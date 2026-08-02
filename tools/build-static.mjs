@@ -49,6 +49,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync, rmSync, copyFileSync, renameSync, cpSync, openSync, readSync, closeSync } from 'fs';
 import { join, dirname, relative, basename } from 'path';
 import { execFileSync } from 'child_process';
+import { createHash } from 'crypto';
 import { createContext, runInContext } from 'vm';
 import { fileURLToPath } from 'url';
 
@@ -85,6 +86,33 @@ const KEEP_STORY = !flag('no-story');
 const log = (...a) => console.log(...a);
 const warn = (...a) => console.warn('  ! ', ...a);
 const die = (m) => { console.error('\nBUILD FAILED: ' + m + '\n'); process.exit(1); };
+
+// *** ONE DEFINITION OF "WHICH .png BECOMES A .webp", SHARED BY THREE READERS. ***
+// (a) the webp pass picks its targets with it, (b) the runtime shim injected into
+// the shipped page rewrites requests with it, and (c) the reference-integrity gate
+// at the bottom of this file decides with it whether a vanished .png is still
+// reachable. They used to be three hand-copied regexes; a build that converts a
+// file the shim cannot rewrite is a silent 404, and a build that rewrites a request
+// for a file it did not convert is the same 404 backwards. Both are now impossible
+// to write by hand: there is exactly one source and the shim is serialised from it.
+const SWAP_RE = /((^|\/)(bg|background|stylized|main|festival|gray|open)\.png(\?|$))|(assets\/characters\/[^?]*\.png(\?|$))/;
+const SWAP_DENY = /(^|\/)(depth|mask|maskraw)[\w-]*\.png/i;
+const willSwap = (rel) => SWAP_RE.test(rel) && !SWAP_DENY.test(rel);
+const swapped = (rel) => rel.replace(/\.png(\?|$)/, '.webp$1');
+/** every .png the webp pass removed from the output (rel paths) — the gate's evidence */
+const WEBP_DELETED = [];
+
+// ---- --audit <dir> : run ONLY the reference-integrity gate, then exit --------
+// Re-check a tree somebody else built (or a deploy you are about to upload) in a
+// few seconds, without rebuilding. It touches nothing.
+if (flag('audit')) {
+  const dir = opt('audit', null);
+  if (!dir || !existsSync(dir)) die('--audit needs a built directory: node tools/build-static.mjs --audit dist-c');
+  log('\n  reference-integrity audit of ' + dir + '\n');
+  referenceAudit(dir, null);
+  log('');
+  process.exit(0);
+}
 
 // The WebP worker. Kept as a string so this tool stays one file with no deps
 // beyond Pillow, which is what the repo already has.
@@ -267,7 +295,20 @@ claim('play3d.html', 'code', 'the engine page');
 // relative asset path identical and keeps cdp.mjs's GAME_PAGE matcher honest.
 PLAN.push({ src: join(PUB, 'play3d.html'), dest: join(OUT, 'play.html'), cat: 'code', why: 'replaces server.js GET /play.html', rel: 'play.html' });
 claimed.add('play.html');
-if (KEEP_STORY) claim('story.html', 'code', 'story/world review page (linked from the front door)');
+if (KEEP_STORY) {
+  // Same treatment index.html gets, for the same reason: story.html's top strip
+  // links `assets.html`, a DEV page this build does not ship, so the deployed page
+  // carried a 404 behind a visible link. Caught by the reference-integrity gate at
+  // the bottom of this file, which is exactly what it is for.
+  let h = readFileSync(join(PUB, 'story.html'), 'utf8');
+  h = h.replace(/(?:\s*·\s*)?<a href="([^"]+)"[^>]*>[\s\S]*?<\/a>/g, (m, href) => {
+    if (/^(https?:|\/|#)/.test(href)) return m;
+    const bare = href.split('?')[0].split('#')[0];
+    return (bare.endsWith('.html') && !SHIPPED_REVIEW.has(bare)) ? '' : m;
+  });
+  PLAN.push({ inline: h, dest: join(OUT, 'story.html'), cat: 'code', why: 'story/world review page (links pruned to what ships)', rel: 'story.html' });
+  claimed.add('story.html');
+}
 
 // ---- 2. code ----------------------------------------------------------------
 // The module list is READ OUT OF play3d.html's own <script src> tags, so a module
@@ -469,6 +510,7 @@ for (const p of PLAN) {
 
 // ---- COMPRESSION HOOKS (off by default) -------------------------------------
 const NEVER_LOSSY = /(^|\/)(depth|mask|maskraw)[\w-]*\.png$/i;
+
 if (WEBP) await webpPass();
 if (GLB) await glbPass();
 
@@ -476,14 +518,14 @@ async function webpPass() {
   log('\n  --webp: re-encoding background plates …');
   const py = join(ROOT, 'tools/_webp_pass.py');
   writeFileSync(py, WEBP_PY);
+  // THE SAME RULE THE SHIM WILL USE (SWAP_RE / SWAP_DENY above) — plates by name,
+  // plus every portrait under assets/characters. Pictures, every one: the runtime
+  // draws them and never samples them.
   const targets = walk(OUT).filter(f => {
     const r = relative(OUT, f);
-    if (!f.endsWith('.png') || NEVER_LOSSY.test(r)) return false;
-    if (/(^|\/)(bg|background|stylized|main|festival|gray|open)\.png$/.test(r)) return true;
-    // portraits: busts, cut-ins and expression plates. Pictures, every one — the
-    // runtime draws them and never samples them.
-    return r.startsWith('assets/characters/') && r.endsWith('.png');
+    return f.endsWith('.png') && !NEVER_LOSSY.test(r) && willSwap(r);
   });
+  for (const f of targets) WEBP_DELETED.push(relative(OUT, f));
   const depth = WEBP_DEPTH ? walk(OUT).filter(f => NEVER_LOSSY.test(relative(OUT, f))) : [];
   const listFile = join(ROOT, '.webp-list.tmp');
   writeFileSync(listFile, JSON.stringify({ lossy: targets, lossless: depth, plateMax: PLATE_MAX }));
@@ -547,9 +589,11 @@ function patchPlateExtensions() {
     if (!existsSync(p)) continue;
     let h = readFileSync(p, 'utf8');
     if (h.includes('EB_WEBP_SHIM')) continue;
+    // The two regexes are SERIALISED FROM THE BUILD'S OWN CONSTANTS, never retyped:
+    // the shim and the converter are then the same rule by construction.
     h = h.replace(/<script/, `<script>/*EB_WEBP_SHIM*/(function(){
-  var RE=/((^|\\/)(bg|background|stylized|main|festival|gray|open)\\.png(\\?|$))|(assets\\/characters\\/[^?]*\\.png(\\?|$))/;
-  var D=/(^|\\/)(depth|mask|maskraw)[\\w-]*\\.png/i;
+  var RE=new RegExp(${JSON.stringify(SWAP_RE.source)});
+  var D=new RegExp(${JSON.stringify(SWAP_DENY.source)},'i');
   var swap=function(u){ return (typeof u==='string' && RE.test(u) && !D.test(u)) ? u.replace(/\\.png(\\?|$)/,'.webp$1') : u; };
   var IS=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,'src');
   Object.defineProperty(HTMLImageElement.prototype,'src',{get:IS.get,set:function(v){IS.set.call(this,swap(v));},configurable:true});
@@ -681,6 +725,180 @@ log('='.repeat(72) + '\n');
 // Every build gets the banner — it is a property of "this is a deployed artifact",
 // not of "this build was compressed".
 injectWipBanner();
+
+// ---- THE REFERENCE-INTEGRITY GATE -------------------------------------------
+// WHY. Twice in one night the build shipped a tree that every unit gate called
+// green, because EVERY OTHER GATE IN THIS REPO READS THE SOURCE TREE, where the
+// file it is asking about still exists under its original name. The build is the
+// only place a path can change: a compressed extension, a pruned page, a renamed
+// container. So the build has to be the place that checks them.
+//
+// WHAT IT ASSERTS, over the FINISHED artifact, with no browser and no network:
+//   1. Every local path a shipped page or a shipped JSON manifest names RESOLVES —
+//      as itself, or through the plate/portrait rewrite the shim performs at
+//      runtime. Restricted to paths that EXIST IN public/, because "a speaker with
+//      no art" and "a bundle with no zones.json" are documented, load-bearing
+//      absences; a gate that fires on those gets switched off. A path that resolved
+//      in the source tree and does not resolve in the build is, always, a build bug.
+//   2. Every .png the compression pass DELETED is one the shim can rewrite, and
+//      its .webp is really there. This is the exact shape of the failure: the build
+//      quietly moves a file and nothing tells the client.
+//   3. No shipped page links a page this build did not ship (the front door and
+//      story.html are both pruned above; this proves the pruning worked).
+//
+// It also runs ALONE against a tree somebody else built —
+//     node tools/build-static.mjs --audit dist-c
+// — so a deploy can be re-checked in three seconds without a 40-minute rebuild,
+// and so this gate can be developed and calibrated against a real artifact.
+function referenceAudit(OUT, deleted) {
+  const have = new Set(walk(OUT).map(f => relative(OUT, f)));
+  const inSrc = (rel) => existsSync(join(PUB, rel));
+  const refs = new Map();                       // rel -> why
+  const norm = (p) => p.split('?')[0].split('#')[0].replace(/^\.\//, '').replace(/^\/+/, '');
+  const addRef = (p, why) => {
+    if (!p || typeof p !== 'string') return;
+    if (/^(https?:|data:|blob:|mailto:|javascript:|#|\/\/)/i.test(p)) return;
+    const r = norm(p); if (!r) return;
+    if (!refs.has(r)) refs.set(r, why);
+  };
+  const ASSET_EXT = /\.(png|webp|jpe?g|glb|gltf|mp3|ogg|wav|json|js|css|svg|html)$/i;
+  const ROOTED = /^(assets|game|world|townmap|lib|js|docs)\//;
+
+  // (a) pages: every src= / href= they carry, resolved against the page's own dir
+  for (const rel of [...have].filter(r => r.endsWith('.html'))) {
+    const h = readFileSync(join(OUT, rel), 'utf8');
+    const dir = dirname(rel) === '.' ? '' : dirname(rel);
+    for (const m of h.matchAll(/\b(?:src|href)\s*=\s*"([^"]+)"/g))
+      addRef(dir ? join(dir, m[1]) : m[1], rel + ' src/href');
+  }
+  // (b) every shipped JSON, every string in it that looks like a path. A rooted
+  //     path is from the site root; anything else is relative to the JSON itself,
+  //     which is how a bundle's cine.json names its own plates (c.art.bg).
+  for (const rel of [...have].filter(r => r.endsWith('.json'))) {
+    let j; try { j = JSON.parse(readFileSync(join(OUT, rel), 'utf8')); } catch { continue; }
+    const dir = dirname(rel);
+    const rec = (v) => {
+      if (typeof v === 'string') {
+        if (ASSET_EXT.test(v) && !/[\s<>]/.test(v))
+          addRef(ROOTED.test(v) ? v : join(dir, v), rel);
+      } else if (Array.isArray(v)) v.forEach(rec);
+      else if (v && typeof v === 'object') for (const k in v) rec(v[k]);
+    };
+    rec(j);
+  }
+  // (c) the names the RUNTIME BUILDS rather than reads — the ones no manifest
+  //     spells out. dialogue.js: cutins.json says which cut-in moods were matted,
+  //     and every portrait id has a neutral bust.
+  const CUTINS_REL = 'assets/characters/cutins.json';
+  if (existsSync(join(OUT, CUTINS_REL))) {
+    const cj = JSON.parse(readFileSync(join(OUT, CUTINS_REL), 'utf8'));
+    for (const [id, e] of Object.entries(cj)) {
+      addRef(`assets/characters/${id}/cutin.png`, 'cutins.json manifest');
+      for (const x of (e && e.expr) || []) addRef(`assets/characters/${id}/cutin-${x}.png`, 'cutins.json expr list');
+    }
+  }
+  for (const r of have) { const m = r.match(/^assets\/characters\/([^/]+)\//);
+    if (m) addRef(`assets/characters/${m[1]}/bust.png`, 'dialogue.js bustUrl() convention'); }
+
+  const unresolved = [], deadLinks = [];
+  for (const [p, why] of refs) {
+    if (have.has(p)) continue;
+    if (willSwap(p) && have.has(swapped(p))) continue;      // the shim finds it
+    if (!inSrc(p)) continue;                                // never existed: a legal absence
+    (p.endsWith('.html') ? deadLinks : unresolved).push(`${p}   <- ${why}`);
+  }
+  // (2) every deleted plate/portrait is reachable through the shim's own rule.
+  //     In --audit mode nobody handed us the list, so it is RECOVERED from the two
+  //     trees: a .png that public/ has and the build does not is a .png this build
+  //     removed, whatever removed it.
+  const gone = deleted || [...walk(PUB).map(f => relative(PUB, f))]
+    .filter(r => r.endsWith('.png') && !have.has(r) && have.has(swapped(r)));
+  const stranded = gone.filter(r => !willSwap(r) || !have.has(swapped(r)));
+
+  // geometry first: it is the finding that costs the most to discover late, and a
+  // gate that stops at the first complaint makes you run it N times for N problems.
+  geometryAudit(OUT, have);
+
+  if (stranded.length) die('the compression pass removed .png files the runtime shim cannot rewrite\n' +
+    '(each of these is a silent 404 in the deployed game):\n  ' + stranded.slice(0, 30).join('\n  '));
+  if (unresolved.length) die('these paths resolve in public/ and NOT in the build — the build moved them:\n  ' +
+    unresolved.slice(0, 40).join('\n  '));
+  if (deadLinks.length) die('these shipped pages link to a page this build did not ship:\n  ' +
+    deadLinks.slice(0, 40).join('\n  '));
+  log(`  reference integrity: ${refs.size} referenced paths all resolve` +
+      (gone.length ? ` (${gone.length} via the .webp rewrite)` : ''));
+}
+
+// ---- THE GEOMETRY GATE ------------------------------------------------------
+// A scene GLB in this repo is not scenery. It is the COLLISION AND WALK GEOMETRY:
+// play3d reads its triangles for walkGround() and the body box, and CLAUDE.md's
+// standing rule is that a walk floor moving by a centimetre is the class of defect
+// that has already cost this repo a day. `--glb` runs the file through
+// gltf-transform, which REPACKS the container — measured on emb-cine, 4760
+// bufferViews become 2301 and every accessor is re-indexed and re-offset — so
+// "the build only touched textures" is a claim, not a fact, until something checks
+// it. This checks it: for every primitive of every shipped bundle, the POSITION
+// bytes and the index bytes are digested out of BOTH files and must match exactly.
+// It is the same shape of proof as the `glTF` magic check — read the artifact, do
+// not believe the log — one level deeper.
+function geometryAudit(OUT, have) {
+  const COMP = { 5120: [Int8Array, 1], 5121: [Uint8Array, 1], 5122: [Int16Array, 2],
+    5123: [Uint16Array, 2], 5125: [Uint32Array, 4], 5126: [Float32Array, 4] };
+  const NCOMP = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4, MAT4: 16 };
+  function readGlb(p) {
+    const buf = readFileSync(p);
+    if (buf.length < 12 || buf.toString('latin1', 0, 4) !== 'glTF') return null;
+    let off = 12, json = null, bin = null;
+    const total = buf.readUInt32LE(8);
+    while (off + 8 <= Math.min(total, buf.length)) {
+      const len = buf.readUInt32LE(off), type = buf.toString('latin1', off + 4, off + 8);
+      const body = buf.subarray(off + 8, off + 8 + len);
+      if (type === 'JSON') json = JSON.parse(body.toString('utf8'));
+      else if (type.startsWith('BIN')) bin = body;
+      off += 8 + len;
+    }
+    return json && bin ? { json, bin } : null;
+  }
+  // the accessor's own bytes, DE-INTERLEAVED — a repack is free to change the
+  // stride, so comparing raw bufferView slices would report a false difference.
+  function accBytes(g, i) {
+    const a = g.json.accessors[i], bv = g.json.bufferViews[a.bufferView];
+    const [, sz] = COMP[a.componentType]; const n = NCOMP[a.type];
+    const item = sz * n, stride = bv.byteStride || item;
+    const base = (bv.byteOffset || 0) + (a.byteOffset || 0);
+    const out = Buffer.alloc(item * a.count);
+    for (let k = 0; k < a.count; k++) g.bin.copy(out, k * item, base + k * stride, base + k * stride + item);
+    return out;
+  }
+  function digest(p) {
+    const g = readGlb(p); if (!g) return null;
+    const h = createHash('sha256');
+    for (const m of g.json.meshes || []) for (const pr of m.primitives || []) {
+      h.update(String(m.name || '') + '|');
+      if (pr.attributes && pr.attributes.POSITION !== undefined) h.update(accBytes(g, pr.attributes.POSITION));
+      if (pr.indices !== undefined) h.update(accBytes(g, pr.indices));
+    }
+    return h.digest('hex');
+  }
+  const bad = [], checked = [];
+  for (const rel of [...have].filter(r => r.startsWith('assets/scenes/') && r.endsWith('.glb'))) {
+    const src = join(PUB, rel); if (!existsSync(src)) continue;
+    let a, b;
+    try { a = digest(src); b = digest(join(OUT, rel)); }
+    catch (e) { bad.push(`${rel}  (unreadable: ${e.message})`); continue; }
+    if (a === null || b === null) { bad.push(`${rel}  (not parseable as binary glTF)`); continue; }
+    checked.push(rel);
+    if (a !== b) bad.push(`${rel}\n      public/ ${a}\n      build   ${b}`);
+  }
+  if (bad.length) die('the GLB pass MOVED GEOMETRY. These bundles are the walk and collision\n' +
+    'meshes; a compression pass is only allowed to touch textures:\n  ' + bad.join('\n  ') +
+    '\n\n  (in --audit mode there is a second reading: public/ has been rebuilt since this\n' +
+    '   tree was, and what you are holding is a STALE deploy. Same action either way —\n' +
+    '   rebuild — but check the bundle\'s mtime before you go looking in the compressor.)');
+  log(`  scene geometry: ${checked.length} bundle GLBs byte-identical to public/ (POSITION + indices)`);
+}
+
+referenceAudit(OUT, WEBP_DELETED);
 
 writeFileSync(join(OUT, 'BUILD.json'), JSON.stringify({
   built: new Date().toISOString(),

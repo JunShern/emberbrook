@@ -247,6 +247,51 @@ of `migration/3d-hybrid`:
 root. No rewrite rules, no SPA fallback, no redirects. `/` is the launcher, `/play.html`
 is the game.
 
+## The build's own gates — and why they live in the build
+
+**Every other gate in this repo reads the source tree.** That is the hole this class of
+bug lives in: the build is the only place a path, a container or a byte can change, so
+`public/` is always green while `dist/` is broken. Three checks now run at the end of
+every build, over the finished artifact, in about a second:
+
+| gate | what it asserts | the failure it was built from |
+|---|---|---|
+| **binary glTF** | every `.glb` starts with the `glTF` magic | `gltf-transform` picks its container from the extension: a temp file called `scene.glb.webp` made it write a **JSON** `.gltf` document under a name still ending `.glb`. `GLTFLoader` failed *silently* — no error, no scene graph, no walk meshes, no NPCs — and the game booted into an empty world |
+| **scene geometry** | for every shipped bundle GLB, the POSITION bytes and the index bytes of **every primitive** digest identically to `public/` | the `--glb` pass **repacks the container**: measured on `emb-cine`, 4760 bufferViews become 2301, POSITION and NORMAL are interleaved at stride 24, and every accessor is re-indexed and re-offset. These GLBs are the **collision and walk geometry**; "the pass only touched textures" was a claim, not a fact |
+| **reference integrity** | every local path a shipped page or a shipped JSON names resolves in the output — as itself, or through the plate/portrait `.webp` rewrite the runtime shim performs | the build changes paths (`bg.png` → `bg.webp`, pages pruned). Anything that names one and is not rewritten is a silent 404. It caught `story.html`'s link to `assets.html`, a dev page the build does not ship |
+
+Run them alone against a tree you already have — a deploy you are about to upload, or
+somebody else's build — without rebuilding:
+
+    node tools/build-static.mjs --audit dist-c
+
+Two calibration notes, both load-bearing:
+
+* The reference gate only complains about a path that **resolves in `public/` and does
+  not resolve in the build**. "A speaker with no art" and "a bundle with no
+  `zones.json`" are documented, load-bearing absences; a gate that fires on those is a
+  gate somebody switches off.
+* The `.png` → `.webp` rule now has **one definition** (`SWAP_RE`/`SWAP_DENY` in
+  `tools/build-static.mjs`). The converter picks its targets with it, the injected
+  runtime shim is **serialised from it**, and the gate resolves with it. It used to be
+  three hand-copied regexes, and a converter that converts what the shim cannot rewrite
+  is a 404 nobody sees.
+
+Both gates were negative-controlled: nudging one vertex by 1 cm inside a copied
+`scene.glb` fails the geometry gate with both digests printed; an incomplete tree fails
+the reference gate naming each missing plate.
+
+### What the compression pass was cleared of (measured 2026-08-02)
+
+`--compress` was suspected of corrupting the world. It does not:
+
+* all **16** shipped bundle GLBs digest identically to `public/` on POSITION + indices
+* `node tools/walk_engine_gate.mjs --scene emb-cine` against the **built** tree
+  (`--port 8129`) and against the **dev** server (`--port 3000`) return the same census
+  cell for cell: **7451 standable cells, 1508.8 m², 0 lost, `SIM.bvh().fail = 0`**
+* the NPC body plates survive the lossy re-encode as **chroma keys**: on
+  `poppy/pose-front`, the keyed fraction moves 0.6142 → 0.6137
+
 ## The acceptance test
 
 `node tools/static_verify.mjs` is the receipt. It serves `dist` with
