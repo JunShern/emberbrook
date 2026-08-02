@@ -15,6 +15,12 @@ git runs here, on branch `migration/3d-hybrid`.
   must stage it. chapter2.js = Dellhollow, chapter3.js = Lanternstead.
 - docs/chapter2-script.md — Lanternstead full script. VOICES.md — dialogue voice per
   character.
+- **docs/plans/end-to-end-wiring.md** — the AUDIT of what stands between three
+  scripted chapters and one continuous playthrough (2026-08-02). Headline: the chapters
+  live in the LEGACY 2D runtime (join-legacy.html); play3d.html has no chapter runner,
+  no story flag, no end card. Carries the save-state schema, the chapter-handoff
+  contract, the story-flag proposal (`story.ch1.gate-open`), and the measured
+  empty-Emberbrook finding. Read before any wiring work.
 - **docs/qa/RESUME.md** — WORK PAUSED 2026-08-02: what every lane was mid-way
   through and how to pick it up. Read it before restarting any lane.
 - Canon rulings log + nightly state: **docs/qa/DAYLOG.md** (append handover-quality
