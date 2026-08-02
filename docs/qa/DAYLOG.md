@@ -15346,3 +15346,27 @@ because a lobed skin plus a card shell is ~124 tris a site and a conifer is 48.
 Waiting on the user: one pick among F1 / F2 / F3, a hybrid, or a rejection. My recommendation
 on the page is F2 with F1 folded in and `bushlang.Mass.shell()` re-pointed from one stand-wide
 skin to individual crowns — labelled as mine to reject.
+
+**THE RECEIPT (2026-08-03 00:50).** A fresh `--compress --plate-max 1920` build carrying
+the portrait fix (`dist-c3`, from `207df78`), served by `python3 -m http.server`:
+
+    node tools/playthrough_test.mjs --port=8132 --no-walk
+    playthrough_test: 51 passed, 0 failed
+
+`--no-walk` because §W reachability landed on by default during the night (`1154da7`) and
+its one red — `ch1.done -> ch2.road` — belongs to another lane; with §W on, the same build
+scored 69/1 with that as the only failure, and `walk_engine_gate --scene ow-valley` returns
+**2065 cells / 418.2 m², 0 lost** against the compressed build AND raw `public/`, so it is
+a content/anchor defect, not a build one. Portrait fix verified on the artifact:
+`assets/characters/{vesper,lake}/bust.webp`, `lake/cutin.webp`, `poppy/pose-front.webp`
+all **200** from `dist-c3` where the `.png` they replace was **404** from the previous build.
+
+Build gates on that run: 16/16 bundle GLBs byte-identical, 241 referenced paths resolve
+(219 via the rewrite), every `.glb` binary glTF. One warning fired and is a FALSE POSITIVE
+worth keeping: `js/dialogue.js: expr-warm.png` is a filename inside a code comment. The
+warning cannot tell a comment from a CSS url() and is a warning precisely for that reason.
+
+*Cheap lesson paid in full: `node --check` does not catch a temporal dead zone. A `const`
+declared below `if (WEBP) await webpPass()` threw `ReferenceError` only AFTER 219 plates
+had been re-encoded — ten minutes to learn a one-line mistake. Exercise a new build step
+on a three-file copy before spending a build on it.*

@@ -281,6 +281,32 @@ Both gates were negative-controlled: nudging one vertex by 1 cm inside a copied
 `scene.glb` fails the geometry gate with both digests printed; an incomplete tree fails
 the reference gate naming each missing plate.
 
+### The shim cannot see a CSS background — so the build rewrites the builders
+
+`--webp` injects a shim that hooks `HTMLImageElement.prototype.src` and `window.fetch`.
+That is **every way the runtime loads a plate**. It is *not* every way it loads a
+**portrait**: `EBUI.portrait()` (`ui_kit.js:664` — the party list and the 210 px bust in
+the pause menu), `dialogue.js`'s framed-thumbnail fallback and `battle_turnbased`'s status
+row all build `background-image:url("…/bust.png")` **into an HTML string**. A CSS `url()`
+never touches an `HTMLImageElement` and never touches `fetch`, so the shim never sees it —
+and the webp pass had already deleted the file it names.
+
+Measured on the build of 2026-08-02: `assets/characters/vesper/bust.png` → **404 from the
+built tree, 200 from `public/`**; `bust.webp` the exact mirror. **Every party portrait in
+the pause menu was a blank frame in the deploy.** Nothing caught it: a CSS background that
+404s logs nothing the console gate reads, breaks no gameplay, and every other gate reads
+`public/`, where `bust.png` still exists.
+
+`patchPortraitUrls()` fixes it **at the builder, not the loader** — six URL builders under
+`assets/characters/` are rewritten to `.webp` in the *shipped copies*, so the `<img>` path
+and the CSS path both name a file that exists and the shim becomes redundant for portraits
+rather than load-bearing. `assets/battle/` and `assets/monsters/` are **not** converted and
+keep their `.png`.
+
+**Every entry must match exactly once or the build dies naming the line.** A lane that
+edits a portrait path now breaks the build loudly instead of shipping blank frames — which
+is the whole point, because the failure it replaces was invisible.
+
 ### What the compression pass was cleared of (measured 2026-08-02)
 
 `--compress` was suspected of corrupting the world. It does not:
