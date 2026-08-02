@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-02T01:58:40.928Z",
+ "generated": "2026-08-02T02:01:21.112Z",
  "source": "chapters: public/js/chapter1-3.js + END_CARDS(main.js) · bible: STORY.md · cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · places: public/townmap/*.map.json",
  "stats": {
   "blocks": 153,
@@ -7986,12 +7986,21 @@
    ],
    "art": {
     "moods": [
+     "annoyed",
      "awed",
+     "crushed",
      "determined",
-     "happy"
+     "happy",
+     "indignant",
+     "sad",
+     "surprised",
+     "tender",
+     "thinking",
+     "worried",
+     "wry"
     ],
-    "w": 995,
-    "h": 629
+    "w": 513,
+    "h": 864
    },
    "moodSpec": [
     "awed",

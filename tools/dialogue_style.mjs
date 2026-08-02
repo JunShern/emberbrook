@@ -567,6 +567,15 @@ console.log(`spoken median: ${median(spokenBoxes.map(b => b.words))} words · ${
   + `   over 25 words: ${spokenBoxes.filter(b => b.words > 25).length}`);
 
 const groupBy = (list, key) => list.reduce((a, x) => { (a[key(x)] ||= []).push(x); return a; }, {});
+
+// per-source budget: a writer's-eye view of how much text each file is actually spending
+console.log('\n  source            boxes   words   med   3+sent  >ceiling');
+for (const [src, list] of Object.entries(groupBy(boxes, b => b.src))) {
+  const words = list.reduce((a, b) => a + b.words, 0);
+  const over = list.filter(b => b.words > (b.channel === 'spoken' ? LIMIT.wordsSpoken : LIMIT.wordsCard)).length;
+  console.log(`  ${src.padEnd(16)} ${String(list.length).padStart(6)} ${String(words).padStart(7)} `
+    + `${String(median(list.map(b => b.words))).padStart(5)} ${String(list.filter(b => b.sents > 2).length).padStart(7)} ${String(over).padStart(9)}`);
+}
 const show = (list, title, cap) => {
   if (!list.length) { console.log(`\n${title}: none`); return; }
   console.log(`\n${title} — ${list.length}`);

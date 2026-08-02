@@ -15,6 +15,12 @@ git runs here, on branch `migration/3d-hybrid`.
   must stage it. chapter2.js = Dellhollow, chapter3.js = Lanternstead.
 - docs/chapter2-script.md — Lanternstead full script. VOICES.md — dialogue voice per
   character.
+- **docs/exemplars.md** — the RATIFIED style set: 42 shipped Ch1–Ch2 lines that already
+  obey VOICES.md, ~5 per main voice, each with one line on why. Read it before writing
+  any dialogue; paste PART 2 as the few-shot block for any generated dialogue (match by
+  example, never by describing the style in the abstract). Every quote in it is verbatim
+  from the script — change a line there and you owe the same change in the chapter.
+  Ch3 is deliberately absent: it is not the house style (user ruling 2026-08-02).
 - **docs/plans/end-to-end-wiring.md** — the AUDIT of what stands between three
   scripted chapters and one continuous playthrough (2026-08-02). Headline: the chapters
   live in the LEGACY 2D runtime (join-legacy.html); play3d.html has no chapter runner,
@@ -76,6 +82,16 @@ git runs here, on branch `migration/3d-hybrid`.
 - node tools/slice_test.mjs · cine_test.mjs · seam_test.mjs · seam_walk.mjs ·
   economy_test.mjs · battle_sim / encounter_sim · transition_test.mjs --port=<port>
   (real Chrome; needs a server on the port serving /public)
+- node tools/dialogue_style.mjs — THE STYLE GATE (no browser, no network): every spoken,
+  `system` and `narrate` box in chapter1.js + chapter2.js + dialogue.json against
+  VOICES.md's OWN numbers — two sentences a box, 25/30-word ceilings, one capped word,
+  banned register, reading grade, exclamation density — reported BY SCENE and BY
+  CHARACTER so a writer can act on it. Chapter3 is OUT of scope and does not gate
+  (`--scope=all` measures it for information only). `--selftest` proves the sentence
+  counter on hand-checked cases FIRST: '…' and '—' are not enders, abbreviations don't
+  split, and a ≤2-word segment with no copula is a noise, not a sentence. Judgment calls
+  (aphorism budget, aim band, internal ration) are WARNINGS on purpose — a heuristic that
+  fails a build is a heuristic that gets written around.
 - node tools/dialogue_test.mjs — THE CAST GATE (no browser, no network): every speaker
   has a bust §2, resolves to a cut-in or a thumbnail with the alpha MEASURED IN THE PNG
   §2b, and the PARTY has a face on every beat the player speaks — choice lists
