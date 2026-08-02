@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-02T17:45:43Z",
+ "generated": "2026-08-02T21:53:30Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -3019,7 +3019,7 @@
      "seam:square-plaza__barn"
     ],
     "minCharPx": 37,
-    "visibleFrac": 0.7969
+    "visibleFrac": 0.7656
    }
   },
   "pondlane": {
@@ -3442,7 +3442,7 @@
      "seam:brook-bridge__square-plaza"
     ],
     "minCharPx": 80,
-    "visibleFrac": 0.4062
+    "visibleFrac": 0.3906
    }
   },
   "homerow": {
@@ -4973,8 +4973,6 @@
    ]
   }
  ],
- "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 1 of 11 plates are stale against the solve — square (0.06u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
- ],
+ "warnings": [],
  "overrides": {}
 }
