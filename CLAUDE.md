@@ -27,6 +27,9 @@ git runs here, on branch `migration/3d-hybrid`.
   no story flag, no end card. Carries the save-state schema, the chapter-handoff
   contract, the story-flag proposal (`story.ch1.gate-open`), and the measured
   empty-Emberbrook finding. Read before any wiring work.
+- **docs/qa/MORNING.md** — the 2026-08-02 overnight brief: what shipped, the seven
+  decisions waiting on the user, the honest reds, and the night's measurement lessons.
+  Read this before RESUME.md, which it supersedes.
 - **docs/qa/RESUME.md** — WORK PAUSED 2026-08-02: what every lane was mid-way
   through and how to pick it up. Read it before restarting any lane.
 - Canon rulings log + nightly state: **docs/qa/DAYLOG.md** (append handover-quality
