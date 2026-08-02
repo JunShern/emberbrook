@@ -208,6 +208,20 @@ git runs here, on branch `migration/3d-hybrid`.
   Agents: NEVER audible in browser tests — ?nomusic=1 (exception: transition_test,
   which mutes at source).
 
+## Scope rulings (user decisions that bound the work)
+- **SINGLE-PLAYER FOR THE PROTOTYPE** (user ruling 2026-08-02, verbatim: "Let's leave the
+  two-player version of the game as an upgrade for later, and in the prototype we can keep
+  things as single-player"). The 3D runtime is single-body and STAYS so. Chapter One's climax
+  (two keepers on twin sigil plates) and Chapter Two's (a six-hand winch) are staged as
+  single-player + companion so nothing soft-locks. DO NOT re-open this as an open question —
+  it was carried on a status list as "undecided" for hours after it had been decided, which is
+  its own small lesson: a ruling that is not written down is a ruling that gets re-asked.
+- **LAKE IS A PARTY MEMBER**, not a narrative-only companion (settled 2026-08-02: the user
+  refers to "Lake as a party member", and growth.json already carries his record with
+  `joinFlag: lake-joined` and stats). His `joinFlag` stays.
+- The goal is A PLAYABLE PROTOTYPE, not a polished product (user steer 2026-08-02) — prefer
+  the 80/20 that gets the thing playable over the round that gets it perfect.
+
 ## Working rules (hard-won)
 - Git: stage-and-commit one breath WITH pathspec on the commit; never `git add -A`
   (shared index across agents). PUSH REGULARLY (user standing order 2026-08-01): the
