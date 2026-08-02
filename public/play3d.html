@@ -56,11 +56,12 @@ const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for
 // Player model: DEV-MENU controlled (user ruling 2026-07-31: controls live in the M
 // menu, not URL params). Priority: ?model= (harness/tests) > dev-menu choice
 // (localStorage) > the default — which is VESPER-V2, the user's own model.
-// finn/mara/maren/pip are NPC-RECIPE builds (Walk_Loop, 0.46 u/s): in the picker for
+// finn/mara/maren/pip/lake are NPC-RECIPE builds (Walk_Loop, 0.46 u/s): in the picker for
 // INSPECTION — as player models their walk would need ~10x to lock cadence (moon-skate).
 const MODELS={ 'vesper-v2':'assets/characters/vesper/vesper-v2.glb', 'vesper-test':'assets/characters/vesper/anim_test.glb', 'rogue':'assets/characters3d/rogue.glb',
   'finn':'assets/characters/finn/finn-v1.glb', 'mara':'assets/characters/mara/mara-v1.glb',
-  'maren':'assets/characters/maren/maren-v1.glb', 'pip':'assets/characters/pip/pip-v1.glb' };
+  'maren':'assets/characters/maren/maren-v1.glb', 'pip':'assets/characters/pip/pip-v1.glb',
+  'lake':'assets/characters/lake/lake-v1.glb' };
 // SESSION-scoped, not localStorage (user bug 2026-08-01: previewing finn in the H
 // picker permanently swapped the PLAYER body — a dev preview must not outlive the
 // tab). Old localStorage key is cleared on load so stuck players self-heal.

@@ -13561,3 +13561,73 @@ per the `_framingRef` recipe (canvas 1.44× width, pads filled from the plate's 
 border paper). Measured while doing it: **this bust never touches its own plate edges** —
 all 1184 border rows on both sides are warm paper — so the fault the pad exists for is not
 present on it. The pad is cheap and stays; the rest roll off it came back edge_touch 0.0000.
+
+------------------------------------------------------------
+## LAKE IS A WALKING BODY — retargeted on the NPC recipe, gates green, and the coat
+## panel behaviour MEASURED AGAINST A SHIPPED CONTROL (2026-08-02, lake retarget lane)
+
+`lake-v1.glb` shipped from `lake.glb` (the repaired intake, ebf5f8c) through the
+unmodified pipeline: `vesper_retarget.py -- lake.glb lake-v1.glb walk=Walk_Loop`,
+posture P3, head +0.0. Clip contract IDENTICAL to the other four cast builds —
+Idle 2.500s (UAL Idle_Loop), Walking_A 1.333s (UAL Walk_Loop), Jump_Full_Short 1.167s
+(KayKit). Rest bbox 0.9798, feet on the ground.
+
+WALK_LOOP, NOT THE JOG, and the reason is npc.js's arithmetic, not taste: he has no
+NPC record yet but the first thing anyone will do with a body is stand it in a town,
+and npc.js scales by wspd/NPC_WALK_UPS(0.46) clamped 0.5..2.5 — hand it the jog and
+every villager speed clamps at 0.5. Re-running him on the jog is one command if he
+ever becomes a player-driven body.
+
+GATE (tools/vesper_verify.py, VERIFY OK):
+    upper arm off-vertical  L mean 8.23 (7.00..9.76)   R mean 8.19 (6.91..9.25)   bar 15
+    elbow bend              L 2.8..4.0                 R 3.8..4.6                 P3 floor 2.0
+    hand-vs-coat (idle)     L -0.0081                  R +0.0020                  P3 floor -0.045
+    head pitch mean         Idle -0.0  Walking_A -0.0  Jump +0.0                  bar ±5
+The arm angles land on the cast's shared 8.2/8.2 (the solve targets angles and the
+transfer is angle-exact). HIS HANDS ARE THE CLEANEST IN THE CAST: -0.0081/+0.0020
+against vesper -0.0359/-0.0253, finn -0.0133/-0.0257, mara -0.0229/-0.0242,
+maren -0.0031/-0.0076, pip -0.0088/-0.0053. The turnaround worry that the hands would
+fuse into the coat skirt did not materialise — LOOKED AT at 2x on the idle hand
+close-ups, the whole hand silhouette reads outside the cloth on both sides.
+
+THE COAT PANELS UNDER STRIDE — the thing this model was flagged for. Measured per
+frame over all 41 frames of Walking_A, and then measured AGAIN on finn-v1 (SHIPPED,
+same Walk_Loop clip) as the control, because "is this bad" is only answerable against
+what the game already ships:
+    panel-to-panel min gap   lake 0.0100 @f22        finn 0.0003 @f27
+    hand-vs-body min         lake +0.0098 L / +0.0162 R (excl. the far-swing sign
+                             artifact — see below)   finn -0.0030 L / -0.0128 R
+Lake is BETTER than the shipped control on both. The panels never cross the midline
+and never enter the legs.
+WHAT THEY DO DO, and this is an eye verdict off the contact sheets, not a number: the
+two front panels are skinned 82%/87% to the THIGH TWISTS, so they hinge from the hip
+and rotate with the femur. At mid-stride each panel swings out as a stiff slab with a
+hard straight lower edge, and the camera sees its unlit inner face as a dark wedge
+between panel and leg — worst f8..f20 and f32..f38. It reads as a hinged flap, not
+cloth. THE CONTROL IS THE WHOLE POINT: finn does the identical thing at the identical
+phase of the identical clip and has been in the game for days; lake's is larger only
+because his coat is a wide OPEN mid-thigh garment and finn's is a narrow closed duffel.
+So this is the house's standing cost of Tripo garment skinning with no cloth sim, NOT
+a lake regression, and it is not fixable by re-solving the retarget (the offsets move
+arms and head; the legs and therefore the panels are untouched). If it is ever ruled
+unacceptable the fix is upstream in the SKIN — reweight the panel vertices off the
+thigh twists toward Pelvis/Waist so they hang plumb — and that is a model edit, not a
+retarget option. NOT SHIPPED SILENTLY; flagged for the user's call.
+METRIC CAVEAT, recorded with the instrument: the hand-vs-body signed distance takes
+its SIGN from the nearest body VERTEX's normal, which is only meaningful while the
+hand is near the surface. Lake's right hand reads -0.14..-0.16 on f4,f5,f37..f39 —
+a "penetration" 15% of body height deep, which is arithmetically impossible with the
+coat right there. Those are max arm-swing frames where the nearest body vertex is
+140-155 mm away and the sign flips; the renders show the hand in clear air. Read this
+metric's sign only at |d| < ~0.05.
+
+REGISTERED: `MODELS['lake'] = assets/characters/lake/lake-v1.glb` in play3d.html, one
+line, alongside the four other NPC-recipe builds. NOT added to npcs.json — he has no
+NPC record in either town and inventing one would be authoring content. growth.json
+ALREADY carries him (added the same day by the end-to-end-wiring lane, joinFlag
+`lake-joined`, active:false); nothing invented, and the R8 open question — battling
+party member or narrative companion — is still the user's to answer.
+tools/transition_test.mjs --port=3000: 167 ok / 1 failed, and the single failure is the
+console gate, which fails IDENTICALLY with this change stashed (`.mute is not a
+function` out of battle_turnbased.js plus two CSS-in-template SyntaxErrors from another
+lane's in-flight edits). Not this lane's.
