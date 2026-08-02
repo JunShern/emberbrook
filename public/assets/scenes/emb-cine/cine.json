@@ -26,12 +26,12 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 0.7799999713897705,
+   "exposure": 1.0,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6000000238418579,
+   "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 2.0,
+   "moon": 2.71,
    "moonColor": [
     0.65,
     0.75,
@@ -39,15 +39,11 @@
    ],
    "moonZenithDeg": 50.0,
    "moonAzimuthDeg": 90.0,
-   "warmAnchorGlow": 0.35,
+   "warmAnchorGlow": null,
    "lampWatts": null,
-   "waystoneLanternW": 900.0,
-   "waystoneLanternAt": [
-    56.9,
-    -12.6,
-    2.0
-   ],
-   "waystoneLanternOn": "emb_dress_waystone_lanternglass"
+   "waystoneLanternW": null,
+   "waystoneLanternAt": null,
+   "waystoneLanternOn": null
   }
  },
  "cameras": [
@@ -527,27 +523,27 @@
    "entry": false,
    "transit": false,
    "pos": [
-    47.233,
-    38.791,
-    20.631
+    52.826,
+    23.427,
+    34.248
    ],
    "aim": [
     40.676,
     56.808,
     3.367
    ],
-   "fov": 35,
+   "fov": 20,
    "clip": [
     0.05,
     1400
    ],
    "rtClip": [
-    5.265,
-    67.63
+    10.978,
+    97.614
    ],
    "depth": {
-    "near": 10.52991008758545,
-    "far": 42.26882553100586,
+    "near": 21.955934524536133,
+    "far": 61.00902557373047,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -562,10 +558,10 @@
     -60.556
    ],
    "spawnFrom": "walk_pad_elder-house",
-   "visibleFrac": 0.7656,
+   "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-01T21:40:56Z",
-   "seconds": 681.6,
+   "baked": "2026-08-02T12:46:58Z",
+   "seconds": 703.3,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
