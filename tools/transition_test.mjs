@@ -48,6 +48,7 @@ import { readFileSync, rmSync } from 'fs';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { freePort, killOrphans, findPage, GAME_PAGE } from './cdp.mjs';
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -55,7 +56,9 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const argv = process.argv.slice(2);
 const arg = (k, d) => { const h = argv.find(a => a.startsWith('--' + k + '=')); return h ? h.split('=').slice(1).join('=') : d; };
 const PORT = parseInt(arg('port', '8123'), 10);
-const CDP_PORT = parseInt(arg('cdp', '9347'), 10);
+// PORT: a free one unless --cdp says otherwise. Two tools shipped 9351 and
+// would have collided; a fixed port also collides with an orphan of yourself.
+const CDP_PORT = parseInt(arg('cdp', '0'), 10) || await freePort();   // was 9347
 const HEAD = argv.includes('--head');
 const RELOAD_PATH = argv.includes('--reload');
 const DOORS = parseInt(arg('doors', '24'), 10);
@@ -159,6 +162,7 @@ function driftSelfCheck() {
 // is load-bearing: the run always starts from a URL) and the cleanup is a trap on
 // exit, not a line at the bottom of main(), so a FAILING run cleans up too.
 const profile = join(process.env.TMPDIR || '/tmp', 'transition-test-profile');
+killOrphans(profile);   // a live Chrome still holding this profile makes the rmSync a lie
 rmSync(profile, { recursive: true, force: true });
 const chrome = spawn(CHROME, [
   `--remote-debugging-port=${CDP_PORT}`, `--user-data-dir=${profile}`,
@@ -182,17 +186,10 @@ for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP'])
   process.on(sig, () => { kill(); process.exit(130); });
 process.on('uncaughtException', (e) => { console.error('UNCAUGHT:', e && e.message); kill(); process.exit(4); });
 
-async function targetWs() {
-  for (let i = 0; i < 120; i++) {
-    try {
-      const r = await fetch(`http://127.0.0.1:${CDP_PORT}/json/list`);
-      const page = (await r.json()).find(t => t.type === 'page' && t.url.includes('play3d.html'));
-      if (page && page.webSocketDebuggerUrl) return page.webSocketDebuggerUrl;
-    } catch (e) { }
-    await sleep(250);
-  }
-  throw new Error('chrome never exposed a play3d page over CDP');
-}
+// findPage's failure carries its evidence (every CDP target it saw, and whether
+// CDP answered at all). The old body threw 'chrome never exposed a play3d page',
+// which named four different worlds with one sentence — see tools/cdp.mjs.
+const targetWs = () => findPage(CDP_PORT, { tries: 120, label: 'transition_test' });
 function connect(url) {
   return new Promise((res, rej) => {
     const ws = new WebSocket(url, { perMessageDeflate: false, maxPayload: 256 * 1024 * 1024 });

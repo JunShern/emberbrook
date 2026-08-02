@@ -12821,3 +12821,97 @@ instrument was named. A number recorded without its instrument cannot even be au
    which is one dialogue line per second and a 20-minute run;
    --disable-background-timer-throttling and friends cut it to about a third.
    Neither defect was in the game.
+
+------------------------------------------------------------
+## 2026-08-02 — CDP LANE: five tools, one plumbing, and three bugs that were all the same bug
+
+Five tools drive Chrome over CDP (`transition_test`, `playthrough_test`,
+`trigger_probe`, `arena_playtest`, `ow_shot`). Each was written by copying the last
+one, so each independently re-made the same three mistakes. All three cost real
+debugging time on 2026-08-02. They are now one shared module, **tools/cdp.mjs**.
+
+1. **HARDCODED CDP PORTS THAT COLLIDE.** `playthrough_test` and `trigger_probe`
+   BOTH shipped `9351`. Run them together and the second Chrome cannot bind, so it
+   exits and the tool reports "chrome never exposed a page" — a lie about the world
+   caused by a neighbour. MEASURED, a live specimen, this session: `ps ax -o
+   pid,command` found an orphaned Chrome (pid 34155) still holding **port 9412**
+   with the `ow-shot-profile` — `ow_shot.mjs`'s old hardcoded port — left by an
+   earlier run. Under the old code the next `ow_shot` would have collided with its
+   own ghost and blamed the world. Fix: `freePort()` asks the OS for a port nobody
+   owns, which ends the class rather than renumbering it; `--cdp <n>` still
+   overrides explicitly.
+
+2. **A MATCHER THAT KNEW ONE URL.** All five searched CDP targets for the literal
+   `'play3d.html'`. The game is ALSO served at the friendly route `/play.html`
+   (server.js maps it), so a tool aimed at that route found nothing and said so
+   confidently while a perfectly good page sat there. MEASURED: a headless Chrome
+   pointed at `/play.html?nomusic=1` exposes exactly that URL as its page target
+   (see the self-test in this lane) — `includes('play3d.html')` is false for it.
+   Fix: `GAME_PAGE = /\/play(3d)?\.html/`, asserted against both routes plus two
+   negatives (`townmap/viewer.html`, `about:blank`).
+
+3. **FAILURE MESSAGES THAT REPORT ONLY THE ABSENCE.** "chrome never exposed a
+   play3d page over CDP" is indistinguishable from *Chrome never started*, *Chrome
+   started and crashed*, *the port was taken*, and *my matcher is wrong* — and it
+   was the last of those. Fix: `findPage()` separates "CDP unreachable" from "CDP
+   fine, matcher wrong" and, in the second case, DUMPS EVERY TARGET IT SAW. Both
+   branches were provoked deliberately and their output read, not assumed.
+
+   The general rule, which is the day's most portable lesson:
+   **AN INSTRUMENT THAT FINDS NOTHING MUST PROVE IT COULD HAVE FOUND SOMETHING.**
+
+`killOrphans(profile)` pre-empts (1)'s sibling: the four tools with a FIXED profile
+dir `rmSync` it at launch, and an `rmSync` of a directory a live Chrome still holds
+is a no-op that reads as a clean start. `arena_playtest`'s profile is per-pid and
+needs no such call.
+
+### The retrofit was landed HALF-DONE, and the missing half was the whole point
+As delivered, all five tools imported `findPage`/`killOrphans` and **called
+neither** — each kept its own `targetWs()` loop still throwing the bare
+"chrome never exposed a play3d page over CDP". Bug class 3, the one the module's
+header names as the most expensive, was still shipped in every tool. Both helpers
+are now actually wired in, each keeping its own timeout budget (100/120/160/320
+tries). Worth recording because the failure mode is subtle: `grep` for `cdp.mjs`
+showed five clean imports and looked like five fixed tools.
+
+### GATES — PARTIAL, and the lane was stood down mid-run
+The user was playing and the box was loaded (headless Chrome measured at 742% CPU
+on 10 cores); the coordinator suspended browser gauntlets. What completed:
+
+* `trigger_probe --static` — **3/0, matches benchmark. GREEN.**
+* `transition_test --port=3000` — **155/13** against a benchmark of 168/0.
+  **NOT CAUSED BY THIS LANE, PROVEN:** `git stash push -- tools/transition_test.mjs`
+  (stashing ONLY the retrofitted tool, leaving every other lane's in-flight work
+  untouched) and re-running the pre-change tool gives the **IDENTICAL 155 ok / 13
+  failed**, same 13 rows, same deltas. A CDP port cannot move a geometry counter.
+* `trigger_probe --port=3000` — **67/13** against a benchmark of 79/0. **CAUSE NOT
+  ESTABLISHED**: the lane was stood down before the equivalent stash-baseline could
+  be run. It is NOT to be reported as retrofit-caused OR as retrofit-clean until
+  that baseline exists.
+* `playthrough_test` (baseline 51/0) and `arena_playtest` (no baseline on record)
+  — **NOT RUN.**
+
+### The 13 transition_test rows are a real leak, in another lane's uncommitted work
+Instrument: transition_test's own GPU assertion (`renderer.info` returns to
+baseline). The uncommitted `public/play3d.html` overworld-sky probe adds, per
+overworld load, **four BufferGeometries** — one sky dome + three ridge rings — that
+are never disposed. Their MATERIALS are registered in `SCENEMATS` (mats delta 0
+throughout) but the geometries are not, so the counter climbs +4 per ow-valley
+visit and, because `renderer.info` is global, every LATER scene inherits the total:
+deltas run +4, +4, +8 … +12 across doors 14→"after battle", and `programs` goes
+6→16. This is a finding ABOUT that lane's in-flight probe, not a verdict on it.
+
+### PROCESS DEFECT, and it is the one CLAUDE.md already warns about
+Commit `eb0b711` (13:03:20) — another lane's — contains edits to
+`tools/playthrough_test.mjs` that THIS lane had made minutes earlier and had not
+staged. That is the shared-index hazard behind the "never `git add -A`, always a
+pathspec" rule, observed live rather than in the abstract.
+
+Its consequence was a **BROKEN HEAD**, and the breakage was invisible in the repo
+we work in because the missing file sits untracked in our working tree: HEAD's
+`playthrough_test.mjs` imported `./cdp.mjs` while `tools/cdp.mjs` was in no commit
+at all. Measured the only way that catches it — `git clone` the branch to a scratch
+dir and run the tool there:
+`Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/private/tmp/cdpcheck/tools/cdp.mjs'`.
+A green gate in a dirty working tree says nothing about what a clone can run. This
+commit lands `cdp.mjs` and repairs it.

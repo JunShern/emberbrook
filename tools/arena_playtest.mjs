@@ -31,6 +31,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { freePort, killOrphans, findPage, GAME_PAGE } from './cdp.mjs';
 
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
@@ -44,7 +45,9 @@ const ONLY = arg('only', null);
 const AS_JSON = argv.includes('--json');
 const HEAD = argv.includes('--head');
 const SCENE = arg('scene', 'ow-valley');
-const CDP_PORT = parseInt(arg('cdp', '9339'), 10);
+// PORT: a free one unless --cdp says otherwise. Two tools shipped 9351 and
+// would have collided; a fixed port also collides with an orphan of yourself.
+const CDP_PORT = parseInt(arg('cdp', '0'), 10) || await freePort();   // was 9339
 
 const CHROME = process.env.CHROME_BIN ||
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -90,18 +93,10 @@ process.on('exit', kill);
 process.on('SIGINT', () => { kill(); process.exit(130); });
 
 // ---- CDP ------------------------------------------------------------------
-async function targetWs() {
-  for (let i = 0; i < 100; i++) {
-    try {
-      const r = await fetch(`http://127.0.0.1:${CDP_PORT}/json/list`);
-      const list = await r.json();
-      const page = list.find(t => t.type === 'page' && t.url.includes('play3d.html'));
-      if (page && page.webSocketDebuggerUrl) return page.webSocketDebuggerUrl;
-    } catch (e) { /* not up yet */ }
-    await sleep(250);
-  }
-  throw new Error('chrome never exposed a play3d page over CDP');
-}
+// findPage's failure carries its evidence (every CDP target it saw, and whether
+// CDP answered at all) — see tools/cdp.mjs. (Profile here is per-pid, so there is
+// no fixed-profile orphan to kill.)
+const targetWs = () => findPage(CDP_PORT, { tries: 100, label: 'arena_playtest' });
 
 function connect(url) {
   return new Promise((res, rej) => {

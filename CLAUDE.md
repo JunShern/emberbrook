@@ -109,6 +109,14 @@ git runs here, on branch `migration/3d-hybrid`.
 - node tools/slice_test.mjs · cine_test.mjs · seam_test.mjs · seam_walk.mjs ·
   economy_test.mjs · battle_sim / encounter_sim · transition_test.mjs --port=<port>
   (real Chrome; needs a server on the port serving /public)
+- **tools/cdp.mjs — the shared Chrome/CDP plumbing for EVERY browser tool** (transition_test,
+  playthrough_test, trigger_probe, arena_playtest, ow_shot). Never hardcode a CDP port or
+  match a page by literal URL again: `freePort()` (OS-assigned — two tools both shipped 9351
+  and the collision reported "chrome never exposed a page", a lie about the world caused by a
+  neighbour), `GAME_PAGE` (matches BOTH /play.html and /play3d.html — server.js serves both),
+  `findPage()` (a failure that DUMPS every CDP target it saw and separates "CDP unreachable"
+  from "matcher wrong"), `killOrphans()`, `chromeArgs()`. The rule it encodes: AN INSTRUMENT
+  THAT FINDS NOTHING MUST PROVE IT COULD HAVE FOUND SOMETHING.
 - node tools/dialogue_style.mjs — THE STYLE GATE (no browser, no network): every spoken,
   `system` and `narrate` box in chapter1.js + chapter2.js + dialogue.json against
   VOICES.md's OWN numbers — two sentences a box, 25/30-word ceilings, one capped word,
