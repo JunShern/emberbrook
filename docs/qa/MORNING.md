@@ -5,6 +5,19 @@ the paused state; the lanes have since run). ~95 commits, all pushed and verifie
 
 ---
 
+## ✅ IT PLAYS END TO END (confirmed 13:00)
+
+`NEW GAME` on `/` → Chapter One in the lit Emberbrook → the Old Gate → the valley road →
+Dellhollow → Chapter Two's end card. **`playthrough_test` 51 passed / 0 failed** in real
+Chrome from a cleared save, and it never calls `Story.force`: **all 24 beats fire on their
+own triggers.** transition_test 168/0, story_test 1021/0, dialogue_test 1400/0,
+dialogue_style PASS, economy 225/0, seam_walk 10/10.
+
+The seal would have been PERMANENT, and a gate caught it: the map's `sealedUntil` named
+`ch1.gateOpen`, but the only thing that ever set that flag was an in-memory object inside
+the 2D engine play3d never loads. `story_test`'s flag ledger found it as a read with no
+writer — the class of bug that only shows up when a player reaches the gate.
+
 ## DO THIS FIRST
 
 **Open `localhost:3000` and press NEW GAME.** Until tonight there was no front door: every
