@@ -1635,6 +1635,11 @@ Object.assign(window.SIM,{
     return SGE.length-1; },
   // ---- the in-place swap's own test surface ---------------------------------
   scene(){ return SCENE; },
+  // Allocation-free "is a transition in flight". SIM.cine() and SIM.transitions()
+  // both carry `busy`, but both build an object, and this one is read on EVERY
+  // physics tick by the story director — a beat must never open inside the window
+  // between the veil going up and the new scene being playable.
+  busy(){ return SGbusy; },
   // renderer.info is the ONLY honest answer to "did the swap leak". A count that
   // does not come back to where it started after a round trip means something this
   // scene uploaded was dropped without being disposed, and three.js cannot know.

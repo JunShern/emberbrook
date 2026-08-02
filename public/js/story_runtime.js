@@ -45,6 +45,15 @@
   var log = [];                     // {id, at} — what fired this session, for the harness
 
   var HAS_DOM = typeof document !== 'undefined' && !!document.createElement;
+  // ?nostory=1 (or window.__NOSTORY) — the escape hatch, and it exists for the same
+  // reason ?nomusic=1 and ?walklock=0 do: a harness that is measuring something ELSE
+  // must be able to get a story-free world without anybody switching the story off
+  // by default. It is NEVER the default and no shipped gate sets it: a gauntlet that
+  // passes because the story was disabled is worth nothing.
+  var OFF = (function () {
+    try { if (window.__NOSTORY) return true;
+      return new URLSearchParams(location.search).get('nostory') === '1'; } catch (e) { return false; }
+  })();
 
   function G() { return window.GS && window.GS.state ? window.GS : null; }
   function flags() { var g = G(); return g ? g.state.flags : null; }
@@ -254,11 +263,18 @@
   }
 
   function tick() {
-    if (busy || !DATA) return;
+    if (busy || !DATA || OFF) return;
     // A beat must never open on top of another modal — the shop, the pause menu,
     // the dialogue window or a transition all hold UILOCK, and all four of them
     // own the screen while they do.
     if (window.UILOCK && UILOCK.active()) return;
+    // NOR INSIDE A TRANSITION. UILOCK is not enough: transitionTo() raises the veil
+    // and sets SGbusy BEFORE sgSwap takes UILOCK('transition'), so there is a
+    // fade-length window — 350 ms, ~20 physics ticks — in which the scene is on its
+    // way out and nothing holds the modal lock. A beat opening there would play
+    // over a scene the player is leaving, and would still hold UILOCK when the new
+    // one arrives. (Plan §6: "a beat never runs while SGbusy or UILOCK.active()".)
+    if (window.SIM && SIM.busy && SIM.busy()) return;
     if (++ticks % 6) return;                   // beats are not frame-critical
     var bs = DATA.beats || [];
     for (var i = 0; i < bs.length; i++) if (eligible(bs[i])) { runBeat(bs[i]); return; }
