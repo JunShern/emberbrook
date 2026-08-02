@@ -109,7 +109,7 @@
           }
         },
         {
-          "objective": "Emberwake — greet the villagers (Poppy, and Mara by the Heartlight)"
+          "objective": "Emberwake — greet the villagers (Poppy at her bread stall, Mara by the Heartlight)"
         }
       ]
     },
@@ -269,9 +269,9 @@
       "chapter": 1,
       "scene": "emb-cine",
       "at": [
-        49.76,
+        51.4,
         1.5,
-        -44.29
+        -43.0
       ],
       "r": 3.2,
       "when": {
@@ -386,9 +386,9 @@
       "chapter": 1,
       "scene": "emb-cine",
       "at": [
-        56.2,
-        -0.2,
-        11.6
+        56.6,
+        -0.21,
+        12.2
       ],
       "r": 3.4,
       "when": {

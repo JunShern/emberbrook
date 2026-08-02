@@ -148,7 +148,7 @@
       "name": "the cat",
       "scene": ["townwalk", "del-cine"],
       "district": "locksfoot",
-      "position": [57.43, 1.00, -28.10],
+      "position": [57.93, 1.00, -27.70],
       "facing": 250,
       "height": 0.30,
       "radius": 1.5,
@@ -158,7 +158,7 @@
       "idleBehavior": "wander",
       "wander": { "radius": 0.9, "speed": 0.35 },
       "dialogue": "mochi.hail",
-      "note": "'Mochi has located the eel-stall. The party's marching order has quietly changed.' — Beat 2. He is at the fish dock because of course he is. MOVED 2026-08-01, a PRE-EXISTING defect the new arrival gate found rather than one this lane made: at 49.10/-28.20 his 0.9 m errand carried him 0.19 m PAST the waterfront>fishdock cut spawn, so a player taking that cut landed on the cat. 57.43 is 5.23 m clear of every arrival and 1.63 m from the eel-wife — which is also the first time this record has actually put him AT the stall the line is about, six metres closer than the post it was authored at. Facing 250 is at her, and at the eels."
+      "note": "'Mochi has located the eel-stall. The party's marching order has quietly changed.' — Beat 2. He is at the fish dock because of course he is. MOVED 2026-08-01, a PRE-EXISTING defect the new arrival gate found rather than one this lane made: at 49.10/-28.20 his 0.9 m errand carried him 0.19 m PAST the waterfront>fishdock cut spawn, so a player taking that cut landed on the cat. 57.43 is 5.23 m clear of every arrival and 1.63 m from the eel-wife — which is also the first time this record has actually put him AT the stall the line is about, six metres closer than the post it was authored at. Facing 250 is at her, and at the eels. MOVED 0.64 m 2026-08-02 (findability lane): at (57.43, -28.10) only 29% of the cat's own 0.30 m box cleared `fishdock`'s depth map — eel-stall clutter in front of him; at (57.93, -27.70) it is 100% (tools/findability_test.mjs)."
     },
 
     {
@@ -300,14 +300,14 @@
       "name": "Poppy",
       "scene": ["emb-townwalk", "emb-cine"],
       "district": "square",
-      "position": [49.76, 1.50, -44.29],
-      "facing": 85,
+      "position": [51.40, 1.50, -43.00],
+      "facing": 92,
       "portrait": "poppy",
       "body": { "type": "model", "src": "assets/characters/mara/mara-v1.glb", "tint": "#e8b294", "h": 1.09 },
       "bodyNote": "borrowed body: mara's 3D model in bakery terracotta. Poppy's own GLB is outstanding (see rowan).",
       "idleBehavior": "stand",
       "dialogue": "poppy.hail",
-      "note": "Her own doorstep — walk_pad_bakery, the door AND the serving window in the same wall, which the map calls 'warm window on the square'. The audit's post is the bakery landmark (47.2, 45.4); that is the building CENTRE and has no walk surface, so the pad 3.4 m east of it is the same post made standable. Facing 85 is out at the square, which is the direction a bread-window faces. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (50.62, -45.12) she was 1.20 m from the bakery door trigger at [51.82, 1.57, -45.12] r 1.8, i.e. 0.60 m INSIDE it — standing in her own doorway, her prompt arguing with the door's. Moved 1.2 m along the frontage to the WINDOW half of the wall: 2.22 m from the trigger centre, 0.42 m clear. Verified on the walk network, not by eye — walkGround (play3d's own rule, replayed against emb-cine/scene.glb's triangles) reads 1.57 here and the body box is clear."
+      "note": "Her own doorstep — walk_pad_bakery, the door AND the serving window in the same wall, which the map calls 'warm window on the square'. The audit's post is the bakery landmark (47.2, 45.4); that is the building CENTRE and has no walk surface, so the pad 3.4 m east of it is the same post made standable. Facing 85 is out at the square, which is the direction a bread-window faces. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (50.62, -45.12) she was 1.20 m from the bakery door trigger at [51.82, 1.57, -45.12] r 1.8, i.e. 0.60 m INSIDE it — standing in her own doorway, her prompt arguing with the door's. Moved 1.2 m along the frontage to the WINDOW half of the wall: 2.22 m from the trigger centre, 0.42 m clear. Verified on the walk network, not by eye — walkGround (play3d's own rule, replayed against emb-cine/scene.glb's triangles) reads 1.57 here and the body box is clear. MOVED AGAIN 2026-08-02 BY THE FINDABILITY LANE, AND THIS IS THE MOVE THAT UNBLOCKED CHAPTER ONE. At (49.76, -44.29) she stood 0.9 m from her own festival stall (map landmark poppy-stall at 50.19/45.15), and from `square` — the ONLY shot whose band owns that ground — the stall's canopy at 3.3-3.8 m covered her ENTIRE body column. play3d's exact-pixel depth occlusion therefore discarded every one of her pixels: 2.8% of the body survived the plate's depth map (tools/findability_test.mjs). She was in the scene, Object3D.visible true, projecting to a valid on-screen pixel, and INVISIBLE — the user reported 'I couldn't find poppy' and could not clear the chapter's first objective. Moved 2.06 m onto the plaza side of the canopy: 100% of the body clears the depth map, ground y 1.50, 2.16 m clear of the bakery door trigger [51.818, 1.57, -45.115] r 1.8, still her own frontage and still her stall. Facing 92 is out at the Heartlight, which is where the greeting comes from. THE LESSON, now a gate: a post verified on the walk network is verified for the BODY, not for the CAMERA. 'She can stand there' and 'the player can see her' are two measurements, and until findability_test this repo only ever made the first."
     },
     {
       "id": "mara",
@@ -358,7 +358,7 @@
       "name": "the cat",
       "scene": ["emb-townwalk", "emb-cine"],
       "district": "woodroad",
-      "position": [56.20, -0.20, 11.60],
+      "position": [56.60, -0.21, 12.20],
       "facing": 340,
       "height": 0.30,
       "radius": 1.5,
@@ -367,7 +367,7 @@
       "idleBehavior": "wander",
       "wander": { "radius": 1.1, "speed": 0.35 },
       "dialogue": "mochi.waystone",
-      "note": "The waystone, OUTSIDE the arch on the Whisperwood road — the user's 2026-08-01 REDLINE puts it there and names it as where Mochi hires himself to Vesper. A SECOND RECORD, not a move: id 'mochi' is the Dellhollow cat at the eel stall and both towns need him, so the two posts are two records with two ids and two hail nodes. Same plate, same cat. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (56.36, 10.19) he was 1.57 m from the arch>waystone cut's landing spawn [56.67, -0.18, 8.65] — 0.47 m after his 1.1 m errand is subtracted, so a player arriving on that cut materialised inside a wandering cat. Moved 1.4 m UP the road toward the stone itself (the waystone is at runtime z 12.0, he is now at 11.60): 2.99 m from the spawn, 1.89 m after the errand."
+      "note": "The waystone, OUTSIDE the arch on the Whisperwood road — the user's 2026-08-01 REDLINE puts it there and names it as where Mochi hires himself to Vesper. A SECOND RECORD, not a move: id 'mochi' is the Dellhollow cat at the eel stall and both towns need him, so the two posts are two records with two ids and two hail nodes. Same plate, same cat. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (56.36, 10.19) he was 1.57 m from the arch>waystone cut's landing spawn [56.67, -0.18, 8.65] — 0.47 m after his 1.1 m errand is subtracted, so a player arriving on that cut materialised inside a wandering cat. Moved 1.4 m UP the road toward the stone itself (the waystone is at runtime z 12.0, he is now at 11.60): 2.99 m from the spawn, 1.89 m after the errand. MOVED AGAIN 0.72 m 2026-08-02 (findability lane): at (56.20, 11.60) the cat was 0% visible from `waystone`, the shot that owns that ground — a 0.30 m body behind the roadside stone, measured on its OWN box by tools/findability_test.mjs (sampling a 0.9 m column over a 0.30 m cat measures the air above the cat and reports 33%). At (56.60, 12.20) he is 100% clear AND under the waystone lantern: plate ground luminance 0.70 against 0.28 where he was. Still 3.55 m from the cut spawn, 2.45 m after the errand. ch1.see.mochi's trigger moved with him."
     },
 
     {
@@ -375,13 +375,13 @@
       "name": "the miller",
       "scene": ["emb-townwalk", "emb-cine"],
       "district": "homerow",
-      "position": [48.02, 2.00, -60.54],
+      "position": [48.62, 2.00, -59.54],
       "facing": 124,
       "body": { "type": "model", "src": "assets/characters/mara/mara-v1.glb", "tint": "#cfc2a4", "h": 1.09 },
       "bodyNote": "archetype villager: mara's model in flour-dust. THE MILLER IS A WOMAN BECAUSE THE FRAME SAID SO: authored as finn tinted, she and emb.neighbour 8.5 m up the lane were the same model in near-identical greens, and the Home Row screenshot showed the two of them in ONE FRAME as one figure pasted twice — the exact defect _bodies warns about. A different model was the fix; tint and height alone were not enough at that distance. Bust emb.miller -> villager-woman.",
       "idleBehavior": "stand",
       "dialogue": "emb.miller.hail",
-      "note": "Mill lane, at walk_pad_watermill. THE REASON: the map names this edge 'mill lane' and the watermill is the only working building on Home Row; a mill with nobody at the wheel-gate is a prop. Facing 124 is at the mill door."
+      "note": "Mill lane, at walk_pad_watermill. THE REASON: the map names this edge 'mill lane' and the watermill is the only working building on Home Row; a mill with nobody at the wheel-gate is a prop. Facing 124 is at the mill door. MOVED 1.17 m 2026-08-02 (findability lane): at (48.02, -60.54) she was 0% visible from `homerow`, the shot whose band owns that ground — entirely behind the mill's own mass. Here she is 100% clear (tools/findability_test.mjs). SEPARATE AND UNFIXED, FOR THE LIGHTING LANE: the plate's ground luminance behind her is 0.004 — she now clears the depth map into pitch dark, which is visible-but-not-readable. The best-lit clear cell within 9 m is (46.0, -56.4) at 0.45, but that is 4.6 m off the mill door and would break the post's own reason."
     },
     {
       "id": "emb.neighbour",
