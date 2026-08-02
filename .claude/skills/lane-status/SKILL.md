@@ -120,6 +120,24 @@ Then do two things with it:
    looping. A lane doing something its brief never asked for gets a ⚠️ and a direct
    question via SendMessage — recognizing this is the coordinator's job, not the user's.
 
+**PROCESS CHECKS MUST BE CASE-INSENSITIVE AND MUST EXCLUDE WAITER SHELLS** (2026-08-03,
+both halves paid for within an hour):
+  * The Blender binary is `/Applications/Blender.app/Contents/MacOS/**B**lender` — capital B —
+    and `pgrep -f` is CASE-SENSITIVE. `pgrep -f blender` returns 0 while a bake is mid-render.
+    I reported "zero Blender" all evening on that reading and told a lane to re-spawn a bake
+    that was ten minutes into its beauty pass; it correctly refused, because re-spawning would
+    have recreated a write-race this repo has already paid for. **Always `pgrep -if`.**
+  * The converse bit a lane the same hour: its `pgrep -f playthrough_test` matched three
+    WAITER SHELLS whose command lines merely contained the string, inventing a 25-minute
+    blocker on an idle machine. Exclude `zsh -c`/`sh -c` wrappers, as `cdp.mjs killOrphans`
+    already does.
+  * The rule this yields is cdp.mjs's law plus its converse: AN INSTRUMENT THAT FINDS NOTHING
+    MUST PROVE IT COULD HAVE FOUND SOMETHING — **and one that finds something must prove it
+    found the right thing.**
+  * A stale artifact mtime NEVER proves a bake is dead: `cine_bake` writes `bg.png` only at
+    the very end, so an hours-old plate is normal until the process is gone. Check the
+    process, case-insensitively, before concluding.
+
 Practical extraction: walk the tail's JSONL lines backwards to the most recent
 `tool_use` (name + first ~120 chars of its `command`/`description`/`prompt` input) or,
 failing that, the last assistant text snippet. Record WHEN that event happened — an
