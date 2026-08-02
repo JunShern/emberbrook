@@ -729,7 +729,13 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       ? new THREE.MeshBasicMaterial({color:0x2fff6a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}) // walkable = green fill
       : new THREE.MeshBasicMaterial({color:0x5ab4ff,wireframe:true,transparent:true,opacity:.55});                        // objects  = blue wireframe
     SCENEMATS.add(o.userData.hideMat); SCENEMATS.add(o.userData.dbgMat);
-    const noStand=/^water_/i.test(o.name)||/^lm_/i.test(o.name)||/^veg_/i.test(o.name);   // lm_ = blockout placeholder massing (non-solid until detailed); veg_ = foliage, never standable (tree canopies were climbable terrain)
+    // fx_ ADDED 2026-08-02: `fx_dam4_spray` (mat_spray) — a water-spray CARD standing
+    // across the Dellhollow slipway boardwalks — was the town's third-largest blocker
+    // at 2,999 blocked steps, and 87% (6,690/7,663) of every blocked step in the
+    // boatyard district. This IS the "invisible geometry here blocking me" the user
+    // annotated on their own screenshot. del-cine ships 16 fx_ meshes; all were solid.
+    // An effect card has no business being collision.
+    const noStand=/^water_/i.test(o.name)||/^lm_/i.test(o.name)||/^veg_/i.test(o.name)||/^fx_/i.test(o.name);   // lm_ = blockout placeholder massing (non-solid until detailed); veg_ = foliage, never standable (tree canopies were climbable terrain); fx_ = effect cards (spray, glow), never collision
     if(/^bar_/i.test(o.name)){ if(!RT){ o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); SCENEMATS.add(o.material); } }
     else if(!RT){
       // CANON: fixed-camera occlusion comes from the baked depth map (depth.png,
@@ -1026,6 +1032,12 @@ function phys(inp){
  // means SIM.move/SIM.tick exercise the real prompt logic — rAF is throttled in a
  // background tab, so a rAF-driven prompt would be untestable headlessly.
  sgTick();
+ // THE STORY DIRECTOR rides the same tick, and its place in the order is the whole
+ // of its precedence contract: AFTER sgTick, so a beat can never beat a transition
+ // to the frame (you finish walking through the door, then the chapter speaks), and
+ // BEFORE Encounters, so a scripted beat always wins over an ambush — which is the
+ // same precedence Encounters already documents against sgTick.
+ if(window.Story&&Story.tick) Story.tick();
  if(window.Shop&&Shop.tick) Shop.tick();   // counter prompts ride the physics tick like doors do
  if(window.Npc&&Npc.tick) Npc.tick();      // NPC prompts ride it too — AFTER Shop, so a shopkeeper owns his own counter banner
  if(window.Encounters) Encounters.tick();  // encounter director: measures its own travel; must lose to sgTick's transitions
@@ -1242,11 +1254,30 @@ function sgHit(e){
   const d=Math.hypot(px,pz);
   return {d, dy, in: d<=e.r && dy<=vt};
 }
+// ---- CONDITIONAL EDGES — the runtime gate the generator has been waiting for ----
+// A map exit may be SEALED until a story flag turns true (emberbrook.map.json's
+// 'sigil-gate-downstream' carries `sealed` + `sealedUntil`), and
+// tools/scenegraph_derive.mjs prints an explicit instruction saying the runtime
+// needs this before such a pair can ship as a live edge. An edge with `when` is
+// evaluated with Dialogue.check() — the SAME evaluator dialogue.json's node
+// conditions use, reading GS.state.flags — so there is no second condition
+// language in the project and a flag means one thing everywhere.
+//
+// IT FAILS CLOSED, deliberately. If dialogue.js has not loaded (or has no data),
+// a conditional edge does NOT exist. Seam canon's sealed rule is that "the sealed
+// presentation is the absence"; a gate that opens because a module was slow is a
+// worse defect than a gate that stays shut for a frame.
+function sgLive(e){
+  if(!e.when) return true;
+  if(window.Dialogue&&Dialogue.check) { try{ return !!Dialogue.check(e.when); }catch(err){ return false; } }
+  return false;
+}
 function sgTick(){
   sgOpen();
   if(!SG||SGbusy) return;
   let best=null, fire=null;
   for(const e of SGE){
+    if(!sgLive(e)) continue;                 // sealed: no prompt, no fire — see sgLive
     // CAMERA GATING: a boundary and the boundary back are the SAME place on the
     // ground, so an edge only exists while you are in the shot it leaves. Without
     // this the two cuts of one seam would fight over "nearest wins" forever.
@@ -1302,6 +1333,7 @@ function markersTick(t){
   const on=MARKERS_ON&&SG&&!SGbusy&&cam&&!(window.UILOCK&&UILOCK.active());
   const seen=new Set();
   if(on) for(const e of SGE){
+    if(!sgLive(e)) continue;                                  // sealed: a red arrow onto a shut gate is a lie
     if(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id) continue;  // not in this shot
     _mkv.set(e.at[0],e.at[1]+2.1,e.at[2]).project(cam);
     if(_mkv.z>1||_mkv.x<-1.05||_mkv.x>1.05||_mkv.y<-1.05||_mkv.y>1.05) continue;
@@ -1551,8 +1583,12 @@ Object.assign(window.SIM,{
     return {i, id:e.id, kind:e.kind, to:e.to, label:e.label, at:e.at, r:e.r,
             dist:+h.d.toFixed(2), dy:+h.dy.toFixed(2), inRange:h.in, armed:e.armed,
             spawn:e.spawn, camFrom:e.camFrom||null, cam:e.cam?e.cam.key:null,
-            auto:!!e.auto, band:e.band||null,
-            live:!(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id)}; }); },
+            auto:!!e.auto, band:e.band||null, when:e.when||null, open:sgLive(e),
+            // `live` = "this edge can fire from where the player is standing right
+            // now": in the current shot AND not sealed by a story flag. A sealed
+            // edge is reported (so a test can assert its ABSENCE from play, which
+            // is the presentation seam canon asks for) but is never live.
+            live:sgLive(e)&&!(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id)}; }); },
   // ---- cinematic cameras: the whole state a test needs to judge a cut ----------
   cine(){ if(!CINE) return null;
     return {shot:CINECAM?CINECAM.id:null, name:CINECAM?CINECAM.name:null,
@@ -1599,7 +1635,10 @@ Object.assign(window.SIM,{
   // and resolve when the transition has fully settled. This is SIM.go() with a
   // promise: a scripted gauntlet cannot poll SGbusy without racing the fade.
   door(to,via){
-    const i=SGE.findIndex(e=>e.to===to&&e.from===SCENE&&(!via||String(e.id).indexOf(via)>=0));
+    // sgLive: a scripted gauntlet must not be able to walk through a sealed gate
+    // the player cannot see. The end-to-end proof asserts the flag flips the edge
+    // ON, and that assertion is worthless if this could take it either way.
+    const i=SGE.findIndex(e=>e.to===to&&e.from===SCENE&&sgLive(e)&&(!via||String(e.id).indexOf(via)>=0));
     if(i<0) return Promise.resolve({error:'no edge to '+to+' from '+SCENE,
                                     have:SGE.filter(e=>e.to!==SCENE).map(e=>e.id)});
     const t0=performance.now(), from=SCENE, e=SGE[i];
@@ -1629,6 +1668,11 @@ sceneLoad().then(r=>{ if(r) TRANSLOG.push({scene:r.scene, kind:'boot', ms:Math.r
 <script src="js/ui_kit.js"></script>
 <script src="js/shop.js"></script>
 <script src="js/dialogue.js"></script>
+<!-- STORY. After dialogue.js because every beat's prose is played through that
+     window and its conditions are evaluated by Dialogue.check(); before npc.js so
+     a beat that fires on arrival has already claimed UILOCK when the NPC prompts
+     arm. Self-arms at load and re-arms on 'eb-scene' like every other module. -->
+<script src="js/story_runtime.js"></script>
 <script src="js/npc.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/route_overlay.js"></script>

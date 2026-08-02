@@ -727,9 +727,35 @@
     });
   }
 
+  // ---- INJECTION: one window, two data files --------------------------------
+  // The story layer (story_runtime.js / game/story.json) authors CUTSCENE prose,
+  // and a cutscene line is the same thing as an NPC line — same box, same typing,
+  // same busts, same cut-ins, same `if`/`effects`/`choices`, same UILOCK. So the
+  // story does not get a second renderer: it hands its nodes to this one and then
+  // calls play() like anybody else. Speakers may be added too, for a voice the
+  // ambient table never needed (a narrator, a one-scene visitor).
+  //
+  // MERGE, DO NOT REPLACE, and dialogue.json WINS: the ambient file is the one
+  // dialogue_test polices, so an id collision must never let an unchecked story
+  // node quietly shadow a checked one. It warns instead.
+  function inject(bundle) {
+    if (!bundle) return 0;
+    return load().then(function (d) {
+      if (!d) { console.warn('[Dialogue] inject before data — story nodes dropped'); return 0; }
+      var n = 0;
+      for (var s in (bundle.speakers || {}))
+        if (!DATA.speakers[s]) { DATA.speakers[s] = bundle.speakers[s]; }
+      for (var k in (bundle.nodes || {})) {
+        if (DATA.nodes[k]) { console.warn('[Dialogue] inject: node "' + k + '" already exists in dialogue.json — kept the shipped one'); continue; }
+        DATA.nodes[k] = bundle.nodes[k]; n++;
+      }
+      return n;
+    });
+  }
+
   window.Dialogue = {
-    load: load, play: play,
-    node: node, speaker: speaker, check: check,
+    load: load, play: play, inject: inject,
+    node: node, speaker: speaker, check: check, effects: effects,
     close: function () { if (S) finish(); return true; },
     get isOpen() { return !!S; },
     get data() { return DATA; },

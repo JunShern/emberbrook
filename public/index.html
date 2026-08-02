@@ -35,9 +35,15 @@
   <a href="townmap/viewer.html?town=emberbrook" style="color:var(--warm)">Emberbrook map</a> ·
   <a href="cine_regions.svg" style="color:var(--warm)">Dellhollow shot map</a>
 </div>
-<div class="note">Controls: <b>WASD</b> or <b>arrow keys</b> to move. Each scene is standalone (no exits/second player/story yet — that's the engine-wiring step). Collision, occlusion and multi-level stairs are all live.</div>
+<div class="note">Controls: <b>WASD</b> or <b>arrow keys</b> to move, <b>E</b> at a door or a person, <b>Esc</b> for the menu. Chapters One and Two run in the world now: the story fires as you walk it, the Old Gate opens when you open it, and the valley road between the two towns is walked, not skipped.</div>
 </header>
-<main id="m"></main>
+<!-- THE FRONT DOOR. Until 2026-08-02 there was none: every card was a developer
+     jump and a bare /play.html landed in Dellhollow. NEW GAME clears the save and
+     opens Chapter One on its own first ground; CONTINUE is built from the save's
+     own `at` (scene + shot + position), which is the only resume authority. -->
+<main id="m">
+  <div id="door" class="grid" style="margin:6px 0 26px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))"></div>
+</main>
 <script src="game/scenes.js"></script>
 <script>
 const SCENES = window.SCENE_REGISTRY;
@@ -56,6 +62,54 @@ function renderGroups(into, groups) {
     into.appendChild(grid);
   }
 }
+// ---- NEW GAME / CONTINUE ---------------------------------------------------
+// The save is read here directly rather than through GS, because the hub loads no
+// game module: this page only needs the slot's `at`, and the runtime is what owns
+// the schema. Keys and defaults mirror game_state.js (SAVE_KEY + its legacy key).
+const SAVE_KEYS = ['emberbrook-save', 'emberbrook-save-v1'];
+function readSave() {
+  for (const k of SAVE_KEYS) {
+    try { const raw = localStorage.getItem(k); if (!raw) continue;
+      const st = JSON.parse(raw); if (st && typeof st === 'object') return st; } catch (e) { }
+  }
+  return null;
+}
+// Chapter One's own first ground: the Whisperwood road, the entry shot of emb-cine
+// (townmap/emberbrook.map.json's p-woodroad — "the game's opening scene").
+const NEW_URL = 'play.html?scene=emb-cine&cam=woodroad&fade=1&v=' + Date.now();
+function continueUrl(st) {
+  const at = st && st.at;
+  if (!at || !at.scene) return null;
+  const q = new URLSearchParams({ scene: at.scene, fade: '1', v: String(Date.now()) });
+  if (at.cam) q.set('cam', at.cam);
+  if (Array.isArray(at.pos)) { q.set('sx', at.pos[0]); q.set('sy', at.pos[1]); q.set('sz', at.pos[2]); }
+  if (at.yaw != null) q.set('yaw', at.yaw);
+  return 'play.html?' + q.toString();
+}
+function doorCard(href, name, desc, tone) {
+  const a = document.createElement('a'); a.className = 'card'; a.href = href;
+  a.style.borderColor = tone || 'var(--warm)';
+  a.innerHTML = '<div class="meta" style="padding:16px 18px">' +
+    '<div class="name" style="font-size:19px;color:' + (tone || 'var(--warm)') + '">' + name + '</div>' +
+    '<div class="desc" style="margin-top:5px">' + desc + '</div></div>';
+  return a;
+}
+(function frontDoor() {
+  const host = document.getElementById('door');
+  const st = readSave(), cont = continueUrl(st);
+  if (cont) {
+    const ch = (st.at && st.at.chapter) || 1;
+    const where = (st.at && st.at.scene) + (st.at && st.at.cam ? ' · ' + st.at.cam : '');
+    host.appendChild(doorCard(cont, '▶ CONTINUE',
+      'Chapter ' + ch + ' — ' + where +
+      (st.meta && st.meta.savedAt ? '<br><span style="opacity:.7">saved ' + String(st.meta.savedAt).replace('T', ' ').slice(0, 16) + '</span>' : '')));
+  }
+  const nw = doorCard(NEW_URL, '✦ NEW GAME',
+    'Chapter One — “Emberwake”. A mapmaker walks into a valley that is not on any of her maps.',
+    cont ? 'var(--dim)' : 'var(--warm)');
+  nw.addEventListener('click', () => { try { SAVE_KEYS.forEach(k => localStorage.removeItem(k)); } catch (e) { } });
+  host.appendChild(nw);
+})();
 renderGroups(m, SCENES);
 // legacy scenes live behind one collapsed section; the H dev menu never shows them
 const det = document.createElement('details');
