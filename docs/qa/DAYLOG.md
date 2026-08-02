@@ -14907,3 +14907,79 @@ reason. Verified on the ARTIFACT: a full `--out` build carries `townmap/*.camera
 `game/lightrigs.json`.
 
 **GATES:** `slice_test` 848/0 · `build-static` exit 0, artifact checked.
+
+---
+
+## 2026-08-02 late — THE FIND-POPPY LANE: a villager the player could not see
+
+**THE BUG THE USER HIT.** "I wasn't able to advance past vesper's first Town Square
+objective ('speak to mara and poppy') because I couldn't find poppy." Chapter One's
+FIRST objective, dead — the first thing any new player does.
+
+**THE CAUSE, MEASURED.** Poppy was authored at `(49.76, -44.29)`, 0.9 m from her own
+festival stall (map landmark `poppy-stall`, 50.19/45.15). `square` is the ONLY shot
+whose band owns that ground, and from `square`'s high, steep angle the stall's canopy —
+occluder samples at runtime `(50.3–50.8, -45.2…-46.0)`, **3.26–3.82 m up**, ~2 m nearer
+than her along the view ray — covered her ENTIRE body column. play3d's exact-pixel depth
+occlusion therefore discarded every one of her pixels. Depth-map census of her body:
+**2.8% visible**. She was in the scene, `Object3D.visible === true`, `Npc.debug()` counted
+her, she projected to a valid on-screen pixel at plate px `(1039, 355)` — and she was
+invisible. Confirmed BY EYE, not by the number: the before-frame at that pixel is bare
+stall canopy; the after-frame has a terracotta figure in it.
+
+**WHY EVERY GATE WAS GREEN.** `dialogue_test` measures posts against spawns and trigger
+circles (the BODY's problem). `story_test` measures flags and node ids. `playthrough_test`
+passed the beat 51/0 because it drives `SIM.tp()` to the coordinate and calls
+`Npc.talk('poppy')` BY ID — neither of which needs her to be visible or reachable.
+**A TEST THAT TELEPORTS TO A COORDINATE AND CALLS A FUNCTION DOES NOT PROVE A HUMAN CAN
+FIND THE PERSON STANDING THERE.** The record's own note said "Verified on the walk
+network, not by eye" and that sentence was the whole defect: a post verified on the walk
+network is verified for the BODY, not for the CAMERA.
+
+**THE INSTRUMENT (new): `node tools/findability_test.mjs`** — no browser, no network,
+0.4 s. For every villager in a cinematic bundle it finds the shot whose band owns their
+post, projects their own body box into that camera, and reads `depth.png` to ask whether
+those pixels survive the plate. Also §5: every story beat with an `at` — the ground the
+player is SENT to must be visible from the camera they will be looking through. FAIL for
+anyone the story names (a speaker in a story node, or a beat trigger on their post),
+WARN for an ambient villager. It found four more instances the moment it existed.
+
+**PROJECTION, MEASURED NOT ASSUMED.** `cine.json`'s `fov` is VERTICAL, aspect is
+`depth.width/depth.height`. Checked against the running page (three.js reported fov 35 /
+aspect 1.75 for `square`): this file's NDC for Poppy is +0.548 vs the runtime's +0.554.
+Reading `fov` as HORIZONTAL puts her at +0.96, hard against the frame edge — a completely
+different and completely wrong diagnosis, which is exactly the wrong turn this lane took
+for its first twenty minutes.
+
+**FIXED (all four, one line of JSON each, each with the measurement in its note):**
+- `poppy` (49.76,-44.29) → **(51.40,-43.00)**, facing 92 · 2.8% → **100%** · 2.16 m clear
+  of the bakery door trigger · `ch1.see.poppy`'s `at` moved with her.
+- `mochi-emb` (56.20,11.60) → **(56.60,12.20)** · 0% → 100%, and now under the waystone
+  lantern (plate ground luminance 0.70 vs 0.28). `ch1.see.mochi`'s `at` moved with him.
+- `emb.miller` (48.02,-60.54) → **(48.62,-59.54)** · 0% → 100%.
+- `mochi` (del-cine) (57.43,-28.10) → **(57.93,-27.70)** · 29% → 100%.
+- Objective text now says WHERE: "greet the villagers (Poppy at her bread stall, Mara by
+  the Heartlight)".
+
+**MEASURED, LEFT UNFIXED, HANDED ON:**
+- `del.deckhand` (Dellhollow, ambient, no beat): **0%** of the body clears `shelf-east`'s
+  depth map, and his post is 0.70 m OUTSIDE every band box. Nearest legal fully-visible
+  cell is 4.52 m away at `(46.9,-7.6)` (lum 0.42). A 4.5 m move in a red-teamed town for a
+  villager no objective names is not this lane's call — it is a warning in the gate.
+- `emb.miller` now clears the depth map into **plate ground luminance 0.004** — pitch dark.
+  Visible-but-not-readable is the lighting lane's, not geometry's. Best-lit clear cell
+  within 9 m is (46.0,-56.4) at 0.45, 4.6 m off the mill door.
+- `dialogue_test` fails on `del.gullgirl` (arrival clearance −1.31 m, inside the cookhouse
+  door trigger by 0.24 m). **PRE-EXISTING at HEAD** — reproduced with npcs.json/story.json
+  stashed. Not this lane's, but somebody owns it.
+
+**REACHABILITY, PROVEN ON THE ENGINE.** Not a ray gate and not a teleport: `SIM.move()`
+walked the body from the square's own arrival spawn `(60.57,-32.98)` to `(52.47,-41.83)`,
+1.58 m from Poppy, camera staying `square` the whole way; `Npc.debug().near === 'poppy'`
+and `Npc.talk('poppy')` opened her window. **A walk test must read the dialogue first** —
+the first run reported the town unwalkable and had moved 0.00 m, because a story beat had
+UILOCK up and `phys()` returns immediately while it is.
+
+**GATES:** `findability_test` 69/0/2 warn · `story_test` 1021/0 · `slice_test` 848/0 ·
+`dialogue_test` unchanged from baseline (the two `del.gullgirl` rows, pre-existing) ·
+`playthrough_test --port=3000` green.
