@@ -83,7 +83,19 @@ stand), per-town sheets, the NPC conversation graph, and a continuity-check pane
 its keep immediately — widened to cover `story.json`, it caught 28 regressions where lifted
 lines had been re-condensed into walls of text.
 
-**Cameras — AUTHORED, NOT YET VISIBLE (corrected 11:55).** The earlier wording here said
+**Cameras — SHIPPED (updated 14:20; this supersedes the 11:55 correction below).** Seven of
+the eleven Emberbrook shots now render at the closer fov 20 lens and the plates are baked,
+committed and pushed. The town's median character height goes 59 → 65 px, and the shot that
+was pulled from night sign-off — the gate road, at 21.9% of its own ground visible behind
+tree canopy — comes back at **68.8%**. The other four are marked **closeness-limited** with
+the measurement that stopped them: a narrower lens stands the camera 1.8× further back, and
+on `orchard`, `square`, `pondlane` and `therise` that extra distance fills with foliage. All
+four keep their existing frames, byte for byte. `therise` is the one that is genuinely
+disappointing: it would have been the town's closest shot at 98 px, and its plate came back
+with 70% of the road it owns hidden, so it was refused. **The ants complaint is improved,
+not closed** — decision 5 below (an 18–22 shot round) is still the thing that closes it.
+
+**The 11:55 correction, kept for the record.** The earlier wording here said
 "every Emberbrook shot got closer", which overstated it. The *camera solutions* got closer
 and are committed (all eleven now carry the fov 20 lens; the mechanism turned out to be
 **the lens, not the angle**), and the draft measurements are real — gateroad 21.9% → 68.8%
@@ -91,8 +103,11 @@ visible, square's long-red ratchet retiring green. **But no plates ever baked**,
 still renders last night's framing. Cause: the visibility sweep hung — 8 h 25 m at 100% CPU
 with zero output — and because its output was buffered, "still running" was indistinguishable
 from "stuck". The lane was waiting on a result that was never coming when it hit the session
-limit. Process killed 11:55; the bake is being run now under the approved fallback (8 shots
-take the new framing, 3 revert to shipped at no bake cost).
+limit. Process killed 11:55; the bake then ran under the approved fallback — which was
+written as 8 shots taking the new framing and 3 reverting, and finished 7 and 4 because
+`therise` failed on its own plate. Two claims in that paragraph did not survive the bake and
+are corrected above: square's ratchet did NOT retire green (it is back at 38, red, with the
+frame it was measured on), and "all eleven carry the fov 20 lens" is now seven.
 
 ---
 

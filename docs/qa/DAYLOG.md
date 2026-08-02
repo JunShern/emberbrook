@@ -12394,6 +12394,105 @@ verdict without rendering. It was hardcoded to Dellhollow. Now:
     "buried in a crown" is separable from "something is in the way" — the pondlane failure
     mode, made measurable.
 
+## 2026-08-02 (midday) — THE CLOSENESS ROUND, FINISHED ON PLATES (Emberbrook), bake lane
+
+The round above authored eleven fov 20 solutions and baked NONE of them: its visibility
+sweep hung 8 h 25 m at 100% CPU with buffered output and the lane hit its session limit
+waiting on a result that was never coming. This lane ran the approved fallback — bake the
+eight, revert the three the draft contact sheet had already refused — and it came out
+SEVEN AND FOUR, because the eighth failed on its own plate.
+
+### THE SLATE AS IT NOW SHIPS
+
+    shot        fov   charPxFar        visibleFrac (bake, the oracle)
+    gateroad     20   61 ->  73        0.2188 -> 0.6875     the round's biggest win
+    arch         20   44 ->  69        0.6094 -> 0.7656
+    woodroad     20   59 ->  74        1.0000 -> 1.0000
+    waystone     20   76 ->  90        0.9062 -> 0.8438     accepted give-back
+    homerow      20   58 ->  65        0.7656 -> 0.7812
+    northlane    20   58 ->  63        0.5938 -> 0.5781     ONE probe of 64
+    gatefield    20   54 ->  62        0.9833 -> 1.0000
+    therise      35   69 (98 refused)  0.5000 (0.3000 refused)   CLOSENESS-LIMITED
+    orchard      35   50               0.7000 (0.3000 drafted)   CLOSENESS-LIMITED
+    square       35   37               0.7969 (0.6250 drafted)   CLOSENESS-LIMITED
+    pondlane     35   66               0.4062 (0.0620 drafted)   CLOSENESS-LIMITED
+
+Median charPxFar 59 -> 65 over the whole town (the eleven-shot median the earlier round
+projected at 69 assumed all eleven landed). Four of the eleven now carry an explicit
+per-shot `fov` 35 and a `closenessLimited` flag with the measurement that set it.
+
+### THE FOURTH REFUSAL, AND IT IS THE ENTRY WORTH KEEPING
+
+`therise` was NOT one of the seven frames the draft sheet reached, so it went to a full
+plate — and the plate measured **0.30 visibleFrac over 50 probes against the shipped
+plate's 0.50 over the SAME 50**. A twenty-point loss of its own walkable ground fails the
+round's ratified acceptance bar (a candidate ships only if it beats the number the shot
+ships with today), so it was refused, reverted, and its shipped plate restored.
+
+**IT COST THE ROUND'S SINGLE BIGGEST CLOSENESS GAIN**: charPxFar 69 instead of a delivered
+98, the best frame in the town on pixels alone. That is the trade the bar refuses — a
+character twice as big is not a win on a road where 70% of the ground it walks is behind
+something.
+
+**AND ITS OWN NOTE HAD PREDICTED IT**, which makes three for three this round: the shot's
+`_framing_note` already recorded *"this shot measured 100% on the blockout and 50.0% on the
+shipped bake — the dressing is the difference, so its sightline is a bake question, not a
+sweep one."* At fov 20 the blockout said 100.0% and the bake said 30.0%. Every note that
+carried its instrument was right; the round's cost each time was to a lane that read past
+one.
+
+**THE GENERALISATION, now with four members instead of three:** a narrower lens forces a
+1.79x longer standoff and a longer standoff puts more DRESSING between camera and subject,
+so the lens is free ONLY where the foreground is open. Open-foreground shots took the full
+gain and gave back nothing (woodroad 100% -> 100%, gatefield 98.3% -> 100%); vegetation-
+bound shots lost 20 to 34 points. The near-field gate cannot separate the two — it ray-casts
+the blockout bundle, whose trees are cones and most of which are not in it at all.
+
+**WHAT WOULD HAVE CAUGHT IT FOR THE PRICE OF NOTHING**: the draft contact sheet, which costs
+~130 s a frame at 1008x576/28 spp against ~660 s for a plate. Four of eleven shots were
+never drafted (arch, therise, homerow, northlane); one of those four was a 20-point
+regression and the other three were fine. FOR THE NEXT ROUND: draft ALL of them, then bake.
+
+### AN INSTRUMENT NOTE: A CYCLES STALL THAT IS NOT A SLOW RENDER
+
+Two of eight Blender launches on `emberbrook-dressed.blend` PARKED — main thread inside
+`ccl::Session::wait()` on a condition variable, **0.02 s of CPU in a 2-minute sample**, RSS
+207 MB against a 9.8 GB plate. Not slow: stopped. The first cost 21 minutes before it was
+diagnosed, and "still running" was indistinguishable from "stuck" — the same shape as the
+sweep hang that ended the previous lane, at the opposite end of the CPU dial.
+
+**THE DISCRIMINATOR IS CPU TIME, NOT WALL TIME, AND IT IS CHEAP**: sample `ps -o time` twice
+sixty seconds apart. A live 27 M-triangle Cycles frame sits at 700-900% CPU; a parked one
+advances by hundredths. Both stalls cleared on ONE retry, and the remaining plates ran under
+a watchdog that kills at 300 s of no CPU progress and retries once. The first stall
+coincided with real memory starvation (441 MB unused, 15 GB swap, a Chrome renderer at
+554% and ~4.6 GB) and 17 GB came back the instant the parked process died; the second did
+not (18 GB unused at launch), so memory pressure is not the whole story and the retry is
+what is actually known to work.
+
+### WHAT WAS VERIFIED, AND HOW
+
+Every plate on the ARTIFACT, per plate, never on the queue's report: the log's own BG/DPT/
+cine.json markers, the file bytes and mtime, cine.json's entry pos/aim/fov against the
+solved camera, and `appliedGrade` field-by-field against the grade the shot shipped with.
+**THE NIGHT GRADE WAS NOT RE-OPENED and is measured unchanged on all eleven** — 0.78/0.60/
+moon 2.0 for the four lampless shots (+ glow 0.35 and the 900 W waystone lantern on
+woodroad and waystone), 1.00/0.65 for the village with its per-shot floor-pass moons (arch
+3.14, therise 3.75, homerow 2.71, northlane 2.0, rest 1.5).
+
+The four reverted shots were proved to move NOTHING: each re-solves BYTE-IDENTICAL to its
+pre-round solved record, its pos/aim/fov match the shipped cine.json exactly, and its two
+plate files are SHA-1 blob-identical to the pre-round commit. `maxDist` 66 -> 100 does not
+bind (this town solves 22.1-53.0 m). The cut list is byte-identical to both prior solves.
+
+`square`'s charPxMin raise 38 -> 45 is WITHDRAWN with the frame it was measured on: a
+ratchet moves the day a frame delivers the pixels ON THE ORACLE, not the day one is solved.
+
+Gauntlet: **cine_test 480 ok / 1 failed** — the square ratchet, and only that; the eight
+stale-bake failures are gone. **seam_test 171 ok / 2 failed — UNCHANGED**, as the seam
+lane's invariance proof predicted, so that proof now has a second confirmation and the
+pairing still does not need re-testing.
+
 ---
 
 # 2026-08-02 — TRANSITIONS LANE: the derive stops guessing, the old gate stops being silence, and Dellhollow's gate stops being one-way
