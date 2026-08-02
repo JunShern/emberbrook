@@ -90,6 +90,12 @@ git runs here, on branch `migration/3d-hybrid`.
   battle_turnbased + battle_stage3d, encounters, ui_kit (FF-blue), shop, menu, npc,
   dialogue, **story_runtime**, route_overlay, music. Each self-arms at load AND
   re-arms on 'eb-scene'.
+- **public/game/lightrigs.json — THE PER-TOWN SUN, as runtime data** (2026-08-02). Tier 2 of
+  charLight()'s rig lookup: a town whose `<town>.cameras.json` carries no `defaults.lightRig`
+  (Dellhollow) gets its key direction/colour/energy from here. IT SHIPPED UNTRACKED ONCE —
+  the code that fetches it was committed, the file was not, so every clone and every `dist`
+  silently fell back to the page-default sun with only a console warning. A runtime data file
+  that is not in git is a bug that only reproduces off the author's machine.
 - Game data (public/game/): monsters, items, encounters, growth, shops, music.json
   (map rules first-match-wins), npcs.json, dialogue.json, **story.json**.
 - **THE STORY LAYER (2026-08-02 — read docs/plans/end-to-end-wiring.md first).**
