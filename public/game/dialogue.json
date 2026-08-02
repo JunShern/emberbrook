@@ -282,7 +282,7 @@
      "expr": "grave"
     },
     {
-     "text": "He's never once missed a noon. You may quote me. He'll pretend not to hear it.",
+     "text": "He's never once missed a noon. Quote me on it — he'll pretend not to hear.",
      "expr": "grave"
     }
    ],
@@ -296,7 +296,7 @@
    "speaker": "maren",
    "lines": [
     {
-     "text": "You're the stranger! Whole quay says so. The quay says everything, mostly wrong.",
+     "text": "You're the stranger! Whole quay says so — and the quay says everything, mostly wrong.",
      "expr": "happy"
     },
     {
@@ -351,7 +351,7 @@
      "expr": "awed"
     },
     {
-     "text": "I've been down it ten times. Ma says nine. Ma is wrong, for once, and I'm counting.",
+     "text": "I've been down it ten times. Ma says nine, and Ma is wrong for once.",
      "expr": "happy"
     }
    ],
@@ -394,7 +394,7 @@
    "lines": [
     "Don't lean on anything. Everything here is either hot, wet, or mine.",
     "Forty ton of pumpkins, going soft. In elegant rows.",
-    "Nineteen days in this queue. The queue has bunting now. We've named the seagulls.",
+    "Nineteen days in this queue. It has bunting now, and we've named the seagulls.",
     "\"Cut them for pie,\" my wife says. Madam, there is no fair for a November pumpkin."
    ],
    "effects": {
@@ -433,7 +433,7 @@
    "speaker": "hobb",
    "lines": [
     "Round. Round WHAT, exactly — the cliff? There's one road out of this gorge and it's wet.",
-    "You want north, so do forty ton of pumpkins. Get in the queue. It's a very patient queue."
+    "You want north, so do forty ton of pumpkins. Get in the queue — it's a patient one."
    ],
    "next": "hobb.ask"
   },
@@ -467,7 +467,7 @@
   "pell.again": {
    "speaker": "pell",
    "lines": [
-    "Sleep's for the day shift. Which is now. Which is the grudge."
+    "Sleep's for the day shift — which is now. Which is the grudge."
    ],
    "next": "pell.ask"
   },
@@ -620,7 +620,7 @@
    "speaker": "creel",
    "lines": [
     "Drying line. Somebody's wash came down in the wind and somebody blamed the wind.",
-    "It was the splice. It's always the splice. I'll not say whose."
+    "It was the splice. It's always the splice — and I'll not say whose."
    ],
    "next": "creel.ask"
   },
@@ -631,7 +631,7 @@
    "else": "nib.again",
    "speaker": "nib",
    "lines": [
-    "That one's Bailiff. That one's Soup. The big one's called the Harbormistress.",
+    "That one's Bailiff, that one's Soup. The big one's called the Harbormistress.",
     "Don't TELL the harbormistress.",
     "You're littler than the quay said."
    ],
@@ -671,7 +671,7 @@
    "speaker": "nib",
    "lines": [
     "Me. Nobody said so, but nobody else does it, so it's me.",
-    "They go in order. Biggest at the top. Everybody slides down one when a bigger one lands."
+    "They go in order, biggest at the top. Everybody slides down one when a bigger one lands."
    ],
    "next": "nib.ask"
   },
@@ -776,7 +776,7 @@
   "boatwright.time": {
    "speaker": "boatwright",
    "lines": [
-    "Frames in a week. Planking in a month. Trust in about ten years.",
+    "Frames in a week, planking in a month. Trust in about ten years.",
     "You don't build a boat fast up here. The river checks your work personally."
    ],
    "next": "boatwright.ask"
@@ -975,7 +975,7 @@
    "speaker": "del.deckhand",
    "lines": [
     "Nineteen days ashore. I've read that notice board twice and it hasn't improved.",
-    "Three shops on this street. I've been in all of them. I've bought a whistle."
+    "Three shops on this street, and I've been in all of them. I've bought a whistle."
    ],
    "effects": {
     "setFlags": {
@@ -1019,7 +1019,7 @@
    "speaker": "del.stairgran",
    "lines": [
     "Road's flat as far as my door. Past it, it's four hundred years of steps.",
-    "Go on down, love. I'll be here. I'm always here now."
+    "Go on down, love. I'll be here — I'm always here now."
    ],
    "effects": {
     "setFlags": {
@@ -1041,7 +1041,7 @@
    "speaker": "del.quayfisher",
    "lines": [
     "Locks shut, water's still. Best fishing I've had in a year and I can't say so out loud.",
-    "Whatever I land goes to the stall down there. She prices it. I don't argue."
+    "Whatever I land goes to the stall down there. She prices it, and I don't argue."
    ],
    "effects": {
     "setFlags": {
@@ -1062,7 +1062,7 @@
    "else": "del.gullgirl.again",
    "speaker": "del.gullgirl",
    "lines": [
-    "That's my stick. I found it. Don't ask where, it was in the river.",
+    "That's my stick. I found it — don't ask where, it was in the river.",
     "The boy on the dock says he runs the gulls. He doesn't run anything."
    ],
    "effects": {
@@ -1259,8 +1259,8 @@
    "speaker": "pip",
    "expr": "happy",
    "lines": [
-    "Are you new? You're new. I can tell because I know everyone and I don't know you.",
-    "This is my stick. It's the good one. I have others but they're not this one."
+    "Are you new? You're new — I can tell, because I know everyone and I don't know you.",
+    "This is my stick, and it's the good one. I have others but they're not this one."
    ],
    "effects": {
     "setFlags": {
@@ -1355,7 +1355,7 @@
    "speaker": "finn",
    "expr": "puzzled",
    "lines": [
-    "Because the pond's there and I'm here. You'd want a better reason. I haven't got one."
+    "Because the pond's there and I'm here. You'd want a better reason, and I haven't got one."
    ],
    "next": "finn.ask"
   },
@@ -1395,7 +1395,7 @@
    "lines": [
     {
      "speaker": "system",
-     "text": "(Still the waystone. Still the cat. He has moved four inches into the last of the sun.)"
+     "text": "(Still the waystone, still the cat. He has moved four inches into the last of the sun.)"
     }
    ]
   },
@@ -1495,7 +1495,7 @@
    "speaker": "emb.boy",
    "lines": [
     "This is Pip's. I'm allowed in it but only when he's here, and he isn't.",
-    "So I'm waiting. That's allowed. That's the main thing you can do at a den."
+    "So I'm waiting. That's allowed — it's the main thing you can do at a den."
    ],
    "effects": {
     "setFlags": {
@@ -1539,7 +1539,7 @@
    "speaker": "emb.shopkeep",
    "lines": [
     "Preserves, twine, lamp oil. Everything a person needs and nothing anyone wants.",
-    "Not selling tonight, mind. Nobody sells tonight. Take what you need and tell me after."
+    "Not selling tonight, mind — nobody sells tonight. Take what you need and tell me after."
    ],
    "effects": {
     "setFlags": {

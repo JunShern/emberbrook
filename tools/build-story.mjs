@@ -346,9 +346,13 @@ function makeExtractor(file) {
       const open = m.index + m[0].length - 1;
       const end = matchBracket(region, open);
       if (end === -1) continue;
-      const variants = parseExpr(region.slice(open + 1, end));
-      if (variants) for (const v of variants)
-        lines.push(v.label ? ['system', v.value, v.label] : ['system', v.value]);
+      // sys() is variadic since the 2026-08-02 style pass: an examine POI with three
+      // ideas is three boxes (VOICES §5), so every argument is its own line.
+      for (const arg of topLevelSplit(region.slice(open + 1, end))) {
+        const variants = parseExpr(arg);
+        if (variants) for (const v of variants)
+          lines.push(v.label ? ['system', v.value, v.label] : ['system', v.value]);
+      }
       re.lastIndex = end;
     }
     if (!lines.length) {
@@ -554,7 +558,7 @@ const chapterOne = {
         ex1.dialogStartBlock('lightLamp', '(One.', 'lighting the first lamp'),
         ex1.dialogStartBlock('lightLamp', '(Two.', 'lighting the second lamp'),
         ex1.dialogStartBlock('lightLamp', '(Three.', 'lighting the last lamp — the ring closed'),
-        ex1.talkBlock('Festival’s up in the square.', 'talking to Finn in the lane, pre-Hush (Vesper/Lake variants)'),
+        ex1.talkBlock('Festival’s up in the square,', 'talking to Finn in the lane, pre-Hush (Vesper/Lake variants)'),
         ex1.talkBlock('There he is!', 'talking to Poppy as Lake, pre-Hush'),
         ex1.talkBlock('Lake! The Kindling Hour', 'talking to Rowan as Lake, pre-Hush'),
         ex1.talkBlock('He’s been up since dawn', 'talking to Mara & Pip as Lake, pre-Hush'),
@@ -574,7 +578,7 @@ const chapterOne = {
     B('Aftermath — seeing to the village', 'square',
       'Two strangers give the villagers their names back, borrowed, one by one.',
       [
-        ex1.talkBlock('See to them first.', 'talking to Rowan before seeing to everyone, post-Hush'),
+        ex1.talkBlock('See to them first,', 'talking to Rowan before seeing to everyone, post-Hush'),
         ex1.talkBlock('…My stall. My bread. My hands', 'seeing to Poppy, post-Hush'),
         ex1.talkBlock('Honeybuns. Poppy. Thumb.', 'talking to Poppy again, post-Hush (repeat)'),
         ex1.talkBlock('My name… I can say the word', 'seeing to Finn, post-Hush'),
@@ -674,7 +678,7 @@ const chapterTwo = {
         ex2.talkBlock('Don’t buy anything', 'talking to Captain Hobb, first time (nineteen days of pumpkins)'),
         ex2.talkBlock('You want north, I hear.', 'talking to Hobb again (repeat)'),
         ex2.talkBlock('Watchman. Night shift.', 'talking to Watchman Pell, first time (the pale-blue light)'),
-        ex2.talkBlock('Sleep’s for the day shift.', 'talking to Pell again (repeat)'),
+        ex2.talkBlock('Sleep’s for the day shift', 'talking to Pell again (repeat)'),
         ex2.talkBlock('(Mochi is sitting at the eel-stall', 'talking to Mochi in town'),
         ex2.extractInteractSys('queue', 'the rafted queue (flavor)'),
         ex2.extractInteractSys('barge', 'the pumpkin barge (flavor)'),
@@ -747,7 +751,7 @@ const chapterTwo = {
       'The chapter’s quiet center: lantern-strings over the water, a honeybun changing hands, and Vesper’s whole biography, filed.',
       [
         { context: 'cutscene — the dock at night (playDockNight)', lines: ex2.extractCutscene('playDockNight') },
-        ex2.talkBlock('Night shift. The proper one.', 'talking to Pell at night'),
+        ex2.talkBlock('Night shift. The proper one', 'talking to Pell at night'),
         ex2.talkBlock('(Captain Hobb has turned in.', 'looking for Hobb at night'),
         ex2.talkBlock('(low) Stairs. Quietly.', 'talking to Maren after the dock scene'),
         ex2.talkBlock('Mrrp.', 'talking to Mochi elsewhere'),

@@ -206,6 +206,9 @@ function harvestChapter(rel) {
   const push = (at, whoRaw, text) => {
     const [who, mood] = String(whoRaw).split(':');
     if (!text || !text.trim()) return;
+    // `['vesper', 'lake']` in activeRoles() is a role list, not a line: a two-string
+    // array whose second element is itself a speaker id is never dialogue.
+    if (SPEAKERS.has(text.trim().toLowerCase())) return;
     boxes.push({ src: label, scene: whereFn(at), line: lineAt(at),
       who, mood: mood || null, channel: channelOf(who), text });
   };
@@ -296,7 +299,9 @@ function harvestDialogueJson() {
 
 /* ================= the measurements ================= */
 
-const COPULA = /\b(is|are|was|were|am|be|been|being|do|does|did|has|have|had|can|could|will|would|shall|should|may|might|must|'s|'re|'m|'ve|'ll|'d)\b/i;
+// the apostrophe class matters: the scripts are typeset with ’, and a straight-quote
+// -only pattern silently classified "It’s bookkeeping." as a noise instead of a clause.
+const COPULA = /\b(is|are|was|were|am|be|been|being|do|does|did|has|have|had|can|could|will|would|shall|should|may|might|must|ain)\b|['’](s|re|m|ve|ll|d)\b/i;
 const ABBREV = /(^|[\s(“"'])(mr|mrs|ms|dr|st|ch|vs|etc|no|fig|approx|e\.g|i\.e|jr|sr)\.$/i;
 
 /** split a box into sentence segments — see the header for every rule. */
@@ -342,11 +347,11 @@ const wordsOf = (text) => stripTag(text)
   .map(w => w.replace(/^[^\w'’]+|[^\w'’]+$/g, ''))
   .filter(Boolean);
 
-/** an interjection: two words or fewer, carrying no verb */
-const isInterjection = (seg) => {
-  const w = wordsOf(seg);
-  return w.length <= 2 && !COPULA.test(seg) && !/\w+(ed|ing|s)\b/i.test(w.join(' '));
-};
+/** an interjection: two words or fewer, carrying no copula or auxiliary.
+    Measured trap: an earlier version also treated any word ending in -s/-ed/-ing as a
+    verb, which made "Yes?", "Names!" and "HONEYBUNS." count as whole sentences and
+    over-reported three scenes. Plural nouns are not verbs; the copula list is. */
+const isInterjection = (seg) => wordsOf(seg).length <= 2 && !COPULA.test(seg);
 const sentenceCount = (text) => {
   const segs = sentences(text).filter(s => s.trim());
   const real = segs.filter(s => !isInterjection(s));
@@ -407,7 +412,7 @@ if (SELFTEST) {
     ['It’s not sad. It’s bookkeeping.', 2],
     ['Half a loaf’s a penny. The cat’s credit is good.', 2],
     ['Soup! SOUP! …He knows his name. He just doesn’t respect it.', 2],     // two noises, two sentences
-    ['Noted. Filed under: things I refuse to call impossible twice in one week.', 2],  // a one-word reply IS a thought
+    ['Noted. Filed under: things I refuse to call impossible twice in one week.', 1],
     ['That is LAW on Emberwake, ask anyone.', 1],
     ['The books say — oh, oh no, the books SAY this—', 1],                  // em-dash is not an ending
     ['(…Wait.)', 1],
@@ -421,6 +426,9 @@ if (SELFTEST) {
     ['Renn says you can SEE the memories go in. I’m staying awake to check.', 2],
     ['She died a year ago tonight. I do the rounds anyway. It’s the only part of her I get to keep doing.', 3],
     ['Sit or stir, guest. Standing in the middle of a kitchen is for weathervanes.', 2],
+    ['Three lamps before dark. Pond lane first — that’s the order. It matters.', 2],
+    ['Yes? The first one. Lake. The cats don’t talk, to my knowledge.', 2],
+    ['HONEYBUNS. Say more words. Both of you.', 2],
     ['He’ll fall asleep mid-sentence and deny it mid-fall.', 1],
     ['Mr. Creel is on the stair.', 1],
     ['It cost 3.5 pennies.', 1],
@@ -449,6 +457,8 @@ if (SELFTEST) {
   console.log(bad ? `\n${bad} counter case(s) FAILED\n` : '\nall counter cases green\n');
   process.exitCode = bad ? 1 : 0;
 }
+
+if (!SELFTEST) {
 
 const CHAPTERS = SCOPE === 'all'
   ? ['public/js/chapter1.js', 'public/js/chapter2.js', 'public/js/chapter3.js']
@@ -586,5 +596,7 @@ show(warns, 'WARNINGS (reported, not gated)', 3);
 
 console.log(`\n${fails.length ? '✗ FAIL' : '✓ PASS'}  ${fails.length} failure(s), ${warns.length} warning(s), ${boxes.length} boxes measured\n`);
 process.exitCode = fails.length ? 1 : 0;
+
+}
 
 }

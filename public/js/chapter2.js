@@ -93,7 +93,7 @@ const Chapter2 = {
           // here from the shipped dellhollow west exit)
           { zone: { x: 940, y: 0, w: 110, h: 70 }, to: 'descent', spawn: [640, 640, 'up'],
             enabled: () => !Chapter2.flags.nightFallen,
-            deniedLine: ['maren', 'Up the switchbacks at THIS hour? Nothing up there but weather. Everything worth anything is down.'] },
+            deniedLine: ['maren', 'Up the switchbacks at THIS hour? Nothing up there but weather.'] },
           // bottom — the foreground deck runs off the bottom edge to the west dock mouth
           { zone: { x: 340, y: 700, w: 280, h: 68 }, to: 'dellhollow', spawn: [85, 700, 'right'] },
           // (no cottage door here — the keepers' house moved to the dellhollow stilt-house)
@@ -567,15 +567,19 @@ const Chapter2 = {
     const F = this.flags;
     const t = this.nearestThing(p);
     if (!t) return;
-    const sys = (text) => Dialog.start([{ who: 'system', text }]);
+    // §5: a system box is one idea. A POI that has three ideas gets three boxes,
+    // not one essay — so sys() takes a sequence.
+    const sys = (...texts) => Dialog.start(texts.map(text => ({ who: 'system', text })));
     if (t.kind === 'npc') return this.talkTo(t.key, t.ent, p);
     /* --- descent --- */
-    if (t.kind === 'bracket') return sys('An iron bracket bolted to the rock, empty, at lamp height. Whoever took the lamp took the bolts too. Thrift, or reverence.');
+    if (t.kind === 'bracket') return sys('An iron bracket bolted to the rock, empty, at lamp height. Whoever took the lamp took the bolts too.');
     if (t.kind === 'charthalt') return sys('The north sheet, corrected in the field: one gorge, one river, one town, inked over forty years of confident heath. The annotation reads "SURVEYED, this time. —V."');
     if (t.kind === 'parapet') return sys('The parapet’s top is polished smooth. Four hundred years of people have leaned here to look at home.');
     /* --- dellhollow --- */
-    if (t.kind === 'queue') return sys('Boats lashed hull to hull, three deep, gangplanked into a floating lane. Washing between the masts, herbs in a bailing bucket. The queue has become a neighborhood.');
-    if (t.kind === 'barge') return sys('Forty tons of pumpkins in elegant rows. The nearest rank has quietly begun to slump. Captain Hobb has turned the worst of them to face away from the quay.');
+    if (t.kind === 'queue') return sys('Boats lashed hull to hull, three deep, with washing strung between the masts.',
+      'The queue has become a neighborhood.');
+    if (t.kind === 'barge') return sys('Forty tons of pumpkins in elegant rows. The nearest rank has quietly begun to slump.',
+      'Hobb has turned the worst of them to face away from the quay.');
     if (t.kind === 'eelstall') return sys('Shuttered for the night — chalk on the board says BACK AT TIDE. The rack still smells like the best argument for mornings.');
     if (t.kind === 'ledge') {
       // Missable Law §0.2: the ledge advertises its key whether or not you own it
@@ -595,39 +599,60 @@ const Chapter2 = {
         ]);
       return this.playMochiGap(p);
     }
-    if (t.kind === 'notice') return sys('RULINGS OF THE HARBOR. One: the river is right. Two: in disputes, see Ruling One. Three: no boat works Lock Five while the Tenant is below. — O.');
-    if (t.kind === 'tallybeam') return sys('The old balance beam. Low down, under wax: grey chalk tallies in a big hand, ended mid-row. Above them, in charcoal, a smaller hand’s — renewed every morning. Nobody has ever cleaned this beam. Nobody ever will.');
+    if (t.kind === 'notice') return sys('RULINGS OF THE HARBOR. One: the river is right.',
+      'Two: in disputes, see Ruling One.',
+      'Three: no boat works Lock Five while the Tenant is below. — O.');
+    if (t.kind === 'tallybeam') return sys('The old balance beam. Low down under wax, grey chalk tallies in a big hand, ended mid-row.',
+      'Above them, in charcoal, a smaller hand’s — renewed every morning.',
+      'Nobody has ever cleaned this beam. Nobody ever will.');
     if (t.kind === 'wheels') return sys('The bypass races still turn the town’s wheels — grinding, sawing, hoisting. The river is only shut to things that float.');
-    if (t.kind === 'lamppole') return sys('A lamp-pole, a ladder, and a wick-knife on a string. In a flame village this corner would be a shrine. Here it is a chore, and the town sleeps just as sound.');
+    if (t.kind === 'lamppole') return sys('A lamp-pole, a ladder, and a wick-knife on a string.',
+      'In a flame village this corner would be a shrine. Here it is a chore, and the town sleeps just as sound.');
     if (t.kind === 'dockedge') return sys('The bench holds the warmth a while after you stand up. That is all it does, and tonight it was enough.');
-    if (t.kind === 'cottagedoor') return sys(F.supperDone
-      ? 'Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.'
-      : 'The keepers’ door, up on its trestles, the lock tailwater running black under the floorboards. Every other house in Dellhollow stands on the town. This one stands on the job.');
+    if (t.kind === 'cottagedoor') return F.supperDone
+      ? sys('Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.')
+      : sys('The keepers’ door, up on its trestles, the lock tailwater running black under the floorboards.',
+        'Every other house in Dellhollow stands on the town. This one stands on the job.');
     /* --- stairs --- */
     if (t.kind === 'cistern') return sys('The public cistern, fed off a bypass race somewhere above. A tin cup on a chain, worn bright by four hundred years of the same thirst.');
     if (t.kind === 'laundry') return sys('Laundry strung wall to wall, three stories up, snapping in the gorge wind. The town flies its ordinary flags daily, and nobody salutes.');
     if (t.kind === 'chalkgull') return sys('Chalked on the deck boards: load-tallies, initials, somebody’s sums — and a rude but accurate drawing of a gull. The gulls on the rails above have declined to comment.');
     /* --- cottage --- */
-    if (t.kind === 'tallies') return sys('Small dated marks climb the doorframe: MAREN, and a height; MAREN, and a height — stopping a hand below the lintel, years ago. Her records moved to her arm, and nobody in this house has ever said so out loud.');
-    if (t.kind === 'coatpeg') return sys('A man’s oilskin coat on the peg nearest the door, square on its shoulders, oiled this winter. Eleven years of weather have come and gone outside. The coat is ready anyway.');
-    if (t.kind === 'drawer') return sys('A small drawer in the dresser, under the window. Every latch in this house is worn bright with use. This one keyhole is worn bright with something else. Locked — not stuck. Locked.');
-    if (t.kind === 'toolwall') return sys('Eel-spears, winch-pinions, a gear-puller, a coil of chain: the wall of a house where the river is the family trade. Everything is oiled. Nothing is for show.');
-    if (t.kind === 'tableseats') return sys('Two chairs, arm-ends worn to shine by four generations of forearms. And a third seat: a stool, the newest wood in the room by eighty years, standing exactly where a chair would. Nobody says why.');
+    if (t.kind === 'tallies') return sys('Small dated marks climb the doorframe. MAREN, and a height, over and over.',
+      'They stop a hand below the lintel, years ago.',
+      'Her records moved to her arm, and nobody in this house has ever said so.');
+    if (t.kind === 'coatpeg') return sys('A man’s oilskin coat on the peg nearest the door, square on its shoulders, oiled this winter.',
+      'Eleven years of weather have come and gone outside. The coat is ready anyway.');
+    if (t.kind === 'drawer') return sys('A small drawer in the dresser, under the window.',
+      'Every latch in this house is worn bright with use. This one keyhole is worn bright with something else.',
+      'Locked — not stuck. Locked.');
+    if (t.kind === 'toolwall') return sys('Eel-spears, winch-pinions, a gear-puller, a coil of chain. A house where the river is the family trade.',
+      'Everything is oiled. Nothing is for show.');
+    if (t.kind === 'tableseats') return sys('Two chairs, arm-ends worn to shine by four generations of forearms.',
+      'And a third seat: a stool, the newest wood in the room by eighty years.',
+      'It stands exactly where a chair would. Nobody says why.');
     if (t.kind === 'hearthpot') {
       // the hearth is also the supper trigger: fires the beat early, no dwell
       if (F.supperCalled && !F.supperDone) return this.playSupper2(window.players);
       return sys('The stew-pot on its hook, and a fire kept the way locks are kept: banked exact, nothing wasted, nothing out.');
     }
     /* --- lockfive --- */
-    if (t.kind === 'pool') return sys('Still black water. She is watching. She was watching before you looked, and she will be watching after you stop.');
-    if (t.kind === 'grate') return sys(F.lockSeen
-      ? 'The sealed gallery, dark weed packed through its bars strand by strand. Her eggs are behind that door, and she is lying guard. …Move along quietly.'
-      : 'A timber-and-iron grate, low over the water in the far wall, dark weed packed through its bars. Sealed workings — lock business, older than anyone doing it.');
-    if (t.kind === 'flume') return sys('A mile of black, dropping like a stair through the inside of a cliff. Boats were never the flume’s business. There is a first time for everything, ideally with a pilot.');
-    if (t.kind === 'winch') return sys('A century of grease gone to amber. The left drum might turn, with conviction. The right one has become geology.');
-    if (t.kind === 'boatlook') return sys(F.boatDown
-      ? 'Clinker-built, tar-dark, rope fenders, a lantern hook at the prow. The tar is this winter’s. Somebody does this boat’s rounds, and has never once said so.'
-      : 'High in the chains hangs a shrouded shape, small and boat-sized, hoisted clear of the flood. The knots are renewed. Somebody tends whatever sleeps up there.');
+    if (t.kind === 'pool') return sys('Still black water. She is watching.',
+      'She was watching before you looked, and she will be watching after you stop.');
+    if (t.kind === 'grate') return F.lockSeen
+      ? sys('The sealed gallery, dark weed packed through its bars strand by strand.',
+        'Her eggs are behind that door, and she is lying guard. …Move along quietly.')
+      : sys('A timber-and-iron grate, low over the water in the far wall, dark weed packed through its bars.',
+        'Sealed workings — lock business, older than anyone doing it.');
+    if (t.kind === 'flume') return sys('A mile of black, dropping like a stair through the inside of a cliff.',
+      'Boats were never the flume’s business. There is a first time for everything, ideally with a pilot.');
+    if (t.kind === 'winch') return sys('A century of grease gone to amber. The left drum might turn, with conviction.',
+      'The right one has become geology.');
+    if (t.kind === 'boatlook') return F.boatDown
+      ? sys('Clinker-built, tar-dark, rope fenders, a lantern hook at the prow.',
+        'The tar is this winter’s. Somebody does this boat’s rounds, and has never once said so.')
+      : sys('High in the chains hangs a shrouded shape, small and boat-sized, hoisted clear of the flood.',
+        'The knots are renewed. Somebody tends whatever sleeps up there.');
   },
 
   /* ================= dialogue ================= */
@@ -639,7 +664,10 @@ const Chapter2 = {
 
     if (key === 'mochi') {
       if (p.scene === 'dellhollow')
-        return D([['system', '(Mochi is sitting at the eel-stall with the composure of a paying customer. The eel-wife has already fed him twice. Neither of them has admitted it.)']]);
+        return D([
+          ['system', '(Mochi is sitting at the eel-stall with the composure of a paying customer.)'],
+          ['system', '(The eel-wife has already fed him twice. Neither of them has admitted it.)'],
+        ]);
       return D([['mochi', 'Mrrp.']]);
     }
 
@@ -648,20 +676,28 @@ const Chapter2 = {
       const n = F.hobbTalk++;
       if (n === 0) { F.talked.hobb = true;
         return D([
-          ['hobb', 'Don’t buy anything, don’t lean on anything. Come to gawp at the eel? Gawp at forty ton of pumpkins instead.'],
+          ['hobb', 'Don’t buy anything, don’t lean on anything.'],
+          ['hobb', 'Come to gawp at the eel? Gawp at forty ton of pumpkins instead.'],
           ['hobb', 'Going SOFT, the lot of them. In elegant rows.'],
           ['vesper', 'How long have you been in the queue?'],
           ['hobb', 'Nineteen days. “Cut them for pie,” my wife says. Nineteen days of my wife saying pie.'],
           ['hobb', 'It was a bulk contract, madam. Harvest-fair, downriver. There is no fair for a November pumpkin.'],
           ['lake', 'I’m sorry for your cargo.'],
-          ['hobb', 'Don’t be sorry, be useful— no. No, forgive me. Nobody’s useful against the river. First thing you learn up here, last thing you believe.'],
+          ['hobb', 'Don’t be sorry, be useful— no. No, forgive me.'],
+          ['hobb', 'Nobody’s useful against the river. First thing you learn up here, last thing you believe.'],
         ]);
       }
-      return D([['hobb', 'You want north, I hear. So do forty ton of pumpkins. Get in the queue — it’s a very patient queue. We’ve named the seagulls.']]);
+      return D([
+        ['hobb', 'You want north, I hear. So do forty ton of pumpkins.'],
+        ['hobb', 'Get in the queue. It’s a very patient queue — we’ve named the seagulls.'],
+      ]);
     }
 
     if (key === 'pell') {
-      if (F.nightFallen) return D([['pell', 'Night shift. The proper one. Every wick burning, and the river behaving. …Go on about your business, friends — quietly.']]);
+      if (F.nightFallen) return D([
+        ['pell', 'Night shift. The proper one — every wick burning, and the river behaving.'],
+        ['pell', '…Go on about your business, friends. Quietly.'],
+      ]);
       const n = F.pellTalk++;
       if (n === 0) { F.talked.pell = true;
         return D([
@@ -678,7 +714,7 @@ const Chapter2 = {
           ['vesper:thinking', '(Filed. Next to the bow.)'],
         ]);
       }
-      return D([['pell', 'Sleep’s for the day shift. Which is now. Which is the grudge.']]);
+      return D([['pell', 'Sleep’s for the day shift — which is now. Which is the grudge.']]);
     }
 
     if (key === 'sorrel') {
@@ -750,14 +786,20 @@ const Chapter2 = {
         if (F.talked.hobb && F.talked.pell) return this.playJam(window.players);
         return D([['odessa:grave', 'Walk the quay before you spend my time, strangers. The town will tell you most of what I would — and shorter.']]);
       }
-      return D([['odessa:grave', 'My ruling stands as posted. The deep stairs are open to you — my daughter will show you. The stairs, mind. Not the water.']]);
+      return D([
+        ['odessa:grave', 'My ruling stands as posted. The deep stairs are open to you.'],
+        ['odessa:grave', 'My daughter will show you. The stairs, mind — not the water.'],
+      ]);
     }
 
     if (key === 'maren') {
       if (ent.scene === 'cottage')
         return D([['maren:happy', 'Door’s open. Lintel’s low — for tall people and opinions.']]);
       if (F.dockDone) return D([['maren', '(low) Stairs. Quietly. The town sleeps light and my mother doesn’t sleep at all.']]);
-      if (F.lockSeen) return D([['maren:determined', 'The flume goes DOWN. Past her, past the locks. It wants water, a boat, and a pilot. Tell my mother none of that, in any order.']]);
+      if (F.lockSeen) return D([
+        ['maren:determined', 'The flume goes DOWN. Past her, past the locks.'],
+        ['maren:determined', 'It wants water, a boat, and a pilot. Tell my mother none of that.'],
+      ]);
       return D([['maren:happy', 'Deep stairs, then. Ma said show you, so I’m showing you — try to look shown when we get down there.']]);
     }
   },
@@ -806,13 +848,15 @@ const Chapter2 = {
       { mood: 'dellhollow' },                       // the town theme, early and far away (§f)
       { cam: { x: 672, y: 420, viewH: 560 } },
       { say: ['vesper', 'A whole town, Lake. A whole loud living town, stacked down a cliff.'] },
-      { say: ['vesper', 'Read it off the water: in high from the south, down five locks — a stair, for boats — and out the far end north, into the haze.'] },
+      { say: ['vesper', 'Read it off the water. In high from the south, down five locks — a stair, for boats.'] },
+      { say: ['vesper', 'Then out the far end north, into the haze.'] },
       { say: ['lake', 'The little lights, strung straight across the air. Bridges?'] },
-      { say: ['vesper', 'Lantern-strings, cliff to cliff. They tie the town’s two halves together and light the knot at night. …I like them already.'] },
+      { say: ['vesper', 'Lantern-strings, cliff to cliff. They tie the town’s two halves together and light the knot at night.'] },
+      { say: ['vesper', '…I like them already.'] },
       { cam: { x: 1040, y: 400, viewH: 560 } },
       { say: ['mochi', 'Mrrp.'] },
       { say: ['system', '(Mochi regards the town with the enthusiasm of a cat regarding a very large wet staircase. There had better be fish.)'] },
-      { narrate: 'Smoke went up. Gulls came down. And out past the last lock the river went on north without waiting for anyone, the way rivers do.' },
+      { narrate: 'Smoke went up and gulls came down. Out past the last lock the river went on north, the way rivers do.' },
       { fadeTo: 1 },
       { wait: 0.8 },
       { run: () => { park(false); Field.enter('descent'); if (vesper) { Field.cam.x = vesper.x; Field.cam.y = vesper.y; } } },
@@ -836,7 +880,8 @@ const Chapter2 = {
       { say: ['vesper:worried', 'My north sheet. Forty years old, surveyed by a man with a theodolite and a reputation.'] },
       { say: ['vesper:worried', 'It shows this road running on through open heath. Flat. Six more miles of confident little grass symbols.'] },
       { say: ['lake', 'The road disagrees.'] },
-      { say: ['vesper', 'The road is going DOWNSTAIRS. There’s a gorge here you could lose a cathedral in, and a river at the bottom — I can hear the river.'] },
+      { say: ['vesper', 'The road is going DOWNSTAIRS. There’s a gorge here you could lose a cathedral in.'] },
+      { say: ['vesper', 'And a river at the bottom — I can hear it.'] },
       { say: ['vesper', 'And my best chart of this whole country says: heath.'] },
       { say: ['lake', 'Maybe the theodolite man never came this far.'] },
       { say: ['vesper', 'Oh, he came. He got tired, or the light went — and he guessed, and inked the guess like a survey.'] },
@@ -880,7 +925,8 @@ const Chapter2 = {
       { say: ['lake:worried', 'He bowed. That was a real bow — a taught one. Grandmother had one like it and I never learned what it was for.'] },
       { say: ['lake', 'And he aimed it low. At my hands. At the—'] },
       { say: ['vesper', 'Don’t finish that sentence, I’m not ready to file it.'] },
-      { say: ['vesper:thinking', '(Entry: one figure, far rim, hooded. Conduct: courteous. Departure: unexplained. Cat’s opinion: extensive, recorded in full.)'] },
+      { say: ['vesper:thinking', '(Entry: one figure, far rim, hooded. Conduct: courteous.)'] },
+      { say: ['vesper:thinking', '(Departure: unexplained. Cat’s opinion: extensive, recorded in full.)'] },
       { say: ['mochi', 'Mrrp.'] },
       { say: ['lake', 'First time in his life he’s made that sound. I’d have been happy never learning he could.'] },
       { mood: 'forestB' },
@@ -895,7 +941,8 @@ const Chapter2 = {
       { cam: { x: 672, y: 700, viewH: 768 } },
       { wait: 1.0 },
       { narrate: 'The last switchback turned them around a shoulder of rock, and the gorge opened below like a lit window.' },
-      { narrate: 'Closer now, the town stopped being geography and started being NOISE. Hammers. Gulls. Somebody laughing, somebody selling something. And under everything, the river working.' },
+      { narrate: 'Closer now, the town stopped being geography and started being NOISE.' },
+      { narrate: 'Hammers. Gulls, and somebody laughing. Under everything, the river working.' },
       { say: ['lake', 'Listen to it.'] },
       { say: ['vesper', 'I am listening to it. …I’d forgotten what a Tuesday sounds like.'] },
       { say: ['lake', '(Two days since the square went quiet. And down there it’s all just… going on.)'] },
@@ -913,7 +960,8 @@ const Chapter2 = {
       { narrate: 'Dellhollow, of the five locks. It smelled of tar, bread, wet rope and roasting chestnuts, and it sounded like everything Emberbrook had stopped being.' },
       { narrate: 'The road became a street, and the street became a stair. Houses stood on each other’s shoulders, every door painted in somebody’s leftover hull-colours.' },
       { narrate: 'Washing overhead. Bunting from some long-finished regatta nobody ever took down. The whole loud town descending, arguing, to the water.' },
-      { narrate: 'Nobody stared. A woman in a bread-window quoted them a price on principle. Two children ran through the party without slowing. It was wonderful.' },
+      { narrate: 'Nobody stared. A woman in a bread-window quoted them a price on principle.' },
+      { narrate: 'Two children ran through the party without slowing. It was wonderful.' },
       // the Ch2 economy opens here (§1.5): the mapmaker's purse, counted honestly for once
       { say: ['vesper', 'Quoted a price — wonderful. The survey trade pays in pennies, and I’ve six on me, for the record.'] },
       { run: () => { if (!Inventory.found('vesper-purse')) { Inventory.markFound('vesper-purse'); Inventory.grant('penny', 'vesper', 6); } } },
@@ -952,18 +1000,22 @@ const Chapter2 = {
       { say: ['odessa:grave', 'Say your business plain. I’ve a town of idle boats to keep from stupidity.'] },
       { say: ['vesper', 'Vesper — mapmaker. Lake — lamplighter. We need to go north, faster than walking. Everyone we’ve met says the river is the road.'] },
       { say: ['odessa', 'The river IS the road. The road is shut.'] },
-      { say: ['odessa:grave', 'Lamplighter, you said. Off the rim road. …Emberbrook, then. The flame-village on the high valley. You’re a long way below your lamps, boy.'] },
+      { say: ['odessa:grave', 'Lamplighter, you said. Off the rim road — Emberbrook, then.'] },
+      { say: ['odessa:grave', 'The flame-village on the high valley. You’re a long way below your lamps, boy.'] },
       { say: ['lake', 'Yes. And you’ll hear it crooked off a fish-cart soon enough, so I’ll say it straight.'] },
-      { say: ['lake', 'Two nights ago our flame was taken. All of it, in a breath. The village stands — fed, housed, safe.'] },
+      { say: ['lake', 'Two nights ago our flame was taken. All of it, in a breath.'] },
+      { say: ['lake', 'The village stands — fed, housed, safe.'] },
       { say: ['lake', 'And every soul in it has gone flat. They know their own lives like a ledger, and can’t feel one line of them.'] },
       { say: ['lake', 'We’re going north to bring the flame home.'] },
       { wait: 1.2 },
       { say: ['odessa:grave', '…I’ve heard of your lamps the way you’ve maybe heard of our floods. Neighbors’ weather.'] },
-      { say: ['hobb', 'Took the— the LIGHTS? All the lights at once? Who’s minding the ovens? A village can’t just— somebody has to mind the ovens.'] },
+      { say: ['hobb', 'Took the— the LIGHTS? All the lights at once?'] },
+      { say: ['hobb', 'A village can’t just— somebody has to mind the ovens.'] },
       { say: ['odessa', 'Hobb.'] },
       { say: ['hobb', 'I’m only saying. Terrible thing. Terrible. My cousins downriver won’t believe half of it.'] },
       { say: ['vesper:thinking', '(They’re sorry the way you’re sorry for an earthquake across the sea. Real sorrow, with nowhere in them to land.)'] },
-      { say: ['odessa:grave', 'Then you have my sympathy, and my sympathy moves no water. Come to the beam. I’ll show you what shut my road.'] },
+      { say: ['odessa:grave', 'Then you have my sympathy, and my sympathy moves no water.'] },
+      { say: ['odessa:grave', 'Come to the beam. I’ll show you what shut my road.'] },
       { run: () => {                                            // group to the beam on the lock-top crossing; cam angles down the gorge
           const vesper = players.find(p => p && p.role === 'vesper');
           const lake = players.find(p => p && p.role === 'lake');
@@ -975,24 +1027,29 @@ const Chapter2 = {
         } },
       { cam: { x: 700, y: 400, viewH: 620 } },
       { say: ['system', '(Gulls lift off the beam ahead of them, resettle behind them, and resume their argument.)'] },
-      { say: ['odessa', 'Five locks step this water down to the low country. Nineteen days ago, something moved into Lock Five and shut it better than gates ever did.'] },
+      { say: ['odessa', 'Five locks step this water down to the low country.'] },
+      { say: ['odessa', 'Nineteen days ago something moved into Lock Five, and shut it better than gates ever did.'] },
       { say: ['odessa', 'An eel — river-eel, the old kind. Long as a grain-barge, and lying on the only water out of this gorge.'] },
       { say: ['vesper', 'And you can’t… move her along? Drive her down?'] },
       { say: ['odessa:grave', 'Mind how you talk about her in my town.'] },
       { say: ['odessa', 'This town is not frightened of an eel — carry that upriver and down, with my compliments.'] },
-      { say: ['odessa', 'This town is POLITE to this river. Politeness has kept Dellhollow standing four hundred years. Towns that argued with the river are gone.'] },
-      { say: ['hobb', 'What she said. It isn’t fear. It’s manners.'] },
-      { say: ['pell', 'And nobody who’s seen her close is in a hurry to be impolite. Which is a different thing from the other word. Which nobody has said.'] },
+      { say: ['odessa', 'This town is POLITE to this river. That has kept Dellhollow standing four hundred years.'] },
+      { say: ['odessa', 'Towns that argued with the river are gone.'] },
+      { say: ['hobb', 'What she said. It isn’t fear — it’s manners.'] },
+      { say: ['pell', 'And nobody who’s seen her close is in a hurry to be impolite.'] },
+      { say: ['pell', 'Which is a different thing from the other word. Which nobody has said.'] },
       { say: ['odessa:grave', 'My ruling stands as posted. No boat works Lock Five while she’s below.'] },
       { say: ['odessa:grave', 'She came up for her own reasons; she’ll go down for her own reasons. The river asks a season — the town waits a season.'] },
       { say: ['vesper', 'We can’t spend a season. Truly. Every day we’re slow, home gets flatter.'] },
       { say: ['odessa', 'Then walk the high road, or wait with the pumpkins. Those are the choices I’ve got to sell.'] },
-      { say: ['vesper', 'The high road crossed a ravine this morning without us — there’s a gap in it you could post letters down. How far north does it actually get?'] },
+      { say: ['vesper', 'The high road crossed a ravine this morning without us. There’s a gap you could post letters down.'] },
+      { say: ['vesper', 'How far north does it actually get?'] },
       { say: ['odessa:grave', 'To the Falls Span. Which fell sixty years before I was born — a yard of it left on each rim.'] },
       { say: ['odessa:grave', 'Everything north of here goes by water. That is what Dellhollow is FOR — and just now, Dellhollow isn’t going either.'] },
       { say: ['vesper', 'My sheet’s road crosses a span that was already down. The man never walked it.'] },
       { say: ['vesper', '…There’s my heath, Lake. Mystery closed — just bad work.'] },
-      { say: ['odessa:grave', 'I’m sorry for your village, lamplighter. I am. But I won’t drown polite strangers to save it faster, and I won’t—'] },
+      { say: ['odessa:grave', 'I’m sorry for your village, lamplighter. I am.'] },
+      { say: ['odessa:grave', 'But I won’t drown polite strangers to save it faster, and I won’t—'] },
       { say: ['pell', 'OI! HARBORMISTRESS!'] },
       { run: () => { F.jamDone = true; this.playMarenWet(window.players); } },
     ]);
@@ -1009,7 +1066,8 @@ const Chapter2 = {
           pell.x = 990; pell.y = 730; pell.dir = 'up';
         } },
       { cam: { x: 900, y: 500, viewH: 600 } },
-      { say: ['pell', 'Fished this out of Five. Again. Swimming, if you please. In the dark. In November. Over THAT.'] },
+      { say: ['pell', 'Fished this out of Five. Again.'] },
+      { say: ['pell', 'Swimming, if you please. In the dark, in November, over THAT.'] },
       { wait: 0.4 },
       { move: { ent: maren, x: 1030, y: 550, speed: 170 } },    // up the deep stairs to the keeper deck…
       { move: { ent: maren, x: 890, y: 455, speed: 170 } },     // …along the deck…
@@ -1021,14 +1079,18 @@ const Chapter2 = {
       { say: ['odessa', 'Ten.'] },
       { say: ['maren', '…Ten. The point stands!'] },
       { say: ['odessa:grave', 'The point does not stand. The point sinks, like everything else you put in that lock. Home. Dry clothes. Now.'] },
-      { say: ['maren:happy', 'Can’t. Company. …Hello! You’re the flame people — whole quay says. Is the cat part of it? The cat looks official.'] },
+      { say: ['maren:happy', 'Can’t. Company. …Hello! You’re the flame people — whole quay says.'] },
+      { say: ['maren:happy', 'Is the cat part of it? The cat looks official.'] },
       { say: ['mochi', 'Mrrp.'] },
-      { say: ['maren:determined', 'Then before my mother says what she’s going to say: take me on. I’m the best water-eye on this quay — every captain rafted out there knows it.'] },
-      { say: ['maren:determined', 'I’ve crewed these locks since I was five. I can read this river the way your mapmaker reads a— a map. I know what’s in Five better than any soul living.'] },
+      { say: ['maren:determined', 'Then before my mother says what she’s going to say — take me on.'] },
+      { say: ['maren:determined', 'I’m the best water-eye on this quay. Every captain rafted out there knows it.'] },
+      { say: ['maren:determined', 'I read this river the way your mapmaker reads a— a map.'] },
+      { say: ['maren:determined', 'I know what’s in Five better than any soul living.'] },
       { say: ['maren:determined', 'And I’m seventeen, which is grown. Ask anyone who isn’t my mother.'] },
       { say: ['odessa:grave', 'No.'] },
       { say: ['maren', 'You haven’t heard the—'] },
-      { say: ['odessa', 'I’ve heard every word of it since you were six and rowing the wash-tub. The answer is the answer. No child of mine works the north river.'] },
+      { say: ['odessa', 'I’ve heard every word of it since you were six and rowing the wash-tub.'] },
+      { say: ['odessa', 'The answer is the answer. No child of mine works the north river.'] },
       { wait: 0.8 },
       { say: ['maren:determined', 'Say why. Out loud. In front of strangers, say the why.'] },
       { wait: 1.2 },
@@ -1087,7 +1149,8 @@ const Chapter2 = {
         } },
       { cam: { x: 1100, y: 300, viewH: 560 } },
       { narrate: 'The stairs went down into the cool black under the town — two hundred wet timber steps, the river talking to itself inside the walls.' },
-      { say: ['maren:happy', 'Mind the forty-first step, it lies. So — Lake of Emberbrook. Vesper of— what’s yours? Everyone’s of somewhere.'] },
+      { say: ['maren:happy', 'Mind the forty-first step, it lies. So — Lake of Emberbrook.'] },
+      { say: ['maren:happy', 'Vesper of— what’s yours? Everyone’s of somewhere.'] },
       { say: ['maren:happy', 'I’m of HERE. Four generations — you can’t get rid of us with a flood. They tried.'] },
       { say: ['lake', 'Emberbrook. Born a lane off the square. I know every window.'] },
       { say: ['maren', 'And you?'] },
@@ -1102,13 +1165,16 @@ const Chapter2 = {
       { say: ['maren:determined', 'It’s not sad. It’s bookkeeping.'] },
       { wait: 0.6 },
       { cam: { x: 620, y: 480, viewH: 700 } },
-      { narrate: 'Lock Five was a cathedral that worked for a living: black timber out of lantern-reach, chains like bell-ropes, and a flooded chamber of still, dark water.' },
+      { narrate: 'Lock Five was a cathedral that worked for a living. Black timber, chains like bell-ropes, and a chamber of still dark water.' },
       { say: ['system', '(She is there. She was always going to be there, and it still lands like a hand closing on the back of the neck.)'] },
       { say: ['system', '(A body thicker than a barrel, moss-and-bronze, old scars like map-lines, laid in two easy coils. One pale eye, clouded like a lamp behind fog, is open.)'] },
       { say: ['vesper:worried', '…You swam in this.'] },
-      { say: ['maren:awed', 'Ten times. Look at her. LOOK at her. She was in this river when the locks were still trees.'] },
-      { say: ['lake', '(The eye moved. Not at the lantern — at us. I have never been read so thoroughly by anything, and I grew up under my grandmother.)'] },
-      { say: ['maren', 'The Tenant, the quay calls her. Under Dellhollow longer than any family in it. Never once paid rent.'] },
+      { say: ['maren:awed', 'Ten times. Look at her — LOOK at her.'] },
+      { say: ['maren:awed', 'She was in this river when the locks were still trees.'] },
+      { say: ['lake', '(The eye moved. Not at the lantern — at us.)'] },
+      { say: ['lake', '(Nothing has ever read me that thoroughly. And I grew up under my grandmother.)'] },
+      { say: ['maren', 'The Tenant, the quay calls her. She’s been under Dellhollow longer than any family in it.'] },
+      { say: ['maren', 'Never once paid rent.'] },
       { say: ['maren:determined', 'Now the part nobody up top will hear me out on. She’s not hunting, and she’s not lost.'] },
       { say: ['maren:determined', 'Eels her size hold the deep banks, the low country. They do not climb five locks for fun.'] },
       { say: ['maren:determined', 'And watch. Every hour, near enough, she does THAT.'] },
@@ -1123,7 +1189,8 @@ const Chapter2 = {
       { say: ['system', '(A long moment. Then she comes back, and settles, and watches them again.)'] },
       { say: ['vesper', 'The grate. What’s behind the grate?'] },
       { say: ['maren', 'Sluice gallery. Old workings — draws the chamber down when they need her dry. Sealed since granddad crewed.'] },
-      { say: ['vesper:thinking', 'She’s not resting against it. She’s TENDING it. Circuit, wall, back — that’s not an animal loafing. That’s a round.'] },
+      { say: ['vesper:thinking', 'She’s not resting against it. She’s TENDING it.'] },
+      { say: ['vesper:thinking', 'Circuit, wall, back — that’s not an animal loafing. That’s a round.'] },
       { say: ['lake', '…Like a keeper.'] },
       { say: ['maren:awed', 'The weed. There’s weed packed through those bars — I saw it on dive six and called it flood-trash. She CARRIED it there.'] },
       { say: ['maren:awed', 'She’s nesting. Eggs in my sluice gallery — that’s why she won’t go down—'] },
@@ -1131,14 +1198,17 @@ const Chapter2 = {
       { say: ['maren', 'Funny, though — the old pilots always said the deep banks were thick with her kind. Dead quiet down there this year.'] },
       { say: ['maren', 'Maybe that’s why she came all the way up. Anyway.'] },
       { wait: 0.8 },
-      { say: ['maren:determined', 'So it’s worse than the town thinks. Eel eggs, in cold water? She could be over that gallery till spring.'] },
+      { say: ['maren:determined', 'So it’s worse than the town thinks. Eel eggs, in cold water?'] },
+      { say: ['maren:determined', 'She could be over that gallery till spring.'] },
       { say: ['maren:determined', 'Ma’s season just got five months longer, and nobody knows it but the four of us.'] },
-      { say: ['vesper', 'Then nobody waits her out, and nobody in their right mind moves her off a nest. Which leaves— Maren. What is that?'] },
+      { say: ['vesper', 'Then nobody waits her out, and nobody moves her off a nest.'] },
+      { say: ['vesper', 'Which leaves— Maren. What is that?'] },
       { cam: { x: 1000, y: 320, viewH: 520 } },
       { say: ['system', '(High in the cliff wall: a round timber-ringed mouth, dry and dark, big enough to swallow a boat whole.)'] },
       { say: ['maren', 'The flume. The old boys cut it to shoot timber past the bottom locks, straight down to the tailwater pool.'] },
       { say: ['maren', 'Dry since before I was born.'] },
-      { say: ['vesper', 'But it goes DOWN. Past the locks. Past her — without opening one gate over that nest.'] },
+      { say: ['vesper', 'But it goes DOWN. Past the locks, past her.'] },
+      { say: ['vesper', 'Without opening one gate over that nest.'] },
       { say: ['maren:awed', 'It goes down.'] },
       { wait: 0.6 },
       { say: ['maren:determined', 'I want the north river. Wanted it my whole life — the whole town knows, and nobody’s ever once let it be a plan.'] },
@@ -1208,19 +1278,23 @@ const Chapter2 = {
       { say: ['mochi', 'Mrrp.'] },
       { say: ['system', '(Mochi eats on the step — the WARM half of the step. Odessa pretends not to notice.)'] },
       { say: ['system', '(Odessa serves everyone before herself — in order, without hurry, the way she runs the locks. She still hasn’t sat down.)'] },
-      { say: ['maren:happy', 'So — this is the house! Four generations. That beam’s off a barge that sank in the ’02 flood — Da pulled it out. Grand-da. One of them.'] },
-      { say: ['maren:happy', 'And that’s the good table. We’re eating at the good table. Ma got out the GOOD table.'] },
+      { say: ['maren:happy', 'So — this is the house! Four generations.'] },
+      { say: ['maren:happy', 'That beam’s off a barge that sank in the ’02 flood. Da pulled it out.'] },
+      { say: ['maren:happy', 'Grand-da. One of them.'] },
+      { say: ['maren:happy', 'And that’s the good table. We’re eating at the GOOD table.'] },
       { say: ['odessa:grave', 'The table we eat at.'] },
       { say: ['maren', 'The good one.'] },
       { cam: { x: 380, y: 400, viewH: 520 } },
-      { say: ['system', '(Small dated marks climb the doorframe. MAREN, and a height. MAREN, and a height. They stop years ago, a hand below the lintel.)'] },
+      { say: ['system', '(Small dated marks climb the doorframe. MAREN, and a height, over and over.)'] },
+      { say: ['system', '(They stop years ago, a hand below the lintel.)'] },
       { say: ['lake', 'The doorframe. Emberbrook does the same — Grandmother kept mine on the pantry door.'] },
       { say: ['maren', 'Ma stopped measuring me at fourteen.'] },
       { say: ['odessa:grave', 'You stopped standing still.'] },
       { mood: 'silence' },                                      // music out for the middle of the table
       { wait: 0.8 },
       { say: ['maren', 'You never asked me to.'] },
-      { say: ['system', '(Odessa doesn’t answer. She refills Maren’s bowl before Maren notices it’s empty. That is the answer.)'] },
+      { say: ['system', '(Odessa doesn’t answer.)'] },
+      { say: ['system', '(She refills Maren’s bowl before Maren notices it’s empty. That is the answer.)'] },
       { cam: { x: 750, y: 500, viewH: 580 } },
       { say: ['vesper', 'Harbormistress — your house has exactly one lock in it. Sorry. I survey rooms; it’s a professional disease.'] },
       { say: ['vesper', 'Every latch in here is worn bright from use. That one keyhole is worn bright from something else.'] },
@@ -1228,7 +1302,8 @@ const Chapter2 = {
       { say: ['maren', 'It’s the—'] },
       { say: ['odessa', 'Maren.'] },
       { say: ['maren', '…It’s nothing. Dresser drawer. Sticks.'] },
-      { say: ['system', '(A small drawer, in the dresser, under the window. The keyhole is clean, and it doesn’t stick. Nobody at this table believes it’s nothing.)'] },
+      { say: ['system', '(A small drawer in the dresser. The keyhole is clean, and it doesn’t stick.)'] },
+      { say: ['system', '(Nobody at this table believes it’s nothing.)'] },
       { say: ['vesper:thinking', '(A mother, a daughter, and one locked drawer nobody mentions. Filed — and for once, the file stays shut.)'] },
       { wait: 0.8 },
       { mood: 'dellhollowNight' },                              // music back with the kitchen rhythm
@@ -1239,7 +1314,8 @@ const Chapter2 = {
       { say: ['system', '(From Odessa, that counts as high praise.)'] },
       { say: ['system', '(One peg by the door is already taken: a man’s oilskin coat, freshly oiled, hung square.)'] },
       { say: ['system', '(Lake hangs the cloth on the peg below it, and doesn’t ask. Odessa watches him not ask — and fills his bowl again.)'] },
-      { say: ['maren:happy', 'Anyway — tomorrow we thought we’d see the town. More of the town. There’s… plenty of town.'] },
+      { say: ['maren:happy', 'Anyway — tomorrow we thought we’d see the town. More of the town.'] },
+      { say: ['maren:happy', 'There’s… plenty of town.'] },
       { say: ['lake', '(She’s the worst liar on this river. Her mother is letting her be.)'] },
       { say: ['odessa:grave', 'Mind the tide, then — while you’re seeing your town.'] },
       { wait: 1.0 },
@@ -1272,7 +1348,8 @@ const Chapter2 = {
         } },
       { mood: 'dellhollowNight' },
       { fadeTo: 0 },
-      { narrate: 'They stepped out into full night, the lantern-strings burning across the gorge. Maren had slipped past them somewhere between the bread and the door — two steps at a time, already rigging chains in her head.' },
+      { narrate: 'They stepped out into full night, the lantern-strings burning across the gorge.' },
+      { narrate: 'Maren had slipped past them between the bread and the door, already rigging chains in her head.' },
     ]);
   },
 
@@ -1294,37 +1371,48 @@ const Chapter2 = {
       { narrate: 'Night, on the quay. The lantern-strings burned in long swags over the water — ordinary oil, ordinary light — and under them the town went on with its evening.' },
       { say: ['lake', 'Pell lit half of these and complained the whole time. A fish-wife did three while I watched, still arguing about brill.'] },
       { say: ['lake', 'Anyone. They just… light them.'] },
-      { say: ['vesper', 'And it’s enough. That’s the thing rattling around in you tonight, isn’t it. It’s enough.'] },
-      { say: ['lake', '…I’ll manage. It’s a good rattle. Ask me your real question.'] },
+      { say: ['vesper', 'And it’s enough. That’s the thing rattling around in you tonight, isn’t it.'] },
+      { say: ['lake', '…I’ll manage. It’s a good rattle.'] },
+      { say: ['lake', 'Ask me your real question.'] },
       { say: ['vesper', 'I don’t have a—'] },
-      { say: ['lake', 'Maren asked where you’re from. You answer everything, Vesper. Usually with footnotes. You didn’t answer her.'] },
+      { say: ['lake', 'Maren asked where you’re from. You answer everything, Vesper — usually with footnotes.'] },
+      { say: ['lake', 'You didn’t answer her.'] },
       { wait: 1.2 },
-      { say: ['vesper', '…I don’t know where I’m from. That’s the whole answer. It isn’t tragic, so don’t make the face.'] },
+      { say: ['vesper', '…I don’t know where I’m from. That’s the whole answer.'] },
+      { say: ['vesper', 'It isn’t tragic, so don’t make the face.'] },
       { say: ['lake', 'This is my listening face.'] },
-      { say: ['vesper', 'We moved when I was six. The way families do — work, weather, roads. No story to it.'] },
+      { say: ['vesper', 'We moved when I was six. The way families do — work, weather, roads.'] },
+      { say: ['vesper', 'No story to it.'] },
       { say: ['vesper', 'My parents are warm people, Lake. Genuinely. Ask about last summer, you get three hours of stories — my father does the voices.'] },
       { say: ['vesper', 'Ask about anything before I was born, you get weather.'] },
-      { say: ['vesper', '“Where did you two meet?” — “Oh, it was a wet spring.” A wet SPRING.'] },
+      { say: ['vesper', '“Where did you two meet?” — “Oh, it was a wet spring.”'] },
+      { say: ['vesper', 'A wet SPRING.'] },
       { say: ['vesper', 'Twenty years of asking, and I’ve got a complete weather record of my own family. Not one placename.'] },
       { say: ['system', '(Somewhere down the dark a moored boat knocks, twice, against its fenders. Neither of them hurries.)'] },
       { say: ['lake', 'Every family has a fog somewhere. Half of Emberbrook can’t name a great-grandmother.'] },
       { say: ['vesper', 'That’s what I decided too. People move. The past gets left behind for practical reasons.'] },
-      { say: ['vesper', 'I remember three things from before. A well with a cracked cap. A fence with a gate that dragged.'] },
+      { say: ['vesper', 'I remember three things from before. A well with a cracked cap.'] },
+      { say: ['vesper', 'A fence with a gate that dragged.'] },
       { say: ['vesper', 'And a hill — round, bald on top, off east from a kitchen window.'] },
-      { say: ['vesper', 'I remember the hill perfectly. I could draw you the hill — I HAVE drawn the hill. It’s numbered.'] },
-      { say: ['vesper', 'And I feel nothing when I do. People feel things about home. It costs you something every time you say “Emberbrook” — I’ve watched it all week.'] },
+      { say: ['vesper', 'I remember the hill perfectly. I could draw it for you — I HAVE drawn it.'] },
+      { say: ['vesper', 'It’s numbered.'] },
+      { say: ['vesper', 'And I feel nothing when I do. People feel things about home.'] },
+      { say: ['vesper', 'It costs you something every time you say “Emberbrook.” I’ve watched it all week.'] },
       { say: ['vesper', 'My hill is a landform.'] },
       { wait: 1.0 },
       { say: ['lake', '(She says it like she’s reporting a survey error. Because that’s what she thinks it is.)'] },
       { say: ['lake', '…And the routes.'] },
-      { say: ['vesper', 'And the routes. Eleven years of them. Nobody commissions the routes I walk — I go along everything, in order.'] },
+      { say: ['vesper', 'And the routes. Eleven years of them.'] },
+      { say: ['vesper', 'Nobody commissions the routes I walk. I go along everything, in order.'] },
       { say: ['vesper', 'You know what you call walking every road out of every market town on a sheet, in sequence?'] },
       { say: ['lake', 'A grid.'] },
       { say: ['vesper', 'A grid. Thank you. A search would be emotional. A grid is just thorough.'] },
-      { say: ['vesper', 'Somewhere a well, a fence, and a round bald hill line up out a kitchen window. The day I walk over the right rise, I’ll know it.'] },
+      { say: ['vesper', 'Somewhere a well, a fence, and a round bald hill line up out a kitchen window.'] },
+      { say: ['vesper', 'The day I walk over the right rise, I’ll know it.'] },
       { say: ['vesper', 'And then I’ll have an answer for everyone’s favorite small question.'] },
       { say: ['vesper', 'It’s a filing problem. I file. Don’t make it a wound, or I’ll invoice you for the honeybun I know you’ve been saving.'] },
-      { say: ['system', '(Lake hands over the honeybun. He had been saving it. He does not make it a wound.)'] },
+      { say: ['system', '(Lake hands over the honeybun. He had been saving it.)'] },
+      { say: ['system', '(He does not make it a wound.)'] },
       { say: ['lake', 'For the record — the day you walk over the right rise. I’d like to be there.'] },
       { say: ['vesper', '…Noted. For the record.'] },
       { say: ['mochi', 'Mrrp.'] },
@@ -1333,7 +1421,8 @@ const Chapter2 = {
       { run: () => { maren.hidden = false; maren.scene = 'dellhollow'; maren.x = 1040; maren.y = 700; maren.dir = 'left'; } },
       { move: { ent: maren, x: 450, y: 690, speed: 170 } },
       { say: ['maren:determined', '(low) Oi. Flame people. Tide’s slack, town’s asleep, boat’s on the chains. …Well? It’s a very good hour for being impolite quietly.'] },
-      { say: ['vesper', '(One day in, and the girl who can’t leave home is smuggling us out of it. I like her enormously — which is going to be a problem.)'] },
+      { say: ['vesper:thinking', '(One day in, and the girl who can’t leave home is smuggling us out of it.)'] },
+      { say: ['vesper:thinking', '(I like her enormously. Which is going to be a problem.)'] },
       { run: () => { mochi.follow = 'party'; } },
       { camRelease: true },
     ]);
@@ -1363,11 +1452,15 @@ const Chapter2 = {
       { say: ['system', '(Small, old, and kept. The tar is fresh.)'] },
       { say: ['lake', '(I know whose it is before anyone says. Somebody does this boat’s rounds.)'] },
       { say: ['maren', 'Da’s. Ma thinks it hangs down here because she hauled it here.'] },
-      { say: ['maren', 'It hangs here because I climb down and sit in it, some nights. …Don’t tell her. She has enough weather.'] },
+      { say: ['maren', 'It hangs here because I climb down and sit in it, some nights.'] },
+      { say: ['maren', '…Don’t tell her. She has enough weather.'] },
       { say: ['mochi', 'Mrrp?'] },
-      { say: ['system', '(Mochi looks at the boat. Mochi looks at the water beneath the boat, and at the shape in the water beneath the boat. Mochi sits down to reconsider the terms of his employment.)'] },
-      { say: ['maren:determined', 'Head-gates. Twin winches, twin bars. LEFT winch first, to half — or the flume takes her water sideways and we all learn a great deal very fast.'] },
-      { say: ['maren:determined', 'Both of you on the bar. Don’t stop on the squeal. The squeal is it working.'] },
+      { say: ['system', '(Mochi looks at the boat. Then at the water beneath the boat, and at the shape in it.)'] },
+      { say: ['system', '(Mochi sits down to reconsider the terms of his employment.)'] },
+      { say: ['maren:determined', 'Head-gates. Twin winches, twin bars.'] },
+      { say: ['maren:determined', 'LEFT winch first, to half. Or the flume takes her water sideways, and we learn a great deal fast.'] },
+      { say: ['maren:determined', 'Both of you on the bar. Don’t stop on the squeal.'] },
+      { say: ['maren:determined', 'The squeal is it working.'] },
       { run: () => {                                            // stage: vesper + lake at winch L; maren spotting the gate
           if (vesper) { vesper.x = 930; vesper.y = 480; vesper.dir = 'up'; }
           if (lake) { lake.x = 985; lake.y = 495; lake.dir = 'up'; }
@@ -1379,7 +1472,8 @@ const Chapter2 = {
       { run: () => { AudioSys.rumble(); Net.send({ type: 'buzz', ms: 250 }); F.gateHalf = true; } },
       { say: ['system', '(A hundred years of rust lets go a degree at a time. Somewhere inside the cliff, the flume mouth begins, hollowly, to breathe.)'] },
       { say: ['maren:happy', 'HA! Half-gate! Hear her? That’s the flume clearing its throat.'] },
-      { say: ['maren:happy', 'Right winch now — and the right one’s the widow. Seized since granddad. She’ll fight.'] },
+      { say: ['maren:happy', 'Right winch now — and the right one’s the widow.'] },
+      { say: ['maren:happy', 'Seized since granddad. She’ll fight.'] },
       { run: () => {                                            // stage: both players at winch R; they heave — nothing
           if (vesper) { vesper.x = 1055; vesper.y = 480; vesper.dir = 'up'; }
           if (lake) { lake.x = 1115; lake.y = 495; lake.dir = 'up'; }
@@ -1387,12 +1481,14 @@ const Chapter2 = {
         } },
       { wait: 1.0 },
       { say: ['system', '(The right-hand bar does not move. It has spent a lifetime becoming part of the cliff, and it declines — politely, completely — to stop being cliff.)'] },
-      { say: ['lake', 'It’s not rust on this one. The drum’s crowned over. We’re two pairs of hands short of—'] },
+      { say: ['lake', 'It’s not rust on this one. The drum’s crowned over.'] },
+      { say: ['lake', 'We’re two pairs of hands short of—'] },
       { run: () => {                                            // lantern-light on the stairs, descending, unhurried
           odessa.hidden = false; odessa.scene = 'lockfive';
           odessa.x = 1200; odessa.y = 310; odessa.dir = 'down';
         } },
-      { say: ['system', '(There is a lantern coming down the stairs. It does not hurry. It has never needed to hurry. Everyone born in this town knows the harbormistress’s step.)'] },
+      { say: ['system', '(There is a lantern coming down the stairs. It does not hurry, and never has.)'] },
+      { say: ['system', '(Everyone born in this town knows the harbormistress’s step.)'] },
       { wait: 1.2 },
       { move: { ent: odessa, x: 1140, y: 450, speed: 100 } },
       { say: ['maren', '…Ma.'] },
@@ -1420,13 +1516,17 @@ const Chapter2 = {
       { say: ['maren:determined', 'Say it, then. Say no.'] },
       { wait: 1.6 },
       { say: ['odessa:grave', '…Who else knows the mile of black.'] },
-      { say: ['system', '(It is not permission. It is arithmetic, done out loud. Maren does not whoop. Somehow, she does not whoop.)'] },
+      { say: ['system', '(It is not permission. It is arithmetic, done out loud.)'] },
+      { say: ['system', '(Maren does not whoop. Somehow, she does not whoop.)'] },
       { say: ['odessa', 'Stern for you. Weight low past the eye — all of you, low, and hands inboard.'] },
       { say: ['odessa', 'I’ll take the portage stair. I’ll be at the tailwater before the sun is.'] },
       { say: ['odessa:grave', '…Don’t make me stand there long.'] },
-      { say: ['system', '(Boarding order: Maren to the stern like gravity is optional. Lake amidships, the lighter warm inside his coat. Vesper to the bow, notebook triple-wrapped in oilcloth. Mochi—)'] },
+      { say: ['system', '(Boarding order: Maren to the stern, like gravity is optional.)'] },
+      { say: ['system', '(Lake amidships, the lighter warm in his coat. Vesper to the bow, notebook wrapped in oilcloth.)'] },
+      { say: ['system', '(Mochi—)'] },
       { say: ['mochi', 'Mrrp.'] },
-      { say: ['system', '(Mochi is not aboard. Mochi is delivering, from the apron, a position paper on boats. Lake holds open the satchel.)'] },
+      { say: ['system', '(Mochi is not aboard. Mochi is delivering, from the apron, a position paper on boats.)'] },
+      { say: ['system', '(Lake holds open the satchel.)'] },
       { say: ['system', '(A long negotiation occurs, at the speed of cat. Mochi boards the satchel facing backward, as if the whole thing were his idea and everyone else were late.)'] },
       { run: () => { F.boatDown = true; this.playFlumeRun(window.players); } },
     ]);
@@ -1486,9 +1586,11 @@ const Chapter2 = {
       { narrate: 'The flume spat them long and flat across the tailwater pool below the last lock, and the roar fell away behind them.' },
       { wait: 1.2 },
       { mood: 'resolve' },
-      { say: ['system', '(Silence. Steam off the water. Far above, very faint, the lantern-strings of Dellhollow. Mochi emerges from the satchel and begins, immediately and furiously, to wash.)'] },
+      { say: ['system', '(Silence. Steam off the water, and far above, the lantern-strings of Dellhollow.)'] },
+      { say: ['system', '(Mochi emerges from the satchel and begins, immediately and furiously, to wash.)'] },
       { say: ['maren:awed', '…Under four minutes. Da’s best was six.'] },
-      { say: ['maren', '(quiet) Beat your time, Da. You’d have hated that. …You’d have loved that.'] },
+      { say: ['maren', '(quiet) Beat your time, Da. You’d have hated that.'] },
+      { say: ['maren', '…You’d have loved that.'] },
       { fadeTo: 1 }, { wait: 1.2 },
       { run: () => { F.flumeDone = true; this.playLanding(window.players); } },
     ]);
@@ -1518,18 +1620,21 @@ const Chapter2 = {
       { cam: { x: 700, y: 480, viewH: 620 } },
       { narrate: 'They warped the boat in to the old stone landing, and bailed, and wrung, and were loudly alive at one another, until the sky went pearl.' },
       { wait: 0.6 },
-      { narrate: 'Odessa was on the landing before the sun was. Of course she was. She had her lantern, a rope’s-end coiled over one shoulder — and a bag.' },
+      { narrate: 'Odessa was on the landing before the sun was. Of course she was.' },
+      { narrate: 'She had her lantern, a rope’s-end coiled over one shoulder — and a bag.' },
       { say: ['maren', '…Ma. That’s my bag.'] },
       { say: ['odessa:grave', 'Packed a week ago. You were going north the moment that eel gave you an excuse — I’ve watched it come the way I watch weather.'] },
       { say: ['odessa:grave', 'A harbormistress who can’t read her own harbor should hand in the whistle.'] },
       { say: ['maren', 'A WEEK? You packed it a week ago and you still said no! Nine times you said no!'] },
-      { say: ['odessa', 'Ten. And I’d say all ten again. The no was what I owed my own heart. The bag is what I owed yours.'] },
+      { say: ['odessa', 'Ten. And I’d say all ten again.'] },
+      { say: ['odessa', 'The no was what I owed my own heart. The bag is what I owed yours.'] },
       { wait: 1.2 },
       { say: ['odessa', 'The boat’s yours. It was always going to be yours — I only kept the tar on while it waited.'] },
       { say: ['odessa', 'Fenders are new-roped. Bread in the bow locker, and salt-fish enough to make you sick of salt-fish. Take it.'] },
       { toast: { text: '✦ The party gains the boat — tar-dark, clinker-built, river-worthy', color: '#3fa7c9' } },
       { say: ['mochi', 'Mrrp.'] },
-      { say: ['system', '(Mochi walks the gunwale stem to stern, inspecting. The boat appears to have passed. Nobody mentions the satchel.)'] },
+      { say: ['system', '(Mochi walks the gunwale stem to stern, inspecting. The boat appears to have passed.)'] },
+      { say: ['system', '(Nobody mentions the satchel.)'] },
       { wait: 0.8 },
       { say: ['odessa:grave', 'Mapmaker. A word.'] },
       { run: () => {                                            // aside: odessa + vesper apart, near the stair
@@ -1540,7 +1645,8 @@ const Chapter2 = {
       { say: ['system', '(From inside her coat she takes an oilskin tube, worn glossy at the cap from years of handling.)'] },
       { say: ['system', '(She sets it in Vesper’s hands, and keeps her own on it a moment longer.)'] },
       { say: ['vesper:thinking', '(The drawer. The one bright keyhole. She went home in the dark, then — and stood in front of eleven years, and turned the key.)'] },
-      { say: ['odessa', 'His chart. The north river — every reach and shoal of it, tailwater to the grey marshes. He drew it from memory, the night before. It’s wrong.'] },
+      { say: ['odessa', 'His chart. The north river — every reach and shoal of it, tailwater to the grey marshes.'] },
+      { say: ['odessa', 'He drew it from memory, the night before. It’s wrong.'] },
       { say: ['odessa:warm', 'She’ll want to fix it. Don’t let her do that alone.'] },
       { wait: 1.0 },
       { say: ['vesper', '…I’ve been correcting a wrong map by myself for eleven years, harbormistress. I don’t recommend it to anyone.'] },
@@ -1549,9 +1655,11 @@ const Chapter2 = {
       { camRelease: true },
       { cam: { x: 650, y: 500, viewH: 560 } },
       { say: ['maren:determined', 'Ma — I’ll send word. Every town with a fish-queue between here and wherever, I’ll send—'] },
-      { say: ['odessa', 'You’ll send charts. A chart is a daughter’s hand on paper. I’ll have the charts.'] },
+      { say: ['odessa', 'You’ll send charts. A chart is a daughter’s hand on paper.'] },
+      { say: ['odessa', 'I’ll have the charts.'] },
       { say: ['system', '(There is an embrace. It is brief, and it is total, and Odessa does not care who is watching.)'] },
-      { say: ['maren:happy', '(aboard, scrubbing her face with her sleeve, absolutely not crying) Right! Stations! Flame people amidships. Cat on the— cat wherever the cat decides. I’m not fighting the cat.'] },
+      { say: ['maren:happy', '(scrubbing her face, absolutely not crying) Right! Stations! Flame people amidships.'] },
+      { say: ['maren:happy', 'Cat on the— cat wherever the cat decides. I’m not fighting the cat.'] },
       { toast: { text: '✦  Maren joined the party  ✦', color: '#3fa7c9' } },
       { say: ['lake', '(North, then. By water — the lighter warm against my chest, the old road keeping pace up on the rim.)'] },
       { say: ['lake', '(Grandmother — the round’s gotten strange. But I swear it’s still the round.)'] },
@@ -1559,9 +1667,10 @@ const Chapter2 = {
       { say: ['vesper:thinking', '(And a hole in my own sheet, still waiting for its rise. …North.)'] },
       { banner: { title: '✦ North on the river ✦', sub: 'the flume behind them, the grey marshes ahead', dur: 6 } },
       { run: () => { F.marenJoined = true; } },                 // maren.follow = 'party' from Ch3 onward; here the boat carries the blocking
-      { narrate: 'The current took the little boat the moment it felt her — north, quick and cold, down the water her father drew wrong and her mother let her go to fix.' },
+      { narrate: 'The current took the little boat the moment it felt her — north, quick and cold.' },
+      { narrate: 'Down the water her father drew wrong, and her mother let her go to fix.' },
       { narrate: 'On the landing, Odessa stood with her lantern until the boat was a speck, and then stood a while longer.' },
-      { narrate: 'Then she took up her rope and began the long climb home — where a town, a river, and one enormous tenant were waiting, politely, for spring.' },
+      { narrate: 'Then she took up her rope and began the long climb home. A town, a river and one enormous tenant were waiting for spring.' },
       { mood: 'silence' },
       { run: () => { F.ended = true; AudioSys.finale(); Net.send({ type: 'end' }); } },
     ]);
@@ -1630,7 +1739,8 @@ const Chapter2 = {
     ItemInteract.clearWant('maren');
     Cutscene.play([
       { say: ['maren', 'Where did you— the chains. It hung in the chains with the boat, and I never once—'] },
-      { say: ['system', '(She turns it to the light. Burned near the grip, small: initials. Her tally-arm goes still.)'] },
+      { say: ['system', '(She turns it to the light. Burned near the grip, small: initials.)'] },
+      { say: ['system', '(Her tally-arm goes still.)'] },
       { wait: 1.4 },
       { say: ['maren', '(quiet) Da’s. He burned his letters into everything he meant to keep.'] },
       { say: ['maren', 'It rides the stern — that’s where a hook rides. …Don’t look at me like that.'] },
