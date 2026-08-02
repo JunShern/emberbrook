@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-08-02T02:48:42Z",
+ "generated": "2026-08-02T11:05:03Z",
  "sources": [
   "townmap/emberbrook.cameras.json",
   "townmap/emberbrook.map.json",
@@ -130,7 +130,21 @@
    "therise to 14 (from 10), woodroad to 34 (from 26) and gateroad off its authored bearing",
    "entirely. At fov 20 the same frames stand 1.75x further out, the ratio clears, and every",
    "one of those four came back DOWN. Lower camera, bigger character, same bearing.",
-   "A per-shot `fov` in `framing` overrides this; none currently does."
+   "A per-shot `fov` in `framing` overrides this, and THREE SHOTS NOW DO — `orchard`,",
+   "`square` and `pondlane` carry an explicit fov 35 and a `closenessLimited` flag. They",
+   "were drafted at fov 20 on the DRESSED master before any plate was spent and every one",
+   "of them LOST bake-visible ground against the plate it ships with: orchard 70.0% ->",
+   "30.0%, square 79.7% -> 62.5%, pondlane 40.6% -> 6.2% with the camera standing inside a",
+   "conifer crown. The mechanism is the ruling's own arithmetic read the other way: a",
+   "narrower lens forces a 1.79x LONGER STANDOFF, and a longer standoff puts more DRESSING",
+   "between camera and subject, so the lens is free only where the FOREGROUND IS OPEN. The",
+   "near-field gate cannot see it (it ray-casts the blockout bundle, which has no crowns)",
+   "and passed all three. THIS IS NOT A RETREAT FROM THE LENS RULING (coordinator, ratified",
+   "2026-08-02): the redline was that characters read larger, never that one lens serves",
+   "the whole town, and a per-shot lens is ordinary cinematography where a camera inside a",
+   "conifer is not. The acceptance bar is the SHIPPED PLATE'S OWN visibleFrac — a candidate",
+   "ships only if it beats the number the shot ships with today. The other eight took the",
+   "lens and re-baked; see each shot's `_closenessLimited_why` for the three that did not."
   ],
   "margin": 0.1,
   "aimLift": 1.2,
@@ -1726,25 +1740,25 @@
    ],
    "pos": [
     41.279,
-    64.964,
-    27.808
+    49.543,
+    22.27
    ],
    "aim": [
     41.279,
     23.342,
     1.8
    ],
-   "fov": 20,
+   "fov": 35,
    "aspect": 1.75,
-   "dist": 49.08,
-   "solvedDist": 49.08,
+   "dist": 33.25,
+   "solvedDist": 33.25,
    "capped": false,
    "samples": 14,
    "inFrameFrac": 1,
-   "zNear": 39.86,
-   "zFar": 57.55,
-   "charPxNear": 93,
-   "charPxFar": 64,
+   "zNear": 24.62,
+   "zFar": 41.27,
+   "charPxNear": 84,
+   "charPxFar": 50,
    "clip": [
     0.05,
     1400
@@ -2702,26 +2716,26 @@
     }
    ],
    "pos": [
-    73.301,
-    96.485,
-    43.761
+    69.824,
+    76.768,
+    31.992
    ],
    "aim": [
     64.176,
     44.736,
     2.706
    ],
-   "fov": 20,
+   "fov": 35,
    "aspect": 1.75,
-   "dist": 66.68,
-   "solvedDist": 66.68,
+   "dist": 43.77,
+   "solvedDist": 43.77,
    "capped": false,
    "samples": 796,
    "inFrameFrac": 1,
-   "zNear": 55,
-   "zFar": 79.53,
-   "charPxNear": 67,
-   "charPxFar": 47,
+   "zNear": 32.66,
+   "zFar": 56.04,
+   "charPxNear": 63,
+   "charPxFar": 37,
    "clip": [
     0.05,
     1400
@@ -3253,26 +3267,26 @@
     }
    ],
    "pos": [
-    43.129,
-    36.467,
-    12.747
+    58.563,
+    46.603,
+    10.207
    ],
    "aim": [
     82.64,
     50.848,
     2.263
    ],
-   "fov": 20,
+   "fov": 35,
    "aspect": 1.75,
-   "dist": 43.33,
-   "solvedDist": 43.33,
+   "dist": 25.71,
+   "solvedDist": 25.71,
    "capped": false,
    "samples": 298,
    "inFrameFrac": 1,
-   "zNear": 34.6,
-   "zFar": 49.45,
-   "charPxNear": 107,
-   "charPxFar": 75,
+   "zNear": 16.78,
+   "zFar": 31.29,
+   "charPxNear": 123,
+   "charPxFar": 66,
    "clip": [
     0.05,
     1400
