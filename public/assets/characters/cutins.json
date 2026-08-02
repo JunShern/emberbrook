@@ -80,12 +80,21 @@
  },
  "maren": {
   "expr": [
+   "annoyed",
    "awed",
+   "crushed",
    "determined",
-   "happy"
+   "happy",
+   "indignant",
+   "sad",
+   "surprised",
+   "tender",
+   "thinking",
+   "worried",
+   "wry"
   ],
-  "h": 629,
-  "w": 995
+  "h": 864,
+  "w": 513
  },
  "mochi": {
   "h": 714,

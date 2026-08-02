@@ -336,7 +336,7 @@ KEY_RESIDUE_MAX = 0.0008  # ...and essentially none of them may survive. Not exa
                        # zero: a handful of anti-aliased pixels on a magenta-adjacent
                        # trim can land inside the radius honestly. Sorrel's sticker
                        # read 0.68 against it.
-KEY_SIGN_F = 0.50      # ...and this is the SAME RULE ON A BETTER AXIS. See keyness().
+KEY_SIGN_F = 0.35      # ...and this is the SAME RULE ON A BETTER AXIS. See keyness().
 
 
 def keyness(rgb, key):
@@ -375,20 +375,23 @@ def keyness(rgb, key):
 
     The valley between +0.10 and +0.85 is empty on all three, so anything in the
     range is a choice about MARGIN, not about which pixels are key. It was swept
-    (0.35/0.40/0.50/0.60) rather than picked, because the two characters pull in
-    opposite directions and the sweep is what shows the shape:
+    (0.25/0.30/0.35/0.40/0.50) rather than picked, because the two characters pull
+    in opposite directions and only the sweep shows where the knee is:
 
-        Maren  residue 286 px -> 9 px, and edge_noise IMPROVES (0.015 -> 0.010)
-        Lake   residue barely moves (his defect is not this one) while edge_noise
-               climbs 0.029 -> 0.084 (0.50) -> 0.111 (0.35) against a 0.12 gate
+        Maren  happy-3 residue 127 px (0.50) -> 89 (0.40) -> 8 (0.35), then FLAT
+               below 0.35. Her defect is entirely inside one step of the sweep.
+        Lake   residue does not move at all across the whole range (37 -> 34 px);
+               only his edge_noise does, climbing 0.073 -> 0.103 -> 0.126 on his
+               worst plate (tender-1) as the threshold falls 0.50 -> 0.35 -> 0.25.
+        Vesper flat on every number, at every setting.
 
-    Lake's climb is an instrument artifact, and the composite says so: his cut at
-    0.35 and his cut with the term OFF are indistinguishable at 1:1 over a night
-    plate. Cutting a thin coherent run of bloom leaves soft pixels that the blur
-    re-fills to just under opaque, and edge_noise counts exactly those. Real, but
-    invisible. 0.50 keeps the whole of Maren's fix, keeps Vesper's plates unmoved
-    to within 0.01% of their solid area, and leaves Lake a third of the gate in
-    hand — 5x above the cast's warmest paint and still under half the bloom.
+    0.35 is where Maren's curve bottoms out and Lake's worst plate still holds
+    0.103 against a 0.120 gate. His climb is an instrument artifact and the
+    composite says so: his cut at 0.35 and his cut with the term OFF are
+    indistinguishable at 1:1 over a night plate. Cutting a thin coherent run of
+    bloom leaves soft pixels the sub-pixel blur refills to just under opaque, and
+    edge_noise counts exactly those. Real, invisible, and the honest cost of
+    removing something that IS visible.
 
     AND IT RESCUES PLATES, which is the part that settles it. Two of Lake's thirty
     pose rolls FAIL the edge gate outright without this term (sad-3 edge_noise
@@ -632,6 +635,33 @@ def matte_key(im):
             out = np.where(sh > 0.01,
                            np.clip((out - sh * np.array(key, float)) / (1.0 - sh), 0, 255),
                            out)
+
+            # A SUB-PIXEL WISP'S COLOUR IS THE HAIR BESIDE IT, not whatever survives
+            # dividing by its own alpha (2026-08-02, Maren's shipped `happy` at 1:1
+            # over a night plate). Her flyaway strands are thinner than a pixel, so
+            # every pixel along one is a genuine key/hair mix; the un-premultiply
+            # divides by max(alpha, 0.18), and at alpha ~0.3 that is a 3.3x
+            # amplification of every error in the key estimate. The result is
+            # visible and it is TWO-COLOURED: the strand comes out magenta on the
+            # side that kept too much key and NEON CHARTREUSE on the side that lost
+            # too much, because subtracting more magenta than was there drives R and
+            # B below G. 150 such pixels on that one plate, still readable as
+            # coloured filaments after the downscale to CUTIN_MAX_PX.
+            #
+            # No better estimate of the key share exists for these pixels — but a
+            # better estimate of the ANSWER does. The strand is hair; the opaque
+            # figure a few pixels away is that same hair at full coverage; `ref` is
+            # already that colour. So the un-premultiply is trusted in proportion to
+            # the alpha it had to divide by, and the remainder is taken from the
+            # neighbourhood. At alpha >= 0.68 nothing changes at all, which is where
+            # every ordinary anti-aliased edge lives; the blend only bites on the
+            # thin, low-alpha pixels whose arithmetic was never going to be reliable.
+            # It is the same argument the salvage path makes for its fitted paper
+            # model — an estimate from the picture beats an extrapolation — applied
+            # to the figure instead of the background.
+            w = np.clip((a - 0.18) / 0.50, 0.0, 1.0)[..., None]
+            blend = soft & have_ref
+            out = np.where(blend[..., None], w * out + (1.0 - w) * ref, out)
 
     # BEYOND THE BAND THERE IS STILL NO DESPILL STEP, and that remains a measured
     # decision rather than an omission. The global version was written — the classic

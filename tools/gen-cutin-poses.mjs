@@ -116,6 +116,7 @@ const ALL_PICKS = {
   // change it here, re-run `--page`, and re-ship with
   // `gen-cutin.py <id> --picks ...`. The picker pages stay live for exactly that.
   lake: { rest: 1, happy: 3, wry: 3, worried: 3, surprised: 3, determined: 3, sad: 3, tender: 1, thinking: 2, annoyed: 3, hollow: 3, weary: 3 },
+  maren: { rest: 1, happy: 3, awed: 3, determined: 3, indignant: 2, crushed: 2, surprised: 3, wry: 1, worried: 3, sad: 3, tender: 1, thinking: 3, annoyed: 2 },
 };
 const PICKS = ALL_PICKS[id] || {};
 // BASE PICKS (user, 2026-08-02): the ratified base candidate per character —
