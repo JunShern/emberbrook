@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-02T17:55:18Z",
+ "generated": "2026-08-02T19:38:43Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -2213,19 +2213,19 @@
       "behind": false,
       "ndc": [
        -0.439,
-       0.049
+       0.051
       ],
       "px": [
        377,
-       365
+       364
       ],
       "onScreen": true,
       "edgeMargin": 0.561,
-      "depth": 32.616,
-      "charPx": 63,
+      "depth": 32.594,
+      "charPx": 64,
       "headNdc": [
        -0.446,
-       0.209
+       0.211
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2258,19 +2258,19 @@
       "behind": false,
       "ndc": [
        -0.68,
-       0.12
+       0.122
       ],
       "px": [
        215,
-       338
+       337
       ],
       "onScreen": true,
       "edgeMargin": 0.32,
-      "depth": 35.008,
+      "depth": 34.985,
       "charPx": 59,
       "headNdc": [
        -0.691,
-       0.27
+       0.272
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2303,19 +2303,19 @@
       "behind": false,
       "ndc": [
        -0.661,
-       0.003
+       0.005
       ],
       "px": [
        228,
-       383
+       382
       ],
       "onScreen": true,
       "edgeMargin": 0.339,
-      "depth": 31.243,
+      "depth": 31.22,
       "charPx": 66,
       "headNdc": [
        -0.673,
-       0.17
+       0.172
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2347,20 +2347,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.453,
-       -0.401
+       0.455,
+       -0.399
       ],
       "px": [
-       977,
-       538
+       978,
+       537
       ],
       "onScreen": true,
-      "edgeMargin": 0.547,
-      "depth": 24.728,
+      "edgeMargin": 0.545,
+      "depth": 24.706,
       "charPx": 84,
       "headNdc": [
-       0.464,
-       -0.199
+       0.465,
+       -0.197
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2393,7 +2393,7 @@
       "behind": false,
       "ndc": [
        -0.639,
-       0.197
+       0.199
       ],
       "px": [
        243,
@@ -2401,11 +2401,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.361,
-      "depth": 35.802,
+      "depth": 35.78,
       "charPx": 58,
       "headNdc": [
        -0.649,
-       0.345
+       0.346
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2416,34 +2416,34 @@
      "id": "door:cookhouse",
      "kind": "door",
      "at": [
-      43.27,
+      42.8,
       14.07,
-      -11.44
+      -16.8
      ],
      "from": "del-cookhouse-int",
      "via": "del-cookhouse-int>del-cine@cookhouse",
      "label": "Leave Cookhouse",
      "aim": [
-      0.977,
-      -0.215
+      0.942,
+      -0.336
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.145,
-       0.038
+       0.097,
+       -0.154
       ],
       "px": [
-       769,
-       370
+       737,
+       443
       ],
       "onScreen": true,
-      "edgeMargin": 0.855,
-      "depth": 32.015,
-      "charPx": 65,
+      "edgeMargin": 0.846,
+      "depth": 27.019,
+      "charPx": 77,
       "headNdc": [
-       0.147,
-       0.2
+       0.099,
+       0.035
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2456,17 +2456,17 @@
      "id": "door:cookhouse",
      "kind": "door",
      "at": [
-      40.4,
-      14.04,
-      -11
+      39.9,
+      14.07,
+      -16.8
      ],
      "to": "del-cookhouse-int",
      "toKind": "scene",
      "prompt": "E",
      "label": "Enter Cookhouse",
      "aim": [
-      -0.988,
-      0.152
+      -1,
+      0
      ],
      "seam": null,
      "r": 1.8,
@@ -2474,20 +2474,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.311,
-       0.022
+       0.292,
+       -0.193
       ],
       "px": [
-       881,
-       376
+       868,
+       458
       ],
       "onScreen": true,
-      "edgeMargin": 0.689,
-      "depth": 31.631,
-      "charPx": 65,
+      "edgeMargin": 0.708,
+      "depth": 26.217,
+      "charPx": 79,
       "headNdc": [
-       0.316,
-       0.186
+       0.298,
+       0.002
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2523,20 +2523,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.44,
-       0.319
+       -0.439,
+       0.321
       ],
       "px": [
        377,
-       262
+       261
       ],
       "onScreen": true,
-      "edgeMargin": 0.56,
-      "depth": 34.416,
+      "edgeMargin": 0.561,
+      "depth": 34.393,
       "charPx": 60,
       "headNdc": [
-       -0.447,
-       0.474
+       -0.446,
+       0.476
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2573,19 +2573,19 @@
       "behind": false,
       "ndc": [
        -0.817,
-       0.123
+       0.125
       ],
       "px": [
        123,
-       337
+       336
       ],
       "onScreen": true,
       "edgeMargin": 0.183,
-      "depth": 35.089,
+      "depth": 35.067,
       "charPx": 59,
       "headNdc": [
        -0.831,
-       0.273
+       0.275
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2622,19 +2622,19 @@
       "behind": false,
       "ndc": [
        -0.829,
-       -0.103
+       -0.101
       ],
       "px": [
        115,
-       424
+       423
       ],
       "onScreen": true,
       "edgeMargin": 0.171,
-      "depth": 30.888,
+      "depth": 30.865,
       "charPx": 67,
       "headNdc": [
        -0.844,
-       0.063
+       0.065
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2670,20 +2670,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.244,
-       -0.653
+       0.246,
+       -0.651
       ],
       "px": [
-       836,
-       635
+       837,
+       634
       ],
       "onScreen": true,
-      "edgeMargin": 0.347,
-      "depth": 24.996,
+      "edgeMargin": 0.349,
+      "depth": 24.974,
       "charPx": 83,
       "headNdc": [
-       0.25,
-       -0.459
+       0.251,
+       -0.457
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2720,19 +2720,19 @@
       "behind": false,
       "ndc": [
        -0.546,
-       0.342
+       0.344
       ],
       "px": [
        305,
-       253
+       252
       ],
       "onScreen": true,
       "edgeMargin": 0.454,
-      "depth": 36.701,
+      "depth": 36.678,
       "charPx": 56,
       "headNdc": [
        -0.554,
-       0.488
+       0.49
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2784,7 +2784,7 @@
       0,
       1
      ],
-     "length": 13.377,
+     "length": 13.988,
      "points": [
       [
        53.4,
@@ -2792,44 +2792,44 @@
        -14
       ],
       [
-       51.78,
+       51.84,
        14,
-       -13.5
+       -14.56
       ],
       [
-       50.15,
+       50.28,
        14,
-       -13
+       -15.12
       ],
       [
-       48.53,
+       48.72,
        14,
-       -12.5
+       -15.68
       ],
       [
-       46.9,
+       47.16,
        14,
-       -12
+       -16.24
       ],
       [
-       45.28,
+       45.6,
        14,
-       -11.75
+       -16.8
       ],
       [
-       43.65,
-       14,
-       -11.5
+       43.7,
+       14.02,
+       -16.8
       ],
       [
-       42.03,
-       14,
-       -11.25
+       41.8,
+       14.05,
+       -16.8
       ],
       [
-       40.4,
-       14,
-       -11
+       39.9,
+       14.07,
+       -16.8
       ]
      ],
      "source": "map edge quay-deck__cookhouse@0..1",
@@ -2837,6 +2837,7 @@
      "connects": [
       "entry:seam:loop-landing__quay-deck",
       "exit:seam:loop-landing__quay-deck",
+      "entry:seam:deep-stairs-head__deep-stairs-foot",
       "entry:door:cookhouse",
       "exit:door:cookhouse"
      ]
@@ -3193,8 +3194,8 @@
    "measure": {
     "routeSamples": 49,
     "routeInFramePct": 100,
-    "routeLen": 66.619,
-    "spineLen": 66.619,
+    "routeLen": 67.23,
+    "spineLen": 67.23,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -8261,6 +8262,8 @@
    ]
   }
  ],
- "warnings": [],
+ "warnings": [
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 1 of 16 plates are stale against the solve — quay-west (0.05u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+ ],
  "overrides": {}
 }

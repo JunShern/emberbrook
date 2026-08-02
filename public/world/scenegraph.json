@@ -76,7 +76,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-02T17:34:38Z",
+ "generated": "2026-08-02T19:38:43Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -5284,9 +5284,9 @@
    "kind": "door",
    "of": "cookhouse",
    "at": [
-    40.4,
-    14.04,
-    -11
+    39.9,
+    14.07,
+    -16.8
    ],
    "r": 1.8,
    "vTol": 2,
@@ -5301,7 +5301,7 @@
    "label": "Enter Cookhouse",
    "key": "e",
    "reciprocal": "del-cookhouse-int>del-cine@cookhouse",
-   "source": "dellhollow.map.json landmark 'cookhouse' (enterable) -> walk_pad_cookhouse, its doorstep 0.00u off the landmark centre; offered only in shot 'quay-west'"
+   "source": "dellhollow.map.json landmark 'cookhouse' (enterable) -> its MAP point (\"doorstepFromMap\": the map moved this door and the bundle's walk_pad_cookhouse is stale until the next bake); offered only in shot 'quay-west'"
   },
   {
    "id": "del-cookhouse-int>del-cine@cookhouse",
@@ -5317,9 +5317,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    43.266,
+    42.8,
     14.07,
-    -11.441
+    -16.8
    ],
    "spawnYaw": null,
    "cam": {
@@ -7066,6 +7066,7 @@
   "inn: return spawn (24.2,-5.1) is off the walk network — searched to (23.9,-5.5), 0.51u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
   "weapon-shop return spawn: spawn (35.27,-6.92) sat -0.951u from the shelf-west<->shelf-east on 'item-shop__weapon-shop' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (40.30,-6.98), 5.02u along the walk surface, now 3.40u clear, on 'shelf-east' ground (its own shot)",
   "armor-shop return spawn: spawn (47.12,-8.31) sat -0.157u from the shelf-east<->loop-stairs on 'armor-shop__shelf-homes' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (49.69,-8.64), 2.59u along the walk surface, now 0.53u clear, on 'shelf-east' ground (its own shot)",
+  "cookhouse: \"doorstepFromMap\" — trigger taken from the MAP, not walk_pad_cookhouse, which still stands 5.82u away. The bundle is STALE for this landmark: the next blockout/bake moves the pad onto the map point and this flag becomes a no-op.",
   "keepers-cottage return spawn: spawn (89.72,-22.28) sat 0.050u from the crossing<->cottage on 'weave-huts__keepers-cottage' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (90.22,-20.36), 1.98u along the walk surface, now 0.73u clear, on 'cottage' ground (its own shot)",
   "passage 'gate-stair' arrival at 'gate-stair-foot': derived point was off the walk network — searched to (24.9,-5.8), 1.50u away",
   "passage 'gate-stair' arrival at 'gate-stair-head': derived point was off the walk network — searched to (17.6,-5.9), 1.50u away",

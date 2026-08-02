@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-08-02T17:36:56Z",
+ "generated": "2026-08-02T19:38:29Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -2826,24 +2826,24 @@
     }
    ],
    "pos": [
-    36.824,
-    41.255,
-    24.134
+    36.84,
+    41.244,
+    24.11
    ],
    "aim": [
-    44.715,
-    15.446,
+    44.71,
+    15.501,
     14.842
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 28.54,
-   "solvedDist": 28.54,
+   "dist": 28.47,
+   "solvedDist": 28.47,
    "capped": false,
    "samples": 212,
    "inFrameFrac": 1,
-   "zNear": 22.68,
-   "zFar": 38.94,
+   "zNear": 22.66,
+   "zFar": 38.92,
    "charPxNear": 91,
    "charPxFar": 53,
    "clip": [

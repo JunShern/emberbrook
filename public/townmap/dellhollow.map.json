@@ -252,18 +252,21 @@
       "class": "structure",
       "enterable": true,
       "interiorSceneKey": "del-cookhouse-int",
+      "doorstepFromMap": true,
       "kind": "building",
       "district": "quay",
       "pos": [
-        40.4,
-        11,
-        14.0
+        39.9,
+        16.8,
+        14.07
       ],
       "mapVisible": true,
       "residents": [
         "cook"
       ],
-      "note": "warm windows over the gorge at night; the tavern-warmth hub"
+      "note": "warm windows over the gorge at night; the tavern-warmth hub",
+      "_redline_2026-08-02d": "MOVED (40.4,11.0) -> (39.9,16.8), from the building's SOUTH side to its NORTH front, because the cookhouse occluded its own doorstep. MEASURED from the solved `quay-west` camera (body column, 9 heights x 3 lateral offsets, ray-cast against the master): old trigger 0/27 clear and old derived spawn 2/27, blocker `qm_cookhouse` itself 27/27 and 22/27 — the player exited BEHIND the building with the whole cookhouse between them and the camera. `qm_build.py`'s own note says why: the cookhouse was moved NORTH of walk_pad_cookhouse so its lit front faces the gorge, and the doorstep kept deriving from the pad. The new point is on walk_e_quay-deck__deep-stairs-head_l1 at z 14.070, 1.2 m off the north wall: 27/27 clear, and the derived return spawn (42.77,16.8) is 27/27 clear too. The approach edge below was re-routed onto the same north deck so the derived spawn no longer lands inside the building.",
+      "_owed_bake_2026-08-02": "The door LEAF is on the SOUTH face at (39.85, 12.94) facing y- (qm_build.py doorway(parts, 39.85, CY0-0.02, ..., 'y-')), i.e. onto the pad the prompt just left — and that face is 0/27 visible from the only camera that owns this landmark. The diagnosis this fix was dispatched from said the door was already on the north front; it is not, and there is no mesh with `door` in its name anywhere near the cookhouse (it is joined into `qm_cookhouse`). Owed to the Blender lane: one doorway() on the north front between the four lit windows at wx 38.10/39.30/40.50/41.70 (a 1.10 m leaf at 39.85 collides with two of them, so the window run has to re-space), and a re-derived walk_pad_cookhouse on the new map point. Until that bake the prompt is correct and the art is not — `doorstepFromMap` is the flag that says so, and it becomes a no-op the moment the pad is re-derived."
     },
     {
       "id": "market-stalls",
@@ -833,11 +836,12 @@
       "type": "deck",
       "waypoints": [
         [
-          46.9,
-          12,
+          45.6,
+          16.8,
           14.0
         ]
-      ]
+      ],
+      "note": "RE-ROUTED 2026-08-02d with the door (see the cookhouse landmark's _redline): the approach hugs the same outer rail as the deep-stairs deck edge, so it reaches the north front instead of crossing the market to the building's blind south side. THE WAYPOINT IS LOAD-BEARING, not decoration: scenegraph_derive's streetDir takes the LAST waypoint as the street direction, and the return spawn is the doorstep plus 2.9 m along it. Left at (46.9,12) the spawn landed at (42.3,15.2) — inside the cookhouse's own footprint — and only the off-network search would have saved it."
     },
     {
       "from": "quay-deck",
