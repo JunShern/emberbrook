@@ -13014,3 +13014,158 @@ dir and run the tool there:
 `Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/private/tmp/cdpcheck/tools/cdp.mjs'`.
 A green gate in a dirty working tree says nothing about what a clone can run. This
 commit lands `cdp.mjs` and repairs it.
+
+---
+
+## 2026-08-02 — EMBERBROOK'S FIRST NAV-EVAL, and the class of blocker behind "I can't walk in the square"
+
+Lane: nav-eval on Emberbrook (never eval'd before — every prior run in
+`docs/qa/naveval/` is Dellhollow). Trigger: the user, playing Chapter One — *"in the town
+square page I'm not able to access a lot of the map due to some kinds of invisible or
+unexpectedly placed geometries that are blocking my character from walking."*
+
+### The routes file was STALE, and nav-eval composites from it
+`node tools/routes_derive.mjs --town emberbrook --check` → **STALE**. Re-derived and
+committed (5f75335) BEFORE any judging. The drift is the closeness round's: every `screen`
+record was projected through the pre-fov-20 cameras (e.g. one entry's `depth` 33.227 →
+47.631, `charPx` 62 → 78). Route world points are unchanged; the screen block is not.
+Now `--check` is clean. Standing warning it prints, unchanged and not this lane's:
+camera-vs-floor ownership mismatch 3.043 m over 1 span (`brook-bridge__square-plaza@0..0.211`,
+camera `pondlane` over floor owned by `square`).
+
+### THE HEADLINE: the three worst-scoring shots are the three whose OWN DESIGNED ROUTE the walker cannot walk
+
+`--judge oracle-world` (the harness self-check: ground-truth world points handed straight
+to the walker, no image, no judge) is **0.727 town-wide, 8 of 11** — it is supposed to be
+~1.0. It fails on `square`, `homerow`, `gatefield`. The real run's bottom three, N=10,
+pinned gemini-3.6-flash: `gatefield` 0.00, `square` 0.10, `homerow` 0.10. **Perfect rank
+agreement on the bottom three.** The plates are not what is failing those shots; the walk
+network is. (Caveat kept: oracle-world also carries the walker's known local-steering
+pessimism, which cost two of sixteen shots on Dellhollow's ground truth — so read it as
+"the designed route does not survive the shipped walk network here", not as a proof of
+zero walker error.)
+
+Town, N=10, `docs/qa/naveval/run-emb-town-n10`: **TOWN SCORE 0.536, 4 of 11 >= 0.80.**
+```
+woodroad 1.00  therise 1.00  northlane 1.00  waystone 0.80  arch 0.70  gateroad 0.50
+orchard  0.40  pondlane 0.30  homerow 0.10  square 0.10  gatefield 0.00
+```
+`square` was also run alone at N=10 (`run-emb-square-n10`) and scored **0.20** — two
+independent N=10 samples of the identical configuration, 0.10 and 0.20, combined N=20 =
+**0.15**. That spread is this eval's own noise at N=10 on a low shot; quote 0.15 (N=20).
+
+### The 2026-08-01 predictions, scored. Two of the three falsifiers FIRED.
+`docs/qa/naveval/predictions-emberbrook-20260801.md`, registered before any run:
+
+| shot | predicted | measured (N=10) | verdict |
+|---|---|---|---|
+| `woodroad` | 0.0–0.25, HIGH confidence | **1.00** | wrong, and by the whole range |
+| `square` | 0.45–0.70, medium | **0.15** (N=20) | wrong, below the band |
+| `gatefield` | 0.0–0.25, HIGH | **0.00** | right |
+
+The belief under all three was *"legibility follows the light sources, not the exposure."*
+The prediction doc named its own falsifiers and two of them fired:
+* woodroad — the frame it called "functionally black" (median L 6.7, 99.7% under L 25, **no
+  light source in it at all**) got **every one of ten** naive readers out. Ground-plane
+  geometry alone carries a route with no practical in frame.
+* gatefield (0.00) scores *near* square (0.15), and the darkest frame in the town scores
+  1.00. **Darkness is not what drives this metric.** No lighting change would have moved
+  `square`, and the argument for adding a light to the opening shot is materially weaker
+  than the luminance table suggested.
+The one prediction that landed (`gatefield`) landed for a cause the doc did not name — its
+own designed route is broken (below), not its grade.
+
+### THE NAMED OBSTRUCTION: an AREA-FLOOR FOOTPRINT CUT. It has no collider, which is why every collision instrument reports clean.
+
+Not Dellhollow's class. Dellhollow's invisible wall was `fx_dam4_spray` — a *visible* card
+carrying collision it had no business carrying. Emberbrook's is the inverse and the repo
+has no name for it yet: **the walk floor is simply ABSENT**. `emb_blockout.py`'s area-floor
+loop (`# area floors, with the holes`) drops any 0.45 m cell whose centre falls inside a
+landmark footprint padded by `0.28 + CELL/2 = 0.505 m`. Under WALKLOCK `walkGround` returns
+null on a dropped cell and the step is refused. There is no mesh, no triangle, nothing to
+ray-cast — so the picture shows cobbles and the character stops dead.
+
+**Instrument, and it is the proof the class is invisible to the existing gates:**
+`node tools/walk_bodygate.mjs --scene emb-cine --region 50,78,-58,-30 --step 0.15` →
+**39,412 standing samples, 153,464 legal steps, 0 blocked (0.00%), "nothing blocks a step
+anywhere in range."** That is the same square in which 206 m2 of floor is unwalkable. It is
+not a bug in walk_bodygate: it enumerates samples *from the walk meshes' own AABBs* and
+scores steps between two points that both have walk floor. Where the floor was deleted
+there is no step to test, and the denominator never contains the defect.
+
+**The measurement (instrument: `glb_read.trisFlat` standable filter over
+`public/assets/scenes/emb-cine/scene.glb` — walk network byte-identical in `emb-townwalk`,
+56,436 tris / 218 nodes both — cross-checked against a Node port of the builder's own cell
+loop; "covered" = any solid triangle of EITHER shipped bundle projecting into the cell
+between the plaza floor and +3.5 m):**
+```
+FESTIVAL SQUARE, the r14 disc, 0.45 m cells
+  disc                       596.6 m2
+  walkable                   390.4 m2   65.4%
+  refused, a prop on it      128.8 m2   (correct: you can see why)
+  refused, NOTHING on it      77.4 m2   <-- the invisible wall the user is walking into
+```
+And Festival Square is the **outlier, not the norm** — same computation over every area
+floor in the town: `orchard` 85% kept (1 rect cut), `gate-court` 88% (4), `washline-green`
+100% (1), `arrival-clearing` 100% (0), **`square-plaza` 69% (18 rects)**.
+
+The 77.4 m2, by the footprint that cut it:
+```
+  30.8 m2  market-row        <-- 45% of it, one landmark
+  11.9 m2  brook / river-bank / lane-climb / disc edge (not a footprint cut)
+   6.7     item-shop      6.3  inn       5.9  well
+   5.3+1.2 notice-board(+bell)  4.9  heartlight   2.2  village-bell   1.4  festival-dais
+```
+**`market-row` is the single biggest blocker in Festival Square, and the map already says
+why in its own note:** its `footprint` is six *axis-aligned bounding boxes* of stalls yawed
+150 deg — *"Footprints are AABBs of yawed stalls (over-report by design, flagged); true
+shape derivable from axis+slots+size."* Verified: the AABB of a 2.4 x 1.6 stall at 150 deg
+is 2.87 x 2.59 (map's stall0 x[72.1,74.97] y[41.82,44.41] — matches to 0.005 m), so each
+stall refuses **13.96 m2 while occupying 3.84**, and the 0.505 m pad is applied on top of
+the already-inflated box. Its designed 5.8 m threshold gap — the one seam-canon 4 says the
+across-the-square cut has to stand on — survives as **1.60 m of walkable floor** (measured
+by marching the shipped walk network along the row axis; body is 0.60 m wide, so it is
+passable, but it is a slot inside what reads as a 5.8 m opening).
+
+**Costed levers, all measured on the builder's own cell loop, none built** (the walk mesh
+is baked into two GLBs; Blender belongs to another lane):
+```
+  410.7 m2  as shipped (AABB stalls, pad 0.505)
+  434.6 m2  (+23.9)  true yawed market-row rects, same pad   <-- the map already carries
+                              rowAxisDeg 150 / stallSlots / stallSize [2.4,1.6]; blocked
+                              only by multi_foot() hardcoding rz = 0.0
+  443.5 m2  (+32.8)  AABB stalls, pad 0.28 (drop the half-cell)
+  465.3 m2  (+54.7)  both
+  502.8 m2  (+92.1)  no pad at all
+```
+
+### Two more named findings in the same square, both data, neither built
+1. **The Heartlight stands on the plaza's own centre point.** `heartlight.pos` and
+   `square-plaza.pos` are both map `[64, 44]`. Every map edge into `square-plaza`
+   terminates there, so the derived route's junction waypoint sits **inside the monument's
+   own 3.4 m cut** — `(64, 1.5, -44)` has no walk floor (probe: `topsWalk` returns
+   nothing). That is exactly where `--judge oracle-world` gets stuck on `square`: it walks
+   the town's designed route and the route ends inside the Heartlight, 1.63 m short.
+2. **The festival dais reads as steppable and is not.** `emb_dress_dais_board*` spans
+   x[58.30,62.50] z[-42.13,-38.67] at y 1.68–1.75 — **0.18–0.25 m above the plaza floor,
+   far inside STEP_UP 0.63** — with no walk surface on it and a ~20 m2 hole cut around it.
+
+### The rest of the town is CONNECTED — this is friction, not lockout
+Flood-fill of the shipped walk network from the square's own arrival spawn, using play3d's
+walkGround step window on a 0.15 m lattice: **97.3% of the town's walk floor is reachable
+from Festival Square** (62,410 of 64,119 samples). All 8 unreachable islands are elsewhere
+and are door pads with no ribbon: `spring-house` 9.4 m2, `dovecote` 9.0, `smokehouse` 9.0,
+`upper-lane-closed` 5.7, `back-lane-closed` 5.3. So the user CAN get everywhere; what the
+square costs them is a plaza that refuses a third of itself with no visible reason.
+
+`homerow` and `gatefield` fail the same way for a different cause — a GAP in a ribbon, not
+an area cut: `gatefield` has walk floor at (78,-125) and (78,-128) and **none at (78,-123)
+or (78,-124)**, a ~2 m hole mid-route; `homerow` has none from (41,-53) out to (44,-57).
+Not chased — the user's bar for this pass was the square.
+
+### NOTHING WAS BUILT, and that is deliberate
+Every fix above is a Blender rebuild of `emb-cine` + `emb-townwalk` (and by the standing
+rule, a dressing re-run and `emb_decimate --save` after it). Another lane owns the GPU, and
+editing the deterministic builder without rebuilding would leave the committed master
+unbuildable from its own builder — the exact failure CLAUDE.md's digest rule exists to
+catch. The measurements above are the handover; the artifact is the coordinator's.
