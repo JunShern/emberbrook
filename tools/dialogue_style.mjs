@@ -279,20 +279,25 @@ function harvestChapter(rel) {
   }
 }
 
-function harvestDialogueJson() {
-  const chooser = (DLG.defaults && DLG.defaults.players && DLG.defaults.players[0]) || 'vesper';
-  for (const [nodeId, node] of Object.entries(DLG.nodes || {})) {
+// dialogue.json and game/story.json hold the same shape of node and the same kind of
+// line, and since 2026-08-02 story.json holds the CUTSCENE prose of both chapters —
+// the boxes a player reads most. Measuring one and not the other would let the whole
+// of Chapters One and Two drift out of VOICES.md through the file that ships them.
+// Same harvester, one `src` label apart, so a failure names the file it is in.
+function harvestNodeFile(DATA, src) {
+  const chooser = (DATA.defaults && DATA.defaults.players && DATA.defaults.players[0]) || 'vesper';
+  for (const [nodeId, node] of Object.entries(DATA.nodes || {})) {
     for (const l of node.lines || []) {
       const who = (typeof l === 'object' ? l.speaker : null) || node.speaker;
       const text = typeof l === 'object' ? l.text : l;
       if (!text || !who) continue;
-      boxes.push({ src: 'dialogue.json', scene: nodeId, line: 0, who,
+      boxes.push({ src, scene: nodeId, line: 0, who,
         mood: (typeof l === 'object' ? l.expr : null) || node.expr || null,
         channel: channelOf(who), text });
     }
     // a choice is the one line of a conversation the player authors (dialogue_test §2c)
     for (const c of node.choices || [])
-      if (c && c.text) boxes.push({ src: 'dialogue.json', scene: nodeId, line: 0,
+      if (c && c.text) boxes.push({ src, scene: nodeId, line: 0,
         who: node.chooser || chooser, mood: null, channel: 'spoken', text: c.text, isChoice: true });
   }
 }
@@ -464,7 +469,12 @@ const CHAPTERS = SCOPE === 'all'
   ? ['public/js/chapter1.js', 'public/js/chapter2.js', 'public/js/chapter3.js']
   : ['public/js/chapter1.js', 'public/js/chapter2.js'];
 for (const f of CHAPTERS) harvestChapter(f);
-harvestDialogueJson();
+harvestNodeFile(DLG, 'dialogue.json');
+// game/story.json is optional: a tree without the story layer still gates cleanly.
+try {
+  const SP = path.join(ROOT, 'public/game/story.json');
+  if (fs.existsSync(SP)) harvestNodeFile(JSON.parse(fs.readFileSync(SP, 'utf8')), 'story.json');
+} catch (e) { console.log('  (story.json unreadable — not measured: ' + e.message + ')'); }
 
 const fails = [], warns = [];
 const add = (list, box, code, msg) => list.push({ ...box, code, msg });
@@ -559,7 +569,7 @@ const spokenBoxes = boxes.filter(b => b.channel === 'spoken');
 const median = (xs) => { const a = xs.slice().sort((x, y) => x - y); return a.length ? a[a.length >> 1] : 0; };
 
 console.log('\nEMBERBROOK — dialogue style gate     docs/VOICES.md §2 §3 §4 §5 §6 §8');
-console.log(`scope: ${CHAPTERS.map(f => path.basename(f)).join(' · ')} · public/game/dialogue.json`
+console.log(`scope: ${CHAPTERS.map(f => path.basename(f)).join(' · ')} · public/game/dialogue.json · public/game/story.json`
   + (SCOPE === 'all' ? '   (chapter3 measured for information; it does not gate)' : ''));
 console.log(`boxes: ${boxes.length}  (${chan('spoken')} spoken · ${chan('system')} system · ${chan('narrate')} narrate)`);
 console.log(`spoken median: ${median(spokenBoxes.map(b => b.words))} words · ${median(spokenBoxes.map(b => b.sents))} sentences`
