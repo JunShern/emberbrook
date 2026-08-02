@@ -1,10 +1,16 @@
 # cine_visprobe.py — CAN EACH CAMERA SEE ITS REGION? And if not, which angle can?
 #
-#   Blender -b tools/blends/dellhollow-master.blend -P tools/cine_visprobe.py -- [opts]
+#   Blender -b tools/blends/<town>-master.blend -P tools/cine_visprobe.py -- [opts]
 #     (no opts)              report visibility for every solved camera
+#     --town <id>            which town's solved file to read (default dellhollow)
 #     --sweep a,b,c          for these cameras, grid-search yaw/pitch and print the best
 #     --yaw 20,40,...        yaw candidates for the sweep (default 0..340 step 20)
 #     --pitch 12,20,...      pitch candidates (default 10..60 step 8)
+#     --fov 20,26,35         sweep these lenses too, in ONE blend load. The standoff is
+#                            REFITTED per lens (it scales as 1/tan(fov/2)), so this asks
+#                            the question the closeness round actually has: does the
+#                            camera still stand in clear air once a narrower lens pushes
+#                            it 1.8x further out? Default: each camera's own solved fov.
 #
 # WHY THIS EXISTS. The framing solver (tools/cine_solve.mjs) answers "does the region
 # FIT in frame", which is geometry, and it can answer it in milliseconds. It cannot
@@ -21,11 +27,14 @@ import bpy, os, sys, json, math, time
 from mathutils import Vector
 
 REPO = "/Users/junshernchan/projects/multiplayer-rpg"
-S = json.load(open(os.path.join(REPO, "public/townmap/dellhollow.cameras.solved.json")))
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 
 def opt(name, dflt):
     return argv[argv.index(name) + 1] if name in argv and argv.index(name) + 1 < len(argv) else dflt
+
+# THE TOWN, by the house convention (see cine_solve.mjs): one id picks every path.
+TOWN = opt("--town", "dellhollow")
+S = json.load(open(os.path.join(REPO, "public/townmap/%s.cameras.solved.json" % TOWN)))
 
 SWEEP = [s for s in opt("--sweep", "").split(",") if s]
 YAWS = [float(v) for v in opt("--yaw", ",".join(str(y) for y in range(0, 360, 20))).split(",")]
@@ -89,11 +98,13 @@ for cid in SWEEP:
     aim = c["aim"]
     margin = 0.08
     aspect = D["aspect"]
-    fov = c["fov"]
-    print("\n=== SWEEP %s (%d probes, fov %g, aim %s) ===" % (cid, len(pr), fov, aim))
+    FOVS = ([float(v) for v in opt("--fov", "").split(",")] if opt("--fov", "") else [c["fov"]])
+    print("\n=== SWEEP %s (%d probes, fov %s, aim %s) ==="
+          % (cid, len(pr), "/".join("%g" % f for f in FOVS), aim))
     rows = []
     t0 = time.time()
-    for yaw in YAWS:
+    for fov in FOVS:
+      for yaw in YAWS:
         for pitch in PITCHES:
             dirv = Vector((math.cos(math.radians(pitch)) * math.cos(math.radians(yaw)),
                            math.cos(math.radians(pitch)) * math.sin(math.radians(yaw)),
@@ -112,14 +123,32 @@ for cid in SWEEP:
             if dist > D["maxDist"] * 1.25: continue
             pos = Vector(aim) + dirv * dist
             v = seen_frac(pos, pr)
-            rows.append((v, yaw, pitch, dist, tuple(round(x, 2) for x in pos)))
+            # IS THE LENS ITSELF IN A BUSH? The closeness round's own failure mode: a
+            # narrower lens stands the camera 1.8x further out and pondlane's landed
+            # INSIDE a conifer crown (6.2% visible against 40.6% shipped), which the
+            # blockout sweep cannot see because the bundle has no crowns. Fire a short
+            # ray bundle from the stand itself and report how much of the near sphere is
+            # solid, so "buried" is separable from "something is in the way".
+            enc = 0
+            NB = 26
+            for k in range(NB):
+                a = k * 2.399963
+                zz = 1 - 2.0 * (k + 0.5) / NB
+                rr = math.sqrt(max(0.0, 1 - zz * zz))
+                d2 = Vector((rr * math.cos(a), rr * math.sin(a), zz))
+                hit2, *_ = sc.ray_cast(dg, pos, d2, distance=2.5)
+                enc += bool(hit2)
+            rows.append((v, yaw, pitch, dist, fov, enc / float(NB),
+                         tuple(round(x, 2) for x in pos)))
     rows.sort(reverse=True)
     print("  best angles (%.0fs, %d candidates fitted):" % (time.time() - t0, len(rows)))
-    for v, yaw, pitch, dist, pos in rows[:12]:
-        print("    yaw %6.1f  pitch %5.1f  dist %5.1f  visible %5.1f%%   pos %s"
-              % (yaw, pitch, dist, v * 100, pos))
+    print("      yaw  pitch   dist   fov  visible  encl(2.5m)  pos")
+    for v, yaw, pitch, dist, fov, enc, pos in rows[:14]:
+        print("    %5.1f  %5.1f  %5.1f  %4g  %5.1f%%   %5.1f%%     %s"
+              % (yaw, pitch, dist, fov, v * 100, enc * 100, pos))
     if rows:
-        v, yaw, pitch, dist, pos = rows[0]
-        print("    -> suggested framing for '%s': {\"yaw\": %g, \"pitch\": %g}  (%.0f%% visible, %.1fm)"
-              % (cid, yaw, pitch, v * 100, dist))
+        v, yaw, pitch, dist, fov, enc, pos = rows[0]
+        print("    -> suggested framing for '%s': {\"yaw\": %g, \"pitch\": %g, \"fov\": %g}"
+              "  (%.0f%% visible, %.1fm, %.0f%% enclosed)"
+              % (cid, yaw, pitch, fov, v * 100, dist, enc * 100))
 print("\ndone %.0fs" % (time.time() - 0))

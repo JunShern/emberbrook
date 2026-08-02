@@ -12322,3 +12322,74 @@ veg_gate_rimclump legibility surgery unless `ga_build.py` is run after it, and t
 committed to Emberbrook's eleven plates all night. Next session: apply the list, rebuild the
 branch, `ga_build.py`, merge, `cine_solve --check` (expect CLEAN), re-bake `gate` +
 `crossing` + `lockfive`, `geometry_audit`, `cine_test`.
+
+### The same night — WHAT THE DRAFT CONTACT SHEET CAUGHT, and a named limitation of the near-field gate
+
+The eleven re-solved frames were drafted at 1008x576/28 spp on the dressed master before
+any plate was spent. Seven rendered before the round was cut short deliberately (see
+below), and they carry the finding:
+
+    shot        bake-visible  shipped -> drafted
+    gateroad       21.9%  ->  68.8%     the round's biggest win
+    gatefield      98.3%  -> 100.0%
+    woodroad      100.0%  -> 100.0%
+    waystone       90.6%  ->  84.4%     accepted
+    square         79.7%  ->  62.5%     REGRESSED
+    orchard        70.0%  ->  30.0%     REGRESSED
+    pondlane       40.6%  ->   6.2%     UNSHIPPABLE
+
+**THE MECHANISM, and it is doctrine, not an accident.** A narrower lens does not merely
+change the frame — it forces a LONGER STANDOFF (D ~ 1/tan(fov/2); fov 35 -> 20 is 1.79x),
+and a longer standoff puts more DRESSING between the camera and the subject. So the lens
+is only free where the foreground is OPEN. pondlane's stand went from 25.7 m to 43.3 m and
+landed INSIDE A CONIFER CROWN: the right 60% of the drafted frame is pine needles at the
+near clip.
+
+**AND THE NEAR-FIELD GATE CANNOT SEE THIS. Named as a limitation, not discovered as a
+surprise:** the gate (tools/cine_occlude.mjs, consumed by cine_sweep) ray-casts the WALK
+BUNDLE, and the bundle is the blockout — its trees are cones and most are not in it at all.
+It refused 12-42 stands per shot on this town and passed every one of the three above. The
+blockout number is a SCREEN for "does the region fit and is the massing in the way"; it is
+not evidence about foliage in either direction. Where the two disagree the bake wins, and
+this round measured the disagreement at up to 10x (pondlane 59.4% blockout vs 6.2% baked).
+
+**THE ACCEPTANCE BAR IS THEREFORE THE SHIPPED PLATE'S OWN visibleFrac**, not the blockout's:
+a candidate ships only if it beats the number the shot ships with today. A regression
+against a blockout figure is not a regression against reality.
+
+**PER-SHOT `fov` IS THE ANSWER, AND IT IS NOT A RETREAT FROM THE LENS RULING** (coordinator,
+ratified this session). The user's ruling was that characters must read larger; it was never
+"one lens town-wide". A per-shot lens is ordinary cinematography. A uniform lens that stands
+a camera inside a conifer is not. The vegetation-bound shots take the smaller closeness gain.
+
+### TWO NOTES, ONE HOUR APART, AND THE DIFFERENCE BETWEEN THEM IS THE DOCUMENTATION BAR
+
+`orchard`'s shipped note said *"the occluder below 34 degrees is the orchard's own canopy —
+the correct kind, and the reason this shot is not lower"*, and recorded the pitch column it
+came from. I went to pitch 32 anyway and the draft came back at 30% visible. **The note was
+right, it was right because it carried its measurement, and ignoring it cost a plate.**
+
+`waystone`'s shipped note said yaw 280 *"sets it screen-left with the road running past
+it"* — an intent, with no number beside it. Projected through the solved camera the
+landmark is at ndc (-0.01, -0.06), dead centre, and it was (-0.00, -0.05) at the shipped
+fov 35 too. **That composition was never delivered at any lens, and the sentence had been
+read as a measurement for two rounds.**
+
+A note that carries its instrument saved a plate the same hour a note that carried only
+intent sent someone chasing a frame that never existed. This is the documentation bar in
+one paragraph: an interpretation may be recorded only alongside the instrument that proved
+it.
+
+### INSTRUMENT: `tools/cine_visprobe.py` gains `--town`, a fov ladder, and an enclosure probe
+
+The fix for the above is not to iterate 3-minute renders. `cine_visprobe.py` already
+refits the standoff per candidate angle and ray-casts the DRESSED master with the SAME
+`seen_frac` that `cine_bake` records as `visibleFrac` — i.e. it yields the bake's own
+verdict without rendering. It was hardcoded to Dellhollow. Now:
+  * `--town <id>` (the house convention: one id picks every path),
+  * `--fov a,b,c` sweeps LENSES in one blend load, refitting the standoff for each, which
+    is the question this round actually has: does the camera still stand in clear air once
+    a narrower lens pushes it 1.8x further out?
+  * a 26-ray enclosure probe fired from the camera STAND itself over a 2.5 m sphere, so
+    "buried in a crown" is separable from "something is in the way" — the pondlane failure
+    mode, made measurable.
