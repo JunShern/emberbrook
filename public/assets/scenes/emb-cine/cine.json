@@ -127,27 +127,27 @@
    "entry": false,
    "transit": false,
    "pos": [
-    59.325,
-    -30.516,
-    12.076
+    61.326,
+    -41.864,
+    20.188
    ],
    "aim": [
     55.992,
     -11.617,
     0.997
    ],
-   "fov": 35,
+   "fov": 20,
    "clip": [
     0.05,
     1400
    ],
    "rtClip": [
-    4.4519,
-    81.985
+    9.3528,
+    85.088
    ],
    "depth": {
-    "near": 8.90376091003418,
-    "far": 51.24076843261719,
+    "near": 18.705631256103516,
+    "far": 53.1799430847168,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -157,15 +157,15 @@
     "depth": "cameras/waystone/depth.png"
    },
    "spawn": [
-    56.363,
-    -0.13,
-    10.186
+    56.259,
+    -0.2,
+    10.609
    ],
-   "spawnFrom": "walk_pad_waystone",
-   "visibleFrac": 0.9062,
+   "spawnFrom": "walk_e_arrival-clearing__waystone_l6",
+   "visibleFrac": 0.8438,
    "probes": 64,
-   "baked": "2026-08-01T21:14:25Z",
-   "seconds": 306.3,
+   "baked": "2026-08-02T12:15:59Z",
+   "seconds": 398.2,
    "appliedGrade": {
     "exposure": 0.7799999713897705,
     "viewTransform": "AgX",
