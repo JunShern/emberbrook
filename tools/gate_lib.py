@@ -87,9 +87,27 @@ class Terrain:
         notch at the winch: the Waterfront's `cargo_winch_foot` already carries
         its hoist rope up to (28.70, 10.04, 25.03), so the shelf has to let go
         before y=10.6 or the rope would come out of the ground.
+
+        THE APRON CHOP (user redline, left ellipse of
+        docs/qa/refs/user_gate_tier_annotated.png: "Unused space, just chop off
+        to keep the lane narrow, replace with the more-realistic cliff face?").
+        East of the yard the tier ran 4.1-6.1 m past the northernmost walk
+        record — measured per 1 m column off del-cine/scene.glb's 37 tier walk
+        meshes, DAYLOG 2026-08-02.  The yard itself is NOT cut: over x 1.2..10
+        `walk_lm_porters-yard` genuinely reaches y=12.00 against this 12.46 rim,
+        0.46 m of slack, so the bay stays.  The new lip holds a ~1.5 m verge off
+        the road ribbon's own edge from x=11.5 and rejoins the authored rim at
+        the winch (x=26.8).  Deliberately NOT chased column-by-column: a rim
+        scalloped onto every leg of the walk graph reads as a machined edge, and
+        the shoulder is a minimum, not a target.  `gate_ground` skirts "wherever
+        the sheet stops", so the cut face IS the more-realistic cliff face the
+        redline asks for; `gate_parapet` is placed by walking outward from
+        `T.rim`, so the guard follows the new lip; rim vegetation clones off the
+        same function.
         """
-        P = [(1.2, 12.46), (9.5, 12.46), (12.5, 12.10), (16.0, 11.55),
-             (20.0, 11.10), (24.5, 10.60), (26.8, 10.25), (27.6, 9.95),
+        P = [(1.2, 12.46), (9.5, 12.46), (10.6, 12.10), (11.5, 9.60),
+             (13.0, 8.40), (16.0, 7.10), (19.0, 8.60), (22.0, 9.50),
+             (25.0, 10.05), (26.8, 10.25), (27.6, 9.95),
              (30.2, 9.95), (31.9, 10.40)]
         if x <= P[0][0]:
             return P[0][1]
