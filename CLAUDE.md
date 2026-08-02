@@ -238,6 +238,20 @@ git runs here, on branch `migration/3d-hybrid`.
   EDITING A DATABLOCK IS NOT EDITING THE ARTIFACT — any consumer that re-reads from
   disk needs the edit written out and the datablock repointed; the only proof is
   measuring the artifact, never the log.
+- **A BACKTICK INSIDE A CSS COMMENT ENDS THE TEMPLATE LITERAL** (2026-08-02, hit
+  INDEPENDENTLY by two lanes within one hour: ui_kit.js:122 and battle_turnbased.js:207).
+  Every UI module keeps its stylesheet in ``const CSS = ` … ` ``; writing a quoted word
+  like `` `sm` `` in a comment inside it TERMINATES the string, and the file becomes a
+  SyntaxError. HEAD parsed, the working tree did not — it crashed economy_test and
+  encounter_sim outright. The nastier half: a module that fails to parse still LOOKS
+  present, and since every module self-arms at load AND on 'eb-scene', a parse error is
+  invisible until an in-place scene swap silently leaves the module absent.
+  transition_test's console gate is what catches it. Use plain quotes in CSS comments.
+- **A TEST THAT CANNOT BOOT IS NOT A TEST THAT FAILED.** transition_test exits 13 at
+  `== BOOT` while any lane (or the townwalk refresh cron) is mid-write on
+  public/assets/scenes/townwalk/scene.glb (~51 MB) — the boot gate waits on that asset.
+  Re-run once the export settles; do not read it as a regression, and do not "fix" code
+  against it.
 - Agent lanes: written handovers (transcripts expire); DAYLOG notes per phase;
   coordinator owns play3d.html, the town maps, and this file.
 - Documentation bar (user ruling): notes carry AUTHORITY — a written interpretation
