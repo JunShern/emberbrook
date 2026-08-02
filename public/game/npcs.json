@@ -284,7 +284,7 @@
     {
       "id": "rowan",
       "name": "Elder Rowan",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "square",
       "position": [60.40, 1.50, -42.40],
       "facing": 114,
@@ -298,21 +298,21 @@
     {
       "id": "poppy",
       "name": "Poppy",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "square",
-      "position": [50.62, 1.50, -45.12],
+      "position": [49.76, 1.50, -44.29],
       "facing": 85,
       "portrait": "poppy",
       "body": { "type": "model", "src": "assets/characters/mara/mara-v1.glb", "tint": "#e8b294", "h": 1.09 },
       "bodyNote": "borrowed body: mara's 3D model in bakery terracotta. Poppy's own GLB is outstanding (see rowan).",
       "idleBehavior": "stand",
       "dialogue": "poppy.hail",
-      "note": "Her own doorstep — walk_pad_bakery, the door AND the serving window in the same wall, which the map calls 'warm window on the square'. The audit's post is the bakery landmark (47.2, 45.4); that is the building CENTRE and has no walk surface, so the pad 3.4 m east of it is the same post made standable. Facing 85 is out at the square, which is the direction a bread-window faces."
+      "note": "Her own doorstep — walk_pad_bakery, the door AND the serving window in the same wall, which the map calls 'warm window on the square'. The audit's post is the bakery landmark (47.2, 45.4); that is the building CENTRE and has no walk surface, so the pad 3.4 m east of it is the same post made standable. Facing 85 is out at the square, which is the direction a bread-window faces. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (50.62, -45.12) she was 1.20 m from the bakery door trigger at [51.82, 1.57, -45.12] r 1.8, i.e. 0.60 m INSIDE it — standing in her own doorway, her prompt arguing with the door's. Moved 1.2 m along the frontage to the WINDOW half of the wall: 2.22 m from the trigger centre, 0.42 m clear. Verified on the walk network, not by eye — walkGround (play3d's own rule, replayed against emb-cine/scene.glb's triangles) reads 1.57 here and the body box is clear."
     },
     {
       "id": "mara",
       "name": "Mara",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "square",
       "position": [62.13, 1.50, -44.50],
       "facing": 255,
@@ -326,7 +326,7 @@
     {
       "id": "pip",
       "name": "Pip",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "square",
       "position": [60.25, 1.50, -45.00],
       "facing": 75,
@@ -342,7 +342,7 @@
     {
       "id": "finn",
       "name": "Finn",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "lanes",
       "position": [86.00, 1.00, -48.00],
       "facing": 124,
@@ -356,9 +356,9 @@
     {
       "id": "mochi-emb",
       "name": "the cat",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "woodroad",
-      "position": [56.36, -0.20, 10.19],
+      "position": [56.20, -0.20, 11.60],
       "facing": 340,
       "height": 0.30,
       "radius": 1.5,
@@ -367,13 +367,13 @@
       "idleBehavior": "wander",
       "wander": { "radius": 1.1, "speed": 0.35 },
       "dialogue": "mochi.waystone",
-      "note": "The waystone, OUTSIDE the arch on the Whisperwood road — the user's 2026-08-01 REDLINE puts it there and names it as where Mochi hires himself to Vesper. A SECOND RECORD, not a move: id 'mochi' is the Dellhollow cat at the eel stall and both towns need him, so the two posts are two records with two ids and two hail nodes. Same plate, same cat."
+      "note": "The waystone, OUTSIDE the arch on the Whisperwood road — the user's 2026-08-01 REDLINE puts it there and names it as where Mochi hires himself to Vesper. A SECOND RECORD, not a move: id 'mochi' is the Dellhollow cat at the eel stall and both towns need him, so the two posts are two records with two ids and two hail nodes. Same plate, same cat. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (56.36, 10.19) he was 1.57 m from the arch>waystone cut's landing spawn [56.67, -0.18, 8.65] — 0.47 m after his 1.1 m errand is subtracted, so a player arriving on that cut materialised inside a wandering cat. Moved 1.4 m UP the road toward the stone itself (the waystone is at runtime z 12.0, he is now at 11.60): 2.99 m from the spawn, 1.89 m after the errand."
     },
 
     {
       "id": "emb.miller",
       "name": "the miller",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "homerow",
       "position": [48.02, 2.00, -60.54],
       "facing": 124,
@@ -386,21 +386,21 @@
     {
       "id": "emb.neighbour",
       "name": "neighbour",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "homerow",
-      "position": [51.54, 1.87, -52.81],
+      "position": [50.70, 1.87, -54.90],
       "facing": 47,
       "body": { "type": "model", "src": "assets/characters/finn/finn-v1.glb", "tint": "#b98f68", "h": 1.11 },
       "bodyNote": "archetype villager: finn's model in warm russet — deliberately the furthest tint from the miller's flour-grey, because these two share Home Row (see her bodyNote).",
       "idleBehavior": "wander",
       "wander": { "radius": 1.6, "speed": 0.5 },
       "dialogue": "emb.neighbour.hail",
-      "note": "Home lane, the first bend below the square. THE REASON: Home Row is where the village LIVES and it is the emptiest walkable stretch in Emberbrook — five doors and, until now, nobody between them. He is walking up to the square, which is what everyone in this village is doing tonight, so he wanders rather than stands. Facing 47 is up the lane."
+      "note": "Home lane, the first bend below the square. THE REASON: Home Row is where the village LIVES and it is the emptiest walkable stretch in Emberbrook — five doors and, until now, nobody between them. He is walking up to the square, which is what everyone in this village is doing tonight, so he wanders rather than stands. Facing 47 is up the lane. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (51.54, -52.81) he was 0.72 m from the homerow>square cut's landing spawn [52.07, 1.88, -52.32] — MINUS 0.88 m once his 1.6 m errand is subtracted, the worst of the five. Moved 2.25 m down Home Row past the bend: 2.92 m from that spawn, 1.32 m after the errand, and still walking up toward the square (facing unchanged). walkGround 1.94, body clear."
     },
     {
       "id": "emb.townsfolk",
       "name": "old woman at the washline",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "lanes",
       "position": [82.00, 1.00, -60.00],
       "facing": 200,
@@ -413,24 +413,24 @@
     {
       "id": "emb.girl",
       "name": "girl in the square",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "square",
-      "position": [66.50, 1.50, -41.50],
+      "position": [65.45, 1.50, -41.50],
       "facing": 250,
       "height": 0.72,
       "body": { "type": "model", "src": "assets/characters/pip/pip-v1.glb", "tint": "#e8d2b4", "h": 0.72 },
       "bodyNote": "archetype villager: pip's model, warmed. Bust emb.girl -> child-girl.",
       "idleBehavior": "wander",
-      "wander": { "radius": 2.4, "speed": 0.85 },
+      "wander": { "radius": 1.6, "speed": 0.85 },
       "dialogue": "emb.girl.hail",
-      "note": "The square, between the village bell and the notice board. THE REASON: impliedScale's DENSIFICATION RULING says the square is crowded at the Kindling Hour with background villagers, named cast the interactive minority — this is the first instalment, and children are what a festival square has. She keeps 2 m clear of the bell posts (x[67.47..68.53]) at full wander."
+      "note": "The square, between the village bell and the notice board. THE REASON: impliedScale's DENSIFICATION RULING says the square is crowded at the Kindling Hour with background villagers, named cast the interactive minority — this is the first instalment, and children are what a festival square has. She keeps 2 m clear of the bell posts (x[67.47..68.53]) at her errand radius. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (66.50, -41.50) with a 2.4 m errand — the largest in either town — she reached 1.86 m from the store's own exit spawn [68.36, 1.5, -41.38], i.e. MINUS 0.54 m of clearance: a child standing where the player materialises walking out of the shop. TWO changes, both measured: the errand is trimmed 2.4 -> 1.6 (the house default; at 2.4 no post within 2 m of the bell clears that spawn at all — the ring search returns nothing nearer than the Heartlight plinth, which is a different place), and the post moves 1.05 m west. Now 2.91 m from the spawn, 1.31 m after the errand, and still between the bell (2.6 m east) and the board."
     },
     {
       "id": "emb.boy",
       "name": "boy on the pond lane",
-      "scene": "emb-townwalk",
+      "scene": ["emb-townwalk", "emb-cine"],
       "district": "lanes",
-      "position": [79.25, 1.15, -46.55],
+      "position": [79.90, 1.15, -49.00],
       "facing": 200,
       "height": 0.76,
       "body": { "type": "model", "src": "assets/characters/pip/pip-v1.glb", "tint": "#b9c4a8", "h": 0.76 },
@@ -438,7 +438,7 @@
       "idleBehavior": "wander",
       "wander": { "radius": 1.8, "speed": 0.85 },
       "dialogue": "emb.boy.hail",
-      "note": "Pond lane, 1 m from pips-den. THE REASON: the den is Pip's and Pip is up at the square with his mother, so somebody is waiting at it — which is the only way a prop called 'Pip's den' says anything while Pip is elsewhere. Facing 200 is at the den."
+      "note": "Pond lane, 1 m from pips-den. THE REASON: the den is Pip's and Pip is up at the square with his mother, so somebody is waiting at it — which is the only way a prop called 'Pip's den' says anything while Pip is elsewhere. Facing 200 is at the den. MOVED 2026-08-02 by the emb-cine dual-scening pass: adding 'emb-cine' to the scene list put this post inside the cinematic bundle's OWN claimed ground, which emb-townwalk has none of (no camera cuts, no door triggers). Authored at (79.25, -46.55) he was 1.84 m from the pondlane>square cut's landing spawn [77.42, 1.2, -46.71] — 0.04 m after his 1.8 m errand, the narrowest pass in the file. Moved 2.5 m along the lane to the den itself (pips-den is at runtime [79.6, -50.0]; he is 1.03 m from it now, which is what the note above already asked for): 3.38 m from the spawn, 1.58 m after the errand."
     },
 
     {
