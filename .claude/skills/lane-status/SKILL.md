@@ -81,9 +81,21 @@ print(time.strftime('%H:%M',time.localtime(st.st_birthtime)),
       int(time.time()-st.st_mtime))"
 ```
 
-A lane whose last write is minutes old is **stalled or dead** — flag it 🔴 rather than
-reporting it as running. A lane can also die on an API/session limit; that is not a code
-failure and the work is usually resumable, so say which it was.
+**Idle-seconds alone cannot distinguish "inside a long tool call" from "stopped and
+waiting" — check the last event type** (2026-08-02, the user caught two paused lanes I had
+reported as healthy). Read only the TAIL of the transcript (seek to the last ~4 KB, parse the
+final JSONL line — never read the whole file):
+
+```python
+# last line's "type": "assistant" with no tool call in flight => the lane has STOPPED
+# and is waiting; a send via SendMessage resumes it with context intact. Kick it, then
+# report it as "stopped — kicked", never as running.
+```
+
+A lane whose last event is a tool call and whose last write is minutes old is genuinely
+*working* on something slow (a bake, a browser gate) — report that as running. A lane can
+also die outright on an API/session limit; that is not a code failure and the work is
+usually resumable, so say which of the three states it was: working / stopped-kicked / dead.
 
 ## Estimating
 
