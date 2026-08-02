@@ -12149,3 +12149,118 @@ only); the resolved position and housing name are recorded in appliedGrade.
       `sealed` and cannot choose sigil-gate while valley-road-south is listed
       first. Wiring is map/derive + story-flag work (coordinator's call), not
       marker work.
+
+------------------------------------------------------------
+
+## 2026-08-02 (night) — THE CAMERA-CLOSENESS ROUND (Emberbrook), camera lane
+
+USER REDLINE: *"the camera angle is often too high up and far away from the characters.
+The player's character and NPCs end up looking pretty small, like ants... Rule of thumb:
+the INTERIOR shots are a good UPPER BOUND on closeness."*
+
+### 1. The interior bound, and a wrong number retired
+
+Instrument: each interior blend opened headless, ITS OWN camera read, a 1.7 m figure
+projected at the far end of the WALKABLE floor (`walk_*` meshes only, head point, view-z
+— the same z `frameReport` uses for charPxFar), frame 768 px.
+
+    emb-inn-int     vfov 40   z_far 12.35 m   145 px
+    emb-item-int    vfov 34   z_far 11.52 m   185 px
+    emb-bakery-int  vfov 30   z_far 10.75 m   227 px
+    emb-lake-int    vfov 26   z_far 11.41 m   248 px      median 206
+
+**The "157-179 px, vfov 35" figure stamped into emberbrook.cameras.json that morning is
+VOID.** It assumed a uniform vfov 35 that NOT ONE of the four interiors uses (they run
+26-40) and it measured to the far WALL rather than to the far end of the floor a character
+can stand on. Both errors pushed it low. Corrected in the file with the instrument.
+
+### 2. The lever is the LENS, and the intuition is backwards
+
+The solver does not choose a distance, it chooses the smallest distance at which the owned
+region still fits. So D ~ 1/tan(fov/2), the far sample sits at z = D + regionDepth, and
+
+    charPxFar  ~=  charH * 768 / (2E + 2*regionDepth*tan(fov/2))
+
+E being the half-extent the frame must hold. **The lens term is the only one an angle can
+touch, and it SHRINKS with fov** — a wide lens spends its pixels on a huge near field and
+a tiny far field. Measured, best angle over 18x12 stands per shot per lens (cine_sweep
+`--fov N --maxdist 300`), charPxFar ceilings:
+
+                    fov35 fov28 fov22 fov18 fov14
+      woodroad        89   104   114   122   130
+      waystone       117   124   138   154   172
+      arch            59    60    68    75    82
+      orchard         55    61    66    70    76
+      therise         94    97   110   123   139
+      square          43    49    53    57    60
+      pondlane        67    72    80    89    98
+      homerow         60    62    73    83    82
+      northlane       64    66    72    79    90
+      gateroad        70    73    78    87    99
+      gatefield       54    58    62    65    70
+
+Monotone on ten of eleven. **Ruled at fov 20** (hfov 34.6 deg, ~a 62 mm normal lens; the
+shipped 35 was hfov 57, ~a 34 mm wide) and NOT at 14: the complaint is "drone shot", and a
+wide lens high up IS the drone, while past ~14 the town stops having perspective at all.
+maxDist 66 -> 100, the same leash re-scaled by the same 1/tan(fov/2).
+
+**IT ALSO BOUGHT THE PITCH BACK, which is half the win.** The near-field gate — not
+composition — is what had held arch at pitch 18 (10 was refused at a ray 0.25 of the
+standoff), therise at 14 (10 was a HARD reject at 0.233), woodroad at 34, and gateroad off
+its own bearing entirely. At fov 20 those stands sit 1.79x further out, the ray ratio
+clears, and all four came back DOWN. Lower camera, bigger character, same bearing.
+
+### 3. The bands, and the ceiling nobody can re-aim past
+
+    ORDINARY      charPxFar 62-145 px
+    ESTABLISHING  charPxFar >= 40 px AND charPxNear >= 60 px   (exactly one shot: square)
+
+Ceiling 145 = the loosest interior (the inn); the user's rule is that interiors bound
+closeness from above. **Floor 62 is the measured limit of this shot list, not a wish**:
+charPxFar <= charH*768/(2E) is arithmetic about REGION SIZE, and the worst ordinary shot's
+ceiling over 612 stands at five lenses is gatefield at 65. 62 is one notch under it, so it
+binds rather than refuses. `gateroad` was proposed as establishing that morning and is
+REFUSED the label: it is a transit road with no town in it and it reaches 73.
+
+**WHAT THIS ROUND CANNOT REACH.** FF-parity closeness is ~15% of frame = ~115 px; this
+slate delivers a median 65 and a best 98. Emberbrook plays 11 shots over ~180 m where
+Dellhollow plays 16 over ~100 m — about 2.5x under-covered — and that under-coverage IS
+the ants complaint at its root. A 115 px floor needs roughly 18-22 shots: a shot-list and
+seam-canon round, plus the plaza map-topology fix `_split_refused` already names.
+
+### 4. Delivered
+
+charPxFar shipped -> re-solved: woodroad 59->74, waystone 76->90, arch 44->69,
+orchard 50->64, therise 69->98, square 37->47, pondlane 66->75, homerow 58->65,
+northlane 58->63, gateroad 61->73, gatefield 54->62. Median 59 -> 69, min 37 -> 47.
+Bearings held everywhere except pondlane (+10 deg) and gateroad (re-aimed).
+
+**gateroad's occluder question, answered as composition and confirmed on the oracle.**
+It was pulled from night sign-off at 21.9% baked-visible, almost all tree canopy. yaw 140
+pitch 50 stands ABOVE the bend looking DOWN THROUGH the crowns — which is exactly why the
+blockout sweep scored that stand 64% and the dressed master 22%. Returned to the shot's
+OWN original bearing, yaw 80 pitch 14: a low stand looking ALONG the road, under the
+canopy, refused by the near-field gate at fov 35 and admitted at fov 20.
+**Draft bake on the dressed master: 21.9% -> 68.8% visible.**
+
+**square's charPxMin ratchet retires**, 38 -> 45, green at a delivered 47. Recorded in its
+own record that this is NOT the 37.9 median ground luminance (a PASS) — an earlier session
+fused the two numbers and they measure different things.
+
+The night grade is REPLAYED PER SHOT from the shipped cine.json `appliedGrade`, never
+re-opened: 0.78/0.60/moon 2.0 for the four lampless shots (+ glow 0.35 / anchorlight 900
+on woodroad and waystone), 1.00/0.65 for the village with the per-shot floor-pass moons
+(arch 3.14, therise 3.75, homerow 2.71, northlane 2.0, rest 1.5).
+
+### 5. Two instrument notes worth keeping
+
+* **The blockout sweep and the bake disagree by up to 3x, and the direction is not random.**
+  therise measured 98% on the walk bundle and 50.0% on the shipped bake; gateroad 64% vs
+  21.9%. The bundle has no crowns. Every sightline number in a cameras.json note is a
+  SCREEN; the bake's ray-cast is the verdict, and for any shot whose occluder is foliage
+  the two must be quoted separately.
+* **`cine_bake --draft --standins`**: adding and removing the stand-in meshes between
+  cameras invalidates Cycles' scene BVH, and on a 27 M-triangle dressed master that
+  rebuild IS the frame (133 s and 123 s for 1008x576/28 spp frames worth ~12 s of ray
+  tracing). Built once and MOVED instead. Same class as the datablock rule: the cost was
+  in the thing being rebuilt, not in the thing being measured.
