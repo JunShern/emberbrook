@@ -28,6 +28,7 @@ const arg = (k, d) => {
 };
 const OUT = arg('out', 'docs/qa/ow/shot.png');
 const SKY = arg('sky', '1');
+const LIGHT = arg('light', '1');   // ?owlight — the 2026-08-02 lighting probe
 const SCENE = arg('scene', 'ow-valley');
 const PORT = parseInt(arg('port', '3000'), 10);
 // PORT: a free one unless --cdp says otherwise. Two tools shipped 9351 and
@@ -38,7 +39,7 @@ const CHROME = process.env.CHROME_BIN ||
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 const URL = `http://localhost:${PORT}/play.html?scene=${SCENE}&rt=1&owsky=${SKY}` +
-            `&nomusic=1&v=${Date.now()}`;
+            `&owlight=${LIGHT}&nomusic=1&v=${Date.now()}`;
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 const profile = join(process.env.TMPDIR || '/tmp', 'ow-shot-profile');

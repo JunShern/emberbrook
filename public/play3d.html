@@ -106,7 +106,7 @@ function loadBackdrop(ep){
     if(ep!==EPOCH){t.dispose();return;}
     t.encoding=THREE.sRGBEncoding; BGTEX=t; if(!window.__cine)scene.background=t;},undefined,()=>{});
 }
-scene.add(new THREE.AmbientLight(0xffffff,.95)); const dl=new THREE.DirectionalLight(0xffd9a8,1.3);dl.position.set(6,10,4);scene.add(dl);
+const AMBIENT=new THREE.AmbientLight(0xffffff,.95); scene.add(AMBIENT); const dl=new THREE.DirectionalLight(0xffd9a8,1.3);dl.position.set(6,10,4);scene.add(dl);
 // HD-2D billboard character
 const ch=new THREE.Group(); scene.add(ch);
 const sheet=new THREE.TextureLoader().load('assets/characters3d/'+CHAR+'.png');
@@ -780,7 +780,47 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     } else {
       scene.background=new THREE.Color(0x8a7a6a);
     }
-    RTLIGHT=new THREE.HemisphereLight(0xffe8c8, 0x4a4038, 0.75); scene.add(RTLIGHT); }
+    RTLIGHT=new THREE.HemisphereLight(0xffe8c8, 0x4a4038, 0.75); scene.add(RTLIGHT);
+    // ---------------------------------------------------------------------
+    // OVERWORLD LIGHT PROBE  (2026-08-02, ?owlight=0 disables)
+    //
+    // The user's complaint is that the overworld "looks like an early two
+    // thousands game". The sky probe tested one hypothesis and REFUTED it: sky
+    // and horizon moved only 3.2% of the frame, because at this 35-degrees-down,
+    // 40 m map camera you are looking at GROUND, not sky. This tests the next
+    // one, and it is a lighting hypothesis rather than a geometry one because
+    // lighting is hours and geometry is days — cheapest discriminating test first.
+    //
+    // WHAT IS ACTUALLY WRONG, measured off the shipped rig: fill overwhelms key.
+    // AmbientLight 0.95 (page scope) + HemisphereLight 0.75 = ~1.70 of
+    // omnidirectional fill against a DirectionalLight of 1.30, and NOTHING casts
+    // a shadow (shadowMap was never enabled). A surface lit from every direction
+    // at once has no gradient, so nothing reads as having form — which is exactly
+    // what a flat-shaded 2003 renderer looks like.
+    //
+    // ONE CHANGE CLASS ONLY, so the A/B stays clean: drop the fill, raise the key,
+    // turn shadows on. No geometry, no materials, no camera. If this moves a lot
+    // of the frame the terrain rebuild can wait; if it moves as little as the sky
+    // did, the gap really is geometry and we will have learned that for an hour
+    // rather than a day.
+    if(OWCAM && Q.get('owlight')!=='0'){
+      OWLIGHT_SAVED={amb:AMBIENT.intensity, dl:dl.intensity, hemi:RTLIGHT.intensity,
+                     shadows:R.shadowMap.enabled};
+      AMBIENT.intensity=0.28;          // was .95 — fill becomes fill, not a flood
+      RTLIGHT.intensity=0.30;          // was .75
+      dl.intensity=2.30;               // was 1.3 — the key light becomes the key
+      dl.position.set(60,90,40);       // a sun, not a lamp 6 m away
+      dl.castShadow=true;
+      dl.shadow.mapSize.set(2048,2048);
+      const c=dl.shadow.camera; c.left=-160;c.right=160;c.top=160;c.bottom=-160;
+      c.near=1;c.far=400;c.updateProjectionMatrix();
+      R.shadowMap.enabled=true; R.shadowMap.type=THREE.PCFSoftShadowMap;
+      OWSHADOWED=[];
+      g.scene.traverse(o=>{ if(o.isMesh && !/^(walk|bar_|__ow)/i.test(o.name)){
+        o.castShadow=true; o.receiveShadow=true; OWSHADOWED.push(o); }});
+      if(model) model.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
+    }
+  }
   const FXRE=/^(fx_|FOG|.*haze|ridge_upstream|far_town|v10_)/i;
   g.scene.updateMatrixWorld(true);
   g.scene.traverse(o=>{if(o.isMesh){
@@ -891,7 +931,7 @@ function disposeGltf(root){
     if(o.userData){ disposeMaterial(o.userData.hideMat); disposeMaterial(o.userData.dbgMat); }
   });
 }
-let RTLIGHT=null;
+let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null;
 // THE SKY PROBE'S OWN MESHES. Added 2026-08-02 after `transition_test` caught the
 // first version leaking: its MATERIALS went into SCENEMATS (mats delta 0, clean)
 // but its GEOMETRIES were disposed by nothing, so renderer.info climbed +4 per
@@ -901,6 +941,14 @@ let RTLIGHT=null;
 // only half a teardown.
 const OWSKYMESH=new Set();
 function sceneDispose(){
+  // restore the light probe's globals — AmbientLight and `dl` are PAGE-scope, so
+  // leaving them dimmed would follow the player into every town they walk into
+  if(OWLIGHT_SAVED){
+    AMBIENT.intensity=OWLIGHT_SAVED.amb; dl.intensity=OWLIGHT_SAVED.dl;
+    dl.castShadow=false; R.shadowMap.enabled=OWLIGHT_SAVED.shadows;
+    if(OWSHADOWED) for(const o of OWSHADOWED){ o.castShadow=false; o.receiveShadow=false; }
+    OWSHADOWED=null; OWLIGHT_SAVED=null;
+  }
   for(const m of OWSKYMESH){
     scene.remove(m);
     if(m.geometry) m.geometry.dispose();       // the half that leaked
