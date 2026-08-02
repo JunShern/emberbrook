@@ -28,8 +28,21 @@ Mesh data, weights, materials and textures are untouched.
 import struct, json, sys
 import numpy as np
 
-SRC = "/Users/junshernchan/projects/multiplayer-rpg/public/assets/characters/vesper/vesper.glb"
-DST = sys.argv[1] if len(sys.argv) > 1 else "/tmp/vesper-fixed.glb"
+# GENERALISED 2026-08-02.  This was written for vesper.glb with both paths hardcoded,
+# and then Lake's delivery arrived with the SAME defect (max |jointGlobal @ IBM - I|
+# = 1.970, worst joint L_Hand, against Vesper's 1.95) — the repair is per-EXPORTER,
+# not per-character, because it undoes a Tripo behaviour: 0 of N joint nodes carrying
+# a transform, so the whole rig lives in the IBMs in a permuted frame.  Two positional
+# args now, with the old vesper defaults kept so any existing caller is unaffected.
+#     python3 tools/vesper_fix_glb.py <src.glb> <dst.glb>
+_V = "/Users/junshernchan/projects/multiplayer-rpg/public/assets/characters/vesper/vesper.glb"
+_a = [x for x in sys.argv[1:] if not x.startswith('-')]
+if len(_a) >= 2:
+    SRC, DST = _a[0], _a[1]
+elif len(_a) == 1:
+    SRC, DST = _V, _a[0]            # legacy form: one arg was the DESTINATION
+else:
+    SRC, DST = _V, "/tmp/vesper-fixed.glb"
 
 # axis permutation taking the IBM (bind) frame -> the mesh frame: (x,y,z) -> (y,z,x)
 P = np.array([[0., 1., 0.],
