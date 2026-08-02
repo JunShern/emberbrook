@@ -1,0 +1,135 @@
+<meta charset="utf-8"><title>Lake — coat redesign (2026-08-02)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--bg:#140f0c;--card:#221913;--ink:#ece0d0;--dim:#a89179;--warm:#e9a24b;
+        --line:#3a2c20;--ok:#7fc98a;--bad:#e07a6a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,sans-serif}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 24px 70px}
+  h1{margin:0 0 4px;font-size:26px}
+  h1 .fl{color:var(--warm)}
+  .sub{color:var(--dim);margin:0 0 22px}
+  h2{margin:38px 0 6px;font-size:14px;text-transform:uppercase;letter-spacing:1.6px;color:var(--warm)}
+  p{max-width:78ch}
+  .lead{background:#1c150f;border:1px solid var(--line);border-left:3px solid var(--warm);
+        border-radius:8px;padding:14px 18px;margin:16px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;margin-top:14px}
+  figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  figure.pick{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok)}
+  figure.rej{opacity:.62}
+  figure img{width:100%;display:block;background:#0b0806;cursor:zoom-in}
+  figcaption{padding:9px 12px;font-size:12.5px;color:var(--dim)}
+  figcaption b{color:var(--ink);font-size:13px;display:block;margin-bottom:2px}
+  .tag{display:inline-block;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;
+       border-radius:20px;padding:1px 8px;margin-bottom:5px}
+  .t-ok{background:#1e3324;color:var(--ok);border:1px solid #2f5c3c}
+  .t-no{background:#33201e;color:var(--bad);border:1px solid #5c332f}
+  table{border-collapse:collapse;margin-top:12px;font-size:14px;width:100%;max-width:820px}
+  th,td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--warm);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+  td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bad{color:var(--bad)} .ok{color:var(--ok)}
+  #lb{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;
+      z-index:9;cursor:zoom-out;padding:24px}
+  #lb img{max-width:100%;max-height:100%;border-radius:8px}
+</style>
+<div class="wrap">
+<h1>Lake — the <span class="fl">coat</span> redesign</h1>
+<p class="sub">2026-08-02 · why the cape had to go, what replaced it, and the turnaround that is ready for Tripo</p>
+
+<div class="lead">
+<b>The short version.</b> The first Tripo delivery failed for two independent reasons. The file
+itself arrived corrupt — a resumed download wrote a retry at byte zero, overwriting exactly the
+block that holds the skeleton's bind matrices. That alone is just a re-download. The blocker is
+the second one: <b>the cape bound to his arms and legs, not his spine</b>. An auto-rigger binds
+each vertex to the nearest joint, and the cape hung about 35&nbsp;cm clear of the body, where
+nothing nearby <i>is</i> the spine. Under a stride it scissored with the limbs.
+The fix keeps everything that was working and closes the garment against the body.
+</div>
+
+<h2>The measurement that decided it</h2>
+<p>From <code>tools/char_intake.py</code>, run on the delivered GLB. "Sheet region" = a
+contiguous run of garment geometry standing clear of the body.</p>
+<table>
+  <tr><th>Model</th><th>Bind probe (joint×IBM ≈ I)</th><th>Largest sheet region</th><th></th></tr>
+  <tr><td>finn</td><td class="n">1.9e−06</td><td class="n">—</td><td class="ok">pass</td></tr>
+  <tr><td>maren</td><td class="n">1.3e−06</td><td class="n">—</td><td class="ok">pass</td></tr>
+  <tr><td>vesper</td><td class="n">1.95</td><td class="n">1,610 (collar)</td><td>fail, repairable</td></tr>
+  <tr><td><b>lake (cape)</b></td><td class="n bad">1.8e+37</td><td class="n bad">7,714 + 6,789 (cape panels)</td><td class="bad">re-roll</td></tr>
+</table>
+<p>Cape panel A came back <b class="bad">85.9% arm-weighted</b>; panel B <b class="bad">67.1% arm /
+27.7% leg</b>. For scale, the largest sheet on any shipped model is Vesper's collar at 1,610 verts.</p>
+<p><b>The swept-back decision was vindicated in the same pass</b> — the arms were genuinely
+separate geometry (closed loops at 42–52%, matching Finn) and both hands bound 100% clean. So the
+pose stays. Only the garment changes.</p>
+
+<h2>Round 1 — three directions</h2>
+<p>Generated as full A-poses, because that is the view that has to bind. Two findings, both from
+looking rather than from any metric: only one roll held the house render style, and the two
+"open front" variants reproduce the cape defect in miniature.</p>
+<div class="grid">
+  <figure class="pick"><img src="coat/A-belted-knee-1.png" alt="">
+    <figcaption><span class="tag t-ok">the pick</span><b>A · belted, knee-length</b>
+    Closed and belted, set-in sleeves on both arms. The only roll that stayed in our painterly
+    toon style at ~5 heads. Skirt hangs around the legs — the correct joint for a skirt.</figcaption></figure>
+  <figure class="rej"><img src="coat/A-belted-knee-2.png" alt="">
+    <figcaption><span class="tag t-no">off-style</span><b>A · second roll</b>
+    Same design, but drifted to semi-photoreal at ~7 heads with a stubbled adult face.</figcaption></figure>
+  <figure class="rej"><img src="coat/B-open-midthigh-1.png" alt="">
+    <figcaption><span class="tag t-no">rejected</span><b>B · open front</b>
+    The open coat creates two free panels flanking the torso, beside the arms — structurally
+    the cape problem again, at half scale. Also off-style.</figcaption></figure>
+  <figure class="rej"><img src="coat/B-open-midthigh-2.png" alt="">
+    <figcaption><span class="tag t-no">rejected</span><b>B · second roll</b>
+    Nicest picture of the set and still wrong: same two floating front panels.</figcaption></figure>
+  <figure class="rej"><img src="coat/C-mantle-1.png" alt="">
+    <figcaption><span class="tag t-no">rejected</span><b>C · shoulder mantle</b>
+    Kept as the option that preserves cape language. It flares over the upper arms and ends at
+    the elbow line — fabric placed exactly in the zone that failed. Loses the coat silhouette too.</figcaption></figure>
+</div>
+
+<h2>Round 2 — refining the pick</h2>
+<p>Three rolls chained off A-1 asking for a narrower skirt that falls straight against the legs.
+<b>The model refused the edit</b> — all three came back essentially identical. Kept here because
+the null result is the point: it stopped the iteration. On reflection the flare does not matter.
+A skirt binding to the legs is a skirt behaving like a skirt; the cape's fatal error was binding
+to the <i>arms</i>.</p>
+<div class="grid">
+  <figure><img src="coat/A2-narrow-knee.png" alt=""><figcaption><b>narrow · knee</b>unchanged</figcaption></figure>
+  <figure><img src="coat/A2-narrow-knee-b.png" alt=""><figcaption><b>narrow · knee, 2nd roll</b>unchanged</figcaption></figure>
+  <figure><img src="coat/A2-narrow-thigh.png" alt=""><figcaption><b>narrow · mid-thigh</b>came back <i>longer</i></figcaption></figure>
+</div>
+
+<h2>Shipped — the turnaround for Tripo</h2>
+<p>Front is A-1 rendered directly in the house style; left, right and back are chained off it, so
+all four views share one anchor rather than averaging two references. (That mattered: the previous
+attempt blended a stale pre-redesign ref and returned a genuinely different face.)</p>
+<div class="grid">
+  <figure class="pick"><img src="coat/ta-front.png" alt=""><figcaption><b>front</b>A-pose, arms clear, hands empty</figcaption></figure>
+  <figure class="pick"><img src="coat/ta-left.png" alt=""><figcaption><b>left</b></figcaption></figure>
+  <figure class="pick"><img src="coat/ta-right.png" alt=""><figcaption><b>right</b></figcaption></figure>
+  <figure class="pick"><img src="coat/ta-back.png" alt=""><figcaption><b>back</b>hood reads, no free panel</figcaption></figure>
+</div>
+<p><b>One honest reservation.</b> In the side views his hands sit close to the coat skirt. If the
+mesh fuses them, the intake gate catches it in about twenty seconds and the front view — which
+dominates the conditioning and has clear separation — is the one to re-roll.</p>
+
+<h2>What did not change</h2>
+<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">
+  <figure class="rej"><img src="coat/retired-cape-front.png" alt="">
+    <figcaption><b>retired: the cape turnaround</b>Kept at
+    <code>public/assets/characters/lake/turnaround-cape-retired/</code></figcaption></figure>
+</div>
+<p><b>The cut-in portraits keep the front-draped cape</b>, deliberately. A portrait never animates.
+A portrait and a walk cycle want different silhouettes, and the dramatic drape is what makes his
+close-ups read.</p>
+
+</div>
+<div id="lb"><img id="lbi" alt=""></div>
+<script>
+const lb = document.getElementById('lb'), lbi = document.getElementById('lbi');
+document.querySelectorAll('figure img').forEach(i =>
+  i.addEventListener('click', () => { lbi.src = i.src; lb.style.display = 'flex'; }));
+lb.addEventListener('click', () => { lb.style.display = 'none'; });
+addEventListener('keydown', e => { if (e.key === 'Escape') lb.style.display = 'none'; });
+</script>
