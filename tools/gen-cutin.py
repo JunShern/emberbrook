@@ -701,8 +701,30 @@ def matte_key(im):
             ref = np.dstack([_boxf(out[..., c] * sol) for c in range(3)])
             ref = ref / np.maximum(wgt, 1e-4)[..., None]
             have_ref = wgt > 0.02
-            den = ((key[0] - ref[..., 0]) + (key[2] - ref[..., 2]))
-            num = ((out[..., 0] - ref[..., 0]) + (out[..., 2] - ref[..., 2]))
+            # THE SHARE IS MEASURED ON THE KEY'S OWN CHROMA AXIS, NOT ON BRIGHTNESS
+            # (2026-08-03). The first version summed the R and B deltas against the
+            # local opaque reference — "how much more red and blue is this pixel than
+            # its neighbours" — and read every LEGITIMATELY BRIGHTER edge pixel as key
+            # residue. A pale collar beside a dark coat, a lit shoulder above a shadow:
+            # num goes positive with no magenta in the pixel at all, share reaches 0.3
+            # to 0.5, and subtracting that much magenta drives R and B below G. The
+            # result is the NEON CHARTREUSE the block below already names as a failure
+            # mode, arriving here instead of in the sub-pixel wisps — as a bright green
+            # OUTLINE around the whole figure, at alpha 0.86-0.96 where the wisp blend
+            # (w = 1 above alpha 0.68) never bites and so could not undo it.
+            # MEASURED, on the shipped set: 79 of 112 plates carried it, worst 3158 px
+            # on boatwright/cutin; every one had passed tools/cutin_edge.py, whose halo
+            # metric is a LUMINANCE difference and is blind to a hue this wrong.
+            # Magenta lives on (R+B)/2 - G, so that is what the mixture is solved in:
+            # a pixel that is merely brighter than its neighbours moves both terms
+            # together and contributes nothing, while a pixel carrying key residue
+            # separates. Same arithmetic, right axis. After: 1 px on hobb, 1 on
+            # boatwright, 6 on vesper/wry — with the magenta-residue count unchanged
+            # or lower on every plate tested, so this does not buy green with pink.
+            _mg = lambda c: (c[..., 0] + c[..., 2]) / 2.0 - c[..., 1]
+            _mk = (key[0] + key[2]) / 2.0 - key[1]
+            den = (_mk - _mg(ref))
+            num = (_mg(out) - _mg(ref))
             share = np.where((den > 60.0) & have_ref & soft,
                              np.clip(num / np.maximum(den, 1e-4), 0.0, 0.65), 0.0)
             sh = share[..., None]
