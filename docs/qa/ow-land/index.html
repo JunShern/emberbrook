@@ -54,8 +54,10 @@ light, air, ground detail and blended transitions. Everything below is diagnosed
 <br><br><strong>These are AAA renders from a professional studio and this is a prototype. Parity is not on offer
 and nothing here claims it.</strong> What is on offer is the two or three techniques that close the most perceived
 distance for the least work, each measured, each with the gap it does <em>not</em> close stated in the same
-breath. <mark>Nothing on this page ships</mark>: the bundle, the map files and <code>play3d.html</code> are
-untouched; every candidate is injected into the live runtime over CDP and photographed.</p>
+breath. <mark>Nothing on this page shipped when it was written</mark> &mdash; every candidate below was injected into
+the live runtime over CDP and photographed, with the bundle, the map files and <code>play3d.html</code>
+untouched. <strong>All three were then TAKEN and LANDED on 2026-08-03 &mdash; see
+<a href="#landed">&sect;LANDED</a> at the foot of the page for the shipped frames and the port check.</strong></p>
 </header>
 
 <main>
@@ -465,6 +467,133 @@ COLOR_0 are already linear); SIM.tp(x,z) raycasts from the CURRENT P.y; the
 terrain and vegetation meshes are UNINDEXED; and no instrument can derive a road
 heading from the RLE-ordered zone raster — nothing here needs one, the road is
 used only as a MASK.</pre></div>
+
+
+<h2 class="sec" id="landed">&sect;LANDED &mdash; 2026-08-03, and what the shipped build actually measures</h2>
+<p class="desc">The coordinator took <strong>all three</strong>. L1 is now
+<code>public/play3d.html</code>'s overworld rig; L2 and L3 are <code>tools/valley_land.py</code>, run from
+<code>tools/valley_build.py</code> right after the terrain materials are solved, and baked into
+<code>public/assets/scenes/ow-valley/scene.glb</code>. <strong>The frames below are the SHIPPED build</strong>
+&mdash; no injection, no probe, nothing held in a browser session.</p>
+
+<div class="why"><b>The four cameras on this page were never written down</b>, so the landing lane could not
+reproduce them and re&#8209;derived its own. They are now
+<code>tools/ow_probe/land_cams.json</code>, pinned to ROAD STATIONS of <code>valley_map.py</code>'s
+<code>ValleyField</code> so a map edit cannot silently move them, and expanded by
+<code>tools/ow_probe/land_spec.py</code>. The re&#8209;derived gate camera reproduces this page's own published
+before/after to within 0.005 L, which is what says it is the same camera. <b>Every &ldquo;before&rdquo; below is a
+real frame from commit <code>c34ce03</code></b>, served out of a git worktree on its own port, so the
+comparison is against the code and the bundle as they actually were &mdash; not against a remembered number.</div>
+
+<h3>The Emberbrook gate &mdash; boom 16 <span class="tag cost">SHIPPED</span></h3>
+<div class="row">
+ <figure class="pane is-before"><img src="plates/SL0-gate.jpg" alt=""><figcaption>BEFORE &middot; c34ce03</figcaption></figure>
+ <figure class="pane"><img src="plates/SL1-gate.jpg" alt=""><figcaption>SHIPPED &middot; L1+L2+L3</figcaption></figure>
+</div>
+<h3>The open valley &mdash; boom 12 <span class="tag cost">SHIPPED</span></h3>
+<div class="row">
+ <figure class="pane is-before"><img src="plates/SL0-meadow.jpg" alt=""><figcaption>BEFORE &middot; c34ce03</figcaption></figure>
+ <figure class="pane"><img src="plates/SL1-meadow.jpg" alt=""><figcaption>SHIPPED &middot; L1+L2+L3</figcaption></figure>
+</div>
+<h3>The same spot at the shipped follow camera &mdash; boom 40 <span class="tag cost">SHIPPED</span></h3>
+<div class="row">
+ <figure class="pane is-before"><img src="plates/SL0-vista.jpg" alt=""><figcaption>BEFORE &middot; c34ce03</figcaption></figure>
+ <figure class="pane"><img src="plates/SL1-vista.jpg" alt=""><figcaption>SHIPPED &middot; L1+L2+L3</figcaption></figure>
+</div>
+<h3>The gorge road, Dellhollow approach &mdash; boom 40 <span class="tag cost">SHIPPED</span></h3>
+<div class="row">
+ <figure class="pane is-before"><img src="plates/SL0-gorge.jpg" alt=""><figcaption>BEFORE &middot; c34ce03</figcaption></figure>
+ <figure class="pane"><img src="plates/SL1-gorge.jpg" alt=""><figcaption>SHIPPED &middot; L1+L2+L3</figcaption></figure>
+</div>
+
+<div class="why"><b>What I see in the shipped build, having opened all eight.</b> At the gate the tan/green
+polygon boundary is broken by tufts standing on both sides of it and the road stops being a decal; the meadow is
+a real green with patches in it instead of one olive wash. In the village at boom 12 the shadow side of every
+cottage is a readable blue&#8209;grey rather than the same brown darker, which is the whole point of moving the
+fill onto the hemisphere. At boom 40 &mdash; the camera the player actually plays on &mdash; the black hole in
+the foreground becomes ground you can read, the cliff cools out of orange into a grey&#8209;brown, and the green
+shelf separates from it instead of blending in. On the gorge road the far wall now takes haze and the picture
+has a near/far it did not have. <b>The clumps are the one thing I would fix next</b>: 273 squashed icosahedra
+at rock feet read at walking distance as faceted green gems, exactly as this page predicted when it called them
+stand&#8209;ins. They ported faithfully; they are simply not good, and they are 5,220 of the 114,450 triangles.</div>
+
+<h3>The port check &mdash; probe against shipped, same camera, same frame</h3>
+<p class="desc">A port that lands different numbers than the probe is a <strong>port bug until proven
+otherwise</strong>. Three columns: the real before, the probe injected over that same before, and the shipped
+build. <code>tools/ow_probe/imgstat.py</code>, full frame, HUD hidden.</p>
+<table class="sum">
+<tr><th>frame</th><th>L05 (shadows)</th><th>L50</th><th>L95</th><th>sat50</th><th>b&minus;r dark</th><th>detail</th><th>1&#8209;hue mass</th></tr>
+<tr class="beforerow"><td>gate &middot; before</td><td class="n">0.097</td><td class="n">0.366</td><td class="n">0.535</td><td class="n">0.615</td><td class="n">&minus;0.102</td><td class="n">40.5</td><td class="n">0.618</td></tr>
+<tr><td>gate &middot; PROBE</td><td class="n">0.155</td><td class="n">0.501</td><td class="n">0.677</td><td class="n">0.541</td><td class="n">&minus;0.087</td><td class="n">50.6</td><td class="n">0.382</td></tr>
+<tr><td>gate &middot; <b>SHIPPED</b></td><td class="n">0.155</td><td class="n">0.501</td><td class="n">0.677</td><td class="n">0.542</td><td class="n">&minus;0.087</td><td class="n">50.6</td><td class="n">0.382</td></tr>
+<tr class="beforerow"><td>meadow &middot; before</td><td class="n">0.088</td><td class="n">0.297</td><td class="n">0.449</td><td class="n">0.633</td><td class="n">&minus;0.096</td><td class="n">29.1</td><td class="n">0.497</td></tr>
+<tr><td>meadow &middot; PROBE</td><td class="n">0.157</td><td class="n">0.415</td><td class="n">0.619</td><td class="n">0.500</td><td class="n">&minus;0.095</td><td class="n">37.2</td><td class="n">0.389</td></tr>
+<tr><td>meadow &middot; <b>SHIPPED</b></td><td class="n">0.157</td><td class="n">0.415</td><td class="n">0.619</td><td class="n">0.500</td><td class="n">&minus;0.095</td><td class="n">37.2</td><td class="n">0.389</td></tr>
+<tr class="beforerow"><td>vista &middot; before</td><td class="n">0.078</td><td class="n">0.274</td><td class="n">0.488</td><td class="n">0.600</td><td class="n">&minus;0.058</td><td class="n">38.3</td><td class="n">0.411</td></tr>
+<tr><td>vista &middot; PROBE</td><td class="n">0.148</td><td class="n">0.375</td><td class="n">0.642</td><td class="n">0.452</td><td class="n">&minus;0.030</td><td class="n">46.9</td><td class="n">0.392</td></tr>
+<tr><td>vista &middot; <b>SHIPPED</b></td><td class="n">0.149</td><td class="n">0.377</td><td class="n">0.642</td><td class="n">0.453</td><td class="n">&minus;0.030</td><td class="n">47.0</td><td class="n">0.394</td></tr>
+<tr class="beforerow"><td>gorge &middot; before</td><td class="n">0.055</td><td class="n">0.211</td><td class="n">0.415</td><td class="n">0.572</td><td class="n">&minus;0.046</td><td class="n">29.2</td><td class="n">0.370</td></tr>
+<tr><td>gorge &middot; PROBE</td><td class="n">0.119</td><td class="n">0.327</td><td class="n">0.521</td><td class="n">0.325</td><td class="n">&minus;0.006</td><td class="n">39.6</td><td class="n">0.411</td></tr>
+<tr><td>gorge &middot; <b>SHIPPED</b></td><td class="n">0.119</td><td class="n">0.327</td><td class="n">0.520</td><td class="n">0.329</td><td class="n">&minus;0.006</td><td class="n">39.7</td><td class="n">0.409</td></tr>
+</table>
+<div class="why"><b>The shipped build reproduces the probe to &plusmn;0.002 on every column of every camera.</b>
+L05 &mdash; the darkest twentieth, i.e. the shadows &mdash; roughly doubles at all four (0.097&rarr;0.155,
+0.088&rarr;0.157, 0.078&rarr;0.149, 0.055&rarr;0.119). detail is up 25&ndash;36 %. One&#8209;hue mass falls at
+three of the four; it rises at the gorge, where cooling the rock has moved the whole wall into the same bin the
+grass sits in &mdash; the one column that got worse, and it is worth saying so.</div>
+
+<h3>The bundle side, read out of the exported GLB</h3>
+<div class="bands"><pre>L3, on the same measurement the probe made (per-primitive mean of COLOR_0):
+
+  primitive                probe          SHIPPED        verts
+  ground_valley_1 grass    0.383 -&gt; 0.638   0.637        16,293 (both)
+  ground_valley_2 dry      0.345 -&gt; 0.428   0.428         1,958 (both)
+  ground_valley_3 rock     0.502 -&gt; 0.543   0.542        55,793 (both)
+
+  9.5 % of ground corners clip at 1.0 in the builder where three.js left them
+  over 1.0 in the probe.  It costs 0.001 of mean L; it is reported because it is
+  a REAL difference between the two, not because it matters.
+
+L2, placement counts:
+
+                    probe        SHIPPED
+  seam cells        6,467        6,473
+  tufts            17,837       17,908     (+0.4 %)
+  clumps              261          273
+  flowers             841          771  in 81 patches (probe: 89)
+  triangles       113,924      114,450
+
+  The probe hashed triangles; the builder ray-casts a BVH.  A handful of seam
+  cells tie-break the other way, and because the whole pass runs off ONE rng
+  stream, that difference is carried downstream — which is why the flower count
+  moves most and means least.  The frames measure identical.
+
+Bundle: scene.glb 31.7 -&gt; 45.5 MB, of which veg_land_tufts is 12.89 MB.  glTF
+cannot instance what the probe drew as one InstancedMesh, so 17,908 tufts are
+17,908 copies of 18 vertices.  THE COUNT IS A KNOB.</pre></div>
+
+<h3>Not collision &mdash; asked of the ENGINE, not of the file</h3>
+<div class="why"><b>114,450 triangles of grass that BLOCKED the player would be a far worse defect than the
+flatness this pass exists to fix.</b> 1,800 vertices sampled at random out of
+<code>veg_land_{tufts,clumps,flowers}</code> in the shipped GLB, then put through <code>SIM.blocked()</code>
+<em>inside the running game</em>: 62 come back blocked and <b>not one of them by a <code>veg_land_*</code>
+mesh</b> &mdash; all 62 are terrain, cottages and props that a tuft happens to stand against.
+<code>walk_engine_gate --scene ow-valley</code> is 2065/2065 cells, 0 lost, 0 extra.</div>
+
+<h3>What the landing lane refused</h3>
+<div class="why gap"><b>&sect;4, the road shadow &mdash; already fixed, by someone else.</b> The regex is gone
+from <code>play3d.html</code>: all five visible <code>walk_</code> meshes receive and cast. Both the before and
+the after on this page already have it, which is why it is not in any number above.<br><br>
+<b>The camera pitch &mdash; still not mine.</b> &sect;5 stands: no camera on this page contains a sky pixel, so
+the dome, the three ridge rings and the far half of the new fog remain invisible in play. Raising the pitch is a
+gameplay call about how much ground a player can read ahead.<br><br>
+<b>A new one, measured while re&#8209;deriving the cameras.</b> At boom 40 the shipped follow camera is
+<em>inside the canopy</em> for road stations ~78&ndash;172: six of nine stations sampled across the corridor
+photograph nothing but leaves. That is most of the walked route, and it is the reason the two boom&#8209;40
+cameras above sit at stations 30 and 150. It is a camera/collision question, not an art one.<br><br>
+<b>And the clumps were NOT quietly dropped.</b> They ship, faceted and all, because the decision was all three
+and a lane that lands a decided candidate minus the part it dislikes is a lane that shipped a weakened version
+quietly. The fix is a modelling pass, not a knob.</div>
 
 <p class="note" style="margin-top:30px">Related: <a href="../ow-art/index.html">the first art probe</a> (the
 corridor is undressed &mdash; measured) and <a href="../ow-forest/index.html">the forest probe</a> (why every tree

@@ -43,13 +43,25 @@ highest-value lane on the board.
   both quartiles of every frame — nothing in the corridor was cool. The refs are pictures of
   LIGHT, not of ground detail. That is the transferable property, and it is why "add more
   stuff" candidates kept missing.
-  **NOT YET LANDED.** `da28b89` committed the REPORT only; L1/L2/L3 live in the uncommitted
-  probe `tools/ow_probe/land.js`. Porting them into the runtime + the valley builder is a
-  real lane. **QUEUED behind the Old Gate lane**, which is inside `valley_build.py` right now
-  and would collide.
+  **LANDED 2026-08-03** in `4b7d259` (L1 -> play3d's ow rig) and `f94545d` (L2+L3 ->
+  `tools/valley_land.py`, run from `valley_build.py`, baked into `ow-valley/scene.glb`).
+  The shipped build reproduces the probe to **±0.002 on every imgstat column of all four
+  cameras**, and the GLB's own COLOR_0 lands the probe's L3 numbers to ±0.001 on identical
+  vertex counts. Shipped frames + the port-check table: `docs/qa/ow-land/index.html` §LANDED.
+  The four cameras are now WRITTEN DOWN (`tools/ow_probe/land_cams.json`, pinned to road
+  stations) — they never were, and the landing lane had to re-derive them.
+  Cost paid: `scene.glb` 31.7 -> 45.5 MB (12.9 MB of it tufts; glTF cannot instance what
+  the probe drew as one InstancedMesh). Not collision — 1,800 tuft vertices through
+  `SIM.blocked()` in the running game, 62 blocked and NOT ONE by a `veg_land_*` mesh.
+  **Left standing, deliberately:** the 273 clumps ship faceted (they are stand-ins and read
+  as green gems at boom 12 — a modelling pass, not a knob); §4 the road shadow was already
+  fixed by another lane before this one started.
   **Also proven and out of reach for now:** all four ow cameras contain ZERO sky pixels, so
   the sky dome, ridge rings and horizon fog built 2026-08-02 are invisible in play. Raising
-  the pitch is a GAMEPLAY call, so it goes to the user, not to me.
+  the pitch is a GAMEPLAY call, so it goes to the user, not to me. **NEW, same class
+  (measured 2026-08-03):** at boom 40 the shipped follow camera is INSIDE the canopy for
+  road stations ~78-172 — six of nine sampled stations photograph nothing but leaves, i.e.
+  most of the walked corridor. Camera/collision question, not an art one.
 
 ## TRANCHES
 

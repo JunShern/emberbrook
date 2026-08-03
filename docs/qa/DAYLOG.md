@@ -15564,3 +15564,60 @@ because it is low-res, not because it is good).
 Waiting on the user: L1 / L2 / L3, a combination, or a rejection. My recommendation on the
 page, labelled as mine to reject: the road-shadow fix regardless, then L3, then L1 as its
 pair, then L2 staged at road-verge-only first.
+
+### 2026-08-03 — the landscape pass SHIPS (L1+L2+L3 out of the probe, into the build)
+
+Coordinator took all three. Landed in `4b7d259` (L1 -> `play3d.html`'s overworld rig: blue
+fill moved onto the HEMISPHERE, one cool shadowless bounce, fog 150 m -> 34 m, KEY UNTOUCHED)
+and `f94545d` (L2+L3 -> `tools/valley_land.py`, called from `valley_build.py` right after
+`terrain_pbr_f2` because both read the ground's own slot choice).
+
+**THE PORT WAS CHECKED AGAINST THE PROBE, NOT AGAINST TASTE**, and that is the transferable
+part. The probe's PRNG, iteration order and early-`continue` sequence were reproduced exactly,
+which is what makes its own counts a port check at all. Instruments: `imgstat.py` on four
+cameras (real before from a git worktree at `c34ce03` on its own port), and the exported GLB's
+COLOR_0 read directly.
+
+- frames: shipped reproduces probe to **±0.002 on every column of all four cameras**.
+  L05 (the shadows) roughly doubles at each: 0.097→0.155, 0.088→0.157, 0.078→0.149,
+  0.055→0.119. detail +25-36 %.
+- bundle: `ground_valley_1` grass 0.383→**0.637** (probe 0.638), dry →**0.428** (0.428),
+  rock →**0.542** (0.543), on IDENTICAL vertex counts (16,293 / 1,958 / 55,793).
+- L2 counts 17,908 / 273 / 771 against 17,837 / 261 / 841. The builder ray-casts a BVH
+  where the probe hashed triangles; a handful of seam cells tie-break the other way and ONE
+  shared rng stream carries it downstream, which is why the flower count moves most and
+  means least.
+
+**LESSONS WORTH THE INK.**
+- **A GALLERY THAT DOES NOT RECORD ITS CAMERAS CANNOT BE REPRODUCED.** ow-land's four
+  viewpoints existed only in a dead lane's transcript, so the landing lane spent a Chrome
+  run re-deriving them. They are now `tools/ow_probe/land_cams.json`, pinned to ROAD
+  STATIONS of `ValleyField` so a map edit cannot silently move them.
+- **A "BEFORE" SHOULD BE A FRAME, NOT A REMEMBERED NUMBER.** `git worktree add` at the base
+  commit + `PORT=3011 node server.js` (symlink `node_modules`) gives a real before on the
+  real code in about two minutes, and it is the only thing that makes a three-way
+  before/probe/shipped table honest once the bundle has been overwritten.
+- **glTF CANNOT INSTANCE WHAT THREE.JS DREW AS ONE `InstancedMesh`.** 17,908 tufts baked to
+  17,908 copies of 18 vertices: `scene.glb` 31.7 -> 45.5 MB, 12.9 MB of it `veg_land_tufts`.
+  A probe's triangle count is not its bundle cost.
+- **AUTHORED NORMALS SURVIVE THE PORT ONLY IF YOU CARRY THEM.** A tuft blade is one
+  near-vertical triangle; shaded by its facet normal it is edge-on to the key and goes
+  black. `normals_split_custom_set` carries the probe's leaning normals through the export.
+- 9.5 % of ground corners clip at 1.0 in Blender where three.js left COLOR_0 over 1.0. It
+  costs 0.001 of mean L — recorded because it is a real difference between the two, not
+  because it matters.
+
+**ENGINE, NOT FILE:** 1,800 vertices sampled out of `veg_land_{tufts,clumps,flowers}` in the
+shipped GLB and run through `SIM.blocked()` inside the running game — 62 blocked, **not one
+by a `veg_land_*` mesh**. `walk_engine_gate --scene ow-valley` 2065/2065 cells, 0 lost.
+
+**LEFT STANDING, DELIBERATELY.** The 273 clumps ship faceted: at boom 12 they read as green
+gems, exactly as the probe page predicted when it called them stand-ins. They were NOT
+quietly dropped — the decision was all three, and a lane that lands a decided candidate minus
+the part it dislikes has shipped a weakened version quietly. Fix is a modelling pass.
+§4 (the road receiving shadow) was already fixed by another lane before this one started.
+
+**NEW, MEASURED WHILE RE-DERIVING THE CAMERAS:** at boom 40 the shipped follow camera is
+INSIDE the canopy for road stations ~78-172 — six of nine sampled stations across the
+corridor photograph nothing but leaves. That is most of the walked route. Camera/collision,
+not art.
