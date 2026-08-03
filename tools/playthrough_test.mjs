@@ -428,8 +428,26 @@ async function anchor(cdp, id) {
   ok(at2 && at2.scene === 'ow-valley', 'at.scene tracks the corridor', at2);
 
   head('5. Chapter Two, in Dellhollow');
+  // WHERE THE HARNESS STANDS FOR ch2.road, AND WHY IT IS A HAIR OFF THE BEAT'S ANCHOR.
+  // The anchor is the Dellhollow Valley Gate, [44.88, 12.01, -36.19]. It used to be
+  // [184.88, 12.01, -136.19] — valley.region.json's portal in REGION order with the
+  // axes swapped and the TILE OFFSET never applied, which put it OFF the 280x200 tile
+  // on both axes, over nothing but `fx_vista_ring`, 279.7 m from any reachable ground.
+  // The beat could only ever fire by teleport, and this harness was the teleport. Fixed
+  // in story.json 2026-08-03; the transform is T(p)=[p[0]-140, p[2], 100-p[1]].
+  //
+  // MEASURED IN THE RUNNING GAME, NOT THE FILE (2026-08-03, ow-valley, WALKLOCK off):
+  // SIM.ground at the anchor is 12.159, 0.15 m under its own stated y. The exact point
+  // is body-BLOCKED by `portal_markers` (the gate's own marker prop — walk_bodygate
+  // scores it 5244 blocked steps here), so the harness stands on the nearest clear
+  // ground, 0.4 m away at y 12.455, inside r=30 / vTol=40. From the corridor's east
+  // bank below the Old Gate court, reach_probe fills to within the beat's radius of
+  // this point in 4453 cells with no edge taken. From the SOUTH-road arrival on the
+  // west bank it does not: 167851 cells, no path. That is the Old Gate court's masonry,
+  // measured independently by the Old Gate lane and fixed there with a road-arc
+  // back-off — not this anchor.
   const roadFired = await ev(cdp, `(async()=>{
-    ${'SIM.tp(184.88,-136.19,12.01);'}
+    ${'SIM.tp(44.5,-36.31,12.455);'}
     const t0=Date.now();
     while(Date.now()-t0<40000){
       if(GS.state.beats['ch2.road']) return true;

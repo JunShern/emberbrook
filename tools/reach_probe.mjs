@@ -69,9 +69,22 @@ window.__ebReach = async function(A, B, opt){
   const t0 = Date.now();
   let probes = 0, yields = 0;
 
-  const wl = (()=>{ const el = document.getElementById('wl');   // the live flag, mirrored
-    if (el) return !!el.checked;
-    return /^(del-|emb-|townwalk)/.test(String(SIM.scene())); })();
+  // WALKLOCK, RE-DERIVED FROM THE SAME THREE INPUTS play3d DERIVES IT FROM, never read
+  // off the checkbox. #wl is rendered ONCE, at page load, from the scene the page opened
+  // on (play3d.html:808) and is rewritten by nothing but a human clicking it — while
+  // sgSwap() re-runs sceneParams() on every in-place scene change and silently moves the
+  // real flag underneath it. So a page that opened in emb-cine and then took the edge
+  // into ow-valley shows a CHECKED box over a runtime with WALKLOCK off, and this fill
+  // answered the overworld with the town's rules: it saw the 418 m2 road ribbon instead
+  // of the valley floor and called a standable, reachable rim "not standable". That red
+  // was the instrument, not the world (2026-08-03, §W's ch1.done -> ch2.road pair).
+  // play3d.html:35, verbatim in its inputs — scene, the URL (sgSwap rewrites it BEFORE
+  // the modules are told), and localStorage. All three are live at every tick.
+  const wl = (()=>{
+    if (!/^(del-|emb-|townwalk)/.test(String(SIM.scene()))) return false;
+    try { if (new URLSearchParams(location.search).get('walklock') === '0') return false; } catch(e){}
+    try { if (localStorage.getItem('eb-walklock') === '0') return false; } catch(e){}
+    return true; })();
 
   const pickWalk = (x,z,lo,hi)=>{ const f = SIM.walkFloors(x,z); let b = null;
     for (let i=0;i<f.length;i++){ const y=f[i]; if (y>=lo && y<=hi && (b===null || y>b)) b=y; }
