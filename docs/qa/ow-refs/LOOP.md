@@ -33,8 +33,16 @@ against pre-rendered" argument) were wrong.
 2. **THE CRITIC IS BLIND AND FRESH.** A new Opus 5 agent per round. No history, no knowledge of
    which image is ours, randomised order. This is the leg the Gauntlet Loop calls essential and
    the one we did not have: **never let the builder grade itself.**
-3. **ONE DEFICIT PER ROUND, NOT A LIST.** Six weaknesses give a builder no priority and produce
-   scattered half-work.
+3. **THE CRITIC MAY LIST; THE COORDINATOR TRIAGES.** User correction 2026-08-04: *"even if it
+   gives you a list of criticisms, you are the coordinator and so you can try to dish out
+   multiple improvements to the subagents in a single turn if you like. No need to make this
+   such a rigid structure, you have judgment."*
+   I had written "one deficit per round" as a rule ON THE CRITIC. Wrong place. The real risk is
+   **one BUILDER given six things and doing none of them well** — which is fixed by what each
+   lane is handed, not by starving the critique. A list is naturally divisible when the lanes
+   own different surfaces: pipeline items to one, content items to the other. Rank by what would
+   most change the picture, hand each lane a small coherent set, drop anything that is really a
+   design or asset call and surface it to the user instead.
 4. **JUDGE THE PICTURE, NOT THE SUBJECT.** User's framing, verbatim into the critic brief:
    *"different game, different scene, don't judge content, just judge which has better art
    quality"* — otherwise it keeps reporting that the reference has a castle in it.
