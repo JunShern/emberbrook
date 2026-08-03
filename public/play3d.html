@@ -2080,14 +2080,44 @@ function markersTick(t){
     if(!m){ m=document.createElement('div');
       m.dataset.edge=e.id; m.dataset.kind=e.kind;      // the probe's handle (tools/trigger_probe.mjs)
       const col=e.kind==='door'?'#ffb52e':'#ff5340';   // amber = a door; red = you leave this shot/town
-      m.style.cssText='position:absolute;width:0;height:0;will-change:transform;'+
+      m.style.cssText='position:absolute;left:0;top:0;display:flex;flex-direction:column;'+
+        'align-items:center;will-change:transform';
+      const tri=document.createElement('div');
+      tri.style.cssText='width:0;height:0;'+
         'border-left:11px solid transparent;border-right:11px solid transparent;'+
         'border-top:16px solid '+col+';'+
         'filter:drop-shadow(0 0 4px #000c) drop-shadow(0 0 10px '+col+'88)';
+      m.appendChild(tri);
+      // A NAME UNDER THE ARROW, ON PORTALS ONLY. A portal is the one marker where
+      // "which of these is this" is the whole question — the valley carries three,
+      // and two of them go back into Emberbrook. Measured 2026-08-03 (playtest round
+      // 5): the agent walked the road out of Chapter One, met an anonymous red
+      // triangle standing on the Old Gate — which is ON the road to Dellhollow — took
+      // it, and spent 26 steps lost inside the town it had just left, never once
+      // complaining. The label is the edge's OWN `label`, the same string the prompt
+      // uses, so this can never name a door it does not open. Doors and cut bands
+      // stay bare: a town of named doorways is noise, and their ambiguity is local.
+      if(e.kind==='portal'&&e.label){ const t=document.createElement('div');
+        t.textContent=e.label;
+        t.style.cssText='margin-top:3px;font:600 11px/1.15 ui-monospace,Menlo,monospace;'+
+          'letter-spacing:.02em;color:#ffe6c4;white-space:nowrap;'+
+          'text-shadow:0 1px 2px #000,0 0 4px #000,0 0 9px #000';
+        m.appendChild(t); }
       MKPOOL.set(e.id,m); MKBOX.appendChild(m); }
     const bob=Math.sin((t||0)/280+e.at[0])*5;
-    m.style.transform='translate('+((_mkv.x*0.5+0.5)*innerWidth-11)+'px,'+((-_mkv.y*0.5+0.5)*innerHeight-30+bob)+'px)';
-    m.style.display='block';
+    // CLAMP INTO THE FRAME. The frustum test above admits a point out to 1.05 NDC and
+    // the -30 px lift then pushed the arrow off the top edge, where MKBOX's
+    // overflow:hidden ate it. Measured 2026-08-03 on the Dellhollow gate at five
+    // stations along the valley road: screen y -34, -32, -21, -22 and -0.4 px in a
+    // 720 px frame — the ONE marker naming the chapter's destination was invisible for
+    // the whole corridor while the two pointing back into Emberbrook were not. IN
+    // FRAME IS NOT VISIBLE, which is this repo's oldest lesson, arriving in the DOM.
+    // 62 px of top inset keeps a clamped marker clear of the objective banner, which
+    // owns the top centre and was itself overlapping one.
+    const px=(_mkv.x*0.5+0.5)*innerWidth, py=(-_mkv.y*0.5+0.5)*innerHeight-30+bob;
+    m.style.transform='translate('+Math.max(38,Math.min(innerWidth-38,px))+'px,'+
+      Math.max(62,Math.min(innerHeight-46,py))+'px) translateX(-50%)';
+    m.style.display='flex';
   }
   for(const [id,m] of MKPOOL) if(!seen.has(id)) m.style.display='none';
 }

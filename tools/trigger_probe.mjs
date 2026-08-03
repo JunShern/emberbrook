@@ -135,7 +135,10 @@ const READY = `(async()=>{for(let i=0;i<600;i++){
 // raced with a ceiling because rAF can stall in a background tab.
 const FRAMES = `Promise.race([new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(r)))),
   new Promise(r=>setTimeout(r,1500))])`;
-const MARKERS = `[...document.querySelectorAll('#exit-markers div')]
+// `> div[data-edge]` and not `div`: a marker is a CONTAINER now (arrow + the portal's
+// name under it, playtest round 5), so a descendant selector would count its own
+// children as markers with id:undefined. The handle is the data attribute, not depth.
+const MARKERS = `[...document.querySelectorAll('#exit-markers > div[data-edge]')]
   .filter(m=>m.style.display!=='none')
   .map(m=>({id:m.dataset.edge,kind:m.dataset.kind}))`;
 
