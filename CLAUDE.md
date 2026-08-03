@@ -85,6 +85,33 @@ git runs here, on branch `migration/3d-hybrid`.
   (golden-hour variant C, greens into autumn, varied houses, transparent flowing water).
 
 ## Runtime (public/play3d.html — COORDINATOR-OWNED, agents message main for edits)
+- **THREE IS r185 (2026-08-03), ONE FILE.** public/lib/three.min.js is an IIFE built by
+  tools/build_three_lib.mjs from tools/three_lib_entry.js — three + GLTFLoader +
+  DRACOLoader + three-mesh-bvh, publishing `globalThis.THREE`/`MeshBVHLib` exactly as the
+  r128 UMD did (no page became a module, no load order moved). **EDIT THE ENTRY, RUN THE
+  BUILD, COMMIT THE ARTIFACT** — there is no build step at serve time. Deps are
+  devDependencies; `npm run build:three`. What the upgrade turned on and the traps it
+  paid for: **docs/qa/three-upgrade/index.html** (before/after board + gate table).
+  THREE RULES IT COST, all of the same shape — say which space the bytes are in:
+  (1) depth.png/mask are `colorSpace = NoColorSpace`; an sRGB decode gives WRONG
+  occlusion, not an error, and r128 only got away with it by having no colour management;
+  (2) r185 renders into a non-XR render target in the LINEAR working space whatever the
+  target's texture declares (and declaring SRGBColorSpace allocates SRGB8_ALPHA8, so the
+  hardware round-trips the encode away) — battle_stage3d's display-space grade was a stop
+  and a half down with EVERY GATE GREEN until its shaders converted explicitly;
+  (3) r128 scaled every light by pi inside WebGLLights and r185 does not — `IU()` is that
+  conversion, applied once at the light object so the ratified numbers still read as
+  themselves. Colour management also means a hand `convertSRGBToLinear` is now a DOUBLE
+  conversion: two were deleted, look for a third before adding one.
+- **THE FILL IS THE SKY** (2026-08-03). `scene.environment` — a 128x64 float equirect
+  written from the town rig's own colours (or the ow rig's), PMREM'd — REPLACES the flat
+  hemisphere+ambient fill rather than stacking on it, in charLight() and in the ow block.
+  `?ibl=0` restores the two lights. THE LEVELS ARE SWEPT, NOT DERIVED: the k = I identity
+  says the swap is energy-neutral and the measured frame said it lifted the overworld's
+  shadows 0.188 -> 0.302 and cost 18% of its chroma (PMREM's last mip is a blurred
+  radiance, not the cosine convolution the identity assumes). window.__envTune(k, sun) and
+  window.__shadowTune(r) are the live knobs; tools/shot_compare.mjs is the ruler; the
+  sweep tables are in the source beside the shipped numbers.
 - Scene system: pre-rendered bg.png + depth.png per camera, exact-pixel depth occlusion;
   WALKLOCK (walk network is law in /^(del-|townwalk)/ scenes); GHOST v2 stencil;
   UILOCK modal contract; in-place scene swaps via transitionTo() + 'eb-scene'
@@ -255,6 +282,13 @@ git runs here, on branch `migration/3d-hybrid`.
 - tools/nav_eval.mjs — perceptual navigability (judge PINNED gemini-3.6-flash; noise
   ±0.20/shot at N=5 → N=10 for per-shot claims). Viewer: docs/qa/naveval/viewer.html
 - tools/plate_flat.py — background-leak audit.
+- **tools/three_shots.mjs --shots <json> --outdir <dir>** — the same viewpoint list
+  photographed across SEVERAL scenes in one Chrome, so a look change can be replayed
+  against two builds (serve an old tag from a `git worktree` on a second port) and the
+  only thing that differs is the build. Captures the console with the run — a shader that
+  fails to compile still screenshots. Pair with **tools/shot_compare.mjs <dirA> <dirB>**
+  (L05/L50/L95 + chroma per frame). NUMBERS FOR ITERATION, PICTURES FOR THE VERDICT: the
+  r185 arena regression passed all 1900+ assertions in this list.
 - tools/walk_bodygate.mjs — body-box step gate: can a character actually get from one
   walk sample to the next? Reproduces play3d's walkStep() at its own 0.075 m stride
   (ray gates see headroom, not bodies). A calibrated SCREEN, not a verdict — confirm
