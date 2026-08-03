@@ -206,7 +206,24 @@ const WEBP_DELETED = [];
 //   EVERY ENTRY MUST MATCH EXACTLY ONCE. If a lane edits one of these lines the
 // build FAILS LOUDLY instead of shipping blank portraits — which is the whole point,
 // because the failure this replaces was invisible.
+//
+// *** IT HAPPENED AGAIN, AND ON THE FRONT DOOR (measured 2026-08-03 on the LIVE
+// deploy). *** index.html builds its scene-card thumbnails the same forbidden way —
+// `background-image:url('assets/scenes/<key>/stylized.png')` inside a template
+// literal — and index.html does not even get the shim, which is only injected into
+// play.html/play3d.html. Result: EVERY CARD ON THE LAUNCHER WAS A BLANK RECTANGLE
+// in the deployed game, 26 x 404, for as long as --compress has been shipping.
+//   Nothing saw it. static_verify asserted "every card has a thumbnail" by reading
+// the CSS string, which was present and pointed at nothing. The reference gate
+// waved it through because willSwap() said the shim would rescue it — true for the
+// engine page, false for the launcher. The gate's exemption was a claim about a
+// page it never checked, so the suspects scan below now reads shipped .html too.
+//   THE LESSON IS THE ONE ALREADY WRITTEN ABOVE: a CSS url() is invisible to the
+// loader shim. There is no third place to learn it.
 const PORTRAIT_URL_REWRITES = [
+  ['index.html',
+    `<div class="thumb" style="background-image:url('assets/scenes/\${skey}/stylized.png')"></div>`,
+    `<div class="thumb" style="background-image:url('assets/scenes/\${skey}/stylized.webp')"></div>`],
   ['js/ui_kit.js',
     `return assetBase + 'characters/' + String(id) + '/bust.png';`,
     `return assetBase + 'characters/' + String(id) + '/bust.webp';`],
@@ -709,13 +726,14 @@ function patchPortraitUrls() {
     byFile.set(rel, s.split(from).join(to));
   }
   if (missed.length) die(
-    'the portrait-URL rewrite table no longer matches the shipped JS. Somebody edited a\n' +
-    'portrait path builder; until the table is re-derived, this build would ship CSS\n' +
+    'the CSS-url rewrite table no longer matches the shipped source. Somebody edited an\n' +
+    'asset path builder; until the table is re-derived, this build would ship CSS\n' +
     'background-image URLs pointing at .png files the webp pass deleted (blank portraits\n' +
-    'in the menu and the battle status row). Fix the table in tools/build-static.mjs:\n  ' +
+    'in the menu and the battle status row, blank cards on the launcher). Fix the table\n' +
+    'in tools/build-static.mjs:\n  ' +
     missed.join('\n  '));
   for (const [rel, s] of byFile) writeFileSync(join(OUT, rel), s);
-  log(`  portrait URL builders rewritten to .webp in ${byFile.size} module(s) ` +
+  log(`  CSS/img URL builders rewritten to .webp in ${byFile.size} file(s) ` +
       `(${PORTRAIT_URL_REWRITES.length} sites — a CSS url() is invisible to the shim)`);
 }
 
@@ -1047,9 +1065,15 @@ function referenceAudit(OUT, deleted) {
   //     rescues it only if it is loaded through <img>.src or fetch, and nothing here
   //     can tell which. Warning, because a heuristic that fails a build is a heuristic
   //     that gets written around; loud, because this class shipped blank portraits.
+  //     SHIPPED .html IS SCANNED TOO, and that is not a widening for tidiness: the
+  //     launcher built its card thumbnails as `background-image:url('…/stylized.png')`
+  //     inside a template literal in index.html — a page the shim is never even
+  //     injected into — and every card on the front door 404'd in the live deploy
+  //     while this scan looked only at js/. A gate that inspects some of the places
+  //     a path can be written is a gate that reports on the places it looked.
   const convertedNames = new Set(gone.map(r => r.split('/').pop()));
   const suspects = [];
-  for (const rel of [...have].filter(r => r.startsWith('js/') && r.endsWith('.js'))) {
+  for (const rel of [...have].filter(r => (r.startsWith('js/') && r.endsWith('.js')) || r.endsWith('.html'))) {
     const src = readFileSync(join(OUT, rel), 'utf8');
     for (const m of src.matchAll(/['"`]([^'"`\s]*\.png)['"`]/g))
       if (convertedNames.has(m[1].split('/').pop())) suspects.push(`${rel}: ${m[1]}`);

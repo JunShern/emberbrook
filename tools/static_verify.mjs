@@ -224,7 +224,21 @@ try {
   // and not somebody's dev server.
   ok(!!(launcher.wip && launcher.wip.shown), 'the work-in-progress banner is present and visible', launcher.wip);
   ok(launcher.door.some(d => /NEW GAME/.test(d.t)), 'the NEW GAME door is on the page', launcher.door);
-  ok(launcher.thumbs === launcher.cards, `every card has a thumbnail (${launcher.thumbs}/${launcher.cards})`);
+  ok(launcher.thumbs === launcher.cards, `every card names a thumbnail (${launcher.thumbs}/${launcher.cards})`);
+  // AND EVERY ONE OF THEM RESOLVES. The line above passed for as long as --compress
+  // has been shipping while EVERY CARD ON THE LIVE FRONT DOOR WAS BLANK: index.html
+  // builds `background-image:url('…/stylized.png')`, the webp pass deleted that file,
+  // and the runtime shim that would have rewritten the request is only injected into
+  // play.html. Reading the CSS string proves somebody wrote a URL, not that the URL
+  // is a picture. A background-image that 404s renders nothing and says nothing.
+  const thumbStatus = await ev(cdp, `(async()=>{const out={};
+    for(const c of [...document.querySelectorAll('a.card')].filter(a=>!a.closest('#door'))){
+      const s=getComputedStyle(c.querySelector('.thumb')||c).backgroundImage;
+      const m=/url\\("?([^")]+)/.exec(s); if(!m) continue;
+      try{const r=await fetch(m[1]); if(r.status!==200) out[m[1]]=r.status;}catch(e){out[m[1]]='ERR';} }
+    return out;})()`, 120000);
+  ok(Object.keys(thumbStatus).length === 0,
+     `every card thumbnail actually LOADS (${launcher.cards} fetched)`, thumbStatus);
   ok(!launcher.hasArchive, 'no legacy-archive section (this build ships no archived bundles)');
   note('review-tool links kept: ' + JSON.stringify(launcher.links));
   // every launcher link must resolve on the dumb server — a dead link IS the bug class
