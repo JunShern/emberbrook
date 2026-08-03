@@ -41,7 +41,13 @@ import numpy as np
 
 import overworld_lib as L
 
-ROOT = "/Users/junshernchan/projects/multiplayer-rpg"
+# ROOT IS DERIVED FROM THIS FILE, NEVER TYPED.  It was hardcoded to the main
+# checkout, so a build launched from a git WORKTREE read the worktree's builder and
+# wrote its blend, its zones.json, its bundle and its QA record into the SHARED
+# tree — an experiment in an isolated copy silently editing the shipped one.  A
+# lane paid for that on 2026-08-03 and worked around it with an env override; the
+# override is the symptom, this is the fix.  <repo>/tools/valley_map.py -> <repo>.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORLD_P = os.path.join(ROOT, "public/world/world.json")
 REGION_P = os.path.join(ROOT, "public/world/regions/valley.region.json")
 

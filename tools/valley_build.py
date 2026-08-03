@@ -754,16 +754,28 @@ def build_old_gate(col, F, zg, fr):
     STATS["oldgate_bite_e_u"] = round(EBITE, 2)
 
     def wall(o0, o1, z0, z1, thick=1.5):
-        """A run of coursed masonry between two offsets, z0 (base) to z1 (top)."""
+        """A run of masonry between two offsets, z0 (base) to z1 (top).
+
+        ONE WALL, NOT A STACK (docs/qa/oldgate/index.html, 2026-08-03).  This used
+        to lay one cube per 0.55u course with a +-0.06u jog, meant to read as
+        coursing.  At the overworld boom (dist 40) it reads as a FLIGHT OF SHELVES,
+        and the courses are individually standable — the arrival's own frame showed
+        the player on top of the gatewall, and a wall you can stand on is not a
+        seal.  Three boxes instead of six or seven: a plinth proud at the base, the
+        shaft, and a coping proud at the top, which is what gives masonry its
+        silhouette at distance.  It is also 276 triangles CHEAPER.
+        """
         oc, ow = (o0 + o1) / 2.0, abs(o1 - o0)
         if ow < 0.05:
             return
-        n = max(1, int(round((z1 - z0) / 0.55)))          # courses, so it reads as built
-        for k in range(n):
-            zz = z0 + (z1 - z0) * (k + 0.5) / n
-            jog = 0.06 * (1 if k % 2 else -1)
-            x_, y_ = at(oc)
-            p.cube(STONE, (x_, y_, zz), (thick + jog, ow, (z1 - z0) / n * 0.98), rz=ang)
+        x_, y_ = at(oc)
+        h = z1 - z0
+        plin = min(0.55, h * 0.16)
+        cope = min(0.45, h * 0.13)
+        p.cube(STONE, (x_, y_, z0 + plin / 2.0), (thick + 0.30, ow, plin), rz=ang)
+        p.cube(STONE, (x_, y_, (z0 + plin + z1 - cope) / 2.0),
+               (thick, ow, max(0.05, h - plin - cope)), rz=ang)
+        p.cube(STONE, (x_, y_, z1 - cope / 2.0), (thick + 0.34, ow + 0.10, cope), rz=ang)
 
     # 1. the WEST CURTAIN, from the doorway's jamb into the living rock
     wall(door_c + DOOR / 2.0, w_rock + BITE, wl, top)
@@ -831,6 +843,21 @@ def build_old_gate(col, F, zg, fr):
             return o
         w_end = min(_deck_end(+1.0, w_lim), w_lim)
         e_end = max(_deck_end(-1.0, e_lim), e_lim)
+        # THE DECK IS STILL A RAFT AT ITS SE CORNER, AND THAT IS NOT FIXED HERE.
+        # Measured 2026-08-03 with no browser, off VM.ROAD_Z against deck_z: the
+        # road agrees with the deck to within 0.08 m from the doorway (off +6.5)
+        # all the way across the channel (off 0), and then DIVES on the east bank —
+        # 0.54 m below the deck at off -3.94, 0.78 m at -4.86 (the court's own
+        # downstream edge), 1.06 m at -5.70, one station past e_end.  walkStep's
+        # step-down is 0.80 m, so the court's SE corner is a lip the player cannot
+        # come off or get back onto, and the Old Gate is a one-way door.
+        # Opening it is NOT an apron (one lane tried; it made the island smaller)
+        # and not a clamp on _deck_end either — probed the same day, the terrain
+        # along the court's MID-LINE is within 0.60 m of deck_z all the way to the
+        # cap, so there is nothing to clamp: the drop is at the CORNER the road
+        # leaves by.  The fix is a deck whose east bay is GRADED to the road's own
+        # z, which is a re-cut of the court, and it is written up rather than
+        # guessed at: docs/qa/oldgate/index.html §5.
         # the DECK: coursed paving over the hollow, laid on the culvert
         nb = 9
         for k in range(nb):
@@ -853,15 +880,94 @@ def build_old_gate(col, F, zg, fr):
             x_, y_ = at(ox, court_to)
             p.cube(STONE, (x_, y_, oz), (0.55, (hw + 0.45) * 2 / 7 * 1.3, 0.42),
                    rz=ang, rx=a_ + math.pi / 2)
-        # a low parapet along the court's downstream edge — the drop is right there
+        # a low parapet along the court's downstream edge — the drop is right there.
+        # IT IS GAPPED WHERE THE ROAD CROSSES THIS EDGE, MEASURED — not where the
+        # doorway happens to be.  The gap used to be cut at `door_c`, the ARCHED
+        # DOORWAY's offset, which is on the WEST bank.  The road comes through the
+        # doorway, crosses the court and leaves on the EAST bank, so the parapet
+        # stood across its own exit: measured in the running game, a 4.4u band of
+        # body-blocked cells at world x -44.9 to -40.9.  The road's own offset at
+        # this edge is read off VM.ROAD_XY, so it follows the road if the map moves
+        # it.  (This alone does NOT open the court — see the raft note below.)
+        _r = VM.ROAD_XY - ctr
+        _off = _r @ nl
+        _j = int(np.argmin(np.abs((_r @ tg) - court_to)))
+        road_o = float(_off[_j])
+        GAPW = max(DOOR * 0.75, VM.ROAD_WIDTH * 0.5 + 1.2)
         for s_ in (0,):
             for k in range(11):
                 o = e_end + (w_end - e_end) * (k + 0.5) / 11
-                if abs(o - door_c) < DOOR * 0.75:          # the road comes off here
+                if abs(o - door_c) < DOOR * 0.75:          # the doorway's own opening
+                    continue
+                if abs(o - road_o) < GAPW:                 # and the road's
                     continue
                 x_, y_ = at(o, court_to)
                 p.cube(STONE, (x_, y_, deck_z + 0.36), (0.42, (w_end - e_end) / 11 * 0.96, 0.72),
                        rz=ang)
+        # ---- THE THREE MARKS THE CONCEPT IDENTIFIES THIS GATE BY ---------------
+        # docs/qa/emberbrook/concepts/gate-final.png is RATIFIED art and the built
+        # gate carried none of its identity: no leaf in the arch, no sigil over it,
+        # no plates in the paving.  Chapter One's climax is TWO KEEPERS ON TWIN
+        # SIGIL PLATES opening this gate, so the plates are the climax's SET — from
+        # the valley side there was nothing here a player could recognise as the
+        # thing they had just opened.  All three are FLAT — a leaf, a disc, two
+        # plates — and together they cost less than the coursing above gave back.
+        # 1. THE LEAF, SWUNG OPEN.  It opened in Chapter One and it stays open: two
+        #    dark timber leaves laid back against the doorway's own reveals, which
+        #    is also why they cannot be walked into.
+        #    THE OPENING BETWEEN THEM IS NEVER NARROWER THAN THE ROAD.  Laid back
+        #    at DOOR*0.44 wide and 0.22 inside the jamb (the first cut), the two
+        #    leaves left 1.34u clear against a 2.0u road, and every mesh in
+        #    ow-valley that is not water_/lm_/veg_ BLOCKS — so the door dressing
+        #    would have been a second, smaller pinch inside the doorway.
+        LEAF_W = DOOR * 0.30
+        for s_ in (-1.0, 1.0):
+            ox = door_c + s_ * (DOOR / 2.0 - 0.10)
+            x_, y_ = at(ox, 0.62)
+            p.cube(WOOD, (x_, y_, wl + (jamb + 1.15 - wl) / 2.0),
+                   (0.34, LEAF_W, jamb + 1.15 - wl), rz=ang)
+        STATS["oldgate_door_clear_u"] = round(DOOR - 2 * (0.10 + LEAF_W / 2.0), 2)
+        # 2. THE SIGIL ROUNDEL, over the arch, on the court-side face.
+        x_, y_ = at(door_c, 0.80)
+        p.cone(EMIT, (x_, y_, jamb + 1.62), DOOR * 0.27, DOOR * 0.27, 0.16, seg=14, rz=ang)
+        x_, y_ = at(door_c, 0.86)
+        p.cone(STONE, (x_, y_, jamb + 1.62), DOOR * 0.34, DOOR * 0.34, 0.22, seg=14, rz=ang)
+        # 3. THE TWIN PLATES, set in the court paving, one either side of the road —
+        #    the two keepers stood on these.
+        #    PERPENDICULAR TO THE ROAD'S OWN DIRECTION, AND CLAMPED TO THE DECK.
+        #    "Either side of the road" was first written as road_o +- half a road
+        #    width along `nl`, and rendered wrong for a measured reason: the road
+        #    does not run along this court, it CROSSES it — off runs +6.5 to -4.9
+        #    over 4u of bx — so an nl offset walks along the road, not across it,
+        #    and the east plate landed 1.7u past e_end, hanging over the drop
+        #    (seen in docs/qa/oldgate/ship-after-court.png, first cut).  Take the
+        #    road's own local tangent at the middle station inside the court, step
+        #    across THAT, and clamp both plates inside the paving.
+        _bxr = _r @ tg
+        _in = [k for k in range(len(_bxr))
+               if court_from <= _bxr[k] <= court_to and e_end <= _off[k] <= w_end]
+        if _in:
+            _m = _in[len(_in) // 2]
+            _a, _b = _in[max(0, len(_in) // 2 - 1)], _in[min(len(_in) - 1, len(_in) // 2 + 1)]
+            _d = np.array([_bxr[_b] - _bxr[_a], _off[_b] - _off[_a]])
+            _n = float(np.linalg.norm(_d))
+            _d = _d / _n if _n > 1e-6 else np.array([0.0, -1.0])
+            _perp = np.array([-_d[1], _d[0]])
+            for s_ in (-1.0, 1.0):
+                q = np.array([_bxr[_m], _off[_m]]) + _perp * s_ * (VM.ROAD_WIDTH * 0.5 + 0.55)
+                bxp = min(max(float(q[0]), court_from + 0.5), court_to - 0.5)
+                ofp = min(max(float(q[1]), e_end + 0.7), w_end - 0.7)
+                x_, y_ = at(ofp, bxp)
+                # a STONE plate with an EMIT sigil inset, NOT an emissive disc: at
+                # 0.62u across, plain EMIT reads as spilled yellow paint at every
+                # boom this scene is ever seen from (measured by eye, same frame).
+                # low segment counts on purpose: a 1.24u disc read from a 20u boom
+                # cannot show the difference, and the whole redesign is held to
+                # costing LESS than what it replaces.
+                p.cone(STONE, (x_, y_, deck_z + 0.02), 0.62, 0.62, 0.10, seg=10, rz=ang)
+                p.cone(EMIT, (x_, y_, deck_z + 0.07), 0.30, 0.30, 0.05, seg=8, rz=ang)
+            STATS["oldgate_plates_at"] = [round(float(_bxr[_m]), 2), round(float(_off[_m]), 2)]
+        STATS["oldgate_parapet_road_off"] = round(road_o, 2)
         STATS["oldgate_court_len_u"] = round(court_to - court_from, 2)
         STATS["oldgate_court_span_u"] = round(w_end - e_end, 2)
         STATS["oldgate_court_ends"] = [round(e_end, 2), round(w_end, 2)]
