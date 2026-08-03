@@ -150,6 +150,16 @@ git runs here, on branch `migration/3d-hybrid`.
   the code that fetches it was committed, the file was not, so every clone and every `dist`
   silently fell back to the page-default sun with only a console warning. A runtime data file
   that is not in git is a bug that only reproduces off the author's machine.
+- **public/game/worldbounds.json — WHERE THE WORLD ENDS, as runtime data** (playtest round 6).
+  Per scene; play3d fetches it on boot and `sceneParams()` applies it. `ow-valley: floorY 0.0` —
+  the water line. A region built from an ANALYTIC height field has no edge: ow-valley's ground
+  runs continuously out of the gorge and under the water to y −6.07 at the tile corner, because
+  valley_map.py suppresses its own rims within 22 u of the channel so Ch2's boat can leave. The
+  rule lives in walkStep's `outOfWorld()` and is ONE-WAY BY CONSTRUCTION — below the bound only
+  DEEPER steps are refused, so a body already outside always walks back in. A boundary that can
+  strand a player is the defect it was built to fix. The riverbed down to the Moorage (the
+  `boat-tar` landmark, measured floor 1.71) stays open on purpose: measure before you fence.
+  Instrument: tools/playtest/edge_probe.mjs (`--points`, `--nobound` for the A/B).
 - Game data (public/game/): monsters, items, encounters, growth, shops, music.json
   (map rules first-match-wins), npcs.json, dialogue.json, **story.json**.
 - **THE STORY LAYER (2026-08-02 — read docs/plans/end-to-end-wiring.md first).**
