@@ -72,7 +72,7 @@
  * centimetre.
  */
 import { spawn } from 'child_process';
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { createRequire } from 'module';
 import { freePort, killOrphans, findPage, sweepStaleProfiles } from '../cdp.mjs';
@@ -206,6 +206,45 @@ const KEYS = {
 };
 const BURST_MS = 150;    // one push of the stick
 const ARRIVE_M = 1.2;    // "near enough" — a body is 0.6 m wide
+const PROFILE_PREFIX = 'llm-playtester-profile-';
+
+/* REAP OUR OWN ORPHANS, AND ONLY OUR OWN.
+ *
+ * This tool will run more browser sessions than anything else in the repo, so a
+ * leak of one Chrome per episode is the dominant memory cost on the machine at any
+ * useful N. It is not hypothetical: another tool leaked six root Chromes tonight
+ * and they sat on 7.6 GB of swap with 675 MB free, and every browser gate on the
+ * box went slow for half an hour.
+ *
+ * cdp.mjs's sweepStaleProfiles has a two-hour age floor — deliberately, so a
+ * concurrent sibling is never destroyed mid-run — which means a three-minute-old
+ * orphan survives it. But our profile directory carries the pid of the node that
+ * launched it, so we can do better than an age heuristic: ASK WHETHER THAT PROCESS
+ * IS STILL ALIVE. kill(pid, 0) is the question; ESRCH is the answer.
+ *
+ * NEVER PATTERN-KILL CHROME BY NAME. Most of the Chrome processes on this machine
+ * belong to the person using it. The only matcher used here is our own
+ * --user-data-dir prefix, via cdp.mjs's killOrphans, and only after the owning pid
+ * is confirmed dead.
+ */
+function reapDeadProfiles() {
+  const tmp = process.env.TMPDIR || '/tmp';
+  let n = 0;
+  try {
+    for (const name of readdirSync(tmp)) {
+      if (!name.startsWith(PROFILE_PREFIX)) continue;
+      const pid = parseInt(name.slice(PROFILE_PREFIX.length), 10);
+      if (!pid || pid === process.pid) continue;
+      try { process.kill(pid, 0); continue; }            // still alive: not ours to touch
+      catch (e) { if (e.code !== 'ESRCH') continue; }    // EPERM etc: assume alive, leave it
+      const full = join(tmp, name);
+      killOrphans(full);                                  // matches --user-data-dir=<full>
+      try { rmSync(full, { recursive: true, force: true, maxRetries: 2 }); } catch (e) { }
+      n++;
+    }
+  } catch (e) { }
+  return n;
+}
 
 // --------------------------------------------------------------------------
 export function checkpointsFromStory() {
@@ -302,10 +341,28 @@ export function makeAdapter(opt) {
 
     async open(startUrl) {
       const cdpPort = await freePort();
-      profile = join(process.env.TMPDIR || '/tmp', 'llm-playtester-profile-' + process.pid);
-      sweepStaleProfiles('llm-playtester-profile-');
+      profile = join(process.env.TMPDIR || '/tmp', PROFILE_PREFIX + process.pid);
+      const reaped = reapDeadProfiles();
+      if (reaped) console.log(`  reaped ${reaped} orphaned playtester Chrome profile(s) whose owner was gone`);
+      sweepStaleProfiles(PROFILE_PREFIX);
       killOrphans(profile);
       rmSync(profile, { recursive: true, force: true });
+      /* TEARDOWN ON EVERY PATH, and the abnormal ones are the ones that leak: a
+       * crash, a timeout, a Ctrl-C, an outer harness pkill. `exit` covers the
+       * normal and thrown cases; the signals cover the rest. All idempotent. */
+      process.on('exit', () => { try { chrome && chrome.kill('SIGKILL'); } catch (e) { }
+        try { profile && rmSync(profile, { recursive: true, force: true }); } catch (e) { } });
+      for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(sig, () => {
+        try { chrome && chrome.kill('SIGKILL'); } catch (e) { }
+        try { profile && rmSync(profile, { recursive: true, force: true }); } catch (e) { }
+        process.exit(130);
+      });
+      process.on('uncaughtException', (e) => {
+        console.error('UNCAUGHT: ' + (e && e.message));
+        try { chrome && chrome.kill('SIGKILL'); } catch (x) { }
+        try { profile && rmSync(profile, { recursive: true, force: true }); } catch (x) { }
+        process.exit(4);
+      });
       // Real GPU: this tool PHOTOGRAPHS the render, and cdp.mjs's note says forcing
       // swiftshader while something else owns the CPU makes Chrome miss its window.
       // The four throttling flags are not decoration — play3d's whole world runs in
@@ -493,6 +550,11 @@ export function makeAdapter(opt) {
     async close() {
       if (closed) return; closed = true;
       try { chrome && chrome.kill('SIGKILL'); } catch (e) { }
+      // The spawned process is the ROOT Chrome; its renderers and GPU process are
+      // children and normally follow it down. killOrphans is the belt to that
+      // brace, matching on OUR profile path and nothing else — never on the name
+      // "Chrome", most of which on this machine belongs to the person using it.
+      try { profile && killOrphans(profile); } catch (e) { }
       try { profile && rmSync(profile, { recursive: true, force: true, maxRetries: 3 }); } catch (e) { }
     },
     _ev: ev,
