@@ -15449,3 +15449,118 @@ The repair then made it worse — computed against the base I started from rathe
 CURRENT HEAD, it reverted the Lake lane's `20f4aef` out of HEAD (restored in 30c0b62).
 To commit one hunk of a contested file: `git apply --cached`, then `git commit` with NO
 pathspec. To repair one: diff against HEAD as it is now, never the base you began with.*
+
+---
+
+## 2026-08-03 — OVERWORLD LANDSCAPE. The forest probe missed; the refs are pictures of
+## LIGHT. Gallery: docs/qa/ow-land/index.html
+
+**THE REFRAME.** F1/F2/F3 were rejected ("go back to the FFIX reimagined reference
+images ... those images should give you a sense of the level of polish"). **The
+references contain NO FOREST**, so the target was never a tree-species problem. Diagnosed
+at the whole-landscape level instead — and every number below was taken BEFORE anything
+was built. Instrument: `tools/ow_probe/imgstat.py` (no browser, no network) on crops that
+exclude every HUD pixel. L = Rec.709 luma of the sRGB frame; `detail` = mean |laplacian|
+of L x1000; `b-r` measured separately over the darkest and brightest quartile.
+
+| frame | L05 | L50 | L95 | sat50 | b-r dark | detail | 1-hue mass |
+|---|---|---|---|---|---|---|---|
+| REF1 Dali day | 0.298 | **0.541** | **0.799** | 0.352 | **+0.090** | 48.1 | 0.425 |
+| REF3 windmill day | 0.270 | 0.477 | 0.696 | 0.380 | +0.033 | 29.7 | 0.316 |
+| REF2 Treno **NIGHT** | 0.093 | 0.245 | 0.423 | 0.557 | +0.234 | 45.9 | 0.339 |
+| ours gate | 0.094 | 0.363 | 0.536 | 0.613 | -0.104 | 44.4 | 0.588 |
+| ours shelf b12 | 0.108 | **0.204** | 0.384 | 0.594 | -0.087 | **19.3** | 0.494 |
+| ours shelf b40 | 0.074 | 0.236 | 0.418 | 0.553 | -0.058 | 34.1 | 0.427 |
+| ours Dellhollow | 0.072 | 0.243 | 0.429 | 0.562 | -0.059 | 25.3 | 0.399 |
+
+1. **THREE OF OUR FOUR DAYLIGHT CAMERAS ARE DARKER THAN THE REFERENCE'S NIGHT PLATE**
+   (L50 0.204 / 0.236 / 0.243 vs Treno's 0.245), and nothing anywhere in any of our frames
+   exceeds L 0.536 where both daylight refs put 5 % of frame above 0.70. There is no
+   highlight in the corridor at all.
+2. **NOTHING IN THE CORRIDOR IS COOL.** `b-r` is negative in BOTH the dark and the light
+   quartile of every frame. REF1's shadows are **+0.090** — actually blue. A shadow that is
+   the same hue as its lit surface is a multiply layer.
+3. **THE GROUND HAS A THIRD OF THE REFERENCE'S PIXEL-SCALE DETAIL** (19.3 vs 29.7-48.1).
+   That is the "flat tinted plane" — asked about twice — as a number.
+4. **AND THE ALBEDO SAYS THE SAME**, read out of the live bundle's COLOR_0:
+   `ground_valley_1` grass **L 0.383** (rgb .356/.403/.260, G-R only +0.047) against
+   `ground_valley_3` rock **L 0.502**. **THE GRASS IS DARKER THAN THE ROCK** — the largest
+   bright surface in the corridor is a brown cliff, where in all six references it is lit
+   ground. That inversion is most of why our frames read brown.
+
+**THREE ORTHOGONAL CANDIDATES** (`tools/ow_probe/land.js`, injected live over CDP, 32
+frames from one Chrome launch, the first probe's own four cameras, BEFORE re-rendered in
+the same run so every number is comparable):
+- **L1 THE HOUR, +0 tris.** Key untouched (ratified). Fill raised and made blue on the
+  HEMISPHERE not the ambient (a hemisphere is directional and keeps form; flat ambient is
+  the 1.70-omnidirectional mistake already paid for), one dim cool shadowless bounce
+  opposite the sun, fog 150/340 -> 34/205. **L05 roughly DOUBLES in all four frames**
+  (0.094->0.150, 0.108->0.154, 0.072->0.146). Costs saturation (0.59->0.44).
+  NO tone curve: `docs/qa/charlight/tone-ow-{off,aces,agx}.png` already settled that at
+  exposure 1.0 AgX/ACES take the meadow to khaki. **The fault was never the curve, it is
+  the fill.**
+- **L2 GROUND-IS-GEOMETRY, +113,924 tris.** Tufts (6 tris each) ONLY where the ground
+  CHANGES — road edge, grass/sand, grass/rock — plus shrub clumps at rock feet and flowers
+  in PATCHES of 6-14, never scattered. **detail 19.3 -> 33.2 at boom 12 (+72 %)**, past
+  REF3's 29.7; L50 and hue barely move. The one column light and colour cannot touch.
+- **L3 THE SURFACE, +0 tris, COLOR_0 only.** Grass lifted and greened, rock COOLED and
+  given bedding (a band in world y) plus tonal drift, and seam vertices dragged toward the
+  neighbouring surface through a NOISY threshold so a cut becomes ragged. L50 0.363->0.428
+  at the gate with Lrange UP 0.442->0.517 (it adds contrast rather than spending it);
+  1-hue mass 0.588->0.514.
+- **ALL THREE:** boom 12 L05 0.108->0.150, L50 0.204->0.314, detail 19.3->40.7. Sunlit
+  meadow patch at the gate **L p50 0.364->0.511, p90 0.435->0.607 — level with REF3's
+  0.469/0.614** and still under REF1's 0.603/0.806.
+  **Read the COLUMNS: L1 owns L05, L2 owns detail, L3 owns hue and range, and each barely
+  touches the others'.** That is the evidence they are three levers, not three settings.
+
+**A BUG FOUND WHILE MEASURING, AND IT IS ONE REGEX — play3d.html, coordinator-owned.**
+The ow rig gives shadows via `if(o.isMesh && !/^(walk|bar_|__ow)/i.test(o.name))`. In
+`ow-valley` **`walk_road` IS the visible road ribbon** (5 visible `walk_` meshes), so
+**THE ONE SURFACE THE PLAYER IS ALWAYS STANDING ON NEVER RECEIVES A SHADOW**: the road
+runs as a bright stripe straight through the gorge wall's cast shadow, which stops at the
+path edge and resumes on the far side. Setting receive+cast on the visible ones moves
+**15.0 % of the boom-12 frame and 5.0 % of the boom-40 frame by >8/255**, those pixels
+going L 0.238 -> 0.099. The fix wants to be narrower than the regex ("a visible `walk_`
+mesh in a real-time region receives") and must be checked against the townwalk scenes,
+which share the filter.
+
+**AND ONE NO CANDIDATE CAN FIX: THE CAMERA NEVER SEES THE SKY.** Every reference gives
+10-30 % of frame to sky and haze; **all four of our cameras contain ZERO sky pixels** at
+the shipped pitch 0.61 / boom 40. The gradient dome, the three receding ridge rings and
+the horizon-matched fog built on 2026-08-02 are, in gameplay, invisible — and the shipped
+fog at near 150 never reaches anything inside a 172 m corridor. Demonstrated at pitch 0.26
+(not proposed: pitch is a gameplay call about how much path the player can read ahead).
+
+**FOUR TRAPS PAID FOR IN THIS LANE:**
+- **r128 FRUSTUM-CULLS AN InstancedMesh AGAINST THE BASE GEOMETRY'S BOUNDING SPHERE**,
+  transformed by the object's matrixWorld — the per-instance matrices are not in it. A
+  scatter batch whose base form is a 0.15 m tuft at the origin is culled from every camera
+  that cannot see world (0,0,0): **28,347 tufts rendered as EXACTLY NOTHING while every
+  count in the report was correct.** Two rounds went into raising the density of something
+  being drawn perfectly and thrown away. A REPORT THAT SAYS "28,347 PLACED" AND A FRAME
+  THAT SHOWS NONE IS A CULLING BUG, NEVER A PLACEMENT BUG.
+- **r128 SILENTLY DROPS `instanceColor` WHEN `material.vertexColors` IS FALSE**
+  (color_fragment applies vColor only under USE_COLOR, which comes from vertexColors), and
+  renders BLACK when it is true with no color attribute present. An all-ones COLOR_0 on
+  the base form plus `vertexColors:true` is the only right combination.
+- **A SLOPE GATE IS NOT OPTIONAL for seam-driven scatter:** the seam test fires HARDEST
+  where grass meets vertical rock, so the first L2 grew grass out of 60 m of gorge wall.
+- **AN INSTANCE COLOUR MULTIPLIES THE MAP'S OWN MEAN, NOT 1.0.** `ow_valley_bushcore`
+  ships COLOR_0 at L 0.311, so tinting a clump at 0.5-0.8 gave faceted BLACK boulders at
+  every rock foot; x2.4 restores the shipped band. Same class as L3's first rock pass,
+  which multiplied blue by 1.10 and moved the cliff not at all — the brown is in the MAP.
+  A SATURATING CONTROL (force each ground batch to pure R/G/B) proved the plumbing in one
+  frame and located the fault in the amplitude; the working number was r x0.66 / b x1.62.
+
+**WHAT REMAINS OUT OF REACH, recorded so it is not re-promised:** the highlight (L95 0.675
+vs 0.799; needs a curve that lifts without desaturating, plus sky in frame); genuinely blue
+shadows (b-r dark reaches -0.056, never +0.090 — COLOR_0 can only make a warm TEXTURE less
+warm, so truly blue shade needs the terrain maps re-authored); the meadow being a green rather
+than an olive (blue channel 0.21 vs the reference's 0.50); rock strata as modelled relief;
+grass at reference density; and a tight contact shadow (2048 texels over 230 m is soft
+because it is low-res, not because it is good).
+
+Waiting on the user: L1 / L2 / L3, a combination, or a rejection. My recommendation on the
+page, labelled as mine to reject: the road-shadow fix regardless, then L3, then L1 as its
+pair, then L2 staged at road-verge-only first.
