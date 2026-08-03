@@ -1219,13 +1219,57 @@
         }
       ]
     },
-    "story.ch1.meet": {
-      "_note": "Act II in the shipped script is LAKE'S OWN ACT — player two rises from his grandmother's table, takes her hand-lamp off the hook and walks the rounds. TWO-PLAYER PENDING: the 3D runtime is single-body, so the rounds are re-staged as Vesper finding him mid-round on the pond lane and walking the rest of them with him. Every line below is his; nothing of his act is cut, only its camera. If a second body lands, this beat splits at the meet and Act II becomes playable as authored.",
+    "story.ch1.lake.wake": {
+      "_note": "chapter1.js playLakeIntro (~line 692), ported. The narrate box there is two sentences — “…rose from his grandmother's table. He took down her flame.” — and the two sentences are now two beats apart, because the second one is something the PLAYER does. Not a word of either is changed; the table box plays where he rises, and the flame box plays at the mantel where the flame actually hangs.",
       "lines": [
         {
           "speaker": "system",
-          "text": "Down on the pond lane a young man was standing under a dark lamp with a brass lighter in his hand, saying something to it."
+          "text": "The same evening, across the village, the last lamplighter rose from his grandmother's table."
+        }
+      ]
+    },
+    "story.ch1.lake.hearth": {
+      "_note": "At walk_pad_hearth: her flame on the mantel hook, her portrait over it, the rounds tally cut into the breast beside it, her boots still by the fire. The line is verbatim from chapter1.js:696 — in the 2-D script he says it after crossing the room; here he says it standing under her picture, which is where it was always about.",
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "He took down her flame."
         },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "(A year tonight since she set the lighter down. I miss her most at rounds-time.)"
+        }
+      ]
+    },
+    "story.ch1.lake.lamp": {
+      "_note": "At walk_pad_door, under lamphook_peg — the hook by the door, the fact the line already states. Four lines, verbatim from chapter1.js:702-706, in their shipped order. Seed #3 (the hand-lamp) is granted by the beat's giveItem step immediately before the first of them, as chapter1.js:701 grants it immediately before the same line.",
+      "lines": [
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "(Her hand-lamp, off the hook by the door. Tonight I'm not pretending it's for the light.)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "thinking",
+          "text": "(The job, the way she gave it to me: carry the flame from the village's heart to a lamppost near every home.)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "(So nobody sleeps outside the warmth. She said it the way you'd say “fetch the water.”)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "(Three lamps left before the Kindling Hour. Pond lane first — that's the order.)"
+        }
+      ]
+    },
+    "story.ch1.meet": {
+      "_note": "chapter1.js playMeet (~line 709). REWRITTEN STAGING 2026-08-03, not rewritten lines: this node used to open with a `system` box — “Down on the pond lane a young man was standing under a dark lamp…” — which was written for a version of Chapter One where the player was Vesper for the whole of it and came upon Lake mid-round. He is now the one holding the lighter, so that box was describing the player to himself, and it is gone. Nothing replaces it, because the 2-D script has no narration here either: playMeet opens on Vesper's own first line and so does this.",
+      "lines": [
         {
           "speaker": "vesper",
           "expr": "happy",

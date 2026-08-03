@@ -1,6 +1,8 @@
 {
-  "_schema": "type: consumable|weapon|armor|material. price is the single value source; shops buy at shops.json sellRate * price. statMods apply while equipped (slot). effect for consumables.",
+  "_schema": "type: consumable|weapon|armor|material|keepsake. price is the single value source; shops buy at shops.json sellRate * price. statMods apply while equipped (slot). effect for consumables. A KEEPSAKE is a story item: no price, noSell, no slot, no effect — so shop.sellable(), menu's equip list and menu's use list each pass over it by the filter they already have, and nothing new had to learn the word. It is carried, named, and never spent.",
   "items": {
+    "hand-lamp":    { "name": "Grandmother's hand-lamp", "type": "keepsake", "noSell": true, "desc": "Her lamp, off the hook by the door. He is not pretending it is for the light." },
+
     "tonic":        { "name": "Tonic",         "type": "consumable", "price": 12,  "effect": { "heal": 30 },  "desc": "River-herb draught. Restores 30 HP." },
     "hale-tonic":   { "name": "Hale Tonic",    "type": "consumable", "price": 45,  "effect": { "heal": 80 },  "desc": "The strong stuff. Restores 80 HP." },
 

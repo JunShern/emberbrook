@@ -80,6 +80,16 @@
 //                  TELEPORT STEP on purpose. A checker is how it stays true
 //                  after the twentieth beat, when fading to a coordinate is
 //                  once again the shortest way to fix a staging problem.
+//                  AND THE ONE EXCEPTION, STATED RATHER THAN LEFT AS A HOLE.
+//                  A `pov` step (SIM.pov — Chapter One hands the player from
+//                  Vesper to Lake for Lake's own act) may name a scene, because
+//                  a change of protagonist is not travel: nobody is carried
+//                  anywhere, a different person is picked up where they already
+//                  were. What makes that true and not a loophole is `as`. So a
+//                  pov step MUST name a body, and a pov step that names a scene
+//                  must also name the spawn inside it — a `pov` with a scene and
+//                  no body would be exactly the teleport the rest of §7 forbids,
+//                  wearing a different key. That is the assertion below.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -396,7 +406,7 @@ beats.forEach((b, i) => {
 });
 
 // ------------------------------------------------------- 7. no teleports
-section('7. no beat moves the player across a scene');
+section('7. no beat moves the player across a scene (and a pov handoff is not a teleport)');
 for (const b of beats) {
   for (const step of b.do || []) {
     if (!step || typeof step !== 'object') continue;
@@ -404,6 +414,21 @@ for (const b of beats) {
       ok(!TELEPORT_KEYS.has(k), `beat "${b.id}" step has no "${k}"`,
          'the corridor between towns is WALKED (end-to-end-wiring.md §6 invariant; ' +
          'story.json _schema: "THERE IS NO TELEPORT STEP, on purpose")');
+    }
+    // The pov exception, checked rather than assumed. `as` is the whole difference
+    // between "the player is now a different person" and "the player was moved".
+    if (step.pov) {
+      const p = step.pov;
+      const bodyOk = ok(!!p && typeof p.as === 'string' && p.as.length > 0,
+        `beat "${b.id}" pov step names the body it hands the player`,
+        'a pov with no `as` is a teleport with a nicer key');
+      if (bodyOk && p.scene) {
+        ok(Array.isArray(p.spawn) && p.spawn.length === 3 && p.spawn.every(n => typeof n === 'number'),
+          `beat "${b.id}" pov into "${p.scene}" names where that person is standing`,
+          'the incoming body has to already be somewhere; play3d SIM.pov refuses a ' +
+          'cross-scene handoff without a spawn');
+        ok(sgNodes.has(p.scene), `beat "${b.id}" pov scene "${p.scene}" is a scenegraph node`);
+      }
     }
   }
 }

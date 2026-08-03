@@ -202,6 +202,22 @@
     // -- presentation --------------------------------------------------------
     if (s.objective !== undefined) setObjective(s.objective);
     if (s.shot && window.SIM && SIM.shot) return Promise.resolve(SIM.shot(s.shot));
+    // -- WHOSE BODY IS THE PLAYER --------------------------------------------
+    // {pov:{as:'lake', scene:'emb-lake-int', spawn:[x,y,z], yaw, cam}}. The ONLY
+    // route to SIM.pov, and it is a CHANGE OF PROTAGONIST, not the teleport step
+    // the schema forbids. The distinction is `as`: a pov step must name a new body,
+    // so it can never be a shortcut for travel with the same character (asserted in
+    // tools/story_test.mjs §7). Chapter One's Lake act is the only caller: Vesper's
+    // half ends in the square, the cut hands the player to Lake in his grandmother's
+    // cottage — where he has been all evening, nobody has been moved — and every
+    // metre from that cottage to the pond lane is walked by the player.
+    if (s.pov) {
+      if (!(window.SIM && SIM.pov)) { console.warn('[Story] pov step but no SIM.pov'); return Promise.resolve(); }
+      return Promise.resolve(SIM.pov(s.pov)).then(function (r) {
+        if (r && r.error) console.warn('[Story] pov failed: ' + r.error);
+        return r;
+      });
+    }
     if (s.banner) return banner(s.banner);
     if (s.toast) return toast(s.toast);
     if (s.endCard) return endCard(s.endCard);
