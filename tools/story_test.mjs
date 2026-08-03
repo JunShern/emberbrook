@@ -275,7 +275,8 @@ for (const [nid, n] of Object.entries(dlgNodes)) {
 // the townmaps: a `sealedUntil` on an exit is a READ — the exit stays sealed
 // until something writes that flag, and nothing ever will if the name is wrong.
 const MAPDIR = path.join(PUB, 'townmap');
-let sealedSeen = 0;
+let sealedSeen = 0, denySeen = 0;
+const denyNodes = [];     // [mapFile, exitId, node id] — a denial must have a line to say
 if (fs.existsSync(MAPDIR)) {
   for (const f of fs.readdirSync(MAPDIR).filter(x => x.endsWith('.map.json'))) {
     (function walk(o) {
@@ -285,11 +286,26 @@ if (fs.existsSync(MAPDIR)) {
         sealedSeen++;
         addTo(readers, o.sealedUntil, `${f} exit "${o.id || '(unnamed)'}" sealedUntil`);
       }
+      // A `denyUntil` is the same kind of read as a sealedUntil, and the same kind of
+      // silent hole if the name is wrong: the exit refuses forever and the only symptom
+      // is a player who is politely told no for the rest of the game. Its `denyDialogue`
+      // is checked here too — a denial with no line is a wall that does not say why,
+      // which is precisely the presentation this mechanism exists to replace.
+      if (typeof o.denyUntil === 'string') {
+        denySeen++;
+        addTo(readers, o.denyUntil, `${f} exit "${o.id || '(unnamed)'}" denyUntil`);
+      }
+      if (o.deny && typeof o.denyDialogue === 'string')
+        denyNodes.push([f, o.id || '(unnamed)', o.denyDialogue]);
       for (const k in o) walk(o[k]);
     })(JSON.parse(fs.readFileSync(path.join(MAPDIR, f), 'utf8')));
   }
 }
 note(sealedSeen > 0, `the townmaps declare sealed exits to check (${sealedSeen})`);
+note(denySeen > 0, `the townmaps declare denied exits to check (${denySeen})`);
+for (const [f, xid, nid] of denyNodes)
+  ok(!!allNodes[nid], `${f} exit "${xid}" denyDialogue "${nid}" resolves to a node`,
+     'no such node in dialogue.json nodes nor story.json nodes — the exit would refuse in silence');
 // growth.json: a `joinFlag` is a READ — the party member joins when it is set.
 for (const [cid, c] of Object.entries(G.characters || {})) {
   if (typeof c.joinFlag === 'string') addTo(readers, c.joinFlag, `growth.json ${cid}.joinFlag`);

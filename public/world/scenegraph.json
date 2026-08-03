@@ -60,6 +60,15 @@
   "  opens them), `unpaired` for holes. Before these existed an unwired region portal was a",
   "  wordless skip, and \"Emberbrook's old gate has no marker\" had no trace in the tooling.",
   "",
+  "DENIED (`deny` on an edge; the roster is top-level `denied`): the THIRD state, between",
+  "  open and sealed. The edge, its prompt and its trigger all ship; while the deny",
+  "  condition holds the runtime plays a dialogue node instead of transitioning. A map exit",
+  "  asks for it with \"deny\": true + \"denyUntil\": \"<flag>\" + \"denyDialogue\": \"<node id>\"",
+  "  (+ optional \"denyLabel\"), and only the TOWN-SIDE half is denied. USE IT WHERE THE",
+  "  PLAYER CAN SEE THE ROAD: `sealed` withholds everything and its absence is the whole",
+  "  statement, which teaches nothing about a passage that is plainly there. It is not a",
+  "  beat — no flag is written, nobody is moved — it is the character declining out loud.",
+  "",
   "THE ESTABLISHING PLATE (a camera with \"cinematic\": true + \"establishing\": true): the",
   "  portal INTO that town applies the plate instead of the walkable shot that owns the",
   "  gate, and carries `handoff:{key}` naming the shot it defers to. A plate owns no walk",
@@ -76,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-03T00:31:14Z",
+ "generated": "2026-08-03T13:45:14Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -6927,10 +6936,17 @@
    "spawnYaw": -1.3737,
    "cam": null,
    "camFrom": "woodroad",
+   "deny": {
+    "when": {
+     "notFlag": "story.ch1.done"
+    },
+    "dialogue": "emb.southroad.turnback",
+    "label": "Back down the Whisperwood road"
+   },
    "label": "Leave Emberbrook",
    "key": "e",
    "reciprocal": "ow-valley>emb-cine@emberbrook-gate",
-   "source": "emberbrook.map.json exit 'valley-road-south' at 'arrival-clearing' -> world/regions/valley.region.json portal 'emberbrook-gate' (named by the portal (\"exit\": \"valley-road-south\"))"
+   "source": "emberbrook.map.json exit 'valley-road-south' at 'arrival-clearing' -> world/regions/valley.region.json portal 'emberbrook-gate' (named by the portal (\"exit\": \"valley-road-south\")); DENIED until story flag 'story.ch1.done' — the prompt and the edge stand, the key plays 'emb.southroad.turnback' instead of transitioning"
   },
   {
    "id": "ow-valley>emb-cine@old-gate",
@@ -7088,6 +7104,17 @@
    "opensOn": "story.ch1.gate-open",
    "note": "SEALED at story start; opens in Ch1. Beyond it, road and river continue downstream to Dellhollow.",
    "effect": "a CONDITIONAL edge pair carrying when:{flag:\"story.ch1.gate-open\"} — no prompt, no marker and not takeable until that flag is true; live the frame it is"
+  }
+ ],
+ "denied": [
+  {
+   "town": "emberbrook",
+   "exit": "valley-road-south",
+   "at": "arrival-clearing",
+   "edge": "emb-cine>ow-valley@emberbrook-gate",
+   "liftsOn": "story.ch1.done",
+   "says": "emb.southroad.turnback",
+   "effect": "the edge, its prompt and its marker-suppression ship; while \"story.ch1.done\" is unset the key plays \"emb.southroad.turnback\" instead of transitioning"
   }
  ],
  "unpaired": [

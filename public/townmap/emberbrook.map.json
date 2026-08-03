@@ -38,7 +38,12 @@
       "at": "arrival-clearing",
       "mode": "land",
       "to": "overworld",
-      "note": "the river road south through the Whisperwood — upstream, the way Vesper's journey came; the arrival scene begins here"
+      "deny": true,
+      "denyUntil": "story.ch1.done",
+      "denyDialogue": "emb.southroad.turnback",
+      "denyLabel": "Back down the Whisperwood road",
+      "_doc_deny": "PT-20260803-002, re-found as PT-20260803-008 (LLM playtester, both rounds). The game's first frame stood the player ON this exit's own pad — cine.json's woodroad spawn and this exit are the same point, walk_pad_arrival-clearing — so \"Leave Emberbrook? [E]\" was the ONLY prompt on screen, and taking it dropped a brand-new game into ow-valley where no unfired beat lives. Chapter One became unadvanceable while the objective banner still read \"Follow the road north\", naming the place they had just left. The spine detector proved it mechanically: the body in ow-valley for three consecutive steps with none of the next unfired beats there. USER'S REMEDY, verbatim 2026-08-03: \"maybe just spawn the character inside Emberbrook to begin with, and don't let them exit from the whisperwood side until after Ch1? Just use a denial prompt like 'This is where I just came from, I should follow the path toward those lights in the distance'\". Both halves shipped: story.json's `start` moved the new-game spawn 7.0 m up the road (off this pad, still in shot 'woodroad'), and this block denies the exit until story.ch1.done. IT IS A DENIAL, NOT A SEAL, and the difference is the point: `sealed`/`sealedUntil` withholds the edge, the prompt AND the marker, which is right for a gate nobody can see through and WRONG for a road the player can see, walked in on, and would otherwise learn nothing from. A denied edge keeps its prompt, loses its transition, and answers in the character's own voice.",
+      "note": "the river road south through the Whisperwood — upstream, the way Vesper's journey came; the arrival scene begins here. DENIED until story.ch1.done: the prompt stands and Vesper refuses it out loud."
     },
     {
       "id": "forest-north",

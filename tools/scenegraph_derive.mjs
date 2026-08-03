@@ -68,6 +68,11 @@ const noRibbon = [];
 // leaving a reader to re-derive why it is missing.
 const unpaired = [];      // region portals that reached no town
 const sealed = [];        // portal<->exit pairs held shut by the map's own `sealed`
+// DENIED (2026-08-03, PT-20260803-002/-008): exits that DO ship an edge and a prompt but
+// refuse to be taken while a story condition holds, answering with a line instead. The
+// third state between "open" and "sealed", and the only one that teaches the player
+// anything — see the `deny` paragraph in the shipped _doc.
+const denied = [];
 const paired = new Set(); // "<town>:<exit id>" that DID become an edge
 
 // ---------------------------------------------------------------- tunables (DATA)
@@ -959,6 +964,36 @@ for (const reg of world.regions || []) {
       }
       gateFlag = exit.sealedUntil;
     }
+    // ---- DENIED: a passage that ANSWERS instead of opening ---------------------
+    // `sealed` is the right presentation for a gate nobody can see through: the edge,
+    // the prompt and the marker are all withheld and the absence IS the statement.
+    // It is the WRONG presentation for a road the player can see, arrived on, and can
+    // walk back to — they get nothing, learn nothing, and (measured: PT-20260803-002)
+    // walk clean out of the chapter on frame one. So an exit may instead declare
+    //   "deny": true, "denyUntil": "<flag>", "denyDialogue": "<node id>",
+    //   "denyLabel": "<prompt label>"        (optional; the edge's own label otherwise)
+    // and the TOWN-SIDE edge carries `deny: {when:{notFlag:<flag>}, dialogue, label}`.
+    // The runtime keeps the prompt and drops the transition: pressing the key plays the
+    // node. Only the town-side half is denied — the way IN is never the problem.
+    let denyBlock = null;
+    if (exit && exit.deny) {
+      if (!exit.denyUntil || !exit.denyDialogue) {
+        W(`town '${p.target}' exit '${exit.id}': declares "deny" but ` +
+          `${!exit.denyUntil ? '"denyUntil" (the flag that lifts it)' : ''}` +
+          `${!exit.denyUntil && !exit.denyDialogue ? ' and ' : ''}` +
+          `${!exit.denyDialogue ? '"denyDialogue" (the node it answers with)' : ''} is missing — ` +
+          `a denial with no line is a silent wall, and a denial with no flag never lifts. ` +
+          `The exit ships UNDENIED.`);
+      } else {
+        denyBlock = {when: {notFlag: exit.denyUntil}, dialogue: exit.denyDialogue,
+                     ...(exit.denyLabel ? {label: exit.denyLabel} : {})};
+        denied.push({town: p.target, exit: exit.id, at: exit.at, edge: eid(tkey, rkey, p.id),
+                     liftsOn: exit.denyUntil, says: exit.denyDialogue,
+                     effect: `the edge, its prompt and its marker-suppression ship; while ` +
+                             `"${exit.denyUntil}" is unset the key plays "${exit.denyDialogue}" ` +
+                             `instead of transitioning`});
+      }
+    }
     if (exit) paired.add(`${p.target}:${exit.id}`);
     const gateId = exit ? exit.at : (map.landmarks.find((l) => l.class === 'portal' && l.mapVisible) || {}).id;
     const gate = map.landmarks.find((l) => l.id === gateId);
@@ -1098,10 +1133,13 @@ for (const reg of world.regions || []) {
       at: r3(gAt), r: DEFAULTS.portalRadius, vTol: DEFAULTS.vTol,
       spawn: r3(rsp), spawnYaw: rYaw, cam: null, camFrom: gShot,
       ...(gateFlag ? {when: {flag: gateFlag}, requires: gateFlag} : {}),
+      ...(denyBlock ? {deny: denyBlock} : {}),
       label: `Leave ${town}`, key: DEFAULTS.key,
       reciprocal: eid(rkey, tkey, p.id),
       source: `${p.target}.map.json exit '${exit ? exit.id : gate.id}' at '${gate.id}' -> ${reg.file} portal '${p.id}'` +
-              (exit ? ` (${exitWhy})` : ''),
+              (exit ? ` (${exitWhy})` : '') +
+              (denyBlock ? `; DENIED until story flag '${exit.denyUntil}' — the prompt and the ` +
+                           `edge stand, the key plays '${exit.denyDialogue}' instead of transitioning` : ''),
     });
   }
 }
@@ -1184,6 +1222,7 @@ const doc = {
   // `unpaired` rows are holes. A row here is an EXPLAINED row in the declared-vs-derived
   // audit; a declared passage in neither list and in no edge is an unexplained one.
   sealed,
+  denied,
   unpaired,
 };
 doc._doc.splice(doc._doc.length - 6, 0,
@@ -1211,6 +1250,15 @@ doc._doc.splice(doc._doc.length - 6, 0,
   '  edge, by name and with its reason — `sealed` for story-gated ones (with the flag that',
   '  opens them), `unpaired` for holes. Before these existed an unwired region portal was a',
   '  wordless skip, and "Emberbrook\'s old gate has no marker" had no trace in the tooling.',
+  '',
+  'DENIED (`deny` on an edge; the roster is top-level `denied`): the THIRD state, between',
+  '  open and sealed. The edge, its prompt and its trigger all ship; while the deny',
+  '  condition holds the runtime plays a dialogue node instead of transitioning. A map exit',
+  '  asks for it with "deny": true + "denyUntil": "<flag>" + "denyDialogue": "<node id>"',
+  '  (+ optional "denyLabel"), and only the TOWN-SIDE half is denied. USE IT WHERE THE',
+  '  PLAYER CAN SEE THE ROAD: `sealed` withholds everything and its absence is the whole',
+  '  statement, which teaches nothing about a passage that is plainly there. It is not a',
+  '  beat — no flag is written, nobody is moved — it is the character declining out loud.',
   '',
   'THE ESTABLISHING PLATE (a camera with "cinematic": true + "establishing": true): the',
   '  portal INTO that town applies the plate instead of the walkable shot that owns the',
@@ -1252,6 +1300,9 @@ if (noRibbon.length) { console.log('\nno camera boundary placed (map connection 
 if (sealed.length) { console.log('\nSEALED (declared, story-gated, deliberately no edge/prompt/marker):');
   for (const s of sealed) console.log(`  ${s.portal} <-> ${s.town} exit '${s.exit}' at '${s.at}'` +
     `  opens on ${s.opensOn || 'NO FLAG DECLARED'}`); }
+if (denied.length) { console.log('\nDENIED (edge and prompt SHIP; the key plays a line instead of transitioning):');
+  for (const d of denied) console.log(`  ${d.town} exit '${d.exit}' at '${d.at}' -> ${d.edge}` +
+    `  lifts on ${d.liftsOn}  says '${d.says}'`); }
 if (unpaired.length) { console.log('\nUNPAIRED (declared passage, no edge — no prompt and no marker can render):');
   for (const u of unpaired) console.log('  ' + u); }
 

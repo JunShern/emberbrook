@@ -587,7 +587,9 @@ export function makeAdapter(opt) {
     async setup(plan) {
       if (plan.kind === 'newgame') {
         await ev(`(()=>{try{localStorage.removeItem('emberbrook-save');localStorage.removeItem('emberbrook-save-v1');}catch(e){}return 1})()`);
-        await send('Page.navigate', { url: urlFor(plan.scene, plan.cam) });
+        // plan.pos comes from story.json's `start` — a new game boots where the front
+        // door sends the player, not on whatever fallback spawn the shot happens to bake.
+        await send('Page.navigate', { url: urlFor(plan.scene, plan.cam, plan.pos) });
       } else {
         const p = plan.save ? { whole: plan.save } : { patch: plan.patch };
         await ev(`(()=>{ const p=${JSON.stringify(p)};

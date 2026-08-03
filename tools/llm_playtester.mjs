@@ -211,7 +211,14 @@ if (has('checkpoints')) {
 }
 
 // -------------------------------------------------------------- start plan --
-let plan = { kind: 'newgame', scene: arg('scene', 'emb-cine'), cam: arg('cam', 'woodroad'), pos: null, brief: null, objective: null };
+// A NEW GAME STARTS WHERE story.json SAYS IT DOES, not where this file remembers. The
+// front door (public/index.html) and playthrough_test read the same `start` block; when
+// this line carried its own literal, the playtester was certifying a boot the player
+// never gets — and the position in question is exactly the one PT-20260803-002 was about.
+const STORY_START = JSON.parse(readFileSync(join(ROOT, 'public/game/story.json'), 'utf8')).start || {};
+let plan = { kind: 'newgame', scene: arg('scene', STORY_START.scene || 'emb-cine'),
+             cam: arg('cam', STORY_START.cam || 'woodroad'),
+             pos: STORY_START.pos || null, brief: null, objective: null };
 if (REPRO) {
   const e = Q.load().entries.find(x => x.id === REPRO);
   if (!e) { console.error('no queue entry ' + REPRO); process.exit(2); }
@@ -246,7 +253,7 @@ const judge = makeAgent({ model: judgeModel, persona: PERSONA, usage });
 const agent = { id: `${player.id} + ${judge.id}`, decide: player.decide, interview: judge.interview };
 
 const adapter = makeAdapter({ port: PORT, headed: has('head'), framesDir: FRAMES });
-const START = adapter.url(plan.scene, plan.cam);
+const START = adapter.url(plan.scene, plan.cam, plan.pos);
 
 console.log('llm_playtester — one LLM, one screen, one keyboard');
 console.log('  server  :' + PORT + '   ' + START);

@@ -1905,11 +1905,14 @@ function sgPrompt(e){
       'border-radius:8px;padding:7px 14px;text-shadow:0 1px 2px #000;pointer-events:none;'+
       'white-space:nowrap;opacity:0;transition:opacity 120ms linear';
     el.appendChild(SGbanner); }
-  // a labelless edge is deliberately silent (camera cuts): never show an empty banner
-  if(!e||!e.label){ SGbanner.style.opacity='0'; return; }
+  // a labelless edge is deliberately silent (camera cuts): never show an empty banner.
+  // A DENIED edge may wear a different label, because "Leave Emberbrook?" is a promise
+  // the edge is not currently keeping — see sgDenied().
+  const label=e ? ((sgDenied(e)&&e.deny.label)||e.label) : null;
+  if(!e||!label){ SGbanner.style.opacity='0'; return; }
   const k=(e.key||sgDef('key','e')).toUpperCase();
   SGbanner.innerHTML=sgDef('promptFmt','{label}? [{key}]')
-    .replace('{label}', e.label).replace('{key}','<b style="color:#e9a24b">'+k+'</b>');
+    .replace('{label}', label).replace('{key}','<b style="color:#e9a24b">'+k+'</b>');
   SGbanner.style.opacity='1';
 }
 // --- per-frame edge test -----------------------------------------------------
@@ -1954,6 +1957,43 @@ function sgLive(e){
   if(window.Dialogue&&Dialogue.check) { try{ return !!Dialogue.check(e.when); }catch(err){ return false; } }
   return false;
 }
+// ---- DENIED EDGES — a passage that ANSWERS instead of opening ------------------
+// PT-20260803-002, re-found as -008: the game's opening frame stood the player on the
+// arrival clearing's own exit pad, so "Leave Emberbrook? [E]" was the ONLY offer on
+// screen and taking it walked a brand-new game clean out of Chapter One — into a scene
+// where no unfired beat lives, with the objective banner still naming the place behind
+// them. The user's remedy, verbatim (2026-08-03): "spawn the character inside
+// Emberbrook to begin with, and don't let them exit from the whisperwood side until
+// after Ch1 ... just use a denial prompt".
+//
+// A SEAL IS THE WRONG SHAPE FOR THAT, and the difference is the whole design. sgLive's
+// absence is silent on purpose — seam canon's "the sealed presentation is the absence"
+// — which is right for a gate nobody can see through and wrong for a road the player
+// walked in on and can plainly see. They would get nothing, and learn nothing.
+//
+// So an edge may carry  deny:{when:<condition>, dialogue:"<node id>", label:"<label>"}
+// (tools/scenegraph_derive.mjs, from a map exit's deny/denyUntil/denyDialogue). While
+// the condition holds the edge KEEPS its prompt and LOSES its transition: the key plays
+// the node. It writes no flag, keeps no ledger and MOVES NOBODY, so it is not a beat and
+// story.json's "no beat may teleport the player" is untouched. It is the character
+// declining, which is what a shut road looks like from inside the story.
+//
+// IT FAILS CLOSED, exactly as sgLive does: if Dialogue has not loaded the condition
+// cannot be read, and a denial that lapses because a module was slow puts the player
+// back in the defect. In that case the edge is refused silently rather than taken.
+function sgDenied(e){
+  if(!e.deny) return false;
+  if(!e.deny.when) return true;
+  if(window.Dialogue&&Dialogue.check) { try{ return !!Dialogue.check(e.deny.when); }catch(err){ return true; } }
+  return true;
+}
+// Spend the denial. Dialogue.play() claims UILOCK, and the keydown handler bails under
+// UILOCK, so a held key cannot re-fire the line — no debounce of our own is needed.
+function sgSpeakDenial(e){
+  const n=e.deny&&e.deny.dialogue;
+  if(!n||!window.Dialogue||!Dialogue.play) return;
+  try{ const p=Dialogue.play(n); if(p&&p.catch) p.catch(()=>{}); }catch(err){}
+}
 function sgTick(){
   sgOpen();
   if(!SG||SGbusy) return;
@@ -1984,7 +2024,11 @@ function sgTick(){
     // portals) rather than competing with them: a cut band that happens to cross a
     // shop's door pad must not swallow the door's prompt, and a prompt must never
     // delay a cut. Only AUTO edges consult the arm latch.
-    if(e.auto){ if(e.armed&&(!fire||h.d<fire.h.d)) fire={e,h}; }
+    // A denied AUTO edge simply does not fire. No camera cut carries `deny` today, and
+    // an auto-fired denial would be a line the player never asked for, replayed every
+    // time they crossed a band — the guard is here so the mechanism cannot grow one.
+    if(e.auto){ if(sgDenied(e)) continue;
+                if(e.armed&&(!fire||h.d<fire.h.d)) fire={e,h}; }
     else if(!best||h.d<best.h.d) best={e,h};
   }
   const nx=best?best.e:null;
@@ -2016,6 +2060,7 @@ function markersTick(t){
   const seen=new Set();
   if(on) for(const e of SGE){
     if(!sgLive(e)) continue;                                  // sealed: a red arrow onto a shut gate is a lie
+    if(sgDenied(e)) continue;                                 // denied: a marker is a way ON, and this one is not
     if(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id) continue;  // not in this shot
     _mkv.set(e.at[0],e.at[1]+2.1,e.at[2]).project(cam);
     if(_mkv.z>1||_mkv.x<-1.05||_mkv.x>1.05||_mkv.y<-1.05||_mkv.y>1.05) continue;
@@ -2105,6 +2150,8 @@ function sgCorrect(){
 addEventListener('keydown',ev=>{
   if(ev.repeat||SGbusy||!SGnear||UILOCK.active()) return;
   if(ev.key.toLowerCase()!==(SGnear.key||sgDef('key','e'))) return;
+  // A DENIED edge answers instead of opening. Same key, same prompt, no transition.
+  if(sgDenied(SGnear)){ sgSpeakDenial(SGnear); return; }
   transitionTo(SGnear);
 });
 // --- THE SWAP SEAM -----------------------------------------------------------
@@ -2266,11 +2313,16 @@ Object.assign(window.SIM,{
             dist:+h.d.toFixed(2), dy:+h.dy.toFixed(2), inRange:h.in, armed:e.armed,
             spawn:e.spawn, camFrom:e.camFrom||null, cam:e.cam?e.cam.key:null,
             auto:!!e.auto, band:e.band||null, when:e.when||null, open:sgLive(e),
+            // `deny` is the AUTHORED block; `denied` is whether it is holding right
+            // now. A denied edge still has a prompt — that is the point of it — so it
+            // is reported separately from `open`, which is only ever about the seal.
+            deny:e.deny||null, denied:sgDenied(e),
             // `live` = "this edge can fire from where the player is standing right
-            // now": in the current shot AND not sealed by a story flag. A sealed
-            // edge is reported (so a test can assert its ABSENCE from play, which
-            // is the presentation seam canon asks for) but is never live.
-            live:sgLive(e)&&!(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id)}; }); },
+            // now": in the current shot, not sealed by a story flag, and not currently
+            // refusing. A sealed edge is reported (so a test can assert its ABSENCE
+            // from play, which is the presentation seam canon asks for) but is never
+            // live; a denied one is visible and still not takeable.
+            live:sgLive(e)&&!sgDenied(e)&&!(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id)}; }); },
   // ---- cinematic cameras: the whole state a test needs to judge a cut ----------
   cine(){ if(!CINE) return null;
     return {shot:CINECAM?CINECAM.id:null, name:CINECAM?CINECAM.name:null,
@@ -2287,10 +2339,18 @@ Object.assign(window.SIM,{
   // take an edge as if the player pressed its key. {navigate:false} returns the
   // URL without leaving the page (so a test can assert the target and spawn).
   go(i,opt){ const e=SGE[i]; if(!e) return {error:'no edge '+i};
+    // "as if the player pressed its key" is the contract, so a denied edge answers
+    // here too rather than opening — otherwise this hook is a hole in the denial.
+    if(sgDenied(e)){ if(!(opt&&opt.navigate===false)) sgSpeakDenial(e);
+                     return {id:e.id, denied:true, dialogue:e.deny.dialogue}; }
     if(opt&&opt.navigate===false) return {id:e.id, url:sgUrl(e), local:e.to===SCENE};
     const r=transitionTo(e); return r?{id:e.id, ...r}:{error:'busy'}; },
   // what the player can see right now
-  prompt(){ return SGnear?{id:SGnear.id,label:SGnear.label,key:SGnear.key||sgDef('key','e'),
+  // `label` is the one ON SCREEN, which for a denied edge is its deny label — a probe
+  // that reads the edge's raw label reports a prompt the player is not looking at.
+  prompt(){ return SGnear?{id:SGnear.id,
+    label:(sgDenied(SGnear)&&SGnear.deny.label)||SGnear.label,
+    denied:sgDenied(SGnear), key:SGnear.key||sgDef('key','e'),
     text:SGbanner?SGbanner.textContent:null, visible:!!(SGbanner&&SGbanner.style.opacity==='1')}:null; },
   graph(){ return SG?{version:SG.version,generated:SG.generated,nodes:Object.keys(SG.nodes||{}),
     defaults:SGD, scene:SCENE, edges:SGE.length}:null; },
@@ -2385,7 +2445,9 @@ Object.assign(window.SIM,{
     // sgLive: a scripted gauntlet must not be able to walk through a sealed gate
     // the player cannot see. The end-to-end proof asserts the flag flips the edge
     // ON, and that assertion is worthless if this could take it either way.
-    const i=SGE.findIndex(e=>e.to===to&&e.from===SCENE&&sgLive(e)&&(!via||String(e.id).indexOf(via)>=0));
+    // sgDenied for the same reason from the other side: a harness that walks out
+    // through a door the player is refused is a harness measuring a different game.
+    const i=SGE.findIndex(e=>e.to===to&&e.from===SCENE&&sgLive(e)&&!sgDenied(e)&&(!via||String(e.id).indexOf(via)>=0));
     if(i<0) return Promise.resolve({error:'no edge to '+to+' from '+SCENE,
                                     have:SGE.filter(e=>e.to!==SCENE).map(e=>e.id)});
     const t0=performance.now(), from=SCENE, e=SGE[i];

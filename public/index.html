@@ -76,7 +76,20 @@ function readSave() {
 }
 // Chapter One's own first ground: the Whisperwood road, the entry shot of emb-cine
 // (townmap/emberbrook.map.json's p-woodroad — "the game's opening scene").
-const NEW_URL = 'play.html?scene=emb-cine&cam=woodroad&fade=1&v=' + Date.now();
+// THE POINT IS NOT LITERAL HERE ANY MORE. story.json's `start` is the one place that
+// says where a new game begins, because this card and the two instruments that certify
+// it (playthrough_test, llm_playtester) each used to carry their own copy of the URL.
+// The literal below is the FALLBACK for a fetch that fails, and it is the pre-fix
+// position on purpose: a front door that cannot read the story must still open.
+const NEW_FALLBACK = 'play.html?scene=emb-cine&cam=woodroad&fade=1&v=' + Date.now();
+function newUrlFrom(start) {
+  if (!start || !start.scene) return NEW_FALLBACK;
+  const q = new URLSearchParams({ scene: start.scene, fade: '1', v: String(Date.now()) });
+  if (start.cam) q.set('cam', start.cam);
+  if (Array.isArray(start.pos)) { q.set('sx', start.pos[0]); q.set('sy', start.pos[1]); q.set('sz', start.pos[2]); }
+  if (start.yaw != null) q.set('yaw', start.yaw);
+  return 'play.html?' + q.toString();
+}
 function continueUrl(st) {
   const at = st && st.at;
   if (!at || !at.scene) return null;
@@ -104,11 +117,15 @@ function doorCard(href, name, desc, tone) {
       'Chapter ' + ch + ' — ' + where +
       (st.meta && st.meta.savedAt ? '<br><span style="opacity:.7">saved ' + String(st.meta.savedAt).replace('T', ' ').slice(0, 16) + '</span>' : '')));
   }
-  const nw = doorCard(NEW_URL, '✦ NEW GAME',
+  const nw = doorCard(NEW_FALLBACK, '✦ NEW GAME',
     'Chapter One — “Emberwake”. A mapmaker walks into a valley that is not on any of her maps.',
     cont ? 'var(--dim)' : 'var(--warm)');
   nw.addEventListener('click', () => { try { SAVE_KEYS.forEach(k => localStorage.removeItem(k)); } catch (e) { } });
   host.appendChild(nw);
+  // The card is up immediately on the fallback and re-pointed when the story answers,
+  // so a slow fetch delays nothing and a failed one still leaves a working door.
+  fetch('game/story.json?v=' + Date.now()).then(r => r.ok ? r.json() : null)
+    .then(j => { if (j && j.start) nw.href = newUrlFrom(j.start); }).catch(() => { });
 })();
 // The launcher shows CURRENT scenes and nothing else. There is no "Legacy archive"
 // section any more: superseded bundles are DELETED, not collapsed out of sight

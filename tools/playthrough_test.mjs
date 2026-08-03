@@ -91,7 +91,18 @@ const CHROME = process.env.CHROME_BIN ||
 
 // ?nomusic=1 — the standing rule (seam-canon §7): a headless check has no business
 // making noise in somebody's room. Nothing here measures audio.
-const START = `http://localhost:${PORT}/play3d.html?scene=emb-cine&cam=woodroad&nomusic=1`;
+// THE FRONT DOOR'S OWN START, not a copy of it. story.json's `start` is where a new
+// game begins (public/index.html reads the same block); this gate exists to certify
+// that door, and a receipt that boots somewhere else certifies nothing. The literal
+// fallback is what this line used to be — shot 'woodroad's baked spawn, which is the
+// arrival clearing's exit pad, which is PT-20260803-002.
+const _START = JSON.parse(readFileSync(new URL('../public/game/story.json', import.meta.url), 'utf8')).start || {};
+const START = (() => {
+  const q = new URLSearchParams({ scene: _START.scene || 'emb-cine', cam: _START.cam || 'woodroad', nomusic: '1' });
+  if (Array.isArray(_START.pos)) { q.set('sx', _START.pos[0]); q.set('sy', _START.pos[1]); q.set('sz', _START.pos[2]); }
+  if (_START.yaw != null) q.set('yaw', _START.yaw);
+  return `http://localhost:${PORT}/play3d.html?` + q.toString();
+})();
 
 let pass = 0, fail = 0;
 const fails = [];
@@ -440,10 +451,43 @@ async function anchor(cdp, id) {
     ok(sealedProbe.open.some(v => v === true), 'open: the same edge is live once the flag is true', sealedProbe);
   }
 
+  // ---- 3b. THE WHISPERWOOD ROAD, DENIED (PT-20260803-002 / -008) -------------
+  // The road Vesper walked in on is a real edge with a real prompt, and until
+  // story.ch1.done it REFUSES: the key plays a line instead of transitioning. This
+  // is the fix's own receipt, and it is measured both ways for the same reason the
+  // seal above is — a test that only ever sees one state cannot tell a working
+  // denial from an edge that was never denied at all.
+  head('3b. the south road answers instead of opening — the chapter cannot be walked out of');
+  const denyProbe = await ev(cdp, `(async()=>{
+    const pick = () => SIM.edges().find(e=>/emberbrook-gate/.test(String(e.id)));
+    const f = GS.state.flags, was = f['story.ch1.done'];
+    f['story.ch1.done'] = false;  const shut = pick();
+    const refused = await SIM.door('ow-valley','emberbrook-gate');
+    f['story.ch1.done'] = true;   const lifted = pick();
+    f['story.ch1.done'] = was;
+    return {shut:{deny:shut&&shut.deny, denied:shut&&shut.denied, live:shut&&shut.live},
+            lifted:{denied:lifted&&lifted.denied, live:lifted&&lifted.live},
+            refused, scene:SIM.scene()}; })()`, 120000);
+  note('south road: ' + JSON.stringify(denyProbe));
+  ok(denyProbe.shut.deny && denyProbe.shut.deny.dialogue,
+     'the south exit ships a `deny` block naming the line it answers with', denyProbe.shut.deny);
+  ok(denyProbe.shut.denied === true && denyProbe.shut.live === false,
+     'denied while story.ch1.done is unset: the edge is not takeable', denyProbe.shut);
+  ok(!!(denyProbe.refused && denyProbe.refused.error) && denyProbe.scene === 'emb-cine',
+     'SIM.door refuses it and the player is still in Emberbrook', denyProbe.refused);
+  ok(denyProbe.lifted.denied === false,
+     'the same edge stops refusing once Chapter One is done', denyProbe.lifted);
+
   head('4. the handoff — an edge is TAKEN into the corridor, never a teleport');
+  // THE OLD GATE, BY NAME (2026-08-03). emb-cine has TWO edges to ow-valley and this
+  // used to take whichever came first in the file — the SOUTH road, the way Vesper
+  // walked in, which is not the chapter's exit and is now denied outright (PT-002).
+  // ch1.sendoff's own objective is "Step through the Old Gate"; the receipt says so too.
   const toValley = await ev(cdp, `(async()=>{
-    const r = await SIM.door('ow-valley');
+    const r = await SIM.door('ow-valley', 'old-gate');
     return {r, scene:SIM.scene()}; })()`, 180000);
+  ok(String(toValley.r && toValley.r.id).includes('old-gate'),
+     'the corridor was entered by the OLD GATE, the exit the chapter sends them to', toValley.r);
   ok(toValley.scene === 'ow-valley', 'the player is in ow-valley, having taken an edge', toValley);
   await ev(cdp, READY(600), 180000);
   await ev(cdp, AUTOREADER);
