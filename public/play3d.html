@@ -27,7 +27,18 @@ let Q=Q0, SCENE, RT, WALKLOCK, URLSPAWN, URLYAW, BASE, OWCAM;
 function sceneParams(q){
   Q=q;
   SCENE=q.get('scene')||'del-cine';   // bare visit = the real game (legacy proto default caused a 'loads then nothing' report)
-  RT=q.get('rt')||/(^|-)townwalk$/.test(SCENE);  // rt: real-time explore mode (townwalk + emb-townwalk default in)
+  // rt: real-time explore mode (townwalk + emb-townwalk default in; ow-* since
+  // PT-20260803-016/017/018). THE OVERWORLD USED TO BE MISSING FROM THIS LINE while
+  // sitting in OWCAM's regex eighteen lines below, and the two say the same thing
+  // about the same scene: ow-* is a real-time explore scene. The follow camera only
+  // exists inside `if(RT)` (see frame()), so any entry into ow-valley on a page that
+  // booted without ?rt=1 kept the region GLB's baked overview camera 200 m up: a
+  // tabletop DIORAMA of the whole valley, no character on screen, nothing pickable.
+  // The playtest agent called it "the valley map screen" and filed three blockers in
+  // one run, and it was every checkpoint drop-in, every dev jump and every QA link
+  // into the overworld. Measured: 0/25 screen points hit any surface without rt,
+  // 25/25 with it. Two regexes that mean one thing must not disagree.
+  RT=q.get('rt')||/(^|-)townwalk$/.test(SCENE)||/^ow-/.test(SCENE);
   // WALKLOCK (user ruling 2026-07-31): in the routed town scenes the walk network is
   // LAW — walking never drops off an edge onto a lower floor (the old "anything you
   // can climb onto you can get down from" ledge rule made the player fall off routes
