@@ -100,12 +100,22 @@ Findings route **through the coordinator**, never lane to lane.
 
 ## Constraints the builders work under
 
-  * **THE CAMERA IS FIXED.** User ruling: *"the camera now is set up as intended for the scale of
-    the world we want to explore."* Consequence: all four `ow-*` cameras contain **ZERO sky
-    pixels**, so the references' depth cue — cool haze on distant cliffs against sky — has
-    nothing to act on. Depth must come radially across the GROUND PLANE, or from detail falloff.
-    The upside: our high camera makes near-field ground most of the frame, which is exactly where
-    the references have their best material. **We can show off more of it than they can.**
+  * **THE CAMERA: DISTANCE IS FIXED, PITCH IS OPEN.** Refined by the user 2026-08-04, and this
+    is NARROWER than the earlier "camera is fixed" — read it carefully before assuming.
+    **FIXED:** how far back the camera sits. Their reason is a design one, not an aesthetic one:
+    *"I want the player to have a sense of where they are going and have a wide enough field of
+    view to appreciate the surroundings… where the landscape is leading them."* **Do not zoom in.**
+    **OPEN:** *"In terms of camera angles, how high we are, and whether we should include more of
+    the horizon line in the shot, I'm actually very open to changes at that level… so long as the
+    user continues to have a wide field of view of the space around them."*
+    **THIS REOPENS THE CRITIC'S ITEM 8**, which I had dropped as settled. It called lowering the
+    pitch the one structural change that buys aerial perspective, sky as a value anchor, and
+    layered depth "for free" — and independently reached the same conclusion I had.
+    **THE WARNING THAT COMES WITH IT, from the critic:** a lower pitch *"will also expose whatever
+    the near-top-down framing is currently hiding — far LODs, terrain edges, skybox quality — so
+    budget for that, not just the camera move."* We already know the sky dome, ridge rings and
+    horizon fog built 2026-08-02 are INVISIBLE in play at the current pitch. They are about to
+    become load-bearing, and nobody has ever looked at them in a shipped frame.
   * **Treatment first, assets second — but assets ARE on the table** once treatment stops moving
     the picture. The last pass moved a lot with zero new art, which is why treatment leads; it is
     a sequencing preference, NOT a ban. See "What counts as a plateau".
