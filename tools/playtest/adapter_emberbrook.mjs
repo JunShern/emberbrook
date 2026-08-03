@@ -438,14 +438,48 @@ export function checkpointsFromStory() {
   // SPAWN, which is the arrival clearing's exit pad: the exact standing position
   // PT-20260803-002 is about. A checkpoint that reproduces the bug it was meant to
   // start after is worse than no checkpoint.
+  /* A CHECKPOINT ARRIVES BY THE EDGE THE PLAYER WOULD HAVE TAKEN.
+   *
+   * A scene change used to reset the position to null, which drops the body on the
+   * BUNDLE's generic spawn — a place the story never puts anybody. Measured 2026-08-03
+   * (playtest round 5) on the one checkpoint the whole loop runs from: `ch1.done` is the
+   * first beat in `ow-valley`, so `--from=ch1.done` began at the region spawn, at the
+   * SOUTH end of the valley road, 5.05 m from Emberbrook's road gate and 141 m from
+   * Dellhollow. A player who actually finishes Chapter One leaves through the OLD GATE —
+   * the beat before it is `ch1.sendoff`, "Step through the Old Gate" — and arrives on the
+   * east bank at [-36.2, 23.3, 17.2], 97 m from Dellhollow with the Old Gate behind them.
+   * Two rounds of "the agent could not find Dellhollow" were measured from the wrong end
+   * of the valley. THIS IS ROUND 3's PT-015 LESSON AGAIN: a checkpoint that does not enter
+   * the scene the way the game does is measuring a place the game never shows a player.
+   *
+   * The edge is chosen the way the runtime chooses it: among the scenegraph edges from
+   * the previous scene to this one, prefer one whose `when`/`requires` flag the beats so
+   * far have SET (that is the story-specific passage — the Old Gate opens in Chapter One's
+   * climax) over an ungated one, and take nothing at all if none resolves. */
+  let SGRAPH = null;
+  try { SGRAPH = JSON.parse(readFileSync(join(ROOT, 'public/world/scenegraph.json'), 'utf8')); } catch (e) { }
+  const arrivalInto = (from, to, have) => {
+    if (!SGRAPH || !from || !to) return null;
+    const cand = (SGRAPH.edges || []).filter(e => e.from === from && e.to === to && e.spawn);
+    if (!cand.length) return null;
+    const need = e => e.requires || (e.when && e.when.flag) || null;
+    const gated = cand.filter(e => need(e) && have[need(e)]);
+    const open = cand.filter(e => !need(e));
+    const pick = gated[0] || open[0] || null;
+    return pick ? { pos: pick.spawn, via: pick.id } : null;
+  };
+
   const ST = STORY.start || {};
   let objective = null, lastAt = ST.pos || null, lastScene = ST.scene || null, lastCam = ST.cam || null;
   for (const b of STORY.beats || []) {
-    // A CAM AND A POSITION ONLY CARRY WITHIN A SCENE, and the reset has to happen
-    // BEFORE the inheritance or it does not happen at all. Carrying `square` across
-    // a door into an interior builds a checkpoint naming a camera that bundle has
-    // never heard of: ignored at best, an undefined shot at worst.
-    if (b.scene && b.scene !== lastScene) { lastScene = b.scene; lastCam = null; lastAt = null; }
+    // A CAM ONLY CARRIES WITHIN A SCENE, and the reset has to happen BEFORE the
+    // inheritance or it does not happen at all. Carrying `square` across a door into an
+    // interior builds a checkpoint naming a camera that bundle has never heard of:
+    // ignored at best, an undefined shot at worst.
+    if (b.scene && b.scene !== lastScene) {
+      const arr = arrivalInto(lastScene, b.scene, flags);
+      lastScene = b.scene; lastCam = null; lastAt = arr ? arr.pos : null;
+    }
     out.push({ id: b.id, chapter: b.chapter || 1, scene: b.scene,
       cam: b.cam || lastCam, pos: b.at || lastAt,
       objective, flags: { ...flags }, beats: { ...beats }, brief: BRIEFS[b.id] || null });
