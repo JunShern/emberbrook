@@ -1,0 +1,82 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Cut-in scale &amp; alignment — before / after</title>
+<style>
+  body { background:#0b0d12; color:#e6e8ee; font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif;
+         margin:0; padding:28px 30px 70px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  h2 { font-size:17px; margin:34px 0 6px; color:#cfe4ff; }
+  p  { max-width:78ch; color:#b9c0cc; }
+  b  { color:#fff; }
+  img { max-width:100%; display:block; border:1px solid #232838; border-radius:5px; margin:10px 0 4px; }
+  .note { color:#8d95a6; font-size:13px; max-width:78ch; }
+  table { border-collapse:collapse; margin:10px 0; font-size:13.5px; }
+  td,th { border:1px solid #232838; padding:4px 11px; text-align:right; }
+  th { color:#cfe4ff; } td:first-child, th:first-child { text-align:left; }
+  code { background:#161a24; padding:1px 5px; border-radius:3px; color:#ffd9a0; }
+  .bad { color:#ff9b8a; } .good { color:#8ce0a8; }
+</style>
+
+<h1>Cut-in scale &amp; alignment</h1>
+<p class="note">Every frame below is the real game — <code>play3d.html</code> at 1920&times;1080 over the
+baked <code>emb-cine</code> plate, driven through <code>Dialogue.play()</code>. Numbers are measured on
+the live element, not computed from the file.</p>
+
+<h2>The bug</h2>
+<p>The layout gave every cut-in the same <b>element height</b> and let the plate's aspect decide its
+width. That normalises the PNG, not the character in it — and the plates are not framed alike. A head
+spans <b>0.26</b> of Boatwright's plate and <b>0.71</b> of Mara's. At one shared height that is a
+<b>2.73&times;</b> spread in face size, which is what the user saw: <i>"the cat looks huge relative to
+the humans"</i>.</p>
+
+<h2>The fix</h2>
+<p><b>Scale on the head, not the bounds.</b> Each character carries a hand-marked head box
+(crown / eye / chin, as fractions of its own plate height) in
+<code>public/assets/characters/cutins.json</code>. The element height is solved <i>backwards</i> from a
+target head height, so the plate's aspect and framing become consequences rather than inputs.
+Mochi carries <code>hscale: 0.86</code> — the one hand-set number, because a cat's head is not a
+person's head and matching them exactly is only <i>less</i> wrong than matching the images.</p>
+<p><b>Align on the eyeline.</b> The old datum was the element's bottom, which aligns the crops; once
+heads are equal it scatters faces by whatever torso each plate happens to include. The eye is what the
+player's own eye goes to, and because heads are now one size it drags the chins into line for free.</p>
+
+<table>
+  <tr><th>measured on all 28 cut-ins</th><th>before</th><th>after</th></tr>
+  <tr><td>head height on screen</td><td class="bad">80 – 218 px (2.73&times;)</td>
+      <td class="good">107 px (Mochi 92 by <code>hscale</code>)</td></tr>
+  <tr><td>eyeline, relative to the box's top edge</td><td class="bad">94 px scatter</td>
+      <td class="good">&plusmn;2 px on 26 of 28</td></tr>
+  <tr><td>art hanging below the window</td><td class="bad">4 portraits</td><td class="good">none</td></tr>
+</table>
+
+<h2>The pair the user named — Vesper (tall, narrow) and Mochi (short, wide)</h2>
+<img src="pair-vesper-mochi.png" alt="Vesper and Mochi, before and after, at real scale">
+<p class="note">Top row before, bottom row after. Before, the cat's head is half again the size of
+Vesper's and its silhouette spans most of the dialogue box. After, the two heads read as the same
+creature-scale, with the cat's a little smaller — which is what a cat beside a person should look like.</p>
+
+<h2>The same pair at TV distance</h2>
+<img src="pair-tv560.png" alt="the same frames downscaled to 560 px wide">
+<p class="note">The full frames downscaled to 560 px, which is roughly what a couch player resolves.
+The mismatch was <i>worse</i> at this distance, not better: at TV distance you read silhouette mass,
+and the cat's mass dominated the box.</p>
+
+<h2>The whole cast, before</h2>
+<img src="cast-before.png" alt="all 28 cut-ins before the change">
+<h2>The whole cast, after</h2>
+<img src="cast-after.png" alt="all 28 cut-ins after the change">
+<p class="note">Read <i>across</i> a row. Before: Mochi and Mara have the largest faces on the sheet
+while Boatwright, Innkeeper, Lake and Odessa have the smallest, and the eye heights wander. After:
+one face size, one eye height.</p>
+
+<h2>What is still wrong, and why it is not a constant</h2>
+<p><b>Mara sits 41 px low and Mochi 16 px low.</b> Both plates are near head-and-shoulders crops
+(head 0.71 and 0.53 of the image, against a cast median of 0.34), so once their heads are scaled down
+to the cast's size there is not enough body left under the face to reach the dialogue box from the
+shared eyeline. Rather than hang a straight cut edge in mid-air, those two drop until they sink. The
+fix is a re-crop of those two plates, not another number in the layout —
+<code>tools/cutin_edge.py</code> already flags Mara's framing as out-of-family.</p>
+<p class="note">Instruments: <code>tools/cutin_headbox.py</code> (<code>--sheets</code> to mark from,
+<code>--verify</code> to check the marks against every mood plate,
+<code>--report</code> for the shipped layout on paper — it agrees with the browser to within 2 px).
+Marks verified against every mood in <code>docs/qa/cutins/headbox/verify/</code>.</p>

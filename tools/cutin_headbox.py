@@ -144,8 +144,19 @@ def verify(man, out, cell_h=420):
         print('SAVED', p)
 
 
-def report(man, target=118.0):
-    """What each character's head box does to its drawn size, head-normalised."""
+def report(man, target=107.0, lift=1.05, sink=10.0):
+    """The SHIPPED layout, on paper: what dialogue.js will draw for each character.
+
+    It reproduces placeCutin's arithmetic so the whole cast can be audited without a
+    browser — but it is the paper answer, and the only authority is a real frame
+    (see docs/qa/cutins/scale). `target` is the head height in px at the viewport the
+    numbers were taken at, `lift` is CUTIN_EYE_LIFT, `sink` the floor in px.
+
+    THE COLUMN THAT MATTERS IS `eye`: how far above the box's top edge this
+    character's eyes land. It is -lift*target for everyone whose plate carries enough
+    body under the face to reach the window, and shallower for anyone it does not —
+    those are the near-headshot crops, and they are the layout's only residual.
+    """
     rows = []
     for pid in sorted(man):
         e = man[pid]
@@ -153,16 +164,25 @@ def report(man, target=118.0):
         if not hb:
             rows.append((pid, None))
             continue
-        head = hb['chin'] - hb['crown']
-        h = target / head
-        rows.append((pid, (head, h, h * e['w'] / e['h'])))
-    print('%-16s %6s %6s %7s %7s' % ('character', 'head', 'aspect', 'draw h', 'draw w'))
+        span = hb['chin'] - hb['crown']
+        head = target * (e.get('hscale') or 1.0)
+        h = head / span
+        below = h * (1 - hb['eye'])
+        depth = max(below - lift * head, sink)
+        rows.append((pid, (span, h, h * e['w'] / e['h'], head, below - depth)))
+    want = -lift * target
+    print('%-16s %6s %6s %7s %7s %7s %7s' % (
+        'character', 'span', 'aspect', 'draw h', 'draw w', 'head px', 'eye'))
     for pid, r in rows:
         if r is None:
-            print('%-16s   -- no head box --' % pid)
+            print('%-16s   -- no head box: falls back to the cast median --' % pid)
             continue
-        head, h, w = r
-        print('%-16s %6.3f %6.2f %7.0f %7.0f' % (pid, head, w / h, h, w))
+        span, h, w, head, eye = r
+        off = (-eye) - want
+        print('%-16s %6.3f %6.2f %7.0f %7.0f %7.0f %7.0f%s' % (
+            pid, span, w / h, h, w, head, -eye,
+            '' if abs(off) < 2 else '   <-- %+.0f px, floored by its own crop' % off))
+    print('\ntarget eye offset %.0f px above the box top (lift %.2f x head %.0f px)' % (-want, lift, target))
 
 
 def main():
@@ -171,7 +191,8 @@ def main():
     ap.add_argument('--verify', metavar='DIR', nargs='?', const='auto')
     ap.add_argument('--report', action='store_true')
     ap.add_argument('--crowns', action='store_true')
-    ap.add_argument('--target', type=float, default=118.0)
+    ap.add_argument('--target', type=float, default=107.0)
+    ap.add_argument('--lift', type=float, default=1.05)
     ap.add_argument('--zoom', type=float, default=1.0)
     ap.add_argument('--step', type=int, default=5)
     ap.add_argument('--per', type=int, default=5)
@@ -186,7 +207,7 @@ def main():
     if a.verify:
         verify(man, a.verify if a.verify != 'auto' else os.path.join(ROOT, 'docs/qa/cutins/headbox/verify'))
     if a.report:
-        report(man, a.target)
+        report(man, a.target, a.lift)
     return 0
 
 
