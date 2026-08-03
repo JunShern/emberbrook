@@ -145,7 +145,14 @@ export async function run(cfg) {
   const reports = [];
   const stallSeen = new Map();
   const lastFrames = [];
-  let nudge = null, finished = null, steps = 0, offSpine = 0, offSpineFiled = false, lastLeg = null;
+  // A NUDGE IS A CONTAINER, NOT AN AUTHOR. One of the two things that go in it is a
+  // fixed harness sentence; the other is THE TEXT THE GAME JUST DREW, read back to the
+  // agent. `nudgeAuthored` carries only the harness's own words, so the firewall's soft
+  // check can tell them apart — without it, the read-back of "A waystone. Good — the
+  // road's a real road, then." counted as the harness naming a camera, and killed the
+  // run three steps in. Same lesson as the brief, one layer down.
+  let nudge = null, nudgeAuthored = null;
+  let finished = null, steps = 0, offSpine = 0, offSpineFiled = false, lastLeg = null;
   // Consecutive steps with nothing painted. Bounded so a blind harness stops loudly
   // instead of grinding a hundred black frames through a paid model.
   let unready = 0; const UNREADY_MAX = 6;
@@ -294,13 +301,15 @@ export async function run(cfg) {
                    iv.probe = { kind: 'reach', from: lastLeg.from, to: lastLeg.target, scene: truth.scene };
                  fileReport(iv.kind, iv, step, obs.percept, truth, lastFrames.slice(), 'stuck-interview', iv.severity); } }
       } catch (e) { log('  interview failed: ' + e.message); if (/FIREWALL/.test(e.message)) throw e; }
-      nudge = 'You appear to be stuck: you have not moved for a while and nothing has changed. ' +
+      nudge = nudgeAuthored =
+              'You appear to be stuck: you have not moved for a while and nothing has changed. ' +
               'Do something DIFFERENT — walk somewhere else, or go back the way you came.';
     }
 
     let intent;
     try {
-      intent = await agent.decide({ screenshot: obs.screenshot, text: obs.text, history: history.slice(-8), brief, nudge });
+      intent = await agent.decide({ screenshot: obs.screenshot, text: obs.text,
+                                    history: history.slice(-8), brief, nudge, nudgeAuthored });
       // THE ASSEMBLER SAYS WHAT IT WROTE. agent.mjs returns `_authored` — the persona,
       // the controls, the brief and the nudge, built from the same array the prompt is
       // — and everything else in the prompt is either drawn on screen or the agent's
@@ -313,7 +322,7 @@ export async function run(cfg) {
       log('  agent error: ' + e.message);
       intent = { see: '(error)', goal: 'recover', action: 'wait', ms: 700 };
     }
-    nudge = null;
+    nudge = nudgeAuthored = null;
 
     // ---- act ---------------------------------------------------------------
     let detail = '', outcome = null;
@@ -376,7 +385,9 @@ export async function run(cfg) {
       const seen = await adapter.readThrough();
       detail = seen.length ? `read ${seen.length} line(s)` : 'nothing to read';
       outcome = { lines: seen.length };
-      if (seen.length) nudge = 'What you just read:\n' + seen.join('\n');
+      // The label is ours; every line under it is the game's own dialogue.
+      if (seen.length) { nudge = 'What you just read:\n' + seen.join('\n');
+                         nudgeAuthored = 'What you just read:'; }
     } else if (intent.action === 'choose') {
       const c = await adapter.choose(intent.index || 0);
       detail = `chose ${intent.index || 0}` + (c && c.from >= 0 ? ` (cursor was on ${c.from})` : '');

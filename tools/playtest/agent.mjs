@@ -117,7 +117,8 @@ const INTERVIEW = [
  *  recorded observation through a different model with a byte-identical prompt —
  *  a benchmark that re-words the question is measuring the wording. */
 export function decisionPrompt(obs, persona) {
-  const [P, C, brief, nudge] = authoredParts(obs, persona);
+  const [P, C, brief] = authoredParts(obs, persona);
+  const nudge = obs.nudge;              // the WHOLE nudge is shown; only part of it is ours
   const L = [P, '', C];
   if (brief) L.push('', '=== WHERE YOU ARE ===', brief);
   L.push('', '=== WHAT YOU HAVE DONE (most recent last) ===',
@@ -141,7 +142,12 @@ export function decisionPrompt(obs, persona) {
  * the prompt and the soft-check target drifting apart again: a soft target that omits
  * something the harness wrote is a hole, and one that includes the screen is a wall. */
 export function authoredParts(obs, persona) {
-  return [persona || DEFAULT_PERSONA, CONTROLS, obs.brief || '', obs.nudge || ''];
+  // THE NUDGE IS A CONTAINER SHARED BY TWO KINDS OF TEXT: a fixed harness sentence,
+  // and the game's own dialogue read back to the agent. A caller that knows which is
+  // which says so with `nudgeAuthored`; one that does not gets the whole nudge treated
+  // as authored, which is the conservative direction (a false alarm, never a hole).
+  const nudge = obs.nudgeAuthored === undefined ? (obs.nudge || '') : (obs.nudgeAuthored || '');
+  return [persona || DEFAULT_PERSONA, CONTROLS, obs.brief || '', nudge];
 }
 
 const VALID = new Set(['goto', 'interact', 'advance', 'choose', 'wait', 'report', 'giveup']);
