@@ -149,6 +149,12 @@
   var crumbs = [];                // [{x,y,z,s}] newest LAST; s = cumulative arc length
   var head = null;                // last sampled leader position
   var sceneKey = null, built = false, driving = false, hidden = [];
+  // A RE-SEED IS A TELEPORT, AND A TELEPORT MUST NOT BE JOGGED TO. Without this the
+  // speed cap in frame() applies to the catch-up as well, so after SIM.tp() (a
+  // harness, an in-scene arrival spawn, play3d's marooned unstick) the party is
+  // seen sprinting across the town for as long as the distance takes — measured
+  // 2026-08-03 at 30 m and still closing. Consumed by the next frame().
+  var SNAPQ = false;
   var settleP = null, settleGo = null, inflight = 0, warned = {};
   var EPOCH = 0;                  // strand every continuation a scene swap outran
 
@@ -375,6 +381,7 @@
     for (var j = 0; j < pts.length; j++) push(pts[j]);
     push(p);
     head = { x: p.x, y: p.y, z: p.z };
+    SNAPQ = true;
   }
 
   // Sample the leader. Rides play3d's PHYSICS tick (not rAF) so it advances under
@@ -409,9 +416,9 @@
         // Move toward the trail point at a speed ceiling. Without the cap a snap
         // teleports the body; with it, a companion who fell behind jogs back on
         // the leader's OWN path and never leaves it.
-        var step = Math.min(dist, MAX_SPD * dt);
+        var step = SNAPQ ? dist : Math.min(dist, MAX_SPD * dt);
         if (dist > 1e-6) { F.root.position.x = px + dx / dist * step; F.root.position.z = pz + dz / dist * step; }
-        F.root.position.y += (t.y - F.root.position.y) * Math.min(1, dt * 8);
+        F.root.position.y = SNAPQ ? t.y : F.root.position.y + (t.y - F.root.position.y) * Math.min(1, dt * 8);
         F.spd = dt > 0 ? step / dt : 0;
         F.moving = step > MOVE_EPS;
         if (F.moving && dist > 1e-6) F.yaw = Math.atan2(dx, dz);
@@ -438,6 +445,7 @@
         F.mixer.update(dt);
       }
     }
+    SNAPQ = false;                   // one frame's worth: the teleport is spent
   }
 
   // ---- build / teardown ----------------------------------------------------

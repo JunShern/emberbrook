@@ -135,11 +135,15 @@ const shoot = async (cdp, path) => {
       }
       await ev(cdp, `Hush.off(0)`);
     }
-    await ev(cdp, `Hush.on(0)`); await sleep(700);
+    await ev(cdp, `Hush.on(0)`); await sleep(1200);   // instant apply, but give the compositor a frame
     await shoot(cdp, join(OUTDIR, `${cam}-hush.png`));
     console.log('  charlight ' + await ev(cdp, `JSON.stringify({hush:__charlight.hush,key:__charlight.intens,gain:__charlight.gain})`));
     if (CUTIN) {
-      await ev(cdp, `Dialogue.play(${JSON.stringify(CUTIN)})`);
+      // NOT awaited: Dialogue.play() resolves when the CONVERSATION ends, i.e. when
+      // a player presses a key, so `awaitPromise:true` on it hangs the harness for
+      // ever. Fire it and photograph the window that opens. (Cost of learning this
+      // the other way: one 8-minute stuck run.)
+      await ev(cdp, `(()=>{Dialogue.play(${JSON.stringify(CUTIN)});return 1})()`);
       await sleep(1600);
       await shoot(cdp, join(OUTDIR, `${cam}-hush-cutin.png`));
       await ev(cdp, `(()=>{try{Dialogue.close&&Dialogue.close()}catch(e){}return 1})()`);

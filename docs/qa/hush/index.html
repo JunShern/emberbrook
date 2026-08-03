@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QA — The Hush (Emberbrook)</title>
+<style>
+ :root{color-scheme:dark}
+ body{margin:0;background:#0d1014;color:#d8cfc2;font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif}
+ main{max-width:1240px;margin:0 auto;padding:38px 22px 90px}
+ h1{font:600 30px/1.2 Georgia,serif;color:#f0e3cd;margin:0 0 .35em;letter-spacing:.01em}
+ h2{font:600 20px/1.3 Georgia,serif;color:#e9a24b;margin:2.6em 0 .5em}
+ .sub{color:#8e8377;margin:0 0 2em;font-size:14px}
+ p{max-width:76ch}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1em 0}
+ .pair.three{grid-template-columns:1fr 1fr 1fr}
+ figure{margin:0}
+ figure img{width:100%;display:block;border:1px solid #2a2f36;border-radius:5px;background:#000}
+ figcaption{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#8e8377;padding-top:6px}
+ figcaption b{color:#d8cfc2;font-weight:600}
+ .note{border-left:3px solid #3d4a5c;background:#141922;padding:12px 16px;margin:1.4em 0;border-radius:0 5px 5px 0}
+ .note.red{border-left-color:#8a4a3a;background:#1c1613}
+ code{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:#1a1f27;padding:1px 5px;border-radius:3px;color:#c8b89a}
+ @media (max-width:820px){.pair,.pair.three{grid-template-columns:1fr}}
+</style></head><body><main>
+
+<h1>The Hush</h1>
+<p class="sub">Emberbrook loses its heart — <code>story.ch1.hush</code> · captured 2026-08-03 ·
+<code>node tools/hush_shot.mjs --port 3000 --cams square,homerow,gatefield --cutin rowan.hail</code></p>
+
+<p>The user chose <b>“take the light”</b> over a grayscale wash, and the reason is canon rather
+than taste: <b>Emberbrook IS the Heartlight town.</b> Draining the colour out of the frame says
+something is wrong with the television. Taking the warm sources out and leaving cold ambient says
+the fire is gone, which is the thing that actually happened.</p>
+
+<div class="note"><b>The whole effect is the contrast.</b> The grade is applied to the WebGL
+canvas. A cut-in is a DOM <code>&lt;img&gt;</code> that <code>dialogue.js</code> paints
+<em>over</em> that canvas, so the filter cannot reach it: the town goes blue and flat and
+<b>the people stay warm and fully coloured</b>. If a later change moves the grade to a parent
+element or into a post pass that composites the UI, this breaks silently —
+<code>Hush.debug().cutinsWarm</code> reports which element wears the filter.</div>
+
+<h2>Festival Square — the cut the beat runs on</h2>
+<div class="pair">
+  <figure><img src="square-clear.png" alt="Festival Square, before"><figcaption><b>before</b> — terracotta roofs, amber lamp pools</figcaption></figure>
+  <figure><img src="square-hush.png" alt="Festival Square, hushed"><figcaption><b>hush</b> — roofs slate, the pools pale and cold</figcaption></figure>
+</div>
+<figure><img src="square-hush-cutin.png" alt="Festival Square hushed with Rowan's cut-in up">
+<figcaption><b>the point of the whole thing</b> — Rowan's portrait is untouched: warm skin, gold hair, the green of his coat. He is the only warm thing in the frame.</figcaption></figure>
+
+<h2>Home Row — the clearest read</h2>
+<div class="pair">
+  <figure><img src="homerow-clear.png" alt="Home Row, before"><figcaption><b>before</b></figcaption></figure>
+  <figure><img src="homerow-hush.png" alt="Home Row, hushed"><figcaption><b>hush</b> — the street lamps go from amber boxes to white ones</figcaption></figure>
+</div>
+
+<h2>The Old Gate — the hard case, and what it forced</h2>
+<div class="pair">
+  <figure><img src="gatefield-clear.png" alt="The Old Gate, before"><figcaption><b>before</b> — already dark; no lamp in frame</figcaption></figure>
+  <figure><img src="gatefield-hush.png" alt="The Old Gate, hushed"><figcaption><b>hush</b>, with the adaptive brightness cut</figcaption></figure>
+</div>
+<div class="note"><b>Measured, and it changed the code.</b> The brightness cut is not a constant.
+<code>brightness(0.80)</code> is right where there is light to take — the square and Home Row are
+full of lamp pools and losing a fifth of them is what sells it. The Old Gate plate is outside the
+village and charLight had already measured its 70th-percentile luminance at <b>0.115</b> against
+the square's <b>0.21</b> (<code>window.__charlight.plate.p70</code>, the number the character rig
+uses to set its own level). Taking another fifth off that plate did not read as a hush, it read as
+a dark frame — and this repo already has the rule: <em>visible is not readable</em>. The cut now
+scales with what the plate actually has, floored at 0.35, so a dark plate keeps its floor.</div>
+
+<h2>What was tried and rejected</h2>
+<p>Four grades at the square, judged by eye:</p>
+<div class="pair three">
+  <figure><img src="square-cand2.png" alt="candidate: light touch"><figcaption><b>too light</b> — reads as a colour shift, not a loss of light</figcaption></figure>
+  <figure><img src="square-cand3.png" alt="candidate: duotone"><figcaption><b>too far</b> — a blue duotone, i.e. the wash the user turned down</figcaption></figure>
+  <figure><img src="square-cand4.png" alt="candidate: bright, undersaturated"><figcaption><b>wrong</b> — magenta trees; this one reads as a bug</figcaption></figure>
+</div>
+
+<h2>The honest limit</h2>
+<div class="note red"><b>A filter desaturates a baked lamp pool. It does not extinguish it.</b>
+Emberbrook's lamps, windows and golden hour are pixels baked by <code>tools/cine_bake.py</code>;
+no runtime light can turn them off. The only alternative is a second full Blender bake of every
+Emberbrook camera — hours, plus a second art set to keep in sync for ever. So the pools survive as
+pale cold pools. On the square and Home Row that reads to me as <em>the light has no warmth left
+in it</em>, which is the intent. It is a judgement, so the pairs are here for a human to overrule.</div>
+
+<p class="sub">Force it live for yourself: <code>play3d.html?scene=emb-cine&amp;hush=1</code> (and
+<code>&amp;hush=0</code> to hold it off). In play it is driven by the flag alone, Emberbrook only.</p>
+
+</main></body></html>

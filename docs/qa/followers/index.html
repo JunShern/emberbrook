@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QA — Followers (the party walks behind you)</title>
+<style>
+ :root{color-scheme:dark}
+ body{margin:0;background:#0d1014;color:#d8cfc2;font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif}
+ main{max-width:1240px;margin:0 auto;padding:38px 22px 90px}
+ h1{font:600 30px/1.2 Georgia,serif;color:#f0e3cd;margin:0 0 .35em}
+ h2{font:600 20px/1.3 Georgia,serif;color:#e9a24b;margin:2.4em 0 .5em}
+ .sub{color:#8e8377;margin:0 0 2em;font-size:14px}
+ p,li{max-width:78ch}
+ figure{margin:1em 0}
+ figure img{width:100%;display:block;border:1px solid #2a2f36;border-radius:5px;background:#000}
+ figcaption{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#8e8377;padding-top:6px}
+ figcaption b{color:#d8cfc2;font-weight:600}
+ .note{border-left:3px solid #3d4a5c;background:#141922;padding:12px 16px;margin:1.4em 0;border-radius:0 5px 5px 0}
+ code{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:#1a1f27;padding:1px 5px;border-radius:3px;color:#c8b89a}
+ table{border-collapse:collapse;margin:1em 0;font:13px ui-monospace,Menlo,monospace}
+ td,th{border:1px solid #2a2f36;padding:5px 12px;text-align:left}
+ th{color:#e9a24b;font-weight:600}
+</style></head><body><main>
+
+<h1>Followers</h1>
+<p class="sub">The party and the cat trail the leader — <b>in towns, not the overworld</b> ·
+<code>public/js/followers.js</code> · captured 2026-08-03</p>
+
+<p>It is a <b>breadcrumb trail, not a pathfinder</b>. The leader's own recent positions are
+recorded on the physics tick and each follower is drawn a fixed arc length back along that
+polyline. Every crumb is somewhere <code>walkStep()</code> already let a body stand, so a
+follower cannot get stuck, cannot need a nav query, and cannot disagree with WALKLOCK.</p>
+
+<div class="note"><b>They cannot block you, by construction rather than by tuning.</b> Nothing
+this module builds is pushed into <code>collide</code>, <code>walkRef</code> or
+<code>allMeshes</code>, and play3d's <code>blocked()</code> tests <code>collide</code> and
+nothing else. A follower that could push the player off a ledge would be worse than no
+follower; this is the line that makes it impossible.</div>
+
+<figure><img src="party-homerow.png" alt="Vesper walking Home Row with Lake, Maren and Mochi behind her">
+<figcaption><b>Home Row, the full party</b> — Vesper (the ring is the existing occluded-presence
+marker, she is behind the house corner), then Lake at 1.81 m, Maren at 2.96 m, and Mochi the cat
+at 3.46 m. Distances measured in the running game, not from the file.</figcaption></figure>
+
+<figure><img src="party-square.png" alt="The same party crossing Festival Square">
+<figcaption><b>Festival Square</b> — same trail, wider shot: 1.76 / 2.90 / 3.85 m.</figcaption></figure>
+
+<figure><img src="probe-swap.png" alt="The party inside the item shop after a scene swap">
+<figcaption><b>Through a door</b> — emb-cine → emb-item-int. They survive the in-place scene
+swap ('eb-scene' re-arm), and on arrival there is no trail yet, so they fan out at the doorway
+instead of stacking. Without that, all three landed on (5.75, 0, -6.08) exactly.</figcaption></figure>
+
+<h2>Who follows</h2>
+<table>
+<tr><th>who</th><th>from</th><th>body</th></tr>
+<tr><td>Lake</td><td><code>GS.activeParty()</code> · <code>lake-joined</code> (ch1.meet)</td><td>lake-v1.glb</td></tr>
+<tr><td>Maren</td><td><code>GS.activeParty()</code> · <code>maren-joined</code> (ch2.landing)</td><td>maren-v1.glb</td></tr>
+<tr><td>Mochi</td><td><b>not a party member</b> — <code>story.ch1.pact</code></td><td>the npcs.json plate</td></tr>
+</table>
+<p>Only Vesper, Lake and Maren are playable and only they have bodies here. <b>The leader must
+himself be in the active party</b>, which is what keeps Chapter One's Lake POV solo: during
+<code>ch1.lake.*</code> the flag is not set yet, so the roster is empty and Vesper does not
+follow Lake round his own cottage. It falls out of the data, not out of a scene name.</p>
+<p><b>The posted cats stand down while Mochi follows.</b> <code>mochi</code> at the Dellhollow eel
+stall and <code>mochi-emb</code> at the Emberbrook waystone are the same animal; a cat at your
+heel and a second one at the stall is a duplicate a player reads as a bug. New
+<code>Npc.hide(id, on)</code>, page-level so it survives a doorway.</p>
+
+<h2>Two things measured that changed the code</h2>
+<ul>
+<li><b>A teleport is not a walk.</b> A sample further than 2.2 m re-seeds the trail — and the
+re-seed <em>snaps</em> the bodies. Without the snap the speed cap applied to the catch-up too,
+and after a <code>SIM.tp()</code> the party was seen sprinting across the town: measured at 30 m
+and still closing.</li>
+<li><b>The doorway huddle</b>, above.</li>
+</ul>
+
+<p class="sub">Turn them off for a measurement: <code>play3d.html?...&amp;nofollow=1</code>.
+Live state: <code>Followers.debug()</code> / <code>Followers.list()</code>.</p>
+
+</main></body></html>

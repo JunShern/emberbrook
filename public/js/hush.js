@@ -69,9 +69,27 @@
   //                    monochrome tone over the residue, hue-rotate swings it to
   //                    blue and the trailing saturate decides how far the cast goes.
   var G = { sat: 0.34, bri: 0.80, con: 0.90, sep: 0.42, hue: 196, sat2: 1.55 };
+
+  // THE BRIGHTNESS CUT IS PLATE-ADAPTIVE, and this is a measured fix rather than a
+  // flourish. `brightness(0.80)` is right where there is light to take: Festival
+  // Square and Home Row are full of lamp pools and losing a fifth of them is what
+  // sells the hush. `gatefield` is not — the Old Gate plate is outside the village
+  // with no lamp in frame, and charLight measured its 70th-percentile plate
+  // luminance at 0.115 against the square's 0.21 (window.__charlight.plate.p70, the
+  // number the character rig already uses to set its own level). Taking a further
+  // fifth off THAT plate did not read as a hush; it read as a dark frame, and this
+  // repo has the rule for it already: visible is not readable. So the cut scales
+  // with what the plate actually has, floored, and a dark plate keeps its floor.
+  var P70_REF = 0.21;               // the square's measured level = the full cut
+  function plateP70() {
+    try { var c = window.__charlight; return (c && c.plate && c.plate.p70) || null; } catch (e) { return null; }
+  }
   function grade(g) {
     g = g || G;
-    return 'saturate(' + g.sat + ') brightness(' + g.bri + ') contrast(' + g.con + ') ' +
+    var p = plateP70();
+    var k = p == null ? 1 : Math.max(0.35, Math.min(1, p / P70_REF));
+    var bri = 1 - (1 - g.bri) * k;
+    return 'saturate(' + g.sat + ') brightness(' + bri.toFixed(3) + ') contrast(' + g.con + ') ' +
            'sepia(' + g.sep + ') hue-rotate(' + g.hue + 'deg) saturate(' + g.sat2 + ')';
   }
 
@@ -107,7 +125,14 @@
   function apply(on, ms) {
     var c = canvas();
     if (c) {
-      if (ms !== 0) c.style.transition = 'filter ' + (ms == null ? FADE : ms) + 'ms ease-in-out';
+      // ms === 0 MUST CLEAR THE TRANSITION, not merely decline to set one. A
+      // previous call leaves `transition: filter 2200ms` on the element, so an
+      // "instant" apply after it is still a 2.2 s fade — and CSS interpolates the
+      // whole filter list, so a frame captured part-way through carries a
+      // PARTIAL hue-rotate. MEASURED 2026-08-03: a QA plate taken 700 ms after
+      // Hush.on(0) came out olive-green (hue-rotate at ~60deg of its 196), which
+      // looked exactly like a wrong grade and was a wrong clock.
+      c.style.transition = ms === 0 ? 'none' : 'filter ' + (ms == null ? FADE : ms) + 'ms ease-in-out';
       c.style.filter = on ? grade() : 'none';
     }
     window.__hush = on ? { on: true, key: RIG.key, sky: RIG.sky, grd: RIG.grd,
@@ -163,6 +188,23 @@
   // Self-arming and flag-driven, like every other module here. GS emits 'change' on
   // every setFlags, which is how the beat that sets the flag reaches the frame with
   // nothing reloaded — the hush has to fall while the player is standing there.
+  // A CAMERA CUT CHANGES THE PLATE, AND THE GRADE IS A FUNCTION OF THE PLATE. There
+  // is no per-cut event to listen to (cineApply is play3d-internal), and hanging a
+  // callback off charLight would recurse — charLight is what apply() calls. Polling
+  // the shot id is the cheap, non-recursive answer: one string compare every 400 ms,
+  // and it only touches the canvas' filter (no relight — charLight has already run
+  // for the new cut and window.__hush has not changed).
+  var lastShot = null;
+  function regrade() {
+    var s = null; try { s = (window.SIM && SIM.cine && (SIM.cine() || {}).shot) || null; } catch (e) { }
+    if (s === lastShot) return;
+    lastShot = s;
+    if (!state) return;
+    var c = canvas(); if (!c) return;
+    c.style.transition = 'none'; c.style.filter = grade();
+  }
+  if (HAS_DOM) setInterval(function () { try { regrade(); } catch (e) { } }, 400);
+
   function arm() { try { sync(FORCE !== null ? 0 : undefined); } catch (e) { } }
   if (window.GS && window.GS.ready && window.GS.ready.then) window.GS.ready.then(arm);
   else if (HAS_DOM) setTimeout(arm, 0);
