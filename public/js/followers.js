@@ -419,8 +419,11 @@
         var step = SNAPQ ? dist : Math.min(dist, MAX_SPD * dt);
         if (dist > 1e-6) { F.root.position.x = px + dx / dist * step; F.root.position.z = pz + dz / dist * step; }
         F.root.position.y = SNAPQ ? t.y : F.root.position.y + (t.y - F.root.position.y) * Math.min(1, dt * 8);
-        F.spd = dt > 0 ? step / dt : 0;
-        F.moving = step > MOVE_EPS;
+        // A SNAP IS NOT A STRIDE. Without this line the frame that covers 30 m of
+        // teleport reports a 30 m step, which reads as "moving" and plays one frame
+        // of Walking_A at the clamp — a body that materialises mid-stride.
+        F.spd = (SNAPQ || dt <= 0) ? 0 : step / dt;
+        F.moving = !SNAPQ && step > MOVE_EPS;
         if (F.moving && dist > 1e-6) F.yaw = Math.atan2(dx, dz);
         else if (lead) {
           // Standing still, a companion turns to the person they are following.
@@ -429,8 +432,11 @@
           F.yaw += dpp * Math.min(1, dt * 2.2);
         }
       }
-      var dp = Math.atan2(Math.sin(F.yaw - F.root.rotation.y), Math.cos(F.yaw - F.root.rotation.y));
-      F.root.rotation.y += dp * Math.min(1, dt * 9);
+      if (SNAPQ) F.root.rotation.y = F.yaw;    // arrive facing, do not swivel into place
+      else {
+        var dp = Math.atan2(Math.sin(F.yaw - F.root.rotation.y), Math.cos(F.yaw - F.root.rotation.y));
+        F.root.rotation.y += dp * Math.min(1, dt * 9);
+      }
       // A plate is yaw-billboarded to the camera and stays STANDING (a full lookAt
       // lies it down as the camera pitches) — the cat's whole body is one quad.
       if (F.plate && F.mesh) {
