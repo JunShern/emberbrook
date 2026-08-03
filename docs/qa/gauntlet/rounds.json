@@ -1,0 +1,33 @@
+{
+  "lede": "Five rounds of a blind-critic loop on the overworld's art. Each round: builders change something, a FRESH Opus 5 critic that has never seen this project compares our frame against real FFIX-reimagined overworld screenshots without being told which is which, and its reasons become the next round's work. The bar is artistry, not numeric similarity. Frames below are the same viewpoints every round.",
+  "references": [
+    "public/assets/refs/reimagine_ff9_overworld_1.jpg",
+    "public/assets/refs/reimagine_ff9_overworld_2.jpg",
+    "public/assets/refs/reimagine_ff9_overworld_3.jpg"
+  ],
+  "rounds": [
+    {
+      "n": 0,
+      "title": "Before — the starting point",
+      "when": "2026-08-04, after the three.js r128 to r185 upgrade",
+      "prefix": "base",
+      "views": ["meadow", "gate", "gorge"],
+      "verdict": "Ranked 3rd of 3, very high confidence. But the cause is narrow: not assets, not texture resolution, not colour taste - the lighting solve. Measured on matched ground patches, our lit-to-shadow ratio is 1.30:1 with saturation FLAT across the terminator; a golden-hour sun should be 2.5-4:1. In the critic's words: 'What A has is not a sun, it's an ambient multiplier with a slight gradient.'",
+      "deficits": [
+        "PIPELINE: cast and contact shadows - fourteen houses, a dozen trees, a character, a whole cliff, and not one shadow on the ground",
+        "PIPELINE: a 3:1 key-to-fill ratio, with a warm key and cool ambient so shadows pick up sky rather than being the lit colour dimmed",
+        "PIPELINE: recover the tonal range - the whole frame lives between 0.13 and 0.71 luminance, no true black or white",
+        "CONTENT: vary the instanced dressing - rotation jitter, plus or minus 15% scale, 2-3 roof tints on the existing house asset",
+        "CONTENT: the blade layer visibly stops - push density and extend the fade so the ground does not change species mid-frame",
+        "DROPPED: lower the camera for a horizon - user ruling, the camera is set for the scale of world we want to explore"
+      ]
+    },
+    {
+      "n": 1,
+      "title": "Content: dressing variation and the blade layer",
+      "when": "in progress",
+      "prefix": "r2",
+      "views": ["meadow", "gate", "gorge"]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+<!doctype html><meta charset="utf-8"><title>Overworld gauntlet loop</title>
+<style>
+ body{background:#14161a;color:#dfe3ea;font:15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:32px 40px;max-width:1600px}
+ h1{font-size:26px;margin:0 0 4px} h2{font-size:19px;margin:0 0 2px;color:#fff}
+ .lede{color:#9aa3b2;margin:0 0 28px;max-width:80ch}
+ .round{border-top:1px solid #2a2f38;padding:26px 0}
+ .when{color:#7d8798;font-size:13px;margin:0 0 10px}
+ .verdict{background:#1c2029;border-left:3px solid #5b8dd6;padding:9px 14px;margin:0 0 12px;border-radius:0 4px 4px 0}
+ .deficits{background:#1a1d24;padding:10px 16px;border-radius:5px;margin:0 0 16px}
+ .deficits ol{margin:6px 0 0;padding-left:20px} .deficits li{margin:3px 0;color:#c3cad6}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+ figure{margin:0}
+ img{width:100%;border-radius:5px;display:block;border:1px solid #2a2f38}
+ figcaption{color:#8b94a4;font-size:12px;padding-top:5px}
+ .missing .ph{aspect-ratio:16/9;background:#1a1d24;border:1px dashed #333a45;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#5a6272;font-size:13px}
+ .refs{border-top:1px solid #2a2f38;padding-top:26px;margin-top:10px}
+</style>
+<h1>Overworld gauntlet loop</h1>
+<p class="lede">Five rounds of a blind-critic loop on the overworld's art. Each round: builders change something, a FRESH Opus 5 critic that has never seen this project compares our frame against real FFIX-reimagined overworld screenshots without being told which is which, and its reasons become the next round's work. The bar is artistry, not numeric similarity. Frames below are the same viewpoints every round.</p>
+<section class="round">
+    <h2>Round 0 — Before — the starting point</h2>
+    <p class="when">2026-08-04, after the three.js r128 to r185 upgrade &middot; 3/3 frames captured</p>
+    <p class="verdict"><b>Critic verdict:</b> Ranked 3rd of 3, very high confidence. But the cause is narrow: not assets, not texture resolution, not colour taste - the lighting solve. Measured on matched ground patches, our lit-to-shadow ratio is 1.30:1 with saturation FLAT across the terminator; a golden-hour sun should be 2.5-4:1. In the critic's words: 'What A has is not a sun, it's an ambient multiplier with a slight gradient.'</p>
+    <div class="deficits"><b>What the critic asked for</b><ol><li>PIPELINE: cast and contact shadows - fourteen houses, a dozen trees, a character, a whole cliff, and not one shadow on the ground</li><li>PIPELINE: a 3:1 key-to-fill ratio, with a warm key and cool ambient so shadows pick up sky rather than being the lit colour dimmed</li><li>PIPELINE: recover the tonal range - the whole frame lives between 0.13 and 0.71 luminance, no true black or white</li><li>CONTENT: vary the instanced dressing - rotation jitter, plus or minus 15% scale, 2-3 roof tints on the existing house asset</li><li>CONTENT: the blade layer visibly stops - push density and extend the fade so the ground does not change species mid-frame</li><li>DROPPED: lower the camera for a horizon - user ruling, the camera is set for the scale of world we want to explore</li></ol></div>
+    <div class="grid"><figure><a href="../ow-refs/plates/base-meadow.png"><img src="../ow-refs/plates/base-meadow.png" alt="meadow"></a><figcaption>meadow</figcaption></figure><figure><a href="../ow-refs/plates/base-gate.png"><img src="../ow-refs/plates/base-gate.png" alt="gate"></a><figcaption>gate</figcaption></figure><figure><a href="../ow-refs/plates/base-gorge.png"><img src="../ow-refs/plates/base-gorge.png" alt="gorge"></a><figcaption>gorge</figcaption></figure></div>
+  </section><section class="round">
+    <h2>Round 1 — Content: dressing variation and the blade layer</h2>
+    <p class="when">in progress &middot; 0/3 frames captured</p>
+    
+    
+    <div class="grid"><figure class="missing"><div class="ph">not yet captured</div><figcaption>meadow</figcaption></figure><figure class="missing"><div class="ph">not yet captured</div><figcaption>gate</figcaption></figure><figure class="missing"><div class="ph">not yet captured</div><figcaption>gorge</figcaption></figure></div>
+  </section>
+<section class="refs"><h2>The references</h2>
+<p class="when">The bar. FFIX-reimagined overworld screenshots &mdash; same shot type as ours: a character walking between towns.</p>
+<div class="grid"><figure><a href="../public/assets/refs/reimagine_ff9_overworld_1.jpg"><img src="../public/assets/refs/reimagine_ff9_overworld_1.jpg" alt="reference"></a><figcaption>reimagine_ff9_overworld_1.jpg</figcaption></figure><figure><a href="../public/assets/refs/reimagine_ff9_overworld_2.jpg"><img src="../public/assets/refs/reimagine_ff9_overworld_2.jpg" alt="reference"></a><figcaption>reimagine_ff9_overworld_2.jpg</figcaption></figure><figure><a href="../public/assets/refs/reimagine_ff9_overworld_3.jpg"><img src="../public/assets/refs/reimagine_ff9_overworld_3.jpg" alt="reference"></a><figcaption>reimagine_ff9_overworld_3.jpg</figcaption></figure></div></section>
