@@ -5,12 +5,12 @@
  ],
  "region": "valley",
  "spawn": [
-  -57.43447717785665,
-  27.230360277808053,
-  65.54667757019007
+  -57.84763973688786,
+  26.754707892037686,
+  60.57563159891342
  ],
- "camYaw": -1.5426,
- "spawn_note": "emberbrook-gate portal, facing down the road to Dellhollow",
+ "camYaw": -1.4869,
+ "spawn_note": "4.3u down-road from the emberbrook-gate portal, gate behind, facing Dellhollow. NOT the portal itself: the portal pad is the edge BACK to Emberbrook (r 3.2) and a spawn on it makes the arrival a return \u2014 see valley_map.region_spawn.",
  "portals": {
   "whisperwood-entrance": [
    80.01,

@@ -64,23 +64,12 @@ cam = sc.objects.get("cam_overview")
 if cam:
     sc.camera = cam
 
-# ---- the spawn pin: the emberbrook-gate portal, facing down the road ----------
-# BY PORTAL LOOKUP, not road index: v2 prepended the Whisperwood entrance to the
-# road, so a fixed "index 2" silently became the map edge (verify caught it).
+# ---- the spawn pin: down-road from the emberbrook-gate portal, gate behind ----
+# The rule lives in valley_map.region_spawn() so that this file and the meta.json
+# regeneration cannot drift apart — they used to be the same eight lines twice.
 import numpy as np
 F = VM.ValleyField()
-_gb = VM.w2b(*VM.PORTALS["emberbrook-gate"]["at"][:2])
-i = int(np.argmin(np.hypot(F.road[:, 0] - _gb[0], F.road[:, 1] - _gb[1])))
-i = max(0, min(len(F.road) - 3, i))
-bx, by = float(F.road[i, 0]), float(F.road[i, 1])
-bz = float(F.road_h[i]) + 0.12
-tg = F.road[i + 2] - F.road[i]
-tg = tg / (tg[0] ** 2 + tg[1] ** 2) ** 0.5
-# runtime is +x east / +z south, so runtime z = -blender y.  ORBIT.yaw places the
-# camera at (cos yaw, sin yaw) from the target, so the VIEW direction is its
-# negation: yaw = atan2(tg_z, -tg_x) points the camera down the road.
-spawn = [bx, bz, -by]
-yaw = math.atan2(-float(tg[1]), -float(tg[0]))
+spawn, yaw = VM.region_spawn(F)
 meta = {
     "_doc": ["Bundle metadata for the valley region. spawn is [x, y, z] in runtime "
              "coords (+x east, +y up, +z south); camYaw is the initial follow-camera "

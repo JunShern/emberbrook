@@ -1375,6 +1375,55 @@ def moorage_frame(F):
 
 
 # ------------------------------------------------------------------- diagnostics
+# ---------------------------------------------------------------- region spawn --
+# WHERE A PLAYER LANDS WHO ENTERS ow-valley WITHOUT TAKING A PORTAL EDGE: the
+# bundle's own spawn, read by play3d from meta.json. That is the checkpoint drop-in,
+# a resume whose save carries no position, and any ?scene=ow-valley dev jump.
+#
+# IT USED TO BE THE PORTAL ITSELF. The rule was "the road station nearest the
+# emberbrook-gate portal", with no back-off, which put the spawn 0.072 m from the
+# centre of `ow-valley>emb-cine@emberbrook-gate` — a return pad of radius 3.2 m.
+# THE FIRST THING A PLAYER COULD DO WAS GO BACK TO THE TOWN THEY HAD JUST LEFT, and
+# in the two playtester runs that measured it, that is exactly what the agent did,
+# both times, on its first action. It is PT-20260803-002 again — the spawn that is
+# its own exit pad — on the other side of the same seam, and it breaks the law in
+# docs/plans/seam-canon.md: an arrival may not be a return.
+#
+# The back-off is not a new number. `world/regions/valley.region.json` already
+# carries the house rule for portal arrivals — gateRadius 3.2 + spawnBackoff 1.1
+# = 4.3u of road arc — and it is applied here, down-road toward Dellhollow, so the
+# gate ends up BEHIND the player and the journey ahead of them. That direction is
+# the same composition argument the region file makes for the Old Gate arrival.
+SPAWN_BACKOFF_U = 4.3
+
+
+def region_spawn(F):
+    """(spawn_xyz_runtime, camYaw) for the region bundle. THE ONLY definition —
+    tools/valley_export.py writes meta.json from this and nothing else computes it.
+
+    BY PORTAL LOOKUP, not road index: v2 prepended the Whisperwood entrance to the
+    road, so a fixed "index 2" silently became the map edge (verify caught it).
+    """
+    import numpy as _np
+    gb = w2b(*PORTALS["emberbrook-gate"]["at"][:2])
+    i = int(_np.argmin(_np.hypot(F.road[:, 0] - gb[0], F.road[:, 1] - gb[1])))
+    i = max(0, min(len(F.road) - 3, i))
+    # walk DOWN-ROAD (increasing station index runs emberbrook-gate -> Dellhollow)
+    # until the back-off is spent. Clamped so a short road cannot run off the end.
+    d = 0.0
+    while i < len(F.road) - 3 and d < SPAWN_BACKOFF_U:
+        d += float(_np.hypot(*(F.road[i + 1] - F.road[i])))
+        i += 1
+    bx, by = float(F.road[i, 0]), float(F.road[i, 1])
+    bz = float(F.road_h[i]) + 0.12
+    tg = F.road[i + 2] - F.road[i]
+    tg = tg / (tg[0] ** 2 + tg[1] ** 2) ** 0.5
+    # runtime is +x east / +z south, so runtime z = -blender y.  ORBIT.yaw places the
+    # camera at (cos yaw, sin yaw) from the target, so the VIEW direction is its
+    # negation: yaw = atan2(tg_z, -tg_x) points the camera down the road.
+    return [bx, bz, -by], math.atan2(-float(tg[1]), -float(tg[0]))
+
+
 def describe():
     out = []
     out.append("region %s  tile %.0f x %.0fu  lattice %d x %d @ %.2fu"
