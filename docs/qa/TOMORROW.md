@@ -25,10 +25,31 @@ highest-value lane on the board.
   Emberbrook plates rather than opening a lane for it.
 - **Character lighting / face legibility on dark plates** — SETTLED. User: *"this current
   lighting is good."* No further work. Do not revisit.
-- **Forest** — all three candidates (F1/F2/F3) REJECTED. The bar is the FFIX reimagined refs
-  in `public/assets/refs/reimagine_ff9*.jpg`. A new lane is running against them. The reframe:
-  the refs contain NO forest, so this is not a tree-species problem — it is whole-landscape
-  integration (ground geometry, blended transitions, multi-scale clustered planting, light).
+- **Forest / overworld landscape — DECIDED 2026-08-03 ~02:30: TAKE ALL THREE (L1+L2+L3).**
+  The lane's own columns show they are ORTHOGONAL — each barely moves the others' metric —
+  so this is not a pick-one. Combined, the sunlit gate meadow goes L p50 0.364 -> 0.511,
+  level with ref 3's 0.469. **I looked at the frames before deciding** (`LA-gate.jpg` vs
+  `L0-gate.jpg`): the before is a murky olive with no light in it; the after reads as a
+  sunlit meadow, and L2's tufts do the real work of defining the road/grass and grass/sand
+  seams. Gallery `docs/qa/ow-land/index.html`.
+    * **L1 the hour** (+0 tris) — blue fill on the HEMISPHERE not the ambient, one cool
+      bounce, fog 150 m -> 34 m. Key untouched (the user ratified the key).
+    * **L2 ground-is-geometry** (+113,924 tris) — 6-tri tufts ONLY where the ground changes,
+      flowers in patches of 6-14, never scattered. The placement rule IS the candidate.
+    * **L3 the surface** (`COLOR_0` only) — the bundle's own vertex colours had grass at
+      L 0.383 and rock at L 0.502, i.e. **the grass was darker than the rock**.
+  **THE FINDING THAT REFRAMES IT:** three of our four daylight cameras were darker than the
+  reference's NIGHT plate (ours L50 0.204 vs REF2-night 0.245), and `b-r` was negative in
+  both quartiles of every frame — nothing in the corridor was cool. The refs are pictures of
+  LIGHT, not of ground detail. That is the transferable property, and it is why "add more
+  stuff" candidates kept missing.
+  **NOT YET LANDED.** `da28b89` committed the REPORT only; L1/L2/L3 live in the uncommitted
+  probe `tools/ow_probe/land.js`. Porting them into the runtime + the valley builder is a
+  real lane. **QUEUED behind the Old Gate lane**, which is inside `valley_build.py` right now
+  and would collide.
+  **Also proven and out of reach for now:** all four ow cameras contain ZERO sky pixels, so
+  the sky dome, ridge rings and horizon fog built 2026-08-02 are invisible in play. Raising
+  the pitch is a GAMEPLAY call, so it goes to the user, not to me.
 
 ## TRANCHES
 
