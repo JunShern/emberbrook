@@ -1237,3 +1237,36 @@ The body reached the bound, walked along it, and came back up — which is the o
 play exactly what §3 measured on the bench, with no invisible wall to press against: the shoreline
 stopped it, and the way back was open the whole time.
 
+
+### Open going into round 7
+
+  * **The Moorage LOOKS out of bounds, and the agent said so from inside the world.** At step 18,
+    standing legitimately at `[69.0, 0.00, −55.0]`, it filed *"Glitched view and out-of-bounds
+    geometry after battle … floating collision blocks and open void"*. It is wrong about the
+    cause — it is in bounds, on real ground — but it is **right about the picture**:
+    `frames/step-009.jpg` is a bare gorge wall, a water plane, and Dellhollow's impression decks
+    reading as *submerged*. The barrier fixed where the player can go; nothing has yet made that
+    place look like somewhere they are meant to be. **This is the natural round-7 headline** —
+    and note the shape of it: a fence that stops a player at a view they think is broken has
+    moved the complaint, not answered it.
+  * **The corridor's encounter rate eats the run.** In `run-20260803-230631`, 29 of the first 47
+    steps were spent inside battles in the gorge — the agent fought three encounters in roughly
+    twelve metres of walking. Nothing is wrong with any single battle; the budget is the problem,
+    and a playtest step is not free. Worth measuring against `encounters.json`'s own rate for the
+    `water`/`crag` zones before touching it.
+  * **The tile apron is a second, smaller trap that the bound papers over rather than removes.**
+    The column at x = 138 stands at y ≈ −4 for 45 cells of z, and the terrain itself caps anyone
+    down there at y 3.2 while the meadow above is y 20. The world bound now refuses the step onto
+    it, and the one-way rule means nobody can be stranded — but **whether it was reachable at all
+    was never measured**, and "unreachable" is a claim this round did not earn.
+  * **`PT-20260803-022`: the camera is inside foliage at the Old Gate arrival** (`ow-valley`,
+    `[-36.2, 23.3, 17.2]`). Carried from round 5, still unmeasured.
+  * **PT-20260803-013/014's 64x36 thumbnail still has no cause.** Unchanged since round 3.
+  * **Carried from round 5, unchanged:** a clamped marker looks the same as a marker over its own
+    door; in-town red triangles are anonymous `cut` bands wearing the same red as a town portal;
+    `play3d` has no `resize` handler. All three are design calls for the user.
+  * **`ch1.done`'s objective still says "down".** *"Follow the valley road down to Dellhollow"* is
+    accurate — that road does descend — and round 5 and round 6 both crossed the corridor under it
+    in one or two legs, so it is NOT the defect `ch2.road`'s was. Left alone deliberately; noted
+    here so the next round does not re-litigate it blind.
+
