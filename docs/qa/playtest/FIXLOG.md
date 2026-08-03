@@ -42,6 +42,11 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 4 | (round 3's blocker) | — | The page goes silent after an `ow-valley` battle | **REFUTED against the game · VERIFIED against the harness** — the harness was drowning the page in its own keys | Chrome boots at `about:blank` and the game arrives by `Page.navigate`; a new INPUT SENTINEL | `22db447` |
 | 4 | PT-20260803-019 | P0 | Battle softlocks after defeating the enemy | **REFUTED** — the battle had already ended four steps earlier | the stuck detector no longer counts steps in which the body is not allowed to move | `22db447`+ |
 | 4 | PT-20260803-020 | P1 | The player can leave the chapter on its first frame | **DUPLICATE** of PT-002 / -008 — a design call already with the user | (carried) | — |
+| 5 | (round 4's finding) | — | The agent spent 26 steps failing to reach Dellhollow and never complained | **VERIFIED — every marker on that road said Emberbrook, and the one naming Dellhollow was drawn off the top of the screen** | portal markers carry the edge's own label; the marker clamps into the frame | `81e4a62` |
+| 5 | (not filed) | — | the drop-in this whole loop runs from was at the wrong end of the valley | **HARNESS DEFECT, found while fixing the above** | a checkpoint arrives by the edge the player would have taken — position AND yaw | `e35a657`+`0f1e0c5` |
+| 5 | PT-20260803-025 / -026 | P1 | The player and camera ended up underneath the level geometry | **VERIFIED — the ground runs continuously off the end of the play area, down the gorge, under the water plane** | not fixed: a world-building call, round 6's headline | — |
+| 5 | PT-20260803-022 | P1 | Camera clipped inside foliage obscuring entire screen | **UNVERIFIED** — filed on the first frame of the corrected Old Gate arrival | — | — |
+| 5 | PT-20260803-021 / -023 / -024 | P1 | The player can leave the chapter on its first frame | **DUPLICATE** of PT-002 / -008 / -020 | (carried) | — |
 
 ## Rounds
 
@@ -904,3 +909,172 @@ round 1.
     makes memory pressure a weaker candidate than it looked. Not reproduced since.
   * **Reported, not fixed — a design call for the user.** `play3d` sizes its renderer once from
     `W=1344, H=768` and has no `resize` handler. Carried from round 3, unchanged.
+
+### Round 5 — 2026-08-03 · the road to Dellhollow had no visible marker on it, and the drop-in was at the wrong end of the valley
+
+Round 4 handed over one thing, and it was about the game rather than the harness: *the agent
+spent 26 steps failing to reach Dellhollow and never complained.* Silent navigational failure —
+a player who is lost and knows it consults the map; a player who is lost and doesn't know it
+quits. This round measured the corridor and found two causes, one in the game and one in the
+instrument, and it is the second that had been quietly distorting the first.
+
+#### What the agent actually did, out of round 4's own log
+
+`run-20260803-203813`, plotted from `run.jsonl`. It is not a wander. It is a wrong turn:
+
+| steps | where | what |
+|---|---|---|
+| 2–16 | `ow-valley`, z 60.6 → 41.6 | walking north up the valley road, incl. a won battle |
+| **17** | `[-50.2, 26.1, 26.1]` | *"standing near an archway with an 'Enter Emberbrook? [E]' prompt"* — **took it** |
+| 18–45 | `emb-cine`, z −50 to −110 | 28 steps oscillating between four spots inside the town it had just left |
+
+The agent's own words at step 6 name the trap before it springs: *"a dirt path leads through a
+lush valley up towards a stone archway marked by a red triangle icon."* **The Old Gate stands ON
+the road to Dellhollow.** It is the way through, and it is also a door into Emberbrook, and the
+only thing on screen saying which was an anonymous red triangle.
+
+#### The measurement: what is visible along the corridor
+
+`scratchpad/r5/corridor_probe.mjs` — boots `ow-valley` with Chapter One's flags set, teleports to
+eight stations along the 141 m from the arrival to the Dellhollow gate, sets the camera yaw the
+way play3d's own heading-follow would have it for a player walking the road, and reads **the
+marker layer's own DOM output** (`#exit-markers`), so the probe cannot drift from `markersTick`.
+
+| station | dist to Dellhollow | markers actually drawn |
+|---|---|---|
+| A the arrival | 141 m | `Enter Emberbrook` 5.0 m · `Enter Emberbrook` 35.0 m |
+| B road-mid | 131 m | both Emberbrook markers · **Dellhollow at screen y −34 px** |
+| C gate approach | 119 m | `Enter Emberbrook` 4.3 m · **Dellhollow at y −32 px** |
+| D gate court | 106 m | `Enter Emberbrook` 9.0 m · **Dellhollow at y −21 px** |
+| E east bank | 97 m | `Enter Emberbrook` 17.8 m · **Dellhollow at y −22 px** |
+| F gorge | 63 m | **Dellhollow at y −0.4 px** |
+
+Two facts, and neither is an opinion:
+
+1. **Every marker a player can see on that road says Emberbrook**, and none of them says so out
+   loud — the label only exists in the prompt, at 3.2 m.
+2. **The one marker naming the destination is drawn off the top of the screen.** The frustum test
+   admits a point out to 1.05 NDC; the `-30 px` lift then puts it above the top edge, where
+   `MKBOX`'s `overflow:hidden` eats it. Five stations, screen y −34, −32, −21, −22, −0.4 px in a
+   720 px frame. **IN FRAME IS NOT VISIBLE** — this repo's oldest lesson, arriving in the DOM.
+
+#### What changed (`81e4a62`)
+
+  * **Portal markers carry a name.** The edge's own `label` under the arrow — `Enter Dellhollow`,
+    `Enter Emberbrook`, `Leave Emberbrook` — the same string the prompt uses, so a marker can
+    never name a door it does not open. Zero authoring. Doors and cut bands stay bare: a town of
+    named doorways is noise, and their ambiguity is local.
+  * **The marker clamps into the viewport**, with 62 px of top inset to clear the objective
+    banner (which was itself overlapping the Old Gate's marker at the arrival, measured at
+    px 737,42 under a banner spanning x 460–820).
+
+`play3d.html` is coordinator-owned; recorded here and in the commit so the owner sees it.
+`trigger_probe`'s selector tightened to `> div[data-edge]` — a marker is a container now.
+
+It works as a cue, and the agent's own perception is the receipt. Round 5's first run:
+*"a red marker labeled 'Enter Emberbrook' ahead"* … *"one behind me for Leave Emberbrook"*. It
+had never named an exit in five rounds.
+
+#### And then the harness turned out to be standing in the wrong place
+
+The first run under the fix went into Emberbrook anyway, on step 3, through the marker at its
+feet. Which raised the question nobody had asked: **is that where Chapter One leaves you?**
+
+It is not. `--from=ch1.done` — the drop-in this entire loop runs from — carried `pos: null`,
+because `checkpointsFromStory` reset the position on a scene change, so play3d fell through to
+the BUNDLE spawn: the **south** end of the valley road, 5.05 m from Emberbrook's road gate and
+141 m from Dellhollow. A player who actually finishes Chapter One steps through the **Old Gate**
+— the beat before is `ch1.sendoff`, *"Step through the Old Gate"* — and arrives on the east bank
+at `[-36.2, 23.3, 17.2]`, **97 m** from Dellhollow with the gate behind them.
+
+**Two rounds of "the agent cannot find Dellhollow" were measured from the wrong end of the
+valley.** This is round 3's PT-015 lesson in a third costume: an entry point that is not the one
+the game uses is measuring a place the game never shows a player.
+
+Worse, and only visible once the position was right: the yaw. Projecting each live edge with the
+follow camera itself (`window._rtCam`) at that arrival —
+
+| camera yaw | `Enter Dellhollow`, 97 m |
+|---|---|
+| the edge's own `spawnYaw` 2.3232 | **ndc [0.275, 0.981] — in frame** (and, thanks to the clamp, drawn) |
+| `meta.json`'s generic `camYaw` | **ndc.z 1.055 — behind the camera** |
+
+**What changed (`e35a657`, `0f1e0c5`).** A checkpoint now arrives by the edge the player would
+have taken: among the scenegraph edges from the previous scene to this one, prefer the one whose
+story flag the beats so far have SET (the Old Gate opens in Chapter One's climax) over an ungated
+one, take nothing when none resolves — and carry that edge's `spawnYaw` through `urlFor` as
+`?yaw=`. `ch1.done` → the Old Gate east bank; `ch2.arrive` → del-cine's valley-gate spawn;
+`ch2.supper` → the cottage doorstep. All three were the generic bundle spawn before.
+
+#### Round 5 — the receipt: the loop turns, and Chapter Two starts
+
+`node tools/llm_playtester.mjs --port=3000 --from=ch1.done --steps=60 --stop-beat=ch2.arrive`,
+run `run-20260803-221232`.
+
+```
+  step 2   [-36.2, 23.3, 17.2]   the Old Gate arrival, "Follow the valley road down to Dellhollow"
+  step 3   [ 21.5, 14.4, -17.7]  one goto, four waypoints, 68 m of valley road
+  step 4   ch2.road FIRES        "Down into the hollow — find whoever runs the locks"
+```
+
+**The corridor that took 26 steps and was never crossed is crossed in two walk legs, and
+`ch2.road` is the first Chapter Two beat this loop has ever fired.** `frames/step-004.jpg` is
+the whole round in one picture: the gorge road climbing to Dellhollow, and the marker on the gate
+reading **`Enter Dellhollow`**.
+
+**What it did next, stated plainly: it fell out of the world.** From step 5 it aimed *"down into
+the hollow towards the locks"* — which from that camera reads as down the river — walked **past**
+the gate and down the riverbed, and spent steps 5–60 at y −2 to −4.6 while the gate stands at
+y 12.65. It filed `PT-20260803-025` and `-026`: *"the player and camera ended up underneath the
+level geometry"*. Measured (`scratchpad/r5/underworld.mjs`, sweeping `SIM.ground` over a column
+of `fy` and taking the distinct surfaces):
+
+```
+  gate      [44.9,-36.2]  floor stack 4.15 .. 16.17   zone crag
+  transect  gate -> [76.1,-62.6]:  12.21, 10.6, 6.9, 5.4, 3.7, 3.7, 3.2, 1.1, -1.3, -3.0, -3.9, -4.18
+  the body's resting places        y -2.03 .. -4.18   zone water
+```
+
+**It is not a hole.** The walkable surface runs continuously off the end of the intended play
+area, down the gorge, under the water plane — no barrier, and the agent could not climb back
+(legs closing 0.5–1 m of 9–10 m for fifty steps). **This is the next round's headline, and it is
+a world-building call, not a marker one:** the valley's downstream end needs a stop, and the
+Dellhollow gate needs to read as the way *up* out of the gorge rather than a thing you pass.
+
+**Gates.** `transition_test` **168 ok / 0 failed** on a quiet machine, exactly at baseline;
+`percept_test` PASS. Two earlier `transition_test` runs failed at `== BOOT` on `del-cine` and one
+returned 165/3 — the same load-dependent flake CLAUDE.md already names. The page itself was
+proven healthy independently by booting `del-cine` over CDP and reading its edges and prompt.
+
+#### What is NOT fixed, and is a design decision for the user
+
+  * **At the arrival the destination marker is behind you, not merely off screen.** The clamp
+    rescues a marker inside the frustum; nothing rescues one outside it, and turning portal
+    markers into a true off-screen compass is a look decision an FFIX-style game should make
+    deliberately, not one a bug fix should smuggle in.
+  * **A clamped marker is a compass, and this agent treats it as a destination.** In round 5's
+    second run it read *"Step through the gate marked 'Leave Emberbrook'"* and aimed at the
+    triangle — which the clamp had moved to the top of the frame, over sky. Measured against the
+    engine, that ground was never the problem: 24/24 headings have floor at the stopping point,
+    0/24 body-blocked, and a transect from z −122.6 to −130.6 is continuous with nothing blocked.
+    A clamped marker probably wants to look different from a marker over its own door.
+  * **In-town the red triangles are still anonymous**, because they are `cut` bands — camera
+    seams, not places — and naming them would be noise. But they are the SAME RED as a town
+    portal, which is what the lost agent chased for 28 steps in round 4 and 52 in round 5's
+    second run. Whether a shot-exit should look like a town exit is the user's call.
+  * **The objective banner does not know where you are.** *"Follow the valley road down to
+    Dellhollow"* sits over Emberbrook's gate court and over a cottage roof deep inside the town.
+    Carried from round 0.
+
+### Open going into round 6
+
+  * **The downstream end of `ow-valley` is a trap.** Walk past the Dellhollow gate and the ground
+    keeps going down to y −4.2 under the water plane, with no barrier and no way back that 50
+    steps of trying found. `PT-20260803-025` / `-026`. Highest value next fix — it is now the
+    thing standing between the playtester and Chapter Two.
+  * **`PT-20260803-022`: the camera is inside foliage at the Old Gate arrival** (`ow-valley`,
+    `[-36.2, 23.3, 17.2]`). Filed on the first frame of the corrected drop-in. Seam canon has a
+    lot to say about arrivals; unmeasured so far.
+  * **PT-20260803-013/014's 64x36 thumbnail still has no cause.** Unchanged from round 3.
+  * **Reported, not fixed — a design call for the user.** `play3d` sizes its renderer once from
+    `W=1344, H=768` and has no `resize` handler. Carried from rounds 3 and 4, unchanged.
