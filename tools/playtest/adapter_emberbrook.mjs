@@ -363,7 +363,18 @@ const INSTALL_MOTOR = `(()=>{ if(window.__pt) return 'already';
     // oct 0 = straight up (away from camera), then clockwise in 45 degree steps.
     const oct=((Math.round(Math.atan2(c,a)/(Math.PI/4))%8)+8)%8;
     return {dist:+dist.toFixed(2),oct}; }
-  window.__pt={hit,dirTo,where(){const p=SIM.pos();return [+p.x.toFixed(2),+p.y.toFixed(2),+p.z.toFixed(2)];}};
+  /* THE INPUT SENTINEL. The harness knows exactly how many key events it dispatched;
+   * only the page knows how many arrived. When those two numbers diverge the harness
+   * is drowning the page in its own input, and every downstream symptom — a silent
+   * Runtime.evaluate, a silent captureScreenshot, a body that will not walk — is a
+   * lie about the game. That is precisely what happened on 2026-08-03 (see the note
+   * at the Chrome spawn), and it was diagnosed as "the page's main thread is busy"
+   * for a whole round because nobody was counting. Two integers make it unmissable. */
+  const KC={d:0,u:0};
+  addEventListener('keydown',()=>{KC.d++},true);
+  addEventListener('keyup',  ()=>{KC.u++},true);
+  window.__pt={hit,dirTo,keys(){return {d:KC.d,u:KC.u};},
+    where(){const p=SIM.pos();return [+p.x.toFixed(2),+p.y.toFixed(2),+p.z.toFixed(2)];}};
   return 'armed'; })()`;
 
 const KEYS = {
@@ -521,10 +532,31 @@ export function makeAdapter(opt) {
   async function evSoft(expr, t, fallback) {
     try { return await ev(expr, t); } catch (e) { if (e.pageSilent) return fallback; throw e; }
   }
+  /* Half of the input sentinel: what WE sent. The other half (what arrived) is
+   * counted in the page by INSTALL_MOTOR. See inputStorm(). */
+  let sentDown = 0, sentUp = 0;
   function keyEvent(type, k, ms) {
     const p = { type, key: k.key, code: k.code, windowsVirtualKeyCode: k.vk, nativeVirtualKeyCode: k.vk };
     if (type === 'keyDown' && k.key.length === 1) p.text = k.key;
+    type === 'keyDown' ? sentDown++ : sentUp++;
     return raced('Input.dispatchKeyEvent', p, ms || KEY_MS, 'key ' + type + ' ' + k.key);
+  }
+  /* A DIVERGENCE BETWEEN WHAT WE SENT AND WHAT ARRIVED IS A HARNESS FAULT, AND IT
+   * MUST BE NAMED AS ONE. Returns a sentence when the page has received materially
+   * more key events than were dispatched, else null. Deliberately generous (2x and
+   * at least 20 extra) — the storm this exists for ran four to five ORDERS of
+   * magnitude over, so a tight bound would only add false positives. Asked with a
+   * short deadline and answered `null` when the page is silent: a sentinel that
+   * hangs is worse than no sentinel. */
+  async function inputStorm() {
+    const got = await evSoft(`(window.__pt&&__pt.keys)?__pt.keys():null`, 3000, null);
+    if (!got || typeof got.d !== 'number') return null;
+    if (got.d < sentDown * 2 || got.d - sentDown < 20) return null;
+    return `INPUT STORM — THIS IS THE HARNESS, NOT THE GAME: the page has received ` +
+      `${got.d} keydown and ${got.u} keyup events for the ${sentDown}/${sentUp} this harness ` +
+      `dispatched. Held keys are never released, so the page is saturating its own main ` +
+      `thread and every read below starves. Check that Chrome was launched at about:blank ` +
+      `and the game arrived by Page.navigate (see the note at the Chrome spawn).`;
   }
   /* A KEY THAT WENT DOWN COMES BACK UP, EVEN WHEN THE PAGE STOPS ANSWERING.
    * `Input.dispatchKeyEvent` is acked by the renderer's main thread, so it starves
@@ -671,6 +703,33 @@ export function makeAdapter(opt) {
       // swiftshader while something else owns the CPU makes Chrome miss its window.
       // The four throttling flags are not decoration — play3d's whole world runs in
       // requestAnimationFrame, and a throttled rAF is a player who cannot walk.
+      //
+      // CHROME LAUNCHES AT about:blank AND THE GAME ARRIVES BY Page.navigate. THE
+      // URL MUST NOT GO ON THE COMMAND LINE. Measured 2026-08-03, one page, one set
+      // of flags, one dispatched `keyDown w` held 400 ms:
+      //
+      //   launched with the game URL as argv   ->  1370 keydown events, rising to
+      //                                            15000/leg; the keyUp NEVER lands
+      //   launched at about:blank, then navigated ->  exactly 1 keydown, 1 keyup
+      //
+      // The repeats are `isTrusted:true` with `timeStamp:0` and `repeat:false`, so
+      // they come from the browser process, not from the page — nothing in play3d
+      // or in any module dispatches a KeyboardEvent (trapped with
+      // Page.addScriptToEvaluateOnNewDocument: zero hits on dispatchEvent and zero
+      // on `new KeyboardEvent`). It is not scene-specific, not RT-specific and not
+      // caused by Emulation.setDeviceMetricsOverride; it reproduces in emb-cine and
+      // ow-valley alike, and it SURVIVES a later Page.navigate, so navigating after
+      // an argv boot does not undo it. The property belongs to the target Chrome
+      // creates when it is handed a URL to open.
+      //
+      // What it did to this harness: four stuck direction keys at ~3000 events a
+      // second each. rAF stays alive (worst gap 50 ms) so the game keeps drawing and
+      // the renderer never crashes — but ordinary tasks starve, and Runtime.evaluate
+      // and Page.captureScreenshot ARE ordinary tasks. Worst setTimeout gap measured
+      // 41151 ms against a 50 ms interval. That is the whole of "the page's main
+      // thread did not answer in 6000 ms": the page was not dead, it was drowning in
+      // our own input. Only this tool dispatches real key events, which is why
+      // playthrough_test and transition_test (both drive through SIM) never saw it.
       chrome = spawn(CHROME, [
         `--remote-debugging-port=${cdpPort}`, `--user-data-dir=${profile}`,
         '--no-first-run', '--no-default-browser-check', '--disable-extensions',
@@ -678,9 +737,11 @@ export function makeAdapter(opt) {
         '--disable-renderer-backgrounding', '--disable-features=CalculateNativeWinOcclusion',
         '--autoplay-policy=no-user-gesture-required',
         `--window-size=${viewport[0]},${viewport[1] + 80}`, ...(headed ? [] : ['--headless=new']),
-        startUrl,
+        'about:blank',
       ], { stdio: 'ignore' });
-      const url = await findPage(cdpPort, { tries: 200, label: 'llm_playtester' });
+      // The page target is about:blank at this moment, so it cannot be matched by
+      // the game's URL. Take the one page target Chrome opened with.
+      const url = await findPage(cdpPort, { tries: 200, label: 'llm_playtester', match: /^about:blank/ });
       cdp = await new Promise((res, rej) => {
         const ws = new WebSocket(url, { perMessageDeflate: false, maxPayload: 256 * 1024 * 1024 });
         const pend = new Map(); let id = 0;
@@ -695,6 +756,8 @@ export function makeAdapter(opt) {
       // comparable between runs — or between models in a benchmark.
       await send('Emulation.setDeviceMetricsOverride', { width: viewport[0], height: viewport[1], deviceScaleFactor: 1, mobile: false });
       try { await send('Emulation.setFocusEmulationEnabled', { enabled: true }); } catch (e) { }
+      // The game arrives HERE, by navigation, for the reason written at the spawn above.
+      await send('Page.navigate', { url: startUrl });
       // A COLD BOOT MAY BE SLOW; IT MAY NOT BE ENDLESS. READY_JS is an in-page poll,
       // so its own 60 s cap only starts once the main thread dequeues it — which on
       // a thrashing machine has been measured at eleven minutes. The harness's clock
@@ -769,8 +832,10 @@ export function makeAdapter(opt) {
       try { r = await raced('Page.captureScreenshot', { format: 'jpeg', quality: 72 }, EV_MS, 'captureScreenshot'); }
       catch (e) {
         if (!e.pageSilent) throw e;
+        const storm = await inputStorm();
         return { screenshot: null, text: flattenPercept(percept), percept, framePath: null,
-          ready: false, why: [...(g.why || []), 'the page never returned a screenshot: ' + e.message],
+          ready: false, why: [...(g.why || []), 'the page never returned a screenshot: ' + e.message,
+            ...(storm ? [storm] : [])],
           frozen: g.frozen, meanL: null, waitedMs: g.waitedMs };
       }
       // THE VERDICT IS TAKEN ON THE PICTURE THAT IS ABOUT TO BE HANDED OVER.
@@ -916,7 +981,8 @@ export function makeAdapter(opt) {
         if (!e.pageSilent) throw e;
         starved = true; exhausted = false;
         const g = await frameGate().catch(() => ({ why: [] }));
-        starvedWhy = [e.message, ...(g.why || [])];
+        const storm = await inputStorm();
+        starvedWhy = [e.message, ...(g.why || []), ...(storm ? [storm] : [])];
       }
       const end = await evSoft(`window.__pt.where()`, EV_MS, last);
       const stoppedByModal = await evSoft(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`, EV_MS, false);
