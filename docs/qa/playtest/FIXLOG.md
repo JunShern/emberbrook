@@ -26,6 +26,13 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 1 | PT-20260803-005 | P1 | Screen remains black after leaving Emberbrook | **REFUTED against the game · VERIFIED against the harness** | the playtester's readiness gate + an honest capture | `19dcc15` |
 | 1 | PT-20260803-006 | P0 | End the test session, the game is stuck on a black screen | **REFUTED against the game · VERIFIED against the harness** | same | `19dcc15` |
 | 1 | (not filed) | — | the agent was blind in combat and the gate called a battle "nothing" | **HARNESS DEFECT, found while fixing the above** | the battle is now in the percept | `82dfdc1` |
+| 2 | PT-20260803-009 | P1 | Camera detached or character missing after battle | **VERIFIED — but nothing to do with the battle** | the overworld gets the presence marker, and the occlusion ray can see foliage | `ffe507d` |
+| 2 | PT-20260803-010 | P1 | Walk blocked: closed 0 m of an intended 5.7 m | **REFUTED against the game · VERIFIED against the harness** | a leg may only cry "blocked" once every heading was tried | `7fde690` |
+| 2 | PT-20260803-011 | P1 | Walk blocked: closed 0 m of an intended 8.74 m | **REFUTED against the game · VERIFIED against the harness** | same | `7fde690` |
+| 2 | PT-20260803-012 | P1 | Character stuck on terrain in sandy clearing | **REFUTED** — 24/24 headings open, character visible at 218 px | same | `7fde690` |
+| 2 | PT-20260803-001 | P1 | Walk blocked: closed 0 m of an intended 35.57 m | **REFUTED** — reachable, 1296 cells, via 2 in-scene edges | (carried from round 0; no code change needed) | — |
+| 2 | PT-20260803-003 | P1 | Character stuck on terrain geometry | **REFUTED** — 24/24 headings open at that spot, character visible at 219 px | (carried from round 0) | — |
+| 2 | PT-20260803-004 | P1 | Character stuck on terrain near rock formation | **REFUTED** — same position as -003, same measurement | (carried from round 0) | — |
 
 ## Rounds
 
@@ -168,4 +175,153 @@ the next round's work):
 - **PT-20260803-008** — the spine detector firing again on the same design question already
   logged as PT-002 in round 0: the player can leave the chapter on its first frame. Duplicate,
   not new information.
+
+
+### Round 2 — 2026-08-03 · the now-seeing agent's first six reports, triaged
+
+Round 1 gave the playtester its eyes back. This is the first round where what it filed could
+be taken at face value — so the first thing worth saying is that **five of its six reports
+were wrong about the game, and the sixth was right about something it could not name.**
+That is not a complaint about the tool. Two of those five are wrong in a way that turned out
+to be *the harness's own fault*, and the one that was right found a defect no gate in this
+repo covers.
+
+#### PT-20260803-009 · VERIFIED · P1 — and the battle was innocent
+
+**What the agent experienced.** After winning a random encounter in `ow-valley` it dismissed
+the victory screen and reported: *"The camera is looking at a cliff and some trees, and my
+character is nowhere to be seen. There's just floating text saying 'Vesper reached level 2'."*
+`frames/step-025.jpg` is exactly that — a cliff face, tree canopy, the level-up line floating
+in the middle of the screen, and no Vesper anywhere in the frame.
+
+**What the instruments said.** First, the battle is not the culprit. Driving a real encounter
+to victory over CDP and reading `SIM.cam()` either side of it, the camera is **bit-identical
+before, during and after** — position and forward vector unchanged — and the body never moves:
+`model:true, visible:true, inScene:true`, same coordinates throughout. Nothing detaches.
+
+What is actually true at that spot is worse, and permanent. Using `SIM.paint()`, play3d's own
+GL readback (it paints the character magenta and counts the pixels), at the exact position the
+report was filed from — `[-34.78, 29.64, 79.42]`, `ow-valley` under `rt=1`:
+
+| question | instrument | answer |
+|---|---|---|
+| is the character drawn at all? | `SIM.paint({tested:false})` | **219 px** — yes |
+| do any of those pixels survive the depth test? | `SIM.paint({tested:true})` | **0 px** — wholly hidden |
+| does the engine's own ray see an occluder? | `SIM.occ()` | **`nHits: 0`** — it sees nothing |
+| is the presence marker up? | `SIM.occCheck()` | **DOWN** |
+
+The character is drawn, is completely behind a cliff-side tree canopy, and **the game does not
+know it**. Two stacked defects:
+
+1. `occCheck()` opened with `if(RT||!cam) return`. Every `ow-*` scene is `RT`, so the whole
+   overworld skipped the presence check outright. The ring-at-the-feet and diamond-overhead
+   that exist precisely so a hidden character can still be found have never run there.
+2. Even when asked, the ray searched `collide`. Foliage and terrain dressing are deliberately
+   **not** collidable — canon is that a canopy hides you and never blocks you — so the ray
+   could not see the thing doing the hiding. The comment sitting directly above `occCheck`
+   already tells this exact story about a rim tree over the Valley Gate. The scar was written
+   down, and the fix was applied to the one mode where the check was switched off.
+
+**What changed (`ffe507d`).** The occluder set is now the render-visible geometry whenever
+`DEPTH || RT`, and `SIM.occ()` uses the same set so the harness and the game agree about what
+hides you. Re-measured on the same four spots:
+
+| spot | before | after |
+|---|---|---|
+| PT-009's position | `nHits:0`, marker DOWN | **`nHits:8`, first `veg_canopy_whisperwood_cards` @ 35.1 m, marker UP** |
+| "sandy clearing" | marker DOWN | `nHits:0`, 218 px visible, marker DOWN |
+| "brown rock face" | marker DOWN | `nHits:0`, 219 px visible, marker DOWN |
+| the spine spot | marker DOWN | `nHits:0`, 220 px visible, marker DOWN |
+
+It fires where the character is hidden and **nowhere else** — the three control spots stay
+clean, which is the part that makes it a fix rather than a new source of noise.
+
+**Worth keeping:** the agent said *"camera detached or character missing"*, and both halves
+were wrong. The camera was fine and the character was present. What it could actually observe
+— *"my character is nowhere to be seen"* — was true, precisely true, and pointed at a real
+defect. **A playtester's diagnosis is a lead; its description of what it saw is the evidence.**
+
+#### PT-20260803-010 / -011 / -012 · REFUTED against the game · VERIFIED against the harness
+
+**What the agent experienced.** Stuck in a sandy clearing in `ow-valley` at
+`[-53.64, 26.75, 75.47]`, filing three P1 blockers from that one spot: *"The character moved
+0 m and stopped 5.7 m short — twice in this run. Something is in the way, or that ground is not
+connected to where I was standing"*, and then *"Four consecutive movement attempts in different
+directions (south, west, southwest) all failed to move Vesper at all (0 m closed)."* The run
+ended with the body at that identical coordinate for its last eight steps.
+
+**What the instruments said.** Three of them, independently, that nothing is in the way:
+
+| instrument | result |
+|---|---|
+| `tools/reach_probe.mjs`, in the running page | reachable, 5.7 m, **289 cells**, on foot |
+| the same, for the second target | reachable, 8.7 m, **1270 cells**, on foot |
+| `SIM.ground` / `SIM.blocked`, 24-heading census at r=0.8 m | **24/24 headings have floor, 0/24 body-blocked** |
+| real CDP key events — the executor's own `hold()` | one 150 ms burst moves **0.90 m** |
+| driving from that point for ~3 minutes | the body walked **~21 m** clean out of the clearing |
+
+The ground is open in every direction and the body crosses it at nearly a metre per burst.
+
+**So why did the executor measure 0 m?** The leg budget is 9 s of *wall clock*, but almost none
+of a leg is spent walking — it is spent on CDP round-trips. On a loaded machine one burst plus
+its two position reads measured **7 to 66 seconds** (the filed legs record `ms` of 14810 to
+132928); on an idle one the same iteration takes ~500 ms. So the inner `if (elapsed > budget)
+break` fired **after the first heading**, the five-heading slide never ran, and `moved < 0.10`
+was then read as *"every heading refused: blocked"*.
+
+Every one of those three reports carries **`bursts: 1`** in its own payload. One heading is not
+every heading. The report contained its own refutation and nobody had read it.
+
+**What changed (`7fde690`).** A round of headings is no longer cut short by the ordinary budget
+— only by a hard ceiling at 6×. The leg now returns `exhausted` (all five pushed, nothing moved:
+*the world refused*, and this is worth filing) separately from `starved` (the ceiling stopped
+it: what the world would have done is **unknown**). `episode.mjs` may only file a blocker on
+`exhausted`; a starved leg is logged with its measured ms/burst and files nothing. The surviving
+blocker text now states its own evidence — how many bursts, at what cost — so the next reader
+does not have to go find it.
+
+This is round 1's lesson relocated from the eye to the motor loop: **an instrument that could
+not look must say so rather than report what it did not see.**
+
+#### PT-20260803-001 / -003 / -004 · REFUTED — the round-0 carry-over, finally measured
+
+These three were filed before the Old Gate quarter-turn fix (`28a5f9d`) and never verified,
+because `reach_probe` needs a running server and that lane did not pass one. Measured now:
+
+- **PT-001** (*"closed 0 m of an intended 35.57 m"*, in `emb-cine`) — `reach_probe`:
+  **reachable, 35.6 m apart, 1296 cells filled, via 2 in-scene edges.**
+- **PT-003 / PT-004** (*"completely immobile"*, *"won't move no matter where I click"*, both at
+  `[-95.18, 30.37, 90.67]`) — the destination was never recorded, so the claim cannot be
+  replayed as filed. But the 24-heading census at that exact position answers the claim
+  directly: **24/24 headings have floor, 0/24 are body-blocked**, and `SIM.paint` puts the
+  character on screen at **219 px**. A body with open floor in every direction is not immobile.
+
+**The standing hypothesis from round 1 was that these three were the Old Gate rotation bug and
+are now dead. That is not what the measurement says.** They are the same harness defect as
+PT-010/011/012 — the walk executor calling its own timeout a wall — which is why the class kept
+reappearing *after* the gate was fixed. The gate fix was real; it was never what these reports
+were about. Both the original hypothesis and the evidence offered against it were wrong, and
+the instrument settled it.
+
+#### PT-20260803-008 — not triaged here, by instruction
+
+The spine detector re-finding round 0's PT-002: the player can leave Chapter One on its first
+frame and the objective follows them out. Verified and mechanical, but the remedy is a design
+call the user is deciding (seal the road vs. let the chapter follow), and a separate lane is
+mid-flight implementing their ruling — *"spawn the character inside Emberbrook to begin with,
+and don't let them exit from the whisperwood side until after Ch1 ... just use a denial
+prompt"*. Left alone deliberately.
+
+#### A blocker for the next round, found by accident and not fixed here
+
+A `newgame` run now dies at step 2 with
+`FATAL: FIREWALL: the agent prompt contains privileged state it must never see:
+["waystone (soft, in harness-authored text)"]`. The cause is in
+`assertNoPrivileged`: the soft-token check does `harnessText == null ? prompt : harnessText`,
+so when a plan carries **no brief** — which `newgame` does not — the "harness-authored text"
+falls back to *the entire prompt*, and any camera name the game legitimately drew on screen
+trips it. It only started firing now because the in-flight spawn change moves a new game into
+the `waystone` shot. It belongs to that lane, so it is reported rather than patched; round 2's
+closing run used `--from=ch1.open`, which carries a brief and starts in `woodroad`, to get
+around it.
 
