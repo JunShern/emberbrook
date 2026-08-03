@@ -49,6 +49,8 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 5 | PT-20260803-021 / -023 / -024 | P1 | The player can leave the chapter on its first frame | **DUPLICATE** of PT-002 / -008 / -020 | (carried) | — |
 | 6 | PT-20260803-025 / -026 | P1 | The player and camera ended up underneath the level geometry | **VERIFIED — 126 of 3500 cells stand below y 0, in two components, out to y −6.07; the region's builder suppresses its own rims within 22 u of the river on purpose** | the world gets a bottom as map data (`worldbounds.json`), one-way so it can never strand anyone | `f1f5243` |
 | 6 | (not filed — read off round 5's own frame) | — | The objective banner named a DIRECTION where it meant a PLACE, and the agent obeyed it | **VERIFIED — `ch2.road` fires AT the gate and said "Down into the hollow"** | "Through the Dellhollow gate — find whoever runs the locks", which is what the exit marker reads | `f1f5243` |
+| 6 | PT-20260803-028 | P1 | Glitched view and out-of-bounds geometry after battle | **VERIFIED AS A PICTURE, REFUTED AS A PLACE** — filed from `[69.0, 0.00, −55.0]`, in bounds, on real ground; the Moorage reads as submerged decks and bare gorge wall | not fixed — round 7's headline | — |
+| 6 | PT-20260803-027 | P1 | The player can leave the chapter on its first frame | **DUPLICATE** of PT-002 / -008 / -020 / -021 / -023 / -024 | (carried) | — |
 
 ## Rounds
 
@@ -1236,6 +1238,14 @@ useful receipt, because it is the same wander round 5 died in:
 The body reached the bound, walked along it, and came back up — which is the one-way rule doing in
 play exactly what §3 measured on the bench, with no invisible wall to press against: the shoreline
 stopped it, and the way back was open the whole time.
+
+It then ran out of steps at 60 without reaching `del-cine`, **and the reason is not the boundary**:
+**32 of its 60 steps were spent inside battles** in the gorge and at the water line. It filed two
+reports — `PT-20260803-028` (the Moorage looks broken; see round 7 below) and `PT-20260803-027`,
+the harness's own off-spine detector firing the long-carried "the player can leave the chapter"
+class. **Two runs, two different endings, and neither of them is round 5's ending:** the y floor
+across both is 0.00, against round 5's −4.6.
+
 
 
 ### Open going into round 7
