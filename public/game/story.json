@@ -154,18 +154,56 @@
         }
       ]
     },
+
     {
-      "id": "ch1.meet",
+      "_doc_act": "LAKE'S ACT — the four beats below are the 3-D staging of chapter1.js playVesperOutro + playLakeIntro (~line 668-708), and the player PLAYS it. The user's ask, verbatim: “I never get to play as Lake at any point… we start with Lake in his home and about to do his rounds. In the current game, we basically skip over that entire part.” Every spoken line here is lifted from the shipped 2-D script without a word changed; what is new is that the walking between them is the player's. NOTHING IS TELEPORTED: the handoff is a change of protagonist (SIM.pov), not of place — Lake has been in his grandmother's cottage all evening — and the cottage door out is the ordinary scenegraph edge emb-lake-int>emb-cine@lake-home, taken by the player, arriving in shot 'homerow' at the top of his own lane. The room he walks is the one the interior blend already dresses: her chair with the shawl still on it, the mantel hook under her portrait, the tally of rounds cut beside it, and the lamp hook by the door (emb-lake-int scene.glb: chair_gran_seat, hook_tip, rounds_mark_*, lamphook_peg).",
+      "id": "ch1.lake.handoff",
       "chapter": 1,
       "scene": "emb-cine",
-      "cam": "pondlane",
       "when": {
         "all": [
           {
             "flag": "story.ch1.vesper-done"
           },
           {
-            "notFlag": "story.ch1.met"
+            "notFlag": "story.ch1.lake-pov"
+          }
+        ]
+      },
+      "do": [
+        {
+          "pov": {
+            "as": "lake",
+            "scene": "emb-lake-int",
+            "spawn": [
+              3.37,
+              0.03,
+              -1.3
+            ],
+            "_spawn_is": "walk_pad_table — grandmother's table, the chair he rises from. Her chair is the far one, and her shawl is still over its back."
+          }
+        },
+        {
+          "setFlags": {
+            "story.ch1.lake-pov": true
+          }
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+    {
+      "id": "ch1.lake.wake",
+      "chapter": 1,
+      "scene": "emb-lake-int",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.lake-pov"
+          },
+          {
+            "notFlag": "story.ch1.lake-woke"
           }
         ]
       },
@@ -177,6 +215,122 @@
             "ms": 3200
           }
         },
+        {
+          "dialogue": "story.ch1.lake.wake"
+        },
+        {
+          "setFlags": {
+            "story.ch1.lake-woke": true
+          }
+        },
+        {
+          "objective": "Take her flame down from the mantel"
+        }
+      ]
+    },
+    {
+      "id": "ch1.lake.hearth",
+      "chapter": 1,
+      "scene": "emb-lake-int",
+      "at": [
+        4.1,
+        0.02,
+        -4.13
+      ],
+      "r": 1.2,
+      "_at_is": "walk_pad_hearth — the mantel. Her flame hangs on hook_tip above it, her portrait above that, and the rounds tally is cut into the breast beside it. r is 1.2 so this cannot fire from the table (2.85 m) and the door beat cannot fire from here (1.97 m); the order of his own room is the order of the scene.",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.lake-woke"
+          },
+          {
+            "notFlag": "story.ch1.lake-flame"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.lake.hearth"
+        },
+        {
+          "setFlags": {
+            "story.ch1.lake-flame": true
+          }
+        },
+        {
+          "objective": "Her hand-lamp — the hook by the door"
+        }
+      ]
+    },
+    {
+      "id": "ch1.lake.lamp",
+      "chapter": 1,
+      "scene": "emb-lake-int",
+      "at": [
+        6.05,
+        0.02,
+        -4.42
+      ],
+      "r": 1.2,
+      "_at_is": "walk_pad_door, under lamphook_peg. The door EDGE is the same point at r 1.8, so the beat's circle sits inside the prompt's: he reaches the lamp before he can reach for the latch. If he leaves anyway, ch1.meet is gated on story.ch1.rounds and he has to come back for it — which is correct. A lamplighter does not walk the round without the lamp.",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.lake-flame"
+          },
+          {
+            "notFlag": "story.ch1.rounds"
+          }
+        ]
+      },
+      "do": [
+        {
+          "giveItem": "hand-lamp"
+        },
+        {
+          "dialogue": "story.ch1.lake.lamp"
+        },
+        {
+          "setFlags": {
+            "story.ch1.rounds": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦  Grandmother's hand-lamp  ✦",
+            "color": "#e0a94e"
+          }
+        },
+        {
+          "objective": "Three lamps before the Kindling Hour — pond lane first"
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+
+    {
+      "id": "ch1.meet",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "pondlane",
+      "_doc_when": "story.ch1.rounds (the hand-lamp beat) joined this condition on 2026-08-03: the meeting is now the END of Lake's playable act, not the start of it, so it must not be reachable by a Lake who walked out of his grandmother's house empty-handed.",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.vesper-done"
+          },
+          {
+            "flag": "story.ch1.rounds"
+          },
+          {
+            "notFlag": "story.ch1.met"
+          }
+        ]
+      },
+      "do": [
         {
           "dialogue": "story.ch1.meet"
         },
@@ -191,6 +345,12 @@
           "toast": {
             "text": "✦  Lake joined the party  ✦",
             "color": "#e0a94e"
+          }
+        },
+        {
+          "pov": {
+            "as": "vesper-v2",
+            "_doc": "THE HANDBACK, and it is the same cut as the handoff — same scene, no spawn, no coordinate, nobody moved. Lake's act ends where it was always going to end: the moment the two of them are standing on the pond lane together, the party exists and the player carries Vesper again for the rest of the chapter and all of Chapter Two. Lake does not leave; he becomes what growth.json's lake-joined already says he is (user ruling 2026-08-02: “Lake as a party member”). Everything downstream of this line — ch1.lamps through ch2.landing, every findability post, every playthrough anchor — is unchanged by the whole act, because after it the body is the one they all assumed."
           }
         },
         {
@@ -595,10 +755,11 @@
       "id": "ch2.road",
       "chapter": 2,
       "scene": "ow-valley",
+      "_doc_at": "THE DELLHOLLOW VALLEY GATE, IN RUNTIME COORDINATES. Was [184.88, 12.01, -136.19] until 2026-08-03: valley.region.json's portal 'dellhollow-valley-gate' is [184.88, 136.19, 12.01] in REGION order (x, map-y, elevation), and it was pasted in here with the axes swapped and map-y negated but THE TILE OFFSET NEVER APPLIED. The one transform is stated in tools/scenegraph_derive.mjs:853 — T(p) = [p[0]-CX, p[2], CY-p[1]], CX,CY = world.json regions[].tile.origin = [140, 100] — and it reproduces the plan position of ALL THREE valley portals to 0.000 m against the shipped scenegraph edges: emberbrook-gate x/z -57.40/65.61, old-gate -51.58/26.17, this one 44.88/-36.19 (the derive re-grounds y off the walk surface, so its y differs by <0.7 m). The old point was OFF THE 280x200 TERRAIN TILE ENTIRELY (|x|>140, |z|>100) and 279.7 m from any ground a player can reach, so this beat could only ever fire by teleport — which is exactly what the harness did to it, and why every gate stayed green. Found by playthrough_test's §W reachability fill.",
       "at": [
-        184.88,
+        44.88,
         12.01,
-        -136.19
+        -36.19
       ],
       "r": 30.0,
       "vTol": 40,
@@ -916,10 +1077,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "annoyed",
           "text": "(Eleven days out of Harrowmere. Two of them on a road my own survey says is a river.)"
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "(There are lights up ahead. Lights mean somebody who can tell me where I am.)"
         }
       ]
@@ -932,6 +1095,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "surprised",
           "text": "(…Wait.)"
         },
         {
@@ -950,6 +1114,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "worried",
           "text": "GAH— …a cat. Hello. Don't sneak up on people in haunted forests."
         },
         {
@@ -958,6 +1123,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "There are lights up the road. Come on. If anyone can explain my sketchbook, it's whoever lives here."
         }
       ]
@@ -975,10 +1141,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "tender",
           "text": "(That warmth is not weather. I have been cold for eleven days and I stopped being cold at the arch.)"
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "(Right. Somebody here knows what a gate on my chart is doing in a valley that isn't.)"
         }
       ]
@@ -987,22 +1155,27 @@
       "lines": [
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "Now then! A guest, and on Emberwake of all nights. Welcome, my dear."
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "Vesper. Mapmaker. I need to get through your gate, and I'm told you're in charge."
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "In charge! Ha! I keep the ledger; the village keeps itself."
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "And nobody opens the Old Gate, child. It hasn't a key — it has RULES."
         },
         {
           "speaker": "vesper",
+          "expr": "wry",
           "text": "Rules can be charted. Charting things is my whole profession."
         },
         {
@@ -1012,14 +1185,17 @@
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "Three hundred years that flame has burned. In all of them, nobody here carried a grief alone."
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "That is not boasting, my dear. It is bookkeeping — I checked."
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "As for the Gate — lamplighter business, child. His order built it, his order shut it."
         },
         {
@@ -1028,10 +1204,12 @@
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "You'll find him somewhere across the village, apologizing to lamps."
         },
         {
           "speaker": "vesper",
+          "expr": "thinking",
           "text": "Apologizing to lamps."
         },
         {
@@ -1055,7 +1233,7 @@
         },
         {
           "speaker": "vesper",
-          "expr": "happy",
+          "expr": "wry",
           "text": "Are you the lamplighter, or do I keep collecting cats until one talks?"
         },
         {
@@ -1069,18 +1247,22 @@
         },
         {
           "speaker": "lake",
+          "expr": "wry",
           "text": "I know. Poppy's told half the square about you."
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "Your elder says the Old Gate is your family's business, and I need it open."
         },
         {
           "speaker": "lake",
+          "expr": "surprised",
           "text": "The— nobody crosses the Gate. It hasn't opened in my lifetime."
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "Because this valley isn't on any chart I own. And I walked here anyway."
         },
         {
@@ -1095,18 +1277,22 @@
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "Ask me after. Three lamps left, and the ring closes before full dark — that's the order she gave me."
         },
         {
           "speaker": "lake",
+          "expr": "tender",
           "text": "(One. While this lamp burns, every house on the lane sits inside the village's heart. Dark lamp, dull street.)"
         },
         {
           "speaker": "vesper",
+          "expr": "thinking",
           "text": "…You're apologizing to it."
         },
         {
           "speaker": "lake",
+          "expr": "sad",
           "text": "It's been a long year for the lane."
         },
         {
@@ -1119,26 +1305,32 @@
       "lines": [
         {
           "speaker": "lake",
+          "expr": "thinking",
           "text": "(Two. “Light them like you mean it,” she said, “or they gutter by midnight.”)"
         },
         {
           "speaker": "lake",
+          "expr": "wry",
           "text": "(She never once explained what the meaning involved. I improvise.)"
         },
         {
           "speaker": "lake",
+          "expr": "weary",
           "text": "(Three. The ring is closed before full dark, same as every night of my life.)"
         },
         {
           "speaker": "lake",
+          "expr": "happy",
           "text": "(A lit lamp near every door. Now the Hour can start.)"
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "The HOUR! Gather, neighbors — to the square!"
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "Lake — the flame."
         }
       ]
@@ -1152,10 +1344,12 @@
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "Three hundred years, and the warmth of every one of them — right here."
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "You know the trade. Bring the year's best, and tell it to the flame."
         },
         {
@@ -1164,6 +1358,7 @@
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "Who brings the first memory?"
         },
         {
@@ -1196,6 +1391,7 @@
         },
         {
           "speaker": "pip",
+          "expr": "scared",
           "text": "Mama?"
         },
         {
@@ -1235,6 +1431,7 @@
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "Every window in this village. Every name behind it."
         },
         {
@@ -1244,10 +1441,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "worried",
           "text": "I got here an HOUR ago."
         },
         {
           "speaker": "lake",
+          "expr": "thinking",
           "text": "And keepers don't make tellings. We keep our own — Grandmother's one hard rule."
         },
         {
@@ -1262,10 +1461,12 @@
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "See to them — all of them. They deserve their names back, even borrowed."
         },
         {
           "speaker": "rowan",
+          "expr": "hollow",
           "text": "Then come find me. I will be with my ledger — every word of it true, and not one of them mine."
         }
       ]
@@ -1279,26 +1480,32 @@
         },
         {
           "speaker": "lake",
+          "expr": "tender",
           "text": "You're Poppy. You bake."
         },
         {
           "speaker": "lake",
+          "expr": "tender",
           "text": "Every morning you burn your thumb on the first tray, and swear you won't tomorrow."
         },
         {
           "speaker": "poppy",
+          "expr": "hollow",
           "text": "…Do I do it anyway?"
         },
         {
           "speaker": "lake",
+          "expr": "tender",
           "text": "Every morning."
         },
         {
           "speaker": "poppy",
+          "expr": "hollow",
           "text": "The round warm things. I know the word — it just sounds like nobody's when I say it."
         },
         {
           "speaker": "poppy",
+          "expr": "worried",
           "text": "Say it to me, love."
         },
         {
@@ -1312,10 +1519,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "I'm writing this down. All of it — who you are, and who you are to each other."
         },
         {
           "speaker": "poppy",
+          "expr": "tender",
           "text": "Good, love. Write the thumb. The thumb feels true."
         }
       ]
@@ -1324,14 +1533,17 @@
       "lines": [
         {
           "speaker": "pip",
+          "expr": "scared",
           "text": "Tell her. TELL her!"
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "Mara. This is Pip. Your son, seven years old."
         },
         {
           "speaker": "lake",
+          "expr": "tender",
           "text": "You waited out a snowstorm at the pass for him to be born."
         },
         {
@@ -1346,6 +1558,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "worried",
           "text": "Pip. Look at me. I saw her holding your hand — an hour ago, by the stall."
         },
         {
@@ -1355,10 +1568,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "So I am telling you: it is TRUE."
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "It happened, and I have it."
         },
         {
@@ -1367,6 +1582,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "tender",
           "text": "It is now."
         },
         {
@@ -1390,10 +1606,12 @@
         },
         {
           "speaker": "lake",
+          "expr": "tender",
           "text": "Finn. You're Finn."
         },
         {
           "speaker": "finn",
+          "expr": "happy",
           "text": "…Finn. Huh. Short. I like it."
         },
         {
@@ -1408,6 +1626,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "wry",
           "text": "Fish don't count."
         },
         {
@@ -1433,10 +1652,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "annoyed",
           "text": "Your grandmother said that. Casually. As common knowledge."
         },
         {
           "speaker": "lake",
+          "expr": "wry",
           "text": "She said a lot of things. She was a lamplighter too."
         },
         {
@@ -1460,6 +1681,7 @@
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "Ink keeps facts. It cannot keep what they WEIGHED."
         },
         {
@@ -1468,6 +1690,7 @@
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "And the old Order kept one creed above all: light does not die — it is only ever carried."
         },
         {
@@ -1476,6 +1699,7 @@
         },
         {
           "speaker": "lake",
+          "expr": "worried",
           "text": "Nobody knows the way. The Gate's been shut three hundred years, and the road's gone."
         },
         {
@@ -1485,14 +1709,17 @@
         },
         {
           "speaker": "vesper",
+          "expr": "worried",
           "text": "Since I was six years old, I have drawn one clearing. Over and over, in dreams."
         },
         {
           "speaker": "vesper",
+          "expr": "worried",
           "text": "Forty-one drawings of the same clearing."
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "I came here because the forty-first had YOUR gate in the corner."
         },
         {
@@ -1502,6 +1729,7 @@
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "It has been CALLING you. Forty-one times it called."
         },
         {
@@ -1510,10 +1738,12 @@
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "So it must be both of you, together."
         },
         {
           "speaker": "vesper",
+          "expr": "annoyed",
           "text": "We met an hour ago."
         },
         {
@@ -1528,14 +1758,17 @@
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "I'm scared to walk that road, and I'll walk it. Both of those are true."
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "The old rite, then. Two keepers, one flame — say it and mean it, or the Gate will know."
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "“What they forgot, we keep. What we keep, we return.”"
         },
         {
@@ -1555,10 +1788,12 @@
         },
         {
           "speaker": "lake",
+          "expr": "annoyed",
           "text": "He's not my—"
         },
         {
           "speaker": "rowan",
+          "expr": "happy",
           "text": "It was not a question, boy."
         },
         {
@@ -1567,10 +1802,12 @@
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "Twin sigils, before the Gate. The Lamplighters cut them, in the old days."
         },
         {
           "speaker": "rowan",
+          "expr": "grave",
           "text": "That road was always meant to be walked by two."
         }
       ]
@@ -1584,14 +1821,17 @@
         },
         {
           "speaker": "vesper",
+          "expr": "thinking",
           "text": "Two plates. Cut into the road, one either side. Worn smooth."
         },
         {
           "speaker": "lake",
+          "expr": "thinking",
           "text": "The sigils. Grandmother walked me up here once and would not tell me what they were for."
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "I'll take the far one. Stand on yours — and don't step off, whatever it does."
         },
         {
@@ -1600,6 +1840,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "surprised",
           "text": "It's reading us."
         },
         {
@@ -1613,11 +1854,12 @@
         },
         {
           "speaker": "vesper",
-          "expr": "surprised",
+          "expr": "wry",
           "text": "…Three hundred years, and it opens like a garden gate."
         },
         {
           "speaker": "lake",
+          "expr": "sad",
           "text": "It was never locked, Vesper. It was just shut."
         }
       ]
@@ -1630,34 +1872,42 @@
         },
         {
           "speaker": "poppy",
+          "expr": "stern",
           "text": "Take this, love. Nobody leaves Emberbrook hungry — I'm reliably informed that's MY law."
         },
         {
           "speaker": "poppy",
+          "expr": "tender",
           "text": "Honeybuns, a dozen. And the tin comes back, love — that's how I'll know you did."
         },
         {
           "speaker": "vesper",
+          "expr": "wry",
           "text": "It comes back. That's in ink now."
         },
         {
           "speaker": "mara",
+          "expr": "hollow",
           "text": "Festival ribbon, from the square. There's no festival to fly it — so take it somewhere that's going somewhere."
         },
         {
           "speaker": "lake",
+          "expr": "tender",
           "text": "It'll fly, Mara. I'll find it wind."
         },
         {
           "speaker": "pip",
+          "expr": "happy",
           "text": "Wait! I made you a map, and it goes to the MOON."
         },
         {
           "speaker": "pip",
+          "expr": "happy",
           "text": "You said not yet. So it's for when."
         },
         {
           "speaker": "vesper",
+          "expr": "tender",
           "text": "For the record: this is now the best chart I carry."
         },
         {
@@ -1670,6 +1920,7 @@
         },
         {
           "speaker": "lake",
+          "expr": "weary",
           "text": "That's where the light went. Some of it never made it to the sky."
         },
         {
@@ -1679,10 +1930,12 @@
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "My grandmother had a saying for the rounds. The first lamp is the whole job — the rest is only more of it."
         },
         {
           "speaker": "vesper",
+          "expr": "happy",
           "text": "Then it goes in the book. Come on, partner — first lamp."
         }
       ]
@@ -1700,6 +1953,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "surprised",
           "text": "My north chart says gentle fall to marsh. That is a gorge, and there is a town stacked down the inside of it."
         },
         {
@@ -1726,10 +1980,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "worried",
           "text": "…New page. “A hooded man, courteous, on the wrong side of a river.”"
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "Down, then. Somebody in that town moves boats for a living, and we need to be moved."
         }
       ]
@@ -1751,18 +2007,22 @@
         },
         {
           "speaker": "lake",
+          "expr": "surprised",
           "text": "And they're — fine. They're better than fine."
         },
         {
           "speaker": "vesper",
+          "expr": "wry",
           "text": "You say that like it's an accusation."
         },
         {
           "speaker": "lake",
+          "expr": "wry",
           "text": "I say it like a lamplighter who has just found out his whole family's job might have been optional."
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "Later. River first. Find whoever tells the water what to do."
         }
       ]
@@ -1771,6 +2031,7 @@
       "lines": [
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "Nineteen days, and not one boat through Lock Five. Before you ask: no, and no, and I'll say it again this afternoon."
         },
         {
@@ -1784,10 +2045,12 @@
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "You do not evict a nesting Tenant. You wait for spring, or you learn to walk on water."
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "And if somebody wanted to go tonight?"
         },
         {
@@ -1797,6 +2060,7 @@
         },
         {
           "speaker": "odessa",
+          "expr": "warm",
           "text": "Apron's down the steps. She's the wet one."
         }
       ]
@@ -1805,6 +2069,7 @@
       "lines": [
         {
           "speaker": "maren",
+          "expr": "happy",
           "text": "You're the flame people. Word came up the stair before you did."
         },
         {
@@ -1814,6 +2079,7 @@
         },
         {
           "speaker": "maren",
+          "expr": "determined",
           "text": "There's a flume behind Lock Five, dry since my father's time. It runs past her."
         },
         {
@@ -1822,10 +2088,12 @@
         },
         {
           "speaker": "maren",
+          "expr": "wry",
           "text": "OVER her, technically. Ma's said no nine times, which is how I know it works."
         },
         {
           "speaker": "vesper",
+          "expr": "determined",
           "text": "Show us the lock."
         },
         {
@@ -1852,18 +2120,22 @@
         },
         {
           "speaker": "maren",
+          "expr": "wry",
           "text": "She looks at everyone. She's a landlord."
         },
         {
           "speaker": "maren",
+          "expr": "determined",
           "text": "There. The flume mouth, above the head gates."
         },
         {
           "speaker": "maren",
+          "expr": "determined",
           "text": "Open both gates and the head drops enough to fill it."
         },
         {
           "speaker": "maren",
+          "expr": "determined",
           "text": "One run, four minutes, out the tailwater below her."
         },
         {
@@ -1872,10 +2144,12 @@
         },
         {
           "speaker": "maren",
+          "expr": "thinking",
           "text": "Two winches. Ma has the only key to one of them and she sleeps with it. Midnight, then."
         },
         {
           "speaker": "maren",
+          "expr": "wry",
           "text": "Ma will feed you first. She always feeds people before she tells them no."
         }
       ]
@@ -1884,6 +2158,7 @@
       "lines": [
         {
           "speaker": "odessa",
+          "expr": "warm",
           "text": "Sit. Both of you at the good table, and don't argue, the argument's after."
         },
         {
@@ -1897,10 +2172,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "thinking",
           "text": "(That drawer is opened often, and by one person.)"
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "Her father drew the north river from memory the night before he went down it."
         },
         {
@@ -1910,10 +2187,12 @@
         },
         {
           "speaker": "lake",
+          "expr": "sad",
           "text": "…My grandmother kept a rule she never explained either."
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "Then you know what they are. They're a wall with a person behind it."
         },
         {
@@ -1935,6 +2214,7 @@
         },
         {
           "speaker": "vesper",
+          "expr": "sad",
           "text": "(Somebody should have written it down, so I write everything down.)"
         },
         {
@@ -1943,10 +2223,12 @@
         },
         {
           "speaker": "vesper",
+          "expr": "wry",
           "text": "Nowhere, yet. It's under survey."
         },
         {
           "speaker": "maren",
+          "expr": "wry",
           "text": "Flame people. Quiet. Ma's asleep and I've got twenty minutes of her being asleep."
         },
         {
@@ -1961,10 +2243,12 @@
       "lines": [
         {
           "speaker": "maren",
+          "expr": "determined",
           "text": "Left one first. It's honest."
         },
         {
           "speaker": "maren",
+          "expr": "determined",
           "text": "Both of you on the bar — Lake, you're taller, take the top."
         },
         {
@@ -1973,6 +2257,7 @@
         },
         {
           "speaker": "maren",
+          "expr": "determined",
           "text": "Right. Now the widow."
         },
         {
@@ -1981,10 +2266,12 @@
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "Move."
         },
         {
           "speaker": "maren",
+          "expr": "surprised",
           "text": "…Ma."
         },
         {
@@ -1998,6 +2285,7 @@
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "The flume takes four minutes. Bail with the pumpkin, it's better than it looks."
         },
         {
@@ -2044,6 +2332,7 @@
         },
         {
           "speaker": "maren",
+          "expr": "surprised",
           "text": "…Ma. That's my bag."
         },
         {
@@ -2053,18 +2342,22 @@
         },
         {
           "speaker": "maren",
+          "expr": "indignant",
           "text": "A WEEK? You packed it a week ago and you still said no! Nine times you said no!"
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "Ten. And I'd say all ten again."
         },
         {
           "speaker": "odessa",
+          "expr": "warm",
           "text": "The no was what I owed my own heart. The bag is what I owed yours."
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "The boat's yours. It was always going to be yours — I only kept the tar on while it waited."
         },
         {
@@ -2087,18 +2380,22 @@
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "His chart. The north river — every reach and shoal of it, to the grey marshes."
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "He drew it from memory, the night before. It's wrong."
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "She'll want to fix it. Don't let her do that alone."
         },
         {
           "speaker": "vesper",
+          "expr": "sad",
           "text": "…I've been correcting a wrong map by myself for eleven years, harbormistress. I don't recommend it to anyone."
         },
         {
@@ -2113,10 +2410,12 @@
         },
         {
           "speaker": "odessa",
+          "expr": "warm",
           "text": "You'll send charts. A chart is a daughter's hand on paper."
         },
         {
           "speaker": "odessa",
+          "expr": "grave",
           "text": "I'll have the charts."
         },
         {
@@ -2126,14 +2425,17 @@
         },
         {
           "speaker": "maren",
+          "expr": "wry",
           "text": "Cat wherever the cat decides. I'm not fighting the cat."
         },
         {
           "speaker": "lake",
+          "expr": "determined",
           "text": "(North, then. By water — the lighter warm against my chest, the old road keeping pace up on the rim.)"
         },
         {
           "speaker": "lake",
+          "expr": "tender",
           "text": "(Grandmother — the round's gotten strange. But I swear it's still the round.)"
         },
         {
