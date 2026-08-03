@@ -63,6 +63,26 @@ luminance 0.004, i.e. pitch dark (visible ≠ readable); `del.gullgirl` clearanc
 + `arena_playtest --eval=`); Lake's and Finn's coats breaking under `Death_A` f32–f48 (a garment
 class defect — two-panel open coats — fix is a skin reweight upstream).
 
+## NEW BACKLOG ITEM (2026-08-03 ~02:10) — THE EXPRESSION CEILING IS ART, NOT WRITING
+
+The expression pass raised `story.json` mood coverage 30% -> **90%** (Vesper 31 -> **91%**)
+with **portrait tags only — no dialogue rewritten**, verified mechanically. But it hit a hard
+ceiling it cannot pass:
+
+  * **Five speakers have ZERO expression plates** — hobb (23 lines), sorrel (14), creel (17),
+    the weaponsmith and the armorer. **44+ lines physically cannot emote**, whatever is written.
+  * **The 2D and 3D runtimes draw DIFFERENT art**: 2D uses `expr-*.png` busts, 3D uses
+    `cutin-*.png`, and the bust set is smaller. `vesper:wry`, `vesper:annoyed` and `lake:wry`
+    are LIVE in 3D and REFUSED in 2D for want of art.
+
+Both want a `tools/gen-cutin-art.mjs` pass. QUEUED — dispatch when a lane frees. Cheap
+(image generation, no GPU) and it unlocks writing work already done.
+
+**The find worth remembering from that lane:** `dialogue.js` has shipped a `chooserExpr` hook
+since the chooser ruling and **nothing had ever set it**, so the protagonist sat on her neutral
+plate for EVERY choice in the game. 0/17 -> 14/17. A shipped hook that nothing calls is
+invisible to every gate.
+
 ## RISKS
 
 - **Session limits killed lanes twice tonight.** Mitigation: every lane is now briefed to
