@@ -1305,7 +1305,19 @@ def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None
         shutil.move(os.path.join(stage, n), os.path.join(d, n))
     shutil.rmtree(stage, ignore_errors=True)
 
+    # THE HEAD BOX AND ITS SPECIES SCALE SURVIVE A RE-ROLL. Everything else in this
+    # entry is re-derived from the plate that just landed, but `head` (crown/eye/chin,
+    # hand-marked off tools/cutin_headbox.py's ruler sheets) and `hscale` are the only
+    # numbers here a machine did not produce, and dialogue.js scales every cut-in on
+    # them — dropping them would silently return that character to image-bounds sizing,
+    # which is the bug of 2026-08-02. They are carried, and the operator is TOLD to
+    # re-mark, because a replacement plate may well be framed differently.
+    carried = {k: man[cid][k] for k in ('head', 'hscale') if cid in man and k in man[cid]}
     man[cid] = {'h': neutral['h'], 'w': neutral['w']}
+    man[cid].update(carried)
+    if 'head' in carried:
+        print('  NOTE %s: kept the marked head box across a new plate — re-check it with '
+              'python3 tools/cutin_headbox.py --verify' % cid)
     if kept_moods:
         man[cid]['expr'] = sorted(kept_moods)
     # `flip` travels from the spec into the manifest because the manifest is

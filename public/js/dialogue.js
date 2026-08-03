@@ -80,11 +80,22 @@
   var CUTIN_URL = 'characters/cutins.json';   // under assetBase, not the game data
   var TICK_MS = 16;              // typewriter clock (timer, not rAF — see header)
   var DEF_CPS = 46;              // characters per second, overridable in the data
-  var CUTIN_MAX_PX = 364;        // user 2026-08-01: 560 halved, then +30% ("increase by about 30%")
-  var CUTIN_VH = 0.29;           // ...VISIBLE portrait never exceeds this much viewport
-  var CUTIN_STAGE = 0.40;        // ...nor this much of the game frame
+  // THE CUT-IN IS SCALED ON ITS SUBJECT, NEVER ON ITS IMAGE (user bug 2026-08-02:
+  // "the cut-ins are very differently sized now ... the cat looks huge relative to
+  // the humans"). See THE SUBJECT NORMALISATION below placeCutin() for the whole
+  // argument; the short version is that these five numbers are about a HEAD, not
+  // about a PNG.
+  var CUTIN_HEAD_VH = 0.110;     // target head height (crown->chin) as a share of viewport
+  var CUTIN_HEAD_MIN = 62;       // ...floored and capped so a tiny or huge window still reads
+  var CUTIN_HEAD_MAX = 152;
+  var CUTIN_EYE_LIFT = 1.30;     // the eyeline sits this many HEAD-HEIGHTS above the box's top edge
+  var CUTIN_STAGE = 0.62;        // element height safety cap vs the game frame
   var CUTIN_WIDE = 0.60;         // ...nor this much of the window's width
-  var CUTIN_SINK = 0.20;         // share of the box the art's bottom sinks behind (user 2026-08-01: was 0.55, more of the figure wanted)
+  var CUTIN_SINK = 0.08;         // MINIMUM share of the box the art's bottom passes behind
+  // The cast median head box, for a speaker whose manifest entry predates the
+  // measurement. It reproduces the old behaviour for that speaker rather than
+  // dropping them out of the layout — a missing number must not move a portrait.
+  var CUTIN_HEAD_DEF = 0.340, CUTIN_EYE_DEF = 0.240;
   // THE PARTY, and why the runtime needs to know. The user ruled (2026-08-01) that
   // the player characters get a cut-in on every beat the PLAYER speaks — including
   // the choice list, which is the player talking and used to sit under whichever
@@ -315,6 +326,17 @@
     var e = CUT && CUT[pid];
     return (e && e.w && e.h) ? e.w / e.h : 0.9;
   }
+  // THE HEAD BOX: crown/eye/chin as fractions of this plate's OWN height, hand-marked
+  // once per character off tools/cutin_headbox.py's ruler sheets and carried in the
+  // manifest. `hscale` is the species correction — a per-character multiplier on the
+  // head target, and the only place in this layout where a human judgement about
+  // anatomy is allowed to override the measurement.
+  function cutinHead(pid) {
+    var e = CUT && CUT[pid], h = e && e.head, s = e && e.hscale;
+    var out = { head: CUTIN_HEAD_DEF, eye: CUTIN_EYE_DEF, scale: (s > 0 ? s : 1) };
+    if (h && h.chin > h.crown) { out.head = h.chin - h.crown; out.eye = h.eye; }
+    return out;
+  }
   // MIRRORED PLACEMENT IS THE CONVENTION; MIRRORING THE ART IS NOT, and the
   // difference is deliberate. Putting the party on the opposite side of the frame
   // is free and it is what makes an exchange read as two people. Flipping the
@@ -487,24 +509,25 @@
     if (!bb.height) return;
 
     // The bottom sinks INTO the box: no bottom edge is ever on screen, so the
-    // character emerges from the window instead of resting on it.
-    var sink = Math.min(Math.round(bb.height * CUTIN_SINK), bb.height - 6);
+    // character emerges from the window instead of resting on it. Under subject
+    // normalisation this is a FLOOR, not the placement — how deep a given plate
+    // actually sinks falls out of where its eyeline has to be.
+    var sink = Math.min(Math.max(6, Math.round(bb.height * CUTIN_SINK)), bb.height - 6);
 
-    // HEIGHT: the ruling's ~2.5-3x the old 190px thumbnail, then three caps.
-    // THE VIEWPORT CAP IS ON THE VISIBLE PORTRAIT, not on the element — `sink`
-    // of this art is behind the window and was never on screen to be capped, and
-    // measuring the element instead quietly shrank every portrait by the box's
-    // half-height. The stage cap is separate and not redundant: play3d's frame is
-    // a 16:9 letterbox inside the page, so 45vh can be taller than the whole
-    // game. The WIDTH cap has to be generous or it silently punishes a pose: the
-    // crops are cut to the silhouette, so Maren's folded arms make hers 1.58 wide
-    // where the cast's norm is ~1.0, and at 44% she rendered 262 px tall against
-    // Rowan's 426 — the same ruling producing two different portraits because one
-    // character crossed her arms. At 60% she lands at 369 and the cap is back to
-    // being what it is for: stopping a portrait from becoming a wall.
+    // HEIGHT: solve the ELEMENT for a fixed HEAD. `h` is whatever height puts this
+    // character's own crown-to-chin span at the cast-wide target; the plate's
+    // aspect and framing are consequences, not inputs.
     var stageH = (S.panel.el && S.panel.el.clientHeight) || 0;
     var viewH = (typeof window !== 'undefined' && window.innerHeight) || stageH || 720;
-    var h = Math.min(CUTIN_MAX_PX, viewH * CUTIN_VH + sink);
+    var hb = cutinHead(S.pid);
+    var head = Math.max(CUTIN_HEAD_MIN, Math.min(CUTIN_HEAD_MAX, viewH * CUTIN_HEAD_VH)) * hb.scale;
+    var h = head / hb.head;
+    // THE TWO CAPS ARE SAFETY, AND EVERY ONE OF THEM COSTS HEAD SIZE when it bites —
+    // which is the bug this file just came out of, so they are set where no plate in
+    // the cast reaches them (tallest element is boatwright's 454 px against a 0.62
+    // stage; widest is hobb's 510 px against a 0.60 window). They exist for the plate
+    // nobody has drawn yet, and a portrait that hits one should be re-cropped, not
+    // re-tuned here.
     if (stageH > 0) h = Math.min(h, stageH * CUTIN_STAGE);
     var wide = fb.width * CUTIN_WIDE, asp = cutinAspect(S.pid);
     if (asp * h > wide) h = wide / asp;
@@ -521,8 +544,60 @@
     // 48px in from the box's left edge, per "a bit more margin from the left".
     el.style.right = 'auto';
     el.style.left = Math.round(bb.left - fb.left + 48) + 'px';
-    el.style.bottom = Math.round(fb.bottom - bb.top - sink) + 'px';
+    // VERTICAL: the EYELINE is the shared datum, not the element's bottom. `below`
+    // is how much art hangs under the eyes; putting the eyes `lift` above the box's
+    // top edge therefore sinks the plate by the remainder.
+    var below = h * (1 - hb.eye);
+    var lift = head * CUTIN_EYE_LIFT;
+    var maxDepth = Math.max(sink, Math.round(fb.bottom - bb.top) - 4);
+    var depth = Math.min(Math.max(Math.round(below - lift), sink), maxDepth);
+    el.style.bottom = Math.round(fb.bottom - bb.top - depth) + 'px';
   }
+
+  // ------------------------------------------ THE SUBJECT NORMALISATION ----
+  // WHAT THE PLAYER READS IS A SUBJECT, NOT AN IMAGE. Until 2026-08-02 this
+  // function gave every cut-in the SAME ELEMENT HEIGHT and let each plate's aspect
+  // decide its width. That normalises the PNG. It does not normalise the character
+  // inside it, and the two are not the same thing, because the plates are not framed
+  // alike: measured off the shipped art (tools/cutin_headbox.py), a head spans 0.26
+  // of Boatwright's plate and 0.71 of Mara's — 2.7x. At one shared element height
+  // that is a 2.7x spread in face size on screen, and the user filed it exactly:
+  // "the cat looks huge relative to the humans". Mochi's plate is the wide, short
+  // one (head 0.53, aspect 1.18) and Vesper's is the tall, narrow one (head 0.38,
+  // aspect 0.71), so the cat spent the shared budget on face and width while Vesper
+  // spent hers on torso and height.
+  //
+  // SO THE HEAD IS THE UNIT. `h` is solved backwards from a target head height, and
+  // the element ends up whatever size it has to be. Head, not overall silhouette,
+  // because a silhouette is mostly costume and props — Hobb's rope coil and Sorrel's
+  // paddle are as much of their plates as their bodies are, and normalising on the
+  // bounding box hands the frame to whoever is holding the biggest object.
+  //
+  // A CAT IS NOT A PERSON, and matching a cat's head to a human's head is still the
+  // wrong answer — it just fails by a smaller margin than matching the images did.
+  // That correction is `hscale` in the manifest: one number, per character, applied
+  // to the head target. Mochi carries 0.86, which is a judgement (a real cat's head
+  // is nearer 0.6 of an adult's, and at 0.6 the party cat is a thumbnail); every
+  // human carries nothing and gets 1. It is deliberately the ONLY hand-set number
+  // here, so "why is this portrait that size" always has one of two answers: the
+  // measurement, or a decision somebody wrote down.
+  //
+  // ALIGNMENT IS ON THE EYELINE (user 2026-08-02, "aligned in some way that feels
+  // consistent"). Three candidates, and the eyes win on all three counts:
+  //   - The element's BOTTOM was the old datum and it is the worst one: it aligns
+  //     the crops, so once heads are equalised the faces scatter by however much
+  //     torso each plate happens to include (measured 107 px of eyeline spread at
+  //     1080p before this change).
+  //   - The CHIN is defensible but noisy to anchor on: a chin under Rowan's beard or
+  //     Finn's stubble is a judgement call, where a pupil is not.
+  //   - The EYELINE is what the player's own eye goes to, and because heads are now
+  //     one size it drags the chins into line for free — eye-within-head runs 0.58-
+  //     0.67 across the cast, so chins land within ~12 px of each other.
+  // The floor is the one thing that can break the datum: a plate with almost no body
+  // under the face (Mara 0.71 head, Mochi 0.53) cannot reach the window from the
+  // shared eyeline, and rather than hang a cut edge in mid-air those two drop until
+  // they sink. That is a REPORTED residual, not a hidden one — it is a framing fault
+  // in those two plates, and the fix for it is a re-crop, not another constant.
 
   // Push S.cutin into the persistent element. Re-arms the entrance animation on
   // a SPEAKER CHANGE only (src change), never on a typewriter tick.
