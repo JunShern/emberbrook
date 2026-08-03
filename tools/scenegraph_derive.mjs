@@ -967,13 +967,53 @@ for (const reg of world.regions || []) {
     const gPad = padStand(tkey, 'walk_pad_' + gate.id);
     if (gPad) gAt[1] = gPad[1];
 
-    // region-side spawn: back UP the region's own road polyline, past the radius
-    const back = DEFAULTS.gateRadius + DEFAULTS.spawnBackoff;
-    let rsp = [at[0], at[1], at[2]];
+    // ------------------------------------------------ THE REGION-SIDE ARRIVAL ----
+    // WALK OUT ALONG THE ROAD, AWAY FROM THE TOWN — never "toward road[0]".
+    //
+    // This used to read `for (let k = i; k > 0; k--)`: the back-off always ran toward
+    // the polyline's START. That is right by accident for a portal at a road END
+    // (emberbrook-gate is the road's 3rd point with the town north of it; dellhollow-
+    // valley-gate is the last point) and WRONG for a portal in the MIDDLE of the road.
+    // The Old Gate is index 8 of 20, with Emberbrook UPSTREAM at index 2, so "toward
+    // road[0]" is "back into the town you just left": leaving Emberbrook by the Old
+    // Gate spawned the player 4.2u on EMBERBROOK'S OWN SIDE of the gate, inside the
+    // gate court's masonry, and a 266 945-cell flood fill of the running game from
+    // that spawn reaches neither the road below the gate nor Dellhollow. That was the
+    // shipped chapter handoff, and it is the user's report verbatim: "I spawn ...
+    // behind or somewhere in the middle of the old gates ... not able to get out of
+    // that to cross to the road behind it".
+    //
+    // The direction is derived, never authored: step toward whichever NEIGHBOURING
+    // road vertex is FARTHER from the target town's own anchor. Re-derived on the two
+    // portals that already worked, it reproduces them bit for bit.
+    //
+    // HOW FAR is a property of the portal's STRUCTURE, not of its trigger radius. The
+    // default (gateRadius + spawnBackoff = 4.3u) only clears the prompt you just used.
+    // A portal that is a BUILDING you pass through — the Old Gate is a gatewall, an
+    // arched doorway and a culverted court 13.7u deep — must state its own reach with
+    // `spawnBackoffU`, or the arrival lands inside it.
+    const anchor = (R.townAnchors || []).find((a) => a.town === p.target);
+    const aW = anchor ? T(anchor.pos) : null;
     let i = 0, bd = Infinity;
     road.forEach((q, k) => { const d = Math.hypot(q[0] - at[0], q[2] - at[2]); if (d < bd) { bd = d; i = k; } });
-    for (let k = i, acc = 0; k > 0; k--) {
-      const a = road[k], b = road[k - 1], seg = Math.hypot(b[0] - a[0], b[2] - a[2]);
+    const dAnchor = (k) => (!aW || !road[k]) ? -Infinity
+      : Math.hypot(road[k][0] - aW[0], road[k][2] - aW[2]);
+    let step = -1;                                   // the historical default
+    if (aW) step = dAnchor(i + 1) > dAnchor(i - 1) ? +1 : -1;
+    else W(`portal '${p.id}': region '${reg.id}' declares no townAnchor for '${p.target}' — ` +
+           `the arrival back-off fell back to "toward road[0]", which is only right for a ` +
+           `portal at the road's far end. Add the anchor.`);
+    const back = (p.spawnBackoffU != null) ? p.spawnBackoffU
+                                           : DEFAULTS.gateRadius + DEFAULTS.spawnBackoff;
+    let rsp = [at[0], at[1], at[2]];
+    // travel direction at the landing; seeded at the portal so a portal the loop
+    // cannot leave (the road ends on it, in this direction) still faces somewhere real
+    let tan = road[i + step] ? norm2(road[i + step][0] - road[i][0], road[i + step][2] - road[i][2])
+            : road[i - step] ? norm2(road[i][0] - road[i - step][0], road[i][2] - road[i - step][2])
+            : null;
+    for (let k = i, acc = 0; k + step >= 0 && k + step < road.length; k += step) {
+      const a = road[k], b = road[k + step], seg = Math.hypot(b[0] - a[0], b[2] - a[2]);
+      if (seg > 1e-6) tan = norm2(b[0] - a[0], b[2] - a[2]);
       if (acc + seg >= back) { const t = (back - acc) / seg;
         rsp = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; break; }
       acc += seg; rsp = [b[0], b[1], b[2]];
@@ -981,9 +1021,12 @@ for (const reg of world.regions || []) {
     const rspY = walkY(rkey, rsp[0], rsp[2], rsp[1]);
     if (rspY == null) W(`portal '${p.id}': region spawn (${rsp[0].toFixed(1)},${rsp[2].toFixed(1)}) is off the walk network`);
     else rsp[1] = rspY;
-    // face down the road (toward the gate): ORBIT.yaw places the camera at
-    // (cos,sin)*dist from the target, so the VIEW direction is its negation.
-    const [fx, fz] = norm2(at[0] - rsp[0], at[2] - rsp[2]);
+    // FACE THE WAY ON, not the way back. This used to face the gate the player had
+    // just walked out of — seam canon §10's "reads backwards" defect, authored: "the
+    // shot's visible flow points at the door the player just came through". The view
+    // direction is the road's own tangent in the direction of travel; ORBIT.yaw places
+    // the camera at (cos,sin)*dist from the target, so the stored yaw is its negation.
+    const [fx, fz] = tan || norm2(rsp[0] - at[0], rsp[2] - at[2]);
     const rYaw = Math.round(Math.atan2(-fz, -fx) * 1e4) / 1e4;
 
     // town-side spawn: on the gate pad, pushed in along its first street

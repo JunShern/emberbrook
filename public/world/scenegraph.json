@@ -76,7 +76,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-02T19:38:43Z",
+ "generated": "2026-08-03T00:31:14Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -6924,7 +6924,7 @@
     27.591,
     69.827
    ],
-   "spawnYaw": 1.7679,
+   "spawnYaw": -1.3737,
    "cam": null,
    "camFrom": "woodroad",
    "label": "Leave Emberbrook",
@@ -6977,11 +6977,11 @@
    "r": 2.2,
    "vTol": 2,
    "spawn": [
-    -52.174,
-    26.438,
-    30.364
+    -36.185,
+    23.294,
+    17.159
    ],
-   "spawnYaw": 1.7114,
+   "spawnYaw": 2.3232,
    "cam": null,
    "camFrom": "gatefield",
    "when": {
@@ -7038,7 +7038,7 @@
     13.101,
     -33.827
    ],
-   "spawnYaw": 2.5599,
+   "spawnYaw": -0.5817,
    "cam": null,
    "camFrom": "gate",
    "label": "Leave Dellhollow",
