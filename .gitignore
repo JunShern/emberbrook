@@ -35,3 +35,11 @@ scratchpad/
 # the static build encode cache (tools/build-static.mjs). Derived bytes, keyed by
 # sha256(source)+sha256(encode params) — regenerable, and hundreds of MB.
 .build-cache/
+
+# PLAYTEST RUNS. Every llm_playtester run writes a directory of frames + jsonl;
+# 24 of them accumulated in a day and 19 were pure churn in `git status`.
+# NOTE: .gitignore does not touch already-tracked files, so the runs the FIXLOG
+# cites as EVIDENCE for a bug report stay in git exactly as they are. When a new
+# run is the evidence for a finding, commit it deliberately with `git add -f` —
+# that is the point: evidence is a decision, not a side effect of running a test.
+docs/qa/playtest/runs/
