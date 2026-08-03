@@ -307,7 +307,8 @@ console.log(`  steps        ${result.steps}`);
 console.log(`  finished     ${result.finished || 'ran out of steps'}`);
 console.log(`  beats fired  ${result.beatsFired.length ? result.beatsFired.join(', ') : '(none)'}`);
 console.log(`  walk legs    ${result.legs.n} (${result.legs.arrived} arrived, ${result.legs.offNetwork} aimed off the walk ` +
-  `network, ${result.legs.unprojectable} un-projectable), median closed ${result.legs.medianClosedFrac}`);
+  `network, ${result.legs.unprojectable} un-projectable, ${result.legs.interrupted} interrupted by the game), ` +
+  `median closed ${result.legs.medianClosedFrac}`);
 console.log(`  reports      ${result.reports.length}  ${result.reports.map(r => r.id).join(' ')}`);
 console.log('  model        ' + usage.report());
 console.log(`  log          ${Q.relative(join(RUNDIR, 'run.jsonl'))}`);

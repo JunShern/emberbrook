@@ -70,7 +70,13 @@ const OBS = join(RUNS, RUN, 'observations.jsonl');
 /* A row is usable when the game measured that the decision WORKED. */
 function label(o) {
   const a = o.intent && o.intent.action;
-  if (a === 'goto' && o.outcome && o.outcome.ok && o.outcome.arrived && o.intent.waypoints?.length)
+  const L = o.outcome;
+  // A waypoint that ARRIVED is obviously good. So is one the GAME interrupted after
+  // most of the distance was closed — a camera cut or a story beat firing mid-walk
+  // is the game agreeing that you were going somewhere it cared about, and throwing
+  // those rows away would bias the golden set against every interesting decision.
+  if (a === 'goto' && L && o.intent.waypoints?.length &&
+      (L.arrived || (L.reason === 'modal' && L.intended > 1 && L.closed / L.intended >= 0.7)))
     return { action: 'goto', waypoint: o.intent.waypoints[0] };
   if (a === 'advance' && o.outcome && o.outcome.lines > 0) return { action: 'advance' };
   if (a === 'interact' || a === 'choose') return null;      // no measured outcome

@@ -186,7 +186,12 @@ export async function run(cfg) {
       for (const [wx, wy] of intent.waypoints) {
         const leg = await adapter.walkLeg(wx, wy);
         legs.push({ step, ...leg }); outcome = leg;
-        if (!leg.ok) { parts.push(`[${wx.toFixed(2)},${wy.toFixed(2)}] is not ground you can walk to`); break; }
+        if (!leg.ok) {
+          parts.push(leg.reason === 'modal'
+            ? 'the game took over part-way (a scene or a conversation started)'
+            : `[${wx.toFixed(2)},${wy.toFixed(2)}] is not ground you can walk to`);
+          break;
+        }
         parts.push(`[${wx.toFixed(2)},${wy.toFixed(2)}] ${leg.arrived ? 'reached' : `only closed ${leg.closed} m of ${leg.intended} m`}`);
         if (!leg.arrived && leg.intended >= 3 && leg.closed < 0.75) {
           const cell = leg.target.map(v => Math.round(v / 3)).join(',');
@@ -252,7 +257,8 @@ export async function run(cfg) {
     endTruth: { ...endTruth, save: undefined },
     legs: { n: legs.length, arrived: legs.filter(l => l.arrived).length,
       offNetwork: okLegs.filter(l => !l.onNetwork).length,
-      unprojectable: legs.length - okLegs.length,
+      unprojectable: legs.filter(l => !l.ok && l.reason === 'unprojection').length,
+      interrupted: legs.filter(l => !l.ok && l.reason === 'modal').length,
       medianClosedFrac: med(okLegs.map(l => l.closedFrac)) },
     _legs: legs,
   };

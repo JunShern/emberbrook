@@ -163,8 +163,12 @@ const INSTALL_MOTOR = `(()=>{ if(window.__pt) return 'already';
     const {b,d}=rayOf(nx,ny);
     const tops=(x,z,walk)=>{ try{ const ys=walk?SIM.walkFloors(x,z):SIM.floors(x,z);
       return (ys&&ys.length)?ys.slice().sort((p,q)=>q-p):[]; }catch(e){ return []; } };
+    // 0.5 m near, 1.0 m far, then bisect. Each step is a BVH query against the
+    // walk network and a 0.25 m march to 160 m is 640 of them per waypoint, on the
+    // page's own main thread, while it is rendering — measured slow enough to
+    // matter. The bisection recovers the precision the coarser march gives up.
     const march=(walk)=>{ let prev=null;
-      for(let t=0.6;t<=(far||160);t+=0.25){
+      for(let t=0.6;t<=(far||160);t+= (t<40?0.5:1.0)){
         const p=V.add(b.pos,V.mul(d,t)); const ys=tops(p[0],p[2],walk);
         const under = ys.length && p[1] <= ys[0]+0.05;
         if(under && prev && !prev.under){
@@ -179,16 +183,18 @@ const INSTALL_MOTOR = `(()=>{ if(window.__pt) return 'already';
     const w=march(true); if(w) return {ok:true,onNetwork:true,...w};
     const f2=march(false); if(f2) return {ok:true,onNetwork:false,...f2};
     return {ok:false,reason:'the ray for that pixel never reaches a surface (sky, or past the world)'}; }
+  // The direction to a world point, expressed as an octant of the CAMERA's ground
+  // basis — which is the basis play3d's own phys() uses, so the keys mean the same
+  // thing on the way in as on the way out. Returning the octant INDEX rather than
+  // the keys is what lets the executor slide along a wall: index+/-1 is 45 degrees off.
   function dirTo(target){ const b=basis(); const p=SIM.pos();
     const v=[target[0]-p.x,0,target[2]-p.z]; const dist=Math.hypot(v[0],v[2]);
-    if(dist<1e-3) return {dist:0,keys:[]};
+    if(dist<1e-3) return {dist:0,oct:0};
     const fwd=V.norm([b.f[0],0,b.f[2]]), rgt=V.norm([b.r[0],0,b.r[2]]);
     const a=V.dot(v,fwd)/dist, c=V.dot(v,rgt)/dist;
-    const keys=[];
-    if(a> 0.383) keys.push('up'); else if(a<-0.383) keys.push('down');
-    if(c> 0.383) keys.push('right'); else if(c<-0.383) keys.push('left');
-    if(!keys.length) keys.push(a>=0?'up':'down');
-    return {dist:+dist.toFixed(2),keys}; }
+    // oct 0 = straight up (away from camera), then clockwise in 45 degree steps.
+    const oct=((Math.round(Math.atan2(c,a)/(Math.PI/4))%8)+8)%8;
+    return {dist:+dist.toFixed(2),oct}; }
   window.__pt={hit,dirTo,where(){const p=SIM.pos();return [+p.x.toFixed(2),+p.y.toFixed(2),+p.z.toFixed(2)];}};
   return 'armed'; })()`;
 
@@ -210,20 +216,19 @@ export function checkpointsFromStory() {
   const out = []; const flags = {}; const beats = {};
   let objective = null, lastAt = null, lastScene = null, lastCam = null;
   for (const b of STORY.beats || []) {
-    // A CAM AND A POSITION ONLY CARRY WITHIN A SCENE. Inheriting `square` across a
-    // door into an interior would build a checkpoint that names a camera that
-    // bundle has never heard of — the URL would be ignored at best and land the
-    // player under an undefined shot at worst.
+    // A CAM AND A POSITION ONLY CARRY WITHIN A SCENE, and the reset has to happen
+    // BEFORE the inheritance or it does not happen at all. Carrying `square` across
+    // a door into an interior builds a checkpoint naming a camera that bundle has
+    // never heard of: ignored at best, an undefined shot at worst.
+    if (b.scene && b.scene !== lastScene) { lastScene = b.scene; lastCam = null; lastAt = null; }
     out.push({ id: b.id, chapter: b.chapter || 1, scene: b.scene,
-      cam: b.cam || (b.scene === lastScene ? lastCam : null),
-      pos: b.at || (b.scene === lastScene ? lastAt : null),
+      cam: b.cam || lastCam, pos: b.at || lastAt,
       objective, flags: { ...flags }, beats: { ...beats }, brief: BRIEFS[b.id] || null });
     beats[b.id] = true;
     for (const d of b.do || []) {
       if (d.setFlags) Object.assign(flags, d.setFlags);
       if (d.objective !== undefined) objective = d.objective;
     }
-    if (b.scene) lastScene = b.scene;
     if (b.cam) lastCam = b.cam;
     if (b.at) lastAt = b.at;
   }
@@ -397,32 +402,62 @@ export function makeAdapter(opt) {
      * intended vs closed — which is the free bug signal. */
     async walkLeg(nx, ny, budgetMs) {
       await ev(INSTALL_MOTOR);
+      // A LEG THAT NEVER GOT TO RUN IS NOT A BLOCKED PATH. If a beat fired or a
+      // conversation opened between the screenshot and the first key, phys() is
+      // frozen under UILOCK and the body cannot move — recording that as "closed
+      // 0 m of 15 m" would manufacture a blocker out of a cutscene. Measured on the
+      // first bring-up run: the waystone beat fired mid-route and produced exactly
+      // that false leg.
+      if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`))
+        return { ok: false, nx, ny, reason: 'modal', detail: 'the game took control before the walk started', intended: 0, closed: 0 };
       const h = await ev(`window.__pt.hit(${nx},${ny})`);
       if (!h.ok) return { ok: false, nx, ny, reason: 'unprojection', detail: h.reason, intended: 0, closed: 0 };
       const from = await ev(`window.__pt.where()`);
       const d0 = Math.hypot(h.p[0] - from[0], h.p[2] - from[2]);
       const t0 = Date.now();
-      let best = d0, sinceGain = 0, blocked = 0, last = from, bursts = 0;
+      let best = d0, sinceGain = 0, last = from, bursts = 0, slides = 0;
+      /* THE SLIDE. A person who walks into a rock does not stand there pushing into
+       * it — they angle off and go round. The first bring-up run failed exactly
+       * here: the agent picked a perfectly sensible waypoint up the road, the body
+       * met the road's own stone border at 45 degrees, travelled 0.0 m, and the leg
+       * was recorded as a blocked path. That would have been a manufactured bug
+       * report about a wall that any player walks around without noticing.
+       * So: on a burst that moves nothing, try the octant 45 degrees to each side,
+       * then 90. Only when NONE of the five headings moves the body is the path
+       * actually blocked — and that is the finding worth filing. */
+      const OFFSETS = [0, 1, -1, 2, -2];
+      const OCT_KEYS = [['up'], ['up', 'right'], ['right'], ['down', 'right'],
+                        ['down'], ['down', 'left'], ['left'], ['up', 'left']];
       while (Date.now() - t0 < (budgetMs || 9000)) {
-        const st = await ev(`window.__pt.dirTo(${JSON.stringify(h.p)})`);
+        const st = await ev(`window.__pt.dirTo(${JSON.stringify(h.p)})`, 15000);
         if (st.dist <= ARRIVE_M) break;
-        await hold(st.keys, BURST_MS); bursts++;
-        const now = await ev(`window.__pt.where()`);
-        const moved = Math.hypot(now[0] - last[0], now[2] - last[2]); last = now;
+        let moved = 0, now = last;
+        for (const off of OFFSETS) {
+          await hold(OCT_KEYS[(((st.oct + off) % 8) + 8) % 8], BURST_MS); bursts++;
+          now = await ev(`window.__pt.where()`, 15000);
+          moved = Math.hypot(now[0] - last[0], now[2] - last[2]);
+          if (moved >= 0.10) { if (off !== 0) slides++; break; }
+          if (Date.now() - t0 > (budgetMs || 9000)) break;
+        }
+        last = now;
         const d = Math.hypot(h.p[0] - now[0], h.p[2] - now[2]);
         if (d < best - 0.15) { best = d; sinceGain = 0; } else sinceGain++;
-        blocked = moved < 0.10 ? blocked + 1 : 0;
-        if (sinceGain >= 6 || blocked >= 5) break;   // a person feels this in a second
+        if (moved < 0.10) break;                  // every heading refused: blocked
+        if (sinceGain >= 8) break;                // moving, but not getting closer
         // A camera cut, a doorway or a story beat changes the world under the leg.
-        if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`)) break;
+        if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`, 15000)) break;
       }
       const end = await ev(`window.__pt.where()`);
+      const stoppedByModal = await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`);
       const dEnd = Math.hypot(h.p[0] - end[0], h.p[2] - end[2]);
+      if (stoppedByModal)
+        return { ok: false, nx, ny, reason: 'modal', detail: 'the game took control part-way through the walk',
+          target: h.p, from, end, intended: +d0.toFixed(2), closed: +(d0 - dEnd).toFixed(2) };
       return { ok: true, nx, ny, onNetwork: h.onNetwork, target: h.p, from, end,
         intended: +d0.toFixed(2), remaining: +dEnd.toFixed(2), closed: +(d0 - dEnd).toFixed(2),
         travelled: +Math.hypot(end[0] - from[0], end[2] - from[2]).toFixed(2),
         closedFrac: d0 > 0.5 ? +((d0 - dEnd) / d0).toFixed(2) : 1,
-        bursts, arrived: dEnd <= ARRIVE_M, ms: Date.now() - t0 };
+        bursts, slides, arrived: dEnd <= ARRIVE_M, ms: Date.now() - t0 };
     },
 
     /* Read a whole conversation with real presses and hand back the transcript. A
@@ -434,10 +469,19 @@ export function makeAdapter(opt) {
         const p = await ev(PERCEPT_JS);
         if (p.dialogue && p.dialogue.choices) break;
         if (!p.dialogue && !p.card) break;
-        const line = p.dialogue
+        // The typewriter draws the SAME line twice — once mid-type, once finished
+        // with a '▼' advance caret — so a naive transcript is exactly double length
+        // and reads like a stutter to whatever gets handed it. Strip the caret and
+        // the narration bullet before comparing.
+        const raw = p.dialogue
           ? ((p.dialogue.speaker ? p.dialogue.speaker + ': ' : '') + (p.dialogue.text || ''))
           : ('CARD: ' + [p.card.title, p.card.sub, p.card.prose].filter(Boolean).join(' — '));
-        if (line.trim() && seen[seen.length - 1] !== line) seen.push(line);
+        const line = raw.replace(/[▼✦▶]/g, '').replace(/\s+/g, ' ').trim();
+        const prev = seen[seen.length - 1];
+        if (line && prev !== line) {
+          if (prev && line.startsWith(prev)) seen[seen.length - 1] = line;   // the same line, finished
+          else seen.push(line);
+        }
         await tap('e'); await sleep(320);
       }
       return seen;
