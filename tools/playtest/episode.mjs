@@ -132,6 +132,9 @@ export async function run(cfg) {
   // Consecutive steps with nothing painted. Bounded so a blind harness stops loudly
   // instead of grinding a hundred black frames through a paid model.
   let unready = 0; const UNREADY_MAX = 6;
+  // Consecutive steps frozen under a modal lock with nothing drawn. That is the
+  // GAME's defect, not the harness's, so it is filed rather than swallowed.
+  let frozenN = 0; const FROZEN_MAX = 5;
 
   const brief = [plan.brief, plan.objective ? `Your current objective is: ${plan.objective}` : null]
     .filter(Boolean).join(' ') || null;
@@ -181,7 +184,8 @@ export async function run(cfg) {
     if (obs.ready && obs.framePath) { lastFrames.push(obs.framePath); if (lastFrames.length > 3) lastFrames.shift(); }
     for (const b of truth.beats || []) if (!beatsSeen.has(b)) { beatsSeen.add(b); log(`  [beat] ${b}`); }
     appendFileSync(jsonl, JSON.stringify({ step, percept: obs.percept, ready: obs.ready,
-      why: obs.ready ? undefined : obs.why, meanL: obs.meanL, waitedMs: obs.waitedMs,
+      why: obs.ready ? undefined : obs.why, frozen: obs.frozen || undefined,
+      meanL: obs.meanL, waitedMs: obs.waitedMs,
       truth: { ...truth, save: undefined }, frame: Q.relative(obs.framePath) }) + '\n');
 
     if (stopBeat && (truth.beats || []).includes(stopBeat)) {
@@ -208,6 +212,29 @@ export async function run(cfg) {
       continue;
     }
     unready = 0;
+
+    /* A GAME THAT TAKES CONTROL AND DRAWS NOTHING IS A BUG, AND IT IS THE GAME'S.
+     * Distinct from the case above: the picture is up and measurable, the body is
+     * frozen under a modal lock, and no dialogue, card or battle is on screen for
+     * the player to answer. observe() has already waited its short budget. Filed
+     * once, with the frames, so a human can see what "nothing" looked like. */
+    if (obs.frozen) {
+      frozenN++;
+      log(`  (step ${step}: ${obs.frozen} — waited ${obs.waitedMs} ms, screen is up at ${obs.meanL} luminance)`);
+      if (frozenN === FROZEN_MAX) {
+        fileReport('blocker', {
+          title: 'The game took control and never gave it back, with nothing on screen to answer',
+          doing: 'I was playing normally when the game froze my character.',
+          expected: 'Either something to read or answer, or my controls back.',
+          happened: `Nothing I press does anything. There is a picture on screen but no dialogue box, ` +
+            `no card and no menu — the game is holding me still and showing me nothing. ` +
+            `This lasted ${FROZEN_MAX} turns.`,
+        }, step, obs.percept, truth, lastFrames.slice(), 'freeze-detector', 'P1');
+        finished = 'frozen'; log('\n== FROZEN: the game held control with nothing drawn. Stopping.'); break;
+      }
+      continue;
+    }
+    frozenN = 0;
 
     /* THE SPINE DETECTOR. Found on the second real episode, and it is the same
      * shape as the walk-executor's free signal: cheap, harness-side, and it does
@@ -317,8 +344,8 @@ export async function run(cfg) {
       outcome = { lines: seen.length };
       if (seen.length) nudge = 'What you just read:\n' + seen.join('\n');
     } else if (intent.action === 'choose') {
-      await adapter.menuDown(intent.index || 0); await adapter.press('e');
-      detail = 'chose ' + (intent.index || 0);
+      const c = await adapter.choose(intent.index || 0);
+      detail = `chose ${intent.index || 0}` + (c && c.from >= 0 ? ` (cursor was on ${c.from})` : '');
     } else if (intent.action === 'report' || intent.action === 'giveup') {
       // Hand the last walk's from/to along. When the complaint is "I cannot get
       // there", triage can then measure THAT pair instead of parsing prose for a

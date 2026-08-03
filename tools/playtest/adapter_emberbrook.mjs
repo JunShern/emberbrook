@@ -99,6 +99,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 //   #sgp          play3d's own doorway banner (play3d.html:1828)
 //   .ebui-banner  ui_kit's prompt banner — NPC talk prompts, shop counters
 //   .ebui-veil    any modal panel: dialogue, menu, shop (ui_kit.js:473)
+//   .ebb-root     THE BATTLE SCREEN (battle_turnbased.js:766)
+// ---------------------------------------------------------------------------
+// THE BATTLE WAS MISSING FROM THIS LIST AND THAT MADE THE AGENT BLIND IN COMBAT
+// (2026-08-03). A random encounter fired in the overworld; the whole percept was
+// "OBJECTIVE ON SCREEN: Follow the road north", because a battle is not a
+// .ebui-veil. The readiness gate then called a fully drawn, fully playable
+// turn-based battle "a modal lock with nothing drawn on it" and the run stalled on
+// it for four and a half minutes. The screen was at 117 luminance the whole time.
+// A PERCEPT THAT OMITS A WHOLE GAME MODE IS NOT A NARROW PERCEPT, IT IS A BLIND ONE.
 // ---------------------------------------------------------------------------
 const PERCEPT_JS = `(()=>{
   const vis = (e) => { if(!e) return false;
@@ -107,7 +116,8 @@ const PERCEPT_JS = `(()=>{
     const r = e.getBoundingClientRect();
     return r.width > 2 && r.height > 2 && r.bottom > 0 && r.top < innerHeight; };
   const txt = (e) => e ? e.textContent.replace(/\\s+/g,' ').trim() : null;
-  const out = { objective:null, prompts:[], dialogue:null, card:null };
+  const out = { objective:null, prompts:[], dialogue:null, card:null, battle:null };
+  const cur = (e) => /(^|\\s)(cur|sel|selected|active)(\\s|$)/.test(e.className||'');
   const ob = document.getElementById('story-obj');
   if (vis(ob)) out.objective = (txt(ob)||'').replace(/^[^A-Za-z0-9]+/, '');
   const sg = document.getElementById('sgp');
@@ -125,6 +135,40 @@ const PERCEPT_JS = `(()=>{
   const c = document.getElementById('story-card');
   if (vis(c)) out.card = { title: txt(c.querySelector('.t')), sub: txt(c.querySelector('.s')),
                            prose: txt(c.querySelector('p')), hint: txt(c.querySelector('.k')) };
+  const br = [...document.querySelectorAll('.ebb-root')].filter(vis).pop();
+  if (br) {
+    const rows = (sel, root) => [...(root||br).querySelectorAll(sel)].filter(vis)
+      .map(e => ({ text: txt(e), selected: cur(e) })).filter(r => r.text);
+    const cmdbox = br.querySelector('.ebb-cmds');
+    const sub = br.querySelector('.ebb-sub');
+    const subOpen = sub && vis(sub);
+    out.battle = {
+      zone: txt(br.querySelector('.ebb-hud .zone')), round: txt(br.querySelector('.ebb-hud .rnd')),
+      actor: txt(br.querySelector('.ebb-actor')), log: txt(br.querySelector('.ebb-logtxt')),
+      // .ebb-cmds carries the class "idle" while it is somebody else's turn
+      // (battle_turnbased.js:322) — that is the difference between a menu you may
+      // drive and a menu you are watching.
+      yourTurn: !!cmdbox && !/(^|\\s)idle(\\s|$)/.test(cmdbox.className||''),
+      commands: rows('.ebb-cmd', cmdbox),
+      submenu: subOpen ? rows('.ebb-item, .ebb-cmd, .ebb-prow, li', sub) : null,
+      // A FOE IS A TRANSFORMED SILHOUETTE and its box does not always satisfy vis()'s
+      // size test, so ask only whether it is DISPLAYED — a monster you are fighting
+      // and cannot see the name of is the one thing you must not drop from a percept.
+      foes: [...br.querySelectorAll('.ebb-foe')]
+        .filter(f => { const s=getComputedStyle(f);
+          return s.display!=='none' && s.visibility!=='hidden' && parseFloat(s.opacity||'1')>0.06; })
+        .map(f => ({ name: txt(f.querySelector('.ebb-ftag')), targeted: cur(f) || !!f.querySelector('.ebb-mark.cur') }))
+        .filter(f => f.name),
+      // textContent runs the spans together ("VesperLV 134/34"). Read the parts.
+      party: [...br.querySelectorAll('.ebb-party .ebb-prow')].filter(vis).map(r => ({
+        text: [txt(r.querySelector('.ebb-pname b')), txt(r.querySelector('.ebb-pname small')),
+               (txt(r.querySelector('.hp'))||'?') + '/' + (txt(r.querySelector('.mx'))||'?') + ' HP']
+              .filter(Boolean).join(' '), selected: cur(r) })),
+    };
+    // The doorway banner is still in the DOM underneath a full-screen battle, and a
+    // player cannot see it. Reporting it would be reporting something not drawn.
+    out.prompts = [];
+  }
   return out; })()`;
 
 // HARNESS BOOKKEEPING ONLY: stuck detection, the run log, the repro save, and the
@@ -195,10 +239,15 @@ const FRAME_GATE_JS = `(()=>{ const why=[];
       why.push('a full-screen black veil is over the picture (opacity '+(op*al).toFixed(2)+
                ') — play3d fades to black across a transition');
       break; } }catch(e){}
+  /* FROZEN IS NOT BLIND, AND CONFLATING THEM COST A RUN. A modal lock with nothing
+   * drawn is a statement about the GAME (it took control and showed nothing); a
+   * black frame is a statement about the INSTRUMENT. Reported separately so the
+   * runner can wait out the first and refuse to photograph the second. */
+  let frozen=null;
   try{ const p=${PERCEPT_JS};
-    if(!!(window.UILOCK&&UILOCK.active()) && !(p.dialogue||p.card))
-      why.push('the game holds a modal lock with nothing drawn on it'); }catch(e){}
-  return {why}; })()`;
+    if(!!(window.UILOCK&&UILOCK.active()) && !(p.dialogue||p.card||p.battle))
+      frozen='the game holds a modal lock with nothing drawn on it'; }catch(e){}
+  return {why, frozen}; })()`;
 
 const READY_JS = `(async()=>{for(let i=0;i<600;i++){
   const S=window.SIM; if(S&&S.gpu&&S.gpu().meshes>0&&S.cam&&!S.transitions().busy){
@@ -354,6 +403,19 @@ export function flattenPercept(p) {
     if (p.dialogue.choices) L.push('  CHOICES: ' + p.dialogue.choices.map((c, i) => `[${i}] ${c.text}`).join('   '));
     if (p.dialogue.foot) L.push(`  footer: ${p.dialogue.foot}`);
   }
+  if (p.battle) {
+    const b = p.battle;
+    const list = (rs) => rs.map((r, i) => `[${i}]${r.selected ? ' >' : ''} ${r.text}`).join('   ');
+    L.push(`A BATTLE IS UNDER WAY${b.zone ? ` — ${[b.zone, b.round].filter(Boolean).join(', ')}` : ''}` +
+      (b.foes.length ? `. You are fighting: ${b.foes.map(f => f.name + (f.targeted ? ' (targeted)' : '')).join(', ')}` : ''));
+    if (b.actor || b.log) L.push('  ' + [b.actor, b.log].filter(Boolean).join(': '));
+    if (b.commands && b.commands.length)
+      L.push(`  ${b.yourTurn ? 'IT IS YOUR TURN. Commands' : 'Commands (someone else is acting)'}: ` + list(b.commands));
+    if (b.submenu && b.submenu.length) L.push('  THE OPEN SUB-MENU: ' + list(b.submenu));
+    if (b.party && b.party.length) L.push('  your party: ' + b.party.map(r => r.text).join(' | '));
+    L.push('  "> " marks where the cursor is. Use choose to pick a numbered entry; ' +
+      'use advance or wait to let the other side act.');
+  }
   if (p.prompts && p.prompts.length) L.push('PROMPT BANNER ON SCREEN: ' + p.prompts.join(' ; '));
   return L.join('\n');
 }
@@ -431,18 +493,23 @@ export function makeAdapter(opt) {
     const lum = await frameLum();
     if (lum && lum.meanL != null && lum.meanL < BLACK_L)
       why.push(`the picture is black (mean luminance ${lum.meanL}, only ${lum.nonblackPct}% of pixels above black)`);
-    return { why, lum };
+    return { why, lum, frozen: (g && g.frozen) || null };
   }
 
   /* Wait PROPERLY, then be honest. The old settle() capped at a flat 10 s, which is
    * shorter than a cold real-time bundle load — and then let the capture happen
-   * anyway, so its own timeout reached the agent as a fact about the game. */
-  async function waitForFrame(budgetMs) {
+   * anyway, so its own timeout reached the agent as a fact about the game.
+   * TWO CLOCKS, because the two conditions mean different things: an unpainted frame
+   * gets the long budget (a bundle load is legitimately slow), while an empty modal
+   * gets a short one and is then HANDED BACK as a fact about the game rather than
+   * waited on forever. */
+  async function waitForFrame(budgetMs, frozenMs = 8000) {
     const t0 = Date.now();
     for (;;) {
       const g = await frameGate();
-      if (!g.why.length) return { ...g, ready: true, waitedMs: Date.now() - t0 };
-      if (Date.now() - t0 >= budgetMs) return { ...g, ready: false, waitedMs: Date.now() - t0 };
+      const el = Date.now() - t0;
+      if (!g.why.length && (!g.frozen || el >= frozenMs)) return { ...g, ready: true, waitedMs: el };
+      if (el >= budgetMs) return { ...g, ready: !g.why.length, waitedMs: el };
       await sleep(250);
     }
   }
@@ -567,7 +634,7 @@ export function makeAdapter(opt) {
         writeFileSync(framePath, Buffer.from(r.data, 'base64'));
       }
       return { screenshot: { mime: 'image/jpeg', data: r.data }, text: flattenPercept(percept), percept, framePath,
-        ready: g.ready, why: g.why, meanL: g.lum ? g.lum.meanL : null, waitedMs: g.waitedMs };
+        ready: g.ready, why: g.why, frozen: g.frozen, meanL: g.lum ? g.lum.meanL : null, waitedMs: g.waitedMs };
     },
 
     async truth() { return await ev(TRUTH_JS); },
@@ -663,6 +730,28 @@ export function makeAdapter(opt) {
 
     async press(name) { await tap(name); await sleep(700); },
     async menuDown(n) { for (let i = 0; i < n; i++) { await tap('down'); await sleep(120); } },
+
+    /* PICK ENTRY N OF THE LIST THAT IS OPEN. The agent is shown numbered entries and
+     * where the cursor is; it does not count keypresses. menuDown(index) only landed
+     * on the right row when the cursor happened to start at the top — true for a
+     * fresh dialogue choice, false for a battle command menu that remembers where it
+     * was. So MEASURE the cursor and move relative to it. */
+    async choose(index) {
+      const at = await ev(`(()=>{ const sel=(l)=>{ let i=-1;
+          [...l].forEach((e,k)=>{ if(/(^|\\s)(cur|sel|selected|active)(\\s|$)/.test(e.className||'')) i=k; }); return i; };
+        const br=document.querySelector('.ebb-root');
+        if(br){ const sub=br.querySelector('.ebb-sub');
+          const open = sub && getComputedStyle(sub).display!=='none' && sub.getBoundingClientRect().height>2;
+          return sel(open ? sub.querySelectorAll('.ebb-item,.ebb-cmd,.ebb-prow,li')
+                          : br.querySelectorAll('.ebb-cmds .ebb-cmd')); }
+        const v=[...document.querySelectorAll('.ebui-veil')].pop();
+        if(v) return sel(v.querySelectorAll('.ebui-row,.ebui-choice,li,.row,.choice'));
+        return -1; })()`);
+      const d = index - (at >= 0 ? at : 0);
+      for (let i = 0; i < Math.abs(d); i++) { await tap(d > 0 ? 'down' : 'up'); await sleep(130); }
+      await tap('e'); await sleep(700);
+      return { from: at, to: index };
+    },
 
     async close() {
       if (closed) return; closed = true;
