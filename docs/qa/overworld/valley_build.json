@@ -1,5 +1,5 @@
 {
- "build_s": 11.56,
+ "build_s": 11.11,
  "canopy_farwall-crown": {
   "cards": 4711,
   "core_tris": 4570,
@@ -23,7 +23,7 @@
  "emberbrook_houses": 14,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.26,
+ "field_s": 0.25,
  "h_range": [
   -6.18,
   50.9
@@ -63,12 +63,22 @@
  "oldgate_bite_e_u": 3.05,
  "oldgate_bite_w_u": 0.9,
  "oldgate_court_ends": [
-  -5.3,
+  -4.1,
   6.8
  ],
  "oldgate_court_len_u": 3.85,
- "oldgate_court_span_u": 12.1,
+ "oldgate_court_span_u": 10.9,
  "oldgate_culvert_covered_u": 5.35,
+ "oldgate_deck_end_vs_road_u": [
+  0.21,
+  -0.03
+ ],
+ "oldgate_deck_ends_z": [
+  25.79,
+  26.41
+ ],
+ "oldgate_deck_fall_u": 0.519,
+ "oldgate_deck_riser_u": 0.047,
  "oldgate_door_clear_u": 2.02,
  "oldgate_door_halfwidths": 2.727,
  "oldgate_floodfill_past_pinch": 0,
@@ -76,8 +86,8 @@
  "oldgate_parapet_road_off": -4.86,
  "oldgate_pinch_u": 13.55,
  "oldgate_plates_at": [
-  3.22,
-  0.97
+  3.11,
+  1.97
  ],
  "oldgate_strip_east_u": 0.0,
  "oldgate_strip_west_u": 0.0,
@@ -113,9 +123,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 265262,
+ "tris": 265310,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.44,
+ "veg_s": 3.4,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
@@ -125,5 +135,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.073
+ "zone_s": 0.07
 }

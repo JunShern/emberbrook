@@ -715,7 +715,24 @@ def build_old_gate(col, F, zg, fr):
     wl = float(VM.water_level(np.array([t]))[0])
     hw = float(VM.water_halfwidth(np.array([t]))[0])
     ctr = VM.RIV_XY[i]
-    ang = math.atan2(float(nl[1]), float(nl[0]))         # the wall runs ACROSS the water
+    # THE PROP'S LOCAL FRAME, AND IT WAS 90 DEGREES OUT FOR THE WHOLE OF THIS GATE'S
+    # LIFE (measured 2026-08-03, tools/glb_read.mjs on the shipped bundle).  Every
+    # cube here is sized (ALONG THE RIVER, ACROSS THE NOTCH, height) — `wall()` passes
+    # (thick, ow, ...), the grate bars (0.9, 0.13, ...), the deck ((b1-b0), span, ...).
+    # Blender's Matrix.Rotation(rz, 'Z') sends local X to (cos rz, sin rz), so rz must
+    # be the RIVER's angle for size[0] to lie along the river.  It was `nl`'s, which is
+    # the angle ACROSS the notch, and every box came out rotated a quarter turn: the
+    # four wall runs stood as piers ALONG the gorge instead of one wall across it (the
+    # coping boxes measured 1.86-1.90 m of x against 2.2-7.7 m of z, on a notch that
+    # runs along x), and the nine deck bays stacked into a single 0.42 m strip pointing
+    # downstream — which is the SIX-CELL "raft" docs/qa/oldgate/index.html measured and
+    # read as a height problem.  The comment on this line was right about the intent
+    # ("the wall runs ACROSS the water") and the code did the opposite.
+    #
+    # THE BUILDER'S OWN SEAL COULD NOT SEE IT: the flood fill below blocks the wall's
+    # INTENDED footprint analytically (`abs(bb) < 0.7 and ...`), so it scored the design,
+    # not the build, and printed 0 leaks over a gate made of four detached piers.
+    ang = math.atan2(float(tg[1]), float(tg[0]))         # the wall runs ACROSS the water
 
     def at(off, bx=0.0):
         """world point `off` half-widths west of the centreline, `bx` u downstream."""
@@ -826,8 +843,36 @@ def build_old_gate(col, F, zg, fr):
         clen = float(culv["lengthU"])
         face = VM.WALL_THICK_U / 2.0 if hasattr(VM, "WALL_THICK_U") else 0.75
         court_from, court_to = face, face + clen - 0.40   # 0.40 short of the lip
-        deck_z = float(gw[2]) - 0.10
+        deck_z = float(gw[2]) - 0.10                      # the court's nominal level
         w_lim, e_lim = w_rock + BITE, -hw - EBITE
+        # ---- THE DECK FOLLOWS THE ROAD IT CARRIES ---------------------------
+        # A COURT LAID AT ONE LEVEL IS A TABLE BESIDE THE ROAD, NOT A PIECE OF IT.
+        # The road descends across this notch — measured off VM.ROAD_Z, 26.44 at the
+        # doorway (off +6.7) to 25.62 where it leaves the court's downstream edge
+        # (off -4.86) and 25.34 one station further — while a flat deck stands at
+        # 26.40 the whole way.  walkStep's step-UP is 0.63 m, so a 0.78 m lip at the
+        # east end is a wall the player can fall off and never climb back onto: the
+        # Old Gate as a ONE-WAY DOOR, exactly as docs/qa/oldgate/index.html §5 read it.
+        # So the paving takes its height from THE ROAD'S OWN Z at that offset, read
+        # off the map's stations inside the court band.  No ramp object, no apron
+        # (one was tried and made the island smaller): the deck and the road are the
+        # same surface because they are derived from the same numbers.
+        _r = VM.ROAD_XY - ctr
+        _off = _r @ nl
+        _bxr = _r @ tg
+        _band = [k for k in range(len(_bxr)) if court_from - 2.5 <= _bxr[k] <= court_to + 2.5]
+        _ro = np.array([_off[k] for k in _band], float)
+        _rz = np.array([float(VM.ROAD_Z[k]) for k in _band], float)
+        _sort = np.argsort(_ro)
+        _ro, _rz = _ro[_sort], _rz[_sort]
+
+        def deck_at(o):
+            """The paving's top at offset `o` — the road's own z, 30 mm under it.
+
+            np.interp CLAMPS outside the sampled band, so the court's buried west
+            shoulder keeps the doorway's level instead of extrapolating off a cliff.
+            """
+            return float(np.interp(float(o), _ro, _rz)) - 0.03
         # THE DECK IS AS WIDE AS THE HOLLOW IT HAS TO COVER, AND THE HOLLOW IS
         # MEASURED.  A slab run rock-to-rock at one level is half buried and half
         # floating — which is exactly what the first render of this court showed,
@@ -838,41 +883,37 @@ def build_old_gate(col, F, zg, fr):
             o = 0.0
             while abs(o) < abs(cap):
                 x_, y_ = at(o, (court_from + court_to) / 2.0)
-                if gh(F, zg, fr, x_, y_) >= deck_z - 0.12 and abs(o) > hw + 0.6:
+                if gh(F, zg, fr, x_, y_) >= deck_at(o) - 0.12 and abs(o) > hw + 0.6:
                     break
                 o += d * 0.1
             return o
         w_end = min(_deck_end(+1.0, w_lim), w_lim)
         e_end = max(_deck_end(-1.0, e_lim), e_lim)
-        # THE DECK IS STILL A RAFT AT ITS SE CORNER, AND THAT IS NOT FIXED HERE.
-        # Measured 2026-08-03 with no browser, off VM.ROAD_Z against deck_z: the
-        # road agrees with the deck to within 0.08 m from the doorway (off +6.5)
-        # all the way across the channel (off 0), and then DIVES on the east bank —
-        # 0.54 m below the deck at off -3.94, 0.78 m at -4.86 (the court's own
-        # downstream edge), 1.06 m at -5.70, one station past e_end.  walkStep's
-        # step-down is 0.80 m, so the court's SE corner is a lip the player cannot
-        # come off or get back onto, and the Old Gate is a one-way door.
-        # Opening it is NOT an apron (one lane tried; it made the island smaller)
-        # and not a clamp on _deck_end either — probed the same day, the terrain
-        # along the court's MID-LINE is within 0.60 m of deck_z all the way to the
-        # cap, so there is nothing to clamp: the drop is at the CORNER the road
-        # leaves by.  The fix is a deck whose east bay is GRADED to the road's own
-        # z, which is a re-cut of the court, and it is written up rather than
-        # guessed at: docs/qa/oldgate/index.html §5.
-        # the DECK: coursed paving over the hollow, laid on the culvert
-        nb = 9
-        for k in range(nb):
-            b0 = court_from + (court_to - court_from) * k / nb
-            b1 = court_from + (court_to - court_from) * (k + 1) / nb
-            x_, y_ = at((w_end + e_end) / 2.0, (b0 + b1) / 2.0)
-            p.cube(STONE, (x_, y_, deck_z - 0.22),
-                   ((b1 - b0) * 0.98, (w_end - e_end), 0.44), rz=ang)
+        # the DECK: coursed paving over the hollow, laid on the culvert.
+        # THE COURSES RUN ACROSS THE ROAD, one per step of offset, because that is
+        # what lets each course sit at its own height: nine bays laid the other way
+        # could only ever be one flat table.  Twelve courses over a 12 m notch put
+        # ~0.075 m between neighbours against a 0.63 m step-up — a slope to walk, a
+        # coursing line to look at.  They overlap 2% so the paving has no crack for
+        # a floor ray to fall through.
+        ncr = 12
+        deck_lo = deck_hi = None
+        for k in range(ncr):
+            o0 = e_end + (w_end - e_end) * k / ncr
+            o1 = e_end + (w_end - e_end) * (k + 1) / ncr
+            zc = deck_at((o0 + o1) / 2.0)
+            deck_lo = zc if deck_lo is None else min(deck_lo, zc)
+            deck_hi = zc if deck_hi is None else max(deck_hi, zc)
+            x_, y_ = at((o0 + o1) / 2.0, (court_from + court_to) / 2.0)
+            p.cube(STONE, (x_, y_, zc - 0.22),
+                   (court_to - court_from, (o1 - o0) * 1.02, 0.44), rz=ang)
         # the CULVERT BARREL under it: two side walls in the channel carrying the deck,
         # so the paving is held up by something and the water has a barrel to run in
         for s_ in (-1.0, 1.0):
+            zb = deck_at(s_ * (hw + 0.45))
             x_, y_ = at(s_ * (hw + 0.45), (court_from + court_to) / 2.0)
-            p.cube(STONE, (x_, y_, (wl - 1.6 + deck_z) / 2.0),
-                   (court_to - court_from, 0.9, deck_z - wl + 1.6), rz=ang)
+            p.cube(STONE, (x_, y_, (wl - 1.6 + zb) / 2.0),
+                   (court_to - court_from, 0.9, zb - wl + 1.6), rz=ang)
         # the DOWNSTREAM MOUTH: a plain arched head, and the water leaves it at the sill
         for k in range(7):
             a_ = math.pi * (k + 0.5) / 7.0
@@ -889,10 +930,9 @@ def build_old_gate(col, F, zg, fr):
         # stood across its own exit: measured in the running game, a 4.4u band of
         # body-blocked cells at world x -44.9 to -40.9.  The road's own offset at
         # this edge is read off VM.ROAD_XY, so it follows the road if the map moves
-        # it.  (This alone does NOT open the court — see the raft note below.)
-        _r = VM.ROAD_XY - ctr
-        _off = _r @ nl
-        _j = int(np.argmin(np.abs((_r @ tg) - court_to)))
+        # it.  (This alone did NOT open the court: the court was shut by the prop's
+        # 90-degree frame error and by the flat deck, both fixed above.)
+        _j = int(np.argmin(np.abs(_bxr - court_to)))
         road_o = float(_off[_j])
         GAPW = max(DOOR * 0.75, VM.ROAD_WIDTH * 0.5 + 1.2)
         for s_ in (0,):
@@ -903,8 +943,8 @@ def build_old_gate(col, F, zg, fr):
                 if abs(o - road_o) < GAPW:                 # and the road's
                     continue
                 x_, y_ = at(o, court_to)
-                p.cube(STONE, (x_, y_, deck_z + 0.36), (0.42, (w_end - e_end) / 11 * 0.96, 0.72),
-                       rz=ang)
+                p.cube(STONE, (x_, y_, deck_at(o) + 0.36),
+                       (0.42, (w_end - e_end) / 11 * 0.96, 0.72), rz=ang)
         # ---- THE THREE MARKS THE CONCEPT IDENTIFIES THIS GATE BY ---------------
         # docs/qa/emberbrook/concepts/gate-final.png is RATIFIED art and the built
         # gate carried none of its identity: no leaf in the arch, no sigil over it,
@@ -944,7 +984,6 @@ def build_old_gate(col, F, zg, fr):
         #    (seen in docs/qa/oldgate/ship-after-court.png, first cut).  Take the
         #    road's own local tangent at the middle station inside the court, step
         #    across THAT, and clamp both plates inside the paving.
-        _bxr = _r @ tg
         _in = [k for k in range(len(_bxr))
                if court_from <= _bxr[k] <= court_to and e_end <= _off[k] <= w_end]
         if _in:
@@ -965,14 +1004,25 @@ def build_old_gate(col, F, zg, fr):
                 # low segment counts on purpose: a 1.24u disc read from a 20u boom
                 # cannot show the difference, and the whole redesign is held to
                 # costing LESS than what it replaces.
-                p.cone(STONE, (x_, y_, deck_z + 0.02), 0.62, 0.62, 0.10, seg=10, rz=ang)
-                p.cone(EMIT, (x_, y_, deck_z + 0.07), 0.30, 0.30, 0.05, seg=8, rz=ang)
+                p.cone(STONE, (x_, y_, deck_at(ofp) + 0.02), 0.62, 0.62, 0.10, seg=10, rz=ang)
+                p.cone(EMIT, (x_, y_, deck_at(ofp) + 0.07), 0.30, 0.30, 0.05, seg=8, rz=ang)
             STATS["oldgate_plates_at"] = [round(float(_bxr[_m]), 2), round(float(_off[_m]), 2)]
         STATS["oldgate_parapet_road_off"] = round(road_o, 2)
         STATS["oldgate_court_len_u"] = round(court_to - court_from, 2)
         STATS["oldgate_court_span_u"] = round(w_end - e_end, 2)
         STATS["oldgate_court_ends"] = [round(e_end, 2), round(w_end, 2)]
         STATS["oldgate_culvert_covered_u"] = round(court_to + 0.75, 2)
+        # THE GRADE, RECORDED EVERY BUILD.  These three numbers are what make the
+        # gate a two-way door: the paving's fall across the notch, the biggest
+        # riser between neighbouring courses, and how far the deck's two ENDS sit
+        # from the road they meet.  A riser over walkStep's 0.63 m step-up, or an
+        # end more than 0.63 m above its road, is the one-way door coming back.
+        STATS["oldgate_deck_fall_u"] = round(deck_hi - deck_lo, 3)
+        STATS["oldgate_deck_riser_u"] = round((deck_hi - deck_lo) / max(1, ncr - 1), 3)
+        STATS["oldgate_deck_ends_z"] = [round(deck_at(e_end), 2), round(deck_at(w_end), 2)]
+        STATS["oldgate_deck_end_vs_road_u"] = [
+            round(deck_at(e_end) - (float(np.interp(e_end - 0.9, _ro, _rz))), 2),
+            round(deck_at(w_end) - (float(np.interp(w_end + 0.9, _ro, _rz))), 2)]
 
     # ---- THE SEAL, PRINTED EVERY BUILD -------------------------------------
     # ow-valley is FREE-ROAM terrain, not WALKLOCK: nothing stops a walker but the
@@ -1051,6 +1101,13 @@ def build_old_gate(col, F, zg, fr):
               "the river is under stone from the grate to the sill, %.2fu; the road crosses on it"
               % (court_to - court_from, w_end - e_end, e_end, w_end,
                  w_rock + BITE + hw + EBITE, court_to + 0.75))
+        print("   GRADED to the road: %d courses, %.2fu of fall, biggest riser %.3fu "
+              "(step-up 0.63u); ends z %.2f east / %.2f west, %+.2fu / %+.2fu against "
+              "the road just outside them"
+              % (ncr, deck_hi - deck_lo, (deck_hi - deck_lo) / max(1, ncr - 1),
+                 deck_at(e_end), deck_at(w_end),
+                 STATS["oldgate_deck_end_vs_road_u"][0],
+                 STATS["oldgate_deck_end_vs_road_u"][1]))
     if leak:
         offs = [l[0] for l in leak]
         bbs = [l[1] for l in leak]
