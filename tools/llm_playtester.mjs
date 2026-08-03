@@ -314,7 +314,9 @@ if (KEEP !== 'all') {
   for (const f of readdirSync(FRAMES)) {
     const p = join(FRAMES, f);
     const n = parseInt((f.match(/step-(\d+)/) || [])[1] || '0', 10);
-    if (cited.has(p) || (n % 10 === 0 && /^step-\d+\.jpg$/.test(f))) continue;
+    // -UNREADY frames are the evidence that the INSTRUMENT went blind, and they are
+    // the first thing anyone debugging that will want. They are never dropped.
+    if (cited.has(p) || /-UNREADY\.jpg$/.test(f) || (n % 10 === 0 && /^step-\d+\.jpg$/.test(f))) continue;
     try { unlinkSync(p); dropped++; } catch (e) { }
   }
   console.log(`  frames: dropped ${dropped} uncited (kept every 10th + every frame a report cites; --keep=all keeps all)`);

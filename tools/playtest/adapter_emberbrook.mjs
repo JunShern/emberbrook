@@ -79,6 +79,14 @@ import { freePort, killOrphans, findPage, sweepStaleProfiles } from '../cdp.mjs'
 
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
+// The luminance backstop needs a PNG decoder. pngjs is what nav_eval, findability_test
+// and scene_redteam already read plates with. If it is ever gone, SAY SO — a silently
+// disabled backstop is exactly the failure this whole gate exists to stop.
+const PNG = (() => { try { return require('pngjs').PNG; } catch (e) {
+  console.warn('  WARN pngjs is not installed: the playtester CANNOT measure whether a frame is black.\n' +
+               '       The page-side readiness gate still runs, but the backstop that caught\n' +
+               '       PT-20260803-005 is off. Install pngjs before trusting a clean run.');
+  return null; } })();
 const ROOT = join(dirname(new URL(import.meta.url).pathname), '../..');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -132,6 +140,65 @@ const TRUTH_JS = `(()=>{ const o={};
   try{ o.exits = SIM.edges().filter(e=>e.live).map(e=>e.id); }catch(e){}
   try{ o.save = (window.GS&&GS.state) ? JSON.parse(GS.serialize()) : null; }catch(e){}
   return o; })()`;
+
+/* ================== IS THERE A FRAME THE PLAYER WOULD SEE? ==================
+ * PT-20260803-005/006 (2026-08-03). The agent left Emberbrook, saw four black
+ * frames in a row, and filed a P1 blocker: "Screen remains black after leaving
+ * Emberbrook". THE GAME WAS FINE. What it photographed was play3d's own fade veil
+ * while a 45 MB real-time bundle loaded — settle() waited its flat 10 s, timed out,
+ * and observe() captured anyway. The run log even said so three times ("held a
+ * modal lock for 10 s with nothing on screen") and the frame went to the model
+ * regardless, labelled as what the player sees.
+ *
+ * AN INSTRUMENT THAT CANNOT SEE MUST SAY SO RATHER THAN EMIT A BLACK FRAME.
+ * So readiness is now a question whose true answer implies a PAINTED frame, and it
+ * is asked two ways that fail for different reasons:
+ *
+ *   IN THE PAGE  the transition is not in flight, the bundle has meshes, a
+ *                pre-rendered scene has chosen its shot, NO full-screen black veil
+ *                is over the picture (play3d's sgVeil is an anonymous fixed div at
+ *                z-index 9 — found here by what it DOES, since it has no id), and
+ *                the game is not holding a modal lock with nothing drawn on it.
+ *   ON THE FRAME the mean luminance of the captured picture. This is the backstop:
+ *                it does not care WHY nothing is on screen, and it would have caught
+ *                this bug on its own. Measured on this build: the veil reads 0.4,
+ *                emb-cine 32.9, ow-valley 113-121.
+ *
+ * The old predicate's conjuncts were all TRUE the whole time — SIM.gpu().meshes is
+ * renderer bookkeeping (47 in ow-valley), SIM.cam is a function, and SGbusy went
+ * false as soon as the swap finished. None of them is a statement about pixels.
+ */
+const BLACK_L = 2.0;              // mean luminance below this = nothing is drawn
+const FRAME_BUDGET_MS = 45000;    // a cold 45 MB real-time bundle is a legitimate wait
+
+const FRAME_GATE_JS = `(()=>{ const why=[];
+  const S=window.SIM;
+  if(!S||!S.scene) return {why:['the page has no SIM yet — it is still booting']};
+  try{ if(S.transitions().busy) why.push('a scene transition is still in flight'); }
+  catch(e){ why.push('SIM.transitions() threw: '+e.message); }
+  try{ if(!(S.gpu().meshes>0)) why.push('the loaded bundle has no meshes'); }
+  catch(e){ why.push('SIM.gpu() threw: '+e.message); }
+  try{ const c=S.cine&&S.cine(); if(c && !c.shot) why.push('a pre-rendered scene with no shot chosen'); }catch(e){}
+  try{ for(const el of document.body.children){ const s=getComputedStyle(el);
+      if(s.position!=='fixed') continue;
+      const op=parseFloat(s.opacity||'1'); if(!(op>0.5)) continue;
+      const r=el.getBoundingClientRect();
+      if(r.width<innerWidth*0.9||r.height<innerHeight*0.9) continue;
+      // THE ALPHA CHANNEL IS PART OF THE COLOUR. Matching only rgb() called
+      // play3d's own #exit-markers layer — fixed, full-screen, background
+      // rgba(0,0,0,0) — a black veil, and reported an unreadable screen over a
+      // frame measuring 121 luminance. A transparent black is not black.
+      const m=String(s.backgroundColor||'').match(/rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)/);
+      if(!m || +m[1]>24 || +m[2]>24 || +m[3]>24) continue;
+      const al=m[4]===undefined?1:parseFloat(m[4]);
+      if(!(op*al>0.5)) continue;
+      why.push('a full-screen black veil is over the picture (opacity '+(op*al).toFixed(2)+
+               ') — play3d fades to black across a transition');
+      break; } }catch(e){}
+  try{ const p=${PERCEPT_JS};
+    if(!!(window.UILOCK&&UILOCK.active()) && !(p.dialogue||p.card))
+      why.push('the game holds a modal lock with nothing drawn on it'); }catch(e){}
+  return {why}; })()`;
 
 const READY_JS = `(async()=>{for(let i=0;i<600;i++){
   const S=window.SIM; if(S&&S.gpu&&S.gpu().meshes>0&&S.cam&&!S.transitions().busy){
@@ -334,6 +401,52 @@ export function makeAdapter(opt) {
     return `http://localhost:${port}/play3d.html?` + q.toString();
   }
 
+  /* THE FRAME, MEASURED. A 64-px-wide PNG of the whole viewport: cheap enough to
+   * take every quarter-second, and it answers the only question that matters here
+   * without believing anything the page says about itself.
+   * NOT gl.readPixels on the default framebuffer — after compositing the drawing
+   * buffer is cleared unless preserveDrawingBuffer is set, so that probe reads black
+   * for EVERY scene including ones that demonstrably render. play3d's own probes
+   * render immediately before reading (play3d.html:1806); a harness must not, because
+   * forcing a render is perturbing the thing it is measuring. A screenshot is not. */
+  async function frameLum() {
+    if (!PNG) return null;
+    try {
+      const w = 64, s = w / viewport[0];
+      const r = await send('Page.captureScreenshot', { format: 'png',
+        clip: { x: 0, y: 0, width: viewport[0], height: viewport[1], scale: s } });
+      const img = PNG.sync.read(Buffer.from(r.data, 'base64'));
+      const n = img.width * img.height; let sum = 0, nb = 0;
+      for (let i = 0; i < n; i++) { const o = i * 4;
+        const l = img.data[o] * 0.299 + img.data[o + 1] * 0.587 + img.data[o + 2] * 0.114;
+        sum += l; if (l > 10) nb++; }
+      return { meanL: +(sum / n).toFixed(2), nonblackPct: +(100 * nb / n).toFixed(1) };
+    } catch (e) { return { meanL: null, nonblackPct: null, error: e.message }; }
+  }
+
+  async function frameGate() {
+    let g; try { g = await ev(FRAME_GATE_JS); }
+    catch (e) { return { why: ['the readiness gate could not run in the page: ' + e.message], lum: null }; }
+    const why = (g && g.why) ? g.why.slice() : ['the readiness gate returned nothing'];
+    const lum = await frameLum();
+    if (lum && lum.meanL != null && lum.meanL < BLACK_L)
+      why.push(`the picture is black (mean luminance ${lum.meanL}, only ${lum.nonblackPct}% of pixels above black)`);
+    return { why, lum };
+  }
+
+  /* Wait PROPERLY, then be honest. The old settle() capped at a flat 10 s, which is
+   * shorter than a cold real-time bundle load — and then let the capture happen
+   * anyway, so its own timeout reached the agent as a fact about the game. */
+  async function waitForFrame(budgetMs) {
+    const t0 = Date.now();
+    for (;;) {
+      const g = await frameGate();
+      if (!g.why.length) return { ...g, ready: true, waitedMs: Date.now() - t0 };
+      if (Date.now() - t0 >= budgetMs) return { ...g, ready: false, waitedMs: Date.now() - t0 };
+      await sleep(250);
+    }
+  }
+
   return {
     PERSONA, flattenPercept,
     checkpoints() { return checkpointsFromStory(); },
@@ -423,34 +536,38 @@ export function makeAdapter(opt) {
       await ev(`(()=>{const s=document.createElement('style');s.textContent='#h{display:none!important}';document.head.appendChild(s);return 1})()`);
       await ev(INSTALL_MOTOR);
       await sleep(500);
+      // BOOT IS HELD TO THE SAME BAR AS EVERY STEP. "The page became playable" used
+      // to mean SIM answered its own questions; it now also means something is drawn.
+      const f = await waitForFrame(FRAME_BUDGET_MS);
+      if (!f.ready) { console.error('  the page never painted a frame: ' + f.why.join('; ')); return false; }
       return ok;
     },
 
     /* A veil, a fade, or a modal with nothing drawn on it is not a decision — it is
-     * a wait, and paying a model call to watch a transition is paying for nothing. */
-    async settle(maxMs = 10000) {
-      const t0 = Date.now();
-      while (Date.now() - t0 < maxMs) {
-        const busy = await ev(`(()=>{ try{
-          const t = SIM.transitions(); const p = ${PERCEPT_JS};
-          return (t&&t.busy) || (!!(window.UILOCK&&UILOCK.active()) && !(p.dialogue||p.card));
-        }catch(e){ return false } })()`);
-        if (!busy) return true;
-        await sleep(250);
-      }
-      return false;                       // frozen with nothing on screen — a finding
-    },
+     * a wait, and paying a model call to watch a transition is paying for nothing.
+     * Returns TRUE only when a painted frame is up; see FRAME_GATE_JS for why the
+     * old version of this could return false while the game was perfectly fine. */
+    async settle(maxMs = FRAME_BUDGET_MS) { return (await waitForFrame(maxMs)).ready; },
 
-    async observe(tag) {
+    /* observe() EITHER HANDS BACK A FRAME THE PLAYER WOULD SEE, OR SAYS IT COULD
+     * NOT GET ONE. It never does both silently. `ready:false` carries `why` (the
+     * gate's own reasons, in plain language) and `meanL`, the frame is written with
+     * an -UNREADY suffix so the evidence survives the retention sweep, and layer 3
+     * is responsible for not paying a model to look at it. */
+    async observe(tag, opt) {
+      const budget = (opt && opt.budgetMs != null) ? opt.budgetMs : FRAME_BUDGET_MS;
+      const g = await waitForFrame(budget);
       const percept = await ev(PERCEPT_JS);
       const r = await send('Page.captureScreenshot', { format: 'jpeg', quality: 72 });
       let framePath = null;
       if (framesDir) {
         mkdirSync(framesDir, { recursive: true });
-        framePath = join(framesDir, 'step-' + String(++frameN).padStart(3, '0') + (tag ? '-' + tag : '') + '.jpg');
+        framePath = join(framesDir, 'step-' + String(++frameN).padStart(3, '0') +
+          (tag ? '-' + tag : '') + (g.ready ? '' : '-UNREADY') + '.jpg');
         writeFileSync(framePath, Buffer.from(r.data, 'base64'));
       }
-      return { screenshot: { mime: 'image/jpeg', data: r.data }, text: flattenPercept(percept), percept, framePath };
+      return { screenshot: { mime: 'image/jpeg', data: r.data }, text: flattenPercept(percept), percept, framePath,
+        ready: g.ready, why: g.why, meanL: g.lum ? g.lum.meanL : null, waitedMs: g.waitedMs };
     },
 
     async truth() { return await ev(TRUTH_JS); },

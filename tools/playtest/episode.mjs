@@ -129,6 +129,9 @@ export async function run(cfg) {
   const stallSeen = new Map();
   const lastFrames = [];
   let nudge = null, finished = null, steps = 0, offSpine = 0, offSpineFiled = false, lastLeg = null;
+  // Consecutive steps with nothing painted. Bounded so a blind harness stops loudly
+  // instead of grinding a hundred black frames through a paid model.
+  let unready = 0; const UNREADY_MAX = 6;
 
   const brief = [plan.brief, plan.objective ? `Your current objective is: ${plan.objective}` : null]
     .filter(Boolean).join(' ') || null;
@@ -168,20 +171,43 @@ export async function run(cfg) {
 
   for (let step = 1; step <= maxSteps; step++) {
     steps = step;
-    const settled = await adapter.settle();
+    // observe() WAITS for a painted frame and tells us whether it got one. It used
+    // to photograph whatever was there when its own 10 s timer expired, which on
+    // 2026-08-03 handed the agent four black transition veils and earned two P1
+    // blockers against the harness's own timeout (PT-20260803-005/006). The game was
+    // rendering the whole time.
     const obs = await adapter.observe();
     const truth = await adapter.truth();
-    if (obs.framePath) { lastFrames.push(obs.framePath); if (lastFrames.length > 3) lastFrames.shift(); }
+    if (obs.ready && obs.framePath) { lastFrames.push(obs.framePath); if (lastFrames.length > 3) lastFrames.shift(); }
     for (const b of truth.beats || []) if (!beatsSeen.has(b)) { beatsSeen.add(b); log(`  [beat] ${b}`); }
-    appendFileSync(jsonl, JSON.stringify({ step, percept: obs.percept, settled,
+    appendFileSync(jsonl, JSON.stringify({ step, percept: obs.percept, ready: obs.ready,
+      why: obs.ready ? undefined : obs.why, meanL: obs.meanL, waitedMs: obs.waitedMs,
       truth: { ...truth, save: undefined }, frame: Q.relative(obs.framePath) }) + '\n');
 
     if (stopBeat && (truth.beats || []).includes(stopBeat)) {
       finished = stopBeat; log(`\n== FINISH LINE: ${stopBeat} fired at step ${step}`); break;
     }
-    // Frozen with a modal up and nothing drawn: not a decision the agent can make,
-    // and a real defect if it persists. settle() already waited it out.
-    if (!settled) log(`  (step ${step}: the game held a modal lock for 10 s with nothing on screen)`);
+
+    /* NOTHING ON SCREEN IS THE HARNESS'S PROBLEM, NOT THE AGENT'S.
+     * If there is no painted frame, no model call is made, no report can be filed
+     * and no black picture enters anybody's context. Persist and the run STOPS and
+     * says the instrument went blind — which is a sentence about this tool, and must
+     * never be dressed up as a sentence about the game. */
+    if (!obs.ready) {
+      unready++;
+      log(`  (step ${step}: NO PLAYABLE FRAME after ${obs.waitedMs} ms — ${obs.why.join('; ')}` +
+          `${obs.meanL != null ? `; mean luminance ${obs.meanL}` : ''}. Nothing was shown to the agent.)`);
+      if (unready >= UNREADY_MAX) {
+        finished = 'harness-blind';
+        log(`\n== THE HARNESS COULD NOT SEE. ${UNREADY_MAX} consecutive steps with no painted frame.\n` +
+            `   ${obs.why.join('; ')}\n` +
+            `   This is an INSTRUMENT FAULT. No bug was filed against the game, on purpose.`);
+        break;
+      }
+      await sleep(1000);
+      continue;
+    }
+    unready = 0;
 
     /* THE SPINE DETECTOR. Found on the second real episode, and it is the same
      * shape as the walk-executor's free signal: cheap, harness-side, and it does
@@ -247,7 +273,11 @@ export async function run(cfg) {
       const parts = [];
       for (const [wx, wy] of intent.waypoints) {
         const leg = await adapter.walkLeg(wx, wy);
-        legs.push({ step, ...leg }); outcome = leg;
+        legs.push({ step, ...leg });
+        // THE FIRST LEG IS THE ONE THE LABEL IS ABOUT. The golden set scores a
+        // model on waypoints[0]; recording the LAST leg's outcome next to it made
+        // every multi-waypoint row lie about which decision succeeded.
+        if (outcome === null) outcome = leg;
         if (leg.from && leg.target) lastLeg = leg;
         if (!leg.ok) {
           parts.push(leg.reason === 'modal'
