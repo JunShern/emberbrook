@@ -233,7 +233,7 @@ if (REPRO) {
 } else if (FROM) {
   const c = checkpointsFromStory().checkpoints.find(x => x.id === FROM);
   if (!c) { console.error(`no beat "${FROM}" in story.json. Try --checkpoints`); process.exit(2); }
-  plan = { kind: 'checkpoint', id: c.id, scene: c.scene, cam: c.cam, pos: c.pos, brief: c.brief, objective: c.objective,
+  plan = { kind: 'checkpoint', id: c.id, scene: c.scene, cam: c.cam, pos: c.pos, yaw: c.yaw, brief: c.brief, objective: c.objective,
     patch: { flags: c.flags, beats: c.beats, at: { chapter: c.chapter, scene: c.scene, cam: c.cam, pos: c.pos, yaw: null } } };
 }
 
@@ -253,7 +253,7 @@ const judge = makeAgent({ model: judgeModel, persona: PERSONA, usage });
 const agent = { id: `${player.id} + ${judge.id}`, decide: player.decide, interview: judge.interview };
 
 const adapter = makeAdapter({ port: PORT, headed: has('head'), framesDir: FRAMES });
-const START = adapter.url(plan.scene, plan.cam, plan.pos);
+const START = adapter.url(plan.scene, plan.cam, plan.pos, null, plan.yaw);
 
 console.log('llm_playtester — one LLM, one screen, one keyboard');
 console.log('  server  :' + PORT + '   ' + START);

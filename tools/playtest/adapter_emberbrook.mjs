@@ -466,11 +466,12 @@ export function checkpointsFromStory() {
     const gated = cand.filter(e => need(e) && have[need(e)]);
     const open = cand.filter(e => !need(e));
     const pick = gated[0] || open[0] || null;
-    return pick ? { pos: pick.spawn, via: pick.id } : null;
+    return pick ? { pos: pick.spawn, yaw: pick.spawnYaw == null ? null : pick.spawnYaw, via: pick.id } : null;
   };
 
   const ST = STORY.start || {};
   let objective = null, lastAt = ST.pos || null, lastScene = ST.scene || null, lastCam = ST.cam || null;
+  let lastYaw = ST.yaw == null ? null : ST.yaw;
   for (const b of STORY.beats || []) {
     // A CAM ONLY CARRIES WITHIN A SCENE, and the reset has to happen BEFORE the
     // inheritance or it does not happen at all. Carrying `square` across a door into an
@@ -479,9 +480,15 @@ export function checkpointsFromStory() {
     if (b.scene && b.scene !== lastScene) {
       const arr = arrivalInto(lastScene, b.scene, flags);
       lastScene = b.scene; lastCam = null; lastAt = arr ? arr.pos : null;
+      /* AND THE YAW, because in the overworld the camera IS the affordance. Measured at
+       * the Old Gate arrival: with the edge's own spawnYaw the "Enter Dellhollow" marker
+       * projects to NDC y 0.981 — in frame; with meta.json's generic camYaw the same
+       * marker is BEHIND THE CAMERA (ndc.z 1.055). A drop-in that keeps the bundle's
+       * yaw is facing a way the game never faces a player. */
+      lastYaw = arr ? arr.yaw : null;
     }
     out.push({ id: b.id, chapter: b.chapter || 1, scene: b.scene,
-      cam: b.cam || lastCam, pos: b.at || lastAt,
+      cam: b.cam || lastCam, pos: b.at || lastAt, yaw: b.at ? null : lastYaw,
       objective, flags: { ...flags }, beats: { ...beats }, brief: BRIEFS[b.id] || null });
     beats[b.id] = true;
     for (const d of b.do || []) {
@@ -610,11 +617,12 @@ export function makeAdapter(opt) {
   }
   async function tap(name) { const k = KEYS[name] || KEYS.e; await keyEvent('keyDown', k); await sleep(45); await keyEvent('keyUp', k); }
 
-  function urlFor(scene, cam, pos, extra) {
+  function urlFor(scene, cam, pos, extra, yaw) {
     const q = new URLSearchParams({ nomusic: '1' });
     if (scene) q.set('scene', scene);
     if (cam) q.set('cam', cam);
     if (pos) { q.set('sx', pos[0]); q.set('sy', pos[1]); q.set('sz', pos[2]); }
+    if (yaw != null) q.set('yaw', yaw);
     for (const [k, v] of Object.entries(extra || {})) q.set(k, v);
     return `http://localhost:${port}/play3d.html?` + q.toString();
   }
@@ -811,7 +819,7 @@ export function makeAdapter(opt) {
         await ev(`(()=>{try{localStorage.removeItem('emberbrook-save');localStorage.removeItem('emberbrook-save-v1');}catch(e){}return 1})()`);
         // plan.pos comes from story.json's `start` — a new game boots where the front
         // door sends the player, not on whatever fallback spawn the shot happens to bake.
-        await send('Page.navigate', { url: urlFor(plan.scene, plan.cam, plan.pos) });
+        await send('Page.navigate', { url: urlFor(plan.scene, plan.cam, plan.pos, null, plan.yaw) });
       } else {
         const p = plan.save ? { whole: plan.save } : { patch: plan.patch };
         await ev(`(()=>{ const p=${JSON.stringify(p)};
@@ -820,7 +828,7 @@ export function makeAdapter(opt) {
           Object.assign(st.flags, p.patch.flags||{}); Object.assign(st.beats, p.patch.beats||{});
           st.at = Object.assign({}, st.at, p.patch.at||{});
           localStorage.setItem('emberbrook-save', JSON.stringify(st)); return 'patched'; })()`);
-        await send('Page.navigate', { url: urlFor(plan.scene, plan.cam, plan.pos, { v: String(Date.now()) }) });
+        await send('Page.navigate', { url: urlFor(plan.scene, plan.cam, plan.pos, { v: String(Date.now()) }, plan.yaw) });
       }
       await sleep(1400);
       const ok = await evSoft(READY_JS, BOOT_MS, false);
