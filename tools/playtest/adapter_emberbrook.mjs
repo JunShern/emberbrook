@@ -137,7 +137,13 @@ export const PERCEPT_JS = `(()=>{
   const veil = [...document.querySelectorAll('.ebui-veil')].filter(vis).pop();
   if (veil) {
     const rows = [...veil.querySelectorAll('.ebui-row, .ebui-choice, li, .row, .choice')].filter(vis)
-      .map(r=>({ text: txt(r), selected: /sel|active|cursor/.test(r.className||'') }));
+      // 'cur' IS THE CLASS THE SHIPPING UI ACTUALLY SETS (ui_kit.js row(): 'ebui-row' +
+      // (opt.cur ? ' cur' : '')). The old test was /sel|active|cursor/, which matches none
+      // of it — 'cur' is not 'cursor' — so EVERY ui_kit list reached the model with
+      // selected:false on every row: dialogue choices, the pause menu, the shop. The agent
+      // could read the options and never see which one it was standing on, which makes a
+      // menu a guess. Found by percept_test's selector census, not by playing.
+      .map(r=>({ text: txt(r), selected: /(^|\s)cur(\s|$)|sel|active|cursor/.test(r.className||'') }));
     out.dialogue = { speaker: txt(veil.querySelector('.ebui-title')) || null,
       text: txt(veil.querySelector('.ebui-body')) || null,
       foot: txt(veil.querySelector('.ebui-foot')) || null,
