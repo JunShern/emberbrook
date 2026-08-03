@@ -15687,3 +15687,57 @@ that. The only alternative is a second full Blender bake of every Emberbrook cam
 
 Gates: `transition_test` 168/0 · `playthrough_test` 80 passed / 1 failed (the documented
 ch2.road anchor in ow-valley, where followers do not exist).
+
+------------------------------------------------------------
+2026-08-03 EXPRESSION LANE (art half of "more emotive expressions"). Closed the
+      ceiling docs/qa/TOMORROW.md logged. Both claims in that note were checked on
+      instruments before any generation, and both needed correcting.
+
+      CLAIM 1 (five speakers have zero plates) — TRUE, but the cause was wrong. It
+      was never a generation problem: hobb, sorrel, creel, armorer and weaponsmith
+      each already had a complete studio/ set on disk, drawn and on the key, that
+      tools/gen-cutin.py had never matted. Instrument: `ls */studio` against
+      `cutins.json`. Landed 0 -> 11 mood plates (hobb 3, sorrel 3, creel 3,
+      weaponsmith 1, armorer 1); 44+ lines can now emote.
+
+      CLAIM 2 (2D/3D divergence is vesper:wry, vesper:annoyed, lake:wry) — the count
+      is 15 scripted moods, not 3, AND none of them is being dropped today: the 15
+      live only in story.json, which the 3D runtime renders, while chapter1.js and
+      chapter2.js ask for nothing the bust set lacks. Latent, not live. The gap is
+      now documented on public/js/assets.js's EXPRESSIONS list itself, which is the
+      2D runtime's entire emotional vocabulary and is hardcoded.
+
+      THE DEFECT NEITHER CLAIM MENTIONED, and the one that was actually on screen:
+      79 of 112 shipped cut-ins carried a bright chartreuse OUTLINE, every one of
+      them passing tools/cutin_edge.py. `halo` is a LUMINANCE difference and cannot
+      see a hue that wrong. Cause was in gen-cutin.py's band despill: it estimated
+      key share by summing R and B deltas against the local opaque reference, so a
+      legitimately BRIGHTER edge pixel (pale collar beside dark coat) read as magenta
+      residue and the subtraction drove R and B below G. Fixed by solving the mixture
+      on the key's own chroma axis, (R+B)/2 - G. Instrument: count of visible pixels
+      with G-(R+B)/2 > 60. 79/112 -> 20/119, magenta residue unchanged or lower on
+      every plate tested. The 20 remaining are maren, mochi and pip, whose moods have
+      no studio art to re-mat from. A GATE THAT MEASURES LUMINANCE CANNOT REFUSE A
+      COLOUR — cutin_edge still has no chroma term, and that is a real hole.
+
+      SECOND ORPHAN, found only by reading ACROSS a row: lake's four shipped 2D
+      expression busts (happy/worried/determined/tender) were the SUPERSEDED design —
+      black hair, green vest, cape — while his ratified bust.png is brown-haired and
+      red-vested. His neutral line showed one man and every emotional line showed
+      another. The cape retirement had never reached the expression chain. Re-rolled
+      all four off the current bust.
+
+      PAID FOR HERE, worth not repeating: I re-rolled sorrel's `rest` AFTER her moods,
+      orphaning three plates from a superseded reference, and the row showed it (her
+      striped apron went plain white, her peel wood-to-terracotta). THE CHAIN IS THE
+      IDENTITY: re-rolling a base silently orphans every mood beneath it, and the only
+      instrument that catches it is the eye on a contact row.
+
+      REFUSED, gate not lowered: armorer/appraising + happy (halo +30/+24 vs +18, two
+      independent rolls — his art carries a real rim light); weaponsmith/focused + wry
+      (head_frac drift 0.148/0.189 vs a 0.224 base, bound 0.03).
+
+      Gates: dialogue_test 1398/2 -> 1482/2 (both reds del.gullgirl's post,
+      pre-existing). story_test green. dialogue_style PASS, 0 failures.
+      QA docs/qa/cutins/index.html refreshed (120 plates). Commits 8416ca3, 70002f7,
+      486b098; pushed and verified by ls-remote against rev-parse HEAD.
