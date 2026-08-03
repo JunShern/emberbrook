@@ -631,7 +631,67 @@ if(GHOST){ stampStencil(spr.material);
 spr.position.y=1.03; if(SPRITE) ch.add(spr);
 // 3D character: KayKit rogue, scaled to the 1.7u contract, idle/walk clips
 let model=null,mixer=null,actIdle=null,actWalk=null,actJump=null,actCur=null;const clock=new THREE.Clock();
-if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
+// ===== THE PLAYER'S BODY IS A VARIABLE, NOT A CONSTANT ======================
+// (2026-08-03, Lake's playable intro.) Chapter One hands the player from Vesper
+// to Lake for his own act — he rises from his grandmother's table, takes her
+// flame off the mantel hook and her hand-lamp off the hook by the door, and
+// walks his rounds — and hands them back when the two meet on the pond lane.
+//
+// THIS IS NOT THE TWO-PLAYER UPGRADE. The user's ruling of 2026-08-02 stands
+// verbatim ("leave the two-player version as an upgrade for later"): there is
+// still exactly ONE body, one input, one camera, one walk network. What changes
+// is WHOSE body it is. Nothing here adds a second player, a second controller,
+// or a party formation.
+//
+// The block below was a one-shot loader that ran at boot. It is now a function
+// the boot calls once and SIM.pov() calls again, which is the whole mechanism:
+// dispose the old GLB's GPU objects, load the new one, rebuild the mixer and the
+// three actions the physics loop drives (actIdle/actWalk/actJump). Every caller
+// above it — setAct, setCharH, phys, the H picker — reads the same module-level
+// `model`/`mixer` bindings it always did and is untouched.
+let BODY = Q.get('model') ? null : MODEL_KEY;   // the MODELS key the player is wearing
+                                                // (null = pinned by ?model=, a harness)
+// Hand every GPU object of the outgoing body back. GHOST twins share the source
+// geometry and clone the material, so geometries are deduped and materials are not.
+function bodyDispose(){
+  if(!model) return;
+  const geos=new Set(), mats=new Set();
+  model.traverse(o=>{ if(o.isMesh){ if(o.geometry)geos.add(o.geometry);
+    (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{ if(m)mats.add(m); }); } });
+  if(mixer){ mixer.stopAllAction(); mixer.uncacheRoot(model); }
+  ch.remove(model);
+  for(const g of geos) g.dispose();
+  for(const m of mats){ if(m.map&&m.map.dispose)m.map.dispose(); m.dispose(); }
+  model=null; mixer=null; actIdle=actWalk=actJump=actCur=null; window.actJump=null;
+}
+// CADENCE PER MODEL, because stride length is a property of the baked clip.
+// vesper-v2 1.2 = the user's calm-cycle ruling (2026-08-01, picked live).
+// lake 2.0 = MEASURED, not chosen by eye: lake-v1's Walking_A is the NPC recipe's
+// UAL Walk_Loop, 0.46 u/s at 1.0 (npc.js NPC_WALK_UPS), against the player's
+// ~4.5 u/s. A full cadence lock would be ~9.8x and unwatchable; Vesper's own
+// ratified 1.2 leaves 3.2x of residual skate, and matching THAT would need 3.05x
+// here — a 0.44 s cycle, a scramble. 2.0 is the taste point: a hurried walk, which
+// is what he is doing (three lamps before the Kindling Hour). It is the one number
+// in this lane a human should re-pick by eye.
+const WALK_TS={'vesper-v2':1.2,'vesper-test':2.0,'lake':2.0};
+function loadBody(key){
+  if(SPRITE) return Promise.resolve(null);
+  const url=(key&&MODELS[key])||MODEL_URL;
+  // BODY IS CLAIMED SYNCHRONOUSLY, before the 12 MB GLB is fetched. The scene swap
+  // and the body swap run under the same veil, so 'eb-scene' can fire while this
+  // load is still in flight; a SIM.body() that still reported the OLD body there
+  // would make story_runtime's povSync start a second, redundant load of the same
+  // rig. Claiming the name first makes the answer to "who is the player" true from
+  // the instant the decision is made rather than from the instant the art arrives.
+  BODY=key||BODY;
+  // The dev picker's session key IS the player body, so ?reload=1 and the fallback
+  // full-page path restore whoever the story handed the player. Session-scoped, as
+  // the 2026-08-01 bug requires: a body must not outlive the tab.
+  if(key){ try{ sessionStorage.setItem('eb-model',key); }catch(e){} }
+  return new Promise((res,rej)=>{ new THREE.GLTFLoader().load(url,g=>{ try{ res(bodyBuild(g)); }catch(e){ rej(e); } }, undefined, rej); });
+}
+function bodyBuild(g){
+  bodyDispose();
   model=g.scene;
   const bb=new THREE.Box3().setFromObject(model), sz=new THREE.Vector3(); bb.getSize(sz);
   modelNatH=sz.y; modelMinY=bb.min.y;
@@ -654,7 +714,7 @@ if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   // idle_Pn/walk_Pn are a POSTURE PAIR (built to blend); run_R* swaps the locomotion
   // clip; ATS overrides timeScale so cadence can be judged honestly (R2 at 2.9 is the
   // only near-locked cadence either donor pack offers).
-  window.ANIMTEST = MODEL_KEY==='vesper-test' ? {
+  window.ANIMTEST = BODY==='vesper-test' ? {
     P:(localStorage.getItem('eb-animtest-p')||'1'), R:localStorage.getItem('eb-animtest-r')||'',
     TS:+(localStorage.getItem('eb-animtest-ts')||0),
     apply(){
@@ -678,12 +738,14 @@ if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   // clip, 1.45-u model). A full lock (4.5/1.17 ~= 3.85x) plays the cycle in 0.24s and
   // reads as a scramble, so 2.0x is the taste point: fast-run cadence, residual skate
   // ~1.9x — down from ~7x with the clip at 1x. Per-model because stride length is a
-  // property of the baked clip, not the engine.
-  const WALK_TS={'vesper-v2':1.2,'vesper-test':2.0};   // 1.2 = user's calm-cycle ruling (2026-08-01, picked live)
-  if(WALK_TS[MODEL_KEY]&&!(ANIMTEST&&(ANIMTEST.TS||ANIMTEST.R))) actWalk.timeScale=WALK_TS[MODEL_KEY];
+  // property of the baked clip, not the engine. (The table lives above bodyBuild so
+  // SIM.pov's second and third loads read the same numbers as the boot's first.)
+  if(WALK_TS[BODY]&&!(ANIMTEST&&(ANIMTEST.TS||ANIMTEST.R))) actWalk.timeScale=WALK_TS[BODY];
   window.actJump=pick(/^Jump_Full_Short$/i)||pick(/^Jump$/i)||pick(/jump/i); actJump=actJump?mixer.clipAction(actJump):null;
   actIdle.play(); actCur=actIdle;
-});
+  return {body:BODY, url:(BODY&&MODELS[BODY])||MODEL_URL, clips:clips.map(c=>c.name)};
+}
+if(!SPRITE) loadBody(BODY).catch(e=>console.error('[body] initial load failed', e));
 function setAct(a){ if(!mixer||a===actCur) return; a.reset().fadeIn(0.15).play(); if(actCur)actCur.fadeOut(0.15); actCur=a; }
 const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CFG.up.n,m:false},
   left:{row:CFG.side.row,n:CFG.side.n,m:false},right:{row:CFG.side.row,n:CFG.side.n,m:true}};
@@ -2166,6 +2228,57 @@ Object.assign(window.SIM,{
   addEdge(e){ SGE.push(Object.assign({r:sgDef('doorRadius',1.8), key:sgDef('key','e'),
     kind:'test', label:'TEST', from:SCENE, id:'test'+SGE.length}, e, {armed:null}));
     return SGE.length-1; },
+  // ---- THE POV HANDOFF ------------------------------------------------------
+  // SIM.pov({as, scene, spawn, yaw, cam, ms}) — change WHO the one body is, and
+  // optionally which room it is standing in. Chapter One's Lake act is the first
+  // and only caller (public/game/story.json, beat ch1.lake.handoff and the revert
+  // at the end of ch1.meet); story_runtime.js's `pov` step is the only route in.
+  //
+  // WHY THIS IS NOT THE TELEPORT STEP story.json's _schema forbids. That invariant
+  // is about FAKING TRAVEL: "the corridor between the towns is WALKED", written
+  // against chapter2.js:261, which fades and writes a coordinate so the player
+  // arrives somewhere their own legs never took them. A POV handoff moves nobody.
+  // Vesper stays in the square where the player left her; Lake has been in his
+  // grandmother's cottage all evening; the cut between them is the same cut the
+  // shipped 2-D script makes at chapter1.js:677 (fadeTo, banner, setPhase('lake'),
+  // spawnFor('lake')). The player then WALKS Lake's rounds — out his own door, up
+  // his own lane, to the square — and every metre of that is theirs.
+  // tools/story_test.mjs §7 encodes the distinction rather than being dodged by it.
+  //
+  // It goes through transitionTo() — the ONE place a scene change happens — so the
+  // handoff inherits the veil, the epoch, sceneDispose, the 'eb-scene' announce and
+  // the reload fallback. There is no second swap path.
+  body(){ return BODY; },
+  pov(o){
+    o=o||{};
+    const key=o.as, ms=(o.ms==null?sgDef('fadeMs',350):o.ms);
+    if(!key||!MODELS[key]) return Promise.resolve({error:'no body "'+key+'"', have:Object.keys(MODELS)});
+    if(Q.get('model')) return Promise.resolve({skipped:'?model= pins the body', body:BODY});
+    const dest=o.scene||SCENE;
+    if(dest===SCENE){
+      // same room: swap under the veil, so a change of protagonist reads as a CUT
+      // and never as one character morphing into another in open frame.
+      if(key===BODY) return Promise.resolve({body:BODY, scene:SCENE, noop:true});
+      return sgFade(1,ms).then(()=>loadBody(key))
+        .then(()=>sgFade(0,ms)).then(()=>({body:BODY, scene:SCENE}))
+        .catch(err=>{ sgFade(0,ms); return {error:String(err)}; });
+    }
+    if(!(SG&&SG.nodes&&SG.nodes[dest])) return Promise.resolve({error:'no scenegraph node '+dest});
+    if(!Array.isArray(o.spawn)||o.spawn.length!==3) return Promise.resolve({error:'pov across scenes needs a spawn [x,y,z]'});
+    const e={id:'pov:'+key+'@'+dest, from:SCENE, to:dest, kind:'pov', of:null,
+             at:[P.x,P.y,P.z], r:sgDef('doorRadius',1.8), spawn:o.spawn,
+             spawnYaw:(o.yaw==null?null:o.yaw), cam:(o.cam?{key:o.cam}:null),
+             label:'', key:sgDef('key','e')};
+    const t0=performance.now(), from=SCENE, r=transitionTo(e);
+    if(!r) return Promise.resolve({error:'busy'});
+    // The body loads WHILE the scene does, both under the same veil.
+    const bodyP=(key===BODY)?Promise.resolve(null):loadBody(key).catch(err=>{ console.error('[pov] body load failed',err); return null; });
+    return bodyP.then(()=>new Promise(res=>{ let n=0;
+      const w=()=>{ if(!SGbusy||++n>1200) return res({from, to:SCENE, body:BODY,
+        ms:Math.round(performance.now()-t0), timedOut:SGbusy});
+        setTimeout(w,25); };
+      setTimeout(w,25); }));
+  },
   // ---- the in-place swap's own test surface ---------------------------------
   scene(){ return SCENE; },
   // Allocation-free "is a transition in flight". SIM.cine() and SIM.transitions()
