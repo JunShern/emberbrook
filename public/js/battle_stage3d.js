@@ -207,6 +207,7 @@
       sat: 1.08,
       grain: 0.016,       // a whisper of it. Kills the banding a smooth dish shows.
       scale: 0.25,        // bloom buffer resolution
+      msaa: 4,            // samples on the SCENE buffer — see p.rt below; 0 disables
     },
 
     // HIT FEEDBACK. Read this as a budget, not a wish list: a flash, a shove, a
@@ -1980,7 +1981,18 @@
             const W = Math.max(2, Math.floor(w * dpr)), H = Math.max(2, Math.floor(h * dpr));
             const bw = Math.max(2, Math.floor(W * P.scale)), bh = Math.max(2, Math.floor(H * P.scale));
             for (const k of ['rt', 'bA', 'bB']) if (p[k]) p[k].dispose();
-            p.rt = new TH.WebGLRenderTarget(W, H, opt);
+            // MSAA, WHICH THIS STAGE HAS BEEN QUIETLY DOING WITHOUT SINCE THE POST
+            // PASS LANDED. `new WebGLRenderer({antialias:true})` above asks the
+            // browser for a multisampled DEFAULT framebuffer and nothing else — the
+            // moment the scene renders into `post.rt` instead, that request buys
+            // nothing, so every silhouette in the arena has been hard-aliased while
+            // the renderer was configured for antialiasing. `samples` is the render
+            // target's own version of the same request (WebGL2 multisample renderbuffer,
+            // resolved on read), and it is the ONE knob that puts it back. It applies
+            // to the scene buffer only: the bloom chain is a quarter-res blur of an
+            // already-resolved image and multisampling it would cost memory for a
+            // difference no blur can carry.
+            p.rt = new TH.WebGLRenderTarget(W, H, Object.assign({ samples: P.msaa != null ? P.msaa : 4 }, opt));
             p.bA = new TH.WebGLRenderTarget(bw, bh, opt);
             p.bB = new TH.WebGLRenderTarget(bw, bh, opt);
             // DECLARED RAW ON PURPOSE — see the GAMMA note above. Under r185 a

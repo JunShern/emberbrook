@@ -22,12 +22,28 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 // which modern three does not publish. Only the decoder binaries stay external
 // (they are wasm, and they are what the build vendors into dist/lib/draco).
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+// POST-PROCESSING (2026-08-03). The r185 upgrade bought the capability; these six
+// modules are it. They ride in THIS bundle rather than as <script src> tags for
+// the same reason GLTFLoader does: they `import` three, and a second copy of three
+// would give every pass its own WebGLRenderTarget/Vector2/ShaderMaterial classes,
+// so `instanceof` between a pass and the renderer's own state would be false and
+// the failure would look like a driver bug rather than a packaging one.
+// EffectComposer + RenderPass + OutputPass are the frame; GTAOPass is the effect
+// that actually changes the picture (see THE POST STACK in play3d.html for which
+// scene families get it and why the baked-plate towns do not).
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import * as MeshBVHLib from 'three-mesh-bvh';
 
 // the ESM namespace object is frozen, so the additive names go on a copy. Every
 // mutable table inside it (ShaderChunk, ShaderLib, ...) is still the SAME object,
 // which is what play3d.html's shader surgery relies on.
-const NS = Object.assign({}, THREE, { GLTFLoader, DRACOLoader });
+const NS = Object.assign({}, THREE, { GLTFLoader, DRACOLoader,
+  EffectComposer, RenderPass, OutputPass, ShaderPass, GTAOPass, UnrealBloomPass });
 
 globalThis.THREE = NS;
 globalThis.MeshBVHLib = MeshBVHLib;

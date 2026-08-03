@@ -29,7 +29,12 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 // and the depth map, i.e. it would photograph a different game than the player's.
 // ?nostory=1 so a story beat's dialogue box does not sit over half the plate in
 // one run and not the other — a before/after strip has to differ only in the build.
-const urlFor=s=>`http://localhost:${PORT}/play3d.html?scene=${s}&nomusic=1&nostory=1&v=${Date.now()}`;
+// --q "postfx=off&ao_i=0" appends page knobs to EVERY shot's URL. A tuning A/B is
+// the same shot list against a different build OR against a different setting, and
+// the second kind used to mean editing the source between runs — which is exactly
+// the thing a before/after strip must not have done.
+const QEXTRA=arg('q','');
+const urlFor=s=>`http://localhost:${PORT}/play3d.html?scene=${s}&nomusic=1&nostory=1${QEXTRA?'&'+QEXTRA:''}&v=${Date.now()}`;
 const profile=join(process.env.TMPDIR||'/tmp','three-shots-profile');
 killOrphans(profile); rmSync(profile,{recursive:true,force:true});
 const chrome=spawn(CHROME,[`--remote-debugging-port=${CDP}`,`--user-data-dir=${profile}`,

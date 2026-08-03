@@ -231,6 +231,249 @@ function loadBackdrop(ep){
     if(ep!==EPOCH){t.dispose();return;}
     t.colorSpace=THREE.SRGBColorSpace; BGTEX=t; if(!window.__cine)scene.background=t;},undefined,()=>{});
 }
+// ===== THE POST STACK =======================================================
+// (2026-08-03, post-processing lane. ?postfx=off restores the direct path;
+//  ?postfx=all is the DIAGNOSTIC that forces the composer onto a baked-plate town,
+//  and the reason it exists is written below.)
+//
+// THE STACK IS PER SCENE FAMILY, and that is a measurement, not a preference.
+//
+//   REAL-TIME (ow-*, townwalk — anything RT): RenderPass -> GTAO -> bloom -> Output.
+//     These scenes are honest geometry under a solved key with NO baked lighting of
+//     any kind, so nothing in them was ever occluded by anything: a cottage sill, a
+//     pavilion post and a fence stake all meet the ground on a hard albedo seam with
+//     no darkening at the contact. Ground-truth ambient occlusion is the single
+//     effect that changes that, and it is the one thing this game has never had.
+//
+//   BAKED-PLATE TOWNS (emb-*, del-*): NOTHING. The composer is not built and the
+//     page renders exactly as it did. Two independent reasons, either sufficient:
+//
+//     1. THERE IS NO GEOMETRY TO OCCLUDE. The "world" in those scenes is a
+//        full-screen quad showing a Cycles render; the only real meshes are the
+//        character and the collision hulls, which are colorWrite:false. Screen-space
+//        AO would be computed against depth.png's reconstruction of a picture that
+//        ALREADY CARRIES CYCLES' OWN AO, and would darken every crease in the plate
+//        a second time.
+//     2. A COMPOSER RE-GRADES THE PLATE, MEASURABLY. three r185 disables
+//        material-level tone mapping whenever the destination is a non-XR render
+//        target (WebGLPrograms.js: `if (material.toneMapped) if (currentRenderTarget
+//        === null || ...isXRRenderTarget)`), which is correct — the composer's
+//        OutputPass is supposed to apply the curve at the end instead. But the plate
+//        does not arrive through a material: it is scene.background, and this file
+//        deliberately STRIPS `#include <tonemapping_fragment>` out of
+//        ShaderLib.background (see THE TONE CURVE above) because a plate baked
+//        through Blender's AgX must not be graded twice. Under a composer that
+//        exemption is lost — OutputPass grades the whole buffer, plate included, and
+//        the town comes back milky. `?postfx=all` reproduces it on demand and
+//        docs/qa/postfx/rejected-* is the photograph. This is the same ruling the
+//        tone-curve lane already made from the other side: a curve belongs to
+//        scene-referred light, and a finished plate is not that.
+//
+//   THE BATTLE ARENA is not in this decision at all — battle_stage3d.js builds its
+//     own renderer and its own four-pass grade and never sees `R`.
+//
+// AA COMES FROM MSAA, NOT FROM A PASS. `new WebGLRenderer({antialias:true})` only
+// ever antialiased the DEFAULT framebuffer, so routing through a composer would
+// have silently thrown the game's antialiasing away and made silhouettes worse
+// while claiming a win. The composer's own buffers are therefore allocated
+// `samples: 4`, which is both better-looking and cheaper than an SMAA pass.
+const PFXQ=Q.get('postfx')||'';
+const PFX_ON=PFXQ!=='off'&&PFXQ!=='0';
+const PFX_ALL=PFXQ==='all';                    // the diagnostic; see (2) above
+const PFXNUM=(k,d)=>{const v=parseFloat(Q.get(k)); return isFinite(v)?v:d;};
+// The knobs, all overridable from the URL so the next person tunes against a
+// picture instead of against a rebuild.
+const PFX={
+  samples: PFXNUM('pfx_msaa',4),
+  // AO RADIUS IS IN METRES and this town is built in metres. 0.25 (the addon
+  // default) is a crease-darkener for a product shot; at the overworld's 40 m boom
+  // it is under a pixel and does nothing. 0.9 m is a doorstep, a post-foot and a
+  // roof eave — the scale at which "this object sits ON something" is legible from
+  // the follow camera.
+  aoRadius: PFXNUM('ao_r',0.9),
+  aoIntensity: PFXNUM('ao_i',0.9),
+  aoScale: PFXNUM('ao_s',1.6),               // gamma on the AO term: contrast, not depth
+  aoThickness: PFXNUM('ao_t',1.4),
+  aoSamples: Math.round(PFXNUM('ao_n',16)),
+  // AO RUNS AT HALF RESOLUTION and that is the whole performance story. GTAO costs
+  // a full normal/depth prepass of the scene plus a 16-tap horizon search per pixel
+  // plus a 16-tap Poisson denoise; at full res in the dressed townwalk (1246 draw
+  // calls, 8.5 M tris) that measured +12.0 ms/frame, which turns 48 fps into 30.
+  // The AO term is a low-frequency signal that is about to be blurred by its own
+  // denoiser, so half res costs it almost nothing visible and buys most of that
+  // back. `ao_res=1` restores full res for anyone who wants to see the difference.
+  aoRes: PFXNUM('ao_res',0.5),
+  // BLOOM IS DELIBERATELY SMALL, AND THE THRESHOLD IS THE WHOLE ARGUMENT. These
+  // scenes render with NoToneMapping, so nothing in them is HDR: the brightest
+  // ground is already near 1.0 linear and the only things ABOVE it are the emissive
+  // window panes, the lamp heads and the square's fire. Threshold 0.86 (tried
+  // first, docs/qa/postfx/rejected-bloom-loud.png) therefore blooms the PAVING —
+  // Emberbrook's plaza came back washed and hazy with the cobbles glowing. 0.99
+  // catches the lights and leaves the floor alone, which is the difference between
+  // a village that reads as lit after dark and a lens that needs cleaning.
+  bloomStrength: PFXNUM('bloom_s',0.16),
+  bloomRadius: PFXNUM('bloom_r',0.30),
+  bloomThreshold: PFXNUM('bloom_t',0.99),
+  // THE DEPTH GRADE — overworld only. See THE AERIAL SPLIT below.
+  gradeAmt: PFXNUM('grade',1.0),
+  gradeNear: PFXNUM('grade_n',26),
+  // dFar IS THE MEASURED SPAN OF THE FRAME, not a round number: from the 40 m boom
+  // at the shipped pitch the visible ground runs about 30 m to 110 m radial, so a
+  // 150 m far point spends the whole frame on the first half of the ramp and the
+  // cue never arrives. 105 puts the far edge of the picture at the far end of it.
+  gradeFar: PFXNUM('grade_f',105),
+  gradeLift: PFXNUM('grade_l',0.032),
+  gradeTint: PFXNUM('grade_k',1.6),        // scales both tints away from neutral
+};
+// THE AERIAL SPLIT (2026-08-03, overworld only, ?grade=0 to remove).
+//
+// THE FINDING THIS ANSWERS, from the overworld-art lane via the coordinator: our
+// four ow-* cameras are fixed high and looking DOWN, so a shipped frame contains
+// no horizon and no sky to tint — the usual "cool the far background" move has
+// nothing to act on. Meanwhile the FFIX reference shots
+// (public/assets/refs/reimagine_ff9_overworld_*.jpg) get their depth from exactly
+// one thing: COOL BLUE-GREY DISTANCE AGAINST WARM NEAR GROUND. The r185 upgrade
+// moved us the other way (their measurement: chroma 46.5 -> 42.0 on ow-closeup,
+// 44.6 -> 38.7 on ow-corridor-turn, both frames warmer and more unified).
+//
+// WHY NOT MORE FOG. There already IS fog here — `scene.fog = Fog(0xd3e0e8, 34,
+// 205)`, landed 2026-08-03 by the sky lane — and fog is a MIX TOWARD A COLOUR: it
+// buys distance by taking contrast and saturation OUT of the far ground. Turning
+// it up to get the reference's separation flattens the thing it is separating.
+// This pass does the half fog cannot: a MULTIPLICATIVE warm/cool split by depth.
+// Near ground is multiplied by a warm triple, far ground by a cool one, so the
+// hue separates while the luminance and the local contrast stay where the art
+// direction put them — that is chroma ADDED, not density removed.
+//
+// RADIAL, NOT PLANAR, and that is the whole reason it is a post pass instead of a
+// second Fog. three's Fog runs on `-mvPosition.z`, distance along the camera axis,
+// which under a 35 deg downward boom is very nearly the vertical screen axis: it
+// makes the TOP of the frame far and the BOTTOM near, in a scene where the player
+// is in the middle and the ground wraps around them. This reconstructs the view
+// position from the depth buffer and uses `length(viewPos)`, so the cue radiates
+// from the character in every direction, which is what a top-down frame needs.
+//
+// IT RIDES GTAO'S G-BUFFER. The AO pass already renders a normal+depth prepass
+// every frame; this samples that depth texture rather than allocating one, which
+// is why the whole effect costs one fullscreen quad and zero extra memory. It is
+// therefore skipped when AO is off (?ao_i=0), which is stated rather than hidden.
+const GRADE_SHADER={
+  uniforms:{ tDiffuse:{value:null}, tDepth:{value:null}, projInv:{value:new THREE.Matrix4()},
+             dNear:{value:30}, dFar:{value:150}, amt:{value:1}, lift:{value:0.03},
+             warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
+             coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
+  vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
+  fragmentShader:[
+    'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
+    'uniform float dNear,dFar,amt,lift; uniform vec3 warmCol,coolCol;',
+    'void main(){',
+    '  vec4 c=texture2D(tDiffuse,vUv);',
+    '  float d=texture2D(tDepth,vUv).x;',
+    // depth 1.0 is "nothing was drawn here" — the sky dome is a BackSide sphere and
+    // the G-buffer's override material is FrontSide, so it never reaches this
+    // buffer. Leaving those pixels alone is what keeps the painted sky painted.
+    '  if(d>=0.999999){ gl_FragColor=c; return; }',
+    '  vec4 v=projInv*vec4(vUv*2.0-1.0, d*2.0-1.0, 1.0); v/=v.w;',
+    '  float t=clamp((length(v.xyz)-dNear)/max(1e-3,dFar-dNear),0.0,1.0);',
+    '  t=t*t*(3.0-2.0*t);',
+    '  vec3 tint=mix(warmCol,coolCol,t);',
+    '  vec3 o=mix(c.rgb, c.rgb*tint, amt);',
+    // the far lift is aerial perspective's other half: distance does not only go
+    // cool, it goes PALE. Scaled by t so nothing near the player moves.
+    '  o+=coolCol*lift*t;',
+    '  gl_FragColor=vec4(o,c.a);',
+    '}'].join('\n')};
+let PFXRIG=null, PFX_DEAD=false;
+function pfxBuild(){
+  const t0=performance.now();
+  const rt=new THREE.WebGLRenderTarget(W,H,{type:THREE.HalfFloatType, samples:PFX.samples});
+  rt.texture.name='pfx.rt1';
+  const composer=new THREE.EffectComposer(R, rt);
+  const render=new THREE.RenderPass(scene, cam);
+  composer.addPass(render);
+  let ao=null;
+  if(PFX.aoIntensity>0){
+    ao=new THREE.GTAOPass(scene, cam, W, H);
+    ao.output=THREE.GTAOPass.OUTPUT.Default;
+    ao.blendIntensity=PFX.aoIntensity;
+    ao.updateGtaoMaterial({radius:PFX.aoRadius, thickness:PFX.aoThickness,
+                           scale:PFX.aoScale, samples:PFX.aoSamples,
+                           distanceExponent:1.0, distanceFallOff:1.0, screenSpaceRadius:false});
+    composer.addPass(ao);
+    // AFTER addPass, NOT AT CONSTRUCTION. EffectComposer.addPass() calls
+    // pass.setSize(composerWidth, composerHeight) on the way in, so a GTAOPass
+    // constructed at half res is silently resized back to full and the saving is
+    // measured as zero — which is exactly what the first run of this reported.
+    if(PFX.aoRes!==1) ao.setSize(Math.max(2,Math.round(W*PFX.aoRes)), Math.max(2,Math.round(H*PFX.aoRes)));
+  }
+  // the aerial split rides GTAO's depth, so it exists only where GTAO does, and
+  // only in the overworld — a town at eye level has no distance to grade.
+  let grade=null;
+  if(ao&&OWCAM&&PFX.gradeAmt>0){
+    grade=new THREE.ShaderPass(GRADE_SHADER);
+    grade.material.uniforms.tDepth.value=ao.depthTexture;
+    grade.material.uniforms.dNear.value=PFX.gradeNear;
+    grade.material.uniforms.dFar.value=PFX.gradeFar;
+    grade.material.uniforms.amt.value=PFX.gradeAmt;
+    grade.material.uniforms.lift.value=PFX.gradeLift;
+    const K=PFX.gradeTint, u=grade.material.uniforms;
+    for(const k of ['warmCol','coolCol']){ const v=u[k].value;
+      v.set(1+(v.x-1)*K, 1+(v.y-1)*K, 1+(v.z-1)*K); }
+    composer.addPass(grade);
+  }
+  let bloom=null;
+  if(PFX.bloomStrength>0){
+    bloom=new THREE.UnrealBloomPass(new THREE.Vector2(W,H),
+      PFX.bloomStrength, PFX.bloomRadius, PFX.bloomThreshold);
+    composer.addPass(bloom);
+  }
+  composer.addPass(new THREE.OutputPass());
+  window.__postfx={on:true, family:RT?'realtime':'plate(forced)', ms:+(performance.now()-t0).toFixed(1),
+                   passes:composer.passes.length, ao:!!ao, bloom:!!bloom, grade:!!grade, ...PFX};
+  return {composer, render, ao, bloom, grade, rt};
+}
+// THE COMPOSER IS SCENE-SCOPED, and it is scene-scoped for renderer.info.
+// transition_test walks 20+ doors and requires renderer.info to come back to its
+// boot baseline; a composer built lazily on the first overworld frame and kept
+// would add ~10 textures to that baseline forever and read as a leak in whichever
+// scene happened to be measured second. sceneDispose() frees it, and the next
+// real-time frame rebuilds it behind the transition veil.
+function pfxDispose(){
+  if(!PFXRIG) return;
+  try{
+    // every pass, not the three named ones: composer.dispose() frees only its own
+    // two ping-pong buffers and the copy pass, and GTAO alone owns four more
+    // targets plus a noise texture. The half-teardown is the OWSKYMESH lesson.
+    for(const p of PFXRIG.composer.passes) if(p&&p.dispose) p.dispose();
+    PFXRIG.composer.dispose();
+  }catch(e){}
+  PFXRIG=null; try{ delete window.__postfx; }catch(e){ window.__postfx=undefined; }
+}
+// ONE render of the whole frame. Everything that draws — the frame loop, the
+// settle-before-the-veil, and every SIM entry point a QA instrument photographs —
+// goes through here, so a screenshot can never be of a different pipeline from the
+// one the player sees. (The battle stage learned this the same way and calls its
+// own renderFrame() for the same reason.)
+function renderFrame(){
+  if(!cam) return;
+  if(!PFX_ON||PFX_DEAD||(!RT&&!PFX_ALL)){ R.setRenderTarget(null); R.render(scene,cam); return; }
+  if(!PFXRIG){
+    try{ PFXRIG=pfxBuild(); }
+    catch(e){ PFX_DEAD=true; console.warn('[postfx] unavailable, falling back to the direct path',e);
+      R.setRenderTarget(null); R.render(scene,cam); return; }
+  }
+  // the real-time camera is created lazily inside frame() and REPLACED on a scene
+  // swap, so the passes are re-pointed every frame rather than at build time
+  PFXRIG.render.camera=cam; if(PFXRIG.ao) PFXRIG.ao.camera=cam;
+  // the split reconstructs view position from the depth buffer, so it needs THIS
+  // frame's projection — the overworld camera's aspect and near/far are stable but
+  // the matrix is rebuilt on every scene swap, and a stale inverse silently puts
+  // the whole cue at the wrong distance rather than erroring.
+  if(PFXRIG.grade) PFXRIG.grade.material.uniforms.projInv.value.copy(cam.projectionMatrixInverse);
+  try{ PFXRIG.composer.render(); }
+  catch(e){ PFX_DEAD=true; console.warn('[postfx] render failed, falling back',e);
+    pfxDispose(); R.setRenderTarget(null); R.render(scene,cam); }
+}
 // ===== THE CHARACTER LIGHT ==================================================
 // (2026-08-02, character-lighting lane. User: "the 3D models that we have don't
 // seem to have any sort of lighting applied to them. They just have this plain
@@ -1707,6 +1950,7 @@ function sceneDispose(){
   // town the player just left. Disposed here so renderer.info comes back to where
   // it started on a round trip, which is the only honest answer to 'did it leak'.
   if(ENVRT){ ENVRT.dispose(); ENVRT=null; } scene.environment=null; _envKey.v=null;
+  pfxDispose();                             // see THE COMPOSER IS SCENE-SCOPED
   try{ delete window.__env; }catch(e){ window.__env=undefined; }
   // restore the light probe's globals — AmbientLight and `dl` are PAGE-scope, so
   // leaving them dimmed would follow the player into every town they walk into
@@ -1810,7 +2054,7 @@ function sceneLoad(){
   return Promise.all([pGlb,pCine,pDepth]).then(()=>ep===EPOCH?CINEBOOTP:null)
     .then(()=>{ if(ep!==EPOCH) return null;
       if(DEBUG) applyDebug();          // the overlay is a page preference, not a scene's
-      syncDepth(); if(cam) R.render(scene,cam);   // a settled first frame before the veil lifts
+      syncDepth(); renderFrame();   // a settled first frame before the veil lifts
       return {scene:SCENE, pos:{...P}}; });
 }
 // debug overlay: swap every mesh between invisible-depth and its debug material; dim the backdrop
@@ -2024,7 +2268,7 @@ function frame(){requestAnimationFrame(frame);
    dl.position.set(P.x+OWSUN.x*170, P.y+OWSUN.y*170, P.z+OWSUN.z*170); }
  occCheck();
  syncDepth();
- if(cam)R.render(scene,cam);
+ renderFrame();
  markersTick(performance.now());
  // THE HUD NAMES THE BODY, NOT THE BOOT ARGUMENT. `CHAR` is the sprite-era ?char=
  // label and never changes; BODY does, the moment SIM.pov() hands the player to
@@ -2056,10 +2300,10 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  // loop() alone, so a background tab (where rAF is throttled to nothing, and where
  // all headless verification lives) never updated the marker and a test could not
  // tell 'hidden with a marker' from 'hidden and lost'.
- tick(n){for(let i=0;i<(n||1);i++){phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick();} occCheck(); syncDepth(); if(cam)R.render(scene,cam); return{...P,AIR,airY}},   // sgTick PER STEP: live play checks seams every frame; cut bands are ~0.5u and a 25-step stride jumps them
+ tick(n){for(let i=0;i<(n||1);i++){phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick();} occCheck(); syncDepth(); renderFrame(); return{...P,AIR,airY}},   // sgTick PER STEP: live play checks seams every frame; cut bands are ~0.5u and a 25-step stride jumps them
  tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
- tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);syncDepth();if(cam)R.render(scene,cam);return{...P}},
- depthQuad(v){if(DEPTH){syncDepth();DEPTH.quad.visible=!!v;if(cam)R.render(scene,cam);}return !!DEPTH},
+ tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);syncDepth();renderFrame();return{...P}},
+ depthQuad(v){if(DEPTH){syncDepth();DEPTH.quad.visible=!!v;renderFrame();}return !!DEPTH},
  // GL READBACK: is the character actually rasterised? Paint the model magenta and
  // count the pixels. `depthTest:false` measures "is it drawn at all"; pass
  // {tested:true} to leave the depth test ON, which measures "does it survive the
@@ -2076,7 +2320,7 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
      o.material=new THREE.MeshBasicMaterial({color:0xff00ff,toneMapped:false,depthTest:!opt.tested?false:true});
      o.renderOrder=998;n++;}});
    syncDepth();
-   if(cam)R.render(scene,cam);
+   renderFrame();
    // The window FOLLOWS the character instead of sitting at one scene's coordinates:
    // eighteen fixed cameras put them in eighteen different places on screen.
    const s=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.85,P.z).project(cam);

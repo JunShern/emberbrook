@@ -1,0 +1,212 @@
+<!doctype html><meta charset="utf-8">
+<title>Post-processing — before / after</title>
+<style>
+ :root{--bg:#14120f;--fg:#e8dfd2;--dim:#9d9182;--line:#33302a;--good:#7fd08a;--bad:#e08d7f}
+ body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ .wrap{max-width:1500px;margin:0 auto;padding:34px 22px 90px}
+ h1{font-size:26px;margin:0 0 6px} h2{font-size:19px;margin:44px 0 4px;border-bottom:1px solid var(--line);padding-bottom:6px}
+ h3{font-size:15px;margin:26px 0 2px;color:var(--dim);letter-spacing:.04em;text-transform:uppercase}
+ p{max-width:82ch;color:var(--fg)} .dim{color:var(--dim)}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 4px}
+ .pair figure{margin:0} .pair img{width:100%;display:block;border:1px solid var(--line);border-radius:4px;background:#000}
+ .pair figcaption{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dim);padding:5px 2px}
+ .quad{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 4px}
+ .quad figure{margin:0} .quad img{width:100%;display:block;border:1px solid var(--line);border-radius:4px}
+ .quad figcaption{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dim);padding:5px 2px}
+ .cap{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dim);margin:0 0 22px;max-width:112ch}
+ table{border-collapse:collapse;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;margin:10px 0 6px}
+ th,td{border-bottom:1px solid var(--line);padding:5px 14px 5px 0;text-align:left}
+ th{color:var(--dim);font-weight:600}
+ .up{color:var(--good)} .down{color:var(--bad)}
+ ul{max-width:82ch} li{margin:5px 0}
+ code{background:#221f1a;padding:1px 5px;border-radius:3px;font-size:0.92em}
+ .box{border:1px solid var(--line);border-left:3px solid var(--dim);padding:12px 16px;margin:16px 0;max-width:96ch;background:#191712}
+ @media (max-width:900px){.pair,.quad{grid-template-columns:1fr}}
+</style>
+<div class="wrap">
+
+<h1>The post-processing stack</h1>
+<p class="dim">2026-08-03. Same viewpoints, same scenes, same harness as the r185 board
+(<code>tools/three_shots.mjs</code> against <code>docs/qa/three-upgrade/shots.json</code>), so this strip chains
+to that one. <b>BEFORE is HEAD before this lane; AFTER is HEAD after it.</b> Numbers from
+<code>tools/shot_compare.mjs</code>. Toggle everything with <code>?postfx=off</code>.</p>
+
+<div class="box">
+<b>The stack is per scene family, and that is a measurement, not a preference.</b>
+<ul>
+<li><b>Real-time scenes</b> (<code>ow-*</code>, <code>emb-townwalk</code>) get the whole thing:
+    <code>RenderPass → GTAO → aerial split → bloom → OutputPass</code>, on 4× multisampled half-float buffers.</li>
+<li><b>Baked-plate towns</b> (<code>emb-*</code>, <code>del-*</code>) get <b>nothing</b>. The composer is never built and
+    those five frames are bit-for-bit what they were. Two reasons, either sufficient — see
+    <a href="#rejected" style="color:var(--fg)">what we rejected</a>.</li>
+<li><b>The battle arena</b> has its own renderer and its own four-pass grade; the one change there is that its
+    scene buffer now asks for MSAA, which it had silently been doing without.</li>
+</ul>
+</div>
+
+<h2>The one that carries the lane — ambient occlusion</h2>
+<p>Nothing in this game has ever had any. The real-time scenes are honest geometry under a solved key with no
+baked lighting, so a pavilion post, a cottage sill and a box all met the ground on a hard albedo seam. Look at
+the character's feet, the crate on the left, the paving slabs on the right, and the cobbles in the plaza —
+which were not visible at all before.</p>
+
+<div class="pair">
+ <figure><img src="before/townwalk-closeup.png"><figcaption>BEFORE</figcaption></figure>
+ <figure><img src="after/townwalk-closeup.png"><figcaption>AFTER — GTAO + bloom</figcaption></figure>
+</div>
+<p class="cap">L05 0.175 → <span class="up">0.166</span> · L50 0.424 → 0.415 · chroma 0.149 → <span class="up">0.153</span>.
+She is standing on the ground rather than in front of it. The frame gets slightly darker because
+contact shadow is, correctly, darkness that was not there.</p>
+
+<div class="pair">
+ <figure><img src="before/townwalk-wide.png"><figcaption>BEFORE</figcaption></figure>
+ <figure><img src="after/townwalk-wide.png"><figcaption>AFTER</figcaption></figure>
+</div>
+<p class="cap">L05 0.171 → <span class="up">0.144</span> · L50 0.431 → 0.412 · L95 0.586 → 0.518 · chroma 0.128 → 0.132.
+The biggest single change in the set: the cobbled plaza on the left is <em>geometry that was already there</em>
+and could not be seen. The pavilion posts, the lamp foot and the crates all acquire footprints.</p>
+
+<h2>The overworld</h2>
+<div class="pair">
+ <figure><img src="before/ow-corridor.png"><figcaption>BEFORE</figcaption></figure>
+ <figure><img src="after/ow-corridor.png"><figcaption>AFTER</figcaption></figure>
+</div>
+<p class="cap">L05 0.237 → 0.238 · L50 0.473 → 0.484 · chroma 0.221 → 0.218.
+Cottage windows and the square's fire now read as light sources, and the near clearing separates warm from
+the cool far meadow. Bloom threshold is 0.99 on purpose — see the rejected frame below.</p>
+
+<div class="pair">
+ <figure><img src="before/ow-closeup.png"><figcaption>BEFORE</figcaption></figure>
+ <figure><img src="after/ow-closeup.png"><figcaption>AFTER</figcaption></figure>
+</div>
+<p class="cap">L05 0.168 → <span class="up">0.179</span> · L50 0.421 → 0.427 · chroma 0.096 → <span class="up">0.125 (+30%)</span>.
+The largest chroma gain in the set, and it is the one the overworld-art lane asked for.</p>
+
+<h2>The aerial split — a depth-graded hue rotation that holds saturation</h2>
+<p>Our four <code>ow-*</code> cameras are fixed high and looking down, so a shipped frame has no horizon and no
+sky to tint: the usual "cool the far background" move has nothing to act on. The content lane measured that
+naive distance fog is the wrong tool — it goes milky long before it goes blue, and dropped far-band saturation
+below the references' own floor. This pass does the other thing instead: a <b>multiplicative</b> warm/cool tint by
+<b>radial</b> distance (view position reconstructed from GTAO's own depth buffer, so the cue radiates from the
+character rather than running up the screen the way <code>Fog</code>'s <code>-mvPosition.z</code> does). Hue separates;
+luminance and local contrast stay where the art direction put them. The shipped fog (34/205) is untouched.</p>
+<div class="pair">
+ <figure><img src="ow-grade/grade-off-corridor.png"><figcaption>?grade=0 — AO and bloom only</figcaption></figure>
+ <figure><img src="ow-grade/grade-on-corridor.png"><figcaption>shipped — aerial split on</figcaption></figure>
+</div>
+<p class="cap">Near-patch minus far-patch red-blue difference (the warm-near / cool-far split):
+<b>12.9 → <span class="up">29.5</span></b> on ow-corridor, <b>19.5 → <span class="up">26.3</span></b> on ow-corridor-turn.
+Knobs: <code>?grade=0..1</code> amount, <code>?grade_k</code> tint strength, <code>?grade_n/?grade_f</code> the distance ramp.</p>
+<div class="pair">
+ <figure><img src="ow-grade/grade-off-turn.png"><figcaption>?grade=0</figcaption></figure>
+ <figure><img src="ow-grade/grade-on-turn.png"><figcaption>shipped</figcaption></figure>
+</div>
+
+<h2>The baked-plate towns — deliberately identical</h2>
+<div class="pair">
+ <figure><img src="before/emb-square.png"><figcaption>BEFORE</figcaption></figure>
+ <figure><img src="after/emb-square.png"><figcaption>AFTER — the same picture, on purpose</figcaption></figure>
+</div>
+<p class="cap">L05 0.014 → 0.014 · L50 0.153 → 0.153 · L95 0.498 → 0.498 · chroma 0.090 → 0.090.
+All five plate frames are identical to three decimals. That is the deliverable, not a miss.</p>
+
+<h2 id="rejected">What we rejected, with the frames</h2>
+
+<h3>1 — the composer on a baked-plate town</h3>
+<p>three r185 turns material-level tone mapping <em>off</em> whenever the destination is a render target
+(<code>WebGLPrograms.js</code>), because the composer's <code>OutputPass</code> is meant to apply the curve at the end.
+But the plate does not arrive through a material — it is <code>scene.background</code>, and this page deliberately
+strips <code>#include &lt;tonemapping_fragment&gt;</code> out of <code>ShaderLib.background</code> so a plate baked
+through Blender's AgX is not graded twice. Under a composer that exemption is lost.</p>
+<div class="pair">
+ <figure><img src="after/emb-square.png"><figcaption>shipped — direct path</figcaption></figure>
+ <figure><img src="rejected/rejected-plate-composer.png"><figcaption>?postfx=all — AgX applied a second time</figcaption></figure>
+</div>
+<p class="cap">L05 <b>0.014 → <span class="bad">0.000</span></b> (the toe crushes to true black), L50 0.153 → 0.133.
+By eye it is worse than the numbers: the night reads as flat overcast dusk, the lamp pools lose their warmth
+and their edges, and the foliage lifts. Screen-space AO on that frame would also be computed against
+<code>depth.png</code>'s reconstruction of a picture that already carries Cycles' own AO. Reproduce with
+<code>?postfx=all</code>.</p>
+
+<h3>2 — bloom at a threshold that catches the floor</h3>
+<p>These scenes render with <code>NoToneMapping</code>, so nothing in them is HDR: the brightest ground is already
+near 1.0 linear and the only things above it are emissive window panes, lamp heads and the square's fire.</p>
+<div class="pair">
+ <figure><img src="after/townwalk-wide.png"><figcaption>shipped — strength 0.16, threshold 0.99</figcaption></figure>
+ <figure><img src="rejected/rejected-bloom-loud.png"><figcaption>rejected — strength 0.30, threshold 0.86</figcaption></figure>
+</div>
+<p class="cap">The aggregate barely moves (L05 0.144 → 0.157, L50 0.412 → 0.413) and that is the point: the
+percentile table cannot see this, and the picture can. The plaza hazes, the cobbles glow, the tree speckles.
+<b>A difference table is not the instrument for a veiling glare.</b></p>
+
+<h2>The battle arena — MSAA it had been doing without</h2>
+<p><code>new WebGLRenderer({antialias:true})</code> asks the browser for a multisampled <em>default</em> framebuffer.
+The moment the arena's four-pass grade landed, the scene started rendering into <code>post.rt</code> instead, and
+that request bought nothing: every silhouette in the arena has been hard-aliased ever since, with the renderer
+configured for antialiasing. One line — <code>samples: 4</code> on the scene buffer.</p>
+<div class="pair">
+ <figure><img src="battle/before-meadow.png"><figcaption>BEFORE — post.rt with no samples</figcaption></figure>
+ <figure><img src="battle/after-meadow.png"><figcaption>AFTER — samples: 4</figcaption></figure>
+</div>
+<p class="cap">Mean horizontal edge energy 5.725 → 5.591 (−2.3%). <b>Honest caveat:</b> the arena scatters its
+reeds and rocks per boot, so the two frames are not the same picture and the number is confounded by prop
+count. The mechanism is not in doubt — the render target was allocated with <code>samples</code> unset — but this
+instrument cannot isolate it.</p>
+
+<h2>What it costs</h2>
+<p>Measured in the page, with a 1×1 <code>gl.readPixels</code> after every frame so the number includes GPU time
+(a bare <code>performance.now()</code> around a draw call measures how fast the driver can <em>queue</em> work).
+<code>rAF</code> median is the pipelined truth a player would feel; the forced-sync figure is the worst case.</p>
+<table>
+<tr><th>scene</th><th>forced-sync ms/frame</th><th>rAF median ms</th><th>GPU render targets</th><th>renderer textures</th></tr>
+<tr><td>ow-valley</td><td>3.9 → 5.0 <span class="dim">(+1.1)</span></td><td>8.3 → 8.3 <span class="dim">(unchanged)</span></td><td>0 → 129.9 MB</td><td>40 → 59</td></tr>
+<tr><td>emb-townwalk</td><td>20.1 → 29.9 <span class="dim">(+9.8)</span></td><td>16.0 → 16.8</td><td>0 → 129.9 MB</td><td>97 → 116</td></tr>
+</table>
+<p class="cap">Isolated at 1344×768: AO +8.4 ms, bloom +1.5 ms, the aerial split is inside the AO number (it reuses
+GTAO's G-buffer and allocates nothing). AO runs at <b>half resolution</b> — at full res townwalk cost +12.0 ms
+instead of +8.4, and the AO term is about to be blurred by its own denoiser anyway (<code>?ao_res=1</code> restores it).
+<code>?pfx_msaa=2</code> takes the render targets from 129.9 MB to 82.7 MB and about 2 ms, at 2× instead of 4× MSAA.
+<b>The plate towns allocate none of this</b> — the composer is disposed in <code>sceneDispose()</code>, which is also
+what keeps <code>renderer.info</code> returning to its boot baseline for <code>transition_test</code>.</p>
+
+<h2>The lighting probe — what the blind critic's 1.30:1 actually is</h2>
+<p>Ratio measured with a <b>shadow mask taken from the engine's own shadow pass</b> (the pixels that darken when
+<code>dl.castShadow</code> is toggled) rather than from matched patches, so "shadowed" is not a guess.</p>
+<ul>
+<li><b>The shadows exist.</b> The shadow pass moves <b>20.2%</b> of the sampled ground and props by more than
+    12/255. "Not one shadow on the ground" is wrong as stated — they are real, they are just only
+    <b>1.36:1</b> deep, so they do not read as shadow.</li>
+<li><b>It is not penumbra averaging.</b> Banded by occlusion strength, the deepest core (&gt;60/255 removed)
+    is 1.34:1 and the penumbra is 1.30:1. The ratio does not deepen with occlusion.</li>
+<li><b>The environment is the fill.</b> <code>scene.environmentIntensity = 0</code> takes shadowed ground from
+    90.2 → 55.8 and lit from 122.9 → 103.7 — ratio 1.36 → <b>1.86:1</b>. The key contributes only 43/255 of a
+    lit pixel; the bounce contributes 7; <b>the fog contributes nothing measurable</b> (90.2 → 90.0 with
+    <code>?owsky=0</code>), so the floor is <em>not</em> being lifted by fog.</li>
+<li><b>An instrument defect worth recording:</b> <code>window.__envTune(k, sunLevel)</code>, the documented live
+    surface for this fill, does <b>not</b> move it. Swept at k = 0.75 / 0.45 / 0.20 the shadowed ground sat at
+    90 / 90 / 91. <code>scene.environmentIntensity</code> is the knob that works.</li>
+<li><b>Key alone cannot get there.</b> Key ×1.8 / ×2.6 / ×3.4 takes the ratio 1.36 → 1.56 → 1.73 → 1.86 while
+    L99 goes 0.727 → 0.830 → 0.902 → <b>0.957</b>. The highlight end clips before the ratio arrives, so
+    golden hour here needs the fill cut <em>and</em> the key raised together.</li>
+</ul>
+<div class="quad">
+ <figure><img src="light/s0-shipped.png"><figcaption>shipped — 1.36:1, L99 0.727</figcaption></figure>
+ <figure><img src="light/s1.png"><figcaption>key ×1.8 — 1.56:1, L99 0.830</figcaption></figure>
+ <figure><img src="light/s2.png"><figcaption>key ×2.6 — 1.73:1, L99 0.902</figcaption></figure>
+ <figure><img src="light/s3.png"><figcaption>key ×3.4 — 1.86:1, L99 0.957 (clipping)</figcaption></figure>
+</div>
+<div class="quad">
+ <figure><img src="light/probe-shadowpass-off.png"><figcaption>probe — shadow pass off (the mask's source)</figcaption></figure>
+ <figure><img src="light/probe-env-off.png"><figcaption>probe — environmentIntensity 0 (ratio 1.86:1)</figcaption></figure>
+</div>
+<p class="cap"><b>Nothing in this section is shipped.</b> The overworld key is a user-ratified rig
+(THE OVERWORLD GOLDEN KEY, 2026-08-02) and re-cutting it at the end of an unrelated lane is not this lane's
+call. These are the measurements and the frames for whoever makes it.</p>
+
+<h2>Gates</h2>
+<p class="cap">playthrough_test 86/0 · transition_test 168/0 · cine_test 689/0 · slice_test 848/0 ·
+findability_test 69/0 · seam_test --town emberbrook 177/2 known · dialogue_test 1493/2 known
+(<code>del.gullgirl</code>, pre-existing). Depth occlusion is untouched by construction: the plate towns never
+enter the composer.</p>
+
+</div>
