@@ -1,0 +1,1422 @@
+[
+ {
+  "file": "000-story.ch1.open-0.png",
+  "node": "story.ch1.open",
+  "i": 0,
+  "speaker": "system",
+  "text": "On the last night of autumn, a mapmaker walked into a valley that was not on any of her maps.",
+  "mode": "line",
+  "portrait": "none",
+  "mood": null
+ },
+ {
+  "file": "001-story.ch1.open-1.png",
+  "node": "story.ch1.open",
+  "i": 1,
+  "speaker": "vesper",
+  "text": "(Eleven days out of Harrowmere. Two of them on a road my own survey says is a river.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "annoyed"
+ },
+ {
+  "file": "002-story.ch1.open-2.png",
+  "node": "story.ch1.open",
+  "i": 2,
+  "speaker": "vesper",
+  "text": "(There are lights up ahead. Lights mean somebody who can tell me where I am.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "003-story.ch1.waystone-0.png",
+  "node": "story.ch1.waystone",
+  "i": 0,
+  "speaker": "vesper",
+  "text": "(A waystone. Good — the road's a real road, then.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "004-story.ch1.waystone-1.png",
+  "node": "story.ch1.waystone",
+  "i": 1,
+  "speaker": "vesper",
+  "text": "(…Wait.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "surprised"
+ },
+ {
+  "file": "005-story.ch1.waystone-2.png",
+  "node": "story.ch1.waystone",
+  "i": 2,
+  "speaker": "vesper",
+  "text": "(I've drawn this stone. This exact stone — the face, the crack through its chin.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "006-story.ch1.waystone-3.png",
+  "node": "story.ch1.waystone",
+  "i": 3,
+  "speaker": "vesper",
+  "text": "(It's in my sketchbook right now. And I have never been here in my life.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "007-story.ch1.waystone-4.png",
+  "node": "story.ch1.waystone",
+  "i": 4,
+  "speaker": "mochi",
+  "text": "Mrrp.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "008-story.ch1.waystone-5.png",
+  "node": "story.ch1.waystone",
+  "i": 5,
+  "speaker": "vesper",
+  "text": "GAH— …a cat. Hello. Don't sneak up on people in haunted forests.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "009-story.ch1.waystone-6.png",
+  "node": "story.ch1.waystone",
+  "i": 6,
+  "speaker": "mochi",
+  "text": "Mrrp.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "010-story.ch1.waystone-7.png",
+  "node": "story.ch1.waystone",
+  "i": 7,
+  "speaker": "vesper",
+  "text": "There are lights up the road. Come on. If anyone can explain my sketchbook, it's whoever lives here.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "011-story.ch1.reveal-0.png",
+  "node": "story.ch1.reveal",
+  "i": 0,
+  "speaker": "system",
+  "text": "The wood thinned, and there was an arch with harvest wreaths on it, and past the arch a square full of lamplight and people.",
+  "mode": "line",
+  "portrait": "none",
+  "mood": null
+ },
+ {
+  "file": "012-story.ch1.reveal-1.png",
+  "node": "story.ch1.reveal",
+  "i": 1,
+  "speaker": "vesper",
+  "text": "(A festival. Of course. I arrive somewhere for the first time in my life and it's the one night they're all outside.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "surprised"
+ },
+ {
+  "file": "013-story.ch1.reveal-2.png",
+  "node": "story.ch1.reveal",
+  "i": 2,
+  "speaker": "vesper",
+  "text": "(That warmth is not weather. I have been cold for eleven days and I stopped being cold at the arch.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "014-story.ch1.reveal-3.png",
+  "node": "story.ch1.reveal",
+  "i": 3,
+  "speaker": "vesper",
+  "text": "(Right. Somebody here knows what a gate on my chart is doing in a valley that isn't.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "015-story.ch1.rowan-0.png",
+  "node": "story.ch1.rowan",
+  "i": 0,
+  "speaker": "rowan",
+  "text": "Now then! A guest, and on Emberwake of all nights. Welcome, my dear.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "016-story.ch1.rowan-1.png",
+  "node": "story.ch1.rowan",
+  "i": 1,
+  "speaker": "vesper",
+  "text": "Vesper. Mapmaker. I need to get through your gate, and I'm told you're in charge.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "017-story.ch1.rowan-2.png",
+  "node": "story.ch1.rowan",
+  "i": 2,
+  "speaker": "rowan",
+  "text": "In charge! Ha! I keep the ledger; the village keeps itself.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "018-story.ch1.rowan-3.png",
+  "node": "story.ch1.rowan",
+  "i": 3,
+  "speaker": "rowan",
+  "text": "And nobody opens the Old Gate, child. It hasn't a key — it has RULES.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "019-story.ch1.rowan-4.png",
+  "node": "story.ch1.rowan",
+  "i": 4,
+  "speaker": "vesper",
+  "text": "Rules can be charted. Charting things is my whole profession.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "wry"
+ },
+ {
+  "file": "020-story.ch1.rowan-5.png",
+  "node": "story.ch1.rowan",
+  "i": 5,
+  "speaker": "rowan",
+  "text": "…Ha! I like you. Stay the night, then — and stay for the Kindling Hour.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "021-story.ch1.rowan-6.png",
+  "node": "story.ch1.rowan",
+  "i": 6,
+  "speaker": "rowan",
+  "text": "Three hundred years that flame has burned. In all of them, nobody here carried a grief alone.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "022-story.ch1.rowan-7.png",
+  "node": "story.ch1.rowan",
+  "i": 7,
+  "speaker": "rowan",
+  "text": "That is not boasting, my dear. It is bookkeeping — I checked.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "023-story.ch1.rowan-8.png",
+  "node": "story.ch1.rowan",
+  "i": 8,
+  "speaker": "rowan",
+  "text": "As for the Gate — lamplighter business, child. His order built it, his order shut it.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "024-story.ch1.rowan-9.png",
+  "node": "story.ch1.rowan",
+  "i": 9,
+  "speaker": "rowan",
+  "text": "Ask HIM. The quiet one with the flame that never goes out.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "025-story.ch1.rowan-10.png",
+  "node": "story.ch1.rowan",
+  "i": 10,
+  "speaker": "rowan",
+  "text": "You'll find him somewhere across the village, apologizing to lamps.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "026-story.ch1.rowan-11.png",
+  "node": "story.ch1.rowan",
+  "i": 11,
+  "speaker": "vesper",
+  "text": "Apologizing to lamps.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "thinking"
+ },
+ {
+  "file": "027-story.ch1.rowan-12.png",
+  "node": "story.ch1.rowan",
+  "i": 12,
+  "speaker": "rowan",
+  "text": "Ha! You'll see.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "028-story.ch1.meet-0.png",
+  "node": "story.ch1.meet",
+  "i": 0,
+  "speaker": "vesper",
+  "text": "Excuse me. You look official — you're holding fire.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "029-story.ch1.meet-1.png",
+  "node": "story.ch1.meet",
+  "i": 1,
+  "speaker": "vesper",
+  "text": "Are you the lamplighter, or do I keep collecting cats until one talks?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "wry"
+ },
+ {
+  "file": "030-story.ch1.meet-2.png",
+  "node": "story.ch1.meet",
+  "i": 2,
+  "speaker": "lake",
+  "text": "Oh. Um. Yes? The first one. Lake. The cats don't talk, to my knowledge.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "031-story.ch1.meet-3.png",
+  "node": "story.ch1.meet",
+  "i": 3,
+  "speaker": "vesper",
+  "text": "Vesper. Mapmaker.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "032-story.ch1.meet-4.png",
+  "node": "story.ch1.meet",
+  "i": 4,
+  "speaker": "lake",
+  "text": "I know. Poppy's told half the square about you.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "wry"
+ },
+ {
+  "file": "033-story.ch1.meet-5.png",
+  "node": "story.ch1.meet",
+  "i": 5,
+  "speaker": "vesper",
+  "text": "Your elder says the Old Gate is your family's business, and I need it open.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "034-story.ch1.meet-6.png",
+  "node": "story.ch1.meet",
+  "i": 6,
+  "speaker": "lake",
+  "text": "The— nobody crosses the Gate. It hasn't opened in my lifetime.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "surprised"
+ },
+ {
+  "file": "035-story.ch1.meet-7.png",
+  "node": "story.ch1.meet",
+  "i": 7,
+  "speaker": "vesper",
+  "text": "Because this valley isn't on any chart I own. And I walked here anyway.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "036-story.ch1.meet-8.png",
+  "node": "story.ch1.meet",
+  "i": 8,
+  "speaker": "vesper",
+  "text": "Something on the other side of that gate has been sending me MAIL, Lake. I intend to answer it in person.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "037-story.ch1.meet-9.png",
+  "node": "story.ch1.meet",
+  "i": 9,
+  "speaker": "lake",
+  "text": "…what?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "038-story.ch1.meet-10.png",
+  "node": "story.ch1.meet",
+  "i": 10,
+  "speaker": "lake",
+  "text": "Ask me after. Three lamps left, and the ring closes before full dark — that's the order she gave me.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "039-story.ch1.meet-11.png",
+  "node": "story.ch1.meet",
+  "i": 11,
+  "speaker": "lake",
+  "text": "(One. While this lamp burns, every house on the lane sits inside the village's heart. Dark lamp, dull street.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "040-story.ch1.meet-12.png",
+  "node": "story.ch1.meet",
+  "i": 12,
+  "speaker": "vesper",
+  "text": "…You're apologizing to it.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "thinking"
+ },
+ {
+  "file": "041-story.ch1.meet-13.png",
+  "node": "story.ch1.meet",
+  "i": 13,
+  "speaker": "lake",
+  "text": "It's been a long year for the lane.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "sad"
+ },
+ {
+  "file": "042-story.ch1.meet-14.png",
+  "node": "story.ch1.meet",
+  "i": 14,
+  "speaker": "lake",
+  "text": "Two more, up in the square. Walk with me.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "043-story.ch1.lamps-0.png",
+  "node": "story.ch1.lamps",
+  "i": 0,
+  "speaker": "lake",
+  "text": "(Two. “Light them like you mean it,” she said, “or they gutter by midnight.”)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "thinking"
+ },
+ {
+  "file": "044-story.ch1.lamps-1.png",
+  "node": "story.ch1.lamps",
+  "i": 1,
+  "speaker": "lake",
+  "text": "(She never once explained what the meaning involved. I improvise.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "wry"
+ },
+ {
+  "file": "045-story.ch1.lamps-2.png",
+  "node": "story.ch1.lamps",
+  "i": 2,
+  "speaker": "lake",
+  "text": "(Three. The ring is closed before full dark, same as every night of my life.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "weary"
+ },
+ {
+  "file": "046-story.ch1.lamps-3.png",
+  "node": "story.ch1.lamps",
+  "i": 3,
+  "speaker": "lake",
+  "text": "(A lit lamp near every door. Now the Hour can start.)",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "047-story.ch1.lamps-4.png",
+  "node": "story.ch1.lamps",
+  "i": 4,
+  "speaker": "rowan",
+  "text": "The HOUR! Gather, neighbors — to the square!",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "048-story.ch1.lamps-5.png",
+  "node": "story.ch1.lamps",
+  "i": 5,
+  "speaker": "rowan",
+  "text": "Lake — the flame.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "049-story.ch1.hush-0.png",
+  "node": "story.ch1.hush",
+  "i": 0,
+  "speaker": "rowan",
+  "text": "Neighbors! The year turns!",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "050-story.ch1.hush-1.png",
+  "node": "story.ch1.hush",
+  "i": 1,
+  "speaker": "rowan",
+  "text": "Three hundred years, and the warmth of every one of them — right here.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "051-story.ch1.hush-2.png",
+  "node": "story.ch1.hush",
+  "i": 2,
+  "speaker": "rowan",
+  "text": "You know the trade. Bring the year's best, and tell it to the flame.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "052-story.ch1.hush-3.png",
+  "node": "story.ch1.hush",
+  "i": 3,
+  "speaker": "rowan",
+  "text": "You keep the memory — every minute, yours till you die. The flame keeps the WARMTH, and shines it on all of us, for good.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "053-story.ch1.hush-4.png",
+  "node": "story.ch1.hush",
+  "i": 4,
+  "speaker": "rowan",
+  "text": "Who brings the first memory?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "054-story.ch1.hush-5.png",
+  "node": "story.ch1.hush",
+  "i": 5,
+  "speaker": "poppy",
+  "text": "The flood! The spring flood — the whole town in my bakery, bailing water with soup pots, and LAUGHING, gods help us—",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "laughing"
+ },
+ {
+  "file": "055-story.ch1.hush-6.png",
+  "node": "story.ch1.hush",
+  "i": 6,
+  "speaker": "pip",
+  "text": "This is the BEST night.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "056-story.ch1.hush-7.png",
+  "node": "story.ch1.hush",
+  "i": 7,
+  "speaker": "pip",
+  "text": "…Why did the music stop?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "scared"
+ },
+ {
+  "file": "057-story.ch1.hush-8.png",
+  "node": "story.ch1.hush",
+  "i": 8,
+  "speaker": "system",
+  "text": "It did not happen slowly. Between one heartbeat and the next, the light of Emberbrook — three hundred years of it — stood up and left.",
+  "mode": "line",
+  "portrait": "none",
+  "mood": null
+ },
+ {
+  "file": "058-story.ch1.hush-9.png",
+  "node": "story.ch1.hush",
+  "i": 9,
+  "speaker": "system",
+  "text": "Moths came off the Heartlight the way sparks come off a struck flint, and did not climb, and did not go anywhere.",
+  "mode": "line",
+  "portrait": "none",
+  "mood": null
+ },
+ {
+  "file": "059-story.ch1.hush-10.png",
+  "node": "story.ch1.hush",
+  "i": 10,
+  "speaker": "poppy",
+  "text": "…My stall. My bread. Why doesn't any of it feel like MINE?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "hollow"
+ },
+ {
+  "file": "060-story.ch1.hush-11.png",
+  "node": "story.ch1.hush",
+  "i": 11,
+  "speaker": "pip",
+  "text": "Mama?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "scared"
+ },
+ {
+  "file": "061-story.ch1.hush-12.png",
+  "node": "story.ch1.hush",
+  "i": 12,
+  "speaker": "mara",
+  "text": "…I'm sorry — whose child— no. I know whose. Mine.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "distressed"
+ },
+ {
+  "file": "062-story.ch1.hush-13.png",
+  "node": "story.ch1.hush",
+  "i": 13,
+  "speaker": "mara",
+  "text": "I can say it, and it weighs NOTHING— someone's crying. Why is someone crying?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "distressed"
+ },
+ {
+  "file": "063-story.ch1.hush-14.png",
+  "node": "story.ch1.hush",
+  "i": 14,
+  "speaker": "pip",
+  "text": "Mama. It's me, it's Pip. You KNOW me!",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "scared"
+ },
+ {
+  "file": "064-story.ch1.hush-15.png",
+  "node": "story.ch1.hush",
+  "i": 15,
+  "speaker": "rowan",
+  "text": "Everyone stay where you are. Names! Say your names, out loud — say them NOW.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "065-story.ch1.hush-16.png",
+  "node": "story.ch1.hush",
+  "i": 16,
+  "speaker": "rowan",
+  "text": "…I know my name. It just doesn't feel like mine to say.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "hollow"
+ },
+ {
+  "file": "066-story.ch1.hush-17.png",
+  "node": "story.ch1.hush",
+  "i": 17,
+  "speaker": "lake",
+  "text": "Rowan. Your name is Rowan.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "067-story.ch1.hush-18.png",
+  "node": "story.ch1.hush",
+  "i": 18,
+  "speaker": "vesper",
+  "text": "…You know them? All of them?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "068-story.ch1.hush-19.png",
+  "node": "story.ch1.hush",
+  "i": 19,
+  "speaker": "lake",
+  "text": "Every window in this village. Every name behind it.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "069-story.ch1.hush-20.png",
+  "node": "story.ch1.hush",
+  "i": 20,
+  "speaker": "rowan",
+  "text": "You two. The stranger and the lamplighter. Everyone in this square is a stranger wearing a neighbor's face — except you.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "070-story.ch1.hush-21.png",
+  "node": "story.ch1.hush",
+  "i": 21,
+  "speaker": "vesper",
+  "text": "I got here an HOUR ago.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "071-story.ch1.hush-22.png",
+  "node": "story.ch1.hush",
+  "i": 22,
+  "speaker": "lake",
+  "text": "And keepers don't make tellings. We keep our own — Grandmother's one hard rule.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "thinking"
+ },
+ {
+  "file": "072-story.ch1.hush-23.png",
+  "node": "story.ch1.hush",
+  "i": 23,
+  "speaker": "lake",
+  "text": "…My lighter's still warm. Every other flame in Emberbrook just died — not this one.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "073-story.ch1.hush-24.png",
+  "node": "story.ch1.hush",
+  "i": 24,
+  "speaker": "rowan",
+  "text": "Then we are not finished. Not yet.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "074-story.ch1.hush-25.png",
+  "node": "story.ch1.hush",
+  "i": 25,
+  "speaker": "rowan",
+  "text": "See to them — all of them. They deserve their names back, even borrowed.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "075-story.ch1.hush-26.png",
+  "node": "story.ch1.hush",
+  "i": 26,
+  "speaker": "rowan",
+  "text": "Then come find me. I will be with my ledger — every word of it true, and not one of them mine.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "hollow"
+ },
+ {
+  "file": "076-story.ch1.see.poppy-0.png",
+  "node": "story.ch1.see.poppy",
+  "i": 0,
+  "speaker": "poppy",
+  "text": "…My stall. My bread. My hands — I know every burn scar on them. Why does none of it feel like MINE?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "hollow"
+ },
+ {
+  "file": "077-story.ch1.see.poppy-1.png",
+  "node": "story.ch1.see.poppy",
+  "i": 1,
+  "speaker": "lake",
+  "text": "You're Poppy. You bake.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "078-story.ch1.see.poppy-2.png",
+  "node": "story.ch1.see.poppy",
+  "i": 2,
+  "speaker": "lake",
+  "text": "Every morning you burn your thumb on the first tray, and swear you won't tomorrow.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "079-story.ch1.see.poppy-3.png",
+  "node": "story.ch1.see.poppy",
+  "i": 3,
+  "speaker": "poppy",
+  "text": "…Do I do it anyway?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "hollow"
+ },
+ {
+  "file": "080-story.ch1.see.poppy-4.png",
+  "node": "story.ch1.see.poppy",
+  "i": 4,
+  "speaker": "lake",
+  "text": "Every morning.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "081-story.ch1.see.poppy-5.png",
+  "node": "story.ch1.see.poppy",
+  "i": 5,
+  "speaker": "poppy",
+  "text": "The round warm things. I know the word — it just sounds like nobody's when I say it.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "hollow"
+ },
+ {
+  "file": "082-story.ch1.see.poppy-6.png",
+  "node": "story.ch1.see.poppy",
+  "i": 6,
+  "speaker": "poppy",
+  "text": "Say it to me, love.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "083-story.ch1.see.poppy-7.png",
+  "node": "story.ch1.see.poppy",
+  "i": 7,
+  "speaker": "vesper",
+  "text": "Honeybuns.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "084-story.ch1.see.poppy-8.png",
+  "node": "story.ch1.see.poppy",
+  "i": 8,
+  "speaker": "poppy",
+  "text": "HONEYBUNS. Say more words. Both of you.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "085-story.ch1.see.poppy-9.png",
+  "node": "story.ch1.see.poppy",
+  "i": 9,
+  "speaker": "vesper",
+  "text": "I'm writing this down. All of it — who you are, and who you are to each other.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "086-story.ch1.see.poppy-10.png",
+  "node": "story.ch1.see.poppy",
+  "i": 10,
+  "speaker": "poppy",
+  "text": "Good, love. Write the thumb. The thumb feels true.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "087-story.ch1.see.mara-0.png",
+  "node": "story.ch1.see.mara",
+  "i": 0,
+  "speaker": "pip",
+  "text": "Tell her. TELL her!",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "scared"
+ },
+ {
+  "file": "088-story.ch1.see.mara-1.png",
+  "node": "story.ch1.see.mara",
+  "i": 1,
+  "speaker": "lake",
+  "text": "Mara. This is Pip. Your son, seven years old.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "089-story.ch1.see.mara-2.png",
+  "node": "story.ch1.see.mara",
+  "i": 2,
+  "speaker": "lake",
+  "text": "You waited out a snowstorm at the pass for him to be born.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "090-story.ch1.see.mara-3.png",
+  "node": "story.ch1.see.mara",
+  "i": 3,
+  "speaker": "mara",
+  "text": "I believe you. That is the worst of it — every word lands like a fact about a stranger.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "distressed"
+ },
+ {
+  "file": "091-story.ch1.see.mara-4.png",
+  "node": "story.ch1.see.mara",
+  "i": 4,
+  "speaker": "pip",
+  "text": "…You held my hand. TONIGHT. You said I'd remember tonight forever.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "scared"
+ },
+ {
+  "file": "092-story.ch1.see.mara-5.png",
+  "node": "story.ch1.see.mara",
+  "i": 5,
+  "speaker": "vesper",
+  "text": "Pip. Look at me. I saw her holding your hand — an hour ago, by the stall.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "093-story.ch1.see.mara-6.png",
+  "node": "story.ch1.see.mara",
+  "i": 6,
+  "speaker": "vesper",
+  "text": "I'm a mapmaker. I keep records of true things.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "094-story.ch1.see.mara-7.png",
+  "node": "story.ch1.see.mara",
+  "i": 7,
+  "speaker": "vesper",
+  "text": "So I am telling you: it is TRUE.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "095-story.ch1.see.mara-8.png",
+  "node": "story.ch1.see.mara",
+  "i": 8,
+  "speaker": "vesper",
+  "text": "It happened, and I have it.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "096-story.ch1.see.mara-9.png",
+  "node": "story.ch1.see.mara",
+  "i": 9,
+  "speaker": "pip",
+  "text": "…Is it in ink?",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "097-story.ch1.see.mara-10.png",
+  "node": "story.ch1.see.mara",
+  "i": 10,
+  "speaker": "vesper",
+  "text": "It is now.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "098-story.ch1.see.mara-11.png",
+  "node": "story.ch1.see.mara",
+  "i": 11,
+  "speaker": "mara",
+  "text": "Whoever you two are — whatever you still carry — do not waste it. Please.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "distressed"
+ },
+ {
+  "file": "099-story.ch1.see.finn-0.png",
+  "node": "story.ch1.see.finn",
+  "i": 0,
+  "speaker": "finn",
+  "text": "My name… I can say the word, friend. It just isn't MINE anymore.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "hollow"
+ },
+ {
+  "file": "100-story.ch1.see.finn-1.png",
+  "node": "story.ch1.see.finn",
+  "i": 1,
+  "speaker": "finn",
+  "text": "Hands still know the knots, though. Funny what stays.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "hollow"
+ },
+ {
+  "file": "101-story.ch1.see.finn-2.png",
+  "node": "story.ch1.see.finn",
+  "i": 2,
+  "speaker": "lake",
+  "text": "Finn. You're Finn.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "tender"
+ },
+ {
+  "file": "102-story.ch1.see.finn-3.png",
+  "node": "story.ch1.see.finn",
+  "i": 3,
+  "speaker": "finn",
+  "text": "…Finn. Huh. Short. I like it.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "103-story.ch1.see.finn-4.png",
+  "node": "story.ch1.see.finn",
+  "i": 4,
+  "speaker": "finn",
+  "text": "One thing for your book, mapmaker. The fish stopped circlin' the moment it happened.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "puzzled"
+ },
+ {
+  "file": "104-story.ch1.see.finn-5.png",
+  "node": "story.ch1.see.finn",
+  "i": 5,
+  "speaker": "finn",
+  "text": "Like they'd been countin' down to it.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "puzzled"
+ },
+ {
+  "file": "105-story.ch1.see.finn-6.png",
+  "node": "story.ch1.see.finn",
+  "i": 6,
+  "speaker": "vesper",
+  "text": "Fish don't count.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "wry"
+ },
+ {
+  "file": "106-story.ch1.see.finn-7.png",
+  "node": "story.ch1.see.finn",
+  "i": 7,
+  "speaker": "finn",
+  "text": "Didn't think so either. This morning I was wrong about a lot of things.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "107-story.ch1.see.mochi-0.png",
+  "node": "story.ch1.see.mochi",
+  "i": 0,
+  "speaker": "vesper",
+  "text": "The cat. The cat is FINE?!",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "surprised"
+ },
+ {
+  "file": "108-story.ch1.see.mochi-1.png",
+  "node": "story.ch1.see.mochi",
+  "i": 1,
+  "speaker": "system",
+  "text": "(Mochi is purring. Mochi has, if anything, improved.)",
+  "mode": "line",
+  "portrait": "none",
+  "mood": null
+ },
+ {
+  "file": "109-story.ch1.see.mochi-2.png",
+  "node": "story.ch1.see.mochi",
+  "i": 2,
+  "speaker": "lake",
+  "text": "Cats don't keep their hearts where moths can reach. My grandmother used to say that.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "110-story.ch1.see.mochi-3.png",
+  "node": "story.ch1.see.mochi",
+  "i": 3,
+  "speaker": "vesper",
+  "text": "Your grandmother said that. Casually. As common knowledge.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "annoyed"
+ },
+ {
+  "file": "111-story.ch1.see.mochi-4.png",
+  "node": "story.ch1.see.mochi",
+  "i": 4,
+  "speaker": "lake",
+  "text": "She said a lot of things. She was a lamplighter too.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "wry"
+ },
+ {
+  "file": "112-story.ch1.see.mochi-5.png",
+  "node": "story.ch1.see.mochi",
+  "i": 5,
+  "speaker": "system",
+  "text": "(He is watching the north road. He does not usually watch anything.)",
+  "mode": "line",
+  "portrait": "none",
+  "mood": null
+ },
+ {
+  "file": "113-story.ch1.pact-0.png",
+  "node": "story.ch1.pact",
+  "i": 0,
+  "speaker": "rowan",
+  "text": "Look at this. The year four-twenty-nine. The flood. A wedding.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "114-story.ch1.pact-1.png",
+  "node": "story.ch1.pact",
+  "i": 1,
+  "speaker": "rowan",
+  "text": "I wrote every line of this page — and tonight I read it like the minutes of somebody else's village.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "115-story.ch1.pact-2.png",
+  "node": "story.ch1.pact",
+  "i": 2,
+  "speaker": "rowan",
+  "text": "Ink keeps facts. It cannot keep what they WEIGHED.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "116-story.ch1.pact-3.png",
+  "node": "story.ch1.pact",
+  "i": 3,
+  "speaker": "rowan",
+  "text": "Our flame was first drawn from a shrine deep in the Whisperwood. The Kindling.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "117-story.ch1.pact-4.png",
+  "node": "story.ch1.pact",
+  "i": 4,
+  "speaker": "rowan",
+  "text": "And the old Order kept one creed above all: light does not die — it is only ever carried.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "118-story.ch1.pact-5.png",
+  "node": "story.ch1.pact",
+  "i": 5,
+  "speaker": "rowan",
+  "text": "Whatever THAT was tonight, it did not put our flame out, children. It carried it off. Whole.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "119-story.ch1.pact-6.png",
+  "node": "story.ch1.pact",
+  "i": 6,
+  "speaker": "lake",
+  "text": "Nobody knows the way. The Gate's been shut three hundred years, and the road's gone.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "120-story.ch1.pact-7.png",
+  "node": "story.ch1.pact",
+  "i": 7,
+  "speaker": "vesper",
+  "text": "…I need to show you both something, and I need you to not be strange about it.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "121-story.ch1.pact-8.png",
+  "node": "story.ch1.pact",
+  "i": 8,
+  "speaker": "vesper",
+  "text": "Since I was six years old, I have drawn one clearing. Over and over, in dreams.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "122-story.ch1.pact-9.png",
+  "node": "story.ch1.pact",
+  "i": 9,
+  "speaker": "vesper",
+  "text": "Forty-one drawings of the same clearing.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "worried"
+ },
+ {
+  "file": "123-story.ch1.pact-10.png",
+  "node": "story.ch1.pact",
+  "i": 10,
+  "speaker": "vesper",
+  "text": "I came here because the forty-first had YOUR gate in the corner.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "124-story.ch1.pact-11.png",
+  "node": "story.ch1.pact",
+  "i": 11,
+  "speaker": "rowan",
+  "text": "Girl… that is the Kindling. That is the heart of the Whisperwood.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "125-story.ch1.pact-12.png",
+  "node": "story.ch1.pact",
+  "i": 12,
+  "speaker": "rowan",
+  "text": "It has been CALLING you. Forty-one times it called.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "126-story.ch1.pact-13.png",
+  "node": "story.ch1.pact",
+  "i": 13,
+  "speaker": "rowan",
+  "text": "The map does not know fire. The flame does not know the way.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "127-story.ch1.pact-14.png",
+  "node": "story.ch1.pact",
+  "i": 14,
+  "speaker": "rowan",
+  "text": "So it must be both of you, together.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "128-story.ch1.pact-15.png",
+  "node": "story.ch1.pact",
+  "i": 15,
+  "speaker": "vesper",
+  "text": "We met an hour ago.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "annoyed"
+ },
+ {
+  "file": "129-story.ch1.pact-16.png",
+  "node": "story.ch1.pact",
+  "i": 16,
+  "speaker": "rowan",
+  "text": "Then you have an hour's head start on resenting each other. Marvelous.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "130-story.ch1.pact-17.png",
+  "node": "story.ch1.pact",
+  "i": 17,
+  "speaker": "rowan",
+  "text": "Understand what you carry, boy. That little flame is the last live fire in the valley.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "131-story.ch1.pact-18.png",
+  "node": "story.ch1.pact",
+  "i": 18,
+  "speaker": "lake",
+  "text": "I'm scared to walk that road, and I'll walk it. Both of those are true.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "132-story.ch1.pact-19.png",
+  "node": "story.ch1.pact",
+  "i": 19,
+  "speaker": "rowan",
+  "text": "The old rite, then. Two keepers, one flame — say it and mean it, or the Gate will know.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "133-story.ch1.pact-20.png",
+  "node": "story.ch1.pact",
+  "i": 20,
+  "speaker": "rowan",
+  "text": "“What they forgot, we keep. What we keep, we return.”",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "134-story.ch1.pact-21.png",
+  "node": "story.ch1.pact",
+  "i": 21,
+  "speaker": "vesper",
+  "text": "What they forgot, we keep. What we keep, we return.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "135-story.ch1.pact-22.png",
+  "node": "story.ch1.pact",
+  "i": 22,
+  "speaker": "lake",
+  "text": "What they forgot, we keep. What we keep, we return.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "determined"
+ },
+ {
+  "file": "136-story.ch1.pact-23.png",
+  "node": "story.ch1.pact",
+  "i": 23,
+  "speaker": "rowan",
+  "text": "…The cat is going with you.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "137-story.ch1.pact-24.png",
+  "node": "story.ch1.pact",
+  "i": 24,
+  "speaker": "lake",
+  "text": "He's not my—",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "annoyed"
+ },
+ {
+  "file": "138-story.ch1.pact-25.png",
+  "node": "story.ch1.pact",
+  "i": 25,
+  "speaker": "rowan",
+  "text": "It was not a question, boy.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "happy"
+ },
+ {
+  "file": "139-story.ch1.pact-26.png",
+  "node": "story.ch1.pact",
+  "i": 26,
+  "speaker": "rowan",
+  "text": "That cat has been watching the north road all evening. Take the hint.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "neutral"
+ },
+ {
+  "file": "140-story.ch1.pact-27.png",
+  "node": "story.ch1.pact",
+  "i": 27,
+  "speaker": "rowan",
+  "text": "Twin sigils, before the Gate. The Lamplighters cut them, in the old days.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ },
+ {
+  "file": "141-story.ch1.pact-28.png",
+  "node": "story.ch1.pact",
+  "i": 28,
+  "speaker": "rowan",
+  "text": "That road was always meant to be walked by two.",
+  "mode": "line",
+  "portrait": "cutin",
+  "mood": "grave"
+ }
+]

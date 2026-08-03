@@ -1,0 +1,7 @@
+# The per-line frames are 500 MB of 2560x1266 PNGs and are REPRODUCIBLE:
+#   node tools/mood_shots.mjs --port=3000 --out=docs/qa/moods
+# What ships is the reading artefact — the contact strips and the manifest that
+# records which mood the RUNTIME actually chose for each line.
+*.png
+!vesper-ch1-strip.png
+!cast-ch1-strip.png

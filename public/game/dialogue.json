@@ -240,7 +240,8 @@
      "text": "Nothing, harbormistress.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "determined"
   },
   "odessa.jam": {
    "speaker": "odessa",
@@ -341,7 +342,8 @@
      "text": "We'll leave you to it.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "happy"
   },
   "maren.lock": {
    "speaker": "maren",
@@ -427,7 +429,8 @@
      "text": "Good day, captain.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "thinking"
   },
   "hobb.round": {
    "speaker": "hobb",
@@ -502,7 +505,8 @@
      "text": "Carry on, watchman.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "thinking"
   },
   "pell.count": {
    "speaker": "pell",
@@ -571,7 +575,8 @@
      "text": "Another time.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "happy"
   },
   "sorrel.bunting": {
    "speaker": "sorrel",
@@ -630,7 +635,8 @@
      "text": "I'll let you work.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "thinking"
   },
   "creel.bridges": {
    "speaker": "creel",
@@ -698,7 +704,8 @@
      "text": "Carry on.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "wry"
   },
   "nib.office": {
    "speaker": "nib",
@@ -771,7 +778,8 @@
      "text": "Just looking.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "wry"
   },
   "eelwife.trade": {
    "speaker": "eelwife",
@@ -837,7 +845,8 @@
      "text": "I'll keep out of the way.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "thinking"
   },
   "boatwright.time": {
    "speaker": "boatwright",
@@ -1214,7 +1223,8 @@
      "text": "I'll let you get on.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "happy"
   },
   "rowan.ledger": {
    "speaker": "rowan",
@@ -1282,7 +1292,8 @@
      "text": "Just passing.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "happy"
   },
   "poppy.tray": {
    "speaker": "poppy",
@@ -1348,7 +1359,8 @@
      "text": "Enjoy your evening.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "happy"
   },
   "mara.pip": {
    "speaker": "mara",
@@ -1409,7 +1421,8 @@
      "text": "Off you go.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "happy"
   },
   "pip.stick": {
    "speaker": "pip",
@@ -1472,7 +1485,8 @@
      "text": "Good luck with it.",
      "to": null
     }
-   ]
+   ],
+   "chooserExpr": "wry"
   },
   "finn.why": {
    "speaker": "finn",
