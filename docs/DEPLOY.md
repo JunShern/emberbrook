@@ -189,6 +189,95 @@ Not a projection any more. `dist-c/BUILD.json`, the build that was play-tested:
 `--plate-max 1920` ships background plates at a 1080p TV's own pixels from the 2688x1536
 masters. Depth and mask are never resized at any setting — see the note in the build script.
 
+**2026-08-03 `--compress` (the shipped deploy): 514.0 MB, 373 files.** Bigger than the
+332 MB above, because the branch grew art: `ow-valley` alone is 31.3 MB after the
+overworld landscape pass. Plates went 492.1 MB → 49.3 MB; scene GLBs 522 MB → 262 MB.
+Largest single file `emb-townwalk/scene.glb` at 66.9 MB — inside GitHub's 100 MB hard
+limit, and the total is inside the ~1 GB soft cap, so no `--no-dev-scenes` was needed.
+`emb-cine/scene.glb` is the one bundle the GLB pass does not shrink (12.4 → 12.4 MB):
+it is walk geometry with vertex colours, not PBR maps, which is the same reason DRACO
+was the wrong lever here.
+
+## The encode cache — why a redeploy is cheap now
+
+Before 2026-08-03 every build re-encoded **219 unchanged plates and 16 unchanged
+scene GLBs**, ~28 minutes of work whose inputs had not moved. The cost that
+mattered was never the wall clock: *a 28-minute deploy is a deploy you skip*, and
+the live site drifts behind the branch. That drift was the defect.
+
+    node tools/build-static.mjs --compress            # cache ON (default)
+    node tools/build-static.mjs --compress --no-cache # re-encode everything
+    node tools/build-static.mjs --cache-prune         # drop entries this build did not use
+    EB_BUILD_CACHE=/elsewhere node tools/build-static.mjs …   # or --cache-dir
+
+`.build-cache/` (gitignored) holds every encoded artifact under
+
+    sha256(source bytes)  +  sha256(every parameter that changes the output)
+
+**The second half is the whole design.** A cache keyed on the source file alone is
+worse than no cache at all: the first time somebody changes a quality setting, a
+codec or `--plate-max`, it serves the OLD bytes under the NEW settings, and the
+failure is invisible until a human notices a plate looks wrong. So the recipe hash
+is deliberately over-inclusive — it hashes the **encoder source itself**
+(`WEBP_PY` verbatim, the `gltf-transform` argv), `--plate-max`, and the
+Pillow/Python/`gltf-transform` versions. Over-keying costs a re-encode; under-keying
+ships wrong art. Nobody has to remember to bump a version constant: editing the
+encoder changes its hash.
+
+Three things the cache is **not** allowed to do:
+
+* **Fail a build.** A cache entry that is missing, empty, unreadable or has the
+  wrong magic bytes (`RIFF` for a plate, `glTF` for a bundle) is demoted to a miss
+  and re-encoded, loudly. Deleting `.build-cache/` at any moment costs a slow build
+  and nothing else.
+* **Skip a proof.** `depth.png` under `--webp-depth` is deliberately **uncached**:
+  its encode carries the byte-exact round-trip gate, and that gate is the only
+  reason a lossless depth plate may ship at all. Serving it from a cache would skip
+  the proof to save work nobody runs by default.
+* **Get in under a weaker check than a fresh encode.** A cached bundle GLB still
+  faces the `glTF` magic gate on the way in *and* the geometry gate (POSITION +
+  indices digested against `public/`) at the end of the build.
+
+### MEASURED (2026-08-03, `--compress`, same machine, 373 files / 514.0 MB both times)
+
+| | cold (`.build-cache` deleted) | warm |
+|---|---:|---:|
+| encode | 0 hit / **235 miss** | **235 hit** / 0 miss, 311.7 MB served |
+| wall clock (`BUILD.json.seconds`) | **337.5 s** | **3.0 s** |
+
+**112x.** The stage step is in both numbers and is now 0.6–1.6 s for 369 files.
+
+`BUILD.json` now records `flags.plateMax`, a `cache` block and `seconds`, so any
+deploy can be read back for what it was built with. `plateMax` was missing from
+that record until 2026-08-03 — the one flag that changes what a plate *looks like*
+could not be recovered from a shipped tree.
+
+**The byte-identity proof matters more than the speed.** A fast build that produces
+different bytes is a far worse bug than a slow one. The cold and warm trees were
+digested file by file:
+
+    A dist-c   : 374 files   digest 92eded5999c2402772c61b791e474c69a90432ae841f67f3acddd927393e243c
+    B dist-warm: 374 files   digest e57b856fe3cddee8a3c3b9ea31e9997df034d9a4fc177c48beb5b9d49da2a0c8
+    only in A: 0   only in B: 0   differing: 2
+      BUILD.json                  OK — identical once built/seconds/cache is removed
+      assets/story-manifest.json  OK — identical once `generated` is removed
+    BYTE-IDENTICAL: 372/374; the 2 that differ are the two build clocks.
+
+The two clocks are re-read as JSON and every other key compared, so "it is only a
+timestamp" is proven rather than asserted. Note what this proof is: the warm tree's
+bytes are the bytes a **full fresh encode** produced, because the cold run is what
+populated the cache.
+
+**The negative control is the other half**, and it is the one that guards the
+failure mode that matters — serving yesterday's art under today's settings. With a
+cache holding 219 entries for exactly these sources, a build run with
+`--plate-max 1920` reported **zero hits** and went straight into a full re-encode.
+The parameter is in the key, not decoration.
+
+Also on 2026-08-03: the 1.26 GB staging copy uses `COPYFILE_FICLONE`, so on APFS it
+is a copy-on-write clone — **369 files staged in 1.6 s**. It is a hint, not a mode;
+a filesystem that cannot clone silently gets a real copy.
+
 ## Picking a host
 
 The build is plain files. Any static host works — the acceptance test deliberately uses
@@ -235,8 +324,22 @@ Run the build, verify it, then upload `dist/`.
     npx wrangler pages project create emberbrook     # once
     npx wrangler pages deploy dist --project-name=emberbrook
 
-**GitHub Pages** — Pages serves a branch, so `dist/` has to be *on* a branch. Keep it out
-of `migration/3d-hybrid`:
+**GitHub Pages — use the script.** `bash tools/deploy-ghpages.sh dist-c` does all of
+the below, plus the pre-flight checks (100 MB per-file hard limit, the ~1 GB soft cap,
+`.nojekyll`) and — the part you must not skip by hand — it **verifies the push landed**
+by comparing `git ls-remote` against the local SHA, because this repo has been burned
+by a push that died on GitHub's pack limit while reporting success. It makes `dist-c`
+its own throwaway repo and force-pushes that, so the parent repo and every other lane's
+uncommitted work are never touched. Then:
+
+    node tools/static_verify.mjs --url https://junshern.github.io/emberbrook
+
+which drives the **deployed** site, not a local tree. That is the only check that can
+see a file which is fetched by committed code and is itself untracked — the
+`lightrigs.json` failure, which works on the author's machine and 404s everywhere else.
+
+By hand, if you must — Pages serves a branch, so `dist/` has to be *on* a branch. Keep
+it out of `migration/3d-hybrid`:
 
     git checkout --orphan gh-pages && git rm -rf .
     cp -R dist/. . && touch .nojekyll        # .nojekyll or Pages eats lib/ and _-prefixed paths

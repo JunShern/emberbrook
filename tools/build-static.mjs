@@ -31,6 +31,17 @@
  *   node tools/build-static.mjs --compress       # --webp --glb
  *   node tools/build-static.mjs --fetch-draco    # once: vendor the DRACO decoder
  *   node tools/build-static.mjs --out /some/dir
+ *   node tools/build-static.mjs --no-cache       # re-encode everything (see below)
+ *   node tools/build-static.mjs --cache-prune    # drop cache entries this build did not use
+ *
+ * THE ENCODE CACHE (on by default, .build-cache/). Every encoded plate and scene
+ * GLB is kept keyed by sha256(source) + sha256(every parameter that changes the
+ * bytes) — the encoder script itself, --plate-max, the Pillow/gltf-transform
+ * versions. A no-op rebuild copies them back instead of re-encoding, which is the
+ * difference between a 28-minute deploy and a 1-minute one, and therefore the
+ * difference between a site that tracks the branch and one that drifts behind it.
+ * A cache entry that is missing, truncated or has the wrong magic bytes is
+ * DEMOTED TO A MISS, never a build failure. See the block comment at CACHE.
  *
  * COMPRESSION IS OFF BY DEFAULT, on purpose: the art lanes are still moving the
  * assets, and compressing a moving target is wasted work. Turn it on for the
@@ -46,7 +57,8 @@
  * PROOF OF THE BUILD IS THE BUILD SERVED BY A DUMB STATIC SERVER AND PLAYED, not
  * this script exiting 0. See docs/DEPLOY.md.
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync, rmSync, copyFileSync, renameSync, cpSync, openSync, readSync, closeSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync, rmSync, copyFileSync, renameSync, cpSync, openSync, readSync, closeSync, constants as FS } from 'fs';
+const { COPYFILE_FICLONE } = FS;
 import { join, dirname, relative, basename } from 'path';
 import { execFileSync } from 'child_process';
 import { createHash } from 'crypto';
@@ -82,10 +94,81 @@ const PLATE_MAX = (() => {
 const GLB = COMPRESS || flag('glb') || flag('draco');
 const NO_DEV_SCENES = flag('no-dev-scenes');
 const KEEP_STORY = !flag('no-story');
+// --no-cache: encode everything from scratch. --cache-dir <p>: put it elsewhere.
+// --cache-prune: after the build, drop cache entries this build did not use.
+const NO_CACHE = flag('no-cache');
+const CACHE_DIR = opt('cache-dir', process.env.EB_BUILD_CACHE || join(ROOT, '.build-cache'));
+const CACHE_PRUNE = flag('cache-prune');
 
 const log = (...a) => console.log(...a);
 const warn = (...a) => console.warn('  ! ', ...a);
 const die = (m) => { console.error('\nBUILD FAILED: ' + m + '\n'); process.exit(1); };
+const t0 = Date.now();
+const secs = () => ((Date.now() - t0) / 1000).toFixed(1) + 's';
+
+// ---- THE ENCODE CACHE -------------------------------------------------------
+// WHY. The build re-encoded 219 unchanged plates and 16 unchanged scene GLBs on
+// EVERY run — ~28 minutes of work whose inputs had not moved. The cost is not the
+// wall clock; it is that a 28-minute deploy is a deploy you skip, and the live
+// site drifts behind the branch. That drift is the actual defect this fixes.
+//
+// THE KEY IS THE THING THAT MATTERS. A cache keyed on the SOURCE FILE ALONE is
+// worse than no cache: the first time somebody changes a quality setting, a codec
+// or --plate-max, it serves the OLD bytes under the NEW settings and the failure
+// is invisible until a human notices a plate looks wrong. So the key is
+//
+//     sha256(source bytes)  +  sha256(every parameter that changes the output)
+//
+// and the "recipe" half is deliberately over-inclusive: it hashes the ENCODER
+// SOURCE ITSELF (WEBP_PY, the gltf-transform argv) plus the tool versions plus
+// --plate-max. Over-keying costs a re-encode. Under-keying ships wrong art.
+// Anything a lane edits in the encoder changes the recipe hash automatically —
+// nobody has to remember to bump a version constant.
+//
+// A MISS IS NEVER A FAILURE. Every read from the cache is wrapped: a missing,
+// truncated, unreadable or wrong-magic entry is demoted to a miss and re-encoded.
+// The cache can be deleted at any moment and the only consequence is a slow build.
+const CACHE = { hits: 0, misses: 0, bytesServed: 0, stored: 0, errors: 0, used: new Set() };
+const sha256File = (p) => createHash('sha256').update(readFileSync(p)).digest('hex');
+const recipeHash = (o) => createHash('sha256').update(JSON.stringify(o)).digest('hex').slice(0, 16);
+/** cache path for (kind, recipe, source-digest, output extension) */
+function cachePath(kind, recipe, srcSha, ext) {
+  return join(CACHE_DIR, kind + '-' + recipe, srcSha.slice(0, 2), srcSha.slice(2) + ext);
+}
+/** Copy a cached artifact into place. Returns false (a MISS) on anything at all
+ *  wrong with it — including a magic-byte check, so a corrupt entry can never
+ *  reintroduce the silent-loader bug the .glb gate exists for. */
+function cacheGet(cp, dest, magic) {
+  if (NO_CACHE) return false;
+  try {
+    if (!existsSync(cp)) return false;
+    const st = statSync(cp);
+    if (!st.isFile() || st.size === 0) return false;
+    if (magic) {
+      const fd = openSync(cp, 'r'); const b = Buffer.alloc(magic.length);
+      readSync(fd, b, 0, magic.length, 0); closeSync(fd);
+      if (b.toString('latin1') !== magic) { warn('cache entry has the wrong magic, re-encoding: ' + cp); CACHE.errors++; return false; }
+    }
+    mkdirSync(dirname(dest), { recursive: true });
+    copyFileSync(cp, dest);
+    CACHE.hits++; CACHE.bytesServed += st.size; CACHE.used.add(cp);
+    return true;
+  } catch (e) { warn('cache read failed (treating as a miss): ' + e.message); CACHE.errors++; return false; }
+}
+/** Store a freshly encoded artifact. Written to a temp name and renamed, so a
+ *  build killed mid-write leaves no half-file for the next build to trust. */
+function cachePut(cp, src) {
+  if (NO_CACHE) return;
+  try {
+    mkdirSync(dirname(cp), { recursive: true });
+    const tmp = cp + '.' + process.pid + '.tmp';
+    copyFileSync(src, tmp); renameSync(tmp, cp);
+    CACHE.stored++; CACHE.used.add(cp);
+  } catch (e) { warn('cache write failed (harmless, next build re-encodes): ' + e.message); CACHE.errors++; }
+}
+/** Tool versions belong in the key: a Pillow or gltf-transform upgrade changes
+ *  the bytes and nothing else in the key would notice. Probed once, cheaply. */
+const probe = (cmd, args) => { try { return execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); } catch { return 'unknown'; } };
 
 // *** ONE DEFINITION OF "WHICH .png BECOMES A .webp", SHARED BY THREE READERS. ***
 // (a) the webp pass picks its targets with it, (b) the runtime shim injected into
@@ -532,11 +615,16 @@ if (KEEP_STORY) {
 // ---- WRITE ------------------------------------------------------------------
 if (existsSync(OUT)) rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
+// COPYFILE_FICLONE: on APFS this is a copy-on-write clone — the 1.2 GB stage
+// becomes metadata instead of 1.2 GB of reads and writes. It is a HINT, not a
+// mode: on a filesystem that cannot clone, node falls back to a real copy, so
+// this is free everywhere and fast here. (Not FICLONE_FORCE, which would fail.)
 for (const p of PLAN) {
   mkdirSync(dirname(p.dest), { recursive: true });
   if (p.inline != null) writeFileSync(p.dest, p.inline);
-  else copyFileSync(p.src, p.dest);
+  else copyFileSync(p.src, p.dest, COPYFILE_FICLONE);
 }
+log(`  staged ${PLAN.length} files  [${secs()}]`);
 
 // regenerate scenes.js from the FILTERED registry. Emitting it (rather than
 // copying) is what makes --no-dev-scenes honest and what stops the launcher
@@ -569,14 +657,40 @@ async function webpPass() {
   });
   for (const f of targets) WEBP_DELETED.push(relative(OUT, f));
   const depth = WEBP_DEPTH ? walk(OUT).filter(f => NEVER_LOSSY.test(relative(OUT, f))) : [];
+
+  // THE RECIPE. Everything that can change a byte of the output: the encoder
+  // script verbatim (quality, method, LANCZOS, the depth round-trip gate — all of
+  // it lives in WEBP_PY, so an edit there invalidates the cache by itself),
+  // --plate-max, and the Pillow/Python that will run it.
+  const recipe = recipeHash({
+    encoder: WEBP_PY, plateMax: PLATE_MAX,
+    pillow: probe('python3', ['-c', 'import PIL,sys;print(PIL.__version__, sys.version.split()[0])']),
+  });
+  const hits = [], miss = []; const served0 = CACHE.bytesServed;
+  for (const f of targets) {
+    const cp = cachePath('webp', recipe, sha256File(f), '.webp');
+    const out = f.replace(/\.png$/, '.webp');
+    // 'RIFF' — a truncated or half-written .webp can never be served as a plate.
+    if (cacheGet(cp, out, 'RIFF')) { rmSync(f); hits.push(f); }
+    else miss.push({ f, out, cp });
+  }
+  CACHE.misses += miss.length;
+  if (hits.length) log(`    cache: ${hits.length}/${targets.length} plates served from ${relative(ROOT, CACHE_DIR) || CACHE_DIR}` +
+    ` (${((CACHE.bytesServed - served0) / 1048576).toFixed(1)} MB, no re-encode)`);
+
+  // DEPTH IS DELIBERATELY NOT CACHED. Its encode carries its own gate — decode
+  // both files back to RGB and compare every byte — and that gate is the only
+  // reason a lossless depth plate is allowed to ship at all. Serving it from a
+  // cache would skip the proof to save ~87 MB of work nobody runs by default.
   const listFile = join(ROOT, '.webp-list.tmp');
-  writeFileSync(listFile, JSON.stringify({ lossy: targets, lossless: depth, plateMax: PLATE_MAX }));
+  writeFileSync(listFile, JSON.stringify({ lossy: miss.map(m => m.f), lossless: depth, plateMax: PLATE_MAX }));
   try {
     const out = execFileSync('python3', [py, listFile], { encoding: 'utf8', maxBuffer: 1 << 28 });
     log(out.trim().split('\n').map(l => '    ' + l).join('\n'));
   } catch (e) {
     die('--webp pass failed (depth round-trip check is fatal by design):\n' + (e.stdout || '') + (e.stderr || e.message));
   } finally { rmSync(listFile, { force: true }); rmSync(py, { force: true }); }
+  for (const m of miss) if (existsSync(m.out)) cachePut(m.cp, m.out);
   // rewrite the references the runtime builds by name
   patchPlateExtensions();
   patchPortraitUrls();
@@ -683,9 +797,28 @@ async function glbPass() {
     ? execFileSync('npx', ['-y', '@gltf-transform/cli@4', ...args], { encoding: 'utf8', maxBuffer: 1 << 28 })
     : execFileSync(cli, args, { encoding: 'utf8', maxBuffer: 1 << 28 });
   const glbs = walk(join(OUT, 'assets/scenes')).filter(f => f.endsWith('.glb'));
-  let before = 0, after = 0;
+  // THE RECIPE, same discipline as the plates: the exact argv this pass runs plus
+  // the CLI's own version. `@gltf-transform/cli@4` is a RANGE — a patch release
+  // that repacks differently must not be served yesterday's bytes.
+  const glbRecipe = recipeHash({
+    pass: ['webp'], draco: false,
+    cli: cli === 'NPX' ? probe('npx', ['-y', '@gltf-transform/cli@4', '--version']) : probe(cli, ['--version']),
+  });
+  let before = 0, after = 0, ghit = 0;
   for (const g of glbs) {
     const b0 = statSync(g).size; before += b0;
+    // A cached bundle still has to be binary glTF before it is allowed in — this
+    // is the `glTF` magic gate applied to the cache, at the one place a wrong
+    // container would otherwise enter the build unexamined. The geometry gate at
+    // the end of the build then re-proves POSITION+indices against public/, so a
+    // cache hit is held to exactly the same standard as a fresh encode.
+    const cp = cachePath('glb', glbRecipe, sha256File(g), '.glb');
+    if (cacheGet(cp, g, 'glTF')) {
+      const b1 = statSync(g).size; after += b1; ghit++;
+      log(`    ${relative(OUT, g).padEnd(44)} ${(b0 / 1048576).toFixed(1)} -> ${(b1 / 1048576).toFixed(1)} MB  (cached)`);
+      continue;
+    }
+    CACHE.misses++;
     // textures first: draco shrinks the buffer the texture pass would otherwise
     // have to walk, and running it second keeps each step's log honest.
     // *** THE TEMP FILES MUST END IN .glb. *** gltf-transform picks its OUTPUT
@@ -707,10 +840,12 @@ async function glbPass() {
     // It is also nearly free to skip: measured, the texture pass is the whole win
     // (509 MB -> 20 MB) and draco was the last ~12%. Correctness over 12%.
     void t2;
+    cachePut(cp, g);
     const b1 = statSync(g).size; after += b1;
     log(`    ${relative(OUT, g).padEnd(44)} ${(b0 / 1048576).toFixed(1)} -> ${(b1 / 1048576).toFixed(1)} MB`);
   }
-  log(`    GLB total ${(before / 1048576).toFixed(0)} MB -> ${(after / 1048576).toFixed(0)} MB`);
+  log(`    GLB total ${(before / 1048576).toFixed(0)} MB -> ${(after / 1048576).toFixed(0)} MB` +
+      (ghit ? `   (${ghit}/${glbs.length} from cache)` : ''));
   // decoder + loader into dist, and wire it into every page that makes a GLTFLoader
   mkdirSync(join(OUT, 'lib/draco'), { recursive: true });
   // cpSync, NOT a readdir+copyFileSync loop: tools/vendor/draco holds a `gltf/`
@@ -770,8 +905,23 @@ for (const b of biggest) log(`    ${MB(b.b).padStart(9)}  ${b.f}`);
 log('\n  scene bundles:');
 for (const s of perScene) log(`    ${MB(s.bytes).padStart(9)}  ${s.key.padEnd(20)} ${s.why}`);
 if (MISSING.length) { log('\n  claimed but ABSENT from public/ (' + MISSING.length + '):'); for (const m of MISSING.slice(0, 20)) log('    ' + m); }
-log('\n  compression: webp=' + (WEBP ? 'ON' : 'off') + '  webp-depth=' + (WEBP_DEPTH ? 'ON' : 'off (depth.png stays lossless PNG)') + '  glb=' + (GLB ? 'ON' : 'off'));
+log('\n  compression: webp=' + (WEBP ? 'ON' : 'off') + '  webp-depth=' + (WEBP_DEPTH ? 'ON' : 'off (depth.png stays lossless PNG)') + '  glb=' + (GLB ? 'ON' : 'off') + '  plate-max=' + (PLATE_MAX || 'master size'));
+if (WEBP || GLB) {
+  log('  encode cache: ' + (NO_CACHE ? 'DISABLED (--no-cache): everything re-encoded'
+    : `${CACHE.hits} hit / ${CACHE.misses} miss, ${(CACHE.bytesServed / 1048576).toFixed(1)} MB served, ` +
+      `${CACHE.stored} stored${CACHE.errors ? `, ${CACHE.errors} demoted to a miss` : ''}  [${CACHE_DIR}]`));
+}
+log('  wall clock: ' + secs());
 log('='.repeat(72) + '\n');
+
+// --cache-prune: drop entries this build did not touch. Off by default — two
+// builds with different flags legitimately use different entries, and a prune
+// that runs automatically would make them evict each other's work every time.
+if (CACHE_PRUNE && !NO_CACHE && existsSync(CACHE_DIR)) {
+  let n = 0, b = 0;
+  for (const f of walk(CACHE_DIR)) if (!CACHE.used.has(f)) { b += statSync(f).size; rmSync(f, { force: true }); n++; }
+  log(`  cache pruned: ${n} unused entries, ${(b / 1048576).toFixed(1)} MB freed\n`);
+}
 
 // THE GATE THAT WOULD HAVE CAUGHT THE SILENT ONE. A .glb whose first four bytes
 // are not `glTF` is a JSON document wearing a binary file's name, and GLTFLoader
@@ -989,7 +1139,12 @@ referenceAudit(OUT, WEBP_DELETED);
 writeFileSync(join(OUT, 'BUILD.json'), JSON.stringify({
   built: new Date().toISOString(),
   generator: 'tools/build-static.mjs',
-  flags: { webp: WEBP, webpDepth: WEBP_DEPTH, glb: GLB, noDevScenes: NO_DEV_SCENES, story: KEEP_STORY },
+  // plateMax was MISSING from this record until 2026-08-03, which meant the one
+  // build flag that changes what a plate LOOKS like could not be read back off a
+  // deploy. It is also a cache key input, so it has to be written down.
+  flags: { webp: WEBP, webpDepth: WEBP_DEPTH, glb: GLB, plateMax: PLATE_MAX, noDevScenes: NO_DEV_SCENES, story: KEEP_STORY },
+  cache: NO_CACHE ? { enabled: false } : { enabled: true, hits: CACHE.hits, misses: CACHE.misses, stored: CACHE.stored, demoted: CACHE.errors },
+  seconds: +((Date.now() - t0) / 1000).toFixed(1),
   totals: { bytes: total, files: files.length, byCategory: Object.fromEntries(CATS.map(c => [c, size[c]])) },
   scenes: perScene, cast: [...cast].sort(), missing: MISSING,
 }, null, 2));

@@ -125,6 +125,22 @@ git runs here, on branch `migration/3d-hybrid`.
   'eb-scene' ONLY once `beats` is non-empty — a dev scene-jump must not write a save,
   which is play3d's own module contract and what transition_test booby-traps.
 
+## Shipping it (the live demo is a standing deliverable, refreshed every work window)
+- **docs/DEPLOY.md** — tools/build-static.mjs (inclusion-not-exclusion; its own glTF-magic,
+  scene-geometry and reference-integrity gates) → tools/deploy-ghpages.sh → LIVE at
+  https://junshern.github.io/emberbrook/ . `--compress` is the deploy flag set.
+- **The build has an ENCODE CACHE, on by default** (`.build-cache/`, gitignored):
+  sha256(source) + sha256(EVERY parameter that changes the bytes — the encoder source
+  itself, `--plate-max`, the Pillow/gltf-transform versions). Warm rebuild is SECONDS
+  instead of 28 minutes, which is the point: a 28-minute deploy is a deploy you skip and
+  the site drifts behind the branch. `--no-cache` bypasses; a bad entry is DEMOTED TO A
+  MISS, never a build failure; depth.png is deliberately uncached because its encode
+  carries the byte-exact round-trip proof. A cache keyed on the source alone would serve
+  stale art the first time a quality setting moved — invisibly.
+- **node tools/static_verify.mjs** drives a built tree off `python3 -m http.server`;
+  **`--url https://…` drives THE DEPLOY**. Only the live run can see a file that
+  committed code fetches and git does not carry (the lightrigs.json class).
+
 ## Test gauntlet (run what your change touches; all green before ship)
 - node tools/slice_test.mjs · cine_test.mjs · seam_test.mjs · seam_walk.mjs ·
   economy_test.mjs · battle_sim / encounter_sim · transition_test.mjs --port=<port>

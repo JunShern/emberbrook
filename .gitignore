@@ -31,3 +31,7 @@ dist-*/
 # AND unignored until 2026-08-02, so 128 files of dead probe output showed in every
 # `git status`, which is exactly the clutter the cleanup was asked to remove.
 scratchpad/
+
+# the static build encode cache (tools/build-static.mjs). Derived bytes, keyed by
+# sha256(source)+sha256(encode params) — regenerable, and hundreds of MB.
+.build-cache/

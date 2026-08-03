@@ -3,6 +3,15 @@
 //   node tools/static_verify.mjs                 # builds nothing; serves ./dist itself
 //   node tools/static_verify.mjs --dir dist --head
 //   node tools/static_verify.mjs --port 8080     # use a server you already started
+//   node tools/static_verify.mjs --url https://junshern.github.io/emberbrook
+//                                                # THE DEPLOY ITSELF, over the wire
+//
+// --url IS THE ONE THAT ANSWERS "IS THE GAME UP". Everything else here proves the
+// tree on this disk is playable; only --url proves the thing a player will load
+// is. The difference between them is the exact class of bug this repo has already
+// shipped once — public/game/lightrigs.json was fetched by committed code and was
+// itself untracked, so it worked on the author's machine and 404'd everywhere
+// else. A local build cannot see that; a request to the live host can.
 //
 // WHY THIS EXISTS, SEPARATELY FROM EVERY OTHER GATE. `node tools/build-static.mjs`
 // exiting 0 proves that files were copied. It does not prove the result is a game:
@@ -35,8 +44,10 @@ const WebSocket = require('ws');
 const argv = process.argv.slice(2);
 const arg = (k, d) => { const i = argv.findIndex(a => a === '--' + k || a.startsWith('--' + k + '=')); if (i < 0) return d; const a = argv[i]; return a.includes('=') ? a.split('=').slice(1).join('=') : argv[i + 1]; };
 const DIR = resolve(arg('dir', 'dist'));
+const LIVE = arg('url', null);                       // verify a DEPLOY, not a directory
+const BASE = LIVE ? String(LIVE).replace(/\/+$/, '') : null;
 const HEAD = argv.includes('--head');
-const SHOT = resolve(arg('shot', join(DIR, '..', 'static-verify.png')));
+const SHOT = resolve(arg('shot', BASE ? join(process.cwd(), 'static-verify-live.png') : join(DIR, '..', 'static-verify.png')));
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 let pass = 0, fail = 0; const fails = [];
@@ -45,7 +56,7 @@ const note = (m) => console.log('       ' + m);
 const head = (s) => console.log('\n== ' + s);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-if (!existsSync(join(DIR, 'index.html'))) { console.error('no build at ' + DIR + ' — run: node tools/build-static.mjs'); process.exit(2); }
+if (!BASE && !existsSync(join(DIR, 'index.html'))) { console.error('no build at ' + DIR + ' — run: node tools/build-static.mjs'); process.exit(2); }
 
 // ---- 1. THE DUMB SERVER -----------------------------------------------------
 // python3 -m http.server: no rewrite rules, no routing, no fallback document.
@@ -53,7 +64,9 @@ if (!existsSync(join(DIR, 'index.html'))) { console.error('no build at ' + DIR +
 // the build, not in the host.
 let httpd = null;
 let PORT = parseInt(arg('port', '0'), 10);
-if (!PORT) {
+if (BASE) {
+  note('LIVE MODE: no local server. Driving ' + BASE + ' over the wire.');
+} else if (!PORT) {
   PORT = await freePort();
   httpd = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1'], { cwd: DIR, stdio: 'ignore' });
   await sleep(700);
@@ -65,7 +78,7 @@ const profile = join(process.env.TMPDIR || '/tmp', 'static-verify-profile-' + pr
 sweepStaleProfiles('static-verify-profile-');
 killOrphans(profile);
 rmSync(profile, { recursive: true, force: true });
-const START = `http://127.0.0.1:${PORT}/index.html`;
+const START = BASE ? BASE + '/index.html' : `http://127.0.0.1:${PORT}/index.html`;
 // --mute-audio: the launcher's NEW GAME link carries no ?nomusic=1 and this run
 // clicks the REAL link rather than a hand-built URL, so silence is enforced at the
 // browser instead (standing rule: an agent is never audible in somebody's room).
@@ -108,11 +121,21 @@ async function ev(cdp, expr, timeoutMs) {
 // dist/ on the same evening and the second overwrote the first, so a green run
 // against the wrong tree is a real failure mode here, not a hypothetical.
 {
-  const bj = join(DIR, 'BUILD.json');
-  if (!existsSync(bj)) { console.error('no BUILD.json in ' + DIR + ' — run tools/build-static.mjs'); process.exit(2); }
-  const b = JSON.parse(require('fs').readFileSync(bj, 'utf8'));
+  // In LIVE mode BUILD.json is fetched from the host — which is also the first
+  // proof that the deploy is the build you think it is. A stale gh-pages branch
+  // announces itself here, by timestamp, before a single assertion runs.
+  let b;
+  if (BASE) {
+    const r = await fetch(BASE + '/BUILD.json').catch(e => { console.error('cannot reach ' + BASE + '/BUILD.json: ' + e.message); process.exit(2); });
+    if (!r.ok) { console.error(BASE + '/BUILD.json -> HTTP ' + r.status + '. Either the deploy has not published yet, or it is not a build of this tool.'); process.exit(2); }
+    b = await r.json();
+  } else {
+    const bj = join(DIR, 'BUILD.json');
+    if (!existsSync(bj)) { console.error('no BUILD.json in ' + DIR + ' — run tools/build-static.mjs'); process.exit(2); }
+    b = JSON.parse(require('fs').readFileSync(bj, 'utf8'));
+  }
   if (b.generator !== 'tools/build-static.mjs') {
-    console.error('\n' + DIR + ' was built by ' + (b.generator || 'an unknown script') +
+    console.error('\n' + (BASE || DIR) + ' was built by ' + (b.generator || 'an unknown script') +
       ', not tools/build-static.mjs. Rebuild before verifying.\n');
     process.exit(2);
   }
@@ -189,10 +212,17 @@ try {
     const door=[...document.querySelectorAll('#door a.card')].map(a=>({t:a.textContent.trim().slice(0,40),href:a.getAttribute('href')}));
     const thumbs=cards.map(c=>{const s=getComputedStyle(c.querySelector('.thumb')||c).backgroundImage;const m=/url\\("?([^")]+)/.exec(s);return m?m[1]:null;}).filter(Boolean);
     const links=[...document.querySelectorAll('.note a')].map(a=>a.getAttribute('href'));
+    const w=document.getElementById('eb-wip');
     return {cards:cards.length, door, thumbs:thumbs.length, links, title:document.title,
-            hasArchive:!!document.querySelector('details')};
+            hasArchive:!!document.querySelector('details'),
+            wip: w ? {text:w.textContent.replace(/\\s+/g,' ').trim().slice(0,80),
+                      shown:w.getBoundingClientRect().height>0} : null};
   })()`);
   ok(launcher.cards > 0, `launcher rendered ${launcher.cards} scene cards`, launcher);
+  // The WIP banner is injected BY THE BUILD and exists in no source page, so it is
+  // also the cheapest single proof that what is being driven is a built artifact
+  // and not somebody's dev server.
+  ok(!!(launcher.wip && launcher.wip.shown), 'the work-in-progress banner is present and visible', launcher.wip);
   ok(launcher.door.some(d => /NEW GAME/.test(d.t)), 'the NEW GAME door is on the page', launcher.door);
   ok(launcher.thumbs === launcher.cards, `every card has a thumbnail (${launcher.thumbs}/${launcher.cards})`);
   ok(!launcher.hasArchive, 'no legacy-archive section (this build ships no archived bundles)');
@@ -325,7 +355,7 @@ try {
     if(Array.isArray(at.pos)){q.set('sx',at.pos[0]);q.set('sy',at.pos[1]);q.set('sz',at.pos[2]);}
     if(at.yaw!=null) q.set('yaw',at.yaw);
     return 'play.html?'+q.toString(); })()`);
-  await cdp.send('Page.navigate', { url: `http://127.0.0.1:${PORT}/` + resumeUrl });
+  await cdp.send('Page.navigate', { url: (BASE || `http://127.0.0.1:${PORT}`) + '/' + resumeUrl });
   await sleep(2500);
   const rr = await ev(cdp, READY(900), 300000);
   ok(rr === true, 'the cold reload booted');
