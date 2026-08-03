@@ -261,6 +261,24 @@ git runs here, on branch `migration/3d-hybrid`.
   THE ENGINE IS MEASURING THE ARTIST'S INTENT, NOT THE PLAYER'S WORLD. `--reduced` is
   the no-browser mechanism proof (three-mesh-bvh permutes geometry.index.array in place
   while GLTFLoader shares one index attribute between primitives).
+- **tools/_court_probe.mjs — A FLOOD FILL TELLS YOU WHERE THE WORLD IS SHUT AND NEVER WHAT
+  SHUTS IT** (2026-08-03). `--comp` labels the disjoint components of a region in the RUNNING
+  game and, at each frontier, asks `SIM.blocked` — **which returns the blocking MESH'S NAME**.
+  That name is the whole diagnosis. Worked example, and it is the reason this entry exists:
+  the Old Gate's court had been called a raft "0.8-1.7 m proud, past walkStep's step-down"
+  for a day. The probe found `SIM.ground` CONTINUOUS across the frontier — so never a step —
+  and `SIM.blocked` naming `oldgate_3`. **The whole prop was built a quarter turn out**:
+  every cube in `build_old_gate` is sized (along river, across notch, height) but `rz` took
+  `nl`'s angle, sending local X ACROSS the notch. "One wall across the pinch" was four
+  detached piers standing ALONG the gorge, and the nine deck bays stacked into a single
+  0.42 m strip — six cells on a 0.4 m lattice. A plank, not a step.
+  **AND THE BUILDER'S OWN GATE COULD NOT SEE IT**: its seal blocks the wall's *intended*
+  footprint analytically, so it printed `flood fill past the pinch 0 cells` over a gate made
+  of piers, every build, for weeks. Same class as walk_engine_gate — **A GATE THAT MEASURES
+  ITS OWN DRAWING CANNOT MEASURE ITS OWN BUILD.** Fix was two derivations and no new massing
+  (`ang = atan2(tg)`; deck paving takes z from `VM.ROAD_Z`): 3 components -> 1 of 712 cells,
+  `SIM.move()` 27/27 legs BOTH ways, and **`playthrough_test` 80/1 -> 81/0** — the long-
+  standing `ch1.done -> ch2.road` §W red WAS this gate.
 - tools/scene_redteam.mjs — LLM scene critique (naive + map-informed checklist modes,
   adversarial verify; judge PINNED, shares GEMINI_API_KEY). Calibrated 4/5 hand / 2/5
   matcher on the user's own annotated complaints (sweep 2; was 3/5 — the gate rows moved
