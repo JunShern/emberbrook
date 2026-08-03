@@ -337,7 +337,15 @@ export async function run(cfg) {
         if (outcome === null) outcome = leg;
         if (leg.from && leg.target) lastLeg = leg;
         if (!leg.ok) {
-          parts.push(leg.reason === 'modal'
+          /* THREE REASONS A LEG DID NOT HAPPEN, AND ONLY ONE OF THEM IS ABOUT THE
+           * GROUND. `unready` is the harness saying it could not measure — the page
+           * was not painting, so the walk never started. Calling that "not ground you
+           * can walk to" would hand the agent a fact about the world that the harness
+           * never established, which is the same class of lie as an unready frame. */
+          if (leg.reason === 'unready') {
+            log(`  leg not run: the page was not painting — ${(leg.starvedWhy || []).join('; ')}`);
+            parts.push('the game was still loading, so that walk never started');
+          } else parts.push(leg.reason === 'modal'
             ? 'the game took over part-way (a scene or a conversation started)'
             : `[${wx.toFixed(2)},${wy.toFixed(2)}] is not ground you can walk to`);
           break;
@@ -352,7 +360,10 @@ export async function run(cfg) {
            * ticket. Only `exhausted` — all five headings pushed, nothing moved — may file. */
           if (!leg.exhausted) {
             log(`  leg not conclusive: ${leg.starved ? 'STARVED' : 'gave up'} after ${leg.bursts} burst(s) ` +
-                `at ~${leg.msPerBurst} ms/burst — no blocker filed (the headings were never all tried)`);
+                `at ~${leg.msPerBurst} ms/burst — no blocker filed (the headings were never all tried)` +
+                // WHY it starved, measured while the condition was live. "Starved" with
+                // a reason is a finding about the machine; without one it is a shrug.
+                (leg.starvedWhy && leg.starvedWhy.length ? `\n      because: ${leg.starvedWhy.join('; ')}` : ''));
             break;
           }
           const cell = leg.target.map(v => Math.round(v / 3)).join(',');

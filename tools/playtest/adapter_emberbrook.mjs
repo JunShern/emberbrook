@@ -114,6 +114,12 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 // it for four and a half minutes. The screen was at 117 luminance the whole time.
 // A PERCEPT THAT OMITS A WHOLE GAME MODE IS NOT A NARROW PERCEPT, IT IS A BLIND ONE.
 // ---------------------------------------------------------------------------
+/* What a percept is when the page would not answer for one. NOT a percept the agent
+ * is shown — observe() has already flagged the frame unready by then — but the shape
+ * flattenPercept and the run log expect, so a busy moment is a blank rather than a
+ * TypeError three layers up. */
+const EMPTY_PERCEPT = { objective: null, prompts: [], dialogue: null, card: null, battle: null };
+
 const PERCEPT_JS = `(()=>{
   const vis = (e) => { if(!e) return false;
     const s = getComputedStyle(e);
@@ -219,6 +225,38 @@ const TRUTH_JS = `(()=>{ const o={};
  */
 const BLACK_L = 2.0;              // mean luminance below this = nothing is drawn
 const FRAME_BUDGET_MS = 45000;    // a cold 45 MB real-time bundle is a legitimate wait
+
+/* ================= THE HARNESS OWNS ITS OWN CLOCK =========================
+ * `Runtime.evaluate` accepts a `timeout`, and IT IS NOT A TIMEOUT THE HARNESS MAY
+ * RELY ON. Measured on this build, against a live playtester page whose main thread
+ * was busy: an evaluate sent with `timeout: 3000` had still not answered TWENTY
+ * SECONDS later, and neither had one sent with no timeout at all — while
+ * `Performance.getMetrics` on the same socket answered instantly. The reason is
+ * mechanical: that parameter is implemented by asking V8 to terminate a script it
+ * is RUNNING, and a request that the main thread never dequeues has no script to
+ * terminate. So the parameter is a cap on execution, never on the wait.
+ *
+ * Every round-trip therefore carries a deadline the harness enforces itself, with
+ * Promise.race, and an overrun raises PageSilent — a DISTINCT OUTCOME, never a
+ * measurement. That distinction is the whole point: `no answer` and `the body did
+ * not move` are the same bytes on the wire and opposite facts about the game.
+ *
+ * The old default was 120 000 ms and most of the walk loop passed nothing at all,
+ * so a single blocking evaluate could sail past a 54 s hard ceiling that was only
+ * ever checked BETWEEN calls. That is how one burst came to be reported at 210 s.
+ */
+const EV_MS = 12000;              // default deadline for one page round-trip
+const KEY_MS = 4000;              // one Input.dispatchKeyEvent ack
+const BOOT_MS = 240000;           // a cold boot may be slow; it may not be endless
+class PageSilent extends Error {
+  constructor(ms, expr) {
+    super(`the page did not answer in ${ms} ms (${String(expr).replace(/\s+/g, ' ').slice(0, 60)})`);
+    this.pageSilent = true; this.waitedMs = ms;
+  }
+}
+/* A deadline the caller can hand to every await in a loop, so the ceiling is
+ * enforced DURING the calls instead of discovered after one of them returns. */
+function deadline(ms) { const at = Date.now() + ms; return () => Math.max(250, at - Date.now()); }
 
 const FRAME_GATE_JS = `(()=>{ const why=[];
   const S=window.SIM;
@@ -448,21 +486,52 @@ export function makeAdapter(opt) {
   let cdp = null, chrome = null, profile = null, closed = false, frameN = 0;
 
   const send = (m, p) => cdp.send(m, p);
+  /* EVERY round-trip through this adapter goes through one raced primitive. See the
+   * PageSilent note above for why CDP's own `timeout` cannot be trusted to do it. */
+  async function raced(method, params, ms, label) {
+    let timer = null;
+    const r = await Promise.race([
+      cdp.send(method, params).then(v => ({ v })),
+      new Promise(res => { timer = setTimeout(() => res({ silent: true }), ms); }),
+    ]);
+    if (timer) clearTimeout(timer);
+    if (r.silent) throw new PageSilent(ms, label || method);
+    return r.v;
+  }
   async function ev(expr, t) {
-    const r = await cdp.send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true, userGesture: true, timeout: t || 120000 });
+    const ms = t || EV_MS;
+    const r = await raced('Runtime.evaluate',
+      { expression: expr, awaitPromise: true, returnByValue: true, userGesture: true, timeout: ms }, ms, expr);
     if (r.exceptionDetails) throw new Error('page exception: ' + ((r.exceptionDetails.exception || {}).description || r.exceptionDetails.text));
     return r.result && r.result.value;
   }
-  function keyEvent(type, k) {
+  /* A read that a busy page is ALLOWED to refuse. Anything the run can carry on
+   * without — a percept, a truth dump, a UILOCK poll — asks through this and gets
+   * `fallback` when the page is silent, so a slow moment does not become a stack
+   * trace three layers up. Anything the run cannot carry on without uses ev(). */
+  async function evSoft(expr, t, fallback) {
+    try { return await ev(expr, t); } catch (e) { if (e.pageSilent) return fallback; throw e; }
+  }
+  function keyEvent(type, k, ms) {
     const p = { type, key: k.key, code: k.code, windowsVirtualKeyCode: k.vk, nativeVirtualKeyCode: k.vk };
     if (type === 'keyDown' && k.key.length === 1) p.text = k.key;
-    return send('Input.dispatchKeyEvent', p);
+    return raced('Input.dispatchKeyEvent', p, ms || KEY_MS, 'key ' + type + ' ' + k.key);
   }
-  async function hold(names, ms) {
+  /* A KEY THAT WENT DOWN COMES BACK UP, EVEN WHEN THE PAGE STOPS ANSWERING.
+   * `Input.dispatchKeyEvent` is acked by the renderer's main thread, so it starves
+   * exactly like an evaluate — and a keyDown whose keyUp was skipped by a thrown
+   * timeout leaves the body walking for the rest of the run. The release is in a
+   * finally, best-effort, and the starvation is reported rather than swallowed. */
+  async function hold(names, ms, budget) {
     const ks = names.map(n => KEYS[n]).filter(Boolean);
-    for (const k of ks) await keyEvent('keyDown', k);
-    await sleep(ms);
-    for (const k of ks) await keyEvent('keyUp', k);
+    const down = [];
+    let silent = null;
+    try {
+      for (const k of ks) { await keyEvent('keyDown', k, budget); down.push(k); }
+      await sleep(ms);
+    } catch (e) { if (e.pageSilent) silent = e; else throw e; }
+    finally { for (const k of down) { try { await keyEvent('keyUp', k, budget); } catch (e) { if (!e.pageSilent) throw e; } } }
+    if (silent) throw silent;
   }
   async function tap(name) { const k = KEYS[name] || KEYS.e; await keyEvent('keyDown', k); await sleep(45); await keyEvent('keyUp', k); }
 
@@ -487,8 +556,8 @@ export function makeAdapter(opt) {
     if (!PNG) return null;
     try {
       const w = 64, s = w / viewport[0];
-      const r = await send('Page.captureScreenshot', { format: 'png',
-        clip: { x: 0, y: 0, width: viewport[0], height: viewport[1], scale: s } });
+      const r = await raced('Page.captureScreenshot', { format: 'png',
+        clip: { x: 0, y: 0, width: viewport[0], height: viewport[1], scale: s } }, EV_MS, 'captureScreenshot');
       const img = PNG.sync.read(Buffer.from(r.data, 'base64'));
       const n = img.width * img.height; let sum = 0, nb = 0;
       for (let i = 0; i < n; i++) { const o = i * 4;
@@ -499,8 +568,17 @@ export function makeAdapter(opt) {
   }
 
   async function frameGate() {
-    let g; try { g = await ev(FRAME_GATE_JS); }
-    catch (e) { return { why: ['the readiness gate could not run in the page: ' + e.message], lum: null }; }
+    let g;
+    try { g = await ev(FRAME_GATE_JS, 6000); }
+    catch (e) {
+      /* PAGE-SILENT IS A READINESS ANSWER, NOT A CRASH. The gate not answering means
+       * the main thread is busy, which is precisely the condition in which nothing is
+       * being painted and nothing may be measured. It reads as not-ready, in words,
+       * and the run waits it out like any other unpainted frame. */
+      return { why: [e.pageSilent
+        ? `the page's main thread did not answer the readiness gate in ${e.waitedMs} ms — it is busy (a bundle load, a parse, or the machine)`
+        : 'the readiness gate could not run in the page: ' + e.message], lum: null, silent: !!e.pageSilent };
+    }
     const why = (g && g.why) ? g.why.slice() : ['the readiness gate returned nothing'];
     const lum = await frameLum();
     if (lum && lum.meanL != null && lum.meanL < BLACK_L)
@@ -583,7 +661,13 @@ export function makeAdapter(opt) {
       // comparable between runs — or between models in a benchmark.
       await send('Emulation.setDeviceMetricsOverride', { width: viewport[0], height: viewport[1], deviceScaleFactor: 1, mobile: false });
       try { await send('Emulation.setFocusEmulationEnabled', { enabled: true }); } catch (e) { }
-      return await ev(READY_JS, 180000);
+      // A COLD BOOT MAY BE SLOW; IT MAY NOT BE ENDLESS. READY_JS is an in-page poll,
+      // so its own 60 s cap only starts once the main thread dequeues it — which on
+      // a thrashing machine has been measured at eleven minutes. The harness's clock
+      // is the one that decides, and it says so out loud rather than hanging.
+      const boot = await evSoft(READY_JS, BOOT_MS, '__silent__');
+      if (boot === '__silent__') { console.error(`  the page's main thread never answered in ${BOOT_MS} ms`); return false; }
+      return boot;
     },
 
     /* ------------------------------------------------------------------ SETUP
@@ -608,7 +692,8 @@ export function makeAdapter(opt) {
         await send('Page.navigate', { url: urlFor(plan.scene, plan.cam, plan.pos, { v: String(Date.now()) }) });
       }
       await sleep(1400);
-      const ok = await ev(READY_JS, 180000);
+      const ok = await evSoft(READY_JS, BOOT_MS, false);
+      if (ok === false) console.error(`  the page did not become playable within ${BOOT_MS} ms`);
       // HIDE THE DEV HUD. play3d draws `#h` with the live scene, shot and pos(x,y,z)
       // in the top-left corner (play3d.html:1702). A shipping build would not, and a
       // screenshot containing it hands the agent the exact numbers this instrument
@@ -638,8 +723,11 @@ export function makeAdapter(opt) {
     async observe(tag, opt) {
       const budget = (opt && opt.budgetMs != null) ? opt.budgetMs : FRAME_BUDGET_MS;
       const g = await waitForFrame(budget);
-      const percept = await ev(PERCEPT_JS);
-      const r = await send('Page.captureScreenshot', { format: 'jpeg', quality: 72 });
+      // A percept the busy page refused is EMPTY, never stale and never a hang. The
+      // frame gate above has already said `ready:false`, so layer 3 will not pay a
+      // model to read it.
+      const percept = await evSoft(PERCEPT_JS, EV_MS, EMPTY_PERCEPT) || EMPTY_PERCEPT;
+      const r = await raced('Page.captureScreenshot', { format: 'jpeg', quality: 72 }, EV_MS, 'captureScreenshot');
       let framePath = null;
       if (framesDir) {
         mkdirSync(framesDir, { recursive: true });
@@ -651,12 +739,29 @@ export function makeAdapter(opt) {
         ready: g.ready, why: g.why, frozen: g.frozen, meanL: g.lum ? g.lum.meanL : null, waitedMs: g.waitedMs };
     },
 
-    async truth() { return await ev(TRUTH_JS); },
+    async truth() { return await evSoft(TRUTH_JS, EV_MS, {}); },
 
     /* ONE WALK LEG. Real keys, closed loop, and it reports the geometry —
      * intended vs closed — which is the free bug signal. */
     async walkLeg(nx, ny, budgetMs) {
-      await ev(INSTALL_MOTOR);
+      /* A LEG MAY NOT BEGIN WHILE THE PAGE IS NOT PAINTING. Walking is measured by
+       * asking the body where it is before and after real key events; a page whose
+       * main thread is loading a bundle answers neither, and phys() is not running to
+       * move anybody anyway. Every metre of "0 m closed of 20.87 m" ever filed by this
+       * executor was measured across exactly that. The frame gate already knows how to
+       * ask the question — readiness plus the measured luminance of a real screenshot
+       * — so the leg asks it FIRST and refuses to start rather than mis-measuring.
+       * `starved`, never `exhausted`: what the world would have done is unknown. */
+      const pre = await waitForFrame(FRAME_BUDGET_MS);
+      if (!pre.ready)
+        return { ok: false, nx, ny, reason: 'unready', starved: true, exhausted: false,
+          detail: 'the walk never started: ' + pre.why.join('; '), starvedWhy: pre.why,
+          intended: 0, closed: 0, bursts: 0, msPerBurst: null, waitedMs: pre.waitedMs };
+      try { await ev(INSTALL_MOTOR); }
+      catch (e) { if (!e.pageSilent) throw e;
+        return { ok: false, nx, ny, reason: 'unready', starved: true, exhausted: false,
+          detail: 'the page stopped answering before the walk started', starvedWhy: [e.message],
+          intended: 0, closed: 0, bursts: 0, msPerBurst: null }; }
       // A LEG THAT NEVER GOT TO RUN IS NOT A BLOCKED PATH. If a beat fired or a
       // conversation opened between the screenshot and the first key, phys() is
       // frozen under UILOCK and the body cannot move — recording that as "closed
@@ -665,7 +770,9 @@ export function makeAdapter(opt) {
       // that false leg.
       if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`))
         return { ok: false, nx, ny, reason: 'modal', detail: 'the game took control before the walk started', intended: 0, closed: 0 };
-      const h = await ev(`window.__pt.hit(${nx},${ny})`);
+      // The pixel-to-world march is 640 BVH queries on the page's own main thread —
+      // the one expensive read in this loop, and it gets a budget of its own.
+      const h = await ev(`window.__pt.hit(${nx},${ny})`, 30000);
       if (!h.ok) return { ok: false, nx, ny, reason: 'unprojection', detail: h.reason, intended: 0, closed: 0 };
       const from = await ev(`window.__pt.where()`);
       const d0 = Math.hypot(h.p[0] - from[0], h.p[2] - from[2]);
@@ -701,30 +808,51 @@ export function makeAdapter(opt) {
        * that could not look must say so rather than report what it did not see. */
       const BUDGET = budgetMs || 9000;
       const HARD = BUDGET * 6;                  // a full round of 5 headings, however slow the link
-      let exhausted = false, starved = false, rounds = 0;
-      while (Date.now() - t0 < BUDGET) {
-        const st = await ev(`window.__pt.dirTo(${JSON.stringify(h.p)})`, 15000);
-        if (st.dist <= ARRIVE_M) break;
-        let moved = 0, now = last, tried = 0;
-        for (const off of OFFSETS) {
-          await hold(OCT_KEYS[(((st.oct + off) % 8) + 8) % 8], BURST_MS); bursts++; tried++;
-          now = await ev(`window.__pt.where()`, 15000);
-          moved = Math.hypot(now[0] - last[0], now[2] - last[2]);
-          if (moved >= 0.10) { if (off !== 0) slides++; break; }
-          if (Date.now() - t0 > HARD) { starved = true; break; }
+      /* THE CEILING IS NOW ENFORCED DURING THE CALLS, NOT BETWEEN THEM. It used to be
+       * a `Date.now()` test sitting AFTER an await with no deadline of its own, so one
+       * blocking round-trip sailed straight past 54 s and the leg only noticed
+       * afterwards — which is how a single burst came to be reported at 210 402 ms.
+       * `left()` is what remains of the ceiling, and every await in the loop is capped
+       * by it, so the worst case is one call's own budget past HARD instead of forever. */
+      const left = deadline(HARD);
+      const cap = (n) => Math.min(n, left());
+      let exhausted = false, starved = false, rounds = 0, starvedWhy = null;
+      try {
+        while (Date.now() - t0 < BUDGET) {
+          if (left() <= 250) { starved = true; break; }
+          const st = await ev(`window.__pt.dirTo(${JSON.stringify(h.p)})`, cap(EV_MS));
+          if (st.dist <= ARRIVE_M) break;
+          let moved = 0, now = last, tried = 0;
+          for (const off of OFFSETS) {
+            await hold(OCT_KEYS[(((st.oct + off) % 8) + 8) % 8], BURST_MS, cap(KEY_MS)); bursts++; tried++;
+            now = await ev(`window.__pt.where()`, cap(EV_MS));
+            moved = Math.hypot(now[0] - last[0], now[2] - last[2]);
+            if (moved >= 0.10) { if (off !== 0) slides++; break; }
+            if (Date.now() - t0 > HARD) { starved = true; break; }
+          }
+          rounds++;
+          last = now;
+          const d = Math.hypot(h.p[0] - now[0], h.p[2] - now[2]);
+          if (d < best - 0.15) { best = d; sinceGain = 0; } else sinceGain++;
+          // Every heading refused — but only say so if every heading was actually TRIED.
+          if (moved < 0.10) { exhausted = (tried === OFFSETS.length && !starved); break; }
+          if (sinceGain >= 8) break;                // moving, but not getting closer
+          // A camera cut, a doorway or a story beat changes the world under the leg.
+          if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`, cap(EV_MS))) break;
         }
-        rounds++;
-        last = now;
-        const d = Math.hypot(h.p[0] - now[0], h.p[2] - now[2]);
-        if (d < best - 0.15) { best = d; sinceGain = 0; } else sinceGain++;
-        // Every heading refused — but only say so if every heading was actually TRIED.
-        if (moved < 0.10) { exhausted = (tried === OFFSETS.length && !starved); break; }
-        if (sinceGain >= 8) break;                // moving, but not getting closer
-        // A camera cut, a doorway or a story beat changes the world under the leg.
-        if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`, 15000)) break;
+      } catch (e) {
+        /* THE PAGE STOPPED ANSWERING MID-LEG. Not a blocked path, not a refusal — an
+         * absence of evidence, and the one outcome that must never become `exhausted`.
+         * Ask the frame gate WHY while the condition is still live, because "starved"
+         * with a reason is a finding about the machine and "starved" without one is a
+         * shrug the next reader has to re-investigate. */
+        if (!e.pageSilent) throw e;
+        starved = true; exhausted = false;
+        const g = await frameGate().catch(() => ({ why: [] }));
+        starvedWhy = [e.message, ...(g.why || [])];
       }
-      const end = await ev(`window.__pt.where()`);
-      const stoppedByModal = await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`);
+      const end = await evSoft(`window.__pt.where()`, EV_MS, last);
+      const stoppedByModal = await evSoft(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`, EV_MS, false);
       const dEnd = Math.hypot(h.p[0] - end[0], h.p[2] - end[2]);
       if (stoppedByModal)
         return { ok: false, nx, ny, reason: 'modal', detail: 'the game took control part-way through the walk',
@@ -739,7 +867,8 @@ export function makeAdapter(opt) {
         // — the world refused, and this is the finding worth filing. `starved`: the
         // round was cut off by the hard ceiling, so what the world would have done is
         // UNKNOWN and no blocker may be built on it.
-        exhausted, starved, msPerBurst: bursts ? Math.round((Date.now() - t0) / bursts) : null };
+        exhausted, starved, starvedWhy,
+        msPerBurst: bursts ? Math.round((Date.now() - t0) / bursts) : null };
     },
 
     /* Read a whole conversation with real presses and hand back the transcript. A
@@ -748,7 +877,10 @@ export function makeAdapter(opt) {
     async readThrough(max = 40) {
       const seen = [];
       for (let n = 0; n < max; n++) {
-        const p = await ev(PERCEPT_JS);
+        // A page that stops answering ends the read; the transcript so far is real
+        // and a half-read conversation is not a reason to abort the run.
+        const p = await evSoft(PERCEPT_JS, EV_MS, null);
+        if (!p) break;
         if (p.dialogue && p.dialogue.choices) break;
         if (!p.dialogue && !p.card) break;
         // The typewriter draws the SAME line twice — once mid-type, once finished
@@ -764,7 +896,8 @@ export function makeAdapter(opt) {
           if (prev && line.startsWith(prev)) seen[seen.length - 1] = line;   // the same line, finished
           else seen.push(line);
         }
-        await tap('e'); await sleep(320);
+        try { await tap('e'); } catch (e) { if (e.pageSilent) break; throw e; }
+        await sleep(320);
       }
       return seen;
     },
@@ -778,7 +911,7 @@ export function makeAdapter(opt) {
      * fresh dialogue choice, false for a battle command menu that remembers where it
      * was. So MEASURE the cursor and move relative to it. */
     async choose(index) {
-      const at = await ev(`(()=>{ const sel=(l)=>{ let i=-1;
+      const at = await evSoft(`(()=>{ const sel=(l)=>{ let i=-1;
           [...l].forEach((e,k)=>{ if(/(^|\\s)(cur|sel|selected|active)(\\s|$)/.test(e.className||'')) i=k; }); return i; };
         const br=document.querySelector('.ebb-root');
         if(br){ const sub=br.querySelector('.ebb-sub');
@@ -787,7 +920,7 @@ export function makeAdapter(opt) {
                           : br.querySelectorAll('.ebb-cmds .ebb-cmd')); }
         const v=[...document.querySelectorAll('.ebui-veil')].pop();
         if(v) return sel(v.querySelectorAll('.ebui-row,.ebui-choice,li,.row,.choice'));
-        return -1; })()`);
+        return -1; })()`, EV_MS, -1);
       const d = index - (at >= 0 ? at : 0);
       for (let i = 0; i < Math.abs(d); i++) { await tap(d > 0 ? 'down' : 'up'); await sleep(130); }
       await tap('e'); await sleep(700);
@@ -804,6 +937,6 @@ export function makeAdapter(opt) {
       try { profile && killOrphans(profile); } catch (e) { }
       try { profile && rmSync(profile, { recursive: true, force: true, maxRetries: 3 }); } catch (e) { }
     },
-    _ev: ev,
+    _ev: ev, _hold: hold, _frameGate: frameGate,
   };
 }
