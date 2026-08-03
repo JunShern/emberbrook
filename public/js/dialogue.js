@@ -491,8 +491,18 @@
   // getBoundingClientRect is a synchronous layout read and render() runs on a
   // 16 ms tick, so it is gated on a GEOMETRY KEY: the box only changes shape when
   // the mode changes, when a choice list appears, or when the frame is resized.
+  //
+  // THE BOX'S OWN HEIGHT IS PART OF THAT KEY, and leaving it out was a real defect
+  // (measured 2026-08-02). render() writes only the REVEALED prefix of the line, so
+  // a box that ends up two lines tall starts one line tall and grows mid-typewriter;
+  // without its height in the key the portrait was placed against the one-line box
+  // and never re-placed, which showed up as a 15 px scatter in the box's top edge
+  // across the cast — and every portrait is anchored to that edge. clientHeight is
+  // the same class of layout read the key already does on the frame.
   function geoKey() {
+    var w = S.panel && S.panel.frame && S.panel.frame.querySelector('.eb-win');
     return (S.mode || '') + '/' + (S.avail ? S.avail.length : 0) + '/' +
+      (w ? w.clientHeight : 0) + '/' +
       (S.side || '') + '/' + (S.pid || '') + '/' +
       (S.panel && S.panel.frame ? S.panel.frame.clientWidth + 'x' + S.panel.frame.clientHeight : '');
   }
@@ -549,9 +559,20 @@
     // top edge therefore sinks the plate by the remainder.
     var below = h * (1 - hb.eye);
     var lift = head * CUTIN_EYE_LIFT;
-    var maxDepth = Math.max(sink, Math.round(fb.bottom - bb.top) - 4);
-    var depth = Math.min(Math.max(Math.round(below - lift), sink), maxDepth);
+    var depth = Math.min(Math.max(Math.round(below - lift), sink), h);
     el.style.bottom = Math.round(fb.bottom - bb.top - depth) + 'px';
+    // A DEEP SINK IS CLIPPED, NOT CLAMPED. The window is `.ebui-panel.float`: it
+    // draws no background of its own outside the box, so art that sinks PAST the
+    // box's bottom edge is not hidden by anything — it hangs below the window with
+    // the crop's straight bottom cut on open ground, which is the one thing the
+    // sink exists to prevent. Measured 2026-08-02 on Boatwright, Innkeeper, Lake and
+    // Odessa, whose zoomed-out plates are the tall ones. Clamping the depth instead
+    // would have paid for it in the eyeline (Boatwright alone by 89 px), so the art
+    // is clipped at the box's bottom edge instead and the datum survives. The clip
+    // runs 8 px SHORT of that edge so the element's drop-shadow, which is cast from
+    // the clipped silhouette and offset downward, also stays behind the box.
+    var over = depth - (bb.height - 8);
+    el.style.clipPath = over > 0 ? 'inset(0 0 ' + Math.round(over) + 'px 0)' : 'none';
   }
 
   // ------------------------------------------ THE SUBJECT NORMALISATION ----
