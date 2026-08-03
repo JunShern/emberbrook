@@ -177,8 +177,11 @@ export async function run(cfg) {
   // GAME's defect, not the harness's, so it is filed rather than swallowed.
   let frozenN = 0; const FROZEN_MAX = 5;
 
+  // The objective sentence QUOTES the game's own banner, so it is shown to the agent
+  // but is NOT part of what the harness authored — see agent.mjs authoredParts().
   const brief = [plan.brief, plan.objective ? `Your current objective is: ${plan.objective}` : null]
     .filter(Boolean).join(' ') || null;
+  const briefAuthored = plan.brief || null;
   if (brief) log('  brief: ' + brief);
 
   function fileReport(kind, r, step, percept, truth, frames, source, severity) {
@@ -326,7 +329,7 @@ export async function run(cfg) {
     let intent;
     try {
       intent = await agent.decide({ screenshot: obs.screenshot, text: obs.text,
-                                    history: history.slice(-8), brief, nudge, nudgeAuthored });
+                                    history: history.slice(-8), brief, briefAuthored, nudge, nudgeAuthored });
       // THE ASSEMBLER SAYS WHAT IT WROTE. agent.mjs returns `_authored` — the persona,
       // the controls, the brief and the nudge, built from the same array the prompt is
       // — and everything else in the prompt is either drawn on screen or the agent's

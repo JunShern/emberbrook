@@ -147,7 +147,18 @@ export function authoredParts(obs, persona) {
   // which says so with `nudgeAuthored`; one that does not gets the whole nudge treated
   // as authored, which is the conservative direction (a false alarm, never a hole).
   const nudge = obs.nudgeAuthored === undefined ? (obs.nudge || '') : (obs.nudgeAuthored || '');
-  return [persona || DEFAULT_PERSONA, CONTROLS, obs.brief || '', nudge];
+  // THE BRIEF IS THE SAME KIND OF CONTAINER, and for the same reason: the drop-in
+  // brief is the harness's own words, but the sentence "Your current objective is:
+  // <...>" QUOTES A BANNER THE GAME DRAWS. A caller that knows which is which says
+  // so with `briefAuthored`; one that does not gets the whole brief treated as
+  // authored, which is the conservative direction (a false alarm, never a hole).
+  // WHY (playtest round 6): round 6 renamed ch2.road's objective to "Through the
+  // Dellhollow gate — …", del-cine's shot is named `gate`, and the run died at the
+  // step it entered Dellhollow on a SOFT token the game had painted on screen — the
+  // firewall's own stated exemption, missed because the objective travelled inside
+  // the authored brief. A player is allowed to know the word "gate".
+  const brief = obs.briefAuthored === undefined ? (obs.brief || '') : (obs.briefAuthored || '');
+  return [persona || DEFAULT_PERSONA, CONTROLS, brief, nudge];
 }
 
 const VALID = new Set(['goto', 'interact', 'advance', 'choose', 'wait', 'report', 'giveup']);
