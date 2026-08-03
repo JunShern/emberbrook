@@ -30,6 +30,9 @@ git runs here, on branch `migration/3d-hybrid`.
 - **docs/qa/MORNING.md** — the 2026-08-02 overnight brief: what shipped, the seven
   decisions waiting on the user, the honest reds, and the night's measurement lessons.
   Read this before RESUME.md, which it supersedes.
+- **docs/qa/TOMORROW.md** — the 2026-08-03 plan: five tranches, the art calls the user
+  DELEGATED to me (Old Gate structure, the bunting post, forest-vs-the-FFIX-refs), what is
+  settled and must not be re-asked, and the standing risks. Read it before picking up work.
 - **docs/qa/RESUME-LANES.md** — 2026-08-02 ~21:30: the FIVE lanes paused when the account
   moved to a lower tier and work narrowed to deployment. One entry each: what landed, what
   remains, the traps already paid for, and the decisions waiting on the user. Read it before
