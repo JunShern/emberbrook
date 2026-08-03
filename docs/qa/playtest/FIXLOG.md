@@ -51,6 +51,9 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 6 | (not filed — read off round 5's own frame) | — | The objective banner named a DIRECTION where it meant a PLACE, and the agent obeyed it | **VERIFIED — `ch2.road` fires AT the gate and said "Down into the hollow"** | "Through the Dellhollow gate — find whoever runs the locks", which is what the exit marker reads | `f1f5243` |
 | 6 | PT-20260803-028 | P1 | Glitched view and out-of-bounds geometry after battle | **VERIFIED AS A PICTURE, REFUTED AS A PLACE** — filed from `[69.0, 0.00, −55.0]`, in bounds, on real ground; the Moorage reads as submerged decks and bare gorge wall | not fixed — round 7's headline | — |
 | 6 | PT-20260803-027 | P1 | The player can leave the chapter on its first frame | **DUPLICATE** of PT-002 / -008 / -020 / -021 / -023 / -024 | (carried) | — |
+| 7 | (round 6's handover) | — | The gorge encounter rate eats the run | **REFUTED as a game defect** — 3 battles in 175.5 u against an analytic 4.48; the corridor ON ITS ROAD is 28.6 u, 77% road, expected **0.28** battles. The cost is a battle costing 10.7 HARNESS steps against ~1 for a 15 u walk leg | measurement + recommendation only; `encounters.json` untouched by instruction | — |
+| 7 | PT-20260803-028 | P1 | Glitched view and out-of-bounds geometry | **VERIFIED AS AN ART DEFECT, reproduced on tonight's rebuilt bundle** — the same river surface measures **222.3 L at one camera yaw and 83.4 L at another**, and at 222 it is BRIGHTER than the sky (189) while the gorge around it is 55–70 | not fixed by this lane — `GLASS_ROUGH 0.06` is a dated user art pick and the lighting lane owns the surface; handed over with the numbers | — |
+| 7 | (not filed — found by the same probe) | P1 | The camera boom sits inside the new grass and 88.2% of the frame is grass cards | **VERIFIED on the current build** — same position, yaw 0.4 | routed to the overworld-content lane; same class as `PT-20260803-022` | — |
 
 ## Rounds
 
@@ -1280,3 +1283,107 @@ across both is 0.00, against round 5's −4.6.
     in one or two legs, so it is NOT the defect `ch2.road`'s was. Left alone deliberately; noted
     here so the next round does not re-litigate it blind.
 
+### Round 7 — 2026-08-04 · the encounter rate was innocent, and the river turns white when you look along it
+
+Round 6 handed over two things and asked for a number on each before anybody built anything.
+Both got one. **Neither turned out to be the thing it looked like**, and in both cases the number
+is what says so.
+
+#### Handover 1 — the gorge encounter rate: REFUTED as a game defect
+
+**The claim.** In `run-20260803-230631`, 32 of 60 steps went to battles; the agent ran out of
+steps without reaching town, and the fighting, not the boundary, is what ate the run.
+
+**What the instruments said.** `zones.json` is the encounter geography — an RLE grid the runtime
+reads through `SIM.zone` — so the zone profile of a walked path can be measured **offline, with
+no browser**, by decoding the grid and sampling every 0.5 u along the positions in `run.jsonl`.
+Against `encounters.json`'s own numbers (a "step" is 1.0 world unit of travel, ratified in
+`encounters.js`):
+
+| run | walked | road | water | crag | meadow | forest | expected battles | **observed** |
+|---|---|---|---|---|---|---|---|---|
+| `run-20260803-230631` | 175.5 u | 34.5% | 29.9% | 25.5% | 6.7% | 3.5% | **4.48** | **3** |
+| `run-20260803-221232` | 109.3 u | — | 100% | — | — | — | 4.37 | 3 |
+| `run-20260803-230413` (on the road) | 28.5 u | **77.2%** | — | 12.3% | 10.5% | **0.28** | **0** |
+
+**The corridor is not 172 metres. It is 28.6.** Round 6's own successful run walked the Old Gate
+to the Dellhollow gate in three legs, 77% of it on `road` — which is `chancePerStep 0`, safe by
+design — and fought nothing, exactly as the analytic predicts. The 175 u run walked *six times the
+corridor* because it wandered off the road into the gorge and along the water line, and even then
+it fought **three battles where its own zone profile predicts 4.48**. The rate is not high. It is
+running slightly under its own spec.
+
+**So what actually ate the run?** Not the rate — the *price*. Measured on the same log:
+
+  * **a battle costs 10.7 harness steps** (3 battles, 32 steps)
+  * **a walk leg costs 1 step and covers ~15 u**
+
+One battle therefore costs the step-budget equivalent of about 160 u of walking. A 60-step budget
+buys either ~15 legs of exploration or ~5 battles, and the corridor run drew the second hand.
+
+**Recommendation, and it is deliberately not a retune.** `encounters.json` should not be touched
+on this evidence: the measured rate is *below* its analytic mean, roads are already free, and the
+one run that followed the route fought nothing. **Size the budget instead** — roughly 11 steps per
+expected battle on top of the walking estimate, so an off-road `ow-valley` run wants 100+ steps,
+not 60. The one number that IS worth putting in front of the user as a design question is the
+walking time between fights off-road, because it is short: at the shipped `SPD` of 4.5 u/s, the
+mean gaps work out to **forest 8.5 s · crag 9.1 s · water 10.0 s · meadow 13.6 s** of continuous
+walking. On the road it is never. Whether "nine seconds off the path" is the intended texture is a
+balance call, and this lane is not making it.
+
+#### Handover 2 — the view the agent called broken, photographed on tonight's build
+
+`PT-20260803-028` was filed from `[69.0, 0.00, −55.0]`, standing legitimately in bounds:
+*"out-of-bounds geometry … floating collision blocks and open void."* Round 6 called it VERIFIED
+AS A PICTURE, REFUTED AS A PLACE, and left it as an art problem at a coordinate.
+
+**Round 6's frame is not evidence about the current game** — the ow bundle was rebuilt at 00:36
+tonight by the lighting and overworld-content lanes. So the first thing this round did was go
+stand there again. `tools/playtest/look_probe.mjs` (new, adapted from `ow_shot.mjs`: same CDP
+pattern, `freePort`, own profile, cleaned on every exit path, hard self-expiry) boots `ow-valley`,
+`SIM.tp()`s to a named coordinate and photographs a ring of yaws. It landed exactly where the
+report was filed — `zone: water`, `ground y 0.0376` — and the defect reproduced.
+
+**The picture is view-dependent, and the measurement is the whole finding.** Same position, same
+build, same river surface, patch means off the written PNGs:
+
+| camera yaw | what the river reads as | measured luminance |
+|---|---|---|
+| **+1.4** (looking downstream, the way the player walks) | a flat pale plane, **indistinguishable from sky** | **222.3** |
+| −1.5 | teal, with its bed visible through it | **83.4** |
+| +2.4 | teal, gorge and plank decks legible | 116.4 |
+
+and the comparison that names the complaint:
+
+| in the same frame | luminance |
+|---|---|
+| the river at yaw +1.4 | **222.3** |
+| the sky | 189.5 |
+| the gorge walls around it | 55 – 70 |
+
+**At a grazing view angle the water is brighter than the sky, in a frame whose every other surface
+is three times darker.** That is not "submerged decks" and it is not a glitch — it is a hole punched
+in the picture, and *"floating collision blocks and open void"* is an accurate description of what
+is drawn. The dark brown Moorage decks sit on top of it with nothing behind them.
+
+**Where it comes from, stated as a mechanism and not a fix.** `tools/valley_build.py` carries
+`GLASS_ROUGH = 0.06` — the user's own B1 glass-river pick of 2026-08-03, from
+`docs/qa/ow-art/index.html` section B. Roughness 0.06 is a near-mirror, so the Fresnel term goes
+to 1 at grazing incidence and the environment reflection dominates; `play3d.html:1570` sets
+`NoToneMapping` for every `OWCAM` scene, so there is nothing to roll that highlight off and it
+clips. Both halves of that are someone else's ratified decision — a dated user art pick and a live
+lighting lane — so **this lane measured it and handed it over rather than turning a knob.**
+Evidence frames: `docs/qa/playtest/round7/moorage-*.jpg`.
+
+The good news in the same set: **from most angles the Moorage is genuinely handsome.** `yaw2p4`
+is gorge walls, teal river, plank decks, a boathouse and greenery, and it reads as a place. The
+defect is one arc of yaw, and it happens to be the arc a player walking downstream is looking
+along.
+
+#### A third thing, found by the same probe and NOT filed by any agent
+
+At yaw +0.4 from that identical coordinate, **88.2% of the frame is grass cards** — the camera
+boom is inside the new overworld grass dressing (`public/js/ow_detail.js`, added tonight). This is
+the same class as `PT-20260803-022` (*"camera clipped inside foliage obscuring entire screen"*),
+which has been carried unmeasured since round 5, and it is now measured on a live build. It
+belongs to the overworld-content lane and is routed there, not patched here.
