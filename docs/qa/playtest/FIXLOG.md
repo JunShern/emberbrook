@@ -33,6 +33,7 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 2 | PT-20260803-001 | P1 | Walk blocked: closed 0 m of an intended 35.57 m | **REFUTED** — reachable, 1296 cells, via 2 in-scene edges | (carried from round 0; no code change needed) | — |
 | 2 | PT-20260803-003 | P1 | Character stuck on terrain geometry | **REFUTED** — 24/24 headings open at that spot, character visible at 219 px | (carried from round 0) | — |
 | 2 | PT-20260803-004 | P1 | Character stuck on terrain near rock formation | **REFUTED** — same position as -003, same measurement | (carried from round 0) | — |
+| 2 | PT-20260803-002 / -008 | P1 | The player can leave the chapter on its first frame, and the objective follows them out | **VERIFIED — the spawn WAS the exit pad** | spawn moved 7.0 m up the road; a new `denied` edge state answers in Vesper's voice | `615fa16` |
 
 ## Rounds
 
@@ -355,3 +356,55 @@ on the instrument (`SIM.occ` naming `veg_canopy_whisperwood_cards`, the marker u
 reported spot and down at three controls) but not yet by the tool that filed it. **That is
 an open item for round 3, by rule 3 of this log** — a fix is not done until the playtester
 stops reporting it, and this one has not had the chance to.
+
+### Round 2, the last piece — the spawn was the door out (`615fa16`)
+
+**What the agent experienced,** twice, in two different runs a day apart: it read the opening
+narration, took the only prompt on screen, and was in `ow-valley` — outside the chapter, with the
+objective still reading "Follow the road north," and nothing out there able to advance anything.
+
+**What the instrument said.** The cause was not the prompt and not the story wiring. Shot
+`woodroad`'s baked fallback spawn **is the map exit's own pad** (`walk_pad_arrival-clearing`,
+r 2.2). **A new game began standing on the door out.** The first thing a player could do was
+leave, because it was the only thing in reach.
+
+**What changed.**
+
+  * **The spawn is now a story fact.** `story.json` gained `start` (scene, cam, pos), and
+    `index.html`, `playthrough_test` and `llm_playtester` all read it instead of each carrying
+    its own URL. The position moved **7.0 m up the Whisperwood road** to `[53.7,-0.385,21.2]`.
+    `checkpointsFromStory` is seeded from the same fact, so a `--from=ch1.open` drop-in no longer
+    reproduces the bug it starts after.
+  * **A new edge state: `denied`, between open and sealed.** A sealed edge shows no prompt at
+    all, which suits a gate you cannot see through and NOT a road you just walked in on. A denied
+    edge keeps the prompt and drops the transition. It writes no flag and moves nobody, so it is
+    not a beat, and `SIM.door`/`SIM.go`/markers all honour it.
+  * **The line**, per the user's ruling that this should be a refusal in her own voice rather
+    than a wall:
+
+    > **"(South is eleven days of road I've surveyed. The lights north aren't on any map I carry.)"**
+
+    Fact first, filed as paperwork. The refusal is a survey record; the noticing is a gap in her
+    own maps, which is *why* she goes north. It branches into Lake's voice during his playable act.
+
+**The circuit closed.** A real `newgame` run: 10 steps, all in `emb-cine`, shots running
+`woodroad -> waystone -> arch` (northward, which is the point), `ch1.open` and `ch1.waystone`
+fired, **the spine detector never fired, zero reports**.
+
+**A red that was not real, and the lesson in it.** That lane's own `playthrough_test` came back
+**54 passed / 16 failed**, cascading from `ch1.pact` "never fired" — while the flag dump printed by
+that very failure read `story.ch1.pact: true`. It ran at load 19-22 against another lane's Chrome
+swarm and took 28 minutes instead of 12. Re-run by the coordinator on a QUIET machine, the same
+tree is **86 passed / 0 failed**. Second time in one day a browser-gate red dissolved when the
+machine was idle. **ON THIS BOX A BROWSER GATE'S RESULT IS ONLY MEANINGFUL WHEN NOTHING ELSE IS
+RUNNING** — treat a red from a loaded machine as unproven, not as a finding.
+
+### Open going into round 3
+
+  * **PT-009's fix is verified on the instrument but the playtester has not re-seen it.** Rule 3
+    says a fix is not done until the playtester stops reporting it, and no run has yet reached an
+    `ow-valley` battle since. First job of round 3.
+  * **The closing runs starve.** One printed `STARVED after 1 burst(s) at ~210402 ms/burst` while
+    the agent closed 0 m of 20.87 m on ground measured open in all 24 directions. The
+    exhausted/starved split held and it filed nothing, which is the round-2 fix working — but a
+    loop whose closing condition cannot walk cannot close. Being fixed now.
