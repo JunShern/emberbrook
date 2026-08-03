@@ -1,6 +1,7 @@
 # The overworld gauntlet loop — protocol and round log
 
-**Five rounds, then we assess whether it is going anywhere.** User ruling 2026-08-04.
+**Ten rounds minimum, then keep going while it is still paying.** User ruling 2026-08-04.
+(An earlier version of this line said five; superseded — see rule 6.)
 
 The experiment: can a blind LLM critic, comparing our overworld against real FFIX-reimagined
 overworld screenshots, produce direction good enough to drive real art improvement? Separate
@@ -105,11 +106,13 @@ Findings route **through the coordinator**, never lane to lane.
     nothing to act on. Depth must come radially across the GROUND PLANE, or from detail falloff.
     The upside: our high camera makes near-field ground most of the frame, which is exactly where
     the references have their best material. **We can show off more of it than they can.**
-  * No new assets until treatment is exhausted. The last pass moved a lot with zero new art.
+  * **Treatment first, assets second — but assets ARE on the table** once treatment stops moving
+    the picture. The last pass moved a lot with zero new art, which is why treatment leads; it is
+    a sequencing preference, NOT a ban. See "What counts as a plateau".
   * Ground detail must not become collision (`veg_*`; verify in the ENGINE, not the file).
 
 ## Rounds
 
-| # | frames judged | verdict | the one deficit | routed to | outcome |
+| # | frames judged | verdict | deficits | routed to | outcome (moved / did-not-move / not-tried) |
 |---|---|---|---|---|---|
 | — | *(round 1 begins when a builder returns frames)* | — | — | — | — |
