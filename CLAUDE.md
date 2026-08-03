@@ -396,6 +396,15 @@ git runs here, on branch `migration/3d-hybrid`.
   present, and since every module self-arms at load AND on 'eb-scene', a parse error is
   invisible until an in-place scene swap silently leaves the module absent.
   transition_test's console gate is what catches it. Use plain quotes in CSS comments.
+- **AND A BACKTICK INSIDE A DOUBLE-QUOTED `git commit -m` RUNS AS A COMMAND** (2026-08-03,
+  paid immediately after writing the bullet above). Committing a message that quoted a word
+  in backticks made zsh execute it: the shell printed `command not found`, the word was
+  substituted OUT of the message, and THE COMMIT STILL SUCCEEDED AND PUSHED — a silent
+  edit to the permanent record, with a nonzero-looking error that belonged to a
+  subshell rather than to git. Same root as the CSS-comment trap: a backtick is live
+  inside double quotes wherever it appears. **Use single quotes for commit messages, or
+  a heredoc.** Do not amend a pushed shared branch to fix cosmetic damage — rewriting
+  history other lanes have fetched costs more than the missing word.
 - **A TEST THAT CANNOT BOOT IS NOT A TEST THAT FAILED.** transition_test exits 13 at
   `== BOOT` while any lane (or the townwalk refresh cron) is mid-write on
   public/assets/scenes/townwalk/scene.glb (~51 MB) — the boot gate waits on that asset.
