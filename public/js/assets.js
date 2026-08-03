@@ -374,10 +374,21 @@ const LOOKS = {
 // Characters without one fall back to their compiled pixel portrait above.
 // Expression variants load as "<key>:<expr>"; dialogue lines may use
 // who: 'vesper:worried' to pick one (missing files fail silently).
+// THIS LIST IS THE 2D RUNTIME'S WHOLE EMOTIONAL VOCABULARY, and it is smaller than the
+// 3D runtime's (2026-08-03). dialogue.js resolves a mood through public/assets/characters/
+// cutins.json and draws cutin-<mood>.png; this page never reads that manifest and draws
+// expr-<mood>.png off the hardcoded list below, so a mood can be live in one runtime and
+// absent in the other. MEASURED: 15 scripted moods currently have a cut-in and no bust
+// (lake annoyed/sad/surprised/thinking/weary/wry, maren indignant/surprised/thinking/wry,
+// poppy stern/tender/worried, vesper annoyed/wry). It is a LATENT gap, not a live one —
+// chapter1.js and chapter2.js ask for nothing this list lacks, so nothing is being dropped
+// today — but the day a writer moves one of those moods into a chapter it fails SILENTLY,
+// because a missing plate just leaves the neutral bust on screen. If you add a mood to a
+// chapter, add its expr-<mood>.png here, or it will not appear and nothing will say so.
 const PORTRAITS_HD = {};
 const EXPRESSIONS = {
-  vesper: ['happy', 'worried', 'surprised', 'determined', 'sad', 'thinking', 'tender'],
-  lake: ['happy', 'worried', 'determined', 'tender'],
+  vesper: ['happy', 'worried', 'surprised', 'determined', 'sad', 'thinking', 'tender', 'wry', 'annoyed'],
+  lake: ['happy', 'worried', 'determined', 'tender', 'wry'],
   rowan: ['happy', 'hollow', 'grave'],
   poppy: ['happy', 'hollow', 'laughing'],
   mara: ['happy', 'hollow', 'distressed'],

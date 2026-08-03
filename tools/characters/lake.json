@@ -6,7 +6,8 @@
     "happy": "a bright open smile, eyes lit up",
     "worried": "brows knit, small anxious frown, eyes glancing aside",
     "determined": "firm set jaw, focused eyes, faint confident smirk",
-    "tender": "soft eyes, small warm smile, head fractionally tilted — the look of giving someone their name back"
+    "tender": "soft eyes, small warm smile, head fractionally tilted — the look of giving someone their name back",
+    "wry": "one brow up, mouth pulled a millimetre sideways — the whole joke, delivered quietly and without moving anything else"
   },
   "files": {
     "key": "public/assets/characters/lake/bust-key.png",

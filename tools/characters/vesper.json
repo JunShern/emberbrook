@@ -9,7 +9,9 @@
     "determined": "a firm set jaw, focused steady eyes, the faintest confident smirk",
     "sad": "eyes cast down, mouth soft and small, quiet grief on her face",
     "thinking": "eyes glancing up and to one side, lips pressed together in a wry line, the look of someone mid-calculation",
-    "tender": "soft warm eyes, a small gentle smile, head tilted very slightly, quiet tenderness — her eyes stay exactly the same bright teal-green color"
+    "tender": "soft warm eyes, a small gentle smile, head tilted very slightly, quiet tenderness — her eyes stay exactly the same bright teal-green color",
+    "wry": "one brow up hard, mouth pulled sideways into a dry flat line — deadpan disbelief, chin tipped back a fraction while the eyes stay level on you",
+    "annoyed": "one brow cocked down while the other stays level, eyes half-lidded and flat, mouth pulled tight to one side — irritated and unimpressed, tolerating this conversation and no more"
   },
   "files": {
     "key": "public/assets/characters/vesper/bust-key.png",

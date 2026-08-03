@@ -4,7 +4,7 @@
       "key": {
         "file": "assets/characters/lake/bust-key.png",
         "refs": [],
-        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A gentle young man in his late twenties: the village lamplighter. Tousled wavy brown hair, soft warm brown eyes, a warm boyish friendly face, a calm kind manner. He wears a mid-thigh-length charcoal dark-grey TAILORED COAT with NO HOOD, worn OPEN down the front with no belt: it has an armhole seam at each shoulder, a SLEEVE enclosing each arm down to a cuff at the wrist, and two separate front panels that hang straight down close against his sides. It ends at a plain flat collar band at the base of the neck — nothing bunched or draped behind his shoulders. A small brass flame-shaped clasp at the throat. The open coat shows a white band-collar shirt and, over it, a fitted SCARLET RED-ORANGE vest (the colour of a lit flame) with cord X-lacing down the front. Brown pants, brown boots. No chest strap, no bag, nothing held in either hand. No part of the garment flares or stands out into empty space. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
@@ -21,7 +21,7 @@
           "assets/characters/lake/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up. Every other detail stays identical. No text, no watermark, no frame.",
-        "generatedAt": null
+        "generatedAt": "2026-08-03T10:11:42.942Z"
       },
       "expr:worried": {
         "file": "assets/characters/lake/expr-worried.png",
@@ -29,7 +29,7 @@
           "assets/characters/lake/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows knit, small anxious frown, eyes glancing aside. Every other detail stays identical. No text, no watermark, no frame.",
-        "generatedAt": null
+        "generatedAt": "2026-08-03T10:11:50.953Z"
       },
       "expr:determined": {
         "file": "assets/characters/lake/expr-determined.png",
@@ -37,7 +37,7 @@
           "assets/characters/lake/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: firm set jaw, focused eyes, faint confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
-        "generatedAt": null
+        "generatedAt": "2026-08-03T10:11:59.148Z"
       },
       "expr:tender": {
         "file": "assets/characters/lake/expr-tender.png",
@@ -45,14 +45,14 @@
           "assets/characters/lake/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: soft eyes, small warm smile, head fractionally tilted — the look of giving someone their name back. Every other detail stays identical. No text, no watermark, no frame.",
-        "generatedAt": null
+        "generatedAt": "2026-08-03T10:12:07.021Z"
       },
       "sheet": {
         "file": "assets/characters/lake/sheet.png",
         "refs": [
           "assets/characters/lake/bust.png"
         ],
-        "prompt": "Create a video game character sprite sheet of this exact character (same face, black undercut swept back, dark-teal shoulder-cape with brass flame pin, cream band-collar shirt, chest strap with brass wick-case), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "prompt": "Create a video game character sprite sheet of this exact character (same face, tousled wavy brown hair, warm boyish late-twenties face, open charcoal tailored coat with NO hood, a sleeve on each arm and two front panels hanging straight and close at his sides, plain flat collar band, brass flame-shaped clasp at the throat, white band-collar shirt and a scarlet red-orange X-laced vest beneath, brown pants, brown boots, no chest strap, hands empty), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
       },
       "turnaround": {
@@ -63,9 +63,17 @@
           "assets/characters/lake/turnaround/back.png"
         ],
         "styleAnchor": "public/assets/refs/vesper_apose_front.jpg"
+      },
+      "expr:wry": {
+        "file": "assets/characters/lake/expr-wry.png",
+        "refs": [
+          "assets/characters/lake/bust.png"
+        ],
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: one brow up, mouth pulled a millimetre sideways — the whole joke, delivered quietly and without moving anything else. Every other detail stays identical. No text, no watermark, no frame.",
+        "generatedAt": "2026-08-03T10:10:43.482Z"
       }
     },
-    "desc": "A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case."
+    "desc": "A gentle young man in his late twenties: the village lamplighter. Tousled wavy brown hair, soft warm brown eyes, a warm boyish friendly face, a calm kind manner. He wears a mid-thigh-length charcoal dark-grey TAILORED COAT with NO HOOD, worn OPEN down the front with no belt: it has an armhole seam at each shoulder, a SLEEVE enclosing each arm down to a cuff at the wrist, and two separate front panels that hang straight down close against his sides. It ends at a plain flat collar band at the base of the neck — nothing bunched or draped behind his shoulders. A small brass flame-shaped clasp at the throat. The open coat shows a white band-collar shirt and, over it, a fitted SCARLET RED-ORANGE vest (the colour of a lit flame) with cord X-lacing down the front. Brown pants, brown boots. No chest strap, no bag, nothing held in either hand. No part of the garment flares or stands out into empty space."
   },
   "pip": {
     "stages": {
@@ -428,6 +436,22 @@
         ],
         "prompt": "Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
+      },
+      "expr:wry": {
+        "file": "assets/characters/vesper/expr-wry.png",
+        "refs": [
+          "assets/characters/vesper/bust.png"
+        ],
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: one brow up hard, mouth pulled sideways into a dry flat line — deadpan disbelief, chin tipped back a fraction while the eyes stay level on you. Every other detail stays identical. No text, no watermark, no frame.",
+        "generatedAt": "2026-08-03T10:10:27.132Z"
+      },
+      "expr:annoyed": {
+        "file": "assets/characters/vesper/expr-annoyed.png",
+        "refs": [
+          "assets/characters/vesper/bust.png"
+        ],
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: one brow cocked down while the other stays level, eyes half-lidded and flat, mouth pulled tight to one side — irritated and unimpressed, tolerating this conversation and no more. Every other detail stays identical. No text, no watermark, no frame.",
+        "generatedAt": "2026-08-03T10:10:36.138Z"
       }
     },
     "desc": "A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest."
