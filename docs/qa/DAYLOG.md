@@ -15370,3 +15370,82 @@ warning cannot tell a comment from a CSS url() and is a warning precisely for th
 declared below `if (WEBP) await webpPass()` threw `ReferenceError` only AFTER 219 plates
 had been re-encoded — ten minutes to learn a one-line mistake. Exercise a new build step
 on a three-file copy before spending a build on it.*
+
+------------------------------------------------------------
+**CH2.ROAD ANCHOR (2026-08-03 ~01:30-02:30).** §W's one red on its first night was a
+DEFECT IN THE GAME DATA, and it is fixed: `story.json` beat `ch2.road` carried
+`at [184.88, 12.01, -136.19]`. That is `valley.region.json`'s portal
+`dellhollow-valley-gate` — `[184.88, 136.19, 12.01]` in REGION order (x, map-y,
+elevation) — pasted in with the axes swapped and map-y negated but **the tile offset
+never applied**. `ow-valley`'s tile is 280x200 centred on world (140, 100), so runtime
+x is [-140,140] and z is [-100,100]: the old point was outside on BOTH axes, over
+nothing but `fx_vista_ring`, 18.8 m below its own stated y.
+
+**THE TRANSFORM, verified on all three valley portals before anything was changed.**
+`tools/scenegraph_derive.mjs:853` states it once and `world.json regions[].tile.origin`
+supplies the constants:
+
+    T(p) = [p[0] - CX, p[2], CY - p[1]]        CX, CY = 140, 100
+
+| region portal `[x, map-y, h]` | T(p) plan | shipped scenegraph edge `at` |
+|---|---|---|
+| emberbrook-gate `[82.6, 34.39, 27.1]` | -57.40 / 65.61 | `[-57.40, 27.207, 65.61]` |
+| old-gate `[88.42, 73.83, 26.5]` | -51.58 / 26.17 | `[-51.58, 26.516, 26.17]` |
+| dellhollow-valley-gate `[184.88, 136.19, 12.01]` | 44.88 / -36.19 | `[44.88, 12.651, -36.19]` |
+
+x and z reproduce to **0.000 m** on all three; only y moves, because the derive
+re-grounds it off the walk surface. Cross-checked against the bundle with `glb_read`: a
+down-ray at T(emberbrook-gate) tops out at **27.207**, the edge's y exactly. The Old Gate
+lane arrived at the same offset independently from the other side (`rx 94.7` = world
+x -45.3). Commit b72cfe0; the derivation is also carried in the beat's own `_doc_at`.
+
+**SIBLING SWEEP: no other anchor shares the defect.** Every numeric array in story.json
+(13 of them, including the Lake lane's `pov.spawn`) was down-rayed against its own
+shipped bundle — all land within **0.10 m** of their stated y. `ch2.road` was the only
+raw region coordinate, and the only anchor `findability_test` §5 cannot see: §5 skips a
+scene with no camera bands, and `ow-valley` has none. That is why §W was the instrument
+that found it.
+
+**THE ENGINE, ASKED DIRECTLY (ow-valley, WALKLOCK off, reach_probe's own primitives).**
+`SIM.ground` at the new anchor = **12.159**, 0.15 m under its stated y. The exact point
+is body-blocked by `portal_markers`, the gate's own marker prop (`walk_bodygate` scores
+it 5244 blocked steps there), so the nearest clear ground is **0.4 m** away at y 12.455.
+Flood fill at step 0.5, valley-sized budget:
+
+- east bank below the Old Gate court `[-42, 26.08, 22.5]` -> anchor, tol 30:
+  **REACHED, 4453 cells, no edge taken**
+- south-road arrival `[-58.242, 27.591, 69.827]` (west bank) -> anchor, tol 30:
+  **NO PATH, 167851 cells**
+
+**The valley is TWO components and the Old Gate court is the wall between them** — the
+same band the Old Gate lane measured from the other side and is fixing with a road-arc
+back-off. Not this anchor.
+
+**TWO INSTRUMENT DEFECTS FIXED WITH IT (3e997f3).** (1) `reach_probe` read WALKLOCK off
+the `#wl` checkbox. play3d renders that box ONCE at page load (play3d.html:808) and only
+a human click rewrites it, while `sgSwap()` re-runs `sceneParams()` on every in-place
+scene change and moves the real flag underneath it — so a page that opened in emb-cine
+and edged into ow-valley shows a CHECKED box over a runtime with WALKLOCK OFF, and the
+fill answered the overworld with the town's rules. *An instrument that mirrors a flag
+lies the moment the flag moves.* It now re-derives from play3d.html:35's own three live
+inputs. (2) The harness's ch2.road stand point was 9.8 m out and 9.0 m up on a claim
+measured through defect (1); the running game puts clear ground 0.4 m away.
+
+**STILL NOT 70/0, and the reason is not this lane.** The full run dies at `ch1.meet`:
+the Lake lane's new `ch1.lake.handoff` beat moves the player into `emb-lake-int` after
+`ch1.rowan`, and playthrough_test's CH1 spine table does not know about the pov step, so
+every later section fails inside the cottage. Re-run once that lane teaches the harness
+its own beat. Green today, unrelated to the spine: story 1101/0, findability 69/0,
+slice 848/0, seam 294/0, cine 689/0, seam_walk 9/9, battle + encounter sims, dialogue_style
+0 failures. Pre-existing reds owned elsewhere: `dialogue_test` del.gullgirl arrival
+clearance (2), `economy_test` `hand-lamp has a price` (Lake lane's new item),
+`routes_derive --check` STALE on dellhollow.
+
+*Git lesson paid twice in ten minutes on a file four lanes were holding, and worth the
+line: `git commit -m ... -- <pathspec>` COMMITS THE WORKING TREE for that path and
+IGNORES the index, so a careful `git apply --cached` of one hunk is silently overridden
+(b72cfe0 published 309 insertions of two other lanes' in-progress edits instead of 3).
+The repair then made it worse — computed against the base I started from rather than
+CURRENT HEAD, it reverted the Lake lane's `20f4aef` out of HEAD (restored in 30c0b62).
+To commit one hunk of a contested file: `git apply --cached`, then `git commit` with NO
+pathspec. To repair one: diff against HEAD as it is now, never the base you began with.*
