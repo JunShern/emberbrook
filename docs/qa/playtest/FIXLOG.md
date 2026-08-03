@@ -34,6 +34,11 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 2 | PT-20260803-003 | P1 | Character stuck on terrain geometry | **REFUTED** — 24/24 headings open at that spot, character visible at 219 px | (carried from round 0) | — |
 | 2 | PT-20260803-004 | P1 | Character stuck on terrain near rock formation | **REFUTED** — same position as -003, same measurement | (carried from round 0) | — |
 | 2 | PT-20260803-002 / -008 | P1 | The player can leave the chapter on its first frame, and the objective follows them out | **VERIFIED — the spawn WAS the exit pad** | spawn moved 7.0 m up the road; a new `denied` edge state answers in Vesper's voice | `615fa16` |
+| 3 | PT-20260803-015 | P1 | I ended up somewhere with no way to advance the story | **VERIFIED — the overworld arrival was the door back to Emberbrook** | `ow-valley`'s bundle spawn backed 4.3u down-road, off the return pad; new `spawn_gate` instrument | `5c15518` |
+| 3 | PT-20260803-013 | P1 | Game screen rendered as a tiny thumbnail in top-left corner | **VERIFIED as a picture — CAUSE STILL UNKNOWN** | the gate already refuses to vouch for it (`8b76529`); the probe-poisoning hypothesis is refuted below | — |
+| 3 | PT-20260803-014 | P0 | The game is unresponsive and visually broken | **VERIFIED — same frame as -013**, one step later | same | — |
+| 3 | PT-20260803-016 / -017 / -018 | P0 | Cannot move on the valley map screen · valley map ground is non-walkable · I must give up | **VERIFIED — the overworld booted as a diorama, with no follow camera at all** | `ow-` added to play3d's `RT` test, where `OWCAM`'s regex already had it | `10ea7a4` |
+| 3 | (not filed) | — | yesterday's percept cursor fix shipped inert: `\s` in a template literal | **HARNESS DEFECT, found by re-reading `percept_test`'s own output** | call the percept's own `cur()` helper; the stale KNOWN-defect allowance retired | `b3bf841` |
 
 ## Rounds
 
@@ -408,3 +413,305 @@ RUNNING** — treat a red from a loaded machine as unproven, not as a finding.
     the agent closed 0 m of 20.87 m on ground measured open in all 24 directions. The
     exhausted/starved split held and it filed nothing, which is the round-2 fix working — but a
     loop whose closing condition cannot walk cannot close. Being fixed now.
+
+### Round 3 — 2026-08-03 · the first round where the harness was not the thing in the way
+
+Rounds 1 and 2 spent themselves on the instrument: it could not see, then it could not walk.
+Round 3 opened with a seeing, walking, self-checking harness — and the first thing that
+harness did was hand back **a real defect on the one seam the whole game depends on**, in
+2 runs out of 2, on the agent's first action.
+
+#### Before anything else: yesterday's percept fix had never actually run (`b3bf841`)
+
+The round-2 close-out said menus should work better now. They did not. `b4ae9d7` fixed the
+ui_kit cursor blindness by inlining a regex into `PERCEPT_JS`:
+
+```js
+selected: /(^|\s)cur(\s|$)|sel|active|cursor/.test(r.className||'')
+```
+
+`PERCEPT_JS` is a **template literal**. `\s` inside one collapses to a literal `s` before the
+page ever sees the regex, so what actually ran was `/(^|s)cur(s|$)|sel|active|cursor/`, which
+does not match `class="ebui-row cur"`. Proven in node rather than argued — the collapsed
+source tests `false` on the real class string and the double-escaped one tests `true`. The
+helper twenty lines above (`cur()`) had doubled its backslashes and was right all along; the
+fix now calls it.
+
+**The part worth keeping is not the escape.** `percept_test` was *already printing this as a
+failure* — as a `KNOWN` defect, with a note written before the fix, under a green `PASS` line.
+The allowance outlived the bug it described, so a red assertion sat in plain sight for a day
+and nobody read it. The note is gone; it is an ordinary assertion now. **A known-defect
+allowance that is not retired with its fix converts a passing gate into a lie.**
+
+That is the same trap family as the backtick in a CSS comment and the backtick in `git -m`,
+now on its fourth syntax in two days — and it was hit by the person who wrote the CLAUDE.md
+entry about it, in the commit that fixed the previous instance.
+
+#### PT-20260803-015 · VERIFIED · P1 — the overworld arrival was the door back to Emberbrook
+
+**What the agent experienced.** Dropped in at `ch1.done` — the Chapter One → Chapter Two
+handoff, standing in the valley with the town behind it — it took one action and was back
+inside Emberbrook, with a Chapter Two objective ("Follow the valley road down to Dellhollow")
+floating over a Chapter One street. It filed: *"I ended up somewhere with no way to advance
+the story. Nothing here can continue the chapter."*
+
+**What the instruments said.** Not a diagnosis from the model — a coordinate from the run log,
+in two independent runs:
+
+| run | step 1 | step 2 |
+|---|---|---|
+| `run-20260803-191540` | `ow-valley` `[-57.43, 27.20, 65.55]` | **`emb-cine` `woodroad`** |
+| `run-20260803-191750` | `ow-valley` `[-57.43, 27.20, 65.55]` | **`emb-cine` `woodroad`** |
+
+That spawn is `public/assets/scenes/ow-valley/meta.json`'s own — what `play3d` uses whenever
+nothing else supplies a position. Against `public/world/scenegraph.json`:
+
+| | |
+|---|---|
+| bundle spawn | `[-57.434, 27.230, 65.547]` |
+| the edge `ow-valley>emb-cine@emberbrook-gate` | `at [-57.4, 27.207, 65.61]`, **`r 3.2`** |
+| distance between them | **0.072 m** |
+
+**The arrival was 7.2 cm from the centre of the portal that sends you back.** `meta.json`'s
+own `spawn_note` said so in plain words — *"emberbrook-gate portal"* — because it was placed
+there deliberately; nobody checked that the portal it was pinned to was the one pointing home.
+
+This is **PT-20260803-002 on the other side of the same seam.** Round 2 found a new game
+spawning on its exit pad and moved it 7 m up the road. The return trip had the identical
+defect and was never looked at. It also breaks the law in `docs/plans/seam-canon.md`:
+an arrival may not be a return.
+
+Who actually hits it: the checkpoint drop-ins (all of the overworld ones — the tool this
+whole loop is being run with), a resume whose save carries no position, and any
+`?scene=ow-valley` jump. A player walking out of Emberbrook takes the *edge*, which bakes its
+own arrival 4.3 m clear, which is why `playthrough_test` is 86/0 over this seam and never saw it.
+
+**What changed (`5c15518`).** The back-off is not a new number. `world/regions/valley.region.json`
+already carries the house rule for portal arrivals — `gateRadius 3.2 + spawnBackoff 1.1 = 4.3u`
+of road arc — and it had simply never been applied to the region's own spawn, twenty lines away.
+Applied down-road, so the gate ends up behind the player and Dellhollow ahead:
+
+```
+spawn  [-57.434, 27.230, 65.547] -> [-57.848, 26.755, 60.576]
+camYaw -1.5426 -> -1.4869
+distance to the return pad   0.072 m -> 5.054 m   (1.85 m outside r 3.2)
+```
+
+The rule now lives **once**, in `valley_map.region_spawn()`; `valley_export.py` calls it instead
+of carrying its own copy. Before touching it, the unmodified rule was made to reproduce the
+shipped spawn to all seventeen digits, so the only delta in `meta.json` is the back-off — the
+faithfulness gate this repo asks of every carrier.
+
+**A new instrument, and a second defect it found by itself.** `tools/playtest/spawn_gate.mjs`
+boots the real page with **no position in the URL** — exactly what a drop-in does — and asks the
+*engine*, not the file, where the body landed: floor census, body-box census reported **by
+blocking mesh name**, and the distance to every edge pad in the scene. Run against the old
+spawn as a control it fails twice, and the second failure is something no report mentioned:
+
+| | floor | body-blocked | distance to return pad |
+|---|---|---|---|
+| old spawn (control) | 24/24 | **6/24, by `emberbrook_5`** | 0.07 m — inside `r 3.2` |
+| new spawn | 20/24 | **0/24** | 5.05 m |
+
+The old spawn was pressed against the gate structure *as well as* standing on its own exit,
+with a quarter of its headings walled off. That is very likely why those two runs also logged
+`closed 0 m` legs from their first step.
+
+20/24 is the road verge, not a ledge: a ~4 m ribbon censused 0.8 m out in 24 directions loses
+the headings over each edge, and the control scores the same in kind. The gate's threshold is
+18, with the control written down beside it — a bound loose enough to refuse everything is a
+veto, not a test.
+
+#### PT-20260803-013 / -014 · VERIFIED as a picture · CAUSE STILL UNKNOWN
+
+Filed at 17:34 by a run nobody had triaged: *"the game view shrunk to a tiny rectangle in the
+top-left corner"*, then, four steps later, *"the game is unresponsive and visually broken."*
+
+**The agent was exactly right, and it is worth being blunt about that.** `frames/step-004.jpg`
+is 1280x720, mean luminance **0.08**, with **0.2%** of its pixels above black — the entire game
+drawn into a **64x40** rectangle in the top-left corner. Measured on the written files:
+
+| frame | size | meanL | above black | what the run log recorded |
+|---|---|---|---|---|
+| `step-002.jpg` | 1280x720 | 32.25 | 84.7% | `meanL 32.21, ready:true` |
+| `step-003.jpg` | 1280x720 | **0.09** | **0.2%** | `meanL 33.56, ready:true` |
+| `step-004.jpg` | 1280x720 | **0.08** | **0.2%** | `meanL 32.80, ready:true` |
+| `step-008.jpg` | 1280x720 | **0.08** | **0.2%** | `meanL 32.83, ready:true` |
+
+The gate vouched for a painted frame five times over a picture that was 99.8% black, because
+the cheap 64-px poll probe and the JPEG the agent is handed **were not the same picture** — and
+the probe is exactly the size of the surviving thumbnail, so it kept reading a healthy scene
+nobody was looking at. That half was already fixed before this round began (`8b76529`: the
+verdict is now taken on a full-size capture of the frame that gets handed over), with the
+thumbnail itself explicitly parked as belonging to whoever owns `play3d`.
+
+**The obvious suspect is refuted.** The coincidence of `64` is loud enough that it had to be
+destroyed rather than assumed: `Page.captureScreenshot` with `clip.scale` can resize a page's
+surface, so the harness's own probe was the leading hypothesis for the harness's own broken
+frame. Driven directly over CDP with the playtester's exact Chrome flags, real GPU, same
+viewport:
+
+| stage | full capture | content bounding box | `innerWidth` / canvas |
+|---|---|---|---|
+| before any probe | meanL 68.22, 92.4% non-black | `[0,0]..[1279,719]` = **1280x720** | 1280x720 / attr 1344x768 |
+| after 1 clipped probe | 68.22, 92.4% | **1280x720** | unchanged |
+| 1.5 s later | 68.22, 92.4% | **1280x720** | unchanged |
+| after 20 more probes | 68.22, 92.4% | **1280x720** | unchanged |
+
+**Twenty-one probes move nothing.** The probe is not the cause, and that is a false lead
+retired rather than a fix shipped against a guess.
+
+**What is still open.** The 64x36 surface was *live* — `step-003` and `step-008` differ in
+their thumbnail, so the game was rendering into it, not frozen. The strongest remaining
+hypothesis, and it is labelled as a hypothesis because nothing has measured it: that run
+predates the NPC model cache (`c3a35cb`, which took `emb-cine` boot from 6246 MB to 3277 MB),
+and a compositor surface collapsing under memory pressure fits both the timing and the shape.
+**It has not been reproduced since.** It is a lead for round 4, and the honest status is that
+the harness will no longer show such a frame to a model or file a bug from it, while the thing
+that made the frame is still unidentified.
+
+One incidental measurement from the same probe, not a defect and not chased: `play3d` sizes its
+renderer once, from the constants `W=1344, H=768`, with no `resize` handler anywhere in the
+page. The canvas backing store is 1344x768 while CSS stretches it to whatever the window is
+(1280x720 here) — a ~1.6% aspect stretch, and a window resize is not followed at all.
+Reported, not fixed: it is a design call about what the game should do when the window changes.
+
+#### PT-20260803-016 / -017 / -018 · VERIFIED · P0 — the overworld booted as a diorama
+
+This one only became findable *because* the spawn was fixed. With the arrival no longer a
+return, the agent stayed in `ow-valley` — and immediately could not play it.
+
+**What the agent experienced.** Fourteen consecutive aim attempts, spread deliberately across
+the whole frame — `[0.32,0.60]`, `[0.65,0.55]`, `[0.25,0.76]`, `[0.52,0.40]` — every one of
+them answered *"is not ground you can walk to."* It filed three reports in one run and then
+gave up: *"Cannot move or interact with the valley map screen"*, *"Valley map ground is
+non-walkable"*, *"Unable to move character on this map view after trying multiple coordinates
+across the screen, so I must give up."*
+
+**Note the words it chose: "map screen", "map view".** Open `run-20260803-192758/frames/step-010.jpg`
+and that is precisely what it is — **a tabletop diorama of the entire valley**, the terrain tile
+floating on a brown backdrop seen from far above, three red portal markers on it, the Chapter
+Two objective across the top, and **no character anywhere**. The agent was not confused. It was
+describing the screen accurately, and the diagnosis in its own words was better than any of our
+gates managed.
+
+**What the instruments said.** The camera was at `[-4.00, 236.00, 212.00]` — 200 m above a body
+standing at `[-57.85, 26.72, 60.58]`. That is the region GLB's own baked overview camera, and
+the follow camera did not exist. `play3d.html` says the same thing about the same scene in two
+regexes eighteen lines apart, and only one of them knew about the overworld:
+
+```js
+line 30   RT    = q.get('rt') || /(^|-)townwalk$/.test(SCENE)     // no ow-
+line 48   OWCAM = /^ow-/.test(SCENE)                              // ow-
+```
+
+The follow camera is built and assigned **entirely inside `if(RT)`** in `frame()`. With `RT`
+false there is no follow camera at all, so `cam` stays whatever the bundle baked. `ow-*` scenes
+were getting overworld *lighting* and overworld *sky* and no overworld *camera*.
+
+Measured with the playtester's own picker — lifted out of the adapter source rather than
+copied, so the probe cannot drift from the thing being tested — on a 5x5 grid of screen points
+at the `ow-valley` bundle spawn:
+
+| | camera | pixels that hit a surface | on the walk network |
+|---|---|---|---|
+| as shipped | `[-4.00, 236.00, 212.00]` | **0/25** | 0/25 |
+| with `&rt=1` | `[-55.10, 50.64, 27.91]` | **25/25** | 5/25 |
+| after the fix, no `rt` in the URL | `[-55.10, 50.64, 27.91]` | **25/25** | 5/25 |
+
+**It is not a regression from the spawn fix.** The control at the *old* spawn gives the
+identical overview camera and the identical 0/25 — the diorama was there all along.
+
+**Why no gate had caught it.** It hit every entry into the overworld *except one*: the in-place
+swap from a page that booted somewhere else. That is the single path `playthrough_test`,
+`transition_test` and `seam_test` all take. Checkpoint drop-ins, dev jumps and QA links — every
+way a human or a tool visits the overworld directly — got the diorama. **A suite that only ever
+enters a scene by the front door cannot tell you the side door opens onto nothing.**
+
+**What changed (`10ea7a4`).** `ow-` added to the `RT` test. Gates re-run on a quiet machine,
+both exactly at baseline: `playthrough_test` **86 passed / 0 failed**, `transition_test`
+**168 ok / 0 failed**.
+
+`public/play3d.html` is coordinator-owned; this is a one-line, one-regex change to it, recorded
+here and in the commit so the owner sees it.
+
+#### PT-20260803-009 · CLOSED by rule 3 — the playtester finally re-saw it, and said nothing
+
+This was round 3's first job and the one open item from round 2: the fix for *"camera detached
+or character missing after battle"* was verified on `SIM.occ` but **no run had reached an
+`ow-valley` battle since**, so by rule 3 it was not done.
+
+Run `run-20260803-195450` reached one. Straight out of the log:
+
+| step | scene | battle | meanL | what happened |
+|---|---|---|---|---|
+| 4–7 | `ow-valley` | MEADOW, ROUND 1 | — | a random encounter: Reed Nibblers, fought through the menus |
+| 8–14 | `ow-valley` | MEADOW, ROUND 2 | 96 | Vesper *and* Lake both given Attack and a target |
+| 15–17 | `ow-valley` | MEADOW | 45 | victory, and the Victory screen dismissed |
+| **18** | **`ow-valley`** | **none** | **110.23** | **back on the map, frame ready, shown to the model** |
+
+**Zero reports.** The agent entered an overworld battle, won it, came out the other side onto
+the exact class of frame that produced PT-009 in round 2, and did not file anything. The
+circuit is closed and the entry can come off the open list.
+
+The honest qualification, because this log is worth more if it states its own limits: that is
+**one** post-battle frame, at a different spot in the valley from the one PT-009 was filed at,
+so it is evidence the defect is not ubiquitous rather than proof it is gone everywhere. The
+instrument evidence from round 2 remains the stronger half — the marker fires where the
+character is hidden and at none of the three controls.
+
+**A second thing this run settles, quietly.** Every menu step reads `chose 0 (cursor was on 0)`.
+The agent could see where the cursor was, measure it, and act relative to it — through a
+two-character battle with target sub-menus. That is the percept fix from the top of this round
+actually working, as opposed to yesterday's, which shipped and did nothing.
+
+#### Round 3 — the receipt: the loop turns, and how far the agent got
+
+`node tools/llm_playtester.mjs --port=3000 --from=ch1.done --steps=45 --stop-beat=ch2.arrive`,
+run `run-20260803-195450`, quiet machine, one run only — which is itself a lesson from earlier
+in this round.
+
+```
+  steps        24
+  beats fired  all 19 of Chapter One, through ch1.done
+  reports      0
+  walk legs    2
+  finished     harness-blind
+```
+
+**Reports filed: 0.** Against the same build and the same ground that produced five P0/P1
+blockers three runs earlier.
+
+**How far it got, which is the number that says whether this loop is worth continuing.** Round 1
+died at step 6 on a black screen. Round 2's closing run walked but never reached a battle. Round
+3 dropped into the Chapter One → Chapter Two handoff, stayed in the overworld instead of falling
+back through the door, crossed the valley, **fought and won a random encounter through the
+menus with a two-character party**, dismissed the victory, and returned to the map still
+playing. That whole sequence was unreachable this morning — twice over, once because the arrival
+was an exit and once because the overworld had no camera.
+
+**What is still not right, stated plainly.** The run ended `harness-blind`: from step 19 the
+page stopped answering, six unready steps in a row, and the harness stopped itself with
+*"THIS IS AN INSTRUMENT FAULT. No bug was filed against the game, on purpose."* That is the
+round-1 rule working exactly as designed — it refused to invent a bug out of its own blindness —
+but a loop whose closing run goes blind at step 19 is still a loop that cannot run long. The
+page going silent after a battle in `ow-valley` is the top lead for round 4, and it is genuinely
+unknown at this point whether it is the game or the harness.
+
+### Open going into round 4
+
+  * **The page goes silent after an `ow-valley` battle** (run `run-20260803-195450`, steps 19–24;
+    also seen in the two killed runs earlier in this round as repeated
+    `did not answer in 12000 ms (captureScreenshot)`). Game or harness is undetermined. Highest
+    value next measurement, because it is what caps run length.
+  * **PT-20260803-013/014's 64x36 thumbnail has no cause.** The probe-poisoning hypothesis is
+    refuted and the memory-pressure one is unmeasured. Not reproduced since. The harness will no
+    longer show such a frame to a model.
+  * **Two concurrent playtester runs is too many on this box** for a scene as heavy as
+    `ow-valley`. Both starved into `captureScreenshot` timeouts and had to be killed; the single
+    quiet run that replaced them is the one that got a battle. Round 3's own contribution to the
+    house rule: **one run at a time in the overworld.**
+  * **Reported, not fixed — a design call for the user.** `play3d` sizes its renderer once from
+    the constants `W=1344, H=768` and has no `resize` handler at all. The canvas backing store
+    is 1344x768 stretched by CSS to whatever the window is, so the picture is ~1.6% off-aspect
+    at 1280x720 and a window resize is not followed. Harmless today, a real annoyance on a TV.
