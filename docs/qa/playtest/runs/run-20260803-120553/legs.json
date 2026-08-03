@@ -1,0 +1,68 @@
+[
+  {
+    "step": 5,
+    "ok": true,
+    "nx": 0.5,
+    "ny": 0.38,
+    "onNetwork": false,
+    "target": [
+      -60.02,
+      27.66,
+      78.62
+    ],
+    "from": [
+      -58.24,
+      27.59,
+      69.83
+    ],
+    "end": [
+      -63.12,
+      33.12,
+      94.24
+    ],
+    "intended": 8.97,
+    "remaining": 15.92,
+    "closed": -6.96,
+    "travelled": 24.89,
+    "closedFrac": -0.78,
+    "bursts": 3,
+    "slides": 0,
+    "arrived": false,
+    "ms": 11860
+  },
+  {
+    "step": 6,
+    "ok": false,
+    "nx": 0.48,
+    "ny": 0.38,
+    "reason": "unprojection",
+    "detail": "the ray for that pixel never reaches a surface (sky, or past the world)",
+    "intended": 0,
+    "closed": 0
+  },
+  {
+    "step": 7,
+    "ok": false,
+    "nx": 0.45,
+    "ny": 0.44,
+    "reason": "modal",
+    "detail": "the game took control part-way through the walk",
+    "target": [
+      -61.08,
+      33.59,
+      98.93
+    ],
+    "from": [
+      -63.12,
+      33.12,
+      94.24
+    ],
+    "end": [
+      -33.5,
+      30.06,
+      65.76
+    ],
+    "intended": 5.11,
+    "closed": -38.02
+  }
+]

@@ -1,0 +1,65 @@
+{
+  "run": "run-20260803-113942",
+  "when": "2026-08-03T11:41:01.935Z",
+  "sha": "5bc18c8bcf23f39a45c97978a90cf81ac0555ab7",
+  "scene": "emb-cine",
+  "cam": "woodroad",
+  "start": "newgame",
+  "from": null,
+  "playerModel": "gemini:gemini-3.6-flash",
+  "judgeModel": "gemini:gemini-3.1-pro-preview",
+  "steps": 6,
+  "finished": "gaveup",
+  "beatsFired": [
+    "ch1.open"
+  ],
+  "endTruth": {
+    "scene": "ow-valley",
+    "pos": [
+      52,
+      -0.64,
+      28
+    ],
+    "shot": null,
+    "locked": true,
+    "beats": [
+      "ch1.open"
+    ],
+    "flags": [
+      "story.ch1.started"
+    ],
+    "exits": [
+      "ow-valley>emb-cine@emberbrook-gate",
+      "ow-valley>del-cine@dellhollow-valley-gate"
+    ]
+  },
+  "legs": {
+    "n": 0,
+    "arrived": 0,
+    "offNetwork": 0,
+    "unprojectable": 0,
+    "interrupted": 0,
+    "medianClosedFrac": null
+  },
+  "reports": [
+    "PT-20260803-005",
+    "PT-20260803-006"
+  ],
+  "usage": {
+    "calls": 6,
+    "in": 12084,
+    "out": 367,
+    "thought": 2580,
+    "apiSeconds": 25,
+    "estUSD": 0.011,
+    "byModel": {
+      "gemini:gemini-3.6-flash": {
+        "calls": 6,
+        "in": 12084,
+        "out": 367,
+        "thought": 2580,
+        "ms": 24547
+      }
+    }
+  }
+}
