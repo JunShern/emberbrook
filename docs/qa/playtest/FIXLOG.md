@@ -47,6 +47,8 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 5 | PT-20260803-025 / -026 | P1 | The player and camera ended up underneath the level geometry | **VERIFIED — the ground runs continuously off the end of the play area, down the gorge, under the water plane** | not fixed: a world-building call, round 6's headline | — |
 | 5 | PT-20260803-022 | P1 | Camera clipped inside foliage obscuring entire screen | **UNVERIFIED** — filed on the first frame of the corrected Old Gate arrival | — | — |
 | 5 | PT-20260803-021 / -023 / -024 | P1 | The player can leave the chapter on its first frame | **DUPLICATE** of PT-002 / -008 / -020 | (carried) | — |
+| 6 | PT-20260803-025 / -026 | P1 | The player and camera ended up underneath the level geometry | **VERIFIED — 126 of 3500 cells stand below y 0, in two components, out to y −6.07; the region's builder suppresses its own rims within 22 u of the river on purpose** | the world gets a bottom as map data (`worldbounds.json`), one-way so it can never strand anyone | `f1f5243` |
+| 6 | (not filed — read off round 5's own frame) | — | The objective banner named a DIRECTION where it meant a PLACE, and the agent obeyed it | **VERIFIED — `ch2.road` fires AT the gate and said "Down into the hollow"** | "Through the Dellhollow gate — find whoever runs the locks", which is what the exit marker reads | `f1f5243` |
 
 ## Rounds
 
@@ -1079,3 +1081,113 @@ proven healthy independently by booting `del-cine` over CDP and reading its edge
   * **PT-20260803-013/014's 64x36 thumbnail still has no cause.** Unchanged from round 3.
   * **Reported, not fixed — a design call for the user.** `play3d` sizes its renderer once from
     `W=1344, H=768` and has no `resize` handler. Carried from rounds 3 and 4, unchanged.
+
+### Round 6 — 2026-08-03 · the world had no bottom, and the banner was pointing down the river
+
+Round 5 handed over one finding: the player can walk out of the world. It closed with the agent
+past the Dellhollow gate (y 12.65) and 56 of its 60 steps at y −2 .. −4.6, under the water plane,
+with no barrier and no way back that 50 steps of trying found.
+
+Before anything was built, the coordinator looked at `run-20260803-221232/frames/step-060.jpg` —
+the drowned character and the objective banner in one picture — and read the banner:
+
+> **"Down into the hollow — find whoever runs the locks"**
+
+**The agent did exactly what the game told it to.** That reframes the round: this is two defects
+wearing one coat, and only one of them is geometry.
+
+#### The measurement: where the world leaks, and how far
+
+`tools/playtest/edge_probe.mjs` (new) asks the RUNNING ENGINE, not the file:
+
+  * **§1 CENSUS** — `SIM.floors` + `SIM.zone` at every cell of the region tile.
+  * **§3 RETURN** — from a named place, 24 headings × N strides at play3d's own 0.075 stride:
+    the best height regained. This is the number that decides *soft-lock* vs *level design*.
+  * **§4 ESCAPE** — from an IN-BOUNDS seed, the deepest ground 24 headings can reach.
+
+Two instrument bugs were paid for on the way, and both are recorded in its header because both
+are general: a story beat firing under a probe raises **UILOCK**, which freezes `phys()` outright,
+so one descent ran 50 legs and *every seed after it reported "1 leg"* — a probe that measures
+nothing while looking like it measured. And §3's first numbers included a 52.5 u walk that
+"arrived" 87 u away: `marooned()`, play3d's own 600-tick stuck-recovery, firing inside the probe.
+§3 now carries a **walk-budget self-check** — a body walking `n` strides of `SPD` can be at most
+`n·SPD` from where it started, and anything further is reported as `IMPOSSIBLE: not a walk`.
+
+The tile, on a 4 u lattice (70 × 50 cells, runtime x −140..140, z −100..100):
+
+```
+  standable-top surface   3031 / 3500 cells      y -6.07 .. 50.67
+  cells below y = 0        126 (3.6%), in EXACTLY TWO connected components:
+     the Long Reach   x  50..114   z -98..-50   floor to -6.07   zone water
+     the tile apron   x = 138      z -98.. 78   floor ~ -4.0     (the terrain tile's own skirt)
+```
+
+**It is not a hole and it is not a bug in the builder — it is the builder's own decision, read
+back.** `tools/valley_map.py` suppresses the north/south/west rims *and* the east escarpment
+within 22 u of the river channel, in its own words:
+
+> `# A RIM CANNOT STAND IN THE RIVER.` … *the rim runs out at x~210, where the gorge's own walls
+> take the river on to the Long Reach*
+
+That breach exists so Chapter Two's boat can leave the Moorage. It is correct for the boat and
+fatal for the walker: an analytic height field has no edge, so the ground simply keeps going.
+
+#### The riverbed is level design. Measure before you fence.
+
+The lowest **authored** place in the region is `valley.region.json`'s `boat-tar` landmark — the
+Moorage boat — at world `[200.96, 152.87, 1.30]` = runtime `[61.0, 1.30, −52.9]`, measured floor
+**y 1.71**. The three valley portals stand at elevation 12.01, 26.5 and 27.1. Nothing the game
+authors is below zero. And returnability, measured before choosing anything:
+
+| from | floor | best climb, 24 headings | to |
+|---|---|---|---|
+| the Moorage | 1.71 | **+25.2 u** | y 26.95 |
+| round 5's resting place `[76, −62.6]` | **−4.21** | **+17.0 u** | y 12.77 |
+| the Long Reach, deep `[102, −86]` | −5.61 | +9.8 u | y 4.15 |
+| the tile apron `[138, −20]` | −3.96 | +7.2 u | y 3.21 — **and the meadow above it is y 20** |
+
+So round 5's pit is not geometrically one-way: one heading in twenty-four climbs 17 u out of it.
+**It is a navigation trap, not a wall of the world** — which is exactly why a barrier alone was
+never going to be the whole fix, and why the coordinator's read of the frame was right.
+
+#### What changed (`f1f5243`)
+
+**1. The world gets a bottom, as map data.** `public/game/worldbounds.json` — per scene, fetched
+by play3d on boot, applied by `sceneParams()`. `ow-valley: { floorY: 0.0 }`. **One number closes
+both components and nothing else**, because upstream the riverbed sits at y 23..27 and the rule
+never fires at all: the shallow upper river stays waded, the Moorage stays open, and the bound
+reads as a *shoreline* rather than as a fence — it only bites where the world actually stops.
+It is committed, which is `lightrigs.json`'s lesson: a runtime data file that is not in git is a
+bug that only reproduces off the author's machine.
+
+**2. It is ONE-WAY by construction** (`outOfWorld()` in `walkStep`). Above the bound, a step onto
+ground below it is refused. Below the bound, only steps that go *deeper* are refused — level and
+uphill always pass. So a body already out there (an old save, a jump off the bank) walks back in,
+and it is deliberately not a jump gate: you can still jump into the river, and then you can still
+walk out. **A boundary that can strand a player is the defect it was built to fix, wearing the
+other coat.** The ledge/fall branch is gated the same way, on the same rule.
+
+The A/B, same page, same seeds, one number — because an instrument that finds nothing must prove
+it could have found something (`--nobound` disarms the bound in the live page):
+
+| seed | bound armed | `--nobound` |
+|---|---|---|
+| moorage bank `[61, −50]` | deepest **y 0.00** | deepest **y −3.00** |
+| gorge road `[54, −46]` | deepest **y 0.00** | deepest **y −3.06** |
+
+and 0/5 in-bounds seeds reach below the bound with it on, while every below-zero pit still climbs
+out (`+17.0`, `+8.4`, `+7.9`, `+7.2` u).
+
+**3. The banner stops naming a direction.** `ch2.road` fires **at** the Dellhollow valley gate
+(`at [44.88, 12.01, −36.19]`, r 30) — so the line that tells the player what to do next is on
+screen while they are standing at the door, and it said *"Down into the hollow"*. That is a
+**place** written as a **heading**, and downhill is precisely the wrong way. It now reads:
+
+> **"Through the Dellhollow gate — find whoever runs the locks"**
+
+which is also what the exit marker on that gate reads since round 5. The *prose* keeps "down" —
+Lake's *"Down, then."*, and the system line about a town stacked down the inside of a gorge — because
+the town genuinely is down there; it is the persistent banner that has to name the door. The why
+is recorded in the beat's own `_doc_objective`. `dialogue_style` **PASS, 0 failures**;
+`story_test` **1104 ok / 0 failed**.
+
