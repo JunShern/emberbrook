@@ -2532,6 +2532,408 @@
         },
         "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
       }
+    },
+    {
+      "id": "PT-20260803-019",
+      "created": "2026-08-03T20:39:45.882Z",
+      "verification": {
+        "status": "REFUTED",
+        "instrument": "the run's own run.jsonl (percept.battle + truth.locked, step by step)",
+        "evidence": "The battle ENDED, four steps before this report was written. Straight out of run-20260803-203813/run.jsonl: step 12 percept.battle.log is 'Duskpad is defeated!' with foes []; steps 13-15 are the Victory card (meanL 36.7, UILOCK held); step 16 has no battle, UILOCK released, and the agent walks on for another 29 steps. Nothing softlocked. THIS WAS THE HARNESS: the stuck detector measures metres over a six-step window, and a battle is exactly a window in which zero metres is correct play. It fired at step 12 because the body had not moved since step 7 — the battle's first step — and the interview it paid for produced this P0 against a fight that had already been won. Fixed in episode.mjs: a step where UILOCK is held or a battle/dialogue/card is on screen is dropped from the window rather than counted. A real modal freeze is still caught by the frame gate's separate `frozen` check.",
+        "at": "2026-08-03"
+      },
+      "run": "run-20260803-203813",
+      "step": 12,
+      "source": "stuck-interview",
+      "kind": "blocker",
+      "severity": "P0",
+      "title": "Battle softlocks after defeating the enemy",
+      "doing": "I was waiting for the battle to end after Lake's attack defeated the only enemy, Duskpad.",
+      "expected": "The battle should end and return me to the map or show a victory screen.",
+      "happened": "The message says 'Duskpad is defeated!' and the enemy model is gone, but the battle doesn't end. The command menu is greyed out and I can't do anything else.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          -57.62,
+          27.79,
+          32.53
+        ],
+        "to": [
+          -56.54,
+          26.13,
+          44.64
+        ],
+        "scene": "ow-valley"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260803-203813/frames/step-010.jpg",
+        "docs/qa/playtest/runs/run-20260803-203813/frames/step-011.jpg",
+        "docs/qa/playtest/runs/run-20260803-203813/frames/step-012.jpg"
+      ],
+      "onscreen": {
+        "objective": "Follow the valley road down to Dellhollow",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "ow-valley",
+        "shot": null,
+        "pos": [
+          -58.97,
+          25.98,
+          41.58
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done"
+        ],
+        "exits": [
+          "ow-valley>emb-cine@emberbrook-gate",
+          "ow-valley>emb-cine@old-gate",
+          "ow-valley>del-cine@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "22db4473293638a0742c5ddee91c9cb8b61f1b0a",
+        "capturedAt": "2026-08-03T20:39:45.881Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "ow-valley",
+            "cam": null,
+            "pos": [
+              -57.848,
+              26.725,
+              60.576
+            ],
+            "yaw": -1.4869
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-03T20:38:24.886Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260803-020",
+      "created": "2026-08-03T20:40:41.952Z",
+      "verification": {
+        "status": "DUPLICATE",
+        "instrument": "the spine detector, same as PT-20260803-002 / -008",
+        "evidence": "The third filing of the SAME design question already logged as PT-20260803-002 (round 0) and -008 (round 1): the player can leave the chapter and the objective follows them out. The remedy is a user design call, and a separate lane is implementing their ruling. Carried, not re-triaged.",
+        "at": "2026-08-03"
+      },
+      "run": "run-20260803-203813",
+      "step": 20,
+      "source": "spine-detector",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "The player can leave the chapter on its first frame, and the objective follows them out",
+      "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
+      "expected": "To carry on with the objective the game was showing me.",
+      "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Follow the valley road down to Dellhollow\") still refers to where I was. Nothing here can continue the chapter.",
+      "probe": null,
+      "frames": [
+        "docs/qa/playtest/runs/run-20260803-203813/frames/step-018.jpg",
+        "docs/qa/playtest/runs/run-20260803-203813/frames/step-019.jpg",
+        "docs/qa/playtest/runs/run-20260803-203813/frames/step-020.jpg"
+      ],
+      "onscreen": {
+        "objective": "Follow the valley road down to Dellhollow",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-cine",
+        "shot": "gateroad",
+        "pos": [
+          66.83,
+          2.69,
+          -105.17
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done"
+        ],
+        "exits": [
+          "emb-cine>emb-cine@cut:barn__gate-court:0.298:gateroad>northlane",
+          "emb-cine>emb-cine@cut:barn__gate-court:0.698:gateroad>gatefield"
+        ]
+      },
+      "repro": {
+        "sha": "22db4473293638a0742c5ddee91c9cb8b61f1b0a",
+        "capturedAt": "2026-08-03T20:40:41.951Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 6,
+              "hp": 29,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 6,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 39,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "emb-cine",
+            "cam": "gatefield",
+            "pos": [
+              78,
+              2.66,
+              -126.7
+            ],
+            "yaw": -1.5708
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-03T20:40:19.882Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
     }
   ]
 }

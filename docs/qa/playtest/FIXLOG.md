@@ -39,6 +39,9 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 3 | PT-20260803-014 | P0 | The game is unresponsive and visually broken | **VERIFIED — same frame as -013**, one step later | same | — |
 | 3 | PT-20260803-016 / -017 / -018 | P0 | Cannot move on the valley map screen · valley map ground is non-walkable · I must give up | **VERIFIED — the overworld booted as a diorama, with no follow camera at all** | `ow-` added to play3d's `RT` test, where `OWCAM`'s regex already had it | `10ea7a4` |
 | 3 | (not filed) | — | yesterday's percept cursor fix shipped inert: `\s` in a template literal | **HARNESS DEFECT, found by re-reading `percept_test`'s own output** | call the percept's own `cur()` helper; the stale KNOWN-defect allowance retired | `b3bf841` |
+| 4 | (round 3's blocker) | — | The page goes silent after an `ow-valley` battle | **REFUTED against the game · VERIFIED against the harness** — the harness was drowning the page in its own keys | Chrome boots at `about:blank` and the game arrives by `Page.navigate`; a new INPUT SENTINEL | `22db447` |
+| 4 | PT-20260803-019 | P0 | Battle softlocks after defeating the enemy | **REFUTED** — the battle had already ended four steps earlier | the stuck detector no longer counts steps in which the body is not allowed to move | `22db447`+ |
+| 4 | PT-20260803-020 | P1 | The player can leave the chapter on its first frame | **DUPLICATE** of PT-002 / -008 — a design call already with the user | (carried) | — |
 
 ## Rounds
 
@@ -715,3 +718,189 @@ unknown at this point whether it is the game or the harness.
     the constants `W=1344, H=768` and has no `resize` handler at all. The canvas backing store
     is 1344x768 stretched by CSS to whatever the window is, so the picture is ~1.6% off-aspect
     at 1280x720 and a window resize is not followed. Harmless today, a real annoyance on a TV.
+
+### Round 4 — 2026-08-03 · the page was never dead. We were standing on its air hose.
+
+Round 3 ended with the honest admission that nobody knew whether the post-battle silence was
+the game or the harness. It was the harness, and the mechanism turned out to be the harness's
+own keyboard.
+
+#### The symptom, and why it was worth being careful about
+
+Run `run-20260803-195450` fought a real random encounter in `ow-valley` (Reed Nibblers,
+MEADOW, two rounds), won it, dismissed the victory card, and produced a good frame at step 18.
+Steps 19–24 then came back blind, six in a row, each waiting ~50 seconds and reporting *both*
+"the page's main thread did not answer the readiness gate in 6000 ms" *and* "the page never
+returned a screenshot". The run stopped itself.
+
+If that had been the game it would have been the worst bug in the repo: **win a random
+encounter in the overworld, then be unable to continue** — and no gate we own would have seen
+it, because `playthrough_test` never fights, `transition_test` does not battle and
+`battle_sim` has no page.
+
+#### What the instruments said, in the order they said it
+
+**`percept_test`: PASS, 159/160, in 1.1 seconds.** So the adapter could still see a battle, a
+dialogue, a veil and the overworld. Not the eye this time.
+
+**The renderer was healthy the whole time.** Driving a real `ow-valley` encounter to victory
+over CDP with the playtester's own Chrome flags (real GPU, `--headless=new`) and watching the
+process rather than the page:
+
+| | |
+|---|---|
+| renderer process | **alive throughout** — no `Inspector.targetCrashed`, no `executionContextsCleared` |
+| renderer physical footprint (`vmmap`, not `ps rss`) | **~900 MB, flat** across the battle and after it |
+| JS heap (`Performance.getMetrics`) | **12 MB** |
+| `UILOCK` after the victory | **not held** |
+| `Battle.active` after the victory | **false** |
+| `Encounters._debug()` | **live** |
+
+So the memory-pressure hypothesis carried over from round 3 is **refuted for this symptom**.
+Nothing collapsed and nothing crashed.
+
+**And yet `Runtime.evaluate` went silent for eight seconds while `Page.captureScreenshot`
+answered normally.** That is a strange pair, and it is the pair that cracked it: a dead main
+thread cannot do either. So the question stopped being "is the page alive" and became "what
+is the main thread doing instead of answering us".
+
+**Asked from inside the page.** A recorder that stamps every `requestAnimationFrame` and every
+50 ms `setTimeout` and keeps the worst gap in each window, drained once per walk leg:
+
+| | worst rAF gap | worst `setTimeout(…,50)` gap |
+|---|---|---|
+| a healthy leg | 10 ms | 53 ms |
+| a leg where `Runtime.evaluate` timed out | 33–50 ms | **41151 ms** |
+
+**The frame loop never stopped.** The game kept drawing at ~60 fps while ordinary tasks were
+starved for forty-one seconds against a fifty-millisecond interval. `Runtime.evaluate` and
+`Page.captureScreenshot` are ordinary tasks. The page was not frozen; it was too busy to
+answer, and rAF's priority is exactly what hid that.
+
+#### Busy with what: the harness's own keys
+
+The same recorder counted key events. One `Input.dispatchKeyEvent` `keyDown`, held 400 ms:
+
+| walk leg | key events the PAGE received |
+|---|---|
+| 0 | `w` down **1370**, up 1 |
+| 1 | `w` down **2677** (after its keyUp), `a` down 1157 |
+| 3 | `s` 1564, `a` 1563, `w` 1563, `d` 893 — **four keys, in lockstep** |
+| 5 | `w` 9862, `a` 8105, `s` 4932, `d` 4931 |
+
+**The keyUp never lands, so nothing is ever released.** By leg 5 four direction keys are held
+at roughly three thousand events per second each, they cancel each other out, and the body sits
+at one coordinate while the main thread does nothing but run keydown handlers. That is the
+whole of "cannot move", "the page is busy" and "harness-blind".
+
+#### Whose fault, settled by bisection
+
+The events are **`isTrusted: true`, `timeStamp: 0`, `repeat: false`** — browser-generated, not
+page-generated. Confirmed rather than assumed: trapping `EventTarget.prototype.dispatchEvent`
+and `new KeyboardEvent` **before any page script runs**
+(`Page.addScriptToEvaluateOnNewDocument`) records **zero** hits from either. Nothing in
+`play3d.html` or any module dispatches a keyboard event; the whole page contains one
+`dispatchEvent`, and it is the `eb-scene` CustomEvent.
+
+One page, one set of flags, one dispatched key — the only thing varied is how Chrome was
+launched:
+
+| how Chrome was started | keydowns in the page from ONE dispatched keyDown |
+|---|---|
+| `about:blank` on the command line (control) | **1** |
+| the game URL on the command line | **6387** |
+| the game URL on the command line, then `Page.navigate` to it again | **6663** |
+| `about:blank` on the command line, then `Page.navigate` to the game | **1** |
+
+It is not scene-specific (`emb-cine` storms exactly like `ow-valley`), not `RT`-specific, and
+not caused by `Emulation.setDeviceMetricsOverride`. **It survives a later navigation**, so the
+property belongs to the target Chrome creates when it is handed a URL to open — which is
+precisely what `adapter.open()` did.
+
+**Only this tool dispatches real key events.** Every other browser gate in the repo drives the
+game through `SIM`, which is why `playthrough_test` (86/0) and `transition_test` (168/0) were
+green over this exact ground all day while the playtester could not walk across it.
+
+#### What changed (`22db447`)
+
+  * **Chrome boots at `about:blank`; the game arrives by `Page.navigate`.** The URL does not go
+    on the command line, and the reason is written at the spawn so nobody puts it back.
+  * **THE INPUT SENTINEL.** The harness counts the key events it dispatched; the page counts
+    the ones that arrived (`__pt.keys()`). A divergence is reported, in `observe()`'s `why` and
+    in a starved leg's `starvedWhy`, as **"INPUT STORM — THIS IS THE HARNESS, NOT THE GAME"**.
+    Two integers, so this class can never again be read as "the page's main thread is busy".
+
+**It also retires three earlier entries' explanation.** Rounds 0 and 2 recorded walk legs at
+4769, 42127 and 210402 ms per burst and blamed machine load, and PT-001/-003/-004 and
+-010/-011/-012 were all filed out of legs that closed 0 m. Under the fix a leg closes 14.74 m
+of an intended 15.11 m in **1770 ms, at 161 ms/burst**. The load was real; it was not the
+cause. **A cost that only ever appears in your own instrument is a cost your instrument is
+creating.**
+
+#### PT-20260803-019 · REFUTED — and it is the same lesson, twice in one round
+
+The closing run filed a P0: *"Battle softlocks after defeating the enemy. The message says
+'Duskpad is defeated!' and the enemy model is gone, but the battle doesn't end."*
+
+The battle had ended four steps earlier. From the run's own `run.jsonl`:
+
+| step | what the percept says |
+|---|---|
+| 7–11 | FOREST, ROUND 1, Duskpad, fought through the menus |
+| **12** | `"Duskpad is defeated!"`, foes `[]` — **the report is filed here** |
+| 13–15 | the Victory card (meanL 36.7, `UILOCK` held) |
+| 16 | no battle, `UILOCK` released, walking |
+| 17–45 | still playing, twenty-nine more steps |
+
+**This was the harness again.** The stuck detector measures metres moved over a six-step
+window — and a battle is exactly a window in which zero metres is *correct play*. It fired at
+step 12 because the body had not moved since step 7, the battle's first step, and the
+interview it paid for produced a P0 against a fight that had already been won.
+
+Fixed in `episode.mjs`: a step in which `UILOCK` is held, or a battle, dialogue or full-screen
+card is on screen, is **dropped** from the window — it neither counts toward it nor resets it —
+so six genuinely motionless free-roaming steps still fire. This does not hide a real modal
+freeze: "`UILOCK` held with nothing drawn on it" is a different question, asked by the frame
+gate's own `frozen` check, which files its own blocker. Proven by replaying both versions of
+the detector over the recorded 45 steps: **the old one fires once, at step 12, with a battle
+on screen and `UILOCK` held; the gated one fires zero times.**
+
+#### Round 4 — the receipt: the loop turns, and the cap is gone
+
+`node tools/llm_playtester.mjs --port=3000 --from=ch1.done --steps=45 --stop-beat=ch2.arrive`,
+run `run-20260803-203813`, on a machine at the same 70% swap that produced round 3's blindness.
+
+```
+  steps        45   (round 3 stopped at 24)
+  finished     ran out of steps   (round 3: harness-blind)
+  walk legs    65 — 50 arrived, 19 aimed off the walk network, 1 interrupted
+  median leg   0.89 of the distance closed
+  reports      2   (one refuted above, one a known duplicate)
+```
+
+**Not one blind step in forty-five.** `percept_test`'s replay of the run says it in the form
+that matters: *"45 step(s) of run-20260803-203813 checked; 45 shown to the model."* Round 3's
+run put 17 of 24 in front of the model and gave up.
+
+The run **fought and won a second overworld battle** (Duskpad, FOREST) through the menus with
+a two-character party, took the Victory card, and walked on for twenty-nine more steps. That
+is the thing round 3 could not do, and it is the closing condition this round was given.
+
+**What is still not right, stated plainly.** The agent spent steps 20–45 wandering `ow-valley`
+and `emb-cine` without reaching Dellhollow: it can walk now, and it is not lost in the sense of
+being stuck, but the road to Ch2 is not legible to it. Nothing was filed, so this is an
+observation from the log rather than a report. It is the natural next question for round 5, and
+it is a question about the *game* — which is where this loop has been trying to get since
+round 1.
+
+### Open going into round 5
+
+  * **The valley road to Dellhollow is not legible.** 26 steps of goto in `ow-valley` and back
+    through `emb-cine` without arriving, and the agent never filed a complaint about it. Worth
+    a run with a bigger step budget before assuming it is a design problem.
+  * **PT-20260803-013/014's 64x36 thumbnail still has no cause.** Unchanged from round 3.
+    The probe-poisoning hypothesis is refuted, the memory-pressure one is unmeasured — though
+    round 4's finding that the renderer stays at a flat ~900 MB through an overworld battle
+    makes memory pressure a weaker candidate than it looked. Not reproduced since.
+  * **Reported, not fixed — a design call for the user.** `play3d` sizes its renderer once from
+    `W=1344, H=768` and has no `resize` handler. Carried from round 3, unchanged.

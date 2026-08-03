@@ -109,6 +109,23 @@ export function assertNoPrivileged(prompt, truth, harnessText) {
 class Stuck {
   constructor(n) { this.n = n; this.buf = []; this.lastFire = -99; }
   push(step, truth, percept) {
+    /* A STEP IN WHICH THE BODY IS NOT ALLOWED TO MOVE IS NOT EVIDENCE THAT IT
+     * CANNOT. This detector measures metres, and a battle, a conversation or a
+     * full-screen card is exactly a window where zero metres is CORRECT play.
+     * Such a step is DROPPED — it neither counts toward the window nor resets it —
+     * so six genuinely motionless free-roaming steps still fire.
+     *
+     * Paid for on 2026-08-03, run-20260803-203813: a ten-step overworld battle
+     * (fought and WON — "Duskpad is defeated!" at step 12, the Victory card at
+     * 13-15, walking again at 16) tripped the six-step window at step 12, and the
+     * interview it paid for produced PT-20260803-019, "Battle softlocks after
+     * defeating the enemy", P0, against a battle that had already ended. The
+     * detector was right that nothing moved and wrong about what that meant.
+     *
+     * This does NOT hide a real modal freeze: "UILOCK held with nothing drawn on
+     * it" is a different question, asked by the frame gate's `frozen`, which files
+     * its own blocker. Two different sentences about two different things. */
+    if (truth.locked || percept.battle || percept.dialogue || percept.card) return null;
     this.buf.push({ step, pos: truth.pos || [0, 0, 0], scene: truth.scene, shot: truth.shot,
       obj: percept.objective || '', dlg: (percept.dialogue && percept.dialogue.text) || '',
       beats: (truth.beats || []).length });
