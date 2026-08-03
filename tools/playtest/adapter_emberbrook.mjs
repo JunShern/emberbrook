@@ -210,7 +210,12 @@ export function checkpointsFromStory() {
   const out = []; const flags = {}; const beats = {};
   let objective = null, lastAt = null, lastScene = null, lastCam = null;
   for (const b of STORY.beats || []) {
-    out.push({ id: b.id, chapter: b.chapter || 1, scene: b.scene, cam: b.cam || lastCam,
+    // A CAM AND A POSITION ONLY CARRY WITHIN A SCENE. Inheriting `square` across a
+    // door into an interior would build a checkpoint that names a camera that
+    // bundle has never heard of — the URL would be ignored at best and land the
+    // player under an undefined shot at worst.
+    out.push({ id: b.id, chapter: b.chapter || 1, scene: b.scene,
+      cam: b.cam || (b.scene === lastScene ? lastCam : null),
       pos: b.at || (b.scene === lastScene ? lastAt : null),
       objective, flags: { ...flags }, beats: { ...beats }, brief: BRIEFS[b.id] || null });
     beats[b.id] = true;

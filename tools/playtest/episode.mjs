@@ -118,6 +118,7 @@ export async function run(cfg) {
       run: runId, step, source, kind: kind || 'confusion', severity: severity || r.severity || 'P1',
       title: String(r.title || 'untitled').slice(0, 160),
       doing: r.doing || null, expected: r.expected || null, happened: r.happened || null,
+      probe: r.probe || null,
       frames: frames.filter(Boolean).map(Q.relative),
       onscreen: { objective: percept.objective, prompts: percept.prompts,
         dialogue: percept.dialogue ? (percept.dialogue.speaker || '') + ': ' + (percept.dialogue.text || '') : null,
@@ -198,6 +199,11 @@ export async function run(cfg) {
               expected: `To walk about ${leg.intended} m and arrive there.`,
               happened: `The character moved ${leg.travelled} m and stopped ${leg.remaining} m short — twice in this run. ` +
                 'Something is in the way, or that ground is not connected to where I was standing.',
+              // THE CLAIM, IN THE FORM AN INSTRUMENT CAN MEASURE. Triage runs the
+              // reachability probe over exactly this pair rather than re-deriving
+              // it from prose — a triage that has to guess what was claimed is
+              // measuring its own guess.
+              probe: { kind: 'reach', from: leg.from, to: leg.target, scene: truth.scene },
             }, step, obs.percept, truth, [obs.framePath, f2.framePath], 'walk-executor', 'P1');
           }
           break;                             // do not grind the rest of the route into a wall
