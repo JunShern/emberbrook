@@ -266,9 +266,18 @@ try {
    * Leaving that set is leaving the story, and it is the harness's job to notice
    * because the player cannot — the objective banner follows you out. */
   const ALL_BEATS = checkpointsFromStory().checkpoints;
+  const SPINE_LOOKAHEAD = parseInt(arg('spine-lookahead', '3'), 10);
+  /* THE NEXT FEW BEATS, NOT ANY BEAT. Measured the first time this ran: "a scene
+   * holding an un-fired beat" put ow-valley on the spine, because ch1.done and
+   * ch2.road live there — an hour of play away. The player who leaves Emberbrook on
+   * frame two is standing in a scene the story does get to eventually, and a
+   * detector that accepts that detects nothing. Three is the lookahead because
+   * Chapter One's own Lake detour is a two-beat hop into an interior and back; a
+   * lookahead of one would call that leaving the story. */
   const spineScenes = (fired) => {
     const f = new Set(fired);
-    return new Set(ALL_BEATS.filter(b => !f.has(b.id) && b.scene).map(b => b.scene));
+    const next = ALL_BEATS.filter(b => !f.has(b.id) && b.scene).slice(0, SPINE_LOOKAHEAD);
+    return new Set(next.map(b => b.scene));
   };
   result = await runEpisode({ adapter, agent, plan, runDir: RUNDIR, runId: RUN_ID, port: PORT,
     maxSteps: MAX_STEPS, maxReports: MAX_REPORTS, stopBeat: STOP_BEAT, stuckWindow: STUCK_N,
