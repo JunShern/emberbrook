@@ -87,6 +87,11 @@ const RE_FIND = /can(?:no|')?t (?:find|see|spot)|cannot (?:find|see|spot)|couldn
 const RE_REACH = /block|can(?:no|')?t (?:get|reach|walk|go)|cannot (?:get|reach|walk|go)|in the way|won'?t let me|stuck|wall|barrier|closed off|no way (?:through|past)/i;
 function classify(e) {
   const prose = [e.title, e.doing, e.expected, e.happened].filter(Boolean).join(' ');
+  // THE SPINE REPORT IS ALREADY A MEASUREMENT. Unlike everything the model says,
+  // it is a mechanical fact: the scene the body is in holds none of the next
+  // un-fired beats in story.json. There is nothing left to confirm — only a design
+  // decision about what to do, which is a human's.
+  if (e.source === 'spine-detector') return { kind: 'spine', why: 'a harness measurement, not a model opinion' };
   if (e.probe && e.probe.kind === 'reach') return { kind: 'reach', probe: e.probe, why: 'the executor recorded the exact pair' };
   if (e.source === 'walk-executor') return { kind: 'reach', probe: e.probe, why: 'a walk-executor stall' };
   const who = namesIn(prose);
@@ -301,7 +306,13 @@ function relToDocs(p) { return String(p).replace(/^docs\/qa\/playtest\//, ''); }
       if (!RECHECK && e.verification.instrument) continue;
       const cls = classify(e);
       let v;
-      if (cls.kind === 'find') v = triageFind(e, cls);
+      if (cls.kind === 'spine') v = { status: 'VERIFIED',
+        instrument: 'llm_playtester spine detector (public/game/story.json vs the running scene)',
+        evidence: `The body was in "${e.truth.scene}" for three consecutive steps while none of the next ` +
+          `un-fired beats in story.json lives there. Beats fired at the time: ` +
+          `${(e.truth.beats || []).join(', ') || '(none)'}. This is a mechanical fact about the game, not a ` +
+          'model opinion — there is nothing left to measure. What to DO about it is a design decision.' };
+      else if (cls.kind === 'find') v = triageFind(e, cls);
       else if (cls.kind === 'reach') v = await triageReach(e, cls);
       else if (cls.kind === 'reach-vague') v = { status: 'UNVERIFIED', instrument: 'tools/reach_probe.mjs (needs a target)',
         evidence: 'a blocked-path claim with no recorded destination. Re-run it with --repro so the walk ' +

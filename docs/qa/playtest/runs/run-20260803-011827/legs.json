@@ -1,0 +1,219 @@
+[
+  {
+    "step": 3,
+    "ok": true,
+    "nx": 0.495,
+    "ny": 0.42,
+    "onNetwork": true,
+    "target": [
+      -59.08,
+      27.94,
+      75.47
+    ],
+    "from": [
+      -58.24,
+      27.59,
+      69.83
+    ],
+    "end": [
+      -59.28,
+      27.93,
+      75.05
+    ],
+    "intended": 5.7,
+    "remaining": 0.47,
+    "closed": 5.24,
+    "travelled": 5.32,
+    "closedFrac": 0.92,
+    "bursts": 2,
+    "slides": 0,
+    "arrived": true,
+    "ms": 612
+  },
+  {
+    "step": 3,
+    "ok": true,
+    "nx": 0.495,
+    "ny": 0.25,
+    "onNetwork": false,
+    "target": [
+      -62.07,
+      30.75,
+      90.57
+    ],
+    "from": [
+      -59.86,
+      27.63,
+      77.92
+    ],
+    "end": [
+      -62.99,
+      32.83,
+      93.58
+    ],
+    "intended": 12.84,
+    "remaining": 3.15,
+    "closed": 9.69,
+    "travelled": 15.97,
+    "closedFrac": 0.75,
+    "bursts": 2,
+    "slides": 0,
+    "arrived": false,
+    "ms": 2675
+  },
+  {
+    "step": 4,
+    "ok": true,
+    "nx": 0.65,
+    "ny": 0.6,
+    "onNetwork": false,
+    "target": [
+      -86.53,
+      32.76,
+      95.13
+    ],
+    "from": [
+      -79.83,
+      32.84,
+      100.13
+    ],
+    "end": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "intended": 8.36,
+    "remaining": 9.73,
+    "closed": -1.37,
+    "travelled": 18.03,
+    "closedFrac": -0.16,
+    "bursts": 4,
+    "slides": 0,
+    "arrived": false,
+    "ms": 38203
+  },
+  {
+    "step": 5,
+    "ok": true,
+    "nx": 0.58,
+    "ny": 0.48,
+    "onNetwork": false,
+    "target": [
+      -100.7,
+      29.76,
+      88.93
+    ],
+    "from": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "end": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "intended": 5.79,
+    "remaining": 5.79,
+    "closed": 0,
+    "travelled": 0,
+    "closedFrac": 0,
+    "bursts": 1,
+    "slides": 0,
+    "arrived": false,
+    "ms": 292220
+  },
+  {
+    "step": 6,
+    "ok": true,
+    "nx": 0.52,
+    "ny": 0.65,
+    "onNetwork": false,
+    "target": [
+      -93.05,
+      28.24,
+      87.76
+    ],
+    "from": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "end": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "intended": 3.61,
+    "remaining": 3.61,
+    "closed": 0,
+    "travelled": 0,
+    "closedFrac": 0,
+    "bursts": 1,
+    "slides": 0,
+    "arrived": false,
+    "ms": 89637
+  },
+  {
+    "step": 7,
+    "ok": true,
+    "nx": 0.55,
+    "ny": 0.8,
+    "onNetwork": false,
+    "target": [
+      -90.5,
+      26.41,
+      84.1
+    ],
+    "from": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "end": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "intended": 8.07,
+    "remaining": 8.07,
+    "closed": 0,
+    "travelled": 0,
+    "closedFrac": 0,
+    "bursts": 1,
+    "slides": 0,
+    "arrived": false,
+    "ms": 23284
+  },
+  {
+    "step": 9,
+    "ok": true,
+    "nx": 0.3,
+    "ny": 0.7,
+    "onNetwork": false,
+    "target": [
+      -82.73,
+      31.51,
+      92.26
+    ],
+    "from": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "end": [
+      -95.18,
+      30.37,
+      90.67
+    ],
+    "intended": 12.55,
+    "remaining": 12.55,
+    "closed": 0,
+    "travelled": 0,
+    "closedFrac": 0,
+    "bursts": 2,
+    "slides": 0,
+    "arrived": false,
+    "ms": 20908
+  }
+]

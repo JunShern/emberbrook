@@ -128,7 +128,7 @@ export async function run(cfg) {
   const reports = [];
   const stallSeen = new Map();
   const lastFrames = [];
-  let nudge = null, finished = null, steps = 0, offSpine = 0, offSpineFiled = false;
+  let nudge = null, finished = null, steps = 0, offSpine = 0, offSpineFiled = false, lastLeg = null;
 
   const brief = [plan.brief, plan.objective ? `Your current objective is: ${plan.objective}` : null]
     .filter(Boolean).join(' ') || null;
@@ -219,7 +219,9 @@ export async function run(cfg) {
         const iv = await agent.interview({ screenshots: frames, text: obs.text, history: history.slice(-10) });
         if (iv) { assertNoPrivileged(iv._prompt, truth, brief);
           if (iv.notabug) log('  (interview: the agent says it is not really stuck — nothing filed)');
-          else fileReport(iv.kind, iv, step, obs.percept, truth, lastFrames.slice(), 'stuck-interview', iv.severity); }
+          else { if (lastLeg && lastLeg.from && lastLeg.target)
+                   iv.probe = { kind: 'reach', from: lastLeg.from, to: lastLeg.target, scene: truth.scene };
+                 fileReport(iv.kind, iv, step, obs.percept, truth, lastFrames.slice(), 'stuck-interview', iv.severity); } }
       } catch (e) { log('  interview failed: ' + e.message); if (/FIREWALL/.test(e.message)) throw e; }
       nudge = 'You appear to be stuck: you have not moved for a while and nothing has changed. ' +
               'Do something DIFFERENT — walk somewhere else, or go back the way you came.';
@@ -246,6 +248,7 @@ export async function run(cfg) {
       for (const [wx, wy] of intent.waypoints) {
         const leg = await adapter.walkLeg(wx, wy);
         legs.push({ step, ...leg }); outcome = leg;
+        if (leg.from && leg.target) lastLeg = leg;
         if (!leg.ok) {
           parts.push(leg.reason === 'modal'
             ? 'the game took over part-way (a scene or a conversation started)'
@@ -287,6 +290,11 @@ export async function run(cfg) {
       await adapter.menuDown(intent.index || 0); await adapter.press('e');
       detail = 'chose ' + (intent.index || 0);
     } else if (intent.action === 'report' || intent.action === 'giveup') {
+      // Hand the last walk's from/to along. When the complaint is "I cannot get
+      // there", triage can then measure THAT pair instead of parsing prose for a
+      // destination it will only guess at.
+      if (intent.report && lastLeg && lastLeg.from && lastLeg.target)
+        intent.report.probe = { kind: 'reach', from: lastLeg.from, to: lastLeg.target, scene: truth.scene };
       if (intent.report)
         fileReport(intent.report.kind, intent.report, step, obs.percept, truth, lastFrames.slice(), 'agent',
           intent.action === 'giveup' ? 'P0' : intent.report.severity);

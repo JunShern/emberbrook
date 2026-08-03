@@ -1,0 +1,490 @@
+{
+  "version": 1,
+  "note": "see tools/playtest/queue.mjs",
+  "entries": [
+    {
+      "id": "PT-20260803-001",
+      "created": "2026-08-03T01:04:49.757Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": "tools/reach_probe.mjs (NOT RUN)",
+        "evidence": "the reachability probe needs a running server: re-run this with --port=3000.",
+        "at": "2026-08-03T01:35:48.593Z"
+      },
+      "run": "run-20260803-005848",
+      "step": 4,
+      "source": "walk-executor",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Walk blocked: the body closed 0 m of an intended 35.57 m, twice at the same place",
+      "doing": "I tried to walk to a point on screen at [0.50, 0.40]; my goal was \"Follow the road north by walking along the stone path past the monument.\".",
+      "expected": "To walk about 35.57 m and arrive there.",
+      "happened": "The character moved 0 m and stopped 35.57 m short — twice in this run. Something is in the way, or that ground is not connected to where I was standing.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          52,
+          -0.41,
+          22.23
+        ],
+        "to": [
+          53.19,
+          0.22,
+          -13.32
+        ],
+        "scene": "emb-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260803-005848/frames/step-004.jpg",
+        "docs/qa/playtest/runs/run-20260803-005848/frames/step-005-stall.jpg"
+      ],
+      "onscreen": {
+        "objective": "Follow the road north",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-cine",
+        "shot": "woodroad",
+        "pos": [
+          52,
+          -0.41,
+          22.23
+        ],
+        "beats": [
+          "ch1.open"
+        ],
+        "flags": [
+          "story.ch1.started"
+        ],
+        "exits": [
+          "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+          "emb-cine>ow-valley@emberbrook-gate"
+        ]
+      },
+      "repro": {
+        "sha": "7dc81dad20b6c03e03db1127a81c2931f48f6680",
+        "capturedAt": "2026-08-03T01:04:49.757Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "emb-cine",
+            "cam": "woodroad",
+            "pos": [
+              52,
+              -0.64,
+              28
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-03T00:59:03.533Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260803-002",
+      "created": "2026-08-03T01:20:01.071Z",
+      "verification": {
+        "status": "VERIFIED",
+        "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
+        "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+        "at": "2026-08-03T01:35:48.597Z"
+      },
+      "run": "run-20260803-011827",
+      "step": 5,
+      "source": "spine-detector",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "The player can leave the chapter on its first frame, and the objective follows them out",
+      "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
+      "expected": "To carry on with the objective the game was showing me.",
+      "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Follow the road north\") still refers to where I was. Nothing here can continue the chapter.",
+      "probe": null,
+      "frames": [
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-003.jpg",
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-004.jpg",
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-005.jpg"
+      ],
+      "onscreen": {
+        "objective": "Follow the road north",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "ow-valley",
+        "shot": null,
+        "pos": [
+          -95.18,
+          30.37,
+          90.67
+        ],
+        "beats": [
+          "ch1.open"
+        ],
+        "flags": [
+          "story.ch1.started"
+        ],
+        "exits": [
+          "ow-valley>emb-cine@emberbrook-gate",
+          "ow-valley>del-cine@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "0ac851e99cae55640d68026cf0408de06e606565",
+        "capturedAt": "2026-08-03T01:20:01.071Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "ow-valley",
+            "cam": null,
+            "pos": [
+              -58.242,
+              27.591,
+              69.827
+            ],
+            "yaw": -1.3737
+          },
+          "beats": {
+            "ch1.open": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-03T01:18:52.654Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260803-003",
+      "created": "2026-08-03T01:28:35.971Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": "tools/reach_probe.mjs (needs a target)",
+        "evidence": "a blocked-path claim with no recorded destination. Re-run it with --repro so the walk executor records the from/to pair, then triage again.",
+        "at": "2026-08-03T01:35:48.598Z"
+      },
+      "run": "run-20260803-011827",
+      "step": 8,
+      "source": "agent",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Character stuck on terrain geometry",
+      "doing": "Trying to walk away from the brown rock face on the grassy hill",
+      "expected": "Character should navigate around collision or walk downhill when ground is clicked",
+      "happened": "Character is completely immobile and closed 0 meters across three movement attempts",
+      "probe": null,
+      "frames": [
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-006.jpg",
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-007.jpg",
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-008.jpg"
+      ],
+      "onscreen": {
+        "objective": "Follow the road north",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "ow-valley",
+        "shot": null,
+        "pos": [
+          -95.18,
+          30.37,
+          90.67
+        ],
+        "beats": [
+          "ch1.open"
+        ],
+        "flags": [
+          "story.ch1.started"
+        ],
+        "exits": [
+          "ow-valley>emb-cine@emberbrook-gate",
+          "ow-valley>del-cine@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "0ac851e99cae55640d68026cf0408de06e606565",
+        "capturedAt": "2026-08-03T01:28:35.970Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "ow-valley",
+            "cam": null,
+            "pos": [
+              -58.242,
+              27.591,
+              69.827
+            ],
+            "yaw": -1.3737
+          },
+          "beats": {
+            "ch1.open": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-03T01:18:52.654Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260803-004",
+      "created": "2026-08-03T01:31:21.172Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": "tools/reach_probe.mjs (needs a target)",
+        "evidence": "a blocked-path claim with no recorded destination. Re-run it with --repro so the walk executor records the from/to pair, then triage again.",
+        "at": "2026-08-03T01:35:48.599Z"
+      },
+      "run": "run-20260803-011827",
+      "step": 10,
+      "source": "stuck-interview",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Character stuck on terrain near rock formation",
+      "doing": "I was trying to walk around the rock formation to find the road north.",
+      "expected": "I expected my character to walk down the grassy slope when I clicked.",
+      "happened": "My character is completely stuck in place and won't move in any direction, no matter where I click.",
+      "probe": null,
+      "frames": [
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-008.jpg",
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-009.jpg",
+        "docs/qa/playtest/runs/run-20260803-011827/frames/step-010.jpg"
+      ],
+      "onscreen": {
+        "objective": "Follow the road north",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "ow-valley",
+        "shot": null,
+        "pos": [
+          -95.18,
+          30.37,
+          90.67
+        ],
+        "beats": [
+          "ch1.open"
+        ],
+        "flags": [
+          "story.ch1.started"
+        ],
+        "exits": [
+          "ow-valley>emb-cine@emberbrook-gate",
+          "ow-valley>del-cine@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "0ac851e99cae55640d68026cf0408de06e606565",
+        "capturedAt": "2026-08-03T01:31:21.170Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "ow-valley",
+            "cam": null,
+            "pos": [
+              -58.242,
+              27.591,
+              69.827
+            ],
+            "yaw": -1.3737
+          },
+          "beats": {
+            "ch1.open": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-03T01:18:52.654Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    }
+  ]
+}

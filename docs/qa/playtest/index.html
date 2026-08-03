@@ -19,15 +19,79 @@
  a{color:#c8a86a}
 </style>
 <h1>Emberbrook — LLM playtest queue</h1>
-<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-03T00:56:28.290Z.</p>
+<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-03T01:35:48.608Z.</p>
 <div class="warn"><b>An UNVERIFIED complaint is a lead, never a ticket.</b> These are an LLM's opinions about
 screenshots. This repo has a confabulation scar; the ratified workflow is judge&nbsp;→&nbsp;<b>measure on an
 instrument</b>&nbsp;→&nbsp;build. REFUTED entries matter as much as VERIFIED ones: the agent sees one still frame
 of a night-graded plate with no parallax and no camera control, so it is biased toward "I cannot find it",
 and the false-positive rate is this tool's calibration.</div>
 <div class="tally">
- <div><b style="color:#3fa96a">0</b>verified</div>
- <div><b style="color:#8a7a5a">0</b>unverified</div>
+ <div><b style="color:#3fa96a">1</b>verified</div>
+ <div><b style="color:#8a7a5a">3</b>unverified</div>
  <div><b style="color:#b25a4a">0</b>refuted</div>
- <div><b>0</b>total</div>
+ <div><b>4</b>total</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-002</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Follow the road north&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;ow-valley&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260803-011827/frames/step-003.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-005.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-011827 step 5 · found by spine-detector · ow-valley / - @ -95.18,30.37,90.67
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-002</code> (captured at 0ac851e9)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Walk blocked: the body closed 0 m of an intended 35.57 m, twice at the same place</span><span class="id">PT-20260803-001</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.50, 0.40]; my goal was &quot;Follow the road north by walking along the stone path past the monument.&quot;.</dd>
+  <dt>I expected</dt><dd>To walk about 35.57 m and arrive there.</dd>
+  <dt>What happened</dt><dd>The character moved 0 m and stopped 35.57 m short — twice in this run. Something is in the way, or that ground is not connected to where I was standing.</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (NOT RUN)</dd>
+ </dl>
+ <pre>the reachability probe needs a running server: re-run this with --port=3000.</pre>
+ <div class="fr"><img src="runs/run-20260803-005848/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-005848/frames/step-005-stall.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-005848 step 4 · found by walk-executor · emb-cine / woodroad @ 52,-0.41,22.23
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-001</code> (captured at 7dc81dad)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Character stuck on terrain geometry</span><span class="id">PT-20260803-003</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Trying to walk away from the brown rock face on the grassy hill</dd>
+  <dt>I expected</dt><dd>Character should navigate around collision or walk downhill when ground is clicked</dd>
+  <dt>What happened</dt><dd>Character is completely immobile and closed 0 meters across three movement attempts</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (needs a target)</dd>
+ </dl>
+ <pre>a blocked-path claim with no recorded destination. Re-run it with --repro so the walk executor records the from/to pair, then triage again.</pre>
+ <div class="fr"><img src="runs/run-20260803-011827/frames/step-006.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-007.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-008.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-011827 step 8 · found by agent · ow-valley / - @ -95.18,30.37,90.67
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-003</code> (captured at 0ac851e9)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Character stuck on terrain near rock formation</span><span class="id">PT-20260803-004</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to walk around the rock formation to find the road north.</dd>
+  <dt>I expected</dt><dd>I expected my character to walk down the grassy slope when I clicked.</dd>
+  <dt>What happened</dt><dd>My character is completely stuck in place and won't move in any direction, no matter where I click.</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (needs a target)</dd>
+ </dl>
+ <pre>a blocked-path claim with no recorded destination. Re-run it with --repro so the walk executor records the from/to pair, then triage again.</pre>
+ <div class="fr"><img src="runs/run-20260803-011827/frames/step-008.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-009.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-010.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-011827 step 10 · found by stuck-interview · ow-valley / - @ -95.18,30.37,90.67
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-004</code> (captured at 0ac851e9)</div>
 </div>
