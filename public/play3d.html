@@ -610,17 +610,30 @@ function syncDepth(){
 // raycast could not see the thing doing the hiding. Canon says a canopy hides the
 // character and never blocks them; that is only playable if the marker knows.
 let occSet=null;
-function occCheck(){ if(RT||!cam){occRing.visible=occDia.visible=false;return;}
+// THE OCCLUDER SET IS THE RENDER-VISIBLE GEOMETRY, NOT THE COLLIDABLE SET, in every
+// mode except a pre-rendered plate with ghosted overheads. `collide` is the wrong
+// question here twice over: foliage and terrain dressing are deliberately non-collidable
+// (canon: a canopy hides you and never blocks you), so a ray against `collide` cannot see
+// the thing doing the hiding — which is exactly the Valley Gate canopy scar above.
+// THE OVERWORLD USED TO SKIP THIS CHECK ENTIRELY (`if(RT||!cam) return`), so ow-* had no
+// presence marker at all. Measured 2026-08-03 at [-34.78,29.64,79.42] in ow-valley, the
+// spot the playtester filed PT-20260803-009 from: the character painted 219 px with the
+// depth test OFF and 0 px with it ON — drawn, and wholly behind a cliff — while SIM.occ()
+// reported nHits:0 and the marker stayed down. A player who cannot see themselves and has
+// no marker cannot navigate, which is precisely what that report said in a player's words.
+const occVis=()=>!!DEPTH||!!RT;                        // render-visible geometry is the occluder set
+function occCheck(){ if(!cam){occRing.visible=occDia.visible=false;return;}
   if(++occT%6)return;                                  // every 6th frame is plenty
   if(!occSet) occSet=allMeshes.filter(o=>!o.userData.isWalk);
+  const VIS=occVis();
   const tgt=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.9,P.z);
   occRay.set(cam.position.clone(),tgt.clone().sub(cam.position).normalize());
   occRay.far=cam.position.distanceTo(tgt)-0.3;
-  const hit=occRay.intersectObjects(DEPTH?occSet:collide,true).find(h=>{
-    if(DEPTH) return true;                             // depth-map mode: nothing is ghosted, any surface counts
+  const hit=occRay.intersectObjects(VIS?occSet:collide,true).find(h=>{
+    if(VIS) return true;                               // any render-visible surface counts
     const m=h.object.material; return !(m&&m.depthWrite===false); });  // ghosted overheads don't count
   occRing.visible=occDia.visible=!!hit;
-  window.__occ={t:occT,hit:!!hit,depth:!!DEPTH,set:DEPTH?'depth-visible geometry':'collide'};
+  window.__occ={t:occT,hit:!!hit,depth:!!DEPTH,rt:!!RT,set:VIS?'render-visible geometry':'collide'};
 }
 const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
 // GHOST PASS (2026-07-31, user: see the character through occluders). A twin that
@@ -1833,8 +1846,8 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
    occRay.far=cam.position.distanceTo(tgt)-0.3;
    if(!occSet) occSet=allMeshes.filter(o=>!o.userData.isWalk);
    // same set occCheck uses, or the harness and the game disagree about what hides you
-   const hits=occRay.intersectObjects(DEPTH?occSet:collide,true);
-   return{depthMode:!!DEPTH,ring:occRing.visible,nHits:hits.length,
+   const hits=occRay.intersectObjects(occVis()?occSet:collide,true);
+   return{depthMode:!!DEPTH,rtMode:!!RT,ring:occRing.visible,nHits:hits.length,
      first:hits[0]?{name:hits[0].object.name,dist:+hits[0].distance.toFixed(2)}:null,
      camDist:+cam.position.distanceTo(tgt).toFixed(2)}}};
 // ===== SCENE GRAPH + TRANSITIONS ============================================
