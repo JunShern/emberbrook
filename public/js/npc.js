@@ -266,6 +266,17 @@
   // shape of the leak this file is here to stop making.
   var EPOCH = 0;
 
+  // HIDDEN — "this posted villager is somewhere else right now", as PAGE state.
+  // Its one caller today is followers.js: once Mochi is at the player's heel, the
+  // posted cats ('mochi' at the Dellhollow eel stall, 'mochi-emb' at the Emberbrook
+  // waystone) are the SAME ANIMAL, and a cat following you while a second one sits
+  // at the stall reads as a bug. It is page state and not scene state deliberately:
+  // spawn() honours it, so the intent survives a doorway without either module
+  // having to win a race with the other's 'eb-scene' handler. A hidden figure is
+  // also out of nearest(), so their prompt and their hail node are unreachable
+  // rather than invisible-but-talkable.
+  var HIDDEN = Object.create(null);
+
   // THE SETTLE SIGNAL. "the 'eb-scene' handler returned" is NOT "the villagers are
   // standing there": the art arrives over an <img> load and a chroma key, several
   // hops later. Anything MEASURING this page needs that difference — a per-(scene,
@@ -341,6 +352,7 @@
       art: false,
     };
     PEOPLE.push(P);
+    if (HIDDEN[P.id]) { root.visible = false; P.hidden = true; }   // see Npc.hide
 
     // the shadow exists whether or not the art does — it is the figure's
     // contact with the ground, and it is also how a missing plate is visible in
@@ -578,6 +590,7 @@
     if (!pos) return null;
     var best = null;
     for (var i = 0; i < PEOPLE.length; i++) {
+      if (PEOPLE[i].hidden) continue;                 // Npc.hide: not here right now
       var h = reach(PEOPLE[i], pos);
       if (!h['in']) continue;
       if (!best || h.d < best.d) best = { p: PEOPLE[i], d: h.d };
@@ -839,6 +852,23 @@
       });
     },
     near: function () { var n = nearest(); return n ? { id: n.p.id, name: n.p.name, d: +n.d.toFixed(2) } : null; },
+    // Npc.hide(id, on) — take a posted villager out of the world without editing
+    // npcs.json (see HIDDEN above). Returns true if the id is one this town knows
+    // about right now; the intent is recorded either way, for the next spawn.
+    hide: function (id, on) {
+      if (on === undefined) on = true;
+      if (on) HIDDEN[id] = true; else delete HIDDEN[id];
+      var found = false;
+      for (var i = 0; i < PEOPLE.length; i++) {
+        if (PEOPLE[i].id !== id) continue;
+        found = true;
+        PEOPLE[i].hidden = !!on;
+        PEOPLE[i].root.visible = !on;
+        if (on && nearId === id) { nearId = null; try { if (U()) U().prompt('npc', null); } catch (e) { } }
+      }
+      return found;
+    },
+    hidden: function () { return Object.keys(HIDDEN); },
     get group() { return GROUP; },
     debug: function () {
       return { scene: sceneKey, built: built, count: PEOPLE.length, missingArt: missing.slice(),

@@ -377,7 +377,18 @@ function charLight(c){
   HEMI.intensity=CL.FILL*gain;
   AMBIENT.color.copy(hue(world,0.30));
   AMBIENT.intensity=CL.AMB*gain;
-  window.__charlight={scene:SCENE, town:CLTOWN, shot:c?c.id:null, rig:!!CLRIG,
+  // THE HUSH — public/js/hush.js, which owns the decision and the numbers; this is
+  // the one place the town's rig can be told the warm sources have gone out. It is
+  // the LAST word in charLight deliberately: the plate-derived gain above is still
+  // what sets the level, so a hushed character sits in the picture at the right
+  // exposure and only loses the warmth. Nothing here touches the cut-ins — they are
+  // DOM, they stay fully coloured, and that contrast is the whole effect.
+  if(window.__hush&&window.__hush.on){ const H=window.__hush;
+    dl.color.setRGB(H.key[0],H.key[1],H.key[2]);   dl.intensity*=H.keyMul;
+    HEMI.color.setRGB(H.sky[0],H.sky[1],H.sky[2]);
+    HEMI.groundColor.setRGB(H.grd[0],H.grd[1],H.grd[2]); HEMI.intensity*=H.fillMul;
+    AMBIENT.color.setRGB(H.sky[0],H.sky[1],H.sky[2]);   AMBIENT.intensity*=H.ambMul; }
+  window.__charlight={scene:SCENE, town:CLTOWN, shot:c?c.id:null, rig:!!CLRIG, hush:!!(window.__hush&&window.__hush.on),
     key:S.length?{what:S[0].what, w:S[0].w, dir:S[0].dir.toArray().map(v=>+v.toFixed(3)),
                   elev:+(Math.asin(S[0].dir.y)*180/Math.PI).toFixed(1),
                   col:S[0].col}:null,
@@ -1680,6 +1691,9 @@ function phys(inp){
  if(window.Story&&Story.tick) Story.tick();
  if(window.Shop&&Shop.tick) Shop.tick();   // counter prompts ride the physics tick like doors do
  if(window.Npc&&Npc.tick) Npc.tick();      // NPC prompts ride it too — AFTER Shop, so a shopkeeper owns his own counter banner
+ // The follower trail samples the LEADER, so it must ride the tick that moved her
+ // — not rAF, which is dead in a background tab where headless verification lives.
+ if(window.Followers&&Followers.tick) Followers.tick();
  if(window.Encounters) Encounters.tick();  // encounter director: measures its own travel; must lose to sgTick's transitions
  return{dx,dz,l,f,r};
 }
@@ -2296,6 +2310,10 @@ Object.assign(window.SIM,{
   // handoff inherits the veil, the epoch, sceneDispose, the 'eb-scene' announce and
   // the reload fallback. There is no second swap path.
   body(){ return BODY; },
+  // Re-run the character rig for the shot that is up. The hush changes what
+  // charLight() should answer without changing the shot, and a module outside this
+  // file cannot reach CINECAM — this is the whole of that surface.
+  relight(){ try{ return charLight(typeof CINECAM!=='undefined'?CINECAM:null); }catch(e){ return null; } },
   pov(o){
     o=o||{};
     const key=o.as, ms=(o.ms==null?sgDef('fadeMs',350):o.ms);
@@ -2390,6 +2408,14 @@ sceneLoad().then(r=>{ if(r) TRANSLOG.push({scene:r.scene, kind:'boot', ms:Math.r
      arm. Self-arms at load and re-arms on 'eb-scene' like every other module. -->
 <script src="js/story_runtime.js"></script>
 <script src="js/npc.js"></script>
+<!-- FOLLOWERS. After npc.js: the following cat replaces the posted one and asks
+     Npc.hide() to stand it down, so Npc must exist by the time this arms. Towns
+     only (its own scene predicate) — the overworld corridor is walked alone. -->
+<script src="js/followers.js"></script>
+<!-- THE HUSH. Flag-driven (story.ch1.hush), Emberbrook only. It grades the WebGL
+     canvas and drives charLight through window.__hush; the cut-ins are DOM above
+     that canvas and stay warm, which is the entire point of the effect. -->
+<script src="js/hush.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/route_overlay.js"></script>
 <script src="js/music.js"></script>
