@@ -34,7 +34,7 @@
       this.W = W; this.H = H;
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       this.renderer.setSize(W, H, false);
-      this.renderer.outputEncoding = THREE.sRGBEncoding;
+      this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       container.appendChild(this.renderer.domElement);
       this.scene = new THREE.Scene();
       this.scene.add(new THREE.AmbientLight(0xffffff, 0.95));
@@ -48,7 +48,7 @@
       // clear previous scene geometry
       for (const m of this.collide) this.scene.remove(m);
       this.collide = []; this.ready = false;
-      new THREE.TextureLoader().load(dir + 'stylized.png', t => { t.encoding = THREE.sRGBEncoding; this.scene.background = t; });
+      new THREE.TextureLoader().load(dir + 'stylized.png', t => { t.colorSpace = THREE.SRGBColorSpace; this.scene.background = t; });
       new THREE.GLTFLoader().load(dir + 'scene.glb', g => {
         this.scene.add(g.scene);
         this.camera = (g.cameras && g.cameras[0]) ||
@@ -67,7 +67,7 @@
     registerChar(key, url, layout) {
       const sheet = new THREE.TextureLoader().load(url);
       sheet.wrapS = sheet.wrapT = THREE.RepeatWrapping; sheet.repeat.set(1 / layout.cols, 1 / layout.rows);
-      sheet.encoding = THREE.sRGBEncoding;
+      sheet.colorSpace = THREE.SRGBColorSpace;
       this._sheets[key] = { sheet, layout };
     },
 

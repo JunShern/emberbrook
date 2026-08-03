@@ -1,0 +1,62 @@
+[
+ {
+  "scene": "ow-valley",
+  "out": "ow-corridor.png",
+  "expr": "window.ORBIT.dist=40;window.ORBIT.pitch=0.61;SIM.tick&&SIM.tick(0.1)",
+  "settle": 1600
+ },
+ {
+  "scene": "ow-valley",
+  "out": "ow-corridor-turn.png",
+  "expr": "window.ORBIT.dist=30;window.ORBIT.pitch=0.45;window.ORBIT.yaw+=2.0;SIM.tick&&SIM.tick(0.1)",
+  "settle": 1600
+ },
+ {
+  "scene": "ow-valley",
+  "out": "ow-closeup.png",
+  "expr": "window.ORBIT.dist=4.5;window.ORBIT.pitch=0.14;SIM.tick&&SIM.tick(0.1)",
+  "settle": 1600
+ },
+ {
+  "scene": "emb-townwalk",
+  "out": "townwalk-wide.png",
+  "expr": "window.ORBIT.dist=16;window.ORBIT.pitch=0.62;SIM.tick&&SIM.tick(0.1)",
+  "settle": 1600
+ },
+ {
+  "scene": "emb-townwalk",
+  "out": "townwalk-closeup.png",
+  "expr": "window.ORBIT.dist=4.0;window.ORBIT.pitch=0.12;SIM.tick&&SIM.tick(0.1)",
+  "settle": 1600
+ },
+ {
+  "scene": "emb-cine",
+  "out": "emb-square.png",
+  "expr": "const _j=await fetch('assets/scenes/emb-cine/cine.json').then(r=>r.json());const _c=_j.cameras.find(y=>y.id==='square');if(_c&&_c.spawn)SIM.tp(_c.spawn[0],_c.spawn[2],_c.spawn[1]);window.__S=await SIM.shot('square')",
+  "settle": 2200
+ },
+ {
+  "scene": "emb-cine",
+  "out": "emb-gateroad.png",
+  "expr": "const _j=await fetch('assets/scenes/emb-cine/cine.json').then(r=>r.json());const _c=_j.cameras.find(y=>y.id==='gateroad');if(_c&&_c.spawn)SIM.tp(_c.spawn[0],_c.spawn[2],_c.spawn[1]);window.__S=await SIM.shot('gateroad')",
+  "settle": 2200
+ },
+ {
+  "scene": "emb-cine",
+  "out": "emb-waystone.png",
+  "expr": "const _j=await fetch('assets/scenes/emb-cine/cine.json').then(r=>r.json());const _c=_j.cameras.find(y=>y.id==='waystone');if(_c&&_c.spawn)SIM.tp(_c.spawn[0],_c.spawn[2],_c.spawn[1]);window.__S=await SIM.shot('waystone')",
+  "settle": 2200
+ },
+ {
+  "scene": "del-cine",
+  "out": "del-quay-west.png",
+  "expr": "const _j=await fetch('assets/scenes/del-cine/cine.json').then(r=>r.json());const _c=_j.cameras.find(y=>y.id==='quay-west');if(_c&&_c.spawn)SIM.tp(_c.spawn[0],_c.spawn[2],_c.spawn[1]);window.__S=await SIM.shot('quay-west')",
+  "settle": 2200
+ },
+ {
+  "scene": "del-cine",
+  "out": "del-lockhead.png",
+  "expr": "const _j=await fetch('assets/scenes/del-cine/cine.json').then(r=>r.json());const _c=_j.cameras.find(y=>y.id==='lockhead');if(_c&&_c.spawn)SIM.tp(_c.spawn[0],_c.spawn[2],_c.spawn[1]);window.__S=await SIM.shot('lockhead')",
+  "settle": 2200
+ }
+]

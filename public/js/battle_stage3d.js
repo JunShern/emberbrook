@@ -389,17 +389,21 @@
   }
 
   // ---- COLOUR SPACE --------------------------------------------------------
-  // The renderer writes sRGB (outputEncoding), but three r128 has no colour
-  // management: a hex handed to THREE.Color is taken as ALREADY LINEAR and then
-  // gamma-encoded on the way out, so #5e4d31 — a dark forest brown — leaves the
-  // pipe as a pale tan. Every palette hex in this file is authored as the colour
-  // you want to SEE, so every one of them goes through here. Getting this wrong
-  // is what turns a zone-tinted clearing into one flat orange pancake.
+  // Every palette hex in this file is authored as the colour you want to SEE, and
+  // it has to reach the shader as linear radiance. Under r128 that was this
+  // function's job: r128 had no colour management, took a hex as ALREADY LINEAR
+  // and gamma-encoded it on the way out, so #5e4d31 — a dark forest brown — left
+  // the pipe as a pale tan, and C() hand-called convertSRGBToLinear on all of them.
+  //
+  // r185 DOES IT: ColorManagement is on, and `new Color(hex)` decodes from sRGB
+  // into the linear working space at construction. The hand conversion is deleted
+  // rather than kept "for safety" — kept, it would convert a SECOND time and drop
+  // the whole arena palette roughly a stop and a half, which looks like a lighting
+  // bug and is a colour-space bug. C() survives only as the memo cache.
   const _cc = Object.create(null);
   function C(hex) {
     if (_cc[hex]) return _cc[hex].clone();
     const c = new (T().Color)(hex);
-    if (c.convertSRGBToLinear) c.convertSRGBToLinear();
     _cc[hex] = c;
     return c.clone();
   }
@@ -603,7 +607,7 @@
                                         preserveDrawingBuffer: CFG.snapshots !== false });
     } catch (e) { return null; }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    if (TH.sRGBEncoding !== undefined) renderer.outputEncoding = TH.sRGBEncoding;
+    renderer.outputColorSpace = TH.SRGBColorSpace;   // r185: colour management is on by default
     renderer.setClearColor(zone.sky, 1);
     // SHADOWS. Soft-PCF, and every failure mode here is a silent one — an old
     // driver that refuses a depth texture must cost the arena a shadow, never a
@@ -612,7 +616,10 @@
     try {
       if (CFG.shadow.on) {
         renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = TH.PCFSoftShadowMap;
+        // r185 deprecated PCFSoftShadowMap (it falls back to PCFShadowMap and warns).
+        // Nothing is lost: r185's PCF is a Vogel disk scaled by key.shadow.radius,
+        // which CFG.shadow.radius already sets below.
+        renderer.shadowMap.type = TH.PCFShadowMap;
       }
     } catch (e) { }
     const canvas = renderer.domElement;
@@ -655,9 +662,15 @@
     // hemisphere blew the ground out and the cast read as dark cut-outs against
     // it. 0.44 / 0.12 is the same total on the LIT side with the floor a stop
     // down, which is what lets a character hold the frame.
-    const hemi = new TH.HemisphereLight(C(zone.sky), C(zone.ground), 0.44);
+    // r185 UNITS. r128 multiplied every light by pi inside WebGLLights; r185 does
+    // not, so the four numbers below — all of them argued out against pictures in
+    // docs/qa/battle3d — are 3.14x too dark unless the conversion is made. IU() is
+    // that conversion and nothing else: the RATIOS (0.44 hemi : 0.86 key : 0.22
+    // fill : 0.12 ambient) are untouched, which is what the notes above are about.
+    const IU = v => v * Math.PI;
+    const hemi = new TH.HemisphereLight(C(zone.sky), C(zone.ground), IU(0.44));
     scene.add(hemi);
-    const key = new TH.DirectionalLight(C(zone.key), 0.86);
+    const key = new TH.DirectionalLight(C(zone.key), IU(0.86));
     key.position.set(-7, 9, -4.5);                    // raking from the upper LEFT-BACK
     scene.add(key);
     // THE SHADOW CAMERA WRAPS THE FIGHT, NOT THE CLEARING. The formations live
@@ -682,7 +695,7 @@
         scene.add(key.target);
       }
     } catch (e) { console.warn('[stage3d] shadows unavailable', e); }
-    const fill = new TH.DirectionalLight(C(zone.fill), 0.22);
+    const fill = new TH.DirectionalLight(C(zone.fill), IU(0.22));
     fill.position.set(6, 4, 7);
     scene.add(fill);
     // THE RIM, from behind the formations and almost level with them — see
@@ -691,12 +704,12 @@
     // than as a second coloured lamp.
     if (CFG.rim.on) {
       const rc = C(zone.key); rc.lerp(new TH.Color(1, 1, 1), 0.35);
-      const rim = new TH.DirectionalLight(0xffffff, CFG.rim.intensity);
+      const rim = new TH.DirectionalLight(0xffffff, IU(CFG.rim.intensity));
       rim.color.copy(rc);
       rim.position.set(CFG.rim.pos[0] * partySide(), CFG.rim.pos[1], CFG.rim.pos[2]);
       scene.add(rim);
     }
-    scene.add(new TH.AmbientLight(0xffffff, 0.12));
+    scene.add(new TH.AmbientLight(0xffffff, IU(0.12)));
 
     // ---- THE GROUND: a dished clearing --------------------------------------
     // A radial grid, not a square plane: the rim is a circle, so the silhouette
@@ -863,7 +876,7 @@
       probeImage([url]).then((im) => {
         if (!im || dead) return;
         const tex = new TH.Texture(im);
-        if (TH.sRGBEncoding !== undefined) tex.encoding = TH.sRGBEncoding;
+        tex.colorSpace = TH.SRGBColorSpace;
         tex.minFilter = TH.LinearFilter; tex.generateMipmaps = false;
         tex.wrapS = tex.wrapT = TH.ClampToEdgeWrapping;
         tex.needsUpdate = true;
@@ -1248,7 +1261,7 @@
       const w = source.naturalWidth || source.width, h = source.naturalHeight || source.height;
       const tex = source instanceof HTMLCanvasElement ? new TH2.CanvasTexture(source) : new TH2.Texture(source);
       tex.__own = true;
-      if (TH2.sRGBEncoding !== undefined) tex.encoding = TH2.sRGBEncoding;
+      tex.colorSpace = TH2.SRGBColorSpace;
       if (pixel || h <= 64) { tex.minFilter = tex.magFilter = TH2.NearestFilter; }
       else { tex.minFilter = TH2.LinearFilter; }
       tex.generateMipmaps = false;
@@ -1946,7 +1959,7 @@
             // composite reads linear values through a shader that assumes display
             // space and the whole frame comes out washed. Stating it on the
             // texture is how r128 is told.
-            if (TH.sRGBEncoding !== undefined) p.rt.texture.encoding = TH.sRGBEncoding;
+            p.rt.texture.colorSpace = TH.SRGBColorSpace;
           },
           draw(to, mat) {
             quad.material = mat;

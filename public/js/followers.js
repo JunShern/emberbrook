@@ -270,7 +270,7 @@
     return plate(rec.src).then(function (canvas) {
       if (ep !== EPOCH || !canvas) return F;
       var tex = new T.CanvasTexture(canvas);
-      if (T.sRGBEncoding !== undefined) tex.encoding = T.sRGBEncoding;
+      tex.colorSpace = T.SRGBColorSpace;
       tex.minFilter = T.LinearFilter; tex.generateMipmaps = false; tex.needsUpdate = true;
       var pw = F.h * (canvas.width / canvas.height);
       var geo = new T.PlaneGeometry(pw, F.h); geo.translate(0, F.h / 2, 0);

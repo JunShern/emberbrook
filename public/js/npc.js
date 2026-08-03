@@ -233,7 +233,7 @@
     var T = TH();
     var w = canvas.width, h = canvas.height;
     var tex = new T.CanvasTexture(canvas);
-    if (T.sRGBEncoding !== undefined) tex.encoding = T.sRGBEncoding;
+    tex.colorSpace = T.SRGBColorSpace;
     tex.minFilter = T.LinearFilter; tex.generateMipmaps = false; tex.needsUpdate = true;
     var pw = targetH * (w / h);
     var geo = new T.PlaneGeometry(pw, targetH);

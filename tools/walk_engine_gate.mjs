@@ -53,7 +53,6 @@ import { spawn } from 'child_process';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import vm from 'vm';
 import { loadGlb, WALK_RE } from './glb_read.mjs';
 import { PUB } from './cine_regions.mjs';
 import { freePort, killOrphans, findPage, chromeArgs, sweepStaleProfiles } from './cdp.mjs';
@@ -229,9 +228,12 @@ async function engineCensus(pts) {
 // walk primitives three ways over the shipped bundle's largest shared-index group.
 // ---------------------------------------------------------------------------
 function reduced() {
+  // ONE file since the r185 upgrade: public/lib/three.min.js bundles three,
+  // GLTFLoader and three-mesh-bvh and publishes both globals, so this loads
+  // literally the same bytes the browser does — which is the whole point of a
+  // gate that exists to catch file-vs-engine disagreement.
   const THREE = require(join(HERE, '../public/lib/three.min.js'));
   globalThis.THREE = THREE;
-  vm.runInThisContext(fs.readFileSync(join(HERE, '../public/lib/three-mesh-bvh.js'), 'utf8'), { filename: 'three-mesh-bvh.js' });
   const BVH = globalThis.MeshBVHLib;
   const G = loadGlb(GLB), J = G.json;
   // the walk primitives, grouped by the glTF index accessor they name
@@ -246,7 +248,7 @@ function reduced() {
   }
   const shared = [...groups.entries()].filter(([, m]) => m.length > 1)
     .sort((a, b) => b[1].length - a[1].length);
-  console.log(`three.js r${THREE.REVISION} + public/lib/three-mesh-bvh.js, bundle ${path.basename(path.dirname(GLB))}`);
+  console.log(`three.js r${THREE.REVISION} + bundled three-mesh-bvh, bundle ${path.basename(path.dirname(GLB))}`);
   console.log(`${G.nodesNamed(WALK_RE).length} walk primitives resolve to ${groups.size} glTF index accessors;`);
   console.log(`${shared.length} of those accessors are shared by more than one geometry, and GLTFLoader caches`);
   console.log(`accessors — so every sharer receives the SAME BufferAttribute, i.e. ONE index array.\n`);
