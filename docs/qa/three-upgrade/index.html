@@ -1,0 +1,156 @@
+<!doctype html><meta charset="utf-8">
+<title>three.js r128 → r185 — before / after</title>
+<style>
+ :root{--bg:#14120f;--fg:#e8dfd2;--dim:#9d9182;--line:#33302a;--good:#7fd08a;--bad:#e08d7f}
+ body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ .wrap{max-width:1500px;margin:0 auto;padding:34px 22px 90px}
+ h1{font-size:26px;margin:0 0 6px} h2{font-size:19px;margin:44px 0 4px;border-bottom:1px solid var(--line);padding-bottom:6px}
+ p{max-width:82ch;color:var(--fg)} .dim{color:var(--dim)}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 4px}
+ .pair figure{margin:0} .pair img{width:100%;display:block;border:1px solid var(--line);border-radius:4px;background:#000}
+ .pair figcaption{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dim);padding:5px 2px}
+ .cap{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dim);margin:0 0 22px;max-width:110ch}
+ table{border-collapse:collapse;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;margin:10px 0 6px}
+ th,td{border-bottom:1px solid var(--line);padding:5px 14px 5px 0;text-align:left}
+ th{color:var(--dim);font-weight:600}
+ .up{color:var(--good)} .down{color:var(--bad)}
+ ul{max-width:82ch} li{margin:5px 0}
+ code{background:#221f1a;padding:1px 5px;border-radius:3px;font-size:0.92em}
+ @media (max-width:900px){.pair{grid-template-columns:1fr}}
+</style>
+<div class="wrap">
+
+<h1>three.js r128 → r185</h1>
+<p class="dim">Same viewpoints, same scenes, same harness (<code>tools/three_shots.mjs</code>), rendered against
+the pre-upgrade tree (tag <code>pre-three-upgrade</code>, served from a second worktree) and against HEAD.
+Numbers from <code>tools/shot_compare.mjs</code>: display-space luminance percentiles over the frame with the
+HUD rows excluded. L05 is roughly "the shadows", L50 the mids, L95 the highlights; chroma is mean
+max-minus-min channel spread — a proxy for how colourful the frame is, not a verdict.</p>
+
+<h2>What actually changed under the hood</h2>
+<ul>
+<li><b>Colour management is on.</b> r128 had none: textures went down the pipe as raw bytes and the look
+    was whatever fell out. Every texture now declares its space.</li>
+<li><b>The sky is a light.</b> <code>scene.environment</code>, built as a 128×64 float equirect from the
+    numbers the key light already uses, replaces the flat hemisphere+ambient fill. That is the change
+    you can see: ambient that varies with the direction a surface faces rather than only its tilt, a
+    warm side and a cool side to the fill, and specular on cloth, hair and wet ground.</li>
+<li><b>Native AgX</b> instead of the hand-backported r160 shader.</li>
+<li><b>Physical light units.</b> r128 multiplied every light by π inside WebGLLights; r185 does not.
+    Applied once, at the light object, so the ratified numbers still read as themselves in the source.</li>
+<li><b>Depth occlusion</b> — the pre-rendered-plate crown jewels — works, and now says why: every depth
+    and mask texture declares <code>NoColorSpace</code> beside a comment explaining that an sRGB decode
+    produces <em>wrong occlusion rather than an error</em>. Under r128 it survived by accident.</li>
+</ul>
+
+<h2>The overworld corridor</h2>
+<div class="pair">
+ <figure><img src="before/ow-corridor.png"><figcaption>BEFORE — r128</figcaption></figure>
+ <figure><img src="after/ow-corridor.png"><figcaption>AFTER — r185</figcaption></figure>
+</div>
+<p class="cap">L05 0.188 → <span class="up">0.237</span> · L50 0.489 → 0.473 · chroma 0.218 → <span class="up">0.221</span>.
+The meadow has variation instead of one olive wash, the road reads warm against it, and the tree shadows
+have edges. The flat fill that used to sit over everything went out with the hemisphere; what replaced it
+is the sky, plus a warm sun cap that gives the ambient a direction.</p>
+
+<div class="pair">
+ <figure><img src="before/ow-corridor-turn.png"><figcaption>BEFORE — r128</figcaption></figure>
+ <figure><img src="after/ow-corridor-turn.png"><figcaption>AFTER — r185</figcaption></figure>
+</div>
+<p class="cap">L05 0.122 → <span class="up">0.157</span> · L50 0.346 → 0.372 · chroma 0.155 → <span class="down">0.133</span>.
+<b>Honest note:</b> this frame lost chroma. It is the most sky-and-haze-dominated of the set and the new
+grade pulls it warmer overall, which reads as less colour separation even though it reads as more
+convincing air. Worth the user's eye.</p>
+
+<h2>A character in close-up (the overworld)</h2>
+<div class="pair">
+ <figure><img src="before/ow-closeup.png"><figcaption>BEFORE — r128</figcaption></figure>
+ <figure><img src="after/ow-closeup.png"><figcaption>AFTER — r185</figcaption></figure>
+</div>
+<p class="cap">L05 0.157 → <span class="up">0.168</span> · L50 0.389 → 0.421 · chroma 0.118 → <span class="down">0.096</span>.
+The coat and boots have a lit side and a shadow side that are different colours rather than the same
+colour at two brightnesses, and the grass under her has depth. <b>Honest note:</b> the frame's overall
+chroma is down — the whole picture is warmer and more unified, so the cool/warm split that the chroma
+metric was counting is smaller. This is the frame where the "is it better?" call is a taste call.</p>
+
+<h2>The dressed town, real-time (emb-townwalk)</h2>
+<div class="pair">
+ <figure><img src="before/townwalk-wide.png"><figcaption>BEFORE — r128</figcaption></figure>
+ <figure><img src="after/townwalk-wide.png"><figcaption>AFTER — r185</figcaption></figure>
+</div>
+<p class="cap">L05 0.078 → <span class="up">0.171</span> · L50 0.471 → 0.431 · chroma 0.116 → <span class="up">0.128</span>.
+The biggest single win in the set. The paving has a gradient across it, the awning throws a shadow you
+can read, and the shadowed side of the character is lit by something with a colour instead of being
+merely dark. <b>Honest note:</b> the ground is more uniformly amber than it was — some of the paving-slab
+colour variety is now swamped by the key.</p>
+
+<div class="pair">
+ <figure><img src="before/townwalk-closeup.png"><figcaption>BEFORE — r128</figcaption></figure>
+ <figure><img src="after/townwalk-closeup.png"><figcaption>AFTER — r185</figcaption></figure>
+</div>
+<p class="cap">L05 0.140 → <span class="up">0.178</span> · L50 0.463 → 0.434 · chroma 0.106 → <span class="up">0.121</span>.
+Cloth folds, the bag strap and the boot shafts are all readable now. Skin picks up the sky.</p>
+
+<h2>Baked-plate towns — the plate must not move, and it does not</h2>
+<div class="pair">
+ <figure><img src="before/emb-square.png"><figcaption>BEFORE — r128 · Emberbrook, Festival Square</figcaption></figure>
+ <figure><img src="after/emb-square.png"><figcaption>AFTER — r185</figcaption></figure>
+</div>
+<div class="pair">
+ <figure><img src="before/del-quay-west.png"><figcaption>BEFORE — r128 · Dellhollow, The Harbour Deck</figcaption></figure>
+ <figure><img src="after/del-quay-west.png"><figcaption>AFTER — r185</figcaption></figure>
+</div>
+<p class="cap">Every cine plate lands within 1–4% of where it was (table below). That is the result we
+wanted: the backdrop is an already-graded photograph and the upgrade must round-trip it, not re-grade it.
+It also means the towns' <em>visible</em> gain is confined to the live character and NPCs standing on
+those plates — which is real but small on a wide shot, and is the one place this upgrade has not yet
+bought much.</p>
+
+<h2>The battle arena — a real regression, found by looking</h2>
+<div class="pair">
+ <figure><img src="battle/before-meadow.png"><figcaption>BEFORE — r128</figcaption></figure>
+ <figure><img src="battle/after-meadow.png"><figcaption>AFTER — r185, once fixed</figcaption></figure>
+</div>
+<p class="cap">The arena builds its own renderer and its own four-pass grade, whose every constant is a
+display-space number. Under r128 the scene pass arrived display-space for free; r185 renders into a
+non-XR render target in the linear working space regardless of what the target's texture declares.
+The first r185 build put the whole arena about a stop and a half down with its contrast crushed —
+<b>with every gate green</b>. Fixed forward: the post targets are declared <code>NoColorSpace</code> and the
+composite shader does the linear→display conversion explicitly.</p>
+
+<h2>All measurements</h2>
+<table>
+<tr><th>frame</th><th>L05 (shadows)</th><th>L50 (mids)</th><th>L95 (highlights)</th><th>chroma</th></tr>
+<tr><td>ow-corridor</td><td>0.188 → 0.237</td><td>0.489 → 0.473</td><td>0.662 → 0.655</td><td class="up">0.218 → 0.221</td></tr>
+<tr><td>ow-corridor-turn</td><td>0.122 → 0.157</td><td>0.346 → 0.372</td><td>0.639 → 0.640</td><td class="down">0.155 → 0.133</td></tr>
+<tr><td>ow-closeup</td><td>0.157 → 0.168</td><td>0.389 → 0.421</td><td>0.840 → 0.746</td><td class="down">0.118 → 0.096</td></tr>
+<tr><td>townwalk-wide</td><td>0.078 → 0.171</td><td>0.471 → 0.431</td><td>0.633 → 0.586</td><td class="up">0.116 → 0.128</td></tr>
+<tr><td>townwalk-closeup</td><td>0.140 → 0.178</td><td>0.463 → 0.434</td><td>0.589 → 0.553</td><td class="up">0.106 → 0.121</td></tr>
+<tr><td>emb-square</td><td>0.015 → 0.014</td><td>0.152 → 0.153</td><td>0.496 → 0.498</td><td>0.089 → 0.090</td></tr>
+<tr><td>emb-waystone</td><td>0.008 → 0.008</td><td>0.115 → 0.116</td><td>0.294 → 0.296</td><td>0.069 → 0.070</td></tr>
+<tr><td>emb-gateroad</td><td>0.004 → 0.004</td><td>0.051 → 0.053</td><td>0.276 → 0.276</td><td>0.021 → 0.021</td></tr>
+<tr><td>del-quay-west</td><td>0.009 → 0.009</td><td>0.204 → 0.208</td><td>0.602 → 0.604</td><td>0.164 → 0.165</td></tr>
+<tr><td>del-lockhead</td><td>0.016 → 0.016</td><td>0.280 → 0.282</td><td>0.578 → 0.578</td><td>0.198 → 0.200</td></tr>
+</table>
+
+<h2>Gates</h2>
+<table>
+<tr><th>gate</th><th>baseline</th><th>after</th></tr>
+<tr><td>playthrough_test --port=3000</td><td>86 / 0</td><td>86 / 0</td></tr>
+<tr><td>transition_test</td><td>168 / 0</td><td>168 / 0</td></tr>
+<tr><td>cine_test</td><td>689 / 0</td><td>689 / 0 (2 soft)</td></tr>
+<tr><td>slice_test</td><td>848 / 0</td><td>848 / 0</td></tr>
+<tr><td>findability_test</td><td>69 / 0</td><td>69 / 0 (2 warn)</td></tr>
+<tr><td>walk_engine_gate --scene ow-valley</td><td>GREEN</td><td>GREEN — 0 cells lost, BVH fail 0</td></tr>
+<tr><td>walk_engine_gate --reduced</td><td>mechanism confirmed</td><td>mechanism confirmed, fix still holds</td></tr>
+<tr><td>seam_test --town emberbrook</td><td>177 / 2 (known)</td><td>177 / 2 (known)</td></tr>
+<tr><td>dialogue_test</td><td>1493 / 2 (known)</td><td>2 known (del.gullgirl)</td></tr>
+<tr><td>story_test</td><td>green</td><td>green</td></tr>
+<tr><td>economy_test</td><td>228 / 0</td><td>228 / 0</td></tr>
+<tr><td>encounter_sim · battle_sim</td><td>green</td><td>green</td></tr>
+<tr><td>build-static.mjs</td><td>dist ok</td><td>dist ok, every .glb verified binary glTF</td></tr>
+</table>
+<p class="dim">The arena regression above passed every one of these. Green gates are necessary, not
+sufficient — the pictures are the gate.</p>
+
+</div>
