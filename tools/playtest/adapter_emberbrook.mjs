@@ -143,7 +143,10 @@ export const PERCEPT_JS = `(()=>{
       // selected:false on every row: dialogue choices, the pause menu, the shop. The agent
       // could read the options and never see which one it was standing on, which makes a
       // menu a guess. Found by percept_test's selector census, not by playing.
-      .map(r=>({ text: txt(r), selected: /(^|\s)cur(\s|$)|sel|active|cursor/.test(r.className||'') }));
+      // The backslashes are DOUBLED because this whole block is a template literal:
+      // a lone \\s in here collapses to a plain 's' before the page ever sees it, which
+      // is how the first version of this fix shipped inert. cur() above got it right.
+      .map(r=>({ text: txt(r), selected: cur(r) }));
     out.dialogue = { speaker: txt(veil.querySelector('.ebui-title')) || null,
       text: txt(veil.querySelector('.ebui-body')) || null,
       foot: txt(veil.querySelector('.ebui-foot')) || null,

@@ -164,15 +164,15 @@ const STATES = [
       ok(this.name, 'both choices are read', (d.choices || []).length === 2,
         j(d.choices), 'two choices: Ask about the gate / Say nothing');
       ok(this.name, 'the cursor is on the first choice',
-        !!((d.choices || [])[0] || {}).selected, j(d.choices), 'the first row carries .cur',
-        // FOUND BY THIS FILE, 2026-08-03, NOT FIXED HERE. ui_kit's row() marks the
-        // selected row with the class `cur` (ui_kit.js:572), and PERCEPT_JS tests
-        // dialogue rows with /sel|active|cursor/ — which does not match `cur`. So
-        // EVERY list the game draws through ui_kit (dialogue choices, the menu, the
-        // shop) is reported to the model with selected:false on every row: the agent
-        // cannot tell where the cursor is. The battle path is unaffected — it uses the
-        // percept's own cur() helper, which does match. Reported, left alone.
-        'the ui_kit list cursor is invisible to the percept (`cur` vs /sel|active|cursor/)');
+        // FOUND BY THIS FILE, 2026-08-03. ui_kit's row() marks the selected row with the
+        // class 'cur' (ui_kit.js:572); PERCEPT_JS tested dialogue rows with
+        // /sel|active|cursor/, which does not match it, so every ui_kit list (dialogue
+        // choices, the pause menu, the shop) reached the model with selected:false on
+        // every row. FIXED TWICE: the first fix inlined a regex with single-escaped \s
+        // inside PERCEPT_JS's template literal, where it collapses to a literal 's' —
+        // the fix shipped, this assertion stayed red, and nobody read it. It now calls
+        // the percept's own cur() helper, which was correct all along.
+        !!((d.choices || [])[0] || {}).selected, j(d.choices), 'the first row carries .cur');
       ok(this.name, 'a drawn modal is not called frozen',
         !g.frozen, j(g.frozen), 'UILOCK is held AND a dialogue box is drawn');
       ok(this.name, 'the flattened text offers the choices to the model',
