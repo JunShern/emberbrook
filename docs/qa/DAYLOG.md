@@ -15741,3 +15741,72 @@ ch2.road anchor in ow-valley, where followers do not exist).
       pre-existing). story_test green. dialogue_style PASS, 0 failures.
       QA docs/qa/cutins/index.html refreshed (120 plates). Commits 8416ca3, 70002f7,
       486b098; pushed and verified by ls-remote against rev-parse HEAD.
+
+---
+
+## 2026-08-03 — THE OLD GATE WAS A QUARTER TURN, NOT A RAFT (28a5f9d, 3d3e857)
+
+      THE FINDING THAT REFRAMES A DAY OF WORK. docs/qa/oldgate/index.html §2 measured,
+      honestly, that a flood fill started on the culvert court's paving fills SIX CELLS
+      and stops, and attached a cause: a deck standing 0.8-1.7 m proud of the ground it
+      meets. That cause was wrong, and it cost one lane an apron (built, made the island
+      smaller, removed) and sent the next after "a re-cut of the deck's SE corner".
+
+      What was actually wrong: every cube in `build_old_gate` is sized (ALONG THE RIVER,
+      ACROSS THE NOTCH, height), and `rz` was set to `nl`'s angle, which sends Blender's
+      local X ACROSS the notch. Matrix.Rotation(rz,'Z') therefore turned every box in the
+      prop a quarter turn. Measured on the shipped GLB with tools/glb_read.mjs: the wall's
+      coping boxes were 1.86-1.90 m of x against 2.2-7.7 m of z, on a notch that runs
+      along x. "One wall across the pinch" was FOUR DETACHED PIERS STANDING ALONG THE
+      GORGE. The nine deck bays, all laid at one offset and stepped only in bx, stacked
+      into A SINGLE 0.42 m STRIP pointing downstream — and a 0.42 m strip is six cells on
+      a 0.4 m lattice. There was never a step to climb; there was a plank.
+
+      THE BUILDER'S OWN SEAL COULD NOT SEE IT, AND THIS IS THE TRANSFERABLE PART. The
+      flood fill inside build_old_gate blocks the wall's INTENDED footprint analytically
+      (`abs(bb) < 0.7 and ...`). It scored the drawing, not the build, and printed
+      `flood fill past the pinch 0 cells` over a gate made of four piers, every build,
+      for weeks. Same class as the walk_engine_gate lesson: A GATE THAT MEASURES ITS OWN
+      DRAWING CANNOT MEASURE ITS OWN BUILD.
+
+      WHAT NAMED IT, IN FORTY SECONDS: `SIM.blocked` returns the blocking mesh's NAME.
+      Standing anywhere on the road ribbon in the court's east half it returned
+      `oldgate_3` — the "wall over the water" run, lying across the road for 7.7 m.
+      A FLOOD FILL TELLS YOU WHERE THE WORLD IS SHUT AND NEVER WHAT SHUTS IT. Shipped as
+      tools/_court_probe.mjs (`--who` tallies blockers by mesh name over a lattice;
+      `--comp` prints a fill's cells as an ASCII plan, one letter per seed, so two
+      disjoint worlds read as two letters instead of two cell counts; `--at`; `--way`
+      drives SIM.move() both directions).
+
+      THE FIX, two derivations and no new massing (repo doctrine: a conflict fix is a
+      landmark move or a lane waypoint):
+        1. `ang = atan2(tg)` — the river's angle. One line.
+        2. THE DECK FOLLOWS THE ROAD IT CARRIES. The 0.78 m lip at the east end WAS real:
+           the road falls 26.44 -> 25.62 across the notch while a flat deck stood at
+           26.40, against walkStep's 0.63 m step-up. The paving now takes its z from
+           VM.ROAD_Z at that offset, in 12 courses running ACROSS the road — the only
+           direction in which each course can carry its own height. Every build now
+           prints the grade: 0.52u of fall, biggest riser 0.047u, ends +0.21u / -0.03u
+           against the road just outside them (also in valley_build.json).
+
+      ENGINE, before -> after. Three fills (deck / village road / east bank) gave THREE
+      disjoint components and now give ONE, 712 cells, containing all three seeds.
+      reach_probe reaches in both directions (was no-path eastbound). SIM.move() walks
+      27/27 road waypoints through the doorway each way, no stall. walk_engine_gate
+      --scene ow-valley --region -56,-34,16,30 GREEN, 0 lost. cine_test / slice_test /
+      story_test / routes --check clean; seam_test 177/2 and dialogue_test 1482/2
+      unchanged (pre-existing). AND playthrough_test went 80/1 -> 81/0: the documented
+      `ch1.done -> ch2.road` §W reachability red WAS THIS GATE.
+
+      LOOKED AT IT: docs/qa/oldgate/fix-{before,after}-{court,high,lookback,approach}.png.
+      Before, Vesper stands on a plank among floating slabs with the sigil plates hanging
+      over the drop and no wall behind her; after, a paved court under one coursed wall,
+      the arch open on the road, the culvert mouth below her. Chapter One's climax has a
+      set again.
+
+      LEFT ALONE ON PURPOSE: valley.region.json's `spawnBackoffU: 20.0`. Its note said
+      the number should come down once the court was walkable. It should not — with the
+      court open, 20.0u is no longer a workaround but the composition the user asked for
+      ("spawned clearly after the gate structure"), and it is what the arrival-vs-band
+      audit measured 20.6u clear on. The note is corrected in place rather than the
+      value changed; moving the arrival is a composition call for the user.
