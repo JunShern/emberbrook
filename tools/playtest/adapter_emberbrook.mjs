@@ -552,18 +552,43 @@ export function makeAdapter(opt) {
    * for EVERY scene including ones that demonstrably render. play3d's own probes
    * render immediately before reading (play3d.html:1806); a harness must not, because
    * forcing a render is perturbing the thing it is measuring. A screenshot is not. */
+  function lumOf(b64) {
+    const img = PNG.sync.read(Buffer.from(b64, 'base64'));
+    const n = img.width * img.height; let sum = 0, nb = 0;
+    for (let i = 0; i < n; i++) { const o = i * 4;
+      const l = img.data[o] * 0.299 + img.data[o + 1] * 0.587 + img.data[o + 2] * 0.114;
+      sum += l; if (l > 10) nb++; }
+    return { meanL: +(sum / n).toFixed(2), nonblackPct: +(100 * nb / n).toFixed(1), w: img.width, h: img.height };
+  }
   async function frameLum() {
     if (!PNG) return null;
     try {
       const w = 64, s = w / viewport[0];
       const r = await raced('Page.captureScreenshot', { format: 'png',
         clip: { x: 0, y: 0, width: viewport[0], height: viewport[1], scale: s } }, EV_MS, 'captureScreenshot');
-      const img = PNG.sync.read(Buffer.from(r.data, 'base64'));
-      const n = img.width * img.height; let sum = 0, nb = 0;
-      for (let i = 0; i < n; i++) { const o = i * 4;
-        const l = img.data[o] * 0.299 + img.data[o + 1] * 0.587 + img.data[o + 2] * 0.114;
-        sum += l; if (l > 10) nb++; }
-      return { meanL: +(sum / n).toFixed(2), nonblackPct: +(100 * nb / n).toFixed(1) };
+      return lumOf(r.data);
+    } catch (e) { return { meanL: null, nonblackPct: null, error: e.message }; }
+  }
+  /* THE POLL PROBE AND THE AGENT'S FRAME ARE NOT THE SAME PICTURE, and on
+   * 2026-08-03 they disagreed completely. Run run-20260803-173450 recorded
+   * `meanL 32.8, ready:true` for six consecutive steps while the JPEGs the agent was
+   * handed are 1280x720 and 99.8% BLACK, with the whole game drawn into a 64x36
+   * thumbnail in the top-left corner — which is exactly the size the poll probe asks
+   * for. `Page.captureScreenshot` with `clip.scale` renders down a path that was still
+   * working; the plain full-size capture the agent gets was not. So the cheap 64-px
+   * probe stayed honest about a picture NOBODY WAS LOOKING AT, and the agent filed
+   * "the game is unresponsive and visually broken" against a gate that said painted.
+   *
+   * The poll loop keeps the cheap probe — it runs every 250 ms and must stay cheap.
+   * The VERDICT is taken once per step, on a full-size capture, because the only
+   * luminance that means anything is the luminance of the frame that gets handed over.
+   * (The 64x36 thumbnail is a renderer/compositor failure in its own right and belongs
+   * to whoever owns play3d; this is only the gate refusing to vouch for it.) */
+  async function verifyFrame() {
+    if (!PNG) return null;
+    try {
+      const r = await raced('Page.captureScreenshot', { format: 'png' }, EV_MS, 'captureScreenshot(full)');
+      return lumOf(r.data);
     } catch (e) { return { meanL: null, nonblackPct: null, error: e.message }; }
   }
 
@@ -739,15 +764,29 @@ export function makeAdapter(opt) {
           ready: false, why: [...(g.why || []), 'the page never returned a screenshot: ' + e.message],
           frozen: g.frozen, meanL: null, waitedMs: g.waitedMs };
       }
+      // THE VERDICT IS TAKEN ON THE PICTURE THAT IS ABOUT TO BE HANDED OVER.
+      const why = (g.why || []).slice();
+      let ready = g.ready;
+      const vf = await verifyFrame();
+      if (vf && vf.meanL != null && vf.meanL < BLACK_L) {
+        ready = false;
+        why.push(`the frame the agent would be handed is black (${vf.w}x${vf.h}, mean luminance ` +
+          `${vf.meanL}, only ${vf.nonblackPct}% of pixels above black)` +
+          (g.lum && g.lum.meanL != null && g.lum.meanL >= BLACK_L
+            ? ` — while the ${g.lum.w}x${g.lum.h} readiness probe read ${g.lum.meanL}. ` +
+              'THE TWO CAPTURES DISAGREE: the game is drawing into a fraction of the surface.'
+            : ''));
+      }
       let framePath = null;
       if (framesDir) {
         mkdirSync(framesDir, { recursive: true });
         framePath = join(framesDir, 'step-' + String(++frameN).padStart(3, '0') +
-          (tag ? '-' + tag : '') + (g.ready ? '' : '-UNREADY') + '.jpg');
+          (tag ? '-' + tag : '') + (ready ? '' : '-UNREADY') + '.jpg');
         writeFileSync(framePath, Buffer.from(r.data, 'base64'));
       }
       return { screenshot: { mime: 'image/jpeg', data: r.data }, text: flattenPercept(percept), percept, framePath,
-        ready: g.ready, why: g.why, frozen: g.frozen, meanL: g.lum ? g.lum.meanL : null, waitedMs: g.waitedMs };
+        ready, why, frozen: g.frozen, meanL: vf && vf.meanL != null ? vf.meanL : (g.lum ? g.lum.meanL : null),
+        probeMeanL: g.lum ? g.lum.meanL : null, waitedMs: g.waitedMs };
     },
 
     async truth() { return await evSoft(TRUTH_JS, EV_MS, {}); },
@@ -963,6 +1002,6 @@ export function makeAdapter(opt) {
       try { profile && killOrphans(profile); } catch (e) { }
       try { profile && rmSync(profile, { recursive: true, force: true, maxRetries: 3 }); } catch (e) { }
     },
-    _ev: ev, _hold: hold, _frameGate: frameGate,
+    _ev: ev, _hold: hold, _frameGate: frameGate, _send: send,
   };
 }
