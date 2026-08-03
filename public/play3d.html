@@ -1213,7 +1213,18 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       scene.add(dl.target);
       OWSUN=OWSUN_DIR;
       OWSHADOWED=[];
-      g.scene.traverse(o=>{ if(o.isMesh && !/^(walk|bar_|__ow)/i.test(o.name)){
+      // `walk_` IS NOT A COLLISION PREFIX OUT HERE. In the town bundles a walk_*
+      // mesh is invisible collision, so excluding it from the shadow pass is free.
+      // In ow-valley all five of them — walk_road, walk_emberbrook_green,
+      // walk_dam_crest, walk_dock, walk_dockpath — are the VISIBLE ground, each
+      // with a real texture and COLOR_0. Excluding them lit the one surface the
+      // player always stands on with no shadow at all: the road ran as a bright
+      // stripe straight through the gorge wall's shadow (15.0% of the boom-12
+      // frame, those pixels L 0.238 -> 0.099 once fixed). A prefix convention
+      // borrowed across bundle families is a bug that renders, which is why it
+      // survived every gate. `bar_`/`__ow` stay excluded: __owsky/__owridge are
+      // runtime render-only helpers built above, not art.
+      g.scene.traverse(o=>{ if(o.isMesh && !/^(bar_|__ow)/i.test(o.name)){
         o.castShadow=true; o.receiveShadow=true; OWSHADOWED.push(o); }});
       if(model) model.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
     }
