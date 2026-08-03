@@ -374,7 +374,14 @@ export function checkpointsFromStory() {
   const bp = join(ROOT, 'docs/qa/playtest/briefs.json');
   if (existsSync(bp)) { try { BRIEFS = JSON.parse(readFileSync(bp, 'utf8')).briefs || {}; } catch (e) { } }
   const out = []; const flags = {}; const beats = {};
-  let objective = null, lastAt = null, lastScene = null, lastCam = null;
+  // SEEDED FROM story.json's `start`, not from nothing. The chapter's first beats
+  // declare no `at` — they fire anywhere in emb-cine — so before this seed a
+  // `--from=ch1.open` drop-in carried pos:null and fell through to the SHOT'S BAKED
+  // SPAWN, which is the arrival clearing's exit pad: the exact standing position
+  // PT-20260803-002 is about. A checkpoint that reproduces the bug it was meant to
+  // start after is worse than no checkpoint.
+  const ST = STORY.start || {};
+  let objective = null, lastAt = ST.pos || null, lastScene = ST.scene || null, lastCam = ST.cam || null;
   for (const b of STORY.beats || []) {
     // A CAM AND A POSITION ONLY CARRY WITHIN A SCENE, and the reset has to happen
     // BEFORE the inheritance or it does not happen at all. Carrying `square` across

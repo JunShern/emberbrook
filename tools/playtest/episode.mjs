@@ -64,13 +64,30 @@ export const HEAD_SHA = (() => {
  *     "pos(52.0,-0.6,28.0)" lands in the drawn text and this catches it.
  *   SOFT tokens are ordinary English that happens to also be an id — the camera
  *     names (square, waystone, pondlane, gatefield). They are checked only against
- *     the parts the HARNESS composed: the persona and the brief. They are NOT
- *     checked against the text the game drew or the agent's own recollection,
- *     because a player is allowed to know the word "square".
+ *     the parts the HARNESS composed: the persona, the controls, the brief and the
+ *     nudge, which agent.mjs names once in authoredParts() and hands back as
+ *     `_authored`. They are NOT checked against the text the game drew or the
+ *     agent's own recollection, because a player is allowed to know the word
+ *     "square".
+ *
+ * `harnessText` IS REQUIRED, and null is a legal value meaning "the harness wrote
+ * nothing in this prompt". It used to DEFAULT TO THE WHOLE PROMPT when it was null,
+ * which quietly undid the distinction above for any run whose plan has no brief —
+ * i.e. every `newgame` run, the only kind that starts at the beginning. Those died at
+ * step 2 on the soft token the game itself had just spoken, while checkpoint runs
+ * (which do carry a brief) passed, so the instrument could only be pointed at the
+ * middle of the game. The HARD list is untouched: it still scans the entire prompt,
+ * and it is the half that actually stops a leak.
  */
 export function assertNoPrivileged(prompt, truth, harnessText) {
+  if (harnessText === undefined) throw new Error(
+    'FIREWALL: assertNoPrivileged needs its third argument. Pass the harness-authored ' +
+    'text (agent.mjs sets it on every reply as `_authored`), or an explicit null to ' +
+    'mean the harness wrote nothing. It must not be inferred: the old fallback used ' +
+    'the whole prompt and turned every soft token into a false alarm on the game\'s ' +
+    'own dialogue.');
   const whole = String(prompt || '').toLowerCase();
-  const authored = String(harnessText == null ? prompt : harnessText).toLowerCase();
+  const authored = String(harnessText || '').toLowerCase();
   const bad = [];
   const hard = [];
   if (truth.scene) hard.push(truth.scene);
@@ -270,7 +287,8 @@ export async function run(cfg) {
       try {
         const frames = lastFrames.map(p => ({ mime: 'image/jpeg', data: readFileSync(p).toString('base64') }));
         const iv = await agent.interview({ screenshots: frames, text: obs.text, history: history.slice(-10) });
-        if (iv) { assertNoPrivileged(iv._prompt, truth, brief);
+        // `_authored` is what agent.mjs actually wrote, not our guess at it.
+        if (iv) { assertNoPrivileged(iv._prompt, truth, iv._authored);
           if (iv.notabug) log('  (interview: the agent says it is not really stuck — nothing filed)');
           else { if (lastLeg && lastLeg.from && lastLeg.target)
                    iv.probe = { kind: 'reach', from: lastLeg.from, to: lastLeg.target, scene: truth.scene };
@@ -283,10 +301,13 @@ export async function run(cfg) {
     let intent;
     try {
       intent = await agent.decide({ screenshot: obs.screenshot, text: obs.text, history: history.slice(-8), brief, nudge });
-      // `brief` is the only text in this prompt the HARNESS wrote; the persona is a
-      // reviewed constant in the adapter, and everything else is either drawn on
-      // screen or the agent's own recollection.
-      assertNoPrivileged(intent._prompt, truth, brief);
+      // THE ASSEMBLER SAYS WHAT IT WROTE. agent.mjs returns `_authored` — the persona,
+      // the controls, the brief and the nudge, built from the same array the prompt is
+      // — and everything else in the prompt is either drawn on screen or the agent's
+      // own recollection. Passing `brief` here was close but not the same thing, and
+      // passing nothing at all silently meant "scan everything" (see the firewall's
+      // own note above).
+      assertNoPrivileged(intent._prompt, truth, intent._authored);
     } catch (e) {
       if (/FIREWALL/.test(e.message)) throw e;
       log('  agent error: ' + e.message);

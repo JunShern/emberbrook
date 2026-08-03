@@ -117,14 +117,31 @@ const INTERVIEW = [
  *  recorded observation through a different model with a byte-identical prompt —
  *  a benchmark that re-words the question is measuring the wording. */
 export function decisionPrompt(obs, persona) {
-  const L = [persona || DEFAULT_PERSONA, '', CONTROLS];
-  if (obs.brief) L.push('', '=== WHERE YOU ARE ===', obs.brief);
+  const [P, C, brief, nudge] = authoredParts(obs, persona);
+  const L = [P, '', C];
+  if (brief) L.push('', '=== WHERE YOU ARE ===', brief);
   L.push('', '=== WHAT YOU HAVE DONE (most recent last) ===',
     (obs.history && obs.history.length) ? obs.history.join('\n') : '(nothing yet — you have just started)');
   L.push('', '=== WHAT IS ON YOUR SCREEN RIGHT NOW ===', obs.text || '(no text on screen)');
-  if (obs.nudge) L.push('', '=== NOTE ===', obs.nudge);
+  if (nudge) L.push('', '=== NOTE ===', nudge);
   L.push('', 'The image is your screen. Choose ONE action.');
   return L.join('\n');
+}
+/* EXACTLY THE PARTS OF THAT PROMPT THE HARNESS WROTE, named once and used twice —
+ * decisionPrompt assembles from them, and episode.mjs's firewall runs its SOFT check
+ * against them ALONE. Everything else in the prompt is either the text the game drew
+ * or the agent's own recollection, and a player is allowed to know the word "square".
+ *
+ * WHY THIS EXISTS (2026-08-03): assertNoPrivileged's third argument used to default to
+ * THE WHOLE PROMPT when it was null, and a `newgame` plan has no brief, so every
+ * newgame run had the soft list checked against the game's own dialogue — the exact
+ * false alarm ("A waystone. Good — the road's a real road, then.") the harnessText
+ * argument was added to prevent. It killed newgame runs at step 2 while checkpoint
+ * runs, which do have a brief, passed. Deriving both from this one array is what stops
+ * the prompt and the soft-check target drifting apart again: a soft target that omits
+ * something the harness wrote is a hole, and one that includes the screen is a wall. */
+export function authoredParts(obs, persona) {
+  return [persona || DEFAULT_PERSONA, CONTROLS, obs.brief || '', obs.nudge || ''];
 }
 
 const VALID = new Set(['goto', 'interact', 'advance', 'choose', 'wait', 'report', 'giveup']);
@@ -175,6 +192,7 @@ export function makeAgent({ model, persona = DEFAULT_PERSONA, temperature = 0.55
       const raw = await call([obs.screenshot], text, temperature);
       const j = normalise(parseJson(raw));
       j._prompt = text;                 // the runner's firewall inspects this
+      j._authored = authoredParts(obs, persona).join('\n');   // ...and only this for soft tokens
       return j;
     },
     /* frames: [{mime,data}] oldest first. Returns a report object or null when the
@@ -186,7 +204,10 @@ export function makeAgent({ model, persona = DEFAULT_PERSONA, temperature = 0.55
       const j = parseJson(raw);
       if (!j) return null;
       j._prompt = text;
-      if (j.kind === 'notabug') return { notabug: true, _prompt: text };
+      // The interview prompt's only harness-authored part is the INTERVIEW constant;
+      // the history and the on-screen text are the agent's and the game's.
+      j._authored = INTERVIEW;
+      if (j.kind === 'notabug') return { notabug: true, _prompt: text, _authored: INTERVIEW };
       return j;
     },
   };
