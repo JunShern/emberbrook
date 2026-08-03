@@ -88,7 +88,14 @@
   var CUTIN_HEAD_VH = 0.110;     // target head height (crown->chin) as a share of viewport
   var CUTIN_HEAD_MIN = 62;       // ...floored and capped so a tiny or huge window still reads
   var CUTIN_HEAD_MAX = 152;
-  var CUTIN_EYE_LIFT = 1.30;     // the eyeline sits this many HEAD-HEIGHTS above the box's top edge
+  // The eyeline sits this many HEAD-HEIGHTS above the box's top edge. Once a deep
+  // sink is CLIPPED rather than clamped, nothing at the tall end of the cast pays
+  // for a lower lift — a zoomed-out plate just sinks further behind the window — so
+  // the number is set by the SHORT end, where the sink floor is the only thing that
+  // can break the datum. 1.05 is the largest lift Mochi's near-headshot plate can
+  // still reach the window from; at the 1.30 it was first tuned to, the cat's face
+  // sat 49 px below everybody else's. Only Mara cannot make it at any sane value.
+  var CUTIN_EYE_LIFT = 1.05;
   var CUTIN_STAGE = 0.62;        // element height safety cap vs the game frame
   var CUTIN_WIDE = 0.60;         // ...nor this much of the window's width
   var CUTIN_SINK = 0.08;         // MINIMUM share of the box the art's bottom passes behind
@@ -785,6 +792,18 @@
       if (host && host !== document.body && host.clientHeight > 0) {
         S.panel.el.style.position = 'absolute';
       }
+      // THE BOX RISES BEFORE IT SETTLES, AND THE PORTRAIT IS ANCHORED TO IT.
+      // ui_kit gives .eb-win its own 300 ms `eb-rise` entrance and drops the
+      // `enter` class at 520 ms, so for the first half-second the box's rect is
+      // its animated one — and every measurement placeCutin takes off bb.top is
+      // that long a lie. It cost a real 13-15 px scatter in the eyeline across the
+      // cast (measured 2026-08-02) that looked exactly like a layout bug and was a
+      // timing one. One re-place when the animation ends, and a timer behind it for
+      // the reduced-motion path where no animationend ever fires.
+      S.panel.frame.addEventListener('animationend', function (e) {
+        if (S && e.target && e.target.classList && e.target.classList.contains('eb-win')) placeCutin(true);
+      });
+      setTimeout(function () { if (S) placeCutin(true); }, 560);
       // The cut-in's one element, created before the first render so the first
       // line already has its portrait. onerror is the last fallback in the
       // chain: a manifest that outran the art on disk drops this speaker back to
