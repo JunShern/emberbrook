@@ -1699,7 +1699,11 @@ function frame(){requestAnimationFrame(frame);
  syncDepth();
  if(cam)R.render(scene,cam);
  markersTick(performance.now());
- hud.textContent=`${SCENE}${CINECAM?' · shot:'+CINECAM.id:''} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${ZGRID?' · zone:'+(zoneAt(P.x,P.z)||'-')+' Z:tint'+(ZONEVIS?' ON':''):''}${BUNDLE_TS}`;}
+ // THE HUD NAMES THE BODY, NOT THE BOOT ARGUMENT. `CHAR` is the sprite-era ?char=
+ // label and never changes; BODY does, the moment SIM.pov() hands the player to
+ // someone else. Reading "vesper" through the whole of Lake's act was a lie the
+ // one instrument on screen was telling about the one thing that act changes.
+ hud.textContent=`${SCENE}${CINECAM?' · shot:'+CINECAM.id:''} · ${SPRITE?CHAR:(BODY||CHAR)} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${ZGRID?' · zone:'+(zoneAt(P.x,P.z)||'-')+' Z:tint'+(ZONEVIS?' ON':''):''}${BUNDLE_TS}`;}
 window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
  // --- terrain zones: the hook encounter logic reads ---------------------------
  // SIM.zone(x,z) -> "meadow"|"forest"|"crag"|"road"|"water"|... or null off-tile;

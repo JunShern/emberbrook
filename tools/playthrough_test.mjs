@@ -351,7 +351,28 @@ async function anchor(cdp, id) {
     ['ch1.rowan', 'square', [60.4, 1.5, -42.4],
       `(async()=>{ const a = await ${TALK('poppy')}; const b = await ${TALK('mara')};
                    return {a, b, met:(GS.state.flags['npc.met.poppy']?1:0)+(GS.state.flags['npc.met.mara']?1:0)}; })()`],
-    ['ch1.meet', 'pondlane', null, null],
+    // ---- LAKE'S ACT. The player stops being Vesper here and starts being Lake,
+    // in his grandmother's cottage, and the harness has to know that or it spends
+    // four beats chasing a Vesper who is somewhere else. A pov handoff is NOT a
+    // teleport (story_test §7 states the distinction): nobody is carried anywhere,
+    // a different person is picked up where they already were. So there is no shot
+    // to take and no arrival to stand on for the handoff — it fires on the flag
+    // ch1.rowan just set, and the scene it lands in is emb-lake-int, which has no
+    // cine.json and therefore no named shot at all. The `at` rows are the fixtures
+    // of his own room, and `body` is the fifth column: THE MODELS KEY THE PLAYER
+    // MUST BE WEARING when that beat fires, so the swap is asserted rather than
+    // merely survived.
+    ['ch1.lake.handoff', null, null, null, 'lake'],
+    ['ch1.lake.wake', null, null, null, 'lake'],
+    ['ch1.lake.hearth', null, [4.10, 0.02, -4.13], null, 'lake'],   // walk_pad_hearth, the mantel
+    ['ch1.lake.lamp', null, [6.05, 0.02, -4.42], null, 'lake'],     // walk_pad_door, under the lamp hook
+    // And OUT, the way a player leaves a room: the ordinary scenegraph door edge
+    // emb-lake-int>emb-cine@lake-home, taken as an edge, arriving in shot 'homerow'.
+    // The rounds from there to the pond lane are a walk, which is what §W measures.
+    ['ch1.meet', 'pondlane', null,
+      `(async()=>{ const r = await SIM.door('emb-cine');
+                   return {door:r, scene:SIM.scene(), shot:(SIM.cine()||{}).shot, body:SIM.body&&SIM.body()}; })()`,
+      'vesper-v2'],   // ...and the handback: ch1.meet's last step gives the body to Vesper
     ['ch1.lamps', 'square', null, null],
     ['ch1.hush', 'square', null, null],
     ['ch1.see.poppy', 'square', [51.4, 1.5, -43.0], null],
@@ -364,12 +385,18 @@ async function anchor(cdp, id) {
   ];
 
   head('2. every Chapter One beat fires on its own trigger, in order');
-  for (const [id, shot, at, pre] of CH1) {
+  for (const [id, shot, at, pre, body] of CH1) {
     if (pre) { const r = await ev(cdp, pre, 60000); note(id + ': prerequisite -> ' + JSON.stringify(r)); }
     const where = await ev(cdp, GOTO(shot, at), 60000);
     const fired = await ev(cdp, AWAIT_BEAT(id, 60), 120000);
-    ok(fired === true, 'beat ' + id + ' fired (shot ' + shot + ')', fired ? undefined : where);
+    ok(fired === true, 'beat ' + id + ' fired (shot ' + (shot || '—') + ')', fired ? undefined : where);
     if (!fired) { note('  stopped: the spine cannot continue past a beat that never fires'); break; }
+    // WHOSE BODY IS THIS. Only stated on the rows where it is the point; a beat
+    // that does not care leaves the column off and nothing is asserted.
+    if (body) {
+      const worn = await ev(cdp, `(window.SIM&&SIM.body?SIM.body():null)`);
+      ok(worn === body, 'beat ' + id + ': the player is wearing "' + body + '"', worn);
+    }
     await anchor(cdp, id);
     if (STOP_AT && id === STOP_AT) { note('  --stop-at reached'); break; }
   }
