@@ -47,7 +47,44 @@ against pre-rendered" argument) were wrong.
    *"different game, different scene, don't judge content, just judge which has better art
    quality"* — otherwise it keeps reporting that the reference has a castle in it.
 5. **THE REASON IS THE WORK ITEM**, routed verbatim to whichever lane owns that surface.
-6. **FIVE ROUNDS, THEN ASSESS.** No plateau detection, no waiting on the user.
+6. **TEN ROUNDS MINIMUM, THEN KEEP GOING WHILE IT IS STILL PAYING.** User ruling
+   2026-08-04 (superseding the earlier five): *"you need to run at least 10 rounds, but if you
+   have more time and you have not exhausted the options, then you should run this many more
+   rounds. Just keep running it until you find that the quality has actually plateaued or you're
+   not able to add any more meaningful improvements."*
+
+## What counts as a plateau — and what does NOT
+
+I first wrote that the loop stops when the critic's remaining asks are "needs new assets" or
+"needs a different camera." **The user rejected both, and was right; I had also contradicted
+myself, having said two paragraphs earlier that asset work was fair game.**
+
+  * **NEW ASSETS ARE NOT A CEILING.** We have the character factory, Tripo, and the procedural
+    Blender pipeline that built two towns. If the critic keeps naming foliage that terminates in
+    flat facets, the answer is better foliage — generate it, mat it, ship it. Cost, not wall.
+  * **THE CAMERA RULING IS "DO NOT MOVE THE CAMERA", NOT "DO NOT SOLVE THE PROBLEM THE CAMERA
+    CREATES."** The deficit is real — no horizon means no aerial perspective, no layered ridges,
+    no sky as a value anchor. Attack the CUE: distant silhouettes placed where the CURRENT pitch
+    can see them, depth carried radially across the ground plane, a far band that is genuinely
+    far rather than warm cliff at 60 m. Filing this under "blocked by user ruling" is laziness.
+
+**THE ONLY PLATEAU IS: WE TRIED THINGS AND THE PICTURE DID NOT MOVE.** Not "the critic named
+something expensive."
+
+Every round therefore records which of three outcomes each deficit reached, and **only the middle
+one is evidence of a ceiling**:
+
+  * **TRIED — MOVED IT.**
+  * **TRIED — DID NOT MOVE THE PICTURE.** ← the only real ceiling evidence
+  * **NOT TRIED — RAN OUT OF NIGHT.** ← says nothing about the ceiling, only about the clock
+
+## Standing decisions for the overnight run
+
+  * **HOLD THE STYLISED LINE.** If the critic pushes toward photoreal and away from the
+    FFIX-ish stylisation, do not follow it — log the disagreement instead. "Looks more like a
+    modern AAA render" is not "looks more like the game we are making." Coordinator's call,
+    flagged to the user, not yet contradicted.
+  * **REDEPLOY PERIODICALLY** so the live site tracks the work. It is ~50 s now.
 
 ## The seam between builders
 
