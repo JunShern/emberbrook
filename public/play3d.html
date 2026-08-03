@@ -61,7 +61,23 @@ function sceneParams(q){
   // player's walking direction (~100 ft equivalent at miniature scale). Applies to
   // ow-* scenes; drag/wheel still work, the yaw eases back to heading while moving.
   OWCAM = /^ow-/.test(SCENE);
+  FLOORY = wbFloor(SCENE);
 }
+// ---- WHERE THE WORLD ENDS (playtest round 6) --------------------------------
+// public/game/worldbounds.json, fetched once per page and applied per scene. A
+// scene with no entry is unbounded and behaves exactly as it did before. The
+// number is the region's own water line; the file carries the measurement and the
+// reason, and walkStep() carries the rule. Fetched, not hardcoded, because the
+// bound is MAP DATA — the same call as lightrigs.json, and it is committed for the
+// same reason lightrigs.json had to be.
+let WORLDBOUNDS=null, FLOORY=null;
+function wbFloor(s){
+  const e=WORLDBOUNDS&&WORLDBOUNDS.scenes&&WORLDBOUNDS.scenes[s];
+  return e&&typeof e.floorY==='number' ? e.floorY : null;
+}
+fetch('game/worldbounds.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
+  WORLDBOUNDS=j; FLOORY=wbFloor(SCENE);          // re-apply: the fetch loses the race with the first sceneParams()
+}).catch(()=>{});
 sceneParams(Q0);
 const W=1344,H=768;
 // per-character sheet layout (cols,rows,dirs); extend as cast is added
@@ -1098,6 +1114,25 @@ function airBlocked(x,z,y,r){ return boxSolid(bodyBox(x,z,y+.06,y+BODY_H,r)); }
 const SLIM=.35;
 // legacy signature kept for callers/tests: "is a move of (dx,dz) from (x,z) blocked"
 function wall(x,z,dx,dz,fy){ return !!blocked(x+dx,z+dz,fy); }
+// ---- THE WORLD HAS A BOTTOM (playtest round 6) ------------------------------
+// A region built from an ANALYTIC height field has no edge: ow-valley's ground runs
+// continuously out of the gorge, under the water plane, to y -6.07 at the tile's
+// corner, and the region's own builder suppresses the rims within 22 u of the river
+// on purpose (Chapter Two's boat leaves that way). Round 5's playtest agent walked
+// past the Dellhollow gate at y 12.65 and spent 56 of 60 steps at y -2 .. -4.6.
+// The bound is public/game/worldbounds.json — map data, measured, per scene.
+//
+// IT IS ONE-WAY BY CONSTRUCTION, and that is the whole design. Standing ABOVE the
+// bound, a step onto ground below it is refused: that is the shoreline. Standing
+// BELOW it, only steps that go DEEPER are refused — level and uphill always pass —
+// so a body that is already out there (an old save, a jump off the bank) walks back
+// in. A boundary that can strand a player is the defect it was built to fix.
+// It is deliberately NOT a jump gate: you can still jump into the river, and then
+// you can still walk out. A returnable mistake beats an invisible wall.
+function outOfWorld(g){
+ if(FLOORY==null||g>=FLOORY) return false;
+ return P.y>=FLOORY || g<P.y-1e-3;
+}
 function rayStep(dx,dz){ walkStep(dx,dz); marooned(); }
 function walkStep(dx,dz){
  // normally the full body blocks. If the body is ALREADY inside something, retry
@@ -1108,6 +1143,7 @@ function walkStep(dx,dz){
   if(!mx&&!mz)continue;
   const nx=P.x+mx, nz=P.z+mz;
   const g=WALKLOCK?walkGround(nx,nz,P.y):ground(nx,nz,P.y); if(g==null)continue;   // WALKLOCK: only the walk network catches the foot
+  if(outOfWorld(g))continue;      // the world has a bottom (see below); refuses only OUTWARD steps
   // Body test at the settled height, with the lower bound never below the height you are
   // stepping DOWN from: a slab you were just standing on (a stair landing, the table you
   // are walking off) cannot obstruct you as you descend past its edge, while anything
@@ -1126,8 +1162,8 @@ function walkStep(dx,dz){
   if(!mx&&!mz)continue;
   const nx=P.x+mx, nz=P.z+mz;
   if(ground(nx,nz,P.y)!=null)continue;                      // (already tried above)
-  const below=floors(nx,nz).filter(y=>y<P.y-STEP_DN&&y>P.y-DROP_MAX);
-  if(!below.length)continue;                                // bottomless -> refuse
+  const below=floors(nx,nz).filter(y=>y<P.y-STEP_DN&&y>P.y-DROP_MAX&&!outOfWorld(y));
+  if(!below.length)continue;                                // bottomless (or out of the world) -> refuse
   if(r0&&airBlocked(nx,nz,P.y,r0))continue;
   P.x=nx;P.z=nz;AIR=true;airY=P.y;jvy=0;return;
  }
@@ -2007,6 +2043,9 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  zoneOverlay(v){ if(v!==undefined && !!v!==ZONEVIS) toggleZones(); return ZONEVIS },
  // --- test harness (rAF is throttled in background tabs; drive the sim by hand) ---
  ground,blocked:(x,z,fy)=>{const o=blocked(x,z,fy);return o?o.name:null},
+ // the scene's world bound, so a test can assert the fence is armed instead of
+ // inferring it from a walk that might have been stopped by something else
+ bounds(){return{scene:SCENE, floorY:FLOORY, loaded:!!WORLDBOUNDS}},
  air(){return{AIR,airY,jvy}},
  key(k,v){keys[String(k).toLowerCase()]=v?1:0},
  // one tick with an explicit WORLD-space direction (camera-independent walk tests)

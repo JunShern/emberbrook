@@ -790,7 +790,8 @@
           }
         },
         {
-          "objective": "Down into the hollow — find whoever runs the locks"
+          "_doc_objective": "WAS \"Down into the hollow \u2014 find whoever runs the locks\" until playtest round 6. This beat fires AT the Dellhollow valley gate (r 30), so the banner that names the next step is on screen while the player stands at the door \u2014 and it named a DIRECTION where it meant a PLACE. Round 5's agent read it as a heading, walked past the gate at y 12.65 and down the riverbed, and spent 56 of its 60 steps at y -2 .. -4.6. It did exactly what the game told it to. The prose keeps \"down\" (Lake: \"Down, then.\") because the town IS stacked down the inside of the gorge; it is the persistent BANNER that has to name the door, which the exit marker now also reads: Enter Dellhollow.",
+   "objective": "Through the Dellhollow gate — find whoever runs the locks"
         }
       ]
     },
