@@ -169,6 +169,14 @@ git runs here, on branch `migration/3d-hybrid`.
 - node tools/slice_test.mjs · cine_test.mjs · seam_test.mjs · seam_walk.mjs ·
   economy_test.mjs · battle_sim / encounter_sim · transition_test.mjs --port=<port>
   (real Chrome; needs a server on the port serving /public)
+- **node tools/playtest/percept_test.mjs — DOES THE PLAYTEST HARNESS SEE THE GAME** (1.1 s,
+  no LLM, no server): feeds the adapter's OWN PERCEPT_JS/FRAME_GATE_JS/flattenPercept four
+  known screens (overworld · dialogue · BATTLE · transition veil) as real DOM in headless
+  Chrome on about:blank, replays the recorded runs' percepts, and censuses the percept's
+  selectors against the shipping UI source. It exists because five adapter perception bugs
+  in one day each cost a 30-60 minute LLM run to find and another to prove fixed — the worst
+  being a fully drawn battle the percept could not see at all. A HARNESS BUG IS NOT A GAME
+  BUG, AND ONLY THE HARNESS CAN BE TESTED IN A SECOND.
 - **tools/cdp.mjs — the shared Chrome/CDP plumbing for EVERY browser tool** (transition_test,
   playthrough_test, trigger_probe, arena_playtest, ow_shot). Never hardcode a CDP port or
   match a page by literal URL again: `freePort()` (OS-assigned — two tools both shipped 9351

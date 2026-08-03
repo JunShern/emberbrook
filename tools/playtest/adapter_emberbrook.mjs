@@ -120,7 +120,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
  * TypeError three layers up. */
 const EMPTY_PERCEPT = { objective: null, prompts: [], dialogue: null, card: null, battle: null };
 
-const PERCEPT_JS = `(()=>{
+export const PERCEPT_JS = `(()=>{
   const vis = (e) => { if(!e) return false;
     const s = getComputedStyle(e);
     if (s.display==='none' || s.visibility==='hidden' || parseFloat(s.opacity||'1') < 0.06) return false;
@@ -223,7 +223,7 @@ const TRUTH_JS = `(()=>{ const o={};
  * renderer bookkeeping (47 in ow-valley), SIM.cam is a function, and SGbusy went
  * false as soon as the swap finished. None of them is a statement about pixels.
  */
-const BLACK_L = 2.0;              // mean luminance below this = nothing is drawn
+export const BLACK_L = 2.0;              // mean luminance below this = nothing is drawn
 const FRAME_BUDGET_MS = 45000;    // a cold 45 MB real-time bundle is a legitimate wait
 
 /* ================= THE HARNESS OWNS ITS OWN CLOCK =========================
@@ -258,7 +258,7 @@ class PageSilent extends Error {
  * enforced DURING the calls instead of discovered after one of them returns. */
 function deadline(ms) { const at = Date.now() + ms; return () => Math.max(250, at - Date.now()); }
 
-const FRAME_GATE_JS = `(()=>{ const why=[];
+export const FRAME_GATE_JS = `(()=>{ const why=[];
   const S=window.SIM;
   if(!S||!S.scene) return {why:['the page has no SIM yet — it is still booting']};
   try{ if(S.transitions().busy) why.push('a scene transition is still in flight'); }
