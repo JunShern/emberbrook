@@ -328,6 +328,15 @@ git runs here, on branch `migration/3d-hybrid`.
   public/assets/scenes/townwalk/scene.glb (~51 MB) — the boot gate waits on that asset.
   Re-run once the export settles; do not read it as a regression, and do not "fix" code
   against it.
+- **`git commit -m … -- <pathspec>` COMMITS THE WORKING TREE AND IGNORES THE INDEX**
+  (2026-08-03, paid for across three lanes). A lane staged ONE hunk with `git apply --cached`,
+  then committed with a pathspec — the pathspec form re-reads those paths from the WORKING
+  TREE, so it published 309 insertions of two other lanes' in-progress edits. The repair then
+  diffed against the base it started from rather than current HEAD and reverted a third lane's
+  committed beats out of HEAD. Nothing was lost (restored byte-identical, sha-verified) but
+  ORIGIN WAS BRIEFLY RED and two lanes had 20 minutes of work committed under another's name.
+  With a dirty shared tree: stage precisely, then `git commit` with NO pathspec, or
+  `git commit --only <paths>`. And repair against CURRENT HEAD, never against your own base.
 - Agent lanes: written handovers (transcripts expire); DAYLOG notes per phase;
   coordinator owns play3d.html, the town maps, and this file.
 - Documentation bar (user ruling): notes carry AUTHORITY — a written interpretation
