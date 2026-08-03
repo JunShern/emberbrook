@@ -20,7 +20,15 @@ const rounds = JSON.parse(readFileSync(ROUNDS, 'utf8'));
 const have = existsSync(PLATES) ? readdirSync(PLATES) : [];
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const rel = p => '../' + p.replace(/^docs\/qa\//, '');
+// TWO PATH FAMILIES, TWO RULES. The plates live under docs/qa/ and are reached
+// relatively from this page; the references live under public/, which server.js
+// serves at the ROOT, so `public/assets/...` is `/assets/...` and any relative
+// path to it is wrong. The first version of this got that wrong and every
+// reference rendered as a broken-image icon - the sibling page ow-refs/index.html
+// had already solved it with an absolute /assets/ URL. Verified with curl, not
+// assumed: /assets/refs/... is 200, /public/assets/refs/... is 404.
+const rel = p => p.startsWith('public/') ? '/' + p.slice('public/'.length)
+                                         : '../' + p.replace(/^docs\/qa\//, '');
 
 let body = '';
 for (const r of rounds.rounds) {
