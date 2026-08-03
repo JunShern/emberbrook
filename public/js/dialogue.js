@@ -97,7 +97,7 @@
   // sat 49 px below everybody else's. Only Mara cannot make it at any sane value.
   var CUTIN_EYE_LIFT = 1.05;
   var CUTIN_STAGE = 0.62;        // element height safety cap vs the game frame
-  var CUTIN_WIDE = 0.60;         // ...nor this much of the window's width
+  var CUTIN_WIDE = 0.72;         // ...nor this much of the window's width
   var CUTIN_SINK = 0.08;         // MINIMUM share of the box the art's bottom passes behind
   // The cast median head box, for a speaker whose manifest entry predates the
   // measurement. It reproduces the old behaviour for that speaker rather than
@@ -541,10 +541,14 @@
     var h = head / hb.head;
     // THE TWO CAPS ARE SAFETY, AND EVERY ONE OF THEM COSTS HEAD SIZE when it bites —
     // which is the bug this file just came out of, so they are set where no plate in
-    // the cast reaches them (tallest element is boatwright's 454 px against a 0.62
-    // stage; widest is hobb's 510 px against a 0.60 window). They exist for the plate
-    // nobody has drawn yet, and a portrait that hits one should be re-cropped, not
-    // re-tuned here.
+    // the cast comes NEAR them. Measured at 1920x1080: the tallest element is
+    // Boatwright's 412 px against a 616 px stage cap, and the widest is Hobb's 463 px.
+    // The width cap was 0.60 of the 800 px window = 480 px, which left Hobb inside 4%
+    // of it — near enough that a slightly different viewport would have silently
+    // shrunk his head and nothing would have said so. 0.72 restores the margin. (Hobb
+    // is the widest because his plate carries a block of matte failure beside him,
+    // which is an art bug worth fixing on its own.) These exist for the plate nobody
+    // has drawn yet: a portrait that hits one should be re-cropped, not re-tuned here.
     if (stageH > 0) h = Math.min(h, stageH * CUTIN_STAGE);
     var wide = fb.width * CUTIN_WIDE, asp = cutinAspect(S.pid);
     if (asp * h > wide) h = wide / asp;
