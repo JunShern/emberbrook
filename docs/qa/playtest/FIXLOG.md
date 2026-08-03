@@ -325,3 +325,33 @@ the `waystone` shot. It belongs to that lane, so it is reported rather than patc
 closing run used `--from=ch1.open`, which carries a brief and starts in `woodroad`, to get
 around it.
 
+
+#### Round 2 — the receipt: the loop turns
+
+`node tools/llm_playtester.mjs --port=3000 --from=ch1.open --steps=26`, run
+`run-20260803-135651`, on a machine that happened to be as loaded as the one that produced
+the false blockers (swap 3.7 GB of 5.1 GB used). That load is not a nuisance here, it is the
+test: it is the exact condition the defect needed.
+
+```
+  4 goto  goal="Follow the paved road further into the forest towa"  [0.52,0.42] only closed 16.86 m of 25.77 m
+leg not conclusive: gave up after 6 burst(s) at ~42127 ms/burst — no blocker filed (the headings were never all tried)
+  5 goto  goal="Follow the path towards the red indicator near the"   [0.53,0.42] only closed 0 m of 18.97 m
+```
+
+**A leg closed 0 m of an intended 18.97 m — the exact shape of PT-010/011/012 — and no
+blocker was filed.** The executor said what it actually knew instead: it gave up after six
+bursts, the headings were never all tried, and the reason is printed as a number —
+**~42 seconds per burst**. That single figure is the whole diagnosis, measured in the wild
+rather than argued: forty-two seconds to hold a key for 150 ms and read a position twice.
+
+**Reports filed by the closing run: 0.** The queue is unchanged at 12 entries. The same
+instrument that filed six P1s against this ground now walks the same ground under the same
+load and files nothing, while still reporting honestly that it is not closing the distance.
+
+What this round did NOT prove: PT-009's fix has not yet been seen by the playtester, because
+this run never reached a battle in `ow-valley` within its step budget. The marker is verified
+on the instrument (`SIM.occ` naming `veg_canopy_whisperwood_cards`, the marker up at the
+reported spot and down at three controls) but not yet by the tool that filed it. **That is
+an open item for round 3, by rule 3 of this log** — a fix is not done until the playtester
+stops reporting it, and this one has not had the chance to.
