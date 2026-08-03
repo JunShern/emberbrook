@@ -1,0 +1,295 @@
+{
+  "base": "https://junshern.github.io/emberbrook",
+  "launcher": {
+    "title": "Emberbrook — chapter select",
+    "cards": 17,
+    "wip": "Emberbrook — work in progress. An early prototype: expect rough edges,",
+    "wipVisible": true
+  },
+  "state": {
+    "url": "/emberbrook/play.html",
+    "scene": "emb-cine",
+    "shot": "woodroad",
+    "hud": "",
+    "pos": {
+      "x": 52,
+      "y": -0.6399999856948995,
+      "z": 28
+    },
+    "meshes": 2300,
+    "wip": true
+  },
+  "rows": [
+    {
+      "i": 0,
+      "key": "w",
+      "moved": 1.95,
+      "pos": [
+        52,
+        26.1
+      ],
+      "onScreen": true,
+      "silhouette": 985,
+      "visible": 926,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 42.38
+      }
+    },
+    {
+      "i": 1,
+      "key": "w",
+      "moved": 1.95,
+      "pos": [
+        52,
+        24.1
+      ],
+      "onScreen": true,
+      "silhouette": 934,
+      "visible": 874,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 44.05
+      }
+    },
+    {
+      "i": 2,
+      "key": "w",
+      "moved": 1.87,
+      "pos": [
+        52,
+        22.2
+      ],
+      "onScreen": true,
+      "silhouette": 882,
+      "visible": 882,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.57
+      }
+    },
+    {
+      "i": 3,
+      "key": "a",
+      "moved": 0,
+      "pos": [
+        52,
+        22.2
+      ],
+      "onScreen": true,
+      "silhouette": 882,
+      "visible": 882,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.57
+      }
+    },
+    {
+      "i": 4,
+      "key": "a",
+      "moved": 0,
+      "pos": [
+        52,
+        22.2
+      ],
+      "onScreen": true,
+      "silhouette": 882,
+      "visible": 882,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.57
+      }
+    },
+    {
+      "i": 5,
+      "key": "w",
+      "moved": 0,
+      "pos": [
+        52,
+        22.2
+      ],
+      "onScreen": true,
+      "silhouette": 882,
+      "visible": 882,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.57
+      }
+    },
+    {
+      "i": 6,
+      "key": "w",
+      "moved": 0,
+      "pos": [
+        52,
+        22.2
+      ],
+      "onScreen": true,
+      "silhouette": 882,
+      "visible": 882,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.57
+      }
+    },
+    {
+      "i": 7,
+      "key": "d",
+      "moved": 1.95,
+      "pos": [
+        54,
+        22.2
+      ],
+      "onScreen": true,
+      "silhouette": 858,
+      "visible": 858,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.56
+      }
+    },
+    {
+      "i": 8,
+      "key": "d",
+      "moved": 0.83,
+      "pos": [
+        54.8,
+        22.2
+      ],
+      "onScreen": true,
+      "silhouette": 864,
+      "visible": 864,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.58
+      }
+    },
+    {
+      "i": 9,
+      "key": "w",
+      "moved": 1.95,
+      "pos": [
+        54.8,
+        20.3
+      ],
+      "onScreen": true,
+      "silhouette": 816,
+      "visible": 816,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 47.28
+      }
+    },
+    {
+      "i": 10,
+      "key": "s",
+      "moved": 1.95,
+      "pos": [
+        54.8,
+        22.2
+      ],
+      "onScreen": true,
+      "silhouette": 864,
+      "visible": 864,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.58
+      }
+    },
+    {
+      "i": 11,
+      "key": "s",
+      "moved": 0.15,
+      "pos": [
+        54.8,
+        22.4
+      ],
+      "onScreen": true,
+      "silhouette": 856,
+      "visible": 856,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.45
+      }
+    },
+    {
+      "i": 12,
+      "key": "a",
+      "moved": 1.95,
+      "pos": [
+        52.8,
+        22.4
+      ],
+      "onScreen": true,
+      "silhouette": 869,
+      "visible": 869,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 45.43
+      }
+    },
+    {
+      "i": 13,
+      "key": "w",
+      "moved": 1.95,
+      "pos": [
+        52.8,
+        20.4
+      ],
+      "onScreen": true,
+      "silhouette": 834,
+      "visible": 834,
+      "occ": {
+        "depthMode": true,
+        "ring": false,
+        "nHits": 0,
+        "first": null,
+        "camDist": 47.13
+      }
+    }
+  ],
+  "errors": [
+    "HTTP 404 https://junshern.github.io/favicon.ico",
+    "HTTP 404 https://junshern.github.io/emberbrook/assets/scenes/emb-cine/depth.json?v=1785742149447",
+    "HTTP 404 https://junshern.github.io/emberbrook/assets/scenes/emb-cine/zones.json?v=1785742149447"
+  ]
+}
