@@ -137,6 +137,20 @@ git runs here, on branch `migration/3d-hybrid`.
   `findPage()` (a failure that DUMPS every CDP target it saw and separates "CDP unreachable"
   from "matcher wrong"), `killOrphans()`, `chromeArgs()`. The rule it encodes: AN INSTRUMENT
   THAT FINDS NOTHING MUST PROVE IT COULD HAVE FOUND SOMETHING.
+- **A BROWSER TOOL THAT DOES NOT REAP ITS CHROME POISONS EVERY OTHER LANE** (2026-08-03,
+  measured). `tools/mood_shots.mjs` shipped without going through cdp.mjs's cleanup and left
+  SIX orphaned Chrome instances (`--user-data-dir=/tmp/moodshots-*`, all `ppid 1`) alive after
+  its own lane had finished. They held **7.6 GB of swap**: the machine sat at 17.7/18.4 GB
+  swap used with 675 MB free and ZERO Blender running, and every browser gate on it was slow
+  and flaky for half an hour. Reaping them returned swap to 10.1 GB and free to 8.3 GB — so
+  "the lanes are straining the machine" was FALSE; one leaked tool was.
+  Tell an orphan from a live gate with
+  `ps -Ao pid,ppid,etime,command | grep 'MacOS/Google Chrome '`: root Chrome with **ppid 1**
+  is an orphan, one with a live parent pid is somebody's running gate and MUST NOT be killed.
+  **NEVER pattern-kill Chrome by name — 25 of the processes on this machine are the USER'S OWN
+  browser.** Match on the tool's own `--user-data-dir` prefix and prove the parent is gone
+  (`pgrep -if <toolname>` empty) first. Any new browser tool goes through cdp.mjs, which
+  already has `killOrphans()` and `sweepStaleProfiles()`.
 - node tools/dialogue_style.mjs — THE STYLE GATE (no browser, no network): every spoken,
   `system` and `narrate` box in chapter1.js + chapter2.js + dialogue.json against
   VOICES.md's OWN numbers — two sentences a box, 25/30-word ceilings, one capped word,
