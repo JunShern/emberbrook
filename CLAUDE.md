@@ -292,6 +292,25 @@ git runs here, on branch `migration/3d-hybrid`.
     already-shipped mood is refused and the character keeps today's art.
     QA docs/qa/cutins/index.html — every plate over a baked plate, read ACROSS a row
     for identity drift. Baseline before the pass: 19/62 plates passed the gate.
+    **`cutin_edge` STILL HAS NO CHROMA TERM — the hole is OPEN** (2026-08-03). Its `halo`
+    is a LUMINANCE difference, so a rim of the wrong HUE at the right brightness is
+    invisible to it: a bright chartreuse outline sat on **79 of 112 SHIPPED plates**, every
+    one gate-green, until someone LOOKED. Cause was in the despill, which estimated key
+    share by summing the R and B deltas against the local opaque reference — so a
+    legitimately brighter edge pixel read as magenta residue and the subtraction drove R
+    and B under G. Fixed by solving the mixture on the key's own chroma axis,
+    `(R+B)/2 - G`: 79/112 → 20/119, magenta residue unchanged or lower everywhere.
+    THE GATE ITSELF WAS NOT FIXED. Until it grows a chroma term, a green/cyan/magenta
+    fringe can ship gate-green again — A GATE THAT MEASURES BRIGHTNESS CANNOT SEE COLOUR.
+    **RE-ROLL `rest` FIRST, NEVER LAST**: `rest` is the identity reference the mood plates
+    are drawn from, so re-rolling it after them orphans the set against a superseded
+    reference (sorrel's striped apron went plain white, her peel wood → terracotta). The
+    chain IS the identity.
+    **THE TWO RUNTIMES DRAW DIFFERENT ART**: 2D (chapter1/2) uses `expr-*.png` busts, 3D
+    uses `cutin-*.png`. 15 scripted moods exist in one and not the other — LATENT, not
+    live, because they sit only in story.json. Lake's 2D busts were still the RETIRED
+    design (black hair, green vest, cape) against a ratified brown-haired, red-vested
+    bust.png, so his neutral line showed one man and every emotional line another.
 2. tools/gen-turnaround.mjs — A-pose 4-view sets (style anchor = user's Vesper A-pose;
    hands empty; capes swept back)
 3. Tripo (user via web, or tools/gen3d.mjs API) → GLB
