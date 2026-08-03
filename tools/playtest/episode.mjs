@@ -50,20 +50,39 @@ export const HEAD_SHA = (() => {
   try { return execFileSync('git', ['-C', ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(); } catch (e) { return null; }
 })();
 
-export function assertNoPrivileged(prompt, truth) {
-  const hay = String(prompt || '').toLowerCase(); const bad = [];
-  const tok = [];
-  if (truth.scene) tok.push(truth.scene);
-  if (truth.shot) tok.push(truth.shot);
-  for (const p of truth.pos || []) tok.push(String(p));
-  for (const b of truth.beats || []) tok.push(b);
-  for (const f of truth.flags || []) if (f.indexOf('.') > 0) tok.push(f);
-  for (const e of truth.exits || []) tok.push(e);
-  for (const t of tok) {
-    const s = String(t).toLowerCase();
-    if (s.length < 5) continue;              // '1.5' is a duration, not a leak
-    if (hay.includes(s)) bad.push(t);
-  }
+/* THE FIREWALL, and the distinction it has to make was paid for on the first real
+ * episode. It failed the run on the token "waystone" — which is a camera id AND a
+ * word the game's own dialogue says out loud ("A waystone. Good — the road's a real
+ * road, then."). A player reads that. A firewall that cannot tell a leak from a
+ * noun is a firewall that gets switched off, so:
+ *
+ *   HARD tokens can NEVER legitimately appear on a player's screen — a scene id
+ *     (emb-cine), a flag or beat id (story.ch1.waystone), an edge id
+ *     (emb-cine>ow-valley@emberbrook-gate), a body coordinate (-47.92). These are
+ *     checked against the WHOLE prompt, and one of them anywhere fails the run.
+ *     This is also the backstop for the dev HUD: if hiding `#h` ever stops working,
+ *     "pos(52.0,-0.6,28.0)" lands in the drawn text and this catches it.
+ *   SOFT tokens are ordinary English that happens to also be an id — the camera
+ *     names (square, waystone, pondlane, gatefield). They are checked only against
+ *     the parts the HARNESS composed: the persona and the brief. They are NOT
+ *     checked against the text the game drew or the agent's own recollection,
+ *     because a player is allowed to know the word "square".
+ */
+export function assertNoPrivileged(prompt, truth, harnessText) {
+  const whole = String(prompt || '').toLowerCase();
+  const authored = String(harnessText == null ? prompt : harnessText).toLowerCase();
+  const bad = [];
+  const hard = [];
+  if (truth.scene) hard.push(truth.scene);
+  for (const b of truth.beats || []) if (b.indexOf('.') > 0) hard.push(b);
+  for (const f of truth.flags || []) if (f.indexOf('.') > 0) hard.push(f);
+  for (const e of truth.exits || []) hard.push(e);
+  for (const p of truth.pos || []) { const s = String(p); if (s.includes('.') && s.length >= 4) hard.push(s); }
+  for (const t of hard) { const s = String(t).toLowerCase();
+    if (s.length >= 5 && whole.includes(s)) bad.push(t + ' (hard)'); }
+  const soft = truth.shot ? [truth.shot] : [];
+  for (const t of soft) { const s = String(t).toLowerCase();
+    if (s.length >= 4 && authored.includes(s)) bad.push(t + ' (soft, in harness-authored text)'); }
   if (bad.length) throw new Error(
     'FIREWALL: the agent prompt contains privileged state it must never see: ' + JSON.stringify(bad) +
     '\n  This is a build error in the harness, not a game bug. The agent may only be given the ' +
@@ -160,7 +179,7 @@ export async function run(cfg) {
       try {
         const frames = lastFrames.map(p => ({ mime: 'image/jpeg', data: readFileSync(p).toString('base64') }));
         const iv = await agent.interview({ screenshots: frames, text: obs.text, history: history.slice(-10) });
-        if (iv) { assertNoPrivileged(iv._prompt, truth);
+        if (iv) { assertNoPrivileged(iv._prompt, truth, brief);
           if (iv.notabug) log('  (interview: the agent says it is not really stuck — nothing filed)');
           else fileReport(iv.kind, iv, step, obs.percept, truth, lastFrames.slice(), 'stuck-interview', iv.severity); }
       } catch (e) { log('  interview failed: ' + e.message); if (/FIREWALL/.test(e.message)) throw e; }
@@ -171,7 +190,10 @@ export async function run(cfg) {
     let intent;
     try {
       intent = await agent.decide({ screenshot: obs.screenshot, text: obs.text, history: history.slice(-8), brief, nudge });
-      assertNoPrivileged(intent._prompt, truth);
+      // `brief` is the only text in this prompt the HARNESS wrote; the persona is a
+      // reviewed constant in the adapter, and everything else is either drawn on
+      // screen or the agent's own recollection.
+      assertNoPrivileged(intent._prompt, truth, brief);
     } catch (e) {
       if (/FIREWALL/.test(e.message)) throw e;
       log('  agent error: ' + e.message);

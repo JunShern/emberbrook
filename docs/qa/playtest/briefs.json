@@ -1,0 +1,22 @@
+{
+  "_what": "Per-checkpoint orientation for tools/llm_playtester.mjs --from=<beat>.",
+  "_why": "A dropped-in agent with no goal wanders and files noise. Most of the orientation is FREE — the game draws an objective line, and the checkpoint derives it from the last `objective` any earlier beat set. These are the cases where the objective alone does not answer WHO AM I and WHERE AM I: the Lake point-of-view handover, the interiors, and the beats whose objective text is poetic rather than practical.",
+  "_rules": [
+    "One or two plain sentences. It is what a player would know from having played the last ten minutes, and NOTHING a player would not know.",
+    "NEVER name a coordinate, a scene id, a camera id, a flag or an NPC id. It goes into the agent's context and the firewall will fail the run.",
+    "Say who the player is controlling when it has changed. Nothing else in the percept says so.",
+    "A brief naming a beat story.json no longer has is WARNED about by --checkpoints. Fix it there; do not let a stale instruction survive a story edit."
+  ],
+  "briefs": {
+    "ch1.open": "You have just walked into an unfamiliar valley at night, at the end of a long road. You are a mapmaker, and this place is not on your map.",
+    "ch1.lake.handoff": "You are no longer the mapmaker. You are now a young lamplighter, at home in the village, and the evening's lamp round is yours.",
+    "ch1.lake.wake": "You are the lamplighter, waking up indoors in your grandmother's cottage. You need to get yourself together and get out to the lamps.",
+    "ch1.lake.hearth": "You are indoors in a small cottage. The thing you want is on the mantel above the fireplace. Walk to it and use it.",
+    "ch1.lake.lamp": "You are indoors. Your hand-lamp hangs on a hook by the front door. Take it, then go outside.",
+    "ch1.meet": "You are the lamplighter, out on your round. Three lamps have to be lit before the hour is up, and the pond lane is first.",
+    "ch1.hush": "The whole village has stopped for a moment of quiet. Wait for it, watch, and do not fight it.",
+    "ch1.see.poppy": "You are back to being the mapmaker, in the village square during a festival. Four people and creatures around the square want a word. Find each of them and talk to them.",
+    "ch1.sigils": "You are leaving the village by its north gate. The gate is old and it does not simply open.",
+    "ch2.supper": "You are indoors, invited to supper in a lock-keeper's cottage. Talk to the people in the room."
+  }
+}
