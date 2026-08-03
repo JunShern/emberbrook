@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-02T19:38:43Z",
+ "generated": "2026-08-03T05:32:12Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -8262,8 +8262,6 @@
    ]
   }
  ],
- "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 1 of 16 plates are stale against the solve — quay-west (0.05u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
- ],
+ "warnings": [],
  "overrides": {}
 }
