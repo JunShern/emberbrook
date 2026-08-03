@@ -1,0 +1,296 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>The Old Gate — the arrival, and three candidates for the structure</title>
+<style>
+:root{--bg:#14120f;--fg:#e8e2d6;--dim:#a2998a;--line:#33302a;--warm:#e0a355;--good:#7fbf6a;--bad:#d9705a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.62 "Iowan Old Style",Georgia,serif;padding:0 0 6rem}
+.wrap{max-width:1180px;margin:0 auto;padding:0 1.6rem}
+h1{font-size:2.1rem;line-height:1.15;margin:2.6rem 0 .4rem;font-weight:600}
+h2{font-size:1.35rem;margin:3rem 0 .6rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+h3{font-size:1.02rem;margin:1.8rem 0 .4rem;color:var(--warm);letter-spacing:.02em}
+p,li{max-width:78ch}
+.lede{color:var(--dim);font-size:1.06rem}
+code,.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.86em}
+blockquote{margin:1.2rem 0;padding:.7rem 0 .7rem 1.1rem;border-left:3px solid var(--warm);color:#efe6d4;font-style:italic}
+figure{margin:1.4rem 0}
+img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:3px;background:#000}
+figcaption{color:var(--dim);font-size:.86rem;margin-top:.45rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:1.4rem}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.1rem}
+table{border-collapse:collapse;width:100%;margin:1.1rem 0;font-size:.9rem}
+th,td{text-align:left;padding:.42rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600}
+.ok{color:var(--good)} .no{color:var(--bad)}
+.scroll{overflow-x:auto}
+.card{border:1px solid var(--line);border-radius:5px;padding:1rem 1.15rem;background:#191713}
+.card h3{margin-top:0}
+.tag{display:inline-block;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--bg);background:var(--warm);padding:.1rem .5rem;border-radius:2px;vertical-align:middle}
+.tag.grey{background:#544e44;color:#e8e2d6}
+.tag.red{background:var(--bad);color:#1a0f0c}
+.note{color:var(--dim);font-size:.9rem}
+</style>
+<div class="wrap">
+
+<h1>The Old Gate</h1>
+<p class="lede">Why leaving Emberbrook put the player inside the gate, what the gate actually
+is, and three candidates for the structure. 2026-08-03.</p>
+
+<blockquote>"when I finish Chapter 1 and leave Ember Brook, I spawn on the overworld behind or
+somewhere in the middle of the old gates. There are various strange, blocky structures, and
+I'm not able to get out of that to cross to the road behind it&hellip; the structure there
+doesn't really make sense and needs a better redesign. In doing so, we should make sure that
+the character spawned clearly after the gate structure and while on the road to Del Hollow so
+that the player can actually walk down the road."</blockquote>
+
+<p>Two separate defects share one symptom. <b>The arrival is fixed and shipped.</b>
+<b>The structure is not</b> — this page carries the measurements and three candidates, and it
+is honest about the one thing none of them solve.</p>
+
+
+<h2>1 &nbsp;The arrival <span class="tag">fixed &middot; c130f76</span></h2>
+
+<h3>Where it was</h3>
+<p>World <code class="mono">[-52.174, 26.438, 30.364]</code> — region <code class="mono">rx&nbsp;87.8, ry&nbsp;69.6</code>.
+The Old Gate stands at <code class="mono">ry&nbsp;73.83</code> and <em>ry increases downstream</em>,
+so the shipped arrival was <b>4.2 units on Emberbrook's own side of the gate it had just come
+through</b>, in the court's masonry, with canopy on one hand and blockwork on the other.</p>
+
+<div class="grid2">
+<figure><img src="before-spawn-eye.png" alt="the shipped arrival, from the player's eye">
+<figcaption><b>The shipped arrival.</b> Vesper on a scrap of dirt: canopy mass filling the left
+half, grey slabs and a stepped stack to the right, water below. This is the frame the player
+sees the moment Chapter One ends.</figcaption></figure>
+<figure><img src="before-A-arrival-shipped-cam.png" alt="the shipped arrival, wide">
+<figcaption><b>Same spawn, boom pulled back.</b> The gate is the pale block cluster on the
+right. The player (centre) is on the village side of it.</figcaption></figure>
+</div>
+
+<h3>It was <em>not</em> the <code>ch2.road</code> disease</h3>
+<p>No raw region coordinate reached a world field. The transform is right and holds on all
+three valley portals: <code class="mono">world = [rx − 140, ground, 100 − ry]</code>, checked
+against <code>emberbrook-gate</code>, <code>old-gate</code> and
+<code>dellhollow-valley-gate</code>.</p>
+
+<h3>The mechanism</h3>
+<p><code>tools/scenegraph_derive.mjs</code> backed the region-side arrival off along the road
+polyline with <code class="mono">for (let k = i; k &gt; 0; k--)</code> — <b>always toward
+road[0]</b>. That is right by accident for a portal at a road END (<code>emberbrook-gate</code>
+is point 3 of 20 with the town north of it; <code>dellhollow-valley-gate</code> is the last
+point) and wrong for a portal in the MIDDLE. The Old Gate is point 9 of 20 with Emberbrook
+upstream at point 3, so "toward road[0]" is "back into the town you just left".</p>
+
+<h3>The fix, in three parts</h3>
+<table>
+<tr><th>#</th><th>what</th><th>where</th></tr>
+<tr><td>1</td><td><b>Direction</b>, derived not authored: step toward whichever neighbouring road
+vertex is farther from the target town's anchor. Re-derived, it reproduces the two portals that
+already worked <b>bit for bit</b>.</td><td><code>scenegraph_derive.mjs</code></td></tr>
+<tr><td>2</td><td><b>Distance</b>: <code>spawnBackoffU</code> on the portal. The default
+(<code class="mono">gateRadius 3.2 + spawnBackoff 1.1 = 4.3u</code>) clears a <em>trigger</em>;
+the Old Gate is a <em>structure</em> 13.7u deep. It declares <b>20.0u</b>.</td>
+<td><code>valley.region.json</code></td></tr>
+<tr><td>3</td><td><b>The arrival faces the way ON</b>, not back at the door it came out of —
+seam canon §10's "reads backwards" defect, authored. All three portals were facing backwards;
+all three now take the road's own tangent in the direction of travel.</td>
+<td><code>scenegraph_derive.mjs</code></td></tr>
+</table>
+
+<h3>Where it is</h3>
+<p>World <code class="mono">[-36.185, 23.294, 17.159]</code>, yaw <code class="mono">2.3232</code>,
+<code>SIM.zone()</code> = <b>road</b>. Past the whole court, gate behind, gorge ahead.</p>
+
+<div class="grid2">
+<figure><img src="after-1-arrival-eye.png" alt="the new arrival, from the player's eye">
+<figcaption><b>The new arrival.</b> On the road ribbon, on the green bench, river to the left,
+the road running on down the gorge. The gate's masonry is the mass in the bottom-left corner —
+behind her.</figcaption></figure>
+<figure><img src="after-2-arrival-lookback.png" alt="looking back at the gate from the new arrival">
+<figcaption><b>The same spot, camera swung round.</b> The way back is in frame: the road runs
+up to the gate structure at the top of the picture. (This is also the frame that shows how
+badly the structure reads — see §3.)</figcaption></figure>
+</div>
+
+<h3>The receipt — the engine, not a model of it</h3>
+<table>
+<tr><th>claim</th><th>instrument</th><th>result</th></tr>
+<tr><td>the edge is an absence before the flag and live after it</td>
+<td><code>SIM.edges()</code> around <code>GS.setFlags</code></td>
+<td class="ok">open false &rarr; true, unchanged spawn</td></tr>
+<tr><td>the runtime lands the body where the data says</td>
+<td><code>SIM.door('ow-valley','old-gate')</code></td>
+<td class="ok">[-36.185, 23.294, 17.159], yaw 2.3232, zone road</td></tr>
+<tr><td><b>a player can walk from there to Dellhollow</b></td>
+<td>play3d's own <code>phys()</code> via <code>SIM.move()</code>, one tick at a time</td>
+<td class="ok">1300 ticks, no stall, 1.2u inside the valley-gate trigger</td></tr>
+<tr><td>the arrival is not inside a camera cut band</td>
+<td>derive's arrival-vs-band audit</td><td class="ok">20.6u clear (15/15 arrivals clear)</td></tr>
+</table>
+
+<div class="grid2">
+<figure><img src="after-0-the-actual-arrival-frame.png" alt="the real arrival frame with the chapter end card">
+<figcaption><b>The real thing.</b> The Old Gate edge taken in <code>play3d.html</code>, Chapter
+One's end card over the frame the player actually arrives in.</figcaption></figure>
+<figure><img src="after-4-dellhollow-gate-reached.png" alt="Dellhollow's gate reached on foot">
+<figcaption><b>The walk's end.</b> Driven from the arrival with the runtime's own physics —
+"Enter Dellhollow? [E]".</figcaption></figure>
+</div>
+
+
+<h2>2 &nbsp;What is measured to be wrong with the structure</h2>
+
+<p>Every number below comes from a flood fill run <em>inside the running page</em> with the
+runtime's own primitives — <code>SIM.ground</code>, <code>SIM.blocked</code>, the player's own
+0.30&nbsp;m body box, on a 0.4&nbsp;m lattice (<code>tools/reach_probe.mjs</code>).</p>
+
+<div class="scroll"><table>
+<tr><th>fill started at</th><th>cells filled</th><th>reaches Dellhollow?</th></tr>
+<tr><td>the shipped arrival (village side)</td><td>266&nbsp;945</td><td class="no">no</td></tr>
+<tr><td>the court's west end, world x −45.4</td><td>266&nbsp;947</td><td class="no">no</td></tr>
+<tr><td>world x −40.5 — the east bank</td><td>11&nbsp;728</td><td class="ok">yes, no edge taken</td></tr>
+<tr><td><b>a cell standing ON the court deck</b></td><td class="no"><b>6</b></td><td class="no">no</td></tr>
+</table></div>
+
+<h3 style="color:var(--bad)">The court deck is a raft</h3>
+<p>A fill started on the culvert court's own paving fills <b>six cells</b> — about one square
+metre — and stops. The deck is laid at <code class="mono">gw[2] − 0.10</code> and the ground it
+meets at either end stands 0.8&nbsp;m to 1.7&nbsp;m lower, which is past <code>walkStep</code>'s
+own 0.8&nbsp;m step-down. <b>The road runs up to a table it cannot climb onto, and away from a
+table it cannot climb off.</b> The two banks are two separate worlds 1.22&nbsp;m apart.</p>
+
+<p class="note"><b>And the obvious-looking cause was not the cause.</b> The downstream parapet
+(<code>valley_build.py</code>) gaps itself only within <code class="mono">DOOR*0.75</code> of
+<code>door_c</code> — the <em>arched doorway's</em> offset, which is on the west bank — while the
+road leaves the court on the <em>east</em>. That is a real defect and candidate A fixes it. It
+moves the walker's frontier <b>0.8u and no further</b>. Measured before it was built on; the
+raft is the wall.</p>
+
+<h3>And the picture agrees</h3>
+<div class="grid2">
+<figure><img src="before-C-gate-from-village-side.png" alt="the gate from the village side">
+<figcaption><b>From Emberbrook's side.</b> Emberbrook's impression is bottom-left (cottage,
+timber road-arch, canopy). The gate is the tan mass ahead: loose slabs, a square block, a low
+shelf across the water. No readable arch, no door, no threshold.</figcaption></figure>
+<figure><img src="before-D-court-standing.png" alt="standing on the court">
+<figcaption><b>Standing on the court itself.</b> Vesper on a thin ledge against a blank block
+wall, water below. The player can stand on the gatewall's own courses — <em>a wall you can
+stand on top of is not a seal.</em></figcaption></figure>
+</div>
+
+
+<h2>3 &nbsp;The ratified concept, and what got built</h2>
+
+<figure><img src="../emberbrook/concepts/gate-final.png" alt="the ratified Old Gate concept">
+<figcaption><b>docs/qa/emberbrook/concepts/gate-final.png</b> — ratified, and named as canon in
+<code>valley_build.py</code>'s own docstring.</figcaption></figure>
+
+<div class="scroll"><table>
+<tr><th>the concept has</th><th>the build has</th></tr>
+<tr><td>one coursed wall across the notch, capped, reading as a single mass</td>
+<td>a run of separate cubes, one per 0.55u course, with a ±0.06u jog — at the overworld boom
+(dist 40) it reads as a flight of shelves</td></tr>
+<tr><td>an <b>arched timber double door</b>, studded, iron rings, warm-lit — the single most
+legible thing in the picture</td><td class="no">no leaf at all. Chapter One's climax is
+<em>this gate opening</em>, and there is nothing here that can be open or shut</td></tr>
+<tr><td>a low <b>arched grate</b> at water level, water running through</td>
+<td class="ok">built — 11 bars and a sill lintel</td></tr>
+<tr><td>a carved <b>sigil roundel</b> over the arch</td><td class="no">absent</td></tr>
+<tr><td><b>twin sigil plates</b> set in the ground either side of the road</td>
+<td class="no">absent — and Chapter One's climax is two keepers standing on them</td></tr>
+<tr><td>flagstone road with a kerbed water channel beside it</td>
+<td>a raft of 9 slabs, a barrel, an arch head, and a parapet across the road's own exit</td></tr>
+<tr><td>value separation: pale stone, dark timber, black water, moss</td>
+<td class="no">tan masonry against tan cliff</td></tr>
+</table></div>
+
+
+<h2>4 &nbsp;Three candidates</h2>
+
+<p>Each is a <b>superset</b> of the one before. Each is <b>lighter than what ships</b> — the
+user's standing note on the last art round was that a candidate must make the existing thing
+good rather than add another thing, so the budget here is triangles and every candidate spends
+fewer of them than today.</p>
+
+<div class="scroll"><table>
+<tr><th></th><th>candidate</th><th>what it does</th><th>triangles</th><th>vs shipped</th></tr>
+<tr><td class="mono">—</td><td><b>base</b></td><td>what ships today</td>
+<td class="mono">150&nbsp;528</td><td class="mono">—</td></tr>
+<tr><td class="mono">A</td><td><b>Open the road</b></td>
+<td>the downstream parapet is gapped where the <em>road</em> crosses it, derived from
+<code>VM.ROAD_XY</code>, not where the doorway happens to be. Pure subtraction.</td>
+<td class="mono">150&nbsp;492</td><td class="mono ok">−36</td></tr>
+<tr><td class="mono">B</td><td><b>One wall, not a stack</b></td>
+<td>A, plus the coursed stack collapses to <b>plinth + shaft + coping</b> — three boxes where
+there were six or seven. Silhouette instead of shelves, and nothing left to stand on.</td>
+<td class="mono">150&nbsp;252</td><td class="mono ok">−276</td></tr>
+<tr><td class="mono">C</td><td><b>The door and the sigil</b></td>
+<td>B, plus the three marks the concept identifies this gate by: the timber leaf swung back in
+the arch (it opened in Chapter One and it stays open), the sigil roundel over it, and the twin
+sigil plates inlaid in the court paving 40&nbsp;mm proud.</td>
+<td class="mono">150&nbsp;484</td><td class="mono ok">−44</td></tr>
+</table></div>
+
+<p class="note">Read the last column twice: <b>C adds a door, a roundel and two plates and is
+still 44 triangles lighter than what ships</b>, because B removed more coursing than C spends.</p>
+
+<h3>From the arrival, looking back <span class="tag grey">clay massing</span></h3>
+<p class="note">Untextured on purpose — these are massing candidates, and clay is how you judge a
+silhouette. The textured frames of the same view are in §1.</p>
+
+<div class="grid4">
+<figure><img src="cand-base-F2-lookback.png" alt="base">
+<figcaption><b>base.</b> The road runs into a scatter of loose cubes lying across it (the
+parapet), a ribbed slab, a stepped stack, a long thin shelf jutting right. Rubble on a
+road.</figcaption></figure>
+<figure><img src="cand-A-F2-lookback.png" alt="candidate A">
+<figcaption><b>A.</b> The cubes across the road are gone. The mass behind them is unchanged and
+still reads as ribs.</figcaption></figure>
+<figure><img src="cand-B-F2-lookback.png" alt="candidate B">
+<figcaption><b>B.</b> The ribs become one wall with a proud cap. Now it reads as a
+<em>wall</em>, and the road runs clear to it.</figcaption></figure>
+<figure><img src="cand-C-F2-lookback.png" alt="candidate C">
+<figcaption><b>C.</b> B, plus the two sigil plates in the paving and the timber leaf in the
+arch — the first thing on this frame that says which gate this is.</figcaption></figure>
+</div>
+
+<h3>From above <span class="tag grey">clay massing</span></h3>
+<div class="grid4">
+<figure><img src="cand-base-F4-high.png" alt="base from above"><figcaption><b>base.</b></figcaption></figure>
+<figure><img src="cand-A-F4-high.png" alt="A from above"><figcaption><b>A.</b></figcaption></figure>
+<figure><img src="cand-B-F4-high.png" alt="B from above"><figcaption><b>B.</b></figcaption></figure>
+<figure><img src="cand-C-F4-high.png" alt="C from above"><figcaption><b>C.</b></figcaption></figure>
+</div>
+
+<p>The patch that builds all three is <a href="candidates.valley_build.patch"><code>candidates.valley_build.patch</code></a>
+against <code>tools/valley_build.py</code>; the variant is chosen with
+<code class="mono">OLDGATE=base|A|B|C</code>. Nothing here has been applied to the shipped tile.</p>
+
+
+<h2>5 &nbsp;What none of the three fix</h2>
+
+<div class="card">
+<h3><span class="tag red">open</span> &nbsp;The court is still a raft</h3>
+<p>All three candidates were re-measured with the same flood fill. <b>None of them opens the
+court.</b> A, B and C move the walker's frontier from world x −42.4 to −43.2 and stop; the
+deck's own island stays six cells. The consequence, stated plainly:</p>
+<ul>
+<li>the arrival must stay <b>20.0u</b> past the gate, because anything nearer is inside the
+sealed component — that number is a measurement of today's geometry, not a design intent, and
+it is written next to the measurement in <code>valley.region.json</code>;</li>
+<li><b>the player cannot walk back into Emberbrook</b> through the Old Gate. The return portal
+sits on the far side of the raft. Chapter Two goes forward, so nothing soft-locks, but the door
+only works one way.</li>
+</ul>
+<p>The redesign's real job is therefore <em>not</em> a look: it is <b>a threshold</b> — the
+deck's two ends let down to the road they meet, in rises under 0.63u, so the court is a piece of
+the road rather than a table beside it. An apron was tried in this pass and made the island
+smaller, not larger; it is removed rather than shipped on a guess. Whoever takes this should
+start from the six-cell number, not from the picture.</p>
+</div>
+
+<p class="note" style="margin-top:2.4rem">Frames: shipped bundle for the textured ones,
+worktree builds for the clay. Fills: <code>tools/reach_probe.mjs</code> inside
+<code>play.html?scene=ow-valley&amp;rt=1</code>. Walk: <code>SIM.move()</code>, play3d's own
+<code>phys()</code>.</p>
+
+</div>

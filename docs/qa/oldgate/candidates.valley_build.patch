@@ -1,0 +1,123 @@
+diff --git a/tools/valley_build.py b/tools/valley_build.py
+index f6beea5..1d8b0c3 100644
+--- a/tools/valley_build.py
++++ b/tools/valley_build.py
+@@ -704,6 +704,24 @@ def build_old_gate(col, F, zg, fr):
+     wall-to-wall into living rock" is what makes it a seal rather than a fence, and
+     because a flush joint is the knife edge that made 2b's rectangle test lie twice.
+     """
++    # ---- OLD GATE REDESIGN CANDIDATES (docs/qa/oldgate/index.html) --------------
++    # OLDGATE=base|A|B|C.  Every candidate is a SUPERSET of the one before it, and
++    # every one of them ends with FEWER cubes in the wall than `base`, because the
++    # user's standing note on the last art round was that a candidate must make the
++    # existing thing good rather than add another thing.
++    #   A  OPEN THE ROAD      the downstream parapet is gapped where the ROAD crosses
++    #                         it, not where the doorway is.  Pure subtraction.
++    #   B  ONE WALL           the coursed stack becomes one solid + one coping + one
++    #                         plinth.  Fewer, larger boxes; a silhouette, not shelves.
++    #   C  DOOR AND SIGIL     B, plus the three marks the ratified concept
++    #                         (docs/qa/emberbrook/concepts/gate-final.png) identifies
++    #                         this gate by: the timber leaf swung open in the arch,
++    #                         the sigil roundel over it, the twin sigil plates in the
++    #                         court paving.  All flat; all cheaper than the wall saved.
++    VARIANT = os.environ.get("OLDGATE", "base").upper()
++    V_ROADGAP = VARIANT in ("A", "B", "C")
++    V_SOLID   = VARIANT in ("B", "C")
++    V_MARKS   = VARIANT in ("C",)
+     p = B.Prop("oldgate")
+     gw = VM.PORTALS["old-gate"]["at"]
+     i = int(np.argmin(np.hypot(VM.RIV_XY[:, 0] - gw[0], VM.RIV_XY[:, 1] - gw[1])))
+@@ -758,11 +776,27 @@ def build_old_gate(col, F, zg, fr):
+         oc, ow = (o0 + o1) / 2.0, abs(o1 - o0)
+         if ow < 0.05:
+             return
++        x_, y_ = at(oc)
++        if V_SOLID:
++            # ONE WALL, NOT A STACK.  The 0.55u courses with a +-0.06u jog were meant
++            # to read as coursing; at the overworld boom (dist 40) they read as a
++            # flight of shelves, and the player can STAND on them — measured, the
++            # arrival's own frame shows Vesper standing on top of the gatewall.  A
++            # wall you can stand on is not a seal.  Three boxes instead of six or
++            # seven: a plinth proud at the base, the shaft, and a coping proud at the
++            # top, which is what gives masonry its silhouette at distance.
++            h = z1 - z0
++            plin = min(0.55, h * 0.16)
++            cope = min(0.45, h * 0.13)
++            p.cube(STONE, (x_, y_, z0 + plin / 2.0), (thick + 0.30, ow, plin), rz=ang)
++            p.cube(STONE, (x_, y_, (z0 + plin + z1 - cope) / 2.0),
++                   (thick, ow, max(0.05, h - plin - cope)), rz=ang)
++            p.cube(STONE, (x_, y_, z1 - cope / 2.0), (thick + 0.34, ow + 0.10, cope), rz=ang)
++            return
+         n = max(1, int(round((z1 - z0) / 0.55)))          # courses, so it reads as built
+         for k in range(n):
+             zz = z0 + (z1 - z0) * (k + 0.5) / n
+             jog = 0.06 * (1 if k % 2 else -1)
+-            x_, y_ = at(oc)
+             p.cube(STONE, (x_, y_, zz), (thick + jog, ow, (z1 - z0) / n * 0.98), rz=ang)
+ 
+     # 1. the WEST CURTAIN, from the doorway's jamb into the living rock
+@@ -854,14 +888,63 @@ def build_old_gate(col, F, zg, fr):
+             p.cube(STONE, (x_, y_, oz), (0.55, (hw + 0.45) * 2 / 7 * 1.3, 0.42),
+                    rz=ang, rx=a_ + math.pi / 2)
+         # a low parapet along the court's downstream edge — the drop is right there
++        # WHERE THE ROAD CROSSES THIS EDGE, MEASURED — not assumed to be the doorway.
++        # The gap used to be cut at `door_c`, the ARCHED DOORWAY's offset, which is on
++        # the WEST bank.  The road comes through the doorway, crosses the court and
++        # leaves on the EAST bank, so the parapet stood across its own exit: measured
++        # in the running game, a 4.4u band of body-blocked cells at world x -44.9 to
++        # -40.9, and a flood fill from the Emberbrook side of it reaches neither the
++        # road below the gate nor Dellhollow.  The road's own offset at this edge is
++        # read off VM.ROAD_XY, so it follows the road if the map moves it.
++        road_o = door_c
++        if V_ROADGAP:
++            _r = VM.ROAD_XY - ctr
++            _bx = _r @ tg
++            _off = _r @ nl
++            _j = int(np.argmin(np.abs(_bx - court_to)))
++            road_o = float(_off[_j])
++        GAPW = max(DOOR * 0.75, VM.ROAD_WIDTH * 0.5 + 1.2)   # road half-width + a body
+         for s_ in (0,):
+             for k in range(11):
+                 o = e_end + (w_end - e_end) * (k + 0.5) / 11
+-                if abs(o - door_c) < DOOR * 0.75:          # the road comes off here
++                if abs(o - door_c) < DOOR * 0.75:          # the doorway's own opening
++                    continue
++                if V_ROADGAP and abs(o - road_o) < GAPW:   # and the road's
+                     continue
+                 x_, y_ = at(o, court_to)
+                 p.cube(STONE, (x_, y_, deck_z + 0.36), (0.42, (w_end - e_end) / 11 * 0.96, 0.72),
+                        rz=ang)
++        # ---- C: THE THREE MARKS THE CONCEPT IDENTIFIES THIS GATE BY -------------
++        # docs/qa/emberbrook/concepts/gate-final.png is RATIFIED art and the built
++        # gate carries none of its identity: no leaf in the arch, no sigil over it,
++        # no plates in the paving.  Chapter One's climax is TWO KEEPERS ON TWIN SIGIL
++        # PLATES opening this gate, and from the valley side there is nothing here
++        # that a player could recognise as the thing they just opened.  All three are
++        # FLAT — a leaf, a disc, two plates — and together they cost less geometry
++        # than the coursing candidate B already removed.
++        if V_MARKS:
++            # 1. THE LEAF, SWUNG OPEN.  It opened in Chapter One and it stays open:
++            #    two dark timber leaves laid back against the doorway's own reveals,
++            #    which is also why they cannot be walked into.
++            for s_ in (-1.0, 1.0):
++                ox = door_c + s_ * (DOOR / 2.0 - 0.22)
++                x_, y_ = at(ox, 0.62)
++                p.cube(WOOD, (x_, y_, wl + (jamb + 1.15 - wl) / 2.0),
++                       (0.34, DOOR * 0.44, jamb + 1.15 - wl), rz=ang)
++            # 2. THE SIGIL ROUNDEL, over the arch, on the court-side face.
++            x_, y_ = at(door_c, 0.80)
++            p.cone(EMIT, (x_, y_, jamb + 1.62), DOOR * 0.27, DOOR * 0.27, 0.16,
++                   seg=14, rz=ang, )
++            x_, y_ = at(door_c, 0.86)
++            p.cone(STONE, (x_, y_, jamb + 1.62), DOOR * 0.34, DOOR * 0.34, 0.22,
++                   seg=14, rz=ang)
++            # 3. THE TWIN PLATES, set in the court paving, one either side of the road
++            #    — the two keepers stood on these.  Proud of the deck by 40 mm so they
++            #    read as inlay, not as an obstacle: nothing here may block the road.
++            for s_ in (-1.0, 1.0):
++                ox = road_o + s_ * (VM.ROAD_WIDTH * 0.5 + 0.55)
++                x_, y_ = at(ox, (court_from + court_to) / 2.0)
++                p.cone(EMIT, (x_, y_, deck_z + 0.02), 0.62, 0.62, 0.08, seg=14, rz=ang)
+         STATS["oldgate_court_len_u"] = round(court_to - court_from, 2)
+         STATS["oldgate_court_span_u"] = round(w_end - e_end, 2)
+         STATS["oldgate_court_ends"] = [round(e_end, 2), round(w_end, 2)]
