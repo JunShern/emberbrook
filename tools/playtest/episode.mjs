@@ -314,6 +314,17 @@ export async function run(cfg) {
         }
         parts.push(`[${wx.toFixed(2)},${wy.toFixed(2)}] ${leg.arrived ? 'reached' : `only closed ${leg.closed} m of ${leg.intended} m`}`);
         if (!leg.arrived && leg.intended >= 3 && leg.closed < 0.75) {
+          /* A STARVED LEG IS NOT A BLOCKED PATH. If the executor's hard ceiling cut the
+           * slide short, it never learned whether the world refuses — see walkLeg's note
+           * and PT-20260803-010/011/012, three P1s filed off `bursts: 1` against ground
+           * that is open in every direction. Say it out loud in the run log, because a
+           * harness this slow is a finding about the machine, and carry on without a
+           * ticket. Only `exhausted` — all five headings pushed, nothing moved — may file. */
+          if (!leg.exhausted) {
+            log(`  leg not conclusive: ${leg.starved ? 'STARVED' : 'gave up'} after ${leg.bursts} burst(s) ` +
+                `at ~${leg.msPerBurst} ms/burst — no blocker filed (the headings were never all tried)`);
+            break;
+          }
           const cell = leg.target.map(v => Math.round(v / 3)).join(',');
           stallSeen.set(cell, (stallSeen.get(cell) || 0) + 1);
           if (stallSeen.get(cell) === 2) {
@@ -323,6 +334,8 @@ export async function run(cfg) {
               doing: `I tried to walk to a point on screen at [${wx.toFixed(2)}, ${wy.toFixed(2)}]; my goal was "${intent.goal || '(none stated)'}".`,
               expected: `To walk about ${leg.intended} m and arrive there.`,
               happened: `The character moved ${leg.travelled} m and stopped ${leg.remaining} m short — twice in this run. ` +
+                `All five headings were pushed (${leg.bursts} bursts at ~${leg.msPerBurst} ms each) and none of them ` +
+                'moved the body, so this is the world refusing rather than the harness running out of time. ' +
                 'Something is in the way, or that ground is not connected to where I was standing.',
               // THE CLAIM, IN THE FORM AN INSTRUMENT CAN MEASURE. Triage runs the
               // reachability probe over exactly this pair rather than re-deriving

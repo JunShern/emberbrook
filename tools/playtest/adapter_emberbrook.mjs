@@ -674,21 +674,42 @@ export function makeAdapter(opt) {
       const OFFSETS = [0, 1, -1, 2, -2];
       const OCT_KEYS = [['up'], ['up', 'right'], ['right'], ['down', 'right'],
                         ['down'], ['down', 'left'], ['left'], ['up', 'left']];
-      while (Date.now() - t0 < (budgetMs || 9000)) {
+      /* "BLOCKED" MEANS THE HEADINGS WERE TRIED AND REFUSED — NOT THAT THE CLOCK RAN OUT.
+       *
+       * The budget below is WALL CLOCK, but almost none of it is spent walking: it is
+       * spent on CDP round-trips. On a loaded machine one 150 ms burst plus its two
+       * position reads measured 7-66 SECONDS (run-20260803-122026, `ms` 14810-132928 for
+       * legs of one and two bursts), against ~500 ms on an idle one. So the old inner
+       * `if (elapsed > budget) break` fired after the FIRST heading, the slide never ran,
+       * and `moved < 0.10` was then read as "every heading refused: blocked". Three P1
+       * blockers (PT-20260803-010/011/012) were filed that way against ground the engine
+       * says is open in all 24 directions and that a real 150 ms burst crosses at 0.9 m.
+       * Their own payload recorded `bursts: 1`. ONE HEADING IS NOT EVERY HEADING.
+       *
+       * So a round of headings is never cut short by the ordinary budget. Only a hard
+       * ceiling stops it, and when that ceiling is what stopped it the leg says STARVED
+       * and is not allowed to be a blocker. Same rule as the frame gate: an instrument
+       * that could not look must say so rather than report what it did not see. */
+      const BUDGET = budgetMs || 9000;
+      const HARD = BUDGET * 6;                  // a full round of 5 headings, however slow the link
+      let exhausted = false, starved = false, rounds = 0;
+      while (Date.now() - t0 < BUDGET) {
         const st = await ev(`window.__pt.dirTo(${JSON.stringify(h.p)})`, 15000);
         if (st.dist <= ARRIVE_M) break;
-        let moved = 0, now = last;
+        let moved = 0, now = last, tried = 0;
         for (const off of OFFSETS) {
-          await hold(OCT_KEYS[(((st.oct + off) % 8) + 8) % 8], BURST_MS); bursts++;
+          await hold(OCT_KEYS[(((st.oct + off) % 8) + 8) % 8], BURST_MS); bursts++; tried++;
           now = await ev(`window.__pt.where()`, 15000);
           moved = Math.hypot(now[0] - last[0], now[2] - last[2]);
           if (moved >= 0.10) { if (off !== 0) slides++; break; }
-          if (Date.now() - t0 > (budgetMs || 9000)) break;
+          if (Date.now() - t0 > HARD) { starved = true; break; }
         }
+        rounds++;
         last = now;
         const d = Math.hypot(h.p[0] - now[0], h.p[2] - now[2]);
         if (d < best - 0.15) { best = d; sinceGain = 0; } else sinceGain++;
-        if (moved < 0.10) break;                  // every heading refused: blocked
+        // Every heading refused — but only say so if every heading was actually TRIED.
+        if (moved < 0.10) { exhausted = (tried === OFFSETS.length && !starved); break; }
         if (sinceGain >= 8) break;                // moving, but not getting closer
         // A camera cut, a doorway or a story beat changes the world under the leg.
         if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`, 15000)) break;
@@ -703,7 +724,13 @@ export function makeAdapter(opt) {
         intended: +d0.toFixed(2), remaining: +dEnd.toFixed(2), closed: +(d0 - dEnd).toFixed(2),
         travelled: +Math.hypot(end[0] - from[0], end[2] - from[2]).toFixed(2),
         closedFrac: d0 > 0.5 ? +((d0 - dEnd) / d0).toFixed(2) : 1,
-        bursts, slides, arrived: dEnd <= ARRIVE_M, ms: Date.now() - t0 };
+        bursts, slides, rounds, arrived: dEnd <= ARRIVE_M, ms: Date.now() - t0,
+        // THE TWO WORDS THAT MAY NOT BE CONFUSED, and the per-burst cost that decides
+        // which one it is. `exhausted`: all five headings pushed, the body did not move
+        // — the world refused, and this is the finding worth filing. `starved`: the
+        // round was cut off by the hard ceiling, so what the world would have done is
+        // UNKNOWN and no blocker may be built on it.
+        exhausted, starved, msPerBurst: bursts ? Math.round((Date.now() - t0) / bursts) : null };
     },
 
     /* Read a whole conversation with real presses and hand back the transcript. A
