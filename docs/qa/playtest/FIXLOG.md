@@ -935,7 +935,7 @@ only thing on screen saying which was an anonymous red triangle.
 
 #### The measurement: what is visible along the corridor
 
-`scratchpad/r5/corridor_probe.mjs` — boots `ow-valley` with Chapter One's flags set, teleports to
+`tools/playtest/marker_probe.mjs` — boots `ow-valley` with Chapter One's flags set, teleports to
 eight stations along the 141 m from the arrival to the Dellhollow gate, sets the camera yaw the
 way play3d's own heading-follow would have it for a player walking the road, and reads **the
 marker layer's own DOM output** (`#exit-markers`), so the probe cannot drift from `markersTick`.
@@ -1026,8 +1026,9 @@ reading **`Enter Dellhollow`**.
 the hollow towards the locks"* — which from that camera reads as down the river — walked **past**
 the gate and down the riverbed, and spent steps 5–60 at y −2 to −4.6 while the gate stands at
 y 12.65. It filed `PT-20260803-025` and `-026`: *"the player and camera ended up underneath the
-level geometry"*. Measured (`scratchpad/r5/underworld.mjs`, sweeping `SIM.ground` over a column
-of `fy` and taking the distinct surfaces):
+level geometry"*. Measured (sweeping `SIM.ground(x,z,fy)` over a column of `fy` from −12 to 34
+and taking the distinct surfaces — a single high cast finds nothing, because `ground`
+settles within a window around `fy`):
 
 ```
   gate      [44.9,-36.2]  floor stack 4.15 .. 16.17   zone crag
