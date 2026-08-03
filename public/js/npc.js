@@ -404,17 +404,73 @@
   //
   // TINT, for a borrowed body: the plate path multiplies its texture by body.tint,
   // and this does exactly the same thing to the model's base colour, for the same
-  // reason (the expansion script's "reuse the sheet, tint it" device). Every load
-  // gets its own materials — GLTFLoader does not share across calls — so this
-  // never reaches through to another villager wearing the same file.
+  // reason (the expansion script's "reuse the sheet, tint it" device). A tinted
+  // figure gets CLONED materials (see cloneBody) so this never reaches through to
+  // another villager wearing the same file.
+  //
+  // ============================================================================
+  // ONE GLB PER FILE, NOT ONE PER PERSON.  (2026-08-03 — the renderer-collapse fix)
+  //
+  // This function used to mint `new T.GLTFLoader()` and call `.load(body.src)` for
+  // EVERY figure. npcs.json posts 29 villagers across FOUR distinct bodies, and
+  // each of those bodies is a 12 MB GLB carrying THREE 4096x4096 maps — 257 MB of
+  // decoded texture per instance. GLTFLoader shares nothing across calls, so a
+  // town paid that 257 MB once per PERSON.
+  //
+  // MEASURED, not reasoned (tools/npc_mem_gate.mjs, real GPU, macOS physical
+  // footprint via vmmap — `ps rss` overcounts shared IOSurface pages and is not
+  // the instrument): emb-cine booted at renderer 2867 MB + gpu-process 3379 MB =
+  // 6.2 GB, and blocking js/npc.js over CDP dropped the renderer to 302 MB. Eight
+  // figures x 257 MB is the 2 GB. On the author's M1 Max that is 6 GB of unified
+  // memory and the machine merely swaps; on a weaker machine it is the hang the
+  // playtest harness photographed as a 103-second scene transition.
+  //
+  // THE CACHE IS SCENE-SCOPED ON PURPOSE. Page-scoped would be a bigger win and
+  // would break the disposal contract this module is built on: transition_test
+  // requires renderer.info to return to baseline across every door, and a master
+  // held past dropScene() is exactly the leak that gate exists to catch.
+  var modelCache = Object.create(null);       // src -> Promise<gltf>, THIS scene's
+  function modelMaster(src) {
+    if (modelCache[src]) return modelCache[src];
+    return (modelCache[src] = new Promise(function (res) {
+      var T = TH(), L = null;
+      try { L = new T.GLTFLoader(); } catch (e) { }
+      if (!L) return res(null);
+      L.load(src, function (g) { res(g); }, null, function () { res(null); });
+    }));
+  }
+  // Object3D.clone() shares geometry and material by reference — which is the whole
+  // point — but it leaves every SkinnedMesh bound to the SOURCE's bones, so N clones
+  // animate as one. This is three.js's own SkeletonUtils.clone recipe, inlined
+  // because this repo ships three.min.js + GLTFLoader and nothing else.
+  function parallelTraverse(a, b, cb) {
+    cb(a, b);
+    for (var i = 0; i < a.children.length && i < b.children.length; i++)
+      parallelTraverse(a.children[i], b.children[i], cb);
+  }
+  function cloneBody(source) {
+    var srcOf = new Map(), cloneOf = new Map();
+    var out = source.clone(true);
+    parallelTraverse(source, out, function (s, c) { srcOf.set(c, s); cloneOf.set(s, c); });
+    out.traverse(function (node) {
+      if (!node.isSkinnedMesh) return;
+      var sm = srcOf.get(node); if (!sm || !sm.skeleton) return;
+      var bones = sm.skeleton.bones;
+      node.skeleton = sm.skeleton.clone();
+      node.bindMatrix.copy(sm.bindMatrix);
+      node.skeleton.bones = bones.map(function (b) { return cloneOf.get(b) || b; });
+      node.bind(node.skeleton, node.bindMatrix);
+    });
+    return out;
+  }
   function loadModel(P, body, ep) {
     var T = TH();
-    return new Promise(function (res) {
-      var L = null;
-      try { L = new T.GLTFLoader(); } catch (e) { }
-      if (!L) { missing.push(P.id); return res(P); }
-      L.load(body.src, function (g) {
-        if (ep !== EPOCH) { disposeTree(g.scene); return res(P); }  // arrived for a scene we left
+    return modelMaster(body.src).then(function (master) {
+      if (!master || !master.scene) { missing.push(P.id); return P; }
+      if (ep !== EPOCH) return P;                 // arrived for a scene we left; the
+                                                 // CACHE owns the master, not us
+      return new Promise(function (res) {
+        var g = { scene: cloneBody(master.scene), animations: master.animations };
         var o = g.scene;
         var box = new T.Box3().setFromObject(o), sz = new T.Vector3(); box.getSize(sz);
         // body.h wins over the record's height so a shared record can carry a
@@ -433,8 +489,19 @@
           c.frustumCulled = false;
           c.castShadow = false; c.receiveShadow = false;
           if (!tint) return;
+          // THE ONE THING THE CLONE MAY NOT SHARE. Materials come across by
+          // reference, so multiplying in place would tint every OTHER villager
+          // wearing this file — and compound once per wearer. Material.clone()
+          // copies the map references, so the tinted figure still costs no
+          // second texture upload; the clone is inside GROUP and dies with it.
           var ms = Array.isArray(c.material) ? c.material : [c.material];
-          for (var i = 0; i < ms.length; i++) if (ms[i] && ms[i].color) ms[i].color.multiply(tint);
+          var out = [];
+          for (var i = 0; i < ms.length; i++) {
+            var m = ms[i] ? ms[i].clone() : ms[i];
+            if (m && m.color) m.color.multiply(tint);
+            out.push(m);
+          }
+          c.material = Array.isArray(c.material) ? out : out[0];
         });
         P.bob.add(o); P.mesh = o; P.model = true; P.h = targetH; P.w = Math.max(sz.x, sz.z) || targetH * 0.5;
         P.art = true;
@@ -442,7 +509,7 @@
         P.shadow.scale.set(sw, sw * 0.62, 1);
         buildMixer(P, g.animations || []);
         res(P);
-      }, null, function () { missing.push(P.id); res(P); });
+      });
     });
   }
 
@@ -796,6 +863,20 @@
       GROUP = null;
     }
     if (shadowTex) { try { shadowTex.dispose(); } catch (e) { } shadowTex = null; }
+    // THE MASTER BODIES. Each is a GLB the figures above were CLONED from, and it
+    // is not in GROUP, so nothing above has disposed it — a cache that outlives
+    // the scene is the leak transition_test counts, and it would be a 257 MB one.
+    // A master still in flight is disposed WHEN IT LANDS: the figure continuation
+    // sees ep !== EPOCH and returns without touching it, precisely so the cache
+    // stays the only owner.
+    var stale = modelCache; modelCache = Object.create(null);
+    for (var k in stale) {
+      try {
+        Promise.resolve(stale[k]).then(function (g) {
+          if (g && g.scene) { try { disposeTree(g.scene); } catch (e) { } }
+        }, function () { });
+      } catch (e) { }
+    }
     PEOPLE = [];
     built = false; building = false;
     // the banner is per-scene too: walking out of the town with "Talk to Odessa"
