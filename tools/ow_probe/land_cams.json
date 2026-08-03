@@ -1,0 +1,18 @@
+{
+ "_doc": [
+  "THE FOUR OVERWORLD LANDSCAPE CAMERAS, written down at last.",
+  "docs/qa/ow-land was measured on four viewpoints that were never recorded anywhere, so",
+  "the landing lane could not reproduce them and had to re-derive its own baseline. These",
+  "are the re-derived four, pinned to ROAD STATIONS of tools/valley_map.py's ValleyField so",
+  "they survive a map edit: station 12 is the Emberbrook gate portal, 126 the gorge shelf,",
+  "168 the Dellhollow approach. yaw is the road tangent (the same formula valley_export.py",
+  "uses for the spawn), pitch 0.61 is the shipped follow camera.",
+  "Expand with tools/ow_probe/land_spec.py; capture with tools/ow_probe/ow_multi.mjs."
+ ],
+ "cams": [
+  {"key": "gate",  "station": 12,  "x": -57.43, "z": 65.55,  "yaw": -1.5426, "pitch": 0.61, "dist": 16, "note": "Emberbrook gate portal, boom 16 — the grass/sand cut"},
+  {"key": "close", "station": 126, "x": 5.57,   "z": -12.36, "yaw": -2.3984, "pitch": 0.61, "dist": 12, "note": "gorge shelf at walking closeness, boom 12"},
+  {"key": "far",   "station": 126, "x": 5.57,   "z": -12.36, "yaw": -2.3984, "pitch": 0.61, "dist": 40, "note": "gorge shelf at the SHIPPED follow camera, boom 40"},
+  {"key": "dell",  "station": 168, "x": 40.64,  "z": -33.52, "yaw": -2.5784, "pitch": 0.61, "dist": 40, "note": "Dellhollow approach, boom 40"}
+ ]
+}

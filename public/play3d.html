@@ -1115,9 +1115,15 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       skyMesh.renderOrder=-1000; skyMesh.name='__owsky'; scene.add(skyMesh);
       SCENEMATS.add(skyMesh.material); OWSKYMESH.add(skyMesh);
       scene.background=HOR.clone();
-      // Fog: starts past the playable valley so gameplay reads crisp, and is
-      // total by the far ridges. Colour = horizon, or the seam is visible.
-      scene.fog=new THREE.Fog(HOR.getHex(), 150, 340);
+      // AIR (L1, docs/qa/ow-land — landed 2026-08-03).  This fog USED to start at
+      // 150 m so "gameplay reads crisp"; the walked corridor is 172 m end to end,
+      // so it never ran: the ow-land probe measured NOT ONE FOGGED PIXEL on any of
+      // the four cameras. Aerial perspective is most of what carries reference 3,
+      // and a haze that begins beyond the world is a haze that was never built.
+      // 34/205, and the colour is its own — convertSRGBToLinear'd, unlike the dome's
+      // HOR, which is a painted constant on a toneMapped:false material.
+      scene.fog=new THREE.Fog(0xd3e0e8, 34, 205);
+      scene.fog.color.copy(new THREE.Color(0xd3e0e8).convertSRGBToLinear());
       // Distant ridges: three rings, receding toward the sky colour.
       const RING=[{r:210,h:26,c:0x6e7f96,n:13},{r:270,h:34,c:0x93a6b6,n:11},{r:320,h:44,c:0xb4c5d2,n:9}];
       for(const R_ of RING){
@@ -1189,9 +1195,31 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
                      dl:dl.intensity, dlC:dl.color.clone(),
                      hemi:RTLIGHT.intensity, shadows:R.shadowMap.enabled};
       dl.color.setRGB(1.0,0.70,0.42); dl.intensity=2.60;   // the towns' own sun
-      AMBIENT.color.setRGB(0.45,0.55,0.72); AMBIENT.intensity=0.32;
-      RTLIGHT.color.setRGB(0.62,0.76,0.95);
-      RTLIGHT.groundColor.setRGB(0.34,0.27,0.18); RTLIGHT.intensity=0.55;
+      // ------------------------------------------------------------------
+      // L1 — THE HOUR (docs/qa/ow-land, landed 2026-08-03). THE KEY IS NOT
+      // TOUCHED: its angle and colour are the towns' ratified golden hour and
+      // this is not the lane that re-decides them. What changed is everything
+      // the key does NOT reach. The ow-land probe measured three of our four
+      // DAYLIGHT cameras darker than the reference's NIGHT plate (L50 0.204 /
+      // 0.236 / 0.243 against Treno's 0.245), with b-r negative in BOTH the dark
+      // and the light quartile of every frame — nothing in the corridor was cool.
+      // The fill is raised, made properly blue, and raised ON THE HEMISPHERE
+      // rather than on the ambient: a hemisphere is directional, so it keeps the
+      // top-to-bottom gradient that gives a solid its form, while flat ambient is
+      // exactly the "1.70 of omnidirectional fill" mistake named above.
+      // Measured L05 (the shadows) roughly DOUBLES on every camera.
+      AMBIENT.color.setRGB(0.30,0.42,0.72); AMBIENT.intensity=0.34;
+      RTLIGHT.color.setRGB(0.50,0.68,1.00);
+      RTLIGHT.groundColor.setRGB(0.52,0.42,0.30); RTLIGHT.intensity=1.25;
+      // THE BOUNCE: one dim, cool, SHADOWLESS light from roughly opposite the key
+      // at a low elevation — the second thing every reference frame has that we
+      // did not, namely a shadowed vertical face that is not flat. It casts
+      // nothing, so it costs a shader loop and no shadow pass. Scene-scoped and
+      // torn down beside RTLIGHT: added blind on every swap it would stack.
+      OWBOUNCE=new THREE.DirectionalLight(0x000000, 0);
+      OWBOUNCE.color.setRGB(0.44,0.60,0.92); OWBOUNCE.intensity=0.85;
+      OWBOUNCE.position.set(0.62,0.34,0.71); OWBOUNCE.castShadow=false;
+      OWBOUNCE.name='__ow_bounce'; scene.add(OWBOUNCE);
       // fill is COOL against a warm key on purpose: that split is what golden
       // hour actually is, and it is what keeps a shadowed face readable instead
       // of merely dark (the el-24 probe's murk was a neutral fill, not a low sun).
@@ -1382,7 +1410,7 @@ function disposeGltf(root){
     if(o.userData){ disposeMaterial(o.userData.hideMat); disposeMaterial(o.userData.dbgMat); }
   });
 }
-let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null, OWSUN=null;
+let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null, OWSUN=null, OWBOUNCE=null;
 // THE SKY PROBE'S OWN MESHES. Added 2026-08-02 after `transition_test` caught the
 // first version leaking: its MATERIALS went into SCENEMATS (mats delta 0, clean)
 // but its GEOMETRIES were disposed by nothing, so renderer.info climbed +4 per
@@ -1426,6 +1454,10 @@ function sceneDispose(){
   for(const m of SCENEMATS) disposeMaterial(m);
   SCENEMATS.clear();
   if(RTLIGHT){ scene.remove(RTLIGHT); if(RTLIGHT.dispose)RTLIGHT.dispose(); RTLIGHT=null; }
+  // L1's cool bounce is scene-scoped for RTLIGHT's own reason: added blind on every
+  // swap it would stack, and an overworld re-entered three times would be lit by
+  // three of them.
+  if(OWBOUNCE){ scene.remove(OWBOUNCE); if(OWBOUNCE.dispose)OWBOUNCE.dispose(); OWBOUNCE=null; }
   // backdrop + every cached shot's art pair. The quad itself is a page singleton
   // (see DEPTHQ) — it is unparented here and re-added by the next setDepth().
   scene.background=null; bgSaved=null;
