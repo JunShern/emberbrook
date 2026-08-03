@@ -727,7 +727,18 @@ export function makeAdapter(opt) {
       // frame gate above has already said `ready:false`, so layer 3 will not pay a
       // model to read it.
       const percept = await evSoft(PERCEPT_JS, EV_MS, EMPTY_PERCEPT) || EMPTY_PERCEPT;
-      const r = await raced('Page.captureScreenshot', { format: 'jpeg', quality: 72 }, EV_MS, 'captureScreenshot');
+      // NO PICTURE IS AN OBSERVATION, NOT AN EXCEPTION. A capture the compositor never
+      // answered is the same fact as a black frame — the harness could not see — and it
+      // travels the same way, as `ready:false` with a reason, so the runner's blindness
+      // counter handles it instead of a stack trace ending the run.
+      let r;
+      try { r = await raced('Page.captureScreenshot', { format: 'jpeg', quality: 72 }, EV_MS, 'captureScreenshot'); }
+      catch (e) {
+        if (!e.pageSilent) throw e;
+        return { screenshot: null, text: flattenPercept(percept), percept, framePath: null,
+          ready: false, why: [...(g.why || []), 'the page never returned a screenshot: ' + e.message],
+          frozen: g.frozen, meanL: null, waitedMs: g.waitedMs };
+      }
       let framePath = null;
       if (framesDir) {
         mkdirSync(framesDir, { recursive: true });
@@ -752,29 +763,37 @@ export function makeAdapter(opt) {
        * ask the question — readiness plus the measured luminance of a real screenshot
        * — so the leg asks it FIRST and refuses to start rather than mis-measuring.
        * `starved`, never `exhausted`: what the world would have done is unknown. */
+      /* THE PROLOGUE IS AS STARVABLE AS THE LOOP, and one raced call in it that nobody
+       * caught took a probe's whole process down through the adapter's own
+       * uncaughtException handler. The gate above and this guard are not redundant:
+       * the gate can pass and the page go quiet in the same breath — measured, under
+       * load 37, between `ready` and the first UILOCK read. A leg that cannot even ask
+       * its questions is `starved`, like every other leg that could not look. */
+      const unrun = (why, waitedMs) => ({ ok: false, nx, ny, reason: 'unready', starved: true,
+        exhausted: false, detail: 'the walk never started: ' + why.join('; '), starvedWhy: why,
+        intended: 0, closed: 0, bursts: 0, msPerBurst: null, waitedMs });
       const pre = await waitForFrame(FRAME_BUDGET_MS);
-      if (!pre.ready)
-        return { ok: false, nx, ny, reason: 'unready', starved: true, exhausted: false,
-          detail: 'the walk never started: ' + pre.why.join('; '), starvedWhy: pre.why,
-          intended: 0, closed: 0, bursts: 0, msPerBurst: null, waitedMs: pre.waitedMs };
-      try { await ev(INSTALL_MOTOR); }
-      catch (e) { if (!e.pageSilent) throw e;
-        return { ok: false, nx, ny, reason: 'unready', starved: true, exhausted: false,
-          detail: 'the page stopped answering before the walk started', starvedWhy: [e.message],
-          intended: 0, closed: 0, bursts: 0, msPerBurst: null }; }
-      // A LEG THAT NEVER GOT TO RUN IS NOT A BLOCKED PATH. If a beat fired or a
-      // conversation opened between the screenshot and the first key, phys() is
-      // frozen under UILOCK and the body cannot move — recording that as "closed
-      // 0 m of 15 m" would manufacture a blocker out of a cutscene. Measured on the
-      // first bring-up run: the waystone beat fired mid-route and produced exactly
-      // that false leg.
-      if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`))
-        return { ok: false, nx, ny, reason: 'modal', detail: 'the game took control before the walk started', intended: 0, closed: 0 };
-      // The pixel-to-world march is 640 BVH queries on the page's own main thread —
-      // the one expensive read in this loop, and it gets a budget of its own.
-      const h = await ev(`window.__pt.hit(${nx},${ny})`, 30000);
-      if (!h.ok) return { ok: false, nx, ny, reason: 'unprojection', detail: h.reason, intended: 0, closed: 0 };
-      const from = await ev(`window.__pt.where()`);
+      if (!pre.ready) return unrun(pre.why, pre.waitedMs);
+      let h, from;
+      try {
+        await ev(INSTALL_MOTOR);
+        // A LEG THAT NEVER GOT TO RUN IS NOT A BLOCKED PATH. If a beat fired or a
+        // conversation opened between the screenshot and the first key, phys() is
+        // frozen under UILOCK and the body cannot move — recording that as "closed
+        // 0 m of 15 m" would manufacture a blocker out of a cutscene. Measured on the
+        // first bring-up run: the waystone beat fired mid-route and produced exactly
+        // that false leg.
+        if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`))
+          return { ok: false, nx, ny, reason: 'modal', detail: 'the game took control before the walk started', intended: 0, closed: 0 };
+        // The pixel-to-world march is 640 BVH queries on the page's own main thread —
+        // the one expensive read in this loop, and it gets a budget of its own.
+        h = await ev(`window.__pt.hit(${nx},${ny})`, 30000);
+        if (!h.ok) return { ok: false, nx, ny, reason: 'unprojection', detail: h.reason, intended: 0, closed: 0 };
+        from = await ev(`window.__pt.where()`);
+      } catch (e) {
+        if (!e.pageSilent) throw e;
+        return unrun([e.message]);
+      }
       const d0 = Math.hypot(h.p[0] - from[0], h.p[2] - from[2]);
       const t0 = Date.now();
       let best = d0, sinceGain = 0, last = from, bursts = 0, slides = 0;
@@ -902,8 +921,12 @@ export function makeAdapter(opt) {
       return seen;
     },
 
-    async press(name) { await tap(name); await sleep(700); },
-    async menuDown(n) { for (let i = 0; i < n; i++) { await tap('down'); await sleep(120); } },
+    /* A KEYPRESS THE PAGE NEVER ACKED IS NOT A RUN-ENDING EVENT. The renderer's main
+     * thread acks Input.dispatchKeyEvent, so a press starves exactly like a read; the
+     * next observe() will report the unpainted frame and the runner already knows what
+     * to do with that. Throwing here instead took the whole process down. */
+    async press(name) { try { await tap(name); } catch (e) { if (!e.pageSilent) throw e; } await sleep(700); },
+    async menuDown(n) { for (let i = 0; i < n; i++) { try { await tap('down'); } catch (e) { if (e.pageSilent) break; throw e; } await sleep(120); } },
 
     /* PICK ENTRY N OF THE LIST THAT IS OPEN. The agent is shown numbered entries and
      * where the cursor is; it does not count keypresses. menuDown(index) only landed
@@ -922,8 +945,11 @@ export function makeAdapter(opt) {
         if(v) return sel(v.querySelectorAll('.ebui-row,.ebui-choice,li,.row,.choice'));
         return -1; })()`, EV_MS, -1);
       const d = index - (at >= 0 ? at : 0);
-      for (let i = 0; i < Math.abs(d); i++) { await tap(d > 0 ? 'down' : 'up'); await sleep(130); }
-      await tap('e'); await sleep(700);
+      try {
+        for (let i = 0; i < Math.abs(d); i++) { await tap(d > 0 ? 'down' : 'up'); await sleep(130); }
+        await tap('e');
+      } catch (e) { if (!e.pageSilent) throw e; return { from: at, to: index, unacked: true }; }
+      await sleep(700);
       return { from: at, to: index };
     },
 
