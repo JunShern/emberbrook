@@ -452,10 +452,22 @@
    "else": "pell.again",
    "speaker": "pell",
    "lines": [
-    "Watchman. Night shift. It is presently day, which is why I'm holding a wick-knife and a grudge.",
-    "Every wick, every noon, so they burn every night. That's the whole trade.",
-    "No ceremony to it, friend. Oil goes in, light comes out.",
-    "And I'd thank the town to remember who carries the ladder."
+    {
+     "text": "Watchman. Night shift. It is presently day, which is why I'm holding a wick-knife and a grudge.",
+     "expr": "wry"
+    },
+    {
+     "text": "Every wick, every noon, so they burn every night. That's the whole trade.",
+     "expr": "tired"
+    },
+    {
+     "text": "No ceremony to it, friend. Oil goes in, light comes out.",
+     "expr": "tired"
+    },
+    {
+     "text": "And I'd thank the town to remember who carries the ladder.",
+     "expr": "wry"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -467,7 +479,10 @@
   "pell.again": {
    "speaker": "pell",
    "lines": [
-    "Sleep's for the day shift — which is now. Which is the grudge."
+    {
+     "text": "Sleep's for the day shift — which is now. Which is the grudge.",
+     "expr": "tired"
+    }
    ],
    "next": "pell.ask"
   },
@@ -492,15 +507,24 @@
   "pell.count": {
    "speaker": "pell",
    "lines": [
-    "Two hundred and six, counting the strings over the water. I don't count those out loud.",
-    "One ladder. One me. You do the sum and then you understand my face."
+    {
+     "text": "Two hundred and six, counting the strings over the water. I don't count those out loud.",
+     "expr": "tired"
+    },
+    {
+     "text": "One ladder. One me. You do the sum and then you understand my face.",
+     "expr": "wry"
+    }
    ],
    "next": "pell.ask"
   },
   "pell.nights": {
    "speaker": "pell",
    "lines": [
-    "Quiet enough. Gulls arguing, water working, somebody laughing at the cookhouse too late.",
+    {
+     "text": "Quiet enough. Gulls arguing, water working, somebody laughing at the cookhouse too late.",
+     "expr": "tired"
+    },
     "A town with its lamps lit doesn't need much watching. That's the point of the lamps."
    ],
    "next": "pell.ask"
@@ -631,8 +655,14 @@
    "else": "nib.again",
    "speaker": "nib",
    "lines": [
-    "That one's Bailiff, that one's Soup. The big one's called the Harbormistress.",
-    "Don't TELL the harbormistress.",
+    {
+     "text": "That one's Bailiff, that one's Soup. The big one's called the Harbormistress.",
+     "expr": "happy"
+    },
+    {
+     "text": "Don't TELL the harbormistress.",
+     "expr": "scared"
+    },
     "You're littler than the quay said."
    ],
    "effects": {
@@ -645,7 +675,10 @@
   "nib.again": {
    "speaker": "nib",
    "lines": [
-    "Soup! SOUP! …He knows his name. He just doesn't respect it."
+    {
+     "text": "Soup! SOUP! …He knows his name. He just doesn't respect it.",
+     "expr": "indignant"
+    }
    ],
    "next": "nib.ask"
   },
@@ -670,7 +703,10 @@
   "nib.office": {
    "speaker": "nib",
    "lines": [
-    "Me. Nobody said so, but nobody else does it, so it's me.",
+    {
+     "text": "Me. Nobody said so, but nobody else does it, so it's me.",
+     "expr": "happy"
+    },
     "They go in order, biggest at the top. Everybody slides down one when a bigger one lands."
    ],
    "next": "nib.ask"
@@ -679,7 +715,10 @@
    "speaker": "nib",
    "lines": [
     "Eels. Then more eels. Then the deep stairs, and you're not allowed up them.",
-    "I'm not allowed either. That's different, because I already went."
+    {
+     "text": "I'm not allowed either. That's different, because I already went.",
+     "expr": "happy"
+    }
    ],
    "next": "nib.ask"
   },
@@ -690,9 +729,18 @@
    "else": "eelwife.again",
    "speaker": "eelwife",
    "lines": [
-    "Two for a penny! Three if you carry them, and no, I won't skin them for you.",
-    "You weren't buying. I priced you anyway — it's the principle of the stall.",
-    "That cat's been fed twice today. We have an understanding and no witnesses."
+    {
+     "text": "Two for a penny! Three if you carry them, and no, I won't skin them for you.",
+     "expr": "happy"
+    },
+    {
+     "text": "You weren't buying. I priced you anyway — it's the principle of the stall.",
+     "expr": "scowl"
+    },
+    {
+     "text": "That cat's been fed twice today. We have an understanding and no witnesses.",
+     "expr": "sly"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -704,7 +752,10 @@
   "eelwife.again": {
    "speaker": "eelwife",
    "lines": [
-    "Still two for a penny. The river hasn't changed its mind and neither have I."
+    {
+     "text": "Still two for a penny. The river hasn't changed its mind and neither have I.",
+     "expr": "scowl"
+    }
    ],
    "next": "eelwife.ask"
   },
@@ -725,8 +776,14 @@
   "eelwife.trade": {
    "speaker": "eelwife",
    "lines": [
-    "Boats stopped, mouths didn't. Best nineteen days I've had and I'll deny saying it.",
-    "Ask me in the spring and I'll tell you it was a hardship. It will be true by then."
+    {
+     "text": "Boats stopped, mouths didn't. Best nineteen days I've had and I'll deny saying it.",
+     "expr": "sly"
+    },
+    {
+     "text": "Ask me in the spring and I'll tell you it was a hardship. It will be true by then.",
+     "expr": "happy"
+    }
    ],
    "next": "eelwife.ask"
   },
@@ -737,9 +794,15 @@
    "else": "boatwright.again",
    "speaker": "boatwright",
    "lines": [
-    "Mind the pitch kettle. It's hot, it's mine, and it doesn't care which.",
+    {
+     "text": "Mind the pitch kettle. It's hot, it's mine, and it doesn't care which.",
+     "expr": "grave"
+    },
     "Two hulls in frames, one waiting on oak. Nothing goes back in the water dry.",
-    "Nineteen days of stopped boats is nineteen days of stopped boats getting mended."
+    {
+     "text": "Nineteen days of stopped boats is nineteen days of stopped boats getting mended.",
+     "expr": "happy"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -751,7 +814,10 @@
   "boatwright.again": {
    "speaker": "boatwright",
    "lines": [
-    "Still ribs and tar. Come back when there's a hull worth looking at."
+    {
+     "text": "Still ribs and tar. Come back when there's a hull worth looking at.",
+     "expr": "happy"
+    }
    ],
    "next": "boatwright.ask"
   },
@@ -776,8 +842,14 @@
   "boatwright.time": {
    "speaker": "boatwright",
    "lines": [
-    "Frames in a week, planking in a month. Trust in about ten years.",
-    "You don't build a boat fast up here. The river checks your work personally."
+    {
+     "text": "Frames in a week, planking in a month. Trust in about ten years.",
+     "expr": "happy"
+    },
+    {
+     "text": "You don't build a boat fast up here. The river checks your work personally.",
+     "expr": "grave"
+    }
    ],
    "next": "boatwright.ask"
   },
@@ -785,7 +857,10 @@
    "speaker": "boatwright",
    "lines": [
     "Pitch. You'll taste it for a day and then you'll stop noticing forever.",
-    "Half this town smells of tar and the other half married into it."
+    {
+     "text": "Half this town smells of tar and the other half married into it.",
+     "expr": "happy"
+    }
    ],
    "next": "boatwright.ask"
   },
@@ -834,7 +909,10 @@
    "speaker": "chandler",
    "lines": [
     "Chandlery. Oil, rope, pitch, and whatever else the river takes off you.",
-    "Half this floor hangs over the gorge on brackets. It's held ninety years. Don't jump."
+    {
+     "text": "Half this floor hangs over the gorge on brackets. It's held ninety years. Don't jump.",
+     "expr": "wry"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -846,7 +924,10 @@
   "chandler.again": {
    "speaker": "chandler",
    "lines": [
-    "Oil's fresh, rope's dry, floor's still up. Same as yesterday."
+    {
+     "text": "Oil's fresh, rope's dry, floor's still up. Same as yesterday.",
+     "expr": "wry"
+    }
    ],
    "next": "chandler.ask"
   },
@@ -870,7 +951,10 @@
   "chandler.looking": {
    "speaker": "chandler",
    "lines": [
-    "Look all you like. Everyone leaves with rope eventually."
+    {
+     "text": "Look all you like. Everyone leaves with rope eventually.",
+     "expr": "happy"
+    }
    ]
   },
   "weaponsmith.hail": {
@@ -975,7 +1059,10 @@
    "speaker": "del.deckhand",
    "lines": [
     "Nineteen days ashore. I've read that notice board twice and it hasn't improved.",
-    "Three shops on this street, and I've been in all of them. I've bought a whistle."
+    {
+     "text": "Three shops on this street, and I've been in all of them. I've bought a whistle.",
+     "expr": "happy"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -1062,7 +1149,10 @@
    "else": "del.gullgirl.again",
    "speaker": "del.gullgirl",
    "lines": [
-    "That's my stick. I found it — don't ask where, it was in the river.",
+    {
+     "text": "That's my stick. I found it — don't ask where, it was in the river.",
+     "expr": "happy"
+    },
     "The boy on the dock says he runs the gulls. He doesn't run anything."
    ],
    "effects": {
@@ -1074,7 +1164,10 @@
   "del.gullgirl.again": {
    "speaker": "del.gullgirl",
    "lines": [
-    "Still my stick."
+    {
+     "text": "Still my stick.",
+     "expr": "happy"
+    }
    ]
   },
   "rowan.hail": {
@@ -1098,7 +1191,10 @@
   "rowan.again": {
    "speaker": "rowan",
    "lines": [
-    "Still not running it. Still standing where they put me."
+    {
+     "text": "Still not running it. Still standing where they put me.",
+     "expr": "happy"
+    }
    ],
    "next": "rowan.ask"
   },
@@ -1123,8 +1219,14 @@
   "rowan.ledger": {
    "speaker": "rowan",
    "lines": [
-    "Forty years of who owes whom a hand. Nobody has ever asked to see it.",
-    "That's the trick of a ledger in a village. Keeping it is the whole of the work."
+    {
+     "text": "Forty years of who owes whom a hand. Nobody has ever asked to see it.",
+     "expr": "happy"
+    },
+    {
+     "text": "That's the trick of a ledger in a village. Keeping it is the whole of the work.",
+     "expr": "grave"
+    }
    ],
    "next": "rowan.ask"
   },
@@ -1157,7 +1259,10 @@
   "poppy.again": {
    "speaker": "poppy",
    "lines": [
-    "Still warm. Won't be by the time you've decided."
+    {
+     "text": "Still warm. Won't be by the time you've decided.",
+     "expr": "stern"
+    }
    ],
    "next": "poppy.ask"
   },
@@ -1190,7 +1295,10 @@
   "poppy.day": {
    "speaker": "poppy",
    "lines": [
-    "Up at four, and I'll be up at four tomorrow. It's a good complaint to have."
+    {
+     "text": "Up at four, and I'll be up at four tomorrow. It's a good complaint to have.",
+     "expr": "happy"
+    }
    ],
    "next": "poppy.ask"
   },
@@ -1202,7 +1310,10 @@
    "speaker": "mara",
    "lines": [
     "Evening. Don't mind him — he's mine, and he's on his eleventh lap of this square.",
-    "He'll tell you about the stick. Let him, it's shorter than you'd think."
+    {
+     "text": "He'll tell you about the stick. Let him, it's shorter than you'd think.",
+     "expr": "happy"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -1214,7 +1325,10 @@
   "mara.again": {
    "speaker": "mara",
    "lines": [
-    "Twelfth lap. I've stopped counting out loud."
+    {
+     "text": "Twelfth lap. I've stopped counting out loud.",
+     "expr": "happy"
+    }
    ],
    "next": "mara.ask"
   },
@@ -1272,7 +1386,10 @@
   "pip.again": {
    "speaker": "pip",
    "lines": [
-    "Still the good one. I checked."
+    {
+     "text": "Still the good one. I checked.",
+     "expr": "happy"
+    }
    ],
    "next": "pip.ask"
   },
@@ -1305,7 +1422,10 @@
   "pip.home": {
    "speaker": "pip",
    "lines": [
-    "Mum's right there. That counts. She says it counts when she's the one saying it."
+    {
+     "text": "Mum's right there. That counts. She says it counts when she's the one saying it.",
+     "expr": "happy"
+    }
    ],
    "next": "pip.ask"
   },
@@ -1317,7 +1437,10 @@
    "speaker": "finn",
    "lines": [
     "Careful on the boards, they're greener than they look. Everything here is.",
-    "Nothing biting. Hasn't all week. I come down anyway, that's the arrangement."
+    {
+     "text": "Nothing biting. Hasn't all week. I come down anyway, that's the arrangement.",
+     "expr": "happy"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -1362,7 +1485,10 @@
   "finn.smoke": {
    "speaker": "finn",
    "lines": [
-    "Half the winter, hanging. Everyone's very fond of me in February."
+    {
+     "text": "Half the winter, hanging. Everyone's very fond of me in February.",
+     "expr": "happy"
+    }
    ],
    "next": "finn.ask"
   },
@@ -1428,8 +1554,14 @@
    "else": "emb.neighbour.again",
    "speaker": "emb.neighbour",
    "lines": [
-    "Evening. I'd walk up with you but I'm carrying a dish and it's not a steady one.",
-    "Whole lane's going up. You can tell by the doors — none of them shut properly."
+    {
+     "text": "Evening. I'd walk up with you but I'm carrying a dish and it's not a steady one.",
+     "expr": "worried"
+    },
+    {
+     "text": "Whole lane's going up. You can tell by the doors — none of them shut properly.",
+     "expr": "happy"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -1440,7 +1572,10 @@
   "emb.neighbour.again": {
    "speaker": "emb.neighbour",
    "lines": [
-    "Still carrying it. Getting there."
+    {
+     "text": "Still carrying it. Getting there.",
+     "expr": "worried"
+    }
    ]
   },
   "emb.townsfolk.hail": {
@@ -1472,8 +1607,14 @@
    "else": "emb.girl.again",
    "speaker": "emb.girl",
    "lines": [
-    "You can't ring it. I asked. You have to be Elder Rowan or the bell falls on you.",
-    "That's not true but he said it, so it's a bit true."
+    {
+     "text": "You can't ring it. I asked. You have to be Elder Rowan or the bell falls on you.",
+     "expr": "scared"
+    },
+    {
+     "text": "That's not true but he said it, so it's a bit true.",
+     "expr": "happy"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -1484,7 +1625,10 @@
   "emb.girl.again": {
    "speaker": "emb.girl",
    "lines": [
-    "Still can't ring it. I've been checking."
+    {
+     "text": "Still can't ring it. I've been checking.",
+     "expr": "happy"
+    }
    ]
   },
   "emb.boy.hail": {
@@ -1495,7 +1639,10 @@
    "speaker": "emb.boy",
    "lines": [
     "This is Pip's. I'm allowed in it but only when he's here, and he isn't.",
-    "So I'm waiting. That's allowed — it's the main thing you can do at a den."
+    {
+     "text": "So I'm waiting. That's allowed — it's the main thing you can do at a den.",
+     "expr": "happy"
+    }
    ],
    "effects": {
     "setFlags": {
@@ -1506,7 +1653,10 @@
   "emb.boy.again": {
    "speaker": "emb.boy",
    "lines": [
-    "Still not here. I've got all evening."
+    {
+     "text": "Still not here. I've got all evening.",
+     "expr": "happy"
+    }
    ]
   },
   "emb.innkeep.hail": {
@@ -1516,7 +1666,10 @@
    "else": "emb.innkeep.again",
    "speaker": "emb.innkeep",
    "lines": [
-    "Come in, then. Two rooms and a fire, and tonight nobody wants any of the three.",
+    {
+     "text": "Come in, then. Two rooms and a fire, and tonight nobody wants any of the three.",
+     "expr": "happy"
+    },
     "They're all up at the square. I'll go when the kettle's off and not before."
    ],
    "effects": {
@@ -1528,7 +1681,10 @@
   "emb.innkeep.again": {
    "speaker": "emb.innkeep",
    "lines": [
-    "Kettle's still on. It's a very slow kettle tonight."
+    {
+     "text": "Kettle's still on. It's a very slow kettle tonight.",
+     "expr": "happy"
+    }
    ]
   },
   "emb.shopkeep.hail": {
