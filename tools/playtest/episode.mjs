@@ -136,6 +136,13 @@ export async function run(cfg) {
 
   function fileReport(kind, r, step, percept, truth, frames, source, severity) {
     if (reports.length >= maxReports) return null;
+    // AN EMPTY REPORT IS NOISE IN THE QUEUE, and it costs a human the same look as
+    // a real one. Measured: a `giveup` reply that carried no report body filed
+    // "untitled" with three nulls at P0, straight to the top of the list.
+    if (!r || (!r.title && !r.doing && !r.expected && !r.happened)) {
+      log(`  (a ${source} report arrived with nothing in it — not filed)`);
+      return null;
+    }
     const e = {
       run: runId, step, source, kind: kind || 'confusion', severity: severity || r.severity || 'P1',
       title: String(r.title || 'untitled').slice(0, 160),

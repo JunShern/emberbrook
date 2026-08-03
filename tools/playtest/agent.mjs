@@ -148,8 +148,11 @@ export function normalise(j) {
   else if (out.action === 'wait') out.ms = Math.max(150, Math.min(4000, +j.ms || 500));
   else if (out.action === 'report' || out.action === 'giveup') {
     const r = j.report || j;
+    // No default title. An empty report must LOOK empty so the runner can refuse
+    // it — 'untitled' with three nulls at P0 is worse than nothing, because it
+    // costs a human the same look as a real finding.
     out.report = { kind: r.kind || 'confusion', severity: r.severity || null,
-      title: String(r.title || 'untitled').slice(0, 140),
+      title: r.title ? String(r.title).slice(0, 140) : (out.goal || null),
       doing: r.doing || null, expected: r.expected || null, happened: r.happened || null };
   }
   return out;
