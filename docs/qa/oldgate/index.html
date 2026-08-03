@@ -137,7 +137,12 @@ One's end card over the frame the player actually arrives in.</figcaption></figu
 </div>
 
 
-<h2>2 &nbsp;What is measured to be wrong with the structure</h2>
+<h2>2 &nbsp;What is measured to be wrong with the structure <span class="tag grey">superseded &middot; read &sect;5 first</span></h2>
+
+<p class="note"><b>2026-08-03:</b> the numbers in this section are real and the cause they
+were given is wrong. The gate was rotated 90&deg; in the build; the six-cell island is a
+0.42&nbsp;m plank, not a deck the walker cannot step onto. <a href="#s5">&sect;5</a> has the
+measurement that named it and what shipped.</p>
 
 <p>Every number below comes from a flood fill run <em>inside the running page</em> with the
 runtime's own primitives — <code>SIM.ground</code>, <code>SIM.blocked</code>, the player's own
@@ -266,10 +271,54 @@ against <code>tools/valley_build.py</code>; the variant is chosen with
 <code class="mono">OLDGATE=base|A|B|C</code>. Nothing here has been applied to the shipped tile.</p>
 
 
-<h2>5 &nbsp;What none of the three fix</h2>
+<h2 id="s5">5 &nbsp;What none of the three fix <span class="tag">SOLVED &middot; 28a5f9d, 2026-08-03</span></h2>
 
 <div class="card">
-<h3><span class="tag red">open</span> &nbsp;The court is still a raft</h3>
+<h3><span class="tag">closed</span> &nbsp;It was never a raft. It was a quarter turn.</h3>
+<p><b>The six-cell island below is a real measurement with the wrong cause attached to it,
+and the cause is worth more than the fix.</b> Every cube in <code>build_old_gate</code> is
+sized <span class="mono">(along the river, across the notch, height)</span>, but
+<code class="mono">rz</code> was set to <code class="mono">nl</code>'s angle, which sends
+local&nbsp;X <em>across</em> the notch. Blender's
+<code class="mono">Matrix.Rotation(rz,'Z')</code> then turned every box in the prop a
+quarter turn. Measured on the shipped GLB with <code>tools/glb_read.mjs</code>: the wall's
+coping boxes were <b>1.86&ndash;1.90&nbsp;m of x against 2.2&ndash;7.7&nbsp;m of z</b>, on a
+notch that runs along&nbsp;x. "One wall across the pinch" was <b>four detached piers standing
+along the gorge</b>, and the nine deck bays — all laid at the same offset, stepped only in
+<code class="mono">bx</code> — stacked into <b>a single 0.42&nbsp;m strip pointing
+downstream</b>. That strip is the six cells. It was never 0.8&nbsp;m of step; it was a
+0.42&nbsp;m plank.</p>
+<p><b>The builder's own seal could not see it.</b> The flood fill in
+<code>build_old_gate</code> blocks the wall's <em>intended</em> footprint analytically
+(<code class="mono">abs(bb) &lt; 0.7 and &hellip;</code>), so it scored the drawing, not the
+build, and printed <code class="mono">flood fill past the pinch 0 cells</code> over a gate
+made of four piers. <b>A gate that measures its own drawing cannot measure its own
+build.</b></p>
+<p><b>What named it was asking the engine who blocks.</b> <code>SIM.blocked</code> returns
+the mesh name; standing on the road ribbon anywhere in the court's east half it returned
+<code class="mono">oldgate_3</code> — the "wall over the water" run, lying across the road
+for 7.7&nbsp;m. Everything else in the paragraph below (the SE corner, the apron, the
+re-cut) was reasoning about geometry nobody had asked the running game to identify.</p>
+<p><b>The fix was two derivations and no new massing.</b>
+(1)&nbsp;<code class="mono">ang = atan2(tg)</code>, one line.
+(2)&nbsp;The deck takes its z from <code class="mono">VM.ROAD_Z</code> at that offset, in 12
+courses running <em>across</em> the road — the only direction in which each course can carry
+its own height. The 0.78&nbsp;m lip at the east end <em>was</em> real and this is what removes
+it: 0.52u of fall, biggest riser 0.047u against a 0.63u step-up, ends +0.21u&nbsp;/&nbsp;&minus;0.03u
+against the road just outside them (printed by every build, and in
+<code>valley_build.json</code>).</p>
+<p><b>The engine, before &rarr; after.</b> Three fills (deck, village road, east bank) gave
+three disjoint components and now give <b>one, 712 cells, containing all three seeds</b>;
+<code>reach_probe</code> reaches in <em>both</em> directions; <code>SIM.move()</code> walks
+27/27 road waypoints through the doorway each way with no stall;
+<code>walk_engine_gate --scene ow-valley --region -56,-34,16,30</code> is GREEN with 0 lost
+cells; and <code>playthrough_test</code> went <b>80/1 &rarr; 81/0</b> — the documented
+<code class="mono">ch1.done &rarr; ch2.road</code> &sect;W red was this gate all along.
+Frames: <code>fix-{before,after}-{court,high,lookback,approach}.png</code>.</p>
+</div>
+
+<div class="card">
+<h3><span class="tag grey">superseded</span> &nbsp;The reading this page shipped with</h3>
 <p>All three candidates were re-measured with the same flood fill. <b>None of them opens the
 court.</b> A, B and C move the walker's frontier from world x −42.4 to −43.2 and stop; the
 deck's own island stays six cells. The consequence, stated plainly:</p>
@@ -286,6 +335,37 @@ deck's two ends let down to the road they meet, in rises under 0.63u, so the cou
 the road rather than a table beside it. An apron was tried in this pass and made the island
 smaller, not larger; it is removed rather than shipped on a guess. Whoever takes this should
 start from the six-cell number, not from the picture.</p>
+<p class="note"><b>Kept, wrong, on purpose.</b> Every number in this box was honestly
+measured and every inference from them was wrong, because they were all measurements of a
+90&deg; error read as a height problem. The lesson is not "be more careful": it is that a
+flood fill tells you <em>where</em> the world is shut and never <em>what</em> shuts it, and
+that the runtime has the answer — <code>SIM.blocked</code> returns the mesh's name. Ask that
+before designing a fix.</p>
+</div>
+
+<div class="scroll" style="margin-top:1.6rem"><table>
+<tr><th>fill started at</th><th>before</th><th>after 28a5f9d</th></tr>
+<tr><td>a cell standing ON the court deck</td><td class="no">6 cells (its own island)</td><td class="ok">712 cells, joined</td></tr>
+<tr><td>the village road, west of the doorway</td><td class="no">separate component</td><td class="ok">same 712 cells</td></tr>
+<tr><td>the east bank, world x &minus;38.3</td><td class="no">separate component</td><td class="ok">same 712 cells</td></tr>
+<tr><td><code>SIM.move()</code> through the doorway, both ways</td><td class="no">stalls</td><td class="ok">27/27 legs each way</td></tr>
+</table></div>
+
+<div class="grid2" style="margin-top:1.6rem">
+<figure><img src="fix-before-court.png" alt="the court before the fix">
+<figcaption><b>Before, standing on the court.</b> Vesper on a 0.42&nbsp;m plank among
+free-floating slabs; the sigil plates hang over the drop; there is no wall behind
+her.</figcaption></figure>
+<figure><img src="fix-after-court.png" alt="the court after the fix">
+<figcaption><b>After.</b> Paved court, one coursed wall with its coping, the arch open on
+the road at right, the culvert mouth under her feet, a plate in the paving beside
+her.</figcaption></figure>
+<figure><img src="fix-before-high.png" alt="the gate from above, before">
+<figcaption><b>Before, from above.</b> Thin slabs strung <em>along</em> the gorge; the road
+runs into nothing.</figcaption></figure>
+<figure><img src="fix-after-high.png" alt="the gate from above, after">
+<figcaption><b>After.</b> One wall <em>across</em> the notch, the court spanning it, the road
+crossing on the paving.</figcaption></figure>
 </div>
 
 <p class="note" style="margin-top:2.4rem">Frames: shipped bundle for the textured ones,
