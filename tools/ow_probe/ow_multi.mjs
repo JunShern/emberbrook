@@ -25,7 +25,13 @@ const PORT = parseInt(arg('port', '3000'), 10);
 const CDP = await freePort();
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const W = arg('w', '1400'), H = arg('h', '820');
-const URL = `http://localhost:${PORT}/play.html?scene=${SCENE}&rt=1&owsky=1&owlight=1&nomusic=1&v=${Date.now()}`;
+// `--extra postfx=off` — PIPELINE STATE IS PART OF A MEASUREMENT. The post-processing
+// lane's composer is built for every RT scene (play3d.html:280, RenderPass -> GTAO ->
+// bloom -> Output), so a content before/after shot without pinning it spans two lanes'
+// changes at once and cannot be attributed. Pass it on every art-lane capture and record
+// the value beside the numbers.
+const EXTRA = arg('extra', '');
+const URL = `http://localhost:${PORT}/play.html?scene=${SCENE}&rt=1&owsky=1&owlight=1&nomusic=1${EXTRA ? '&' + EXTRA : ''}&v=${Date.now()}`;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const profile = join(process.env.TMPDIR || '/tmp', 'ow-multi-profile');
 killOrphans(profile); rmSync(profile, { recursive: true, force: true });

@@ -1,0 +1,215 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Overworld vs the real references — 2026-08-04</title>
+<style>
+  :root { --bg:#14171c; --fg:#e7ecf3; --dim:#9aa6b5; --line:#2b323d; --good:#7fd493; --bad:#e78d7a; --warn:#e8c07a; }
+  * { box-sizing:border-box }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  .wrap { max-width:1500px; margin:0 auto; padding:36px 24px 90px }
+  h1 { font-size:30px; margin:0 0 6px; letter-spacing:-.02em }
+  h2 { font-size:21px; margin:52px 0 4px; padding-top:22px; border-top:1px solid var(--line); letter-spacing:-.01em }
+  h3 { font-size:16px; margin:26px 0 8px; color:var(--dim); text-transform:uppercase; letter-spacing:.07em; font-weight:600 }
+  p { max-width:86ch; color:#cfd8e3 }
+  .sub { color:var(--dim); margin:0 0 22px }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0 6px }
+  .trio { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:14px 0 6px }
+  @media (max-width:900px){ .pair,.trio { grid-template-columns:1fr } }
+  figure { margin:0 }
+  img { width:100%; display:block; border-radius:7px; border:1px solid var(--line); background:#000 }
+  figcaption { font-size:12.5px; color:var(--dim); margin-top:7px; letter-spacing:.02em }
+  .tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+         padding:2px 7px; border-radius:4px; margin-right:7px; vertical-align:1px }
+  .t-ref { background:#2d4a63; color:#bfe0f7 } .t-our { background:#3d3a2a; color:#e8d9a8 }
+  .t-bad { background:#4d2a24; color:#f2b8a8 } .t-new { background:#24402c; color:#a8e6bd }
+  table { border-collapse:collapse; width:100%; margin:14px 0; font-size:13.5px; font-variant-numeric:tabular-nums }
+  th,td { text-align:right; padding:7px 11px; border-bottom:1px solid var(--line) }
+  th:first-child,td:first-child { text-align:left }
+  th { color:var(--dim); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.05em }
+  .good { color:var(--good) } .bad { color:var(--bad) } .warn { color:var(--warn) }
+  .note { background:#1b1f26; border-left:3px solid var(--line); padding:13px 17px; margin:18px 0; border-radius:0 6px 6px 0 }
+  .note.red { border-left-color:var(--bad) } .note.grn { border-left-color:var(--good) }
+  .note.amb { border-left-color:var(--warn) }
+  code { background:#1f242c; padding:1px 5px; border-radius:3px; font-size:13px }
+  .lede { font-size:17px; color:#dbe4ee }
+</style>
+<div class="wrap">
+
+<h1>Overworld art, measured against the real references</h1>
+<p class="sub">2026-08-04 · corridor <code>ow-valley</code> · camera as shipped (pitch 0.61, boom 40 — user ruling, untouched)<br>
+Plates captured with <code>--extra postfx=off</code> unless a caption says otherwise. Instruments: <code>tools/ow_probe/imgstat.py</code>, <code>tools/ow_probe/refmatch.js</code>, <code>tools/ow_probe/ow_multi.mjs</code>.</p>
+
+<div class="note red">
+<strong>This supersedes the <code>docs/qa/ow-land</code> comparison.</strong> That pass was run against
+<code>REF1–3.jpg</code>, which are re-encodes of <code>reimagine_ff9_2/_3/_dagger.jpg</code> — and
+<code>_dagger</code> is a <em>character portrait</em>, used there as the bar for landscape art. Its
+measurements are fine; conclusions drawn from that bar are not. The real references are the three
+overworld gameplay screenshots below.
+</div>
+
+<h2>1 · What the three real references actually establish</h2>
+
+<div class="trio">
+  <figure><img src="/assets/refs/reimagine_ff9_overworld_1.jpg" alt="ref 1">
+    <figcaption><span class="tag t-ref">REF1</span>Clifftop, day. Top third is <em>cliff wall and ocean</em> — barely any sky.</figcaption></figure>
+  <figure><img src="/assets/refs/reimagine_ff9_overworld_2.jpg" alt="ref 2">
+    <figcaption><span class="tag t-ref">REF2</span>Night. Deep blue frame; the only warm thing is the quest destination's lit windows.</figcaption></figure>
+  <figure><img src="/assets/refs/reimagine_ff9_overworld_3.jpg" alt="ref 3">
+    <figcaption><span class="tag t-ref">REF3</span>Windmill ridge over a river valley. Heavy haze, big framing rock in the near field.</figcaption></figure>
+</div>
+
+<p><strong>Correcting the brief on two points.</strong> First, the shared cue is not <em>sky</em> — REF1's
+top third is cliff and sea, REF3's is misty mountain, and only REF2 shows real sky. What all three have is a
+<em>long view</em>: a distance plane kilometres out, rendered cool and desaturated. Second, the camera is not
+"8–12 m back at a shallow angle" — all three are high three-quarter booms at roughly 30–40° down with the
+character at 7–10% of frame height, sitting <em>below</em> centre with the vista stacked above. The framing is
+closer than ours, but it is not low.</p>
+
+<p>All three stratify vertically: fine near-field material at the bottom, the playfield and character in the
+middle, a cool distance plane on top. That stratification is the transferable idea, and under a downward
+camera our own vertical axis is a depth axis too — which is what makes the band measurements below comparable.</p>
+
+<h2>2 · The measured gap</h2>
+<p>Band crops: FAR / NEAR = top / bottom third of frame. <code>bmr_dark</code> = blue-minus-red in the dark
+quartile (higher = cooler). Refs cropped to exclude HUD.</p>
+
+<table>
+<tr><th>Frame</th><th>FAR bmr_dark</th><th>NEAR bmr_dark</th><th>FAR − NEAR</th><th>FAR detail</th><th>NEAR detail</th></tr>
+<tr><td>REF1 clifftop</td><td>+0.191</td><td>−0.146</td><td class="good">+0.337</td><td>45.2</td><td>46.7</td></tr>
+<tr><td>REF2 night</td><td>+0.318</td><td>+0.154</td><td class="good">+0.164</td><td>36.0</td><td>49.9</td></tr>
+<tr><td>REF3 vale</td><td>+0.224</td><td>−0.046</td><td class="good">+0.270</td><td>12.9</td><td>34.7</td></tr>
+<tr><td>ours — gate</td><td>−0.124</td><td>−0.133</td><td class="warn">+0.009</td><td>33.1</td><td>40.8</td></tr>
+<tr><td>ours — meadow</td><td>−0.073</td><td>−0.016</td><td class="bad">−0.057</td><td>43.5</td><td>43.0</td></tr>
+<tr><td>ours — gorge</td><td>−0.092</td><td>−0.013</td><td class="bad">−0.079</td><td>21.1</td><td>33.8</td></tr>
+</table>
+
+<p>The refs hold a <strong>+0.16 to +0.34 cool-far / warm-near gradient</strong>. We hold none, and in two of
+three frames it runs <em>backwards</em> — our far field is warmer than our near field. Every one of our bands
+is also red-dominant in absolute terms.</p>
+
+<div class="note amb">
+<strong>The r185 warming did move the wrong way against these refs.</strong> The brief's chroma-loss reading is
+confirmed by direction here: the refs' distance is cool and desaturated, and a warmer, more unified grade
+flattens exactly the axis they use for depth. Stated plainly because it was asked for plainly.
+</div>
+
+<h2>3 · Cool distance is real — and fog cannot buy it</h2>
+<p>I swept fog colour and ramp against the day refs' FAR band (target <code>bmr_dark</code> +0.19…+0.22 at
+<code>S50</code> 0.29…0.35) before the scope seam was drawn. Reporting it as a <strong>finding for the
+post-processing lane</strong>, not as a build — depth fog is theirs.</p>
+
+<table>
+<tr><th>Fog config</th><th>meadow bmr_dark</th><th>meadow S50</th><th>gorge bmr_dark</th><th>gorge S50</th></tr>
+<tr><td>shipped <code>d3e0e8</code> 34/205</td><td>−0.073</td><td>0.371</td><td>−0.092</td><td>0.305</td></tr>
+<tr><td>A <code>9ec4de</code> 30/150</td><td>−0.031</td><td>0.289</td><td>−0.059</td><td>0.241</td></tr>
+<tr><td>B <code>8fb8d8</code> 30/130</td><td>−0.017</td><td class="bad">0.256</td><td>−0.047</td><td class="bad">0.213</td></tr>
+<tr><td>C <code>9ec4de</code> 40/190</td><td>−0.065</td><td>0.412</td><td>−0.091</td><td>0.328</td></tr>
+<tr><td>E <code>a8c8dc</code> 44/210</td><td>−0.073</td><td>0.449</td><td>−0.097</td><td>0.342</td></tr>
+</table>
+
+<div class="note red">
+<strong>Fog goes milky long before it goes blue.</strong> The most aggressive setting (B) moves meadow just
+<strong>+0.056</strong> toward a target <strong>+0.26</strong> away, and pays by dropping far-band saturation
+to <strong>0.256 — below the refs' own floor of 0.286</strong>. The cause is structural: the refs' far band is
+a distance plane kilometres out; ours is ground and warm cliff at 60–120 m, and 60 m of air cannot tint much
+before it merely washes.<br><br>
+<strong>Recommendation to the post lane:</strong> the cool far field wants a <em>depth-graded hue rotation
+toward blue that holds saturation</em>, not denser fog. The shipped <code>34/205</code> is already about the
+best fog alone can do here — better left alone than traded for an invisible hue gain.
+</div>
+
+<h2>4 · Our frame beside the matching reference</h2>
+
+<div class="pair">
+  <figure><img src="plates/pf-base-meadow.png" alt=""><figcaption><span class="tag t-our">OURS</span>meadow — open valley, Emberbrook beyond</figcaption></figure>
+  <figure><img src="/assets/refs/reimagine_ff9_overworld_1.jpg" alt=""><figcaption><span class="tag t-ref">REF1</span>the same job: character on a worn trail, open ground</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/pf-base-gorge.png" alt=""><figcaption><span class="tag t-our">OURS</span>gorge — the Dellhollow approach</figcaption></figure>
+  <figure><img src="/assets/refs/reimagine_ff9_overworld_3.jpg" alt=""><figcaption><span class="tag t-ref">REF3</span>note the haze separating each ridge from the next</figcaption></figure>
+</div>
+
+<p>Read the ground, not the composition. Ours is a smooth vertex-colour gradient with a few large flat
+star-shaped tufts and a road that is a hard-edged ribbon. Theirs is a fine blade carpet, gravel speckle in the
+worn dirt, and grass fingering irregularly over the path edge. <strong>Our high camera makes near-field ground
+the majority of the frame</strong>, so this is where we have the most to gain, and it costs no new assets.</p>
+
+<h2>5 · What I changed — near-field blade carpet</h2>
+<p><code>RM.s4()</code>: ~110 blades/m² inside 16 m, thinning to zero at 34 m, scattered by <em>distance</em>
+rather than by seam, with a baked base-to-tip value gradient and a fringe that spills irregularly into the
+road cells of the zone raster. Instances are named <code>veg_rm_blades</code>.</p>
+
+<div class="pair">
+  <figure><img src="plates/pf-base-meadow.png" alt=""><figcaption><span class="tag t-our">BEFORE</span>meadow, postfx off</figcaption></figure>
+  <figure><img src="plates/pf-full-meadow.png" alt=""><figcaption><span class="tag t-new">AFTER</span>meadow + blade carpet</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/pf-base-gorge.png" alt=""><figcaption><span class="tag t-our">BEFORE</span>gorge, postfx off</figcaption></figure>
+  <figure><img src="plates/pf-full-gorge.png" alt=""><figcaption><span class="tag t-new">AFTER</span>gorge + blade carpet</figcaption></figure>
+</div>
+
+<table>
+<tr><th>Frame</th><th>NEAR detail before</th><th>NEAR detail after</th><th>Δ</th><th>FAR→NEAR shape</th></tr>
+<tr><td>gate</td><td>41.8</td><td>76.1</td><td class="good">+82%</td><td class="good">rises (ref shape)</td></tr>
+<tr><td>meadow</td><td>43.3</td><td>48.9</td><td class="good">+13%</td><td class="warn">falls — far band holds the lit town</td></tr>
+<tr><td>gorge</td><td>33.9</td><td>38.7</td><td class="good">+14%</td><td class="good">rises (ref shape)</td></tr>
+</table>
+
+<p>Near-field saturation also moved toward the refs on all three (gate 0.531→0.452 vs REF1's 0.503; meadow
+0.321→0.341; gorge 0.264→0.293).</p>
+
+<div class="note amb">
+<strong>Worse in one respect:</strong> gate's near-field lightness fell 0.457 → 0.387 against REF1's 0.558.
+The blades read <em>darker</em> than the ground they stand on, so a dense field slightly muddies the near
+field. Next iteration should lift the blade albedo and the tip end of the gradient rather than add more of them.
+</div>
+
+<h2>6 · Things I tried that made it worse, or did nothing</h2>
+
+<h3>land.js <code>l2</code> clumps — a regression at this camera</h3>
+<div class="pair">
+  <figure><img src="plates/base-meadow.png" alt=""><figcaption><span class="tag t-our">BEFORE</span>postfx <em>on</em> (pre-seam capture)</figcaption></figure>
+  <figure><img src="plates/t3-meadow.png" alt=""><figcaption><span class="tag t-bad">REJECTED</span>+ l2 clumps: large faceted blobs reading as debris</figcaption></figure>
+</div>
+<p>The previous pass's clump geometry is authored for a closer camera. At boom 40 the blobs read as crumpled
+rock, not foliage. Not used; <code>s4</code> scatters blades only.</p>
+
+<div class="note red">
+<strong>Blades cloned from <code>ow_f2_matte</code> rendered as dead twigs.</strong> That material is authored
+with <code>vertexColors:true</code> against the terrain's own <code>COLOR_0</code>; applied to blade geometry
+carrying a different colour attribute, the whole field came out near-black. Fixed by giving the blades an
+explicit material and their own baked gradient. The lesson generalises: <em>a shipped material is not a
+portable material</em> — it carries an attribute contract with the geometry it was authored for.
+</div>
+
+<div class="note amb">
+<strong>Ground detail texture (<code>RM.s5</code>) measured as a complete no-op — unresolved.</strong>
+An <code>onBeforeCompile</code> injecting world-space value noise into the ground diffuse changed
+<em>nothing</em>: <code>mat</code> and <code>base</code> differ by &lt;0.15 in every band on every frame
+(gate FAR detail 35.06 vs 35.11). First attempt used 3.1/11.0 cycles per metre, which is sub-pixel at 35 m and
+correctly averaged to flat; but coarsening to 0.9/3.2 cycles/m and raising the amount to 0.34 changed the
+numbers just as little. <strong>Most likely cause: three.js caches the compiled program by cache key, and
+<code>needsUpdate</code> alone does not rebuild a shader whose <code>customProgramCacheKey</code> is
+unchanged</strong> — so the patched source was probably never compiled. Flagged rather than claimed: pixel-scale
+ground material is still, by eye, the loudest remaining gap, and vertex colour cannot supply it (the terrain's
+vertices are metres apart, so several metres is the finest thing it can represent).
+</div>
+
+<h2>7 · Scope and safety</h2>
+<ul>
+<li><strong>Camera untouched.</strong> Every plate is the shipped pitch 0.61 / boom 40. No camera proposal was produced.</li>
+<li><strong>No pipeline work.</strong> No fog, AO, bloom or grading shipped from this lane; the fog sweep is handed over as a finding.</li>
+<li><strong>Pipeline state recorded</strong> beside every measurement. Section 2's table and the section-6 clump plates predate the seam and were shot with the composer <em>on</em>; sections 5 and 6's material note are <code>postfx=off</code>. <code>ow_multi.mjs</code> gained <code>--extra</code> so this can never again go unrecorded.</li>
+<li><strong>No new assets.</strong> Blade geometry and gradient are generated procedurally at runtime.</li>
+<li><strong>Nothing entered the walk set.</strong> These are runtime probes — <code>public/assets/scenes/ow-valley/scene.glb</code> is byte-untouched, so the shipped walk network cannot have changed. Instances are <code>veg_</code>-prefixed so the <code>play3d.html:1282</code> exclusion holds if this is ever baked into the bundle.</li>
+</ul>
+
+<h2>8 · What I would do next, in cost order</h2>
+<ol>
+<li><strong>Fix and land the ground detail material</strong> (<code>customProgramCacheKey</code>) — by eye this is the biggest remaining content gap, and gravel speckle in the worn dirt is most of what separates our path from theirs.</li>
+<li><strong>Lift blade albedo</strong> so density stops darkening the near field, then raise density further toward the refs' carpet.</li>
+<li><strong>Path-edge irregularity as authored content</strong> — the spill fringe helps, but the ribbon's own boundary in the zone raster is still geometrically clean.</li>
+<li><strong>Replace the canopy blobs</strong> with ground-level clustered foliage; the refs' bushes sit <em>on</em> the ground with internal light variation.</li>
+<li><strong>Hand the cool-distance problem to post</strong> as a depth-graded hue rotation, then re-measure the FAR−NEAR gradient to see what content bought on top of pipeline.</li>
+</ol>
+
+</div>

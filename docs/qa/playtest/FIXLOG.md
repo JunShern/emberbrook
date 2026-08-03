@@ -1176,7 +1176,9 @@ it could have found something (`--nobound` disarms the bound in the live page):
 | gorge road `[54, −46]` | deepest **y 0.00** | deepest **y −3.06** |
 
 and 0/5 in-bounds seeds reach below the bound with it on, while every below-zero pit still climbs
-out (`+17.0`, `+8.4`, `+7.9`, `+7.2` u).
+out (`+17.0`, `+8.4`, `+7.9`, `+7.2` u). **The other three seeds do not move at all** — `gate court` reaches
+y 1.93 either way, `east plateau` 15.46, `road lower` 9.63 — which is the specificity claim
+stated as a measurement: the bound changes the world in exactly one place, the water line.
 
 **3. The banner stops naming a direction.** `ch2.road` fires **at** the Dellhollow valley gate
 (`at [44.88, 12.01, −36.19]`, r 30) — so the line that tells the player what to do next is on
@@ -1190,4 +1192,48 @@ Lake's *"Down, then."*, and the system line about a town stacked down the inside
 the town genuinely is down there; it is the persistent banner that has to name the door. The why
 is recorded in the beat's own `_doc_objective`. `dialogue_style` **PASS, 0 failures**;
 `story_test` **1104 ok / 0 failed**.
+
+
+#### Round 6 — the receipt: the agent walks into Dellhollow
+
+`node tools/llm_playtester.mjs --port=3000 --from=ch1.done --steps=60 --stop-beat=ch2.arrive`.
+
+**Run `run-20260803-230413`:**
+
+```
+  step 2   [-36.2, 23.3, 17.2]   the Old Gate arrival
+  step 3   [ 21.1, 14.5, -18.2]  one goto, the valley road
+  step 4   ch2.road FIRES        "Through the Dellhollow gate — find whoever runs the locks"
+  step 5   [ 44.0, 12.6, -35.3]  goal="Interact to enter Dellhollow."
+  step 6   del-cine [4.9, 24.1, -6.5]
+```
+
+**Step 6 is `del-cine`. THE AGENT IS INSIDE DELLHOLLOW** — the first time in six rounds, and
+one step after the beat whose banner used to point down the river. `frames/step-005.jpg` is the
+round in one picture: the banner reading *Through the Dellhollow gate*, the marker reading
+*Enter Dellhollow*, the prompt reading *Enter Dellhollow? [E]*, the character on the road at the
+gate — and the gorge that swallowed round 5 filling the left third of the frame, unmistakably a
+drop rather than a way on.
+
+That run then died — **on the harness, at the very step it succeeded.** `del-cine`'s shot is named
+`gate`; the new objective contains the word "gate"; and the objective travels to the agent inside
+the harness-authored **brief**, which is what the firewall's SOFT check scans. The firewall's own
+doctrine already says soft tokens are *"NOT checked against the text the game drew … a player is
+allowed to know the word square"* — the objective was simply on the wrong side of that line.
+`briefAuthored` now splits the brief exactly as `nudgeAuthored` already splits the nudge: the
+drop-in brief is ours, the quoted banner is the game's (`2b06873`).
+
+**Run `run-20260803-230631`, the fence in live play.** This one wandered — and that is the more
+useful receipt, because it is the same wander round 5 died in:
+
+```
+  step  9   [69.0, 0.00, -55.0]   down the gorge toward the water — AND STOPS AT THE BOUND
+  step 20   [62.7, 0.80, -63.3]   downstream along the water line, still y 0.8
+  step 21   [58.4, 5.70, -45.7]   CLIMBS BACK OUT, on its own, toward the gate
+```
+
+**y over the whole run: 0.00 .. 23.29.** Round 5's identical wander spent 56 steps at −2 to −4.6.
+The body reached the bound, walked along it, and came back up — which is the one-way rule doing in
+play exactly what §3 measured on the bench, with no invisible wall to press against: the shoreline
+stopped it, and the way back was open the whole time.
 
