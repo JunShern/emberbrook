@@ -15621,3 +15621,69 @@ the part it dislikes has shipped a weakened version quietly. Fix is a modelling 
 INSIDE the canopy for road stations ~78-172 — six of nine sampled stations across the
 corridor photograph nothing but leaves. That is most of the walked route. Camera/collision,
 not art.
+
+---
+
+## 2026-08-03 — FOLLOWERS AND THE HUSH (T2, both user playthrough items)
+
+**FOLLOWERS — `public/js/followers.js`.** A BREADCRUMB TRAIL, not a pathfinder: the leader's
+positions are sampled on the physics tick and each follower is drawn a fixed ARC LENGTH back
+along that polyline. The property that made this the shape rather than a cheaper version of
+something better: *every crumb is somewhere `walkStep()` already allowed a body to stand*, so
+a follower cannot get stuck, cannot need a nav query, cannot disagree with WALKLOCK, and its
+worst failure is cosmetic. Towns only (WALKLOCK's own regex; the overworld is the user's
+exclusion). Nothing it builds enters `collide`/`walkRef`/`allMeshes`, so "a follower can never
+block the player" is true by construction, not by tuning.
+
+MEASURED, each of which changed the code:
+- **The doorway stack.** Through `emb-cine -> emb-item-int` all three followers landed on
+  (5.75, 0, -6.08) *exactly*: on an arrival there is no trail, so every lag resolves to the
+  same tail crumb. Three bodies on one point reads as one body with a rendering bug. Lags that
+  run off the end now take a lateral offset — the party huddles at the door and strings back
+  out when you walk.
+- **A re-seed must SNAP.** The speed cap was being applied to the catch-up too, so after a
+  `SIM.tp()` the party was seen sprinting across the town — 30 m out and still closing when
+  the probe read it.
+- **The Lake POV falls out of the data.** The rule "the leader must himself be in the active
+  party" is what keeps `ch1.lake.*` solo (`lake-joined` is set at ch1.meet, after it). No
+  scene name appears anywhere in the module.
+- **Two cats is a bug.** `mochi` (Dellhollow eel stall) and `mochi-emb` (Emberbrook waystone)
+  are the same animal as the one at your heel. New `Npc.hide(id, on)` — PAGE state, honoured
+  by every later `spawn()`, so neither module has to win a race with the other's 'eb-scene'.
+
+**THE HUSH — `public/js/hush.js`.** "Take the light", not a grayscale wash, and the reason is
+canon: Emberbrook IS the Heartlight town. The town is a PRE-RENDERED PLATE, so no runtime
+light can extinguish its baked lamps; the frame is graded instead, **on the WebGL canvas**,
+and that placement is the whole effect — a cut-in is a DOM `<img>` painted over that canvas,
+so the portraits stay warm while the town goes cold. `Hush.debug().cutinsWarm` asserts it
+rather than trusting it.
+
+MEASURED:
+- **`brightness()` must be plate-adaptive.** charLight already measures each plate's 70th-
+  percentile luminance (`window.__charlight.plate.p70`). Festival Square 0.21, Home Row
+  similar, **gatefield 0.115** — no lamp in frame. A flat `brightness(0.80)` on the Old Gate
+  did not read as a hush, it read as a dark frame. *Visible is not readable*, again. The cut
+  now scales with what the plate has, floored at 0.35, and re-grades on a camera cut (a 400 ms
+  poll on the shot id — a callback in charLight would recurse, since charLight is what the
+  hush calls).
+- **`Hush.on(0)` was not instant, and the QA plate said so before the code did.** apply()
+  declined to *set* a transition at ms===0 but never *cleared* the 2.2 s one already on the
+  element. CSS interpolates the whole filter list, so a frame captured 700 ms in carried a
+  PARTIAL hue-rotate and came out **olive green**. It looked exactly like a wrong grade and
+  was a wrong clock. Recorded because the class is general: an instant apply that only omits
+  the transition is not instant.
+- **`tools/hush_shot.mjs` asked for `square` and photographed `woodroad`,** reporting success.
+  `SIM.shot()` cuts the camera; sgTick's bands cut it straight back to whichever shot owns the
+  ground the player is standing on. It now stands her on the camera's own `cine.json` spawn
+  first AND prints the LIVE shot, so a mismatch announces itself. (Same family as the day's
+  standing rule: an instrument that finds something must prove it found the right thing.)
+- **`Dialogue.play()` resolves when the CONVERSATION ends** — i.e. on a keypress — so
+  `awaitPromise: true` on it hangs a headless harness for ever. Cost: one 8-minute stuck run.
+
+**HONEST LIMIT, not hidden:** a filter desaturates a baked lamp pool, it does not extinguish
+it. The pools survive as pale cold pools. On the square and Home Row that reads as *the light
+has no warmth left in it*; the pairs are in `docs/qa/hush/index.html` so a human can overrule
+that. The only alternative is a second full Blender bake of every Emberbrook camera.
+
+Gates: `transition_test` 168/0 · `playthrough_test` 80 passed / 1 failed (the documented
+ch2.road anchor in ow-valley, where followers do not exist).

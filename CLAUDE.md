@@ -91,8 +91,32 @@ git runs here, on branch `migration/3d-hybrid`.
   CustomEvent module contract (see sgAnnounce comment; ?reload=1 = fallback).
 - Modules (public/js/): game_state (GS), battle_rules (pure kernel — untouchable),
   battle_turnbased + battle_stage3d, encounters, ui_kit (FF-blue), shop, menu, npc,
-  dialogue, **story_runtime**, route_overlay, music. Each self-arms at load AND
-  re-arms on 'eb-scene'.
+  dialogue, **story_runtime**, followers, hush, route_overlay, music. Each self-arms at
+  load AND re-arms on 'eb-scene'.
+- **public/js/followers.js — THE PARTY WALKS BEHIND YOU, IN TOWNS** (2026-08-03, user
+  playthrough item). A BREADCRUMB TRAIL, never a pathfinder: the leader's positions are
+  sampled on the physics tick and each follower is drawn a fixed ARC LENGTH back along that
+  polyline, so every place a follower stands is a place walkStep() already allowed — it
+  cannot get stuck, cannot need a nav query, cannot disagree with WALKLOCK. If you find
+  yourself wanting a path solver you have left the design. Towns only (WALKLOCK's own
+  /^(del-|emb-|townwalk)/ — the overworld is excluded by the user's ruling). Nothing it
+  builds enters collide/walkRef/allMeshes, which is what makes "a follower can never block
+  the player" true by construction. Roster = GS.activeParty() minus the player's body
+  (vesper/lake/maren ONLY); THE LEADER MUST HIMSELF BE ACTIVE, which is what keeps Ch1's
+  Lake POV solo without naming a scene. Mochi is a cat, not a party member: `story.ch1.pact`,
+  and the posted cats stand down via the new **Npc.hide(id,on)** (page-level intent, honoured
+  by every later spawn). `?nofollow=1` disables. QA docs/qa/followers/index.html.
+- **public/js/hush.js — THE HUSH: Emberbrook loses its heart** (2026-08-03). Flag-driven off
+  `story.ch1.hush`, /^emb-/ only. The user chose "TAKE THE LIGHT" over a grayscale wash and
+  the reason is canon — Emberbrook IS the Heartlight town. The town is a PRE-RENDERED PLATE,
+  so no runtime light can put its baked lamps out: the frame is graded ON THE WEBGL CANVAS,
+  and that placement IS the effect — a cut-in is a DOM <img> dialogue.js paints OVER that
+  canvas, so THE PORTRAITS STAY WARM while the town goes blue and flat. Move the grade to a
+  parent element and the effect breaks silently (Hush.debug().cutinsWarm asserts it). The
+  same decision drives the shipped charLight() rig through `window.__hush` + **SIM.relight()**.
+  The brightness cut is PLATE-ADAPTIVE off window.__charlight.plate.p70 (measured: gatefield
+  at 0.115 vs the square's 0.21 — a flat cut made the Old Gate a dark frame, not a hush).
+  `?hush=1|0` forces it. Capture with tools/hush_shot.mjs; QA docs/qa/hush/index.html.
 - **public/game/lightrigs.json — THE PER-TOWN SUN, as runtime data** (2026-08-02). Tier 2 of
   charLight()'s rig lookup: a town whose `<town>.cameras.json` carries no `defaults.lightRig`
   (Dellhollow) gets its key direction/colour/energy from here. IT SHIPPED UNTRACKED ONCE —

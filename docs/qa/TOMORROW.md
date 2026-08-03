@@ -70,15 +70,18 @@ three of them write `story.json` (Lake adding beats, expressions adding mood tag
 changing one coordinate). Then a full gate sweep, then a build with everything. The live site
 is `https://junshern.github.io/emberbrook/` and is behind HEAD.
 
-**T2 — Followers + the hush.** Both were HELD because they need `play3d.html`, which the Lake
-lane owns for the body swap. Unblock them the moment Lake lands.
-  - Followers: party members and Mochi trail the leader IN TOWNS, not the overworld. The cheap
-    correct shape is a BREADCRUMB TRAIL — followers replay the leader's recent positions
-    rather than pathfinding. No navigation code, cannot get stuck.
-  - Hush: user approved *"take the light"* over grayscale. Emberbrook IS the Heartlight town;
-    kill the warm sources and leave cold ambient, so the town goes blue and flat while the
-    CUT-INS STAY WARM AND COLOURED — the people become the only warmth in frame. Tonight's
-    AgX tone-curve work is the machinery.
+**T2 — Followers + the hush. ~~HELD~~ LANDED 2026-08-03** (`public/js/followers.js`,
+`public/js/hush.js`; pointers in CLAUDE.md, findings in DAYLOG, QA at
+`docs/qa/followers/index.html` and `docs/qa/hush/index.html`).
+  - Followers: shipped as the BREADCRUMB TRAIL described below. Towns only, cannot block the
+    player (never in `collide`), survives the scene swap. New `Npc.hide(id,on)` stands the
+    posted cats down while Mochi follows.
+  - Hush: shipped as "take the light" — the WebGL canvas is graded and the DOM cut-ins are
+    not, which is what keeps the portraits warm. Brightness cut is plate-adaptive.
+  - **STILL OPEN, and it needs a human's eye, not another lane's:** the grade desaturates a
+    baked lamp pool but cannot extinguish it. Read `docs/qa/hush/index.html`; if the pale
+    cold pools read as broken rather than as lightless, the only fix is a second Blender bake
+    of every Emberbrook camera and that is a decision, not a task.
 
 **T3 — Make redeploys cheap.** The build is ~28 min and re-encodes 219 unchanged plates every
 run. A content-hash cache makes it seconds. Without it I will redeploy less often than I
