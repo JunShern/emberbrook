@@ -160,6 +160,18 @@ async function main() {
   for (const [id, it] of Object.entries(items)) {
     if (it.type === 'weapon' || it.type === 'armor') ok(!!it.slot, 'equippable ' + id + ' declares a slot');
     if (it.type === 'consumable') ok(!!it.effect, 'consumable ' + id + ' declares an effect');
+    // A KEEPSAKE HAS NO PRICE, and that is the assertion, not an exemption from one.
+    // Story items (items.json `type: keepsake` — grandmother's hand-lamp is the first)
+    // are carried and never spent: no price and noSell is exactly what makes
+    // shop.sellable() and menu's lists pass over them using the filters they already
+    // had. Priced-and-unsellable would be a contradiction the shop UI has to hold in
+    // its head; priceless is the honest encoding, so the test asks for THAT instead.
+    if (it.type === 'keepsake') {
+      ok(it.price === undefined, 'keepsake ' + id + ' has no price');
+      ok(it.noSell === true, 'keepsake ' + id + ' is noSell');
+      ok(!it.slot && !it.effect, 'keepsake ' + id + ' is neither equipment nor a consumable');
+      continue;
+    }
     ok(typeof it.price === 'number' && it.price > 0, 'item ' + id + ' has a price');
   }
   eq(Shop.shopForScene('del-item-int'), 'del-item', 'scene del-item-int maps to shop del-item');
