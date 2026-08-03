@@ -47,6 +47,7 @@ import overworld2_build as B2
 import overworld3_lib as O3
 import overworld3_build as B3      # F2's material + vertex-colour passes
 import valley_veg as VV            # this region's forest, rock and meadow
+import valley_land as VL           # L2/L3: the landscape pass (docs/qa/ow-land)
 
 # The canyon rebuild puts more crag beside the gorge-rim climb than F2's tile ever
 # had, and the 0.16u road notch no longer clears the terrain/ribbon sawtooth
@@ -1737,6 +1738,18 @@ def main():
     B3.terrain_pbr_f2(made, F, zg, fcrag)
     VV.patch_green(made)               # and drop leafy_grass from the bundle
     VV.stretch_rock_uv(made)           # a cliff wants a coarser run than a lawn
+
+    # ---- THE LANDSCAPE PASS (L3 then L2 — tools/valley_land.py) -------------
+    # Both read the ground's own SLOT CHOICE, so they run AFTER terrain_pbr_f2
+    # writes it.  L3 first because it only rewrites COLOR_0 and L2 only reads
+    # kinds; the order is the probe's own and keeps the two comparable to it.
+    t0 = time.time()
+    TS = VL.Terrain(made["ground"])
+    STATS["land_surface"] = VL.surface(made["ground"], TS)
+    land_objs, STATS["land_tufts"] = VL.tufts(col, made["ground"], zg, mats, T=TS)
+    for ob_ in land_objs:
+        made[ob_.name] = ob_
+    print("  landscape pass took %.1fs" % (time.time() - t0))
 
     # ---- the QA-only zone overlay -----------------------------------------
     ovl = O3.build_zone_overlay(col, F, zg, fr)

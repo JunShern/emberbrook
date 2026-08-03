@@ -1,5 +1,5 @@
 {
- "build_s": 10.15,
+ "build_s": 11.56,
  "canopy_farwall-crown": {
   "cards": 4711,
   "core_tris": 4570,
@@ -23,16 +23,43 @@
  "emberbrook_houses": 14,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.35,
+ "field_s": 0.26,
  "h_range": [
   -6.18,
   50.9
  ],
+ "land_surface": {
+  "clipped": 15314,
+  "corners": 160656,
+  "dry": {
+   "L0": 0.346,
+   "L1": 0.442,
+   "n": 8604
+  },
+  "grass": {
+   "L0": 0.384,
+   "L1": 0.651,
+   "n": 83067
+  },
+  "rock": {
+   "L0": 0.51,
+   "L1": 0.547,
+   "n": 68985
+  }
+ },
+ "land_tufts": {
+  "clumps": 273,
+  "flowers": 771,
+  "patches": 81,
+  "seam_cells": 6473,
+  "tris": 114450,
+  "tufts": 17908
+ },
  "lattice": [
   176,
   126
  ],
- "meshes": 29,
+ "meshes": 32,
  "oldgate_bite_e_u": 3.05,
  "oldgate_bite_w_u": 0.9,
  "oldgate_court_ends": [
@@ -63,7 +90,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.25,
+ "terrain_s": 0.17,
  "tile": [
   280.0,
   200.0
@@ -86,9 +113,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 150812,
+ "tris": 265262,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 4.41,
+ "veg_s": 3.44,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
@@ -98,5 +125,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.117
+ "zone_s": 0.073
 }
