@@ -9,10 +9,15 @@
  * THE CONTRACT IT IMPLEMENTS:
  *   await adapter.open()                      launch Chrome, attach, boot the page
  *   await adapter.setup(plan)                 new game | checkpoint | repro save
- *   await adapter.observe()   -> {screenshot, text, percept, framePath}
+ *   await adapter.observe()   -> {screenshot, text, percept, framePath,
+ *                                 ready, why, frozen, meanL, waitedMs}
+ *                              READY IS NOT DECORATION: it is false when the harness
+ *                              could not get a painted frame, and layer 3 must not
+ *                              show the agent a frame that says so. See FRAME_GATE_JS.
  *   await adapter.truth()     -> harness-only ground truth (NEVER to the agent)
  *   await adapter.act(intent) -> {summary, legs, transcript}
- *   await adapter.settle()                    wait out fades and empty modals
+ *   await adapter.choose(n)                   pick entry n of the open list
+ *   await adapter.settle()                    wait for a frame the player would see
  *   adapter.checkpoints()     -> derived from story.json AT RUN TIME
  *   await adapter.close()
  *
