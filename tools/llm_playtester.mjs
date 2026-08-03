@@ -261,9 +261,18 @@ try {
   console.log(`== SETUP (${plan.kind})`);
   if (!await adapter.setup(plan)) { console.error('the page never became playable after setup'); await adapter.close(); process.exit(13); }
   console.log('== PLAY');
+  /* THE SPINE, as a question the runner can ask without knowing what a beat is:
+   * given the beats that have fired, which SCENES still hold one that has not?
+   * Leaving that set is leaving the story, and it is the harness's job to notice
+   * because the player cannot — the objective banner follows you out. */
+  const ALL_BEATS = checkpointsFromStory().checkpoints;
+  const spineScenes = (fired) => {
+    const f = new Set(fired);
+    return new Set(ALL_BEATS.filter(b => !f.has(b.id) && b.scene).map(b => b.scene));
+  };
   result = await runEpisode({ adapter, agent, plan, runDir: RUNDIR, runId: RUN_ID, port: PORT,
     maxSteps: MAX_STEPS, maxReports: MAX_REPORTS, stopBeat: STOP_BEAT, stuckWindow: STUCK_N,
-    noQueue: has('no-queue') });
+    spineScenes, noQueue: has('no-queue') });
 } catch (e) {
   err = e;
   console.error('\nFATAL: ' + (e && e.stack || e));

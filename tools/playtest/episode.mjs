@@ -113,7 +113,10 @@ class Stuck {
  */
 export async function run(cfg) {
   const { adapter, agent, plan, runDir, runId, maxSteps = 120, maxReports = 8,
-    stopBeat = null, stuckWindow = 6, port = 3000, log = console.log, noQueue = false } = cfg;
+    stopBeat = null, stuckWindow = 6, port = 3000, log = console.log, noQueue = false,
+    // spineScenes(firedBeats) -> Set of scenes where an un-fired beat still lives.
+    // Supplied by the CLI, which owns story.json; the runner only needs the answer.
+    spineScenes = null } = cfg;
   mkdirSync(runDir, { recursive: true });
   const jsonl = join(runDir, 'run.jsonl');
   const obsLog = join(runDir, 'observations.jsonl');
@@ -125,7 +128,7 @@ export async function run(cfg) {
   const reports = [];
   const stallSeen = new Map();
   const lastFrames = [];
-  let nudge = null, finished = null, steps = 0;
+  let nudge = null, finished = null, steps = 0, offSpine = 0, offSpineFiled = false;
 
   const brief = [plan.brief, plan.objective ? `Your current objective is: ${plan.objective}` : null]
     .filter(Boolean).join(' ') || null;
@@ -172,6 +175,34 @@ export async function run(cfg) {
     // Frozen with a modal up and nothing drawn: not a decision the agent can make,
     // and a real defect if it persists. settle() already waited it out.
     if (!settled) log(`  (step ${step}: the game held a modal lock for 10 s with nothing on screen)`);
+
+    /* THE SPINE DETECTOR. Found on the second real episode, and it is the same
+     * shape as the walk-executor's free signal: cheap, harness-side, and it does
+     * not need the model to be articulate.
+     *
+     * The agent read the opening narration by pressing E, and the very next frame
+     * offered "Leave Emberbrook? [E]" on the tile it was standing on. It pressed
+     * the button the game had just spent three lines teaching it to press, and was
+     * put in the overworld with "Follow the road north" still on the HUD and
+     * nothing in that scene able to advance the chapter.
+     *
+     * A player cannot see that they have left the story; the harness can, because
+     * it knows which scenes still hold an un-fired beat. Leaving that set and
+     * staying gone is a defect whether the player noticed or not. Filed ONCE. */
+    if (spineScenes && truth.scene) {
+      const live = spineScenes(truth.beats || []);
+      if (live && live.size && !live.has(truth.scene)) offSpine++; else offSpine = 0;
+      if (offSpine === 3 && !offSpineFiled) {
+        offSpineFiled = true;
+        fileReport('bug', {
+          title: 'The player can leave the chapter on its first frame, and the objective follows them out',
+          doing: 'I read the opening narration by pressing the action button, then used the only prompt on screen.',
+          expected: 'To carry on with the objective the game was showing me.',
+          happened: `I ended up somewhere with no way to advance the story, and the objective on screen ` +
+            `("${obs.percept.objective || 'none'}") still refers to where I was. Nothing here can continue the chapter.`,
+        }, step, obs.percept, truth, lastFrames.slice(), 'spine-detector', 'P1');
+      }
+    }
 
     const s = stuck.push(step, truth, obs.percept);
     if (s) {
