@@ -1874,20 +1874,45 @@
     // would mean editing play3d.html, which is coordinator custody. Four shader
     // passes is less code than the vendored one anyway.
     //
-    // GAMMA, HONESTLY: the render target carries the renderer's sRGB output, so
-    // the bloom threshold and the blur run in display space rather than in
-    // linear. That is the cheap-bloom convention and it is why the threshold sits
-    // as high as 0.70 with a knee — in display space a hard threshold on midtones
-    // strobes as a body moves. Anyone re-tuning this should know which space the
-    // numbers are in.
+    // GAMMA, HONESTLY — AND THIS BLOCK IS WHERE THE r185 UPGRADE BIT.
+    // Every constant in the grade below (threshold 0.70, the 0.5 contrast pivot,
+    // the 0.42 split-tone pivot, the vignette falloff) is a DISPLAY-SPACE number.
+    // That is the cheap-bloom convention and it is deliberate: in display space a
+    // hard threshold on midtones does not strobe as a body moves.
+    //
+    // Under r128 the scene pass ARRIVED display-space for free — the renderer
+    // applied outputEncoding when rendering into a render target, so sRGB bytes
+    // landed in an RGBA8 buffer and a raw sampler read them straight back.
+    // r185 does neither half of that:
+    //   1. it renders into a non-XR render target in the WORKING space (linear) —
+    //      `WebGLRenderer.js`: colorSpace = _currentRenderTarget === null ?
+    //      outputColorSpace : ... : ColorManagement.workingColorSpace — so
+    //      renderTarget.texture.colorSpace does NOT make it encode; and
+    //   2. if you set that property anyway the target is ALLOCATED SRGB8_ALPHA8,
+    //      so the hardware encodes on write and decodes again on read, and the
+    //      composite still sees linear.
+    // The measured cost of getting this wrong was the whole arena about a stop
+    // and a half down with its contrast crushed (docs/qa/three-upgrade/battle).
+    // So the conversion is now EXPLICIT, in the two shaders that consume the
+    // scene pass, and the render targets are declared as the raw buffers they
+    // are. Same numbers, same look, and the space they are in is written down
+    // instead of inherited from a renderer default that moved.
     const POST_V = [
       'varying vec2 vUv;',
       'void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     ].join('\n');
+    // linear working space -> display (sRGB transfer). The scene pass lands in
+    // the render target LINEAR under r185; every constant after this line is a
+    // display-space number, so the conversion happens once, here, at the sample.
+    const LIN2DISP = [
+      'vec3 lin2disp(vec3 c){ c = max(c, vec3(0.0));',
+      '  return mix(c * 12.92, 1.055 * pow(c, vec3(0.41666)) - 0.055, step(vec3(0.0031308), c)); }',
+    ].join('\n');
     const BRIGHT_F = [
       'varying vec2 vUv; uniform sampler2D tS; uniform float thr, knee;',
+      LIN2DISP,
       'void main(){',
-      '  vec3 c = texture2D(tS, vUv).rgb;',
+      '  vec3 c = lin2disp(texture2D(tS, vUv).rgb);',
       '  float l = max(c.r, max(c.g, c.b));',
       '  float w = smoothstep(thr - knee, thr + knee, l);',
       '  gl_FragColor = vec4(c * w, 1.0);',
@@ -1909,9 +1934,12 @@
     const COMP_F = [
       'varying vec2 vUv; uniform sampler2D tS, tB;',
       'uniform float bloom, vig, warm, con, sat, grain, seed;',
+      LIN2DISP,
       'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }',
       'void main(){',
-      '  vec3 c = texture2D(tS, vUv).rgb;',
+      // tS is the raw scene pass (linear); tB is the bloom chain, which BRIGHT_F
+      // already converted, so it is display-space and must NOT be converted twice.
+      '  vec3 c = lin2disp(texture2D(tS, vUv).rgb);',
       '  c += texture2D(tB, vUv).rgb * bloom;',
       '  c = clamp((c - 0.5) * con + 0.5, 0.0, 2.0);',
       '  float l = dot(c, vec3(0.299, 0.587, 0.114));',
@@ -1955,11 +1983,13 @@
             p.rt = new TH.WebGLRenderTarget(W, H, opt);
             p.bA = new TH.WebGLRenderTarget(bw, bh, opt);
             p.bB = new TH.WebGLRenderTarget(bw, bh, opt);
-            // The scene pass must land in the target ALREADY sRGB-encoded, or the
-            // composite reads linear values through a shader that assumes display
-            // space and the whole frame comes out washed. Stating it on the
-            // texture is how r128 is told.
-            p.rt.texture.colorSpace = TH.SRGBColorSpace;
+            // DECLARED RAW ON PURPOSE — see the GAMMA note above. Under r185 a
+            // render target marked SRGBColorSpace is allocated SRGB8_ALPHA8 and
+            // the hardware round-trips the encode away; the composite shader does
+            // the conversion instead, so these three buffers are plain linear.
+            p.rt.texture.colorSpace = TH.NoColorSpace;
+            p.bA.texture.colorSpace = TH.NoColorSpace;
+            p.bB.texture.colorSpace = TH.NoColorSpace;
           },
           draw(to, mat) {
             quad.material = mat;

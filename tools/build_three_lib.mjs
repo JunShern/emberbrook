@@ -21,8 +21,17 @@ const vBVH = JSON.parse(readFileSync(new URL('../node_modules/three-mesh-bvh/pac
 await build({
   entryPoints: [new URL('three_lib_entry.js', import.meta.url).pathname],
   bundle: true, format: 'iife', minify: true, target: 'es2020',
+  // DRACOLoader resolves its DEFAULT decoder URLs at module scope with
+  // `new URL('../libs/...', import.meta.url)`, and an IIFE has no import.meta —
+  // esbuild leaves it empty and `new URL` throws on load, taking the whole bundle
+  // with it. The defaults are overridden by setDecoderPath() in every caller here
+  // (tools/build-static.mjs --draco), so all this has to be is a VALID base in
+  // both a browser and Node's require().
+  // (a define value must be a literal or an entity name, so the expression lives
+  // in a banner-declared global rather than inline.)
+  define: { 'import.meta.url': '__EB_BASE_URL' },
   outfile: OUT, legalComments: 'none',
-  banner: { js: `/* three ${vThree} + three-mesh-bvh ${vBVH} — built by tools/build_three_lib.mjs. DO NOT EDIT. */` },
+  banner: { js: `var __EB_BASE_URL=(typeof document!=='undefined'&&document.baseURI)||'file:///';\n/* three ${vThree} + three-mesh-bvh ${vBVH} — built by tools/build_three_lib.mjs. DO NOT EDIT. */` },
   // `module` exists in Node's CommonJS scope and not in a browser's; the guard is
   // what lets walk_engine_gate require() the same bytes the page loads.
   footer: { js: `if(typeof module!=="undefined"&&module.exports){module.exports=globalThis.THREE;module.exports.MeshBVHLib=globalThis.MeshBVHLib;}` },
@@ -36,4 +45,5 @@ const kb = (statSync(OUT).size / 1024).toFixed(0);
 if (!T || !T.REVISION) { console.error('BUILT BUT DEAD: no REVISION on the require()d bundle'); process.exit(1); }
 if (!T.MeshBVHLib || !T.MeshBVHLib.MeshBVH) { console.error('BUILT BUT DEAD: no MeshBVHLib.MeshBVH'); process.exit(1); }
 if (!T.GLTFLoader) { console.error('BUILT BUT DEAD: no GLTFLoader'); process.exit(1); }
+if (!T.DRACOLoader) { console.error('BUILT BUT DEAD: no DRACOLoader'); process.exit(1); }
 console.log(`SAVED ${OUT}  r${T.REVISION} (three ${vThree}, three-mesh-bvh ${vBVH})  ${kb} KB`);

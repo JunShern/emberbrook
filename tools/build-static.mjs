@@ -312,18 +312,18 @@ else:
 `;
 
 // ---- --fetch-draco : vendor the decoder, then exit ---------------------------
-// three.min.js here is r128 (2021), so the DRACOLoader that matches is the
-// CLASSIC non-module examples/js build — the module build would not attach to
-// the global THREE these pages use.
+// public/lib/three.min.js is r185 and it BUNDLES its own DRACOLoader (see
+// tools/three_lib_entry.js) — modern three publishes no classic examples/js build
+// that would attach to the global THREE these pages use. So only the DECODER is
+// vendored here: three wasm/js files, pinned to the same three the bundle is.
 if (flag('fetch-draco')) {
   const dest = join(ROOT, 'tools/vendor/draco');
   mkdirSync(join(dest, 'gltf'), { recursive: true });
-  const B = 'https://unpkg.com/three@0.128.0/examples/js';
+  const B = 'https://unpkg.com/three@0.185.1/examples/jsm/libs/draco';
   const files = [
-    [`${B}/loaders/DRACOLoader.js`, 'DRACOLoader.js'],
-    [`${B}/libs/draco/gltf/draco_decoder.js`, 'draco_decoder.js'],
-    [`${B}/libs/draco/gltf/draco_decoder.wasm`, 'draco_decoder.wasm'],
-    [`${B}/libs/draco/gltf/draco_wasm_wrapper.js`, 'draco_wasm_wrapper.js'],
+    [`${B}/gltf/draco_decoder.js`, 'draco_decoder.js'],
+    [`${B}/gltf/draco_decoder.wasm`, 'draco_decoder.wasm'],
+    [`${B}/gltf/draco_wasm_wrapper.js`, 'draco_wasm_wrapper.js'],
   ];
   for (const [url, name] of files) {
     execFileSync('curl', ['-fsSL', '-o', join(dest, name), url]);
@@ -804,10 +804,11 @@ function patchPlateExtensions() {
 async function glbPass() {
   log('\n  --glb: compressing scene GLBs (textures -> WebP, then geometry -> DRACO) …');
   const vendor = join(ROOT, 'tools/vendor/draco');
-  if (!existsSync(join(vendor, 'DRACOLoader.js')))
+  if (!existsSync(join(vendor, 'draco_decoder.wasm')))
     die('--glb needs the DRACO decoder vendored first:\n' +
         '    node tools/build-static.mjs --fetch-draco\n' +
-        '  (downloads three r128 DRACOLoader.js + the draco decoder into tools/vendor/draco/)');
+        '  (downloads the draco decoder into tools/vendor/draco/; the LOADER now ships\n' +
+        '   inside public/lib/three.min.js, so only the wasm pair is vendored)');
   let cli;
   try { cli = execFileSync('sh', ['-c', 'command -v gltf-transform || echo NPX'], { encoding: 'utf8' }).trim(); }
   catch { cli = 'NPX'; }
@@ -875,12 +876,19 @@ async function glbPass() {
     const p = join(OUT, rel); if (!existsSync(p)) continue;
     let h = readFileSync(p, 'utf8');
     if (h.includes('EB_DRACO_SHIM')) continue;
-    h = h.replace(/(<script[^>]*src="lib\/GLTFLoader\.js"[^>]*>\s*<\/script>)/,
-      `$1\n<script src="lib/draco/DRACOLoader.js"></script>\n<script>/*EB_DRACO_SHIM*/(function(){
+    // ANCHORED ON three.min.js, NOT on GLTFLoader.js. The r185 upgrade collapsed
+    // three + GLTFLoader + three-mesh-bvh into one file, and a .replace() whose
+    // pattern no longer matches does not throw — it returns the string unchanged.
+    // That would have shipped a draco-compressed dist with no decoder wired in and
+    // reported success, so the substitution is ASSERTED rather than attempted.
+    const before = h;
+    h = h.replace(/(<script[^>]*src="lib\/three\.min\.js"[^>]*>\s*<\/script>)/,
+      `$1\n<script>/*EB_DRACO_SHIM*/(function(){
   var d=new THREE.DRACOLoader(); d.setDecoderPath('lib/draco/');
   var C=THREE.GLTFLoader; THREE.GLTFLoader=function(m){ var l=new C(m); l.setDRACOLoader(d); return l; };
   THREE.GLTFLoader.prototype=C.prototype;
 })();</script>`);
+    if (h === before) { console.error(`FATAL: --draco could not find the three.min.js script tag in ${rel}; the dist would have no decoder.`); process.exit(1); }
     writeFileSync(p, h);
   }
 }

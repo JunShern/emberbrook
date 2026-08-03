@@ -17,12 +17,17 @@
  */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+// DRACOLoader rides along because tools/build-static.mjs --draco needs one that
+// MATCHES this three; the r128 era loaded a separate classic examples/js file,
+// which modern three does not publish. Only the decoder binaries stay external
+// (they are wasm, and they are what the build vendors into dist/lib/draco).
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import * as MeshBVHLib from 'three-mesh-bvh';
 
 // the ESM namespace object is frozen, so the additive names go on a copy. Every
 // mutable table inside it (ShaderChunk, ShaderLib, ...) is still the SAME object,
 // which is what play3d.html's shader surgery relies on.
-const NS = Object.assign({}, THREE, { GLTFLoader });
+const NS = Object.assign({}, THREE, { GLTFLoader, DRACOLoader });
 
 globalThis.THREE = NS;
 globalThis.MeshBVHLib = MeshBVHLib;

@@ -20,13 +20,13 @@
  {
   "scene": "emb-townwalk",
   "out": "townwalk-wide.png",
-  "expr": "window.ORBIT.dist=16;window.ORBIT.pitch=0.62;SIM.tick&&SIM.tick(0.1)",
+  "expr": "SIM.tp(52,-18);window.ORBIT.dist=8;window.ORBIT.pitch=0.32;window.ORBIT.yaw=0.9;SIM.tick&&SIM.tick(0.1)",
   "settle": 1600
  },
  {
   "scene": "emb-townwalk",
   "out": "townwalk-closeup.png",
-  "expr": "window.ORBIT.dist=4.0;window.ORBIT.pitch=0.12;SIM.tick&&SIM.tick(0.1)",
+  "expr": "window.ORBIT.dist=4.0;window.ORBIT.pitch=0.12;window.ORBIT.yaw=2.4;SIM.tick&&SIM.tick(0.1)",
   "settle": 1600
  },
  {
