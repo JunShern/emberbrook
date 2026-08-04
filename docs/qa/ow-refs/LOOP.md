@@ -1596,3 +1596,99 @@ one (CB at 24%), where the reference carries green-dominant with a cool second a
 Gates: `walk_engine_gate ow-valley` GREEN (0 lost cells, BVH 0 FAIL), `slice_test` 848/0,
 `valley_verify` OK. The change is vertex-colour/palette only — no triangle, material or object
 moved.
+
+---
+
+## Round 14 — the grade's missing half, and a metric satisfied by the wrong object
+
+**THE GRADE ONLY EVER HAD ITS WARM HALF WRITTEN.** R6 gated the warm push on `litK` and left shade
+at `vec3(1.0)`; the only cool term rides depth. **Eight rounds of warming the light and doing
+nothing whatsoever to the shade.** Fixed with a luminance-normalised (1.0000 Rec.709) cool push,
+steered off vegetation by r13's own yellow selector because the references' shaded grass (99°) and
+shaded stone (217°) are 110° apart. Key:fill 2.40/0.95 → 3.00/0.55, **ratio 7.6 → 17.5**, and the
+sweep's own lesson: **cutting the fill works, raising the key clips.**
+
+That is the seventh thing in three nights that was disconnected or half-connected rather than
+mistuned, after the window `use_vcol`, the campfire emissive, the depth-ramp range, the haze
+colour space, the ground-albedo blue, and the playtest finish line.
+
+**AND THE CLASSIFIER WAS DELETING THE SIGNAL IT WAS BUILT TO MEASURE:** it inherited r13's water
+rule and dropped **36% of the roof pixels — the bluest ones — the moment slate became slate.**
+Fixed on `(g−r)/(b−r)`. An instrument that silently discards its own subject is worse than no
+instrument, because it reports a clean table.
+
+**`framespread`, the round's new instrument, earns its place by refusing the value ladder as
+evidence.** r13's meadow 5–95 luminance range was **0.559** against the references' 0.523/0.442,
+its IQR wider than both, its local contrast between them — **by every value statistic the frame
+was not flat, and it plainly looked flat.** The number that agrees with the eye is hue:
+chroma-weighted circular **R 0.872** vs their 0.631/0.493, with three ADJACENT 30° sectors holding
+95% of the frame's chroma. That is "a narrow band of warm beige-green" as a number.
+
+| | r13 | r14 | ref 3 |
+|---|---|---|---|
+| roof/wall value ratio | 1.14 | **0.85** | 0.82 |
+| roof lit→shade L | .700→.316 | **.475→.222** | .488→.228 |
+| roof HSV sat | 0.114 | **0.309** | 0.457 |
+| meadow circular R | 0.872 | **0.541** | 0.493 / 0.631 |
+
+**THE BLACK SLIVERS ARE GONE, third round named:** inverted lattice cells (0.99·STEP jitter letting
+neighbours cross over), **2648/22995 → 0**, with a build-time census that raises. **The contact
+shadow was never missing** — it was a CIRCLE, darkening the ground 41% and still unread; stretched
+2.1x along the sun's bearing. **The water's ratified depth→alpha DID port** (bed present at 85/85
+stations); what was fighting it was a 31% albedo chroma cut plus a 20% cyan pull left on top.
+
+### AND THE ROOFS WENT BLUE TO BUY A COOL SECTOR THE REFERENCES GET FROM AIR
+
+`framespread` wanted a cool sector. The roofs were the only object available to supply one. The
+metric went green. **The blind critic, asked only whether the roof colour works:**
+
+> *"Be blunt: it is **the single worst decision in A**. Two materials could justify a blue roof:
+> slate, which is desaturated grey-blue and DARK; or glazed ceramic tile, which is saturated but
+> then demands specular highlights and per-tile variation. A's roofs have neither… blue-violet is
+> the complement of both the ochre walls and the olive ground, so every roof is doing maximum
+> simultaneous contrast against everything it touches, at close range, on ten objects at once. The
+> roofs read as **stickers laid over the landscape** rather than as objects in it."*
+
+**Verified in the reference itself: ref 3's cool 21% is the river, the mist banks, the far
+mountains and the sky. The windmill's roof is dark grey-brown and every building is warm stone.
+There are no blue roofs.** The critic's own cool-source census across the four frames:
+
+  * **A: the roofs** — manufactured props, near field. Secondary: the teal river.
+  * **B: distant hill bands, sky, blue fill in the cliff's shadow faces** — atmospheric.
+  * **C: the ocean, the blue-violet far cliffs, the cave glow** — water and air.
+  * **D: the river, the mist banks, the far mountains, the sky** — purely atmospheric.
+
+> *"A gets its coolness from painted objects in the near field, **which inverts aerial perspective**
+> — near should be warm and saturated, far should be cool and pale. A puts its coolest, most
+> saturated pixels closest to camera, and that is **the mechanical reason the frame feels flat**
+> despite having plenty of depth cues available."*
+
+**THE RULE THIS ROUND BUYS, and it is not the same as round 13's.** R13's lesson was that a
+statistic constrains a DISTRIBUTION and says nothing about the relationships in the frame. This
+one is sharper: **a histogram does not care WHICH OBJECT supplies a bin.** `framespread` is a good
+instrument and stays — but a metric that counts pixels by colour can always be satisfied by
+painting the wrong thing, and the cheapest object to paint is rarely the right one. When a metric
+goes green, ask which object moved it.
+
+**And the sky is the real answer, which the round found and could not spend.** The critic's sky
+census: **A ~2%, B ~5%, C ~15%, D ~25% with structured cloud** — and of A: *"the frame carries
+crisp directional shadows and a warm key. **Nothing visible justifies that light.**"* r14's own
+report reached it independently: *"the meadow has no sky… structurally the camera pitch — which
+the user opened and no lane took."* **Fourteen rounds treated the camera as fixed when the user had
+explicitly opened pitch, height and horizon** (distance is the part that is fixed). Round 15 takes
+it, under the user's own constraint that the player keeps a wide view of the ground.
+
+**Honest costs.** Meadow under L 0.10 went **1.26% → 2.02%** against the references' 0.00/0.03% —
+the black point got WORSE, and it was reported rather than buried. The critic's read of the same
+axis: *"saturation has overshot; value contrast is still short — the darks are muddy grey-brown
+rather than deep."* Both are true and the fix is more range WITHIN the shadows with fewer pixels at
+the floor, which is not more crushing. Ochre as a second rock tone made the cliff worse (hue SD
+13.4 → 11.5°) and was kept out.
+
+**One act of judgment worth recording as precedent:** commit `2d4db1` hit the reference's absolute
+roof chroma almost exactly (0.149 vs 0.154) and produced cobalt roofs, circular R 0.363, PAST both
+references. The builder looked at it, called it wrong, and shipped at 40% back. **The picture
+refused the number, on the builder's own work, unprompted.** That is the standard.
+
+Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 · `findability_test` 69/0 ·
+`walk_engine_gate ow-valley` GREEN.
