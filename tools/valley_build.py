@@ -71,6 +71,38 @@ LEAFM, LEAFC, BARK, MARK = O3.LEAFM, O3.LEAFC, O3.BARK, O3.MARK
 HOUSE_RIDGE = VM.HOUSE_RIDGE       # 3.7u — the scale contract beside a 1.45u character
 HOUSE_EAVE = 1.80                  # wall-plate height before the per-house factor
 STATS = {}
+# THE PER-HOUSE CHIMNEY GATE (R13).  One record per house built, in both towns:
+# (footprint inside the pad, outer face behind the wall face, cap above the ridge,
+# pad margin, wall recess, ridge clearance).  A house that fails any clause is built
+# WITHOUT a chimney — the gate refuses, it does not merely report.
+CHIM_GATE = []
+
+# =============================================================================
+# R13 — THE ROOFS WERE THE LOUDEST THING IN THE FRAME
+# =============================================================================
+# The twelfth blind critic: "the grass is a dull uniform olive ... while the roofs
+# stay a strong terracotta and the river stays a strong cyan — two loud colours on
+# a dead field", filed explicitly as the signature of a GLOBAL saturation walk-back
+# where a PER-MATERIAL one was needed.  This is the per-material one, and it is a
+# palette entry rather than a grade term precisely because a grade cannot separate
+# a roof from the ground beside it.
+#
+# Measured (scratchpad/r13b/warmhue.py, warm band 8-32 deg at sat > 0.50): the r12
+# meadow plate carries 27.8% of its pixels in that band at mean saturation 0.600;
+# the three FFIX-reimagined overworld references carry 0.06-0.55% at 0.60-0.65.
+# THE REFERENCES ARE NOT LESS SATURATED WHERE THEY ARE WARM — they are warm over
+# half a percent of the frame instead of a quarter of it.  So the fix is chroma on
+# the classes that cover area, not a hue move.
+#
+# `ow_f2_tiles` is a red-slate PHOTO albedo multiplied by this class colour, so the
+# product's chroma is roughly (1 - s_tex)(1 - s_col): PAL f's a86b52 is s 0.512 and
+# takes the pair to ~0.68.  917366 is s 0.297 at the SAME Rec.709 luminance (120.5
+# against 118.1 — a chroma move must not smuggle in a value move, which is how the
+# last two "desaturations" in this loop turned into brightness changes), landing the
+# product near 0.54.  Still fired clay; no longer the loudest thing in the frame.
+ROOF_HEX = "917366"
+B.PAL[STYLE][ROOF] = ROOF_HEX
+B.PAL_LIN[STYLE][ROOF] = srgb(ROOF_HEX)
 
 
 def gh(F, zg, fr, x, y):
@@ -108,9 +140,68 @@ def ghv(F, zg, fr, x, y):
 #     node or the colour never leaves Blender.
 # Nothing else is needed: three's GLTFLoader turns alphaMode BLEND into
 # transparent=true + depthWrite=false, which is the rest of the probe's recipe.
-GLASS = "#bfe6ee"        # probe B1's tint, sRGB
-GLASS_OPACITY = 0.62
+#
+# ============================ R13: A DEPTH-DRIVEN ALPHA, AND WHY IT IS ALLOWED HERE
+# The thirteenth blind critic: the river is "OPAQUE FLAT CYAN: no reflection, no
+# depth falloff, no shore transition, hitting the bank on a hard line ... the most
+# saturated thing in the frame and the least believable material in either frame."
+# docs/plans/water-transparency.md is this repo's ratified answer and its central
+# ruling is that THE BATHYMETRY IS THE DELIVERABLE AND THE SHADER IS THE CHEAP
+# PART — a depth-alpha ramp does nothing without a bed and a shallow zone.  So the
+# first thing this round did was ask THIS river that question, with that document's
+# own method (a down-ray stack; scratchpad/r13b/bathy.py against the built blend):
+#
+#   * A BED EXISTS UNDER EVERY STATION.  0 of 85 sampled stations have no ground
+#     under the channel centre.  Centre depth: min 0.84, median 1.63, p90 3.57,
+#     max 3.64u.  Dellhollow's pools were two flat slabs at a uniform 3.5-7.5 m;
+#     this channel is a groove cut into the height field and it has a real profile.
+#   * AND A REAL SHALLOW ZONE.  Across the channel the depth runs ~1.6u at the
+#     centre, ~0.3-1.3u at half-width and crosses zero between 0.75 and 1.0 of the
+#     half-width, i.e. the ramp lands inside the water's own footprint.
+#   * FINDING 2 IS LARGELY ABSENT.  86% of the strip's own edge samples are BURIED
+#     IN THE BANK (ground above the waterline); only 14% float, by a median 0.53u.
+#     Dellhollow's sheets were 43-79% floating rectangle corner, which is why
+#     making them transparent there would have been worse.
+#
+# So the ratified recipe applies as ratified, at x1.0 — no per-sheet rescale.  The
+# two things this build has to add are the ones the measurement implies: the strip
+# needed INTERIOR VERTICES to carry the ramp (it was two columns, so a per-vertex
+# alpha could only ever describe its two edges), and the alpha has to come off
+# COLOR_0.
+#
+# WHICH RE-INTRODUCES, DELIBERATELY, THE LINK THE COMMENT BELOW REMOVED.  Read that
+# comment first: an alpha link from COLOR_0 WON over the BSDF default and shipped an
+# opaque river for four weeks.  The difference is that the vertex alpha was flat 1.0
+# then and carries the ramp now.  MEASURED IN THE EXPORTED GLB, not in Blender:
+# COLOR_0 shipped as **VEC3** before this change — the exporter drops the alpha
+# channel entirely unless the Alpha socket is fed from it, so `baseColorFactor[3]`
+# was the only alpha that existed.  Linking it is what makes the attribute VEC4;
+# three's GLTFLoader then sets USE_COLOR_ALPHA off `itemSize === 4` and the
+# per-vertex alpha multiplies into the fragment.  The gate for this is a byte read
+# of the accessor (scratchpad/r13b/glbwater.py), never the Blender-side print.
+GLASS = "#f4f7f6"        # R13: NEAR-NEUTRAL.  This constant is a MULTIPLIER on the
+# water's COLOR_0, and B1's #bfe6ee is itself a blue-green, so it was multiplying a
+# saturated teal albedo by another blue and the product came out MORE chromatic than
+# either (linear (0.019, 0.127, 0.170) — sRGB (37, 100, 115) at HSV sat 0.678).  The
+# water's colour is authored in one place now, WATER_HEX below, and this stays out of
+# its way.  Letting the transparency and the bed carry the colour is the ratified
+# note's own recommendation.
+WATER_HEX = "44757f"     # the river's albedo, written straight into COLOR_0.  With
+# GLASS the product is sRGB (65, 113, 122) at sat 0.467 against r12's 0.678 — a 31%
+# chroma cut in the albedo BEFORE the bed shows through it.
+GLASS_OPACITY = 0.62     # the fallback for water with no bathymetry (falls, tribs)
 GLASS_ROUGH = 0.06
+
+# The ratified depth -> alpha ramp, docs/plans/water-transparency.md W3, verbatim.
+ALPHA_RAMP = [(0.00, 0.06), (0.60, 0.30), (1.50, 0.62), (3.00, 0.88), (4.00, 0.97)]
+
+
+def depth_alpha(depth):
+    """Piecewise-linear ALPHA_RAMP, clamped at both ends."""
+    d = np.asarray(depth, float)
+    xs = np.array([p[0] for p in ALPHA_RAMP])
+    ys = np.array([p[1] for p in ALPHA_RAMP])
+    return np.interp(np.clip(d, xs[0], xs[-1]), xs, ys)
 
 
 def _srgb_to_linear(hex_):
@@ -121,7 +212,8 @@ def _srgb_to_linear(hex_):
     return out
 
 
-def glass_water(m, tint=GLASS, opacity=GLASS_OPACITY, rough=GLASS_ROUGH):
+def glass_water(m, tint=GLASS, opacity=GLASS_OPACITY, rough=GLASS_ROUGH,
+                vertex_alpha=True):
     """Re-cut `ow_f2_water` as the probe's B1 glass river."""
     nt = m.node_tree
     b = nt.nodes["Principled BSDF"]
@@ -139,6 +231,12 @@ def glass_water(m, tint=GLASS, opacity=GLASS_OPACITY, rough=GLASS_ROUGH):
         if lk.to_node == b and lk.to_socket.name == "Alpha":
             nt.links.remove(lk)
     b.inputs["Alpha"].default_value = float(opacity)
+    if vertex_alpha and vc is not None:
+        # R13: the link goes BACK IN, on purpose (see the header above).  It is what
+        # promotes COLOR_0 from VEC3 to VEC4 in the export, and the depth ramp rides
+        # that alpha.  `opacity` above stays as the socket default and is what the
+        # material falls back to if the link is ever cut again.
+        nt.links.new(vc.outputs["Alpha"], b.inputs["Alpha"])
     b.inputs["Roughness"].default_value = float(rough)
     b.inputs["Metallic"].default_value = 0.0
     lin = _srgb_to_linear(tint)
@@ -154,8 +252,10 @@ def glass_water(m, tint=GLASS, opacity=GLASS_OPACITY, rough=GLASS_ROUGH):
         nt.links.new(mx.outputs[2], b.inputs["Base Color"])
     else:
         b.inputs["Base Color"].default_value = (*lin, 1.0)
-    print("  water: B1 glass  tint %s -> linear %s, opacity %.2f, rough %.2f"
-          % (tint, ", ".join("%.4f" % v for v in lin), opacity, rough))
+    print("  water: B1 glass  tint %s -> linear %s, opacity %.2f (%s), rough %.2f"
+          % (tint, ", ".join("%.4f" % v for v in lin), opacity,
+             "COLOR_0 alpha LINKED — the ramp drives it" if vertex_alpha and vc
+             else "unlinked, exports as baseColorFactor[3]", rough))
     return m
 
 
@@ -175,11 +275,102 @@ def build_water(col, F):
     nx, ny = -tg[:, 1], tg[:, 0]
     bx, by = xy[:, 0] - VM.CX, xy[:, 1] - VM.CY
     p = B.Prop("water_river")
-    p.strip(WATER, list(zip(bx + nx * hw, by + ny * hw, wl)),
-            list(zip(bx - nx * hw, by - ny * hw, wl)))
+    # R13 — THE STRIP NEEDS AN INSIDE.  It was two columns wide, one per bank, so a
+    # per-vertex depth ramp could only ever describe its two EDGES: the whole
+    # shallow-to-deep gradient the bathymetry actually has had nowhere to live, and
+    # the surface interpolated straight from one shore alpha to the other.  Nine
+    # columns across is all it takes; the ramp is written in water_bathymetry()
+    # below, from the same height field the channel was cut out of.  (Adjacent
+    # columns are laid as separate strips and therefore share duplicate vertices —
+    # they take identical positions AND identical alpha, so no seam exists.)
+    ncol = 9
+    us = np.linspace(-1.0, 1.0, ncol)
+    cols_ = [list(zip(bx + nx * hw * u, by + ny * hw * u, wl)) for u in us]
+    for k in range(ncol - 1):
+        p.strip(WATER, cols_[k], cols_[k + 1])
     ob = p.finish(col)
     STATS["river_width"] = (float(VM.RIV_WIDTH[0]), float(VM.RIV_WIDTH[-1]))
     return ob
+
+
+def water_bathymetry(made, F, zg, fr):
+    """THE WATER SHEETS' OWN COLOR_0: one albedo, and a DEPTH-DRIVEN ALPHA.
+
+    Runs as the LAST write to COLOR_0 on these objects (see main): B.write_prop_colors
+    rewrites every corner from the class palette and would erase anything applied
+    before it — the same ordering rule apply_house_tints already lives under.
+
+    Only WATER-class faces are touched.  `water_falls` carries a STONE lip in the
+    same mesh, and a pass that recoloured the object rather than the class would
+    have painted the rock the colour of the river — a mixed-class prop is why the
+    per-polygon class array exists.
+
+    Depth is measured against the SAME analytic height field the channel was cut
+    from (O3.height, crag treatment included), so the ramp cannot disagree with the
+    ground it is describing.  Sheets with no meaningful bathymetry take a flat
+    alpha: the falls curtain is a vertical sheet whose "depth" is meaningless, and
+    the tributaries are laid 0.05u above their own bed by construction, which the
+    ramp would render at alpha 0.08 — i.e. it would DELETE them.  A ramp applied
+    where its input is not a depth is a ramp applied to noise.
+    """
+    flat = {"tributaries": 0.72, "falls": 0.86}
+    lin = _srgb_to_linear(WATER_HEX)
+    rep = {}
+    for key in ("water", "pool", "tributaries", "falls"):
+        ob = made.get(key)
+        cls = made.get(key + "_cls")
+        if ob is None or cls is None:
+            continue
+        me = ob.data
+        ca = me.color_attributes.get("Col")
+        if ca is None:
+            continue
+        nv, nl = len(me.vertices), len(me.loops)
+        co = np.zeros(nv * 3)
+        me.vertices.foreach_get("co", co)
+        co = co.reshape(-1, 3)
+        if key in flat:
+            a_v = np.full(nv, float(flat[key]))
+            depth = None
+        else:
+            depth = co[:, 2] - np.asarray(ghv(F, zg, fr, co[:, 0], co[:, 1]), float)
+            a_v = depth_alpha(depth)
+        # CORNER or POINT domain — measure the attribute, do not assume it
+        per_loop = len(ca.data) == nl
+        if per_loop:
+            li = np.zeros(nl, dtype=np.int64)
+            me.loops.foreach_get("vertex_index", li)
+            sel = np.zeros(nl, bool)
+            for pi, poly in enumerate(me.polygons):
+                if int(cls[pi]) == WATER:
+                    for lx in poly.loop_indices:
+                        sel[lx] = True
+            aa = a_v[li]
+        else:
+            sel = np.zeros(nv, bool)
+            for pi, poly in enumerate(me.polygons):
+                if int(cls[pi]) == WATER:
+                    for vx in poly.vertices:
+                        sel[vx] = True
+            aa = a_v
+        buf = np.zeros(len(ca.data) * 4)
+        ca.data.foreach_get("color", buf)
+        buf = buf.reshape(-1, 4)
+        buf[sel, 0], buf[sel, 1], buf[sel, 2] = lin[0], lin[1], lin[2]
+        buf[sel, 3] = aa[sel]
+        ca.data.foreach_set("color", buf.ravel())
+        me.update()
+        rep[key] = dict(verts=nv, water_corners=int(sel.sum()),
+                        alpha=[round(float(np.min(aa[sel])), 3),
+                               round(float(np.median(aa[sel])), 3),
+                               round(float(np.max(aa[sel])), 3)],
+                        depth=None if depth is None else
+                        [round(float(np.min(depth)), 2), round(float(np.median(depth)), 2),
+                         round(float(np.max(depth)), 2)])
+        print("  bathymetry %-13s %5d verts, %5d water corners, alpha %s%s"
+              % (key, nv, int(sel.sum()), rep[key]["alpha"],
+                 "" if depth is None else "  depth %s" % rep[key]["depth"]))
+    return rep
 
 
 def build_tributaries(col, F, zg, fr):
@@ -270,12 +461,22 @@ def build_falls(col, F, zg, fr):
     c0, t0, n0, hw0 = frame(lip)
     c1, t1, n1, hw1 = frame(foot)
     ang0 = math.atan2(float(t0[1]), float(t0[0]))
-    # 1. THE LIP — a hard rock sill, so the water leaves the GROUND, not a slope
+    # 1. THE LIP — a hard rock sill, so the water leaves the GROUND, not a slope.
+    #    R13: IT IS ITS OWN MESH NOW, and the reason is an exporter rule measured in
+    #    the shipped GLB rather than guessed.  The depth ramp rides COLOR_0's ALPHA,
+    #    and the glTF exporter only writes COLOR_0 as VEC4 when the mesh's materials
+    #    feed their Alpha from it.  A mesh carrying BOTH the water material and the
+    #    rock one exported VEC3 — alpha silently dropped for the whole object — so
+    #    the curtain fell back to baseColorFactor[3] = 1.0 and went fully opaque,
+    #    while the river beside it ramped correctly.  ONE MIXED-MATERIAL MESH
+    #    DISABLES VERTEX ALPHA FOR EVERY PRIMITIVE IN IT.  Still `water_` prefixed,
+    #    so it stays out of collision exactly as it was inside water_falls.
+    lp = B.Prop("water_falls_lip")
     for k in range(7):
         u = (k - 3) / 3.0
-        p.cube(STONE, (float(c0[0] + n0[0] * u * hw0 * 1.12),
-                       float(c0[1] + n0[1] * u * hw0 * 1.12), z_top - 0.20),
-               (1.5, hw0 * 0.42, 0.9), rz=ang0)
+        lp.cube(STONE, (float(c0[0] + n0[0] * u * hw0 * 1.12),
+                        float(c0[1] + n0[1] * u * hw0 * 1.12), z_top - 0.20),
+                (1.5, hw0 * 0.42, 0.9), rz=ang0)
     # 2. THE CURTAIN — sheets hung from the lip, bowed downstream at the centre so it
     #    catches light as a face instead of as a seam
     nseg, nrow = 9, 5
@@ -303,7 +504,7 @@ def build_falls(col, F, zg, fr):
     print("EMBER FALLS: lip arc %.1fu z %.2f -> foot arc %.1fu z %.2f = %.2fu of free "
           "water over %.2fu of run (curtain %dx%d, 22 churn)"
           % (S[lip], z_top, S[foot], z_bot, z_top - z_bot, S[foot] - S[lip], nseg, nrow))
-    return p.finish(col)
+    return p.finish(col), lp.finish(col)
 
 
 def _ribbon(p, cls, xy, z, hw):
@@ -398,7 +599,10 @@ WALL_TINTS = [(1.00, 1.00, 1.00),        # the palette's own plaster
               (0.98, 1.00, 1.04)]        # limewash, a touch cooler
 ROOF_TINTS = [(1.00, 1.00, 1.00),        # the palette's own tile
               (0.71, 0.78, 0.87),        # weathered slate
-              (1.06, 0.85, 0.70)]        # a redder, older tile
+              (1.03, 0.92, 0.82)]        # an older, warmer tile — R13 pulled this
+# family's chroma back with the palette entry (was 1.06/0.85/0.70): a third of the
+# town multiplied the terracotta by ANOTHER 20% of red-over-blue, so the loudest
+# roofs in the frame were the ones this family owned.
 # TRODDEN EARTH IS DARKER THAN THE GRASS IT REPLACED, and the first version of the
 # bedding ring was not: f2's DIRT is 9c8a70, a pale warm grey, and under a 2.4x
 # golden key it arrived as CREAM — every house sat in a bright halo, which is the
@@ -629,51 +833,73 @@ def impression_house(p, ht, fam, px, py, yaw, dims, ch, rng):
     p.cube(WOOD, at(0, 0, fl + eh + 0.05), (w * 1.31, d * 1.18, 0.13), rz=yaw)
     p.prism(ROOF, at(0, 0, fl + eh + 0.11), w * 1.26, d * 1.14,
             max(0.9, rh - eh - 0.11), rz=yaw)
-    # CHIMNEY — an EXTERNAL STACK ON A GABLE END, not a stub on the roof slope.  The
-    # old one was 0.74u and would now be buried inside the prism; a stack pushed
-    # through the slope reads DETACHED from a high camera, because the half of it
-    # below the ridge is hidden by the near slope.  Against the gable wall it runs
-    # from the ground to above the ridge in one unbroken line: unambiguously part of
-    # the building from every angle this camera can take, and the tallest, narrowest
-    # thing in the frame — which is exactly what a 34-degree sun draws best.
-    # R11: THE STACK WAS PLACED AT A FRACTION OF `d` AND THEREFORE STOOD OFF THE
-    # WALL.  `gs * d * 0.60` against a 0.34 deep stack puts its inner face at
-    # `0.60d - 0.17`; the gable wall's face is at `0.50d`.  They touch only when
-    # `0.10d <= 0.17`, i.e. d <= 1.70 — and house_dims() draws d in 1.30..2.68, so
-    # MOST of the town had a free-standing pillar with daylight between it and the
-    # house, which is exactly what the tenth blind critic reported ("free-standing
-    # pillars that pass the roof ridge without flashing, several of them detached
-    # from the wall behind").  Measure the offset from the WALL FACE, never from a
-    # fraction of a jittered dimension: an offset that is a fraction of a random
-    # number is a contact that is a coin toss.
+    # ================================================================ CHIMNEY
+    # R13 — THREE ROUNDS OF PATCHES, SO THE MASSING IS WHAT IS WRONG.  R11 attached
+    # the stack to the wall face and collared it at the eave; R12 found the collar
+    # was a metre low (u = 0 is the roof prism's RIDGE, not its eave) and narrowed
+    # the shaft.  Both were real fixes and the thirteenth blind critic still read
+    # the object as "SEPARATE OBJECTS LEANED AGAINST THE HOUSES ... background grass
+    # visible in the gap at its base ... a flat cap in mid-air beside the roofline
+    # ... the column's base sits on bare grass while the house sits on a pale gravel
+    # pad".  Every clause of that is arithmetic, and here it is:
+    #
+    #   THE STACK OVERHUNG THE PAD ON EVERY HOUSE IN BOTH TOWNS.  It stood proud of
+    #   the gable wall face by `cd - 0.14` = 0.20u.  The plinth it is supposed to
+    #   stand on is `d * 1.07`, i.e. it reaches only `0.035 d` past that same wall
+    #   face — 0.046u at d = 1.30 and 0.094u at d = 2.68.  So 0.11-0.15u of the
+    #   stack's depth hung over open ground, and its base at `fl - 0.30` sat ABOVE
+    #   that ground: a free-standing foot with daylight under and behind it.  "The
+    #   column isn't on the pad" is literally, measurably true, on all fourteen.
+    #   THE THIRD FRACTION-OF-A-JITTERED-DIMENSION CONTACT IN THIS FILE after R11's
+    #   stack and R12's window pane — and this time it is retired by construction
+    #   rather than by a better fraction: no dimension of the stack is a fraction
+    #   of `d` any more, and the three clauses below are GATED per house, not
+    #   asserted (see CHIM_GATE; a house that fails any of them LOSES ITS CHIMNEY,
+    #   which is the authorised outcome — a missing chimney is invisible, a
+    #   detached one is the first thing the eye finds).
+    #
+    #   (i)   FOOTPRINT INSIDE THE PAD.  |cv| + cd/2 = d*0.5 - CIN, inside both the
+    #         plinth's d*0.535 and the trodden ring's max(w,d)*0.56.
+    #   (ii)  OUTER FACE BEHIND THE WALL FACE by CIN.  Below the eave the stack is
+    #         inside the wall solid, so THERE IS NO GAP TO SEE BACKGROUND THROUGH.
+    #   (iii) THE CAP CLEARS THE RIDGE, always, by CUP at least.  A chimney that
+    #         breaks the ridgeline reads as a chimney; one that stops beside the
+    #         eave reads as a post, which is what "a flat cap in mid-air beside the
+    #         roofline" is describing.
+    #
+    # WHAT THIS COSTS, deliberately: the stack is no longer a full-height column
+    # with its own visible face below the roof.  What the near-top-down camera gets
+    # is the stone standing ABOVE the roof at the gable end of the ridge, growing
+    # out of the roof mass rather than leaning on the wall.  R11's argument for the
+    # tall column (a 34-degree sun draws a tall narrow object best) produced three
+    # rounds of "leaning menhir"; a short stack that is unambiguously part of the
+    # building beats a tall one that is unambiguously not.
     gs = 1.0 if rng.random() < 0.5 else -1.0        # which gable end carries it
-    cw, cz0 = 0.27 + 0.08 * s, fl - 0.30
-    cz1 = fl + rh + 0.26 + rng.uniform(0, 0.24)
-    cd = 0.34
-    cv = gs * (d * 0.5 + cd * 0.5 - 0.14)           # 0.14u of stack INSIDE the gable
-    p.cube(STONE, at(0, cv, (cz0 + cz1) / 2), (cw, cd, cz1 - cz0), rz=yaw)
-    # FLASHING — AND R12 MOVES IT TO WHERE THE STACK ACTUALLY CROSSES THE ROOF.
-    # R11 put the collar at the eave board `fl + eh + 0.06` on the reasoning that
-    # the eave is where the stack passes the overhang.  It is not.  The stack
-    # stands at u = 0, and u = 0 is the roof prism's RIDGE: the crossing is at the
-    # apex, `fl + max(rh, eh + 1.01)`, a metre or more ABOVE the eave, so the
-    # collar was inside the wall and the intersection it exists to hide was left
-    # bare — which is the twelfth critic's "chimneys interpenetrate roofs with
-    # visible hard intersections", the same object R11 verified attached and read
-    # wrong for the second round running.  A collar at the wrong height is not a
-    # collar.  (The prism apex is `fl+eh+0.11 + max(0.9, rh-eh-0.11)`; that max is
-    # why the ridge is not simply `fl + rh`.)
-    # AND THE COLLARS ARE TIGHT, because the first R12 pass made them wide slabs
-    # (1.44x / 1.42x the stack) and LOOKED AT IT: a wide plate on a narrow shaft high
-    # in the frame reads as a floating shelf, so the stack became a totem of hovering
-    # slabs — worse than the bare intersection it was hiding.  A collar is a joint,
-    # not a shelf.  The shaft is narrower too (0.34+0.10s -> 0.27+0.08s): the object
-    # being reported for three rounds is a PALE WIDE COLUMN crossing a dark roof from
-    # a near-top-down camera, and its width is the half of that nobody had moved.
-    zr = fl + max(rh, eh + 1.01)
-    p.cube(STONE, at(0, cv, zr - 0.02), (cw * 1.18, cd * 1.30, 0.15), rz=yaw)
-    p.cube(STONE, at(0, cv, fl + eh + 0.06), (cw * 1.16, cd * 1.28, 0.14), rz=yaw)
-    p.cube(STONE, at(0, cv, cz1 + 0.06), (cw * 1.20, cd * 1.28, 0.13), rz=yaw)
+    CIN, CUP = 0.03, 0.55            # recess behind the wall face; clearance over the ridge
+    cw = 0.30 + 0.09 * s                            # across the ridge
+    cd = 0.38                                       # along the ridge (roughly square in plan)
+    cv = gs * (d * 0.5 - CIN - cd * 0.5)
+    zr = fl + max(rh, eh + 1.01)                    # the roof prism's apex, i.e. the ridge
+    cz0 = fl - plinth                               # buried in the plinth: no free base exists
+    cz1 = zr + CUP + rng.uniform(0.0, 0.28)
+    pad_u, pad_v = w * 0.535, d * 0.535             # the plinth's own half-extents
+    g_i = (cw * 0.5 <= pad_u + 1e-9) and (abs(cv) + cd * 0.5 <= pad_v + 1e-9)
+    g_ii = (abs(cv) + cd * 0.5) <= d * 0.5 + 1e-9
+    g_iii = cz1 >= zr + CUP - 1e-9
+    CHIM_GATE.append((g_i, g_ii, g_iii,
+                      round(pad_v - (abs(cv) + cd * 0.5), 3),      # pad margin
+                      round(d * 0.5 - (abs(cv) + cd * 0.5), 3),    # recess behind the wall
+                      round(cz1 - zr, 3)))                         # clearance over the ridge
+    if g_i and g_ii and g_iii:
+        p.cube(STONE, at(0, cv, (cz0 + cz1) / 2), (cw, cd, cz1 - cz0), rz=yaw)
+        # A COLLAR IS A JOINT, NOT A SHELF (R12, paid for by looking): the first R12
+        # pass put 1.44x plates on a narrow shaft high in the frame and the stack
+        # became a totem of hovering slabs.  Two tight ones only — the flashing where
+        # the shaft leaves the roof at the ridge, and the cap.  The eave collar is
+        # GONE: at this massing that height is inside the wall solid, so it was a
+        # slab hidden in a box.
+        p.cube(STONE, at(0, cv, zr + 0.03), (cw * 1.14, cd * 1.14, 0.13), rz=yaw)
+        p.cube(STONE, at(0, cv, cz1 + 0.055), (cw * 1.22, cd * 1.20, 0.13), rz=yaw)
     # DOOR + two windows on the face the yaw points at.  The door is the scale cue;
     # the gable window is what says "there is an upstairs", which is most of the
     # difference between a tall box and a house.
@@ -2128,7 +2354,7 @@ def main():
     made["water"] = build_water(col, F)
     _fl = build_falls(col, F, zg, fr)
     if _fl is not None:
-        made["falls"] = _fl
+        made["falls"], made["falls_lip"] = _fl
     _tb = build_tributaries(col, F, zg, fr)
     if _tb is not None:
         made["tributaries"] = _tb
@@ -2227,7 +2453,7 @@ def main():
                 print("  mesh-true conform %-10s lifted %d verts" % (key, lifted))
 
     # ---- colours, shading, materials --------------------------------------
-    PROPKEYS = ([k for k in ("skirt", "water", "falls", "tributaries", "road", "causeway", "green",
+    PROPKEYS = ([k for k in ("skirt", "water", "falls", "falls_lip", "tributaries", "road", "causeway", "green",
                              "emberbrook", "dellhollow", "damcrest", "portals", "oldgate",
                              "props", "fx", "dock", "boat", "pool", "dockpath",
                              "ref") if k in made] + veg_keys)
@@ -2242,7 +2468,7 @@ def main():
         ob.data.update()
 
     pm = B3.props_materials_f2(made, mats, group, veg_maps)
-    UVKEYS = [k for k in ("emberbrook", "dellhollow", "portals", "oldgate", "falls", "props", "damcrest",
+    UVKEYS = [k for k in ("emberbrook", "dellhollow", "portals", "oldgate", "falls", "falls_lip", "props", "damcrest",
                           "causeway", "boat", "dock", "skirt", "fx") if k in made]
     UVKEYS += [k for k in veg_keys if not k.endswith("_cards")]
     for key in UVKEYS:
@@ -2257,6 +2483,37 @@ def main():
     for key in ("emberbrook", "dellhollow"):
         if key in made:
             STATS[key + "_tint_families"] = apply_house_tints(made[key], made[key + "_cls"])
+    # ...and the LAST write to the water sheets', for the same reason.
+    STATS["water_bathymetry"] = water_bathymetry(made, F, zg, fr)
+
+    # ---- THE PER-HOUSE CHIMNEY GATE (R13) ----------------------------------
+    # A GATE THAT MEASURES ITS OWN DRAWING CANNOT MEASURE ITS OWN BUILD (CLAUDE.md,
+    # _court_probe): this proves the three clauses hold for the parameters that were
+    # handed to p.cube, which is necessary and not sufficient.  The build is
+    # confirmed by photographing it — see scratchpad/r13b.
+    if CHIM_GATE:
+        ok = sum(1 for r in CHIM_GATE if r[0] and r[1] and r[2])
+        pm = [r[3] for r in CHIM_GATE]
+        wr = [r[4] for r in CHIM_GATE]
+        rc = [r[5] for r in CHIM_GATE]
+        print("CHIMNEY GATE: %d/%d houses carry a stack "
+              "(i footprint-in-pad %d, ii behind-wall-face %d, iii cap-above-ridge %d)"
+              % (ok, len(CHIM_GATE), sum(1 for r in CHIM_GATE if r[0]),
+                 sum(1 for r in CHIM_GATE if r[1]), sum(1 for r in CHIM_GATE if r[2])))
+        print("  pad margin   min %+.3f  median %+.3f  max %+.3f u" %
+              (min(pm), float(np.median(pm)), max(pm)))
+        print("  wall recess  min %+.3f  median %+.3f  max %+.3f u  (+ve = behind the face)" %
+              (min(wr), float(np.median(wr)), max(wr)))
+        print("  ridge clear  min %+.3f  median %+.3f  max %+.3f u" %
+              (min(rc), float(np.median(rc)), max(rc)))
+        for i, r in enumerate(CHIM_GATE):
+            print("    house %2d  %s%s%s  pad %+.3f  recess %+.3f  ridge %+.3f"
+                  % (i, "i" if r[0] else "-", "i" if r[1] else "-", "i" if r[2] else "-",
+                     r[3], r[4], r[5]))
+        STATS["chimneys"] = dict(built=ok, houses=len(CHIM_GATE),
+                                 pad_margin_min=round(min(pm), 3),
+                                 wall_recess_min=round(min(wr), 3),
+                                 ridge_clear_min=round(min(rc), 3))
     for key in PROPKEYS:
         ob = made[key]
         if ob.data.materials:

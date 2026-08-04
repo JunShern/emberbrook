@@ -1,5 +1,5 @@
 {
- "build_s": 12.46,
+ "build_s": 13.6,
  "canopy_farwall-crown": {
   "cards": 4711,
   "core_tris": 4570,
@@ -18,6 +18,13 @@
   "culled": 14048,
   "lobes": 267
  },
+ "chimneys": {
+  "built": 25,
+  "houses": 25,
+  "pad_margin_min": 0.082,
+  "ridge_clear_min": 0.568,
+  "wall_recess_min": 0.03
+ },
  "dellhollow_houses": 11,
  "dellhollow_tint_families": 3,
  "dellhollow_wheels": 4,
@@ -27,7 +34,7 @@
  "emberbrook_tint_families": 3,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.24,
+ "field_s": 0.28,
  "h_range": [
   -6.18,
   50.9
@@ -63,7 +70,7 @@
   176,
   126
  ],
- "meshes": 32,
+ "meshes": 33,
  "oldgate_bite_e_u": 3.05,
  "oldgate_bite_w_u": 0.9,
  "oldgate_court_ends": [
@@ -104,7 +111,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.18,
+ "terrain_s": 0.2,
  "tile": [
   280.0,
   200.0
@@ -127,10 +134,60 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 272406,
+ "tris": 274458,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.45,
+ "veg_s": 3.71,
  "vista_crest_stations": 264,
+ "water_bathymetry": {
+  "falls": {
+   "alpha": [
+    0.86,
+    0.86,
+    0.86
+   ],
+   "depth": null,
+   "verts": 656,
+   "water_corners": 2496
+  },
+  "pool": {
+   "alpha": [
+    0.06,
+    0.936,
+    0.97
+   ],
+   "depth": [
+    -0.26,
+    3.63,
+    4.27
+   ],
+   "verts": 56,
+   "water_corners": 108
+  },
+  "tributaries": {
+   "alpha": [
+    0.72,
+    0.72,
+    0.72
+   ],
+   "depth": null,
+   "verts": 506,
+   "water_corners": 1212
+  },
+  "water": {
+   "alpha": [
+    0.06,
+    0.38,
+    0.942
+   ],
+   "depth": [
+    -15.56,
+    0.82,
+    3.69
+   ],
+   "verts": 2704,
+   "water_corners": 5376
+  }
+ },
  "zone_cells": 35840,
  "zone_coverage_pct": {
   "crag": 21.94,
@@ -139,5 +196,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.076
+ "zone_s": 0.086
 }
