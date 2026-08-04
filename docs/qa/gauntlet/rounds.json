@@ -8,10 +8,14 @@
   "rounds": [
     {
       "n": 0,
-      "title": "Before — the starting point",
+      "title": "Before \u2014 the starting point",
       "when": "2026-08-04, after the three.js r128 to r185 upgrade",
       "prefix": "base",
-      "views": ["meadow", "gate", "gorge"],
+      "views": [
+        "meadow",
+        "gate",
+        "gorge"
+      ],
       "verdict": "Ranked 3rd of 3, very high confidence. But the cause is narrow: not assets, not texture resolution, not colour taste - the lighting solve. Measured on matched ground patches, our lit-to-shadow ratio is 1.30:1 with saturation FLAT across the terminator; a golden-hour sun should be 2.5-4:1. In the critic's words: 'What A has is not a sun, it's an ambient multiplier with a slight gradient.'",
       "deficits": [
         "PIPELINE: cast and contact shadows - fourteen houses, a dozen trees, a character, a whole cliff, and not one shadow on the ground",
@@ -24,10 +28,42 @@
     },
     {
       "n": 1,
-      "title": "Content: dressing variation and the blade layer",
-      "when": "in progress",
+      "title": "Content: near-field blade carpet scattered by distance",
+      "when": "2026-08-04 \u2014 partial; lane killed by a session limit mid-commit",
       "prefix": "r2",
-      "views": ["meadow", "gate", "gorge"]
+      "views": [
+        "meadow",
+        "gate",
+        "gorge"
+      ],
+      "verdict": "Not separately judged \u2014 round 2's critic saw the camera-tilt frames instead.",
+      "deficits": [
+        "Near-field detail +82% at the gate; blades scattered by DISTANCE rather than by material seam, because our detail peaked mid-frame while the references climb into the near field."
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Camera: an aim tilt puts a horizon in frame for the first time",
+      "when": "2026-08-04 \u2014 shipped as default, ?owtilt=0 restores the old frame",
+      "prefix": "r4",
+      "views": [
+        "meadow",
+        "gorge",
+        "gate",
+        "vista"
+      ],
+      "verdict": "Ranked 3rd and 4th of four (meadow above gorge). The gap is large and it is NOT mostly asset budget: the top four fixes are all TREATMENT. The critic's summary \u2014 'light is currently a GLOBAL TINT rather than a DIRECTION: every surface got warmer, but nothing got occluded, so nothing has form. Fix that one thing before commissioning a single new asset.'",
+      "deficits": [
+        "TREATMENT: cast shadows with one committed key direction \u2014 nothing casts one; largest single change available",
+        "ASSET: a near-field ground-detail tier, dense at the bottom of frame and thinning with distance \u2014 the current tuft is too sparse, too uniform, too spindly to read as ground cover",
+        "TREATMENT: the firepit is CLIPPED to pure white over ~60px with a bloom ~3x its plausible radius, over a circular gradient decal that does not follow the terrain and does not light the houses beside it",
+        "TREATMENT: depth fog / aerial perspective \u2014 the tan hill upper-right is as saturated and contrasty as grass three metres from camera",
+        "BROKEN (gorge): two hard-edged grey rectangles over the sky top-left \u2014 'reads as a crash artefact'. INDEPENDENTLY CORROBORATES the camera lane's own unfixed 'pale grey rectangle upper-left'",
+        "BROKEN (gorge): plateau grass upper-right blows to pale blue-white with a STRAIGHT-LINE terminator \u2014 a slope does not do that; fog volume or bloom threshold",
+        "BROKEN (gorge): several ridge trees render pure white/unlit while their neighbours are green",
+        "TREATMENT: anti-aliasing \u2014 roof ridgelines and canopy edges are stair-stepped at 1x",
+        "ASSET: water shader and shoreline \u2014 flat opaque planes butting terrain on a clean edge, no shallows, no wet band"
+      ]
     }
   ]
 }

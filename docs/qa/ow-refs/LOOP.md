@@ -123,6 +123,41 @@ Findings route **through the coordinator**, never lane to lane.
 
 ## Rounds
 
-| # | frames judged | verdict | deficits | routed to | outcome (moved / did-not-move / not-tried) |
-|---|---|---|---|---|---|
-| — | *(round 1 begins when a builder returns frames)* | — | — | — | — |
+| # | frames judged | verdict | headline | outcome |
+|---|---|---|---|---|
+| 1 | `base-meadow` vs 2 refs | 3rd of 3, very high conf | **1.30:1 lit-to-shadow, saturation flat across the terminator** — "not a sun, an ambient multiplier with a slight gradient" | shadows/key/tonal → pipeline; dressing/blades → content |
+| 2 | `r4-meadow`, `r4-gorge` vs 2 refs | 3rd and 4th of 4 | **"Light is a GLOBAL TINT rather than a DIRECTION: every surface got warmer, but nothing got occluded, so nothing has form."** Top four fixes all TREATMENT | 3 lanes killed by a session limit before routing |
+
+### What the loop has established in two rounds
+
+**The same deficit has now been named twice by two independent critics that never saw each other's
+work: WE HAVE NO DIRECTIONAL LIGHT.** Round 1 measured it (1.30:1, reproduced by the pipeline lane
+as 1.36:1). Round 2 named its consequence — form. That is convergence, not repetition, and it is
+the strongest signal the loop has produced.
+
+**The critic also corrected itself between rounds without being told.** Round 1 said "not one
+shadow anywhere"; the pipeline lane measured the shadow pass moving **20.2% of the frame** and
+proved it wrong. Round 2, judging a later frame, did not repeat the claim.
+
+**And round 2 independently corroborated a defect a BUILDER could not fix.** The camera lane
+reported "a pale grey rectangle upper-left of the gorge camera, world geometry, unresolved". The
+critic — with no access to that report — called out "two hard-edged grey rectangles overlaying the
+sky, reads as a crash artefact" and ranked it the most damning thing in either frame. **Two
+independent observers, one artefact.** That is the blind critic earning its place.
+
+**Standing strengths it keeps finding, which are worth defending:** our colour idea is the
+boldest in the set (committed amber key against cyan river); our frame reads as INHABITED faster
+than the commercial reference; and our navigation read is the clearest of the four. Round 1 said
+our focal hierarchy beats the commercial frame's, which has none.
+
+### Open, going into round 3
+
+  * **The lighting lane died mid-sweep** on the environment fill — the exact fix both rounds
+    demand. Resume first when the session budget returns.
+  * **`transition_test` aborts on its final assertion**, reproducibly: 13 sections green, then
+    `HARNESS ERROR: ReferenceError: SIM is not defined` at the deep-link re-evaluate, immediately
+    after the harness's own readiness check returned true on that page. **Provenance unknown** —
+    no pre-camera baseline was obtainable while lanes held the file. Not claimed as pre-existing,
+    not claimed as new.
+  * **Three BROKEN items in the gorge frame** (grey rectangles, a straight-line blowout
+    terminator, unlit white ridge trees) — these are bugs, not taste, and should outrank polish.
