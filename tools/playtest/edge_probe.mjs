@@ -15,20 +15,37 @@
  *   §0 WATER      the water planes' own world boxes — "below the water plane" as a number
  *   §1 CENSUS     top standable surface + zone at every cell of the region tile
  *                 (SIM.floors / SIM.zone), so the leak can be drawn as a contour
- *   §2 DESCENT    from N seeds on the road and around the gate, a greedy downhill walk
- *                 driven by the ENGINE (SIM.tp + SIM.move at play3d's own 0.075 stride).
- *                 How many seeds end below water tells you gap-vs-flank.
- *   §3 RETURN     from each descent's resting place, 24 headings x M steps: the best
- *                 height regained. This is the number that makes it a soft-lock.
+ *   §2 DESCENT    from N seeds, a greedy downhill walk driven by the ENGINE (SIM.tp +
+ *                 SIM.move at play3d's own 0.075 stride). A SCREEN for finding descents;
+ *                 `--points` replaces it with named places, which is what you argue about.
+ *   §3 RETURN     from each resting place, 24 headings x M strides: the best height
+ *                 regained. This is the number that separates a soft-lock from level design.
+ *   §4 ESCAPE     the mirror: from an IN-BOUNDS seed, the deepest ground 24 headings can
+ *                 reach. With a bound armed this must never go below it.
  *
  *   node tools/playtest/edge_probe.mjs [--port 3000] [--scene ow-valley] [--cell 4]
- *      [--seeds '[[x,z],...]'] [--descent 400] [--return 400] [--out <json>]
+ *      [--descent 400] [--return 400] [--out <json>]
+ *      [--points 'name,x,z;name,x,z']   skip §2, measure exactly these places
+ *      [--escape '[["name",x,z],...]']  §4's seeds
+ *      [--nobound]                      disarm the world bound in the live page (the A/B)
+ *      [--trace <name>]                 dump the winning heading's trail
  *
- * Runs ONE Chrome, self-expires at 900 s, reaps on every exit path.
+ * THREE THINGS THIS INSTRUMENT LEARNED THE HARD WAY, all still live in its output:
+ *   * UILOCK freezes phys() outright, so a story beat firing under a probe turns every
+ *     later walk into zero motion — one descent ran 50 legs and every seed after it
+ *     reported "1 leg". Every probe clears the lock before it moves (`unlock()`).
+ *   * sgTick runs on the physics tick, so a walk that crosses a portal TRANSITIONS and
+ *     then reports the next scene's coordinates. SGE is cleared at boot.
+ *   * §3 carries a WALK-BUDGET SELF-CHECK: a body walking n strides of SPD can be at
+ *     most n*SPD from where it started, and anything further is printed as
+ *     `IMPOSSIBLE: not a walk`. That is what caught marooned() — play3d's own 600-tick
+ *     stuck-recovery — firing inside the probe and teleporting the body 87 u.
+ *
+ * Runs ONE Chrome, self-expires at 900 s, reaps process AND profile on every exit path.
  */
-import { freePort, findPage, killOrphans } from '../cdp.mjs';
+import { freePort, findPage, killOrphans, sweepStaleProfiles } from '../cdp.mjs';
 import { spawn } from 'child_process';
-import { mkdtempSync, writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, dirname } from 'path';
 import WebSocket from 'ws';
@@ -44,7 +61,15 @@ const OUT = arg('out', 'docs/qa/playtest/edge/edge-' + SC + '.json');
 mkdirSync(dirname(OUT), { recursive: true });
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
-const profile = mkdtempSync(join(tmpdir(), 'edgeprobe-'));
+// PER-PID PROFILE + a sweep of stale siblings, the same as every other browser tool
+// here. This shipped with `mkdtempSync` and no sweep, and six runs in one session left
+// NINE abandoned profiles holding 765 MB — reaping the Chrome is not reaping the disk,
+// and a random suffix also defeats sweepStaleProfiles' "never our own" guard, which is
+// written as `prefix + process.pid`.
+const PROFILE_PREFIX = 'edgeprobe-';
+sweepStaleProfiles(PROFILE_PREFIX);
+const profile = join(tmpdir(), PROFILE_PREFIX + process.pid);
+mkdirSync(profile, { recursive: true });
 const cdpPort = await freePort();
 const child = spawn(CHROME, [
   `--remote-debugging-port=${cdpPort}`, `--user-data-dir=${profile}`,
@@ -54,7 +79,10 @@ const child = spawn(CHROME, [
   '--window-size=1280,800', '--headless=new', 'about:blank',
 ], { stdio: 'ignore' });
 let done = false;
-const reap = () => { if (done) return; done = true; try { child.kill('SIGKILL'); } catch (e) {} killOrphans(profile); };
+// killOrphans reaps the PROCESS, never the DISK (see its docstring). On a clean exit
+// take the directory too, so the startup sweep is only ever cleaning up after a crash.
+const reap = () => { if (done) return; done = true; try { child.kill('SIGKILL'); } catch (e) {}
+  killOrphans(profile); try { rmSync(profile, { recursive: true, force: true, maxRetries: 2 }); } catch (e) {} };
 process.on('exit', reap);
 for (const s of ['SIGINT', 'SIGTERM']) process.on(s, () => { reap(); process.exit(1); });
 setTimeout(() => { console.error('SELF-EXPIRY at 900 s'); reap(); process.exit(2); }, 900000);
