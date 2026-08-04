@@ -278,7 +278,183 @@
     return true;
   }
 
+  /* ================= THE WAY TO THE OBJECTIVE (playtest round 11) =============
+   *
+   * WHY THIS IS HERE AND NOT IN THE MARKER LAYER. The objective banner says WHERE
+   * ("Midnight, at Lock Five — the head-gate winches"). Nothing on screen said
+   * WHICH WAY, and Dellhollow is fifteen shots joined by forty-two anonymous cut
+   * bands. THREE independent playtest runs failed at the same spot, and every
+   * filing was reach-REFUTED on tools/reach_probe.mjs — the walk network is clean
+   * twice over. The defect was legibility, and the banner is this module's, so the
+   * direction is this module's too.
+   *
+   * MEASURED, before anything was written (tools/playtest/wayfind_probe.mjs, the
+   * three failing runs' own positions and shots, 2026-08-04):
+   *
+   *   station        markers drawn   identical red cuts   the ONE toward Lock Five
+   *   cottage door         4                3             cottage>cottage-steps
+   *   lockhead             2                2             lockhead>quay-west
+   *   quay deck            6                5             quay-west>weave
+   *   loop-stairs          3                3             loop-stairs>quay-west
+   *   valley gate          3                2             the gate stair
+   *
+   * At the quay deck the right triangle and a WRONG one draw 9 px apart in x. And
+   * SIM.pick at each marker's own drawn pixel lands on SCENERY — cliff_town_back,
+   * shelf_home_a_5, an awning, a rail — for 9 of the 21 shown markers, because
+   * markersTick lifts the arrow 2.1 m + 30 px (measured here at 86-164 px, 0.12 to
+   * 0.23 of frame height, in EVERY shot, not only steep ones). The lift is
+   * deliberate FF7 grammar and is left alone; what was missing is a NAME.
+   *
+   * WHAT IT DOES. Finds the beat the chapter is waiting on, BFS's the shipped
+   * scenegraph from the shot the player is standing in to the shot that beat names,
+   * and puts the objective's own amber diamond and the DESTINATION's own name under
+   * the ONE marker that starts that route.
+   *
+   * THREE RULES IT KEEPS:
+   *  1. IT DECORATES, IT NEVER DRAWS. The label is appended INSIDE markersTick's own
+   *     marker div, found by `data-edge`. So it inherits every gate that layer
+   *     already applies — sealed, denied, camFrom, frustum, UILOCK — and it is
+   *     structurally incapable of naming a way the game is not offering.
+   *  2. IT NAMES THE DESTINATION, NOT THE HOP. At the quay deck the next hop is
+   *     `weave`; the label still reads "Lock Five", because that is what the banner
+   *     says and matching them is the entire point.
+   *  3. ONE MARKER, EVER. "A town of named doorways is noise" (markersTick's own
+   *     ruling, kept): every other triangle stays bare, which is what makes this one
+   *     mean something.
+   *
+   * ?nohint=1 disables it. Story.wayhint() is the instrument.
+   */
+  var HINT_OFF = (function () {
+    try { return new URLSearchParams(location.search).get('nohint') === '1'; }
+    catch (e) { return false; }
+  })();
+  var hintEdge = null, hintTicks = 0, lastHint = null;
+
+  // play3d.html is a classic script: CINE and SG are top-level `let`s, so they live
+  // in the shared global LEXICAL scope and are readable bare — but NOT as window.SG
+  // (window.cam being undefined is how the probe first read "this edge has no
+  // position"). Guarded, because a missing binding must disable the hint, never throw.
+  function SGraph() { try { return SG; } catch (e) { return null; } }
+  function CineDef() { try { return CINE; } catch (e) { return null; } }
+
+  // THE BEAT THE CHAPTER IS WAITING ON: eligible on its CONDITIONS but not yet on
+  // its place. Deliberately not eligible() — that one answers "may this fire HERE",
+  // and the whole question is where "here" ought to be.
+  function pendingBeat() {
+    if (!DATA) return null;
+    var L = ledger(), bs = DATA.beats || [];
+    for (var i = 0; i < bs.length; i++) {
+      var b = bs[i];
+      if (!b || !b.id) continue;
+      if (b.once !== false && L && L[b.id]) continue;
+      if (b.when && !check(b.when)) continue;
+      if (!b.scene && !b.cam) continue;          // nothing to point at
+      return b;
+    }
+    return null;
+  }
+
+  function nodeKey(s, c) { return s + '|' + (c || '*'); }
+  // A conditional edge is evaluated with the game's own condition language, the same
+  // way sgLive does it, so a sealed gate is never routed through. FAILS CLOSED.
+  function edgeLive(e) {
+    var w = e.when || (e.requires ? { flag: e.requires } : null);
+    return w ? check(w) : true;
+  }
+
+  /* THE ROUTE. Nodes are (scene, shot) pairs, so one BFS answers both "which
+   * triangle in this town" and "which door out of it" — the corridor between the
+   * towns is the same graph. An edge with no camFrom leaves from ANY shot (that is
+   * what an interior's single-shot door is), and one whose destination shot is
+   * unknown lands on the scene's wildcard node. Optimistic on the wildcard, which is
+   * right for a HINT: the cost of a hop too many is a longer walk, the cost of
+   * refusing is the silence we are fixing. */
+  function routeTo(destScene, destCam) {
+    var G = SGraph(); if (!G || !G.edges) return null;
+    var here = scene(); if (!here) return null;
+    var start = nodeKey(here, shot());
+    var byFrom = {};
+    for (var i = 0; i < G.edges.length; i++) {
+      var e = G.edges[i]; if (!e.from || !e.to) continue;
+      (byFrom[e.from] = byFrom[e.from] || []).push(e);
+    }
+    var goal = function (s, c) {
+      return s === destScene && (!destCam || c === destCam || c === '*');
+    };
+    if (goal(here, shot())) return { hops: 0, edge: null };
+    var seen = {}, q = [[start, null, 0]]; seen[start] = 1;
+    while (q.length) {
+      var cur = q.shift(), parts = cur[0].split('|'), sc = parts[0], cm = parts[1];
+      var outs = byFrom[sc] || [];
+      for (var j = 0; j < outs.length; j++) {
+        var ed = outs[j];
+        if (ed.camFrom && cm !== '*' && ed.camFrom !== cm) continue;
+        if (!edgeLive(ed)) continue;
+        var nc = (ed.cam && ed.cam.key) || null, nk = nodeKey(ed.to, nc);
+        if (seen[nk]) continue;
+        var first = cur[1] || ed, d = cur[2] + 1;
+        if (goal(ed.to, nc || '*')) return { hops: d, edge: first };
+        seen[nk] = 1; q.push([nk, first, d]);
+      }
+    }
+    return null;
+  }
+
+  // The destination's own authored name: a shot's `name` out of the bundle's
+  // cine.json ("Lock Five"), or the scene node's label out of the scenegraph
+  // ("Dellhollow"). Never a string invented here.
+  function destName(b) {
+    var C = CineDef(), G = SGraph();
+    if (b.cam && b.scene === scene() && C && C.byId && C.byId[b.cam] && C.byId[b.cam].name)
+      return C.byId[b.cam].name;
+    if (b.scene && G && G.nodes && G.nodes[b.scene] && G.nodes[b.scene].label)
+      return G.nodes[b.scene].label;
+    return null;
+  }
+
+  function clearHint() {
+    if (!hintEdge || !HAS_DOM) { hintEdge = null; return; }
+    var m = document.querySelector('#exit-markers > div[data-edge="' + cssEsc(hintEdge) + '"]');
+    if (m) { var t = m.querySelector('.story-way'); if (t) t.remove(); m.style.zIndex = ''; }
+    hintEdge = null;
+  }
+  // The edge ids carry '>', '@', ':' and '.' — all meaningful inside an attribute
+  // selector. CSS.escape is the browser's own answer; the fallback is for a headless
+  // context that lacks it.
+  function cssEsc(s) {
+    if (typeof CSS !== 'undefined' && CSS.escape) return CSS.escape(s);
+    return String(s).replace(/["\\]/g, '\\$&');
+  }
+
+  function hintTick() {
+    if (HINT_OFF || !DATA || OFF || !HAS_DOM) return;
+    if (++hintTicks % 10) return;                 // ~6 Hz; a label is not frame-critical
+    var b = pendingBeat();
+    var r = b ? routeTo(b.scene || scene(), b.cam || null) : null;
+    var want = (r && r.edge) ? r.edge.id : null;
+    var name = b ? destName(b) : null;
+    if (!want || !name) { clearHint(); lastHint = null; return; }
+    if (want !== hintEdge) clearHint();
+    var m = document.querySelector('#exit-markers > div[data-edge="' + cssEsc(want) + '"]');
+    if (!m) { hintEdge = null; lastHint = null; return; }   // not drawn: say nothing
+    hintEdge = want;
+    var t = m.querySelector('.story-way');
+    if (!t) {
+      t = document.createElement('div'); t.className = 'story-way';
+      // Same diamond, same amber as the objective banner's — a player should read the
+      // label and the banner as ONE thing without being told they are.
+      t.style.cssText = 'margin-top:3px;font:600 11px/1.15 ui-monospace,Menlo,monospace;' +
+        'letter-spacing:.02em;color:#e9a24b;white-space:nowrap;' +
+        'text-shadow:0 1px 2px #000,0 0 4px #000,0 0 9px #000';
+      m.appendChild(t);
+      m.style.zIndex = '1';                       // over its neighbours when they crowd
+    }
+    if (t.textContent !== '\u25C6 ' + name) t.textContent = '\u25C6 ' + name;
+    lastHint = { beat: b.id, edge: want, dest: name, hops: r.hops };
+  }
+
   function tick() {
+    hintTick();                 // BEFORE the modal guards: a marker is not a modal
     if (busy || !DATA || OFF) return;
     // A beat must never open on top of another modal — the shop, the pause menu,
     // the dialogue window or a transition all hold UILOCK, and all four of them
@@ -417,6 +593,26 @@
       return runBeat(b);
     },
     recordAt: recordAt,
+    /* THE WAYFINDING INSTRUMENT. What the hint currently says, plus the two answers
+     * it is derived from, so a harness can assert "the way to the objective is
+     * named" without reading a pixel — and so a null can be told apart from a lie:
+     * `beat` null means the chapter is waiting on nothing here, `edge` null with a
+     * beat means no route (or you have arrived), and `shown` false means the route
+     * exists but its marker is not on screen from this spot. */
+    wayhint: function () {
+      var b = pendingBeat();
+      var r = b ? routeTo(b.scene || scene(), b.cam || null) : null;
+      var e = r && r.edge ? r.edge.id : null;
+      var m = (e && HAS_DOM) ? document.querySelector('#exit-markers > div[data-edge="' + cssEsc(e) + '"]') : null;
+      return {
+        off: HINT_OFF, scene: scene(), shot: shot(),
+        beat: b ? b.id : null, wantScene: b ? (b.scene || null) : null, wantCam: b ? (b.cam || null) : null,
+        edge: e, hops: r ? r.hops : null, dest: b ? destName(b) : null,
+        shown: !!(m && m.style.display !== 'none'),
+        labelled: !!(m && m.querySelector('.story-way')),
+        drawn: hintEdge, last: lastHint,
+      };
+    },
   };
 
   if (typeof window !== 'undefined' && window.addEventListener)
