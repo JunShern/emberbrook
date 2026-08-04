@@ -2348,11 +2348,22 @@ slice 848/0, cine 689/0 (2 soft), findability 69/0 (2 warn).
 
 ### STILL OPEN
 
-  * **THE STRUCTURAL WALL WAS NOT REACHED.** The round's stretch item — one bush prototyped as
-    leaf-cluster CARDS beside a volume bush, photographed at the closeup — was not started.
-    The judge's thesis stands unanswered and is now the strongest single lead: *"you cannot
-    light your way out of a closed convex hull."* r4's own core measurement is evidence FOR it
-    (a smooth solid at 22% of the crown's pixels, and it is the thing that reads as rock).
+  * **THE STRUCTURAL WALL: THE A/B EXISTS, THE PROTOTYPE DOES NOT.** The stretch item asked for
+    one bush built from leaf-cluster cards, photographed beside a volume bush. No new asset was
+    built — but the two constructions already stand 0.45 m apart in the world and had never
+    been photographed together, so the comparison was taken from the shipped tile instead:
+    `docs/qa/ow-refs/plates/f4-cards-vs-volume.png` (as-rendered on top, the same frame with
+    `veg_bush` marked GREEN and `veg_land_clumps` MAGENTA underneath). **The judge's thesis
+    survives the picture.** The card-shelled bushlang bush reads as a leafy mass with a broken
+    silhouette that sits INTO the grass; the flat-colour volume clumps read as smooth faceted
+    lumps with a hard closed outline and no internal texture — rocks, in a field.
+    AND THE STATISTICS DISAGREE WITH THE PICTURE, which is the finding: the VOLUME is the
+    brighter object with the WIDER range (V50 0.349 / range 0.447 against the cards' 0.310 /
+    0.353) and it is the one that fails. Silhouette and internal texture decide this, not
+    value — r14's "the value ladder is evidence of nothing", arriving in the bush lane.
+    r4's core measurement is the same thing from the other end: a smooth solid at 22% of the
+    hero crown's pixels, and it is the part that reads as rock. *"You cannot light your way out
+    of a closed convex hull."* A real card-built bush prototype is still owed.
   * The pale edge-on card slivers: 15% of the hero crown, refuted as anything the runtime does,
     and the view-fade prototype is not a shipped answer.
   * The crown-scale sun ramp's normalising extent (above).
