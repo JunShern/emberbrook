@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-04T23:01:57Z",
+ "generated": "2026-08-04T23:35:02Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",

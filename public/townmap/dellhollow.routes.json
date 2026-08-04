@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-04T23:01:45Z",
+ "generated": "2026-08-04T23:35:00Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -7184,19 +7184,19 @@
       "behind": false,
       "ndc": [
        0.068,
-       -0.166
+       -0.157
       ],
       "px": [
        718,
-       448
+       444
       ],
       "onScreen": true,
-      "edgeMargin": 0.834,
-      "depth": 24.671,
-      "charPx": 84,
+      "edgeMargin": 0.843,
+      "depth": 24.382,
+      "charPx": 85,
       "headNdc": [
        0.069,
-       0.048
+       0.06
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7228,20 +7228,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.232,
-       -0.614
+       0.234,
+       -0.61
       ],
       "px": [
-       828,
-       620
+       829,
+       618
       ],
       "onScreen": true,
-      "edgeMargin": 0.386,
-      "depth": 21.324,
-      "charPx": 97,
+      "edgeMargin": 0.39,
+      "depth": 21.035,
+      "charPx": 98,
       "headNdc": [
-       0.235,
-       -0.373
+       0.238,
+       -0.365
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7273,20 +7273,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.232,
-       -0.208
+       -0.235,
+       -0.203
       ],
       "px": [
-       516,
-       464
+       514,
+       462
       ],
       "onScreen": true,
-      "edgeMargin": 0.768,
-      "depth": 38.039,
-      "charPx": 54,
+      "edgeMargin": 0.765,
+      "depth": 37.75,
+      "charPx": 55,
       "headNdc": [
-       -0.234,
-       -0.07
+       -0.237,
+       -0.064
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7318,20 +7318,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.25,
-       -0.205
+       -0.253,
+       -0.2
       ],
       "px": [
-       504,
-       463
+       502,
+       461
       ],
       "onScreen": true,
-      "edgeMargin": 0.75,
-      "depth": 38.614,
+      "edgeMargin": 0.747,
+      "depth": 38.325,
       "charPx": 54,
       "headNdc": [
-       -0.253,
-       -0.069
+       -0.255,
+       -0.063
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7369,20 +7369,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.117,
-       0.165
+       0.118,
+       0.177
       ],
       "px": [
        751,
-       321
+       316
       ],
       "onScreen": true,
-      "edgeMargin": 0.835,
-      "depth": 26.266,
-      "charPx": 79,
+      "edgeMargin": 0.823,
+      "depth": 25.977,
+      "charPx": 80,
       "headNdc": [
        0.119,
-       0.371
+       0.386
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7418,20 +7418,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.275,
-       -0.879
+       0.278,
+       -0.878
       ],
       "px": [
-       857,
+       859,
        721
       ],
       "onScreen": true,
-      "edgeMargin": 0.121,
-      "depth": 18.63,
-      "charPx": 111,
+      "edgeMargin": 0.122,
+      "depth": 18.341,
+      "charPx": 113,
       "headNdc": [
-       0.28,
-       -0.607
+       0.283,
+       -0.602
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7467,20 +7467,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.191,
-       -0.022
+       -0.193,
+       -0.015
       ],
       "px": [
-       544,
-       392
+       542,
+       390
       ],
       "onScreen": true,
-      "edgeMargin": 0.809,
-      "depth": 40.541,
+      "edgeMargin": 0.807,
+      "depth": 40.252,
       "charPx": 51,
       "headNdc": [
-       -0.193,
-       0.109
+       -0.195,
+       0.117
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7516,20 +7516,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.27,
-       -0.168
+       -0.273,
+       -0.162
       ],
       "px": [
-       490,
-       448
+       489,
+       446
       ],
       "onScreen": true,
-      "edgeMargin": 0.73,
-      "depth": 41.183,
-      "charPx": 50,
+      "edgeMargin": 0.727,
+      "depth": 40.894,
+      "charPx": 51,
       "headNdc": [
-       -0.273,
-       -0.04
+       -0.275,
+       -0.034
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7840,8 +7840,8 @@
     "exitsAtFrameEdge": [
      "seam:tenant-shack__fish-dock"
     ],
-    "minCharPx": 50,
-    "visibleFrac": 0.4844
+    "minCharPx": 51,
+    "visibleFrac": 0.4219
    }
   },
   "north-landing": {

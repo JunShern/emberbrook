@@ -86,8 +86,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-02T20:04:44Z",
-   "seconds": 426.6,
+   "baked": "2026-08-04T23:17:16Z",
+   "seconds": 335.1,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -472,8 +472,24 @@
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
    "visibleFrac": 0.9333,
    "probes": 30,
-   "baked": "2026-08-01T16:33:38Z",
-   "seconds": 160.3
+   "baked": "2026-08-04T23:07:22Z",
+   "seconds": 290.9,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "weave",
@@ -757,14 +773,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    51.181,
-    35.68,
-    10.392
+    51.426,
+    35.578,
+    10.25
    ],
    "aim": [
-    75.795,
-    26.722,
-    4.824
+    75.697,
+    26.744,
+    4.76
    ],
    "fov": 35,
    "clip": [
@@ -772,12 +788,12 @@
     1400
    ],
    "rtClip": [
-    5.999,
-    164.627
+    5.8545,
+    167.501
    ],
    "depth": {
-    "near": 11.99802017211914,
-    "far": 102.89160919189453,
+    "near": 11.70901107788086,
+    "far": 104.68792724609375,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -792,10 +808,10 @@
     -29.65
    ],
    "spawnFrom": "walk_lm_moorage",
-   "visibleFrac": 0.4844,
+   "visibleFrac": 0.4219,
    "probes": 64,
-   "baked": "2026-08-02T16:40:29Z",
-   "seconds": 179.4,
+   "baked": "2026-08-04T23:34:41Z",
+   "seconds": 175.8,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -856,8 +872,24 @@
    "spawnFrom": "walk_e_lock-five__north-landing_l0",
    "visibleFrac": 0.8333,
    "probes": 30,
-   "baked": "2026-08-01T01:25:58Z",
-   "seconds": 11905.9
+   "baked": "2026-08-04T23:17:15Z",
+   "seconds": 331.3,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   }
  ]
 }
