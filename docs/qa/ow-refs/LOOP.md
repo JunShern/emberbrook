@@ -134,6 +134,7 @@ Findings route **through the coordinator**, never lane to lane.
 | 9 | not judged — BUILT against 8 + three blind critics | plates `r9-*` | **the houses go up: ridge 1.6u → 3.7u, 1.1× the character → 2.65×, height:width 1.10 → 1.39** — and every cottage in the meadow now lays a shadow across the grass | TRIED — MOVED IT |
 | 10 | `r9-*` judged blind | plates `r10-*` | **the light gets a SECOND COLOUR** — warm key + blue-violet fill, the warm grade back 50%, the Heartlight reined in from a global tint to a lamp; plinths capped, bases bedded, window panes given a dark albedo. Frame saturation 0.651/0.584/0.478/0.456 → **0.540/0.496/0.411/0.360**, b−r −0.357 → −0.284 on the meadow | TRIED — MOVED IT |
 | 13 | `r12-*` judged blind | plates `r13-*` | **the shadow hue is MEASURED off the references instead of picked** (violet 273° then brown 41°, target 99–100° on grass / 209–227° on stone), the fill's LEVEL goes up rather than down, R11's toe comes off because **the references have ZERO pixels under L 0.10**, and the saturation pull becomes PER-MATERIAL on three channel-order selectors. Chimneys re-massed after measuring that all 25 overhung their own pad; the river gets Dellhollow's ratified depth→alpha at ×1.0. Δ hue +2.6 → **+11.1** (ref +12.9/+13.9), frame sat .447 → **.374** (ref .370/.381), L05 .098 → **.170** | TRIED — MOVED IT |
+| 14 | `r13-*` judged blind | plates `r14-*` | **the value statistics said the frame was not flat and it plainly was** — 5-95 range 0.559 against the references' 0.523/0.442, IQR and local contrast both inside their band, and the critic called it "one undifferentiated putty-coloured mass". The number that agreed with the eye was HUE: circular R **0.872** against their 0.631/0.493, 95% of the frame's chroma inside one 90-degree arc. The grade's warm/cool split turned out to have only ever had its WARM half written. Key:fill 7.6 -> 17.5, a luminance-neutral cool push on shade, a chromatic floor instead of a toe, and the roofs take the VALUE they had been denied | TRIED — MOVED IT |
 | 11 | `r10-*` judged blind | plates `r11-*` | **depth gets a hue and the frame gets a black point** — an exponential haze ramp anchored on the PLAYER, a mix toward a low-chroma blue at distance, a foreground toe, the terrain's own COLOR_0 off yellow, and the Heartlight's albedo (not its emissive) named as the thing that made it a white blob. Saturation **.545/.502/.413/.362 → .434/.376/.342/.333**, green b:g **.634 → .758** (meadow), L05 **.127 → .094**, pixels under L 0.10 **3.5% → 5.5%** | TRIED — MOVED IT |
 
 ### Round 4–5: A NUMBER THAT IMPROVES WHILE THE PICTURE WORSENS IS THE WRONG NUMBER
@@ -949,6 +950,155 @@ frame has gone drab, `?grade_gp=0`, `?owfill=0.42,0.44,1.00&owenv=0.60` and `?gr
 out the three halves independently without a rebuild. And the chimneys are IMPROVED, NOT SOLVED:
 they are still pale stone columns read from a near-top-down camera, the fourth round in which that
 sentence is true.
+
+---
+
+## Round 14 — EVERY VALUE STATISTIC SAID THE FRAME WAS NOT FLAT, AND IT PLAINLY WAS
+
+Plates `r14-{meadow,gate,vista,gorge}.png`. Commits `9d7cbb0` `39d7d31` (pipeline)
+`13cd671` (content).
+
+Round 13 built the best instrument this loop has made — a material classifier that splits
+each material by ITS OWN luminance quartiles and runs identically on the references and on
+our plates — used it to overturn three settled beliefs, matched the references on every
+number it could see, and shipped a frame the fourteenth blind critic called *"plainly the
+flatter of the two... one undifferentiated putty-coloured mass... over-correction in the
+desaturating direction"*. **This round is what that costs and how it was caught.**
+
+### THE VALUE LADDER IS EVIDENCE OF NOTHING, AND HERE IT IS
+
+`tools/ow_probe/framespread.py` (promoted out of the gitignored scratchpad so the source
+comments do not dangle). Masks the references' HUD; identical treatment otherwise.
+
+| | 5-95 range | IQR | 9x9 local SD | under L 0.10 | circular R | hue SD | sectors >= 8% |
+|---|---|---|---|---|---|---|---|
+| ref 1 | 0.523 | 0.219 | 0.0434 | 0.00% | 0.631 | 55.0 | 3 |
+| ref 3 | 0.442 | 0.152 | 0.0367 | 0.03% | 0.493 | 68.1 | 4 |
+| **r13 meadow** | **0.559** | **0.259** | 0.0393 | 1.26% | **0.872** | **29.9** | 3 |
+
+**OUR LUMINANCE RANGE IS WIDER THAN EITHER REFERENCE. OUR INTERQUARTILE SPREAD IS WIDER.
+OUR LOCAL CONTRAST SITS BETWEEN THEM.** By every value statistic the frame is not flat, and
+it plainly looks flat. R13 had matched their L05 and their share under L 0.10 — and both of
+those describe only the BOTTOM of a histogram, so a frame can carry the reference's floor
+and none of its picture.
+
+The number that agrees with the eye is the HUE one. Chroma-weighted circular R 0.872 against
+0.631 and 0.493, and the three loudest 30-degree sectors are **R 0-30 (53%), O 30-60 (20%),
+Y 60-90 (22%) — THREE ADJACENT SECTORS holding 95% of the frame's chroma inside one
+90-degree arc.** Both references' third sector is a CYAN-BLUE carrying a fifth of the frame,
+and we had none of it. *"The entire frame lives in a narrow band of warm beige-green"* is
+that table.
+
+**A STATISTIC IS A CONSTRAINT ON A DISTRIBUTION AND SAYS NOTHING ABOUT THE RELATIONSHIPS
+INSIDE THE FRAME**, which is where craft lives. When a measurement and the eye disagree, the
+eye wins and the measurement gets extended — user ruling, and this round is its first
+worked example.
+
+### THE GRADE HAD ONLY EVER HAD ITS WARM HALF WRITTEN
+
+R6 gated the warm push on `litK` and left the shade at `vec3(1.0)`. The only cool term in the
+whole pass rides `t`, which is DEPTH. **So for eight rounds the grade warmed the light and did
+nothing whatever to the shade at the player's feet** — while three consecutive critics asked
+for a cool shadow side. The fourteenth named the fix in one sentence and called it the
+highest-value single move in the set: *"let sunlit tan go warmer and shaded tan go cooler...
+it fixes flatness AND partly fixes the same-coloured-houses problem BY SPLITTING EVERY WALL
+INTO TWO TONES."*
+
+**TWO TONES MEANS TWO COLOURS, NOT TWO VALUES**, and that is why this is the move rather than
+more key. `shadeCol` is luminance-normalised to 1.0000 on the Rec.709 weights, so the split is
+a hue rotation with no level in it and **cannot move the black point R13 measured** — R13's
+finding is preserved arithmetically rather than by being careful. Hue 213 deg, inside the
+references' own 209-227 shaded-stone band.
+
+**AND IT IS STEERED OFF THE VEGETATION**, by R13's own yellow selector read off the SOURCE
+pixel rather than the already-tinted one: their shaded grass sits at hue 99-100 and their
+shaded stone at 209-227, **110 degrees apart**, and one cool multiply cannot serve both. Run
+flat, it takes the grass shadows teal — the trap R13's `cyn` selector was written to dodge,
+arriving from the other side.
+
+### CUTTING THE FILL IS THE HALF THAT WORKS; RAISING THE KEY IS THE HALF THAT CLIPS
+
+Key:fill 2.40/0.95 -> 3.00/0.55, a luminance ratio of 7.6 -> 17.5. Five rungs, two views,
+every plate opened:
+
+| owkey / owenv | L50 | L95 | IQR | under L 0.10 | max > 0.97 | |
+|---|---|---|---|---|---|---|
+| 2.40 / 0.95 | 0.505 | 0.728 | 0.259 | 1.26% | 0.34% | shipped r13 |
+| 2.70 / 0.72 | 0.518 | 0.742 | 0.281 | 1.71% | — | |
+| 2.90 / 0.62 | 0.528 | 0.754 | 0.292 | 1.82% | — | |
+| 3.20 / 0.50 | 0.546 | 0.770 | 0.306 | 1.93% | 0.66% | |
+| 3.60 / 0.38 | 0.572 | 0.789 | 0.321 | 2.23% | 1.20% | lit grass blowing |
+
+Past 3.2 **the shade stops getting deeper at all** (L05 0.150 -> 0.148) while the sunlit grass
+goes to white-green, which is an item on the same critic's list. So the ratio is bought mostly
+on the fill. The references clip 0.45-0.93% of their pixels above 0.97; 3.00/0.55 lands at
+0.6% rather than exceeding it. R13's own note that the `?ibl=0` fallback is committed to
+"roughly the environment's own irradiance" is honoured: both its lights move by the same
+0.579x, or that branch becomes a second, staler art direction.
+
+### THE FLOOR IS THE DELIBERATE INVERSE OF R11'S TOE
+
+The brief's constraint was *"deepen the shade WITHOUT re-introducing a black point... it is
+contrast, not a toe. If you find yourself adding a black point you have taken the easy
+version."* The ratio move DOES re-buy one — measured, owenv 0.95 -> 0.62 takes the meadow's
+share under L 0.10 from 1.26% to 1.82%. So the floor is put back separately, and **as a
+COLOUR**: an additive lift in `shadeCol` under linear L 0.055 only, because a floor under a
+shadow is physically the sky and a neutral lift is the milky wash R5 was refused for.
+1.37% at 0.014, with midtones and highlights untouched by construction.
+
+### THE CONTACT SHADOW WAS NEVER MISSING — IT WAS A CIRCLE
+
+Three critics in a row wrote that she *"has no contact shadow at all on the path"*, and the
+reflex readings (the quad is absent; MultiplyBlending vanishes over dark ground) are BOTH
+WRONG AND WERE MEASURED. A/B at `?contact=0` against `?contact=1.15`, meadow, the 24x54 px
+box at her feet: **(101,75,65) -> (59,36,32)**. It darkens the ground by 41% and is still not
+read as a shadow.
+
+**Because a symmetric pool under a figure lit at 34 degrees is the one thing a real shadow
+never is.** The eye files it as vignetting on the texture. Stretched 2.1x along the sun's own
+bearing — derived from `OWSUN_DIR`, never a second copy of the number — squeezed across it,
+and walked half its long axis down-sun, the same pixels become the ROOT OF A CAST SHADOW. A
+contact shadow's job is to join a figure to the ground plane, and joining needs a direction
+to join along.
+
+### THE RIVER: THE SECOND FIX TO LAND ON A SHARED HUE, AGAIN
+
+Not untouched — R13 ported `docs/plans/water-transparency.md` at x1.0 after measuring that
+this channel has the bathymetry Dellhollow's pools did not, and the shipped frame has a bed,
+a shore transition and a depth read. What R13 also did was cut the water's ALBEDO chroma 31%
+in the bundle **and leave a 20% cyan pull on top of it** — the same stacking that had already
+cost the roofs a re-sweep four paragraphs earlier in its own entry. Measured on the meadow's
+river box: sat **0.235** with the pull, **0.298** without, against ref 3's water at **0.387**.
+**The river was the palest thing in the frame and this term was still desaturating it.**
+`grade_cp` 0.20 -> 0.06, the token that keeps the falls and tributaries — which have no
+bathymetry and still run at a flat `GLASS_OPACITY` — from being the loud cyan it was written
+for. Still open: the ratified recipe's FOAM LOBE has no port, and our water's local contrast
+is 0.039 against the reference's 0.066.
+
+### WHAT THE INSTRUMENT SAID ABOUT THE ROUND'S OWN CONTENT FIX
+
+The ladder, one lane per step, all four frames under the same camera:
+
+| meadow | 5-95 range | under L 0.10 | circular R | hue SD | sectors | coloured % |
+|---|---|---|---|---|---|---|
+| r13 shipped | 0.559 | 1.26% | 0.872 | 29.9 | 3 | 84.3% |
+| + r14 pipeline | 0.611 | 1.50% | 0.856 | 31.9 | 3 | 82.7% |
+| + r14 roofs | 0.601 | 1.99% | **0.638** | **54.3** | **4** | **72.5%** |
+| ref 1 / ref 3 | 0.523 / 0.442 | 0.00 / 0.03% | 0.631 / 0.493 | 55.0 / 68.1 | 3 / 4 | 84.1 / 81.5% |
+
+**The pipeline could not move the hue spread and was never going to** — the frame's narrowness
+is an ALBEDO fact, and a post pass that widened it would be the global tint this lane has now
+undone four times. The roof value split moved circular R onto ref 1's number exactly, and the
+picture agrees: the village reads as buildings.
+
+**AND THE SAME TABLE CARRIES THE OVERSHOOT.** `coloured %` — the share of the frame with any
+chroma at all — falls 84.3 -> 72.5 against the references' 81.5-84.1. Twelve percent of the
+frame lost its colour, which is the roofs arriving as a NEUTRAL that happens to sit cool
+rather than as the references' saturated blue-grey slate (roof HSV sat 0.076 against ref 3's
+0.446, roof-wall warm-cool -0.26 against -0.07). **The cool sector was bought with hue
+DISTANCE because chroma was unavailable, and the sector metric was satisfied by something
+that does not look like the thing the metric was chosen to detect** — round 13's failure, one
+level down, caught inside one round instead of after one. Named and open.
 
 ---
 
