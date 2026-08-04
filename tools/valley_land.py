@@ -71,6 +71,7 @@ import numpy as np
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
+import bushlang as BL
 import overworld_build as B
 
 # ---------------------------------------------------------------------------
@@ -508,6 +509,10 @@ CLUMP_SUN = np.array([-0.4393, 0.5592, -0.7031])
 CLUMP_BASE_DARK = 0.42      # COLOR_0 multiplier at the very bottom of a clump
 CLUMP_SUN_AMT = 0.30        # how much of the shading the sun side wins
 CLUMP_SINK = 0.16           # share of clump height buried below the terrain
+# THE CLUMP'S LEAF SCALE IS THE BUSH'S LEAF SCALE, taken from bushlang rather than
+# typed: both wear ow_valley_bushcore's leafmass_tile, and one leaf size across the
+# region is the whole point of sharing the map.  See _clump_uv().
+CLUMP_UV = BL.CORE_UV       # world units per leafmass_tile repeat
 
 
 def _clump_geo():
@@ -539,22 +544,45 @@ def _clump_geo():
     #     y = 0, i.e. tangent to the terrain, so there was no contact and no
     #     interpenetration — the "floating" read.
     # `gshade` is the per-vertex answer to the first and CLUMP_SINK to the second.
-    pos, uv, shade = [], [], []
+    #
+    # R19 — AND THE THIRD MECHANISM WAS THAT IT HAD NO TEXTURE AND NO SMOOTHING.
+    # The f4b A/B (docs/qa/ow-refs/plates/f4b-bush-ab-*.png) stood a card-built bush
+    # beside one of these in open sun and the cards won so plainly that the round
+    # after it was going to be a card conversion.  MEASURED on the extracted
+    # geometry first: this clump's UVs spanned 0.06 x 0.06 of the leaf tile over
+    # 1.4 m2 — one texel, stretched over the whole solid, i.e. EFFECTIVELY
+    # UNTEXTURED — and 20/20 of its triangles were flat-shaded.  The bushlang core
+    # it lost to is a closed volume too; what it has is the tiled leaf map and
+    # smooth normals.  So the A/B was never "cards beat volumes", it was "textured
+    # beats untextured", and the fix is an unwrap and a normal, not a rebuild.
+    #   * UVs: per-face planar projection on the face's dominant axis, in the
+    #     clump's OWN frame and scaled by the instance in `_emit` — so texel
+    #     density is world-constant, the phase rides each clump's yaw, and a
+    #     per-instance offset keeps 261 of them off one lattice.
+    #   * NORMALS: the icosphere's outward direction, which is already computed
+    #     here for the sun term.  Twenty facets shaded smooth read as a mass;
+    #     shaded flat they read as a cut gem, which is what "green rocks" was.
+    pos, nrm, uvax, shade = [], [], [], []
     for f in _ICO_F:
-        for i in f:
-            v = np.array(_ICO_V[i], dtype=float)
-            v = v / np.linalg.norm(v) * 0.5
+        vs = [np.array(_ICO_V[i], dtype=float) for i in f]
+        vs = [v / np.linalg.norm(v) * 0.5 for v in vs]
+        # the face's dominant axis, on the squashed positions the UV is taken from
+        fp = [np.array((v[0], v[1] * 0.94, v[2])) for v in vs]
+        fn = np.cross(fp[1] - fp[0], fp[2] - fp[0])
+        ax = int(np.argmax(np.abs(fn)))
+        for v in vs:
             pos.append((v[0], v[1] * 0.94 + 0.47 - CLUMP_SINK, v[2]))
             # t = height within the clump, 0 at the base and 1 at the crown
             t = np.clip(v[1] + 0.5, 0.0, 1.0)
             base = CLUMP_BASE_DARK + (1.0 - CLUMP_BASE_DARK) * t ** 1.20
             # the icosphere's own outward direction IS its normal
             n = v / np.linalg.norm(v)
+            nrm.append(tuple(n))
+            uvax.append(ax)
             sun = np.clip(float(n @ CLUMP_SUN) * 0.5 + 0.5, 0.0, 1.0)
             shade.append(base * (1.0 - CLUMP_SUN_AMT + CLUMP_SUN_AMT * 2.0 * sun))
-    for k in range(len(pos)):
-        uv.append((0.42 + (k % 3) * 0.03, 0.44 + ((k // 3) % 3) * 0.03))
-    return np.array(pos), np.array(uv), np.array(shade)
+    return (np.array(pos), np.array(nrm), np.array(uvax, dtype=int),
+            np.array(shade))
 
 
 # ---- THE FLOWER.  Two triangles, in CLUMPS never scattered. ---------------
@@ -575,13 +603,30 @@ def _rot(tilt, yaw):
     return Rx @ Ry
 
 
-def _emit(rows, gpos, gnrm, guv, gshade=None):
+def _clump_uv(gpos, uvax, s, row, seed=17):
+    """Per-face planar UVs for ONE instance, in the instance's own scaled frame.
+
+    bushlang's `_mesh_core` convention, in runtime axes: the two coordinates the
+    face's dominant axis leaves over, taken off the SCALED local position, so a
+    wide clump gets more leaf tile than a small one and the density is the same
+    metres-per-repeat the bush core uses.  The yaw is deliberately NOT applied —
+    the projection rides the clump's own frame, so 261 clumps at 261 yaws already
+    disagree about phase; `off` decorrelates the rest.
+    """
+    p = gpos * s
+    u = np.where(uvax == 0, p[:, 2], p[:, 0])
+    v = np.where(uvax == 1, p[:, 2], p[:, 1])
+    off = np.array([h2(row["x"], row["z"], seed), h2(row["z"], row["x"], seed + 1)])
+    return np.stack([u, v], axis=-1) / CLUMP_UV + off[None, :]
+
+
+def _emit(rows, gpos, gnrm, guv, gshade=None, uvax=None):
     """Bake instance rows into one runtime-space soup, then convert to Blender."""
     npv = len(gpos)
     V = np.empty((len(rows) * npv, 3))
     N = np.empty((len(rows) * npv, 3)) if gnrm is not None else None
     C = np.empty((len(rows) * npv, 3))
-    U = np.empty((len(rows) * npv, 2)) if guv is not None else None
+    U = np.empty((len(rows) * npv, 2)) if (guv is not None or uvax is not None) else None
     for i, row in enumerate(rows):
         R = _rot(row["tilt"], row["yaw"])
         s = np.array([row["w"], row["h"], row["w"]])
@@ -595,7 +640,7 @@ def _emit(rows, gpos, gnrm, guv, gshade=None):
         C[o:o + npv] = row["c"] if gshade is None else \
             np.asarray(row["c"])[None, :] * gshade[:, None]
         if U is not None:
-            U[o:o + npv] = guv
+            U[o:o + npv] = guv if uvax is None else _clump_uv(gpos, uvax, s, row)
     # runtime (x, y, z) -> blender (x, -z, y)
     Vb = np.stack([V[:, 0], -V[:, 2], V[:, 1]], axis=1)
     Nb = None if N is None else np.stack([N[:, 0], -N[:, 2], N[:, 1]], axis=1)
@@ -825,9 +870,9 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
     objs.append(_mesh(col, "veg_land_tufts", V, N, C, None, m_tuft, True))
     tris += len(V) // 3
     if clump_rows:
-        gp, guv, gsh = _clump_geo()
-        V, _, C, U = _emit(clump_rows, gp, None, guv, gshade=gsh)
-        objs.append(_mesh(col, "veg_land_clumps", V, None, C, U, m_clump, False))
+        gp, gn, gax, gsh = _clump_geo()
+        V, N, C, U = _emit(clump_rows, gp, gn, None, gshade=gsh, uvax=gax)
+        objs.append(_mesh(col, "veg_land_clumps", V, N, C, U, m_clump, True))
         tris += len(V) // 3
     if flower_rows:
         gp, gn = _flower_geo()

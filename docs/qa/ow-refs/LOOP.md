@@ -2368,3 +2368,58 @@ slice 848/0, cine 689/0 (2 soft), findability 69/0 (2 warn).
     and the view-fade prototype is not a shipped answer.
   * The crown-scale sun ramp's normalising extent (above).
   * The bald slope is better and is still the barest thing in the closeup.
+
+## FOLIAGE ROUND 4c (f4c) — the unwrap, and what it did NOT buy
+
+The cheap experiment f4b's confound demanded, run before any card round: give
+`veg_land_clumps` real UVs and smooth normals and re-shoot f4b's own frame.
+
+**THE CHANGE IS TWO DERIVATIONS, NO NEW MASSING** (`tools/valley_land.py`,
+`_clump_geo` / `_clump_uv`). UVs are a per-face planar projection on the face's
+dominant axis — bushlang's `_mesh_core` convention, in runtime axes — taken off the
+INSTANCE-SCALED local position, so texel density is world-constant and each clump's
+own yaw carries the phase; a per-instance `h2` offset decorrelates the rest. The
+normal is the icosphere direction that the sun term was already computing.
+`CLUMP_UV = bushlang.CORE_UV`, imported rather than typed: both wear
+`ow_valley_bushcore`'s leaf tile and one leaf size across the region is the point of
+sharing a map.
+
+**THE PROOF THAT NOTHING ELSE MOVED**, in the GLB, per accessor of
+`veg_land_clumps` (24 780 verts, 413 clumps):
+
+| accessor | old `22ae6542` | new `6f21c588` |
+|---|---|---|
+| POSITION | `05263d5b8cd25157` | `05263d5b8cd25157` |
+| COLOR_0 | `66a2d15e378bf91a` | `66a2d15e378bf91a` |
+| NORMAL | `fbcd27e1d1244fb1` | **`80f5acc8b0137c54`** |
+| TEXCOORD_0 | `917be7fccf5f6882` | **`31c3cbb97b2b7c1a`** |
+
+Measured in the running page by f4b's own uv probe, on the same extracted clump:
+uv span **0.06 x 0.06 -> 0.32 x 0.41** of the tile, texelPerM2 **-> 0.186** against
+the bush core's **0.191**, flat triangles **20/20 -> 0/20**. Read straight out of
+both GLBs over all 8 260 clump triangles (986.8 m2 of surface, unchanged), the old
+number is not small, it is **ZERO**: total uv area 0.0000 against the new 176.13,
+because the old assignment gave every triangle three COLLINEAR uvs — the solid was
+sampling a single line of the leaf tile, which is the exact mechanism behind f4b's
+"effectively untextured".
+
+**THE VERDICT IS BY EYE** (`plates/f4c-clump-retextured.png`, `-backlit.png`,
+`-beforeafter.png` — same station, sun and camera as f4b, only the build differs):
+
+  * **YES, IT READS AS FOLIAGE NOW.** The faceted green gem is gone. In full sun the
+    clump is a leaf mass at the same leaf scale as the bush beside it; back-lit, the
+    black gem with the specular streak is a dark leaf mass. Volume-vs-volume with the
+    card shell hidden, the clump and the bushlang core are visibly the SAME CLASS OF
+    OBJECT — which is what f4b predicted and what the card round was going to buy at
+    the price of an asset.
+  * **AND THE CARDS STILL WIN, on ONE axis: the OUTLINE.** A 20-face solid still
+    silhouettes as a hexagon, and no unwrap touches a silhouette. The gap that
+    remains is FORM and RIM (multi-lobed mass, edge break-up against the sky), not
+    material — the "green rocks" half of the complaint is paid, the "closed convex
+    hull" half is not. At game distance (row 2 of the before/after) the residual gap
+    is small.
+
+Gates: `walk_engine_gate` ow-valley **GREEN** (2065 cells both sides, 0 lost, 0
+extra, BVH 0 FAIL); clumps confirmed non-collidable IN THE ENGINE — `SIM.floors`
+across a 3.6 m line through a clump rises monotonically with the terrain, no step at
+the clump (a floor there would have been a 0.38 m bump).

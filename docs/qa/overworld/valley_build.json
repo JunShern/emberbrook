@@ -1,5 +1,5 @@
 {
- "build_s": 19.61,
+ "build_s": 18.26,
  "bushes": {
   "cards": 741,
   "core_tris": 11265,
@@ -63,7 +63,7 @@
  "emberbrook_tint_families": 5,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.3,
+ "field_s": 0.28,
  "h_range": [
   -6.18,
   50.9
@@ -166,7 +166,7 @@
  "tributary_falls": 26,
  "tris": 337781,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 4.25,
+ "veg_s": 3.86,
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "dhfalls": {
@@ -250,5 +250,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.093
+ "zone_s": 0.078
 }
