@@ -474,6 +474,8 @@ const PFX={
   // per-material rather than just a second global pull: without it, cutting gp and
   // adding wp/cp is still a frame-wide walk-back with a different sign.
   gradeVeg: PFXNUM('grade_vb',0.18),
+  // vh — the vegetation HUE, see "ALMOST NO HUE VARIATION" in GRADE_SHADER. Swept.
+  gradeVegHue: PFXNUM('grade_vh',0.10),
   gradeDesat: PFXNUM('grade_d',0.40),
 };
 // THE AERIAL SPLIT (2026-08-03, overworld only, ?grade=0 to remove).
@@ -513,14 +515,14 @@ const GRADE_SHADER={
              dNear:{value:30}, dFar:{value:150}, amt:{value:1}, lift:{value:0.03},
              desat:{value:0.0}, litLo:{value:0.0}, litHi:{value:1.0},
              haze:{value:0.0}, sat:{value:1.0}, dScale:{value:52.0}, dRef:{value:0.0}, toe:{value:0.0},
-             gp:{value:0.0}, wp:{value:0.0}, cp:{value:0.0}, vb:{value:0.0},
+             gp:{value:0.0}, wp:{value:0.0}, cp:{value:0.0}, vb:{value:0.0}, vh:{value:0.0},
              hazeCol:{value:new THREE.Vector3(0.127,0.175,0.275)},
              warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
              coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
   vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
   fragmentShader:[
     'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
-    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb;',
+    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb,vh;',
     'uniform vec3 warmCol,coolCol,hazeCol;',
     'void main(){',
     '  vec4 c=texture2D(tDiffuse,vUv);',
@@ -647,6 +649,44 @@ const GRADE_SHADER={
     '                   - cp*smoothstep(0.16,0.40,cyn)',
     '                   + vb*smoothstep(0.28,0.55,yel);',
     '  o=mix(vec3(oL), o, max(0.0,kSat));',
+    // R13 — AND "ALMOST NO HUE VARIATION" TURNED OUT NOT TO BE ABOUT VARIATION. The
+    // critic's word was variation; the statistic says our vegetation had as much spread
+    // as the references all along and the CENTRE was in the wrong place. Measured over
+    // the green family (hue 55-160, sat > 0.15):
+    //
+    //                     hue mean   hue SD   hue IQR   sat mean
+    //   ref 1              94.3       19.8     14.6      0.417
+    //   ref 3              85.6       16.4     11.5      0.476
+    //   r12 meadow         74.2       18.2     14.0      0.387
+    //
+    // Our spread was already inside theirs. Our vegetation simply sits 11-20 deg
+    // YELLOWER than both, which is what "dull uniform olive" actually is — an olive is
+    // a green whose hue is wrong, not a green with no variance. IF WE HAD READ THE WORD
+    // AND NOT THE PIXELS we would have spent the round adding noise to a field that
+    // already had it. (Same shape as the "flat far hillside" item: the critic names a
+    // symptom, the instrument names the property.)
+    // A green-channel gain on the same vegetation selector is what moves the centre —
+    // in the green sector hue = 60*(2+(b-r)/(g-b)), so widening g-b is the only term
+    // that walks 73 deg toward 90 (raising r walks it the WRONG WAY, which is worth
+    // stating because it is the intuitive move). Luminance is renormalised after, so
+    // this is a hue rotation and not a brightness push. ?grade_vh=0 removes it.
+    //
+    // AND THE FIRST MEASUREMENT OF THIS KNOB SAID IT DID NOTHING, WHICH WAS THE
+    // INSTRUMENT'S FAULT. Swept 0 / 0.10 / 0.20, the green family's mean hue read
+    // 77.3 / 76.8 / 77.3 — flat, and by this repo's own rule ("a knob swept without
+    // moving the thing it names is a WIRING problem") that is four words from being
+    // filed as a fifth disconnected knob. It is not. THE SELECTOR'S OWN BOUNDARY MOVES
+    // WITH THE TREATMENT: the family is "hue 55-160 and sat > 0.15", the gain pulls
+    // marginal pixels ACROSS the 55 deg edge (share 22.6% -> 28.4%), and those arrive
+    // at the bottom of the range and hold the mean down. Re-measured on a FIXED PIXEL
+    // SET (the vh=0 selection, applied to all three plates) the rotation is plainly
+    // there: meadow 77.3 -> 79.6 -> 81.6, gorge 88.1 -> 89.9 -> 91.4, toward the
+    // references' 85.6 / 94.3. WHEN A TREATMENT CHANGES THE CLASSIFIER, MEASURE ON THE
+    // PIXELS AND NOT ON THE CLASS. 0.20 is measured and REFUSED by eye — the canopy
+    // goes acid lime — which is the whole reason the plates get opened.
+    '  if(vh>0.0){ vec3 og=o; og.g*=1.0+vh*smoothstep(0.28,0.55,yel);',
+    '    float l0=dot(o,vec3(0.2126,0.7152,0.0722)), l1=dot(og,vec3(0.2126,0.7152,0.0722));',
+    '    o=og*(l1>1e-5 ? l0/l1 : 1.0); }',
     // R11 — THE FOREGROUND TOE, and it exists because the first version of this pass
     // FAILED THE CRITIC'S OWN SECOND TEST while passing its first. Measured over the
     // whole frame, r10 -> r11a: saturation 0.545 -> 0.402 and the green b:g 0.634 ->
@@ -792,6 +832,7 @@ function pfxBuild(){
     grade.material.uniforms.wp.value=PFX.gradeWarm;
     grade.material.uniforms.cp.value=PFX.gradeCyan;
     grade.material.uniforms.vb.value=PFX.gradeVeg;
+    grade.material.uniforms.vh.value=PFX.gradeVegHue;
     {const hz=(Q.get('grade_hc')||'').split(',');
      if(hz.length===3) grade.material.uniforms.hazeCol.value.set(+hz[0],+hz[1],+hz[2]);}
     const K=PFX.gradeTint, u=grade.material.uniforms;
