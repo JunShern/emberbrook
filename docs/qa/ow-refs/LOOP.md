@@ -1960,3 +1960,76 @@ findability_test (69/0), walk_engine_gate ow-valley.
     same three blade shapes. Two more ground assets and a real flower are the next honest step.
   * `ow_f2_tuft` (bundle, not this lane's) is dithered out from 20 m and returns at FULL
     strength beyond 66 m — so the far ridge is still carried by a regularly-placed asset.
+
+---
+
+## TREES r2 (t2) — the sun was never wired, and the bush in the frame was not the bush with the name
+
+Plates `docs/qa/ow-refs/plates/t2-{meadow,gate,vista,gorge,closeup}.png`, crops in
+`t2-crops/` (all before/after against the f2 build, TOP = f2, BOTTOM = t2).
+Scene 325 406 -> 333 677 tris (+8 271, +2.5%). cine 689/0, slice 848/0,
+findability 69/0, walk_engine_gate ow-valley GREEN (0 cells lost).
+
+**THE RIDGE CONTRADICTION: THE BLIND JUDGE WAS RIGHT, AND MY ROUND-1 REPORT WAS TRUE.**
+Both, and that is the finding. `tree_e`, the 0.68-1.58 ramp and the keep-out jitter all
+LANDED — `MEADOW_CFG` is wired through `O3.TREE_FN["e"]`, the build plants 17 of them,
+and the size spread is plainly visible in `t1-gorge`. So the judge's literal words
+("same size, same rotation") are false. But its headline was right, because **the repeat
+it names is a repeat of FORM, and no scatter knob addresses form**: both field species
+hung ONE ball clear of a BARE VERTICAL STICK. tree_a's crown bottom sat at z+1.33 s over
+a trunk running to z+1.55 s — 86% of the trunk uncovered on every instance at every
+scale. Scaling a lollipop gives a bigger lollipop. Fixed in the SHAPE (per-instance trunk
+height + a skirt of 1-3 low lobes that brings foliage down over the trunk), not the
+scatter. `t2-crops/gorge-ridge.png`: the stick is gone and no two outlines match.
+*A dead end worth recording:* round 1 also added `tree_e` to `overworld3_lib`'s
+`FIELD_MIX`/`plant_field`, which builds `ow-proto-*` and NOT `ow-valley` — that half was
+always inert. The live path is `valley_build.plant_region`.
+
+**CHARGE 1 WAS AN ABSENCE AT THE WIRE, NOT A LEVEL.** "No lobe is lit and no lobe is
+shaded" was literally true: EVERY crown-scale term in `bushlang` was a function of world
+up — `shade_core` read `up = N[:,2]`, `_colour` read `nz = N[:,2]` and `_lobe_height`
+(a Z gradient by construction). A lobe on the sun side and one on the shade side got
+IDENTICAL colour at every scale. There was no lateral gradient to sweep. `SUN_TO` is now
+DERIVED from the ratified rig (Blender euler 56/0/212 -> toward-sun (-0.439, 0.703,
+0.559), elevation 34.0 deg — the same 34-degree sun every shadow note in `valley_build`
+is written against) and applied at two scales: local normal (per-lobe form) and position
+along the sun axis normalised over the mass's own extent (the crown-scale ramp). It takes
+a SHARE of the existing lift rather than stacking, so the mean holds and only the
+distribution moves. `Mass(sun_scope=)` exists because the crown ramp normalises over the
+mass extent: correct for one forest mass, a tile-wide vignette for a batch of bushes.
+
+**THE PALE STREAKS ARE DIAGNOSED, AND THE COMMENT THAT NAMED THEM WAS WRONG.**
+`bushlang.py`'s own CORE_UV block blamed the core's planar UV projection. Measured and
+refuted: hide the core, streaks unchanged; hide the CARDS, streaks GONE. Per-triangle UV
+anisotropy out of the shipped GLB is core median 1.14 / max 1.70 against cards exactly
+1.000 — dominant-axis planar projection is bounded at sqrt(3) BY CONSTRUCTION, so the
+claimed smear cannot happen. Filtering excluded (LinearFilter, anisotropy 16: no change).
+Culling `|N.view| < 0.45` removes 14 283 of 33 333 cards and most of the streaks; a
+streak is 85-130 px = one BIG card. **They are big shell cards seen near edge-on**, made
+pale because `NZ_HI` made those same up-facing cards the brightest in the mass. That is
+also the other half of charge 1 — "the canopy's brightest pixels are scattered" — and no
+crown-scale gradient can read through a field of bright slivers. BETA_MAX 56 -> 46 deg
+and NZ_HI 0.42 -> 0.22 cut them materially; they are reduced, not gone.
+**The wrong comment cost a diagnostic hour.** Documentation bar, paid in full: an
+interpretation may only be recorded beside the instrument that proved it.
+
+**THE BUSH ITEM: I ALMOST FIXED THE WRONG OBJECT.** The brief routed bushes to
+`bushlang.py` and `overworld3_lib.shrub_a`. Both were real and both were rebuilt —
+`shrub_a`'s two flat-coloured ellipsoids became one bushlang mass (lobed core, culled
+interior, card shell, dark base, sunk by `BUSH_SINK`). Then, measured in the running
+game: **only THREE `veg_bush` vertices lie within 45 m of any of the five fixed views.**
+`veg_bush` is almost entirely the west forestwall, off camera. What is in frame at every
+one of those views — and therefore what every "pancake disc / floating / still looks lit"
+critique has actually been about — is **`veg_land_clumps`**, from `valley_land.py`.
+Its mechanism was in `_emit`: `C[o:o+npv] = row["c"]`, ONE FLAT COLOUR on every vertex of
+the clump, so a convex solid under one directional light had no dark side and no dark
+underside; and its base sat at exactly y = 0, tangent to the terrain, which is the
+floating read. Now a per-vertex `gshade` (darkest at the base, plus the same derived sun)
+and `CLUMP_SINK`. **FIND THE OBJECT THAT IS IN THE FRAME BEFORE FIXING THE OBJECT THAT
+HAS THE RIGHT NAME** — a fix aimed only at `shrub_a` would have been invisible in the
+very pictures it was judged on.
+
+**Gorge shade band (coordinator's item 5):** `t2-crops/bush-shade.png`. The shaded clumps
+keep a readable green value with visible form and do not collapse into holes; the value
+floor holds. Honest limit: they are still bright faceted low-poly solids, which is the
+declared style, and the in-shade improvement is real but modest.

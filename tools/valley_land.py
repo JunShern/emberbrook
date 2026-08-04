@@ -500,6 +500,16 @@ _ICO_F = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11),
           (4, 9, 5), (2, 4, 11), (6, 2, 10), (8, 6, 7), (9, 8, 1)]
 
 
+# THE CLUMP'S SUN, in RUNTIME axes.  bushlang.SUN_TO is (-0.4393, 0.7031, 0.5592)
+# in Blender (z-up); this geometry is built in runtime space and converted at the
+# end of _emit by (x, y, z) -> (x, -z, y), so the inverse takes the sun vector to
+# (x, z, -y).  Derived from the same ratified rig, NOT typed independently.
+CLUMP_SUN = np.array([-0.4393, 0.5592, -0.7031])
+CLUMP_BASE_DARK = 0.42      # COLOR_0 multiplier at the very bottom of a clump
+CLUMP_SUN_AMT = 0.30        # how much of the shading the sun side wins
+CLUMP_SINK = 0.16           # share of clump height buried below the terrain
+
+
 def _clump_geo():
     # R11: THE SQUASH WAS 0.62 AND IT MADE PANCAKES.  A unit clump 1.0 wide and
     # 0.62 tall, then scaled w in 0.75..1.80 against h in 0.45..1.20, lands at a
@@ -509,15 +519,42 @@ def _clump_geo():
     # at three of them returns veg_land_clumps with a first-hit normal of
     # (-0.06, 0.99, -0.14) — a horizontal facet.  0.94 keeps the low-poly facet
     # read (which IS the style) and gives the thing a height.
-    pos, uv = [], []
+    #
+    # ROUND 2 — AND THESE ARE THE BUSHES THE CRITIQUES HAVE BEEN TALKING ABOUT.
+    # The foliage brief routed "bushes look lit inside a cast shadow, several read
+    # as floating" to tools/bushlang.py and overworld3_lib's `shrub_a`.  Measured in
+    # the running game: only THREE bush vertices lie within 45 m of any of the five
+    # fixed views — `veg_bush` is almost entirely in the west forestwall, off
+    # camera.  What is in frame at every one of those views is `veg_land_clumps`.
+    # A fix aimed at shrub_a would have been invisible in the pictures it was
+    # judged on, which is the whole lesson: FIND THE OBJECT THAT IS IN THE FRAME
+    # BEFORE FIXING THE OBJECT THAT HAS THE RIGHT NAME.
+    #
+    # Two of the brief's three mechanisms were live here and neither is geometry:
+    #   * NO FORM GRADIENT.  `_emit` wrote `C[o:o+npv] = row["c"]` — ONE flat
+    #     colour on every vertex of the clump.  A convex solid under a single
+    #     directional light with a constant COLOR_0 has no dark side and no dark
+    #     underside; nothing about it could read as occluded.
+    #   * BASE NOT DARKEST, AND SITTING ON THE GROUND.  The base sat at exactly
+    #     y = 0, i.e. tangent to the terrain, so there was no contact and no
+    #     interpenetration — the "floating" read.
+    # `gshade` is the per-vertex answer to the first and CLUMP_SINK to the second.
+    pos, uv, shade = [], [], []
     for f in _ICO_F:
         for i in f:
             v = np.array(_ICO_V[i], dtype=float)
             v = v / np.linalg.norm(v) * 0.5
-            pos.append((v[0], v[1] * 0.94 + 0.47, v[2]))
+            pos.append((v[0], v[1] * 0.94 + 0.47 - CLUMP_SINK, v[2]))
+            # t = height within the clump, 0 at the base and 1 at the crown
+            t = np.clip(v[1] + 0.5, 0.0, 1.0)
+            base = CLUMP_BASE_DARK + (1.0 - CLUMP_BASE_DARK) * t ** 1.20
+            # the icosphere's own outward direction IS its normal
+            n = v / np.linalg.norm(v)
+            sun = np.clip(float(n @ CLUMP_SUN) * 0.5 + 0.5, 0.0, 1.0)
+            shade.append(base * (1.0 - CLUMP_SUN_AMT + CLUMP_SUN_AMT * 2.0 * sun))
     for k in range(len(pos)):
         uv.append((0.42 + (k % 3) * 0.03, 0.44 + ((k // 3) % 3) * 0.03))
-    return np.array(pos), np.array(uv)
+    return np.array(pos), np.array(uv), np.array(shade)
 
 
 # ---- THE FLOWER.  Two triangles, in CLUMPS never scattered. ---------------
@@ -538,7 +575,7 @@ def _rot(tilt, yaw):
     return Rx @ Ry
 
 
-def _emit(rows, gpos, gnrm, guv):
+def _emit(rows, gpos, gnrm, guv, gshade=None):
     """Bake instance rows into one runtime-space soup, then convert to Blender."""
     npv = len(gpos)
     V = np.empty((len(rows) * npv, 3))
@@ -555,7 +592,8 @@ def _emit(rows, gpos, gnrm, guv):
             # three.js's normalMatrix on a non-uniform scale: n' ~ R @ (n / s)
             m = (gnrm / s) @ R.T
             N[o:o + npv] = m / np.maximum(np.linalg.norm(m, axis=1, keepdims=True), 1e-9)
-        C[o:o + npv] = row["c"]
+        C[o:o + npv] = row["c"] if gshade is None else \
+            np.asarray(row["c"])[None, :] * gshade[:, None]
         if U is not None:
             U[o:o + npv] = guv
     # runtime (x, y, z) -> blender (x, -z, y)
@@ -787,8 +825,8 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
     objs.append(_mesh(col, "veg_land_tufts", V, N, C, None, m_tuft, True))
     tris += len(V) // 3
     if clump_rows:
-        gp, guv = _clump_geo()
-        V, _, C, U = _emit(clump_rows, gp, None, guv)
+        gp, guv, gsh = _clump_geo()
+        V, _, C, U = _emit(clump_rows, gp, None, guv, gshade=gsh)
         objs.append(_mesh(col, "veg_land_clumps", V, None, C, U, m_clump, False))
         tris += len(V) // 3
     if flower_rows:

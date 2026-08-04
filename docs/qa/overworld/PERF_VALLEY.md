@@ -4,26 +4,26 @@ The region is **280 x 200u = 56.0 k square units**, the F2 tile was 120 x 90u = 
 
 | | F2 tile | valley | F2 per 1k u2 | valley per 1k u2 |
 |---|---|---|---|---|
-| draw calls | 48 | 50 | 4.44 | 0.89 |
-| verts | 116492 | 765475 | 10786 | 13669 |
-| tris | 53952 | 325102 | 4996 | 5805 |
-| GLB MB | 22.50 | 51.22 | 2.08 | 0.91 |
+| draw calls | 48 | 52 | 4.44 | 0.93 |
+| verts | 116492 | 768881 | 10786 | 13730 |
+| tris | 53952 | 333373 | 4996 | 5953 |
+| GLB MB | 22.50 | 51.39 | 2.08 | 0.92 |
 | embedded texture MB | 17.03 | 17.23 | - | - |
 | images | 29 | 34 | - | - |
 | materials | 17 | 21 | - | - |
-| build s | 2.07 | 16.37 | 0.192 | 0.292 |
+| build s | 2.07 | 16.46 | 0.192 | 0.294 |
 
-Where the build time goes: field 0.25s, zone grid 0.074s, terrain mesh 0.21s, planting 3.94s (149 trees).  The zone grid — the whole encounter geography of a 280 x 200u region, 224 x 160 cells — costs **0.074 s**.
+Where the build time goes: field 0.25s, zone grid 0.075s, terrain mesh 0.20s, planting 4.07s (149 trees).  The zone grid — the whole encounter geography of a 280 x 200u region, 224 x 160 cells — costs **0.075 s**.
 
 Geometry byte budget inside the GLB:
 
 | attribute | MB |
 |---|---|
-| POSITION | 9.19 |
-| NORMAL | 9.19 |
-| COLOR_0 | 9.02 |
-| TEXCOORD_0 | 3.46 |
-| INDICES | 3.07 |
+| POSITION | 9.23 |
+| NORMAL | 9.23 |
+| COLOR_0 | 9.06 |
+| TEXCOORD_0 | 3.48 |
+| INDICES | 3.09 |
 | embedded images | 17.23 |
 
 | zone | coverage |

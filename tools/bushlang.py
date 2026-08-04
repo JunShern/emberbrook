@@ -39,20 +39,33 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEXO = os.path.join(ROOT, "tools/textures/overworld")
 
 # ------------------------------------------------------------------ taste knobs
-BETA_MAX = math.radians(56.0)     # max card lie-back from vertical (the H clamp)
+BETA_MAX = math.radians(46.0)     # max card lie-back from vertical (the H clamp)
 BETA_JIT = math.radians(13.0)
 SIL_BIAS = 0.42                   # 0 = cards only on silhouettes, 1 = uniform
 # CORE_UV — 3.6 -> 2.1.  `_mesh_core` projects PLANAR UVs with the axis chosen by
-# each face's dominant normal, and on a dome that compresses hard for the faces
-# near 45 degrees, where neither axis is a good projection: one texel gets smeared
-# across the face.  Isolating the core in the running game (cards hidden) showed it
-# as pale FEATHERY STREAKS radiating over every lobe, and those streaks were
-# reading through the shell as the crown's worst artefact.  A shorter repeat does
-# not fix the projection — it makes the smear fine instead of coarse, which is what
-# the eye reads as leaf noise rather than as brush strokes.  The projection itself
-# is a known hole, left named: the core is meant to be the dark interior nothing
-# can see through, so the real defence is that it is now more than a stop below the
-# shell and covered by 2.20 cards per square unit rather than 1.25.
+# each face's dominant normal, which does compress on faces near 45 degrees, and a
+# shorter repeat makes that smear fine rather than coarse.
+#
+# THIS COMMENT USED TO BLAME THE PALE CROWN STREAKS ON THAT PROJECTION.  IT WAS
+# WRONG, AND BEING WRITTEN DOWN IT COST ANOTHER LANE A DIAGNOSTIC HOUR — the
+# documentation bar's own warning about interpretations carrying authority, paid in
+# full.  MEASURED (round 2, ow_multi at the meadow camera, postfx off):
+#   * hide the CORE and the streaks are unchanged; hide the CARDS and they are GONE.
+#     The core is not drawing them.
+#   * per-triangle UV anisotropy out of the shipped GLB (SVD of d(uv)/d(world)):
+#     core median 1.14, max 1.70; cards exactly 1.000.  Dominant-axis planar
+#     projection is bounded at sqrt(3) = 1.732 BY CONSTRUCTION, so "one texel
+#     smeared across the face" cannot happen here at all.
+#   * LinearFilter and anisotropy 16 (default 1) both leave the streaks unchanged,
+#     which excludes filtering.
+#   * culling cards with |N.view| < 0.45 removes 14 283 of 33 333 and most of the
+#     streaks; a streak measures 85-130 px, which is one BIG card (1.55-2.35 u at
+#     ~55 px/u).
+# THE STREAKS ARE BIG SHELL CARDS SEEN NEAR EDGE-ON.  `beta` lays crown-top cards
+# back to within BETA_MAX of horizontal; against a 35-degree-down camera half the
+# azimuths at that pitch go edge-on, and NZ_HI makes those same up-facing cards the
+# BRIGHTEST in the mass — so the slivers read pale over a darker crown.  The knobs
+# that own it are BETA_MAX (line above), the beta clamp in `shell`, and NZ_HI.
 CORE_UV = 2.1                     # world units per leafmass_tile repeat
 CARD_SINK = 0.10                  # extra sink below the sample point
 CARD_OUT = 0.16                   # card centre stands this far out along N
@@ -92,7 +105,71 @@ BASE_POW = 1.15
 # live inside every card has to reappear at crown scale or not at all, and this
 # and BASE_DARK are where it reappears.
 HI_LIFT = 0.80
-NZ_LO, NZ_HI = 0.72, 0.42         # side-facing cards darker than up-facing ones
+# NZ_HI 0.42 -> 0.22, BETA_MAX 56 -> 46 deg: THE PALE STREAKS.  These are the two
+# knobs the streak diagnosis named (see the CORE_UV block).  A big card laid back
+# near BETA_MAX goes edge-on for half its azimuths against the 35-degree-down
+# camera, and NZ_HI made exactly those up-facing cards the BRIGHTEST thing in the
+# mass — so every grazing sliver read pale over a darker crown.  That is also,
+# word for word, the blind critic's "the canopy's brightest pixels are scattered":
+# the streaks were half of charge 1, and no amount of crown-scale gradient can
+# read through a field of bright slivers scattered across it.
+NZ_LO, NZ_HI = 0.72, 0.22         # side-facing cards darker than up-facing ones
+
+# ------------------------------------------------------- THE SUN (round 2, charge 1)
+# "Texture without form.  The house shadows say the sun is upper-right, yet the
+# canopy's brightest pixels are scattered, so NO LOBE IS LIT AND NO LOBE IS SHADED."
+#
+# The blind critic is describing an absence, and it was an absence at the wire, not a
+# level that wanted sweeping: EVERY crown-scale term in this module was a function of
+# WORLD UP and nothing else.  `shade_core` read `up = N[:,2]`; `_colour` read
+# `nz = N[:,2]` and `_lobe_height`, which is a Z gradient by construction.  A lobe on
+# the sun side and a lobe on the shade side of the same mass therefore got IDENTICAL
+# colour, at every scale.  That is not a gradient that is too weak to see — there was
+# no lateral gradient to see.  (Same class as round 1's `hz = h*0.62`: check the wire
+# before sweeping the knob.)
+#
+# SUN_TO is the direction TOWARD the sun, derived from the towns' own ratified rig —
+# Blender euler (56, 0, 212) on a lamp that points down -Z (valley_build.py:791):
+#     Rz(212) @ Rx(56) @ (0,0,-1) = (0.439, -0.703, -0.559)   [light travel]
+#     toward the sun = -that = (-0.439, 0.703, 0.559),  elevation asin(0.559) = 34 deg,
+# which is the 34-degree sun every shadow-length note in valley_build is written
+# against.  DERIVED, NOT TYPED: change the rig and this must be re-derived with it.
+#
+# TWO SCALES, because the charge is about both and they are different mechanisms:
+#   * SUN_N   — the LOCAL surface normal against the sun.  This is per-lobe form:
+#               the side of a lobe that faces the sun lifts, the side away falls.
+#   * SUN_AX  — position along the sun axis across the WHOLE MASS, normalised over
+#               the mass's own extent.  This is the crown-scale gradient the critic
+#               asked for in so many words ("as a gradient across the whole mass"),
+#               and it is the one a distant crown can actually resolve, because at
+#               60 m the per-lobe normals average out and only the mass-wide ramp
+#               survives.
+# THE SKY TERM STAYS.  Up-facing still lifts (the sky is a real source and the whole
+# module's dark-underside logic hangs off it); the sun terms take a SHARE of the
+# existing lift rather than stacking on it, so the mean is held and only the
+# DISTRIBUTION changes.  SUN_SHARE is that split.
+SUN_TO = np.array([-0.4393, 0.7030, 0.5592])
+SUN_TO = SUN_TO / np.linalg.norm(SUN_TO)
+SUN_SHARE = 0.55                  # of the lift, how much is sun vs sky (0 = old wire)
+SUN_AX_MIX = 0.45                 # within the sun term, crown-scale vs local-normal
+SUN_FLOOR = 0.30                  # the shade side never goes to zero: it is sky-lit
+
+
+def _sun_term(N, P, centre=None, extent=None):
+    """The sun's share of the lift, in 0..1, at two scales blended by SUN_AX_MIX.
+
+    `N` is the surface normal per point; `P` the world position.  When `centre`/
+    `extent` are given the crown-scale ramp is included — callers that have no mass
+    extent (a single loose card) get the local term alone rather than a wrong ramp.
+    """
+    loc = np.clip(N @ SUN_TO, -1.0, 1.0) * 0.5 + 0.5          # 0 away .. 1 facing
+    if centre is None or extent is None or extent <= 1e-6:
+        t = loc
+    else:
+        ax = ((P - centre[None, :]) @ SUN_TO) / extent         # -0.5 .. +0.5
+        ax = np.clip(ax + 0.5, 0.0, 1.0)
+        t = (1.0 - SUN_AX_MIX) * loc + SUN_AX_MIX * ax
+    return SUN_FLOOR + (1.0 - SUN_FLOOR) * t
 
 
 # ---------------------------------------------------------------- icosphere
@@ -165,8 +242,17 @@ class Lobe:
 class Mass:
     """One vegetation mass: lobed core + card shell, both in numpy until finish."""
 
-    def __init__(self, name):
+    def __init__(self, name, sun_scope="mass"):
         self.name = name
+        # SUN_SCOPE — "mass" or "local", and it is a correctness flag, not taste.
+        # The crown-scale ramp normalises over THE MASS'S OWN EXTENT, which is
+        # right for one forest mass and WRONG the moment a Mass is a container for
+        # many separate plants: a tile-wide bush batch would get a tile-wide
+        # gradient, i.e. bushes on the west of the map darker than bushes on the
+        # east, which is not a form cue but a bug that looks like vignetting.
+        # "local" drops the ramp and keeps the per-normal sun term, which is
+        # scale-free and is what a 1 m bush reads by anyway.
+        self.sun_scope = sun_scope
         self.lobes = []
         self.nv = 0            # accumulated CORE VERTEX count.  Not len(self.V):
         #                        that is the number of lobe blocks, and using it
@@ -199,6 +285,19 @@ class Mass:
         self.F.append(Fc + base)
         self.lobes.append(Lobe(c, s, ph, squash, tone))
         return len(self.lobes) - 1
+
+    def _sun_axis(self):
+        """The mass's centre and its own extent ALONG THE SUN AXIS.
+
+        Normalising the crown-scale ramp by the mass's extent (rather than by a
+        world constant) is what makes one gradient work for a 2 m bush and a 40 m
+        forest mass: both get the full ramp across themselves.
+        """
+        V = self._V if getattr(self, "_V", None) is not None else np.concatenate(self.V)
+        if not len(V):
+            return None, None
+        t = V @ SUN_TO
+        return V.mean(axis=0), float(t.max() - t.min())
 
     def cull_interior(self, margin=0.965):
         """Delete every face whose centre is buried in ANOTHER lobe.
@@ -252,7 +351,14 @@ class Mass:
             occ[m] += np.clip(pen[m] + 0.30, 0.0, 0.65) / 0.65
         occ = np.clip(occ, 0.0, 2.2)
         up = np.clip(N[:, 2], -1.0, 1.0)
-        shade = deep + lift * np.clip(up * 0.5 + 0.5, 0.0, 1.0) ** 1.6
+        sky = np.clip(up * 0.5 + 0.5, 0.0, 1.0) ** 1.6
+        # THE LIFT IS SPLIT, NOT STACKED (see the SUN_* block): the sky keeps
+        # (1 - SUN_SHARE) of it and the sun takes the rest, so the mass's mean
+        # COLOR_0 is held and what changes is WHICH SIDE of it is bright.
+        self._sun_c, self._sun_e = self._sun_axis() \
+            if self.sun_scope == "mass" else (None, None)
+        sun = _sun_term(N, V, self._sun_c, self._sun_e)
+        shade = deep + lift * ((1.0 - SUN_SHARE) * sky + SUN_SHARE * sun)
         shade *= np.clip(1.0 - crev * occ, 0.22, 1.0)
         tone = np.array([lb.tone for lb in self.lobes])[VL]
         col = np.clip(shade * tone, 0.0, 1.0)[:, None] * np.ones((1, 3))
@@ -296,7 +402,7 @@ class Mass:
         b[flip] = 1.0 - b[flip]
         return A[:, 0] + b[:, :1] * (A[:, 1] - A[:, 0]) + b[:, 1:] * (A[:, 2] - A[:, 0])
 
-    def _colour(self, shade, nz, P, hi_lift):
+    def _colour(self, shade, N, P, hi_lift):
         """COLOR_0 for a batch of cards.
 
         The shell's COLOR_0 is RELATIVE, normalised against the core's own
@@ -322,8 +428,18 @@ class Mass:
         """
         rel = shade / max(float(self._shade.max()), 1e-6)
         base = BASE_DARK + (1.0 - BASE_DARK) * self._lobe_height(P) ** BASE_POW
+        # THE CARDS CARRY THE SUN TOO, and they matter more than the core does:
+        # the shell is 66.5% of the hero crop against the core's 26.8%, so a sun
+        # gradient applied to the core alone would be a gradient nobody sees.
+        # `nz` (world up) keeps its job of separating up-facing from side-facing
+        # cards; the sun term is a SEPARATE multiplier, normalised to average 1.0
+        # over a full sphere of normals so it redistributes rather than dims.
+        nz = np.clip(N[:, 2], -1.0, 1.0)
+        sun = _sun_term(N, P, getattr(self, "_sun_c", None),
+                        getattr(self, "_sun_e", None))
+        sunm = 1.0 + SUN_SHARE * (sun - (SUN_FLOOR + (1.0 - SUN_FLOOR) * 0.5)) * 2.0
         return np.clip(CARD_LO + (1.0 - CARD_LO) * rel * hi_lift * base
-                       * (NZ_LO + NZ_HI * np.clip(nz, 0, 1)), CARD_LO, 1.0)
+                       * (NZ_LO + NZ_HI * np.clip(nz, 0, 1)) * sunm, CARD_LO, 1.0)
 
     def shell(self, rng, density=0.85, big=(1.55, 2.35), fuzz=(0.70, 1.15),
               fuzz_frac=0.30, beta_max=BETA_MAX, sil_bias=SIL_BIAS,
@@ -366,7 +482,7 @@ class Mass:
                         rng.randint(0, N_BIG, n_want))
         if cell_pick is not None:
             cell = cell_pick(cell, is_fuzz, rng)
-        col = self._colour(shade, nz, P, hi_lift)
+        col = self._colour(shade, N, P, hi_lift)
         # PUSH THE SHELL OUT past the core.  With the cards' bases sitting ON the
         # surface the core stayed the silhouette and the mass read as mossy
         # boulders with leaves along the top: half of every card was inside the
@@ -422,7 +538,7 @@ class Mass:
         # the BRIGHTEST thing in the crown — the opposite of a silhouette.  P is
         # where the card belongs to the mass; the throw is only where it reaches.
         self._emit_cards(base, yaw, beta, sz, cell,
-                         self._colour(shade, nz, P, hi_lift) * RIM_DIM, rng)
+                         self._colour(shade, N, P, hi_lift) * RIM_DIM, rng)
         return n
 
     def _emit_cards(self, P, yaw, beta, sz, cell, col, rng):
@@ -526,14 +642,14 @@ class Mass:
 # ---------------------------------------------------------------------------
 # ONE BUSH — the line-up's exhibit and the unit the forest masses are made of
 # ---------------------------------------------------------------------------
-def bush(M, rng, x, y, z, r, h, nlobe=5, tone=1.0, squash=0.16):
+def bush(M, rng, x, y, z, r, h, nlobe=5, tone=1.0, squash=0.16, subd=2):
     """A chunky multi-lobed core: one dominant lobe plus satellites.
 
     The satellites sit at 0.40-0.70 r and are DELIBERATELY unequal — a ring of
     equal lobes is a flower, and a single lobe is round 1's rejected blob.
     """
     ids = [M.lobe(x, y, z + h * 0.50, r, r * rng.uniform(0.88, 1.06), h * 0.55,
-                  subd=2, seed=rng.randint(1 << 28), squash=squash,
+                  subd=subd, seed=rng.randint(1 << 28), squash=squash,
                   tone=tone * rng.uniform(0.94, 1.06))]
     a0 = rng.uniform(0, 6.283)
     for k in range(nlobe - 1):
@@ -547,7 +663,8 @@ def bush(M, rng, x, y, z, r, h, nlobe=5, tone=1.0, squash=0.16):
         ids.append(M.lobe(x + math.cos(a) * d, y + math.sin(a) * d,
                           z + h * rng.uniform(0.30, 0.62),
                           rr, rr * rng.uniform(0.85, 1.12), h * rng.uniform(0.28, 0.48),
-                          subd=2 if rr > r * 0.5 else 1, seed=rng.randint(1 << 28),
+                          subd=subd if rr > r * 0.5 else max(subd - 1, 0),
+                          seed=rng.randint(1 << 28),
                           squash=squash * rng.uniform(0.6, 1.4),
                           tone=tone * rng.uniform(0.88, 1.10)))
     return ids

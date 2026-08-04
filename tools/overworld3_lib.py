@@ -1026,8 +1026,23 @@ def tree_a(V, x, y, z, s, rz, rng):
     Three sculpted lobes on a leaning trunk with two visible limbs.  The bet: a
     canopy that is real geometry never breaks up at any camera distance and never
     sorts wrong, and the leaf DETAIL comes from the map rather than the mesh.
+
+    ROUND 2 — THE LOLLIPOP, AND WHICH REPEAT IT ACTUALLY WAS.  Round 1 answered a
+    "row of identical mushrooms" charge with three scatter knobs (species mix, a
+    0.68-1.58 scale ramp, spacing jitter).  All three landed and are visible in the
+    frame — and a second blind critic, shown only the pictures, said the ridge was
+    STILL "a dozen identical lollipops... visible stick trunks".  It was right, and
+    the knobs were not the answer, because the repeat it names is a repeat of FORM:
+    both field species hung ONE ball clear of the top of a BARE VERTICAL STICK.
+    tree_a's crown bottom sat at z+1.33 s over a trunk running to z+1.55 s, so 86%
+    of the trunk was uncovered on every instance at every scale.  No scale ramp can
+    break that silhouette — scaling a lollipop gives you a bigger lollipop.
+    So: the trunk height VARIES per instance, and a SKIRT of low lobes brings
+    foliage down over the upper trunk, which is what makes the outline irregular and
+    the trunk read as something the crown grows out of rather than a stick it
+    balances on.
     """
-    h = 1.55 * s
+    h = 1.55 * s * float(rng.uniform(0.80, 1.16))
     top = _trunk(V, x, y, z, s, rz, h, 0.115 * s, 0.075 * s, lean=0.10 * s)
     for k in range(2):
         a = rz + 1.9 + k * 2.6
@@ -1035,13 +1050,26 @@ def tree_a(V, x, y, z, s, rz, rng):
               (top[0] + math.cos(a) * 0.52 * s, top[1] + math.sin(a) * 0.52 * s,
                z + h * 1.02), 0.045 * s)
     R = 1.00 * s
-    _lobe(V, LEAFM, top[0], top[1], z + h + 0.52 * s, R, R * 0.94, R * 0.74,
+    # the main mass drops from +0.52 s to +0.30 s: the crown now overlaps the top
+    # of the trunk instead of floating above it
+    _lobe(V, LEAFM, top[0], top[1], z + h + 0.30 * s, R, R * 0.94, R * 0.74,
           subd=2, seed=rng.randint(1 << 28))
     for k in range(2):
         a = rz + 1.1 + k * 3.1
         _lobe(V, LEAFM, top[0] + math.cos(a) * 0.50 * s, top[1] + math.sin(a) * 0.50 * s,
-              z + h + (0.24 + 0.34 * k) * s, R * 0.66, R * 0.62, R * 0.52,
+              z + h + (0.06 + 0.32 * k) * s, R * 0.66, R * 0.62, R * 0.52,
               subd=2, seed=rng.randint(1 << 28))
+    # THE SKIRT: 1-3 lobes hung DOWN the trunk, their count and reach drawn per
+    # instance, so two neighbouring trees do not share an outline.
+    a0 = rng.uniform(0, 6.283)
+    for k in range(int(rng.randint(1, 4))):
+        a = a0 + k * 2.094 + rng.uniform(-0.5, 0.5)
+        d = R * rng.uniform(0.44, 0.80)
+        rr = R * rng.uniform(0.34, 0.56)
+        _lobe(V, LEAFM, top[0] + math.cos(a) * d, top[1] + math.sin(a) * d,
+              z + h * rng.uniform(0.56, 0.86), rr, rr * rng.uniform(0.86, 1.10),
+              rr * rng.uniform(0.62, 0.92), subd=1,
+              seed=rng.randint(1 << 28), squash_top=0.18)
     V.n["a"] += 1
 
 
@@ -1208,7 +1236,7 @@ def tree_e(V, x, y, z, s, rz, rng):
     as different plants in profile, which is the thing a distant ridge shows.
     It is tagged LEAFM2, so it is also a cooler green.
     """
-    h = 0.80 * s
+    h = 0.80 * s * float(rng.uniform(0.82, 1.20))
     top = _trunk(V, x, y, z, s, rz, h, 0.135 * s, 0.090 * s, lean=0.16 * s)
     for k in range(3):
         a = rz + 0.5 + k * 2.2
@@ -1228,6 +1256,16 @@ def tree_e(V, x, y, z, s, rz, rng):
               cz + rng.uniform(-0.16, 0.12) * s, rr, rr * rng.uniform(0.86, 1.10),
               rr * 0.50, subd=2 if rr > R * 0.62 else 1,
               seed=rng.randint(1 << 28), squash_top=0.22)
+    # the spreading tree gets a skirt too — its trunk is short, but a short bare
+    # stick under a flat disc is still a lollipop, just a squat one
+    for k in range(int(rng.randint(1, 3))):
+        a = a0 + 1.05 + k * 2.4 + rng.uniform(-0.4, 0.4)
+        d = R * rng.uniform(0.50, 0.86)
+        rr = R * rng.uniform(0.30, 0.48)
+        _lobe(V, LEAFM2, top[0] + math.cos(a) * d, top[1] + math.sin(a) * d,
+              z + h * rng.uniform(0.44, 0.80), rr, rr * rng.uniform(0.86, 1.12),
+              rr * rng.uniform(0.60, 0.90), subd=1,
+              seed=rng.randint(1 << 28), squash_top=0.18)
     V.n["e"] += 1
 
 

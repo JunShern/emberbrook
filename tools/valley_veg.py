@@ -282,6 +282,64 @@ def build_canopy(col, F, zg, fr, VM, STATS=None):
     return made
 
 
+# ------------------------------------------------------------------- THE BUSHES
+# ROUND 2, charge 3.  The shipped bush was `overworld3_lib.shrub_a`: TWO squashed
+# solid lobes, flat material colour, no cards, and its centre at z + 0.30 s with a
+# half-height of 0.30 s — so its underside sat EXACTLY on the terrain plane.
+#
+# The honest perception was "bushes in a cast shadow still look lit, several read as
+# floating", and the grass lane refuted the obvious mechanism at the wire: recv is
+# true everywhere and foliage darkens MORE than the rest of the frame under the
+# shadow map.  So the shadow the WORLD casts on a bush was never the problem.  What
+# a solid two-lobe ellipsoid with flat colour has none of is the shadow A BUSH CASTS
+# ON ITSELF:
+#   * no occluded underside — `shade_core`'s crevice + sun terms need lobes to
+#     occlude each other, and two lobes barely overlap;
+#   * the base is not the darkest value — that is `BASE_DARK`/`_lobe_height`, and it
+#     lives on the CARD shell, which shrub_a had none of;
+#   * it sits ON the terrain rather than INTO it, so there is no contact at all and
+#     the eye reads a disc hovering over its own ground.
+# All three are properties bushlang.Mass already has, which is the whole argument
+# for building a bush with the bush language instead of with two ellipsoids.
+BUSH_SINK = 0.34            # share of the bush's height buried below the terrain
+BUSH_DENSITY = 3.10         # cards per sq unit — denser than a stand: a bush is small
+BUSH_RIM = 7.2              # ... and its ragged rim carries the silhouette
+
+
+def build_bushes(col, F, sites, rng, name="veg_bush", core_mat=None, card_mat=None):
+    """Every bush in the region as ONE mass pair.
+
+    `sites` is (x, y, z, s) in BLENDER coords.  One Mass, not one per bush: 47
+    bushes as 94 objects is 94 draw calls for 3% of the frame.  `sun_scope="local"`
+    is what makes that batching safe (see Mass.__init__).
+    """
+    M = BL.Mass(name, sun_scope="local")
+    for (x, y, z, s) in sites:
+        r = 0.62 * s
+        h = 0.78 * s
+        # SUNK.  The lobe cluster's base goes BELOW the terrain by BUSH_SINK of its
+        # height, so the hull interpenetrates the ground and the bush has a contact
+        # line instead of a footprint.  It costs nothing: the buried faces are the
+        # ones `cull_interior` and the `nrm[:,2] > -0.45` cut throw away anyway.
+        BL.bush(M, rng, float(x), float(y), float(z) - h * BUSH_SINK,
+                r, h, nlobe=int(rng.randint(4, 7)), subd=1,
+                tone=float(rng.uniform(0.88, 1.08)),
+                squash=float(rng.uniform(0.12, 0.26)))
+    if not M.lobes:
+        return [], 0, 0
+    killed, total = M.cull_interior()
+    M.shade_core(deep=CORE_DEEP, lift=CORE_LIFT)
+    n = M.shell(rng, density=BUSH_DENSITY, big=(0.42, 0.72), fuzz=(0.22, 0.40),
+                fuzz_frac=0.42, rim_density=BUSH_RIM, rim_size=(0.12, 0.26))
+    objs = M.finish(col, core_mat, card_mat)
+    made = []
+    for key, ob in objs.items():
+        nm = "%s%s" % (name, "_cards" if key == "cards" else "")
+        ob.name = ob.data.name = nm
+        made.append(ob)
+    return made, int(len(M._F)), n
+
+
 # ===========================================================================
 # 2. THE ROCK
 # ===========================================================================

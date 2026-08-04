@@ -1,5 +1,10 @@
 {
- "build_s": 16.37,
+ "build_s": 16.46,
+ "bushes": {
+  "cards": 741,
+  "core_tris": 11265,
+  "n": 59
+ },
  "canopy_farwall-crown": {
   "cards": 12996,
   "core_tris": 3849,
@@ -28,7 +33,7 @@
  "contact_shadow": {
   "base": 0.44,
   "ground_dark": 0.46,
-  "ground_verts": 6843,
+  "ground_verts": 6807,
   "masses": 9
  },
  "dellhollow_decks": 19,
@@ -80,7 +85,7 @@
   176,
   126
  ],
- "meshes": 33,
+ "meshes": 35,
  "oldgate_bite_e_u": 3.05,
  "oldgate_bite_w_u": 0.9,
  "oldgate_court_ends": [
@@ -121,7 +126,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.21,
+ "terrain_s": 0.2,
  "tile": [
   280.0,
   200.0
@@ -144,9 +149,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 325406,
+ "tris": 333677,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.94,
+ "veg_s": 4.07,
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "falls": {
@@ -206,5 +211,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.074
+ "zone_s": 0.075
 }

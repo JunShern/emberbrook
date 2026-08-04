@@ -2517,6 +2517,7 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
     cell = 3.2
     grid = {}
     placed = []
+    bushes = []
 
     def free(x, y, sp):
         r = int(sp / cell) + 1
@@ -2605,12 +2606,15 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
                 a = rng.uniform(0, 6.283)
                 dd = rng.uniform(1.3, 2.5)
                 sx, sy = x + math.cos(a) * dd, y + math.sin(a) * dd
-                # shrub (a) ALWAYS, whatever the tree is: the card-fringe shrubs
-                # read as cabbages/agave in the foreground of the Emberbrook shot,
-                # and understory is exactly where a card is seen flat from above
-                O3.SHRUB_FN["a"](V, sx, sy, gh(F, zg, fr, sx, sy),
-                                 float(rng.uniform(0.6, 1.0)),
-                                 float(rng.uniform(0, 6.283)), rng)
+                # THE BUSH IS NO LONGER A PAIR OF ELLIPSOIDS.  It used to be
+                # `O3.SHRUB_FN["a"]` emitting two solid squashed lobes into this
+                # same Veg accumulator, which is what read as a pancake disc
+                # floating on its own ground.  Sites are COLLECTED here and built
+                # as one bushlang mass afterwards (VV.build_bushes) — they cannot
+                # be built inline because a Mass needs all its lobes before
+                # cull_interior and shade_core can run.
+                bushes.append((sx, sy, gh(F, zg, fr, sx, sy),
+                               float(rng.uniform(0.6, 1.0))))
             add(x, y, spj)
             placed.append((x, y, zone, key))
             n += 1
@@ -2634,7 +2638,27 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
         print("    %-18s %d" % (k, byz[k]))
     STATS["trees"] = len(placed)
     STATS["trees_by_stand"] = byz
-    return V.finish(col, suffix), placed, byz
+    out = V.finish(col, suffix)
+
+    # ---- the bushes, as one bushlang mass (see VV.build_bushes) --------------
+    # RETURNED SEPARATELY, and that is a contract and not tidiness: everything in
+    # `out` goes through B.write_prop_colors, which writes the class-index colour
+    # attribute a Prop mesh expects.  A bushlang mass already carries its own
+    # COLOR_0 with a different layout, so putting bushes in `out` made that pass
+    # die with "internal error setting the array".  The canopy masses are held out
+    # of `veg_keys` for exactly this reason; bushes join them.
+    bobs = []
+    if bushes:
+        atlas, atlas_nor = VV.FA.build_atlas()
+        tile, tile_nor = VV.FA.build_tile()
+        bcore, bcard = VV.BL.materials(atlas, atlas_nor, tile, tile_nor,
+                                       suffix="valley", pbr_mat=B2.pbr_mat)
+        bobs, bt, bc = VV.build_bushes(col, F, bushes,
+                                       np.random.RandomState(seed + 4242),
+                                       core_mat=bcore, card_mat=bcard)
+        STATS["bushes"] = dict(n=len(bushes), core_tris=bt, cards=bc)
+        print("  bushes: %d plants, core %d tris, %d cards" % (len(bushes), bt, bc))
+    return out, placed, byz, bobs
 
 
 # =============================================================================
@@ -2951,12 +2975,15 @@ def main():
 
     # ---- trees -------------------------------------------------------------
     t0 = time.time()
-    field, placed, byzone = plant_region(col, F, zg, fr, SUF)
+    field, placed, byzone, bushobs = plant_region(col, F, zg, fr, SUF)
     t_veg = time.time() - t0
     veg_keys = []
     for k, o in field.items():
         made["veg_" + k] = o
         veg_keys.append("veg_" + k)
+    # bushes carry their own COLOR_0 — same handling as the canopy masses
+    for i_, ob_ in enumerate(bushobs):
+        made["bush_%d" % i_] = ob_
     print("  planting took %.1fs" % t_veg)
 
     # ---- clearance safety net ---------------------------------------------
