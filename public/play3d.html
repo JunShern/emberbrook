@@ -2748,8 +2748,13 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
         // the r128 rig was solved at; against a key that is now 2.4x they would be
         // the flat frame this whole block exists to undo. Scaled to roughly the
         // environment's own irradiance and coloured like it.
-        AMBIENT.intensity=IU(0.10); RTLIGHT.color.setRGB(0.35,0.62,1.00);
-        RTLIGHT.groundColor.setRGB(0.30,0.40,0.55); RTLIGHT.intensity=IU(0.42);
+        // R13: these numbers ARE DERIVED, not swept — the comment above commits this
+        // branch to "roughly the environment's own irradiance", so when OWENV moved
+        // 0.376 -> 0.95 the fallback had to move by the same 2.53x or the sentence
+        // stopped being true and ?ibl=0 became a second, staler art direction. The
+        // hemisphere's sky colour takes the new fill's hue for the same reason.
+        AMBIENT.intensity=IU(0.25); RTLIGHT.color.setRGB(0.55,0.72,1.00);
+        RTLIGHT.groundColor.setRGB(0.30,0.40,0.55); RTLIGHT.intensity=IU(1.06);
       }
       // fill is COOL against a warm key on purpose: that split is what golden
       // hour actually is, and it is what keeps a shadowed face readable instead
