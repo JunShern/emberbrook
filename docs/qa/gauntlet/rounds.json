@@ -327,7 +327,8 @@
     "gorge",
     "gate",
     "vista",
-    "closeup"
+    "closeup",
+    "cards-vs-volume"
    ],
    "verdict": "The canopy's fix was a FLOOR lift, not gain: V95 was already in the reference band; V05 was a stop and a half low, and the core read darker than the cards once the remap stopped inflating it. Now 0.137/0.435/0.706 \u2014 leaf clusters resolve sunward, no chartreuse. Method note: swept LIVE (16 s/candidate) and predicted the 13-min rebuild to +/-0.004. The closeup's bald patch was never a distance cull: the dry slot's plants matched the ground in both value (L 0.607 vs 0.603) and hue \u2014 invisible by CONTRAST at full density. Improved, not solved. The cards-vs-volume A/B shipped (f4-cards-vs-volume.png): the volume bush is the brighter, wider-range object and the one that fails \u2014 the card conversion remains the named wall, prototype deferred. DoubleSide weed hypothesis refuted by toggle. Gates all green."
   }
