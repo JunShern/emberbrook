@@ -707,3 +707,82 @@ geometry but not perfected in the picture:** verified attached by raycast (stack
 roof slope at 14.17 m, adjacent in screen space), yet a full-height external stack seen from a
 near-top-down camera is still a long pale rectangle crossing a roof — the R9 finding recurring, and the
 next round's if it is raised again.
+
+---
+
+## Round 11 — the wiring round, and the tint it shipped
+
+**What the builders actually found is worth more than what they were sent to do.** The assigned
+list was treatment. Three of the items on it turned out to be things that had never been
+connected at all.
+
+**THE CAMPFIRE, after four rounds of sweeping the wrong knob.** The emissive was swept again
+(0.52 / 0.26 / 0.13 / 0.06) and the ball did not visibly change. Measured per-object with
+`SIM.px`, one toggle at a time: the white blob is **two additive sprites at opacity 1.615 and
+1.955** — above 1.0 an additive sprite has no falloff left in its bright half, so it is a clipped
+plateau with a gradient tail, which is the critic's sentence verbatim. **The body mesh was worth
+3/255 at its own centre**: the "opaque amber sphere carrying the shading" that three rounds of
+notes describe *had never been visible*. The ground bloom is the point light (48/255), not
+UnrealBloom (4/255). And **the pink was the ALBEDO** — `0xd4661c` at roughness 0.32 under a 2.6x
+key renders (2.16, 1.04, 0.29), and `NeutralToneMapping` desaturates a clipped highlight toward
+white BY DESIGN.
+
+**THE DEPTH RAMP HAD NEVER RUN IN THE MEADOW OR GATE FRAMES.** Linear 28–155 m gives t = 0.079 at
+50 m. Five rounds read those frames as "having no distance". **They have 60 m; the ramp had none
+in it.** Now exponential and anchored on the PLAYER, not the lens — the first attempt hazed the
+gorge cliff (the subject) into milk, because the boom is 12 m in one frame and 40 m in the other.
+
+**That is the fourth instance in two nights of one pattern**, after the window `use_vcol`, the
+campfire emissive above, and the playtest finish line: **a knob that has been swept repeatedly
+without moving the thing it names is not a tuning problem, it is a wiring problem.** Sweeping is
+what you do to a connected knob; the sweep itself is evidence when it comes back flat.
+
+Measured, both of the round's own tests passed: greens off yellow (b:g on green pixels
+**.634 → .758** meadow, **.632 → .774** gate), real darks (L05 **.127/.151/.143/.072 →
+.094/.108/.121/.056**; pixels under L 0.10 **3.5/2.3/3.2/7.5% → 5.5/4.6/3.6/10.8%**), saturation
+**.545/.502/.413/.362 → .434/.376/.342/.333**.
+
+### And the rank did not move: D > C > B > A
+
+The blind critic ranked us **last**, and this round says plainly that *"A and B are not at the
+same level"* as the references. **Both tests passing and the rank unchanged is the round's real
+result** — the two tests were necessary and they were not sufficient, because the fix for each
+one arrived with a side effect nobody measured.
+
+> *"Over-correction, since you asked directly: yes, in both, and it is saturation and contrast
+> again. In A the shadows are crushed nearly to black **and tinted** — the ground shadows read
+> blue-purple. In B the same fault is worse and larger: the big shadow across the gorge floor
+> turns the road a **plum/magenta**, occupying roughly the bottom third of the frame."*
+
+That is round 11's cool sky-fill landing on top of round 11's crushed darks — **two fixes that
+were each correct and are wrong together.** The same knob is over-corrected the other way in B's
+upper-right meadow, *"a pale lavender-white wash so desaturated it looks blown out rather than
+distant."* A grade has no local scope: it is applied to everything, so every push has a second
+place it lands, and the round that ships it is the round that owes that measurement.
+
+**And the ramp is on and still not doing anything at the meadow's distances:** *"A collapses
+depth entirely — the far hill at top right and the near tree at top left carry the same contrast
+and saturation."* Wiring it was necessary; its near/far anchors are still wrong for a 60 m scene.
+
+**The orb is now worse than the blob it replaced.** The critic, unprompted and knowing none of
+its history: *"untextured with a single specular hotspot; whatever it's meant to be, it is
+currently a beach ball"*, filed under missing material. Two rounds have now made this object
+worse. Round 12's instruction is that **a restrained version beats a conspicuous wrong one** — if
+it will not read as a lamp, it goes small and dim.
+
+**New and cheap, from this round's critic:** the windows are *"flat unlit orange rectangles with
+no frame, no glass, no recess — they read as stickers on a wall"* (the same window whose albedo
+was fixed last round — fixing its colour did not make it an opening); B's distant hills are
+*"four flat bands of blue-grey with hard edges and zero internal gradient — textbook paper
+cutouts"*, which is the banding, not the colour.
+
+**Bugs: three of four real.** Chimneys genuinely detached (`gs*d*0.60` against a 0.34 stack
+contacts only when `d ≤ 1.70`; `house_dims` draws 1.30–2.68). Discs genuinely discs. The violet
+region is `walk_road`. **The tan slope was NOT a missing material** — same DRY slot both sides,
+it carried half of grass's noise at twice the gain, which is why it read as untextured.
+
+Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 · `findability_test` 69/0 ·
+`walk_engine_gate ow-valley` GREEN · `valley_verify` OK.
+
+**Also paid for:** `THREE.MultiplyBlending` + `transparent:true` **brightens** in this build, and
+it shipped a white square under the character into one plate before the factors were written out.
