@@ -1683,3 +1683,58 @@ cold-reload-from-`at` assertion, which is the one this round's fix could have br
   * Carried, unchanged: the gorge water brighter than the sky at one arc of yaw; the camera
     boom inside the overworld grass; PT-013/014's 64×36 thumbnail; `play3d` has no `resize`
     handler.
+
+---
+
+## Round 9 — 2026-08-04 06:30
+
+Credit was restored overnight and the loop ran again. This round's entry is mostly a
+**retraction**, which is why it is written up at the same length as a fix.
+
+### PT-20260803-005 / -006 "screen black after leaving Emberbrook" — NOT REPRODUCED
+
+Filed `blocker/P1` + `confusion/P0` by `run-20260803-113942`, which gave up at step 6.
+Three instruments were pointed at it and **none of them found a defect.** The chain:
+
+  1. **The first probe called `emb-cine` BLACK AT BOOT** — `meanL 0`, `nonblackPct 0`, on a
+     scene that visibly renders. A bare `gl.readPixels` on this page always reads zero: the
+     context is `preserveDrawingBuffer:false`, so outside a rAF callback the back buffer is
+     undefined. `SIM.px()` is the shipped probe and it calls `renderFrame()` immediately
+     before reading — that call is the entire difference. The probe now **self-tests on a
+     scene known to render and exits 2 rather than report**, because the first version of it
+     spent a round proving a black screen that was its own.
+     With the fix: **`meanL 29.5`, 82.5 % non-black, steady across 20 s. Never black.**
+  2. **Both exits from Emberbrook are shut ON PURPOSE, and the scenegraph says so.**
+     `emb-cine>ow-valley@emberbrook-gate` carries `deny.when.notFlag story.ch1.done` and
+     plays `emb.southroad.turnback`; `@old-gate` carries `when.flag story.ch1.gate-open`.
+     The playtester tried to leave at **step 2**, before doing any of Chapter One. **A
+     refusal is correct behaviour**, and "I could not leave Emberbrook" is not a bug.
+  3. **The refusal draws, and it draws the right line.** `scratchpad/denyprobe2.mjs` at HEAD:
+     `denied:true, live:false` before the flag → `SIM.go` returns
+     `{denied:true, dialogue:"emb.southroad.turnback"}` → setting `story.ch1.done` gives
+     `denied:false, live:true` → the Lake branch speaks *"(Nothing down there but the
+     Whisperwood. My lamps are the other way.)"* → **console clean, 0 errors, 0 exceptions.**
+
+**Why it was filed at all:** the run is timestamped **11:39** on 2026-08-03 and the turnback
+node's own doc-string cites **PT-20260803-002/-008** — the fix for this exact complaint landed
+around 15:00 that day. *The report predates its own fix.* The lesson is not about the
+transition; it is that **an aging report in a queue is evidence about a commit, not about the
+game**, and re-running it costs less than reading it.
+
+And the soft-lock this would have become if the flags were orphaned did not exist:
+`story_test` **1104 / 0**, both exit flags written (`story.ch1.gate-open` at story.json:661,
+`story.ch1.done` by beat `ch1.done` at :730).
+
+### What the loop actually showed
+
+`run-20260804-013303` — **48 steps, Chapter One played end to end into Dellhollow**
+(`del-cine`, `quay-west`, beats `ch1.open → ch1.waystone → ch1.reveal → …`), **zero reports
+filed.** That run is the round's real result: the spine holds under a model that is only
+allowed one screen and one keyboard.
+
+### Carried into round 10
+
+Unchanged from round 8, except that the credit blocker is **cleared**: `ch2.maren` onward
+still never played (round 9 is running `--from=ch2.maren`); three Dellhollow interiors still
+empty; a shop still never entered; Dellhollow's 40 silent cuts still a design call for the
+user; `play3d` still has no `resize` handler.

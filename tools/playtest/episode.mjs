@@ -147,7 +147,7 @@ class Stuck {
  */
 export async function run(cfg) {
   const { adapter, agent, plan, runDir, runId, maxSteps = 120, maxReports = 8,
-    stopBeat = null, stuckWindow = 6, port = 3000, log = console.log, noQueue = false,
+    stuckWindow = 6, port = 3000, log = console.log, noQueue = false,
     // spineScenes(firedBeats) -> Set of scenes where an un-fired beat still lives.
     // Supplied by the CLI, which owns story.json; the runner only needs the answer.
     spineScenes = null,
@@ -158,9 +158,21 @@ export async function run(cfg) {
   const jsonl = join(runDir, 'run.jsonl');
   const obsLog = join(runDir, 'observations.jsonl');
 
+  // MUTABLE ON PURPOSE — the pre-set-checkpoint guard below clears it.
+  let stopBeat = cfg.stopBeat ?? null;
   const stuck = new Stuck(stuckWindow);
   const history = [];
   const beatsSeen = new Set();
+  /* THE FINISH LINE MUST MEAN "THE PLAYER GOT THERE", NOT "THE CHECKPOINT SET IT".
+   * `--from=<beat>` builds state by firing every beat up to it, so when the run
+   * started the ledger ALREADY contained the stop beat and the loop declared victory
+   * on step 1 with zero model calls. Measured 2026-08-04: `--from=ch2.maren` reported
+   * "FINISH LINE: ch1.sendoff fired at step 1" and exited having played nothing.
+   * That is why the fix log carried "ch2.maren onward has never been played" for four
+   * rounds — not because nobody tried, but because EVERY `--from` past ch1.sendoff
+   * ended instantly and reported success. A stop condition that a setup step can
+   * satisfy does not measure the game. Seeded below, once the page is up. */
+  let preBeats = null;
   const legs = [];
   const reports = [];
   const stallSeen = new Map();
@@ -234,12 +246,28 @@ export async function run(cfg) {
     const obs = await adapter.observe();
     const truth = await adapter.truth();
     if (obs.ready && obs.framePath) { lastFrames.push(obs.framePath); if (lastFrames.length > 3) lastFrames.shift(); }
+    // The checkpoint's own beats, banked on the first observed frame. Everything in
+    // here was set by SETUP, not reached by the player.
+    if (preBeats === null) {
+      preBeats = new Set(truth.beats || []);
+      if (stopBeat && preBeats.has(stopBeat))
+        log(`  (checkpoint pre-set ${preBeats.size} beat(s) including the finish line "${stopBeat}" — ` +
+            `it will only count if it fires AGAIN during play)`);
+    }
     for (const b of truth.beats || []) if (!beatsSeen.has(b)) { beatsSeen.add(b); log(`  [beat] ${b}`); }
     appendFileSync(jsonl, JSON.stringify({ step, percept: obs.percept, ready: obs.ready,
       why: obs.ready ? undefined : obs.why, frozen: obs.frozen || undefined,
       meanL: obs.meanL, waitedMs: obs.waitedMs,
       truth: { ...truth, save: undefined }, frame: Q.relative(obs.framePath) }) + '\n');
 
+    // ...and a finish line the checkpoint already crossed is not a finish line. Beats
+    // are once:true, so a pre-set stop beat can never honestly fire again; honouring
+    // it ends the run before it starts. Drop it and play the steps out instead.
+    if (stopBeat && preBeats.has(stopBeat)) {
+      log(`  (finish line "${stopBeat}" was already set by the checkpoint — DISABLED. ` +
+          `This run ends when it runs out of steps.)`);
+      stopBeat = null;
+    }
     if (stopBeat && (truth.beats || []).includes(stopBeat)) {
       finished = stopBeat; log(`\n== FINISH LINE: ${stopBeat} fired at step ${step}`); break;
     }
