@@ -132,6 +132,7 @@ Findings route **through the coordinator**, never lane to lane.
 | 5 | not judged — BUILT against 4 | plates `r6-*`, `docs/qa/ow-refs/r6.html` | **the grade is applied to what the light touches, not to the frame**; the blade carpet stops rendering half of itself black; the Heartlight gets a core and a falloff. Ratio kept and up, 4.96 / 3.38 / 3.87 / 4.19 | TRIED — MOVED IT |
 | 8 | not judged — MEASURED against 4's "no directional light" | plates `r8-*` | **the meadow has the same sun as the gorge, and it is not a lighting defect at all** — a 2.6 m cottage under a 34° sun throws a 3.9 m shadow from a 2.9 m footprint, straight away from the lens | routed to CONTENT; both sun moves REJECTED by eye |
 | 9 | not judged — BUILT against 8 + three blind critics | plates `r9-*` | **the houses go up: ridge 1.6u → 3.7u, 1.1× the character → 2.65×, height:width 1.10 → 1.39** — and every cottage in the meadow now lays a shadow across the grass | TRIED — MOVED IT |
+| 10 | `r9-*` judged blind | plates `r10-*` | **the light gets a SECOND COLOUR** — warm key + blue-violet fill, the warm grade back 50%, the Heartlight reined in from a global tint to a lamp; plinths capped, bases bedded, window panes given a dark albedo. Frame saturation 0.651/0.584/0.478/0.456 → **0.540/0.496/0.411/0.360**, b−r −0.357 → −0.284 on the meadow | TRIED — MOVED IT |
 
 ### Round 4–5: A NUMBER THAT IMPROVES WHILE THE PICTURE WORSENS IS THE WRONG NUMBER
 
@@ -427,3 +428,102 @@ among its houses — and it needs the geometry and the runtime moved in one comm
 Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 ·
 `findability_test` 69/0 · `walk_engine_gate --scene ow-valley` GREEN (0 cells lost,
 418.2 m2 both sides) · `valley_verify` OK. Tris 266 786 → 267 122.
+
+### R10: THE LIGHT HAD ONE COLOUR — AND TWO OF THE THREE BUGS REPORTED WITH IT WERE NOT THERE
+
+Plates `r10-{meadow,gate,vista,gorge}.png` against `r9-*`. Gallery section at the top of
+`docs/qa/ow-refs/index.html`.
+
+**The critic's summary, and it is the clearest direction this loop has produced:** *"the light
+has one colour instead of two; the ground is a colour instead of a surface; objects rest on the
+terrain instead of being bedded into it. Fix those three and these frames move most of the
+distance without a single new building model."*
+
+**THE FILL WAS ALREADY BLUE. IT WAS NOT ALREADY VISIBLE.** R3 made the fill blue and wrote down
+that the colour, not the level, was where the terminator was hiding — then left both too small to
+read. At `owenv` 0.35 / `owbounce` 0.80 against a key of 2.60 x 2.40, a cottage's shaded wall took
+so little fill that its hue was decided by whatever warm thing was nearest. In the meadow frame
+that was **the Heartlight: 26 W at 26 m range, which covers every house in the picture**, and
+Emberbrook's houses MOSTLY FACE THE GREEN, so the lamp was painting exactly the walls the key
+could not reach. A lamp whose range does not stop inside the frame is the global tint this lane
+keeps undoing, arriving through the one light nobody had audited.
+
+Four numbers, and they only work together (all `public/play3d.html`, all still URL-sweepable):
+fill hue `[0.35,0.62,1.00]` → `[0.42,0.44,1.00]` (the green channel was making the shade side
+teal, too near the grass to read as a second light); `OWENV` 0.35 → 0.55 and `OWBOUNCE` 0.80 →
+2.60 (the bounce is the DIRECTIONAL one — it buys the cool side without lifting the lit side, which
+is the R5 trap); `gradeTint` 1.45 → 1.20; Heartlight 26 W/26 m → 10 W/15 m. **On its own the grade
+number is the R5 regression again** — R5 already tried it and the frame went milky. Paired with a
+fill that is genuinely a second colour it stops being a filter. Do not move one without the other.
+**The sun's elevation, its azimuth and the camera were not touched.**
+
+| | r9 | r10 |
+|---|---|---|
+| frame saturation, meadow / gate / vista / gorge | .651 / .584 / .478 / .456 | **.540 / .496 / .411 / .360** |
+| mean (b−r), same four | −.357 / −.351 / −.166 / −.108 | **−.284 / −.303 / −.137 / −.084** |
+| open-meadow grass RGB | (184, 170, 70) | **(197, 180, 111)** |
+| window core RGB | (255, 228, 214) | **(245, 160, 122)** |
+
+**THE FLOATING BUILDING IS NOT FLOATING, AND THE PROOF TOOK FOUR MINUTES.** The report was
+specific — *"upper-left-centre, roughly x 480–580, y 200–340 … a detached slab hanging in mid-air
+with a visible underside face and daylight beneath it"* — and specific is checkable. At those
+pixels the first hit is `emberbrook_4`'s footing wall; **the ground is BEHIND the stone**, and the
+footing's underside sits at y 25.77 against terrain at 26.19–26.33, i.e. buried 0.4–0.6 u. A
+4 px-step scan of the whole frame for a downward-facing FIRST hit returns one 7-sample cluster,
+on `emberbrook_1` inside the Heartlight's bloom, invisible; the gate, vista and gorge frames
+return **none on any building**. The "daylight beneath it" is the downhill ground passing in
+front. Blender agreed independently: 15 buildings, 0 with a positive gap.
+
+**But the misread names a real defect, and that is why it was worth checking rather than
+dismissing.** `ft` spanned `fl` down to `min(ch) − 0.40`, so on a station whose four footprint
+corners spread ~1.3 u the "footing" grew to wall height — a 1.5 u block of stone with no contact
+shading, which is what stops reading as a footing. Three lines fix it, in
+`tools/valley_build.py`: the PROUD course is a constant 0.42 u whatever the slope does and the
+part reaching the low corner is INSET (it draws its own shadow line instead of continuing the
+wall); the floor stops chasing the high corner (`min + 0.70·spread + 0.20`, so the uphill side beds
+INTO the ground — 0.70 and not 0.50 because a door sits at `fl + 0.54`); and the station search
+prefers ground a mason would build on. **`emberbrook_house_slope_u` 1.3 → 0.47** and it is now a
+recorded number, beside `emberbrook_road_clear_u` (unchanged at 3.49), for the same reason: a
+house on a slope is invisible to every instrument in this repo and obvious in one screenshot.
+
+**"A BLOB SHADOW WITH NO CASTER" HAS A CASTER.** Two discriminators, neither of them an argument:
+it is pixel-identical with every `veg_` mesh in the scene hidden, and at `__shadowTune(0)` it
+resolves into a chimney stack with a stepped silhouette. It reads as a smear at `shadow.radius`
+1.5 because a 0.4 m chimney is four texels at 0.11 m/texel. Not fixed — named, so the next round
+does not spend itself re-finding it.
+
+**THE WINDOW WAS NEVER THE EMISSIVE, AND THREE ROUNDS HAD SWEPT THE EMISSIVE.** R5 and R6 both
+tuned `OWEMIT` (9 → 5 → 3.4) against "the panes are clipped white". Measured this round: at
+`?owemit=0.02` — emission effectively OFF — **and** `?bloom_s=0`, the window core still read
+(254, 215, 193). `B.new_mat`'s `use_vcol` default hands Base Color to COLOR_0, which the class-gain
+pass lifts toward its own target, so the pane had a near-white ALBEDO and the 2.4x golden key blew
+it out unaided. `ow_f2_emit` now carries a fixed dark base (0.045, 0.030, 0.018) and `use_vcol=False`.
+Only then did the knob start working: swept 3.4 / 2.2 / 1.4 → (254,207,182) / (253,193,160) /
+(245,160,122) against the critic's own target of (255, 200, 120), and 1.5 is the first value at
+which the pane has an EDGE rather than a white core with a warm surround. **A knob that has been
+swept three times and never moved the thing it names is measuring something else.**
+
+**Bedding, and the version of it that was worse.** A ring of trodden earth plus seven tufts that
+straddle the plinth, in the house prop so it inherits the town's own class gains. The first ring
+used f2's `DIRT` (9c8a70) untinted and arrived as CREAM under a 2.4x golden key — every house sat
+in a bright halo, which is exactly the decal read the ring exists to prevent. `BED_TINT`
+(0.60, 0.46, 0.33) makes worn ground the darkest thing at the base, which is what it is.
+
+**Also landed:** roof planes facing away from the sun take 20% off COLOR_0 on a soft ramp
+(`ROOF_AWAY`), computed from the towns' own ratified rig euler rather than a second copy of the
+number — a stylisation baked into vertex colour, so it survives every camera and every grade.
+Overworld bloom radius 0.15 → 0.075.
+
+**Three new instruments on `SIM`, because every round so far has re-derived them by hand:**
+`SIM.pick(px,py)` (the hit chain at a screen pixel — the R7 rule made callable), `SIM.px(x,y,w,h)`
+(the composited framebuffer read back at a point), `SIM.vis(pattern,on)` (hide that one mesh and
+see if the artefact goes). Two of this round's three "bugs" were settled with them in minutes.
+
+Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 ·
+`findability_test` 69/0 · `walk_engine_gate --scene ow-valley` GREEN (0 cells lost, 418.2 m2 both
+sides) · `valley_verify` OK. Tris 267 122 → 268 546.
+
+**What got worse, recorded and not smoothed away:** the gorge's far plateau is paler and cooler
+than it was — the raised environment fill lands on everything, and that frame has the most sky-lit
+open ground of the four. It is the price of the fill being visible at all, and it is why
+`owenv`/`owbounce` are still knobs.

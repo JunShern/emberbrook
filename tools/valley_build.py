@@ -399,11 +399,35 @@ WALL_TINTS = [(1.00, 1.00, 1.00),        # the palette's own plaster
 ROOF_TINTS = [(1.00, 1.00, 1.00),        # the palette's own tile
               (0.71, 0.78, 0.87),        # weathered slate
               (1.06, 0.85, 0.70)]        # a redder, older tile
+# TRODDEN EARTH IS DARKER THAN THE GRASS IT REPLACED, and the first version of the
+# bedding ring was not: f2's DIRT is 9c8a70, a pale warm grey, and under a 2.4x
+# golden key it arrived as CREAM — every house sat in a bright halo, which is the
+# decal read the ring exists to prevent.  Worn ground is compacted and shaded; it
+# has to be the darkest thing at the base or it draws a second silhouette line.
+BED_TINT = (0.60, 0.46, 0.33)
+TUFT_TINT = (0.86, 0.94, 0.72)           # the blades that overlap the plinth
 
 
 def tint_layer(p):
     """The per-house family index layer on a B.Prop under construction."""
     return p.bm.faces.layers.float.get(HTINT) or p.bm.faces.layers.float.new(HTINT)
+
+
+# WHICH WAY A ROOF POINTS (2026-08-04).  The blind critic: "every roof is the same
+# value regardless of which way it points."  It is not a light bug — the key really
+# does reach both slopes of a 34-degree-sun gable at similar cosines, and at a 40 m
+# boom the two planes differ by a few percent of luminance, which is nothing beside
+# their shared albedo.  The reference frames get their roof read from PAINT: the away
+# plane is simply drawn darker.  So the SLOPE FACING AWAY FROM THE SUN takes 20% off
+# its COLOR_0 and the facing one is left alone.  Baked into vertex colour on purpose:
+# it is a stylisation, it survives every camera and every grade, and it costs nothing.
+# The sun is the towns' own ratified rig, (56, 0, 212) in Blender euler — never a
+# second copy of the number, and never a different sun than the one that shades it.
+_SUNRX, _SUNRZ = math.radians(56.0), math.radians(212.0)
+SUN_BL = (math.sin(_SUNRX) * math.sin(_SUNRZ),
+          -math.sin(_SUNRX) * math.cos(_SUNRZ),
+          math.cos(_SUNRX))
+ROOF_AWAY = 0.80          # 20% off the away-facing plane
 
 
 def apply_house_tints(ob, cls):
@@ -427,10 +451,19 @@ def apply_house_tints(ob, cls):
             continue
         c = int(cls[pi])
         m = (WALL_TINTS[(k - 1) % len(WALL_TINTS)] if c == WALL else
-             ROOF_TINTS[(k - 1) % len(ROOF_TINTS)] if c == ROOF else None)
+             ROOF_TINTS[(k - 1) % len(ROOF_TINTS)] if c == ROOF else
+             BED_TINT if c == DIRT else
+             TUFT_TINT if c == GRASS_HI else None)
         seen.add(k)
         if m is None:
             continue
+        if c == ROOF:
+            n = poly.normal
+            dot = n[0] * SUN_BL[0] + n[1] * SUN_BL[1] + n[2] * SUN_BL[2]
+            # a soft ramp, not a step: the ridge cap and the eave board sit near
+            # dot 0 and a hard threshold would make a black line out of them.
+            t = min(1.0, max(0.0, (dot + 0.05) / 0.35))
+            m = tuple(mm * (ROOF_AWAY + (1.0 - ROOF_AWAY) * t) for mm in m)
         for li in poly.loop_indices:
             buf[li, 0] *= m[0]
             buf[li, 1] *= m[1]
@@ -466,6 +499,12 @@ def apply_house_tints(ob, cls):
 # tell in the frame."  A DOOR IS THE SCALE CUE: it is the one element a viewer reads
 # as person-sized without being told, and it is what turns a big box into a building.
 HOUSE_KINDS = 3
+# The corner-height spread a station may have and still carry a house (2026-08-04).
+# The exposed stone under a house is 0.70 x this + 0.20u, so 0.85 caps it at 0.80u —
+# a footing.  r9's worst station spanned ~1.3u and produced a 1.5u block of stone
+# that a blind critic read as a detached slab.  It is a PREFERENCE, not a veto: the
+# search falls back to the old road/neighbour-only test rather than lose a house.
+HOUSE_SLOPE_CAP = 0.85
 
 
 def house_dims(rng):
@@ -498,6 +537,51 @@ def house_ground(F, zg, fr, px, py, w, d, yaw):
             for u in (-1, 1) for v in (-1, 1)]
 
 
+def bed_in(p, ht, fam, F, zg, fr, px, py, w, d, yaw, rng):
+    """A RING OF TRODDEN EARTH round a house, plus tufts that overlap its plinth.
+
+    The critic's phrase for this is "the cheapest conversion of 'model' into
+    'building' available", and it is: a building placed on a surface has WORN the
+    surface, so the grass stops a foot short of the wall and a few blades grow
+    against the stone.  Without it every base is one hard silhouette line between
+    two flat colours, which is what reads as "resting on the terrain" instead of
+    "bedded into it" — a real building has no such line anywhere.
+
+    Ground-hugging (+0.02) and follows `gh`, so it never becomes a step: it is a
+    floor 2 cm above the floor, not an obstacle, and it inherits the emberbrook
+    prop's own class gains and COLOR_0 rather than needing a material of its own.
+    """
+    before = set(p.bm.faces)
+    r0 = max(w, d) * 0.56
+    r1 = r0 + 0.42 + rng.uniform(0.0, 0.30)
+    ph = rng.uniform(0, 6.283)
+    inner, outer = [], []
+    for i in range(25):
+        a = 2 * math.pi * i / 24
+        ca, sa = math.cos(a), math.sin(a)
+        # the outer edge WANDERS: a perfect annulus reads as a decal, and a decal
+        # under a building is the artefact this exists to avoid, not the fix.
+        j = 1.0 + 0.17 * math.sin(3 * a + ph) + 0.09 * math.sin(5 * a + ph * 2)
+        xi, yi = px + ca * r0, py + sa * r0
+        xo, yo = px + ca * r1 * j, py + sa * r1 * j
+        inner.append((xi, yi, gh(F, zg, fr, xi, yi) + 0.02))
+        outer.append((xo, yo, gh(F, zg, fr, xo, yo) + 0.02))
+    p.strip(DIRT, outer, inner)
+    # ...and the tufts that break the base line. They straddle the plinth edge on
+    # purpose — a tuft that stops at the stone draws the line again.
+    for k in range(7):
+        a = rng.uniform(0, 2 * math.pi)
+        rr = r0 * rng.uniform(0.86, 1.02)
+        tx, ty = px + math.cos(a) * rr, py + math.sin(a) * rr
+        tz = gh(F, zg, fr, tx, ty)
+        hgt = 0.16 + rng.uniform(0, 0.14)
+        p.cone(GRASS_HI, (tx, ty, tz + hgt / 2), 0.075 + rng.uniform(0, 0.05),
+               0.0, hgt, seg=4, rz=a)
+    for f in p.bm.faces:                 # so apply_house_tints can grade the ring
+        if f not in before:
+            f[ht] = float(fam)
+
+
 def impression_house(p, ht, fam, px, py, yaw, dims, ch, rng):
     """ONE overworld impression house.  Returns its ridge height above `min(ch)`.
 
@@ -514,9 +598,31 @@ def impression_house(p, ht, fam, px, py, yaw, dims, ch, rng):
     def at(u, v, z):                    # local (across-ridge, along-ridge, up) -> world
         return (px + ca * u - sa * v, py + sa * u + ca * v, z)
 
-    fl = max(ch) + 0.20                                     # the floor
-    ft = max(0.48, fl - (min(ch) - 0.40))                   # ...down past the low corner
-    p.cube(STONE, at(0, 0, fl - ft / 2), (w * 1.07, d * 1.07, ft), rz=yaw)
+    # A PLINTH IS A PLINTH, NOT A PODIUM (2026-08-04).  This used to be ONE box
+    # spanning `fl` down to `min(ch) - 0.40`, which is correct on flat ground and a
+    # monolith on a slope: where the four corners spread 1.2u the stone grew to wall
+    # height and stood proud as a slab as big as the house it carried.  A blind critic
+    # read exactly that box as "a detached slab hanging in mid-air with a visible
+    # underside face" — and it is NOT detached (measured: SIM.pick at the named pixels
+    # puts the ground BEHIND the stone, its underside 0.4-0.6u below the terrain, and a
+    # 4 px-step scan of all four landscape frames finds no downward-facing first hit on
+    # any building at all).  The misread is the finding: an unbedded stone box that tall
+    # stops reading as a footing.  So the PROUD course is a constant 0.42u whatever the
+    # slope does, and the part that reaches down to the low corner is INSET, which
+    # draws its own shadow line under the plinth instead of continuing the wall.
+    # ...and the floor stops chasing the HIGH corner. `max(ch) + 0.20` puts the whole
+    # slope into the exposed stone; 0.70 of the way up puts most of it there and beds
+    # the uphill side INTO the ground, which is the ask ("bedded into it, not resting
+    # on it") answered by the same line. It is 0.70 and not 0.50 because a door sits
+    # at fl + 0.54: at 0.50 the uphill terrain would climb over the threshold on the
+    # steepest station this town still allows.
+    low = min(ch) - 0.40
+    fl = min(ch) + 0.70 * (max(ch) - min(ch)) + 0.20
+    plinth = 0.42
+    p.cube(STONE, at(0, 0, fl - plinth / 2), (w * 1.07, d * 1.07, plinth), rz=yaw)
+    sk = (fl - plinth) - low
+    if sk > 0.03:
+        p.cube(STONE, at(0, 0, low + sk / 2), (w * 0.92, d * 0.92, sk), rz=yaw)
     p.cube(WALL, at(0, 0, fl + eh / 2), (w, d, eh), rz=yaw)
     # the eave board: the dark line every real building has where its roof meets its
     # wall, and the cheapest thing in this file that stops a wall reading as a decal.
@@ -545,7 +651,9 @@ def impression_house(p, ht, fam, px, py, yaw, dims, ch, rng):
     if kind == 1:                       # the lean-to: a third of the town is not a box
         ww, wd, weh = w * 0.60, d * 0.74, eh * 0.50
         wu = -(w / 2 + ww / 2 - 0.07)
-        p.cube(STONE, at(wu, d * 0.09, fl - ft / 2), (ww * 1.08, wd * 1.08, ft), rz=yaw)
+        p.cube(STONE, at(wu, d * 0.09, fl - plinth / 2), (ww * 1.08, wd * 1.08, plinth), rz=yaw)
+        if sk > 0.03:
+            p.cube(STONE, at(wu, d * 0.09, low + sk / 2), (ww * 0.93, wd * 0.93, sk), rz=yaw)
         p.cube(WALL, at(wu, d * 0.09, fl + weh / 2), (ww, wd, weh), rz=yaw)
         p.prism(ROOF, at(wu, d * 0.09, fl + weh), ww * 1.26, wd * 1.16,
                 weh * 0.62, rz=yaw)
@@ -570,6 +678,7 @@ def build_emberbrook(col, F, zg, fr):
     h0 = F.village_h
     ring = []
     road_clear = 1e9
+    house_slope = 0.0
     for i in range(14):
         # A SETTLEMENT, NOT FOURTEEN COPIES (2026-08-04).  A blind critic comparing
         # this frame against the FFIX-reimagined overworld refs called the dressing out
@@ -596,18 +705,38 @@ def build_emberbrook(col, F, zg, fr):
         # the Emberbrook gate portal itself.  Search r AND the bearing together, and
         # take the first station that clears both the road and every neighbour.
         need = VM.ROAD_WIDTH * 0.5 + 2.45
-        for dr in (0.0, 0.9, 1.8, 2.7, 3.6, 4.6):
-            for da in (0.0, .13, -.13, .26, -.26, .40, -.40, .55, -.55, .72, -.72):
-                tx = cx + math.cos(a + da) * (r + dr)
-                ty = cy + math.sin(a + da) * (r + dr)
-                if float(F.road_dist(np.array([tx]), np.array([ty]))[0]) < need:
-                    continue
-                if not all(math.hypot(tx - ox, ty - oy) >= 3.55 for ox, oy in ring):
-                    continue
-                hx, hy = tx, ty
-                dr = None                                  # sentinel: placed
-                break
-            if dr is None:
+        # A MASON DOES NOT BUILD ON A 40-DEGREE SLOPE, and the picture said so before
+        # any gate did: the one station in r9 that a blind critic singled out ("its
+        # stone plinth is a detached slab hanging in mid-air") was not detached at all
+        # — measured, its underside sits 0.4-0.6u BELOW the terrain — it was a house
+        # whose four footprint corners span ~1.3u, so the footing that has to reach the
+        # low corner grew as tall as the wall above it and read as a separate block.
+        # The station search now prefers ground the house can actually sit on, and only
+        # falls back to the old road/neighbour-only test if nothing flat enough exists.
+        placed = False
+        for slope_cap in (HOUSE_SLOPE_CAP, 1e9):
+            for dr in (0.0, 0.9, 1.8, 2.7, 3.6, 4.6):
+                for da in (0.0, .13, -.13, .26, -.26, .40, -.40, .55, -.55, .72, -.72):
+                    tx = cx + math.cos(a + da) * (r + dr)
+                    ty = cy + math.sin(a + da) * (r + dr)
+                    if float(F.road_dist(np.array([tx]), np.array([ty]))[0]) < need:
+                        continue
+                    if not all(math.hypot(tx - ox, ty - oy) >= 3.55 for ox, oy in ring):
+                        continue
+                    if slope_cap < 1e8:
+                        # a NOMINAL footprint, not this house's own: house_dims()
+                        # must keep its place in the rng stream or every later
+                        # house's angle, size and yaw move and R9's ratified
+                        # scatter is thrown away to answer a question about slope.
+                        tc = house_ground(F, zg, fr, tx, ty, 2.35, 2.05, 0.0)
+                        if max(tc) - min(tc) > slope_cap:
+                            continue
+                    hx, hy = tx, ty
+                    placed = True
+                    break
+                if placed:
+                    break
+            if placed:
                 break
         road_clear = min(road_clear,
                          float(F.road_dist(np.array([hx]), np.array([hy]))[0]))
@@ -617,8 +746,14 @@ def build_emberbrook(col, F, zg, fr):
         dims = house_dims(rng)
         fam = 1 + (i * 5 + i // 3) % 3                        # neighbours rarely match
         ch = house_ground(F, zg, fr, hx, hy, dims[1], dims[2], fa)
+        # ITS OWN STREAM, deliberately: drawing from `rng` here would re-scatter the
+        # whole town (every later house's angle, radius and dims move), and R9's
+        # placement is ratified art. Bedding must be able to land without moving it.
+        bed_in(p, ht, fam, F, zg, fr, hx, hy, dims[1], dims[2], fa,
+               random.Random(20260804 + i))
         impression_house(p, ht, fam, hx, hy, fa, dims, ch, rng)
         ring.append((hx, hy))
+        house_slope = max(house_slope, max(ch) - min(ch))
     # ---- the Heartlight: plinth + a standing light, the town's whole identity ----
     for i in range(8):
         a = i * (2 * math.pi / 8)
@@ -651,6 +786,11 @@ def build_emberbrook(col, F, zg, fr):
     # the road centreline.  A house on the road is invisible in every gate this
     # repo owns and obvious in one frame — so it gets a number in valley_build.json.
     STATS["emberbrook_road_clear_u"] = round(road_clear, 2)
+    # ...and its twin: the WORST corner-height spread any house ended up on. It is
+    # what turns a footing into a podium (the exposed stone is 0.70 x this + 0.20u),
+    # and like the road number it is invisible to every instrument in this repo and
+    # obvious in one screenshot.
+    STATS["emberbrook_house_slope_u"] = round(house_slope, 2)
     return p.finish(col)
 
 
@@ -1830,7 +1970,18 @@ def main():
 
     mats = {"matte": B.new_mat("ow_%s_matte" % STYLE, rough=0.9),
             "water": B.new_mat("ow_%s_water" % STYLE, rough=0.28, alpha=0.82, blend=True),
-            "emit": B.new_mat("ow_%s_emit" % STYLE, rough=0.6, emit=srgb("ff9f38"),
+            # A LIT WINDOW IS DARK GLASS WITH A LIGHT BEHIND IT, and this material
+            # was PALE GLASS with a light behind it: `use_vcol` (the default) hands
+            # Base Color to COLOR_0, which the class-gain pass lifts toward its own
+            # target, so the pane had a near-white albedo and the 2.4x golden key
+            # blew it out on its own.  MEASURED, because three rounds had assumed
+            # the emissive was the culprit and swept it: at ?owemit=0.02, with the
+            # emission effectively off AND ?bloom_s=0, the window core still read
+            # (254, 215, 193).  Neither the emissive nor the bloom was making it
+            # white — the albedo was.  A fixed dark base puts the pane's appearance
+            # back where it belongs, in the light it is supposed to be emitting.
+            "emit": B.new_mat("ow_%s_emit" % STYLE, base=(0.045, 0.030, 0.018),
+                              use_vcol=False, rough=0.6, emit=srgb("ff9f38"),
                               emit_str=9.0),
             "mist": B.new_mat("ow_%s_mist" % STYLE, rough=1.0, alpha=0.2, blend=True)}
     for k in ("water", "mist"):

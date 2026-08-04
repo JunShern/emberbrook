@@ -46,6 +46,50 @@ measurements are fine; conclusions drawn from that bar are not. The real referen
 overworld gameplay screenshots below.
 </div>
 
+<h2>R10 · The light gets a second colour, and the floating building was never floating</h2>
+<p class="lede">The critic’s whole brief in three lines: <em>“the light has one colour instead of two;
+the ground is a colour instead of a surface; objects rest on the terrain instead of being bedded into
+it.”</em> Plus a bug report — an upper-left building whose <em>“stone plinth is a detached slab hanging
+in mid-air with a visible underside face and daylight beneath it.”</em> It is not detached. What is
+there is a footing that grew as tall as the wall it carries, on a station with a 1.3u corner spread,
+with nothing bedding it in — and <strong>the misread is the finding.</strong></p>
+
+<div class="pair">
+  <figure><img src="plates/r9-meadow.png" alt="r9 meadow">
+    <figcaption><span class="tag t-bad">BEFORE — R9</span>Every hue in the frame is the same amber: the
+    meadow, the dirt, the roofs and the shadows. Lit wall and shade wall are the same colour. The windows
+    are 255 white. Frame saturation 0.651, b−r −0.357.</figcaption></figure>
+  <figure><img src="plates/r10-meadow.png" alt="r10 meadow">
+    <figcaption><span class="tag t-new">AFTER — R10</span>Warm key, blue-violet fill: a cool shaded side on
+    every house, the away roof plane 20% down, the meadow green again, amber panes with an edge, and a ring
+    of trodden earth and tufts at every base. Saturation 0.540, b−r −0.284.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/r10-gate.png" alt="r10 gate">
+    <figcaption><span class="tag t-our">R10</span>gate, boom 16.</figcaption></figure>
+  <figure><img src="plates/r10-vista.png" alt="r10 vista">
+    <figcaption><span class="tag t-our">R10</span>vista, boom 40.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/r10-gorge.png" alt="r10 gorge">
+    <figcaption><span class="tag t-our">R10</span>gorge, boom 40 — the shelf shadow survives and now reads
+    as a COOL shadow against a warm cliff, which is the whole point of the change. The sun, its azimuth and
+    the camera were not touched.</figcaption></figure>
+  <figure><img src="plates/r9-gorge.png" alt="r9 gorge">
+    <figcaption><span class="tag t-bad">BEFORE — R9</span>Same shelf, same sun; the shadow is a darker
+    orange rather than a different colour.</figcaption></figure>
+</div>
+
+<div class="note grn">
+<strong>THREE CLAIMS ABOUT THE WORLD WERE CHECKED BEFORE ANYTHING WAS BUILT, AND TWO WERE WRONG.</strong>
+The floating building: <code>SIM.pick</code> at the critic’s own pixels puts the ground <em>behind</em> the
+stone and its underside 0.4–0.6 u <em>below</em> the terrain, and a 4 px-step scan of all four landscape
+frames finds <strong>no downward-facing first hit on any building at all</strong>. The “blob shadow with no
+caster”: it survives hiding every <code>veg_</code> mesh in the scene, and at <code>__shadowTune(0)</code>
+it resolves into a chimney stack. Both were still worth the trip — the first named an over-tall unbedded
+plinth, the second is a real shadow that reads as a smear because of shadow-map texel size.
+</div>
+
 <h2>R9 · The cottages were 1.1× the character. They are 2.65× now.</h2>
 <p class="lede">Four independent observers reached this by two unrelated routes: a shadow-geometry probe
 measured in the running page, and three blind art critics who saw neither the probe nor each other.

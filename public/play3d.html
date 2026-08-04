@@ -367,7 +367,17 @@ const PFX={
   // an 11% red gain against a 15% blue cut on grass, roof, path and shadow alike.
   // That is most of "everything is one garish amber". 1.45 leaves the golden hour
   // clearly warmer than neutral while the LIT WEIGHT below decides where it lands.
-  gradeTint: PFXNUM('grade_k',1.45),       // scales both tints away from neutral
+  // R10 (2026-08-04) BACKS IT OFF ~50% AGAIN, 1.45 -> 1.20, and the pairing is the
+  // whole point. "The greens are gone — the meadow is yellow-orange, the dirt is
+  // orange, the roofs are orange, the shadows are orange... it went past the point
+  // where warmth reads as time of day and into the point where it reads as a
+  // filter." R5 already tried the naive version of this and the frame got WORSE
+  // (desaturating globally went milky and the amber was graded away). What is
+  // different here is that the fill is now a genuinely different colour, so the
+  // warmth that comes off the grade is not lost — it moves into the terminator.
+  // Alone, this number is a regression; with THE LIGHT GETS A SECOND COLOUR it is
+  // the second half of one change. Do not move one without the other.
+  gradeTint: PFXNUM('grade_k',1.20),       // scales both tints away from neutral
   // THE LIT WINDOW for the warm push (R6): source luminance below litLo takes none
   // of it, above litHi takes all of it. The floor sits under the frame's shadow
   // band (measured L05 0.12-0.16 on the four landscape cameras) so a shadow keeps
@@ -596,7 +606,11 @@ function pfxBuild(){
     // black; out here it is one bright object against a fully lit valley and the
     // same radius reads as a lens artefact. The towns' number is NOT touched —
     // docs/qa/postfx/rejected-bloom-loud.png is what happens when it is.
-    const BR=OWCAM ? PFXNUM('bloom_r_ow',0.15) : PFX.bloomRadius;
+    // R10 halves the overworld bloom radius (0.15 -> 0.075). A halo three times the
+    // pane's own size is what turned fourteen windows into fourteen holes punched in
+    // a wall; the STRENGTH stays, so a lit window still glows — it just glows the
+    // size of a window. Paired with OWEMIT 3.4 -> 2.2 below; the two are one fix.
+    const BR=OWCAM ? PFXNUM('bloom_r_ow',0.075) : PFX.bloomRadius;
     bloom=new THREE.UnrealBloomPass(new THREE.Vector2(W,H),
       PFX.bloomStrength, BR, PFX.bloomThreshold);
     composer.addPass(bloom);
@@ -2055,7 +2069,14 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // the key cannot, so it sets the COLOUR of every shadow side; at 0.85 of a
       // half-warm blue it was competing with the fill instead of tinting it.
       OWBOUNCE=new THREE.DirectionalLight(0x000000, 0);
-      OWBOUNCE.color.setRGB(0.38,0.58,1.00); OWBOUNCE.intensity=IU(0.85*(+(Q.get('owbounce')||0.80)));
+      // R10: THE BOUNCE IS THE COOL SIDE, so it is the one that goes up (0.80 ->
+      // 2.6) and violet. It is the only source reaching a face the key cannot, it
+      // casts nothing, and unlike the environment it is DIRECTIONAL — raising it
+      // darkens nothing and lifts only the walls that were the same orange as
+      // their lit neighbours. ?owbouncecol=r,g,b, ?owbounce= to sweep.
+      const OWBC=(Q.get('owbouncecol')||'').split(',').length===3
+        ? Q.get('owbouncecol').split(',').map(Number) : [0.44,0.46,1.00];
+      OWBOUNCE.color.setRGB(OWBC[0],OWBC[1],OWBC[2]); OWBOUNCE.intensity=IU(0.85*(+(Q.get('owbounce')||2.60)));
       OWBOUNCE.position.set(0.62,0.34,0.71); OWBOUNCE.castShadow=false;
       OWBOUNCE.name='__ow_bounce'; scene.add(OWBOUNCE);
       // ---- THE HEARTLIGHT ACTUALLY LIGHTS SOMETHING (R5, 2026-08-04) ----------
@@ -2103,7 +2124,16 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       const HL=[-58.0, 52.0];                                  // L.VILLAGE, Z-up (x,y) -> (x,-y)
       const _hf=floors(HL[0], HL[1]);
       const _hly=(_hf.length?Math.max.apply(null,_hf):26)+1.34;
-      OWHEARTH=new THREE.PointLight(0xff9f38, IU(+(Q.get('owhearth')||26.0)), 26, 2);
+      // R10: 34 W / 26 m -> 10 W / 15 m, and this is not a nerf of the Heartlight,
+      // it is the fix for "shadow colour = lit colour". Emberbrook's houses MOSTLY
+      // FACE THE GREEN (build_emberbrook's `fa`), so the wall the key cannot reach
+      // is the wall pointing AT this lamp: a 26 m range covers every house in the
+      // meadow frame and painted every shaded face the same amber as its lit one.
+      // Inverse-square is what makes a lamp a lamp — but only if its range stops
+      // inside the picture. At 15 m it still lights the ring of houses round the
+      // green and the character standing at it, and it decides nothing beyond them.
+      OWHEARTH=new THREE.PointLight(0xff9f38, IU(+(Q.get('owhearth')||10.0)),
+                                    +(Q.get('owhearthr')||15), 2);
       OWHEARTH.position.set(HL[0], _hly, HL[1]);
       OWHEARTH.castShadow=false; OWHEARTH.name='__ow_hearth'; scene.add(OWHEARTH);
       owHearthOrb(HL[0], _hly, HL[1]);
@@ -2145,8 +2175,52 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // sky radiance — so there is one number for the level and one triple for
       // the hue, and the sun cap is small enough to give the ambient a direction
       // without giving it a temperature.
-      const OWENV=+(Q.get('owenv')||0.35), OWENVSUN=+(Q.get('owsun')||0.30);
-      const OWSKYCOL=[0.35,0.62,1.00];             // sky hue; ground gets 55% of it
+      // ==================================================================
+      // R10 — THE LIGHT GETS A SECOND COLOUR (2026-08-04).
+      //
+      // THE FINDING, from a blind critic given r9 against the FFIX-reimagined
+      // overworld refs, and it is the whole brief in one line: "on every house the
+      // lit wall and the shade wall are the same hue and within about 15% value of
+      // each other, both orange. Shadow colour = lit colour. Nothing in the frame
+      // has a cool side. That is not golden hour; golden hour is a warm key AND a
+      // blue sky-fill, and here the key has been applied to the fill too."
+      //
+      // R3 had already made the fill blue and WROTE DOWN that the colour was where
+      // the terminator was hiding. What it had not done is give the cool side
+      // enough energy to be seen: at OWENV 0.35 / OWBOUNCE 0.80 against a key of
+      // 2.60 x 2.40, the shaded wall of a cottage was taking so little fill that
+      // its hue was decided by whatever warm thing was nearest — in the meadow
+      // frame, the Heartlight, whose 26 W at 26 m range reached every house in the
+      // village and repainted exactly the faces the key could not (the houses
+      // MOSTLY FACE THE GREEN, so their shaded walls face the lamp). A lamp with a
+      // range that covers the whole frame is the global tint this lane keeps
+      // undoing, arriving through the one light nobody was auditing.
+      //
+      // FOUR NUMBERS, and they only work together:
+      //   1. the fill goes BLUE-VIOLET, not blue-green ([0.35,0.62,1.00] ->
+      //      [0.42,0.44,1.00]) — the green channel was making the shade side
+      //      teal, which sits too near the grass to read as a different light.
+      //   2. the fill LEVEL 0.35 -> 0.55 and the cool BOUNCE 0.80 -> 2.6. The
+      //      bounce is the directional one: it lands on anti-sun faces only, so
+      //      it buys the cool SIDE without lifting the lit side with it. Raising
+      //      the environment alone lifts both and goes milky, which is the R5 trap.
+      //   3. the warm depth grade backs off ~50% (gradeTint 1.45 -> 1.20). On its
+      //      own this is the R5 regression again — desaturating globally went
+      //      milky and graded the amber AWAY. Paired with a fill that is actually
+      //      a second colour, the warmth stops being a filter and starts being a
+      //      time of day, which is the difference the critic named.
+      //   4. the Heartlight becomes a LAMP: 26 W / 26 m -> 10 W / 15 m. It still
+      //      puts a warm side on the ring of houses round the green; it no longer
+      //      decides the hue of the whole village.
+      // Sun elevation, azimuth and the camera are UNTOUCHED (R8 measured what both
+      // sun moves cost and the user's camera ruling stands).
+      const OWENV=+(Q.get('owenv')||0.55), OWENVSUN=+(Q.get('owsun')||0.30);
+      // THE HUE IS A KNOB NOW, not only the level. R3 swept the fill's LEVEL and
+      // wrote down that the COLOUR was where the terminator was hiding — and then
+      // left the colour as a literal, so the next round could not sweep the thing
+      // R3's own note said mattered. ?owfill=r,g,b (0..1 triples).
+      const OWSKYCOL=(Q.get('owfill')||'').split(',').length===3
+        ? Q.get('owfill').split(',').map(Number) : [0.42,0.44,1.00];
       if(IBL){
         const _sky=OWSKYCOL.map(v=>v*OWENV);
         const _grd=_sky.map(v=>v*0.55);
@@ -2226,7 +2300,19 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // still reads as amber rather than as paper at the gate camera's distance —
       // swept 9 / 5 / 3.4 / 2.4 against the meadow and vista plates. ?owemit=
       // re-sweeps it without an edit; the light itself is OWHEARTH above.
-      const OWEMIT=+(Q.get('owemit')||3.4);
+      // R10: 3.4 -> 2.2. "They are pure 255 white with bloom — clipped highlights,
+      // no colour left... they should read as glass with a room behind, not holes
+      // punched in a wall." The material's own colour is already the town's amber
+      // (ow_f2_emit = ff9f38); at 3.4 every channel of it clears the tone curve's
+      // shoulder and the pane arrives at the frame as paper. 2.2 is measured, not
+      // guessed: swept 3.4 / 2.2 / 1.4 and MEASURED at the window core (the top 40
+      // pixels of the pane, tools/../pixprobe SIM.px) — (254,207,182) / (253,193,160)
+      // / (245,160,122) against the critic's own (255, 200, 120). 1.5 is the first
+      // value at which the pane has an EDGE: below the tone curve's desaturation
+      // knee it is amber glass, above it it is a white blob with a warm surround.
+      // NOTE FOR THE NEXT ROUND: this knob only started working in this build. The
+      // whiteness was never the emissive — see ow_f2_emit in tools/valley_build.py.
+      const OWEMIT=+(Q.get('owemit')||1.5);
       g.scene.traverse(o=>{ if(!o.isMesh) return;
         for(const mm of (Array.isArray(o.material)?o.material:[o.material]))
           if(mm && mm.name==='ow_f2_emit') mm.emissiveIntensity=OWEMIT; });
@@ -2917,7 +3003,50 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
    const hits=occRay.intersectObjects(occVis()?occSet:collide,true);
    return{depthMode:!!DEPTH,rtMode:!!RT,ring:occRing.visible,nHits:hits.length,
      first:hits[0]?{name:hits[0].object.name,dist:+hits[0].distance.toFixed(2)}:null,
-     camDist:+cam.position.distanceTo(tgt).toFixed(2)}}};
+     camDist:+cam.position.distanceTo(tgt).toFixed(2)}},
+ // WHAT IS AT THIS PIXEL. The art loop's own rule is "name the artefact by
+ // raycasting the pixels, not by guessing" (docs/qa/ow-refs/LOOP.md R7, where the
+ // grey rectangles were finally named that way) — and every round before this one
+ // had to re-derive the ray by hand because nothing here exposed the camera or the
+ // mesh list. px/py are CSS pixels on the canvas, origin top-left, exactly the
+ // coordinates a plate is measured in. Returns the hit chain, not just the first
+ // hit: a floating slab and the ground behind it are two entries, and the gap
+ // between them is the answer.
+ pick(px,py,n){
+   const cv=R.domElement, W=cv.clientWidth, H=cv.clientHeight;
+   const rc=new THREE.Raycaster();
+   rc.setFromCamera(new THREE.Vector2((px/W)*2-1, -(py/H)*2+1), cam);
+   const hits=rc.intersectObjects(allMeshes,true);
+   return{px:[px,py],canvas:[W,H],cam:cam.position.toArray().map(v=>+v.toFixed(2)),
+     hits:hits.slice(0,n||8).map(h=>({name:h.object.name||'(anon)',
+       d:+h.distance.toFixed(2), pt:h.point.toArray().map(v=>+v.toFixed(2)),
+       nrm:h.face?h.face.normal.toArray().map(v=>+v.toFixed(2)):null}))}},
+ // HIDE THAT ONE MESH AND SEE IF THE ARTEFACT GOES. The discriminator that named
+ // the grey rectangles (LOOP.md R7) was exactly this, done by hand each time.
+ // Returns the names it touched, so an instrument that finds nothing proves it
+ // could have found something.
+ vis(pattern, on){
+   const re=new RegExp(pattern,'i'), hit=[];
+   allMeshes.forEach(o=>{ if(re.test(o.name||'')){ o.visible=!!on; hit.push(o.name); } });
+   renderFrame(); return{pattern, on:!!on, n:hit.length, names:hit.slice(0,20)};
+ },
+ // THE PIXEL ITSELF, off the framebuffer. A screenshot is the honest artefact, but
+ // a sweep wants numbers without a PNG round trip: this reads the composited frame
+ // back at one point (or the mean of a box) so "the lit wall and the shade wall are
+ // the same hue" is a measurement instead of an impression.
+ px(x,y,w,h){
+   renderFrame();
+   const cv=R.domElement, dpr=R.getPixelRatio();
+   const W=Math.max(1,Math.round((w||1)*dpr)), H=Math.max(1,Math.round((h||1)*dpr));
+   const X=Math.round(x*dpr), Y=cv.height-Math.round(y*dpr)-H;
+   const buf=new Uint8Array(W*H*4);
+   const gl=R.getContext();
+   gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+   gl.readPixels(X,Y,W,H,gl.RGBA,gl.UNSIGNED_BYTE,buf);
+   let r=0,g=0,b=0; for(let i=0;i<W*H;i++){r+=buf[i*4];g+=buf[i*4+1];b+=buf[i*4+2];}
+   const n=W*H;
+   return{at:[x,y,w||1,h||1],rgb:[Math.round(r/n),Math.round(g/n),Math.round(b/n)],n};
+ }};
 // ===== SCENE GRAPH + TRANSITIONS ============================================
 // The layer that makes the scenes ONE GAME. Everything it knows comes from
 // public/world/scenegraph.json (generated by tools/scenegraph_derive.mjs from the
