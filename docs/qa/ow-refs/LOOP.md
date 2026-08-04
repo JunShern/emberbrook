@@ -133,6 +133,7 @@ Findings route **through the coordinator**, never lane to lane.
 | 8 | not judged — MEASURED against 4's "no directional light" | plates `r8-*` | **the meadow has the same sun as the gorge, and it is not a lighting defect at all** — a 2.6 m cottage under a 34° sun throws a 3.9 m shadow from a 2.9 m footprint, straight away from the lens | routed to CONTENT; both sun moves REJECTED by eye |
 | 9 | not judged — BUILT against 8 + three blind critics | plates `r9-*` | **the houses go up: ridge 1.6u → 3.7u, 1.1× the character → 2.65×, height:width 1.10 → 1.39** — and every cottage in the meadow now lays a shadow across the grass | TRIED — MOVED IT |
 | 10 | `r9-*` judged blind | plates `r10-*` | **the light gets a SECOND COLOUR** — warm key + blue-violet fill, the warm grade back 50%, the Heartlight reined in from a global tint to a lamp; plinths capped, bases bedded, window panes given a dark albedo. Frame saturation 0.651/0.584/0.478/0.456 → **0.540/0.496/0.411/0.360**, b−r −0.357 → −0.284 on the meadow | TRIED — MOVED IT |
+| 13 | `r12-*` judged blind | plates `r13-*` | **the shadow hue is MEASURED off the references instead of picked** (violet 273° then brown 41°, target 99–100° on grass / 209–227° on stone), the fill's LEVEL goes up rather than down, R11's toe comes off because **the references have ZERO pixels under L 0.10**, and the saturation pull becomes PER-MATERIAL on three channel-order selectors. Chimneys re-massed after measuring that all 25 overhung their own pad; the river gets Dellhollow's ratified depth→alpha at ×1.0. Δ hue +2.6 → **+11.1** (ref +12.9/+13.9), frame sat .447 → **.374** (ref .370/.381), L05 .098 → **.170** | TRIED — MOVED IT |
 | 11 | `r10-*` judged blind | plates `r11-*` | **depth gets a hue and the frame gets a black point** — an exponential haze ramp anchored on the PLAYER, a mix toward a low-chroma blue at distance, a foreground toe, the terrain's own COLOR_0 off yellow, and the Heartlight's albedo (not its emissive) named as the thing that made it a white blob. Saturation **.545/.502/.413/.362 → .434/.376/.342/.333**, green b:g **.634 → .758** (meadow), L05 **.127 → .094**, pixels under L 0.10 **3.5% → 5.5%** | TRIED — MOVED IT |
 
 ### Round 4–5: A NUMBER THAT IMPROVES WHILE THE PICTURE WORSENS IS THE WRONG NUMBER
@@ -950,6 +951,169 @@ they are still pale stone columns read from a near-top-down camera, the fourth r
 sentence is true.
 
 ---
+
+## Round 13 — THE ROUND WHERE WE STOPPED GUESSING THE SHADOW COLOUR AND MEASURED IT
+
+Plates `r13-{meadow,gate,vista,gorge}.png`. Commits `c6830a0` `e0d8d90` `6f737e7` `d0ae583`
+`4aa8138` (content) `c7aa270`.
+
+**THE SHADOW HUE HAD NOW BEEN GUESSED TWICE AND MISSED TWICE IN OPPOSITE DIRECTIONS** — r11
+violet (hue 273), r12 warm brown (hue 41) — and the thirteenth critic said the target was
+neither: *"Both A and B take a MUDDY GREY-OLIVE, and both should be taking COOL BLUE…
+nothing inside it is cooler in hue than the lit grass beside it, which is what makes the
+whole frame read as unbounced spotlight rather than golden hour."* **An oscillation is the
+signal to stop picking the number by taste.**
+
+### The references' own numbers (scratchpad/r13/refhue.py)
+
+Classify by material, then split each material by ITS OWN luminance quartiles — no
+hand-picked boxes, and the SAME classifier runs on our plates, which is the only reason the
+two columns can be compared at all.
+
+| | shaded hue | lit hue | Δ hue | shade sat | sat ratio shade/lit | shade/lit L |
+|---|---|---|---|---|---|---|
+| ref 1 grass | **100.3°** | 87.4° | +12.9 | 0.388 | 2.41 | 0.53 |
+| ref 3 grass | **99.0°** | 85.1° | +13.9 | 0.454 | 1.36 | 0.59 |
+| ref 1 stone | **226.5°** | 135.0° | +91.4 | 0.236 | 4.61 | 0.35 |
+| ref 3 stone | **209.2°** | 122.9° | +86.3 | 0.352 | 11.39 | 0.34 |
+
+**Three things that are not obvious and are now measured:**
+
+  1. **A REFERENCE SHADOW IS MORE SATURATED THAN THE LIGHT BESIDE IT.** Their neutral stone
+     runs sat 0.03 in sun and 0.24–0.35 in shade. The shade is where their colour LIVES.
+  2. **THEIR SHADOWS ARE NOWHERE NEAR BLACK.** Over the playfield of both shots **ZERO
+     PERCENT of their pixels sit under L 0.10** and their L05 is 0.211/0.276. Ours were
+     0.084/0.043 with 6.4%/14.2% under 0.10. **R11's toe was buying back a black point the
+     references do not have** — and a crushed shadow has no signal left to carry a hue,
+     which is half of why this axis has been missed twice.
+  3. **Violet was never wrong for being COOL, it was wrong for being MAGENTA.** R11's
+     `[0.42,0.44,1.00]` had G barely above R. The refs' shaded stone is R < G < B with G
+     nearer the middle — a cyan-blue at ~210–227°.
+
+So the fill takes **their** hue, `[0.55,0.72,1.00]` = 217.3°, and **the level goes UP,
+0.376 → 0.95.** R12 cut the level to hold shade luminance while it moved the hue — correct
+arithmetic for the move it was making, and exactly what pinned the shade at 0.20 of lit.
+The toe drops 0.38 → 0.06. `?owfill= ?owenv= ?grade_toe=` back all three out.
+
+| meadow | r12 | **r13** | reference |
+|---|---|---|---|
+| grass shade hue | 74.6° | **83.9°** | 99–100° |
+| lit→shade Δ hue | +2.6 | **+11.1** | +12.9 / +13.9 |
+| grass shade sat | .564 | **.428** | .388 / .454 |
+| frame saturation | .447 | **.374** | .370 / .381 |
+| L05 | .098 | **.170** | .211 / .276 |
+| pixels under L 0.10 | 5.1% | **1.2%** | 0.0% |
+
+Gorge grass shade hue **79.9 → 98.9** against their 99–100. **The DELTA is on their number;
+the ABSOLUTE is ~15° short because our LIT grass sits at 72° against their 85–87° — that is
+the KEY's warmth, a different axis, out of scope this round, and the honest next lever.**
+
+### The saturation pull was global where it had to be per-material
+
+*"A is over-corrected grey on the greens… while the roofs stay a strong terracotta and the
+river stays a strong cyan — that is the signature of a GLOBAL saturation walk-back applied
+where a PER-MATERIAL one was needed. Two loud colours on a dead field."* As arithmetic:
+**the meadow was 44.8% warm-hue pixels at sat 0.534, where the references are 0.3–1.5% at
+0.371–0.490**, while our greens sat under both. One `sat` scalar cannot move one without the
+other.
+
+Three channel-order selectors, no texture reads: `yel=(min(r,g)−b)` vegetation,
+`wrm=(r−max(g,b))` fired clay, `cyn=(min(g,b)−r)` the river. **Shaded grass scoring ZERO on
+`cyn` is load-bearing** — after the fill fix shade swings blue-green, and a naive "cool
+pixels" selector would have desaturated every shadow in the frame and undone the round's
+other half. b is still below r in shaded grass, which is what keeps them apart.
+Meadow: warm sat .534 → .426, green .397 → .426, cyan .450 → .288.
+
+### FOUR LESSONS ABOUT INSTRUMENTS, all paid for in this one round
+
+  * **"ALMOST NO HUE VARIATION" WAS NOT ABOUT VARIATION.** Our vegetation's hue SD is 18.2
+    against the references' 16.4 and 19.8, and our IQR is inside theirs. **The spread was
+    always fine; the CENTRE was wrong** — hue mean 74.2 against 85.6/94.3. An olive is a
+    green whose hue is wrong, not a green with no variance. Had we read the WORD instead of
+    the pixels we would have spent the round adding noise to a field that already had it.
+  * **WHEN A TREATMENT CHANGES THE CLASSIFIER, MEASURE ON THE PIXELS AND NOT ON THE CLASS.**
+    The vegetation hue knob swept 0/0.10/0.20 read 77.3/76.8/77.3 — flat, and by this repo's
+    own rule four words from being filed as this loop's FIFTH disconnected knob. It is not:
+    the gain pulls marginal pixels across the family's own 55° edge (share 22.6% → 28.4%)
+    and they land at the bottom of the range. On a FIXED pixel set: 77.3 → 79.6 → **81.6**.
+  * **TWO OF THE CRITIC'S ITEMS WERE ONE KNOB PULLED IN OPPOSITE DIRECTIONS.** The gorge's
+    *"hard-edged pale flat-shaded triangles… a broken normal or a near-white material"* is
+    **not geometry at all** — a 600-sample raycast census returns `ground_valley_3` and
+    Dellhollow's own houses, zero ridge hits, zero sky hits, and `?gbuf=0` leaves it
+    identical. It is **the haze**: with post off that box is (26,21,22) at L 0.086 and
+    relative contrast 1.02 — a legible terraced cliff with a terracotta roof in it — and
+    shipped it was (58,70,89) at L 0.270, contrast 0.27. A lerp toward a MID value **lifts a
+    far DARK far harder than a far LIGHT** (3.13×, 4× flatter). But turning `grade_h` down
+    would have taken the cue off the far hillside, which the same critic calls flat. Gating
+    the mix on the pixel's own luminance serves both: cliff L 0.296 → 0.203, hillside
+    **unchanged to three decimals**. Third instance of *a grade has no local scope*.
+  * **THE SECOND FIX TO LAND ON A SHARED HUE OWES A RE-SWEEP OF THE FIRST.** `wp` was swept
+    to 0.26 against the old bundle; the content lane then pulled the ROOF albedo, and the
+    two stacked past the references (frame sat 0.347) with the roofs merging into the timber
+    walls. Re-swept to 0.12. Lane scope is not the same as effect scope.
+
+### Content (commit 4aa8138)
+
+  * **THE CHIMNEY WAS OVERHANGING ITS OWN PAD, ON ALL 25 HOUSES, AND THAT IS WHY THREE
+    ROUNDS OF DETAIL FIXES DID NOT LAND.** The stack stood `cd − 0.14 = 0.20u` proud of the
+    gable wall face while the plinth reaches only `0.035·d` (0.046u at d=1.30, 0.094u at
+    d=2.68) — so 0.11–0.15u of stack hung over open ground with its base *above* it. *"The
+    column isn't on the pad"* and *"background grass visible in the gap at its base"* were
+    literally true and measurable. **Third fraction-of-a-jittered-dimension contact in this
+    file** after r11's stack and r12's window pane. Re-massed: footprint inside the plinth,
+    outer face recessed 0.03u BEHIND the wall, cap clearing the ridge by ≥0.55u, nothing a
+    fraction of `d`. **Gated, not asserted** — a house failing any clause is built without a
+    chimney; 25/25 pass (pad margin ≥ +0.082, recess +0.030, ridge clearance +0.568…+0.827).
+    The visible object is now only the 0.6–0.8u above the roof: **a short stack that is part
+    of the building beats a tall one that isn't.**
+  * **THE RIVER HAD A BED ALL ALONG**, which is the opposite of Dellhollow and is why
+    `water-transparency.md`'s recipe applied at ×1.0 with no bathymetry work: 0/85 stations
+    missing a bed, median depth 1.63u, and **86% of the strip edge buried in the bank**
+    against Dellhollow's 43–79% floating. Two exporter facts measured in the shipped GLB:
+    COLOR_0 exported as **VEC3** until the Alpha socket is fed from it, and **one mixed-
+    material mesh disables vertex alpha for every primitive in it** (hence `water_falls_lip`
+    became its own mesh). Alpha 0.06 at the shore → 0.94 at depth; tint neutralised (a blue
+    multiplying an already-blue albedo made the product MORE chromatic than either):
+    river box sat 0.469 → 0.265.
+  * Roof albedo `a86b52` (s .512) → `917366` (s .297) at held luminance.
+
+### Bugs: two REAL, two CLOSED
+
+  * **THE CHARACTER IS NOT A MISSING MATERIAL** — the item that would have outranked
+    everything. Her body carries a bound 4096² map + metalnessMap + roughnessMap +
+    normalMap, `__chardump2` returns byte-identical records at a 40 m boom and a 4 m boom
+    (no LOD, no streaming), and whole-figure saturation falls only 0.369 → 0.329 across an
+    85 px and a 17 px rendering — mip averaging. **She is 17×41 px, standing in the gorge
+    rim's own shadow, on a dark road, at max boom. STAGING, NOT MATERIALS.**
+  * **THE SOFT SHADOW IS CLOSED WITH NO CHANGE.** Caster named: `ground_valley_3`, 23.5 m
+    up-sun and off the left of frame. The shadow map is not the cause — **8.6× more filter
+    sharpness (ortho ±115→±40, radius 1.5→0.5, 2048→4096) buys 3 px of a median 18 px
+    edge**, because the edge's y-position wanders with std 20.7 px: **THE WANDER IS LARGER
+    THAN THE BLUR.** A radius-6.0 control (median 54 px) proves the instrument is sensitive.
+    And tightening the ortho box flat-lights Dellhollow's houses at 72–76 m. Its interior is
+    not dead either: shadowed floor relative contrast 0.863 vs lit floor 0.762.
+  * The pale triangles and the flat hillside: above.
+
+**What got worse, or is knowingly unfinished:**
+
+  * **The far hillside is flat BEFORE any post pass runs** — Lstd 0.049 against the
+    mid-ground's 0.076. Every face normal on it lies within ~2° of the same direction,
+    nothing casts onto it, and 7 of 600 samples hit vegetation. **It needs VALUE structure,
+    not colour; a hue or saturation move will not land.** Routed to r14, content lane.
+  * Shade still sits at 0.34 of lit against the references' 0.53–0.59, and 1.2%/3.4% of
+    pixels remain under L 0.10 against their 0.0%. Going the rest of the way costs the
+    lit/shade separation rounds 1–3 were fought for; stopped deliberately, `?owenv=1.10` is
+    the measured next rung.
+  * Roof luminance rose ~5% on the box probes (desaturating at a held max lifts the dark
+    channels). The river reads faint in the shallow upper reach of the vista frame — it is a
+    stream over a mossy bed now, not a ribbon. `?grade_vb=0.28` under the shade weighting
+    was measured and changes nothing.
+  * `?grade_vh=0.20` is measured and **REFUSED BY EYE** — the canopy goes acid lime. Which
+    is the whole reason the plates get opened.
+
+Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 ·
+`findability_test` 69/0 · `walk_engine_gate ow-valley` GREEN (0 lost, 418.2 m², BVH fail 0) ·
+`valley_verify` OK. Tris 272 102 → 274 154.
 
 ---
 
