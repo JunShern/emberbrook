@@ -463,7 +463,18 @@ const PFX={
   // meadow frame (warm-family sat 0.534 over 44.8% of the pixels; the references run
   // 0.371-0.490 over 0.3-1.5%). tools/valley_build.py's ROOF albedo carries the other
   // half of this: an albedo fix survives every camera, a grade fix survives every asset.
-  gradeWarm: PFXNUM('grade_wp',0.26),
+  // 0.26 -> 0.12 AFTER THE ALBEDO LANDED, and this is the round's own small version of
+  // R11's "two fixes that were each correct and are wrong together". wp was swept to
+  // 0.26 against the OLD bundle; the content lane then pulled the ROOF albedo in
+  // tools/valley_build.py, and the two pulls stacked. Measured on the meadow with the
+  // new bundle: wp 0.26 takes the warm family to sat 0.370 and the FRAME to 0.347
+  // (references 0.370/0.381) — past them, and by eye the roofs stopped reading as
+  // fired clay and merged into the timber walls. wp 0.12 puts the frame at 0.374, dead
+  // on the references, and gives the roofs back their tile. THE ALBEDO KEEPS THE
+  // LARGER SHARE ON PURPOSE — it survives every camera, this term only survives this
+  // pass. WHEN TWO LANES ARE HANDED THE SAME HUE, THE SECOND ONE TO LAND OWES A
+  // RE-SWEEP OF THE FIRST.
+  gradeWarm: PFXNUM('grade_wp',0.12),
   // cp — the river. "Opaque flat cyan... the most saturated thing in the frame and the
   // least believable material in either frame." The REAL fix is the water treatment in
   // the bundle (docs/plans/water-transparency.md); this is the part that lands on the
@@ -478,6 +489,8 @@ const PFX={
   gradeVegHue: PFXNUM('grade_vh',0.10),
   // hgate — the haze asks whether the pixel is lit. See THE HAZE HAD TO ASK.
   gradeHazeGate: PFXNUM('grade_hg',1.0),
+  // vbl — how much of the vegetation boost is steered into shade. Swept; see above.
+  gradeVegShade: PFXNUM('grade_vbl',1.0),
   gradeDesat: PFXNUM('grade_d',0.40),
 };
 // THE AERIAL SPLIT (2026-08-03, overworld only, ?grade=0 to remove).
@@ -517,14 +530,14 @@ const GRADE_SHADER={
              dNear:{value:30}, dFar:{value:150}, amt:{value:1}, lift:{value:0.03},
              desat:{value:0.0}, litLo:{value:0.0}, litHi:{value:1.0},
              haze:{value:0.0}, sat:{value:1.0}, dScale:{value:52.0}, dRef:{value:0.0}, toe:{value:0.0},
-             gp:{value:0.0}, wp:{value:0.0}, cp:{value:0.0}, vb:{value:0.0}, vh:{value:0.0}, hgate:{value:0.0},
+             gp:{value:0.0}, wp:{value:0.0}, cp:{value:0.0}, vb:{value:0.0}, vh:{value:0.0}, hgate:{value:0.0}, vbl:{value:0.0},
              hazeCol:{value:new THREE.Vector3(0.127,0.175,0.275)},
              warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
              coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
   vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
   fragmentShader:[
     'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
-    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb,vh,hgate;',
+    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb,vh,hgate,vbl;',
     'uniform vec3 warmCol,coolCol,hazeCol;',
     'void main(){',
     '  vec4 c=texture2D(tDiffuse,vUv);',
@@ -677,7 +690,14 @@ const GRADE_SHADER={
     '  float kSat = 1.0 - gp*smoothstep(0.12,0.45,yel)',
     '                   - wp*smoothstep(0.14,0.34,wrm)',
     '                   - cp*smoothstep(0.16,0.40,cyn)',
-    '                   + vb*smoothstep(0.28,0.55,yel);',
+    // R13 — AND THE VEGETATION BOOST IS WEIGHTED INTO THE SHADE, for the same reason
+    // R6 weighted the warm push into the light. Flat, it raised LIT grass from sat
+    // 0.237 to 0.404 against the references' 0.161 and 0.334, and dropped the
+    // shade/lit saturation RATIO to 1.09 where both references sit at 1.36 and 2.41.
+    // Their chroma lives in the shade; a flat boost gives us their total and not their
+    // distribution. Reusing litK costs nothing — it is already computed for the warm
+    // push twenty lines up. ?grade_vbl=0 restores the flat boost.
+    '                   + vb*smoothstep(0.28,0.55,yel)*mix(1.0,1.0-litK,vbl);',
     '  o=mix(vec3(oL), o, max(0.0,kSat));',
     // R13 — AND "ALMOST NO HUE VARIATION" TURNED OUT NOT TO BE ABOUT VARIATION. The
     // critic's word was variation; the statistic says our vegetation had as much spread
@@ -864,6 +884,7 @@ function pfxBuild(){
     grade.material.uniforms.vb.value=PFX.gradeVeg;
     grade.material.uniforms.vh.value=PFX.gradeVegHue;
     grade.material.uniforms.hgate.value=PFX.gradeHazeGate;
+    grade.material.uniforms.vbl.value=PFX.gradeVegShade;
     {const hz=(Q.get('grade_hc')||'').split(',');
      if(hz.length===3) grade.material.uniforms.hazeCol.value.set(+hz[0],+hz[1],+hz[2]);}
     const K=PFX.gradeTint, u=grade.material.uniforms;
