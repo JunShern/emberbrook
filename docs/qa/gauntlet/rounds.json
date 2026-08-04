@@ -247,6 +247,33 @@
     "closeup"
    ],
    "verdict": "BLIND VERDICT (anonymized set): the judge found the before/after pair unprompted and ranked the new build's trees ABOVE the old \u2014 the old canopy's leaf cards read as 'agave, not tree leaves, at roughly 1.5m each \u2014 the worst scale break in the set'; the new crown's remaining fault is 'texture without form: the house shadows say the sun is upper-right, yet no lobe is lit and no lobe is shaded.' CONTRADICTION LOGGED: the builder reported the gorge ridge lollipop repeat closed (second species + 0.6-1.5x scale ramp); the blind judge, ranking that plate last, sees 'a dozen identical lollipops, same crown, same size, same rotation' \u2014 one of them is wrong about the same pixels, and tree round 2 verifies by eye before building. Also blind-found: bushes standing in a cast shadow stay lit \u2014 refuted at the wire by the grass lane (recv:true everywhere; foliage darkens MORE than the rest of the frame) \u2014 the honest perception's real mechanism is the bush's own missing self-shadow/form, queued for tree round 2."
+  },
+  {
+   "n": 13,
+   "title": "DELLHOLLOW VISTA \u2014 a scaffold town, not a cluster of cottages (user-caught canon breach)",
+   "when": "2026-08-04 12:41",
+   "prefix": "dh1",
+   "views": [
+    "gorge",
+    "closeup",
+    "emberbrook",
+    "vs-emberbrook"
+   ],
+   "verdict": "The user caught it from this page: the overworld vista of Dellhollow was built from Emberbrook's own cottage prop (build_dellhollow called impression_house \u2014 gabled plaster boxes under the r14 blue slate). Canon says stone dam spine + rickety timber scaffolds, and the user ruled the towns must be 'entirely distinct'. Rebuilt as 19 stilt-bay decks: X-braced posts, rope rails, single-pitch lean-tos, laundry lines, raking stairs \u2014 no gable, no plaster, no tile anywhere in the town (STATS now carries plaster_faces 0 / tile_faces 0, so distinctness is a number a diff can check). The side-by-side (dh1-vs-emberbrook) is the acceptance test: no element is swappable across it. Two eye-caught fixes recorded at the code: a tar-class roof facing away from the sun lands near black and reads as a HOLE, not a shadow; and tier step 4.4 made the bays read as separate watchtowers (now 3.5)."
+  },
+  {
+   "n": 14,
+   "title": "FOLIAGE 2 (low camera) \u2014 the density never collapsed; the BLADES went sub-pixel",
+   "when": "2026-08-04 13:23",
+   "prefix": "f2",
+   "views": [
+    "meadow",
+    "gorge",
+    "gate",
+    "vista",
+    "closeup"
+   ],
+   "verdict": "The blind judge saw a bare hillside and prescribed more scatter. Measured from the real closeup camera: density held at ~4.5 roots/m2 across the whole failing band \u2014 10,600 blade roots stood inside the region called bare \u2014 but a 3.6 cm blade is SUB-PIXEL past ~30 m, so the population rendered as aliased stipple. The perception was honest, the prescription would have been wrong, and only the wire knew: fixed with a distance width-gain paid for out of blade count \u2014 scatter tris DOWN 34% (1.21M to 808k) and the picture better. Both f1 discrepancies were wiring: 793 flowers existed and 12 were on screen (62% spent past 30 m at 2 px; flowers were the one class with no size compensation); the house pads' DIRT class fell through the material map to a matte the fringe system could not see. Carried, named: the far ridge is still the ow_f2_tuft bundle asset, and the dry slope is one tint on three blade shapes \u2014 'two more ground assets and a real flower' is the next honest step, and it is new art, not settings."
   }
  ]
 }
