@@ -61,7 +61,39 @@ function sceneParams(q){
   // player's walking direction (~100 ft equivalent at miniature scale). Applies to
   // ow-* scenes; drag/wheel still work, the yaw eases back to heading while moving.
   OWCAM = /^ow-/.test(SCENE);
+  owCamRead(q);
   FLOORY = wbFloor(SCENE);
+}
+// ---- THE OVERWORLD BOOM: ELEVATION AND AIM ARE TWO NUMBERS ------------------
+// (2026-08-04.  ?owpitch= / ?owtilt= override either, in radians, for A/B.)
+// DISTANCE IS FIXED BY USER RULING (boom 40 — "a wide enough field of view to
+// appreciate the surroundings… where the landscape is leading them"); pitch is
+// explicitly OPEN, and so is how much horizon is in the shot.
+//
+// THE GEOMETRY THAT DECIDES THIS, and it is not a taste call.  The follow camera
+// is a 42 deg VERTICAL fov, so the top edge of the frame sits 21 deg above the
+// camera's own axis.  While the camera looks down at OWPITCH, the top of the
+// frame is at (OWPITCH - 21 deg) BELOW the horizontal — so at the shipped 0.61
+// rad (35 deg) everything above the horizon, sky dome and all three ridge rings
+// included, is 14 deg off the top of the screen.  Measured: zero sky pixels on
+// all four ow cameras.  NOTHING above the horizon can appear at ANY aim while
+// the camera's down-angle is >= 0.3665 rad.  That is the whole finding.
+//
+// OWTILT is the second number, and it is what lets the camera stay HIGH while
+// still seeing a distance plane — which is what the FFIX-reimagine references
+// actually are (refs 1/3: a sliver of sky, then a quarter-frame of layered hazy
+// ridge; not low cameras).  The boom position still comes from OWPITCH, so the
+// camera keeps its elevation over the canopy; the camera is then rotated UP by
+// OWTILT about its own X, which moves the horizon down into frame and the player
+// down with it.  Effective down-angle = OWPITCH - OWTILT; the player's height in
+// frame is 0.5 + 0.5*tan(OWTILT)/tan(21 deg).
+// SHIPPED: pitch 0.61 UNCHANGED (see the sweep — every reduction of it drove the boom
+// into terrain, because this rig has no camera collision), tilt 0.22.
+// ?owtilt=0 is the exact frame we shipped before this change.
+let OWPITCH=0.61, OWTILT=0.22;
+function owCamRead(q){
+  if(q.has('owpitch')) OWPITCH=parseFloat(q.get('owpitch'));
+  if(q.has('owtilt'))  OWTILT =parseFloat(q.get('owtilt'));
 }
 // ---- WHERE THE WORLD ENDS (playtest round 6) --------------------------------
 // public/game/worldbounds.json, fetched once per page and applied per scene. A
@@ -1596,24 +1628,66 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // and the old fix-up would now convert it a SECOND time (the fog would come
       // back much darker and bluer than the horizon it is supposed to match).
       scene.fog=new THREE.Fog(0xd3e0e8, 34, 205);
-      // Distant ridges: three rings, receding toward the sky colour.
-      const RING=[{r:210,h:26,c:0x6e7f96,n:13},{r:270,h:34,c:0x93a6b6,n:11},{r:320,h:44,c:0xb4c5d2,n:9}];
-      for(const R_ of RING){
-        const g2=new THREE.BufferGeometry(), v=[];
-        for(let i=0;i<R_.n;i++){
-          const a0=(i/R_.n)*Math.PI*2, a1=((i+1)/R_.n)*Math.PI*2, am=(a0+a1)/2;
-          const jitter=0.55+0.45*Math.abs(Math.sin(i*12.9898)*43758.5453%1);
-          const pk=R_.h*jitter;
-          v.push(Math.cos(a0)*R_.r,-4,Math.sin(a0)*R_.r,
-                 Math.cos(a1)*R_.r,-4,Math.sin(a1)*R_.r,
-                 Math.cos(am)*R_.r, pk, Math.sin(am)*R_.r);
+      // ---- THE DISTANT RIDGES ------------------------------------------------
+      // Rebuilt 2026-08-04, the first time anything here was ever LOOKED AT: the
+      // pitch was 35 deg down against a 21 deg half-fov, so every one of these
+      // rings had been 14 deg off the top of the screen since the day it landed.
+      //
+      // THREE DEFECTS, all only visible once the aim came up:
+      //  1. `fog:true` ON A RING BEYOND `fog.far`. The rings sit at 210/270/320 and
+      //     the fog ends at 205, so ALL THREE were clamped to exactly the fog colour.
+      //     The authored 0x6e7f96 -> 0xb4c5d2 recession — the entire point of having
+      //     three rings — was being computed and then thrown away, and what reached
+      //     the frame was three IDENTICAL near-white shapes. They are painted
+      //     constants like the dome above; they take the dome's fog:false too.
+      //  2. 13/11/9 segments AROUND A FULL CIRCLE is one triangle every 27 deg —
+      //     at r=210 that is a 98 m wide, 26 m tall isoceles tent. It read as paper.
+      //     Now a continuous CREST STRIP: 120 segments of a smoothed periodic noise
+      //     line, so the silhouette has shoulders and saddles instead of apexes.
+      //  3. The base was y=-4, about 30 m under the player — close enough that a
+      //     bearing with no terrain in it showed the ring's own bottom edge floating.
+      //
+      // Four rings, not three: the near one dark enough to be read as land, the far
+      // one close enough to the horizon band to be read as almost-air.
+      //
+      // THE CRESTS ARE TUNED AGAINST EYE HEIGHT, WHICH IS THE WHOLE TRICK AND WAS
+      // WORTH ONE WRONG PASS. The boom puts the eye 22.9 m over the player, so it
+      // rides at y~37 in the gorge and y~50 at the Emberbrook bench; a ring's
+      // apparent height is atan((crest - eyeY)/r), NOT its height above the valley.
+      // The first rebuild used crests of 40-88 m — plausible mountains, and every
+      // one of them stood ABOVE the eye, so the nearest and DARKEST ring covered
+      // the sky, the three paler rings behind it and the whole layering it was
+      // built for. Crests near 30 m sit a few degrees UNDER the eye, which is what
+      // makes them recede; the far rings are only slightly taller and read higher
+      // purely because they are further away. That is also what the references do:
+      // in two of the three, the distant land is BELOW the camera.
+      const RING=[{r:205,b:14,a:13,c:0x6d7d95},{r:255,b:16,a:14,c:0x8496a9},
+                  {r:305,b:18,a:15,c:0x9dafc0,},{r:345,b:20,a:16,c:0xb8c8d6}];
+      const hsh=(i,s)=>{const x=Math.sin(i*127.1+s*311.7)*43758.5453; return x-Math.floor(x);};
+      OWSKYFOLLOW=[skyMesh];
+      RING.forEach((R_,ri)=>{
+        const K=24, N=K*5, v=[];                    // K periodic control points, 5 spans each
+        const crest=[];
+        for(let i=0;i<=N;i++){
+          const c=i/5, c0=Math.floor(c), t=c-c0, sm=t*t*(3-2*t);
+          const lo=hsh(c0%K,ri+1), hi=hsh((c0+1)%K,ri+1);
+          crest.push(R_.b + R_.a*(lo+(hi-lo)*sm) + R_.a*0.22*hsh(i,ri+9));
         }
+        for(let i=0;i<N;i++){
+          const a0=(i/N)*Math.PI*2, a1=((i+1)/N)*Math.PI*2;
+          const x0=Math.cos(a0)*R_.r, z0=Math.sin(a0)*R_.r;
+          const x1=Math.cos(a1)*R_.r, z1=Math.sin(a1)*R_.r;
+          const h0=crest[i], h1=crest[i+1];
+          v.push(x0,-60,z0, x1,-60,z1, x1,h1,z1,
+                 x0,-60,z0, x1,h1,z1, x0,h0,z0);
+        }
+        const g2=new THREE.BufferGeometry();
         g2.setAttribute('position', new THREE.Float32BufferAttribute(v,3));
         g2.computeVertexNormals();
-        const m2=new THREE.MeshBasicMaterial({color:R_.c, side:THREE.DoubleSide, fog:true, toneMapped:false});
-        const ridge=new THREE.Mesh(g2,m2); ridge.name='__owridge'; ridge.renderOrder=-900;
-        scene.add(ridge); SCENEMATS.add(m2); OWSKYMESH.add(ridge);
-      }
+        const m2=new THREE.MeshBasicMaterial({color:R_.c, side:THREE.DoubleSide, fog:false, toneMapped:false});
+        const ridge=new THREE.Mesh(g2,m2); ridge.name='__owridge'+ri; ridge.renderOrder=-900+ri;
+        scene.add(ridge); SCENEMATS.add(m2); OWSKYMESH.add(ridge); OWSKYFOLLOW.push(ridge);
+      });
     } else {
       scene.background=new THREE.Color(0x8a7a6a);
     }
@@ -1783,6 +1857,11 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>SCENEMATS.add(m));
     if(FXRE.test(o.name)){ o.visible=false; return; }          // render-only helpers: nothing at all
     // the map's own rim: with fog + ridges it is a tabletop edge in plain view
+    // The skirt stays hidden. TESTED with the aim up, 2026-08-04, because the pale
+    // grey rectangle the tilt exposed in the gorge (docs/qa/ow-horizon C-gorge, upper
+    // left) looked like a tile edge hanging in mid-air: showing the skirt again
+    // changes NOTHING in that frame, so the rectangle is some other object and the
+    // 2026-08-02 decision stands. Recorded so the next lane does not re-run it.
     if(RT && OWCAM && Q.get('owsky')!=='0' && /^edge_skirt/i.test(o.name)){ o.visible=false; return; }
     const isWalk=/^walk/i.test(o.name);
     o.userData.isWalk=isWalk;
@@ -1937,6 +2016,12 @@ let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null, OWSUN=null, OWBOUNCE=null
 // half of a mesh is a separate lifetime from the material half, and SCENEMATS is
 // only half a teardown.
 const OWSKYMESH=new Set();
+// The dome and the ridge rings are a SKYBOX, so they ride the player in XZ (never
+// in Y — the horizon must stay put as the road climbs). Built at the origin, they
+// used to stay there: the walked corridor is 172 m long inside a 280x200 tile, so
+// at the Dellhollow end the "distant" 205 m ring could be 70 m away and inside the
+// fog, and the far horizon looked different at the two ends of one road.
+let OWSKYFOLLOW=null;
 function sceneDispose(){
   // THE CHARACTER RIG IS PAGE-SCOPE FOR THE SAME REASON AMBIENT AND dl ARE, and
   // pays the same price: it is re-derived from data on the way IN to every scene
@@ -1974,7 +2059,7 @@ function sceneDispose(){
     if(m.geometry) m.geometry.dispose();       // the half that leaked
     if(m.material) disposeMaterial(m.material);
   }
-  OWSKYMESH.clear();
+  OWSKYMESH.clear(); OWSKYFOLLOW=null;
   if(GLBROOT){ scene.remove(GLBROOT); disposeGltf(GLBROOT); GLBROOT=null; }
   for(const m of SCENEMATS) disposeMaterial(m);
   SCENEMATS.clear();
@@ -2040,7 +2125,8 @@ function sgBind(){
 function rtCamReset(){
   if(!window.ORBIT) return;
   window.ORBIT.yaw=(URLYAW!=null?URLYAW:METAYAW!=null?METAYAW:Math.PI*0.25);
-  window.ORBIT.pitch=OWCAM?0.61:0.62; window.ORBIT.dist=OWCAM?40:16;
+  window.ORBIT.pitch=OWCAM?OWPITCH:0.62; window.ORBIT.dist=OWCAM?40:16;
+  window.ORBIT.tilt=OWCAM?OWTILT:0;
   window.ORBIT.panX=window.ORBIT.panY=window.ORBIT.panZ=0;
 }
 // Kick off the whole bundle. The fetches stay PARALLEL and the "either order"
@@ -2227,7 +2313,7 @@ function frame(){requestAnimationFrame(frame);
    else if(l){ setAct(actWalk); if(model) ch.rotation.y=Math.atan2(dx,dz); }
    else setAct(actIdle); }
  if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400);
-     window.ORBIT={yaw:(URLYAW!=null?URLYAW:METAYAW!=null?METAYAW:Math.PI*0.25), pitch:OWCAM?0.61:0.62, dist:OWCAM?40:16, panX:0, panY:0, panZ:0};   // ow: 35deg look-ahead pitch (user-tuned), boom 34->40 2026-07-31 (user: zoom out a little further); meta.json may pin the start yaw
+     window.ORBIT={yaw:(URLYAW!=null?URLYAW:METAYAW!=null?METAYAW:Math.PI*0.25), pitch:OWCAM?OWPITCH:0.62, tilt:OWCAM?OWTILT:0, dist:OWCAM?40:16, panX:0, panY:0, panZ:0};   // ow: 35deg look-ahead pitch (user-tuned), boom 34->40 2026-07-31 (user: zoom out a little further); meta.json may pin the start yaw
      const cv=R.domElement; let drag=null;
      cv.addEventListener('mousedown',e=>{drag={x:e.clientX,y:e.clientY,pan:e.button===2||e.shiftKey};if(drag.pan)e.preventDefault();});
      addEventListener('mouseup',()=>drag=null);
@@ -2258,7 +2344,10 @@ function frame(){requestAnimationFrame(frame);
    cam.position.set(tx+Math.cos(O.yaw)*Math.cos(O.pitch)*O.dist,
                     ty+Math.sin(O.pitch)*O.dist,
                     tz+Math.sin(O.yaw)*Math.cos(O.pitch)*O.dist);
-   cam.lookAt(tx,ty,tz); }
+   cam.lookAt(tx,ty,tz);
+   // AIM UP off the boom axis (see THE OVERWORLD BOOM). rotateX after lookAt, not a
+   // raised look-at point: the boom's own elevation must not move, only where it points.
+   if(O.tilt) cam.rotateX(O.tilt); }
  if(SPRITE) ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);
  // OVERWORLD SUN FOLLOW. The light DIRECTION never changes — OWSUN is a fixed
  // unit vector, so the hour is constant and shadows never swing as you walk.
@@ -2266,6 +2355,7 @@ function frame(){requestAnimationFrame(frame);
  // 115 m instead of 190 and its texels land where the player is looking.
  if(OWSUN){ dl.target.position.set(P.x,P.y,P.z); dl.target.updateMatrixWorld();
    dl.position.set(P.x+OWSUN.x*170, P.y+OWSUN.y*170, P.z+OWSUN.z*170); }
+ if(OWSKYFOLLOW) for(const m of OWSKYFOLLOW) m.position.set(P.x,0,P.z);   // skybox, XZ only
  occCheck();
  syncDepth();
  renderFrame();

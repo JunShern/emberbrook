@@ -1,0 +1,136 @@
+<meta charset="utf-8">
+<title>Overworld — putting a horizon in the frame (2026-08-04)</title>
+<style>
+ body{background:#14110e;color:#e7ddd0;font:15px/1.6 -apple-system,Segoe UI,sans-serif;margin:0 auto;padding:28px 22px 90px;max-width:1180px}
+ h1{font-size:26px;margin:0 0 4px} h2{font-size:19px;margin:38px 0 8px;border-bottom:1px solid #3a332b;padding-bottom:5px}
+ .sub{color:#a8998a;margin:0 0 22px}
+ code{background:#241f19;padding:1px 5px;border-radius:3px;font-size:13px}
+ figure{margin:0 0 18px} figcaption{color:#a8998a;font-size:13px;margin-top:5px}
+ img{width:100%;display:block;border-radius:5px;border:1px solid #3a332b}
+ .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+ table{border-collapse:collapse;width:100%;margin:10px 0 18px;font-size:14px}
+ th,td{border:1px solid #3a332b;padding:6px 9px;text-align:left} th{background:#241f19}
+ .rec{color:#8fd18a;font-weight:600} .bad{color:#e08a72} .warn{color:#e0c072}
+ p,li{max-width:74ch} .note{background:#1d1a15;border-left:3px solid #6d7d95;padding:10px 14px;margin:14px 0}
+</style>
+
+<h1>Overworld — putting a horizon in the frame</h1>
+<p class="sub">2026-08-04 · <code>ow-valley</code>, real-time follow camera · boom distance 40 <strong>unchanged</strong> (user ruling) ·
+lighting as of this capture: the shipped golden-hour rig, <code>owlight</code> default, <strong>no lighting-lane changes included</strong> —
+if the lighting lane has landed since, re-shoot before comparing.</p>
+
+<h2>The finding that decides everything</h2>
+<p>The follow camera is a <strong>42&deg; vertical fov</strong>, so the top edge of the frame sits 21&deg; above the camera's own axis.
+While the camera looks down at the shipped 0.61 rad (35&deg;), the top of the frame is <strong>14&deg; below the horizontal</strong>.
+Nothing above the horizon can be on screen at <em>any</em> aim while the down-angle is &ge; 21&deg;. That is why all four
+<code>ow-*</code> cameras measured zero sky pixels, and why the sky dome, the three ridge rings and the horizon fog
+built on 2026-08-02 had never appeared in a shipped frame: they were never <em>failing</em>, they were off-screen.</p>
+<p>It also caps how far the frame can see: at 22.9&nbsp;m of eye height, a top edge 14&deg; down hits the ground at
+<strong>92&nbsp;m</strong>. Fog runs 34&ndash;205&nbsp;m, so more than half the aerial-perspective range was outside the picture.</p>
+
+<h2>Lowering the boom does not work — it is not a taste call</h2>
+<p>The obvious move is to drop the pitch. It was swept at 0.61 / 0.45 / 0.36 / 0.30 / 0.24 / 0.18 on all four cameras.
+<strong>This rig has no camera collision.</strong> Reducing the pitch swings the boom down and back into whatever is behind
+the player, and in a corridor that runs along a gorge wall and under a canopy that is nearly everything:</p>
+<div class="grid">
+ <figure><img src="plates/A-vista.png"><figcaption>pitch 0.61 — shipped. Clean, and no sky.</figcaption></figure>
+ <figure><img src="sweep/p30-vista.png"><figcaption class="bad">pitch 0.30 — the camera is <strong>inside the gorge wall</strong>, rendering its backfaces.</figcaption></figure>
+ <figure><img src="sweep/p36-vista.png"><figcaption class="bad">pitch 0.36 — inside the grass carpet.</figcaption></figure>
+ <figure><img src="sweep/p45-gorge.png"><figcaption class="bad">pitch 0.45 — inside the cliff and the tree crowns.</figcaption></figure>
+</div>
+<p>An earlier lane already measured that at boom 40 the shipped camera is <em>inside the canopy</em> for road stations
+78&ndash;172. Every degree taken off the pitch makes that worse. <strong>Pitch stays at 0.61.</strong></p>
+
+<h2>What does work: aim the camera up, leave the boom where it is</h2>
+<p>The references are not low cameras — they are high cameras that still see a distance plane. So the boom's
+<em>elevation</em> and the camera's <em>aim</em> are now two numbers. <code>ORBIT.tilt</code> rotates the camera up about its own X
+after the look-at; <strong>the camera does not move at all</strong>, so no new occluder can enter and there is nothing to
+re-verify about the walk. The horizon comes down into frame and the player comes down with it.</p>
+<table>
+ <tr><th>candidate</th><th>pitch</th><th>tilt</th><th>eye height</th><th>ground reach at frame top</th><th>player, % down frame</th><th></th></tr>
+ <tr><td>A</td><td>0.61</td><td>0.00</td><td>22.9 m</td><td>92 m</td><td>50%</td><td>shipped, baseline</td></tr>
+ <tr><td>B</td><td>0.61</td><td>0.14</td><td>22.9 m</td><td>~215 m</td><td>66%</td><td>a distance plane, barely any sky</td></tr>
+ <tr class="rec"><td>C</td><td>0.61</td><td>0.22</td><td>22.9 m</td><td>horizon in frame</td><td>79%</td><td>RECOMMENDED</td></tr>
+ <tr><td>D</td><td>0.61</td><td>0.30</td><td>22.9 m</td><td>horizon + sky band</td><td>90%</td><td>best landscape, player nearly cropped</td></tr>
+</table>
+
+<h2>The four candidates, same four viewpoints</h2>
+<p>Viewpoints are <code>tools/ow_probe/land_cams.json</code>: <b>gate</b> (Emberbrook portal, boom 16), <b>meadow</b> (road verge, boom 12),
+<b>vista</b> (the same spot at the shipped boom 40), <b>gorge</b> (the Dellhollow approach, boom 40).</p>
+
+<h3>vista — the shipped follow camera</h3>
+<div class="grid">
+ <figure><img src="plates/A-vista.png"><figcaption>A · tilt 0.00 — shipped</figcaption></figure>
+ <figure><img src="plates/B-vista.png"><figcaption>B · tilt 0.14</figcaption></figure>
+ <figure><img src="plates/C-vista.png"><figcaption class="rec">C · tilt 0.22 — recommended</figcaption></figure>
+ <figure><img src="plates/D-vista.png"><figcaption>D · tilt 0.30</figcaption></figure>
+</div>
+
+<h3>gorge — the Dellhollow approach</h3>
+<div class="grid">
+ <figure><img src="plates/A-gorge.png"><figcaption>A · tilt 0.00</figcaption></figure>
+ <figure><img src="plates/B-gorge.png"><figcaption>B · tilt 0.14</figcaption></figure>
+ <figure><img src="plates/C-gorge.png"><figcaption class="rec">C · tilt 0.22</figcaption></figure>
+ <figure><img src="plates/D-gorge.png"><figcaption>D · tilt 0.30</figcaption></figure>
+</div>
+
+<h3>gate — the Emberbrook portal, boom 16</h3>
+<div class="grid">
+ <figure><img src="plates/A-gate.png"><figcaption>A · tilt 0.00</figcaption></figure>
+ <figure><img src="plates/C-gate.png"><figcaption class="rec">C · tilt 0.22</figcaption></figure>
+ <figure><img src="plates/B-gate.png"><figcaption>B · tilt 0.14</figcaption></figure>
+ <figure><img src="plates/D-gate.png"><figcaption class="bad">D · tilt 0.30 — <strong>the player is cropped by the bottom edge.</strong> This is what rules D out.</figcaption></figure>
+</div>
+
+<h3>meadow — the road verge, boom 12</h3>
+<div class="grid">
+ <figure><img src="plates/A-meadow.png"><figcaption>A · tilt 0.00</figcaption></figure>
+ <figure><img src="plates/C-meadow.png"><figcaption class="rec">C · tilt 0.22</figcaption></figure>
+ <figure><img src="plates/B-meadow.png"><figcaption>B · tilt 0.14</figcaption></figure>
+ <figure><img src="plates/D-meadow.png"><figcaption>D · tilt 0.30</figcaption></figure>
+</div>
+
+<h2>What the tilt exposed, and what was done about it</h2>
+<div class="note"><strong>Every one of these was invisible until the aim came up.</strong> Finding them is the point;
+they are the cost the critic warned about, and most of the night went here rather than into the camera move.</div>
+<table>
+ <tr><th>exposed</th><th>status</th><th>what it was</th></tr>
+ <tr><td>Three ridge rings rendering as <strong>one flat near-white value</strong></td><td class="rec">FIXED</td>
+     <td>They sat at 210/270/320 m with <code>fog:true</code> and <code>fog.far = 205</code>: every ring was clamped to
+     exactly the fog colour, so the authored 0x6e7f96&rarr;0xb4c5d2 recession — the entire reason for having three
+     rings — was computed and thrown away. They are painted constants like the dome; they now take
+     <code>fog:false</code>. Four rings now, and the layering is the single biggest gain in these frames.</td></tr>
+ <tr><td>Ridges reading as <strong>paper tents</strong></td><td class="rec">FIXED</td>
+     <td>13/11/9 segments around a full circle is one triangle every 27&deg; — a 98 m wide isoceles tent at r=210.
+     Rebuilt as a continuous crest strip: 120 spans of a smoothed periodic noise line, so the silhouette has
+     shoulders and saddles.</td></tr>
+ <tr><td>The horizon <strong>looked different at the two ends of one road</strong></td><td class="rec">FIXED</td>
+     <td>Dome and rings were built at the origin and stayed there, while the walked corridor is 172 m long: at the
+     Dellhollow end the "distant" 205 m ring could be 70 m away. They now ride the player in XZ (never in Y).</td></tr>
+ <tr><td>First rebuild of the rings <strong>covered the sky</strong></td><td class="rec">FIXED</td>
+     <td>Recorded because it is the trap: crests of 40&ndash;88 m are plausible mountains, and every one of them stood
+     above the eye — so the nearest and darkest ring covered the sky and the three paler rings behind it. The eye
+     rides at y~37 (gorge) to y~50 (bench); crests near 30 m sit under it, which is what makes them recede.</td></tr>
+ <tr><td>A pale grey rectangle, upper left of <b>gorge</b></td><td class="warn">NOT FIXED — identified only as "not the skirt"</td>
+     <td>It moves down the frame as the tilt increases, so it is world geometry, not an overlay. The obvious
+     suspect was the <code>edge_skirt</code>, hidden since 2026-08-02 on the argument that "fog now does its job" — a
+     decision taken when the tile edge was 14&deg; off screen. <strong>Tested: showing the skirt again changes nothing
+     in that frame</strong>, so it is some other object and the 2026-08-02 decision stands. Needs a picker to name it.</td></tr>
+ <tr><td>Far terrain going <strong>milky</strong>, and the tile edge visible as a hard silhouette with grass cards on it</td>
+     <td class="warn">NOT FIXED — ran out of night</td>
+     <td>Most visible top-right of <b>gorge</b>. Fog 34/205 was tuned against a frame that ended at 92 m; the far half
+     of its range has never been looked at. This is the next thing to sweep and it belongs with the fog, not the camera.</td></tr>
+</table>
+
+<h2>Does the player still read where the road goes?</h2>
+<p>That is the user's actual requirement and it is the test C has to pass rather than the prettiest horizon.
+It gets <em>better</em>, not worse: tilting up trades ground <em>behind</em> the player for ground <em>ahead</em>.
+At A the frame stops 92 m out; at C the whole of the Emberbrook bench, the road up to the gate, the gorge and the
+river are all in one frame. Field of view is untouched — same 42&deg;, same boom 40, character the same size on
+screen as before (pitch and fov are what set that, and neither moved).</p>
+
+<h2>Reproduce</h2>
+<p><code>/play3d.html?scene=ow-valley&amp;rt=1&amp;owtilt=0.22</code> — and <code>&amp;owtilt=0</code> is exactly the frame that shipped
+before this change. <code>&amp;owpitch=</code> overrides the boom elevation for anyone who wants to re-run the sweep.
+Plates: <code>node tools/_gate_shots.mjs --shots &lt;spec&gt; --port 3000</code> over
+<code>tools/ow_probe/land_cams.json</code>.</p>
