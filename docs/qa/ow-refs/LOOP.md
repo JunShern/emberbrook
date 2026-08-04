@@ -1427,3 +1427,105 @@ post pass runs — Lstd .049 vs mid-ground .076, every face normal within ~2° o
 nothing casting on it, 7/600 samples hitting vegetation. *"A hue or saturation move will not
 land."* Routed to round 14 as CONTENT rather than faked in the grade, which is the right call and
 the kind of refusal this loop needs more of.
+
+---
+
+## Round 14 — CONTENT lane, SECOND PASS (append-only; the coordinator owns the round-14 heading above)
+
+Continuing `13cd671`, which landed the roof/wall **value** ratio (1.14 → 0.82 against the
+reference's 0.83) and did not land the roof's **chroma** (HSV sat 0.076 against 0.446).
+Instruments: `tools/ow_probe/matclass.py` (the picture), `tools/ow_probe/glb_albedo.py`
+(the artifact), `tools/ow_probe/framespread.py` (the frame's hue histogram). Plates
+`scratchpad/r14-content2/p1-*.png`, four canonical viewpoints, `ow_multi.mjs`, no `--extra`.
+
+### THE WARM KEY CANCELS A COOL ALBEDO, and the factor is 2.4x, not 1.7x
+
+`13cd671` recorded "per-channel irradiance on a roof runs 7.36 / 5.65 / 4.34 … a 1.7x warm
+light cancels most of a cool albedo." **The finding is right and the number was stale** — it
+was read before that commit's own second push of `ROOF_HEX`. Re-measured on the shipped
+bundle, per channel, as *(display-linear roof pixels) / (effective albedo out of the GLB)*:
+
+| | R | G | B | R/B |
+|---|---|---|---|---|
+| `ow_f2_tiles` eff albedo, shipped GLB (`glb_albedo.py`) | .0107 | .0177 | .0306 | 0.35 |
+| roof declared box, meadow plate, display-linear (`matclass.py`) | .0969 | .0987 | .1141 | 0.85 |
+| **transfer D/a** | **9.06** | **5.58** | **3.73** | **2.43** |
+
+So an albedo authored 2.9x blue-over-red arrives on screen 1.2x **red**-over-blue. That is the
+whole reason a cool neutral is not the cool sector, and it means the palette entry has to be
+pushed far further blue in LINEAR terms than the on-screen target looks: `ROOF_HEX`
+`374c81 → 2d4db1`, solved backwards through that transfer at held frame value.
+
+The transfer is a **local** linearisation and must be re-measured every time the albedo moves
+far. A two-point fit across the r13 and r14 bundles returns a *negative* blue transfer — not a
+physical impossibility but proof the chain is not a per-channel gain: the grade's warm-family
+selector (`wp`, gated on the pixel's own `wrm`) fired on r13's terracotta roof and does not
+fire on a cool one, so the two bundles were not graded by the same function.
+
+### R-B AND HSV SATURATION ARE THE SAME NUMBER, so this round's two targets are one target
+
+For a blue-grey (B the max channel, R the min), `R-B ≡ -sat × max`. Checked to three places on
+both frames: reference roof .446 × .344 = .154 against a measured R-B of −.153; ours
+.076 × .372 = .0283 against −.0280. It is an identity, not a fit. Therefore
+
+    roof-wall warm-cool  =  -(sat_roof × max_roof)  -  (R-B)_wall
+
+and **with the wall held, raising roof chroma can only drive warm-cool further negative.** The
+brief's prediction was that the two would relax together; they cannot. The reference reaches
+−0.076 *at* sat 0.457 only because **its wall is cool too** (R-B −0.082, hue 223 — a stone
+windmill, not plaster). Ours is a warm tan at +0.231. Closing warm-cool from the roof is
+arithmetically impossible; closing it at all needs the wall at R-B −0.095, i.e. a cool grey
+village. **That is an art-direction call, not a knob**, and it is left open.
+
+### THE CLASSIFIER WAS DELETING THE CLASS IT MEASURES
+
+`matclass.py`'s water exclusion — loosened in `13cd671` to `b max & chroma > 0.20` because
+r13's version deleted the *reference's* slate — did the same thing to **our** slate the moment
+the slate became slate. On the 2d4db1 plate it took **36% of the roof boxes' pixels**, and it
+took the bluest ones:
+
+| roof declared box, meadow | pixels | HSV sat | R-B |
+|---|---|---|---|
+| 374c81 plate, rule ON (as reported in `13cd671`) | 58 753 | 0.076 | −.028 |
+| 374c81 plate, rule OFF | 62 893 | **0.114** | −.044 |
+| 2d4db1 plate, rule ON | 40 450 | 0.165 | −.067 |
+| 2d4db1 plate, rule OFF | 63 223 | **0.309** | −.149 |
+
+So `13cd671`'s "5.9x under the reference" was partly the instrument. Fixed on the **axis, not
+the threshold**: our river is CYAN (g sits on top of b), slate is BLUE (g near r). `cy =
+(g−r)/(b−r)` measures where g falls on the r→b span — our river 1.02, the reference's river
+0.68, our roof 0.24, the reference's slate 0.26, the reference's stone tower 0.27. The rule now
+also requires `cy > 0.55`. The reference's own numbers move slightly and in the same direction
+(roof sat .446 → **.457**, warm-cool −.071 → **−.076**, value ratio .826 → **.823**): it was
+being biased too, by 13% of its roof box. **A classifier that deletes the class it is measuring
+reports the absence it caused** — the same shape as walk_engine_gate and `_court_probe`.
+
+### Measured, meadow plate, before → after (all on the FIXED classifier)
+
+| | before (`13cd671`) | after (`2d4db1`) | reference |
+|---|---|---|---|
+| roof HSV saturation | 0.114 | **0.309** | 0.457 |
+| roof absolute chroma (max−min) | 0.044 | **0.149** | 0.154 |
+| roof-wall warm-cool | −0.276 | **−0.375** | −0.076 |
+| roof/wall value ratio | 0.839 | 0.852 | 0.823 |
+| framespread circular R | 0.638 | **0.363** | 0.493 |
+| framespread CB 210-240 share | 9% | **24%** | 21% |
+| framespread sectors ≥8% | 4 | 4 | 4 |
+
+**The roof-saturation gap is 0.309 against 0.457 and it is OPEN — but it is now a VALUE gap,
+not a chroma gap.** Absolute chroma is matched (0.149 against 0.154). Saturation is
+`chroma / max`, and our roof sits at max 0.480 where the reference's sits at 0.344: our whole
+built palette renders about 1.5x brighter than the reference's (wall L 0.423 against 0.280).
+Bringing sat to 0.457 at matched chroma would mean darkening the roof ~30% — which moves the
+value ratio this round is forbidden to touch, and to keep the ratio the wall would have to
+darken with it. **The residue is an exposure question for the pipeline lane, not an albedo
+question for this one.** Recorded here so the next round does not spend another pass pushing a
+palette entry at it.
+
+Frame hue spread has now gone slightly PAST the reference (circular R 0.363 against 0.493) and
+the reason is the same warm wall: we carry a loud warm sector (R 0-30 at 29%) *and* a loud cool
+one (CB at 24%), where the reference carries green-dominant with a cool second and only 8% warm.
+
+Gates: `walk_engine_gate ow-valley` GREEN (0 lost cells, BVH 0 FAIL), `slice_test` 848/0,
+`valley_verify` OK. The change is vertex-colour/palette only — no triangle, material or object
+moved.

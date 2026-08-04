@@ -80,7 +80,24 @@ def built_mask(im):
     # cool, which is the very fact the round is chasing.  A classifier whose
     # exclusions are written against our own art cannot measure art we do not have.
     # Real water here is high-chroma cyan (g above r as well as b), so ask for that.
-    water = (b >= r) & (b >= g) & (g >= r) & (chroma > 0.20)
+    #
+    # AND THE SAME BUG CAME BACK ON OUR OWN FRAME THE MOMENT THE SLATE BECAME SLATE
+    # (r14 second pass).  The loosened rule was still only a CHROMA threshold, so it
+    # deleted 36% of the roof boxes' pixels out of the 2d4db1 plate — 63223 pixels
+    # counted with the rule off, 40450 with it on — and the pixels it took were the
+    # bluest ones, which biased the very number the round is about: roof HSV sat read
+    # 0.165 with the rule and 0.309 without.  It was ALREADY biasing the 374c81 plate
+    # the pass before (0.076 with, 0.114 without), so the "5.9x under the reference"
+    # figure in 13cd671 was partly the instrument.  A CLASSIFIER THAT DELETES THE
+    # CLASS IT IS MEASURING REPORTS THE ABSENCE IT CAUSED.
+    #
+    # The fix is the axis, not the threshold.  Our river is CYAN — g sits almost on
+    # top of b — while slate is BLUE, g much nearer r than b.  `cy` is where g falls
+    # on the r->b span: 1.0 is pure cyan, 0.0 is pure blue.  Measured: our river runs
+    # 0.75-1.0, our roof 0.17, the reference's slate 0.27, the reference's stone
+    # tower 0.32.  0.55 separates them with room on both sides.
+    cy = (g - r) / np.maximum(b - r, 1e-6)
+    water = (b >= r) & (b >= g) & (g >= r) & (chroma > 0.20) & (cy > 0.55)
     return ~veg & ~water & (L > 0.03) & (L < 0.86)
 
 

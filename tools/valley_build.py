@@ -145,7 +145,83 @@ CHIM_GATE = []
 # light cancels most of a cool albedo.  Pushed on the SAME held-luminance discipline
 # r13 wrote down (eff L709 .0171 against .0176, inside a percent) so this is a
 # chroma move and not a second value move.
-ROOF_HEX = "374c81"
+#
+# =============================================================================
+# R14 SECOND PASS — THE SECTOR WAS BOUGHT WITH HUE DISTANCE, NOT WITH CHROMA
+# =============================================================================
+# 374c81 landed the value (roof/wall 0.82 against the reference's 0.83) and that
+# stands.  What it did NOT land is the roof's own chroma: HSV sat 0.076 against the
+# reference slate's 0.446, 5.9x under, while the roof-wall warm-cool ran to -0.26
+# against the reference's -0.07, 3.7x over.  THOSE ARE ONE NUMBER, NOT TWO, and
+# this is the arithmetic the last pass did not write down:
+#
+#   for a blue-grey (B is the max channel, R the min)   R-B  ==  -sat x max
+#
+# Checked on both frames to three places: reference roof sat .446 x max .344 =
+# .154 against a measured R-B of -.153; our roof .076 x .372 = .0283 against
+# -.0280.  It is an identity, not a fit.  So
+#
+#   roof-wall warm-cool  =  -(sat_roof x max_roof)  -  (R-B)_wall
+#
+# and with the wall held where it is (R-B +0.231, a warm tan), RAISING ROOF CHROMA
+# CAN ONLY DRIVE THE WARM-COOL NUMBER FURTHER NEGATIVE.  They do not move
+# together; they move apart, by construction.  The reference reaches -0.071 AT sat
+# 0.446 because ITS wall is cool too (R-B -0.082, hue 223, sat 0.242 — a stone
+# windmill, not plaster).  -0.07 is therefore not an axis this class can be steered
+# along at all: it is a joint statement about wall AND roof, and closing it from
+# the roof alone is impossible.  Solving it from the wall instead would need our
+# wall at R-B -0.095, i.e. a COOL GREY VILLAGE.  That is an art-direction call and
+# is left to the user; the gap is named below, not quietly closed.
+#
+# SO THIS PASS BUYS CHROMA AND SPENDS WARM-COOL, DELIBERATELY, and the previous
+# pass's own diagnosis is why it is affordable: the key is warm, so the measured
+# per-channel transfer on the roof box (display-linear / eff albedo out of the
+# shipped GLB, tools/ow_probe/glb_albedo.py + tools/ow_probe/matclass.py) runs
+#
+#   9.06 / 5.58 / 3.73   —  R/B 2.43x
+#
+# NOT the 7.36/5.65/4.34 the last pass recorded (that number was read before its
+# own second push; re-measured here on the shipped bundle it is 2.4x, not 1.7x).
+# A cool albedo is cancelled harder than anyone thought, so the albedo has to go
+# much further blue in LINEAR terms than the on-screen target looks.  Solved
+# backwards through that transfer for the reference's own roof channel GEOMETRY at
+# our own held frame value (L709 0.348, so the landed 0.82 value ratio does not
+# move): target display 0.287 0.351 0.516, eff albedo .00738 .01815 .06137.
+#
+# PREDICTION, WRITTEN BEFORE THE BUILD (the brief's prediction was that chroma and
+# warm-cool would move TOGETHER; the identity above says they cannot, and this is
+# the falsifiable form):
+#   * roof HSV sat 0.076 -> 0.30..0.44, SHORT of the 0.444 the proportional solve
+#     says, because the transfer is not purely multiplicative — a two-point fit
+#     across the r13 and r14 bundles puts ~25% of the roof box's luminance in an
+#     albedo-independent floor (haze, lift, and non-tile pixels inside the box),
+#     and a floor dilutes a chroma move;
+#   * roof-wall warm-cool -0.26 -> WORSE, about -0.35..-0.46, never better;
+#   * framespread stays at 4 sectors and circular R drops below 0.638.
+# If the warm-cool number IMPROVES, the identity is wrong and everything above it
+# is wrong with it.
+#
+# MEASURED, AFTER THE BUILD (meadow plate; and see docs/qa/ow-refs/LOOP.md).  The
+# classifier itself had to be fixed first — its water exclusion was deleting 36% of
+# the roof boxes' pixels, the bluest ones, the moment the slate became slate, so the
+# 0.076 above was partly the instrument.  ON THE FIXED CLASSIFIER, before -> after,
+# reference in brackets:
+#
+#   roof HSV saturation      0.114 -> 0.309   [0.457]
+#   roof absolute chroma     0.044 -> 0.149   [0.154]   <- MATCHED
+#   roof-wall warm-cool     -0.276 -> -0.375  [-0.076]  <- moved APART, as predicted
+#   roof/wall value ratio    0.839 -> 0.852   [0.823]   <- the landed number held
+#   frame circular R         0.638 -> 0.363   [0.493]
+#   frame CB 210-240 share      9% -> 24%     [21%]
+#
+# THE SATURATION GAP IS OPEN AND IT IS A VALUE GAP, NOT A CHROMA GAP.  sat is
+# chroma/max; our roof's max is 0.480 where the reference's is 0.344, because our
+# whole built palette renders ~1.5x brighter than theirs (wall L 0.423 vs 0.280).
+# The absolute chroma is already theirs.  Closing the rest means darkening the roof
+# ~30%, which moves the value ratio this pass is forbidden to touch — an exposure
+# question for the pipeline lane, not an albedo question for this one.  DO NOT
+# spend another pass pushing this palette entry at it.
+ROOF_HEX = "2d4db1"
 B.PAL[STYLE][ROOF] = ROOF_HEX
 B.PAL_LIN[STYLE][ROOF] = srgb(ROOF_HEX)
 

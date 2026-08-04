@@ -1,5 +1,5 @@
 {
- "build_s": 13.14,
+ "build_s": 14.35,
  "canopy_farwall-crown": {
   "cards": 4711,
   "core_tris": 4570,
@@ -40,7 +40,7 @@
  "emberbrook_tint_families": 5,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.25,
+ "field_s": 0.29,
  "h_range": [
   -6.18,
   50.9
@@ -117,7 +117,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.18,
+ "terrain_s": 0.21,
  "tile": [
   280.0,
   200.0
@@ -142,7 +142,7 @@
  "tributary_falls": 26,
  "tris": 274458,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.51,
+ "veg_s": 3.76,
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "falls": {
@@ -202,5 +202,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.073
+ "zone_s": 0.082
 }
