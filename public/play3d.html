@@ -476,6 +476,8 @@ const PFX={
   gradeVeg: PFXNUM('grade_vb',0.18),
   // vh — the vegetation HUE, see "ALMOST NO HUE VARIATION" in GRADE_SHADER. Swept.
   gradeVegHue: PFXNUM('grade_vh',0.10),
+  // hgate — the haze asks whether the pixel is lit. See THE HAZE HAD TO ASK.
+  gradeHazeGate: PFXNUM('grade_hg',1.0),
   gradeDesat: PFXNUM('grade_d',0.40),
 };
 // THE AERIAL SPLIT (2026-08-03, overworld only, ?grade=0 to remove).
@@ -515,14 +517,14 @@ const GRADE_SHADER={
              dNear:{value:30}, dFar:{value:150}, amt:{value:1}, lift:{value:0.03},
              desat:{value:0.0}, litLo:{value:0.0}, litHi:{value:1.0},
              haze:{value:0.0}, sat:{value:1.0}, dScale:{value:52.0}, dRef:{value:0.0}, toe:{value:0.0},
-             gp:{value:0.0}, wp:{value:0.0}, cp:{value:0.0}, vb:{value:0.0}, vh:{value:0.0},
+             gp:{value:0.0}, wp:{value:0.0}, cp:{value:0.0}, vb:{value:0.0}, vh:{value:0.0}, hgate:{value:0.0},
              hazeCol:{value:new THREE.Vector3(0.127,0.175,0.275)},
              warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
              coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
   vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
   fragmentShader:[
     'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
-    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb,vh;',
+    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb,vh,hgate;',
     'uniform vec3 warmCol,coolCol,hazeCol;',
     'void main(){',
     '  vec4 c=texture2D(tDiffuse,vUv);',
@@ -583,7 +585,35 @@ const GRADE_SHADER={
     // R5 mixed the WHOLE FRAME toward a fog colour and went milky. This rides `t`,
     // which is now exponential and ~0 inside 20 m, so the foreground is untouched
     // by construction. `?grade_h=0` removes it if a later round disagrees.
-    '  o=mix(o, hazeCol, clamp(haze*t*amt,0.0,1.0));',
+    // R13 — AND THE HAZE HAD TO ASK WHETHER THE PIXEL IS LIT, for the same reason the
+    // WARM half did in R6. Two of the thirteenth critic's items turned out to be ONE
+    // knob pulling in OPPOSITE DIRECTIONS, which is why they are fixed together:
+    //
+    //  * "Hard-edged pale flat-shaded triangles at the far-left edge of B, around
+    //    mid-height — looks like a low-poly mesh with a broken normal or a near-white
+    //    material." IT IS NEITHER. A 600-sample raycast census of that corner returns
+    //    `ground_valley_3` (the far crag) at 72-88 m and Dellhollow's own houses — no
+    //    __owridge hits, no sky-dome hits, and `?gbuf=0` leaves it identical, so it is
+    //    not the g-buffer artefact either. It is THIS LINE: with post off that box is
+    //    (26,21,22) at L 0.086 and relative contrast 1.02 — a legible terraced cliff
+    //    with a terracotta roof in it. Shipped it is (58,70,89) at L 0.270 and
+    //    contrast 0.27. THE GRADE LIFTS A DEEP-SHADOW SURFACE 3.13x AND FLATTENS IT 4x,
+    //    because at t 0.84-0.91 this mix replaces half those pixels with the constant
+    //    `hazeCol`, and a lerp toward a MID value lifts a far DARK far harder than a
+    //    far LIGHT. The critic read the result as a broken material, correctly.
+    //  * The meadow's far hillside "still reads flat" — and there the cue must STAY.
+    //    Measured, that hillside is L 0.607 / Lstd 0.038 against mid-ground grass at
+    //    L 0.636 / Lstd 0.081: same luminance, HALF the local contrast. Its own cause
+    //    is upstream and is NOT this pass (with post off it is already 1.5x flatter
+    //    than the mid-ground: every face normal on it lies within ~2 deg of the same
+    //    direction, nothing casts onto it, and 7 of 600 samples hit vegetation).
+    //
+    // So `grade_h` down would have traded one item for the other. Gating the mix on the
+    // pixel's own luminance serves both: the far LIT hillside keeps the whole cue R12
+    // paid for, the far SHADOWED cliff keeps its darkness. This is R11's "a grade has no
+    // local scope" for the third time, and the answer is the same each time — give the
+    // pass a term that knows what it landed on. `?grade_hg=0` restores the flat mix.
+    '  o=mix(o, hazeCol, clamp(haze*t*amt*mix(1.0,smoothstep(0.02,0.20,lum),hgate),0.0,1.0));',
     // R11 — THE GLOBAL CHROMA PULL, the critic's item 3 and the one it said to do
     // BEFORE judging anything else ("A looks over-corrected on warmth and
     // saturation... judge the next pass on whether the greens have come back off
@@ -833,6 +863,7 @@ function pfxBuild(){
     grade.material.uniforms.cp.value=PFX.gradeCyan;
     grade.material.uniforms.vb.value=PFX.gradeVeg;
     grade.material.uniforms.vh.value=PFX.gradeVegHue;
+    grade.material.uniforms.hgate.value=PFX.gradeHazeGate;
     {const hz=(Q.get('grade_hc')||'').split(',');
      if(hz.length===3) grade.material.uniforms.hazeCol.value.set(+hz[0],+hz[1],+hz[2]);}
     const K=PFX.gradeTint, u=grade.material.uniforms;
