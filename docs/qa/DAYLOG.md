@@ -15810,3 +15810,14 @@ ch2.road anchor in ow-valley, where followers do not exist).
       ("spawned clearly after the gate structure"), and it is what the arrival-vs-band
       audit measured 20.6u clear on. The note is corrected in place rather than the
       value changed; moving the arrival is a composition call for the user.
+
+## 2026-08-04 13:50 — findability_test hangs under concurrent gate load (2x today, reproducible signature)
+
+Twice today `node tools/findability_test.mjs` sat at **0% CPU for 28+ and 32+ minutes** (documented
+cost: 0.4 s), both times while a second gate instance was driving the same :3000 server. Both were
+reaped by hand; both owning lanes had already obtained a 69/0 result from another attempt, so no
+verdict was corrupted — but the failure mode is a QUIET one: a lane whose gate hangs will retry or
+skip, and the suite stays green while the gate stops gating. Not diagnosed (the hang leaves no
+error, no output past its banner). Instrument: `ps -Ao pid,etime,%cpu` — the signature is etime in
+minutes with %cpu 0.0 on a tool whose cost is sub-second. Next occurrence deserves a stack sample
+(`sample <pid> 5`) BEFORE the reap; two data points say pattern, a stack says cause.
