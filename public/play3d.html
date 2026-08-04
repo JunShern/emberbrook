@@ -2167,7 +2167,19 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // of merely dark (the el-24 probe's murk was a neutral fill, not a low sun).
       dl.castShadow=true;
       dl.shadow.mapSize.set(2048,2048);
-      dl.shadow.normalBias=0.04; dl.shadow.bias=-0.0003;
+      // normalBias 0.04 -> 0.08 (R8, measured). At 0.112 m/texel the depth-slope
+      // error on GROUND under a 34-degree sun is texel*tan(56) = 0.166 m, and the
+      // slack the two biases bought was 0.12 + 0.04 = 0.16 m — marginally short, so
+      // every open-ground pixel in the corridor was self-shadowing. Measured
+      // key-only A/B on three caster-free grass patches in the meadow frame: 0.04
+      // loses 5.4% of the key everywhere and lays a fine hatch over the whole
+      // ground; 0.08 loses 1.9%. It is a TRADE and 0.08 is where it was stopped:
+      // normalBias erodes real shadows too (it lifts the receiver along its own
+      // normal, so a shadow edge shrinks by nb/tan(34) = 1.5x nb). Character-shadow
+      // area, same A/B: 0.04 1017 px, 0.08 906 (-11%), 0.12 799 (-21%), 0.30 697.
+      // 0.12 and 0.30 buy almost no further acne and cost the small shadows this
+      // scene has few enough of already. See docs/qa/ow-refs/LOOP.md R8.
+      dl.shadow.normalBias=0.08; dl.shadow.bias=-0.0003;
       // THE FRUSTUM FOLLOWS THE PLAYER (see frame()). A world-sized ortho box has
       // to span the map's 172 m half-diagonal, which spends 2048 texels over 380 m
       // = 0.19 m/texel and mushes every cottage shadow into a smudge. Tracking the

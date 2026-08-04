@@ -130,6 +130,7 @@ Findings route **through the coordinator**, never lane to lane.
 | 3 | not judged — BUILT against 1 and 2 | plates `r5-*` | **the sun gets a direction: 1.58–2.40:1 → 3.29–4.33:1 on four viewpoints, and the terminator carries a HUE** | TRIED — MOVED IT |
 | 4 | `r5-*` judged blind | **`r5-meadow` LAST of four**, below the r4 frame it replaced | **"This is a global tint, not a light. Nothing in the frame has a lit side and a shaded side that agree with anything else."** — the ratio said 3.29:1 | the metric moved and the picture did not |
 | 5 | not judged — BUILT against 4 | plates `r6-*`, `docs/qa/ow-refs/r6.html` | **the grade is applied to what the light touches, not to the frame**; the blade carpet stops rendering half of itself black; the Heartlight gets a core and a falloff. Ratio kept and up, 4.96 / 3.38 / 3.87 / 4.19 | TRIED — MOVED IT |
+| 8 | not judged — MEASURED against 4's "no directional light" | plates `r8-*` | **the meadow has the same sun as the gorge, and it is not a lighting defect at all** — a 2.6 m cottage under a 34° sun throws a 3.9 m shadow from a 2.9 m footprint, straight away from the lens | routed to CONTENT; both sun moves REJECTED by eye |
 
 ### Round 4–5: A NUMBER THAT IMPROVES WHILE THE PICTURE WORSENS IS THE WRONG NUMBER
 
@@ -295,3 +296,65 @@ aliased. The composer resolves 4x MSAA in the beauty buffer, but the depth textu
 samples is single-sampled, so an antialiased edge pixel takes a full-far grade and the AA is
 undone. Inherent to depth-driven post; the fog change makes the step small enough that it barely
 reads. Named here so the next round does not spend itself re-finding it.
+
+### R8: "A GOT A COLOUR GRADE AND B GOT A LIGHT" IS TRUE OF THE PICTURE AND FALSE OF THE RIG
+
+Plates `r8-{gate,meadow,vista,gorge}.png`, `r8-meadow-before-after.png`, and the one that
+carries the finding: **`r8-why-meadow-has-no-shadows.png`** — the two frames with every pixel
+whose KEY IS >60% BLOCKED painted magenta. In the gorge the whole shelf is magenta. In the
+meadow not one cottage has magenta on the grass beside it.
+
+Four rounds named "no directional light" as the biggest deficit and a lighting lane spent hours
+raising lit:shadow. **The three obvious suspects were all measured and all three are innocent.**
+
+  * **NOT THE SHADOW FRUSTUM.** Probed in the ENGINE at the meadow camera: every one of the 25
+    meshes within 55 m — `emberbrook_1..5`, `walk_emberbrook_green`, `oldgate_*`,
+    `veg_canopy_whisperwood` — projects **8 of 8 bounding-box corners inside** the ±115 ortho
+    box. Shrinking the box to ±40 and to ±25 adds no shadow anywhere.
+  * **NOT THE CASTER SET.** Every `ow-*` mesh carries `castShadow` and `receiveShadow` live in
+    the scene graph, read off the running page, not the file.
+  * **NOT TEXEL DENSITY.** `mapSize` 4096 (0.056 m/texel) and box ±40 (0.039 m/texel) both
+    add no shadow that 2048/±115 did not already have.
+  * **AND THE KEY ITSELF IS IDENTICAL.** Key-only render, everything else at zero: lit ground
+    reads **0.510 in the meadow and 0.509 in the gorge**. Where an occluder does exist the
+    shadow is DEEP — full-rig lit:shadow on a clean key-blocked mask is 3.83:1 (meadow) and
+    5.15:1 (gorge). Nothing is stopping the light.
+
+**WHAT IT ACTUALLY IS — CASTER ASPECT RATIO AGAINST SUN ELEVATION.** At 34° a shadow is
+1.48× the caster's height. Emberbrook's overworld cottages are ~2.6 m tall and ~2.9 m wide, so
+the shadow (3.9 m) barely outruns the footprint that threw it — and the meadow camera sits
+within **18°** of straight down-sun (shadow XZ (0.527, 0.849) vs view dir (0.231, 0.973)), so
+the remaining metre is behind the cottage. The gorge's caster is a 25 m cliff; its 37 m shadow
+cannot be hidden by anything. **The one object in the meadow frame that casts a shadow you can
+see is the character — the only object in it taller than it is wide.** That is the whole
+difference, and it is a CONTENT fact, not a lighting one.
+
+**TRIED — MADE IT WORSE, and the plates are on disk.** Both are the moves that would give a
+2.6 m box a readable shadow, and both cost the frame that currently works:
+
+  * **Elevation 34° → 28/24/20**, with the key multiplied by sin34/sinE so ground irradiance is
+    conserved exactly. The meadow gains real house shadows and a real terminator. The gorge dies:
+    at 24° the cliff shadow swallows the entire gorge floor and the plateau goes cold grey
+    (`G-el24`). Refused.
+  * **Azimuth 238° → 208/178/148/298** at unchanged elevation. At 178/148 the cottages finally
+    get a lit face and a shaded face and throw shadows sideways where you can see them — and the
+    gorge's shelf shadow, "the single best piece of lighting craft in either frame", **disappears
+    entirely** (`G-az178`, `G-az208`, `G-az298`). Refused. 238° is load-bearing.
+  * **The fill is not the flattener either.** Environment ground-hemisphere 0.55 → 0.20 → 0.08,
+    and `OWBOUNCE` ×0.45 and ×0: the house's lit wall / shaded wall / roof move by **less than
+    0.01 L each**. Measured, not argued.
+
+**THE ONE REAL DEFECT IN THE SHADOW PASS, and it shipped: `normalBias` was 0.04 and needed
+0.08.** At 0.112 m/texel the depth-slope error on ground under a 34° sun is texel·tan(56°) =
+0.166 m; the two biases together bought 0.16 m. Marginally short, so **every open-ground pixel in
+the corridor was self-shadowing** — measured key-only A/B on three caster-free grass patches:
+5.4% of the key lost everywhere, laid down as a fine hatch over the whole meadow floor. 0.08
+takes it to 1.9%. It is a TRADE, stopped where it was because normalBias erodes real shadows too
+(character-shadow area 1017 px → 906 at 0.08, 799 at 0.12, 697 at 0.30): 0.12 and 0.30 buy almost
+no further acne and cost the few small shadows this scene has.
+
+**THE WORK ITEM THIS ROUTES TO CONTENT.** The overworld village is a field of ~2.6 m cubes beside
+a 1.45 u character — a cottage is 1.8× her height where a real one is 2.5–3×. Nothing in the
+lighting rig can make a box that is wider than its own shadow read as a solid. Taller houses,
+a chimney or gable that breaks the silhouette, a fence line, anything with a height-to-width
+ratio above 1, and this sun will draw it. **Do not send another lane at the key.**
