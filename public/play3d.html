@@ -480,7 +480,16 @@ const PFX={
   // the bundle (docs/plans/water-transparency.md); this is the part that lands on the
   // pixel whatever the material does, and it is deliberately small so it cannot be
   // mistaken for that work.
-  gradeCyan: PFXNUM('grade_cp',0.20),
+  // R14 — 0.20 -> 0.06, AND IT IS R13'S OWN LESSON ARRIVING A SECOND TIME ("the second
+  // fix to land on a shared hue owes a re-sweep of the first"). R13 cut the water's
+  // ALBEDO chroma 31% in the bundle AND left this 20% pull on top of it, and the two
+  // stacked past the target in the same shape the roof/wp pair did. Measured on the
+  // meadow's river box against the references' own water: ours sat 0.235 with the pull,
+  // 0.298 without, against ref 3's 0.387. THE RIVER IS NOW THE PALEST THING IN THE FRAME
+  // AND THIS TERM WAS STILL DESATURATING IT. What is left is the token that keeps the
+  // falls and tributaries — which have no bathymetry and still run at a flat
+  // GLASS_OPACITY — from being the loud cyan this term was written for.
+  gradeCyan: PFXNUM('grade_cp',0.06),
   // vb — and the vegetation gets its chroma BACK. This is the term that makes the set
   // per-material rather than just a second global pull: without it, cutting gp and
   // adding wp/cp is still a frame-wide walk-back with a different sign.
