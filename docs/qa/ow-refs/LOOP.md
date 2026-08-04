@@ -950,3 +950,82 @@ they are still pale stone columns read from a near-top-down camera, the fourth r
 sentence is true.
 
 ---
+
+---
+
+## Round 12 — the diagnosis round, and the overshoot it shipped
+
+Three defects, all arithmetic, none of them taste.
+
+**THE PLUM SHADOW WAS A VIOLET FILL, LITERALLY.** The sky-fill was `[0.42, 0.44, 1.00]` — G barely
+above R, B at 2.4x — **which IS a violet**. Any warm albedo in shade came out with R and B up and
+G down; there was never a grade to blame. Neutralised to `[0.68, 0.76, 1.00]` (B/R 2.38 → 1.47)
+and compensated by the exact luminance ratio (`OWENV` 0.60 → 0.376, `OWBOUNCE` 2.60 → 1.734), so
+the hue moves and shade brightness holds. Measured on the gorge road in shadow:
+**(29,23,34) B>R>G, hue 273° plum → (31,28,19) R>G>B, hue 41° warm brown.** The fill was NOT
+deleted; it was a fix for shadows crushing to mud and deleting it would have re-bought that.
+
+**THE DEPTH RAMP WAS ON AND SPANNING NOTHING.** A raycast census of the four frames: they hold
+**40–60 m of depth beyond the character, and the ramp was normalised over 149 m**, so the farthest
+pixel anywhere in any frame only ever reached t 0.32–0.63. `dNear` 6 → 10, `dScale` 60 → 20,
+`dFar` 155 → 60. The near-minus-far saturation delta went **−0.084 (INVERTED — the far hill was
+more saturated than the near canopy) to +0.064 / +0.155**.
+
+**AND `hazeCol` WAS sRGB FED INTO A LINEAR PASS**, landing on screen a stop and a half up — so
+**adding haze made distance WHITER instead of bluer**. That was B's lavender wash:
+(187,193,212) → (154,164,174), now sitting correctly beside the ridge band at (128,147,168).
+
+**Named-broken: three real, two misreads** — and the misreads cost nothing because they were
+checked before anything was built. The chimney/roof intersection is real (r11's collar was at the
+EAVE; the stack crosses at the RIDGE). The cliff wedges are real and are **GEOMETRY, NOT SHADOW
+ACNE** — unchanged with the shadow map off, so no bias fix exists for them. The gorge shadow
+boundary is real with an offscreen caster. The meadow blotch is a genuine cast shadow. The grey
+sliver is `ground_valley_3` at 50.7 m, correctly drawn. The window pane was **literally floating
+0.07–0.15 u off the wall** — r11's chimney arithmetic in the line below it.
+
+Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 · `findability_test` 69/0 ·
+`walk_engine_gate ow-valley` GREEN (0 lost, 418.2 m2). Tris 268 546 → 272 102.
+
+### THE RANK DID NOT MOVE, FOR THE THIRD ROUND: D > C > B > A
+
+**And two of the round's own fixes are why.**
+
+**THE SHADOW HUE OSCILLATED PAST THE TARGET.** r11 was violet at 273°; this round landed warm
+brown at 41°; the critic wants **cool blue**, and points at the references to say what that means:
+*"shadowed grass swings distinctly blue-green and shadowed rock goes violet"*, while ours is *"a
+muddy grey-olive… nothing inside it is cooler in hue than the lit grass beside it, which is what
+makes the whole frame read as unbounced spotlight rather than golden hour."* **Twice guessed,
+twice missed, in opposite directions.** Violet was wrong because it was magenta-leaning with G
+suppressed — not because it was cool. A golden-hour shadow is lit BY THE SKY and belongs near
+200–230°. Round 13's instruction is therefore to **measure the references' own shadow hue first
+and target that number**, because an axis that has been guessed twice is an axis that has earned
+an instrument.
+
+**AND THE SATURATION PULL WAS THE WRONG INSTRUMENT.** The critic's diagnosis is the sharpest
+sentence the loop has produced:
+
+> *"The grass is a dull uniform olive with almost no hue variation, while the roofs stay a strong
+> terracotta and the river stays a strong cyan — that is the signature of a **global** saturation
+> walk-back applied where a **per-material** one was needed. It killed the vegetation and left the
+> two hero hues untouched, so the frame is **two loud colours on a dead field**."*
+
+A global grade cannot pull one material and lift another; reaching for it means every future
+correction lands on everything. That is the same shape as the round-11 note that *a grade has no
+local scope* — recorded then as a caution, now as a measured cost.
+
+**Carried, and now third-round items.** The stone columns still read as *"separate objects leaned
+against the houses"* — with grass visible in the gap at the base, a flat cap terminating in mid-air
+beside the roofline, and one column standing on bare grass while its house sits on a gravel pad.
+Two rounds of partial fixes (the eave collar, the ridge crossing) have not landed it. **Three
+rounds of patching one object is the signal to reconsider the massing rather than patch again** —
+a missing chimney is invisible; a detached one is the first thing the eye finds.
+
+**New this round:** the river is *"opaque flat cyan… the most saturated thing in the frame and the
+least believable material in either frame"* (this repo already ratified a water treatment in
+`docs/plans/water-transparency.md` — apply what Dellhollow earned, do not invent a second water);
+and in B the player character reads as *"a pale untextured sliver… a missing material, not a
+design"*, which if real is a GAME bug and outranks the art list.
+
+**What the critic will not let us tell ourselves:** *"Both A and B are short of C and D, and it is
+not a content gap: it is atmosphere, shadow colour, and vegetation. The cliff in B proves the
+hard-surface craft is already there."*
