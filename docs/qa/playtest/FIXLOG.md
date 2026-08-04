@@ -1732,9 +1732,36 @@ And the soft-lock this would have become if the flags were orphaned did not exis
 filed.** That run is the round's real result: the spine holds under a model that is only
 allowed one screen and one keyboard.
 
+### A SECOND HARNESS BUG, and it explains four rounds of the log
+
+Round 9's `--from=ch2.maren` run ended at **step 1 with zero model calls**:
+`== FINISH LINE: ch1.sendoff fired at step 1`. **`--from` builds state by firing every beat up
+to the checkpoint**, so the stop beat was already in the ledger before the player moved, and
+`episode.mjs` read the setup's own work as the player reaching the end.
+
+Beats are `once:true`, so a pre-set stop beat can never honestly fire again. The guard now banks
+the checkpoint's beats on the first observed frame and **disables** a finish line found inside
+them, so the run plays its steps out instead. Verified: the same command now prints
+*"finish line 'ch1.sendoff' was already set by the checkpoint — DISABLED"* and proceeds.
+
+**This is why this log has carried "`ch2.maren` and everything after it have still never been
+played" for four consecutive rounds.** Not because nobody tried — because **every `--from` past
+`ch1.sendoff` ended instantly and reported success.** A stop condition that a setup step can
+satisfy does not measure the game, and it fails in the one direction nobody audits: it looks
+like a pass.
+
+### 🚨 BLOCKER, carried into round 10 — THE GEMINI CREDITS ARE DEPLETED AGAIN
+
+The fixed run got exactly one step further and then:
+`HTTP 429 … "Your prepayment credits are depleted"`. `llm_playtester`, `nav_eval` and
+`scene_redteam` are all down again. **The playtest loop cannot run at all until the account is
+topped up at https://ai.studio/projects.** Every no-model instrument still works, and the two
+harness fixes above were made and verified on them — but the loop itself is stopped, and this is
+the second time in one night.
+
 ### Carried into round 10
 
-Unchanged from round 8, except that the credit blocker is **cleared**: `ch2.maren` onward
-still never played (round 9 is running `--from=ch2.maren`); three Dellhollow interiors still
-empty; a shop still never entered; Dellhollow's 40 silent cuts still a design call for the
-user; `play3d` still has no `resize` handler.
+`ch2.maren` onward **still never played** — the harness bug that prevented it is fixed, so the
+single cheapest thing to do the moment credit returns is re-run `--from=ch2.maren`. Three
+Dellhollow interiors still empty; a shop still never entered; Dellhollow's 40 silent cuts still
+a design call for the user; `play3d` still has no `resize` handler.

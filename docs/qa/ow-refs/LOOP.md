@@ -527,3 +527,62 @@ sides) · `valley_verify` OK. Tris 267 122 → 268 546.
 than it was — the raised environment fill lands on everything, and that frame has the most sky-lit
 open ground of the four. It is the price of the fill being visible at all, and it is why
 `owenv`/`owbounce` are still knobs.
+
+---
+
+## Round 10 — the critic's verdict, and the question it was asked
+
+Ten rounds in, the blind critic was given `r10-meadow` (A) and `r10-gorge` (B) against the two
+references (C, D) and asked the question the loop exists to answer: **how big is the gap really,
+and is what remains cheap or expensive?**
+
+**Ranking: C ≈ D > B > A.**
+
+> **"B is close. A is not, and A's remaining problem is craft, not budget."**
+
+> **"Do not tell yourselves A's problem is asset budget. A's problem is that the frame has no
+> value structure, no atmospheric recession, an over-saturated palette, an inconsistent key
+> light, and one element (the fire) that is unfinished. Every one of those is free. You could
+> add zero new assets to A and it would improve more than any asset pass would deliver."**
+
+On B it is genuinely complimentary — the warm-lit/cool-shadow split on the cliff is called
+**reference-grade**, the composition **more ambitious than either reference**, and the gap
+**"largely a side-by-side gap"**: *"a player passing through B would register 'big flat rock
+wall' rather than 'bad art'."* Asked whether a player would notice unprompted: **"A: yes,
+immediately, and not in side-by-side. B: mostly no."**
+
+**THE SINGLE LARGEST REMAINING CRAFT GAP, in its words:** *"value and chroma compression across
+depth. In both A and B, near and far sit at the same contrast and the same saturation. C and D
+both push distance toward low-contrast blue and hold their darkest darks in the foreground. This
+single property is doing more work in the references than any texture or model in them, and
+neither project frame has it."*
+
+### The regression this round shipped, and how it got past me
+
+The critic's warning: *"A looks over-corrected on warmth and saturation… the greens have gone
+acid yellow-green. If the last round was a 'push the golden hour' round, it overshot."*
+
+**I had looked at that same frame and reported the greens were back.** Both readings are
+defensible about the pixels and only one is about the bar — I was comparing `r10-meadow` to
+`r9-meadow`, which was orange, and scoring the delta. The critic compared it to the references
+and scored the distance. **A frame that is better than our last frame and still wrong is a frame
+that gets shipped when the comparison is to ourselves.** This is the third time in this loop the
+same substitution has cost a round (the r3 lighting numbers, the reference set, this), and it is
+the reason the critic is kept blind and the reason its verdict outranks mine.
+
+It also supplies the test for the next round, which is deliberately not "does it feel warmer":
+**are the greens off yellow, and is anything in the frame genuinely dark?**
+
+### Standing after ten rounds
+
+The user's instruction was to run at least ten and keep going while the judge is still useful and
+a gap remains. **Both hold, so the loop continues.** The critic's own priority order for the
+cheap list — campfire first (*"the highest impact per unit of work by a wide margin"*), then
+distance haze with a hue target, a 15–20% global chroma pullback with the greens re-targeted off
+yellow, a cool sky-fill so shade keeps chroma and texture, a darker ground plane, AA, a contact
+shadow under the character, and sky dither on B.
+
+Four items it named as broken are being **verified before they are built**, because two of this
+critic's previous "bugs" (the floating building, the casterless shadow) were misreads that cost a
+round each: free-standing chimneys passing the roof ridge, an untextured tan slope, a polygonal
+violet ground region, and flat green discs on the gorge floor.
