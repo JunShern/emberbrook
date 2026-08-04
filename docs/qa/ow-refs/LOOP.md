@@ -1692,3 +1692,128 @@ refused the number, on the builder's own work, unprompted.** That is the standar
 
 Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 · `findability_test` 69/0 ·
 `walk_engine_gate ow-valley` GREEN.
+
+---
+
+## FOLIAGE ROUND 1 — the near-field "grass" was never the carpet, and the sheen was never specular
+
+Plates `f1-{meadow,gate,vista,gorge,closeup}.png`, crops `f1-crops/`. A NEW LOOP: the user
+re-scoped the gauntlet to ONE subject, vegetation, after a foliage-only blind critic ranked
+**r3 above both r14 plates** and wrote the thesis this round is built on:
+
+> *"The references' vegetation is a POPULATION OF INDIVIDUAL CLUMPED PLANTS that breaks every
+> silhouette and every seam, and ours is a SURFACE TREATMENT APPLIED TO TERRAIN — which is why
+> nothing of ours reads as growing anywhere."*
+
+The user's ruling on round 4's reversal: **the MATERIAL was right, the SCALE was wrong.**
+
+### THE OBJECT THE CRITIC WAS JUDGING WAS NOT THE OBJECT WE HAD BEEN TUNING
+
+Before anything was changed, every foliage class was hidden one at a time at the low camera
+(`scratchpad/f1/id-*.png`). **The pale spiked clumps that fill the near field — the ones read
+as "our grass" for four rounds — are `ow_f2_tuft`, 108 744 static triangles in the bundle, and
+they read as AGAVE.** The runtime blade carpet was underneath them the whole time at 173 423
+blades of 0.085–0.235 m — ankle height on a 1.45u character — contributing a fine grain you
+have to be told to look for. Round 6 halved that carpet for reading "enormous" and the halving
+was measured and correct; what nobody checked is that **the object the complaint was about was
+a different mesh.** LOOP.md r14's rule, arriving from the other side: when a metric goes green
+ask which object moved it — and when a critique goes red, ask which object drew it.
+
+### AND THE WET-PLASTIC SHEEN IS NOT SPECULAR, MEASURED BEFORE THE SWEEP
+
+`envMapIntensity = 0` on EVERY foliage material moves the bush box by **0.1/255** and the tuft
+field by **0.4/255**. Every foliage material was already at roughness 0.92–0.95 with metalness
+0. There is no specular term in this frame to turn down. The "wet plastic" read is a PALE,
+NARROW-HUE albedo with a near-black interior under a warm key — so the material work became a
+translucency term, a highlight DESATURATION, and an albedo value→hue remap, and the specular
+knob was left alone. **Eighth disconnected knob in four nights, and the first one caught before
+a lane spent a round sweeping it.**
+
+### WHAT SHIPPED (public/js/ow_detail.js, rewritten)
+
+  * **TUFTS, NOT BLADES.** 3–7 blades per root point inside a 7 cm disc, sharing the tuft's
+    height scale, hue draw and species. A blade placed independently per triangle is an even
+    lawn whatever the density field does, because the eye reads ROOT SPACING.
+  * **THREE BLADE VARIANTS** (short/broad, medium, seed-head) mixed per clump, 0.65–1.35 width
+    jitter, half that on height, full yaw. `hMin/hMax` 0.115/0.335 — knee, not waist, not ankle.
+  * **A BASE-TO-TIP HUE RAMP IN THE VERTEX COLOUR**, deep cool green at the root to warm yellow
+    at the tip, so one clump carries hue variation before any per-instance jitter.
+  * **THE FRINGE IS A DISTANCE FIELD.** Every non-turf surface (road, dock path, water, terrain
+    rock, stone/planks/plaster/tiles/tar, bark, bush cores) is rasterised once into a 0.6 m
+    occupancy grid and chamfer-transformed: 166 560 cells, 70 864 occupied, **33 ms, once**.
+    Density ×2.6 and height ×1.22 inside a 1.3 m band; 30% of the band's tufts are pushed OUT
+    along the field's own gradient so they stand IN the dirt, short, with 2 blades.
+  * **BARE EARTH BY THRESHOLD, NOT BY THINNING.** The clump noise is thresholded at 0.36 — below
+    it the density is zero, not small. A field that only thins still covers everything.
+  * **VEGETATION ON THE DRY SLOPES** (the terrain's second primitive) at 0.48x with an ochre
+    tint, plus a 20% dry share on the turf itself — most of the "references are 15–25% non-green".
+  * **FLOWERS**, three species (white / yellow / pink-lavender) in patches, biased into the
+    fringe band, ~550 heads in the near disc.
+  * **ONE SHARED FOLIAGE SHADER**: leaf translucency hooked INSIDE `lights_fragment_begin` (so
+    it carries the shadow factor — a leaf in shade must not glow), a highlight DESATURATION
+    toward the pixel's own luminance, and an albedo value→hue remap on this lane's materials only.
+
+### THREE DEFECTS THE PLATES FOUND, EACH ONE A RULE
+
+  * **A TUFT MAY NOT BE BORN INSIDE THE THING IT IS FRINGING.** The turf primitive runs UNDER
+    the road ribbon, so every road cell was a grass cell that also scored the maximum fringe
+    multiplier: the first plate had grass growing out of the middle of the path at 3.6x the
+    meadow's density and it read as **straw confetti scattered across the whole path.**
+  * **...AND "OCCUPIED" AND "IMPASSABLE" ARE NOT THE SAME SET.** Refusing a tuft in any occupied
+    cell dropped the closeup from **208 055 blades to 67 095** — `ow_f2_ter_rock` and the bush
+    cores are terrain SLOTS that interleave with turf across most of the meadow. A rock outcrop
+    is something grass grows AGAINST (must fringe) and also BETWEEN (must not refuse). A paved
+    road is neither. Two sets, one grid: `D` for distance, `HD` for refusal.
+  * **A DESATURATOR WIDE ENOUGH TO CATCH EVERY LIT PIXEL IS A CHROMA CUT ON THE FRAME.** The
+    highlight clamp's threshold is in PRE-TONEMAP LINEAR and the first guess was half a crown
+    too low: on the meadow's crown box, saturation **0.326 (term off) → 0.243 at 0.45/1.00 →
+    0.296 at 0.80/1.60**. Round 13's overshoot in miniature, caught in one round.
+
+### A CORRECTION TO THIS ROUND'S OWN MEASUREMENT, worth more than the numbers
+
+The first canopy A/B said my material patch lifted the crown L50 **0.550 → 0.737**. With every
+term I added switched off it was still **0.714**. The cause was not in my code at all: the
+parallel TREE lane re-exported `public/assets/scenes/ow-valley/scene.glb` and regenerated the
+canopy atlas **between my BEFORE capture and my AFTER capture.** My patch accounts for 0.023 of
+that lift, not 0.164. **A BEFORE PLATE IS ONLY A BEFORE PLATE IF THE BUNDLE UNDER IT HAS NOT
+MOVED** — with two lanes on one branch the baseline must be shot from the SAME tree, which is
+what `?owdetail=0` is for and what the shipped f0/f1 pair now uses.
+
+### MEASURED
+
+Near-band saturation, box x 0.35–0.95 / y 0.72–0.98 of frame (clear of the references' HUD);
+r3 in the same box reads **0.651**, which is round 4's overshoot in this box's units:
+
+| | ref 1 | ref 2 | ref 3 | meadow | gate | vista | gorge | closeup |
+|---|---|---|---|---|---|---|---|---|
+| f0 (`?owdetail=0`) | — | — | — | 0.357 | 0.411 | 0.417 | 0.353 | 0.334 |
+| **f1** | **0.428** | **0.598** | **0.333** | **0.421** | **0.443** | **0.444** | **0.383** | **0.368** |
+
+**We are UNDER the references, not over** — the round-4 fear did not materialise, and there is
+headroom left rather than an overshoot to walk back.
+
+Cost, closeup camera: scatter **173 423 blades / 1 040 538 tris / 1 draw → 175 603 blades +
+flowers / 1 186 422 tris / 4 draws** (+14% triangles, +3 calls). Whole scene per render call
+**87 820 tris / 6.73 calls** with the module off → **195 677 / 7.09** with it on. Rebuild 91–113 ms,
+at most every 700 ms and only after the player moves 9 m. Headless rAF is clamped at ~120 in
+both configurations and therefore **cannot** discriminate frame cost; do not quote an fps from it.
+
+Gates: `slice_test` 848/0 · `cine_test` 689/0 · `findability_test` 69/0 · `walk_engine_gate
+ow-valley` **GREEN (0 lost cells, BVH 0 FAIL)**.
+
+### CARRIED, NAMED
+
+  * **ITEM 5, THE BUSHES, IS NOT DONE AND WAS DEFERRED ON PURPOSE.** They are still cards, not
+    hemispherical hulls. `tools/bushlang.py` was being edited by the TREE lane in the same
+    window, and a second lane rebuilding the same builder is how a branch goes red. What they
+    did get is the shared material: the closeup bush box went L50 **0.225 → 0.408** (the
+    near-black core lifted) at saturation **0.406 → 0.464**.
+  * **`ow_f2_tuft` IS DITHERED, NOT FIXED.** The bundle's agave clumps are hashed out over
+    20–66 m and stand beyond it. It is a stopgap for an asset this lane could not rebuild.
+  * **THE FAR FIELD IS TONE, NOT GRAIN.** At boom 40 (vista) the scatter is invisible past
+    ~74 m and the terrain reads smooth. The references carry "directional grain" at that
+    distance and we do not.
+  * **The grass/dry terrain SLOT boundary is a polygon edge** and became visible the moment
+    only one slot had plants on it. Raising the dry slope's density to 0.48x hides it; it is
+    not solved.
+  * Item 6's second tree species and the plateau scale ramp: NOT TRIED, ran out of round.

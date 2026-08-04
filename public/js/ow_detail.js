@@ -1,5 +1,5 @@
-// ow_detail.js — THE OVERWORLD'S NEAR-FIELD GROUND: a blade carpet that follows the
-// camera, and pixel-scale material on the terrain the carpet stands in.
+// ow_detail.js — THE OVERWORLD'S NEAR-FIELD GROUND: a clumped tuft scatter that follows
+// the camera, a fringe band along every seam, and the shared FOLIAGE MATERIAL.
 //
 // WHY IT IS RUNTIME AND NOT IN THE BUNDLE. Both halves are camera-relative. The refs
 // (public/assets/refs/reimagine_ff9_overworld_{1,2,3}.jpg) carry blade geometry from the
@@ -11,22 +11,52 @@
 // falloff can have the shape the refs have (thick at the near edge, thinning with depth)
 // rather than the shape a static scatter can afford.
 //
+// ============================ FOLIAGE ROUND 1 (2026-08-04) ============================
+// The blind foliage critic's thesis, and every change below is one clause of it:
+//   "The references' vegetation is a POPULATION OF INDIVIDUAL CLUMPED PLANTS that breaks
+//    every silhouette and every seam, and ours is a SURFACE TREATMENT APPLIED TO TERRAIN —
+//    which is why nothing of ours reads as growing anywhere."
+//
+// WHAT THE PICTURE SHOWED WHEN THE OBJECTS WERE TURNED OFF ONE AT A TIME (id-*.png,
+// scratchpad/f1). The near-field "grass" the critic was judging IS NOT THIS CARPET. It is
+// `ow_f2_tuft`, 108 744 static triangles in the bundle, and with it hidden the frame loses
+// every pale spiked clump in the meadow: they read as AGAVE, not turf. This carpet was
+// underneath it the whole time at 173 423 blades of 0.085-0.235 m — ankle height on a 1.45u
+// character — and contributed a fine grain you have to be told to look for. Two lessons in
+// one A/B: (a) ASK WHICH OBJECT SUPPLIES THE PIXELS BEFORE TUNING ANYTHING (LOOP.md r14),
+// (b) a carpet sized so it cannot break a silhouette is a texture with extra triangles.
+//
+// AND THE SHEEN WAS NOT THE ENVIRONMENT. Before sweeping the material the wire was checked:
+// envMapIntensity = 0 on EVERY foliage material moves the bush box by 0.1/255 and the tuft
+// field by 0.4/255. The "wet plastic" read is not specular at all — it is a PALE, NARROW-HUE
+// albedo with a near-black interior, lit by a warm key. So the material work here is a
+// translucency term, a highlight DESATURATION clamp, and an albedo value->hue remap; the
+// specular knob was left alone because it was measured and it was not connected to the
+// complaint. (Eighth disconnected knob avoided rather than swept — see LOOP.md r14.)
+//
+// THE SCATTER IS NOW TUFTS, NOT BLADES. A blade placed independently per triangle is an even
+// lawn no matter what the density field does, because the eye reads the ROOT SPACING. Blades
+// are drawn 3-5 to a root point inside a 5-16 cm radius, sharing that tuft's height scale,
+// hue draw and species — which is what makes a clump occlude itself and carry one identity.
+//
+// THE FRINGE IS THE HIGHEST-PAYOFF HALF AND IT IS A DISTANCE FIELD. Every hard seam in the
+// frame (road edge, water line, rock foot, building footing, bush base) is a cell where the
+// grass primitive meets something else. Those are rasterised ONCE into a 0.6 m occupancy
+// grid and chamfer-transformed, so `fringe(x,z)` is a metre distance any placement rule can
+// read. Density multiplies up inside the band, a share of the tufts are pushed OUT along the
+// field's own gradient so they stand IN the dirt, and the seam stops being a line.
+//
 // WHAT IT IS NOT. It is CONTENT — geometry and materials. No fog, no AO, no bloom, no
 // grading, no tone curve: those belong to the post-processing lane and nothing here may
-// touch them (scope seam ratified 2026-08-04, docs/qa/ow-refs/LOOP.md).
+// touch them (scope seam ratified 2026-08-04, docs/qa/ow-refs/LOOP.md). The one edit that
+// sits near that seam is the highlight desaturation, and it is deliberately PER-MATERIAL
+// (foliage only) rather than a curve on the frame.
 //
-// THE "DEAD NO-OP" THAT WASN'T (2026-08-04). The previous lane reported the ground detail
-// material measured as a complete no-op and guessed at three.js's program cache. It is not:
-// Material.customProgramCacheKey() returns onBeforeCompile.toString(), so assigning a new
-// closure DOES change the key and DOES force a rebuild. Proved by patching diffuseColor to
-// flat magenta through the same path — the terrain went magenta on the next frame, and the
-// onBeforeCompile callback fired 3/3. The real defect was in the MEASUREMENT: mean
-// |laplacian| over the frame cannot see a +/-17% multiply at 0.9-3.2 cycles/m, because at
-// this camera those features are 10-30 px across and a 1 px laplacian is nearly blind to
-// them. Pixel-diffing the two plates showed 15% of pixels moving by more than 2/255 — the
-// shader was live the whole time and the instrument said nothing. Hence GRIT: the octave
-// that matters is the one at ~0.1 m, and it is faded out by view depth so it never aliases
-// into stipple at distance.
+// THE TREE LANE OWNS THE CANOPY ALBEDO. tools/foliage_atlas.py and the canopy/leaf textures
+// are not touched here. The SHARED terms (translucency, highlight clamp, roughness) are
+// applied to the canopy too because they are one shader edit by design; the albedo value->hue
+// REMAP is applied only to the materials this lane owns, so the two lanes cannot fight over
+// the same pixels.
 //
 // COLLISION. Every mesh it adds is veg_-prefixed and is only ever scene.add()ed — never
 // pushed into play3d's collide / walkRef / allMeshes, which are built once from the bundle.
@@ -36,8 +66,9 @@
 // window.OWD — the instrument:
 //   OWD.state()          counts, budget, last rebuild ms, current params
 //   OWD.set({...})       any of the tunables below, then rebuilds
-//   OWD.rebuild(force)   place the carpet at the player's current position
-//   OWD.enable(false)    tear the carpet down and unpatch nothing (materials stay patched)
+//   OWD.rebuild(force)   place the scatter at the player's current position
+//   OWD.enable(false)    tear the scatter down (materials stay patched)
+//   OWD.occ()            the fringe field's own census — cells, occupied, ms
 (function () {
   'use strict';
 
@@ -51,101 +82,207 @@
   };
 
   var GROUP = 'veg_owd';
-  var ON = true, MESH = null, IDX = null, SRC = null, LASTMS = 0, LASTAT = null, LASTT = 0;
+  var ON = true, MESHES = [], SRCS = null, LASTMS = 0, LASTAT = null, LASTT = 0, NBLADE = 0;
   var PATCHED = {};
 
   // ---- tunables -----------------------------------------------------------------
-  // dens0/r0/r1 are the ref SHAPE: full carpet under the character, thinning with depth,
-  // zero past r1. Everything here is exposed on OWD.set() so the next lane can sweep it in
-  // one Chrome launch instead of editing this file.
   var P = {
-    dens0: 46,       // blades per m2 inside r0
+    // ---- the disc ----------------------------------------------------------------
     r0: 15,          // full density radius
     r1: 74,          // zero at this radius — set by the FRAME, not by taste: at boom 40 /
                      // pitch 0.61 the meadow still fills the top of the plate at 60 m, and
                      // a fade that ends inside the picture is a fade the player can SEE
                      // end, which is the whole deficit ("the blade layer visibly stops").
-    tail: 1.30,      // falloff exponent; >1 keeps blades far out at low density
-    budget: 220000,  // hard instance cap (x6 tris) — a safety valve, see rebuild()
+    tail: 1.30,      // falloff exponent; >1 keeps tufts far out at low density
+    budget: 230000,  // hard BLADE cap — a safety valve, see rebuild()
     step: 9.0,       // rebuild once the player has moved this far
     minMs: 700,      // ...and never more often than this (see rebuild)
-    // R6 (2026-08-04) HALVES THE BLADE. At 0.19-0.42 against a 1.45u character the
-    // carpet measured knee-high and, at the meadow camera's 12 m boom, covered most of
-    // the frame — the user's words were "enormous… green scribble". Ankle height on
-    // this character is ~0.11-0.13, and that is what the refs' near grass reads as.
-    hMin: 0.085, hMax: 0.235,
-    hPow: 2.10,      // R6: heights are POWER-distributed, not uniform. A uniform draw
-                     // between two numbers gives a crop, not a meadow — every blade
-                     // lands in the same visual half of the range and the field has one
-                     // silhouette height. >1 pushes the mass to the short end and leaves
-                     // a thin tail of tall blades, which is what breaks the top edge up.
-    wide: 0.030,     // blade half-width at the base (R6: 0.044 was chunky once the
-                     // blades came down in height — the aspect ratio is what reads)
-    grow: 0.45,      // extra height per r1 of distance — far blades read at fewer pixels
-                     // (R6: 0.90 nearly doubled the tail and put the biggest cards where
-                     // the frame is densest)
+
+    // ---- the tuft ----------------------------------------------------------------
+    // ROOT POINTS PER SQUARE METRE, not blades. 9.5 inside r0 is a 0.32 m mean spacing,
+    // the dense end of the reference's 0.3-0.6 m, and the bare gaps come from the clump
+    // threshold rather than from thinning the whole field.
+    tuftDens: 10.5,
+    bptMin: 4, bptMax: 7,   // blades per root point
+    tuftR: 0.070,           // how far a blade's root may sit from the tuft centre (m)
+    // HEIGHT: r3's carpet read at the waist and was cut for it; R6's replacement read at
+    // the ankle and could not break a silhouette. Knee on a 1.45u character is ~0.40 m,
+    // and hMax x the height jitter's ceiling lands there. Power-distributed so the mass
+    // sits short and a thin tail of tall blades breaks the top edge up.
+    hMin: 0.115, hMax: 0.335, hPow: 1.85,
+    sizeJit: 0.35,   // +-35% on WIDTH (0.65..1.35), and half of that on height: a blade
+                     // scaled 1.4x tall is a different plant, 1.4x wide is the same plant
+                     // seen closer, and only one of those is what "size jitter" should buy.
+    grow: 0.25,      // extra height per r1 of distance — far blades read at fewer pixels
+    lean: 0.38,      // radians of random lean about a random horizontal axis
+    seedFrac: 0.12,  // share of blades drawn as the seed-head variant
+    shortFrac: 0.52, // ...as the short broad variant; the rest are the medium blade
+    farThin: 0.62,   // blades per tuft are cut by this fraction at r1 — a far tuft needs a
+                     // ROOT (that is what serrates a silhouette) and not four cards. The
+                     // first build at tuftDens 12 hit the 230k valve, and the valve loses
+                     // one SIDE of the disc rather than thinning evenly, so the far field
+                     // is thinned on purpose instead of being truncated by accident.
+    wide: 0.018,     // blade half-width at the base, before the per-variant multiplier.
+                     // 0.030 x the short variant's 1.30 gave a 7.8 cm leaf: at the low
+                     // camera the field read as CORN, which is the exact word the critic
+                     // used for r3. A grass blade is a few millimetres wide and the thing
+                     // that makes it read is the ASPECT RATIO, not the height.
+
+    // ---- where it grows -----------------------------------------------------------
     slope: 0.62,     // reject triangles whose normal.y is below this (no grass on cliff)
-    lift: 1.14,      // blade tint vs the ground it stands in, AFTER the texture mean is
-                     // folded in (see texMean). >1 on purpose: the previous pass's carpet
-                     // DARKENED the near field (gate L 0.457 -> 0.387 against REF1's 0.558).
-                     // MEASURED, and it is a finding: raising this barely moves frame
-                     // luminance (gate NEAR L50 0.375 / 0.380 / 0.385 at lift 1.40 / 1.70 /
-                     // 2.00, postfx=off). The carpet darkens a frame by COVERAGE, not by
-                     // albedo — chase that L back through density and exposure, not here.
-                     // R6: 1.70 was compensating for the BACKFACE BUG below — half the
-                     // carpet was rendering black, so the field was lifted to get its
-                     // mean back. With the flip gone the same lift blows the near field
-                     // out, so it comes down with it.
-    jitV: 0.30,      // R6: per-instance VALUE jitter width (was a hardcoded 0.14, which
-    jitH: 0.16,      // ...and HUE jitter width — green-vs-amber, which 0.14 of flat value
-                     // could not give. A field of one hue is a texture; a field of many
-                     // is vegetation. Both shrink with distance (see the jw comment).
-    // ---- CLUMPING (R6) --------------------------------------------------------
-    // The single biggest remaining "reads as noise rather than vegetation" term, and
-    // the one that no per-blade jitter can supply: EVEN DENSITY IS THE TELL. A carpet
-    // placed at a constant blades/m2 has no bare ground in it, so its top edge is a
-    // continuous line across the frame and the eye reads one material, not plants.
-    // Real turf is patches. Two octaves of world-space value noise multiply the local
-    // density (and, more weakly, the height, because a thick tuft is also a tall one),
-    // which costs one hash per triangle and no instances at all.
-    clump: 0.95,     // 0 = the old even carpet; 1 = density swings 0..2x
-    clumpM: 6.5,     // metres per clump cell — sized against a 1.45u character, so a
-                     // patch is roughly four of her wide
-    clumpH: 0.45,    // how much of the same field the blade HEIGHT follows
+    // THE FIELD MUST THIN TO BARE EARTH. Two octaves of world-space value noise, then a
+    // THRESHOLD: below `bare` the density is zero, not small. A carpet that only thins
+    // still covers everything, and "covers everything" is the surface-treatment read.
+    clumpM: 5.5,     // metres per clump cell
+    bare: 0.36,      // clump value below which the ground is left bare
+    clumpP: 0.80,    // shaping exponent above the threshold
+    clumpH: 0.40,    // how much of the same field the tuft HEIGHT follows
+    dryDens: 0.48,   // density multiplier on the DRY terrain primitive. THE TERRAIN'S OWN
+                     // SLOT BOUNDARY BECAME VISIBLE the moment only one slot had plants on
+                     // it: the grass/dry split is a polygon edge, and at 0.30 the gate plate
+                     // showed straight-edged green patches where before both sides were
+                     // equally bare. Vegetation on both slots is what hides a seam the
+                     // terrain has always had. (worn slopes are
+                     // not bare dirt in the references — they carry ochre grass.)
+    crestK: 0.85,    // extra density where the ground is already sloping, which is where
+                     // vegetation is seen against a backdrop rather than from above
+
+    // ---- the fringe ----------------------------------------------------------------
+    fringeD: 1.30,   // width of the dense band along every seam, metres
+    fringeK: 2.6,    // density multiplier at the seam itself
+    fringeH: 0.22,   // ...and how much taller the band's tufts are
+    stray: 0.30,     // share of fringe tufts pushed OUT past the seam, into the dirt
+    strayMax: 0.20,  // how far out (m). The reference has no hard seam anywhere — but the
+                     // first build added `fd` to this and let a third of the band's tufts
+                     // travel up to 1.3 m onto the road, which is not a fringe: the plate
+                     // showed CONFETTI scattered across the whole path. A straggler is a
+                     // plant that has crossed the edge, so it must stay near the edge, be
+                     // rarer than the band it comes from, and be SHORT (it gets trodden).
+    strayFr: 0.45,   // ...and only tufts already this deep in the band may stray
+    strayH: 0.62,    // how tall a straggler is against its own tuft
+    occCell: 0.6,    // fringe field resolution, metres
+
+    // ---- colour -----------------------------------------------------------------
+    lift: 1.14,      // tuft tint vs the ground it stands in, AFTER the texture mean is
+                     // folded in (see texMean). MEASURED and it is a finding: raising this
+                     // barely moves frame luminance — the carpet darkens a frame by
+                     // COVERAGE, not by albedo. Chase L back through density and exposure.
+    jitV: 0.30,      // per-TUFT value jitter width
+    jitH: 0.20,      // per-TUFT hue jitter width (green <-> amber)
+    jitB: 0.10,      // per-BLADE jitter inside a tuft — small, or a clump stops being one
+    dryFrac: 0.20,   // share of tufts drawn DRY (ochre). The references' vegetation is
+                     // 15-25% NON-GREEN overall and ours was one green family.
+    dryTint: [1.20, 0.95, 0.44],
+    dryBias: 1.9,    // ...and dry tufts are this much likelier on worn/fringe ground
+
+    // ---- flowers -----------------------------------------------------------------
+    // Three species, in PATCHES, biased to transitions. Never mid-lawn: a flower on open
+    // ground is confetti, a flower at a path shoulder or a bush base is a plant.
+    flowers: 1.0,    // master scale, 0 = off
+    flPatchM: 13.0,  // metres per flower-patch cell
+    flPatchT: 0.60,  // patch threshold — above this the patch may flower
+    flPer: 0.090,    // heads per m2 inside a patch at full density
+    flFringe: 2.2,   // ...multiplied by this inside the fringe band
+    flH: 0.13,       // stem height
+
+    // ---- the bundle's own tufts ----------------------------------------------------
+    // `ow_f2_tuft` is the pale spiked clump the critic was judging. It is a bundle asset
+    // this lane cannot rebuild tonight, so it is DITHERED OUT of the band where this
+    // scatter is dense and left standing beyond it, where it still serrates a far hillside
+    // and its species is not readable. tuftFade = 0 restores it everywhere.
+    tuftFade: 1.0, tuftFadeA: 20.0, tuftFadeB: 66.0,
+
+    // ---- the shared foliage material ------------------------------------------------
+    rough: 0.90,     // one number for every foliage material (was 0.92-0.95, and the
+                     // spread was accidental rather than authored)
+    trans: 0.42,     // LEAF TRANSLUCENCY: light through the back of a leaf, strongest
+                     // when the viewer is looking down-sun. The references' single most
+                     // recognisable foliage cue and we had none of it.
+    transCol: [1.00, 0.86, 0.42],
+    transPow: 2.2,
+    hiA: 0.85, hiB: 1.70, hiAmt: 0.55,  // highlight DESATURATION, not a clip: above hiA
+                     // the pixel is pulled toward its own luminance, so a lit tip stops
+                     // going chartreuse without the value being crushed. Chartreuse is a
+                     // CHROMA failure (warm key x green albedo blows G first) and clamping
+                     // the value would only make it a paler chartreuse.
+                     // THE THRESHOLD IS IN PRE-TONEMAP LINEAR AND THE FIRST GUESS WAS HALF
+                     // A CROWN TOO LOW. At 0.45 the term fired over the WHOLE lit canopy,
+                     // not its tips: measured on the meadow's crown box, saturation
+                     // 0.326 (term off) -> 0.243 at 0.45/1.00 -> 0.296 at 0.80/1.60. A
+                     // desaturator wide enough to catch every lit pixel is a chroma cut on
+                     // the frame, which is the round-13 overshoot in miniature.
+    remap: 0.72,     // strength of the albedo value->hue remap, this lane's materials only
+    vComp: 0.75,     // value-range compression toward vMid. THE FIRST SETTING TOOK THE
+                     // MODELLING OUT WITH THE BLACK: at 0.62/0.055 the bushes' whole value
+                     // range collapsed and the frame read candy — the near-black CORES are
+                     // the defect, not the shading. Compress less, floor lower.
+    vMid: 0.30, vFloor: 0.035,
+    hueSpread: 0.30, // how far the remap swings yellow-green <-> blue-green
+    sat: 1.25,       // chroma gain after the remap
+
     grit: 0.42,      // ground material: amount of the pixel-scale octave
     gritFar: 30.0    // ...faded to nothing by this view depth, so it never stipples
   };
 
-  // ---- the blade ------------------------------------------------------------------
-  // Two quads tall with a lean and a baked base-to-tip value gradient. The gradient is
-  // what stops a blade field reading as one flat colour no matter how many blades are in
-  // it — the refs' grass has internal light variation inside a single clump.
-  function bladeGeo() {
-    var T = TH(), seg = 3, w = P.wide, h = 1.0, bend = 0.30;
-    var Pp = [], N = [], U = [], C = [], I = [];
+  // ---- the blade variants -------------------------------------------------------------
+  // THREE SHAPES, MIXED PER CLUMP. One blade shape is one plant no matter how it is jittered
+  // — the critic's words for r3 were "one blade shape... a field of corn". The seed-head is
+  // the one that reads at distance, because its silhouette has a lump in it.
+  //
+  // The vertex colour is a BASE-TO-TIP HUE RAMP, not just a value ramp. Base is a deep cool
+  // green (a clump is dark where it meets the ground — that contact is what makes it sit in
+  // the terrain instead of on it); tip is warm and yellow. So a single clump carries hue
+  // variation from root to tip before any per-instance jitter is applied.
+  var BASE_C = [0.60, 0.72, 0.50];
+  var TIP_C  = [1.14, 1.06, 0.72];
+
+  function ramp(t, out) {
+    for (var i = 0; i < 3; i++) out[i] = BASE_C[i] + (TIP_C[i] - BASE_C[i]) * t;
+    return out;
+  }
+
+  function bladeGeo(kind) {
+    var T = TH();
+    // kind 0 SHORT/BROAD, 1 MEDIUM, 2 SEED-HEAD
+    var seg = kind === 2 ? 4 : 3;
+    var wmul = kind === 0 ? 1.35 : (kind === 1 ? 0.92 : 0.58);
+    var bend = kind === 0 ? 0.42 : (kind === 1 ? 0.24 : 0.16);
+    var hmul = kind === 0 ? 0.72 : (kind === 1 ? 1.00 : 1.22);
+    var w = P.wide * wmul, h = hmul;
+    var Pp = [], N = [], U = [], C = [], I = [], c3 = [0, 0, 0];
     for (var i = 0; i <= seg; i++) {
-      var t = i / seg, tw = w * (1 - t * 0.85), y = h * t, z = bend * t * t;
+      var t = i / seg, tw = w * (1 - t * 0.85), y = h * t, z = bend * t * t * h;
       Pp.push(-tw, y, z, tw, y, z);
-      // NORMALS POINT MOSTLY UP, not along the blade's own face. A blade card normal
-      // (0,0.45,1) makes half the field face the low sun and half face away, and at
-      // boom 40 — where a blade is 3-8 px — that per-blade contrast resolves as white
-      // STIPPLE, not as grass (measured by eye on the first carpet: the meadow read as
-      // frost). Shading them like the ground they stand in keeps the silhouette and
-      // drops the noise; the value variation then comes from the baked tip gradient,
-      // which is under our control, instead of from the light, which is not.
-      // R6 MEASURED THE TILT AND IT WAS THE SPECKLE. 0.34 of lateral normal, against a
-      // key at elevation 34 deg, swings a blade's own N.L from 0.24 to 0.81 depending on
-      // which way it happens to be yawed — and yaw is uniform over 2*pi. That is a 3.4x
-      // per-blade lighting range, i.e. exactly the stipple the comment above says it
-      // exists to prevent, and it also put the AVERAGE blade at ~0.29 against the
-      // ground's 0.56, which is why the carpet read as dark scribble over lit ground.
-      // 0.14 keeps a trace of form (0.47..0.62) and lands the mean on the ground's own.
+      // NORMALS POINT MOSTLY UP, not along the blade's own face. R6 MEASURED THE TILT AND
+      // IT WAS SPECKLE: 0.34 of lateral normal against a key at elevation 34 deg swings a
+      // blade's own N.L from 0.24 to 0.81 depending on which way it happens to be yawed,
+      // and yaw is uniform over 2*pi. 0.14 keeps a trace of form and lands the mean on the
+      // ground's own. The value variation comes from the baked ramp, which is ours, rather
+      // than from the light, which is not.
       N.push(0, 0.990, 0.14, 0, 0.990, 0.14);
       U.push(0, t, 1, t);
-      var s = 0.72 + 0.36 * t;
-      C.push(s, s, s, s, s, s);
+      ramp(t, c3);
+      C.push(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
     }
     for (var j = 0; j < seg; j++) { var a = j * 2; I.push(a, a + 1, a + 3, a, a + 3, a + 2); }
+    if (kind === 2) {
+      // THE SEED HEAD: two crossed cards on the top fifth of the stalk, paler and warmer.
+      // It is 4 triangles and it is what stops the far band reading as a comb.
+      var v0 = Pp.length / 3, hy0 = h * 0.70, hy1 = h * 1.08, hw = P.wide * 0.72;
+      var hz0 = bend * 0.74 * 0.74 * h, hz1 = bend * 1.0 * 1.0 * h;
+      var quads = [[hw, 0], [0, hw]];
+      for (var q = 0; q < 2; q++) {
+        var ax = quads[q][0], az = quads[q][1];
+        Pp.push(-ax, hy0, hz0 - az, ax, hy0, hz0 + az, -ax * 0.35, hy1, hz1 - az * 0.35,
+                ax * 0.35, hy1, hz1 + az * 0.35);
+        for (var k = 0; k < 4; k++) {
+          N.push(0, 0.94, 0.34); U.push(0, 0.85);
+          C.push(1.08, 1.02, 0.66);
+        }
+        var b0 = v0 + q * 4;
+        I.push(b0, b0 + 1, b0 + 3, b0, b0 + 3, b0 + 2);
+      }
+    }
     var g = new T.BufferGeometry();
     g.setAttribute('position', new T.Float32BufferAttribute(Pp, 3));
     g.setAttribute('normal', new T.Float32BufferAttribute(N, 3));
@@ -155,52 +292,94 @@
     return g;
   }
 
-  // ---- the source: the terrain's own GRASS primitive -------------------------------
-  // Placing against the ground MESH rather than a height probe buys three things at once:
-  // the exact surface y (no float above or sink below), the terrain's own COLOR_0 under
-  // each blade (so the carpet is never a different green from the ground it stands in —
-  // which is precisely the "changes species mid-frame" complaint), and the grass/dry/rock
-  // slot choice for free, because the builder already split the terrain by slot and this
-  // reads only the grass one.
-  function source() {
-    var sc = SCN(); if (!sc) return null;
-    var hit = null;
-    sc.traverse(function (m) {
-      if (hit || !m.isMesh || !m.geometry) return;
-      var n = m.name || '', mn = (m.material && m.material.name) || '';
-      if (/^ground_valley_1$/.test(n) || mn === 'ow_f2_ter_grass') hit = m;
-    });
-    return hit;
+  // A FLOWER IS A STEM AND A CROSS. Two crossed cards give it a silhouette from every yaw
+  // for 4 triangles, which matters because a flower is 2-5 px and a billboard that happens
+  // to be edge-on is a missing flower.
+  function flowerGeo() {
+    var T = TH(), Pp = [], N = [], U = [], C = [], I = [];
+    var sw = 0.006, sh = 1.0, hw = 0.030, hy0 = 0.86, hy1 = 1.14;
+    Pp.push(-sw, 0, 0, sw, 0, 0, -sw, sh * hy0, 0, sw, sh * hy0, 0);
+    for (var i = 0; i < 4; i++) { N.push(0, 0.97, 0.24); U.push(0, 0); C.push(0.34, 0.42, 0.24); }
+    I.push(0, 1, 3, 0, 3, 2);
+    var pairs = [[hw, 0], [0, hw]];
+    for (var q = 0; q < 2; q++) {
+      var v0 = Pp.length / 3, ax = pairs[q][0], az = pairs[q][1];
+      Pp.push(-ax, sh * hy0, -az, ax, sh * hy0, az, -ax, sh * hy1, -az, ax, sh * hy1, az);
+      for (var k = 0; k < 4; k++) { N.push(0, 1, 0); U.push(0, 1); C.push(1, 1, 1); }
+      I.push(v0, v0 + 1, v0 + 3, v0, v0 + 3, v0 + 2);
+    }
+    var g = new T.BufferGeometry();
+    g.setAttribute('position', new T.Float32BufferAttribute(Pp, 3));
+    g.setAttribute('normal', new T.Float32BufferAttribute(N, 3));
+    g.setAttribute('uv', new T.Float32BufferAttribute(U, 2));
+    g.setAttribute('color', new T.Float32BufferAttribute(C, 3));
+    g.setIndex(I);
+    return g;
   }
 
-  // THE GROUND IS TEXTURE x COLOR_0, AND THE BLADES ONLY GET COLOR_0. Sampling the
-  // terrain's vertex colour alone made the first carpet 1.5-2x brighter than the ground
-  // it stood in, which at boom 40 is exactly the white frost the plate showed — the
-  // terrain material is baseColorTexture * COLOR_0 (glTF can only multiply) and L3
-  // deliberately pushed COLOR_0's grass to L 0.651 knowing a darker texture would come
-  // back down over it. So measure the map's mean, in the shader's own colour space, and
-  // fold it into the blade tint. Measured once per material; a texture that will not
-  // draw (cross-origin, not yet decoded) leaves TEXMEAN null and the carpet falls back
-  // to a flat factor rather than to a wrong one.
-  var TEXMEAN = null;
+  // WHITE / YELLOW / PINK-LAVENDER. Three species, because two reads as a mistake and four
+  // reads as a garden. Values are close together on purpose — the references' flowers are a
+  // HUE event at roughly the ground's own value, not a bright spot.
+  var FLOWER = [[1.30, 1.26, 1.10], [1.34, 1.10, 0.34], [1.22, 0.72, 0.92]];
+
+  // ---- the sources: the terrain's own GRASS and DRY primitives -------------------------
+  // Placing against the ground MESH rather than a height probe buys three things at once:
+  // the exact surface y, the terrain's own COLOR_0 under each tuft (so the scatter is never
+  // a different green from the ground it stands in), and the slot choice for free.
+  //
+  // R-F1 ADDS THE DRY PRIMITIVE. The worn slopes were bare dirt with nothing growing on
+  // them and the references' worn slopes are ochre GRASS; scattering there at 0.42x density
+  // with the dry tint is most of the "15-25% non-green" item, and it costs no new asset.
+  var SRC_DEF = [
+    { name: 'ow_f2_ter_grass', mesh: 'ground_valley_1', dry: 0.0, w: 1.0 },
+    { name: 'ow_f2_ter_dry', mesh: null, dry: 1.0, w: 0.42 }
+  ];
+
+  function sources() {
+    var sc = SCN(); if (!sc) return null;
+    var out = [];
+    for (var i = 0; i < SRC_DEF.length; i++) {
+      (function (def) {
+        var hit = null;
+        sc.traverse(function (m) {
+          if (hit || !m.isMesh || !m.geometry) return;
+          var mn = (m.material && m.material.name) || '';
+          if (mn === def.name || (def.mesh && m.name === def.mesh)) hit = m;
+        });
+        if (hit) out.push({ def: def, mesh: hit, idx: null });
+      })(SRC_DEF[i]);
+    }
+    return out.length ? out : null;
+  }
+
+  // THE GROUND IS TEXTURE x COLOR_0, AND THE TUFTS ONLY GET COLOR_0. Sampling the terrain's
+  // vertex colour alone made the first carpet 1.5-2x brighter than the ground it stood in,
+  // which at boom 40 is exactly white frost — the terrain material is baseColorTexture *
+  // COLOR_0 (glTF can only multiply). So measure the map's mean, in the shader's own colour
+  // space, and fold it into the tint. A texture that will not draw leaves it null and the
+  // scatter falls back to a flat factor rather than to a wrong one.
+  var TEXMEAN = {};
   function texMean(mat) {
-    if (TEXMEAN) return TEXMEAN;
+    var key = (mat && mat.name) || '?';
+    if (key in TEXMEAN) return TEXMEAN[key];
+    var out = null;
     try {
       var img = mat && mat.map && mat.map.image;
-      if (!img || !img.width) return null;
-      var cv = document.createElement('canvas'); cv.width = cv.height = 24;
-      var cxr = cv.getContext('2d', { willReadFrequently: true });
-      cxr.drawImage(img, 0, 0, 24, 24);
-      var d = cxr.getImageData(0, 0, 24, 24).data, s = [0, 0, 0];
-      for (var i = 0; i < d.length; i += 4) { s[0] += d[i]; s[1] += d[i + 1]; s[2] += d[i + 2]; }
-      var n = d.length / 4, out = [];
-      for (var c = 0; c < 3; c++) {
-        var u = s[c] / n / 255;
-        out.push(u <= 0.04045 ? u / 12.92 : Math.pow((u + 0.055) / 1.055, 2.4)); // -> linear
+      if (img && img.width) {
+        var cv = document.createElement('canvas'); cv.width = cv.height = 24;
+        var cxr = cv.getContext('2d', { willReadFrequently: true });
+        cxr.drawImage(img, 0, 0, 24, 24);
+        var d = cxr.getImageData(0, 0, 24, 24).data, s = [0, 0, 0];
+        for (var i = 0; i < d.length; i += 4) { s[0] += d[i]; s[1] += d[i + 1]; s[2] += d[i + 2]; }
+        var n = d.length / 4; out = [];
+        for (var c = 0; c < 3; c++) {
+          var u = s[c] / n / 255;
+          out.push(u <= 0.04045 ? u / 12.92 : Math.pow((u + 0.055) / 1.055, 2.4));
+        }
       }
-      TEXMEAN = out;
-      return out;
-    } catch (e) { return null; }
+    } catch (e) { out = null; }
+    TEXMEAN[key] = out;
+    return out;
   }
 
   function index(mesh) {
@@ -234,11 +413,147 @@
              area: area, ny: ny };
   }
 
-  // WORLD-SPACE VALUE NOISE (R6), for the clump field. It is keyed on WORLD position,
-  // not on the draw order, which is what makes a patch stay where it is across a
-  // rebuild — a clump field derived from the per-call PRNG would reshuffle the meadow
-  // every time the player walked 9 m, and a meadow that reshuffles is worse than a
-  // meadow that is even.
+  // ===================================================================================
+  // THE FRINGE FIELD — a distance transform over everything that is not turf
+  // ===================================================================================
+  // A FLOOD FILL TELLS YOU WHERE THE WORLD IS SHUT AND NEVER WHAT SHUTS IT (CLAUDE.md), and
+  // the same is true here in reverse: "the path edge is hard" is a fact about a SEAM, and a
+  // seam is only findable if you know where both sides are. Rasterising every non-turf
+  // surface into one grid and chamfer-transforming it turns "am I near a seam, and which way
+  // is it" into two array reads, which is what lets the fringe rule be one line at the
+  // placement site instead of five special cases.
+  //
+  // The occluder set is deliberately WIDE: road and dock path (the item the critic named),
+  // water (a shoreline is a seam), terrain rock (a cliff foot is a seam), stone/planks/
+  // plaster/tiles/tar (building footings), bark (tree feet) and bushcore (bush bases).
+  var OCC_MATS = ['ow_f2_road', 'ow_f2_dockpath', 'ow_f2_water', 'ow_f2_ter_rock',
+                  'ow_f2_stone', 'ow_f2_planks', 'ow_f2_plaster', 'ow_f2_tiles',
+                  'ow_f2_tar', 'ow_f2_bark', 'ow_valley_bushcore'];
+  // ...and the SUBSET a plant genuinely cannot grow through. THE TWO SETS ARE NOT THE SAME
+  // AND CONFLATING THEM COST 68% OF THE FIELD: refusing a tuft in any occupied cell dropped
+  // the closeup from 208 055 blades to 67 095, because `ow_f2_ter_rock` and the bush cores
+  // are terrain SLOTS that interleave with turf across most of the meadow. A rock outcrop
+  // is something grass grows AGAINST (so it must fringe) and also something grass grows
+  // BETWEEN (so it must not refuse). A paved road is neither.
+  var HARD_MATS = ['ow_f2_road', 'ow_f2_dockpath', 'ow_f2_water', 'ow_f2_tar',
+                   'ow_f2_stone', 'ow_f2_planks', 'ow_f2_plaster', 'ow_f2_tiles'];
+  // ow_f2_ter_dry IS DELIBERATELY NOT AN OCCLUDER, and the first build proved why: the dry
+  // primitive is also a SOURCE, so marking it occupied put every dry cell at distance 0 from
+  // a seam and gave the whole worn slope the fringe multiplier — a bleached straw carpet
+  // across the middle of the frame instead of a thin band at its edge. A cell cannot be both
+  // the thing being fringed and the thing doing the fringing.
+  var OCC = null;
+
+  function buildOcc() {
+    var sc = SCN(); if (!sc || !SRCS || !SRCS.length) return null;
+    var t0 = (performance && performance.now) ? performance.now() : 0;
+    var T = TH();
+    // bounds from the TURF, padded — a fringe cell outside the turf is still needed
+    // (a stray blade stands past the seam).
+    var bb = new T.Box3();
+    for (var i = 0; i < SRCS.length; i++) {
+      SRCS[i].mesh.updateWorldMatrix(true, false);
+      bb.expandByObject(SRCS[i].mesh);
+    }
+    if (!isFinite(bb.min.x)) return null;
+    var cell = P.occCell, pad = 4;
+    var x0 = bb.min.x - pad, z0 = bb.min.z - pad;
+    var nx = Math.ceil((bb.max.x - bb.min.x + pad * 2) / cell);
+    var nz = Math.ceil((bb.max.z - bb.min.z + pad * 2) / cell);
+    if (nx <= 0 || nz <= 0 || nx * nz > 4e6) return null;
+    var D = new Float32Array(nx * nz); D.fill(1e9);
+    var HD = new Uint8Array(nx * nz);
+    var nOcc = 0, nHard = 0, nTri = 0;
+    var va = new T.Vector3(), vb = new T.Vector3(), vc = new T.Vector3();
+
+    sc.traverse(function (m) {
+      if (!m.isMesh || !m.geometry) return;
+      var mn = (m.material && m.material.name) || '';
+      if (OCC_MATS.indexOf(mn) < 0) return;
+      var hard = HARD_MATS.indexOf(mn) >= 0;
+      var g = m.geometry, pos = g.attributes.position, ix = g.index;
+      if (!pos) return;
+      m.updateWorldMatrix(true, false);
+      var mw = m.matrixWorld;
+      var cnt = ix ? ix.count : pos.count;
+      for (var t = 0; t + 2 < cnt; t += 3) {
+        var ia = ix ? ix.getX(t) : t, ib = ix ? ix.getX(t + 1) : t + 1, ic = ix ? ix.getX(t + 2) : t + 2;
+        va.fromBufferAttribute(pos, ia).applyMatrix4(mw);
+        vb.fromBufferAttribute(pos, ib).applyMatrix4(mw);
+        vc.fromBufferAttribute(pos, ic).applyMatrix4(mw);
+        nTri++;
+        // plan-view area -> sample count. 16 samples/m2 puts ~4 in a 0.6 m cell, which is
+        // enough that a thin road ribbon never develops holes in its own footprint.
+        var ax = vb.x - va.x, az = vb.z - va.z, bx = vc.x - va.x, bz = vc.z - va.z;
+        var ar = Math.abs(ax * bz - az * bx) * 0.5;
+        var ns = Math.max(3, Math.min(400, Math.ceil(ar * 16)));
+        for (var s = 0; s < ns; s++) {
+          var u = ((s * 0.7548776662) % 1), w = ((s * 0.5698402909) % 1);
+          if (u + w > 1) { u = 1 - u; w = 1 - w; }
+          var px = va.x + u * ax + w * bx, pz = va.z + u * az + w * bz;
+          var gi = ((px - x0) / cell) | 0, gk = ((pz - z0) / cell) | 0;
+          if (gi < 0 || gk < 0 || gi >= nx || gk >= nz) continue;
+          var o = gk * nx + gi;
+          if (D[o] !== 0) { D[o] = 0; nOcc++; }
+          if (hard && !HD[o]) { HD[o] = 1; nHard++; }
+        }
+      }
+    });
+
+    // two-pass chamfer (3,4)/3 — the standard cheap Euclidean approximation, in CELLS,
+    // scaled to metres on read.
+    var A = 1.0, B = Math.SQRT2;
+    var k, o2;
+    for (k = 0; k < nz; k++) for (var i2 = 0; i2 < nx; i2++) {
+      o2 = k * nx + i2; if (D[o2] === 0) continue;
+      var d = D[o2];
+      if (i2 > 0) d = Math.min(d, D[o2 - 1] + A);
+      if (k > 0) d = Math.min(d, D[o2 - nx] + A);
+      if (k > 0 && i2 > 0) d = Math.min(d, D[o2 - nx - 1] + B);
+      if (k > 0 && i2 < nx - 1) d = Math.min(d, D[o2 - nx + 1] + B);
+      D[o2] = d;
+    }
+    for (k = nz - 1; k >= 0; k--) for (var i3 = nx - 1; i3 >= 0; i3--) {
+      o2 = k * nx + i3; if (D[o2] === 0) continue;
+      var e = D[o2];
+      if (i3 < nx - 1) e = Math.min(e, D[o2 + 1] + A);
+      if (k < nz - 1) e = Math.min(e, D[o2 + nx] + A);
+      if (k < nz - 1 && i3 < nx - 1) e = Math.min(e, D[o2 + nx + 1] + B);
+      if (k < nz - 1 && i3 > 0) e = Math.min(e, D[o2 + nx - 1] + B);
+      D[o2] = e;
+    }
+    var ms = ((performance && performance.now) ? performance.now() : 0) - t0;
+    return { x0: x0, z0: z0, nx: nx, nz: nz, cell: cell, D: D, HD: HD,
+             cells: nx * nz, occ: nOcc, hard: nHard, tris: nTri, ms: +ms.toFixed(1) };
+  }
+
+  function occHard(x, z) {                    // is this cell paved / water / a building?
+    if (!OCC) return false;
+    var gi = ((x - OCC.x0) / OCC.cell) | 0, gk = ((z - OCC.z0) / OCC.cell) | 0;
+    if (gi < 0 || gk < 0 || gi >= OCC.nx || gk >= OCC.nz) return false;
+    return OCC.HD[gk * OCC.nx + gi] === 1;
+  }
+  function occD(x, z) {                       // metres to the nearest non-turf surface
+    if (!OCC) return 99;
+    var gi = ((x - OCC.x0) / OCC.cell) | 0, gk = ((z - OCC.z0) / OCC.cell) | 0;
+    if (gi < 0 || gk < 0 || gi >= OCC.nx || gk >= OCC.nz) return 99;
+    return OCC.D[gk * OCC.nx + gi] * OCC.cell;
+  }
+  // ...and which way it lies. Central differences on the same field: a stray tuft is pushed
+  // DOWN the gradient, i.e. toward the thing it is fringing, so it ends up standing in the
+  // dirt rather than beside it.
+  function occGrad(x, z, out) {
+    var h = OCC ? OCC.cell : 1;
+    var dx = occD(x + h, z) - occD(x - h, z), dz = occD(x, z + h) - occD(x, z - h);
+    var l = Math.hypot(dx, dz);
+    if (l < 1e-6) { out[0] = 0; out[1] = 0; return false; }
+    out[0] = -dx / l; out[1] = -dz / l; return true;
+  }
+
+  // WORLD-SPACE VALUE NOISE, for the clump and patch fields. Keyed on WORLD position, not on
+  // draw order, which is what makes a patch stay where it is across a rebuild — a clump field
+  // derived from the per-call PRNG would reshuffle the meadow every time the player walked
+  // 9 m, and a meadow that reshuffles is worse than a meadow that is even.
   function vhash(a, b) {
     var s = (Math.imul(a | 0, 374761393) ^ Math.imul(b | 0, 668265263) ^ 0x9e3779b9) >>> 0;
     s = (s ^ (s >>> 13)) >>> 0; s = Math.imul(s, 1274126177) >>> 0;
@@ -254,9 +569,11 @@
     var s = 1 / Math.max(0.5, P.clumpM);
     return vnoise(x * s, z * s) * 0.68 + vnoise(x * s * 2.7 + 11.3, z * s * 2.7 - 4.1) * 0.32;
   }
+  function patchAt(x, z) {
+    var s = 1 / Math.max(0.5, P.flPatchM);
+    return vnoise(x * s + 71.7, z * s - 33.1);
+  }
 
-  // deterministic per-call PRNG: the same anchor always yields the same carpet, so a
-  // plate is reproducible and a blade never twitches because the player turned round.
   function rngAt(x, z) {
     var s = (Math.imul(Math.round(x * 4) | 0, 374761393) ^
              Math.imul(Math.round(z * 4) | 0, 668265263) ^ 20260804) >>> 0;
@@ -268,11 +585,24 @@
     var g = sc.getObjectByName(GROUP);
     if (g) {
       g.traverse(function (n) {
-        if (n.isMesh) { try { n.geometry.dispose(); n.material.dispose(); } catch (e) {} }
+        if (n.isMesh) { try { n.geometry.dispose(); } catch (e) {} }
       });
       sc.remove(g);
     }
-    MESH = null;
+    MESHES = []; NBLADE = 0;
+  }
+
+  // the scatter's own material is built ONCE and shared by all four instanced meshes, so the
+  // foliage shader patch below is applied to it exactly like a bundle material.
+  var SMAT = null;
+  function scatterMat() {
+    if (SMAT) return SMAT;
+    var T = TH();
+    SMAT = new T.MeshStandardMaterial({ color: 0xffffff, roughness: P.rough, metalness: 0.0,
+                                        vertexColors: true, side: T.DoubleSide });
+    SMAT.name = 'veg_owd_blade';
+    patchFoliage(SMAT, true);
+    return SMAT;
   }
 
   function rebuild(force) {
@@ -283,174 +613,408 @@
     var now = (performance && performance.now) ? performance.now() : Date.now();
     if (!force) {
       if (LASTAT && Math.hypot(p.x - LASTAT.x, p.z - LASTAT.z) < P.step) return null;
-      // A FLOOR ON HOW OFTEN THIS CAN COST 80 ms. Movement alone is not enough of a
-      // guard: a harness that teleports (playthrough_test, transition_test, reach_probe)
-      // clears the step test on every jump and would pay for a full rebuild each time.
+      // A FLOOR ON HOW OFTEN THIS CAN COST 80 ms. Movement alone is not enough of a guard:
+      // a harness that teleports (playthrough_test, transition_test, reach_probe) clears the
+      // step test on every jump and would pay for a full rebuild each time.
       if (LASTT && now - LASTT < P.minMs) return null;
     }
     LASTT = now;
-    if (!SRC || !sc.getObjectByName(SRC.name)) { SRC = source(); IDX = null; }
-    if (!SRC) return null;
-    if (!IDX) IDX = index(SRC);
-    if (!IDX) return null;
+    if (!SRCS || !SRCS.length || !sc.getObjectByName(SRCS[0].mesh.name)) { SRCS = sources(); OCC = null; }
+    if (!SRCS) return null;
+    for (var si = 0; si < SRCS.length; si++) if (!SRCS[si].idx) SRCS[si].idx = index(SRCS[si].mesh);
+    if (!OCC) OCC = buildOcc();
     var t0 = (performance && performance.now) ? performance.now() : 0;
 
-    var R = rngAt(p.x, p.z), cx = p.x, cz = p.z, r1 = P.r1, r0 = P.r0;
-    // `budget` is a SAFETY VALVE, not a target. Cells are walked in x,z order, so a run
-    // that actually hits the cap loses one whole side of the disc rather than thinning
-    // evenly — visible as a straight edge in the carpet. At the shipped dens0/r1 the
-    // worst frame measured is 177k against a 220k cap; if a future tune gets close,
-    // lower dens0, do not raise the cap.
-    var span = r1 - r0;
-    var mats = [], cols = [], n = 0;
+    var R = rngAt(p.x, p.z), cx = p.x, cz = p.z, r1 = P.r1, r0 = P.r0, span = r1 - r0;
+    // `budget` is a SAFETY VALVE, not a target. Cells are walked in x,z order, so a run that
+    // actually hits the cap loses one whole side of the disc rather than thinning evenly.
+    // If a future tune gets close, lower tuftDens; do not raise the cap.
+    var MB = [[], [], []], MC = [[], [], []];   // per-variant matrices / colours
+    var FM = [], FC = [];                       // flowers
+    var n = 0, nT = 0;
     var zone = SIM.zone ? SIM.zone : null;
     var m4 = new T.Matrix4(), q = new T.Quaternion(), up = new T.Vector3(0, 1, 0);
     var lean = new T.Quaternion(), axis = new T.Vector3();
     var vp = new T.Vector3(), vs = new T.Vector3();
-    var c0 = IDX.CELL, i0 = Math.floor((cx - r1) / c0), i1 = Math.floor((cx + r1) / c0);
-    var k0 = Math.floor((cz - r1) / c0), k1 = Math.floor((cz + r1) / c0);
-    var COL = IDX.col, ix = IDX.ix, X = IDX.X, Y = IDX.Y, Z = IDX.Z;
-    var TM = texMean(SRC.material) || [0.34, 0.34, 0.34];
+    var gr = [0, 0];
 
-    for (var ci = i0; ci <= i1 && n < P.budget; ci++) {
-      for (var ck = k0; ck <= k1 && n < P.budget; ck++) {
-        var list = IDX.cells.get(ci + ',' + ck);
-        if (!list) continue;
-        for (var li = 0; li < list.length && n < P.budget; li++) {
-          var t = list[li];
-          if (IDX.ny[t] < P.slope) continue;              // no grass growing out of cliff
-          var a = ix.getX(t * 3), b = ix.getX(t * 3 + 1), c = ix.getX(t * 3 + 2);
-          var mx = (X[a] + X[b] + X[c]) / 3, mz = (Z[a] + Z[b] + Z[c]) / 3;
-          var d = Math.hypot(mx - cx, mz - cz);
-          if (d > r1) continue;
-          var fall = d <= r0 ? 1 : Math.pow(1 - (d - r0) / span, P.tail);
-          // the clump field is sampled at the TRIANGLE, not per blade: a per-blade
-          // sample thins a patch uniformly instead of moving its edge, which is the
-          // even carpet again by another route.
-          var cl = clumpAt(mx, mz);
-          var want = IDX.area[t] * P.dens0 * fall * Math.max(0, 1 + P.clump * (2 * cl - 1));
-          var k = Math.floor(want); if (R() < want - k) k++;
-          for (var j = 0; j < k && n < P.budget; j++) {
-            var u = R(), w = R();
-            if (u + w > 1) { u = 1 - u; w = 1 - w; }
-            var bx = X[a] + u * (X[b] - X[a]) + w * (X[c] - X[a]);
-            var by = Y[a] + u * (Y[b] - Y[a]) + w * (Y[c] - Y[a]);
-            var bz = Z[a] + u * (Z[b] - Z[a]) + w * (Z[c] - Z[a]);
-            if (zone) { var zn = zone(bx, bz); if (zn === 'water') continue; }
-            var dd = Math.hypot(bx - cx, bz - cz);
-            // far blades get taller so they still subtend pixels; near blades stay ankle
-            // height against the body. Without this the tail reads as bare ground with
-            // dust on it, which is the same visible stop by another route.
-            var h = (P.hMin + Math.pow(R(), P.hPow) * (P.hMax - P.hMin)) *
-                    (1 + P.grow * (dd / r1)) *
-                    (1 - P.clumpH * 0.5 + P.clumpH * cl);
-            q.setFromAxisAngle(up, R() * Math.PI * 2);
-            axis.set(Math.cos(R() * 6.283), 0, Math.sin(R() * 6.283));
-            lean.setFromAxisAngle(axis, (R() - 0.5) * 0.55);
-            q.multiply(lean);
-            vp.set(bx, by - 0.015, bz);
-            vs.set(0.8 + R() * 0.55, h, 0.8 + R() * 0.55);
-            // flat floats, not 170k Matrix4 objects: the instanceMatrix wants exactly
-            // this layout anyway, and the object form cost ~20 MB of transient garbage
-            // on every rebuild for nothing.
-            m4.compose(vp, q, vs);
-            for (var e = 0; e < 16; e++) mats.push(m4.elements[e]);
-            if (COL) {
-              var cr = COL.getX(a) + u * (COL.getX(b) - COL.getX(a)) + w * (COL.getX(c) - COL.getX(a));
-              var cg = COL.getY(a) + u * (COL.getY(b) - COL.getY(a)) + w * (COL.getY(c) - COL.getY(a));
-              var cb = COL.getZ(a) + u * (COL.getZ(b) - COL.getZ(a)) + w * (COL.getZ(c) - COL.getZ(a));
-              // per-blade tint jitter is deliberately SMALL and shrinks with distance:
-              // near the body it is variety, far away it is the same stipple by another
-              // name, because a 4 px blade is one sample of it.
+    for (var srci = 0; srci < SRCS.length; srci++) {
+      var S = SRCS[srci], IDX = S.idx;
+      if (!IDX) continue;
+      var dryW = S.def.dry, wgt = S.def.dry > 0 ? P.dryDens : S.def.w;
+      var COL = IDX.col, ix = IDX.ix, X = IDX.X, Y = IDX.Y, Z = IDX.Z;
+      var TM = texMean(S.mesh.material) || [0.34, 0.34, 0.34];
+      var c0 = IDX.CELL;
+      var i0 = Math.floor((cx - r1) / c0), i1 = Math.floor((cx + r1) / c0);
+      var k0 = Math.floor((cz - r1) / c0), k1 = Math.floor((cz + r1) / c0);
+
+      for (var ci = i0; ci <= i1 && n < P.budget; ci++) {
+        for (var ck = k0; ck <= k1 && n < P.budget; ck++) {
+          var list = IDX.cells.get(ci + ',' + ck);
+          if (!list) continue;
+          for (var li = 0; li < list.length && n < P.budget; li++) {
+            var t = list[li];
+            if (IDX.ny[t] < P.slope) continue;            // no grass growing out of cliff
+            var a = ix.getX(t * 3), b = ix.getX(t * 3 + 1), c = ix.getX(t * 3 + 2);
+            var mx = (X[a] + X[b] + X[c]) / 3, mz = (Z[a] + Z[b] + Z[c]) / 3;
+            var d = Math.hypot(mx - cx, mz - cz);
+            if (d > r1) continue;
+            var fall = d <= r0 ? 1 : Math.pow(1 - (d - r0) / span, P.tail);
+
+            // the clump field is sampled at the TRIANGLE, not per tuft: a per-tuft sample
+            // thins a patch uniformly instead of moving its edge, which is the even carpet
+            // again by another route.
+            var cl = clumpAt(mx, mz);
+            // ...and then THRESHOLDED, which is what puts bare earth in the frame.
+            var cm = (cl - P.bare) / Math.max(1e-3, 1 - P.bare);
+            if (cm <= 0) continue;
+            cm = Math.pow(cm, P.clumpP) * (1 + P.clumpP);
+
+            // FRINGE: the density multiplier along every seam, and the whole reason the
+            // horizon and the path edges stop being lines.
+            var fd = occD(mx, mz);
+            // A TUFT MAY NOT BE BORN INSIDE THE THING IT IS FRINGING. The turf primitive
+            // runs UNDER the road ribbon, the bush cores and the rock feet, so without this
+            // line every one of those cells is a grass cell that also scores the maximum
+            // fringe multiplier — the first plate had grass growing out of the middle of
+            // the path at 3.6x the meadow's density and it read as scattered straw. Only a
+            // deliberate STRAY may cross, and it crosses by being pushed.
+            if (occHard(mx, mz)) continue;
+            var fr = fd < P.fringeD ? (1 - fd / P.fringeD) : 0;
+            var fk = 1 + P.fringeK * fr;
+            // ...and a slope term, because vegetation seen against a backdrop is what
+            // serrates a silhouette, and slope is where that happens.
+            var ck2 = 1 + P.crestK * Math.max(0, Math.min(1, (0.985 - IDX.ny[t]) / 0.30));
+
+            var want = IDX.area[t] * P.tuftDens * wgt * fall * cm * fk * ck2;
+            var kt = Math.floor(want); if (R() < want - kt) kt++;
+
+            for (var j = 0; j < kt && n < P.budget; j++) {
+              var u = R(), w = R();
+              if (u + w > 1) { u = 1 - u; w = 1 - w; }
+              var bx = X[a] + u * (X[b] - X[a]) + w * (X[c] - X[a]);
+              var by = Y[a] + u * (Y[b] - Y[a]) + w * (Y[c] - Y[a]);
+              var bz = Z[a] + u * (Z[b] - Z[a]) + w * (Z[c] - Z[a]);
+
+              // A STRAY STANDS IN THE DIRT. Pushed down the distance field's own gradient,
+              // with its y taken from this triangle's PLANE rather than held constant — a
+              // stray held at the old y floats on a slope, and a floating blade at 0.4 m is
+              // exactly the seam artefact this is here to remove.
+              var isFringe = fr > 0, isStray = false;
+              if (fr > P.strayFr && R() < P.stray && occGrad(bx, bz, gr)) {
+                isStray = true;
+                var push = fd + (0.15 + 0.85 * R()) * P.strayMax;
+                var nx2 = bx + gr[0] * push, nz2 = bz + gr[1] * push;
+                var e1x = X[b] - X[a], e1z = Z[b] - Z[a], e1y = Y[b] - Y[a];
+                var e2x = X[c] - X[a], e2z = Z[c] - Z[a], e2y = Y[c] - Y[a];
+                var det = e1x * e2z - e1z * e2x;
+                if (Math.abs(det) > 1e-6) {
+                  var rx = nx2 - X[a], rz = nz2 - Z[a];
+                  var uu = (rx * e2z - rz * e2x) / det, ww = (e1x * rz - e1z * rx) / det;
+                  bx = nx2; bz = nz2; by = Y[a] + uu * e1y + ww * e2y;
+                }
+              }
+              if (zone) { var zn = zone(bx, bz); if (zn === 'water') continue; }
+              var dd = Math.hypot(bx - cx, bz - cz);
+
+              // ---- the tuft's own identity, shared by its blades -----------------------
+              var hBase = (P.hMin + Math.pow(R(), P.hPow) * (P.hMax - P.hMin)) *
+                          (1 + P.grow * (dd / r1)) *
+                          (1 - P.clumpH * 0.5 + P.clumpH * cl) *
+                          (1 + P.fringeH * fr) * (isStray ? P.strayH : 1);
+              var dryP = Math.min(0.95, P.dryFrac * (dryW > 0 ? P.dryBias : 1) *
+                                        (1 + (P.dryBias - 1) * fr));
+              var isDry = dryW > 0 ? (R() < 0.55 + 0.45 * dryP) : (R() < dryP);
               var dw = (1 - 0.7 * (dd / r1));
-              var jw = P.jitV * dw;
-              var jit = (1 - jw * 0.5) + R() * jw;
-              // R6: the SECOND axis. Value jitter alone gives a field of one colour at
-              // several brightnesses, which is still one colour; hue jitter rolls each
-              // blade between a cooler green and the ground's own amber, which is what
-              // the refs' grass does clump by clump. The two channels move OPPOSITE
-              // ways so the blade's luminance is not disturbed by the hue draw.
-              var hw = P.jitH * dw, hj = (R() - 0.5) * hw;
-              cols.push(cr * TM[0] * P.lift * jit * (1 + hj),
-                        cg * TM[1] * P.lift * jit * (1 - hj * 0.55),
-                        cb * TM[2] * P.lift * jit * 0.98 * (1 - hj * 0.9));
+              var jv = P.jitV * dw, jh = P.jitH * dw;
+              var tv = (1 - jv * 0.5) + R() * jv;
+              var th = (R() - 0.5) * jh;
+              var cr = COL ? COL.getX(a) + u * (COL.getX(b) - COL.getX(a)) + w * (COL.getX(c) - COL.getX(a)) : 0.5;
+              var cg = COL ? COL.getY(a) + u * (COL.getY(b) - COL.getY(a)) + w * (COL.getY(c) - COL.getY(a)) : 0.5;
+              var cb = COL ? COL.getZ(a) + u * (COL.getZ(b) - COL.getZ(a)) + w * (COL.getZ(c) - COL.getZ(a)) : 0.5;
+              var tr = cr * TM[0] * P.lift * tv * (1 + th);
+              var tg = cg * TM[1] * P.lift * tv * (1 - th * 0.55);
+              var tb = cb * TM[2] * P.lift * tv * 0.98 * (1 - th * 0.9);
+              if (isDry) { tr *= P.dryTint[0]; tg *= P.dryTint[1]; tb *= P.dryTint[2]; }
+
+              var nb = P.bptMin + ((R() * (P.bptMax - P.bptMin + 1)) | 0);
+              nb = Math.max(2, Math.round(nb * (1 - P.farThin * (dd / r1))));
+              if (isStray) nb = Math.max(2, nb - 3);
+              nT++;
+              for (var bi = 0; bi < nb && n < P.budget; bi++) {
+                // ROOTS INSIDE ONE TUFT, not one root: blades that share a point read as a
+                // starburst. A small disc of roots is what makes a clump occlude itself.
+                var ang = R() * 6.2831853, rad = P.tuftR * Math.sqrt(R());
+                var ox = Math.cos(ang) * rad, oz = Math.sin(ang) * rad;
+                var kind = R() < P.seedFrac ? 2 : (R() < P.shortFrac ? 0 : 1);
+                var sj = 1 + (R() - 0.5) * 2 * P.sizeJit;
+                var h = hBase * (1 + (sj - 1) * 0.5);
+                q.setFromAxisAngle(up, R() * Math.PI * 2);
+                axis.set(Math.cos(R() * 6.283), 0, Math.sin(R() * 6.283));
+                // blades in one tuft lean OUTWARD from its centre as well as randomly —
+                // a clump is a fan, not a bundle
+                lean.setFromAxisAngle(axis, (R() - 0.5) * P.lean + rad * 1.1);
+                q.multiply(lean);
+                vp.set(bx + ox, by - 0.015, bz + oz);
+                vs.set(sj, h, sj);
+                m4.compose(vp, q, vs);
+                var MM = MB[kind], CC = MC[kind];
+                for (var e = 0; e < 16; e++) MM.push(m4.elements[e]);
+                var bj = 1 + (R() - 0.5) * P.jitB;
+                CC.push(tr * bj, tg * bj, tb * bj * (1 - (R() - 0.5) * 0.08));
+                n++;
+              }
+
+              // ---- flowers -------------------------------------------------------------
+              // In PATCHES and at TRANSITIONS. `flPer` is a per-tuft probability here, which
+              // is what keeps flowers inside the same clumps the grass is in rather than
+              // sprinkled over the bare gaps between them.
+              if (P.flowers > 0) {
+                var pv = patchAt(bx, bz);
+                if (pv > P.flPatchT) {
+                  var pp = P.flPer * P.flowers * (pv - P.flPatchT) / (1 - P.flPatchT) *
+                           (1 + (P.flFringe - 1) * fr);
+                  if (R() < pp) {
+                    var sp = FLOWER[(vhash(Math.floor(bx / 7), Math.floor(bz / 7)) * 3) | 0];
+                    var fh = P.flH * (0.75 + 0.5 * R());
+                    q.setFromAxisAngle(up, R() * Math.PI * 2);
+                    vp.set(bx + (R() - 0.5) * 0.2, by - 0.01, bz + (R() - 0.5) * 0.2);
+                    vs.set(1, fh, 1);
+                    m4.compose(vp, q, vs);
+                    for (var e2 = 0; e2 < 16; e2++) FM.push(m4.elements[e2]);
+                    var fj = 0.9 + 0.2 * R();
+                    FC.push(sp[0] * fj, sp[1] * fj, sp[2] * fj);
+                  }
+                }
+              }
             }
-            n++;
           }
         }
       }
     }
+
     clear();
     if (!n) { LASTAT = { x: p.x, z: p.z }; return 0; }
-    var mat = new T.MeshStandardMaterial({
-      color: 0xffffff, roughness: 0.94, metalness: 0.0,
-      vertexColors: true, side: T.DoubleSide
-    });
-    mat.name = 'veg_owd_blade';
-    // ---- THE BACKFACE BUG (R6, 2026-08-04) -------------------------------------
-    // HALF THE CARPET WAS RENDERING BLACK, and it is what the user saw as "hard black
-    // alpha edges". There is no alpha in this material at all — the blade is solid
-    // geometry — so the black was never a cutout. It is three.js's DOUBLE_SIDED normal
-    // flip: `normal *= faceDirection` in normal_fragment_begin. bladeGeo() deliberately
-    // points every normal UP (0, 0.94, 0.34 at the time; 0, 0.99, 0.14 now) so a blade
-    // shades like the ground it stands in; on a back face that is negated — pointing at
-    // roughly the dirt rather than the sky, i.e. at a direction which
-    // receives neither the key nor the sky. Blade yaw is uniform over 2*pi, so ~half of
-    // 177k instances were DOWN-facing, and the field read as green scribble over black.
-    // Un-flipping the normal is the whole fix and costs two ALU ops: these normals are
-    // authored, not derived, and there is no side of a blade that should be dark.
-    // (The alternative — mirrored geometry at FrontSide — doubles the triangle count for
-    // the same pixels.)
-    //
-    // AND IT MUST BE WRITTEN AS AN INCLUDE EDIT. The first version of this patch replaced
-    // the chunk's own `float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;` and MATCHED
-    // NOTHING — three.js calls onBeforeCompile BEFORE resolveIncludes, so what the hook
-    // is handed is the template with `#include <normal_fragment_begin>` still in it, not
-    // the expanded chunk. The frames looked slightly better anyway (the height and jitter
-    // changes landed in the same run) and the patch would have shipped as a no-op. Proved
-    // by capturing sh.fragmentShader from inside the hook: 3942 chars, neither string
-    // present. patchGround() below always replaced INCLUDES; this now does too.
-    mat.onBeforeCompile = function (sh) {
-      sh.fragmentShader = sh.fragmentShader.replace('#include <normal_fragment_begin>',
-        '#include <normal_fragment_begin>\n' +
-        '// owd: blade normals are authored (mostly +Y), never flipped by facing\n' +
-        'normal = gl_FrontFacing ? normal : -normal;\nnonPerturbedNormal = normal;');
-    };
-    // No customProgramCacheKey override — Material's own default already returns
-    // onBeforeCompile.toString(), which is unique to this closure, so there was nothing
-    // to gain. (An earlier note here blamed a constant cache key for the black-frame bug
-    // in play3d.html's owHearthOrb. THAT NOTE WAS WRONG and is corrected rather than
-    // deleted: removing the override there did NOT fix the frame; the cause is elsewhere,
-    // see the receipt in owHearthOrb. A wrong written interpretation is worse than none.)
-    var im = new T.InstancedMesh(bladeGeo(), mat, n);
-    im.instanceMatrix = new T.InstancedBufferAttribute(new Float32Array(mats), 16);
-    if (cols.length === n * 3) {
-      im.instanceColor = new T.InstancedBufferAttribute(new Float32Array(cols), 3);
-      im.instanceColor.needsUpdate = true;
+    var mat = scatterMat();
+    var grp = new T.Group(); grp.name = GROUP;
+    var made = [];
+    function addIM(geo, marr, carr, nm) {
+      var cnt = marr.length / 16; if (!cnt) { geo.dispose(); return; }
+      var im = new T.InstancedMesh(geo, mat, cnt);
+      im.instanceMatrix = new T.InstancedBufferAttribute(new Float32Array(marr), 16);
+      im.instanceMatrix.needsUpdate = true;
+      if (carr.length === cnt * 3) {
+        im.instanceColor = new T.InstancedBufferAttribute(new Float32Array(carr), 3);
+        im.instanceColor.needsUpdate = true;
+      }
+      im.frustumCulled = false;      // instanced bounds lie about a carpet this wide
+      // RECEIVE, DO NOT CAST. A carpet that ignores the shadow map is BRIGHTER than the
+      // ground inside every tree shadow and darker than it outside — speckle in both
+      // directions, and it undoes the terminator the lighting lane bought. Casting would
+      // cost 150k instances in the depth pass for shadows nothing resolves at 3-8 px.
+      im.castShadow = false; im.receiveShadow = true;
+      im.name = nm;                  // veg_ => play3d's noStand test can never adopt it
+      grp.add(im); MESHES.push(im); made.push(nm + ':' + cnt);
     }
-    im.instanceMatrix.needsUpdate = true;
-    im.frustumCulled = false;      // instanced bounds lie about a carpet this wide
-    // R6: RECEIVE, DO NOT CAST. A carpet that ignores the shadow map is BRIGHTER than
-    // the ground inside every tree shadow and darker than it outside — speckle in both
-    // directions, and it undoes the terminator the lighting lane just bought. Receiving
-    // costs one shadow-map lookup per fragment; casting would cost 174k instances in the
-    // depth pass for shadows nothing can resolve at 3-8 px a blade.
-    im.castShadow = false; im.receiveShadow = true;
-    im.name = 'veg_owd_blades';    // veg_ => play3d's noStand test can never adopt it
-    var g = new T.Group(); g.name = GROUP; g.add(im);
-    sc.add(g);                     // scene ONLY: collide/walkRef/allMeshes are never touched
-    MESH = im;
-    LASTAT = { x: p.x, z: p.z };
+    addIM(bladeGeo(0), MB[0], MC[0], 'veg_owd_short');
+    addIM(bladeGeo(1), MB[1], MC[1], 'veg_owd_med');
+    addIM(bladeGeo(2), MB[2], MC[2], 'veg_owd_seed');
+    addIM(flowerGeo(), FM, FC, 'veg_owd_flower');
+    sc.add(grp);                     // scene ONLY: collide/walkRef/allMeshes never touched
+    NBLADE = n;
+    LASTAT = { x: p.x, z: p.z, tufts: nT, made: made };
     LASTMS = ((performance && performance.now) ? performance.now() : 0) - t0;
     return n;
   }
 
+  // ===================================================================================
+  // THE SHARED FOLIAGE MATERIAL — one shader edit, every plant in the frame
+  // ===================================================================================
+  // AND IT MUST BE WRITTEN AS AN INCLUDE EDIT. three.js calls onBeforeCompile BEFORE
+  // resolveIncludes, so what the hook is handed is the template with `#include <chunk>`
+  // still in it, not the expanded chunk. R6 paid for this once with a patch that matched
+  // nothing and would have shipped as a no-op; every replace below targets an include, and
+  // the one place that needs the chunk's INSIDE pulls the chunk out of THREE.ShaderChunk and
+  // inlines it, which is version-robust because it is the shipping text rather than a copy.
+  //
+  // WHICH MATERIALS GET WHAT. The shared terms (translucency, highlight desaturation,
+  // roughness) go on everything green, canopy included — they are one edit by design and the
+  // tree lane was told this lane owns the shader. The albedo value->hue REMAP goes only on
+  // the materials this lane owns, so the tree lane's canopy albedo work cannot be fought
+  // over the same pixels.
+  // (bark is deliberately NOT here: a trunk is not translucent, and a highlight clamp
+  // authored for leaf tips has no business on wood.)
+  var FOL_SHARED = ['ow_f2_canopy', 'ow_f2_leaf'];
+  var FOL_OWNED = ['ow_f2_tuft', 'ow_f2_flower', 'ow_f2_green',
+                   'ow_valley_bushcore', 'ow_valley_bushcard'];
+
+  function chunkOr(name, fallback) {
+    try { var s = TH().ShaderChunk[name]; if (typeof s === 'string' && s.length) return s; }
+    catch (e) {}
+    return fallback;
+  }
+
+  var TRANS_FN =
+    'uniform float owdTrans; uniform vec3 owdTransCol; uniform float owdTransPow;\n' +
+    'uniform float owdTransMul;\n' +
+    'uniform float owdHiA; uniform float owdHiB; uniform float owdHiAmt;\n' +
+    'uniform float owdRemap; uniform float owdVComp; uniform float owdVMid;\n' +
+    'uniform float owdVFloor; uniform float owdHueSp; uniform float owdSat;\n' +
+    'uniform float owdTuftFade; uniform vec3 owdEye; uniform vec2 owdFadeAB;\n' +
+    'varying vec3 vOwdW;\n' +
+    // THE TRANSLUCENCY. A leaf lit from behind glows, and the glow is strongest when the
+    // VIEWER is looking down-sun through it. `directLight.color` already has the shadow
+    // factor applied at this point in lights_fragment_begin, which is exactly why the hook
+    // goes there and not at lights_fragment_end: a leaf in shade must not glow.
+    'void owdTransAdd(const in IncidentLight dl, const in vec3 nrm, const in vec3 vdir,\n' +
+    '                 const in vec3 alb, inout ReflectedLight rl) {\n' +
+    '  float bk = max(0.0, -dot(nrm, dl.direction));\n' +
+    '  float fw = max(0.0, -dot(vdir, dl.direction));\n' +
+    '  float tr = owdTrans * owdTransMul * bk * (0.30 + 0.70 * pow(fw, owdTransPow));\n' +
+    '  rl.indirectDiffuse += dl.color * owdTransCol * alb * tr;\n' +
+    '}\n';
+
+  // THE TRANSLUCENCY LEVEL IS PER MATERIAL, AND IT IS MEASURED, NOT TASTE. At one global
+  // 0.55 the canopy box on the meadow plate went L50 0.452 -> 0.690 with saturation
+  // 0.312 -> 0.258: an additive term large enough to wash a dense crown pale, on the exact
+  // asset the tree lane is about to re-author. A tree crown presents far more back-facing
+  // card area per screen pixel than a grass blade does, so the same coefficient is a rim on
+  // one and a flood on the other. The SHADER is still one edit; only the level differs.
+  var TRANS_MUL = { ow_f2_canopy: 0.42, ow_f2_leaf: 0.60, ow_valley_bushcard: 0.85,
+                    ow_valley_bushcore: 0.70 };
+
+  function patchFoliage(mat, owned) {
+    if (!mat || PATCHED['F' + mat.uuid]) return false;
+    PATCHED['F' + mat.uuid] = true;
+    mat.roughness = P.rough;
+    var isTuft = mat.name === 'ow_f2_tuft';
+    var tmul = TRANS_MUL[mat.name] !== undefined ? TRANS_MUL[mat.name] : 1.0;
+    mat.onBeforeCompile = function (sh) {
+      sh.uniforms.owdTransMul = { value: tmul };
+      sh.uniforms.owdTrans = { value: P.trans };
+      sh.uniforms.owdTransCol = { value: new (TH().Color)(P.transCol[0], P.transCol[1], P.transCol[2]) };
+      sh.uniforms.owdTransPow = { value: P.transPow };
+      sh.uniforms.owdHiA = { value: P.hiA };
+      sh.uniforms.owdHiB = { value: P.hiB };
+      sh.uniforms.owdHiAmt = { value: P.hiAmt };
+      sh.uniforms.owdRemap = { value: owned ? P.remap : 0.0 };
+      sh.uniforms.owdVComp = { value: P.vComp };
+      sh.uniforms.owdVMid = { value: P.vMid };
+      sh.uniforms.owdVFloor = { value: P.vFloor };
+      sh.uniforms.owdHueSp = { value: P.hueSpread };
+      sh.uniforms.owdSat = { value: P.sat };
+      sh.uniforms.owdTuftFade = { value: isTuft ? P.tuftFade : 0.0 };
+      sh.uniforms.owdEye = { value: new (TH().Vector3)() };
+      sh.uniforms.owdFadeAB = { value: new (TH().Vector2)(P.tuftFadeA, P.tuftFadeB) };
+      UNIS.push(sh.uniforms);
+
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nvarying vec3 vOwdW;')
+        .replace('#include <begin_vertex>',
+          '#include <begin_vertex>\nvOwdW = (modelMatrix * vec4(transformed,1.0)).xyz;');
+
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', '#include <common>\n' + TRANS_FN);
+
+      // ---- the bundle's own spiked tufts, dithered out of the near band ---------------
+      // A hard radius pops; a HASHED dither over a 28 m band reads as thinning, and the
+      // thing it thins toward is this module's own clumps. It is a stopgap for an asset
+      // this lane cannot rebuild, and it is named as one.
+      if (isTuft) {
+        sh.fragmentShader = sh.fragmentShader.replace('#include <clipping_planes_fragment>',
+          '#include <clipping_planes_fragment>\n' +
+          '{ float dw = distance(vOwdW.xz, owdEye.xz);\n' +
+          '  float keep = smoothstep(owdFadeAB.x, owdFadeAB.y, dw);\n' +
+          '  float hsh = fract(sin(dot(floor(vOwdW.xz*3.0), vec2(127.1,311.7)))*43758.5453);\n' +
+          '  if (owdTuftFade > 0.5 && hsh > keep) discard; }');
+      }
+
+      // ---- albedo: NARROW VALUE, WIDE HUE ---------------------------------------------
+      // The near-black cores are baked into the art and a dark core is what makes a card
+      // read as a painted texture rather than as a plant. Compress the value range toward
+      // vMid with a floor, then spend the range that was there on HUE — dark goes blue-
+      // green, light goes yellow-green — at roughly constant luminance, and add a little
+      // chroma. This is the one term the tree lane's canopy does not get.
+      sh.fragmentShader = sh.fragmentShader.replace('#include <color_fragment>',
+        '#include <color_fragment>\n' +
+        '#ifdef OWD_REMAP\n' +
+        '{ vec3 c0 = diffuseColor.rgb;\n' +
+        '  float l0 = max(1e-4, dot(c0, vec3(0.2126,0.7152,0.0722)));\n' +
+        '  float l1 = max(owdVFloor, owdVMid + (l0 - owdVMid) * owdVComp);\n' +
+        '  float tt = clamp((l0 - owdVMid) / 0.28, -1.0, 1.0);\n' +
+        '  vec3 hs = vec3(1.0 + owdHueSp * tt * 0.55, 1.0, 1.0 - owdHueSp * tt);\n' +
+        '  vec3 c1 = c0 * (l1 / l0) * hs;\n' +
+        '  float lm = dot(c1, vec3(0.2126,0.7152,0.0722));\n' +
+        '  c1 = mix(vec3(lm), c1, owdSat);\n' +
+        '  diffuseColor.rgb = mix(c0, max(c1, vec3(0.0)), owdRemap); }\n' +
+        '#endif\n');
+      if (owned) sh.fragmentShader = '#define OWD_REMAP\n' + sh.fragmentShader;
+
+      // ---- translucency, INSIDE the light loop where the shadow factor lives ----------
+      var lb = chunkOr('lights_fragment_begin', null);
+      if (lb && /RE_Direct\s*\(/.test(lb)) {
+        var hooked = lb.replace(/(RE_Direct\s*\([^;]*\);)/g,
+          '$1\n\t\towdTransAdd( directLight, normal, normalize( vViewPosition ), diffuseColor.rgb, reflectedLight );');
+        sh.fragmentShader = sh.fragmentShader.replace('#include <lights_fragment_begin>', hooked);
+      } else if (window.console) {
+        console.warn('[owd] lights_fragment_begin unavailable — no translucency on ' + mat.name);
+      }
+
+      // ---- the highlight stops going chartreuse ---------------------------------------
+      // outgoingLight is declared in the main body immediately before <opaque_fragment>,
+      // so this is an include-boundary edit like every other one here.
+      sh.fragmentShader = sh.fragmentShader.replace('#include <opaque_fragment>',
+        '{ float owl = dot(outgoingLight, vec3(0.2126,0.7152,0.0722));\n' +
+        '  float owk = smoothstep(owdHiA, owdHiB, owl) * owdHiAmt;\n' +
+        '  outgoingLight = mix(outgoingLight, vec3(owl), owk); }\n' +
+        '#include <opaque_fragment>');
+    };
+    mat.needsUpdate = true;
+    return true;
+  }
+
+  // every patched material's uniform block, so a live sweep (OWD.set) reaches the shader
+  // without a recompile — and so the tuft fade can track the player.
+  var UNIS = [];
+  function pushUnis() {
+    var SIM = window.SIM, p = (SIM && SIM.pos) ? SIM.pos() : null;
+    for (var i = 0; i < UNIS.length; i++) {
+      var u = UNIS[i];
+      if (u.owdTrans) u.owdTrans.value = P.trans;
+      if (u.owdTransPow) u.owdTransPow.value = P.transPow;
+      if (u.owdTransCol) u.owdTransCol.value.setRGB(P.transCol[0], P.transCol[1], P.transCol[2]);
+      if (u.owdHiA) u.owdHiA.value = P.hiA;
+      if (u.owdHiB) u.owdHiB.value = P.hiB;
+      if (u.owdHiAmt) u.owdHiAmt.value = P.hiAmt;
+      if (u.owdVComp) u.owdVComp.value = P.vComp;
+      if (u.owdVMid) u.owdVMid.value = P.vMid;
+      if (u.owdVFloor) u.owdVFloor.value = P.vFloor;
+      if (u.owdHueSp) u.owdHueSp.value = P.hueSpread;
+      if (u.owdSat) u.owdSat.value = P.sat;
+      if (u.owdFadeAB) u.owdFadeAB.value.set(P.tuftFadeA, P.tuftFadeB);
+      if (u.owdTuftFade && u.owdTuftFade.value > 0) u.owdTuftFade.value = P.tuftFade;
+      if (u.owdEye && p) u.owdEye.value.set(p.x, p.y, p.z);
+    }
+  }
+
+  function patchAllFoliage() {
+    var sc = SCN(); if (!sc) return 0;
+    var n = 0;
+    sc.traverse(function (m) {
+      if (!m.isMesh || !m.material) return;
+      var mn = m.material.name || '';
+      if (FOL_OWNED.indexOf(mn) >= 0) { if (patchFoliage(m.material, true)) n++; }
+      else if (FOL_SHARED.indexOf(mn) >= 0) { if (patchFoliage(m.material, false)) n++; }
+    });
+    return n;
+  }
+
   // ---- pixel-scale ground material --------------------------------------------------
-  // Three octaves of world-space value noise multiplied into diffuse. The finest is the
-  // one that matters (gravel speckle in the worn dirt is most of what separates the refs'
-  // path from ours) and it is also the one that aliases, so it is faded out by view depth.
-  // Worn ground gets more of it than turf: the terrain builder already split those into
-  // separate primitives, so "more grit on the dirt" is a per-material amount, not a mask.
+  // Three octaves of world-space value noise multiplied into diffuse. The finest is the one
+  // that matters (gravel speckle in the worn dirt is most of what separates the refs' path
+  // from ours) and it is also the one that aliases, so it is faded out by view depth. Worn
+  // ground gets more of it than turf: the terrain builder already split those into separate
+  // primitives, so "more grit on the dirt" is a per-material amount, not a mask.
   function patchGround() {
     var sc = SCN(); if (!sc) return 0;
     var AMT = { ow_f2_ter_grass: 0.62, ow_f2_ter_dry: 1.0, ow_f2_road: 1.15,
@@ -495,17 +1059,13 @@
   // ---- arming -----------------------------------------------------------------------
   // A SOFTWARE RASTERISER CANNOT AFFORD A CARPET, AND HALF THIS REPO'S GATES USE ONE.
   // tools/cdp.mjs:149 and transition_test.mjs:180 launch Chrome with
-  // `--use-angle=swiftshader --disable-gpu`. The carpet is ~1.0 M triangles of alpha-free
-  // but overdraw-heavy instancing; on the GPU path it costs nothing measurable, on
-  // SwiftShader every one of those triangles is rasterised by the CPU. So the carpet is a
-  // GPU feature: on a software context the module keeps the material patch (a few ALU ops
-  // per fragment) and places no blades at all.
-  // WHAT IS MEASURED AND WHAT IS NOT, stated plainly because the difference matters: the
-  // DETECTION is measured — booted under the gates' own flags, OWD.state() comes back
-  // {software:true, blades:0}. The saving is NOT isolated; this is a precaution taken
-  // because the art is worthless in a SwiftShader frame anyway (nothing judges those
-  // pixels) and a content change that makes the suite unrunnable gets reverted by
-  // whoever is on call, rightly. Do not quote a speedup from this comment.
+  // `--use-angle=swiftshader --disable-gpu`. The scatter is ~1 M triangles of overdraw-heavy
+  // instancing; on the GPU path it costs nothing measurable, on SwiftShader every one of
+  // those triangles is rasterised by the CPU. So it is a GPU feature: on a software context
+  // the module keeps the material patches (a few ALU ops per fragment) and places nothing.
+  // WHAT IS MEASURED AND WHAT IS NOT: the DETECTION is measured — booted under the gates'
+  // own flags, OWD.state() comes back {software:true, blades:0}. The saving is NOT isolated.
+  // Do not quote a speedup from this comment.
   var SOFT = null;
   function softwareGL() {
     if (SOFT !== null) return SOFT;
@@ -520,54 +1080,63 @@
       if (dbg) s += ' ' + (gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '');
       s += ' ' + (gl.getParameter(gl.RENDERER) || '') + ' ' + (gl.getParameter(gl.VENDOR) || '');
       SOFT = /swiftshader|softwar|llvmpipe|mesa offscreen/i.test(s);
-      if (SOFT) console.warn('[owd] software WebGL (' + s.trim() + ') — blade carpet off');
+      if (SOFT) console.warn('[owd] software WebGL (' + s.trim() + ') — scatter off');
     } catch (e) { SOFT = false; }
     return SOFT;
   }
 
-  // `?owdetail=0` turns the whole module off — carpet AND material patch — so an A/B
+  // `?owdetail=0` turns the whole module off — scatter AND material patches — so an A/B
   // capture never has to edit play3d.html to get a clean BEFORE. An art lane that has to
-  // remove a script tag to photograph its own baseline will eventually photograph
-  // somebody else's tree.
+  // remove a script tag to photograph its own baseline will eventually photograph somebody
+  // else's tree.
   function isOW() {
     try { if (new URLSearchParams(location.search).get('owdetail') === '0') return false; }
     catch (e) {}
     return /^ow-/.test(SKEY() || '');
   }
 
-  var TICK = null, NPATCH = 0;
+  var TICK = null, NPATCH = 0, NFOL = 0;
   function arm() {
-    clear(); SRC = null; IDX = null; LASTAT = null; NPATCH = 0;
+    clear(); SRCS = null; OCC = null; LASTAT = null; NPATCH = 0; NFOL = 0;
     if (TICK) { clearInterval(TICK); TICK = null; }
     if (!isOW()) return;
-    // THE BUNDLE IS NOT LOADED YET. This module arms at DOMContentLoaded and on
-    // 'eb-scene', and BOTH can land before ow-valley's 45 MB GLB has finished parsing —
-    // at which point source() finds nothing and patchGround() patches nothing, silently
-    // and forever. So arming only starts the poll; the poll is what does the work, and it
-    // keeps retrying the material patch until the terrain actually exists. (A module that
-    // decides at t=0 whether the world contains a thing is a module that ships off.)
+    // THE BUNDLE IS NOT LOADED YET. This module arms at DOMContentLoaded and on 'eb-scene',
+    // and BOTH can land before ow-valley's 45 MB GLB has finished parsing — at which point
+    // sources() finds nothing and the patches patch nothing, silently and forever. So arming
+    // only starts the poll; the poll does the work and keeps retrying. (A module that decides
+    // at t=0 whether the world contains a thing is a module that ships off.)
     TICK = setInterval(function () {
       try {
         if (NPATCH < 2) NPATCH += patchGround();
+        if (NFOL < 6) NFOL += patchAllFoliage();
         rebuild(false);
+        pushUnis();
       } catch (e) {}
     }, 250);
   }
 
   window.OWD = {
     state: function () {
-      return { on: ON, scene: SKEY(), software: softwareGL(), blades: MESH ? MESH.count : 0,
+      var tris = 0;
+      for (var i = 0; i < MESHES.length; i++) {
+        var g = MESHES[i].geometry;
+        tris += (g.index ? g.index.count / 3 : 0) * MESHES[i].count;
+      }
+      return { on: ON, scene: SKEY(), software: softwareGL(), blades: NBLADE,
                ms: +LASTMS.toFixed(1), at: LASTAT, params: JSON.parse(JSON.stringify(P)),
-               source: SRC ? SRC.name : null, tris: MESH ? MESH.count * 6 : 0 };
+               sources: SRCS ? SRCS.map(function (s) { return s.mesh.name; }) : null,
+               folPatched: NFOL, draws: MESHES.length, tris: tris };
     },
-    set: function (o) { for (var k in o) if (k in P) P[k] = o[k]; return rebuild(true); },
+    occ: function () { return OCC ? { cells: OCC.cells, occ: OCC.occ, hard: OCC.hard, tris: OCC.tris,
+                                      ms: OCC.ms, cell: OCC.cell, nx: OCC.nx, nz: OCC.nz } : null; },
+    set: function (o) { for (var k in o) if (k in P) P[k] = o[k]; pushUnis(); return rebuild(true); },
     rebuild: rebuild,
     enable: function (v) { ON = v !== false; if (!ON) clear(); else rebuild(true); return ON; }
   };
 
   if (typeof window !== 'undefined') {
-    // self-arm at load AND on every in-place scene swap, which is the module contract
-    // every module in this runtime keeps (see play3d.html's sgAnnounce comment).
+    // self-arm at load AND on every in-place scene swap, which is the module contract every
+    // module in this runtime keeps (see play3d.html's sgAnnounce comment).
     window.addEventListener('eb-scene', function () {
       try { arm(); } catch (e) { console.error('[owd] eb-scene', e); }
     });
