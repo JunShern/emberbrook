@@ -2132,3 +2132,82 @@ weeds 2 141 x 36 + sedges 990 x 48 = 124.6k, extra blades 2 586 x 6 = 15.5k, ric
   * `GRASS_HI` -> `ow_f2_matte`: handed to the bundle lane, unfixed here.
   * The near field still reads broad; the weed's erect leaves are now part of that read.
   * `cine_sweep`-style question untouched: the far ridge is still carried by `ow_f2_tuft`.
+
+## TREES r3 (t3) — the trunk that rendered zero pixels, and the teal that was never ours
+
+Plates `docs/qa/ow-refs/plates/t3-{meadow,gate,vista,gorge,closeup}.png`.
+Scene 333 373 -> 337 793 tris. playthrough 86/0, walk_engine_gate ow-valley GREEN
+(0 cells lost), cine 689/0, slice 848/0, findability 69/0.
+
+**A GATE THAT COUNTS TRIANGLES CANNOT SEE AN INVISIBLE OBJECT.** The inherited
+stand-trunk pass built 63 trunks / 4 032 tris, printed them in `valley_build.json`,
+and rendered **0 px on all seven judged cameras**. The instrument that found it:
+give `veg_canopy_trunks` a flat magenta `MeshBasicMaterial` and count magenta —
+and, because a null result must prove it could have found something, the same
+marker rendered **1 720 px** with the rest of the scene hidden. Hiding the CARD
+shells alone still gave 0, which named the occluder as the lobed CORE.
+
+**AND THE BUILD'S OWN NUMBERS SAID WHY, ONCE ASKED.** `stand_mass` places a lobe at
+`cz = gz + h*1.04 - hz`, so `H = cz - gz` is a function of the LOBE and never of
+where the ground is. Printed over all 446 lobes of the three stands, the exposure
+`bot - gz` runs **p50 -0.85, p90 -0.03, max +0.17** — not one lobe in this region
+has half a metre of air beneath it, because the mass is deliberately sunk. A trunk
+from that ground to that centre is inside the core for its whole length. The fix is
+a different GROUND, not a different trunk: an 8-sample ring at the lobe's own radius,
+keep the minimum. That is the crown whose skirt runs out over falling ground, which
+is the judges' complaint stated as a measurement.
+
+**THE FIX'S FIRST BUILD SHIPPED A WORSE DEFECT, AND ONLY THE PICTURE HAD IT.** The
+ring minimum beyond a gorge-rim lobe is partway down a vertical wall, so trunks stood
+against the cliff as pale poles — scaffolding, plainly wrong, and every number was
+green (whisperwood exposure max +13.01 m looked like success). Two guards: `TRUNK_MAX`
+3.6 (a trunk, not a mast) and `TRUNK_SLOPE` 0.70 (no trunk on a wall). **15 trunks,
+420 tris — an eighth of the inherited cost — and vista trunk px 831 -> 14, the
+under-canopy camera 12 578 -> 0.** Honest limit: the hero crown at the meadow and
+closeup cameras still shows no trunk (89 px / 0 px); this closes the gorge-rim and
+farwall cases, not the hero one.
+
+**THE STREAKS: THE SHELL NORMAL IS THE PAYER, MEASURED ON A CLEAN A/B.** Two builds
+(twist+normal ON and OFF), one glb swapped under one browser so the shader is
+identical on both sides: canopy pixels over L 0.72 **13.58% -> 11.69%**, L50 0.586 ->
+0.574. The picture is the verdict and it agrees — the scattered bright slivers become
+a lobed mass with dark interstices (`scratchpad/t3ab/zoom-meadow.png`). Real, partial.
+
+**THE CYAN/TEAL IS `ow_detail.js`'s REMAP, AND THE NUMBER IS NOT CLOSE.** Neutralising
+the remap's four component knobs takes canopy pixels over L 0.72 from **9.79% to
+0.78%** and L50 0.558 -> 0.380, against references that run 1-3% over. Mechanism: this
+atlas's albedo in LINEAR space is 0.017-0.20, **entirely below `owdVMid = 0.30`**, so
+`tt` clamps at -1 for every texel — a fixed `R x0.835 / B x1.30` hue swing plus a value
+lift of up to **5x** on the darkest texels and 1.1x on the brightest, i.e. the
+leaf-cluster contrast is crushed ~4.6x. `envMapIntensity = 0` is pixel-identical, which
+excludes the IBL. **The remap's own block says it goes "only on the materials this lane
+owns, so the tree lane's canopy albedo work cannot be fought over the same pixels" —
+and `ow_valley_bushcore`/`ow_valley_bushcard` are in that list.** One-line handoff:
+move both to `FOL_SHARED` (ow_detail.js:1373-1375). **`OWD.set({remap: …}) IS A
+NO-OP`**: `pushUnis()` pushes every other uniform and not `owdRemap`, so a remap sweep
+returns a pixel-identical frame (measured: `M3-remap0` ≡ `M0-base`). A knob that
+cannot be swept cost the previous session an experiment.
+
+**OUR HALF OF THE FRINGE, AND IT DID NOT PAY.** `foliage_atlas`'s un-premultiply
+divides by `max(a,1e-4)`, so every fully transparent texel stored BLACK — and the GPU
+does not respect alpha when it filters, which made the atlas's darkest texels its own
+edges, i.e. exactly the input the remap amplifies 5x. `_bleed` pushes the opaque colour
+outward (edge-clamped per cell; alpha sum identical, opaque texels identical; mip-2
+luminance 0.192 -> 0.198). At the wire it measured **~0** while the remap dominates.
+Kept as a no-regression correctness fix, reported as one.
+
+**Shade band (item 4): HOLDS.** Gorge shaded vegetation L p05 0.119 / p50 0.186 / p95
+0.356, **0.02% under the 0.06 black point**, chroma 0.115; the deep under-canopy frame
+p05 0.110, 0.00% under. No collapse into holes.
+
+Also: the seven `GRASS_HI` wall-line cones per house are DELETED (coordinator's item,
+option b) — no class->material entry, so they shipped untextured; the detail lane's
+`weedFringe` covers that feature now and the bases still read collared by eye.
+
+### STILL OPEN (trees)
+  * The hero crown's own trunk — the whisperwood at the meadow/closeup cameras. Every
+    lobe there is sunk into its ground; a trunk there needs a skirt change, not a probe.
+  * The remap handoff above. Until it lands, every canopy number in this lane is
+    measured through a 5x value lift.
+  * `cutin_edge`-class hole in our own gates: nothing here measures HUE, which is why a
+    teal canopy passed every tree-lane gate for two rounds.
