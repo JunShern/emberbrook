@@ -79,7 +79,7 @@ export const HEAD_SHA = (() => {
  * middle of the game. The HARD list is untouched: it still scans the entire prompt,
  * and it is the half that actually stops a leak.
  */
-export function assertNoPrivileged(prompt, truth, harnessText) {
+export function assertNoPrivileged(prompt, truth, harnessText, gameText) {
   if (harnessText === undefined) throw new Error(
     'FIREWALL: assertNoPrivileged needs its third argument. Pass the harness-authored ' +
     'text (agent.mjs sets it on every reply as `_authored`), or an explicit null to ' +
@@ -97,9 +97,17 @@ export function assertNoPrivileged(prompt, truth, harnessText) {
   for (const p of truth.pos || []) { const s = String(p); if (s.includes('.') && s.length >= 4) hard.push(s); }
   for (const t of hard) { const s = String(t).toLowerCase();
     if (s.length >= 5 && whole.includes(s)) bad.push(t + ' (hard)'); }
+  // A shot named after a word THE GAME ITSELF DRAWS is not a leak. The ch2.supper
+  // checkpoint crashed a run here (2026-08-04): the shot is `cottage`, and the brief
+  // legitimately says "cottage" because the game's own banner names Keepers' Cottage
+  // on screen. If the word is already in front of the player, the harness writing it
+  // reveals no camera state — so soft tokens are excused by the DRAWN text, never by
+  // the prompt (which would excuse everything the harness itself wrote).
+  const drawn = String(gameText || '').toLowerCase();
   const soft = truth.shot ? [truth.shot] : [];
   for (const t of soft) { const s = String(t).toLowerCase();
-    if (s.length >= 4 && authored.includes(s)) bad.push(t + ' (soft, in harness-authored text)'); }
+    if (s.length >= 4 && authored.includes(s) && !drawn.includes(s))
+      bad.push(t + ' (soft, in harness-authored text)'); }
   if (bad.length) throw new Error(
     'FIREWALL: the agent prompt contains privileged state it must never see: ' + JSON.stringify(bad) +
     '\n  This is a build error in the harness, not a game bug. The agent may only be given the ' +
@@ -400,7 +408,7 @@ export async function run(cfg) {
       // own recollection. Passing `brief` here was close but not the same thing, and
       // passing nothing at all silently meant "scan everything" (see the firewall's
       // own note above).
-      assertNoPrivileged(intent._prompt, truth, intent._authored);
+      assertNoPrivileged(intent._prompt, truth, intent._authored, obs.text);
     } catch (e) {
       if (/FIREWALL/.test(e.message)) throw e;
       log('  agent error: ' + e.message);
