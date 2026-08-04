@@ -37,6 +37,14 @@ const arg = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i
 const PORT = parseInt(arg('port', '3000'), 10);
 const SC = arg('scene', 'del-cine');
 const TARGET = arg('target', 'lockfive');
+/* --liftcap <px>: MEASURE THE PROPOSED FIX WITHOUT MAKING IT. markersTick lifts the
+ * arrow at[1]+2.1 m and then 30 px more; measured here that is 86-164 px, and half the
+ * markers land a click on scenery. A CAP on the SCREEN distance between the seam's own
+ * projection and the arrow keeps the "floats over the door, points down at it" grammar
+ * while keeping the arrow on the ground it names. This reports where each arrow WOULD
+ * draw under the cap and what SIM.pick returns there, so the change can be argued with
+ * numbers before anyone edits the coordinator-owned page. 0 = do not measure it. */
+const LIFTCAP = parseFloat(arg('liftcap', '0'));
 const OUT = arg('out', 'docs/qa/playtest/wayfind');
 mkdirSync(OUT, { recursive: true });
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -99,7 +107,8 @@ await new Promise(r => setTimeout(r, 1500));
  *  - `pickAtMarker` is SIM.pick at the marker's own drawn centre: what a player aiming
  *    at that triangle actually points at.
  */
-const READ_JS = (target) => `(()=>{
+const READ_JS = (target, CAPV) => `(()=>{
+  const CAP=${CAPV};
   const p=SIM.pos();
   // cam and SG are play3d top-level let bindings: global LEXICAL scope, NOT on window
   // (window.cam is undefined, which read as 'the edge has no position'). Bare, guarded.
@@ -128,12 +137,17 @@ const READ_JS = (target) => `(()=>{
     let hit=null;
     if(m.shown&&m.px){ try{ const h=SIM.pick(m.px[0],m.px[1],3);
       hit=h.hits.map(q=>({name:q.name,pt:q.pt,d:q.d})); }catch(err){ hit=String(err); } }
+    let capPx=null, capHit=null;
+    if(CAP>0&&m.shown&&seam){
+      capPx=[seam[0], seam[1]-Math.min(CAP, Math.max(0, seam[1]-m.px[1]))];
+      try{ const h2=SIM.pick(capPx[0],capPx[1],3);
+        capHit=h2.hits.map(q=>({name:q.name,pt:q.pt,d:q.d})); }catch(err){ capHit=String(err); } }
     rows.push({id:e.id,label:e.label,kind:e.kind,to:e.to,dist:e.dist,open:e.open,
       camTo:e.cam&&e.cam.key?e.cam.key:null,
       at:e.at, shown:!!m.shown, markerPx:m.px, seamPx:seam, arrowPx:arrow,
       liftPx: (m.px&&seam)?+(seam[1]-m.px[1]).toFixed(1):null,
       liftFrac:(m.px&&seam)?+((seam[1]-m.px[1])/innerHeight).toFixed(3):null,
-      pick:hit});
+      pick:hit, capPx:capPx, capPick:capHit});
   }
   return JSON.stringify({pos:[+p.x.toFixed(2),+p.y.toFixed(2),+p.z.toFixed(2)],
     scene:SIM.scene?SIM.scene():null, shot,
@@ -185,7 +199,7 @@ for (const [name, pos, useShot] of STATIONS) {
   await ev(`SIM.tick(3)`);
   await new Promise(r => setTimeout(r, 700));
   let r, hop;
-  try { r = JSON.parse(await ev(READ_JS(TARGET))); } catch (e) { r = { error: String(e) }; }
+  try { r = JSON.parse(await ev(READ_JS(TARGET, LIFTCAP))); } catch (e) { r = { error: String(e) }; }
   try { hop = JSON.parse(await ev(HOP_JS(TARGET))); } catch (e) { hop = { error: String(e) }; }
   r.station = name; r.want = pos; r.hop = hop;
   rows.push(r);
@@ -211,6 +225,8 @@ for (const [name, pos, useShot] of STATIONS) {
       '  seam@' + JSON.stringify(m.seamPx && m.seamPx.map(v => Math.round(v))) +
       '  lift ' + m.liftPx + 'px (' + m.liftFrac + ' frame)' +
       '  click hits: ' + top +
+      (LIFTCAP > 0 ? ('  |  capped@' + JSON.stringify(m.capPx && m.capPx.map(v => Math.round(v))) +
+        ' hits: ' + ((m.capPick && m.capPick[0]) ? m.capPick[0].name : '(nothing)')) : '') +
       '  [' + (m.label || m.camTo || m.id.slice(-24)) + ']');
   }
 }
