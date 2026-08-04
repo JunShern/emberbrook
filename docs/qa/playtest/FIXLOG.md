@@ -63,6 +63,8 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 8 | (found by playing) | P1 | 34 of 45 steps inside one shot of Dellhollow, walking well and getting nowhere | **VERIFIED as LEGIBILITY, REFUTED as connectivity** — `reach_probe` in the running page: the lock apron IS reachable from the deck (39.7 m, 2469 cells, 2 in-scene edges). `del-cine` ships **40 label-less `cut` edges against 9 labelled ones**, and `quay-west` has **6 exits of which 5 are silent** — the only labelled thing in the shot is the door into the empty Cookhouse | not fixed — the look decision carried since round 5, now with a price | — |
 | 8 | (not filed) | — | The playtest agent cannot read the pause menu | **HARNESS DEFECT** — `menu.js` renders `.mn-navrow`, the percept queried `.ebui-row`; measured live: menu open, six commands in the DOM, **zero rows in the percept** | `.mn-navrow` in the percept's union, a fifth `percept_test` fixture, and menu.js added to the selector census | this commit |
 | 8 | (the run itself) | **BLOCKER** | The LLM playtest died at step 46 of 120 | **`HTTP 429 — "Your prepayment credits are depleted"` (Gemini/AI Studio).** Not a game or harness fault; the loop cannot run further without credit | reported to the user; the round finished on the no-model instruments | — |
+| 10 | PT-20260804-004 | P1 | Character stuck on wooden platform, cannot reach objective markers | **REFUTED against the game · VERIFIED against the harness** — the world is open (`SIM.move` crosses to the seam in 46 ticks; the agent itself was two levels down one step later), but every failed leg aimed at a **cliff face 7 m past the deck**, because an exit marker is drawn 2.1 m above the ground it names and the executor ray-marched the arrow's pixel | a pixel on an exit arrow resolves to that edge's own `at`; and in a walk-network scene a ray that never crosses the network is refused instead of walked at — re-run `run-20260804-112506`: off-network legs **14 → 0**, median leg closed **0.11 → 0.63**, zero verified blockers | this commit |
+| 10 | PT-20260804-003 | P1 | Character cannot navigate up the stairs from the middle walkway | **REFUTED** (triage, round 10) — reachable, 4.7 m, 325 cells, via 2 in-scene edges; the agent climbed those stairs later in the same run | same root cause as -004 | — |
 
 ## Rounds
 
@@ -1765,3 +1767,138 @@ the second time in one night.
 single cheapest thing to do the moment credit returns is re-run `--from=ch2.maren`. Three
 Dellhollow interiors still empty; a shop still never entered; Dellhollow's 40 silent cuts still
 a design call for the user; `play3d` still has no `resize` handler.
+
+### Round 10 — 2026-08-04 · the arrow floats two metres over its door, and the harness walked at what was behind it
+
+`run-20260804-101155` is the first run that ever got past `ch2.maren` (round 9's finish-line
+guard did that). It played 140 steps of Chapter Two and filed two P1s, both of the shape
+*"I am stuck, I cannot reach the markers"*, both from the Lock Five objective. Triage's
+`reach_probe` **verified** PT-20260804-004: the target `[60.47, 16.58, −3.53]` is not standable
+and the nearest ground the player can reach is 6.0 m away.
+
+That verification is correct and the ticket is still wrong, because **the target was never a
+place the agent meant to go.**
+
+#### What the probe named
+
+`_court_probe`'s method, pointed at a WALKLOCK town — `del-cine` must fill on `walkGround`, not
+on `SIM.ground`, which is the one change `_court_probe` needs to be re-aimed at a town. Every
+number below is the engine's own, read in the running page. Three measurements, in order:
+
+1. **The body was not stuck.** From the exact filing position `[56.47, 17.4, −7.84]`, a
+   WALKLOCK component fill reaches **1357 cells**, including the quay deck 4 m below; and
+   `SIM.move()` drives to the two seams offered in that shot and **arrives** — `d 0.95 m` in 46
+   ticks, `d 0.97 m` in 128 ticks, the second one firing the cut into `quay-west`. The agent's
+   own log agrees: **step 125 has it at `[43.48, 14.07, −18.03]`**, one step after it said it
+   could not move.
+2. **Every failed leg aimed at the same cliff.** `legs.json`, steps 110–124: **8 legs failed,
+   all with `onNetwork:false` and a target at `z ≈ −3.5, y ≈ 16.5`. 7 legs arrived, all with
+   `onNetwork:true`.** One field, 15 for 15.
+3. **Why the aim was wrong.** `markersTick` projects `e.at[1] + 2.1`, then lifts the arrow 30
+   px and bobs it — an FF7 arrow floats over its door and points *down* at it. Measured live in
+   `del-cine` from `loop-stairs`: the three markers draw at ny **.159 / .435 / .428** while
+   their own edges project at **.382 / .657 / .616** through `SIM.cam()` — a constant **0.22 of
+   frame height**. `__pt.hit` at each arrow's own centre returned `[48.87, 21.88, −12.91]`,
+   `[56.33, 16.83, −3.27]`, `[60.37, 16.76, −3.38]`: **the cliff behind the arrows.** The agent
+   clicked the red triangles it was told to head for, the ray sailed over the deck, and the
+   body pushed at a cliff for 16 bursts.
+
+The 2.1 m lift is deliberate and reads correctly to a human. **Nothing in the game was
+changed** — `play3d.html` is coordinator-owned, and the world here is not the defect.
+
+#### The fix (`tools/playtest/adapter_emberbrook.mjs`, `INSTALL_MOTOR`)
+
+* **A pixel on an exit arrow resolves to that edge's own `at`.** `markersTick` already stamps
+  `dataset.edge` on every marker for `trigger_probe`, so the motor reads the game's own handle
+  and can never name a seam the game is not drawing.
+* **In a walk-network scene, a ray that never crosses the network is refused.** `march(true)`
+  scans the *whole* ray, so a roof or a tree in front of a reachable plaza is transparent to it;
+  a ray that still finds nothing has named scenery. The executor gets
+  `ok:false` and the agent gets the sentence it already understands —
+  *"[x,y] is not ground you can walk to"* — instead of sixteen bursts and a false P1.
+  The switch is **the scene's own answer under the player's feet**, with `walkGround`'s four
+  0.18 m plank-crack retries, not a scene-name regex: measured at the very spot this bug was
+  filed from, a bare `walkFloors(56.47, −7.84)` is **empty** and `z−0.18` returns **17.4**. A
+  one-sample test would have read "this scene has no walk network" while the body stood on it.
+  `ow-valley` is untouched by construction (no `walk_` meshes → the old fallback stands, and it
+  was re-measured: three off-network overworld pixels still resolve exactly as before).
+
+#### Receipts
+
+| what | before | after |
+|---|---|---|
+| the 8 failing pixels of steps 110–124 | 8/8 aimed at the cliff, `ok:true` | **3 resolve to the seam the arrow names, 5 refused with a reason** — 0 still aim at the cliff |
+| the 7 arriving pixels of the same steps | 7/7 `onNetwork:true` | **unchanged** (one now goes to the seam itself, which is where it was heading) |
+| `percept_test` | — | **PASS 434/434, 1.3 s** |
+| `ow-valley` off-network aim | `ok:true` | **`ok:true`, identical targets** |
+| `story_test` | — | **1104 / 0** |
+
+#### A LEAD, NOT A VERDICT: `playthrough_test` came back 54/16, and it is not this lane
+
+`node tools/playthrough_test.mjs --port=3000` on `23336cb`+ returned **54 passed, 16 failed**
+against the 81/0 the Old Gate fix left. The 16 are ONE cascade:
+`beat ch1.pact fired (shot square)` fails → `ch1.sigils` is never driven →
+`story.ch1.gate-open` is never set → the Old Gate edge stays sealed → the run never leaves
+`emb-cine`, so §W's only red (`ch1.done -> ch2.road`) is an anchor pair measured from
+Emberbrook and means nothing, and every Chapter Two assertion falls over behind it.
+
+**Not this change**, by construction: `playthrough_test` imports `reach_probe` and `cdp` and
+`grep -c adapter_emberbrook` is **0** in all three, and this lane touched only that adapter
+and this log. `story_test` is **1104/0**, so the story DATA is intact.
+
+**And not yet established as a game defect either.** The same run's final flag dump has
+`story.ch1.pact: true` and lists `ch1.pact` among its 16 completed beats — **the beat DID
+fire, just not inside the assert's 75-tick window.** The machine was at 66 MB free and
+3.4 GB of swap while this ran, and a slow page missing a fixed tick budget looks exactly like
+this. So: **re-run it on a quiet machine before anybody builds against it.** Recorded here
+because the next reader will otherwise inherit a red gate with no note beside it — not
+because we know what it is.
+
+The consequence for this round is only that `playthrough_test` could not serve as the
+receipt: the run never entered `del-cine`, so §W never walked the Chapter Two anchors. The
+receipt is the engine's own answers above plus the playtester re-run below.
+
+#### The circuit closed: `--from=ch2.dock --steps=60`, `run-20260804-112506`
+
+The same command the bug came from, on the same checkpoint, same models:
+
+| | run-20260804-101155 (before) | run-20260804-112506 (after) |
+|---|---|---|
+| walk legs | 133 | 54 |
+| **aimed off the walk network** | **14** | **0** |
+| un-projectable (the new refusal) | 0 | **3** |
+| arrived | 35 (26%) | 30 (**56%**) |
+| **median fraction of the leg closed** | **0.11** | **0.63** |
+| verified navigation blockers | **PT-20260804-004, P1** | **none** |
+
+**Zero legs aimed off the walk network**, and the median leg now closes 63% of its distance
+instead of 11%. The agent got far enough to hold two full conversations (Watchman Pell,
+Sorrel) that the previous run never reached.
+
+It filed four new reports and `playtest_triage` **REFUTED three of them**
+(PT-20260804-006/-007/-008) on `reach_probe` in the running page; the fourth
+(PT-20260804-005) is UNVERIFIED — *the probe itself* died with "Execution context was
+destroyed", which is a triage failure, not a finding.
+
+The refutations are the interesting part, because **the complaint has changed shape.** Round
+10's targets were `[60.47, 16.58, −3.53]` — a cliff, 6.0 m from any reachable ground. The new
+ones are `[54.02, 15.96, −11.57]` (**1.6 m**, 15 cells) and `[53.44, 18.75, −9.7]` (**3.1 m**,
+86 cells, via 1 in-scene edge): real, connected, walkable ground a step or two away. The aim
+is now ON the world, so what is left is the honest residue — a stride or body-box question for
+`walk_bodygate`, and Dellhollow's 3.9 m level changes that only a cut band crosses. **That is
+a smaller and truer bug than the one we started with, and it is carried, not fixed.**
+
+#### One thing this fix deliberately does NOT hide
+
+A refusal is now the answer whenever visible ground has no walk network under it — which is
+also the signature of the real defect `walk_engine_gate` exists for (209.6 m² of Emberbrook
+non-collidable for weeks). The refusal therefore *names the surface it found*
+(`"the ray lands on scenery at [58.03, 16.55, −3.55]"`) and `legs.unprojectable` is already
+counted in every run summary. A run whose unprojectable count jumps is a lead, not noise.
+
+#### And a legibility note for the coordinator, not fixed here
+
+From a steep down-looking shot the 2.1 m lift puts the arrow visually **on the cliff face 7 m
+behind** the seam it names. A human reads the arrow's *direction*; nobody has measured whether
+a human reads its *place*. Same family as round 8's "40 silent cuts in `del-cine`". Owned by
+whoever owns `play3d.html`.

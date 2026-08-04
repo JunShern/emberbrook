@@ -19,17 +19,49 @@
  a{color:#c8a86a}
 </style>
 <h1>Emberbrook — LLM playtest queue</h1>
-<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-03T01:35:48.608Z.</p>
+<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-04T11:34:23.344Z.</p>
 <div class="warn"><b>An UNVERIFIED complaint is a lead, never a ticket.</b> These are an LLM's opinions about
 screenshots. This repo has a confabulation scar; the ratified workflow is judge&nbsp;→&nbsp;<b>measure on an
 instrument</b>&nbsp;→&nbsp;build. REFUTED entries matter as much as VERIFIED ones: the agent sees one still frame
 of a night-graded plate with no parallax and no camera control, so it is biased toward "I cannot find it",
 and the false-positive rate is this tool's calibration.</div>
 <div class="tally">
- <div><b style="color:#3fa96a">1</b>verified</div>
- <div><b style="color:#8a7a5a">3</b>unverified</div>
- <div><b style="color:#b25a4a">0</b>refuted</div>
- <div><b>4</b>total</div>
+ <div><b style="color:#3fa96a">18</b>verified</div>
+ <div><b style="color:#8a7a5a">6</b>unverified</div>
+ <div><b style="color:#b25a4a">12</b>refuted</div>
+ <div><b>37</b>total</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P0 · confusion</span>
+  <span class="ttl">Attempted to navigate towards the village, but the game is unresponsive and visually broken.</span><span class="id">PT-20260803-014</span></div>
+ <dl>
+  
+  
+  
+  <dt>On screen</dt><dd>objective: Find the village at the end of the road</dd>
+  <dt>Measured by</dt><dd>same as PT-20260803-013</dd>
+ </dl>
+ <pre>same frame one step later; same status</pre>
+ <div class="fr"><img src="runs/run-20260803-173450/frames/step-005.jpg" loading="lazy"><img src="runs/run-20260803-173450/frames/step-006.jpg" loading="lazy"><img src="runs/run-20260803-173450/frames/step-008.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-173450 step 8 · found by agent · emb-cine / waystone @ 55.53,-0.17,7.33
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-014</code> (captured at 42ccd33e)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P0 · confusion</span>
+  <span class="ttl">Unable to move character on this map view after trying multiple coordinates across the screen, so I must give up.</span><span class="id">PT-20260803-018</span></div>
+ <dl>
+  
+  
+  
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>same as PT-20260803-016</dd>
+ </dl>
+ <pre>duplicate of -016, same root cause, same fix 10ea7a4</pre>
+ <div class="fr"><img src="runs/run-20260803-192758/frames/step-016.jpg" loading="lazy"><img src="runs/run-20260803-192758/frames/step-017.jpg" loading="lazy"><img src="runs/run-20260803-192758/frames/step-018.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-192758 step 18 · found by agent · ow-valley / - @ -57.85,26.72,60.58
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-018</code> (captured at 5c15518b)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
@@ -46,6 +78,262 @@ and the false-positive rate is this tool's calibration.</div>
  <div class="fr"><img src="runs/run-20260803-011827/frames/step-003.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-005.jpg" loading="lazy"></div>
  <div class="meta">run run-20260803-011827 step 5 · found by spine-detector · ow-valley / - @ -95.18,30.37,90.67
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-002</code> (captured at 0ac851e9)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-007</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Follow the road north&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;ow-valley&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260803-120553/frames/step-005.jpg" loading="lazy"><img src="runs/run-20260803-120553/frames/step-006.jpg" loading="lazy"><img src="runs/run-20260803-120553/frames/step-007.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-120553 step 7 · found by spine-detector · ow-valley / - @ -63.12,33.12,94.24
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-007</code> (captured at 19dcc158)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-008</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Follow the road north&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;ow-valley&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260803-122026/frames/step-005.jpg" loading="lazy"><img src="runs/run-20260803-122026/frames/step-006.jpg" loading="lazy"><img src="runs/run-20260803-122026/frames/step-007.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-122026 step 7 · found by spine-detector · ow-valley / - @ -64.35,33.8,100.13
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-008</code> (captured at 82dfdc13)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Camera detached or character missing after battle</span><span class="id">PT-20260803-009</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Dismissing the victory screen to return to the map.</dd>
+  <dt>I expected</dt><dd>To see my character on the map where the battle started.</dd>
+  <dt>What happened</dt><dd>The camera is looking at a cliff and some trees, and my character is nowhere to be seen. There's just floating text saying 'Vesper reached level 2'.</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>tools/llm_playtester.mjs run-20260803-195450 (rule 3 close-out)</dd>
+ </dl>
+ <pre>Fix ffe507d verified on SIM.occ in round 2. Round 3 closed the circuit: the agent fought a full ow-valley encounter (Reed Nibblers, MEADOW, 2 rounds, Vesper + Lake), won it, dismissed the victory screen, and step 18 is post-battle ow-valley at meanL 110.23, ready and shown to the model, with ZERO reports filed.</pre>
+ <div class="fr"><img src="runs/run-20260803-122026/frames/step-023.jpg" loading="lazy"><img src="runs/run-20260803-122026/frames/step-024.jpg" loading="lazy"><img src="runs/run-20260803-122026/frames/step-025.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-122026 step 25 · found by stuck-interview · ow-valley / - @ -34.78,29.64,79.42
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-009</code> (captured at 82dfdc13)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Game screen rendered as a tiny thumbnail in top-left corner</span><span class="id">PT-20260803-013</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Advancing past the dialogue to continue down the road.</dd>
+  <dt>I expected</dt><dd>The full game scene should be rendered across the screen.</dd>
+  <dt>What happened</dt><dd>The screen went black and the game view shrunk to a tiny rectangle in the top-left corner, making navigation impossible.</dd>
+  <dt>On screen</dt><dd>objective: Find the village at the end of the road</dd>
+  <dt>Measured by</dt><dd>PIL luminance of the written frames + a 21-probe CDP experiment</dd>
+ </dl>
+ <pre>step-003/004/008.jpg are 1280x720 at meanL 0.08 with 0.2 pct above black, the game live in a 64x40 corner, while the run log recorded meanL 32.8 ready:true. Harness half fixed at 8b76529 (verdict now taken on the full-size frame). CAUSE OF THE THUMBNAIL STILL UNKNOWN: the clip.scale probe-poisoning hypothesis is REFUTED (21 probes, full capture unchanged at meanL 68.22, bbox 1280x720).</pre>
+ <div class="fr"><img src="runs/run-20260803-173450/frames/step-002.jpg" loading="lazy"><img src="runs/run-20260803-173450/frames/step-003.jpg" loading="lazy"><img src="runs/run-20260803-173450/frames/step-004.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-173450 step 4 · found by agent · emb-cine / waystone @ 57.97,-0.13,9.48
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-013</code> (captured at 42ccd33e)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-015</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Follow the valley road down to Dellhollow&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>ow-valley meta.json spawn vs scenegraph edge pad + tools/playtest/spawn_gate.mjs</dd>
+ </dl>
+ <pre>bundle spawn was 0.072 m from the centre of ow-valley&gt;emb-cine@emberbrook-gate (r 3.2); 2 runs of 2 took the portal home on step 2. Fixed 5c15518: 5.054 m, spawn_gate PASS. Control at the old spawn also found 6/24 headings blocked by emberbrook_5.</pre>
+ <div class="fr"><img src="runs/run-20260803-191750/frames/step-003.jpg" loading="lazy"><img src="runs/run-20260803-191750/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-191750/frames/step-005.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-191750 step 5 · found by spine-detector · emb-cine / waystone @ 57.97,-0.13,9.47
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-015</code> (captured at b3bf841a)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Cannot move or interact with the valley map screen</span><span class="id">PT-20260803-016</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I'm trying to click on the road and the red markers to follow the valley road to Dellhollow.</dd>
+  <dt>I expected</dt><dd>I expected my character to move along the path or for a level to load.</dd>
+  <dt>What happened</dt><dd>Nothing happens when I click anywhere on the map. I seem to be stuck on this overview screen.</dd>
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>the playtester picker (INSTALL_MOTOR) on a 5x5 screen grid, real Chrome</dd>
+ </dl>
+ <pre>ow-valley kept the region GLB overview camera at [-4,236,212]: 0/25 screen points hit any surface. play3d line 30 RT regex lacked ow- while line 48 OWCAM had it; the follow camera only exists inside if(RT). Fixed 10ea7a4: 25/25 hit, 5/25 on the walk network.</pre>
+ <div class="fr"><img src="runs/run-20260803-192758/frames/step-006.jpg" loading="lazy"><img src="runs/run-20260803-192758/frames/step-007.jpg" loading="lazy"><img src="runs/run-20260803-192758/frames/step-008.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-192758 step 8 · found by stuck-interview · ow-valley / - @ -57.85,26.72,60.58
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-016</code> (captured at 5c15518b)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Valley map ground is non-walkable</span><span class="id">PT-20260803-017</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Trying to click on visible ground and dirt paths to walk down to Dellhollow.</dd>
+  <dt>I expected</dt><dd>Clicking on the dirt paths or clearings near the red objective markers should move the character.</dd>
+  <dt>What happened</dt><dd>All movement coordinates across multiple attempts return 'not ground you can walk to'.</dd>
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>same as PT-20260803-016</dd>
+ </dl>
+ <pre>duplicate of -016, same root cause, same fix 10ea7a4</pre>
+ <div class="fr"><img src="runs/run-20260803-192758/frames/step-011.jpg" loading="lazy"><img src="runs/run-20260803-192758/frames/step-012.jpg" loading="lazy"><img src="runs/run-20260803-192758/frames/step-013.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-192758 step 13 · found by agent · ow-valley / - @ -57.85,26.72,60.58
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-017</code> (captured at 5c15518b)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-021</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Follow the valley road down to Dellhollow&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;emb-cine&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260803-213400/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-213400/frames/step-005.jpg" loading="lazy"><img src="runs/run-20260803-213400/frames/step-006.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-213400 step 6 · found by spine-detector · emb-cine / arch @ 50.52,0.35,-18.37
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-021</code> (captured at 81e4a624)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-023</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Follow the valley road down to Dellhollow&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;emb-cine&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260803-214720/frames/step-008.jpg" loading="lazy"><img src="runs/run-20260803-214720/frames/step-009.jpg" loading="lazy"><img src="runs/run-20260803-214720/frames/step-010.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-214720 step 10 · found by spine-detector · emb-cine / gateroad @ 65.82,2.68,-104.52
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-023</code> (captured at e35a6573)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-024</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Down into the hollow — find whoever runs the locks&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Down into the hollow — find whoever runs the locks</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;ow-valley&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260803-221232/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-221232/frames/step-005.jpg" loading="lazy"><img src="runs/run-20260803-221232/frames/step-006.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-221232 step 6 · found by spine-detector · ow-valley / - @ 59.47,-2.06,-55.93
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-024</code> (captured at cb203c19)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-027</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Through the Dellhollow gate — find whoever runs the locks&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Through the Dellhollow gate — find whoever runs the locks</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;ow-valley&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260803-230631/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-230631/frames/step-005.jpg" loading="lazy"><img src="runs/run-20260803-230631/frames/step-006.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-230631 step 6 · found by spine-detector · ow-valley / - @ 28.22,11.6,-30.83
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-027</code> (captured at 2b068735)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-029</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Find whoever runs the locks — the lockhead, above Lock Five&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Find whoever runs the locks — the lockhead, above Lock Five</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;del-inn-int&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260803-234940/frames/step-035.jpg" loading="lazy"><img src="runs/run-20260803-234940/frames/step-036.jpg" loading="lazy"><img src="runs/run-20260803-234940/frames/step-037.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-234940 step 37 · found by spine-detector · del-inn-int / - @ -1.17,0,-1.95
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-029</code> (captured at 80eedbd7)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260804-001</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Down to the lock apron — the girl who was in the water&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;del-cookhouse-int&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive, ch2.jam. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260804-000237/frames/step-014.jpg" loading="lazy"><img src="runs/run-20260804-000237/frames/step-015.jpg" loading="lazy"><img src="runs/run-20260804-000237/frames/step-016.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260804-000237 step 16 · found by spine-detector · del-cookhouse-int / - @ 0.03,0,-1.94
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-001</code> (captured at 03af0da5)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260804-002</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Down to the lock apron — the girl who was in the water&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;del-cookhouse-int&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive, ch2.jam. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260804-013303/frames/step-029.jpg" loading="lazy"><img src="runs/run-20260804-013303/frames/step-030.jpg" loading="lazy"><img src="runs/run-20260804-013303/frames/step-031.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260804-013303 step 31 · found by spine-detector · del-cookhouse-int / - @ 0.14,0,-2
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-002</code> (captured at 743c2956)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Character stuck on wooden platform, cannot reach objective markers</span><span class="id">PT-20260804-004</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to walk to the red objective markers to interact with the head-gate winches.</dd>
+  <dt>I expected</dt><dd>My character should walk to the red markers when I click on them.</dd>
+  <dt>What happened</dt><dd>My character seems stuck on the small wooden platform and won't move to either of the red markers on the left or right.</dd>
+  <dt>On screen</dt><dd>objective: Midnight, at Lock Five — the head-gate winches</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: UNREACHABLE — the TARGET anchor [60.47,16.58,-3.53] is not standable in the running game, and the nearest ground the player can reach from [56.47,17.4,-7.84] is 6.0 m away (3411 cells filled). No walk can ever trigger this beat.</pre>
+ <div class="fr"><img src="runs/run-20260804-101155/frames/step-122.jpg" loading="lazy"><img src="runs/run-20260804-101155/frames/step-123.jpg" loading="lazy"><img src="runs/run-20260804-101155/frames/step-124.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260804-101155 step 124 · found by stuck-interview · del-cine / loop-stairs @ 56.47,17.4,-7.83
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-004</code> (captured at 23336cbf)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
+  <span class="sev">P0 · confusion</span>
+  <span class="ttl">End the test session as the game is stuck on a black screen and cannot continue.</span><span class="id">PT-20260803-006</span></div>
+ <dl>
+  
+  
+  
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (needs a target)</dd>
+ </dl>
+ <pre>a blocked-path claim with no recorded destination. Re-run it with --repro so the walk executor records the from/to pair, then triage again.</pre>
+ <div class="fr"><img src="runs/run-20260803-113942/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-113942/frames/step-005.jpg" loading="lazy"><img src="runs/run-20260803-113942/frames/step-006.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-113942 step 6 · found by agent · ow-valley / - @ 52,-0.64,28
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-006</code> (captured at 5bc18c8b)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
@@ -94,4 +382,255 @@ and the false-positive rate is this tool's calibration.</div>
  <div class="fr"><img src="runs/run-20260803-011827/frames/step-008.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-009.jpg" loading="lazy"><img src="runs/run-20260803-011827/frames/step-010.jpg" loading="lazy"></div>
  <div class="meta">run run-20260803-011827 step 10 · found by stuck-interview · ow-valley / - @ -95.18,30.37,90.67
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-004</code> (captured at 0ac851e9)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Screen remains black after leaving Emberbrook</span><span class="id">PT-20260803-005</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Leaving Emberbrook to follow the road north</dd>
+  <dt>I expected</dt><dd>The new area to load and be displayed on screen</dd>
+  <dt>What happened</dt><dd>The screen turned completely black and did not load the new area after multiple waits</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>(nothing yet)</dd>
+ </dl>
+ <pre>no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.</pre>
+ <div class="fr"><img src="runs/run-20260803-113942/frames/step-003.jpg" loading="lazy"><img src="runs/run-20260803-113942/frames/step-004.jpg" loading="lazy"><img src="runs/run-20260803-113942/frames/step-005.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-113942 step 5 · found by agent · emb-cine / woodroad @ 52,-0.64,28
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-005</code> (captured at 5bc18c8b)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Cannot navigate to character with orange marker on right platform</span><span class="id">PT-20260804-005</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Trying to walk across the wooden walkway to the character with the orange marker on the right.</dd>
+  <dt>I expected</dt><dd>My character would walk over to them.</dd>
+  <dt>What happened</dt><dd>My character gets stuck and stops moving before reaching the platform, even though the path looks clear.</dd>
+  <dt>On screen</dt><dd>objective: Midnight, at Lock Five — the head-gate winches</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (FAILED)</dd>
+ </dl>
+ <pre>the probe itself failed: Execution context was destroyed.</pre>
+ <div class="fr"><img src="runs/run-20260804-112506/frames/step-027.jpg" loading="lazy"><img src="runs/run-20260804-112506/frames/step-028.jpg" loading="lazy"><img src="runs/run-20260804-112506/frames/step-029.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260804-112506 step 29 · found by stuck-interview · del-cine / quay-west @ 41.64,14.04,-9.55
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-005</code> (captured at fc47150f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P0 · blocker</span>
+  <span class="ttl">Battle softlocks after defeating the enemy</span><span class="id">PT-20260803-019</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was waiting for the battle to end after Lake's attack defeated the only enemy, Duskpad.</dd>
+  <dt>I expected</dt><dd>The battle should end and return me to the map or show a victory screen.</dd>
+  <dt>What happened</dt><dd>The message says 'Duskpad is defeated!' and the enemy model is gone, but the battle doesn't end. The command menu is greyed out and I can't do anything else.</dd>
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>the run's own run.jsonl (percept.battle + truth.locked, step by step)</dd>
+ </dl>
+ <pre>The battle ENDED, four steps before this report was written. Straight out of run-20260803-203813/run.jsonl: step 12 percept.battle.log is 'Duskpad is defeated!' with foes []; steps 13-15 are the Victory card (meanL 36.7, UILOCK held); step 16 has no battle, UILOCK released, and the agent walks on for another 29 steps. Nothing softlocked. THIS WAS THE HARNESS: the stuck detector measures metres over a six-step window, and a battle is exactly a window in which zero metres is correct play. It fired at step 12 because the body had not moved since step 7 — the battle's first step — and the interview it paid for produced this P0 against a fight that had already been won. Fixed in episode.mjs: a step where UILOCK is held or a battle/dialogue/card is on screen is dropped from the window rather than counted. A real modal freeze is still caught by the frame gate's separate `frozen` check.</pre>
+ <div class="fr"><img src="runs/run-20260803-203813/frames/step-010.jpg" loading="lazy"><img src="runs/run-20260803-203813/frames/step-011.jpg" loading="lazy"><img src="runs/run-20260803-203813/frames/step-012.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-203813 step 12 · found by stuck-interview · ow-valley / - @ -58.97,25.98,41.58
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-019</code> (captured at 22db4473)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Walk blocked: the body closed 0 m of an intended 5.7 m, twice at the same place</span><span class="id">PT-20260803-010</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.45, 0.60]; my goal was &quot;Follow the road north into the village.&quot;.</dd>
+  <dt>I expected</dt><dd>To walk about 5.7 m and arrive there.</dd>
+  <dt>What happened</dt><dd>The character moved 0 m and stopped 5.7 m short — twice in this run. Something is in the way, or that ground is not connected to where I was standing.</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (5.7 m apart, 339 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260803-122026/frames/step-028.jpg" loading="lazy"><img src="runs/run-20260803-122026/frames/step-029-stall.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-122026 step 28 · found by walk-executor · ow-valley / - @ -53.64,26.75,75.47
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-010</code> (captured at 82dfdc13)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Walk blocked: the body closed 0 m of an intended 8.74 m, twice at the same place</span><span class="id">PT-20260803-011</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.50, 0.70]; my goal was &quot;Walk down to the open ground connecting to the village dirt road, then follow it north.&quot;.</dd>
+  <dt>I expected</dt><dd>To walk about 8.74 m and arrive there.</dd>
+  <dt>What happened</dt><dd>The character moved 0 m and stopped 8.74 m short — twice in this run. Something is in the way, or that ground is not connected to where I was standing.</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (8.7 m apart, 1367 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260803-122026/frames/step-030.jpg" loading="lazy"><img src="runs/run-20260803-122026/frames/step-031-stall.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-122026 step 29 · found by walk-executor · ow-valley / - @ -53.64,26.75,75.47
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-011</code> (captured at 82dfdc13)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Character stuck on terrain in sandy clearing</span><span class="id">PT-20260803-012</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Trying to navigate towards the road leading north into the village.</dd>
+  <dt>I expected</dt><dd>Vesper should move across the terrain towards the clicked location.</dd>
+  <dt>What happened</dt><dd>Four consecutive movement attempts in different directions (south, west, southwest) all failed to move Vesper at all (0m closed).</dd>
+  <dt>On screen</dt><dd>objective: Follow the road north</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (8.7 m apart, 1367 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260803-122026/frames/step-028.jpg" loading="lazy"><img src="runs/run-20260803-122026/frames/step-030.jpg" loading="lazy"><img src="runs/run-20260803-122026/frames/step-032.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-122026 step 30 · found by agent · ow-valley / - @ -53.64,26.75,75.47
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-012</code> (captured at 82dfdc13)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#666">DUPLICATE</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260803-020</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Follow the valley road down to Dellhollow&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>the spine detector, same as PT-20260803-002 / -008</dd>
+ </dl>
+ <pre>The third filing of the SAME design question already logged as PT-20260803-002 (round 0) and -008 (round 1): the player can leave the chapter and the objective follows them out. The remedy is a user design call, and a separate lane is implementing their ruling. Carried, not re-triaged.</pre>
+ <div class="fr"><img src="runs/run-20260803-203813/frames/step-018.jpg" loading="lazy"><img src="runs/run-20260803-203813/frames/step-019.jpg" loading="lazy"><img src="runs/run-20260803-203813/frames/step-020.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-203813 step 20 · found by spine-detector · emb-cine / gateroad @ 66.83,2.69,-105.17
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-020</code> (captured at 22db4473)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Camera clipped inside foliage obscuring entire screen</span><span class="id">PT-20260803-022</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Following the path down the valley</dd>
+  <dt>I expected</dt><dd>A clear view of the character and the path ahead</dd>
+  <dt>What happened</dt><dd>The camera is stuck inside foreground leaf geometry, completely hiding the player character and surroundings</dd>
+  <dt>On screen</dt><dd>objective: Follow the valley road down to Dellhollow</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (16.2 m apart, 1661 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260803-214720/frames/step-001.jpg" loading="lazy"><img src="runs/run-20260803-214720/frames/step-002.jpg" loading="lazy"><img src="runs/run-20260803-214720/frames/step-003.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-214720 step 3 · found by agent · ow-valley / - @ -19.97,19.46,4.13
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-022</code> (captured at e35a6573)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Camera clipped under map geometry after battle</span><span class="id">PT-20260803-025</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Dismissing the victory screen to return to the level</dd>
+  <dt>I expected</dt><dd>To return to the walkable level path where the character was before combat</dd>
+  <dt>What happened</dt><dd>The player and camera ended up underneath the level geometry, looking up at the underside of rock models and floating collision boxes.</dd>
+  <dt>On screen</dt><dd>objective: Down into the hollow — find whoever runs the locks</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (16.0 m apart, 3363 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260803-221232/frames/step-018.jpg" loading="lazy"><img src="runs/run-20260803-221232/frames/step-019.jpg" loading="lazy"><img src="runs/run-20260803-221232/frames/step-020.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-221232 step 20 · found by agent · ow-valley / - @ 59.47,-2.06,-55.93
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-025</code> (captured at cb203c19)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Camera clipped through map geometry</span><span class="id">PT-20260803-026</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Walking down the wooden walkway in the canyon hollow.</dd>
+  <dt>I expected</dt><dd>To follow the pathway smoothly with the camera remaining focused on the character and environment.</dd>
+  <dt>What happened</dt><dd>The view clipped under the terrain geometry, showing an out-of-bounds sky void and dark cliff meshes.</dd>
+  <dt>On screen</dt><dd>objective: Down into the hollow — find whoever runs the locks</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (10.6 m apart, 1138 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260803-221232/frames/step-041.jpg" loading="lazy"><img src="runs/run-20260803-221232/frames/step-042.jpg" loading="lazy"><img src="runs/run-20260803-221232/frames/step-043.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-221232 step 43 · found by agent · ow-valley / - @ 61.92,-4.56,-60.66
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-026</code> (captured at cb203c19)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Glitched view and out-of-bounds geometry after battle</span><span class="id">PT-20260803-028</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Returning to exploration after winning a battle</dd>
+  <dt>I expected</dt><dd>I expected to return to the game world path normally</dd>
+  <dt>What happened</dt><dd>The camera or character ended up under/outside the environment geometry, showing floating collision blocks and open void</dd>
+  <dt>On screen</dt><dd>objective: Through the Dellhollow gate — find whoever runs the locks</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (10.9 m apart, 1471 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260803-230631/frames/step-016.jpg" loading="lazy"><img src="runs/run-20260803-230631/frames/step-017.jpg" loading="lazy"><img src="runs/run-20260803-230631/frames/step-018.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260803-230631 step 18 · found by agent · ow-valley / - @ 62.95,0.46,-54.19
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-028</code> (captured at 2b068735)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Character cannot navigate up the stairs from the middle walkway</span><span class="id">PT-20260804-003</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to climb the stairs from the middle platform to get to the upper levels for the objective.</dd>
+  <dt>I expected</dt><dd>I expected my character to walk up the stairs when I clicked on them or the path above.</dd>
+  <dt>What happened</dt><dd>My character just stood there and wouldn't go up the stairs, no matter where I clicked around them. I seem to be stuck on this level.</dd>
+  <dt>On screen</dt><dd>objective: Supper at the keepers' cottage — you have been asked in</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (4.7 m apart, 325 cells filled, via 2 in-scene edges)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260804-101155/frames/step-077.jpg" loading="lazy"><img src="runs/run-20260804-101155/frames/step-078.jpg" loading="lazy"><img src="runs/run-20260804-101155/frames/step-079.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260804-101155 step 79 · found by stuck-interview · del-cine / lockfive @ 85.38,0.17,-26.85
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-003</code> (captured at 23336cbf)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Walk blocked: the body closed 0 m of an intended 3.14 m, twice at the same place</span><span class="id">PT-20260804-006</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.61, 0.72]; my goal was &quot;Walk down the stairs and around through the lower path to reach the head-gate winches.&quot;.</dd>
+  <dt>I expected</dt><dd>To walk about 3.14 m and arrive there.</dd>
+  <dt>What happened</dt><dd>The character moved 0 m and stopped 3.14 m short — twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.</dd>
+  <dt>On screen</dt><dd>objective: Midnight, at Lock Five — the head-gate winches</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (3.1 m apart, 86 cells filled, via 1 in-scene edge)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260804-112506/frames/step-054.jpg" loading="lazy"><img src="runs/run-20260804-112506/frames/step-055-stall.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260804-112506 step 54 · found by walk-executor · del-cine / loop-stairs @ 53.04,14.83,-12.81
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-006</code> (captured at fc47150f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Character stuck on upper wooden platform at Lock Five</span><span class="id">PT-20260804-007</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Trying to move toward the head-gate winches or down the stairs from the upper wooden platform</dd>
+  <dt>I expected</dt><dd>Vesper should be able to walk across the platform, interact with the winch, or walk back down the stairs</dd>
+  <dt>What happened</dt><dd>Vesper is completely stuck on the platform next to the cat; four consecutive goto commands in different directions closed 0m.</dd>
+  <dt>On screen</dt><dd>objective: Midnight, at Lock Five — the head-gate winches</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (1.6 m apart, 15 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260804-112506/frames/step-054.jpg" loading="lazy"><img src="runs/run-20260804-112506/frames/step-056.jpg" loading="lazy"><img src="runs/run-20260804-112506/frames/step-057.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260804-112506 step 56 · found by agent · del-cine / loop-stairs @ 53.04,14.83,-12.81
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-007</code> (captured at fc47150f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Character stuck on wooden platform near cat at Lock Five</span><span class="id">PT-20260804-008</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to walk down the stairs or across the platform to reach the head-gate winches.</dd>
+  <dt>I expected</dt><dd>I expected my character to move down the stairs or across the platform when I clicked.</dd>
+  <dt>What happened</dt><dd>My character is completely stuck on the platform next to the cat and won't move anywhere.</dd>
+  <dt>On screen</dt><dd>objective: Midnight, at Lock Five — the head-gate winches</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (1.6 m apart, 15 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.</pre>
+ <div class="fr"><img src="runs/run-20260804-112506/frames/step-056.jpg" loading="lazy"><img src="runs/run-20260804-112506/frames/step-057.jpg" loading="lazy"><img src="runs/run-20260804-112506/frames/step-058.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260804-112506 step 57 · found by stuck-interview · del-cine / loop-stairs @ 53.04,14.83,-12.81
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-008</code> (captured at fc47150f)</div>
 </div>

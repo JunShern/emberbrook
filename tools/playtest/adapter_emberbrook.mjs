@@ -334,7 +334,42 @@ const INSTALL_MOTOR = `(()=>{ if(window.__pt) return 'already';
     const ty=Math.tan(b.fov*Math.PI/180/2), tx=ty*b.aspect;
     const sx=nx*2-1, sy=1-ny*2;
     return {b, d:V.norm(V.add(b.f, V.add(V.mul(b.r,sx*tx), V.mul(b.u,sy*ty))))}; }
+  /* AN EXIT MARKER IS DRAWN 2.1 m ABOVE THE GROUND IT NAMES, AND THE RAY BEHIND THE
+   * ARROW LANDS SOMEWHERE ELSE ENTIRELY. play3d's markersTick projects e.at[1]+2.1,
+   * then lifts the arrow another 30 px and bobs it — an FF7 arrow floats over its door
+   * and points DOWN at it, which reads correctly to a human and not at all to a ray.
+   * MEASURED in del-cine from the 'loop-stairs' shot (2026-08-04, by reading #exit-markers'
+   * own DOM rects against each edge projected through SIM.cam() — the basis this file
+   * already uses, so the two numbers are comparable by construction):
+   * the three markers draw at ny .159/.435/.428 while their own edges project at
+   * .382/.657/.616 through SIM.cam() — a constant 0.22 of frame height — and
+   * __pt.hit at each arrow's own centre returned [48.87,21.88,-12.91],
+   * [56.33,16.83,-3.27] and [60.37,16.76,-3.38]: cliff face SEVEN METRES PAST the
+   * deck the arrows name. So: a pixel on an arrow resolves to THAT EDGE'S own 'at' —
+   * the place the arrow points at — never to whatever stands behind the arrow.
+   * dataset.edge is markersTick's own handle (it already carries it for
+   * tools/trigger_probe.mjs), so this can never name a seam the game is not drawing. */
+  function markerAt(nx,ny){
+    const box=document.getElementById('exit-markers'); if(!box) return null;
+    const px=nx*innerWidth, py=ny*innerHeight, PAD=14;   // the arrow itself is 22x16
+    let best=null;
+    for(const el of box.children){
+      if(!el.dataset||!el.dataset.edge) continue;
+      if(getComputedStyle(el).display==='none') continue;
+      const r=el.getBoundingClientRect(); if(!r.width||!r.height) continue;
+      if(px<r.left-PAD||px>r.right+PAD||py<r.top-PAD||py>r.bottom+PAD) continue;
+      const dd=Math.hypot(px-(r.left+r.right)/2, py-(r.top+r.bottom)/2);
+      if(!best||dd<best.d) best={d:dd,id:el.dataset.edge};
+    }
+    if(!best) return null;
+    const e=(SIM.edges()||[]).find(x=>x.id===best.id);
+    if(!e||!e.at) return null;
+    return {id:e.id, p:[+e.at[0].toFixed(2),+e.at[1].toFixed(2),+e.at[2].toFixed(2)]};
+  }
   function hit(nx,ny,far){
+    const mk=markerAt(nx,ny);
+    if(mk){ let on=false; try{ on=(SIM.walkFloors(mk.p[0],mk.p[2])||[]).length>0; }catch(e){}
+      return {ok:true, onNetwork:on, marker:mk.id, t:null, p:mk.p}; }
     const {b,d}=rayOf(nx,ny);
     const tops=(x,z,walk)=>{ try{ const ys=walk?SIM.walkFloors(x,z):SIM.floors(x,z);
       return (ys&&ys.length)?ys.slice().sort((p,q)=>q-p):[]; }catch(e){ return []; } };
@@ -356,7 +391,38 @@ const INSTALL_MOTOR = `(()=>{ if(window.__pt) return 'already';
         prev={t,under};
       } return null; };
     const w=march(true); if(w) return {ok:true,onNetwork:true,...w};
-    const f2=march(false); if(f2) return {ok:true,onNetwork:false,...f2};
+    const f2=march(false);
+    /* IN A WALKLOCK TOWN, A SURFACE THAT IS NOT THE WALK NETWORK IS NOT A PLACE.
+     * play3d's own walkStep gates on walkRef.length (play3d.html:3140): where a
+     * scene ships walk_ meshes, ONLY they may catch the foot. march(true) scans the
+     * WHOLE ray for the network, so a roof or a tree in front of a reachable plaza is
+     * transparent to it — a ray that still finds nothing has crossed cliff, wall and
+     * river and named nothing the body can ever stand on. Aiming the executor there
+     * manufactures a blocker out of scenery: on run-20260804-101155 onNetwork:false
+     * predicted the failure on 8 of 8 failed legs (targets all on the same cliff face
+     * at z about -3.5) and onNetwork:true predicted arrival on 7 of 7 that arrived,
+     * and the pile-up became PT-20260804-004 [P1] against ground SIM.move crosses in
+     * 46 ticks. Refusing costs the agent one step and tells it the truth; walking at it
+     * cost sixteen bursts and a false P1.
+     * THE SCENE'S OWN ANSWER UNDER THE PLAYER'S FEET IS THE TEST, not a scene-name
+     * regex: in a walk-network scene the body is by construction standing on the
+     * network, so a walk floor there proves both that the network exists and that this
+     * ray genuinely missed it. Where there is none (the overworld, every interior)
+     * nothing changes and the old fallback stands.
+     * IT MUST BE walkGround'S OWN FOUR RETRIES, NOT A BARE walkFloors. Measured at the
+     * exact spot this bug was filed from, [56.47, -7.84] in del-cine: walkFloors is
+     * EMPTY on the centre sample and returns 17.4 at z-0.18 — the plank-crack retry
+     * play3d's walkGround already does, and reach_probe copies. A one-sample test read
+     * "this scene has no walk network" while the body was standing on it. */
+    let netHere=false;
+    try{ const p0=SIM.pos();
+      const any=(x,z)=>{ try{ return (SIM.walkFloors(x,z)||[]).length>0; }catch(e){ return false; } };
+      netHere = any(p0.x,p0.z) || any(p0.x+0.18,p0.z) || any(p0.x-0.18,p0.z)
+             || any(p0.x,p0.z+0.18) || any(p0.x,p0.z-0.18); }catch(e){}
+    if(netHere) return {ok:false, offNetwork:true, reason:
+      'nothing you could stand on lies along that pixel'+
+      (f2?' — the ray lands on scenery at ['+f2.p.join(', ')+'], which is not walkable ground':'')};
+    if(f2) return {ok:true,onNetwork:false,...f2};
     return {ok:false,reason:'the ray for that pixel never reaches a surface (sky, or past the world)'}; }
   // The direction to a world point, expressed as an octant of the CAMERA's ground
   // basis — which is the basis play3d's own phys() uses, so the keys mean the same
