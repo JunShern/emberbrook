@@ -178,6 +178,46 @@
    "name": "shopkeeper",
    "color": "#a89a7c",
    "portrait": "villager-woman"
+  },
+  "del.innkeep": {
+   "name": "innkeeper",
+   "color": "#b8894f",
+   "portrait": "innkeeper"
+  },
+  "del.inn.bargeman": {
+   "name": "bargeman",
+   "color": "#8fa08c",
+   "portrait": "villager-man"
+  },
+  "del.inn.lodger": {
+   "name": "lodger",
+   "color": "#9c8f9c",
+   "portrait": "elder-woman"
+  },
+  "del.cook": {
+   "name": "the cook",
+   "color": "#c0925f",
+   "portrait": "villager-woman"
+  },
+  "del.cookhouse.bargeman": {
+   "name": "bargeman",
+   "color": "#7f8fa3",
+   "portrait": "villager-man"
+  },
+  "del.cookhouse.boy": {
+   "name": "boy with a bowl",
+   "color": "#a3b06a",
+   "portrait": "child-boy"
+  },
+  "del.yard.apprentice": {
+   "name": "the boatwright's apprentice",
+   "color": "#a89660",
+   "portrait": "villager-woman"
+  },
+  "del.yard.caulker": {
+   "name": "caulker",
+   "color": "#94795a",
+   "portrait": "villager-man"
   }
  },
  "nodes": {
@@ -1748,6 +1788,126 @@
      "expr": "thinking"
     }
    ]
+  },
+
+  "del.innkeep.hail": {
+   "if": { "notFlag": "npc.met.del.innkeep" },
+   "else": "del.innkeep.again",
+   "speaker": "del.innkeep",
+   "lines": [
+    "Beds are upstairs and all of them are full. Nineteen days of crews and nowhere to send them.",
+    "You can have the bench by the fire. It's warm, it's free, and it's taken at nine."
+   ],
+   "effects": { "setFlags": { "npc.met.del.innkeep": true } }
+  },
+  "del.innkeep.again": {
+   "speaker": "del.innkeep",
+   "lines": [ "Bench is still by the fire. Still taken at nine." ]
+  },
+
+  "del.inn.bargeman.hail": {
+   "if": { "notFlag": "npc.met.del.inn.bargeman" },
+   "else": "del.inn.bargeman.again",
+   "speaker": "del.inn.bargeman",
+   "lines": [
+    "Ashore since the locks shut. I've drunk this cellar dry in small honest amounts.",
+    "My boat's third in the queue. Third of forty, and I've stopped saying that out loud."
+   ],
+   "effects": { "setFlags": { "npc.met.del.inn.bargeman": true } }
+  },
+  "del.inn.bargeman.again": {
+   "speaker": "del.inn.bargeman",
+   "lines": [ "Still third. Ask me tomorrow and it'll still be third." ]
+  },
+
+  "del.inn.lodger.hail": {
+   "if": { "notFlag": "npc.met.del.inn.lodger" },
+   "else": "del.inn.lodger.again",
+   "speaker": "del.inn.lodger",
+   "lines": [
+    "That's my bag by the stair. It's been packed since the locks shut.",
+    "I'm not carrying it up again. If the water moves, I want to hear it first."
+   ],
+   "effects": { "setFlags": { "npc.met.del.inn.lodger": true } }
+  },
+  "del.inn.lodger.again": {
+   "speaker": "del.inn.lodger",
+   "lines": [ "Bag's still packed by the stair. So am I." ]
+  },
+
+  "del.cook.hail": {
+   "if": { "notFlag": "npc.met.del.cook" },
+   "else": "del.cook.again",
+   "speaker": "del.cook",
+   "lines": [
+    "Mind the range, it spits. Everything in this room is hotter than it looks.",
+    "Two hundred meals a day when the locks run. Ninety now, and I still start at four."
+   ],
+   "effects": { "setFlags": { "npc.met.del.cook": true } }
+  },
+  "del.cook.again": {
+   "speaker": "del.cook",
+   "lines": [ "Pot's on. It's always on — that's the job." ]
+  },
+
+  "del.cookhouse.bargeman.hail": {
+   "if": { "notFlag": "npc.met.del.cookhouse.bargeman" },
+   "else": "del.cookhouse.bargeman.again",
+   "speaker": "del.cookhouse.bargeman",
+   "lines": [
+    "Stew and a bit of bread. Same as yesterday, and I'm not complaining.",
+    "Cheaper than the inn and you eat standing up. Crews work that out by day three."
+   ],
+   "effects": { "setFlags": { "npc.met.del.cookhouse.bargeman": true } }
+  },
+  "del.cookhouse.bargeman.again": {
+   "speaker": "del.cookhouse.bargeman",
+   "lines": [ "Still waiting on the hatch. She serves in her own order." ]
+  },
+
+  "del.cookhouse.boy.hail": {
+   "if": { "notFlag": "npc.met.del.cookhouse.boy" },
+   "else": "del.cookhouse.boy.again",
+   "speaker": "del.cookhouse.boy",
+   "lines": [
+    "I get the crusts when the pot's scraped. That's a wage, my mam says.",
+    "You can sit there. Nobody's using it and I won't tell."
+   ],
+   "effects": { "setFlags": { "npc.met.del.cookhouse.boy": true } }
+  },
+  "del.cookhouse.boy.again": {
+   "speaker": "del.cookhouse.boy",
+   "lines": [ "Crusts aren't ready. Come back when the pot's down." ]
+  },
+
+  "del.yard.apprentice.hail": {
+   "if": { "notFlag": "npc.met.del.yard.apprentice" },
+   "else": "del.yard.apprentice.again",
+   "speaker": "del.yard.apprentice",
+   "lines": [
+    "I fetch, I hold, and I don't touch the adze. Two years of that so far.",
+    "The boatwright's down at the kettle. Shout if you want him, he won't hear you."
+   ],
+   "effects": { "setFlags": { "npc.met.del.yard.apprentice": true } }
+  },
+  "del.yard.apprentice.again": {
+   "speaker": "del.yard.apprentice",
+   "lines": [ "Still holding things. He'll want the mallet in a minute." ]
+  },
+
+  "del.yard.caulker.hail": {
+   "if": { "notFlag": "npc.met.del.yard.caulker" },
+   "else": "del.yard.caulker.again",
+   "speaker": "del.yard.caulker",
+   "lines": [
+    "Mind your feet round the frames. Oakum, mallet, and a seam that takes me all day.",
+    "Every hull in this yard leaks somewhere. Mine's this one, and it's winning."
+   ],
+   "effects": { "setFlags": { "npc.met.del.yard.caulker": true } }
+  },
+  "del.yard.caulker.again": {
+   "speaker": "del.yard.caulker",
+   "lines": [ "Same seam as yesterday. Half a day left in it, I reckon." ]
   }
  }
 }

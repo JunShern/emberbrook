@@ -220,7 +220,7 @@
       "name": "girl with a stick",
       "scene": ["townwalk", "del-cine"],
       "district": "quay",
-      "position": [43.65, 14.00, -17.07],
+      "position": [48.00, 14.07, -16.75],
       "facing": 30,
       "height": 0.74,
       "body": { "type": "model", "src": "assets/characters/pip/pip-v1.glb", "tint": "#cdd4e0", "h": 0.74 },
@@ -228,7 +228,7 @@
       "idleBehavior": "wander",
       "wander": { "radius": 2.2, "speed": 0.8 },
       "dialogue": "del.gullgirl.hail",
-      "note": "The Harbour Deck's south run, on the way to the deep stairs. THE REASON: 'two children ran down between the party without apology' is verbatim in the expansion script and Nib is the only child in the data — one kid is an oddity, two is a town. She is on the QUAY tier and he is on the dock 13 m below, so they are never the same shot and never read as a pair; she is also the fastest wanderer here (0.8) because that is the whole note, and this run is the longest clear stretch of deck to run it on. MOVED 2026-08-01 from 43.65/-11.50, which was 0.39 m from the cookhouse arrival spawn — with a 2.2 m errand she was standing in the doorway a player arrives through (see _posts). Same x, 5.6 m south: 5.64 m clear of that arrival."
+      "note": "The Harbour Deck's south run, on the way to the deep stairs. THE REASON: 'two children ran down between the party without apology' is verbatim in the expansion script and Nib is the only child in the data — one kid is an oddity, two is a town. She is on the QUAY tier and he is on the dock 13 m below, so they are never the same shot and never read as a pair; she is also the fastest wanderer here (0.8) because that is the whole note, and this run is the longest clear stretch of deck to run it on. MOVED 2026-08-01 from 43.65/-11.50, which was 0.39 m from the cookhouse arrival spawn — with a 2.2 m errand she was standing in the doorway a player arrives through (see _posts). Same x, 5.6 m south: 5.64 m clear of that arrival. MOVED AGAIN 2026-08-04, and THE POST DID NOT MOVE — THE DOOR DID: dellhollow.map.json's 'doorstepFromMap' walked the cookhouse door down the deck to [39.9, 14.07, -16.8] and its return spawn to [42.8, 14.07, -16.8], which landed 0.89 m from 43.65/-17.07 and turned a green record red with no edit to this file (dialogue_test: -1.31 m after the errand, and 0.24 m INSIDE the door trigger). That is the third instalment of _posts's own lesson and the first where the camera layer moved onto a standing villager rather than the other way round. 4.36 m east-north along the same deck run (top 14.07): 5.20 m from that spawn, 3.00 m after the 2.2 m errand, and 8.10 m from the door trigger. Same tier, same run, same note. THE FIRST FIX WAS WORSE THAN THE BUG and is the reason this record now carries two numbers instead of one: 47.00/-17.07 cleared every arrival and turned dialogue_test green, and findability then read 0% of her body column off quay-west's plate — a clearance search that does not also ask the camera just relocates the defect to the layer that has no gate on it (dialogue_test measures spawns, findability measures pixels, and a post has to win BOTH). 48.00/-16.75 was picked by searching the two constraints together: 100% of her own 1.18 m column survives quay-west's depth.png, edge margin 0.75."
     },
 
     {
@@ -470,6 +470,116 @@
       "dialogue": "emb.shopkeep.hail",
       "promptLabel": "Talk to the {name}",
       "note": "The Village Store, inside the L of the counter — ct_top is x[1.55..4.55] z[-3.25..-2.55] with the return at x[3.85..4.55], so z -3.80 is 0.55 m behind the top on free floorboard, which is the Emberbrook equivalent of the Dellhollow KEEP zone all three of its keepers stand in. Facing 0 is across the counter at walk_pad_counter. NO shop field, for the same Q1 reason as the innkeeper. Title nameplate: the map calls her 'shopkeep'."
+    },
+
+    {
+      "id": "del.innkeep",
+      "name": "innkeeper",
+      "scene": "del-inn-int",
+      "district": "shelf",
+      "position": [-0.20, 0.02, -2.10],
+      "facing": 70,
+      "radius": 2.7,
+      "body": { "type": "model", "src": "assets/characters/maren/maren-v1.glb", "tint": "#d8b48c", "h": 1.08 },
+      "bodyNote": "archetype villager: maren's model in tallow-and-brass. Bust del.innkeep -> innkeeper.",
+      "idleBehavior": "stand",
+      "dialogue": "del.innkeep.hail",
+      "promptLabel": "Talk to the {name}",
+      "note": "The Boatmen's Rest, at the OPEN END of the reception counter — the emb.innkeep precedent, and for the same measured reason. The counter carcass is x[0.42..3.16] z[-3.15..-1.74] and wall_back's face is z -3.37: 0.22 m behind it, so this room has no KEEP zone the way the Dellhollow shop archetype does. x -0.20 is 0.62 m past the carcass's left end on plain floorboard, clear of kit_barrel.002 (z[-3.38..-2.46]). Facing 70 is across the counter at walk_pad_counter (1.90, -1.35) rather than at the door, which is behind her left shoulder: the counter pad is where a player stands to talk. MEASURED on the bundle's own plate: 92% of the body column survives depth.png, edge margin 0.71, 165 px tall; 3.31 m from the inn's arrival spawn [-3.4, 0.04, -2.72] and 3.31 m outside its r-1.8 door trigger."
+    },
+    {
+      "id": "del.inn.bargeman",
+      "name": "bargeman",
+      "scene": "del-inn-int",
+      "district": "shelf",
+      "position": [-1.80, 0.02, -1.30],
+      "facing": 40,
+      "body": { "type": "model", "src": "assets/characters/finn/finn-v1.glb", "tint": "#a8b0a0", "h": 1.12 },
+      "bodyNote": "archetype villager: finn's model in wet wool, stood tall at 1.12. Bust del.inn.bargeman -> villager-man.",
+      "idleBehavior": "stand",
+      "dialogue": "del.inn.bargeman.hail",
+      "note": "The head of the long table, in the aisle between the counter front (z -1.74) and the table back (z -0.58). THE REASON: the inn is the room the stopped queue ends up in — Hobb is nineteen days into it out on the quay, and the common room is where the rest of his crews are. Facing 40 is into the room and at the table, not at the wall. MEASURED: 100% of the body column survives depth.png, edge 0.67, 175 px. Clearance is the tight one in this room and it is why he is not at the door end of the aisle: 2.14 m from the inn arrival spawn [-3.4, 0.04, -2.72], i.e. 0.34 m outside the r-1.8 door trigger. Anything west of x -2.0 loses that argument to the door."
+    },
+    {
+      "id": "del.inn.lodger",
+      "name": "lodger",
+      "scene": "del-inn-int",
+      "district": "shelf",
+      "position": [3.30, 0.02, 0.60],
+      "facing": 215,
+      "body": { "type": "model", "src": "assets/characters/maren/maren-v1.glb", "tint": "#a5a09c", "h": 1.03 },
+      "bodyNote": "archetype villager: maren's model, greyed and stood at 1.03. Bust del.inn.lodger -> elder-woman.",
+      "idleBehavior": "stand",
+      "dialogue": "del.inn.lodger.hail",
+      "note": "The foot of the stair, among the luggage. THE REASON: the beds are full and the bags are packed — a room with three people in three different relationships to the stopped water reads as a town, and she is the one who is not crew. Clear of the stair carcass (x[3.09..4.91] z[-3.96..-1.09]) and of small_tables (z 1.25 on). Facing 215 is back down the room at the counter. MEASURED: 81% of the body column survives depth.png, edge 0.33, 204 px; 7.03 m from the inn arrival spawn, and 1.54 m off the near corner of walk_pad_counter so she does not crowd the keeper's prompt."
+    },
+    {
+      "id": "del.cook",
+      "name": "the cook",
+      "scene": "del-cookhouse-int",
+      "district": "quay",
+      "position": [-2.20, 0.02, -1.70],
+      "facing": 45,
+      "radius": 2.4,
+      "body": { "type": "model", "src": "assets/characters/mara/mara-v1.glb", "tint": "#d3c0a6", "h": 1.09 },
+      "bodyNote": "archetype villager: mara's model in scorched linen. Bust del.cook -> villager-woman.",
+      "idleBehavior": "stand",
+      "dialogue": "del.cook.hail",
+      "promptLabel": "Talk to the {name}",
+      "note": "The working lane in front of the range, between the range front (z -2.17) and the hatch back (z -1.64). Facing 45 is out at the hatch and the room. MEASURED: 97% of the body column survives depth.png, edge 0.60, 179 px; 5.24 m from the cookhouse arrival spawn [3, 0.04, -2.58]. THE OBVIOUS POST IS THE WRONG ONE HERE and it is worth the sentence: the prep bench (x[-0.95..1.85] z[-3.19..-2.25]) is where a cook belongs and where I first put her, and the hatch carcass in front of it (x[-0.67..2.42], 2.52 m TALL) takes 50-56% of the body column out of the plate — the Poppy failure exactly, one room over. The range end is the only stretch of the working lane the camera owns."
+    },
+    {
+      "id": "del.cookhouse.bargeman",
+      "name": "bargeman",
+      "scene": "del-cookhouse-int",
+      "district": "quay",
+      "position": [-1.00, 0.02, 0.40],
+      "facing": 130,
+      "body": { "type": "model", "src": "assets/characters/finn/finn-v1.glb", "tint": "#9fa8b4", "h": 1.11 },
+      "bodyNote": "archetype villager: finn's model in slate-blue. Bust del.cookhouse.bargeman -> villager-man.",
+      "idleBehavior": "stand",
+      "dialogue": "del.cookhouse.bargeman.hail",
+      "note": "Waiting on the hatch, a step west of walk_pad_counter (x[-0.32..2.08] z[-0.82..-0.02]) so the player's own serving spot stays free. Facing 130 is at the hatch. THE REASON: a cookhouse with a cook and no queue is a kitchen, not a cookhouse — he is what makes the hatch a hatch. MEASURED: 100% of the body column survives depth.png, edge 0.58, 213 px; 4.99 m from the cookhouse arrival spawn and 2.42 m from the cook."
+    },
+    {
+      "id": "del.cookhouse.boy",
+      "name": "boy with a bowl",
+      "scene": "del-cookhouse-int",
+      "district": "quay",
+      "position": [-2.60, 0.02, 2.00],
+      "facing": 30,
+      "height": 0.72,
+      "body": { "type": "model", "src": "assets/characters/pip/pip-v1.glb", "tint": "#c8b898", "h": 0.72 },
+      "bodyNote": "archetype villager: pip's model, warmed and stood at 0.72 — the height variation _bodies asks for, in a room that would otherwise be two adults at 1.09 and 1.11. Bust del.cookhouse.boy -> child-boy.",
+      "idleBehavior": "stand",
+      "dialogue": "del.cookhouse.boy.hail",
+      "note": "The dining benches on the west side. Facing 30 is back at the hatch. MEASURED at HIS OWN height, not an adult column (the Mochi lesson): 100% of a 1.15 m body survives depth.png, edge 0.25, 164 px; 3.72 m from the cook and 2.26 m from the bargeman."
+    },
+    {
+      "id": "del.yard.apprentice",
+      "name": "the boatwright's apprentice",
+      "scene": "del-boatyard",
+      "district": "boatyard",
+      "position": [19.50, 2.24, -29.00],
+      "facing": 80,
+      "body": { "type": "model", "src": "assets/characters/maren/maren-v1.glb", "tint": "#b8a88c", "h": 1.02 },
+      "bodyNote": "archetype villager: maren's model in canvas and tar. Bust del.yard.apprentice -> villager-woman.",
+      "idleBehavior": "stand",
+      "dialogue": "del.yard.apprentice.hail",
+      "note": "On walk_lm_slipway, between the pitch kettle and the shed, facing 80 at the arriving player. NOT A SECOND BOATWRIGHT: the canon Boatwright already stands at the kettle at [22.0, 1.64, -28.5] in townwalk and del-cine, and THAT COORDINATE IS THIS BUNDLE'S OWN SPAWN (depth.json spawn [22.0, 1.58, -28.5]) — which is exactly why he is not in this roster and why nobody is posted within 2 m of it. She points at him instead. MEASURED on the hero plate: 100% of the body column survives depth.png, edge 0.65, 110 px; 2.55 m from that spawn."
+    },
+    {
+      "id": "del.yard.caulker",
+      "name": "caulker",
+      "scene": "del-boatyard",
+      "district": "boatyard",
+      "position": [13.00, 2.94, -28.00],
+      "facing": 100,
+      "body": { "type": "model", "src": "assets/characters/finn/finn-v1.glb", "tint": "#a89880", "h": 1.09 },
+      "bodyNote": "archetype villager: finn's model in oakum-brown. Bust del.yard.caulker -> villager-man.",
+      "idleBehavior": "stand",
+      "dialogue": "del.yard.caulker.hail",
+      "note": "Up at the drydock frames on walk_e_slipway__lockfour-overlook_l0 (top 2.94), facing 100 back down the yard. THE REASON: the parcel's intent line is 'slipway with hauled-out hulls, boatwright at work' and the hulls had nobody at them. MEASURED: 75% of the body column survives depth.png, edge 0.79, 85 px — small because the hero camera is 25 m off, which is the shot, not a defect; 9.5 m from the bundle spawn and 6.6 m from the apprentice."
     }
   ]
 }
