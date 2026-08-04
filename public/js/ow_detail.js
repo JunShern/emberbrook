@@ -1370,9 +1370,18 @@
   // over the same pixels.
   // (bark is deliberately NOT here: a trunk is not translucent, and a highlight clamp
   // authored for leaf tips has no business on wood.)
-  var FOL_SHARED = ['ow_f2_canopy', 'ow_f2_leaf'];
-  var FOL_OWNED = ['ow_f2_tuft', 'ow_f2_flower', 'ow_f2_green',
-                   'ow_valley_bushcore', 'ow_valley_bushcard'];
+  // ow_valley_bushcore/bushcard moved OWNED -> SHARED (2026-08-04, tree lane's
+  // measured handoff): the REMAP was built for the tuft/flower palette, whose
+  // linear albedo straddles owdVMid; the bush atlas lives entirely BELOW it
+  // (0.017-0.20 vs vMid 0.30), so tt clamped at -1 and every canopy pixel took a
+  // fixed R x0.835 / B x1.30 plus up to a 5x value lift - the cyan/teal fringe
+  // and most of the "pale streaks" three blind judges named. Knocking the remap
+  // off the canopy took pixels over L 0.72 from 9.79% to 0.78%. Which is what
+  // the comment above always said this split intends: the tree lane owns the
+  // canopy albedo, and a remap authored for grass has no business re-authoring it.
+  var FOL_SHARED = ['ow_f2_canopy', 'ow_f2_leaf',
+                    'ow_valley_bushcore', 'ow_valley_bushcard'];
+  var FOL_OWNED = ['ow_f2_tuft', 'ow_f2_flower', 'ow_f2_green'];
 
   function chunkOr(name, fallback) {
     try { var s = TH().ShaderChunk[name]; if (typeof s === 'string' && s.length) return s; }
@@ -1424,6 +1433,7 @@
       sh.uniforms.owdHiB = { value: P.hiB };
       sh.uniforms.owdHiAmt = { value: P.hiAmt };
       sh.uniforms.owdRemap = { value: owned ? P.remap : 0.0 };
+      sh.uniforms.owdRemap.__owdOwned = owned;   // pushUnis must not turn the remap ON for shared materials
       sh.uniforms.owdVComp = { value: P.vComp };
       sh.uniforms.owdVMid = { value: P.vMid };
       sh.uniforms.owdVFloor = { value: P.vFloor };
@@ -1512,6 +1522,10 @@
       if (u.owdHiA) u.owdHiA.value = P.hiA;
       if (u.owdHiB) u.owdHiB.value = P.hiB;
       if (u.owdHiAmt) u.owdHiAmt.value = P.hiAmt;
+      // owdRemap was never pushed here, so OWD.set({remap:...}) was a silent no-op
+      // (tree lane, 2026-08-04). Per-material: only materials bound as OWNED take
+      // the live value; shared materials stay at 0 by construction.
+      if (u.owdRemap && u.owdRemap.__owdOwned) u.owdRemap.value = P.remap;
       if (u.owdVComp) u.owdVComp.value = P.vComp;
       if (u.owdVMid) u.owdVMid.value = P.vMid;
       if (u.owdVFloor) u.owdVFloor.value = P.vFloor;
