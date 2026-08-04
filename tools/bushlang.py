@@ -114,6 +114,55 @@ HI_LIFT = 0.80
 # the streaks were half of charge 1, and no amount of crown-scale gradient can
 # read through a field of bright slivers scattered across it.
 NZ_LO, NZ_HI = 0.72, 0.22         # side-facing cards darker than up-facing ones
+# ------------------------------------------------ THE TWIST (round 3, the streaks)
+# ROUND 2 DIAGNOSED THE PALE STREAKS AND THEN TRIMMED TWO LEVELS AT THEM (BETA_MAX
+# 56 -> 46, NZ_HI 0.42 -> 0.22).  That helped and it could not finish, because the
+# diagnosis was STRUCTURAL and the answer was tonal: a streak is a BIG CARD SEEN
+# NEAR EDGE-ON, and dimming an edge-on card leaves an edge-on card.  Round 2's own
+# census: culling `|N.view| < 0.45` removed 14 283 of 33 333 cards on one frame, so
+# this is not a rare azimuth — a shell aims its cards along the surface normal in
+# every direction, so from ANY view about two fifths of a dome's cards are within
+# 27 degrees of edge-on, and a 1.55-2.35 u quad seen that way is an 85-130 px
+# SLIVER.  There is no scatter knob for that; there is no level for it either.
+#
+# A DOT-PRODUCT FADE IS THE STANDARD ANSWER AND IT IS NOT THIS LANE'S FILE — it is a
+# draw-time term in the shared foliage shader (public/js/ow_detail.js, the grass
+# lane's).  What IS in this file is the reason the sliver exists: THE CARD IS FLAT.
+# So the corners are displaced along the card's own normal, +d on one diagonal and
+# -d on the other — a propeller twist.  The quad's two triangles come out
+# non-coplanar, tilted about +-atan(2 CARD_TWIST) from the card plane, so the
+# projected area at the worst azimuth goes from ~0 to sin(that), and the card
+# degrades into a small clump instead of a bright line.
+#
+# THE PROPERTY THAT MADE THIS THE CHOICE OVER A FOLD OR A CROSS: IT IS FREE.  A
+# V-fold needs a centre seam (4 tris for 2) and a cross needs a second quad; both
+# are +2 tris on every card in the region, which is +18% of the tile for a
+# silhouette artefact.  A twist moves four vertices that already exist.
+CARD_TWIST = 0.18                 # corner displacement along N, in card half-widths
+# ------------------------------------------ THE SHELL NORMAL (round 3, the streaks)
+# AND THE TWIST ALONE DID NOT PAY — measured, built, photographed: at 0.24 the thin
+# bright slivers became BROAD SOFT SMEARS and the mass went hazier.  Widening a
+# sliver is not removing it, because the sliver was never bright BECAUSE it was
+# thin.  It was bright because A CARD CARRIES ITS OWN PLANE NORMAL: `_emit_cards`
+# writes a flat quad and nothing ever replaced its normal, so a card laid back by
+# `beta` over a lobe whose surface faces somewhere else takes a DIFFERENT lambert
+# from every neighbour it sits between.  33 000 cards, each shading as its own
+# little plane, is the mechanical statement of the blind critic's "the canopy's
+# brightest pixels are scattered" — and no crown-scale gradient can read through it.
+#
+# So the card's normal is REPLACED by the core surface normal it was scattered from
+# (the standard foliage normal transfer).  The shell then shades as the VOLUME it
+# is a shell of, the mass gets its lit side and its shaded side back at lobe scale,
+# and an edge-on card takes the same light as the crown behind it instead of
+# announcing itself.  It costs nothing: the normals are already computed in `shell`
+# and `_rim`, and custom split normals are what glTF's NORMAL accessor carries.
+#
+# NOT 1.0.  At a full transfer every card in a lobe is exactly one value and the
+# crown flattens into a shaded ball; the residual plane term is what keeps leaf
+# clusters reading as clusters.  With the normals transferred the TWIST is no
+# longer a shading term at all — it only moves the silhouette — which is why the
+# two ship together and why the twist could come down.
+CARD_NRM = 0.82                   # share of the core surface normal in a card's own
 
 # ------------------------------------------------------- THE SUN (round 2, charge 1)
 # "Texture without form.  The house shadows say the sun is upper-right, yet the
@@ -265,6 +314,7 @@ class Mass:
         self.VN = []           # core vertex normals (the sculpted sphere normal)
         self.VL = []           # which lobe each vert belongs to
         self.cV, self.cF, self.cUV, self.cC = [], [], [], []   # the cards
+        self.cN = []           # ... and their TRANSFERRED normals (see CARD_NRM)
         self.ncv = 0           # accumulated CARD vertex count (same trap as nv)
         self.n_cards = 0
 
@@ -490,7 +540,7 @@ class Mass:
         # outside the surface makes the shell the volume and demotes the core to
         # what it should be — the dark interior nothing can see through.
         self._emit_cards(P + N * (sz * CARD_OUT)[:, None], yaw, beta, sz, cell,
-                         col, rng)
+                         col, rng, N)
         self.n_cards += n_want
         n_rim = self._rim(rng, area, nrm, A, fidx, rim_density, rim_size,
                           beta_max, hi_lift)
@@ -538,10 +588,10 @@ class Mass:
         # the BRIGHTEST thing in the crown — the opposite of a silhouette.  P is
         # where the card belongs to the mass; the throw is only where it reaches.
         self._emit_cards(base, yaw, beta, sz, cell,
-                         self._colour(shade, N, P, hi_lift) * RIM_DIM, rng)
+                         self._colour(shade, N, P, hi_lift) * RIM_DIM, rng, N)
         return n
 
-    def _emit_cards(self, P, yaw, beta, sz, cell, col, rng):
+    def _emit_cards(self, P, yaw, beta, sz, cell, col, rng, SN=None):
         n = len(P)
         cw, sw = np.cos(yaw), np.sin(yaw)
         cb, sb = np.cos(beta), np.sin(beta)
@@ -556,11 +606,29 @@ class Mass:
         # half (which is what left bare core showing between the clumps)
         o = P - U * (h * (0.5 + CARD_SINK))
         quad = np.stack([o - R * w, o + R * w, o + R * w + U * h, o - R * w + U * h], 1)
+        # THE TWIST (see CARD_TWIST).  N = R x U is the card's own plane normal;
+        # corners 0 and 2 go out along it and 1 and 3 go in, which is a saddle, so
+        # the quad's two triangles stop being coplanar and the card stops having an
+        # orientation at which it disappears.  The sign flips per card so the shell
+        # does not acquire one shared handedness at grazing angles.
+        if CARD_TWIST > 0:
+            Nc = np.cross(R, U)
+            d = (Nc * (w * CARD_TWIST)) * np.where(rng.rand(n) < 0.5, -1.0, 1.0)[:, None]
+            quad = quad + d[:, None, :] * np.array([1.0, -1.0, 1.0, -1.0])[None, :, None]
         b0 = self.ncv
         self.ncv += n * 4
         self.cV.append(quad.reshape(-1, 3))
         f = b0 + np.arange(n)[:, None] * 4 + np.array([0, 1, 2, 3])[None, :]
         self.cF.append(f)
+        # THE SHELL NORMAL (see CARD_NRM).  The card's plane normal is mixed toward
+        # the CORE surface normal it was scattered from, and the result is written
+        # as a custom split normal in `_mesh_cards` — otherwise every quad shades as
+        # its own plane and the crown has 33 000 independent lambert terms in it.
+        Nq = np.cross(R, U)
+        if SN is not None and CARD_NRM > 0:
+            Nq = Nq * (1.0 - CARD_NRM) + SN * CARD_NRM
+        Nq = Nq / np.maximum(np.linalg.norm(Nq, axis=1, keepdims=True), 1e-9)
+        self.cN.append(np.repeat(Nq, 4, axis=0))
         gx, gy = cell % GRID, cell // GRID
         u0 = gx / GRID
         v0 = 1.0 - (gy + 1) / GRID                 # cell 0 is the atlas TOP-left
@@ -634,6 +702,23 @@ class Mass:
         me.materials.append(mat)
         for p in me.polygons:
             p.use_smooth = True
+        # THE TRANSFERRED NORMALS.  A card is its own four verts, so the loop
+        # normal is just the vertex's; glTF's NORMAL accessor is written from
+        # the LOOP normals, which is why this has to be a custom split normal
+        # and not a vertex attribute of our own.
+        if self.cN:
+            NR = np.concatenate(self.cN)
+            try:
+                me.shade_smooth()
+            except Exception:
+                pass
+            try:
+                me.use_auto_smooth = True          # <4.1 only; a no-op after
+            except Exception:
+                pass
+            lv = np.zeros(len(me.loops), np.int32)
+            me.loops.foreach_get("vertex_index", lv)
+            me.normals_split_custom_set([tuple(v) for v in NR[lv]])
         ob = bpy.data.objects.new(self.name + "_cards", me)
         coll.objects.link(ob)
         return ob

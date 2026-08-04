@@ -1080,16 +1080,15 @@ def bed_in(p, ht, fam, F, zg, fr, px, py, w, d, yaw, rng):
         inner.append((xi, yi, gh(F, zg, fr, xi, yi) + 0.02))
         outer.append((xo, yo, gh(F, zg, fr, xo, yo) + 0.02))
     p.strip(DIRT, outer, inner)
-    # ...and the tufts that break the base line. They straddle the plinth edge on
-    # purpose — a tuft that stops at the stone draws the line again.
-    for k in range(7):
-        a = rng.uniform(0, 2 * math.pi)
-        rr = r0 * rng.uniform(0.86, 1.02)
-        tx, ty = px + math.cos(a) * rr, py + math.sin(a) * rr
-        tz = gh(F, zg, fr, tx, ty)
-        hgt = 0.16 + rng.uniform(0, 0.14)
-        p.cone(GRASS_HI, (tx, ty, tz + hgt / 2), 0.075 + rng.uniform(0, 0.05),
-               0.0, hgt, seg=4, rz=a)
+    # THE SEVEN WALL-LINE TUFTS THAT USED TO STAND HERE ARE DELETED (round 3).
+    # They were `p.cone(GRASS_HI, …, seg=4)`, and GRASS_HI has NO entry in
+    # overworld3_build's class -> material map, so all seven per house fell through
+    # to the untextured matte and shipped as pale mint cones — the same mechanism
+    # that produced f2's DIRT -> matte defect.  They are also now redundant: the
+    # detail lane's runtime `weedFringe` scatters real rosettes at exactly this
+    # feature (building footings), so the base line is broken by an asset that has
+    # a material.  The DIRT collar strip above is what actually beds the house.
+    # Deleted rather than remapped, per the delete-superseded ruling.
     for f in p.bm.faces:                 # so apply_house_tints can grade the ring
         if f not in before:
             f[ht] = float(fam)
@@ -3200,7 +3199,8 @@ def main():
     # stand is now a lobed core with a dense shell of leaf-cluster cards on a real
     # atlas instead of a painted swell.  One core + one cards mesh per stand, each
     # with its own vcol material, so they stay out of the class passes as before.
-    for i_, ob_ in enumerate(VV.build_canopy(col, F, zg, fr, VM, STATS)):
+    _canopy, _ctrunks = VV.build_canopy(col, F, zg, fr, VM, STATS)
+    for i_, ob_ in enumerate(_canopy):
         made["canopy_%d" % i_] = ob_
     made["props"] = build_props(col, F, zg, fr)
     made["fx"] = build_vista(col, F)
@@ -3238,6 +3238,15 @@ def main():
     for k, o in field.items():
         made["veg_" + k] = o
         veg_keys.append("veg_" + k)
+    # the STANDS' trunks (VV.build_canopy).  They join veg_keys rather than the
+    # canopy masses because they are a plain class-index BARK Prop like the field
+    # trunks — they want write_prop_colors, the class gains and the planar UV, and
+    # the masses are held out of that pass only because they carry their own
+    # COLOR_0.  Their OBJECT name is `veg_canopy_trunks`, which is what keeps them
+    # out of collision; the field trunks are `tree_field_trunks` and stay solid.
+    if _ctrunks is not None:
+        made["veg_canopy_trunks"] = _ctrunks
+        veg_keys.append("veg_canopy_trunks")
     # bushes carry their own COLOR_0 — same handling as the canopy masses
     for i_, ob_ in enumerate(bushobs):
         made["bush_%d" % i_] = ob_

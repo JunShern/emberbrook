@@ -63,6 +63,47 @@ CROWN_K = 0.062             # crown-swell wavelength, ~16 u (see stand_mass)
 CORE_DEEP = 0.11            # core COLOR_0 floor (its underside / crevices)
 CORE_LIFT = 0.26            # ... and how much a sky-facing core vertex adds
 
+# ------------------------------------------------- THE STAND'S TRUNKS (round 3)
+# "The hero canopy has no trunk and terminates in mid-air over the river" — named
+# by THREE separate blind judges and never owned by a round, and the reason is the
+# reason r2 already wrote down about bushes: THE OBJECT IN THE FRAME IS NOT THE
+# OBJECT WITH THE RIGHT NAME.  Round 2's lollipop fix (per-instance trunk height +
+# a skirt of low lobes) went into `overworld3_lib.tree_a`/`tree_e`, the FIELD tree
+# path.  Measured at the wire (ow_multi, the meadow camera): the mass under that
+# camera's left edge is `veg_canopy_whisperwood`, a bushlang Mass out of
+# `build_canopy` — and a Mass emits a lobed core and a card shell AND NOTHING ELSE.
+# There has never been one triangle of trunk in a canopy stand.
+#
+# IT IS ALSO A PLACEMENT FACT, so the judge's two readings are both true.  Over the
+# whisperwood's 1037 plan cells (2 u lattice, crown's lowest vertex against
+# SIM.floors in the running game) the gap runs p10 -2.01, p50 -0.83, p90 +1.11,
+# max +5.00 — the mass mostly sits INTO its ground, and the cells that hang worst
+# are the ones that run out over the river bank, where the ground falls away under
+# a crown that does not.  The stand mask is the map's and the overhang is wanted.
+# So the fix is not to move the crown: it is to give it something to grow out of,
+# which is exactly what fixed the field trees.
+#
+# `veg_` PREFIXED ON PURPOSE.  The runtime strips /^veg_/ from collision entirely,
+# so these cannot move one cell of the walk network — a stand is walkable encounter
+# terrain by the MIGRATION ruling, and a trunk that blocked the player would be a
+# new defect bought with a fix.  (The FIELD trees' trunks are `tree_*_trunks` and
+# ARE solid; that is deliberate and unchanged.)
+TRUNK_SP = 7.0              # min spacing between stand trunks, world units
+TRUNK_R = (0.24, 0.46)      # butt radius, clamped around 0.085 x the lobe radius
+TRUNK_SINK = 0.30           # buried below the terrain: a trunk may never show a gap
+TRUNK_RIM = 0.66            # a lobe with edge weight under this is ON the rim ...
+TRUNK_IN = 0.22             # ... and this share of interior lobes gets one anyway
+TRUNK_SHOW = 0.55           # ... but ONLY if this much of its underside is in the
+                            # air.  Without this the whole set is buried in the core
+                            # and renders 0 px — see _stand_trunks.
+# AND TWO GUARDS AGAINST THE OPPOSITE FAILURE, both paid for by looking at the
+# picture.  With exposure alone the gorge-rim stands planted trunks on the CLIFF
+# FACE: the skirt's lowest ground beyond a rim lobe is partway down a vertical wall,
+# so the trunk stood against the rock as a pale pole and read as scaffolding — a new
+# defect bought with a fix, which is worse than the missing trunk it replaced.
+TRUNK_MAX = 3.6             # a trunk, not a mast: past this the crown is over a drop
+TRUNK_SLOPE = 0.70          # ... and no trunk stands on ground steeper than this
+
 # rock
 ROCK_SET = "dark_rock_02"   # stratified/striated — the gorge walls' hero material
 CRAG_STRATA = 0.62          # bedding-terrace amplitude, world units
@@ -193,6 +234,7 @@ def stand_mass(name, F, sites, rng, density=None):
     # crown-scale swells and hollows that several lobes share.
     crown = np.clip(0.5 + 0.62 * O3.fbm(bx, by, CROWN_K, seed=63, oct_=2), 0.0, 1.0)
     gz = F.sample(bx, by)
+    crowns = []
     for k in range(len(sites)):
         e = float(sites[k, 2])
         c = float(crown[k])
@@ -216,11 +258,43 @@ def stand_mass(name, F, sites, rng, density=None):
         # character in effect.  A no-op that reads like a fix — the knob has to be
         # WIRED, i.e. hz has to vary independently of h, or there is no hull.
         hz = h * 0.62 * float(rng.uniform(0.80, 1.28))
-        M.lobe(float(bx[k]), float(by[k]), float(gz[k]) + h * 1.04 - hz,
+        cz = float(gz[k]) + h * 1.04 - hz
+        M.lobe(float(bx[k]), float(by[k]), cz,
                r, r * rng.uniform(0.88, 1.10), hz,
                subd=1, seed=rng.randint(1 << 28),
                squash=float(rng.uniform(0.10, 0.24)),
                tone=float(0.86 + 0.30 * float(tone_n[k])))
+        # WHAT A TRUNK NEEDS TO KNOW, recorded here because it is the only place
+        # that knows it: where this lobe's CENTRE is (a trunk that stops at the
+        # crown's underside is still a visible stick, so it runs up INTO the lobe),
+        # how big the lobe is, and how far out on the mass it sits.
+        #
+        # AND THE GROUND IT NEEDS IS NOT THE GROUND UNDER ITS CENTRE.  Measured
+        # (round 3, the build's own print): against `gz[k]`, the exposure
+        # `bot - gz` over all 446 lobes of the three stands runs p50 -0.85,
+        # p90 -0.03, MAX +0.17 — not one lobe in the region has half a metre of air
+        # beneath it, because `cz` is placed FROM `gz` and the mass is deliberately
+        # sunk.  A trunk from that ground to that centre is inside the opaque core
+        # for its whole length, which is exactly why the first version of this
+        # feature rendered 0 px on seven cameras.
+        #
+        # The crown that "terminates in mid-air over the river" is the crown whose
+        # SKIRT runs out over falling ground, so the ground that matters is the
+        # LOWEST terrain the lobe's own radius reaches over.  Sample a ring at r and
+        # keep its minimum, and the plan point where it occurs: that is where the
+        # air actually is, and it is where a trunk can be seen.
+        ang = np.arange(8) * (math.pi / 4.0)
+        rx, ry = float(bx[k]) + r * np.cos(ang), float(by[k]) + r * np.sin(ang)
+        rz_ = F.sample(rx, ry)
+        j = int(np.argmin(rz_))
+        tx, ty = float(rx[j]), float(ry[j])
+        # ... and the SLOPE there, because that point can be on a cliff (TRUNK_SLOPE)
+        sx = F.sample(np.array([tx - 1.0, tx + 1.0, tx, tx]),
+                      np.array([ty, ty, ty - 1.0, ty + 1.0]))
+        slope = float(math.hypot((sx[1] - sx[0]) * 0.5, (sx[3] - sx[2]) * 0.5))
+        crowns.append((float(bx[k]), float(by[k]), float(gz[k]), cz,
+                       r, e, float(cz - hz), float(rz_[j]), tx, ty, slope))
+    M.crowns = np.array(crowns) if crowns else np.zeros((0, 11))
     killed, total = M.cull_interior()
     # Darker than a lit surface but NOT black: at region scale the core is only
     # seen through gaps in the shell and a gap must read as canopy SHADOW, but
@@ -249,6 +323,8 @@ def build_canopy(col, F, zg, fr, VM, STATS=None):
     core_mat, card_mat = BL.materials(atlas, atlas_nor, tile, tile_nor,
                                      suffix="valley", pbr_mat=B2.pbr_mat)
     made = []
+    trunkp = B.Prop("veg_canopy_trunks")
+    ntrunk = 0
     zg.canopy_int = np.zeros_like(zg.BX, dtype=bool)
     RD = np.hypot(zg.BX[..., None] - F.road[::4, 0], zg.BY[..., None] - F.road[::4, 1])
     ri = RD.argmin(-1) * 4
@@ -275,11 +351,109 @@ def build_canopy(col, F, zg, fr, VM, STATS=None):
             ob.name = ob.data.name = nm
             made.append(ob)
         ct = int(len(M._F))
+        nt = _stand_trunks(trunkp, M.crowns, rng)
+        ntrunk += nt
         STATS["canopy_" + st["id"]] = dict(lobes=len(sites), core_tris=ct,
-                                           culled=killed, cards=n)
-        print("  canopy %-18s %4d lobes, core %5d/%5d tris, %6d cards"
-              % (st["id"], len(sites), ct, total, n))
-    return made
+                                           culled=killed, cards=n, trunks=nt)
+        print("  canopy %-18s %4d lobes, core %5d/%5d tris, %6d cards, %3d trunks"
+              % (st["id"], len(sites), ct, total, n, nt))
+    trunks = None
+    if len(trunkp.bm.faces):
+        trunks = trunkp.finish(col)
+        trunks.name = trunks.data.name = "veg_canopy_trunks"
+        STATS["canopy_trunks"] = ntrunk
+        print("  canopy trunks: %d, %d tris" % (ntrunk, len(trunks.data.polygons)))
+    else:
+        trunkp.bm.free()
+    return made, trunks
+
+
+def _stand_trunks(p, crowns, rng, spacing=TRUNK_SP):
+    """Trunk stubs + two limbs under a stand's lobes, EXPOSED UNDERSIDE FIRST.
+
+    A stand is 100 u across and every trunk inside it is behind a hundred cards, so
+    trunks are spent where the crown's UNDERSIDE is actually clear of the ground.
+
+    THE FIRST VERSION OF THIS FUNCTION PICKED BY THE RIM WEIGHT `e` AND SHIPPED
+    4 032 TRIANGLES THAT NO CAMERA COULD SEE.  Measured (round 3, ow_multi: the
+    trunk mesh given a flat magenta MeshBasicMaterial, then the magenta counted in
+    the frame): **0 px on all seven judged views** — meadow, closeup, gate, vista,
+    gorge and two cameras aimed at the worst overhang — while the same marker
+    rendered 1 720 px with the rest of the scene hidden, which is what proves the
+    instrument could have found something.  Hiding the CARD shells alone still gave
+    0: the occluder is the lobed CORE.
+
+    The mechanism is one line of arithmetic.  `stand_mass` places a lobe centre at
+    `cz = gz + h*1.04 - hz`, so `H = cz - gz` is a function of the LOBE and never of
+    where the ground is; and the lobe's own underside `cz - hz` sits at or below that
+    ground on most of the mass (the mass is deliberately sunk — measured crown-to-
+    floor gap p50 -0.83).  A trunk running from the ground to the lobe centre is
+    therefore inside the opaque core for its whole length everywhere except the
+    minority of lobes whose underside is genuinely in the air.
+
+    So the pick is now BY EXPOSURE — `bot - gz`, the lobe's underside above its own
+    terrain, which `stand_mass` already records and nothing used — most exposed
+    first, and a lobe with less than TRUNK_SHOW of clear air under it does not buy a
+    trunk at all.  That is also exactly the judge's complaint: the crown that runs
+    out over the river bank is the crown with air under it.
+    """
+    if not len(crowns):
+        return 0
+    show = crowns[:, 6] - crowns[:, 7]       # underside above the SKIRT's lowest ground
+    flat = crowns[:, 10] < TRUNK_SLOPE
+    keep = (show > TRUNK_SHOW) & (show < TRUNK_MAX) & flat \
+        & ((crowns[:, 5] < TRUNK_RIM) | (rng.rand(len(crowns)) < TRUNK_IN))
+    idx = np.nonzero(keep)[0]
+    idx = idx[np.argsort(-(show[idx] + rng.rand(len(idx)) * 0.25))]
+    print("    trunks: exposure p50 %+.2f p90 %+.2f max %+.2f | %d over %.2f, "
+          "%d in band, %d of those on ground under slope %.2f (of %d lobes)"
+          % (np.percentile(show, 50), np.percentile(show, 90), show.max(),
+             int((show > TRUNK_SHOW).sum()), TRUNK_SHOW,
+             int(((show > TRUNK_SHOW) & (show < TRUNK_MAX)).sum()),
+             int(((show > TRUNK_SHOW) & (show < TRUNK_MAX) & flat).sum()),
+             TRUNK_SLOPE, len(show)))
+    taken = []
+    n = 0
+    for k in idx:
+        cx, cy, _gzc, cz, r, e, bot, gz, x, y, _sl = crowns[k]
+        if any((x - a) ** 2 + (y - b) ** 2 < spacing * spacing for (a, b) in taken):
+            continue
+        taken.append((x, y))
+        # UP INTO THE LOBE, not up to it.  A trunk that stops at the crown's
+        # underside is the bare stick round 2 spent a whole round removing; the
+        # lobe has to swallow its top, which is what `cz` (the lobe CENTRE) buys.
+        H = float(cz - gz) + TRUNK_SINK
+        if H < 1.0:
+            continue
+        r0 = float(np.clip(0.085 * r, TRUNK_R[0], TRUNK_R[1])
+                   * rng.uniform(0.84, 1.22))
+        r1 = r0 * float(rng.uniform(0.58, 0.78))
+        # THE LEAN IS AIMED, not random.  The trunk stands at the skirt's lowest
+        # ground, which is a lobe radius out from the lobe centre — so it leans
+        # INWARD, and its top finishes inside the mass it carries instead of beside
+        # it.  A pole that ends next to a crown is a flagpole, again.
+        rz = math.atan2(cy - y, cx - x)
+        lean = 0.30 * H * float(rng.uniform(0.5, 1.0))
+        dx, dy = math.cos(rz) * lean, math.sin(rz) * lean
+        z0 = float(gz) - TRUNK_SINK
+        p.cone(O3.BARK, (x, y, z0 + H * 0.22), r0 * 1.34, r0, H * 0.46,
+               seg=6, rz=rz)
+        p.cone(O3.BARK, (x + dx * 0.5, y + dy * 0.5, z0 + H * 0.70),
+               r0, r1, H * 0.52, seg=6, rz=rz + 0.4)
+        # TWO LIMBS, and they are what make the join read rather than the stub: a
+        # bare pole under a crown is a flagpole.  They reach out toward the lobe's
+        # own radius, so they die inside the foliage they carry.
+        top = (x + dx, y + dy, z0 + H)
+        for j in range(2):
+            a = rz + 1.9 + j * 2.6 + float(rng.uniform(-0.5, 0.5))
+            d = float(r) * float(rng.uniform(0.34, 0.62))
+            O3.O2.beam(p, O3.BARK,
+                       (top[0], top[1], z0 + H * 0.70),
+                       (top[0] + math.cos(a) * d, top[1] + math.sin(a) * d,
+                        z0 + H * float(rng.uniform(0.94, 1.10))),
+                       r1 * 0.62, r1 * 0.42)
+        n += 1
+    return n
 
 
 # ------------------------------------------------------------------- THE BUSHES

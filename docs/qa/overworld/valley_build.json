@@ -1,5 +1,5 @@
 {
- "build_s": 16.46,
+ "build_s": 18.82,
  "bushes": {
   "cards": 741,
   "core_tris": 11265,
@@ -9,19 +9,23 @@
   "cards": 12996,
   "core_tris": 3849,
   "culled": 9111,
-  "lobes": 162
+  "lobes": 162,
+  "trunks": 5
  },
  "canopy_pocket-grove": {
   "cards": 1697,
   "core_tris": 491,
   "culled": 869,
-  "lobes": 17
+  "lobes": 17,
+  "trunks": 2
  },
+ "canopy_trunks": 15,
  "canopy_whisperwood": {
   "cards": 18640,
   "core_tris": 6316,
   "culled": 15044,
-  "lobes": 267
+  "lobes": 267,
+  "trunks": 8
  },
  "chimneys": {
   "built": 14,
@@ -33,14 +37,25 @@
  "contact_shadow": {
   "base": 0.44,
   "ground_dark": 0.46,
-  "ground_verts": 6807,
-  "masses": 9
+  "ground_verts": 6824,
+  "masses": 10
  },
- "dellhollow_decks": 19,
+ "dellhollow_deck_over_water_u": [
+  2.2,
+  14.2
+ ],
+ "dellhollow_decks": 25,
+ "dellhollow_lock_drops_u": [
+  2.77,
+  2.84,
+  2.35
+ ],
  "dellhollow_plaster_faces": 0,
- "dellhollow_terraces": 5,
+ "dellhollow_pools": 3,
+ "dellhollow_terraces": 1,
  "dellhollow_tile_faces": 0,
  "dellhollow_tint_families": 0,
+ "dellhollow_water_decks": 5,
  "dellhollow_wheels": 4,
  "emberbrook_house_slope_u": 0.47,
  "emberbrook_houses": 14,
@@ -48,7 +63,7 @@
  "emberbrook_tint_families": 5,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.25,
+ "field_s": 0.26,
  "h_range": [
   -6.18,
   50.9
@@ -85,7 +100,7 @@
   176,
   126
  ],
- "meshes": 35,
+ "meshes": 38,
  "oldgate_bite_e_u": 3.05,
  "oldgate_bite_w_u": 0.9,
  "oldgate_court_ends": [
@@ -126,7 +141,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.2,
+ "terrain_s": 0.22,
  "tile": [
   280.0,
   200.0
@@ -149,11 +164,35 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 333677,
+ "tris": 337781,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 4.07,
+ "veg_s": 4.05,
  "vista_crest_stations": 264,
  "water_bathymetry": {
+  "dhfalls": {
+   "alpha": [
+    0.86,
+    0.86,
+    0.86
+   ],
+   "depth": null,
+   "verts": 996,
+   "water_corners": 3636
+  },
+  "dhpools": {
+   "alpha": [
+    0.06,
+    0.846,
+    0.97
+   ],
+   "depth": [
+    -0.49,
+    2.77,
+    5.32
+   ],
+   "verts": 480,
+   "water_corners": 864
+  },
   "falls": {
    "alpha": [
     0.86,
@@ -211,5 +250,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.075
+ "zone_s": 0.078
 }
