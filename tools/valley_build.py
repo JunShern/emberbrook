@@ -453,10 +453,16 @@ def water_bathymetry(made, F, zg, fr):
     ramp would render at alpha 0.08 — i.e. it would DELETE them.  A ramp applied
     where its input is not a depth is a ramp applied to noise.
     """
-    flat = {"tributaries": 0.72, "falls": 0.86}
+    # `dhpools` is deliberately NOT flat: a lock pond has a real depth (shallow at
+    # the head where it meets the river, deepest against its own dam), so the ramp
+    # describes it correctly and darkens the ponded reach against the shallow river
+    # — which is the "boat queue pooled above the jam" read, for free. `dhfalls` is
+    # flat for the same reason `falls` is: a curtain is a vertical sheet and its
+    # distance-to-ground is not a depth.
+    flat = {"tributaries": 0.72, "falls": 0.86, "dhfalls": 0.86}
     lin = _srgb_to_linear(WATER_HEX)
     rep = {}
-    for key in ("water", "pool", "tributaries", "falls"):
+    for key in ("water", "pool", "tributaries", "falls", "dhpools", "dhfalls"):
         ob = made.get(key)
         cls = made.get(key + "_cls")
         if ob is None or cls is None:
@@ -1508,8 +1514,100 @@ DH_DECK_W = (4.4, 5.9)     # along the river — bays nearly touch at 6 u spacin
 DH_DECK_D = (2.5, 3.4)     # out from the wall
 DH_LIFT = (1.7, 3.5)       # deck top above the HIGHEST ground under its footprint
 
+# =============================================================================
+# ROUND 2 — THE TOWN HAS TO REACH THE WATER (2026-08-04)
+# =============================================================================
+# THE USER, on the round-1 vista: "this looks way better now but it seems entirely
+# disconnected from the actual dellhollow town model that we use for the playable
+# town.  e.g. the town stretches down into the river below and has locks; the
+# screenshot shows me the town climbing up the slope but not the water."
+#
+# Round 1 passed DISTINCTNESS and failed IDENTITY, and the ladder is why. It offset
+# each tier LATERALLY from the channel centreline (`lat = hw + 2.4 + tier * 3.5`),
+# which says nothing about height — so where the gorge wall is steep the lowest deck
+# is already high. MEASURED on the shipped ladder, tier 0's deck top stood 4.94 to
+# 11.12 u ABOVE the local waterline; the town genuinely began above the river and
+# climbed away from it. The cross-gorge profile says where it should have begun: the
+# waterline band sits at lat 4-6, which is INSIDE the channel half-width (5.9-7.9).
+#
+# SO THE LADDER IS SOLVED IN HEIGHT, NOT IN LATERAL OFFSET. Each tier names a height
+# ABOVE THE LOCAL WATER and the lateral offset is SEARCHED for — the first offset at
+# which the built ground reaches it. Three things fall out of that and all three are
+# the identity the user is asking for:
+#   * the tiers become TRUE CONTOURS of the gorge wall, so where the wall is steep
+#     they stack vertically (the master ref's lattice of decks with air between) and
+#     where it eases they spread — instead of a constant offset doing whichever of
+#     those the terrain happened to make it do;
+#   * tier 0 is BELOW the waterline by construction, so its stilts foot on the
+#     riverbed and the deck stands OVER the shallows. The `gz < cwl + 0.35` guard
+#     that used to refuse those stations refuses DROWNED ones, not waterline ones —
+#     a deck on tall stilts over water is the entire point of stilts;
+#   * every height is relative to the LOCAL water, and the water falls 7.4 u across
+#     the town's own reach, so the whole town steps down WITH the river rather than
+#     sitting on one bench. That is the cascade, and it is derived, not drawn.
+DH_TIER_H = (-0.55, 2.2, 5.2, 8.2, 11.2)   # tier GROUND target, REL. TO LOCAL WATER
+# AND THE DECK TOPS ARE ANCHORED TO THE WATER TOO — every tier, not just the wet one.
+# Measured on the first round-2 build: with tiers 1-3 still taking `max(cor) + lift`,
+# their deck tops came out at water +13 to +19, which is 4 to 7 u ABOVE the rim road
+# the player walks in on (h 12.3-14.5). The town therefore photographed as a thing
+# standing ON the rim rather than descending into the gorge — the user's original
+# complaint surviving in the upper tiers after the lower one had been fixed. The
+# cause is that on a wall this steep `max(cor)` is the uphill corner, metres above
+# the contour the tier was placed on, so the lift compounded the slope.
+# Each entry is ALSO the next tier's ground target, which is what a terraced hillside
+# actually is: every tier's deck is level with the ground the tier above stands on.
+#
+# FIVE TIERS, WATER TO RIM — and the fifth was earned by a photograph, not a taste.
+# At four tiers the town spanned water +2.2 to +11.4, which is CORRECT placement and
+# yet it read as almost nothing from the standing gorge camera: the rim road there is
+# only 8-12 u above the river, so a town that stops at rim height sits entirely
+# BEHIND the near lip from 36 u away, and the establishing frame went empty. Round 1
+# was visible from there only because it stood too high to be a river town at all.
+# The resolution is not to lift the town back up — it is that a cascade town SPANS.
+# The lower tiers are what reach the water and the upper two are what break the rim
+# line and carry the silhouette at distance; taking either end away loses one of the
+# two things the frame has to say at once.
+DH_TIER_TOP = (2.2, 5.2, 8.2, 11.2, 14.2)  # tier DECK TOP, relative to local water
+# How far INBOARD of its own contour a wet bay sits, as a fraction of deck depth.
+# A bay centred exactly on the waterline contour puts half its footprint up the
+# cliff, and on this wall the ground climbs ~2 u per lateral unit — so its uphill
+# corner came out 7 u above its downhill one and dragged the whole deck up with it
+# (measured: tier-0 tops of +3.06 to +7.22 above water, when the intent was +2.2).
+# Shifted inboard, the footprint straddles the waterline the way a stilt house on a
+# shore actually does: back against the bank, front out over the water.
+DH_WET_IN = 0.32
+# THE LOCK FLIGHT. `rise` is how far each weir holds its pool ABOVE the natural
+# surface at its own sill — i.e. exactly the height of the drop over it, which is
+# the thing a distant glance reads. 1.9 u is not a taste: the natural fall between
+# consecutive weirs is 2.57 u and 2.11 u, so a hold of 1.9 makes each pool reach
+# back very nearly to the weir above it and the three steps tile the reach.
+DH_LOCK_RISE = 1.9
+DH_POOL_MAX = 13.0                   # longest reach one weir is allowed to pond
 
-def scaffold_bay(p, F, zg, fr, px, py, yaw, sgn, dims, pad, rng, lamp):
+
+def contour_lat(F, zg, fr, cpt, cnr, side, target, lo=0.8, hi=26.0, step=0.22):
+    """First lateral offset from the channel centreline where the GROUND reaches
+    `target`, or (None, None) if the wall never gets there inside `hi`.
+
+    This is the whole round-2 ladder in one function. It marches OUT from the
+    channel, so for a target below the waterline it stops inside the water (which
+    is what puts a stilt bay in the shallows) and for a target above it stops on
+    the wall. The march is over the BUILT ground (O3.height, crag treatment
+    included) rather than the analytic field, because the crag treatment is what
+    the player actually sees and a contour taken from the smooth field would sit
+    off the rock it is supposed to be following.
+    """
+    lat = lo
+    while lat <= hi:
+        q = cpt + cnr * side * lat
+        g = gh(F, zg, fr, float(q[0] - VM.CX), float(q[1] - VM.CY))
+        if g >= target:
+            return lat, g
+        lat += step
+    return None, None
+
+
+def scaffold_bay(p, F, zg, fr, px, py, yaw, sgn, dims, pad, rng, lamp, top_z=None):
     """ONE timber bay: deck, stilts, cross-bracing, rail, and sometimes a lean-to.
 
     `sgn` is which way local +Y points over the gorge — SOLVED by the caller against
@@ -1519,6 +1617,16 @@ def scaffold_bay(p, F, zg, fr, px, py, yaw, sgn, dims, pad, rng, lamp):
 
     `pad` is the stone terrace top under this bay, or None.  Legs foot on the HIGHER
     of the terrace and the ground so a leg never grows through its own masonry.
+
+    `top_z` anchors the walking surface to an ABSOLUTE height instead of to this
+    bay's own highest footing — which is what a bay standing in the river needs,
+    because there the interesting datum is the WATER and the footings can be metres
+    of riverbed and bank apart. The clearance floor it is held against is the
+    LOWEST footing, deliberately: a bay on this wall has its back corner up the
+    cliff, and holding an over-water deck above its HIGHEST footing is what threw
+    round 2's first pass up to +7.22 above the waterline it was aiming at +2.2.
+    Clearing the lowest footing is the condition for there being a bay at all;
+    clearing the highest would mean there is no such thing as a bay against a bank.
     """
     dw, dd, lift = dims
     ca, sa = math.cos(yaw), math.sin(yaw)
@@ -1532,7 +1640,8 @@ def scaffold_bay(p, F, zg, fr, px, py, yaw, sgn, dims, pad, rng, lamp):
         return g if pad is None else max(g, pad)
 
     cor = [foot(u * dw * 0.5, v * dd * 0.5) for u in (-1, 1) for v in (-1, 1)]
-    top = max(cor) + lift               # the walking surface
+    top = (max(cor) + lift if top_z is None
+           else max(float(top_z), min(cor) + 1.5))   # the walking surface
 
     # ---- THE STILTS. The outer row is the tall one: the ground falls away under
     # the cantilever, and that fall IS the read the map's "cantilevered out over the
@@ -1648,19 +1757,23 @@ def build_dellhollow(col, F, zg, fr):
     # `nr` is the gorge frame's LEFT normal, so +1 is the left bank looking downstream.
     bench_side = 1 if VM.BENCH_LEFT else -1
     anchor_arc = VM.river_arc_at(aw[0], aw[1])
-    # 4 tiers on one bank, not 3 on two: the town keeps its mass and its stepped read
+    # Tiers on ONE bank, not on two: the town keeps its mass and its stepped read
     # without borrowing the cliff opposite. STATS carries the count so the change is
     # visible in valley_build.json rather than only in a render.
+    n_water_deck = 0
+    deck_dz = []                         # every deck top MINUS its local water level
     for side in (bench_side,):
-        for tier in range(4):
-            # TIER STEP 3.5, NOT 4.4 (2026-08-04, by eye at the gorge camera). At 4.4
-            # the four tiers spread 13.2u across the wall and the bays photographed as
-            # five separate stilt towers with sky between them — the read was watch-
-            # towers, not a town. A scaffold town is DENSE; the decks have to overlap
-            # in silhouette for the lattice to close up.
-            lat = hw + 2.4 + tier * 3.5
+        for tier in range(len(DH_TIER_TOP)):
+            # THE TIER IS A HEIGHT ABOVE THE LOCAL WATER, and the lateral offset is
+            # SEARCHED for — see DH_TIER_H. Round 1's constant `lat = hw + 2.4 +
+            # tier * 3.5` is what put the lowest deck 4.9-11.1 u above the river.
             for stat in (-13.0, -7.0, -1.0, 5.0, 11.0):
                 jx = rng.uniform(-1.1, 1.1)
+                # THE BAY IS SIZED BEFORE IT IS PLACED, because a wet bay's position
+                # depends on its own depth (DH_WET_IN).
+                dw = rng.uniform(*DH_DECK_W)
+                dd = rng.uniform(*DH_DECK_D)
+                dims = (dw, dd, rng.uniform(*DH_LIFT))
                 # STEP ALONG THE RIVER'S OWN CURVE, and take the normal there.
                 # Restricting `side` to the bench was not enough: this cluster spans
                 # 24u of a reach that turns from bearing 13 to 49 degrees, so lateral
@@ -1669,13 +1782,26 @@ def build_dellhollow(col, F, zg, fr):
                 # vertex.  A per-station bank guard refused those, and correctly, but
                 # it cost the town half its houses.  On the curve, nothing is refused.
                 cpt, ctg, cnr, cwl, chw, _ = VM.river_frame_at_arc(anchor_arc + stat + jx)
+                lat, gz = contour_lat(F, zg, fr, cpt, cnr, side,
+                                      cwl + DH_TIER_H[tier])
+                if lat is None:                     # wall never reaches this tier
+                    continue
+                wet = (tier == 0)
+                if wet:
+                    lat = max(1.2, lat - dd * DH_WET_IN)
                 q = cpt + cnr * side * lat
                 px, py = float(q[0] - VM.CX), float(q[1] - VM.CY)
-                gz = gh(F, zg, fr, px, py)
-                if gz < cwl + 0.35:                 # that station is in the water
-                    continue
                 off, hw_here = VM.bank_offset(float(q[0]), float(q[1]))
-                if off * side < hw_here + 1.5:      # kept as a SCREEN, not the method
+                # ONE GUARD FOR EVERY TIER, and it is the CENTRELINE, not the bank.
+                # Round 1's `off * side >= hw + 1.5` said "stand beyond the water's
+                # edge", which is precisely the rule that makes a waterfront town
+                # impossible — it refused four of five tier-1 stations here, because
+                # once tiers are solved by HEIGHT a low tier legitimately sits at the
+                # water. What must never happen is the town wading across to the far
+                # wall (ch3 territory), and that is what this tests.
+                if off * side < 0.30 * hw_here:
+                    continue
+                if wet and off * side > hw_here + 2.5:
                     continue
                 # The terrace ALIGNS to the bench — a stepped town does not scatter its
                 # yaw — so the copy-read is broken here on size and tint, plus a small
@@ -1689,9 +1815,6 @@ def build_dellhollow(col, F, zg, fr):
                 # sign; assuming it is how the deck ends up pitched into the cliff.
                 sgn = 1.0 if (-math.sin(yaw) * float(-cnr[0] * side)
                               + math.cos(yaw) * float(-cnr[1] * side)) > 0 else -1.0
-                dw = rng.uniform(*DH_DECK_W)
-                dd = rng.uniform(*DH_DECK_D)
-                dims = (dw, dd, rng.uniform(*DH_LIFT))
                 # A terrace pad + retaining wall is what makes a cluster read
                 # STEPPED — but a pad placed at the CENTRE height cantilevers off a
                 # gorge wall, which is what the first render showed.  The pad top is
@@ -1709,8 +1832,12 @@ def build_dellhollow(col, F, zg, fr):
                 # the steep wall the town is supposed to cling to. A cottage needs
                 # bedding; A SCAFFOLD DOES NOT, that being the point of stilts. So the
                 # steep stations keep their bay and simply lose the masonry under it.
+                # A WET BAY GETS NO MASONRY. A stone terrace poured in the river is a
+                # causeway, and a causeway is the one thing that must not appear here:
+                # it would both fill the channel the boat leaves by and hand the
+                # player a standable ramp toward the ch3 wall.
                 pad = None
-                if max(ch) - min(ch) <= 2.8:
+                if not wet and max(ch) - min(ch) <= 2.8:
                     pad = min(ch) + 0.10
                     p.cube(STONE, (px, py, pad - 0.20), (pw_, pd_, 0.44), rz=yaw)
                     foot = min(ch) - 0.4
@@ -1722,8 +1849,12 @@ def build_dellhollow(col, F, zg, fr):
                     p.cube(STONE, (ox, oy, pad - 0.42 - drop / 2), (pw_, 0.38, drop),
                            rz=yaw)
                     n_terrace += 1
-                _, rail = scaffold_bay(p, F, zg, fr, px, py, yaw, sgn, dims, pad, rng,
-                                       lamp=(n_deck % 3 != 1))
+                dtop, rail = scaffold_bay(p, F, zg, fr, px, py, yaw, sgn, dims, pad,
+                                          rng, lamp=(n_deck % 3 != 1),
+                                          top_z=cwl + DH_TIER_TOP[tier])
+                deck_dz.append(dtop - cwl)
+                if wet:
+                    n_water_deck += 1
                 # THE LAUNDRY LINE between neighbours in a tier. The townmap names it
                 # twice ("laundry lines, rickety balconies"; "Drying decks — laundry
                 # lines and fish racks strung between the clusters"), and at vista
@@ -1740,44 +1871,155 @@ def build_dellhollow(col, F, zg, fr):
                         _strut(p, ROPE, mid, rail, 0.07)
                 prev_rail[tier] = rail
                 n_deck += 1
-    # ---- THE WEIR FLIGHT: the reason the locks exist ------------------------
+    # ---- THE LOCK FLIGHT: the reason the locks exist, and the reason the river
+    # ---- reads as a CASCADE (round 2, 2026-08-04) ---------------------------
+    # Round 1 built these weirs and they were invisible in the frame, because A WEIR
+    # WHOSE WATER DOES NOT STEP IS A WALL STANDING IN A RIVER: the surface ran past
+    # them as one smooth ramp (VM.water_level interpolates the authored profile and
+    # nothing in it knows a weir is there). The identity the user is asking for —
+    # canon's "locks as the town's spine, waterfalls on every level" — is carried by
+    # THE WATER, not by the masonry, and at 40 m a stepped surface is the whole read.
+    #
+    # So each weir now PONDS its own reach. The pool is held at the sill plus
+    # DH_LOCK_RISE and its head is FOUND, not typed: march upstream until the natural
+    # surface has itself risen to the crest, and stop there. That is what makes the
+    # upstream seam invisible — at the head the natural ribbon is at or above the
+    # pool, so it COVERS the pool's leading edge instead of z-fighting it, and the
+    # pool appears to emerge from under the river. Every drop is then exactly
+    # DH_LOCK_RISE tall and no seam has to be faired by hand.
+    #
+    # THE POOL WIDENS AS IT DEEPENS, because its edge is solved against the same
+    # ground contour the decks are rather than taken from the channel's nominal
+    # half-width. That is free, it is what ponded water actually does, and it draws
+    # the townmap's "boat queue pooled above the jam" without authoring a vertex.
+    #
+    # THE WATER IS ITS OWN `water_` PROP, and BOTH halves of that matter. build_falls
+    # paid for the first: ONE MIXED-MATERIAL MESH DISABLES VERTEX ALPHA FOR EVERY
+    # PRIMITIVE IN IT, so water sharing a mesh with the STONE lock would export
+    # COLOR_0 as VEC3 and the entire flight would go opaque. The second is
+    # valley_export's own rule — every mesh that is NOT water_/lm_/veg_ is standable
+    # AND BLOCKING — so a pool built into the town prop would be walkable water.
+    # Pools and falls are split for the reason build_falls split them: a pool has a
+    # real depth and wants the ramp, a curtain is a vertical sheet whose "depth" is
+    # meaningless and wants a flat alpha.
+    pwp = B.Prop("water_dellhollow_pools")
+    pwf = B.Prop("water_dellhollow_falls")
     n_weir = 0
+    n_pool = 0
+    lock_steps = []
     crest = None
     for k, stat in enumerate((-11.0, -1.0, 9.0)):
         cx_ = float(ctr[0] + tg[0] * stat)
         cy_ = float(ctr[1] + tg[1] * stat)
         _, wtg, wnr, wwl, whw, _ = gorge_frame(F, cx_ + VM.CX, cy_ + VM.CY)
         ang = math.atan2(float(wtg[1]), float(wtg[0])) + math.pi / 2
-        span = whw * 2.0 + 1.4
+        pool_z = wwl + DH_LOCK_RISE
+        a_w = VM.river_arc_at(cx_ + VM.CX, cy_ + VM.CY)
+        # THE HEAD OF THE POND, found by marching upstream to the crest level.
+        head = a_w - DH_POOL_MAX
+        s_ = a_w
+        while s_ > a_w - DH_POOL_MAX:
+            s_ -= 0.4
+            if float(VM.river_frame_at_arc(s_)[3]) >= pool_z:
+                head = s_
+                break
+        # THE PONDED SURFACE, its edges on the crest contour.
+        #
+        # NINE COLUMNS, AND THE FIRST BUILD PROVED WHY. This was two columns — one
+        # per edge — and every vertex it had therefore sat exactly ON the contour
+        # where the pool meets the ground, i.e. at depth ZERO. water_bathymetry
+        # measured it and said so: `dhpools ... alpha [0.06, 0.06, 0.06] depth
+        # [-0.49, -0.12, -0.01]`, an alpha of 0.06 being an INVISIBLE pool. The whole
+        # cascade rendered as nothing. This is build_water's own R13 lesson — "THE
+        # STRIP NEEDS AN INSIDE", a depth ramp on a two-column strip can only ever
+        # describe its two edges — and it is written thirty lines above this one; a
+        # note read and then not applied is a note that cost a build. The interior
+        # columns are what sit over the deep bed and carry the ramp.
+        ncol = 9
+        ns = max(3, int((a_w - head) / 1.1))
+        cols_ = [[] for _ in range(ncol)]
+        wide = 0.0
+        for i_ in range(ns + 1):
+            s2 = head + (a_w - head) * i_ / ns
+            cpt2, _, cnr2, _, hw2, _ = VM.river_frame_at_arc(s2)
+            eL, _ = contour_lat(F, zg, fr, cpt2, cnr2, 1, pool_z,
+                                lo=hw2 * 0.55, hi=hw2 + 8.0, step=0.18)
+            eR, _ = contour_lat(F, zg, fr, cpt2, cnr2, -1, pool_z,
+                                lo=hw2 * 0.55, hi=hw2 + 8.0, step=0.18)
+            eL = hw2 if eL is None else eL
+            eR = hw2 if eR is None else eR
+            wide = max(wide, eL + eR)
+            for ci in range(ncol):
+                u = ci / (ncol - 1.0)                 # 0 at the right edge, 1 at left
+                q2 = cpt2 + cnr2 * (-eR + (eL + eR) * u)
+                cols_[ci].append((float(q2[0] - VM.CX), float(q2[1] - VM.CY), pool_z))
+        for ci in range(ncol - 1):
+            pwp.strip(WATER, cols_[ci], cols_[ci + 1])
+        n_pool += 1
+        # the masonry has to be as wide as the water it holds, or the pool runs
+        # round the end of its own dam — measured off the pool, never guessed.
+        span = max(whw * 2.0 + 1.4, wide + 1.6)
         # SEGMENTED: one 2 x 15 x 3.4u block beside the houses reads as a monolith,
         # and the moorage camera stood right behind it.  Six courses with hashed
-        # offsets read as built masonry at the same cost.
+        # offsets read as built masonry at the same cost.  The courses now run from
+        # the BED to the crest, because the dam has to be as tall as its own head.
+        bed = min(gh(F, zg, fr, cx_, cy_), wwl - 2.6)
         nb = 6
         for bi in range(nb):
             u = (bi - (nb - 1) / 2.0) * (span / nb)
             hj = float(O3._hash01(bi, k * 17, 3))
+            top_ = pool_z + 0.34 - 0.10 * hj
             p.cube(STONE, (cx_ + float(wnr[0]) * u, cy_ + float(wnr[1]) * u,
-                           wwl - 1.0 - 0.10 * hj),
-                   (1.5 + 0.22 * hj, span / nb * 0.97, 2.9), rz=ang)
-        p.cube(STONE, (cx_, cy_, wwl + 0.62), (2.1, span, 0.36), rz=ang)   # crest walk
-        # a visible weir LINE downstream of the sill: white water reads as a drop
-        p.cube(STONE, (cx_ - float(wtg[0]) * 1.6, cy_ - float(wtg[1]) * 1.6,
-                       wwl - 0.28), (0.9, span * 0.88, 0.5), rz=ang)
+                           (bed + top_) / 2),
+                   (1.5 + 0.22 * hj, span / nb * 0.97, max(1.0, top_ - bed)), rz=ang)
+        p.cube(STONE, (cx_, cy_, pool_z + 0.66), (2.1, span, 0.36), rz=ang)  # crest walk
+        # THE FALL over the sill: a curtain from the crest down to the natural
+        # surface just below it, plus churn at its foot. This is the element that
+        # makes the step read at 40 m — the level change alone is a line, and a line
+        # is what round 1 already had.
+        _, _, _, wl_dn, _, _ = VM.river_frame_at_arc(min(a_w + 2.6, VM.RIV_S[-1]))
+        drop = max(0.5, pool_z - wl_dn)
+        nseg, nrow = 7, 4
+        for ci in range(nseg):
+            u = (ci + 0.5) / nseg * 2.0 - 1.0
+            bow = (1.0 - u * u) * 0.42
+            for r in range(nrow):
+                fmid = (r + 0.5) / nrow
+                zz = pool_z - drop * fmid
+                pwf.cube(WATER, (cx_ + float(wnr[0]) * u * span * 0.46
+                                 - float(wtg[0]) * (0.5 + bow),
+                                 cy_ + float(wnr[1]) * u * span * 0.46
+                                 - float(wtg[1]) * (0.5 + bow), zz),
+                         (0.5, span * 0.92 / nseg, drop / nrow * 1.06), rz=ang)
+        for ci in range(9):
+            hj = float(O3._hash01(ci, k * 23, 5))
+            u = (ci / 8.0 - 0.5) * span * 0.86
+            pwf.ico(WATER, (cx_ + float(wnr[0]) * u - float(wtg[0]) * (1.5 + 0.9 * hj),
+                            cy_ + float(wnr[1]) * u - float(wtg[1]) * (1.5 + 0.9 * hj),
+                            wl_dn + 0.20 + 0.5 * hj),
+                    (0.52 + 0.3 * hj, 0.52 + 0.3 * hj, 0.36), subd=1)
+        lock_steps.append(round(float(drop), 2))
         if crest is None:
-            crest = (cx_, cy_, wwl + 0.90, ang, span)
+            crest = (cx_, cy_, pool_z + 0.94, ang, span)
         # ---- waterwheel HINTS on the abutment (2 of the 3 stations) ----------
         if k != 1:
+            # A WHEEL IS DRIVEN BY THE TAILWATER, so its hub hangs just above the
+            # level BELOW the sill and its rim dips into it — round 1 hung it at the
+            # sill's own level, which now that the pool is 1.9u higher would have
+            # buried the wheel in the pond it is supposed to be spilling out of.
+            # The abutment moved out with the dam, so it is measured off `span`.
+            hub = wl_dn + 1.25
             for side in (-1, 1):
-                wx_ = cx_ + float(wnr[0]) * side * (whw + 1.4)
-                wy_ = cy_ + float(wnr[1]) * side * (whw + 1.4)
+                wx_ = cx_ + float(wnr[0]) * side * (span * 0.5 + 1.0)
+                wy_ = cy_ + float(wnr[1]) * side * (span * 0.5 + 1.0)
                 for j in range(9):
                     a = j * (2 * math.pi / 9)
                     p.cube(WOOD, (wx_ + math.cos(a) * 1.15 * float(wtg[0]),
                                   wy_ + math.cos(a) * 1.15 * float(wtg[1]),
-                                  wwl + 0.15 + math.sin(a) * 1.15),
+                                  hub + math.sin(a) * 1.15),
                            (0.40, 0.14, 0.40), rz=ang, rx=a)
-                p.cone(WOOD, (wx_, wy_, wwl + 0.15), 1.22, 1.22, 0.20, seg=12, rz=ang)
-                p.cone(METAL, (wx_, wy_, wwl + 0.15), 0.16, 0.16, 1.2, seg=8, rz=ang)
+                p.cone(WOOD, (wx_, wy_, hub), 1.22, 1.22, 0.20, seg=12, rz=ang)
+                p.cone(METAL, (wx_, wy_, hub), 0.16, 0.16, 1.2, seg=8, rz=ang)
                 # the mill it drives — BENCH SIDE ONLY.  A weir has two abutments and
                 # both may carry a wheel; a MILL is a building, and a building on the
                 # far wall is town mass on the cliff the player cannot reach.
@@ -1795,7 +2037,7 @@ def build_dellhollow(col, F, zg, fr):
                 # "entirely distinct look" rules out — swappable into Emberbrook
                 # without looking wrong. A millhouse here is a stone footing, plank
                 # cladding and one pitch.
-                mb = max(mz, wwl)
+                mb = max(mz, wl_dn)
                 p.cube(STONE, (mx, my, mb + 0.55), (2.3, 2.1, 1.10), rz=ang)
                 p.cube(WOOD, (mx, my, mb + 2.40), (2.0, 1.8, 2.60), rz=ang)
                 p.cube(TAR, (mx, my, mb + 3.78), (2.6, 2.3, 0.16), rz=ang, rx=0.26)
@@ -1811,7 +2053,21 @@ def build_dellhollow(col, F, zg, fr):
     STATS["dellhollow_plaster_faces"] = sum(1 for f in p.bm.faces if f[p.cl] == WALL)
     STATS["dellhollow_tile_faces"] = sum(1 for f in p.bm.faces if f[p.cl] == ROOF)
     STATS["dellhollow_wheels"] = n_weir
-    return p.finish(col), crest
+    # ROUND 2'S OWN CLAIM, in numbers a diff can check: how many bays stand in the
+    # river, and how far the water actually steps at each lock. `deck_over_water_u`
+    # is the measurement the user's complaint was about — it is the whole town's
+    # vertical extent ABOVE THE LOCAL WATERLINE, floor and ceiling. Round 1's LOWEST
+    # deck alone stood +4.94 to +11.12, and the first round-2 build still carried its
+    # top tier to +19. Both ends matter: the floor is "does the town reach the
+    # water", the ceiling is "does it stay in the gorge instead of towering over the
+    # rim road at 12.3-14.5". A regression in either is visible here without
+    # re-rendering anything.
+    STATS["dellhollow_water_decks"] = n_water_deck
+    STATS["dellhollow_pools"] = n_pool
+    STATS["dellhollow_lock_drops_u"] = lock_steps
+    STATS["dellhollow_deck_over_water_u"] = [round(min(deck_dz), 2),
+                                             round(max(deck_dz), 2)] if deck_dz else []
+    return p.finish(col), crest, pwp.finish(col), pwf.finish(col)
 
 
 def build_dam_crest(col, F, zg, fr, crest):
@@ -2930,8 +3186,9 @@ def main():
         made["causeway"] = cw
     made["green"] = build_emberbrook_green(col, F, zg, fr)
     made["emberbrook"] = build_emberbrook(col, F, zg, fr)
-    dh, crest = build_dellhollow(col, F, zg, fr)
+    dh, crest, dhp, dhf = build_dellhollow(col, F, zg, fr)
     made["dellhollow"] = dh
+    made["dhpools"], made["dhfalls"] = dhp, dhf
     dc = build_dam_crest(col, F, zg, fr, crest)
     if dc is not None:
         made["damcrest"] = dc
@@ -3023,7 +3280,8 @@ def main():
 
     # ---- colours, shading, materials --------------------------------------
     PROPKEYS = ([k for k in ("skirt", "water", "falls", "falls_lip", "tributaries", "road", "causeway", "green",
-                             "emberbrook", "dellhollow", "damcrest", "portals", "oldgate",
+                             "emberbrook", "dellhollow", "dhpools", "dhfalls",
+                             "damcrest", "portals", "oldgate",
                              "props", "fx", "dock", "boat", "pool", "dockpath",
                              "ref") if k in made] + veg_keys)
     for i, key in enumerate(PROPKEYS):
