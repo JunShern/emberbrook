@@ -114,7 +114,7 @@
         "gate",
         "vista"
       ],
-      "verdict": "Not yet judged - round 4's critic is running. By the coordinator's own eye: r6 beats BOTH r4 and r5. Greens read green, the amber belongs to the road/roofs/lamp pools rather than everything, near-mid-far separate, blade carpet varied instead of scribble.",
+      "verdict": "Ranked 4th of 4. The critic's headline: 'There is not one cast shadow in the entire frame\u2026 the houses have no lit side and no shade side. Four walls, one colour.' And its summary of two frames from the same build: 'A got a colour grade and B got a light.' It ALSO caught an over-correction I had missed after looking myself: the golden grade is past the point where hue distinctions survive.",
       "deficits": [
         "FIXED: the grade was multiplying EVERY near pixel by a warm colour - a global tint arriving through the post pass, the exact defect the lighting round existed to remove. Now weighted by each pixel's own luminance: full on lit surfaces, nothing in shadow.",
         "FIXED: the key's blue channel was closed. (1.0,0.70,0.42) at 2.4x turned grass albedo into yellow - NO lit surface could read green whatever its albedo.",
@@ -122,6 +122,28 @@
         "FIXED: the grey rectangles were THE AO PASS'S OWN DEPTH BUFFER. GTAOPass draws its prepass with scene.overrideMaterial = MeshNormalMaterial, which carries neither the leaf atlas nor its alphaTest - so every alpha-cut foliage card writes its WHOLE QUAD into the g-buffer, and a camera-facing billboard is axis-aligned in screen space by construction. The aerial grade then read 11 m where the picture shows a 233 m ridge.",
         "FIXED: the 'unlit white trees' and the 'missing skybox' were ONE NUMBER - the fog was aimed at a colour between the two FURTHEST ridge rings while the terrain's skyline is drawn against ring 0.",
         "REFUSED: going all the way to the refs' near-band saturation was tried and the frame got worse - milky, flat trees, amber graded away. Stopped at 0.60-0.70 and said so."
+      ]
+    },
+    {
+      "n": 5,
+      "title": "The houses were too small to cast a shadow the sun could draw",
+      "when": "2026-08-04 05:40",
+      "prefix": "r9",
+      "views": [
+        "meadow",
+        "gorge",
+        "gate",
+        "vista"
+      ],
+      "verdict": "THE ROUND THAT PAID FOR THE LOOP. Four rounds of critique named 'no directional light'; chasing it directly produced one regression and one cleanup. The cause was never the light. THREE blind critics said 'the character is roughly one house tall' from looking, and a shadow lane derived the same thing from geometry: cottages 2.6 m tall and 2.9 m WIDE, height:width below 1, so at 34 degrees the shadow barely outran the footprint that threw it. The only object in the frame with a visible shadow was the character - the only thing taller than it was wide.",
+      "deficits": [
+        "ridge height 1.60u -> 3.70u; 1.10x the character -> 2.65x (2.97x to the chimney cap)",
+        "height:width 1.10 -> 1.39; shadow at 34 degrees 2.4u from a 1.5u footprint -> 5.7u from a 2.76u footprint",
+        "Gained eave board, steep gable, gable-end chimney, person-sized door, stone footing that reaches BELOW the lowest footprint corner so a house on a slope is not cut by a straight line",
+        "BROKE AND FIXED: a house landed ON the 'Enter Emberbrook' portal - the old road-clearance push was RADIAL, which for a house bearing along the road walks it DOWN the road. Every gate was green with it there; only the frame showed it.",
+        "BROKE AND FIXED: Dellhollow lost a third of its stations (11 -> 7) to wider terrace pads. Back to 11.",
+        "OPEN, needs the coordinator: the Heartlight is now a garden ornament among 4u houses. Geometry and play3d's point light are both hard-coded at village_h+1.34 and must move in one commit.",
+        "NOT TRIED - RAN OUT OF NIGHT: ground de-tiling and the water shoreline. Both are terrain-material work sitting one step from the grade."
       ]
     }
   ]
