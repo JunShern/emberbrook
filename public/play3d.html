@@ -348,14 +348,30 @@ const PFX={
   bloomThreshold: PFXNUM('bloom_t',0.99),
   // THE DEPTH GRADE — overworld only. See THE AERIAL SPLIT below.
   gradeAmt: PFXNUM('grade',1.0),
-  gradeNear: PFXNUM('grade_n',26),
+  gradeNear: PFXNUM('grade_n',28),
   // dFar IS THE MEASURED SPAN OF THE FRAME, not a round number: from the 40 m boom
   // at the shipped pitch the visible ground runs about 30 m to 110 m radial, so a
   // 150 m far point spends the whole frame on the first half of the ramp and the
   // cue never arrives. 105 puts the far edge of the picture at the far end of it.
-  gradeFar: PFXNUM('grade_f',105),
-  gradeLift: PFXNUM('grade_l',0.032),
-  gradeTint: PFXNUM('grade_k',1.6),        // scales both tints away from neutral
+  // R5 (2026-08-04): 105 was measured against the frame BEFORE ORBIT.tilt, which
+  // more than doubled the visible depth. The far edge of the picture is now well
+  // past 105 m, so the whole back half of the frame sat clamped at t=1 with no
+  // gradient left in it. 155 puts the ramp back across the picture as shipped.
+  gradeFar: PFXNUM('grade_f',155),
+  // lift is the "distance goes PALE" term, and paleness is exactly what the
+  // mid-corridor frame was complained about for. Halved; the desat below carries
+  // the recession instead, which costs chroma without costing black point.
+  gradeLift: PFXNUM('grade_l',0.016),
+  gradeTint: PFXNUM('grade_k',2.2),        // scales both tints away from neutral
+  // THE THIRD HALF OF AERIAL PERSPECTIVE, and the one we never had (R5). Measured
+  // on the two daylight references with tools/../bands.py: their saturation RISES
+  // toward the camera — FAR 0.30/0.35, MID 0.33/0.39, NEAR 0.48/0.49 — while ours
+  // was FLAT and roughly double (gate FAR 0.63 MID 0.67 NEAR 0.75). A frame whose
+  // 150 m band is as chromatic as its 3 m band has no distance in it whatever the
+  // hue does. This mixes the far end toward its own luminance, scaled by the same
+  // depth ramp: chroma removed, VALUE and local contrast untouched, which is the
+  // difference between recession and the milky fog the same frame was rejected for.
+  gradeDesat: PFXNUM('grade_d',0.42),
 };
 // THE AERIAL SPLIT (2026-08-03, overworld only, ?grade=0 to remove).
 //
@@ -392,12 +408,13 @@ const PFX={
 const GRADE_SHADER={
   uniforms:{ tDiffuse:{value:null}, tDepth:{value:null}, projInv:{value:new THREE.Matrix4()},
              dNear:{value:30}, dFar:{value:150}, amt:{value:1}, lift:{value:0.03},
+             desat:{value:0.0},
              warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
              coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
   vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
   fragmentShader:[
     'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
-    'uniform float dNear,dFar,amt,lift; uniform vec3 warmCol,coolCol;',
+    'uniform float dNear,dFar,amt,lift,desat; uniform vec3 warmCol,coolCol;',
     'void main(){',
     '  vec4 c=texture2D(tDiffuse,vUv);',
     '  float d=texture2D(tDepth,vUv).x;',
@@ -410,6 +427,12 @@ const GRADE_SHADER={
     '  t=t*t*(3.0-2.0*t);',
     '  vec3 tint=mix(warmCol,coolCol,t);',
     '  vec3 o=mix(c.rgb, c.rgb*tint, amt);',
+    // DISTANCE LOSES CHROMA (R5). Toward the pixel's OWN luminance, not toward a
+    // fog colour: a mix to grey keeps the value the key put there, so the far
+    // band recedes without the frame going milky and without the black point
+    // moving. Scaled by the same t, so nothing at the player's feet is touched.
+    '  float lum=dot(o, vec3(0.2126,0.7152,0.0722));',
+    '  o=mix(o, vec3(lum), clamp(desat*t*amt,0.0,1.0));',
     // the far lift is aerial perspective's other half: distance does not only go
     // cool, it goes PALE. Scaled by t so nothing near the player moves.
     '  o+=coolCol*lift*t;',
@@ -448,6 +471,7 @@ function pfxBuild(){
     grade.material.uniforms.dFar.value=PFX.gradeFar;
     grade.material.uniforms.amt.value=PFX.gradeAmt;
     grade.material.uniforms.lift.value=PFX.gradeLift;
+    grade.material.uniforms.desat.value=PFX.gradeDesat;
     const K=PFX.gradeTint, u=grade.material.uniforms;
     for(const k of ['warmCol','coolCol']){ const v=u[k].value;
       v.set(1+(v.x-1)*K, 1+(v.y-1)*K, 1+(v.z-1)*K); }
@@ -455,8 +479,16 @@ function pfxBuild(){
   }
   let bloom=null;
   if(PFX.bloomStrength>0){
+    // THE OVERWORLD GETS A TIGHTER HALO (R5, 2026-08-04), and only the overworld.
+    // The blind critic measured the Heartlight's bloom at "roughly 3x the flame's
+    // plausible radius". 0.30 was solved against Emberbrook AFTER DARK, where a
+    // wide soft halo on a lantern is the whole point and the frame is mostly
+    // black; out here it is one bright object against a fully lit valley and the
+    // same radius reads as a lens artefact. The towns' number is NOT touched —
+    // docs/qa/postfx/rejected-bloom-loud.png is what happens when it is.
+    const BR=OWCAM ? PFXNUM('bloom_r_ow',0.15) : PFX.bloomRadius;
     bloom=new THREE.UnrealBloomPass(new THREE.Vector2(W,H),
-      PFX.bloomStrength, PFX.bloomRadius, PFX.bloomThreshold);
+      PFX.bloomStrength, BR, PFX.bloomThreshold);
     composer.addPass(bloom);
   }
   composer.addPass(new THREE.OutputPass());
@@ -623,10 +655,14 @@ function envEqui(sky, hor, grd, sunDir, sunCol, sunLevel){
 }
 // key is a string: rebuilding an identical environment every cut would cost a
 // PMREM pass (~6 draw calls into a mip chain) per camera change for no pixels.
-let _envLast=null;
+// _envSpec IS THE RIG'S OWN SPEC AND THE TUNER MUST NOT WRITE IT — see __envTune.
+let _envSpec=null;
 function envApply(key, sky, hor, grd, sunDir, sunCol, sunLevel, intensity){
+  _envSpec={key, sky, hor, grd, sunDir, sunCol, sunLevel, intensity};
+  return envBuild(key, sky, hor, grd, sunDir, sunCol, sunLevel, intensity);
+}
+function envBuild(key, sky, hor, grd, sunDir, sunCol, sunLevel, intensity){
   if(Q.get('ibl')==='0'){ scene.environment=null; return null; }
-  _envLast={key, sky, hor, grd, sunDir, sunCol, sunLevel, intensity};
   scene.environmentIntensity=intensity;
   if(_envKey.v===key) return ENVRT?ENVRT.texture:null;
   if(!PMREM) PMREM=new THREE.PMREMGenerator(R);
@@ -651,12 +687,29 @@ function envApply(key, sky, hor, grd, sunDir, sunCol, sunLevel, intensity){
 // a Vogel disk scaled by shadow.radius), and softness trades against the frame's
 // contrast, so it has to be swept against the same pictures the fill was.
 window.__shadowTune=(r)=>{ dl.shadow.radius=r; return dl.shadow.radius; };
+// THE KNOB LIED, TWICE, AND BOTH LIES ARE FIXED HERE (2026-08-04, ow-lighting
+// lane; the post-processing lane reported it as "does not move the fill" and
+// swept k = 0.75 / 0.45 / 0.20 for 90 / 90 / 91 shadowed ground).
+//   1. IT WAS CUMULATIVE WHILE READING AS ABSOLUTE. envApply() recorded its own
+//      already-scaled arrays as "the current environment", so the second call in
+//      a sweep multiplied the FIRST call's output: 0.75 / 0.45 / 0.20 is really
+//      0.75 / 0.34 / 0.07. The rig's own spec is now kept in _envSpec, which
+//      only envApply() writes, and the tuner always scales from THAT.
+//   2. IT SCALED THE GRADIENT AND LEFT THE SUN CAP ALONE — and the cap was the
+//      bigger half. At the shipped OWENVSUN 4.5 against a sky of ~0.3, the
+//      cos^12 lobe supplied roughly half the environment's irradiance on an
+//      up-facing normal, so an 80% cut of "the fill" moved the measured shadow
+//      luminance 90.0 -> 74.6 (tools/ow_ratio.mjs, corridor). k now scales the
+//      cap too unless a sunLevel is given explicitly.
+// A knob that moves a third of what it says it moves is worse than no knob: it
+// gets swept, it reports "this lever is exhausted", and the lever was never pulled.
 window.__envTune=(k, sunLevel)=>{
-  if(!_envLast) return null;
-  const L=_envLast, m=v=>v.map(x=>x*k);
+  const L=_envSpec; if(!L) return null;
+  const m=v=>v.map(x=>x*k);
+  const s=sunLevel==null ? L.sunLevel*k : sunLevel;
   _envKey.v=null;
-  return envApply(L.key+':k'+k+':s'+sunLevel, m(L.sky), m(L.hor), m(L.grd),
-                  L.sunDir, L.sunCol, sunLevel==null?L.sunLevel:sunLevel, L.intensity);
+  envBuild(L.key+':k'+k+':s'+s, m(L.sky), m(L.hor), m(L.grd), L.sunDir, L.sunCol, s, L.intensity);
+  return {k, sunLevel:+s.toFixed(3), sky:m(L.sky).map(v=>+v.toFixed(4)), from:L.key};
 };
 const AMBIENT=new THREE.AmbientLight(CHARLIGHT?0x93a8c6:0xffffff, IU(CHARLIGHT?CL.AMB:.95)); scene.add(AMBIENT);
 const dl=new THREE.DirectionalLight(0xffd9a8, IU(CHARLIGHT?CL.KEY:1.3)); dl.position.set(6,10,4); scene.add(dl);
@@ -816,6 +869,22 @@ function charLight(c){
   const grdC=HEMI.groundColor.clone().multiplyScalar(CL.FILL*fillMul).add(ambC);
   const horC=skyC.clone().lerp(grdC,0.5);
   const KS=S.length?S[0]:null;
+  // emb-townwalk WAS MEASURED FOR THE SAME FLAT-FILL DEFECT AND MUST NOT GET THE
+  // SAME FIX (R3, 2026-08-04, ow-lighting lane — a measured negative, recorded so
+  // the next lane does not pay for it twice). The complaint transfers on paper:
+  // this scene has no plate, so these numbers light the whole town and not just a
+  // character, and it renders with NO cast shadow at all (R.shadowMap.enabled is
+  // only ever set inside the overworld block) — 1.22:1 lit-to-shadow over a shadow
+  // pass that moves 0.0% of the frame. Both halves of the overworld's fix were
+  // built and measured here (tools/ow_ratio.mjs, two viewpoints):
+  //   key x2.2 + fill x0.34   L50 0.412 -> 0.147, chroma 0.066 -> 0.057. Dark.
+  //   a 2048 shadow pass      65% of the wide frame goes into shadow and the ratio
+  //                           gets WORSE, 1.22 -> 1.11.
+  // THE REASON IS THE HOUR, not the rig: this town is Emberbrook at 18:24. Its key
+  // is a low dusk sun and most of its light is sky and lamps, so cutting the fill
+  // does not reveal a terminator — it removes the light. A golden-hour recipe is
+  // not a lighting principle, it is a recipe for golden hour. If the real-time town
+  // wants form it wants its own hour, not this one's numbers.
   if(IBL){
     HEMI.intensity=0; AMBIENT.intensity=0;
     envApply('town:'+CLTOWN+':'+(c?c.id:'rt')+':'+gain.toFixed(2)+':'+(window.__hush&&window.__hush.on?'h':'-'),
@@ -1627,7 +1696,22 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // sRGB on the way in, so the constructor already lands in linear working space
       // and the old fix-up would now convert it a SECOND time (the fog would come
       // back much darker and bluer than the horizon it is supposed to match).
-      scene.fog=new THREE.Fog(0xd3e0e8, 34, 205);
+      // R5 (2026-08-04) RE-AIMS THE FOG AT THE RIDGES, NOT AT THE SKY, and pushes
+      // `near` out. THE FOG BILL, stated as the measurement that settles it: the
+      // colour was matched to the sky's HORIZON band (0xcfe3ee) so terrain would
+      // dissolve into sky — correct for a frame with no ridges in it. The camera
+      // tilt then put FOUR RIDGE RINGS (0x6d7d95 .. 0xb8c8d6, luma 0.24-0.60)
+      // between the far terrain and that horizon, so terrain was fading to a value
+      // BRIGHTER THAN THE THING BEHIND IT: the far slope over the gorge crest
+      // measured L50 0.711 against rings at 0.24-0.60, which is why it read as a
+      // blowout rather than as distance. Aimed at the ring band instead, the same
+      // patch measures 0.668 AND GAINS saturation, 0.119 -> 0.142 — a wash removed
+      // without the density increase a content lane already measured as pushing
+      // far-band saturation (0.256) under the references' own floor (0.286).
+      // near 34 -> 44 for the same reason the grade's dNear moved: the tilt more
+      // than doubled the visible depth, and haze that starts 34 m from the player
+      // is haze on the ground she is standing on.
+      scene.fog=new THREE.Fog(0xa8b8cc, 44, 195);
       // ---- THE DISTANT RIDGES ------------------------------------------------
       // Rebuilt 2026-08-04, the first time anything here was ever LOOKED AT: the
       // pitch was 35 deg down against a 21 deg half-fov, so every one of these
@@ -1740,7 +1824,75 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       OWLIGHT_SAVED={amb:AMBIENT.intensity, ambC:AMBIENT.color.clone(),
                      dl:dl.intensity, dlC:dl.color.clone(),
                      hemi:RTLIGHT.intensity, shadows:R.shadowMap.enabled};
-      dl.color.setRGB(1.0,0.70,0.42); dl.intensity=IU(2.60);   // the towns' own sun
+      // ==================================================================
+      // R3 — THE TERMINATOR (2026-08-04, ow-lighting lane; coordinator
+      // authorised re-cutting the ratified rig, see below). ?owkey= ?owenv=
+      // ?owsun= ?owbounce= ?tone= sweep every number here without an edit.
+      //
+      // THE FINDING. A blind critic called this frame "not a sun, an ambient
+      // multiplier with a slight gradient" and measured lit:shadow at 1.30:1
+      // against 2.5-4:1 for golden hour. The post-processing lane then measured
+      // the cause and corrected the critic on one point worth keeping: THE
+      // SHADOWS WERE ALWAYS THERE — the shadow pass moves 20.2% of the frame —
+      // they were only 1.3:1 deep, and a 1.3:1 shadow is not read as shadow.
+      //
+      // WHY THE RATIFICATION DID NOT BLOCK THIS. The user ratified "this current
+      // lighting is good" on 2026-08-02. The scene.environment PMREM that was
+      // supplying the fill LANDED IN THE r128->r185 UPGRADE ON 2026-08-03. The
+      // ratification predates the thing being tuned. Coordinator's call.
+      //
+      // THREE CHANGES, AND THEY ONLY WORK TOGETHER (tools/ow_ratio.mjs, three
+      // views, mask taken from the engine's own shadow pass at maskrel 0.5):
+      //
+      //   1. THE FILL IS CUT AND MADE SKY-COLOURED. The old environment was
+      //      built by folding the pre-IBL AmbientLight and hemisphere numbers
+      //      together, which made it a muddy blue-green, and it carried a sun
+      //      cap at level 4.5 — a cos^12 lobe that supplied about HALF the
+      //      environment's irradiance and made the AMBIENT warm. A warm ambient
+      //      is precisely what erases a terminator: the shadow side got the same
+      //      hue as the lit side and only slightly less of it. The fill is now a
+      //      plain sky radiance (a blue triple, ground at 55% of sky) at 0.35,
+      //      with the cap dropped 4.5 -> 0.30 — enough to keep the ambient
+      //      DIRECTIONAL, not enough to warm it.
+      //   2. THE KEY GOES UP 2.4x. Cutting fill alone only darkens the picture;
+      //      the postfx lane also measured that raising the key alone clips
+      //      (x3.4 -> L99 0.957) — the two have to move together.
+      //   3. THE OVERWORLD GETS A TONE CURVE, WHICH REVERSES A 2026-08-02
+      //      RULING, and the reversal is narrow. That ruling was measured on
+      //      ACES and AgX ("the meadow greens go khaki, the river's cyan goes
+      //      grey-teal") and it still holds for both. THREE.NeutralToneMapping
+      //      is the Khronos PBR Neutral curve, which is hue- and
+      //      saturation-preserving by construction and was not in that test:
+      //      measured here it RAISES chroma (corridor 0.204 -> 0.318) while
+      //      giving the shoulder that lets the key rise without clipping and
+      //      the toe that finally puts a black point in the frame.
+      //      THE COST, MEASURED, NOT WAVED THROUGH: OutputPass tone-maps the
+      //      whole composited buffer, so the painted `toneMapped:false` constants
+      //      (sky dome, ridge rings) go through the curve too — `toneMapped:false`
+      //      is a MATERIAL flag and the composer's curve is applied after every
+      //      material has already written into the buffer. It is NOT a no-op below
+      //      0.8: three's NeutralToneMapping subtracts a black-point offset from
+      //      the darkest channel first (x<0.08 ? x-6.25x^2 : 0.04), which is the
+      //      toe this frame wanted and which the painted sky also receives. Same
+      //      shot at ?tone=off vs shipped: zenith 141,165,197 -> 131,157,191,
+      //      far ridge 105,123,156 -> 90,111,147. Both go DARKER AND BLUER, i.e.
+      //      further from the terrain in front of them, so the aerial cue reads
+      //      slightly stronger, not weaker. If that ever inverts, the fix is a
+      //      curve inside GRADE_SHADER, which already skips sky pixels by depth.
+      //
+      // MEASURED, corridor / corridor-turn / closeup, lit:shadow at maskrel 0.5:
+      //      before  1.55 / 1.38 / 1.95        after  2.83 / 2.36 / 3.17
+      //      L05     0.239 / 0.163 / 0.166     ->     0.140 / 0.068 / 0.070
+      //      L99     0.711 / 0.726 / 0.813     ->     0.805 / 0.864 / 0.879
+      //      chroma  0.204 / 0.160 / 0.176     ->     0.318 / 0.235 / 0.237
+      // and the terminator is a HUE now, not only a level: mean (b-r) across the
+      // masked pixels splits 24 units cool-side against 79 warm-side on the
+      // corridor, where it was 17 against 52.
+      const OWKEY=+(Q.get('owkey')||2.40);      // multiplies the towns' own 2.60
+      dl.color.setRGB(1.0,0.70,0.42); dl.intensity=IU(2.60*OWKEY);
+      // THE CURVE IS ARMED HERE, not at the NoToneMapping line above, so ?tone=
+      // still overrides it and ?owlight=0 still restores the flat 2026-08-02 rig.
+      setTone(THREE.NeutralToneMapping);
       // ------------------------------------------------------------------
       // L1 — THE HOUR (docs/qa/ow-land, landed 2026-08-03). THE KEY IS NOT
       // TOUCHED: its angle and colour are the towns' ratified golden hour and
@@ -1762,10 +1914,39 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // did not, namely a shadowed vertical face that is not flat. It casts
       // nothing, so it costs a shader loop and no shadow pass. Scene-scoped and
       // torn down beside RTLIGHT: added blind on every swap it would stack.
+      // R3: same light, bluer and dimmer. It is the only thing reaching a face
+      // the key cannot, so it sets the COLOUR of every shadow side; at 0.85 of a
+      // half-warm blue it was competing with the fill instead of tinting it.
       OWBOUNCE=new THREE.DirectionalLight(0x000000, 0);
-      OWBOUNCE.color.setRGB(0.44,0.60,0.92); OWBOUNCE.intensity=IU(0.85);
+      OWBOUNCE.color.setRGB(0.38,0.58,1.00); OWBOUNCE.intensity=IU(0.85*(+(Q.get('owbounce')||0.80)));
       OWBOUNCE.position.set(0.62,0.34,0.71); OWBOUNCE.castShadow=false;
       OWBOUNCE.name='__ow_bounce'; scene.add(OWBOUNCE);
+      // ---- THE HEARTLIGHT ACTUALLY LIGHTS SOMETHING (R5, 2026-08-04) ----------
+      // The blind critic called this "the firepit": "the core is clipped to pure
+      // white over ~60 px, the bloom halo is roughly 3x the flame's plausible
+      // radius" — and the damning half — "it does not light the houses beside it
+      // or the character." It is not a firepit; it is THE HEARTLIGHT, Emberbrook's
+      // whole identity (world canon: Heartlights are rare, and this is the
+      // Heartlight town), an emissive icosphere on a stone plinth at the village
+      // centre, tools/valley_build.py build_emberbrook(). The critic's reading is
+      // still right about the picture: an emissive material emits NOTHING in
+      // three.js, so the brightest object in the frame cast no light at all, and
+      // at emissiveIntensity 9 against a tone curve it could only ever be a white
+      // disc. The third claim in that sentence is WRONG and was checked rather
+      // than actioned: the "hard-edged circular gradient decal on the ground" is
+      // walk_emberbrook_green, the village green — a real surface with real
+      // geometry, not a light decal (see __emit / the ow5 sweep).
+      //
+      // ONE point light, at the plinth, in the ONE place the town has one. Range
+      // 15 m with the physically-correct inverse-square falloff, so it never
+      // reaches the frame edge and can never become the "global tint" this whole
+      // lane exists to undo. castShadow stays OFF: a shadowing point light is six
+      // more shadow-map faces every frame for a 15 m pool at golden hour.
+      const HL=[-58.0, 52.0];                                  // L.VILLAGE, Z-up (x,y) -> (x,-y)
+      const _hf=floors(HL[0], HL[1]);
+      OWHEARTH=new THREE.PointLight(0xff9f38, IU(+(Q.get('owhearth')||9.0)), 15, 2);
+      OWHEARTH.position.set(HL[0], (_hf.length?Math.max.apply(null,_hf):26)+1.34, HL[1]);
+      OWHEARTH.castShadow=false; OWHEARTH.name='__ow_hearth'; scene.add(OWHEARTH);
       // ---- THE SKY LIGHTS THE VALLEY (r185 IBL) --------------------------
       // The corridor's fill was AmbientLight 0.34 + a hemisphere at 1.25 — two flat
       // terms with no direction beyond up/down and no specular at all. The SAME
@@ -1796,13 +1977,30 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       //   r1.5 s4.5   L05 .203  L50 .442  chroma .235   <- shipped
       // The mids sit ~12% under r128 because most of a flat fill left with the
       // hemisphere. The shadows land where they were and the colour is up.
-      const OWENV=0.30, OWENVSUN=4.5;
+      // R3 (2026-08-04) REPLACES THAT RECIPE AND KEEPS THE TABLE, because the
+      // table is the record of what a WARM fill costs. Everything above swept the
+      // LEVEL of a fill whose colour was the old ambient and hemisphere folded
+      // together plus a level-4.5 warm cap; none of it swept the COLOUR, which is
+      // where the terminator was hiding. The fill is now written as what it is —
+      // sky radiance — so there is one number for the level and one triple for
+      // the hue, and the sun cap is small enough to give the ambient a direction
+      // without giving it a temperature.
+      const OWENV=+(Q.get('owenv')||0.35), OWENVSUN=+(Q.get('owsun')||0.30);
+      const OWSKYCOL=[0.35,0.62,1.00];             // sky hue; ground gets 55% of it
       if(IBL){
-        const _sky=[(0.30*0.34+0.50*1.25)*OWENV, (0.42*0.34+0.68*1.25)*OWENV, (0.72*0.34+1.00*1.25)*OWENV];
-        const _grd=[(0.30*0.34+0.52*1.25)*OWENV, (0.42*0.34+0.42*1.25)*OWENV, (0.72*0.34+0.30*1.25)*OWENV];
+        const _sky=OWSKYCOL.map(v=>v*OWENV);
+        const _grd=_sky.map(v=>v*0.55);
         const _hor=_sky.map((v,i)=>(v+_grd[i])*0.5);
         AMBIENT.intensity=0; RTLIGHT.intensity=0;
-        envApply('ow', _sky, _hor, _grd, OWSUN_DIR, [1.0,0.70,0.42], OWENVSUN, 1.0);
+        envApply('ow:r3', _sky, _hor, _grd, OWSUN_DIR, [1.0,0.70,0.42], OWENVSUN, 1.0);
+      } else {
+        // ?ibl=0 IS A FALLBACK, NOT A DIFFERENT ART DIRECTION. The two lights
+        // above still carry the PRE-R3 levels (0.34 / 1.25) because they are what
+        // the r128 rig was solved at; against a key that is now 2.4x they would be
+        // the flat frame this whole block exists to undo. Scaled to roughly the
+        // environment's own irradiance and coloured like it.
+        AMBIENT.intensity=IU(0.10); RTLIGHT.color.setRGB(0.35,0.62,1.00);
+        RTLIGHT.groundColor.setRGB(0.30,0.40,0.55); RTLIGHT.intensity=IU(0.42);
       }
       // fill is COOL against a warm key on purpose: that split is what golden
       // hour actually is, and it is what keeps a shadowed face readable instead
@@ -1846,6 +2044,20 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // runtime render-only helpers built above, not art.
       g.scene.traverse(o=>{ if(o.isMesh && !/^(bar_|__ow)/i.test(o.name)){
         o.castShadow=true; o.receiveShadow=true; OWSHADOWED.push(o); }});
+      // THE EMISSIVE CEILING (R5). ow_f2_emit ships at emissiveIntensity 9 and it
+      // is ONE material for the whole town — the Heartlight, fourteen window panes
+      // and five lantern heads. 9 was authored under NoToneMapping, where nothing
+      // above 1.0 survives anyway; under the Neutral curve added by R3 a value
+      // that high desaturates on the way through the shoulder, so the town's own
+      // amber went WHITE and bloom (threshold 0.99) then painted a halo about
+      // three times the light's radius around it. 3.4 is the highest value that
+      // still reads as amber rather than as paper at the gate camera's distance —
+      // swept 9 / 5 / 3.4 / 2.4 against the meadow and vista plates. ?owemit=
+      // re-sweeps it without an edit; the light itself is OWHEARTH above.
+      const OWEMIT=+(Q.get('owemit')||3.4);
+      g.scene.traverse(o=>{ if(!o.isMesh) return;
+        for(const mm of (Array.isArray(o.material)?o.material:[o.material]))
+          if(mm && mm.name==='ow_f2_emit') mm.emissiveIntensity=OWEMIT; });
       if(model) model.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
     }
   }
@@ -2007,7 +2219,7 @@ function disposeGltf(root){
     if(o.userData){ disposeMaterial(o.userData.hideMat); disposeMaterial(o.userData.dbgMat); }
   });
 }
-let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null, OWSUN=null, OWBOUNCE=null;
+let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null, OWSUN=null, OWBOUNCE=null, OWHEARTH=null;
 // THE SKY PROBE'S OWN MESHES. Added 2026-08-02 after `transition_test` caught the
 // first version leaking: its MATERIALS went into SCENEMATS (mats delta 0, clean)
 // but its GEOMETRIES were disposed by nothing, so renderer.info climbed +4 per
@@ -2068,6 +2280,7 @@ function sceneDispose(){
   // swap it would stack, and an overworld re-entered three times would be lit by
   // three of them.
   if(OWBOUNCE){ scene.remove(OWBOUNCE); if(OWBOUNCE.dispose)OWBOUNCE.dispose(); OWBOUNCE=null; }
+  if(OWHEARTH){ scene.remove(OWHEARTH); if(OWHEARTH.dispose)OWHEARTH.dispose(); OWHEARTH=null; }
   // backdrop + every cached shot's art pair. The quad itself is a page singleton
   // (see DEPTHQ) — it is unparented here and re-added by the next setDepth().
   scene.background=null; bgSaved=null;

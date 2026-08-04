@@ -127,6 +127,52 @@ Findings route **through the coordinator**, never lane to lane.
 |---|---|---|---|---|
 | 1 | `base-meadow` vs 2 refs | 3rd of 3, very high conf | **1.30:1 lit-to-shadow, saturation flat across the terminator** — "not a sun, an ambient multiplier with a slight gradient" | shadows/key/tonal → pipeline; dressing/blades → content |
 | 2 | `r4-meadow`, `r4-gorge` vs 2 refs | 3rd and 4th of 4 | **"Light is a GLOBAL TINT rather than a DIRECTION: every surface got warmer, but nothing got occluded, so nothing has form."** Top four fixes all TREATMENT | 3 lanes killed by a session limit before routing |
+| 3 | not judged — BUILT against 1 and 2 | plates `r5-*` | **the sun gets a direction: 1.58–2.40:1 → 3.29–4.33:1 on four viewpoints, and the terminator carries a HUE** | TRIED — MOVED IT |
+
+### Round 3, the build round: what shipped and what it cost
+
+Three critiques were routed to one lane because they are one system — fill, exposure and haze
+chase each other if they are tuned apart.
+
+**LIT-TO-SHADOW**, `tools/ow_ratio.mjs`, four landscape cameras, mask taken from the ENGINE's own
+shadow pass at `maskrel 0.5` (a pixel that keeps 50% of its key is not a shadow):
+
+| view | ratio | L05 | L99 | chroma | shadow-side (g−r) |
+|---|---|---|---|---|---|
+| gate | 2.40 → **4.24** | .198 → .110 | .724 → .860 | .276 → .400 | −2.4 → **+4.0** |
+| meadow | 1.77 → **3.29** | .213 → .122 | .750 → .841 | .256 → .385 | −0.3 → **+9.3** |
+| vista | 1.79 → **3.92** | .249 → .132 | .771 → .777 | .169 → .272 | −0.2 → **+9.4** |
+| gorge | 1.58 → **4.33** | .205 → .061 | .752 → .768 | .137 → .226 | −1.7 → **+11.7** |
+
+The last column is the one that answers round 1's actual complaint — *saturation flat across the
+terminator*. Before, the shadowed pixels and the lit pixels had the SAME hue and slightly less of
+it. Now the shadow side runs blue-green (g−r positive) while the lit side goes further warm on
+every view. gate and gorge sit just over the 2.5–4:1 golden-hour band and gorge's L05 lands at
+0.061 against the references' 0.21–0.25: **recorded as the cost, not smoothed away.** By eye the
+frames read as contrasty, not grim; if a later round disagrees, `?owenv=` raises the fill without
+touching anything else.
+
+**Three findings worth keeping, all of them corrections to something a lane believed:**
+
+  * **`window.__envTune` — the documented fill knob — was lying twice**, and a whole sweep was
+    wasted on it (k = 0.75 / 0.45 / 0.20 → 90 / 90 / 91, reported as "this lever is exhausted").
+    It was CUMULATIVE while reading as absolute (0.75 / 0.45 / 0.20 is really 0.75 / 0.34 / 0.07,
+    because `envApply` recorded its own already-scaled output as "the current environment"), and
+    it scaled the sky gradient while leaving the SUN CAP alone — and at level 4.5 the cap was
+    supplying roughly half the environment's irradiance. Both fixed in `play3d.html`. **A knob
+    that moves a third of what it says it moves is worse than no knob: it gets swept, it reports
+    a ceiling, and the lever was never pulled.**
+  * **The fog was aimed at a thing that is no longer behind the terrain.** Its colour matched the
+    sky's horizon band, which was right for a frame with no ridges in it; the camera tilt then put
+    four ridge rings (luma 0.24–0.60) in front of that horizon, so far terrain was fading to a
+    value BRIGHTER than the thing behind it. That, not exposure, is what read as a blowout.
+  * **Two of the critic's three claims about the "firepit" were right and one was wrong.** It does
+    not light anything (true — an emissive material emits nothing in three.js; it has a point light
+    now) and its halo was oversized (true). The "hard-edged circular gradient decal painted on the
+    ground under it" is `walk_emberbrook_green`, the village green — real geometry, checked before
+    it was actioned. It is also not a firepit: it is the **Heartlight**, the town's whole identity.
+    The rule the loop already carries held: a claim about the WORLD gets checked; a judgment of
+    QUALITY is the deliverable.
 
 ### What the loop has established in two rounds
 
@@ -150,10 +196,18 @@ boldest in the set (committed amber key against cyan river); our frame reads as 
 than the commercial reference; and our navigation read is the clearest of the four. Round 1 said
 our focal hierarchy beats the commercial frame's, which has none.
 
-### Open, going into round 3
+### Open, going into round 4
 
-  * **The lighting lane died mid-sweep** on the environment fill — the exact fix both rounds
-    demand. Resume first when the session budget returns.
+  * ~~The lighting lane died mid-sweep on the environment fill~~ — **landed, round 3 above.**
+  * **The near field is the next deficit, and it is the CONTENT lane's.** Measured on the same
+    plates: our near-band saturation is 0.70–0.79 against the two daylight references' 0.48–0.49,
+    and it is FLAT with depth in the two close cameras (gate, meadow) because those frames have no
+    distance for the aerial grade to work on. The blade carpet also reads oversized beside a 1.45u
+    character at boom 12–16. Treatment cannot fix either; both are the grass material and the
+    blade scatter.
+  * **The two grey rectangles over the gorge sky are STILL THERE** and are still the most damning
+    thing in that frame. Untouched by round 3 — showing `edge_skirt` again was already tested and
+    changes nothing, so it is some other object.
   * **`transition_test` aborts on its final assertion**, reproducibly: 13 sections green, then
     `HARNESS ERROR: ReferenceError: SIM is not defined` at the deep-link re-evaluate, immediately
     after the harness's own readiness check returned true on that page. **Provenance unknown** —
