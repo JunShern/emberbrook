@@ -379,7 +379,16 @@ export async function run(cfg) {
            * harness this slow is a finding about the machine, and carry on without a
            * ticket. Only `exhausted` — all five headings pushed, nothing moved — may file. */
           if (!leg.exhausted) {
-            log(`  leg not conclusive: ${leg.starved ? 'STARVED' : 'gave up'} after ${leg.bursts} burst(s) ` +
+            /* THREE OUTCOMES, THREE SENTENCES (2026-08-04). `noGain` used to print the
+             * starvation line — "the headings were never all tried" — over a leg on which
+             * every heading WAS tried and the body moved every round. On a healthy link
+             * (Dellhollow, 164 ms/burst) that read as a slow machine and hid the actual
+             * answer: walkable, but not toward the goal. Neither files a blocker. */
+            log(leg.noGain
+              ? `  leg not conclusive: NO GAIN after ${leg.bursts} burst(s) at ~${leg.msPerBurst} ms/burst ` +
+                `— the body moved every round and never got closer. The headings WERE tried; ` +
+                `the ground is walkable and the approach is not. No blocker filed.`
+              : `  leg not conclusive: ${leg.starved ? 'STARVED' : 'gave up'} after ${leg.bursts} burst(s) ` +
                 `at ~${leg.msPerBurst} ms/burst — no blocker filed (the headings were never all tried)` +
                 // WHY it starved, measured while the condition was live. "Starved" with
                 // a reason is a finding about the machine; without one it is a shrug.

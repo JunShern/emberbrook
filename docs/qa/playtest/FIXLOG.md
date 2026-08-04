@@ -54,6 +54,9 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 7 | (round 6's handover) | — | The gorge encounter rate eats the run | **REFUTED as a game defect** — 3 battles in 175.5 u against an analytic 4.48; the corridor ON ITS ROAD is 28.6 u, 77% road, expected **0.28** battles. The cost is a battle costing 10.7 HARNESS steps against ~1 for a 15 u walk leg | measurement + recommendation only; `encounters.json` untouched by instruction | — |
 | 7 | PT-20260803-028 | P1 | Glitched view and out-of-bounds geometry | **VERIFIED AS AN ART DEFECT, reproduced on tonight's rebuilt bundle** — the same river surface measures **222.3 L at one camera yaw and 83.4 L at another**, and at 222 it is BRIGHTER than the sky (189) while the gorge around it is 55–70 | not fixed by this lane — `GLASS_ROUGH 0.06` is a dated user art pick and the lighting lane owns the surface; handed over with the numbers | — |
 | 7 | (not filed — found by the same probe) | P1 | The camera boom sits inside the new grass and 88.2% of the frame is grass cards | **VERIFIED on the current build** — same position, yaw 0.4 | routed to the overworld-content lane; same class as `PT-20260803-022` | — |
+| 7 | (found by playing) | P1 | The Boatmen's Rest is a door onto an empty room — the agent spent 18 of 70 steps trying to talk to its own party | **VERIFIED on `npcs.json` + `shops.json`** — 0 NPC records for `del-inn-int` against 1 each for the three shop interiors, no shop with that `sceneKey`, and 1 dialogue box in the whole run | not fixed — content, reported | — |
+| 7 | PT-20260803-029 | P1 | The player can leave the chapter on its first frame | **REFUTED — the spine detector fired because the player walked into a pub** and left again six steps later; 8th of this class | kept as calibration, per rule 2 | — |
+| 7 | (not filed — read off this run's own log) | — | Three legs blamed a slow machine at 160 ms/burst for a walk that had tried every heading | **HARNESS DEFECT** — `sinceGain >= 8` was falling into the starvation branch | `walkLeg` returns `noGain`; `episode.mjs` prints its own sentence for it | this commit |
 
 ## Rounds
 
@@ -1387,3 +1390,105 @@ boom is inside the new overworld grass dressing (`public/js/ow_detail.js`, added
 the same class as `PT-20260803-022` (*"camera clipped inside foliage obscuring entire screen"*),
 which has been carried unmeasured since round 5, and it is now measured on a live build. It
 belongs to the overworld-content lane and is routed there, not patched here.
+
+#### Round 7 — the receipt: the agent gets INSIDE Dellhollow, and into a building
+
+`node tools/llm_playtester.mjs --port=3000 --from=ch2.arrive --steps=70 --stop-beat=ch2.lockfive`,
+run `run-20260803-234940`. Round 6 reached `del-cine` and stopped there. This one drops in at the
+arrival and plays the town.
+
+```
+  steps        70          scenes   del-cine 52 · del-inn-int 18
+  walk legs    95 (67 arrived, median closed 0.63 m, ~160 ms/burst)
+  beats fired  all of Ch1 + ch2.road + ch2.arrive        reports 1
+```
+
+**New ground, and it is worth naming.** For seven rounds this loop has lived in `emb-cine` and
+`ow-valley`. This run walked a pre-rendered plate town, took a *cut* between two of its shots, and
+then **opened a door and went inside a building** — `del-inn-int`, The Boatmen's Rest, lit, dressed,
+a LOCKS DELAYED notice on the board. No playtest run had ever entered an interior.
+
+##### VERIFIED · P1 — The Boatmen's Rest is a door onto an empty room
+
+**What the agent experienced.** It entered the tavern at step 34 and spent **18 of its 70 steps**
+inside, goal after goal: *"walk up to the NPC in the dark coat next to the notice board"*,
+*"talk to the person standing by the notice board"*, *"explore the right side of the tavern to look
+for someone"*. Nothing answered. The two figures in `frames/step-037.jpg` are **Vesper and Lake** —
+its own party. It was trying to talk to itself.
+
+**What the instruments said** (both files, no browser):
+
+| | |
+|---|---|
+| `npcs.json`, records with scene `del-inn-int` | **0** |
+| the same for `del-item-int` / `del-weapon-int` / `del-armor-int` | 1 each (chandler, weaponsmith, armorer) |
+| `shops.json`, a shop whose `sceneKey` is `del-inn-int` | **none** |
+| dialogue boxes in the whole 70-step run | **1** — `ch2.arrive`'s own arrival narration |
+
+The inn is the one Dellhollow interior that ships as a bundle, carries a door prompt a player can
+take (*"Enter The Boatmen's Rest? [E]"*), and **has nobody in it and nothing to do**. Every unit
+gate in this repo is green over that, because no gate asks "does this room contain a person."
+`del-cookhouse-int` and `del-boatyard` are in the same position and were not visited.
+
+##### The spine detector filed a P1 because the player walked into a pub — REFUTED
+
+`PT-20260803-029` is the eighth report of the long-carried *"the player can leave the chapter on
+its first frame"* class, and this time it fired from `del-inn-int` at step 37. It is a **false
+positive**, and a new shape of one: the rule is *"you left the set of scenes that still hold an
+unfired beat and stayed gone"*, which is true and damning in `ow-valley` and simply wrong about an
+optional interior entered by a door you can walk straight back out of. The agent left by that same
+door six steps later. Kept in the log as calibration, per rule 2.
+
+##### Measured, NOT filed — the agent crossed 24 metres of Dellhollow in 52 steps
+
+The number that says what the town costs a first-time player:
+
+| | |
+|---|---|
+| `del-cine` shots the run ever saw | **2** — `gate` (31 steps) and `shelf-west` (21) |
+| its x range across 52 town steps | **4.9 .. 28.8** |
+| where the objective's lockhead (`odessa`) stands | **x 78.9** |
+| the nearest NPC to the arrival band | `del.deckhand`, ~15 m away and 5 m below |
+
+For the first 31 steps it **oscillated between x 15 and x 28** — a pendulum in a 13 m corridor,
+walking well (`median closed 0.63`, 160 ms/burst, the link healthy) and getting nowhere. Look at
+`frames/step-020.jpg` and `step-027.jpg`: identical shot, and the only *labelled* thing in the
+frame reads **"Leave Dellhollow."** The other two red triangles are `cut` bands wearing the same
+red as a town portal. The agent's own goals name them — *"walk over to the NPC standing under the
+red marker"* — and there is no NPC there.
+
+**This is round 5's carried design call** (*"whether a shot-exit should look like a town exit is
+the user's call"*), now with a price on it: **30 steps, and the arrival band of the town Chapter
+Two happens in contains no NPC, no shop door and no labelled destination except the way out.**
+It is not filed as a bug because the remedy is a look decision, and this lane does not make those.
+
+##### A harness defect found in this run's own log, and fixed
+
+Three legs printed `leg not conclusive: gave up after N burst(s) at ~160 ms/burst — no blocker
+filed (the headings were never all tried)`. **160 ms/burst is a healthy link, and the headings
+HAD all been tried.** Those legs exited on `sinceGain >= 8` — the body moved on every round and
+never got closer — and were falling into the starvation branch, so a real navigation answer
+("walkable, but not toward the goal") was being printed as an excuse about a slow machine. That is
+the exhausted/starved split from round 2 with a third case nobody had separated. `walkLeg` now
+returns `noGain` and `episode.mjs` prints its own sentence for it. Neither files a blocker.
+`percept_test` PASS.
+
+### Open going into round 8
+
+  * **The Boatmen's Rest has nobody in it.** VERIFIED above on `npcs.json` + `shops.json`.
+    `del-cookhouse-int` and `del-boatyard` are in the same position and unvisited — worth the same
+    two-line check before a run wastes 18 steps in one of them.
+  * **`ch2.jam` has never been reached by a playtest.** The run spent 52 steps in `del-cine` and
+    covered 24 m of a town whose objective stands 50 m further on. Whether the route is legible is
+    the question; whether it EXISTS is not in doubt (`playthrough_test` §W walks it).
+    **A `--from=ch2.jam` drop-in is the cheapest way to test the rest of Chapter Two** without
+    paying 30 steps for the arrival band again — and it is the next round's first job, along with
+    a shop, and a save/reload taken mid-chapter, neither of which any run has touched.
+  * **The gorge water is brighter than the sky at one arc of yaw** (222.3 L vs 189.5). Measured
+    above; belongs to the lighting lane and to whoever owns the B1 art pick.
+  * **The camera boom sits inside the new overworld grass** (88.2% of frame). Overworld-content lane.
+  * **The spine detector needs to know an optional interior from a wrong turn.** Eight reports of
+    one class, and the newest is a pub.
+  * **PT-20260803-013/014's 64x36 thumbnail still has no cause.** Unchanged since round 3.
+  * **Carried, unchanged:** a clamped marker looks like a marker over its own door; `play3d` has no
+    `resize` handler; the objective banner does not know where you are (now also true inside an inn).

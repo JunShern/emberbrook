@@ -990,6 +990,15 @@ export function makeAdapter(opt) {
        * by it, so the worst case is one call's own budget past HARD instead of forever. */
       const left = deadline(HARD);
       const cap = (n) => Math.min(n, left());
+      /* A THIRD OUTCOME, AND IT WAS BEING REPORTED AS ONE OF THE OTHER TWO (2026-08-04).
+       * `sinceGain >= 8` means the body MOVED on every round and never got closer —
+       * the headings WERE tried and the world's answer was "you may walk, you may not
+       * approach". That is a navigation finding. It was falling into the `!exhausted`
+       * branch in episode.mjs, which prints "gave up ... (the headings were never all
+       * tried)" and the cost per burst, so a Dellhollow leg that circled an obstacle on
+       * a HEALTHY link (164 ms/burst) read as a slow machine. Same family as the
+       * exhausted/starved split itself: a leg must say which question it answered. */
+      let noGain = false;
       let exhausted = false, starved = false, rounds = 0, starvedWhy = null;
       try {
         while (Date.now() - t0 < BUDGET) {
@@ -1010,7 +1019,7 @@ export function makeAdapter(opt) {
           if (d < best - 0.15) { best = d; sinceGain = 0; } else sinceGain++;
           // Every heading refused — but only say so if every heading was actually TRIED.
           if (moved < 0.10) { exhausted = (tried === OFFSETS.length && !starved); break; }
-          if (sinceGain >= 8) break;                // moving, but not getting closer
+          if (sinceGain >= 8) { noGain = true; break; }   // moving, but not getting closer
           // A camera cut, a doorway or a story beat changes the world under the leg.
           if (await ev(`(()=>{try{return !!(window.UILOCK&&UILOCK.active())}catch(e){return false}})()`, cap(EV_MS))) break;
         }
@@ -1042,7 +1051,9 @@ export function makeAdapter(opt) {
         // — the world refused, and this is the finding worth filing. `starved`: the
         // round was cut off by the hard ceiling, so what the world would have done is
         // UNKNOWN and no blocker may be built on it.
-        exhausted, starved, starvedWhy,
+        // `noGain`: neither of the above. Every round moved the body and none of them
+        // shortened the distance. The headings WERE tried; the approach is what failed.
+        exhausted, starved, starvedWhy, noGain,
         msPerBurst: bursts ? Math.round((Date.now() - t0) / bursts) : null };
     },
 
