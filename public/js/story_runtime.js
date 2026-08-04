@@ -41,7 +41,7 @@
   var busy = false;                 // a beat is running
   var ticks = 0;
   var objective = null;             // the current objective string (null = hidden)
-  var lastScene = null;
+  var lastScene = null, lastShot = null;
   var log = [];                     // {id, at} — what fired this session, for the harness
 
   var HAS_DOM = typeof document !== 'undefined' && !!document.createElement;
@@ -292,6 +292,14 @@
     // one arrives. (Plan §6: "a beat never runs while SGbusy or UILOCK.active()".)
     if (window.SIM && SIM.busy && SIM.busy()) return;
     if (++ticks % 6) return;                   // beats are not frame-critical
+    /* THE SHOT IS HALF OF `at`, AND IT MOVES WITHOUT A SCENE CHANGE. A cinematic
+     * town cuts between shots as the player walks, and until this ran, `at.cam`
+     * held whichever shot the scene happened to arrive on — measured as `gate`
+     * while the body stood in `lockhead`. IN MEMORY ONLY, deliberately: a manual
+     * SAVE serialises GS.state and now writes the shot the player is actually
+     * looking at, while a shot cut adds no localStorage write of its own. The
+     * autosave on the next scene change or beat carries it to disk. */
+    if (lastShot !== shot()) { lastShot = shot(); recordAt(); }
     var bs = DATA.beats || [];
     for (var i = 0; i < bs.length; i++) if (eligible(bs[i])) { runBeat(bs[i]); return; }
   }
@@ -300,8 +308,42 @@
   // `at` is written on every scene change and after every beat, and it is the ONLY
   // resume authority (docs/plans/end-to-end-wiring.md §5). Everything it needs is
   // already exposed by play3d: SIM.scene(), SIM.cine().shot, SIM.pos(), ORBIT.yaw.
+  /* HAS THE SCENE ACTUALLY ARRIVED?
+   *
+   * `arm()` runs the moment this module loads, which on a cold boot is BEFORE
+   * play3d has read sx/sy/sz off the URL and placed the body, and before a
+   * cinematic scene has chosen its shot. Measured 2026-08-04 in `del-cine`, booted
+   * at the ch2.jam checkpoint with the beat ledger non-empty:
+   *
+   *   t=0s     body [0,2,0]         shot null      at.pos [0,2,0]  cam null
+   *   t=3s     body [78.93,...]     shot lockhead  at.pos [0,2,0]  cam null
+   *   t=20s    body [78.93,...]     shot lockhead  at.pos [0,2,0]  cam null
+   *   after one 'eb-scene'          shot lockhead  at.pos [78.93,...] cam lockhead
+   *
+   * `at` IS THE RESUME AUTHORITY, and the autosave was committing [0,2,0] to disk
+   * on the first frame of every load. Nothing corrected it until the next scene
+   * change or beat — so a player who loaded a save, walked around one scene and
+   * closed the tab came back somewhere else, AND a save that was correct on disk
+   * was overwritten with the placeholder by the act of loading it.
+   *
+   * The test is the scene's own: a pre-rendered scene that has not chosen a shot
+   * has not arrived. A real-time scene has no cine(), so it is judged on position
+   * alone, which is exactly the behaviour it had before. Recording nothing leaves
+   * the previous `at` standing, which is the right answer — the old one is at worst
+   * stale, and the placeholder is wrong. */
+  function arrived() {
+    try {
+      if (!window.SIM || !SIM.pos) return false;
+      var p = SIM.pos(); if (!p || !isFinite(p.x)) return false;
+      var c = SIM.cine ? SIM.cine() : null;
+      if (c && !c.shot) return false;
+      return true;
+    } catch (e) { return false; }
+  }
+
   function recordAt() {
     var g = G(); if (!g || !g.setAt) return null;
+    if (!arrived()) return null;
     var p = window.SIM && SIM.pos ? SIM.pos() : null;
     return GS.setAt({
       scene: scene(), cam: shot(),
@@ -319,6 +361,21 @@
       // The objective survives a door: it is a property of the chapter, not the room.
       if (objective) setObjective(objective);
       recordAt();
+      /* AND AGAIN ONCE THE SCENE HAS ARRIVED. recordAt() refuses to write a
+       * placeholder (see arrived()), so on a cold boot the call above does nothing
+       * — and nothing else would write `at` until the next scene change. This poll
+       * is the missing edge: it fires ONCE, as soon as the body is placed and the
+       * shot is chosen, and gives up after ~15 s rather than spinning forever.
+       * Idempotent by construction: each arm() owns its own timer and the first
+       * successful record clears it. */
+      (function pollArrival(n) {
+        if (arrived()) {
+          if (recordAt() && G() && GS.autosave) { var L2 = ledger(); if (L2 && Object.keys(L2).length) GS.autosave(); }
+          return;
+        }
+        if (n > 60) return;
+        setTimeout(function () { pollArrival(n + 1); }, 250);
+      })(0);
       // AUTOSAVE ON EVERY 'eb-scene', BUT ONLY ONCE THERE IS A PLAYTHROUGH TO LOSE.
       // play3d.html's own module contract says a door does NO save and NO load —
       // "GS is page state and persists untouched across a door" — and

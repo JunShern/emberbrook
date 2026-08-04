@@ -226,6 +226,35 @@ const STATES = [
     },
   },
   {
+    /* THE PAUSE MENU IS A DIFFERENT SHAPE OF PANEL, and the percept was blind to it.
+     * menu.js renders with layout:'full', whose nav list is .mn-nav > .mn-navrow —
+     * not the .ebui-row every other ui_kit panel draws. Measured on the live game
+     * 2026-08-04: Escape opens it (Menu.isOpen true, one visible .ebui-veil,
+     * "PARTY EQUIP ITEMS SAVE LOAD NEW GAME" in the DOM) and the percept returned
+     * ZERO rows, so an agent that paused was handed an empty list. Markup below is
+     * copied from that live dump. */
+    name: 'pause-menu',
+    setup: SIM_OK + LOCK_ON,
+    html: '<div class="ebui-veil on"><div class="ebui-panel full">' +
+      '<div class="ebui-head"><span class="ebui-title">PAUSE</span>' +
+      '<span class="ebui-sub">Chapter 1 &middot; del-cine</span></div>' +
+      '<div class="ebui-body"><div class="mn-grid"><div class="eb-win mn-nav">' +
+      '<div class="mn-navrow cur">PARTY</div><div class="mn-navrow">EQUIP</div>' +
+      '<div class="mn-navrow">ITEMS</div><div class="mn-navrow">SAVE</div>' +
+      '<div class="mn-navrow">LOAD</div><div class="mn-navrow">NEW GAME</div>' +
+      '</div></div></div></div></div>',
+    check(p, g, text) {
+      const d = p.dialogue || {};
+      ok(this.name, 'the pause menu is seen at all', !!p.dialogue, j(p.dialogue), 'a panel is open');
+      ok(this.name, 'all six commands are read', (d.choices || []).length === 6,
+        j((d.choices || []).map(c => c.text)), 'PARTY EQUIP ITEMS SAVE LOAD NEW GAME');
+      ok(this.name, 'SAVE is one of them', (d.choices || []).some(c => /^SAVE$/.test(c.text || '')),
+        j((d.choices || []).map(c => c.text)), 'a player can find SAVE');
+      ok(this.name, 'the cursor is read', !!((d.choices || [])[0] || {}).selected,
+        j(d.choices), 'the first row carries .cur');
+    },
+  },
+  {
     name: 'transition-veil',
     setup: SIM_BUSY + LOCK_OFF,
     html: '<div id="story-obj">Follow the road north</div>' +
@@ -243,7 +272,7 @@ const STATES = [
 
 // ---------------------------------------------------------------------------
 async function runDom() {
-  console.log('§1 THE FOUR SCREENS (real DOM, headless Chrome, no game)');
+  console.log('§1 THE FIVE SCREENS (real DOM, headless Chrome, no game)');
   const port = await freePort();
   const profile = join(process.env.TMPDIR || '/tmp', PROFILE_PREFIX + process.pid);
   let chrome = null;
@@ -375,11 +404,11 @@ function runReplay() {
 function runCensus() {
   console.log('§3 SELECTOR CENSUS (the fixture must not drift from the shipping UI)');
   const src = ['public/js/battle_turnbased.js', 'public/js/ui_kit.js', 'public/js/story_runtime.js',
-    'public/play3d.html']
+    'public/js/menu.js', 'public/play3d.html']
     .map(f => existsSync(join(ROOT, f)) ? readFileSync(join(ROOT, f), 'utf8') : '').join('\n');
   ok('census', 'the shipping UI source was found to check against', src.length > 5000,
-    `${src.length} bytes read`, 'battle_turnbased.js + ui_kit.js + story_runtime.js + play3d.html');
-  const classes = [...new Set((PERCEPT_JS.match(/\.(ebb|ebui)-[a-z]+/g) || []))];
+    `${src.length} bytes read`, 'battle_turnbased.js + ui_kit.js + story_runtime.js + menu.js + play3d.html');
+  const classes = [...new Set((PERCEPT_JS.match(/\.(ebb|ebui|mn)-[a-z]+/g) || []))];
   const ids = ['story-obj', 'sgp', 'story-card'];
   // LOAD-BEARING: the percept has no second way to see these, so if a module renames
   // one the harness goes blind on that screen and every fixture here keeps passing.
@@ -387,7 +416,10 @@ function runCensus() {
   // absent is untidy, not blind, so it warns.
   const LOADBEARING = new Set(['.ebb-root', '.ebb-cmds', '.ebb-cmd', '.ebb-sub', '.ebb-foe',
     '.ebb-ftag', '.ebb-prow', '.ebb-party', '.ebb-actor', '.ebb-mark',
-    '.ebui-veil', '.ebui-title', '.ebui-body', '.ebui-banner']);
+    '.ebui-veil', '.ebui-title', '.ebui-body', '.ebui-banner',
+    // The pause menu draws .mn-navrow and nothing else the percept can read; without
+    // it an agent that presses Escape is handed an empty list (measured 2026-08-04).
+    '.mn-navrow']);
   ok('census', 'the percept still queries a battle at all', classes.some(c => c.startsWith('.ebb-')),
     j(classes), 'a percept that can see .ebb-root');
   for (const c of classes) {
@@ -404,7 +436,7 @@ function runCensus() {
   const fixtures = STATES.map(s => s.html).join('') + BATTLE_HTML;
   const missed = [...LOADBEARING].filter(c => !fixtures.includes(c.slice(1)));
   ok('census', 'every load-bearing class appears in some fixture', missed.length === 0,
-    `fixtures never exercise ${j(missed)}`, 'four screens covering the whole percept');
+    `fixtures never exercise ${j(missed)}`, 'five screens covering the whole percept');
 }
 
 // ---------------------------------------------------------------------------

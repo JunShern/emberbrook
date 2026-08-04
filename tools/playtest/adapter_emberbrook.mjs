@@ -136,7 +136,14 @@ export const PERCEPT_JS = `(()=>{
   for (const b of document.querySelectorAll('.ebui-banner')) if (vis(b) && txt(b)) out.prompts.push(txt(b));
   const veil = [...document.querySelectorAll('.ebui-veil')].filter(vis).pop();
   if (veil) {
-    const rows = [...veil.querySelectorAll('.ebui-row, .ebui-choice, li, .row, .choice')].filter(vis)
+    // .mn-navrow IS THE PAUSE MENU'S OWN ROW. menu.js renders with layout:'full',
+    // whose nav list is .mn-nav > .mn-navrow — NOT the .ebui-row every other panel
+    // uses. Measured 2026-08-04: Escape opens the menu (Menu.isOpen true, one veil,
+    // "PARTY EQUIP ITEMS SAVE LOAD NEW GAME" in the DOM) and the percept read ZERO
+    // rows, so an agent that opened the pause menu was handed an empty list and
+    // could not see, let alone drive, SAVE. Same class as the 'cur' fix above:
+    // found by a selector, not by playing.
+    const rows = [...veil.querySelectorAll('.ebui-row, .mn-navrow, li, .row, .choice')].filter(vis)
       // 'cur' IS THE CLASS THE SHIPPING UI ACTUALLY SETS (ui_kit.js row(): 'ebui-row' +
       // (opt.cur ? ' cur' : '')). The old test was /sel|active|cursor/, which matches none
       // of it — 'cur' is not 'cursor' — so EVERY ui_kit list reached the model with
