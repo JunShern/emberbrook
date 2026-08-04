@@ -221,7 +221,26 @@ CHIM_GATE = []
 # ~30%, which moves the value ratio this pass is forbidden to touch — an exposure
 # question for the pipeline lane, not an albedo question for this one.  DO NOT
 # spend another pass pushing this palette entry at it.
-ROOF_HEX = "2d4db1"
+# R14 THIRD PASS — AND THE PICTURE REFUSED THE NUMBER, WHICH IS THE ROUND'S OWN RULE
+# ARRIVING ON THE ROUND'S OWN WORK.  2d4db1 was solved backwards from the reference
+# slate's absolute chroma and it HIT IT (0.149 against their 0.154, from 0.044).  The
+# frame it produced has cobalt roofs: the village reads as a painted toy set, not as a
+# hamlet, and `framespread` says the same thing from the other side — circular R 0.363
+# against ref 1's 0.631 and ref 3's 0.493, i.e. PAST BOTH REFERENCES, with the cyan-blue
+# sector at 24% against their 21% but carrying a hero colour rather than a material.
+# THE REASON THE CHROMA TARGET IS NOT REACHABLE HERE IS MEASURED AND IS A VALUE FACT:
+# sat = chroma / max, and our roof's max channel is 0.480 where the reference's is 0.344
+# — our built palette renders about 1.5x brighter than the windmill it is being matched
+# to (their wall L 0.280, ours 0.423).  At OUR brightness, the reference's SATURATION
+# lands as cobalt; a slate is a dark saturated blue, and the dark half is not available
+# without moving the roof/wall value ratio that this round already got onto their number
+# (0.85 against 0.82).  So the chroma is set where the PICTURE puts it, between the two
+# solved values, and the residual gap is recorded as a VALUE gap in LOOP.md rather than
+# spent on another palette entry.  374c81 read as a grey with a cool cast; 2d4db1 as
+# cobalt; this is 40% of the way from the first to the second in effective albedo (the
+# blue channel's hex -> shipped-albedo transfer is linear at gain 0.1366, measured on
+# both builds' own GLBs, so that fraction is arithmetic and not a guess).
+ROOF_HEX = "32498f"
 B.PAL[STYLE][ROOF] = ROOF_HEX
 B.PAL_LIN[STYLE][ROOF] = srgb(ROOF_HEX)
 

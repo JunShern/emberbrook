@@ -98,6 +98,7 @@ TERRAIN_LAYERS = [
     ("rock", None, None, None),                          # rock_face_03 lives in TEX
 ]
 SLOT_GRASS, SLOT_DRY, SLOT_ROCK = range(3)
+LIP_WARP = 2.2                  # world units the grass/rock slot boundary may wander
 
 
 def layer_paths():
@@ -272,15 +273,33 @@ def terrain_pbr_f2(made, F, zg, fcrag):
     # argmax never reaches for it (round 2 halved its weight on purpose)
     dom[(W[:, SLOT_DRY] > 0.24) & (fw < 0.30) & (cw < 0.30)] = SLOT_DRY
     dom[(fw > 0.45) & (cw < 0.30)] = SLOT_GRASS       # forest floor is not straw
-    dom[cw > 0.50] = SLOT_ROCK
-    dom[fcrag > O3.FLAT_W] = SLOT_ROCK     # the roughened facets ARE rock
-    # the grass<->rock seam is the only slot boundary left, and it is DITHERED by
-    # the same hash the tessellation uses: a threshold on a smooth field still
-    # draws one clean contour, and a clean contour on a triangulated surface is a
-    # zigzag.  Ragged reads as weathering; regular reads as a bug.
+    # R14 — THE CLIFFTOP GRASS STOPPED IN A KNIFE-STRAIGHT LINE AT THE LIP, and this
+    # is where the line was drawn.  The dither below is a per-face HASH gated on the
+    # narrow window cw in (0.34, 0.50]: at a lip crag_w crosses that window inside one
+    # or two 1.25 u cells, so the ragged band was ~1 u wide and the boundary still read
+    # as a contour.  A THRESHOLD ON A SMOOTH FIELD IS A CONTOUR HOWEVER IT IS DITHERED;
+    # what makes a boundary ragged at a scale the eye reads is a DOMAIN WARP — ask the
+    # field where it stands 2 u away, along a noise direction — because then the wander
+    # is set by the warp's own amplitude and not by the field's gradient.  One extra
+    # wsample, no new geometry, and the crag/meadow shading blend (FLAT_W) is untouched.
+    # AND THE WARP IS ONE-WAY: `minimum` lets TURF SPILL DOWN OVER THE LIP and never
+    # lets bare rock climb up onto the meadow.  The symmetric version was built and
+    # looked at first, and it put isolated rock facets on the flat clifftop — a row of
+    # pale triangular teeth along the whole crest, which is a worse boundary than the
+    # straight one it replaced.  A warp that can go either way is two edits, and only
+    # one of them was asked for.
+    wx = (O3.vnoise(ctr[:, 0], ctr[:, 1], 0.23, 81) - 0.5) * 2.0 * LIP_WARP
+    wy = (O3.vnoise(ctr[:, 0], ctr[:, 1], 0.23, 83) - 0.5) * 2.0 * LIP_WARP
+    cwj = np.minimum(cw, zg.wsample(zg.crag_w, ctr[:, 0] + wx, ctr[:, 1] + wy))
+    dom[cwj > 0.50] = SLOT_ROCK
+    # the roughened facets ARE rock — but a facet the warp has carried onto the grass
+    # side keeps the grass, so the lip's own flat-shaded rim can carry turf
+    dom[(fcrag > O3.FLAT_W) & (cwj > 0.30)] = SLOT_ROCK
+    # ...and the per-face hash stays, on the warped field, as the fine grain inside
+    # the band the warp opened up.  Ragged reads as weathering; regular reads as a bug.
     jitter = O3._hash01((ctr[:, 0] * 37.0).astype(int),
                         (ctr[:, 1] * 37.0).astype(int), 4)
-    dom[(cw > 0.34) & (cw <= 0.50) & (jitter < (cw - 0.34) / 0.16)] = SLOT_ROCK
+    dom[(cwj > 0.34) & (cwj <= 0.50) & (jitter < (cwj - 0.34) / 0.16)] = SLOT_ROCK
 
     slots = []
     for nm, diff, nor, rgh in layer_paths():

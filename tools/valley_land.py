@@ -36,7 +36,12 @@ checked by its own counts against the probe's report:
     ground_valley_3 rock  L 0.502 -> 0.543   (55,793 verts)
 
 A port that lands different numbers than the probe is a PORT BUG until proven
-otherwise.  Both functions print theirs.
+otherwise.  Both functions print theirs.  TWO DELIBERATE DIVERGENCES ARE NOW ON THE
+RECORD, so the check is against these and not against the probe's originals: R14 lets
+a tuft stand at a CLIFF LIP (the tight re-probe in `tufts`, which admits sites the
++-0.7 u slope gate rejected) and R14 warps the grass/rock slot boundary
+(`overworld3_build.LIP_WARP`), which moves the seam cells the scatter keys off.  Both
+change the counts on purpose; a change nobody wrote down would still be a port bug.
 
 THREE TRAPS ALREADY PAID FOR, all still live in this file's numbers:
   * SCALE IS AGAINST THE BODY.  Vesper is 1.45 u.  The probe's first tufts were
@@ -205,8 +210,79 @@ def zone_at(zg, x, z):
 # both average 0.98): the gorge cliff needed value STRUCTURE, not a darker cliff —
 # its L05 was already 0.061 (LOOP.md R3) and taking the mean down would have made
 # the frame grim rather than deep.
-def surface(ground, T, grass_gain=1.08, dry_gain=0.72, rock_gain=1.16,
+#
+# R14 — A SECOND ROCK TONE AND DARKENED CREVICES (the fourteenth critic's single
+# highest-value change: "moderately cheap — a material pass, not new models").  Three
+# edits, all still COLOR_0 and still +0 triangles:
+#
+#   (d) THE MOTTLE WAS A PLAN-VIEW NOISE ON A VERTICAL WALL.  `n` is
+#       vnoise(x, z, ...) — the two RUNTIME GROUND axes — so it is CONSTANT down any
+#       vertical column.  On a 30 u gorge face the only thing that varied with height
+#       was `bed`, and that is most of why the wall reads as "one flat tone" however
+#       much amplitude the noise is given.  The rock branch now samples a SLANTED
+#       section (x + y*k, z - y*k), so the same noise varies down the face too.
+#   (e) A SECOND TONE, AND IT HAS TO BE THE COOL ONE.  The rock had ONE hue: a fixed
+#       cool multiplier with a value band on it.  The first attempt paired it with a
+#       warm ochre AT HELD LUMINANCE, on the theory that a hue move should not have to
+#       spend value — and tools/ow_probe/framespread.py said that made the cliff WORSE
+#       on the only axis that was short.  Over the gorge cliff box (600,200)-(1390,520),
+#       r13 -> that attempt: hue SD 13.4 -> 11.5 deg, the RED sector 78% -> 90%, hue
+#       sectors holding >= 8% of the box 2 -> 1.  AN OCHRE BESIDE A WARM ROCK UNDER A
+#       WARM KEY IS NOT A SECOND TONE, IT IS MORE OF THE FIRST ONE.  The references
+#       hold a fifth of their frame in the cyan-blue sector and we hold none of it, so
+#       the second tone is a cool blue-grey stratum — and it is allowed to be DARKER,
+#       because COLOR_0 can only multiply: cool over a warm albedo means taking R and G
+#       down and there is no version of this that holds luminance.  That is not a cost
+#       here, it is the other half of the same ask — 19% between the two bands is value
+#       structure the cliff also did not have (its 5-95 range was 0.307 against the
+#       references' whole-frame 0.44-0.52).
+#   (f) CREVICE OCCLUSION, from the mesh's OWN curvature.  Per vertex, the mean of
+#       dot(normalise(neighbour - v), n_v) over its incident edges: positive where the
+#       surround sits above the tangent plane, i.e. inside a fissure.  It costs one
+#       pass over me.edges and no raycasts, and it is the cheap half of what an AO
+#       bake would buy — the crag fan vertices, which are the crevices, get it hardest.
+#       AND COLOR_0 HAS A CEILING OF 1.0 THAT THE ROCK IS ALREADY NEAR.  The first
+#       cool triple was (0.50, 0.78, 1.75) and it did not read: `terrain_pbr_f2` has
+#       already multiplied the rock slot by its own albedo-mean gain of 1.81, so a blue
+#       of 1.75 on top CLIPS (9,348 of 160,656 corners at 1.0) and the band's colour is
+#       thrown away in the clamp — the cliff came back 88% red-sector, no better than
+#       before.  A multiply-only channel cannot be pushed up; the cool band is made by
+#       taking R and G DOWN, and 1.42 is the most blue that survives the ceiling.
+ROCK_WARM = (1.100, 0.940, 0.720)   # ochre bed       L 0.958
+ROCK_COOL = (0.420, 0.660, 1.420)   # blue-grey bed   L 0.664   (R13's single tone: 0.901)
+CAV_REF = 0.30                      # curvature that counts as a full crevice
+CAV_ROCK = 0.58                     # ... and how far down a full crevice goes
+CAV_SOFT = 0.16                     # ... on grass / dry, where it only wants a hint
+
+
+def _cavity(me, P):
+    """Per-vertex concavity in 0..1 from the mesh's own edges and normals."""
+    ev = np.zeros(len(me.edges) * 2, dtype=np.int32)
+    me.edges.foreach_get("vertices", ev)
+    ev = ev.reshape(-1, 2)
+    nrm = np.zeros(len(me.vertices) * 3)
+    try:                                        # Blender 4.1+ drops vertices.normal
+        me.vertex_normals.foreach_get("vector", nrm)
+    except (AttributeError, TypeError):
+        me.vertices.foreach_get("normal", nrm)
+    nrm = nrm.reshape(-1, 3)
+    d = P[ev[:, 1]] - P[ev[:, 0]]
+    d = d / np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-9)
+    acc = np.zeros(len(P))
+    cnt = np.zeros(len(P))
+    np.add.at(acc, ev[:, 0], (d * nrm[ev[:, 0]]).sum(1))
+    np.add.at(acc, ev[:, 1], (-d * nrm[ev[:, 1]]).sum(1))
+    np.add.at(cnt, ev[:, 0], 1.0)
+    np.add.at(cnt, ev[:, 1], 1.0)
+    return np.clip(acc / np.maximum(cnt, 1.0) / CAV_REF, 0.0, 1.0)
+
+
+def surface(ground, T, grass_gain=1.08, dry_gain=0.72, rock_gain=1.28,
             rock_cool=1.0, seam=True):
+    # rock_gain 1.16 -> 1.28 pays for the cool band, and only for it: splitting one
+    # tone into a 0.958/0.664 pair takes the class MEAN down 7% by construction, and
+    # R13's ruling that the gorge needed structure and NOT a darker cliff still holds.
+    # The gate on the number is the printed class mean (R13 shipped rock L 0.543).
     me = ground.data
     ca = me.color_attributes.get("Col")
     if ca is None:
@@ -228,6 +304,7 @@ def surface(ground, T, grass_gain=1.08, dry_gain=0.72, rock_gain=1.16,
     me.polygons.foreach_get("material_index", mi)
     lf = _loop_face(me)
     lkind = np.array([Terrain.KIND.get(int(k), 1) for k in mi])[lf]
+    cav = _cavity(me, P)[lv]                   # per-loop crevice weight, 0..1
 
     lum = lambda a: 0.2126 * a[:, 0] + 0.7152 * a[:, 1] + 0.0722 * a[:, 2]
     before = {}
@@ -273,12 +350,34 @@ def surface(ground, T, grass_gain=1.08, dry_gain=0.72, rock_gain=1.16,
             r, g, b = r * (0.84 + n * 0.36), g * (0.88 + n * 0.42), b * (0.98 + n * 0.58)
             s = dry_gain * (0.86 + n * 0.32)
         else:                               # ---- ROCK --------------------------
-            bed = 0.5 + 0.5 * math.sin(y * 1.55 + vnoise(x, z, 22.0, 5.5) * 4.2)
+            # (d) a SLANTED section, so the mottle varies DOWN the wall as well as
+            # across it.  vnoise(x, z, ..) alone is one value per vertical column.
+            rB = vnoise(x + y * 0.62, z - y * 0.48, 17.0, 4.4)
+            rM = vnoise(x - y * 0.55, z + y * 0.71, 5.2, 9.9)
+            rF = vnoise(x + y * 0.83, z + y * 0.36, 2.1, 23.7)
+            n = rB * 0.50 + rM * 0.34 + rF * 0.16
+            bedq = y * 1.55 + vnoise(x, z, 22.0, 5.5) * 4.2
+            bed = 0.5 + 0.5 * math.sin(bedq)
             band = 0.62 + bed * 0.72
+            # (e) the second tone: a slow field, plus the bed's own parity so
+            # neighbouring strata differ in HUE and not only in value
+            # THE BANDS HAVE TO REACH THE ENDS.  A tone that only ever sits near the
+            # middle of the mix is one averaged rock again; the parity term is weighted
+            # so `tone` clips at both ends over most of a wall, which is what makes a
+            # stratum a stratum rather than a gradient.
+            par = 0.5 + 0.5 * math.sin(bedq * 0.5 + 1.1)
+            tone = min(1.0, max(0.0, 0.5 + 1.60 * (par - 0.5) + 0.90 * (rB - 0.5)))
             k = rock_cool
-            r, g, b = (r * (1 - 0.34 * k + n * 0.14), g * (1 - 0.10 * k + n * 0.14),
-                       b * (1 + 0.62 * k + n * 0.20))
+            mr = ROCK_COOL[0] + (ROCK_WARM[0] - ROCK_COOL[0]) * tone
+            mg = ROCK_COOL[1] + (ROCK_WARM[1] - ROCK_COOL[1]) * tone
+            mb = ROCK_COOL[2] + (ROCK_WARM[2] - ROCK_COOL[2]) * tone
+            r, g, b = (r * (1 + (mr - 1) * k + n * 0.14),
+                       g * (1 + (mg - 1) * k + n * 0.14),
+                       b * (1 + (mb - 1) * k + n * 0.20))
             s = rock_gain * band * (0.86 + n * 0.30)
+        # (f) the crevices go down.  A cavity term costs no triangles and is the
+        # half of an AO bake the eye actually reads on a fissured face.
+        s = s * (1.0 - (CAV_ROCK if kind == 3 else CAV_SOFT) * float(cav[i]))
         r, g, b = r * s, g * s, b * s
         if seam:
             other = tot = 0
@@ -316,6 +415,21 @@ def surface(ground, T, grass_gain=1.08, dry_gain=0.72, rock_gain=1.16,
         parts.append("%s L %.3f->%.3f (%d verts)" % (names[k], before[k][0], a, before[k][1]))
     # THE CLIP IS A REAL DIFFERENCE FROM THE PROBE, so it is reported rather than
     # hidden: three.js leaves a COLOR_0 over 1.0 alone, glTF does not promise to.
+    rk = lkind == 3
+    if rk.any():
+        rc = out[rk][:, :3]
+        mx = rc.max(1)
+        mn = rc.min(1)
+        sat = np.where(mx > 1e-6, (mx - mn) / np.maximum(mx, 1e-6), 0.0)
+        # the hue spread is the whole point of the second tone; report it beside the
+        # cavity so "did the material pass land" is a number and not an opinion
+        print("  L3 rock — cavity p50 %.3f p95 %.3f (%.1f%% of rock corners > 0.25) | "
+              "COLOR_0 r/b p10 %.3f p90 %.3f | sat mean %.3f sd %.3f"
+              % (float(np.percentile(cav[rk], 50)), float(np.percentile(cav[rk], 95)),
+                 100.0 * float((cav[rk] > 0.25).mean()),
+                 float(np.percentile(rc[:, 0] / np.maximum(rc[:, 2], 1e-6), 10)),
+                 float(np.percentile(rc[:, 0] / np.maximum(rc[:, 2], 1e-6), 90)),
+                 float(sat.mean()), float(sat.std())))
     print("  L3 surface — COLOR_0 only, +0 triangles — %s  [%d/%d corners clipped at 1.0]"
           % (" | ".join(parts), over, nl))
     stats["clipped"] = over
@@ -487,6 +601,7 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
     flow = _lin(FLOW)
     tuft_rows, clump_rows, flower_rows = [], [], []
     edge_sites = 0
+    lip_tufts = 0
 
     # The corridor the player actually walks, plus a margin.  Sampling the whole
     # 280x200 u tile would spend the entire budget on ground no camera ever sees —
@@ -561,18 +676,49 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
                 if sa_ is None or sb_ is None or sc_ is None or sd_ is None:
                     continue
                 grad = math.hypot(sa_[0] - sb_[0], sc_[0] - sd_[0]) / 1.4
+                lip = False
                 if grad > maxslope:
-                    continue
+                    # R14 — THE LIP WAS BALD BECAUSE OF THIS GATE, and the bald strip
+                    # IS the "knife-straight line at the lip with no transition".  A
+                    # clifftop cell is FLAT; the +-0.7 u probe straddles the edge, so
+                    # every tuft within 0.7 u of it measured the CLIFF's gradient and
+                    # was rejected.  Re-probe at +-0.28 u: if the tuft's OWN ground is
+                    # gentle it stands — and it stands right on the brink, where it
+                    # gets a bigger lean, which is the overhang the boundary wants.
+                    # The slope gate itself is untouched everywhere else (the module
+                    # docstring's 60 m of gorge wall sprouting grass stays impossible:
+                    # this branch only fires on a GRASS site beside a rock seam).
+                    if s[1] != 1 or rock_near < 2:
+                        continue
+                    ta_ = T.at(px + 0.28, pz)
+                    tb_ = T.at(px - 0.28, pz)
+                    tc_ = T.at(px, pz + 0.28)
+                    td_ = T.at(px, pz - 0.28)
+                    if ta_ is None or tb_ is None or tc_ is None or td_ is None:
+                        continue
+                    if math.hypot(ta_[0] - tb_[0], tc_[0] - td_[0]) / 0.56 > maxslope:
+                        continue
+                    lip = True
                 c = np.array(p[int(r() * len(p))])
                 c = c * (0.78 + r() * 0.52)          # a real value spread per tuft
                 hh = (0.13 if s[1] == 3 else 0.15 if s[1] == 2 else 0.24) * (0.62 + r() * 0.90)
+                if lip:
+                    hh *= 1.35
+                    lip_tufts += 1
                 tuft_rows.append(dict(x=px, y=s[0] - 0.02, z=pz, w=0.34 + r() * 0.30,
-                                      h=hh, yaw=r() * 6.28, tilt=(r() - 0.5) * 0.26, c=c))
+                                      h=hh, yaw=r() * 6.28,
+                                      tilt=(r() - 0.5) * (0.62 if lip else 0.26), c=c))
             # ---- SCALE TWO: a shrub clump where grass meets ROCK -------------
             # THE COLOUR MULTIPLIER IS AGAINST THE MAP'S OWN MEAN, NOT AGAINST 1.0.
             # ow_valley_bushcore ships COLOR_0 at L 0.311; instance-colouring it at
             # 0.5-0.8 produced faceted BLACK BOULDERS at every rock foot.
-            if rock_near > 3 and r() < 0.24:
+            # R14 — MORE BUSHES WHERE THE SEAM IS HARD.  The crest of a heightfield lip
+            # is a row of triangles in SILHOUETTE, and no COLOR_0 edit softens a
+            # silhouette: only something standing on it does.  Raised from 0.24 to 0.42
+            # only where a grass site is more than half surrounded by rock, which is a
+            # lip and nothing else.  ONE r() call either way — the stream is preserved.
+            _pc = 0.42 if (rock_near > 6 and here[1] == 1) else 0.24
+            if rock_near > 3 and r() < _pc:
                 cc = np.array(pal[int(r() * len(pal))]) * (1.9 + r() * 0.9)
                 # R11: HEIGHT IS DRAWN FROM THE WIDTH, not independently — two
                 # independent draws is how a bush becomes a puddle on the unlucky
@@ -652,9 +798,10 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
         tris += len(V) // 3
 
     stats = dict(tufts=len(tuft_rows), seam_cells=edge_sites, clumps=len(clump_rows),
-                 flowers=len(flower_rows), patches=placed, tris=tris)
-    print("  L2 ground-is-geometry — %d tufts (6 tris each) at %d seam cells + %d clumps "
-          "+ %d flowers in %d clumps, %d triangles in, 0 out"
-          % (stats["tufts"], stats["seam_cells"], stats["clumps"], stats["flowers"],
-             stats["patches"], stats["tris"]))
+                 flowers=len(flower_rows), patches=placed, tris=tris,
+                 lip_tufts=lip_tufts)
+    print("  L2 ground-is-geometry — %d tufts (6 tris each, %d of them ON THE LIP) at "
+          "%d seam cells + %d clumps + %d flowers in %d clumps, %d triangles in, 0 out"
+          % (stats["tufts"], lip_tufts, stats["seam_cells"], stats["clumps"],
+             stats["flowers"], stats["patches"], stats["tris"]))
     return objs, stats

@@ -373,6 +373,30 @@ CRAG_AMP = 1.45                 # peak vertical break-up in a full-weight crag c
 FLAT_PATHS = []
 SPLIT_W = 0.45                  # crag weight above which a quad gets a centre fan
 FLAT_W = 0.62                   # ... and above which its facets shade FLAT
+# THE PLAN AREA A JITTERED LATTICE CELL MUST KEEP, as a share of STEP^2/2.
+#
+# The jitter below is POLAR with a radius that reaches 0.99*STEP in a full-weight
+# crag cell — and two neighbours 1*STEP apart, each free to move 0.99*STEP, CROSS
+# OVER.  The cell turns inside out, its triangles come out as slivers, and on a
+# near-vertical wall the fan centre then lands outside its own cell, samples
+# height() from a different part of the face, and stands out of it as a needle.
+# Measured in the SHIPPED r13 GLB (scratchpad census of ow-valley/scene.glb):
+# 2,648 of 22,995 ow_f2_ter_rock triangles (11.5%) plan-INVERTED, 1,450 at aspect
+# > 20, worst 3,533:1, longest edge 17.7 u — against 0.083% on grass, where the
+# crag weight is zero.  That is the "dozens of hard-edged black sliver polygons,
+# densest between centre and right" three critics in a row named on the gorge
+# wall, and it is why round 12's shadow-map A/B found nothing: IT WAS NEVER
+# SHADING.  (The material is doubleSided, so an inverted facet is not culled —
+# three.js flips its normal to face the viewer, which is why the fins come out
+# bright on one side and black on the other rather than as holes.)
+#
+# `_relax_jitter` walks the OFFENDING vertices' own jitter back until every cell
+# clears this floor, so the free jitter survives everywhere it was already safe —
+# a smaller constant would have paid for the fix over the whole tile.  And the
+# builder prints its own census and refuses to ship a non-zero one: A CONSTRUCTION
+# THAT CAN INVERT NEEDS A GATE ON THE BUILD, NOT A SMALLER CONSTANT.
+MIN_CELL_AREA = 0.20
+MIN_FAN_AREA = 0.10             # ... and for the four triangles of a centre fan
 
 
 def crag_disp(F, zg, x, y, fr=None):
@@ -446,6 +470,83 @@ def height(F, zg, x, y, fr=None):
     return F.sample(x, y) + crag_disp(F, zg, x, y, fr) + road_notch(F, x, y)
 
 
+def _cell_cross(PX, PY):
+    """The four corner cross products of every lattice cell, in PLAN.
+
+    Corners are walked a=(i,j) b=(i+1,j) c=(i+1,j+1) d=(i,j+1), which is CCW on the
+    unjittered lattice, so every cross is +STEP^2 there.  A cell whose smallest cross
+    has gone to zero or negative is a cell the jitter has folded; testing all four
+    (rather than the two triangles that happen to be emitted) makes the result good
+    for BOTH diagonals and for the centre fan, which is what the emit picks between.
+    """
+    ax, ay = PX[:-1, :-1], PY[:-1, :-1]
+    bx, by = PX[1:, :-1], PY[1:, :-1]
+    cx, cy = PX[1:, 1:], PY[1:, 1:]
+    dx, dy = PX[:-1, 1:], PY[:-1, 1:]
+    q = ((ax, ay), (bx, by), (cx, cy), (dx, dy))
+    out = []
+    for k in range(4):
+        (x0, y0), (x1, y1), (x2, y2) = q[k], q[(k + 1) % 4], q[(k + 2) % 4]
+        out.append((x1 - x0) * (y2 - y1) - (y1 - y0) * (x2 - x1))
+    return np.stack(out, 0)
+
+
+def _relax_jitter(X, Y, JX, JY, step, min_area=MIN_CELL_AREA, iters=24):
+    """Shrink only the jitter that folds a cell.  Returns (MX, MY, scale, n_bad0).
+
+    Deterministic and monotone: every pass finds the vertices of every cell still
+    under the floor and multiplies THEIR OWN scale by 0.72, so a vertex is only ever
+    walked back on the evidence of a cell it actually breaks.  Converges because at
+    scale 0 the cell is the unjittered lattice, whose crosses are all step^2.
+    """
+    s = np.ones_like(X)
+    floor = min_area * step * step
+    bad0 = None
+    for _ in range(iters):
+        MX, MY = X + JX * s, Y + JY * s
+        worst = _cell_cross(MX, MY).min(0)
+        bad = worst < floor
+        if bad0 is None:
+            bad0 = int(bad.sum())
+        if not bad.any():
+            return MX, MY, s, bad0
+        m = np.zeros_like(X, dtype=bool)
+        m[:-1, :-1] |= bad
+        m[1:, :-1] |= bad
+        m[1:, 1:] |= bad
+        m[:-1, 1:] |= bad
+        s = np.where(m, s * 0.72, s)
+    MX, MY = X + JX * s, Y + JY * s
+    return MX, MY, s, bad0
+
+
+def _relax_fan(MX, MY, si, sj, ox, oy, step, min_area=MIN_FAN_AREA, iters=24):
+    """Pull each fan centre back toward its own cell's centroid until all four
+    triangles of the fan clear the floor.  A convex cell's centroid always does, so
+    the halving terminates; the offset survives wherever it was already inside."""
+    ax, ay = MX[si, sj], MY[si, sj]
+    bx, by = MX[si + 1, sj], MY[si + 1, sj]
+    cx, cy = MX[si + 1, sj + 1], MY[si + 1, sj + 1]
+    dx, dy = MX[si, sj + 1], MY[si, sj + 1]
+    gx, gy = (ax + bx + cx + dx) / 4.0, (ay + by + cy + dy) / 4.0
+    t = np.ones(len(si))
+    floor = min_area * step * step
+    pulled = None
+    for _ in range(iters):
+        mx, my = gx + ox * t, gy + oy * t
+        w = np.full(len(si), np.inf)
+        for (x0, y0), (x1, y1) in (((ax, ay), (bx, by)), ((bx, by), (cx, cy)),
+                                   ((cx, cy), (dx, dy)), ((dx, dy), (ax, ay))):
+            w = np.minimum(w, (x1 - x0) * (my - y1) - (y1 - y0) * (mx - x1))
+        bad = w < floor
+        if pulled is None:
+            pulled = int(bad.sum())
+        if not bad.any():
+            return mx, my, pulled
+        t = np.where(bad, t * 0.5, t)
+    return gx + ox * t, gy + oy * t, pulled
+
+
 def build_terrain(coll, F, zg, fr, name="ground_valley"):
     """The zone-aware terrain mesh.  Returns (ground, skirt, face_crag).
 
@@ -470,8 +571,10 @@ def build_terrain(coll, F, zg, fr, name="ground_valley"):
     rad = (0.26 + 0.30 * _hash01(ii, jj, 6)) * (0.52 + 1.25 * cwv)
     interior = np.zeros_like(X)
     interior[1:-1, 1:-1] = 1.0                          # the rim must stay on the tile
-    MX = X + np.cos(ang) * rad * L.STEP * interior
-    MY = Y + np.sin(ang) * rad * L.STEP * interior
+    JX = np.cos(ang) * rad * L.STEP * interior
+    JY = np.sin(ang) * rad * L.STEP * interior
+    # ...and then walked back wherever it folds a cell (see MIN_CELL_AREA).
+    MX, MY, jscale, fold0 = _relax_jitter(X, Y, JX, JY, L.STEP)
     Z = height(F, zg, MX, MY, fr)
 
     g = np.arange(L.NX * L.NY).reshape(L.NX, L.NY)
@@ -487,13 +590,16 @@ def build_terrain(coll, F, zg, fr, name="ground_valley"):
     si, sj = np.nonzero(split)
     cidx = np.full(split.shape, -1, dtype=np.int64)
     extra = np.zeros((0, 3))
+    fan0 = 0
     if len(si):
-        mx = (MX[si, sj] + MX[si + 1, sj] + MX[si + 1, sj + 1] + MX[si, sj + 1]) / 4.0
-        my = (MY[si, sj] + MY[si + 1, sj] + MY[si + 1, sj + 1] + MY[si, sj + 1]) / 4.0
         th = ha[si, sj] * 2.0 * math.pi
         rr = 0.30 * L.STEP * hc[si, sj]
-        mx = mx + np.cos(th) * rr
-        my = my + np.sin(th) * rr
+        # THE CENTRE HAS TO STAY IN ITS OWN CELL.  height() is analytic, so a centre
+        # that has wandered outside samples the face somewhere else entirely — on a
+        # 30 u gorge wall that is the 17 u needle in the r13 census, not a 0.3 u
+        # displacement.  _relax_fan pulls only the ones that escaped.
+        mx, my, fan0 = _relax_fan(MX, MY, si, sj, np.cos(th) * rr, np.sin(th) * rr,
+                                  L.STEP)
         # the centre vertex also spikes/pits: this is what turns four coplanar
         # triangles into broken rock instead of one flat lozenge
         mz = height(F, zg, mx, my, fr) + (hc[si, sj] - 0.5) * 0.62 * qw[si, sj]
@@ -518,6 +624,26 @@ def build_terrain(coll, F, zg, fr, name="ground_valley"):
             else:
                 faces += [(a_, b_, d_), (b_, c_, d_)]
                 fcrag += [w, w]
+
+    # ---- THE GATE.  Measured on the triangles that are about to be emitted, not
+    # on the jitter that was intended: a builder that checks its own drawing cannot
+    # see its own build.  Inverted must be ZERO — a sliver here is a black wedge on
+    # the gorge wall in the shipped bundle.
+    _V = np.asarray(verts, float)
+    _T = _V[np.asarray(faces, np.int64)]
+    _sa = 0.5 * ((_T[:, 1, 0] - _T[:, 0, 0]) * (_T[:, 2, 1] - _T[:, 0, 1])
+                 - (_T[:, 2, 0] - _T[:, 0, 0]) * (_T[:, 1, 1] - _T[:, 0, 1]))
+    _inv = int((_sa <= 0.0).sum())
+    _thin = int((_sa < 0.02 * L.STEP * L.STEP).sum())
+    print("  terrain jitter gate: %d cells folded / %d fan centres escaped, relaxed "
+          "(jitter kept at %.0f%% of authored on average, %.0f%% at worst); emitted "
+          "%d tris, INVERTED %d, plan-area<2%% %d (min %.4f u2)"
+          % (fold0, fan0, 100.0 * float(jscale.mean()), 100.0 * float(jscale.min()),
+             len(faces), _inv, _thin, float(_sa.min())))
+    if _inv:
+        raise RuntimeError("build_terrain: %d inverted triangles survived the relax "
+                           "(MIN_CELL_AREA/MIN_FAN_AREA too low, or iters exhausted)"
+                           % _inv)
 
     me = bpy.data.meshes.new(name)
     me.from_pydata(verts, [], faces)

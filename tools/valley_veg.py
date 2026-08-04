@@ -69,6 +69,39 @@ CRAG_BED = 2.9              # bed thickness
 AMP_TRIM = 0.70
 MEADOW_FLOWERS = 0.00085    # flower SEEDS per pixel (each throws 1-6 heads)
 
+# ---------------------------------------------------------------------- R14 folds
+# THE FAR HILLSIDE IS FLAT BEFORE ANY POST PASS RUNS — Lstd 0.049 against the
+# mid-ground's 0.076, every face normal on it within ~2 deg of the same direction,
+# nothing casting onto it (LOOP.md R13, refused in the grade and routed to content).
+# It is flat because it is the RAW analytic field: crag_w is zero out there, so the
+# crag treatment never reaches it and F.sample's massif shoulders are a single smooth
+# ramp.  IT NEEDS VALUE, AND VALUE ON A LIT SURFACE IS NORMAL VARIATION — a hue or a
+# saturation move cannot buy it, which is the one thing R13 established for certain.
+#
+# So: SPUR AND GULLY FOLDS, an additive term inside the SAME guarded function every
+# other consumer reads (finding 141 — the mesh, the tree feet, the markers and the QA
+# overlay must agree by construction).  Two properties make it safe:
+#   * it rides the crag guard verbatim, so the road corridor, the channel, both
+#     settlement shelves, the dam and the basin apron are EXACTLY as before;
+#   * it is gated on the base field's own SLOPE, so the meadow floor and every walk
+#     ribbon laid on flat ground move by zero, and only ground that is already a
+#     hillside folds.
+#
+# THE AMPLITUDE IS MEASURED, NOT CHOSEN, AND THE FIRST GUESS WAS 3x SHORT.  1.15 was
+# picked from "amplitude A over wavelength L gives slope 2*pi*A/L" — which assumes the
+# noise swings the full +-0.5.  It does not: the mix below has sd 0.157 and |grad| p95
+# 0.058 PER UNIT of amplitude (scratchpad fbmamp.py, 900^2 samples).  At 1.15 that is a
+# p95 fold slope of 0.067 = 3.8 deg, and the shipped mesh agreed — a GLB-to-GLB height
+# raster put the far hillside's |dh| at mean 0.108 u, p90 0.256 (heightdiff.py), and its
+# face normals moved from p50 11.98 deg off the region mean to 12.66.  NOTHING.  3.4 is
+# the same arithmetic run on the measured gradient: p95 slope 0.20 = 11 deg of added
+# normal variation, displacement sd 0.53 u, peak ~1.9 u.  Safe for the walk network by
+# a wide margin — walkStep gates on a per-0.075 m STEP of 0.63 up / 0.8 down, which is
+# a slope of 8.4, not on an angle.
+FOLD_AMP = 3.40             # spur/gully amplitude, world units
+FOLD_SLOPE = (0.06, 0.22)   # base-field slope over which the folds fade in
+FOLD_W = (0.043, 0.098)     # 23 u carrying wave + a 10 u second octave
+
 
 # ===========================================================================
 # 1. THE FOREST
@@ -265,9 +298,26 @@ def patch_crag():
              + (O3.ridged(x, y, 0.145, 23) - 0.42) * 1.05
              + (O3.ridged(x, y, 0.440, 37) - 0.42) * 0.34)
         d = (d + _crag_strata(F, zg, x, y)) * AMP_TRIM
-        return d * O3.CRAG_AMP * np.clip(w, 0.0, 1.0) ** 1.35 * g
+        return (d * O3.CRAG_AMP * np.clip(w, 0.0, 1.0) ** 1.35 * g
+                + _spur_folds(F, zg, x, y, w, g))
 
     O3.crag_disp = crag_disp
+
+
+def _spur_folds(F, zg, x, y, w, g):
+    """R14 — the hillsides fold.  Zero on flat ground, zero inside the crag.
+
+    Rides the caller's already-computed guard `g` and crag weight `w`: the folds are
+    for the ground the CRAG TREATMENT NEVER REACHES (crag_w ~ 0), which is exactly the
+    far hillside the thirteenth and fourteenth critics call flat.  Where crag is
+    present it already has relief and stacking a second landform on it would only
+    take the amplitude somewhere nobody asked for.
+    """
+    s = F.slope_at(x, y)
+    gate = L.sstep(FOLD_SLOPE[0], FOLD_SLOPE[1], s) * (1.0 - np.clip(w, 0.0, 1.0))
+    d = ((O3.fbm(x, y, FOLD_W[0], seed=131, oct_=3) - 0.5) * 1.00
+         + (O3.fbm(x, y, FOLD_W[1], seed=137, oct_=2) - 0.5) * 0.45)
+    return FOLD_AMP * d * gate * g
 
 
 def _guard(F, zg, x, y, fr):
