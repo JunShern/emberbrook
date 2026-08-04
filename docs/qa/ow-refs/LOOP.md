@@ -1100,6 +1100,73 @@ DISTANCE because chroma was unavailable, and the sector metric was satisfied by 
 that does not look like the thing the metric was chosen to detect** — round 13's failure, one
 level down, caught inside one round instead of after one. Named and open.
 
+### THE ROUND'S OWN RULE, ARRIVING ON THE ROUND'S OWN WORK
+
+The roof was solved a third time. `2d4db1` was derived backwards from the reference
+slate's ABSOLUTE CHROMA and it hit the target — 0.149 against their 0.154, up from
+0.044 — and the frame it produced has **cobalt roofs**: the village reads as a painted
+toy set. `framespread` said the same thing from the other side, circular R **0.363**
+against ref 1's 0.631 and ref 3's 0.493, **past both references**, with the cyan-blue
+sector at 24% against their 21% but carrying a hero colour instead of a material.
+
+**THE PICTURE REFUSED THE NUMBER.** Shipped at `32498f`, which is 40% of the way from
+the first solve to the second in EFFECTIVE albedo — arithmetic, not taste, because the
+blue channel's hex-to-shipped-albedo transfer is linear at gain 0.1366 measured on both
+builds' own GLBs. Meadow circular R **0.541**, vista **0.474**, gorge **0.661**, against
+the references' 0.631 and 0.493.
+
+**AND THE RESIDUAL GAP IS A VALUE GAP, NOT A CHROMA GAP** — this is the reusable half.
+`sat = chroma / max`, our roof's max channel is **0.480** where the reference's is
+**0.344**, and their wall sits at L 0.280 against our 0.423: **our built palette renders
+about 1.5x brighter than the windmill it is being matched to.** At OUR brightness their
+SATURATION lands as cobalt, because a slate is a dark saturated blue and the dark half
+is not available without moving the roof/wall value ratio this round just put on their
+number (0.85 against 0.82). Nobody should spend another pass on the palette entry.
+
+Two more instrument failures worth the same treatment as R13's four:
+
+  * **THE CLASSIFIER WAS DELETING THE THING IT WAS SENT TO MEASURE.** `matclass.py`
+    inherited R13's water exclusion, and the moment the slate became slate that rule ate
+    **36% of the roof boxes' pixels — the bluest ones** (63 223 against 40 450), reading
+    sat 0.165 where the truth was 0.309. It had been biasing the previous plate too
+    (0.076 reported, 0.114 true), so part of "5.9x under" was the instrument. Separated
+    on the axis that actually distinguishes them: a river is CYAN (g nearer b), slate is
+    BLUE (g nearer r), `cy = (g−r)/(b−r)` splits them 1.02/0.68 against 0.24/0.26. **The
+    reference's own numbers moved the same way** (roof sat .446 → .457) — it was biased
+    on both columns, which is the only reason the comparison survived at all.
+    Same shape as the exclusion that could not see a cool built surface because it was
+    written against art we did not have: **AN EXCLUSION AUTHORED AGAINST YOUR OWN FRAME
+    CANNOT MEASURE A FRAME YOU HAVE NOT BUILT YET.**
+  * **A RAYCAST IN THE SAME EXPRESSION THAT AIMS THE CAMERA REPORTS THE OLD AIM.**
+    ORBIT → camera happens in the render loop, so the cliff lane's first probe named the
+    far hillside as `__owridge` backdrop rings — a clean, confident lie. Aim, settle,
+    THEN raycast.
+
+### CARRIED, WITH REASONS
+
+  * **The roof-saturation gap is OPEN** — 0.309 against the reference's 0.457, and it is
+    the value fact above. It stays named.
+  * **Our frame now carries a loud warm sector AND a loud cool one** where both references
+    are green-dominant with only 8% warm. The walls are the remaining warm mass.
+  * **The clifftop lip is improved, not solved.** The residual sawtooth is the heightfield's
+    own 1.25 u tessellation at a convex break; it needs a lip bevel, a bigger geometry
+    change than this round.
+  * **The top-left cliff fragment is DIAGNOSED, NOT FIXED**: an engine raycast returns
+    `ground_valley_3` at 36–40 m — the west canyon wall's own rim run-out, not a prop and
+    not a clipped mesh. Fixing it is a `valley_map` massif edit. Named so nobody builds
+    against a guess.
+  * **The river's foam lobe has no port.** `water-transparency.md`'s ratified recipe is
+    depth→alpha PLUS a foam lobe on an AO-proximity × flow-noise mask; R13 brought the
+    first and not the second, and our water's local contrast is 0.039 against the
+    reference's 0.066.
+  * **The "Enter Emberbrook" marker over empty ground: NOT TRIED, deliberately.** It is the
+    FF7 exit-marker DOM overlay sitting at the scene edge's own anchor — gameplay UI, and
+    moving it is seam-canon territory rather than art.
+  * **The meadow frame contains essentially no sky**: what reads as one is a hazed ridge
+    band at saturation **0.091**, against the references' sky at 0.27–0.35. That is
+    literally the "completely overcast" read, and the structural answer is the CAMERA
+    PITCH, which the user has explicitly opened and which no lane took this round.
+
 ---
 
 ## Round 13 — THE ROUND WHERE WE STOPPED GUESSING THE SHADOW COLOUR AND MEASURED IT
