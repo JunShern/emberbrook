@@ -61,7 +61,10 @@ SS = 3                         # supersample factor while drawing
 N_BIG = 8                      # cells 0..7 are big clumps, 8..15 edge fuzz
 AUTUMN_RATIO = 0.055           # fraction of SPRAYS that have turned
 PALE_RATIO = 0.10              # fraction that are new pale growth
-AO_FLOOR = 0.62                # darkest a buried blade may go (never black)
+AO_FLOOR = 0.84                # darkest a buried blade may go (never black).
+                               # 0.62 -> 0.84 with SKY_FLOOR/LAM: see the block
+                               # above SKY_FLOOR — every one of these was solved
+                               # against the remap's 5x lift on dark texels.
 R_BIG = 0.355                  # clump radius / cell.  Sprays throw ~0.13 past
 R_FUZZ = 0.330                 # it, so anything larger CLIPS at the cell border
 KEY = np.array([-0.42, 0.50, 0.76])          # key light, image space, +y up
@@ -75,7 +78,18 @@ HALF = (KEY + UP) / np.linalg.norm(KEY + UP)
 # COLOR_0's job (Mass.shell).  Baking the same gradient into every single card as
 # well is how each card became a little sphere and the crown became a heap of
 # them: charge 1, "each lobe reads as a separate ball", is partly this number.
-SKY_FLOOR, SKY_UP, LAM = 0.52, 0.20, 0.62
+#
+# AND THEN THE SPAN CAME DOWN AGAIN, for the reason EXPOSURE came down: the
+# numbers that set 0.52/0.62 were read off a frame the ow_detail REMAP was
+# lifting up to 5x on its darkest texels (commit 00a9c94 removed it, correctly).
+# Measured honestly on the hero crown at the meadow camera, remap off, the mass
+# came back V05 0.118 / V50 0.357 / V95 0.647 against the references' 0.23-0.29 /
+# 0.43-0.54 / 0.64-0.69: THE TOP WAS ALREADY RIGHT AND THE FLOOR WAS A STOP AND
+# A HALF LOW.  So the fix is a FLOOR LIFT, not a gain — 0.72..1.14 (1.6x) where
+# this was 0.52..1.34 (2.6x), which also finishes what the note above started:
+# the volume read is bushlang's crown-scale job and a card should not carry a
+# second copy of it.
+SKY_FLOOR, SKY_UP, LAM = 0.72, 0.20, 0.42
 
 # ---------------------------------------------------------------- the palette
 # NARROW VALUE, WIDE HUE — the blind critic's rule for the references' leaf
@@ -114,7 +128,16 @@ SKY_FLOOR, SKY_UP, LAM = 0.52, 0.20, 0.62
 # a third of it.  So the level has to come down to where a LIT crown belongs, and
 # EXPOSURE is that one number: it multiplies the palette and nothing else, so
 # every hue and every ratio above survives it unchanged.
-EXPOSURE = 0.80
+#
+# 0.80 -> 0.86 (foliage r4).  The fifth that came off above was measured on a
+# frame the ow_detail REMAP was inflating; with the remap gone the shipped crown
+# read V50 0.357 against the references' 0.43-0.54 and a blind judge called it
+# "an unlit dark-teal solid - reads as mossy stone".  This is the SMALL half of
+# the correction and it is deliberately small: most of it is the floor lift in
+# AO_FLOOR/SKY_FLOOR/LAM, because a gain that fixes the mid blows the top (V95
+# was already inside the reference band at 0.647).  Measured after: V05 0.137 /
+# V50 0.439 / V95 0.706, sat 0.273.
+EXPOSURE = 0.86
 G_DEEP = np.array([0.099, 0.165, 0.150]) * EXPOSURE     # V 0.150  hue 166  sat 0.40
 G_MID = np.array([0.149, 0.265, 0.188]) * EXPOSURE      # V 0.235  hue 140  sat 0.44
 G_LIT = np.array([0.218, 0.363, 0.196]) * EXPOSURE      # V 0.320  hue 112  sat 0.46
@@ -623,8 +646,12 @@ def build_tile(force=False, size=768, ss=2, seed=4211):
     N = _norm(_downsample(C.nrm, ss))
     rgb = rgb / np.maximum(a, 1e-4)[..., None]
     # a hole in the CORE is canopy shadow, never sky: the core is opaque by
-    # contract, and the cards are what let the sky through
-    rgb[a < 0.5] = G_DEEP * 0.45
+    # contract, and the cards are what let the sky through.  0.45 -> 0.95 (r4):
+    # at 0.45 this was V 0.036-0.059, i.e. BLACK, and the core's own COLOR_0
+    # multiplies it down again — those are the hard black wedges between the
+    # lobes that made the mass read as a boulder pile with moss on it.  Canopy
+    # shadow is a value, not an absence.
+    rgb[a < 0.5] = G_DEEP * 0.95
     _save_rgb(TILE, np.clip(rgb, 0, 1))
     _save_rgb(TILE_NOR, N * 0.5 + 0.5)
     print("  core tile -> %s (%.2f MB) + normal (%.2f MB)  cover %.1f%%"

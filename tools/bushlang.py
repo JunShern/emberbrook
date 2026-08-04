@@ -71,6 +71,26 @@ CARD_SINK = 0.10                  # extra sink below the sample point
 CARD_OUT = 0.16                   # card centre stands this far out along N
 FUZZ_LOW = 0.34                   # below this n.z, prefer the small fuzz cards
 CARD_LO = 0.34                    # darkest a shell card's COLOR_0 may go
+# ------------------------------------------------ THE TWO FLOORS (foliage r4)
+# COLOR_0 can only DARKEN a glTF base colour, so every number in this module is a
+# multiplier on an atlas that has just been re-solved a stop up — and the numbers
+# were themselves solved against ow_detail's REMAP, which lifted the darkest
+# canopy texels up to 5x until 00a9c94 removed it.  Measured honestly on the hero
+# crown at the meadow camera with the remap gone:
+#
+#     CORE  V50 0.239   15.8% of its pixels under V 0.12   (22% of the crown)
+#     CARDS V50 0.412    2.4% under V 0.12                 (78% of the crown)
+#
+# i.e. the relationship valley_veg's own note recorded ("CORE ALONE median 0.681
+# against CARDS 0.576") is INVERTED once the remap is not inflating the dark tile
+# the core wears.  The core is a full stop under the shell it is supposed to be
+# the shadow inside, and that is the "unlit dark-teal solid" a blind judge read as
+# mossy stone.  Both floors are an AFFINE LIFT, applied after the crevice/tone
+# multiply so a crevice is lifted too: a canopy crevice is sky-lit shade, and the
+# thing it must never be is black.  Swept live (a runtime COLOR_0 re-curve at the
+# meadow camera, scratchpad/f4) before either number was written here.
+CORE_FLOOR = 0.26                 # core COLOR_0 floor, post-crevice
+SHELL_FLOOR = 0.08                # ... and the shell's, which needed far less
 GRID = 4                          # atlas grid (must match foliage_atlas.GRID)
 N_BIG = 8                         # cells 0..7 big clumps, 8..15 edge fuzz
 # ------------------------------------------------------- the RIM tier (charge 3)
@@ -197,6 +217,22 @@ CARD_NRM = 0.82                   # share of the core surface normal in a card's
 # module's dark-underside logic hangs off it); the sun terms take a SHARE of the
 # existing lift rather than stacking on it, so the mean is held and only the
 # DISTRIBUTION changes.  SUN_SHARE is that split.
+#
+# AND THE CROWN-SCALE RAMP IS DILUTED BY THE MASS'S OWN SIZE — measured, not
+# argued (foliage r4, COLOR_0 census of the running game's `veg_canopy_whisperwood`,
+# 8 bins along SUN_TO, scratchpad/f4/spec-probe2.json).  The whisperwood's extent
+# along the sun axis is 59.6 u, so `ax` spends its whole 0..1 over sixty metres —
+# and the arithmetic of the split (0.55 sun share x 0.45 ax mix x 0.70 span x the
+# caller's 0.26 lift) leaves a total swing of 0.045 of COLOR_0 across ALL of it.
+# Measured core profile across the eight bins: 0.140 0.164 0.153 0.167 0.155 0.163
+# 0.144 0.174 — flat, and not even monotonic, because per-lobe `tone` and the
+# crevice term are each larger than the ramp.  The meadow camera sees maybe a
+# quarter of that mass, so the hero crown gets a quarter of an 8% gradient.
+# THE WIRE IS CONNECTED AND THE SIGNAL IS UNDER THE NOISE.  The honest fix is a
+# CROWN-scale normalising extent (valley_veg's own swell field already has one,
+# CROWN_K ~ 16 u) rather than the mass's; NOT taken in r4, because r4's judged
+# change was the value re-solve below and two changes in one rebuild is an
+# unreadable A/B.  Carried, named.
 SUN_TO = np.array([-0.4393, 0.7030, 0.5592])
 SUN_TO = SUN_TO / np.linalg.norm(SUN_TO)
 SUN_SHARE = 0.55                  # of the lift, how much is sun vs sky (0 = old wire)
@@ -411,7 +447,9 @@ class Mass:
         shade = deep + lift * ((1.0 - SUN_SHARE) * sky + SUN_SHARE * sun)
         shade *= np.clip(1.0 - crev * occ, 0.22, 1.0)
         tone = np.array([lb.tone for lb in self.lobes])[VL]
-        col = np.clip(shade * tone, 0.0, 1.0)[:, None] * np.ones((1, 3))
+        col = np.clip(shade * tone, 0.0, 1.0)
+        col = CORE_FLOOR + (1.0 - CORE_FLOOR) * col        # see CORE_FLOOR
+        col = col[:, None] * np.ones((1, 3))
         # per-lobe hue: a shade of warmth either way, never a full hue swap
         jit = rng.uniform(-hue_jit, hue_jit, (len(self.lobes), 3))[VL]
         self._C = np.clip(col * (1.0 + jit * np.array([1.0, 0.35, -0.9])), 0.0, 1.0)
@@ -488,8 +526,9 @@ class Mass:
         sun = _sun_term(N, P, getattr(self, "_sun_c", None),
                         getattr(self, "_sun_e", None))
         sunm = 1.0 + SUN_SHARE * (sun - (SUN_FLOOR + (1.0 - SUN_FLOOR) * 0.5)) * 2.0
-        return np.clip(CARD_LO + (1.0 - CARD_LO) * rel * hi_lift * base
-                       * (NZ_LO + NZ_HI * np.clip(nz, 0, 1)) * sunm, CARD_LO, 1.0)
+        c = np.clip(CARD_LO + (1.0 - CARD_LO) * rel * hi_lift * base
+                    * (NZ_LO + NZ_HI * np.clip(nz, 0, 1)) * sunm, CARD_LO, 1.0)
+        return SHELL_FLOOR + (1.0 - SHELL_FLOOR) * c       # see SHELL_FLOOR
 
     def shell(self, rng, density=0.85, big=(1.55, 2.35), fuzz=(0.70, 1.15),
               fuzz_frac=0.30, beta_max=BETA_MAX, sil_bias=SIL_BIAS,
