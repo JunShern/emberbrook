@@ -408,7 +408,12 @@ export async function run(cfg) {
       // own recollection. Passing `brief` here was close but not the same thing, and
       // passing nothing at all silently meant "scan everything" (see the firewall's
       // own note above).
-      assertNoPrivileged(intent._prompt, truth, intent._authored, obs.text);
+      // The excuse text is the CURRENT frame's drawn text PLUS the objective banner:
+      // the banner is game-authored and shown to the player even on frames where the
+      // dialogue that named the place has already closed (the second cottage crash —
+      // obs.text alone only excused the word while it happened to be on screen).
+      assertNoPrivileged(intent._prompt, truth, intent._authored,
+                         [obs.text, plan.objective].filter(Boolean).join(' '));
     } catch (e) {
       if (/FIREWALL/.test(e.message)) throw e;
       log('  agent error: ' + e.message);
