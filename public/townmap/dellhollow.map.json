@@ -954,10 +954,10 @@
         [
           76.2,
           28.1,
-          1.7
+          1.25
         ]
       ],
-      "note": "double switchback east of the hut cluster, wide-amplitude hairpins so crossing legs clear each other vertically (tight hairpins let walkers mount the overhead leg)"
+      "note": "double switchback east of the hut cluster, wide-amplitude hairpins so crossing legs clear each other vertically (tight hairpins let walkers mount the overhead leg). | FOOT LOWERED 1.70 -> 1.25 (2026-08-04, user report 'the ground around Maren has a bunch of holes'). town_blockout puts a 2.0x2.0x0.16 landing at every intermediate waypoint with its TOP at the waypoint's own height, so 1.70 stood the stair's foot 0.65 m over the moorage deck it lands on (measured deck 1.02-1.05 on walk_e_moorage__lock-five_l0, 1.25 on walk_lm_moorage). 0.65 m is 0.02 m PAST play3d's STEP_UP of 0.63: the step up was refused, and the same slab roofed the deck's only west-east through-route with 0.49 m of headroom. Maren stands on that lane, so the whole western waterfront could not reach her at all -- _court_probe --way stalled at x 77.53 walking west and, walking down the flight, put the body on the OVERHEAD leg at y 4.52, which is this note's own warning coming true. 1.25 is walk_lm_moorage's top: the landing merges with the pad instead of hovering over it, and its underside (1.09) drops below the body's blocking window from the lane. THE LANDING HEIGHT IS THE LANDMARK'S DECK HEIGHT -- a stairs waypoint at a deck is not free."
     },
     {
       "from": "moorage",
