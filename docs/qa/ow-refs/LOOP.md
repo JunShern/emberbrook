@@ -1193,3 +1193,87 @@ design"*, which if real is a GAME bug and outranks the art list.
 **What the critic will not let us tell ourselves:** *"Both A and B are short of C and D, and it is
 not a content gap: it is atmosphere, shadow colour, and vegetation. The cliff in B proves the
 hard-surface craft is already there."*
+
+---
+
+## Round 13's verdict — WE MATCHED THE NUMBERS AND LOST THE PICTURE
+
+Round 13 built the best instrument this loop has produced and then optimised into a worse frame
+with it. Both halves of that sentence are true and the second one is the lesson.
+
+**The instrument, which stands.** `scratchpad/r13/refhue.py` classifies pixels by MATERIAL, then
+splits each material by ITS OWN luminance quartiles — no hand-picked boxes — and the identical
+classifier runs on the references and on our plates. It overturned three things the loop had been
+treating as settled:
+
+  1. **A reference shadow is MORE saturated than the light beside it** (ref grass shade sat
+     .388/.454). We had been desaturating shade on the assumption that shadow means muted.
+  2. **ZERO percent of the references' pixels sit under L 0.10.** Ours were 6.4% / 14.2%.
+     **Round 11's ratified test — "is anything in the frame genuinely dark?" — was buying a black
+     point the references do not have**, and a crushed shadow has no signal left to carry a hue,
+     which is why the hue kept refusing to land. The fill level went UP (0.376 → 0.95) where
+     round 12 had taken it down.
+  3. **Violet was wrong for being MAGENTA, not for being cool.** Both earlier guesses misread
+     which property was the defect.
+
+Measured after: shaded grass hue **83.9° / 98.9°** against the references' 100.3° / 99.0°; fill at
+**217.3°**, inside their stone band of 209–227; frame saturation **.374** against their
+.370 / .381; under-0.10 **1.2%**.
+
+**And the blind critic called the result washed out.**
+
+> *"Yes, A is washed out — plainly, and it is the flatter of the two. The entire frame lives in a
+> narrow band of warm beige-green. There is no true dark anywhere… Every house wall is the SAME
+> tan, and the roofs are only a few percent different in value from the walls — so the whole
+> village reads as **one undifferentiated putty-coloured mass**… **This is over-correction in the
+> desaturating direction, not under-correction.**"*
+
+> *"A reads as **late afternoon light under a completely overcast sky** — a contradiction, a
+> directional sun with no sky to justify it."*
+
+**WHY THE MEASUREMENT DID NOT PROTECT US, precisely.** The classifier measured GRASS and STONE and
+matched their aggregate statistics. **The houses were never a measured class.** Walls and roofs
+are exactly where the flatness reads, and no grass-or-stone statistic constrains them. **A
+statistic is a constraint on a DISTRIBUTION and says nothing about the RELATIONSHIPS inside the
+frame — which is where craft lives.** Matching a histogram is compatible with every local contrast
+in the picture being wrong.
+
+**THE RULE, which is the user's own and now has a measured cost behind it: numbers are for
+iteration, the picture is the verdict. When a measurement and the eye disagree, the eye wins and
+the measurement gets extended.** Round 14 extends the classifier to walls and roofs — and if the
+gap the critic describes does not show up as a number even then, the instruction is to SAY SO
+rather than report a clean table.
+
+### The single highest-value move, in the critic's words
+
+> *"Raise the key-to-fill ratio and warm the key — deepen shade, let sunlit tan go warmer and
+> shaded tan go cooler. That is **cheap** (a light and a grade) and it is **the highest-value
+> single move in the set**, because it fixes flatness AND partly fixes the same-coloured-houses
+> problem **by splitting every wall into two tones.**"*
+
+With a constraint that makes it interesting rather than a revert: **deepen the shade WITHOUT
+re-introducing a black point.** r13's 0.0%-under-L-0.10 finding stands. More lit-to-shade
+separation with the floor still off the bottom is contrast, not a toe — and reaching for a toe is
+the easy version of this fix.
+
+### What the critic will not let us forget
+
+> *"A **does** have charm its execution is hiding — the lit waystone is the one warm accent in the
+> frame and it works; the chimney cluster, the stream, the little pink-haired figure on the path
+> all say 'village you'd want to walk into.' That is not nothing, and it is **being smothered by
+> the grade, not absent.** B is prettier and emptier — atmosphere without charm. **A is charm
+> without light.**"*
+
+Four rounds without the rank moving, and this is the first round where the critic says the thing
+we are looking for is already in the frame and being suppressed, rather than missing from it.
+
+**Also disproved this round, cleanly.** The "missing character material" was **staging, not
+materials**: bound 4096² map plus metalness, roughness and normal; `__chardump2` byte-identical at
+a 40 m and a 4 m boom (no LOD, no streaming); the saturation drop .369 → .329 is MIP AVERAGING on
+a figure rendering at 17x41 px, in the gorge rim's shadow, on a dark road, at max boom.
+
+**And a diagnosis that correctly refused its own assignment:** the far hillside is flat BEFORE any
+post pass runs — Lstd .049 vs mid-ground .076, every face normal within ~2° of one direction,
+nothing casting on it, 7/600 samples hitting vegetation. *"A hue or saturation move will not
+land."* Routed to round 14 as CONTENT rather than faked in the grade, which is the right call and
+the kind of refusal this loop needs more of.
