@@ -1920,3 +1920,20 @@ And one instrument lesson worth the ink: the lane's own wait-loops (`until ! pgr
 llm_playtester`) never fired because **pgrep matched its own shell's command line** — a watcher
 whose existence satisfies its stop condition is measuring itself. Same family as "an instrument
 that finds nothing must prove it could have found something."
+
+## Receipt run 2026-08-04 21:00 — the inn fix holds; the winch approach graduates to a wayfinding defect
+
+`run-20260804-194447`, `--from=ch2.supper`, 100 steps, **one report** (was four).
+**The Boatmen's Rest fix is receipted**: the run passed through the same inn that cost two
+reports and 12 burned turns this afternoon, and filed nothing — the innkeeper, bargeman and
+lodger (`dfa47db`) answered where silence had been.
+
+**PT-20260804-013 is the THIRD independent run to fail at the head-gate winch approach**
+(after PT-004, refuted + harness marker-aim fixed; PT-011/012, refuted). Every filing is
+reach-REFUTED — the path is walkable in the engine. One refuted report is bad steering;
+three different players failing at one walkable spot is a **legibility defect**: the way up
+exists and cannot be FOUND. This is the arrow-lift question queued this morning, now with
+player-side evidence x3. Next lane's brief is wayfinding, not walk network: how the route up
+reads on screen (marker place vs the seam it names, the ramp's visual affordance, possibly a
+route_overlay hint). Repeated refutation at one location is itself an instrument reading —
+the one findability_test cannot take, because it teleports.
