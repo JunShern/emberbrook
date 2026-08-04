@@ -786,3 +786,167 @@ Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 · `fi
 
 **Also paid for:** `THREE.MultiplyBlending` + `transparent:true` **brightens** in this build, and
 it shipped a white square under the character into one plate before the factors were written out.
+
+### R12: THE FILL WAS PAINTING THE SHADOWS VIOLET, AND THE DEPTH RAMP WAS CALIBRATED FOR A CORRIDOR THAT IS NOT IN ANY OF THE FOUR FRAMES
+
+Plates `r12-{meadow,gate,vista,gorge}.png` against `r11-*`.
+
+**The twelfth critic ranked us LAST, and its top item was R11's own side effect:** *"it is
+saturation and contrast again. In A the greens are pushed into chartreuse and the shadows are
+crushed nearly to black AND TINTED — the ground shadows read blue-purple. In B the same fault is
+worse and larger: the big shadow across the gorge floor turns the road a PLUM/MAGENTA, occupying
+roughly the bottom third of the frame."*
+
+**1. THE SHADOW TOOK A HUE, AND IT IS ONE LINE OF ARITHMETIC.** The fill R11 raised to put texture
+back into shade was `[0.42, 0.44, 1.00]` — G BARELY ABOVE R with B at 2.4x both, which is a
+VIOLET, not a sky. A warm-brown albedo (road, earth, timber) multiplied by it comes out with R and
+B up and G down: plum by construction. `SIM.px` on the gorge road: **(29, 23, 34), hue 273 deg.**
+NEUTRALISED, NOT DELETED (the user's instruction, and the fill is what R10's warm-key/cool-fill
+split rests on): the hue goes to a pale sky blue with R < G < B and a modest spread, B/R
+2.38 -> 1.47, so a shadow now takes ITS OWN ALBEDO'S chroma instead of the fill's hue.
+
+**AND THE LEVEL HAS TO MOVE WITH THE HUE OR IT IS A BRIGHTNESS CHANGE WEARING A COLOUR'S CLOTHES.**
+Making a fill less blue RAISES its luminance, because the Rec.709 weights price a green channel at
+10x a blue one: L[0.42,0.44,1.00] = 0.476 against L[0.68,0.76,1.00] = 0.760. `OWENV` 0.60 -> 0.376
+is exactly that ratio and `OWBOUNCE` takes the same pair. Shade luminance is held; only its hue
+moves.
+
+| SIM.px, same boxes | r11 | r12 |
+|---|---|---|
+| gorge road, in shadow | **(29, 23, 34)** B>R>G, hue 273 | **(31, 28, 19)** R>G>B, hue 41 |
+| gorge road, lower | (25, 29, 32) | (31, 37, 20) |
+| gorge floor, in shadow | (45, 52, 58) | (46, 55, 41) |
+| meadow road, in shadow | (73, 52, 51) | (74, 55, 42) |
+| L of those four | .099 / .111 / .198 / .221 | **.110 / .135 / .204 / .229** |
+
+**2. THE RAMP WAS ON, ANCHORED, EXPONENTIAL — AND NORMALISED OVER 149 m OF WORLD THAT IS NOT IN
+THE PICTURE.** R11 fixed linear-vs-exponential and left the SPAN. Measured with `__depths` (a
+raycast census on a 40 px lattice) and `__t` (the ramp evaluated off `PFXRIG`'s own shipped
+uniforms), both in `scratchpad/r12`:
+
+| | depth beyond the character, p90 | max | t at the farthest thing in frame |
+|---|---|---|---|
+| meadow | 34.2 | 50.4 | **0.50** |
+| gate | 26.7 | 40.1 | **0.32** |
+| vista | 35.8 | 49.6 | - |
+| gorge | 33.5 | 127.7 | **0.63** |
+
+**Nothing in any of the four frames ever got more than half the cue.** `dNear` 6 -> 10, `dScale`
+60 -> 20, `dFar` 155 -> 60: the meadow's far slope now runs at t 0.84 and its far hill at 0.88,
+while the near canopy at 11 m takes 0.06, so the foreground is still untouched by construction.
+**ASK THE FRAME HOW DEEP IT IS BEFORE CALIBRATING A DEPTH CUE FOR IT** — one raycast, five rounds.
+
+**3. AND THE HAZE TARGET WAS WRITTEN IN THE WRONG COLOUR SPACE, which is why more haze made the
+distance WHITER.** `hazeCol` 0.395/0.455/0.560 are the sRGB components of the ridge colour it was
+anchored to, and the grade runs BEFORE `OutputPass`, i.e. in the LINEAR working space: the target
+was landing on screen at about (168, 179, 196) — a stop and a half up with most of its chroma
+gone. So "mix the far band toward a low-chroma blue" was mixing it toward a pale near-neutral.
+That is the critic's *"B's upper-right meadow is a pale lavender-white wash so desaturated it looks
+blown out rather than distant"*, and it was the HAZE, not the fill. `srgbToLinear` ->
+0.127/0.175/0.275. (CLAUDE.md's own rule, third time paid: SAY WHICH SPACE THE BYTES ARE IN.)
+
+| meadow, near vs far | r11 | r12 |
+|---|---|---|
+| near canopy | sat .240  ctr .211  (t .091) | sat **.228**  ctr **.210**  (t .064) |
+| far tan slope | sat .324  ctr .038  (t .466) | sat **.164**  ctr **.033**  (t .839) |
+| far hill | sat .170  ctr .036  (t .501) | sat **.073**  ctr **.029**  (t .879) |
+| **near - far saturation** | **-0.084 (INVERTED: far was MORE saturated)** | **+0.064 / +0.155** |
+
+B's blown slope: (187, 193, 212) sat .134 -> **(154, 164, 174) sat .119**, now sitting beside the
+ridge band it is supposed to recede into (128, 147, 168).
+
+**4. THE GREEN PULL COULD NOT BE DONE IN THE ALBEDO, AND THREE BUILDS PROVED IT BEFORE ONE
+MINUTE WOULD HAVE.** The critic asked for a further 25-30% off the greens — and neutralising the
+fill had just put chroma BACK into the grass (lit meadow sat .317 -> .398 with nothing but the
+fill's hue changed). Three rebuilds moved `valley_land.surface()`'s grass multiplier (b:g 0.81 ->
+0.91 -> 1.03, verified changed IN THE EXPORTED GLB) and the meadow moved **1/255 each time**. The
+decisive test needs no build at all: set `ground_valley_1`'s COLOR_0.z live in the running page and
+read the same probe box — **x1.127 -> +2/255, x2.818 -> +14/255.** A 182% lift in the ground's own
+albedo blue buys 13% of the screen's, so that pixel's blue is not mostly albedo x light and THIS
+WAS NEVER THE KNOB. Both albedo attempts are reverted with their receipt. **Fourth knob in this
+loop swept while disconnected; the live-attribute test is the discriminator and it goes FIRST.**
+
+Done instead in the grade, per-pixel, after everything — and **NOT AS A GREEN TEST**. Our "greens"
+have RED as their max channel under a (1.0, 0.70, 0.42) key: lit meadow is (180, 169, 108), so a
+`g > max(r,b)` selector scores it at ZERO and would desaturate nothing. The chartreuse signature is
+BLUE AS THE MINIMUM with r and g together, so the selector is `(min(r,g) - b) / max`: meadow grass
+0.53, canopy 0.5, orange roofs 0.18, the dry slope 0.10, the character's teal dress 0.
+
+| | r11 | r12 |
+|---|---|---|
+| lit meadow grass | sat .317 | **.261** (-18% on r11, -34% on the un-tinted frame) |
+| shaded green | sat .349 | **.288** |
+| near canopy | sat .240 | **.228** |
+| lit roof | sat .566 | **.563**  (untouched, which is the point) |
+| dry slope | sat .324 | .164 (that is the haze, not the pull) |
+
+**5. THE WINDOW WAS DETACHED FROM THE HOUSE, and it is the chimney's own arithmetic recurring in
+the line directly below it.** *"Flat unlit orange rectangles with no frame, no glass, no recess —
+they read as stickers on a wall."* The gable pane's centre was `-gs * d * 0.60` with a 0.09
+thickness, so its INNER face sat at 0.555d against a gable wall face at 0.50d: **floating
+0.07-0.15 u off the building on every station where d > 1.7, and `house_dims()` draws d in
+1.30-2.68.** R11 wrote AN OFFSET THAT IS A FRACTION OF A JITTERED DIMENSION IS A CONTACT THAT IS A
+COIN TOSS while fixing the chimney, and the neighbouring line still broke it. Measured from the
+wall face now. The recess is joinery, not a boolean: the pane sits at the wall plane and a SILL, a
+LINTEL, two JAMBS and a glazing bar stand proud of it, so the 34 deg key throws a real shadow
+across the glass. Five cubes a window, no new material, +3.6k tris town-wide.
+
+**6. THE BEACH BALL IS DELETED, WHICH IS THE FIX.** The critic, unprompted and with no knowledge of
+this object's history, filed the Heartlight under MISSING MATERIAL: *"untextured with a single
+specular hotspot; whatever it's meant to be, it is currently a beach ball."* The user's ruling:
+make it SMALL AND DIM RATHER THAN LARGE AND SMOOTH. Four rounds have changed what the sphere is
+made OF (emissive x4, then the albedo, then Basic -> Standard) and none has changed that it is a
+big smooth ball, which is the thing being reported. So play3d's 0.54 m covering sphere goes
+outright; the bundle's own emissive ico drops 0.44 -> 0.26 and gains three ribs, a flared hood and
+a finial (existing materials, existing primitives), and the sprites come down with it (glow 2.6 ->
+1.25 m, core 0.55 -> 0.34, lift 0.62/0.66 -> 0.24/0.26 so THE HOOD OCCLUDES ITS OWN GLOW). It
+reads as a hooded lamp on a plinth at the ~40 px it occupies.
+
+**7. THE FIVE "ALSO NAMED BROKEN", each checked before anything was built. Three real, two not.**
+
+  * **THE CHIMNEY INTERSECTION WAS REAL AND R11'S COLLAR WAS AT THE WRONG HEIGHT.** The stack
+    stands at u = 0 and **u = 0 is the roof prism's RIDGE**, so the crossing is at the apex,
+    `fl + max(rh, eh+1.01)` — a metre or more above the eave board R11 collared. The collar was
+    inside the wall. Moved to the crossing. **AND THE FIRST VERSION OF THAT WAS WORSE AND ONLY
+    LOOKING SAW IT**: a 1.44x collar on a narrow shaft high in the frame is a floating SHELF, and
+    the stack became a totem of hovering slabs. Collars 1.44x -> 1.18x, and the shaft itself
+    narrowed 0.34+0.10s -> 0.27+0.08s, which is the half of "a pale wide column crossing a dark
+    roof" nobody had moved in three rounds.
+  * **THE BLOTCH IN A IS A REAL CAST SHADOW.** Toggled `R.shadowMap.enabled` with everything else
+    held: it is pixel-present with shadows on and GONE with them off, and `SIM.pick` at its centre
+    returns `walk_emberbrook_green` (the ground). Its caster is out of frame, which is what the
+    report was reading as absent. Not a defect. Same class as R10's.
+  * **THE GREY SLIVER AT TOP-CENTRE OF A IS NOT UNRESOLVED GEOMETRY.** `__t` returns
+    `ground_valley_3` — the ROCK slot — at 50.7 m of depth: the far crag, correctly drawn. It read
+    as a flat grey wedge because at r11's ramp it took t 0.573 of a cue that never reached; it now
+    takes 0.947 and recedes. Misread, and the fix was the ramp.
+  * **THE BLACK WEDGES IN B'S CLIFF ARE GEOMETRY, NOT SHADOW ACNE.** Same shadow toggle: they are
+    UNCHANGED with `R.shadowMap.enabled = false`, so there is no bias fix. They are the crag
+    tessellation's own long sliver triangles. Named, not fixed — a bias sweep would have been a
+    round spent on the wrong mechanism.
+  * **B'S HARD SHADOW BOUNDARY ACROSS THE GORGE FLOOR IS THE GORGE RIM'S OWN SHADOW** (it vanishes
+    with the shadow map off, with the rim behind the camera). Real light, offscreen caster.
+
+**8. Also landed:** the four `__owridge` bands get an INSIDE — *"four flat bands of blue-grey with
+hard edges and zero internal gradient, textbook paper cutouts."* The silhouette was fixed in R7 and
+was never the tell; a shape filled with ONE constant is. Each ring carries a vertex-colour
+MULTIPLIER (deliberately a multiplier around 1.0, not a colour, so `material.color` keeps doing the
+sRGB conversion and this attribute stays a plain linear scalar — writing the hue there would be
+item 3's bug again): haze pools in the valleys, so the base lifts and the crest sits darkest, plus
+a per-column wobble. **THE SKIRT VERTEX IS AT y = -60 AND THE GRADIENT IS NOT** — a value written
+at the skirt has interpolated ~80% of the way to the crest by y = 0, so the skirt value is SOLVED
+to make the linear interpolant equal the base shade at y = 0 instead.
+
+Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 · `findability_test` 69/0 ·
+`walk_engine_gate --scene ow-valley` GREEN · `valley_verify` OK. Tris 268 546 -> 272 102.
+
+**What got worse, recorded and not smoothed away:** the meadow is **greyer**. The yellow-selective
+pull, the neutral fill and a haze that now actually reaches all land on the same frame, and
+`near-grass-lit` sits at sat .261 against r10's .317 and r9's .40+. The critic asked for exactly
+this and said to judge on whether the greens came off yellow — but if the next round says the
+frame has gone drab, `?grade_gp=0`, `?owfill=0.42,0.44,1.00&owenv=0.60` and `?grade_h=0.34` back
+out the three halves independently without a rebuild. And the chimneys are IMPROVED, NOT SOLVED:
+they are still pale stone columns read from a near-top-down camera, the fourth round in which that
+sentence is true.
+
+---

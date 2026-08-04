@@ -249,6 +249,24 @@ def surface(ground, T, grass_gain=1.08, dry_gain=0.72, rock_gain=1.16,
         nFine = vnoise(x, z, 1.9, 21.3)
         n = nBig * 0.52 + nMid * 0.33 + nFine * 0.15
         if kind == 1:                       # ---- GRASS -------------------------
+            # R12 — THE FURTHER 25-30% OFF THE GREENS, and it had to come from here
+            # because R12 also NEUTRALISED THE SKY FILL, which put chroma BACK into
+            # the grass: measured on the same probe box, lit open grass went sat
+            # 0.317 -> 0.398 with nothing but the fill's hue changed.  A blue fill
+            # was desaturating the greens as a side effect, so the round that
+            # stopped the shadows reading plum also un-did half of R11's chroma
+            # ...AND THEN THE WHOLE ATTEMPT WAS WITHDRAWN, WHICH IS THE FINDING.
+            # Three builds moved this line (b:g 0.81 -> 0.91 -> 1.03) and the lit
+            # meadow moved 1/255 each time.  The decisive test needs no build: set
+            # `ground_valley_1`'s COLOR_0.z live in the running page and read the
+            # same probe box.  x1.127 -> +2/255.  x2.818 -> +14/255.  A 182% lift in
+            # the ground's own albedo blue buys 13% of the screen's, so the grass
+            # pixel's blue is NOT mostly albedo x light and THIS IS NOT THE KNOB
+            # FOR CHROMA.  R11's numbers stand; the 25-30% green pull the twelfth
+            # critic asked for is done in play3d's grade, where it demonstrably
+            # lands (search THE PULL IS YELLOW-SELECTIVE).  Fourth knob in this loop
+            # to be swept while disconnected — the live-attribute test above is a
+            # minute and should come FIRST next time.
             r, g, b = r * (0.80 + n * 0.28), g * (1.06 + n * 0.34), b * (0.86 + n * 0.34)
             s = grass_gain * (0.80 + n * 0.46)
         elif kind == 2:                     # ---- DRY / SAND --------------------
@@ -316,7 +334,17 @@ def _loop_face(me):
 # ===========================================================================
 Z_MEADOW, Z_FOREST, Z_CRAG, Z_ROAD, Z_WATER = range(5)
 
-PAL = ["8fa845", "7d9a3e", "a8b757", "6b8438", "bcae5c"]
+# R12 — THE CHARTREUSE WAS IN THE TUFTS, NOT IN THE GROUND.  "Pull green
+# saturation down a further 25-30% in A" (twelfth blind critic).  Two builds
+# were spent moving `surface()`'s grass multiplier — b:g 0.52 -> 0.66 on the
+# terrain's own COLOR_0, verified IN THE EXPORTED GLB — and the meadow moved
+# 1/255.  L2 puts 17,908 tufts and 771 flowers over exactly the ground the
+# probe box was sampling, so the pixels are these five hexes and the terrain
+# underneath them is barely visible: at 8fa845 the palette's own b:g is 0.41.
+# THE GROUND UNDER A GRASS SCATTER IS NOT THE GRASS.  Each entry keeps its hue
+# and its max channel and has its MIN (blue) lifted so HSV saturation drops
+# ~27%: .589 -> .429, .597 -> .436, .525 -> .383, .576 -> .420, .511 -> .373.
+PAL = ["8fa860", "7d9a57", "a8b771", "6b844d", "bcae76"]
 PALDRY = ["b2a86a", "a39a5e", "c4b878"]
 FLOW = ["f2ead6", "e8c85a", "d98fae", "f2ead6", "c9d8ee"]
 

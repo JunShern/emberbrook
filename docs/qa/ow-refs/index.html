@@ -46,6 +46,52 @@ measurements are fine; conclusions drawn from that bar are not. The real referen
 overworld gameplay screenshots below.
 </div>
 
+<h2>R12 &middot; The fill was painting the shadows violet, and the ramp was calibrated for a corridor that is not in the frame</h2>
+<p class="lede">The twelfth blind critic ranked us last, and its first item was the previous round&rsquo;s own
+side effect: <em>&ldquo;in A the greens are pushed into chartreuse and the shadows are crushed nearly to
+black AND TINTED &mdash; the ground shadows read blue-purple. In B the same fault is worse and larger: the
+big shadow across the gorge floor turns the road a plum/magenta.&rdquo;</em> The three tests for this round:
+is the shadow neutral, does near differ from far, and do the windows read as openings.</p>
+
+<div class="pair">
+  <figure><img src="plates/r11-meadow.png" alt="r11 meadow">
+    <figcaption><span class="tag t-bad">BEFORE &mdash; R11</span>Shaded ground reads blue-purple: the sky
+    fill was <code>[0.42,&nbsp;0.44,&nbsp;1.00]</code>, a violet with G barely above R, so every warm albedo
+    in shade came out with R and B up and G down. Depth ramp normalised over 149&nbsp;m in a frame holding
+    50&nbsp;m, so its farthest pixel took t&nbsp;0.50. Windows are flat orange rectangles; the Heartlight is a
+    beach ball.</figcaption></figure>
+  <figure><img src="plates/r12-meadow.png" alt="r12 meadow">
+    <figcaption><span class="tag t-new">AFTER &mdash; R12</span>Fill neutralised to a pale sky blue (B/R
+    2.38&nbsp;&rarr;&nbsp;1.47) at held luminance, so the shadow keeps its OWN chroma. Ramp respanned
+    (dNear&nbsp;10, dScale&nbsp;20, dFar&nbsp;60): near canopy t&nbsp;0.06 against the far slope&rsquo;s 0.84.
+    Near&minus;far saturation &minus;0.084 (inverted) &rarr; +0.064. Windows get a sill, a lintel, jambs and a
+    glazing bar; the Heartlight is a hooded lamp.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/r11-gorge.png" alt="r11 gorge">
+    <figcaption><span class="tag t-bad">BEFORE &mdash; R11</span>The road in shadow measures
+    (29,&nbsp;23,&nbsp;34) &mdash; hue 273&deg;, plum. The upper-right meadow is a pale lavender-white wash
+    (187,&nbsp;193,&nbsp;212): the haze target was written as sRGB and consumed as LINEAR, so it landed on
+    screen a stop and a half up and the more haze you asked for, the whiter the distance
+    got.</figcaption></figure>
+  <figure><img src="plates/r12-gorge.png" alt="r12 gorge">
+    <figcaption><span class="tag t-new">AFTER &mdash; R12</span>The same road is (31,&nbsp;28,&nbsp;19), a
+    warm brown, at the same luminance. The haze target converted to linear
+    (0.127/0.175/0.275): the far meadow is (154,&nbsp;164,&nbsp;174), sitting beside the ridge band
+    (128,&nbsp;147,&nbsp;168) it is supposed to recede into. Ridge rings carry an internal gradient instead of
+    one flat fill.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/r12-gate.png" alt="r12 gate">
+    <figcaption><span class="tag t-our">R12</span>gate, boom 16 &mdash; the green pull is YELLOW-selective and
+    lives in the grade, not the albedo: three rebuilds of the terrain&rsquo;s COLOR_0 moved the meadow 1/255
+    each, and the live test says why (x2.818 on the ground&rsquo;s albedo blue buys 13% of the
+    screen&rsquo;s).</figcaption></figure>
+  <figure><img src="plates/r12-vista.png" alt="r12 vista">
+    <figcaption><span class="tag t-our">R12</span>vista, boom 40 &mdash; the ramp is anchored on the character,
+    so the same numbers serve a 12&nbsp;m boom and a 40&nbsp;m one.</figcaption></figure>
+</div>
+
 <h2>R11 &middot; Depth by value and chroma, and the blob was never the emissive</h2>
 <p class="lede">The tenth blind critic named the largest remaining craft gap and said every item on its
 list was free: <em>&ldquo;value and chroma compression across depth. In both frames, near and far sit at

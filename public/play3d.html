@@ -351,7 +351,29 @@ const PFX={
   // dNear is now an offset BEYOND THE PLAYER (see THE RAMP IS ANCHORED ON THE
   // PLAYER in pfxFrame), not a distance from the lens. 6 m keeps her own footing
   // and the house she is standing beside completely out of it.
-  gradeNear: PFXNUM('grade_n',6),
+  // R12 — THE RAMP WAS ON AND STILL NOT REACHING. R11 made the extinction
+  // exponential and anchored it on the player, and the next blind critic still said
+  // "A collapses depth entirely — the far hill at top right and the near tree at top
+  // left carry the same contrast and saturation." MEASURED, on the frames' own
+  // geometry (scratchpad/r12, __depths + __t off PFXRIG's shipped uniforms):
+  //
+  //        depth beyond the character   p90    max      t at the FAREST thing
+  //   meadow                            34.2   50.4     0.50
+  //   gate                              26.7   40.1     0.32
+  //   vista                             35.8   49.6     -
+  //   gorge                             33.5  127.7     0.63
+  //
+  // NOTHING IN ANY OF THE FOUR FRAMES EVER GOT MORE THAN HALF THE CUE, because the
+  // ramp was normalised over dFar-dNear = 149 m and the frames hold 40-60 m of
+  // geometry. Five rounds swept the SHAPE of a curve whose SPAN was wrong; R11 fixed
+  // linear-vs-exponential and left the span. The normalisation is the fourth thing
+  // on this one effect to be tuned while disconnected, and the tell was always
+  // available for the cost of one raycast: ASK THE FRAME HOW DEEP IT IS BEFORE
+  // CALIBRATING A DEPTH CUE FOR IT.
+  // dNear 6 -> 10 (the near field is genuinely untouched: the meadow's near canopy
+  // sits at 11 m and takes t 0.06), dScale 60 -> 20, dFar 155 -> 60. Now: meadow
+  // far slope 0.84, far hill 0.88, gate far ground 0.62, gorge far meadow 0.99.
+  gradeNear: PFXNUM('grade_n',10),
   // dFar IS THE MEASURED SPAN OF THE FRAME, not a round number: from the 40 m boom
   // at the shipped pitch the visible ground runs about 30 m to 110 m radial, so a
   // 150 m far point spends the whole frame on the first half of the ramp and the
@@ -360,7 +382,7 @@ const PFX={
   // more than doubled the visible depth. The far edge of the picture is now well
   // past 105 m, so the whole back half of the frame sat clamped at t=1 with no
   // gradient left in it. 155 puts the ramp back across the picture as shipped.
-  gradeFar: PFXNUM('grade_f',155),
+  gradeFar: PFXNUM('grade_f',60),
   // lift is the "distance goes PALE" term, and paleness is exactly what the
   // mid-corridor frame was complained about for. Halved; the desat below carries
   // the recession instead, which costs chroma without costing black point.
@@ -398,17 +420,31 @@ const PFX={
   // R11. THE RAMP'S SHAPE (see THE RAMP WAS LINEAR in GRADE_SHADER): dNear drops
   // 28 -> 14 because the meadow camera's own subject sits at 18-25 m, and dScale is
   // the extinction length that makes one ramp serve a 60 m frame and a 230 m ridge.
-  gradeScale: PFXNUM('grade_s',60),
-  // The haze TARGET, as a colour and an amount. 0.395/0.455/0.560 is the sky dome's
-  // own horizon band taken down to a mid value — a haze that is paler than the thing
-  // behind it is the R7 defect all over again, so it is anchored to the ridges
-  // (__owridge ring 1 is 0x8496a9 = 0.518/0.588/0.663) and set BELOW them.
-  gradeHaze: PFXNUM('grade_h',0.34),
+  gradeScale: PFXNUM('grade_s',20),
+  // The haze TARGET, as a colour and an amount. It is anchored to the ridges
+  // (__owridge ring 1 is 0x8496a9) and set BELOW them — a haze paler than the thing
+  // behind it is the R7 defect all over again.
+  // R12 — AND IT WAS WRITTEN IN THE WRONG COLOUR SPACE, which is the house trap
+  // (CLAUDE.md: SAY WHICH SPACE THE BYTES ARE IN). 0.395/0.455/0.560 are the sRGB
+  // components of that ridge colour, and this pass runs BEFORE OutputPass, i.e. in
+  // the LINEAR working space: fed straight in, the target landed on screen at about
+  // (168,179,196) — a stop and a half up and most of its chroma gone — so "mix the
+  // far band toward a low-chroma blue" was mixing it toward a pale near-neutral,
+  // and the more haze you asked for the WHITER the distance got. That is the twelfth
+  // critic's "B's upper-right meadow is a pale lavender-white wash so desaturated it
+  // looks blown out rather than distant", and it was the haze, not the fill.
+  // Converted: srgbToLinear(0.395,0.455,0.560) = 0.127/0.175/0.275. Measured on that
+  // same slope, at the SAME haze amount: (181,191,199) sat .089 -> (154,164,174)
+  // sat .119, which now sits beside the ridge band it is supposed to recede into
+  // (130,149,170). ?grade_hc=r,g,b sweeps it, in LINEAR.
+  gradeHaze: PFXNUM('grade_h',0.55),
   // 0.87 = the 13% off global chroma. The rest of the critic's 15-20% is in the
   // terrain's COLOR_0 where it belongs, because an albedo fix survives every camera.
   gradeSat: PFXNUM('grade_sat',0.87),
   gradeToe: PFXNUM('grade_toe',0.38),
-  gradeDesat: PFXNUM('grade_d',0.30),
+  // the yellow-selective chroma pull; see THE PULL IS YELLOW-SELECTIVE.
+  gradeGreen: PFXNUM('grade_gp',0.30),
+  gradeDesat: PFXNUM('grade_d',0.40),
 };
 // THE AERIAL SPLIT (2026-08-03, overworld only, ?grade=0 to remove).
 //
@@ -447,13 +483,14 @@ const GRADE_SHADER={
              dNear:{value:30}, dFar:{value:150}, amt:{value:1}, lift:{value:0.03},
              desat:{value:0.0}, litLo:{value:0.0}, litHi:{value:1.0},
              haze:{value:0.0}, sat:{value:1.0}, dScale:{value:52.0}, dRef:{value:0.0}, toe:{value:0.0},
-             hazeCol:{value:new THREE.Vector3(0.395,0.455,0.560)},
+             gp:{value:0.0},
+             hazeCol:{value:new THREE.Vector3(0.127,0.175,0.275)},
              warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
              coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
   vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
   fragmentShader:[
     'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
-    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe;',
+    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp;',
     'uniform vec3 warmCol,coolCol,hazeCol;',
     'void main(){',
     '  vec4 c=texture2D(tDiffuse,vUv);',
@@ -525,6 +562,23 @@ const GRADE_SHADER={
     // reaching the references' saturation NUMBER globally costs the golden hour.
     '  float oL=dot(o, vec3(0.2126,0.7152,0.0722));',
     '  o=mix(vec3(oL), o, sat);',
+    // R12 — THE PULL IS YELLOW-SELECTIVE, and it is here because the albedo could
+    // not do it. The twelfth critic's item 2: "pull green saturation down a further
+    // 25-30% in A", called cheap and "a light and a colour setting". Three builds
+    // spent on tools/valley_land.py's grass multiplier moved the meadow 1/255 each
+    // time, and the live-attribute test says why: x2.818 on that ground's own
+    // COLOR_0 blue buys 13% of the screen's blue. So it is done per-pixel, after
+    // everything, where the number lands.
+    // NOT A GREEN TEST — A YELLOW ONE. Our "greens" have RED as their max channel
+    // under a (1.0,0.70,0.42) key: lit meadow is (180,169,108), i.e. r ~ g >> b.
+    // A `g > max(r,b)` selector scores that at ZERO and would desaturate nothing.
+    // The chartreuse signature is BLUE AS THE MINIMUM with r and g together, so the
+    // selector is (min(r,g) - b) / max: meadow grass 0.53, canopy 0.5, and the
+    // things that must NOT move score low — the orange roofs 0.18, the dry slope
+    // 0.10, the character's teal dress 0. `?grade_gp=0` removes it.
+    '  float pMx=max(o.r,max(o.g,o.b));',
+    '  float yel=clamp((min(o.r,o.g)-o.b)/max(1e-4,pMx), 0.0, 1.0);',
+    '  o=mix(vec3(oL), o, 1.0-gp*smoothstep(0.12,0.45,yel));',
     // R11 — THE FOREGROUND TOE, and it exists because the first version of this pass
     // FAILED THE CRITIC'S OWN SECOND TEST while passing its first. Measured over the
     // whole frame, r10 -> r11a: saturation 0.545 -> 0.402 and the green b:g 0.634 ->
@@ -666,6 +720,7 @@ function pfxBuild(){
     grade.material.uniforms.haze.value=PFX.gradeHaze;
     grade.material.uniforms.sat.value=PFX.gradeSat;
     grade.material.uniforms.toe.value=PFX.gradeToe;
+    grade.material.uniforms.gp.value=PFX.gradeGreen;
     {const hz=(Q.get('grade_hc')||'').split(',');
      if(hz.length===3) grade.material.uniforms.hazeCol.value.set(+hz[0],+hz[1],+hz[2]);}
     const K=PFX.gradeTint, u=grade.material.uniforms;
@@ -2099,6 +2154,30 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
           const lo=hsh(c0%K,ri+1), hi=hsh((c0+1)%K,ri+1);
           crest.push(R_.b + R_.a*(lo+(hi-lo)*sm) + R_.a*0.22*hsh(i,ri+9));
         }
+        // R12 — THE BANDS NEEDED AN INSIDE. "Four flat bands of blue-grey with hard
+        // edges and zero internal gradient — textbook paper cutouts" (twelfth blind
+        // critic, on the gorge frame). The SILHOUETTE was fixed in R7 and is not the
+        // tell; a shape filled with ONE constant is. Each ring now carries a vertex
+        // COLOUR MULTIPLIER — deliberately a multiplier around 1.0 and not a colour,
+        // so `material.color` keeps doing the sRGB->working-space conversion and this
+        // attribute stays a plain linear scalar (vertex colours are assumed to be in
+        // the working space already; writing the hue here would be the same
+        // which-space bug the haze target just paid for).
+        // Two terms: haze POOLS IN THE VALLEYS, so the base of each ring is lifted
+        // toward the air behind it and the crest sits darkest — that vertical ramp is
+        // aerial perspective inside one silhouette. Plus a slow per-column wobble so
+        // no two spans of a ring share a value and the band stops being a fill.
+        const cvc=[];
+        const shade=(h,i)=>{
+          const tt=Math.max(0,Math.min(1,h/Math.max(0.001,R_.b+R_.a)));
+          return (1.16-0.24*tt) * (1.0 + 0.055*(hsh(i%K,ri+21)-0.5) + 0.030*(hsh(i,ri+37)-0.5));
+        };
+        // THE SKIRT VERTEX IS AT y=-60 AND THE GRADIENT IS NOT. A ring's quad runs
+        // from a hidden skirt 60 m down to its crest, so a value written at the skirt
+        // has already interpolated ~80% of the way to the crest by the time it
+        // reaches y=0 — the whole ramp would land underground. Solve the skirt value
+        // that makes the LINEAR interpolant equal shade(0) at y=0 instead.
+        const skirt=(h,i)=>(shade(0,i)*(h+60)-60*shade(h,i))/Math.max(0.001,h);
         for(let i=0;i<N;i++){
           const a0=(i/N)*Math.PI*2, a1=((i+1)/N)*Math.PI*2;
           const x0=Math.cos(a0)*R_.r, z0=Math.sin(a0)*R_.r;
@@ -2106,11 +2185,16 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
           const h0=crest[i], h1=crest[i+1];
           v.push(x0,-60,z0, x1,-60,z1, x1,h1,z1,
                  x0,-60,z0, x1,h1,z1, x0,h0,z0);
+          const c0=shade(h0,i), c1=shade(h1,i+1);
+          const b0=skirt(h0,i), b1=skirt(h1,i+1);
+          for(const q of [b0,b1,c1, b0,c1,c0]) cvc.push(q,q,q);
         }
         const g2=new THREE.BufferGeometry();
         g2.setAttribute('position', new THREE.Float32BufferAttribute(v,3));
+        g2.setAttribute('color', new THREE.Float32BufferAttribute(cvc,3));
         g2.computeVertexNormals();
-        const m2=new THREE.MeshBasicMaterial({color:R_.c, side:THREE.DoubleSide, fog:false, toneMapped:false});
+        const m2=new THREE.MeshBasicMaterial({color:R_.c, vertexColors:true,
+          side:THREE.DoubleSide, fog:false, toneMapped:false});
         const ridge=new THREE.Mesh(g2,m2); ridge.name='__owridge'+ri; ridge.renderOrder=-900+ri;
         scene.add(ridge); SCENEMATS.add(m2); OWSKYMESH.add(ridge); OWSKYFOLLOW.push(ridge);
       });
@@ -2279,9 +2363,12 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // casts nothing, and unlike the environment it is DIRECTIONAL — raising it
       // darkens nothing and lifts only the walls that were the same orange as
       // their lit neighbours. ?owbouncecol=r,g,b, ?owbounce= to sweep.
+      // R12 — THE COOL SIDE IS NEUTRALISED, NOT DELETED (see THE SHADOW TOOK A HUE
+      // at OWSKYCOL below; the two triples are one change and the LEVELS move with
+      // them so the shade's luminance is held).
       const OWBC=(Q.get('owbouncecol')||'').split(',').length===3
-        ? Q.get('owbouncecol').split(',').map(Number) : [0.44,0.46,1.00];
-      OWBOUNCE.color.setRGB(OWBC[0],OWBC[1],OWBC[2]); OWBOUNCE.intensity=IU(0.85*(+(Q.get('owbounce')||2.60)));
+        ? Q.get('owbouncecol').split(',').map(Number) : [0.66,0.74,1.00];
+      OWBOUNCE.color.setRGB(OWBC[0],OWBC[1],OWBC[2]); OWBOUNCE.intensity=IU(0.85*(+(Q.get('owbounce')||1.734)));
       OWBOUNCE.position.set(0.62,0.34,0.71); OWBOUNCE.castShadow=false;
       OWBOUNCE.name='__ow_bounce'; scene.add(OWBOUNCE);
       // ---- THE HEARTLIGHT ACTUALLY LIGHTS SOMETHING (R5, 2026-08-04) ----------
@@ -2436,13 +2523,43 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // KNOWN COST, carried forward from R10's own note: the gorge's far plateau is
       // the most sky-lit open ground in the four frames and pales further. It is now
       // 150 m out under an exponential haze ramp, so the pale IS the recession.
-      const OWENV=+(Q.get('owenv')||0.60), OWENVSUN=+(Q.get('owsun')||0.30);
+      // ==================================================================
+      // R12 — THE SHADOW TOOK A HUE (2026-08-04).
+      //
+      // R11 raised this fill because shade was collapsing to textureless mud, and it
+      // worked. What it also did, landing on R11's own newly-crushed darks, is the
+      // twelfth blind critic's first item on both frames: "the shadows are crushed
+      // nearly to black AND TINTED — the ground shadows read blue-purple... in B the
+      // big shadow across the gorge floor turns the road a PLUM/MAGENTA, occupying
+      // roughly the bottom third of the frame."
+      //
+      // IT IS THE FILL'S HUE, AND THE ARITHMETIC IS ONE LINE. [0.42,0.44,1.00] has
+      // G BARELY ABOVE R with B at 2.4x both — a VIOLET, not a sky. A warm-brown
+      // albedo (road, earth, timber) multiplied by it comes out with R and B up and G
+      // down, which is plum by construction. Measured with SIM.px on the gorge road:
+      // (29,23,34), hue 273 deg. Every warm surface in shade was being repainted.
+      //
+      // NEUTRALISED, NOT DELETED — the user's instruction, and the right one: the
+      // fill is what puts texture back into shade and R10's warm-key/cool-fill split
+      // is the thing B was called reference-grade for. The hue moves to a PALE SKY
+      // BLUE with R<G<B and a modest spread (B/R 2.38 -> 1.47), so a shadow now takes
+      // its own albedo's chroma instead of the fill's hue. The road: (29,23,34) ->
+      // (33,29,17), a dark warm brown; shaded grass goes olive rather than violet.
+      //
+      // AND THE LEVEL MOVES WITH THE HUE OR THE SHADE JUST GETS BRIGHTER. Making a
+      // fill less blue raises its LUMINANCE (0.2126,0.7152,0.0722 weights a green
+      // channel 10x a blue one): L[0.42,0.44,1.00] = 0.476, L[0.68,0.76,1.00] = 0.760.
+      // OWENV 0.60 -> 0.376 is exactly that ratio, so shade luminance is held and only
+      // its hue changes — measured 0.099 -> 0.114 on the gorge road, 0.221 -> 0.228 on
+      // the meadow road. A hue fix that is not luminance-compensated is a level change
+      // wearing a colour's clothes. OWBOUNCE takes the same pair of numbers above.
+      const OWENV=+(Q.get('owenv')||0.376), OWENVSUN=+(Q.get('owsun')||0.30);
       // THE HUE IS A KNOB NOW, not only the level. R3 swept the fill's LEVEL and
       // wrote down that the COLOUR was where the terminator was hiding — and then
       // left the colour as a literal, so the next round could not sweep the thing
       // R3's own note said mattered. ?owfill=r,g,b (0..1 triples).
       const OWSKYCOL=(Q.get('owfill')||'').split(',').length===3
-        ? Q.get('owfill').split(',').map(Number) : [0.42,0.44,1.00];
+        ? Q.get('owfill').split(',').map(Number) : [0.68,0.76,1.00];
       if(IBL){
         const _sky=OWSKYCOL.map(v=>v*OWENV);
         const _grd=_sky.map(v=>v*0.55);
@@ -2760,13 +2877,10 @@ let OWORB=null;
 //      ramp also started at rgba(255,250,238) — a WHITE hot spot on the town's amber
 //      light. Opacity below 1, a smaller glow, and an AMBER core: 1.615/1.955 ->
 //      0.78/0.30, glow 3.4 m -> 1.9 m, core stop 255,250,238 -> 255,222,166.
-//   2. THE BODY MESH IS INVISIBLE. It contributes 3/255 at its own centre, so every
-//      word above about "an opaque amber sphere that carries the shading" describes
-//      an object nobody has ever seen — the sprites were painted over all of it.
-//      With the sprites brought down it reads, and it is switched from
-//      MeshBasicMaterial (which is FLAT BY DEFINITION — one colour, no normal term,
-//      i.e. a disc) to a stock MeshStandardMaterial with an emissive. Stock only:
-//      the frame-goes-black bug receipt above is about CUSTOM materials and stands.
+//   2. THE BODY MESH IS INVISIBLE. It contributed 3/255 at its own centre, so every
+//      word written about "an opaque amber sphere that carries the shading"
+//      described an object nobody had ever seen. R12 deletes it outright — see
+//      THE BEACH BALL IS DELETED below.
 //   3. THE "GROUND BLOOM" IS THE POINT LIGHT, NOT BLOOM. UnrealBloom is worth 4/255
 //      on the ground under it; the 10 W / 15 m PointLight is worth 48/255 there and
 //      22/255 at 140 px away. It paints a 15 m smooth disc on flat grass under a
@@ -2784,12 +2898,13 @@ function owHearthOrb(x,y,z){
   };
   // A BILLBOARD AT THE ORB'S CENTRE IS INVISIBLE, and this is why it is not simply
   // positioned there: a Sprite is a camera-facing quad whose every fragment carries the
-  // depth of its CENTRE, so against an opaque 0.54 m sphere at the same point it fails
-  // the depth test across the whole disc and the first build of this drew a flat orange
+  // depth of its CENTRE, so against opaque geometry at the same point it fails the
+  // depth test across the whole disc and the first build of this drew a flat orange
   // circle with no core in it at all. Turning depthTest off would fix it and would also
   // let the glow bleed through any house that gets between the camera and the green.
   // Instead each billboard is nudged toward the camera by `lift` metres every frame —
-  // clear of its own body sphere, still occluded by anything genuinely in front of it.
+  // clear of the lantern's own glass, still occluded by anything genuinely in front of
+  // it, INCLUDING ITS OWN HOOD, which is what a hooded lamp does.
   const base=new T.Vector3(x,y,z), tmp=new T.Vector3();
   const billboard=(tex,scale,op,lift)=>{
     const sm=new T.SpriteMaterial({map:tex, transparent:true, blending:T.AdditiveBlending,
@@ -2802,7 +2917,30 @@ function owHearthOrb(x,y,z){
     };
     sp.name='__ow_orb_glow'; return sp;
   };
-  const g=new T.SphereGeometry(0.54,28,20);
+  // R12 — THE BEACH BALL IS DELETED, AND THAT IS THE FIX.
+  //
+  // The twelfth blind critic, with no prompting and no knowledge of this object's
+  // four rounds of history, filed it under MISSING MATERIAL: "untextured with a
+  // single specular hotspot; whatever it's meant to be, it is currently a beach
+  // ball." The user's ruling on being told that: if it cannot be made to read as a
+  // lamp this round, MAKE IT SMALL AND DIM RATHER THAN LARGE AND SMOOTH — a
+  // restrained version beats a conspicuous wrong one.
+  //
+  // A smooth 0.54 m sphere is a beach ball at any material. Every round so far has
+  // changed what it is made OF (emissive x4, then the albedo, then Basic ->
+  // Standard) and none has changed that it is a big smooth ball, which is the thing
+  // being reported. So the covering sphere GOES. What replaces it is not a material
+  // at all: the BUNDLE's own emissive ico shrinks 0.44 -> 0.26 and gets three stone
+  // ribs, a flared hood and a finial (tools/valley_build.py build_emberbrook) — a
+  // lantern, in existing primitives and existing materials, at the ~40 px this
+  // object occupies. The sphere existed only to hide a 0.44 m flat emissive that
+  // clipped; at 0.26 m behind ribs and under a hood, a small flat bright amber
+  // disc is what the glass of a lamp looks like.
+  // THE SPRITES STAY AND SHRINK. They are the falloff, and R11's measurement stands
+  // (they were the whole blob, at additive opacity 1.615/1.955). Glow 2.6 -> 1.25 m
+  // and core 0.55 -> 0.34 m, both under half opacity, and the LIFT drops 0.62/0.66
+  // -> 0.24/0.26: it only has to clear a 0.26 m ico now, and a smaller lift lets the
+  // HOOD occlude the top of the glow, which is what a hooded lamp does.
   // MeshStandardMaterial, not Basic: Basic has no normal term at all, so the body
   // was a flat-filled circle by construction and could never be the "core and
   // falloff" the comment above claims. A low-roughness standard sphere under the
@@ -2818,12 +2956,6 @@ function owHearthOrb(x,y,z){
   // else. 0x6a2c0a with envMapIntensity 0.20 (the sky fill is blue and was the other
   // half of the pink) keeps the whole sphere inside the curve, so the key draws a
   // shoulder, a terminator and a shaded underside on it: a lit SOLID, not a decal.
-  const m=new T.MeshStandardMaterial({color:+(Q.get('oworbcol')||0x6a2c0a), roughness:0.32,
-    metalness:0.0, envMapIntensity:0.20,
-    emissive:new T.Color(0xff8f28), emissiveIntensity:+(Q.get('oworbe')||0.55)});
-  m.name='__ow_orb';
-  const orb=new T.Mesh(g,m); orb.name='__ow_orb'; orb.position.set(x,y,z);
-  orb.castShadow=false; orb.receiveShadow=false;
   // THE RAMPS ARE STEEPER, not just dimmer. A gaussian-ish falloff over the whole
   // radius is what makes a lens flare; a light has a bright body with an EDGE and
   // then a thin halo. Both cores now reach zero by 0.72 of the radius.
@@ -2837,11 +2969,11 @@ function owHearthOrb(x,y,z){
   // sphere, and a soft ring that reaches about 1.2x its radius onto the ground.
   const core=billboard(ramp([[0.00,'rgba(255,226,172,1.00)'],[0.36,'rgba(255,194,116,0.70)'],
                              [0.62,'rgba(255,154, 68,0.22)'],[1.00,'rgba(255,138, 50,0.00)']],128),
-                       +(Q.get('oworbc')||0.55), Math.min(1,HOT*0.55), 0.62);
+                       +(Q.get('oworbc')||0.34), Math.min(1,HOT*0.42), 0.24);
   const glow=billboard(ramp([[0.00,'rgba(255,186,116,0.60)'],[0.28,'rgba(255,152, 72,0.26)'],
                              [0.60,'rgba(255,120, 38,0.07)'],[1.00,'rgba(255,110, 30,0.00)']],128),
-                       2.6, Math.min(1,HOT*+(Q.get('owglow')||0.62)), 0.66);
-  OWORB=new T.Group(); OWORB.name='__ow_orb'; OWORB.add(orb); OWORB.add(core); OWORB.add(glow);
+                       +(Q.get('oworbg')||1.25), Math.min(1,HOT*+(Q.get('owglow')||0.40)), 0.26);
+  OWORB=new T.Group(); OWORB.name='__ow_orb'; OWORB.add(core); OWORB.add(glow);
   scene.add(OWORB);
 }
 // THE SKY PROBE'S OWN MESHES. Added 2026-08-02 after `transition_test` caught the

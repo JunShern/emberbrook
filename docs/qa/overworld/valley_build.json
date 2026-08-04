@@ -1,5 +1,5 @@
 {
- "build_s": 12.43,
+ "build_s": 12.46,
  "canopy_farwall-crown": {
   "cards": 4711,
   "core_tris": 4570,
@@ -104,7 +104,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.17,
+ "terrain_s": 0.18,
  "tile": [
   280.0,
   200.0
@@ -127,9 +127,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 269030,
+ "tris": 272406,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.49,
+ "veg_s": 3.45,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
@@ -139,5 +139,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.07
+ "zone_s": 0.076
 }
