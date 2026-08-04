@@ -68,7 +68,8 @@ srgb = B.srgb
 TAR, CANVAS, ROPE, LEAF, TUFT, LAMP = range(20, 26)
 LEAFM, LEAFC, BARK, MARK = O3.LEAFM, O3.LEAFC, O3.BARK, O3.MARK
 
-HOUSE_RIDGE = VM.HOUSE_RIDGE       # 1.6u — the scale contract beside a 1.45u character
+HOUSE_RIDGE = VM.HOUSE_RIDGE       # 3.7u — the scale contract beside a 1.45u character
+HOUSE_EAVE = 1.80                  # wall-plate height before the per-house factor
 STATS = {}
 
 
@@ -437,10 +438,127 @@ def apply_house_tints(ob, cls):
     col.data.foreach_set("color", buf.ravel())
     me.attributes.remove(me.attributes[HTINT])   # never reaches the GLB
     return len(seen)
+
+
+# =============================================================================
+# HOW TALL IS A HOUSE (2026-08-04) — one construction, both towns
+# =============================================================================
+# The impression houses were 1.6u to the ridge beside a 1.45u character: 1.1x her
+# height, and WIDER THAN THEY WERE TALL.  Four independent observers converged on it
+# by two unrelated routes — a shadow-geometry probe measured in the running page, and
+# three blind art critics who saw neither the probe nor each other ("the character is
+# roughly one house tall"; "the settlement reads as a tabletop model").  Two
+# consequences, and the second is the one that cost a whole lighting lane:
+#
+#   * it reads as a MODEL.  A real cottage is 2.5-3x a person.
+#   * at the 34-degree sun a shadow is 1.48x the caster's height, so a box wider than
+#     it is tall throws a shadow that never clears its own footprint — and the meadow
+#     camera sits 18 degrees off straight down-sun, which hides the last metre behind
+#     the house.  The ONLY object in that frame with a visible shadow was the
+#     character: the only thing in it taller than it is wide.  Key, frustum, texel
+#     density and bias were each measured innocent (docs/qa/ow-refs/LOOP.md R8).
+#     NO LIGHTING CHANGE CAN FIX A CASTER ASPECT RATIO.  This is the fix.
+#
+# So: ridge 3.7u (2.55x the character), eaves ~2.2u, footprint ~1.5 x 1.3u, giving
+# height:width ~2.0 — and the silhouette is broken on purpose (a chimney that clears
+# the ridge, an eave board, a lean-to on a third of them), because "a single flat
+# colour per face plus a glowing window decal is a blockout, and it is the loudest
+# tell in the frame."  A DOOR IS THE SCALE CUE: it is the one element a viewer reads
+# as person-sized without being told, and it is what turns a big box into a building.
+HOUSE_KINDS = 3
+
+
+def house_dims(rng):
+    """Per-house proportions: ONE apparent-size factor plus a KIND.
+
+    Scale jitter alone makes fourteen copies of one house at fourteen sizes.  The
+    kind changes the PROPORTION — a cottage, a cottage with a lean-to, and a tall
+    narrow two-storey — so the row does not read as one asset.
+    """
+    s = 0.86 + rng.uniform(0.0, 0.30)
+    kind = rng.randrange(HOUSE_KINDS)
+    w = (1.94 + rng.uniform(0, 0.46)) * s        # across the ridge (the eave walls)
+    d = (1.68 + rng.uniform(0, 0.42)) * s        # along the ridge (the gable ends)
+    eh = (HOUSE_EAVE + rng.uniform(0, 0.30)) * s
+    rh = HOUSE_RIDGE * s + rng.uniform(-0.14, 0.34)
+    if kind == 2:                                # the two-storey: taller AND narrower
+        w *= 0.82
+        d *= 0.90
+        eh *= 1.22
+        rh *= 1.10
+    return s, w, d, eh, rh, kind
+
+
+def house_ground(F, zg, fr, px, py, w, d, yaw):
+    """The four footprint corners' ground heights (plus a little margin)."""
+    ca, sa = math.cos(yaw), math.sin(yaw)
+    hw, hd = w * 0.62, d * 0.62
+    return [gh(F, zg, fr, px + ca * u * hw - sa * v * hd,
+               py + sa * u * hw + ca * v * hd)
+            for u in (-1, 1) for v in (-1, 1)]
+
+
+def impression_house(p, ht, fam, px, py, yaw, dims, ch, rng):
+    """ONE overworld impression house.  Returns its ridge height above `min(ch)`.
+
+    `ch` is house_ground()'s four corner heights.  The floor sits above the HIGHEST
+    of them and the stone footing reaches below the LOWEST, so a house on a slope
+    MEETS the ground instead of being cut by it on a straight line — which is the
+    critics' "every house floats, no contact shading where wall meets ground", in
+    geometry rather than in a shader.  The footing is also the dark band.
+    """
+    s, w, d, eh, rh, kind = dims
+    before = set(p.bm.faces)
+    ca, sa = math.cos(yaw), math.sin(yaw)
+
+    def at(u, v, z):                    # local (across-ridge, along-ridge, up) -> world
+        return (px + ca * u - sa * v, py + sa * u + ca * v, z)
+
+    fl = max(ch) + 0.20                                     # the floor
+    ft = max(0.48, fl - (min(ch) - 0.40))                   # ...down past the low corner
+    p.cube(STONE, at(0, 0, fl - ft / 2), (w * 1.07, d * 1.07, ft), rz=yaw)
+    p.cube(WALL, at(0, 0, fl + eh / 2), (w, d, eh), rz=yaw)
+    # the eave board: the dark line every real building has where its roof meets its
+    # wall, and the cheapest thing in this file that stops a wall reading as a decal.
+    p.cube(WOOD, at(0, 0, fl + eh + 0.05), (w * 1.31, d * 1.18, 0.13), rz=yaw)
+    p.prism(ROOF, at(0, 0, fl + eh + 0.11), w * 1.26, d * 1.14,
+            max(0.9, rh - eh - 0.11), rz=yaw)
+    # CHIMNEY — an EXTERNAL STACK ON A GABLE END, not a stub on the roof slope.  The
+    # old one was 0.74u and would now be buried inside the prism; a stack pushed
+    # through the slope reads DETACHED from a high camera, because the half of it
+    # below the ridge is hidden by the near slope.  Against the gable wall it runs
+    # from the ground to above the ridge in one unbroken line: unambiguously part of
+    # the building from every angle this camera can take, and the tallest, narrowest
+    # thing in the frame — which is exactly what a 34-degree sun draws best.
+    gs = 1.0 if rng.random() < 0.5 else -1.0        # which gable end carries it
+    cw, cz0 = 0.34 + 0.10 * s, fl - 0.30
+    cz1 = fl + rh + 0.26 + rng.uniform(0, 0.24)
+    p.cube(STONE, at(0, gs * d * 0.60, (cz0 + cz1) / 2), (cw, 0.34, cz1 - cz0), rz=yaw)
+    p.cube(STONE, at(0, gs * d * 0.60, cz1 + 0.07), (cw * 1.32, 0.48, 0.14), rz=yaw)
+    # DOOR + two windows on the face the yaw points at.  The door is the scale cue;
+    # the gable window is what says "there is an upstairs", which is most of the
+    # difference between a tall box and a house.
+    p.cube(WOOD, at(w / 2 + 0.02, d * 0.17, fl + 0.54), (0.11, 0.42, 1.08), rz=yaw)
+    p.cube(EMIT, at(w / 2 + 0.02, -d * 0.22, fl + eh * 0.54), (0.09, 0.36, 0.42), rz=yaw)
+    p.cube(EMIT, at(0.0, -gs * d * 0.60, fl + eh + (rh - eh) * 0.30),
+           (0.30, 0.09, 0.30), rz=yaw)             # the far gable from the stack
+    if kind == 1:                       # the lean-to: a third of the town is not a box
+        ww, wd, weh = w * 0.60, d * 0.74, eh * 0.50
+        wu = -(w / 2 + ww / 2 - 0.07)
+        p.cube(STONE, at(wu, d * 0.09, fl - ft / 2), (ww * 1.08, wd * 1.08, ft), rz=yaw)
+        p.cube(WALL, at(wu, d * 0.09, fl + weh / 2), (ww, wd, weh), rz=yaw)
+        p.prism(ROOF, at(wu, d * 0.09, fl + weh), ww * 1.26, wd * 1.16,
+                weh * 0.62, rz=yaw)
+    for f in p.bm.faces:
+        if f not in before:
+            f[ht] = float(fam)
+    return cz1 - min(ch)
+
+
 def build_emberbrook(col, F, zg, fr):
     """Emberbrook: a clustered warm-lit village in a forest clearing on the plateau.
 
-    An IMPRESSION at overworld scale: 14 houses whose ridges land at 1.6u beside a
+    An IMPRESSION at overworld scale: 14 houses whose ridges land at 3.7u beside a
     1.45u character, the Heartlight on its plinth at the centre (world canon: a
     Heartlight is rare and magical, and Emberbrook is the Heartlight town — the
     other lights here are ordinary lanterns), and a green for the spawn scan.
@@ -451,6 +569,7 @@ def build_emberbrook(col, F, zg, fr):
     cx, cy = L.VILLAGE
     h0 = F.village_h
     ring = []
+    road_clear = 1e9
     for i in range(14):
         # A SETTLEMENT, NOT FOURTEEN COPIES (2026-08-04).  A blind critic comparing
         # this frame against the FFIX-reimagined overworld refs called the dressing out
@@ -463,48 +582,42 @@ def build_emberbrook(col, F, zg, fr):
         #   rotation still mostly faces the green (the warm window is the town's read),
         #            but every fourth house stands gable-on or askew
         #   tint     a family index carried on the faces to apply_house_tints() below
+        #   shape    a KIND (house_dims): plain, lean-to, tall two-storey — added
+        #            2026-08-04, because scale jitter alone is fourteen copies at
+        #            fourteen sizes and the critique was about the ASSET, not the size
         a = i * (2 * math.pi / 14) + 0.22 + rng.uniform(-0.13, 0.13)
-        r = 4.4 + (i % 3) * 2.0 + rng.uniform(0.0, 2.1)
+        r = 5.3 + (i % 3) * 2.25 + rng.uniform(0.0, 2.15)
         hx, hy = cx + math.cos(a) * r, cy + math.sin(a) * r
-        # the ROAD passes through the village ring — a house whose footprint
-        # touches it blocks the region's one route (slice agent: emberbrook_5
-        # stood on the road 3u from spawn).  Push such houses outward until the
-        # verge is clear; the ring's rhythm survives, the road stays open.
-        for _try in range(6):
-            if float(F.road_dist(np.array([hx]), np.array([hy]))[0]) >= VM.ROAD_WIDTH * 0.5 + 1.55:
+        # the ROAD passes through the village ring — a house whose footprint touches
+        # it blocks the region's one route (slice agent: emberbrook_5 stood on the
+        # road 3u from spawn).  A PURELY RADIAL push cannot always clear it, and the
+        # 2026-08-04 rescatter proved it in a frame: a house whose bearing points
+        # ALONG the road walks straight down the road as r grows, and one landed on
+        # the Emberbrook gate portal itself.  Search r AND the bearing together, and
+        # take the first station that clears both the road and every neighbour.
+        need = VM.ROAD_WIDTH * 0.5 + 2.45
+        for dr in (0.0, 0.9, 1.8, 2.7, 3.6, 4.6):
+            for da in (0.0, .13, -.13, .26, -.26, .40, -.40, .55, -.55, .72, -.72):
+                tx = cx + math.cos(a + da) * (r + dr)
+                ty = cy + math.sin(a + da) * (r + dr)
+                if float(F.road_dist(np.array([tx]), np.array([ty]))[0]) < need:
+                    continue
+                if not all(math.hypot(tx - ox, ty - oy) >= 3.55 for ox, oy in ring):
+                    continue
+                hx, hy = tx, ty
+                dr = None                                  # sentinel: placed
                 break
-            r += 0.9
-            hx, hy = cx + math.cos(a) * r, cy + math.sin(a) * r
-        # uneven spacing must not become INTERSECTING spacing: push out off any
-        # neighbour already placed.  The push is radial, so the road clearance the
-        # loop above bought is never spent back.
-        for _try in range(8):
-            if all(math.hypot(hx - ox, hy - oy) >= 2.05 for ox, oy in ring):
+            if dr is None:
                 break
-            r += 0.55
-            hx, hy = cx + math.cos(a) * r, cy + math.sin(a) * r
-        gz = gh(F, zg, fr, hx, hy)
+        road_clear = min(road_clear,
+                         float(F.road_dist(np.array([hx]), np.array([hy]))[0]))
         fa = a + math.pi + rng.uniform(-0.30, 0.30)          # mostly face the green
         if i % 4 == 1:                                        # ...but not all of them
             fa += (1.0 if rng.random() < 0.5 else -1.0) * rng.uniform(0.75, 1.25)
-        s = 0.86 + rng.uniform(0.0, 0.30)                     # ±15% apparent size
-        w = (1.05 + rng.uniform(0, 0.34)) * s
-        d = (0.90 + rng.uniform(0, 0.24)) * s
-        bh = (0.96 + rng.uniform(0, 0.14)) * s
+        dims = house_dims(rng)
         fam = 1 + (i * 5 + i // 3) % 3                        # neighbours rarely match
-        before = set(p.bm.faces)
-        p.cube(WALL, (hx, hy, gz + bh / 2), (w, d, bh), rz=fa)
-        p.prism(ROOF, (hx, hy, gz + bh), w * 1.20, d * 1.20,
-                HOUSE_RIDGE * s - bh + rng.uniform(-0.05, 0.20), rz=fa)
-        p.cube(STONE, (hx + math.cos(fa + 1.6) * w * 0.30,
-                       hy + math.sin(fa + 1.6) * w * 0.30, gz + bh + 0.42),
-               (0.17, 0.17, 0.74), rz=fa)
-        # ONE warm window per house facing the green: the "warm-lit" read at 34u
-        p.cube(EMIT, (hx + math.cos(fa) * d * 0.56, hy + math.sin(fa) * d * 0.56,
-                      gz + bh * 0.60), (0.30, 0.07, 0.24), rz=fa)
-        for f in p.bm.faces:
-            if f not in before:
-                f[ht] = float(fam)
+        ch = house_ground(F, zg, fr, hx, hy, dims[1], dims[2], fa)
+        impression_house(p, ht, fam, hx, hy, fa, dims, ch, rng)
         ring.append((hx, hy))
     # ---- the Heartlight: plinth + a standing light, the town's whole identity ----
     for i in range(8):
@@ -514,17 +627,30 @@ def build_emberbrook(col, F, zg, fr):
     p.cone(STONE, (cx, cy, h0 + 0.62), 0.34, 0.24, 1.0, seg=8)
     p.ico(EMIT, (cx, cy, h0 + 1.34), (0.36, 0.36, 0.44), subd=2)
     # ---- ordinary lanterns on posts + a low boundary fence ----
+    # A post standing INSIDE a house is the tell that a scatter was written against a
+    # smaller building: the footprints grew on 2026-08-04 and the two rings did not,
+    # so both now skip any station a house centre has taken.
+    def clear_of_houses(fx, fy, gap):
+        return all(math.hypot(fx - ox, fy - oy) >= gap for ox, oy in ring)
     for k in range(5):
         a = 0.5 + k * 1.15
         fx, fy = cx + math.cos(a) * 8.4, cy + math.sin(a) * 8.4
+        if not clear_of_houses(fx, fy, 2.35):
+            continue
         gz = gh(F, zg, fr, fx, fy)
         p.cube(WOOD, (fx, fy, gz + 0.52), (0.12, 0.12, 1.04), rz=a)
         p.cube(EMIT, (fx, fy, gz + 1.12), (0.17, 0.17, 0.20), rz=a)
     for a in np.linspace(2.6, 5.4, 11):
         fx, fy = cx + math.cos(a) * 9.6, cy + math.sin(a) * 9.6
+        if not clear_of_houses(fx, fy, 2.05):
+            continue
         gz = gh(F, zg, fr, fx, fy)
         p.cube(WOOD, (fx, fy, gz + 0.30), (0.11, 0.11, 0.60), rz=a)
     STATS["emberbrook_houses"] = 14
+    # the number that must never silently regress: the CLOSEST house centre to
+    # the road centreline.  A house on the road is invisible in every gate this
+    # repo owns and obvious in one frame — so it gets a number in valley_build.json.
+    STATS["emberbrook_road_clear_u"] = round(road_clear, 2)
     return p.finish(col)
 
 
@@ -606,27 +732,25 @@ def build_dellhollow(col, F, zg, fr):
                 # yaw wobble a mason would allow. See the note above build_emberbrook.
                 yaw = (math.atan2(float(ctg[1]), float(ctg[0])) + rot
                        + (0.0 if side > 0 else math.pi) + rng.uniform(-0.16, 0.16))
-                s = 0.86 + rng.uniform(0.0, 0.30)
-                w = (1.0 + rng.uniform(0, 0.30)) * s
-                d = (0.86 + rng.uniform(0, 0.22)) * s
-                bh = (0.92 + rng.uniform(0, 0.16)) * s
+                dims = house_dims(rng)
+                w, d = dims[1], dims[2]
                 # A terrace pad + retaining wall is what makes a cluster read
                 # STEPPED — but a pad placed at the CENTRE height cantilevers off a
                 # gorge wall, which is what the first render showed.  The pad top is
                 # the lowest of its own four corners, and the wall reaches from there
                 # down to the ground beneath its outer edge.
-                pw_, pd_ = w * 1.55, d * 1.55
+                pw_, pd_ = w * 1.24, d * 1.24
                 ca, sa = math.cos(yaw), math.sin(yaw)
                 cor = [(px + ca * u * pw_ / 2 - sa * v * pd_ / 2,
                         py + sa * u * pw_ / 2 + ca * v * pd_ / 2)
                        for u in (-1, 1) for v in (-1, 1)]
                 ch = [gh(F, zg, fr, a_, b_) for a_, b_ in cor]
                 # the v2 canyon steepened both walls: where the pad's own corners
-                # span more than ~2.4u of height, no terrace can read as bedded —
+                # span more than ~2.8u of height, no terrace can read as bedded —
                 # the house "stands proud" of the wall (foliage agent's gorge-shot
                 # flag).  Skip that station; the cluster keeps its rhythm on the
                 # stations that CAN bed.
-                if max(ch) - min(ch) > 2.4:
+                if max(ch) - min(ch) > 2.8:
                     continue
                 pad = min(ch) + 0.10
                 p.cube(STONE, (px, py, pad - 0.20), (pw_, pd_, 0.44), rz=yaw)
@@ -637,18 +761,10 @@ def build_dellhollow(col, F, zg, fr):
                                     oy - nr[1] * side * 1.6))
                 drop = max(0.6, min(5.0, pad - foot))
                 p.cube(STONE, (ox, oy, pad - 0.42 - drop / 2), (pw_, 0.38, drop), rz=yaw)
-                gz = pad
-                before = set(p.bm.faces)
-                p.cube(WALL, (px, py, gz + bh / 2), (w, d, bh), rz=yaw)
-                p.prism(ROOF, (px, py, gz + bh), w * 1.20, d * 1.20,
-                        HOUSE_RIDGE * s - bh + rng.uniform(-0.05, 0.20), rz=yaw)
-                p.cube(EMIT, (px + math.cos(yaw + math.pi / 2) * d * 0.56,
-                              py + math.sin(yaw + math.pi / 2) * d * 0.56,
-                              gz + bh * 0.58), (0.26, 0.07, 0.20), rz=yaw)
                 fam = 1 + (n_house * 5 + n_house // 3) % 3
-                for f in p.bm.faces:
-                    if f not in before:
-                        f[ht] = float(fam)
+                # the pad IS this house's ground: four equal corners, so the footing
+                # is the shallow contact band and not a second retaining wall.
+                impression_house(p, ht, fam, px, py, yaw, dims, [pad] * 4, rng)
                 n_house += 1
     # ---- THE WEIR FLIGHT: the reason the locks exist ------------------------
     n_weir = 0
@@ -659,7 +775,7 @@ def build_dellhollow(col, F, zg, fr):
         _, wtg, wnr, wwl, whw, _ = gorge_frame(F, cx_ + VM.CX, cy_ + VM.CY)
         ang = math.atan2(float(wtg[1]), float(wtg[0])) + math.pi / 2
         span = whw * 2.0 + 1.4
-        # SEGMENTED: one 2 x 15 x 3.4u block beside 1.6u houses reads as a monolith,
+        # SEGMENTED: one 2 x 15 x 3.4u block beside the houses reads as a monolith,
         # and the moorage camera stood right behind it.  Six courses with hashed
         # offsets read as built masonry at the same cost.
         nb = 6
@@ -697,8 +813,11 @@ def build_dellhollow(col, F, zg, fr):
                 mx = wx_ + float(wnr[0]) * side * 2.4
                 my = wy_ + float(wnr[1]) * side * 2.4
                 mz = gh(F, zg, fr, mx, my)
-                p.cube(WALL, (mx, my, max(mz, wwl) + 0.85), (1.7, 1.5, 1.7), rz=ang)
-                p.prism(ROOF, (mx, my, max(mz, wwl) + 1.70), 2.0, 1.8, 0.95, rz=ang)
+                # the mill grew with the cottages (2026-08-04): a working building that
+                # is SHORTER than the houses around it stops reading as a mill.
+                p.cube(WALL, (mx, my, max(mz, wwl) + 1.35), (2.0, 1.8, 2.70), rz=ang)
+                p.cube(WOOD, (mx, my, max(mz, wwl) + 2.76), (2.6, 2.2, 0.14), rz=ang)
+                p.prism(ROOF, (mx, my, max(mz, wwl) + 2.83), 2.5, 2.1, 1.35, rz=ang)
                 n_weir += 1
     STATS["dellhollow_houses"] = n_house
     STATS["dellhollow_wheels"] = n_weir

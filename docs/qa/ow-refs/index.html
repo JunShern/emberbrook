@@ -46,6 +46,52 @@ measurements are fine; conclusions drawn from that bar are not. The real referen
 overworld gameplay screenshots below.
 </div>
 
+<h2>R9 · The cottages were 1.1× the character. They are 2.65× now.</h2>
+<p class="lede">Four independent observers reached this by two unrelated routes: a shadow-geometry probe
+measured in the running page, and three blind art critics who saw neither the probe nor each other.
+<em>“The character is roughly one house tall… the settlement reads as a tabletop model.”</em></p>
+
+<div class="pair">
+  <figure><img src="plates/r8-meadow.png" alt="r8 meadow">
+    <figcaption><span class="tag t-bad">BEFORE — R8</span>Ridge 1.6u beside a 1.45u character; roof wider
+    than the house is tall. Not one cottage casts a shadow you can see.</figcaption></figure>
+  <figure><img src="plates/r9-meadow.png" alt="r9 meadow">
+    <figcaption><span class="tag t-new">AFTER — R9</span>Ridge 3.7u, roof 2.76u wide — height:width 1.39.
+    Every house lays a shadow across the grass, in the same direction as the character’s.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/r8-vista.png" alt="r8 vista">
+    <figcaption><span class="tag t-bad">BEFORE — R8</span>vista, boom 40 — fourteen sheds.</figcaption></figure>
+  <figure><img src="plates/r9-vista.png" alt="r9 vista">
+    <figcaption><span class="tag t-new">AFTER — R9</span>The same fourteen, with mass, chimneys and a
+    silhouette. Dellhollow’s terraces got the same construction.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/r9-gate.png" alt="r9 gate">
+    <figcaption><span class="tag t-our">R9</span>gate, boom 16 — the Emberbrook portal, kept clear (see the
+    note below: the rescatter put a house on it once).</figcaption></figure>
+  <figure><img src="plates/r9-gorge.png" alt="r9 gorge">
+    <figcaption><span class="tag t-our">R9</span>gorge, boom 40 — the shelf shadow, the frame’s best piece
+    of lighting craft, is untouched. The sun was not moved.</figcaption></figure>
+</div>
+
+<div class="note grn">
+<strong>NO LIGHTING CHANGE COULD EVER HAVE FIXED THIS.</strong> At the shipped 34° sun a shadow is 1.48× the
+caster’s height. A 1.6u ridge on a 1.48u-wide roof threw 2.4u of shadow from a footprint that already ate
+1.5u of it — and the meadow camera sits 18° off straight down-sun, which hid the rest behind the house. Key,
+shadow frustum, texel density and depth bias were each measured innocent in R8. At 3.7u the shadow is 5.7u
+from a 2.76u roof: 2.9u of it clears the building, which is what the plate above shows.
+</div>
+
+<div class="note amb">
+<strong>What the height change broke, and it broke in a frame rather than in a gate.</strong> Bigger
+footprints forced a rescatter, and the old placement pushed a colliding house <em>radially outward</em> —
+which, for a house whose bearing points along the road, walks it <em>down</em> the road. One landed on the
+“Enter Emberbrook” portal. Fixed by searching radius <em>and</em> bearing together, and the closest
+house-centre-to-road distance is now a recorded number (<code>emberbrook_road_clear_u</code>) in
+<code>valley_build.json</code> so it cannot regress silently again.
+</div>
+
 <h2>1 · What the three real references actually establish</h2>
 
 <div class="trio">

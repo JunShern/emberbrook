@@ -131,6 +131,7 @@ Findings route **through the coordinator**, never lane to lane.
 | 4 | `r5-*` judged blind | **`r5-meadow` LAST of four**, below the r4 frame it replaced | **"This is a global tint, not a light. Nothing in the frame has a lit side and a shaded side that agree with anything else."** — the ratio said 3.29:1 | the metric moved and the picture did not |
 | 5 | not judged — BUILT against 4 | plates `r6-*`, `docs/qa/ow-refs/r6.html` | **the grade is applied to what the light touches, not to the frame**; the blade carpet stops rendering half of itself black; the Heartlight gets a core and a falloff. Ratio kept and up, 4.96 / 3.38 / 3.87 / 4.19 | TRIED — MOVED IT |
 | 8 | not judged — MEASURED against 4's "no directional light" | plates `r8-*` | **the meadow has the same sun as the gorge, and it is not a lighting defect at all** — a 2.6 m cottage under a 34° sun throws a 3.9 m shadow from a 2.9 m footprint, straight away from the lens | routed to CONTENT; both sun moves REJECTED by eye |
+| 9 | not judged — BUILT against 8 + three blind critics | plates `r9-*` | **the houses go up: ridge 1.6u → 3.7u, 1.1× the character → 2.65×, height:width 1.10 → 1.39** — and every cottage in the meadow now lays a shadow across the grass | TRIED — MOVED IT |
 
 ### Round 4–5: A NUMBER THAT IMPROVES WHILE THE PICTURE WORSENS IS THE WRONG NUMBER
 
@@ -358,3 +359,71 @@ a 1.45 u character — a cottage is 1.8× her height where a real one is 2.5–3
 lighting rig can make a box that is wider than its own shadow read as a solid. Taller houses,
 a chimney or gable that breaks the silhouette, a fence line, anything with a height-to-width
 ratio above 1, and this sun will draw it. **Do not send another lane at the key.**
+
+### R9: A CASTER ASPECT RATIO IS CONTENT, AND CONTENT IS WHERE IT HAD TO BE FIXED
+
+Plates `r9-{meadow,gate,vista,gorge}.png` against `r8-*`. Gallery section at the top of
+`docs/qa/ow-refs/index.html`. One file changed the picture: `tools/valley_build.py`
+(`house_dims` / `house_ground` / `impression_house`, now shared by BOTH towns) plus
+`HOUSE_RIDGE` in `tools/valley_map.py`.
+
+**The convergence R8 predicted was real, and it was reached twice by routes that could not
+have contaminated each other.** The shadow probe measured a caster wider than its own
+shadow; three blind art critics, with no access to it or to each other, each independently
+named scale as the thing breaking the frame ("the character is roughly one house tall";
+"the settlement reads as a tabletop model"; "either the houses go up ~2.5x or…").
+
+| | R8 | R9 |
+|---|---|---|
+| ridge above floor | 1.60u | **3.70u** (mean 3.84 with jitter) |
+| vs the 1.45u character | 1.10× | **2.65×** (2.97× to the chimney cap) |
+| roof width | 1.48u | **2.76u** |
+| height : width | 1.10 | **1.39** (wall box 1.75) |
+| shadow at 34° | 2.4u, from a 1.5u footprint | **5.7u, from a 2.76u footprint** |
+
+The last row is the whole round: 0.9u of shadow used to clear the building, and the meadow
+camera sits 18° off straight down-sun, which spends exactly that. 2.9u clears it now, and
+the plate shows it — **every cottage in `r9-meadow` casts a shadow that agrees with the
+character's, and none did in `r8-meadow`.** THE SUN WAS NOT TOUCHED. Neither was the grade
+or the camera.
+
+**Not just taller — the blockout read was the other half of the ask.** Per house: a stone
+footing that reaches BELOW the lowest footprint corner (a house on a slope meets the ground
+instead of being cut by it — the "every house floats" note answered in geometry, not in a
+shader), a dark eave board where roof meets wall, a steep gable, an EXTERNAL CHIMNEY STACK on
+a gable end, a person-sized door, a ground-floor window and a lit gable window that says
+there is an upstairs. Variety got a fifth axis (`kind`: plain / lean-to / tall two-storey)
+on top of the four R7 added — scale jitter alone is fourteen copies at fourteen sizes, and
+the critique was about the ASSET, not the size.
+
+**A CHIMNEY PUSHED THROUGH A ROOF SLOPE READS AS DETACHED FROM A HIGH CAMERA**, and this
+loop's own rule caught it: the first build put the stack at 0.17w/0.28d, geometrically
+inside the roof plan and provably attached — and in the plate it floated, because the half
+below the ridge is hidden by the NEAR slope. Moved to the gable end, where it runs ground to
+sky in one line. *The geometry was right and the picture was wrong; the picture won.*
+
+**WHAT THE HEIGHT CHANGE BROKE — and it broke in a frame, not in a gate.** Bigger footprints
+forced a rescatter (min neighbour spacing 2.05 → 3.55u, road clearance +1.55 → +2.45u), and
+the old placement cleared the road by pushing a house RADIALLY OUTWARD. For a house whose
+bearing points along the road, that walks it *down* the road: one landed on the "Enter
+Emberbrook" portal, standing on the marker with the player at its wall. Every gate in the
+repo was green with it there. Fixed by searching radius AND bearing together, and the
+closest house-centre-to-road distance is now recorded as `emberbrook_road_clear_u` (3.49u)
+in `valley_build.json`, because a house on the road is invisible to every instrument here
+and obvious in one screenshot.
+
+Also carried: Dellhollow's pads shrank 1.55 → 1.24× footprint and their bedding tolerance
+went 2.4 → 2.8u, or the wider houses would have cost the town a third of its stations (it
+fell to 7 before the fix, 11 after); the weir mill grew to 4.0u, since a working building
+shorter than the cottages around it stops reading as a mill; lantern posts and fence stakes
+now skip any station a house centre has taken.
+
+**Not touched, deliberately: the Heartlight.** Its geometry is at `village_h + 1.34` and
+`play3d.html` hard-codes its point light at the same `+1.34`. Raising the monument to suit
+4u houses would silently separate the orb from its light, and play3d is coordinator-owned.
+It is a real deficit at the new scale — the town's whole identity is now a garden ornament
+among its houses — and it needs the geometry and the runtime moved in one commit.
+
+Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 ·
+`findability_test` 69/0 · `walk_engine_gate --scene ow-valley` GREEN (0 cells lost,
+418.2 m2 both sides) · `valley_verify` OK. Tris 266 786 → 267 122.

@@ -87,7 +87,11 @@ L.NX = int(round(TILE_W / STEP)) + 1
 L.NY = int(round(TILE_H / STEP)) + 1
 
 CHAR_H = L.CHAR_H                             # 1.45u — the scale contract
-HOUSE_RIDGE = 1.6                             # ridge height of an impression house
+# 2026-08-04: 1.6 -> 3.7.  At 1.6 a cottage was 1.1x the character and WIDER THAN IT
+# WAS TALL; a real one is 2.5-3x a person.  See impression_house() in valley_build.py
+# for the four independent observers that converged on it and for why no lighting
+# change could ever have rescued it.
+HOUSE_RIDGE = 3.7                             # ridge height of an impression house
 
 
 def w2b(wx, wy):
