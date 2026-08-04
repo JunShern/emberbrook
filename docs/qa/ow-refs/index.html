@@ -46,6 +46,45 @@ measurements are fine; conclusions drawn from that bar are not. The real referen
 overworld gameplay screenshots below.
 </div>
 
+<h2>R11 &middot; Depth by value and chroma, and the blob was never the emissive</h2>
+<p class="lede">The tenth blind critic named the largest remaining craft gap and said every item on its
+list was free: <em>&ldquo;value and chroma compression across depth. In both frames, near and far sit at
+the same contrast and the same saturation. C and D both push distance toward low-contrast blue and hold
+their darkest darks in the foreground.&rdquo;</em> Judge this round on its own two tests &mdash; are the
+greens off yellow, and is anything in the frame genuinely dark.</p>
+
+<div class="pair">
+  <figure><img src="plates/r10-meadow.png" alt="r10 meadow">
+    <figcaption><span class="tag t-bad">BEFORE &mdash; R10</span>Greens are chartreuse (b:g 0.634 on green
+    pixels), the depth ramp never runs (linear 28&ndash;155&nbsp;m: the tan slope at 50&nbsp;m took 8% of
+    it), and the Heartlight is a clipped white disc with a 15&nbsp;m ground pool. Saturation 0.545,
+    L05 0.127, 3.5% of pixels under L&nbsp;0.10.</figcaption></figure>
+  <figure><img src="plates/r11-meadow.png" alt="r11 meadow">
+    <figcaption><span class="tag t-new">AFTER &mdash; R11</span>Exponential haze anchored on the PLAYER, a
+    hue-targeted blue at distance, a foreground toe, the terrain&rsquo;s own COLOR_0 taken off yellow, and an
+    amber Heartlight with a terminator on it. Saturation 0.434, b:g 0.758, L05 0.094, 5.5% under
+    L&nbsp;0.10.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/r10-gorge.png" alt="r10 gorge">
+    <figcaption><span class="tag t-bad">BEFORE &mdash; R10</span>Flat green discs on the valley floor and
+    the cliff top (the critic&rsquo;s &ldquo;first thing my eye caught&rdquo;), sky banding along the top
+    edge, no recession on the far hills.</figcaption></figure>
+  <figure><img src="plates/r11-gorge.png" alt="r11 gorge">
+    <figcaption><span class="tag t-new">AFTER &mdash; R11</span>Bushes with a height, a 64&times;44 dome
+    plus per-pixel dither, and ridges that recede. Saturation 0.362 &rarr; 0.333, L05 0.072 &rarr; 0.056,
+    darks 7.5% &rarr; 10.8%.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="plates/r11-gate.png" alt="r11 gate">
+    <figcaption><span class="tag t-our">R11</span>gate, boom 16 &mdash; the &ldquo;missing material
+    assignment&rdquo; slope is the DRY slot (verified by raycast, both sides); it was never missing, it had
+    no variation and twice the gain it needed. dry L 0.428 &rarr; 0.248.</figcaption></figure>
+  <figure><img src="plates/r11-vista.png" alt="r11 vista">
+    <figcaption><span class="tag t-our">R11</span>vista, boom 40 &mdash; the same ramp reads at 230&nbsp;m
+    as it does at 25&nbsp;m because it is an extinction curve, not a line.</figcaption></figure>
+</div>
+
 <h2>R10 · The light gets a second colour, and the floating building was never floating</h2>
 <p class="lede">The critic’s whole brief in three lines: <em>“the light has one colour instead of two;
 the ground is a colour instead of a surface; objects rest on the terrain instead of being bedded into

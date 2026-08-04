@@ -133,6 +133,7 @@ Findings route **through the coordinator**, never lane to lane.
 | 8 | not judged — MEASURED against 4's "no directional light" | plates `r8-*` | **the meadow has the same sun as the gorge, and it is not a lighting defect at all** — a 2.6 m cottage under a 34° sun throws a 3.9 m shadow from a 2.9 m footprint, straight away from the lens | routed to CONTENT; both sun moves REJECTED by eye |
 | 9 | not judged — BUILT against 8 + three blind critics | plates `r9-*` | **the houses go up: ridge 1.6u → 3.7u, 1.1× the character → 2.65×, height:width 1.10 → 1.39** — and every cottage in the meadow now lays a shadow across the grass | TRIED — MOVED IT |
 | 10 | `r9-*` judged blind | plates `r10-*` | **the light gets a SECOND COLOUR** — warm key + blue-violet fill, the warm grade back 50%, the Heartlight reined in from a global tint to a lamp; plinths capped, bases bedded, window panes given a dark albedo. Frame saturation 0.651/0.584/0.478/0.456 → **0.540/0.496/0.411/0.360**, b−r −0.357 → −0.284 on the meadow | TRIED — MOVED IT |
+| 11 | `r10-*` judged blind | plates `r11-*` | **depth gets a hue and the frame gets a black point** — an exponential haze ramp anchored on the PLAYER, a mix toward a low-chroma blue at distance, a foreground toe, the terrain's own COLOR_0 off yellow, and the Heartlight's albedo (not its emissive) named as the thing that made it a white blob. Saturation **.545/.502/.413/.362 → .434/.376/.342/.333**, green b:g **.634 → .758** (meadow), L05 **.127 → .094**, pixels under L 0.10 **3.5% → 5.5%** | TRIED — MOVED IT |
 
 ### Round 4–5: A NUMBER THAT IMPROVES WHILE THE PICTURE WORSENS IS THE WRONG NUMBER
 
@@ -586,3 +587,123 @@ Four items it named as broken are being **verified before they are built**, beca
 critic's previous "bugs" (the floating building, the casterless shadow) were misreads that cost a
 round each: free-standing chimneys passing the roof ridge, an untextured tan slope, a polygonal
 violet ground region, and flat green discs on the gorge floor.
+
+### R11: THE KNOB THAT HAD BEEN SWEPT FOUR TIMES WAS MEASURING SOMETHING ELSE, AGAIN
+
+Plates `r11-{meadow,gate,vista,gorge}.png` against `r10-*`. Gallery section at the top of
+`docs/qa/ow-refs/index.html`.
+
+**The critic's verdict, and it is the one to keep:** *"Do not tell yourselves A's problem is asset
+budget. A's problem is that the frame has no value structure, no atmospheric recession, an
+over-saturated palette, an inconsistent key light, and one element (the fire) that is unfinished.
+Every one of those is free."* Named largest gap: **value and chroma compression across depth** —
+*"C and D both push distance toward low-contrast blue and hold their darkest darks in the
+FOREGROUND."*
+
+**1. THE HEARTLIGHT: FOUR ROUNDS SWEPT THE EMISSIVE AND THE EMISSIVE WAS NEVER IT.** R5, R6 and R10
+swept `OWEMIT`; R11's first pass swept `emissiveIntensity` 0.52 / 0.26 / 0.13 / 0.06 and **the ball
+did not visibly change** (`scratchpad r11 orb-sweep`). What decided those pixels, measured one toggle
+at a time with `SIM.px` at the orb's own projected pixel (879,434):
+
+| | orb centre | ground 80 px below |
+|---|---|---|
+| full | (238,146, 90) | (246,147,102) |
+| sprites hidden | (118, 78, 72) | (242,143, 97) |
+| **body mesh hidden** | **(241,149, 93)** | (245,146,101) |
+| bloom off | (225,133, 82) | (245,145,100) |
+| **hearth point light off** | (237,146, 90) | **(198,128,100)** |
+
+  * **THE BLOB WAS THE TWO ADDITIVE SPRITES**, at opacity **1.615 and 1.955**. An additive sprite over
+    1.0 has no falloff left in its bright half — every ramp stop past ~0.5 alpha already sums past
+    white — which is a clipped plateau with the tail of a gradient round it, i.e. exactly *"a hard
+    white circular blob with a soft radial falloff."*
+  * **THE BODY MESH WAS INVISIBLE** (3/255 at its own centre), so every earlier note about "an opaque
+    amber sphere carrying the shading" described an object nobody had ever seen.
+  * **THE "GROUND BLOOM" WAS THE POINT LIGHT, NOT BLOOM** — 48/255 against UnrealBloom's 4/255 at the
+    same pixel. 10 W / 15 m → 6 W / 9.5 m.
+  * **AND THE PINK WAS THE ALBEDO.** `0xd4661c` at roughness 0.32 under a 2.6x golden key renders
+    (2.16, 1.04, 0.29) — red and green both clipped — and `NeutralToneMapping` desaturates a clipped
+    highlight toward white by design. `0x6a2c0a` + `envMapIntensity 0.20` keeps the whole sphere inside
+    the curve, and `MeshBasicMaterial` → `MeshStandardMaterial` gives it a terminator. **A flat-shaded
+    material cannot be "a core and a falloff": MeshBasicMaterial is a disc by construction.**
+
+**2. THE DEPTH RAMP HAD NEVER RUN IN THE TWO FRAMES THAT NEEDED IT, and five rounds misread why.**
+Linear over 28–155 m, smoothstepped: at 50 m, `t = 0.079`. The meadow and gate cameras see 10–60 m of
+world, so the tan slope and the far houses took **8% of a cue built for a 155 m corridor**. R5 recorded
+this as *"those frames have no distance for the aerial grade to work on"* — they have 60 m of distance
+and **the ramp had none in that range**. It is an exponential extinction now (0.19 at 25 m, 0.50 at
+50 m, 0.81 at 100 m, 0.94 at 155 m) plus a **mix toward a fixed low-chroma blue**, which is the only
+one of the four terms that COMPRESSES CONTRAST — a multiply and a desat are per-pixel scalings and
+contrast is a relation between pixels.
+
+**3. AND THE RAMP HAD TO BE ANCHORED ON THE PLAYER, WHICH IS WHERE THE FIRST VERSION DIED.**
+`length(viewPos)` is distance from the LENS on an orbit camera whose boom runs **12 m in the meadow and
+40 m in the gorge**. A fixed `dNear` therefore starts the haze 26 m behind the character in one frame
+and 2 m in front of her in the other: the gorge's cliff face — the subject — took half the atmosphere
+meant for a 200 m ridge and the whole frame went milky (`scratchpad/r11/t1-gorge.png`, kept). **That is
+the R5 regression arriving through a different door, and the door is that the cue's origin was the
+wrong object.** `dRef` is the lens-to-character distance; `dist - dRef` reads the same at every boom.
+
+**4. THE FIRST PASS PASSED THE CRITIC'S FIRST TEST AND FAILED ITS SECOND, and the numbers said so
+before the eye did.** Saturation 0.545 → 0.402 and green b:g 0.634 → 0.771 (both asks met) — while
+**L05 went 0.127 → 0.148 and the share of pixels under L 0.10 went 3.47% → 2.31%. The frame had got
+LIGHTER in its darks.** Two wanted changes did it: a raised sky fill (which is what puts texture back
+in shade) and a haze that lifts the far band — and the second is not a defect, since *"hold their
+darkest darks in the FOREGROUND"* means far darks SHOULD lift. So the black point is bought back where
+the reference keeps it: a **toe weighted by (1−t)**, biting only on already-dark pixels in the near
+field. Final: L05 **.127/.151/.143/.072 → .094/.108/.121/.056**, darks **3.5/2.3/3.2/7.5% →
+5.5/4.6/3.6/10.8%**.
+
+**5. THREE OF THE FOUR NEW BUG REPORTS WERE REAL, AND ALL FOUR WERE CHECKED BEFORE ANYTHING WAS BUILT.**
+
+  * **THE CHIMNEYS WERE GENUINELY DETACHED, AND IT IS ARITHMETIC.** `gs * d * 0.60` against a 0.34-deep
+    stack puts its inner face at `0.60d − 0.17`; the gable wall's face is at `0.50d`. They touch only
+    when `d ≤ 1.70`, and `house_dims()` draws d in **1.30–2.68**. Most of the town had a pillar with
+    daylight behind it. **An offset that is a fraction of a jittered dimension is a contact that is a
+    coin toss** — it is measured from the wall face now, with 0.14 u of interpenetration and a flashing
+    collar at the eave.
+  * **THE FLAT GREEN DISCS WERE REAL.** `veg_land_clumps`, first-hit normal (−0.06, 0.99, −0.14) — a
+    horizontal facet. `_clump_geo` squashed the unit ico to 0.62 and then `w` and `h` were drawn
+    INDEPENDENTLY (0.75–1.80 against 0.45–1.20), mean 1.28 × 0.51, aspect 0.40. Height is drawn from
+    the width now, and **the PRNG stream is preserved exactly** (same seven calls in the same order) so
+    this module's port check still means something.
+  * **THE TAN SLOPE IS NOT A MISSING MATERIAL.** `SIM.pick` returns `ground_valley_2` — the DRY slot —
+    on BOTH sides of the boundary. What was missing is variation: the dry recipe's noise amplitude was
+    0.24–0.34 against grass's 0.30–0.40, on a gain that made it the brightest thing in the frame, so it
+    clipped flat. dry L 0.428 → 0.248, amplitude doubled, seam probe 2.1 → 3.2 u.
+  * **THE DARK VIOLET GROUND REGION IS THE ROAD MESH.** `walk_road` at y 26.12 with `ground_valley_1`
+    behind it; the "partly straight polygonal edge" is the road polygon. Not a lightmap artifact — but
+    the reason it reads as a stain is the critic's item 4, so the fix is the sky fill, not the road.
+
+**6. TWO INSTRUMENT BUGS PAID FOR IN THIS ROUND, both worth keeping.**
+
+  * **`THREE.MultiplyBlending` PLUS `transparent:true` BRIGHTENS IN THIS BUILD**, and the first version
+    of the contact shadow shipped a WHITE SQUARE under the character into a plate. One pixel, everything
+    else held: plane hidden (134,86,68) · MultiplyBlending+transparent (157,115,98) · MultiplyBlending
+    opaque (134,86,68) · CustomBlending ZERO/SRC_COLOR+transparent (133,86,67). **dst×src cannot
+    brighten**, so the named blend mode is not the mode being applied. The factors are written out.
+  * **A REPORT COMPUTED IN `ow_multi`'s `expr` IS COMPUTED BEFORE THE CAMERA HAS SETTLED.** The orbit
+    camera damps toward its target over several frames, so `wp.project(cam)` inside the expr put the
+    Heartlight at pixel (5802,−4895) and the first fire probe measured five points that were all off
+    canvas and all read (0,0,0). Defer the report by ~1.6 s inside the settle window.
+
+**Also landed, all in `public/play3d.html`:** a compact luma FXAA + interleaved-gradient dither as the
+final composer pass — **after `OutputPass`, which is the only place FXAA's luma thresholds mean
+anything**, and the answer to R7's own unactioned note that MSAA is resolved in the beauty buffer and
+then undone by a grade sampling a single-sampled depth texture (raising the sample count cannot fix a
+pass that runs after the resolve; three's bundle carries no `SMAAPass` and no `FXAAShader`, checked).
+Sky dome 32×20 → 64×44. Global chroma −13% in the grade on top of the terrain's own −20%. Sky fill
+`OWENV` 0.55 → 0.60.
+
+Gates: `playthrough_test` 86/0 · `cine_test` 689/0 · `slice_test` 848/0 · `findability_test` 69/0 ·
+`walk_engine_gate --scene ow-valley` GREEN (0 cells lost, 418.2 m2 both sides) · `valley_verify` OK.
+
+**What got worse, recorded and not smoothed away:** the frame is **less warm**. The terrain gain drop
+and the global chroma pull together take the golden-hour push down, and `gate`'s L50 falls 0.644 →
+0.573. The critic asked for exactly this and said to judge on greens and darks rather than warmth, so
+it is a trade taken deliberately — `?grade_sat=1` and `?grade_h=0` back both halves out without a
+rebuild, and `grass_gain` in `tools/valley_land.py` is the third. **And the chimney read is fixed in
+geometry but not perfected in the picture:** verified attached by raycast (stack at 13.6 m, its own
+roof slope at 14.17 m, adjacent in screen space), yet a full-height external stack seen from a
+near-top-down camera is still a long pale rectangle crossing a roof — the R9 finding recurring, and the
+next round's if it is raised again.

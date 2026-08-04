@@ -636,11 +636,29 @@ def impression_house(p, ht, fam, px, py, yaw, dims, ch, rng):
     # from the ground to above the ridge in one unbroken line: unambiguously part of
     # the building from every angle this camera can take, and the tallest, narrowest
     # thing in the frame — which is exactly what a 34-degree sun draws best.
+    # R11: THE STACK WAS PLACED AT A FRACTION OF `d` AND THEREFORE STOOD OFF THE
+    # WALL.  `gs * d * 0.60` against a 0.34 deep stack puts its inner face at
+    # `0.60d - 0.17`; the gable wall's face is at `0.50d`.  They touch only when
+    # `0.10d <= 0.17`, i.e. d <= 1.70 — and house_dims() draws d in 1.30..2.68, so
+    # MOST of the town had a free-standing pillar with daylight between it and the
+    # house, which is exactly what the tenth blind critic reported ("free-standing
+    # pillars that pass the roof ridge without flashing, several of them detached
+    # from the wall behind").  Measure the offset from the WALL FACE, never from a
+    # fraction of a jittered dimension: an offset that is a fraction of a random
+    # number is a contact that is a coin toss.
     gs = 1.0 if rng.random() < 0.5 else -1.0        # which gable end carries it
     cw, cz0 = 0.34 + 0.10 * s, fl - 0.30
     cz1 = fl + rh + 0.26 + rng.uniform(0, 0.24)
-    p.cube(STONE, at(0, gs * d * 0.60, (cz0 + cz1) / 2), (cw, 0.34, cz1 - cz0), rz=yaw)
-    p.cube(STONE, at(0, gs * d * 0.60, cz1 + 0.07), (cw * 1.32, 0.48, 0.14), rz=yaw)
+    cd = 0.34
+    cv = gs * (d * 0.5 + cd * 0.5 - 0.14)           # 0.14u of stack INSIDE the gable
+    p.cube(STONE, at(0, cv, (cz0 + cz1) / 2), (cw, cd, cz1 - cz0), rz=yaw)
+    # FLASHING.  A stack that crosses a roof line with no collar reads as a pillar
+    # standing in front of a house; the collar is the one detail that says the two
+    # are the same object.  It sits at the eave board, which is where the stack
+    # actually passes the roof overhang (the eave reaches 0.59d, the stack's inner
+    # face 0.50d - 0.14).
+    p.cube(STONE, at(0, cv, fl + eh + 0.06), (cw * 1.30, cd * 1.42, 0.20), rz=yaw)
+    p.cube(STONE, at(0, cv, cz1 + 0.07), (cw * 1.32, cd * 1.42, 0.14), rz=yaw)
     # DOOR + two windows on the face the yaw points at.  The door is the scale cue;
     # the gable window is what says "there is an upstairs", which is most of the
     # difference between a tall box and a house.

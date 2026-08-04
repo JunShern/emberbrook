@@ -184,7 +184,28 @@ def zone_at(zg, x, z):
 #       ragged instead of vector.  THE HONEST LIMIT: the terrain lattice is 1.6 m,
 #       so this buys a 1.6-3.2 m ragged seam and NOT a true blend — the textures
 #       still change abruptly underneath it.
-def surface(ground, T, grass_gain=1.34, dry_gain=1.16, rock_gain=1.16,
+# R11 — VALUE AND CHROMA, THE TENTH CRITIC'S NAMED LARGEST GAP.  Three asks land
+# here and nowhere else, because they are all the ground's own albedo and no post
+# pass can undo an albedo without also undoing the light on it:
+#   * "re-target the greens OFF YELLOW."  The grass recipe multiplied b by 0.70
+#     against g by 1.14 — a b:g of 0.61, which is chartreuse by construction.  It
+#     is 0.86 : 1.06 now (b:g 0.81) and the hue is a green again.
+#   * "pull global chroma back 15-20%" and "darken and desaturate the ground plane
+#     so the orange roofs separate from it."  grass_gain 1.34 -> 1.08, dry 1.16 ->
+#     0.84.  L3 originally lifted grass 0.383 -> 0.638 to answer "the grass was
+#     darker than the rock"; it overshot into "nothing in the frame is dark."
+#   * "the tan slope reads as a missing material assignment — flat untextured sand."
+#     It is not missing: SIM.pick returns ground_valley_2 (the DRY slot) on both
+#     sides of that boundary.  What is missing is VARIATION — the dry recipe's
+#     noise amplitude was 0.24-0.34 against grass's 0.30-0.40 on a gain that made
+#     it the brightest thing in the frame, so it clipped flat.  Amplitude doubled,
+#     gain cut, and the seam band widened (2.1 -> 3.2 u probe, 0.30 -> 0.42 depth)
+#     so the boundary is ragged over 3 m instead of hard over 1.
+# The ROCK's mean is deliberately unchanged (0.72 + bed*0.52 and 0.62 + bed*0.72
+# both average 0.98): the gorge cliff needed value STRUCTURE, not a darker cliff —
+# its L05 was already 0.061 (LOOP.md R3) and taking the mean down would have made
+# the frame grim rather than deep.
+def surface(ground, T, grass_gain=1.08, dry_gain=0.72, rock_gain=1.16,
             rock_cool=1.0, seam=True):
     me = ground.data
     ca = me.color_attributes.get("Col")
@@ -228,14 +249,14 @@ def surface(ground, T, grass_gain=1.34, dry_gain=1.16, rock_gain=1.16,
         nFine = vnoise(x, z, 1.9, 21.3)
         n = nBig * 0.52 + nMid * 0.33 + nFine * 0.15
         if kind == 1:                       # ---- GRASS -------------------------
-            r, g, b = r * (0.86 + n * 0.30), g * (1.14 + n * 0.40), b * (0.70 + n * 0.34)
+            r, g, b = r * (0.80 + n * 0.28), g * (1.06 + n * 0.34), b * (0.86 + n * 0.34)
             s = grass_gain * (0.80 + n * 0.46)
         elif kind == 2:                     # ---- DRY / SAND --------------------
-            r, g, b = r * (1.02 + n * 0.24), g * (1.00 + n * 0.26), b * (0.88 + n * 0.34)
+            r, g, b = r * (0.84 + n * 0.36), g * (0.88 + n * 0.42), b * (0.98 + n * 0.58)
             s = dry_gain * (0.86 + n * 0.32)
         else:                               # ---- ROCK --------------------------
             bed = 0.5 + 0.5 * math.sin(y * 1.55 + vnoise(x, z, 22.0, 5.5) * 4.2)
-            band = 0.72 + bed * 0.52
+            band = 0.62 + bed * 0.72
             k = rock_cool
             r, g, b = (r * (1 - 0.34 * k + n * 0.14), g * (1 - 0.10 * k + n * 0.14),
                        b * (1 + 0.62 * k + n * 0.20))
@@ -245,7 +266,7 @@ def surface(ground, T, grass_gain=1.34, dry_gain=1.16, rock_gain=1.16,
             other = tot = 0
             for j in range(6):
                 a = j * math.pi / 3
-                sp = T.at(x + math.cos(a) * 2.1, z + math.sin(a) * 2.1)
+                sp = T.at(x + math.cos(a) * 3.2, z + math.sin(a) * 3.2)
                 if sp is None:
                     continue
                 tot += 1
@@ -256,7 +277,7 @@ def surface(ground, T, grass_gain=1.34, dry_gain=1.16, rock_gain=1.16,
                 # a smooth ramp is just a softer vector edge; reference seams are RAGGED
                 t = max(0.0, min(1.0, wr * 1.5 - 0.25 + (nFine - 0.5) * 0.85))
                 dark = 0.72 + nMid * 0.30
-                m = 1 - t * 0.30 * dark
+                m = 1 - t * 0.42 * dark
                 r, g, b = r * m, g * m, b * m
         if r > 1.0 or g > 1.0 or b > 1.0:
             over += 1
@@ -338,12 +359,20 @@ _ICO_F = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11),
 
 
 def _clump_geo():
+    # R11: THE SQUASH WAS 0.62 AND IT MADE PANCAKES.  A unit clump 1.0 wide and
+    # 0.62 tall, then scaled w in 0.75..1.80 against h in 0.45..1.20, lands at a
+    # mean 1.28 x 0.51 — aspect 0.40.  The tenth blind critic's first sentence
+    # about the gorge frame was "flat green discs, pancakes lying on the ground,
+    # not bushes; the first thing my eye caught."  Measured, not argued: SIM.pick
+    # at three of them returns veg_land_clumps with a first-hit normal of
+    # (-0.06, 0.99, -0.14) — a horizontal facet.  0.94 keeps the low-poly facet
+    # read (which IS the style) and gives the thing a height.
     pos, uv = [], []
     for f in _ICO_F:
         for i in f:
             v = np.array(_ICO_V[i], dtype=float)
             v = v / np.linalg.norm(v) * 0.5
-            pos.append((v[0], v[1] * 0.62 + 0.5, v[2]))
+            pos.append((v[0], v[1] * 0.94 + 0.47, v[2]))
     for k in range(len(pos)):
         uv.append((0.42 + (k % 3) * 0.03, 0.44 + ((k // 3) % 3) * 0.03))
     return np.array(pos), np.array(uv)
@@ -517,9 +546,18 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
             # 0.5-0.8 produced faceted BLACK BOULDERS at every rock foot.
             if rock_near > 3 and r() < 0.24:
                 cc = np.array(pal[int(r() * len(pal))]) * (1.9 + r() * 0.9)
-                clump_rows.append(dict(x=jx + (r() - 0.5) * 0.9, y=here[0] - 0.10,
-                                       z=jz + (r() - 0.5) * 0.9, w=0.75 + r() * 1.05,
-                                       h=0.45 + r() * 0.75, yaw=r() * 6.28, tilt=0.0, c=cc))
+                # R11: HEIGHT IS DRAWN FROM THE WIDTH, not independently — two
+                # independent draws is how a bush becomes a puddle on the unlucky
+                # half of them.  The PRNG STREAM IS PRESERVED EXACTLY (same seven
+                # calls in the same order), because the port check in this module's
+                # docstring is a count check and a different stream is a different
+                # picture with the same statistics.
+                _cx = jx + (r() - 0.5) * 0.9
+                _cz = jz + (r() - 0.5) * 0.9
+                _cw = 0.62 + r() * 0.72
+                _ch = _cw * (0.86 + r() * 0.46)
+                clump_rows.append(dict(x=_cx, y=here[0] - 0.14, z=_cz, w=_cw,
+                                       h=_ch, yaw=r() * 6.28, tilt=0.0, c=cc))
         x += step
 
     # ---- SCALE THREE: FLOWERS IN CLUMPS, never scattered -------------------
