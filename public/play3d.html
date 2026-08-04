@@ -441,9 +441,39 @@ const PFX={
   // 0.87 = the 13% off global chroma. The rest of the critic's 15-20% is in the
   // terrain's COLOR_0 where it belongs, because an albedo fix survives every camera.
   gradeSat: PFXNUM('grade_sat',0.87),
-  gradeToe: PFXNUM('grade_toe',0.38),
+  // R13 — 0.38 -> 0.06, AND THE REFERENCES ARE WHY. R11 added this toe to buy back a
+  // black point after the critic asked "is anything in the frame genuinely dark". The
+  // references answer that question themselves and the answer is NO: measured over the
+  // playfield of both FFIX overworld shots, **ZERO PERCENT of their pixels sit under
+  // L 0.10**, and their L05 is 0.211 / 0.276. Ours was 0.084 / 0.043 with 6.4% / 14.2%
+  // of the frame under 0.10. We were not short of darks; we had crushed them, and a
+  // crushed shadow has no signal left to carry a hue — which is half of why the shadow
+  // colour has now been guessed wrong twice (violet, then brown). The toe stays as a
+  // knob because "far darks should lift, near darks should not" is still true.
+  gradeToe: PFXNUM('grade_toe',0.06),
   // the yellow-selective chroma pull; see THE PULL IS YELLOW-SELECTIVE.
-  gradeGreen: PFXNUM('grade_gp',0.30),
+  // R12's yellow-selective pull. R13 CUTS IT TO A TOKEN and the reason is measured on
+  // the references themselves, not chosen: their grass is MORE saturated in shade than
+  // in light (HSV sat ratio shade/lit 2.41 on ref 1, 1.36 on ref 3), so a pull that
+  // lands on every vegetation pixel in the frame is fighting the thing the refs do.
+  // What is left is insurance against the chartreuse R12 was fixing. ?grade_gp= sweeps.
+  gradeGreen: PFXNUM('grade_gp',0.06),
+  // THE THREE PER-MATERIAL TERMS (R13). See the selectors in GRADE_SHADER.
+  // wp — the terracotta/fired-clay pull. The roofs were the loudest thing in the
+  // meadow frame (warm-family sat 0.534 over 44.8% of the pixels; the references run
+  // 0.371-0.490 over 0.3-1.5%). tools/valley_build.py's ROOF albedo carries the other
+  // half of this: an albedo fix survives every camera, a grade fix survives every asset.
+  gradeWarm: PFXNUM('grade_wp',0.26),
+  // cp — the river. "Opaque flat cyan... the most saturated thing in the frame and the
+  // least believable material in either frame." The REAL fix is the water treatment in
+  // the bundle (docs/plans/water-transparency.md); this is the part that lands on the
+  // pixel whatever the material does, and it is deliberately small so it cannot be
+  // mistaken for that work.
+  gradeCyan: PFXNUM('grade_cp',0.20),
+  // vb — and the vegetation gets its chroma BACK. This is the term that makes the set
+  // per-material rather than just a second global pull: without it, cutting gp and
+  // adding wp/cp is still a frame-wide walk-back with a different sign.
+  gradeVeg: PFXNUM('grade_vb',0.18),
   gradeDesat: PFXNUM('grade_d',0.40),
 };
 // THE AERIAL SPLIT (2026-08-03, overworld only, ?grade=0 to remove).
@@ -483,14 +513,14 @@ const GRADE_SHADER={
              dNear:{value:30}, dFar:{value:150}, amt:{value:1}, lift:{value:0.03},
              desat:{value:0.0}, litLo:{value:0.0}, litHi:{value:1.0},
              haze:{value:0.0}, sat:{value:1.0}, dScale:{value:52.0}, dRef:{value:0.0}, toe:{value:0.0},
-             gp:{value:0.0},
+             gp:{value:0.0}, wp:{value:0.0}, cp:{value:0.0}, vb:{value:0.0},
              hazeCol:{value:new THREE.Vector3(0.127,0.175,0.275)},
              warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
              coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
   vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
   fragmentShader:[
     'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
-    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp;',
+    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb;',
     'uniform vec3 warmCol,coolCol,hazeCol;',
     'void main(){',
     '  vec4 c=texture2D(tDiffuse,vUv);',
@@ -576,9 +606,47 @@ const GRADE_SHADER={
     // selector is (min(r,g) - b) / max: meadow grass 0.53, canopy 0.5, and the
     // things that must NOT move score low — the orange roofs 0.18, the dry slope
     // 0.10, the character's teal dress 0. `?grade_gp=0` removes it.
+    // R13 — AND THE PULL HAD TO BECOME PER-MATERIAL, because R12's was global and a
+    // global one cannot do this job. The thirteenth critic: "A is over-corrected grey
+    // on the greens. The grass is a dull uniform olive with almost no hue variation,
+    // while the roofs stay a strong terracotta and the river stays a strong cyan —
+    // that is the signature of a GLOBAL saturation walk-back applied where a
+    // PER-MATERIAL one was needed. It killed the vegetation and left the two hero hues
+    // untouched, so the frame is TWO LOUD COLOURS ON A DEAD FIELD."
+    //
+    // MEASURED, and the number is the whole argument (scratchpad/r13, a hue-family
+    // census of our plates against the two FFIX references' own pixels):
+    //
+    //                        share of frame   HSV saturation
+    //   ref 1 / ref 3  warm 10-45 deg    0.3% / 1.5%     0.490 / 0.371
+    //   r12 meadow     warm 10-45 deg   44.8%            0.534
+    //   ref 1 / ref 3  green 60-160    61.1% / 43.9%     0.418 / 0.484
+    //   r12 meadow     green 60-160     17.0%            0.397
+    //
+    // Nearly half the meadow is warm-hue pixels at a saturation ABOVE either
+    // reference's terracotta, while the greens sit under both. That is the critic's
+    // sentence as arithmetic, and no single `sat` scalar can move one without the
+    // other — it is one multiply on every pixel in the frame.
+    //
+    // THREE SELECTORS, each a channel-order test, so a material is picked out by what
+    // it IS rather than by where it is. They cost three max/min and no texture reads.
+    // Scored on the shipped r12 frames' own probe boxes:
+    //   yel (min(r,g)-b)  vegetation   meadow grass 0.53  canopy 0.50  roof 0.18  road 0.10
+    //   wrm (r-max(g,b))  fired clay   roof 0.32  road 0.20  grass 0.00 (g>=r under our key)
+    //   cyn (min(g,b)-r)  the river    river 0.41  hazed far band 0.06  shaded grass 0.00
+    // SHADED GRASS SCORES ZERO ON `cyn` AND THAT IS LOAD-BEARING: after the fill fix
+    // above, shade swings blue-green (hue 87-103), and a naive "cool pixels" selector
+    // would desaturate every shadow in the frame — undoing the round's other half.
+    // b is still BELOW r in shaded grass, which is what keeps the two apart.
     '  float pMx=max(o.r,max(o.g,o.b));',
     '  float yel=clamp((min(o.r,o.g)-o.b)/max(1e-4,pMx), 0.0, 1.0);',
-    '  o=mix(vec3(oL), o, 1.0-gp*smoothstep(0.12,0.45,yel));',
+    '  float wrm=clamp((o.r-max(o.g,o.b))/max(1e-4,pMx), 0.0, 1.0);',
+    '  float cyn=clamp((min(o.g,o.b)-o.r)/max(1e-4,pMx), 0.0, 1.0);',
+    '  float kSat = 1.0 - gp*smoothstep(0.12,0.45,yel)',
+    '                   - wp*smoothstep(0.14,0.34,wrm)',
+    '                   - cp*smoothstep(0.16,0.40,cyn)',
+    '                   + vb*smoothstep(0.28,0.55,yel);',
+    '  o=mix(vec3(oL), o, max(0.0,kSat));',
     // R11 — THE FOREGROUND TOE, and it exists because the first version of this pass
     // FAILED THE CRITIC'S OWN SECOND TEST while passing its first. Measured over the
     // whole frame, r10 -> r11a: saturation 0.545 -> 0.402 and the green b:g 0.634 ->
@@ -721,6 +789,9 @@ function pfxBuild(){
     grade.material.uniforms.sat.value=PFX.gradeSat;
     grade.material.uniforms.toe.value=PFX.gradeToe;
     grade.material.uniforms.gp.value=PFX.gradeGreen;
+    grade.material.uniforms.wp.value=PFX.gradeWarm;
+    grade.material.uniforms.cp.value=PFX.gradeCyan;
+    grade.material.uniforms.vb.value=PFX.gradeVeg;
     {const hz=(Q.get('grade_hc')||'').split(',');
      if(hz.length===3) grade.material.uniforms.hazeCol.value.set(+hz[0],+hz[1],+hz[2]);}
     const K=PFX.gradeTint, u=grade.material.uniforms;
@@ -2553,13 +2624,77 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // its hue changes — measured 0.099 -> 0.114 on the gorge road, 0.221 -> 0.228 on
       // the meadow road. A hue fix that is not luminance-compensated is a level change
       // wearing a colour's clothes. OWBOUNCE takes the same pair of numbers above.
-      const OWENV=+(Q.get('owenv')||0.376), OWENVSUN=+(Q.get('owsun')||0.30);
+      // ==================================================================
+      // R13 — THE HUE OVERSHOT, AND THIS TIME IT IS MEASURED OFF THE REFERENCES.
+      //
+      // R11 shipped shadows at hue 273 deg (violet). R12 neutralised them to hue 41 deg
+      // (warm brown). THE TARGET WAS NEITHER, and the thirteenth blind critic said so:
+      // "Both A and B take a MUDDY GREY-OLIVE, and both should be taking COOL BLUE...
+      // nothing inside it is cooler in hue than the lit grass beside it, which is what
+      // makes the whole frame read as unbounced spotlight rather than golden hour."
+      //
+      // TWO GUESSES IN OPPOSITE DIRECTIONS IS THE SIGNAL TO STOP GUESSING. So the
+      // number comes off the references' own pixels (scratchpad/r13/refhue.py — classify
+      // by material, split each material by ITS OWN luminance quartiles, no hand-picked
+      // boxes), and both references agree closely:
+      //
+      //                              shaded          lit        shade-lit    shade   shade/lit
+      //                               hue            hue          d hue       sat        L
+      //   ref 1  grass              100.3 deg      87.4 deg      +12.9       0.388     0.53
+      //   ref 3  grass               99.0          85.1          +13.9       0.454     0.59
+      //   ref 1  rock/stone         226.5         135.0          +91.4       0.236     0.35
+      //   ref 3  rock/stone         209.2         122.9          +86.3       0.352     0.34
+      //
+      // THREE THINGS THAT ARE NOT OBVIOUS AND ARE NOW MEASURED:
+      //   1. A REFERENCE SHADOW IS MORE SATURATED THAN THE LIGHT BESIDE IT, not less
+      //      (sat ratio 2.41 and 1.36 on grass, 4.6 and 11.4 on stone). Their neutral
+      //      stone goes from sat 0.03 in sun to 0.24-0.35 in shade. The shade is where
+      //      their colour LIVES.
+      //   2. THEIR SHADOWS ARE NOWHERE NEAR BLACK — shade sits at 0.34-0.59 of lit.
+      //      Ours sat at 0.16-0.26. See gradeToe above.
+      //   3. Violet was never wrong for being COOL, it was wrong for being MAGENTA:
+      //      R11's [0.42,0.44,1.00] had G barely above R. The refs' shaded stone is
+      //      R < G < B with G nearer the middle — a cyan-blue, hue ~210-227.
+      //
+      // SO: the fill takes THE REFERENCES' OWN HUE. [0.55,0.72,1.00] is hue 217.3 deg,
+      // inside their 209-227 band, with more chroma than R12's [0.68,0.76,1.00]
+      // (hue 217 as well, but at half the spread — it was the right hue too WEAK to
+      // reach the shade, which is why R12's shadows took the albedo's warmth instead).
+      // AND THE LEVEL GOES UP RATHER THAN DOWN: 0.376 -> 0.95. R12 cut the level to hold
+      // shade LUMINANCE constant while it moved the hue, which was correct arithmetic
+      // for the move it was making and is exactly what pinned the shade at 0.20 of lit,
+      // where nothing has enough signal to be blue.
+      //
+      // SWEPT, NOT DERIVED (six rungs of owfill x owenv x grade_toe, plates in
+      // scratchpad/r13, analysed by scratchpad/r13/ourhue.py — THE SAME CLASSIFIER THAT
+      // MEASURED THE REFERENCES, which is the only reason the two columns can be
+      // compared at all). Landed at owenv 0.95 / toe 0.06, on the meadow:
+      //
+      //                     r12 shipped      r13          reference
+      //   grass shade hue    74.6 deg        83.7          99-100
+      //   lit->shade d hue   +2.6            +13.1         +12.9 / +13.9
+      //   grass shade sat     0.564           0.451         0.388 / 0.454
+      //   frame saturation    0.447           0.366         0.370 / 0.381
+      //   L05                 0.098           0.176         0.211 / 0.276
+      //   pixels under L 0.10 5.2%            1.0%          0.0%
+      //
+      // The DELTA is on the references' number; the ABSOLUTE hue is still ~15 deg short
+      // because our LIT grass sits at 70 deg against their 85-87 — that is the KEY's
+      // warmth, a different axis, and out of scope this round. Recorded, not fixed.
+      // A rung further (owenv 1.10) is measured and available: it buys L05 0.187 and
+      // costs shade saturation 0.451 -> 0.429. ?owenv= / ?owfill= sweep both.
+      //
+      // OWBOUNCE IS DELIBERATELY NOT MOVED. R12's note says it "takes the same pair of
+      // numbers"; that was true of R12's change and is NOT true of this one — the sweep
+      // above held the bounce fixed, so its shipped triple is what these numbers were
+      // measured under. Moving it now would be shipping an unmeasured value.
+      const OWENV=+(Q.get('owenv')||0.95), OWENVSUN=+(Q.get('owsun')||0.30);
       // THE HUE IS A KNOB NOW, not only the level. R3 swept the fill's LEVEL and
       // wrote down that the COLOUR was where the terminator was hiding — and then
       // left the colour as a literal, so the next round could not sweep the thing
       // R3's own note said mattered. ?owfill=r,g,b (0..1 triples).
       const OWSKYCOL=(Q.get('owfill')||'').split(',').length===3
-        ? Q.get('owfill').split(',').map(Number) : [0.68,0.76,1.00];
+        ? Q.get('owfill').split(',').map(Number) : [0.55,0.72,1.00];
       if(IBL){
         const _sky=OWSKYCOL.map(v=>v*OWENV);
         const _grd=_sky.map(v=>v*0.55);
