@@ -102,7 +102,7 @@
     // ROOT POINTS PER SQUARE METRE, not blades. 9.5 inside r0 is a 0.32 m mean spacing,
     // the dense end of the reference's 0.3-0.6 m, and the bare gaps come from the clump
     // threshold rather than from thinning the whole field.
-    tuftDens: 10.5,
+    tuftDens: 11.4,
     bptMin: 4, bptMax: 7,   // blades per root point
     tuftR: 0.070,           // how far a blade's root may sit from the tuft centre (m)
     // HEIGHT: r3's carpet read at the waist and was cut for it; R6's replacement read at
@@ -159,7 +159,7 @@
                      // first build at tuftDens 12 hit the 230k valve, and the valve loses
                      // one SIDE of the disc rather than thinning evenly, so the far field
                      // is thinned on purpose instead of being truncated by accident.
-    wide: 0.018,     // blade half-width at the base, before the per-variant multiplier.
+    wide: 0.0138,    // blade half-width at the base, before the per-variant multiplier.
                      // 0.030 x the short variant's 1.30 gave a 7.8 cm leaf: at the low
                      // camera the field read as CORN, which is the exact word the critic
                      // used for r3. A grass blade is a few millimetres wide and the thing
@@ -215,6 +215,10 @@
                      // rarer than the band it comes from, and be SHORT (it gets trodden).
     strayFr: 0.45,   // ...and only tufts already this deep in the band may stray
     strayH: 0.62,    // how tall a straggler is against its own tuft
+    strayLift: 0.30, // the most a straggler may be lifted onto the surface it crossed
+                     // onto (see occTop). A road ramp, a dock plank and a bedding ring
+                     // are all proud of their terrain by 0.02-0.25 m; a roof is not a
+                     // surface anything walked onto.
     occCell: 0.6,    // fringe field resolution, metres
 
     // ---- colour -----------------------------------------------------------------
@@ -267,9 +271,47 @@
                      // TERM THAT MOVES THEM INTO THE PICTURE: without it the per-tuft
                      // probability spends the whole budget on the far annulus.
     flFringe: 2.2,   // ...multiplied by this inside the fringe band
-    flH: 0.185,      // stem height — a head that does not clear the blades around it is a
+    flH: 0.205,      // stem height — a head that does not clear the blades around it is a
                      // head nobody sees, and hMax went up this round too
     flW: 1.35,       // head width scale at r0, before the distance gain
+
+    // ---- ROUND 3: the two new ground assets ----------------------------------------
+    // They get their OWN density fields, not a share of the grass's. A second species
+    // scattered on the first one's mask is the first species in a different shape: the
+    // patches have to land somewhere the grass patches are not, or the hillside is still
+    // one population. Each field has its own rotation angle and its own scale (see
+    // weedAt/sedgeAt), so a weed patch, a sedge stand and a grass clump have no edges
+    // in common.
+    //
+    // THE WEED IS A PLANT OF DISTURBED GROUND — path shoulders, house bedding, the foot
+    // of a rock — which is exactly where `fringe` already knows how to point. So the
+    // fringe boost is bigger than the grass's, and mid-lawn it is rare.
+    weed: 1.0,       // master, 0 = off
+    weedM: 17.0,     // metres per weed-patch cell
+    weedT: 0.44,     // patch threshold
+    weedPer: 0.105,  // per-tuft probability inside a patch at full density
+    weedFringe: 2.3, // ...and this much likelier inside the fringe band
+    weedNear: 2.0,   // ...at the player, falling to 1.0 at r1 (the flNear lesson: a
+                     // per-tuft probability spends itself on the far annulus by
+                     // arithmetic alone, because tuft count grows as the AREA)
+    weedS: 0.225,    // leaf length (m); the rosette spans ~1.7x this and stands ~0.85x
+    weedJ: 0.34,     // +-34% size jitter
+    // THE SEDGE IS A PLANT OF HELD WATER. There is no moisture field here and inventing
+    // one would be a system for one asset, so it rides two things that already exist and
+    // correlate with it: the GREEN slot (the terrain builder put the dry slot on the worn
+    // slopes, which is where water does not sit) and low `crest` (flat ground, not a
+    // shoulder). It is the one asset that gets RARER toward the dry slope, which is what
+    // makes the two slopes read as different GROUND rather than as one ground at two
+    // tints — f2's own unfinished business.
+    sedge: 1.0,
+    sedgeM: 23.0,
+    sedgeT: 0.52,
+    sedgePer: 0.085,
+    sedgeDry: 0.28,  // multiplier for a sedge standing on the DRY slot
+    sedgeFlat: 1.7,  // ...and this much likelier on flat ground than on a shoulder
+    sedgeNear: 1.7,
+    sedgeS: 0.46,    // crown height (m)
+    sedgeJ: 0.36,
 
     // ---- the bundle's own tufts ----------------------------------------------------
     // `ow_f2_tuft` is the pale spiked clump the critic was judging. It is a bundle asset
@@ -378,22 +420,191 @@
     return g;
   }
 
-  // A FLOWER IS A STEM AND A CROSS. Two crossed cards give it a silhouette from every yaw
-  // for 4 triangles, which matters because a flower is 2-5 px and a billboard that happens
-  // to be edge-on is a missing flower.
-  function flowerGeo() {
-    var T = TH(), Pp = [], N = [], U = [], C = [], I = [];
-    var sw = 0.006, sh = 1.0, hw = 0.030, hy0 = 0.86, hy1 = 1.14;
-    Pp.push(-sw, 0, 0, sw, 0, 0, -sw, sh * hy0, 0, sw, sh * hy0, 0);
-    for (var i = 0; i < 4; i++) { N.push(0, 0.97, 0.24); U.push(0, 0); C.push(0.34, 0.42, 0.24); }
-    I.push(0, 1, 3, 0, 3, 2);
-    var pairs = [[hw, 0], [0, hw]];
-    for (var q = 0; q < 2; q++) {
-      var v0 = Pp.length / 3, ax = pairs[q][0], az = pairs[q][1];
-      Pp.push(-ax, sh * hy0, -az, ax, sh * hy0, az, -ax, sh * hy1, -az, ax, sh * hy1, az);
-      for (var k = 0; k < 4; k++) { N.push(0, 1, 0); U.push(0, 1); C.push(1, 1, 1); }
-      I.push(v0, v0 + 1, v0 + 3, v0, v0 + 3, v0 + 2);
+  // ===================================================================================
+  // ROUND 3: THREE NEW GROUND ASSETS — the ceiling f2 measured from the inside
+  // ===================================================================================
+  // f2's own STILL OPEN list named this and the blind judge named it independently:
+  // "the dry slope is one tint multiplier on the same three blade shapes." Every knob
+  // this module owns moves COUNT, SIZE, TINT or PLACEMENT, and none of them can make a
+  // second species — a hillside carried by one silhouette at two tints is a hillside
+  // with one plant on it, and no amount of scatter tuning is going to be the answer.
+  // So: two more ground plants and one real flower, in the same vertex-colour language
+  // (a base->tip ramp baked into COLOR_0, no new material, no new texture, no new
+  // draw call per plant — two more instanced meshes).
+  //
+  // THE POINT OF EACH IS ITS SILHOUETTE, not its detail. At 10-20 m these are 8-25 px
+  // tall, so what survives is the OUTLINE:
+  //   blade   a thin spike            (have)
+  //   weed    a low rosette of BROAD lobed leaves — a round, horizontal mass
+  //   sedge   a tight fountain of stiff arcs — tall, narrow, sharply bent
+  //   flower  a NOTCHED DISC on a stem — the one round-with-holes shape out there
+  // Three of the four disagree in aspect ratio, which is the axis a 12 px plant is
+  // read on. Detail below ~2 px is triangles spent on nothing (f2's whole finding).
+
+  // ---- the broadleaf weed: a plantain/dock rosette --------------------------------
+  // 5 ovate leaves from one crown, pitched out and arcing DOWN at the tip so the mass
+  // is wider than it is tall. 30 triangles. It is the only thing in the frame with a
+  // horizontal silhouette, which is exactly why it reads next to a field of spikes.
+  // THE MIDRIB IS AN ARC THAT TURNS OVER, AND THE FIRST VERSION DID NOT — CAUGHT BY
+  // LOOKING, not by any number here. Written as `y = len*t*cos(pitch*0.55)` the height
+  // grows monotonically with t, so every leaf's TIP was its highest point: six leaves
+  // radiating UP and OUT, which in the frame read as loose leaves floating over the road
+  // rather than as one plant on the ground. A rosette is defined by its tips being BELOW
+  // its crown. So the midrib is integrated from a tangent ELEVATION that starts steep and
+  // ends NEGATIVE, which is the one property the shape has to have.
+  function weedGeo() {
+    var T = TH(), Pp = [], N = [], U = [], C = [], I = [], c3 = [0, 0, 0];
+    var NL = 6, SEG = 3;
+    for (var l = 0; l < NL; l++) {
+      // deterministic per-leaf variation: the six leaves of ONE geometry must differ, or
+      // the rosette is a pinwheel and reads as a manufactured object.
+      var a = l * (6.2831853 / NL) + (l % 2 ? 0.21 : -0.14);
+      var ca = Math.cos(a), sa = Math.sin(a);
+      var len = 0.84 + 0.16 * ((l * 7) % 5) / 4;          // 0.84..1.00
+      // TWO ERECT INNER LEAVES AND FOUR FLAT OUTER ONES. A rosette of six flat leaves is
+      // 0.07 m tall against grass that is 0.10-0.36 m: a correct plant that the field it
+      // stands in completely hides. Dock and plantain both hold their young leaves up,
+      // so the two silhouettes this asset needs — a horizontal MASS and something that
+      // clears the blades — are the same plant's, not a compromise between them.
+      var erect = l < 2;
+      var A0 = erect ? 1.35 : 1.09 + 0.14 * ((l * 3) % 4) / 3;   // tangent elevation, base
+      var A1 = erect ? 0.75 : -0.42 - 0.30 * ((l * 5) % 3) / 2;  // ...and at the tip
+      var v0 = Pp.length / 3, rr = 0, yy = 0;
+      for (var i = 0; i <= SEG; i++) {
+        var t = i / SEG;
+        if (i > 0) {                                       // midpoint integration of the arc
+          var am = A0 + (A1 - A0) * (t - 0.5 / SEG);
+          rr += len / SEG * Math.cos(am);
+          yy += len / SEG * Math.sin(am);
+        }
+        // OVATE, not lanceolate: widest at ~40% of the length. sin(pi*t^0.75) puts the
+        // shoulder there and still closes to a point, which is the whole difference
+        // between "leaf" and "blade" at 12 px. WIDE ENOUGH TO OVERLAP ITS NEIGHBOURS:
+        // six leaves that do not touch are six leaves, and the asset is a MASS.
+        var hw = 0.30 * len * Math.sin(Math.PI * Math.pow(Math.max(1e-4, t), 0.75));
+        if (i === 0) hw = 0.040 * len;
+        var px = ca * rr, pz = sa * rr;
+        var ox = -sa * hw, oz = ca * hw;
+        Pp.push(px - ox, yy, pz - oz, px + ox, yy, pz + oz);
+        // a broad leaf FACES UP; the lateral term is the elevation it is held at, so a
+        // drooping tip turns its face outward exactly as far as it has turned over.
+        var av = A0 + (A1 - A0) * t, nl = Math.sin(av) * 0.62;
+        N.push(-ca * nl, 0.92, -sa * nl, -ca * nl, 0.92, -sa * nl);
+        U.push(0, t, 1, t);
+        ramp3(WEED_C0, WEED_C1, t, c3);
+        C.push(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
+      }
+      for (var j = 0; j < SEG; j++) { var b = v0 + j * 2; I.push(b, b + 1, b + 3, b, b + 3, b + 2); }
     }
+    return mkGeo(T, Pp, N, U, C, I);
+  }
+
+  // ---- the low sedge / rush tussock ------------------------------------------------
+  // 7 stiff arcs off ONE knot, splayed in a fan, each much narrower and much more bent
+  // than a grass blade, and the whole thing TALLER than the tuft it stands among. 42
+  // triangles, and it replaces blades rather than adding to them (see `weedCost`).
+  // Its hue family is the cool one on purpose — the f2 `grassOnDry` lesson generalised:
+  // a second species that agrees with the first is a tint, not a species.
+  function sedgeGeo() {
+    var T = TH(), Pp = [], N = [], U = [], C = [], I = [], c3 = [0, 0, 0];
+    var NA = 7, SEG = 3;
+    for (var l = 0; l < NA; l++) {
+      var a = l * (6.2831853 / NA) + (l % 2 ? 0.28 : -0.21);
+      var ca = Math.cos(a), sa = Math.sin(a);
+      var len = 0.70 + 0.30 * ((l * 11) % 7) / 6;         // 0.70..1.00 — ragged crown
+      // A FOUNTAIN, NOT A STARFISH. The first pass ran flop to 1.10 and the tussock came
+      // out wider than it was tall, which is the weed's silhouette — two assets with one
+      // outline is the defect this round exists to fix, arriving by the back door.
+      var flop = 0.18 + 0.30 * ((l * 5) % 4) / 3;         // how far the arc falls over
+      var v0 = Pp.length / 3;
+      for (var i = 0; i <= SEG; i++) {
+        var t = i / SEG;
+        var rr = len * flop * t * t;                      // out
+        var yy = len * (t - 0.28 * t * t * flop);         // up, bending over
+        var hw = 0.030 * len * (1 - t * 0.90);            // a rush is a needle
+        var px = ca * rr, pz = sa * rr;
+        var ox = -sa * hw, oz = ca * hw;
+        Pp.push(px - ox, yy, pz - oz, px + ox, yy, pz + oz);
+        N.push(-ca * 0.22, 0.96, -sa * 0.22, -ca * 0.22, 0.96, -sa * 0.22);
+        U.push(0, t, 1, t);
+        ramp3(SEDGE_C0, SEDGE_C1, t, c3);
+        C.push(c3[0], c3[1], c3[2], c3[0], c3[1], c3[2]);
+      }
+      for (var j = 0; j < SEG; j++) { var b = v0 + j * 2; I.push(b, b + 1, b + 3, b, b + 3, b + 2); }
+    }
+    // THE DARK KNOT. A tussock's base is a dense mat of old growth, and without it the
+    // seven arcs read as seven separate blades that happen to touch — the one thing
+    // this asset exists NOT to be. Six triangles for the read that makes it one plant.
+    var v1 = Pp.length / 3;
+    for (var k = 0; k < 6; k++) {
+      var ak = k * (6.2831853 / 6);
+      Pp.push(Math.cos(ak) * 0.085, 0.035, Math.sin(ak) * 0.085);
+      N.push(0, 1, 0); U.push(0.5, 0.05);
+      C.push(SEDGE_C0[0] * 0.62, SEDGE_C0[1] * 0.62, SEDGE_C0[2] * 0.66);
+    }
+    var vc = Pp.length / 3;
+    Pp.push(0, 0.075, 0); N.push(0, 1, 0); U.push(0.5, 0.1);
+    C.push(SEDGE_C0[0] * 0.86, SEDGE_C0[1] * 0.86, SEDGE_C0[2] * 0.90);
+    for (var k2 = 0; k2 < 6; k2++) I.push(vc, v1 + k2, v1 + (k2 + 1) % 6);
+    return mkGeo(T, Pp, N, U, C, I);
+  }
+
+  // ---- A REAL FLOWER: a notched disc on a stem -------------------------------------
+  // f2 made the billboard cross BIGGER and pulled it IN, and the judge still called the
+  // result specks — correctly, because a cross of two cards has no outline of its own:
+  // seen from anywhere but dead-on it is one bright rectangle, and a bright rectangle
+  // 3 px across is a speck whatever colour it is. What reads at 10-20 m is a shape the
+  // eye has a name for, and for a flower that is a RING OF PETALS: six petals around a
+  // gold centre give a round silhouette with notches in it, and notches survive
+  // downsampling as a texture the way a rectangle does not.
+  // 6 petals x 2 + a 6-triangle centre fan + stem + two stem leaves = 24 triangles for
+  // the one object in this scatter the player is meant to notice.
+  function flowerGeo() {
+    var T = TH(), Pp = [], N = [], U = [], C = [], I = [], v0;
+    var sw = 0.007, hy = 0.92;                    // stem half-width, head height
+    // stem
+    Pp.push(-sw, 0, 0, sw, 0, 0, -sw * 0.7, hy, 0, sw * 0.7, hy, 0);
+    for (var i = 0; i < 4; i++) { N.push(0, 0.97, 0.24); U.push(0, 0); C.push(0.30, 0.40, 0.22); }
+    I.push(0, 1, 3, 0, 3, 2);
+    // two small stem leaves, so the flower is a PLANT and not a lollipop — the same
+    // note the tree lane paid for on its canopies, one scale down.
+    for (var q = 0; q < 2; q++) {
+      var a = q * 2.4 + 0.6, ca = Math.cos(a), sa = Math.sin(a);
+      var y0 = 0.24 + q * 0.22, ln = 0.20;
+      v0 = Pp.length / 3;
+      Pp.push(0, y0, 0,
+              ca * ln * 0.55, y0 + 0.055, sa * ln * 0.55,
+              ca * ln, y0 - 0.02, sa * ln);
+      for (var k = 0; k < 3; k++) { N.push(-ca * 0.3, 0.94, -sa * 0.3); U.push(0.5, 0.5); C.push(0.34, 0.46, 0.24); }
+      I.push(v0, v0 + 1, v0 + 2);
+    }
+    // the head: a gold centre and six petals lifted into a shallow bowl. COLOR_0 is
+    // WHITE on the petals so the per-instance colour carries the species (three of
+    // them), and the centre is baked warm so every species keeps a gold eye.
+    var NP = 6, R = 0.055, RC = 0.019, lift = 0.020;
+    var cIdx = Pp.length / 3;
+    Pp.push(0, hy + lift * 0.5, 0); N.push(0, 1, 0); U.push(0.5, 1); C.push(1.15, 0.86, 0.30);
+    var ring0 = Pp.length / 3;
+    for (var p2 = 0; p2 < NP; p2++) {
+      var ap = p2 * (6.2831853 / NP);
+      Pp.push(Math.cos(ap) * RC, hy + lift * 0.35, Math.sin(ap) * RC);
+      N.push(0, 1, 0); U.push(0.5, 0.9); C.push(1.10, 0.80, 0.26);
+    }
+    for (var p3 = 0; p3 < NP; p3++) I.push(cIdx, ring0 + p3, ring0 + (p3 + 1) % NP);
+    for (var p4 = 0; p4 < NP; p4++) {
+      var a4 = (p4 + 0.5) * (6.2831853 / NP), c4 = Math.cos(a4), s4 = Math.sin(a4);
+      var w4 = 0.40;                                   // petal half-angle spread
+      v0 = Pp.length / 3;
+      Pp.push(Math.cos(a4 - w4) * RC * 1.2, hy + lift * 0.30, Math.sin(a4 - w4) * RC * 1.2,
+              Math.cos(a4 + w4) * RC * 1.2, hy + lift * 0.30, Math.sin(a4 + w4) * RC * 1.2,
+              c4 * R, hy + lift, s4 * R);
+      for (var k4 = 0; k4 < 3; k4++) { N.push(-c4 * 0.18, 0.98, -s4 * 0.18); U.push(0.5, 1); C.push(1, 1, 1); }
+      I.push(v0, v0 + 1, v0 + 2);
+    }
+    return mkGeo(T, Pp, N, U, C, I);
+  }
+
+  function mkGeo(T, Pp, N, U, C, I) {
     var g = new T.BufferGeometry();
     g.setAttribute('position', new T.Float32BufferAttribute(Pp, 3));
     g.setAttribute('normal', new T.Float32BufferAttribute(N, 3));
@@ -402,6 +613,15 @@
     g.setIndex(I);
     return g;
   }
+  function ramp3(a, b, t, out) {
+    for (var i = 0; i < 3; i++) out[i] = a[i] + (b[i] - a[i]) * t;
+    return out;
+  }
+  // Each asset gets its OWN base->tip ramp. The weed is broad, so it catches more key
+  // and runs warmer at the tip; the sedge is the COOL member of the family, which is
+  // what stops a mixed clump reading as one plant at two sizes.
+  var WEED_C0  = [0.40, 0.56, 0.32], WEED_C1  = [0.90, 0.96, 0.54];
+  var SEDGE_C0 = [0.40, 0.56, 0.48], SEDGE_C1 = [0.88, 1.00, 0.78];
 
   // WHITE / YELLOW / PINK-LAVENDER. Three species, because two reads as a mistake and four
   // reads as a garden. Values are close together on purpose — the references' flowers are a
@@ -561,6 +781,19 @@
     if (nx <= 0 || nz <= 0 || nx * nz > 4e6) return null;
     var D = new Float32Array(nx * nz); D.fill(1e9);
     var HD = new Uint8Array(nx * nz);
+    // ...AND HOW HIGH THE HARD SURFACE STANDS (round 3). EVERY paved or bedded surface
+    // in this bundle is PROUD of the terrain it lies on — the road ribbon has its own
+    // ramp, `bed_in`'s trodden ring is a 2 cm disc, a house floor is a step — and a
+    // STRAY takes its y from the TERRAIN TRIANGLE it was born on, because that is the
+    // surface it was pushed off. So a straggler that crosses the seam stands at the
+    // height of the ground BESIDE the path, which puts its lower stem inside the path:
+    // measured on the closeup, 130 of 20 844 sampled blades sit under a hard surface,
+    // 56 of them by 3-25 cm (a stray at a bedding ring or a road shoulder), the rest by
+    // more than that (inside a house, where nothing can see them anyway). It is a small
+    // number and it lands on the ONE seam the player stands closest to, which is where
+    // f2 already learned this field's errors get read. One more array on a grid that is
+    // already being rasterised: the max surface height per hard cell.
+    var HY = new Float32Array(nx * nz); HY.fill(-1e9);
     var nOcc = 0, nHard = 0, nTri = 0;
     var va = new T.Vector3(), vb = new T.Vector3(), vc = new T.Vector3();
 
@@ -582,7 +815,8 @@
         nTri++;
         // plan-view area -> sample count. 16 samples/m2 puts ~4 in a 0.6 m cell, which is
         // enough that a thin road ribbon never develops holes in its own footprint.
-        var ax = vb.x - va.x, az = vb.z - va.z, bx = vc.x - va.x, bz = vc.z - va.z;
+        var ax = vb.x - va.x, ay = vb.y - va.y, az = vb.z - va.z;
+        var bx = vc.x - va.x, by2 = vc.y - va.y, bz = vc.z - va.z;
         var ar = Math.abs(ax * bz - az * bx) * 0.5;
         var ns = Math.max(3, Math.min(400, Math.ceil(ar * 16)));
         for (var s = 0; s < ns; s++) {
@@ -593,7 +827,11 @@
           if (gi < 0 || gk < 0 || gi >= nx || gk >= nz) continue;
           var o = gk * nx + gi;
           if (D[o] !== 0) { D[o] = 0; nOcc++; }
-          if (hard && !HD[o]) { HD[o] = 1; nHard++; }
+          if (hard) {
+            if (!HD[o]) { HD[o] = 1; nHard++; }
+            var py2 = va.y + u * ay + w * by2;
+            if (py2 > HY[o]) HY[o] = py2;
+          }
         }
       }
     });
@@ -621,7 +859,7 @@
       D[o2] = e;
     }
     var ms = ((performance && performance.now) ? performance.now() : 0) - t0;
-    return { x0: x0, z0: z0, nx: nx, nz: nz, cell: cell, D: D, HD: HD,
+    return { x0: x0, z0: z0, nx: nx, nz: nz, cell: cell, D: D, HD: HD, HY: HY,
              cells: nx * nz, occ: nOcc, hard: nHard, tris: nTri, ms: +ms.toFixed(1) };
   }
 
@@ -630,6 +868,16 @@
     var gi = ((x - OCC.x0) / OCC.cell) | 0, gk = ((z - OCC.z0) / OCC.cell) | 0;
     if (gi < 0 || gk < 0 || gi >= OCC.nx || gk >= OCC.nz) return false;
     return OCC.HD[gk * OCC.nx + gi] === 1;
+  }
+  // ...and how high it stands. null = no hard surface here, which is NOT the same as
+  // "the surface is at zero": a caller that treats a miss as a height puts every plant
+  // in open country at y=0.
+  function occTop(x, z) {
+    if (!OCC) return null;
+    var gi = ((x - OCC.x0) / OCC.cell) | 0, gk = ((z - OCC.z0) / OCC.cell) | 0;
+    if (gi < 0 || gk < 0 || gi >= OCC.nx || gk >= OCC.nz) return null;
+    var o = gk * OCC.nx + gi;
+    return OCC.HD[o] === 1 && OCC.HY[o] > -1e8 ? OCC.HY[o] : null;
   }
   function occD(x, z) {                       // metres to the nearest non-turf surface
     if (!OCC) return 99;
@@ -693,6 +941,20 @@
     var s = 1 / Math.max(0.5, P.slotM);
     return vnoise((x * RC3 - z * RS3) * s + 43.1, (x * RS3 + z * RC3) * s + 19.7);
   }
+  // ...and one field per NEW SPECIES, each on its own angle. If the weed and the sedge
+  // shared the grass's clump field they would appear exactly where the grass is thickest
+  // and vanish where it thins — three assets drawing one map. Their patches have to be
+  // able to land in the grass's bare gaps, which is where a different plant grows.
+  var RC4 = Math.cos(0.9126), RS4 = Math.sin(0.9126);     // ~52.3 deg
+  var RC5 = Math.cos(1.8734), RS5 = Math.sin(1.8734);     // ~107.3 deg
+  function weedAt(x, z) {
+    var s = 1 / Math.max(0.5, P.weedM);
+    return vnoise((x * RC4 - z * RS4) * s - 17.3, (x * RS4 + z * RC4) * s + 61.9);
+  }
+  function sedgeAt(x, z) {
+    var s = 1 / Math.max(0.5, P.sedgeM);
+    return vnoise((x * RC5 - z * RS5) * s + 8.7, (x * RS5 + z * RC5) * s - 52.3);
+  }
 
   function rngAt(x, z) {
     var s = (Math.imul(Math.round(x * 4) | 0, 374761393) ^
@@ -751,7 +1013,8 @@
     // If a future tune gets close, lower tuftDens; do not raise the cap.
     var MB = [[], [], []], MC = [[], [], []];   // per-variant matrices / colours
     var FM = [], FC = [];                       // flowers
-    var n = 0, nT = 0;
+    var WM = [], WC = [], SM = [], SC = [];     // weeds, sedges
+    var n = 0, nT = 0, nW = 0, nS = 0;
     var zone = SIM.zone ? SIM.zone : null;
     var m4 = new T.Matrix4(), q = new T.Quaternion(), up = new T.Vector3(0, 1, 0);
     var lean = new T.Quaternion(), axis = new T.Vector3();
@@ -846,6 +1109,25 @@
                   var rx = nx2 - X[a], rz = nz2 - Z[a];
                   var uu = (rx * e2z - rz * e2x) / det, ww = (e1x * rz - e1z * rx) / det;
                   bx = nx2; bz = nz2; by = Y[a] + uu * e1y + ww * e2y;
+                  // A STRAGGLER STANDS ON THE PATH, NOT IN IT. The plane it just took its
+                  // height from is the TERRAIN, and the thing it was pushed onto is proud
+                  // of that terrain by anything from 2 cm (a bedding ring) to a step (a
+                  // house floor). Without this the plant is planted at the height of the
+                  // ground BESIDE the paving and the paving draws over its lower stem —
+                  // the "grass clipping through the path" read, and its actual mechanism.
+                  // Only ever a LIFT: pulling a plant down to a surface it is standing
+                  // above would bury the ones the field is wrong about.
+                  // ...AND THE LIFT IS BOUNDED, WHICH THE FIRST BUILD LEARNED IN ONE
+                  // FRAME. `occTop` is the max height of any HARD triangle in the cell,
+                  // and `ow_f2_tiles` / `ow_f2_plaster` are in that set because a wall
+                  // footing is a seam — so under a house the cell's top is THE ROOF, and
+                  // an unbounded lift planted grass and flowers on the roofs of Emberbrook
+                  // (r3-meadow, caught by eye against t2-meadow's clean roof). A surface a
+                  // straggler could have stepped onto is proud of its terrain by
+                  // centimetres; anything higher is a BUILDING OVER the plant, not the
+                  // ground under it, and the plant stays where the terrain put it.
+                  var top = occTop(bx, bz);
+                  if (top !== null && top > by && top - by < P.strayLift) by = top + 0.004;
                 }
               }
               if (zone) { var zn = zone(bx, bz); if (zn === 'water') continue; }
@@ -892,6 +1174,84 @@
               var nb = P.bptMin + ((R() * (P.bptMax - P.bptMin + 1)) | 0);
               nb = Math.max(2, Math.round(nb * (1 - P.farThin * (dd / r1))));
               if (isStray) nb = Math.max(2, nb - 3);
+
+              // ---- ROUND 3: the weed and the sedge ------------------------------------
+              // THEY ARE PAID FOR OUT OF THE BLADES, NOT ADDED TO THEM. A rosette is 36
+              // triangles and a tussock 48 against a blade's 6, so a tuft that draws one
+              // drops most of its blades: the plant STANDS WHERE THE GRASS WOULD HAVE
+              // BEEN, which is the right picture — two species do not occupy the same
+              // 8 cm. `n` is charged their real cost so the budget valve still means what
+              // it says.
+              // BUT THE SUBSTITUTION DOES NOT MAKE THEM FREE, AND THE MEASURED A/B SAYS SO.
+              // An earlier draft of this comment claimed "two assets for roughly no
+              // triangles"; the true A/B on one bundle (closeup, r2 vs f3) is 808 848 ->
+              // 964 794 scatter triangles, +19.3%, and 4 -> 6 draws. The saving is real and
+              // the round spent it: `tuftDens` 10.5 -> 11.4 put 2 586 blades back in the
+              // same breath, so it never reaches the total. Substitution bounds the cost of
+              // a species; it does not pay for one.
+              var near = 1 - Math.min(1, dd / r1);
+              // NEITHER OF THEM MAY BE A STRAGGLER. A stray is deliberately pushed PAST
+              // the seam and now stands on top of the paving (see occTop), which is right
+              // for a few short blades and wrong for a 0.37 m rosette: the first build put
+              // pale dock leaves lying flat across the middle of the road and they read as
+              // litter, not as plants. The module's own note for `strayH` already says what
+              // a straggler is — a plant that has crossed the edge and GETS TRODDEN — and
+              // neither of these two assets is that plant.
+              var drewBig = isStray;
+              if (P.weed > 0 && !drewBig && n + 5 < P.budget) {
+                var wv2 = weedAt(bx, bz);
+                if (wv2 > P.weedT) {
+                  var pw = P.weedPer * P.weed * (wv2 - P.weedT) / (1 - P.weedT) *
+                           (1 + (P.weedFringe - 1) * frb) * (1 + (P.weedNear - 1) * near);
+                  if (R() < pw) {
+                    var ws = P.weedS * (1 + (R() - 0.5) * 2 * P.weedJ) * (1 + P.grow * (dd / r1));
+                    q.setFromAxisAngle(up, R() * Math.PI * 2);
+                    axis.set(Math.cos(R() * 6.283), 0, Math.sin(R() * 6.283));
+                    // a rosette sits ON the ground and takes its tilt from it, so the lean
+                    // is a third of a blade's: a weed leaning 20 degrees is a weed that has
+                    // been stepped on, which is a different story than the one being told.
+                    lean.setFromAxisAngle(axis, (R() - 0.5) * P.lean * 0.34);
+                    q.multiply(lean);
+                    vp.set(bx, by - 0.010, bz);
+                    // the horizontal gain goes on BOTH ground axes, unlike a blade: this is
+                    // a 3D rosette, not a card, so scaling one axis would shear it.
+                    vs.set(ws * wg, ws, ws * wg);
+                    m4.compose(vp, q, vs);
+                    for (var ew = 0; ew < 16; ew++) WM.push(m4.elements[ew]);
+                    var wj = 0.92 + 0.16 * R();
+                    WC.push(tr * wj, tg * wj * 1.02, tb * wj * 0.94);
+                    n += 5; nW++; drewBig = true;
+                    nb = Math.max(1, nb - 3);
+                  }
+                }
+              }
+              if (P.sedge > 0 && !drewBig && n + 8 < P.budget) {
+                var sv3 = sedgeAt(bx, bz);
+                if (sv3 > P.sedgeT) {
+                  var flat = 1 + (P.sedgeFlat - 1) * Math.max(0, Math.min(1, (IDX.ny[t] - 0.86) / 0.14));
+                  var ps = P.sedgePer * P.sedge * (sv3 - P.sedgeT) / (1 - P.sedgeT) *
+                           (dryW > 0 ? P.sedgeDry : 1) * flat *
+                           (1 + (P.sedgeNear - 1) * near);
+                  if (R() < ps) {
+                    var ss = P.sedgeS * (1 + (R() - 0.5) * 2 * P.sedgeJ) * (1 + P.grow * (dd / r1));
+                    q.setFromAxisAngle(up, R() * Math.PI * 2);
+                    axis.set(Math.cos(R() * 6.283), 0, Math.sin(R() * 6.283));
+                    lean.setFromAxisAngle(axis, (R() - 0.5) * P.lean * 0.45);
+                    q.multiply(lean);
+                    vp.set(bx, by - 0.020, bz);
+                    vs.set(ss * wg, ss, ss * wg);
+                    m4.compose(vp, q, vs);
+                    for (var es = 0; es < 16; es++) SM.push(m4.elements[es]);
+                    var sjt = 0.90 + 0.20 * R();
+                    // the COOL member of the family, and it is explicit rather than
+                    // inherited: f2's `grassOnDry` finding is that a plant which takes its
+                    // colour from its own ground cannot disagree with its own ground.
+                    SC.push(tr * sjt * 0.88, tg * sjt, tb * sjt * 1.10);
+                    n += 8; nS++; drewBig = true;
+                    nb = Math.max(1, nb - 4);
+                  }
+                }
+              }
               nT++;
               for (var bi = 0; bi < nb && n < P.budget; bi++) {
                 // ROOTS INSIDE ONE TUFT, not one root: blades that share a point read as a
@@ -983,10 +1343,12 @@
     addIM(bladeGeo(0), MB[0], MC[0], 'veg_owd_short');
     addIM(bladeGeo(1), MB[1], MC[1], 'veg_owd_med');
     addIM(bladeGeo(2), MB[2], MC[2], 'veg_owd_seed');
+    addIM(weedGeo(), WM, WC, 'veg_owd_weed');
+    addIM(sedgeGeo(), SM, SC, 'veg_owd_sedge');
     addIM(flowerGeo(), FM, FC, 'veg_owd_flower');
     sc.add(grp);                     // scene ONLY: collide/walkRef/allMeshes never touched
     NBLADE = n;
-    LASTAT = { x: p.x, z: p.z, tufts: nT, made: made };
+    LASTAT = { x: p.x, z: p.z, tufts: nT, weeds: nW, sedges: nS, made: made };
     LASTMS = ((performance && performance.now) ? performance.now() : 0) - t0;
     return n;
   }

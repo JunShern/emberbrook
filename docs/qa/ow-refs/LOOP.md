@@ -2033,3 +2033,102 @@ very pictures it was judged on.
 keep a readable green value with visible form and do not collapse into holes; the value
 floor holds. Honest limit: they are still bright faceted low-poly solids, which is the
 declared style, and the in-shade improvement is real but modest.
+
+---
+
+## FOLIAGE ROUND 3 (f3) — two species arrive, and the cones were never ours
+
+Plates `docs/qa/ow-refs/plates/f3-{closeup,meadow,gate,vista,gorge}.png`, crops in `f3-crops/`.
+Gates: **playthrough_test 86/0**, slice 848/0, cine 689/0 (2 soft), findability 69/0 (2 warn),
+walk_engine_gate ow-valley GREEN (0 cells lost, 0 extra, height agreement median 0.000 m).
+
+**THE A/B IS MODULE-AGAINST-MODULE ON ONE BUNDLE, AND THIS ROUND HAD TO EARN IT TWICE.**
+r1 wrote the stale-before-plate rule, r2 paid it again, and the f3 lane inherited five plates
+whose timestamps STRADDLED a `scene.glb` write (closeup 14:19:42, meadow :46, **glb rewritten
+:48**, gate :49, vista :52, gorge :55) — a sheet where two frames judge one bundle and three
+judge another. They were discarded. The bundle then moved AGAIN mid-probe
+(`184b4bf7` -> `621effe4`) while the tree lane re-exported. So the shipped comparison is the
+committed `ow_detail.js` against the working one, swapped in place between two runs of the same
+spec, on **one digest verified identical either side of both runs** (`621effe4`). The rule that
+keeps costing rounds is not "re-shoot the before" — it is **PIN THE BUNDLE DIGEST ACROSS THE
+RUN AND ASSERT IT, because a neighbour lane's export is not an event your plates can see.**
+
+### THE PALE MINT CONES ARE BUNDLE GEOMETRY, AND THEY ARE THE f2 DEFECT ONE CLASS OVER
+
+The user's "pale mint untextured cones" at the closeup's bottom edge, named by raycasting the
+plate's own pixels back through the plate's own camera (`docs/qa/ow-refs/plates/f3-crops/cone_probe.js`):
+**`emberbrook_2`, material `ow_f2_matte`, `map=false`, 7.7-9.0 m from camera.** Not the scatter.
+
+They are `valley_build.py:1085` — `p.cone(GRASS_HI, …, seg=4)`, the seven tufts per house that
+`trodden_ring` plants to break the base line where wall meets ground. **`GRASS_HI` has no entry
+in `overworld3_build.py`'s class->material map** (line 383-387), so `group.get(int(c), "matte")`
+falls it through to the untextured `ow_f2_matte` — and `TUFT_TINT = (0.86, 0.94, 0.72)` is then
+multiplied onto a material with no texture at all. That is EXACTLY f2's finding
+(`DIRT` -> matte, five hard pads) one class over, in the same `.get(..., "matte")` call.
+Flat ground classes falling to matte is correct for the bedding DISC; it is wrong for a
+four-sided CONE, which has a silhouette and reads as a paper spike.
+**HANDED OFF, not fixed** — the fix is a bundle rebuild + export, which is the tree lane's.
+Worth noting for whoever takes it: round 3's own `weedFringe` (2.3) now scatters real rosettes
+at exactly the house-bedding fringe these seven cones were hand-placed to cover, so *deleting*
+them may be the whole fix.
+
+**A RAY CAST THROUGH AN UNCONVERGED CAMERA NAMES THE WRONG OBJECT WITH TOTAL CONFIDENCE.**
+The first probe raycast synchronously after `SIM.tick(2)` and every hit came back ~38 m away on
+the far side of the valley — the orbit rig converges in the render loop, not in `tick`. The pick
+now re-runs on an interval and **the report carries the camera it was cast from**, so a
+disagreement with the plate's camera is visible instead of silent.
+
+### THE STRAGGLER LIFT: BOUNDED, AND THE BOUND PROVEN LOAD-BEARING
+
+`occTop` (max height of any HARD triangle in the occupancy cell) lifts a straggler onto the
+surface it crossed onto, because a stray takes its y from the TERRAIN triangle it was born on
+while every paved surface is proud of that terrain. Unbounded, this teleported tufts onto
+ROOFS: `ow_f2_tiles`/`ow_f2_plaster` are in the hard set (a wall footing is a seam), so under a
+house the cell's top IS the roof. `strayLift: 0.30` bounds it to surfaces a body could have
+stepped onto.
+
+**The bound is not incidental, and a clean roof does not prove it** — so it was falsified on
+purpose (`f3-crops/ab-lift.png`, `OWD.set({strayLift:99})` on the meadow camera): tufts and
+a flower sit plainly on two roofs at 99, and the roofs are clean at 0.30. Effect sizes, measured
+as changed pixels: the lift itself (0 -> 0.30, closeup) **8 649 px, 0.84% of frame, bbox
+x 267-739 y 338-721** — the left field and the road shoulder, exactly where it should be;
+removing the bound (0.30 -> 99, meadow) **17 518 px, 1.71%, frame-wide**.
+Honest limit: at 3x on one road-shoulder crop the clipping fix is **not readable by eye**. It is
+a real and correctly-placed 0.84% of the frame, not a picture-level win.
+
+### THE THREE NEW ASSETS, BY EYE AT THE CLOSEUP
+
+`f3-crops/assets-zoom.png` (4x). The weed rosette reads as a BROAD leaf mass, the sedge as
+a taller narrow fountain with a dark basal knot, and both are plainly not the blade. The near
+field's "corn" read is **reduced, not solved**: `wide` 0.018 -> 0.0138 lands visibly (blades are
+thinner and denser than r2's splayed Vs), but the weed's two erect inner leaves are themselves
+broad and upright, so the agricultural read has a new contributor even as the old one shrank.
+
+**AND ONE THING IS WORSE, ISOLATED RATHER THAN GUESSED.** A minority of weed rosettes render a
+near-BLACK leaf or crown at the closeup. Isolated by toggle, not by reading the source:
+the blobs SURVIVE `sedge:0` and VANISH with `weed:0` (`f3-crops/ab-blob.png`), so they are
+the weed and not the sedge's dark knot. Mechanism, stated as the hypothesis it is: the material
+is `T.DoubleSide` and the outer leaves arc past horizontal (`A1` runs to -0.72 rad), so the
+camera sees their UNDERSIDE, whose flipped normal faces away from the sun. Not fixed this round
+— the fix lands in the shared foliage shader and would ship unverified. **CARRIED, NAMED.**
+
+### COST (true A/B, same bundle `621effe4`, closeup camera)
+
+| | blades | scatter tris | draws | weeds | sedges | flowers |
+|---|---|---|---|---|---|---|
+| r2 | 119 170 | 808 848 | 4 | — | — | 1 302 |
+| **f3** | **140 381** | **964 794** | **6** | **2 141** | **990** | **1 431** |
+
+**+155 946 tris (+19.3%) and +2 draw calls.** The module comment claiming the two species cost
+"roughly no triangles" because they are paid for out of the blades is **WRONG and has been
+corrected in place**: the substitution does save, but `tuftDens` 10.5 -> 11.4 in the same round
+put 2 586 blades BACK, so the saving never reaches the total. Arithmetic that reconciles it:
+weeds 2 141 x 36 + sedges 990 x 48 = 124.6k, extra blades 2 586 x 6 = 15.5k, richer flower head
+(6 -> 16 tris) = 15.8k.
+
+### STILL OPEN
+
+  * The dark weed underside (above) — the first f3 item for round 4.
+  * `GRASS_HI` -> `ow_f2_matte`: handed to the bundle lane, unfixed here.
+  * The near field still reads broad; the weed's erect leaves are now part of that read.
+  * `cine_sweep`-style question untouched: the far ridge is still carried by `ow_f2_tuft`.
