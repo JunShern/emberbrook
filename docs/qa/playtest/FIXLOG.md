@@ -56,7 +56,13 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 7 | (not filed — found by the same probe) | P1 | The camera boom sits inside the new grass and 88.2% of the frame is grass cards | **VERIFIED on the current build** — same position, yaw 0.4 | routed to the overworld-content lane; same class as `PT-20260803-022` | — |
 | 7 | (found by playing) | P1 | The Boatmen's Rest is a door onto an empty room — the agent spent 18 of 70 steps trying to talk to its own party | **VERIFIED on `npcs.json` + `shops.json`** — 0 NPC records for `del-inn-int` against 1 each for the three shop interiors, no shop with that `sceneKey`, and 1 dialogue box in the whole run | not fixed — content, reported | — |
 | 7 | PT-20260803-029 | P1 | The player can leave the chapter on its first frame | **REFUTED — the spine detector fired because the player walked into a pub** and left again six steps later; 8th of this class | kept as calibration, per rule 2 | — |
-| 7 | (not filed — read off this run's own log) | — | Three legs blamed a slow machine at 160 ms/burst for a walk that had tried every heading | **HARNESS DEFECT** — `sinceGain >= 8` was falling into the starvation branch | `walkLeg` returns `noGain`; `episode.mjs` prints its own sentence for it | this commit |
+| 7 | (not filed — read off this run's own log) | — | Three legs blamed a slow machine at 160 ms/burst for a walk that had tried every heading | **HARNESS DEFECT** — `sinceGain >= 8` was falling into the starvation branch | `walkLeg` returns `noGain`; `episode.mjs` prints its own sentence for it | `03af0da` |
+| 8 | (not filed — found by building the probe the tool asked for) | **P0** | **The act of loading a save destroys it: the autosave writes `at.pos [0,2,0]` on the first frame of every boot** | **VERIFIED — `story_runtime.arm()` runs before play3d has placed the body, and nothing corrected it for the 20 s measured** (body `[78.93,14.07,-15.6]`, `at.pos [0,2,0]`, `cam null`, through to the next scene change) | `recordAt()` refuses to write a scene that has not arrived; `arm()` polls for arrival; `at.cam` now follows the shot in memory | this commit |
+| 8 | PT-20260804-002 | P1 | The player can leave the chapter on its first frame | **REFUTED — the ninth of this class, filed from `del-cookhouse-int`** six steps before the agent walked back out of the door | the spine detector now asks scenegraph.json whether it is standing in an `interior` | this commit |
+| 8 | (found by playing) | P1 | The Cookhouse is the SECOND door onto an empty room | **VERIFIED on `npcs.json`** — 0 records for `del-cookhouse-int`, `del-inn-int`, `del-boatyard`; 1 each for the three shop interiors | not fixed — content; the new empty-room detector will now name the room instead of mis-filing the spine | this commit |
+| 8 | (found by playing) | P1 | 34 of 45 steps inside one shot of Dellhollow, walking well and getting nowhere | **VERIFIED as LEGIBILITY, REFUTED as connectivity** — `reach_probe` in the running page: the lock apron IS reachable from the deck (39.7 m, 2469 cells, 2 in-scene edges). `del-cine` ships **40 label-less `cut` edges against 9 labelled ones**, and `quay-west` has **6 exits of which 5 are silent** — the only labelled thing in the shot is the door into the empty Cookhouse | not fixed — the look decision carried since round 5, now with a price | — |
+| 8 | (not filed) | — | The playtest agent cannot read the pause menu | **HARNESS DEFECT** — `menu.js` renders `.mn-navrow`, the percept queried `.ebui-row`; measured live: menu open, six commands in the DOM, **zero rows in the percept** | `.mn-navrow` in the percept's union, a fifth `percept_test` fixture, and menu.js added to the selector census | this commit |
+| 8 | (the run itself) | **BLOCKER** | The LLM playtest died at step 46 of 120 | **`HTTP 429 — "Your prepayment credits are depleted"` (Gemini/AI Studio).** Not a game or harness fault; the loop cannot run further without credit | reported to the user; the round finished on the no-model instruments | — |
 
 ## Rounds
 
@@ -1492,3 +1498,188 @@ returns `noGain` and `episode.mjs` prints its own sentence for it. Neither files
   * **PT-20260803-013/014's 64x36 thumbnail still has no cause.** Unchanged since round 3.
   * **Carried, unchanged:** a clamped marker looks like a marker over its own door; `play3d` has no
     `resize` handler; the objective banner does not know where you are (now also true inside an inn).
+
+### Round 8 — 2026-08-04 · the act of loading a save was destroying it
+
+**The headline is a P0 that no gate in this repo could have caught, and it was found by
+building the instrument the tool had been asking for since Chapter Two was wired.**
+
+#### The run, and the blocker that ended it
+
+`node tools/llm_playtester.mjs --port=3000 --from=ch2.jam --steps=120 --stop-beat=ch2.dock`,
+run `run-20260804-013303`. It died at **step 46** on
+`HTTP 429 {"error":{"code":429,"message":"Your prepayment credits are depleted..."}}` from
+AI Studio. **That is a spend blocker, not a defect** — the harness kept its shape (it
+degraded into `wait goal="recover"` rather than filing anything) and was killed by hand.
+The rest of this round ran on the instruments that need no model.
+
+What it got before it stopped, which is new ground again:
+
+| | |
+|---|---|
+| step 1 | `ch2.jam` fires on its own trigger — **Odessa speaks, 7 lines read** |
+| steps 2–11 | walks the lockhead, takes a silent cut west into `quay-west` |
+| steps 12–45 | **34 steps inside `quay-west`**, x 37 → 53, never leaving deck level |
+| steps 29–34 | goes into `del-cookhouse-int`, finds nobody, comes back out |
+| reports | 1 (`PT-20260804-002`, refuted below) |
+
+**The lockkeeper works.** For the first time a playtest has reached a named Chapter Two
+character on that character's own trigger and read her out. Everything after it is the
+question of whether the town says where to go next, and the answer is measured below.
+
+#### THE P0 — `at.pos` was `[0, 2, 0]`, and it was written by loading the game
+
+`tools/playtest/save_probe.mjs` is item 4 on `llm_playtester`'s own "covering Chapter Two"
+list, written there when Ch2 was wired and never built: *"A SAVE/RESUME PROBE. Ch2 is where
+a player stops for the night."* On its first run it failed on an assertion nobody had ever
+made: **the position in the save was not the position of the player.**
+
+Measured directly, `del-cine` booted at the `ch2.jam` checkpoint with a non-empty beat
+ledger (so the autosave is armed, exactly as in a real playthrough):
+
+| | body | shot | `at.pos` on disk | `at.cam` |
+|---|---|---|---|---|
+| t = 0 s | `[0, 2, 0]` | null | `[0, 2, 0]` | null |
+| t = 3 s | `[78.93, 14.07, −15.6]` | `lockhead` | **`[0, 2, 0]`** | **null** |
+| t = 20 s | `[78.93, 14.07, −15.6]` | `lockhead` | **`[0, 2, 0]`** | **null** |
+| after one `'eb-scene'` | same | `lockhead` | `[78.93, 14.07, −15.6]` | `lockhead` |
+
+`story_runtime.arm()` runs the moment the module loads — **before `play3d` has read
+`sx/sy/sz` off the URL and before a cinematic scene has chosen its shot** — and `recordAt()`
+faithfully wrote what it was shown. `at` is *the* resume authority
+(`docs/plans/end-to-end-wiring.md` §5), so the consequences are both of these:
+
+* a player who loads, walks around **inside one scene**, and closes the tab comes back
+  somewhere else — `[0,2,0]` is not a place in Dellhollow, so CONTINUE falls through to
+  whatever the bundle spawns;
+* **a save that was correct on disk is overwritten with the placeholder by the act of
+  loading it**, before the player touches anything.
+
+It needs no scene change and no beat to bite; it needs a player to stop between them, which
+is what stopping for the night IS. Every gate was green over it because every gate in this
+repo writes the save from the inside: `playthrough_test` builds `at` itself, `--from=`
+patches localStorage directly. **Nobody had ever pressed Escape, chosen SAVE, quit and come
+back.**
+
+**The fix (`story_runtime.js`).** `recordAt()` now refuses to write a scene that has not
+arrived — a pre-rendered scene that has not chosen a shot has not arrived; a real-time
+scene has no `cine()` and is judged on position alone, which is exactly its old behaviour.
+Recording *nothing* leaves the previous `at` standing, which is the right answer: stale
+beats wrong. `arm()` polls for arrival (250 ms, ~15 s ceiling, fires once) so the record
+still happens on a cold boot, and `tick()` refreshes `at.cam` when the shot cuts —
+**in memory only**, so a manual SAVE writes the shot the player is looking at while a shot
+cut adds no localStorage write of its own.
+
+Re-measured: `at.pos` is the body's position from the moment the scene arrives, and the
+full round trip is green.
+
+```
+save_probe --from ch2.jam
+  §0 the arrival cutscene closed              14 boxes read through
+  §1 the body moved off the drop-in           2.01 m
+  §2 Escape opens a menu                      6 rows ·  SAVE is row 3
+  §3 at.pos is where the player was standing  [79.80,14.04,-17.27] vs body [80.05,14.04,-17.27]
+  §4 same scene / same shot / same place      del-cine · lockhead · 0.25 m
+     beats 22 -> 22 · flags 24 -> 24 · party vesper+lake -> vesper+lake
+  PASS 15/0
+```
+
+#### FOUR of this probe's own failures were the probe, and they are worth listing
+
+Rule 1 applies to instruments as hard as it applies to agents. The first run of
+`save_probe` reported *six* failures. **Only one was the game.**
+
+| what it reported | what it was |
+|---|---|
+| "`at.pos` is not where the player stood" | **the real defect above** |
+| "Escape opens no menu" | it read `.ebui-row`; the pause menu draws `.mn-navrow` |
+| "the body will not move" (0.07 m in 5 s of held keys) | a `keyDown` with no `text` field — the adapter has set it all along |
+| "the body will not move" (before that) | the probe walked *during* the arrival cutscene, which holds UILOCK |
+| "same shot failed" | a consequence of the two above |
+| — | the four rAF throttling flags, added on suspicion and **measured not to be the cause** |
+
+The `text` one is the keeper: **a single missing CDP field turned a walking body into a
+paralysed one and would have been filed as a game bug by anything that did not check.**
+
+#### The percept could not read the pause menu (harness defect)
+
+Found while chasing the above, and it is the `cur` lesson again one panel over. `menu.js`
+renders with `layout:'full'`, whose nav list is `.mn-nav > .mn-navrow` — **not** the
+`.ebui-row` every other `ui_kit` panel draws. Measured on the live game: Escape opens the
+menu (`Menu.isOpen` true, one visible veil, `PARTY EQUIP ITEMS SAVE LOAD NEW GAME` in the
+DOM) and **the percept returned zero rows**. An agent that paused was handed an empty list,
+so no playtest could ever have saved, equipped or used an item. Fixed in the percept's row
+union, with a fifth `percept_test` fixture built from that live DOM dump and `menu.js` added
+to the selector census — `.mn-navrow` is now load-bearing, so a rename goes red instead of
+blind. `percept_test` **PASS 342/342** (and the vestigial `.ebui-choice` warning is gone,
+because that alternate was what `.mn-navrow` replaced).
+
+#### PT-20260804-002 — the ninth "leave the chapter on its first frame", and the fix
+
+It fired at step 29 from `del-cookhouse-int` and the agent left by the same door at step 35.
+Round 7 predicted this shape exactly. `scenegraph.json` already classifies every node, and
+`del-cookhouse-int` is `kind: "interior"`, so the detector now asks the game instead of
+guessing: **an interior is a room, not a wrong turn.** What *is* worth saying about that room
+is a different sentence, so the **empty-room detector** says it — twelve turns inside an
+interior with no dialogue, shop or menu ever opening files one report naming the room.
+
+That detector has two customers already: `del-inn-int` cost round 7 eighteen of seventy
+steps, and `del-cookhouse-int` cost this round six. Both ship with **zero** `npcs.json`
+records, as does `del-boatyard`.
+
+#### 34 steps in one shot — VERIFIED as legibility, REFUTED as connectivity
+
+The agent walked well the whole time (`median closed 0.63 m`, ~157 ms/burst, the link
+healthy) and got nowhere. Before calling that a maze, the world was asked whether the route
+exists, with `reach_probe` **inside the running page** — the engine's own rays and body box:
+
+| pair | verdict |
+|---|---|
+| deck `[41, 14.07, −18.4]` → lock apron `[79.7, 0.83, −27.13]` | **reachable**, 39.7 m apart, 2469 cells, via 2 in-scene edges |
+| lockhead → lock apron | **reachable**, 11.6 m apart, 2631 cells, via 3 in-scene edges |
+| deck → the deep-stairs entry seam | **reachable**, 3.6 m, on foot |
+| deck → lockhead (back east) | **reachable**, 38.0 m, via 1 in-scene edge |
+
+**Nothing is walled off.** So the question is what the town tells you, and the town's own
+audit layer answers it. Out of `del-cine`'s 49 outbound edges in `scenegraph.json`:
+
+| kind | count | labelled? |
+|---|---|---|
+| `cut` | **40** | **none** — `play3d.html:2627`: *"a labelless edge is deliberately silent (camera cuts)"* |
+| `door` | 6 | yes |
+| `passage` | 2 | yes |
+| `portal` | 1 | yes |
+
+And in `quay-west` specifically, from `dellhollow.routes.json` — the shot the agent could not
+leave — there are **six exits, five of them silent seams**, and *the only labelled thing in
+the frame is the door into the Cookhouse*, which has nobody in it. Open
+`frames/step-045.jpg`: six red triangles, none carrying a word, four of them clustered
+against a bare cliff, under a banner that reads *"Down to the lock apron"*.
+
+This is round 5's carried design call — *whether a shot-exit should look like a town exit* —
+now measured on three instruments and priced at 34 steps. **It is not filed as a bug because
+the remedy is a look decision, and this lane does not make those.**
+
+#### Gates
+
+`percept_test` **PASS 342/342** · `story_test` **1104 / 0** (baseline) · `dialogue_test`
+**1493 / 2** (the two known `del.gullgirl` clearances) · `save_probe --from ch2.jam`
+**15 / 0** · **`playthrough_test` 86 passed / 0 failed, exactly baseline** — including its own
+cold-reload-from-`at` assertion, which is the one this round's fix could have broken and did not.
+
+### Open going into round 9
+
+  * **THE ACCOUNT IS OUT OF GEMINI CREDIT.** `llm_playtester` cannot run at all until it is
+    topped up. Every no-model instrument in `tools/playtest/` still works, and round 8 was
+    finished on them, but the loop itself is stopped.
+  * **`ch2.maren` and everything after it have still never been played.** The cheapest next
+    run is `--from=ch2.maren` or `--from=ch2.supper`; the arrival band costs 30+ steps and
+    the deck costs 34 more, and neither is where the untested content is.
+  * **Three Dellhollow interiors have nobody in them** (`del-inn-int`, `del-cookhouse-int`,
+    `del-boatyard`). Two have now been visited by a playtest and both cost it steps.
+  * **A shop has never been entered by a playtest.** With the pause menu now legible to the
+    percept, buying something is finally testable — and so is equipping it.
+  * **Dellhollow's 40 silent cuts.** Measured above. A design call for the user.
+  * Carried, unchanged: the gorge water brighter than the sky at one arc of yaw; the camera
+    boom inside the overworld grass; PT-013/014's 64×36 thumbnail; `play3d` has no `resize`
+    handler.
