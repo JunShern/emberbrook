@@ -919,6 +919,13 @@ def _stamp_wrap_cell(buf, cx, cy, ox, oy, c, ang, ra, rb, rgb):
 # ---------------------------------------------------------------------------
 # Round-3 art classes, continuing round 2's table (which ended at LAMP = 25).
 LEAFM, LEAFC, BARK, MARK = range(26, 30)
+# LEAFM2 — the SECOND canopy hue, same material and same tile, a cooler and
+# deeper green class colour.  It exists because a stand of one species is what
+# the blind critic saw on the gorge plateau ("identical instances at identical
+# scale on regular spacing"), and hue is the one axis a specimen tree could not
+# vary: `Prop` writes COLOR_0 from a face's ART CLASS, so per-instance colour
+# means a class, not a parameter.  Anything not tagged with it is untouched.
+LEAFM2 = 30
 
 # The line-up hillside.  Chosen by SEARCH, not by taste: the site scan wanted a
 # 22u run whose slope stays inside 0.18..0.80 (a hillside, not a cliff and not a
@@ -946,7 +953,7 @@ class Veg:
         self.mesh = B.Prop("veg_%s" % base)
         self.cards = B.Prop("veg_%s_cards" % base)
         self.uvs = []
-        self.n = dict(a=0, b=0, c=0, d=0, shrub=0, cards=0, lobes=0)
+        self.n = dict(a=0, b=0, c=0, d=0, e=0, shrub=0, cards=0, lobes=0)
 
     def finish(self, coll, suffix):
         out = {}
@@ -1189,7 +1196,42 @@ def shrub_d(V, x, y, z, s, rz, rng):
     V.n["shrub"] += 1
 
 
-TREE_FN = dict(a=tree_a, b=tree_b, c=tree_c, d=tree_d)
+def tree_e(V, x, y, z, s, rz, rng):
+    """(e) THE SPREADING TREE — the second field species, and it is a second
+    PROPORTION before it is a second colour.
+
+    (a) is a tall round lollipop: trunk 1.55 s, one crown of radius 1.00 s sat
+    0.52 s above it, total height 2.8 s over a width of 2.0 s.  Planted alone at a
+    0.86-1.26 scale ramp it gives the gorge plateau a row of identical mushrooms.
+    This one inverts both numbers — a SHORT trunk (0.80 s) under a WIDE, FLAT,
+    four-lobed crown (1.30 s across, 0.46 s deep) — so at any scale the two read
+    as different plants in profile, which is the thing a distant ridge shows.
+    It is tagged LEAFM2, so it is also a cooler green.
+    """
+    h = 0.80 * s
+    top = _trunk(V, x, y, z, s, rz, h, 0.135 * s, 0.090 * s, lean=0.16 * s)
+    for k in range(3):
+        a = rz + 0.5 + k * 2.2
+        _limb(V, (top[0], top[1], z + h * 0.80),
+              (top[0] + math.cos(a) * 0.66 * s, top[1] + math.sin(a) * 0.66 * s,
+               z + h * 1.18), 0.048 * s)
+    R = 0.86 * s
+    cz = z + h + 0.30 * s
+    _lobe(V, LEAFM2, top[0], top[1], cz, R, R * 0.96, R * 0.52,
+          subd=2, seed=rng.randint(1 << 28), squash_top=0.26)
+    a0 = rng.uniform(0, 6.283)
+    for k in range(3):
+        a = a0 + k * 2.094 + rng.uniform(-0.42, 0.42)
+        d = R * rng.uniform(0.72, 1.02)
+        rr = R * rng.uniform(0.52, 0.76)
+        _lobe(V, LEAFM2, top[0] + math.cos(a) * d, top[1] + math.sin(a) * d,
+              cz + rng.uniform(-0.16, 0.12) * s, rr, rr * rng.uniform(0.86, 1.10),
+              rr * 0.50, subd=2 if rr > R * 0.62 else 1,
+              seed=rng.randint(1 << 28), squash_top=0.22)
+    V.n["e"] += 1
+
+
+TREE_FN = dict(a=tree_a, b=tree_b, c=tree_c, d=tree_d, e=tree_e)
 SHRUB_FN = dict(a=shrub_a, b=shrub_b, c=shrub_c, d=shrub_d)
 
 

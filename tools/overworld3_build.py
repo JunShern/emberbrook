@@ -54,12 +54,14 @@ pbr_mat = B2.pbr_mat
  FOL_A, FOL_B, FOL_C, TRUNK, EMIT, BASE, METAL, MIST) = range(20)
 TAR, CANVAS, ROPE, LEAF, TUFT, LAMP = range(20, 26)
 LEAFM, LEAFC, BARK, MARK = O3.LEAFM, O3.LEAFC, O3.BARK, O3.MARK
+LEAFM2 = O3.LEAFM2
 
 # F2's palette IS F's palette (the treatment must not drift), plus the four new
 # classes.  The veg entries are deliberately pale: they only TINT real albedo, and
 # glTF's baseColorTexture * COLOR_0 can never brighten (round-1 finding).
 PAL_F2 = dict(B.PAL["f"])
-PAL_F2.update({LEAFM: "8fa07e", LEAFC: "ffffff", BARK: "9b8a74", MARK: "d9d2c2"})
+PAL_F2.update({LEAFM: "8fa07e", LEAFC: "ffffff", BARK: "9b8a74", MARK: "d9d2c2",
+               LEAFM2: "7b9583"})   # the cooler, deeper second canopy hue
 B.PAL[STYLE] = PAL_F2
 B.PAL_LIN[STYLE] = {c: srgb(h) for c, h in PAL_F2.items()}
 
@@ -381,7 +383,8 @@ def props_materials_f2(made, mats, group, veg_maps):
                   STONE: "stone", ROCK: "stone", BASE: "stone",
                   TAR: "tar", CANVAS: "planks", ROPE: "planks", METAL: "stone",
                   FOL_A: "canopy", FOL_B: "canopy", FOL_C: "canopy",
-                  LEAFM: "canopy", LEAFC: "leaf", BARK: "bark", MARK: "matte"})
+                  LEAFM: "canopy", LEAFM2: "canopy", LEAFC: "leaf",
+                  BARK: "bark", MARK: "matte"})
     return pm
 
 

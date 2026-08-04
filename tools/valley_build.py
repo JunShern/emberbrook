@@ -2278,7 +2278,19 @@ STAND_CFG = {
     # rim.west = "forestwall": the wall itself is the stand
     "west-forestwall": dict(spacing=4.3, target=105, shrub=0.35),
 }
-MEADOW_CFG = dict(spacing=13.0, target=38, shrub=0.22)
+# THE OPEN-COUNTRY SCATTER, and it is three numbers, not one.  The blind critic
+# on the gorge plateau: "the plateau trees along the top edge are one lollipop at
+# one size" — a treeline, not a picket fence.  All three causes were here:
+#   * ONE SPECIES.  `key = "a"` unconditionally in the meadow zone.
+#   * ONE SIZE.     `s = uniform(0.86, 1.26)`, a 1.5x span that a ridge silhouette
+#                   at 60 m cannot resolve at all.
+#   * ONE SPACING.  `free()` rejected inside a FIXED radius, so the survivors sit
+#                   on the densest packing of one circle — a lattice, which is
+#                   what reads as a fence.
+# `jitter` multiplies each candidate's own keep-out radius, so trees cluster and
+# gap; `scale` is the ramp; `mix` is the second species' share.
+MEADOW_CFG = dict(spacing=11.0, target=44, shrub=0.22, spow=1.45,
+                  scale=(0.68, 1.58), jitter=(0.62, 1.55), mix=0.42)
 
 
 def plant_region(col, F, zg, fr, suffix, seed=20260730):
@@ -2351,18 +2363,25 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
             if getattr(zg, "canopy_int", None) is not None and \
                     bool(zg.wsample(zg.canopy_int.astype(float), x, y) > 0.5):
                 continue
-            if not free(x, y, sp):
+            jit = cfg.get("jitter")
+            spj = sp * (float(rng.uniform(*jit)) if jit else 1.0)
+            if not free(x, y, spj):
                 continue
             z = gh(F, zg, fr, x, y)
             fw = float(zg.wsample(zg.forest_w, x, y))
             interior = fw >= 0.72
             if zone == "meadow":
-                key = "a"
+                key = "e" if rng.rand() < cfg.get("mix", 0.0) else "a"
             elif interior:
                 key = "a" if rng.rand() < 0.80 else "c"
             else:
                 key = "c" if rng.rand() < 0.74 else "a"
-            s = float(rng.uniform(0.86, 1.26))
+            slo, shi = cfg.get("scale", (0.86, 1.26))
+            # weighted toward the SMALL end: a stand of young trees with a few
+            # mature ones reads as a treeline, where a uniform draw gives a row of
+            # medium ones with noise on it.  Power 1.0 for the forest stands, whose
+            # scatter nobody has complained about — this is an open-country fix.
+            s = float(slo + (shi - slo) * rng.rand() ** cfg.get("spow", 1.0))
             O3.TREE_FN[key](V, x, y, z, s, float(rng.uniform(0, 6.283)), rng)
             if rng.rand() < cfg["shrub"]:
                 a = rng.uniform(0, 6.283)
@@ -2374,7 +2393,7 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
                 O3.SHRUB_FN["a"](V, sx, sy, gh(F, zg, fr, sx, sy),
                                  float(rng.uniform(0.6, 1.0)),
                                  float(rng.uniform(0, 6.283)), rng)
-            add(x, y, sp)
+            add(x, y, spj)
             placed.append((x, y, zone, key))
             n += 1
         return n
@@ -2391,8 +2410,8 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
     byz["meadow-specimens"] = try_plant(bx, by, MEADOW_CFG, "meadow")
 
     n = V.n
-    print("  planting: %d trees (a=%d c=%d), %d shrubs, %d cards, %d lobes"
-          % (len(placed), n["a"], n["c"], n["shrub"], n["cards"], n["lobes"]))
+    print("  planting: %d trees (a=%d c=%d e=%d), %d shrubs, %d cards, %d lobes"
+          % (len(placed), n["a"], n["c"], n["e"], n["shrub"], n["cards"], n["lobes"]))
     for k in sorted(byz):
         print("    %-18s %d" % (k, byz[k]))
     STATS["trees"] = len(placed)

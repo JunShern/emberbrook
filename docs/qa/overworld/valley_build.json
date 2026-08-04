@@ -1,21 +1,21 @@
 {
- "build_s": 14.86,
+ "build_s": 17.72,
  "canopy_farwall-crown": {
-  "cards": 4711,
-  "core_tris": 4570,
-  "culled": 8390,
+  "cards": 12996,
+  "core_tris": 3849,
+  "culled": 9111,
   "lobes": 162
  },
  "canopy_pocket-grove": {
-  "cards": 504,
-  "core_tris": 550,
-  "culled": 810,
+  "cards": 1697,
+  "core_tris": 491,
+  "culled": 869,
   "lobes": 17
  },
  "canopy_whisperwood": {
-  "cards": 6813,
-  "core_tris": 7312,
-  "culled": 14048,
+  "cards": 18640,
+  "core_tris": 6316,
+  "culled": 15044,
   "lobes": 267
  },
  "chimneys": {
@@ -28,7 +28,7 @@
  "contact_shadow": {
   "base": 0.44,
   "ground_dark": 0.46,
-  "ground_verts": 6627,
+  "ground_verts": 6843,
   "masses": 9
  },
  "dellhollow_houses": 11,
@@ -118,14 +118,14 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.21,
+ "terrain_s": 0.22,
  "tile": [
   280.0,
   200.0
  ],
- "trees": 143,
+ "trees": 149,
  "trees_by_stand": {
-  "meadow-specimens": 38,
+  "meadow-specimens": 44,
   "west-forestwall": 105
  },
  "tributaries": [
@@ -141,9 +141,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 278120,
+ "tris": 321534,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.56,
+ "veg_s": 4.48,
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "falls": {
@@ -203,5 +203,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.075
+ "zone_s": 0.084
 }

@@ -42,13 +42,57 @@ TEXO = os.path.join(ROOT, "tools/textures/overworld")
 BETA_MAX = math.radians(56.0)     # max card lie-back from vertical (the H clamp)
 BETA_JIT = math.radians(13.0)
 SIL_BIAS = 0.42                   # 0 = cards only on silhouettes, 1 = uniform
-CORE_UV = 3.6                     # world units per leafmass_tile repeat
+# CORE_UV — 3.6 -> 2.1.  `_mesh_core` projects PLANAR UVs with the axis chosen by
+# each face's dominant normal, and on a dome that compresses hard for the faces
+# near 45 degrees, where neither axis is a good projection: one texel gets smeared
+# across the face.  Isolating the core in the running game (cards hidden) showed it
+# as pale FEATHERY STREAKS radiating over every lobe, and those streaks were
+# reading through the shell as the crown's worst artefact.  A shorter repeat does
+# not fix the projection — it makes the smear fine instead of coarse, which is what
+# the eye reads as leaf noise rather than as brush strokes.  The projection itself
+# is a known hole, left named: the core is meant to be the dark interior nothing
+# can see through, so the real defence is that it is now more than a stop below the
+# shell and covered by 2.20 cards per square unit rather than 1.25.
+CORE_UV = 2.1                     # world units per leafmass_tile repeat
 CARD_SINK = 0.10                  # extra sink below the sample point
 CARD_OUT = 0.16                   # card centre stands this far out along N
 FUZZ_LOW = 0.34                   # below this n.z, prefer the small fuzz cards
-CARD_LO = 0.55                    # darkest a shell card's COLOR_0 may go
+CARD_LO = 0.34                    # darkest a shell card's COLOR_0 may go
 GRID = 4                          # atlas grid (must match foliage_atlas.GRID)
 N_BIG = 8                         # cells 0..7 big clumps, 8..15 edge fuzz
+# ------------------------------------------------------- the RIM tier (charge 3)
+# "The outline is made of QUADS, not of leaves — cards too large relative to the
+# crown."  Measured on the shipped meadow frame: the hero crown is ~10 world units
+# across at ~55 px/u, and a BIG card is 1.55-2.45 u, so one card is 85-135 px of a
+# 550 px crown.  Nothing inside a card can rescue that; the notches in the
+# silhouette ARE the quads.
+#
+# The answer is NOT to shrink every card — a card is also the only thing holding
+# the mass opaque, and at a quarter of the area it takes four times as many to do
+# it (12 000 cards to 48 000, and the tri budget says no).  It is a SECOND TIER:
+# the mass keeps its big cards, and the silhouette — which is a thin band, a
+# per-face property the shell already computes for its density weight — gets its
+# own scatter of small ones, thrown OUT past the hull with a length jitter so the
+# boundary is ragged at leaf-cluster scale.  Cost is proportional to the rim, not
+# to the volume.
+RIM_NZ = 0.42                     # a face silhouettes when its normal.z is under this
+RIM_DENSITY = 5.6                 # rim cards per square unit of rim face
+RIM_SIZE = (0.28, 0.58)           # ... and they are a QUARTER of a big card
+RIM_OUT = (0.10, 0.85)            # how far past the surface, in card sizes
+RIM_DIM = 0.88                    # the ragged edge is not the highlight
+BASE_DARK = 0.36                  # COLOR_0 at the very bottom of a lobe
+BASE_POW = 1.15
+# HI_LIFT — the shell's CEILING, and it was cut 1.10 -> 0.80 the moment the card
+# art stopped carrying its own 5x value range.  Measured on the hero crown:
+# flattening the atlas alone took the frame from V50 0.464 / 13.7% of pixels over
+# V 0.72 to V50 0.612 / 35.1% over, against references that run V50 0.43-0.54 and
+# 1-3% over.  THE MASS DID NOT GET BRIGHTER, IT LOST ITS DARK HALF — the atlas's
+# own mean is 0.262 against the old 0.263, and its p99 fell 0.702 -> 0.535.  A
+# median rises when you delete the pixels below it.  So the value that used to
+# live inside every card has to reappear at crown scale or not at all, and this
+# and BASE_DARK are where it reappears.
+HI_LIFT = 0.80
+NZ_LO, NZ_HI = 0.72, 0.42         # side-facing cards darker than up-facing ones
 
 
 # ---------------------------------------------------------------- icosphere
@@ -219,42 +263,92 @@ class Mass:
         return self._C
 
     # ---------------------------------------------------------- the card shell
+    def _lobe_height(self, P):
+        """Each point's height WITHIN ITS OWN LOBE, 0 at the lobe's floor and 1 at
+        its crown.  Local on purpose: a stand lies on a hillside, so a height
+        normalised over the whole mass measures the HILL and darkens the downhill
+        end of a level crown.  The nearest lobe is taken in the lobe's own scaled
+        space, which is the same metric `Lobe.inside` uses.
+        """
+        if not self.lobes:
+            return np.full(len(P), 0.5)
+        d2 = np.stack([np.linalg.norm((P - lb.c[None, :]) / lb.s[None, :], axis=1)
+                       for lb in self.lobes], 1)
+        j = d2.argmin(1)
+        cz = np.array([lb.c[2] for lb in self.lobes])[j]
+        sz = np.maximum(np.array([lb.s[2] for lb in self.lobes])[j], 1e-6)
+        return np.clip((P[:, 2] - (cz - sz)) / (2.0 * sz), 0.0, 1.0)
+
+    def _faces(self):
+        """Surviving core faces as (area, normal, triangle) with the undersides
+        dropped — shared by the mass scatter and the rim scatter."""
+        V, F = self._V, self._F
+        A = V[F]
+        cr = np.cross(A[:, 1] - A[:, 0], A[:, 2] - A[:, 0])
+        ln = np.linalg.norm(cr, axis=1)
+        nrm = cr / np.maximum(ln, 1e-12)[:, None]
+        keep = nrm[:, 2] > -0.45      # pointing down is under the mass: nothing to see
+        return 0.5 * ln[keep], nrm[keep], A[keep], np.nonzero(keep)[0]
+
+    def _sample(self, A, rng, n):
+        b = rng.rand(n, 2)
+        flip = b.sum(1) > 1.0
+        b[flip] = 1.0 - b[flip]
+        return A[:, 0] + b[:, :1] * (A[:, 1] - A[:, 0]) + b[:, 1:] * (A[:, 2] - A[:, 0])
+
+    def _colour(self, shade, nz, P, hi_lift):
+        """COLOR_0 for a batch of cards.
+
+        The shell's COLOR_0 is RELATIVE, normalised against the core's own
+        brightest vertex — and this line is the one the glTF round trip caught.
+        Reading the core's ABSOLUTE shade meant that darkening the core (which
+        region masses want, so their gaps read as canopy shadow) pushed every
+        single card onto the clamp floor: the export came back with COLOR_0
+        min == max == 0.521 on 28 000 cards, so the shell AO was doing nothing
+        AND was multiplying the whole atlas by a flat half.  That is where the
+        persistent murkiness came from, and no amount of re-lighting the atlas
+        would have fixed it.  Normalised, the shell spans CARD_LO..1.0 whatever
+        the core is set to.
+
+        THE BASE TERM IS THE VOLUME, and it moved here from the card art.  The
+        references' masses are *"a lit crown on top, a hard falloff into an
+        occluded dark underside, and the darkest value at the BASE where they
+        meet ground"* — that is a CROWN-SCALE gradient.  Baking it into every
+        card's own texture (which is what foliage_atlas's first light rig did,
+        spanning 5.1x inside one card) gives every card a lit top and a dark
+        bottom of its own, i.e. a field of little spheres — charge 1's
+        cauliflower, from the other end.  One gradient, at the scale of the
+        thing that actually has a top and a bottom.
+        """
+        rel = shade / max(float(self._shade.max()), 1e-6)
+        base = BASE_DARK + (1.0 - BASE_DARK) * self._lobe_height(P) ** BASE_POW
+        return np.clip(CARD_LO + (1.0 - CARD_LO) * rel * hi_lift * base
+                       * (NZ_LO + NZ_HI * np.clip(nz, 0, 1)), CARD_LO, 1.0)
+
     def shell(self, rng, density=0.85, big=(1.55, 2.35), fuzz=(0.70, 1.15),
               fuzz_frac=0.30, beta_max=BETA_MAX, sil_bias=SIL_BIAS,
-              hi_lift=1.10, cell_pick=None):
+              hi_lift=HI_LIFT, cell_pick=None, rim_density=RIM_DENSITY,
+              rim_size=RIM_SIZE):
         """Scatter cards over the SURVIVING core faces, area-weighted.
 
         `density` is cards per square world unit of visible core surface, which
         is the one number the user is taste-gating: three of these are what the
-        line-up compares.
+        line-up compares.  `rim_density` is the same number for the SECOND tier,
+        the small silhouette-breakers — see the RIM_* block at the top.
         """
-        V, F = self._V, self._F
-        if not len(F):
+        if not len(self._F):
             return 0
-        A = V[F]
-        e1, e2 = A[:, 1] - A[:, 0], A[:, 2] - A[:, 0]
-        cr = np.cross(e1, e2)
-        area = 0.5 * np.linalg.norm(cr, axis=1)
-        nrm = cr / np.maximum(np.linalg.norm(cr, axis=1), 1e-12)[:, None]
-        # a face whose normal points down is under the mass: nothing to see
-        keep = nrm[:, 2] > -0.45
-        if not keep.any():
+        area, nrm, A, fidx = self._faces()
+        if not len(area):
             return 0
-        area, nrm, A = area[keep], nrm[keep], A[keep]
-        fidx = np.nonzero(keep)[0]
         # DENSER ON SILHOUETTES: from a 35 deg camera the silhouette is where the
         # surface turns away, i.e. where the normal is nearly horizontal
         w = area * (sil_bias + (1.0 - sil_bias) * (1.0 - np.clip(nrm[:, 2], 0, 1)))
         n_want = int(density * float(area.sum()))
         if n_want <= 0:
             return 0
-        p = w / w.sum()
-        pick = rng.choice(len(area), size=n_want, p=p)
-        b = rng.rand(n_want, 2)
-        flip = b.sum(1) > 1.0
-        b[flip] = 1.0 - b[flip]
-        P = A[pick, 0] + b[:, :1] * (A[pick, 1] - A[pick, 0]) \
-            + b[:, 1:] * (A[pick, 2] - A[pick, 0])
+        pick = rng.choice(len(area), size=n_want, p=w / w.sum())
+        P = self._sample(A[pick], rng, n_want)
         N = nrm[pick]
         shade = self._shade[self._F[fidx[pick]]].mean(axis=1) if hasattr(self, "_shade") \
             else np.ones(n_want)
@@ -272,29 +366,64 @@ class Mass:
                         rng.randint(0, N_BIG, n_want))
         if cell_pick is not None:
             cell = cell_pick(cell, is_fuzz, rng)
-        # The shell's COLOR_0 is RELATIVE, normalised against the core's own
-        # brightest vertex — and this line is the one the glTF round trip caught.
-        # Reading the core's ABSOLUTE shade meant that darkening the core (which
-        # region masses want, so their gaps read as canopy shadow) pushed every
-        # single card onto the clamp floor: the export came back with COLOR_0
-        # min == max == 0.521 on 28 000 cards, so the shell AO was doing nothing
-        # AND was multiplying the whole atlas by a flat half.  That is where the
-        # persistent murkiness came from, and no amount of re-lighting the atlas
-        # would have fixed it.  Normalised, the shell spans CARD_LO..1.0 whatever
-        # the core is set to.
-        rel = shade / max(float(self._shade.max()), 1e-6)
-        col = np.clip(CARD_LO + (1.0 - CARD_LO) * rel * hi_lift
-                      * (0.86 + 0.28 * np.clip(nz, 0, 1)), CARD_LO, 1.0)
+        col = self._colour(shade, nz, P, hi_lift)
         # PUSH THE SHELL OUT past the core.  With the cards' bases sitting ON the
         # surface the core stayed the silhouette and the mass read as mossy
         # boulders with leaves along the top: half of every card was inside the
         # thing it was supposed to hide.  Standing each card's CENTRE a little
         # outside the surface makes the shell the volume and demotes the core to
         # what it should be — the dark interior nothing can see through.
-        base = P + N * (sz * CARD_OUT)[:, None]
-        self._emit_cards(base, yaw, beta, sz, cell, col, rng)
+        self._emit_cards(P + N * (sz * CARD_OUT)[:, None], yaw, beta, sz, cell,
+                         col, rng)
         self.n_cards += n_want
-        return n_want
+        n_rim = self._rim(rng, area, nrm, A, fidx, rim_density, rim_size,
+                          beta_max, hi_lift)
+        self.n_cards += n_rim
+        return n_want + n_rim
+
+    def _rim(self, rng, area, nrm, A, fidx, density, size, beta_max, hi_lift):
+        """The SECOND tier: small cards along the silhouette band, thrown out past
+        the hull by a jittered distance so the boundary is ragged at leaf scale.
+
+        `RIM_OUT` is the whole point and it is a RANGE, not a constant: cards all
+        pushed out by the same amount give a smooth offset surface, which is
+        another hull with another clean edge.  It is the SPREAD of the throw that
+        makes leaf clusters stick out past the mass the way the references' do.
+        Cells are drawn from the edge-fuzz half of the atlas only (open, few
+        sprays, much sky) — a near-filled big clump used as a silhouette breaker
+        just moves the same solid edge outwards.
+        """
+        sil = np.clip((RIM_NZ - nrm[:, 2]) / RIM_NZ, 0.0, 1.0)
+        w = area * sil
+        tot = float(w.sum())
+        n = int(density * tot)
+        if n <= 0 or tot <= 0:
+            return 0
+        pick = rng.choice(len(area), size=n, p=w / tot)
+        P = self._sample(A[pick], rng, n)
+        N = nrm[pick]
+        nz = np.clip(N[:, 2], -1.0, 1.0)
+        shade = self._shade[self._F[fidx[pick]]].mean(axis=1) if hasattr(self, "_shade") \
+            else np.ones(n)
+        sz = rng.uniform(size[0], size[1], n)
+        # steeper than the mass tier: a rim card is seen against the sky, and a
+        # card lying back at the silhouette shows its face (the H lesson again)
+        beta = np.clip(np.minimum(np.arcsin(np.abs(nz)), beta_max) * 0.55
+                       + rng.uniform(-BETA_JIT, BETA_JIT, n),
+                       math.radians(4.0), math.radians(58.0))
+        yaw = np.arctan2(N[:, 1], N[:, 0]) + math.pi / 2.0 + rng.uniform(-0.5, 0.5, n)
+        out = rng.uniform(RIM_OUT[0], RIM_OUT[1], n) ** 1.5
+        base = P + N * (sz * (CARD_OUT + out))[:, None]
+        base[:, 2] += sz * rng.uniform(-0.30, 0.22, n)
+        cell = N_BIG + rng.randint(0, GRID * GRID - N_BIG, n)
+        # COLOUR FROM THE SURFACE POINT, NOT FROM THE THROWN POSITION.  `base` is
+        # up to 0.85 card-sizes outside the hull, so feeding it to the height term
+        # clipped every rim card to the top of its lobe and made the ragged edge
+        # the BRIGHTEST thing in the crown — the opposite of a silhouette.  P is
+        # where the card belongs to the mass; the throw is only where it reaches.
+        self._emit_cards(base, yaw, beta, sz, cell,
+                         self._colour(shade, nz, P, hi_lift) * RIM_DIM, rng)
+        return n
 
     def _emit_cards(self, P, yaw, beta, sz, cell, col, rng):
         n = len(P)

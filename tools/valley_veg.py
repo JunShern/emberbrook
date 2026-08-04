@@ -48,12 +48,20 @@ LOBE_SP = 3.8               # lobe spacing over a stand, world units
 LOBE_R = (2.9, 4.3)         # interior lobe radius (min, max)
 LOBE_R_EDGE = (1.9, 2.7)    # ... at the stand edge, where the mass tapers
 LOBE_H = (2.3, 4.0)         # lobe half-height range, scaled by the billow
-DENSITY = 1.25            # CARDS PER SQUARE UNIT of visible core — the knob
-BIG = (1.55, 2.45)          # big-clump card size at region scale: one treetop
-FUZZ = (0.85, 1.40)
+DENSITY = 2.20            # CARDS PER SQUARE UNIT of visible core — the knob
+BIG = (1.20, 1.95)          # big-clump card size at region scale: one treetop
+FUZZ = (0.70, 1.15)
 FUZZ_FRAC = 0.34            # share of cards drawn from the edge-fuzz cells
-CORE_DEEP = 0.20            # core COLOR_0 floor (its underside / crevices)
-CORE_LIFT = 0.42            # ... and how much a sky-facing core vertex adds
+CROWN_K = 0.062             # crown-swell wavelength, ~16 u (see stand_mass)
+# THE CORE MEASURED BRIGHTER THAN THE SHELL, which nobody had checked because
+# nothing until now could ask the question separately.  Hiding the two meshes in
+# turn in the running game (ow_multi, veg_canopy_*_cards vs veg_canopy_*) on the
+# hero crown: CORE ALONE median 0.681 with 43.9% of its pixels over V 0.72, CARDS
+# ALONE 0.576 and 29.2%.  The core is a smooth solid taking full lambert where the
+# cards are angled cutouts, so equal albedo does NOT mean equal frame value —
+# 0.20/0.42 was set when the shell's own art was a stop darker than it is now.
+CORE_DEEP = 0.11            # core COLOR_0 floor (its underside / crevices)
+CORE_LIFT = 0.26            # ... and how much a sky-facing core vertex adds
 
 # rock
 ROCK_SET = "dark_rock_02"   # stratified/striated — the gorge walls' hero material
@@ -175,15 +183,41 @@ def stand_mass(name, F, sites, rng, density=None):
     billow = (np.abs(O3.fbm(bx, by, 0.11, seed=61, oct_=3))
               + 0.5 * np.abs(O3.fbm(bx, by, 0.31, seed=62, oct_=2)))
     tone_n = O3.fbm(bx, by, 0.045, seed=77, oct_=2)
+    # THE CROWN SWELL — the answer to charge 1, "the crown is built of large cards
+    # clustered into lobes with no overall hull shaping, so each lobe reads as a
+    # separate ball".  The lobe layout had a coherent HEIGHT field (billow, 9 u)
+    # and a per-lobe RANDOM radius, so the mass's plan silhouette was white noise
+    # at the lobe spacing: neighbouring lobes disagreed about how big they were
+    # and every one of them announced itself.  This is one long-wavelength field
+    # (~16 u, two and a half lobe spacings) driving BOTH, so a stand gets
+    # crown-scale swells and hollows that several lobes share.
+    crown = np.clip(0.5 + 0.62 * O3.fbm(bx, by, CROWN_K, seed=63, oct_=2), 0.0, 1.0)
     gz = F.sample(bx, by)
     for k in range(len(sites)):
         e = float(sites[k, 2])
+        c = float(crown[k])
         lo, hi = (LOBE_R_EDGE if e < 0.55 else LOBE_R)
-        r = float(rng.uniform(lo, hi))
-        h = float(LOBE_H[0] + (LOBE_H[1] - LOBE_H[0]) * min(float(billow[k]), 1.0)) \
-            * (0.62 + 0.38 * e)
-        M.lobe(float(bx[k]), float(by[k]), float(gz[k]) + h * 0.42,
-               r, r * rng.uniform(0.84, 1.14), h * 0.62,
+        # a MINORITY of dominants.  bushlang.bush's own note — "a ring of equal
+        # lobes is a flower" — is true of a stand too: without this the coherent
+        # field just makes a smoother field of equal balls.
+        dom = 1.30 if rng.rand() < 0.22 else 1.0
+        r = float(lo + (hi - lo) * (0.62 * c + 0.38 * rng.rand())) * dom
+        h = float(LOBE_H[0] + (LOBE_H[1] - LOBE_H[0])
+                  * min(0.30 * float(billow[k]) + 0.70 * c, 1.0)) * (0.55 + 0.45 * e)
+        # PLACED BY ITS TOP, and the DEPTH is the free variable.  This is the line
+        # that makes the hull: every lobe's crown lands on one smooth surface (h is
+        # the coherent field above), and what differs between neighbours is how far
+        # each hangs BELOW it — so the mass has one upper boundary with lobes under
+        # it instead of a field of tops at different heights.
+        #
+        # WRITING IT AS `top - hz` IS NOT ENOUGH, AND THE FIRST ATTEMPT WAS EXACTLY
+        # THAT.  With hz = h * 0.62 the algebra cancels: gz + h*1.04 - h*0.62 is
+        # gz + h*0.42, which is the centre-placed line it replaced, character for
+        # character in effect.  A no-op that reads like a fix — the knob has to be
+        # WIRED, i.e. hz has to vary independently of h, or there is no hull.
+        hz = h * 0.62 * float(rng.uniform(0.80, 1.28))
+        M.lobe(float(bx[k]), float(by[k]), float(gz[k]) + h * 1.04 - hz,
+               r, r * rng.uniform(0.88, 1.10), hz,
                subd=1, seed=rng.randint(1 << 28),
                squash=float(rng.uniform(0.10, 0.24)),
                tone=float(0.86 + 0.30 * float(tone_n[k])))
