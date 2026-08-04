@@ -415,7 +415,11 @@
   function clearHint() {
     if (!hintEdge || !HAS_DOM) { hintEdge = null; return; }
     var m = document.querySelector('#exit-markers > div[data-edge="' + cssEsc(hintEdge) + '"]');
-    if (m) { var t = m.querySelector('.story-way'); if (t) t.remove(); m.style.zIndex = ''; }
+    if (m) {
+      var t = m.querySelector('.story-way'); if (t) t.remove();
+      m.style.zIndex = '';
+      if (m.firstChild && m.firstChild.style) m.firstChild.style.scale = '';
+    }
     hintEdge = null;
   }
   // The edge ids carry '>', '@', ':' and '.' — all meaningful inside an attribute
@@ -441,15 +445,34 @@
     var t = m.querySelector('.story-way');
     if (!t) {
       t = document.createElement('div'); t.className = 'story-way';
-      // Same diamond, same amber as the objective banner's — a player should read the
-      // label and the banner as ONE thing without being told they are.
-      t.style.cssText = 'margin-top:3px;font:600 11px/1.15 ui-monospace,Menlo,monospace;' +
-        'letter-spacing:.02em;color:#e9a24b;white-space:nowrap;' +
-        'text-shadow:0 1px 2px #000,0 0 4px #000,0 0 9px #000';
+      /* THE OBJECTIVE BANNER, IN MINIATURE — same pill, same border, same amber
+       * diamond. A player should read the label and the banner as ONE thing without
+       * being told they are, and the pill is what makes it legible over a plate: the
+       * first cut was a bare glow-shadowed caption and it sat on a dark cliff face.
+       *
+       * IT IS THIS SIZE FOR A REASON. That first cut shipped at 11 px, the portal
+       * label's size, and the receipt run walked straight past it: at step 2 of
+       * run-20260804-204212 the label was on screen, bottom-left, correct — and the
+       * agent's own stated goal was still "climb the stairs UP to the head-gate
+       * winches", after which it spent five legs stuck on the platform above. This
+       * game is played on a TV (memory: controller-agnostic, everything renders on
+       * the TV), where 11 px is not a label, it is a texture. */
+      t.style.cssText = 'margin-top:4px;font:700 13px/1.2 ui-monospace,Menlo,monospace;' +
+        'letter-spacing:.02em;color:#e7ddd0;white-space:nowrap;' +
+        'background:#000c;border:1px solid #3a2c20;border-radius:7px;padding:3px 9px;' +
+        'text-shadow:0 1px 2px #000';
       m.appendChild(t);
       m.style.zIndex = '1';                       // over its neighbours when they crowd
+      // and the arrow itself a size up, so the one that matters reads at a glance
+      if (m.firstChild && m.firstChild.style) m.firstChild.style.scale = '1.3';
     }
-    if (t.textContent !== '\u25C6 ' + name) t.textContent = '\u25C6 ' + name;
+    // Compared on a data-attribute, NOT on innerHTML: the browser re-serialises what
+    // it parsed, so an innerHTML round-trip can never be relied on to equal what was
+    // written, and this would repaint at 6 Hz forever.
+    if (t.dataset.dest !== name) {
+      t.dataset.dest = name;
+      t.innerHTML = '<b style="color:#e9a24b">\u25C6</b> ' + String(name).replace(/[<>]/g, '');
+    }
     lastHint = { beat: b.id, edge: want, dest: name, hops: r.hops };
   }
 
