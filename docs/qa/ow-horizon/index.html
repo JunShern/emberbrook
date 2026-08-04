@@ -129,6 +129,16 @@ At A the frame stops 92 m out; at C the whole of the Emberbrook bench, the road 
 river are all in one frame. Field of view is untouched — same 42&deg;, same boom 40, character the same size on
 screen as before (pitch and fov are what set that, and neither moved).</p>
 
+
+<h2>The mid-corridor, at the shipped setting — and the bill that comes with it</h2>
+<figure><img src="plates/C-midcorridor.png"><figcaption>tilt 0.22, no explicit override — this is the DEFAULT code path, on the road between the two towns.</figcaption></figure>
+<p>Four ridge bands, sky, and the road's own landform layered in front of them: this is the gain, and it is on the
+stretch the player actually walks rather than on a chosen viewpoint. It also shows the bill. <strong>The middle
+distance is milky.</strong> Fog is <code>Fog(0xd3e0e8, 34, 205)</code> and it was tuned against a frame that ended at 92&nbsp;m,
+so everything past about 120&nbsp;m — which nobody could see until tonight — is washing to near-white. The horizon is
+worth having; the fog curve underneath it now needs a sweep it has never had. That is a lighting/post job, not a
+camera one, and it is the single biggest thing still owed on this frame.</p>
+
 <h2>Reproduce</h2>
 <p><code>/play3d.html?scene=ow-valley&amp;rt=1&amp;owtilt=0.22</code> — and <code>&amp;owtilt=0</code> is exactly the frame that shipped
 before this change. <code>&amp;owpitch=</code> overrides the boom elevation for anyone who wants to re-run the sweep.
