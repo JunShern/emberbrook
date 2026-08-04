@@ -2046,13 +2046,63 @@ not a label, it is a texture.
 `percept_test` not run and not needed — the adapter was not touched, which is the point:
 the agent sees this the way a player does, in the screenshot.
 
+### The receipt — `--from=ch2.dock --steps=60`, `run-20260804-204657`
+
+**The label is read, and the agent steers by it.** The discriminator is the agent's OWN
+words in `observations.jsonl`, not a DOM assertion:
+
+| run | what the agent calls the markers |
+|---|---|
+| 185107 (before) | "a red marker", "red markers indicating objective locations" |
+| 194447 (before) | "red markers above indicating winches", "under a yellow marker" |
+| **204657 (after)** | **"the Lock Five marker", "the objective marker for Lock Five", "walk left along the wooden walkway towards Lock Five"** |
+
+| | 194447 (before) | **204657 (after)** |
+|---|---|---|
+| reports filed | 1 (PT-013, the third refuted winch filing) | **0** |
+| legs aimed off the walk network | 0 | 0 |
+| how far the run got | circled the quay deck for 90 steps, never left `quay-west`/`loop-stairs` | **reached `weave` — ONE hop from Lock Five** |
+
+**`ch2.winches` did not fire, and this is an honest partial.** The run spent steps 2–6
+climbing the wrong way (it opened on the objective's own words — "*navigate up the ramp
+towards the head-gate*" — before it had read anything), then followed the hint down and
+across the town to `weave`, and spent its last thirteen steps stuck at
+`[61.77, 11.6, −17.6…−19.5]` on the pilot-cluster platform: the executor's own verdict,
+thirteen times, is *"the body moved every round and never got closer — the ground is
+walkable and the approach is not."* That is the stride/body-box residue round 10 already
+carried for `walk_bodygate`, one hop short of the beat. **Wayfinding got the player to the
+last seam; something else is holding the last seam shut.** Probed there: the hint is
+correct and drawn (`weave>lockfive`, 1 hop, shown, labelled).
+
+### AND THE QUEUED LIFT CLAMP IS REFUTED — MEASURE BEFORE YOU BUILD
+
+This morning's coordinator note proposed clamping the arrow's lift on steep shots.
+`wayfind_probe --liftcap 46` measures that change WITHOUT making it (it reports where each
+arrow would draw under the cap and what `SIM.pick` returns there):
+
+| | today | under a 46 px cap |
+|---|---|---|
+| clicks landing on scenery | **11 / 24** | **12 / 24** |
+| top hits changed by the cap | — | 17 / 24 |
+
+**It does not help, and it moves seventeen markers to do it.** The reason is this repo's
+oldest lesson wearing a new hat: the occluder is BETWEEN THE CAMERA AND THE SEAM (a rail, a
+pile brace, a hut), so no screen-space lift can uncover it — the cap just swaps one piece of
+scenery for another. "In frame ≠ visible ≠ unobstructed ray."
+
+And the finding matters less than it looks: **this game is not click-to-move.** A pixel
+under an arrow is a HARNESS concern (the adapter already resolves a pixel on a marker to
+that edge's own `at`, round 10), not a player one — a player pushes a stick toward the
+arrow. Recorded so the next reader does not re-open it as a player defect.
+
 ### Carried
 
-* **The lift is unfixed and now measured.** 0.12–0.23 of frame height everywhere, half the
-  markers resolving to scenery under a click. It is the marker layer's, and the marker layer
-  is `play3d.html`, which is coordinator-owned. The cheapest correct change if it is ever
-  taken: clamp the pixel lift so the arrow's tip stays within the seam's own projected
-  footprint, and re-shoot `wayfind_probe` — the `pick` column IS the before/after.
-* **PT-20260804-014** was filed against the 11 px cut and is superseded by the pill; it
-  should be re-tested, not triaged as a world defect. Its two predecessors at that platform
-  were already reach-REFUTED.
+* **The last hop into Lock Five.** `weave` → `lockfive` at `[75.0, 6.3, −25.2]`: thirteen
+  no-gain legs from the pilot-cluster platform, ground walkable by the executor's own
+  reading. `walk_bodygate` on that stretch, then a `--from=ch2.dock` re-run, is the next
+  cheapest thing — and it is now the ONLY thing between this checkpoint and the beat.
+* **The lift stays as shipped** (see above). If it is ever revisited, revisit the OCCLUDERS,
+  not the pixels.
+* **PT-20260804-014** was filed against the 11 px cut and is superseded by the pill; re-test
+  it, do not triage it as a world defect. Its predecessors at that platform were already
+  reach-REFUTED.
