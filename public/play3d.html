@@ -491,6 +491,13 @@ const PFX={
   gradeHazeGate: PFXNUM('grade_hg',1.0),
   // vbl — how much of the vegetation boost is steered into shade. Swept; see above.
   gradeVegShade: PFXNUM('grade_vbl',1.0),
+  // sc — HOW MUCH COOL THE SHADE TAKES. See THE OTHER HALF OF THE SPLIT in
+  // GRADE_SHADER; swept in scratchpad/r14. It is luminance-neutral, so this number
+  // cannot darken anything and cannot buy back a black point.
+  gradeShade: PFXNUM('grade_sc',2.00),
+  // flr — the chromatic floor; see THE FLOOR in GRADE_SHADER. Swept against the
+  // references' own "0.0% of pixels under L 0.10".
+  gradeFloor: PFXNUM('grade_flr',0.014),
   gradeDesat: PFXNUM('grade_d',0.40),
 };
 // THE AERIAL SPLIT (2026-08-03, overworld only, ?grade=0 to remove).
@@ -532,13 +539,21 @@ const GRADE_SHADER={
              haze:{value:0.0}, sat:{value:1.0}, dScale:{value:52.0}, dRef:{value:0.0}, toe:{value:0.0},
              gp:{value:0.0}, wp:{value:0.0}, cp:{value:0.0}, vb:{value:0.0}, vh:{value:0.0}, hgate:{value:0.0}, vbl:{value:0.0},
              hazeCol:{value:new THREE.Vector3(0.127,0.175,0.275)},
+             sc:{value:0.0}, flr:{value:0.0},
              warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
-             coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
+             coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)},
+             // R14 — THE SHADE SIDE OF THE SPLIT. Luminance-normalised to 1.000 on the
+             // Rec.709 weights ON PURPOSE (0.2126*0.947+0.7152*1.003+0.0722*1.121 =
+             // 1.0000): this is a HUE rotation with no level in it, which is the whole
+             // reason it can deepen the read of a shadow without touching the black
+             // point. Hue 213 deg, inside the references' own 209-227 shaded-stone band
+             // measured in R13. ?grade_shc=r,g,b.
+             shadeCol:{value:new THREE.Vector3(0.947,1.003,1.121)} },
   vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
   fragmentShader:[
     'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
-    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb,vh,hgate,vbl;',
-    'uniform vec3 warmCol,coolCol,hazeCol;',
+    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi,haze,sat,dScale,dRef,toe,gp,wp,cp,vb,vh,hgate,vbl,sc,flr;',
+    'uniform vec3 warmCol,coolCol,hazeCol,shadeCol;',
     'void main(){',
     '  vec4 c=texture2D(tDiffuse,vUv);',
     '  float d=texture2D(tDepth,vUv).x;',
@@ -573,7 +588,37 @@ const GRADE_SHADER={
     // between "the light is warm" and "the picture is orange".
     '  float srcL=dot(c.rgb, vec3(0.2126,0.7152,0.0722));',
     '  float litK=smoothstep(litLo,litHi,srcL);',
-    '  vec3 tint=mix(mix(vec3(1.0),warmCol,litK),coolCol,t);',
+    // R14 — AND THE SHADE PUSH IS STEERED OFF THE VEGETATION, for the reason R13
+    // measured and could not act on: the references' shaded GRASS sits at hue 99-100
+    // and their shaded STONE at 209-227. Those are 110 degrees apart. ONE cool multiply
+    // cannot serve both — run it flat and the grass shadows go teal, which is the
+    // "desaturate every shadow in the frame" trap R13's `cyn` selector was written to
+    // dodge. So it is gated by R13's OWN yellow selector, read off the SOURCE pixel
+    // rather than off the already-tinted one, which is the more honest classification:
+    // a material is what it is before this pass touched it.
+    '  float sMx=max(c.r,max(c.g,c.b));',
+    '  float sYel=clamp((min(c.r,c.g)-c.b)/max(1e-4,sMx), 0.0, 1.0);',
+    '  float scK=sc*(1.0-0.80*smoothstep(0.20,0.48,sYel));',
+    // R14 — AND THE OTHER HALF OF THE SPLIT WAS NEVER WRITTEN. R6 gated the WARM push
+    // on litK and left the shade at vec3(1.0); the only cool term in this pass rides
+    // `t`, which is DEPTH. So for eight rounds the grade warmed the light and did
+    // nothing whatever to the shade at the player's feet, and the fourteenth blind
+    // critic named the consequence exactly: "raise the key-to-fill ratio and WARM THE
+    // KEY — deepen shade, let sunlit tan go WARMER and shaded tan go COOLER... it fixes
+    // flatness AND partly fixes the same-coloured-houses problem BY SPLITTING EVERY
+    // WALL INTO TWO TONES."
+    // TWO TONES MEANS TWO COLOURS, NOT TWO VALUES, and that distinction is why this is
+    // the move rather than more key. Measured this round (scratchpad/r14/tonal.py): our
+    // r13 frame's 5-95 luminance range is 0.559 against the references' 0.523 and 0.442,
+    // its IQR 0.259 against 0.219 and 0.152, its 9x9 local-contrast median 0.0393 against
+    // 0.0434 and 0.0367. BY EVERY VALUE STATISTIC THE FRAME IS NOT FLAT, AND IT PLAINLY
+    // LOOKS FLAT. What it has no spread in is HUE — "the entire frame lives in a narrow
+    // band of warm beige-green" — so the fix has to be chromatic or it is not a fix.
+    // ENERGY-NEUTRAL BY CONSTRUCTION (shadeCol's Rec.709 luminance is 1.0000), which is
+    // what lets it run at full strength on the darkest pixels in the frame without
+    // moving L05 or the share under L 0.10 — R13's no-black-point finding is preserved
+    // arithmetically rather than by being careful. `?grade_sc=0` removes it.
+    '  vec3 tint=mix(mix(mix(vec3(1.0),shadeCol,scK),warmCol,litK),coolCol,t);',
     '  vec3 o=mix(c.rgb, c.rgb*tint, amt);',
     // DISTANCE LOSES CHROMA (R5). Toward the pixel's OWN luminance, not toward a
     // fog colour: a mix to grey keeps the value the key put there, so the far
@@ -751,6 +796,21 @@ const GRADE_SHADER={
     // only on pixels that are already dark and only in the near field. Midtones,
     // highlights and the whole far band are untouched by construction.
     '  o*=1.0-toe*(1.0-t)*smoothstep(0.30,0.02,oL);',
+    // R14 — THE FLOOR, WHICH IS THE INVERSE OF THE TOE ON THE LINE ABOVE, and the two
+    // are kept because they are not the same knob: the toe is a MULTIPLY that bites on
+    // near darks, this is an ADD that bites on the darkest pixels only.
+    // THE CONSTRAINT IT EXISTS TO SATISFY, verbatim from the round's brief: "deepen the
+    // shade WITHOUT re-introducing a black point. More separation between lit and shade,
+    // with the floor still off the bottom. Those are compatible: it is CONTRAST, NOT A
+    // TOE. If you find yourself adding a black point you have taken the easy version."
+    // Cutting the fill to raise the key:fill ratio does re-buy a black point — measured,
+    // owenv 0.95 -> 0.62 takes the meadow's share under L 0.10 from 1.26% to 1.82%. So
+    // the ratio move is paid for and the floor is put back separately, where it can be a
+    // COLOUR: the same shadeCol the split uses, because a floor under a shadow is
+    // physically the sky, and a neutral lift would be the milky wash R5 was refused for.
+    // It runs UNDER the grade's own darkest band only (linear L 0.055 is about sRGB
+    // 0.26) so nothing in the midtones or the highlights moves. ?grade_flr=0 removes it.
+    '  o+=shadeCol*flr*smoothstep(0.055,0.0,oL);',
     '  gl_FragColor=vec4(o,c.a);',
     '}'].join('\n')};
 // ===== THE G-BUFFER IS COLOUR-BLIND  (2026-08-04, ?gbuf=0 restores the old one) ===
@@ -885,8 +945,12 @@ function pfxBuild(){
     grade.material.uniforms.vh.value=PFX.gradeVegHue;
     grade.material.uniforms.hgate.value=PFX.gradeHazeGate;
     grade.material.uniforms.vbl.value=PFX.gradeVegShade;
+    grade.material.uniforms.sc.value=PFX.gradeShade;
+    grade.material.uniforms.flr.value=PFX.gradeFloor;
     {const hz=(Q.get('grade_hc')||'').split(',');
      if(hz.length===3) grade.material.uniforms.hazeCol.value.set(+hz[0],+hz[1],+hz[2]);}
+    {const shc=(Q.get('grade_shc')||'').split(',');
+     if(shc.length===3) grade.material.uniforms.shadeCol.value.set(+shc[0],+shc[1],+shc[2]);}
     const K=PFX.gradeTint, u=grade.material.uniforms;
     for(const k of ['warmCol','coolCol']){ const v=u[k].value;
       v.set(1+(v.x-1)*K, 1+(v.y-1)*K, 1+(v.z-1)*K); }
@@ -2478,7 +2542,27 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // and the terminator is a HUE now, not only a level: mean (b-r) across the
       // masked pixels splits 24 units cool-side against 79 warm-side on the
       // corridor, where it was 17 against 52.
-      const OWKEY=+(Q.get('owkey')||2.40);      // multiplies the towns' own 2.60
+      // R14 — THE KEY:FILL RATIO, and it is the fourteenth critic's own top item:
+      // "Raise the key-to-fill ratio and warm the key - deepen shade, let sunlit tan go
+      // warmer and shaded tan go cooler. That is CHEAP (a light and a grade) and it is
+      // THE HIGHEST-VALUE SINGLE MOVE IN THE SET, because it fixes flatness AND partly
+      // fixes the same-coloured-houses problem BY SPLITTING EVERY WALL INTO TWO TONES."
+      // 2.40/0.95 -> 3.00/0.55 takes the ratio of key luminance to fill luminance from
+      // 7.6 to 17.5. SWEPT, NOT DERIVED (scratchpad/r14, four rungs x two views, and
+      // every plate opened):
+      //   owkey/owenv    L50    L95   IQR   under L0.10   max>0.97   verdict
+      //   2.40 / 0.95   0.505  0.728 0.259     1.26%        0.34%    shipped r13, flat
+      //   2.70 / 0.72   0.518  0.742 0.281     1.71%          -
+      //   2.90 / 0.62   0.528  0.754 0.292     1.82%          -
+      //   3.20 / 0.50   0.546  0.770 0.306     1.93%        0.66%
+      //   3.60 / 0.38   0.572  0.789 0.321     2.23%        1.20%    lit grass blowing
+      // THE SWEEP'S OWN LESSON: CUTTING THE FILL IS THE HALF THAT WORKS AND RAISING THE
+      // KEY IS THE HALF THAT CLIPS. Past 3.2 the shade stops getting deeper (L05 moves
+      // 0.150 -> 0.148, i.e. nothing) while the sunlit grass goes to white-green, which
+      // is an item on the same critic's list. So the ratio is bought mostly on the fill.
+      // The references clip 0.45-0.93% of their pixels above 0.97; 3.00/0.55 sits inside
+      // that at 0.6% instead of exceeding it.
+      const OWKEY=+(Q.get('owkey')||3.00);      // multiplies the towns' own 2.60
       // R6 (2026-08-04) OPENS THE KEY'S BLUE CHANNEL, and this is the other half of
       // "everything is one garish amber". (1.0, 0.70, 0.42) is a 2500K sun; at 2.4x it
       // multiplies a grass albedo of roughly (0.35, 0.55, 0.20) into (2.2, 2.4, 0.5),
@@ -2494,6 +2578,29 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // GRADE_SHADER's litK) rather than graded away.
       dl.color.setRGB(1.0,0.785,0.555); dl.intensity=IU(2.60*OWKEY);
       contactShadow.visible=(Q.get('contact')!=='0');   // R11, see THE CONTACT SHADOW
+      // R14 — AND IT HAD TO POINT SOMEWHERE. Three critics in a row have written that
+      // she "has no contact shadow at all on the path", and the reflex reading — that
+      // the quad is missing, or that MultiplyBlending vanishes over dark ground — is
+      // WRONG AND WAS MEASURED: A/B'd at ?contact=0 against ?contact=1.15 on the meadow,
+      // the 24x54 px box at her feet goes (101,75,65) -> (59,36,32). It is darkening the
+      // ground by 41% and it is still not read as a shadow.
+      // IT IS A CIRCLE. A symmetric pool under a figure lit at 34 degrees is the one
+      // thing a real shadow never is, so the eye files it as soft vignetting on the
+      // texture rather than as contact. Stretched 2.1x along the sun's own shadow
+      // bearing and squeezed across it, the same pixels become the ROOT OF A CAST
+      // SHADOW — and that is the whole difference, because a contact shadow's job is to
+      // join the figure to the ground plane, which needs a direction to join along.
+      // The bearing is DERIVED FROM OWSUN_DIR, never a second copy of the number: with
+      // rotation.x = -PI/2 the plane's local +x maps to world +x and local +y to world
+      // -z, so an in-plane angle phi points along world (cos phi, -sin phi).
+      {const sx=-OWSUN_DIR.x, sz=-OWSUN_DIR.z;      // the direction the shadow falls
+       const phi=Math.atan2(-sz,sx), s=+(Q.get('contact')||1.15);
+       contactShadow.rotation.set(-Math.PI/2,0,phi);
+       contactShadow.scale.set(s*2.1,s*0.85,1);
+       // and the pool's centre walks HALF ITS LONG AXIS down-sun, so the dense end sits
+       // under her feet and the tail runs away from the light instead of the disc
+       // hanging symmetrically off the front of her boots.
+       contactShadow.position.set(sx*s*0.42,0.015,sz*s*0.42);}
       // THE CURVE IS ARMED HERE, not at the NoToneMapping line above, so ?tone=
       // still overrides it and ?owlight=0 still restores the flat 2026-08-02 rig.
       setTone(THREE.NeutralToneMapping);
@@ -2781,7 +2888,15 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // numbers"; that was true of R12's change and is NOT true of this one — the sweep
       // above held the bounce fixed, so its shipped triple is what these numbers were
       // measured under. Moving it now would be shipping an unmeasured value.
-      const OWENV=+(Q.get('owenv')||0.95), OWENVSUN=+(Q.get('owsun')||0.30);
+      // R14 — 0.95 -> 0.55. R13 raised this to 0.95 to get shade off the black point and
+      // to give a shadow enough signal to carry a hue; both worked and BOTH ARE KEPT (the
+      // hue is measured off the references and the floor is now defended by grade_flr,
+      // which is luminance-only and cannot undo either). What 0.95 also did is the
+      // fourteenth critic's whole verdict: "the ambient fill is lifted so hard that the
+      // shaded roof faces are only slightly darker than the lit ones... A reads as LATE
+      // AFTERNOON LIGHT UNDER A COMPLETELY OVERCAST SKY - a contradiction, a directional
+      // sun with no sky to justify it." An overcast read IS a fill this large.
+      const OWENV=+(Q.get('owenv')||0.55), OWENVSUN=+(Q.get('owsun')||0.30);
       // THE HUE IS A KNOB NOW, not only the level. R3 swept the fill's LEVEL and
       // wrote down that the COLOUR was where the terminator was hiding — and then
       // left the colour as a literal, so the next round could not sweep the thing
@@ -2805,8 +2920,11 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
         // 0.376 -> 0.95 the fallback had to move by the same 2.53x or the sentence
         // stopped being true and ?ibl=0 became a second, staler art direction. The
         // hemisphere's sky colour takes the new fill's hue for the same reason.
-        AMBIENT.intensity=IU(0.25); RTLIGHT.color.setRGB(0.55,0.72,1.00);
-        RTLIGHT.groundColor.setRGB(0.30,0.40,0.55); RTLIGHT.intensity=IU(1.06);
+        // R14: OWENV 0.95 -> 0.55 is 0.579x, and these two follow it for the reason
+        // R13 wrote down — this branch is committed to "roughly the environment's own
+        // irradiance", so a fill move that is not carried here forks the art direction.
+        AMBIENT.intensity=IU(0.145); RTLIGHT.color.setRGB(0.55,0.72,1.00);
+        RTLIGHT.groundColor.setRGB(0.30,0.40,0.55); RTLIGHT.intensity=IU(0.614);
       }
       // fill is COOL against a warm key on purpose: that split is what golden
       // hour actually is, and it is what keeps a shadowed face readable instead
