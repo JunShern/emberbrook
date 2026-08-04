@@ -2106,3 +2106,97 @@ arrow. Recorded so the next reader does not re-open it as a player defect.
 * **PT-20260804-014** was filed against the 11 px cut and is superseded by the pill; re-test
   it, do not triage it as a world defect. Its predecessors at that platform were already
   reach-REFUTED.
+
+## Round 12 — 2026-08-05 · "the ground around Maren has a bunch of holes" — it was a staircase
+
+**USER REPORT, verbatim:** *"it's literally hard for me to reach Maren because the ground
+around her still has a bunch of holes"* (Dellhollow, `del-cine`, the lock apron).
+
+There were no holes. There was **one wall, and the wall was a staircase**, and it stood
+between the entire western waterfront and the woman Chapter Two sends you to.
+
+### What it was
+
+`town_blockout.stairs_leg` puts a 2.0 x 2.0 x 0.16 landing at every intermediate `stairs`
+waypoint with its **top at the waypoint's own height**. `weave-huts__moorage` carried a
+last waypoint at **1.70** over a moorage deck measured at **1.02–1.05**
+(`walk_e_moorage__lock-five_l0` — the lane Maren stands on) and **1.25** (`walk_lm_moorage`).
+
+| | |
+|---|---|
+| step up onto the stair's foot | **0.65 m** |
+| `play3d.html:1918` `STEP_UP` | **0.63 m** |
+| headroom under that same slab | **0.49 m** (`BODY_H` is 1.30) |
+
+**Refused by 20 mm, and un-duckable by 0.81 m.** So the stair neither joined the deck it is
+named for nor let anyone pass beneath it, and `walk_e_moorage__tenant-shack` →
+`walk_e_moorage__lock-five` — the waterline's only west–east route — was severed at the join.
+
+### The instruments, in the order they were asked
+
+| instrument | what it said |
+|---|---|
+| `walk_engine_gate --scene del-cine` | **GREEN, 0 lost cells.** Not a collision-BVH defect — file and engine agreed about a world that was already wrong |
+| `_court_probe --way` (SIM.move) | stalled at **x 77.53** driving west; driving *down* the flight it put the body on the **overhead leg at y 4.52** |
+| `_court_probe --at` | `SIM.blocked` **named it**: `walk_e_weave-huts__moorage_l3_t00`, `_landing002` |
+| `reach_probe --pairs` | fishdock arrival → maren: **no-path**, gap `dy 2.18 m` over `0.4 m` in plan |
+
+**The map's own note predicted the second row and nobody heard it:** *"tight hairpins let
+walkers mount the overhead leg."* It was written about the flight's legs clearing **each
+other**. Nothing had ever asked whether they cleared **the deck below**.
+
+**And a flood fill could not have found this.** `reach_probe` reported `ok=true` from the
+lockhead — its 0.4 m lattice, its four 0.18 m plank-crack retries and its settle-from-the-
+neighbour's-height bridge what a 0.075 m stride and a 0.30 m body cannot. Its own header
+says so ("a TOPOLOGY screen, not a drive"). **The drive is what found the wall.**
+
+### The fix — one number of map
+
+`public/townmap/dellhollow.map.json`, that waypoint's height **1.70 → 1.25**
+(`walk_lm_moorage`'s own top). The landing now merges with the pad instead of hovering over
+it, and its underside drops to 1.09 — below the body's blocking window from the lane.
+
+Carried in by `walk_rederive --edge weave-huts__moorage` (the blockout stays the only
+generator), then **`locksfoot_build deck`** — `lf_stair_treads` is *built from* those walk
+records, and leaving the art behind would have made the wall invisible rather than absent —
+then `cine_solve`, the derives, and four plates.
+
+### Receipt
+
+| | before | after |
+|---|---|---|
+| `lockfive` spawn → Maren (`SIM.move`) | walled | **2/2 legs, both ways** |
+| down the flight → Maren | 2/8, on the overhead leg | **8/8 legs** |
+| §W `ch2.jam → ch2.maren` | — | **reachable, 11.6 m, 3 in-scene edges** |
+| `playthrough_test` | 86/0 | **86/0** |
+| `cine_test` | 687/1 | **688/0** |
+| `walk_engine_gate` del-cine | GREEN | **GREEN**, 3985 cells / 807.0 m², BVH FAIL 0 |
+| `findability_test` | 69/0 | **69/0**, Maren in neither warning |
+
+**This closes round 11's carried item** — *"the last hop into Lock Five… thirteen no-gain
+legs from the pilot-cluster platform, ground walkable by the executor's own reading."* Same
+stair. The LLM playtester and the human hit the same 20 mm.
+
+### Carried, measured, not fixed
+
+* **The flight still crosses `walk_e_moorage__tenant-shack` with 1.05 m of headroom**
+  (was 0.88 — the steeper flight improved it, and 1.30 is what a body needs). The
+  tenant-shack/fish-dock deck therefore still does not join the moorage *under* the stair;
+  it joins over it. Fixing it needs deck the moorage footprint does not have, and every rect
+  there must be measured-landed, so it is a build, not a waypoint.
+* **`walk_rederive --report` shows 44 records across 9 OTHER edges stale against the map**
+  (`inn__item-shop`, `quay-deck__cookhouse`, `deep-stairs-head__…`, two `walk_pad_`s…).
+  Only `weave-huts__moorage` was re-derived. **Each of those is a place the master and the
+  map disagree, which is exactly the shape of the defect above.**
+
+### Two lessons worth the ink
+
+1. **`cine_solve` runs BEFORE the bake.** The solver frames a shot off the walk network in
+   its own band, so moving a stair moved `lockfive` 0.30 m and made its just-finished plate
+   stale against the solve. `lockfive` was baked twice to learn it. The chain is
+   `map → walk_rederive → district build → cine_solve → derives → bake`.
+2. **A GATE THAT MEASURES THE FILE CANNOT SEE A STEP THE BODY WON'T TAKE.** `walk_engine_gate`
+   answers "does the engine find the floor the file has" and was green through all of this,
+   *correctly* — both sides had the floor. The missing question was whether a **body** gets
+   from one floor to the next, and only `SIM.move` asks it. Same family as `_court_probe`'s
+   founding lesson: a fill tells you where the world is shut, never what shuts it.
