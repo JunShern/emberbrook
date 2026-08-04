@@ -192,6 +192,17 @@ numbers just as little. <strong>Most likely cause: three.js caches the compiled 
 unchanged</strong> — so the patched source was probably never compiled. Flagged rather than claimed: pixel-scale
 ground material is still, by eye, the loudest remaining gap, and vertex colour cannot supply it (the terrain's
 vertices are metres apart, so several metres is the finest thing it can represent).
+<br><br>
+<strong>WRONG, corrected 2026-08-04 — and the correction is the lesson.</strong> The shader was live the
+whole time. <code>Material.customProgramCacheKey()</code> returns <code>onBeforeCompile.toString()</code>,
+so assigning a new closure <em>does</em> change the key and <em>does</em> force a rebuild. Proved by pushing
+<code>diffuseColor.rgb = vec3(1,0,1)</code> through the identical path: the terrain went flat magenta on the
+next frame and the callback fired 3/3 (<code>ground_valley_1/2/3</code>, so the name selector was fine too).
+The defect was in the <em>instrument</em>: mean&nbsp;|laplacian| over a 1&nbsp;px kernel is nearly blind to a
+±17&nbsp;% multiply whose features are 10–30&nbsp;px across at this camera. A straight pixel diff of the same
+two plates shows <strong>15&nbsp;% of pixels moving by more than 2/255, peak 59/255</strong> — visible to
+anything that looked. <em>A metric that cannot resolve the effect will report the mechanism broken, and the
+next lane will go and fix the mechanism.</em> The real fix was frequency and amount, not plumbing: see §9.
 </div>
 
 <h2>7 · Scope and safety</h2>
@@ -211,5 +222,115 @@ vertices are metres apart, so several metres is the finest thing it can represen
 <li><strong>Replace the canopy blobs</strong> with ground-level clustered foliage; the refs' bushes sit <em>on</em> the ground with internal light variation.</li>
 <li><strong>Hand the cool-distance problem to post</strong> as a depth-graded hue rotation, then re-measure the FAR−NEAR gradient to see what content bought on top of pipeline.</li>
 </ol>
+
+<h2>9 · Gauntlet round 1, CONTENT lane — what shipped</h2>
+<p>The blind critic ranked us third of three and named two content deficits: <em>"one house asset, ~14 copies,
+one scale, one rotation family, one material, roughly even spacing"</em>, and <em>"near-field has scattered
+blade quads; a short distance in, the meadow becomes flat painted green … their ground never changes species
+mid-frame."</em> Both are now in the shipped game, not in a probe.</p>
+
+<h3>Where each half lives</h3>
+<ul>
+<li><strong>The houses are BUNDLE content</strong> — <code>tools/valley_build.py</code>, rebuilt and re-exported.
+Per-house uniform scale (0.86–1.16, so width, depth, wall height and ridge move together), angular jitter plus
+double the radial spread on the ring, a rotation that only <em>mostly</em> faces the green (every fourth house
+stands gable-on), and <strong>three wall/roof tint families</strong> carried on a face layer and multiplied into
+<code>COLOR_0</code> after <code>apply_class_gains</code>. Zero new materials, zero new art, +56 triangles.
+Dellhollow got the same treatment minus the rotation scatter — a terraced town aligns to its bench.
+<br><em>Why the existing per-face jitter was not enough:</em> <code>write_prop_colors</code> already jitters
+COLOR_0 per FACE, which is grain. What reads as "several houses" is a whole <em>building</em> sharing one
+deviation while its neighbour shares another.</li>
+<li><strong>The blade carpet is RUNTIME</strong> — <code>public/js/ow_detail.js</code>, ow-* scenes only.
+It has to be: the player walks all 280×200u, so "dense where the player is" as static geometry is dense
+<em>everywhere</em>, which at 46 blades/m² is millions of triangles in the bundle. Against the live camera it
+costs no bytes and the falloff can have the refs' shape. 169k instances at the gate (≈1.0 M tris, one draw
+call), rebuilt in 58–88 ms every 9 m walked.</li>
+</ul>
+
+<h3>Two things that were measured, not guessed</h3>
+<div class="note grn">
+<strong>Blades must be tinted by texture × COLOR_0, not COLOR_0 alone.</strong> The terrain material is
+<code>baseColorTexture * COLOR_0</code> (glTF can only multiply) and L3 deliberately pushed grass COLOR_0 to
+L 0.651 <em>knowing</em> a darker map would come back down over it. Sampling COLOR_0 alone made the first
+carpet 1.5–2× brighter than the ground it stood in — at boom 40 that resolved as white frost across the whole
+meadow. Folding in the map's measured mean fixed it in one change.
+</div>
+<div class="note grn">
+<strong>Blade normals point UP, not along the blade.</strong> A card normal (0, 0.45, 1) puts half the field
+facing the low sun and half facing away; at 3–8 px per blade that per-blade contrast <em>is</em> stipple.
+Shading them like the ground keeps the silhouette and drops the noise, and the value variation then comes from
+the baked tip gradient, which is under our control, instead of from the light, which is not.
+</div>
+
+<h3>Before / after — all six plates <code>postfx=off</code></h3>
+<div class="pair">
+<figure><img src="plates/b2off-gate.png" alt="gate before"><figcaption><span class="tag t-bad">before</span>gate — shipped bundle, module off</figcaption></figure>
+<figure><img src="plates/r2-gate.png" alt="gate after"><figcaption><span class="tag t-new">after</span>gate — house variation + blade carpet</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="plates/b2off-meadow.png" alt="meadow before"><figcaption><span class="tag t-bad">before</span>meadow — the fourteen copies, flat painted green</figcaption></figure>
+<figure><img src="plates/r2-meadow.png" alt="meadow after"><figcaption><span class="tag t-new">after</span>meadow — three roof tints, carpet to the top of frame</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="plates/b2off-gorge.png" alt="gorge before"><figcaption><span class="tag t-bad">before</span>gorge — the Dellhollow approach</figcaption></figure>
+<figure><img src="plates/r2-gorge.png" alt="gorge after"><figcaption><span class="tag t-new">after</span>gorge — carpet on the shelf, cliff correctly bare</figcaption></figure>
+</div>
+
+<h3>The numbers, <code>postfx=off</code> on both sides</h3>
+<table>
+<tr><th>frame</th><th>detail before</th><th>after</th><th>Δ</th><th>L50 before</th><th>after</th><th>S50 before</th><th>after</th></tr>
+<tr><td>gate FAR</td><td>35.9</td><td>95.3</td><td class="good">+165 %</td><td>0.577</td><td class="bad">0.516</td><td>0.489</td><td>0.452</td></tr>
+<tr><td>gate MID</td><td>56.1</td><td>95.2</td><td class="good">+70 %</td><td>0.467</td><td class="bad">0.377</td><td>0.511</td><td>0.464</td></tr>
+<tr><td>gate NEAR</td><td>41.6</td><td>85.5</td><td class="good">+105 %</td><td>0.456</td><td class="bad">0.380</td><td>0.530</td><td>0.471</td></tr>
+<tr><td>meadow FAR</td><td>44.9</td><td>76.7</td><td class="good">+71 %</td><td>0.488</td><td class="bad">0.419</td><td>0.434</td><td>0.409</td></tr>
+<tr><td>meadow MID</td><td>36.2</td><td>73.6</td><td class="good">+103 %</td><td>0.389</td><td class="bad">0.339</td><td>0.426</td><td>0.408</td></tr>
+<tr><td>meadow NEAR</td><td>42.7</td><td>50.1</td><td class="good">+17 %</td><td>0.304</td><td>0.271</td><td>0.324</td><td class="good">0.349</td></tr>
+<tr><td>gorge FAR</td><td>21.5</td><td>22.9</td><td>+7 %</td><td>0.376</td><td>0.376</td><td>0.330</td><td>0.330</td></tr>
+<tr><td>gorge MID</td><td>43.8</td><td>59.4</td><td class="good">+36 %</td><td>0.315</td><td>0.298</td><td>0.299</td><td class="good">0.323</td></tr>
+<tr><td>gorge NEAR</td><td>34.6</td><td>41.6</td><td class="good">+20 %</td><td>0.255</td><td>0.240</td><td>0.264</td><td class="good">0.288</td></tr>
+</table>
+
+<div class="note amb">
+<strong>What got worse, and one number to distrust.</strong>
+<ul>
+<li><strong>Every band is darker.</strong> Worst is gate MID/NEAR, L50 0.467→0.377 and 0.456→0.380, against
+REF1's near-field 0.558. <em>Measured, and it is not albedo:</em> gate NEAR L50 runs 0.375 / 0.380 / 0.385 at
+blade lift 1.40 / 1.70 / 2.00. The carpet darkens a frame by <strong>coverage</strong>. Chasing that L back is
+density or exposure, and exposure is the pipeline lane's — flagged to them rather than fought here.</li>
+<li><strong>Detail has overshot the references</strong> (gate 85–95 against REF1's 45–47, REF3's 13–35). Per
+§2's own warning this metric cannot tell blades from noise, so read the plates and not the column; but it is a
+real risk that a boom-40 carpet reads as busy, and it is the first thing a round-2 critic should be allowed to
+say without us arguing back with a number.</li>
+<li><strong>Dellhollow gained a house</strong>, 11 → 12: the per-station scale and yaw wobble changed which
+terrace stations can bed within the 2.4u corner-span rule. Intended mechanism, unintended count.</li>
+<li><strong>A rebuild is a hitch.</strong> 58–105 ms every 9 m walked (floored at one per 700 ms so a
+teleporting harness cannot pay it on every jump), on the main thread. Fine for a prototype, wrong for a
+shipping game; the fix is to spread placement across frames.</li>
+<li><strong>The carpet is off under software WebGL.</strong> <code>cdp.mjs</code> and
+<code>transition_test</code> launch Chrome with <code>--use-angle=swiftshader --disable-gpu</code>, and a
+1.0 M-triangle instanced field is rasterised by the CPU there. <em>The detection is measured</em> — booted
+under those exact flags, <code>OWD.state()</code> returns <code>{software:true, blades:0}</code> — but the
+saving was <em>not</em> isolated, so no speedup is claimed. It is a precaution: nothing judges art in a
+SwiftShader frame, and a content change that makes the suite unrunnable gets reverted.</li>
+</ul>
+</div>
+
+<h3>Scope and safety</h3>
+<ul>
+<li><strong>Camera untouched</strong>; every plate is the shipped pitch 0.61 / boom 40, at the exact
+<code>base-*</code> viewpoints (gate −57.43/65.55 yaw −1.5426, meadow −56.33/47.95 yaw −1.8040, gorge
+26.45/−22.61 yaw −2.6882, all boom 40) — <strong>which were nowhere on disk and had to be recovered from a
+scratch file</strong>. They are written down here now, which is the same debt <code>land_cams.json</code>
+was created to pay.</li>
+<li><strong>No pipeline work.</strong> No fog, AO, bloom, grading or tone curve. <code>r2pf-*.png</code> are
+the same three frames at the working-tree composer state, for the gallery only; every number above is
+<code>postfx=off</code> on both sides.</li>
+<li><strong>Nothing entered the walk set.</strong> <code>walk_engine_gate --scene ow-valley</code> is
+<span class="good">GREEN</span> — 2065 cells / 418.2 m² standable in the file, 2065 / 418.2 m² in the engine,
+0 lost, BVH fail 0. The carpet is <code>scene.add()</code>ed only and named <code>veg_owd_blades</code>.</li>
+<li><strong>The bundle rebuild is reproducible.</strong> Before touching anything, <code>valley_build</code> +
+<code>valley_export</code> were re-run on the unchanged source and the GLB came back <strong>byte-identical</strong>
+(sha256 <code>ae6ed412…</code>), so every difference after that is attributable to the edit.</li>
+</ul>
 
 </div>

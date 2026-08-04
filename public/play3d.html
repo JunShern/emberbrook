@@ -3117,4 +3117,9 @@ sceneLoad().then(r=>{ if(r) TRANSLOG.push({scene:r.scene, kind:'boot', ms:Math.r
 <script src="js/hush.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/route_overlay.js"></script>
+<!-- OVERWORLD GROUND DETAIL. ow-* scenes only, and CONTENT only (geometry + materials):
+     a camera-following blade carpet and pixel-scale noise on the terrain material. Adds
+     nothing to collide/walkRef/allMeshes and every mesh it makes is veg_-prefixed. Self-
+     arms at load and on 'eb-scene', and keeps polling until the bundle has parsed. -->
+<script src="js/ow_detail.js"></script>
 <script src="js/music.js"></script>

@@ -1,5 +1,5 @@
 {
- "build_s": 11.11,
+ "build_s": 11.69,
  "canopy_farwall-crown": {
   "cards": 4711,
   "core_tris": 4570,
@@ -18,12 +18,14 @@
   "culled": 14048,
   "lobes": 267
  },
- "dellhollow_houses": 11,
+ "dellhollow_houses": 12,
+ "dellhollow_tint_families": 3,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
+ "emberbrook_tint_families": 3,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.25,
+ "field_s": 0.28,
  "h_range": [
   -6.18,
   50.9
@@ -100,7 +102,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.17,
+ "terrain_s": 0.18,
  "tile": [
   280.0,
   200.0
@@ -123,9 +125,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 265310,
+ "tris": 265366,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.4,
+ "veg_s": 3.47,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
@@ -135,5 +137,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.07
+ "zone_s": 0.077
 }

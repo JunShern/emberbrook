@@ -383,6 +383,60 @@ def build_causeway(col, F, zg, fr):
 # =============================================================================
 # TOWN IMPRESSIONS — impressions, NOT the town models shrunk
 # =============================================================================
+# PER-HOUSE TINT FAMILIES.  B.write_prop_colors already jitters COLOR_0 per FACE,
+# which is grain, not variety: every house still ends up the same colour because the
+# jitter averages out over its dozen faces.  What reads as "several houses" is a
+# whole BUILDING sharing one deviation from the palette while its neighbour shares
+# another.  So the builder tags each house's faces with a family index on a bmesh
+# float layer, and apply_house_tints() multiplies COLOR_0 by that family's wall and
+# roof factors AFTER B3.apply_class_gains — the last write to COLOR_0 wins, and the
+# gains pass would otherwise erase this.  Zero new materials, zero new triangles.
+HTINT = "htint"
+WALL_TINTS = [(1.00, 1.00, 1.00),        # the palette's own plaster
+              (0.86, 0.82, 0.71),        # earth daub, darker and warmer
+              (0.98, 1.00, 1.04)]        # limewash, a touch cooler
+ROOF_TINTS = [(1.00, 1.00, 1.00),        # the palette's own tile
+              (0.71, 0.78, 0.87),        # weathered slate
+              (1.06, 0.85, 0.70)]        # a redder, older tile
+
+
+def tint_layer(p):
+    """The per-house family index layer on a B.Prop under construction."""
+    return p.bm.faces.layers.float.get(HTINT) or p.bm.faces.layers.float.new(HTINT)
+
+
+def apply_house_tints(ob, cls):
+    """Multiply COLOR_0 by each house's family tint. Returns houses touched."""
+    me = ob.data
+    at = me.attributes.get(HTINT)
+    if at is None:
+        return 0
+    fam = np.array([v.value for v in at.data])
+    col = me.color_attributes.get("Col")
+    if col is None:
+        me.attributes.remove(at)
+        return 0
+    buf = np.zeros(len(me.loops) * 4, dtype=np.float64)
+    col.data.foreach_get("color", buf)
+    buf = buf.reshape(-1, 4)
+    seen = set()
+    for pi, poly in enumerate(me.polygons):
+        k = int(round(float(fam[pi])))
+        if k <= 0:
+            continue
+        c = int(cls[pi])
+        m = (WALL_TINTS[(k - 1) % len(WALL_TINTS)] if c == WALL else
+             ROOF_TINTS[(k - 1) % len(ROOF_TINTS)] if c == ROOF else None)
+        seen.add(k)
+        if m is None:
+            continue
+        for li in poly.loop_indices:
+            buf[li, 0] *= m[0]
+            buf[li, 1] *= m[1]
+            buf[li, 2] *= m[2]
+    col.data.foreach_set("color", buf.ravel())
+    me.attributes.remove(me.attributes[HTINT])   # never reaches the GLB
+    return len(seen)
 def build_emberbrook(col, F, zg, fr):
     """Emberbrook: a clustered warm-lit village in a forest clearing on the plateau.
 
@@ -393,12 +447,24 @@ def build_emberbrook(col, F, zg, fr):
     """
     rng = random.Random(20260730)
     p = B.Prop("emberbrook")
+    ht = tint_layer(p)
     cx, cy = L.VILLAGE
     h0 = F.village_h
     ring = []
     for i in range(14):
-        a = i * (2 * math.pi / 14) + 0.22
-        r = 4.4 + (i % 3) * 2.0 + rng.uniform(0.0, 1.1)
+        # A SETTLEMENT, NOT FOURTEEN COPIES (2026-08-04).  A blind critic comparing
+        # this frame against the FFIX-reimagined overworld refs called the dressing out
+        # exactly: "one house asset, ~14 copies, one scale, one rotation family, one
+        # material, roughly even spacing" — and said the same fourteen with jitter would
+        # read as a settlement.  Four scatter parameters, no new art:
+        #   spacing  angular jitter + double the radial spread (was a fixed 2π/14 step)
+        #   scale    ONE per-house factor 0.86..1.16, so w/d/h/ridge move together —
+        #            per-dimension jitter alone changes proportion, not apparent size
+        #   rotation still mostly faces the green (the warm window is the town's read),
+        #            but every fourth house stands gable-on or askew
+        #   tint     a family index carried on the faces to apply_house_tints() below
+        a = i * (2 * math.pi / 14) + 0.22 + rng.uniform(-0.13, 0.13)
+        r = 4.4 + (i % 3) * 2.0 + rng.uniform(0.0, 2.1)
         hx, hy = cx + math.cos(a) * r, cy + math.sin(a) * r
         # the ROAD passes through the village ring — a house whose footprint
         # touches it blocks the region's one route (slice agent: emberbrook_5
@@ -409,20 +475,36 @@ def build_emberbrook(col, F, zg, fr):
                 break
             r += 0.9
             hx, hy = cx + math.cos(a) * r, cy + math.sin(a) * r
+        # uneven spacing must not become INTERSECTING spacing: push out off any
+        # neighbour already placed.  The push is radial, so the road clearance the
+        # loop above bought is never spent back.
+        for _try in range(8):
+            if all(math.hypot(hx - ox, hy - oy) >= 2.05 for ox, oy in ring):
+                break
+            r += 0.55
+            hx, hy = cx + math.cos(a) * r, cy + math.sin(a) * r
         gz = gh(F, zg, fr, hx, hy)
-        fa = a + math.pi + rng.uniform(-0.28, 0.28)          # face the green
-        w = 1.05 + rng.uniform(0, 0.34)
-        d = 0.90 + rng.uniform(0, 0.24)
-        bh = 0.96 + rng.uniform(0, 0.14)
+        fa = a + math.pi + rng.uniform(-0.30, 0.30)          # mostly face the green
+        if i % 4 == 1:                                        # ...but not all of them
+            fa += (1.0 if rng.random() < 0.5 else -1.0) * rng.uniform(0.75, 1.25)
+        s = 0.86 + rng.uniform(0.0, 0.30)                     # ±15% apparent size
+        w = (1.05 + rng.uniform(0, 0.34)) * s
+        d = (0.90 + rng.uniform(0, 0.24)) * s
+        bh = (0.96 + rng.uniform(0, 0.14)) * s
+        fam = 1 + (i * 5 + i // 3) % 3                        # neighbours rarely match
+        before = set(p.bm.faces)
         p.cube(WALL, (hx, hy, gz + bh / 2), (w, d, bh), rz=fa)
         p.prism(ROOF, (hx, hy, gz + bh), w * 1.20, d * 1.20,
-                HOUSE_RIDGE - bh + rng.uniform(0.0, 0.10), rz=fa)
+                HOUSE_RIDGE * s - bh + rng.uniform(-0.05, 0.20), rz=fa)
         p.cube(STONE, (hx + math.cos(fa + 1.6) * w * 0.30,
                        hy + math.sin(fa + 1.6) * w * 0.30, gz + bh + 0.42),
                (0.17, 0.17, 0.74), rz=fa)
         # ONE warm window per house facing the green: the "warm-lit" read at 34u
         p.cube(EMIT, (hx + math.cos(fa) * d * 0.56, hy + math.sin(fa) * d * 0.56,
                       gz + bh * 0.60), (0.30, 0.07, 0.24), rz=fa)
+        for f in p.bm.faces:
+            if f not in before:
+                f[ht] = float(fam)
         ring.append((hx, hy))
     # ---- the Heartlight: plinth + a standing light, the town's whole identity ----
     for i in range(8):
@@ -486,6 +568,7 @@ def build_dellhollow(col, F, zg, fr):
     """
     rng = random.Random(20260731)
     p = B.Prop("dellhollow")
+    ht = tint_layer(p)
     aw = VM.DELLHOLLOW
     ctr, tg, nr, wl, hw, t = gorge_frame(F, aw[0], aw[1])
     rot = math.radians(float(VM.ANCHORS["dellhollow"]["rotationDeg"]))
@@ -518,10 +601,15 @@ def build_dellhollow(col, F, zg, fr):
                 off, hw_here = VM.bank_offset(float(q[0]), float(q[1]))
                 if off * side < hw_here + 1.5:      # kept as a SCREEN, not the method
                     continue
-                yaw = math.atan2(float(ctg[1]), float(ctg[0])) + rot + (0.0 if side > 0 else math.pi)
-                w = 1.0 + rng.uniform(0, 0.30)
-                d = 0.86 + rng.uniform(0, 0.22)
-                bh = 0.92 + rng.uniform(0, 0.16)
+                # The terrace ALIGNS to the bench — a stepped town does not scatter its
+                # yaw — so the copy-read is broken here on size and tint, plus a small
+                # yaw wobble a mason would allow. See the note above build_emberbrook.
+                yaw = (math.atan2(float(ctg[1]), float(ctg[0])) + rot
+                       + (0.0 if side > 0 else math.pi) + rng.uniform(-0.16, 0.16))
+                s = 0.86 + rng.uniform(0.0, 0.30)
+                w = (1.0 + rng.uniform(0, 0.30)) * s
+                d = (0.86 + rng.uniform(0, 0.22)) * s
+                bh = (0.92 + rng.uniform(0, 0.16)) * s
                 # A terrace pad + retaining wall is what makes a cluster read
                 # STEPPED — but a pad placed at the CENTRE height cantilevers off a
                 # gorge wall, which is what the first render showed.  The pad top is
@@ -550,12 +638,17 @@ def build_dellhollow(col, F, zg, fr):
                 drop = max(0.6, min(5.0, pad - foot))
                 p.cube(STONE, (ox, oy, pad - 0.42 - drop / 2), (pw_, 0.38, drop), rz=yaw)
                 gz = pad
+                before = set(p.bm.faces)
                 p.cube(WALL, (px, py, gz + bh / 2), (w, d, bh), rz=yaw)
                 p.prism(ROOF, (px, py, gz + bh), w * 1.20, d * 1.20,
-                        HOUSE_RIDGE - bh + rng.uniform(0, 0.10), rz=yaw)
+                        HOUSE_RIDGE * s - bh + rng.uniform(-0.05, 0.20), rz=yaw)
                 p.cube(EMIT, (px + math.cos(yaw + math.pi / 2) * d * 0.56,
                               py + math.sin(yaw + math.pi / 2) * d * 0.56,
                               gz + bh * 0.58), (0.26, 0.07, 0.20), rz=yaw)
+                fam = 1 + (n_house * 5 + n_house // 3) % 3
+                for f in p.bm.faces:
+                    if f not in before:
+                        f[ht] = float(fam)
                 n_house += 1
     # ---- THE WEIR FLIGHT: the reason the locks exist ------------------------
     n_weir = 0
@@ -1787,6 +1880,12 @@ def main():
     gains = {g: m["vcol_gain"] for g, m in pm.items()}
     for key in UVKEYS:
         B3.apply_class_gains(made[key], made[key + "_cls"], group, gains)
+    # LAST write to COLOR_0 for the town impressions: the per-house tint families.
+    # It runs after apply_class_gains on purpose — that pass rewrites every corner
+    # from the class palette and would erase a tint applied before it.
+    for key in ("emberbrook", "dellhollow"):
+        if key in made:
+            STATS[key + "_tint_families"] = apply_house_tints(made[key], made[key + "_cls"])
     for key in PROPKEYS:
         ob = made[key]
         if ob.data.materials:

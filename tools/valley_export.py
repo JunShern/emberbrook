@@ -78,7 +78,14 @@ meta = {
     "region": VM.REGION_ID,
     "spawn": spawn,
     "camYaw": round(yaw, 4),
-    "spawn_note": "emberbrook-gate portal, facing down the road to Dellhollow",
+    # THE NOTE IS PART OF THE GENERATOR, NOT OF THE FILE. This text lived only in the
+    # committed meta.json — someone hand-edited it after the spawn rule changed, and the
+    # next re-export (2026-08-04) silently replaced it with the old one-liner. A fact that
+    # only exists in a generated file is a fact with a countdown on it.
+    "spawn_note": ("4.3u down-road from the emberbrook-gate portal, gate behind, facing "
+                   "Dellhollow. NOT the portal itself: the portal pad is the edge BACK to "
+                   "Emberbrook (r 3.2) and a spawn on it makes the arrival a return — see "
+                   "valley_map.region_spawn."),
     "portals": {k: v["at"] for k, v in VM.PORTALS.items()},
 }
 json.dump(meta, open(os.path.join(OUT, "meta.json"), "w"), indent=1)
