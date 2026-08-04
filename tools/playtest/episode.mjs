@@ -150,7 +150,10 @@ export async function run(cfg) {
     stopBeat = null, stuckWindow = 6, port = 3000, log = console.log, noQueue = false,
     // spineScenes(firedBeats) -> Set of scenes where an un-fired beat still lives.
     // Supplied by the CLI, which owns story.json; the runner only needs the answer.
-    spineScenes = null } = cfg;
+    spineScenes = null,
+    // sceneKind(scene) -> 'town' | 'region' | 'interior' | null, out of scenegraph.json.
+    // See the spine detector: an interior is a room, not a wrong turn.
+    sceneKind = null } = cfg;
   mkdirSync(runDir, { recursive: true });
   const jsonl = join(runDir, 'run.jsonl');
   const obsLog = join(runDir, 'observations.jsonl');
@@ -176,6 +179,11 @@ export async function run(cfg) {
   // Consecutive steps frozen under a modal lock with nothing drawn. That is the
   // GAME's defect, not the harness's, so it is filed rather than swallowed.
   let frozenN = 0; const FROZEN_MAX = 5;
+  // Consecutive steps inside an `interior` node, and whether anything in it ever
+  // answered. Round 7 measured the cost of a room with nobody in it: 18 of 70 steps
+  // in The Boatmen's Rest, talking to its own party. 12 is under that and well over
+  // the 3-4 steps a shop visit or a look round costs.
+  let roomSteps = 0, roomAnswered = false, emptyRoomFiled = false; const EMPTY_ROOM_MAX = 12;
 
   // The objective sentence QUOTES the game's own banner, so it is shown to the agent
   // but is NOT part of what the harness authored — see agent.mjs authoredParts().
@@ -293,9 +301,37 @@ export async function run(cfg) {
      * A player cannot see that they have left the story; the harness can, because
      * it knows which scenes still hold an un-fired beat. Leaving that set and
      * staying gone is a defect whether the player noticed or not. Filed ONCE. */
+    /* AN INTERIOR IS A ROOM, NOT A WRONG TURN. Eight of this detector's reports were
+     * the same design question; the eighth (PT-20260803-029) fired because the agent
+     * walked into a pub and left again six steps later. The rule "you left the set of
+     * scenes holding an un-fired beat and stayed gone" is true and damning about a
+     * region, and simply wrong about an optional interior entered by a door that is
+     * still behind you. `kind` comes from the scenegraph, so this is the game's own
+     * classification and not a name-suffix guess. What IS worth saying about that pub
+     * is a different sentence, and the emptyRoom detector below says it. */
+    const inInterior = !!(sceneKind && sceneKind(truth.scene) === 'interior');
+    if (inInterior) {
+      roomSteps++;
+      // EVERY ui_kit SURFACE IS AN `.ebui-veil`, so the percept reports a shop, a pause
+      // menu and a conversation in the same `dialogue` field — which is exactly the
+      // question here: did anything at all open. `card` is the story-card, same test.
+      const d = obs.percept.dialogue;
+      if ((d && (d.text || d.choices)) || obs.percept.card) roomAnswered = true;
+      if (roomSteps === EMPTY_ROOM_MAX && !roomAnswered && !emptyRoomFiled) {
+        emptyRoomFiled = true;
+        fileReport('bug', {
+          title: `I spent ${roomSteps} turns inside ${truth.scene} and nothing in the room answered me`,
+          doing: 'I went through a door the game offered me and tried to talk to everyone and everything inside.',
+          expected: 'Somebody to talk to, something to buy, or something to do — a room the game lets me into should hold something.',
+          happened: `${roomSteps} turns in this room and not one dialogue box, shop or menu opened. ` +
+            `The only figures in here are the party I walked in with.`,
+        }, step, obs.percept, truth, lastFrames.slice(), 'empty-room-detector', 'P1');
+      }
+    } else { roomSteps = 0; roomAnswered = false; }
+
     if (spineScenes && truth.scene) {
       const live = spineScenes(truth.beats || []);
-      if (live && live.size && !live.has(truth.scene)) offSpine++; else offSpine = 0;
+      if (live && live.size && !live.has(truth.scene) && !inInterior) offSpine++; else offSpine = 0;
       if (offSpine === 3 && !offSpineFiled) {
         offSpineFiled = true;
         fileReport('bug', {

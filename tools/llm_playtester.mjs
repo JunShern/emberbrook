@@ -286,9 +286,22 @@ try {
     const next = ALL_BEATS.filter(b => !f.has(b.id) && b.scene).slice(0, SPINE_LOOKAHEAD);
     return new Set(next.map(b => b.scene));
   };
+  /* WHAT KIND OF PLACE IS THIS. The scenegraph already answers it — every node
+   * carries `kind` ('town' | 'region' | 'interior') — and the spine detector needs
+   * the answer because the two ways of being off the spine are not the same event.
+   * Leaving a town for a region with the objective still on the HUD is the defect
+   * PT-002 named. Walking into a pub through a door you can walk straight back out
+   * of is a player looking around, and the detector filed a P1 about it eight times
+   * (PT-029, round 7). The runner only needs the kind; scenegraph.json is read here
+   * because the CLI owns the game data, as with story.json above. */
+  let SCENE_KIND = () => null;
+  try {
+    const sgNodes = JSON.parse(readFileSync(join(ROOT, 'public/world/scenegraph.json'), 'utf8')).nodes || {};
+    SCENE_KIND = (s) => (sgNodes[s] && sgNodes[s].kind) || null;
+  } catch { console.warn('  WARN no scenegraph.json — the spine detector cannot tell an interior from a wrong turn'); }
   result = await runEpisode({ adapter, agent, plan, runDir: RUNDIR, runId: RUN_ID, port: PORT,
     maxSteps: MAX_STEPS, maxReports: MAX_REPORTS, stopBeat: STOP_BEAT, stuckWindow: STUCK_N,
-    spineScenes, noQueue: has('no-queue') });
+    spineScenes, sceneKind: SCENE_KIND, noQueue: has('no-queue') });
 } catch (e) {
   err = e;
   console.error('\nFATAL: ' + (e && e.stack || e));
