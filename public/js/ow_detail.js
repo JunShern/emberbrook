@@ -69,17 +69,49 @@
     budget: 220000,  // hard instance cap (x6 tris) — a safety valve, see rebuild()
     step: 9.0,       // rebuild once the player has moved this far
     minMs: 700,      // ...and never more often than this (see rebuild)
-    hMin: 0.19, hMax: 0.42,   // blade height, against a 1.45u character (ankle-to-shin)
-    wide: 0.044,     // blade half-width at the base
-    grow: 0.90,      // extra height per r1 of distance — far blades read at fewer pixels
+    // R6 (2026-08-04) HALVES THE BLADE. At 0.19-0.42 against a 1.45u character the
+    // carpet measured knee-high and, at the meadow camera's 12 m boom, covered most of
+    // the frame — the user's words were "enormous… green scribble". Ankle height on
+    // this character is ~0.11-0.13, and that is what the refs' near grass reads as.
+    hMin: 0.085, hMax: 0.235,
+    hPow: 2.10,      // R6: heights are POWER-distributed, not uniform. A uniform draw
+                     // between two numbers gives a crop, not a meadow — every blade
+                     // lands in the same visual half of the range and the field has one
+                     // silhouette height. >1 pushes the mass to the short end and leaves
+                     // a thin tail of tall blades, which is what breaks the top edge up.
+    wide: 0.030,     // blade half-width at the base (R6: 0.044 was chunky once the
+                     // blades came down in height — the aspect ratio is what reads)
+    grow: 0.45,      // extra height per r1 of distance — far blades read at fewer pixels
+                     // (R6: 0.90 nearly doubled the tail and put the biggest cards where
+                     // the frame is densest)
     slope: 0.62,     // reject triangles whose normal.y is below this (no grass on cliff)
-    lift: 1.70,      // blade tint vs the ground it stands in, AFTER the texture mean is
+    lift: 1.14,      // blade tint vs the ground it stands in, AFTER the texture mean is
                      // folded in (see texMean). >1 on purpose: the previous pass's carpet
                      // DARKENED the near field (gate L 0.457 -> 0.387 against REF1's 0.558).
                      // MEASURED, and it is a finding: raising this barely moves frame
                      // luminance (gate NEAR L50 0.375 / 0.380 / 0.385 at lift 1.40 / 1.70 /
                      // 2.00, postfx=off). The carpet darkens a frame by COVERAGE, not by
                      // albedo — chase that L back through density and exposure, not here.
+                     // R6: 1.70 was compensating for the BACKFACE BUG below — half the
+                     // carpet was rendering black, so the field was lifted to get its
+                     // mean back. With the flip gone the same lift blows the near field
+                     // out, so it comes down with it.
+    jitV: 0.30,      // R6: per-instance VALUE jitter width (was a hardcoded 0.14, which
+    jitH: 0.16,      // ...and HUE jitter width — green-vs-amber, which 0.14 of flat value
+                     // could not give. A field of one hue is a texture; a field of many
+                     // is vegetation. Both shrink with distance (see the jw comment).
+    // ---- CLUMPING (R6) --------------------------------------------------------
+    // The single biggest remaining "reads as noise rather than vegetation" term, and
+    // the one that no per-blade jitter can supply: EVEN DENSITY IS THE TELL. A carpet
+    // placed at a constant blades/m2 has no bare ground in it, so its top edge is a
+    // continuous line across the frame and the eye reads one material, not plants.
+    // Real turf is patches. Two octaves of world-space value noise multiply the local
+    // density (and, more weakly, the height, because a thick tuft is also a tall one),
+    // which costs one hash per triangle and no instances at all.
+    clump: 0.95,     // 0 = the old even carpet; 1 = density swings 0..2x
+    clumpM: 6.5,     // metres per clump cell — sized against a 1.45u character, so a
+                     // patch is roughly four of her wide
+    clumpH: 0.45,    // how much of the same field the blade HEIGHT follows
     grit: 0.42,      // ground material: amount of the pixel-scale octave
     gritFar: 30.0    // ...faded to nothing by this view depth, so it never stipples
   };
@@ -101,7 +133,14 @@
       // frost). Shading them like the ground they stand in keeps the silhouette and
       // drops the noise; the value variation then comes from the baked tip gradient,
       // which is under our control, instead of from the light, which is not.
-      N.push(0, 0.94, 0.34, 0, 0.94, 0.34);
+      // R6 MEASURED THE TILT AND IT WAS THE SPECKLE. 0.34 of lateral normal, against a
+      // key at elevation 34 deg, swings a blade's own N.L from 0.24 to 0.81 depending on
+      // which way it happens to be yawed — and yaw is uniform over 2*pi. That is a 3.4x
+      // per-blade lighting range, i.e. exactly the stipple the comment above says it
+      // exists to prevent, and it also put the AVERAGE blade at ~0.29 against the
+      // ground's 0.56, which is why the carpet read as dark scribble over lit ground.
+      // 0.14 keeps a trace of form (0.47..0.62) and lands the mean on the ground's own.
+      N.push(0, 0.990, 0.14, 0, 0.990, 0.14);
       U.push(0, t, 1, t);
       var s = 0.72 + 0.36 * t;
       C.push(s, s, s, s, s, s);
@@ -195,6 +234,27 @@
              area: area, ny: ny };
   }
 
+  // WORLD-SPACE VALUE NOISE (R6), for the clump field. It is keyed on WORLD position,
+  // not on the draw order, which is what makes a patch stay where it is across a
+  // rebuild — a clump field derived from the per-call PRNG would reshuffle the meadow
+  // every time the player walked 9 m, and a meadow that reshuffles is worse than a
+  // meadow that is even.
+  function vhash(a, b) {
+    var s = (Math.imul(a | 0, 374761393) ^ Math.imul(b | 0, 668265263) ^ 0x9e3779b9) >>> 0;
+    s = (s ^ (s >>> 13)) >>> 0; s = Math.imul(s, 1274126177) >>> 0;
+    return ((s ^ (s >>> 16)) >>> 8) / 16777216;
+  }
+  function vnoise(x, z) {
+    var xi = Math.floor(x), zi = Math.floor(z), xf = x - xi, zf = z - zi;
+    var u = xf * xf * (3 - 2 * xf), v = zf * zf * (3 - 2 * zf);
+    return (vhash(xi, zi) * (1 - u) + vhash(xi + 1, zi) * u) * (1 - v) +
+           (vhash(xi, zi + 1) * (1 - u) + vhash(xi + 1, zi + 1) * u) * v;
+  }
+  function clumpAt(x, z) {
+    var s = 1 / Math.max(0.5, P.clumpM);
+    return vnoise(x * s, z * s) * 0.68 + vnoise(x * s * 2.7 + 11.3, z * s * 2.7 - 4.1) * 0.32;
+  }
+
   // deterministic per-call PRNG: the same anchor always yields the same carpet, so a
   // plate is reproducible and a blade never twitches because the player turned round.
   function rngAt(x, z) {
@@ -264,7 +324,11 @@
           var d = Math.hypot(mx - cx, mz - cz);
           if (d > r1) continue;
           var fall = d <= r0 ? 1 : Math.pow(1 - (d - r0) / span, P.tail);
-          var want = IDX.area[t] * P.dens0 * fall;
+          // the clump field is sampled at the TRIANGLE, not per blade: a per-blade
+          // sample thins a patch uniformly instead of moving its edge, which is the
+          // even carpet again by another route.
+          var cl = clumpAt(mx, mz);
+          var want = IDX.area[t] * P.dens0 * fall * Math.max(0, 1 + P.clump * (2 * cl - 1));
           var k = Math.floor(want); if (R() < want - k) k++;
           for (var j = 0; j < k && n < P.budget; j++) {
             var u = R(), w = R();
@@ -277,7 +341,9 @@
             // far blades get taller so they still subtend pixels; near blades stay ankle
             // height against the body. Without this the tail reads as bare ground with
             // dust on it, which is the same visible stop by another route.
-            var h = (P.hMin + R() * (P.hMax - P.hMin)) * (1 + P.grow * (dd / r1));
+            var h = (P.hMin + Math.pow(R(), P.hPow) * (P.hMax - P.hMin)) *
+                    (1 + P.grow * (dd / r1)) *
+                    (1 - P.clumpH * 0.5 + P.clumpH * cl);
             q.setFromAxisAngle(up, R() * Math.PI * 2);
             axis.set(Math.cos(R() * 6.283), 0, Math.sin(R() * 6.283));
             lean.setFromAxisAngle(axis, (R() - 0.5) * 0.55);
@@ -296,10 +362,18 @@
               // per-blade tint jitter is deliberately SMALL and shrinks with distance:
               // near the body it is variety, far away it is the same stipple by another
               // name, because a 4 px blade is one sample of it.
-              var jw = 0.14 * (1 - 0.7 * (dd / r1));
+              var dw = (1 - 0.7 * (dd / r1));
+              var jw = P.jitV * dw;
               var jit = (1 - jw * 0.5) + R() * jw;
-              cols.push(cr * TM[0] * P.lift * jit, cg * TM[1] * P.lift * jit,
-                        cb * TM[2] * P.lift * (jit * 0.98));
+              // R6: the SECOND axis. Value jitter alone gives a field of one colour at
+              // several brightnesses, which is still one colour; hue jitter rolls each
+              // blade between a cooler green and the ground's own amber, which is what
+              // the refs' grass does clump by clump. The two channels move OPPOSITE
+              // ways so the blade's luminance is not disturbed by the hue draw.
+              var hw = P.jitH * dw, hj = (R() - 0.5) * hw;
+              cols.push(cr * TM[0] * P.lift * jit * (1 + hj),
+                        cg * TM[1] * P.lift * jit * (1 - hj * 0.55),
+                        cb * TM[2] * P.lift * jit * 0.98 * (1 - hj * 0.9));
             }
             n++;
           }
@@ -313,6 +387,41 @@
       vertexColors: true, side: T.DoubleSide
     });
     mat.name = 'veg_owd_blade';
+    // ---- THE BACKFACE BUG (R6, 2026-08-04) -------------------------------------
+    // HALF THE CARPET WAS RENDERING BLACK, and it is what the user saw as "hard black
+    // alpha edges". There is no alpha in this material at all — the blade is solid
+    // geometry — so the black was never a cutout. It is three.js's DOUBLE_SIDED normal
+    // flip: `normal *= faceDirection` in normal_fragment_begin. bladeGeo() deliberately
+    // points every normal UP (0, 0.94, 0.34 at the time; 0, 0.99, 0.14 now) so a blade
+    // shades like the ground it stands in; on a back face that is negated — pointing at
+    // roughly the dirt rather than the sky, i.e. at a direction which
+    // receives neither the key nor the sky. Blade yaw is uniform over 2*pi, so ~half of
+    // 177k instances were DOWN-facing, and the field read as green scribble over black.
+    // Un-flipping the normal is the whole fix and costs two ALU ops: these normals are
+    // authored, not derived, and there is no side of a blade that should be dark.
+    // (The alternative — mirrored geometry at FrontSide — doubles the triangle count for
+    // the same pixels.)
+    //
+    // AND IT MUST BE WRITTEN AS AN INCLUDE EDIT. The first version of this patch replaced
+    // the chunk's own `float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;` and MATCHED
+    // NOTHING — three.js calls onBeforeCompile BEFORE resolveIncludes, so what the hook
+    // is handed is the template with `#include <normal_fragment_begin>` still in it, not
+    // the expanded chunk. The frames looked slightly better anyway (the height and jitter
+    // changes landed in the same run) and the patch would have shipped as a no-op. Proved
+    // by capturing sh.fragmentShader from inside the hook: 3942 chars, neither string
+    // present. patchGround() below always replaced INCLUDES; this now does too.
+    mat.onBeforeCompile = function (sh) {
+      sh.fragmentShader = sh.fragmentShader.replace('#include <normal_fragment_begin>',
+        '#include <normal_fragment_begin>\n' +
+        '// owd: blade normals are authored (mostly +Y), never flipped by facing\n' +
+        'normal = gl_FrontFacing ? normal : -normal;\nnonPerturbedNormal = normal;');
+    };
+    // No customProgramCacheKey override — Material's own default already returns
+    // onBeforeCompile.toString(), which is unique to this closure, so there was nothing
+    // to gain. (An earlier note here blamed a constant cache key for the black-frame bug
+    // in play3d.html's owHearthOrb. THAT NOTE WAS WRONG and is corrected rather than
+    // deleted: removing the override there did NOT fix the frame; the cause is elsewhere,
+    // see the receipt in owHearthOrb. A wrong written interpretation is worse than none.)
     var im = new T.InstancedMesh(bladeGeo(), mat, n);
     im.instanceMatrix = new T.InstancedBufferAttribute(new Float32Array(mats), 16);
     if (cols.length === n * 3) {
@@ -321,7 +430,12 @@
     }
     im.instanceMatrix.needsUpdate = true;
     im.frustumCulled = false;      // instanced bounds lie about a carpet this wide
-    im.castShadow = false; im.receiveShadow = false;
+    // R6: RECEIVE, DO NOT CAST. A carpet that ignores the shadow map is BRIGHTER than
+    // the ground inside every tree shadow and darker than it outside — speckle in both
+    // directions, and it undoes the terminator the lighting lane just bought. Receiving
+    // costs one shadow-map lookup per fragment; casting would cost 174k instances in the
+    // depth pass for shadows nothing can resolve at 3-8 px a blade.
+    im.castShadow = false; im.receiveShadow = true;
     im.name = 'veg_owd_blades';    // veg_ => play3d's noStand test can never adopt it
     var g = new T.Group(); g.name = GROUP; g.add(im);
     sc.add(g);                     // scene ONLY: collide/walkRef/allMeshes are never touched

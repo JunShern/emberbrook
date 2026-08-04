@@ -128,6 +128,45 @@ Findings route **through the coordinator**, never lane to lane.
 | 1 | `base-meadow` vs 2 refs | 3rd of 3, very high conf | **1.30:1 lit-to-shadow, saturation flat across the terminator** — "not a sun, an ambient multiplier with a slight gradient" | shadows/key/tonal → pipeline; dressing/blades → content |
 | 2 | `r4-meadow`, `r4-gorge` vs 2 refs | 3rd and 4th of 4 | **"Light is a GLOBAL TINT rather than a DIRECTION: every surface got warmer, but nothing got occluded, so nothing has form."** Top four fixes all TREATMENT | 3 lanes killed by a session limit before routing |
 | 3 | not judged — BUILT against 1 and 2 | plates `r5-*` | **the sun gets a direction: 1.58–2.40:1 → 3.29–4.33:1 on four viewpoints, and the terminator carries a HUE** | TRIED — MOVED IT |
+| 4 | `r5-*` judged blind | **`r5-meadow` LAST of four**, below the r4 frame it replaced | **"This is a global tint, not a light. Nothing in the frame has a lit side and a shaded side that agree with anything else."** — the ratio said 3.29:1 | the metric moved and the picture did not |
+| 5 | not judged — BUILT against 4 | plates `r6-*`, `docs/qa/ow-refs/r6.html` | **the grade is applied to what the light touches, not to the frame**; the blade carpet stops rendering half of itself black; the Heartlight gets a core and a falloff. Ratio kept and up, 4.96 / 3.38 / 3.87 / 4.19 | TRIED — MOVED IT |
+
+### Round 4–5: A NUMBER THAT IMPROVES WHILE THE PICTURE WORSENS IS THE WRONG NUMBER
+
+This is the loop's most important round so far and it is the one that vindicates rule 1.
+
+R5 was **good work that shipped a regression**. `__envTune` really was lying, the fog really was
+aimed at the wrong band, the Heartlight really had no point light — all kept. But the lane took
+`lit:shadow` as its target, hit it, and the frame got worse: everything inside one amber band,
+plane separation gone, the near field a carpet of black scribble. A blind critic that had never
+seen the numbers ranked it BELOW the frame it replaced. **The user confirmed it by eye.**
+
+Two things the round establishes, both cheap to state and expensive to relearn:
+
+  * **THE RATIO WAS NEVER WRONG — IT WAS INCOMPLETE.** A directional KEY and a global GRADE
+    produce a high lit:shadow ratio and a flat picture at the same time, because the grade repaints
+    the shadow the key just carved. R6's fix is one line: the warm half of the depth grade is
+    weighted by the pixel's own luminance, so it lands on lit surfaces and not in shadows. The
+    cool far half stays unweighted — haze is atmospheric and does land on everything.
+  * **THE R5 LANE MEASURED BOTH FAULTS AND SHIPPED THEM AS "UNTOUCHED"** (near-band saturation
+    0.70–0.79 against the references' 0.48–0.49; "the blade carpet also reads oversized"). A
+    measurement filed under known costs is still a defect in the frame. If a lane can name the
+    fault, the fault is in scope.
+
+**And the near field was not the grade's fault the way everyone assumed.** With the carpet off
+(`?owdetail=0`) the near-band saturation barely moves (0.795 → 0.773) — yet the frame looks
+enormously better. The number and the eye disagreed and **the eye was right**: what was wrong with
+that field was that three.js's `DOUBLE_SIDED` normal flip was rendering roughly half of 177k blade
+instances BLACK (authored up-normal → pointing at the dirt on a back face), which no saturation
+statistic can see. The user read it as "hard black alpha edges"; there is no alpha in that material
+at all.
+
+**Where R6 stopped, deliberately.** Near-band saturation lands at 0.60–0.70, not the references'
+0.48–0.49. Closing the rest was TRIED (key (1.0, 0.90, 0.74), grade tint 1.0): it reaches 0.585–0.639
+and the frame stops being golden hour — trees flatten, the picture goes milky, the amber is graded
+AWAY instead of into the light. Refused under the standing stylised-line ruling. **The remaining gap
+is the terrain's own COLOR_0**, which was deliberately pushed to a strong yellow-green; that is a
+CONTENT lever, not a grade one, and is the honest next move.
 
 ### Round 3, the build round: what shipped and what it cost
 

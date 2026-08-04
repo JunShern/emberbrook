@@ -362,7 +362,18 @@ const PFX={
   // mid-corridor frame was complained about for. Halved; the desat below carries
   // the recession instead, which costs chroma without costing black point.
   gradeLift: PFXNUM('grade_l',0.016),
-  gradeTint: PFXNUM('grade_k',2.2),        // scales both tints away from neutral
+  // R6 (2026-08-04) PULLS THE TINT BACK FROM 2.2. At 2.2 the near warm was
+  // (1.121, 1.000, 0.846) applied to every pixel in the front half of the frame —
+  // an 11% red gain against a 15% blue cut on grass, roof, path and shadow alike.
+  // That is most of "everything is one garish amber". 1.45 leaves the golden hour
+  // clearly warmer than neutral while the LIT WEIGHT below decides where it lands.
+  gradeTint: PFXNUM('grade_k',1.45),       // scales both tints away from neutral
+  // THE LIT WINDOW for the warm push (R6): source luminance below litLo takes none
+  // of it, above litHi takes all of it. The floor sits under the frame's shadow
+  // band (measured L05 0.12-0.16 on the four landscape cameras) so a shadow keeps
+  // the cool fill's own hue instead of being repainted amber by the post pass.
+  gradeLitLo: PFXNUM('grade_ll',0.16),
+  gradeLitHi: PFXNUM('grade_lh',0.46),
   // THE THIRD HALF OF AERIAL PERSPECTIVE, and the one we never had (R5). Measured
   // on the two daylight references with tools/../bands.py: their saturation RISES
   // toward the camera — FAR 0.30/0.35, MID 0.33/0.39, NEAR 0.48/0.49 — while ours
@@ -408,13 +419,13 @@ const PFX={
 const GRADE_SHADER={
   uniforms:{ tDiffuse:{value:null}, tDepth:{value:null}, projInv:{value:new THREE.Matrix4()},
              dNear:{value:30}, dFar:{value:150}, amt:{value:1}, lift:{value:0.03},
-             desat:{value:0.0},
+             desat:{value:0.0}, litLo:{value:0.0}, litHi:{value:1.0},
              warmCol:{value:new THREE.Vector3(1.055,1.000,0.930)},
              coolCol:{value:new THREE.Vector3(0.900,0.972,1.105)} },
   vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
   fragmentShader:[
     'varying vec2 vUv; uniform sampler2D tDiffuse, tDepth; uniform mat4 projInv;',
-    'uniform float dNear,dFar,amt,lift,desat; uniform vec3 warmCol,coolCol;',
+    'uniform float dNear,dFar,amt,lift,desat,litLo,litHi; uniform vec3 warmCol,coolCol;',
     'void main(){',
     '  vec4 c=texture2D(tDiffuse,vUv);',
     '  float d=texture2D(tDepth,vUv).x;',
@@ -425,7 +436,19 @@ const GRADE_SHADER={
     '  vec4 v=projInv*vec4(vUv*2.0-1.0, d*2.0-1.0, 1.0); v/=v.w;',
     '  float t=clamp((length(v.xyz)-dNear)/max(1e-3,dFar-dNear),0.0,1.0);',
     '  t=t*t*(3.0-2.0*t);',
-    '  vec3 tint=mix(warmCol,coolCol,t);',
+    // THE WARM HALF IS GRADED INTO THE LIGHT, NOT ACROSS THE FRAME (R6, 2026-08-04).
+    // R5 multiplied EVERY near pixel by warmCol, which is a global tint by definition —
+    // the exact thing the whole lane exists to undo, arriving through the grade instead
+    // of through the ambient. A blind critic ranked the result last of four and said of
+    // it "this is a global tint, not a light", while the lit:shadow ratio said 3.29:1.
+    // Both are true: the KEY has a direction and the GRADE did not.
+    // So the warm push is now weighted by the pixel's own luminance — full on a lit
+    // surface, nothing in a shadow — and the COOL far push is not, because haze is
+    // atmospheric and does land on everything. That single line is the difference
+    // between "the light is warm" and "the picture is orange".
+    '  float srcL=dot(c.rgb, vec3(0.2126,0.7152,0.0722));',
+    '  float litK=smoothstep(litLo,litHi,srcL);',
+    '  vec3 tint=mix(mix(vec3(1.0),warmCol,litK),coolCol,t);',
     '  vec3 o=mix(c.rgb, c.rgb*tint, amt);',
     // DISTANCE LOSES CHROMA (R5). Toward the pixel's OWN luminance, not toward a
     // fog colour: a mix to grey keeps the value the key put there, so the far
@@ -472,6 +495,8 @@ function pfxBuild(){
     grade.material.uniforms.amt.value=PFX.gradeAmt;
     grade.material.uniforms.lift.value=PFX.gradeLift;
     grade.material.uniforms.desat.value=PFX.gradeDesat;
+    grade.material.uniforms.litLo.value=PFX.gradeLitLo;
+    grade.material.uniforms.litHi.value=PFX.gradeLitHi;
     const K=PFX.gradeTint, u=grade.material.uniforms;
     for(const k of ['warmCol','coolCol']){ const v=u[k].value;
       v.set(1+(v.x-1)*K, 1+(v.y-1)*K, 1+(v.z-1)*K); }
@@ -1889,7 +1914,20 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // masked pixels splits 24 units cool-side against 79 warm-side on the
       // corridor, where it was 17 against 52.
       const OWKEY=+(Q.get('owkey')||2.40);      // multiplies the towns' own 2.60
-      dl.color.setRGB(1.0,0.70,0.42); dl.intensity=IU(2.60*OWKEY);
+      // R6 (2026-08-04) OPENS THE KEY'S BLUE CHANNEL, and this is the other half of
+      // "everything is one garish amber". (1.0, 0.70, 0.42) is a 2500K sun; at 2.4x it
+      // multiplies a grass albedo of roughly (0.35, 0.55, 0.20) into (2.2, 2.4, 0.5),
+      // i.e. YELLOW — the green channel never gets to beat the red, so no lit surface in
+      // the valley can read as green whatever its albedo is. The lane before this one
+      // measured the consequence (near-band saturation 0.70-0.79 against the references'
+      // 0.48-0.49) and shipped it as "untouched".
+      // (1.0, 0.785, 0.555) is still unmistakably golden hour — warmer than any daylight
+      // white, and warmer than both references — but it leaves the blue channel enough
+      // room that a green albedo comes back green and a red roof still reads red against
+      // it. THE STYLISED LINE IS HELD ON PURPOSE: the committed amber is the thing the
+      // critic liked best about our frame, so it is graded INTO the light (see
+      // GRADE_SHADER's litK) rather than graded away.
+      dl.color.setRGB(1.0,0.785,0.555); dl.intensity=IU(2.60*OWKEY);
       // THE CURVE IS ARMED HERE, not at the NoToneMapping line above, so ?tone=
       // still overrides it and ?owlight=0 still restores the flat 2026-08-02 rig.
       setTone(THREE.NeutralToneMapping);
@@ -1942,11 +1980,34 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // reaches the frame edge and can never become the "global tint" this whole
       // lane exists to undo. castShadow stays OFF: a shadowing point light is six
       // more shadow-map faces every frame for a 15 m pool at golden hour.
+      //
+      // R6 (2026-08-04) FINISHES THE JOB, because R5 left it "a blown white disc with a
+      // hard-ish boundary" — the user's own words on the shipped frame, and the critic's
+      // first clause ("clipped to pure white") was never actually addressed: R5 lowered
+      // the emissive of the material the orb SHARES with fourteen window panes, which is
+      // as far as one number can go. Two things land here instead.
+      //
+      //   1. THE ORB GETS A CORE AND A FALLOFF (owHearthOrb below). A uniformly emissive
+      //      sphere is a FLAT DISC on screen by construction — every fragment emits the
+      //      same radiance, so the silhouette is the only edge in it, and once that flat
+      //      value clips it is a paper circle. The orb is now shaded by its own facing
+      //      term: a small hot core where it faces the camera, falling through amber to
+      //      a dim saturated rim. Same geometry, same position, one pow().
+      //   2. THE POOL REACHES THE HOUSES. At 9 W / range 15 / decay 2 the nearest houses
+      //      (8-10 m out on the green's ring) were taking under 2% of the light at the
+      //      plinth — measured, and it is why the critic could say "it does not light the
+      //      houses beside it" AFTER a point light had been added for exactly that. The
+      //      falloff is the physically correct one and stays; the WATTAGE is what was
+      //      wrong. 34 W at range 26 puts a readable warm side on the ring of houses and
+      //      on the character standing at the green, and is still nothing at the frame
+      //      edge — inverse-square is what keeps this a lamp and not a global tint.
       const HL=[-58.0, 52.0];                                  // L.VILLAGE, Z-up (x,y) -> (x,-y)
       const _hf=floors(HL[0], HL[1]);
-      OWHEARTH=new THREE.PointLight(0xff9f38, IU(+(Q.get('owhearth')||9.0)), 15, 2);
-      OWHEARTH.position.set(HL[0], (_hf.length?Math.max.apply(null,_hf):26)+1.34, HL[1]);
+      const _hly=(_hf.length?Math.max.apply(null,_hf):26)+1.34;
+      OWHEARTH=new THREE.PointLight(0xff9f38, IU(+(Q.get('owhearth')||26.0)), 26, 2);
+      OWHEARTH.position.set(HL[0], _hly, HL[1]);
       OWHEARTH.castShadow=false; OWHEARTH.name='__ow_hearth'; scene.add(OWHEARTH);
+      owHearthOrb(HL[0], _hly, HL[1]);
       // ---- THE SKY LIGHTS THE VALLEY (r185 IBL) --------------------------
       // The corridor's fill was AmbientLight 0.34 + a hemisphere at 1.25 — two flat
       // terms with no direction beyond up/down and no specular at all. The SAME
@@ -2220,6 +2281,82 @@ function disposeGltf(root){
   });
 }
 let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null, OWSUN=null, OWBOUNCE=null, OWHEARTH=null;
+let OWORB=null;
+// ---- THE HEARTLIGHT'S OWN SHAPE (R6, 2026-08-04) --------------------------------
+// WHY THIS IS A SECOND SPHERE AND NOT A MATERIAL TWEAK. The orb in the bundle shares
+// ONE material, `ow_f2_emit`, with fourteen window panes and five lantern heads
+// (tools/valley_build.py), so there is no per-object emissive to reach for: R5 could
+// only lower the number for all twenty-one of them, and the orb still clipped. This
+// builds a slightly larger sphere over the same centre — it fully encloses the bundle's
+// ico, so the flat disc is simply not visible any more — carrying the shading the
+// original could not have.
+//
+// THREE PARTS, WHICH IS WHAT "A CORE AND A FALLOFF" MEANS:
+//   the BODY    an opaque amber sphere that COVERS the bundle's clipping ico. Sized just
+//               over it (0.54 against 0.36-0.44) and held at a value the tone curve does
+//               not flatten, so the orb has a colour again instead of being paper.
+//   the CORE    a small additive billboard, hot and near-white at its centre, falling off
+//               over ~0.9 m. This is the bit that is allowed to clip; a light SHOULD have
+//               one blown pixel at its middle.
+//   the GLOW    a large additive billboard with a smooth radial ramp, ~2.6 m across. Bloom
+//               alone gives a halo whose profile is the blur kernel's, which is why the R5
+//               frame had "a hard-ish boundary"; a falloff has to be drawn, not blurred.
+//
+// AND IT IS BUILT FROM STOCK MATERIALS ONLY, WHICH IS A BUG RECEIPT. Two earlier versions
+// shaded the body by its own facing term (N.V), first through onBeforeCompile on a
+// MeshBasicMaterial and then as a self-contained ShaderMaterial. BOTH RENDERED THE ENTIRE
+// FRAME BLACK — mean pixel 0.97/255 against 115/255, everything else identical, with no
+// console error, no shader warning, no thrown exception and the rAF loop still ticking.
+// Bisected on the plate: the sprites are innocent, the mesh is guilty, moving the mesh
+// off screen restores the frame (so it is SCREEN-SPACE, not scene state), swapping the
+// material at runtime restores it, and — the one that names it — `?bloom_s=0` restores it
+// at 111.97. So a custom-material mesh built at load time puts something through
+// UnrealBloomPass that its blur then smears over the whole picture. Cause not isolated;
+// the fix is to not need one. Recorded rather than explained, because the next lane will
+// reach for exactly this trick.
+function owHearthOrb(x,y,z){
+  const T=THREE, HOT=+(Q.get('oworb')||1.70);
+  const ramp=(stops,px)=>{
+    const cv=document.createElement('canvas'); cv.width=cv.height=px;
+    const c2=cv.getContext('2d'), h=px/2, gr=c2.createRadialGradient(h,h,0,h,h,h);
+    for(const s of stops) gr.addColorStop(s[0],s[1]);
+    c2.fillStyle=gr; c2.fillRect(0,0,px,px);
+    const tx=new T.CanvasTexture(cv); tx.colorSpace=T.SRGBColorSpace; return tx;
+  };
+  // A BILLBOARD AT THE ORB'S CENTRE IS INVISIBLE, and this is why it is not simply
+  // positioned there: a Sprite is a camera-facing quad whose every fragment carries the
+  // depth of its CENTRE, so against an opaque 0.54 m sphere at the same point it fails
+  // the depth test across the whole disc and the first build of this drew a flat orange
+  // circle with no core in it at all. Turning depthTest off would fix it and would also
+  // let the glow bleed through any house that gets between the camera and the green.
+  // Instead each billboard is nudged toward the camera by `lift` metres every frame —
+  // clear of its own body sphere, still occluded by anything genuinely in front of it.
+  const base=new T.Vector3(x,y,z), tmp=new T.Vector3();
+  const billboard=(tex,scale,op,lift)=>{
+    const sm=new T.SpriteMaterial({map:tex, transparent:true, blending:T.AdditiveBlending,
+      depthWrite:false, opacity:op});
+    const sp=new T.Sprite(sm); sp.scale.setScalar(scale); sp.position.copy(base);
+    sp.onBeforeRender=(rr,sc,camera)=>{
+      tmp.copy(camera.position).sub(base);
+      const L=tmp.length()||1; sp.position.copy(base).addScaledVector(tmp, lift/L);
+      sp.updateMatrixWorld(true);
+    };
+    sp.name='__ow_orb_glow'; return sp;
+  };
+  const g=new T.SphereGeometry(0.54,28,20);
+  const m=new T.MeshBasicMaterial({color:0xffa33a});
+  m.name='__ow_orb';
+  const orb=new T.Mesh(g,m); orb.name='__ow_orb'; orb.position.set(x,y,z);
+  orb.castShadow=false; orb.receiveShadow=false;
+  const core=billboard(ramp([[0.00,'rgba(255,250,238,1.00)'],[0.30,'rgba(255,214,150,0.86)'],
+                             [0.62,'rgba(255,168, 78,0.30)'],[1.00,'rgba(255,150, 60,0.00)']],128),
+                       +(Q.get('oworbc')||0.82), HOT*0.95, 0.62);
+  const glow=billboard(ramp([[0.00,'rgba(255,196,128,0.72)'],[0.26,'rgba(255,158, 76,0.34)'],
+                             [0.58,'rgba(255,124, 40,0.11)'],[1.00,'rgba(255,110, 30,0.00)']],128),
+                       3.4, HOT*+(Q.get('owglow')||1.15), 0.66);
+  OWORB=new T.Group(); OWORB.name='__ow_orb'; OWORB.add(orb); OWORB.add(core); OWORB.add(glow);
+  scene.add(OWORB);
+}
 // THE SKY PROBE'S OWN MESHES. Added 2026-08-02 after `transition_test` caught the
 // first version leaking: its MATERIALS went into SCENEMATS (mats delta 0, clean)
 // but its GEOMETRIES were disposed by nothing, so renderer.info climbed +4 per
@@ -2281,6 +2418,13 @@ function sceneDispose(){
   // three of them.
   if(OWBOUNCE){ scene.remove(OWBOUNCE); if(OWBOUNCE.dispose)OWBOUNCE.dispose(); OWBOUNCE=null; }
   if(OWHEARTH){ scene.remove(OWHEARTH); if(OWHEARTH.dispose)OWHEARTH.dispose(); OWHEARTH=null; }
+  // R6: the orb is GEOMETRY, so it leaks a mesh, a sprite, a canvas texture and two
+  // materials per swap if it is only removed — transition_test's renderer.info gate is
+  // what caught the sky probe doing exactly this, so it is disposed the same way.
+  if(OWORB){ OWORB.traverse(o=>{
+      if(o.geometry) o.geometry.dispose();
+      const mm=o.material; if(mm){ if(mm.map) mm.map.dispose(); mm.dispose(); } });
+    scene.remove(OWORB); OWORB=null; }
   // backdrop + every cached shot's art pair. The quad itself is a page singleton
   // (see DEPTHQ) — it is unparented here and re-added by the next setDepth().
   scene.background=null; bgSaved=null;

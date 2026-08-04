@@ -1,0 +1,189 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>R6 — the grade-and-scale correction (r4 / r5 / r6)</title>
+<style>
+  :root { --bg:#14171c; --fg:#e7ecf3; --dim:#9aa6b5; --line:#2b323d; --good:#7fd493; --bad:#e78d7a; --warn:#e8c07a; }
+  * { box-sizing:border-box }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif }
+  .wrap { max-width:1560px; margin:0 auto; padding:36px 24px 90px }
+  h1 { font-size:30px; margin:0 0 6px; letter-spacing:-.02em }
+  h2 { font-size:21px; margin:52px 0 4px; padding-top:22px; border-top:1px solid var(--line) }
+  h3 { font-size:15px; margin:26px 0 8px; color:var(--dim); text-transform:uppercase; letter-spacing:.07em; font-weight:600 }
+  p { max-width:88ch; color:#cfd8e3 }
+  .sub { color:var(--dim); margin:0 0 22px }
+  .trio { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:14px 0 6px }
+  @media (max-width:1000px){ .trio { grid-template-columns:1fr } }
+  figure { margin:0 }
+  img { width:100%; display:block; border-radius:7px; border:1px solid var(--line); background:#000 }
+  figcaption { font-size:12.5px; color:var(--dim); margin-top:7px }
+  .tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+         padding:2px 7px; border-radius:4px; margin-right:7px; vertical-align:1px }
+  .t-old { background:#2f3640; color:#c4d0dd } .t-bad { background:#4d2a24; color:#f2b8a8 }
+  .t-new { background:#24402c; color:#a8e6bd } .t-ref { background:#2d4a63; color:#bfe0f7 }
+  table { border-collapse:collapse; width:100%; margin:14px 0; font-size:13.5px; font-variant-numeric:tabular-nums }
+  th,td { text-align:right; padding:7px 11px; border-bottom:1px solid var(--line) }
+  th:first-child,td:first-child { text-align:left }
+  th { color:var(--dim); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.05em }
+  .good { color:var(--good) } .bad { color:var(--bad) } .warn { color:var(--warn) }
+  .note { background:#1b1f26; border-left:3px solid var(--line); padding:13px 17px; margin:18px 0; border-radius:0 6px 6px 0 }
+  .note.red { border-left-color:var(--bad) } .note.grn { border-left-color:var(--good) }
+  .note.amb { border-left-color:var(--warn) }
+  code { background:#1f242c; padding:1px 5px; border-radius:3px; font-size:13px }
+  .lede { font-size:17px; color:#dbe4ee }
+</style>
+<div class="wrap">
+
+<h1>R6 — the grade-and-scale correction</h1>
+<p class="sub">2026-08-04 · <code>ow-valley</code> · same four viewpoints, same camera (pitch 0.61, booms 16/12/40/40 — untouched)<br>
+r4 = before the lighting round · r5 = the shipped regression · r6 = this pass</p>
+
+<p class="lede"><strong>R5 improved the number and made the picture worse.</strong> Lit:shadow went
+1.58–2.40 → 3.29–4.33 and a blind critic still ranked <code>r5-meadow</code> LAST of four:
+<em>“this is a global tint, not a light.”</em> Both readings were true. The KEY had a direction;
+the GRADE did not, and the blade carpet that arrived in the same window was rendering half its
+instances black. R6 keeps every bit of R5's directional gain and fixes what it was applied to.</p>
+
+<div class="note amb">
+<strong>PROVENANCE — two things in these plates are not this pass's.</strong> The r6 frames were
+captured from the live working tree, which also carried two other lanes' uncommitted play3d.html
+changes: the <em>g-buffer alpha-cut</em> fix and an <em>R7 fog re-aim</em> to ring 1
+(<code>0x8496a9</code>). <strong>The gorge sky's grey rectangles are gone because of the first of
+those, not because of anything here</strong> — verified by re-shooting the same frame at
+<code>?gbuf=0</code> with the old fog colour, where they come straight back. The horizon dissolve
+in the gorge and vista frames is the second. Everything credited below is this pass's.
+</div>
+
+<div class="note red">
+<strong>The regression was real and it was measured before it shipped.</strong> The R5 lane
+recorded near-band saturation at 0.70–0.79 against the references' 0.48–0.49 and wrote that
+“the blade carpet also reads oversized”, then shipped both as “untouched”. A measurement filed
+as a known cost is still a defect in the frame.
+</div>
+
+<h2>meadow — the frame the critic ranked last</h2>
+<div class="trio">
+  <figure><img src="plates/r4-meadow.png" alt="r4 meadow"><figcaption><span class="tag t-old">r4</span>before the lighting round. Flat, but planes separate and grass is green.</figcaption></figure>
+  <figure><img src="plates/r5-meadow.png" alt="r5 meadow"><figcaption><span class="tag t-bad">r5</span>one garish amber; blade carpet as black scribble over most of the frame; Heartlight a blown white disc.</figcaption></figure>
+  <figure><img src="plates/r6-meadow.png" alt="r6 meadow"><figcaption><span class="tag t-new">r6</span>greens read green, amber owns the road, the roofs and the lamp pools, the Heartlight has a core and a falloff.</figcaption></figure>
+</div>
+
+<h2>gate</h2>
+<div class="trio">
+  <figure><img src="plates/r4-gate.png" alt="r4 gate"><figcaption><span class="tag t-old">r4</span></figcaption></figure>
+  <figure><img src="plates/r5-gate.png" alt="r5 gate"><figcaption><span class="tag t-bad">r5</span>the whole hill is blade carpet; the far ridge has nothing to recede against.</figcaption></figure>
+  <figure><img src="plates/r6-gate.png" alt="r6 gate"><figcaption><span class="tag t-new">r6</span>meadow, dry bank and road are three materials again; the ridge reads blue behind them.</figcaption></figure>
+</div>
+
+<h2>vista</h2>
+<div class="trio">
+  <figure><img src="plates/r4-vista.png" alt="r4 vista"><figcaption><span class="tag t-old">r4</span></figcaption></figure>
+  <figure><img src="plates/r5-vista.png" alt="r5 vista"><figcaption><span class="tag t-bad">r5</span></figcaption></figure>
+  <figure><img src="plates/r6-vista.png" alt="r6 vista"><figcaption><span class="tag t-new">r6</span></figcaption></figure>
+</div>
+
+<h2>gorge</h2>
+<div class="trio">
+  <figure><img src="plates/r4-gorge.png" alt="r4 gorge"><figcaption><span class="tag t-old">r4</span></figcaption></figure>
+  <figure><img src="plates/r5-gorge.png" alt="r5 gorge"><figcaption><span class="tag t-bad">r5</span></figcaption></figure>
+  <figure><img src="plates/r6-gorge.png" alt="r6 gorge"><figcaption><span class="tag t-new">r6</span></figcaption></figure>
+</div>
+
+<h2>The directional gain is kept — it went UP</h2>
+<p><code>tools/ow_ratio.mjs</code>, one Chrome, one scene load, ONE mask per view taken from the
+engine's own shadow pass at <code>maskrel 0.5</code>, both configs measured against it. This is
+the apples-to-apples run, not a comparison against numbers from a different session.</p>
+<table>
+<tr><th>view</th><th>lit:shadow r5</th><th>r6</th><th>shadow g−r r5</th><th>r6</th><th>frame chroma r5</th><th>r6</th></tr>
+<tr><td>gate</td>  <td>4.50</td><td class="good">4.96</td><td>+1.7</td><td class="good">+6.6</td><td>0.449</td><td class="good">0.388</td></tr>
+<tr><td>meadow</td><td>2.91</td><td class="good">3.38</td><td>+6.8</td><td class="good">+11.0</td><td>0.454</td><td class="good">0.396</td></tr>
+<tr><td>vista</td> <td>3.48</td><td class="good">3.87</td><td>+9.2</td><td class="good">+13.0</td><td>0.307</td><td class="good">0.259</td></tr>
+<tr><td>gorge</td> <td>3.84</td><td class="good">4.19</td><td>+12.7</td><td class="good">+17.8</td><td>0.236</td><td class="good">0.182</td></tr>
+</table>
+<p>The terminator is not only intact, it is wider: shadows run further blue-green while the lit
+side comes off its extreme warm (lit g−r, meadow, −37.5 → −28.2). Whole-frame chroma falls
+toward the references without the frame going grey.</p>
+
+<h2>Near-band saturation: moved, NOT reached — and that is a decision, not a miss</h2>
+<p><code>scratchpad/ow5/bands.py</code>, horizontal thirds, median saturation.</p>
+<table>
+<tr><th>view</th><th>r4</th><th>r5</th><th>r6</th><th>references</th></tr>
+<tr><td>gate</td>  <td>0.503</td><td class="bad">0.772</td><td class="warn">0.661</td><td rowspan="4">0.48 / 0.49</td></tr>
+<tr><td>meadow</td><td>0.514</td><td class="bad">0.795</td><td class="warn">0.704</td></tr>
+<tr><td>vista</td> <td>0.446</td><td class="bad">0.734</td><td class="warn">0.640</td></tr>
+<tr><td>gorge</td> <td>0.289</td><td class="bad">0.667</td><td class="warn">0.601</td></tr>
+</table>
+<div class="note amb">
+<strong>Going the rest of the way was tried and it looked worse.</strong> A key at
+(1.0, 0.90, 0.74) with the grade tint at 1.0 lands meadow NEAR at 0.639 and gate at 0.585 —
+closer to the target on every row — and the frame stops being golden hour. The trees flatten,
+the picture goes milky, the amber is graded AWAY rather than into the light. Refused under the
+standing ruling: <em>“do not grade the amber away; grade it into the light.”</em> r6 sits at
+0.60–0.70. <strong>The remaining gap is the ground's own albedo</strong> (the terrain's COLOR_0
+grass was deliberately pushed to a strong yellow-green), which is a CONTENT change, not a grade
+one, and is the honest next lever.
+</div>
+
+<h2>What actually changed</h2>
+<h3>1 · the warm half of the grade is now weighted by light</h3>
+<p>R5 multiplied every near pixel by <code>warmCol</code> — a global tint by definition, arriving
+through the post pass instead of through the ambient, which is the exact defect the lighting round
+existed to remove. The warm push is now scaled by the pixel's own luminance
+(<code>litLo 0.16 → litHi 0.46</code>): full on a lit surface, nothing in a shadow. The COOL far
+push is deliberately not weighted, because haze is atmospheric and does land on everything.
+Tint magnitude 2.2 → 1.45.</p>
+
+<h3>2 · the key's blue channel is opened</h3>
+<p>(1.0, 0.70, 0.42) at 2.4× multiplies a grass albedo of roughly (0.35, 0.55, 0.20) into
+(2.2, 2.4, 0.5) — yellow. No lit surface in the valley could read as green whatever its albedo.
+Now (1.0, 0.785, 0.555): still unmistakably golden hour, still warmer than either reference, but
+a green albedo comes back green.</p>
+
+<h3>3 · the blade carpet was rendering half its instances BLACK</h3>
+<p>The user read this as “hard black alpha edges”. There is no alpha in the blade material at all —
+it is solid geometry. The black is three.js's <code>DOUBLE_SIDED</code> normal flip: the blade's
+authored up-normal (0, 0.94, 0.34) becomes (0, −0.94, −0.34) on a back face, pointing at the dirt,
+receiving neither key nor sky. Blade yaw is uniform over 2π, so <strong>~half of 177k instances
+were down-facing</strong>. Un-flipped in <code>onBeforeCompile</code>.
+The tilt itself was also measured and was the speckle: 0.34 of lateral normal swings a blade's own
+N·L from 0.24 to 0.81 depending on which way it happens to be yawed, and put the AVERAGE blade at
+0.29 against the ground's 0.56 — dark scribble over lit ground. Now 0.14.
+Height 0.19–0.42 → 0.085–0.235 (ankle height on a 1.45u character), power-distributed instead of
+uniform, with per-instance hue as well as value jitter, two octaves of world-space clumping so the
+field has bare ground in it, and <code>receiveShadow</code> on so the carpet stops being brighter
+than the ground inside every tree shadow.</p>
+
+<h3>4 · the Heartlight has a core and a falloff</h3>
+<p>A uniformly emissive sphere is a flat disc on screen by construction, and R5 could only lower
+the emissive of the material the orb SHARES with fourteen window panes. It now carries an opaque
+amber body that covers the bundle's clipping ico, a small hot additive core, and a drawn radial
+glow — bloom alone gives a halo whose profile is the blur kernel's, which is why R5 had “a
+hard-ish boundary”. The point light was measured reaching under 2% of its plinth value at the
+nearest houses; at 26 W / range 26 it now puts +9.4 red on the nearest house and +8.8 on the
+character, with the inverse-square falloff untouched.</p>
+
+<div class="note grn">
+<strong>Two bugs paid for on the way, both recorded in the source.</strong>
+A shader patch that replaced <code>float faceDirection = gl_FrontFacing ? 1.0 : − 1.0;</code>
+matched NOTHING — <code>onBeforeCompile</code> runs BEFORE <code>resolveIncludes</code>, so the hook
+is handed <code>#include &lt;normal_fragment_begin&gt;</code>, not the expanded chunk. It would
+have shipped as a no-op inside a change that looked better anyway.
+And a custom-material mesh built at load time rendered THE WHOLE FRAME BLACK — 0.97/255 against
+115/255, no console error, no shader warning, no exception, rAF still ticking. Bisected to
+<code>?bloom_s=0</code> restoring the frame; the orb is built from stock materials instead.
+</div>
+
+<h2>Still worse than r4</h2>
+<ul>
+<li><strong>L05 is lower on every view</strong> (meadow 0.216 → 0.155, gorge 0.207 → 0.063 against
+the references' 0.21–0.25). That is R5's cost, carried forward deliberately — it is the price of
+the terminator and the frames read contrasty rather than grim. <code>?owenv=</code> raises the
+fill without touching anything else.</li>
+<li><strong>Near-band saturation is still 0.60–0.70 against r4's 0.29–0.51</strong>, see above.</li>
+<li>The gorge's two grey rectangles over the sky were not touched here — they are gone in the
+plates because a concurrent g-buffer lane fixed them (see PROVENANCE at the top).</li>
+<li>The near field is less <em>present</em> than r5 wanted it to be: halving the blade height and
+adding bare ground buys legibility and costs some of the "you are standing in grass" read at the
+12 m meadow boom. It is the right trade at this camera and it is a trade.</li>
+</ul>
+
+</div>
