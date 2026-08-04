@@ -1,5 +1,5 @@
 {
- "build_s": 13.6,
+ "build_s": 13.14,
  "canopy_farwall-crown": {
   "cards": 4711,
   "core_tris": 4570,
@@ -25,16 +25,22 @@
   "ridge_clear_min": 0.568,
   "wall_recess_min": 0.03
  },
+ "contact_shadow": {
+  "base": 0.44,
+  "ground_dark": 0.46,
+  "ground_verts": 6620,
+  "masses": 9
+ },
  "dellhollow_houses": 11,
- "dellhollow_tint_families": 3,
+ "dellhollow_tint_families": 5,
  "dellhollow_wheels": 4,
  "emberbrook_house_slope_u": 0.47,
  "emberbrook_houses": 14,
  "emberbrook_road_clear_u": 3.49,
- "emberbrook_tint_families": 3,
+ "emberbrook_tint_families": 5,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.28,
+ "field_s": 0.25,
  "h_range": [
   -6.18,
   50.9
@@ -111,7 +117,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.2,
+ "terrain_s": 0.18,
  "tile": [
   280.0,
   200.0
@@ -136,7 +142,7 @@
  "tributary_falls": 26,
  "tris": 274458,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.71,
+ "veg_s": 3.51,
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "falls": {
@@ -196,5 +202,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.086
+ "zone_s": 0.073
 }

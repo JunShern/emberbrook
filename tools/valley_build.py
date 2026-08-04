@@ -100,7 +100,52 @@ CHIM_GATE = []
 # against 118.1 — a chroma move must not smuggle in a value move, which is how the
 # last two "desaturations" in this loop turned into brightness changes), landing the
 # product near 0.54.  Still fired clay; no longer the loudest thing in the frame.
-ROOF_HEX = "917366"
+#
+# =============================================================================
+# R14 — AND THEN THE ROOF HAD NEITHER MORE CHROMA NOR LESS VALUE THAN THE WALL
+# =============================================================================
+# The fourteenth blind critic: "every house wall is the SAME tan, and the roofs are
+# only a few percent different in value from the walls — so the whole village reads
+# as ONE UNDIFFERENTIATED PUTTY-COLOURED MASS."  R13 desaturated the roof AT HELD
+# LUMINANCE, deliberately.  That was right about chroma and is exactly why the value
+# collapsed: holding luminance while removing chroma leaves a plane that differs
+# from the wall under it in NOTHING.
+#
+# Measured on the shipped r13 bundle and the shipped r13 plate
+# (tools/ow_probe/glb_albedo.py for the artifact, tools/ow_probe/matclass.py for the
+# picture — the second is r13's classifier extended to walls and roofs, because
+# HOUSES WERE NEVER A MEASURED CLASS and no grass statistic constrains a roof):
+#
+#   effective albedo  ow_f2_plaster L709 .0776   ow_f2_tiles L709 .0487  (0.63x)
+#   the r13 meadow    wall L .445 hue 26.2       roof L .502 hue 24.9    (1.13x)
+#   the reference     wall L .280 R-B -.082      roof L .231 R-B -.153   (0.83x)
+#
+# So in the PICTURE our roof is 13% BRIGHTER than the wall and 1.1 degrees away from
+# it in hue; the reference's is 17% darker and decisively cooler.  A roof plane also
+# collects about 2.1x the wall's irradiance here (measured as rendered/albedo per
+# class, 4.55 against 2.21 — a 34-degree sun and a whole sky hemisphere), which is
+# why an albedo ratio that already read as 0.63 arrived on screen above 1.
+#
+# TAKE THE VALUE.  Target eff albedo L709 0.0175 — 0.36x — with the class colour on
+# the COOL side of neutral so the product lands blue-grey slate rather than a darker
+# tan.  414c75 is that number solved backwards through the measured transfer (eff =
+# tex_lin x k x pal_lin, k read off the shipped GLB per channel), NOT picked by eye:
+# the product is [.0151 .0178 .0222] linear = a dark blue-grey at HSV sat 0.16.  The
+# palette entry looks vividly blue in isolation and must — it is multiplying a red
+# slate photo, and only the PRODUCT is ever seen.  R13's chroma finding stands: this
+# does not go back toward saturated terracotta, it goes past neutral the other way.
+#
+# AND THEN A COOL NEUTRAL IS NOT THE COOL SECTOR.  With 414c75 in the bundle the
+# roof measured HSV sat 0.042 in the frame against the reference slate's 0.446, and
+# tools/ow_probe/framespread.py — which counts how much of a frame's chroma sits in
+# each 30-degree hue sector — still found only THREE sectors at or above 8% where
+# the references have four, the missing one being a cyan-blue holding a fifth of
+# their frame.  The cause is measurable and is not the palette: the key is warm, so
+# per-channel irradiance on a roof plane runs 7.36 / 5.65 / 4.34 and a 1.7x warm
+# light cancels most of a cool albedo.  Pushed on the SAME held-luminance discipline
+# r13 wrote down (eff L709 .0171 against .0176, inside a percent) so this is a
+# chroma move and not a second value move.
+ROOF_HEX = "374c81"
 B.PAL[STYLE][ROOF] = ROOF_HEX
 B.PAL_LIN[STYLE][ROOF] = srgb(ROOF_HEX)
 
@@ -594,15 +639,38 @@ def build_causeway(col, F, zg, fr):
 # roof factors AFTER B3.apply_class_gains — the last write to COLOR_0 wins, and the
 # gains pass would otherwise erase this.  Zero new materials, zero new triangles.
 HTINT = "htint"
-WALL_TINTS = [(1.00, 1.00, 1.00),        # the palette's own plaster
-              (0.86, 0.82, 0.71),        # earth daub, darker and warmer
-              (0.98, 1.00, 1.04)]        # limewash, a touch cooler
-ROOF_TINTS = [(1.00, 1.00, 1.00),        # the palette's own tile
-              (0.71, 0.78, 0.87),        # weathered slate
-              (1.03, 0.92, 0.82)]        # an older, warmer tile — R13 pulled this
-# family's chroma back with the palette entry (was 1.06/0.85/0.70): a third of the
-# town multiplied the terracotta by ANOTHER 20% of red-over-blue, so the loudest
-# roofs in the frame were the ones this family owned.
+# R14 — THREE FAMILIES SPANNING 18% OF VALUE IS NOT A VILLAGE, IT IS ONE BUILDING
+# PAINTED THREE TIMES.  Measured on the r13 meadow plate with the unsupervised
+# split (tools/ow_probe/matclass.py): wall value across the five foreground
+# buildings ran 0.234 to 0.336 and MOST of that was which way the house faced, not
+# which family it drew.  The families themselves were 1.000 / 0.821 / 0.999 in
+# Rec.709 factor — two of the three were the same house.  FIVE families now, spaced
+# ~15% apart and spanning 1.87x, and the hue moves with the value the way real
+# render does: limewash is pale AND cool, daub is dark AND warm, so a neighbour
+# differs on two axes at once instead of being a dimmer copy.
+#
+# THE CEILING IS THE CLAMP, NOT TASTE.  COLOR_0 is written pal_lin x class gain x
+# family x per-face jitter and vec_gain CLIPS it at 1.0; the shipped plaster base
+# measures 0.81/0.69/0.49 with jitter to ~0.855 on red, so a family above ~1.17 on
+# R would flatten its own brightest faces into a clipped patch and the family would
+# stop being a colour.  1.12 is that headroom, not a preference.
+WALL_TINTS = [(1.12, 1.14, 1.20),        # limewash — the brightest, and cool
+              (1.00, 1.00, 1.00),        # the palette's own plaster
+              (0.95, 0.85, 0.66),        # ochre daub, warm
+              (0.70, 0.73, 0.79),        # grey render, cool
+              (0.70, 0.60, 0.45)]        # earth daub, dark and warm
+ROOF_TINTS = [(1.00, 1.00, 1.00),        # the palette's own slate
+              (0.80, 0.83, 0.90),        # weathered, greyer and cooler still
+              (1.12, 1.06, 0.94),        # an older tile that kept some fired clay
+              (0.66, 0.70, 0.78),        # dark wet slate
+              (0.98, 0.94, 0.86)]        # sun-bleached
+assert len(WALL_TINTS) == len(ROOF_TINTS)   # one family index indexes BOTH lists
+NFAM = len(WALL_TINTS)
+# The five roof families are chosen so their PER-CHANNEL MEAN (0.912/0.906/0.896) is
+# within a percent of the three they replace (0.913/0.900/0.897).  That is not
+# tidiness: ROOF_HEX above was solved from the eff-albedo measured on the shipped
+# bundle, and that measurement already had the old families averaged into it.  Move
+# the family mean and the palette solve silently stops meaning what it says.
 # TRODDEN EARTH IS DARKER THAN THE GRASS IT REPLACED, and the first version of the
 # bedding ring was not: f2's DIRT is 9c8a70, a pale warm grey, and under a 2.4x
 # golden key it arrived as CREAM — every house sat in a bright halo, which is the
@@ -632,6 +700,146 @@ SUN_BL = (math.sin(_SUNRX) * math.sin(_SUNRZ),
           -math.sin(_SUNRX) * math.cos(_SUNRZ),
           math.cos(_SUNRX))
 ROOF_AWAY = 0.80          # 20% off the away-facing plane
+
+
+# =============================================================================
+# R14 — THE FOLIAGE CLUMPS FLOATED
+# =============================================================================
+# The fourteenth blind critic: "the dark foliage clumps at upper right sit on the
+# pale hill with zero contact shadow, floating."  They did.  The masses are lit by
+# the same key as everything else and the runtime casts no shadow they can catch at
+# region scale, so the only thing that ever said "this touches the ground" was the
+# silhouette crossing it.
+#
+# TWO HALVES, AND THE SECOND IS THE ONE THAT DOES THE WORK.  A mass whose own base
+# darkens still floats if the ground under it stays lit — that is the same lesson
+# BED_TINT paid for on the houses (a house in a BRIGHT ring reads as a decal).  So:
+#
+#   1. the clump's own COLOR_0 ramps down toward its base, over a distance scaled
+#      to the clump (a 12 m tree and a 4 m bush do not share a contact height);
+#   2. the GROUND's COLOR_0 takes a soft ring wherever a mass stands over it,
+#      derived from the masses' OWN vertices — no site list, no radius guess, and
+#      it cannot drift out of step with the geometry because it IS the geometry.
+#
+# VERTEX COLOUR ONLY.  Nothing here adds a triangle, a material or an object, so
+# ground detail cannot become collision: the runtime's veg_ rule and the collide /
+# walkRef sets are untouched by construction, and walk_engine_gate proves it in the
+# ENGINE rather than in the file.
+#
+# veg_land_* IS EXCLUDED ON PURPOSE.  L2's tuft and flower layers are 0.13-0.25 m
+# blades whose ENTIRE height sits inside any plausible contact ramp — feeding them
+# to this would not shade a contact, it would repaint the meadow two stops down.
+# The gate is a real vertical extent (> 2.0 u above the ground beneath it).
+CONTACT_BASE = 0.44       # COLOR_0 factor at the very bottom of a mass
+CONTACT_GROUND = 0.46     # deepest ground darkening under full canopy cover
+CONTACT_CELL = 0.7        # u, the footprint lattice
+CONTACT_BLUR = 2          # cells; the ring's softness
+
+
+def _loop_vert(me):
+    lv = np.zeros(len(me.loops), dtype=np.int32)
+    me.loops.foreach_get("vertex_index", lv)
+    return lv
+
+
+def _co(me):
+    co = np.zeros(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", co)
+    return co.reshape(-1, 3)
+
+
+def _scale_color(me, per_vert):
+    """Multiply COLOR_0 by a PER-VERTEX factor, on either colour domain.
+
+    The prop accumulator writes CORNER colours and bushlang writes POINT ones, and
+    a corner-shaped index into a point-domain buffer does not raise a wrong answer,
+    it raises a broadcast error only because the counts happen to differ — on a mesh
+    where they did NOT, this would have silently shaded the wrong vertices."""
+    ca = me.color_attributes.get("Col")
+    if ca is None:
+        return False
+    d = np.zeros(len(ca.data) * 4)
+    ca.data.foreach_get("color", d)
+    d = d.reshape(-1, 4)
+    idx = (np.arange(len(me.vertices)) if ca.domain == "POINT" else _loop_vert(me))
+    if len(idx) != len(d):
+        return False
+    d[:, :3] = np.clip(d[:, :3] * per_vert[idx][:, None], 0.0, 1.0)
+    ca.data.foreach_set("color", d.ravel())
+    return True
+
+
+def canopy_contact(made, F, zg, fr):
+    """Bed the vegetation masses into the ground in COLOR_0.  Returns stats."""
+    masses, foot, seen = [], [], set()
+    # THE DICT KEY IS NOT THE OBJECT NAME.  The bush masses live in `made` under
+    # `canopy_0..n` while the OBJECT is `veg_canopy_<stand>` — the runtime's veg_
+    # contract is on the object, so that is what this reads.  Keying on the dict
+    # would have silently skipped every stand in the region and reported success.
+    for ob in list(made.values()):
+        if getattr(ob, "type", None) != "MESH" or ob.name in seen:
+            continue
+        seen.add(ob.name)
+        if not ob.name.startswith("veg_"):
+            continue
+        # L2's BUSH CLUMPS ARE THE ONES THE CRITIC WAS LOOKING AT.  Measured on the
+        # first r14 plate: the masses that read as floating on the pale hill are the
+        # 0.4 m clump layer, not the stands, and the first cut of this pass excluded
+        # every veg_land_* object by name.  Tufts and flowers stay out — their whole
+        # height is inside any contact ramp, so a ramp would repaint the meadow —
+        # but a clump has a base, and a per-object height test cannot find it: the
+        # layer is ONE merged mesh spanning the region, so its 95th percentile
+        # height is a bush, not a canopy.  The clumps get their own short ramp and
+        # stay out of the ground footprint (a 0.4 m bush has no ring to cast).
+        small = ob.name == "veg_land_clumps"
+        if ob.name.startswith("veg_land_") and not small:
+            continue
+        me = ob.data
+        if not len(me.vertices) or me.color_attributes.get("Col") is None:
+            continue
+        co = _co(me)
+        h = co[:, 2] - ghv(F, zg, fr, co[:, 0], co[:, 1])
+        top = float(np.percentile(h, 95))
+        if not small and top <= 2.0:
+            continue
+        ramp = 0.42 if small else float(np.clip(0.30 * top, 0.6, 2.4))
+        base = 0.52 if small else CONTACT_BASE
+        f = base + (1.0 - base) * np.clip(h / ramp, 0.0, 1.0)
+        if _scale_color(me, f):
+            masses.append((ob.name, len(me.vertices), round(ramp, 2)))
+            if not small:
+                foot.append(co[:, :2])
+    if not foot:
+        return dict(masses=0)
+
+    g = made.get("ground")
+    ring = 0
+    if g is not None and g.data.color_attributes.get("Col") is not None:
+        P = np.concatenate(foot)
+        gco = _co(g.data)
+        x0, y0 = gco[:, 0].min(), gco[:, 1].min()
+        nx = int((gco[:, 0].max() - x0) / CONTACT_CELL) + 3
+        ny = int((gco[:, 1].max() - y0) / CONTACT_CELL) + 3
+        occ = np.zeros((nx, ny), np.float32)
+        ix = np.clip(((P[:, 0] - x0) / CONTACT_CELL).astype(int), 0, nx - 1)
+        iy = np.clip(((P[:, 1] - y0) / CONTACT_CELL).astype(int), 0, ny - 1)
+        occ[ix, iy] = 1.0
+        k = CONTACT_BLUR
+        sm = np.zeros_like(occ)
+        for dx in range(-k, k + 1):
+            for dy in range(-k, k + 1):
+                sm += np.roll(np.roll(occ, dx, 0), dy, 1)
+        sm /= (2 * k + 1) ** 2
+        sm = np.clip(sm * 2.6, 0.0, 1.0)      # a ring, not a wash
+        gx = np.clip(((gco[:, 0] - x0) / CONTACT_CELL).astype(int), 0, nx - 1)
+        gy = np.clip(((gco[:, 1] - y0) / CONTACT_CELL).astype(int), 0, ny - 1)
+        v = sm[gx, gy]
+        _scale_color(g.data, 1.0 - CONTACT_GROUND * v)
+        ring = int((v > 0.02).sum())
+    print("  contact shadow: %d masses bedded, %d ground verts in a ring"
+          % (len(masses), ring))
+    return dict(masses=len(masses), ground_verts=ring,
+                base=CONTACT_BASE, ground_dark=CONTACT_GROUND)
 
 
 def apply_house_tints(ob, cls):
@@ -1050,7 +1258,9 @@ def build_emberbrook(col, F, zg, fr):
         if i % 4 == 1:                                        # ...but not all of them
             fa += (1.0 if rng.random() < 0.5 else -1.0) * rng.uniform(0.75, 1.25)
         dims = house_dims(rng)
-        fam = 1 + (i * 5 + i // 3) % 3                        # neighbours rarely match
+        # NFAM families, walked by a stride coprime with it so neighbours in the
+        # PLACEMENT order rarely draw the same one: 1,4,2,5,3,2,5,3,1,4,...
+        fam = 1 + (i * 3 + i // NFAM) % NFAM
         ch = house_ground(F, zg, fr, hx, hy, dims[1], dims[2], fa)
         # ITS OWN STREAM, deliberately: drawing from `rng` here would re-scatter the
         # whole town (every later house's angle, radius and dims move), and R9's
@@ -1228,7 +1438,7 @@ def build_dellhollow(col, F, zg, fr):
                                     oy - nr[1] * side * 1.6))
                 drop = max(0.6, min(5.0, pad - foot))
                 p.cube(STONE, (ox, oy, pad - 0.42 - drop / 2), (pw_, 0.38, drop), rz=yaw)
-                fam = 1 + (n_house * 5 + n_house // 3) % 3
+                fam = 1 + (n_house * 3 + n_house // NFAM) % NFAM
                 # the pad IS this house's ground: four equal corners, so the footing
                 # is the shallow contact band and not a second retaining wall.
                 impression_house(p, ht, fam, px, py, yaw, dims, [pad] * 4, rng)
@@ -2534,6 +2744,13 @@ def main():
     for ob_ in land_objs:
         made[ob_.name] = ob_
     print("  landscape pass took %.1fs" % (time.time() - t0))
+
+    # ---- R14: THE CLUMPS WERE NOT TOUCHING THE GROUND ----------------------
+    # It runs HERE and nowhere earlier because it is the LAST write to two
+    # COLOR_0 buffers that four passes upstream each rewrite in full
+    # (write_prop_colors -> apply_class_gains for the veg, terrain_pbr_f2 ->
+    # VL.surface for the ground).  Same rule as the per-house tints.
+    STATS["contact_shadow"] = canopy_contact(made, F, zg, fr)
 
     # ---- the QA-only zone overlay -----------------------------------------
     ovl = O3.build_zone_overlay(col, F, zg, fr)
