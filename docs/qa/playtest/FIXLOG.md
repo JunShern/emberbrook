@@ -1902,3 +1902,21 @@ From a steep down-looking shot the 2.1 m lift puts the arrow visually **on the c
 behind** the seam it names. A human reads the arrow's *direction*; nobody has measured whether
 a human reads its *place*. Same family as round 8's "40 silent cuts in `del-cine`". Owned by
 whoever owns `play3d.html`.
+
+**Coordinator addendum, 2026-08-04 13:20 — the 54/16 flag above is RESOLVED: contention, not
+regression.** `playthrough_test` re-run on a quiet machine (zero Blender, zero other gates, zero
+tool Chrome): **86/0**. Independently, the foliage lane's own gate run on a tree containing the
+same commits was also 86/0. The 54/16 was recorded at 66 MB free with a second instance of the
+same suite running against the same server — the exact signature the lane refused to build
+against, correctly. `ch1.pact`'s 75-tick window stands unchanged.
+
+Also carried out of this lane, for the coordinator (play3d.html is coordinator-owned): from a
+steep down-looking shot, the exit arrow's 2.1 m + 30 px lift can place it visually ON the cliff
+behind the seam it names. The harness now aims at the edge's own `at` and is immune; whether a
+HUMAN reads the arrow's place (not just its direction) from those shots has never been measured.
+Queued as a legibility item, not acted on.
+
+And one instrument lesson worth the ink: the lane's own wait-loops (`until ! pgrep -f
+llm_playtester`) never fired because **pgrep matched its own shell's command line** — a watcher
+whose existence satisfies its stop condition is measuring itself. Same family as "an instrument
+that finds nothing must prove it could have found something."
