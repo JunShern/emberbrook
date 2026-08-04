@@ -1451,6 +1451,177 @@ def gorge_frame(F, wx, wy):
             float(VM.water_halfwidth(np.array([t]))[0]), t)
 
 
+def _strut(p, cls_, a, b, th):
+    """ONE member between two world points, out of a cube that can only Z-then-X.
+
+    Prop.cube applies Matrix.Rotation(rz,'Z') @ Matrix.Rotation(rx,'X'), so a box
+    long in local Z points along (sin rz sin rx, -cos rz sin rx, cos rx).  Solving
+    that for an arbitrary direction gives rz = bearing + pi/2 and rx = atan2(run,
+    rise) — which is the whole reason this helper exists: without it every diagonal
+    in the scaffold has to be hand-derived, and a diagonal derived by hand is the
+    quarter-turn bug build_old_gate paid a day for.
+    """
+    dx, dy, dz = b[0] - a[0], b[1] - a[1], b[2] - a[2]
+    run = math.hypot(dx, dy)
+    L = math.hypot(run, dz)
+    if L < 1e-4:
+        return
+    p.cube(cls_, ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2),
+           (th, th, L), rz=math.atan2(dx, -dy), rx=math.atan2(run, dz))
+
+
+# =============================================================================
+# DELLHOLLOW'S OWN VOCABULARY — A STILT BAY, NOT A COTTAGE (2026-08-04)
+# =============================================================================
+# THE USER, ON THE SHIPPED VISTA: "the overworld vista of Dellhollow is a cluster of
+# gabled cottages.  Dellhollow is not a cottage town" — and then, sharpening it:
+# "dellhollow should have an entirely distinct look VS emberbrook."  They are right
+# and the old code says why in one line: it called `impression_house()`, which is
+# EMBERBROOK'S building, so the two towns were drawn from one asset set and differed
+# only in where they stood.  t1-gorge.png and t1-closeup.png are the receipt — ochre
+# plaster walls under blue slate gables in both frames.
+#
+# The canon (user memory "Dellhollow architecture", public/townmap/dellhollow.map.json,
+# public/assets/refs/dellhollow-master-*.png): a STONE DAM/LOCKS SPINE with a village
+# of RICKETY WOODEN SCAFFOLD LAYERS clinging to the gorge wall.  The map names its own
+# shapes — "Stilt Cluster", "Weave huts / laundry lines, rickety balconies", "Drying
+# decks", shops "cantilevered out over the gorge".  Master ref 6b is the picture: a
+# cross-braced timber lattice, decks stacked with air between them, stair flights
+# zig-zagging down, small sheds on top, dark wet masonry behind.
+#
+# SO THE BAY IS DIFFERENTIATED ON ALL THREE AXES A GLANCE READS, deliberately:
+#   SILHOUETTE  Emberbrook is freestanding gabled masses on open ground; a bay is a
+#               HORIZONTAL deck on VERTICAL stilts, nothing freestanding, and its
+#               roofs are SINGLE-PITCH lean-tos.  No prism() is called in this town.
+#   MATERIAL    Emberbrook is plaster (WALL) + tile (ROOF).  A bay uses none of
+#               either: WOOD (weathered planks), TAR (dark planks), ROPE, STONE.
+#               After this change the dellhollow object contains ZERO WALL and ZERO
+#               ROOF faces — which is a countable claim, not a taste one, and
+#               STATS carries it as dellhollow_plaster_faces / _tile_faces.
+#   PALETTE     no terracotta and no slate anywhere in it; the timber is the f2
+#               plank browns and the value contrast is carried by WOOD against TAR.
+#
+# IT IS AN IMPRESSION AT 40 m.  Big honest shapes only: the deck line, the leg
+# lattice, the X-brace, the rail, the lean-to.  Treads, shingles and joinery are
+# below a pixel at the gorge camera and would only alias.
+DH_DECK_W = (4.4, 5.9)     # along the river — bays nearly touch at 6 u spacing
+DH_DECK_D = (2.5, 3.4)     # out from the wall
+DH_LIFT = (1.7, 3.5)       # deck top above the HIGHEST ground under its footprint
+
+
+def scaffold_bay(p, F, zg, fr, px, py, yaw, sgn, dims, pad, rng, lamp):
+    """ONE timber bay: deck, stilts, cross-bracing, rail, and sometimes a lean-to.
+
+    `sgn` is which way local +Y points over the gorge — SOLVED by the caller against
+    the river normal rather than assumed, because `yaw` carries the anchor's own
+    rotation and a bank flip, and a lean-to that pitches INTO the cliff is the
+    silent half of the same quarter-turn class of bug.
+
+    `pad` is the stone terrace top under this bay, or None.  Legs foot on the HIGHER
+    of the terrace and the ground so a leg never grows through its own masonry.
+    """
+    dw, dd, lift = dims
+    ca, sa = math.cos(yaw), math.sin(yaw)
+
+    def at(u, v, z):                    # local (along river, out over gorge, up)
+        return (px + ca * u - sa * v, py + sa * u + ca * v, z)
+
+    def foot(u, v):
+        x, y, _ = at(u, v, 0.0)
+        g = gh(F, zg, fr, x, y)
+        return g if pad is None else max(g, pad)
+
+    cor = [foot(u * dw * 0.5, v * dd * 0.5) for u in (-1, 1) for v in (-1, 1)]
+    top = max(cor) + lift               # the walking surface
+
+    # ---- THE STILTS. The outer row is the tall one: the ground falls away under
+    # the cantilever, and that fall IS the read the map's "cantilevered out over the
+    # gorge" is asking for.
+    us = [-0.42 * dw, 0.0, 0.42 * dw]
+    vs = [-sgn * 0.40 * dd, sgn * 0.40 * dd]
+    legz = {}
+    for u in us:
+        for v in vs:
+            g = foot(u, v)
+            legz[(u, v)] = g
+            h = max(0.5, top - 0.30 - g)
+            p.cube(WOOD, at(u, v, g + h / 2 - 0.20), (0.26, 0.26, h + 0.40), rz=yaw)
+    # ---- THE CROSS-BRACING, on the OUTER face only. This is the single element a
+    # glance reads as "scaffold" rather than "building on posts", so it is worth its
+    # triangles; the inner face is against the cliff and nobody ever sees it.
+    ov = sgn * 0.40 * dd
+    for k in range(len(us) - 1):
+        u0, u1 = us[k], us[k + 1]
+        z0, z1 = legz[(u0, ov)], legz[(u1, ov)]
+        hi = top - 0.42
+        if hi - max(z0, z1) < 1.0:      # too short to brace; a brace there is noise
+            continue
+        _strut(p, WOOD, at(u0, ov, z0 + 0.15), at(u1, ov, hi), 0.17)
+        _strut(p, WOOD, at(u1, ov, z1 + 0.15), at(u0, ov, hi), 0.17)
+        # the horizontal tie the braces cross at — it is what stops the X reading
+        # as two unrelated sticks at distance
+        zm = (max(z0, z1) + hi) / 2
+        p.cube(WOOD, at((u0 + u1) / 2, ov, zm), (abs(u1 - u0) * 1.02, 0.15, 0.15), rz=yaw)
+    # ---- THE DECK, and the DARK BAND under it. The fascia beam is the strong
+    # horizontal line in the silhouette and it is TAR on purpose: a deck whose
+    # underside is the same value as its top has no thickness at 40 m.
+    p.cube(WOOD, at(0, 0, top - 0.11), (dw, dd, 0.22), rz=yaw)
+    for u in (-0.34 * dw, 0.0, 0.34 * dw):
+        p.cube(TAR, at(u, 0, top - 0.38), (0.24, dd * 1.04, 0.32), rz=yaw)
+    p.cube(TAR, at(0, ov * 1.06, top - 0.36), (dw * 1.04, 0.26, 0.36), rz=yaw)
+    # ---- THE RAIL. Rickety: a top rail, a slack rope below it, and posts that do
+    # not quite line up.
+    rv = sgn * dd * 0.46
+    for k in range(5):
+        u = (k / 4.0 - 0.5) * dw * 0.90 + rng.uniform(-0.10, 0.10)
+        p.cube(WOOD, at(u, rv, top + 0.44), (0.11, 0.11, 0.88), rz=yaw)
+    p.cube(WOOD, at(0, rv, top + 0.82), (dw * 0.94, 0.10, 0.11), rz=yaw)
+    p.cube(ROPE, at(0, rv, top + 0.46), (dw * 0.94, 0.07, 0.07), rz=yaw)
+    # ---- THE LEAN-TO. A SINGLE PITCH, high at the cliff and low over the water —
+    # never prism(), which is the gable that started this.
+    if rng.random() < 0.72:
+        sw = dw * rng.uniform(0.42, 0.60)
+        sd = dd * rng.uniform(0.54, 0.70)
+        sh = rng.uniform(1.9, 2.7)
+        su = rng.uniform(-0.18, 0.18) * dw
+        sv = -sgn * dd * 0.10
+        # THE SHED'S VALUE BREAK IS THE EAVE LINE, NOT A DARK MATERIAL (2026-08-04,
+        # two builds photographed at the gorge camera). Walls WOOD under a TAR roof
+        # made every shed a black LID; the swap made every shed a black BODY. Both
+        # are the same mistake — this cliff faces away from the ratified sun, so
+        # ANY tar-class plane here lands near black and a near-black mass is a hole
+        # in the silhouette, not a shadow. So both are WOOD and the separation is
+        # geometric: the roof is a TOP plane and catches what light there is, and a
+        # TAR fascia under its overhang draws the dark line the eye reads as depth.
+        # That line costs one box and cannot go black-on-black, because it is only
+        # ever seen against the lit plane above it.
+        p.cube(WOOD, at(su, sv, top + sh / 2), (sw, sd, sh), rz=yaw)
+        p.cube(TAR, at(su, sv - sgn * sd * 0.62, top + sh + 0.06), (sw * 1.14, 0.14, 0.30),
+               rz=yaw)
+        p.cube(WOOD, at(su, sv, top + sh + 0.24), (sw * 1.18, sd * 1.34, 0.15),
+               rz=yaw, rx=-0.30 * sgn)
+        if lamp:                        # the hearth read, kept from the cottages
+            p.cube(EMIT, at(su + sw * 0.52, sv, top + sh * 0.62),
+                   (0.06, 0.34, 0.42), rz=yaw)
+    if lamp:
+        p.cube(EMIT, at(dw * rng.uniform(-0.34, 0.34), rv, top + 0.90),
+               (0.15, 0.15, 0.18), rz=yaw)
+    # ---- THE STAIR that says the tiers are joined. One flight raking down over the
+    # gorge edge; the map's own "Deep Stairs" and the ref's zig-zags in one plank.
+    if rng.random() < 0.55:
+        su = rng.choice((-0.40, 0.40)) * dw
+        run = dd * rng.uniform(0.7, 1.1)
+        drop = rng.uniform(1.4, 2.4)
+        a0 = at(su, sgn * dd * 0.48, top - 0.10)
+        a1 = at(su, sgn * (dd * 0.48 + run), top - 0.10 - drop)
+        p.cube(WOOD, ((a0[0] + a1[0]) / 2, (a0[1] + a1[1]) / 2, (a0[2] + a1[2]) / 2),
+               (0.62, 0.16, math.hypot(run, drop)), rz=yaw,
+               rx=math.atan2(-sgn * run, -drop))
+        _strut(p, WOOD, (a0[0], a0[1], a0[2] + 0.80), (a1[0], a1[1], a1[2] + 0.80), 0.10)
+        _strut(p, WOOD, a1, (a1[0], a1[1], foot(su, sgn * (dd * 0.48 + run))), 0.18)
+    return top, at(0, rv, top + 0.72)
+
+
 def build_dellhollow(col, F, zg, fr):
     """Dellhollow: stepped clusters down the BENCH-SIDE gorge wall, weirs, wheels, gate.
 
@@ -1471,7 +1642,9 @@ def build_dellhollow(col, F, zg, fr):
     ctr, tg, nr, wl, hw, t = gorge_frame(F, aw[0], aw[1])
     rot = math.radians(float(VM.ANCHORS["dellhollow"]["rotationDeg"]))
     base_ang = math.atan2(float(tg[1]), float(tg[0]))
-    n_house = 0
+    n_deck = 0
+    n_terrace = 0
+    prev_rail = {}                       # per tier: the last bay's rail anchor
     # `nr` is the gorge frame's LEFT normal, so +1 is the left bank looking downstream.
     bench_side = 1 if VM.BENCH_LEFT else -1
     anchor_arc = VM.river_arc_at(aw[0], aw[1])
@@ -1480,7 +1653,12 @@ def build_dellhollow(col, F, zg, fr):
     # visible in valley_build.json rather than only in a render.
     for side in (bench_side,):
         for tier in range(4):
-            lat = hw + 2.4 + tier * 4.4
+            # TIER STEP 3.5, NOT 4.4 (2026-08-04, by eye at the gorge camera). At 4.4
+            # the four tiers spread 13.2u across the wall and the bays photographed as
+            # five separate stilt towers with sky between them — the read was watch-
+            # towers, not a town. A scaffold town is DENSE; the decks have to overlap
+            # in silhouette for the lattice to close up.
+            lat = hw + 2.4 + tier * 3.5
             for stat in (-13.0, -7.0, -1.0, 5.0, 11.0):
                 jx = rng.uniform(-1.1, 1.1)
                 # STEP ALONG THE RIVER'S OWN CURVE, and take the normal there.
@@ -1504,40 +1682,64 @@ def build_dellhollow(col, F, zg, fr):
                 # yaw wobble a mason would allow. See the note above build_emberbrook.
                 yaw = (math.atan2(float(ctg[1]), float(ctg[0])) + rot
                        + (0.0 if side > 0 else math.pi) + rng.uniform(-0.16, 0.16))
-                dims = house_dims(rng)
-                w, d = dims[1], dims[2]
+                # WHICH WAY IS OUT OVER THE GORGE, SOLVED. `yaw` carries the anchor
+                # rotation and the bank flip, so local +Y is not reliably the water
+                # side — measure it against the river's own normal instead. Every
+                # cantilever, lean-to pitch and stair rake in the bay hangs off this
+                # sign; assuming it is how the deck ends up pitched into the cliff.
+                sgn = 1.0 if (-math.sin(yaw) * float(-cnr[0] * side)
+                              + math.cos(yaw) * float(-cnr[1] * side)) > 0 else -1.0
+                dw = rng.uniform(*DH_DECK_W)
+                dd = rng.uniform(*DH_DECK_D)
+                dims = (dw, dd, rng.uniform(*DH_LIFT))
                 # A terrace pad + retaining wall is what makes a cluster read
                 # STEPPED — but a pad placed at the CENTRE height cantilevers off a
                 # gorge wall, which is what the first render showed.  The pad top is
                 # the lowest of its own four corners, and the wall reaches from there
                 # down to the ground beneath its outer edge.
-                pw_, pd_ = w * 1.24, d * 1.24
+                pw_, pd_ = dw * 1.06, dd * 1.22
                 ca, sa = math.cos(yaw), math.sin(yaw)
                 cor = [(px + ca * u * pw_ / 2 - sa * v * pd_ / 2,
                         py + sa * u * pw_ / 2 + ca * v * pd_ / 2)
                        for u in (-1, 1) for v in (-1, 1)]
                 ch = [gh(F, zg, fr, a_, b_) for a_, b_ in cor]
-                # the v2 canyon steepened both walls: where the pad's own corners
-                # span more than ~2.8u of height, no terrace can read as bedded —
-                # the house "stands proud" of the wall (foliage agent's gorge-shot
-                # flag).  Skip that station; the cluster keeps its rhythm on the
-                # stations that CAN bed.
-                if max(ch) - min(ch) > 2.8:
-                    continue
-                pad = min(ch) + 0.10
-                p.cube(STONE, (px, py, pad - 0.20), (pw_, pd_, 0.44), rz=yaw)
-                foot = min(ch) - 0.4
-                ox = px - nr[0] * side * pd_ * 0.52
-                oy = py - nr[1] * side * pd_ * 0.52
-                foot = min(foot, gh(F, zg, fr, ox - nr[0] * side * 1.6,
-                                    oy - nr[1] * side * 1.6))
-                drop = max(0.6, min(5.0, pad - foot))
-                p.cube(STONE, (ox, oy, pad - 0.42 - drop / 2), (pw_, 0.38, drop), rz=yaw)
-                fam = 1 + (n_house * 3 + n_house // NFAM) % NFAM
-                # the pad IS this house's ground: four equal corners, so the footing
-                # is the shallow contact band and not a second retaining wall.
-                impression_house(p, ht, fam, px, py, yaw, dims, [pad] * 4, rng)
-                n_house += 1
+                # THE SPREAD TEST IS NOW A TERRACE TEST, NOT A STATION VETO (2026-08-04).
+                # It used to `continue` — no house where the ground was steeper than
+                # ~2.8u across the pad, which cost the cluster its stations on exactly
+                # the steep wall the town is supposed to cling to. A cottage needs
+                # bedding; A SCAFFOLD DOES NOT, that being the point of stilts. So the
+                # steep stations keep their bay and simply lose the masonry under it.
+                pad = None
+                if max(ch) - min(ch) <= 2.8:
+                    pad = min(ch) + 0.10
+                    p.cube(STONE, (px, py, pad - 0.20), (pw_, pd_, 0.44), rz=yaw)
+                    foot = min(ch) - 0.4
+                    ox = px - nr[0] * side * pd_ * 0.52
+                    oy = py - nr[1] * side * pd_ * 0.52
+                    foot = min(foot, gh(F, zg, fr, ox - nr[0] * side * 1.6,
+                                        oy - nr[1] * side * 1.6))
+                    drop = max(0.6, min(5.0, pad - foot))
+                    p.cube(STONE, (ox, oy, pad - 0.42 - drop / 2), (pw_, 0.38, drop),
+                           rz=yaw)
+                    n_terrace += 1
+                _, rail = scaffold_bay(p, F, zg, fr, px, py, yaw, sgn, dims, pad, rng,
+                                       lamp=(n_deck % 3 != 1))
+                # THE LAUNDRY LINE between neighbours in a tier. The townmap names it
+                # twice ("laundry lines, rickety balconies"; "Drying decks — laundry
+                # lines and fish racks strung between the clusters"), and at vista
+                # distance it is the cheapest thing in the frame that says the decks
+                # are ONE town rather than a row of separate huts. Sagged in two
+                # segments; a straight line reads as a wire.
+                pr = prev_rail.get(tier)
+                if pr is not None:
+                    span = math.hypot(rail[0] - pr[0], rail[1] - pr[1])
+                    if span < 9.0:
+                        mid = ((rail[0] + pr[0]) / 2, (rail[1] + pr[1]) / 2,
+                               (rail[2] + pr[2]) / 2 - 0.16 - span * 0.045)
+                        _strut(p, ROPE, pr, mid, 0.07)
+                        _strut(p, ROPE, mid, rail, 0.07)
+                prev_rail[tier] = rail
+                n_deck += 1
     # ---- THE WEIR FLIGHT: the reason the locks exist ------------------------
     n_weir = 0
     crest = None
@@ -1587,11 +1789,27 @@ def build_dellhollow(col, F, zg, fr):
                 mz = gh(F, zg, fr, mx, my)
                 # the mill grew with the cottages (2026-08-04): a working building that
                 # is SHORTER than the houses around it stops reading as a mill.
-                p.cube(WALL, (mx, my, max(mz, wwl) + 1.35), (2.0, 1.8, 2.70), rz=ang)
-                p.cube(WOOD, (mx, my, max(mz, wwl) + 2.76), (2.6, 2.2, 0.14), rz=ang)
-                p.prism(ROOF, (mx, my, max(mz, wwl) + 2.83), 2.5, 2.1, 1.35, rz=ang)
+                # AND THEN IT LOST THE COTTAGES' MATERIALS WITH THEM: this was the last
+                # plaster wall and the last tile gable in Dellhollow, and one gabled
+                # roof beside twenty lean-tos is precisely the element the user's
+                # "entirely distinct look" rules out — swappable into Emberbrook
+                # without looking wrong. A millhouse here is a stone footing, plank
+                # cladding and one pitch.
+                mb = max(mz, wwl)
+                p.cube(STONE, (mx, my, mb + 0.55), (2.3, 2.1, 1.10), rz=ang)
+                p.cube(WOOD, (mx, my, mb + 2.40), (2.0, 1.8, 2.60), rz=ang)
+                p.cube(TAR, (mx, my, mb + 3.78), (2.6, 2.3, 0.16), rz=ang, rx=0.26)
                 n_weir += 1
-    STATS["dellhollow_houses"] = n_house
+    # STATS IS THE HONEST RECORD OF THE SWAP. `dellhollow_houses` is GONE rather
+    # than left reading zero: a stat that never moves off zero is a stat nobody
+    # reads. The two face counts are the distinctness claim in a number a diff can
+    # check — Emberbrook's vocabulary is plaster and tile, and Dellhollow must carry
+    # NONE of either. If a later lane reintroduces a gable here, this goes nonzero.
+    p.bm.faces.ensure_lookup_table()
+    STATS["dellhollow_decks"] = n_deck
+    STATS["dellhollow_terraces"] = n_terrace
+    STATS["dellhollow_plaster_faces"] = sum(1 for f in p.bm.faces if f[p.cl] == WALL)
+    STATS["dellhollow_tile_faces"] = sum(1 for f in p.bm.faces if f[p.cl] == ROOF)
     STATS["dellhollow_wheels"] = n_weir
     return p.finish(col), crest
 

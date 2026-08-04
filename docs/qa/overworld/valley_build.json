@@ -1,5 +1,5 @@
 {
- "build_s": 17.72,
+ "build_s": 16.37,
  "canopy_farwall-crown": {
   "cards": 12996,
   "core_tris": 3849,
@@ -19,10 +19,10 @@
   "lobes": 267
  },
  "chimneys": {
-  "built": 25,
-  "houses": 25,
-  "pad_margin_min": 0.082,
-  "ridge_clear_min": 0.568,
+  "built": 14,
+  "houses": 14,
+  "pad_margin_min": 0.083,
+  "ridge_clear_min": 0.618,
   "wall_recess_min": 0.03
  },
  "contact_shadow": {
@@ -31,8 +31,11 @@
   "ground_verts": 6843,
   "masses": 9
  },
- "dellhollow_houses": 11,
- "dellhollow_tint_families": 5,
+ "dellhollow_decks": 19,
+ "dellhollow_plaster_faces": 0,
+ "dellhollow_terraces": 5,
+ "dellhollow_tile_faces": 0,
+ "dellhollow_tint_families": 0,
  "dellhollow_wheels": 4,
  "emberbrook_house_slope_u": 0.47,
  "emberbrook_houses": 14,
@@ -40,7 +43,7 @@
  "emberbrook_tint_families": 5,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.28,
+ "field_s": 0.25,
  "h_range": [
   -6.18,
   50.9
@@ -118,7 +121,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.22,
+ "terrain_s": 0.21,
  "tile": [
   280.0,
   200.0
@@ -141,9 +144,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 321534,
+ "tris": 325406,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 4.48,
+ "veg_s": 3.94,
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "falls": {
@@ -203,5 +206,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.084
+ "zone_s": 0.074
 }
