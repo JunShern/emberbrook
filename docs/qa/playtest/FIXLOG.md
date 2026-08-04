@@ -2200,3 +2200,18 @@ stair. The LLM playtester and the human hit the same 20 mm.
    *correctly* — both sides had the floor. The missing question was whether a **body** gets
    from one floor to the next, and only `SIM.move` asks it. Same family as `_court_probe`'s
    founding lesson: a fill tells you where the world is shut, never what shuts it.
+
+## Winches first-fire attempt, 2026-08-05 01:00 — closer than ever, not yet
+
+`run-20260804-234816` (--from=ch2.dock, 60 steps): the Maren stair fix OPENED the winch
+approach — legs now arrive throughout the area that was 13 no-gain legs yesterday — but
+`ch2.winches` still did not fire. The pattern in the last 20 steps: nearby legs arrive,
+the final ~3-4 m to the winch target repeatedly closes partial distance (0.94/4.02,
+1.49/3.64). One report filed, a typo (PT-20260804-015, duplicate "the" in the cook's
+prompt — interiors lane's, trivial).
+
+NEXT SESSION'S FIRST LANE, precisely scoped: `_court_probe --at` at the stalling legs'
+own coordinates — `SIM.blocked` names the mesh. Prime suspect is the carried fish-dock
+item (the flight crosses walk_e_moorage__tenant-shack with 1.05 m headroom, under
+BODY_H 1.30). Also carried: PT-015 typo; the 44 stale walk records across 9 edges from
+the Maren lane's --report.
