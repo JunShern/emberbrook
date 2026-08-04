@@ -461,6 +461,90 @@ const GRADE_SHADER={
     '  o+=coolCol*lift*t;',
     '  gl_FragColor=vec4(o,c.a);',
     '}'].join('\n')};
+// ===== THE G-BUFFER IS COLOUR-BLIND  (2026-08-04, ?gbuf=0 restores the old one) ===
+//
+// THE ARTEFACT THIS ANSWERS, reported independently by two blind critics and the
+// camera lane and unfixed for three rounds: hard-edged pale grey rectangles over
+// the gorge frame's top-left sky, "the single most damning thing in either image —
+// it reads as a crash artefact." It is neither a shadow cascade nor a broken
+// impostor. It is THE AO PASS'S OWN DEPTH BUFFER.
+//
+// GTAOPass draws its depth+normal prepass with `scene.overrideMaterial =
+// MeshNormalMaterial`, and that material carries NEITHER the leaf atlas NOR its
+// alphaTest 0.5. So every alpha-cut foliage card — the canopy impostors, the field
+// cards, the grass — writes its WHOLE RECTANGULAR QUAD into the g-buffer as an
+// opaque surface. In the beauty pass the same quad is 95% discarded and reads as
+// leaves; in the g-buffer it is a solid billboard, and a billboard is
+// axis-aligned in screen space by construction. That is the crisp vertical right
+// edge and the crisp horizontal bottom edge.
+// Everything downstream then believes it: GTAO computes occlusion on a plane that
+// is not there, and THE AERIAL GRADE, which rides that same depth, reads 11 m
+// where the picture shows a 233 m ridge — so a rectangle of ridge skips aerial
+// perspective entirely while the ridge around it takes the full cool-and-desaturate.
+// Measured: inside the rectangle (100.9,120.0,113.4), forty pixels away
+// (95.2,108.3,131.4). The lane that owns the grade never saw it because the grade
+// is innocent; it was told the wrong depth.
+// MEASURED, NOT ARGUED: ?ao_i=0 (which takes the grade with it) removes the
+// rectangles and nothing else does — ?grade=0 and ?bloom_s=0 both leave them.
+//
+// THE SECOND THING IN THE SAME BUFFER. __owsky and the four __owridge rings are
+// PAINTED CONSTANTS — `fog:false, toneMapped:false`, colours chosen to appear
+// exactly as typed, and the 2026-08-04 ridge rebuild exists precisely because fog
+// was flattening their authored 0x6d7d95 -> 0xb8c8d6 recession. The grade was
+// throwing it away again through a different door: the rings write depth, they sit
+// at 205-345 m against a 155 m gradeFar, so all four clamp to t=1 and take the same
+// full cool + desat + lift. 0x6d7d95 reached the frame as (93,106,128). A painted
+// constant that a post pass regrades is not a constant. Held out of the g-buffer
+// they read depth 1.0, which the grade already leaves alone by design (the dome's
+// BackSide is why that early-out exists at all) — one hook, both defects.
+//
+// WHY HERE AND NOT IN THE PASS: _overrideVisibility/_restoreVisibility already
+// bracket the g-buffer render and nothing else, which is the seam three.js gives
+// us. No fork of the library, and the wrap is undone with the composer.
+const GBUFCUT=new Map();                      // source material -> alpha-cut normal material
+function gbufCutMat(src){
+  let m=GBUFCUT.get(src);
+  if(m) return m;
+  const tex=src.alphaMap||src.map, chan=src.alphaMap?'g':'a';
+  m=new THREE.MeshNormalMaterial({side:src.side, blending:THREE.NoBlending});
+  // allowOverride:false is r185's own opt-out (WebGLRenderer checks it before
+  // substituting scene.overrideMaterial). Without it this material is replaced by
+  // the very MeshNormalMaterial it exists to correct and the swap is a no-op.
+  m.allowOverride=false;
+  m.onBeforeCompile=(sh)=>{
+    sh.uniforms.tCut={value:tex}; sh.uniforms.cutAt={value:src.alphaTest};
+    const v=sh.vertexShader.replace('void main() {','void main() {\n\tvCutUv = uv;');
+    const f=sh.fragmentShader.replace('void main() {',
+      'void main() {\n\tif ( texture2D( tCut, vCutUv ).'+chan+' < cutAt ) discard;');
+    // A REPLACE THAT MISSES IS A SHADER THAT COMPILES. It would restore the exact
+    // artefact with every gate still green, so it says so out loud.
+    if(v===sh.vertexShader||f===sh.fragmentShader){ console.warn('[gbuf] alpha-cut injection missed its anchor'); return; }
+    sh.vertexShader='varying vec2 vCutUv;\n'+v;
+    sh.fragmentShader='uniform sampler2D tCut;\nuniform float cutAt;\nvarying vec2 vCutUv;\n'+f;
+  };
+  GBUFCUT.set(src,m); return m;
+}
+function gbufArm(ao){
+  const ov=ao._overrideVisibility.bind(ao), rv=ao._restoreVisibility.bind(ao);
+  const swapped=[], hidden=[];
+  ao._overrideVisibility=function(){
+    ov();
+    // traversed per frame, not cached at build time: pfxBuild runs on the first
+    // real-time frame and the town/overworld GLB may still be arriving, and a
+    // cached list would be a list of the meshes that happened to exist first.
+    scene.traverse(o=>{
+      if(!o.isMesh||!o.visible) return;
+      if(OWSKYMESH.has(o)){ o.visible=false; hidden.push(o); return; }
+      const m=o.material;
+      if(m&&!Array.isArray(m)&&m.alphaTest>0&&(m.alphaMap||m.map)){ swapped.push([o,m]); o.material=gbufCutMat(m); }
+    });
+  };
+  ao._restoreVisibility=function(){
+    for(const [o,m] of swapped) o.material=m; swapped.length=0;
+    for(const o of hidden) o.visible=true; hidden.length=0;
+    rv();
+  };
+}
 let PFXRIG=null, PFX_DEAD=false;
 function pfxBuild(){
   const t0=performance.now();
@@ -483,6 +567,7 @@ function pfxBuild(){
     // constructed at half res is silently resized back to full and the saving is
     // measured as zero — which is exactly what the first run of this reported.
     if(PFX.aoRes!==1) ao.setSize(Math.max(2,Math.round(W*PFX.aoRes)), Math.max(2,Math.round(H*PFX.aoRes)));
+    if(Q.get('gbuf')!=='0') gbufArm(ao);          // see THE G-BUFFER IS COLOUR-BLIND
   }
   // the aerial split rides GTAO's depth, so it exists only where GTAO does, and
   // only in the overworld — a town at eye level has no distance to grade.
@@ -1736,7 +1821,21 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // near 34 -> 44 for the same reason the grade's dNear moved: the tilt more
       // than doubled the visible depth, and haze that starts 34 m from the player
       // is haze on the ground she is standing on.
-      scene.fog=new THREE.Fog(0xa8b8cc, 44, 195);
+      // R7 (2026-08-04) FINISHES THAT MOVE AT THE RING THE TERRAIN ACTUALLY MEETS.
+      // Two of round 6's three reported gorge defects — "several plateau trees render
+      // pure white/unlit while their neighbours are green" and "the tan hill terminates
+      // against the sky with a hard aliased seam" — are one number: 0xa8b8cc (168,184,204)
+      // sits between rings 2 and 3, the two FURTHEST silhouettes, while the far terrain's
+      // skyline is drawn against ring 0 (0x6d7d95, 109,125,149). The wash was aimed at a
+      // band that is not behind the thing being washed, so the inversion R5 diagnosed
+      // survived it, 60 luma units of it, and the horizon became a step instead of a
+      // dissolve. MEASURED on the gorge camera (far ground mean luma minus ring0 mean
+      // luma at the crest): 0xa8b8cc +20, 0x8496a9 +9, 0x6d7d95 +3. Ring 1 is the pick,
+      // not ring 0: at +3 the plateau and the ridge behind it are the same value and the
+      // skyline stops reading at all. The tree the critic called unlit is `veg_field` at
+      // 153.6 m — scene.fog=null turns every one of them green again, which is the whole
+      // proof that nothing there is broken and the haze was simply too pale, too soon.
+      scene.fog=new THREE.Fog(0x8496a9, 44, 195);
       // ---- THE DISTANT RIDGES ------------------------------------------------
       // Rebuilt 2026-08-04, the first time anything here was ever LOOKED AT: the
       // pitch was 35 deg down against a 21 deg half-fov, so every one of these
@@ -2412,6 +2511,12 @@ function sceneDispose(){
   if(GLBROOT){ scene.remove(GLBROOT); disposeGltf(GLBROOT); GLBROOT=null; }
   for(const m of SCENEMATS) disposeMaterial(m);
   SCENEMATS.clear();
+  // the alpha-cut g-buffer materials are keyed by a SOURCE material that is being
+  // disposed on this line, so they die with it — kept out of SCENEMATS on purpose,
+  // since nothing in the scene graph owns them and transition_test measures the
+  // renderer's baseline coming back.
+  for(const m of GBUFCUT.values()) m.dispose();
+  GBUFCUT.clear();
   if(RTLIGHT){ scene.remove(RTLIGHT); if(RTLIGHT.dispose)RTLIGHT.dispose(); RTLIGHT=null; }
   // L1's cool bounce is scene-scoped for RTLIGHT's own reason: added blind on every
   // swap it would stack, and an overworld re-entered three times would be lit by

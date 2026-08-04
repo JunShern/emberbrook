@@ -244,9 +244,8 @@ our focal hierarchy beats the commercial frame's, which has none.
     distance for the aerial grade to work on. The blade carpet also reads oversized beside a 1.45u
     character at boom 12–16. Treatment cannot fix either; both are the grass material and the
     blade scatter.
-  * **The two grey rectangles over the gorge sky are STILL THERE** and are still the most damning
-    thing in that frame. Untouched by round 3 — showing `edge_skirt` again was already tested and
-    changes nothing, so it is some other object.
+  * ~~**The two grey rectangles over the gorge sky are STILL THERE**~~ — **named and fixed, R7
+    below.** Not `edge_skirt`, not an impostor, not a shadow cascade: the AO pass's own depth buffer.
   * **`transition_test` aborts on its final assertion**, reproducibly: 13 sections green, then
     `HARNESS ERROR: ReferenceError: SIM is not defined` at the deep-link re-evaluate, immediately
     after the harness's own readiness check returned true on that page. **Provenance unknown** —
@@ -254,3 +253,45 @@ our focal hierarchy beats the commercial frame's, which has none.
     not claimed as new.
   * **Three BROKEN items in the gorge frame** (grey rectangles, a straight-line blowout
     terminator, unlit white ridge trees) — these are bugs, not taste, and should outrank polish.
+
+### R7: the three gorge artefacts were TWO buffers, and neither was the one being blamed
+
+Plates `r7-gorge-before.png` (annotated — the first picture of the artefact anyone has drawn a box
+on), `r7-{gorge,gate,meadow,vista}.png`, `r7-vista-before.png`.
+
+**1. THE GREY RECTANGLES — the AO pass's own depth buffer.** Named by raycasting the pixels, not by
+guessing: the first hit is `veg_canopy_farwall-crown_cards` at 11 m, and hiding that one mesh takes
+the rectangles with it. GTAOPass draws its depth+normal prepass with `scene.overrideMaterial =
+MeshNormalMaterial`, which carries neither the leaf atlas nor its `alphaTest 0.5`, so every
+alpha-cut foliage card writes its WHOLE QUAD into the g-buffer — and a camera-facing billboard is
+axis-aligned in screen space by construction. That is the crisp right edge and the crisp bottom
+edge. GTAO then occludes a plane that is not there, and the aerial grade, which rides that same
+depth, reads **11 m where the picture shows a 233 m ridge**: a rectangle of ridge skips aerial
+perspective while the ridge around it takes the full cool-and-desaturate. Inside (100.9,120.0,113.4),
+forty pixels away (95.2,108.3,131.4). **The discriminator that settled it: `?ao_i=0` removes the
+rectangles and nothing else does — `?grade=0` and `?bloom_s=0` both leave them.** The grade was
+innocent; it was told the wrong depth. Fixed by alpha-cutting the g-buffer (`?gbuf=0` restores).
+`edge_skirt` really was not it, and neither was any impostor, LOD or shadow cascade.
+
+**2 AND 3 ARE ONE NUMBER, and it is not a broken instance.** `scene.fog=null` turns every "unlit
+white" plateau tree green again — the tree the critic named is plain `veg_field` at 153.6 m, 73%
+of the way through a fog that ends at 195. The haze was aimed at `0xa8b8cc`, which sits between
+rings 2 and 3, the two FURTHEST silhouettes, while the far terrain's skyline is drawn against
+ring 0 (`0x6d7d95`). So R5's own diagnosis — *terrain fading to a value BRIGHTER than the thing
+behind it* — survived R5's fix, and the horizon became a step instead of a dissolve. Far-ground
+luma minus ring-0 luma at the crest: **`0xa8b8cc` +20, `0x8496a9` +9, `0x6d7d95` +3.** Ring 1
+ships; ring 0 is too far — at +3 the plateau and the ridge are the same value and the skyline
+stops reading at all.
+
+**A PAINTED CONSTANT THAT A POST PASS REGRADES IS NOT A CONSTANT.** The same g-buffer hook holds
+`__owsky` and the four `__owridge` rings out of it. They are `fog:false, toneMapped:false` on
+purpose, and the 2026-08-04 rebuild exists precisely because fog was flattening their authored
+`0x6d7d95 → 0xb8c8d6` recession — the grade was throwing it away again through a different door,
+all four rings clamped to `t=1` against a 155 m `gradeFar`. `0x6d7d95` was reaching the frame as
+(93,106,128). This is most of "the sky is a flat undifferentiated grey-blue with zero gradient".
+
+**NOT FIXED, and it is not a bug:** the silhouette where terrain meets ridge is still slightly
+aliased. The composer resolves 4x MSAA in the beauty buffer, but the depth texture the grade
+samples is single-sampled, so an antialiased edge pixel takes a full-far grade and the AA is
+undone. Inherent to depth-driven post; the fog change makes the step small enough that it barely
+reads. Named here so the next round does not spend itself re-finding it.
