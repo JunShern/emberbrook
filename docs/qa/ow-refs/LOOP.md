@@ -2211,3 +2211,149 @@ option b) — no class->material entry, so they shipped untextured; the detail l
     measured through a 5x value lift.
   * `cutin_edge`-class hole in our own gates: nothing here measures HUE, which is why a
     teal canopy passed every tree-lane gate for two rounds.
+
+---
+
+## FOLIAGE ROUND 4 (f4) — the canopy's light was solved against a bug, and the bald slope was never a cull
+
+Plates `f4-{closeup,meadow,gate,vista,gorge}.png`, shot after the last bundle commit with the
+digest pinned and asserted either side of the run (`22ae6542`). A fully blind judge on an
+anonymised set (merged build + old build + both references) preferred the OLD build's hero
+canopy — "lit, leaf clusters resolve" — over the merged build's "unlit dark-teal solid, reads
+as mossy stone". **The old brightness was the remap bug 00a9c94 correctly removed.** Every
+number that framed the canopy had been solved against a 5x value lift on its darkest texels.
+
+### THE NUMBERS THAT SET THE CANOPY WERE ALL READ THROUGH THE REMAP, AND HERE IS THE SPLIT
+
+Magenta-marker mask out of the running game (hero crown, meadow camera), against the
+references' own canopy crops:
+
+| | share | V05 | V50 | V95 | sat50 | under V 0.12 |
+|---|---|---|---|---|---|---|
+| references | — | 0.23–0.29 | 0.43–0.54 | 0.64–0.69 | 0.26–0.37 | 0.0% |
+| shipped (r3) | 100% | 0.118 | 0.357 | 0.647 | 0.246 | 5.4% |
+| … core | 22% | 0.098 | 0.239 | 0.400 | 0.275 | **15.8%** |
+| … cards | 78% | 0.137 | 0.412 | 0.659 | 0.234 | 2.4% |
+
+**THE TOP WAS ALREADY INSIDE THE REFERENCE BAND AND THE FLOOR WAS A STOP AND A HALF LOW**, so
+the fix is a floor lift and not a gain — a gain that fixes the mid blows a V95 that is already
+right (and r1's rule stands: the dark half of the old frame was holes, so brightness is not
+what is owed). And `valley_veg`'s own recorded "CORE ALONE median 0.681 against CARDS 0.576"
+is **INVERTED** once the remap stops inflating the dark tile the core wears: the core is a full
+stop under the shell it is supposed to be the shadow inside. That is the mossy stone.
+
+Shipped: `foliage_atlas` AO_FLOOR .62→.84 and SKY_FLOOR/LAM .52/.62→.72/.42 (in-card span
+2.6x → 1.6x, which finishes what that module's own note started — the volume read is
+bushlang's crown-scale job), EXPOSURE .80→.86, and the core tile's hole colour ×.45→×.95 (at
+.45 it was V 0.036, i.e. the hard black wedges between lobes). `bushlang` CORE_FLOOR .26 and
+SHELL_FLOOR .08, affine and applied AFTER the crevice multiply so a crevice lifts too.
+**Result 0.137 / 0.435 / 0.706 at sat 0.278, under V 0.12 down to 2.8%**, and by eye the mass
+reads as lit foliage with leaf clusters resolving in the sunward half.
+
+### A 16-SECOND SWEEP PREDICTED A 13-MINUTE REBUILD TO THREE DECIMALS
+
+The atlas is a numpy one-off and the COLOR_0s are a vertex attribute, so both were swept
+**live**: variant atlases generated offline (16 s each), served, swapped onto the shipped
+materials in the running page, plus a COLOR_0 re-curve per mesh (`scratchpad/f4/swap.js`).
+The harness's own gate is that variant `A0` — the shipped constants, rebuilt — reproduced the
+shipped frame to three decimals before any candidate was judged. Prediction vs the actual
+Blender build: **V05 0.137/0.137, V50 0.439/0.435, V95 0.706/0.706, sat 0.273/0.278.**
+A canopy value sweep is now a coffee break, not a night.
+
+### AND THREE TERMS THAT COULD NOT HAVE DONE IT, MEASURED BEFORE THEY WERE SWEPT
+
+14.4% of the hero crown is V>0.45 at saturation <0.18 — pale, low-chroma, and it is the whole
+"stone" read. It is **not** the runtime's: `envMapIntensity = 0` on the canopy is
+**pixel-identical**, `hiAmt = 0` is **pixel-identical** (t3's finding, re-confirmed on the
+post-remap build), and `trans = 0` moves V50 by 0.012 — which is what proves the probe was
+live. Overlaid, those pixels are exactly t3's **pale edge-on shell-card slivers**. A
+view-dependent alpha fade was prototyped in the shared shader and moved them 16.5% → 15.2%;
+**not shipped**, and honestly, its own sweep was a no-op (three thresholds returned identical
+frames — three.js reuses the compiled program and the uniforms captured with it, the same
+class as t3's `owdRemap`). One live value, one small number, no sweep: not a result.
+
+### THE CROWN-SCALE SUN RAMP REACHES THE HERO TREE AND IS UNDER THE NOISE THERE
+
+COLOR_0 census of the running `veg_canopy_whisperwood`, 8 bins along `SUN_TO`:
+**0.140 0.164 0.153 0.167 0.155 0.163 0.144 0.174** over an extent of **59.6 u**. Flat, and not
+even monotonic. The arithmetic: 0.55 sun share × 0.45 ax mix × 0.70 span × 0.26 lift = **0.045
+of total swing across sixty metres**, less than the per-lobe tone jitter — and the meadow
+camera sees a quarter of that mass. **THE WIRE IS CONNECTED AND THE SIGNAL IS UNDER THE NOISE**,
+because the ramp normalises over the whole forest mass rather than over a crown. The honest fix
+is a CROWN-scale extent (`valley_veg`'s own swell field already has one, `CROWN_K` ≈ 16 u).
+Not taken: two changes in one rebuild is an unreadable A/B. Carried, named.
+
+### ITEM 2 — THE BALD SLOPE IS A SLOT WITH CAMOUFLAGED PLANTS, NOT A CULL
+
+"Bald tan patch where ground cover culled out (600-850,380-500), foliage disappears entirely
+past ~30 m." Raycast the plate's own pixels back through the plate's own camera: the bald box
+is **`ow_f2_ter_dry`/ground_valley_2 at 32–35 m** and the GREEN hillside beside it is
+`ow_f2_ter_grass` **at 33–34 m**. Same distance, opposite read — so it is the SLOT, never the
+falloff. The slope reject is not firing either (normal.y p50 0.83 against a 0.62 gate). World-
+space census of the module's own InstancedMeshes in a 6 m disc: **1491 roots on the bald slope
+against 3045 on the green**, and the module's own on/off toggle says the scatter draws
+**15.9%** of the bald box's pixels.
+
+**THE COVER NEVER STOPPED. WHAT STOPPED WAS THE CONTRAST**, and the defect is two numbers —
+on the pixels the scatter changes:
+
+| | ground L | plant L | ground hue | plant hue |
+|---|---|---|---|---|
+| dry slot | 0.603 | **0.607** | 23° | **25°** |
+| grass slot | 0.653 | 0.617 | 58° | 64° |
+
+Four thousandths of a stop and two degrees. f2's own `grassOnDry` finding ("ochre on sand is
+camouflage") was diagnosed and half paid: `dryOnDry` 0.42 plus `dryBias` left ~64% of the dry
+slot's tufts drawn OCHRE over ochre ground. Shipped: dryOnDry .42→.10, `grassOnDry` and
+`dryTint` both taken down in value (a plant now sits BELOW its ground, dL +0.005 → −0.021),
+`dryDens` .48→.66. **And the ground itself, which is the judge's own cheap item:**
+`patchGround` scaled its WHOLE grit amount by the depth fade, so past 30 m the 1.4 m and 0.35 m
+octaves went out with the 0.09 m one and the far ground was a flat pale smear — **only the fine
+octave can alias, so only the fine octave is faded now** — plus a per-material `groundDark`
+(dry .15, road .10, dockpath .08, turf a token .02). Bald box L50 0.613 → 0.571.
+**Honest limit: improved, not solved.** It reads as ground with grass on it instead of a bald
+tan smear, and it is still the barest part of the frame.
+
+### THE SHADE-BAND REGRESSION THAT WAS NOT ONE — the stale-before-plate rule, paid a fourth time
+
+The gorge frame's shaded vegetation band read L p50 **0.167 → 0.149** against the **f3 plate**,
+and I was one commit from spending a knob to buy it back. Re-run as a true A/B — one bundle,
+`ow_detail.js` swapped between two runs of one shot spec — **the entire r4 change to this
+module moves that band by 0.001** (p50 0.150 → 0.149; p05 0.089 both; 0.23% under the 0.06
+black point both). The 0.018 is between BUNDLES. The box's green-pixel count also HALVES across
+that pair, which is a composition change and not a value one, and it is the tell: an unaligned
+box across two bundles measures the bundle.
+
+### CARRIED ITEM CLOSED: THE NEAR-BLACK WEED LEAF IS NOT A NORMAL FLIP
+
+f3 offered DoubleSide undersides as the mechanism, correctly labelled a hypothesis. **Toggled
+rather than reasoned about** — `side = FrontSide` on the scatter material, same camera, same
+frame — and the dark pixels are UNCHANGED: **2.20% of weed pixels under L 0.10 at DoubleSide
+against 2.29% at FrontSide**, minimum L 0.0339 vs 0.0328. There was never a flip to find: the
+winding gives a +Y face normal for every leaf at every arc angle, drooping outer tips included.
+Overlaid, the dark pixels are weeds standing in the deep shade under the canopy, in a band
+where the grass beside them is equally dark.
+
+### COST (true A/B, same bundle `22ae6542`, closeup camera)
+
+| | blades | scatter tris | draws |
+|---|---|---|---|
+| f3 | 140 381 | 964 794 | 6 |
+| **f4** | **154 578** | **1 062 094** | **6** |
+
++10.1% scatter triangles, no new draw call, `dryDens` is the whole of it. Scene geometry
+337 793 → 337 477 tris (the palette does not move geometry). Gates: playthrough_test,
+walk_engine_gate ow-valley **GREEN** (0 cells lost, 0 extra, height agreement median 0.000 m),
+slice 848/0, cine 689/0 (2 soft), findability 69/0 (2 warn).
+
+### STILL OPEN
+
+  * **THE STRUCTURAL WALL WAS NOT REACHED.** The round's stretch item — one bush prototyped as
+    leaf-cluster CARDS beside a volume bush, photographed at the closeup — was not started.
+    The judge's thesis stands unanswered and is now the strongest single lead: *"you cannot
+    light your way out of a closed convex hull."* r4's own core measurement is evidence FOR it
+    (a smooth solid at 22% of the crown's pixels, and it is the thing that reads as rock).
+  * The pale edge-on card slivers: 15% of the hero crown, refuted as anything the runtime does,
+    and the view-fade prototype is not a shipped answer.
+  * The crown-scale sun ramp's normalising extent (above).
+  * The bald slope is better and is still the barest thing in the closeup.
