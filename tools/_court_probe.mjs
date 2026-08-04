@@ -26,8 +26,15 @@
  *            and position of any stall. The drive, not a model of it.
  *   --pairs  reach_probe's own __ebReach A->B verdicts, for the record.
  *
- * Scene is ow-valley; it is a scratch instrument in the sense that its defaults are that
- * region's, not that its answers are soft — every number it prints is the engine's.
+ * SCENE. `--scene <name>` (default ow-valley, which is where the instrument was born).
+ * `--comp` settles the foot BY THE SCENE'S OWN LAW, derived the way reach_probe derives
+ * it and never read off the #wl checkbox: in a WALKLOCK scene (/^(del-|emb-|townwalk)/)
+ * only walk_ meshes may catch the foot — walkFloors within [fy-STEP_DN-.1, fy+STEP_UP+.1],
+ * highest first, with walkGround's four 0.18 m plank-crack retries — and elsewhere it is
+ * SIM.ground plus play3d's 8 m fall. THIS DISTINCTION IS THE WHOLE POINT IN A TOWN: the
+ * overworld settle stands the fill on scenery the player cannot stand on, so a town probed
+ * with it reports FEWER holes than the town has. Its defaults are one region's; its
+ * answers are not soft — every number it prints is the engine's.
  */
 import { spawn } from 'child_process';
 import { rmSync } from 'fs';
@@ -68,7 +75,10 @@ const DRIVE = (way) => `(async()=>{
 
 const CDP = await freePort();
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const URL = `http://localhost:${PORT}/play.html?scene=ow-valley&rt=1&nomusic=1&v=${Date.now()}`;
+const SCENE = arg('scene', 'ow-valley');
+// rt=1 is the overworld's realtime flag; a pre-rendered town scene must not carry it.
+const URL = `http://localhost:${PORT}/play.html?scene=${encodeURIComponent(SCENE)}` +
+  `${/^ow-/.test(SCENE) ? '&rt=1' : ''}&nomusic=1&v=${Date.now()}`;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const profile = join(process.env.TMPDIR || '/tmp', 'ow-court-profile');
 killOrphans(profile); rmSync(profile, { recursive: true, force: true });
@@ -99,7 +109,10 @@ const ev = async (cdp, e) => {
   for (let i = 0; i < 200; i++) { if (await ev(cdp, `(()=>{try{return !!(window.SIM&&SIM.pos()&&isFinite(SIM.pos().x))}catch(e){return false}})()`) === true) { ok = true; break } await sleep(250) }
   if (!ok) { console.error('never populated'); kill(); process.exit(2) }
   await sleep(800);
-  console.log('scene:', await ev(cdp, 'SIM.scene()'));
+  console.log('scene:', await ev(cdp, 'SIM.scene()'),
+    ' walklock:', await ev(cdp, `(()=>{ if(!/^(del-|emb-|townwalk)/.test(String(SIM.scene()))) return false;
+      try{ if(new URLSearchParams(location.search).get('walklock')==='0') return false; }catch(e){}
+      try{ if(localStorage.getItem('eb-walklock')==='0') return false; }catch(e){} return true; })()`));
 
   if (TRANSECT.length) {
     const expr = `(()=>{const P=${JSON.stringify(TRANSECT)};const out=[];
@@ -118,20 +131,41 @@ const ev = async (cdp, e) => {
     } catch (e) { console.log(t); }
   }
 
-  const GRID = JSON.parse(arg('grid', 'null'));   // {x0,x1,z0,z1,step,ymin,ymax}
+  const GRID = JSON.parse(arg('grid', 'null'));   // {x0,x1,z0,z1,step,ymin,ymax, walk?}
+  // `"walk":true` PAINTS THE LEGIBILITY HOLE, and in a WALKLOCK town that is the map that
+  // matters. WALKLOCK means only walk_ meshes catch the foot, so a cell can carry a solid,
+  // rendered, plate-visible floor (SIM.floors) and still refuse the player (no
+  // SIM.walkFloors under it). Those cells print `v` — ground you can SEE and cannot STAND
+  // on, which is what a player reports as "a hole in the ground". `#` still means a body
+  // is blocked where the foot would land; `.` means no floor of any kind.
   if (GRID) {
     const expr = `(()=>{const G=${JSON.stringify(GRID)};const rows=[];
+      // THE SAME Y WINDOW FOR BOTH SIDES. An earlier cut banded walkFloors around the TOP
+      // scenery floor, so a walk pad under an eave or a jetty read as absent and painted a
+      // hole that was not there. The question is per-BAND: is there walk network in the
+      // slice of world this map is drawn for?
+      const wf=(x,z)=>{const f=SIM.walkFloors(x,z)||[];let b=null;
+        for(let i=0;i<f.length;i++){const v=f[i]; if(v>=G.ymin&&v<=G.ymax&&(b===null||v>b))b=v;} return b;};
+      const O4=[[.18,0],[-.18,0],[0,.18],[0,-.18]];
       for(let z=G.z1; z>=G.z0-1e-9; z-=G.step){ let s='';
         for(let x=G.x0; x<=G.x1+1e-9; x+=G.step){
           const fl=(SIM.floors(x,z)||[]).filter(v=>v>=G.ymin&&v<=G.ymax).sort((a,b)=>b-a);
           if(!fl.length){ s+='.'; continue; }
           const y=fl[0];
+          if(G.walk){
+            let w=wf(x,z);
+            if(w===null) for(let k=0;k<4;k++){ w=wf(x+O4[k][0],z+O4[k][1]); if(w!==null)break; }
+            if(w===null){ s+='v'; continue; }            // visible floor, NO walk network
+            s += SIM.blocked(x,z,w) ? '#' : (w>=G.hi?'H':(w>=G.mid?'M':'l'));
+            continue;
+          }
           s += SIM.blocked(x,z,y) ? '#' : (y>=G.hi?'H':(y>=G.mid?'M':'l'));
         }
         rows.push(z.toFixed(1).padStart(6)+' '+s); }
       return JSON.stringify(rows);})()`;
     const g = await ev(cdp, expr);
-    console.log(`\n== GRID  x ${GRID.x0}..${GRID.x1} step ${GRID.step}  (# blocked, H/M/l floor band, . no floor in [${GRID.ymin},${GRID.ymax}]) ==`);
+    console.log(`\n== GRID  x ${GRID.x0}..${GRID.x1} step ${GRID.step}  (# blocked, H/M/l floor band, ` +
+      `${GRID.walk ? "v = VISIBLE floor with no walk network under it, " : ''}. no floor in [${GRID.ymin},${GRID.ymax}]) ==`);
     const hdr = [];
     for (let x = GRID.x0; x <= GRID.x1 + 1e-9; x += GRID.step) hdr.push(x);
     console.log('       ' + hdr.map(v => (Math.abs(v % 2) < GRID.step / 2 ? '|' : ' ')).join(''));
@@ -140,15 +174,30 @@ const ev = async (cdp, e) => {
     console.log('       x from ' + GRID.x0 + ' to ' + GRID.x1 + ', ticks every 2 m');
   }
 
-  // ---- COMPONENT: reach_probe's own overworld walk rules, but DUMP THE CELLS -----
+  // ---- COMPONENT: reach_probe's own walk rules, but DUMP THE CELLS ---------------
   const COMP = JSON.parse(arg('comp', 'null'));  // {seeds:[[x,y,z],..], box:[x0,x1,z0,z1], step, budget}
   if (COMP) {
     const expr = `(async()=>{const C=${JSON.stringify(COMP)};
       const STEP=C.step||0.4, SU=0.63, SD=0.8, DROP_MAX=8, BUD=C.budget||60000;
-      const settle=(x,z,fy)=>{const g=SIM.ground(x,z,fy); if(g!==null&&g!==undefined)return g;
-        let best=null; const f=SIM.floors(x,z);
-        for(let i=0;i<f.length;i++){const y=f[i]; if(y<fy-SD&&y>fy-DROP_MAX&&(best===null||y>best))best=y;}
-        return best;};
+      // WALKLOCK, re-derived from the three inputs play3d derives it from (reach_probe's
+      // note): the #wl checkbox is written once at page load and sgSwap moves the real
+      // flag underneath it.
+      const wl=(()=>{ if(!/^(del-|emb-|townwalk)/.test(String(SIM.scene()))) return false;
+        try{ if(new URLSearchParams(location.search).get('walklock')==='0') return false; }catch(e){}
+        try{ if(localStorage.getItem('eb-walklock')==='0') return false; }catch(e){}
+        return true; })();
+      const pickWalk=(x,z,lo,hi)=>{const f=SIM.walkFloors(x,z); let b=null;
+        for(let i=0;i<f.length;i++){const y=f[i]; if(y>=lo&&y<=hi&&(b===null||y>b))b=y;} return b;};
+      const O4=[[.18,0],[-.18,0],[0,.18],[0,-.18]];
+      const settle = wl
+        ? (x,z,fy)=>{const lo=fy-SD-0.1, hi=fy+SU+0.1;
+            let g=pickWalk(x,z,lo,hi); if(g!==null)return g;
+            for(let k=0;k<4;k++){ g=pickWalk(x+O4[k][0],z+O4[k][1],lo,hi); if(g!==null)return g; }
+            return null;}
+        : (x,z,fy)=>{const g=SIM.ground(x,z,fy); if(g!==null&&g!==undefined)return g;
+            let best=null; const f=SIM.floors(x,z);
+            for(let i=0;i<f.length;i++){const y=f[i]; if(y<fy-SD&&y>fy-DROP_MAX&&(best===null||y>best))best=y;}
+            return best;};
       const snap=v=>Math.round(v/STEP), key=(i,j)=>(i+100000)*200000+(j+100000);
       const out=[];
       for(const S of C.seeds){
@@ -183,18 +232,28 @@ const ev = async (cdp, e) => {
       }
       // ascii overlay of every component in the box, one letter each
       if (bx) {
-        const cols = Math.round((bx[1] - bx[0]) / step) + 1, rows = Math.round((bx[3] - bx[2]) / step) + 1;
+        // THE PLAN IS DRAWN ON THE FILL'S OWN LATTICE, NOT ON THE BOX. The fill snaps every
+        // cell to a global multiple of `step`; a box edge that is not one (z=-33 at 0.4 m)
+        // puts every printed row half a cell off every filled cell, and HALF THE ROWS COME
+        // OUT EMPTY — a picture of nothing, over a world that is there. Snap outward.
+        const q0 = Math.floor(bx[0] / step), q1 = Math.ceil(bx[1] / step);
+        const r0 = Math.floor(bx[2] / step), r1 = Math.ceil(bx[3] / step);
+        const ox = q0 * step, oz = r0 * step;
+        const cols = q1 - q0 + 1, rows = r1 - r0 + 1;
         const grid = Array.from({ length: rows }, () => new Array(cols).fill('.'));
         const L = 'ABCDEFG';
         res.forEach((r, n) => (r.list || []).forEach(([x, y, z]) => {
-          const ci = Math.round((x - bx[0]) / step), ri = Math.round((z - bx[2]) / step);
+          const ci = Math.round(x / step) - q0, ri = Math.round(z / step) - r0;
           if (ci >= 0 && ci < cols && ri >= 0 && ri < rows) grid[ri][ci] = grid[ri][ci] === '.' ? L[n] : '*';
         }));
-        console.log(`\n  plan, x ${bx[0]}..${bx[1]} left->right, z ${bx[3]} (top) .. ${bx[2]} (bottom), cell ${step} m`);
+        console.log(`\n  plan, x ${ox.toFixed(1)}..${(q1 * step).toFixed(1)} left->right, ` +
+          `z ${(r1 * step).toFixed(1)} (top) .. ${oz.toFixed(1)} (bottom), cell ${step} m` +
+          `\n  ('*' = a cell BOTH fills reached — the fill settles from the neighbour's height,` +
+          ` so membership is not symmetric and two components may overlap without joining)`);
         for (let ri = rows - 1; ri >= 0; ri--)
-          console.log('   ' + (bx[2] + ri * step).toFixed(1).padStart(6) + ' ' + grid[ri].join(''));
+          console.log('   ' + (oz + ri * step).toFixed(1).padStart(6) + ' ' + grid[ri].join(''));
         let hdr = '          ';
-        for (let ci = 0; ci < cols; ci++) { const x = bx[0] + ci * step; hdr += (Math.abs(x - Math.round(x / 2) * 2) < step / 2) ? '|' : ' '; }
+        for (let ci = 0; ci < cols; ci++) { const x = ox + ci * step; hdr += (Math.abs(x - Math.round(x / 2) * 2) < step / 2) ? '|' : ' '; }
         console.log(hdr + '   (| = even x)');
       }
     } catch (e) { console.log(String(c).slice(0, 4000)); }
