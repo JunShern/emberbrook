@@ -109,15 +109,52 @@
     // the ankle and could not break a silhouette. Knee on a 1.45u character is ~0.40 m,
     // and hMax x the height jitter's ceiling lands there. Power-distributed so the mass
     // sits short and a thin tail of tall blades breaks the top edge up.
-    hMin: 0.115, hMax: 0.335, hPow: 1.85,
+    // hPow 1.85 put the MASS of the distribution on top of hMin: median height came out
+    // 0.176 m against a 0.115-0.335 range, so most blades were the same short blade and the
+    // tall ones were a thin garnish. At a grazing camera that mass is a flat even mat, which
+    // is what "even ranks, identical heights" describes. 1.40 keeps the short bias (a lawn
+    // is not a wheat field) while putting real spread in the middle of the range.
+    hMin: 0.105, hMax: 0.360, hPow: 1.40,
     sizeJit: 0.35,   // +-35% on WIDTH (0.65..1.35), and half of that on height: a blade
                      // scaled 1.4x tall is a different plant, 1.4x wide is the same plant
                      // seen closer, and only one of those is what "size jitter" should buy.
-    grow: 0.25,      // extra height per r1 of distance — far blades read at fewer pixels
+    grow: 0.16,      // extra height per r1 of distance — far blades read at fewer pixels.
+                     // CUT from 0.25: height was never the axis that was failing (a blade
+                     // still measured 7.9 px tall at 30 m), and growing the far ones while
+                     // the field around them thinned is what made the survivors read as
+                     // "isolated sprigs, each too large for its distance".
+    // ---- THE ANGULAR WIDTH FLOOR — the actual fix for the mid-distance collapse --------
+    // MEASURED AT THE CLOSEUP CAMERA (scratchpad/f2/probe2.js, 1840 screen rays against the
+    // running game, camera 7.25 m behind the player at pitch 0.18). Per 10 m band of camera
+    // distance, mean live root density and mean blade size in PIXELS:
+    //
+    //     dCam      0-10   10-20  20-30  30-40  40-50  50-60
+    //     roots/m2  3.49   8.12   4.38   4.52   4.52   5.87
+    //     spacing   0.63   0.41   0.62   0.56   0.63   0.48   m
+    //     blade H   28.1   19.6   11.2    7.9    6.6    5.5   px
+    //     blade W   5.11   3.52   1.94   1.33   1.08   0.87   px
+    //
+    // THE DENSITY NEVER COLLAPSED. Roots hold at ~4.5/m2 and 0.6 m spacing all the way out;
+    // `fall` is only down to 0.56 at 40 m. What collapses is the WIDTH OF ONE BLADE: 0.036 m
+    // of grass is 5.1 px at the player's feet and 1.1 px at 40 m, and a blade thinner than a
+    // pixel does not half-cover that pixel — it either wins the sample or vanishes. Past
+    // ~30 m the whole population was rendering as an aliased stipple over the terrain
+    // texture, which is why the frame reads as "bare terrain with roughly eight isolated
+    // sprigs" while 10 600 blade roots stand inside that very region.
+    //
+    // So the mid band is bought with COVERAGE PER PLANT, not with more plants: widen a blade
+    // with distance so its apparent width holds near two pixels, and pay for it out of blade
+    // COUNT (farThin). This is ordinary grass LOD and it is self-limiting — a blade at 60 m
+    // scaled 2.3x subtends the same two pixels a near blade does, so it cannot look like a
+    // leaf on screen; it only looks wrong if you fly out and stand next to it, and the disc
+    // ends at r1 before that. The near field is untouched by construction (gain is 1 inside
+    // r0), so r3's "field of corn" cannot come back through this door.
+    wgrow: 1.55,     // extra WIDTH at r1, on top of 1.0 — 1.08 px at 40 m becomes ~2.0 px
+    wgrowP: 0.80,    // shaping exponent: <1 spends the gain early, where the collapse is
     lean: 0.38,      // radians of random lean about a random horizontal axis
     seedFrac: 0.12,  // share of blades drawn as the seed-head variant
     shortFrac: 0.52, // ...as the short broad variant; the rest are the medium blade
-    farThin: 0.62,   // blades per tuft are cut by this fraction at r1 — a far tuft needs a
+    farThin: 0.72,   // blades per tuft are cut by this fraction at r1 — a far tuft needs a
                      // ROOT (that is what serrates a silhouette) and not four cards. The
                      // first build at tuftDens 12 hit the 230k valve, and the valve loses
                      // one SIDE of the disc rather than thinning evenly, so the far field
@@ -137,7 +174,25 @@
     bare: 0.36,      // clump value below which the ground is left bare
     clumpP: 0.80,    // shaping exponent above the threshold
     clumpH: 0.40,    // how much of the same field the tuft HEIGHT follows
-    dryDens: 0.48,   // density multiplier on the DRY terrain primitive. THE TERRAIN'S OWN
+    // ---- THE SLOT BOUNDARY: a density step that lay exactly on a polygon edge ----------
+    // The terrain is ONE mesh with PER-FACE material slots (overworld3_build.py:306 assigns
+    // grass/dry/rock by `material_index`), so the grass/dry line is a chain of triangle
+    // edges — dead straight, and running through open ground. r1 put a CONSTANT 0.48x
+    // density on the dry slot, which laid a 2x density step precisely along that straight
+    // line: "a visible grid... terminating in a straight-line rectangle boundary against
+    // dirt with no density falloff". Hiding it under more dry vegetation was r1's plan and
+    // the judge found it anyway, blind.
+    // THE FIX IS TO STOP THE SLOT DECIDING THE DENSITY. Both slots now draw their weight
+    // from the SAME range [dryDens, 1], and where in that range a given spot lands is
+    // decided by `slotAt` — a rotated noise field that knows nothing about the polygon
+    // edge. The slots only BIAS which end they tend toward, and the bias is small enough
+    // that the two distributions overlap heavily. There is still a dry slope and a green
+    // one, because the TINT still follows the slot (dryTint/dryBias); what no longer
+    // follows the slot is the count, so the edge has nothing to draw itself with.
+    slotM: 11.0,     // metres per cell of the slot-blend field — wider than clumpM, so it
+                     // reads as ground changing character rather than as more clumping
+    slotBias: 0.14,  // how far each slot is pushed toward its end of the range
+    dryDens: 0.48,   // FLOOR of that shared range (was a flat multiplier on DRY). THE
                      // SLOT BOUNDARY BECAME VISIBLE the moment only one slot had plants on
                      // it: the grass/dry split is a polygon edge, and at 0.30 the gate plate
                      // showed straight-edged green patches where before both sides were
@@ -152,7 +207,7 @@
     fringeK: 2.6,    // density multiplier at the seam itself
     fringeH: 0.22,   // ...and how much taller the band's tufts are
     stray: 0.30,     // share of fringe tufts pushed OUT past the seam, into the dirt
-    strayMax: 0.20,  // how far out (m). The reference has no hard seam anywhere — but the
+    strayMax: 0.32,  // how far out (m). The reference has no hard seam anywhere — but the
                      // first build added `fd` to this and let a third of the band's tufts
                      // travel up to 1.3 m onto the road, which is not a fringe: the plate
                      // showed CONFETTI scattered across the whole path. A straggler is a
@@ -174,16 +229,47 @@
                      // 15-25% NON-GREEN overall and ours was one green family.
     dryTint: [1.20, 0.95, 0.44],
     dryBias: 1.9,    // ...and dry tufts are this much likelier on worn/fringe ground
+    // OCHRE ON SAND IS CAMOUFLAGE. r1 drew 55-90% of the tufts on the DRY slot in the dry
+    // tint, and the dry slot's ground is itself sand-coloured — so on the one slope the
+    // blind judge called "bare terrain texture", the plants that were standing there had
+    // almost no hue or value contrast against the dirt behind them. Density was never going
+    // to fix that: an invisible plant at twice the count is still invisible. Cutting the
+    // floor to a third puts GREEN tussocks on the worn slope, which is also what the
+    // references show — a dry hillside is green clumps in ochre ground, not ochre in ochre.
+    dryOnDry: 0.42,  // floor on the dry share for tufts standing ON the dry slot
+    // ...AND CUTTING THAT SHARE ALONE MADE IT WORSE, which is the finding. A tuft takes its
+    // base colour from the COLOR_0 of the ground UNDER it (see texMean — deliberate, so the
+    // scatter is never a different green from its own ground). On the dry slot that base is
+    // sand, so a "not dry" tuft there is not green: it is PALE SAND, and dropping dryOnDry
+    // to 0.34 simply traded ochre-on-sand for sand-on-sand and the slope got fainter, not
+    // greener. Measured by eye at the closeup, and it is the same shape of error as r1's
+    // disconnected-knob list: the term I reached for was not wired to the thing I wanted.
+    // A worn slope needs plants that DISAGREE with it, so the non-dry share on dry ground is
+    // tinted green explicitly rather than inheriting the sand.
+    grassOnDry: [0.64, 1.04, 0.56],
 
     // ---- flowers -----------------------------------------------------------------
     // Three species, in PATCHES, biased to transitions. Never mid-lawn: a flower on open
     // ground is confetti, a flower at a path shoulder or a bush base is a plant.
+    // AND THEY DID NOT READ. r1 shipped them and the blind judge saw none, in either frame;
+    // MEASURED at the closeup camera, 793 heads existed in the disc and TWELVE were on
+    // screen. Two causes, both wiring: (1) `flPer` is a per-tuft probability, and tuft count
+    // grows with the ANNULUS AREA, so 62% of the heads landed 30-50 m out where a 6 cm head
+    // is 2 px — the population was real and spent almost entirely where it could not be
+    // seen; (2) the head is 4 triangles 6 cm across and `vs.set(1, fh, 1)` scaled only Y, so
+    // unlike a blade it got no size compensation at all. Flowers are pulled INWARD, made
+    // bigger, and given the same angular width floor the blades now get.
     flowers: 1.0,    // master scale, 0 = off
     flPatchM: 13.0,  // metres per flower-patch cell
-    flPatchT: 0.60,  // patch threshold — above this the patch may flower
-    flPer: 0.090,    // heads per m2 inside a patch at full density
+    flPatchT: 0.52,  // patch threshold — above this the patch may flower
+    flPer: 0.115,    // heads per tuft inside a patch at full density
+    flNear: 2.4,     // ...multiplied by up to this at the player and 1.0 at r1. THE ONE
+                     // TERM THAT MOVES THEM INTO THE PICTURE: without it the per-tuft
+                     // probability spends the whole budget on the far annulus.
     flFringe: 2.2,   // ...multiplied by this inside the fringe band
-    flH: 0.13,       // stem height
+    flH: 0.185,      // stem height — a head that does not clear the blades around it is a
+                     // head nobody sees, and hMax went up this round too
+    flW: 1.35,       // head width scale at r0, before the distance gain
 
     // ---- the bundle's own tufts ----------------------------------------------------
     // `ow_f2_tuft` is the pale spiked clump the critic was judging. It is a bundle asset
@@ -426,17 +512,29 @@
   // The occluder set is deliberately WIDE: road and dock path (the item the critic named),
   // water (a shoreline is a seam), terrain rock (a cliff foot is a seam), stone/planks/
   // plaster/tiles/tar (building footings), bark (tree feet) and bushcore (bush bases).
+  // `ow_f2_matte` IS THE HOUSE PADS, and its absence here was r1's unfringed-seam defect.
+  // MEASURED, not guessed: valley_build's `trodden_ring` lays its wear ring with class
+  // DIRT (valley_build.py:1076), and overworld3_build's class->material `group` map has no
+  // entry for DIRT, so it falls through `group.get(int(c), "matte")` to ow_f2_matte. The
+  // ring is therefore a 2 cm-proud disc of bare earth that the chamfer field could not see:
+  // every house pad was a hard polygon edge with no band on either side of it, which is
+  // exactly the "stamped decals with hard, unfringed seams" the blind judge named on five
+  // pads at once. A SEAM IS ONLY FINDABLE IF THE FIELD KNOWS BOTH SIDES OF IT.
   var OCC_MATS = ['ow_f2_road', 'ow_f2_dockpath', 'ow_f2_water', 'ow_f2_ter_rock',
                   'ow_f2_stone', 'ow_f2_planks', 'ow_f2_plaster', 'ow_f2_tiles',
-                  'ow_f2_tar', 'ow_f2_bark', 'ow_valley_bushcore'];
+                  'ow_f2_tar', 'ow_f2_bark', 'ow_valley_bushcore', 'ow_f2_matte'];
   // ...and the SUBSET a plant genuinely cannot grow through. THE TWO SETS ARE NOT THE SAME
   // AND CONFLATING THEM COST 68% OF THE FIELD: refusing a tuft in any occupied cell dropped
   // the closeup from 208 055 blades to 67 095, because `ow_f2_ter_rock` and the bush cores
   // are terrain SLOTS that interleave with turf across most of the meadow. A rock outcrop
   // is something grass grows AGAINST (so it must fringe) and also something grass grows
   // BETWEEN (so it must not refuse). A paved road is neither.
+  // ...and it is HARD too, because a trodden ring is trodden: valley_build's own docstring
+  // for it says "the grass stops a foot short of the wall and a few blades grow against the
+  // stone", which is a refusal plus a fringe plus strays — precisely this pair of sets.
   var HARD_MATS = ['ow_f2_road', 'ow_f2_dockpath', 'ow_f2_water', 'ow_f2_tar',
-                   'ow_f2_stone', 'ow_f2_planks', 'ow_f2_plaster', 'ow_f2_tiles'];
+                   'ow_f2_stone', 'ow_f2_planks', 'ow_f2_plaster', 'ow_f2_tiles',
+                   'ow_f2_matte'];
   // ow_f2_ter_dry IS DELIBERATELY NOT AN OCCLUDER, and the first build proved why: the dry
   // primitive is also a SOURCE, so marking it occupied put every dry cell at distance 0 from
   // a seam and gave the whole worn slope the fringe multiplier — a bleached straw carpet
@@ -565,13 +663,35 @@
     return (vhash(xi, zi) * (1 - u) + vhash(xi + 1, zi) * u) * (1 - v) +
            (vhash(xi, zi + 1) * (1 - u) + vhash(xi + 1, zi + 1) * u) * v;
   }
+  // THE NOISE LATTICE IS AXIS-ALIGNED AND THE TERRAIN GRID IS TOO, so a threshold on it
+  // produces blobs whose edges run along world x and z — and the blind judge read exactly
+  // that back as "a visible grid, even ranks". Value noise is bilinear over integer cells;
+  // nothing makes it isotropic. Rotating the SAMPLE DOMAIN by an angle that is no simple
+  // fraction of a turn costs two multiplies and takes the lattice off both the world axes
+  // and the road tangent, so a clump edge no longer agrees with anything else in the frame.
+  // Each octave gets its OWN angle, or the octaves re-align with each other at depth.
+  var RC1 = Math.cos(0.5473), RS1 = Math.sin(0.5473);     // ~31.4 deg
+  var RC2 = Math.cos(1.2971), RS2 = Math.sin(1.2971);     // ~74.3 deg
+  var RC3 = Math.cos(2.2419), RS3 = Math.sin(2.2419);     // ~128.4 deg
   function clumpAt(x, z) {
     var s = 1 / Math.max(0.5, P.clumpM);
-    return vnoise(x * s, z * s) * 0.68 + vnoise(x * s * 2.7 + 11.3, z * s * 2.7 - 4.1) * 0.32;
+    var xa = (x * RC1 - z * RS1) * s, za = (x * RS1 + z * RC1) * s;
+    var xb = (x * RC2 - z * RS2) * s * 2.7, zb = (x * RS2 + z * RC2) * s * 2.7;
+    // a THIRD octave, finer and weaker: two octaves threshold into blobs of one size and a
+    // field of one blob size is its own kind of regularity at a grazing angle.
+    var xc = (x * RC3 - z * RS3) * s * 6.1, zc = (x * RS3 + z * RC3) * s * 6.1;
+    return vnoise(xa, za) * 0.60 + vnoise(xb + 11.3, zb - 4.1) * 0.28 +
+           vnoise(xc + 5.9, zc + 27.7) * 0.12;
   }
   function patchAt(x, z) {
     var s = 1 / Math.max(0.5, P.flPatchM);
-    return vnoise(x * s + 71.7, z * s - 33.1);
+    return vnoise((x * RC2 - z * RS2) * s + 71.7, (x * RS2 + z * RC2) * s - 33.1);
+  }
+  // ...and the slot-blend field (see `wgt` in rebuild): its whole job is to disagree with
+  // the terrain's polygon edges, so it gets its own angle and its own scale.
+  function slotAt(x, z) {
+    var s = 1 / Math.max(0.5, P.slotM);
+    return vnoise((x * RC3 - z * RS3) * s + 43.1, (x * RS3 + z * RC3) * s + 19.7);
   }
 
   function rngAt(x, z) {
@@ -641,7 +761,7 @@
     for (var srci = 0; srci < SRCS.length; srci++) {
       var S = SRCS[srci], IDX = S.idx;
       if (!IDX) continue;
-      var dryW = S.def.dry, wgt = S.def.dry > 0 ? P.dryDens : S.def.w;
+      var dryW = S.def.dry, baseW = S.def.dry > 0 ? 1.0 : S.def.w;
       var COL = IDX.col, ix = IDX.ix, X = IDX.X, Y = IDX.Y, Z = IDX.Z;
       var TM = texMean(S.mesh.material) || [0.34, 0.34, 0.34];
       var c0 = IDX.CELL;
@@ -679,9 +799,23 @@
             // fringe multiplier — the first plate had grass growing out of the middle of
             // the path at 3.6x the meadow's density and it read as scattered straw. Only a
             // deliberate STRAY may cross, and it crosses by being pushed.
+            //
+            // ...BUT THIS TEST DECIDES THE COUNT ONLY, NOT WHERE THE EDGE IS. It is asked
+            // at the triangle's CENTROID, and the terrain's triangles are metres across, so
+            // as the sole test it resolved every road shoulder at TRIANGLE scale: a triangle
+            // whose centroid fell on the road contributed nothing at all, and one whose
+            // centroid fell beside it scattered blades right across the paving. That is a
+            // ~2.5 m ragged quantisation of the one edge the player stands closest to, and
+            // at the grazing camera it reads as the judge's "no geometry at its edges at
+            // all, just a brushed texture ramp". The refusal is repeated PER BLADE below,
+            // at 0.6 m, which is the grid's own resolution and the finest this can be.
             if (occHard(mx, mz)) continue;
             var fr = fd < P.fringeD ? (1 - fd / P.fringeD) : 0;
             var fk = 1 + P.fringeK * fr;
+            // the slot blend — see `slotBias`. Both slots span [dryDens, 1]; the noise, not
+            // the polygon, says where in that range this patch of ground sits.
+            var sv = slotAt(mx, mz) + (dryW > 0 ? -P.slotBias : P.slotBias);
+            var wgt = baseW * (P.dryDens + (1 - P.dryDens) * Math.max(0, Math.min(1, sv)));
             // ...and a slope term, because vegetation seen against a backdrop is what
             // serrates a silhouette, and slope is where that happens.
             var ck2 = 1 + P.crestK * Math.max(0, Math.min(1, (0.985 - IDX.ny[t]) / 0.30));
@@ -700,7 +834,7 @@
               // with its y taken from this triangle's PLANE rather than held constant — a
               // stray held at the old y floats on a slope, and a floating blade at 0.4 m is
               // exactly the seam artefact this is here to remove.
-              var isFringe = fr > 0, isStray = false;
+              var isStray = false;
               if (fr > P.strayFr && R() < P.stray && occGrad(bx, bz, gr)) {
                 isStray = true;
                 var push = fd + (0.15 + 0.85 * R()) * P.strayMax;
@@ -715,16 +849,33 @@
                 }
               }
               if (zone) { var zn = zone(bx, bz); if (zn === 'water') continue; }
+              // ---- THE SEAM, RESOLVED WHERE THE PLANT IS ------------------------------
+              // Two array reads, and they are what turn a triangle-scale shoulder into a
+              // 0.6 m one. A stray is exempt because a stray was PUT there on purpose —
+              // refusing it here would delete the only plants that cross the seam at all,
+              // which is the whole mechanism that stops a path edge being a line.
+              if (!isStray && occHard(bx, bz)) continue;
+              var frb = fr;
+              if (!isStray) {
+                var fdb = occD(bx, bz);
+                frb = fdb < P.fringeD ? (1 - fdb / P.fringeD) : 0;
+              }
               var dd = Math.hypot(bx - cx, bz - cz);
 
               // ---- the tuft's own identity, shared by its blades -----------------------
               var hBase = (P.hMin + Math.pow(R(), P.hPow) * (P.hMax - P.hMin)) *
                           (1 + P.grow * (dd / r1)) *
                           (1 - P.clumpH * 0.5 + P.clumpH * cl) *
-                          (1 + P.fringeH * fr) * (isStray ? P.strayH : 1);
+                          (1 + P.fringeH * frb) * (isStray ? P.strayH : 1);
+              // THE ANGULAR WIDTH FLOOR (see `wgrow`): the blade gets wider with distance so
+              // its apparent width holds, and this is the term that puts cover back on the
+              // 20-50 m hillside. It scales WIDTH ONLY — height already has `grow`, and
+              // widening a blade without lengthening it is what keeps a far clump reading as
+              // grass rather than as a shrub.
+              var wg = 1 + P.wgrow * Math.pow(Math.min(1, dd / r1), P.wgrowP);
               var dryP = Math.min(0.95, P.dryFrac * (dryW > 0 ? P.dryBias : 1) *
-                                        (1 + (P.dryBias - 1) * fr));
-              var isDry = dryW > 0 ? (R() < 0.55 + 0.45 * dryP) : (R() < dryP);
+                                        (1 + (P.dryBias - 1) * frb));
+              var isDry = dryW > 0 ? (R() < P.dryOnDry + (1 - P.dryOnDry) * dryP) : (R() < dryP);
               var dw = (1 - 0.7 * (dd / r1));
               var jv = P.jitV * dw, jh = P.jitH * dw;
               var tv = (1 - jv * 0.5) + R() * jv;
@@ -736,6 +887,7 @@
               var tg = cg * TM[1] * P.lift * tv * (1 - th * 0.55);
               var tb = cb * TM[2] * P.lift * tv * 0.98 * (1 - th * 0.9);
               if (isDry) { tr *= P.dryTint[0]; tg *= P.dryTint[1]; tb *= P.dryTint[2]; }
+              else if (dryW > 0) { tr *= P.grassOnDry[0]; tg *= P.grassOnDry[1]; tb *= P.grassOnDry[2]; }
 
               var nb = P.bptMin + ((R() * (P.bptMax - P.bptMin + 1)) | 0);
               nb = Math.max(2, Math.round(nb * (1 - P.farThin * (dd / r1))));
@@ -749,6 +901,7 @@
                 var kind = R() < P.seedFrac ? 2 : (R() < P.shortFrac ? 0 : 1);
                 var sj = 1 + (R() - 0.5) * 2 * P.sizeJit;
                 var h = hBase * (1 + (sj - 1) * 0.5);
+                var sw = sj * wg;                       // width carries the distance gain
                 q.setFromAxisAngle(up, R() * Math.PI * 2);
                 axis.set(Math.cos(R() * 6.283), 0, Math.sin(R() * 6.283));
                 // blades in one tuft lean OUTWARD from its centre as well as randomly —
@@ -756,7 +909,11 @@
                 lean.setFromAxisAngle(axis, (R() - 0.5) * P.lean + rad * 1.1);
                 q.multiply(lean);
                 vp.set(bx + ox, by - 0.015, bz + oz);
-                vs.set(sj, h, sj);
+                // X IS THE BLADE'S WIDTH AXIS AND Z IS ITS BEND (bladeGeo pushes +-tw on x
+                // and `bend*t*t` on z), so the gain goes on X ALONE. Putting it on Z as well
+                // multiplies the forward curve by the same 2.5x and lays every far blade
+                // flat on the ground — a wider blade, not a collapsed one.
+                vs.set(sw, h, sj);
                 m4.compose(vp, q, vs);
                 var MM = MB[kind], CC = MC[kind];
                 for (var e = 0; e < 16; e++) MM.push(m4.elements[e]);
@@ -772,14 +929,21 @@
               if (P.flowers > 0) {
                 var pv = patchAt(bx, bz);
                 if (pv > P.flPatchT) {
+                  // flNear: the per-tuft probability is spent where the flowers can be SEEN.
+                  // Tuft count grows as the annulus area, so a flat probability puts most of
+                  // the population past 30 m by arithmetic alone — which is what it did.
                   var pp = P.flPer * P.flowers * (pv - P.flPatchT) / (1 - P.flPatchT) *
-                           (1 + (P.flFringe - 1) * fr);
+                           (1 + (P.flFringe - 1) * frb) *
+                           (1 + (P.flNear - 1) * (1 - Math.min(1, dd / r1)));
                   if (R() < pp) {
                     var sp = FLOWER[(vhash(Math.floor(bx / 7), Math.floor(bz / 7)) * 3) | 0];
                     var fh = P.flH * (0.75 + 0.5 * R());
                     q.setFromAxisAngle(up, R() * Math.PI * 2);
                     vp.set(bx + (R() - 0.5) * 0.2, by - 0.01, bz + (R() - 0.5) * 0.2);
-                    vs.set(1, fh, 1);
+                    // the head gets the blades' angular floor too — r1 scaled Y only, so a
+                    // flower was the one thing in the frame with no size compensation at all.
+                    var fw = P.flW * wg;
+                    vs.set(fw, fh, fw);
                     m4.compose(vp, q, vs);
                     for (var e2 = 0; e2 < 16; e2++) FM.push(m4.elements[e2]);
                     var fj = 0.9 + 0.2 * R();

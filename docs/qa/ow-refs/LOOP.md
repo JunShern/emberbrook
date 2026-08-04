@@ -1850,3 +1850,113 @@ Asked by the coordinator after the tree lane solved `EXPOSURE = 0.80` against to
 Meadow crown box, current tree, my terms toggled live: all off **L50 0.592 / sat 0.296 / L95
 0.762**, shipped **0.604 / 0.295 / 0.771**. Translucency contributes +0.012 of L50; **the
 highlight desaturation never fires on it at all** at hiA 0.85. No reconcile needed.
+
+---
+
+## FOLIAGE ROUND 2 — the density never collapsed; one blade was thinner than one pixel
+
+Plates `f2-{closeup,meadow,gate,vista,gorge}.png`. A genuinely blind judge (anonymised
+frames, no labels, no history) ranked our new LOW camera **last of six** — *"essentially
+unfinished... the hillside is bare terrain texture with roughly eight isolated sprigs at
+regular spacing"* — while ranking the same build's MEADOW frame **above** the old build.
+The population treatment worked at boom 40 and collapsed at the grazing camera.
+
+### THE FALLOFF WAS NOT THE DEFECT, AND THE WIRE SAID SO BEFORE ANY CODE MOVED
+
+`scratchpad/f2/probe2.js`: 1 840 screen rays cast at the ground **in the running game** from
+the real closeup camera (measured at 7.25 m behind the player, 2.25 m above it, pitch 0.18),
+each hit re-evaluating the scatter's own `want` product term by term from the module's own
+live parameters. Per 10 m band of camera distance:
+
+| dCam | 0-10 | 10-20 | 20-30 | 30-40 | 40-50 | 50-60 |
+|---|---|---|---|---|---|---|
+| live roots/m2 | 3.49 | 8.12 | 4.38 | 4.52 | 4.52 | 5.87 |
+| mean spacing (m) | 0.63 | 0.41 | 0.62 | 0.56 | 0.63 | 0.48 |
+| blade height (px) | 28.1 | 19.6 | 11.2 | 7.9 | 6.6 | 5.5 |
+| **blade WIDTH (px)** | **5.11** | **3.52** | **1.94** | **1.33** | **1.08** | **0.87** |
+
+**Root density never collapses.** It holds at ~4.5/m2 and 0.6 m spacing across the entire
+failing band, and `fall` is only down to 0.56 at 40 m. 10 600 blade roots stood inside the
+region the judge called bare, and 21 775 were on screen. What collapses is **the width of one
+blade**: 3.6 cm of grass is 5.1 px at the player's feet and 1.1 px at 40 m, and a blade
+thinner than a pixel does not half-cover that pixel — it wins the sample or it vanishes. Past
+~30 m the whole population was rendering as an aliased stipple over the terrain texture.
+
+**A FIELD CAN BE FULLY POPULATED AND COMPLETELY INVISIBLE.** Every instrument this lane had
+counted plants; the judge was reading COVERAGE. Adding roots to a sub-pixel population buys
+nothing — the cheap fix the judge offered blind ("scatter the existing tuft asset with density
+from noise and slope") would have cost triangles and moved the picture barely at all.
+
+So the mid band is bought with coverage PER PLANT: `wgrow` widens a blade with distance so its
+apparent width holds near two pixels, paid for out of blade COUNT (`farThin` 0.62 -> 0.72).
+Ordinary grass LOD, and self-limiting — a blade at 60 m scaled 2.3x subtends the same two
+pixels a near blade does. The near field is untouched by construction (gain is 1 inside r0),
+so r3's "field of corn" cannot return through this door. **The gain goes on local X ALONE:**
+`bladeGeo` puts width on x and `bend*t*t` on z, so scaling both lays every far blade flat.
+
+### THE OTHER FOUR, EACH A WIRING FACT
+
+  * **THE RECTANGLE BOUNDARY IS A MATERIAL SLOT.** The terrain is ONE mesh with per-face
+    material slots (`overworld3_build.py:306`), so the grass/dry line is a chain of triangle
+    edges — dead straight, through open ground. r1 put a CONSTANT 0.48x density on the dry
+    slot, laying a 2x density step exactly along it. Both slots now draw their weight from the
+    same range and a rotated noise field (`slotAt`), not the polygon, says where in that range
+    a spot lands. **The slot still decides the TINT; it no longer decides the COUNT.**
+  * **THE PATH SHOULDER WAS QUANTISED TO A TRIANGLE.** `occHard` was asked once at the
+    triangle CENTROID, and terrain triangles are metres across: a triangle centred on the road
+    contributed nothing, one centred beside it scattered blades across the paving. That is a
+    ~2.5 m ragged edge on the one seam the player stands closest to. The refusal is now
+    repeated PER BLADE at the grid's own 0.6 m, with strays exempt.
+  * **THE HOUSE PADS WERE NOT IN THE CHAMFER FIELD AT ALL.** `trodden_ring` lays its wear ring
+    with class DIRT (`valley_build.py:1076`), and `overworld3_build`'s class->material map has
+    no DIRT entry, so it falls through `group.get(int(c), "matte")` to **`ow_f2_matte`** —
+    which was absent from `OCC_MATS`. Five pads, five hard unfringed seams, exactly as read
+    blind. Proof it is now wired: field triangles **74 150 -> 75 422 (+1 272, the matte count
+    to the triangle)**, hard cells 15 213 -> 15 377.
+  * **THE FLOWERS EXISTED AND WERE SPENT WHERE THEY COULD NOT BE SEEN.** 793 heads in the
+    disc, **12 on screen**. `flPer` is a per-tuft probability and tuft count grows as the
+    ANNULUS AREA, so 62% of them landed 30-50 m out where a 6 cm head is 2 px; and
+    `vs.set(1, fh, 1)` scaled Y only, so a flower was the one thing in the frame with no size
+    compensation at all. `flNear` pulls them in, and the head now takes the blades' width gain.
+
+### AND ONE KNOB THAT WAS NOT WIRED TO WHAT I WANTED — CAUGHT BY LOOKING
+
+The dry slope's plants were ochre on sand: no contrast, which is why they read as "bare
+terrain" even where they stood. I cut the dry share on the dry slot (`dryOnDry` 0.55 -> 0.34)
+and **the slope got fainter, not greener.** A tuft takes its base colour from the COLOR_0 of
+the ground UNDER it (deliberate — the scatter must never be a different green from its own
+ground), so on the dry slot a "not dry" tuft is not green, it is PALE SAND. I had traded
+ochre-on-sand for sand-on-sand. The fix is an explicit `grassOnDry` tint, so the worn slope
+carries plants that DISAGREE with it. **The proxy would have called the first version a
+success — only the picture said otherwise.**
+
+### A STALE BEFORE PLATE, FOR THE SECOND ROUND RUNNING
+
+The first f1-vs-f2 sheet showed the cliffs recoloured and a whole wooden scaffold appearing in
+the gorge. None of it was mine: `scene.glb` was rewritten at **12:41** and `f1-closeup.png`
+was shot at **12:01**. r1 wrote this rule down and this round still had to pay it once.
+The A/B below is r1's module against r2's module on **one tree**, captured by swapping
+`public/js/ow_detail.js` in place between two runs of the same spec.
+
+### COST (true A/B, same bundle, closeup camera)
+
+| | blades | scatter tris | draws | rebuild |
+|---|---|---|---|---|
+| r1 | 179 359 | 1 211 856 | 4 | 103.7 ms |
+| **r2** | **119 170** | **807 762** | **4** | **66.4 ms** |
+
+**-34% triangles and -36% rebuild time for more visible cover** — the width gain is paid for
+by `farThin`, and the per-blade `occHard` deletes the blades that were being drawn inside the
+road. Flowers 793 -> 1 264 heads. Gates: playthrough_test, slice_test (848), cine_test (689),
+findability_test (69/0), walk_engine_gate ow-valley.
+
+### STILL OPEN
+
+  * The near field still reads slightly broad ("corn") at the grazing camera — improved by the
+    height-distribution widening (`hPow` 1.85 -> 1.40, whose old mass sat on top of `hMin`)
+    but not solved.
+  * The judge's ceiling warning stands and is now measured from the inside: **one tuft asset
+    at one hue cannot carry a hillside.** The dry slope is carried by a tint multiplier on the
+    same three blade shapes. Two more ground assets and a real flower are the next honest step.
+  * `ow_f2_tuft` (bundle, not this lane's) is dithered out from 20 m and returns at FULL
+    strength beyond 66 m — so the far ridge is still carried by a regularly-placed asset.
