@@ -1937,3 +1937,122 @@ player-side evidence x3. Next lane's brief is wayfinding, not walk network: how 
 reads on screen (marker place vs the seam it names, the ramp's visual affordance, possibly a
 route_overlay hint). Repeated refutation at one location is itself an instrument reading —
 the one findability_test cannot take, because it teleports.
+
+## Round 11 — 2026-08-04 · the town had forty-two ways out and not one of them said which
+
+Three independent runs failed at the head-gate winches (PT-004 → harness marker-aim, fixed;
+PT-011/012 and PT-013, all reach-REFUTED). The walk network is proven clean twice over, so
+round 11's brief was WAYFINDING: how the way up reads on screen. The answer turned out to
+have nothing to do with the ramp and everything to do with the arrows above it.
+
+### The instrument — `tools/playtest/wayfind_probe.mjs`
+
+`marker_probe` answers "is the way onward marked, from here?" for the OVERWORLD and cannot
+be pointed at a pre-rendered town: there the camera is CINECAM's fixed shot, `del-cine`
+carries FIFTEEN of them, and the edges joining them are anonymous `cut` bands. So this is
+that probe re-aimed. At each of the three failing filings' OWN positions and shots (their
+`truth` blocks in `queue.json`), with their own flags AND their own beat ledger seeded — the
+ledger matters, `once` is gated on `GS.state.beats` and a run with an empty one is waiting on
+a different beat — it reads `#exit-markers`' own DOM, asks **`SIM.pick` at each marker's
+drawn pixel** what a player aiming there would actually hit, projects each edge's own `at`
+through the shot camera, and BFS's the shipped scenegraph for the true next hop.
+
+Two probe bugs paid for on the way, both worth the ink: `window.cam` and `window.SG` are
+**undefined** — play3d is a classic script, so its top-level `let`s live in the global
+LEXICAL scope and must be read bare and guarded (the first run reported "the edge has no
+position" for every edge in the town). And a backtick inside a comment **inside a template
+literal** ends the literal, which CLAUDE.md already warned about twice and which this lane
+paid for a third time.
+
+### What it measured (7 stations, `docs/qa/playtest/wayfind/`)
+
+| station (shot) | markers drawn | the ONE toward Lock Five | hops |
+|---|---|---|---|
+| cottage door (`cottage`) | 4 (3 red cuts + a door) | `cottage>cottage-steps` | 2 |
+| lockhead | 2, both red cuts | `lockhead>quay-west` | 3 |
+| quay deck (`quay-west`) | **6** (5 red cuts + a door) | `quay-west>weave` | 2 |
+| loop-stairs (PT-013's spot) | 3, all red cuts | `loop-stairs>quay-west` | 3 |
+| valley gate (PT-011/012's spot) | 3 | the gate stair | 6 |
+| weave | 3, all red cuts | `weave>lockfive` | 1 |
+
+**Every triangle is identical and none of them is named.** At the quay deck the right one
+draws at x 97 and a WRONG one (back to `lockhead`, away from the objective) at x 106 —
+**9 px apart**. The objective banner names a place; nothing on screen said which of six
+ways went there. That is the defect, and it is why three different players failed at one
+walkable spot.
+
+**And the arrows do not stand on their seams.** markersTick projects `at[1] + 2.1` and then
+lifts 30 px: measured here at **86–164 px, 0.12 to 0.23 of frame height, in EVERY shot** —
+not only the steep ones, which is a correction to this morning's note. `SIM.pick` at the
+marker's own drawn centre lands on **scenery for 12 of the 24 shown markers**:
+`cliff_town_back`, `shelf_home_a_5`, `ls_treads`, a station awning, `cx_rail`,
+`gate_barrier001`, `gate_arch001_1`, `lf_joists`, a cookhouse wall. The lift is deliberate
+FF7 grammar and reads correctly to a human as *pointing down at* the thing; it is left
+alone and recorded, because what was actually missing was a NAME.
+
+### The fix — `public/js/story_runtime.js`, not the marker layer
+
+The objective banner says WHERE. Nothing said WHICH WAY, and the banner is this module's,
+so the direction is this module's. It finds the beat the chapter is waiting on (eligible on
+its CONDITIONS, not on its place — that is the whole question), BFS's the shipped
+scenegraph from the shot you are standing in to the shot that beat names, and labels the
+ONE marker that starts that route.
+
+Three rules it keeps:
+
+1. **It decorates, it never draws.** The label is appended INSIDE markersTick's own marker
+   div, found by `data-edge` — the handle that layer already carries for `trigger_probe`. So
+   it inherits every gate that layer applies (sealed, denied, `camFrom`, frustum, UILOCK) and
+   is structurally incapable of naming a way the game is not offering. **No `play3d.html`
+   edit**, which is also why it landed in a module lane and not in the coordinator's queue.
+2. **It names the DESTINATION, not the hop.** At the quay deck the next hop is `weave`; the
+   label still reads "Lock Five", because that is what the banner says and making the two
+   match is the entire point. The string is the shot's own `name` out of the bundle's
+   `cine.json`, or the scene node's label — never invented here.
+3. **One marker, ever.** "A town of named doorways is noise" (markersTick's own ruling,
+   kept). Every other triangle stays bare, which is what makes this one mean something.
+
+Nodes in the BFS are `(scene, shot)` pairs, so ONE search answers both "which triangle in
+this town" and "which door out of it" — the corridor between the towns is the same graph.
+Conditional edges are evaluated with the game's own condition language, so a sealed gate is
+never routed through. `?nohint=1` disables it; `Story.wayhint()` is the instrument, and it
+distinguishes "no beat", "no route", and "route exists but its marker is not on screen from
+here" instead of collapsing all three into a null.
+
+### AND THE FIRST CUT SHIPPED IT AT 11 px, WHICH IS THE ROUND'S REAL LESSON
+
+The label was built at 11 px — the portal label's size, matched on purpose. Every gate was
+green: **7/7 probe stations, hint agreeing with the probe's own independent BFS, `shown` and
+`labelled` at all seven.** Then the receipt run (`run-20260804-204212`) walked straight past
+it. Step 2: the label is on screen, bottom-left, correct, naming Lock Five under the one
+arrow that leads there — and the agent's own stated goal is *"climb the stairs UP to the
+head-gate winches"*. It spent five legs stuck on the platform above and filed
+**PT-20260804-014, a fourth report at the same place.**
+
+**A GATE THAT PROVES THE LABEL IS PRESENT CANNOT PROVE THE LABEL IS READ.** Same family as
+Poppy behind her own canopy and as `walk_engine_gate`: `shown:true` and `labelled:true` were
+measurements of the DOM, and the question was about a picture. The frame was there to be
+looked at the whole time.
+
+So the label now wears the objective banner's own pill — same `#000c` fill, same `#3a2c20`
+border, same amber diamond, 13 px 700 — and the hinted arrow is scaled 1.3x. This game is
+played on a TV (memory: controller-agnostic, everything renders on the TV), where 11 px is
+not a label, it is a texture.
+
+### Gates
+
+`playthrough_test --port=3000` **86 / 0** (quiet machine, §W 21 pairs, 0 unreachable) ·
+`story_test` **1104 / 0** · `cine_test` **689 / 0** · `findability_test` **69 / 0** ·
+`percept_test` not run and not needed — the adapter was not touched, which is the point:
+the agent sees this the way a player does, in the screenshot.
+
+### Carried
+
+* **The lift is unfixed and now measured.** 0.12–0.23 of frame height everywhere, half the
+  markers resolving to scenery under a click. It is the marker layer's, and the marker layer
+  is `play3d.html`, which is coordinator-owned. The cheapest correct change if it is ever
+  taken: clamp the pixel lift so the arrow's tip stays within the seam's own projected
+  footprint, and re-shoot `wayfind_probe` — the `pick` column IS the before/after.
+* **PT-20260804-014** was filed against the 11 px cut and is superseded by the pill; it
+  should be re-tested, not triaged as a world defect. Its two predecessors at that platform
+  were already reach-REFUTED.
