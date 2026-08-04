@@ -316,6 +316,20 @@
     "vista"
    ],
    "verdict": "Fully blind judge on the merged build vs the old build vs both references. Net positive: the new meadow beats the old (blade cards vs sprigs; transparent water with a bed), the gorge is the project's best environment frame ('stilt-houses reading as small against the stratified cliff \u2014 composition wins'). ONE REGRESSION, decoded with care because the judge got the chronology backward while its per-image observations were all accurate: it blind-preferred the OLD chartreuse canopy ('lit, leaf clusters resolve') over the new dark one ('unlit dark-teal solid \u2014 reads as mossy stone'). The old brightness was the remap BUG (fixed R/B shift + 5x lift, removed in 00a9c94); removing it exposed that the canopy has no legitimate light of its own \u2014 EXPOSURE was solved against the lifted material. The closeup ranked LAST again (bald tan patch, cover gone past ~30 m). THE GAP QUESTION, answered: scatter and colour close in one round; the STRUCTURAL wall is that the references build vegetation from thin translucent cards while our bushes are opaque volumes \u2014 'you cannot light your way out of a closed convex hull' \u2014 plus wind. Round f4 is running: relight the canopy honestly, fix the closeup cull, prototype ONE card-built bush."
+  },
+  {
+   "n": 18,
+   "title": "FOLIAGE 4 \u2014 the light was solved against a bug, and the bald patch was never a cull",
+   "when": "2026-08-04 20:25",
+   "prefix": "f4",
+   "views": [
+    "meadow",
+    "gorge",
+    "gate",
+    "vista",
+    "closeup"
+   ],
+   "verdict": "The canopy's fix was a FLOOR lift, not gain: V95 was already in the reference band; V05 was a stop and a half low, and the core read darker than the cards once the remap stopped inflating it. Now 0.137/0.435/0.706 \u2014 leaf clusters resolve sunward, no chartreuse. Method note: swept LIVE (16 s/candidate) and predicted the 13-min rebuild to +/-0.004. The closeup's bald patch was never a distance cull: the dry slot's plants matched the ground in both value (L 0.607 vs 0.603) and hue \u2014 invisible by CONTRAST at full density. Improved, not solved. The cards-vs-volume A/B shipped (f4-cards-vs-volume.png): the volume bush is the brighter, wider-range object and the one that fails \u2014 the card conversion remains the named wall, prototype deferred. DoubleSide weed hypothesis refuted by toggle. Gates all green."
   }
  ]
 }
