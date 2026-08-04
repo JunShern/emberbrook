@@ -1817,3 +1817,36 @@ ow-valley` **GREEN (0 lost cells, BVH 0 FAIL)**.
     only one slot had plants on it. Raising the dry slope's density to 0.48x hides it; it is
     not solved.
   * Item 6's second tree species and the plateau scale ramp: NOT TRIED, ran out of round.
+
+### THE "VEGETATION IS NOT TAKING THE SUN" LEAD IS REFUTED AS A WIRING CLAIM — AND THE PICTURE IS STILL RIGHT
+
+A clean blind critique of the gorge frame called it the highest-value change in that shot:
+*"the big cast shadow crossing the lower meadow darkens the ground but NOT the bushes standing
+in it — the vegetation is not taking the sun at all."* **Checked before changing anything, and
+the wire is connected three ways** (`scratchpad/f1/spec-shadow.json`, gorge camera, the SAME
+pixels with `R.shadowMap.enabled` toggled):
+
+  * **The flags are all true.** play3d.html:2991 gives every mesh in the bundle
+    `castShadow = receiveShadow = true`; queried live, `ow_valley_bushcore`, `ow_valley_bushcard`,
+    `ow_f2_canopy` and `ow_f2_tuft` all come back `recv:true cast:true`, emissive `000000`,
+    emissiveIntensity 1. (The runtime scatter is `recv:true cast:false` — deliberate and
+    documented: 175k instances in the depth pass buys shadows nothing resolves at 3-8 px.)
+  * **Foliage moves MORE than the ground when the shadow map is removed**, not less: mean
+    |delta| **37.9/255 on green pixels against 14.2 on everything else**; green is 16.1% of the
+    frame and **27.2%** of the pixels the shadow map darkens.
+  * **The lit:shadow ratio is the same on both.** On the pixels the sun's shadow demonstrably
+    darkens: foliage **141.1 -> 60.1 (2.35)**, everything else **122.8 -> 50.8 (2.42)**.
+
+**The judge's perception is honest and its named mechanism is wrong.** What is missing is not
+the shadow the world casts ONTO a bush, it is the shadow a bush casts ON ITSELF: the cores'
+normals are blended toward the hemisphere so a bush has no lit side and no shade side, its base
+is not its darkest value, and it sits ON the terrain instead of into it. That is **item 5 of the
+foliage brief verbatim**, deferred this round because `tools/bushlang.py` was open in the TREE
+lane. Queue it there, not as a shadow flag.
+
+### AND THE SHARED MATERIAL DOES NOT MOVE THE HERO CANOPY
+
+Asked by the coordinator after the tree lane solved `EXPOSURE = 0.80` against today's material.
+Meadow crown box, current tree, my terms toggled live: all off **L50 0.592 / sat 0.296 / L95
+0.762**, shipped **0.604 / 0.295 / 0.771**. Translucency contributes +0.012 of L50; **the
+highlight desaturation never fires on it at all** at hiA 0.85. No reconcile needed.
