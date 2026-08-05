@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-05T10:28:51Z",
+ "generated": "2026-08-05T12:54:35Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -6712,7 +6712,7 @@
    "vTol": 2,
    "spawn": [
     -36.185,
-    23.294,
+    23.3,
     17.159
    ],
    "spawnYaw": 2.3232,
