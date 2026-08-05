@@ -4463,3 +4463,48 @@ legitimately hold there.
 * `tools/del_ladder_derate.py` — the carrier, with its own faithfulness gate.
 * `tools/playtest/fall_probe.mjs` — `--motor keys|tick`, §1 drive / §2 spray / §3 column /
   §4 fallback. Report: `docs/qa/playtest/round26/fall-probe.{txt,json}`.
+
+### ADDENDUM — the receipt run REPRODUCED the fall, three times, from one square metre
+
+`--from=ch2.lockfive --steps=100 --stop-beat=ch2.landing` (`run-20260805-134944`).
+
+**The ladder fix worked and the number says so.** Round 24 spent **22 of its first 24 steps**
+hunting for the way up. This run:
+
+| step | position | |
+|---|---|---|
+| 4 | `[71.43, 3.30, −27.77]` | the switchback's middle hairpin |
+| 5 | `[72.45, 7.87, −24.34]` | **on the weave tier — four steps, not twenty-four** |
+| 6 | `[73.89, 7.95, −23.20]` | one more, shot `crossing` |
+
+With the two false ladders gone the climb is found immediately and repeatedly (the agent
+made it up on steps 5, 22 and 36). **The findability half of round 25's order is closed.**
+
+**And then, every time, it falls off.** Three drops in one run, and their starting positions
+are IDENTICAL to the centimetre:
+
+    step  7:  [73.89, 7.95, -23.20] -> [76.86,  1.07, -26.26]   shot -> lockfive
+    step 24:  [73.89, 7.95, -23.20] -> [91.25, -0.21, -26.83]   shot -> north-landing
+    step 38:  [73.89, 7.95, -23.20] -> [76.89,  1.07, -26.24]   shot -> lockfive
+
+That is not a wandering accident, it is **one square metre of world**, and the run visits it
+by the same route each time: the `lockfive>weave` cut lands the player at `[72.452, 7.75,
+−24.338]` (the spawn, exactly), one leg walks 1.7 m north-east to `[73.89, 7.95, −23.20]`,
+and the leg after that ends at the waterline. So the loop is climb → cut → two metres →
+fall → climb again, which is why the run burned 100 steps without reaching `ch2.landing`.
+
+What is measured about that stand: `[73.89, −23.20]`'s walk column carries exactly one floor,
+**7.95 — the height the body is standing at**, so `sgPlace` settling there is a no-op and the
+drop is NOT the settle at the stand itself. Both landings are heights their own columns' walk
+floors do not carry (`[76.86, −26.26]` carries only 5.60; the round-24 landing `[74.05,
+−23.98]` carries only 7.68). **Every landing in both runs is a height the walk network does
+not have and the COLLISION set does** — which is the signature of the two code paths that
+consult `floors()` instead of `walkFloors()`: `sgPlace`'s fallback (live only when `walkRef`
+is empty) and `walkStep`'s non-WALKLOCK branch (live only when `WALKLOCK` is false). Neither
+should be reachable in `del-cine`. **Naming which one needs a `P.y`-per-tick log across the
+transition from inside play3d, which is a coordinator edit; the probe is in place to take it.**
+
+**THE RECEIPT IS RED, and it is red on ONE defect rather than two.** `ch2.landing` did not
+fire. The blocker is no longer "the player cannot find the way up" — it is "the player is
+thrown off the tier two metres after arriving on it", from a coordinate this round can hand
+over. That is the whole of what stands between `ch2.lockfive` and the end card.
