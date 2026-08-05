@@ -66,6 +66,8 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 10 | PT-20260804-004 | P1 | Character stuck on wooden platform, cannot reach objective markers | **REFUTED against the game · VERIFIED against the harness** — the world is open (`SIM.move` crosses to the seam in 46 ticks; the agent itself was two levels down one step later), but every failed leg aimed at a **cliff face 7 m past the deck**, because an exit marker is drawn 2.1 m above the ground it names and the executor ray-marched the arrow's pixel | a pixel on an exit arrow resolves to that edge's own `at`; and in a walk-network scene a ray that never crosses the network is refused instead of walked at — re-run `run-20260804-112506`: off-network legs **14 → 0**, median leg closed **0.11 → 0.63**, zero verified blockers | this commit |
 | 10 | PT-20260804-003 | P1 | Character cannot navigate up the stairs from the middle walkway | **REFUTED** (triage, round 10) — reachable, 4.7 m, 325 cells, via 2 in-scene edges; the agent climbed those stairs later in the same run | same root cause as -004 | — |
 | 14 | PT-20260805-006 | P1 | Cannot walk to the head-gate winches at Lock Five | **VERIFIED — and filed from 70 m away.** The objective named `the head-gate winches`; Dellhollow's head gate is the VALLEY GATE at the dam (`winch-head`/`winch-foot`, x≈20), Lock Five is x≈87. The agent spawned 2 hops / 7.2 m from the goal and spent 45 of 60 steps at the wrong landmark, with the correct amber `Lock Five` caption drawn on screen the whole time | the objective carries a bearing instead of a decoy noun; re-run fired **`ch2.winches` at step 5** and the Ch2 card at step 8 | `459f861` |
+| 18 | (round 17's open item) | P1 | `ch1.see.mochi` never fires — the last beat between a NEW GAME and the Old Gate | **VERIFIED as LEGIBILITY, REFUTED as world** — `_court_probe --way` drives the whole road to the cat 10/10 legs both ways; the frame shows TWO identical red arrows at `therise`, the labelled one at (669,475) and the anonymous one at (674,225), and the agent took the anonymous one on **20 of 31 legs**, 87 shot changes in 150 steps | rivals demoted to opacity .34 while a beat hint is live; the objective names the Waystone instead of "north" | `b8b6f12` |
+| 18 | PT-20260805-011 / -012 | P1 | The well cuts the square in half (carried, round 17) | **RE-MEASURED — it is a 3.8 m BAR, not a 3.6×2.7 island, and only ~1.2 m of it is the well.** `--who`: 351 clear, 6 blocked (a lamp post); nothing blocks, floor is MISSING. The bar's west half belongs to no landmark | **NOT FIXED and no `walkStep` diff prepared — a slide cannot manufacture floor.** The number is in `emb_blockout.py`, not the map; the fix is a builder change to the area-floor cut | — |
 | 14 | PT-20260805-004 | P1 | One-way lip at `[57.74, 15.30, −11.24]` (carried, round 13) | **VERIFIED, and round 13's "one map line" REFUTED by arithmetic.** New `_court_probe --stand` census: **16 of 17 stairs landings in `del-cine` are roofed by their own flight, 30–52% of each**; clearing the body band needs `step ≤ 0.29`, which needs a leg descending under 0.87 m — no waypoint in the map can make one | **NOT FIXED — filed as the build lane it is** (tread-top convention + `walk_rederive`×6 + `ls_build` + `cine_solve` + plates) | `f3f3f39` (instrument) |
 
 ## Rounds
@@ -2973,3 +2975,133 @@ could not reproduce it, which is right — but it drove the pair the agent's las
 happened to carry (`[59.25, −12.51] → [58.78, −15.32]`, the `therise` seam), not the
 northlane wall this round actually fixed. The receipt for that fix is the four `--way`
 lines and the marker's own `SIM.pick`, above; the queue badge is not evidence for it.
+
+## Round 18 — 2026-08-05 · `ch1.see.mochi`: two identical red arrows, and the label lost to screen position
+
+Round 17 shipped `beatCam()` and proved it labels the right seam. `ch1.see.mochi` still
+never fired. Round 17's own note said the residual cause was unknown, and named three
+suspects — trigger radius, the cat's post, `Npc.hide`. **It was none of them, and it was
+not the world either.**
+
+### FIRST, THE WORLD WAS RULED OUT — 12/12 LEGS
+
+Before touching anything, `_court_probe --way` in `emb-cine` drove the whole road the
+beat needs, forwards and backwards:
+
+| segment | legs |
+|---|---|
+| `square [60.4, −42.4] → therise seam → [58.9, −24.0]` | see below |
+| `therise spawn [58.04, −28.04] → [58.78, −15.32]` (the arch seam) | **4/4 both ways** |
+| `arch spawn [59.25, −12.51] → waystone seam → the cat's post [56.6, 12.2]` | **6/6 both ways** |
+
+So the road from the north end of Festival Square to Mochi is open in both directions and
+the cat's trigger is standable. One waypoint of my own DID stall — driving due north from
+Rowan's post at `[60.4, −42.4]` — and the grid says why, honestly: the festival dais cuts
+`x 58.4..62.4, z −39.0..−41.8` out of the plaza floor, so straight north from Rowan is
+into the dais and the way round it is 0.4 m west. That is a prop doing its job, and
+recorded here only so the next reader does not re-file it.
+
+### THE CAUSE IS ONE FRAME, AND IT IS A LEGIBILITY BUG
+
+`docs/qa/playtest/runs/run-20260805-040031/frames/step-130.jpg`, opened. The player is on
+the north road at `therise`. There are TWO red triangles on screen:
+
+| marker | drawn at | labelled |
+|---|---|---|
+| `therise>arch` — the way to the cat | **(669, 475)**, lower centre | `◆ The Waystone` |
+| `therise>square` — the way back | **(674, 225)**, upper centre | *nothing* |
+
+The `therise` camera looks back SOUTH over the square, so the road onward is at the bottom
+of the frame and the road back is at the top. `markersTick` labels PORTALS only — a
+camera-boundary cut is anonymous by construction — so the beat hint dressed one of two
+otherwise identical glyphs, and the other one had the composition.
+
+The run log says exactly what the agent did with that:
+
+* **87 shot changes in 150 steps**; 33 stops at the `therise` spawn `[58.04, −28.04]` and
+  22 at the `square` spawn `[60.57, −32.98]` — the two sides of ONE seam, 5 m apart;
+* of **31 legs launched from the `therise` spawn, 20 aimed at the square seam** (`ny`
+  0.32–0.35, target `[59.27, 0.95, −30.45]`), i.e. back the way it came;
+* from `square` it then aimed north correctly, re-crossed, and repeated.
+
+Its own words, step 122: *"a red marker pointing at a spot in the midground **and another
+red marker for 'The Waystone' lower down**"* — it saw the label, named it, and took the
+other one. Step 134 is worse and more useful: *"a red marker pointing down at a small
+figure … with 'The Waystone' marker below it"* — the objective said *the cat*, so an
+anonymous arrow up-screen read as **an arrow over the cat**.
+
+**A LABEL DOES NOT BEAT A COMPOSITION.** Round 14 and round 16 both ended "a wayfinder
+cannot out-argue an objective"; this is the same sentence one layer down — a wayfinder
+cannot out-argue an identical unlabelled rival drawn nearer the centre of the frame.
+
+### THE FIX — DEMOTE THE RIVALS, AND STOP USING A COMPASS WORD
+
+`story_runtime.dimRivals()`: while a beat hint is live, every OTHER marker in the shot
+drops to `opacity .34` and its triangle to `scale .78`. Still drawn — a player may always
+choose to leave — plainly secondary. **Opacity and scale only**, on nodes `markersTick`
+pools and thereafter rewrites `transform` and `display` for and nothing else, which is the
+same contract the existing `scale = 1.3` has relied on since round 15; every node touched
+is remembered so the demotion is exactly reversible. No `play3d.html` edit.
+
+And the objective stops naming a direction for the THIRD round running:
+`the cat back up the north road` → **`the cat out at the Waystone`**, which is the shot's
+own authored name and therefore the same string the arrow carries. Objective and arrow now
+say one thing. (Five identical fragments in `story.json`, one edit.)
+
+**RECEIPT**, `wayfind_probe --from ch1.see.mochi` at the two ping-pong stations —
+`story_test` 1112/0, `percept_test` 444/444:
+
+| station | objective on screen | hint | hops |
+|---|---|---|---|
+| `therise` `[58.04, −28.04]` | `◆ See to them (Finn ✓) — the cat out at the Waystone` | **`The Waystone`**, `shown=true labelled=true` | 2 |
+| `square` `[60.57, −32.98]` | same | **`The Waystone`** | 3 |
+
+and the frames, opened: at `therise` the rival at (674, 225) is now a small dim triangle
+against the labelled arrow; at `square` the three doors and four rival cuts read as
+background while `◆ The Waystone` sits alone at the top of the road. Commit `b8b6f12`.
+
+### PT-20260805-011 / -012 RE-MEASURED — IT IS NOT THE WELL, AND A SLIDE CANNOT FIX IT
+
+Round 17 called this "Festival Square's own well cuts a 3.6 × 2.7 m no-walk island" and
+offered two fixes: the well's prop footprint, or a `walkStep` slide. Re-measured tonight at
+step 0.3 over `x 52..62, z −49..−43`, **both halves of that are wrong**:
+
+    -44.5 llllllllllllllllllvlllllllllllllll     v = ground you can SEE and cannot STAND on
+    -44.8 lllllllvvvlllvvvvvvlllllllllllllll
+    -45.1 lllllllvvvvvvvvvvvvlllllllllllllll   <- x 54.1 .. 57.9, a 3.8 m BAR, not an island
+    -45.4 lllllllvvvvvvvvvvvvvllllllllllllll
+    -45.7 lllllllllllvvvvvvvvvllllllllllllll
+    -46.0 lllllllllllvvvvvvvvvllllllllllllll   <- the WELL's own cut, x 55.3 .. 57.7
+    -46.3 lllllllllllvvvvvvvvvllllllllllllll
+    -46.6 lllllllllllvvvvvvvvvllllllllllllll
+    -46.9 lllllllllllvvvvvvvvvllllllllllllll
+    -47.2 lllllllllllllvvvvlllllllllllllllll
+    -47.5 llllllllllllllllllllllllllllllllll
+
+1. **It is not an island, it is a BAR**, and it is two cuts fused. The well's own cut is
+   `x 55.3..57.7, z −45.7..−47.2` — consistent with `emb_blockout.py`'s hardcoded
+   `("well" in nm) -> (2.5, 2.5)` plus the 0.28 pad. The bar's WEST HALF, `x 54.1..54.9`
+   at `z −44.8..−45.4`, is **outside** that cut and belongs to no landmark: the nearest is
+   the well itself at 2.0 m and `poppy-stall` at 4.5 m. So shrinking the well's footprint
+   to its true ring (the same file masses it as `disc(..., r 1.0)` — a 0.5 m over-report)
+   would open about 0.25 m per side and **would not open the bar**. `--who` over the whole
+   region: **351 cells clear, 6 blocked**, all six `emb_lamp_09_bakery_post`. Nothing is
+   blocking; floor is MISSING.
+2. **A `walkStep` slide cannot fix it and no diff is prepared.** The run's own legs already
+   show `slides 2–5`, so the body is sliding and returning. A slide moves a body ALONG an
+   obstacle; here there is 3.8 m of absent walk mesh with open floor 0.6 m beyond it, and
+   no step rule can manufacture a surface. `_court_probe --at` is the proof: on an `l` cell
+   there are two floors, `y 1.38` (the plate's ground) and `y 1.36` (the walk tile); on a
+   `v` cell there is only `y 1.38`.
+
+**AND THE MAP CANNOT CARRY THE FIX EITHER.** `emberbrook.map.json`'s `well` landmark has no
+`footprint` field — the number is in `emb_blockout.py`, and that builder regenerates the
+whole 2320-object master in one pass, which owes a dressing re-run, an `emb_decimate --save`
+and a plate re-bake. That is the trade CLAUDE.md refuses in front of a receipt run, and it
+is why `emb_lanepatch.py` exists. **NOT BUILT TONIGHT, deliberately**, and the reason is
+recorded so the build lane does not start from the wrong sentence: the ticket is *"the
+square's area-floor cut leaves a 3.8 m bar north of the well, and only ~1.2 m of it is the
+well"*, not *"the well's footprint is too big"*. Note also that the shared `foot_rect` is
+what every clearance search tests against, where over-reporting is protective — the
+market-row redline's own lesson — so the cut and the placement rects must be separated
+first, exactly as `foot_rects_cut()` already did for the stalls.
