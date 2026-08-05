@@ -2651,13 +2651,46 @@ def build_props(col, F, zg, fr):
               for dx_, dy_ in ((-s, -s), (s, -s), (s, s), (-s, s))]
         if max(ca) - min(ca) > 1.7:
             continue
-        p.ico(ROCK, (bx, by, min(ca) + s * 0.10), (s * 1.15, s * 0.86, s * 0.70),
-              subd=1, rz=rng.uniform(0, 6.28))
+        # R24 THE SILHOUETTE ROUND — `subd` IS BLENDER'S, AND subd=1 IS THE BARE
+        # ICOSAHEDRON.  bmesh.ops.create_icosphere(subdivisions=1) is 20 faces, so
+        # every outcrop in this region silhouetted on ~6 straight segments: the same
+        # hexagon defect f4c named on veg_land_clumps, on the object standing next
+        # to it.  Measured before it was touched: props_valley was 956 tris for a
+        # 36-tri waystone and 46 outcrops = 20 tris each.
+        ctr = Vector((bx, by, min(ca) + s * 0.10))
+        p.ico(ROCK, ctr, (s * 1.15, s * 0.86, s * 0.70),
+              subd=2, rz=rng.uniform(0, 6.28))
+        # THE PHASES COME OFF `rng` AND THE GRAIN DOES NOT, and that split is the
+        # whole reason this is shaped the way it is.  The old jitter drew from `rng`
+        # once per VERTEX-FACE INCIDENCE, so the number of draws an outcrop consumed
+        # was a function of its face count — changing `subd` shifted the stream and
+        # re-scattered every outcrop after it, which is the trap _clump_geo already
+        # paid for.  Six phase draws is a FIXED cost per outcrop whatever the
+        # subdivision, and the grain runs on its own per-outcrop stream, so the next
+        # person to move `subd` moves resolution and nothing else.
+        ph = [rng.uniform(0, 6.28) for _ in range(6)]
+        jr = random.Random(4242 * 7919 + n)
+        # LOW-ORDER HARMONICS, then a little grain — bushlang's ladder, the in-repo
+        # pattern.  Subdivision alone buys a rounder hull and a hull is what a
+        # boulder must NOT be; the harmonic is what makes the outline non-convex.
+        # The grain stays small on purpose: per-vertex noise at 42 verts is
+        # high-frequency, and at the old amplitude it reads as crumpled foil rather
+        # than as rock.
+        newv = set()
         for f in p.bm.faces:
             if f not in before:
-                for v in f.verts:
-                    v.co += Vector((rng.uniform(-.13, .13), rng.uniform(-.13, .13),
-                                    rng.uniform(-.10, .10))) * s
+                newv.update(f.verts)
+        for v in newv:
+            d = v.co - ctr
+            if d.length < 1e-6:
+                continue
+            nrm = d.normalized()
+            k = (0.30 * math.sin(2.7 * nrm.x + ph[0]) * math.sin(2.2 * nrm.y + ph[1])
+                 + 0.17 * math.sin(3.9 * nrm.y + ph[2]) * math.sin(3.3 * nrm.z + ph[3])
+                 + 0.09 * math.sin(6.9 * nrm.x + ph[4]) * math.sin(5.9 * nrm.z + ph[5]))
+            v.co = ctr + d * max(0.55, 1.0 + k) + Vector(
+                (jr.uniform(-.05, .05), jr.uniform(-.05, .05),
+                 jr.uniform(-.04, .04))) * s
         n += 1
     STATS["outcrops"] = n
     return p.finish(col)
