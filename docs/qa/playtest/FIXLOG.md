@@ -70,6 +70,7 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 18 | PT-20260805-011 / -012 | P1 | The well cuts the square in half (carried, round 17) | **RE-MEASURED — it is a 3.8 m BAR, not a 3.6×2.7 island, and only ~1.2 m of it is the well.** `--who`: 351 clear, 6 blocked (a lamp post); nothing blocks, floor is MISSING. The bar's west half belongs to no landmark | **NOT FIXED and no `walkStep` diff prepared — a slide cannot manufacture floor.** The number is in `emb_blockout.py`, not the map; the fix is a builder change to the area-floor cut | — |
 | 14 | PT-20260805-004 | P1 | One-way lip at `[57.74, 15.30, −11.24]` (carried, round 13) | **VERIFIED, and round 13's "one map line" REFUTED by arithmetic.** New `_court_probe --stand` census: **16 of 17 stairs landings in `del-cine` are roofed by their own flight, 30–52% of each**; clearing the body band needs `step ≤ 0.29`, which needs a leg descending under 0.87 m — no waypoint in the map can make one | **NOT FIXED — filed as the build lane it is** (tread-top convention + `walk_rederive`×6 + `ls_build` + `cine_solve` + plates) | `f3f3f39` (instrument) |
 | 19 | PT-20260805-014 / -015 / -016 / -017 / -018 / -019 | P1 | Cannot reach / nothing happens at The Lockhead (SIX filings, ONE arrow) | **VERIFIED as LEGIBILITY, REFUTED as routing.** The hint is live, labelled and metre-correct at all seven Dellhollow stations; the arrow itself was drawn 96.9 px above its seam and `SIM.pick` at its own pixel landed on `cliff_town_back` **31.4 m away, 70 m behind the town**. Across 24 markers, 5/24 landed within 3 m of the seam they name; at a 20 px cap, 19/24 | the routed marker is clamped to a 20 px screen lift in `story_runtime` (`clampLift`); the general `markersTick` cap is a prepared diff for the coordinator | `e7bdee4` |
+| 20 | PT-20260805-022 / -023 / -024 / -025 / -026 | P1 | Cannot reach the girl at the lock apron (FIVE filings, 46 of 120 steps) | **VERIFIED as world — and the ticket named the wrong 8 metres.** The agent was not short of a surface; it was standing IN one. `[72.07, 1.25, −28.43]` is the moorage's WEST STORE footprint rect, a 3.0 m2 raft with a legal 0.79 m step DOWN in and 0.16 m past `STEP_UP` back out, `walk_pad_tenant-shack`'s slab 20 mm inside the body window, and 2.46 m of open water east. `--comp` measured it at **10 cells** | the moorage's missing second connective landing: `tools/moorage_westlink.py` plank-links the two decks and the footprint gains four measured-landed rects. **10 cells → 643; `reach_probe` west-store→Maren `ok=true`** | this commit |
 
 ## Rounds
 
@@ -3351,3 +3352,118 @@ gate that projects Maren's body into the `lockfive` band would have caught the s
 **BUDGET, flagged as required: $0.532 for the receipt run**, plus ~$0.10 wasted on a
 `--help` that is not a flag — `llm_playtester` has no help path, so `--help` **started a real
 NEW GAME run** and it had to be killed at step 22. Round total ≈ **$0.63**.
+
+## Round 20 — 2026-08-05 · the eight metres were not missing, they were a pit
+
+Round 19's ticket read: *"the lock apron's walk surface ends 0.5 m east of `[72.05, 1.25, −28.4]`
+and Maren's post is on a platform 1.1 m above it."* The first half is true and the second half is
+not, and neither is the diagnosis. **Maren stands at `[79.70, 0.83, −27.13]` — 0.42 m BELOW the
+body that could not reach her, not 1.1 m above** (the `y 2.34` in that ticket is
+`walk_e_weave-huts__moorage_l2_t03`, a stair tread, read off an `--at` column three metres away).
+And nothing is *missing* at `[72.5…74.5, −28.4]`: the map has never claimed a surface there. It is
+open water — `t2w_shelf_lockfive` at −0.35 under `water_pool-mid` at 0.20.
+
+### What the agent was actually standing on
+
+`walk_lm_moorage`'s SECOND footprint rect, `[70.9, 71.9, 26.2, 29.2]` — `lf_stage_moorage_w`, the
+moorage's 1.0 × 3.0 m **west store**. It is a ONE-WAY PIT, and every side is a different refusal:
+
+| leaving the west store, deck top **1.199** | `_court_probe --way` (SIM.move) / `--at` |
+|---|---|
+| north, x ≤ 71.3, up to `walk_pad_tenant-shack` (top 2.04) | **STALLS.** The step is 0.79 m: legal DOWN (`STEP_DN` 0.80), 0.16 m past `STEP_UP` 0.63 coming back. And the pad's own 1.92–2.04 slab sits **20 mm** inside the body's blocking window over a 1.199 floor (`[1.85, 2.50]`) |
+| north, x 71.5…71.9 | **STALLS** — `cx_mr_slabs001_1`, `cx_rail` (the moorage stair's structure) |
+| east | **STALLS at x 72.05** — 2.46 m of open water |
+| in, from the shack pad | **3/3 legs.** The way in works |
+
+`--comp` from `[72.05, 1.25, −28.4]`, box `x 44..92`: **10 cells**, unchanged when the box was
+widened to the whole waterfront. In `ch2-arrive-receipt/run.jsonl` the agent stepped down at step
+75 and was still there at step 120 — **46 of 120 steps, x 70.76..72.08, y 1.25 in every frame**.
+
+**THE MAP'S OWN NOTE PREDICTED THIS AND IT WAS READ AS DONE.** The 2026-08-01 stilt-waterfront
+ruling measured the same thing: *"after the stamp … `walk_lm_moorage` kept only its 3.0 m2
+west-store rect"* — i.e. the west store was the island. `waterfront_landings.py` then built the
+moorage a connective pier and the note was closed. But that tool's `connective_rect` runs 2.0 m
+about `pos` and **the west store is not in that column**, so it built the pier from `pos` to the
+main staging and the one rect the ruling had already called an island stayed one, for four days.
+A CONNECTIVE LANDING PER LANDMARK IS ONE LANDING; A FOOTPRINT WITH THREE RECTS CAN NEED TWO.
+
+### The second defect, measured in the same pass and NOT fixed
+
+`walk_e_moorage__tenant-shack_l0` — the waterfront's declared route to the moorage — **is a walk
+ribbon over open water for x ≈ 72.2…74.7**, and it is roofed where it is not. Its floor and the
+first render-visible art under it, at z −27.0: `x 73.9 → walk 1.31, art none`; `x 74.3 → walk 1.23,
+art none`; `x 74.7 → walk 1.16, art none`; `x 75.1 → walk 1.25, art 1.20`. Driven at four
+latitudes (z −26.4, −26.6, −26.8, −27.2) it stalls eastbound at **x 73.4–73.5** every time and
+westbound at 75.8–76.9, and `--at` names the blocker: `walk_e_weave-huts__moorage_l2_t02/t03`, the
+stair's lowest flight, whose undersides (2.55 / 2.20 / 1.86) sit in the body window over a 1.2–1.4
+floor. **This is round 12's carried item, still true and still a build** — the stair foot and that
+lane want the same two metres of air, and no waypoint moves either without moving the other.
+Round 12's own sentence stands: *"it is a build, not a waypoint."*
+
+### SHIPPED: `tools/moorage_westlink.py` — the missing second landing
+
+Additive, revertible, `mwl_*` only, on `emb_lanepatch`'s rule (`waterfront_landings --build`
+deletes and rebuilds all four landings and destructively cuts rail faces; the master has moved a
+long way since it last ran, so it is not a tool to re-run at 3 a.m.).
+
+**EVERY NUMBER MEASURED.** A 0.02 m ray scan along the run found the two bank edges and their tops —
+**west x 72.26 top 1.199, east x 74.72 top 1.199, gap 2.46 m** — and the build refuses if the two
+banks differ by more than 0.10 m, because a link is a link and a ramp is a different object. Deck
+height and material are read off the bank it continues (`lf_planking`, `mat_deck`).
+
+**AND THE PAD'S SHAPE IS A MEASUREMENT, NOT A TASTE.** A 0.15 m occupancy scan of the body window
+(1.85–2.50 over a 1.199 floor) over the whole area finds exactly two obstructions, **at opposite
+corners**: the stair's `l2_t03`/`l2_t04` undersides fill x 74.30–75.50 for y ≤ 28.50 (north-EAST),
+and `lf_railings` — the west store's own guard — fills a diagonal x 71.00–71.45 for y 28.95–29.55
+(south-WEST). Of the six `l2` treads only those two are in that window at all: t02's underside is
+2.55 (clears by 50 mm) and t05's TOP is 1.66 (under it). **The widest single rectangle that misses
+both corners is 0.15 m wide**, so the footprint gains FOUR overlapping rects — a north band out of
+the store, a wide middle, and two that step south under the stair — and `town_blockout` joins them
+into one `walk_lm_moorage`.
+
+`bar_*` rails are deliberately NOT counted: `cine_bake --glb` drops them (**0 `bar_` nodes in the
+shipped bundle**), so a rail that exists only in the master is not a wall the player meets. That
+difference had never been written down anywhere.
+
+Carried the doctrine way: map → `town_blockout` → `walk_rederive --lm moorage` → `cine_solve` →
+`routes_derive` + `scenegraph_derive` → `cine_bake --glb` → plates.
+
+### RECEIPT
+
+| | before | after |
+|---|---|---|
+| `--comp` from the west store, box x 44..92 | **10 cells** | **643 cells** |
+| `reach_probe` west-store → Maren | (island) | **`ok=true`, 201 cells** |
+| `reach_probe` fish-dock → Maren | — | **`ok=true`, 967 cells, 1 in-scene edge** |
+| `reach_probe` shack pad → Maren | — | **`ok=true`, 381 cells** |
+| `SIM.move` west store → Maren, 4 legs | **1/5, stalled at [72.05, 1.25, −28.34]** | **4/4, ends [79.21, 0.87, −27.38]** |
+| `SIM.move` Maren → west store, 5 legs | — | **5/5, no stall** |
+| `walk_engine_gate --scene del-cine` | GREEN, 807.0 m2 | **GREEN, 812.4 m2, 4012/4012 cells, BVH FAIL 0** |
+| `story_test` | 1112/0 | **1112/0** |
+| `findability_test` | 69/0 | **69/0** |
+| `routes_derive --check` | — | **up to date, 16 shots** |
+| `scenegraph_derive` arrivals | — | **15/15 arrivals clear every cut band** |
+
+**THE CORRIDOR IS AN S-BEND AND THAT IS THE GEOMETRY, NOT A DEFECT**: the rail forces the west end
+north, the stair's foot forces the east end south. A drive pushed straight at Maren still stops on
+the north lip at `[73.33, 1.25, −27.78]`; one waypoint south of the stair and it is 4/4. `walkStep`
+slides (`[dx,dz] → [dx,0] → [0,dz]`), which is why the fill joins and the pairs read `ok`.
+
+### PLATES
+
+`cine_solve` moved exactly one camera — `lockfive`, **pos 0.015 m, aim 0.016 m** — and `cine_test`
+caught it as its own single failure (`the BAKED camera is the SOLVED camera`). Which plates the new
+deck is actually IN was measured rather than guessed: 45 samples over the deck, frustum-tested and
+then ray-cast against render-visible geometry only (`walk_`/`bar_`/hidden skipped, which is the bug
+in the first version of that probe — it reported `walk_lm_moorage` as an occluder).
+
+| camera | in frustum | render-visible | distance |
+|---|---|---|---|
+| `lockfive` | 45/45 | 27 | 24.8 m |
+| `north-landing` | 45/45 | 38 | 47.8 m |
+| `weave` | 30/45 | 27 | 38.2 m |
+| `fishdock` | 36/45 | 27 | 37.5 m |
+| `cottage-steps` | 14/45 | 7 | 31.5 m |
+| `gate` | 45/45 | 12 | 99.1 m |
+
+All six re-baked; the other ten are untouched, which is what `--cams` is for.

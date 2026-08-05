@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-04T23:35:00Z",
+ "generated": "2026-08-05T06:57:11Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -7183,7 +7183,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.068,
+       0.069,
        -0.157
       ],
       "px": [
@@ -7192,10 +7192,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.843,
-      "depth": 24.382,
+      "depth": 24.376,
       "charPx": 85,
       "headNdc": [
-       0.069,
+       0.07,
        0.06
       ],
       "headOnScreen": true,
@@ -7228,19 +7228,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.234,
+       0.235,
        -0.61
       ],
       "px": [
-       829,
+       830,
        618
       ],
       "onScreen": true,
       "edgeMargin": 0.39,
-      "depth": 21.035,
+      "depth": 21.029,
       "charPx": 98,
       "headNdc": [
-       0.238,
+       0.239,
        -0.365
       ],
       "headOnScreen": true,
@@ -7273,19 +7273,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.235,
+       -0.234,
        -0.203
       ],
       "px": [
-       514,
+       515,
        462
       ],
       "onScreen": true,
-      "edgeMargin": 0.765,
-      "depth": 37.75,
+      "edgeMargin": 0.766,
+      "depth": 37.744,
       "charPx": 55,
       "headNdc": [
-       -0.237,
+       -0.236,
        -0.064
       ],
       "headOnScreen": true,
@@ -7318,19 +7318,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.253,
+       -0.252,
        -0.2
       ],
       "px": [
-       502,
+       503,
        461
       ],
       "onScreen": true,
-      "edgeMargin": 0.747,
-      "depth": 38.325,
+      "edgeMargin": 0.748,
+      "depth": 38.319,
       "charPx": 54,
       "headNdc": [
-       -0.255,
+       -0.254,
        -0.063
       ],
       "headOnScreen": true,
@@ -7369,19 +7369,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.118,
-       0.177
+       0.119,
+       0.178
       ],
       "px": [
-       751,
+       752,
        316
       ],
       "onScreen": true,
-      "edgeMargin": 0.823,
-      "depth": 25.977,
+      "edgeMargin": 0.822,
+      "depth": 25.971,
       "charPx": 80,
       "headNdc": [
-       0.119,
+       0.12,
        0.386
       ],
       "headOnScreen": true,
@@ -7418,19 +7418,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.278,
+       0.279,
        -0.878
       ],
       "px": [
-       859,
+       860,
        721
       ],
       "onScreen": true,
       "edgeMargin": 0.122,
-      "depth": 18.341,
+      "depth": 18.335,
       "charPx": 113,
       "headNdc": [
-       0.283,
+       0.285,
        -0.602
       ],
       "headOnScreen": true,
@@ -7467,19 +7467,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.193,
+       -0.192,
        -0.015
       ],
       "px": [
-       542,
+       543,
        390
       ],
       "onScreen": true,
-      "edgeMargin": 0.807,
-      "depth": 40.252,
+      "edgeMargin": 0.808,
+      "depth": 40.245,
       "charPx": 51,
       "headNdc": [
-       -0.195,
+       -0.194,
        0.117
       ],
       "headOnScreen": true,
@@ -7516,7 +7516,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.273,
+       -0.272,
        -0.162
       ],
       "px": [
@@ -7524,8 +7524,8 @@
        446
       ],
       "onScreen": true,
-      "edgeMargin": 0.727,
-      "depth": 40.894,
+      "edgeMargin": 0.728,
+      "depth": 40.888,
       "charPx": 51,
       "headNdc": [
        -0.275,
@@ -8262,6 +8262,8 @@
    ]
   }
  ],
- "warnings": [],
+ "warnings": [
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 1 of 16 plates are stale against the solve — lockfive (0.02u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+ ],
  "overrides": {}
 }

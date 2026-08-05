@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-05T00:52:25Z",
+ "generated": "2026-08-05T06:57:18Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -914,6 +914,34 @@
        75.25,
        -51.2,
        1.5
+      ],
+      [
+       63.56,
+       -54.3,
+       66,
+       -53.5,
+       1.6
+      ],
+      [
+       63.51,
+       -54.9,
+       65.95,
+       -54.1,
+       1.7
+      ],
+      [
+       63.46,
+       -55.5,
+       65.9,
+       -54.7,
+       1.8
+      ],
+      [
+       63.4,
+       -56.1,
+       65.85,
+       -55.3,
+       1.9
       ]
      ]
     },
@@ -5916,9 +5944,9 @@
     "key": "lockfive"
    },
    "spawn": [
-    73.289,
-    3.997,
-    -26.651
+    72.79,
+    1.25,
+    -29.15
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__moorage:0.273:lockfive>weave",
    "source": "camera boundary 'weave' -> 'lockfive' where the walk network crosses landmark weave-huts into weave-huts__moorage@0..1; seam slid to weave-huts__moorage@t=0.273, band half-width 1.9u measured off the walk surface, clearance margin 0u"
@@ -7072,10 +7100,8 @@
  ],
  "warnings": [
   "cut square<->pondlane on 'square-plaza__pond-jetty': every seam position in t=[0.714,0.846] overlaps another path (walk_pad_pips-den) — a player walking THAT path will be cut; VERIFY THIS SEAM",
-  "cut square<->northlane on 'square-plaza__barn': arrival (64.6,-55.0) is off the walk network",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",
-  "arrival override lockfive 'weave-huts__moorage:weave' REJECTED: off the walk network (nearest surface none, authored 1.25) — is the coordinate still in MAP order [x, y, h]?",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",
