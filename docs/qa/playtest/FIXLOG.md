@@ -4028,3 +4028,37 @@ The stalled run was found **still alive** at step 61, 29 steps into a stand it c
 with ~80 steps of budget left to spend on the same cell. Killing it returned its Chrome cleanly.
 **A RUN THAT HAS PROVABLY STOPPED LEARNING IS SPENDING MONEY, NOT GATHERING EVIDENCE** — the
 29 identical steps were the whole finding, and steps 62–140 would have been 79 more copies of it.
+
+### THE RECEIPT — `--from=ch2.jam --steps=140 --stop-beat=ch2.landing` (`run-20260805-112819`)
+
+**THE FIX SHOWS UP ON STEP 3.** The percept handed the agent
+`>> "Lock Five" at [0.075, 0.429] — to your left  <== THE GAME IS ROUTING YOU THROUGH THIS ONE`,
+and it aimed `[0.07, 0.43]` and reached. The run it replaces never aimed below nx 0.30 in 29
+consecutive steps at that same stand.
+
+| | previous run (`run-20260805-105834`) | this run |
+|---|---|---|
+| beats past the checkpoint | `ch2.jam` only | **`ch2.jam` → `ch2.maren` → `ch2.lockfive`** |
+| the quay-west stand | 29 steps pinned at x 58.11, killed at 61 | crossed it by step 3 |
+| Maren reached | no | **yes, step 32, 17 lines read** |
+| NPC re-talk | Odessa three times, ~20 steps | Old Creel once, exited on "I'll let you work." |
+
+**THE RUN DIED ON A HARD API BLOCKER, NOT ON THE GAME.** At step ~65:
+
+    HTTP 429 — "Your project has exceeded its monthly spending cap."
+    (RESOURCE_EXHAUSTED, Gemini/AI Studio — https://ai.studio/spend)
+
+This is a MONTHLY CAP, not a rate limit: it does not clear by waiting, and **no further LLM
+playtest run can be started until the user raises it.** Round 8 died the same way on prepayment
+credits; this is the second time the loop has been stopped by spend rather than by a defect.
+
+### WHAT IS STILL BETWEEN `ch2.lockfive` AND THE END CARD
+
+Four beats: `ch2.supper`, `ch2.dock`, `ch2.winches`, `ch2.landing`. The run spent steps 33–64
+failing to reach the first of them, and filed two leads on the way. **Both are UNVERIFIED —
+LEADS, NOT TICKETS** — and the next session's first move is to measure them, not build on them:
+
+| id | sev | where | the claim | the instrument to point at it |
+|---|---|---|---|---|
+| `PT-20260805-037` | P1 | shot `weave`, `[61.77, 11.6, −17.82]` | stuck coming down the stairs toward Lock Five | it RECOVERED on its own at step 16 and reached Maren at 32 — suspect a legibility lead, not a world one |
+| `PT-20260805-038` | P1 | shot `fishdock`, `[61.85, 1.25, −25.06]` | cannot reach the Keepers' Cottage | **its own probe pair is the tell: `to` is `[64.85, 8.54, −22.56]`, 7.3 m UP.** The body is at water level and the cottage is a tier above — the round-20 class. `_court_probe --comp` at the fishdock, then `--way` |
