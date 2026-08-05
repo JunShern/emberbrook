@@ -107,3 +107,17 @@ Wave B (as A closes): houses (bet 1) · staging pass (bet 9) · combat juice (be
 Wave C: circulation redesign (bet 2) · card vegetation (bet 3) · world life (11) ·
 camera/sky (bet 5). End-to-end receipt re-run after every wave; the gallery and
 FIXLOG stay current; blind judges verdict every art bet.
+
+---
+
+## STEER UPDATE 2026-08-05 13:10 (user, before AFK): "I'm most interested in seeing
+## graphics upgrades! So let's focus on that but broadly."
+
+Re-sequenced, graphics-first. Wave A: silhouettes (bet 4, restart — inherits the
+killed lane's valley_land.py work) · end-card receipt (leg 9 restart — the standing
+mandate) · then HOUSES (bet 1) as soon as the valley builder frees. Wave B: card
+vegetation (bet 3) · camera/sky (bet 5) · world life (bet 11, the visual half:
+smoke/fireflies/leaves/river motion). Wave C: staging (bet 9, camera work IS
+graphics-adjacent) · Dellhollow circulation (bet 2, enables its vistas) · audio +
+combat juice (bets 8/10) deferred behind all visual bets. Legacy cleanup (bet 6)
+continues when a lane slot frees — it is hygiene, not graphics.
