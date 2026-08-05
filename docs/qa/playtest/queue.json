@@ -19056,10 +19056,10 @@
    "id": "PT-20260805-049",
    "created": "2026-08-05T15:54:39Z",
    "verification": {
-    "status": "MEASURED",
+    "status": "FIXED",
     "instrument": "tools/_court_probe.mjs --way (SIM.move, the drive, 400 ticks per leg)",
     "at": "2026-08-05T15:54:39Z",
-    "evidence": "From [76.15,1.32,-27.11] on the moorage deck the body drives EAST to [76.74,1.32,-27.15] cleanly and stalls in every other heading: south to [76.15,1.32,-28.2] travels 0.00 m, west to [75.2,1.3,-27.0] 0.11 m, north to [76.15,1.32,-26.2] 0.22 m, north-west to [74.6,1.25,-26.75] 0.30 m. The REVERSE drives all walk back INTO it. The columns around it carry walk_e_weave-huts__moorage_l2_t03/t04 treads at 1.19-1.32 — the deck height itself — so a body standing at 1.32 is wedged against the flights own treads."
+    "evidence": "From [76.15,1.32,-27.11] on the moorage deck the body drives EAST to [76.74,1.32,-27.15] cleanly and stalls in every other heading: south to [76.15,1.32,-28.2] travels 0.00 m, west to [75.2,1.3,-27.0] 0.11 m, north to [76.15,1.32,-26.2] 0.22 m, north-west to [74.6,1.25,-26.75] 0.30 m. The REVERSE drives all walk back INTO it. The columns around it carry walk_e_weave-huts__moorage_l2_t03/t04 treads at 1.19-1.32 — the deck height itself — so a body standing at 1.32 is wedged against the flights own treads. | FIXED round 29 (a2461ed): the south wall was cx_rail at z 2.12 -- RAIL_H over the OLD 1.70 foot, never re-derived when 8752b87 lowered the floor; and behind it the un-migrated switchback itself (l1 over l2 in the body window, both hairpins). STAIRS_V2 += weave-huts__moorage with weave/locksfoot/cx re-run in the same window; town_blockout grew lay_stair_rails (a rail may not stand in a body window of its own edge). _court_probe --way: DOWN 12/12 legs clean, UP threads; run-20260805-163944 walked moorage->weave->crossing->cottage and fired ch2.supper."
    },
    "run": "run-20260805-154827",
    "step": 3,
@@ -19078,7 +19078,7 @@
      -27.11
     ],
     "to": [
-     75.0,
+     75,
      1.93,
      -27.7
     ],
@@ -19105,10 +19105,10 @@
    "id": "PT-20260805-050",
    "created": "2026-08-05T15:54:39Z",
    "verification": {
-    "status": "MEASURED",
+    "status": "FIXED",
     "instrument": "tools/playtest/wayfind_probe.mjs --from ch2.winches --stations weave",
     "at": "2026-08-05T15:54:39Z",
-    "evidence": "In shot weave standing at [72.4,7.87,-23.56] the routed weave>lockfive arrow draws at [128,468] of 1280x720 — nx 0.100, the frames LEFT MARGIN — and SIM.pick at its own drawn pixel returns wv_piles, a stilt. The seam itself projects to [139,488]; the aim correctly does NOT engage, because from the weave tier the straight line to the seam IS ground. Frame: docs/qa/playtest/wayfind-r28-weave/weave arrival.jpg."
+    "evidence": "In shot weave standing at [72.4,7.87,-23.56] the routed weave>lockfive arrow draws at [128,468] of 1280x720 — nx 0.100, the frames LEFT MARGIN — and SIM.pick at its own drawn pixel returns wv_piles, a stilt. The seam itself projects to [139,488]; the aim correctly does NOT engage, because from the weave tier the straight line to the seam IS ground. Frame: docs/qa/playtest/wayfind-r28-weave/weave arrival.jpg. | FIXED round 29 (565ba15): weave yaw 118 -> 142 (seam nx 0.104 -> 0.203, ground/chest/head occluder rays clear, charPxFar 54 >= 50 floor, region 81.3% vs 90.6%), one plate baked. run-20260805-170550 took the weave>lockfive cut AT STEP 9 and the Chapter Two END CARD was drawn and perceived at step 12."
    },
    "run": "run-20260805-154201",
    "step": 7,
@@ -19150,6 +19150,990 @@
      7.87,
      -23.56
     ]
+   }
+  },
+  {
+   "id": "PT-20260805-051",
+   "created": "2026-08-05T16:48:11.578Z",
+   "verification": {
+    "status": "UNVERIFIED",
+    "instrument": null,
+    "evidence": null,
+    "at": null
+   },
+   "run": "run-20260805-163944",
+   "step": 62,
+   "source": "stuck-interview",
+   "kind": "blocker",
+   "severity": "P1",
+   "title": "Stuck on plank bridge, cannot move up or down",
+   "doing": "Trying to walk along the plank bridge, either up towards the top right or down following the routing arrow to Lock Five.",
+   "expected": "To be able to walk up or down the bridge to continue exploring or follow the objective.",
+   "happened": "I keep getting told the areas I click are not ground I can walk to, leaving me stuck in place on the ramp.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     88.56,
+     10.63,
+     -18.85
+    ],
+    "to": [
+     89.66,
+     10.02,
+     -19.26
+    ],
+    "scene": "del-cine"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-163944/frames/step-060.jpg",
+    "docs/qa/playtest/runs/run-20260805-163944/frames/step-061.jpg",
+    "docs/qa/playtest/runs/run-20260805-163944/frames/step-062.jpg"
+   ],
+   "onscreen": {
+    "objective": "Midnight at Lock Five — out over the plank bridge",
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-cine",
+    "shot": "cottage",
+    "pos": [
+     88.56,
+     10.63,
+     -18.85
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.poppy",
+     "ch1.see.mara",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive",
+     "ch2.jam",
+     "ch2.maren",
+     "ch2.lockfive",
+     "ch2.supper",
+     "ch2.dock"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.mara",
+     "story.ch1.seen.finn",
+     "story.ch1.seen.mochi",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "story.ch2.jam",
+     "story.ch2.maren-met",
+     "story.ch2.plan",
+     "story.ch2.supper",
+     "story.ch2.night",
+     "story.ch2.dock"
+    ],
+    "exits": [
+     "del-cine>del-cottage-int@keepers-cottage",
+     "del-cine>del-cine@cut:lockhead__keepers-cottage:0.222:cottage>lockhead",
+     "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:cottage>crossing"
+    ]
+   },
+   "repro": {
+    "sha": "a03eb7b229870ea0d7a2ee6332510e2a20c12b26",
+    "capturedAt": "2026-08-05T16:48:11.572Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen.finn": true,
+      "story.ch1.seen.mochi": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "story.ch2.jam": true,
+      "story.ch2.maren-met": true,
+      "story.ch2.plan": true,
+      "story.ch2.supper": true,
+      "story.ch2.night": true,
+      "story.ch2.dock": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "cottage",
+      "pos": [
+       90.219,
+       9.314,
+       -20.359
+      ],
+      "yaw": null
+     },
+     "beats": {
+      "ch1.open": true,
+      "ch1.waystone": true,
+      "ch1.reveal": true,
+      "ch1.rowan": true,
+      "ch1.lake.handoff": true,
+      "ch1.lake.wake": true,
+      "ch1.lake.hearth": true,
+      "ch1.lake.lamp": true,
+      "ch1.meet": true,
+      "ch1.lamps": true,
+      "ch1.hush": true,
+      "ch1.see.poppy": true,
+      "ch1.see.mara": true,
+      "ch1.see.finn": true,
+      "ch1.see.mochi": true,
+      "ch1.pact": true,
+      "ch1.sigils": true,
+      "ch1.sendoff": true,
+      "ch1.done": true,
+      "ch2.road": true,
+      "ch2.arrive": true,
+      "ch2.jam": true,
+      "ch2.maren": true,
+      "ch2.lockfive": 1,
+      "ch2.supper": 1,
+      "ch2.dock": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T16:47:10.686Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-052",
+   "created": "2026-08-05T17:08:53.312Z",
+   "verification": {
+    "status": "UNVERIFIED",
+    "instrument": null,
+    "evidence": null,
+    "at": null
+   },
+   "run": "run-20260805-170550",
+   "step": 19,
+   "source": "stuck-interview",
+   "kind": "bug",
+   "severity": "P1",
+   "title": "Character stuck behind wooden pillars under curved platform",
+   "doing": "Trying to walk along the lower walkway towards the exit markers.",
+   "expected": "I expected to be able to walk along the path to the next area.",
+   "happened": "My character got stuck behind the vertical wooden pillars supporting the platform above and I can't move in any direction.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     73.37,
+     1.25,
+     -29.06
+    ],
+    "to": [
+     75.09,
+     1.25,
+     -30.67
+    ],
+    "scene": "del-cine"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-170550/frames/step-017.jpg",
+    "docs/qa/playtest/runs/run-20260805-170550/frames/step-018.jpg",
+    "docs/qa/playtest/runs/run-20260805-170550/frames/step-019.jpg"
+   ],
+   "onscreen": {
+    "objective": null,
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-cine",
+    "shot": "lockfive",
+    "pos": [
+     73.37,
+     1.25,
+     -29.08
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.poppy",
+     "ch1.see.mara",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive",
+     "ch2.jam",
+     "ch2.maren",
+     "ch2.lockfive",
+     "ch2.supper",
+     "ch2.dock",
+     "ch2.winches",
+     "ch2.landing"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.mara",
+     "story.ch1.seen.finn",
+     "story.ch1.seen.mochi",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "story.ch2.jam",
+     "story.ch2.maren-met",
+     "story.ch2.plan",
+     "story.ch2.supper",
+     "story.ch2.night",
+     "story.ch2.dock",
+     "story.ch2.gates-open",
+     "story.ch2.done",
+     "maren-joined"
+    ],
+    "exits": [
+     "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+     "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+     "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+    ]
+   },
+   "repro": {
+    "sha": "a2461eddee7228ddb1be8cdb8021d78c69a566a2",
+    "capturedAt": "2026-08-05T17:08:53.307Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen.finn": true,
+      "story.ch1.seen.mochi": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "story.ch2.jam": true,
+      "story.ch2.maren-met": true,
+      "story.ch2.plan": true,
+      "story.ch2.supper": true,
+      "story.ch2.night": true,
+      "story.ch2.dock": true,
+      "story.ch2.gates-open": true,
+      "story.ch2.done": true,
+      "maren-joined": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "lockfive",
+      "pos": [
+       72.79,
+       1.245,
+       -29.15
+      ],
+      "yaw": null
+     },
+     "beats": {
+      "ch1.open": true,
+      "ch1.waystone": true,
+      "ch1.reveal": true,
+      "ch1.rowan": true,
+      "ch1.lake.handoff": true,
+      "ch1.lake.wake": true,
+      "ch1.lake.hearth": true,
+      "ch1.lake.lamp": true,
+      "ch1.meet": true,
+      "ch1.lamps": true,
+      "ch1.hush": true,
+      "ch1.see.poppy": true,
+      "ch1.see.mara": true,
+      "ch1.see.finn": true,
+      "ch1.see.mochi": true,
+      "ch1.pact": true,
+      "ch1.sigils": true,
+      "ch1.sendoff": true,
+      "ch1.done": true,
+      "ch2.road": true,
+      "ch2.arrive": true,
+      "ch2.jam": true,
+      "ch2.maren": true,
+      "ch2.lockfive": true,
+      "ch2.supper": true,
+      "ch2.dock": 1,
+      "ch2.winches": 1,
+      "ch2.landing": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T17:07:44.863Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-053",
+   "created": "2026-08-05T17:19:03.545Z",
+   "verification": {
+    "status": "UNVERIFIED",
+    "instrument": null,
+    "evidence": null,
+    "at": null
+   },
+   "run": "run-20260805-170550",
+   "step": 80,
+   "source": "walk-executor",
+   "kind": "blocker",
+   "severity": "P1",
+   "title": "Walk blocked: the body closed 0 m of an intended 10.13 m, twice at the same place",
+   "doing": "I tried to walk to a point on screen at [0.51, 0.33]; my goal was \"Walk up the elevated walkway towards the top-right exit marker at [0.573, 0.243]\".",
+   "expected": "To walk about 10.13 m and arrive there.",
+   "happened": "The character moved 0 m and stopped 10.13 m short — twice in this run. All five headings were pushed (5 bursts at ~157 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     74.66,
+     2,
+     -27.47
+    ],
+    "to": [
+     83.98,
+     7.38,
+     -23.49
+    ],
+    "scene": "del-cine"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-170550/frames/step-080.jpg",
+    "docs/qa/playtest/runs/run-20260805-170550/frames/step-081-stall.jpg"
+   ],
+   "onscreen": {
+    "objective": null,
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-cine",
+    "shot": "lockfive",
+    "pos": [
+     74.66,
+     2,
+     -27.47
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.poppy",
+     "ch1.see.mara",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive",
+     "ch2.jam",
+     "ch2.maren",
+     "ch2.lockfive",
+     "ch2.supper",
+     "ch2.dock",
+     "ch2.winches",
+     "ch2.landing"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.mara",
+     "story.ch1.seen.finn",
+     "story.ch1.seen.mochi",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "story.ch2.jam",
+     "story.ch2.maren-met",
+     "story.ch2.plan",
+     "story.ch2.supper",
+     "story.ch2.night",
+     "story.ch2.dock",
+     "story.ch2.gates-open",
+     "story.ch2.done",
+     "maren-joined",
+     "npc.met.maren"
+    ],
+    "exits": [
+     "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+     "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+     "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+    ]
+   },
+   "repro": {
+    "sha": "a2461eddee7228ddb1be8cdb8021d78c69a566a2",
+    "capturedAt": "2026-08-05T17:19:03.539Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen.finn": true,
+      "story.ch1.seen.mochi": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "story.ch2.jam": true,
+      "story.ch2.maren-met": true,
+      "story.ch2.plan": true,
+      "story.ch2.supper": true,
+      "story.ch2.night": true,
+      "story.ch2.dock": true,
+      "story.ch2.gates-open": true,
+      "story.ch2.done": true,
+      "maren-joined": true,
+      "npc.met.maren": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "lockfive",
+      "pos": [
+       69.043,
+       1.958,
+       -26.28
+      ],
+      "yaw": null
+     },
+     "beats": {
+      "ch1.open": true,
+      "ch1.waystone": true,
+      "ch1.reveal": true,
+      "ch1.rowan": true,
+      "ch1.lake.handoff": true,
+      "ch1.lake.wake": true,
+      "ch1.lake.hearth": true,
+      "ch1.lake.lamp": true,
+      "ch1.meet": true,
+      "ch1.lamps": true,
+      "ch1.hush": true,
+      "ch1.see.poppy": true,
+      "ch1.see.mara": true,
+      "ch1.see.finn": true,
+      "ch1.see.mochi": true,
+      "ch1.pact": true,
+      "ch1.sigils": true,
+      "ch1.sendoff": true,
+      "ch1.done": true,
+      "ch2.road": true,
+      "ch2.arrive": true,
+      "ch2.jam": true,
+      "ch2.maren": true,
+      "ch2.lockfive": true,
+      "ch2.supper": true,
+      "ch2.dock": 1,
+      "ch2.winches": 1,
+      "ch2.landing": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T17:07:44.863Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-054",
+   "created": "2026-08-05T17:19:27.476Z",
+   "verification": {
+    "status": "UNVERIFIED",
+    "instrument": null,
+    "evidence": null,
+    "at": null
+   },
+   "run": "run-20260805-170550",
+   "step": 82,
+   "source": "walk-executor",
+   "kind": "blocker",
+   "severity": "P1",
+   "title": "Walk blocked: the body closed 0 m of an intended 8.45 m, twice at the same place",
+   "doing": "I tried to walk to a point on screen at [0.54, 0.64]; my goal was \"Walk along the curved platform to the right toward the exit arrow at [0.654, 0.736].\".",
+   "expected": "To walk about 8.45 m and arrive there.",
+   "happened": "The character moved 0 m and stopped 8.45 m short — twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     74.66,
+     2,
+     -27.47
+    ],
+    "to": [
+     66.46,
+     6.91,
+     -29.5
+    ],
+    "scene": "del-cine"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-170550/frames/step-083.jpg",
+    "docs/qa/playtest/runs/run-20260805-170550/frames/step-084-stall.jpg"
+   ],
+   "onscreen": {
+    "objective": null,
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-cine",
+    "shot": "lockfive",
+    "pos": [
+     74.66,
+     2,
+     -27.47
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.poppy",
+     "ch1.see.mara",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive",
+     "ch2.jam",
+     "ch2.maren",
+     "ch2.lockfive",
+     "ch2.supper",
+     "ch2.dock",
+     "ch2.winches",
+     "ch2.landing"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.mara",
+     "story.ch1.seen.finn",
+     "story.ch1.seen.mochi",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "story.ch2.jam",
+     "story.ch2.maren-met",
+     "story.ch2.plan",
+     "story.ch2.supper",
+     "story.ch2.night",
+     "story.ch2.dock",
+     "story.ch2.gates-open",
+     "story.ch2.done",
+     "maren-joined",
+     "npc.met.maren"
+    ],
+    "exits": [
+     "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+     "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+     "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+    ]
+   },
+   "repro": {
+    "sha": "a2461eddee7228ddb1be8cdb8021d78c69a566a2",
+    "capturedAt": "2026-08-05T17:19:27.472Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen.finn": true,
+      "story.ch1.seen.mochi": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "story.ch2.jam": true,
+      "story.ch2.maren-met": true,
+      "story.ch2.plan": true,
+      "story.ch2.supper": true,
+      "story.ch2.night": true,
+      "story.ch2.dock": true,
+      "story.ch2.gates-open": true,
+      "story.ch2.done": true,
+      "maren-joined": true,
+      "npc.met.maren": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "lockfive",
+      "pos": [
+       69.043,
+       1.958,
+       -26.28
+      ],
+      "yaw": null
+     },
+     "beats": {
+      "ch1.open": true,
+      "ch1.waystone": true,
+      "ch1.reveal": true,
+      "ch1.rowan": true,
+      "ch1.lake.handoff": true,
+      "ch1.lake.wake": true,
+      "ch1.lake.hearth": true,
+      "ch1.lake.lamp": true,
+      "ch1.meet": true,
+      "ch1.lamps": true,
+      "ch1.hush": true,
+      "ch1.see.poppy": true,
+      "ch1.see.mara": true,
+      "ch1.see.finn": true,
+      "ch1.see.mochi": true,
+      "ch1.pact": true,
+      "ch1.sigils": true,
+      "ch1.sendoff": true,
+      "ch1.done": true,
+      "ch2.road": true,
+      "ch2.arrive": true,
+      "ch2.jam": true,
+      "ch2.maren": true,
+      "ch2.lockfive": true,
+      "ch2.supper": true,
+      "ch2.dock": 1,
+      "ch2.winches": 1,
+      "ch2.landing": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T17:07:44.863Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
    }
   }
  ]

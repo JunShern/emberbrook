@@ -234,7 +234,18 @@ export async function run(cfg) {
   function rebuildBrief() {
     const r = recallLine();
     brief = [BASE_BRIEF, r].filter(Boolean).join(' ') || null;
-    briefAuthored = [BASE_AUTHORED, r].filter(Boolean).join(' ') || null;
+    /* THE NAMES IN THE RECALL LINE ARE QUOTES OF THE GAME'S OWN SPEAKER LABELS, so
+     * they go to the agent but NOT into the authored text the firewall's soft check
+     * runs on — the same container split brief/nudge already have (round 6, round 28
+     * §6). Measured 2026-08-05: the first full NEW GAME receipt died at step 27 on
+     * soft token `square` because the agent had talked to "Girl in the Square" three
+     * steps earlier — a name the GAME drew, resurfaced by this memory line after the
+     * frame stopped drawing it. */
+    const rAuth = spokenTo.size
+      ? 'You have ALREADY had a full conversation with the people listed. ' +
+        'Talking to them again replays lines you have read; do it only if the objective changed since.'
+      : null;
+    briefAuthored = [BASE_AUTHORED, rAuth].filter(Boolean).join(' ') || null;
   }
 
   function fileReport(kind, r, step, percept, truth, frames, source, severity) {

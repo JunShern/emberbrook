@@ -1,0 +1,1061 @@
+[
+ {
+  "pos": [
+   76.15,
+   1.32,
+   -27.11
+  ],
+  "scene": "del-cine",
+  "shot": "lockfive",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Midnight at Lock Five — out over the plank bridge",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "del-cine",
+   "shot": "lockfive",
+   "aim": null,
+   "walked": null,
+   "crow": null,
+   "routes": true,
+   "drawnAt": null,
+   "beat": "ch2.landing",
+   "wantScene": "del-cine",
+   "wantCam": null,
+   "camAuthored": null,
+   "edge": null,
+   "hops": 0,
+   "dest": "Dellhollow",
+   "shown": false,
+   "labelled": false,
+   "drawn": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+   "last": {
+    "beat": "ch2.winches",
+    "edge": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+    "dest": "Lock Five",
+    "hops": 6,
+    "aim": [
+     16.67,
+     24,
+     -4
+    ],
+    "walked": 10.32,
+    "crow": 9.17
+   }
+  },
+  "target": "cottage",
+  "markers": [
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+    "label": "Up to the Valley Gate",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 58.3,
+    "open": true,
+    "camTo": null,
+    "at": [
+     22,
+     19.04,
+     -5.5
+    ],
+    "shown": false,
+    "markerPx": [
+     1242,
+     62
+    ],
+    "boxPx": [
+     1242,
+     62
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1705.0266455265387,
+     656.449234498946
+    ],
+    "arrowPx": [
+     -1652.1696549659202,
+     739.5850958742695
+    ],
+    "liftPx": 594.4,
+    "liftFrac": 0.834,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+    "label": "Down to the Shelf street",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 59.45,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.5,
+     24.07,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     609.33,
+     237.203
+    ],
+    "boxPx": [
+     609.33,
+     237.203
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1408.5107706803901,
+     859.1926290343438
+    ],
+    "arrowPx": [
+     -1367.909859418078,
+     924.6560042819904
+    ],
+    "liftPx": 622,
+    "liftFrac": 0.872,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 59.9,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.352,
+     22.57,
+     -3.32
+    ],
+    "shown": false,
+    "markerPx": [
+     694.429,
+     278.28
+    ],
+    "boxPx": [
+     694.429,
+     278.28
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1678.9575434608628,
+     815.8094746608283
+    ],
+    "arrowPx": [
+     -1630.4898342924093,
+     887.3859517013578
+    ],
+    "liftPx": 537.5,
+    "liftFrac": 0.754,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 1.93,
+    "open": true,
+    "camTo": null,
+    "at": [
+     74.784,
+     6.273,
+     -25.123
+    ],
+    "shown": false,
+    "markerPx": [
+     722.187,
+     174.236
+    ],
+    "boxPx": [
+     722.187,
+     174.236
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     720.7894148891933,
+     292.5321216700545
+    ],
+    "arrowPx": [
+     722.1872289710673,
+     169.3914941796311
+    ],
+    "liftPx": 118.3,
+    "liftFrac": 0.166,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 9.42,
+    "open": true,
+    "camTo": null,
+    "at": [
+     66.331,
+     1.467,
+     -27.157
+    ],
+    "shown": false,
+    "markerPx": [
+     820.516,
+     512.878
+    ],
+    "boxPx": [
+     820.516,
+     512.878
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     816.19055671365,
+     669.5371054570156
+    ],
+    "arrowPx": [
+     820.5161333697567,
+     516.6310947700438
+    ],
+    "liftPx": 156.7,
+    "liftFrac": 0.22,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 13.76,
+    "open": true,
+    "camTo": null,
+    "at": [
+     89.957,
+     -0.242,
+     -27.86
+    ],
+    "shown": false,
+    "markerPx": [
+     465.134,
+     325.71
+    ],
+    "boxPx": [
+     465.134,
+     325.71
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     467.04013127842956,
+     417.1973579336035
+    ],
+    "arrowPx": [
+     465.1341042673225,
+     329.24751855801657
+    ],
+    "liftPx": 91.5,
+    "liftFrac": 0.128,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>ow-valley@dellhollow-valley-gate",
+    "label": "Leave Dellhollow",
+    "kind": "portal",
+    "to": "ow-valley",
+    "dist": 77.43,
+    "open": true,
+    "camTo": null,
+    "at": [
+     1.6,
+     24.04,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     691.991,
+     507.282
+    ],
+    "boxPx": [
+     691.991,
+     507.282
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -687.8448141570734,
+     527.099163284775
+    ],
+    "arrowPx": [
+     -673.1282330023765,
+     554.162268931642
+    ],
+    "liftPx": 19.8,
+    "liftFrac": 0.028,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "moorage-pocket",
+  "want": [
+   76.15,
+   1.32,
+   -27.11
+  ],
+  "hop": {
+   "here": "lockfive",
+   "hops": 3,
+   "m": 13.05554823449113,
+   "path": [
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+     "from": "lockfive",
+     "to": "weave"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:weave>crossing",
+     "from": "weave",
+     "to": "crossing"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+     "from": "crossing",
+     "to": "cottage"
+    }
+   ],
+   "alts": [
+    {
+     "hops": 4,
+     "m": 46.520926057877446,
+     "first": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave"
+    }
+   ]
+  },
+  "uiClear": true
+ },
+ {
+  "pos": [
+   76.2,
+   1.35,
+   -28.1
+  ],
+  "scene": "del-cine",
+  "shot": "lockfive",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Midnight at Lock Five — out over the plank bridge",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "del-cine",
+   "shot": "lockfive",
+   "aim": null,
+   "walked": null,
+   "crow": null,
+   "routes": true,
+   "drawnAt": null,
+   "beat": null,
+   "wantScene": null,
+   "wantCam": null,
+   "camAuthored": null,
+   "edge": null,
+   "hops": null,
+   "dest": null,
+   "shown": false,
+   "labelled": false,
+   "drawn": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+   "last": {
+    "beat": "ch2.winches",
+    "edge": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+    "dest": "Lock Five",
+    "hops": 6,
+    "aim": [
+     16.67,
+     24,
+     -4
+    ],
+    "walked": 10.32,
+    "crow": 9.17
+   }
+  },
+  "target": "cottage",
+  "markers": [
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+    "label": "Up to the Valley Gate",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 58.72,
+    "open": true,
+    "camTo": null,
+    "at": [
+     22,
+     19.04,
+     -5.5
+    ],
+    "shown": false,
+    "markerPx": [
+     1242,
+     62
+    ],
+    "boxPx": [
+     1242,
+     62
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1705.0266455265387,
+     656.449234498946
+    ],
+    "arrowPx": [
+     -1652.1696549659202,
+     739.5850958742695
+    ],
+    "liftPx": 594.4,
+    "liftFrac": 0.834,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+    "label": "Down to the Shelf street",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 59.85,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.5,
+     24.07,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     609.33,
+     237.203
+    ],
+    "boxPx": [
+     609.33,
+     237.203
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1408.5107706803901,
+     859.1926290343438
+    ],
+    "arrowPx": [
+     -1367.909859418078,
+     924.6560042819904
+    ],
+    "liftPx": 622,
+    "liftFrac": 0.872,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 60.32,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.352,
+     22.57,
+     -3.32
+    ],
+    "shown": false,
+    "markerPx": [
+     694.429,
+     278.28
+    ],
+    "boxPx": [
+     694.429,
+     278.28
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1678.9575434608628,
+     815.8094746608283
+    ],
+    "arrowPx": [
+     -1630.4898342924093,
+     887.3859517013578
+    ],
+    "liftPx": 537.5,
+    "liftFrac": 0.754,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 2.34,
+    "open": true,
+    "camTo": null,
+    "at": [
+     74.784,
+     6.273,
+     -25.123
+    ],
+    "shown": false,
+    "markerPx": [
+     722.187,
+     164.45
+    ],
+    "boxPx": [
+     722.187,
+     164.45
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     720.7894148891933,
+     292.5321216700545
+    ],
+    "arrowPx": [
+     722.1872289710673,
+     169.3914941796311
+    ],
+    "liftPx": 128.1,
+    "liftFrac": 0.18,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 9.32,
+    "open": true,
+    "camTo": null,
+    "at": [
+     66.331,
+     1.467,
+     -27.157
+    ],
+    "shown": false,
+    "markerPx": [
+     820.516,
+     518.787
+    ],
+    "boxPx": [
+     820.516,
+     518.787
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     816.19055671365,
+     669.5371054570156
+    ],
+    "arrowPx": [
+     820.5161333697567,
+     516.6310947700438
+    ],
+    "liftPx": 150.8,
+    "liftFrac": 0.211,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 13.75,
+    "open": true,
+    "camTo": null,
+    "at": [
+     89.957,
+     -0.242,
+     -27.86
+    ],
+    "shown": false,
+    "markerPx": [
+     465.134,
+     333.888
+    ],
+    "boxPx": [
+     465.134,
+     333.888
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     467.04013127842956,
+     417.1973579336035
+    ],
+    "arrowPx": [
+     465.1341042673225,
+     329.24751855801657
+    ],
+    "liftPx": 83.3,
+    "liftFrac": 0.117,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>ow-valley@dellhollow-valley-gate",
+    "label": "Leave Dellhollow",
+    "kind": "portal",
+    "to": "ow-valley",
+    "dist": 77.75,
+    "open": true,
+    "camTo": null,
+    "at": [
+     1.6,
+     24.04,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     691.991,
+     507.282
+    ],
+    "boxPx": [
+     691.991,
+     507.282
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -687.8448141570734,
+     527.099163284775
+    ],
+    "arrowPx": [
+     -673.1282330023765,
+     554.162268931642
+    ],
+    "liftPx": 19.8,
+    "liftFrac": 0.028,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "stair-foot",
+  "want": [
+   76.2,
+   1.35,
+   -28.1
+  ],
+  "hop": {
+   "here": "lockfive",
+   "hops": 3,
+   "m": 13.47161941329071,
+   "path": [
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+     "from": "lockfive",
+     "to": "weave"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:weave>crossing",
+     "from": "weave",
+     "to": "crossing"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+     "from": "crossing",
+     "to": "cottage"
+    }
+   ],
+   "alts": [
+    {
+     "hops": 4,
+     "m": 46.93699723667702,
+     "first": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave"
+    }
+   ]
+  },
+  "uiClear": true
+ },
+ {
+  "pos": [
+   72.6,
+   3.4,
+   -26.9
+  ],
+  "scene": "del-cine",
+  "shot": "lockfive",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Midnight at Lock Five — out over the plank bridge",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "del-cine",
+   "shot": "lockfive",
+   "aim": null,
+   "walked": null,
+   "crow": null,
+   "routes": true,
+   "drawnAt": null,
+   "beat": null,
+   "wantScene": null,
+   "wantCam": null,
+   "camAuthored": null,
+   "edge": null,
+   "hops": null,
+   "dest": null,
+   "shown": false,
+   "labelled": false,
+   "drawn": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+   "last": {
+    "beat": "ch2.winches",
+    "edge": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+    "dest": "Lock Five",
+    "hops": 6,
+    "aim": [
+     16.67,
+     24,
+     -4
+    ],
+    "walked": 10.32,
+    "crow": 9.17
+   }
+  },
+  "target": "cottage",
+  "markers": [
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+    "label": "Up to the Valley Gate",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 54.94,
+    "open": true,
+    "camTo": null,
+    "at": [
+     22,
+     19.04,
+     -5.5
+    ],
+    "shown": false,
+    "markerPx": [
+     1242,
+     62
+    ],
+    "boxPx": [
+     1242,
+     62
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1705.0266455265387,
+     656.449234498946
+    ],
+    "arrowPx": [
+     -1652.1696549659202,
+     739.5850958742695
+    ],
+    "liftPx": 594.4,
+    "liftFrac": 0.834,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+    "label": "Down to the Shelf street",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 56.06,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.5,
+     24.07,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     609.33,
+     237.203
+    ],
+    "boxPx": [
+     609.33,
+     237.203
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1408.5107706803901,
+     859.1926290343438
+    ],
+    "arrowPx": [
+     -1367.909859418078,
+     924.6560042819904
+    ],
+    "liftPx": 622,
+    "liftFrac": 0.872,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 56.54,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.352,
+     22.57,
+     -3.32
+    ],
+    "shown": false,
+    "markerPx": [
+     694.429,
+     278.28
+    ],
+    "boxPx": [
+     694.429,
+     278.28
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -1678.9575434608628,
+     815.8094746608283
+    ],
+    "arrowPx": [
+     -1630.4898342924093,
+     887.3859517013578
+    ],
+    "liftPx": 537.5,
+    "liftFrac": 0.754,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 1.58,
+    "open": true,
+    "camTo": null,
+    "at": [
+     74.784,
+     6.273,
+     -25.123
+    ],
+    "shown": false,
+    "markerPx": [
+     722.187,
+     164.45
+    ],
+    "boxPx": [
+     722.187,
+     164.45
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     720.7894148891933,
+     292.5321216700545
+    ],
+    "arrowPx": [
+     722.1872289710673,
+     169.3914941796311
+    ],
+    "liftPx": 128.1,
+    "liftFrac": 0.18,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 6.04,
+    "open": true,
+    "camTo": null,
+    "at": [
+     66.331,
+     1.467,
+     -27.157
+    ],
+    "shown": false,
+    "markerPx": [
+     820.516,
+     518.787
+    ],
+    "boxPx": [
+     820.516,
+     518.787
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     816.19055671365,
+     669.5371054570156
+    ],
+    "arrowPx": [
+     820.5161333697567,
+     516.6310947700438
+    ],
+    "liftPx": 150.8,
+    "liftFrac": 0.211,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 17.3,
+    "open": true,
+    "camTo": null,
+    "at": [
+     89.957,
+     -0.242,
+     -27.86
+    ],
+    "shown": false,
+    "markerPx": [
+     465.134,
+     333.888
+    ],
+    "boxPx": [
+     465.134,
+     333.888
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     467.04013127842956,
+     417.1973579336035
+    ],
+    "arrowPx": [
+     465.1341042673225,
+     329.24751855801657
+    ],
+    "liftPx": 83.3,
+    "liftFrac": 0.117,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>ow-valley@dellhollow-valley-gate",
+    "label": "Leave Dellhollow",
+    "kind": "portal",
+    "to": "ow-valley",
+    "dist": 73.96,
+    "open": true,
+    "camTo": null,
+    "at": [
+     1.6,
+     24.04,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     691.991,
+     507.282
+    ],
+    "boxPx": [
+     691.991,
+     507.282
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     -687.8448141570734,
+     527.099163284775
+    ],
+    "arrowPx": [
+     -673.1282330023765,
+     554.162268931642
+    ],
+    "liftPx": 19.8,
+    "liftFrac": 0.028,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "mid-landing",
+  "want": [
+   72.6,
+   3.4,
+   -26.9
+  ],
+  "hop": {
+   "here": "lockfive",
+   "hops": 3,
+   "m": 11.569447680928285,
+   "path": [
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+     "from": "lockfive",
+     "to": "weave"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:weave>crossing",
+     "from": "weave",
+     "to": "crossing"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+     "from": "crossing",
+     "to": "cottage"
+    }
+   ],
+   "alts": [
+    {
+     "hops": 4,
+     "m": 45.0348255043146,
+     "first": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave"
+    }
+   ]
+  },
+  "uiClear": true
+ }
+]
