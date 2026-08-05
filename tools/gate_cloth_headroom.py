@@ -111,6 +111,29 @@ UNFIXED = {
     "t2c_N2_nl_bunting": "1240 blocked steps but NOT this defect: per-vertex min 2.439 m, "
                          "nothing under the band. Its two 3.21 m masts are the count, and a "
                          "bunting pole standing on the ground is not a defect",
+    # ADDED 2026-08-05 (playtest round 24, PT-20260805-038's measurement). Same
+    # mechanism, different street, and it SEVERS A WALKWAY rather than narrowing one.
+    # `_court_probe --grid walk:true` over the crossing ribbon (x 73..90, z -25..-20,
+    # y band 6..10) shows the corridor blocked at x 78.7..79.6 at EVERY walkable z
+    # (-22.1, -22.4, -22.7, -23.0, -23.3), and `--who` names the blocker:
+    #     t2c_W9_laundry_planking_5   bbox y 8.78..9.67   walk surface under it 7.50
+    #                                 hem clearance 1.28 m — under a 1.70 m body
+    #     t2c_W9_laundry_planking_4   bbox y 9.07..9.63   clearance 1.57 m — also under
+    # `--comp` over the same box fills the weave side and the crossing side as TWO
+    # components (115 / 144 cells) that never join on foot.
+    # NOT ON THE STORY'S PATH, WHICH IS WHY IT IS RECORDED RATHER THAN FIXED HERE.
+    # `weave>crossing` is a CUT edge whose spawn is 9.3 m east (84.54), past the
+    # laundry, so the game steps over the severance: `reach_probe` maren -> Keepers'
+    # Cottage door is ok=true via three cut edges. A player who tries to WALK that
+    # 6.4 m instead of crossing the seam is the one who meets it.
+    "t2c_W9_laundry_planking_5": "SEVERS the crossing walkway at x 78.7..79.6: hem 1.28 m "
+                                 "over walk surface 7.50, blocked at every walkable z. "
+                                 "This script's own per-vertex ramp is the fix; owed a "
+                                 "re-bake of crossing (and whichever of weave/cottage/"
+                                 "lockhead the lift re-composes), which is why it is not "
+                                 "in TARGETS yet",
+    "t2c_W9_laundry_planking_4": "same row, hem 1.57 m over the same walkway — under a "
+                                 "1.70 m body, inside _5's blocked span, same owed re-bake",
 }
 
 walks = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith("walk_")]
