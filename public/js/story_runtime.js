@@ -513,8 +513,74 @@
       var t = m.querySelector('.story-way'); if (t) t.remove();
       m.style.zIndex = '';
       if (m.firstChild && m.firstChild.style) m.firstChild.style.scale = '';
+      unclampLift(m);
     }
     hintEdge = null;
+  }
+
+  /* THE ARROW ON THE CLIFF (round 19) — the routed marker was drawn 97 px above the
+   * ground it names, and that is far enough to be a different place.
+   *
+   * MEASURED, `wayfind_probe --from ch2.jam --liftcap 16,20,24,28,32,35,50,70,90`
+   * (docs/qa/playtest/wayfind-r19, -r19b), 24 shown markers over seven Dellhollow
+   * stations. For each one: SIM.pick at the arrow's OWN drawn pixel, and the distance
+   * from what it hit to the seam's own `at`.
+   *
+   *   lift            uncapped   20 px   35 px   50 px   90 px
+   *   within 3 m         5/24    19/24   17/24   15/24    7/24
+   *
+   * `quay-west>lockhead` — the arrow Chapter Two's `ch2.jam` is reached by — was the
+   * worst of them: **31.4 m off**, landing on `cliff_town_back` 70 m behind the town,
+   * because 2.1 m of world lift on a 14 m seam is 97 px of screen and the deck it names
+   * is only a few px deep in that shot. `run-20260805-044813`'s agent wrote *"ground
+   * marked as not walkable"* and *"cannot figure out how to reach the marker"* FIVE
+   * times. Round 10 made the EXECUTOR immune (a click on an arrow resolves to the edge's
+   * own `at`); nothing makes the reader immune. Same family as round 5's off-screen
+   * label and round 18's rival arrow: THE ARROW IS IN THE RIGHT PLACE IN THE WORLD AND
+   * THE WRONG PLACE ON THE SCREEN.
+   *
+   * 20 px is both the global optimum and the ONLY band that fixes that arrow (24 px and
+   * up put it back on the cliff — its ground is a 4 px-deep sliver). With markersTick's
+   * 16 px glyph the tip then lands ~4 px above the seam: still the FF7 "floats over the
+   * spot and points down at it" grammar, just honest about which spot.
+   *
+   * IT DECORATES, IT NEVER DRAWS (this module's rule 1, kept). `markersTick` rewrites
+   * `transform` and `display` on the marker div every frame and nothing else, so this
+   * writes the CSS `translate` property on the div's CHILDREN — a different property on
+   * different nodes, exactly as `dimRivals` already writes `scale` on the triangle. The
+   * offset is measured off the triangle's OWN bounding rect (the artifact, not a re-derived
+   * intent) with our previous nudge subtracted, and only rewritten when it moves more
+   * than 6 px, which is wider than markersTick's own +-5 px bob — so the arrow keeps
+   * bobbing and this never thrashes at 6 Hz.
+   *
+   * THE GENERAL FIX BELONGS IN `markersTick` and is prepared for the coordinator in
+   * FIXLOG round 19: this clamps the ONE routed marker, that would clamp all 24. If it
+   * lands, this goes to zero by construction (dy is a max against 0) and can be deleted. */
+  var LIFT_CAP = 20;
+  function unclampLift(m) {
+    if (!m || !m.dataset) return;
+    for (var i = 0; i < m.children.length; i++)
+      if (m.children[i].style) m.children[i].style.translate = '';
+    delete m.dataset.wayDy;
+  }
+  function clampLift(m, edge) {
+    if (!m || !edge || !edge.at || typeof THREE === 'undefined') return;
+    var C = null; try { C = cam; } catch (e) {}
+    var H = window.innerHeight || 0;
+    if (!C || !H) return;
+    if (m.style.display === 'none') return;     // a hidden marker's rect is all zeroes
+    var tri = m.firstChild; if (!tri || !tri.getBoundingClientRect) return;
+    var v = new THREE.Vector3(edge.at[0], edge.at[1], edge.at[2]).project(C);
+    if (v.z > 1) return;                       // seam behind the camera: no honest y
+    var seamY = (-v.y * 0.5 + 0.5) * H;
+    var prev = parseFloat(m.dataset.wayDy || '0') || 0;
+    var top = tri.getBoundingClientRect().top - prev;
+    var dy = Math.max(0, (seamY - top) - LIFT_CAP);
+    if (Math.abs(dy - prev) <= 6) return;      // inside the bob: leave it alone
+    m.dataset.wayDy = String(dy.toFixed(1));
+    var s = dy ? '0 ' + dy.toFixed(1) + 'px' : '';
+    for (var i = 0; i < m.children.length; i++)
+      if (m.children[i].style) m.children[i].style.translate = s;
   }
 
   /* THE RIVAL ARROW — why the routed marker is not enough on its own (2026-08-05).
@@ -642,6 +708,7 @@
         t.style.transform = dx ? 'translateX(' + dx.toFixed(1) + 'px)' : '';
       }
     }
+    clampLift(m, r.edge);       // see clampLift: the arrow was drawn 97 px off its ground
     lastHint = { beat: b.id, edge: want, dest: name, hops: r.hops };
   }
 

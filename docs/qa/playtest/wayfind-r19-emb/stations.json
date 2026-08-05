@@ -1,0 +1,959 @@
+[
+ {
+  "pos": [
+   58.04,
+   0.95,
+   -28.04
+  ],
+  "scene": "emb-cine",
+  "shot": "therise",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ See to them (Finn ✓) — the cat out at the Waystone",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "emb-cine",
+   "shot": "therise",
+   "beat": "ch1.see.mochi",
+   "wantScene": "emb-cine",
+   "wantCam": "waystone",
+   "camAuthored": null,
+   "edge": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+   "hops": 2,
+   "dest": "The Waystone",
+   "shown": true,
+   "labelled": true,
+   "drawn": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+   "last": {
+    "beat": "ch1.see.mochi",
+    "edge": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+    "dest": "The Waystone",
+    "hops": 2
+   }
+  },
+  "target": "waystone",
+  "markers": [
+   {
+    "id": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 12.67,
+    "open": true,
+    "camTo": null,
+    "at": [
+     58.78,
+     0.285,
+     -15.318
+    ],
+    "shown": true,
+    "markerPx": [
+     668.5274658203125,
+     638.7266845703125
+    ],
+    "boxPx": [
+     668.535,
+     465.827
+    ],
+    "glyphPx": [
+     668.5274658203125,
+     638.7266845703125
+    ],
+    "seamPx": [
+     667.4940269213901,
+     659.7716802892984
+    ],
+    "arrowPx": [
+     668.5352734929303,
+     469.50153004356
+    ],
+    "liftPx": 21,
+    "liftFrac": 0.03,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       58.8,
+       0.31,
+       -15.81
+      ],
+      "d": 14.84
+     },
+     {
+      "name": "walk_e_road-gate__square-plaza_l3",
+      "pt": [
+       58.8,
+       0.3,
+       -15.82
+      ],
+      "d": 14.85
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       59.04,
+       -4.28,
+       -24.42
+      ],
+      "d": 24.6
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:therise>square",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 2.7,
+    "open": true,
+    "camTo": null,
+    "at": [
+     59.272,
+     0.947,
+     -30.445
+    ],
+    "shown": true,
+    "markerPx": [
+     674.1349487304688,
+     217.96170043945312
+    ],
+    "boxPx": [
+     674.135,
+     216.202
+    ],
+    "glyphPx": [
+     674.1349487304688,
+     217.96170043945312
+    ],
+    "seamPx": [
+     673.5252025852607,
+     333.9367682241093
+    ],
+    "arrowPx": [
+     674.134944322125,
+     221.04231963144443
+    ],
+    "liftPx": 116,
+    "liftFrac": 0.163,
+    "pick": [
+     {
+      "name": "veg_emb_village_04_crown",
+      "pt": [
+       58.88,
+       5.47,
+       -17.41
+      ],
+      "d": 14.81
+     },
+     {
+      "name": "walk_lm_square-plaza017",
+      "pt": [
+       59.84,
+       1.48,
+       -49.85
+      ],
+      "d": 47.51
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       59.86,
+       1.38,
+       -50.64
+      ],
+      "d": 48.31
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 45.56,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.572,
+     -0.327,
+     17.712
+    ],
+    "shown": false,
+    "markerPx": [
+     698.511,
+     178.402
+    ],
+    "boxPx": [
+     698.511,
+     178.402
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     890.1832178110907,
+     -418.162721101848
+    ],
+    "arrowPx": [
+     883.3085014509254,
+     -302.25469086037975
+    ],
+    "liftPx": -596.6,
+    "liftFrac": -0.837,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "therise",
+  "want": [
+   58.04,
+   0.95,
+   -28.04
+  ],
+  "hop": {
+   "here": "therise",
+   "hops": 2,
+   "m": 31.382837270226904,
+   "path": [
+    {
+     "edge": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+     "from": "therise",
+     "to": "arch"
+    },
+    {
+     "edge": "emb-cine>emb-cine@cut:waystone__road-gate:0.300:arch>waystone",
+     "from": "arch",
+     "to": "waystone"
+    }
+   ],
+   "alts": []
+  },
+  "uiClear": true
+ },
+ {
+  "pos": [
+   60.57,
+   0.95,
+   -32.98
+  ],
+  "scene": "emb-cine",
+  "shot": "square",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ See to them (Finn ✓) — the cat out at the Waystone",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "emb-cine",
+   "shot": "square",
+   "beat": "ch1.see.mochi",
+   "wantScene": "emb-cine",
+   "wantCam": "waystone",
+   "camAuthored": null,
+   "edge": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+   "hops": 3,
+   "dest": "The Waystone",
+   "shown": true,
+   "labelled": true,
+   "drawn": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+   "last": {
+    "beat": "ch1.see.mochi",
+    "edge": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+    "dest": "The Waystone",
+    "hops": 3
+   }
+  },
+  "target": "waystone",
+  "markers": [
+   {
+    "id": "emb-cine>emb-item-int@item-shop",
+    "label": "Enter Item Shop",
+    "kind": "door",
+    "to": "emb-item-int",
+    "dist": 12.49,
+    "open": true,
+    "camTo": null,
+    "at": [
+     71.059,
+     1.57,
+     -39.765
+    ],
+    "shown": true,
+    "markerPx": [
+     446.8036193847656,
+     245.13072204589844
+    ],
+    "boxPx": [
+     446.804,
+     243.371
+    ],
+    "glyphPx": [
+     446.8036193847656,
+     245.13072204589844
+    ],
+    "seamPx": [
+     452.53818712922634,
+     317.9604514905816
+    ],
+    "arrowPx": [
+     446.80361636130925,
+     248.3681982151109
+    ],
+    "liftPx": 72.8,
+    "liftFrac": 0.102,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       71.03,
+       1.38,
+       -34.31
+      ],
+      "d": 52.42
+     },
+     {
+      "name": "walk_lm_square-plaza037",
+      "pt": [
+       71.03,
+       1.36,
+       -34.28
+      ],
+      "d": 52.45
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       71.26,
+       -4.28,
+       -26.48
+      ],
+      "d": 62.08
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-inn-int@inn",
+    "label": "Enter The Ember Hearth",
+    "kind": "door",
+    "to": "emb-inn-int",
+    "dist": 6.47,
+    "open": true,
+    "camTo": null,
+    "at": [
+     56.678,
+     1.57,
+     -38.143
+    ],
+    "shown": true,
+    "markerPx": [
+     787.5315551757812,
+     192.78269958496094
+    ],
+    "boxPx": [
+     787.532,
+     191.023
+    ],
+    "glyphPx": [
+     787.5315551757812,
+     192.78269958496094
+    ],
+    "seamPx": [
+     783.4168958299811,
+     258.8002260500485
+    ],
+    "arrowPx": [
+     787.5315336840404,
+     189.97048256699037
+    ],
+    "liftPx": 66,
+    "liftFrac": 0.093,
+    "pick": [
+     {
+      "name": "lm_inn_body",
+      "pt": [
+       56.2,
+       3.84,
+       -36.36
+      ],
+      "d": 51.16
+     },
+     {
+      "name": "lm_inn_base",
+      "pt": [
+       55.6,
+       2.6,
+       -34.58
+      ],
+      "d": 53.41
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       55.01,
+       1.37,
+       -32.82
+      ],
+      "d": 55.63
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-bakery-int@bakery",
+    "label": "Enter Poppy's bakery",
+    "kind": "door",
+    "to": "emb-bakery-int",
+    "dist": 14.96,
+    "open": true,
+    "camTo": null,
+    "at": [
+     51.818,
+     1.57,
+     -45.115
+    ],
+    "shown": true,
+    "markerPx": [
+     958.6671752929688,
+     275.6997985839844
+    ],
+    "boxPx": [
+     958.667,
+     273.94
+    ],
+    "glyphPx": [
+     958.6671752929688,
+     275.6997985839844
+    ],
+    "seamPx": [
+     948.9131700686316,
+     348.52145241643467
+    ],
+    "arrowPx": [
+     958.6671503312675,
+     278.6199094598294
+    ],
+    "liftPx": 72.8,
+    "liftFrac": 0.102,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       49.53,
+       1.4,
+       -40.42
+      ],
+      "d": 51.72
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       45.77,
+       -4.28,
+       -33.69
+      ],
+      "d": 61.29
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 17.3,
+    "open": true,
+    "camTo": null,
+    "at": [
+     58.78,
+     0.285,
+     -15.318
+    ],
+    "shown": false,
+    "markerPx": [
+     668.535,
+     464.637
+    ],
+    "boxPx": [
+     668.535,
+     464.637
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     643.3576868011302,
+     52.50938066299781
+    ],
+    "arrowPx": [
+     643.4288817511596,
+     -10.562100577372455
+    ],
+    "liftPx": -412.1,
+    "liftFrac": -0.578,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:therise>square",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 2.85,
+    "open": true,
+    "camTo": null,
+    "at": [
+     59.272,
+     0.947,
+     -30.445
+    ],
+    "shown": false,
+    "markerPx": [
+     674.135,
+     216.208
+    ],
+    "boxPx": [
+     674.135,
+     216.208
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     688.3463520236719,
+     181.92053884695204
+    ],
+    "arrowPx": [
+     689.5884544987164,
+     115.17358368072766
+    ],
+    "liftPx": -34.3,
+    "liftFrac": -0.048,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 2.85,
+    "open": true,
+    "camTo": null,
+    "at": [
+     59.272,
+     0.947,
+     -30.445
+    ],
+    "shown": true,
+    "markerPx": [
+     689.5806274414062,
+     162.83035278320312
+    ],
+    "boxPx": [
+     689.588,
+     111.73
+    ],
+    "glyphPx": [
+     689.5806274414062,
+     162.83035278320312
+    ],
+    "seamPx": [
+     688.3463520236719,
+     181.92053884695204
+    ],
+    "arrowPx": [
+     689.5884544987164,
+     115.17358368072766
+    ],
+    "liftPx": 19.1,
+    "liftFrac": 0.027,
+    "pick": [
+     {
+      "name": "walk_e_road-gate__square-plaza_l6",
+      "pt": [
+       58.82,
+       0.85,
+       -28.6
+      ],
+      "d": 58.46
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       58.79,
+       0.76,
+       -28.45
+      ],
+      "d": 58.64
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       57.01,
+       -4.28,
+       -20.67
+      ],
+      "d": 68.07
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 23,
+    "open": true,
+    "camTo": null,
+    "at": [
+     80.255,
+     1.125,
+     -46.464
+    ],
+    "shown": true,
+    "markerPx": [
+     190.87367248535156,
+     407.5068054199219
+    ],
+    "boxPx": [
+     190.874,
+     405.747
+    ],
+    "glyphPx": [
+     190.87367248535156,
+     407.5068054199219
+    ],
+    "seamPx": [
+     206.0632134266192,
+     470.79791773823183
+    ],
+    "arrowPx": [
+     190.8736800302944,
+     400.84347563246075
+    ],
+    "liftPx": 63.3,
+    "liftFrac": 0.089,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       81.21,
+       0.98,
+       -42.79
+      ],
+      "d": 47.45
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       83.13,
+       -4.28,
+       -37.03
+      ],
+      "d": 55.48
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:square>homerow",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 23.07,
+    "open": true,
+    "camTo": null,
+    "at": [
+     49.975,
+     1.939,
+     -54.254
+    ],
+    "shown": true,
+    "markerPx": [
+     1119.498046875,
+     440.3582763671875
+    ],
+    "boxPx": [
+     1119.5,
+     438.598
+    ],
+    "glyphPx": [
+     1119.498046875,
+     440.3582763671875
+    ],
+    "seamPx": [
+     1102.3144007087594,
+     506.7348165820064
+    ],
+    "arrowPx": [
+     1119.4980984652213,
+     435.64511442686296
+    ],
+    "liftPx": 66.4,
+    "liftFrac": 0.093,
+    "pick": [
+     {
+      "name": "lm_watermill_roof",
+      "pt": [
+       56.28,
+       13.46,
+       -61.12
+      ],
+      "d": 27.83
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       47.72,
+       1.7,
+       -51.2
+      ],
+      "d": 45.44
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       43.36,
+       -4.28,
+       -46.15
+      ],
+      "d": 54.4
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 24.64,
+    "open": true,
+    "camTo": null,
+    "at": [
+     64.441,
+     1.98,
+     -57.859
+    ],
+    "shown": true,
+    "markerPx": [
+     710.0162963867188,
+     584.3147583007812
+    ],
+    "boxPx": [
+     710.016,
+     582.555
+    ],
+    "glyphPx": [
+     710.0162963867188,
+     584.3147583007812
+    ],
+    "seamPx": [
+     707.1791699343732,
+     657.6410218082376
+    ],
+    "arrowPx": [
+     710.0162946667281,
+     587.3269502705701
+    ],
+    "liftPx": 73.3,
+    "liftFrac": 0.103,
+    "pick": [
+     {
+      "name": "walk_e_square-plaza__barn_l2",
+      "pt": [
+       63.71,
+       1.75,
+       -55.03
+      ],
+      "d": 37.81
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       63.66,
+       1.47,
+       -54.82
+      ],
+      "d": 38.16
+     },
+     {
+      "name": "walk_lm_square-plaza027",
+      "pt": [
+       63.63,
+       1.36,
+       -54.74
+      ],
+      "d": 38.3
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 20.95,
+    "open": true,
+    "camTo": null,
+    "at": [
+     73.466,
+     1.36,
+     -50.311
+    ],
+    "shown": true,
+    "markerPx": [
+     390.3157043457031,
+     457.2177734375
+    ],
+    "boxPx": [
+     390.316,
+     455.458
+    ],
+    "glyphPx": [
+     390.3157043457031,
+     457.2177734375
+    ],
+    "seamPx": [
+     399.2088185052928,
+     521.9108850066972
+    ],
+    "arrowPx": [
+     390.31570675147015,
+     451.64254839981584
+    ],
+    "liftPx": 64.7,
+    "liftFrac": 0.091,
+    "pick": [
+     {
+      "name": "walk_lm_square-plaza048",
+      "pt": [
+       73.71,
+       1.36,
+       -47.15
+      ],
+      "d": 42.85
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       73.72,
+       1.3,
+       -47.09
+      ],
+      "d": 42.94
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       74.43,
+       -4.28,
+       -41.71
+      ],
+      "d": 50.72
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 50.81,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.572,
+     -0.327,
+     17.712
+    ],
+    "shown": false,
+    "markerPx": [
+     698.511,
+     178.402
+    ],
+    "boxPx": [
+     698.511,
+     178.402
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     622.5527200553322,
+     -130.79150926599226
+    ],
+    "arrowPx": [
+     622.2844755366885,
+     -187.5896046849747
+    ],
+    "liftPx": -309.2,
+    "liftFrac": -0.434,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "square",
+  "want": [
+   60.57,
+   0.95,
+   -32.98
+  ],
+  "hop": {
+   "here": "square",
+   "hops": 3,
+   "m": 34.225451787336944,
+   "path": [
+    {
+     "edge": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+     "from": "square",
+     "to": "therise"
+    },
+    {
+     "edge": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+     "from": "therise",
+     "to": "arch"
+    },
+    {
+     "edge": "emb-cine>emb-cine@cut:waystone__road-gate:0.300:arch>waystone",
+     "from": "arch",
+     "to": "waystone"
+    }
+   ],
+   "alts": []
+  },
+  "uiClear": true
+ }
+]

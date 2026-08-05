@@ -44,8 +44,14 @@ const TARGET = arg('target', 'lockfive');
  * projection and the arrow keeps the "floats over the door, points down at it" grammar
  * while keeping the arrow on the ground it names. This reports where each arrow WOULD
  * draw under the cap and what SIM.pick returns there, so the change can be argued with
- * numbers before anyone edits the coordinator-owned page. 0 = do not measure it. */
-const LIFTCAP = parseFloat(arg('liftcap', '0'));
+ * numbers before anyone edits the coordinator-owned page. 0 = do not measure it.
+ *
+ * IT TAKES A LIST (2026-08-05, round 19). `--liftcap 30,45,60,80` measures SEVERAL caps
+ * in one boot. One value per Chrome boot made the question "at what cap does this arrow
+ * stop landing on the cliff" cost a run each — and the answer is a THRESHOLD, so a
+ * single sample can only ever say yes or no about a number somebody guessed. */
+const LIFTCAPS = String(arg('liftcap', '0')).split(',').map(s => parseFloat(s)).filter(v => v > 0);
+const LIFTCAP = LIFTCAPS.length ? LIFTCAPS[0] : 0;
 /* --from <beatId>: WHICH GAME AM I MEASURING. (2026-08-05, PT-20260805-010.)
  *
  * The seed below used to be two hand-written arrays covering exactly one checkpoint,
@@ -149,7 +155,7 @@ await new Promise(r => setTimeout(r, 1500));
  *    at that triangle actually points at.
  */
 const READ_JS = (target, CAPV) => `(()=>{
-  const CAP=${CAPV};
+  const CAPS=${JSON.stringify(LIFTCAPS)};
   const p=SIM.pos();
   // cam and SG are play3d top-level let bindings: global LEXICAL scope, NOT on window
   // (window.cam is undefined, which read as 'the edge has no position'). Bare, guarded.
@@ -163,8 +169,18 @@ const READ_JS = (target, CAPV) => `(()=>{
   for(const d of document.querySelectorAll('#exit-markers > div')){
     const tf=d.style.transform||'';
     const m=/translate\\((-?[\\d.]+)px,\\s*(-?[\\d.]+)px\\)/.exec(tf);
+    /* THE GLYPH'S OWN RECT, not the div's transform (2026-08-05, round 19). The
+       transform is markersTick's INTENT; story_runtime clamps the routed arrow by
+       writing the CSS translate property on the triangle, which the transform string
+       does not carry. A probe that reads the intent cannot see the fix - and would
+       have reported the arrow still on the cliff while the frame showed otherwise.
+       Top-CENTRE of the triangle, which is the point the div transform also named. */
+    let g=null;
+    const tri=d.firstChild;
+    if(tri&&tri.getBoundingClientRect){ const r=tri.getBoundingClientRect();
+      if(r.width||r.height) g=[r.left+r.width/2, r.top]; }
     mk[d.dataset.edge]={shown:d.style.display!=='none', kind:d.dataset.kind,
-      px:m?[+m[1],+m[2]]:null};
+      px:g||(m?[+m[1],+m[2]]:null), boxPx:m?[+m[1],+m[2]]:null, glyphPx:g};
   }
   for(const e of es){
     const m=mk[e.id]; if(!m) continue;
@@ -178,17 +194,24 @@ const READ_JS = (target, CAPV) => `(()=>{
     let hit=null;
     if(m.shown&&m.px){ try{ const h=SIM.pick(m.px[0],m.px[1],3);
       hit=h.hits.map(q=>({name:q.name,pt:q.pt,d:q.d})); }catch(err){ hit=String(err); } }
-    let capPx=null, capHit=null;
-    if(CAP>0&&m.shown&&seam){
-      capPx=[seam[0], seam[1]-Math.min(CAP, Math.max(0, seam[1]-m.px[1]))];
-      try{ const h2=SIM.pick(capPx[0],capPx[1],3);
-        capHit=h2.hits.map(q=>({name:q.name,pt:q.pt,d:q.d})); }catch(err){ capHit=String(err); } }
+    let caps=null;
+    if(CAPS.length&&m.shown&&seam&&m.px){
+      caps=[];
+      for(const CAP of CAPS){
+        const cx=[seam[0], seam[1]-Math.min(CAP, Math.max(0, seam[1]-m.px[1]))];
+        let ch=null;
+        try{ const h2=SIM.pick(cx[0],cx[1],3);
+          ch=h2.hits.map(q=>({name:q.name,pt:q.pt,d:q.d})); }catch(err){ ch=String(err); }
+        caps.push({cap:CAP,px:cx,pick:ch});
+      } }
+    const capPx=caps&&caps[0]?caps[0].px:null, capHit=caps&&caps[0]?caps[0].pick:null;
     rows.push({id:e.id,label:e.label,kind:e.kind,to:e.to,dist:e.dist,open:e.open,
       camTo:e.cam&&e.cam.key?e.cam.key:null,
-      at:e.at, shown:!!m.shown, markerPx:m.px, seamPx:seam, arrowPx:arrow,
+      at:e.at, shown:!!m.shown, markerPx:m.px, boxPx:m.boxPx, glyphPx:m.glyphPx,
+      seamPx:seam, arrowPx:arrow,
       liftPx: (m.px&&seam)?+(seam[1]-m.px[1]).toFixed(1):null,
       liftFrac:(m.px&&seam)?+((seam[1]-m.px[1])/innerHeight).toFixed(3):null,
-      pick:hit, capPx:capPx, capPick:capHit});
+      pick:hit, capPx:capPx, capPick:capHit, caps:caps});
   }
   return JSON.stringify({pos:[+p.x.toFixed(2),+p.y.toFixed(2),+p.z.toFixed(2)],
     scene:SIM.scene?SIM.scene():null, shot,
@@ -283,11 +306,15 @@ for (const [name, pos, useShot] of STATIONS) {
       '  hops=' + wh.hops + '  shown=' + wh.shown + '  labelled=' + wh.labelled) : 'none (beat=' + wh.beat + ')')
     : 'Story.wayhint absent'));
   console.log('    SHORTEST BY METRES toward ' + TARGET + ': ' +
-    (hop && hop.path ? (hop.hops + ' hops / ' + hop.m.toFixed(1) + ' m, first = ' + hop.path[0].edge + ' -> ' + hop.path[0].to)
-                     : 'NO PATH'));
+    // hop.path can be an EMPTY array: standing in the target shot already is 0 hops, not
+    // "no path". It crashed the run at station B the first time this probe was pointed at
+    // a target inside its own station list.
+    (hop && hop.path && hop.path.length
+      ? (hop.hops + ' hops / ' + hop.m.toFixed(1) + ' m, first = ' + hop.path[0].edge + ' -> ' + hop.path[0].to)
+      : (hop && hop.path ? 'ALREADY IN ' + TARGET + ' (0 hops)' : 'NO PATH')));
   if (hop && hop.alts && hop.alts.length)
     console.log('       runners-up: ' + hop.alts.map(a => a.hops + ' hops / ' + a.m.toFixed(1) + ' m via ' + String(a.first).slice(-22)).join('  ·  '));
-  if (hop && hop.path && wh && wh.edge && wh.edge !== hop.path[0].edge)
+  if (hop && hop.path && hop.path.length && wh && wh.edge && wh.edge !== hop.path[0].edge)
     console.log('       !! SHIPPED HINT DISAGREES with the metre-shortest first hop');
   for (const m of (r.markers || [])) {
     if (!m.shown) continue;
@@ -298,9 +325,11 @@ for (const [name, pos, useShot] of STATIONS) {
       '  seam@' + JSON.stringify(m.seamPx && m.seamPx.map(v => Math.round(v))) +
       '  lift ' + m.liftPx + 'px (' + m.liftFrac + ' frame)' +
       '  click hits: ' + top +
-      (LIFTCAP > 0 ? ('  |  capped@' + JSON.stringify(m.capPx && m.capPx.map(v => Math.round(v))) +
-        ' hits: ' + ((m.capPick && m.capPick[0]) ? m.capPick[0].name : '(nothing)')) : '') +
       '  [' + (m.label || m.camTo || m.id.slice(-24)) + ']');
+    if (m.caps) for (const c of m.caps)
+      console.log('        cap ' + String(c.cap).padStart(3) + 'px -> @' +
+        JSON.stringify(c.px.map(v => Math.round(v))) + '  hits: ' +
+        ((c.pick && c.pick[0]) ? c.pick[0].name : '(nothing)'));
   }
 }
 writeFileSync(join(OUT, 'stations.json'), JSON.stringify(rows, null, 1));

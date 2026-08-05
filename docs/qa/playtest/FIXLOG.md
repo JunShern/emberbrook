@@ -3157,3 +3157,150 @@ hops-are-not-metres, unresolved for this edge. Frames pinned at
 with `--liftcap`, which is the instrument built for exactly this; (2) a `--from ch2.arrive`
 run so Chapter Two gets a budget of its own instead of Chapter One's remainder — the end
 card has still never been reached from any start.
+
+## Round 19 — 2026-08-05 · the routed arrow was drawn 97 px above the ground it names
+
+Round 18 ended with two jobs. This is both of them.
+
+### 1. THE `quay-west>lockhead` ARROW — IT IS ROUTED, AND IT IS MISDRAWN
+
+First the cheap question, because round 18 raised it: **is the Lockhead arrow simply not
+routed while `ch2.jam` is pending?** No. `wayfind_probe --from ch2.jam --target lockhead`
+at seven Dellhollow stations — the hint is live, labelled and correct at every one of them,
+and `dimRivals` (round 18, `b8b6f12`) is already demoting its neighbours:
+
+| station | shot | hinted edge | hops | shown / labelled | metre-shortest oracle |
+|---|---|---|---|---|---|
+| A-cottage-door | `cottage` | `cottage>lockhead` | 1 | true / true | **same edge**, 11.5 m |
+| B-lockhead | `lockhead` | — | 0 | (already there) | — |
+| C-quay-deck | `quay-west` | `quay-west>lockhead` | 1 | true / true | **same edge**, 13.7 m |
+| D/E-loop-stairs | `loop-stairs` | `loop-stairs>quay-west` | 2 | true / true | **same edge**, 4.4 / 6.4 m |
+| F-valley-gate | `gate` | `gate-stair-head>…-foot` | 5 | true / true | **same edge**, 33.0 m |
+| G-weave | `weave` | `weave>quay-west` | 2 | true / true | **same edge**, 11.9 m |
+
+Which also **retracts round 18's `!! SHIPPED HINT DISAGREES` flag on this edge**: that run
+was left on the probe's default `--target lockfive` while `ch2.jam`'s own cam is `lockhead`.
+The oracle was routing to a different building than the game. AN ORACLE POINTED AT THE
+WRONG DESTINATION IS NOT A SECOND OPINION — the probe now prints the target it used, and
+`--target` must be set to the beat's cam.
+
+So the residual is entirely **where the arrow draws**. `--liftcap 16,20,24,28,32,35,50,70,90`,
+24 shown markers over the seven stations. For each: `SIM.pick` at the arrow's own drawn
+pixel, and the distance from what it hit to the seam's own `at` — *how far from the place
+it names is the place it points at*:
+
+| cap on the screen lift | uncapped | 16 px | 20 px | 28 px | 35 px | 50 px | 70 px | 90 px |
+|---|---|---|---|---|---|---|---|---|
+| arrows landing within 3 m of their seam | **5/24** | 18/24 | **19/24** | 19/24 | 17/24 | 15/24 | 11/24 | 7/24 |
+
+and the one that stalled Chapter Two was the worst in the set:
+
+| `quay-west>lockhead` | uncapped | 16 px | 20 px | **24 px** | 35 px | 70 px |
+|---|---|---|---|---|---|---|
+| metres from the seam | **31.4** | 1.4 | **1.5** | **32.1** | 31.9 | 6.2 |
+
+Uncapped it lands on `cliff_town_back`, **70 m behind the town**, because 2.1 m of world
+lift on a 14 m seam is 97 px of screen and the deck it names is a few px deep in that shot.
+`run-20260805-044813`'s agent wrote *"ground marked as not walkable"* and *"cannot figure
+out how to reach the marker from the upper balcony"* — PT-20260805-014/015/016/017/018/019,
+**six filings, one arrow**. Round 10 made the EXECUTOR immune (a click on an exit arrow
+resolves to that edge's own `at`); nothing makes the READER immune. Same family as round 5's
+off-screen portal label and round 18's rival arrow: **THE ARROW IS IN THE RIGHT PLACE IN THE
+WORLD AND THE WRONG PLACE ON THE SCREEN.**
+
+**20 px is the number**, and note *why* it is not a taste call: it is both the global optimum
+and the only band that fixes this arrow — 24 px puts it straight back on the cliff, because
+its ground is a 4 px-deep sliver. With markersTick's 16 px glyph the tip then sits ~4 px
+above the seam: still "floats over the spot and points down at it", honest about which spot.
+
+### SHIPPED: the clamp, in `story_runtime` — the routed marker only
+
+`clampLift()` writes the CSS **`translate`** property on the marker div's CHILDREN.
+`markersTick` rewrites `transform` and `display` on the div every frame and nothing else, so
+this is a different property on different nodes — the same contract `dimRivals` already
+relies on, and this module's rule 1 (*it decorates, it never draws*) intact. The offset is
+measured off the triangle's OWN bounding rect with our previous nudge subtracted (the
+artifact, never a re-derived intent) and rewritten only when it moves more than 6 px, which
+is wider than markersTick's ±5 px bob — so the arrow keeps bobbing and this never thrashes.
+
+**RECEIPT**, `wayfind_probe --from ch2.jam --target lockhead`, the routed marker at each
+station (`docs/qa/playtest/wayfind-r19-fixed/`), against the same measurement before:
+
+| station | lift before → after | metres from its seam, before → after |
+|---|---|---|
+| A-cottage-door | 115.3 → 20.6 px | 2.8 → **1.2** |
+| **C-quay-deck** | 96.9 → 22.2 px | **31.4 → 1.7** (`cliff_town_back` → `wf_ground`) |
+| D-loop-stairs | 142.3 → 18.5 px | 7.4 → 5.0 |
+| E-loop-stairs-2 | 139.9 → 15.7 px | 7.3 → **0.5** |
+| F-valley-gate | 86.4 → 21.1 px | 5.3 → 4.3 (`gate_arch001` — a passage under an arch; expected) |
+| G-weave | 108.3 → 21.3 px | 8.7 → **1.0** |
+
+**Nothing else moved**: every RIVAL marker's lift is unchanged to within the bob (±2 px) at
+all seven stations, and Emberbrook is clean too — `--scene emb-cine --from ch1.see.mochi` at
+round 18's two ping-pong stations still reads `The Waystone`, `shown labelled`, with the
+rivals still dim (`docs/qa/playtest/wayfind-r19-emb/`). `story_test` **green**,
+`percept_test` **317/317**.
+
+**FRAMES, opened, both pinned**: `wayfind-r19/C-quay-deck.jpg` — arrow and pill on bare rock,
+no walkway under them; `wayfind-r19-fixed/C-quay-deck.jpg` — the same arrow now standing at
+the end of the boardwalk it names. And `wayfind-r19-emb/square.jpg` for the eight-marker case:
+the labelled arrow full-size on the north road, seven dim rivals reading as background.
+
+THE TRADE, recorded because a later reader will meet it: a seam near the bottom of a shot
+now draws its arrow near the bottom of the frame (`emb-cine/therise`, y 475 → 639 of 713).
+The lift was doing double duty as "pull the arrow up into the composition"; that half is gone
+on the routed marker, deliberately, because the other half was a lie about the ground.
+
+### PREPARED FOR THE COORDINATOR — the general fix, in `play3d.html`
+
+The clamp above fixes ONE arrow per shot. **19 of 24 need it**, and the number belongs where
+the lift is. `play3d.html` is coordinator-owned, so this is a diff and not a commit; if it
+lands, `clampLift` goes to zero by construction (`dy` is a `max` against 0) and should be
+deleted along with this paragraph.
+
+```diff
+@@ markersTick — the marker pool
+-const MKPOOL=new Map(); let MKBOX=null; const _mkv=new THREE.Vector3();
++const MKPOOL=new Map(); let MKBOX=null; const _mkv=new THREE.Vector3(), _mks=new THREE.Vector3();
+@@ the draw position
+     const bob=Math.sin((t||0)/280+e.at[0])*5;
+-    const px=(_mkv.x*0.5+0.5)*innerWidth, py=(-_mkv.y*0.5+0.5)*innerHeight-30+bob;
+-    m.style.transform='translate('+Math.max(38,Math.min(innerWidth-38,px))+'px,'+
+-      Math.max(62,Math.min(innerHeight-46,py))+'px) translateX(-50%)';
++    // AND CAP THE SCREEN LIFT AT 20 px (playtest round 19). at[1]+2.1 is a person's
++    // height above the seam in the WORLD; on screen it measured 83-164 px across seven
++    // Dellhollow stations, and 2.1 m above a seam is AIR — so the arrow draws against
++    // whatever stands behind it. Measured with wayfind_probe --liftcap: SIM.pick at each
++    // arrow's own drawn pixel landed within 3 m of the seam it names for 5 of 24 markers
++    // uncapped and 19 of 24 at 20 px. The one Chapter Two is reached by,
++    // quay-west>lockhead, was 31.4 m out on cliff_town_back 70 m behind the town, and 24 px
++    // puts it back there — its ground is a 4 px sliver. With the 16 px glyph the tip then
++    // lands ~4 px above the seam: the FF7 grammar, honest about which spot it means.
++    _mks.set(e.at[0],e.at[1],e.at[2]).project(cam);
++    const sy=(-_mks.y*0.5+0.5)*innerHeight;
++    const px=(_mkv.x*0.5+0.5)*innerWidth;
++    let py=(-_mkv.y*0.5+0.5)*innerHeight-30;
++    if(_mks.z<=1&&sy-py>20) py=sy-20;      // z>1: seam behind the camera, no honest y
++    py+=bob;
++    m.style.transform='translate('+Math.max(38,Math.min(innerWidth-38,px))+'px,'+
++      Math.max(62,Math.min(innerHeight-46,py))+'px) translateX(-50%)';
+```
+
+It also *helps* the 2026-08-03 clamp two lines above it: a smaller lift is a marker that
+needs clamping into the top of the frame less often, not more.
+
+### THE INSTRUMENT GREW THREE THINGS, and one of them was hiding the fix
+
+* **`--liftcap` takes a LIST** (`16,20,24,…`). One value per Chrome boot made "at what cap
+  does this arrow stop landing on the cliff" cost a run each, and the answer is a THRESHOLD:
+  a single sample can only say yes or no about a number somebody guessed.
+* **It reads the GLYPH'S OWN RECT, not the div's `transform`.** The transform is
+  markersTick's INTENT; `clampLift` moves the triangle with the CSS `translate` property,
+  which that string does not carry. A probe left reading the intent would have reported the
+  arrow still on the cliff while the frame showed otherwise — the walk_engine_gate lesson in
+  the DOM: an instrument that measures the drawing cannot measure the build.
+* **`hop.path` can be legitimately EMPTY** — standing in the target shot is 0 hops, not "no
+  path"; it crashed the run at station B the first time the probe was aimed at a target that
+  is also one of its stations.
+
+### 2. THE CHAPTER TWO RECEIPT — `--from ch2.arrive`, 120 steps
