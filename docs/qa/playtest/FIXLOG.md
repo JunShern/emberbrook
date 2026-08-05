@@ -3467,3 +3467,36 @@ in the first version of that probe — it reported `walk_lm_moorage` as an occlu
 | `gate` | 45/45 | 12 | 99.1 m |
 
 All six re-baked; the other ten are untouched, which is what `--cams` is for.
+
+### THE RECEIPT RUN — `--from=ch2.jam --steps=80`, and it never reached the fix
+
+`run-20260805-072356`, **$0.306** (plus ~$0.02 on an aborted start: `llm_playtester`'s own
+`arg()` only accepts `--key=value`, so `--from ch2.jam --steps 80` was silently ignored and
+began a NEW GAME at 120 steps — killed at step 2. **A FLAG PARSER THAT IGNORES AN UNKNOWN FORM
+SPENDS MONEY BEING WRONG**; round 19 paid ~$0.10 for the same class with `--help`).
+
+**`ch2.maren` DID NOT FIRE, and the reason is 35 m from anything this round touched.**
+The agent talked to Odessa at step 9–15, then spent steps 27–44 in the **Cookhouse**, hunting a
+person it had decided was called "Dellhollow" (PT-20260805-027 / -028, both filed against
+cookhouse furniture), and steps 45–80 — **36 of 80** — on the **deep stairs**, at
+`x 37–40, y 5.9–9.0`, stalled at `[39.56, 5.96, −20.84]`.
+
+That is **round 14's carried item, unchanged**: PT-20260805-004, *"16 of 17 stairs landings in
+`del-cine` are roofed by their own flight, 30–52% of each"*, filed then as the build lane it is
+(tread-top convention + `walk_rederive`×6 + `ls_build` + `cine_solve` + plates). `--at` at the
+stall: floor 5.96 **clear**, and the next cells in the direction it pushed have no floor at that
+height at all — only `seam_bank` at −3.9. `--way` down the flight: **1/3 legs** each way.
+
+**PINNED**: `ch2-maren-receipt/step-080-deep-stairs-stall.jpg` — the party mid-cliff, the amber
+`Lock Five` marker ~200 px BELOW them, the objective reading *"Down to the lock apron — the girl
+who was in the water"*, and stepping platforms between that the agent aimed at 30 times. Plus
+`step-067-deep-stairs-stall.jpg` and the run's `run.jsonl`.
+
+**SO THE MOORAGE FIX IS RECEIPTED BY INSTRUMENT, NOT BY THE LLM** — `playthrough_test` fires
+`ch2.maren`, `ch2.lockfive`, `ch2.supper`, `ch2.dock`, `ch2.winches` and `ch2.landing` (28 beats,
+**86/0**, §W 21 pairs flood-filled, **0 unreachable**), and `reach_probe` reaches Maren from the
+west store, the fish dock and the shack pad. What is still missing between `ch2.jam` and a human
+reaching Maren is the deep-stairs descent, and that was already the open ticket.
+
+**BUDGET, flagged as required: $0.33 of the ~$0.40 approved. A second run is not started** — it
+would meet the same flight.
