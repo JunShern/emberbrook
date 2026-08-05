@@ -127,6 +127,25 @@ export const PERCEPT_JS = `(()=>{
     const r = e.getBoundingClientRect();
     return r.width > 2 && r.height > 2 && r.bottom > 0 && r.top < innerHeight; };
   const txt = (e) => e ? e.textContent.replace(/\\s+/g,' ').trim() : null;
+  /* WHERE THE ARROW IS DRAWN, NOT WHERE ITS DIV IS (2026-08-05, round 28's receipt run).
+   * story_runtime nudges the routed marker by writing the CSS "translate" property on the
+   * div's CHILDREN — round 19's 20 px lift clamp, and now round 28's aim, which moves it
+   * onto the next point of the shot's route (175 px at the cottage). A CSS transform does
+   * not change layout, so the DIV'S OWN RECT NEVER MOVES: this reported the routed arrow at
+   * nx 0.441 while the frame the agent was looking at drew it at nx 0.307. The agent then
+   * clicked what it could SEE, missed the div, and the ray behind those pixels crossed the
+   * pit: "is not ground you can walk to", from aiming correctly. wayfind_probe learned this
+   * in round 19 and fixed ITS reader; the adapter's was never updated, so the harness has
+   * been ~130 px wrong about this one arrow ever since. Union of the children, which equals
+   * the div's own box whenever nothing is translated — so every other marker is unchanged. */
+  const __mrect = (el) => {
+    let L=Infinity,T=Infinity,R=-Infinity,B=-Infinity,n=0;
+    for (const c of el.children) { if(!c.getBoundingClientRect) continue;
+      const q=c.getBoundingClientRect(); if(!q.width&&!q.height) continue;
+      L=Math.min(L,q.left); T=Math.min(T,q.top); R=Math.max(R,q.right); B=Math.max(B,q.bottom); n++; }
+    if (!n) return el.getBoundingClientRect();
+    return {left:L, top:T, right:R, bottom:B, width:R-L, height:B-T};
+  };
   const out = { objective:null, prompts:[], dialogue:null, card:null, battle:null, you:null, markers:[] };
   const cur = (e) => /(^|\\s)(cur|sel|selected|active)(\\s|$)/.test(e.className||'');
   const ob = document.getElementById('story-obj');
@@ -247,8 +266,8 @@ export const PERCEPT_JS = `(()=>{
     if (!el.dataset || !el.dataset.edge) continue;
     const s = getComputedStyle(el);
     if (s.display === 'none' || s.visibility === 'hidden') continue;
-    const r = el.getBoundingClientRect();
-    if (!r.width || !r.height || r.bottom < 0 || r.top > innerHeight) continue;
+    const r = __mrect(el);
+    if (!r || !r.width || !r.height || r.bottom < 0 || r.top > innerHeight) continue;
     const pill = el.querySelector('.story-way');
     // The pill repeats the objective banner's amber diamond; strip it the same way the
     // objective line does, so the label is the PLACE NAME and nothing else.
@@ -415,10 +434,18 @@ const INSTALL_MOTOR = `(()=>{ if(window.__pt) return 'already';
     const box=document.getElementById('exit-markers'); if(!box) return null;
     const px=nx*innerWidth, py=ny*innerHeight, PAD=14;   // the arrow itself is 22x16
     let best=null;
+    /* THE GLYPH'S RECT, NOT THE DIV'S — see the same helper in PERCEPT_JS. A marker that
+       story_runtime has lifted or aimed draws where its CHILDREN are, and the div stays put.
+       Matching on the div made a click on the arrow the player can SEE miss it entirely. */
+    const mrect=(el)=>{ let L=Infinity,T=Infinity,R=-Infinity,B=-Infinity,n=0;
+      for(const c of el.children){ if(!c.getBoundingClientRect) continue;
+        const q=c.getBoundingClientRect(); if(!q.width&&!q.height) continue;
+        L=Math.min(L,q.left); T=Math.min(T,q.top); R=Math.max(R,q.right); B=Math.max(B,q.bottom); n++; }
+      return n?{left:L,top:T,right:R,bottom:B,width:R-L,height:B-T}:el.getBoundingClientRect(); };
     for(const el of box.children){
       if(!el.dataset||!el.dataset.edge) continue;
       if(getComputedStyle(el).display==='none') continue;
-      const r=el.getBoundingClientRect(); if(!r.width||!r.height) continue;
+      const r=mrect(el); if(!r.width||!r.height) continue;
       if(px<r.left-PAD||px>r.right+PAD||py<r.top-PAD||py>r.bottom+PAD) continue;
       const dd=Math.hypot(px-(r.left+r.right)/2, py-(r.top+r.bottom)/2);
       if(!best||dd<best.d) best={d:dd,id:el.dataset.edge,at:el.dataset.wayAt||null};

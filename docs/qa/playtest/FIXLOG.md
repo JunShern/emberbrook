@@ -4781,3 +4781,24 @@ The frames were looked at, not only measured: at the moorage the pill sits on th
 beside the body instead of up among the laundry decks; at the cottage it sits one step further
 down the ramp the body is standing on instead of out over the basin.
 
+### §5 The gauntlet, and two reds that are not this round's
+
+`story_test` 1112/0 · `percept_test` 349/349 · `routes_derive --check` clean (the file was
+STALE only in two `visibleFrac` measures; the polylines this round now depends on were
+byte-identical, and it is committed current so a future round cannot aim at a stale one).
+
+`transition_test --port=3000`: **161 ok, 7 failed, and CONSOLE CLEAN** — "no console errors
+across the whole run", which is the assertion that would catch a module that failed to parse
+or threw at 6 Hz. The seven are two pre-existing shapes, and the memory table separates them
+without a second run:
+
+* **6 × `geo +1 / tex +1`.** They appear at `del-inn-int`, `del-item-int` and
+  `del-cine|shelf-west` — *exactly* the states whose baseline was taken at doors 0–3, BEFORE
+  the first `ow-valley` visit — and at no state first seen after it (`shelf-east`, `gate`,
+  `cottage`, `del-cottage-int` all repeat clean). **One geometry and one texture are created
+  on the first overworld load and never released.** `story_runtime` allocates neither; this
+  is an `ow-valley` disposal matter and is reported, not fixed here.
+* **1 × "the re-entered town still knows all 16 of its shots — 15".** `del-cine` ships 15
+  shots. The sixteenth was `cottage-steps`, retired on 2026-08-05 with its walk records (the
+  `keepers-cottage` landmark's own note). The assertion's constant is stale, not the bundle.
+
