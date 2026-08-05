@@ -1,6 +1,6 @@
 # Emberbrook — LLM playtest queue
 
-Generated 2026-08-05T12:42:11.227Z by `tools/playtest_triage.mjs`. Source of truth: `docs/qa/playtest/queue.json`.
+Generated 2026-08-05T21:20:17.374Z by `tools/playtest_triage.mjs`. Source of truth: `docs/qa/playtest/queue.json`.
 
 **An UNVERIFIED complaint is a lead, never a ticket.** Filed by an LLM playing the game through
 screenshots and real key events; measured by instruments before anybody builds. REFUTED entries are
@@ -11,6 +11,8 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 |---|---|---|---|---|
 | VERIFIED | P0 | PT-20260803-014 | Attempted to navigate towards the village, but the game is unresponsive and visually broken. | same as PT-20260803-013 |
 | VERIFIED | P0 | PT-20260803-018 | Unable to move character on this map view after trying multiple coordinates across the screen, so I must give up. | same as PT-20260803-016 |
+| REFUTED against the game · VERIFIED against the harness | P0 | PT-20260805-036 | Character stuck on terrain geometry on middle platform | tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs |
+| VERIFIED | P0 | PT-20260805-048 | Cannot enter Keepers' Cottage despite standing on the waypoint marker | tools/reach_probe.mjs (in the running page) |
 | VERIFIED | P1 | PT-20260803-002 | The player can leave the chapter on its first frame, and the objective follows them out | llm_playtester spine detector (public/game/story.json vs the running scene) |
 | VERIFIED | P1 | PT-20260803-007 | The player can leave the chapter on its first frame, and the objective follows them out | llm_playtester spine detector (public/game/story.json vs the running scene) |
 | VERIFIED | P1 | PT-20260803-008 | The player can leave the chapter on its first frame, and the objective follows them out | llm_playtester spine detector (public/game/story.json vs the running scene) |
@@ -44,6 +46,9 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 | VERIFIED | P1 | PT-20260805-029 | Player gets stuck trying to walk down stairs to Lock Five | tools/reach_probe.mjs + SIM.move (in the running page) |
 | VERIFIED | P1 | PT-20260805-030 | Walk blocked: the body closed 0 m of an intended 4.34 m, twice at the same place | tools/reach_probe.mjs + SIM.move (in the running page) |
 | VERIFIED | P1 | PT-20260805-031 | Walk blocked: the body closed 0 m of an intended 3.41 m, twice at the same place | tools/reach_probe.mjs + SIM.move (in the running page) |
+| VERIFIED | P1 | PT-20260805-043 | Player falls through upper deck walkway collision geometry | tools/reach_probe.mjs + SIM.move (in the running page) |
+| VERIFIED | P1 | PT-20260805-053 | Walk blocked: the body closed 0 m of an intended 10.13 m, twice at the same place | tools/reach_probe.mjs (in the running page) |
+| VERIFIED | P1 | PT-20260805-054 | Walk blocked: the body closed 0 m of an intended 8.45 m, twice at the same place | tools/reach_probe.mjs (in the running page) |
 | UNVERIFIED | P0 | PT-20260803-006 | End the test session as the game is stuck on a black screen and cannot continue. | tools/reach_probe.mjs (needs a target) |
 | UNVERIFIED | P1 | PT-20260803-001 | Walk blocked: the body closed 0 m of an intended 35.57 m, twice at the same place | tools/reach_probe.mjs (NOT RUN) |
 | UNVERIFIED | P1 | PT-20260803-003 | Character stuck on terrain geometry | tools/reach_probe.mjs (needs a target) |
@@ -55,8 +60,7 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 | REFUTED | P0 | PT-20260804-011 | Cannot walk up the path to the head-gate winches | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P0 | PT-20260805-014 | Cannot interact with the NPC at 'The Lockhead' marker | tools/reach_probe.mjs + SIM.move (in the running page) |
 | REFUTED | P0 | PT-20260805-021 | Cannot interact with 'The Lockhead' NPC to advance objective | tools/reach_probe.mjs + SIM.move (in the running page) |
-| REFUTED against the game · VERIFIED against the harness | P0 | PT-20260805-036 | Character stuck on terrain geometry on middle platform | tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs |
-| UNVERIFIED | P1 | PT-20260805-039 | Stuck on lower dock, cannot climb stairs to Keepers' Cottage | tools/reach_probe.mjs (NOT RUN) |
+| REFUTED | P0 | PT-20260805-061 | Cannot trigger 'The Lockhead' area transition marker | tools/reach_probe.mjs + SIM.move (in the running page) |
 | REFUTED | P1 | PT-20260803-010 | Walk blocked: the body closed 0 m of an intended 5.7 m, twice at the same place | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260803-011 | Walk blocked: the body closed 0 m of an intended 8.74 m, twice at the same place | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260803-012 | Character stuck on terrain in sandy clearing | tools/reach_probe.mjs (in the running page) |
@@ -90,10 +94,29 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 | REFUTED against the game · VERIFIED against the harness | P1 | PT-20260805-035 | Character stuck on middle cliffside path | tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs |
 | REFUTED (round 24, recorded here in round 25) | P1 | PT-20260805-037 | Character gets stuck navigating down stairs towards Lock Five | tools/playtest/wayfind_probe.mjs --from=ch2.supper --target=cottage (docs/qa/playtest/wayfind-r24) |
 | REFUTED as filed (round 24, recorded here in round 25) | P1 | PT-20260805-038 | Character stuck on walkway near lantern, cannot reach Keepers' Cottage | tools/_court_probe.mjs --comp/--grid + tools/reach_probe.mjs |
+| UNVERIFIED | P1 | PT-20260805-039 | Stuck on lower dock, cannot climb stairs to Keepers' Cottage | tools/reach_probe.mjs (NOT RUN) |
 | THE HOLE IS VERIFIED · THE MECHANISM IS STILL UNNAMED · ONE SUSPECT REFUTED | P1 | PT-20260805-040 | Walk blocked: the body closed 0 m of an intended 11.33 m, twice at the same place | tools/_court_probe.mjs --at/--way + tools/scenegraph_derive.mjs + docs/qa/playtest/runs/run-20260805-121612/run.jsonl |
 | THE HOLE IS VERIFIED · THE MECHANISM IS STILL UNNAMED · ONE SUSPECT REFUTED | P1 | PT-20260805-041 | Character stuck on bottom right dock geometry | tools/_court_probe.mjs --at/--way + tools/scenegraph_derive.mjs + docs/qa/playtest/runs/run-20260805-121612/run.jsonl |
+| REFUTED | P1 | PT-20260805-042 | Keepers' Cottage exit teleports player back to lower dock loop | tools/reach_probe.mjs + SIM.move (in the running page) |
+| PARTIAL | P1 | PT-20260805-044 | Clicking upper level objective marker causes character to walk underneath it | tools/playtest/wayfind_probe.mjs + tools/_court_probe.mjs --way |
+| FIXED | P1 | PT-20260805-045 | Stuck on plank bridge due to missing walkable ground navmesh | tools/playtest/wayfind_probe.mjs + tools/_court_probe.mjs --way/--grid |
+| FIXED | P1 | PT-20260805-046 | Cannot navigate to Lock Five exit from broken bridge | tools/playtest/wayfind_probe.mjs + tools/_court_probe.mjs --way/--grid |
+| REFUTED | P1 | PT-20260805-047 | NPC blocking narrow bridge path | tools/reach_probe.mjs + SIM.move (in the running page) |
+| FIXED | P1 | PT-20260805-049 | Moorage deck at [76.15,1.32,-27.11] is a one-way pocket: the body can only leave eastward | tools/_court_probe.mjs --way (SIM.move, the drive, 400 ticks per leg) |
+| FIXED | P1 | PT-20260805-050 | weave shot: the routed Lock Five arrow sits at the frame edge on wv_piles, and every click on it fails | tools/playtest/wayfind_probe.mjs --from ch2.winches --stations weave |
+| REFUTED | P1 | PT-20260805-051 | Stuck on plank bridge, cannot move up or down | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-052 | Character stuck behind wooden pillars under curved platform | tools/reach_probe.mjs + SIM.move (in the running page) |
+| FIXED | P1 | PT-20260805-055 | The player can leave the chapter on its first frame, and the objective follows them out | tools/_court_probe.mjs --way (SIM.move in the running game) + tools/routes_derive.mjs --check + tools/playthrough_test.mjs |
+| FIXED | P1 | PT-20260805-057 | The player can leave the chapter on its first frame, and the objective follows them out | the recorded run itself (run-20260805-194359 percepts) replayed through the amended detector |
+| REFUTED | P1 | PT-20260805-058 | Exit trigger to The Emberbrook Valley does not activate when standing on marker | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-059 | Overlapping interaction prompts for 'Leave' and 'Talk' use the same key | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-060 | Scene transition for 'The Lockhead' is not triggering | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-062 | Cannot trigger 'The Lockhead' transition marker | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-063 | Multiple actions bound to the same key [E] prevent leaving the room | tools/reach_probe.mjs + SIM.move (in the running page) |
+| FIXED | P1 | PT-20260805-064 | Interact button prioritizes bargeman dialogue over exiting room | tools/_court_probe.mjs --comp/--who + adapter drive (real keys + E) in del-inn-int, both ways |
 | REFUTED | P2 | PT-20260804-009 | Cannot interact with NPCs inside The Boatmen's Rest | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P2 | PT-20260805-016 | Area transition trigger blocks path to objective building | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P2 | PT-20260805-056 | Overlapping interaction prompts near shop exit | tools/reach_probe.mjs + SIM.move (in the running page) |
 
 ## Detail
 
@@ -116,6 +139,46 @@ same frame one step later; same status
 duplicate of -016, same root cause, same fix 10ea7a4
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-018` (captured at 5c15518b)
+
+### PT-20260805-036 — Character stuck on terrain geometry on middle platform
+
+- **status** REFUTED against the game · VERIFIED against the harness (tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs)
+- **severity** P0 · **kind** blocker · **found by** stuck-interview
+- **I was doing** I was trying to move in any direction (left towards the stairs, right towards the walkway, or down) to get off this middle platform and head towards Lock Five.
+- **I expected** I expected my character to walk along the path in the direction I clicked.
+- **What happened** My character is completely stuck in place and won't move no matter where I click. I seem to be caught on some invisible geometry.
+
+```
+STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).
+BUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the
+route the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending
+[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;
+only ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any
+direction', and that is FALSE.
+WHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier
+5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --
+'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.
+THE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc
+[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the
+ticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)
+shows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on
+walk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.
+Fixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-036` (captured at fca1c303)
+
+### PT-20260805-048 — Cannot enter Keepers' Cottage despite standing on the waypoint marker
+
+- **status** VERIFIED (tools/reach_probe.mjs (in the running page))
+- **severity** P0 · **kind** blocker · **found by** stuck-interview
+- **I was doing** I was trying to enter the Keepers' Cottage to continue the supper quest.
+- **I expected** I expected to transition into the cottage or trigger a cutscene/dialogue when standing on or interacting with the marker.
+- **What happened** I am standing right on the marker and clicking it or trying to walk past it does nothing. I am stuck outside.
+
+```
+where I stood -> where I pointed: UNREACHABLE — [75.88,1.32,-26.85] -> [67.95,6.91,-29.5]: 4165 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 1.9 m away (at 66.8,1.64,-28, 5.27 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] — a 5.71 m step.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-048` (captured at 99d3dacd)
 
 ### PT-20260803-002 — The player can leave the chapter on its first frame, and the objective follows them out
 
@@ -559,6 +622,46 @@ where I stood -> where I pointed: reachable (3.4 m apart, 3 cells filled on foot
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-031` (captured at 22002c13)
 
+### PT-20260805-043 — Player falls through upper deck walkway collision geometry
+
+- **status** VERIFIED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** agent
+- **I was doing** Walking along the elevated walkway towards the Keepers' Cottage transition
+- **I expected** To walk along the upper deck to reach the Keepers' Cottage entrance at [0.558, 0.272]
+- **What happened** Stepping onto the upper walkway near [0.55, 0.33] repeatedly causes the character to fall through the floor back to the lower level at [0.375, 0.565] or [0.48, 0.64]
+
+```
+where I stood -> where I pointed: reachable (12.6 m apart, 559 cells filled on foot)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [77.06,1.07,-26.08] and stopped 2.23 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-043` (captured at 8ce6d0a3)
+
+### PT-20260805-053 — Walk blocked: the body closed 0 m of an intended 10.13 m, twice at the same place
+
+- **status** VERIFIED (tools/reach_probe.mjs (in the running page))
+- **severity** P1 · **kind** blocker · **found by** walk-executor
+- **I was doing** I tried to walk to a point on screen at [0.51, 0.33]; my goal was "Walk up the elevated walkway towards the top-right exit marker at [0.573, 0.243]".
+- **I expected** To walk about 10.13 m and arrive there.
+- **What happened** The character moved 0 m and stopped 10.13 m short — twice in this run. All five headings were pushed (5 bursts at ~157 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.
+
+```
+where I stood -> where I pointed: UNREACHABLE — [74.66,2,-27.47] -> [83.98,7.38,-23.49]: 1 cells filled from the start, 1 from the target, and they never meet. Nearest standable cell to the target is 10.1 m away (at 74.8,1.12,-27.6, 6.26 m off in height); the two regions come within 10.03 m of each other between [74.8,1.12,-27.6] and [84,7.38,-23.6] — a 6.26 m step.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-053` (captured at a2461edd)
+
+### PT-20260805-054 — Walk blocked: the body closed 0 m of an intended 8.45 m, twice at the same place
+
+- **status** VERIFIED (tools/reach_probe.mjs (in the running page))
+- **severity** P1 · **kind** blocker · **found by** walk-executor
+- **I was doing** I tried to walk to a point on screen at [0.54, 0.64]; my goal was "Walk along the curved platform to the right toward the exit arrow at [0.654, 0.736].".
+- **I expected** To walk about 8.45 m and arrive there.
+- **What happened** The character moved 0 m and stopped 8.45 m short — twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.
+
+```
+where I stood -> where I pointed: UNREACHABLE — [74.66,2,-27.47] -> [66.46,6.91,-29.5]: 1 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 8.6 m away (at 74.8,1.12,-27.6, 5.79 m off in height); the two regions come within 6.12 m of each other between [74.8,1.12,-27.6] and [68.8,6.91,-28.8] — a 5.79 m step.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-054` (captured at a2461edd)
+
 ### PT-20260803-006 — End the test session as the game is stuck on a black screen and cannot continue.
 
 - **status** UNVERIFIED (tools/reach_probe.mjs (needs a target))
@@ -702,45 +805,19 @@ where I stood -> where I pointed: reachable (0.8 m apart, 1 cells filled on foot
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-021` (captured at 44e93c6b)
 
-### PT-20260805-036 — Character stuck on terrain geometry on middle platform
+### PT-20260805-061 — Cannot trigger 'The Lockhead' area transition marker
 
-- **status** REFUTED against the game · VERIFIED against the harness (tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs)
-- **severity** P0 · **kind** blocker · **found by** stuck-interview
-- **I was doing** I was trying to move in any direction (left towards the stairs, right towards the walkway, or down) to get off this middle platform and head towards Lock Five.
-- **I expected** I expected my character to walk along the path in the direction I clicked.
-- **What happened** My character is completely stuck in place and won't move no matter where I click. I seem to be caught on some invisible geometry.
-
-```
-STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).
-BUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the
-route the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending
-[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;
-only ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any
-direction', and that is FALSE.
-WHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier
-5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --
-'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.
-THE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc
-[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the
-ticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)
-shows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on
-walk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.
-Fixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.
-```
-- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-036` (captured at fca1c303)
-
-### PT-20260805-039 — Stuck on lower dock, cannot climb stairs to Keepers' Cottage
-
-- **status** UNVERIFIED (tools/reach_probe.mjs (NOT RUN))
-- **severity** P1 · **kind** blocker · **found by** stuck-interview
-- **I was doing** trying to climb the wooden stairs to get up to the Keepers' Cottage for my objective
-- **I expected** my character to walk up the stairs to the circular platform above
-- **What happened** my character just shuffles around on the lower dock and won't actually go up the stairs, so I can't reach the objective marker
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P0 · **kind** bug · **found by** stuck-interview
+- **I was doing** Trying to walk into 'The Lockhead' way-out marker to proceed to the next area.
+- **I expected** To transition to the new area or initiate a conversation.
+- **What happened** I walk into the marker and stand there, but nothing happens. Interacting also does nothing.
 
 ```
-the reachability probe needs a running server: re-run this with --port=3000.
+where I stood -> where I pointed: reachable (0.9 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [33.33,19.07,-7.63], 0.58 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
 ```
-- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-039` (captured at e9bf1ba7)
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-061` (captured at a7be573f)
 
 ### PT-20260803-010 — Walk blocked: the body closed 0 m of an intended 5.7 m, twice at the same place
 
@@ -1264,6 +1341,19 @@ whose spawn lands 9.3 m east).
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-038` (captured at 690c1d4e)
 
+### PT-20260805-039 — Stuck on lower dock, cannot climb stairs to Keepers' Cottage
+
+- **status** UNVERIFIED (tools/reach_probe.mjs (NOT RUN))
+- **severity** P1 · **kind** blocker · **found by** stuck-interview
+- **I was doing** trying to climb the wooden stairs to get up to the Keepers' Cottage for my objective
+- **I expected** my character to walk up the stairs to the circular platform above
+- **What happened** my character just shuffles around on the lower dock and won't actually go up the stairs, so I can't reach the objective marker
+
+```
+the reachability probe needs a running server: re-run this with --port=3000.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-039` (captured at e9bf1ba7)
+
 ### PT-20260805-040 — Walk blocked: the body closed 0 m of an intended 11.33 m, twice at the same place
 
 - **status** THE HOLE IS VERIFIED · THE MECHANISM IS STILL UNNAMED · ONE SUSPECT REFUTED (tools/_court_probe.mjs --at/--way + tools/scenegraph_derive.mjs + docs/qa/playtest/runs/run-20260805-121612/run.jsonl)
@@ -1328,6 +1418,236 @@ page that logs P.y per tick across the transition, not another fill.
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-041` (captured at e9bf1ba7)
 
+### PT-20260805-042 — Keepers' Cottage exit teleports player back to lower dock loop
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** agent
+- **I was doing** Walking into the Keepers' Cottage transition marker at [0.55, 0.32]
+- **I expected** To transition inside the Keepers' Cottage to progress the objective
+- **What happened** The scene reloads and respawns my character at the bottom dock at [0.375, 0.565] in a loop.
+
+```
+where I stood -> where I pointed: reachable (4.7 m apart, 65 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [90.53,-0.15,-27.71], 0.59 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-042` (captured at 8ce6d0a3)
+
+### PT-20260805-044 — Clicking upper level objective marker causes character to walk underneath it
+
+- **status** PARTIAL (tools/playtest/wayfind_probe.mjs + tools/_court_probe.mjs --way)
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to go up to the Keepers' Cottage by clicking the objective marker and the stairs.
+- **I expected** I expected my character to automatically pathfind up the stairs to reach the upper level, or for clicking the stairs to let me walk up them.
+- **What happened** My character just walked underneath the upper platform on the lower dock. When I tried clicking the stairs manually, it either didn't move me much or said it wasn't ground.
+
+```
+round 28: root named and fixed in public/js/story_runtime.js (wayAim reads <town>.routes.json and aims the routed arrow at the furthest route vertex the body can reach in a straight line, gated by an in-page march of SIM.walkFloors+SIM.blocked under walkGround's own step window). Measured with tools/playtest/wayfind_probe.mjs (real Chrome, the shipped projection), frames pinned in docs/qa/playtest/wayfind-r28-*, and the aim driven with tools/_court_probe.mjs --way. THE ARROW IS FIXED: it moved from [713,291] (5.0 m overhead, picking the laundry decks) to [608,~466], aim [75.00,1.93,-27.70] on the switchbacks lower flight, SIM.pick returning wv_planking. THE REMAINING HALF IS A WORLD DEFECT, split out as PT-20260805-047: the stand [76.15,1.32,-27.11] is a one-way pocket — SIM.move drives out of it EAST only (0.00 m south, 0.11 m west, 0.22 m north, 0.30 m north-west) while every reverse drive walks back into it.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-044` (captured at 0d6c0c0f)
+
+### PT-20260805-045 — Stuck on plank bridge due to missing walkable ground navmesh
+
+- **status** FIXED (tools/playtest/wayfind_probe.mjs + tools/_court_probe.mjs --way/--grid)
+- **severity** P1 · **kind** bug · **found by** agent
+- **I was doing** Trying to walk along the plank bridge to satisfy the objective
+- **I expected** The player character should be able to walk along the wooden plank bridge surface
+- **What happened** Multiple movement attempts in all directions on the bridge failed with 'is not ground you can walk to', leaving me stuck
+
+```
+round 28: root named and fixed in public/js/story_runtime.js (wayAim reads <town>.routes.json and aims the routed arrow at the furthest route vertex the body can reach in a straight line, gated by an in-page march of SIM.walkFloors+SIM.blocked under walkGround's own step window). Measured with tools/playtest/wayfind_probe.mjs (real Chrome, the shipped projection), frames pinned in docs/qa/playtest/wayfind-r28-*, and the aim driven with tools/_court_probe.mjs --way. Cottage: the arrow moved from [568,686] (the seam, across a 1.5 m hole 2.6 m down) to [405,~627], aim [91.27,7.75,-22.13]; SIM.pick at its own pixel returns walk_e_lockhead__keepers-cottage_l16 (the spur the body is on); _court_probe --way drives that chord clean in BOTH directions from the cottage door. Past the junction the aim withdraws by itself and the arrow is round 19s plain lift clamp on the bridge.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-045` (captured at 0d6c0c0f)
+
+### PT-20260805-046 — Cannot navigate to Lock Five exit from broken bridge
+
+- **status** FIXED (tools/playtest/wayfind_probe.mjs + tools/_court_probe.mjs --way/--grid)
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** Trying to walk down the broken plank bridge to reach the 'Lock Five' exit arrow at the bottom of the screen.
+- **I expected** My character should walk down the structure and reach the exit.
+- **What happened** I seem to be stuck on the broken bridge pieces. Clicking near the exit arrow doesn't move my character there, and I can't find a path down.
+
+```
+round 28: root named and fixed in public/js/story_runtime.js (wayAim reads <town>.routes.json and aims the routed arrow at the furthest route vertex the body can reach in a straight line, gated by an in-page march of SIM.walkFloors+SIM.blocked under walkGround's own step window). Measured with tools/playtest/wayfind_probe.mjs (real Chrome, the shipped projection), frames pinned in docs/qa/playtest/wayfind-r28-*, and the aim driven with tools/_court_probe.mjs --way. Cottage: the arrow moved from [568,686] (the seam, across a 1.5 m hole 2.6 m down) to [405,~627], aim [91.27,7.75,-22.13]; SIM.pick at its own pixel returns walk_e_lockhead__keepers-cottage_l16 (the spur the body is on); _court_probe --way drives that chord clean in BOTH directions from the cottage door. Past the junction the aim withdraws by itself and the arrow is round 19s plain lift clamp on the bridge.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-046` (captured at 0d6c0c0f)
+
+### PT-20260805-047 — NPC blocking narrow bridge path
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** blocker · **found by** stuck-interview
+- **I was doing** Trying to walk down the plank bridge towards the Lock Five objective.
+- **I expected** To be able to walk down the bridge.
+- **What happened** Another character is standing in the middle of the narrow bridge, blocking my path, and I can't get around them.
+
+```
+where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [91.15,8.5,-21.14], 0.55 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-047` (captured at f10d3ca3)
+
+### PT-20260805-049 — Moorage deck at [76.15,1.32,-27.11] is a one-way pocket: the body can only leave eastward
+
+- **status** FIXED (tools/_court_probe.mjs --way (SIM.move, the drive, 400 ticks per leg))
+- **severity** P1 · **kind** bug · **found by** lane
+- **I was doing** Walking from the moorage toward the switchback up to the weave tier, following the routed Keepers Cottage arrow.
+- **I expected** A body standing on the moorage deck can walk to the foot of the stair one metre south.
+- **What happened** The leg closed 0.06 m of 2.4 m. Split out of PT-20260805-044, whose HUD half (an arrow drawn 5 m above the tier) is fixed in round 28 — this is the world half and no arrow can cure it.
+
+```
+From [76.15,1.32,-27.11] on the moorage deck the body drives EAST to [76.74,1.32,-27.15] cleanly and stalls in every other heading: south to [76.15,1.32,-28.2] travels 0.00 m, west to [75.2,1.3,-27.0] 0.11 m, north to [76.15,1.32,-26.2] 0.22 m, north-west to [74.6,1.25,-26.75] 0.30 m. The REVERSE drives all walk back INTO it. The columns around it carry walk_e_weave-huts__moorage_l2_t03/t04 treads at 1.19-1.32 — the deck height itself — so a body standing at 1.32 is wedged against the flights own treads. | FIXED round 29 (a2461ed): the south wall was cx_rail at z 2.12 -- RAIL_H over the OLD 1.70 foot, never re-derived when 8752b87 lowered the floor; and behind it the un-migrated switchback itself (l1 over l2 in the body window, both hairpins). STAIRS_V2 += weave-huts__moorage with weave/locksfoot/cx re-run in the same window; town_blockout grew lay_stair_rails (a rail may not stand in a body window of its own edge). _court_probe --way: DOWN 12/12 legs clean, UP threads; run-20260805-163944 walked moorage->weave->crossing->cottage and fired ch2.supper.
+```
+- **repro** none
+
+### PT-20260805-050 — weave shot: the routed Lock Five arrow sits at the frame edge on wv_piles, and every click on it fails
+
+- **status** FIXED (tools/playtest/wayfind_probe.mjs --from ch2.winches --stations weave)
+- **severity** P1 · **kind** bug · **found by** lane
+- **I was doing** Crossing into the weave shot and walking at the one labelled Lock Five arrow.
+- **I expected** The arrow marks ground the player can walk to, inside the frame.
+- **What happened** Five separate steps (7, 9, 19, 21, 23) drove at nx 0.10-0.11 and each returned "is not ground you can walk to"; the agent bounced weave<->crossing for eighteen steps. Round 5 fixed the LABEL being half off frame and round 19 the arrow being lifted onto scenery; this is the seam itself projecting to the margin, which neither covers.
+
+```
+In shot weave standing at [72.4,7.87,-23.56] the routed weave>lockfive arrow draws at [128,468] of 1280x720 — nx 0.100, the frames LEFT MARGIN — and SIM.pick at its own drawn pixel returns wv_piles, a stilt. The seam itself projects to [139,488]; the aim correctly does NOT engage, because from the weave tier the straight line to the seam IS ground. Frame: docs/qa/playtest/wayfind-r28-weave/weave arrival.jpg. | FIXED round 29 (565ba15): weave yaw 118 -> 142 (seam nx 0.104 -> 0.203, ground/chest/head occluder rays clear, charPxFar 54 >= 50 floor, region 81.3% vs 90.6%), one plate baked. run-20260805-170550 took the weave>lockfive cut AT STEP 9 and the Chapter Two END CARD was drawn and perceived at step 12.
+```
+- **repro** none
+
+### PT-20260805-051 — Stuck on plank bridge, cannot move up or down
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** blocker · **found by** stuck-interview
+- **I was doing** Trying to walk along the plank bridge, either up towards the top right or down following the routing arrow to Lock Five.
+- **I expected** To be able to walk up or down the bridge to continue exploring or follow the objective.
+- **What happened** I keep getting told the areas I click are not ground I can walk to, leaving me stuck in place on the ramp.
+
+```
+where I stood -> where I pointed: reachable (1.2 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [89.12,10.3,-19.06], 0.57 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-051` (captured at a03eb7b2)
+
+### PT-20260805-052 — Character stuck behind wooden pillars under curved platform
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** Trying to walk along the lower walkway towards the exit markers.
+- **I expected** I expected to be able to walk along the path to the next area.
+- **What happened** My character got stuck behind the vertical wooden pillars supporting the platform above and I can't move in any direction.
+
+```
+where I stood -> where I pointed: reachable (2.4 m apart, 27 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [74.91,1.25,-30.11], 0.59 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-052` (captured at a2461edd)
+
+### PT-20260805-055 — The player can leave the chapter on its first frame, and the objective follows them out
+
+- **status** FIXED (tools/_court_probe.mjs --way (SIM.move in the running game) + tools/routes_derive.mjs --check + tools/playthrough_test.mjs)
+- **severity** P1 · **kind** bug · **found by** spine-detector
+- **I was doing** I read the opening narration by pressing the action button, then used the only prompt on screen.
+- **I expected** To carry on with the objective the game was showing me.
+- **What happened** I ended up somewhere with no way to advance the story, and the objective on screen ("Step through the Old Gate") still refers to where I was. Nothing here can continue the chapter.
+
+```
+Fixed as filed, in the map: gate-court->sigil-gate carried no waypoints, so the routed polyline ran the holed centre line and wayAim failed closed over the channel head. The edge now carries the measured west-flank waypoints ([74.6,122.5],[74.6,125.0],[76.5,127.3] map coords, verbatim from the 4/4 drive in run-20260805-182057). routes_derive --check clean. Engine drive along the NEW routed polyline: 4/4 legs BOTH ways (forward terminus [77.99,2.66,-128.44], 1.56 m from the portal, inside its r 2.2). playthrough_test 86/0, findability 69/0, story gate green. The channel-head hole itself is untouched on purpose: THE FLANK IS THE DESIGN, and the fix class is one line of map plus one re-derive, exactly the doctrine's shape.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-055` (captured at 7e63a317)
+
+### PT-20260805-057 — The player can leave the chapter on its first frame, and the objective follows them out
+
+- **status** FIXED (the recorded run itself (run-20260805-194359 percepts) replayed through the amended detector)
+- **severity** P1 · **kind** bug · **found by** spine-detector
+- **I was doing** I read the opening narration by pressing the action button, then used the only prompt on screen.
+- **I expected** To carry on with the objective the game was showing me.
+- **What happened** I ended up somewhere with no way to advance the story, and the objective on screen ("Step through the Old Gate") still refers to where I was. Nothing here can continue the chapter.
+
+```
+Detector false positive by design, fixed in the harness (episode.mjs): the walk from the sigil court to the Old Gate takes more than three steps and the next un-fired beat (ch1.done) lives in ow-valley, so any correctly guided exit walk tripped the 3-step window — the SAME run fired ch1.done and crossed the corridor right after this filing. The filing sentence "nothing here can continue the chapter" is false whenever the routed wayhint arrow is drawn, so a step with a live routed marker no longer counts toward off-spine. Replayed over the recorded run: all 15 post-sendoff emb-cine steps carried the routed marker; the amended detector files nothing. An unguided exit (hint broken, edge sealed, marker off-screen 3 straight steps) still files exactly as before. percept_test 704/704.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-057` (captured at a7be573f)
+
+### PT-20260805-058 — Exit trigger to The Emberbrook Valley does not activate when standing on marker
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** agent
+- **I was doing** Trying to step through the Old Gate into The Emberbrook Valley by walking on and around the red marker [0.665, 0.191].
+- **I expected** Walking onto or interacting near the exit marker should trigger a map transition to the next area.
+- **What happened** My character is standing directly at the marker location [0.635, 0.15] and walking/interacting repeatedly does nothing.
+
+```
+where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [75.97,2.66,-127.17], 0.55 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-058` (captured at a7be573f)
+
+### PT-20260805-059 — Overlapping interaction prompts for 'Leave' and 'Talk' use the same key
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** Trying to leave The Boatmen's Rest.
+- **I expected** Pressing the interact button would let me leave the building.
+- **What happened** The prompt to leave and the prompt to talk to the bargeman are both on screen and use the same key [E]. Pressing it keeps triggering the conversation instead of letting me leave.
+
+```
+where I stood -> where I pointed: reachable (1.2 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [-2.58,0,-1.83], 0.53 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-059` (captured at a7be573f)
+
+### PT-20260805-060 — Scene transition for 'The Lockhead' is not triggering
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to leave the area by walking onto the scene exit marker labelled 'The Lockhead'.
+- **I expected** I expected to transition to the next scene or area.
+- **What happened** I just stand on the marker and nothing happens, I can't leave the area.
+
+```
+where I stood -> where I pointed: reachable (1.0 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [32.01,19.07,-8.02], 0.6 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-060` (captured at a7be573f)
+
+### PT-20260805-062 — Cannot trigger 'The Lockhead' transition marker
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** blocker · **found by** stuck-interview
+- **I was doing** I'm trying to follow the objective marker to 'The Lockhead' by walking onto the red arrow at the edge of the walkway.
+- **I expected** Walking onto or past the red arrow should trigger a transition to the next screen or area.
+- **What happened** I walked all over the marker and past it, but nothing happens. I'm stuck on this screen.
+
+```
+where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [33.38,19.07,-7.61], 0.53 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-062` (captured at a7be573f)
+
+### PT-20260805-063 — Multiple actions bound to the same key [E] prevent leaving the room
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to leave The Boatmen's Rest by pressing the interact button [E].
+- **I expected** I expected to exit the tavern and go back to Dellhollow.
+- **What happened** Instead of leaving, pressing [E] kept triggering the dialogue with the bargeman because both the 'Leave' and 'Talk' prompts are active at the same time and use the same key.
+
+```
+where I stood -> where I pointed: reachable (1.7 m apart, 3 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [-2.9,-0.06,-1.79], 0.57 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-063` (captured at a7be573f)
+
+### PT-20260805-064 — Interact button prioritizes bargeman dialogue over exiting room
+
+- **status** FIXED (tools/_court_probe.mjs --comp/--who + adapter drive (real keys + E) in del-inn-int, both ways)
+- **severity** P1 · **kind** bug · **found by** agent
+- **I was doing** Pressing interact while standing at the Dellhollow exit point to leave the building.
+- **I expected** Pressing interact should execute the primary/exit prompt 'Leave The Boatmen's Rest?'.
+- **What happened** Pressing interact triggers dialogue with the nearby bargeman ('Still third...') every time instead of exiting.
+
+```
+The door was never region-unreachable: the exit pad [-3.4,0.04,-2.72] r 1.8 sits in the room's main walk component (377-cell fill contains it) and a real-key drive reaches 0.46 m from it. The reach probe's unreachable target [-3.61,0,0.81] is a 23-cell dead POCKET between the hearth and the settle (sealed at both mouths by hearth_dress_5/the fire-iron stand at [-3.62,z-0.78] and the settle's body shadow — _court_probe --who) that no body can enter; a click-target trap only. The player-facing defect was the KEY: ui_kit dispatches global keys in the CAPTURE phase and npc.js's chain consumed E whenever any villager was within 1.9 m, so play3d's bubble-phase door keydown never saw it — and the bargeman's reach covers the whole door pad. npc.js now yields E to a nearer live scene edge. Drive-verified: at [-3.6,-1.39] (the filing's own spot, door 1.35 m < bargeman 1.80 m) E exits to del-cine [23.94,19.07,-5.54]; at [-2.2,-1.5] (bargeman 0.45 m) E still talks. The double prompt banner remains the known PT-009/056 cosmetic.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-064` (captured at a7be573f)
+
 ### PT-20260804-009 — Cannot interact with NPCs inside The Boatmen's Rest
 
 - **status** REFUTED (tools/reach_probe.mjs (in the running page))
@@ -1355,3 +1675,17 @@ where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot
   The ground is connected AND SIM.move drives it (ended [20.74,24.07,-5.89], 0.39 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-016` (captured at b8b6f12a)
+
+### PT-20260805-056 — Overlapping interaction prompts near shop exit
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P2 · **kind** bug · **found by** stuck-interview
+- **I was doing** Walking to the door to leave the item shop.
+- **I expected** A clean 'Leave Item Shop? [E]' prompt.
+- **What happened** The 'Leave Item Shop' prompt is overlapping with the 'Talk to shopkeeper' prompt, making it look like 'Ta Leave Item Shop? [E] [E]'.
+
+```
+where I stood -> where I pointed: reachable (1.4 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [5.22,0.03,-5.19], 0.57 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-056` (captured at a7be573f)

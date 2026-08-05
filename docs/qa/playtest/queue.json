@@ -493,7 +493,7 @@
     "status": "UNVERIFIED",
     "instrument": null,
     "evidence": "no instrument in this repo answers this claim \u2014 it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
-    "at": "2026-08-05T12:42:11.205Z"
+    "at": "2026-08-05T20:34:15.964Z"
    },
    "run": "run-20260803-113942",
    "step": 5,
@@ -6868,7 +6868,7 @@
     "status": "UNVERIFIED",
     "instrument": null,
     "evidence": "no instrument in this repo answers this claim \u2014 it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
-    "at": "2026-08-05T12:42:11.212Z"
+    "at": "2026-08-05T20:34:15.973Z"
    },
    "run": "run-20260804-185107",
    "step": 24,
@@ -17422,10 +17422,10 @@
    "id": "PT-20260805-042",
    "created": "2026-08-05T14:00:53.864Z",
    "verification": {
-    "status": "UNVERIFIED",
-    "instrument": null,
-    "evidence": null,
-    "at": null
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (4.7 m apart, 65 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [90.53,-0.15,-27.71], 0.59 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:34:30.248Z"
    },
    "run": "run-20260805-134944",
    "step": 64,
@@ -17652,10 +17652,10 @@
    "id": "PT-20260805-043",
    "created": "2026-08-05T14:03:29.916Z",
    "verification": {
-    "status": "UNVERIFIED",
-    "instrument": null,
-    "evidence": null,
-    "at": null
+    "status": "VERIFIED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (12.6 m apart, 559 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [77.06,1.07,-26.08] and stopped 2.23 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+    "at": "2026-08-05T20:34:44.413Z"
    },
    "run": "run-20260805-134944",
    "step": 78,
@@ -18590,10 +18590,10 @@
    "id": "PT-20260805-047",
    "created": "2026-08-05T15:38:20.584Z",
    "verification": {
-    "status": "UNVERIFIED",
-    "instrument": null,
-    "evidence": null,
-    "at": null
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [91.15,8.5,-21.14], 0.55 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:34:56.067Z"
    },
    "run": "run-20260805-153730",
    "step": 7,
@@ -18828,10 +18828,10 @@
    "id": "PT-20260805-048",
    "created": "2026-08-05T15:49:49.811Z",
    "verification": {
-    "status": "UNVERIFIED",
-    "instrument": null,
-    "evidence": null,
-    "at": null
+    "status": "VERIFIED",
+    "instrument": "tools/reach_probe.mjs (in the running page)",
+    "evidence": "where I stood -> where I pointed: UNREACHABLE \u2014 [75.88,1.32,-26.85] -> [67.95,6.91,-29.5]: 4165 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 1.9 m away (at 66.8,1.64,-28, 5.27 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] \u2014 a 5.71 m step.",
+    "at": "2026-08-05T20:35:04.548Z"
    },
    "run": "run-20260805-154827",
    "step": 8,
@@ -19156,10 +19156,10 @@
    "id": "PT-20260805-051",
    "created": "2026-08-05T16:48:11.578Z",
    "verification": {
-    "status": "UNVERIFIED",
-    "instrument": null,
-    "evidence": null,
-    "at": null
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (1.2 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [89.12,10.3,-19.06], 0.57 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:35:16.266Z"
    },
    "run": "run-20260805-163944",
    "step": 62,
@@ -19394,10 +19394,10 @@
    "id": "PT-20260805-052",
    "created": "2026-08-05T17:08:53.312Z",
    "verification": {
-    "status": "UNVERIFIED",
-    "instrument": null,
-    "evidence": null,
-    "at": null
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (2.4 m apart, 27 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [74.91,1.25,-30.11], 0.59 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:35:27.987Z"
    },
    "run": "run-20260805-170550",
    "step": 19,
@@ -19642,10 +19642,10 @@
    "id": "PT-20260805-053",
    "created": "2026-08-05T17:19:03.545Z",
    "verification": {
-    "status": "UNVERIFIED",
-    "instrument": null,
-    "evidence": null,
-    "at": null
+    "status": "VERIFIED",
+    "instrument": "tools/reach_probe.mjs (in the running page)",
+    "evidence": "where I stood -> where I pointed: UNREACHABLE \u2014 [74.66,2,-27.47] -> [83.98,7.38,-23.49]: 1 cells filled from the start, 1 from the target, and they never meet. Nearest standable cell to the target is 10.1 m away (at 74.8,1.12,-27.6, 6.26 m off in height); the two regions come within 10.03 m of each other between [74.8,1.12,-27.6] and [84,7.38,-23.6] \u2014 a 6.26 m step.",
+    "at": "2026-08-05T20:35:33.819Z"
    },
    "run": "run-20260805-170550",
    "step": 80,
@@ -19891,10 +19891,10 @@
    "id": "PT-20260805-054",
    "created": "2026-08-05T17:19:27.476Z",
    "verification": {
-    "status": "UNVERIFIED",
-    "instrument": null,
-    "evidence": null,
-    "at": null
+    "status": "VERIFIED",
+    "instrument": "tools/reach_probe.mjs (in the running page)",
+    "evidence": "where I stood -> where I pointed: UNREACHABLE \u2014 [74.66,2,-27.47] -> [66.46,6.91,-29.5]: 1 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 8.6 m away (at 74.8,1.12,-27.6, 5.79 m off in height); the two regions come within 6.12 m of each other between [74.8,1.12,-27.6] and [68.8,6.91,-28.8] \u2014 a 5.79 m step.",
+    "at": "2026-08-05T20:35:39.656Z"
    },
    "run": "run-20260805-170550",
    "step": 82,
@@ -20329,6 +20329,2018 @@
      },
      "meta": {
       "savedAt": "2026-08-05T18:44:47.187Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-056",
+   "created": "2026-08-05T19:32:10.977Z",
+   "verification": {
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (1.4 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [5.22,0.03,-5.19], 0.57 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:35:47.380Z"
+   },
+   "run": "run-20260805-192354",
+   "step": 67,
+   "source": "stuck-interview",
+   "kind": "bug",
+   "severity": "P2",
+   "title": "Overlapping interaction prompts near shop exit",
+   "doing": "Walking to the door to leave the item shop.",
+   "expected": "A clean 'Leave Item Shop? [E]' prompt.",
+   "happened": "The 'Leave Item Shop' prompt is overlapping with the 'Talk to shopkeeper' prompt, making it look like 'Ta Leave Item Shop? [E] [E]'.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     4.44,
+     0,
+     -4.91
+    ],
+    "to": [
+     5.75,
+     0.03,
+     -5.38
+    ],
+    "scene": "emb-item-int"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-192354/frames/step-065.jpg",
+    "docs/qa/playtest/runs/run-20260805-192354/frames/step-066.jpg",
+    "docs/qa/playtest/runs/run-20260805-192354/frames/step-067.jpg"
+   ],
+   "onscreen": {
+    "objective": "See to them, all four \u2014 Poppy at her stall, Mara at the Heartlight, Finn at the pond, the cat out at the Waystone",
+    "prompts": [
+     "Leave Item Shop? [E]",
+     "Talk to the shopkeeper? [E]"
+    ],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "emb-item-int",
+    "shot": null,
+    "pos": [
+     5.75,
+     0.03,
+     -5.47
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.emb.girl",
+     "npc.met.poppy",
+     "npc.met.mara",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "npc.met.emb.shopkeep"
+    ],
+    "exits": [
+     "emb-item-int>emb-cine@item-shop"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T19:32:10.975Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.emb.girl": true,
+      "npc.met.poppy": true,
+      "npc.met.mara": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "npc.met.emb.shopkeep": true
+     },
+     "at": {
+      "chapter": 1,
+      "scene": "emb-item-int",
+      "cam": null,
+      "pos": [
+       5.75,
+       0.03,
+       -5.38
+      ],
+      "yaw": null
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T19:31:15.824Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-057",
+   "created": "2026-08-05T20:06:11.965Z",
+   "verification": {
+    "status": "FIXED",
+    "instrument": "the recorded run itself (run-20260805-194359 percepts) replayed through the amended detector",
+    "at": "2026-08-05T22:05:00Z",
+    "evidence": "Detector false positive by design, fixed in the harness (episode.mjs): the walk from the sigil court to the Old Gate takes more than three steps and the next un-fired beat (ch1.done) lives in ow-valley, so any correctly guided exit walk tripped the 3-step window \u2014 the SAME run fired ch1.done and crossed the corridor right after this filing. The filing sentence \"nothing here can continue the chapter\" is false whenever the routed wayhint arrow is drawn, so a step with a live routed marker no longer counts toward off-spine. Replayed over the recorded run: all 15 post-sendoff emb-cine steps carried the routed marker; the amended detector files nothing. An unguided exit (hint broken, edge sealed, marker off-screen 3 straight steps) still files exactly as before. percept_test 704/704."
+   },
+   "run": "run-20260805-194359",
+   "step": 188,
+   "source": "spine-detector",
+   "kind": "bug",
+   "severity": "P1",
+   "title": "The player can leave the chapter on its first frame, and the objective follows them out",
+   "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
+   "expected": "To carry on with the objective the game was showing me.",
+   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Step through the Old Gate\") still refers to where I was. Nothing here can continue the chapter.",
+   "probe": null,
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-186.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-187.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-188.jpg"
+   ],
+   "onscreen": {
+    "objective": "Step through the Old Gate",
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "emb-cine",
+    "shot": "gatefield",
+    "pos": [
+     76.6,
+     2.66,
+     -126.24
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "npc.met.emb.neighbour",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "npc.met.rowan",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff"
+    ],
+    "exits": [
+     "emb-cine>emb-cine@cut:barn__gate-court:0.698:gatefield>gateroad",
+     "emb-cine>ow-valley@old-gate"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T20:06:11.962Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "npc.met.emb.neighbour": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "npc.met.rowan": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true
+     },
+     "at": {
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "gatefield",
+      "pos": [
+       69.666,
+       2.722,
+       -109.777
+      ],
+      "yaw": null
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T20:05:58.739Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-058",
+   "created": "2026-08-05T20:07:18.725Z",
+   "verification": {
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [75.97,2.66,-127.17], 0.55 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:35:51.912Z"
+   },
+   "run": "run-20260805-194359",
+   "step": 195,
+   "source": "agent",
+   "kind": "bug",
+   "severity": "P1",
+   "title": "Exit trigger to The Emberbrook Valley does not activate when standing on marker",
+   "doing": "Trying to step through the Old Gate into The Emberbrook Valley by walking on and around the red marker [0.665, 0.191].",
+   "expected": "Walking onto or interacting near the exit marker should trigger a map transition to the next area.",
+   "happened": "My character is standing directly at the marker location [0.635, 0.15] and walking/interacting repeatedly does nothing.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     75.46,
+     2.66,
+     -127.04
+    ],
+    "to": [
+     76.5,
+     2.85,
+     -127.3
+    ],
+    "scene": "emb-cine"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-193.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-194.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-195.jpg"
+   ],
+   "onscreen": {
+    "objective": "Step through the Old Gate",
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "emb-cine",
+    "shot": "gatefield",
+    "pos": [
+     75.46,
+     2.66,
+     -127.04
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "npc.met.emb.neighbour",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "npc.met.rowan",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff"
+    ],
+    "exits": [
+     "emb-cine>emb-cine@cut:barn__gate-court:0.698:gatefield>gateroad",
+     "emb-cine>ow-valley@old-gate"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T20:07:18.721Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "npc.met.emb.neighbour": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "npc.met.rowan": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true
+     },
+     "at": {
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "gatefield",
+      "pos": [
+       69.666,
+       2.722,
+       -109.777
+      ],
+      "yaw": null
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T20:05:58.739Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-059",
+   "created": "2026-08-05T20:14:00.767Z",
+   "verification": {
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (1.2 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [-2.58,0,-1.83], 0.53 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:36:03.044Z"
+   },
+   "run": "run-20260805-194359",
+   "step": 250,
+   "source": "stuck-interview",
+   "kind": "bug",
+   "severity": "P1",
+   "title": "Overlapping interaction prompts for 'Leave' and 'Talk' use the same key",
+   "doing": "Trying to leave The Boatmen's Rest.",
+   "expected": "Pressing the interact button would let me leave the building.",
+   "happened": "The prompt to leave and the prompt to talk to the bargeman are both on screen and use the same key [E]. Pressing it keeps triggering the conversation instead of letting me leave.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     -2.43,
+     0,
+     -2.49
+    ],
+    "to": [
+     -2.69,
+     0,
+     -1.31
+    ],
+    "scene": "del-inn-int"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-248.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-249.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-250.jpg"
+   ],
+   "onscreen": {
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
+    "prompts": [
+     "Leave The Boatmen's Rest? [E]",
+     "Talk to bargeman? [E]"
+    ],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-inn-int",
+    "shot": null,
+    "pos": [
+     -2.43,
+     0,
+     -2.49
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "npc.met.emb.neighbour",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "npc.met.rowan",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "npc.met.del.innkeep",
+     "npc.met.del.inn.bargeman"
+    ],
+    "exits": [
+     "del-inn-int>del-cine@inn"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T20:14:00.764Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "npc.met.emb.neighbour": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "npc.met.rowan": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "npc.met.del.innkeep": true,
+      "npc.met.del.inn.bargeman": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-inn-int",
+      "cam": null,
+      "pos": [
+       -3.4,
+       0.04,
+       -2.72
+      ],
+      "yaw": 0.7854
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1,
+      "ch1.done": 1,
+      "ch2.road": 1,
+      "ch2.arrive": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T20:12:39.243Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-060",
+   "created": "2026-08-05T20:16:14.960Z",
+   "verification": {
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (1.0 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [32.01,19.07,-8.02], 0.6 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:36:17.148Z"
+   },
+   "run": "run-20260805-194359",
+   "step": 269,
+   "source": "stuck-interview",
+   "kind": "bug",
+   "severity": "P1",
+   "title": "Scene transition for 'The Lockhead' is not triggering",
+   "doing": "I was trying to leave the area by walking onto the scene exit marker labelled 'The Lockhead'.",
+   "expected": "I expected to transition to the next scene or area.",
+   "happened": "I just stand on the marker and nothing happens, I can't leave the area.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     31.57,
+     19.07,
+     -7.93
+    ],
+    "to": [
+     32.6,
+     19,
+     -8.13
+    ],
+    "scene": "del-cine"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-267.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-268.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-269.jpg"
+   ],
+   "onscreen": {
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-cine",
+    "shot": "shelf-west",
+    "pos": [
+     31.57,
+     19.07,
+     -7.93
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "npc.met.emb.neighbour",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "npc.met.rowan",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "npc.met.del.innkeep",
+     "npc.met.del.inn.bargeman"
+    ],
+    "exits": [
+     "del-cine>del-inn-int@inn",
+     "del-cine>del-item-int@item-shop",
+     "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+     "del-cine>del-cine@cut:valley-gate__inn:0.319:shelf-west>gate",
+     "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-west>shelf-east"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T20:16:14.956Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "npc.met.emb.neighbour": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "npc.met.rowan": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "npc.met.del.innkeep": true,
+      "npc.met.del.inn.bargeman": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "shelf-west",
+      "pos": [
+       27.596,
+       19.07,
+       -7.378
+      ],
+      "yaw": 0.7854
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1,
+      "ch1.done": 1,
+      "ch2.road": 1,
+      "ch2.arrive": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T20:15:35.734Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-061",
+   "created": "2026-08-05T20:23:55.814Z",
+   "verification": {
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (0.9 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [33.33,19.07,-7.63], 0.58 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:36:28.765Z"
+   },
+   "run": "run-20260805-194359",
+   "step": 327,
+   "source": "stuck-interview",
+   "kind": "bug",
+   "severity": "P0",
+   "title": "Cannot trigger 'The Lockhead' area transition marker",
+   "doing": "Trying to walk into 'The Lockhead' way-out marker to proceed to the next area.",
+   "expected": "To transition to the new area or initiate a conversation.",
+   "happened": "I walk into the marker and stand there, but nothing happens. Interacting also does nothing.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     33.03,
+     19.07,
+     -7.59
+    ],
+    "to": [
+     33.9,
+     19,
+     -7.7
+    ],
+    "scene": "del-cine"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-325.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-326.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-327.jpg"
+   ],
+   "onscreen": {
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-cine",
+    "shot": "shelf-west",
+    "pos": [
+     33.03,
+     19.07,
+     -7.59
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "npc.met.emb.neighbour",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "npc.met.rowan",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "npc.met.del.innkeep",
+     "npc.met.del.inn.bargeman"
+    ],
+    "exits": [
+     "del-cine>del-inn-int@inn",
+     "del-cine>del-item-int@item-shop",
+     "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+     "del-cine>del-cine@cut:valley-gate__inn:0.319:shelf-west>gate",
+     "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-west>shelf-east"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T20:23:55.810Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "npc.met.emb.neighbour": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "npc.met.rowan": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "npc.met.del.innkeep": true,
+      "npc.met.del.inn.bargeman": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "shelf-west",
+      "pos": [
+       31.23,
+       19.04,
+       -9.781
+      ],
+      "yaw": 0.7854
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1,
+      "ch1.done": 1,
+      "ch2.road": 1,
+      "ch2.arrive": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T20:15:35.734Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-062",
+   "created": "2026-08-05T20:26:00.442Z",
+   "verification": {
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [33.38,19.07,-7.61], 0.53 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:36:40.348Z"
+   },
+   "run": "run-20260805-194359",
+   "step": 341,
+   "source": "stuck-interview",
+   "kind": "blocker",
+   "severity": "P1",
+   "title": "Cannot trigger 'The Lockhead' transition marker",
+   "doing": "I'm trying to follow the objective marker to 'The Lockhead' by walking onto the red arrow at the edge of the walkway.",
+   "expected": "Walking onto or past the red arrow should trigger a transition to the next screen or area.",
+   "happened": "I walked all over the marker and past it, but nothing happens. I'm stuck on this screen.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     32.79,
+     19.07,
+     -7.5
+    ],
+    "to": [
+     33.9,
+     19,
+     -7.7
+    ],
+    "scene": "del-cine"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-339.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-340.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-341.jpg"
+   ],
+   "onscreen": {
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-cine",
+    "shot": "shelf-west",
+    "pos": [
+     32.79,
+     19.07,
+     -7.5
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "npc.met.emb.neighbour",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "npc.met.rowan",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "npc.met.del.innkeep",
+     "npc.met.del.inn.bargeman"
+    ],
+    "exits": [
+     "del-cine>del-inn-int@inn",
+     "del-cine>del-item-int@item-shop",
+     "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+     "del-cine>del-cine@cut:valley-gate__inn:0.319:shelf-west>gate",
+     "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-west>shelf-east"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T20:26:00.439Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "npc.met.emb.neighbour": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "npc.met.rowan": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "npc.met.del.innkeep": true,
+      "npc.met.del.inn.bargeman": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "shelf-west",
+      "pos": [
+       32.552,
+       19.07,
+       -8.149
+      ],
+      "yaw": 0.7854
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1,
+      "ch1.done": 1,
+      "ch2.road": 1,
+      "ch2.arrive": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T20:15:35.734Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-063",
+   "created": "2026-08-05T20:27:29.009Z",
+   "verification": {
+    "status": "REFUTED",
+    "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+    "evidence": "where I stood -> where I pointed: reachable (1.7 m apart, 3 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [-2.9,-0.06,-1.79], 0.57 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "at": "2026-08-05T20:36:51.496Z"
+   },
+   "run": "run-20260805-194359",
+   "step": 353,
+   "source": "stuck-interview",
+   "kind": "bug",
+   "severity": "P1",
+   "title": "Multiple actions bound to the same key [E] prevent leaving the room",
+   "doing": "I was trying to leave The Boatmen's Rest by pressing the interact button [E].",
+   "expected": "I expected to exit the tavern and go back to Dellhollow.",
+   "happened": "Instead of leaving, pressing [E] kept triggering the dialogue with the bargeman because both the 'Leave' and 'Talk' prompts are active at the same time and use the same key.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     -2.27,
+     0,
+     -2.72
+    ],
+    "to": [
+     -3.22,
+     0,
+     -1.32
+    ],
+    "scene": "del-inn-int"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-351.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-352.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-353.jpg"
+   ],
+   "onscreen": {
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
+    "prompts": [
+     "Leave The Boatmen's Rest? [E]",
+     "Talk to bargeman? [E]"
+    ],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-inn-int",
+    "shot": null,
+    "pos": [
+     -3.28,
+     0,
+     -1.71
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "npc.met.emb.neighbour",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "npc.met.rowan",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "npc.met.del.innkeep",
+     "npc.met.del.inn.bargeman"
+    ],
+    "exits": [
+     "del-inn-int>del-cine@inn"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T20:27:29.005Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "npc.met.emb.neighbour": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "npc.met.rowan": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "npc.met.del.innkeep": true,
+      "npc.met.del.inn.bargeman": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-inn-int",
+      "cam": null,
+      "pos": [
+       -3.4,
+       0.04,
+       -2.72
+      ],
+      "yaw": 0.7854
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1,
+      "ch1.done": 1,
+      "ch2.road": 1,
+      "ch2.arrive": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T20:26:17.957Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
+  },
+  {
+   "id": "PT-20260805-064",
+   "created": "2026-08-05T20:28:28.927Z",
+   "verification": {
+    "status": "FIXED",
+    "instrument": "tools/_court_probe.mjs --comp/--who + adapter drive (real keys + E) in del-inn-int, both ways",
+    "at": "2026-08-05T22:05:00Z",
+    "evidence": "The door was never region-unreachable: the exit pad [-3.4,0.04,-2.72] r 1.8 sits in the room's main walk component (377-cell fill contains it) and a real-key drive reaches 0.46 m from it. The reach probe's unreachable target [-3.61,0,0.81] is a 23-cell dead POCKET between the hearth and the settle (sealed at both mouths by hearth_dress_5/the fire-iron stand at [-3.62,z-0.78] and the settle's body shadow \u2014 _court_probe --who) that no body can enter; a click-target trap only. The player-facing defect was the KEY: ui_kit dispatches global keys in the CAPTURE phase and npc.js's chain consumed E whenever any villager was within 1.9 m, so play3d's bubble-phase door keydown never saw it \u2014 and the bargeman's reach covers the whole door pad. npc.js now yields E to a nearer live scene edge. Drive-verified: at [-3.6,-1.39] (the filing's own spot, door 1.35 m < bargeman 1.80 m) E exits to del-cine [23.94,19.07,-5.54]; at [-2.2,-1.5] (bargeman 0.45 m) E still talks. The double prompt banner remains the known PT-009/056 cosmetic."
+   },
+   "run": "run-20260805-194359",
+   "step": 359,
+   "source": "agent",
+   "kind": "bug",
+   "severity": "P1",
+   "title": "Interact button prioritizes bargeman dialogue over exiting room",
+   "doing": "Pressing interact while standing at the Dellhollow exit point to leave the building.",
+   "expected": "Pressing interact should execute the primary/exit prompt 'Leave The Boatmen's Rest?'.",
+   "happened": "Pressing interact triggers dialogue with the nearby bargeman ('Still third...') every time instead of exiting.",
+   "probe": {
+    "kind": "reach",
+    "from": [
+     -3.6,
+     -0.01,
+     -1.39
+    ],
+    "to": [
+     -3.61,
+     0,
+     0.81
+    ],
+    "scene": "del-inn-int"
+   },
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-357.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-358.jpg",
+    "docs/qa/playtest/runs/run-20260805-194359/frames/step-359.jpg"
+   ],
+   "onscreen": {
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
+    "prompts": [
+     "Leave The Boatmen's Rest? [E]",
+     "Talk to bargeman? [E]"
+    ],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "del-inn-int",
+    "shot": null,
+    "pos": [
+     -3.07,
+     0,
+     -1.19
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff",
+     "ch1.done",
+     "ch2.road",
+     "ch2.arrive"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "npc.met.emb.neighbour",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "npc.met.rowan",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff",
+     "story.ch1.done",
+     "story.ch2.road",
+     "story.ch2.arrived",
+     "npc.met.del.innkeep",
+     "npc.met.del.inn.bargeman"
+    ],
+    "exits": [
+     "del-inn-int>del-cine@inn"
+    ]
+   },
+   "repro": {
+    "sha": "a7be573f65e5c209e2e43db6de51ed8ee5d21dfb",
+    "capturedAt": "2026-08-05T20:28:28.923Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "npc.met.emb.neighbour": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "npc.met.rowan": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true,
+      "story.ch1.done": true,
+      "story.ch2.road": true,
+      "story.ch2.arrived": true,
+      "npc.met.del.innkeep": true,
+      "npc.met.del.inn.bargeman": true
+     },
+     "at": {
+      "chapter": 2,
+      "scene": "del-inn-int",
+      "cam": null,
+      "pos": [
+       -3.4,
+       0.04,
+       -2.72
+      ],
+      "yaw": 0.7854
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1,
+      "ch1.done": 1,
+      "ch2.road": 1,
+      "ch2.arrive": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T20:26:17.957Z",
       "playSeconds": 0
      }
     },
