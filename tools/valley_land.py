@@ -445,6 +445,265 @@ def _loop_face(me):
 
 
 # ===========================================================================
+# R22 — THE ROAD VERGE.  The seam the user named, as a MATERIAL band.
+# ===========================================================================
+# "the main road is also too 'distinct' from the grass around it in a way that is
+# unrealistic, the cuts are too abrupt."  Measured on the gate plate: the ribbon's
+# edge is a ONE-TO-TWO PIXEL step in value with nothing either side of it.  It has
+# to be, by construction — `walk_road` carried ONE flat COLOR_0 on every vertex
+# (overworld3_build.terrain_pbr_f2 writes the tint 8e7a63 to the whole mesh) and
+# met a terrain whose own COLOR_0 knows nothing about it.  Two flat fields meeting
+# on a polygon edge IS a cut; no amount of fringe scatter hides one, which is
+# exactly what f1 carried forward and f2's pads re-learned.
+#
+# THE FIX IS THE ONE THE REFERENCES SHOW: the dirt feathers OUT into the grass and
+# the grass creeps IN over the dirt, so neither side owns the edge.  Both sides
+# ramp to the SAME 50/50 mixture AT the seam and back to their own colour away
+# from it — which makes the step zero by construction rather than by tuning, and
+# is why there are two mix numbers and not one.
+#
+# IT IS COLOUR ONLY.  No new material (a second material on the road would be a
+# second draw call and a second seam), no alpha (an alpha-blended verge sorts, and
+# a stipple at this pixel size reads as noise), no geometry on the terrain side at
+# all — the ground's own ~0.8 u vertex spacing already gives a 1.4 u band two
+# vertices to interpolate across.  The ROAD side needed its lanes (see
+# valley_build.ROAD_LANES) because a 2-across strip has no interior vertex to
+# ramp from.
+#
+# THE TWO MESHES ARE IN DIFFERENT COLOUR NORMALISATIONS and this is the trap that
+# would have made the band a new seam instead of a cure.  glTF renders
+# baseColorTexture * COLOR_0, and pbr_mat pre-divides each class colour by ITS OWN
+# texture's albedo mean — so COLOR_0 0.6 on the road and COLOR_0 0.6 on the grass
+# are NOT the same brightness on screen.  The blend is therefore done in PERCEIVED
+# space (albedo_mean * COLOR_0) and converted back per mesh.
+VERGE_GROUND = 1.40      # u the road's colour reaches OUT over the terrain
+VERGE_ROAD = 0.34        # u the terrain's colour reaches IN over the ribbon
+VERGE_MIX = 0.52         # the mixture both sides carry AT the seam
+VERGE_RAG = 0.55         # u the band's own edge wanders, so it is worn not drawn
+
+
+def _vnoise_v(x, y, cell, s):
+    """vnoise(), vectorised.  Identical arithmetic — checked against the scalar
+    on the build's own assert — because a second noise implementation that drifts
+    from the first is a bug nobody can see."""
+    fx, fy = np.asarray(x, float) / cell, np.asarray(y, float) / cell
+    ix, iy = np.floor(fx), np.floor(fy)
+    tx, ty = fx - ix, fy - iy
+    sx = tx * tx * (3 - 2 * tx)
+    sy = ty * ty * (3 - 2 * ty)
+    h = lambda a, b: (lambda n: n - np.floor(n))(
+        np.sin(a * 127.1 + b * 311.7 + s * 74.7) * 43758.5453)
+    a_, b_ = h(ix, iy), h(ix + 1, iy)
+    c_, d_ = h(ix, iy + 1), h(ix + 1, iy + 1)
+    return (a_ * (1 - sx) + b_ * sx) * (1 - sy) + (c_ * (1 - sx) + d_ * sx) * sy
+
+
+def _perceived(ob):
+    """(mean albedo of this mesh's material, per-loop COLOR_0) — the pair a
+    cross-mesh blend has to work in.  Multi-slot meshes get their per-face
+    material's own mean, which is what makes the ground's three slots blend
+    against the road as three different browns rather than one."""
+    me = ob.data
+    ca = me.color_attributes.get("Col")
+    if ca is None:
+        raise RuntimeError("road_verge: %s has no COLOR_0" % ob.name)
+    nl = len(me.loops)
+    col = np.zeros(nl * 4)
+    ca.data.foreach_get("color", col)
+    col = col.reshape(-1, 4)
+    mi = np.zeros(len(me.polygons), dtype=np.int32)
+    me.polygons.foreach_get("material_index", mi)
+    means = np.array([float(m.get("albedo_mean", 0.5)) if m else 0.5
+                      for m in me.materials]) if me.materials else np.array([0.5])
+    am = means[np.clip(mi, 0, len(means) - 1)][_loop_face(me)]
+    return ca, col, am
+
+
+def _loop_world(ob):
+    """Per-loop world position, in RUNTIME axes (+x east, +y up, +z south)."""
+    me = ob.data
+    nl = len(me.loops)
+    lv = np.zeros(nl, dtype=np.int32)
+    me.loops.foreach_get("vertex_index", lv)
+    co = np.zeros(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    mw = np.array(ob.matrix_world.to_4x4())
+    P = co @ mw[:3, :3].T + mw[:3, 3]
+    return P[lv]                                    # BLENDER world, per loop
+
+
+def _road_offset(F, hl, hr, X, Y):
+    """Signed distance OUTSIDE the built ribbon edge, per query point.
+
+    Negative on the carriageway, positive off it.  It has to be measured against
+    the WOBBLED halfwidth (valley_build.road_wobble) and not against ROAD_WIDTH/2,
+    or the band crosses the ribbon wherever the wobble narrowed it.
+    """
+    rd = F.road
+    # nearest station, chunked so a 160 k x 1.6 k product never materialises
+    idx = np.zeros(len(X), dtype=np.int64)
+    dist = np.zeros(len(X))
+    step = 8192
+    for a in range(0, len(X), step):
+        b = min(a + step, len(X))
+        d2 = ((X[a:b, None] - rd[None, :, 0]) ** 2
+              + (Y[a:b, None] - rd[None, :, 1]) ** 2)
+        j = np.argmin(d2, axis=1)
+        idx[a:b] = j
+        dist[a:b] = np.sqrt(d2[np.arange(b - a), j])
+    tg = np.gradient(rd, axis=0)
+    tg /= np.maximum(np.linalg.norm(tg, axis=1)[:, None], 1e-9)
+    # which side: the sign of the cross product of the tangent with the offset
+    dx, dy = X - rd[idx, 0], Y - rd[idx, 1]
+    side = np.sign(tg[idx, 0] * dy - tg[idx, 1] * dx)
+    hw = np.where(side >= 0, hr[idx], hl[idx])
+    return dist - hw
+
+
+# R22 — AND THE SAME CURE FOR THE TERRAIN'S OWN INTERNAL SEAMS.
+# overworld3_build's header wrote the rule in round 3 and then applied it to
+# exactly one boundary: "one-material-per-FACE means every slot boundary is a hard
+# zigzag along the triangulation... a road apron is a COLOUR gradient (COLOR_0,
+# per-vertex, smooth)".  The DIRT slot was deleted from the terrain for that reason
+# and grass/dry/rock were left to cut against each other unchanged.
+#
+# A face can only carry ONE material, so the texture WILL switch on a polygon edge
+# and no amount of warping changes that.  What the eye reads at 10 m is not the
+# texture, it is the VALUE STEP — and COLOR_0 is per-vertex, so the step can be
+# taken out even though the material index cannot.  Every vertex that touches more
+# than one slot is set to the PERCEIVED mean of the loops meeting there, so the two
+# sides are equal AT the seam and Gouraud ramps each back to its own class across
+# one triangle.  On the flat that is a ~0.8 u feather; on the far crag wall, where
+# the faces are metres across and the teeth were, it is proportionally wider, which
+# is the right way round.
+SLOT_FEATHER = 0.88      # how far to the shared mean a seam vertex goes (1 = all)
+
+
+def slot_feather(ground, amt=SLOT_FEATHER):
+    me = ground.data
+    ca, col, am = _perceived(ground)
+    nl = len(me.loops)
+    lv = np.zeros(nl, dtype=np.int32)
+    me.loops.foreach_get("vertex_index", lv)
+    mi = np.zeros(len(me.polygons), dtype=np.int32)
+    me.polygons.foreach_get("material_index", mi)
+    lslot = mi[_loop_face(me)]
+
+    nv = len(me.vertices)
+    mask = np.zeros(nv, dtype=np.int32)
+    np.bitwise_or.at(mask, lv, (1 << lslot).astype(np.int32))
+    mixed = (mask & (mask - 1)) != 0            # a vertex on more than one slot
+
+    P = col[:, :3] * am[:, None]                # perceived albedo, per loop
+    S = np.zeros((nv, 3))
+    np.add.at(S, lv, P)
+    N = np.zeros(nv)
+    np.add.at(N, lv, 1.0)
+    V = S / np.maximum(N, 1.0)[:, None]
+
+    sel = mixed[lv]
+    out = col.copy()
+    blended = P[sel] * (1 - amt) + V[lv[sel]] * amt
+    out[sel, :3] = np.clip(blended / np.maximum(am[sel, None], 1e-6), 0.0, 1.0)
+    ca.data.foreach_set("color", out.ravel())
+
+    lum = lambda a: 0.2126 * a[:, 0] + 0.7152 * a[:, 1] + 0.0722 * a[:, 2]
+    # THE GATE IS THE STEP ACROSS THE SEAM, and it is measured PER SEAM VERTEX (the
+    # spread of perceived luminance among the loops that meet there) rather than as
+    # a class mean — a class mean cannot see a seam at all, which is how this one
+    # survived fourteen rounds of class-mean reporting.
+    def spread(Q):
+        mx = np.full(nv, -1e9)
+        mn = np.full(nv, 1e9)
+        l_ = lum(Q)
+        np.maximum.at(mx, lv, l_)
+        np.minimum.at(mn, lv, l_)
+        return (mx - mn)[mixed]
+    Pa = P.copy()
+    Pa[sel] = blended
+    b, a_ = spread(P), spread(Pa)
+    print("  R22 slot feather — %d seam vertices of %d (%.1f%%); step across the "
+          "seam p50 %.4f -> %.4f, p95 %.4f -> %.4f, +0 triangles"
+          % (int(mixed.sum()), nv, 100.0 * mixed.mean(),
+             float(np.percentile(b, 50)), float(np.percentile(a_, 50)),
+             float(np.percentile(b, 95)), float(np.percentile(a_, 95))))
+    return dict(seam_verts=int(mixed.sum()), verts=nv,
+                step_p50_before=round(float(np.percentile(b, 50)), 4),
+                step_p50_after=round(float(np.percentile(a_, 50)), 4),
+                step_p95_before=round(float(np.percentile(b, 95)), 4),
+                step_p95_after=round(float(np.percentile(a_, 95)), 4))
+
+
+def road_verge(ground, road, F, hl, hr):
+    """Paint the transition band into both meshes' COLOR_0.  +0 triangles."""
+    gca, gcol, gam = _perceived(ground)
+    rca, rcol, ram = _perceived(road)
+    GP, RP = _loop_world(ground), _loop_world(road)
+    go = _road_offset(F, hl, hr, GP[:, 0], GP[:, 1])
+    ro = _road_offset(F, hl, hr, RP[:, 0], RP[:, 1])
+
+    # the band's own edge wanders on the same value noise the surface pass uses,
+    # so the verge is ragged at ~1 u — a clean gradient reads as an airbrush and
+    # is the other way to fail this
+    def rag(P):
+        x, z = P[:, 0], -P[:, 1]
+        n = _vnoise_v(x, z, 1.8, 47) * 0.62 + _vnoise_v(x, z, 0.55, 53) * 0.38
+        return (n - 0.5) * 2.0 * VERGE_RAG
+
+    tg_ = np.clip(1.0 - (go + rag(GP)) / VERGE_GROUND, 0.0, 1.0) ** 1.20
+    tg_[go < 0] = 1.0                       # under the ribbon: fully the seam mix
+    tr_ = np.clip(1.0 + (ro - rag(RP)) / VERGE_ROAD, 0.0, 1.0) ** 1.20
+    tr_[ro > 0] = 1.0
+
+    road_perc = (rcol[:, :3] * ram[:, None]).mean(0)          # one flat tint
+    # the ground side takes the road's colour...
+    gp = gcol[:, :3] * gam[:, None]
+    gp = gp * (1 - (tg_ * VERGE_MIX)[:, None]) + road_perc * (tg_ * VERGE_MIX)[:, None]
+    # ...and the road side takes the colour of the ground it is actually crossing,
+    # sampled from the nearest ground loop rather than assumed to be grass (the
+    # road runs through dry meadow for a third of its length)
+    # PREFILTER, or this is a 19 k x 160 k product.  Only ground within 4 u of the
+    # ribbon can ever be the nearest neighbour of a point ON the ribbon.
+    cand = np.flatnonzero(go < 4.0)
+    gxy = GP[cand][:, :2]
+    near = np.zeros(len(RP), dtype=np.int64)
+    step = 4096
+    for a in range(0, len(RP), step):
+        b = min(a + step, len(RP))
+        d2 = ((RP[a:b, 0, None] - gxy[None, :, 0]) ** 2
+              + (RP[a:b, 1, None] - gxy[None, :, 1]) ** 2)
+        near[a:b] = cand[np.argmin(d2, axis=1)]
+    ground_perc = gcol[near, :3] * gam[near, None]
+    rp = rcol[:, :3] * ram[:, None]
+    rp = rp * (1 - (tr_ * VERGE_MIX)[:, None]) + ground_perc * (tr_ * VERGE_MIX)[:, None]
+
+    gout, rout = gcol.copy(), rcol.copy()
+    gout[:, :3] = np.clip(gp / np.maximum(gam[:, None], 1e-6), 0.0, 1.0)
+    rout[:, :3] = np.clip(rp / np.maximum(ram[:, None], 1e-6), 0.0, 1.0)
+    gca.data.foreach_set("color", gout.ravel())
+    rca.data.foreach_set("color", rout.ravel())
+
+    lum = lambda a: 0.2126 * a[:, 0] + 0.7152 * a[:, 1] + 0.0722 * a[:, 2]
+    # THE GATE IS THE STEP AT THE SEAM, in perceived albedo, before and after —
+    # the number the complaint is about.  Anything else here is decoration.
+    edge = (go > 0) & (go < 0.35)
+    redge = ro > -0.20
+    b_step = abs(float(lum(gcol[edge][:, :3] * gam[edge, None]).mean())
+                 - float(lum(rcol[redge][:, :3] * ram[redge, None]).mean())) if edge.any() else 0.0
+    a_step = abs(float(lum(gp[edge]).mean()) - float(lum(rp[redge]).mean())) if edge.any() else 0.0
+    print("  R22 road verge — seam step in perceived albedo %.4f -> %.4f "
+          "(%.0f%% closed) | band %.2f u out / %.2f u in, ragged +-%.2f u | "
+          "%d ground corners touched, %d road corners, +0 triangles"
+          % (b_step, a_step, 100.0 * (1 - a_step / max(b_step, 1e-6)),
+             VERGE_GROUND, VERGE_ROAD, VERGE_RAG,
+             int((tg_ > 0.02).sum()), int((tr_ > 0.02).sum())))
+    return dict(step_before=round(b_step, 4), step_after=round(a_step, 4),
+                ground_corners=int((tg_ > 0.02).sum()),
+                road_corners=int((tr_ > 0.02).sum()))
+
+
+# ===========================================================================
 # L2 — THE GROUND IS GEOMETRY.  Detail placed ONLY where it makes an edge.
 # ===========================================================================
 Z_MEADOW, Z_FOREST, Z_CRAG, Z_ROAD, Z_WATER = range(5)

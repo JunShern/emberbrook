@@ -661,6 +661,35 @@ def _ribbon(p, cls, xy, z, hw):
             list(zip(xy[:, 0] - nx * hw, xy[:, 1] - ny * hw, z)))
 
 
+def road_wobble(F):
+    """The road's per-station halfwidth, LEFT and RIGHT, in world units.
+
+    Lifted out of build_road because valley_land.road_verge has to find the same
+    edge the ribbon was built on: the halfwidth wanders +-35%, so a verge band
+    measured against the CONSTANT halfwidth would cross the ribbon in places and
+    fall short of it in others.  One derivation, two consumers.
+    """
+    s_ = F.road_s
+    hw = VM.ROAD_WIDTH * 0.5
+    wob_l = 1.0 + 0.35 * np.sin(s_ * 0.61 + 0.9) * np.abs(np.sin(s_ * 0.173 + 2.2))
+    wob_r = 1.0 + 0.35 * np.sin(s_ * 0.53 - 1.7) * np.abs(np.sin(s_ * 0.191 + 0.4))
+    return hw * wob_l, hw * wob_r
+
+
+# R22 — THE RIBBON IS TWO VERTICES ACROSS AND THAT IS WHY ITS EDGE IS A CUT.
+# COLOR_0 is per-vertex and interpolates across a face, so on a 2-across strip the
+# ONLY ramp available spans the whole 2 u carriageway: there is nowhere to put a
+# verge without repainting the road.  Three lanes give the outer ~0.38 u its own
+# vertex row, which is the band valley_land.road_verge paints into.  The surface
+# is UNCHANGED — same plane, same z, same outline, subdivided — so the walk
+# network this mesh IS cannot move (walk_engine_gate is what proves that, not this
+# comment).  Cost: 348 -> 1044 triangles on a 530 k scene, i.e. 0.13%.
+# LEFT-TO-RIGHT, which is the order the single strip was built in.  p.finish runs
+# recalc_face_normals and an open flat strip has no "outward" for it to find, so a
+# reversed lane order is a coin-flip on which way the road faces.
+ROAD_LANES = (1.0, 0.62, -0.62, -1.0)
+
+
 def build_road(col, F):
     """walk_road — the visible road AND the walk network, on its authored z.
 
@@ -668,16 +697,20 @@ def build_road(col, F):
     the halfwidth wanders +-35% along the stations, independently per side."""
     xy = np.column_stack([F.road[:, 0], F.road[:, 1]])
     p = B.Prop("walk_road")
-    s_ = F.road_s
-    wob_l = 1.0 + 0.35 * np.sin(s_ * 0.61 + 0.9) * np.abs(np.sin(s_ * 0.173 + 2.2))
-    wob_r = 1.0 + 0.35 * np.sin(s_ * 0.53 - 1.7) * np.abs(np.sin(s_ * 0.191 + 0.4))
     tg = np.gradient(xy, axis=0)
     tg /= np.maximum(np.linalg.norm(tg, axis=1)[:, None], 1e-9)
     nx, ny = -tg[:, 1], tg[:, 0]
-    hw = VM.ROAD_WIDTH * 0.5
+    hl, hr = road_wobble(F)
     z = F.road_h + 0.09
-    p.strip(DIRT, list(zip(xy[:, 0] + nx * hw * wob_l, xy[:, 1] + ny * hw * wob_l, z)),
-            list(zip(xy[:, 0] - nx * hw * wob_r, xy[:, 1] - ny * hw * wob_r, z)))
+
+    def lane(f):
+        h = hl * f if f > 0 else hr * (-f)
+        s = 1.0 if f > 0 else -1.0
+        return list(zip(xy[:, 0] + nx * h * s, xy[:, 1] + ny * h * s, z))
+
+    lanes = [lane(f) for f in ROAD_LANES]
+    for a, b in zip(lanes[:-1], lanes[1:]):
+        p.strip(DIRT, a, b)
     return p.finish(col)
 
 
@@ -3370,6 +3403,18 @@ def main():
     for ob_ in land_objs:
         made[ob_.name] = ob_
     print("  landscape pass took %.1fs" % (time.time() - t0))
+
+    # ---- R22: THE TERRAIN'S OWN SLOT SEAMS (valley_land.slot_feather) ------
+    STATS["slot_feather"] = VL.slot_feather(made["ground"])
+
+    # ---- R22: THE ROAD VERGE (valley_land.road_verge) ----------------------
+    # AFTER terrain_pbr_f2 (which writes the ribbon's flat tint) and after
+    # VL.surface (which writes the ground's), because it blends the two against
+    # each other and the last write to a COLOR_0 buffer is the only one that
+    # ships.  BEFORE canopy_contact, so a contact shadow still darkens the band
+    # rather than the band erasing the shadow.
+    STATS["road_verge"] = VL.road_verge(made["ground"], made["road"], F,
+                                        *road_wobble(F))
 
     # ---- R14: THE CLUMPS WERE NOT TOUCHING THE GROUND ----------------------
     # It runs HERE and nowhere earlier because it is the LAST write to two

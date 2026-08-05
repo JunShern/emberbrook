@@ -2423,3 +2423,112 @@ Gates: `walk_engine_gate` ow-valley **GREEN** (2065 cells both sides, 0 lost, 0
 extra, BVH 0 FAIL); clumps confirmed non-collidable IN THE ENGINE — `SIM.floors`
 across a 3.6 m line through a clump rises monotonically with the terrain, no step at
 the clump (a floor there would have been a 0.38 m bump).
+
+## ROUND 22 (r22) — THE ABRUPT-CUT FAMILY: what "jagged low-poly edges" actually was
+
+User, on `plates/f4-cards-vs-volume.png`: *"the most obvious issue with the graphics
+now is the jagged low-poly edges"*, widened mid-round to *"the abrupt/jagged edges
+apply in a few different places, e.g. the main road is also too 'distinct' from the
+grass around it in a way that is unrealistic, the cuts are too abrupt."*
+
+### THE ALIASING HYPOTHESIS IS DEAD, AND IT COST FOUR MINUTES TO KILL
+
+`ow_multi` with `PFX.samples` swept live (`PFX.samples=N; pfxDispose()` rebuilds the
+composer on the next frame — no relaunch), gate and meadow cameras, same frame:
+
+| pair | pixels differing >2/255 | mean abs |
+|---|---|---|
+| msaa 0 vs 4 | **32.7% / 23.0%** | 0.0092 / 0.0073 |
+| msaa 4 vs 8 | 7.3% / 9.7% | 0.0028 / 0.0034 |
+
+**MSAA 4x reaches `Page.captureScreenshot` intact** — a third of the frame moves
+when it is switched off — so every plate the user has judged is the shipped
+pipeline, and 4 -> 8 buys a third as much again for double the samples. The edges in
+the complaint crop are smoothly antialiased *pixel by pixel*. Nothing here is AA.
+
+### IT IS ONE DEFECT WEARING THREE FACES: A MATERIAL BOUNDARY DRAWN ON A LATTICE
+
+`overworld3_build`'s own round-3 header states the rule and then applies it to
+exactly one boundary: *"one-material-per-FACE means every slot boundary is a hard
+zigzag along the triangulation... a road apron is a COLOUR gradient (COLOR_0,
+per-vertex, smooth)"*. The DIRT slot was deleted from the terrain for that reason
+and grass/dry/rock were then left to cut against each other for nineteen rounds.
+
+  1. **THE ROAD** (`walk_road`, 348 tris). Two vertices across and ONE flat COLOR_0
+     on all of them (`terrain_pbr_f2` writes the tint `8e7a63` to the whole mesh),
+     meeting a terrain whose COLOR_0 knows nothing about it. Two flat fields meeting
+     on a polygon edge IS a cut. A 2-across strip also has **nowhere to put a
+     verge** — the only ramp available spans the whole 2 u carriageway.
+  2. **GRASS/DRY** — a raw threshold on a smooth bilinear field, no warp, no dither.
+     A threshold on a smooth field is a CONTOUR, and a contour rasterised onto 0.8 u
+     triangles comes out as multi-metre straight segments meeting at sharp corners.
+  3. **THE BACKDROP WALL'S ROW OF IDENTICAL TRIANGULAR TEETH** — and this is the one
+     the phrase "jagged low-poly edges" is literally about.
+
+### WHAT THE TEETH WERE, AND THE INSTRUMENT THAT SAID SO
+
+Three wrong guesses were each killed by a measurement rather than by reasoning:
+`SIM.pick` returned NOTHING there (the mesh is not collidable, so `allMeshes` cannot
+see it — an instrument that finds nothing must prove it could have found something);
+a raycast against the whole scene graph named `__owridge0`, the runtime backdrop, at
+**234 m** — a red herring standing behind; and `SIM.vis('ground_valley_3', false)`
+settled it (`plates/r22-teeth-are-grass.png`): **hiding the rock slot leaves the
+teeth standing.** They are `ground_valley_1` — GRASS faces on the crag wall that fell
+through every rock rule.
+
+**A DOMAIN WARP WHOSE NOISE IS FINER THAN THE MESH IS NOT A WARP, IT IS CONFETTI.**
+R14's warp drew its offset from `vnoise(x, y, 0.23, ...)` — cell **0.23 u** against
+a ~0.8 u triangle — so neighbouring faces drew INDEPENDENT offsets up to ±2.2 u.
+Where `crag_w` changes slowly (the flat clifftop R14 was looking at) that reads as a
+pleasing ragged band and shipped; on a steep wall, where the field changes fast in
+plan, it flips isolated faces back to grass and they rasterise as a regular sawtooth.
+**The amplitude was never the problem; the CELL was.** `WARP_CELL = 4.6`.
+
+### THE FIX, IN THREE PIECES, +0 NEW MATERIALS AND +0 DRAW CALLS
+
+  * `valley_land.slot_feather()` — every vertex touching more than one slot is set
+    to the PERCEIVED mean of the loops meeting there, so the two sides are equal AT
+    the seam and Gouraud ramps each back to its class across one triangle. The
+    material index still switches on a polygon edge and always will; the VALUE STEP,
+    which is what the eye reads at 10 m, does not. 3 676 seam vertices of 27 077.
+  * `valley_land.road_verge()` — the dirt feathers OUT 1.40 u and the grass creeps IN
+    0.34 u, **both sides ramping to the SAME 50/50 mixture at the seam**, so the step
+    is zero by construction rather than by tuning. Ragged ±0.55 u on the surface
+    pass's own value noise (a clean gradient reads as an airbrush). `ROAD_LANES`
+    gives the ribbon the interior vertex row it had no way to ramp from.
+  * `overworld3_build` — `WARP_CELL` on both warps; the per-face hash cut to ±0.030
+    and kept as grain INSIDE the band, never as the band.
+
+**BOTH MESHES ARE IN DIFFERENT COLOUR NORMALISATIONS and that is the trap that would
+have made the band a new seam.** glTF renders `baseColorTexture * COLOR_0` and
+`pbr_mat` pre-divides each class colour by ITS OWN texture's albedo mean, so COLOR_0
+0.6 on the road and 0.6 on the grass are not the same brightness. Every blend here is
+done in PERCEIVED space (`albedo_mean * COLOR_0`) and converted back per mesh.
+
+| gate | before | after |
+|---|---|---|
+| slot seam step, per seam vertex, p50 | 0.0421 | **0.0051** |
+| ...p95 | 0.0999 | **0.0120** |
+| road seam step, perceived albedo | 0.0099 | **0.0012** (88% closed) |
+
+**AND A CLASS MEAN CANNOT SEE A SEAM AT ALL** — which is how this survived fourteen
+rounds of `L3 surface — grass L 0.383 -> 0.472` reporting. The gate had to be the
+spread of perceived luminance *among the loops that meet at one vertex*.
+
+### COST, AND WHAT IS STILL OPEN
+
++4 562 tris (337 477 -> 342 039, **+1.35%**), +0.54 MB, 36 meshes and 21 materials
+UNCHANGED. Only **+696** of that is the road's lanes; the other +3 912/+234/-280 is
+the L2 scatter reacting to moved seam cells (6 467 -> 6 696), which is the placement
+rule doing its job.
+
+Plates `plates/r22-seam-crops.png` (three crops, shipped vs r22, same camera),
+`r22-gate-{before,after}.png`, `r22-meadow-{before,after}.png` (the standing
+regression view — village, pads, water unchanged).
+
+  * **THE TEETH ARE SOFTENED, NOT GONE.** `slot_feather` takes the value step out so
+    they shade as slopes instead of cut-outs, but the boundary is still triangular in
+    SHAPE and `WARP_CELL` did not move it — so something other than the warp selects
+    those faces. At 234 m it now reads as stylisation; it is not closed.
+  * The 20-face clump silhouette (f4c's carried item) is untouched here: no COLOR_0
+    treatment reaches an outline.

@@ -1,5 +1,5 @@
 {
- "build_s": 18.26,
+ "build_s": 19.57,
  "bushes": {
   "cards": 741,
   "core_tris": 11265,
@@ -63,38 +63,38 @@
  "emberbrook_tint_families": 5,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.28,
+ "field_s": 0.27,
  "h_range": [
   -6.18,
   50.9
  ],
  "land_surface": {
-  "clipped": 8430,
+  "clipped": 8372,
   "corners": 160656,
   "dry": {
-   "L0": 0.346,
-   "L1": 0.245,
-   "n": 8604
+   "L0": 0.345,
+   "L1": 0.244,
+   "n": 9654
   },
   "grass": {
    "L0": 0.384,
-   "L1": 0.474,
-   "n": 83790
+   "L1": 0.473,
+   "n": 82860
   },
   "rock": {
    "L0": 0.509,
    "L1": 0.498,
-   "n": 68262
+   "n": 68142
   }
  },
  "land_tufts": {
-  "clumps": 413,
-  "flowers": 554,
-  "lip_tufts": 225,
-  "patches": 57,
-  "seam_cells": 6489,
-  "tris": 118112,
-  "tufts": 18124
+  "clumps": 399,
+  "flowers": 671,
+  "lip_tufts": 209,
+  "patches": 67,
+  "seam_cells": 6696,
+  "tris": 121978,
+  "tufts": 18776
  },
  "lattice": [
   176,
@@ -140,6 +140,20 @@
  ],
  "road_pushed_stations": 0,
  "road_spans": [],
+ "road_verge": {
+  "ground_corners": 1938,
+  "road_corners": 1194,
+  "step_after": 0.0012,
+  "step_before": 0.0099
+ },
+ "slot_feather": {
+  "seam_verts": 3676,
+  "step_p50_after": 0.0051,
+  "step_p50_before": 0.0421,
+  "step_p95_after": 0.012,
+  "step_p95_before": 0.0999,
+  "verts": 27077
+ },
  "step": 1.6,
  "terrain_s": 0.22,
  "tile": [
@@ -164,9 +178,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 337781,
+ "tris": 342343,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.86,
+ "veg_s": 4.14,
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "dhfalls": {
@@ -250,5 +264,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.078
+ "zone_s": 0.081
 }

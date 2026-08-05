@@ -101,6 +101,26 @@ TERRAIN_LAYERS = [
 ]
 SLOT_GRASS, SLOT_DRY, SLOT_ROCK = range(3)
 LIP_WARP = 2.2                  # world units the grass/rock slot boundary may wander
+# R22 — A DOMAIN WARP WHOSE NOISE IS FINER THAN THE MESH IS NOT A WARP, IT IS
+# CONFETTI, and that one line is where the user's "jagged low-poly edges" came
+# from.  MEASURED: `SIM.vis('ground_valley_3', false)` on the gate frame leaves the
+# backdrop mesa's row of identical triangular teeth STANDING — so the teeth are
+# `ground_valley_1` faces that fell through every rock rule, not a rock silhouette
+# and not the runtime's `__owridge` backdrop (probed: that is 234 m further out).
+# They fell through because R14's warp offset was sampled at CELL 0.23 u while the
+# ground's triangles are ~0.8 u on a side: neighbouring faces therefore drew
+# INDEPENDENT offsets up to +-2.2 u, which on a steep wall (where crag_w changes
+# fast in plan) flips isolated faces back to grass.  On the flat clifftop R14 was
+# looking at, crag_w changes slowly, so the same confetti read as a pleasing ragged
+# band and shipped.  The amplitude was never the problem; the CELL was.
+# A warp cell must be several triangles wide, so that neighbours warp TOGETHER and
+# the boundary wanders as a connected curve.
+WARP_CELL = 4.6                 # u — the warp's own feature size (>> a 0.8 u face)
+DRY_WARP = 2.6                  # units the grass/dry slot boundary may wander
+# ...and the per-face HASH is the confetti generator by design, so it stays SMALL
+# and narrow: it is grain inside the band the warp opened, never the band itself.
+DRY_DITHER = 0.030              # half-width of the hashed band around dry's 0.24
+CRAG_DITHER = 0.030             # ditto, around the crag-FACE rock threshold's 0.30
 
 
 def layer_paths():
@@ -271,9 +291,35 @@ def terrain_pbr_f2(made, F, zg, fcrag):
     # contour, and the discrete grid stays what it is for: gameplay.
     cw = zg.wsample(zg.crag_w, ctr[:, 0], ctr[:, 1])
     fw = zg.wsample(zg.forest_w, ctr[:, 0], ctr[:, 1])
-    # the DRY layer is what keeps a 120x90u meadow from being one green sheet, and
-    # argmax never reaches for it (round 2 halved its weight on purpose)
-    dom[(W[:, SLOT_DRY] > 0.24) & (fw < 0.30) & (cw < 0.30)] = SLOT_DRY
+    # R22 — EVERY SLOT BOUNDARY IS A POLYGON BOUNDARY, and only one of them was
+    # ever treated.  The user's complaint ("the cuts are too abrupt", on the
+    # gate frame) lands on TWO seams this pass draws and one it does not:
+    #   * grass/DRY, below: a RAW THRESHOLD on a smooth bilinear field.  A
+    #     threshold on a smooth field is a CONTOUR, and a contour rasterised onto
+    #     a 0.8 u triangle lattice comes out as multi-metre straight segments
+    #     meeting at sharp corners — measured on the gate plate, the tan meadow
+    #     patch's edge runs 40+ px of unbroken straight line.  R14 already wrote
+    #     this sentence for the crag lip and fixed only the crag lip.
+    #   * grass/ROCK on a CRAG FACE (the fcrag line further down), whose
+    #     threshold was likewise raw — and on the backdrop mesa it rasterised
+    #     into a row of IDENTICAL triangular teeth, because the cwj = 0.30
+    #     contour there runs nearly parallel to a lattice row and the per-face
+    #     assignment then picks alternate triangles.  That row of teeth is what
+    #     "jagged low-poly edges" is, literally.
+    # Same two mechanisms R14 landed on, applied to both: a DOMAIN WARP (so the
+    # wander is set by the warp's amplitude, not by the field's gradient) and a
+    # per-face HASH inside the band the warp opens.  No new geometry, no new
+    # material, two extra wsample/bands_at calls.
+    dwx = (O3.vnoise(ctr[:, 0], ctr[:, 1], WARP_CELL, 91) - 0.5) * 2.0 * DRY_WARP
+    dwy = (O3.vnoise(ctr[:, 0], ctr[:, 1], WARP_CELL, 93) - 0.5) * 2.0 * DRY_WARP
+    dryw = np.maximum(W[:, SLOT_DRY],
+                      bands_at(F, ctr[:, 0] + dwx, ctr[:, 1] + dwy)[:, SLOT_DRY])
+    djit = O3._hash01((ctr[:, 0] * 41.0).astype(int),
+                      (ctr[:, 1] * 41.0).astype(int), 7)
+    # the hash band straddles the threshold, so the seam is stippled from BOTH
+    # sides — a one-sided dither only ever grows one class and reads as fringe
+    dryt = 0.24 + DRY_DITHER * (djit - 0.5) * 2.0
+    dom[(dryw > dryt) & (fw < 0.30) & (cw < 0.30)] = SLOT_DRY
     dom[(fw > 0.45) & (cw < 0.30)] = SLOT_GRASS       # forest floor is not straw
     # R14 — THE CLIFFTOP GRASS STOPPED IN A KNIFE-STRAIGHT LINE AT THE LIP, and this
     # is where the line was drawn.  The dither below is a per-face HASH gated on the
@@ -290,13 +336,20 @@ def terrain_pbr_f2(made, F, zg, fcrag):
     # pale triangular teeth along the whole crest, which is a worse boundary than the
     # straight one it replaced.  A warp that can go either way is two edits, and only
     # one of them was asked for.
-    wx = (O3.vnoise(ctr[:, 0], ctr[:, 1], 0.23, 81) - 0.5) * 2.0 * LIP_WARP
-    wy = (O3.vnoise(ctr[:, 0], ctr[:, 1], 0.23, 83) - 0.5) * 2.0 * LIP_WARP
+    wx = (O3.vnoise(ctr[:, 0], ctr[:, 1], WARP_CELL, 81) - 0.5) * 2.0 * LIP_WARP
+    wy = (O3.vnoise(ctr[:, 0], ctr[:, 1], WARP_CELL, 83) - 0.5) * 2.0 * LIP_WARP
     cwj = np.minimum(cw, zg.wsample(zg.crag_w, ctr[:, 0] + wx, ctr[:, 1] + wy))
     dom[cwj > 0.50] = SLOT_ROCK
     # the roughened facets ARE rock — but a facet the warp has carried onto the grass
     # side keeps the grass, so the lip's own flat-shaded rim can carry turf
-    dom[(fcrag > O3.FLAT_W) & (cwj > 0.30)] = SLOT_ROCK
+    # R22 — AND THIS LINE IS WHERE THE MESA'S TEETH CAME FROM.  On a crag FACE
+    # fcrag > FLAT_W almost everywhere, so this reduced to the bare `cwj > 0.30`
+    # contour with no dither at all, and the dither band below (0.34..0.50) could
+    # only ever ADD rock to a boundary this line had already drawn clean.  The
+    # threshold now carries the same hash the band does.
+    cjit = O3._hash01((ctr[:, 0] * 43.0).astype(int),
+                      (ctr[:, 1] * 43.0).astype(int), 11)
+    dom[(fcrag > O3.FLAT_W) & (cwj > 0.30 + CRAG_DITHER * (cjit - 0.5) * 2.0)] = SLOT_ROCK
     # ...and the per-face hash stays, on the warped field, as the fine grain inside
     # the band the warp opened up.  Ragged reads as weathering; regular reads as a bug.
     jitter = O3._hash01((ctr[:, 0] * 37.0).astype(int),
