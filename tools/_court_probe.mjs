@@ -292,20 +292,28 @@ const ev = async (cdp, e) => {
     } catch (e) { console.log(String(w).slice(0, 3000)); }
   }
 
+  /* --mesh <name>[,<name>..] — WHERE IS THAT RECORD, IN THE RUNNING GAME.
+   * It used to traverse `window.THREE_SCENE || window.scene`, and play3d.html has
+   * NEITHER (its scene is a module-scope `let`), so it printed `[]` for every name
+   * that exists — an instrument that finds nothing while proving nothing. It now goes
+   * through SIM.pad, the page's own supported accessor, one exact name at a time, and
+   * says MISSING for a name the bundle does not carry. Handy for a switchback: the
+   * tread centres ARE the waypoints --way needs. */
   const MESH = arg('mesh', null);
   if (MESH) {
-    const expr = `(()=>{const out=[];const S=SIM.scn?SIM.scn():null;
-      const root=(window.SCENE_ROOT||window.__root||null);
-      const seen=[];
-      (window.THREE_SCENE||window.scene||root||{traverse:()=>{}}).traverse(o=>{
-        if(o.isMesh&&new RegExp(${JSON.stringify(MESH)}).test(o.name)){
-          o.geometry.computeBoundingBox();const b=o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld);
-          seen.push({n:o.name,tris:(o.geometry.index?o.geometry.index.count:o.geometry.attributes.position.count)/3,
-            min:[+b.min.x.toFixed(2),+b.min.y.toFixed(2),+b.min.z.toFixed(2)],
-            max:[+b.max.x.toFixed(2),+b.max.y.toFixed(2),+b.max.z.toFixed(2)]});}});
-      return JSON.stringify(seen);})()`;
-    console.log('\n== MESHES ==');
-    console.log(await ev(cdp, expr));
+    const names = MESH.split(',').map(s => s.trim()).filter(Boolean);
+    const expr = `(()=>{const N=${JSON.stringify(names)};return JSON.stringify(
+      N.map(n=>{try{const p=SIM.pad(n);return p?{n:n,c:p.center.map(v=>+v.toFixed(2)),
+        min:p.min.map(v=>+v.toFixed(2)),max:p.max.map(v=>+v.toFixed(2))}:{n:n,missing:true}}
+        catch(e){return {n:n,err:String(e)}}}));})()`;
+    console.log('\n== MESHES (SIM.pad) ==');
+    try {
+      for (const r of JSON.parse(await ev(cdp, expr))) {
+        if (r.missing) console.log(`  ${r.n.padEnd(48)} MISSING from this bundle`);
+        else if (r.err) console.log(`  ${r.n.padEnd(48)} ${r.err}`);
+        else console.log(`  ${r.n.padEnd(48)} centre ${JSON.stringify(r.c)}  min ${JSON.stringify(r.min)}  max ${JSON.stringify(r.max)}`);
+      }
+    } catch (e) { console.log(await ev(cdp, expr)); }
   }
 
   const AT = JSON.parse(arg('at', 'null'));  // [[x,z],..] — full floor list + blocked at each floor
