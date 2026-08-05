@@ -56,6 +56,11 @@ git runs here, on branch `migration/3d-hybrid`.
   Each prints its own faithfulness gate; roadchop's `repro` mode proves the copy bit-exact
   BEFORE it builds. tools/walk_rederive.py `--drop` takes a deleted map entity's walk records
   out (an orphaned walk record goes on paving the town).
+- **tools/town_blockout.py `STAIRS_V2` — the switchback pivot split; a flight not in the set
+  is still the old geometry, and an edge joins it only when its district builder is re-run in
+  the same window.** (Round 21: both flights of a switchback pivoted about ONE waypoint, so a
+  body walking DOWN was picked back UP by walkGround, rung by rung — and a flood fill called
+  it one component the whole time. Only the drive says so.)
 - <town>.cameras.json (authoring; grade in defaults.exposure) → tools/cine_solve.mjs →
   .cameras.solved.json → tools/scenegraph_derive.mjs → scenegraph.json →
   tools/cine_bake.py (Blender headless, ALWAYS `-b --python-exit-code 1`; bake ray-cast

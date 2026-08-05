@@ -3729,3 +3729,92 @@ seconds. It earned its two corrections the hard way and both are worth the ink:
 It is still a SCREEN, not a verdict: it carries no district art, so where art fills a gap (the
 deep stairs' `wf_stair_treads`) it reads pessimistic, and where art blocks one (`cx_rail`,
 `lf_lantern_1_1`) it reads optimistic. `_court_probe` on the shipped bundle remains the oracle.
+
+### THE REGRADE — the coordinator's ruling, built: 40 degrees -> 25, and what it did NOT fix
+
+**COORDINATOR RULING on round 21's escalation:** more RUN, not a wider `blocked()` window — *"a
+global collision change to cure one 44-degree flight is the wrong instrument; it would move every
+headroom judgment in the game, and the tread-roofing class we just spent all night fixing is
+exactly what a widened window would re-hide."* Authorised to edit `dellhollow.map.json`.
+
+**REDLINE CHECK FIRST, as instructed: there is none on this flight.** The map's dated redlines are
+all on the gate tier and the shelf (valley-road, valley-gate, inn, cookhouse). What
+`keepers-cottage__lock-five` carries is a plain design note, and it turned out to be the binding
+constraint: *"final approach hugs the cliff side and meets the waterline lane only where heights
+nearly merge (its old landing sat 1.2u above the North Landing deck lane: an unrecoverable drop
+trap)."*
+
+**THE REGRADE.** Three waypoints as before, `(94.5,24.5,5.2) (92.5,25.8,3.2) (89.5,26.2,1.4)` ->
+`(96.5,23.8,5.87) (90.4,25.0,3.92) (95.0,25.9,1.96)`. Run **11.70 m -> 23.50 m**, max slope
+**0.84 -> 0.46 (40 deg -> 25 deg)**. The run is bought in X, ALONG the cliff, because the river's
+near bank is y~26 and the map says so: every interior waypoint stays y <= 25.9 and only the final
+leg reaches the waterline. The note's own trap was the check that picked the last waypoint — the
+landing at (95.0, 25.9) stands **1.73 m** from the `lock-five__north-landing` deck centreline
+against the 0.6 + 0.8 = 1.4 m at which they would touch.
+
+Chosen on the offline whole-network model from six candidates. The one taken drives 24/24 both
+ways at tread width 1.2 **and** 1.3; two others only at 1.2.
+
+**AND IT NEEDED TWO GENERATOR RULES THE MODEL FOUND FIRST:**
+
+* **`TREAD_W_V2` — a narrower tread, per edge.** The pivot split separates two flights AT the
+  pivot; away from it they run back on their own lines, and if the map's rungs are closer together
+  than a tread is WIDE the flights overlap for their whole length and their gap crosses
+  `[+0.65, +1.30]` somewhere MID-LEG, where no offset reaches. The regrade folds its rungs
+  1.1–1.3 m apart in y, so a 1.4 m tread overlaps its neighbour by 0.3 m: **tread 1.4 -> 14/24,
+  tread 1.2 -> 24/24 both ways.** 1.2 m is still 4x the body's own half-width.
+* **The landing depth must SCALE WITH THE TREAD RUN.** A landing's job is to reach the arriving
+  flight's last tread, whose centre sits `FOOT_TRIM + run/2` back — and `run` is `hl/n`. A fixed
+  0.90 m slab covers a 0.5 m-run flight and falls a metre short of a 1.6 m-run one. Every regrade
+  candidate died on it, with the model reporting `no floor ahead` at the pivot **while every
+  landing read 96–100% standable**. A CLEAN LANDING IS NOT A CONNECTED ONE — second time this
+  round.
+
+**BUILT, MEASURED, AND REVERTED — and the reason is one number.** Carried the doctrine chain
+(map -> blockout -> `walk_rederive` -> `lg_build` + `cx_build` + `locksfoot_build` +
+`waterfront_build` -> glb -> `cine_solve` to its fixed point -> derives -> plates):
+
+| `_court_probe` on the shipped bundle | v1 (40 deg) | regrade (25 deg) |
+|---|---|---|
+| `--stand` `landing` / `001` / `002` | 48% / 54% / 55% | **93% / 84% / 92%** |
+| `--way` DOWN, 24 legs | 8/25 | **16/24** |
+| `--way` UP | 7/25 | 3/24 |
+| `--comp` cottage seed / lock-five seed | — | **371 cells / 184 cells — TWO COMPONENTS** |
+
+**THE PIVOT SPLIT PUT THE FLIGHT ON THE WATER.** The split moves a departing leg
+`2 x PIVOT_OFF = 2.40 m` sideways, and at this pivot geometry that displacement is almost pure
++y — straight at the river. Computed on the model, for the waypoints as authored:
+
+    wp1 (96.5, 23.8)  turn 144   departing leg starts (96.24, 25.98)
+    wp2 (90.4, 25.0)  turn 158   departing leg starts (90.40, 26.20)   <- ON THE WATER
+    wp3 (95.0, 25.9)  turn 154   departing leg starts (95.04, 27.10)   <- ON THE WATER
+
+The river's near bank is y~26. So legs 2 and 3 began over the lock basin, their feet dived under
+the apron (`--at` at [90.18, -27.43]: the walkable floor is 0.85 and the flight's own `l3_t03` is
+at -0.12), and `t2c_L2_lockhouse_paint` roofs the deck at 1.25 where they should have met it.
+**A REGRADE MUST BE PLANNED AGAINST THE GEOMETRY THE GENERATOR WILL ADD, NOT THE LINE YOU TYPE** —
+the waypoints have to leave room for the split's own 2.4 m, and nobody had had to think that
+before because no previous flight was folded against a hard edge.
+
+**AND THE ENVELOPE IS THE REAL ANSWER, WHICH IS WHY THIS STOPS HERE.** Shifting the waypoints
+north to keep the split off the water was swept (three sets x three offsets, all on the model):
+every set that stays dry drops to **14/24** because the rungs then sit closer than a tread is wide
+and the flights roof each other mid-leg; the only set that drives 24/24 is the one that goes wet.
+The cottage is at y 22 and the near bank at y 26 — **4 m of band for a flight that needs 1.2 m
+between rungs AND 2.4 m of split**. That is not a waypoint problem any more, it is the shape of
+this corner of Dellhollow, and it belongs to whoever owns the town's form.
+
+**WHAT SHOULD SURVIVE THIS, both measured and both right regardless of the waypoints:**
+`TREAD_W_V2` (a switchback folded tighter than its own tread width cannot be walked) and the
+run-scaled landing depth (a landing must reach the tread it serves). They are reverted with the
+rest only because they have no edge to serve yet.
+
+**AND A LANE'S UNCOMMITTED MASTER IS NOT PRIVATE.** The townwalk refresh cron ticked at 11:05
+while the regrade sat unstaged in `dellhollow-master.blend`, and exported the SHARED explore
+bundle from it: `public/assets/scenes/townwalk/scene.glb` came back carrying 31
+`keepers-cottage__lock-five` records — my geometry — and `cine_test` caught it as the bundle-parity
+failure it is (312 vs 313 walk meshes). Restoring the file from git made it worse, not better,
+because the committed copy is itself older than HEAD's master (it missed
+`walk_e_weave-huts__moorage_l2_t04/t05`). The fix is the only correct one: **re-export it from the
+master you actually intend to ship** (`town_export.py`), which is now done — 313 meshes,
+`cine_test` 688/0. If you hold a master edit across a cron tick, you have published it.
