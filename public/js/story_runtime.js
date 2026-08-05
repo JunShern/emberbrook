@@ -124,11 +124,31 @@
       var h = host(); if (!h) return null; h.appendChild(e); }
     return e;
   }
+  /* AN OBJECTIVE THAT NAMES A JOB ALREADY DONE IS WORSE THAN ONE THAT NAMES NOTHING
+   * (playtest round 15). Chapter One's "See to them" is four anchors in ONE scene, so
+   * the wayfinder has nothing to draw — routeTo() only ever answers with an EXIT — and
+   * the sentence IS the route. But a beat fires once and cannot know what the other
+   * three beats have done since, so a static string kept sending the player back to
+   * Poppy after Poppy: measured at 20+ steps of a 200-step budget in run-20260805-015721.
+   *
+   *   {!flag: text}   emit `text` only while `flag` is falsy.
+   *
+   * The RAW string is what is stored, so every re-render re-reads the flags — which is
+   * what makes one string serve all five beats and update itself as they tick off. It
+   * expands BEFORE the <> strip, and the syntax itself carries no <> , so an author
+   * cannot smuggle markup through the template. No flags, no evaluator, or a malformed
+   * template: the segment is DROPPED, never printed raw. */
+  function expandObjective(s) {
+    return String(s).replace(/\{!([A-Za-z0-9_.\-]+):([^{}]*)\}/g, function (_, f, txt) {
+      var F = flags(); if (!F) return '';
+      return F[f] ? '' : txt;
+    }).replace(/\s{2,}/g, ' ').replace(/[\s,;:—-]+$/, '').trim();
+  }
   function setObjective(txt) {
-    objective = txt || null;
+    if (txt !== undefined) objective = txt || null;
     style(); var e = el('story-obj'); if (!e) return objective;
     if (!objective) { e.style.opacity = '0'; return null; }
-    e.innerHTML = '<b>&#9670;</b> ' + String(objective).replace(/[<>]/g, '');
+    e.innerHTML = '<b>&#9670;</b> ' + expandObjective(objective).replace(/[<>]/g, '');
     e.style.opacity = '1';
     return objective;
   }
@@ -328,7 +348,7 @@
     try { return new URLSearchParams(location.search).get('nohint') === '1'; }
     catch (e) { return false; }
   })();
-  var hintEdge = null, hintTicks = 0, lastHint = null;
+  var hintEdge = null, hintTicks = 0, lastHint = null, lastObjDrawn = null;
 
   // play3d.html is a classic script: CINE and SG are top-level `let`s, so they live
   // in the shared global LEXICAL scope and are readable bare — but NOT as window.SG
@@ -474,6 +494,13 @@
   function hintTick() {
     if (HINT_OFF || !DATA || OFF || !HAS_DOM) return;
     if (++hintTicks % 10) return;                 // ~6 Hz; a label is not frame-critical
+    // a templated objective is re-read here, not on a timer of its own: the frame a
+    // `seen.` flag flips, the name it guarded has to leave the banner. Re-render ONLY
+    // when the expansion actually changed — innerHTML at 6 Hz is a repaint per tick.
+    if (objective && objective.indexOf('{!') >= 0) {
+      var xo = expandObjective(objective);
+      if (xo !== lastObjDrawn) { lastObjDrawn = xo; setObjective(); }
+    }
     var b = pendingBeat();
     var r = b ? routeTo(b.scene || scene(), b.cam || null) : null;
     var want = (r && r.edge) ? r.edge.id : null;
