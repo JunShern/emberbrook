@@ -1,6 +1,6 @@
 # Emberbrook — LLM playtest queue
 
-Generated 2026-08-05T21:20:17.374Z by `tools/playtest_triage.mjs`. Source of truth: `docs/qa/playtest/queue.json`.
+Generated 2026-08-05T22:37:56.534Z by `tools/playtest_triage.mjs`. Source of truth: `docs/qa/playtest/queue.json`.
 
 **An UNVERIFIED complaint is a lead, never a ticket.** Filed by an LLM playing the game through
 screenshots and real key events; measured by instruments before anybody builds. REFUTED entries are
@@ -114,6 +114,8 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 | REFUTED | P1 | PT-20260805-062 | Cannot trigger 'The Lockhead' transition marker | tools/reach_probe.mjs + SIM.move (in the running page) |
 | REFUTED | P1 | PT-20260805-063 | Multiple actions bound to the same key [E] prevent leaving the room | tools/reach_probe.mjs + SIM.move (in the running page) |
 | FIXED | P1 | PT-20260805-064 | Interact button prioritizes bargeman dialogue over exiting room | tools/_court_probe.mjs --comp/--who + adapter drive (real keys + E) in del-inn-int, both ways |
+| REFUTED against the game · VERIFIED against the harness | P1 | PT-20260805-065 | Infinite screen transition loop following 'The Lockhead' marker | run traces (runs 194359/211913/215044) + adapter drive reproduction + follow-the-arrow scripted bot |
+| REFUTED against the game · VERIFIED against the harness | P1 | PT-20260805-066 | Wrong transition prompt appears at 'The Lockhead' marker | same as PT-20260805-065 |
 | REFUTED | P2 | PT-20260804-009 | Cannot interact with NPCs inside The Boatmen's Rest | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P2 | PT-20260805-016 | Area transition trigger blocks path to objective building | tools/reach_probe.mjs + SIM.move (in the running page) |
 | REFUTED | P2 | PT-20260805-056 | Overlapping interaction prompts near shop exit | tools/reach_probe.mjs + SIM.move (in the running page) |
@@ -1647,6 +1649,32 @@ where I stood -> where I pointed: reachable (1.7 m apart, 3 cells filled on foot
 The door was never region-unreachable: the exit pad [-3.4,0.04,-2.72] r 1.8 sits in the room's main walk component (377-cell fill contains it) and a real-key drive reaches 0.46 m from it. The reach probe's unreachable target [-3.61,0,0.81] is a 23-cell dead POCKET between the hearth and the settle (sealed at both mouths by hearth_dress_5/the fire-iron stand at [-3.62,z-0.78] and the settle's body shadow — _court_probe --who) that no body can enter; a click-target trap only. The player-facing defect was the KEY: ui_kit dispatches global keys in the CAPTURE phase and npc.js's chain consumed E whenever any villager was within 1.9 m, so play3d's bubble-phase door keydown never saw it — and the bargeman's reach covers the whole door pad. npc.js now yields E to a nearer live scene edge. Drive-verified: at [-3.6,-1.39] (the filing's own spot, door 1.35 m < bargeman 1.80 m) E exits to del-cine [23.94,19.07,-5.54]; at [-2.2,-1.5] (bargeman 0.45 m) E still talks. The double prompt banner remains the known PT-009/056 cosmetic.
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-064` (captured at a7be573f)
+
+### PT-20260805-065 — Infinite screen transition loop following 'The Lockhead' marker
+
+- **status** REFUTED against the game · VERIFIED against the harness (run traces (runs 194359/211913/215044) + adapter drive reproduction + follow-the-arrow scripted bot)
+- **severity** P1 · **kind** bug · **found by** agent
+- **I was doing** Walking left toward 'The Lockhead' marker at [0.25, 0.62].
+- **I expected** To reach the Lockhead location or continue along the path above Lock Five.
+- **What happened** Walking to the marker at [0.25, 0.62] triggers a scene transition back to the previous village screen, which in turn immediately routes back to this screen.
+
+```
+There is no transition loop in the game: the shelf-west<->shelf-east cuts are the authored route to the Lockhead and a scripted bot that clicks the routed arrow crosses them once each and reaches the ch2.jam trigger. The loop was the EXECUTOR: (1) the hold/arrive deadband made every leg at the arrow a zero-metre "arrived" (fixed b957de5), (2) a flat ARRIVE_M floored clicks under 1.2 m so inching east never moved (fixed 3b5d7ce), (3) the agent aimed at midpoints between itself and the arrow, which under the toward-camera shelf-east shot resolve backwards or onto awnings (percept line now instructs aiming AT the arrow, e71b8e2). LLM receipt of the fixed executor is BLOCKED: Gemini prepaid credits depleted mid-round (429 RESOURCE_EXHAUSTED).
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-065` (captured at 71082c27)
+
+### PT-20260805-066 — Wrong transition prompt appears at 'The Lockhead' marker
+
+- **status** REFUTED against the game · VERIFIED against the harness (same as PT-20260805-065)
+- **severity** P1 · **kind** blocker · **found by** stuck-interview
+- **I was doing** I was trying to enter 'The Lockhead' to find the person who runs the locks.
+- **I expected** I expected to see a prompt to enter The Lockhead or talk to someone when standing on the red marker.
+- **What happened** The prompt says 'Down to the Shelf street? [E]' instead, and I can't seem to trigger the correct transition to progress the objective.
+
+```
+"Down to the Shelf street?" is the gate-stair passage prompt, correct where it stands; the agent was at the gate because its own midpoint-goto had carried it up there (same loop as PT-065). The routed arrow the objective needs was drawn and labelled on every one of those frames. Same harness class and same fixes as PT-065.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-066` (captured at 71082c27)
 
 ### PT-20260804-009 — Cannot interact with NPCs inside The Boatmen's Rest
 

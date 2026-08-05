@@ -15953,3 +15953,44 @@ RECEIPT RUNS (both mine, llm_playtester, gemini-3.6-flash):
   normal walk from sendoff to the gate — the same run left the scene).
 Round 30 lane dispatched: lockhead trigger-vs-marker, 064 pinch, 057 honest
 re-triage, then --from=ch2.arrive leg and the full 500-step bar.
+
+## 2026-08-05 ~23:00 — ROUND 30 LANE: the Lockhead deadband, the bargeman's door, the exit-walk detector — and the credits ran dry
+
+THE LOCKHEAD ROOT CAUSE, named and measured: not the trigger (Odessa's own post,
+[78.93,14.07,-15.6] r 3.6, fires instantly when stood on — checkpoint boot receipt),
+not the ground (findability 69/0), not the route (a no-LLM bot clicking only the
+routed arrow walks shelf->lockhead and fires ch2.jam) — the HOLD/ARRIVE DEADBAND:
+story_runtime releases a held aim at 0.7 m, the drive executor declared arrival at
+1.2 m, and a body stopped between the two gets a zero-metre "arrived" leg forever
+(measured 6x in run-194359, steps 276-287; reproduced live at the shelf cut).
+Fixes: adapter marker legs drive to 0.5 m and complete on the way being TAKEN
+(b957de5); short legs scale their tolerance instead of being floored (3b5d7ce);
+the percept says aim AT the routed arrow, not towards it (e71b8e2); and the one
+GAME fix — story_runtime keeps rival-arrow demotion ON in the objective's own shot
+(71082c2; run-211913 step 88 measured the arrived shot sending the agent back out).
+
+PT-064 FIXED in npc.js: ui_kit's capture-phase key dispatch let any villager in
+1.9 m starve play3d's door keydown — the bargeman's reach covers the whole
+Boatmen's Rest door pad, so E could never exit while both prompts showed. npc now
+yields to a nearer live edge; drives receipt both directions, and run-211913's
+agent left that inn on its first E. The "unreachable exit" half REFUTED: the pad
+is in the main component; the unreachable point is a 23-cell dead pocket
+(hearth_dress_5 fire-iron stand + settle body shadow, _court_probe --who), a
+click-trap only, geometry deferred with measurements. PT-057 FIXED in the
+detector: guided steps (routed marker drawn) no longer count off-spine; replay of
+the filing run's own percepts files nothing. PT-065/066 (the new leads) are the
+executor loop itself — REFUTED against the game, closed by the same fixes.
+
+RECEIPTS: run-211913 (200 steps, $0.60) — deadband fix carried it to the lockhead
+shot in 7 legs, arrived-shot trap (then unfixed) sent it back, capped, 0 reports.
+run-215044 (200 steps, $0.58) — capped on midpoint clicks + short-leg flooring
+(both since fixed). Attempt 3 (run-222534) died at spawn: **GEMINI PREPAID
+CREDITS DEPLETED — 429 RESOURCE_EXHAUSTED on every call (probed directly). THE
+FULL NEW-GAME BAR IS BLOCKED ON BILLING, NOT ON THE GAME.** When credits return:
+--from=ch2.arrive --stop-beat=ch2.landing --steps=200, then the 500-step bar.
+
+Gauntlet at close: story_test green · percept_test 504/504 · routes --check clean
+both towns · findability 69/0 · playthrough_test 86/0 (§W 21 pairs, 0 unreachable,
+zero console errors). FIXLOG round 30 has the full record. Instruments of the
+round: _court_probe --comp/--who (del-inn-int), adapter drive probes (scratchpad),
+follow-the-arrow scripted bot, wayhint dumps.

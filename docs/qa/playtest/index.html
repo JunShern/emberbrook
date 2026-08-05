@@ -19,7 +19,7 @@
  a{color:#c8a86a}
 </style>
 <h1>Emberbrook — LLM playtest queue</h1>
-<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-05T21:20:17.371Z.</p>
+<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-05T22:37:56.532Z.</p>
 <div class="warn"><b>An UNVERIFIED complaint is a lead, never a ticket.</b> These are an LLM's opinions about
 screenshots. This repo has a confabulation scar; the ratified workflow is judge&nbsp;→&nbsp;<b>measure on an
 instrument</b>&nbsp;→&nbsp;build. REFUTED entries matter as much as VERIFIED ones: the agent sees one still frame
@@ -29,7 +29,7 @@ and the false-positive rate is this tool's calibration.</div>
  <div><b style="color:#3fa96a">39</b>verified</div>
  <div><b style="color:#8a7a5a">8</b>unverified</div>
  <div><b style="color:#b25a4a">43</b>refuted</div>
- <div><b>108</b>total</div>
+ <div><b>110</b>total</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
@@ -1882,6 +1882,38 @@ page that logs P.y per tick across the transition, not another fill.</pre>
  <div class="fr"><img src="runs/run-20260805-194359/frames/step-357.jpg" loading="lazy"><img src="runs/run-20260805-194359/frames/step-358.jpg" loading="lazy"><img src="runs/run-20260805-194359/frames/step-359.jpg" loading="lazy"></div>
  <div class="meta">run run-20260805-194359 step 359 · found by agent · del-inn-int / - @ -3.07,0,-1.19
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-064</code> (captured at a7be573f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#666">REFUTED against the game · VERIFIED against the harness</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Infinite screen transition loop following 'The Lockhead' marker</span><span class="id">PT-20260805-065</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Walking left toward 'The Lockhead' marker at [0.25, 0.62].</dd>
+  <dt>I expected</dt><dd>To reach the Lockhead location or continue along the path above Lock Five.</dd>
+  <dt>What happened</dt><dd>Walking to the marker at [0.25, 0.62] triggers a scene transition back to the previous village screen, which in turn immediately routes back to this screen.</dd>
+  <dt>On screen</dt><dd>objective: Find whoever runs the locks — the lockhead, above Lock Five</dd>
+  <dt>Measured by</dt><dd>run traces (runs 194359/211913/215044) + adapter drive reproduction + follow-the-arrow scripted bot</dd>
+ </dl>
+ <pre>There is no transition loop in the game: the shelf-west&lt;-&gt;shelf-east cuts are the authored route to the Lockhead and a scripted bot that clicks the routed arrow crosses them once each and reaches the ch2.jam trigger. The loop was the EXECUTOR: (1) the hold/arrive deadband made every leg at the arrow a zero-metre &quot;arrived&quot; (fixed b957de5), (2) a flat ARRIVE_M floored clicks under 1.2 m so inching east never moved (fixed 3b5d7ce), (3) the agent aimed at midpoints between itself and the arrow, which under the toward-camera shelf-east shot resolve backwards or onto awnings (percept line now instructs aiming AT the arrow, e71b8e2). LLM receipt of the fixed executor is BLOCKED: Gemini prepaid credits depleted mid-round (429 RESOURCE_EXHAUSTED).</pre>
+ <div class="fr"><img src="runs/run-20260805-215044/frames/step-124.jpg" loading="lazy"><img src="runs/run-20260805-215044/frames/step-125.jpg" loading="lazy"><img src="runs/run-20260805-215044/frames/step-126.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-215044 step 126 · found by agent · del-cine / shelf-west @ 23.25,19.04,-6.91
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-065</code> (captured at 71082c27)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#666">REFUTED against the game · VERIFIED against the harness</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Wrong transition prompt appears at 'The Lockhead' marker</span><span class="id">PT-20260805-066</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to enter 'The Lockhead' to find the person who runs the locks.</dd>
+  <dt>I expected</dt><dd>I expected to see a prompt to enter The Lockhead or talk to someone when standing on the red marker.</dd>
+  <dt>What happened</dt><dd>The prompt says 'Down to the Shelf street? [E]' instead, and I can't seem to trigger the correct transition to progress the objective.</dd>
+  <dt>On screen</dt><dd>objective: Find whoever runs the locks — the lockhead, above Lock Five</dd>
+  <dt>Measured by</dt><dd>same as PT-20260805-065</dd>
+ </dl>
+ <pre>&quot;Down to the Shelf street?&quot; is the gate-stair passage prompt, correct where it stands; the agent was at the gate because its own midpoint-goto had carried it up there (same loop as PT-065). The routed arrow the objective needs was drawn and labelled on every one of those frames. Same harness class and same fixes as PT-065.</pre>
+ <div class="fr"><img src="runs/run-20260805-215044/frames/step-136.jpg" loading="lazy"><img src="runs/run-20260805-215044/frames/step-137.jpg" loading="lazy"><img src="runs/run-20260805-215044/frames/step-138.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-215044 step 138 · found by stuck-interview · del-cine / gate @ 20.68,24.07,-6.34
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-066</code> (captured at 71082c27)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>

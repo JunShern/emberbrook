@@ -5004,3 +5004,106 @@ state, in receipts rather than hopes: **NEW GAME → all 18 Ch1 beats on their o
 **Spend this round:** ~$1.15 of model calls (two partial episode legs ~$0.35, receipt
 attempt 1 ~$0.10, receipt attempt 2 $0.68), five plate bakes (3.2 min each), and ~30
 browser probes.
+
+## Round 30 — 2026-08-05 · THE DRIVE SAID ARRIVED AND THE HINT SAID NOT YET
+
+### §1 The Lockhead question — what actually ate the 400-step cap
+
+run-20260805-194359 spent ~150 steps circling "The Lockhead" objective with ch2.jam
+never firing. Every game-side suspect measured CLEAN first: the trigger `at [78.93,
+14.07, −15.6] r 3.6` is Odessa's own canon post (npcs.json — the beat anchor IS the
+person you are sent to find), findability 69/0 says her body and the trigger ground
+survive the plate, a checkpoint spawned on the trigger fires the beat instantly, and a
+scripted bot that does nothing but click the routed arrow walks shelf-west →
+shelf-east → loop-stairs → quay → lockhead and fires ch2.jam. The world, the data and
+the guidance chain are fine.
+
+**The cap-eater was a CONTRACT GAP between two tolerances that had never met.**
+story_runtime HOLDS a routed arrow's aim waypoint until the body is within
+`AIM_HOLD = 0.7` m; the drive executor declared a leg arrived at `ARRIVE_M = 1.2` m. A
+body stopped in the 0.7–1.2 m band is "arrived" to the drive and "not there yet" to
+the hint — the arrow never advances, and the next click at it is another zero-metre
+leg. Measured six times in one window (steps 276-278/281/286-287: target
+[33.9,19,−7.7], intended 1.13 m, closed 0.00, ok:true). Reproduced live without an
+LLM: seam at [35.14,19.07,−7], drive ends [34.23], the camera cut never fires, next
+leg dist 1.02 ≤ 1.2 → zero metres forever. A HUMAN WALKS THROUGH THE WAYPOINT AND
+NEVER SEES THE BAND; only a closed-loop executor can stand in it.
+
+Three harness fixes, each measured before and after (commits b957de5, 3b5d7ce, e71b8e2):
+1. a MARKER leg drives to 0.5 m (inside AIM_HOLD) and is complete the moment the way
+   is TAKEN — the shot/scene is watched every round, so a cut crossed mid-burst ends
+   the leg as success instead of "closed −0.41";
+2. a non-marker leg's tolerance scales with its own length (half of it, clamped
+   0.35..1.2) — a flat 1.2 m floored every deliberate short step into a zero-metre
+   "arrived" (run-215044 step 85: intended 0.64, closed 0.00);
+3. the percept's routed-arrow line now says aim AT the arrow's exact coordinates —
+   two 200-step runs aimed at MIDPOINTS, and under the toward-camera shelf-east shot
+   those pixels resolve backwards (x 31-34, west) or onto awnings ([48.97,22.44,−5.54]
+   at y 22 over the seam — "the ray lands on scenery").
+
+And one GAME fix (71082c2): routeTo answers hops:0 in the objective's own shot, and
+clearHint used to put every rival arrow back at FULL strength exactly where all of
+them are wrong. run-211913 step 88: the routed chain delivered the agent to the
+lockhead ramp in SEVEN legs, Odessa 14.5 m ahead, and it aimed at the bare cut arrow
+over the seam OUT of the shot and was carried back to the shelf. On arrival the
+demotion now stays on with no arrow kept — the beat needs none, its trigger fires on
+its own ground. Verified live: both lockhead-shot cuts read dimmed with ch2.jam
+pending; percept_test green throughout (finished at 504/504).
+
+### §2 PT-20260805-064 — the door the bargeman ate (FIXED, drive-verified both ways)
+
+The filing said "interior exit unreachable + E prioritizes NPC over door". The first
+half is FALSE as filed: the Boatmen's Rest exit pad [−3.4,0.04,−2.72] r 1.8 sits in
+the room's main walk component (377-cell fill contains it; a real-key drive parks
+0.46 m from it). The reach probe's unreachable [−3.61,0,0.81] is a 23-cell dead
+POCKET between the hearth and the settle — sealed at both mouths by the fire-iron
+stand at rt (−3.62,−0.78) plus the settle's body shadow (`_court_probe --who`:
+hearth_dress_5 / hearth_settle_3) — which no body can enter, a click-target trap
+only, geometry fix deferred with measurements on file.
+
+The second half was the real defect and it was WORSE than filed: ui_kit dispatches
+global keys in the CAPTURE phase and stopImmediatePropagation's a consumed key, so
+while ANY villager stood within 1.9 m, npc.js starved play3d's bubble-phase door
+keydown — and the bargeman's reach covers the WHOLE door pad. E could not exit that
+inn from anywhere both prompts showed. npc.js now yields E to a nearer live scene
+edge ("a person at arm's reach is more specific" stays true — while the person is
+the nearer claim). Drive receipts: at [−3.6,−1.39] (the filing's own spot; door
+1.35 m < bargeman 1.80 m) E exits to del-cine [23.94,19.07,−5.54]; at [−2.2,−1.5]
+(bargeman 0.45 m) E still talks. And in run-211913 the agent walked into that inn
+mid-run and left ON ITS FIRST E (step 24).
+
+### §3 PT-20260805-057 — the exit walk is not a wrong turn (detector fixed)
+
+The spine detector filed "no way to advance the story" from emb-cine post-sendoff —
+and the SAME RUN fired ch1.done and crossed the corridor right after. The walk from
+the sigil court to the Old Gate simply takes more than the detector's three steps
+when the next beat lives in the next scene. The filing's own sentence is the test:
+"nothing here can continue the chapter" is false whenever the routed wayhint arrow
+is drawn — that arrow IS the way. episode.mjs now skips off-spine counting on any
+step with a live routed marker; replayed over the filing run's own percepts, all 15
+post-sendoff emb-cine steps were guided and nothing files. An unguided exit (hint
+broken, edge sealed, marker off-screen three straight steps) still files as before.
+
+### §4 The receipts — and the wall they hit
+
+- run-20260805-211913 (200 steps, $0.60, --from=ch2.arrive): pre-fix page for the
+  arrived-shot demotion. The deadband fix carried it shelf → lockhead shot in seven
+  legs (steps 81-87); step 88 took the rival arrow back out; capped. 0 reports.
+- run-20260805-215044 (200 steps, $0.58): arrived-shot fix live, short-leg fix not
+  yet in-process. Ping-ponged the shelf on midpoint clicks and zero-metre short
+  legs; capped. Its two leads (PT-065 "infinite transition loop", PT-066 "wrong
+  prompt") are the executor loop itself — REFUTED against the game, closed by §1.
+- run-20260805-222534 (attempt 3, all fixes in-process): 17 straight "recover"
+  steps at spawn — **the Gemini prepaid credits DEPLETED mid-round** (429
+  RESOURCE_EXHAUSTED on every call; probed directly with the .env key). Killed.
+  **THE FULL NEW-GAME BAR IS BLOCKED ON BILLING, not on the game**: the no-LLM
+  arrow-clicking bot completes the Lockhead chain, and playthrough_test remains the
+  mechanical spine receipt. The moment credits exist, the standing order is
+  `--from=ch2.arrive --stop-beat=ch2.landing --steps=200`, then the 500-step NEW
+  GAME bar.
+
+### §5 The gauntlet
+
+story_test green · percept_test 504/504 · routes_derive --check clean (both towns) ·
+findability 69/0 · playthrough_test: see the round-30 DAYLOG entry (run singly at
+close of round).
