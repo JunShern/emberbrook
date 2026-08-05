@@ -250,7 +250,9 @@ export const PERCEPT_JS = `(()=>{
     const r = el.getBoundingClientRect();
     if (!r.width || !r.height || r.bottom < 0 || r.top > innerHeight) continue;
     const pill = el.querySelector('.story-way');
-    const lab = txt(pill) || txt(el.querySelector('div + div')) || null;
+    // The pill repeats the objective banner's amber diamond; strip it the same way the
+    // objective line does, so the label is the PLACE NAME and nothing else.
+    const lab = (txt(pill) || txt(el.querySelector('div + div')) || '').replace(/^[^A-Za-z0-9]+/, '') || null;
     out.markers.push({ label: lab, kind: el.dataset.kind || null,
       nx: +(((r.left + r.right) / 2) / innerWidth).toFixed(3),
       ny: +(((r.top + r.bottom) / 2) / innerHeight).toFixed(3),
