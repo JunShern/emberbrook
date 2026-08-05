@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-05T15:08:35Z",
+ "generated": "2026-08-05T17:32:16Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -4342,20 +4342,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.087,
-       -0.079
+       0.09,
+       -0.109
       ],
       "px": [
-       730,
-       414
+       733,
+       426
       ],
       "onScreen": true,
-      "edgeMargin": 0.913,
-      "depth": 31.044,
-      "charPx": 67,
+      "edgeMargin": 0.891,
+      "depth": 29.288,
+      "charPx": 71,
       "headNdc": [
-       0.088,
-       0.083
+       0.092,
+       0.063
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4366,12 +4366,12 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      72.45,
+      72.08,
       7.75,
-      -24.34
+      -24.21
      ],
      "from": "lockfive",
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.273:lockfive>weave",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
      "aim": [
       -0.948,
       0.319
@@ -4387,20 +4387,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.662,
-       -0.268
+       -0.493,
+       -0.097
       ],
       "px": [
-       227,
-       487
+       341,
+       421
       ],
       "onScreen": true,
-      "edgeMargin": 0.338,
-      "depth": 34.098,
-      "charPx": 61,
+      "edgeMargin": 0.507,
+      "depth": 37.24,
+      "charPx": 56,
       "headNdc": [
-       -0.675,
-       -0.124
+       -0.501,
+       0.038
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4432,20 +4432,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.63,
-       -0.231
+       -0.47,
+       -0.066
       ],
       "px": [
-       248,
-       473
+       356,
+       409
       ],
       "onScreen": true,
-      "edgeMargin": 0.37,
-      "depth": 34.668,
-      "charPx": 60,
+      "edgeMargin": 0.53,
+      "depth": 37.801,
+      "charPx": 55,
       "headNdc": [
-       -0.642,
-       -0.089
+       -0.478,
+       0.068
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4483,20 +4483,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.155,
-       0.188
+       0.195,
+       0.153
       ],
       "px": [
-       776,
-       312
+       803,
+       325
       ],
       "onScreen": true,
-      "edgeMargin": 0.812,
-      "depth": 31.509,
-      "charPx": 66,
+      "edgeMargin": 0.805,
+      "depth": 29.183,
+      "charPx": 71,
       "headNdc": [
-       0.158,
-       0.354
+       0.2,
+       0.331
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4507,17 +4507,17 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      75.01,
+      74.78,
       6.27,
-      -25.2
+      -25.12
      ],
      "to": "lockfive",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.49,
-      -0.872
+      -0.444,
+      -0.896
      ],
      "seam": {
       "n": [
@@ -4528,24 +4528,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.273:weave>lockfive",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.256:weave>lockfive",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.782,
-       -0.37
+       -0.577,
+       -0.156
       ],
       "px": [
-       147,
-       526
+       284,
+       444
       ],
       "onScreen": true,
-      "edgeMargin": 0.218,
-      "depth": 35.06,
-      "charPx": 59,
+      "edgeMargin": 0.423,
+      "depth": 39.247,
+      "charPx": 53,
       "headNdc": [
-       -0.796,
-       -0.232
+       -0.587,
+       -0.029
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4581,20 +4581,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.696,
-       -0.158
+       -0.484,
+       0.012
       ],
       "px": [
-       204,
-       445
+       347,
+       379
       ],
       "onScreen": true,
-      "edgeMargin": 0.304,
-      "depth": 36.673,
-      "charPx": 56,
+      "edgeMargin": 0.516,
+      "depth": 40.4,
+      "charPx": 51,
       "headNdc": [
-       -0.708,
-       -0.022
+       -0.492,
+       0.138
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4723,15 +4723,15 @@
      ]
     },
     {
-     "id": "weave:weave-huts__moorage@0..0.273",
+     "id": "weave:weave-huts__moorage@0..0.256",
      "class": "stairs",
      "from": "node:weave-huts",
      "to": "node:moorage",
      "t": [
       0,
-      0.273
+      0.256
      ],
-     "length": 4.103,
+     "length": 3.844,
      "points": [
       [
        71.45,
@@ -4739,22 +4739,17 @@
        -24
       ],
       [
-       72.63,
-       7.27,
-       -24.4
+       73.12,
+       7.05,
+       -24.56
       ],
       [
-       73.82,
-       6.72,
-       -24.8
-      ],
-      [
-       75,
-       6.16,
-       -25.2
+       74.78,
+       6.27,
+       -25.12
       ]
      ],
-     "source": "map edge weave-huts__moorage@0..0.273",
+     "source": "map edge weave-huts__moorage@0..0.256",
      "role": "spine",
      "connects": [
       "entry:seam:weave-huts__moorage",
@@ -4991,20 +4986,17 @@
     ]
    },
    "measure": {
-    "routeSamples": 37,
+    "routeSamples": 36,
     "routeInFramePct": 100,
-    "routeLen": 47.335,
-    "spineLen": 47.335,
+    "routeLen": 47.076,
+    "spineLen": 47.076,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [
-     "seam:weave-huts__moorage",
-     "seam:weave-huts__keepers-cottage"
-    ],
-    "minCharPx": 56,
-    "visibleFrac": 0.9219
+    "exitsAtFrameEdge": [],
+    "minCharPx": 51,
+    "visibleFrac": 0.8281
    }
   },
   "deep-stairs": {
@@ -6767,10 +6759,10 @@
       -29.15
      ],
      "from": "weave",
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.273:weave>lockfive",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.256:weave>lockfive",
      "aim": [
-      -0.49,
-      -0.872
+      -0.444,
+      -0.896
      ],
      "seam": {
       "n": [
@@ -6783,20 +6775,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.101,
-       -0.557
+       -0.084,
+       -0.556
       ],
       "px": [
-       604,
-       598
+       616,
+       597
       ],
       "onScreen": true,
-      "edgeMargin": 0.443,
-      "depth": 23.537,
+      "edgeMargin": 0.444,
+      "depth": 23.431,
       "charPx": 88,
       "headNdc": [
-       -0.103,
-       -0.338
+       -0.085,
+       -0.336
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6828,20 +6820,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.231,
-       -0.608
+       0.252,
+       -0.606
       ],
       "px": [
-       827,
+       841,
        617
       ],
       "onScreen": true,
-      "edgeMargin": 0.392,
-      "depth": 20.913,
-      "charPx": 99,
+      "edgeMargin": 0.394,
+      "depth": 20.807,
+      "charPx": 100,
       "headNdc": [
-       0.235,
-       -0.362
+       0.256,
+       -0.359
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6873,20 +6865,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.25,
-       -0.214
+       -0.239,
+       -0.212
       ],
       "px": [
-       504,
-       466
+       511,
+       465
       ],
       "onScreen": true,
-      "edgeMargin": 0.75,
-      "depth": 37.503,
+      "edgeMargin": 0.761,
+      "depth": 37.397,
       "charPx": 55,
       "headNdc": [
-       -0.252,
-       -0.074
+       -0.242,
+       -0.071
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6899,9 +6891,9 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      75.01,
+      74.78,
       6.27,
-      -25.2
+      -25.12
      ],
      "to": "weave",
      "toKind": "shot",
@@ -6920,24 +6912,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.273:lockfive>weave",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
      "screen": {
       "behind": false,
       "ndc": [
-       0.115,
-       0.183
+       0.143,
+       0.184
       ],
       "px": [
-       749,
+       768,
        314
       ],
       "onScreen": true,
-      "edgeMargin": 0.817,
-      "depth": 25.855,
-      "charPx": 80,
+      "edgeMargin": 0.816,
+      "depth": 25.564,
+      "charPx": 81,
       "headNdc": [
-       0.116,
-       0.392
+       0.145,
+       0.395
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6973,20 +6965,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.275,
+       0.299,
        -0.878
       ],
       "px": [
-       857,
+       873,
        721
       ],
       "onScreen": true,
       "edgeMargin": 0.122,
-      "depth": 18.219,
+      "depth": 18.113,
       "charPx": 114,
       "headNdc": [
-       0.281,
-       -0.6
+       0.305,
+       -0.598
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7022,20 +7014,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.27,
-       -0.17
+       -0.261,
+       -0.168
       ],
       "px": [
-       490,
+       497,
        449
       ],
       "onScreen": true,
-      "edgeMargin": 0.73,
-      "depth": 40.06,
+      "edgeMargin": 0.739,
+      "depth": 39.954,
       "charPx": 52,
       "headNdc": [
-       -0.273,
-       -0.039
+       -0.263,
+       -0.036
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7045,20 +7037,20 @@
    ],
    "routes": [
     {
-     "id": "lockfive:weave-huts__moorage@0.273..1",
+     "id": "lockfive:weave-huts__moorage@0.256..1",
      "class": "stairs",
      "from": "node:weave-huts",
      "to": "node:moorage",
      "t": [
-      0.273,
+      0.256,
       1
      ],
-     "length": 11.295,
+     "length": 11.554,
      "points": [
       [
-       75,
-       6.16,
-       -25.2
+       74.78,
+       6.27,
+       -25.12
       ],
       [
        76.2,
@@ -7101,7 +7093,7 @@
        -27
       ]
      ],
-     "source": "map edge weave-huts__moorage@0.273..1",
+     "source": "map edge weave-huts__moorage@0.256..1",
      "role": "link",
      "connects": [
       "exit:seam:weave-huts__moorage"
@@ -7293,8 +7285,8 @@
    "measure": {
     "routeSamples": 27,
     "routeInFramePct": 100,
-    "routeLen": 35.427,
-    "spineLen": 35.427,
+    "routeLen": 35.686,
+    "spineLen": 35.686,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -7303,7 +7295,7 @@
      "seam:tenant-shack__fish-dock"
     ],
     "minCharPx": 52,
-    "visibleFrac": 0.3906
+    "visibleFrac": 0.6406
    }
   },
   "north-landing": {
@@ -7559,21 +7551,6 @@
    ]
   },
   {
-   "edge": "weave-huts__moorage",
-   "t": [
-    0,
-    0.273
-   ],
-   "metres": 3.751,
-   "cameraUp": "weave",
-   "floorOwnedBy": "lockfive",
-   "at": [
-    73.23,
-    7,
-    -24.6
-   ]
-  },
-  {
    "edge": "valley-gate__inn",
    "t": [
     0,
@@ -7601,6 +7578,21 @@
     58.95,
     14.95,
     -11.24
+   ]
+  },
+  {
+   "edge": "weave-huts__moorage",
+   "t": [
+    0,
+    0.256
+   ],
+   "metres": 3.517,
+   "cameraUp": "weave",
+   "floorOwnedBy": "lockfive",
+   "at": [
+    73.12,
+    7.05,
+    -24.56
    ]
   },
   {

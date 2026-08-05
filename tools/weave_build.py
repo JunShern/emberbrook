@@ -519,7 +519,15 @@ if "deck" in DO:
     #      The drying decks and the North Landing are both working platforms that
     #      would really be bigger than their standing pad, so each gets a planked
     #      annulus outboard of the walk.  That band is what carries the dressing.
-    def apron(cx, cy, r0, r1, z, tag, nseg=40, nrad=4):
+    def apron(cx, cy, r0, r1, z, tag, nseg=40, nrad=4, ymax=None):
+        # `ymax` clamps the annulus riverward (2026-08-05, findability regression):
+        # the drying apron's own radius reaches y 32.9, 3.4 m past its pad, and that
+        # fringe crossed the lockfive camera's ONLY sightline to Maren's post at
+        # [79.7, 0.83, -27.13] at a grazing 0.0-0.3 m -- her body and the ch2.maren
+        # trigger ground went 0% visible on the rebaked plate (findability_test, and
+        # a Blender ray-cast named wv_planking at (63.6, 32.0, 6.81)). A working
+        # platform's skirt stops near its own pad; planks five metres over open
+        # river read as floor a player can never stand on anyway.
         made = []
         for k in range(nseg):
             t0, t1 = 2 * math.pi * k / nseg, 2 * math.pi * (k + 1) / nseg
@@ -529,6 +537,8 @@ if "deck" in DO:
                 q = [(cx + math.cos(t) * rr, cy + math.sin(t) * rr)
                      for t, rr in ((t0, a), (t1, a), (t1, b), (t0, b))]
                 mid = (sum(p[0] for p in q) / 4, sum(p[1] for p in q) / 4)
+                if ymax is not None and max(py for px, py in q) > ymax:
+                    continue
                 if not all(free_of_walk(px, py, z) for px, py in q + [mid]):
                     continue
                 if ground_z(mid[0], mid[1]) > z - 0.35:
@@ -542,6 +552,8 @@ if "deck" in DO:
         for k in range(10):
             th = 2 * math.pi * k / 10 + 0.15
             px, py = cx + math.cos(th) * (r1 - 0.25), cy + math.sin(th) * (r1 - 0.25)
+            if ymax is not None and py > ymax:
+                continue                           # no leg under a plank that was clamped
             if not free_of_walk(px, py, z) or not clear_box(px, py, z - 0.30, z, pad=0.16):
                 continue
             zb = min(ground_z(px, py), water_z(px) - 0.1) - 0.35
@@ -555,7 +567,7 @@ if "deck" in DO:
         bb = world_bbox(dd)
         deck += apron((bb[0] + bb[1]) / 2, (bb[2] + bb[3]) / 2,
                       (bb[1] - bb[0]) / 2 - 0.15, (bb[1] - bb[0]) / 2 + 1.55,
-                      bb[5] - DECK_DROP, "drying")
+                      bb[5] - DECK_DROP, "drying", ymax=bb[3] + 1.0)
 
     done(join_meshes(deck, "wv_planking", COLL + "_DECK"), T_(lf_deck=PAL["deck"]))
     done(join_meshes(joists, "wv_joists", COLL + "_DECK"), T_(lf_deck=PAL["timberdk"]))

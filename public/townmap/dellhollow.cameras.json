@@ -360,9 +360,10 @@
    "name": "The Weave",
    "shot": "From the cliff shoulder out over the stilt clusters — the pilot cluster's plank yard, the huts stacked on their legs, drying decks strung with nets, the Westweave tucked in under the quay's shadow, and the gorge wall receding behind. The pilot slice's proven drama angle.",
    "framing": {
-    "yaw": 118,
+    "yaw": 142,
     "pitch": 22,
-    "margin": 0.1
+    "margin": 0.1,
+    "_pt050": "yaw 118 -> 142 (2026-08-05, PT-20260805-050): the weave>lockfive seam projected at nx 0.104 -- the frame's left margin -- and its click ray landed on wv_piles/lf_ground, so five agent drives at the one labelled exit all failed. Swept offline (solver + occluder rays): at yaw 142/pitch 22 the seam draws at nx 0.203 with all three seam rays (ground/chest/head) clear of the stilt field and charPxFar 54 over the 50 px floor; region visibility 81.3% vs 90.6% at 118 -- the cost of an exit the player can actually use. Verdict on the baked plate, not this note."
    },
    "owns": {
     "landmarks": [
