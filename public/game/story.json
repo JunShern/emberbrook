@@ -427,7 +427,7 @@
           }
         },
         {
-          "objective": "See to them — all of them (0/4)"
+          "objective": "See to them — all four (0/4): Poppy at her stall, Mara at the Heartlight, Finn at the pond, the cat back up the north road"
         }
       ]
     },
@@ -466,7 +466,7 @@
           }
         },
         {
-          "objective": "See to them — all of them (Poppy ✓)"
+          "objective": "See to them (Poppy ✓) — Mara at the Heartlight, Finn at the pond, the cat back up the north road"
         }
       ]
     },
@@ -505,7 +505,7 @@
           }
         },
         {
-          "objective": "See to them — all of them (Mara and Pip ✓)"
+          "objective": "See to them (Mara and Pip ✓) — Poppy at her stall, Finn at the pond, the cat back up the north road"
         }
       ]
     },
@@ -544,7 +544,7 @@
           }
         },
         {
-          "objective": "See to them — all of them (Finn ✓)"
+          "objective": "See to them (Finn ✓) — Poppy at her stall, Mara at the Heartlight, the cat back up the north road"
         }
       ]
     },
@@ -583,7 +583,7 @@
           }
         },
         {
-          "objective": "See to them — all of them (the cat is fine ✓)"
+          "objective": "See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond"
         }
       ]
     },
