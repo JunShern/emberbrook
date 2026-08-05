@@ -493,7 +493,7 @@
         "status": "UNVERIFIED",
         "instrument": null,
         "evidence": "no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
-        "at": "2026-08-05T01:04:27.887Z"
+        "at": "2026-08-05T04:33:25.940Z"
       },
       "run": "run-20260803-113942",
       "step": 5,
@@ -6868,7 +6868,7 @@
         "status": "UNVERIFIED",
         "instrument": null,
         "evidence": "no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
-        "at": "2026-08-05T01:04:27.892Z"
+        "at": "2026-08-05T04:33:25.946Z"
       },
       "run": "run-20260804-185107",
       "step": 24,
@@ -9492,10 +9492,10 @@
       "id": "PT-20260805-006",
       "created": "2026-08-05T01:40:01.622Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.5,24.07,-6.49], 0.29 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T04:33:37.809Z"
       },
       "run": "run-20260805-013331",
       "step": 44,
@@ -9732,10 +9732,10 @@
       "id": "PT-20260805-007",
       "created": "2026-08-05T02:15:10.914Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (0.6 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [36.22,0.46,-17.58], 0.56 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T04:33:42.105Z"
       },
       "run": "run-20260805-015721",
       "step": 151,
@@ -9927,10 +9927,10 @@
       "id": "PT-20260805-008",
       "created": "2026-08-05T02:16:29.680Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (2.0 m apart, 18 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [45.6,0.46,-20.53], 0.54 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T04:33:46.458Z"
       },
       "run": "run-20260805-015721",
       "step": 163,
@@ -10122,10 +10122,10 @@
       "id": "PT-20260805-009",
       "created": "2026-08-05T02:19:09.381Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (1.5 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [4.79,0,-5.55], 0.54 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T04:33:54.361Z"
       },
       "run": "run-20260805-015721",
       "step": 188,
@@ -10320,10 +10320,10 @@
       "id": "PT-20260805-010",
       "created": "2026-08-05T02:40:16.500Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (2.8 m apart, 39 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [58.88,0.26,-14.73], 0.6 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T04:33:58.695Z"
       },
       "run": "run-20260805-022035",
       "step": 151,
@@ -10518,6 +10518,380 @@
           },
           "meta": {
             "savedAt": "2026-08-05T02:37:27.741Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-011",
+      "created": "2026-08-05T04:03:29.606Z",
+      "verification": {
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (11.0 m apart, 1553 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [55.18,1.36,-45.83] and stopped 10.65 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T04:34:04.196Z"
+      },
+      "run": "run-20260805-040031",
+      "step": 17,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Cannot interact with Mara at the Heartlight",
+      "doing": "I was trying to talk to Mara at the Heartlight to complete that part of the objective.",
+      "expected": "I expected a conversation to start when I interacted with her.",
+      "happened": "I clicked to interact but nothing happened, and the objective hasn't updated.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          55.18,
+          1.36,
+          -46.42
+        ],
+        "to": [
+          63.8,
+          1.36,
+          -39.58
+        ],
+        "scene": "emb-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-040031/frames/step-015.jpg",
+        "docs/qa/playtest/runs/run-20260805-040031/frames/step-016.jpg",
+        "docs/qa/playtest/runs/run-20260805-040031/frames/step-017.jpg"
+      ],
+      "onscreen": {
+        "objective": "See to them (Poppy ✓) — Mara at the Heartlight, Finn at the pond, the cat back up the north road",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-cine",
+        "shot": "square",
+        "pos": [
+          54.75,
+          1.36,
+          -45.62
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen"
+        ],
+        "exits": [
+          "emb-cine>emb-item-int@item-shop",
+          "emb-cine>emb-inn-int@inn",
+          "emb-cine>emb-bakery-int@bakery",
+          "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+          "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
+          "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:square>homerow",
+          "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+          "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane"
+        ]
+      },
+      "repro": {
+        "sha": "475f616197a3061e5d01e9c5418fe8e8295f4474",
+        "capturedAt": "2026-08-05T04:03:29.601Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen": 1
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "emb-cine",
+            "cam": "square",
+            "pos": [
+              53.261,
+              1.57,
+              -45.316
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": 1,
+            "ch1.see.poppy": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T04:02:20.223Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-012",
+      "created": "2026-08-05T04:05:55.055Z",
+      "verification": {
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (9.5 m apart, 1605 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [55.17,1.36,-45.81] and stopped 9.51 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T04:34:08.579Z"
+      },
+      "run": "run-20260805-040031",
+      "step": 29,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Character gets stuck trying to navigate around the Heartlight well",
+      "doing": "I was trying to walk around the central well to reach Mara and talk to her.",
+      "expected": "My character should have walked around the well to get to Mara.",
+      "happened": "My character got stuck near the wooden platform and wouldn't pathfind around the well, no matter where I clicked.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          55.17,
+          1.36,
+          -45.81
+        ],
+        "to": [
+          61.37,
+          1.36,
+          -38.6
+        ],
+        "scene": "emb-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-040031/frames/step-027.jpg",
+        "docs/qa/playtest/runs/run-20260805-040031/frames/step-028.jpg",
+        "docs/qa/playtest/runs/run-20260805-040031/frames/step-029.jpg"
+      ],
+      "onscreen": {
+        "objective": "See to them (Poppy ✓) — Mara at the Heartlight, Finn at the pond, the cat back up the north road",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-cine",
+        "shot": "square",
+        "pos": [
+          54.73,
+          1.36,
+          -45.66
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen"
+        ],
+        "exits": [
+          "emb-cine>emb-item-int@item-shop",
+          "emb-cine>emb-inn-int@inn",
+          "emb-cine>emb-bakery-int@bakery",
+          "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+          "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
+          "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:square>homerow",
+          "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+          "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane"
+        ]
+      },
+      "repro": {
+        "sha": "475f616197a3061e5d01e9c5418fe8e8295f4474",
+        "capturedAt": "2026-08-05T04:05:55.053Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen": 1
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "emb-cine",
+            "cam": "square",
+            "pos": [
+              53.261,
+              1.57,
+              -45.316
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": 1,
+            "ch1.see.poppy": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T04:02:20.223Z",
             "playSeconds": 0
           }
         },

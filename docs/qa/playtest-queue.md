@@ -1,6 +1,6 @@
 # Emberbrook — LLM playtest queue
 
-Generated 2026-08-05T01:05:05.763Z by `tools/playtest_triage.mjs`. Source of truth: `docs/qa/playtest/queue.json`.
+Generated 2026-08-05T04:34:08.593Z by `tools/playtest_triage.mjs`. Source of truth: `docs/qa/playtest/queue.json`.
 
 **An UNVERIFIED complaint is a lead, never a ticket.** Filed by an LLM playing the game through
 screenshots and real key events; measured by instruments before anybody builds. REFUTED entries are
@@ -30,6 +30,8 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 | VERIFIED | P1 | PT-20260805-001 | Character stuck on wooden platform, unable to move left or right | tools/reach_probe.mjs + SIM.move (in the running page) |
 | VERIFIED | P1 | PT-20260805-004 | Character stuck on Lock Five central deck geometry | tools/reach_probe.mjs + SIM.move (in the running page) |
 | VERIFIED | P1 | PT-20260805-005 | Cannot interact with head-gate winches to progress objective | tools/reach_probe.mjs + SIM.move (in the running page) |
+| VERIFIED | P1 | PT-20260805-011 | Cannot interact with Mara at the Heartlight | tools/reach_probe.mjs + SIM.move (in the running page) |
+| VERIFIED | P1 | PT-20260805-012 | Character gets stuck trying to navigate around the Heartlight well | tools/reach_probe.mjs + SIM.move (in the running page) |
 | UNVERIFIED | P0 | PT-20260803-006 | End the test session as the game is stuck on a black screen and cannot continue. | tools/reach_probe.mjs (needs a target) |
 | UNVERIFIED | P1 | PT-20260803-001 | Walk blocked: the body closed 0 m of an intended 35.57 m, twice at the same place | tools/reach_probe.mjs (NOT RUN) |
 | UNVERIFIED | P1 | PT-20260803-003 | Character stuck on terrain geometry | tools/reach_probe.mjs (needs a target) |
@@ -57,6 +59,11 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 | REFUTED | P1 | PT-20260804-015 | Duplicate word 'the' in cook interaction prompt | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260805-002 | Character stuck on narrow wooden plank bridge | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260805-003 | Character stuck in place on central wooden platform | tools/reach_probe.mjs (in the running page) |
+| REFUTED | P1 | PT-20260805-006 | Cannot walk to the head-gate winches at Lock Five | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-007 | Cannot interact with the two figures on the path | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-008 | Cannot interact with Poppy at her stall | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-009 | Overlapping interaction prompts for 'Leave Item Shop' and 'Talk to shopkeeper' | tools/reach_probe.mjs + SIM.move (in the running page) |
+| REFUTED | P1 | PT-20260805-010 | Old Gate exit loops back to Village Square | tools/reach_probe.mjs + SIM.move (in the running page) |
 | REFUTED | P2 | PT-20260804-009 | Cannot interact with NPCs inside The Boatmen's Rest | tools/reach_probe.mjs (in the running page) |
 
 ## Detail
@@ -330,6 +337,34 @@ where I stood -> where I pointed: reachable (1.4 m apart, 40 cells filled, via 1
   BUT THE DRIVE STALLS. SIM.move from the same start reached [57.74,15.3,-11.25] and stopped 1.39 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-005` (captured at 37ce4161)
+
+### PT-20260805-011 — Cannot interact with Mara at the Heartlight
+
+- **status** VERIFIED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to talk to Mara at the Heartlight to complete that part of the objective.
+- **I expected** I expected a conversation to start when I interacted with her.
+- **What happened** I clicked to interact but nothing happened, and the objective hasn't updated.
+
+```
+where I stood -> where I pointed: reachable (11.0 m apart, 1553 cells filled on foot)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [55.18,1.36,-45.83] and stopped 10.65 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-011` (captured at 475f6161)
+
+### PT-20260805-012 — Character gets stuck trying to navigate around the Heartlight well
+
+- **status** VERIFIED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to walk around the central well to reach Mara and talk to her.
+- **I expected** My character should have walked around the well to get to Mara.
+- **What happened** My character got stuck near the wooden platform and wouldn't pathfind around the well, no matter where I clicked.
+
+```
+where I stood -> where I pointed: reachable (9.5 m apart, 1605 cells filled on foot)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [55.17,1.36,-45.81] and stopped 9.51 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-012` (captured at 475f6161)
 
 ### PT-20260803-006 — End the test session as the game is stuck on a black screen and cannot continue.
 
@@ -696,6 +731,76 @@ where I stood -> where I pointed: reachable (8.1 m apart, 386 cells filled, via 
   The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-003` (captured at 37ce4161)
+
+### PT-20260805-006 — Cannot walk to the head-gate winches at Lock Five
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to walk to the winches under the shelter to complete my objective.
+- **I expected** I expected to be able to walk up to the winches and interact with them.
+- **What happened** I keep getting told the area around the winches is not ground I can walk to, so I can't reach the objective.
+
+```
+where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [20.5,24.07,-6.49], 0.29 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-006` (captured at edde27bc)
+
+### PT-20260805-007 — Cannot interact with the two figures on the path
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I walked up to the two people standing on the path of footprints and tried to talk to them.
+- **I expected** I expected to be able to interact with them to progress the objective.
+- **What happened** I pressed the interact button multiple times while standing right next to them, but nothing happened.
+
+```
+where I stood -> where I pointed: reachable (0.6 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [36.22,0.46,-17.58], 0.56 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-007` (captured at 08dd3d04)
+
+### PT-20260805-008 — Cannot interact with Poppy at her stall
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** blocker · **found by** stuck-interview
+- **I was doing** I'm trying to talk to Poppy at her stall to progress the objective.
+- **I expected** When I stand next to the figures under the red marker and press interact, a conversation should start.
+- **What happened** I'm standing right at the red marker next to the figures, but pressing interact does absolutely nothing. I've tried moving around and pressing it from different angles, but I'm stuck.
+
+```
+where I stood -> where I pointed: reachable (2.0 m apart, 18 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [45.6,0.46,-20.53], 0.54 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-008` (captured at 08dd3d04)
+
+### PT-20260805-009 — Overlapping interaction prompts for 'Leave Item Shop' and 'Talk to shopkeeper'
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to leave the item shop after talking to the shopkeeper.
+- **I expected** I expected to be able to press E to leave the shop.
+- **What happened** The 'Leave Item Shop? [E]' prompt is overlapping with the 'Talk to the shopkeeper? [E]' prompt. Because they both use the same key, pressing E just makes me talk to the shopkeeper again instead of leaving.
+
+```
+where I stood -> where I pointed: reachable (1.5 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [4.79,0,-5.55], 0.54 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-009` (captured at 08dd3d04)
+
+### PT-20260805-010 — Old Gate exit loops back to Village Square
+
+- **status** REFUTED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** blocker · **found by** agent
+- **I was doing** Walking north towards The Old Gate to leave the village per the objective.
+- **I expected** Walking north through The Old Gate should transition to the world map or area outside the village.
+- **What happened** Crossing the northern exit zone at The Old Gate repeatedly transitions back to the Village Square, creating an infinite scene loop.
+
+```
+where I stood -> where I pointed: reachable (2.8 m apart, 39 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [58.88,0.26,-14.73], 0.6 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-010` (captured at 764c561f)
 
 ### PT-20260804-009 — Cannot interact with NPCs inside The Boatmen's Rest
 

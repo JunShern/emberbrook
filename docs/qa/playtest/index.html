@@ -19,17 +19,17 @@
  a{color:#c8a86a}
 </style>
 <h1>Emberbrook — LLM playtest queue</h1>
-<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-05T01:05:05.762Z.</p>
+<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-05T04:34:08.591Z.</p>
 <div class="warn"><b>An UNVERIFIED complaint is a lead, never a ticket.</b> These are an LLM's opinions about
 screenshots. This repo has a confabulation scar; the ratified workflow is judge&nbsp;→&nbsp;<b>measure on an
 instrument</b>&nbsp;→&nbsp;build. REFUTED entries matter as much as VERIFIED ones: the agent sees one still frame
 of a night-graded plate with no parallax and no camera control, so it is biased toward "I cannot find it",
 and the false-positive rate is this tool's calibration.</div>
 <div class="tally">
- <div><b style="color:#3fa96a">21</b>verified</div>
+ <div><b style="color:#3fa96a">23</b>verified</div>
  <div><b style="color:#8a7a5a">7</b>unverified</div>
- <div><b style="color:#b25a4a">20</b>refuted</div>
- <div><b>49</b>total</div>
+ <div><b style="color:#b25a4a">25</b>refuted</div>
+ <div><b>56</b>total</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
@@ -369,6 +369,40 @@ and the false-positive rate is this tool's calibration.</div>
  <div class="fr"><img src="runs/run-20260805-005322/frames/step-021.jpg" loading="lazy"><img src="runs/run-20260805-005322/frames/step-022.jpg" loading="lazy"><img src="runs/run-20260805-005322/frames/step-023.jpg" loading="lazy"></div>
  <div class="meta">run run-20260805-005322 step 23 · found by stuck-interview · del-cine / quay-west @ 57.75,15.3,-11.25
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-005</code> (captured at 37ce4161)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Cannot interact with Mara at the Heartlight</span><span class="id">PT-20260805-011</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to talk to Mara at the Heartlight to complete that part of the objective.</dd>
+  <dt>I expected</dt><dd>I expected a conversation to start when I interacted with her.</dd>
+  <dt>What happened</dt><dd>I clicked to interact but nothing happened, and the objective hasn't updated.</dd>
+  <dt>On screen</dt><dd>objective: See to them (Poppy ✓) — Mara at the Heartlight, Finn at the pond, the cat back up the north road</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (11.0 m apart, 1553 cells filled on foot)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [55.18,1.36,-45.83] and stopped 10.65 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260805-040031/frames/step-015.jpg" loading="lazy"><img src="runs/run-20260805-040031/frames/step-016.jpg" loading="lazy"><img src="runs/run-20260805-040031/frames/step-017.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-040031 step 17 · found by stuck-interview · emb-cine / square @ 54.75,1.36,-45.62
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-011</code> (captured at 475f6161)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Character gets stuck trying to navigate around the Heartlight well</span><span class="id">PT-20260805-012</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to walk around the central well to reach Mara and talk to her.</dd>
+  <dt>I expected</dt><dd>My character should have walked around the well to get to Mara.</dd>
+  <dt>What happened</dt><dd>My character got stuck near the wooden platform and wouldn't pathfind around the well, no matter where I clicked.</dd>
+  <dt>On screen</dt><dd>objective: See to them (Poppy ✓) — Mara at the Heartlight, Finn at the pond, the cat back up the north road</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (9.5 m apart, 1605 cells filled on foot)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [55.17,1.36,-45.81] and stopped 9.51 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260805-040031/frames/step-027.jpg" loading="lazy"><img src="runs/run-20260805-040031/frames/step-028.jpg" loading="lazy"><img src="runs/run-20260805-040031/frames/step-029.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-040031 step 29 · found by stuck-interview · emb-cine / square @ 54.73,1.36,-45.66
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-012</code> (captured at 475f6161)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
@@ -819,6 +853,91 @@ and the false-positive rate is this tool's calibration.</div>
  <div class="fr"><img src="runs/run-20260805-005322/frames/step-009.jpg" loading="lazy"><img src="runs/run-20260805-005322/frames/step-010.jpg" loading="lazy"><img src="runs/run-20260805-005322/frames/step-011.jpg" loading="lazy"></div>
  <div class="meta">run run-20260805-005322 step 11 · found by stuck-interview · del-cine / quay-west @ 57.73,15.3,-11.24
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-003</code> (captured at 37ce4161)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Cannot walk to the head-gate winches at Lock Five</span><span class="id">PT-20260805-006</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to walk to the winches under the shelter to complete my objective.</dd>
+  <dt>I expected</dt><dd>I expected to be able to walk up to the winches and interact with them.</dd>
+  <dt>What happened</dt><dd>I keep getting told the area around the winches is not ground I can walk to, so I can't reach the objective.</dd>
+  <dt>On screen</dt><dd>objective: Midnight, at Lock Five — the head-gate winches</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (0.3 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [20.5,24.07,-6.49], 0.29 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.</pre>
+ <div class="fr"><img src="runs/run-20260805-013331/frames/step-042.jpg" loading="lazy"><img src="runs/run-20260805-013331/frames/step-043.jpg" loading="lazy"><img src="runs/run-20260805-013331/frames/step-044.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-013331 step 44 · found by stuck-interview · del-cine / gate @ 20.5,24.07,-6.49
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-006</code> (captured at edde27bc)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Cannot interact with the two figures on the path</span><span class="id">PT-20260805-007</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I walked up to the two people standing on the path of footprints and tried to talk to them.</dd>
+  <dt>I expected</dt><dd>I expected to be able to interact with them to progress the objective.</dd>
+  <dt>What happened</dt><dd>I pressed the interact button multiple times while standing right next to them, but nothing happened.</dd>
+  <dt>On screen</dt><dd>objective: See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (0.6 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [36.22,0.46,-17.58], 0.56 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.</pre>
+ <div class="fr"><img src="runs/run-20260805-015721/frames/step-149.jpg" loading="lazy"><img src="runs/run-20260805-015721/frames/step-150.jpg" loading="lazy"><img src="runs/run-20260805-015721/frames/step-151.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-015721 step 151 · found by stuck-interview · emb-cine / orchard @ 36.29,0.46,-17.61
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-007</code> (captured at 08dd3d04)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Cannot interact with Poppy at her stall</span><span class="id">PT-20260805-008</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I'm trying to talk to Poppy at her stall to progress the objective.</dd>
+  <dt>I expected</dt><dd>When I stand next to the figures under the red marker and press interact, a conversation should start.</dd>
+  <dt>What happened</dt><dd>I'm standing right at the red marker next to the figures, but pressing interact does absolutely nothing. I've tried moving around and pressing it from different angles, but I'm stuck.</dd>
+  <dt>On screen</dt><dd>objective: See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (2.0 m apart, 18 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [45.6,0.46,-20.53], 0.54 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.</pre>
+ <div class="fr"><img src="runs/run-20260805-015721/frames/step-161.jpg" loading="lazy"><img src="runs/run-20260805-015721/frames/step-162.jpg" loading="lazy"><img src="runs/run-20260805-015721/frames/step-163.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-015721 step 163 · found by stuck-interview · emb-cine / orchard @ 45.21,0.46,-20.43
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-008</code> (captured at 08dd3d04)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Overlapping interaction prompts for 'Leave Item Shop' and 'Talk to shopkeeper'</span><span class="id">PT-20260805-009</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to leave the item shop after talking to the shopkeeper.</dd>
+  <dt>I expected</dt><dd>I expected to be able to press E to leave the shop.</dd>
+  <dt>What happened</dt><dd>The 'Leave Item Shop? [E]' prompt is overlapping with the 'Talk to the shopkeeper? [E]' prompt. Because they both use the same key, pressing E just makes me talk to the shopkeeper again instead of leaving.</dd>
+  <dt>On screen</dt><dd>objective: See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (1.5 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [4.79,0,-5.55], 0.54 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.</pre>
+ <div class="fr"><img src="runs/run-20260805-015721/frames/step-186.jpg" loading="lazy"><img src="runs/run-20260805-015721/frames/step-187.jpg" loading="lazy"><img src="runs/run-20260805-015721/frames/step-188.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-015721 step 188 · found by stuck-interview · emb-item-int / - @ 4.5,0,-5.6
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-009</code> (captured at 08dd3d04)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Old Gate exit loops back to Village Square</span><span class="id">PT-20260805-010</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Walking north towards The Old Gate to leave the village per the objective.</dd>
+  <dt>I expected</dt><dd>Walking north through The Old Gate should transition to the world map or area outside the village.</dd>
+  <dt>What happened</dt><dd>Crossing the northern exit zone at The Old Gate repeatedly transitions back to the Village Square, creating an infinite scene loop.</dd>
+  <dt>On screen</dt><dd>objective: North, out of the village — the Old Gate</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (2.8 m apart, 39 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [58.88,0.26,-14.73], 0.6 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.</pre>
+ <div class="fr"><img src="runs/run-20260805-022035/frames/step-149.jpg" loading="lazy"><img src="runs/run-20260805-022035/frames/step-150.jpg" loading="lazy"><img src="runs/run-20260805-022035/frames/step-151.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-022035 step 151 · found by agent · emb-cine / therise @ 58.34,0.39,-17.98
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-010</code> (captured at 764c561f)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>

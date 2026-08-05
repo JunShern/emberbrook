@@ -2924,3 +2924,52 @@ pointing anywhere.
 It reaches Chapter Two as well — `ch2.jam` and `ch2.maren` also carry `at` with no `cam`,
 and `--from=ch2.maren` at the Lockhead now labels **`Lock Five`** where it labelled
 nothing. `story_test` 1112/0, `playthrough_test` **65/0**, `node --check` clean.
+### THE RECEIPT RUN — the arrow moved the numbers, and the hunt still did not close
+
+`run-20260805-040031`, `--from=ch1.hush`, 150 steps, $0.55, WITH `beatCam` live. Against
+the three NEW GAME runs, measured from each run's own `ch1.hush`:
+
+| anchor | `013253` | `015721` | `022035` | **`040031` (arrow live)** |
+|---|---|---|---|---|
+| steps after `hush` to `see.poppy` | never | +43 | +11 | **+8** |
+| to `see.mara` | +3 | +24 | +9 | **+35** |
+| to **`see.finn`** | +104 | **never** | +60 | **+52** |
+| to `see.mochi` | +39 | +61 | +25 | **never in 147** |
+
+Faster to three of four, and `see.finn` — the anchor that never fired in one run and cost
+60–104 steps in the others — landed at +52. **`see.mochi` still did not close**, and the
+run ended at `square [59.2, 1.0, −30.7]` walking north. The arrow is a real improvement
+and it is not sufficient; a full NEW GAME to the end card is still unproven.
+
+### PT-20260805-011 / -012 — VERIFIED, AND THEY ARE ONE TRAP
+
+Both filed by the stuck interview, both **VERIFIED by `playtest_triage`'s own drive**
+(`reach_probe` + `SIM.move` in the running page) — the lattice fills 1553 cells between
+the two points and the body gains nothing for 41 ticks:
+
+    from [55.18, 1.36, -46.42] -> Mara at [63.8, 1.36, -39.58]
+      reachable on the lattice, 11.0 m apart — BUT THE DRIVE STALLS 10.65 m short
+
+**24 legs of a 150-step run, steps 6–31, all from the same 0.5 m pocket** west of the
+village well, all aimed east at Mara, all closing under 10% — and `slides` is 2–5, so the
+body IS sliding and coming back. `--who` names only `emb_lamp_09_bakery_post`, on six
+cells; the trap is not a blocker but a **no-walk island**, `--grid "walk":true`:
+
+    -44.7 MMMMMllvvvlllvvvvvvlllllllllllllll        x 52.0 .. 62.0, step 0.3
+    -45.3 MMMMMllvvvvvvvvvvvvlllllllllllllll        the WELL is the map's own
+    -45.9 MMMMMllllllvvvvvvvvvllllllllllllll        `well` landmark at (56.5, 46)
+    -46.5 MMMMMllllllvvvvvvvvvllllllllllllll
+    -47.1 llllllllllllvvvvvvllllllllllllllll   <- the way out is SOUTH, and only south
+
+Driven: straight east **stalls at 0.00 m**; south to z −47.2 first, then east, is **4/4
+legs**. So Festival Square's own well cuts a 3.6 × 2.7 m hole in the walk network across
+the line from Poppy's stall to the Heartlight, and the objective sends the player along
+exactly that line. Not built tonight — the honest fixes are a prop-footprint question for
+the square's builder or a slide question in `walkStep` (play3d, coordinator-owned) — but
+it is measured, named and reproducible from the two entries' own probe pairs.
+
+**AND A CAUTION ON PT-20260805-010'S NEW `REFUTED` BADGE.** The triage re-drove it and
+could not reproduce it, which is right — but it drove the pair the agent's last leg
+happened to carry (`[59.25, −12.51] → [58.78, −15.32]`, the `therise` seam), not the
+northlane wall this round actually fixed. The receipt for that fix is the four `--way`
+lines and the marker's own `SIM.pick`, above; the queue badge is not evidence for it.
