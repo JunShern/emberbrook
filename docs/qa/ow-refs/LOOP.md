@@ -2533,6 +2533,89 @@ regression view — village, pads, water unchanged).
   * The 20-face clump silhouette (f4c's carried item) is untouched here: no COLOR_0
     treatment reaches an outline.
 
+## ROUND 25 (r25) — THE HOUSE ROUND: fourteen copies of one outline, and a chimney measured
+
+**BET 1 of the director's slate.** Three blind critics, independently, on the r14 village:
+"one asset repeated at least six times", "the whole village reads as one undifferentiated
+putty-coloured mass", "houses hard-cropped at the frame edges". Fourteen rounds moved the
+COLOURS — r13/r14 put roof and wall inside the reference's own value band — and no critic
+moved the meadow off last place. **At 40 m a building is an OUTLINE, and fourteen outlines
+drawn from one gabled box with tint and height jitter is one outline however it is painted.**
+
+**Four massings** in `impression_house()`: gable (kept, improved), lean-to (a MONO-PITCH
+shed — the old kind 1 put a `prism` there, i.e. a second little gable turned side-on),
+L-plan (two ridges at ninety degrees, cross wing held below the main one), hip (four
+slopes, no gable triangle anywhere in the outline; new `_hip_roof` primitive). Plus a
+ridge cap, an eave with a fascia, a doorstep, a cantilevered door hood and a yard
+(woodpile or fence stub) standing on `gh()`. Plates `r25-*`, crops `r25-silhouettes.png`.
+
+### AND THE FOURTH ROUND OF THE CHIMNEY WAS AN ASPECT RATIO
+
+R11 attached the stack to the wall, R12 found the collar a metre low, R13 measured that it
+overhung its own pad on all 25 and retired that by construction. All three were real fixes
+and the next critic still read a post. **The first cut of this round fattened only the part
+inside the wall and THE PICTURE DID NOT MOVE AT ALL** — because the only part of a chimney a
+camera ever sees is the part above the roof, and that part was untouched. Its arithmetic:
+at u = 0 a gable prism's own half-width is `0.63 w (1 - t)`, so a 0.19 half-width shaft
+leaves the roof solid at t = 0.86 — 0.24 u below the apex — and then stands `CUP` 0.55 plus
+up to 0.28 of jitter higher still. **0.8-1.1 u of exposed shaft, 0.4 u wide: 2.5 : 1, which
+is a menhir, and that is the word three critics used.** The emergent stack is now BROAD AND
+SHORT (near 1 : 1), the flashing is a tight skirt (1.07x) and only the cap oversails —
+1.16x plates on a broadened shaft brought R12's "totem of hovering slabs" straight back,
+measured in the same frame. Placement is now derived from the massing, not authored: a gable
+end takes a stepped BREAST, a hip or an L-plan takes a RIDGE STRADDLE at u = 0, because a
+hip HAS no gable end to carry one. `CHIM_GATE` 14/14, 7 breast + 7 straddle.
+
+**THE LESSON, and it is not R13's.** R13's was that a gate measuring its own drawing cannot
+measure its own build. This one: **a fix aimed at the part of an object the camera cannot
+see is not a fix, it is a rebuild of the invisible.** Before touching a read, ask which
+pixels carry it.
+
+### VARIETY BY STATION, NOT BY DICE — and the shape stream stops being the placement stream
+
+`docs/plans/house-variety-design.md`'s ratified town-tier rule, ported: a stable stride picks
+the candidate massing and tint family, and a neighbour-difference pass bumps it if any house
+already standing within 7 u carries it. Neither half works alone — a stride draws a repeating
+pattern round the ring, a die puts twins side by side. Measured into `valley_build.json`:
+closest same-massing **7.35 u**, closest same-tint **8.11 u**.
+
+It only became possible because `house_shape()` now runs on `random.Random(20260805 + i)` and
+draws KIND-INDEPENDENTLY. Every previous version drew the dimensions out of
+`build_emberbrook`'s placement `rng`, so **changing the art re-scattered the whole town** and
+R9's ratified scatter was hostage to the family; the kind could not be decided by the station
+because the station search ran before the draw. The re-scatter is paid once, here.
+
+### MEASURED: the r14 value relationship SURVIVED the new geometry
+
+`matclass`'s declared boxes are the right instrument for r13/r14 (when roof and wall were the
+same colour, only a declared box could separate them) and **the wrong one for a before/after
+across a re-scatter** — the buildings moved, so the two plates' boxes are not the same sample
+and the wall term drifts with the author's hand (the same boxes gave 1.13 before / 0.86 after
+while the ROOF was identical). Post-r14 the roof IS separable by colour, so the honest
+comparison is a whole-frame census on the same rule, `matclass`'s own exclusions verbatim:
+
+| meadow plate, box-free census | before (r24 HEAD) | after (r25) | ref 3 |
+|---|---|---|---|
+| roof L | 0.283 | **0.294** | 0.397 |
+| roof lit -> shade | .452 -> .097 | **.456 -> .096** | .540 -> .234 |
+| roof R-B | -0.129 | **-0.129** | -0.198 |
+| roof/wall value ratio | 0.544 | **0.549** | 0.778 |
+
+Under 1% on every term. `matclass`'s declared boxes on the after plate read roof/wall
+**0.859** against r14's ratified 0.85 and the reference's 0.823.
+
+Tris **369,043 -> 370,683** (+1,640 region-wide, +117 a house) against a 1.4M ceiling.
+Gates: `walk_engine_gate ow-valley` GREEN (0 lost cells of 2065, BVH 0 FAIL — the house pads
+grew and stayed collidable-consistent), `findability_test` 69/0, `slice_test` 812/0,
+`cine_test` 646/0, `valley_verify` OK. Blind pack `docs/qa/ow-refs/blind-r25`, NOT yet judged.
+
+**OPEN, honestly.** The near-field chimney is improved and not solved: at the 10 u orbit
+cameras several stacks still stand taller above their ridge than a masonry stack would. The
+next move is not another width — it is a gable-end BREAST that stands on its own extended
+plinth outside the roof verge, which needs the plinth and the bedding ring to follow it.
+
+---
+
 ## ROUND 24 (r24) — THE SILHOUETTE ROUND: two objects, one defect, and it was always geometry
 
 User steer: *"we need to fix the underlying shapes, not just the lighting / textures"*,
