@@ -65,6 +65,8 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 8 | (the run itself) | **BLOCKER** | The LLM playtest died at step 46 of 120 | **`HTTP 429 — "Your prepayment credits are depleted"` (Gemini/AI Studio).** Not a game or harness fault; the loop cannot run further without credit | reported to the user; the round finished on the no-model instruments | — |
 | 10 | PT-20260804-004 | P1 | Character stuck on wooden platform, cannot reach objective markers | **REFUTED against the game · VERIFIED against the harness** — the world is open (`SIM.move` crosses to the seam in 46 ticks; the agent itself was two levels down one step later), but every failed leg aimed at a **cliff face 7 m past the deck**, because an exit marker is drawn 2.1 m above the ground it names and the executor ray-marched the arrow's pixel | a pixel on an exit arrow resolves to that edge's own `at`; and in a walk-network scene a ray that never crosses the network is refused instead of walked at — re-run `run-20260804-112506`: off-network legs **14 → 0**, median leg closed **0.11 → 0.63**, zero verified blockers | this commit |
 | 10 | PT-20260804-003 | P1 | Character cannot navigate up the stairs from the middle walkway | **REFUTED** (triage, round 10) — reachable, 4.7 m, 325 cells, via 2 in-scene edges; the agent climbed those stairs later in the same run | same root cause as -004 | — |
+| 14 | PT-20260805-006 | P1 | Cannot walk to the head-gate winches at Lock Five | **VERIFIED — and filed from 70 m away.** The objective named `the head-gate winches`; Dellhollow's head gate is the VALLEY GATE at the dam (`winch-head`/`winch-foot`, x≈20), Lock Five is x≈87. The agent spawned 2 hops / 7.2 m from the goal and spent 45 of 60 steps at the wrong landmark, with the correct amber `Lock Five` caption drawn on screen the whole time | the objective carries a bearing instead of a decoy noun; re-run fired **`ch2.winches` at step 5** and the Ch2 card at step 8 | `459f861` |
+| 14 | PT-20260805-004 | P1 | One-way lip at `[57.74, 15.30, −11.24]` (carried, round 13) | **VERIFIED, and round 13's "one map line" REFUTED by arithmetic.** New `_court_probe --stand` census: **16 of 17 stairs landings in `del-cine` are roofed by their own flight, 30–52% of each**; clearing the body band needs `step ≤ 0.29`, which needs a leg descending under 0.87 m — no waypoint in the map can make one | **NOT FIXED — filed as the build lane it is** (tread-top convention + `walk_rederive`×6 + `ls_build` + `cine_solve` + plates) | `f3f3f39` (instrument) |
 
 ## Rounds
 
@@ -2406,3 +2408,141 @@ AND drives is still REFUTED, and now says so with the drive's own numbers. Re-ru
 
 Queue 18 verified / 23 refuted → **21 verified / 20 refuted**. Three real traps had been
 argued away by a lattice.
+
+## Round 14 — 2026-08-05 · the arrow was right and the sentence was wrong
+
+### PT-20260805-006 — THE OBJECTIVE NAMED THE WINCHES AT THE OTHER END OF THE TOWN
+
+Five rounds have now ended with "`ch2.winches` has not fired". Round 11 grew the
+wayfinding pill, round 13 made it route by metres and clamped the caption into frame.
+Nobody had read the **sentence the pill is pointing away from**.
+
+    "Midnight, at Lock Five — the head-gate winches"
+
+Dellhollow has a head gate. It is the **valley gate at the dam** — landmarks
+`winch-head` and `winch-foot`, camera `gate` "The Valley Gate", visible winches, at
+`x ≈ 20, y ≈ 24`. **Lock Five is `x ≈ 87, y ≈ 0`**, the far low end of the same town.
+The objective names a real place in the wrong direction, and the run is unambiguous
+(`run-20260805-013331`, `--from=ch2.dock`, 60 steps):
+
+| step | where the body was | |
+|---|---|---|
+| 1 | `[90.2, 9.3, −20.4]` | the cottage door — **2 hops / 7.2 m from Lock Five** |
+| 7 | `[80.9, 14.0, −16.1]` | the Lockhead, walking WEST |
+| 13 | `[32.5, 19.1, −8.2]` | past the Weave, still west |
+| 15–60 | `[20.5, 24.1, −6.5]` | **the Valley Gate.** 45 of 60 steps, ping-ponging |
+
+and it filed **"Cannot walk to the head-gate winches at Lock Five"** from a position
+70 m from Lock Five. It was not lost. It had arrived, at the wrong head gate.
+
+**THE ARROW WAS RIGHT THE WHOLE TIME AND IT DID NOT MATTER.** `wayfind_probe` at that
+exact station: `SHIPPED HINT: Lock Five via gate-stair-head>gate-stair-foot hops=6
+shown=true labelled=true` — and `frames/step-042.jpg`, **which I opened**, has the amber
+`◆ Lock Five` caption drawn on the correct triangle in the middle of the picture, over a
+prompt reading `Down to the Shelf street? [E]`. The agent took the stair down and came
+straight back up, three times, because the banner told it the winches were here.
+
+Fixed in one line — the decoy noun out, a bearing in, aimed at the landmark the
+metre-shortest route's own first hop goes to (`cottage > cottage-steps > lockfive`):
+
+    "Midnight at Lock Five — down past the Keepers' Cottage"
+
+`story_test` **1112/0**.
+
+**AND THE SAME 60-STEP RECEIPT, RE-RUN AGAINST THE NEW SENTENCE** (`run-20260805-014451`,
+identical checkpoint, identical model, one word of content changed):
+
+| step | | before |
+|---|---|---|
+| 2 | *"Walk down towards Lock Five as indicated by the objective"* — reached | walked west |
+| 5 | **`[beat] ch2.winches`** | never, in five rounds |
+| 8 | *"Advance past the full-screen chapter card"* → **`[beat] ch2.landing`** | never |
+
+**A WAYFINDER CANNOT OUT-ARGUE AN OBJECTIVE.** Every instrument this repo built for
+round 11 and round 13 measures the MARKER; not one of them reads the objective string
+against the town's own landmark names. That gap is what cost five rounds, and the fix
+was one sentence.
+
+### PT-20260805-004 — THE ONE MAP LINE DOES NOT EXIST, AND HERE IS THE PROOF
+
+Round 13 named the mesh correctly: `walk_e_shelf-homes__market-stalls_l1_t04`, the
+second-to-last tread of the flight, roofs `landing001` where the two overlap in plan.
+Its prescription was "one map line in round 12's own shape — raise the tread's waypoint
+or lower the landing's". **That prescription is arithmetically impossible**, and the
+census says the defect is not this edge's.
+
+**A new instrument, because `--mesh` gives a box and `--at` gives one column and
+neither answers what a landing actually poses.** `_court_probe --stand <name>` walks a
+named slab's own top face on a lattice and asks the engine twice per cell: is this slab
+still the top floor here (`SIM.floors`), and does a body standing on it fit
+(`SIM.blocked`, which NAMES the roof). Every stairs landing in `del-cine`, 400 cells each:
+
+| landing | standable | roofed by |
+|---|---|---|
+| `quay-deck__pilot-cluster_landing` | **100%** | — |
+| `shelf-homes__market-stalls_landing` | 70% | its own `l0_t03` |
+| `weave-huts__moorage_landing001` | 68% | its own `l1_t04` |
+| `valley-gate__inn_landing` | 67% | its own `l0_t03` |
+| … eleven more between 54% and 63% … | | |
+| `shelf-homes__market-stalls_landing001` | 57% | its own `l1_t04` / `l1_t03` |
+| `keepers-cottage__lock-five_landing` | **48%** | its own `l0_t04` / `l0_t05` |
+
+**Sixteen of seventeen landings in Dellhollow are roofed by their own flight, 30–52% of
+each.** The single clean one is the tell: `quay-deck__pilot-cluster_landing`'s incoming
+leg has **zero rise** — one tread, top 0.07 above the landing — so there is nothing over
+it. The rule is geometric, not a mistake in one edge.
+
+The arithmetic, so nobody re-derives it. `blocked()` reads the band
+`[fy+STEP_UP+.02, fy+BODY_H]` = `[fy+0.65, fy+1.30]`. `town_blockout.stairs_leg` lays
+tread `t` with its top at `min(p0,p1).z + step + 0.07`, so the tread two steps above a
+landing tops out at `L + 2·step + 0.07`, and the 2×2 landing reaches **1.35 m** back
+along a flight at 28°, which is further than that tread's near edge for any run under
+1.35 m. Clearing the band needs `2·step + 0.07 ≤ 0.65`, i.e. **`step ≤ 0.29`** — and
+`step = rise / ceil(rise/0.4)` is only ever that small for a leg descending **under
+0.87 m**. Splitting 2.1 m of descent into legs that shallow needs five landings 0.68 m
+apart on a 3.4 m run. **No waypoint anywhere in the map can do it.**
+
+So the trap at `[57.74, 15.30, −11.24]` is one instance of a town-wide derivation
+property, and it is a trap only because the clear remainder there is a 0.65 m strip with
+`ls_rail` on one side and a 1.06 m drop on the other. Re-measured tonight on the shipped
+bundle, and the margins are small enough to be worth writing down:
+
+* `t04` top **16.07** vs the body band's floor **15.97** — **0.10 m** of intersection;
+* the body box's south face at z −10.94 vs `t04`'s south edge −10.951 — **0.01 m**;
+* drive east from `[58.19, 15.3, −11.3]`: **2/2 legs**. Drive east from
+  `[57.74, 15.3, −11.24]`, five centimetres north: **0.00 m closed of 1.00 m**.
+
+**THE FIX IS A BUILD LANE AND IT IS NOT A MAP EDIT.** The honest one is the tread
+convention — lay a tread's top at its leg's own lower end rather than a step above it,
+which turns every `L + 2·step + 0.07` roof into `L + step + 0.07` and clears the band at
+every landing in the town. It moves every tread in six stairs edges by one step, and
+`ls_build.py` builds the visible loop stairs **from those ribbons**, so it owes
+`walk_rederive` ×6 + `ls_build` + `cine_solve` + the plates that see them. That is not a
+patch to make at 03:00 in front of a three-hour receipt run, and it is filed as the
+build lane it is rather than attempted and half-landed.
+
+### AND THE KEEPERS' STEPS DO NOT DRIVE END TO END
+
+Found while checking whether round 13's metre-hint had started routing players down a
+stair. `_court_probe --way` from the cottage to Lock Five, **tread by tread** off
+`--mesh`'s own centres, 22 legs:
+
+    downhill  stalls at [94.04, 6.77, -23.72]   (l0_t03's top, 0.76 m short of l0_t06)
+    uphill    stalls at [91.18, 2.55, -25.85]   (l2_t02's top, 1.02 m short of landing001)
+
+Every tread top the drive stopped at reads `clear` under `--at`, so this is not the
+landing roof. **It does not block the spine**: `cottage > cottage-steps > lockfive` is
+served by two `cut` seams (`at [94.44, 5.27, −24.42]` and `at [89.85, 1.69, −26.15]`),
+so the player is carried past the stair rather than walking it. Filed as a lead, not a
+ticket — it wants its own `--who` pass over the flight, and `--stand` already says
+`keepers-cottage__lock-five_landing` is the worst landing in the town at **48%**.
+
+### The cross-check has a blind spot of its own
+
+`wayfind_probe`'s metre-shortest enumerator returned **NO PATH** from `gate` to
+`lockfive` while the shipped Dijkstra returned a live 6-hop route that the frame shows
+drawn and labelled. Round 13 built the second implementation precisely so the two could
+disagree out loud; at six hops it stops enumerating and says nothing rather than saying
+"deeper than I look". **An instrument that reports NO PATH where a path exists is the
+`--mesh` bug wearing different clothes**, and it is logged here so the next reader does
+not trust that line at long range.
