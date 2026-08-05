@@ -573,7 +573,8 @@
     try { return new URLSearchParams(location.search).get('noaim') === '1'; }
     catch (e) { return false; }
   })();
-  var AIM_LEAD = 1.5;        // m: an arrow on your own feet is not a direction
+  var AIM_LEAD = 0.9;        // m: an arrow on your own feet is not a direction — see the
+                             // march's note for why this is short and not 1.5
   var AIM_NEAR_ME = 4.0, AIM_NEAR_SEAM = 2.0;  // fail-closed radii onto the polyline
   var RT = null, RT_TRIED = null;        // routes data, and the scene it was asked for
 
@@ -684,10 +685,19 @@
    * cottage pit it finds a column with no walk floor at all — which is what PT-045
    * measured with `SIM.blocked` NULL: nothing blocks it, there is nothing to step on.
    *
-   * IT IS DELIBERATELY A FLOOR TEST AND NOT A BODY TEST. Adding `SIM.blocked` would make
-   * the march refuse a doorway jamb the walker slides through, and over-firing the arrow
-   * into a detour around a door the player can walk is the same class of harm. Both
-   * defects this round fixes are missing FLOOR, and that is what it measures.
+   * AND IT TESTS THE BODY, WHICH IT DID NOT AT FIRST. The first cut left `SIM.blocked` out,
+   * reasoning that a body test would refuse a doorway jamb the walker slides past. Measured
+   * (`run-20260805-154827`, the moorage): the arrow was drawn correctly on
+   * `[73.8, 2.62, −27.3]` and the drive at it **closed 0.06 m of 2.4 m**, because the chord
+   * from the deck to the middle of the lower flight passes under the stair's own structure —
+   * the moorage landmark's note already measures those treads' undersides filling
+   * x 74.30..75.50. A FLOOR THE BODY CANNOT OCCUPY IS NOT GROUND, and an arrow on one is the
+   * whole defect again with a different cause. The march now asks `blocked` at every sample.
+   *
+   * WHICH IS WHY THE LEAD IS SHORT. A stricter march can only pick a NEARER vertex, and on a
+   * switchback the nearest honest one is the foot of the flight — 1.0 m away. At the original
+   * 1.5 m lead no vertex qualified at all and the aim withdrew to the seam overhead, which is
+   * worse than either. On tiered geometry "go this way" is allowed to be one step.
    *
    * THE STEP RULE IS REPLICATED, WHICH IS A SMELL (round 27 §3's own finding): play3d
    * exports `walkFloors` but not `walkGround`, so the four lines below are a copy of a
@@ -718,9 +728,11 @@
     if (walkStepY(a[0], a[2], a[1]) === null) return true;
     var dx = b[0] - a[0], dz = b[2] - a[2], L = Math.hypot(dx, dz);
     var n = Math.max(1, Math.min(W_MAXSTEP, Math.ceil(L / W_MARCH))), y = a[1];
+    var S = window.SIM;
     for (var i = 1; i <= n; i++) {
-      var t = i / n, g = walkStepY(a[0] + dx * t, a[2] + dz * t, y);
+      var t = i / n, x = a[0] + dx * t, z = a[2] + dz * t, g = walkStepY(x, z, y);
       if (g === null) return false;
+      if (S.blocked && S.blocked(x, z, g)) return false;   // a floor a body cannot occupy
       y = g;
     }
     return Math.abs(y - b[1]) <= W_UP + W_DN;             // and it ARRIVED, on that tier
@@ -745,7 +757,7 @@
    * far vertex into an honest one. At the cottage door that walks the arrow past
    * `[91.63, 8.30, −21.50]` to the junction `[92.61, 7.83, −22.00]` — the corner where the
    * map joins the spur to the bridge, which is the whole answer in one marker. */
-  var AIM_HOLD = 1.2;
+  var AIM_HOLD = 0.7;        // < AIM_LEAD, so a re-solve can never pick what we just held
   var held = null;                     // {edge, shot, at, walked, crow}
   function wayAim(edge, p) {
     if (AIM_OFF || !edge || !edge.at || !p) { held = null; return null; }
@@ -763,11 +775,17 @@
     var t = nearestV(g, edge.at, AIM_NEAR_SEAM); if (t < 0 || t === s) return null;
     var r = aimPath(g, s, t); if (!r) return null;
     var walked = r.cost + gap(me, g.v[s]), best = null;
+    /* EVERY VERTEX IS ASKED, AND THE FURTHEST CLEAN ONE WINS. An earlier cut STOPPED at the
+     * first unreachable vertex, which is over-conservative and cost the moorage its arrow
+     * entirely: from `[76.15, 1.32, −27.11]` the stair foot one metre south is body-blocked
+     * (the `--way` drive travels 0.00 m at it), so the scan broke on candidate one, no aim
+     * survived, and the arrow went back to hanging 5 m overhead — worse than either. Each
+     * candidate is marched on its OWN chord, so a clean one is walkable whether or not the
+     * vertex before it was; there is nothing to protect by stopping early. */
     for (var i = 0; i < r.path.length; i++) {
       var v = g.v[r.path[i]];
       if (gap(me, v) < AIM_LEAD) continue;        // too close to read as a direction
-      if (!lineIsGround(me, v)) break;            // past here the chord leaves the ground
-      best = v;
+      if (lineIsGround(me, v)) best = v;
     }
     if (!best) return null;            // the whole detour is inside the lead: say nothing
     held = { edge: edge.id, shot: sid, at: best, walked: walked, crow: crow };
