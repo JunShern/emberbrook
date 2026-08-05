@@ -121,3 +121,10 @@ smoke/fireflies/leaves/river motion). Wave C: staging (bet 9, camera work IS
 graphics-adjacent) · Dellhollow circulation (bet 2, enables its vistas) · audio +
 combat juice (bets 8/10) deferred behind all visual bets. Legacy cleanup (bet 6)
 continues when a lane slot frees — it is hygiene, not graphics.
+
+## BET 1: BANKED (2026-08-05 16:25). Two blind rounds moved the village from "reads
+## as unfinished" to "good-enough — the correct outcome; architecture that isn't the
+## subject shouldn't win", ranked above one reference. Residuals (open, small): the
+## pad/ground decal read (bed plinths into terrain), flat soffits, tower proportion.
+## Next graphics bet: BET 5 (camera/sky) — the largest frame-level lever left, user-
+## opened, never spent.

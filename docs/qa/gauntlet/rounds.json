@@ -345,6 +345,20 @@
     "closeup"
    ],
    "verdict": "Four massings (gable improved, mono-pitch lean-to, L-plan, hip) with massing-placed chimneys (CHIM_GATE 14/14), ridge caps, doorsteps, door hoods, yards. The build DID NOT REPRODUCE until a real determinism bug was fixed: r24's outcrop pass iterated a Python set of BMVerts (memory-address order), so the RNG grain hit different vertices per run \u2014 index_update()+sorted, two builds now byte-identical. The r14 colour work survived to <1% on every term. BLIND VERDICT (architecture-only, judge found the pair itself): the new village moved from 'reads as unfinished' to 'noticed, mildly positively' \u2014 footprint and roof variety credited, the porch canopy 'the single best detail in either shot'. What remains, the judge's words: 'no eave overhang anywhere \u2014 which is why the houses read as blockout regardless of texture'; chimneys still oversized (one at a hip apex, 'the least plausible position available'); flat window openings; one roof colour. Round 26 (eaves+plinth, chimney rebuild, per-instance variation, window reveals) is running."
+  },
+  {
+   "n": 20,
+   "title": "HOUSES 2 \u2014 eaves, plinths, reveals; the bet BANKS at 'good-enough is the correct outcome'",
+   "when": "2026-08-05 16:25",
+   "prefix": "r26",
+   "views": [
+    "meadow",
+    "gate",
+    "vista",
+    "gorge",
+    "closeup"
+   ],
+   "verdict": "Eave+soffit+fascia (three shadow lines where there were none), a real plinth course, the chimney HALVED (0.685->0.389 u \u2014 r25's was a 2.2 m stack once you do the units) with a six-clause gate whose lesson is the campaign's sharpest: 'a gate that measures every property except the one that is wrong is a green light on the defect' \u2014 r25 passed 14/14 on three true clauses about a wrong chimney. Variation decoupled (no two houses share both roof and wall families). Door surrounds and window reveals built from PROUD parts (an inset pane is invisible without booleans \u2014 tried, measured, rebuilt). BLIND VERDICT: stage order found unprompted, every mechanism credited, r26 ranked ABOVE one reference, and the exit line: 'a player registers a village and moves on \u2014 that's the correct outcome; architecture that isn't the subject shouldn't win.' BET 1 BANKED. Residuals on the slate: the dirt-oval pads still read as decals (grounding item), flat soffits, the tower-house proportion."
   }
  ]
 }
