@@ -461,13 +461,44 @@
     return found ? { hops: found.hops, edge: found.edge } : null;
   }
 
+  /* THE SHOT A BEAT WITHOUT A `cam` IS ACTUALLY ASKING FOR (2026-08-05, round 15's
+   * deferred fix). A beat may name a place with `at` and no `cam` — all four of Chapter
+   * One's `ch1.see.*` do — and `routeTo(scene, null)` then has a `goal` whose camera
+   * clause is vacuously true, so it collapses to "are we in this scene". The player IS,
+   * so the route is zero hops, the edge is null, and NO LABEL IS EVER DRAWN for the one
+   * objective in the chapter that sends the player to four places 40-90 m apart across
+   * four camera bands. Not a wrong arrow — no arrow.
+   *
+   * The bands are already in the scenegraph and this is `findability_test.ownerShot()`
+   * written out: whichever shot's box contains the beat's own `at`, last match wins,
+   * the same rule play3d's band test uses. It FAILS CLOSED — no `at`, no graph, no
+   * owning band, and the caller gets null and today's behaviour back. */
+  function beatCam(b) {
+    if (!b) return null;
+    if (b.cam) return b.cam;
+    var at = b.at; if (!at || at.length < 3) return null;
+    var G = SGraph(); if (!G || !G.nodes) return null;
+    var n = G.nodes[b.scene || scene()]; if (!n || !n.shots) return null;
+    var hit = null;
+    for (var i = 0; i < n.shots.length; i++) {
+      var s = n.shots[i], bx = s.boxes || [];
+      for (var j = 0; j < bx.length; j++) {
+        var q = bx[j];
+        if (q[0] <= at[0] && at[0] <= q[2] && q[1] <= at[2] && at[2] <= q[3]) hit = s.id;
+      }
+    }
+    return hit;
+  }
+
   // The destination's own authored name: a shot's `name` out of the bundle's
   // cine.json ("Lock Five"), or the scene node's label out of the scenegraph
-  // ("Dellhollow"). Never a string invented here.
-  function destName(b) {
+  // ("Dellhollow"). Never a string invented here. `cam` is passed in because it may
+  // have been DERIVED from the beat's `at` (see beatCam) rather than authored.
+  function destName(b, cam) {
     var C = CineDef(), G = SGraph();
-    if (b.cam && b.scene === scene() && C && C.byId && C.byId[b.cam] && C.byId[b.cam].name)
-      return C.byId[b.cam].name;
+    var c = cam === undefined ? b.cam : cam;
+    if (c && b.scene === scene() && C && C.byId && C.byId[c] && C.byId[c].name)
+      return C.byId[c].name;
     if (b.scene && G && G.nodes && G.nodes[b.scene] && G.nodes[b.scene].label)
       return G.nodes[b.scene].label;
     return null;
@@ -502,9 +533,10 @@
       if (xo !== lastObjDrawn) { lastObjDrawn = xo; setObjective(); }
     }
     var b = pendingBeat();
-    var r = b ? routeTo(b.scene || scene(), b.cam || null) : null;
+    var bc = beatCam(b);
+    var r = b ? routeTo(b.scene || scene(), bc) : null;
     var want = (r && r.edge) ? r.edge.id : null;
-    var name = b ? destName(b) : null;
+    var name = b ? destName(b, bc) : null;
     if (!want || !name) { clearHint(); lastHint = null; return; }
     if (want !== hintEdge) clearHint();
     var m = document.querySelector('#exit-markers > div[data-edge="' + cssEsc(want) + '"]');
@@ -712,13 +744,16 @@
      * exists but its marker is not on screen from this spot. */
     wayhint: function () {
       var b = pendingBeat();
-      var r = b ? routeTo(b.scene || scene(), b.cam || null) : null;
+      var bc = beatCam(b);
+      var r = b ? routeTo(b.scene || scene(), bc) : null;
       var e = r && r.edge ? r.edge.id : null;
       var m = (e && HAS_DOM) ? document.querySelector('#exit-markers > div[data-edge="' + cssEsc(e) + '"]') : null;
       return {
         off: HINT_OFF, scene: scene(), shot: shot(),
-        beat: b ? b.id : null, wantScene: b ? (b.scene || null) : null, wantCam: b ? (b.cam || null) : null,
-        edge: e, hops: r ? r.hops : null, dest: b ? destName(b) : null,
+        beat: b ? b.id : null, wantScene: b ? (b.scene || null) : null,
+        // wantCam is what the ROUTE used: the beat's own, or the band that owns its `at`.
+        wantCam: bc || null, camAuthored: b ? (b.cam || null) : null,
+        edge: e, hops: r ? r.hops : null, dest: b ? destName(b, bc) : null,
         shown: !!(m && m.style.display !== 'none'),
         labelled: !!(m && m.querySelector('.story-way')),
         drawn: hintEdge, last: lastHint,
