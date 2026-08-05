@@ -63,3 +63,47 @@ or the files stay as data. Verify-then-delete, the three-way method.
 ## Standing method for every bet
 Blind judges on anonymized images; the picture is the verdict; wire-before-sweep;
 receipts by playtest run where playability is the claim; delete superseded work.
+
+---
+
+# Phase 2 slate — the A+ pillars (opened 2026-08-05, user AFK week)
+
+The user's framing: "The game is currently still a C-. What would it take to get
+to an A+? What does a real 2026 AAA reimagining of a Final Fantasy-style JRPG
+look like?" The answer, as five absences (not deficiencies — things the game does
+not do at all), each cheaper than the art bets and each transformative:
+
+## Bet 7 — THE CAST ACTS (character presence)
+Stand-in bodies translate between points; AAA characters perform. Idle life
+(breath, weight shift, look-at the person talking), talk gestures, facing
+discipline in dialogue, party followers reacting. The retarget pipeline and
+posture ladder exist; what is missing is the ACTING layer on top.
+
+## Bet 8 — THE WORLD SOUNDS (audio beyond music)
+Footsteps by surface, doors, dialogue blips, UI ticks, ambience beds (river,
+wind, birds, tavern murmur, lock machinery), battle SFX. CC0 sourcing per the
+repo's own precedent (Quaternius/KayKit), provenance recorded; synthesis where
+sourcing fails. Music ducking under dialogue.
+
+## Bet 9 — BEATS ARE STAGED (cinematic grammar)
+Every ch1/ch2 beat gets deliberate camera work from the shipped primitives:
+establishing/medium/close per beat phase, cut-ins on emotional lines, blocking
+(who stands where, who turns). story.json already carries cams; most beats
+simply never set them. FF grammar, data-driven, no new engine.
+
+## Bet 10 — COMBAT PERFORMS (battle juice)
+Attack lunges/tweens, hit flash + shake, damage number motion, turn camera
+punch-ins, KO/victory beats. battle_stage3d owns presentation; rules untouched.
+
+## Bet 11 — THE WORLD MOVES (ambient life)
+Chimney smoke, fireflies at dusk, drifting leaves, birds off rooftops, NPC
+idle wander within posts, river sparkle motion. Cheap particles + the existing
+NPC post system; the hush/dusk systems already prove the vocabulary.
+
+## Sequencing (machine-real: max 3-4 lanes, Blender-heavy never 2-wide)
+Wave A (now): leg 9 end-card receipt (standing) · silhouette round (bet 4) ·
+legacy cleanup (bet 6) · AUDIO (bet 8 — file-disjoint from everything).
+Wave B (as A closes): houses (bet 1) · staging pass (bet 9) · combat juice (bet 10).
+Wave C: circulation redesign (bet 2) · card vegetation (bet 3) · world life (11) ·
+camera/sky (bet 5). End-to-end receipt re-run after every wave; the gallery and
+FIXLOG stay current; blind judges verdict every art bet.
