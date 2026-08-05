@@ -15926,3 +15926,30 @@ walk_bodygate are both vacuous over a hole — no cells to lose. Fix class: Embe
 lane waypoint around the channel head; coordinator's town, filed for that lane.
 Harness: the recall line's game-quoted names leave briefAuthored (container lesson #3).
 FIXLOG round 29 has the full record. All work committed and pushed in five batches.
+
+## 2026-08-05 ~21:40 — COORDINATOR: PT-055 map fix + the two receipt runs (between rounds 29 and 30)
+
+PT-055 fixed as filed, in the map: gate-court->sigil-gate carried no waypoints, so
+the routed polyline ran the court centre line across the culvert channel head and
+wayAim failed closed on exactly that line. The edge now carries the measured west
+flank ([74.6,122.5],[74.6,125.0],[76.5,127.3]) verbatim from the filing's 4/4 drive.
+Verified: routes_derive --check clean; _court_probe --way on the NEW polyline 4/4
+BOTH ways (forward terminus [77.99,2.66,-128.44], inside the portal's r 2.2);
+playthrough_test 86/0; findability 69/0. Commit a7be573.
+
+RECEIPT RUNS (both mine, llm_playtester, gemini-3.6-flash):
+- run-20260805-192354 (160 steps, $0.37): CHAPTER ONE COMPLETE from NEW GAME — all
+  18 beats on their own triggers, the Old Gate exit taken ON FOOT down the routed
+  flank (steps 155-157 are the map's own waypoints being walked). Stopped at its
+  configured finish line ch1.sendoff — the default invocation is a Chapter One run;
+  the full game needs --stop-beat=ch2.landing. A receipt's finish line is part of
+  the receipt.
+- run-20260805-194359 (400 steps, $1.11, --stop-beat=ch2.landing): FURTHEST EVER —
+  ch1 complete, ch1.done, corridor, ch2.road, ch2.arrive, then ~150 steps circling
+  "The Lockhead" with ch2.jam never firing; capped at 400. playtest_triage: 6/8 of
+  its reports REFUTED (the world drives fine — guidance/perception, not holes);
+  PT-064 VERIFIED (interior exit pinch 1.13 m + E-arbitration, bargeman room);
+  PT-057 VERIFIED-mechanical but suspect (spine detector's 3-step window vs the
+  normal walk from sendoff to the gate — the same run left the scene).
+Round 30 lane dispatched: lockhead trigger-vs-marker, 064 pinch, 057 honest
+re-triage, then --from=ch2.arrive leg and the full 500-step bar.
