@@ -493,7 +493,7 @@
         "status": "UNVERIFIED",
         "instrument": null,
         "evidence": "no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
-        "at": "2026-08-05T04:33:25.940Z"
+        "at": "2026-08-05T11:23:39.534Z"
       },
       "run": "run-20260803-113942",
       "step": 5,
@@ -6868,7 +6868,7 @@
         "status": "UNVERIFIED",
         "instrument": null,
         "evidence": "no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
-        "at": "2026-08-05T04:33:25.946Z"
+        "at": "2026-08-05T11:23:39.542Z"
       },
       "run": "run-20260804-185107",
       "step": 24,
@@ -10902,10 +10902,10 @@
       "id": "PT-20260805-013",
       "created": "2026-08-05T05:05:56.750Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
+        "evidence": "The body was in \"emb-cine\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.mara, ch1.see.poppy, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+        "at": "2026-08-05T11:23:39.546Z"
       },
       "run": "run-20260805-044813",
       "step": 138,
@@ -11103,10 +11103,10 @@
       "id": "PT-20260805-014",
       "created": "2026-08-05T05:08:14.310Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (1.0 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [19.02,24.07,-5.17], 0.6 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T11:23:50.876Z"
       },
       "run": "run-20260805-044813",
       "step": 156,
@@ -11330,10 +11330,10 @@
       "id": "PT-20260805-015",
       "created": "2026-08-05T05:11:06.041Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.83,24.07,-6.26], 0.34 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T11:24:02.116Z"
       },
       "run": "run-20260805-044813",
       "step": 177,
@@ -11559,10 +11559,10 @@
       "id": "PT-20260805-016",
       "created": "2026-08-05T05:13:48.962Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.74,24.07,-5.89], 0.39 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T11:24:13.241Z"
       },
       "run": "run-20260805-044813",
       "step": 194,
@@ -11788,10 +11788,10 @@
       "id": "PT-20260805-017",
       "created": "2026-08-05T05:15:21.366Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.74,24.07,-5.89], 0.39 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T11:24:31.699Z"
       },
       "run": "run-20260805-044813",
       "step": 206,
@@ -12017,10 +12017,10 @@
       "id": "PT-20260805-018",
       "created": "2026-08-05T05:16:54.822Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.71,24.07,-6.03], 0.27 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T11:24:42.901Z"
       },
       "run": "run-20260805-044813",
       "step": 218,
@@ -12246,10 +12246,10 @@
       "id": "PT-20260805-019",
       "created": "2026-08-05T05:19:18.694Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (3.1 m apart, 42 cells filled, via 1 in-scene edge)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [53.76,18.43,-9.87] and stopped 3.09 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T11:24:54.069Z"
       },
       "run": "run-20260805-044813",
       "step": 235,
@@ -12473,10 +12473,10 @@
       "id": "PT-20260805-020",
       "created": "2026-08-05T05:25:11.162Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (3.3 m apart, 50 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [0.11,-0.06,-1.97] and stopped 3.31 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T11:25:05.948Z"
       },
       "run": "run-20260805-044813",
       "step": 287,
@@ -12704,10 +12704,10 @@
       "id": "PT-20260805-021",
       "created": "2026-08-05T05:45:59.228Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (0.8 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [17.47,24.07,-5.16], 0.57 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T11:25:17.137Z"
       },
       "run": "run-20260805-054441",
       "step": 10,
@@ -12920,10 +12920,10 @@
       "id": "PT-20260805-022",
       "created": "2026-08-05T05:54:03.345Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (1.3 m apart, 4129 cells filled, via 5 in-scene edges)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [39.43,14.07,-18.51] and stopped 1.27 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T11:25:28.503Z"
       },
       "run": "run-20260805-054441",
       "step": 62,
@@ -13149,10 +13149,10 @@
       "id": "PT-20260805-023",
       "created": "2026-08-05T05:57:07.236Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs (in the running page)",
+        "evidence": "where I stood -> where I pointed: UNREACHABLE — [72.07,1.25,-29.19] -> [68.11,6.91,-29.5]: 1467 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 1.9 m away (at 68,1.79,-27.6, 5.12 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] — a 5.71 m step.",
+        "at": "2026-08-05T11:25:34.181Z"
       },
       "run": "run-20260805-054441",
       "step": 79,
@@ -13374,10 +13374,10 @@
       "id": "PT-20260805-024",
       "created": "2026-08-05T05:59:39.665Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs (in the running page)",
+        "evidence": "where I stood -> where I pointed: UNREACHABLE — [70.76,1.25,-28.01] -> [65.48,6.91,-29.5]: 1467 cells filled from the start, 47 from the target, and they never meet. Nearest standable cell to the target is 1.1 m away (at 65.6,1.48,-28.4, 5.43 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] — a 5.71 m step.",
+        "at": "2026-08-05T11:25:39.839Z"
       },
       "run": "run-20260805-054441",
       "step": 92,
@@ -13599,10 +13599,10 @@
       "id": "PT-20260805-025",
       "created": "2026-08-05T06:02:19.514Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs (in the running page)",
+        "evidence": "where I stood -> where I pointed: UNREACHABLE — [70.76,1.25,-28.01] -> [66.43,6.91,-29.5]: 1467 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 1.4 m away (at 65.6,1.48,-28.4, 5.43 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] — a 5.71 m step.",
+        "at": "2026-08-05T11:25:45.455Z"
       },
       "run": "run-20260805-054441",
       "step": 105,
@@ -13824,10 +13824,10 @@
       "id": "PT-20260805-026",
       "created": "2026-08-05T06:04:38.979Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "REFUTED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (4.5 m apart, 35 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [74.58,1.25,-29.23], 0.53 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+        "at": "2026-08-05T11:25:56.703Z"
       },
       "run": "run-20260805-054441",
       "step": 118,
@@ -14049,10 +14049,10 @@
       "id": "PT-20260805-027",
       "created": "2026-08-05T07:28:44.221Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (2.7 m apart, 33 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [0.19,0,-1.97] and stopped 2.7 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T11:26:08.667Z"
       },
       "run": "run-20260805-072356",
       "step": 35,
@@ -14273,10 +14273,10 @@
       "id": "PT-20260805-028",
       "created": "2026-08-05T07:29:09.044Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (3.7 m apart, 95 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [0.07,0,-1.95] and stopped 3.67 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T11:26:20.600Z"
       },
       "run": "run-20260805-072356",
       "step": 36,
@@ -14497,10 +14497,10 @@
       "id": "PT-20260805-029",
       "created": "2026-08-05T07:32:44.828Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (3.3 m apart, 3 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [39.48,5.98,-20.87] and stopped 3.26 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T11:26:31.850Z"
       },
       "run": "run-20260805-072356",
       "step": 60,
@@ -14720,10 +14720,10 @@
       "id": "PT-20260805-030",
       "created": "2026-08-05T07:34:00.562Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (4.3 m apart, 61 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [39.62,5.94,-20.81] and stopped 4.34 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T11:26:43.182Z"
       },
       "run": "run-20260805-072356",
       "step": 66,
@@ -14942,10 +14942,10 @@
       "id": "PT-20260805-031",
       "created": "2026-08-05T07:34:15.884Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": null,
-        "evidence": null,
-        "at": null
+        "status": "VERIFIED",
+        "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
+        "evidence": "where I stood -> where I pointed: reachable (3.4 m apart, 3 cells filled on foot)\n  BUT THE DRIVE STALLS. SIM.move from the same start reached [39.62,5.94,-20.81] and stopped 3.41 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.",
+        "at": "2026-08-05T11:26:54.522Z"
       },
       "run": "run-20260805-072356",
       "step": 68,
@@ -15154,6 +15154,1131 @@
           },
           "meta": {
             "savedAt": "2026-08-05T07:30:21.488Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-032",
+      "created": "2026-08-05T11:03:30.538Z",
+      "verification": {
+        "status": "REFUTED against the game · VERIFIED against the harness",
+        "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
+        "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
+        "at": "2026-08-05T11:28:59.254Z"
+      },
+      "run": "run-20260805-105834",
+      "step": 38,
+      "source": "stuck-interview",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Player gets stuck on geometry at far right of upper wooden platform",
+      "doing": "I walked to the far right end of the upper wooden walkway and then tried to turn around and walk back left.",
+      "expected": "I should be able to walk back along the path I came from.",
+      "happened": "I got stuck on the environment and couldn't move left or anywhere else.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          58.11,
+          14.24,
+          -12.18
+        ],
+        "to": [
+          33.37,
+          19.07,
+          -8.68
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-036.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-037.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-038.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "quay-west",
+        "pos": [
+          58.11,
+          14.24,
+          -12.45
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.odessa"
+        ],
+        "exits": [
+          "del-cine>del-cookhouse-int@cookhouse",
+          "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
+          "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+          "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+          "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
+          "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs"
+        ]
+      },
+      "repro": {
+        "sha": "fca1c303c53f16780a1f80c68495180bd3a1f6f9",
+        "capturedAt": "2026-08-05T11:03:30.536Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.odessa": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "quay-west",
+            "pos": [
+              59.187,
+              14.245,
+              -13.026
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": true,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T10:58:48.404Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-033",
+      "created": "2026-08-05T11:03:43.572Z",
+      "verification": {
+        "status": "REFUTED against the game · VERIFIED against the harness",
+        "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
+        "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
+        "at": "2026-08-05T11:28:59.260Z"
+      },
+      "run": "run-20260805-105834",
+      "step": 38,
+      "source": "agent",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Stuck in geometry at far right platform",
+      "doing": "Trying to walk back left towards the lower lock apron",
+      "expected": "Character should be able to navigate back along the upper walkway",
+      "happened": "Character is trapped in geometry at the far right and pathfinding fails to move in any direction",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          58.11,
+          14.24,
+          -12.18
+        ],
+        "to": [
+          33.37,
+          19.07,
+          -8.68
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-036.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-037.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-038.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "quay-west",
+        "pos": [
+          58.11,
+          14.24,
+          -12.45
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.odessa"
+        ],
+        "exits": [
+          "del-cine>del-cookhouse-int@cookhouse",
+          "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
+          "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+          "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+          "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
+          "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs"
+        ]
+      },
+      "repro": {
+        "sha": "fca1c303c53f16780a1f80c68495180bd3a1f6f9",
+        "capturedAt": "2026-08-05T11:03:43.570Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.odessa": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "quay-west",
+            "pos": [
+              59.187,
+              14.245,
+              -13.026
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": true,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T10:58:48.404Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-034",
+      "created": "2026-08-05T11:05:08.047Z",
+      "verification": {
+        "status": "REFUTED against the game · VERIFIED against the harness",
+        "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
+        "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
+        "at": "2026-08-05T11:28:59.264Z"
+      },
+      "run": "run-20260805-105834",
+      "step": 46,
+      "source": "agent",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Character stuck on central wooden platform unable to move",
+      "doing": "Attempting to walk left towards the stairs to reach Lock Five",
+      "expected": "Vesper should move along the walkway towards the targeted ground coordinates",
+      "happened": "Vesper remains fixed at x=0.43, y=0.42 regardless of target coordinates, failing to navigate in any direction.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          58.11,
+          14.24,
+          -12.83
+        ],
+        "to": [
+          46.95,
+          14.07,
+          -11.26
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-044.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-045.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-046.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "quay-west",
+        "pos": [
+          58.11,
+          14.24,
+          -12.17
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.odessa"
+        ],
+        "exits": [
+          "del-cine>del-cookhouse-int@cookhouse",
+          "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
+          "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+          "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+          "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
+          "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs"
+        ]
+      },
+      "repro": {
+        "sha": "fca1c303c53f16780a1f80c68495180bd3a1f6f9",
+        "capturedAt": "2026-08-05T11:05:08.044Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.odessa": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "quay-west",
+            "pos": [
+              59.187,
+              14.245,
+              -13.026
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": true,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T10:58:48.404Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-035",
+      "created": "2026-08-05T11:07:10.211Z",
+      "verification": {
+        "status": "REFUTED against the game · VERIFIED against the harness",
+        "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
+        "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
+        "at": "2026-08-05T11:28:59.268Z"
+      },
+      "run": "run-20260805-105834",
+      "step": 57,
+      "source": "agent",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Character stuck on middle cliffside path",
+      "doing": "Trying to walk along or down from the middle platform near x=0.43, y=0.42",
+      "expected": "Character should navigate around obstacles to reach the destination",
+      "happened": "Character is completely stuck in place and cannot move in any direction despite multiple movement attempts",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          58.11,
+          14.24,
+          -12.47
+        ],
+        "to": [
+          50.82,
+          14.24,
+          -10.69
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-055.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-056.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-057.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "quay-west",
+        "pos": [
+          58.11,
+          14.24,
+          -12.84
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.odessa"
+        ],
+        "exits": [
+          "del-cine>del-cookhouse-int@cookhouse",
+          "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
+          "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+          "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+          "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
+          "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs"
+        ]
+      },
+      "repro": {
+        "sha": "fca1c303c53f16780a1f80c68495180bd3a1f6f9",
+        "capturedAt": "2026-08-05T11:07:10.209Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.odessa": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "quay-west",
+            "pos": [
+              59.187,
+              14.245,
+              -13.026
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": true,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T10:58:48.404Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-036",
+      "created": "2026-08-05T11:07:58.739Z",
+      "verification": {
+        "status": "REFUTED against the game · VERIFIED against the harness",
+        "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
+        "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
+        "at": "2026-08-05T11:28:59.272Z"
+      },
+      "run": "run-20260805-105834",
+      "step": 62,
+      "source": "stuck-interview",
+      "kind": "blocker",
+      "severity": "P0",
+      "title": "Character stuck on terrain geometry on middle platform",
+      "doing": "I was trying to move in any direction (left towards the stairs, right towards the walkway, or down) to get off this middle platform and head towards Lock Five.",
+      "expected": "I expected my character to walk along the path in the direction I clicked.",
+      "happened": "My character is completely stuck in place and won't move no matter where I click. I seem to be caught on some invisible geometry.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          58.11,
+          14.24,
+          -12.84
+        ],
+        "to": [
+          50.45,
+          14.24,
+          -10.58
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-060.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-061.jpg",
+        "docs/qa/playtest/runs/run-20260805-105834/frames/step-062.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "quay-west",
+        "pos": [
+          58.11,
+          14.24,
+          -12.42
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.odessa"
+        ],
+        "exits": [
+          "del-cine>del-cookhouse-int@cookhouse",
+          "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
+          "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+          "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+          "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
+          "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs"
+        ]
+      },
+      "repro": {
+        "sha": "fca1c303c53f16780a1f80c68495180bd3a1f6f9",
+        "capturedAt": "2026-08-05T11:07:58.737Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.odessa": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "quay-west",
+            "pos": [
+              59.187,
+              14.245,
+              -13.026
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": true,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T10:58:48.404Z",
             "playSeconds": 0
           }
         },

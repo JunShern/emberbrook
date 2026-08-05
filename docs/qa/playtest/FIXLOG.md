@@ -71,6 +71,9 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 14 | PT-20260805-004 | P1 | One-way lip at `[57.74, 15.30, −11.24]` (carried, round 13) | **VERIFIED, and round 13's "one map line" REFUTED by arithmetic.** New `_court_probe --stand` census: **16 of 17 stairs landings in `del-cine` are roofed by their own flight, 30–52% of each**; clearing the body band needs `step ≤ 0.29`, which needs a leg descending under 0.87 m — no waypoint in the map can make one | **NOT FIXED — filed as the build lane it is** (tread-top convention + `walk_rederive`×6 + `ls_build` + `cine_solve` + plates) | `f3f3f39` (instrument) |
 | 19 | PT-20260805-014 / -015 / -016 / -017 / -018 / -019 | P1 | Cannot reach / nothing happens at The Lockhead (SIX filings, ONE arrow) | **VERIFIED as LEGIBILITY, REFUTED as routing.** The hint is live, labelled and metre-correct at all seven Dellhollow stations; the arrow itself was drawn 96.9 px above its seam and `SIM.pick` at its own pixel landed on `cliff_town_back` **31.4 m away, 70 m behind the town**. Across 24 markers, 5/24 landed within 3 m of the seam they name; at a 20 px cap, 19/24 | the routed marker is clamped to a 20 px screen lift in `story_runtime` (`clampLift`); the general `markersTick` cap is a prepared diff for the coordinator | `e7bdee4` |
 | 20 | PT-20260805-022 / -023 / -024 / -025 / -026 | P1 | Cannot reach the girl at the lock apron (FIVE filings, 46 of 120 steps) | **VERIFIED as world — and the ticket named the wrong 8 metres.** The agent was not short of a surface; it was standing IN one. `[72.07, 1.25, −28.43]` is the moorage's WEST STORE footprint rect, a 3.0 m2 raft with a legal 0.79 m step DOWN in and 0.16 m past `STEP_UP` back out, `walk_pad_tenant-shack`'s slab 20 mm inside the body window, and 2.46 m of open water east. `--comp` measured it at **10 cells** | the moorage's missing second connective landing: `tools/moorage_westlink.py` plank-links the two decks and the footprint gains four measured-landed rects. **10 cells → 643; `reach_probe` west-store→Maren `ok=true`** | this commit |
+| 23 | PT-20260805-032 / -033 / -034 / -035 / -036 | P1×4 + P0 | Stuck in geometry on the quay platform (FIVE filings, ONE stand, 29 steps) | **REFUTED against the game · VERIFIED against the harness.** `_court_probe --way` walks the stall cell 3/3 legs BOTH ways; `--at` has ground clear east and south with only `ls_rail` fencing west. `seen_probe` (new) puts the body at `charNdc [−0.623,0.238]` = screen **[241,274]** of 1280×720 with **353 of 428 pixels through the plate**, while the ticket says "far right of the platform". `wayfind_probe --from=ch2.maren` — the run's OWN state — has the routed **"Lock Five"** arrow `shown=true labelled=true`, lift **22 px**, its click landing on `walk_e_quay-deck__pilot-cluster_landing`. So: open world, drawn body, correct clickable sign — and the agent aimed **nx 0.30–0.86 on 29 consecutive steps, never once below 0.30**, at an arrow drawn at **nx 0.076** | the percept gains `you` (the body's own screen position, from three.js's `charNdc`) and `markers` (every arrow the shot draws, its `.story-way` label, the routed flag, and a bearing in words) — screen coordinates only, never a world coordinate. `percept_test` **368/368** with a sixth fixture from this stand's real numbers, and the census extended to `#exit-markers` + `.story-way` | `690c1d4` |
+| 23 | (the run's second cost centre) | — | The agent re-entered Odessa's finished dialogue tree three times, ~20 steps | **VERIFIED — and split.** `history` is a rolling window of the last 8 decisions, so a conversation eight steps back is gone. But a HUMAN also gets no cue: the prompt reads "Talk to Odessa? [E]" identically before and after, and the re-talk re-offers the same answered choices; the only tell is one word, "Mm." | the harness restores **memory** (a roster named from the game's own prompt), which is what a human has and the agent did not. **The missing cue is left alone and filed as a GAME finding** rather than papered over on this side | `690c1d4` |
+
 
 ## Rounds
 
@@ -3920,3 +3923,108 @@ and the independent metre enumerator agreeing on the new route. What stands betw
 the end card in an LLM run is now (a) an agent that re-talks to NPCs it has finished with and
 (b) whatever makes the quay platforms un-aimable — a percept/steering question, not a walk-network
 one, and the first candidate is the same class `percept_test` exists to catch.
+
+## Round 23 — 2026-08-05 · five tickets, one stand, and the percept never said which figure was you
+
+The previous round's closing sentence guessed that the quay stall was "a percept/steering
+question, not a walk-network one, and the first candidate is the same class `percept_test`
+exists to catch." **That guess was right, and it is recorded here only because it was then
+MEASURED — the guess is not the finding.**
+
+### The five tickets are one defect wearing five IDs
+
+`PT-20260805-032 / -033 / -034 / -035 / -036`, four P1 and one P0, were all filed from ONE
+stand: `del-cine`, `[58.11, 14.24, −12.4]`, shot `quay-west`. The run
+(`run-20260805-105834`, `--from=ch2.jam`) reached it at step 33 and never left: **x pinned at
+exactly 58.11 for 29 consecutive steps**, z oscillating in [−12.16, −12.88], every leg
+reporting `ok:true, onNetwork:true` and `closed ≈ 0`. The run was killed at step 61 rather
+than burn its remaining ~80 steps on the same cell.
+
+| asked | instrument | answered |
+|---|---|---|
+| is the world shut here? | `_court_probe --way` | **3/3 legs, BOTH ways.** Open. |
+| is the ground there? | `_court_probe --at` | clear east and south; only `ls_rail` west, which is a fence doing its job |
+| is the body drawn? | **`seen_probe` (new)** | **353 of 428 pixels survive the plate**; `charNdc [−0.623, 0.238]` = screen **[241, 274]** of 1280×720 |
+| is the sign right? | `wayfind_probe --from=ch2.maren` | hint **"Lock Five"**, `shown=true`, `labelled=true`, lift **22 px**, and the arrow's own clicked pixel lands on `walk_e_quay-deck__pilot-cluster_landing` — a walk ribbon |
+
+**THE SEED HAD TO BE THE RUN'S OWN.** At `--from=ch2.jam` the probe measures the state in which
+`ch2.jam` is PENDING, but `ch2.jam` fired at step 2 — so the honest seed is `--from=ch2.maren`.
+At the wrong seed the shipped hint reads "The Lockhead" and **DISAGREES** with the metre-shortest
+first hop; at the right one it reads "Lock Five" and **AGREES** with it. Round 15's PT-010 lesson,
+paid again in the same file: a probe at the wrong checkpoint is measuring a different game.
+
+### Which half: (a). And the reason underneath it is the finding
+
+Of the three hypotheses the brief carried — (a) the agent walked past the routed marker,
+(b) the motor's target resolution, (c) a marker routed but drawn somewhere unhelpful —
+**(b) and (c) are REFUTED at the arrow's own pixel** (22 px lift, click lands on walk network;
+round 19's `clampLift` is working), and **(a) is VERIFIED**. But "the agent missed the pill" is
+a symptom. The measurement underneath it:
+
+> The routed arrow was at **nx 0.076**. Across 29 consecutive steps the agent aimed
+> **nx 0.30 – 0.86 and never once below 0.30.** Its own ticket says it was stuck at the
+> **"far right of the upper platform"** while its body was at **nx 0.19 — the LEFT QUARTER of
+> its own frame.** It was wrong about where it stood by roughly **700 px**, so every "walk back
+> left" was a walk into the one correctly fenced side.
+
+**AND THE PERCEPT TOLD IT NEITHER FACT.** The percept carried objective / prompts / dialogue /
+card / battle and nothing else; the persona said, verbatim, *"Your character is a small figure
+standing somewhere in the picture."* At that stand there are **four other villagers of the same
+~300 pixels**. A human does not have this problem — they pressed the key and watched that figure
+move, and they read a crisp 22×16 arrow and its pill on a television. The agent gets one still
+1280×720 JPEG per step with no motion cue.
+
+### The fix, and the line it is careful not to cross
+
+Two readings added to `PERCEPT_JS`, both **strictly what is DRAWN** — screen coordinates only,
+never a world coordinate, never the walk network. This is parity with a player's eyes, not the map.
+
+- **`percept.you`** — the body's own screen position, from `SIM.cam().charNdc`, which is
+  three.js's own projection, so the percept and the picture cannot drift. Plus `hidden`
+  (GHOST v2 is drawing you through an occluder — a look, not a loss, but it changes which shape
+  in the picture is you) and `offscreen`.
+- **`percept.markers`** — every marker the shot is actually drawing (`markersTick` sets
+  `display:none` on the rest and hides the layer under UILOCK, so this can never report an arrow
+  the player is not shown): the label off story_runtime's `.story-way` pill, the `routed` flag,
+  `dimRivals`' opacity demotion, and **a bearing in words relative to the body**. That last part
+  is not decoration: the agent never compared two coordinate pairs, and a percept that lists two
+  and leaves the subtraction to the model is the same defect one layer up.
+
+**GATE: `percept_test` 368/368**, with a sixth fixture built from this stand's real numbers
+(`charNdc [−0.623,0.238]`, the routed pill at nx 0.076 to the body's left, a dimmed rival, and a
+`display:none` marker that must NOT be reported). The selector census now covers `#exit-markers`
+and `.story-way` — **rename either and the percept goes blind while every fixture keeps passing**,
+which is precisely this bug.
+
+**AND IT COST THE DOCUMENTED BACKTICK TRAP ONE MORE TIME.** A backtick inside a comment inside
+`PERCEPT_JS`'s template literal ended the string and the module would not parse. CLAUDE.md has
+carried this rule for CSS comments since 2026-08-02 and for `git commit -m` since 2026-08-03;
+this is the third surface. Plain quotes in comments, everywhere.
+
+### The second cost centre: ~20 steps re-reading Odessa
+
+`episode.mjs` now carries the roster of who has been spoken to, named from the game's **own**
+`"Talk to X? [E]"` prompt (reading it off the dialogue box does not work: `.ebui-title` is empty
+for every villager and the speaker runs together with the first line — `"OdessaNineteen days,
+and…"`). `history` is a rolling window of the last 8 decisions, so a conversation eight steps
+back was simply gone.
+
+**ONLY THE HONEST HALF WAS FIXED IN THE HARNESS, AND THE OTHER HALF IS A GAME FINDING.**
+Measured on the run: the prompt reads `"Talk to Odessa? [E]"` identically before and after, and
+the re-talk **re-offers the same answered choices** ("Why are the boats stopped?" / "What is this
+post?") with no mark that they were answered ninety seconds ago. The only cue in the game is one
+word — "Mm." — in place of her greeting. So what a human has and this agent did not is **MEMORY,
+not a UI cue**; memory is what the harness restores, and the missing cue is filed rather than
+papered over.
+
+> **GAME FINDING (not fixed, content lane): an exhausted dialogue tree looks exactly like a fresh
+> one.** A player who forgets whether they asked Odessa about the boats has no way to tell from
+> the prompt or the choice list. This is a real FFIX-era convention and may well be a deliberate
+> non-feature — recorded so the call is made on purpose rather than by omission.
+
+### A note the deploy lane and every browser lane should read
+
+The stalled run was found **still alive** at step 61, 29 steps into a stand it could not leave,
+with ~80 steps of budget left to spend on the same cell. Killing it returned its Chrome cleanly.
+**A RUN THAT HAS PROVABLY STOPPED LEARNING IS SPENDING MONEY, NOT GATHERING EVIDENCE** — the
+29 identical steps were the whole finding, and steps 62–140 would have been 79 more copies of it.
