@@ -480,26 +480,6 @@
    }
   },
   {
-   "id": "cottage-steps",
-   "name": "The Keepers' Steps",
-   "transit": true,
-   "shot": "The last descent, read broadside: the cottage stair zig-zagging eight metres down the spur face with the cottage lit above it, the basin opening to the right, Lock Five past the moorage. No landmarks by design.",
-   "framing": {
-    "yaw": 45,
-    "pitch": 16,
-    "margin": 0.09
-   },
-   "owns": {
-    "landmarks": [],
-    "edges": [
-     "keepers-cottage__lock-five"
-    ]
-   },
-   "thresholdPair": true,
-   "_thresholdPair_why": "A place you ENTER and LEAVE: it owns the middle of one map edge whose two ends belong to other shots, so its passage costs two cuts BY DESIGN. Both sit at the span's own thresholds (abutment, stair head/foot), never mid-plank. seam_test.mjs allows the second cut only for a camera that declares this.",
-   "_framing_note": "THIRD framing, and the first chosen against a MEASURED arrival. yaw 128 (out over the water) and yaw 330 (downstream, cliff-side) both stood on the CLIFF side of a switchback whose arrival sits on its river face, so the player materialised UNDER the flight she had just walked down, behind its own treads and handrails: nav-eval 0/5 with wentBack 5/5, shot_probe, and a 351-cell ghost sweep whose best legal standing cell was still 64.8% occluded. Three instruments agreeing makes it the CAMERA row per seam-canon 9.3 - every occluder named is the walk graph itself, which is nobody to trim. yaw 45 is not a taste pick: the flight runs (92.6,22)->(86.9,28), so its own axis is 45 degrees, and 45 is the BROADSIDE of it. Every blocker measured off the shipped depth plate falls on the far side. Probe-rendered before committing (docs/qa/districts/cs45_cottage-steps.png) after yaw 0 was rendered and REJECTED - it cleared the blockers too but read as a town vista with the flight edge-on and lost in it. Water 66.8% -> 8.4%, traded knowingly on the brief order (trade water before arrival visibility). Wall clearance 0.8m -> 7.8m: the old frame was nearly inside the as-built cliff."
-  },
-  {
    "id": "lockfive",
    "name": "Lock Five",
    "shot": "The water-level centrepiece, low in the gorge looking downstream: the black dam and its three wheels ahead, the lock gates, the tar-dark boat at its moorage, the tenant's shack on the near bank, and the cottage lantern-lit on the wall above — the 'house over the locks' sightline.",

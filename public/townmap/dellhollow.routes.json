@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-05T09:06:18Z",
+ "generated": "2026-08-05T10:28:49Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -3649,65 +3649,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.123,
-       0.057
+       0.162,
+       0.076
       ],
       "px": [
-       755,
-       362
+       781,
+       355
       ],
       "onScreen": true,
-      "edgeMargin": 0.877,
-      "depth": 27.678,
-      "charPx": 75,
+      "edgeMargin": 0.838,
+      "depth": 19.676,
+      "charPx": 105,
       "headNdc": [
-       0.127,
-       0.236
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:keepers-cottage__lock-five",
-     "kind": "seam",
-     "at": [
-      92.72,
-      7.75,
-      -22.15
-     ],
-     "from": "cottage-steps",
-     "via": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage-steps>cottage",
-     "aim": [
-      -0.603,
-      0.798
-     ],
-     "seam": {
-      "n": [
-       0.2516,
-       -0.9678
-      ],
-      "t": 1.1,
-      "w": 2.95
-     },
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.344,
-       -0.555
-      ],
-      "px": [
-       441,
-       597
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.445,
-      "depth": 26.634,
-      "charPx": 78,
-      "headNdc": [
-       -0.355,
-       -0.388
+       0.169,
+       0.332
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3739,20 +3694,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.248,
-       -0.571
+       -0.366,
+       -0.823
       ],
       "px": [
-       506,
-       603
+       426,
+       700
       ],
       "onScreen": true,
-      "edgeMargin": 0.429,
-      "depth": 26.48,
-      "charPx": 78,
+      "edgeMargin": 0.177,
+      "depth": 18.478,
+      "charPx": 112,
       "headNdc": [
-       -0.255,
-       -0.403
+       -0.383,
+       -0.591
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3777,20 +3732,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.155,
-       -0.321
+       -0.231,
+       -0.459
       ],
       "px": [
-       568,
-       507
+       517,
+       560
       ],
       "onScreen": true,
-      "edgeMargin": 0.679,
-      "depth": 27.233,
-      "charPx": 76,
+      "edgeMargin": 0.541,
+      "depth": 19.231,
+      "charPx": 108,
       "headNdc": [
-       -0.16,
-       -0.151
+       -0.241,
+       -0.221
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3821,20 +3776,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.335,
-       -0.534
+       -0.49,
+       -0.767
       ],
       "px": [
-       447,
-       589
+       343,
+       679
       ],
       "onScreen": true,
-      "edgeMargin": 0.466,
-      "depth": 26.693,
-      "charPx": 78,
+      "edgeMargin": 0.233,
+      "depth": 18.691,
+      "charPx": 111,
       "headNdc": [
-       -0.345,
-       -0.366
+       -0.511,
+       -0.535
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3870,69 +3825,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.307,
-       0.205
+       0.421,
+       0.284
       ],
       "px": [
-       878,
-       305
+       955,
+       275
       ],
       "onScreen": true,
-      "edgeMargin": 0.693,
-      "depth": 27.613,
-      "charPx": 75,
+      "edgeMargin": 0.579,
+      "depth": 19.612,
+      "charPx": 106,
       "headNdc": [
-       0.316,
-       0.389
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:keepers-cottage__lock-five",
-     "kind": "seam",
-     "at": [
-      94.44,
-      5.27,
-      -24.42
-     ],
-     "to": "cottage-steps",
-     "toKind": "shot",
-     "prompt": null,
-     "label": null,
-     "aim": [
-      -0.861,
-      -0.508
-     ],
-     "seam": {
-      "n": [
-       0.2516,
-       -0.9678
-      ],
-      "t": 1.1,
-      "w": 2.95
-     },
-     "r": null,
-     "via": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage>cottage-steps",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.493,
-       -0.95
-      ],
-      "px": [
-       341,
-       749
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.05,
-      "depth": 26.022,
-      "charPx": 80,
-      "headNdc": [
-       -0.509,
-       -0.791
+       0.439,
+       0.549
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3968,20 +3874,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.069,
-       -0.637
+       -0.112,
+       -0.924
       ],
       "px": [
-       625,
-       628
+       597,
+       739
       ],
       "onScreen": true,
-      "edgeMargin": 0.363,
-      "depth": 26.007,
-      "charPx": 80,
+      "edgeMargin": 0.076,
+      "depth": 18.005,
+      "charPx": 115,
       "headNdc": [
-       -0.072,
-       -0.468
+       -0.117,
+       -0.691
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4052,47 +3958,9 @@
      "connects": [
       "entry:seam:lockhead__keepers-cottage",
       "exit:seam:lockhead__keepers-cottage",
-      "entry:seam:keepers-cottage__lock-five",
       "entry:seam:weave-huts__keepers-cottage",
       "entry:door:keepers-cottage",
       "exit:door:keepers-cottage"
-     ]
-    },
-    {
-     "id": "cottage:keepers-cottage__lock-five@0..0.259",
-     "class": "stairs",
-     "from": "node:keepers-cottage",
-     "to": "node:lock-five",
-     "t": [
-      0,
-      0.259
-     ],
-     "length": 3.957,
-     "points": [
-      [
-       92.61,
-       7.83,
-       -22
-      ],
-      [
-       93.52,
-       6.56,
-       -23.21
-      ],
-      [
-       94.44,
-       5.29,
-       -24.42
-      ]
-     ],
-     "source": "map edge keepers-cottage__lock-five@0..0.259",
-     "role": "spine",
-     "connects": [
-      "entry:seam:keepers-cottage__lock-five",
-      "entry:seam:weave-huts__keepers-cottage",
-      "entry:door:keepers-cottage",
-      "exit:door:keepers-cottage",
-      "exit:seam:keepers-cottage__lock-five"
      ]
     },
     {
@@ -4133,7 +4001,6 @@
       "entry:seam:weave-huts__keepers-cottage",
       "entry:door:keepers-cottage",
       "exit:seam:weave-huts__keepers-cottage",
-      "entry:seam:keepers-cottage__lock-five",
       "exit:door:keepers-cottage"
      ]
     }
@@ -4150,18 +4017,19 @@
     ]
    },
    "measure": {
-    "routeSamples": 16,
+    "routeSamples": 13,
     "routeInFramePct": 100,
-    "routeLen": 19.822,
-    "spineLen": 19.822,
+    "routeLen": 15.865,
+    "spineLen": 15.865,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
-     "seam:keepers-cottage__lock-five"
+     "door:keepers-cottage",
+     "seam:weave-huts__keepers-cottage"
     ],
-    "minCharPx": 75,
+    "minCharPx": 105,
     "visibleFrac": 0.9219
    }
   },
@@ -5428,7 +5296,7 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 75,
-    "visibleFrac": 0.9219
+    "visibleFrac": 0.8438
    }
   },
   "boatyard": {
@@ -6888,273 +6756,6 @@
     "visibleFrac": 0.86
    }
   },
-  "cottage-steps": {
-   "entries": [
-    {
-     "id": "seam:keepers-cottage__lock-five",
-     "kind": "seam",
-     "at": [
-      91.99,
-      3.04,
-      -25.87
-     ],
-     "from": "cottage",
-     "via": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage>cottage-steps",
-     "aim": [
-      -0.861,
-      -0.508
-     ],
-     "seam": {
-      "n": [
-       0.2516,
-       -0.9678
-      ],
-      "t": 1.1,
-      "w": 2.95
-     },
-     "screen": {
-      "behind": false,
-      "ndc": [
-       0.061,
-       -0.428
-      ],
-      "px": [
-       713,
-       548
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.572,
-      "depth": 16.177,
-      "charPx": 128,
-      "headNdc": [
-       0.062,
-       -0.111
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:keepers-cottage__lock-five",
-     "kind": "seam",
-     "at": [
-      92.65,
-      3.2,
-      -25.71
-     ],
-     "from": "lockfive",
-     "via": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.701:lockfive>cottage-steps",
-     "aim": [
-      0.987,
-      0.158
-     ],
-     "seam": {
-      "n": [
-       -0.9912,
-       -0.1322
-      ],
-      "t": 1.1,
-      "w": 2.25
-     },
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.004,
-       -0.427
-      ],
-      "px": [
-       669,
-       548
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.573,
-      "depth": 15.797,
-      "charPx": 131,
-      "headNdc": [
-       -0.004,
-       -0.102
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    }
-   ],
-   "exits": [
-    {
-     "id": "seam:keepers-cottage__lock-five",
-     "kind": "seam",
-     "at": [
-      94.44,
-      5.27,
-      -24.42
-     ],
-     "to": "cottage",
-     "toKind": "shot",
-     "prompt": null,
-     "label": null,
-     "aim": [
-      -0.603,
-      0.798
-     ],
-     "seam": {
-      "n": [
-       0.2516,
-       -0.9678
-      ],
-      "t": 1.1,
-      "w": 2.95
-     },
-     "r": null,
-     "via": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage-steps>cottage",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.27,
-       -0.05
-      ],
-      "px": [
-       491,
-       403
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.73,
-      "depth": 14.88,
-      "charPx": 139,
-      "headNdc": [
-       -0.279,
-       0.308
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:keepers-cottage__lock-five",
-     "kind": "seam",
-     "at": [
-      89.85,
-      1.69,
-      -26.15
-     ],
-     "to": "lockfive",
-     "toKind": "shot",
-     "prompt": null,
-     "label": null,
-     "aim": [
-      -0.851,
-      -0.525
-     ],
-     "seam": {
-      "n": [
-       -0.9912,
-       -0.1322
-      ],
-      "t": 1.1,
-      "w": 2.25
-     },
-     "r": null,
-     "via": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.701:cottage-steps>lockfive",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       0.229,
-       -0.555
-      ],
-      "px": [
-       826,
-       597
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.445,
-      "depth": 17.811,
-      "charPx": 116,
-      "headNdc": [
-       0.235,
-       -0.272
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    }
-   ],
-   "routes": [
-    {
-     "id": "cottage-steps:keepers-cottage__lock-five@0.259..0.701",
-     "class": "stairs",
-     "from": "node:keepers-cottage",
-     "to": "node:lock-five",
-     "t": [
-      0.259,
-      0.701
-     ],
-     "length": 6.371,
-     "points": [
-      [
-       94.44,
-       5.29,
-       -24.42
-      ],
-      [
-       94.5,
-       5.2,
-       -24.5
-      ],
-      [
-       93.5,
-       4.2,
-       -25.15
-      ],
-      [
-       92.5,
-       3.2,
-       -25.8
-      ],
-      [
-       91.17,
-       2.4,
-       -25.98
-      ],
-      [
-       89.84,
-       1.6,
-       -26.15
-      ]
-     ],
-     "source": "map edge keepers-cottage__lock-five@0.259..0.701",
-     "role": "vignette",
-     "connects": [
-      "entry:seam:keepers-cottage__lock-five",
-      "exit:seam:keepers-cottage__lock-five"
-     ]
-    }
-   ],
-   "name": "The Keepers' Steps",
-   "intent": "The last descent, read broadside: the cottage stair zig-zagging eight metres down the spur face with the cottage lit above it, the basin opening to the right, Lock Five past the moorage. No landmarks by design.",
-   "district": null,
-   "owns": {
-    "landmarks": [],
-    "edges": [
-     "keepers-cottage__lock-five"
-    ]
-   },
-   "measure": {
-    "routeSamples": 6,
-    "routeInFramePct": 100,
-    "routeLen": 6.371,
-    "spineLen": 6.371,
-    "entriesGroundOffScreen": [],
-    "exitsGroundOffScreen": [],
-    "entriesFigureOffScreen": [],
-    "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [],
-    "minCharPx": 116,
-    "visibleFrac": 0.7969
-   }
-  },
   "lockfive": {
    "entries": [
     {
@@ -7182,20 +6783,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.096,
-       -0.559
+       -0.101,
+       -0.557
       ],
       "px": [
-       607,
-       599
+       604,
+       598
       ],
       "onScreen": true,
-      "edgeMargin": 0.441,
-      "depth": 23.652,
+      "edgeMargin": 0.443,
+      "depth": 23.537,
       "charPx": 88,
       "headNdc": [
-       -0.097,
-       -0.341
+       -0.103,
+       -0.338
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7227,65 +6828,20 @@
      "screen": {
       "behind": false,
       "ndc": [
+       0.231,
+       -0.608
+      ],
+      "px": [
+       827,
+       617
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.392,
+      "depth": 20.913,
+      "charPx": 99,
+      "headNdc": [
        0.235,
-       -0.61
-      ],
-      "px": [
-       830,
-       618
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.39,
-      "depth": 21.029,
-      "charPx": 98,
-      "headNdc": [
-       0.239,
-       -0.365
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:keepers-cottage__lock-five",
-     "kind": "seam",
-     "at": [
-      87.32,
-      0.04,
-      -27.71
-     ],
-     "from": "cottage-steps",
-     "via": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.701:cottage-steps>lockfive",
-     "aim": [
-      -0.851,
-      -0.525
-     ],
-     "seam": {
-      "n": [
-       -0.9912,
-       -0.1322
-      ],
-      "t": 1.1,
-      "w": 2.25
-     },
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.234,
-       -0.203
-      ],
-      "px": [
-       515,
-       462
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.766,
-      "depth": 37.744,
-      "charPx": 55,
-      "headNdc": [
-       -0.236,
-       -0.064
+       -0.362
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7296,12 +6852,12 @@
      "id": "seam:lock-five__north-landing",
      "kind": "seam",
      "at": [
-      88.01,
+      87.26,
       -0.08,
-      -27.95
+      -27.98
      ],
      "from": "north-landing",
-     "via": "del-cine>del-cine@cut:lock-five__north-landing:0.202:north-landing>lockfive",
+     "via": "del-cine>del-cine@cut:lock-five__north-landing:0.163:north-landing>lockfive",
      "aim": [
       -0.999,
       -0.046
@@ -7317,20 +6873,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.252,
-       -0.2
+       -0.25,
+       -0.214
       ],
       "px": [
-       503,
-       461
+       504,
+       466
       ],
       "onScreen": true,
-      "edgeMargin": 0.748,
-      "depth": 38.319,
-      "charPx": 54,
+      "edgeMargin": 0.75,
+      "depth": 37.503,
+      "charPx": 55,
       "headNdc": [
-       -0.254,
-       -0.063
+       -0.252,
+       -0.074
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7368,20 +6924,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.119,
-       0.178
+       0.115,
+       0.183
       ],
       "px": [
-       752,
-       316
+       749,
+       314
       ],
       "onScreen": true,
-      "edgeMargin": 0.822,
-      "depth": 25.971,
+      "edgeMargin": 0.817,
+      "depth": 25.855,
       "charPx": 80,
       "headNdc": [
-       0.12,
-       0.386
+       0.116,
+       0.392
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7417,69 +6973,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.279,
+       0.275,
        -0.878
       ],
       "px": [
-       860,
+       857,
        721
       ],
       "onScreen": true,
       "edgeMargin": 0.122,
-      "depth": 18.335,
-      "charPx": 113,
+      "depth": 18.219,
+      "charPx": 114,
       "headNdc": [
-       0.285,
-       -0.602
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:keepers-cottage__lock-five",
-     "kind": "seam",
-     "at": [
-      89.85,
-      1.69,
-      -26.15
-     ],
-     "to": "cottage-steps",
-     "toKind": "shot",
-     "prompt": null,
-     "label": null,
-     "aim": [
-      0.987,
-      0.158
-     ],
-     "seam": {
-      "n": [
-       -0.9912,
-       -0.1322
-      ],
-      "t": 1.1,
-      "w": 2.25
-     },
-     "r": null,
-     "via": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.701:lockfive>cottage-steps",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.192,
-       -0.015
-      ],
-      "px": [
-       543,
-       390
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.808,
-      "depth": 40.245,
-      "charPx": 51,
-      "headNdc": [
-       -0.194,
-       0.117
+       0.281,
+       -0.6
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7490,9 +6997,9 @@
      "id": "seam:lock-five__north-landing",
      "kind": "seam",
      "at": [
-      90.71,
-      -0.3,
-      -27.83
+      89.96,
+      -0.24,
+      -27.86
      ],
      "to": "north-landing",
      "toKind": "shot",
@@ -7511,24 +7018,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:lock-five__north-landing:0.202:lockfive>north-landing",
+     "via": "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.272,
-       -0.162
+       -0.27,
+       -0.17
       ],
       "px": [
-       489,
-       446
+       490,
+       449
       ],
       "onScreen": true,
-      "edgeMargin": 0.728,
-      "depth": 40.888,
-      "charPx": 51,
+      "edgeMargin": 0.73,
+      "depth": 40.06,
+      "charPx": 52,
       "headNdc": [
-       -0.275,
-       -0.034
+       -0.273,
+       -0.039
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7693,8 +7200,8 @@
      "source": "map edge moorage__lock-five@0..1",
      "role": "link",
      "connects": [
-      "entry:seam:keepers-cottage__lock-five",
-      "entry:seam:lock-five__north-landing"
+      "entry:seam:lock-five__north-landing",
+      "exit:seam:lock-five__north-landing"
      ]
     },
     {
@@ -7732,56 +7239,15 @@
      ]
     },
     {
-     "id": "lockfive:keepers-cottage__lock-five@0.701..1",
-     "class": "stairs",
-     "from": "node:keepers-cottage",
-     "to": "node:lock-five",
-     "t": [
-      0.701,
-      1
-     ],
-     "length": 3.848,
-     "points": [
-      [
-       89.84,
-       1.6,
-       -26.15
-      ],
-      [
-       89.5,
-       1.4,
-       -26.2
-      ],
-      [
-       88.21,
-       0.7,
-       -27.1
-      ],
-      [
-       86.91,
-       0,
-       -28
-      ]
-     ],
-     "source": "map edge keepers-cottage__lock-five@0.701..1",
-     "role": "spine",
-     "connects": [
-      "entry:seam:keepers-cottage__lock-five",
-      "entry:seam:lock-five__north-landing",
-      "exit:seam:keepers-cottage__lock-five",
-      "exit:seam:lock-five__north-landing"
-     ]
-    },
-    {
-     "id": "lockfive:lock-five__north-landing@0..0.202",
+     "id": "lockfive:lock-five__north-landing@0..0.163",
      "class": "deck",
      "from": "node:lock-five",
      "to": "node:north-landing",
      "t": [
       0,
-      0.202
+      0.163
      ],
-     "length": 3.804,
+     "length": 3.071,
      "points": [
       [
        86.91,
@@ -7789,22 +7255,20 @@
        -28
       ],
       [
-       88.8,
-       -0.14,
-       -27.91
+       88.44,
+       -0.11,
+       -27.93
       ],
       [
-       90.7,
-       -0.28,
-       -27.83
+       89.97,
+       -0.22,
+       -27.86
       ]
      ],
-     "source": "map edge lock-five__north-landing@0..0.202",
+     "source": "map edge lock-five__north-landing@0..0.163",
      "role": "spine",
      "connects": [
-      "entry:seam:keepers-cottage__lock-five",
       "entry:seam:lock-five__north-landing",
-      "exit:seam:keepers-cottage__lock-five",
       "exit:seam:lock-five__north-landing"
      ]
     }
@@ -7827,10 +7291,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 31,
+    "routeSamples": 27,
     "routeInFramePct": 100,
-    "routeLen": 40.008,
-    "spineLen": 40.008,
+    "routeLen": 35.427,
+    "spineLen": 35.427,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -7838,7 +7302,7 @@
     "exitsAtFrameEdge": [
      "seam:tenant-shack__fish-dock"
     ],
-    "minCharPx": 51,
+    "minCharPx": 52,
     "visibleFrac": 0.4375
    }
   },
@@ -7848,12 +7312,12 @@
      "id": "seam:lock-five__north-landing",
      "kind": "seam",
      "at": [
-      93.4,
-      -0.52,
-      -27.7
+      92.65,
+      -0.46,
+      -27.74
      ],
      "from": "lockfive",
-     "via": "del-cine>del-cine@cut:lock-five__north-landing:0.202:lockfive>north-landing",
+     "via": "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing",
      "aim": [
       0.999,
       0.046
@@ -7869,20 +7333,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.071,
-       0.017
+       0.077,
+       0.04
       ],
       "px": [
-       720,
-       377
+       724,
+       369
       ],
       "onScreen": true,
-      "edgeMargin": 0.929,
-      "depth": 28.476,
-      "charPx": 73,
+      "edgeMargin": 0.923,
+      "depth": 29.251,
+      "charPx": 71,
       "headNdc": [
-       0.072,
-       0.204
+       0.078,
+       0.222
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7895,9 +7359,9 @@
      "id": "seam:lock-five__north-landing",
      "kind": "seam",
      "at": [
-      90.71,
-      -0.3,
-      -27.83
+      89.96,
+      -0.24,
+      -27.86
      ],
      "to": "lockfive",
      "toKind": "shot",
@@ -7916,24 +7380,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:lock-five__north-landing:0.202:north-landing>lockfive",
+     "via": "del-cine>del-cine@cut:lock-five__north-landing:0.163:north-landing>lockfive",
      "screen": {
       "behind": false,
       "ndc": [
-       0.095,
-       0.103
+       0.099,
+       0.122
       ],
       "px": [
-       736,
-       345
+       739,
+       337
       ],
       "onScreen": true,
-      "edgeMargin": 0.897,
-      "depth": 30.994,
-      "charPx": 67,
+      "edgeMargin": 0.878,
+      "depth": 31.771,
+      "charPx": 65,
       "headNdc": [
-       0.096,
-       0.275
+       0.1,
+       0.29
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7943,35 +7407,35 @@
    ],
    "routes": [
     {
-     "id": "north-landing:lock-five__north-landing@0.202..1",
+     "id": "north-landing:lock-five__north-landing@0.163..1",
      "class": "deck",
      "from": "node:lock-five",
      "to": "node:north-landing",
      "t": [
-      0.202,
+      0.163,
       1
      ],
-     "length": 14.995,
+     "length": 15.728,
      "points": [
       [
-       90.7,
-       -0.28,
-       -27.83
+       89.97,
+       -0.22,
+       -27.86
       ],
       [
-       92.48,
-       -0.41,
-       -27.74
+       91.93,
+       -0.37,
+       -27.77
       ],
       [
-       94.26,
-       -0.54,
-       -27.66
+       93.9,
+       -0.51,
+       -27.68
       ],
       [
-       96.05,
-       -0.67,
-       -27.58
+       95.86,
+       -0.66,
+       -27.59
       ],
       [
        97.83,
@@ -7999,7 +7463,7 @@
        -27
       ]
      ],
-     "source": "map edge lock-five__north-landing@0.202..1",
+     "source": "map edge lock-five__north-landing@0.163..1",
      "role": "link",
      "connects": [
       "entry:seam:lock-five__north-landing",
@@ -8021,14 +7485,14 @@
    "measure": {
     "routeSamples": 9,
     "routeInFramePct": 100,
-    "routeLen": 14.995,
-    "spineLen": 14.995,
+    "routeLen": 15.728,
+    "spineLen": 15.728,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 67,
+    "minCharPx": 65,
     "visibleFrac": 0.8333
    }
   }
@@ -8095,21 +7559,6 @@
    ]
   },
   {
-   "edge": "lock-five__north-landing",
-   "t": [
-    0,
-    0.202
-   ],
-   "metres": 3.791,
-   "cameraUp": "lockfive",
-   "floorOwnedBy": "north-landing",
-   "at": [
-    88.8,
-    -0.14,
-    -27.91
-   ]
-  },
-  {
    "edge": "weave-huts__moorage",
    "t": [
     0,
@@ -8155,18 +7604,18 @@
    ]
   },
   {
-   "edge": "keepers-cottage__lock-five",
+   "edge": "lock-five__north-landing",
    "t": [
-    0.701,
-    1
+    0,
+    0.163
    ],
-   "metres": 3.498,
+   "metres": 3.059,
    "cameraUp": "lockfive",
-   "floorOwnedBy": "cottage-steps",
+   "floorOwnedBy": "north-landing",
    "at": [
-    88.35,
-    0.78,
-    -27
+    88.44,
+    -0.11,
+    -27.93
    ]
   },
   {
@@ -8197,21 +7646,6 @@
     82.17,
     13.45,
     -16.47
-   ]
-  },
-  {
-   "edge": "keepers-cottage__lock-five",
-   "t": [
-    0,
-    0.259
-   ],
-   "metres": 3.03,
-   "cameraUp": "cottage",
-   "floorOwnedBy": "cottage-steps",
-   "at": [
-    93.52,
-    6.56,
-    -23.21
    ]
   },
   {
@@ -8261,7 +7695,7 @@
   }
  ],
  "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 2 of 16 plates are stale against the solve — deep-stairs (0.57u), waterfront (0.13u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 3 of 15 plates are stale against the solve — cottage (7.03u), lockfive (0.17u), north-landing (0.09u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
  ],
  "overrides": {}
 }

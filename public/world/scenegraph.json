@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-05T09:06:20Z",
+ "generated": "2026-08-05T10:28:51Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -1736,7 +1736,7 @@
    "rt": false,
    "params": {},
    "cinematic": true,
-   "shotCount": 16,
+   "shotCount": 15,
    "shots": [
     {
      "id": "gate",
@@ -3596,179 +3596,6 @@
      ]
     },
     {
-     "id": "cottage-steps",
-     "boxes": [
-      [
-       92.64,
-       -23.48,
-       93.97,
-       -22.36,
-       7.9
-      ],
-      [
-       92.82,
-       -23.72,
-       94.15,
-       -22.6,
-       7.52
-      ],
-      [
-       93.01,
-       -23.97,
-       94.34,
-       -22.84,
-       7.15
-      ],
-      [
-       93.19,
-       -24.21,
-       94.52,
-       -23.09,
-       6.77
-      ],
-      [
-       93.38,
-       -24.45,
-       94.7,
-       -23.33,
-       6.4
-      ],
-      [
-       93.56,
-       -24.7,
-       94.89,
-       -23.57,
-       6.02
-      ],
-      [
-       93.74,
-       -24.94,
-       95.07,
-       -23.82,
-       5.65
-      ],
-      [
-       93.72,
-       -25.35,
-       94.88,
-       -23.91,
-       5.27
-      ],
-      [
-       93.32,
-       -25.61,
-       94.48,
-       -24.17,
-       4.87
-      ],
-      [
-       92.92,
-       -25.87,
-       94.08,
-       -24.43,
-       4.47
-      ],
-      [
-       92.52,
-       -26.13,
-       93.68,
-       -24.69,
-       4.07
-      ],
-      [
-       92.12,
-       -26.39,
-       93.28,
-       -24.95,
-       3.67
-      ],
-      [
-       91.81,
-       -26.57,
-       92.59,
-       -25.11,
-       3.27
-      ],
-      [
-       91.21,
-       -26.65,
-       91.99,
-       -25.19,
-       2.91
-      ],
-      [
-       90.61,
-       -26.73,
-       91.39,
-       -25.27,
-       2.55
-      ],
-      [
-       90.01,
-       -26.81,
-       90.79,
-       -25.35,
-       2.19
-      ],
-      [
-       89.41,
-       -26.89,
-       90.19,
-       -25.43,
-       1.83
-      ],
-      [
-       88.66,
-       -27.08,
-       89.9,
-       -25.63,
-       1.47
-      ],
-      [
-       88.22,
-       -27.39,
-       89.46,
-       -25.93,
-       1.12
-      ],
-      [
-       87.77,
-       -27.7,
-       89.02,
-       -26.24,
-       0.77
-      ],
-      [
-       87.33,
-       -28,
-       88.57,
-       -26.55,
-       0.42
-      ],
-      [
-       93.5,
-       -25.5,
-       95.5,
-       -23.5,
-       5.2
-      ],
-      [
-       91.5,
-       -26.8,
-       93.5,
-       -24.8,
-       3.2
-      ],
-      [
-       88.5,
-       -27.2,
-       90.5,
-       -25.2,
-       1.4
-      ]
-     ]
-    },
-    {
      "id": "lockfive",
      "boxes": [
       [
@@ -4011,7 +3838,7 @@
     }
    ],
    "bundle": "assets/scenes/del-cine/",
-   "origin": "townmap/dellhollow.map.json (town 'dellhollow') — fixed-camera play scene, 16 shots from townmap/dellhollow.cameras.json"
+   "origin": "townmap/dellhollow.map.json (town 'dellhollow') — fixed-camera play scene, 15 shots from townmap/dellhollow.cameras.json"
   },
   "emb-item-int": {
    "label": "Item Shop",
@@ -6423,150 +6250,6 @@
    "from": "del-cine",
    "to": "del-cine",
    "kind": "cut",
-   "of": "keepers-cottage__lock-five",
-   "at": [
-    94.44,
-    5.27,
-    -24.421
-   ],
-   "band": {
-    "n": [
-     0.2516,
-     -0.9678
-    ],
-    "t": 1.1,
-    "w": 2.95
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage>cottage-steps",
-   "camFrom": "cottage",
-   "cam": {
-    "key": "cottage-steps"
-   },
-   "spawn": [
-    91.989,
-    3.04,
-    -25.868
-   ],
-   "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage-steps>cottage",
-   "source": "camera boundary 'cottage' -> 'cottage-steps' where the walk network crosses landmark keepers-cottage into keepers-cottage__lock-five@0..1; seam slid to keepers-cottage__lock-five@t=0.259, band half-width 2.95u measured off the walk surface, clearance margin 0.04u"
-  },
-  {
-   "from": "del-cine",
-   "to": "del-cine",
-   "kind": "cut",
-   "of": "keepers-cottage__lock-five",
-   "at": [
-    94.44,
-    5.27,
-    -24.421
-   ],
-   "band": {
-    "n": [
-     0.2516,
-     -0.9678
-    ],
-    "t": 1.1,
-    "w": 2.95
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage-steps>cottage",
-   "camFrom": "cottage-steps",
-   "cam": {
-    "key": "cottage"
-   },
-   "spawn": [
-    92.721,
-    7.75,
-    -22.147
-   ],
-   "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage>cottage-steps",
-   "source": "camera boundary 'cottage-steps' -> 'cottage' (the same seam, back)"
-  },
-  {
-   "from": "del-cine",
-   "to": "del-cine",
-   "kind": "cut",
-   "of": "keepers-cottage__lock-five",
-   "at": [
-    89.847,
-    1.69,
-    -26.154
-   ],
-   "band": {
-    "n": [
-     -0.9912,
-     -0.1322
-    ],
-    "t": 1.1,
-    "w": 2.25
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.701:cottage-steps>lockfive",
-   "camFrom": "cottage-steps",
-   "cam": {
-    "key": "lockfive"
-   },
-   "spawn": [
-    87.324,
-    0.04,
-    -27.712
-   ],
-   "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.701:lockfive>cottage-steps",
-   "source": "camera boundary 'cottage-steps' -> 'lockfive' where the walk network crosses keepers-cottage__lock-five@0..1 into landmark lock-five; seam slid to keepers-cottage__lock-five@t=0.701, band half-width 2.25u measured off the walk surface, clearance margin 0.007u"
-  },
-  {
-   "from": "del-cine",
-   "to": "del-cine",
-   "kind": "cut",
-   "of": "keepers-cottage__lock-five",
-   "at": [
-    89.847,
-    1.69,
-    -26.154
-   ],
-   "band": {
-    "n": [
-     -0.9912,
-     -0.1322
-    ],
-    "t": 1.1,
-    "w": 2.25
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.701:lockfive>cottage-steps",
-   "camFrom": "lockfive",
-   "cam": {
-    "key": "cottage-steps"
-   },
-   "spawn": [
-    92.645,
-    3.2,
-    -25.706
-   ],
-   "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.701:cottage-steps>lockfive",
-   "source": "camera boundary 'lockfive' -> 'cottage-steps' (the same seam, back)"
-  },
-  {
-   "from": "del-cine",
-   "to": "del-cine",
-   "kind": "cut",
    "of": "weave-huts__keepers-cottage",
    "at": [
     75.193,
@@ -6785,9 +6468,9 @@
    "kind": "cut",
    "of": "lock-five__north-landing",
    "at": [
-    90.706,
-    -0.301,
-    -27.826
+    89.957,
+    -0.242,
+    -27.86
    ],
    "band": {
     "n": [
@@ -6802,18 +6485,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:lock-five__north-landing:0.202:lockfive>north-landing",
+   "id": "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing",
    "camFrom": "lockfive",
    "cam": {
     "key": "north-landing"
    },
    "spawn": [
-    93.403,
-    -0.517,
-    -27.703
+    92.654,
+    -0.457,
+    -27.737
    ],
-   "reciprocal": "del-cine>del-cine@cut:lock-five__north-landing:0.202:north-landing>lockfive",
-   "source": "camera boundary 'lockfive' -> 'north-landing' where the walk network crosses landmark lock-five into lock-five__north-landing@0..1; seam slid to lock-five__north-landing@t=0.202, band half-width 1.9u measured off the walk surface, clearance margin 0u"
+   "reciprocal": "del-cine>del-cine@cut:lock-five__north-landing:0.163:north-landing>lockfive",
+   "source": "camera boundary 'lockfive' -> 'north-landing' where the walk network crosses landmark lock-five into lock-five__north-landing@0..1; seam slid to lock-five__north-landing@t=0.163, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -6821,9 +6504,9 @@
    "kind": "cut",
    "of": "lock-five__north-landing",
    "at": [
-    90.706,
-    -0.301,
-    -27.826
+    89.957,
+    -0.242,
+    -27.86
    ],
    "band": {
     "n": [
@@ -6838,17 +6521,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:lock-five__north-landing:0.202:north-landing>lockfive",
+   "id": "del-cine>del-cine@cut:lock-five__north-landing:0.163:north-landing>lockfive",
    "camFrom": "north-landing",
    "cam": {
     "key": "lockfive"
    },
    "spawn": [
-    88.009,
+    87.26,
     -0.08,
-    -27.95
+    -27.984
    ],
-   "reciprocal": "del-cine>del-cine@cut:lock-five__north-landing:0.202:lockfive>north-landing",
+   "reciprocal": "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing",
    "source": "camera boundary 'north-landing' -> 'lockfive' (the same seam, back)"
   },
   {

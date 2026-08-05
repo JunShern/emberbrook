@@ -3818,3 +3818,75 @@ because the committed copy is itself older than HEAD's master (it missed
 `walk_e_weave-huts__moorage_l2_t04/t05`). The fix is the only correct one: **re-export it from the
 master you actually intend to ship** (`town_export.py`), which is now done — 313 meshes,
 `cine_test` 688/0. If you hold a master edit across a cron tick, you have published it.
+
+## Round 22 — 2026-08-05 · the keepers' steps become scenery
+
+**COORDINATOR RULING, on round 21's second escalation:** the flight that cannot be walked stops
+carrying walk records. Rationale from the receipts, not from taste: `run-20260805-014451` had
+already walked `ch2.dock -> ch2.winches -> END CARD` in six steps WITHOUT it, and round 21's own
+7-of-9 run reached `ch2.dock` without it. **A stair that cannot be walked must not carry walk
+records** — it was not the critical path, it was a trap the metre-Dijkstra preferred.
+
+**THE REDLINE CHECK CAME FIRST AND FOUND NOTHING.** Every dated redline in
+`dellhollow.map.json` is on the gate tier or the shelf. What this edge carried was a plain design
+note, and it is the one that constrained the work: *"final approach hugs the cliff side and meets
+the waterline lane only where heights nearly merge."*
+
+**AND THE STOP CONDITION WAS TESTED BEFORE ANYTHING MOVED**, because the ruling came with one:
+if a beat anchor loses its route, the decision is wrong.
+
+| asked | measured |
+|---|---|
+| does `lockfive` keep a way in? | it is entered by **FOUR** cuts and the flight carried ONE. `weave-huts__moorage`, `tenant-shack__fish-dock` and `lock-five__north-landing` survive — and the weave->moorage cut is the one round 21's run actually used |
+| do the Ch2 beat anchors survive? | only `ch2.jam` and `ch2.maren` carry `at` at all; both sit on the surviving side |
+| orphaned walk records after the drop? | `cine_solve` orphans **0** |
+| villagers losing their owning shot? | `findability_test` **69 passed, 0 failed** |
+
+### What it cost, and it is not what the ruling named
+
+`cottage-steps` had **four** scenegraph edges and **all four rode this flight**. Dropping the
+records left a shot with no way in and no way out, and `cine_test` flagged it five ways at once
+(`owns no walk geometry`, `NaN% of its region in frame`, ...). It is retired — camera entry,
+plates, `cine.json` row — on the standing delete-superseded ruling, and ratified. Removing it
+re-solved three cameras: **`cottage` by 7.0 m**, `lockfive` 0.18, `north-landing` 0.10, all
+rebaked. THE LESSON WORTH THE INK: **a transit vignette is a shot with no landmarks of its own,
+so its whole reason to exist is one edge — retiring that edge retires the shot, and nothing in
+the pipeline says so until the shot has already lost its geometry.**
+
+### AND THE SENTENCE WAS CHECKED BEFORE IT COST A RUN — the first time
+
+`ch2.dock` set the objective **"Midnight at Lock Five — down past the Keepers' Cottage"**, which
+round 14 wrote to name the route's own first hop. That route no longer exists. Round 14's law is
+*a wayfinder cannot out-argue an objective*, and every previous time this file records it, it was
+found by burning an LLM run. This time it was found by reading the change.
+
+Rewritten from `wayfind_probe`, not from a guess. At the cottage door, `--from=ch2.winches`:
+
+    SHIPPED HINT:      Lock Five via weave-huts__keepers-cottage:0.812:cottage>crossing  hops=3
+    SHORTEST BY METRES: 3 hops / 18.1 m, first = the same cut -> crossing
+    the marker's own clicked pixel: walk_e_weave-huts__keepers-cottage_l2  (the bridge itself)
+
+The shipped Dijkstra and the independent metre enumerator AGREE, and the arrow lands on the plank
+bridge's own walk ribbon. So the sentence names the plank bridge:
+**"Midnight at Lock Five — out over the plank bridge"**. `story_test` green, `dialogue_style`
+PASS (0 failures, 1314 boxes).
+
+### RECEIPT
+
+| gate | before (round 21 HEAD) | after the retirement |
+|---|---|---|
+| `playthrough_test` | 86/0 | **86 passed, 0 failed** |
+| §W reachability | 21 pairs, 0 unreachable | **21 pairs, 0 unreachable** — THE STOP CONDITION, and it held |
+| `cine_test` | 688/0 | **646/0** (42 assertions retired with the shot) |
+| `walk_engine_gate` del-cine | GREEN 4010 cells / 812.0 m2 | **GREEN 3939 cells / 797.6 m2**, 0 lost, BVH FAIL 0 |
+| `seam_test` | — | **282/0** |
+| `findability_test` | 69/0 | **69/0** |
+| `story_test` / `dialogue_style` | green / PASS | **green / PASS** (1314 boxes) |
+| `cine_solve` orphans | — | **0** |
+| GLB walk meshes | 313 | **289** (24 records dropped) |
+
+**AND A NOTE FOR THE DEPLOY LANE, measured today.** The three plates the retirement moved
+(`cottage` re-solved by **7.0 m**, `lockfive`, `north-landing`) were first attempted 3-wide and
+produced NOTHING in 25 minutes at **81% swap** — past CLAUDE.md's own 75% line. Killed and re-run
+1-wide they took **3 minutes each**. Dellhollow's dressed plates are now in the same "serialize"
+regime the dressed Emberbrook ones reached: the parallel order holds only while one plate fits.

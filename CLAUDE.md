@@ -480,6 +480,18 @@ git runs here, on branch `migration/3d-hybrid`.
   inside double quotes wherever it appears. **Use single quotes for commit messages, or
   a heredoc.** Do not amend a pushed shared branch to fix cosmetic damage — rewriting
   history other lanes have fetched costs more than the missing word.
+- **IF YOU HOLD A MASTER EDIT ACROSS A CRON TICK, YOU HAVE PUBLISHED IT** (2026-08-05,
+  measured). `tools/townwalk_live_refresh.sh` exports the SHARED explore bundle
+  (`public/assets/scenes/townwalk/scene.glb`, the `walkSceneKey` every town's `cine_solve`
+  reads) straight from `dellhollow-master.blend`. A lane holding an unstaged experiment in
+  that master had it exported into the shared bundle by the 11:05 tick — 31 walk records of
+  a stair that was about to be reverted. `cine_test` caught it as bundle parity (312 vs 313
+  walk meshes), which is the only reason it was not committed by somebody else.
+  **AND `git checkout` IS THE WRONG REFLEX**: the committed copy of a cron artifact is
+  itself older than the master, so restoring it just swapped one mismatch for another
+  (it was missing `walk_e_weave-huts__moorage_l2_t04/t05`). The fix is to RE-EXPORT it from
+  the master you intend to ship (`tools/town_export.py`). An uncommitted master is not
+  private; stage or revert before you walk away from one.
 - **A TEST THAT CANNOT BOOT IS NOT A TEST THAT FAILED.** transition_test exits 13 at
   `== BOOT` while any lane (or the townwalk refresh cron) is mid-write on
   public/assets/scenes/townwalk/scene.glb (~51 MB) — the boot gate waits on that asset.

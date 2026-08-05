@@ -541,6 +541,7 @@
         "odessa",
         "maren"
       ],
+      "_steps_retired_2026-08-05": "THE PORCH STEPS DOWN TO THE BASIN ARE SCENERY NOW, and the walk records are gone (coordinator ruling). The `stairs keepers-cottage->lock-five` edge carried 2.63 m of rise over 3.13 m of run on its first leg \u2014 40 degrees, the steepest flight in the town \u2014 and at that grade the tread TWO ABOVE you sits 0.75 m up, inside blocked()'s [+0.65, +1.30] body window, so every tread was roofed along the flight's own line (measured: standing at [94.11, -23.85] on floor 6.02, SIM.blocked names walk_e_keepers-cottage__lock-five_l0_t03). Three fixes were BUILT and measured and none cured it: the v2 pivot split (turns are 94/25/27 deg, the offset ramp barely engages), a per-edge riser cap (0.28 -> drive 8/25 to 10/34: a smaller riser buys vertical clearance and spends horizontal), and a full REGRADE to 25 degrees (landings 48/54/55%% -> 93/84/92%%, but the split's own 2.40 m displacement put two legs over the lock basin \u2014 the river's near bank is y~26 \u2014 and every waypoint set that stays dry falls back to 14/24 because the rungs then sit closer than a tread is wide). 4 m of y between this porch and the bank cannot hold both. A STAIR THAT CANNOT BE WALKED MUST NOT CARRY WALK RECORDS: it was a trap the metre-Dijkstra preferred, and run-20260805-014451 had already walked ch2.dock -> winches -> END CARD in six steps without it. The way down is cottage -> weave bridge -> the moorage flight, which is the route the 2026-08-05 receipt run actually walked. THE ART STAYS (lg_ks_* in the master) and is now UNREPRODUCIBLE BY ITS OWN BUILDER: lg_build.py derives it from `walk_e_keepers-cottage__lock-five_*`, which no longer exist, so re-running lg_build DELETES the visible stair. If that flight ever needs rebuilding, restore this edge first.",
       "note": "Maren and Odessa's house — Odessa is the senior lockkeeper of Dellhollow (akin to village chief), Maren her daughter. 'The house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lantern-lit underside is what Locksfoot sees from below."
     },
     {
@@ -1091,29 +1092,6 @@
         ]
       ],
       "note": "winding spur along the cliff to the cottage"
-    },
-    {
-      "from": "keepers-cottage",
-      "to": "lock-five",
-      "type": "stairs",
-      "waypoints": [
-        [
-          94.5,
-          24.5,
-          5.2
-        ],
-        [
-          92.5,
-          25.8,
-          3.2
-        ],
-        [
-          89.5,
-          26.2,
-          1.4
-        ]
-      ],
-      "note": "switchback steps from the porch down to the basin — final approach hugs the cliff side and meets the waterline lane only where heights nearly merge (its old landing sat 1.2u above the North Landing deck lane: an unrecoverable drop trap)"
     },
     {
       "from": "weave-huts",

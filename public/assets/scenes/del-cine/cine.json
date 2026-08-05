@@ -389,13 +389,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    84.739,
-    42.564,
-    24.368
+    85.61,
+    35.538,
+    20.637
    ],
    "aim": [
-    88.008,
-    19.306,
+    87.901,
+    19.23,
     11.88
    ],
    "fov": 35,
@@ -404,12 +404,12 @@
     1400
    ],
    "rtClip": [
-    11.0267,
-    82.764
+    7.62,
+    88.049
    ],
    "depth": {
-    "near": 22.05342674255371,
-    "far": 51.72751235961914,
+    "near": 15.240012168884277,
+    "far": 55.030513763427734,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -424,10 +424,26 @@
     -22
    ],
    "spawnFrom": "walk_pad_keepers-cottage",
-   "visibleFrac": 0.9219,
+   "visibleFrac": 0.9375,
    "probes": 64,
-   "baked": "2026-08-01T15:53:01Z",
-   "seconds": 164.7
+   "baked": "2026-08-05T10:39:17Z",
+   "seconds": 154.8,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "crossing",
@@ -786,80 +802,18 @@
    }
   },
   {
-   "id": "cottage-steps",
-   "name": "The Keepers' Steps",
-   "entry": false,
-   "transit": true,
-   "pos": [
-    102.941,
-    36.056,
-    9.598
-   ],
-   "aim": [
-    92.107,
-    25.221,
-    5.204
-   ],
-   "fov": 35,
-   "clip": [
-    0.05,
-    1400
-   ],
-   "rtClip": [
-    6.5427,
-    161.702
-   ],
-   "depth": {
-    "near": 13.085311889648438,
-    "far": 101.06387329101562,
-    "width": 1344,
-    "height": 768,
-    "encoding": "rgb24-viewz"
-   },
-   "art": {
-    "bg": "cameras/cottage-steps/bg.png",
-    "depth": "cameras/cottage-steps/depth.png"
-   },
-   "spawn": [
-    92.5,
-    3.2,
-    -25.8
-   ],
-   "spawnFrom": "walk_e_keepers-cottage__lock-five_landing.001",
-   "visibleFrac": 0.7969,
-   "probes": 64,
-   "baked": "2026-08-05T07:13:06Z",
-   "seconds": 287.0,
-   "appliedGrade": {
-    "exposure": 0.15000000596046448,
-    "viewTransform": "AgX",
-    "look": "AgX - Medium High Contrast",
-    "sky": 2.0999999046325684,
-    "sunEnergy": null,
-    "moon": null,
-    "moonColor": null,
-    "moonZenithDeg": null,
-    "moonAzimuthDeg": null,
-    "warmAnchorGlow": null,
-    "lampWatts": null,
-    "waystoneLanternW": null,
-    "waystoneLanternAt": null,
-    "waystoneLanternOn": null
-   }
-  },
-  {
    "id": "lockfive",
    "name": "Lock Five",
    "entry": false,
    "transit": false,
    "pos": [
-    51.436,
-    35.589,
-    10.247
+    51.515,
+    35.495,
+    10.19
    ],
    "aim": [
-    75.693,
-    26.76,
+    75.52,
+    26.758,
     4.76
    ],
    "fov": 35,
@@ -868,12 +822,12 @@
     1400
    ],
    "rtClip": [
-    5.8515,
-    167.476
+    5.7144,
+    167.471
    ],
    "depth": {
-    "near": 11.70302963256836,
-    "far": 104.67264556884766,
+    "near": 11.428886413574219,
+    "far": 104.66939544677734,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -888,10 +842,10 @@
     -29.65
    ],
    "spawnFrom": "walk_lm_moorage",
-   "visibleFrac": 0.4375,
+   "visibleFrac": 0.4062,
    "probes": 64,
-   "baked": "2026-08-05T07:13:06Z",
-   "seconds": 384.6,
+   "baked": "2026-08-05T10:42:14Z",
+   "seconds": 175.3,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -915,13 +869,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    120.956,
-    30.446,
-    6.224
+    121.021,
+    30.471,
+    6.263
    ],
    "aim": [
-    99.127,
-    27.378,
+    99.039,
+    27.382,
     0.728
    ],
    "fov": 35,
@@ -930,12 +884,12 @@
     1400
    ],
    "rtClip": [
-    6.3467,
-    331.918
+    6.3821,
+    332.052
    ],
    "depth": {
-    "near": 12.693313598632812,
-    "far": 207.4488067626953,
+    "near": 12.764114379882812,
+    "far": 207.53269958496094,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -952,8 +906,8 @@
    "spawnFrom": "walk_e_lock-five__north-landing_l0",
    "visibleFrac": 0.8333,
    "probes": 30,
-   "baked": "2026-08-05T07:13:49Z",
-   "seconds": 380.5,
+   "baked": "2026-08-05T10:45:20Z",
+   "seconds": 184.6,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
