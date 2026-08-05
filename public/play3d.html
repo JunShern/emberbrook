@@ -3735,7 +3735,10 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  // tell 'hidden with a marker' from 'hidden and lost'.
  tick(n){for(let i=0;i<(n||1);i++){phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick();} occCheck(); syncDepth(); renderFrame(); return{...P,AIR,airY}},   // sgTick PER STEP: live play checks seams every frame; cut bands are ~0.5u and a 25-step stride jumps them
  tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
- tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);syncDepth();renderFrame();return{...P}},
+ // tpY DELEGATES to sgPlace (round 27): it used to carry its own inlined copy of the
+ // PRE-fix settle — no range filter, no neighbour probe — so fall_probe's §4, which
+ // asks tpY, reported the old behaviour on a fixed build forever. One settle, one truth.
+ tpY(x,z,ty){sgPlace([x,ty,z]);syncDepth();renderFrame();return{...P}},
  depthQuad(v){if(DEPTH){syncDepth();DEPTH.quad.visible=!!v;renderFrame();}return !!DEPTH},
  // GL READBACK: is the character actually rasterised? Paint the model magenta and
  // count the pixels. `depthTest:false` measures "is it drawn at all"; pass
