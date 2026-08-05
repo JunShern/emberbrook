@@ -2294,7 +2294,7 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     // encodes. Same path as the painted constants it replaces; the Neutral curve
     // still lands on these pixels and the palette was picked looking at shots
     // taken THROUGH it, never at the raw hex.
-    const SKY2 = SKY_ON && Q.get('sky2')==='1';
+    const SKY2 = SKY_ON && Q.get('sky2')!=='0';
     // Palette v5, MEASURED against ref3's own bands (scratchpad/b12 census): the
     // reference's far band is BLUE AND CHROMATIC — (120,165,193) L 0.60, mist
     // (108,140,172) L 0.53 — while the first mist pass here landed neutral white
