@@ -128,3 +128,22 @@ continues when a lane slot frees — it is hygiene, not graphics.
 ## pad/ground decal read (bed plinths into terrain), flat soffits, tower proportion.
 ## Next graphics bet: BET 5 (camera/sky) — the largest frame-level lever left, user-
 ## opened, never spent.
+
+## BET 5: BANKED (2026-08-05 17:50, gallery Round 21, board docs/qa/ow-camera/).
+## The bet's premise was STALE — r14's "2-5% sky" predated ORBIT.tilt; measured now
+## 18-32% and blind critics called the band a liability. Shipped pick: OWPITCH
+## 0.61->0.66 (a942e49), body position and visible-ground-area constraint both held,
+## blind-ranked above the shipped frame. The lane's first pick was REFUSED by a blind
+## critic and it accepted — the protocol holding on its own work. RESIDUAL PROMOTED TO
+## THE SLATE, a WORLD item not a camera one: at boom 40 the camera rides INSIDE the
+## canopy for road stations ~78-172 (station 90: 65% veg, visible ground a 4 m radius)
+## — where the road was put, no rig recovers it. Candidate fix: thin/limb the canopy
+## over the walked corridor in valley_land, or bend the road out from under it (map-
+## level). Surfaced-not-shipped option for the user: 0.70/0.16 puts the body near the
+## references' frame-Y at the cost of the horizon band (plates r27-opt-*).
+##
+## LEG 12 (same window): PT-044/045/046 closed or split; wayhint now routes on the
+## authored polylines. NEW GAME bar blocked on PT-049 (moorage one-way trap) +
+## PT-050 (weave seam off-frame, seam-canon violation) — the unblock lane is RUNNING
+## and carries the full receipt. BET 6 lane RUNNING in parallel (restarted after the
+## session-limit kill).
