@@ -38,7 +38,8 @@ if (fs.existsSync(cm)) {
   const m = JSON.parse(fs.readFileSync(cm, 'utf8'));
   for (const [name, data] of Object.entries(m))
     prompts[name] = Object.fromEntries(
-      Object.entries(data.stages || {}).map(([id, s]) => [s.file.split('/').pop(), s.prompt]));
+      Object.entries(data.stages || {}).filter(([, s]) => s && s.file)
+        .map(([id, s]) => [s.file.split('/').pop(), s.prompt]));
 }
 
 const manifest = {

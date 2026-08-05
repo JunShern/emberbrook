@@ -1,6 +1,27 @@
 {
-  "generated": "2026-07-27T09:43:50.031Z",
+  "generated": "2026-08-05T16:19:51.768Z",
   "characters": {
+    "armorer": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1295
+        },
+        {
+          "name": "bust.png",
+          "kb": 2434
+        },
+        {
+          "name": "cutin-grave.png",
+          "kb": 636
+        },
+        {
+          "name": "cutin.png",
+          "kb": 625
+        }
+      ],
+      "candidates": []
+    },
     "boat": {
       "files": [
         {
@@ -19,6 +40,193 @@
         }
       ]
     },
+    "boatwright": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1568
+        },
+        {
+          "name": "bust.png",
+          "kb": 2418
+        },
+        {
+          "name": "cutin-grave.png",
+          "kb": 871
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 812
+        },
+        {
+          "name": "cutin.png",
+          "kb": 896
+        }
+      ],
+      "candidates": []
+    },
+    "chandler": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1239
+        },
+        {
+          "name": "bust.png",
+          "kb": 2350
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 1091
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 1116
+        },
+        {
+          "name": "cutin-wry.png",
+          "kb": 955
+        },
+        {
+          "name": "cutin.png",
+          "kb": 945
+        }
+      ],
+      "candidates": []
+    },
+    "child-boy": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1258
+        },
+        {
+          "name": "bust.png",
+          "kb": 2211
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 578
+        },
+        {
+          "name": "cutin-scared.png",
+          "kb": 873
+        },
+        {
+          "name": "cutin.png",
+          "kb": 861
+        }
+      ],
+      "candidates": []
+    },
+    "child-girl": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1226
+        },
+        {
+          "name": "bust.png",
+          "kb": 2242
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 1172
+        },
+        {
+          "name": "cutin-scared.png",
+          "kb": 1172
+        },
+        {
+          "name": "cutin.png",
+          "kb": 1168
+        }
+      ],
+      "candidates": []
+    },
+    "creel": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1418
+        },
+        {
+          "name": "bust.png",
+          "kb": 2438
+        },
+        {
+          "name": "cutin-grave.png",
+          "kb": 406
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 417
+        },
+        {
+          "name": "cutin-remembering.png",
+          "kb": 391
+        },
+        {
+          "name": "cutin.png",
+          "kb": 422
+        }
+      ],
+      "candidates": []
+    },
+    "eelwife": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1693
+        },
+        {
+          "name": "bust.png",
+          "kb": 2476
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 1095
+        },
+        {
+          "name": "cutin-scowl.png",
+          "kb": 1086
+        },
+        {
+          "name": "cutin-sly.png",
+          "kb": 1096
+        },
+        {
+          "name": "cutin.png",
+          "kb": 1098
+        }
+      ],
+      "candidates": []
+    },
+    "elder-woman": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1685
+        },
+        {
+          "name": "bust.png",
+          "kb": 2606
+        },
+        {
+          "name": "cutin-grave.png",
+          "kb": 709
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 734
+        },
+        {
+          "name": "cutin.png",
+          "kb": 803
+        }
+      ],
+      "candidates": []
+    },
     "finn": {
       "files": [
         {
@@ -28,6 +236,22 @@
         {
           "name": "bust.png",
           "kb": 2370
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 669
+        },
+        {
+          "name": "cutin-hollow.png",
+          "kb": 671
+        },
+        {
+          "name": "cutin-puzzled.png",
+          "kb": 669
+        },
+        {
+          "name": "cutin.png",
+          "kb": 678
         },
         {
           "name": "expr-happy.png",
@@ -65,43 +289,190 @@
         }
       ]
     },
-    "lake": {
+    "fisher": {
       "files": [
         {
           "name": "bust-key.png",
-          "kb": 2003
+          "kb": 1391
         },
         {
           "name": "bust.png",
+          "kb": 2504
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 836
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 790
+        },
+        {
+          "name": "cutin.png",
+          "kb": 810
+        }
+      ],
+      "candidates": []
+    },
+    "hobb": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1735
+        },
+        {
+          "name": "bust.png",
+          "kb": 2710
+        },
+        {
+          "name": "cutin-grumbling.png",
+          "kb": 503
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 616
+        },
+        {
+          "name": "cutin-softened.png",
+          "kb": 545
+        },
+        {
+          "name": "cutin.png",
+          "kb": 566
+        }
+      ],
+      "candidates": []
+    },
+    "innkeeper": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1537
+        },
+        {
+          "name": "bust.png",
+          "kb": 2265
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 746
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 752
+        },
+        {
+          "name": "cutin.png",
+          "kb": 700
+        }
+      ],
+      "candidates": []
+    },
+    "lake": {
+      "files": [
+        {
+          "name": "bust-cape-superseded.png",
+          "kb": 2449
+        },
+        {
+          "name": "bust-key-cape-superseded.png",
+          "kb": 1467
+        },
+        {
+          "name": "bust-key.png",
+          "kb": 2044
+        },
+        {
+          "name": "bust-old-blackhair.png",
           "kb": 2132
         },
         {
+          "name": "bust-waist.png",
+          "kb": 2280
+        },
+        {
+          "name": "bust.png",
+          "kb": 2352
+        },
+        {
+          "name": "cutin-annoyed.png",
+          "kb": 602
+        },
+        {
+          "name": "cutin-determined.png",
+          "kb": 686
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 662
+        },
+        {
+          "name": "cutin-hollow.png",
+          "kb": 595
+        },
+        {
+          "name": "cutin-sad.png",
+          "kb": 578
+        },
+        {
+          "name": "cutin-surprised.png",
+          "kb": 715
+        },
+        {
+          "name": "cutin-tender.png",
+          "kb": 588
+        },
+        {
+          "name": "cutin-thinking.png",
+          "kb": 674
+        },
+        {
+          "name": "cutin-weary.png",
+          "kb": 636
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 615
+        },
+        {
+          "name": "cutin-wry.png",
+          "kb": 581
+        },
+        {
+          "name": "cutin.png",
+          "kb": 691
+        },
+        {
           "name": "expr-determined.png",
-          "kb": 2116
+          "kb": 2322
         },
         {
           "name": "expr-happy.png",
-          "kb": 2137
+          "kb": 2408
         },
         {
           "name": "expr-tender.png",
-          "kb": 2084
+          "kb": 2456
         },
         {
           "name": "expr-worried.png",
-          "kb": 2109
+          "kb": 2395
+        },
+        {
+          "name": "expr-wry.png",
+          "kb": 2325
         },
         {
           "name": "pose-back.png",
           "kb": 1441
         },
         {
-          "name": "pose-side.png",
-          "kb": 1300
+          "name": "pose-old-blackhair.png",
+          "kb": 1450
         },
         {
-          "name": "pose.png",
-          "kb": 1450
+          "name": "pose-side.png",
+          "kb": 1300
         },
         {
           "name": "sheet.png",
@@ -346,6 +717,22 @@
           "kb": 2167
         },
         {
+          "name": "cutin-distressed.png",
+          "kb": 459
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 458
+        },
+        {
+          "name": "cutin-hollow.png",
+          "kb": 453
+        },
+        {
+          "name": "cutin.png",
+          "kb": 465
+        },
+        {
           "name": "expr-distressed.png",
           "kb": 2073
         },
@@ -385,6 +772,58 @@
         {
           "name": "bust.png",
           "kb": 2415
+        },
+        {
+          "name": "cutin-annoyed.png",
+          "kb": 614
+        },
+        {
+          "name": "cutin-awed.png",
+          "kb": 688
+        },
+        {
+          "name": "cutin-crushed.png",
+          "kb": 671
+        },
+        {
+          "name": "cutin-determined.png",
+          "kb": 813
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 748
+        },
+        {
+          "name": "cutin-indignant.png",
+          "kb": 752
+        },
+        {
+          "name": "cutin-sad.png",
+          "kb": 658
+        },
+        {
+          "name": "cutin-surprised.png",
+          "kb": 684
+        },
+        {
+          "name": "cutin-tender.png",
+          "kb": 741
+        },
+        {
+          "name": "cutin-thinking.png",
+          "kb": 629
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 661
+        },
+        {
+          "name": "cutin-wry.png",
+          "kb": 733
+        },
+        {
+          "name": "cutin.png",
+          "kb": 678
         },
         {
           "name": "expr-awed.png",
@@ -447,6 +886,10 @@
         {
           "name": "bust.png",
           "kb": 2193
+        },
+        {
+          "name": "cutin.png",
+          "kb": 718
         },
         {
           "name": "pose-back.png",
@@ -572,6 +1015,35 @@
         }
       ]
     },
+    "nib": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1413
+        },
+        {
+          "name": "bust.png",
+          "kb": 2667
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 929
+        },
+        {
+          "name": "cutin-indignant.png",
+          "kb": 830
+        },
+        {
+          "name": "cutin-scared.png",
+          "kb": 831
+        },
+        {
+          "name": "cutin.png",
+          "kb": 848
+        }
+      ],
+      "candidates": []
+    },
     "odessa": {
       "files": [
         {
@@ -581,6 +1053,18 @@
         {
           "name": "bust.png",
           "kb": 2467
+        },
+        {
+          "name": "cutin-grave.png",
+          "kb": 560
+        },
+        {
+          "name": "cutin-warm.png",
+          "kb": 569
+        },
+        {
+          "name": "cutin.png",
+          "kb": 623
         },
         {
           "name": "expr-grave.png",
@@ -614,6 +1098,31 @@
         }
       ]
     },
+    "pell": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1396
+        },
+        {
+          "name": "bust.png",
+          "kb": 2303
+        },
+        {
+          "name": "cutin-tired.png",
+          "kb": 854
+        },
+        {
+          "name": "cutin-wry.png",
+          "kb": 802
+        },
+        {
+          "name": "cutin.png",
+          "kb": 820
+        }
+      ],
+      "candidates": []
+    },
     "pip": {
       "files": [
         {
@@ -623,6 +1132,22 @@
         {
           "name": "bust.png",
           "kb": 2268
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 693
+        },
+        {
+          "name": "cutin-hollow.png",
+          "kb": 680
+        },
+        {
+          "name": "cutin-scared.png",
+          "kb": 697
+        },
+        {
+          "name": "cutin.png",
+          "kb": 701
         },
         {
           "name": "expr-happy.png",
@@ -673,6 +1198,34 @@
         {
           "name": "bust.png",
           "kb": 2312
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 824
+        },
+        {
+          "name": "cutin-hollow.png",
+          "kb": 847
+        },
+        {
+          "name": "cutin-laughing.png",
+          "kb": 916
+        },
+        {
+          "name": "cutin-stern.png",
+          "kb": 831
+        },
+        {
+          "name": "cutin-tender.png",
+          "kb": 909
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 901
+        },
+        {
+          "name": "cutin.png",
+          "kb": 874
         },
         {
           "name": "expr-happy.png",
@@ -780,11 +1333,27 @@
       "files": [
         {
           "name": "bust-key.png",
-          "kb": 1588
+          "kb": 1634
         },
         {
           "name": "bust.png",
-          "kb": 2496
+          "kb": 2308
+        },
+        {
+          "name": "cutin-grave.png",
+          "kb": 932
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 911
+        },
+        {
+          "name": "cutin-hollow.png",
+          "kb": 909
+        },
+        {
+          "name": "cutin.png",
+          "kb": 929
         },
         {
           "name": "expr-grave.png",
@@ -870,6 +1439,35 @@
         }
       ]
     },
+    "sorrel": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1620
+        },
+        {
+          "name": "bust.png",
+          "kb": 2733
+        },
+        {
+          "name": "cutin-conspiring.png",
+          "kb": 728
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 874
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 860
+        },
+        {
+          "name": "cutin.png",
+          "kb": 940
+        }
+      ],
+      "candidates": []
+    },
     "stranger": {
       "files": [
         {
@@ -905,6 +1503,22 @@
         {
           "name": "bust.png",
           "kb": 2312
+        },
+        {
+          "name": "cutin-awed.png",
+          "kb": 745
+        },
+        {
+          "name": "cutin-earnest.png",
+          "kb": 760
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 747
+        },
+        {
+          "name": "cutin.png",
+          "kb": 769
         },
         {
           "name": "expr-awed.png",
@@ -991,6 +1605,50 @@
           "kb": 456
         },
         {
+          "name": "cutin-annoyed.png",
+          "kb": 602
+        },
+        {
+          "name": "cutin-determined.png",
+          "kb": 646
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 652
+        },
+        {
+          "name": "cutin-sad.png",
+          "kb": 624
+        },
+        {
+          "name": "cutin-surprised.png",
+          "kb": 642
+        },
+        {
+          "name": "cutin-tender.png",
+          "kb": 602
+        },
+        {
+          "name": "cutin-thinking.png",
+          "kb": 634
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 552
+        },
+        {
+          "name": "cutin-wry.png",
+          "kb": 637
+        },
+        {
+          "name": "cutin.png",
+          "kb": 660
+        },
+        {
+          "name": "expr-annoyed.png",
+          "kb": 2098
+        },
+        {
           "name": "expr-determined.png",
           "kb": 2066
         },
@@ -1017,6 +1675,10 @@
         {
           "name": "expr-worried.png",
           "kb": 2033
+        },
+        {
+          "name": "expr-wry.png",
+          "kb": 2046
         },
         {
           "name": "pose.png",
@@ -1049,870 +1711,375 @@
           "kb": 1352
         }
       ]
+    },
+    "villager-man": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1117
+        },
+        {
+          "name": "bust.png",
+          "kb": 2233
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 642
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 636
+        },
+        {
+          "name": "cutin.png",
+          "kb": 656
+        }
+      ],
+      "candidates": []
+    },
+    "villager-woman": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1417
+        },
+        {
+          "name": "bust.png",
+          "kb": 2285
+        },
+        {
+          "name": "cutin-worried.png",
+          "kb": 987
+        },
+        {
+          "name": "cutin.png",
+          "kb": 988
+        }
+      ],
+      "candidates": []
+    },
+    "weaponsmith": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1495
+        },
+        {
+          "name": "bust.png",
+          "kb": 2419
+        },
+        {
+          "name": "cutin-happy.png",
+          "kb": 406
+        },
+        {
+          "name": "cutin.png",
+          "kb": 897
+        }
+      ],
+      "candidates": []
     }
   },
   "scenes": {
-    "cottage": {
+    "del-armor-int": {
       "files": [
         {
-          "name": "composite.png",
-          "kb": 1748
+          "name": "background.png",
+          "kb": 5685
         },
         {
-          "name": "main.png",
-          "kb": 2604
+          "name": "depth.png",
+          "kb": 2161
         },
         {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2293
+          "name": "stylized.png",
+          "kb": 5685
         }
       ],
-      "candidates": [
-        {
-          "name": "cand1.png",
-          "kb": 2344
-        },
-        {
-          "name": "cand2.png",
-          "kb": 2368
-        },
-        {
-          "name": "cand3.png",
-          "kb": 2369
-        },
-        {
-          "name": "cand4.png",
-          "kb": 2371
-        },
-        {
-          "name": "green-maskraw-parked.png",
-          "kb": 2359
-        },
-        {
-          "name": "lively-roll1.png",
-          "kb": 2481
-        },
-        {
-          "name": "lively-roll2.png",
-          "kb": 2524
-        },
-        {
-          "name": "lively-roll3.png",
-          "kb": 2604
-        },
-        {
-          "name": "lively-roll4.png",
-          "kb": 2647
-        },
-        {
-          "name": "magenta-flood-1.png",
-          "kb": 2293
-        },
-        {
-          "name": "pre-lively-main.png",
-          "kb": 2409
-        },
-        {
-          "name": "pre-rework-main.png",
-          "kb": 2371
-        },
-        {
-          "name": "pre-rework-maskraw.png",
-          "kb": 2290
-        },
-        {
-          "name": "rework-roll1.png",
-          "kb": 2409
-        }
-      ]
+      "candidates": []
     },
-    "dellhollow": {
+    "del-boatyard": {
       "files": [
         {
-          "name": "composite.png",
-          "kb": 1948
+          "name": "background.png",
+          "kb": 5323
         },
         {
-          "name": "main.png",
-          "kb": 1999
+          "name": "depth.png",
+          "kb": 2404
         },
         {
-          "name": "mask.png",
-          "kb": 2
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2419
+          "name": "stylized.png",
+          "kb": 5323
         }
       ],
-      "candidates": [
+      "candidates": []
+    },
+    "del-cine": {
+      "files": [
         {
-          "name": "cand1.png",
-          "kb": 2524
+          "name": "stylized.png",
+          "kb": 6584
+        }
+      ],
+      "candidates": []
+    },
+    "del-cookhouse-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 5779
         },
         {
-          "name": "green-maskraw-parked.png",
-          "kb": 2488
+          "name": "depth.png",
+          "kb": 1209
         },
         {
-          "name": "magenta-flood-1.png",
-          "kb": 2419
+          "name": "stylized.png",
+          "kb": 5779
+        }
+      ],
+      "candidates": []
+    },
+    "del-cottage-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 5670
         },
         {
-          "name": "magenta-flood-2.png",
-          "kb": 2488
+          "name": "depth.png",
+          "kb": 2666
         },
         {
-          "name": "maskraw-rej1.png",
-          "kb": 2318
+          "name": "stylized.png",
+          "kb": 5670
+        }
+      ],
+      "candidates": []
+    },
+    "del-inn-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 5444
         },
         {
-          "name": "pre-rework-main.png",
-          "kb": 1924
+          "name": "depth.png",
+          "kb": 1093
         },
         {
-          "name": "pre-rework-maskraw.png",
-          "kb": 2316
+          "name": "stylized.png",
+          "kb": 5444
+        }
+      ],
+      "candidates": []
+    },
+    "del-item-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 5644
         },
         {
-          "name": "rework-A-roll1.png",
-          "kb": 2467
+          "name": "depth.png",
+          "kb": 2157
         },
         {
-          "name": "rework-A-roll2-clean.png",
-          "kb": 2541
+          "name": "stylized.png",
+          "kb": 5644
+        }
+      ],
+      "candidates": []
+    },
+    "del-weapon-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 5669
         },
         {
-          "name": "rework-A-roll2-clean2.png",
-          "kb": 2544
+          "name": "depth.png",
+          "kb": 2159
         },
         {
-          "name": "rework-A-roll2.png",
-          "kb": 2564
+          "name": "stylized.png",
+          "kb": 5669
+        }
+      ],
+      "candidates": []
+    },
+    "emb-bakery-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 4990
         },
         {
-          "name": "rework-A.png",
-          "kb": 2544
-        },
-        {
-          "name": "rework-B-roll1.png",
-          "kb": 2522
-        },
-        {
-          "name": "rework-B-roll2.png",
-          "kb": 2515
-        },
-        {
-          "name": "rework-B.png",
-          "kb": 2522
-        },
-        {
-          "name": "rework-C-roll1.png",
-          "kb": 2451
-        },
-        {
-          "name": "rework-C-roll2-clean.png",
-          "kb": 2436
-        },
-        {
-          "name": "rework-C-roll2.png",
-          "kb": 2431
-        },
-        {
-          "name": "rework-C.png",
-          "kb": 2436
-        },
-        {
-          "name": "rework2-roll1.png",
-          "kb": 2505
-        },
-        {
-          "name": "rework2-roll2.png",
-          "kb": 2490
-        },
-        {
-          "name": "rework2-roll3-clean.png",
-          "kb": 1999
-        },
-        {
-          "name": "rework2-roll3.png",
+          "name": "depth.png",
           "kb": 2581
-        }
-      ]
-    },
-    "descent": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2215
         },
         {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2089
+          "name": "stylized.png",
+          "kb": 4990
         }
       ],
-      "candidates": [
+      "candidates": []
+    },
+    "emb-cine": {
+      "files": [
         {
-          "name": "cand1.png",
-          "kb": 2160
+          "name": "stylized.png",
+          "kb": 6852
         }
-      ]
+      ],
+      "candidates": []
+    },
+    "emb-inn-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 5127
+        },
+        {
+          "name": "depth.png",
+          "kb": 2548
+        },
+        {
+          "name": "stylized.png",
+          "kb": 5127
+        }
+      ],
+      "candidates": []
+    },
+    "emb-item-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 5197
+        },
+        {
+          "name": "depth.png",
+          "kb": 2742
+        },
+        {
+          "name": "stylized.png",
+          "kb": 5197
+        }
+      ],
+      "candidates": []
+    },
+    "emb-lake-int": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 5030
+        },
+        {
+          "name": "depth.png",
+          "kb": 2729
+        },
+        {
+          "name": "stylized.png",
+          "kb": 5030
+        }
+      ],
+      "candidates": []
+    },
+    "emb-townwalk": {
+      "files": [
+        {
+          "name": "background.png",
+          "kb": 8296
+        },
+        {
+          "name": "stylized.png",
+          "kb": 8296
+        }
+      ],
+      "candidates": []
     },
     "entrance": {
       "files": [
         {
           "name": "main.png",
           "kb": 2304
-        },
-        {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2180
         }
       ],
-      "candidates": [
-        {
-          "name": "maskraw-roll2-try2.png",
-          "kb": 2179
-        },
-        {
-          "name": "maskraw-roll3-try1.png",
-          "kb": 2260
-        },
-        {
-          "name": "maskraw-try1.png",
-          "kb": 2154
-        },
-        {
-          "name": "old-main.png",
-          "kb": 2322
-        },
-        {
-          "name": "rejected-roll2.png",
-          "kb": 2294
-        },
-        {
-          "name": "roll1.png",
-          "kb": 2300
-        },
-        {
-          "name": "roll2.png",
-          "kb": 2294
-        },
-        {
-          "name": "roll3.png",
-          "kb": 2304
-        }
-      ]
+      "candidates": []
     },
-    "forest": {
+    "lane3d": {
       "files": [
         {
-          "name": "main.png",
-          "kb": 2561
+          "name": "background.png",
+          "kb": 1197
         },
         {
           "name": "mask.png",
-          "kb": 1
+          "kb": 167
         },
         {
-          "name": "maskraw.png",
-          "kb": 2518
+          "name": "stylized.png",
+          "kb": 2458
         }
       ],
-      "candidates": [
-        {
-          "name": "old-main.png",
-          "kb": 2348
-        },
-        {
-          "name": "roll1.png",
-          "kb": 2549
-        },
-        {
-          "name": "roll2.png",
-          "kb": 2561
-        }
-      ]
+      "candidates": []
     },
-    "gate": {
+    "ow-valley": {
       "files": [
         {
-          "name": "gray.png",
-          "kb": 2399
+          "name": "background.png",
+          "kb": 1694
         },
         {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2213
-        },
-        {
-          "name": "open.png",
-          "kb": 2437
+          "name": "stylized.png",
+          "kb": 1694
         }
       ],
-      "candidates": [
-        {
-          "name": "gflood-a.png",
-          "kb": 2401
-        },
-        {
-          "name": "gflood-b.png",
-          "kb": 2375
-        },
-        {
-          "name": "gflood-c.png",
-          "kb": 2213
-        },
-        {
-          "name": "gray-a.png",
-          "kb": 2382
-        },
-        {
-          "name": "gray-b.png",
-          "kb": 2399
-        },
-        {
-          "name": "old-gray.png",
-          "kb": 2060
-        },
-        {
-          "name": "old-open.png",
-          "kb": 2041
-        },
-        {
-          "name": "open-a.png",
-          "kb": 2437
-        }
-      ]
-    },
-    "interior": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2376
-        },
-        {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2317
-        }
-      ],
-      "candidates": [
-        {
-          "name": "flood-a.png",
-          "kb": 2301
-        },
-        {
-          "name": "flood-b.png",
-          "kb": 2309
-        },
-        {
-          "name": "flood-c.png",
-          "kb": 2317
-        },
-        {
-          "name": "old-main.png",
-          "kb": 2341
-        },
-        {
-          "name": "roll-a.png",
-          "kb": 2376
-        },
-        {
-          "name": "roll-b.png",
-          "kb": 2394
-        }
-      ]
-    },
-    "landing": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2683
-        },
-        {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2027
-        }
-      ],
-      "candidates": [
-        {
-          "name": "cand1.png",
-          "kb": 2173
-        },
-        {
-          "name": "flume-edit-1-deck-ripple.png",
-          "kb": 2651
-        },
-        {
-          "name": "pre-warm-main.png",
-          "kb": 2173
-        },
-        {
-          "name": "superseded-cask-and-barrel.png",
-          "kb": 2597
-        },
-        {
-          "name": "warm-1.png",
-          "kb": 2432
-        },
-        {
-          "name": "warm-2-fix.png",
-          "kb": 2540
-        },
-        {
-          "name": "warm-2-trough.png",
-          "kb": 2597
-        },
-        {
-          "name": "warm-2.png",
-          "kb": 2511
-        }
-      ]
-    },
-    "lane": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2011
-        },
-        {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 1409
-        }
-      ],
-      "candidates": [
-        {
-          "name": "maskraw-try1.png",
-          "kb": 1925
-        },
-        {
-          "name": "maskraw-try2-greenpond.png",
-          "kb": 2133
-        },
-        {
-          "name": "maskraw-try3-duskdim-accepted.png",
-          "kb": 1925
-        },
-        {
-          "name": "maskraw-try4-roll1.png",
-          "kb": 1986
-        },
-        {
-          "name": "maskraw-try4-roll2.png",
-          "kb": 1970
-        },
-        {
-          "name": "maskraw-try4-roll3.png",
-          "kb": 1965
-        },
-        {
-          "name": "old-main.png",
-          "kb": 1969
-        },
-        {
-          "name": "roll1.png",
-          "kb": 2002
-        },
-        {
-          "name": "roll2.png",
-          "kb": 2025
-        },
-        {
-          "name": "roll3.png",
-          "kb": 2011
-        },
-        {
-          "name": "roll4.png",
-          "kb": 2056
-        }
-      ]
-    },
-    "lanternstead": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2461
-        },
-        {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2465
-        }
-      ],
-      "candidates": [
-        {
-          "name": "flood1.png",
-          "kb": 2346
-        },
-        {
-          "name": "flood2.png",
-          "kb": 2433
-        },
-        {
-          "name": "flood3.png",
-          "kb": 2465
-        },
-        {
-          "name": "roll1.png",
-          "kb": 2524
-        },
-        {
-          "name": "roll2.png",
-          "kb": 2492
-        },
-        {
-          "name": "roll3.png",
-          "kb": 2461
-        },
-        {
-          "name": "roll4.png",
-          "kb": 2466
-        }
-      ]
-    },
-    "lanternstead-int": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2375
-        },
-        {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2341
-        }
-      ],
-      "candidates": [
-        {
-          "name": "flood1.png",
-          "kb": 2341
-        },
-        {
-          "name": "roll1.png",
-          "kb": 2473
-        },
-        {
-          "name": "roll2.png",
-          "kb": 2438
-        },
-        {
-          "name": "roll3.png",
-          "kb": 2375
-        },
-        {
-          "name": "roll4.png",
-          "kb": 2459
-        }
-      ]
-    },
-    "lockfive": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 1802
-        },
-        {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 1683
-        }
-      ],
-      "candidates": [
-        {
-          "name": "cand1.png",
-          "kb": 1836
-        },
-        {
-          "name": "cand2.png",
-          "kb": 1802
-        }
-      ]
-    },
-    "road": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2667
-        },
-        {
-          "name": "mask.png",
-          "kb": 1
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2618
-        }
-      ],
-      "candidates": [
-        {
-          "name": "flood1.png",
-          "kb": 2553
-        },
-        {
-          "name": "flood2.png",
-          "kb": 2618
-        },
-        {
-          "name": "roll1.png",
-          "kb": 2412
-        },
-        {
-          "name": "roll2.png",
-          "kb": 2482
-        },
-        {
-          "name": "roll3.png",
-          "kb": 2386
-        },
-        {
-          "name": "roll4.png",
-          "kb": 2432
-        },
-        {
-          "name": "roll5.png",
-          "kb": 2620
-        },
-        {
-          "name": "roll6-fix.png",
-          "kb": 2603
-        },
-        {
-          "name": "roll6.png",
-          "kb": 2609
-        },
-        {
-          "name": "roll7.png",
-          "kb": 2660
-        },
-        {
-          "name": "roll8.png",
-          "kb": 2668
-        },
-        {
-          "name": "roll9.png",
-          "kb": 2667
-        }
-      ]
+      "candidates": []
     },
     "square": {
       "files": [
         {
           "name": "festival.png",
           "kb": 2618
-        },
+        }
+      ],
+      "candidates": []
+    },
+    "square3d": {
+      "files": [
         {
-          "name": "gray.png",
-          "kb": 2309
+          "name": "background.png",
+          "kb": 1266
         },
         {
           "name": "mask.png",
-          "kb": 2
+          "kb": 166
         },
         {
-          "name": "maskraw.png",
-          "kb": 2225
+          "name": "ref.png",
+          "kb": 2125
+        },
+        {
+          "name": "stylized.png",
+          "kb": 2660
         }
       ],
-      "candidates": [
-        {
-          "name": "festival-pixel-a.png",
-          "kb": 2654
-        },
-        {
-          "name": "festival-pixel-b.png",
-          "kb": 2654
-        },
-        {
-          "name": "festival-pixel-c.png",
-          "kb": 2661
-        },
-        {
-          "name": "festival-pixel-d.png",
-          "kb": 2684
-        },
-        {
-          "name": "festival-pixel-e.png",
-          "kb": 2651
-        },
-        {
-          "name": "festival-pixel-f.png",
-          "kb": 190
-        },
-        {
-          "name": "festival-pixel-g.png",
-          "kb": 107
-        },
-        {
-          "name": "festival-reimagine-cozy.png",
-          "kb": 1896
-        },
-        {
-          "name": "festival-reimagine-free.png",
-          "kb": 2723
-        },
-        {
-          "name": "festival-reimagine-hd2d.png",
-          "kb": 1717
-        },
-        {
-          "name": "festival-reimagine-snes.png",
-          "kb": 2176
-        },
-        {
-          "name": "full-a.png",
-          "kb": 2581
-        },
-        {
-          "name": "full-b.png",
-          "kb": 2577
-        },
-        {
-          "name": "full-c.png",
-          "kb": 2590
-        },
-        {
-          "name": "full-d.png",
-          "kb": 2589
-        }
-      ]
+      "candidates": []
     },
-    "stairs": {
+    "townwalk": {
       "files": [
         {
-          "name": "composite.png",
-          "kb": 1889
+          "name": "background.png",
+          "kb": 5370
         },
         {
-          "name": "main.png",
-          "kb": 2561
-        },
-        {
-          "name": "mask.png",
-          "kb": 2
-        },
-        {
-          "name": "maskraw.png",
-          "kb": 2474
+          "name": "stylized.png",
+          "kb": 5370
         }
       ],
-      "candidates": [
-        {
-          "name": "green-maskraw-parked.png",
-          "kb": 2398
-        },
-        {
-          "name": "magenta-flood-1.png",
-          "kb": 2474
-        },
-        {
-          "name": "pre-rework-main.png",
-          "kb": 2492
-        },
-        {
-          "name": "pre-rework-maskraw.png",
-          "kb": 2515
-        },
-        {
-          "name": "rework-roll1.png",
-          "kb": 2561
-        }
-      ]
-    },
-    "title": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2364
-        }
-      ],
-      "candidates": [
-        {
-          "name": "title-a.png",
-          "kb": 2382
-        },
-        {
-          "name": "title-b.png",
-          "kb": 2279
-        },
-        {
-          "name": "title-c.png",
-          "kb": 2364
-        }
-      ]
-    },
-    "vista": {
-      "files": [
-        {
-          "name": "main.png",
-          "kb": 2693
-        }
-      ],
-      "candidates": [
-        {
-          "name": "cand1-rej-too-close.png",
-          "kb": 2378
-        },
-        {
-          "name": "cand2-three-locks.png",
-          "kb": 2356
-        },
-        {
-          "name": "pre-rework-main.png",
-          "kb": 2350
-        },
-        {
-          "name": "rework-roll1.png",
-          "kb": 2514
-        },
-        {
-          "name": "rework-roll2.png",
-          "kb": 2543
-        },
-        {
-          "name": "rework-roll3.png",
-          "kb": 2705
-        },
-        {
-          "name": "rework-roll4.png",
-          "kb": 2693
-        }
-      ]
+      "candidates": []
     }
   },
   "refs": [
@@ -2027,13 +2194,14 @@
   ],
   "prompts": {
     "lake": {
-      "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+      "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A gentle young man in his late twenties: the village lamplighter. Tousled wavy brown hair, soft warm brown eyes, a warm boyish friendly face, a calm kind manner. He wears a mid-thigh-length charcoal dark-grey TAILORED COAT with NO HOOD, worn OPEN down the front with no belt: it has an armhole seam at each shoulder, a SLEEVE enclosing each arm down to a cuff at the wrist, and two separate front panels that hang straight down close against his sides. It ends at a plain flat collar band at the base of the neck — nothing bunched or draped behind his shoulders. A small brass flame-shaped clasp at the throat. The open coat shows a white band-collar shirt and, over it, a fitted SCARLET RED-ORANGE vest (the colour of a lit flame) with cord X-lacing down the front. Brown pants, brown boots. No chest strap, no bag, nothing held in either hand. No part of the garment flares or stands out into empty space. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
       "bust.png": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
       "expr-happy.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up. Every other detail stays identical. No text, no watermark, no frame.",
       "expr-worried.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows knit, small anxious frown, eyes glancing aside. Every other detail stays identical. No text, no watermark, no frame.",
       "expr-determined.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: firm set jaw, focused eyes, faint confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
       "expr-tender.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: soft eyes, small warm smile, head fractionally tilted — the look of giving someone their name back. Every other detail stays identical. No text, no watermark, no frame.",
-      "sheet.png": "Create a video game character sprite sheet of this exact character (same face, black undercut swept back, dark-teal shoulder-cape with brass flame pin, cream band-collar shirt, chest strap with brass wick-case), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels."
+      "sheet.png": "Create a video game character sprite sheet of this exact character (same face, tousled wavy brown hair, warm boyish late-twenties face, open charcoal tailored coat with NO hood, a sleeve on each arm and two front panels hanging straight and close at his sides, plain flat collar band, brass flame-shaped clasp at the throat, white band-collar shirt and a scarlet red-orange X-laced vest beneath, brown pants, brown boots, no chest strap, hands empty), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+      "expr-wry.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: one brow up, mouth pulled a millimetre sideways — the whole joke, delivered quietly and without moving anything else. Every other detail stays identical. No text, no watermark, no frame."
     },
     "pip": {
       "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A seven-year-old village boy, genuinely small — a young child only half an adult's height — with messy straw-blond hair sticking out in tufts, bright eager wide eyes, a round childish face with a few freckles. He wears a simple green smock over brown trousers and small scuffed boots, and proudly holds his one good walking stick. Friendly neutral-warm expression. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
@@ -2085,7 +2253,9 @@
       "expr-sad.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: eyes cast down, mouth soft and small, quiet grief on her face. Every other detail stays identical. No text, no watermark, no frame.",
       "expr-thinking.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: eyes glancing up and to one side, lips pressed together in a wry line, the look of someone mid-calculation. Every other detail stays identical. No text, no watermark, no frame.",
       "expr-tender.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: soft warm eyes, a small gentle smile, head tilted very slightly, quiet tenderness — her eyes stay exactly the same bright teal-green color. Every other detail stays identical. No text, no watermark, no frame.",
-      "sheet.png": "Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels."
+      "sheet.png": "Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+      "expr-wry.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: one brow up hard, mouth pulled sideways into a dry flat line — deadpan disbelief, chin tipped back a fraction while the eyes stay level on you. Every other detail stays identical. No text, no watermark, no frame.",
+      "expr-annoyed.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: one brow cocked down while the other stays level, eyes half-lidded and flat, mouth pulled tight to one side — irritated and unimpressed, tolerating this conversation and no more. Every other detail stays identical. No text, no watermark, no frame."
     },
     "maren": {
       "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body framing that includes her forearms — arms loosely crossed at the waist so both forearms are visible in frame. Facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background. A wiry, sun-browned girl of seventeen: a rapids-runner from the river village of Dellhollow. Short choppy dark-brown hair tied back with a strip of faded off-white sailcloth. Bright hazel eyes with a green-gold glint. A big ready grin she is only just barely suppressing. Striped cream-and-teal river-shirt with sleeves rolled to the elbow under a faded blue canvas vest, cord-and-cork bracelet on her right wrist, rows of charcoal tally marks up her left forearm. Modern JRPG key art style.",
@@ -2115,6 +2285,22 @@
     "boat": {
       "boat-side.png": "STRICT right-facing lateral side profile, bow (lantern hook) at the right, tar-dark lapstrake hull, oar inboard, rope fenders, empty, flat magenta.",
       "boat-front.png": "Bow-on view from the slightly elevated game camera, tar-dark exterior planks, rope fenders both sides, lantern hook at the prow tip, empty, flat magenta."
+    },
+    "hobb": {
+      "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A barge captain in his fifties, stuck nineteen days in a stopped river queue and grumbling about it: broad and barrel-chested, weathered ruddy face, a heavy grey-streaked brown beard cropped short, deep laugh lines around tired eyes, a knitted ochre cap pushed back off his forehead. He wears a thick ochre-and-brown oilcloth coat over a cable-knit jumper, a coil of mooring line over one shoulder, fingerless wool gloves, and a brass barge-whistle on a cord. Warm-hearted under the complaint. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+      "bust.png": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame."
+    },
+    "creel": {
+      "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. An old rope-splicer in his seventies who has worked the same stair-town all his life: weather-beaten and slow-moving, deep-set eyes under white brows, a short white stubble beard, a bald crown with white hair over the ears, big knuckled hands scarred by cordage. He wears a pale oatmeal fisherman's jumper under a faded olive canvas waistcoat, a rope belt, and a splicing fid and marlinspike on a lanyard at his chest; a half-spliced hank of hemp rope rests in his hands. Grounded, unhurried, kind. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+      "bust.png": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame."
+    },
+    "nib": {
+      "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A street-wise boy of about nine who has appointed himself the officer of the town's seagulls. FRAMING: close half-body portrait, cropped at the waist, his head and shoulders filling most of the frame — not a full-length figure. Small and wiry, sun-freckled, a mop of straw-blond hair badly cut, a gap in his front teeth, chin up and appraising you frankly. He wears an oversized amber-gold knitted jersey with the sleeves rolled into thick cuffs, a length of twine as a belt, and a grey gull feather stuck behind one ear. Bright, blunt, entirely unimpressed by adults. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+      "bust.png": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame."
+    },
+    "villager-man": {
+      "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame — not a full-length figure. An ordinary river-valley villager, a working man in his forties with a plain easy neutral expression: square stubbled jaw, sun-browned skin, dark hair flattened by a soft brown felt cap he has not taken off, smile lines he is not currently using. He wears a russet-brown jerkin over a grey homespun shirt with the collar open and the sleeves rolled, a wide leather belt with a horn cup hooked to it, and a folded coil of twine at his hip. Nobody important, halfway through an errand. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+      "bust.png": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame."
     }
   }
 }
