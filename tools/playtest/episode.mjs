@@ -403,7 +403,19 @@ export async function run(cfg) {
 
     if (spineScenes && truth.scene) {
       const live = spineScenes(truth.beats || []);
-      if (live && live.size && !live.has(truth.scene) && !inInterior) offSpine++; else offSpine = 0;
+      /* THE EXIT WALK IS NOT A WRONG TURN (PT-20260805-057, re-triaged round 30).
+       * When the next beat lives in the NEXT scene, the player must spend real steps
+       * in this one walking out — run-20260805-194359 filed "no way to advance the
+       * story" from emb-cine post-sendoff and then fired ch1.done and left, because
+       * the walk from the sigil court to the Old Gate simply takes more than three
+       * steps. The filing's own sentence is the test: "nothing here can continue the
+       * chapter" is FALSE whenever the wayhint's routed arrow is drawn on screen —
+       * that arrow IS the way to continue it, and the percept already reports it.
+       * So a step with a live routed marker never counts toward off-spine. A run with
+       * no guidance drawn (the hint broken, the edge sealed, the marker off-screen
+       * for three straight steps) still files exactly as before. */
+      const guided = ((obs.percept && obs.percept.markers) || []).some(m => m.routed && !m.dimmed);
+      if (live && live.size && !live.has(truth.scene) && !inInterior && !guided) offSpine++; else offSpine = 0;
       if (offSpine === 3 && !offSpineFiled) {
         offSpineFiled = true;
         fileReport('bug', {

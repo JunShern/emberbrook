@@ -468,7 +468,7 @@ const INSTALL_MOTOR = `(()=>{ if(window.__pt) return 'already';
   function hit(nx,ny,far){
     const mk=markerAt(nx,ny);
     if(mk){ let on=false; try{ on=(SIM.walkFloors(mk.p[0],mk.p[2])||[]).length>0; }catch(e){}
-      return {ok:true, onNetwork:on, marker:mk.id, t:null, p:mk.p}; }
+      return {ok:true, onNetwork:on, marker:mk.id, aimed:!!mk.aimed, t:null, p:mk.p}; }
     const {b,d}=rayOf(nx,ny);
     const tops=(x,z,walk)=>{ try{ const ys=walk?SIM.walkFloors(x,z):SIM.floors(x,z);
       return (ys&&ys.length)?ys.slice().sort((p,q)=>q-p):[]; }catch(e){ return []; } };
@@ -557,6 +557,26 @@ const KEYS = {
 };
 const BURST_MS = 150;    // one push of the stick
 const ARRIVE_M = 1.2;    // "near enough" — a body is 0.6 m wide
+/* THE HOLD/ARRIVE DEADBAND (round 30, run-20260805-194359). A leg aimed at a MARKER
+ * resolves to a world point — the seam's own `at`, or story_runtime's held aim
+ * waypoint — and this executor used to declare it arrived at ARRIVE_M = 1.2 m. Both
+ * halves of the marker contract live INSIDE that radius:
+ *   - story_runtime releases a held aim only within AIM_HOLD = 0.7 m, so a body
+ *     stopped in the 0.7–1.2 m band is "arrived" to the drive and "not there yet"
+ *     to the hint — the arrow never advances and the next click at it is another
+ *     zero-metre leg. Measured six times in one window on the shelf (steps
+ *     276-278/281/286-287: target [33.9,19,-7.7], intended 1.13 m, closed 0.00,
+ *     ok:true) while ch2.jam starved at the 400-step cap.
+ *   - a camera-cut's band sits ON its `at`, so stopping 1.0 m short leaves the cut
+ *     untaken with the drive reporting arrived:true (reproduced live: seam at
+ *     [35.14,19.07,-7], drive ends [34.23], shot never cuts, next leg dist 1.02 ≤
+ *     1.2 → zero metres forever).
+ * A human walks THROUGH the point and never sees the band; only the closed-loop
+ * executor can stand in it. So a MARKER leg (a) drives to ARRIVE_MARKER_M, inside
+ * AIM_HOLD, and (b) is finished the moment the way is TAKEN — the shot or scene
+ * changes — whichever comes first. Non-marker targets keep the body-width
+ * tolerance; ARRIVE_MARKER_M must stay < story_runtime's AIM_HOLD. */
+const ARRIVE_MARKER_M = 0.5;
 const PROFILE_PREFIX = 'llm-playtester-profile-';
 
 /* REAP OUR OWN ORPHANS, AND ONLY OUR OWN.
@@ -1155,6 +1175,13 @@ export function makeAdapter(opt) {
         if (!e.pageSilent) throw e;
         return unrun([e.message]);
       }
+      const AR = h.marker ? ARRIVE_MARKER_M : ARRIVE_M;   // see THE HOLD/ARRIVE DEADBAND
+      // The frame a marker leg is judged by: taking the way it names. A cut changes
+      // the shot with no UILOCK and no scene change, so the loop must watch for it.
+      const view0 = h.marker ? await evSoft(
+        `(()=>{try{return ((SIM.cine()||{}).shot||'') + '|' + ((SIM.scene&&SIM.scene())||'')}catch(e){return ''}})()`,
+        EV_MS, '') : '';
+      let taken = false;
       const d0 = Math.hypot(h.p[0] - from[0], h.p[2] - from[2]);
       const t0 = Date.now();
       let best = d0, sinceGain = 0, last = from, bursts = 0, slides = 0;
@@ -1210,7 +1237,7 @@ export function makeAdapter(opt) {
         while (Date.now() - t0 < BUDGET) {
           if (left() <= 250) { starved = true; break; }
           const st = await ev(`window.__pt.dirTo(${JSON.stringify(h.p)})`, cap(EV_MS));
-          if (st.dist <= ARRIVE_M) break;
+          if (st.dist <= AR) break;
           let moved = 0, now = last, tried = 0;
           for (const off of OFFSETS) {
             await hold(OCT_KEYS[(((st.oct + off) % 8) + 8) % 8], BURST_MS, cap(KEY_MS)); bursts++; tried++;
@@ -1221,6 +1248,12 @@ export function makeAdapter(opt) {
           }
           rounds++;
           last = now;
+          if (h.marker) {                      // the way was TAKEN: the leg is complete
+            const view = await evSoft(
+              `(()=>{try{return ((SIM.cine()||{}).shot||'') + '|' + ((SIM.scene&&SIM.scene())||'')}catch(e){return ''}})()`,
+              cap(EV_MS), view0);
+            if (view !== view0) { taken = true; break; }
+          }
           const d = Math.hypot(h.p[0] - now[0], h.p[2] - now[2]);
           if (d < best - 0.15) { best = d; sinceGain = 0; } else sinceGain++;
           // Every heading refused — but only say so if every heading was actually TRIED.
@@ -1251,7 +1284,7 @@ export function makeAdapter(opt) {
         intended: +d0.toFixed(2), remaining: +dEnd.toFixed(2), closed: +(d0 - dEnd).toFixed(2),
         travelled: +Math.hypot(end[0] - from[0], end[2] - from[2]).toFixed(2),
         closedFrac: d0 > 0.5 ? +((d0 - dEnd) / d0).toFixed(2) : 1,
-        bursts, slides, rounds, arrived: dEnd <= ARRIVE_M, ms: Date.now() - t0,
+        bursts, slides, rounds, arrived: taken || dEnd <= AR, taken, aimed: !!h.aimed, ms: Date.now() - t0,
         // THE TWO WORDS THAT MAY NOT BE CONFUSED, and the per-burst cost that decides
         // which one it is. `exhausted`: all five headings pushed, the body did not move
         // — the world refused, and this is the finding worth filing. `starved`: the

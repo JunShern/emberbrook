@@ -752,6 +752,31 @@
         if (!nearId || !armed) return false;           // not ours: fall through the chain
         var n = nearest();
         if (!n || !n.p.dialogue) return false;
+        // THE DOOR THE BARGEMAN ATE (PT-20260805-064, measured in del-inn-int).
+        // EBUI dispatches global keys in the CAPTURE phase and a consumed key is
+        // stopImmediatePropagation'd, so while ANY villager is in talk reach this
+        // handler starves play3d's bubble-phase door keydown — the whole door pad
+        // of the Boatmen's Rest sits inside the bargeman's 1.9 m, and "E exits"
+        // was unreachable no matter where the body stood. "A person at arm's
+        // reach is more specific than a counter" (the chain's founding comment)
+        // stays true — but only while the person is the NEARER claim. When a live,
+        // in-range scene edge (a door, never an auto cut) is closer than the
+        // villager, yield the key: returning false leaves the event unconsumed
+        // and play3d's own handler takes the door — or speaks its denial, which
+        // is also that handler's job, so a denied-but-nearer door yields too.
+        try {
+          var S = SIM();
+          if (S && S.edges) {
+            var es = S.edges(), d = null;
+            for (var i = 0; i < es.length; i++) {
+              var e = es[i];
+              if (e.auto || !e.inRange) continue;
+              if (!e.live && !e.denied) continue;
+              if (d === null || e.dist < d) d = e.dist;
+            }
+            if (d !== null && d < n.d) return false;   // the door is the nearer claim
+          }
+        } catch (err) { }
         return talk(n.p.id);
       }, true);
       drive();
