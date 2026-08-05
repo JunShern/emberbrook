@@ -1,0 +1,391 @@
+[
+ {
+  "pos": [
+   77.5,
+   2.66,
+   -121.52
+  ],
+  "scene": "emb-cine",
+  "shot": "gatefield",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Step through the Old Gate",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "emb-cine",
+   "shot": "gatefield",
+   "aim": null,
+   "walked": null,
+   "crow": null,
+   "routes": true,
+   "drawnAt": null,
+   "beat": "ch1.done",
+   "wantScene": "ow-valley",
+   "wantCam": null,
+   "camAuthored": null,
+   "edge": "emb-cine>ow-valley@old-gate",
+   "hops": 1,
+   "dest": "The Emberbrook Valley",
+   "shown": false,
+   "labelled": false,
+   "drawn": null,
+   "last": null
+  },
+  "target": "lockfive",
+  "markers": [
+   {
+    "id": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gatefield>gateroad",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 16.87,
+    "open": true,
+    "camTo": null,
+    "at": [
+     68.2,
+     2.703,
+     -107.333
+    ],
+    "shown": false,
+    "markerPx": [
+     365.661,
+     506.58
+    ],
+    "boxPx": [
+     365.661,
+     506.58
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     374.1347864898564,
+     601.3761081913555
+    ],
+    "arrowPx": [
+     365.6606717511647,
+     505.0491429889412
+    ],
+    "liftPx": 94.8,
+    "liftFrac": 0.133,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 140.93,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.572,
+     -0.327,
+     17.712
+    ],
+    "shown": false,
+    "markerPx": [
+     698.511,
+     177.258
+    ],
+    "boxPx": [
+     698.511,
+     177.258
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     2541.535770943188,
+     -3587.4673607863965
+    ],
+    "arrowPx": [
+     2484.5083331446262,
+     -3429.43562554731
+    ],
+    "liftPx": -3764.7,
+    "liftFrac": -5.28,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>ow-valley@old-gate",
+    "label": "Leave Emberbrook",
+    "kind": "portal",
+    "to": "ow-valley",
+    "dist": 8.49,
+    "open": true,
+    "camTo": null,
+    "at": [
+     78,
+     2.9,
+     -130
+    ],
+    "shown": false,
+    "markerPx": [
+     918.282,
+     62
+    ],
+    "boxPx": [
+     918.282,
+     62
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     911.8962778101912,
+     77.82536133969612
+    ],
+    "arrowPx": [
+     918.2824581726708,
+     -13.347519715228621
+    ],
+    "liftPx": 15.8,
+    "liftFrac": 0.022,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "agent-stand",
+  "want": [
+   77.5,
+   2.66,
+   -121.52
+  ],
+  "hop": {
+   "here": "gatefield",
+   "path": null
+  },
+  "uiClear": true
+ },
+ {
+  "pos": [
+   78,
+   2.7,
+   -124
+  ],
+  "scene": "emb-cine",
+  "shot": "gatefield",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Step through the Old Gate",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "emb-cine",
+   "shot": "gatefield",
+   "aim": null,
+   "walked": null,
+   "crow": null,
+   "routes": true,
+   "drawnAt": null,
+   "beat": "ch1.done",
+   "wantScene": "ow-valley",
+   "wantCam": null,
+   "camAuthored": null,
+   "edge": "emb-cine>ow-valley@old-gate",
+   "hops": 1,
+   "dest": "The Emberbrook Valley",
+   "shown": true,
+   "labelled": true,
+   "drawn": "emb-cine>ow-valley@old-gate",
+   "last": {
+    "beat": "ch1.done",
+    "edge": "emb-cine>ow-valley@old-gate",
+    "dest": "The Emberbrook Valley",
+    "hops": 1,
+    "aim": null,
+    "walked": null,
+    "crow": null
+   }
+  },
+  "target": "lockfive",
+  "markers": [
+   {
+    "id": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gatefield>gateroad",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 19.3,
+    "open": true,
+    "camTo": null,
+    "at": [
+     68.2,
+     2.703,
+     -107.333
+    ],
+    "shown": true,
+    "markerPx": [
+     365.6606750488281,
+     509.8150329589844
+    ],
+    "boxPx": [
+     365.661,
+     508.055
+    ],
+    "glyphPx": [
+     365.6606750488281,
+     509.8150329589844
+    ],
+    "seamPx": [
+     374.1347864898564,
+     601.3761081913555
+    ],
+    "arrowPx": [
+     365.6606717511647,
+     505.0491429889412
+    ],
+    "liftPx": 91.6,
+    "liftFrac": 0.128,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       67.22,
+       2.61,
+       -110.13
+      ],
+      "d": 47.41
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       64.78,
+       -4.28,
+       -116.61
+      ],
+      "d": 57.18
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 143.46,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.572,
+     -0.327,
+     17.712
+    ],
+    "shown": false,
+    "markerPx": [
+     698.511,
+     177.258
+    ],
+    "boxPx": [
+     698.511,
+     177.258
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     2541.535770943188,
+     -3587.4673607863965
+    ],
+    "arrowPx": [
+     2484.5083331446262,
+     -3429.43562554731
+    ],
+    "liftPx": -3764.7,
+    "liftFrac": -5.28,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "emb-cine>ow-valley@old-gate",
+    "label": "Leave Emberbrook",
+    "kind": "portal",
+    "to": "ow-valley",
+    "dist": 6,
+    "open": true,
+    "camTo": null,
+    "at": [
+     78,
+     2.9,
+     -130
+    ],
+    "shown": true,
+    "markerPx": [
+     918.274658203125,
+     59.599998474121094
+    ],
+    "boxPx": [
+     918.282,
+     62
+    ],
+    "glyphPx": [
+     918.274658203125,
+     59.599998474121094
+    ],
+    "seamPx": [
+     911.8962778101912,
+     77.82536133969612
+    ],
+    "arrowPx": [
+     918.2824581726708,
+     -13.347519715228621
+    ],
+    "liftPx": 18.2,
+    "liftFrac": 0.026,
+    "pick": [
+     {
+      "name": "lm_sigil-gate_doors",
+      "pt": [
+       78.13,
+       3.64,
+       -129.86
+      ],
+      "d": 60.59
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       78.09,
+       2.1,
+       -132.3
+      ],
+      "d": 63.48
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       77.9,
+       -4.28,
+       -142.36
+      ],
+      "d": 75.39
+     }
+    ],
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "court-mid",
+  "want": [
+   78,
+   2.7,
+   -124
+  ],
+  "hop": {
+   "here": "gatefield",
+   "path": null
+  },
+  "uiClear": true
+ }
+]
