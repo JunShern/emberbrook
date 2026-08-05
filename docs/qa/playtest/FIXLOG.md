@@ -2704,3 +2704,46 @@ player who does not think to walk away first is stuck in a shop.
 NOT BUILT TONIGHT, deliberately: the arbitration that decides which one E fires lives in
 `play3d.html`, which is coordinator-owned, and a second lane was live in the same
 subsystem this hour. The measurement is the deliverable.
+
+### THE RECEIPT — three NEW GAME runs, 200 steps each, one variable at a time
+
+| beat | `013253` no fix | `015721` sentence | `022035` sentence + `{!flag:}` |
+|---|---|---|---|
+| `ch1.hush` | 45 | 48 | 46 |
+| `ch1.see.mara` | 48 | 72 | **55** |
+| `ch1.see.poppy` | **never** | 91 | **57** |
+| `ch1.see.mochi` | 84 | 109 | **71** |
+| `ch1.see.finn` | 149 | never | **106** |
+| **`ch1.pact`** | **never** | **never** | **step 130** |
+| beats fired | 14 | 14 | **16** |
+| walk legs off-network | 0 | 0 | 0 |
+
+**The hunt closed for the first time.** All four anchors, then `ch1.pact` — the beat that
+gates the rest of Chapter One — at step 130 of 200. `ch1.see.poppy` went from *never in
+200 steps* to *step 57*, and at step 58 the agent's own goal line was *"Head north
+towards the north exit road to find the cat"*: it was reading the roster as the roster
+ticked. Verified by eye in `run-20260805-022035/frames/step-057.jpg` — the banner reads
+`◆ See to them (Mara and Pip ✓) — Poppy at her stall, Finn at the pond, the cat back up
+the north road`, with Mara dropped out of the line.
+
+### AND THE BOTTLENECK MOVED AGAIN — PT-20260805-010, THE OLD GATE
+
+Steps 131–200, the whole remaining budget, in one loop: `square` (z −42) → `therise`
+(z −28) → back to `square`, six times. The agent filed *"Crossing the northern exit zone
+at The Old Gate repeatedly transitions back to the Village Square, creating an infinite
+scene loop."* `ch1.sigils` never fired.
+
+The objective is **"North, out of the village — the Old Gate"**. `therise` is the road
+the player walked IN on at `ch1.open` under the line *"Follow the road north"* — so the
+chapter has now used "north" for both directions of the same road. The Old Gate is the
+other way: `gatefield` sits at z −107, past `northlane`, and `wayfind_probe`'s
+metre-shortest from the square is `square>northlane`, 3 hops / 60.5 m, while the agent
+took `square>therise`.
+
+**NOT DIAGNOSED — and the instrument says why it cannot be, yet.** `wayfind_probe` boots
+a fresh page with no story flags, so `pendingBeat()` resolves to a CHAPTER TWO beat and
+the station prints `objective: "Midnight, at Lock Five…"` with `shown=false`. It is
+measuring a different game than the run was. Reproducing an in-run hint needs the run's
+own flag state loaded first — the repro save is already on the report. Third round
+running that the words and the arrow are the suspects and the world is not: **0 walk legs
+aimed off the network in all three runs.**
