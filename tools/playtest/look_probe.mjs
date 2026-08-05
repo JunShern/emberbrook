@@ -29,8 +29,13 @@ import { rmSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import WebSocket from 'ws';
 import { freePort, killOrphans, findPage } from '../cdp.mjs';
+import { mkArg } from '../argv.mjs';
 
-const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i >= 0 ? process.argv[i + 1] : d; };
+// `--k v` AND `--k=v` (tools/argv.mjs): the bare indexOf form silently
+
+// ignored the `=` spelling and used the DEFAULT instead.
+
+const { arg } = mkArg(process.argv);
 const POS = arg('pos', '69,0,-55').split(',').map(Number);
 const YAWS = arg('yaws', '-1.5,-0.8,0,0.8,1.6,2.4,3.1,-2.3').split(',').map(Number);
 const OUTDIR = arg('out', '/tmp/moorage');

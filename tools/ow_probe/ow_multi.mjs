@@ -17,8 +17,13 @@ import { rmSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import WebSocket from 'ws';
 import { freePort, killOrphans, findPage } from '../cdp.mjs';
+import { mkArg } from '../argv.mjs';
 
-const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i >= 0 ? process.argv[i + 1] : d; };
+// `--k v` AND `--k=v` (tools/argv.mjs): the bare indexOf form silently
+
+// ignored the `=` spelling and used the DEFAULT instead.
+
+const { arg } = mkArg(process.argv);
 const SPEC = JSON.parse(readFileSync(arg('spec'), 'utf8'));
 const SCENE = arg('scene', 'ow-valley');
 const PORT = parseInt(arg('port', '3000'), 10);

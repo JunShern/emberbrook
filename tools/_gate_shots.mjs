@@ -4,7 +4,10 @@ import { rmSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import WebSocket from 'ws';
 import { freePort, killOrphans, findPage } from './cdp.mjs';
-const arg=(k,d)=>{const i=process.argv.indexOf('--'+k);return i>=0?process.argv[i+1]:d;};
+import { mkArg } from './argv.mjs';
+// `--k v` AND `--k=v` (tools/argv.mjs): the bare indexOf form silently
+// ignored the `=` spelling and used the DEFAULT instead.
+const { arg } = mkArg(process.argv);
 const SHOTS=JSON.parse(readFileSync(arg('shots'),'utf8'));
 const PORT=parseInt(arg('port','3000'),10), CDP=await freePort();
 const CHROME=process.env.CHROME_BIN||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';

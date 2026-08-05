@@ -32,8 +32,13 @@ import { join } from 'path';
 import WebSocket from 'ws';
 import { freePort, killOrphans, findPage } from '../cdp.mjs';
 import { checkpointsFromStory } from './adapter_emberbrook.mjs';
+import { mkArg } from '../argv.mjs';
 
-const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i >= 0 ? process.argv[i + 1] : d; };
+// `--k v` AND `--k=v` (tools/argv.mjs): the bare indexOf form silently
+
+// ignored the `=` spelling and used the DEFAULT instead.
+
+const { arg } = mkArg(process.argv);
 const FROM = arg('from', 'ch2.jam');
 const PORT = parseInt(arg('port', '3000'), 10);
 const WALK_MS = parseInt(arg('walk-ms', '1200'), 10);

@@ -27,9 +27,12 @@ import { mkdtempSync, writeFileSync, mkdirSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import WebSocket from 'ws';
+import { mkArg } from '../argv.mjs';
 
 const argv = process.argv.slice(2);
-const arg = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
+// `--k v` AND `--k=v` (tools/argv.mjs): the bare indexOf form silently
+// ignored the `=` spelling and used the DEFAULT instead.
+const { arg } = mkArg(argv);
 const PORT = parseInt(arg('port', '3000'), 10);
 const SC = arg('scene','ow-valley');
 const OUT = arg('out', 'docs/qa/playtest/markers');

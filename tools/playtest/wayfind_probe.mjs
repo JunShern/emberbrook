@@ -26,6 +26,7 @@
  * it names. `liftNdcY` below is that error, measured per marker, in frame heights.
  */
 import { freePort, findPage, killOrphans } from '../cdp.mjs';
+import { mkArg } from '../argv.mjs';
 import { checkpointsFromStory } from './adapter_emberbrook.mjs';
 import { spawn } from 'child_process';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'fs';
@@ -34,7 +35,9 @@ import { join } from 'path';
 import WebSocket from 'ws';
 
 const argv = process.argv.slice(2);
-const arg = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
+// `--k v` AND `--k=v`, and an unknown flag is a hard stop — see tools/argv.mjs. This
+// tool's own `--from=...` was silently ignored for a whole round.
+const { arg, checkArgs } = mkArg(argv);
 const PORT = parseInt(arg('port', '3000'), 10);
 const SC = arg('scene', 'del-cine');
 const TARGET = arg('target', 'lockfive');
@@ -68,6 +71,8 @@ const LIFTCAP = LIFTCAPS.length ? LIFTCAPS[0] : 0;
  * The default stays ch2.dock so round 14's numbers reproduce. */
 const FROM = arg('from', 'ch2.winches');
 const OUT = arg('out', 'docs/qa/playtest/wayfind');
+const STATIONS = arg('stations', null) ? JSON.parse(arg('stations')) : null;
+checkArgs('wayfind_probe');
 mkdirSync(OUT, { recursive: true });
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
@@ -263,7 +268,7 @@ const HOP_JS = (target, MAXH = 5) => `(()=>{
 
 // The three failing filings' own positions + shots (queue.json truth blocks), plus the
 // cottage door the objective starts at and the quay deck the run circled for 90 steps.
-const STATIONS = arg('stations', null) ? JSON.parse(arg('stations')) : [
+const STATION_LIST = STATIONS || [
   ['A-cottage-door',   [92.61, 7.87, -22.0],  'cottage'],      // where ch2.dock leaves you
   ['B-lockhead',       [71.84, 14.07, -15.15],'lockhead'],     // one cut west
   ['C-quay-deck',      [48.20, 14.04, -12.0], 'quay-west'],    // 90 steps of circling
@@ -274,7 +279,7 @@ const STATIONS = arg('stations', null) ? JSON.parse(arg('stations')) : [
 ];
 
 const rows = [];
-for (const [name, pos, useShot] of STATIONS) {
+for (const [name, pos, useShot] of STATION_LIST) {
   if (useShot) { await ev(`SIM.shot(${JSON.stringify(useShot)})`); await new Promise(r => setTimeout(r, 1800)); }
   await ev(`SIM.tp(${pos[0]},${pos[2]},${pos[1]})`);
   if (useShot) await ev(`SIM.shot(${JSON.stringify(useShot)})`);   // tp can cut us elsewhere

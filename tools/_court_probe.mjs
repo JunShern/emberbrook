@@ -42,8 +42,13 @@ import { join } from 'path';
 import WebSocket from 'ws';
 import { freePort, killOrphans, findPage } from './cdp.mjs';
 import { INSTALL } from './reach_probe.mjs';
+import { mkArg } from './argv.mjs';
 
-const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i >= 0 ? process.argv[i + 1] : d; };
+// `--k v` AND `--k=v`, unknown flag = hard stop (tools/argv.mjs). The keys asked for
+// inside the mode branches below are pre-seeded, because checkArgs runs before them.
+const { arg, checkArgs } = mkArg(process.argv,
+  ['port', 'scene', 'transect', 'pairs',
+   'grid', 'comp', 'who', 'mesh', 'stand', 'stand-step', 'at', 'way']);
 const PORT = parseInt(arg('port', '3000'), 10);
 const TRANSECT = JSON.parse(arg('transect', '[]'));   // [[x,z],...] plan points, probed top-down
 const PAIRS = JSON.parse(arg('pairs', '[]'));         // [{name,a,b}]
@@ -73,6 +78,7 @@ const DRIVE = (way) => `(async()=>{
     end:[+p.x.toFixed(2),+p.y.toFixed(2),+p.z.toFixed(2)], log});
 })()`;
 
+checkArgs('_court_probe');
 const CDP = await freePort();
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const SCENE = arg('scene', 'ow-valley');

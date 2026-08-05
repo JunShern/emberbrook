@@ -36,8 +36,13 @@ import { join } from 'path';
 import WebSocket from 'ws';
 import { freePort, killOrphans, findPage } from '/Users/junshernchan/projects/multiplayer-rpg/tools/cdp.mjs';
 import { PERCEPT_JS, flattenPercept } from './adapter_emberbrook.mjs';
+import { mkArg } from '../argv.mjs';
 
-const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i >= 0 ? process.argv[i + 1] : d; };
+// `--k v` AND `--k=v` (tools/argv.mjs): the bare indexOf form silently
+
+// ignored the `=` spelling and used the DEFAULT instead.
+
+const { arg } = mkArg(process.argv);
 const PORT = parseInt(arg('port', '3000'), 10);
 const SC = arg('scene', 'del-cine');
 const STANDS = JSON.parse(arg('stands', '[]'));

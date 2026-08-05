@@ -49,9 +49,12 @@
 import fs from 'fs';
 import path from 'path';
 import { PNG } from 'pngjs';
+import { mkArg } from './argv.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i >= 0 ? process.argv[i + 1] : d; };
+// `--k v` AND `--k=v` (tools/argv.mjs): the bare indexOf form silently
+// ignored the `=` spelling and used the DEFAULT instead.
+const { arg } = mkArg(process.argv);
 const has = (k) => process.argv.includes('--' + k);
 const VERBOSE = has('verbose');
 const ONLY = arg('scene', null);

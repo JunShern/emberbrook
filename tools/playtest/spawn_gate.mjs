@@ -23,10 +23,13 @@ import { mkdtempSync, readFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, dirname } from 'path';
 import WebSocket from 'ws';
+import { mkArg } from '../argv.mjs';
 
 const ROOT = join(dirname(new URL(import.meta.url).pathname), '../..');
 const argv = process.argv.slice(2);
-const arg = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
+// `--k v` AND `--k=v` (tools/argv.mjs): the bare indexOf form silently
+// ignored the `=` spelling and used the DEFAULT instead.
+const { arg } = mkArg(argv);
 const SCENE = arg('scene', 'ow-valley');
 const PORT = parseInt(arg('port', '3000'), 10);
 /* --pos x,y,z pins the body instead of using the bundle spawn. That is how a CONTROL
