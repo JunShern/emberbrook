@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-05T17:51:27Z",
+ "generated": "2026-08-05T23:06:36Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -6680,11 +6680,11 @@
    "r": 3.2,
    "vTol": 2,
    "spawn": [
-    78,
+    76.397,
     2.8,
-    -126.7
+    -127.115
    ],
-   "spawnYaw": -1.5708,
+   "spawnYaw": -1.0637,
    "cam": {
     "key": "gatefield"
    },
@@ -6712,7 +6712,7 @@
    "vTol": 2,
    "spawn": [
     -36.185,
-    23.3,
+    23.22,
     17.159
    ],
    "spawnYaw": 2.3232,
@@ -6735,7 +6735,7 @@
    "of": "dellhollow-valley-gate",
    "at": [
     44.88,
-    12.651,
+    12.629,
     -36.19
    ],
    "r": 3.2,
@@ -6769,7 +6769,7 @@
    "vTol": 2,
    "spawn": [
     41.287,
-    13.101,
+    13.054,
     -33.827
    ],
    "spawnYaw": -0.5817,

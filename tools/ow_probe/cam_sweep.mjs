@@ -36,12 +36,16 @@ const OUT = arg('out', '/tmp/camsweep');
 const SHOTS = arg('shots', '');
 const TAG = arg('tag', 'sw');
 
+// RE-DERIVED 2026-08-06 after the F5 road bend (valley.region.json pts 12-14 moved
+// 6-7 u off the whisperwood so the boom-40 camera stops raking the canopy top —
+// measured at station 90: veg 43.9% -> ~6% on the new line).  gate/vista sit on
+// unmoved control points and keep their coordinates.
 export const STATIONS = [
   { key: 'gate',  x: -57.43, z: 65.55,  yaw: -1.5426, note: 'station 12 — the Emberbrook gate portal' },
   { key: 'vista', x: -56.33, z: 47.95,  yaw: -1.8040, note: 'station 30 — open valley below the gate' },
-  { key: 'wood',  x: -22.44, z: 8.41,   yaw: -2.1696, note: 'station 90 — mid-corridor, under the whisperwood' },
-  { key: 'bend',  x: 1.11,   z: -8.35,  yaw: -2.3999, note: 'station 120 — mid-corridor, the bend' },
-  { key: 'gorge', x: 26.45,  z: -22.61, yaw: -2.6882, note: 'station 150 — the gorge road, Dellhollow approach' },
+  { key: 'wood',  x: -20.34, z: 15.28,  yaw: -2.648,  note: 'station 90 — mid-corridor, beside the whisperwood (road bent off the canopy, F5)' },
+  { key: 'bend',  x: 1.10,   z: -3.82,  yaw: -1.996,  note: 'station 120 — mid-corridor, the bend' },
+  { key: 'gorge', x: 22.81,  z: -21.66, yaw: -2.949,  note: 'station 150 — the gorge road, Dellhollow approach' },
 ];
 
 // pitch x tilt.  0.61/0.22 is what ships.  The pitch axis stops at 0.46 because the
