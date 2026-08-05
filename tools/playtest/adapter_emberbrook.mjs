@@ -726,7 +726,12 @@ export function flattenPercept(p) {
     for (const m of p.markers)
       L.push(`  ${m.routed ? '>>' : '  '} ${m.label ? `"${m.label}"` : `(unlabelled ${m.kind || 'exit'})`}` +
         ` at [${m.nx}, ${m.ny}]${bearingWord(m, p.you)}` +
-        (m.routed ? '  <== THE GAME IS ROUTING YOU THROUGH THIS ONE' : '') +
+        /* "walk towards the marker" is the move that lost two 200-step runs on the
+         * shelf (round 30): the agent aimed at MIDPOINTS between itself and the
+         * routed arrow, and under a toward-camera shot those pixels resolve
+         * backwards or onto awnings. A click ON the arrow always resolves to the
+         * way itself (round 10), so the line now says to do exactly that. */
+        (m.routed ? '  <== THE GAME IS ROUTING YOU THROUGH THIS ONE — aim your goto at EXACTLY these coordinates (never part-way towards them; the walk is handled for you)' : '') +
         (m.dimmed ? ' (dimmed — not the way to your objective)' : ''));
   }
   if (p.card) L.push(`FULL-SCREEN CARD: ${[p.card.title, p.card.sub, p.card.prose, p.card.hint].filter(Boolean).join(' / ')}`);
