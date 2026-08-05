@@ -3183,3 +3183,48 @@ pixels) is gate 19.3%, vista 7.8%, gorge 3.6%, refused-rig 33.2%.
 default path proven untouched (diff is gated additions plus the OWSUN_DIR hoist, and the
 sky2-absent run reproduces the shipped frames); no bake ran, cine/slice untouched;
 transition/playthrough left to the playtest lane per the machine-sharing rule.
+
+### BET 12, ROUNDS 1-2 OF THE BLIND LOOP — the judge refused the first build, and the second one won every matched pair
+
+(The section above was swept into 1a7d7ea by another lane's pathspec commit while in
+progress — the shared-tree trap, again, no content lost. This continues it.)
+
+**ROUND 1 (blind-b12/, 9 frames, fresh judge): THE FIRST BUILD LOST TO THE OLD SKY AT THE
+MONEY RIGS.** The sun-facing vista ranked 3rd of 9 — above every frame of ours ever, behind
+only the two references ("reads as a place and an hour") — but at the gate and refused rigs
+the judge ranked the OLD navy rings above the new mist bands: *"pale scalloped bands ...
+reads as wallpaper or a topographic-noise shader; repetition and paleness break the depth
+read"*, a bright band edge reading as *"the lip of a bowl — the set's edge is on camera"*,
+and the cross-cutting item: *"strongly directional, shadow-casting sunlight on the ground
+beneath skies that are gray, sunless, and directionless."* The criticisms were specific, so
+they became the build: per-ring PERIOD (K 18/26/22/30 — no two rings share a rhythm), a slow
+amplitude modulation (peaks AND saddles), the far stack lowered so it stops short of the
+frame top and the dome's clouds show above it, ridge strips darkened toward the old navy
+(contrast against the mist), and a 0.90+0.20*ts luminance ramp so the sky is brighter toward
+the quadrant the shadows already imply.
+
+**ROUND 2 (blind-b12-r2/, 7 frames — both rig pairs old-vs-new on CURRENT HEAD (1a7d7ea, the
+Bet 3 re-export) + both references, fresh judge): THE NEW SKY WINS EVERY MATCHED PAIR.**
+The judge found the four-frame matched set itself and ordered it new-refused > old-refused >
+new-gate > old-gate, with the head-to-head verdict verbatim: *"c, without hesitation — same
+silhouettes, but c gives each one a fog falloff, and that one difference is the difference
+between paper and atmosphere."* The new refused-rig frame: *"the only one whose distance is
+made of AIR ... the left butte sinking into the veil — the single best sky-meets-ground
+moment in the Emberbrook frames."* The sunview again ranked 3rd behind only the references:
+*"a committed golden-hour statement with real terrain-into-haze melt; the most atmospheric
+Emberbrook frame by a wide margin."* The old gate: *"pure fill; a void, not a sky."*
+
+**THE RESIDUAL DOCKET, the judge's words, not smoothed:** (1) at the SHIPPED rig the gate
+band still reads thin — *"near-empty milky band ... no luminance build at the horizon"* —
+which is the geometry finding again: that rig shows ring 0's body only, and the next lever
+is the camera, not the paint; (2) the haze is neutral-cool while the ground sun is warm —
+the warm/cool hour-agreement between band and terrain is a grade-lane item (the mesa
+"fully saturated and sharp" against the veil is the same item); (3) the sunview's sun disc
+height vs its horizon colour disagree "by a couple of hours" (el 34 is the towns' ratified
+key — if the sky should say later-golden, the KEY moves, which is not this lane's call);
+(4) a residual wallpaper tendency when every layer takes the same treatment.
+
+**Judges:** fresh Anthropic-side subagents per round, $0 external API (the Gemini wall
+stands for the LLM playtester only). Packs committed: blind-b12/, blind-b12-r2/ (mapping
+is the coordinator's copy). `tools/blind_pack.mjs` itself was UNTRACKED until this commit —
+the lightrigs.json class: a tool two lanes' records cite that git did not carry.

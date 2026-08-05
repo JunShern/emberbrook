@@ -16014,3 +16014,47 @@ edit fed the derive, so this lane re-derived; slice 812/0, cine 647/0).
 NOTE FOR THE PLAYTEST LANE: the ow-valley road moved between stations ~75-135; any
 wayhint polylines or recorded runs crossing that span want a re-derive. cam_sweep
 STATIONS re-derived in the same commit (c5f81cf).
+
+## 2026-08-06 ~00:40 — BET 12 LANE (the sky): mechanism named, geometry measured, two blind rounds, prototype ready for main's flip
+
+THE MECHANISM (found before building): the overworld sky is play3d-side and
+runtime-built — vertex-gradient dome `__owsky` (two constants), four `__owridge`
+painted-constant rings, scene.fog. No sun, no clouds, no azimuthal anything: the
+user's "boring gray MS Paint picture" verbatim. The IBL env is the LIGHTING sky
+and is a different object; untouched.
+
+THE MEASUREMENT THAT SHAPED THE DESIGN: at the shipped rig (OWPITCH 0.70/OWTILT
+0.16) the frame top is 10 deg below horizontal — the gameplay frame can NEVER
+contain the horizon, the dome, or a ring crest against the dome. The visible
+"sky" band is one ring's mid-body. So the sky was painted where the frame looks:
+rings rebuilt (three rows: luminous valley-mist -> thin dark ridge strip,
+azimuth-aware via the dome's own palette fn s2hor, mist banks) and the dome made
+a real picture (sun disk + glow on OWSUN_DIR — hoisted, shared, never copied —
+warm-toward-sun horizon, static fbm cumulus) for the vista rigs. All behind
+?sky2=1; the DEFAULT PATH IS BYTE-UNTOUCHED (diff = gated additions + the
+OWSUN_DIR hoist) — main flips `Q.get('sky2')==='1'` -> `!== '0'` when ready.
+
+THE LOOP DID ITS JOB TWICE. Round 1 (fresh Anthropic judge, $0 external, 9
+frames): sunview 3rd of 9, but the first mist build REFUSED at the money rigs —
+old navy above new ("wallpaper... repetition and paleness"). Its list became the
+build. Round 2 (7 frames, both pairs on HEAD 1a7d7ea): new wins EVERY matched
+pair ("the difference between paper and atmosphere"), sunview 3rd behind only
+the references. Full quotes in LOOP.md BET 12.
+
+TRAPS PAID: (1) the R5 milky wash reproduced — first mist pass (190,193,192)
+L 0.75 chroma 2 vs ref3 band (120,165,193); caught by the ruler, recalibrated to
+L 0.61-0.65 chroma 29-37; (2) GLSL pow(ts,2.4) with dot() a float-hair under -1
+is NaN, and UnrealBloom smeared ONE dome column into an 87%-black frame at
+exactly one rig (the one containing the anti-sun azimuth) — clamped in shader
+AND the JS twin; every shipped-rig gate was green while that rig was black.
+
+NEUTRALITY (the k=I concern): paired off/on runs, same poses — unchanged-ground
+mean |d| <= 0.8/255 every station, ground L identical to 3 decimals. No light,
+no env, no grade uniform touched. Backdrop share: gate 19.1%, vista 7.8%,
+refused rig 33.4%.
+
+ALSO: tools/blind_pack.mjs was UNTRACKED (the lightrigs.json class — two lanes'
+records cite it, git didn't carry it); rescued into this commit. My in-progress
+LOOP.md section was swept into 1a7d7ea by another lane's pathspec commit —
+recorded, not repaired. Gemini wall irrelevant here: judges are Anthropic-side
+subagents.

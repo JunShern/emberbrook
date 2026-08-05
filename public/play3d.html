@@ -2277,6 +2277,43 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     //      distance, and what the references are actually doing
     // The `edge_skirt` is hidden when the sky is on: fog now does its job.
     const SKY_ON = OWCAM && Q.get('owsky') !== '0';
+    // OWSUN_DIR is declared HERE (it used to sit beside the key light below) so the
+    // sky can be lit by the same sun as the terrain without a second copy of the
+    // number — the CLAUDE.md contact-shadow rule. Same vector, same comment:
+    // the towns' ratified golden hour, Blender (56,0,212) carried through the
+    // Z-up -> Y-up swap. It POINTS AT THE SUN (see the follow block: dl.position
+    // = P + OWSUN*170).
+    const OWSUN_DIR=new THREE.Vector3(-0.437, 0.559, -0.704);   // el 34, az 238
+    // ---- BET 12 (2026-08-05): A REAL SKY, prototyped behind ?sky2=1 ----------
+    // The user, on r27-refused-gate.png: "the sky is also clearly just a boring
+    // gray MS Paint picture." Everything below is gated on ?sky2=1 and DEFAULT
+    // OFF until main flips it — play3d is coordinator-owned.
+    // WHICH SPACE THE BYTES ARE IN: every hue here is authored as sRGB hex and
+    // decoded by THREE.Color into the LINEAR working space (r185 ColorManagement),
+    // which is what the composer's buffer holds before OutputPass tone-maps and
+    // encodes. Same path as the painted constants it replaces; the Neutral curve
+    // still lands on these pixels and the palette was picked looking at shots
+    // taken THROUGH it, never at the raw hex.
+    const SKY2 = SKY_ON && Q.get('sky2')==='1';
+    // Palette v5, MEASURED against ref3's own bands (scratchpad/b12 census): the
+    // reference's far band is BLUE AND CHROMATIC — (120,165,193) L 0.60, mist
+    // (108,140,172) L 0.53 — while the first mist pass here landed neutral white
+    // (190,193,192) L 0.75, i.e. the R5 milky wash again. Blue carries the
+    // distance; warmth enters only on the sun's side of the horizon.
+    const S2 = { zen:0x4673a8, horC:0xa9c2dc, horW:0xe8cfa4, sun:0xffc27d,
+                 disk:0xfff3d6, cldL:0xf8ead2, cldS:0x8e99b4, land:0x4f658f };
+    // the sky's horizon hue at one azimuth — shared by the dome shader (in GLSL)
+    // and the ridge-ring seating (in JS) so the rings sit INTO the sky they stand
+    // against rather than beside it. ts: 1 toward the sun, 0 anti-sun.
+    const s2hor=(ang)=>{ const sl=Math.hypot(OWSUN_DIR.x,OWSUN_DIR.z);
+      const ts=Math.min(1,Math.max(0, 0.5+0.5*((Math.cos(ang)*OWSUN_DIR.x+Math.sin(ang)*OWSUN_DIR.z)/sl)));
+      // 0.15 floor: golden hour warms the WHOLE horizon a little; the sun's own
+      // azimuth still gets the strong push (matches the dome shader's mix).
+      // The 0.90+0.20*ts luminance ramp is the blind judge's cross-cutting item:
+      // "sunlit ground under a sunless sky" — the sky must be BRIGHTER toward the
+      // quadrant the shadows already imply, even in frames that face away.
+      return new THREE.Color(S2.horC).lerp(new THREE.Color(S2.horW), 0.18+0.82*Math.pow(ts,2.4))
+        .multiplyScalar(0.90+0.20*ts); };
     if(SKY_ON){
       const ZEN=new THREE.Color(0x3f7fc4), HOR=new THREE.Color(0xcfe3ee);
       // Sky dome: BackSide sphere inside the 400 m far plane, depthWrite off so
@@ -2288,23 +2325,90 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // quantisation and is answered by the dither in the AA pass. 1408 more verts
       // on a mesh with no lighting and no fog is nothing.
       const dome=new THREE.SphereGeometry(360, 64, 44);
-      const col=[], pos=dome.attributes.position, c=new THREE.Color();
-      for(let i=0;i<pos.count;i++){
-        const y=pos.getY(i)/360;                       // -1 .. 1
-        const t=Math.pow(Math.max(0, Math.min(1,(y+0.12)/0.72)), 0.85);
-        c.copy(HOR).lerp(ZEN, t); col.push(c.r,c.g,c.b);
+      let skyMesh;
+      if(SKY2){
+        // BET 12 — the dome becomes a PICTURE instead of a two-stop ramp: the
+        // horizon warms toward the sun's own azimuth (az 238, the terrain's key),
+        // a sun disk + glow sit exactly on OWSUN_DIR (el 34 — above the gameplay
+        // frame's ~10 deg sky band, so it owns the vistas and the glow owns the
+        // band), and a static bank of low cumulus rides el ~1-15 deg where the
+        // shipped rig actually LOOKS. Clouds are fbm in the fragment shader —
+        // same hash family as the ridge crests, no texture fetch, no motion
+        // (motion is Bet 11). ShaderMaterial: three's tone-map chunk never
+        // enters, but OutputPass still grades the whole buffer, exactly as it
+        // did the painted vertex colours — see the palette note above.
+        // THE RAMP IS RECALIBRATED FOR THE SHIPPED RIG: the old (y+0.12)/0.72
+        // pow 0.85 ramp had climbed nearly HALFWAY to zenith by el 10 deg, so the
+        // only sky the player ever saw was mid-gradient gray — the exact frame
+        // the user called MS Paint. (el+0.06)/0.85 pow 1.35 keeps the horizon
+        // band IN the 0-15 deg window the camera shows.
+        const U=k=>({value:new THREE.Color(S2[k])});
+        skyMesh=new THREE.Mesh(dome, new THREE.ShaderMaterial({
+          side:THREE.BackSide, depthWrite:false, fog:false,
+          uniforms:{ uZen:U('zen'), uHorC:U('horC'), uHorW:U('horW'),
+                     uSunC:U('sun'), uDisk:U('disk'), uCldL:U('cldL'),
+                     uCldS:U('cldS'), uSun:{value:OWSUN_DIR.clone()} },
+          vertexShader:'varying vec3 vD; void main(){ vD=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
+          fragmentShader:[
+            'varying vec3 vD;',
+            'uniform vec3 uZen,uHorC,uHorW,uSunC,uDisk,uCldL,uCldS,uSun;',
+            'float h21(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }',
+            'float vn(vec2 p){ vec2 i=floor(p),f=fract(p); vec2 u=f*f*(3.0-2.0*f);',
+            '  return mix(mix(h21(i),h21(i+vec2(1.,0.)),u.x),mix(h21(i+vec2(0.,1.)),h21(i+vec2(1.,1.)),u.x),u.y); }',
+            'float fbm(vec2 p){ float a=0.5,s=0.0; for(int i=0;i<5;i++){ s+=a*vn(p); p=p*2.03+vec2(17.3,9.1); a*=0.5; } return s; }',
+            'float cd(vec2 p){ return fbm(p*0.55+vec2(3.7,8.2))+0.35*fbm(p*1.7+vec2(11.0,4.0)); }',
+            'void main(){',
+            '  vec3 d=normalize(vD);',
+            '  float el=d.y;',
+            '  vec2 az=normalize(d.xz+vec2(1e-5,0.0));',
+            '  vec2 sz=normalize(uSun.xz);',
+            // CLAMPED: float error can put dot() a hair under -1, and GLSL
+            // pow(negative, 2.4) is NaN — one NaN column in the beauty buffer
+            // and UnrealBloom smears it into a black frame (measured: the
+            // refused-rig gate view, which contains the exact anti-sun azimuth,
+            // rendered 87% black until this clamp).
+            '  float ts=clamp(0.5+0.5*dot(az,sz),0.0,1.0);',         // 1 toward sun
+            '  float t=pow(clamp((el+0.06)/0.85,0.0,1.0),1.35);',
+            '  vec3 hor=mix(uHorC,uHorW,0.18+0.82*pow(ts,2.4))*(0.90+0.20*ts);',
+            '  vec3 c=mix(hor,uZen,t);',
+            // golden-hour wedge: warm light pooling low over the sun's azimuth
+            '  c+=uSunC*0.32*pow(ts,3.0)*exp(-max(el,0.0)*6.5);',
+            '  float sd=max(dot(d,uSun),0.0);',
+            '  c+=uSunC*(0.28*pow(sd,14.0)+0.85*pow(sd,240.0));',    // glow, two lobes
+            '  c=mix(c,uDisk,smoothstep(0.99966,0.99987,sd));',      // ~1.5 deg disk
+            '  if(el>0.004){',
+            // plane projection: clouds compress toward the horizon like a real deck
+            '    vec2 p=d.xz/(el+0.10)*1.35;',
+            '    float dn=cd(p);',
+            '    float m=smoothstep(0.50,0.90,dn);',                 // coverage: banks, not overcast
+            '    float band=smoothstep(0.008,0.035,el)*smoothstep(0.75,0.16,el);',
+            // sample the same field displaced sunward: denser sunward = shadow side
+            '    float g=cd(p+sz*0.55)-dn;',
+            '    float lit=clamp(0.55-3.2*g,0.0,1.0);',
+            '    vec3 cc=mix(uCldS,uCldL*(1.0+0.25*pow(ts,2.0)),lit);',
+            '    c=mix(c,cc,m*band*0.92);',
+            '  }',
+            '  gl_FragColor=vec4(c,1.0);',
+            '}'].join('\n') }));
+      } else {
+        const col=[], pos=dome.attributes.position, c=new THREE.Color();
+        for(let i=0;i<pos.count;i++){
+          const y=pos.getY(i)/360;                       // -1 .. 1
+          const t=Math.pow(Math.max(0, Math.min(1,(y+0.12)/0.72)), 0.85);
+          c.copy(HOR).lerp(ZEN, t); col.push(c.r,c.g,c.b);
+        }
+        dome.setAttribute('color', new THREE.Float32BufferAttribute(col,3));
+        skyMesh=new THREE.Mesh(dome, new THREE.MeshBasicMaterial({
+          // toneMapped:false — a PAINTED CONSTANT, not radiance. The zenith/horizon
+          // pair and the ridge greys below were chosen to appear exactly as typed;
+          // pushing them through the page's tone curve (added 2026-08-02) would
+          // re-grade a gradient that is already the finished picture.
+          toneMapped:false,
+          vertexColors:true, side:THREE.BackSide, depthWrite:false, fog:false }));
       }
-      dome.setAttribute('color', new THREE.Float32BufferAttribute(col,3));
-      const skyMesh=new THREE.Mesh(dome, new THREE.MeshBasicMaterial({
-        // toneMapped:false — a PAINTED CONSTANT, not radiance. The zenith/horizon
-        // pair and the ridge greys below were chosen to appear exactly as typed;
-        // pushing them through the page's tone curve (added 2026-08-02) would
-        // re-grade a gradient that is already the finished picture.
-        toneMapped:false,
-        vertexColors:true, side:THREE.BackSide, depthWrite:false, fog:false }));
       skyMesh.renderOrder=-1000; skyMesh.name='__owsky'; scene.add(skyMesh);
       SCENEMATS.add(skyMesh.material); OWSKYMESH.add(skyMesh);
-      scene.background=HOR.clone();
+      scene.background=SKY2 ? new THREE.Color(S2.horC) : HOR.clone();
       // AIR (L1, docs/qa/ow-land — landed 2026-08-03).  This fog USED to start at
       // 150 m so "gameplay reads crisp"; the walked corridor is 172 m end to end,
       // so it never ran: the ow-land probe measured NOT ONE FOGGED PIXEL on any of
@@ -2345,7 +2449,19 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // skyline stops reading at all. The tree the critic called unlit is `veg_field` at
       // 153.6 m — scene.fog=null turns every one of them green again, which is the whole
       // proof that nothing there is broken and the haze was simply too pale, too soon.
-      scene.fog=new THREE.Fog(0x8496a9, 44, 195);
+      // BET 12: under ?sky2 the fog keeps R7's DISTANCES (44/195 — measured, not
+      // taste) and re-derives its COLOUR from the same palette the rings now wear,
+      // so the far terrain still dissolves into the band that stands behind it.
+      // Ring 1's seat is land->horizon at 0.52 with the horizon averaged over
+      // azimuth (fog is one colour; the rings themselves vary with azimuth).
+      // Under sky2 the band behind the far terrain is the rings' luminous MIST
+      // zone, not their old slate body, so the fog aims a step below that mist
+      // (R7's rule: never pale r than the thing behind) with the horizon hue
+      // averaged over azimuth. Distances stay R7's 44/195.
+      scene.fog=SKY2
+        ? new THREE.Fog(new THREE.Color(S2.horC).lerp(new THREE.Color(S2.horW),0.30)
+            .lerp(new THREE.Color(S2.land),0.16), 44, 195)
+        : new THREE.Fog(0x8496a9, 44, 195);
       // ---- THE DISTANT RIDGES ------------------------------------------------
       // Rebuilt 2026-08-04, the first time anything here was ever LOOKED AT: the
       // pitch was 35 deg down against a 21 deg half-fov, so every one of these
@@ -2383,7 +2499,90 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
                   {r:305,b:18,a:15,c:0x9dafc0,},{r:345,b:20,a:16,c:0xb8c8d6}];
       const hsh=(i,s)=>{const x=Math.sin(i*127.1+s*311.7)*43758.5453; return x-Math.floor(x);};
       OWSKYFOLLOW=[skyMesh];
-      RING.forEach((R_,ri)=>{
+      if(SKY2){
+      // ---- BET 12: THE RINGS ARE THE ONLY SKY THE GAMEPLAY FRAME EVER SEES ----
+      // Measured before designing (b12/base vs v1 pixel census): at the SHIPPED
+      // rig (OWPITCH 0.70 / OWTILT 0.16, df9a12d) the frame top sits 10 deg BELOW
+      // horizontal, so at 205-345 m every visible far surface is 36-60 m below
+      // eye. The old crests (b 14-20, a 13-16) all clear the frame top, which
+      // means the player's whole "sky" band was ONE ring's mid-body — a single
+      // near-flat fill. That fill is the "boring gray MS Paint picture". The
+      // dome above never shows at this rig, whatever is painted on it.
+      // So under sky2 the band is PAINTED LIKE THE REFERENCES' horizon: each
+      // ring's body carries three rows instead of two — a LUMINOUS VALLEY-MIST
+      // zone (the sky's own horizon hue at that azimuth, warm sun-side, cool
+      // opposite: s2hor) rising to a THIN DARK RIDGE STRIP at the crest — and
+      // ring 0 is dropped (b 5, a 6) so its silhouette actually ENTERS the frame
+      // at the high-eye stations instead of walling it. Vertex colours are
+      // LINEAR working-space values (decoded THREE.Colors) per the R12 contract;
+      // material.color stays white — the tint lives in the attribute.
+      // The R7 crest-noise recipe (K=24, 5 spans, 22% jitter) is kept verbatim.
+      // Blind-judge round 1 on the first build of this ("pale scalloped bands ...
+      // wallpaper; repetition and paleness break the depth read", old rings ranked
+      // ABOVE it) drove three changes here: per-ring PERIOD (K) so no two rings
+      // share a rhythm, a slow AMPLITUDE modulation so a ring has tall peaks and
+      // low saddles instead of one wave, and LOWER far crests so the stack stops
+      // short of the frame top and leaves the dome visible above it.
+      const RING2=[{r:205,b:4, a:5, k:18,seat:0.40},{r:255,b:9, a:8, k:26,seat:0.55},
+                   {r:305,b:11,a:9, k:22,seat:0.72},{r:345,b:13,a:11,k:30,seat:0.85}];
+      RING2.forEach((R_,ri)=>{
+        const K=R_.k, N=120, crest=[];
+        for(let i=0;i<=N;i++){
+          const c=i*K/N, c0=Math.floor(c), t=c-c0, sm=t*t*(3-2*t);
+          const lo=hsh(c0%K,ri+1), hi=hsh((c0+1)%K,ri+1);
+          const amp=R_.a*(0.55+0.90*hsh(c0%K,ri+71));      // peaks AND saddles
+          crest.push(R_.b + amp*(lo+(hi-lo)*sm) + R_.a*0.22*hsh(i,ri+9));
+        }
+        const land=new THREE.Color(S2.land);
+        // MIST BANKS (the refs' white clumps hugging the peaks): a second smoothed
+        // periodic noise line, same recipe as the crest, read as 0..1 bank density
+        // per column. A bank brightens the mist zones toward near-white and eats a
+        // little of the ridge strip above it — a cloud lying ON the band.
+        const bank=[];
+        for(let i=0;i<=N;i++){
+          const c=i/5, c0=Math.floor(c), t=c-c0, sm=t*t*(3-2*t);
+          const lo=hsh(c0%K,ri+51), hi=hsh((c0+1)%K,ri+51);
+          const b=lo+(hi-lo)*sm;
+          bank.push(Math.max(0,Math.min(1,(b-0.55)/0.35)));
+        }
+        const mistC=new THREE.Color(0xf6efe2);   // sRGB; warm-white mist, decoded linear
+        const colAt=(ang,i,zone)=>{   // 0 = skirt (brightest mist), 1 = mid, 2 = ridge strip
+          const hor=s2hor(ang);
+          const w=1.0+0.07*(hsh(i%K,ri+21)-0.5)+0.03*(hsh(i,ri+37)-0.5);
+          const c=zone===2 ? land.clone().lerp(hor,0.28*R_.seat)
+                : zone===1 ? hor.clone().lerp(land,0.62*(1-R_.seat))
+                           : hor.clone().lerp(land,0.34*(1-R_.seat));
+          const bk=bank[i]*(zone===2?0.30:zone===1?0.65:0.45);
+          if(bk>0) c.lerp(mistC,bk);
+          return c.multiplyScalar(w);
+        };
+        const v=[], cvc=[];
+        for(let i=0;i<N;i++){
+          const a0=(i/N)*Math.PI*2, a1=((i+1)/N)*Math.PI*2;
+          const x0=Math.cos(a0)*R_.r, z0=Math.sin(a0)*R_.r;
+          const x1=Math.cos(a1)*R_.r, z1=Math.sin(a1)*R_.r;
+          const h0=crest[i], h1=crest[i+1], m0=h0*0.45, m1=h1*0.45;
+          // skirt -> mid: the pooled valley mist, BRIGHT at the terrain seam and
+          // deepening as it climbs — aerial perspective inside the band itself
+          v.push(x0,-60,z0, x1,-60,z1, x1,m1,z1,  x0,-60,z0, x1,m1,z1, x0,m0,z0);
+          // mid -> crest: the ridge darkens only over its top ~55%
+          v.push(x0,m0,z0, x1,m1,z1, x1,h1,z1,  x0,m0,z0, x1,h1,z1, x0,h0,z0);
+          const S0=colAt(a0,i,0), S1=colAt(a1,i+1,0);
+          const M0=colAt(a0,i,1), M1=colAt(a1,i+1,1);
+          const C0=colAt(a0,i,2), C1=colAt(a1,i+1,2);
+          for(const c of [S0,S1,M1, S0,M1,M0]) cvc.push(c.r,c.g,c.b);
+          for(const c of [M0,M1,C1, M0,C1,C0]) cvc.push(c.r,c.g,c.b);
+        }
+        const g2=new THREE.BufferGeometry();
+        g2.setAttribute('position', new THREE.Float32BufferAttribute(v,3));
+        g2.setAttribute('color', new THREE.Float32BufferAttribute(cvc,3));
+        g2.computeVertexNormals();
+        const m2=new THREE.MeshBasicMaterial({color:0xffffff, vertexColors:true,
+          side:THREE.DoubleSide, fog:false, toneMapped:false});
+        const ridge=new THREE.Mesh(g2,m2); ridge.name='__owridge'+ri; ridge.renderOrder=-900+ri;
+        scene.add(ridge); SCENEMATS.add(m2); OWSKYMESH.add(ridge); OWSKYFOLLOW.push(ridge);
+      });
+      } else RING.forEach((R_,ri)=>{
         const K=24, N=K*5, v=[];                    // K periodic control points, 5 spans each
         const crest=[];
         for(let i=0;i<=N;i++){
@@ -2478,7 +2677,8 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     // swap (x, z, -y) it becomes the unit vector below, azimuth 238 deg in this
     // bundle's frame, which the census independently scores at ~82% lit. The
     // corridor between two golden-hour towns is now lit by the same sun they are.
-    const OWSUN_DIR=new THREE.Vector3(-0.437, 0.559, -0.704);   // el 34, az 238
+    // (OWSUN_DIR itself is declared above the sky block — Bet 12 made the sky
+    // derive from it, and a const cannot be read before its declaration.)
     if(OWCAM && Q.get('owlight')!=='0'){
       // SAVE THE COLOURS TOO, not just the intensities. AMBIENT and `dl` are
       // PAGE scope: the old teardown restored three numbers and would have let a

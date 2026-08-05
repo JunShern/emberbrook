@@ -161,3 +161,20 @@ continues when a lane slot frees — it is hygiene, not graphics.
 ## PT-050 (weave seam off-frame, seam-canon violation) — the unblock lane is RUNNING
 ## and carries the full receipt. BET 6 lane RUNNING in parallel (restarted after the
 ## session-limit kill).
+
+## BET 12 — THE SKY IS A REAL SKY (2026-08-06, PROTOTYPE COMPLETE behind ?sky2=1;
+## awaiting main's one-line default flip in play3d.html: `Q.get('sky2')==='1'` -> `!== '0'`).
+## User: "the sky is also clearly just a boring gray MS Paint picture" (r27-refused-gate).
+## Found first: at the shipped rig the frame top is 10 deg below horizontal — the gameplay
+## frame can never see the horizon/dome/ring-crests; the visible sky band is one ring's
+## mid-body, so the sky was painted INTO the ring bodies (3-row mist->ridge profile,
+## azimuth-aware golden-hour palette, mist banks) with a real shader dome (sun on
+## OWSUN_DIR, warm horizon, static cumulus — motion is Bet 11) for the vistas. Blind loop
+## round 1 refused the first build (wallpaper/paleness) and its list became round 2, which
+## WON EVERY MATCHED PAIR ("the difference between paper and atmosphere"); the sun-facing
+## vista ranked 3rd behind only the two FFIX references, twice. Lighting neutrality proven
+## (unchanged-ground |d| <= 0.8/255, L to 3 decimals). Gallery Round 23; LOOP.md BET 12.
+## RESIDUALS: the shipped-rig band is ring 0's body only — the next sky lever is the
+## CAMERA (a rig that shows the horizon shows the whole system); band-vs-terrain
+## hour-agreement (warm ground / cool veil) is a grade item; sun-disc height vs horizon
+## colour tracks the ratified key's el 34 — moving it is a user call, not a lane's.
