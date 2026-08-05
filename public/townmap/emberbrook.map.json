@@ -1032,7 +1032,13 @@
     {
       "from": "gate-court",
       "to": "sigil-gate",
-      "type": "path"
+      "type": "path",
+      "waypoints": [
+        [74.6, 122.5, 2.8],
+        [74.6, 125.0, 2.8],
+        [76.5, 127.3, 2.85]
+      ],
+      "note": "PT-20260805-055: the court centre line crosses the culvert CHANNEL HEAD (map x 75.5..81, y 123.0..124.5 — visible paving, no walk record), so a straight gate-court->sigil-gate polyline is exactly the line wayAim fails closed on and the full NEW GAME receipt died pounding. THE FLANK IS THE DESIGN: the pad wraps the channel on x<=75.4 and x>=81.5. These waypoints are the west flank, verbatim from the measured drive (_court_probe --way, 4/4 legs BOTH ways, run-20260805-182057): the polyline is the fix, the geometry was always passable."
     },
     {
       "from": "gate-court",

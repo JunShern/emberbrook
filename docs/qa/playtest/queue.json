@@ -19,7 +19,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 35.57 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.50, 0.40]; my goal was \"Follow the road north by walking along the stone path past the monument.\".",
    "expected": "To walk about 35.57 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 35.57 m short — twice in this run. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 35.57 m short \u2014 twice in this run. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -138,7 +138,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-03T01:35:48.597Z"
    },
    "run": "run-20260803-011827",
@@ -492,7 +492,7 @@
    "verification": {
     "status": "UNVERIFIED",
     "instrument": null,
-    "evidence": "no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
+    "evidence": "no instrument in this repo answers this claim \u2014 it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
     "at": "2026-08-05T12:42:11.205Z"
    },
    "run": "run-20260803-113942",
@@ -728,7 +728,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:36:46.774Z"
    },
    "run": "run-20260803-120553",
@@ -846,7 +846,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:36:46.776Z"
    },
    "run": "run-20260803-122026",
@@ -1096,7 +1096,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (5.7 m apart, 339 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (5.7 m apart, 339 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T10:37:02.183Z"
    },
    "run": "run-20260803-122026",
@@ -1107,7 +1107,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 5.7 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.45, 0.60]; my goal was \"Follow the road north into the village.\".",
    "expected": "To walk about 5.7 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 5.7 m short — twice in this run. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 5.7 m short \u2014 twice in this run. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -1227,7 +1227,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (8.7 m apart, 1367 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (8.7 m apart, 1367 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T10:37:17.526Z"
    },
    "run": "run-20260803-122026",
@@ -1238,7 +1238,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 8.74 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.50, 0.70]; my goal was \"Walk down to the open ground connecting to the village dirt road, then follow it north.\".",
    "expected": "To walk about 8.74 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 8.74 m short — twice in this run. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 8.74 m short \u2014 twice in this run. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -1358,7 +1358,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (8.7 m apart, 1367 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (8.7 m apart, 1367 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T10:37:32.789Z"
    },
    "run": "run-20260803-122026",
@@ -2539,7 +2539,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "the run's own run.jsonl (percept.battle + truth.locked, step by step)",
-    "evidence": "The battle ENDED, four steps before this report was written. Straight out of run-20260803-203813/run.jsonl: step 12 percept.battle.log is 'Duskpad is defeated!' with foes []; steps 13-15 are the Victory card (meanL 36.7, UILOCK held); step 16 has no battle, UILOCK released, and the agent walks on for another 29 steps. Nothing softlocked. THIS WAS THE HARNESS: the stuck detector measures metres over a six-step window, and a battle is exactly a window in which zero metres is correct play. It fired at step 12 because the body had not moved since step 7 — the battle's first step — and the interview it paid for produced this P0 against a fight that had already been won. Fixed in episode.mjs: a step where UILOCK is held or a battle/dialogue/card is on screen is dropped from the window rather than counted. A real modal freeze is still caught by the frame gate's separate `frozen` check.",
+    "evidence": "The battle ENDED, four steps before this report was written. Straight out of run-20260803-203813/run.jsonl: step 12 percept.battle.log is 'Duskpad is defeated!' with foes []; steps 13-15 are the Victory card (meanL 36.7, UILOCK held); step 16 has no battle, UILOCK released, and the agent walks on for another 29 steps. Nothing softlocked. THIS WAS THE HARNESS: the stuck detector measures metres over a six-step window, and a battle is exactly a window in which zero metres is correct play. It fired at step 12 because the body had not moved since step 7 \u2014 the battle's first step \u2014 and the interview it paid for produced this P0 against a fight that had already been won. Fixed in episode.mjs: a step where UILOCK is held or a battle/dialogue/card is on screen is dropped from the window rather than counted. A real modal freeze is still caught by the frame gate's separate `frozen` check.",
     "at": "2026-08-03"
    },
    "run": "run-20260803-203813",
@@ -2941,7 +2941,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"emb-cine\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"emb-cine\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:37:32.790Z"
    },
    "run": "run-20260803-213400",
@@ -3136,7 +3136,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (16.2 m apart, 1661 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (16.2 m apart, 1661 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T10:37:49.406Z"
    },
    "run": "run-20260803-214720",
@@ -3344,7 +3344,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"emb-cine\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"emb-cine\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:37:49.408Z"
    },
    "run": "run-20260803-214720",
@@ -3538,7 +3538,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:37:49.410Z"
    },
    "run": "run-20260803-221232",
@@ -3549,7 +3549,7 @@
    "title": "The player can leave the chapter on its first frame, and the objective follows them out",
    "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
    "expected": "To carry on with the objective the game was showing me.",
-   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Down into the hollow — find whoever runs the locks\") still refers to where I was. Nothing here can continue the chapter.",
+   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Down into the hollow \u2014 find whoever runs the locks\") still refers to where I was. Nothing here can continue the chapter.",
    "probe": null,
    "frames": [
     "docs/qa/playtest/runs/run-20260803-221232/frames/step-004.jpg",
@@ -3557,7 +3557,7 @@
     "docs/qa/playtest/runs/run-20260803-221232/frames/step-006.jpg"
    ],
    "onscreen": {
-    "objective": "Down into the hollow — find whoever runs the locks",
+    "objective": "Down into the hollow \u2014 find whoever runs the locks",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -3737,7 +3737,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (16.0 m apart, 3363 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (16.0 m apart, 3363 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T10:38:04.825Z"
    },
    "run": "run-20260803-221232",
@@ -3769,7 +3769,7 @@
     "docs/qa/playtest/runs/run-20260803-221232/frames/step-020.jpg"
    ],
    "onscreen": {
-    "objective": "Down into the hollow — find whoever runs the locks",
+    "objective": "Down into the hollow \u2014 find whoever runs the locks",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -3950,7 +3950,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (10.6 m apart, 1138 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (10.6 m apart, 1138 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T10:38:21.070Z"
    },
    "run": "run-20260803-221232",
@@ -3982,7 +3982,7 @@
     "docs/qa/playtest/runs/run-20260803-221232/frames/step-043.jpg"
    ],
    "onscreen": {
-    "objective": "Down into the hollow — find whoever runs the locks",
+    "objective": "Down into the hollow \u2014 find whoever runs the locks",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -4163,7 +4163,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"ow-valley\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:38:21.071Z"
    },
    "run": "run-20260803-230631",
@@ -4174,7 +4174,7 @@
    "title": "The player can leave the chapter on its first frame, and the objective follows them out",
    "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
    "expected": "To carry on with the objective the game was showing me.",
-   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Through the Dellhollow gate — find whoever runs the locks\") still refers to where I was. Nothing here can continue the chapter.",
+   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Through the Dellhollow gate \u2014 find whoever runs the locks\") still refers to where I was. Nothing here can continue the chapter.",
    "probe": null,
    "frames": [
     "docs/qa/playtest/runs/run-20260803-230631/frames/step-004.jpg",
@@ -4182,7 +4182,7 @@
     "docs/qa/playtest/runs/run-20260803-230631/frames/step-006.jpg"
    ],
    "onscreen": {
-    "objective": "Through the Dellhollow gate — find whoever runs the locks",
+    "objective": "Through the Dellhollow gate \u2014 find whoever runs the locks",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -4362,7 +4362,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (10.9 m apart, 1471 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (10.9 m apart, 1471 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T10:38:36.263Z"
    },
    "run": "run-20260803-230631",
@@ -4394,7 +4394,7 @@
     "docs/qa/playtest/runs/run-20260803-230631/frames/step-018.jpg"
    ],
    "onscreen": {
-    "objective": "Through the Dellhollow gate — find whoever runs the locks",
+    "objective": "Through the Dellhollow gate \u2014 find whoever runs the locks",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -4575,7 +4575,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"del-inn-int\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"del-inn-int\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:38:36.265Z"
    },
    "run": "run-20260803-234940",
@@ -4586,7 +4586,7 @@
    "title": "The player can leave the chapter on its first frame, and the objective follows them out",
    "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
    "expected": "To carry on with the objective the game was showing me.",
-   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Find whoever runs the locks — the lockhead, above Lock Five\") still refers to where I was. Nothing here can continue the chapter.",
+   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Find whoever runs the locks \u2014 the lockhead, above Lock Five\") still refers to where I was. Nothing here can continue the chapter.",
    "probe": null,
    "frames": [
     "docs/qa/playtest/runs/run-20260803-234940/frames/step-035.jpg",
@@ -4594,7 +4594,7 @@
     "docs/qa/playtest/runs/run-20260803-234940/frames/step-037.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -4776,7 +4776,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"del-cookhouse-int\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive, ch2.jam. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"del-cookhouse-int\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive, ch2.jam. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:38:36.266Z"
    },
    "run": "run-20260804-000237",
@@ -4787,7 +4787,7 @@
    "title": "The player can leave the chapter on its first frame, and the objective follows them out",
    "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
    "expected": "To carry on with the objective the game was showing me.",
-   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Down to the lock apron — the girl who was in the water\") still refers to where I was. Nothing here can continue the chapter.",
+   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Down to the lock apron \u2014 the girl who was in the water\") still refers to where I was. Nothing here can continue the chapter.",
    "probe": null,
    "frames": [
     "docs/qa/playtest/runs/run-20260804-000237/frames/step-014.jpg",
@@ -4795,7 +4795,7 @@
     "docs/qa/playtest/runs/run-20260804-000237/frames/step-016.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -4983,7 +4983,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"del-cookhouse-int\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive, ch2.jam. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"del-cookhouse-int\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.poppy, ch1.see.mara, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road, ch2.arrive, ch2.jam. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-04T10:38:36.267Z"
    },
    "run": "run-20260804-013303",
@@ -4994,7 +4994,7 @@
    "title": "The player can leave the chapter on its first frame, and the objective follows them out",
    "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
    "expected": "To carry on with the objective the game was showing me.",
-   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Down to the lock apron — the girl who was in the water\") still refers to where I was. Nothing here can continue the chapter.",
+   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Down to the lock apron \u2014 the girl who was in the water\") still refers to where I was. Nothing here can continue the chapter.",
    "probe": null,
    "frames": [
     "docs/qa/playtest/runs/run-20260804-013303/frames/step-029.jpg",
@@ -5002,7 +5002,7 @@
     "docs/qa/playtest/runs/run-20260804-013303/frames/step-031.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -5190,7 +5190,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (4.7 m apart, 325 cells filled, via 2 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (4.7 m apart, 325 cells filled, via 2 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T10:38:45.006Z"
    },
    "run": "run-20260804-101155",
@@ -5222,7 +5222,7 @@
     "docs/qa/playtest/runs/run-20260804-101155/frames/step-079.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -5421,7 +5421,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: UNREACHABLE — the TARGET anchor [60.47,16.58,-3.53] is not standable in the running game, and the nearest ground the player can reach from [56.47,17.4,-7.84] is 6.0 m away (3411 cells filled). No walk can ever trigger this beat.",
+    "evidence": "where I stood -> where I pointed: UNREACHABLE \u2014 the TARGET anchor [60.47,16.58,-3.53] is not standable in the running game, and the nearest ground the player can reach from [56.47,17.4,-7.84] is 6.0 m away (3411 cells filled). No walk can ever trigger this beat.",
     "at": "2026-08-04T10:38:51.286Z"
    },
    "run": "run-20260804-101155",
@@ -5453,7 +5453,7 @@
     "docs/qa/playtest/runs/run-20260804-101155/frames/step-124.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -5693,7 +5693,7 @@
     "docs/qa/playtest/runs/run-20260804-112506/frames/step-029.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -5906,7 +5906,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (3.1 m apart, 86 cells filled, via 1 in-scene edge)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (3.1 m apart, 86 cells filled, via 1 in-scene edge)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T11:34:10.567Z"
    },
    "run": "run-20260804-112506",
@@ -5917,7 +5917,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 3.14 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.61, 0.72]; my goal was \"Walk down the stairs and around through the lower path to reach the head-gate winches.\".",
    "expected": "To walk about 3.14 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 3.14 m short — twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 3.14 m short \u2014 twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -5937,7 +5937,7 @@
     "docs/qa/playtest/runs/run-20260804-112506/frames/step-055-stall.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -6147,7 +6147,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (1.6 m apart, 15 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (1.6 m apart, 15 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T11:34:16.953Z"
    },
    "run": "run-20260804-112506",
@@ -6179,7 +6179,7 @@
     "docs/qa/playtest/runs/run-20260804-112506/frames/step-057.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -6389,7 +6389,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (1.6 m apart, 15 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (1.6 m apart, 15 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T11:34:23.332Z"
    },
    "run": "run-20260804-112506",
@@ -6421,7 +6421,7 @@
     "docs/qa/playtest/runs/run-20260804-112506/frames/step-058.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -6631,7 +6631,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T19:06:21.044Z"
    },
    "run": "run-20260804-185107",
@@ -6663,7 +6663,7 @@
     "docs/qa/playtest/runs/run-20260804-185107/frames/step-022.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -6867,7 +6867,7 @@
    "verification": {
     "status": "UNVERIFIED",
     "instrument": null,
-    "evidence": "no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
+    "evidence": "no instrument in this repo answers this claim \u2014 it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
     "at": "2026-08-05T12:42:11.212Z"
    },
    "run": "run-20260804-185107",
@@ -6877,7 +6877,7 @@
    "severity": "P1",
    "title": "I spent 12 turns inside del-inn-int and nothing in the room answered me",
    "doing": "I went through a door the game offered me and tried to talk to everyone and everything inside.",
-   "expected": "Somebody to talk to, something to buy, or something to do — a room the game lets me into should hold something.",
+   "expected": "Somebody to talk to, something to buy, or something to do \u2014 a room the game lets me into should hold something.",
    "happened": "12 turns in this room and not one dialogue box, shop or menu opened. The only figures in here are the party I walked in with.",
    "probe": null,
    "frames": [
@@ -6886,7 +6886,7 @@
     "docs/qa/playtest/runs/run-20260804-185107/frames/step-024.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -7090,7 +7090,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T19:06:27.037Z"
    },
    "run": "run-20260804-185107",
@@ -7122,7 +7122,7 @@
     "docs/qa/playtest/runs/run-20260804-185107/frames/step-065.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -7328,7 +7328,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (1.0 m apart, 1 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (1.0 m apart, 1 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-04T19:06:36.974Z"
    },
    "run": "run-20260804-185107",
@@ -7360,7 +7360,7 @@
     "docs/qa/playtest/runs/run-20260804-185107/frames/step-077.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [
      "Down to the Shelf street? [E]"
     ],
@@ -7568,7 +7568,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (4.8 m apart, 150 cells filled, via 2 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (4.8 m apart, 150 cells filled, via 2 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-05T01:01:25.569Z"
    },
    "run": "run-20260804-194447",
@@ -7600,7 +7600,7 @@
     "docs/qa/playtest/runs/run-20260804-194447/frames/step-055.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -7808,7 +7808,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (23.7 m apart, 1557 cells filled, via 3 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (23.7 m apart, 1557 cells filled, via 3 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-05T01:01:31.425Z"
    },
    "run": "run-20260804-204212",
@@ -7840,7 +7840,7 @@
     "docs/qa/playtest/runs/run-20260804-204212/frames/step-008.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -8049,7 +8049,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (4.6 m apart, 39 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (4.6 m apart, 39 cells filled on foot)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-05T01:01:37.523Z"
    },
    "run": "run-20260804-234816",
@@ -8081,7 +8081,7 @@
     "docs/qa/playtest/runs/run-20260804-234816/frames/step-020.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [
      "Talk to the the cook? [E]"
     ],
@@ -8321,7 +8321,7 @@
     "docs/qa/playtest/runs/run-20260805-003146/frames/step-009.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -8530,7 +8530,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (24.1 m apart, 1649 cells filled, via 3 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (24.1 m apart, 1649 cells filled, via 3 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-05T01:01:49.297Z"
    },
    "run": "run-20260805-003146",
@@ -8562,7 +8562,7 @@
     "docs/qa/playtest/runs/run-20260805-003146/frames/step-011.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -8771,7 +8771,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (8.1 m apart, 386 cells filled, via 2 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.",
+    "evidence": "where I stood -> where I pointed: reachable (8.1 m apart, 386 cells filled, via 2 in-scene edges)\n  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model \u2014 confirm with tools/walk_bodygate.mjs.",
     "at": "2026-08-05T01:01:55.132Z"
    },
    "run": "run-20260805-005322",
@@ -8803,7 +8803,7 @@
     "docs/qa/playtest/runs/run-20260805-005322/frames/step-011.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -9044,7 +9044,7 @@
     "docs/qa/playtest/runs/run-20260805-005322/frames/step-017.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -9285,7 +9285,7 @@
     "docs/qa/playtest/runs/run-20260805-005322/frames/step-023.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -9494,7 +9494,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.5,24.07,-6.49], 0.29 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.5,24.07,-6.49], 0.29 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T04:33:37.809Z"
    },
    "run": "run-20260805-013331",
@@ -9526,7 +9526,7 @@
     "docs/qa/playtest/runs/run-20260805-013331/frames/step-044.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight, at Lock Five — the head-gate winches",
+    "objective": "Midnight, at Lock Five \u2014 the head-gate winches",
     "prompts": [
      "Down to the Shelf street? [E]"
     ],
@@ -9734,7 +9734,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (0.6 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [36.22,0.46,-17.58], 0.56 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (0.6 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [36.22,0.46,-17.58], 0.56 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T04:33:42.105Z"
    },
    "run": "run-20260805-015721",
@@ -9766,7 +9766,7 @@
     "docs/qa/playtest/runs/run-20260805-015721/frames/step-151.jpg"
    ],
    "onscreen": {
-    "objective": "See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond",
+    "objective": "See to them (the cat is fine \u2713) \u2014 Poppy at her stall, Mara at the Heartlight, Finn at the pond",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -9929,7 +9929,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (2.0 m apart, 18 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [45.6,0.46,-20.53], 0.54 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (2.0 m apart, 18 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [45.6,0.46,-20.53], 0.54 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T04:33:46.458Z"
    },
    "run": "run-20260805-015721",
@@ -9961,7 +9961,7 @@
     "docs/qa/playtest/runs/run-20260805-015721/frames/step-163.jpg"
    ],
    "onscreen": {
-    "objective": "See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond",
+    "objective": "See to them (the cat is fine \u2713) \u2014 Poppy at her stall, Mara at the Heartlight, Finn at the pond",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -10124,7 +10124,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (1.5 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [4.79,0,-5.55], 0.54 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (1.5 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [4.79,0,-5.55], 0.54 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T04:33:54.361Z"
    },
    "run": "run-20260805-015721",
@@ -10156,7 +10156,7 @@
     "docs/qa/playtest/runs/run-20260805-015721/frames/step-188.jpg"
    ],
    "onscreen": {
-    "objective": "See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond",
+    "objective": "See to them (the cat is fine \u2713) \u2014 Poppy at her stall, Mara at the Heartlight, Finn at the pond",
     "prompts": [
      "Leave Item Shop? [E]",
      "Talk to the shopkeeper? [E]"
@@ -10322,7 +10322,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (2.8 m apart, 39 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [58.88,0.26,-14.73], 0.6 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (2.8 m apart, 39 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [58.88,0.26,-14.73], 0.6 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T04:33:58.695Z"
    },
    "run": "run-20260805-022035",
@@ -10354,7 +10354,7 @@
     "docs/qa/playtest/runs/run-20260805-022035/frames/step-151.jpg"
    ],
    "onscreen": {
-    "objective": "North, out of the village — the Old Gate",
+    "objective": "North, out of the village \u2014 the Old Gate",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -10562,7 +10562,7 @@
     "docs/qa/playtest/runs/run-20260805-040031/frames/step-017.jpg"
    ],
    "onscreen": {
-    "objective": "See to them (Poppy ✓) — Mara at the Heartlight, Finn at the pond, the cat back up the north road",
+    "objective": "See to them (Poppy \u2713) \u2014 Mara at the Heartlight, Finn at the pond, the cat back up the north road",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -10749,7 +10749,7 @@
     "docs/qa/playtest/runs/run-20260805-040031/frames/step-029.jpg"
    ],
    "onscreen": {
-    "objective": "See to them (Poppy ✓) — Mara at the Heartlight, Finn at the pond, the cat back up the north road",
+    "objective": "See to them (Poppy \u2713) \u2014 Mara at the Heartlight, Finn at the pond, the cat back up the north road",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -10904,7 +10904,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "llm_playtester spine detector (public/game/story.json vs the running scene)",
-    "evidence": "The body was in \"emb-cine\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.mara, ch1.see.poppy, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.",
+    "evidence": "The body was in \"emb-cine\" for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.mara, ch1.see.poppy, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff. This is a mechanical fact about the game, not a model opinion \u2014 there is nothing left to measure. What to DO about it is a design decision.",
     "at": "2026-08-05T11:23:39.546Z"
    },
    "run": "run-20260805-044813",
@@ -11105,7 +11105,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (1.0 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [19.02,24.07,-5.17], 0.6 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (1.0 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [19.02,24.07,-5.17], 0.6 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T11:23:50.876Z"
    },
    "run": "run-20260805-044813",
@@ -11137,7 +11137,7 @@
     "docs/qa/playtest/runs/run-20260805-044813/frames/step-156.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -11332,7 +11332,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.83,24.07,-6.26], 0.34 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.83,24.07,-6.26], 0.34 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T11:24:02.116Z"
    },
    "run": "run-20260805-044813",
@@ -11364,7 +11364,7 @@
     "docs/qa/playtest/runs/run-20260805-044813/frames/step-177.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [
      "Down to the Shelf street? [E]"
     ],
@@ -11561,7 +11561,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.74,24.07,-5.89], 0.39 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.74,24.07,-5.89], 0.39 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T11:24:13.241Z"
    },
    "run": "run-20260805-044813",
@@ -11593,7 +11593,7 @@
     "docs/qa/playtest/runs/run-20260805-044813/frames/step-194.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [
      "Down to the Shelf street? [E]"
     ],
@@ -11790,7 +11790,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.74,24.07,-5.89], 0.39 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.74,24.07,-5.89], 0.39 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T11:24:31.699Z"
    },
    "run": "run-20260805-044813",
@@ -11822,7 +11822,7 @@
     "docs/qa/playtest/runs/run-20260805-044813/frames/step-206.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [
      "Down to the Shelf street? [E]"
     ],
@@ -12019,7 +12019,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.71,24.07,-6.03], 0.27 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (0.3 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [20.71,24.07,-6.03], 0.27 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T11:24:42.901Z"
    },
    "run": "run-20260805-044813",
@@ -12051,7 +12051,7 @@
     "docs/qa/playtest/runs/run-20260805-044813/frames/step-218.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [
      "Down to the Shelf street? [E]"
     ],
@@ -12280,7 +12280,7 @@
     "docs/qa/playtest/runs/run-20260805-044813/frames/step-235.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -12507,7 +12507,7 @@
     "docs/qa/playtest/runs/run-20260805-044813/frames/step-287.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -12706,7 +12706,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (0.8 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [17.47,24.07,-5.16], 0.57 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (0.8 m apart, 1 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [17.47,24.07,-5.16], 0.57 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T11:25:17.137Z"
    },
    "run": "run-20260805-054441",
@@ -12738,7 +12738,7 @@
     "docs/qa/playtest/runs/run-20260805-054441/frames/step-010.jpg"
    ],
    "onscreen": {
-    "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+    "objective": "Find whoever runs the locks \u2014 the lockhead, above Lock Five",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -12954,7 +12954,7 @@
     "docs/qa/playtest/runs/run-20260805-054441/frames/step-062.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [
      "Enter Cookhouse? [E]"
     ],
@@ -13151,7 +13151,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: UNREACHABLE — [72.07,1.25,-29.19] -> [68.11,6.91,-29.5]: 1467 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 1.9 m away (at 68,1.79,-27.6, 5.12 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] — a 5.71 m step.",
+    "evidence": "where I stood -> where I pointed: UNREACHABLE \u2014 [72.07,1.25,-29.19] -> [68.11,6.91,-29.5]: 1467 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 1.9 m away (at 68,1.79,-27.6, 5.12 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] \u2014 a 5.71 m step.",
     "at": "2026-08-05T11:25:34.181Z"
    },
    "run": "run-20260805-054441",
@@ -13183,7 +13183,7 @@
     "docs/qa/playtest/runs/run-20260805-054441/frames/step-079.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -13376,7 +13376,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: UNREACHABLE — [70.76,1.25,-28.01] -> [65.48,6.91,-29.5]: 1467 cells filled from the start, 47 from the target, and they never meet. Nearest standable cell to the target is 1.1 m away (at 65.6,1.48,-28.4, 5.43 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] — a 5.71 m step.",
+    "evidence": "where I stood -> where I pointed: UNREACHABLE \u2014 [70.76,1.25,-28.01] -> [65.48,6.91,-29.5]: 1467 cells filled from the start, 47 from the target, and they never meet. Nearest standable cell to the target is 1.1 m away (at 65.6,1.48,-28.4, 5.43 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] \u2014 a 5.71 m step.",
     "at": "2026-08-05T11:25:39.839Z"
    },
    "run": "run-20260805-054441",
@@ -13408,7 +13408,7 @@
     "docs/qa/playtest/runs/run-20260805-054441/frames/step-092.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -13601,7 +13601,7 @@
    "verification": {
     "status": "VERIFIED",
     "instrument": "tools/reach_probe.mjs (in the running page)",
-    "evidence": "where I stood -> where I pointed: UNREACHABLE — [70.76,1.25,-28.01] -> [66.43,6.91,-29.5]: 1467 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 1.4 m away (at 65.6,1.48,-28.4, 5.43 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] — a 5.71 m step.",
+    "evidence": "where I stood -> where I pointed: UNREACHABLE \u2014 [70.76,1.25,-28.01] -> [66.43,6.91,-29.5]: 1467 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 1.4 m away (at 65.6,1.48,-28.4, 5.43 m off in height); the two regions come within 0.4 m of each other between [61.2,1.2,-28.8] and [61.6,6.91,-28.8] \u2014 a 5.71 m step.",
     "at": "2026-08-05T11:25:45.455Z"
    },
    "run": "run-20260805-054441",
@@ -13633,7 +13633,7 @@
     "docs/qa/playtest/runs/run-20260805-054441/frames/step-105.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -13826,7 +13826,7 @@
    "verification": {
     "status": "REFUTED",
     "instrument": "tools/reach_probe.mjs + SIM.move (in the running page)",
-    "evidence": "where I stood -> where I pointed: reachable (4.5 m apart, 35 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [74.58,1.25,-29.23], 0.53 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
+    "evidence": "where I stood -> where I pointed: reachable (4.5 m apart, 35 cells filled on foot)\n  The ground is connected AND SIM.move drives it (ended [74.58,1.25,-29.23], 0.53 m from the target). So the world did not block the walk \u2014 the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.",
     "at": "2026-08-05T11:25:56.703Z"
    },
    "run": "run-20260805-054441",
@@ -13858,7 +13858,7 @@
     "docs/qa/playtest/runs/run-20260805-054441/frames/step-118.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -14083,7 +14083,7 @@
     "docs/qa/playtest/runs/run-20260805-072356/frames/step-035.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [
      "Talk to the cook? [E]"
     ],
@@ -14307,7 +14307,7 @@
     "docs/qa/playtest/runs/run-20260805-072356/frames/step-036.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [
      "Talk to the cook? [E]"
     ],
@@ -14531,7 +14531,7 @@
     "docs/qa/playtest/runs/run-20260805-072356/frames/step-060.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -14733,7 +14733,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 4.34 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.47, 0.65]; my goal was \"Follow the green mossy platforms down to reach Lock Five.\".",
    "expected": "To walk about 4.34 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 4.34 m short — twice in this run. All five headings were pushed (5 bursts at ~159 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 4.34 m short \u2014 twice in this run. All five headings were pushed (5 bursts at ~159 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -14753,7 +14753,7 @@
     "docs/qa/playtest/runs/run-20260805-072356/frames/step-067-stall.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -14955,7 +14955,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 3.41 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.55, 0.58]; my goal was \"Descend the stairs by walking right to the stair landing and then down to Lock Five.\".",
    "expected": "To walk about 3.41 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 3.41 m short — twice in this run. All five headings were pushed (5 bursts at ~161 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 3.41 m short \u2014 twice in this run. All five headings were pushed (5 bursts at ~161 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -14975,7 +14975,7 @@
     "docs/qa/playtest/runs/run-20260805-072356/frames/step-070-stall.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -15164,7 +15164,7 @@
    "id": "PT-20260805-032",
    "created": "2026-08-05T11:03:30.538Z",
    "verification": {
-    "status": "REFUTED against the game · VERIFIED against the harness",
+    "status": "REFUTED against the game \u00b7 VERIFIED against the harness",
     "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
     "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
     "at": "2026-08-05T11:28:59.254Z"
@@ -15198,7 +15198,7 @@
     "docs/qa/playtest/runs/run-20260805-105834/frames/step-038.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -15389,7 +15389,7 @@
    "id": "PT-20260805-033",
    "created": "2026-08-05T11:03:43.572Z",
    "verification": {
-    "status": "REFUTED against the game · VERIFIED against the harness",
+    "status": "REFUTED against the game \u00b7 VERIFIED against the harness",
     "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
     "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
     "at": "2026-08-05T11:28:59.260Z"
@@ -15423,7 +15423,7 @@
     "docs/qa/playtest/runs/run-20260805-105834/frames/step-038.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -15614,7 +15614,7 @@
    "id": "PT-20260805-034",
    "created": "2026-08-05T11:05:08.047Z",
    "verification": {
-    "status": "REFUTED against the game · VERIFIED against the harness",
+    "status": "REFUTED against the game \u00b7 VERIFIED against the harness",
     "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
     "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
     "at": "2026-08-05T11:28:59.264Z"
@@ -15648,7 +15648,7 @@
     "docs/qa/playtest/runs/run-20260805-105834/frames/step-046.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -15839,7 +15839,7 @@
    "id": "PT-20260805-035",
    "created": "2026-08-05T11:07:10.211Z",
    "verification": {
-    "status": "REFUTED against the game · VERIFIED against the harness",
+    "status": "REFUTED against the game \u00b7 VERIFIED against the harness",
     "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
     "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
     "at": "2026-08-05T11:28:59.268Z"
@@ -15873,7 +15873,7 @@
     "docs/qa/playtest/runs/run-20260805-105834/frames/step-057.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -16064,7 +16064,7 @@
    "id": "PT-20260805-036",
    "created": "2026-08-05T11:07:58.739Z",
    "verification": {
-    "status": "REFUTED against the game · VERIFIED against the harness",
+    "status": "REFUTED against the game \u00b7 VERIFIED against the harness",
     "instrument": "tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs",
     "evidence": "STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).\nBUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the\nroute the game routes through (east, the quay-west>weave cut) walks 3/3 legs BOTH ways, ending\n[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;\nonly ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any\ndirection', and that is FALSE.\nWHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier\n5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --\n'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.\nTHE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc\n[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the\nticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)\nshows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on\nwalk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.\nFixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.",
     "at": "2026-08-05T11:28:59.272Z"
@@ -16098,7 +16098,7 @@
     "docs/qa/playtest/runs/run-20260805-105834/frames/step-062.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -16323,7 +16323,7 @@
     "docs/qa/playtest/runs/run-20260805-112819/frames/step-015.jpg"
    ],
    "onscreen": {
-    "objective": "Down to the lock apron — the girl who was in the water",
+    "objective": "Down to the lock apron \u2014 the girl who was in the water",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -16511,7 +16511,7 @@
    "verification": {
     "status": "REFUTED as filed (round 24, recorded here in round 25)",
     "instrument": "tools/_court_probe.mjs --comp/--grid + tools/reach_probe.mjs",
-    "evidence": "--comp at the filed cell [61.85,1.25,-25.06] returns SEED UNSTANDABLE: under WALKLOCK there is\nno walk network under the cell the agent filed from. --grid walk:true shows why — the fish\ndock's east side at that z is a 0.4 m curtain of VISIBLE floor carrying no walk network, while\nthe real exit lane is two metres SOUTH at z -27.0..-27.4, where the network runs continuously\nfrom x 58 to x 70. reach_probe maren -> cottage door is ok=true. The ticket named a tier; the\ncause was a lane. FIXLOG round 24.\nTHE LAUNDRY, SEPARATELY: t2c_W9_laundry_planking_5 leaves 1.28 m over walk against BODY_H 1.30\nand severs the crossing one tier up. Recorded in gate_cloth_headroom.py's UNFIXED register and\ndeliberately NOT fixed — it owes a re-bake and the story steps over it (weave>crossing is a cut\nwhose spawn lands 9.3 m east).",
+    "evidence": "--comp at the filed cell [61.85,1.25,-25.06] returns SEED UNSTANDABLE: under WALKLOCK there is\nno walk network under the cell the agent filed from. --grid walk:true shows why \u2014 the fish\ndock's east side at that z is a 0.4 m curtain of VISIBLE floor carrying no walk network, while\nthe real exit lane is two metres SOUTH at z -27.0..-27.4, where the network runs continuously\nfrom x 58 to x 70. reach_probe maren -> cottage door is ok=true. The ticket named a tier; the\ncause was a lane. FIXLOG round 24.\nTHE LAUNDRY, SEPARATELY: t2c_W9_laundry_planking_5 leaves 1.28 m over walk against BODY_H 1.30\nand severs the crossing one tier up. Recorded in gate_cloth_headroom.py's UNFIXED register and\ndeliberately NOT fixed \u2014 it owes a re-bake and the story steps over it (weave>crossing is a cut\nwhose spawn lands 9.3 m east).",
     "at": "2026-08-05T12:42:11.151Z"
    },
    "run": "run-20260805-112819",
@@ -16543,7 +16543,7 @@
     "docs/qa/playtest/runs/run-20260805-112819/frames/step-055.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -16773,7 +16773,7 @@
     "docs/qa/playtest/runs/run-20260805-121612/frames/step-023.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -16967,9 +16967,9 @@
    "id": "PT-20260805-040",
    "created": "2026-08-05T12:21:40.178Z",
    "verification": {
-    "status": "THE HOLE IS VERIFIED · THE MECHANISM IS STILL UNNAMED · ONE SUSPECT REFUTED",
+    "status": "THE HOLE IS VERIFIED \u00b7 THE MECHANISM IS STILL UNNAMED \u00b7 ONE SUSPECT REFUTED",
     "instrument": "tools/_court_probe.mjs --at/--way + tools/scenegraph_derive.mjs + docs/qa/playtest/runs/run-20260805-121612/run.jsonl",
-    "evidence": "THE HOLE IS REAL. --at along z -24.0: the weave deck's last floor is x 73.2 at y 7.90, x 73.6\nis cx_rail at 7.53, and from x 74.0 east there is NO floor at all above the river plane at\ny -3.90. The run went [70.41,7.87,-25.48] (step 25) -> [74.05,-3.90,-23.98] (step 26) and sat\nthere for seven steps.\n\nA SUSPECT WAS RAISED AND REFUTED IN THE SAME PASS, WHICH IS WHY IT IS WRITTEN DOWN. The\nscenegraph's lockfive>weave arrival spawn is [72.452,7.75,-24.338] — 1.64 m in plan from the\nlanding — and _court_probe --at reports EVERY floor there (7.90/7.87/7.81) blocked by cx_rail,\nwith nothing below until -3.90. That looked like the answer. IT IS NOT: --way tp'd to that\nexact spawn walks 2/2 legs to [70.71,7.87,-25.03] and 2/2 back, no stall, either direction.\nLESSON, and it is the same shape as round 24's: --at's second column answers 'what intersects\na body box raised at this floor', NOT 'can a body stand here' — the settle picks a workable\nfloor and the drive proves it. Do not read a blocker name as a verdict.\nscenegraph_derive emits NO warning for that arrival, and its ARRIVAL vs CAMERA-CUT BANDS table\npasses it.\n\nSTILL UNNAMED: what moved the body 11.8 m down. walkStep provably refuses to walk off that lip\nunder WALKLOCK and jump is disabled in a routed town. Remaining candidates, none measured:\nsgCorrect, the marooned unstick, or a cut spawn taken mid-fall. Naming it needs an instrumented\npage that logs P.y per tick across the transition, not another fill.",
+    "evidence": "THE HOLE IS REAL. --at along z -24.0: the weave deck's last floor is x 73.2 at y 7.90, x 73.6\nis cx_rail at 7.53, and from x 74.0 east there is NO floor at all above the river plane at\ny -3.90. The run went [70.41,7.87,-25.48] (step 25) -> [74.05,-3.90,-23.98] (step 26) and sat\nthere for seven steps.\n\nA SUSPECT WAS RAISED AND REFUTED IN THE SAME PASS, WHICH IS WHY IT IS WRITTEN DOWN. The\nscenegraph's lockfive>weave arrival spawn is [72.452,7.75,-24.338] \u2014 1.64 m in plan from the\nlanding \u2014 and _court_probe --at reports EVERY floor there (7.90/7.87/7.81) blocked by cx_rail,\nwith nothing below until -3.90. That looked like the answer. IT IS NOT: --way tp'd to that\nexact spawn walks 2/2 legs to [70.71,7.87,-25.03] and 2/2 back, no stall, either direction.\nLESSON, and it is the same shape as round 24's: --at's second column answers 'what intersects\na body box raised at this floor', NOT 'can a body stand here' \u2014 the settle picks a workable\nfloor and the drive proves it. Do not read a blocker name as a verdict.\nscenegraph_derive emits NO warning for that arrival, and its ARRIVAL vs CAMERA-CUT BANDS table\npasses it.\n\nSTILL UNNAMED: what moved the body 11.8 m down. walkStep provably refuses to walk off that lip\nunder WALKLOCK and jump is disabled in a routed town. Remaining candidates, none measured:\nsgCorrect, the marooned unstick, or a cut spawn taken mid-fall. Naming it needs an instrumented\npage that logs P.y per tick across the transition, not another fill.",
     "at": "2026-08-05T12:42:11.151Z"
    },
    "run": "run-20260805-121612",
@@ -16980,7 +16980,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 11.33 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.58, 0.75]; my goal was \"Walk up the walkway and stairs towards Keepers' Cottage at [0.558, 0.264]\".",
    "expected": "To walk about 11.33 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 11.33 m short — twice in this run. All five headings were pushed (5 bursts at ~157 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 11.33 m short \u2014 twice in this run. All five headings were pushed (5 bursts at ~157 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -17000,7 +17000,7 @@
     "docs/qa/playtest/runs/run-20260805-121612/frames/step-029-stall.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -17194,9 +17194,9 @@
    "id": "PT-20260805-041",
    "created": "2026-08-05T12:21:57.886Z",
    "verification": {
-    "status": "THE HOLE IS VERIFIED · THE MECHANISM IS STILL UNNAMED · ONE SUSPECT REFUTED",
+    "status": "THE HOLE IS VERIFIED \u00b7 THE MECHANISM IS STILL UNNAMED \u00b7 ONE SUSPECT REFUTED",
     "instrument": "tools/_court_probe.mjs --at/--way + tools/scenegraph_derive.mjs + docs/qa/playtest/runs/run-20260805-121612/run.jsonl",
-    "evidence": "THE HOLE IS REAL. --at along z -24.0: the weave deck's last floor is x 73.2 at y 7.90, x 73.6\nis cx_rail at 7.53, and from x 74.0 east there is NO floor at all above the river plane at\ny -3.90. The run went [70.41,7.87,-25.48] (step 25) -> [74.05,-3.90,-23.98] (step 26) and sat\nthere for seven steps.\n\nA SUSPECT WAS RAISED AND REFUTED IN THE SAME PASS, WHICH IS WHY IT IS WRITTEN DOWN. The\nscenegraph's lockfive>weave arrival spawn is [72.452,7.75,-24.338] — 1.64 m in plan from the\nlanding — and _court_probe --at reports EVERY floor there (7.90/7.87/7.81) blocked by cx_rail,\nwith nothing below until -3.90. That looked like the answer. IT IS NOT: --way tp'd to that\nexact spawn walks 2/2 legs to [70.71,7.87,-25.03] and 2/2 back, no stall, either direction.\nLESSON, and it is the same shape as round 24's: --at's second column answers 'what intersects\na body box raised at this floor', NOT 'can a body stand here' — the settle picks a workable\nfloor and the drive proves it. Do not read a blocker name as a verdict.\nscenegraph_derive emits NO warning for that arrival, and its ARRIVAL vs CAMERA-CUT BANDS table\npasses it.\n\nSTILL UNNAMED: what moved the body 11.8 m down. walkStep provably refuses to walk off that lip\nunder WALKLOCK and jump is disabled in a routed town. Remaining candidates, none measured:\nsgCorrect, the marooned unstick, or a cut spawn taken mid-fall. Naming it needs an instrumented\npage that logs P.y per tick across the transition, not another fill.",
+    "evidence": "THE HOLE IS REAL. --at along z -24.0: the weave deck's last floor is x 73.2 at y 7.90, x 73.6\nis cx_rail at 7.53, and from x 74.0 east there is NO floor at all above the river plane at\ny -3.90. The run went [70.41,7.87,-25.48] (step 25) -> [74.05,-3.90,-23.98] (step 26) and sat\nthere for seven steps.\n\nA SUSPECT WAS RAISED AND REFUTED IN THE SAME PASS, WHICH IS WHY IT IS WRITTEN DOWN. The\nscenegraph's lockfive>weave arrival spawn is [72.452,7.75,-24.338] \u2014 1.64 m in plan from the\nlanding \u2014 and _court_probe --at reports EVERY floor there (7.90/7.87/7.81) blocked by cx_rail,\nwith nothing below until -3.90. That looked like the answer. IT IS NOT: --way tp'd to that\nexact spawn walks 2/2 legs to [70.71,7.87,-25.03] and 2/2 back, no stall, either direction.\nLESSON, and it is the same shape as round 24's: --at's second column answers 'what intersects\na body box raised at this floor', NOT 'can a body stand here' \u2014 the settle picks a workable\nfloor and the drive proves it. Do not read a blocker name as a verdict.\nscenegraph_derive emits NO warning for that arrival, and its ARRIVAL vs CAMERA-CUT BANDS table\npasses it.\n\nSTILL UNNAMED: what moved the body 11.8 m down. walkStep provably refuses to walk off that lip\nunder WALKLOCK and jump is disabled in a routed town. Remaining candidates, none measured:\nsgCorrect, the marooned unstick, or a cut spawn taken mid-fall. Naming it needs an instrumented\npage that logs P.y per tick across the transition, not another fill.",
     "at": "2026-08-05T12:42:11.151Z"
    },
    "run": "run-20260805-121612",
@@ -17228,7 +17228,7 @@
     "docs/qa/playtest/runs/run-20260805-121612/frames/step-031.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -17456,7 +17456,7 @@
     "docs/qa/playtest/runs/run-20260805-134944/frames/step-064.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -17686,7 +17686,7 @@
     "docs/qa/playtest/runs/run-20260805-134944/frames/step-078.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -17885,7 +17885,7 @@
     "status": "PARTIAL",
     "instrument": "tools/playtest/wayfind_probe.mjs + tools/_court_probe.mjs --way",
     "at": "2026-08-05T15:54:39Z",
-    "evidence": "round 28: root named and fixed in public/js/story_runtime.js (wayAim reads <town>.routes.json and aims the routed arrow at the furthest route vertex the body can reach in a straight line, gated by an in-page march of SIM.walkFloors+SIM.blocked under walkGround's own step window). Measured with tools/playtest/wayfind_probe.mjs (real Chrome, the shipped projection), frames pinned in docs/qa/playtest/wayfind-r28-*, and the aim driven with tools/_court_probe.mjs --way. THE ARROW IS FIXED: it moved from [713,291] (5.0 m overhead, picking the laundry decks) to [608,~466], aim [75.00,1.93,-27.70] on the switchbacks lower flight, SIM.pick returning wv_planking. THE REMAINING HALF IS A WORLD DEFECT, split out as PT-20260805-047: the stand [76.15,1.32,-27.11] is a one-way pocket — SIM.move drives out of it EAST only (0.00 m south, 0.11 m west, 0.22 m north, 0.30 m north-west) while every reverse drive walks back into it."
+    "evidence": "round 28: root named and fixed in public/js/story_runtime.js (wayAim reads <town>.routes.json and aims the routed arrow at the furthest route vertex the body can reach in a straight line, gated by an in-page march of SIM.walkFloors+SIM.blocked under walkGround's own step window). Measured with tools/playtest/wayfind_probe.mjs (real Chrome, the shipped projection), frames pinned in docs/qa/playtest/wayfind-r28-*, and the aim driven with tools/_court_probe.mjs --way. THE ARROW IS FIXED: it moved from [713,291] (5.0 m overhead, picking the laundry decks) to [608,~466], aim [75.00,1.93,-27.70] on the switchbacks lower flight, SIM.pick returning wv_planking. THE REMAINING HALF IS A WORLD DEFECT, split out as PT-20260805-047: the stand [76.15,1.32,-27.11] is a one-way pocket \u2014 SIM.move drives out of it EAST only (0.00 m south, 0.11 m west, 0.22 m north, 0.30 m north-west) while every reverse drive walks back into it."
    },
    "run": "run-20260805-142230",
    "step": 8,
@@ -17916,7 +17916,7 @@
     "docs/qa/playtest/runs/run-20260805-142230/frames/step-008.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -18144,7 +18144,7 @@
     "docs/qa/playtest/runs/run-20260805-142937/frames/step-015.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight at Lock Five — out over the plank bridge",
+    "objective": "Midnight at Lock Five \u2014 out over the plank bridge",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -18384,7 +18384,7 @@
     "docs/qa/playtest/runs/run-20260805-142937/frames/step-033.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight at Lock Five — out over the plank bridge",
+    "objective": "Midnight at Lock Five \u2014 out over the plank bridge",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -18624,7 +18624,7 @@
     "docs/qa/playtest/runs/run-20260805-153730/frames/step-007.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight at Lock Five — out over the plank bridge",
+    "objective": "Midnight at Lock Five \u2014 out over the plank bridge",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -18862,7 +18862,7 @@
     "docs/qa/playtest/runs/run-20260805-154827/frames/step-008.jpg"
    ],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -19059,7 +19059,7 @@
     "status": "FIXED",
     "instrument": "tools/_court_probe.mjs --way (SIM.move, the drive, 400 ticks per leg)",
     "at": "2026-08-05T15:54:39Z",
-    "evidence": "From [76.15,1.32,-27.11] on the moorage deck the body drives EAST to [76.74,1.32,-27.15] cleanly and stalls in every other heading: south to [76.15,1.32,-28.2] travels 0.00 m, west to [75.2,1.3,-27.0] 0.11 m, north to [76.15,1.32,-26.2] 0.22 m, north-west to [74.6,1.25,-26.75] 0.30 m. The REVERSE drives all walk back INTO it. The columns around it carry walk_e_weave-huts__moorage_l2_t03/t04 treads at 1.19-1.32 — the deck height itself — so a body standing at 1.32 is wedged against the flights own treads. | FIXED round 29 (a2461ed): the south wall was cx_rail at z 2.12 -- RAIL_H over the OLD 1.70 foot, never re-derived when 8752b87 lowered the floor; and behind it the un-migrated switchback itself (l1 over l2 in the body window, both hairpins). STAIRS_V2 += weave-huts__moorage with weave/locksfoot/cx re-run in the same window; town_blockout grew lay_stair_rails (a rail may not stand in a body window of its own edge). _court_probe --way: DOWN 12/12 legs clean, UP threads; run-20260805-163944 walked moorage->weave->crossing->cottage and fired ch2.supper."
+    "evidence": "From [76.15,1.32,-27.11] on the moorage deck the body drives EAST to [76.74,1.32,-27.15] cleanly and stalls in every other heading: south to [76.15,1.32,-28.2] travels 0.00 m, west to [75.2,1.3,-27.0] 0.11 m, north to [76.15,1.32,-26.2] 0.22 m, north-west to [74.6,1.25,-26.75] 0.30 m. The REVERSE drives all walk back INTO it. The columns around it carry walk_e_weave-huts__moorage_l2_t03/t04 treads at 1.19-1.32 \u2014 the deck height itself \u2014 so a body standing at 1.32 is wedged against the flights own treads. | FIXED round 29 (a2461ed): the south wall was cx_rail at z 2.12 -- RAIL_H over the OLD 1.70 foot, never re-derived when 8752b87 lowered the floor; and behind it the un-migrated switchback itself (l1 over l2 in the body window, both hairpins). STAIRS_V2 += weave-huts__moorage with weave/locksfoot/cx re-run in the same window; town_blockout grew lay_stair_rails (a rail may not stand in a body window of its own edge). _court_probe --way: DOWN 12/12 legs clean, UP threads; run-20260805-163944 walked moorage->weave->crossing->cottage and fired ch2.supper."
    },
    "run": "run-20260805-154827",
    "step": 3,
@@ -19069,7 +19069,7 @@
    "title": "Moorage deck at [76.15,1.32,-27.11] is a one-way pocket: the body can only leave eastward",
    "doing": "Walking from the moorage toward the switchback up to the weave tier, following the routed Keepers Cottage arrow.",
    "expected": "A body standing on the moorage deck can walk to the foot of the stair one metre south.",
-   "happened": "The leg closed 0.06 m of 2.4 m. Split out of PT-20260805-044, whose HUD half (an arrow drawn 5 m above the tier) is fixed in round 28 — this is the world half and no arrow can cure it.",
+   "happened": "The leg closed 0.06 m of 2.4 m. Split out of PT-20260805-044, whose HUD half (an arrow drawn 5 m above the tier) is fixed in round 28 \u2014 this is the world half and no arrow can cure it.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -19086,7 +19086,7 @@
    },
    "frames": [],
    "onscreen": {
-    "objective": "Supper at the keepers' cottage — you have been asked in",
+    "objective": "Supper at the keepers' cottage \u2014 you have been asked in",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -19108,7 +19108,7 @@
     "status": "FIXED",
     "instrument": "tools/playtest/wayfind_probe.mjs --from ch2.winches --stations weave",
     "at": "2026-08-05T15:54:39Z",
-    "evidence": "In shot weave standing at [72.4,7.87,-23.56] the routed weave>lockfive arrow draws at [128,468] of 1280x720 — nx 0.100, the frames LEFT MARGIN — and SIM.pick at its own drawn pixel returns wv_piles, a stilt. The seam itself projects to [139,488]; the aim correctly does NOT engage, because from the weave tier the straight line to the seam IS ground. Frame: docs/qa/playtest/wayfind-r28-weave/weave arrival.jpg. | FIXED round 29 (565ba15): weave yaw 118 -> 142 (seam nx 0.104 -> 0.203, ground/chest/head occluder rays clear, charPxFar 54 >= 50 floor, region 81.3% vs 90.6%), one plate baked. run-20260805-170550 took the weave>lockfive cut AT STEP 9 and the Chapter Two END CARD was drawn and perceived at step 12."
+    "evidence": "In shot weave standing at [72.4,7.87,-23.56] the routed weave>lockfive arrow draws at [128,468] of 1280x720 \u2014 nx 0.100, the frames LEFT MARGIN \u2014 and SIM.pick at its own drawn pixel returns wv_piles, a stilt. The seam itself projects to [139,488]; the aim correctly does NOT engage, because from the weave tier the straight line to the seam IS ground. Frame: docs/qa/playtest/wayfind-r28-weave/weave arrival.jpg. | FIXED round 29 (565ba15): weave yaw 118 -> 142 (seam nx 0.104 -> 0.203, ground/chest/head occluder rays clear, charPxFar 54 >= 50 floor, region 81.3% vs 90.6%), one plate baked. run-20260805-170550 took the weave>lockfive cut AT STEP 9 and the Chapter Two END CARD was drawn and perceived at step 12."
    },
    "run": "run-20260805-154201",
    "step": 7,
@@ -19137,7 +19137,7 @@
     "docs/qa/playtest/wayfind-r28-weave/weave arrival.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight at Lock Five — out over the plank bridge",
+    "objective": "Midnight at Lock Five \u2014 out over the plank bridge",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -19190,7 +19190,7 @@
     "docs/qa/playtest/runs/run-20260805-163944/frames/step-062.jpg"
    ],
    "onscreen": {
-    "objective": "Midnight at Lock Five — out over the plank bridge",
+    "objective": "Midnight at Lock Five \u2014 out over the plank bridge",
     "prompts": [],
     "dialogue": null,
     "card": null
@@ -19655,7 +19655,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 10.13 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.51, 0.33]; my goal was \"Walk up the elevated walkway towards the top-right exit marker at [0.573, 0.243]\".",
    "expected": "To walk about 10.13 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 10.13 m short — twice in this run. All five headings were pushed (5 bursts at ~157 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 10.13 m short \u2014 twice in this run. All five headings were pushed (5 bursts at ~157 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -19904,7 +19904,7 @@
    "title": "Walk blocked: the body closed 0 m of an intended 8.45 m, twice at the same place",
    "doing": "I tried to walk to a point on screen at [0.54, 0.64]; my goal was \"Walk along the curved platform to the right toward the exit arrow at [0.654, 0.736].\".",
    "expected": "To walk about 8.45 m and arrive there.",
-   "happened": "The character moved 0 m and stopped 8.45 m short — twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
+   "happened": "The character moved 0 m and stopped 8.45 m short \u2014 twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.",
    "probe": {
     "kind": "reach",
     "from": [
@@ -20140,10 +20140,10 @@
    "id": "PT-20260805-055",
    "created": "2026-08-05T18:44:58.679Z",
    "verification": {
-    "status": "MEASURED — THE WORLD IS PASSABLE, THE GUIDANCE IS NOT",
-    "instrument": "tools/_court_probe.mjs --way/--grid walk:true/--transect + tools/walk_engine_gate.mjs + tools/walk_bodygate.mjs (all in/against the running game)",
-    "at": "2026-08-05T20:00:00Z",
-    "evidence": "The full NEW GAME receipt (run-20260805-182057) fired every Ch1 beat through ch1.sendoff on its own triggers and then spent ~40 of its last steps at the Old Gate: the exit is a KEY PORTAL (emb-cine>ow-valley@old-gate, at [78,2.9,-130], r 2.2, key e) and the agent pressed E at z -121.5, 8.5 m out of range, because it could not walk south. MEASURED: the court's walk pad (walk_lm_gate-court, top 2.66..2.80, ends z -128.3) has a 1.5x5.5 m WALK HOLE at x 75.5..81, z -123.0..-124.5 -- the culvert channel head, visible paving with no walk record -- squarely on the court's center line where the map edge, the seam arrow and every agent drive aim. SIM.move down the center stalls at z -122.6 on all x 76.5..79 (walk_engine_gate GREEN 0 lost and walk_bodygate 0 blocked steps are both VACUOUS over a hole: no cells exist there to lose). THE FLANK IS THE DESIGN: the pad wraps the channel on x <= 75.4 and x >= 81.5, and _court_probe --way drives [77.5,-121.5] -> [74.6,-122.5] -> [74.6,-125] -> [76.5,-127.3] -> [78,-128] 4/4 legs BOTH ways, ending inside the portal's own radius (z -128 is 2.0 m from the portal, r 2.2). So the game IS completable on foot; the wayhint aims at the portal across the hole (lineIsGround fails there, the routed polyline runs the holed center, so the aim fails closed) and the agent pounded the center for 40 steps. FIX CLASS: Emberbrook map -- a lane waypoint swinging barn__gate-court's tail around the channel head (footprints-live-in-the-map; gate road carriers) so routes/wayAim carry the flank; coordinator-owned town map, filed for the Emberbrook lane rather than patched from the Dellhollow lane at midnight."
+    "status": "FIXED",
+    "instrument": "tools/_court_probe.mjs --way (SIM.move in the running game) + tools/routes_derive.mjs --check + tools/playthrough_test.mjs",
+    "at": "2026-08-05T20:20:00Z",
+    "evidence": "Fixed as filed, in the map: gate-court->sigil-gate carried no waypoints, so the routed polyline ran the holed centre line and wayAim failed closed over the channel head. The edge now carries the measured west-flank waypoints ([74.6,122.5],[74.6,125.0],[76.5,127.3] map coords, verbatim from the 4/4 drive in run-20260805-182057). routes_derive --check clean. Engine drive along the NEW routed polyline: 4/4 legs BOTH ways (forward terminus [77.99,2.66,-128.44], 1.56 m from the portal, inside its r 2.2). playthrough_test 86/0, findability 69/0, story gate green. The channel-head hole itself is untouched on purpose: THE FLANK IS THE DESIGN, and the fix class is one line of map plus one re-derive, exactly the doctrine's shape."
    },
    "run": "run-20260805-182057",
    "step": 187,

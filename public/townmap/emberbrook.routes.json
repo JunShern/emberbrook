@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-02T21:53:30Z",
+ "generated": "2026-08-05T19:10:37Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -4840,7 +4840,7 @@
       0,
       1
      ],
-     "length": 8.001,
+     "length": 12.009,
      "points": [
       [
        78,
@@ -4848,24 +4848,39 @@
        -122
       ],
       [
-       78,
-       2.82,
-       -123.6
+       76.3,
+       2.8,
+       -122.25
       ],
       [
-       78,
-       2.84,
-       -125.2
+       74.6,
+       2.8,
+       -122.5
       ],
       [
-       78,
-       2.86,
-       -126.8
+       74.6,
+       2.8,
+       -123.75
       ],
       [
-       78,
+       74.6,
+       2.8,
+       -125
+      ],
+      [
+       75.55,
+       2.83,
+       -126.15
+      ],
+      [
+       76.5,
+       2.85,
+       -127.3
+      ],
+      [
+       77.25,
        2.88,
-       -128.4
+       -128.65
       ],
       [
        78,
@@ -4939,10 +4954,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 22,
+    "routeSamples": 25,
     "routeInFramePct": 100,
-    "routeLen": 33.241,
-    "spineLen": 25.681,
+    "routeLen": 37.249,
+    "spineLen": 29.689,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
