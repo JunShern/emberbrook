@@ -22,7 +22,7 @@ proposing anything, because the answer changes the plan substantially.
 ### The kit template
 
 Every district's structures are built from one material template
-(`tools/kit_build.py`, `tools/bldg_template.py` and the district `*_materials.py`
+(`tools/kit_build.py` and the district `*_materials.py`
 files). The shape is always the same:
 
 ```

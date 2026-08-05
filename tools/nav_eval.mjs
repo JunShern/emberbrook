@@ -564,7 +564,7 @@ let _sprite = null;
 function sprite() {
   if (_sprite) return _sprite;
   const p = readPng(POSE);
-  // chroma key: tools/iso_key.py's is_magenta / near_magenta, feathered between them
+  // chroma key: is_magenta / near_magenta thresholds (from the retired iso_key.py), feathered between them
   const A = new Uint8Array(p.width * p.height);
   for (let i = 0; i < p.width * p.height; i++) {
     const r = p.data[i * 4], g = p.data[i * 4 + 1], b = p.data[i * 4 + 2];

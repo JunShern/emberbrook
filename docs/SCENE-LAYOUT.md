@@ -63,9 +63,9 @@ dense lane instead of floating stall columns; dressing huddled into
 touching clusters; deliberate open space so the hero reads; framed edges
 (bunting posts, corner trees, a foreground tree).
 
-Three-way comparison (concept / old / new) at the top of
-`public/iso-review.html`; old layout preserved as
-`review/world2-03-square-old.jpg`.
+Three-way comparison (concept / old / new) lived at the top of
+`public/iso-review.html` (deleted with the iso prototype, Bet 6 2026-08-05);
+old layout was preserved as `review/world2-03-square-old.jpg`.
 
 **Orchestrator critique of the pilot transcription (fix before shipping):**
 the thatch cottage drifted off its corner and crowds the plaza's front
