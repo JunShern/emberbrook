@@ -3344,6 +3344,10 @@ what all five agent filings say, because that is what it looks like from inside.
 gate that projects Maren's body into the `lockfive` band would have caught the second half;
 `findability_test` covers villagers, and Maren is a story NPC posted by a beat.
 
+**PINNED** (`docs/qa/playtest/runs/` is gitignored, so the cited evidence is copied out):
+`docs/qa/playtest/ch2-arrive-receipt/step-030-lockhead-reached.jpg`,
+`step-077-apron-no-label.jpg` and the run's own `run.jsonl`.
+
 **BUDGET, flagged as required: $0.532 for the receipt run**, plus ~$0.10 wasted on a
 `--help` that is not a flag — `llm_playtester` has no help path, so `--help` **started a real
 NEW GAME run** and it had to be killed at step 22. Round total ≈ **$0.63**.
