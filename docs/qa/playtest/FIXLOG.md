@@ -3890,3 +3890,33 @@ PASS (0 failures, 1314 boxes).
 produced NOTHING in 25 minutes at **81% swap** — past CLAUDE.md's own 75% line. Killed and re-run
 1-wide they took **3 minutes each**. Dellhollow's dressed plates are now in the same "serialize"
 regime the dressed Emberbrook ones reached: the parallel order holds only while one plate fits.
+
+### THE RECEIPT RUN — `--from=ch2.jam --steps=140`: FIVE BLOCKERS, AND THE DRIVE REFUTES ALL FIVE
+
+`run-20260805-105834`, ~63 steps before it was interrupted, **~$0.20**. `ch2.maren` did NOT fire
+and the end card was never reached, so **the ladder is NOT clean** — but the reason is not the
+retirement, and it is not geometry at all.
+
+| what happened | steps |
+|---|---|
+| re-entered Odessa's dialogue tree at the Lockhead, twice | ~20 of 63 |
+| walked WEST past the weave descent onto the quay platforms | 33 |
+| stuck there, filing **PT-20260805-032/033/034/035/036** (four P1, one **P0**) | 33-63 |
+
+**ALL FIVE REPORTS ARE ONE PLACE AND THE DRIVE SAYS THE PLACE IS FINE.** `_court_probe --way`
+from the exact stuck cell `[58.11, 14.24, -12.83]` out to the Lockhead: **4/4 legs, no stall,
+BOTH WAYS**. `--at` at the same cell: floors 14.24 clear, clear ground east (58.6) and south
+(-13.4), and `ls_rail` fencing only the WEST — which is the loop stair's own rail doing its job.
+
+The harness had already said so in its own words, ten times: *"NO GAIN after 11 bursts — the body
+moved every round and never got closer. The headings WERE tried; the ground is walkable and the
+approach is not."* **A LEG THAT CLOSES NO DISTANCE WHILE THE BODY MOVES EVERY TICK IS AN AIMING
+FAILURE, NOT A WALL** — and the queue now carries five P0/P1 tickets that a 40-second drive
+refutes. Triage them against `--way` before anyone builds against them.
+
+**So the retirement is receipted by instrument and NOT by the LLM**: §W 21 pairs 0 unreachable,
+`playthrough_test` 86/0, `walk_engine_gate` GREEN, and `wayfind_probe` showing the shipped hint
+and the independent metre enumerator agreeing on the new route. What stands between `ch2.jam` and
+the end card in an LLM run is now (a) an agent that re-talks to NPCs it has finished with and
+(b) whatever makes the quay platforms un-aimable — a percept/steering question, not a walk-network
+one, and the first candidate is the same class `percept_test` exists to catch.
