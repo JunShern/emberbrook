@@ -159,23 +159,42 @@ const READ_JS = (target, CAPV) => `(()=>{
     markers:rows});
 })()`;
 
-/* THE TRUE NEXT HOP. BFS over the scene's own self-edges (the graph the game reads),
- * from the shot the player is in to the shot the objective beat names. It is the answer
- * the marker layer does not carry: which ONE of these anonymous triangles is the way. */
-const HOP_JS = (target) => `(()=>{
+/* THE TRUE NEXT HOP, over the scene's own self-edges (the graph the game reads), from
+ * the shot the player is in to the shot the objective beat names. It is the answer the
+ * marker layer does not carry: which ONE of these anonymous triangles is the way.
+ *
+ * IT RANKS BY METRES AND SHOWS ITS RUNNERS-UP (2026-08-05). This was a hop-count BFS,
+ * which is exactly the bug it was pointed at: from the Lockhead, `cottage>cottage-steps`
+ * and `quay-west>weave` are BOTH three hops, 21.9 m and 45.9 m, and a hop-count oracle
+ * calls a route twice the length "correct". So it enumerates every simple path up to
+ * MAXH hops (16 shots — exhaustive is cheap), measures each in metres along the seams'
+ * own positions, and prints the best few. A TIE IN HOPS IS NOT A TIE ON THE GROUND, and
+ * an oracle that cannot see the difference cannot audit the hint. The enumeration is
+ * deliberately a DIFFERENT algorithm from story_runtime's Dijkstra: two implementations
+ * agreeing on the number is the cross-check. */
+const HOP_JS = (target, MAXH = 5) => `(()=>{
   var G=null; try{G=SG}catch(e){}; if(!G) return JSON.stringify({err:'no SG'});
   const sk=SIM.scene(), cine=SIM.cine?SIM.cine():null;
   const here=(cine&&(cine.shot||cine.cam))||null;
+  const p=SIM.pos(), at0=[p.x,p.y,p.z];
   const self=G.edges.filter(e=>e.from===sk&&e.to===sk&&e.camFrom&&e.cam&&e.cam.key);
   const adj={}; for(const e of self){ (adj[e.camFrom]=adj[e.camFrom]||[]).push(e); }
-  const prev={}, q=[here], seen={[here]:1};
-  while(q.length){ const c=q.shift(); if(c===${JSON.stringify(target)}) break;
-    for(const e of (adj[c]||[])){ const n=e.cam.key; if(seen[n]) continue;
-      seen[n]=1; prev[n]=[c,e]; q.push(n); } }
-  if(!seen[${JSON.stringify(target)}]) return JSON.stringify({here,path:null});
-  const path=[]; let c=${JSON.stringify(target)};
-  while(c!==here){ const [p,e]=prev[c]; path.unshift({edge:e.id,from:p,to:c}); c=p; }
-  return JSON.stringify({here,hops:path.length,path});
+  const P=e=>(e.spawn||e.at||null);
+  const d=(a,b)=>(a&&b)?Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]):12;
+  const found=[];
+  (function walk(node, at, used, path, cost){
+    if(path.length>${MAXH}) return;
+    if(node===${JSON.stringify(target)}){ found.push({hops:path.length,m:cost,path:path.slice()}); return; }
+    for(const e of (adj[node]||[])){ const n=e.cam.key; if(used[n]) continue;
+      used[n]=1; path.push({edge:e.id,from:node,to:n});
+      walk(n, P(e), used, path, cost+d(at, e.at||e.spawn));
+      path.pop(); used[n]=0; }
+  })(here, at0, {[here]:1}, [], 0);
+  found.sort((a,b)=>a.m-b.m);
+  if(!found.length) return JSON.stringify({here,path:null});
+  const best=found[0];
+  return JSON.stringify({here,hops:best.hops,m:best.m,path:best.path,
+    alts:found.slice(1,3).map(f=>({hops:f.hops,m:f.m,first:f.path[0].edge}))});
 })()`;
 
 // The three failing filings' own positions + shots (queue.json truth blocks), plus the
@@ -213,9 +232,13 @@ for (const [name, pos, useShot] of STATIONS) {
   console.log('    SHIPPED HINT: ' + (wh ? (wh.dest ? (wh.dest + '  via ' + String(wh.edge).slice(-26) +
       '  hops=' + wh.hops + '  shown=' + wh.shown + '  labelled=' + wh.labelled) : 'none (beat=' + wh.beat + ')')
     : 'Story.wayhint absent'));
-  console.log('    TRUE NEXT HOP toward ' + TARGET + ': ' +
-    (hop && hop.path ? (hop.hops + ' hops, first = ' + hop.path[0].edge + ' -> ' + hop.path[0].to)
+  console.log('    SHORTEST BY METRES toward ' + TARGET + ': ' +
+    (hop && hop.path ? (hop.hops + ' hops / ' + hop.m.toFixed(1) + ' m, first = ' + hop.path[0].edge + ' -> ' + hop.path[0].to)
                      : 'NO PATH'));
+  if (hop && hop.alts && hop.alts.length)
+    console.log('       runners-up: ' + hop.alts.map(a => a.hops + ' hops / ' + a.m.toFixed(1) + ' m via ' + String(a.first).slice(-22)).join('  ·  '));
+  if (hop && hop.path && wh && wh.edge && wh.edge !== hop.path[0].edge)
+    console.log('       !! SHIPPED HINT DISAGREES with the metre-shortest first hop');
   for (const m of (r.markers || [])) {
     if (!m.shown) continue;
     const onRoute = hop && hop.path && hop.path[0] && hop.path[0].edge === m.id;

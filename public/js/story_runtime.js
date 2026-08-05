@@ -362,13 +362,37 @@
     return w ? check(w) : true;
   }
 
-  /* THE ROUTE. Nodes are (scene, shot) pairs, so one BFS answers both "which
+  /* THE ROUTE. Nodes are (scene, shot) pairs, so one search answers both "which
    * triangle in this town" and "which door out of it" — the corridor between the
    * towns is the same graph. An edge with no camFrom leaves from ANY shot (that is
    * what an interior's single-shot door is), and one whose destination shot is
    * unknown lands on the scene's wildcard node. Optimistic on the wildcard, which is
    * right for a HINT: the cost of a hop too many is a longer walk, the cost of
-   * refusing is the silence we are fixing. */
+   * refusing is the silence we are fixing.
+   *
+   * IT COSTS METRES, NOT HOPS (2026-08-05). This was a hop-count BFS, and hops are
+   * not metres. Standing on the Lockhead — directly above Lock Five — BOTH routes to
+   * `lockfive` are exactly three hops:
+   *     lockhead > cottage > cottage-steps > lockfive   21.9 m
+   *     lockhead > quay-west > weave      > lockfive   45.9 m
+   * BFS returned whichever it dequeued first, which was the second, so the ONE
+   * labelled arrow pointed the player away down the length of the town — and the
+   * playtest agent walked it, twice, into the pilot-cluster stalls. A tie in hops is
+   * not a tie on the ground. Cost is the distance the body actually covers: from
+   * where the player IS to the first seam, then seam to seam, using each edge's own
+   * `spawn` (where the player lands) when it has one. A hop into ANOTHER scene has
+   * no comparable coordinates, so it pays a flat XSCENE and the walk restarts from
+   * that edge's spawn — an honest "a scene away", never a number pretending to be
+   * measured. Dijkstra over 42 edges at 6 Hz is free. */
+  var XSCENE = 40;      // nominal metres for a hop the coordinates cannot span
+  var NOPOS = 12;       // nominal metres for a seam that carries no position
+  function seamPos(e) { return (e && (e.spawn || e.at)) || null; }
+  function gap(a, b) {
+    if (!a || !b || a.length < 3 || b.length < 3) return NOPOS;
+    var dx = a[0] - b[0], dy = a[1] - b[1], dz = a[2] - b[2];
+    var d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    return isFinite(d) ? d : NOPOS;
+  }
   function routeTo(destScene, destCam) {
     var G = SGraph(); if (!G || !G.edges) return null;
     var here = scene(); if (!here) return null;
@@ -382,22 +406,39 @@
       return s === destScene && (!destCam || c === destCam || c === '*');
     };
     if (goal(here, shot())) return { hops: 0, edge: null };
-    var seen = {}, q = [[start, null, 0]]; seen[start] = 1;
-    while (q.length) {
-      var cur = q.shift(), parts = cur[0].split('|'), sc = parts[0], cm = parts[1];
+    var p = window.SIM && SIM.pos ? SIM.pos() : null;
+    var at0 = (p && isFinite(p.x)) ? [p.x, p.y, p.z] : null;
+    // best[node] = cheapest cost seen; open = frontier, scanned linearly (tiny graph)
+    var best = {}, open = [{ k: start, at: at0, cost: 0, hops: 0, first: null }];
+    best[start] = 0;
+    var found = null;
+    while (open.length) {
+      var bi = 0;
+      for (var m = 1; m < open.length; m++) if (open[m].cost < open[bi].cost) bi = m;
+      var cur = open.splice(bi, 1)[0];
+      if (found && cur.cost >= found.cost) break;      // nothing cheaper can remain
+      if (best[cur.k] < cur.cost) continue;
+      var parts = cur.k.split('|'), sc = parts[0], cm = parts[1];
       var outs = byFrom[sc] || [];
       for (var j = 0; j < outs.length; j++) {
         var ed = outs[j];
         if (ed.camFrom && cm !== '*' && ed.camFrom !== cm) continue;
         if (!edgeLive(ed)) continue;
+        var cross = ed.to !== sc;
+        var step = cross ? XSCENE : gap(cur.at, ed.at || ed.spawn);
+        var cost = cur.cost + step;
         var nc = (ed.cam && ed.cam.key) || null, nk = nodeKey(ed.to, nc);
-        if (seen[nk]) continue;
-        var first = cur[1] || ed, d = cur[2] + 1;
-        if (goal(ed.to, nc || '*')) return { hops: d, edge: first };
-        seen[nk] = 1; q.push([nk, first, d]);
+        var first = cur.first || ed, hops = cur.hops + 1;
+        if (goal(ed.to, nc || '*')) {
+          if (!found || cost < found.cost) found = { hops: hops, edge: first, cost: cost };
+          continue;                                    // keep looking for a shorter one
+        }
+        if (best[nk] !== undefined && best[nk] <= cost) continue;
+        best[nk] = cost;
+        open.push({ k: nk, at: seamPos(ed), cost: cost, hops: hops, first: first });
       }
     }
-    return null;
+    return found ? { hops: found.hops, edge: found.edge } : null;
   }
 
   // The destination's own authored name: a shot's `name` out of the bundle's

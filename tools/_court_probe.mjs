@@ -109,6 +109,18 @@ const ev = async (cdp, e) => {
   for (let i = 0; i < 200; i++) { if (await ev(cdp, `(()=>{try{return !!(window.SIM&&SIM.pos()&&isFinite(SIM.pos().x))}catch(e){return false}})()`) === true) { ok = true; break } await sleep(250) }
   if (!ok) { console.error('never populated'); kill(); process.exit(2) }
   await sleep(800);
+  // SIM.pos() is finite LONG BEFORE the bundle's GLB is in allMeshes, and every probe
+  // here reads SIM.floors — so a probe that fired on that race printed a whole region
+  // as `<no floor>`: an instrument reporting an empty world because it asked too early.
+  // Wait for the mesh census to be non-zero AND to stop moving for two ticks.
+  let mesh = 0, still = 0;
+  for (let i = 0; i < 240; i++) {
+    const n = await ev(cdp, `(()=>{try{return SIM.gpu().meshes|0}catch(e){return 0}})()`) | 0;
+    if (n > 0 && n === mesh) { if (++still >= 2) break; } else still = 0;
+    mesh = n; await sleep(250);
+  }
+  if (!mesh) { console.error('bundle never loaded (allMeshes 0) — every floor reading would be a lie'); kill(); process.exit(2) }
+  console.log('meshes:', mesh);
   console.log('scene:', await ev(cdp, 'SIM.scene()'),
     ' walklock:', await ev(cdp, `(()=>{ if(!/^(del-|emb-|townwalk)/.test(String(SIM.scene()))) return false;
       try{ if(new URLSearchParams(location.search).get('walklock')==='0') return false; }catch(e){}
