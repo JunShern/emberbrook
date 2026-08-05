@@ -4300,7 +4300,25 @@ function applyCam(cam){
 // correction), else to any floor, else trust the point.
 function sgPlace(p){
   let ys=(walkRef.length?walkFloors(p[0],p[2]):[]);
-  if(!ys.length) ys=floors(p[0],p[2]);
+  // NEAREST IS NOT NEAR, and walkGround already knows it (round 26, three measured
+  // falls from one square metre on the crossing): the walker settles from (x,z) AND
+  // four neighbours at ±0.18 m — the plank-crack tolerance — so a body standing
+  // legitimately over a crack has a floor this exact column does not carry. Without
+  // the same probe here, a cut spawn on a crack column found NO walk floor, fell
+  // through to the COLLISION set below (which over the decks contains the river),
+  // and placed the body 7 m down: [73.89,7.95,-23.20] -> 1.07, three times in one
+  // run. And taking the nearest entry of a column 6 m below is not a 1-2 cm
+  // correction, it is a fall with no cause — so candidates are RANGE-FILTERED to a
+  // step of the authored height first; the collide fallback stays, but LAST.
+  const R=STEP_UP+STEP_DN;
+  let near=ys.filter(y=>Math.abs(y-p[1])<=R);
+  if(!near.length&&walkRef.length)
+    for(const[ox,oz]of[[.18,0],[-.18,0],[0,.18],[0,-.18]]){
+      const t=walkFloors(p[0]+ox,p[2]+oz).filter(y=>Math.abs(y-p[1])<=R);
+      if(t.length){ near=t; break; }
+    }
+  if(near.length) ys=near;
+  else if(!ys.length) ys=floors(p[0],p[2]);
   P.x=p[0]; P.z=p[2];
   P.y=ys.length?ys.reduce((a,b)=>Math.abs(a-p[1])<Math.abs(b-p[1])?a:b):p[1];
   AIR=false; jvy=0; CURF=null;
