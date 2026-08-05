@@ -80,6 +80,10 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 24 | PT-20260805-039 / -040 / -041 | P1 x3 | Stuck on the lower dock, cannot climb to the Keepers' Cottage | **VERIFIED AS FINDABILITY, REFUTED AS CONNECTIVITY — and THREE INSTRUMENTS DISAGREED before the run settled it.** The climb EXISTS: the agent, on real keys, went deck -> `[71.45, 3.30, -27.88]` -> `[77.36, 5.60, -26.12]` -> the weave shot. It cost it **22 steps to find**. Meanwhile `--comp` said NO (two fills, 182 / 179 cells, sharing one 0.4 m cell whose floors are 1.02 and 5.60 — a 4.58 m gap, i.e. the fill's own asymmetric-settle artifact); `reach_probe` said YES but *through that same artifact cell*; and `--way` said NO in both directions — **while also stalling on legs the agent had just walked**, so the straight-line drive is not competent on a switchback deck | not fixed — a WAYFINDING/art job (the climb needs to read), not a build. **The instrument lesson is the finding: on tiered deck geometry, only the keys are the oracle** | — |
 | 24 | (read off the run's own trajectory) | **P0** | The player falls 11.8 m off the weave tier onto the piles under the moorage | **VERIFIED IN THE RUN, MECHANISM NOT YET FOUND.** Step 25 `[70.41, 7.87, -25.48]` in shot `weave`; step 26 `[74.05, -3.90, -23.98]` in shot `lockfive`, and the body sat there **7 steps unmoved**. `--at` at that landing has ONE floor, `y -3.90`, and `--grid` shows the tier has **no floor at all** in x 74.1..77.1 / z -23.9..-24.5. But `--way` driven at the same lip stops correctly at `[73.56, 7.53, -24.24]`: **WALKLOCK's `walkStep` refuses the step, so the drive cannot reproduce the fall** | not fixed — needs an instrumented page to name what moved the body (a cut spawn, `sgCorrect`, or the marooned unstick); plain walk-off is REFUTED | — |
 | 24 | (found by killing the run) | — | The only record of what a run cost is written after the episode returns | **HARNESS DEFECT.** Round 23 made killing a stalled run correct practice; round 24 killed one at step 46 and could then only ESTIMATE the bill, because `run.json` is written after `runEpisode` returns and SIGTERM takes it | a partial receipt with the live usage totals is written on SIGINT/SIGTERM/SIGHUP; the full one still overwrites it on a clean finish | this round |
+| 27 | PT-20260805-042 / -043 (round 26's falls) | **P0** | The player is thrown off the weave tier two metres after arriving on it, three times from one square metre | **FIXED and MEASURED CLOSED at `162bade`.** The disagreement census over the whole weave/moorage lip (x 68..80 / z −29..−22 at 0.2 m, 4984 legitimate stands): **236 stands settled more than 1.43 m from where the walker stands BEFORE the fix, 0 AFTER** — including `[68, −24.4] standing 7.36 → −3.90`, the river. Two playtest runs on the fixed build, 75 measured steps: **zero drops** | `sgPlace` gets `walkGround`'s discipline (range filter + the ±0.18 m plank-crack neighbours, collide fallback LAST); new gate `tools/playtest/settle_gate.mjs` | `162bade` |
+| 27 | (round 26's nominated regression test) | — | `fall_probe --spray` §4 cannot see the fix it was nominated to guard | **HARNESS DEFECT.** §4 asks `SIM.tpY`, and `SIM.tpY` (play3d.html:3738) carries its **own inlined copy** of the pre-fix settle — no range filter, no neighbour probe, collide fallback first-class. It never calls `sgPlace`, so it reports the OLD behaviour on a fixed build for ever. Same shape as `walk_engine_gate` and `_court_probe`: a gate measuring a function the game does not run | `settle_gate.mjs` replicates the SHIPPED source and A/Bs old against new. `SIM.tpY` should delegate to `sgPlace` — coordinator file, **reported not applied** | this round |
+| 27 | PT-20260805-044 | P1 | Clicking the upper-level objective marker walks the character underneath it | **VERIFIED as legibility.** From the Maren dock the routed first edge is `del-cine>del-cine@cut:weave-huts__moorage`, whose band is `[75.0, 6.3, −25.2]` — **5.0 m above the player's tier and 2.5 m away in plan**: the one labelled arrow the game gives you is essentially overhead. The way up is the switchback, whose foot is ~5 m WEST. The agent burned 30 steps and never climbed | not fixed — a wayfinding/marker-placement job (markersTick is coordinator-owned) | — |
+| 27 | PT-20260805-045 / -046 | P1 x2 | Cannot reach the Lock Five exit from the cottage ramp | **VERIFIED as a PIT, REFUTED as a severed world.** Along x = 88.6 the walk network runs 10.80 → 10.33 (z −18.0..−19.75), then **NOTHING from z −20.0 to −21.5** — no walk floor, and for a full metre no collide floor either — then 7.70 from z −21.75. The `cottage>crossing` band at `[88.6, 7.5, −22.4]` is across that hole and 2.6 m down. Every direct drive stalls 1.6–1.9 m short with `SIM.blocked` **null** — nothing blocks it, there is simply nothing to step onto. The way round is EAST (x ≈ 91–92.4): `_court_probe --way` walks it **4/4 legs both ways**. 16 of the run's 64 legs were un-projectable, because the ray behind those pixels never crosses the network | not fixed — same family as PT-044: the ONE arrow the objective gives is not reachable in a straight line from the tier it is shown on | — |
 
 
 ## Rounds
@@ -4508,3 +4512,122 @@ transition from inside play3d, which is a coordinator edit; the probe is in plac
 fire. The blocker is no longer "the player cannot find the way up" — it is "the player is
 thrown off the tier two metres after arriving on it", from a coordinate this round can hand
 over. That is the whole of what stands between `ch2.lockfive` and the end card.
+
+## Round 27 — 2026-08-05 · the fall is closed, and the instrument that was to prove it could not see the fix
+
+Leg 11's order: spot-check `162bade` at round 26's two coordinates, then take the receipt
+`--from=ch2.lockfive --steps=100 --stop-beat=ch2.landing`, target THE END CARD.
+
+### §1 The spot-check — and the two handed-over coordinates were not what the note said
+
+Round 26 handed over `[71.6, −25.6]` and `[72.4, −25.6]` as live P1 trapdoors: "a walker
+stands at ~7.9 and `sgPlace`'s settle returns 1.62–1.77". Both halves were re-measured with
+the engine's own paths (real Chrome on :3000, `del-cine`).
+
+**THE REAL `sgPlace`, NOT A REPLICA.** `play3d` runs `if(URLSPAWN) sgPlace(URLSPAWN)` on
+boot, so a URL spawn at a coordinate IS a call to the shipped settle:
+
+| stand | asked | settled (after 162bade) | exact-column walk floors | collide floors |
+|---|---|---|---|---|
+| `[71.6, −25.6]` | 7.90 | **1.77** | `[1.77]` | `[1.77, −3.90]` |
+| `[72.4, −25.6]` | 7.90 | **1.62** | `[1.62]` | `[1.62, −3.90]` |
+| `[73.89, −23.20]` — the reproduction stand | 7.95 | **7.95** | `[7.95]` | `[7.95, −3.90]` |
+| `[70.41, −25.48]` — round 24's stand | 7.87 | **2.04** | `[2.04, 1.99]` | `[2.04, 1.99, 0.12, −0.60, −3.90]` |
+
+That first reads as the trapdoor surviving the fix. **It is not, and the distinction is the
+whole section: every result is a WALK floor, never the collide set.** `−3.90` — the river,
+the height of every round-24/26 landing — is in the collide list of all four columns and in
+none of the answers. The fallback did not fire.
+
+**And those columns are 0.14 m PAST THE DECK EDGE.** Walking at each from the stand
+(`SIM.move`, straight line, 400 steps) the body stops at `[71.6, 7.87, −25.46]` and
+`[72.4, 7.87, −25.44]`; the upper tier's walk floors stop there too. "A walker stands at
+~7.9" is not true of those exact coordinates on this build — `sgPlace` was being asked to
+place a body at a height its column does not have, and answered with the only walk floor it
+does have. **A handed-over coordinate is a measurement, not a fact; re-take it.**
+
+### §2 The census that IS the regression test
+
+The right question is not what one column does but **"wherever a body may legitimately
+stand, does the settle keep it there?"** — walker's oracle against placer's oracle on one
+lattice. `walkGround` and both versions of `sgPlace` were replicated verbatim from the
+shipped source out of `SIM.walkFloors`/`SIM.floors` and run over every column of the
+weave/moorage lip (x 68..80, z −29..−22 at 0.2 m) at every height a body can hold there:
+
+| | stands whose settle lands more than `STEP_UP+STEP_DN` (1.43 m) away |
+|---|---|
+| before `162bade` | **236** of 4984 — including `[68, −24.4] standing 7.36 → −3.90` and `[68.2, −24.4] standing 7.45 → −3.90`: the river, exactly the shape of the run's falls |
+| after `162bade` | **0** of 4984 |
+
+The drive agrees: from `[73.89, 7.95, −23.20]`, `SIM.move` in 16 world headings × 80 steps
+bottoms out at **7.36** (0.59 m below the stand), zero cuts, zero corrections. And across
+the two receipt runs below — **75 measured steps, 64 walk legs** — there is **not one drop**.
+The three-falls-from-one-square-metre reproduction is closed.
+
+### §3 THE INSTRUMENT COULD NOT HAVE SEEN THE FIX — `SIM.tpY` is a second copy of the old settle
+
+Round 26 nominated `fall_probe --spray` §4 as the regression test for this change. It cannot
+be. §4 asks `SIM.tpY`, and `tpY` (`play3d.html:3738`) carries **its own inlined copy** of the
+pre-fix logic — no range filter, no plank-crack neighbours, the collide fallback still
+first-class. It never calls `sgPlace`. So §4 reports the OLD behaviour on a fixed build for
+ever, and a lane reading it would conclude the fix did nothing. **A duplicated implementation
+in the test surface is a gate measuring a function the game does not run** — the same shape
+as `walk_engine_gate`'s file-vs-engine finding and `_court_probe`'s builder-gate finding.
+`SIM.tpY` should delegate to `sgPlace`'s settle; that is a coordinator edit and is reported,
+not applied. Until then the regression test is **`tools/playtest/settle_gate.mjs`** (new),
+which replicates the shipped source and prints the pre-fix count beside it, so a green run
+has proved it could have found something.
+
+### §4 THE RECEIPT IS RED — and on nothing this round fixed
+
+`--from=ch2.lockfive --steps=100 --stop-beat=ch2.landing` (`run-20260805-142230`), killed at
+step 30 once the shape was unambiguous, ~$0.13. **No fall, and no climb either.** The body
+never left the moorage: it oscillated between the `lockfive` and `north-landing` decks for
+thirty steps while the objective read "Supper at the keepers' cottage". PT-20260805-044.
+
+**The measured cause is that the arrow is overhead.** The routed first edge out of the dock
+is the `weave-huts__moorage` cut, band `[75.0, 6.3, −25.2]`; the player stands at
+`[76.15, 1.32, −27.11]`. That is **5.0 m up and 2.5 m across** — the one labelled marker the
+game draws ("Keepers' Cottage", correct destination, correct edge) projects onto the deck the
+player is standing UNDER, and the agent's own ticket is the sentence "clicking the upper
+level objective marker causes the character to walk underneath it". The climb is 5 m west,
+unmarked. Round 26's addendum found it in 4 steps; this run never did — the same world, a
+different draw of the same model, which is what an unmarked route means.
+
+**So the tail of the spine was taken separately**, `--from=ch2.dock --steps=45
+--stop-beat=ch2.landing` (`run-20260805-142937`, 45/45, ~$0.19), and it is red on a second,
+sharper thing: `ch2.winches` never fired because **the Lock Five arrow is across a hole.**
+Along x = 88.6, the engine's own walk floors read
+
+    z −18.00 .. −19.75   10.80 → 10.33   the cottage ramp
+    z −20.00 .. −21.50   NOTHING — no walk floor, and for a full metre no collide floor
+    z −21.75 .. −23.00   7.70            the crossing deck, which carries the band
+
+The `cottage>crossing` band sits at `[88.6, 7.5, −22.4]`: across that gap and 2.6 m down.
+Ten legs closed 0.13 / −0.34 / −0.01 m of an intended 1.3–1.8 m, and every drive at it from a
+1.2 m ring stalls with **`SIM.blocked` = null** — nothing blocks it; there is nothing to step
+onto, and 2.6 m is past `STEP_DN`. **The world is not severed**: the way round is EAST at
+x ≈ 91–92.4 and `_court_probe --way` walks it **4/4 legs in both directions**. 16 of the
+run's 64 legs were un-projectable for the same reason — the ray behind those pixels crosses
+no walk network at all.
+
+> **BOTH RED RUNS ARE THE SAME DEFECT IN TWO PLACES: the ONE arrow the objective gives is
+> not reachable in a straight line from the tier it is drawn on.** Rounds 11–19 taught the
+> wayfinder to name the right destination and to draw the label where a human reads it. What
+> is still missing is that a marker is a promise about the ground, and on a town built in
+> tiers the promise is being made across five metres of air and a two-and-a-half metre pit.
+> That is the next round's headline, and neither half of it is `sgPlace`.
+
+### Instruments
+
+* `tools/playtest/settle_gate.mjs` (new) — the walker-vs-placer disagreement census, with
+  the pre-fix A/B built in. `--region`, `--step`, `--scene`, `--cam`, `--ab=0`.
+* `_court_probe --comp` said ONE component across the cottage pit and `--way` on the direct
+  line said no; the east detour reconciles them. **Round 24's lesson stands unchanged: on
+  tiered deck geometry a fill is a screen and the drive is the oracle** — and a drive along
+  a straight line is not the same instrument as a drive along a route.
+
+### Spend
+
+`~$0.32` of model calls this round (lockfive `$0.1268` partial + dock `$0.1924`), plus four
+browser probes and no bakes.
