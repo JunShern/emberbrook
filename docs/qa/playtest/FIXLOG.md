@@ -69,6 +69,7 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 18 | (round 17's open item) | P1 | `ch1.see.mochi` never fires — the last beat between a NEW GAME and the Old Gate | **VERIFIED as LEGIBILITY, REFUTED as world** — `_court_probe --way` drives the whole road to the cat 10/10 legs both ways; the frame shows TWO identical red arrows at `therise`, the labelled one at (669,475) and the anonymous one at (674,225), and the agent took the anonymous one on **20 of 31 legs**, 87 shot changes in 150 steps | rivals demoted to opacity .34 while a beat hint is live; the objective names the Waystone instead of "north" | `b8b6f12` |
 | 18 | PT-20260805-011 / -012 | P1 | The well cuts the square in half (carried, round 17) | **RE-MEASURED — it is a 3.8 m BAR, not a 3.6×2.7 island, and only ~1.2 m of it is the well.** `--who`: 351 clear, 6 blocked (a lamp post); nothing blocks, floor is MISSING. The bar's west half belongs to no landmark | **NOT FIXED and no `walkStep` diff prepared — a slide cannot manufacture floor.** The number is in `emb_blockout.py`, not the map; the fix is a builder change to the area-floor cut | — |
 | 14 | PT-20260805-004 | P1 | One-way lip at `[57.74, 15.30, −11.24]` (carried, round 13) | **VERIFIED, and round 13's "one map line" REFUTED by arithmetic.** New `_court_probe --stand` census: **16 of 17 stairs landings in `del-cine` are roofed by their own flight, 30–52% of each**; clearing the body band needs `step ≤ 0.29`, which needs a leg descending under 0.87 m — no waypoint in the map can make one | **NOT FIXED — filed as the build lane it is** (tread-top convention + `walk_rederive`×6 + `ls_build` + `cine_solve` + plates) | `f3f3f39` (instrument) |
+| 19 | PT-20260805-014 / -015 / -016 / -017 / -018 / -019 | P1 | Cannot reach / nothing happens at The Lockhead (SIX filings, ONE arrow) | **VERIFIED as LEGIBILITY, REFUTED as routing.** The hint is live, labelled and metre-correct at all seven Dellhollow stations; the arrow itself was drawn 96.9 px above its seam and `SIM.pick` at its own pixel landed on `cliff_town_back` **31.4 m away, 70 m behind the town**. Across 24 markers, 5/24 landed within 3 m of the seam they name; at a 20 px cap, 19/24 | the routed marker is clamped to a 20 px screen lift in `story_runtime` (`clampLift`); the general `markersTick` cap is a prepared diff for the coordinator | `e7bdee4` |
 
 ## Rounds
 
@@ -3304,3 +3305,45 @@ needs clamping into the top of the frame less often, not more.
   is also one of its stations.
 
 ### 2. THE CHAPTER TWO RECEIPT — `--from ch2.arrive`, 120 steps
+
+`run-20260805-054441`, seeded at `ch2.arrive` (every Ch1 flag and beat, the arrival's own
+objective), 120 steps, **$0.532**.
+
+**`ch2.jam` FIRED AT STEP 35.** The Lockhead was reached on foot at step 29 — the agent
+walked up the stairs from the town gate, said *"Approach the person standing under 'The
+Lockhead'"*, and talked to Odessa. **Six filings in the previous run said that could not be
+done** (PT-20260805-014/015/016/017/018/019), and no NEW GAME run had ever put a beat past
+`ch2.arrive`. That is the round-19 clamp's receipt: the arrow it fixed is the arrow that
+names that door.
+
+**AND THE CHAPTER STOPS AT THE NEXT BEAT. There is still no end card.** `ch2.maren` waits at
+`[79.7, 0.83, −27.13]`, the lock apron. The agent got down to the apron at step 74 and spent
+**steps 74–120 — 46 of 120 — trying to reach a girl it could see**, filing five of the run's
+six reports (PT-20260805-022 … -026) as it went. Measured before writing this, and it is two
+separate things:
+
+1. **THE DECK ENDS.** `_court_probe --way` west→east from `[72.05, 1.25, −28.4]`: **1 of 5
+   legs**, stalled at `[72.05, 1.25, −28.35]`. Driven east→west it manages 4 of 5 and stalls
+   coming back at `[74.05, 2.69, −28.3]`. `--at` says why, and it is not a blocker:
+   at `x 72.5 … 74.0, z −28.35` **the only floors are y −0.35 and y −3.9** — the apron deck
+   the body stands on at y 1.25 simply ENDS, with a 1.6 m drop beyond it, and the girl the
+   agent kept aiming at stands on a platform at **y 2.34**, 1.1 m ABOVE the deck. Nothing is
+   blocking; there is no surface. Same shape as round 18's well bar.
+2. **AND THE WAYFINDER IS SILENT FOR EXACTLY THAT LAST 8 m, BY CONSTRUCTION.** `ch2.maren`'s
+   cam is the shot the player is already standing in, so `routeTo` returns 0 hops, there is
+   no edge to dress, and `clearHint` runs — the frame at step 77 carries **four undressed red
+   arrows and no label**. Round 15's lesson at a new radius: the hint answers *which way out
+   of this shot*, and it has nothing to say once the answer is *nowhere, you are here*. The
+   objective string (`Down to the lock apron — the girl who was in the water`) is then the
+   only guidance, and it named a place the body cannot stand.
+
+**NOT FIXED TONIGHT, and the ticket is written to keep the next lane off the wrong sentence:**
+it is *"the lock apron's walk surface ends 0.5 m east of `[72.05, 1.25, −28.4]` and Maren's
+post is on a platform 1.1 m above it"*, not *"the player is stuck in the pillars"* — which is
+what all five agent filings say, because that is what it looks like from inside. A findability
+gate that projects Maren's body into the `lockfive` band would have caught the second half;
+`findability_test` covers villagers, and Maren is a story NPC posted by a beat.
+
+**BUDGET, flagged as required: $0.532 for the receipt run**, plus ~$0.10 wasted on a
+`--help` that is not a flag — `llm_playtester` has no help path, so `--help` **started a real
+NEW GAME run** and it had to be killed at step 22. Round total ≈ **$0.63**.
