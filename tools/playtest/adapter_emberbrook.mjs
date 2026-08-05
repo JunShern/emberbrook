@@ -1175,7 +1175,18 @@ export function makeAdapter(opt) {
         if (!e.pageSilent) throw e;
         return unrun([e.message]);
       }
-      const AR = h.marker ? ARRIVE_MARKER_M : ARRIVE_M;   // see THE HOLD/ARRIVE DEADBAND
+      /* AND THE SHORT LEG MUST STILL WALK (round 30, run-20260805-215044 step 85).
+       * A flat ARRIVE_M floors every click less than 1.2 m ahead into a zero-metre
+       * "arrived" leg — the agent inched toward the shelf-east cut with goal after
+       * goal ("walk down and right towards The Lockhead") and the executor refused
+       * each one: intended 0.64, closed 0.00, ok:true, while the cut at x 48.08 sat
+       * two clicks away. The tolerance is for OVERSHOOT control on long drives, not
+       * for declaring victory over a step never taken — so it scales with the leg:
+       * a 10 m drive keeps the body-width 1.2, a 1 m drive closes to 0.5, and only
+       * a click already underfoot (< 0.35 m) is a legitimate no-op. */
+      const d0pre = Math.hypot(h.p[0] - from[0], h.p[2] - from[2]);
+      const AR = h.marker ? ARRIVE_MARKER_M
+        : Math.min(ARRIVE_M, Math.max(0.35, 0.5 * d0pre));   // see THE HOLD/ARRIVE DEADBAND
       // The frame a marker leg is judged by: taking the way it names. A cut changes
       // the shot with no UILOCK and no scene change, so the loop must watch for it.
       const view0 = h.marker ? await evSoft(
