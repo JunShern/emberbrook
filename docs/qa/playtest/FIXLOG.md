@@ -3105,3 +3105,55 @@ well"*, not *"the well's footprint is too big"*. Note also that the shared `foot
 what every clearance search tests against, where over-reporting is protective — the
 market-row redline's own lesson — so the cut and the placement rects must be separated
 first, exactly as `foot_rects_cut()` already did for the stalls.
+
+### THE RECEIPT RUN — `run-20260805-044813`, NEW GAME, 300 steps, **$0.907**
+
+**CHAPTER ONE IS COMPLETE FROM A COLD NEW GAME FOR THE FIRST TIME.** Nineteen Ch1 beats,
+in order, every one on its own trigger, and out through the Old Gate into Chapter Two:
+
+| beat | step | | beat | step |
+|---|---|---|---|---|
+| `ch1.open` | 2 | | **`ch1.see.mochi`** | **94** |
+| `ch1.hush` | 45 | | `ch1.pact` | 122 |
+| `ch1.see.mara` | 47 | | `ch1.sigils` | 135 |
+| `ch1.see.poppy` | 49 | | `ch1.sendoff` | 136 |
+| `ch1.see.finn` | 68 | | **`ch1.done`** | **142** |
+| | | | `ch2.road` / `ch2.arrive` | 146 / 149 |
+
+Against every previous NEW GAME run, `see.mochi` had fired **never** (013253, 015721 at +61
+of a 150-step budget, 022035, 031425 never in 300, 040031 never in 147). It fired at step
+94 and `ch1.pact` — the beat that had fired exactly once in this whole loop — at 122.
+**21 of 28 beats. `ch2.jam` onward did not fire, so THERE IS NO END CARD.**
+
+### WHY IT STOPPED, AND IT IS NOT A NEW WALL
+
+Steps 149–300 were spent in Dellhollow with no beat: `del-cine` to 277, then the Cookhouse
+to the end. Six of the run's eight reports are ONE complaint —
+PT-20260805-014/015/017/018/019 and -016 — all *"cannot reach / nothing happens at The
+Lockhead"*. `ch2.jam` sits at `[78.93, 14.07, −15.6]`; the town gate the chapter arrives
+at is `x ≈ 21`. **That is 58 m and five hops across the whole of Dellhollow, and Chapter
+One had already spent 149 of the 300 steps.** The budget, not a wall, is the first cause.
+
+`wayfind_probe --from ch2.jam` says the arrow itself is working — and names the second
+cause in the same breath:
+
+| station | hint | hops | the marker's own drawn pixel, via `SIM.pick` |
+|---|---|---|---|
+| `gate` `[20.9, 24, −6]` | `The Lockhead` `shown labelled` | 5 | — |
+| `quay-west` `[47.5, 14, −12]` | `The Lockhead` `shown labelled` | 1 | **`cliff_town_back`** |
+
+**The `quay-west>lockhead` arrow is drawn on a cliff face** (107.8 px of lift on the one
+below it; this one 91.6). Round 10 made the EXECUTOR immune — a pixel on an exit arrow
+resolves to that edge's own `at` — but nothing makes the AGENT immune, and it wrote
+*"ground marked as not walkable"* and *"cannot figure out how to reach the marker from the
+upper balcony"* five separate times. Same family as round 5's off-screen portal label and
+round 18's rival arrow: **the arrow is in the right place in the world and the wrong place
+on the screen.** The probe also flags `!! SHIPPED HINT DISAGREES with the metre-shortest
+first hop` here (1 hop to `lockhead` against 2 hops / 30.1 m via `weave`) — round 13's
+hops-are-not-metres, unresolved for this edge. Frames pinned at
+`docs/qa/playtest/wayfind-ch2jam/`.
+
+**WHAT ROUND 19 SHOULD DO, in order:** (1) the `quay-west>lockhead` marker's lift, measured
+with `--liftcap`, which is the instrument built for exactly this; (2) a `--from ch2.arrive`
+run so Chapter Two gets a budget of its own instead of Chapter One's remainder — the end
+card has still never been reached from any start.
