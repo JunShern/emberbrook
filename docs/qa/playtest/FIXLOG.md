@@ -2871,3 +2871,56 @@ written into the tool's header rather than only into a commit message.
   (scenery) and now returns **`walk_e_square-plaza__barn_l2`** — a player clicking the
   arrow aims at the road.
 
+### THE 300-STEP NEW GAME THAT NEVER REACHED THE FIX — and what it proved instead
+
+`run-20260805-031425`, NEW GAME, 300 steps, $0.85, **13 beats and no `ch1.pact`.** It
+never got to the Old Gate at all, because it never got out of "See to them":
+
+| beat | step |
+|---|---|
+| `ch1.hush` | 85 |
+| `ch1.see.mara` | **87** |
+| `ch1.see.poppy` | **94** |
+| `ch1.see.finn`, `ch1.see.mochi` | **never, in the remaining 206 steps** |
+
+`walk legs 379 (318 arrived, **0 aimed off the walk network**), 0 reports filed`, and it
+finished at `therise [59.0, 0.9, −30.6]` — bouncing `square ↔ therise` for its last eighty
+steps under the line *"the cat back up the north road"*. **This is round 15's OTHER
+finding, the one that was measured and deliberately not fixed**, and with PT-010 out of
+the way it is now the whole of what stands between a NEW GAME and the end card.
+
+Two smaller things the run did say, recorded and not chased tonight: ten legs intended
+over 3 m and closed under 10% of it, and **six of them are one place** — the orchard
+between `[36..50, −23..−32]`, steps 21–27 — which is 25 steps of a 300-step budget spent
+on the walk in. And `emb-lake-int` step 56 `[4.1, 0, −1.4] → [3.6, 0, −4.9]`, 0.04 m of
+3.46. Neither is on the story spine; both want `_court_probe --grid "walk":true`, which is
+now the instrument that would name them in one run.
+
+### AND SO ROUND 15'S DEFERRED FIX SHIPPED, BECAUSE THE PROBE CAN NOW PROVE IT
+
+Round 15 wrote the design and refused to ship it: *"`wayfind_probe` is the only instrument
+that can prove it, and that instrument needs a Chrome the machine cannot spare … Build it
+against `wayfind_probe` on a quiet machine, with `emb-cine` `square` → `pondlane` as the
+case."* Both conditions are now met, and that IS the case it was built against.
+
+`beatCam()` in `story_runtime.js` is `findability_test.ownerShot()` written out: whichever
+shot band in the scenegraph contains the beat's own `at`, last match wins — play3d's own
+band rule. It **fails closed** (no `at`, no graph, no owning band → null → exactly today's
+behaviour), and `destName` now takes the cam it routed with so the label is the shot's own
+authored name.
+
+| `--from` | standing at | before | after |
+|---|---|---|---|
+| `ch1.see.finn` | `square` | *no arrow* | **`Pond Lane`**, `square>pondlane`, 1 hop |
+| `ch1.see.mochi` | `square` | *no arrow* | **`The Waystone`**, `square>therise`, 3 hops |
+| `ch1.see.mochi` | **`therise`** | *no arrow* | **`The Waystone`**, `therise>arch`, 2 hops |
+| `ch1.see.mochi` | `waystone` | — | none (`beat=null` — you have arrived) |
+
+`shown=true labelled=true` at every one, and **the shipped Dijkstra agrees with the
+probe's independent metre enumerator at every one**. The `therise` row is the exact
+station `run-20260805-031425` spent its last eighty steps in, with nothing on screen
+pointing anywhere.
+
+It reaches Chapter Two as well — `ch2.jam` and `ch2.maren` also carry `at` with no `cam`,
+and `--from=ch2.maren` at the Lockhead now labels **`Lock Five`** where it labelled
+nothing. `story_test` 1112/0, `playthrough_test` **65/0**, `node --check` clean.
