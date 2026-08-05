@@ -3500,3 +3500,121 @@ reaching Maren is the deep-stairs descent, and that was already the open ticket.
 
 **BUDGET, flagged as required: $0.33 of the ~$0.40 approved. A second run is not started** — it
 would meet the same flight.
+
+## Round 21 — 2026-08-05 · the deep stairs were a ladder that only went UP
+
+Round 14 filed it, rounds 16/19/20 deferred it, round 20's receipt run spent **36 of its 80
+steps** on it: *"16 of 17 stairs landings in `del-cine` are roofed by their own flight, 30–52%
+of each."* The census was right and the diagnosis under it was not, and the fix round 14
+prescribed — *"lay a tread's top at its leg's own lower end"* — is arithmetically correct and
+**breaks the town**. Both of those had to be built to be learned.
+
+### WHAT IT ACTUALLY WAS: A SWITCHBACK CANNOT BE WALKED DOWN
+
+`walkGround` takes the **HIGHEST** top within `[fy-(STEP_DN+.1), fy+(STEP_UP+.1)]`.
+`town_blockout` pivots both legs of a switchback about ONE waypoint, so the arriving flight's
+TAIL and the departing flight's HEAD stand on the same plan cells **one riser apart** — and a
+body walking down is picked back UP, rung by rung. `_court_probe --way`, tread by tread, on the
+shipped bundle:
+
+    10.49 (l1_t01)  ->  10.80 (landing)  ->  11.27 (l0_t07)  ->  11.67 (l0_t06)  ->  ...
+
+Every rung is under `STEP_UP` 0.63, so every rung is legal. The drive ended at
+`[39.25, 11.67, -19.85]` — **which is where round 20's receipt run ended**, at
+`[39.56, 5.96, -20.84]`'s own flight, 12 legs of 40.
+
+**AND A FLOOD FILL CANNOT SEE THIS.** `--comp` from the head pad and the foot pad reported ONE
+component of 1663 cells over a stair no body could descend, because the fill's lattice adjacency
+allows a step up. Third time this file has written that sentence; first time it was about a
+stair that reads as perfectly built in every picture.
+
+**The landing census was a SYMPTOM of the same overlap**, not a separate defect. The one clean
+landing in the town, `quay-deck__pilot-cluster_landing`, is the tell round 14 already published
+and read the other way: its incoming leg has **zero rise**, so there is no flight over it.
+
+### THE FIX: SPLIT THE PIVOT — and three things that had to be built to be known
+
+`tools/town_blockout.py`, `STAIRS_V2` (a migration ledger, see below). At every interior
+waypoint the departing leg's start is moved `2 x PIVOT_OFF` sideways, the arriving leg's foot is
+set back `FOOT_TRIM` in plan, and the 2x2 landing becomes an oriented slab spanning the two feet.
+Two flights side by side across one landing — which is what a real switchback is.
+
+**1. THE TREAD HEIGHTS ARE NOT NEGOTIABLE.** Round 14's prescription (tops `U-step..L` instead of
+`U..L+step`) does clear every landing — the offline model says 0/17 roofed, 100.0% standable.
+Built, it broke the flight at BOTH ends: `qm_stair_underworks`, qm_build's masonry laid UNDER the
+old treads, came up into the body window over `l0_t05/t06`; and the approach ribbon
+`walk_e_quay-deck__deep-stairs-head_l2` (top **14.07**, lying over the first six treads) stopped
+being level with the flight's head and became a 0.40 m lip — `--comp` from the head pad filled
+**0 cells past z -18.3**. **Six district builders derive art from these tread tops.** v2 moves
+treads only IN PLAN.
+
+**2. THE SPLIT IS ASYMMETRIC AT THE FIRST PIVOT.** Moving both ends swings the arriving leg's
+whole line, and leg 0 cannot afford 0.2 m: the only way off that approach ribbon is a **0.05 m
+sliver** of tread sticking out past its south edge. So leg 0's pivot gives the departing leg the
+whole separation and leaves l0 alone; every other pivot splits evenly, which also carries the
+arriving leg's own tail off its landing. `FOOT_TRIM` is bounded by that same sliver — 0.25 drives,
+0.34 does not. **The margin is the map's, not the parameter's.**
+
+**3. A RAIL MUST CLEAR THE LANDING IT ENDS AT, WHEREVER THAT LANDING IS.** `stairs_leg` insets its
+rails 0.55 from each end "so junctions/landings stay open" — true while the landing sat ON the
+leg's end. A split pivot puts it OFF TO THE SIDE, straight across the rail line. `--who` named
+`wf_stair_rail_1` (waterfront_build's art, laid on that `bar_`) blocking the body on `l1_t08` at
+7.82, and the drive stopped 0.92 m short of `landing001`. `RAIL_INS` 1.05 at a split end: the
+descent went 19/40 -> 22/40 on that one number.
+
+**AND GROWING THE LANDING TO KEEP UP WITH A BIGGER TRIM IS NOT THE WAY OUT** — tried at
+`FOOT_TRIM` 0.45 with the slab grown to match: every landing read **99–100% standable** and the
+drive lost the last pivot at **13/40**. Clean and disconnected. A landing census is not a route.
+
+### AN OFFLINE MODEL, AND THE BLINDNESS THAT COST A REBUILD
+
+The parameters were swept against play3d's own `walkGround`/`blocked`/`walkStep` rules on plain
+boxes (no Blender, no browser, seconds per sweep) — and the first version modelled ONE stairs edge
+in a vacuum. It said `off=0.70 ft=0.40` drove 40/40; the engine said 8/40, because the model could
+not see `walk_e_quay-deck__deep-stairs-head_l2` sitting on top of the flight. Rebuilt against the
+WHOLE walk network it reproduced the shipped stall exactly — **12/40, ending at y 11.67** — and
+its picks then held in the engine. **A MODEL THAT CANNOT SEE THE NEIGHBOUR IS A MODEL OF A
+DIFFERENT TOWN.** (Same lesson in a second costume: the deep stairs were called "the one flight
+with no derived art" off a search by node ORIGIN. `wf_stair_treads` is a JOINED mesh whose origin
+is nowhere near the stair. Ask for WORLD BOUNDING BOXES.)
+
+### RECEIPT
+
+| | before | after |
+|---|---|---|
+| `--way` **DOWN** the flight, tread by tread, 40 legs | **12/40**, stalled `[39.25, 11.67, -19.85]` | **40/40, no stall**, ends on the foot pad |
+| `--way` **UP** the flight | 4/40 | 6/40 — see the carry |
+| `--stand` `..._landing` | 285/400 **(71%)**, roofed by `l0_t06`/`l0_t05` | 277/288 **(96%)** |
+| `--stand` `..._landing001` | 256/401 **(64%)**, `l1_t07`/`l1_t06` | 269/279 **(96%)** |
+| `--stand` `..._landing002` | 256/401 **(64%)**, `l2_t06`/`l2_t05` | 246/262 **(94%)** |
+| `--stand` `..._landing003` | 235/400 **(59%)**, `l3_t04`/`l3_t03` | 290/335 **(87%)** |
+| `--comp` head pad + foot pad | 1 component (and a lie) | 1 component, **both seeds 999+ cells, `*` everywhere** |
+| `walk_engine_gate --scene del-cine` | GREEN 812.4 m2 | **GREEN, 4010/4010 cells, 812.0 m2, BVH FAIL 0** |
+| `cine_test` | 688/0 | **688/0** |
+| `story_test` | 1112/0 | **1112/0** |
+| `findability_test` | 69/0 | **69/0** |
+| `routes_derive --check` / `scenegraph_derive` | — | up to date, **15/15 arrivals clear every cut band** |
+
+**CARRIED, MEASURED, NOT FIXED — the stair is one-way at its FOOT.** Uphill still stalls at
+`landing003`, where `l3_t04` roofs 29 of the landing's 335 cells and the body cannot cross them to
+reach `l3_t05`. Every lever tried moved it somewhere else (see the three notes above). The
+descent is what Chapter Two walks; the ascent is served by the `deep-stairs<->quay-west` cut.
+
+**AND A CAMERA IS DOWNSTREAM OF THE WALK NETWORK.** Moving the flight moved three solved cameras —
+`quay-west` 0.45 m, `deep-stairs` 0.63 m, `waterfront` 0.15 m — which walked the
+`deep-stairs<->waterfront` seam from t=0.730 to t=0.874 and, at `PIVOT_OFF` 0.90 **asymmetric
+everywhere**, put the seam OFF the walk network entirely (`cine_test`: *the SEAM is on the walk
+network*, `[39.254, 3.91, -25.36]`). The asymmetric split gives the departing leg the WHOLE
+offset, so leg 4 leaves the map polyline the seam solver measures along; the even split at 1.20
+keeps it covered. **`cine_solve` -> `routes_derive` -> `scenegraph_derive` is a FIXED POINT, not a
+sequence** — it took two passes to settle, and the plates baked before it settled were stale
+against their own solve. Three plates rebaked (`deep-stairs`, `quay-west`, `waterfront`), 1-wide
+budget respected.
+
+**STAIRS_V2 IS A MIGRATION LEDGER.** Six of Dellhollow's seven flights have district art derived
+from their walk records at build time — `gs_build` (valley-gate__inn), `ls_build`
+(shelf-homes__market-stalls, loop-landing__quay-deck), `lg_build` (keepers-cottage__lock-five),
+`cx_build` + `locksfoot_build` (weave-huts__moorage), `qm_build` (quay-deck__pilot-cluster). An
+edge joins the set only when its art is carried in the same window; `waterfront_build.py` (which
+clears its own `wf_` prefix and rebuilds deterministically) is what made the deep stairs safe to
+do first. **The other 13 landings are still v1 and still 48–70% standable.**

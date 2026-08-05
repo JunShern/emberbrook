@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-05T06:57:11Z",
+ "generated": "2026-08-05T09:06:18Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -2212,20 +2212,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.439,
-       0.051
+       -0.444,
+       0.068
       ],
       "px": [
-       377,
-       364
+       374,
+       358
       ],
       "onScreen": true,
-      "edgeMargin": 0.561,
-      "depth": 32.594,
-      "charPx": 64,
+      "edgeMargin": 0.556,
+      "depth": 32.954,
+      "charPx": 63,
       "headNdc": [
-       -0.446,
-       0.211
+       -0.452,
+       0.227
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2257,20 +2257,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.68,
-       0.122
+       -0.682,
+       0.137
       ],
       "px": [
-       215,
-       337
+       213,
+       331
       ],
       "onScreen": true,
-      "edgeMargin": 0.32,
-      "depth": 34.985,
+      "edgeMargin": 0.318,
+      "depth": 35.346,
       "charPx": 59,
       "headNdc": [
-       -0.691,
-       0.272
+       -0.693,
+       0.286
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2302,20 +2302,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.661,
-       0.005
+       -0.664,
+       0.024
       ],
       "px": [
-       228,
-       382
+       226,
+       375
       ],
       "onScreen": true,
-      "edgeMargin": 0.339,
-      "depth": 31.22,
+      "edgeMargin": 0.336,
+      "depth": 31.58,
       "charPx": 66,
       "headNdc": [
-       -0.673,
-       0.172
+       -0.676,
+       0.188
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2342,25 +2342,25 @@
        -0.4266
       ],
       "t": 1.1,
-      "w": 2.6
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.455,
-       -0.399
+       0.435,
+       -0.37
       ],
       "px": [
-       978,
-       537
+       964,
+       526
       ],
       "onScreen": true,
-      "edgeMargin": 0.545,
-      "depth": 24.706,
-      "charPx": 84,
+      "edgeMargin": 0.565,
+      "depth": 25.066,
+      "charPx": 83,
       "headNdc": [
-       0.465,
-       -0.197
+       0.444,
+       -0.17
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2392,20 +2392,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.639,
-       0.199
+       -0.642,
+       0.213
       ],
       "px": [
-       243,
-       308
+       241,
+       302
       ],
       "onScreen": true,
-      "edgeMargin": 0.361,
-      "depth": 35.78,
-      "charPx": 58,
+      "edgeMargin": 0.358,
+      "depth": 36.14,
+      "charPx": 57,
       "headNdc": [
-       -0.649,
-       0.346
+       -0.652,
+       0.359
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2430,20 +2430,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.097,
-       -0.154
+       0.083,
+       -0.131
       ],
       "px": [
-       737,
-       443
+       728,
+       434
       ],
       "onScreen": true,
-      "edgeMargin": 0.846,
-      "depth": 27.019,
-      "charPx": 77,
+      "edgeMargin": 0.869,
+      "depth": 27.379,
+      "charPx": 76,
       "headNdc": [
-       0.099,
-       0.035
+       0.085,
+       0.056
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2474,20 +2474,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.292,
-       -0.193
+       0.275,
+       -0.168
       ],
       "px": [
-       868,
-       458
+       857,
+       449
       ],
       "onScreen": true,
-      "edgeMargin": 0.708,
-      "depth": 26.217,
-      "charPx": 79,
+      "edgeMargin": 0.725,
+      "depth": 26.577,
+      "charPx": 78,
       "headNdc": [
-       0.298,
-       0.002
+       0.281,
+       0.024
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2523,20 +2523,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.439,
-       0.321
+       -0.444,
+       0.334
       ],
       "px": [
-       377,
-       261
+       373,
+       256
       ],
       "onScreen": true,
-      "edgeMargin": 0.561,
-      "depth": 34.393,
+      "edgeMargin": 0.556,
+      "depth": 34.753,
       "charPx": 60,
       "headNdc": [
-       -0.446,
-       0.476
+       -0.452,
+       0.488
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2572,20 +2572,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.817,
-       0.125
+       -0.819,
+       0.14
       ],
       "px": [
-       123,
-       336
+       122,
+       330
       ],
       "onScreen": true,
-      "edgeMargin": 0.183,
-      "depth": 35.067,
-      "charPx": 59,
+      "edgeMargin": 0.181,
+      "depth": 35.427,
+      "charPx": 58,
       "headNdc": [
-       -0.831,
-       0.275
+       -0.832,
+       0.288
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2621,20 +2621,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.829,
-       -0.101
+       -0.83,
+       -0.081
       ],
       "px": [
-       115,
-       423
+       114,
+       415
       ],
       "onScreen": true,
-      "edgeMargin": 0.171,
-      "depth": 30.865,
-      "charPx": 67,
+      "edgeMargin": 0.17,
+      "depth": 31.225,
+      "charPx": 66,
       "headNdc": [
-       -0.844,
-       0.065
+       -0.845,
+       0.083
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2663,27 +2663,27 @@
        -0.4266
       ],
       "t": 1.1,
-      "w": 2.6
+      "w": 1.9
      },
      "r": null,
      "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
      "screen": {
       "behind": false,
       "ndc": [
-       0.246,
-       -0.651
+       0.229,
+       -0.619
       ],
       "px": [
-       837,
-       634
+       826,
+       622
       ],
       "onScreen": true,
-      "edgeMargin": 0.349,
-      "depth": 24.974,
-      "charPx": 83,
+      "edgeMargin": 0.381,
+      "depth": 25.334,
+      "charPx": 82,
       "headNdc": [
-       0.251,
-       -0.457
+       0.234,
+       -0.427
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2719,20 +2719,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.546,
-       0.344
+       -0.55,
+       0.356
       ],
       "px": [
-       305,
-       252
+       303,
+       247
       ],
       "onScreen": true,
-      "edgeMargin": 0.454,
-      "depth": 36.678,
+      "edgeMargin": 0.45,
+      "depth": 37.038,
       "charPx": 56,
       "headNdc": [
-       -0.554,
-       0.49
+       -0.558,
+       0.501
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3202,11 +3202,10 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
      "seam:market-stalls__lockhead",
-     "seam:quay-deck__pilot-cluster",
-     "seam:deep-stairs-head__deep-stairs-foot"
+     "seam:quay-deck__pilot-cluster"
     ],
     "minCharPx": 56,
-    "visibleFrac": 0.75
+    "visibleFrac": 0.8594
    }
   },
   "lockhead": {
@@ -4649,8 +4648,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      -0.765,
-      -0.644
+      -0.49,
+      -0.872
      ],
      "seam": {
       "n": [
@@ -5137,7 +5136,7 @@
      "seam:weave-huts__keepers-cottage"
     ],
     "minCharPx": 56,
-    "visibleFrac": 0.9531
+    "visibleFrac": 0.9219
    }
   },
   "deep-stairs": {
@@ -5162,25 +5161,25 @@
        -0.4266
       ],
       "t": 1.1,
-      "w": 2.6
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.084,
-       0.195
+       0.09,
+       0.226
       ],
       "px": [
-       728,
-       309
+       732,
+       297
       ],
       "onScreen": true,
-      "edgeMargin": 0.805,
-      "depth": 26.734,
-      "charPx": 77,
+      "edgeMargin": 0.774,
+      "depth": 26.001,
+      "charPx": 80,
       "headNdc": [
-       0.084,
-       0.398
+       0.091,
+       0.435
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5212,20 +5211,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.039,
-       -0.297
+       -0.036,
+       -0.279
       ],
       "px": [
-       646,
-       498
+       648,
+       491
       ],
       "onScreen": true,
-      "edgeMargin": 0.703,
-      "depth": 25.441,
-      "charPx": 81,
+      "edgeMargin": 0.721,
+      "depth": 24.709,
+      "charPx": 84,
       "headNdc": [
-       -0.039,
-       -0.088
+       -0.036,
+       -0.063
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5256,27 +5255,27 @@
        -0.4266
       ],
       "t": 1.1,
-      "w": 2.6
+      "w": 1.9
      },
      "r": null,
      "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:deep-stairs>quay-west",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.035,
-       0.47
+       -0.032,
+       0.506
       ],
       "px": [
-       649,
-       204
+       650,
+       190
       ],
       "onScreen": true,
-      "edgeMargin": 0.53,
-      "depth": 28.49,
-      "charPx": 73,
+      "edgeMargin": 0.494,
+      "depth": 27.757,
+      "charPx": 75,
       "headNdc": [
-       -0.035,
-       0.663
+       -0.032,
+       0.704
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5312,20 +5311,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0,
-       -0.638
+       0.005,
+       -0.629
       ],
       "px": [
-       672,
-       629
+       675,
+       626
       ],
       "onScreen": true,
-      "edgeMargin": 0.362,
-      "depth": 23.82,
-      "charPx": 87,
+      "edgeMargin": 0.371,
+      "depth": 23.088,
+      "charPx": 90,
       "headNdc": [
-       0,
-       -0.418
+       0.005,
+       -0.402
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5428,8 +5427,8 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 73,
-    "visibleFrac": 1
+    "minCharPx": 75,
+    "visibleFrac": 0.9219
    }
   },
   "boatyard": {
@@ -7153,7 +7152,7 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 116,
-    "visibleFrac": 0.7812
+    "visibleFrac": 0.7969
    }
   },
   "lockfive": {
@@ -7162,15 +7161,15 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      73.29,
-      4,
-      -26.65
+      72.79,
+      1.25,
+      -29.15
      ],
      "from": "weave",
      "via": "del-cine>del-cine@cut:weave-huts__moorage:0.273:weave>lockfive",
      "aim": [
-      -0.765,
-      -0.644
+      -0.49,
+      -0.872
      ],
      "seam": {
       "n": [
@@ -7183,20 +7182,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.069,
-       -0.157
+       -0.096,
+       -0.559
       ],
       "px": [
-       718,
-       444
+       607,
+       599
       ],
       "onScreen": true,
-      "edgeMargin": 0.843,
-      "depth": 24.376,
-      "charPx": 85,
+      "edgeMargin": 0.441,
+      "depth": 23.652,
+      "charPx": 88,
       "headNdc": [
-       0.07,
-       0.06
+       -0.097,
+       -0.341
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7598,7 +7597,6 @@
      "source": "map edge weave-huts__moorage@0.273..1",
      "role": "link",
      "connects": [
-      "entry:seam:weave-huts__moorage",
       "exit:seam:weave-huts__moorage"
      ]
     },
@@ -7841,7 +7839,7 @@
      "seam:tenant-shack__fish-dock"
     ],
     "minCharPx": 51,
-    "visibleFrac": 0.4219
+    "visibleFrac": 0.4375
    }
   },
   "north-landing": {
@@ -8263,7 +8261,7 @@
   }
  ],
  "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 1 of 16 plates are stale against the solve — lockfive (0.02u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 2 of 16 plates are stale against the solve — deep-stairs (0.57u), waterfront (0.13u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
  ],
  "overrides": {}
 }

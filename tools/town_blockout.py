@@ -5,7 +5,9 @@
 # Geometry rules mirror the townmap viewer's material-aware rendering:
 #   road/path   -> chaikin-smoothed flat ribbons (earth)
 #   deck/bridge -> straight plank ribbons, leg per waypoint segment (timber)
-#   stairs      -> real treads (rise <= 0.4/tread) + landing pads at waypoints
+#   stairs      -> real treads (rise <= 0.4/tread) + a landing across each pivot
+#                  (v2, see STAIRS_V2: the two flights at a switchback are offset
+#                   apart so a body can walk DOWN without being picked back up)
 #   ladder      -> steep rail + rungs
 #   winch       -> thin cable (non-walkable)
 # Landmarks by class: structure (kind-shaped massing), area (flat disc, extent),
@@ -208,7 +210,102 @@ def chaikin(pts, n=2):
         out.append(pts[-1]); pts = out
     return pts
 
-def stairs_leg(name, a, b):
+# ---------- stairs v2: a switchback whose flights do not stack ----------------
+# THE TWO FLIGHTS AT A PIVOT MUST NOT SHARE GROUND.  play3d's walkGround takes the
+# HIGHEST top within [fy-(STEP_DN+.1), fy+(STEP_UP+.1)], and a switchback laid about
+# a SINGLE waypoint puts the arriving flight's TAIL and the departing flight's HEAD
+# on the same plan cells one riser apart — so a body walking DOWN is picked back UP,
+# rung by rung, and the stair cannot be descended at all.  Measured in del-cine, on
+# the deep stairs, `_court_probe --way` tread by tread: the drive climbs the ladder
+# 10.49 -> 10.80 (landing) -> 11.27 (l0_t07) -> 11.67 (l0_t06) and ends at
+# [39.25, 11.67, -19.85], which is where round 20's receipt run ended.
+#
+# AND A FLOOD FILL CANNOT SEE IT: the fill's lattice adjacency allows a step UP, so
+# it reports the shipped deep stairs as ONE component of 1663 cells while no body can
+# get down them.  Only the drive says so — CLAUDE.md's own line, earned again.
+#
+# So each interior waypoint is SPLIT: the arriving leg ends off to one side, the
+# departing leg starts off to the other, and the landing bridges the two feet.  That
+# is what a real switchback is — two flights side by side across one landing.
+# Three numbers, all swept offline against play3d's own walkGround/blocked rules
+# (17 landings x ~200 body-box cells, plus a 0.075 m drive of every flight):
+PIVOT_OFF  = 1.20   # half the lateral separation at a 150-degrees-or-sharper turn
+PIVOT_KNEE = 80.0   # a turn gentler than this already misses itself — no offset
+PIVOT_SPAN = 70.0   # degrees of turn over which the offset ramps to PIVOT_OFF
+FOOT_TRIM  = 0.25   # plan-only setback of a leg's LOWER end off its own landing
+LAND_LONG  = 0.90   # landing depth ALONG the flights (a deeper one gets roofed)
+LAND_CROSS = 1.40   # landing width ADDED to the pivot's own separation
+RAIL_INS   = 1.05   # rail setback at a SPLIT end (LAND_LONG/2 + a body's half-width)
+#
+# THE SPLIT IS ASYMMETRIC, and that is the second thing a rebuild had to teach me.
+# Moving BOTH ends off the waypoint swings the ARRIVING leg's whole line, and the
+# flight's first leg cannot afford it: `walk_e_quay-deck__deep-stairs-head_l2`, the
+# flat ribbon that feeds the deep stairs, lies at 14.07 ON TOP OF the first six
+# treads (the approach comes in from the east and the stair doubles straight back
+# under it), and the only way down is a 0.05 m sliver of tread sticking out past the
+# ribbon's south edge.  Swing the leg 0.2 m north and that sliver is gone: measured
+# `--comp` from the head pad, 0 cells past z -18.3, and the drive parked on the
+# ribbon's lip at [39.61, 14.07, -18.52].  So the arriving leg KEEPS the waypoint and
+# the departing leg takes the whole 2 x PIVOT_OFF.  Same separation, one line moved.
+# FOOT_TRIM is bounded by that same sliver: 0.25 drives the descent 40/40, 0.34 does
+# not.  The margin is the map's, not the parameter's.  And GROWING THE LANDING to keep
+# up with a bigger trim is not the way out — tried at 0.45, every landing read 99-100%
+# standable and the drive lost the last pivot at 13/40: clean AND disconnected.
+#
+# STAIRS_V2 IS A MIGRATION LEDGER, NOT A TASTE.  Six of Dellhollow's seven flights
+# have DISTRICT ART derived from their walk records at build time — gs_build
+# (valley-gate__inn), ls_build (shelf-homes__market-stalls, loop-landing__quay-deck),
+# lg_build (keepers-cottage__lock-five), cx_build + locksfoot_build
+# (weave-huts__moorage), qm_build (quay-deck__pilot-cluster) — so moving a ribbon
+# without re-running its builder in the SAME window leaves rails and treads
+# registered to a stair that is no longer there.  An edge joins this set only when
+# its district art is carried with it.  The deep stairs are here first because ONE
+# builder owns theirs — `waterfront_build.py`, which clears its own `wf_`/`veg_wf_`
+# prefix and rebuilds deterministically, so re-running it is safe.
+# AND A SEARCH BY NODE ORIGIN CANNOT FIND THAT ART: `wf_stair_treads` is a JOINED
+# mesh whose origin is nowhere near the stair, so "93 nodes in the stairs' box, all
+# scatter" was a wrong answer confidently obtained.  Ask for WORLD BOUNDING BOXES.
+# When the set covers every stairs edge, delete it and the `if` below with it.
+STAIRS_V2 = {"deep-stairs-head__deep-stairs-foot"}
+
+
+def pivot_split(prev, w, nxt, asym=False):
+    """(arriving-leg END, departing-leg START) at an interior stairs waypoint.
+
+    THE SPLIT IS ASYMMETRIC: the departing leg takes the WHOLE separation and the
+    arriving leg's line is left alone.  A balanced split swings the arriving leg too,
+    and the first leg cannot afford it (see the ribbon note above) — but it was also
+    tried EVERYWHERE ELSE, where it is free of that constraint, and it was worse:
+    balanced at pivots 2..4 drove 36/40 where asymmetric drove 40/40.  One line moved
+    per pivot is both the safer rule and the measured one."""
+    a = Vector((w.x - prev.x, w.y - prev.y, 0))
+    d = Vector((nxt.x - w.x, nxt.y - w.y, 0))
+    if a.length < 1e-6 or d.length < 1e-6: return w, w
+    a.normalize(); d.normalize()
+    th = math.degrees(math.acos(max(-1.0, min(1.0, a.dot(d)))))
+    off = PIVOT_OFF * max(0.0, min(1.0, (th - PIVOT_KNEE) / PIVOT_SPAN))
+    if off < 1e-3: return w, w
+    s = -a                                  # back along the arriving flight
+    m = (s + d)                             # both flights lie roughly along m
+    if m.length < 1e-6: return w, w
+    m.normalize()
+    n = s - m * s.dot(m)                    # the side the arriving flight leans to
+    if n.length < 1e-6: return w, w
+    n.normalize()
+    if asym: return w, w - n * (2 * off)
+    return w + n * off, w - n * off
+
+
+def plan_trim(a, b, t):
+    """pull b back toward a by t IN PLAN, keeping b's height (the riser count and
+    every tread top are unchanged; only the run shortens, which walks the ladder
+    out from under the landing)."""
+    v = Vector((b.x - a.x, b.y - a.y, 0)); L = v.length
+    if L <= t + 0.6: return b
+    return b - v.normalized() * t
+
+
+def stairs_leg(name, a, b, rail_ins=(0.0, 0.0)):
     v = b - a; rise = b.z - a.z
     hl = Vector((v.x, v.y, 0)).length
     # side rails: stop walkers mounting flights sideways (the scoop-trap), read as
@@ -223,9 +320,15 @@ def stairs_leg(name, a, b):
         # descended 0.3 below its start (else rails fence the flat deck they
         # depart from — found blocking the quay crossing under volume physics)
         drop_frac = min(0.6, 0.3 / abs(rise)) if abs(rise) > 1e-6 else 0.0
-        ins = max(0.55, hl * drop_frac)
+        # AND A RAIL MUST CLEAR THE LANDING IT ENDS AT, wherever that landing IS.
+        # 0.55 was enough while a landing sat ON the leg's own end; a split pivot
+        # puts it OFF TO THE SIDE, straight across the rail line, and the rail then
+        # fences the flight off from its own landing.  Measured: `--who` named
+        # `wf_stair_rail_1` (waterfront_build's art, laid on this bar_) blocking the
+        # body on l1_t08 at 7.82, and the drive stopped 0.92 m short of landing001.
+        ins = max(0.55, hl * drop_frac, rail_ins[0])
         fwd_a = Vector((v.x, v.y, 0)).normalized() * ins
-        fwd_b = Vector((v.x, v.y, 0)).normalized() * 0.55
+        fwd_b = Vector((v.x, v.y, 0)).normalized() * max(0.55, rail_ins[1])
         up = Vector((0, 0, 0.55))
         for sgn, tag in ((1, "A"), (-1, "B")):
             ra = a + side * sgn + up + fwd_a; rb = b + side * sgn + up - fwd_b
@@ -233,6 +336,17 @@ def stairs_leg(name, a, b):
     n = max(1, math.ceil(abs(rise) / 0.4))
     for t in range(n):
         p0 = a + v * (t / n); p1 = a + v * ((t + 1) / n)
+        # A TREAD'S HEIGHT IS NOT NEGOTIABLE, and that is a measurement, not taste.
+        # Round 14 prescribed laying a tread's top at its leg's own LOWER end instead
+        # of its upper one (tops U-step..L rather than U..L+step), which does clear
+        # every landing.  BUILT AND MEASURED, it broke the flight at BOTH ends:
+        # `qm_stair_underworks` — qm_build's masonry, laid UNDER the old treads —
+        # came up into the body window over l0_t05/t06, and the approach ribbon
+        # `walk_e_quay-deck__deep-stairs-head_l2` (top 14.07, over the first six
+        # treads) stopped being level with the flight's head and became a 0.40 m
+        # lip the walker could not leave: `--comp` from the head pad filled 0 cells
+        # past z -18.3.  SIX DISTRICT BUILDERS derive art from these tread tops.  So
+        # v2 moves treads only IN PLAN, where the defect actually is.
         z = min(p0.z, p1.z) + abs(rise / n)
         bpy.ops.mesh.primitive_cube_add(location=((p0.x + p1.x) / 2, (p0.y + p1.y) / 2, z))
         o = bpy.context.active_object; o.name = "walk_%s_t%02d" % (name, t)
@@ -287,13 +401,45 @@ for e in D["edges"]:
             p = a + v * (r / n)
             leg_box("%s_rung%02d" % (nm, r), p + Vector((-0.35, 0, 0.1)), p + Vector((0.35, 0, 0.1)), 0.3, 0.06, M_WOOD)
     elif t == "stairs":
-        for i in range(len(pts) - 1):
-            stairs_leg("%s_l%d" % (nm, i), pts[i], pts[i + 1])
-        for wp in pts[1:-1]:
-            bpy.ops.mesh.primitive_cube_add(location=(wp.x, wp.y, wp.z - 0.08))
-            o = bpy.context.active_object; o.name = "walk_" + nm + "_landing"
-            o.dimensions = (2.0, 2.0, 0.16); o.data.materials.append(M_WOOD)
-            link_to(o, "PATHS")
+        v2 = ("%s__%s" % (e["from"], e["to"])) in STAIRS_V2
+        if not v2:
+            for i in range(len(pts) - 1):
+                stairs_leg("%s_l%d" % (nm, i), pts[i], pts[i + 1])
+            for wp in pts[1:-1]:
+                bpy.ops.mesh.primitive_cube_add(location=(wp.x, wp.y, wp.z - 0.08))
+                o = bpy.context.active_object; o.name = "walk_" + nm + "_landing"
+                o.dimensions = (2.0, 2.0, 0.16); o.data.materials.append(M_WOOD)
+                link_to(o, "PATHS")
+        else:
+            # split every interior pivot, then lay the legs between the split ends
+            ends = [(pts[0], pts[0])]
+            for i in range(1, len(pts) - 1):
+                ends.append(pivot_split(pts[i - 1], pts[i], pts[i + 1], asym=(i == 1)))
+            ends.append((pts[-1], pts[-1]))
+            for i in range(len(pts) - 1):
+                s, f = ends[i][1], ends[i + 1][0]
+                # set the LOWER end back off its landing; the upper end needs no
+                # setback (that flight's treads all lie BELOW the landing they leave)
+                if i + 1 < len(pts) - 1 and f.z < s.z: f = plan_trim(s, f, FOOT_TRIM)
+                elif i > 0 and s.z < f.z:              s = plan_trim(f, s, FOOT_TRIM)
+                stairs_leg("%s_l%d" % (nm, i), s, f,
+                           rail_ins=(RAIL_INS if i > 0 else 0.0,
+                                     RAIL_INS if i + 1 < len(pts) - 1 else 0.0))
+            for i in range(1, len(pts) - 1):
+                A, Dp = ends[i]
+                sep = Vector((Dp.x - A.x, Dp.y - A.y, 0))
+                if sep.length > 1e-6:
+                    ang = math.atan2(sep.y, sep.x); lx = sep.length + LAND_CROSS
+                else:   # a gentle turn: lay the slab ACROSS the way through
+                    w = Vector((pts[i + 1].x - pts[i - 1].x, pts[i + 1].y - pts[i - 1].y, 0)).normalized()
+                    ang = math.atan2(w.y, w.x) + math.pi / 2; lx = LAND_CROSS
+                bpy.ops.mesh.primitive_cube_add(
+                    location=((A.x + Dp.x) / 2, (A.y + Dp.y) / 2, pts[i].z - 0.08))
+                o = bpy.context.active_object; o.name = "walk_" + nm + "_landing"
+                o.dimensions = (lx, LAND_LONG, 0.16)
+                o.rotation_euler = (0, 0, ang)
+                o.data.materials.append(M_WOOD)
+                link_to(o, "PATHS")
     else:
         draw = chaikin(pts) if t in ("road", "path") else pts   # deck/bridge stay segmented
         wdt = 1.3 if t == "bridge" else 1.6

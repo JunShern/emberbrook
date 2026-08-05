@@ -281,14 +281,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    36.84,
-    41.244,
-    24.11
+    36.544,
+    41.572,
+    24.054
    ],
    "aim": [
-    44.71,
-    15.501,
-    14.842
+    44.467,
+    15.656,
+    14.723
    ],
    "fov": 35,
    "clip": [
@@ -296,12 +296,12 @@
     1400
    ],
    "rtClip": [
-    10.6781,
-    88.772
+    10.857,
+    89.356
    ],
    "depth": {
-    "near": 21.356246948242188,
-    "far": 55.48221969604492,
+    "near": 21.71405029296875,
+    "far": 55.847599029541016,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -316,10 +316,10 @@
     -12
    ],
    "spawnFrom": "walk_pad_notice-board",
-   "visibleFrac": 0.75,
+   "visibleFrac": 0.8594,
    "probes": 64,
-   "baked": "2026-08-02T20:04:44Z",
-   "seconds": 476.6,
+   "baked": "2026-08-05T09:05:29Z",
+   "seconds": 535.4,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -559,14 +559,14 @@
    "entry": false,
    "transit": true,
    "pos": [
-    30.599,
-    46.491,
-    10.917
+    30.869,
+    45.846,
+    10.611
    ],
    "aim": [
-    38.394,
-    22.502,
-    7.372
+    38.353,
+    22.813,
+    7.207
    ],
    "fov": 35,
    "clip": [
@@ -574,12 +574,12 @@
     1400
    ],
    "rtClip": [
-    7.4127,
-    97.226
+    7.0909,
+    96.113
    ],
    "depth": {
-    "near": 14.825450897216797,
-    "far": 60.76633834838867,
+    "near": 14.181818008422852,
+    "far": 60.070613861083984,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -594,10 +594,26 @@
     -23.5
    ],
    "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.002",
-   "visibleFrac": 1.0,
+   "visibleFrac": 0.8438,
    "probes": 64,
-   "baked": "2026-08-01T16:12:27Z",
-   "seconds": 174.8
+   "baked": "2026-08-05T09:12:14Z",
+   "seconds": 335.2,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "boatyard",
@@ -688,8 +704,24 @@
    "spawnFrom": "walk_pad_winch-foot",
    "visibleFrac": 0.625,
    "probes": 40,
-   "baked": "2026-07-30T21:31:37Z",
-   "seconds": 199.2
+   "baked": "2026-08-05T09:12:21Z",
+   "seconds": 342.8,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "fishdock",
