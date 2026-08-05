@@ -3681,3 +3681,51 @@ the walk network is not the same as a district that fits the body.
 `--from=ch2.jam` run reaching `ch2.landing`.
 
 **BUDGET this round: ~$0.15 of the ~$0.40 approved for the receipt.**
+
+### THE RISER CAP, BUILT AND MEASURED — AND THE KEEPERS' STEPS ARE A MAP PROBLEM
+
+Round 14's own arithmetic says the cure for a tread roofed by the tread two above it is
+`2*riser + 0.07 <= 0.65`, i.e. **`riser <= 0.29`**. Built as a PER-EDGE cap (the riser sets the
+tread count, and every district builder that lays art on a flight is registered to it), 0.28 on
+`keepers-cottage__lock-five`, carried with `lg_build`:
+
+| `_court_probe` | shipped | v2 + riser 0.28 |
+|---|---|---|
+| `--way` DOWN, tread by tread | stalls, 8/25 | **10/34** — further, still a stall |
+| `--way` UP | 7/25 | **17/34** |
+| `landing` / `001` / `002` | 48% / 54% / 55% | 53% / 67% / **86%** |
+
+**It moved and it did not cure, and the reason is a tension the cap cannot escape.** A smaller
+riser buys vertical clearance and spends horizontal: `run = rise/n` shrinks with it, so the tread
+that IS in the `[+0.65, +1.30]` window moves CLOSER in plan. At 0.28 the flight's treads 3 and 4
+above a landing sit at +0.86 and +1.12 and are only 0.86 m back — inside the landing's own
+half-depth plus the body's 0.30 m reach. On a flight of slope `s`, a tread at plan distance `d` is
+at `d*s`; there is no choice of riser that puts every tread either under 0.65 or past 1.30 when
+`s = 0.84`. **REVERTED to the receipted commit.**
+
+**SO THE HONEST FIX IS NOT IN THE GENERATOR.** `keepers-cottage__lock-five` l0 is
+**2.63 m of rise over 3.13 m of run — 44 degrees** — and play3d's body is 1.30 m tall with a
+0.65 m step-up grace. Either the flight gets more RUN (a map regrade: `keepers-cottage`'s own
+position or a waypoint, and the map is coordinator-owned and carries dated REDLINEs), or
+`blocked()`'s window changes (play3d.html, coordinator-owned). **Both are escalations, and this
+is the escalation.** Everything the build lane can do to that flight has now been tried and
+measured.
+
+### THE INSTRUMENT THAT CAME OUT OF THIS ROUND
+
+An offline whole-network model of `town_blockout`'s own boxes, run against play3d's
+`walkGround`/`blocked`/`walkStep` rules — no Blender, no browser, a full parameter sweep in
+seconds. It earned its two corrections the hard way and both are worth the ink:
+
+1. **Modelling ONE edge in a vacuum is modelling a different town.** It said `off=0.70 ft=0.40`
+   drove the deep stairs 40/40; the engine said 8/40, because the model could not see the approach
+   ribbon lying on top of the flight's head. Rebuilt over every walk record in the map it
+   reproduced the shipped stall exactly (12/40, ending at y 11.67).
+2. **A drive that does not call `blocked()` is not a drive.** The first version used only
+   `walkGround` and step limits and reported the keepers' steps at **25/25 both ways** while the
+   engine drove 8. With the body box in it, it reproduces round 14's uphill stall to the
+   centimetre: model `(91.17, 2.55, 25.84)`, engine `[91.18, 2.55, -25.85]`.
+
+It is still a SCREEN, not a verdict: it carries no district art, so where art fills a gap (the
+deep stairs' `wf_stair_treads`) it reads pessimistic, and where art blocks one (`cx_rail`,
+`lf_lantern_1_1`) it reads optimistic. `_court_probe` on the shipped bundle remains the oracle.
