@@ -2598,3 +2598,75 @@ prove it, and that instrument needs a Chrome the machine cannot spare while a 20
 NEW GAME run is at step 99. **Shipping an unverified change to the one thing that just
 began working is how a good night becomes a bad morning.** Build it against
 `wayfind_probe` on a quiet machine, with `emb-cine` `square` → `pondlane` as the case.
+
+### Round 15, second half — and the SENTENCE, which is what shipped
+
+The section above is the arrow. This is the line, measured on the same two runs, and
+between them they are the whole of "why does a NEW GAME run die inside Chapter One".
+
+**WHAT THE PLAYER WAS READING**, in the order the game said it:
+
+    "See to them — all of them (0/4)"
+    "See to them — all of them (Mara and Pip ✓)"
+    "See to them — all of them (the cat is fine ✓)"
+
+**Every success replaces the count with the name of somebody already finished.** The
+line never names a person who is LEFT, never names a place, and after the first tick it
+cannot even be counted. With no arrow drawn (above) it was the only wayfinding in the
+scene, and it carried none. `run-20260805-013253` spent **steps 91–192 — a hundred of
+its two hundred — oscillating between z +20 and z −24**, the road *north* of the
+village, with Poppy at z −43, Mara at z −44.5 and Finn at z −48. It had gone to see the
+cat at `[56.6, −0.21, 12.2]`, correctly, and nothing on screen told it to come back.
+
+Not a world defect and not a hidden NPC: `walk legs 169 (126 arrived, **0 aimed off the
+walk network**), median closed 0.87 m`, **0 reports filed**, `findability_test` **69/0**.
+
+Fixed the way `ch1.reveal` already does it three beats earlier — *"Emberwake — greet the
+villagers (Poppy at her bread stall, Mara by the Heartlight)"*, 81 characters, shipped,
+and the one hunt in the chapter that has never stalled. Every string now carries the
+roster that is LEFT, each with a place. **`run-20260805-015721`, same seed conditions,
+same model:**
+
+| | before (`013253`) | after (`015721`) |
+|---|---|---|
+| `ch1.hush` | step 45 | step 48 |
+| `ch1.see.mara` | 48 | 72 |
+| **`ch1.see.poppy`** | **never, in 200 steps** | **step 91** |
+| `ch1.see.mochi` | 84 | 109 |
+
+and the agent's own words at step 90 were *"Head over to Poppy at her stall on the right
+side"* — **it quoted the banner back.**
+
+### AND THEN IT WALKED TO POPPY AGAIN, BECAUSE THE ROSTER COULD NOT TICK
+
+A beat fires once and cannot know what the other three have done since, so the static
+roster kept naming people already seen: `015721` spends **steps 136–167 walking at
+villagers it had finished at 72 and 91**. Half the win handed back.
+
+So the objective layer gets ONE primitive and no more:
+
+    {!flag: text}      emit `text` only while `flag` is falsy
+
+The RAW string is stored and every render re-reads the flags, which is what lets one
+roster serve all five beats and tick itself off. `hintTick` re-renders at 6 Hz but ONLY
+when the expansion CHANGED — `innerHTML` on a timer is a repaint per tick. It expands
+BEFORE the `<>` strip and its own syntax carries no `<>`, so an author cannot smuggle
+markup through it; a malformed template, absent flags or absent `GS` DROP the segment
+rather than print it raw. Proven on the three states that matter:
+
+    none   See to them, all four — Poppy at her stall, Mara at the Heartlight,
+           Finn at the pond, the cat back up the north road
+    2/4    See to them (Poppy ✓) — Finn at the pond, the cat back up the north road
+    4/4    See to them (Poppy ✓)
+
+`story_test` **1112/0**, `node --check` clean, and the 122-character worst case measured
+by eye against `#story-obj`'s `white-space:nowrap` at 1280 px in
+`run-20260805-015721/frames/step-049.jpg`: one line, no ellipsis.
+
+**THE STEP BUDGET, STATED RATHER THAN RAISED.** Chapter One from NEW GAME costs ~48
+steps to `ch1.hush` in both runs, and Chapter Two's whole remaining spine cost **8 steps**
+in `run-20260805-014451` (`ch2.dock` → winches at 5 → the chapter card at 8). What has
+been eating the budget is this one objective, twice. 200 steps is the right order of
+magnitude for the receipt; it is not obviously enough while a four-anchor hunt with no
+arrow sits in the middle of it, and `llm_playtester`'s own header budgets **300–500** for
+a full playthrough. The number to raise is not `--steps`.
