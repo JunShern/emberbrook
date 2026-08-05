@@ -316,6 +316,46 @@ const ev = async (cdp, e) => {
     } catch (e) { console.log(await ev(cdp, expr)); }
   }
 
+  /* --stand <name>[,<name>..] — HOW MUCH OF THAT SLAB CAN A BODY STAND ON.
+   * `--mesh` gives a box and `--at` gives one column; neither answers the question a
+   * landing actually poses, which is what FRACTION of the floor is usable. This walks
+   * the slab's own top face on a lattice and asks the engine twice per cell: is this
+   * slab still the top floor here (SIM.floors), and does a body standing on it fit
+   * (SIM.blocked, which NAMES the roof). It exists because a stairs landing whose
+   * usable part is a strip can be flood-filled as CONNECTED and driven into as a trap:
+   * the fill stands a point on it, and a point has no head. Reports the roofed cells,
+   * the roof's name, and the worst gap between the roof and the floor it roofs. */
+  const STAND = arg('stand', null);
+  if (STAND) {
+    const names = STAND.split(',').map(s => s.trim()).filter(Boolean);
+    const step = parseFloat(arg('stand-step', '0.1'));
+    const expr = `(()=>{const N=${JSON.stringify(names)},S=${step},out=[];
+      for(const n of N){ let p=null; try{p=SIM.pad(n)}catch(e){}
+        if(!p){out.push({n,missing:true});continue;}
+        const top=p.max[1], cells=[], tally={};
+        for(let x=p.min[0]+S/2;x<p.max[0];x+=S)for(let z=p.min[2]+S/2;z<p.max[2];z+=S){
+          const fl=(SIM.floors(x,z)||[]).filter(y=>Math.abs(y-top)<0.06);
+          if(!fl.length) continue;                       // not this slab's own surface
+          const b=SIM.blocked(x,z,top)||null;
+          tally[b||'<standable>']=(tally[b||'<standable>']||0)+1;
+          cells.push([+x.toFixed(2),+z.toFixed(2),b]); }
+        out.push({n,top:+top.toFixed(2),cells:cells.length,
+          ok:cells.filter(c=>!c[2]).length,tally,
+          sample:cells.filter(c=>c[2]).slice(0,6)}); }
+      return JSON.stringify(out);})()`;
+    const s = await ev(cdp, expr);
+    console.log('\n== STAND (the slab\'s own top face, cell by cell; SIM.blocked names the roof) ==');
+    try {
+      for (const r of JSON.parse(s)) {
+        if (r.missing) { console.log(`  ${r.n.padEnd(46)} MISSING from this bundle`); continue; }
+        const pct = r.cells ? (100 * r.ok / r.cells).toFixed(0) : '--';
+        console.log(`  ${r.n.padEnd(46)} top ${String(r.top).padStart(6)}  standable ${String(r.ok).padStart(5)}/${String(r.cells).padEnd(5)} (${pct}%)`);
+        for (const [k, v] of Object.entries(r.tally).sort((a, b) => b[1] - a[1])) if (k !== '<standable>') console.log(`        ${String(v).padStart(5)} roofed by ${k}`);
+        r.sample.forEach(c => console.log(`        e.g. x ${c[0]} z ${c[1]} <- ${c[2]}`));
+      }
+    } catch (e) { console.log(String(s).slice(0, 3000)); }
+  }
+
   const AT = JSON.parse(arg('at', 'null'));  // [[x,z],..] — full floor list + blocked at each floor
   if (AT) {
     const expr = `(()=>{const P=${JSON.stringify(AT)};const out=[];
