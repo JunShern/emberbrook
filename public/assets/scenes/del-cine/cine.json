@@ -86,8 +86,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-05T07:13:49Z",
-   "seconds": 314.4,
+   "baked": "2026-08-05T13:42:00Z",
+   "seconds": 200.0,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -359,11 +359,11 @@
    ],
    "rtClip": [
     7.7459,
-    69.308
+    88.861
    ],
    "depth": {
     "near": 15.491851806640625,
-    "far": 43.317623138427734,
+    "far": 55.538002014160156,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -378,10 +378,26 @@
     -15.15
    ],
    "spawnFrom": "walk_e_market-stalls__lockhead_l1",
-   "visibleFrac": 0.775,
+   "visibleFrac": 0.8,
    "probes": 40,
-   "baked": "2026-08-01T15:44:14Z",
-   "seconds": 249.2
+   "baked": "2026-08-05T13:42:00Z",
+   "seconds": 155.3,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "cottage",
@@ -426,8 +442,8 @@
    "spawnFrom": "walk_pad_keepers-cottage",
    "visibleFrac": 0.9375,
    "probes": 64,
-   "baked": "2026-08-05T10:39:17Z",
-   "seconds": 154.8,
+   "baked": "2026-08-05T13:42:00Z",
+   "seconds": 164.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -488,8 +504,8 @@
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
    "visibleFrac": 0.9333,
    "probes": 30,
-   "baked": "2026-08-04T23:07:22Z",
-   "seconds": 290.9,
+   "baked": "2026-08-05T13:42:00Z",
+   "seconds": 161.2,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -550,8 +566,8 @@
    "spawnFrom": "walk_pad_pilot-cluster",
    "visibleFrac": 0.9219,
    "probes": 64,
-   "baked": "2026-08-05T07:13:06Z",
-   "seconds": 299.3,
+   "baked": "2026-08-05T13:42:00Z",
+   "seconds": 160.4,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -782,8 +798,8 @@
    "spawnFrom": "walk_e_fish-dock__winch-foot_l0",
    "visibleFrac": 0.86,
    "probes": 50,
-   "baked": "2026-08-05T07:13:49Z",
-   "seconds": 317.3,
+   "baked": "2026-08-05T13:42:00Z",
+   "seconds": 184.6,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -842,10 +858,10 @@
     -29.65
    ],
    "spawnFrom": "walk_lm_moorage",
-   "visibleFrac": 0.4062,
+   "visibleFrac": 0.3906,
    "probes": 64,
-   "baked": "2026-08-05T10:42:14Z",
-   "seconds": 175.3,
+   "baked": "2026-08-05T13:42:00Z",
+   "seconds": 176.7,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -906,8 +922,8 @@
    "spawnFrom": "walk_e_lock-five__north-landing_l0",
    "visibleFrac": 0.8333,
    "probes": 30,
-   "baked": "2026-08-05T10:45:20Z",
-   "seconds": 184.6,
+   "baked": "2026-08-05T13:42:00Z",
+   "seconds": 186.1,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
