@@ -2215,3 +2215,174 @@ own coordinates — `SIM.blocked` names the mesh. Prime suspect is the carried f
 item (the flight crosses walk_e_moorage__tenant-shack with 1.05 m headroom, under
 BODY_H 1.30). Also carried: PT-015 typo; the 44 stale walk records across 9 edges from
 the Maren lane's --report.
+
+## Round 13 — 2026-08-05 · the hint counted hops, and hops are not metres
+
+**`ch2.winches` still has not fired.** Three `--from=ch2.dock` runs tonight
+(`run-20260805-003146` 40 steps, `run-20260805-005322` 30 steps, plus the carried
+`run-20260804-234816`). What DID come out of them is the reason the last four attempts
+failed, and it was never where the previous rounds were looking.
+
+### THE HINT SENT THE PLAYER 45.9 m THE WRONG WAY
+
+The prime suspect carried into this session was the fish-dock headroom. It is not the
+cause. `_court_probe --at` at the stalling legs' own coordinates found the ground clear;
+the drive from the lower waterfront to the Lock Five seam is **4/4 legs both ways**. The
+world on that route was fine. **What was broken was the arrow.**
+
+`story_runtime.routeTo()` — round 11's wayfinder, the thing that puts the ONE label on
+the ONE marker — was a hop-count BFS. Standing on the Lockhead, *directly above Lock
+Five*, there are two routes and they are both exactly three hops:
+
+| route | hops | **metres** |
+|---|---|---|
+| `lockhead > cottage > cottage-steps > lockfive` | 3 | **21.9** |
+| `lockhead > quay-west > weave > lockfive` | 3 | **45.9** |
+
+BFS returned whichever it dequeued first. It dequeued the second. So the labelled arrow —
+the one thing in the town that says which way — pointed the player down the entire length
+of Dellhollow, into the quay deck and the pilot-cluster stairs, and **the agent walked it,
+in `run-20260804-234816` and again in `run-20260805-003146` (step 3, lockhead, 21 m west in
+one leg).** Every previous round's "the agent gets lost at the winch approach" was this.
+
+**A TIE IN HOPS IS NOT A TIE ON THE GROUND.** `routeTo` is now a Dijkstra over the seams'
+own positions: from where the player IS to the first seam, then seam to seam, using each
+edge's `spawn` where it has one. A hop into ANOTHER scene has no comparable coordinates,
+so it pays a flat nominal cost and the walk restarts from that edge's spawn — an honest
+"a scene away", never a number pretending to be measured. 42 edges at 6 Hz is free.
+
+### AND THE PROBE THAT WAS SUPPOSED TO AUDIT IT RANKED BY HOPS TOO
+
+`wayfind_probe`'s "TRUE NEXT HOP" was its own independent BFS — *and therefore could not
+see the defect it was pointed at.* It called a route twice the length correct, at the
+exact station where the shipped hint was wrong, and printed them as agreeing. It now
+enumerates every simple path, ranks by metres, prints the runners-up, and flags a
+shipped-hint disagreement. The enumeration is deliberately a DIFFERENT algorithm from the
+Dijkstra: two implementations agreeing on the number is the cross-check.
+
+    station        SHIPPED HINT (after)              metre-shortest        runner-up
+    dock-spawn     cottage>cottage-steps             2 hops /  9.7 m       3 / 17.2 m
+    lockhead       lockhead>cottage                  3 hops / 17.9 m       3 / 41.5 m
+    deck-mid       lockhead>quay-west                3 hops / 24.1 m       3 / 35.2 m
+    pilot-plat     weave>lockfive                    1 hop  / 16.8 m       4 / 26.7 m
+    quay-end       quay-west>weave                   2 hops / 23.4 m       5 / 33.8 m
+
+Five stations, no disagreement. Before the fix, `lockhead` took the 41.5 m route.
+
+### A LABEL HALF OFF THE FRAME IS NOT A LABEL
+
+Round 11 grew the pill from 11 px to 13 px because a label that is present is not a label
+that is read. Same lesson, one turn further: in `run-20260805-003146` step 3 the pill drew
+at **x 38 px of 1400**, its amber diamond and its left half outside the picture, and the
+agent took the bare triangle on the other side of the frame. **I looked at the frame** —
+`frames/step-003.jpg` — which is the only reason this was found; every DOM assertion said
+`shown:true labelled:true`. The caption is now clamped into the viewport. Only the
+caption slides: the arrow still points at the seam, because the arrow is the claim.
+
+### PT-20260805-004 — VERIFIED, AND IT IS A ONE-WAY SOFT-LOCK
+
+`run-20260805-005322` spent **eighteen consecutive steps** at `[57.74, 15.30, −11.24]`
+moving 0.02 m in six. That is not "the agent is lost". The drive says so:
+
+| `_court_probe --way` | result |
+|---|---|
+| market deck → the trap (4 legs) | **4/4, arrives** |
+| the trap → the landing 1.32 m away | **0 legs, 0 m** |
+| the trap → the deck below | 1 tread, then nothing |
+
+The body settles on the **west lip of `walk_e_shelf-homes__market-stalls_landing001`**
+(the slab is x 57.90..59.90, top 15.30 — it is standing 0.16 m off the edge of it). West
+of it `ls_rail` at x 57.5; below it the deck at 14.24, a **1.06 m** drop against
+`STEP_DN 0.8`; above it the flight's own treads. **You can walk in and you cannot walk
+out.** `SIM.move` cannot even reach the cell — the agent got there on real keys, which is
+the whole argument for this instrument.
+
+**IT PREDATES TONIGHT — measured, not assumed.** The pre-re-derive `scene.glb`
+(`d63fd12`) was checked out under the same probe: floors, blockers and both drives came
+back **identical**. Filed, carried, and it wants a map line plus a district build, not a
+patch at 05:00.
+
+### THE STALE WALK RECORDS — four of the nine were free, five are a build lane
+
+`walk_rederive --report`: 36 records across 9 jobs stale against the map (the carried
+figure of 44 included `weave-huts__moorage`, already re-derived in round 12). **Four jobs
+are `bar_` ONLY** — `deep-stairs-head__deep-stairs-foot`, `quay-deck__pilot-cluster`,
+`shelf-homes__market-stalls`, `keepers-cottage__lock-five` — and a `bar_` is
+render-hidden, so those move COLLISION and no picture: `cine_bake --glb` alone, **5.4 s,
+no plate re-bake**. Done, and measured on both sides because the tool's own sweep warned
+of 27 possible crossings and a rebuilt rail is an invisible wall if it lands wrong:
+
+| | before | after |
+|---|---|---|
+| `--comp` (52..82, −32..−12), 3 seeds | 638 cells, 1 component | **639, 1** |
+| `walk_engine_gate del-cine` | 3985 cells / 807.0 m² | **3985 / 807.0, LOST 0, BVH FAIL 0** |
+| `--way` waterfront → lockfive seam | 4/4 both ways | **4/4 both ways** |
+| `cine_test` | 687/1 (scenegraph stale) | **688/0** |
+
+The tool GUARDED `bar_e_shelf-homes__market-stalls_l0_railB` by itself (ls_reorigin cut a
+gap there over the loop-stairs fork) and held it back — the guard earns its keep.
+
+**The other five are NOT a chore, they are a build lane**, and the reason is worth the
+ink: `qm_build.py` builds the cookhouse *from* `walk_e_quay-deck__cookhouse_l1` and
+`walk_pad_cookhouse`, `shelf_build.py` from `walk_pad_inn` — so re-deriving them moves art
+and owes `cine_solve` + plate bakes. And the one record reported **MISSING** from the
+master, `walk_pad_loop-landing`, is `ls_reorigin.py`'s own deliberate replacement, not a
+defect: **"stale against the map" is not the same as "wrong".**
+
+### PT-20260804-015 — fixed, with the gate that should have caught it
+
+`promptLabel` is a template and `name` is a string, and the two are only ever seen
+joined — on the banner, in the player's face. `del.cook` carried `"Talk to the {name}"`
+over the name `"the cook"` and shipped **"Talk to the the cook?"** with every gate green,
+because no gate had ever EXPANDED the template. `dialogue_test` §1b now expands every one
+and reads the result: doubled article, doubled space, unfilled slot. **1712/0.**
+
+### Two instruments were lying, and both are fixed
+
+* **`_court_probe` waited only for `SIM.pos()` to be finite**, which is true long before
+  the bundle's GLB is in `allMeshes`. A `--who` run on that race printed **2009 cells of
+  `<no floor>`** for a region that has floors — twice, silently, and the same command
+  worked the third time. It now waits for a non-zero, settled mesh census and REFUSES to
+  report rather than report an empty world.
+* **`--mesh` traversed `window.THREE_SCENE || window.scene`**, and play3d has neither (its
+  scene is a module-scope `let`), so it returned `[]` for names the bundle certainly
+  carries. Now it asks `SIM.pad`, and says MISSING when a name really is absent. Its
+  output is what let the Keepers' Steps be driven tread-by-tread instead of through a
+  straight line that leaves the stair on tread two.
+
+### Gates
+
+`playthrough_test --port=3000` **86/0** (§W 21 pairs, 0 unreachable) · `story_test`
+**1112/0** · `dialogue_test` **1712/0** · `cine_test` **688/0** · `seam_test` **294/0** ·
+`walk_engine_gate del-cine` **GREEN** · `routes_derive --check` clean.
+
+### Carried, in the order they should be picked up
+
+1. **PT-20260805-004**, the one-way lip at `[57.74, 15.30, −11.24]` — verified above,
+   pre-existing, and a soft-lock is worse than a missing beat.
+2. **The five walk_-moving stale jobs** — a build lane with a bake, see above.
+3. **`ch2.winches`.** The route the hint names is now the short one and it drives; what
+   is left to prove is whether the agent takes it. That wants a run, not a fix.
+4. The fish-dock headroom (1.05 m against `BODY_H` 1.30) is still carried and is still
+   NOT what was stopping the winches.
+
+### AND THE TRIAGE INSTRUMENT WAS AUTO-REFUTING BODY TRAPS
+
+`playtest_triage` classified all three of tonight's blocker filings as `reach`, ran
+`reach_probe`'s fill, got `ok=true`, and stamped **REFUTED** on every one. In this log's
+own rules REFUTED means *do not build against it* — so the screen that cannot see a body
+trap was closing body traps. It is round 12's lesson wearing the triage tool's clothes:
+**reach_probe's own header calls itself a topology screen, not a drive.**
+
+`triageReach` now runs `SIM.move` over the SAME pair whenever the fill says connected. A
+pair that fills and will not drive is VERIFIED, with the stall position; a pair that fills
+AND drives is still REFUTED, and now says so with the drive's own numbers. Re-run:
+
+| | fill | drive | before | after |
+|---|---|---|---|---|
+| PT-20260805-001 | reachable, 1565 cells | stalled 22.96 m short, 41 dead ticks | REFUTED | **VERIFIED** |
+| PT-20260805-004 | reachable, 627 cells | stalled 8.52 m short, 41 dead ticks | REFUTED | **VERIFIED** |
+| PT-20260805-005 | reachable, 40 cells | stalled 1.39 m short, 41 dead ticks | REFUTED | **VERIFIED** |
+
+Queue 18 verified / 23 refuted → **21 verified / 20 refuted**. Three real traps had been
+argued away by a lattice.

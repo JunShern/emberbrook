@@ -1,6 +1,6 @@
 # Emberbrook — LLM playtest queue
 
-Generated 2026-08-04T11:34:23.345Z by `tools/playtest_triage.mjs`. Source of truth: `docs/qa/playtest/queue.json`.
+Generated 2026-08-05T01:05:05.763Z by `tools/playtest_triage.mjs`. Source of truth: `docs/qa/playtest/queue.json`.
 
 **An UNVERIFIED complaint is a lead, never a ticket.** Filed by an LLM playing the game through
 screenshots and real key events; measured by instruments before anybody builds. REFUTED entries are
@@ -27,13 +27,18 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 | VERIFIED | P1 | PT-20260804-001 | The player can leave the chapter on its first frame, and the objective follows them out | llm_playtester spine detector (public/game/story.json vs the running scene) |
 | VERIFIED | P1 | PT-20260804-002 | The player can leave the chapter on its first frame, and the objective follows them out | llm_playtester spine detector (public/game/story.json vs the running scene) |
 | VERIFIED | P1 | PT-20260804-004 | Character stuck on wooden platform, cannot reach objective markers | tools/reach_probe.mjs (in the running page) |
+| VERIFIED | P1 | PT-20260805-001 | Character stuck on wooden platform, unable to move left or right | tools/reach_probe.mjs + SIM.move (in the running page) |
+| VERIFIED | P1 | PT-20260805-004 | Character stuck on Lock Five central deck geometry | tools/reach_probe.mjs + SIM.move (in the running page) |
+| VERIFIED | P1 | PT-20260805-005 | Cannot interact with head-gate winches to progress objective | tools/reach_probe.mjs + SIM.move (in the running page) |
 | UNVERIFIED | P0 | PT-20260803-006 | End the test session as the game is stuck on a black screen and cannot continue. | tools/reach_probe.mjs (needs a target) |
 | UNVERIFIED | P1 | PT-20260803-001 | Walk blocked: the body closed 0 m of an intended 35.57 m, twice at the same place | tools/reach_probe.mjs (NOT RUN) |
 | UNVERIFIED | P1 | PT-20260803-003 | Character stuck on terrain geometry | tools/reach_probe.mjs (needs a target) |
 | UNVERIFIED | P1 | PT-20260803-004 | Character stuck on terrain near rock formation | tools/reach_probe.mjs (needs a target) |
 | UNVERIFIED | P1 | PT-20260803-005 | Screen remains black after leaving Emberbrook | — |
 | UNVERIFIED | P1 | PT-20260804-005 | Cannot navigate to character with orange marker on right platform | tools/reach_probe.mjs (FAILED) |
+| UNVERIFIED | P1 | PT-20260804-010 | I spent 12 turns inside del-inn-int and nothing in the room answered me | — |
 | REFUTED | P0 | PT-20260803-019 | Battle softlocks after defeating the enemy | the run's own run.jsonl (percept.battle + truth.locked, step by step) |
+| REFUTED | P0 | PT-20260804-011 | Cannot walk up the path to the head-gate winches | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260803-010 | Walk blocked: the body closed 0 m of an intended 5.7 m, twice at the same place | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260803-011 | Walk blocked: the body closed 0 m of an intended 8.74 m, twice at the same place | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260803-012 | Character stuck on terrain in sandy clearing | tools/reach_probe.mjs (in the running page) |
@@ -46,6 +51,13 @@ toward "I cannot find it", and that false-positive rate is this tool's calibrati
 | REFUTED | P1 | PT-20260804-006 | Walk blocked: the body closed 0 m of an intended 3.14 m, twice at the same place | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260804-007 | Character stuck on upper wooden platform at Lock Five | tools/reach_probe.mjs (in the running page) |
 | REFUTED | P1 | PT-20260804-008 | Character stuck on wooden platform near cat at Lock Five | tools/reach_probe.mjs (in the running page) |
+| REFUTED | P1 | PT-20260804-012 | Cannot walk up the path to the head-gate winches at Lock Five | tools/reach_probe.mjs (in the running page) |
+| REFUTED | P1 | PT-20260804-013 | Cannot reach red quest markers for head-gate winches | tools/reach_probe.mjs (in the running page) |
+| REFUTED | P1 | PT-20260804-014 | Character stuck in collision on Lock Five upper platform | tools/reach_probe.mjs (in the running page) |
+| REFUTED | P1 | PT-20260804-015 | Duplicate word 'the' in cook interaction prompt | tools/reach_probe.mjs (in the running page) |
+| REFUTED | P1 | PT-20260805-002 | Character stuck on narrow wooden plank bridge | tools/reach_probe.mjs (in the running page) |
+| REFUTED | P1 | PT-20260805-003 | Character stuck in place on central wooden platform | tools/reach_probe.mjs (in the running page) |
+| REFUTED | P2 | PT-20260804-009 | Cannot interact with NPCs inside The Boatmen's Rest | tools/reach_probe.mjs (in the running page) |
 
 ## Detail
 
@@ -277,6 +289,48 @@ where I stood -> where I pointed: UNREACHABLE — the TARGET anchor [60.47,16.58
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-004` (captured at 23336cbf)
 
+### PT-20260805-001 — Character stuck on wooden platform, unable to move left or right
+
+- **status** VERIFIED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to walk left towards the head-gate winches, and when that failed, I tried to backtrack to the right.
+- **I expected** I expected my character to walk along the wooden paths to the clicked locations.
+- **What happened** My character is stuck in place on the platform near the red plank and won't move anywhere.
+
+```
+where I stood -> where I pointed: reachable (23.1 m apart, 1565 cells filled, via 2 in-scene edges)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [58.11,14.24,-12.16] and stopped 22.96 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-001` (captured at 9896586b)
+
+### PT-20260805-004 — Character stuck on Lock Five central deck geometry
+
+- **status** VERIFIED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** blocker · **found by** agent
+- **I was doing** Trying to walk across the walkway towards the head-gate winches.
+- **I expected** The character should walk towards clicked ground on the path.
+- **What happened** The character is completely stuck and cannot move in any direction (0 meters closed on every movement attempt).
+
+```
+where I stood -> where I pointed: reachable (8.5 m apart, 627 cells filled, via 2 in-scene edges)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [57.74,15.3,-11.45] and stopped 8.52 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-004` (captured at 37ce4161)
+
+### PT-20260805-005 — Cannot interact with head-gate winches to progress objective
+
+- **status** VERIFIED (tools/reach_probe.mjs + SIM.move (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I walked right up to the head-gate winches on the left platform, where the red marker is, and pressed the interact button.
+- **I expected** I expected my character to use the winches and for the objective to update or a cutscene to play.
+- **What happened** Nothing happened at all. I'm just standing next to the winches and the objective hasn't changed.
+
+```
+where I stood -> where I pointed: reachable (1.4 m apart, 40 cells filled, via 1 in-scene edge)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [57.74,15.3,-11.25] and stopped 1.39 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-005` (captured at 37ce4161)
+
 ### PT-20260803-006 — End the test session as the game is stuck on a black screen and cannot continue.
 
 - **status** UNVERIFIED (tools/reach_probe.mjs (needs a target))
@@ -352,6 +406,19 @@ the probe itself failed: Execution context was destroyed.
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-005` (captured at fc47150f)
 
+### PT-20260804-010 — I spent 12 turns inside del-inn-int and nothing in the room answered me
+
+- **status** UNVERIFIED (nothing measured yet)
+- **severity** P1 · **kind** bug · **found by** empty-room-detector
+- **I was doing** I went through a door the game offered me and tried to talk to everyone and everything inside.
+- **I expected** Somebody to talk to, something to buy, or something to do — a room the game lets me into should hold something.
+- **What happened** 12 turns in this room and not one dialogue box, shop or menu opened. The only figures in here are the party I walked in with.
+
+```
+no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-010` (captured at 9534b95d)
+
 ### PT-20260803-019 — Battle softlocks after defeating the enemy
 
 - **status** REFUTED (the run's own run.jsonl (percept.battle + truth.locked, step by step))
@@ -364,6 +431,20 @@ the probe itself failed: Execution context was destroyed.
 The battle ENDED, four steps before this report was written. Straight out of run-20260803-203813/run.jsonl: step 12 percept.battle.log is 'Duskpad is defeated!' with foes []; steps 13-15 are the Victory card (meanL 36.7, UILOCK held); step 16 has no battle, UILOCK released, and the agent walks on for another 29 steps. Nothing softlocked. THIS WAS THE HARNESS: the stuck detector measures metres over a six-step window, and a battle is exactly a window in which zero metres is correct play. It fired at step 12 because the body had not moved since step 7 — the battle's first step — and the interview it paid for produced this P0 against a fight that had already been won. Fixed in episode.mjs: a step where UILOCK is held or a battle/dialogue/card is on screen is dropped from the window rather than counted. A real modal freeze is still caught by the frame gate's separate `frozen` check.
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260803-019` (captured at 22db4473)
+
+### PT-20260804-011 — Cannot walk up the path to the head-gate winches
+
+- **status** REFUTED (tools/reach_probe.mjs (in the running page))
+- **severity** P0 · **kind** blocker · **found by** stuck-interview
+- **I was doing** I was trying to walk up the dirt path towards the buildings and the NPC to reach the head-gate winches for my objective.
+- **I expected** I expected to be able to walk up the path and reach the area under the canopy or the doorway.
+- **What happened** I keep getting blocked by invisible walls. The game tells me the area right in front of me is 'not ground you can walk to', so I can't get to the winches.
+
+```
+where I stood -> where I pointed: reachable (0.4 m apart, 1 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-011` (captured at 9534b95d)
 
 ### PT-20260803-010 — Walk blocked: the body closed 0 m of an intended 5.7 m, twice at the same place
 
@@ -531,3 +612,101 @@ where I stood -> where I pointed: reachable (1.6 m apart, 15 cells filled on foo
   The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
 ```
 - **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-008` (captured at fc47150f)
+
+### PT-20260804-012 — Cannot walk up the path to the head-gate winches at Lock Five
+
+- **status** REFUTED (tools/reach_probe.mjs (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to walk up the dirt path towards the cottage and the wooden structure (the head-gate winches) to reach my objective.
+- **I expected** I expected my character to walk up the path to the area with the winches.
+- **What happened** The game wouldn't let me click to walk on most of the path leading up there, acting like it wasn't valid ground, so I couldn't reach my objective.
+
+```
+where I stood -> where I pointed: reachable (1.0 m apart, 1 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-012` (captured at 9534b95d)
+
+### PT-20260804-013 — Cannot reach red quest markers for head-gate winches
+
+- **status** REFUTED (tools/reach_probe.mjs (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** I was trying to walk to the red quest markers on the dirt bank to interact with the head-gate winches.
+- **I expected** I expected to be able to walk up to the markers and interact with the winches to progress the objective.
+- **What happened** The game wouldn't let me walk to the markers, saying it's 'not ground you can walk to', leaving me stuck on the wooden platform.
+
+```
+where I stood -> where I pointed: reachable (4.8 m apart, 150 cells filled, via 2 in-scene edges)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-013` (captured at dfa47db3)
+
+### PT-20260804-014 — Character stuck in collision on Lock Five upper platform
+
+- **status** REFUTED (tools/reach_probe.mjs (in the running page))
+- **severity** P1 · **kind** blocker · **found by** agent
+- **I was doing** Trying to move away from the upper right ledge back down the path
+- **I expected** Character should walk smoothly back along the wooden platform
+- **What happened** Character is wedged in geometry at [0.88, 0.22] and cannot move in any direction (0m traveled over 3 attempts)
+
+```
+where I stood -> where I pointed: reachable (23.7 m apart, 1557 cells filled, via 3 in-scene edges)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-014` (captured at c5224ee0)
+
+### PT-20260804-015 — Duplicate word 'the' in cook interaction prompt
+
+- **status** REFUTED (tools/reach_probe.mjs (in the running page))
+- **severity** P1 · **kind** bug · **found by** agent
+- **I was doing** Standing near the cook inside the cookhouse
+- **I expected** The prompt banner should read 'Talk to the cook? [E]'.
+- **What happened** The prompt banner displays 'Talk to the the cook? [E]' with 'the' repeated.
+
+```
+where I stood -> where I pointed: reachable (4.6 m apart, 39 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-015` (captured at 06fc4924)
+
+### PT-20260805-002 — Character stuck on narrow wooden plank bridge
+
+- **status** REFUTED (tools/reach_probe.mjs (in the running page))
+- **severity** P1 · **kind** bug · **found by** agent
+- **I was doing** Trying to walk to the left towards the head-gate winches or back to the right platform.
+- **I expected** The character should move along the walkway or step off the plank.
+- **What happened** The character is stuck on the plank at (0.43, 0.42) and all movement attempts fail to close any distance.
+
+```
+where I stood -> where I pointed: reachable (24.1 m apart, 1649 cells filled, via 3 in-scene edges)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-002` (captured at 9896586b)
+
+### PT-20260805-003 — Character stuck in place on central wooden platform
+
+- **status** REFUTED (tools/reach_probe.mjs (in the running page))
+- **severity** P1 · **kind** bug · **found by** stuck-interview
+- **I was doing** Trying to walk towards the objective markers or back down the path.
+- **I expected** My character should move to where I click.
+- **What happened** My character is completely stuck in place and won't move no matter where I click on the platform.
+
+```
+where I stood -> where I pointed: reachable (8.1 m apart, 386 cells filled, via 2 in-scene edges)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-003` (captured at 37ce4161)
+
+### PT-20260804-009 — Cannot interact with NPCs inside The Boatmen's Rest
+
+- **status** REFUTED (tools/reach_probe.mjs (in the running page))
+- **severity** P2 · **kind** confusion · **found by** stuck-interview
+- **I was doing** I walked up to the two characters standing in the middle of the room and tried to talk to them.
+- **I expected** I expected a conversation to start, or at least a prompt to appear so I could interact with them.
+- **What happened** Nothing happened when I pressed the interact button. There is no prompt and they don't respond at all.
+
+```
+where I stood -> where I pointed: reachable (1.1 m apart, 1 cells filled on foot)
+  The ground IS connected, so the walk was not blocked by the world. The likely causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.
+```
+- **repro** `node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-009` (captured at 9534b95d)

@@ -174,6 +174,28 @@ async function withPage(scene, cam, pos, fn) {
     try { require('fs').rmSync(profile, { recursive: true, force: true, maxRetries: 2 }); } catch (e) { }
   }
 }
+/* THE DRIVE, not a model of it: play3d's own phys() through SIM.move, one straight leg,
+ * with the same no-gain rule _court_probe uses. `still` counts ticks that closed under
+ * 2 mm — 40 of them is the body pressed against something. */
+const DRIVE_JS = (from, to) => `(async()=>{
+  SIM.tp(${+from[0]}, ${+from[2]}, ${+from[1]});
+  const T=[${+to[0]},${+to[1]},${+to[2]}];
+  let ticks=0, last=1e9, still=0, stalled=false;
+  while(ticks<900){
+    const p=SIM.pos(); const dx=T[0]-p.x, dz=T[2]-p.z, d=Math.hypot(dx,dz);
+    if(d<0.6) break;
+    SIM.move(dx/d, dz/d, 1); ticks++;
+    const q=SIM.pos(), nd=Math.hypot(T[0]-q.x, T[2]-q.z);
+    still = (last-nd < 0.002) ? still+1 : 0; last=nd;
+    if(still>40){ stalled=true; break; }
+    if(ticks%200===0) await new Promise(r=>setTimeout(r,0));
+  }
+  const p=SIM.pos();
+  return JSON.stringify({stalled, still, ticks,
+    at:[+p.x.toFixed(2),+p.y.toFixed(2),+p.z.toFixed(2)],
+    dist:+Math.hypot(T[0]-p.x,T[2]-p.z).toFixed(2)});
+})()`;
+
 async function triageReach(e, cls) {
   if (!PORT) return { status: 'UNVERIFIED', instrument: 'tools/reach_probe.mjs (NOT RUN)',
     evidence: 'the reachability probe needs a running server: re-run this with --port=3000.' };
@@ -186,10 +208,32 @@ async function triageReach(e, cls) {
     const res = await withPage(scene, e.truth && e.truth.shot, p.from, async (ev) =>
       await ev(CALL(p.from, p.to, { step: 0.4, tol: 1.5, budget: 250000 }), 300000));
     const line = verdict('where I stood', 'where I pointed', p.from, p.to, res);
-    if (res.ok) return { status: 'REFUTED', instrument: 'tools/reach_probe.mjs (in the running page)',
-      evidence: line + '\n  The ground IS connected, so the walk was not blocked by the world. The likely ' +
-        'causes are the executor giving up (a narrow gap, a step it could not take at its 150 ms burst) ' +
-        'or a body-box snag that the cell fill does not model — confirm with tools/walk_bodygate.mjs.' };
+    if (res.ok) {
+      /* A FILL THAT SAYS "CONNECTED" HAS NOT SAID "A BODY GETS THERE" (2026-08-05).
+       * reach_probe's own header calls itself a TOPOLOGY screen: its 0.4 m lattice, its
+       * four 0.18 m plank-crack retries and its settle-from-the-neighbour bridge what a
+       * 0.075 m stride and a 0.30 m body cannot. Round 12's wall and PT-20260805-004's
+       * one-way lip were BOTH `ok=true` on this fill while the drive stalled dead. And
+       * REFUTED, in this log's own rules, means "do not build against it" — so a screen
+       * that cannot see body traps must not be allowed to close one. The fill's `ok` is
+       * now only half the verdict: SIM.move drives the SAME pair, and a pair that fills
+       * and will not drive is VERIFIED, with the stall position. */
+      const drv = await withPage(scene, e.truth && e.truth.shot, p.from, async (ev) =>
+        await ev(DRIVE_JS(p.from, p.to), 180000)).catch(() => null);
+      let d = null; try { d = JSON.parse(drv); } catch (_) { }
+      if (d && d.stalled) return { status: 'VERIFIED', instrument: 'tools/reach_probe.mjs + SIM.move (in the running page)',
+        evidence: line + '\n  BUT THE DRIVE STALLS. SIM.move from the same start reached ' +
+          JSON.stringify(d.at) + ' and stopped ' + d.dist + ' m short, gaining nothing for ' + d.still +
+          ' ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, ' +
+          'not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.' };
+      if (!d) return { status: 'UNVERIFIED', instrument: 'tools/reach_probe.mjs (fill only — the drive did not run)',
+        evidence: line + '\n  The fill says connected. The drive could not be run, so nothing here has ' +
+          'asked whether a BODY makes the trip; do not close this on the fill alone.' };
+      return { status: 'REFUTED', instrument: 'tools/reach_probe.mjs + SIM.move (in the running page)',
+        evidence: line + '\n  The ground is connected AND SIM.move drives it (ended ' + JSON.stringify(d.at) +
+          ', ' + d.dist + ' m from the target). So the world did not block the walk — the likely cause is ' +
+          'the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.' };
+    }
     return { status: 'VERIFIED', instrument: 'tools/reach_probe.mjs (in the running page)', evidence: line };
   } catch (err) {
     return { status: 'UNVERIFIED', instrument: 'tools/reach_probe.mjs (FAILED)',
