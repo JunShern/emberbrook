@@ -4802,3 +4802,45 @@ without a second run:
   shots. The sixteenth was `cottage-steps`, retired on 2026-08-05 with its walk records (the
   `keepers-cottage` landmark's own note). The assertion's constant is stale, not the bundle.
 
+
+### §6 THE FIRST TWO RECEIPT RUNS WERE INSTRUMENT FAILURES, AND BOTH ARE FIXED
+
+Neither reached the card, and neither red was the world.
+
+**`run-20260805-153347` — THE HARNESS COULD NOT SEE THE ARROW.** `PERCEPT_JS` reported the
+"Lock Five" marker at `nx 0.441` for six consecutive steps while the frame the agent was
+looking at drew it at `nx 0.307`, because story_runtime nudges the marker by writing CSS
+`translate` on the div's CHILDREN and **a transform does not change layout, so the div's own
+rect never moves**. At step 6 the agent clicked the arrow it could SEE, missed the div, and
+the ray behind those pixels crossed the cottage pit: *"is not ground you can walk to"* —
+earned by aiming correctly. `wayfind_probe` learned exactly this in round 19 and fixed ITS
+reader; the adapter's two readers (`PERCEPT_JS` and `markerAt`) were never updated, so the
+harness has been ~130 px wrong about this one arrow ever since. Both now take the union of
+the children's rects, which equals the div's own box whenever nothing is translated — every
+other marker is unchanged and `percept_test` stays green (318/318). **The same class as
+round 27 §3: an instrument that cannot see the fix reports the old behaviour for ever.**
+
+**`run-20260805-153730` — THE AIM FLICKERED.** With the reader fixed the agent went straight
+for the arrow (steps 2, 4, 5 all `reached`) and still made **1.46 m in six steps**, because
+the aim was re-solved every tick: the marker was reported at nx `0.307 → 0.441 → 0.358 →
+0.307 → 0.255` on five consecutive steps as the body crossed ground where `lineIsGround`
+flips. **An arrow that moves while you walk at it is not a direction.** So an aim is now
+HELD — the same world point until the body is within 1.2 m of it, or the routed edge or the
+shot changes — and nothing is re-marched while it is held. It also now leads as far as the
+ground allows: not the first vertex past the lead but the FURTHEST vertex along the route
+that still marches clean, since the route polyline promises walkability along ITSELF and
+never across a chord.
+
+Re-measured, and the arrow is now one stable waypoint for the whole approach:
+
+| stand | arrow draws at | aim | `SIM.pick` at the arrow's pixel |
+|---|---|---|---|
+| cottage door `[90.22, 9.15, −20.36]` | `[405, 628]` | `[91.27, 7.75, −22.13]` | `walk_e_lockhead__keepers-cottage_l16` |
+| spur mid `[89.41, 9.33, −20.84]` | `[405, 625]` | same, HELD | `walk_e_lockhead__keepers-cottage_l16` |
+| PT-046 low spur `[90.22, 8.68, −21.69]` | `[405, 627]` | same, HELD | `walk_e_lockhead__keepers-cottage_l16` |
+| past the junction `[92.0, 7.9, −21.8]` | `[564, 665]` | **null** — withdrawn | `walk_e_weave-huts__keepers-cottage_l2` (the bridge) |
+| moorage `[76.15, 1.32, −27.11]` | `[644, 449]` | `[73.8, 2.62, −27.3]` | `walk_e_weave-huts__moorage_l2_t00` |
+| mid-switchback `[72.6, 3.3, −26.9]` | `[644, 446]` | same, HELD | `walk_e_weave-huts__moorage_landing001` |
+
+Two stages, monotone, no flicker: **go to the corner, then go along the bridge** — and the
+second stage is round 19's plain lift clamp, because from there the straight line IS ground.

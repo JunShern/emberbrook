@@ -727,24 +727,51 @@
   }
 
   /* THE AIM: where a body standing at `p` should walk NEXT to get to this seam, or null
-   * for "straight at the seam is honest". `wayhint()` is the instrument's window on it. */
+   * for "straight at the seam is honest". `wayhint()` is the instrument's window on it.
+   *
+   * IT IS STICKY, AND THAT IS THE DIFFERENCE BETWEEN A WAYPOINT AND A FLICKER (round 28's
+   * second receipt run, `run-20260805-153730`). Re-solved every tick this reported the one
+   * labelled arrow at nx 0.307, then 0.441, then 0.358, then 0.307, then 0.255 on FIVE
+   * CONSECUTIVE STEPS — the aim engaging and withdrawing as the body crossed the ground
+   * where `lineIsGround` flips — and the agent chased it 1.46 m in six steps. An arrow that
+   * moves while you walk at it is not a direction. So an aim is HELD: once taken it is the
+   * same world point until the body is within `AIM_HOLD` of it, the routed edge changes, or
+   * the shot changes. Nothing is re-marched while it is held.
+   *
+   * AND IT LEADS AS FAR AS THE GROUND ALLOWS. Not the first vertex past the lead — the
+   * FURTHEST vertex along the route the body can still reach in a straight line, found by
+   * marching each candidate and stopping at the first that fails. The route polyline
+   * promises walkability ALONG itself, never across a chord, so the march is what turns a
+   * far vertex into an honest one. At the cottage door that walks the arrow past
+   * `[91.63, 8.30, −21.50]` to the junction `[92.61, 7.83, −22.00]` — the corner where the
+   * map joins the spur to the bridge, which is the whole answer in one marker. */
+  var AIM_HOLD = 1.2;
+  var held = null;                     // {edge, shot, at, walked, crow}
   function wayAim(edge, p) {
-    if (AIM_OFF || !edge || !edge.at || !p) return null;
-    var me = [p.x, p.y, p.z], crow = gap(me, edge.at);
+    if (AIM_OFF || !edge || !edge.at || !p) { held = null; return null; }
+    var me = [p.x, p.y, p.z], sid = shot();
+    if (held && held.edge === edge.id && held.shot === sid && gap(me, held.at) > AIM_HOLD)
+      return held;                     // HELD: the waypoint does not move while you walk at it
+    held = null;
+    var crow = gap(me, edge.at);
     if (crow <= AIM_LEAD) return null;            // you are standing on it
     // The graph FIRST, and it is cached: with nowhere to aim there is no reason to pay
     // the march, which is 30 BVH columns in a scene that may have no routes file at all.
-    var g = graphFor(shot()); if (!g) return null;
+    var g = graphFor(sid); if (!g) return null;
     if (lineIsGround(me, edge.at)) return null;   // THE ORACLE: the straight line is ground
     var s = nearestV(g, me, AIM_NEAR_ME); if (s < 0) return null;
     var t = nearestV(g, edge.at, AIM_NEAR_SEAM); if (t < 0 || t === s) return null;
     var r = aimPath(g, s, t); if (!r) return null;
-    var walked = r.cost + gap(me, g.v[s]);
+    var walked = r.cost + gap(me, g.v[s]), best = null;
     for (var i = 0; i < r.path.length; i++) {
       var v = g.v[r.path[i]];
-      if (gap(me, v) >= AIM_LEAD) return { at: v, walked: walked, crow: crow };
+      if (gap(me, v) < AIM_LEAD) continue;        // too close to read as a direction
+      if (!lineIsGround(me, v)) break;            // past here the chord leaves the ground
+      best = v;
     }
-    return null;                       // the whole detour is inside the lead: say nothing
+    if (!best) return null;            // the whole detour is inside the lead: say nothing
+    held = { edge: edge.id, shot: sid, at: best, walked: walked, crow: crow };
+    return held;
   }
 
   /* THE ARROW ON THE CLIFF (round 19) — the routed marker was drawn 97 px above the
