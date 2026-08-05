@@ -331,6 +331,20 @@
     "cards-vs-volume"
    ],
    "verdict": "The canopy's fix was a FLOOR lift, not gain: V95 was already in the reference band; V05 was a stop and a half low, and the core read darker than the cards once the remap stopped inflating it. Now 0.137/0.435/0.706 \u2014 leaf clusters resolve sunward, no chartreuse. Method note: swept LIVE (16 s/candidate) and predicted the 13-min rebuild to +/-0.004. The closeup's bald patch was never a distance cull: the dry slot's plants matched the ground in both value (L 0.607 vs 0.603) and hue \u2014 invisible by CONTRAST at full density. Improved, not solved. The cards-vs-volume A/B shipped (f4-cards-vs-volume.png): the volume bush is the brighter, wider-range object and the one that fails \u2014 the card conversion remains the named wall, prototype deferred. DoubleSide weed hypothesis refuted by toggle. Gates all green."
+  },
+  {
+   "n": 19,
+   "title": "BET 1 \u2014 the houses become a prop family (blind: 'D is clearly better')",
+   "when": "2026-08-05 15:20",
+   "prefix": "r25",
+   "views": [
+    "meadow",
+    "gate",
+    "vista",
+    "gorge",
+    "closeup"
+   ],
+   "verdict": "Four massings (gable improved, mono-pitch lean-to, L-plan, hip) with massing-placed chimneys (CHIM_GATE 14/14), ridge caps, doorsteps, door hoods, yards. The build DID NOT REPRODUCE until a real determinism bug was fixed: r24's outcrop pass iterated a Python set of BMVerts (memory-address order), so the RNG grain hit different vertices per run \u2014 index_update()+sorted, two builds now byte-identical. The r14 colour work survived to <1% on every term. BLIND VERDICT (architecture-only, judge found the pair itself): the new village moved from 'reads as unfinished' to 'noticed, mildly positively' \u2014 footprint and roof variety credited, the porch canopy 'the single best detail in either shot'. What remains, the judge's words: 'no eave overhang anywhere \u2014 which is why the houses read as blockout regardless of texture'; chimneys still oversized (one at a hip apex, 'the least plausible position available'); flat window openings; one roof colour. Round 26 (eaves+plinth, chimney rebuild, per-instance variation, window reveals) is running."
   }
  ]
 }
