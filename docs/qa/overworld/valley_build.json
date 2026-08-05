@@ -1,9 +1,9 @@
 {
- "build_s": 19.15,
+ "build_s": 20.56,
  "bushes": {
-  "cards": 741,
-  "core_tris": 11265,
-  "n": 59
+  "cards": 739,
+  "core_tris": 10673,
+  "n": 56
  },
  "canopy_farwall-crown": {
   "cards": 12996,
@@ -13,9 +13,9 @@
   "trunks": 5
  },
  "canopy_pocket-grove": {
-  "cards": 1697,
-  "core_tris": 491,
-  "culled": 869,
+  "cards": 1442,
+  "core_tris": 493,
+  "culled": 867,
   "lobes": 17,
   "trunks": 2
  },
@@ -45,7 +45,7 @@
  "contact_shadow": {
   "base": 0.44,
   "ground_dark": 0.46,
-  "ground_verts": 6824,
+  "ground_verts": 6827,
   "masses": 10
  },
  "dellhollow_deck_over_water_u": [
@@ -98,44 +98,49 @@
  ],
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.23,
+ "field_s": 0.26,
  "h_range": [
   -6.18,
   50.9
  ],
  "land_surface": {
-  "clipped": 8372,
-  "corners": 160656,
+  "clipped": 8328,
+  "corners": 160746,
   "dry": {
-   "L0": 0.345,
+   "L0": 0.346,
    "L1": 0.244,
-   "n": 9654
+   "n": 9801
   },
   "grass": {
    "L0": 0.384,
    "L1": 0.473,
-   "n": 82860
+   "n": 82845
   },
   "rock": {
    "L0": 0.509,
-   "L1": 0.498,
-   "n": 68142
+   "L1": 0.497,
+   "n": 68100
   }
  },
  "land_tufts": {
-  "clumps": 399,
-  "flowers": 671,
-  "lip_tufts": 209,
-  "patches": 67,
-  "seam_cells": 6696,
-  "tris": 145918,
-  "tufts": 18776
+  "card_clumps": 261,
+  "cards": 5508,
+  "cards_mass": 2859,
+  "cards_rim": 2649,
+  "clumps": 361,
+  "flowers": 790,
+  "lip_tufts": 207,
+  "patches": 78,
+  "seam_cells": 6767,
+  "tris": 156196,
+  "tufts": 19120,
+  "volume_clumps": 100
  },
  "lattice": [
   176,
   126
  ],
- "meshes": 38,
+ "meshes": 41,
  "oldgate_bite_e_u": 3.05,
  "oldgate_bite_w_u": 0.9,
  "oldgate_court_ends": [
@@ -146,20 +151,20 @@
  "oldgate_court_span_u": 10.9,
  "oldgate_culvert_covered_u": 5.35,
  "oldgate_deck_end_vs_road_u": [
-  0.21,
+  0.22,
   -0.03
  ],
  "oldgate_deck_ends_z": [
   25.79,
   26.41
  ],
- "oldgate_deck_fall_u": 0.519,
+ "oldgate_deck_fall_u": 0.515,
  "oldgate_deck_riser_u": 0.047,
  "oldgate_door_clear_u": 2.02,
  "oldgate_door_halfwidths": 2.727,
  "oldgate_floodfill_past_pinch": 0,
  "oldgate_notch_u": 17.5,
- "oldgate_parapet_road_off": -4.86,
+ "oldgate_parapet_road_off": -4.84,
  "oldgate_pinch_u": 13.55,
  "oldgate_plates_at": [
   3.11,
@@ -176,21 +181,21 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "road_verge": {
-  "ground_corners": 1938,
+  "ground_corners": 1985,
   "road_corners": 1194,
-  "step_after": 0.0012,
+  "step_after": 0.0011,
   "step_before": 0.0099
  },
  "slot_feather": {
-  "seam_verts": 3676,
-  "step_p50_after": 0.0051,
-  "step_p50_before": 0.0421,
+  "seam_verts": 3680,
+  "step_p50_after": 0.005,
+  "step_p50_before": 0.042,
   "step_p95_after": 0.012,
-  "step_p95_before": 0.0999,
-  "verts": 27077
+  "step_p95_before": 0.0996,
+  "verts": 27092
  },
  "step": 1.6,
- "terrain_s": 0.19,
+ "terrain_s": 0.23,
  "tile": [
   280.0,
   200.0
@@ -213,9 +218,14 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 373971,
+ "tris": 387553,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.85,
+ "veg_s": 4.14,
+ "verge_fringe": {
+  "tris": 3664,
+  "verge_cards": 119,
+  "verge_tufts": 571
+ },
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "dhfalls": {
@@ -231,12 +241,12 @@
   "dhpools": {
    "alpha": [
     0.06,
-    0.846,
+    0.847,
     0.97
    ],
    "depth": [
-    -0.49,
-    2.77,
+    -0.42,
+    2.78,
     5.32
    ],
    "verts": 480,
@@ -279,12 +289,12 @@
   "water": {
    "alpha": [
     0.06,
-    0.38,
+    0.381,
     0.942
    ],
    "depth": [
     -15.56,
-    0.82,
+    0.83,
     3.69
    ],
    "verts": 2704,
@@ -294,10 +304,10 @@
  "zone_cells": 35840,
  "zone_coverage_pct": {
   "crag": 21.94,
-  "forest": 13.3,
-  "meadow": 56.83,
-  "road": 1.59,
+  "forest": 13.31,
+  "meadow": 56.8,
+  "road": 1.61,
   "water": 6.34
  },
- "zone_s": 0.068
+ "zone_s": 0.078
 }
