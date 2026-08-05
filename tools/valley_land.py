@@ -924,6 +924,242 @@ def _clump_uv(gpos, uvax, s, row, seed=17):
     return np.stack([u, v], axis=-1) / CLUMP_UV + off[None, :]
 
 
+# ===========================================================================
+# F5 — THE CARD-BUILT BUSH FAMILY (slate Bet 3).  The blind critics' standing
+# structural gap, named at m1 and carried since: "the references build vegetation
+# from thin translucent cards; ours are opaque volumes — you cannot light your way
+# out of a closed convex hull."  R19 closed the MATERIAL half (UVs + smooth
+# normals), R24 closed the OUTLINE half (subdivision + harmonic displacement),
+# and both rounds wrote down that neither could reach the structure.  This is the
+# structure: the NEAR-FIELD clumps keep their R24 lobed hulls — which become the
+# dark interior, bushlang's core role — and grow a leaf-cluster CARD SHELL over
+# the hull, so the silhouette is leaf clusters and the lighting has thin geometry
+# to be translucent through.
+#
+# THE RECIPE IS THE SHIPPED BUSH'S, NOT A NEW ONE.  valley_veg.build_bushes
+# (BUSH_DENSITY 3.10, big 0.42-0.72, fuzz 0.22-0.40, rim 7.2 at 0.12-0.26) is the
+# object that WON f4b's cards-vs-volume A/B; every angle/twist/normal-transfer
+# constant is imported from bushlang rather than re-typed, converted y-up at the
+# one place an axis is named.  The cards mesh wears ow_valley_bushcard — the
+# atlas's baseColor bytes are sRGB (glTF baseColorTexture; r185 decodes),
+# COLOR_0 is LINEAR, and the runtime translucency term is ow_detail.js's own
+# owdTransAdd, which already carries this material at TRANS_MUL 0.85.  Nothing
+# new at the wire: the shell inherits the term by wearing the material.
+#
+# NEAR FIELD ONLY.  A clump within CARD_NEAR_D of the road polyline (the walked
+# corridor, which is where every money view aims) converts; beyond it the R24
+# volume stands — at boom 40 a far clump is 30+ m out and its outline is already
+# sub-card-size on screen, so the boundary is invisible where it cannot be seen.
+# DELIBERATE DIVERGENCE FROM THE PROBE (the module docstring's port-check rule):
+# the probe has no cards; the placement stream is UNTOUCHED (cards draw from a
+# POSITION-HASH RandomState per instance, never from `r()`), so tufts, flowers
+# and every clump's position/variant are bit-identical to the R24 build.
+CARD_NEAR_D = 45.0          # u from the road polyline: the card/volume boundary.
+#                             Started at 30; build 1's probe found a bare VOLUME
+#                             9 m from a standable meadow point (the overworld has
+#                             no WALKLOCK — the player roams the whole floor, so
+#                             "near the road" under-covers).  45 covers everywhere
+#                             a body can stand in the L2 box at walking closeness;
+#                             the residual volumes are background-hill dressing.
+CARD_DENSITY = 4.60         # cards per u^2 of visible hull.  Started at the bush's
+#                             own 3.10; at that density a DIMMED hull still owned
+#                             stretches of the outline (build 1, spec-sunlit: one
+#                             clump read as a leafy box).  A bush hull, unlike the
+#                             bush's lobe cluster, is one solid — it needs the
+#                             denser shell to stop silhouetting.
+CARD_BIG = (0.42, 0.72)     # big leaf-cluster cards, world u (= build_bushes)
+CARD_FUZZ = (0.22, 0.40)    # edge-fuzz cards
+CARD_FUZZ_FRAC = 0.42
+CARD_RIM_DENS = 8.6         # rim cards per u^2 of silhouette face (bush's 7.2 +
+#                             the same coverage argument as CARD_DENSITY)
+CARD_RIM_SIZE = (0.12, 0.26)
+NEAR_CORE_DIM = 0.78        # a shelled hull is the INTERIOR — demoted, not black.
+#                             0.62 stacked with canopy_contact's 0.52 base ramp and
+#                             CLUMP_BASE_DARK took the gorge-crest row to L~0.15
+#                             blobs (build 1, crop-gorge-0): the dh1 lesson — a
+#                             mass darker than its shadow reads as a HOLE.
+CARD_FAM_GAIN = 1.35        # THE FAMILY VALUE SOLVE, post-floor, clipped at 1.0.
+#                             The volumes this family replaces carried a 1.9-2.9x
+#                             instance boost over the 0.311-mean bushcore tile —
+#                             the same accidental-lift class m1's judge preferred
+#                             and f4 refused to keep — so matching them would be
+#                             re-shipping the bug.  But a 1 m bush is read by its
+#                             SIDE faces (NZ_LO 0.72), not its lit crown, and at
+#                             the canopy's own arithmetic the family landed a stop
+#                             under the meadow it stands in.  One family-level
+#                             gain, swept by rebuild (1.0 was build 1; the atlas
+#                             and the shared shader are untouched).
+
+
+def _card_shade(nrm, t, relshade, hue):
+    """COLOR_0 for a batch of cards — bushlang.Mass._colour, y-up, per instance.
+
+    `relshade` is the hull's own shade at the sample, normalised to the instance
+    max (the glTF-round-trip lesson in bushlang: an absolute shade pushes every
+    card onto the clamp floor).  `t` is height in the unit hull.  All constants
+    are bushlang's own.
+    """
+    base = BL.BASE_DARK + (1.0 - BL.BASE_DARK) * t ** BL.BASE_POW
+    ny = np.clip(nrm[:, 1], -1.0, 1.0)
+    loc = np.clip(nrm @ CLUMP_SUN, -1.0, 1.0) * 0.5 + 0.5
+    sun = BL.SUN_FLOOR + (1.0 - BL.SUN_FLOOR) * loc
+    sunm = 1.0 + BL.SUN_SHARE * (sun - (BL.SUN_FLOOR + (1.0 - BL.SUN_FLOOR) * 0.5)) * 2.0
+    c = np.clip(BL.CARD_LO + (1.0 - BL.CARD_LO) * relshade * BL.HI_LIFT * base
+                * (BL.NZ_LO + BL.NZ_HI * np.clip(ny, 0, 1)) * sunm, BL.CARD_LO, 1.0)
+    c = BL.SHELL_FLOOR + (1.0 - BL.SHELL_FLOOR) * c
+    c = np.minimum(c * CARD_FAM_GAIN, 1.0)        # see CARD_FAM_GAIN
+    return np.clip(c[:, None] * hue[None, :], 0.0, 1.0)
+
+
+def _cards_for_instance(row, gpos, gnrm, gshade, rs, out):
+    """Scatter the shipped-bush card recipe over ONE near clump's world hull.
+
+    Works in RUNTIME space (y up) on the instance's own transformed soup; the
+    conversion to Blender happens once, in `_mesh_cards`.  Appends quads to
+    `out` (lists of V/N/C/UV rows) and returns (n_mass, n_rim).
+    """
+    R = _rot(row["tilt"], row["yaw"])
+    s = np.array([row["w"], row["h"], row["w"]])
+    p = np.array([row["x"], row["y"], row["z"]])
+    V = (gpos * s) @ R.T + p                      # world soup, (n,3)
+    F = np.arange(len(V)).reshape(-1, 3)
+    A = V[F]
+    cr = np.cross(A[:, 1] - A[:, 0], A[:, 2] - A[:, 0])
+    ln = np.linalg.norm(cr, axis=1)
+    nrm = cr / np.maximum(ln, 1e-12)[:, None]
+    area = 0.5 * ln
+    tpar = np.clip((gpos[:, 1] + CLUMP_SINK) / 0.94, 0.0, 1.0)[F].mean(axis=1)
+    shade = gshade[F].mean(axis=1)
+    rel = shade / max(float(shade.max()), 1e-6)
+    keep = nrm[:, 1] > -0.45                      # undersides: nothing to see
+    if not keep.any():
+        return 0, 0
+    area, nrm, A, tpar, rel = area[keep], nrm[keep], A[keep], tpar[keep], rel[keep]
+    # a shade of warmth either way per INSTANCE (shade_core's hue_jit), so a row
+    # of shelled clumps is not one green — amplitude under bushlang's 0.10
+    hue = 1.0 + rs.uniform(-0.08, 0.08) * np.array([1.0, 0.35, -0.9])
+
+    def sample(pick, n):
+        b = rs.rand(n, 2)
+        flip = b.sum(1) > 1.0
+        b[flip] = 1.0 - b[flip]
+        Ap = A[pick]
+        return Ap[:, 0] + b[:, :1] * (Ap[:, 1] - Ap[:, 0]) + b[:, 1:] * (Ap[:, 2] - Ap[:, 0])
+
+    def emit(P, N, yaw, beta, sz, cell, col):
+        n = len(P)
+        cw, sw = np.cos(yaw), np.sin(yaw)
+        cb, sb = np.cos(beta), np.sin(beta)
+        Rv = np.stack([cw, np.zeros(n), sw], -1)              # right, y-up
+        Uv = np.stack([-sw * sb, cb, cw * sb], -1)            # up, leant back
+        Nq = np.cross(Rv, Uv)
+        Nq *= np.where((Nq * N).sum(1) < 0, -1.0, 1.0)[:, None]
+        w2 = (sz * 0.5)[:, None]
+        h = sz[:, None]
+        o = P - Uv * (h * (0.5 + BL.CARD_SINK))
+        quad = np.stack([o - Rv * w2, o + Rv * w2,
+                         o + Rv * w2 + Uv * h, o - Rv * w2 + Uv * h], 1)
+        # THE TWIST (bushlang.CARD_TWIST): the quad stops having an orientation
+        # at which it disappears; sign per card so no shared handedness
+        d = (Nq * (w2 * BL.CARD_TWIST)) * np.where(rs.rand(n) < 0.5, -1.0, 1.0)[:, None]
+        quad = quad + d[:, None, :] * np.array([1.0, -1.0, 1.0, -1.0])[None, :, None]
+        # THE SHELL NORMAL (bushlang.CARD_NRM): the card shades as the volume it
+        # is a shell of, not as its own little plane
+        Nmix = Nq * (1.0 - BL.CARD_NRM) + N * BL.CARD_NRM
+        Nmix = Nmix / np.maximum(np.linalg.norm(Nmix, axis=1, keepdims=True), 1e-9)
+        gx, gy = cell % BL.GRID, cell // BL.GRID
+        u0 = gx / BL.GRID
+        v0 = 1.0 - (gy + 1) / BL.GRID
+        v1 = v0 + 1.0 / BL.GRID
+        mir = rs.rand(n) < 0.5
+        ua = np.where(mir, u0, u0 + 1.0 / BL.GRID)
+        ub = np.where(mir, u0 + 1.0 / BL.GRID, u0)
+        uv = np.stack([np.stack([ua, v0], -1), np.stack([ub, v0], -1),
+                       np.stack([ub, v1], -1), np.stack([ua, v1], -1)], 1)
+        out["V"].append(quad.reshape(-1, 3))
+        out["N"].append(np.repeat(Nmix, 4, axis=0))
+        out["C"].append(np.repeat(col, 4, axis=0))
+        out["U"].append(uv.reshape(-1, 2))
+
+    # ---- the mass tier (Mass.shell, y-up) ----------------------------------
+    w = area * (BL.SIL_BIAS + (1.0 - BL.SIL_BIAS) * (1.0 - np.clip(nrm[:, 1], 0, 1)))
+    n_mass = int(round(CARD_DENSITY * float(area.sum())))
+    if n_mass > 0:
+        pick = rs.choice(len(area), size=n_mass, p=w / w.sum())
+        P = sample(pick, n_mass)
+        N = nrm[pick]
+        ny = np.clip(N[:, 1], -1.0, 1.0)
+        beta = np.minimum(np.arcsin(np.clip(ny, 0.0, 1.0)), BL.BETA_MAX)
+        beta = np.clip(beta + rs.uniform(-BL.BETA_JIT, BL.BETA_JIT, n_mass),
+                       math.radians(6.0), math.radians(74.0))
+        yaw = np.arctan2(N[:, 2], N[:, 0]) + math.pi / 2.0 + rs.uniform(-0.30, 0.30, n_mass)
+        is_fuzz = rs.rand(n_mass) < CARD_FUZZ_FRAC + 0.30 * (ny < BL.FUZZ_LOW)
+        sz = np.where(is_fuzz, rs.uniform(CARD_FUZZ[0], CARD_FUZZ[1], n_mass),
+                      rs.uniform(CARD_BIG[0], CARD_BIG[1], n_mass))
+        cell = np.where(is_fuzz,
+                        BL.N_BIG + rs.randint(0, BL.GRID * BL.GRID - BL.N_BIG, n_mass),
+                        rs.randint(0, BL.N_BIG, n_mass))
+        col = _card_shade(N, tpar[pick], rel[pick], hue)
+        emit(P + N * (sz * BL.CARD_OUT)[:, None], N, yaw, beta, sz, cell, col)
+    # ---- the rim tier (Mass._rim, y-up): small cards thrown PAST the hull --
+    sil = np.clip((BL.RIM_NZ - nrm[:, 1]) / BL.RIM_NZ, 0.0, 1.0)
+    wr = area * sil
+    tot = float(wr.sum())
+    n_rim = int(round(CARD_RIM_DENS * tot))
+    if n_rim > 0 and tot > 0:
+        pick = rs.choice(len(area), size=n_rim, p=wr / tot)
+        P = sample(pick, n_rim)
+        N = nrm[pick]
+        ny = np.clip(N[:, 1], -1.0, 1.0)
+        sz = rs.uniform(CARD_RIM_SIZE[0], CARD_RIM_SIZE[1], n_rim)
+        beta = np.clip(np.minimum(np.arcsin(np.abs(ny)), BL.BETA_MAX) * 0.55
+                       + rs.uniform(-BL.BETA_JIT, BL.BETA_JIT, n_rim),
+                       math.radians(4.0), math.radians(58.0))
+        yaw = np.arctan2(N[:, 2], N[:, 0]) + math.pi / 2.0 + rs.uniform(-0.5, 0.5, n_rim)
+        thrw = rs.uniform(BL.RIM_OUT[0], BL.RIM_OUT[1], n_rim) ** 1.5
+        base = P + N * (sz * (BL.CARD_OUT + thrw))[:, None]
+        base[:, 1] += sz * rs.uniform(-0.30, 0.22, n_rim)
+        cell = BL.N_BIG + rs.randint(0, BL.GRID * BL.GRID - BL.N_BIG, n_rim)
+        # colour from the SURFACE point (P), not the thrown one — bushlang's own
+        # "the ragged edge must not be the brightest thing in the crown"
+        col = _card_shade(N, tpar[pick], rel[pick], hue) * BL.RIM_DIM
+        emit(base, N, yaw, beta, sz, cell, col)
+    return n_mass, max(n_rim, 0)
+
+
+def _mesh_cards(col, name, out, mat):
+    """One quad mesh from the accumulated runtime-space card soup."""
+    V = np.concatenate(out["V"])
+    N = np.concatenate(out["N"])
+    C = np.concatenate(out["C"])
+    U = np.concatenate(out["U"])
+    # runtime (x, y, z) -> blender (x, -z, y); a proper rotation, normals carry
+    Vb = np.stack([V[:, 0], -V[:, 2], V[:, 1]], axis=1)
+    Nb = np.stack([N[:, 0], -N[:, 2], N[:, 1]], axis=1)
+    me = bpy.data.meshes.new(name)
+    faces = np.arange(len(Vb), dtype=np.int32).reshape(-1, 4)
+    me.from_pydata([tuple(v) for v in Vb], [], [tuple(f) for f in faces])
+    uvl = me.uv_layers.new(name="UVMap")
+    uvl.data.foreach_set("uv", U.ravel())
+    ca = me.color_attributes.new("Col", "FLOAT_COLOR", "POINT")
+    d = np.ones((len(Vb), 4))
+    d[:, :3] = np.clip(C, 0.0, 1.0)
+    ca.data.foreach_set("color", d.ravel())
+    me.color_attributes.active_color = ca
+    me.color_attributes.render_color_index = list(me.color_attributes).index(ca)
+    me.materials.append(mat)
+    me.polygons.foreach_set("use_smooth", [True] * len(me.polygons))
+    if hasattr(me, "use_auto_smooth"):
+        me.use_auto_smooth = True
+    lv = np.zeros(len(me.loops), dtype=np.int32)
+    me.loops.foreach_get("vertex_index", lv)
+    me.normals_split_custom_set([tuple(Nb[i]) for i in lv])
+    me.update()
+    ob = bpy.data.objects.new(name, me)
+    col.objects.link(ob)
+    return ob
+
+
 def _emit(rows, gpos, gnrm, guv, gshade=None, uvax=None):
     """Bake instance rows into one runtime-space soup, then convert to Blender.
 
@@ -990,9 +1226,144 @@ def _mesh(col, name, V, N, C, U, mat, smooth):
     return ob
 
 
+# ===========================================================================
+# F5 — THE VERGE FRINGE.  The seam is a place where plants stand, not a line.
+# ===========================================================================
+# R22 blended the COLOURS across the road edge and the user still named the road
+# "a sharp geometric object": a colour ramp cannot hide a boundary that no
+# geometry ever crosses.  The references' paths have no drawable edge because
+# GRASS OVERHANGS THE DIRT — so this pass plants a dense ankle-height fringe
+# whose individuals STRADDLE the built edge line (offsets spanning both sides of
+# the wobbled halfwidth), leaning across the road.  The carriageway CENTRE stays
+# bare: a path with grass all over it is a path nobody uses, and the ribbon is
+# the walk network.
+VERGE_TUFT_PER_M = 1.7      # tufts per metre per side (mean)
+VERGE_CARD_PER_M = 0.30     # small broadleaf fuzz cards per metre per side
+VERGE_SPAN = (-0.55, 0.40)  # offset across the edge line: -ve OVERHANGS the road
+
+
+def verge_scatter(col, ground, F, zg, mats, hl, hr, T=None):
+    """Fringe tufts + fuzz cards straddling the road edge.  Returns stats."""
+    T = T or Terrain(ground)
+    pal = _lin(PAL)
+    paldry = _lin(PALDRY)
+    xy = F.road
+    tg = np.gradient(xy, axis=0)
+    tg /= np.maximum(np.linalg.norm(tg, axis=1)[:, None], 1e-9)
+    nx, ny = -tg[:, 1], tg[:, 0]
+    tuft_rows = []
+    soup = dict(V=[], N=[], C=[], U=[])
+    n_cards = 0
+    for k in range(len(xy)):
+        for side, hw in ((1.0, hl[k]), (-1.0, hr[k])):
+            # a deterministic stream per (station, side) — never the L2 stream
+            rs = np.random.RandomState(
+                (int(h2(float(k), side, 91.0) * (1 << 31)) ^ 0x51F5) & 0x7FFFFFFF)
+            ex = xy[k, 0] + nx[k] * hw * side
+            ey = xy[k, 1] + ny[k] * hw * side
+            for _ in range(rs.poisson(VERGE_TUFT_PER_M)):
+                off = rs.uniform(*VERGE_SPAN)
+                px = ex + nx[k] * off * side + tg[k, 0] * rs.uniform(-0.5, 0.5)
+                py = ey + ny[k] * off * side + tg[k, 1] * rs.uniform(-0.5, 0.5)
+                rx, rz = float(px), float(-py)          # runtime frame
+                s = T.at(rx, rz)
+                if s is None:
+                    continue
+                p = paldry if s[1] == 2 else pal
+                c = np.array(p[int(rs.rand() * len(p))]) * (0.72 + rs.rand() * 0.5)
+                # THE STRADDLE IS THE TRICK, not the pose: VERGE_SPAN puts real
+                # blades ON the dirt, so the boundary has no drawable line.  The
+                # tilt is slouch (a fringe stands worse than a lawn); _rot's
+                # tilt axis is world-fixed, so aiming it would be a lie anyway.
+                tuft_rows.append(dict(
+                    x=rx, y=s[0] - 0.02, z=rz,
+                    w=0.30 + rs.rand() * 0.26,
+                    h=0.10 + rs.rand() * 0.13,
+                    yaw=rs.uniform(0.0, 6.28),
+                    tilt=rs.uniform(-0.45, 0.45), c=c))
+            if rs.rand() < VERGE_CARD_PER_M:
+                off = rs.uniform(-0.30, 0.45)
+                px = ex + nx[k] * off * side
+                py = ey + ny[k] * off * side
+                rx, rz = float(px), float(-py)
+                s = T.at(rx, rz)
+                if s is None:
+                    continue
+                sz = np.array([rs.uniform(0.18, 0.34)])
+                ncard = 1
+                P = np.array([[rx, s[0] + sz[0] * 0.10, rz]])
+                N = np.array([[nx[k] * side, 0.55, -ny[k] * side]])
+                N = N / np.linalg.norm(N)
+                yaw = np.array([math.atan2(N[0, 2], N[0, 0]) + math.pi / 2.0
+                                + rs.uniform(-0.4, 0.4)])
+                beta = np.array([rs.uniform(math.radians(10), math.radians(38))])
+                cell = np.array([BL.N_BIG + rs.randint(0, BL.GRID * BL.GRID - BL.N_BIG)])
+                colv = _card_shade(N, np.array([0.85]), np.array([0.92]),
+                                   1.0 + rs.uniform(-0.06, 0.06)
+                                   * np.array([1.0, 0.35, -0.9]))
+                _verge_emit(soup, rs, P, N, yaw, beta, sz, cell, colv)
+                n_cards += ncard
+    objs = []
+    tris = 0
+    if tuft_rows:
+        gp, gn = _tuft_geo()
+        V, N_, C, _ = _emit(tuft_rows, gp, gn, None)
+        m_tuft = bpy.data.materials.get("ow_f2_tuft") or B.new_mat("ow_f2_tuft", rough=0.95)
+        objs.append(_mesh(col, "veg_land_vergetufts", V, N_, C, None, m_tuft, True))
+        tris += len(V) // 3
+    if soup["V"]:
+        m_card = bpy.data.materials.get("ow_valley_bushcard")
+        if m_card is None:
+            raise RuntimeError("verge_scatter: ow_valley_bushcard missing")
+        objs.append(_mesh_cards(col, "veg_land_vergecards", soup, m_card))
+        tris += n_cards * 2
+    print("  F5 verge fringe — %d tufts + %d fuzz cards straddling the road edge "
+          "(%d tris); span %.2f..%.2f u across the built boundary"
+          % (len(tuft_rows), n_cards, tris, VERGE_SPAN[0], VERGE_SPAN[1]))
+    return objs, dict(verge_tufts=len(tuft_rows), verge_cards=n_cards, tris=tris)
+
+
+def _verge_emit(out, rs, P, N, yaw, beta, sz, cell, col):
+    """One-card emit into the shared card soup (the emit() body, unrolled)."""
+    n = len(P)
+    cw, sw = np.cos(yaw), np.sin(yaw)
+    cb, sb = np.cos(beta), np.sin(beta)
+    Rv = np.stack([cw, np.zeros(n), sw], -1)
+    Uv = np.stack([-sw * sb, cb, cw * sb], -1)
+    Nq = np.cross(Rv, Uv)
+    Nq *= np.where((Nq * N).sum(1) < 0, -1.0, 1.0)[:, None]
+    w2 = (sz * 0.5)[:, None]
+    h = sz[:, None]
+    o = P - Uv * (h * (0.5 + BL.CARD_SINK))
+    quad = np.stack([o - Rv * w2, o + Rv * w2,
+                     o + Rv * w2 + Uv * h, o - Rv * w2 + Uv * h], 1)
+    d = (Nq * (w2 * BL.CARD_TWIST)) * np.where(rs.rand(n) < 0.5, -1.0, 1.0)[:, None]
+    quad = quad + d[:, None, :] * np.array([1.0, -1.0, 1.0, -1.0])[None, :, None]
+    Nmix = Nq * (1.0 - BL.CARD_NRM) + N * BL.CARD_NRM
+    Nmix = Nmix / np.maximum(np.linalg.norm(Nmix, axis=1, keepdims=True), 1e-9)
+    gx, gy = cell % BL.GRID, cell // BL.GRID
+    u0 = gx / BL.GRID
+    v0 = 1.0 - (gy + 1) / BL.GRID
+    v1 = v0 + 1.0 / BL.GRID
+    mir = rs.rand(n) < 0.5
+    ua = np.where(mir, u0, u0 + 1.0 / BL.GRID)
+    ub = np.where(mir, u0 + 1.0 / BL.GRID, u0)
+    uv = np.stack([np.stack([ua, v0], -1), np.stack([ub, v0], -1),
+                   np.stack([ub, v1], -1), np.stack([ua, v1], -1)], 1)
+    out["V"].append(quad.reshape(-1, 3))
+    out["N"].append(np.repeat(Nmix, 4, axis=0))
+    out["C"].append(np.repeat(col, 4, axis=0))
+    out["U"].append(uv.reshape(-1, 2))
+
+
 def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
-          x0=-75.0, x1=60.0, z0=-50.0, z1=85.0, flower_clumps=900, T=None):
-    """L2 — the seam scatter.  Returns (objects, stats)."""
+          x0=-75.0, x1=60.0, z0=-50.0, z1=85.0, flower_clumps=900, T=None,
+          F=None):
+    """L2 — the seam scatter.  Returns (objects, stats).
+
+    `F` (the ValleyField) is only read for its road polyline: it is what defines
+    the F5 card conversion's NEAR FIELD.  With F=None every clump stays a volume
+    (the probe-parity path)."""
     T = T or Terrain(ground)
     r = rng(4711)
     pal = _lin(PAL)
@@ -1191,13 +1562,50 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
     V, N, C, _ = _emit(tuft_rows, gp, gn, None)
     objs.append(_mesh(col, "veg_land_tufts", V, N, C, None, m_tuft, True))
     tris += len(V) // 3
+    n_near = n_cards = n_rim = 0
     if clump_rows:
         vs = _clump_geo()
         gp = [v[0] for v in vs]; gn = [v[1] for v in vs]
         gax = [v[2] for v in vs]; gsh = [v[3] for v in vs]
+        # ---- F5: the near-field card conversion ---------------------------
+        # Near/far is distance to the ROAD POLYLINE in plan (blender x = runtime
+        # x, blender y = -runtime z).  The rows list, its order and every colour
+        # draw are already fixed above — this only annotates.
+        if F is not None:
+            rd = np.asarray(F.road, float)
+            for row in clump_rows:
+                dd = np.hypot(rd[:, 0] - row["x"], rd[:, 1] - (-row["z"])).min()
+                row["near"] = bool(dd <= CARD_NEAR_D)
+                if row["near"]:
+                    n_near += 1
+                    # the hull is the INTERIOR now: a stop under its shell,
+                    # never a lit surface (bushlang's core/shell relationship)
+                    row["c"] = np.asarray(row["c"]) * NEAR_CORE_DIM
         V, N, C, U = _emit(clump_rows, gp, gn, None, gshade=gsh, uvax=gax)
         objs.append(_mesh(col, "veg_land_clumps", V, N, C, U, m_clump, True))
         tris += len(V) // 3
+        if n_near:
+            m_card = bpy.data.materials.get("ow_valley_bushcard")
+            if m_card is None:
+                raise RuntimeError("valley_land F5: ow_valley_bushcard missing — "
+                                   "build_canopy must run before the landscape pass")
+            soup = dict(V=[], N=[], C=[], U=[])
+            for row in clump_rows:
+                if not row.get("near"):
+                    continue
+                # POSITION-HASH stream per instance (the R24 variant rule): the
+                # scatter's own r() is never drawn from, so the L2 layer is
+                # bit-identical to the volume build
+                rs = np.random.RandomState(
+                    (int(h2(row["x"], row["z"], 57.0) * (1 << 31))
+                     ^ (int(row["var"]) * 0x9E3779B1)) & 0x7FFFFFFF)
+                k = int(row["var"])
+                a, b = _cards_for_instance(row, gp[k], gn[k], gsh[k], rs, soup)
+                n_cards += a
+                n_rim += b
+            if soup["V"]:
+                objs.append(_mesh_cards(col, "veg_land_bushcards", soup, m_card))
+                tris += (sum(len(v) for v in soup["V"]) // 4) * 2
     if flower_rows:
         gp, gn = _flower_geo()
         V, N, C, _ = _emit(flower_rows, gp, gn, None)
@@ -1206,9 +1614,18 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
 
     stats = dict(tufts=len(tuft_rows), seam_cells=edge_sites, clumps=len(clump_rows),
                  flowers=len(flower_rows), patches=placed, tris=tris,
-                 lip_tufts=lip_tufts)
+                 lip_tufts=lip_tufts, card_clumps=n_near,
+                 volume_clumps=len(clump_rows) - n_near,
+                 cards=n_cards + n_rim, cards_mass=n_cards, cards_rim=n_rim)
     print("  L2 ground-is-geometry — %d tufts (6 tris each, %d of them ON THE LIP) at "
           "%d seam cells + %d clumps + %d flowers in %d clumps, %d triangles in, 0 out"
           % (stats["tufts"], lip_tufts, stats["seam_cells"], stats["clumps"],
              stats["flowers"], stats["patches"], stats["tris"]))
+    if F is not None:
+        print("  F5 card family — %d of %d clumps within %.0f u of the road carry a "
+              "shell: %d mass + %d rim cards (%d tris), hulls dimmed x%.2f; "
+              "%d far clumps stay volumes"
+              % (n_near, len(clump_rows), CARD_NEAR_D, n_cards, n_rim,
+                 (n_cards + n_rim) * 2, NEAR_CORE_DIM,
+                 len(clump_rows) - n_near))
     return objs, stats

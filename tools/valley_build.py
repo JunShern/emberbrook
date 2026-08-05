@@ -701,7 +701,17 @@ def road_wobble(F):
     hw = VM.ROAD_WIDTH * 0.5
     wob_l = 1.0 + 0.35 * np.sin(s_ * 0.61 + 0.9) * np.abs(np.sin(s_ * 0.173 + 2.2))
     wob_r = 1.0 + 0.35 * np.sin(s_ * 0.53 - 1.7) * np.abs(np.sin(s_ * 0.191 + 0.4))
-    return hw * wob_l, hw * wob_r
+    # F5 — THE FINE RAG (user, verbatim: "why is the path still a sharp geometric
+    # object").  The +-35% wander above has a ~10 u wavelength: at walking
+    # closeness it reads as a clean vector curve, because nothing varies at the
+    # metre scale a boot actually wears.  A second, metre-scale term on each side
+    # independently — value noise, not sin, so it does not beat against the
+    # wander.  Clamped: a halfwidth pinch under 0.42 u would make the ribbon a
+    # thread, and the ribbon is also the walk network.
+    rag_l = (VL._vnoise_v(s_, 0.0, 2.3, 71.0) - 0.5) * 0.62
+    rag_r = (VL._vnoise_v(s_, 0.0, 2.1, 77.0) - 0.5) * 0.62
+    return (np.maximum(hw * wob_l + rag_l, 0.42),
+            np.maximum(hw * wob_r + rag_r, 0.42))
 
 
 # R22 — THE RIBBON IS TWO VERTICES ACROSS AND THAT IS WHY ITS EDGE IS A CUT.
@@ -734,7 +744,18 @@ def build_road(col, F):
     def lane(f):
         h = hl * f if f > 0 else hr * (-f)
         s = 1.0 if f > 0 else -1.0
-        return list(zip(xy[:, 0] + nx * h * s, xy[:, 1] + ny * h * s, z))
+        ex, ey = xy[:, 0] + nx * h * s, xy[:, 1] + ny * h * s
+        zz = z
+        if abs(f) >= 0.999:
+            # F5 — THE EDGE DIES INTO THE GROUND.  The whole ribbon rode at
+            # road_h + 0.09, so its boundary was a 9 cm cliff with its own shading
+            # step — half of "sharp geometric object" is that line.  The OUTER
+            # vertex row drops to the terrain where the terrain is lower (the
+            # fill side); where the ground is higher the mesh-true conform below
+            # already lifts it flush.  Middle lanes keep the crown.
+            t = F.sample(ex, ey)
+            zz = np.minimum(z, t + 0.025)
+        return list(zip(ex, ey, zz))
 
     lanes = [lane(f) for f in ROAD_LANES]
     for a, b in zip(lanes[:-1], lanes[1:]):
@@ -4180,7 +4201,10 @@ def main():
     t0 = time.time()
     TS = VL.Terrain(made["ground"])
     STATS["land_surface"] = VL.surface(made["ground"], TS)
-    land_objs, STATS["land_tufts"] = VL.tufts(col, made["ground"], zg, mats, T=TS)
+    # F=F arms the F5 card-built bush family: near-road clumps grow a leaf-card
+    # shell (veg_land_bushcards) and their hulls demote to interiors.
+    land_objs, STATS["land_tufts"] = VL.tufts(col, made["ground"], zg, mats, T=TS,
+                                              F=F)
     for ob_ in land_objs:
         made[ob_.name] = ob_
     print("  landscape pass took %.1fs" % (time.time() - t0))
@@ -4194,8 +4218,17 @@ def main():
     # each other and the last write to a COLOR_0 buffer is the only one that
     # ships.  BEFORE canopy_contact, so a contact shadow still darkens the band
     # rather than the band erasing the shadow.
-    STATS["road_verge"] = VL.road_verge(made["ground"], made["road"], F,
-                                        *road_wobble(F))
+    _hlhr = road_wobble(F)
+    STATS["road_verge"] = VL.road_verge(made["ground"], made["road"], F, *_hlhr)
+
+    # ---- F5: THE VERGE FRINGE (valley_land.verge_scatter) ------------------
+    # Geometry across the seam — the half of "natural blend" R22's colour band
+    # could not reach.  After road_verge (it reads nothing R22 writes, but the
+    # fringe should stand on the blended colours it ships beside).
+    _vobjs, STATS["verge_fringe"] = VL.verge_scatter(col, made["ground"], F, zg,
+                                                     mats, *_hlhr, T=TS)
+    for ob_ in _vobjs:
+        made[ob_.name] = ob_
 
     # ---- R14: THE CLUMPS WERE NOT TOUCHING THE GROUND ----------------------
     # It runs HERE and nowhere earlier because it is the LAST write to two
