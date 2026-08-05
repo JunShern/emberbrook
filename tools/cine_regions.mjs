@@ -870,11 +870,66 @@ export function cutGeometry(C, glbPath, warn) {
     spawnTo = ovr(c.to, c.from, spawnTo);
     spawnFrom = ovr(c.from, c.to, spawnFrom);
 
+    // A FOLD OF THE EDGE'S OWN RIBBON UNDER THE BAND SHRINKS THE CUT'S vTol
+    // (2026-08-05, PT-20260805-049's migration). A pivot-split switchback moves its
+    // legs SIDEWAYS, and the migrated moorage flight folds l1 back through this
+    // seam's plan window at dy 1.12 — inside cvt 1.6 — so a body descending the
+    // middle flight fired the weave<->lockfive cut four metres short of the seam
+    // (seam_test's one-cut gate went red on moorage__tenant-shack, whose replay
+    // snapped onto the fold at [75.35, 5.15, -26.88]). The seam's PLACE is right;
+    // the vertical dimension has the room: march the chosen band's cells over the
+    // edge's OWN ribbons (triangle tops — an AABB version grazed cells rotated
+    // treads never reach and destabilised three other towns' seams before it was
+    // withdrawn) and drop the tolerance to just under the nearest fold floor.
+    // 0.95 is the measured spread of a seam's OWN floors under its band (hairpin
+    // landings and the sibling leg's first treads sit at dy 0.80-0.90 on five of the
+    // town's six stairs seams — measured on the first run of this pass); a fold
+    // tighter than that is reported for an eye, never auto-cut.
+    // A SEAM ON A PIVOT-SPLIT SWITCHBACK CAN CATCH ITS OWN EDGE'S FOLDED LEG
+    // (2026-08-05, PT-20260805-049's migration): the moorage flight's relocated l1
+    // passes back through this band's plan window at dy 0.67..1.12 — inside the
+    // town cvt 1.6 — so a body descending the middle flight fired weave<->lockfive
+    // four metres short of the seam, and seam_test's one-cut gate went red on the
+    // deck edge underneath. The measurement below (band cells against the edge's
+    // OWN ribbon tops, triangle-accurate) prints the height clusters; the CHOICE of
+    // a tighter tolerance is AUTHORED per edge in defaults.cutVTolPerEdge, because
+    // an auto-shrink cannot tell a folded sibling leg from the seam's own flight
+    // continuing below the band — shrinking those misses honest cuts, which leaves
+    // the camera wrong for everybody (measured on quay-deck__pilot-cluster, whose
+    // 'fold' at 0.66 is its own next treads down).
+    let vTolC = cvt;
+    const vOvr = (D.cutVTolPerEdge || {})[c.edge];
+    if (vOvr !== undefined) vTolC = vOvr;
+    if (E.rec.type === 'stairs') {
+      const reOwn = new RegExp('^walk_e_' + esc(E.rec.from) + '__' + esc(E.rec.to) + '_', 'i');
+      const perpC = [-seam.n[1], seam.n[0]];
+      const dys = [];
+      for (let a = -D.cutThickness; a <= D.cutThickness + 1e-9; a += D.cutThickness) {
+        for (let q = -seam.w; q <= seam.w + 1e-9; q += 0.4) {
+          const x = at[0] + seam.n[0] * a + perpC[0] * q, z = at[2] + seam.n[1] * a + perpC[1] * q;
+          for (const h of G.tops(reOwn, x, z)) {
+            const dy = Math.abs(h - at[1]);
+            if (dy <= cvt) dys.push(+dy.toFixed(2));
+          }
+        }
+      }
+      dys.sort((a, b) => a - b);
+      const above = dys.filter((d) => d > vTolC);
+      if (vOvr !== undefined)
+        W(`cut ${c.from}<->${c.to} on '${c.edge}'@${seam.t.toFixed(3)}: authored vTol ${vTolC} ` +
+          `(town ${cvt}); own-edge floor dys under the band: [${[...new Set(dys)].join(', ')}]`);
+      else if (above.length && dys.some((d) => d <= vTolC))
+        W(`cut ${c.from}<->${c.to} on '${c.edge}'@${seam.t.toFixed(3)}: own-edge floors under ` +
+          `the band at dy [${[...new Set(above)].join(', ')}] are inside vTol ${vTolC} — if any ` +
+          `belongs to a SIBLING leg (not this flight continuing), a body walking it fires this ` +
+          `cut early; author defaults.cutVTolPerEdge['${c.edge}'] below the sibling's floor`);
+    }
+
     out.push({edge: c.edge, E, t: seam.t, from: c.from, to: c.to,
               whatFrom: c.whatFrom, whatTo: c.whatTo,
               at: r3(at), band, margin: +seam.score.toFixed(3),
               spawnTo, spawnFrom,
-              vTol: cvt});
+              vTol: vTolC});
   }
   return {cuts: out, noRibbon, walkY, halfWidth, ribbons, overrideNotes};
 }

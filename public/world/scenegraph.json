@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-05T16:57:20Z",
+ "generated": "2026-08-05T17:51:27Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -5760,7 +5760,7 @@
     "t": 1.1,
     "w": 1.9
    },
-   "vTol": 1.6,
+   "vTol": 0.52,
    "auto": true,
    "label": null,
    "key": null,
@@ -5796,7 +5796,7 @@
     "t": 1.1,
     "w": 1.9
    },
-   "vTol": 1.6,
+   "vTol": 0.52,
    "auto": true,
    "label": null,
    "key": null,
@@ -6785,6 +6785,7 @@
   "cut square<->pondlane on 'square-plaza__pond-jetty': every seam position in t=[0.714,0.846] overlaps another path (walk_pad_pips-den) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",
+  "cut weave<->lockfive on 'weave-huts__moorage'@0.256: authored vTol 0.52 (town 1.6); own-edge floor dys under the band: [0, 0.14, 0.23, 0.37, 0.67, 0.74, 0.83, 0.88, 0.99, 1.13]",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",

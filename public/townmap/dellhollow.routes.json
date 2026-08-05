@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-05T17:32:16Z",
+ "generated": "2026-08-05T17:51:36Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",

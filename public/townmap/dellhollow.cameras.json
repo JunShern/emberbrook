@@ -138,7 +138,11 @@
   ],
   "minDist": 15,
   "_doc_minDist": "floor on the solved standoff. A small region fits from very close, and a camera four metres from a market stall is standing inside it — worse, this town's districts are still being built, so a shot solved against gray blockout must leave room for the geometry that replaces it.",
-  "_frameExits_why": "RULED ON 2026-07-31 (was a migration flag): every shot frames the seams it exits by — the solver default new towns inherit. Turned on with the full-town re-bake; lockhead/cottage re-aimed to pay for it (surgeon's frameExits diff, seam-canon §9)."
+  "_frameExits_why": "RULED ON 2026-07-31 (was a migration flag): every shot frames the seams it exits by — the solver default new towns inherit. Turned on with the full-town re-bake; lockhead/cottage re-aimed to pay for it (surgeon's frameExits diff, seam-canon §9).",
+  "cutVTolPerEdge": {
+   "weave-huts__moorage": 0.52
+  },
+  "_cutVTolPerEdge_why": "2026-08-05, PT-20260805-049's STAIRS_V2 migration: the pivot-split moved l1 sideways and it now passes back through the weave<->lockfive band's plan window. Measured (scenegraph_derive's own band-cell sweep over the edge's ribbon tops): the seam's own crossing floors sit at dy <= 0.37, the folded l1's at >= 0.67. 0.52 is the midpoint of that gap — crossings on l0 still fire, a body on the folded leg no longer does, and seam_test's one-cut replay on moorage__tenant-shack is the gate that proves it."
  },
  "cameras": [
   {
