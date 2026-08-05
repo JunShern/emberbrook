@@ -268,11 +268,65 @@ const STATES = [
         g.why.length > 0, 'ready (no reasons)', 'nothing a player could see is on screen');
     },
   },
+  /* THE PT-20260805-033 STAND, AS A FIXTURE. Five tickets (032/033/034/035/036) came
+   * off ONE spot in del-cine where the world was open (_court_probe --way 3/3 both
+   * ways), the body was drawn (345 of 427 pixels survived the plate) and the routed
+   * arrow was on screen, labelled and clickable (wayfind_probe: lift 22 px, click lands
+   * on a walk ribbon). The agent still spent 29 steps walking into the one fenced side,
+   * because the percept told it neither which figure it was nor what the arrows said.
+   * The numbers below are that frame's real ones: charNdc [-0.623,0.238] is the body at
+   * screen [241,274] of 1280x720, and the routed "Lock Five" pill drew at nx 0.076 —
+   * LEFT of the character, which is the direction it never once tried. */
+  {
+    name: 'town-markers-and-self',
+    setup: SIM_OK.replace('aspect:1.78})',
+      'aspect:1.78,charNdc:[-0.623,0.238,0.91]}),occ:()=>({hit:false})') + LOCK_OFF,
+    html: '<div id="story-obj">Down to the lock apron &mdash; the girl who was in the water</div>' +
+      '<div id="exit-markers" style="position:fixed;inset:0">' +
+      '<div data-edge="cut:quay-deck__pilot-cluster" data-kind="cut" ' +
+      'style="position:absolute;left:7%;top:50%;width:22px;height:16px">' +
+      '<div style="width:22px;height:16px"></div>' +
+      '<div class="story-way">Lock Five</div></div>' +
+      '<div data-edge="cut:quay-west__deep-stairs" data-kind="cut" ' +
+      'style="position:absolute;left:60%;top:20%;width:22px;height:16px;opacity:0.34">' +
+      '<div style="width:22px;height:16px"></div></div>' +
+      '<div data-edge="cut:quay-west__hidden" data-kind="cut" ' +
+      'style="position:absolute;left:30%;top:30%;width:22px;height:16px;display:none">' +
+      '<div style="width:22px;height:16px"></div></div>' +
+      '</div>',
+    check(p, g, text) {
+      ok(this.name, 'THE AGENT IS TOLD WHICH FIGURE IS IT', !!p.you, j(p.you),
+        'percept.you carries the body\'s own screen position');
+      ok(this.name, 'and it is the engine\'s own projection, not a guess',
+        !!p.you && Math.abs(p.you.nx - 0.189) < 0.01 && Math.abs(p.you.ny - 0.381) < 0.01,
+        j(p.you), 'charNdc [-0.623,0.238] -> nx 0.189, ny 0.381');
+      ok(this.name, 'the model is shown that sentence', /YOU ARE THE FIGURE AT/.test(text),
+        j(text.split('\n').filter(l => /FIGURE/.test(l))), 'a YOU ARE THE FIGURE line');
+      ok(this.name, 'a marker the shot is not drawing is NOT reported',
+        (p.markers || []).length === 2, j((p.markers || []).map(m => m.label)),
+        'the display:none marker is absent — 2 of 3');
+      const routed = (p.markers || []).find(m => m.routed);
+      ok(this.name, 'the routed arrow is identified AND named', !!routed && routed.label === 'Lock Five',
+        j(routed), 'the .story-way pill is read as the routed destination');
+      ok(this.name, 'the dimmed rival is reported as dimmed',
+        (p.markers || []).some(m => !m.routed && m.dimmed), j(p.markers),
+        'dimRivals opacity .34 is information the player has');
+      /* THE BEARING IS THE WHOLE POINT. The agent aimed RIGHT for 29 steps at a stand
+       * whose only way on was LEFT; a percept that lists two coordinate pairs and
+       * leaves the subtraction to the model is the same defect one layer up. */
+      ok(this.name, 'the model is told the arrow is to its LEFT',
+        /"Lock Five".*to your left/.test(text), j(text.split('\n').filter(l => /Lock Five/.test(l))),
+        'a bearing in words, relative to the body');
+      ok(this.name, 'and which one the game is routing through',
+        /ROUTING YOU THROUGH THIS ONE/.test(text), j(text.split('\n').filter(l => /ROUTING/.test(l))),
+        'the routed arrow is called out, not just listed');
+    },
+  },
 ];
 
 // ---------------------------------------------------------------------------
 async function runDom() {
-  console.log('§1 THE FIVE SCREENS (real DOM, headless Chrome, no game)');
+  console.log('§1 THE SIX SCREENS (real DOM, headless Chrome, no game)');
   const port = await freePort();
   const profile = join(process.env.TMPDIR || '/tmp', PROFILE_PREFIX + process.pid);
   let chrome = null;
@@ -408,8 +462,10 @@ function runCensus() {
     .map(f => existsSync(join(ROOT, f)) ? readFileSync(join(ROOT, f), 'utf8') : '').join('\n');
   ok('census', 'the shipping UI source was found to check against', src.length > 5000,
     `${src.length} bytes read`, 'battle_turnbased.js + ui_kit.js + story_runtime.js + menu.js + play3d.html');
-  const classes = [...new Set((PERCEPT_JS.match(/\.(ebb|ebui|mn)-[a-z]+/g) || []))];
-  const ids = ['story-obj', 'sgp', 'story-card'];
+  const classes = [...new Set((PERCEPT_JS.match(/\.(ebb|ebui|mn|story)-[a-z]+/g) || []))];
+  // #exit-markers is play3d's marker layer and the percept's ONLY route to the arrows;
+  // round 23 added it, and it is exactly the class of selector this census exists for.
+  const ids = ['story-obj', 'sgp', 'story-card', 'exit-markers'];
   // LOAD-BEARING: the percept has no second way to see these, so if a module renames
   // one the harness goes blind on that screen and every fixture here keeps passing.
   // The rest are alternates in a union selector (.ebui-choice sits beside li/.row) —
@@ -419,7 +475,11 @@ function runCensus() {
     '.ebui-veil', '.ebui-title', '.ebui-body', '.ebui-banner',
     // The pause menu draws .mn-navrow and nothing else the percept can read; without
     // it an agent that presses Escape is handed an empty list (measured 2026-08-04).
-    '.mn-navrow']);
+    '.mn-navrow',
+    // story_runtime's routed pill. It is the ONLY thing that separates "the arrow the
+    // game is sending you through" from five identical rivals; rename it and the
+    // percept lists six anonymous triangles again, which is PT-20260805-032..036.
+    '.story-way']);
   ok('census', 'the percept still queries a battle at all', classes.some(c => c.startsWith('.ebb-')),
     j(classes), 'a percept that can see .ebb-root');
   for (const c of classes) {

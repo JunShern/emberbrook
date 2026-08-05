@@ -207,10 +207,35 @@ export async function run(cfg) {
 
   // The objective sentence QUOTES the game's own banner, so it is shown to the agent
   // but is NOT part of what the harness authored — see agent.mjs authoredParts().
-  const brief = [plan.brief, plan.objective ? `Your current objective is: ${plan.objective}` : null]
+  const BASE_BRIEF = [plan.brief, plan.objective ? `Your current objective is: ${plan.objective}` : null]
     .filter(Boolean).join(' ') || null;
-  const briefAuthored = plan.brief || null;
+  const BASE_AUTHORED = plan.brief || null;
+  let brief = BASE_BRIEF, briefAuthored = BASE_AUTHORED;
   if (brief) log('  brief: ' + brief);
+
+  /* WHO YOU HAVE ALREADY SPOKEN TO (round 23, the ch2.jam receipt run's second cost
+   * centre). The agent re-entered Odessa's dialogue tree three times and spent ~20 of
+   * its steps reading lines it had already read. `history` is a rolling window of the
+   * last 8 decisions, so a conversation eight steps back is simply gone.
+   *
+   * THIS IS THE HONEST HALF OF THAT TICKET AND ONLY THE HONEST HALF. A human ALSO gets
+   * no "already talked" mark from this game — measured: the prompt reads "Talk to
+   * Odessa? [E]" identically before and after, and the re-talk re-offers the SAME
+   * choice list ("Why are the boats stopped?" / "What is this post?") with no sign that
+   * those were answered ten seconds ago. The only cue is one word, "Mm.", in place of
+   * her greeting. What a human has and this agent did not is MEMORY, not a UI cue — so
+   * memory is what the harness restores here, and the missing cue is filed as a game
+   * finding in the fix log rather than papered over on this side. */
+  const spokenTo = new Map();            // name -> step of the last conversation
+  const recallLine = () => spokenTo.size
+    ? `You have ALREADY had a full conversation with: ${[...spokenTo.keys()].join(', ')}. ` +
+      `Talking to them again replays lines you have read; do it only if the objective changed since.`
+    : null;
+  function rebuildBrief() {
+    const r = recallLine();
+    brief = [BASE_BRIEF, r].filter(Boolean).join(' ') || null;
+    briefAuthored = [BASE_AUTHORED, r].filter(Boolean).join(' ') || null;
+  }
 
   function fileReport(kind, r, step, percept, truth, frames, source, severity) {
     if (reports.length >= maxReports) return null;
@@ -497,6 +522,15 @@ export async function run(cfg) {
       }
       detail = parts.join('; ');
     } else if (intent.action === 'interact') {
+      /* NAME IT FROM THE PROMPT THE PLAYER PRESSED E ON. npc.js draws "Talk to Odessa?
+       * [E]" into #sgp, so the name is the game's own and cannot drift from whoever
+       * actually opens. Reading it from the dialogue box instead does not work here:
+       * measured on run-20260805-105834, `.ebui-title` is empty for every villager and
+       * the speaker is run together with the first line ("OdessaNineteen days, and…"). */
+      for (const s of (obs.percept.prompts || [])) {
+        const m = /talk to ([^?]+)\?/i.exec(s);
+        if (m) { spokenTo.set(m[1].trim(), step); rebuildBrief(); }
+      }
       await adapter.press('e');
     } else if (intent.action === 'advance') {
       const seen = await adapter.readThrough();

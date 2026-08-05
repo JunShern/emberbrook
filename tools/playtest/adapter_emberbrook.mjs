@@ -118,7 +118,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
  * is shown — observe() has already flagged the frame unready by then — but the shape
  * flattenPercept and the run log expect, so a busy moment is a blank rather than a
  * TypeError three layers up. */
-const EMPTY_PERCEPT = { objective: null, prompts: [], dialogue: null, card: null, battle: null };
+const EMPTY_PERCEPT = { objective: null, prompts: [], dialogue: null, card: null, battle: null, you: null, markers: [] };
 
 export const PERCEPT_JS = `(()=>{
   const vis = (e) => { if(!e) return false;
@@ -127,7 +127,7 @@ export const PERCEPT_JS = `(()=>{
     const r = e.getBoundingClientRect();
     return r.width > 2 && r.height > 2 && r.bottom > 0 && r.top < innerHeight; };
   const txt = (e) => e ? e.textContent.replace(/\\s+/g,' ').trim() : null;
-  const out = { objective:null, prompts:[], dialogue:null, card:null, battle:null };
+  const out = { objective:null, prompts:[], dialogue:null, card:null, battle:null, you:null, markers:[] };
   const cur = (e) => /(^|\\s)(cur|sel|selected|active)(\\s|$)/.test(e.className||'');
   const ob = document.getElementById('story-obj');
   if (vis(ob)) out.objective = (txt(ob)||'').replace(/^[^A-Za-z0-9]+/, '');
@@ -195,6 +195,66 @@ export const PERCEPT_JS = `(()=>{
     // The doorway banner is still in the DOM underneath a full-screen battle, and a
     // player cannot see it. Reporting it would be reporting something not drawn.
     out.prompts = [];
+  }
+  /* ===================== WHICH FIGURE IS YOU, AND WHAT THE ARROWS SAY =========
+   * PT-20260805-032/033/034/035/036 (round 23). FIVE tickets, four P1 and one P0,
+   * all filed from ONE stand — del-cine [58.11,14.24,-12.4], shot quay-west — and
+   * all five are this hole. What the instruments said about that stand:
+   *
+   *   _court_probe --way          3/3 legs BOTH ways. The world is open.
+   *   SIM.paint({tested:true})    345 of 427 character pixels survive the plate;
+   *                               charNdc [-0.623,0.238] = screen [241,274] of 1280x720.
+   *   wayfind_probe --from=ch2.maren (the run's OWN state)
+   *                               SHIPPED HINT "Lock Five", shown=true, labelled=true,
+   *                               lift 22 px, and the arrow's own clicked pixel lands on
+   *                               'walk_e_quay-deck__pilot-cluster_landing' — a WALK RIBBON.
+   *
+   * So the world was open, the character was drawn, and the routed arrow was correct,
+   * on screen and clickable, at nx 0.076. The agent aimed nx 0.30-0.86 on 29 consecutive
+   * steps, never once below 0.30, and filed "stuck at the FAR RIGHT of the platform"
+   * while standing in the LEFT QUARTER of its own frame. It was wrong about where it
+   * was by ~700 px, so every "walk back left" was a walk into the fence that correctly
+   * closes the west side ('ls_rail').
+   *
+   * THE PERCEPT NEVER TOLD IT EITHER FACT. The persona said, in as many words, "your
+   * character is a small figure standing somewhere in the picture" — and at that stand
+   * there are FOUR other villagers of the same 300-odd pixels. A human does not have
+   * this problem: they pressed the key and watched that figure move, and they read a
+   * crisp 22x16 arrow and its pill on a television. The agent gets one still 1280x720
+   * JPEG per step with no motion cue. Both readings below are strictly what is DRAWN —
+   * screen coordinates only, never a world coordinate, never the walk network — so this
+   * restores parity with a player's eyes rather than handing over the map.
+   * A HARNESS BUG IS NOT A GAME BUG; this one wore five game-bug IDs. */
+  try {
+    const c = (window.SIM && SIM.cam) ? SIM.cam() : null;
+    // charNdc is three.js's OWN projection of the body (play3d SIM.cam()), so the
+    // percept and the picture cannot drift. z>=1 is behind the camera: say nothing.
+    if (c && c.charNdc && c.charNdc[2] < 1) {
+      out.you = { nx: +((c.charNdc[0]+1)/2).toFixed(3), ny: +((1-c.charNdc[1])/2).toFixed(3),
+                  offscreen: Math.abs(c.charNdc[0])>1 || Math.abs(c.charNdc[1])>1 };
+      // GHOST v2 draws you through an occluder, so "hidden" is a look, not a loss —
+      // but it changes which shape in the picture is you, which is the whole question.
+      try { out.you.hidden = !!(SIM.occ && SIM.occ().hit); } catch(e) {}
+    }
+  } catch(e) {}
+  /* markersTick sets display:none on every marker that is not in this shot, and hides
+   * the whole layer under UILOCK — so reading the live rects can never report an arrow
+   * the player is not being shown. '.story-way' is story_runtime's routed pill (the one
+   * carrying the destination name); dimRivals puts the others at opacity .34, and that
+   * demotion is information the player has, so it is reported too. */
+  const mbox = document.getElementById('exit-markers');
+  if (mbox && !out.battle) for (const el of mbox.children) {
+    if (!el.dataset || !el.dataset.edge) continue;
+    const s = getComputedStyle(el);
+    if (s.display === 'none' || s.visibility === 'hidden') continue;
+    const r = el.getBoundingClientRect();
+    if (!r.width || !r.height || r.bottom < 0 || r.top > innerHeight) continue;
+    const pill = el.querySelector('.story-way');
+    const lab = txt(pill) || txt(el.querySelector('div + div')) || null;
+    out.markers.push({ label: lab, kind: el.dataset.kind || null,
+      nx: +(((r.left + r.right) / 2) / innerWidth).toFixed(3),
+      ny: +(((r.top + r.bottom) / 2) / innerHeight).toFixed(3),
+      routed: !!pill, dimmed: parseFloat(s.opacity || '1') < 0.6 });
   }
   return out; })()`;
 
@@ -577,9 +637,39 @@ export function checkpointsFromStory() {
 }
 
 /** The text the game DREW, flattened into the string the agent reads. */
+/* A DIRECTION IN WORDS, RELATIVE TO YOU. The agent's failure mode at PT-033 was not
+ * arithmetic on two coordinate pairs — it never compared them. Saying "left of you and
+ * below" costs nothing and is the form a person's own sentence takes. */
+function bearingWord(m, you) {
+  if (!you) return '';
+  const dx = m.nx - you.nx, dy = m.ny - you.ny;
+  const h = Math.abs(dx) < 0.05 ? '' : (dx < 0 ? 'to your left' : 'to your right');
+  const v = Math.abs(dy) < 0.05 ? '' : (dy < 0 ? 'above' : 'below');
+  if (h && v) return ` — ${h} and ${v}`;
+  if (h) return ` — ${h}`;
+  if (v) return ` — ${v} you`;
+  return ' — right about where you stand';
+}
+
 export function flattenPercept(p) {
   const L = [];
   L.push(p.objective ? `OBJECTIVE ON SCREEN: ${p.objective}` : 'OBJECTIVE ON SCREEN: (none shown)');
+  /* See the percept's own §"WHICH FIGURE IS YOU" for the five tickets that bought
+   * these two lines. They are the last thing added before the dialogue/battle blocks
+   * because when a modal is up they are not what matters. */
+  if (p.you) {
+    L.push(`YOU ARE THE FIGURE AT [${p.you.nx}, ${p.you.ny}] on screen` +
+      (p.you.offscreen ? ' (OFF the edge of the frame — the camera is not showing you)' : '') +
+      (p.you.hidden ? ' — something is in front of you, so you are drawn as a translucent ghost' : '') + '.');
+  }
+  if (p.markers && p.markers.length) {
+    L.push('WAY-OUT ARROWS DRAWN ON SCREEN (aim a goto at one to take that way):');
+    for (const m of p.markers)
+      L.push(`  ${m.routed ? '>>' : '  '} ${m.label ? `"${m.label}"` : `(unlabelled ${m.kind || 'exit'})`}` +
+        ` at [${m.nx}, ${m.ny}]${bearingWord(m, p.you)}` +
+        (m.routed ? '  <== THE GAME IS ROUTING YOU THROUGH THIS ONE' : '') +
+        (m.dimmed ? ' (dimmed — not the way to your objective)' : ''));
+  }
   if (p.card) L.push(`FULL-SCREEN CARD: ${[p.card.title, p.card.sub, p.card.prose, p.card.hint].filter(Boolean).join(' / ')}`);
   if (p.dialogue) {
     L.push(`A DIALOGUE BOX IS OPEN — speaker: ${p.dialogue.speaker || '(none)'}`);
@@ -609,7 +699,11 @@ export const PERSONA = [
   'Final Fantasy IX. You control ONE character. The camera is FIXED for each area and you',
   'cannot turn it. You see exactly what a player sees: this screenshot and the text the game',
   'draws on it. You have no map, no coordinates and no quest log beyond what is on screen.',
-  'Your character is a small figure standing somewhere in the picture.',
+  'Your character is a small figure in the picture. The text tells you WHICH figure —',
+  '"YOU ARE THE FIGURE AT [nx, ny]" — because a still screenshot has no motion to give it',
+  'away and other villagers are the same size. Trust that line over your reading of the',
+  'image: it is the engine\'s own projection of your body. Read it BEFORE you decide which',
+  'way is "back" or "left", and aim relative to it.',
 ].join('\n');
 
 // ===========================================================================
