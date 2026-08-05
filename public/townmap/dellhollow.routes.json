@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-05T10:28:49Z",
+ "generated": "2026-08-05T12:38:30Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -4030,7 +4030,7 @@
      "seam:weave-huts__keepers-cottage"
     ],
     "minCharPx": 105,
-    "visibleFrac": 0.9219
+    "visibleFrac": 0.9375
    }
   },
   "crossing": {
@@ -7303,7 +7303,7 @@
      "seam:tenant-shack__fish-dock"
     ],
     "minCharPx": 52,
-    "visibleFrac": 0.4375
+    "visibleFrac": 0.4062
    }
   },
   "north-landing": {
@@ -7694,8 +7694,6 @@
    ]
   }
  ],
- "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 3 of 15 plates are stale against the solve — cottage (7.03u), lockfive (0.17u), north-landing (0.09u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
- ],
+ "warnings": [],
  "overrides": {}
 }

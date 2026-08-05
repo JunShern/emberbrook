@@ -493,7 +493,7 @@
         "status": "UNVERIFIED",
         "instrument": null,
         "evidence": "no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
-        "at": "2026-08-05T12:36:11.748Z"
+        "at": "2026-08-05T12:42:11.205Z"
       },
       "run": "run-20260803-113942",
       "step": 5,
@@ -6868,7 +6868,7 @@
         "status": "UNVERIFIED",
         "instrument": null,
         "evidence": "no instrument in this repo answers this claim — it is about taste, audio, or a comparison the agent could not have made. A human judges this one, or it is dropped.",
-        "at": "2026-08-05T12:36:11.755Z"
+        "at": "2026-08-05T12:42:11.212Z"
       },
       "run": "run-20260804-185107",
       "step": 24,
@@ -16289,10 +16289,10 @@
       "id": "PT-20260805-037",
       "created": "2026-08-05T11:30:49.784Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": "tools/reach_probe.mjs (NOT RUN)",
-        "evidence": "the reachability probe needs a running server: re-run this with --port=3000.",
-        "at": "2026-08-05T12:36:11.760Z"
+        "status": "REFUTED (round 24, recorded here in round 25)",
+        "instrument": "tools/playtest/wayfind_probe.mjs --from=ch2.supper --target=cottage (docs/qa/playtest/wayfind-r24)",
+        "evidence": "At the honest seed, the routed hint at this stand is SHOWN, LABELLED, dest \"Keepers' Cottage\",\nlift 22.6 px, and its first hop is identical to the metre-shortest. No station printed\nSHIPPED HINT DISAGREES. Not a routing defect. FIXLOG round 24.",
+        "at": "2026-08-05T12:42:11.151Z"
       },
       "run": "run-20260805-112819",
       "step": 15,
@@ -16509,10 +16509,10 @@
       "id": "PT-20260805-038",
       "created": "2026-08-05T11:37:09.728Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": "tools/reach_probe.mjs (NOT RUN)",
-        "evidence": "the reachability probe needs a running server: re-run this with --port=3000.",
-        "at": "2026-08-05T12:36:11.764Z"
+        "status": "REFUTED as filed (round 24, recorded here in round 25)",
+        "instrument": "tools/_court_probe.mjs --comp/--grid + tools/reach_probe.mjs",
+        "evidence": "--comp at the filed cell [61.85,1.25,-25.06] returns SEED UNSTANDABLE: under WALKLOCK there is\nno walk network under the cell the agent filed from. --grid walk:true shows why — the fish\ndock's east side at that z is a 0.4 m curtain of VISIBLE floor carrying no walk network, while\nthe real exit lane is two metres SOUTH at z -27.0..-27.4, where the network runs continuously\nfrom x 58 to x 70. reach_probe maren -> cottage door is ok=true. The ticket named a tier; the\ncause was a lane. FIXLOG round 24.\nTHE LAUNDRY, SEPARATELY: t2c_W9_laundry_planking_5 leaves 1.28 m over walk against BODY_H 1.30\nand severs the crossing one tier up. Recorded in gate_cloth_headroom.py's UNFIXED register and\ndeliberately NOT fixed — it owes a re-bake and the story steps over it (weave>crossing is a cut\nwhose spawn lands 9.3 m east).",
+        "at": "2026-08-05T12:42:11.151Z"
       },
       "run": "run-20260805-112819",
       "step": 55,
@@ -16967,10 +16967,10 @@
       "id": "PT-20260805-040",
       "created": "2026-08-05T12:21:40.178Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": "tools/reach_probe.mjs (NOT RUN)",
-        "evidence": "the reachability probe needs a running server: re-run this with --port=3000.",
-        "at": "2026-08-05T12:36:11.773Z"
+        "status": "THE HOLE IS VERIFIED · THE MECHANISM IS STILL UNNAMED · ONE SUSPECT REFUTED",
+        "instrument": "tools/_court_probe.mjs --at/--way + tools/scenegraph_derive.mjs + docs/qa/playtest/runs/run-20260805-121612/run.jsonl",
+        "evidence": "THE HOLE IS REAL. --at along z -24.0: the weave deck's last floor is x 73.2 at y 7.90, x 73.6\nis cx_rail at 7.53, and from x 74.0 east there is NO floor at all above the river plane at\ny -3.90. The run went [70.41,7.87,-25.48] (step 25) -> [74.05,-3.90,-23.98] (step 26) and sat\nthere for seven steps.\n\nA SUSPECT WAS RAISED AND REFUTED IN THE SAME PASS, WHICH IS WHY IT IS WRITTEN DOWN. The\nscenegraph's lockfive>weave arrival spawn is [72.452,7.75,-24.338] — 1.64 m in plan from the\nlanding — and _court_probe --at reports EVERY floor there (7.90/7.87/7.81) blocked by cx_rail,\nwith nothing below until -3.90. That looked like the answer. IT IS NOT: --way tp'd to that\nexact spawn walks 2/2 legs to [70.71,7.87,-25.03] and 2/2 back, no stall, either direction.\nLESSON, and it is the same shape as round 24's: --at's second column answers 'what intersects\na body box raised at this floor', NOT 'can a body stand here' — the settle picks a workable\nfloor and the drive proves it. Do not read a blocker name as a verdict.\nscenegraph_derive emits NO warning for that arrival, and its ARRIVAL vs CAMERA-CUT BANDS table\npasses it.\n\nSTILL UNNAMED: what moved the body 11.8 m down. walkStep provably refuses to walk off that lip\nunder WALKLOCK and jump is disabled in a routed town. Remaining candidates, none measured:\nsgCorrect, the marooned unstick, or a cut spawn taken mid-fall. Naming it needs an instrumented\npage that logs P.y per tick across the transition, not another fill.",
+        "at": "2026-08-05T12:42:11.151Z"
       },
       "run": "run-20260805-121612",
       "step": 28,
@@ -17194,10 +17194,10 @@
       "id": "PT-20260805-041",
       "created": "2026-08-05T12:21:57.886Z",
       "verification": {
-        "status": "UNVERIFIED",
-        "instrument": "tools/reach_probe.mjs (NOT RUN)",
-        "evidence": "the reachability probe needs a running server: re-run this with --port=3000.",
-        "at": "2026-08-05T12:36:11.778Z"
+        "status": "THE HOLE IS VERIFIED · THE MECHANISM IS STILL UNNAMED · ONE SUSPECT REFUTED",
+        "instrument": "tools/_court_probe.mjs --at/--way + tools/scenegraph_derive.mjs + docs/qa/playtest/runs/run-20260805-121612/run.jsonl",
+        "evidence": "THE HOLE IS REAL. --at along z -24.0: the weave deck's last floor is x 73.2 at y 7.90, x 73.6\nis cx_rail at 7.53, and from x 74.0 east there is NO floor at all above the river plane at\ny -3.90. The run went [70.41,7.87,-25.48] (step 25) -> [74.05,-3.90,-23.98] (step 26) and sat\nthere for seven steps.\n\nA SUSPECT WAS RAISED AND REFUTED IN THE SAME PASS, WHICH IS WHY IT IS WRITTEN DOWN. The\nscenegraph's lockfive>weave arrival spawn is [72.452,7.75,-24.338] — 1.64 m in plan from the\nlanding — and _court_probe --at reports EVERY floor there (7.90/7.87/7.81) blocked by cx_rail,\nwith nothing below until -3.90. That looked like the answer. IT IS NOT: --way tp'd to that\nexact spawn walks 2/2 legs to [70.71,7.87,-25.03] and 2/2 back, no stall, either direction.\nLESSON, and it is the same shape as round 24's: --at's second column answers 'what intersects\na body box raised at this floor', NOT 'can a body stand here' — the settle picks a workable\nfloor and the drive proves it. Do not read a blocker name as a verdict.\nscenegraph_derive emits NO warning for that arrival, and its ARRIVAL vs CAMERA-CUT BANDS table\npasses it.\n\nSTILL UNNAMED: what moved the body 11.8 m down. walkStep provably refuses to walk off that lip\nunder WALKLOCK and jump is disabled in a routed town. Remaining candidates, none measured:\nsgCorrect, the marooned unstick, or a cut spawn taken mid-fall. Naming it needs an instrumented\npage that logs P.y per tick across the transition, not another fill.",
+        "at": "2026-08-05T12:42:11.151Z"
       },
       "run": "run-20260805-121612",
       "step": 30,

@@ -4229,3 +4229,87 @@ writes a partial receipt with live usage totals on SIGINT/SIGTERM/SIGHUP.
    drives the body with the motor the harness itself uses, a connectivity claim about tiered
    deck geometry needs a run.
 4. Only then re-receipt `--from=ch2.lockfive`, and only then the full NEW GAME.
+
+## Round 25 — 2026-08-05 · the town's own data already says which ladders are lies
+
+Round 24's closing order was: make the Lock Five climb READ, name what moved the body to
+y −3.90, and **stop asking a flood fill whether Dellhollow's tiers connect.** This round kept
+the third rule literally — every claim below is from the shipped route data, a `--at` census,
+or a drive, and the one claim that came from reading a blocker name is refuted in the same
+paragraph.
+
+### First: the routes were STALE, and nav-eval composites from them
+
+`routes_derive --check` printed `STALE: public/townmap/dellhollow.routes.json`. CLAUDE.md's own
+line — *"`--check` must be CLEAN — nav-eval composites from routes, stale routes = wrong
+scores"* — so every navigability number taken since the last re-derive was measured against a
+superseded town. Re-derived (15 shots, `--check` now `ok`). It also re-printed the standing
+`camera-vs-floor ownership mismatch` list, 49.8 m over 13 spans, unchanged.
+
+### Why 22 of 24 steps went into the search: the frame offers THREE ways up and the map marks
+### two of them `blocked`
+
+`docs/qa/playtest/round24/run-121612-step-022.jpg` is the `lockfive` shot with the routed
+"Keepers' Cottage" pill drawn correctly on the upper deck and the player down on the moorage.
+The town's own derived routes name what else is in that picture:
+
+| route | class | `blocked` | head → foot | length |
+|---|---|---|---|---|
+| `weave:weave-huts__fish-dock` | **ladder** | **true** | `[71.45, 7.83, −24.0]` → `[59.09, 1.0, −28.0]` | 14.68 m |
+| `lockhead:lockhead__lock-five` | **ladder** | **true** | `[80.73, 14.0, −16.0]` → `[86.91, 0.0, −28.0]` | 19.45 m |
+| `weave-huts__moorage` (map edge) | **stairs** | — | double switchback, map elevations **5.6** and **3.3** | — |
+
+**The run walked the third one, and its own trajectory proves which:** step 23 `[71.45, 3.30,
+−27.88]` and step 24 `[77.36, 5.60, −26.12]` land on the switchback's two hairpin elevations
+**exactly**. So the climb was never missing and was never mis-signposted — the agent spent 22
+steps telling one real staircase apart from two painted ladders **that the map itself already
+flags `blocked: true`, and that the shipped game draws identically to the real one.**
+
+`route_overlay.js` has known this since it was written — its legend says *"RED CENTRELINE = a
+way on that LOOKS walkable and is not (the map's maintenance ladders and cargo winch ship no
+walk ribbon — a legibility trap worth seeing)"*. **The trap was documented, instrumented, and
+shipped to a player anyway**, because the overlay is a debug key (`R`) and nothing in the game
+carries the distinction. `blocked: true` exists in the data; it exists nowhere the player can
+see.
+
+**THE FIX IS NOT A MARKER AND THIS ROUND DID NOT SHIP ONE.** A `passage` would teleport past a
+staircase that works, and the marker vocabulary is seam-anchored — it draws an arrow at the
+destination, which is what the frame already shows correctly. What is needed is either the
+ladder art de-emphasised/removed (a district rebuild) or a marker kind anchored on a *route*
+rather than a seam (a runtime change). Both are outside a data-only pass; recorded with the
+coordinates so the next lane starts at the geometry and not at the search.
+
+### The fall: the hole is verified, one suspect was raised and refuted, the mechanism is unnamed
+
+The hole is not in doubt. `--at` along z −24.0: the weave deck's last floor is **x 73.2 at
+y 7.90**, x 73.6 is `cx_rail` at 7.53, and **from x 74.0 east there is no floor at all** above
+the river plane at y −3.90. The run stepped `[70.41, 7.87, −25.48]` → `[74.05, −3.90, −23.98]`
+and sat there seven steps.
+
+A suspect was raised and killed inside forty minutes, and it is written down because the way it
+died is the reusable part. The scenegraph's `lockfive>weave` arrival spawn is
+`[72.452, 7.75, −24.338]` — **1.64 m in plan from the landing** — and `--at` reports *every*
+floor there (7.90 / 7.87 / 7.81) blocked by `cx_rail`, with nothing below until −3.90. That
+reads exactly like "the player materialises inside a rail on the lip of a 12 m hole."
+
+**It is wrong.** `--way` tp'd to that exact spawn walks **2/2 legs to `[70.71,7.87,−25.03]` and
+2/2 back, no stall, both directions.** `scenegraph_derive` emits no warning for it and its
+ARRIVAL-vs-CUT-BAND table passes it.
+
+> **`--at`'s second column answers "what intersects a body box raised at this floor", not "can a
+> body stand here".** The settle picks a workable floor and the drive proves it. A blocker name
+> is a lead, never a verdict — the same shape as round 24's three-instruments-three-answers, and
+> the reason that entry insisted the keyboard was the only competent instrument.
+
+So **what moved the body 11.8 m down is still unnamed.** `walkStep` refuses to walk off that lip
+under WALKLOCK and jump is disabled in a routed town. The remaining candidates — `sgCorrect`, the
+marooned unstick, a cut spawn taken mid-fall — are *unmeasured*, and naming one needs a page
+instrumented to log `P.y` per tick across the transition, not another fill. Filed on
+PT-20260805-040/041 in those words rather than guessed.
+
+### No LLM spend this round
+
+`--from=ch2.lockfive` was not re-run. The two blockers standing between that checkpoint and the
+end card are the search (unfixed, needs geometry or a new marker kind) and the fall (mechanism
+unnamed), and round 23's rule applies before the money does: **a run that would reproduce a known
+finding is spending money, not gathering evidence.** Round 25's cumulative LLM spend: **$0.00**.
