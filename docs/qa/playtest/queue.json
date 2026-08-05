@@ -20135,6 +20135,205 @@
     },
     "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
    }
+  },
+  {
+   "id": "PT-20260805-055",
+   "created": "2026-08-05T18:44:58.679Z",
+   "verification": {
+    "status": "MEASURED — THE WORLD IS PASSABLE, THE GUIDANCE IS NOT",
+    "instrument": "tools/_court_probe.mjs --way/--grid walk:true/--transect + tools/walk_engine_gate.mjs + tools/walk_bodygate.mjs (all in/against the running game)",
+    "at": "2026-08-05T20:00:00Z",
+    "evidence": "The full NEW GAME receipt (run-20260805-182057) fired every Ch1 beat through ch1.sendoff on its own triggers and then spent ~40 of its last steps at the Old Gate: the exit is a KEY PORTAL (emb-cine>ow-valley@old-gate, at [78,2.9,-130], r 2.2, key e) and the agent pressed E at z -121.5, 8.5 m out of range, because it could not walk south. MEASURED: the court's walk pad (walk_lm_gate-court, top 2.66..2.80, ends z -128.3) has a 1.5x5.5 m WALK HOLE at x 75.5..81, z -123.0..-124.5 -- the culvert channel head, visible paving with no walk record -- squarely on the court's center line where the map edge, the seam arrow and every agent drive aim. SIM.move down the center stalls at z -122.6 on all x 76.5..79 (walk_engine_gate GREEN 0 lost and walk_bodygate 0 blocked steps are both VACUOUS over a hole: no cells exist there to lose). THE FLANK IS THE DESIGN: the pad wraps the channel on x <= 75.4 and x >= 81.5, and _court_probe --way drives [77.5,-121.5] -> [74.6,-122.5] -> [74.6,-125] -> [76.5,-127.3] -> [78,-128] 4/4 legs BOTH ways, ending inside the portal's own radius (z -128 is 2.0 m from the portal, r 2.2). So the game IS completable on foot; the wayhint aims at the portal across the hole (lineIsGround fails there, the routed polyline runs the holed center, so the aim fails closed) and the agent pounded the center for 40 steps. FIX CLASS: Emberbrook map -- a lane waypoint swinging barn__gate-court's tail around the channel head (footprints-live-in-the-map; gate road carriers) so routes/wayAim carry the flank; coordinator-owned town map, filed for the Emberbrook lane rather than patched from the Dellhollow lane at midnight."
+   },
+   "run": "run-20260805-182057",
+   "step": 187,
+   "source": "spine-detector",
+   "kind": "bug",
+   "severity": "P1",
+   "title": "The player can leave the chapter on its first frame, and the objective follows them out",
+   "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
+   "expected": "To carry on with the objective the game was showing me.",
+   "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Step through the Old Gate\") still refers to where I was. Nothing here can continue the chapter.",
+   "probe": null,
+   "frames": [
+    "docs/qa/playtest/runs/run-20260805-182057/frames/step-185.jpg",
+    "docs/qa/playtest/runs/run-20260805-182057/frames/step-186.jpg",
+    "docs/qa/playtest/runs/run-20260805-182057/frames/step-187.jpg"
+   ],
+   "onscreen": {
+    "objective": "Step through the Old Gate",
+    "prompts": [],
+    "dialogue": null,
+    "card": null
+   },
+   "truth": {
+    "scene": "emb-cine",
+    "shot": "gatefield",
+    "pos": [
+     77.5,
+     2.66,
+     -121.52
+    ],
+    "beats": [
+     "ch1.open",
+     "ch1.waystone",
+     "ch1.reveal",
+     "ch1.rowan",
+     "ch1.lake.handoff",
+     "ch1.lake.wake",
+     "ch1.lake.hearth",
+     "ch1.lake.lamp",
+     "ch1.meet",
+     "ch1.lamps",
+     "ch1.hush",
+     "ch1.see.mara",
+     "ch1.see.poppy",
+     "ch1.see.finn",
+     "ch1.see.mochi",
+     "ch1.pact",
+     "ch1.sigils",
+     "ch1.sendoff"
+    ],
+    "flags": [
+     "story.ch1.started",
+     "story.ch1.waystone",
+     "story.ch1.reveal",
+     "npc.met.mara",
+     "npc.met.poppy",
+     "story.ch1.vesper-done",
+     "story.ch1.lake-pov",
+     "story.ch1.lake-woke",
+     "story.ch1.lake-flame",
+     "story.ch1.rounds",
+     "story.ch1.met",
+     "story.ch1.lamps",
+     "lake-joined",
+     "story.ch1.lamps-done",
+     "story.ch1.hush",
+     "story.ch1.seen.mara",
+     "story.ch1.seen",
+     "story.ch1.seen.poppy",
+     "story.ch1.seen.finn",
+     "story.ch1.seen.mochi",
+     "npc.met.emb.innkeep",
+     "story.ch1.pact",
+     "story.ch1.gate-open",
+     "story.ch1.sendoff"
+    ],
+    "exits": [
+     "emb-cine>emb-cine@cut:barn__gate-court:0.698:gatefield>gateroad",
+     "emb-cine>ow-valley@old-gate"
+    ]
+   },
+   "repro": {
+    "sha": "7e63a3172df0162609e85ebf8433bdc305bcb78c",
+    "capturedAt": "2026-08-05T18:44:58.676Z",
+    "save": {
+     "v": 2,
+     "party": [
+      {
+       "id": "vesper",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 34,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "lake",
+       "active": true,
+       "level": 1,
+       "xp": 0,
+       "hp": 32,
+       "equip": {
+        "weapon": "walking-staff",
+        "armor": "quilted-vest"
+       }
+      },
+      {
+       "id": "maren",
+       "active": false,
+       "level": 1,
+       "xp": 0,
+       "hp": 28,
+       "equip": {
+        "weapon": null,
+        "armor": null
+       }
+      }
+     ],
+     "gold": 30,
+     "inventory": {
+      "tonic": 2,
+      "hand-lamp": 1
+     },
+     "flags": {
+      "story.ch1.started": true,
+      "story.ch1.waystone": true,
+      "story.ch1.reveal": true,
+      "npc.met.mara": true,
+      "npc.met.poppy": true,
+      "story.ch1.vesper-done": true,
+      "story.ch1.lake-pov": true,
+      "story.ch1.lake-woke": true,
+      "story.ch1.lake-flame": true,
+      "story.ch1.rounds": true,
+      "story.ch1.met": true,
+      "story.ch1.lamps": 3,
+      "lake-joined": true,
+      "story.ch1.lamps-done": true,
+      "story.ch1.hush": true,
+      "story.ch1.seen.mara": true,
+      "story.ch1.seen": 4,
+      "story.ch1.seen.poppy": true,
+      "story.ch1.seen.finn": true,
+      "story.ch1.seen.mochi": true,
+      "npc.met.emb.innkeep": true,
+      "story.ch1.pact": true,
+      "story.ch1.gate-open": true,
+      "story.ch1.sendoff": true
+     },
+     "at": {
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "gatefield",
+      "pos": [
+       69.666,
+       2.722,
+       -109.777
+      ],
+      "yaw": null
+     },
+     "beats": {
+      "ch1.open": 1,
+      "ch1.waystone": 1,
+      "ch1.reveal": 1,
+      "ch1.rowan": 1,
+      "ch1.lake.handoff": 1,
+      "ch1.lake.wake": 1,
+      "ch1.lake.hearth": 1,
+      "ch1.lake.lamp": 1,
+      "ch1.meet": 1,
+      "ch1.lamps": 1,
+      "ch1.hush": 1,
+      "ch1.see.mara": 1,
+      "ch1.see.poppy": 1,
+      "ch1.see.finn": 1,
+      "ch1.see.mochi": 1,
+      "ch1.pact": 1,
+      "ch1.sigils": 1,
+      "ch1.sendoff": 1
+     },
+     "meta": {
+      "savedAt": "2026-08-05T18:44:47.187Z",
+      "playSeconds": 0
+     }
+    },
+    "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+   }
   }
  ]
 }

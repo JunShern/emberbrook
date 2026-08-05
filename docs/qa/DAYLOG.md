@@ -15893,3 +15893,36 @@ STILL NAMING THE DEAD, deliberately: docs/qa/MORNING.md, end-to-end-wiring.md an
 log (history, past-tensed where they read as current); play3d.html:15 has a cosmetic
 "reference impl for render3d.js" comment — coordinator-owned file, flagged to main
 rather than edited.
+
+---
+
+## 2026-08-05 (evening) — Dellhollow lane, round 29: the two receipt blockers, and the full NEW GAME run
+
+PT-049 and PT-050 both traced to ONE object: the weave-huts__moorage switchback, built
+before STAIRS_V2, foot moved at 8752b87 without its district art. Layer 1: cx_rail at
+z 2.12 = RAIL_H over the OLD 1.70 foot — a handrail the floor left behind (instrument:
+_court_probe --who/--at; Blender ray on the master + a2461ed~1 for the before/after).
+Layer 2: the un-split hairpins stacked l1 over l2 in the body window BOTH ways — nobody
+had ever walked this stair in the shipped game. Migrated to STAIRS_V2 with weave_build +
+locksfoot_build + cx_build re-run in the same window; town_blockout grew lay_stair_rails
+(A RAIL MAY NOT STAND IN A BODY WINDOW OF ITS OWN EDGE — the same-edge blind spot,
+third instance today counting the seam fold and the rail sweep). PT-050: weave yaw
+118 -> 142, measured by projecting AND ray-casting the seam per candidate; found and
+fixed a findability regression the weave rebuild shipped the same hour (the drying apron
+across Maren's sightline — apron clamps riverward at pad+1.0 now). Seam fold under the
+migrated flight: vTol is authored per edge (cutVTolPerEdge weave-huts__moorage 0.52,
+measured clusters in the note) after three auto-fixes were built, measured worse, and
+withdrawn. Gauntlet: story green, percept 375/375 then 331/331, routes clean,
+findability 69/0, seam 282/0, cine 647/0, playthrough 86/0, transition 161/7 (the seven
+known pre-existing).
+
+Receipts: ch2.lockfive -> supper FIRED (run-163944). ch2.dock -> END CARD AT STEP 12
+(run-170550). FULL NEW GAME (run-182057, $0.68): ALL 18 Ch1 beats on their own triggers
+from a cleared save — then out of steps at the Old Gate. PT-055 filed and measured to
+the metre: a 1.5x5.5 m walk hole at the culvert channel head (x 75.5..81, z -123..-124.5)
+on the court's centre line; the flank route drives 4/4 both ways into the key-portal's
+radius, so THE WORLD IS PASSABLE AND THE GUIDANCE IS NOT. walk_engine_gate and
+walk_bodygate are both vacuous over a hole — no cells to lose. Fix class: Emberbrook map
+lane waypoint around the channel head; coordinator's town, filed for that lane.
+Harness: the recall line's game-quoted names leave briefAuthored (container lesson #3).
+FIXLOG round 29 has the full record. All work committed and pushed in five batches.

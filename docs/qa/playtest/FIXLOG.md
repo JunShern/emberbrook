@@ -4889,3 +4889,118 @@ bought. It is the first thing to run once either is closed.
 **Spend this round:** ~$0.35 of model calls across four partial receipt runs (two of them
 killed on instrument defects that the runs themselves exposed and that are now fixed), plus
 eleven browser probes and no bakes.
+
+## Round 29 — 2026-08-05 · THE WALL BETWEEN THE TIERS WAS ONE UN-MIGRATED STAIRCASE
+
+The order: close PT-20260805-049 (the moorage one-way pocket) and PT-20260805-050 (the
+weave shot's margin arrow), then run THE FULL NEW GAME receipt. Both blockers turned out
+to be shadows of one object: the weave-huts__moorage switchback, built before STAIRS_V2
+existed, whose foot 8752b87 moved without carrying its district art.
+
+### §1 PT-049, first layer: the pocket was a handrail that never moved
+
+`_court_probe --who/--at` named the pocket's south wall: **cx_rail at z 2.12** — exactly
+RAIL_H above the OLD foot height 1.70. When 8752b87 lowered the foot to 1.25 it re-derived
+ONLY the walk records; over a 1.70 floor a bar at 2.12 is a legal handrail (the body window
+starts at 2.30), over the new 1.25 landing it is a chest-height wall (window [1.85, 2.50]).
+**The rail never moved; the floor did.** One cx_build re-run — its own clear_of_walk gate
+refuses that station against today's records — and the pocket's south leg walked.
+
+### §2 PT-049, second layer: the switchback itself, unwalkable BOTH ways since construction
+
+With the rail gone the drive up stalled under `walk_e_weave-huts__moorage_l1_t04` (bottom
+4.00 over t01's 3.03) and under stale `wv_stair_treads` (weave_build was not re-run at
+8752b87 either); the drive DOWN was picked back up at the top hairpin — round 21's class, at
+both hairpins, because an un-split switchback stacks its flights inside the body window at
+the shared waypoint. Nobody had ever walked this stair in the shipped game: round 28's
+agents died in the pocket below it or bounced at the arrow above it.
+
+**THE MIGRATION** (the ledger's own prescription, art carried in the same window):
+STAIRS_V2 += weave-huts__moorage → blockout regenerated → `walk_rederive --edge` (26
+records) → weave_build all → locksfoot_build all → cx_build → GLB. Plus one new generator
+rule paid for on the spot: **a rail may not stand in a body window of its own edge**
+(town_blockout `lay_stair_rails` — the pivot split moves sibling legs sideways, so a leg's
+own side rail stood over the relocated sibling's corridor, and walk_rederive's
+invisible-wall sweep is blind to same-edge crossings BY DESIGN). Two of the flight's six
+rails are now legitimately not built at all.
+
+Engine verdict: the full switchback drives DOWN 12/12 legs clean — the first time ever —
+and UP with one west-line thread past t04's lip. `run-20260805-163944` (--from=ch2.lockfive)
+then walked moorage → weave → crossing → cottage and **fired ch2.supper**.
+
+### §3 PT-050: the seam was in frame to the letter, and unusable
+
+The weave>lockfive seam sat at nx 0.104 — framed within `frameExits`' margin exactly, at
+the frame's left edge, its click ray landing on wv_piles. The seam's PLACE on the stair is
+design-correct (one cut per passage at the tier lip), so the fix is the shot: **weave yaw
+118 → 142**, picked by sweeping the solver + occluder rays offline (seam nx 0.203,
+ground/chest/head rays all clear, charPxFar 54 over the 50 px floor; region visibility
+81.3% vs 90.6% — the cost of an exit a player can use). One plate baked.
+`run-20260805-170550` (--from=ch2.dock): the cut TAKEN AT STEP 9, down the migrated
+switchback, and **the Chapter Two END CARD drawn and perceived at step 12**. Round 28's
+agent bounced that arrow for eighteen steps.
+
+### §4 What the rebuilds broke, found by the gates the same day
+
+* **findability went 69/67: Maren 0% visible from the rebaked lockfive plate.** The weave
+  rebuild's drying-deck APRON (an annulus whose radius reaches 3.4 m past its pad) grew
+  across the lockfive camera's only sightline to her post — a Blender ray named
+  wv_planking at (63.6, 32.0, 6.81); the pre-rebuild master measured CLEAR on the same
+  rays. weave_build's apron now clamps riverward at pad + 1.0 m (planks five metres over
+  open river read as floor nobody can stand on anyway). Both plates rebaked; 69/0.
+* **seam_test went 282/280+2: the split l1 folds back under its own seam band.** The
+  one-cut replay fired weave<->lockfive at [75.35, 5.15, −26.88], dy 1.12 — inside the
+  town cutVTol 1.6 — four metres short of the seam. Three generator fixes were built,
+  measured WORSE, and withdrawn (an AABB fold check grazes cells rotated treads never
+  reach; auto-shrunk vTols miss honest cuts on flights whose "fold" is themselves
+  continuing). What ships: scenegraph_derive MEASURES the band's own-edge floor clusters
+  and warns; the tolerance is AUTHORED data — `defaults.cutVTolPerEdge` = 0.52 for this
+  one edge, the midpoint of the measured gap (own crossing ≤ 0.37, folded l1 ≥ 0.67).
+  seam_test 282/0, the stair passage cuts exactly once both ways.
+
+### §5 The gauntlet
+
+story_test green · percept_test 375/375 · routes_derive --check clean · findability 69/0 ·
+seam_test 282/0 · cine_test 647/0 · **playthrough_test 86/0** (§W: 21 pairs flood-filled,
+0 unreachable, zero console errors) · transition_test: see §6.
+
+### §6 THE FULL NEW GAME RECEIPT — two runs, and what each one bought
+
+**Attempt 1 (run-20260805-181559) died at step 27 on the harness's own firewall**: the
+round-23 memory line resurfaced "Girl in the Square" — a name THE GAME drew three steps
+earlier — inside `briefAuthored`, and the soft check only excuses tokens the CURRENT frame
+draws. Third instance of the container lesson (round 6: the brief; round 28 §6: the nudge);
+the recall line now shows the agent the names and the firewall only the harness's fixed
+sentence. percept_test 331/331.
+
+**Attempt 2 (run-20260805-182057, 250 steps, ~$0.68) fired EVERY Chapter One beat on its
+own triggers** — ch1.open through ch1.sendoff, 18 of 18, from a cleared save, including
+the lamp round, the hush, the full see-round and the pact — the deepest any full LLM run
+has ever gone from NEW GAME. It then ran out of steps AT THE OLD GATE, and the last forty
+steps are one repeated sentence: walk at the exit, arrive 8.5 m short, press E, nothing.
+
+**PT-20260805-055, measured to the metre**: the exit is a KEY PORTAL at [78, 2.9, −130]
+r 2.2, and the court's walk pad has a **1.5 × 5.5 m walk hole at x 75.5..81,
+z −123.0..−124.5 — the culvert channel head** — squarely on the centre line where the map
+edge, the arrow and every agent drive aim. Visible paving, no walk record: `walk_engine_gate`
+GREEN and `walk_bodygate` 0 blocked are both VACUOUS over a hole (no cells exist there to
+lose), which is why no gate ever saw it. **The flank IS the design and it works**: the pad
+wraps the channel on x ≤ 75.4, and `_court_probe --way` drives the flank route 4/4 legs
+both ways to inside the portal's own radius. The game is completable on foot; the GUIDANCE
+is what fails — the routed polyline runs the holed centre, `lineIsGround` fails across it,
+the aim fails closed, and the arrow decorates a portal the walker cannot reach in a straight
+line. Fix class: an Emberbrook MAP edit (a lane waypoint swinging barn__gate-court's tail
+around the channel head) + re-derive — the coordinator's town, filed for that lane.
+
+### §7 Where the bar stands tonight
+
+The user's bar is "a playtest run that completes the full game from scratch." Tonight's
+state, in receipts rather than hopes: **NEW GAME → all 18 Ch1 beats on their own triggers**
+(run-182057) · **the Old Gate crossing: world passable, guidance broken, filed as PT-055**
+· the valley corridor and ch2.road..maren: receipted in round 19 (ch2-arrive) ·
+**ch2.lockfive → supper** (run-163944) · **ch2.dock → THE END CARD at step 12**
+(run-170550). One map edit stands between the pieces and one unbroken run.
+
+**Spend this round:** ~$1.15 of model calls (two partial episode legs ~$0.35, receipt
+attempt 1 ~$0.10, receipt attempt 2 $0.68), five plate bakes (3.2 min each), and ~30
+browser probes.
