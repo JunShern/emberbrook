@@ -1,0 +1,78 @@
+  nav http://localhost:3000/play3d.html?nomusic=1&nofollow=1&scene=del-cine&cam=weave&sx=70.41&sy=7.87&sz=-25.48
+  seeded at {"x":70.41,"y":7.87,"z":-25.48}  shot weave  (seam layer idle)
+  motor=tick (SIM.keys + SIM.tick: phys/walkStep/marooned/sgTick/sgCorrect)
+  heading w+a (closes 0.57 m)
+
+--- §1b where the pending transition put the body ---
+  at the end of the drive  [74.71, 6.79, -24.19]  shot=weave cuts=0 corr=1
+  once the seam settled    [74.00, 7.16, -24.38]  shot=lockfive cuts=0 corr=2 busy=false
+  >> the transition did not move the body vertically
+  360 samples (tick), 1 events
+
+--- trajectory (first, every 30th, and the drop) ---
+#     0  [70.48, 7.87, -25.46]  shot=weave      cuts=0 corr=1 busy=0 corrTicks= 0 AIR=0 corrTarget=-
+#    30  [72.63, 7.90, -24.80]  shot=weave      cuts=0 corr=1 busy=0 corrTicks= 0 AIR=0 corrTarget=-
+#    60  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#    90  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#   120  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#   150  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#   180  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#   210  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#   240  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#   270  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#   300  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+#   330  [74.71, 6.79, -24.19]  shot=weave      cuts=0 corr=1 busy=1 corrTicks= 0 AIR=0 corrTarget=lockfive
+
+--- §2 THE SPRAY: 16 headings x 60 steps from every seed on the lip ---
+    33 seeds on the weave/moorage lip (x 69..78, z -27..-23, any walk floor above y 4)
+  NO SEED FALLS MORE THAN 3 m. walkStep will not leave this tier in any direction.
+
+--- §3 the walk floors in the landing column [74.05, -23.98] ---
+  7.6
+  y -3.9 is NOT IN the set.
+
+--- §4 columns where sgPlace settles below y 2 asking for 7.87 ---
+    [71.2, -28] -> y 1.25
+    [71.2, -27.6] -> y 1.25
+    [71.6, -28] -> y 1.25
+    [71.6, -25.6] -> y 1.77
+    [72, -28] -> y 1.25
+    [72, -25.6] -> y 1.7
+    [72.4, -28] -> y 1.25
+    [72.4, -25.6] -> y 1.62
+    [72.8, -28] -> y 1.25
+    [73.2, -28] -> y 1.25
+    [73.6, -28] -> y 1.25
+    [75.2, -26.8] -> y 1.07
+    [75.6, -28] -> y 1.66
+    [76, -28] -> y 1.66
+    [76, -27.6] -> y 1.66
+    [76, -27.2] -> y 1.32
+    [76, -26.8] -> y 1.32
+    [76.4, -28] -> y 1.32
+    [76.4, -27.6] -> y 1.32
+    [76.4, -27.2] -> y 1.32
+    [76.4, -26.8] -> y 1.32
+    [76.8, -28] -> y 1.32
+    [76.8, -27.6] -> y 1.32
+    [76.8, -27.2] -> y 1.32
+    [76.8, -26.8] -> y 1.32
+    [77.2, -27.6] -> y 1.05
+    [77.2, -27.2] -> y 1.05
+    [77.2, -26.8] -> y 1.05
+    [77.2, -26.4] -> y 1.05
+    [77.2, -26] -> y 1.05
+    [77.2, -25.6] -> y 1.05
+    [77.2, -25.2] -> y 1.05
+    [77.2, -24.8] -> y 1.05
+    [77.2, -24.4] -> y 1.05
+    [77.2, -24] -> y 1.05
+    [77.2, -23.6] -> y 1.05
+    [77.6, -27.6] -> y 1.01
+    [77.6, -27.2] -> y 1.02
+    [77.6, -26.8] -> y 1.02
+    [77.6, -26.4] -> y 1.02
+  113 column(s).
+
+VERDICT: NO FALL in 360 ticks. The body travelled 4.42 m in plan and ended at y 6.79 — so the keys DID reach the page.
+wrote docs/qa/playtest/round26/fall-probe.json

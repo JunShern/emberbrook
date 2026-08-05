@@ -4313,3 +4313,153 @@ PT-20260805-040/041 in those words rather than guessed.
 end card are the search (unfixed, needs geometry or a new marker kind) and the fall (mechanism
 unnamed), and round 23's rule applies before the money does: **a run that would reproduce a known
 finding is spending money, not gathering evidence.** Round 25's cumulative LLM spend: **$0.00**.
+
+## Round 26 — 2026-08-05 · the ladders stopped lying, and the fall did not reproduce
+
+Round 25 left two items and the director ruled on both: **fix the ART so the two blocked
+ladders look blocked** (no new marker kind, no passage teleport), and **name what moved the
+body to y −3.90**, measuring keyboard-first.
+
+### The ladders: what they actually were, in the picture
+
+Both are map edges of type `ladder`; `dellhollow.routes.json` marks both `blocked: true`;
+neither ships a walk ribbon and neither ever did. Looking at the shipped `lockfive` plate
+with each object's own vertices projected into the camera (the only way to tell three
+similar diagonals apart at 40 m):
+
+| | what the plate showed | verts | seen from |
+|---|---|---|---|
+| `wv_fishdock_ladder` (`weave-huts__fish-dock`) | a WHOLE ladder: two clean stringers, ~25 evenly spaced rungs, running from the water-level deck up to the weave tier — the most inviting object in the frame | 280 | 7 shots |
+| `e_lockhead__lock-five_rung00..30` (`lockhead__lock-five`) | **31 detached 0.7 x 0.3 x 0.06 slabs with no stiles at all**, floating in mid-air diagonally across the frame. It does not read as a ladder; it reads as a flight of floating steps, which is worse | 248 | 7 shots |
+| `walk_e_weave-huts__moorage` | the real switchback, and the one the run's own trajectory proves it walked | — | — |
+
+The Lockhead one is raw `town_blockout` output that never got district art — and the
+Lockhead district was nevertheless built AROUND it (`lk_build` clamps `rung00` flush with
+the pad, opens the parapet rail at `LADDER_GAP` and cuts a slot in the deck paving for it),
+so it could not simply be deleted without leaving three unexplained holes in finished art.
+
+### The fix, and why it is a CARRIER
+
+`tools/ladder_derate.py` is the shape, shared by three call sites so they cannot drift: the
+lower run gone with **the two rails ragged at different heights** (0.55 / 0.64 — a square
+cut reads as "shortened", two ragged ends read as "failed"), every third surviving rung
+rotted out, the break taking its two neighbours, one rung still hanging by a nail, and a
+plank nailed diagonally across the head. `town_blockout.py` and `weave_build.py` both build
+that way from now on.
+
+**And it was applied by a carrier, not a rebuild, because the obvious route was measured and
+found unfaithful.** `weave_build.py -- all save` run on a byte copy of the live master
+produced **85** `wv_/nl_/veg_wv_/veg_nl_` objects where the master holds **138**: the huts
+(`wv_hut_weave-huts_*`), the North Landing dressing and 48 vegetation clumps are in the file
+and are not in a fresh run's output. Running the district builder would have deleted 55
+objects of shipped art to change one ladder. Same class as `gate_rimchop.py` on the
+Emberbrook side, and CLAUDE.md's rule now has a Dellhollow instance:
+**for a district already dressed, carry the edit.** `tools/del_ladder_derate.py` prints its
+own faithfulness gate — objects 2584 -> 2568, only the ladder set and the lamp added or
+removed, and a hard FAIL if any `walk_`/`bar_` object changed.
+
+**Nothing walkable changed.** `cine_solve` re-run to a fixed point moved no camera (only its
+own timestamp), `scenegraph_derive` reports 15/15 arrivals clear, `routes_derive --check` is
+`ok`. Reachability before and after is identical; what changed is the picture.
+
+Plus the counterpart the ruling allowed: `wv_lantern_stairhead`, `waterfront_build`'s own
+`wf_lantern_stairmouth` recipe (post + bracket + lantern + a 680 W / 14 m practical) at the
+head of the flight that works. **Its post is SEARCHED, not authored** — a ring search with an
+exact surface-distance test — because the hand-placed one at 0.42 m off the tread's edge went
+straight through `bar_e_weave-huts__moorage_l0_railB`, an INVISIBLE canonical rail box: the
+art would have looked right and the flight's own guard would have been solid where the
+picture showed air. The AABB prefilter alone refused every candidate in the town (the cliff,
+the water and the terrain each carry a world AABB tens of metres across) — *a bound loose
+enough to refuse everything is a veto, not a test*, and that line earned its second instance.
+
+### The fall: measured four ways, and it did not reproduce
+
+`tools/playtest/fall_probe.mjs` is new, and it exists because rounds 24 and 25 both recorded
+that the fills lie on this geometry. It drives the body with **the engine's own motor** and
+reads the verdict off the COUNTERS rather than off a theory: on the frame `P.y` drops,
+`corrections++` means `sgCorrect`, `cuts++` means an authored cut, airborne means
+`walkStep`, and none of the three means the marooned unstick.
+
+> **THE PROBE'S FIRST TWO RUNS WERE BOTH WRONG ABOUT THE WORLD, AND BOTH FAILURES ARE THE
+> POINT.** (1) It accepted `SIM.cine()` truthy as "ready", drove keys into a page whose walk
+> network was still loading, and reported "NO FALL" about a body sitting at `[0, 2, 0]`.
+> (2) With a Cycles bake on the machine the page ticked **143 frames in 60 s** and the body
+> walked 1.1 m — *physics rides rAF, and rAF is the first thing a loaded machine takes away.*
+> Worse, the URL spawn's own correction left `SGbusy` set for the whole run, and `sgTick` —
+> and therefore every cut and `sgCorrect` itself — returns immediately while busy. So 240
+> ticks were driven **with the entire seam layer switched off**, while the trace looked
+> healthy. The tool now refuses to report a seam-layer verdict with `SGbusy` stuck.
+
+With the seam layer proven idle, driving the run's own leg from the run's own stand:
+
+| section | measurement | result |
+|---|---|---|
+| §1 the drive | seed `[70.41, 7.87, −25.48]`, hold the heading that closes on the lockhead ladder head | the body walks **4.4 m east onto the switchback's first treads and stops**. `walkStep` refuses to leave. `sgCorrect` **does** fire (`corrections` 1→2, shot `weave`→`lockfive`) and moves the body **0.71 m in plan and +0.37 m vertically**. NO FALL |
+| §2 the spray | 33 seeds over the whole weave/moorage lip x 16 world-space headings x 60 steps = **31 680 measured walk steps** | **no seed gets more than 3 m below where it started.** WALKLOCK holds everywhere on this tier |
+| §3 the column | every walk floor in the landing column `[74.05, −23.98]`, read by sweeping `sgPlace`'s own settle over y −12..22 | exactly **one: y 7.68**. `y −3.90` is NOT in the set, so nothing that re-settles a height could have produced it there |
+| §4 the fallback | every column in x 70..80 / z −28..−22 that settles below y 2 when asked for 7.87 | 113, and **none below y 1.07** |
+
+**So the three named suspects are refuted at that stand and the exact −3.90 landing does not
+reproduce on the shipped build** — and `del-cine/scene.glb` has not been rewritten since
+11:28, so this is the same world the 12:16 run played.
+
+> **AND §3 CONTRADICTS ROUND 25.** That round's `--at` reported "from x 74.0 east there is no
+> floor at all above the river plane at y −3.90"; the engine, asked with `SIM.tpY`, returns
+> the switchback's treads at 7.53 / 7.16 / 6.79 / 6.41 across exactly that span and 7.68 in
+> the landing column. Two engine-side instruments disagree about one world. **NO RAIL WAS
+> BUILT**, because round 24's whole lesson is that building against a measurement another
+> instrument contradicts is how a lane spends a day on a staircase that already exists.
+
+### What the round DID find, with coordinates: sgPlace switches oracles
+
+`sgPlace` is verbatim:
+
+    let ys = (walkRef.length ? walkFloors(p[0], p[2]) : []);
+    if (!ys.length) ys = floors(p[0], p[2]);
+    P.y = ys.length ? ys.reduce((a,b) => Math.abs(a-p[1]) < Math.abs(b-p[1]) ? a : b) : p[1];
+
+Two defects, both measured on this very tier:
+
+1. **NEAREST IS NOT NEAR.** `walkGround` — which is what let the body stand where it is —
+   probes `(x, z)` AND four neighbours at ±0.18 m, the plank-crack tolerance. `sgPlace` probes
+   the exact column only, and then takes the *nearest* floor however far away it is. At
+   `[71.6, −25.6]` and `[72.4, −25.6]` — two metres from the run's own stand — a walker stands
+   at ~7.9 and **`sgPlace`'s settle returns 1.62–1.77**. Any transition taken there, an
+   authored cut or `sgCorrect` firing, drops the player ~6 m onto the moorage. That is the
+   round's live P1 and it has a coordinate. (It is also why this probe seeds with `SIM.tp`
+   and not with the URL spawn: at `[70.41, −25.48]` the URL spawn asking for 7.87 settles to
+   **2.04** — measuring the suspect with the suspect.)
+2. **THE ORACLE SWITCH ITSELF.** When the walk column is empty the settle silently stops
+   asking the walk network and asks the COLLISION set, which over these decks contains the
+   river. That is the only path in the engine that can put a body at a height the walk
+   network does not carry, which is exactly the shape of `−3.90`.
+
+**PREPARED DIFF for `public/play3d.html` (coordinator-owned — reported, not applied):**
+
+    function sgPlace(p){
+      let ys=(walkRef.length?walkFloors(p[0],p[2]):[]);
+      // NEAREST IS NOT NEAR, and walkGround already knows it: the walker settles from
+      // (x,z) AND four neighbours at +/-0.18 m, so a body standing legitimately on a
+      // plank crack has a floor this column does not carry. Taking the nearest entry of
+      // a column 6 m below is not a 1-2 cm correction, it is a fall with no cause.
+      const R=STEP_UP+STEP_DN;
+      let near=ys.filter(y=>Math.abs(y-p[1])<=R);
+      if(!near.length&&walkRef.length)
+        for(const[ox,oz]of[[.18,0],[-.18,0],[0,.18],[0,-.18]]){
+          const t=walkFloors(p[0]+ox,p[2]+oz).filter(y=>Math.abs(y-p[1])<=R);
+          if(t.length){ near=t; break; }
+        }
+      if(near.length) ys=near;
+      else if(!ys.length) ys=floors(p[0],p[2]);   // the collide fallback stays LAST
+      ...
+
+`fall_probe --spray` is the regression test for it: after the change, §4 must report no
+column on a walked tier that settles more than `STEP_UP+STEP_DN` from a height a body can
+legitimately hold there.
+
+### Instruments added
+
+* `tools/ladder_derate.py` — the derate shape, shared by three call sites.
+* `tools/del_ladder_derate.py` — the carrier, with its own faithfulness gate.
+* `tools/playtest/fall_probe.mjs` — `--motor keys|tick`, §1 drive / §2 spray / §3 column /
+  §4 fallback. Report: `docs/qa/playtest/round26/fall-probe.{txt,json}`.
