@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-05T12:38:30Z",
+ "generated": "2026-08-05T15:08:35Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -3619,7 +3619,7 @@
      "seam:lockhead__keepers-cottage"
     ],
     "minCharPx": 75,
-    "visibleFrac": 0.775
+    "visibleFrac": 0.8
    }
   },
   "cottage": {
@@ -7303,7 +7303,7 @@
      "seam:tenant-shack__fish-dock"
     ],
     "minCharPx": 52,
-    "visibleFrac": 0.4062
+    "visibleFrac": 0.3906
    }
   },
   "north-landing": {

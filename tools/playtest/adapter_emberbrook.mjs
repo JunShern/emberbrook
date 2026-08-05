@@ -421,9 +421,19 @@ const INSTALL_MOTOR = `(()=>{ if(window.__pt) return 'already';
       const r=el.getBoundingClientRect(); if(!r.width||!r.height) continue;
       if(px<r.left-PAD||px>r.right+PAD||py<r.top-PAD||py>r.bottom+PAD) continue;
       const dd=Math.hypot(px-(r.left+r.right)/2, py-(r.top+r.bottom)/2);
-      if(!best||dd<best.d) best={d:dd,id:el.dataset.edge};
+      if(!best||dd<best.d) best={d:dd,id:el.dataset.edge,at:el.dataset.wayAt||null};
     }
     if(!best) return null;
+    /* AND WHEN THE ARROW HAS BEEN AIMED, IT RESOLVES TO WHAT IT NOW POINTS AT (round 28).
+     * story_runtime moves the ONE routed arrow onto the next point of the shot's own
+     * route whenever the ground between the body and the seam doubles back, and publishes
+     * that point as "data-way-at". Resolving such a click to the seam's own "at" would send
+     * the body back down the straight line the aim exists to refuse — the rule above is
+     * "a pixel on an arrow resolves to the place the arrow points at", and this is that
+     * place. No attribute = no aim = the seam, exactly as before. */
+    if(best.at){ const a=best.at.split(',').map(Number);
+      if(a.length===3&&a.every(v=>isFinite(v)))
+        return {id:best.id, aimed:true, p:[+a[0].toFixed(2),+a[1].toFixed(2),+a[2].toFixed(2)]}; }
     const e=(SIM.edges()||[]).find(x=>x.id===best.id);
     if(!e||!e.at) return null;
     return {id:e.id, p:[+e.at[0].toFixed(2),+e.at[1].toFixed(2),+e.at[2].toFixed(2)]};
