@@ -15864,10 +15864,20 @@ SPARED, with the failing proof or the reason:
   * MECHANICS.md keeps the pad/controller DESIGN with a STATUS note (two-player is a
     deferred upgrade, not superseded work); items.js mention repointed at game/items.json.
 
-GATES, all green after: dialogue_style (identical output), story_test, build-story
-(manifest lossless), build-static --compress (reference integrity 254/254, cache-warm
-19.4 s), static_verify on dist, transition_test --port=3000. Pre-existing crash fixed
-in passing: build-manifest.mjs died on a char-manifest stage without a file.
+GATES after, with instruments: dialogue_style identical output (449W/1314 boxes/PASS),
+story_test green, build-story manifest lossless, build-static --compress green
+(reference integrity 254/254, cache-warm 19.4 s). static_verify on dist: 28/1 —
+the one FAIL (emb-cine -> emb-item-int swap never completes) is PRE-EXISTING, proven
+by running the same gate against the PRE-DELETION live deploy: identical 28/1, same
+door, same payload (logs: session scratchpad static_verify.rerun.log vs .live.log).
+An open defect of the static build, not of this cleanup — worth its own lane.
+transition_test --port=3000: 161/7, but ALL seven failures are del-cine state
+(baseline drift, 16 -> 15 shots, battle-exit) and the Dellhollow lane held UNCOMMITTED
+writes to exactly those objects (del-cine/meta.json, del-cine/scene.glb,
+world/scenegraph.json; cameras.solved.json at 15 ids) while the test ran — the
+measured-neighbour class, was 168/0 at the last clean window. Re-run it after that
+lane lands before reading it as anyone's regression. Pre-existing crash fixed in
+passing: build-manifest.mjs died on a char-manifest stage without a file.
 
 STILL NAMING THE DEAD, deliberately: docs/qa/MORNING.md, end-to-end-wiring.md and this
 log (history, past-tensed where they read as current); play3d.html:15 has a cosmetic
