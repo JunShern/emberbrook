@@ -749,15 +749,9 @@ def _tuft_geo(nb=6, seed=91):
     return np.array(pos), np.array(nrm)
 
 
-# ---- THE CLUMP.  A squashed low icosahedron: a bush at a rock's foot. ------
-_ICO_T = (1 + math.sqrt(5)) / 2
-_ICO_V = [(-1, _ICO_T, 0), (1, _ICO_T, 0), (-1, -_ICO_T, 0), (1, -_ICO_T, 0),
-          (0, -1, _ICO_T), (0, 1, _ICO_T), (0, -1, -_ICO_T), (0, 1, -_ICO_T),
-          (_ICO_T, 0, -1), (_ICO_T, 0, 1), (-_ICO_T, 0, -1), (-_ICO_T, 0, 1)]
-_ICO_F = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11),
-          (1, 5, 9), (5, 11, 4), (11, 10, 2), (10, 7, 6), (7, 1, 8),
-          (3, 9, 4), (3, 4, 2), (3, 2, 6), (3, 6, 8), (3, 8, 9),
-          (4, 9, 5), (2, 4, 11), (6, 2, 10), (8, 6, 7), (9, 8, 1)]
+# ---- THE CLUMP.  A LOBED icosphere: a bush at a rock's foot. ---------------
+# R24 — the base solid is `bushlang.icosphere`, imported rather than re-typed; the
+# hand-written 20-face icosahedron that used to sit here IS `icosphere(0)`.
 
 
 # THE CLUMP'S SUN, in RUNTIME axes.  bushlang.SUN_TO is (-0.4393, 0.7031, 0.5592)
@@ -772,76 +766,127 @@ CLUMP_SINK = 0.16           # share of clump height buried below the terrain
 # typed: both wear ow_valley_bushcore's leafmass_tile, and one leaf size across the
 # region is the whole point of sharing the map.  See _clump_uv().
 CLUMP_UV = BL.CORE_UV       # world units per leafmass_tile repeat
+# R24 — THE SILHOUETTE KNOBS.  See _clump_geo() for why each one is here.
+CLUMP_SUBD = 1              # bushlang.icosphere subdivisions: 0 = 20 faces, 1 = 80
+CLUMP_VARIANTS = 6          # distinct lobed outlines, chosen per instance by hash
+CLUMP_LOBE = (0.30, 0.17, 0.07)   # harmonic amplitudes — bushlang._harm's ladder
+CLUMP_SKIRT = 0.12          # extra radius straight down: a bush sits INTO its foot
 
 
-def _clump_geo():
-    # R11: THE SQUASH WAS 0.62 AND IT MADE PANCAKES.  A unit clump 1.0 wide and
-    # 0.62 tall, then scaled w in 0.75..1.80 against h in 0.45..1.20, lands at a
-    # mean 1.28 x 0.51 — aspect 0.40.  The tenth blind critic's first sentence
-    # about the gorge frame was "flat green discs, pancakes lying on the ground,
-    # not bushes; the first thing my eye caught."  Measured, not argued: SIM.pick
-    # at three of them returns veg_land_clumps with a first-hit normal of
-    # (-0.06, 0.99, -0.14) — a horizontal facet.  0.94 keeps the low-poly facet
-    # read (which IS the style) and gives the thing a height.
-    #
-    # ROUND 2 — AND THESE ARE THE BUSHES THE CRITIQUES HAVE BEEN TALKING ABOUT.
-    # The foliage brief routed "bushes look lit inside a cast shadow, several read
-    # as floating" to tools/bushlang.py and overworld3_lib's `shrub_a`.  Measured in
-    # the running game: only THREE bush vertices lie within 45 m of any of the five
-    # fixed views — `veg_bush` is almost entirely in the west forestwall, off
-    # camera.  What is in frame at every one of those views is `veg_land_clumps`.
-    # A fix aimed at shrub_a would have been invisible in the pictures it was
-    # judged on, which is the whole lesson: FIND THE OBJECT THAT IS IN THE FRAME
-    # BEFORE FIXING THE OBJECT THAT HAS THE RIGHT NAME.
-    #
-    # Two of the brief's three mechanisms were live here and neither is geometry:
-    #   * NO FORM GRADIENT.  `_emit` wrote `C[o:o+npv] = row["c"]` — ONE flat
-    #     colour on every vertex of the clump.  A convex solid under a single
-    #     directional light with a constant COLOR_0 has no dark side and no dark
-    #     underside; nothing about it could read as occluded.
-    #   * BASE NOT DARKEST, AND SITTING ON THE GROUND.  The base sat at exactly
-    #     y = 0, i.e. tangent to the terrain, so there was no contact and no
-    #     interpenetration — the "floating" read.
-    # `gshade` is the per-vertex answer to the first and CLUMP_SINK to the second.
-    #
-    # R19 — AND THE THIRD MECHANISM WAS THAT IT HAD NO TEXTURE AND NO SMOOTHING.
-    # The f4b A/B (docs/qa/ow-refs/plates/f4b-bush-ab-*.png) stood a card-built bush
-    # beside one of these in open sun and the cards won so plainly that the round
-    # after it was going to be a card conversion.  MEASURED on the extracted
-    # geometry first: this clump's UVs spanned 0.06 x 0.06 of the leaf tile over
-    # 1.4 m2 — one texel, stretched over the whole solid, i.e. EFFECTIVELY
-    # UNTEXTURED — and 20/20 of its triangles were flat-shaded.  The bushlang core
-    # it lost to is a closed volume too; what it has is the tiled leaf map and
-    # smooth normals.  So the A/B was never "cards beat volumes", it was "textured
-    # beats untextured", and the fix is an unwrap and a normal, not a rebuild.
-    #   * UVs: per-face planar projection on the face's dominant axis, in the
-    #     clump's OWN frame and scaled by the instance in `_emit` — so texel
-    #     density is world-constant, the phase rides each clump's yaw, and a
-    #     per-instance offset keeps 261 of them off one lattice.
-    #   * NORMALS: the icosphere's outward direction, which is already computed
-    #     here for the sun term.  Twenty facets shaded smooth read as a mass;
-    #     shaded flat they read as a cut gem, which is what "green rocks" was.
-    pos, nrm, uvax, shade = [], [], [], []
-    for f in _ICO_F:
-        vs = [np.array(_ICO_V[i], dtype=float) for i in f]
-        vs = [v / np.linalg.norm(v) * 0.5 for v in vs]
-        # the face's dominant axis, on the squashed positions the UV is taken from
-        fp = [np.array((v[0], v[1] * 0.94, v[2])) for v in vs]
-        fn = np.cross(fp[1] - fp[0], fp[2] - fp[0])
-        ax = int(np.argmax(np.abs(fn)))
-        for v in vs:
-            pos.append((v[0], v[1] * 0.94 + 0.47 - CLUMP_SINK, v[2]))
-            # t = height within the clump, 0 at the base and 1 at the crown
-            t = np.clip(v[1] + 0.5, 0.0, 1.0)
-            base = CLUMP_BASE_DARK + (1.0 - CLUMP_BASE_DARK) * t ** 1.20
-            # the icosphere's own outward direction IS its normal
-            n = v / np.linalg.norm(v)
-            nrm.append(tuple(n))
-            uvax.append(ax)
-            sun = np.clip(float(n @ CLUMP_SUN) * 0.5 + 0.5, 0.0, 1.0)
-            shade.append(base * (1.0 - CLUMP_SUN_AMT + CLUMP_SUN_AMT * 2.0 * sun))
-    return (np.array(pos), np.array(nrm), np.array(uvax, dtype=int),
-            np.array(shade))
+def _clump_harm(n, ph):
+    """The clump's radius as a function of direction — bushlang._harm, y-up.
+
+    LOW-order terms only, and for bushlang's own reason: sub-facet deformation
+    under smooth shading reads as a cabbage, and THE SILHOUETTE IS WHAT HAS TO
+    VARY.  Amplitudes are bushlang's ladder; only the vertical axis is renamed
+    (this geometry is built in runtime space, where up is y).
+    """
+    nx, ny, nz = n[..., 0], n[..., 1], n[..., 2]
+    a, b, c = CLUMP_LOBE
+    k = (1.0
+         + a * np.sin(2.7 * nx + ph[0]) * np.sin(2.2 * nz + ph[1])
+         + b * np.sin(3.9 * nz + ph[2]) * np.sin(3.3 * ny + ph[3])
+         + c * np.sin(6.9 * nx + ph[4]) * np.sin(5.9 * ny + ph[5]))
+    k = k + CLUMP_SKIRT * np.maximum(-ny, 0.0)   # hangs lower underneath
+    return np.maximum(k, 0.55)
+
+
+def _vnormals(P, F):
+    """Area-weighted smooth normals of a displaced surface.
+
+    NOT the sphere direction any more.  A radius that varies with direction is no
+    longer a sphere, so `v/|v|` would shade the new form with the old form's
+    normals — the exact class of error that made every earlier round's "adjust
+    the lighting" pass inert on this object.
+    """
+    fn = np.cross(P[F[:, 1]] - P[F[:, 0]], P[F[:, 2]] - P[F[:, 0]])
+    N = np.zeros_like(P)
+    for j in range(3):
+        np.add.at(N, F[:, j], fn)
+    return N / np.maximum(np.linalg.norm(N, axis=1, keepdims=True), 1e-9)
+
+
+# RULES THIS OBJECT HAS ALREADY PAID FOR, and which the R24 rewrite keeps:
+#   * FIND THE OBJECT THAT IS IN THE FRAME BEFORE FIXING THE OBJECT THAT HAS THE
+#     RIGHT NAME (round 2).  `veg_bush` is almost entirely in the west forestwall —
+#     only three of its vertices are within 45 m of any of the five fixed views.
+#     What is in frame at every one of them is `veg_land_clumps`.
+#   * THE SQUASH IS 0.94, NOT 0.62 (R11).  0.62 made pancakes; SIM.pick returned a
+#     first-hit normal of (-0.06, 0.99, -0.14), a horizontal facet.
+#   * A FORM GRADIENT AND A SINK (round 2).  One flat COLOR_0 over a convex solid
+#     has no dark side and no dark underside, and a base tangent to the terrain
+#     reads as floating.  `gshade` answers the first, CLUMP_SINK the second.
+#   * UVS AND SMOOTH NORMALS (f4c/R19).  The clump lost f4b's A/B to a card bush
+#     because it was effectively untextured (uv span 0.06 x 0.06 of the tile over
+#     1.4 m2, 20/20 triangles flat) — not because cards beat volumes.
+def _clump_geo(subd=None, nvar=None):
+    """R24 — THE SILHOUETTE ROUND.  Returns a LIST of `nvar` unit clumps.
+
+    f4c closed the material half of "green rocks" (UVs + smooth normals) and wrote
+    down what it could not close: *"A 20-face solid still silhouettes as a hexagon,
+    and no unwrap touches a silhouette."*  R22 closed the seam half and repeated it:
+    *"no COLOR_0 treatment reaches an outline."*  Two rounds named the same object
+    and neither could reach it, because BOTH were colour rounds.  An outline is
+    geometry; only geometry moves it.
+
+    Three changes, in the order they matter:
+      * SUBDIVISION.  `bushlang.icosphere(CLUMP_SUBD)`.  At 20 faces the outline is
+        ~6 straight segments; at a 1.3 m clump seen from 7 m that is ~25 px of
+        unbroken line each, which is the hexagon the user sees.  80 faces halves
+        the segment length AND gives the displacement below something to displace.
+      * DISPLACEMENT.  `_clump_harm` — the same low-order harmonic ladder bushlang
+        uses to give a lobe a form, which is the in-repo pattern the brief points
+        at.  This is what makes the outline non-convex: subdivision alone buys a
+        rounder hexagon, and a rounder hexagon is still a hull.
+      * VARIANTS.  One displaced solid at 399 yaws is 399 copies of one silhouette,
+        and a repeated outline is the same defect wearing a different face.  Six
+        phases, picked per instance by a POSITION HASH — never by the scatter's
+        `r()`, because a draw from that stream re-scatters the whole L2 layer and
+        the A/B stops being an A/B (R11's note, paid for).
+
+    THE UNIT BOX IS PRESERVED ON PURPOSE.  Each variant is renormalised to width
+    1.0 and height 0.94 after displacement, so `w`/`h`/the -0.14 sink in `tufts()`
+    still mean exactly what they meant — the form varies, the placement contract
+    does not.
+    """
+    subd = CLUMP_SUBD if subd is None else subd
+    nvar = CLUMP_VARIANTS if nvar is None else nvar
+    V0, F0 = BL.icosphere(subd)
+    # winding: assert the base solid faces OUT before its normals are trusted
+    fn0 = np.cross(V0[F0[:, 1]] - V0[F0[:, 0]], V0[F0[:, 2]] - V0[F0[:, 0]])
+    ctr0 = V0[F0].mean(axis=1)
+    if float((fn0 * ctr0).sum(axis=1).mean()) < 0:
+        F0 = F0[:, ::-1].copy()
+    rs = np.random.RandomState(9271)
+    # THE NORMALISATION REFERENCE IS THE R22 CLUMP ITSELF — the same solid with
+    # k = 1 — so "same bulk, different outline" is true by construction and not by
+    # eye.  Matching the max radius instead would have shrunk every clump by the
+    # lobe amplitude and quietly taken green out of the meadow.
+    ref = float(np.hypot(V0[:, 0], V0[:, 2]).mean()) * 0.5
+    out = []
+    for _ in range(nvar):
+        ph = rs.uniform(0.0, 2.0 * math.pi, 6)
+        P = V0 * (_clump_harm(V0, ph)[:, None] * 0.5)
+        P[:, 1] *= 0.94                       # the R11 squash, on the lobed solid
+        # recentre in plan (a lobed solid's centroid drifts off its scatter point)
+        P[:, 0] -= P[:, 0].mean()
+        P[:, 2] -= P[:, 2].mean()
+        rad = float(np.hypot(P[:, 0], P[:, 2]).mean())
+        P[:, 0] *= ref / rad
+        P[:, 2] *= ref / rad
+        lo, hi = float(P[:, 1].min()), float(P[:, 1].max())
+        P[:, 1] = (P[:, 1] - lo) * (0.94 / (hi - lo)) - CLUMP_SINK
+        N = _vnormals(P, F0)
+        idx = F0.ravel()
+        pos, nrm = P[idx], N[idx]
+        fn = np.cross(P[F0[:, 1]] - P[F0[:, 0]], P[F0[:, 2]] - P[F0[:, 0]])
+        uvax = np.repeat(np.argmax(np.abs(fn), axis=1), 3)
+        t = np.clip((pos[:, 1] + CLUMP_SINK) / 0.94, 0.0, 1.0)
+        base = CLUMP_BASE_DARK + (1.0 - CLUMP_BASE_DARK) * t ** 1.20
+        sun = np.clip(nrm @ CLUMP_SUN * 0.5 + 0.5, 0.0, 1.0)
+        shade = base * (1.0 - CLUMP_SUN_AMT + CLUMP_SUN_AMT * 2.0 * sun)
+        out.append((pos, nrm, uvax.astype(int), shade))
+    return out
 
 
 # ---- THE FLOWER.  Two triangles, in CLUMPS never scattered. ---------------
@@ -880,26 +925,38 @@ def _clump_uv(gpos, uvax, s, row, seed=17):
 
 
 def _emit(rows, gpos, gnrm, guv, gshade=None, uvax=None):
-    """Bake instance rows into one runtime-space soup, then convert to Blender."""
-    npv = len(gpos)
+    """Bake instance rows into one runtime-space soup, then convert to Blender.
+
+    R24 — gpos/gnrm/gshade/uvax may each be a LIST of equal-length variants, in
+    which case `row["var"]` selects one per instance.  Every variant carries the
+    same vertex count by construction (one icosphere, `nvar` phases), so the
+    output arrays are still one allocation.
+    """
+    multi = isinstance(gpos, (list, tuple))
+    npv = len(gpos[0] if multi else gpos)
     V = np.empty((len(rows) * npv, 3))
     N = np.empty((len(rows) * npv, 3)) if gnrm is not None else None
     C = np.empty((len(rows) * npv, 3))
     U = np.empty((len(rows) * npv, 2)) if (guv is not None or uvax is not None) else None
     for i, row in enumerate(rows):
+        k = int(row.get("var", 0)) if multi else 0
+        gp = gpos[k] if multi else gpos
+        gn = (gnrm[k] if multi else gnrm) if gnrm is not None else None
+        gs = (gshade[k] if multi else gshade) if gshade is not None else None
+        ua = (uvax[k] if multi else uvax) if uvax is not None else None
         R = _rot(row["tilt"], row["yaw"])
         s = np.array([row["w"], row["h"], row["w"]])
         p = np.array([row["x"], row["y"], row["z"]])
         o = i * npv
-        V[o:o + npv] = (gpos * s) @ R.T + p
+        V[o:o + npv] = (gp * s) @ R.T + p
         if N is not None:
             # three.js's normalMatrix on a non-uniform scale: n' ~ R @ (n / s)
-            m = (gnrm / s) @ R.T
+            m = (gn / s) @ R.T
             N[o:o + npv] = m / np.maximum(np.linalg.norm(m, axis=1, keepdims=True), 1e-9)
-        C[o:o + npv] = row["c"] if gshade is None else \
-            np.asarray(row["c"])[None, :] * gshade[:, None]
+        C[o:o + npv] = row["c"] if gs is None else \
+            np.asarray(row["c"])[None, :] * gs[:, None]
         if U is not None:
-            U[o:o + npv] = guv if uvax is None else _clump_uv(gpos, uvax, s, row)
+            U[o:o + npv] = guv if ua is None else _clump_uv(gp, ua, s, row)
     # runtime (x, y, z) -> blender (x, -z, y)
     Vb = np.stack([V[:, 0], -V[:, 2], V[:, 1]], axis=1)
     Nb = None if N is None else np.stack([N[:, 0], -N[:, 2], N[:, 1]], axis=1)
@@ -1072,8 +1129,14 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
                 _cz = jz + (r() - 0.5) * 0.9
                 _cw = 0.62 + r() * 0.72
                 _ch = _cw * (0.86 + r() * 0.46)
+                # R24 — the silhouette variant is a POSITION HASH, never a draw
+                # from `r()`: one extra call here would re-scatter every tuft and
+                # flower after it, and an A/B whose control layer moved is not an
+                # A/B.  Same reason the height is drawn from the width above.
                 clump_rows.append(dict(x=_cx, y=here[0] - 0.14, z=_cz, w=_cw,
-                                       h=_ch, yaw=r() * 6.28, tilt=0.0, c=cc))
+                                       h=_ch, yaw=r() * 6.28, tilt=0.0, c=cc,
+                                       var=int(h2(_cx, _cz, 29) * CLUMP_VARIANTS)
+                                       % CLUMP_VARIANTS))
         x += step
 
     # ---- SCALE THREE: FLOWERS IN CLUMPS, never scattered -------------------
@@ -1129,7 +1192,9 @@ def tufts(col, ground, zg, mats, step=1.0, dens=9.0, band=2.6, maxslope=0.85,
     objs.append(_mesh(col, "veg_land_tufts", V, N, C, None, m_tuft, True))
     tris += len(V) // 3
     if clump_rows:
-        gp, gn, gax, gsh = _clump_geo()
+        vs = _clump_geo()
+        gp = [v[0] for v in vs]; gn = [v[1] for v in vs]
+        gax = [v[2] for v in vs]; gsh = [v[3] for v in vs]
         V, N, C, U = _emit(clump_rows, gp, gn, None, gshade=gsh, uvax=gax)
         objs.append(_mesh(col, "veg_land_clumps", V, N, C, U, m_clump, True))
         tris += len(V) // 3
