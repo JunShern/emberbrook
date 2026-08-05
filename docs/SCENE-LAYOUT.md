@@ -27,9 +27,9 @@ agents.
    needs, the *available catalog vocabulary by name*, composition language
    (focal hierarchy, clustered density with breathing room, framed edges),
    and the verbatim style-B block from `specs.json`. The concept is
-   **composition authority only** — it never ships, is never sliced, and
-   lives in `public/assets/iso/refs/` as the scene's permanent design
-   reference (and future lighting reference).
+   **composition authority only** — it never ships, is never sliced. (The
+   iso-era concept sheets lived in `public/assets/iso/refs/`, deleted with
+   the iso prototype 2026-08-05 — in git history before commit 7656b60.)
 2. **Transcription.** Rebuild the scene JSON to match the concept's
    **arrangement, not pixels**, using only existing catalog blocks:
    - copy where it clusters, how it frames the focal anchor, where
@@ -47,7 +47,8 @@ agents.
 
 ## Pilot results (the square)
 
-Winning concept: `public/assets/iso/refs/square-concept-B.png` — chosen
+Winning concept: `square-concept-B.png` (deleted with `assets/iso/`, in
+git history before 7656b60) — chosen
 over candidate A because its diamond symmetry (buildings at four corners,
 roads at the four cardinal gaps, open center) transcribes almost 1:1 onto
 the iso grid. Prompt clauses that did the work are recorded in the pilot
