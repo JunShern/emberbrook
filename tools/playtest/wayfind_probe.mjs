@@ -26,6 +26,7 @@
  * it names. `liftNdcY` below is that error, measured per marker, in frame heights.
  */
 import { freePort, findPage, killOrphans } from '../cdp.mjs';
+import { checkpointsFromStory } from './adapter_emberbrook.mjs';
 import { spawn } from 'child_process';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'fs';
 import { tmpdir } from 'os';
@@ -45,6 +46,21 @@ const TARGET = arg('target', 'lockfive');
  * draw under the cap and what SIM.pick returns there, so the change can be argued with
  * numbers before anyone edits the coordinator-owned page. 0 = do not measure it. */
 const LIFTCAP = parseFloat(arg('liftcap', '0'));
+/* --from <beatId>: WHICH GAME AM I MEASURING. (2026-08-05, PT-20260805-010.)
+ *
+ * The seed below used to be two hand-written arrays covering exactly one checkpoint,
+ * `ch2.dock`. Pointed at any other stall it measured A DIFFERENT GAME THAN THE RUN:
+ * with Chapter One's flags absent `pendingBeat()` resolved to a Chapter Two beat, so
+ * the station printed `objective: "Midnight, at Lock Five..."` and `shown=false` over
+ * a Chapter One stall — and round 15 had to file PT-010 UNDIAGNOSED because of it.
+ *
+ * So the seed comes from the SAME derivation the playtest runs check point from:
+ * adapter_emberbrook's `checkpointsFromStory()`, which replays every beat's own
+ * `setFlags` and `objective` out of story.json in file order. One source of truth,
+ * no list to rot, and every beat in the chapter is now a station this probe can stand
+ * at. `--from` names the beat that is PENDING — i.e. state is everything BEFORE it.
+ * The default stays ch2.dock so round 14's numbers reproduce. */
+const FROM = arg('from', 'ch2.winches');
 const OUT = arg('out', 'docs/qa/playtest/wayfind');
 mkdirSync(OUT, { recursive: true });
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -81,22 +97,47 @@ for (let i = 0; i < 240; i++) {
   if (await ev(`(()=>{try{return !!(window.SIM&&SIM.gpu&&SIM.gpu().meshes>0&&SIM.pos)}catch(e){return false}})()`)) break;
   await new Promise(r => setTimeout(r, 1000));
 }
-// The failing runs' own flag set: everything up to and including ch2.dock, so the
-// objective on screen is the one they could not complete.
-const FLAGS = ["story.ch1.started","story.ch1.done","story.ch1.gate-open","lake-joined",
-  "story.ch2.road","story.ch2.arrived","story.ch2.jam","story.ch2.maren-met","maren-joined",
-  "story.ch2.plan","story.ch2.supper","story.ch2.night","story.ch2.dock"];
-// AND THE BEAT LEDGER. The flags alone are not the checkpoint: `once` is gated on
-// GS.state.beats, and a run with an empty ledger has a DIFFERENT pending beat from
-// the one the players were stuck on. Seed both, or the probe measures another game.
-const BEATS = ["ch1.open","ch1.waystone","ch1.reveal","ch1.rowan","ch1.lake.handoff",
-  "ch1.lake.wake","ch1.lake.hearth","ch1.lake.lamp","ch1.meet","ch1.lamps","ch1.hush",
-  "ch1.see.poppy","ch1.see.mara","ch1.see.finn","ch1.see.mochi","ch1.pact","ch1.sigils",
-  "ch1.sendoff","ch1.done","ch2.road","ch2.arrive","ch2.jam","ch2.maren","ch2.lockfive",
-  "ch2.supper","ch2.dock"];
-await ev(`(()=>{const f={};for(const k of ${JSON.stringify(FLAGS)})f[k]=true;GS.setFlags(f);
-  const L=GS.state.beats||(GS.state.beats={});for(const b of ${JSON.stringify(BEATS)})L[b]=1;return 1})()`);
-await ev(`(()=>{try{Story&&Story.objective&&Story.objective("Midnight, at Lock Five \\u2014 the head-gate winches")}catch(e){}return 1})()`);
+/* CLEAR THE BOOT BEAT — AND KEEP CLEARING IT. The page boots with an EMPTY flag store,
+ * so Chapter One's `ch1.open` fires on the first tick, and a dialogue box is UILOCK,
+ * which HIDES #exit-markers. The first ch1 run of this probe read `shown=false` at all
+ * four stations with the route correct at every one, and the frame showed the mapmaker's
+ * opening line over an empty marker layer: A MARKER GATE THAT READS A LOCKED FRAME IS
+ * MEASURING THE LOCK. One pass at boot is not enough either — the box opens on Story's
+ * own tick, which lands AFTER the readiness check — so this is a helper, run before the
+ * seed and again before every station read. */
+const drain = async () => {
+  for (let i = 0; i < 40; i++) {
+    const open = await ev(`(()=>{try{return !!(window.Dialogue&&Dialogue.isOpen)}catch(e){return false}})()`);
+    if (!open) return true;
+    await ev(`(()=>{try{Dialogue.close()}catch(e){}return 1})()`);
+    await new Promise(r => setTimeout(r, 250));
+  }
+  return false;
+};
+await new Promise(r => setTimeout(r, 2500));
+await drain();
+
+/* THE SEED, DERIVED. `--from <beat>` = the state in which that beat is PENDING: every
+ * earlier beat's `setFlags` applied, every earlier beat in the ledger (`once` reads
+ * GS.state.beats, so flags alone are the wrong game), and the objective string the last
+ * beat before it posted. All three come out of story.json via the adapter, so the probe
+ * and the runs it is auditing cannot drift apart. */
+const CP = checkpointsFromStory().checkpoints.find(c => c.id === FROM);
+if (!CP) { console.error('no checkpoint for --from ' + FROM); reap(); process.exit(2); }
+console.log(`SEED --from=${FROM}: ${Object.keys(CP.flags).length} flags, ` +
+  `${Object.keys(CP.beats).length} beats, objective ${JSON.stringify(CP.objective)}`);
+await ev(`(()=>{GS.setFlags(${JSON.stringify(CP.flags)});
+  const L=GS.state.beats||(GS.state.beats={});
+  for(const b of ${JSON.stringify(Object.keys(CP.beats))})L[b]=1;return 1})()`);
+if (CP.objective)
+  await ev(`(()=>{try{Story&&Story.objective&&Story.objective(${JSON.stringify(CP.objective)})}catch(e){}return 1})()`);
+/* AND THE PROOF THAT THE SEED TOOK. An instrument that finds nothing must prove it could
+ * have found something (cdp.mjs's rule): if `pendingBeat` is not the beat named, every
+ * hint below is about a different objective and the numbers are worthless. */
+await new Promise(r => setTimeout(r, 1200));
+await drain();
+const PEND = await ev(`(()=>{try{return (Story.wayhint()||{}).beat||null}catch(e){return 'ERR '+e}})()`);
+console.log('   pendingBeat = ' + JSON.stringify(PEND) + (PEND === FROM ? '  OK' : '   !! NOT THE BEAT ASKED FOR'));
 await new Promise(r => setTimeout(r, 1500));
 
 /* THE READING. Everything here comes out of the page's own bindings:
@@ -217,10 +258,19 @@ for (const [name, pos, useShot] of STATIONS) {
   await new Promise(r => setTimeout(r, 1200));
   await ev(`SIM.tick(3)`);
   await new Promise(r => setTimeout(r, 700));
+  const clear = await drain();      // a locked frame draws no markers; see `drain`
+  // AND RE-POST THE SEEDED OBJECTIVE. Draining the boot beat lets it FINISH, and a beat
+  // that finishes posts its own objective over the seed — so the frame this probe writes
+  // showed "Follow the road north" while it was measuring the hint for a beat five ahead.
+  // The banner in the picture must be the banner the run had, or the picture is evidence
+  // for a different game.
+  if (CP.objective)
+    await ev(`(()=>{try{Story.objective(${JSON.stringify(CP.objective)})}catch(e){}return 1})()`);
   let r, hop;
   try { r = JSON.parse(await ev(READ_JS(TARGET, LIFTCAP))); } catch (e) { r = { error: String(e) }; }
   try { hop = JSON.parse(await ev(HOP_JS(TARGET))); } catch (e) { hop = { error: String(e) }; }
-  r.station = name; r.want = pos; r.hop = hop;
+  r.station = name; r.want = pos; r.hop = hop; r.uiClear = clear;
+  if (!clear) console.log('    !! A DIALOGUE BOX WOULD NOT CLOSE — markers are hidden, ignore this station');
   rows.push(r);
   const shot = await send('Page.captureScreenshot', { format: 'jpeg', quality: 82 });
   writeFileSync(join(OUT, name + '.jpg'), Buffer.from(shot.data, 'base64'));

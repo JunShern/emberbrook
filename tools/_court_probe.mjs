@@ -77,8 +77,14 @@ const CDP = await freePort();
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const SCENE = arg('scene', 'ow-valley');
 // rt=1 is the overworld's realtime flag; a pre-rendered town scene must not carry it.
+/* AND `nostory=1`, ALWAYS (2026-08-05). The page boots with an EMPTY flag store, so in
+ * `emb-cine` Chapter One's `ch1.open` fires on the first tick and its narration box is
+ * UILOCK — which FREEZES THE BODY. Every `--way` drive in that scene then stalls on leg 1
+ * having travelled 0.00 m, in BOTH directions, INCLUDING over ground the shipped game
+ * walks: a geometry instrument reporting "the world is shut" about a modal. A probe that
+ * measures the world must not be running the story on top of it. */
 const URL = `http://localhost:${PORT}/play.html?scene=${encodeURIComponent(SCENE)}` +
-  `${/^ow-/.test(SCENE) ? '&rt=1' : ''}&nomusic=1&v=${Date.now()}`;
+  `${/^ow-/.test(SCENE) ? '&rt=1' : ''}&nomusic=1&nostory=1&v=${Date.now()}`;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const profile = join(process.env.TMPDIR || '/tmp', 'ow-court-profile');
 killOrphans(profile); rmSync(profile, { recursive: true, force: true });
