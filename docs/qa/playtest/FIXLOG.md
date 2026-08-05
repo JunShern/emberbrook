@@ -2670,3 +2670,37 @@ been eating the budget is this one objective, twice. 200 steps is the right orde
 magnitude for the receipt; it is not obviously enough while a four-anchor hunt with no
 arrow sits in the middle of it, and `llm_playtester`'s own header budgets **300–500** for
 a full playthrough. The number to raise is not `--steps`.
+
+### PT-20260805-009 — TWO [E] PROMPTS, ONE PIXEL, AND THE DOOR LOSES
+
+Filed by the agent in its own words: *"The 'Leave Item Shop? [E]' prompt is overlapping
+with the 'Talk to the shopkeeper? [E]' prompt. Because they both use the same key,
+pressing E just makes me talk to the shopkeeper again instead of leaving."* It is
+correct on both counts and it is not a one-off.
+
+There are **two independent banner elements drawn at the same coordinate**. play3d's
+`sgPrompt` builds `#sgp` at `position:absolute; left:50%; bottom:8%`; `ui_kit.prompt`
+builds `.ebui-banner` and its own comment says so — *"sgPrompt's recipe VERBATIM — same
+host element (#s), same position … A counter prompt must be indistinguishable from a
+door prompt."* Indistinguishable was the goal; **co-located was not noticed.** Neither
+channel knows the other exists, so `banners[id]` — "one banner per owner id" — stacks
+them.
+
+`npc.js` already carries the fix's shape for a case it DID hit: standing next to a
+shopkeeper it calls `E.prompt('shop', null)`, with the comment *"One prompt, one
+person."* Nothing does that across the `#sgp` / `ebui-banner` boundary.
+
+Measured cost in `run-20260805-015721`, twice in the last twenty steps:
+
+| steps | where | prompts live | outcome |
+|---|---|---|---|
+| 181–190 | `emb-item-int` `[4.5, 0, −5.6]` | `Leave Item Shop? [E]` + `Talk to the shopkeeper? [E]` | ten steps; E kept talking. It escaped by **walking away**, not by pressing the door |
+| 192–199 | `emb-cine` `[52.8, 1.6, −44.1]` | `Enter Poppy's bakery? [E]` + `Talk to Poppy? [E]` | eight steps on the doorstep |
+
+**Eighteen steps of a two-hundred-step budget, in one run, to a collision between two
+banners that were built to look identical.** Not a soft-lock — moving clears it — but a
+player who does not think to walk away first is stuck in a shop.
+
+NOT BUILT TONIGHT, deliberately: the arbitration that decides which one E fires lives in
+`play3d.html`, which is coordinator-owned, and a second lane was live in the same
+subsystem this hour. The measurement is the deliverable.
