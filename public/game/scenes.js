@@ -22,6 +22,15 @@ window.SCENE_REGISTRY = {
   "▶ PLAY — the connected slice (start here)": [
     ["ow-valley&rt=1","PLAY — the connected slice","ONE CONTINUOUS GAME: spawn on the valley road at Emberbrook's gate, walk the road down the bench to Dellhollow's Valley Gate, enter the town, descend to the shelf street and walk INTO the inn, the shops, the cookhouse — and back out again. Every door and portal is derived from the map files (<b>public/world/scenegraph.json</b>); walk near one and a prompt appears — press <b>E</b>"],
   ],
+  // Spawn coordinates below are the scenegraph's own arrival spawns for the two
+  // town portals (edges emb-cine>ow-valley@emberbrook-gate and
+  // del-cine>ow-valley@dellhollow-valley-gate) — the same place transitionTo()
+  // would put you if you walked out of that town. Re-derive from
+  // public/world/scenegraph.json if the portals move; do not hand-tune.
+  "OVERWORLD — the Emberbrook valley (jump in at a place)": [
+    ["ow-valley&rt=1","Overworld — at Emberbrook's gate","The valley road where it leaves Emberbrook: the meadow, the river, the Heartlight waystone. Realtime tier — golden-hour key, the foliage rounds' grass and canopies. Walk south for the full corridor to Dellhollow"],
+    ["ow-valley&rt=1&sx=41.287&sy=13.101&sz=-33.827&yaw=-0.5817","Overworld — at Dellhollow's Valley Gate","The gorge end of the corridor: the cascade-town vista, the locks stepping the river, the scaffold tiers descending to the water. Spawns just outside Dellhollow's gate, facing back up the valley"],
+  ],
   "Chapter 1 — EMBERBROOK, the home village (jump in at a place)": [
     ["emb-cine","EMBERBROOK — the cinematic village","<b>The home village as six fixed pre-rendered shots in its own Emberwake dusk</b> — the town lit by the Heartlight and Lake's fourteen lamps. Arrive up the wood road, cross Festival Square, walk into the inn, the bakery, Lake's cottage and the store (press <b>E</b> at doors). Blockout-era massing; the photoreal dressing pass is building now"],
     ["emb-inn-int","Inn — The Ember Hearth (interior)","Parlour + inglenook + snug; Vesper's key already off the board"],
