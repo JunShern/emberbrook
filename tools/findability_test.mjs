@@ -60,7 +60,28 @@ const ONLY = arg('scene', null);
 // composition note, not a blocker. Under 35% is "the player walks past them".
 const VIS_FAIL = 0.35, VIS_WARN = 0.60;
 const EDGE_MARGIN = 0.02;      // NDC — 2% of the frame; a body touching the edge warns
-const PX_WARN = 12;            // plate pixels of on-screen height
+/* PX_WARN — APPARENT SIZE, and VISIBLE IS NOT FINDABLE (recalibrated 2026-08-05).
+ * This was 12 px, a bare number with no derivation recorded, and nothing in either
+ * town ever tripped it. Then run-20260805-013253 — a 200-step NEW GAME run — spent
+ * its last SIXTY steps on "See to them — all of them", hunting two villagers this
+ * gate scores 100% unoccluded. The sizes it was working with, from this gate's own
+ * --verbose, at 1280x720:
+ *
+ *     mochi-emb  18 px (2.5% of frame height)   found at step 85, 36 after the one before
+ *     pip        19 px      emb.girl  19 px
+ *     rowan      28 px      poppy     28 px     poppy NOT found in 60 steps
+ *     mara       30 px (4.2%)                   found at step 49
+ *
+ * The founding lesson of this file was "in frame is not visible". The next turn is
+ * VISIBLE IS NOT FINDABLE: a 28-pixel smudge at 47 m survives every depth test ever
+ * written and is not a person a player can pick out on a TV.
+ *
+ * 32 px is the top of the population that run demonstrably could not work with, and
+ * the calibration is ONE-SIDED ON PURPOSE — the run never entered `pondlane`, so its
+ * 40-47 px bodies are untested and nothing here proves larger is sufficient. This is
+ * a WARNING, never a failure: it is a judgment call, and a heuristic that fails a
+ * build is a heuristic that gets written around. */
+const PX_WARN = 32;            // plate pixels of on-screen height
 
 let pass = 0, fail = 0, warn = 0;
 const ok = (c, m, x) => { if (c) { pass++; if (VERBOSE) console.log('  ok   ' + m); }
