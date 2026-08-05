@@ -2532,3 +2532,99 @@ regression view — village, pads, water unchanged).
     those faces. At 234 m it now reads as stylisation; it is not closed.
   * The 20-face clump silhouette (f4c's carried item) is untouched here: no COLOR_0
     treatment reaches an outline.
+
+## ROUND 24 (r24) — THE SILHOUETTE ROUND: two objects, one defect, and it was always geometry
+
+User steer: *"we need to fix the underlying shapes, not just the lighting / textures"*,
+with graphics upgrades named the week's priority.
+
+f4c closed the material half of "green rocks" and wrote down what it could not close:
+*"A 20-face solid still silhouettes as a hexagon, and no unwrap touches a silhouette."*
+R22 named the same object again and repeated it: *"no COLOR_0 treatment reaches an
+outline."* **Two rounds named it and neither could reach it, because both were colour
+rounds.** An outline is geometry; only geometry moves it.
+
+### THE DEFECT WAS REPRODUCIBLE AS A NUMBER BEFORE ANYTHING WAS TOUCHED
+
+A silhouette-edge census — count the edges whose two faces disagree about facing the
+viewer, over 16 view yaws. That is the outline's straight-segment count, which is
+exactly what "reads as a hexagon" means:
+
+| object | before | subdivision only | shipped (subd + displacement) |
+|---|---|---|---|
+| `veg_land_clumps` | 7.8 mean, **min 6** | 13.2 | **16.9 mean, min 10** |
+| `props_valley` outcrops | 7.4 mean, **min 6** | — | **16.5 mean, min 12** |
+
+**min 6 IS the hexagon the user reported.** The middle column is why the fix is two
+knobs and not the cheap one: subdivision alone buys a rounder HULL, and a hull is
+precisely what a bush and a boulder must not be. The low-order harmonic displacement
+(bushlang's ladder, the in-repo pattern) is what makes the outline non-convex.
+
+### AND THE SECOND OBJECT WAS FOUND BY READING THE UNITS, NOT THE CODE
+
+`props_valley` was **956 tris** — a 36-tri waystone and 46 outcrops at **20 tris each**.
+`Prop.ico(subd=1)` looks like "one subdivision" and is Blender's parameter, where
+`create_icosphere(subdivisions=1)` is the BARE ICOSAHEDRON. The rock scatter standing
+beside the clumps had the identical defect under a name that hid it. **A parameter
+whose units belong to somebody else's API is worth measuring rather than reading.**
+
+### THE A/B DISCIPLINE, AND THE ONE PLACE IT COULD NOT BE HELD
+
+The clump variant is picked by a POSITION HASH, never by a draw from the scatter's own
+`r()` — so the clump A/B is position-matched, and the mesh census proves it: **of 36
+meshes exactly ONE changed**, `veg_land_tufts` and `veg_land_flowers` identical
+vertex-for-vertex, 21 materials unchanged.
+
+The outcrops could not have that. The old jitter drew from the shared `rng` once per
+VERTEX-FACE INCIDENCE, so the draws an outcrop consumed were a function of its face
+count — 180 at 20 faces. Any change to `subd` shifts the stream and re-scatters every
+outcrop after it. The fix makes the per-outcrop cost FIXED (six phase draws, grain on
+its own stream) so the next `subd` move changes resolution and nothing else, **but this
+round still pays the re-roll once**: the rock A/B is a CLASS comparison, not a matched
+one, and the plates say so on their face.
+
+### COST
+
+342 039 -> **368 739 tris (+7.8%)**, against the ~1.4M headroom this round was given.
+`veg_land_clumps` 7 980 -> 31 920; `props_valley` 956 -> 3 716. 36 meshes and 21
+materials UNCHANGED. Near field only — the vista ring (1 046 tris) was not touched.
+
+### GATES
+
+`walk_engine_gate` ow-valley **GREEN** twice (after each build): 2065 standable cells in
+the FILE and 2065 in the ENGINE, 0 lost, 0 extra, BVH 0 FAIL. Same 2065 f4c recorded, so
+**+26 700 tris bought 0 walk cells** — the clumps are still non-collidable and the
+outcrop re-scatter cost nothing. `playthrough_test` **86/0** with §W reachability 0
+unreachable. `valley_verify` OK both builds.
+
+Plates `plates/r24-clump-silhouette-ab.png` (four distances, position-matched),
+`r24-rock-silhouette-ab.png` (four framings, class comparison),
+`r24-clump-{before,after}-{gamedist,wide}.png`, `r24-rock-{before,after}.png`.
+Crop windows were chosen by a per-pixel diff of each pair rather than by eye, so they
+frame the silhouettes that actually moved.
+
+### CARRIED, MEASURED, NOT TRIED
+
+  * **THE CRAG TEETH ARE A MATERIAL CONTOUR, AND R22 WAS RIGHT THAT `WARP_CELL` IS NOT
+    IT.** The selecting line is `overworld3_build.py:352`,
+    `dom[(fcrag > O3.FLAT_W) & (cwj > 0.30 + CRAG_DITHER*(cjit-0.5)*2.0)] = SLOT_ROCK`.
+    On a crag FACE `fcrag > FLAT_W` is true almost everywhere, so it reduces to the
+    `cwj > 0.30` contour of a box-blurred crag mask, sampled at each face CENTROID and
+    assigned PER FACE — which is why the boundary is made of triangle edges and always
+    will be. `WARP_CELL` (`overworld3_build.py:118`) only perturbs where that field is
+    sampled, and lives in a module `overworld3_lib` does not import, so it cannot reach
+    geometry at all. **The shape is a rasterisation artefact of a per-face binary
+    classification on a 1.25 u lattice, not an amplitude.** The three levers that could
+    move it are finer mesh in the boundary band, a per-vertex material blend, or a
+    dither wide enough to read as weathering — all three are bigger than this round, and
+    it is a far-field contour while this round's constraint was the near field.
+  * The vista ring stays low-poly on purpose (style at distance, user constraint).
+
+### PRE-EXISTING RED, NOT THIS LANE
+
+`cine_test` and `slice_test` each fail ONE assertion, *"scenegraph.json is STALE"* —
+reproduced with this round's bundle STASHED, i.e. on HEAD's own art, so it is inherited.
+A `--out` proposal differs from `public/world/scenegraph.json` in exactly one value
+(**23.294 -> 23.3**) plus the timestamp: **committed inputs no longer reproduce the
+committed artifact.** One re-derive closes it; left for the file's owner rather than
+rewritten by a vegetation lane.
