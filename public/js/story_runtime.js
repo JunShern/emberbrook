@@ -514,6 +514,26 @@
       t.dataset.dest = name;
       t.innerHTML = '<b style="color:#e9a24b">\u25C6</b> ' + String(name).replace(/[<>]/g, '');
     }
+    /* AND IT IS CLAMPED INTO THE FRAME (2026-08-05). The pill is centred on an arrow
+     * markersTick puts wherever the seam projects, and a seam near the edge of a shot
+     * put the label half outside it: run-20260805-003146 step 3 drew "Lock Five" at
+     * x 38 px of 1400, its diamond and its left half off the picture entirely, and the
+     * agent took the bare triangle on the other side of the frame instead. A LABEL
+     * HALF OFF THE FRAME IS NOT A LABEL. Only the caption slides \u2014 the arrow keeps
+     * pointing at the seam, because the arrow is the claim and the pill is the caption.
+     * Measured against the untranslated box so the nudge cannot accumulate. */
+    var prev = parseFloat(t.dataset.dx || '0') || 0;
+    var box = t.getBoundingClientRect();
+    if (box.width) {
+      var W = window.innerWidth || (document.documentElement || {}).clientWidth || 0;
+      var pad = 8, dx = 0, L = box.left - prev, R = box.right - prev;
+      if (L < pad) dx = pad - L;
+      else if (W && R > W - pad) dx = (W - pad) - R;
+      if (Math.abs(dx - prev) > 0.5) {
+        t.dataset.dx = String(dx);
+        t.style.transform = dx ? 'translateX(' + dx.toFixed(1) + 'px)' : '';
+      }
+    }
     lastHint = { beat: b.id, edge: want, dest: name, hops: r.hops };
   }
 
