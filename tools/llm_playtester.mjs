@@ -244,6 +244,27 @@ const FRAMES = join(RUNDIR, 'frames');
 mkdirSync(FRAMES, { recursive: true });
 
 const usage = new Usage();
+/* THE SPEND MUST SURVIVE THE KILL (2026-08-05, round 24). `run.json` — the only
+ * record of what a run cost — is written after runEpisode RETURNS, so a SIGTERM
+ * takes it with it. Round 23 made killing a stalled run the correct practice
+ * ("a run that has provably stopped learning is spending money, not gathering
+ * evidence"), and the very next round killed one at step 46 and could then only
+ * ESTIMATE its bill. An accounting record that only exists on the happy path is
+ * not an accounting record. This writes a partial receipt on the way out; the
+ * full one still overwrites it on a clean finish. */
+const partialReceipt = (why) => {
+  try {
+    writeFileSync(join(RUNDIR, 'run.json'), JSON.stringify({
+      run: RUN_ID, when: new Date().toISOString(), sha: HEAD_SHA, partial: why,
+      playerModel: PLAYER_MODEL, judgeModel: JUDGE_MODEL, from: FROM, maxSteps: MAX_STEPS,
+      usage: { calls: usage.calls, in: usage.in, out: usage.out, thought: usage.thought,
+        apiSeconds: +(usage.ms / 1000).toFixed(0), estUSD: usage.estUSD(), byModel: usage.byModel },
+    }, null, 2));
+    console.error(`\n[${why}] partial receipt written: ${usage.report()}`);
+  } catch (e) { console.error('could not write the partial receipt: ' + e); }
+};
+for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP'])
+  process.on(sig, () => { partialReceipt(sig); process.exit(143); });
 const playerModel = makeModel(PLAYER_MODEL);
 const judgeModel = makeModel(JUDGE_MODEL);
 const player = makeAgent({ model: playerModel, persona: PERSONA, usage });

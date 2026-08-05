@@ -73,6 +73,13 @@ here: what the agent experienced, what the instrument said, what changed, and ho
 | 20 | PT-20260805-022 / -023 / -024 / -025 / -026 | P1 | Cannot reach the girl at the lock apron (FIVE filings, 46 of 120 steps) | **VERIFIED as world — and the ticket named the wrong 8 metres.** The agent was not short of a surface; it was standing IN one. `[72.07, 1.25, −28.43]` is the moorage's WEST STORE footprint rect, a 3.0 m2 raft with a legal 0.79 m step DOWN in and 0.16 m past `STEP_UP` back out, `walk_pad_tenant-shack`'s slab 20 mm inside the body window, and 2.46 m of open water east. `--comp` measured it at **10 cells** | the moorage's missing second connective landing: `tools/moorage_westlink.py` plank-links the two decks and the footprint gains four measured-landed rects. **10 cells → 643; `reach_probe` west-store→Maren `ok=true`** | this commit |
 | 23 | PT-20260805-032 / -033 / -034 / -035 / -036 | P1×4 + P0 | Stuck in geometry on the quay platform (FIVE filings, ONE stand, 29 steps) | **REFUTED against the game · VERIFIED against the harness.** `_court_probe --way` walks the stall cell 3/3 legs BOTH ways; `--at` has ground clear east and south with only `ls_rail` fencing west. `seen_probe` (new) puts the body at `charNdc [−0.623,0.238]` = screen **[241,274]** of 1280×720 with **353 of 428 pixels through the plate**, while the ticket says "far right of the platform". `wayfind_probe --from=ch2.maren` — the run's OWN state — has the routed **"Lock Five"** arrow `shown=true labelled=true`, lift **22 px**, its click landing on `walk_e_quay-deck__pilot-cluster_landing`. So: open world, drawn body, correct clickable sign — and the agent aimed **nx 0.30–0.86 on 29 consecutive steps, never once below 0.30**, at an arrow drawn at **nx 0.076** | the percept gains `you` (the body's own screen position, from three.js's `charNdc`) and `markers` (every arrow the shot draws, its `.story-way` label, the routed flag, and a bearing in words) — screen coordinates only, never a world coordinate. `percept_test` **368/368** with a sixth fixture from this stand's real numbers, and the census extended to `#exit-markers` + `.story-way` | `690c1d4` |
 | 23 | (the run's second cost centre) | — | The agent re-entered Odessa's finished dialogue tree three times, ~20 steps | **VERIFIED — and split.** `history` is a rolling window of the last 8 decisions, so a conversation eight steps back is gone. But a HUMAN also gets no cue: the prompt reads "Talk to Odessa? [E]" identically before and after, and the re-talk re-offers the same answered choices; the only tell is one word, "Mm." | the harness restores **memory** (a roster named from the game's own prompt), which is what a human has and the agent did not. **The missing cue is left alone and filed as a GAME finding** rather than papered over on this side | `690c1d4` |
+| 24 | (found in this round's first command) | — | Every instrument silently ignored `--key=value` and measured its own default | **HARNESS DEFECT.** `wayfind_probe --from=ch2.supper` printed `SEED --from=ch2.winches` and a page of correct-looking numbers: the one-line `indexOf('--'+k)` parser every tool carries matches only the space-separated spelling, and -1 falls through to the default. 18 tools had the copy | `tools/argv.mjs`: `mkArg()` takes both spellings and `checkArgs()` REFUSES TO RUN on a `--token` the tool never asked for. Hard stop wired into the two VERDICT instruments (`_court_probe`, `wayfind_probe`); the other 16 get the `=` spelling. `findability_test` 69/0 unchanged | `d68de6c` |
+| 24 | PT-20260805-038 | P1 | Cannot reach the Keepers' Cottage (shot `fishdock`) | **REFUTED as a world defect, and the ticket's own diagnosis ("7.3 m up a tier") was right about the height and wrong about the cause.** `reach_probe` maren -> cottage door is **ok=true** via three cut edges; `--grid walk:true` shows the fish dock's exit lane at z -27.0..-27.4 (continuous walk network x 58..70), not at the z -25.06 the agent stood on, where the east side is a 0.4 m curtain of `v` — VISIBLE floor with NO walk network. `--comp` calls that stand **"seed unstandable"** | not fixed — the world is open there; what the round found instead is below | — |
+| 24 | PT-20260805-037 | P1 | Stuck coming down the stairs at shot `weave` | **REFUTED as routing.** `wayfind_probe --from=ch2.supper` at `[61.77, 11.6, -17.82]`: hint "Keepers' Cottage", `shown=true labelled=true`, lift **22.6 px**, and its first hop IS the metre-shortest one | none needed | — |
+| 24 | (measured while chasing -038) | P1 | The crossing walkway is severed by hanging laundry | **VERIFIED.** `--grid walk:true` blocks x 78.7..79.6 at EVERY walkable z; `--who` names **`t2c_W9_laundry_planking_5`**, hem 8.78 over a walk surface at 7.50 = **1.28 m under a `BODY_H` of 1.30 — it misses by 2 cm**; `--comp` fills the two sides as 115 / 144 cells that never join. Same mechanism as `t2c_G4_arch_banner`, same placer | **RECORDED, NOT FIXED**, in `gate_cloth_headroom.py`'s UNFIXED register beside the two it already carries: the fix owes a re-bake, and the story steps over it — `weave>crossing` is a cut whose spawn lands 9.3 m east of the laundry | `aa9e05f` |
+| 24 | PT-20260805-039 / -040 / -041 | P1 x3 | Stuck on the lower dock, cannot climb to the Keepers' Cottage | **VERIFIED AS THE ROUND'S HEADLINE.** `--comp` from Maren and from the `lockfive>weave` seam over x 66..82 / z -30..-22 fills **182 and 179 cells that share exactly ONE 0.4 m cell**, and `--at` shows that cell's floors are **1.02 and 5.60 — a 4.58 m gap**, so the shared cell is the fill's own asymmetric-settle artifact and not a step. `--way` (the drive, not a model of it) stalls on the deck at `[76.91, 1.06, -26.24]` going up and at `[77.35, 5.60, -26.59]` coming down | not fixed — round 25's build lane; **and `reach_probe`'s `ok=true` for the same pair is a FALSE POSITIVE that the drive caught** | — |
+| 24 | (read off the run's own trajectory) | **P0** | The player falls 11.8 m off the weave tier onto the piles under the moorage | **VERIFIED IN THE RUN, MECHANISM NOT YET FOUND.** Step 25 `[70.41, 7.87, -25.48]` in shot `weave`; step 26 `[74.05, -3.90, -23.98]` in shot `lockfive`, and the body sat there **7 steps unmoved**. `--at` at that landing has ONE floor, `y -3.90`, and `--grid` shows the tier has **no floor at all** in x 74.1..77.1 / z -23.9..-24.5. But `--way` driven at the same lip stops correctly at `[73.56, 7.53, -24.24]`: **WALKLOCK's `walkStep` refuses the step, so the drive cannot reproduce the fall** | not fixed — needs an instrumented page to name what moved the body (a cut spawn, `sgCorrect`, or the marooned unstick); plain walk-off is REFUTED | — |
+| 24 | (found by killing the run) | — | The only record of what a run cost is written after the episode returns | **HARNESS DEFECT.** Round 23 made killing a stalled run correct practice; round 24 killed one at step 46 and could then only ESTIMATE the bill, because `run.json` is written after `runEpisode` returns and SIGTERM takes it | a partial receipt with the live usage totals is written on SIGINT/SIGTERM/SIGHUP; the full one still overwrites it on a clean finish | this round |
 
 
 ## Rounds
@@ -4062,3 +4069,160 @@ LEADS, NOT TICKETS** — and the next session's first move is to measure them, n
 |---|---|---|---|---|
 | `PT-20260805-037` | P1 | shot `weave`, `[61.77, 11.6, −17.82]` | stuck coming down the stairs toward Lock Five | it RECOVERED on its own at step 16 and reached Maren at 32 — suspect a legibility lead, not a world one |
 | `PT-20260805-038` | P1 | shot `fishdock`, `[61.85, 1.25, −25.06]` | cannot reach the Keepers' Cottage | **its own probe pair is the tell: `to` is `[64.85, 8.54, −22.56]`, 7.3 m UP.** The body is at water level and the cottage is a tier above — the round-20 class. `_court_probe --comp` at the fishdock, then `--way` |
+
+## Round 24 — 2026-08-05 · the flag was ignored, the fill lied, and the drive settled it
+
+The cap was raised and the brief was: measure the two leads, then receipt `ch2.lockfive` to
+the end card, then a full NEW GAME. **Neither receipt was earned.** What the round bought
+instead is a measured, named blocker on the exact leg that has failed three times, and the
+retirement of an instrument's answer that had been believed for two rounds.
+
+### The first command of the round measured a different game, and said so
+
+`wayfind_probe --from=ch2.supper` printed:
+
+    SEED --from=ch2.winches: 29 flags, 26 beats, objective "Midnight at Lock Five..."
+
+`--from=ch2.supper` was passed and **`ch2.winches` was measured**. Every instrument in this
+repo carries the same hand-rolled line:
+
+    const arg = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i+1] : d; };
+
+`indexOf('--from')` does not match `--from=ch2.supper`, returns -1, and the tool uses its own
+DEFAULT. It does not warn. **THE DEFECT IS NOT THE MISSING `=`; IT IS THAT A MISSPELLED FLAG
+IS INDISTINGUISHABLE FROM AN ABSENT ONE** — the run is not wrong-looking, it is
+right-looking, about a question nobody asked. The only reason this was caught in sixty
+seconds is that `wayfind_probe` echoes its own seed, which round 23 added for a different
+reason (PT-010, "a probe at the wrong checkpoint is measuring a different game").
+
+`tools/argv.mjs` now owns it: `mkArg()` accepts both spellings and `checkArgs()` **refuses to
+run** on any `--token` the tool never asked for, printing the flags it does read. Wired as a
+hard stop into the two VERDICT instruments, `_court_probe` and `wayfind_probe`; the other 16
+tools get the `=` spelling. `findability_test` 69 passed / 0 failed, unchanged.
+
+> **PROVENANCE NOTE, and it is owed.** Round 23's `wayfind_probe --from=ch2.maren` reading
+> has the same shape and therefore the same doubt: it was almost certainly measured at
+> `ch2.winches`. Its CONCLUSION survives — the percept, not the arrow, was the defect, and
+> that was measured by `seen_probe` and the frame — but the sentence "at the right one it
+> reads Lock Five and AGREES" was not measured at the seed it names.
+
+### The two leads: both REFUTED, and the second one paid for itself anyway
+
+At the honest seed, `wayfind_probe --from=ch2.supper --target=cottage` at four stands
+(fishdock, weave, the lockfive spawn, Maren) reports the routed hint **shown, labelled, lift
+19-22.6 px, and its first hop identical to the metre-shortest** at every one. No station
+printed `SHIPPED HINT DISAGREES`. So PT-037 is not a routing defect, and PT-038's arrow is
+not the problem either.
+
+PT-038's stand is more interesting than its ticket. `--comp` at `[61.85, 1.25, -25.06]`
+returns **`seed unstandable`** — under WALKLOCK there is no walk network under the cell the
+agent filed from — and `--grid walk:true` shows why: the fish dock's east side at that z is a
+0.4 m curtain of `v`, VISIBLE floor with no walk network, while the real exit lane is two
+metres south at z -27.0..-27.4 where the network runs continuously from x 58 to x 70.
+`reach_probe` maren -> cottage door is **ok=true**. The world is open; the ticket named a
+tier and the cause was a lane.
+
+### The laundry that severs the crossing (measured, recorded, not fixed)
+
+Chasing the cottage route turned up a real severance one tier up. `_court_probe --grid
+walk:true` over x 73..90 / z -25..-20 / y 6..10 blocks the corridor at **x 78.7..79.6 at every
+walkable z**, and `--who` names it:
+
+| | bbox y | walk under it | clearance | `BODY_H` |
+|---|---|---|---|---|
+| `t2c_W9_laundry_planking_5` | 8.78..9.67 | 7.50 | **1.28 m** | 1.30 — **misses by 2 cm** |
+| `t2c_W9_laundry_planking_4` | 9.07..9.63 | 7.50 | 1.57 m | passes |
+
+`--comp` fills the weave side and the crossing side as 115 and 144 cells that never join.
+This is `t2c_G4_arch_banner` exactly — hung cloth whose hem stops in the carriageway, placed
+by `t2_color_pops.py`'s screen-space rectangles, "that carried no idea of what was UNDER
+them". It is recorded in `gate_cloth_headroom.py`'s UNFIXED register beside the two that
+script already carries, and NOT fixed, for the reason that file established: **the fix owes a
+re-bake** (crossing 291 s, weave 299 s, lockhead 249 s, cottage 155 s), and the story steps
+over the severance — `weave>crossing` is a CUT whose spawn lands 9.3 m east of the laundry.
+
+And the ramp `gate_cloth_headroom` uses would be the WRONG mechanism here, which is worth
+writing down before somebody adds two names to `TARGETS` and ships a bug: in the master this
+is ONE object (`t2c_W9_laundry_planking`, 136 verts, z 7.32..9.72 — the runtime `_2/_4/_5`
+are material-split primitives), it contains its own POSTS, and its line hangs at only 2.17 m
+over the walk. Ramping from the top would collapse the sheets to 2 cm and rip the posts off
+the ground. The mechanism this one needs is the ramp ANCHORED AT THE FOOT — stretch the posts,
+carry the line and the sheets up together — which is a different pass.
+
+### THE HEADLINE: Lock Five is a basin, and a flood fill said it was not
+
+`ch2.lockfive` leaves the player on the moorage deck at y ~1.0 and asks them to go to supper
+at the Keepers' Cottage, up on the weave tier at y ~7.9. `_court_probe --comp` with two seeds
+— Maren's own stand and the `lockfive>weave` seam — over x 66..82 / z -30..-22:
+
+    seed [79.7, 0.83, -27.13]  -> 182 cells      (A, the deck)
+    seed [75.011, 6.273, -25.2] -> 179 cells     (B, the tier)
+
+and in the whole 16 x 8 m plan the two share **exactly one 0.4 m cell**, at `[77.2, -26.4]`.
+`--at` on it:
+
+    x 77.0 z -26.4   y 5.60 clear · y 5.56 clear · y 1.02 clear · y 0.70 clear
+
+**A 4.58 m gap.** So the shared cell is not a step, it is the artifact the tool's own legend
+warns about ("the fill settles from the neighbour's height, so membership is not symmetric
+and two components may overlap without joining"). The drive says the same thing without the
+asterisk: `--way` from Maren stalls at `[76.91, 1.06, -26.24]` going up, and coming down
+stalls at `[77.35, 5.60, -26.59]` — it can stand on the tier and cannot reach the deck 2.4 m
+away.
+
+> **AND `reach_probe` CALLED THIS PAIR `ok=true`.** maren -> weave stand and maren -> cottage
+> door both returned `ok=true reason=reached via edges [...]` — because the fill LEAKED
+> through that one overlap cell onto the upper tier and then legitimately took the cut edge
+> from there. A flood fill that settles a cell from its neighbour's height can manufacture a
+> 4.58 m staircase out of nothing. **ONLY THE DRIVE SAYS SO** (CLAUDE.md's round-21 lesson,
+> paid again in a different tool), and the drive is now what this class of claim needs.
+
+### The run itself: 46 steps, three blockers, one fall
+
+`--from=ch2.lockfive --steps=100 --stop-beat=ch2.landing` (`run-20260805-121612`).
+`ch2.lockfive` fired at step 1 and **no further beat fired**. The percept's round-23 additions
+worked exactly as designed the whole time — `you` and a routed marker labelled "Keepers'
+Cottage" at `nx 0.558` on every step, and the agent aimed at it repeatedly — which is what
+makes this a WORLD finding rather than another steering one.
+
+| step | what happened |
+|---|---|
+| 2-23 | 22 steps on the deck hunting the way up; PT-039 filed at step 22 |
+| 24 | **reaches the upper tier** at `[77.36, 5.60, -26.12]` — the one-cell doorway, found by hand |
+| 25 | takes the cut; `[70.41, 7.87, -25.48]`, shot `weave` |
+| 26 | **`[74.05, -3.90, -23.98]`** — 11.8 m down, on the piles under the moorage |
+| 26-32 | seven steps, identical position |
+| 33-46 | back at water level, into the fish dock; PT-040, PT-041 |
+
+**AND THE PICTURE SAYS WHY 22 STEPS WENT INTO THE SEARCH.** `docs/qa/playtest/round24/run-121612-step-026.jpg`
+is the `lockfive` shot with the routed "Keepers' Cottage" arrow drawn correctly on the upper
+deck, the player at `nx 0.605, ny 0.945` (`hidden:false` — the percept had it right) down among
+the piles, and **two painted LADDERS running from the water-level deck up to that tier**. The
+art offers a way up that the walk network does not carry. A player who can see a ladder and
+cannot climb it will spend their steps at its foot, which is exactly what the trajectory shows.
+The same frame also shows the `t2c_W9_laundry_planking` row square in the middle of it, so the
+cloth fix's re-bake list includes `lockfive` and is not the four plates estimated above.
+
+**THE FALL IS A P0 AND ITS MECHANISM IS NOT YET FOUND.** `--at` at that landing has exactly
+one floor, `y -3.90`, and `--grid` shows the weave tier has NO floor at all in x 74.1..77.1 /
+z -23.9..-24.5 — an unfenced 12 m hole beside the route east. But the obvious explanation is
+REFUTED: `--way` driven at the same lip stops correctly at `[73.56, 7.53, -24.24]`, because
+WALKLOCK's `walkStep` refuses to walk off an edge and jump is disabled in a routed town. So
+something else moved that body — a cut spawn, `sgCorrect`, or the marooned unstick — and
+naming it needs an instrumented page, not another fill. It is filed here rather than guessed.
+
+### Spend
+
+The run was killed at step 46 of 100 under round 23's own rule. **And that lost its bill**:
+`run.json` is written after `runEpisode` returns, so SIGTERM took the only record of what the
+run cost, leaving an estimate (~49 model calls, ~$0.4) where a number belongs. An accounting
+record that exists only on the happy path is not an accounting record — `llm_playtester` now
+writes a partial receipt with live usage totals on SIGINT/SIGTERM/SIGHUP.
+
+### What round 25 must do first, in this order
+
+1. **Join the moorage deck to the weave tier.** It is one connective landing, the same shape
+   as round 20's `tools/moorage_westlink.py`, and until it exists no run can reach `ch2.supper`
+   on foot. Verify with `--way` BOTH ways, never with `reach_probe` alone.
+2. **Name what moved the body to y -3.90**, then fence or fill the tier's east hole.
+3. Only then re-receipt `--from=ch2.lockfive`, and only then the full NEW GAME.
