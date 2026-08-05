@@ -2546,3 +2546,55 @@ disagree out loud; at six hops it stops enumerating and says nothing rather than
 "deeper than I look". **An instrument that reports NO PATH where a path exists is the
 `--mesh` bug wearing different clothes**, and it is logged here so the next reader does
 not trust that line at long range.
+
+## Round 15 — 2026-08-05 · the wayfinder is SILENT for the whole of "See to them", by construction
+
+**A FINDING, NOT A FIX.** Traced from the code and the run logs, no browser. Recorded
+rather than shipped, for the reason at the bottom.
+
+Round 14 fixed the *sentence* the Chapter One objective shows. This is about the *arrow*,
+and it is a gap in round 13's own subsystem.
+
+All four `ch1.see.*` beats carry **`cam: null`**:
+
+    ch1.see.poppy   scene=emb-cine  cam=None  at=[51.4,  1.5, -43.0]  r=3.2
+    ch1.see.mara    scene=emb-cine  cam=None  at=[62.13, 1.5, -44.5]  r=3.2
+    ch1.see.finn    scene=emb-cine  cam=None  at=[86.0,  1.0, -48.0]  r=3.4
+    ch1.see.mochi   scene=emb-cine  cam=None  at=[56.6, -0.21, 12.2]  r=3.4
+
+Follow `hintTick` through with one of them. It calls `routeTo(b.scene, b.cam || null)` =
+`routeTo('emb-cine', null)`. Inside, `goal` is
+`s === destScene && (!destCam || …)` — and with `destCam` null the second clause is
+vacuously true, so **`goal` collapses to "are we in emb-cine"**. The player IS:
+
+    if (goal(here, shot())) return { hops: 0, edge: null };
+
+`edge` is null, so `want` is null, so `hintTick` calls `clearHint()` and returns. **No
+label is drawn at any point during the whole objective.** Not a wrong arrow — no arrow.
+
+And the four are **40–90 m apart across four different camera bands of one scene**:
+poppy/mara in `square`, mochi at `waystone`, finn at `[86, 1, −48]` in `pondlane`. So the
+sequence that most needs a way-label is precisely the one the wayfinder is structurally
+incapable of labelling, because the beat names the scene you are already standing in.
+
+The cost, from the runs' own beat timings:
+
+| run | `see.mara` | `see.mochi` | `see.finn` | `see.poppy` |
+|---|---|---|---|---|
+| `run-20260805-013253` (200 steps) | step 49 | step 85 | **step 150** | **never** |
+| `run-20260805-015721` (in flight) | step 73 | — | — | — |
+
+Both NEW GAME runs died in this objective. It is now the only thing between this build and
+a continuous playthrough — Chapter Two runs its whole remaining spine in six steps.
+
+**The shape of the fix** (unbuilt): when a pending beat has no `cam` but has an `at`,
+route to the shot whose BAND OWNS that `at`. The bands are already in `scenegraph.json`,
+which `routeTo` already reads, and `findability_test.ownerShot()` is the same lookup
+written out. It must fail closed exactly as today — no owning band, no hint.
+
+**Why it is not in this commit.** It is a behaviour change to the module that started
+firing `ch2.winches` four hours ago, `wayfind_probe` is the only instrument that can
+prove it, and that instrument needs a Chrome the machine cannot spare while a 200-step
+NEW GAME run is at step 99. **Shipping an unverified change to the one thing that just
+began working is how a good night becomes a bad morning.** Build it against
+`wayfind_probe` on a quiet machine, with `emb-cine` `square` → `pondlane` as the case.
