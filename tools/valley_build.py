@@ -1742,7 +1742,16 @@ def impression_house(p, ht, fam, F, zg, fr, px, py, yaw, D, ch):
         # ON THE RIDGE, NOT ON THE SLOPE.  `rl` is the hip's own ridge length (0 for
         # a gable prism, whose ridge runs the full roof depth `rd`).
         seg = (rl if kind == 3 else rd) * 0.5 - cdmax * 0.5 - 0.06
-        cv_ = gs * max(0.0, min(seg, d * 0.20))
+        # ...AND ON A HIP IT GOES TO THE RIDGE END, NOT THE RIDGE MIDDLE.  Containment
+        # alone is not the whole of the judge's charge: a hip's ridge is only
+        # `rd * hipf` long (0.30..0.56 of the roof), so its MIDDLE is a few tenths of
+        # a unit from the point where four slopes meet, and a stack standing there
+        # still reads as crowning a pyramid however legal it is.  A ridge END puts
+        # the stack visibly off-centre, above where the hip slope begins, which is
+        # where a hipped house's stack actually stands.  An L-plan keeps the middle:
+        # its straddle is at the junction its two wings share a hearth from, and
+        # that reasoning is a plan reason, not a silhouette one.
+        cv_ = gs * max(0.0, seg if kind == 3 else min(seg, d * 0.20))
         chim_out = 0.0
     cz0 = (min(ch) - 0.40) if breast else (fl - plinth)   # no free base, either way
     cz1 = zr + CUP + capj
