@@ -2533,6 +2533,85 @@ regression view — village, pads, water unchanged).
   * The 20-face clump silhouette (f4c's carried item) is untouched here: no COLOR_0
     treatment reaches an outline.
 
+## ROUND 27 (r27) — BET 5, THE CAMERA: THE SKY WAS ALREADY FIXED AND THE CORRIDOR PHOTOGRAPHS LEAVES
+
+Plates `r27-{gate,vista,wood,bend,gorge}.png` + `r27-base-*` (the shipped control), board
+**docs/qa/ow-camera/index.html**, blind packs `blind-r27/` and `blind-r27-refused/`. New
+instruments: `tools/ow_probe/camfit.js` (frame census by mesh class · analytic horizon · ground
+coverage), `cam_sweep.mjs`, `cam_table.mjs`. Forty-nine rigs on five road stations, boom 40 untouched.
+
+**THE BET'S OWN PREMISE WAS STALE.** r14's "~2-5% sky against the references' 15-25%" was measured
+BEFORE `35953fc` shipped `ORBIT.tilt`. Measured now: sky+ridge is **31.9% at the gate, 18.4% at the
+vista**, 3.2% at the worst. A round can be scheduled on a number that its own predecessor already
+fixed; the census is one command and nobody had re-run it.
+
+**AND BOTH BLIND CRITICS CALLED THAT BAND A LIABILITY, UNPROMPTED:** *"a solid navy-gray stack of
+untextured hill silhouettes… ~34% of the frame, and it carries zero information: no landmark, no
+destination, no scale cue, no atmospheric event."* Adding more of it would have made the frame worse.
+
+**THE DEFECT THE SWEEP FOUND INSTEAD, and `land_cams.json` had written it down and nobody acted:**
+at boom 40 the follow camera is inside the canopy for most of the walked corridor. Station 90 on the
+shipped rig: **65.0% of the frame is vegetation, 3.2% air, and the contiguous visible ground around
+the player is a 4 m radius (260 m2)** against the vista's 2845. That is the user's one hard
+constraint — a wide view of the space around them — failing hardest where the player spends the walk.
+No rig in the sweep recovers it: 0.66 takes it to 49% leaf and trades the leaf wall for the gorge
+face. **It is where the road was put, and it is a world item.**
+
+**TWO IDENTITIES, and they are why fourteen rounds of "just lower the pitch" were never going to work.**
+ * **THE BODY'S PLACE IN THE FRAME IS A FUNCTION OF `tilt` ALONE** — `playerFrameY` is 0.577 / 0.656 /
+   0.736 / 0.818 for tilt 0.04 / 0.10 / 0.16 / 0.22, THE SAME FOUR NUMBERS at pitch 0.61 and at 0.37.
+   The boom's elevation cancels out of the camera→player angle.
+ * **AT BOOM 40 WITH A 42 DEG FOV, FIXING THE BODY POSITION AND THE AIR BAND FIXES THE WHOLE RIG.**
+   Three knobs (pitch, tilt, panY), three constraints (distance, body, axis angle), one solution — so
+   the shipped 0.61/0.22/0 IS the unique rig with today's framing at today's distance, and every
+   candidate buys one of the three by spending another.
+ * **THE BOOM LIFT IS A ZOOM IN DISGUISE:** `ORBIT.dist` is the radius from the AIM POINT, so
+   `panY +10` puts the camera 10 m up and the true camera→player distance at **47.2 m**, the character
+   at 23 px instead of 31. Every lift candidate measured well and was refused on that one line.
+
+**THE FIRST RECOMMENDATION WAS REFUSED BY THE BLIND CRITIC, ON THIS LANE'S OWN WORK.** 0.66/0.25 was
+air-neutral, ground +19%, leaf -28%, worst station 65% -> 45%, visible ground -2.1% — every metric the
+right way. A critic that had never seen the numbers ranked it BELOW the frame it replaced and called it
+*"not a stylistic choice, it is a broken shot."* The cost no metric held was 0.04 of frame height
+(body 0.818 -> 0.858) and what it did to the UI: **a steeper camera compresses the vertical screen
+separation between world-anchored things at different depths**, so the portal marker, the town pill and
+the "Enter Emberbrook? [E]" prompt stack cleanly at 0.61/0.22 and OVERLAP at 0.66/0.25. Nothing left the
+screen, nothing measured moved, and every gate in this repo is blind to it.
+
+**SHIPPED: `OWPITCH 0.61 -> 0.66`, `OWTILT 0.22 UNCHANGED`** (prepared as a diff; play3d is
+coordinator-owned). Five-station means: body **0.818 -> 0.817**, ground 45.9% -> **54.6%**, vegetation
+34.2% -> **26.8%**, worst station 65.0% -> **49.0%**, visible ground area 1287 -> **1289 m2** (the
+constraint HOLDS), boom clearance 7.7 -> **8.6 m**, character 31 -> 30 px. Cost: air 14.4% -> **11.7%**,
+and the gate's 5% sliver of true sky leaves the frame. A second, fresh blind critic ranked it ABOVE the
+shipped frame on composition AND art quality and described the trade in its own words — but read the
+mechanism as a push-in or an FOV change when the boom simply climbed 2.9 deg. **A blind critic's
+observations are the deliverable; its diagnosis is not.**
+
+**PITCH DOWN IS NOW REFUSED WITH A NUMBER, not with deference:** at 0.43 the visible ground area is
+579 m2 against 1287 and the boom has 1.8 m of clearance; at 0.37 the boom is **0.5 m UNDER the ground**
+and at the vista station the visible area is literally **zero** — the frustum no longer contains the
+player's own ground.
+
+**WHAT IS ACTUALLY IN THE WAY, measured on the references with a ruler overlay:** their character's feet
+sit at 0.615-0.63 and ours at 0.817; their character is 5.5% / 11.0% of frame height and ours is 3.9%.
+Both follow from one thing — their camera is ~25 m out and ours is 40. **"Match the references'
+composition" and "keep the boom at 40" are not both satisfiable**, and the only lever that closes it
+without moving the boom is the fov (42 -> ~62 deg reaches their body position and air band at once) at
+1.6x of the character's on-screen size. Boom 40 is a standing user ruling and this lane did not touch
+it; the arithmetic goes on the record so the next camera round does not rediscover it.
+
+**The option NOT taken, quantified for the user's call:** 0.70/0.16 puts the body at **0.734** — a fifth
+of a frame higher, near the references — with ground 59.7%, visible area 1337 m2 (+4% on shipped) and
+leaf 27.7%, bought by spending the horizon band down to 5.4%. Both critics asked for exactly that; it
+runs against the user's own "whether we should include more of the horizon line… very open", so it is
+surfaced rather than shipped. Plates `r27-opt-{gate,vista}.png`.
+
+Gates: `findability_test` 69/0 · `playthrough_test --port=3000` per the commit · no bake ran, so
+`cine_test` / `slice_test` are untouched. `ORBIT.pitch`/`ORBIT.tilt` are read nowhere but the boom
+placement — not by `collide`, not by `walkRef`, not by the story runtime.
+
+---
+
 ## ROUND 26 (r26) — THE EAVE, AND A GATE THAT COULD NOT FAIL
 
 **BET 1, second pass, driven by the blind verdict on r25.** The judge found the

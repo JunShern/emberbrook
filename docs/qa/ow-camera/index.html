@@ -1,0 +1,270 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Bet 5 — the composed camera pass, measured (r27)</title>
+<style>
+  :root { --bg:#14171c; --fg:#e7ecf3; --dim:#9aa6b5; --line:#2b323d; --good:#7fd493; --bad:#e78d7a; --warn:#e8c07a; }
+  * { box-sizing:border-box }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  .wrap { max-width:1500px; margin:0 auto; padding:36px 24px 90px }
+  h1 { font-size:30px; margin:0 0 6px; letter-spacing:-.02em }
+  h2 { font-size:21px; margin:52px 0 4px; padding-top:22px; border-top:1px solid var(--line); letter-spacing:-.01em }
+  h3 { font-size:16px; margin:26px 0 8px; color:var(--dim); text-transform:uppercase; letter-spacing:.07em; font-weight:600 }
+  p { max-width:88ch; color:#cfd8e3 }
+  .sub { color:var(--dim); margin:0 0 22px }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0 6px }
+  @media (max-width:900px){ .pair { grid-template-columns:1fr } }
+  figure { margin:0 }
+  img { width:100%; display:block; border-radius:7px; border:1px solid var(--line); background:#000 }
+  figcaption { font-size:12.5px; color:var(--dim); margin-top:7px; letter-spacing:.02em }
+  .tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+         padding:2px 7px; border-radius:4px; margin-right:7px; vertical-align:1px }
+  .t-old { background:#3d3a2a; color:#e8d9a8 } .t-new { background:#24402c; color:#a8e6bd }
+  .t-bad { background:#4d2a24; color:#f2b8a8 } .t-opt { background:#2d3a52; color:#bcd2f0 }
+  table { border-collapse:collapse; width:100%; margin:14px 0; font-size:13.5px; font-variant-numeric:tabular-nums }
+  th,td { text-align:right; padding:7px 11px; border-bottom:1px solid var(--line) }
+  th:first-child,td:first-child { text-align:left }
+  th { color:var(--dim); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.05em }
+  tr.pick td { background:#1c2a20 }
+  .good { color:var(--good) } .bad { color:var(--bad) } .warn { color:var(--warn) }
+  .note { background:#1b1f26; border-left:3px solid var(--line); padding:13px 17px; margin:18px 0; border-radius:0 6px 6px 0 }
+  .note.red { border-left-color:var(--bad) } .note.grn { border-left-color:var(--good) }
+  .note.amb { border-left-color:var(--warn) }
+  blockquote { margin:10px 0 10px 2px; padding-left:14px; border-left:2px solid var(--line); color:#c3ccd8; font-style:italic }
+  code { background:#1f242c; padding:1px 5px; border-radius:3px; font-size:13px }
+  pre { background:#1a1e25; border:1px solid var(--line); border-radius:6px; padding:14px 16px; overflow-x:auto; font-size:13px }
+  .lede { font-size:17px; color:#dbe4ee }
+</style>
+<div class="wrap">
+
+<h1>Bet 5 — the composed camera pass</h1>
+<p class="sub">2026-08-05 · <code>ow-valley</code> · boom 40 UNTOUCHED (user ruling) · five road stations at the SHIPPED rig<br>
+Instruments: <code>tools/ow_probe/camfit.js</code> (frame census · analytic horizon · ground coverage),
+<code>tools/ow_probe/cam_sweep.mjs</code>, <code>tools/ow_probe/cam_table.mjs</code>. Plates are the shipped
+pipeline, post-fx ON. Two blind critics, fresh per round, packs in <code>../ow-refs/blind-r27/</code>
+and <code>../ow-refs/blind-r27-refused/</code>.</p>
+
+<p class="lede">Forty-nine candidate rigs measured on five stations, two blind rounds. The first
+recommendation was REFUSED by the blind critic; the second was ranked above the shipped frame by a
+different one. The verdict is <strong>OWPITCH 0.61 → 0.66, OWTILT unchanged at 0.22</strong>.</p>
+
+<h2>1. The premise this bet was opened on is stale</h2>
+<p>Round 14's critic measured our frames at <strong>~2–5% sky</strong> against the references' 15–25%,
+and that number is what put Bet 5 on the slate. It was taken <em>before</em> <code>35953fc</code> shipped
+<code>ORBIT.tilt</code>. Measured now on the shipped rig, sky dome and the four ridge rings counted
+separately:</p>
+
+<table>
+<tr><th>station</th><th>sky %</th><th>ridge %</th><th>air (sky+ridge) %</th><th>ground %</th><th>veg %</th><th>visible ground m²</th></tr>
+<tr><td>gate (station 12)</td><td>5.0</td><td>26.9</td><td class="good">31.9</td><td>41.3</td><td>19.5</td><td>2258</td></tr>
+<tr><td>vista (station 30)</td><td>3.7</td><td>14.7</td><td class="good">18.4</td><td>48.8</td><td>21.7</td><td>2845</td></tr>
+<tr><td>gorge (station 150)</td><td>0.8</td><td>11.3</td><td>12.1</td><td>56.8</td><td>24.0</td><td>455</td></tr>
+<tr><td>bend (station 120)</td><td>0.8</td><td>5.7</td><td>6.5</td><td>51.5</td><td>40.8</td><td>615</td></tr>
+<tr><td>wood (station 90)</td><td>1.6</td><td>1.6</td><td class="bad">3.2</td><td>31.2</td><td class="bad">65.0</td><td class="bad">260</td></tr>
+</table>
+
+<p>The horizon LINE is still off the top of the frame — <code>horizonMissDeg 1.35</code>, one and a
+third degrees short at the shipped aim — but the ridge rings are tall enough to fill the top of the
+frame anyway. <strong>The air band is real and already at reference scale on the open stations.</strong>
+"Add more sky" is not the deficit any more. Both blind critics this round went further and called that
+band a liability:</p>
+<blockquote>"a solid navy-gray stack of untextured hill silhouettes… ~34% of the frame, and it carries
+zero information: no landmark, no destination, no scale cue, no atmospheric event. It is flat-shaded
+banding. The horizon is in shot and buys nothing."</blockquote>
+
+<h2>2. The defect the sweep did find: the corridor photographs leaves</h2>
+<p><code>land_cams.json</code> has carried this sentence since it was written — "at boom 40 the shipped
+follow camera is INSIDE the canopy for road stations ~78-172, six of nine sampled stations photograph
+nothing but leaves" — and nothing ever acted on it. Measured at station 90:</p>
+
+<div class="pair">
+<figure><img src="../ow-refs/plates/r27-base-wood.png" alt="wood, shipped rig">
+<figcaption><span class="tag t-old">shipped 0.61/0.22</span> <strong>65.0% of the frame is vegetation</strong>, 3.2% air, and the contiguous visible ground around the player is a <strong>4 m</strong> radius (260 m²). The body is the small ring at centre.</figcaption></figure>
+<figure><img src="../ow-refs/plates/r27-wood.png" alt="wood, r27 rig">
+<figcaption><span class="tag t-new">r27 0.66/0.22</span> vegetation 65.0% → <strong>49.0%</strong>, ground 31.2% → <strong>49.1%</strong>, visible ground 260 → 298 m². Better, and still not good: the camera trades a leaf wall for a rock wall, because the road here runs at the foot of a 20 m gorge face.</figcaption></figure>
+</div>
+
+<div class="note red">
+<p style="margin:0"><strong>THIS IS NOT A CAMERA DEFECT AND THE CAMERA CANNOT FIX IT.</strong> It is where
+the road was put. On the user's own constraint — a wide view of the space around the player — the
+shipped camera fails hardest exactly where the player spends most of the walk, and no rig in a
+49-candidate sweep recovers it. Naming that is the most valuable thing this pass produced, and it is a
+world item, not a camera one.</p>
+</div>
+
+<h2>3. The geometry that decides the whole bet</h2>
+<p>Three knobs: <code>pitch</code> (boom elevation), <code>tilt</code> (aim, applied after the look-at),
+<code>panY</code> (boom lift). The sweep produced two structural results worth stating as identities
+rather than as tables.</p>
+
+<div class="note amb">
+<p style="margin:0"><strong>WHERE THE BODY SITS IN THE FRAME IS A FUNCTION OF <code>tilt</code> ALONE.</strong>
+Measured: <code>playerFrameY</code> = 0.577 / 0.656 / 0.736 / 0.818 for tilt 0.04 / 0.10 / 0.16 / 0.22 —
+the same four numbers at pitch 0.61 and at pitch 0.37, to three decimals. The boom's elevation cancels:
+the camera→player angle is <code>pitch + (1/40)·cos pitch</code> and the axis is <code>pitch − tilt</code>,
+so the difference is <code>tilt</code> plus a 1.4° constant. <em>Pitch does not move the body. Only tilt does.</em></p>
+</div>
+
+<div class="note red">
+<p style="margin:0"><strong>AND AT BOOM 40 WITH A 42° FOV, FIXING THE BODY POSITION AND THE AIR BAND FIXES
+THE ENTIRE RIG.</strong> Three knobs, three constraints — distance, body position, axis angle — one
+solution. The shipped 0.61 / 0.22 / 0 <em>is</em> the unique rig with today's framing at today's distance.
+Every candidate below buys one of the three by spending another; there is no free move, and the
+2026-08-04 hope that pitch alone was the lever was geometrically unavailable.</p>
+<p style="margin:.7em 0 0"><strong>The boom lift is a zoom in disguise.</strong> <code>ORBIT.dist</code> is
+the radius from the AIM POINT, not from the player, so <code>panY +10</code> moves the camera 10 m up and
+the true camera→player distance from 40.6 m to <strong>47.2 m</strong> — the character drops from 31 px to
+23 px. Lift candidates measured well on every other axis and were refused for exactly this: distance is
+the one thing the user fixed.</p>
+</div>
+
+<h2>4. The frontier</h2>
+<p>Five stations per row, boom 40, <code>panY 0</code>. PLYR = the body's feet (0 = top edge, 1 = bottom);
+AIR = sky + ridge; vegMax = the worst station's leaf fill; areaM2 = terrain both in frustum and
+unoccluded, contiguous from the player — <strong>the user's hard constraint</strong>; clr = the smallest
+measured air gap under the boom (this rig has no camera collision).</p>
+
+<table>
+<tr><th>pitch / tilt</th><th>PLYR</th><th>AIR %</th><th>ground %</th><th>veg %</th><th>vegMax %</th><th>areaM2</th><th>ahead m</th><th>clr m</th><th>char px</th></tr>
+<tr><td>0.61 / 0.22 &nbsp;<span class="tag t-old">shipped</span></td><td>0.818</td><td>14.4</td><td>45.9</td><td>34.2</td><td class="bad">65.0</td><td>1287</td><td>20.8</td><td>7.7</td><td>31</td></tr>
+<tr class="pick"><td>0.66 / 0.22 &nbsp;<span class="tag t-new">pick</span></td><td class="good">0.817</td><td>11.7</td><td>54.6</td><td>26.8</td><td>49.0</td><td class="good">1289</td><td>20.8</td><td>8.6</td><td>30</td></tr>
+<tr><td>0.64 / 0.24</td><td>0.845</td><td>14.6</td><td>51.7</td><td>27.3</td><td>53.0</td><td>1269</td><td>20.8</td><td>8.3</td><td>31</td></tr>
+<tr><td>0.66 / 0.25 &nbsp;<span class="tag t-bad">refused</span></td><td class="warn">0.858</td><td>14.4</td><td>54.5</td><td>24.5</td><td>45.4</td><td>1260</td><td>20.8</td><td>8.6</td><td>30</td></tr>
+<tr><td>0.68 / 0.26</td><td class="warn">0.872</td><td>14.2</td><td>57.1</td><td>21.9</td><td>37.6</td><td>1243</td><td>20.8</td><td>8.9</td><td>30</td></tr>
+<tr><td>0.70 / 0.22</td><td>0.816</td><td>9.6</td><td>60.7</td><td>23.3</td><td>36.2</td><td>1284</td><td>20.8</td><td>9.2</td><td>29</td></tr>
+<tr><td>0.70 / 0.28</td><td class="bad">0.900</td><td>15.0</td><td>59.9</td><td>19.0</td><td>29.1</td><td>1216</td><td>20.8</td><td>9.2</td><td>30</td></tr>
+<tr><td>0.79 / 0.28</td><td class="bad">0.898</td><td>10.1</td><td>70.0</td><td>13.3</td><td>19.0</td><td>1206</td><td>20.8</td><td>10.5</td><td>27</td></tr>
+<tr><td>0.70 / 0.16 &nbsp;<span class="tag t-opt">option, §7</span></td><td class="good">0.734</td><td class="bad">5.4</td><td>59.7</td><td>27.7</td><td>43.8</td><td>1337</td><td>20.8</td><td>9.2</td><td>28</td></tr>
+<tr><td>0.43 / 0.22 &nbsp;(pitch DOWN)</td><td>0.821</td><td>17.1</td><td>29.2</td><td>46.5</td><td>73.4</td><td class="bad">579</td><td class="bad">7.5</td><td class="bad">1.8</td><td>—</td></tr>
+<tr><td>0.37 / 0.22 &nbsp;(pitch DOWN)</td><td>0.821</td><td>16.1</td><td>35.2</td><td>37.2</td><td>88.5</td><td class="bad">588</td><td class="bad">7.5</td><td class="bad">−0.5</td><td>—</td></tr>
+</table>
+
+<p>The two bottom rows reproduce the 2026-08-04 finding on an instrument that can say <em>why</em>: below
+pitch ~0.46 the boom goes into the hillside (<code>clr</code> negative at 0.37) and the visible ground
+collapses by more than half — at the vista station <code>areaM2</code> goes to literally <strong>zero</strong>,
+because the frustum no longer contains the player's own ground. Lowering the pitch violates the user's one
+hard constraint, on measurement rather than on deference.</p>
+
+<h2>5. The round that was refused, and why it matters</h2>
+<p>The first recommendation off the numbers was <strong>0.66 / 0.25</strong>: air-neutral, ground +19%,
+vegetation −28%, worst-station leaf fill 65% → 45%, visible ground −2.1%. Every metric moved the right
+way. A blind critic that had never seen the numbers ranked it <strong>below the frame it replaced</strong>,
+on both composition and art quality, and named it the single worst composition in the pack:</p>
+<blockquote>"putting the playable character in the bottom 15% of the frame, occluded by its own
+interaction prompt and cropped by the frame edge… That is not a stylistic choice, it is a broken shot."</blockquote>
+<p>The cost the metrics could not see was the 0.04 of frame height the body gave up (0.818 → 0.858) and
+what it did to the world-anchored UI. <strong>A steeper camera compresses the vertical screen separation
+between things at different depths</strong>, so at the gate station the portal marker, the "Emberbrook"
+pill and the "Enter Emberbrook? [E]" prompt stack cleanly at 0.61/0.22 and overlap each other at
+0.66/0.25. Nothing goes off screen, nothing measured moved, and every gate in this repo is blind to it.</p>
+<div class="pair">
+<figure><img src="../ow-refs/plates/r27-refused-gate.png" alt="the refused candidate"><figcaption><span class="tag t-bad">refused</span> 0.66 / 0.25 — the body at 0.858 and the three labels collapsed into each other. Pack: <code>../ow-refs/blind-r27-refused/</code></figcaption></figure>
+<figure><img src="../ow-refs/plates/r27-gate.png" alt="the shipped pick"><figcaption><span class="tag t-new">pick</span> 0.66 / 0.22 — same boom height, tilt left alone, body back at 0.817 and the label stack intact.</figcaption></figure>
+</div>
+<p><strong>Round 4–5's rule held again, on this lane's own work:</strong> a number that improves while the
+picture worsens is the wrong number. The fix was to stop spending the body's frame position — keep
+<code>OWTILT</code> where it is and move only the boom.</p>
+
+<h2>6. The pick: OWPITCH 0.61 → 0.66, OWTILT 0.22 unchanged</h2>
+<p>Five-station means, shipped → r27:</p>
+<table>
+<tr><th></th><th>shipped</th><th>r27</th><th>Δ</th></tr>
+<tr><td>body position in frame</td><td>0.818</td><td class="good">0.817</td><td class="good">unchanged — the whole point</td></tr>
+<tr><td>ground in frame</td><td>45.9%</td><td class="good">54.6%</td><td class="good">+19%</td></tr>
+<tr><td>vegetation in frame</td><td>34.2%</td><td class="good">26.8%</td><td class="good">−22%</td></tr>
+<tr><td>vegetation, WORST station</td><td>65.0%</td><td class="good">49.0%</td><td class="good">−25%</td></tr>
+<tr><td>visible ground area (the constraint)</td><td>1287 m²</td><td class="good">1289 m²</td><td class="good">+0.2% — the constraint holds</td></tr>
+<tr><td>ground radius ahead of the player</td><td>20.8 m</td><td>20.8 m</td><td>unchanged</td></tr>
+<tr><td>boom clearance, worst station</td><td>7.7 m</td><td class="good">8.6 m</td><td class="good">+12%</td></tr>
+<tr><td>character height on screen</td><td>31 px</td><td>30 px</td><td>true distance 40.6 → 40.7 m</td></tr>
+<tr><td>air (sky + ridge)</td><td>14.4%</td><td class="warn">11.7%</td><td class="warn">the cost — 2.7 points of the distance band</td></tr>
+<tr><td>sky specifically, gate station</td><td>5.0%</td><td class="warn">0.2%</td><td class="warn">the sliver of true sky leaves the frame</td></tr>
+</table>
+
+<p>The second blind critic, fresh, ranked <strong>the r27 frame above the shipped frame</strong> on both
+composition and art quality, identified the pair unprompted, and described the trade in its own words:</p>
+<blockquote>"the dead upper band drops from ~34% to ~27%; the road, the bridge and the village roofs
+all read at usable size; the thing the prompt is asking about is finally legible… What it cost: the
+character did not move — 0.79 in both."</blockquote>
+<p>Its measurement of the body agrees with the instrument's (0.818 / 0.817). Its account of the
+MECHANISM does not — it read the change as a push-in or an FOV narrowing. It is neither: the boom
+climbs 2.9° and nothing else moves, which grows near objects and shrinks the far band in exactly the way
+a push-in would. Recorded because a blind critic's <em>observations</em> are the deliverable and its
+<em>diagnosis</em> is not.</p>
+
+<div class="pair">
+<figure><img src="../ow-refs/plates/r27-base-gate.png" alt="gate, shipped"><figcaption><span class="tag t-old">shipped</span> station 12, the Emberbrook gate portal</figcaption></figure>
+<figure><img src="../ow-refs/plates/r27-gate.png" alt="gate, r27"><figcaption><span class="tag t-new">r27</span> 0.66 / 0.22</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="../ow-refs/plates/r27-base-vista.png" alt="vista, shipped"><figcaption><span class="tag t-old">shipped</span> station 30, the open valley</figcaption></figure>
+<figure><img src="../ow-refs/plates/r27-vista.png" alt="vista, r27"><figcaption><span class="tag t-new">r27</span> ground 48.8% → 52.0%, visible ground 2845 → 2840 m²</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="../ow-refs/plates/r27-base-bend.png" alt="bend, shipped"><figcaption><span class="tag t-old">shipped</span> station 120 — the body is inside the bush cluster, 40.8% leaf</figcaption></figure>
+<figure><img src="../ow-refs/plates/r27-bend.png" alt="bend, r27"><figcaption><span class="tag t-new">r27</span> leaf 27.9%, ground 51.5% → 66.1%; the road and the river bank come back</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="../ow-refs/plates/r27-base-gorge.png" alt="gorge, shipped"><figcaption><span class="tag t-old">shipped</span> station 150, the Dellhollow approach</figcaption></figure>
+<figure><img src="../ow-refs/plates/r27-gorge.png" alt="gorge, r27"><figcaption><span class="tag t-new">r27</span> ground 56.8% → 63.4%, leaf 24.0% → 17.7%</figcaption></figure>
+</div>
+
+<h3>The diff, prepared — <code>public/play3d.html</code> is coordinator-owned</h3>
+<pre>@@ public/play3d.html:90-93
+-// SHIPPED: pitch 0.61 UNCHANGED (see the sweep — every reduction of it drove the boom
+-// into terrain, because this rig has no camera collision), tilt 0.22.
++// SHIPPED (r27, 2026-08-05): pitch 0.66, tilt 0.22.  Pitch DOWN is still refused and is
++// now refused with a number — at 0.37 the boom is 0.5 m UNDER the ground and the visible
++// ground area halves.  Pitch UP is the move nobody had swept: +0.05 rad lifts the boom
++// 0.9 m, takes the worst station's leaf fill from 65% to 49% and the frame's ground from
++// 45.9% to 54.6%, and costs 2.7 points of the distance band.  TILT IS UNTOUCHED ON
++// PURPOSE: tilt ALONE sets where the body sits in the frame (playerFrameY is the same
++// four numbers at pitch 0.61 and 0.37), and a blind critic refused 0.66/0.25 — better on
++// every metric — because the body dropped 0.818 -> 0.858 and the world-anchored labels
++// collided.  docs/qa/ow-camera/index.html.
+ // ?owtilt=0 is the exact frame we shipped before this change.
+-let OWPITCH=0.61, OWTILT=0.22;
++let OWPITCH=0.66, OWTILT=0.22;</pre>
+<p><code>?owpitch=0.61</code> reproduces the previous frame exactly; the whole sweep is replayable with
+<code>node tools/ow_probe/cam_sweep.mjs --port 3000 --out &lt;dir&gt;</code>.</p>
+
+<h2>7. The option this lane did NOT take, and the thing that is really in the way</h2>
+<p>Both blind critics, independently, put the same item first: the character is too small and too low,
+and the distance band is dead weight. The rig that answers them fully is <strong>0.70 / 0.16</strong> —
+body up from 0.818 to <strong>0.734</strong> (the references sit at 0.615–0.63), ground 59.7%, visible
+ground 1337 m² (+4% on shipped), leaf 27.7% — bought by spending the horizon band down to
+<strong>5.4%</strong>. That runs against the user's own words ("whether we should include more of the
+horizon line in the shot… very open"), so it is surfaced, not shipped.</p>
+<div class="pair">
+<figure><img src="../ow-refs/plates/r27-opt-gate.png" alt="option 0.70/0.16, gate"><figcaption><span class="tag t-opt">option</span> 0.70 / 0.16 at the gate — the body a fifth of a frame higher, the haze band nearly gone</figcaption></figure>
+<figure><img src="../ow-refs/plates/r27-opt-vista.png" alt="option 0.70/0.16, vista"><figcaption><span class="tag t-opt">option</span> 0.70 / 0.16 at the vista</figcaption></figure>
+</div>
+
+<p>Measured on the reference frames themselves (1920×1080, ruler overlay):</p>
+<table>
+<tr><th></th><th>ours (r27)</th><th>ref 1 (Dali coast)</th><th>ref 3 (windmill)</th></tr>
+<tr><td>character's feet, frame Y</td><td>0.817</td><td>0.63</td><td>0.615</td></tr>
+<tr><td>character height, % of frame</td><td class="bad">3.9%</td><td>5.5%</td><td>11.0%</td></tr>
+<tr><td>distance band, top of frame</td><td>~27%</td><td>~42%</td><td>~42%</td></tr>
+</table>
+<div class="note amb">
+<p style="margin:0">Their character is <strong>1.4× to 2.8× larger on screen</strong> and sits a fifth of a
+frame higher with real foreground under it. Both follow from one thing: their camera is roughly 25 m out
+and ours is 40. <strong>Boom 40 is a standing user ruling and this lane did not touch it</strong> — but the
+measurement belongs on the record, because "match the references' composition" and "keep the boom at 40"
+are not both satisfiable, and every future camera round will rediscover that if it is not written down.
+The one lever that closes it without moving the boom is the field of view (42° → ~62° reaches the
+reference's body position and air band simultaneously) and it costs 1.6× of the character's on-screen
+size, which is the wrong trade. Second critic, unprompted: <em>"Get the camera in by half and the problem
+mostly dissolves."</em></p>
+</div>
+
+<h2>8. Gates</h2>
+<p><code>findability_test</code> <strong>69 / 0</strong> (10 warnings, all pre-existing) ·
+<code>playthrough_test --port=3000</code> as recorded in the commit · no plate bake ran, so
+<code>cine_test</code> and <code>slice_test</code> are untouched by this lane. The ow follow camera is
+read by nothing else: <code>ORBIT.pitch</code> and <code>ORBIT.tilt</code> appear in
+<code>play3d.html</code> only where they are set and where the boom is placed, and nothing in
+<code>collide</code>, <code>walkRef</code> or the story runtime reads either — which is why a pitch
+change cannot move a findability result the way a BAKED town camera would.</p>
+
+</div>
