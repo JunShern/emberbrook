@@ -2711,11 +2711,20 @@ cobbles cost nothing), `playthrough_test` **86/0** with 21 same-scene pairs floo
 NOT yet judged. Plates `r26-*`, silhouette board `r26-silhouettes.png`, paired before/after
 crops `plates/r26-crops/`.
 
-**OPEN, honestly.** The roof VALUE spread is now 1.79x by family and the roofs still read as
-one blue at 40 m, because every family is the same HUE — the variation is a value axis on a
-single pigment, and the reference's roofs differ in material, not only in tone. Whether that
-is worth a second roof colour is a palette question the r14 solve constrains and this round
-did not open.
+**OPEN, honestly.** Two things.
+
+The roof VALUE spread is now 1.79x by family and the roofs still read as one blue at 40 m,
+because every family is the same HUE — the variation is a value axis on a single pigment,
+and the reference's roofs differ in material, not only in tone. Whether that is worth a
+second roof colour is a palette question the r14 solve constrains and this round did not open.
+
+And a hip's stack still stands HIGH, because a hip's ridge is high. Clause (iv) contains it
+and it is placed at the ridge END by intent now rather than by coincidence (on the current
+fourteen draws `seg` was already under `d * 0.20`, so `min()` was picking the end anyway and
+making it explicit rebuilt a byte-identical bundle) — but the ridge of a `rd * hipf` roof is
+0.30-0.56 of the plan, so its end is still within half a unit of where four slopes meet. If a
+judge reads "crowning a pyramid" again, the remaining move is not another placement rule: it
+is that a TALL mass under a HIPPED roof is a tower, and the fix is the massing's proportion.
 
 ---
 
