@@ -217,6 +217,22 @@ for (const p of people) {
   if (p.dialogue) ok(!!nodes[p.dialogue], `npc "${p.id}" dialogue "${p.dialogue}" exists`);
 }
 
+/* THE PROMPT IS A SENTENCE, AND NOBODY HAD EVER READ IT (PT-20260804-015).
+ * `promptLabel` is a template and `name` is a string, and the two are only ever seen
+ * joined — on the interaction banner, in the player's face. del.cook carried
+ * "Talk to the {name}" over the name "the cook" and shipped **"Talk to the the cook?"**
+ * with every gate green, because no gate had ever EXPANDED the template. Expand it and
+ * read the result: a doubled article, a doubled space, or an empty slot is a defect a
+ * player sees on the first press of E. */
+section('1b. every interaction prompt reads as a sentence');
+const DEFPROMPT = (N.defaults && N.defaults.promptLabel) || 'Talk to {name}';
+for (const p of people) {
+  if (!p.name) continue;
+  const label = String(p.promptLabel || DEFPROMPT).replace(/\{name\}/g, p.name);
+  ok(!/\b(the|a|an|to|of)\s+\1\b/i.test(label), `npc "${p.id}" prompt has no doubled word`, label);
+  ok(!/\s{2}|\{|\}/.test(label), `npc "${p.id}" prompt has no stray spacing or slot`, label);
+}
+
 // ------------------------------------------------------- 2. THE BUST GATE
 section('2. every speaker has a bust (the 2026-08-01 ruling)');
 for (const [id, s] of Object.entries(speakers)) {

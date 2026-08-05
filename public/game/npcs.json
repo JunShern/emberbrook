@@ -525,7 +525,7 @@
       "bodyNote": "archetype villager: mara's model in scorched linen. Bust del.cook -> villager-woman.",
       "idleBehavior": "stand",
       "dialogue": "del.cook.hail",
-      "promptLabel": "Talk to the {name}",
+      "promptLabel": "Talk to {name}",
       "note": "The working lane in front of the range, between the range front (z -2.17) and the hatch back (z -1.64). Facing 45 is out at the hatch and the room. MEASURED: 97% of the body column survives depth.png, edge 0.60, 179 px; 5.24 m from the cookhouse arrival spawn [3, 0.04, -2.58]. THE OBVIOUS POST IS THE WRONG ONE HERE and it is worth the sentence: the prep bench (x[-0.95..1.85] z[-3.19..-2.25]) is where a cook belongs and where I first put her, and the hatch carcass in front of it (x[-0.67..2.42], 2.52 m TALL) takes 50-56% of the body column out of the plate — the Poppy failure exactly, one room over. The range end is the only stretch of the working lane the camera owns."
     },
     {
