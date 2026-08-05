@@ -70,11 +70,39 @@ LEAFM, LEAFC, BARK, MARK = O3.LEAFM, O3.LEAFC, O3.BARK, O3.MARK
 
 HOUSE_RIDGE = VM.HOUSE_RIDGE       # 3.7u — the scale contract beside a 1.45u character
 HOUSE_EAVE = 1.80                  # wall-plate height before the per-house factor
+# R26 — THE EAVE IS AN ABSOLUTE DISTANCE, NOT A FRACTION OF A JITTERED WALL.
+# The blind judge on r25, and it is the round's centrepiece: "no eave overhang
+# anywhere — which is why the houses read as blockout regardless of texture ... a
+# 0.25-0.4 m eave overhang plus a plinth course at the wall base is what makes a box
+# become a building; without it no amount of texture will help."
+#
+# r25 DID have a roof plan of w*1.26 x d*1.14, which is 0.26-0.34 u of projection
+# across the ridge and only 0.10-0.17 at the verge — and NOTHING HUNG DOWN AT THE
+# DRIPLINE.  Worse, its "eave board" was w*1.31, i.e. WIDER than the roof above it,
+# so the roof edge landed ON TOP of the board and the assembly read as a string
+# course sitting on the wall rather than as a roof oversailing it.  The judge saw
+# exactly what was built.
+#
+# Four numbers, all ABSOLUTE (R11's rule: an offset that is a fraction of a jittered
+# dimension is a contact that is a coin toss — the same rule that had already been
+# broken by the gable window one line below the place it was written down):
+EAVE_U = 0.34        # projection across the ridge, past the wall face
+EAVE_V = 0.27        # projection at the gable verge
+FASCIA_H = 0.19      # how far the fascia board hangs BELOW the roof's own edge
+SOFFIT_Z = 0.07      # the closed underside, above the wall plate
+# ...and the plinth, which is a COURSE and not a colour: the wall steps out once at
+# PLINTH_OUT and the capping course steps out again at COURSE_OUT, so the base draws
+# TWO horizontal shadow lines under a 34-degree key instead of the single silhouette
+# line the r25 plinth (1.07 x w, i.e. 0.07-0.09 u proud) could not.
+PLINTH_OUT = 0.055
+COURSE_OUT = 0.105
+COURSE_H = 0.10
 STATS = {}
-# THE PER-HOUSE CHIMNEY GATE (R13).  One record per house built, in both towns:
-# (footprint inside the pad, outer face behind the wall face, cap above the ridge,
-# pad margin, wall recess, ridge clearance).  A house that fails any clause is built
-# WITHOUT a chimney — the gate refuses, it does not merely report.
+# THE PER-HOUSE CHIMNEY GATE (R13, extended R26).  One record per house built:
+# (i footed, ii no-gap, iii cap-above-ridge, iv on-the-ridge, v broad-and-short,
+#  vi not-a-doorway-wide, foot/pad margin, wall bite, ridge-segment margin, ridge
+#  clearance, aspect ratio, exposed volume, exposed width, placement).  A house that fails any clause is built WITHOUT a
+# chimney — the gate refuses, it does not merely report.
 CHIM_GATE = []
 
 # =============================================================================
@@ -793,11 +821,23 @@ WALL_TINTS = [(1.12, 1.14, 1.20),        # limewash — the brightest, and cool
               (0.95, 0.85, 0.66),        # ochre daub, warm
               (0.70, 0.73, 0.79),        # grey render, cool
               (0.70, 0.60, 0.45)]        # earth daub, dark and warm
-ROOF_TINTS = [(1.00, 1.00, 1.00),        # the palette's own slate
-              (0.80, 0.83, 0.90),        # weathered, greyer and cooler still
-              (1.12, 1.06, 0.94),        # an older tile that kept some fired clay
-              (0.66, 0.70, 0.78),        # dark wet slate
-              (0.98, 0.94, 0.86)]        # sun-bleached
+# R26 — WIDENED 1.35x ABOUT THE MEAN, WHICH DOES NOT MOVE.  The blind judge asked
+# for "3-4 roof value variants" and r25 already had FIVE, spanning 1.51x in family
+# luminance and 2.05x in measured effective albedo — so the ask was not for more
+# values, and reading it as one would have been the r14 mistake again.  What was
+# missing is that ONE index chose the roof list AND the wall list, so a roof value
+# never appeared against more than one wall and the five combinations read as one
+# relationship (see the decoupling in build_emberbrook).  The spread is widened
+# anyway, because it is free: deviations from the per-channel mean are scaled 1.35x
+# and the MEAN IS HELD (0.912/0.906/0.896 -> within 0.1%), which is the number
+# ROOF_HEX was solved against.  There is no clip risk on this list the way there is
+# on the walls: the tiles' COLOR_0 sits near 0.03/0.05/0.22, two decades under the
+# 1.0 clamp, which is exactly why the WALL list is not widened with it.
+ROOF_TINTS = [(1.031, 1.033, 1.036),     # the palette's own slate
+              (0.761, 0.803, 0.901),     # weathered, greyer and cooler still
+              (1.193, 1.114, 0.955),     # an older tile that kept some fired clay
+              (0.572, 0.628, 0.739),     # dark wet slate
+              (1.004, 0.952, 0.847)]     # sun-bleached
 assert len(WALL_TINTS) == len(ROOF_TINTS)   # one family index indexes BOTH lists
 NFAM = len(WALL_TINTS)
 # The five roof families are chosen so their PER-CHANNEL MEAN (0.912/0.906/0.896) is
@@ -812,6 +852,10 @@ NFAM = len(WALL_TINTS)
 # has to be the darkest thing at the base or it draws a second silhouette line.
 BED_TINT = (0.60, 0.46, 0.33)
 TUFT_TINT = (0.86, 0.94, 0.72)           # the blades that overlap the plinth
+# R26 — the PER-HOUSE tint tables, filled by each town builder that has one.  The
+# HTINT layer carries a house index rather than a family index wherever an entry
+# exists here; a town without one (Dellhollow's bays) still keys the family lists.
+HOUSE_TINTS = {}
 
 
 def tint_layer(p):
@@ -976,8 +1020,15 @@ def canopy_contact(made, F, zg, fr):
                 base=CONTACT_BASE, ground_dark=CONTACT_GROUND)
 
 
-def apply_house_tints(ob, cls):
-    """Multiply COLOR_0 by each house's family tint. Returns houses touched."""
+def apply_house_tints(ob, cls, table=None):
+    """Multiply COLOR_0 by each house's tint. Returns the number of keys touched.
+
+    `table` (R26) is a PER-HOUSE list of (wall_rgb, roof_rgb) indexed by the HTINT
+    key minus one, so a house can carry its own jitter and its own roof family
+    independently of its wall family.  Without it the key indexes WALL_TINTS /
+    ROOF_TINTS by family the way r25 did — which is still what Dellhollow's bays
+    want, since they are tinted by family and have no per-building table.
+    """
     me = ob.data
     at = me.attributes.get(HTINT)
     if at is None:
@@ -996,13 +1047,26 @@ def apply_house_tints(ob, cls):
         if k <= 0:
             continue
         c = int(cls[pi])
-        m = (WALL_TINTS[(k - 1) % len(WALL_TINTS)] if c == WALL else
-             ROOF_TINTS[(k - 1) % len(ROOF_TINTS)] if c == ROOF else
-             BED_TINT if c == DIRT else
-             TUFT_TINT if c == GRASS_HI else None)
+        if table is not None and c in (WALL, ROOF):
+            m = table[(k - 1) % len(table)][0 if c == WALL else 1]
+        else:
+            m = (WALL_TINTS[(k - 1) % len(WALL_TINTS)] if c == WALL else
+                 ROOF_TINTS[(k - 1) % len(ROOF_TINTS)] if c == ROOF else None)
+        if m is None:
+            m = (BED_TINT if c == DIRT else
+                 TUFT_TINT if c == GRASS_HI else None)
         seen.add(k)
         if m is None:
             continue
+        if c == DIRT:
+            # R26 — THE PADS WERE ONE FLAT VALUE, which is half of what made them
+            # read as stamps (the other half was the circle; see bed_in).  DIRT has
+            # no entry in the class -> material map, so the ring renders on the
+            # untextured matte and COLOR_0 is the ONLY thing that can break it up.
+            # A deterministic per-face draw off the polygon index — no RNG, because
+            # a set-ordered RNG draw is exactly what cost r25 its reproducibility.
+            g = 0.90 + 0.20 * (((pi * 2654435761) % 1013) / 1012.0)
+            m = (m[0] * g, m[1] * g, m[2] * g)
         if c == ROOF:
             n = poly.normal
             dot = n[0] * SUN_BL[0] + n[1] * SUN_BL[1] + n[2] * SUN_BL[2]
@@ -1221,7 +1285,7 @@ def house_ground(F, zg, fr, px, py, w, d, yaw):
             for u in (-1, 1) for v in (-1, 1)]
 
 
-def bed_in(p, ht, fam, F, zg, fr, px, py, bw, bd, cu, yaw, rng):
+def bed_in(p, ht, fam, F, zg, fr, px, py, bw, bd, cu, yaw, rng, cv=0.0):
     """A RING OF TRODDEN EARTH round a house, plus tufts that overlap its plinth.
 
     `bw`/`bd`/`cu` are the WHOLE MASSING's plan extents and its local-u centre, not
@@ -1240,23 +1304,60 @@ def bed_in(p, ht, fam, F, zg, fr, px, py, bw, bd, cu, yaw, rng):
     prop's own class gains and COLOR_0 rather than needing a material of its own.
     """
     before = set(p.bm.faces)
-    cx = px + math.cos(yaw) * cu
-    cy = py + math.sin(yaw) * cu
-    r0 = max(bw, bd) * 0.56
-    r1 = r0 + 0.42 + rng.uniform(0.0, 0.30)
+    cyw, syw = math.cos(yaw), math.sin(yaw)
+    cx = px + cyw * cu - syw * cv
+    cy = py + syw * cu + cyw * cv
+
+    # R26 — A CIRCLE ROUND A RECTANGLE IS A STAMP.  The blind judge on r25 asked for
+    # the "stamped circular ground pads" to be broken, and the reason they read as
+    # stamped is that the INNER edge was a circle of radius max(bw, bd) * 0.56 while
+    # the thing standing in it is a rectangle: on every house the ring stood 0.4-0.7 u
+    # off the long walls and cut the short ones, so the eye got a disc with a building
+    # dropped on it rather than earth worn against a wall.  The inner edge now follows
+    # the MASSING, as a superellipse on the house's own local axes (n = 4 rounds the
+    # corners the way a path worn round a corner actually rounds), and the outer edge
+    # wanders on three harmonics instead of two.  Same face count, same class.
+    A = bw * 0.5 + 0.34
+    Bx = bd * 0.5 + 0.34
     ph = rng.uniform(0, 6.283)
+    wob = 0.24 + rng.uniform(0.0, 0.10)
+    band = 0.46 + rng.uniform(0.0, 0.34)
     inner, outer = [], []
     for i in range(25):
         a = 2 * math.pi * i / 24
-        ca, sa = math.cos(a), math.sin(a)
-        # the outer edge WANDERS: a perfect annulus reads as a decal, and a decal
-        # under a building is the artefact this exists to avoid, not the fix.
-        j = 1.0 + 0.17 * math.sin(3 * a + ph) + 0.09 * math.sin(5 * a + ph * 2)
-        xi, yi = cx + ca * r0, cy + sa * r0
-        xo, yo = cx + ca * r1 * j, cy + sa * r1 * j
+        # LOCAL axes: the superellipse is drawn in (u, v) and then rotated by yaw,
+        # so it is the building's rectangle it follows and not the world's.
+        lu, lv = math.cos(a), math.sin(a)
+        rr = ((abs(lu) / A) ** 4 + (abs(lv) / Bx) ** 4) ** -0.25
+        r0 = rr
+        j = 1.0 + wob * math.sin(3 * a + ph) + 0.11 * math.sin(5 * a + ph * 2) \
+            + 0.06 * math.sin(7 * a + ph * 3)
+        r1 = (rr + band) * j
+        xi = cx + (cyw * lu - syw * lv) * r0
+        yi = cy + (syw * lu + cyw * lv) * r0
+        xo = cx + (cyw * lu - syw * lv) * r1
+        yo = cy + (syw * lu + cyw * lv) * r1
         inner.append((xi, yi, gh(F, zg, fr, xi, yi) + 0.02))
         outer.append((xo, yo, gh(F, zg, fr, xo, yo) + 0.02))
     p.strip(DIRT, outer, inner)
+    # ...AND THE THINGS THAT COLLECT AT A WALL BASE.  Six small STONE cobbles pressed
+    # against the plinth, which is where stones actually end up and also the one place
+    # in the ring where they cannot cost a walk cell: the house already blocks there.
+    # STONE, not a new class — the r3 GRASS_HI tufts that used to stand here fell
+    # through to the untextured matte because GRASS_HI has no entry in the class ->
+    # material map, and DIRT (which does not either) is why the ring itself is matte.
+    # CHECK THE MAP BEFORE ADDING A CLASS; this adds none.
+    for k_ in range(6):
+        a = rng.uniform(0, 6.283)
+        lu, lv = math.cos(a), math.sin(a)
+        rr = ((abs(lu) / A) ** 4 + (abs(lv) / Bx) ** 4) ** -0.25
+        t = rr + 0.02 + rng.uniform(0.0, 0.32)
+        sx = cx + (cyw * lu - syw * lv) * t
+        sy = cy + (syw * lu + cyw * lv) * t
+        hgt = 0.07 + rng.uniform(0.0, 0.05)
+        p.cube(STONE, (sx, sy, gh(F, zg, fr, sx, sy) + hgt * 0.35),
+               (0.15 + rng.uniform(0, 0.13), 0.13 + rng.uniform(0, 0.12), hgt),
+               rz=rng.uniform(0, 3.14))
     # THE SEVEN WALL-LINE TUFTS THAT USED TO STAND HERE ARE DELETED (round 3).
     # They were `p.cone(GRASS_HI, …, seg=4)`, and GRASS_HI has NO entry in
     # overworld3_build's class -> material map, so all seven per house fell through
@@ -1291,32 +1392,51 @@ def bed_in(p, ht, fam, F, zg, fr, px, py, bw, bd, cu, yaw, rng):
 #      PROUD of it.  Under a 34 deg key the proud frame throws a real shadow
 #      across the glass, which is the recess — geometry, so it survives every
 #      camera and every grade.  Five cubes a window, no new material.
+# R26 — A REVEAL WITHOUT A BOOLEAN IS A SURROUND, AND THE SURROUND WAS TOO SHALLOW.
+# The blind judge on r25: openings are "flat dark rectangles with no frame, reveal
+# or sill".  Half of that was the DOOR, which really did have no frame at all (see
+# impression_house).  This half is a depth problem, and the fix that suggests itself
+# — INSET THE PANE — DOES NOT WORK HERE AND WAS TRIED FIRST: there is no boolean in
+# this pipeline, the wall is a solid cube, and a pane pushed 0.06 behind the wall
+# face is not a recessed window, it is a pane INSIDE an opaque box, invisible.  A
+# recess has to be built the way a joiner builds it, out of things standing PROUD.
+#
+# So: the surround gets half again the projection (fp 0.075 -> 0.11), the sill
+# becomes STONE and oversails on both axes, and an APRON runs under it.  The sill is
+# the part that carries the read at 40 m — it is the only horizontal in the opening,
+# so it is the only element that takes the key while the head and one jamb are
+# throwing shadow across the glass.  The pane stays a hair PROUD (0.012): it has to
+# win the depth test against the wall it sits in.
 def window(p, at, yaw, u, v, z, ww, wh, nrm):
     """A framed pane.  `nrm` is 'u' or 'v': which local axis the wall faces."""
-    fp, th = 0.075, 0.05                 # frame proud of the wall, bar thickness
+    fp, th = 0.11, 0.05                  # frame proud of the wall, bar thickness
     if nrm == 'u':
         s = 1.0 if u > 0 else -1.0
-        p.cube(EMIT, at(u + s * 0.015, v, z), (0.05, ww, wh), rz=yaw)
-        p.cube(WOOD, at(u + s * fp * 0.62, v, z - wh / 2 - 0.05),
-               (fp * 1.7, ww + 0.20, 0.09), rz=yaw)          # sill
-        p.cube(WOOD, at(u + s * fp * 0.50, v, z + wh / 2 + 0.045),
-               (fp * 1.4, ww + 0.15, 0.08), rz=yaw)          # lintel
+        p.cube(EMIT, at(u + s * 0.012, v, z), (0.05, ww, wh), rz=yaw)
+        p.cube(STONE, at(u + s * fp * 0.62, v, z - wh / 2 - 0.055),
+               (fp * 1.9, ww + 0.28, 0.10), rz=yaw)          # sill, stone, oversails
+        p.cube(STONE, at(u + s * fp * 0.34, v, z - wh / 2 - 0.16),
+               (fp * 1.1, ww + 0.10, 0.13), rz=yaw)          # apron under the sill
+        p.cube(WOOD, at(u + s * fp * 0.50, v, z + wh / 2 + 0.05),
+               (fp * 1.4, ww + 0.19, 0.09), rz=yaw)          # lintel
         for sv in (-1.0, 1.0):
-            p.cube(WOOD, at(u + s * fp * 0.45, v + sv * (ww / 2 + 0.04), z),
-                   (fp * 1.3, 0.08, wh + 0.16), rz=yaw)      # jambs
-        p.cube(WOOD, at(u + s * fp * 0.30, v, z), (fp, th, wh), rz=yaw)
+            p.cube(WOOD, at(u + s * fp * 0.45, v + sv * (ww / 2 + 0.045), z),
+                   (fp * 1.3, 0.09, wh + 0.16), rz=yaw)      # jambs
+        p.cube(WOOD, at(u + s * fp * 0.28, v, z), (fp, th, wh), rz=yaw)
     else:
         s = 1.0 if v > 0 else -1.0
-        p.cube(EMIT, at(u, v + s * 0.015, z), (ww, 0.05, wh), rz=yaw)
-        p.cube(WOOD, at(u, v + s * fp * 0.62, z - wh / 2 - 0.05),
-               (ww + 0.20, fp * 1.7, 0.09), rz=yaw)
-        p.cube(WOOD, at(u, v + s * fp * 0.50, z + wh / 2 + 0.045),
-               (ww + 0.15, fp * 1.4, 0.08), rz=yaw)
+        p.cube(EMIT, at(u, v + s * 0.012, z), (ww, 0.05, wh), rz=yaw)
+        p.cube(STONE, at(u, v + s * fp * 0.62, z - wh / 2 - 0.055),
+               (ww + 0.28, fp * 1.9, 0.10), rz=yaw)
+        p.cube(STONE, at(u, v + s * fp * 0.34, z - wh / 2 - 0.16),
+               (ww + 0.10, fp * 1.1, 0.13), rz=yaw)
+        p.cube(WOOD, at(u, v + s * fp * 0.50, z + wh / 2 + 0.05),
+               (ww + 0.19, fp * 1.4, 0.09), rz=yaw)
         for su in (-1.0, 1.0):
-            p.cube(WOOD, at(u + su * (ww / 2 + 0.04), v + s * fp * 0.45, z),
-                   (0.08, fp * 1.3, wh + 0.16), rz=yaw)
+            p.cube(WOOD, at(u + su * (ww / 2 + 0.045), v + s * fp * 0.45, z),
+                   (0.09, fp * 1.3, wh + 0.16), rz=yaw)
 
-        p.cube(WOOD, at(u, v + s * fp * 0.30, z), (th, fp, wh), rz=yaw)
+        p.cube(WOOD, at(u, v + s * fp * 0.28, z), (th, fp, wh), rz=yaw)
 
 
 def _shed(p, at, ground, fl, low, plinth, sk, yaw, cu, cv, sw, sd, seh, rise):
@@ -1332,18 +1452,26 @@ def _shed(p, at, ground, fl, low, plinth, sk, yaw, cu, cv, sw, sd, seh, rise):
     the shed drains away from the wall it leans on.  Get that sign wrong and the
     roof tips water into the house, which reads instantly and wrongly.
     """
-    p.cube(STONE, at(cu, cv, fl - plinth / 2), (sw * 1.08, sd * 1.08, plinth), rz=yaw)
+    p.cube(STONE, at(cu, cv, fl - plinth / 2),
+           (sw + 2 * PLINTH_OUT, sd + 2 * PLINTH_OUT, plinth), rz=yaw)
+    p.cube(STONE, at(cu, cv, fl - COURSE_H * 0.5 - 0.01),
+           (sw + 2 * COURSE_OUT, sd + 2 * COURSE_OUT, COURSE_H), rz=yaw)
     if sk > 0.03:
         p.cube(STONE, at(cu, cv, low + sk / 2), (sw * 0.93, sd * 0.93, sk), rz=yaw)
     p.cube(WALL, at(cu, cv, fl + seh / 2), (sw, sd, seh), rz=yaw)
     tilt = math.atan2(rise, sw)
-    p.cube(ROOF, at(cu - 0.03, cv, fl + seh + rise * 0.5 + 0.07),
-           (sd * 1.16, sw / max(0.35, math.cos(tilt)) + 0.30, 0.11),
+    # R26: the shed's slope oversails on the SAME absolute numbers as everything
+    # else — it is one slab, so the overhang is written into its length and its
+    # low edge is dropped by EAVE_U * tan(tilt) rather than left on the wall line.
+    p.cube(ROOF, at(cu - EAVE_U * 0.5, cv, fl + seh + rise * 0.5 + 0.07
+                    - EAVE_U * 0.5 * math.tan(tilt)),
+           (sd + 2 * EAVE_V, (sw + EAVE_U) / max(0.35, math.cos(tilt)) + 0.30, 0.11),
            rz=yaw + math.pi / 2, rx=-tilt)
-    # the fascia along its low edge: the same dark line the main eave board draws,
-    # and the thing that stops a thin slab reading as a card.
-    p.cube(WOOD, at(cu - sw * 0.5 - 0.10, cv, fl + seh - 0.04),
-           (0.10, sd * 1.16, 0.12), rz=yaw)
+    # the fascia at ITS dripline, hanging below the slab: the same dark line the
+    # main eave draws, and the thing that stops a thin slab reading as a card.
+    p.cube(WOOD, at(cu - sw * 0.5 - EAVE_U + 0.045, cv,
+                    fl + seh - EAVE_U * math.tan(tilt) - FASCIA_H * 0.42),
+           (0.09, sd + 2 * EAVE_V, FASCIA_H), rz=yaw)
 
 
 def impression_house(p, ht, fam, F, zg, fr, px, py, yaw, D, ch):
@@ -1397,24 +1525,53 @@ def impression_house(p, ht, fam, F, zg, fr, px, py, yaw, D, ch):
     sk = (fl - plinth) - low
 
     def mass(cu, cv, mw, md, meh, axis="v"):
-        """plinth + inset skirt + wall + eave board, for ONE rectangular mass.
+        """plinth + course + inset skirt + wall + a REAL eave, for one rect mass.
 
         Every mass in the family goes through here, so a wing is bedded, footed and
         eaved by the same construction as the house it hangs off — an addition that
         skips the plinth is the "detached slab" read with the roles swapped.
-        `axis` says which way this mass's ridge runs, because the eave overhang is
-        larger ACROSS the ridge than along it and swapping the two flattens the
-        eave shadow on exactly the wall the shadow is for.
+        `axis` says which way this mass's ridge runs, because the overhang is EAVE_U
+        across the ridge and EAVE_V at the verge, and swapping the two puts the deep
+        projection on exactly the wall that does not want it.
+
+        AN EAVE IS THREE THINGS AND r25 SHIPPED NONE OF THEM (R26).  A roof plane
+        that stops at the wall is a lid.  What a viewer reads as an eave is
+        (1) the roof oversailing the wall by a fixed distance, (2) a SOFFIT closing
+        the underside — without it the overhang is a hole you see the ground
+        through from any camera above the eave line — and (3) a FASCIA hanging
+        below the dripline, which is the dark horizontal that separates roof from
+        wall at 40 m where neither the shadow nor the tile texture survives.
+        Returns the mass's own eave half-extents so the roof above it can be sized
+        from the SAME numbers rather than from a second, drifting pair.
         """
-        p.cube(STONE, at(cu, cv, fl - plinth / 2), (mw * 1.07, md * 1.07, plinth), rz=yaw)
+        ou = EAVE_U if axis == "v" else EAVE_V
+        ov = EAVE_V if axis == "v" else EAVE_U
+        # the plinth: a body that steps out once, and a CAPPING COURSE that steps
+        # out again.  Both offsets absolute; the course is what draws the second
+        # shadow line, and the second line is what says "base" rather than "seam".
+        p.cube(STONE, at(cu, cv, fl - plinth / 2),
+               (mw + 2 * PLINTH_OUT, md + 2 * PLINTH_OUT, plinth), rz=yaw)
+        p.cube(STONE, at(cu, cv, fl - COURSE_H * 0.5 - 0.01),
+               (mw + 2 * COURSE_OUT, md + 2 * COURSE_OUT, COURSE_H), rz=yaw)
         if sk > 0.03:
             p.cube(STONE, at(cu, cv, low + sk / 2), (mw * 0.92, md * 0.92, sk), rz=yaw)
         p.cube(WALL, at(cu, cv, fl + meh / 2), (mw, md, meh), rz=yaw)
-        # the eave board: the dark line every real building has where its roof meets
-        # its wall, and the cheapest thing in this file that stops a wall reading as
-        # a decal.
-        ou, ov = (1.31, 1.18) if axis == "v" else (1.18, 1.31)
-        p.cube(WOOD, at(cu, cv, fl + meh + 0.05), (mw * ou, md * ov, 0.13), rz=yaw)
+        # the soffit: the closed underside of the overhang.  Thin, WOOD, and it
+        # spans the whole eave rectangle including the part over the wall (which is
+        # inside solid geometry and costs nothing to draw).
+        p.cube(WOOD, at(cu, cv, fl + meh + SOFFIT_Z),
+               (mw + 2 * ou, md + 2 * ov, 0.07), rz=yaw)
+        # the fascia: FOUR boards at the dripline, hanging DOWN past the soffit.
+        # Two of them (the ones across the ridge) carry the read; the verge pair
+        # closes the corner so the eave does not terminate in mid-air.
+        fz = fl + meh + SOFFIT_Z - FASCIA_H * 0.5 + 0.02
+        for su in (-1.0, 1.0):
+            p.cube(WOOD, at(cu + su * (mw * 0.5 + ou - 0.045), cv, fz),
+                   (0.09, md + 2 * ov, FASCIA_H), rz=yaw)
+        for sv in (-1.0, 1.0):
+            p.cube(WOOD, at(cu, cv + sv * (md * 0.5 + ov - 0.045), fz),
+                   (mw + 2 * ou, 0.09, FASCIA_H), rz=yaw)
+        return ou, ov
 
     def ridge_cap(cu, cv, length, zr, axis="v"):
         """The capping course along a ridge.
@@ -1428,20 +1585,22 @@ def impression_house(p, ht, fam, F, zg, fr, px, py, yaw, D, ch):
         p.cube(ROOF, at(cu, cv, zr - 0.045), sz, rz=yaw)
 
     # ---------------------------------------------------------------- the massing
-    mass(0.0, 0.0, w, d, eh)
+    ou0, ov0 = mass(0.0, 0.0, w, d, eh)
+    rw, rd = w + 2 * ou0, d + 2 * ov0            # THE roof plan — the eave's own
     zr = fl + max(rh, eh + 1.01)                 # THE main ridge, whatever the roof
     if kind == 3:
         # THE HIP.  No gable triangle anywhere in the outline: four slopes meeting a
         # short ridge, which is a trapezoid where every other house in the village
         # has a peak.  It is also the reason this kind carries a ridge-straddling
         # stack — there is no gable end to put a breast on.
-        rl = _hip_roof(p, ROOF, at(0.0, 0.0, fl + eh + 0.11), w * 1.26, d * 1.14,
-                       max(0.9, rh - eh - 0.11), d * 1.14 * D["hipf"], rz=yaw)
+        rl = _hip_roof(p, ROOF, at(0.0, 0.0, fl + eh + 0.11), rw, rd,
+                       max(0.9, rh - eh - 0.11), rd * D["hipf"], rz=yaw)
         ridge_cap(0.0, 0.0, rl + 0.18, zr)
     else:
-        p.prism(ROOF, at(0.0, 0.0, fl + eh + 0.11), w * 1.26, d * 1.14,
+        rl = 0.0
+        p.prism(ROOF, at(0.0, 0.0, fl + eh + 0.11), rw, rd,
                 max(0.9, rh - eh - 0.11), rz=yaw)
-        ridge_cap(0.0, 0.0, d * 1.16, zr)
+        ridge_cap(0.0, 0.0, rd, zr)
 
     if kind == 2:
         # THE L-PLAN.  A cross wing at a right angle on the back, flush with ONE
@@ -1454,10 +1613,10 @@ def impression_house(p, ht, fam, F, zg, fr, px, py, yaw, D, ch):
         ccu = -(w * 0.5 + cl * 0.5 - 0.10)       # overlaps the main wall: no seam
         ceh = eh * 0.88
         crh = min(rh * 0.86, zr - fl - 0.28)
-        mass(ccu, cvv, cl, cwd, ceh, axis="u")
-        p.prism(ROOF, at(ccu, cvv, fl + ceh + 0.11), cwd * 1.26, cl * 1.14,
+        wou, wov = mass(ccu, cvv, cl, cwd, ceh, axis="u")
+        p.prism(ROOF, at(ccu, cvv, fl + ceh + 0.11), cwd + 2 * wov, cl + 2 * wou,
                 max(0.75, crh - ceh - 0.11), rz=yaw + math.pi / 2)
-        ridge_cap(ccu, cvv, cl * 1.16, fl + max(crh, ceh + 0.86), axis="u")
+        ridge_cap(ccu, cvv, cl + 2 * wou, fl + max(crh, ceh + 0.86), axis="u")
         window(p, at, yaw, -(w * 0.5 + cl - 0.10) - 0.005, cvv, fl + ceh * 0.52, 0.30, 0.34, 'u')
 
     if D["shed_w"] > 0.01:
@@ -1509,54 +1668,165 @@ def impression_house(p, ht, fam, F, zg, fr, px, py, yaw, D, ch):
     #
     # So the emergent stack goes BROAD AND SHORT — the exposed block lands near 1 : 1
     # — and the gable end takes the broader of the two because a gable stack IS the
-    # thickness of the wall it rises out of.  Nothing else about the placement moves;
-    # the three clauses below still gate it.
+    # thickness of the wall it rises out of.
+    #
+    # ================= AND THE FIFTH ROUND IS A SCALE, AND A PLACE (R26) ==========
+    # The r25 stack was gate-green on all three clauses and the blind judge still
+    # filed it: "still oversized; the tower-house puts a stack at the apex of a hip
+    # roof — the least plausible position available."  Both halves are true and both
+    # are arithmetic, not taste:
+    #
+    # SCALE.  r25's exposed block is 0.69 x 0.44 u.  A house here is w ~ 2.2 u for a
+    # cottage a 1.45 u character walks into, so 1 u is about 3.2 m and that stack is
+    # 2.2 m ACROSS — a chimney the width of a doorway.  A two-flue masonry stack is
+    # 0.6 m, i.e. 0.19 u.  The visible volume above the ridge is roughly HALVED here
+    # (the gate prints it per house) and every course TAPERS, which is what a
+    # brick stack does and what an extruded post does not.  The gate prints the
+    # exposed volume and the aspect ratio per house, and the r25 figures for the
+    # same fourteen draws are in the round log beside them.
+    #
+    # PLACE.  `_hip_roof`'s ridge is `d * hipf` long, hipf drawing 0.30..0.56, so the
+    # ridge half-length runs 0.17 d .. 0.32 d — and r25 put the straddle at
+    # `min(d * 0.26, ...)`, which on any house with hipf < 0.52 lands the stack PAST
+    # THE END OF ITS OWN RIDGE, on the hip slope, climbing toward the apex.  The
+    # judge read the built object exactly.  The straddle is now CONTAINED IN THE
+    # RIDGE SEGMENT by construction and the containment is clause (iv): a house
+    # whose ridge is too short to hold a stack loses it, which is the same trade the
+    # other three clauses already make.
+    #
+    # AND THE BREAST COMES OUT OF THE ROOF (r25's own open item, verbatim: "a
+    # gable-end BREAST that stands on its own extended plinth outside the roof
+    # verge, which needs the plinth and the bedding ring to follow it").  It is
+    # ENGAGED with the gable wall by ENG and projects past it — past the verge
+    # dripline too, so it is lit on three faces instead of being a bump in a shaded
+    # gable — and it carries its own plinth, its own capping course and its own
+    # reach down to `low`.  `chim_out` is returned to build_emberbrook so the
+    # trodden ring grows to cover it; a breast standing on bare grass beside a
+    # bedded cottage is the decal read bed_in exists to prevent.
+    #
+    #   (i)   THE STACK IS FOOTED.  Breast: its plinth reaches below the ground under
+    #         it.  Straddle: footprint inside the house pad, as before.
+    #   (ii)  NO GAP TO SEE BACKGROUND THROUGH.  Breast: it overlaps the gable wall
+    #         by at least ENG_MIN.  Straddle: footprint inside the wall rectangle.
+    #   (iii) THE CAP CLEARS THE RIDGE by CUP at least.
+    #   (iv)  NEVER A HIP APEX: a straddle sits wholly within its own ridge segment.
+    #   (v)   BROAD AND SHORT: exposed height / widest exposed plan <= CHIM_AR.
+    #   (vi)  AND NOT A DOORWAY WIDE: the widest exposed course <= CHIM_W.  This is
+    #         the clause that would actually have FAILED r25 and (v) is not — r25's
+    #         stacks measure 0.45-0.91 on aspect, comfortably inside the ceiling,
+    #         because r25 had already solved "broad and short" BY HAND.  What it had
+    #         no way to hold was the SCALE: a median exposed course 0.685 u across,
+    #         which at this town's 1 u ~ 3.2 m is a 2.2 m chimney.  A ratchet on the
+    #         shape without a ratchet on the size is how an object gets fixed twice
+    #         and stays wrong.
     CIN = 0.03
+    ENG_MIN = 0.10                               # the least wall a breast may bite
+    CHIM_AR = 1.35                               # the aspect ceiling, above the ridge
+    CHIM_W = 0.46                                # and the WIDTH ceiling (r25: 0.685)
     breast = kind in (0, 1)
     if breast:
-        CUP, capj = 0.26, D["cap"] * 0.64
-        cw, cdp = 0.56 + 0.13 * s, 0.44
-        cwmax = cw + 0.26                        # the base course, which IS the wall
-        cu_, cv_ = 0.0, gs * (d * 0.5 - CIN - cdp * 0.5)
+        CUP, capj = 0.30, D["cap"] * 0.52
+        # three courses, each narrower than the one below: the base IS the wall, the
+        # middle climbs the gable, the top is the only part a camera ever sees.
+        cw, cdp = 0.34 + 0.06 * s, 0.34         # the exposed course
+        cwmax, cdmax = cw + 0.13, 0.56          # the base course, in the wall
+        eng = 0.16
+        cu_, cv_ = 0.0, gs * (d * 0.5 + cdmax * 0.5 - eng)
+        chim_out = cdmax - eng                  # how far it stands past the wall
     else:
-        CUP, capj = 0.34, D["cap"] * 0.72
-        cw, cdp = 0.44 + 0.11 * s, 0.46
-        cwmax = cw
+        CUP, capj = 0.32, D["cap"] * 0.58
+        cw, cdp = 0.32 + 0.06 * s, 0.34
+        cwmax, cdmax = cw + 0.08, cdp + 0.08
+        eng = 0.0
         cu_ = 0.0
-        cv_ = gs * min(d * 0.26, d * 0.5 - CIN - cdp * 0.5)
-    cz0 = fl - plinth                            # buried in the plinth: no free base
+        # ON THE RIDGE, NOT ON THE SLOPE.  `rl` is the hip's own ridge length (0 for
+        # a gable prism, whose ridge runs the full roof depth `rd`).
+        seg = (rl if kind == 3 else rd) * 0.5 - cdmax * 0.5 - 0.06
+        cv_ = gs * max(0.0, min(seg, d * 0.20))
+        chim_out = 0.0
+    cz0 = (min(ch) - 0.40) if breast else (fl - plinth)   # no free base, either way
     cz1 = zr + CUP + capj
     pad_u, pad_v = w * 0.535, d * 0.535
-    m_pad = min(pad_u - (abs(cu_) + cwmax * 0.5), pad_v - (abs(cv_) + cdp * 0.5))
-    m_wall = min(w * 0.5 - (abs(cu_) + cwmax * 0.5), d * 0.5 - (abs(cv_) + cdp * 0.5))
+    if breast:
+        # its own ground, not the house's floor: the breast stands outside the wall.
+        g_ground = ground(cu_, cv_)
+        m_pad = g_ground - 0.15 - cz0            # >= 0 means the plinth reaches down
+        m_wall = (d * 0.5 + cdmax * 0.5 - abs(cv_)) - ENG_MIN
+        m_seg = 1e9
+    else:
+        m_pad = min(pad_u - (abs(cu_) + cwmax * 0.5), pad_v - (abs(cv_) + cdmax * 0.5))
+        m_wall = min(w * 0.5 - (abs(cu_) + cwmax * 0.5),
+                     d * 0.5 - (abs(cv_) + cdmax * 0.5))
+        m_seg = (rl if kind == 3 else rd) * 0.5 - (abs(cv_) + cdmax * 0.5)
+    ar = (cz1 - zr) / max(cw, cdp)
     g_i, g_ii, g_iii = m_pad >= -1e-9, m_wall >= -1e-9, cz1 >= zr + CUP - 1e-9
-    CHIM_GATE.append((g_i, g_ii, g_iii, round(m_pad, 3), round(m_wall, 3),
-                      round(cz1 - zr, 3), "breast" if breast else "straddle"))
-    if g_i and g_ii and g_iii:
+    g_iv, g_v = m_seg >= -1e-9, ar <= CHIM_AR + 1e-9
+    g_vi = max(cw, cdp) <= CHIM_W + 1e-9
+    CHIM_GATE.append((g_i, g_ii, g_iii, g_iv, g_v, g_vi,
+                      round(m_pad, 3), round(m_wall, 3), round(m_seg, 3),
+                      round(cz1 - zr, 3), round(ar, 3),
+                      round((cz1 - zr) * cw * cdp, 4), round(max(cw, cdp), 3),
+                      "breast" if breast else "straddle"))
+    if g_i and g_ii and g_iii and g_iv and g_v and g_vi:
         if breast:
-            zA = fl + eh * 0.62
-            p.cube(STONE, at(cu_, cv_, (cz0 + zA) / 2), (cwmax, cdp, zA - cz0), rz=yaw)
-            p.cube(STONE, at(cu_, cv_, (zA + zr + 0.05) / 2),
-                   (cw + 0.14, cdp * 0.94, zr + 0.05 - zA), rz=yaw)
-            p.cube(STONE, at(cu_, cv_, (zr + 0.05 + cz1) / 2),
-                   (cw, cdp * 0.84, cz1 - zr - 0.05), rz=yaw)
+            # ITS OWN PLINTH AND ITS OWN COURSE, matching the wall's beside it — the
+            # two horizontals run straight through the breast instead of dying into
+            # it, which is what makes the breast part of the building.
+            p.cube(STONE, at(cu_, cv_, (cz0 + fl - plinth) / 2),
+                   (cwmax * 0.92, cdmax * 0.92, fl - plinth - cz0), rz=yaw)
+            p.cube(STONE, at(cu_, cv_, fl - plinth / 2),
+                   (cwmax + 2 * PLINTH_OUT, cdmax + 2 * PLINTH_OUT, plinth), rz=yaw)
+            p.cube(STONE, at(cu_, cv_, fl - COURSE_H * 0.5 - 0.01),
+                   (cwmax + 2 * COURSE_OUT, cdmax + 2 * COURSE_OUT, COURSE_H), rz=yaw)
+            zA = fl + eh * 0.66
+            p.cube(STONE, at(cu_, cv_, (fl + zA) / 2), (cwmax, cdmax, zA - fl), rz=yaw)
+            p.cube(STONE, at(cu_, cv_ - gs * 0.03, (zA + zr + 0.05) / 2),
+                   (cw + 0.09, cdmax * 0.82, zr + 0.05 - zA), rz=yaw)
+            p.cube(STONE, at(cu_, cv_ - gs * 0.07, (zr + 0.05 + cz1) / 2),
+                   (cw, cdp, cz1 - zr - 0.05), rz=yaw)
+            cv_ -= gs * 0.07                     # the cap sits over the TOP course
         else:
-            p.cube(STONE, at(cu_, cv_, (cz0 + cz1) / 2), (cw, cdp, cz1 - cz0), rz=yaw)
+            # the straddle tapers once, at the ridge, for the same reason.
+            p.cube(STONE, at(cu_, cv_, (cz0 + zr + 0.05) / 2),
+                   (cwmax, cdmax, zr + 0.05 - cz0), rz=yaw)
+            p.cube(STONE, at(cu_, cv_, (zr + 0.05 + cz1) / 2),
+                   (cw, cdp, cz1 - zr - 0.05), rz=yaw)
         # A COLLAR IS A JOINT, NOT A SHELF (R12, paid for by looking): the first R12
         # pass put 1.44x plates on a narrow shaft high in the frame and the stack
         # became a totem of hovering slabs.  BROADENING THE SHAFT BRINGS THAT BACK
         # AT 1.16x — measured in the same frame: with only ~0.25 u of shaft showing
         # between a 0.13 flashing and a 0.13 cap of nearly the shaft's own width, the
         # two plates read as a pair of hovering slabs again.  The flashing is
-        # therefore a TIGHT SKIRT that hugs the roof (1.07x, 0.09 thick) and only the
-        # CAP oversails.  A joint is not supposed to be visible; a cap is.
-        p.cube(STONE, at(cu_, cv_, zr + 0.015), (cw * 1.07, cdp * 1.06, 0.09), rz=yaw)
-        p.cube(STONE, at(cu_, cv_, cz1 + 0.06), (cw * 1.22, cdp * 1.18, 0.13), rz=yaw)
+        # therefore a TIGHT SKIRT that hugs the roof (1.06x, 0.07 thick) and only the
+        # CAP oversails.  A joint is not supposed to be visible; a cap is.  Both
+        # shrank with the shaft: a cap sized off the OLD shaft would put r12's
+        # hovering slab back on a stack half the width.
+        p.cube(STONE, at(cu_, cv_, zr + 0.015), (cw * 1.06, cdp * 1.05, 0.07), rz=yaw)
+        p.cube(STONE, at(cu_, cv_, cz1 + 0.045), (cw * 1.20, cdp * 1.16, 0.09), rz=yaw)
+    else:
+        chim_out = 0.0
 
     # ------------------------------------------------- door, step, hood, windows
     # The door is the scale cue; the gable window is what says "there is an
     # upstairs", which is most of the difference between a tall box and a house.
-    p.cube(WOOD, at(w / 2 + 0.02, d * 0.17, fl + 0.54), (0.11, 0.42, 1.08), rz=yaw)
+    #
+    # R26 — AND THE DOOR WAS THE FLAT DARK RECTANGLE THE JUDGE MEANT.  Its charge
+    # was "openings are flat dark rectangles with no frame, reveal or sill", and
+    # `window()` has carried a sill, a lintel and two jambs since R12 — but THE DOOR
+    # HAD NOTHING, one 0.11-thick WOOD slab standing 0.02 proud of the wall.  The
+    # loudest opening on the building, at the one place the eye goes for scale, was
+    # the one nobody had detailed.  Same joinery as the window and for the same
+    # reason: there is no boolean here, so the recess is built by standing the
+    # surround PROUD of a leaf that sits INSET.
+    dv, dw_, dh_ = d * 0.17, 0.44, 1.10
+    # the leaf sits a hair proud (it must win the depth test against the wall it is
+    # in) and the STONE surround stands 0.10 proud of THAT, which is the reveal.
+    p.cube(WOOD, at(w / 2 - 0.04, dv, fl + 0.54), (0.10, dw_, dh_), rz=yaw)
+    p.cube(STONE, at(w / 2 + 0.055, dv, fl + 0.54 + dh_ / 2 + 0.06),
+           (0.16, dw_ + 0.30, 0.13), rz=yaw)                                  # lintel
+    for sv3 in (-1.0, 1.0):
+        p.cube(STONE, at(w / 2 + 0.045, dv + sv3 * (dw_ / 2 + 0.07), fl + 0.60),
+               (0.14, 0.13, dh_ + 0.12), rz=yaw)                              # jambs
     # THE DOORSTEP.  The threshold sits at `fl`, which is 0.70 of the station's own
     # corner spread above its low corner — so on any real slope the door opens onto
     # air, and "the building rests on the terrain" is being said at the one place a
@@ -1612,7 +1882,12 @@ def impression_house(p, ht, fam, F, zg, fr, px, py, yaw, D, ch):
     for f in p.bm.faces:
         if f not in before:
             f[ht] = float(fam)
-    return cz1 - min(ch)
+    # ...and how far the chimney breast stands past the gable wall, so the trodden
+    # ring can be grown to cover it.  A breast on its own plinth standing on BARE
+    # GRASS beside a bedded cottage is exactly the decal read bed_in exists to
+    # prevent, with the roles swapped — which is the same trap the lean-to and the
+    # L-wing each paid for before it.
+    return cz1 - min(ch), chim_out, gs
 
 
 def build_emberbrook(col, F, zg, fr):
@@ -1629,6 +1904,7 @@ def build_emberbrook(col, F, zg, fr):
     cx, cy = L.VILLAGE
     h0 = F.village_h
     ring = []
+    tints = []                 # the per-house (wall, roof) COLOR_0 factors — R26
     road_clear = 1e9
     house_slope = 0.0
     for i in range(14):
@@ -1687,9 +1963,9 @@ def build_emberbrook(col, F, zg, fr):
                     # for a pair of unusually large houses, which is the case the
                     # flat number could not see: an L-plan's wing reaches ~1.1 w from
                     # its own centre, and two of those at 3.55 interpenetrate.
-                    if not all(math.hypot(tx - ox, ty - oy)
-                               >= max(3.55, 0.78 * (radmax + orad))
-                               for ox, oy, orad, _k, _f in ring):
+                    if not all(math.hypot(tx - o_[0], ty - o_[1])
+                               >= max(3.55, 0.78 * (radmax + o_[2]))
+                               for o_ in ring):
                         continue
                     if slope_cap < 1e8:
                         # a NOMINAL footprint, not this house's own — the massing is
@@ -1727,18 +2003,59 @@ def build_emberbrook(col, F, zg, fr):
             return cand % n
         kind = distinct((i * 3) % HOUSE_KINDS, HOUSE_KINDS, lambda o: o[3])
         fam = 1 + distinct((i * 3 + i // NFAM) % NFAM, NFAM, lambda o: o[4] - 1)
+        # R26 — THE ROOF FAMILY STOPS BEING THE WALL FAMILY.  The blind judge called
+        # per-instance material variation "the cheapest biggest win" left, and the
+        # reason r25's five families did not deliver it is that ONE index chose both
+        # lists: a house with the pale limewash always had the palette slate, a house
+        # with the earth daub always had the dark wet slate, so fourteen buildings
+        # carried FIVE combinations out of a possible twenty-five and the roofs
+        # covaried with the walls instead of varying against them.  The roof now runs
+        # its own stride through its own neighbour-difference pass — same rule, second
+        # axis — and on top of both a per-house JITTER breaks the last tie, so two
+        # houses that do land on the same family are still not the same paint.
+        rfam = 1 + distinct((i * 2 + 1) % NFAM, NFAM, lambda o: o[5] - 1)
+        jr = random.Random(20260806 + i)
+        # SYMMETRIC, so the family means the r14 palette solve was measured against
+        # do not drift (the realized means are printed below and recorded in
+        # valley_build.json — a claim about a mean gets measured, not asserted).
+        # AND CLAMPED AT 1.12: COLOR_0 is pal_lin x class gain x family x jitter and
+        # vec_gain CLIPS at 1.0; the shipped plaster measures 0.81 on red, so a wall
+        # factor past ~1.17 flattens its own brightest faces into a clipped patch and
+        # the family stops being a colour.  1.12 is that headroom, not a preference.
+        wv = 1.0 + jr.uniform(-0.055, 0.055)
+        wh_ = jr.uniform(-0.030, 0.030)          # warm/cool, opposed on R and B
+        rv = 1.0 + jr.uniform(-0.050, 0.050)
+        rh_ = jr.uniform(-0.026, 0.026)
+        wt = WALL_TINTS[fam - 1]
+        rt = ROOF_TINTS[rfam - 1]
+        wall_rgb = (min(1.12, wt[0] * (wv + wh_)), min(1.12, wt[1] * wv),
+                    min(1.12, wt[2] * (wv - wh_)))
+        roof_rgb = (min(1.12, rt[0] * (rv + rh_)), min(1.12, rt[1] * rv),
+                    min(1.12, rt[2] * (rv - rh_)))
+        tints.append((wall_rgb, roof_rgb))
         dims = house_dims(shape, kind)
         ch = house_ground(F, zg, fr, hx, hy, dims["w"], dims["d"], fa)
+        # THE HOUSE IS BUILT BEFORE IT IS BEDDED, which is the reverse of r25 and is
+        # not cosmetic: the chimney breast now stands OUTSIDE the gable wall on its
+        # own plinth, and only the house itself knows whether its gate passed and
+        # which end (`gs`) it went on.  Bedding a footprint the builder has not
+        # returned yet is how the lean-to and the L-wing each ended up standing on
+        # bare grass in an earlier round.
+        # `hkey` is the HOUSE index, not a family index: apply_house_tints reads a
+        # per-house table now, because a per-family one cannot carry a jitter.
+        hkey = i + 1
+        _rz, chim_out, gs_ = impression_house(p, ht, hkey, F, zg, fr, hx, hy, fa,
+                                              dims, ch)
         # ITS OWN STREAM, deliberately: drawing from `rng` here would re-scatter the
         # whole town (every later house's angle, radius and dims move), and R9's
         # placement is ratified art. Bedding must be able to land without moving it.
         # The ring is centred on the WHOLE massing (additions live on -u), not on the
         # main mass, so a wing is bedded by the same trodden earth as the cottage.
         bw = dims["ub"] + dims["w"] * 0.5
-        bed_in(p, ht, fam, F, zg, fr, hx, hy, bw, dims["d"],
-               (dims["w"] * 0.5 - dims["ub"]) * 0.5, fa, random.Random(20260804 + i))
-        impression_house(p, ht, fam, F, zg, fr, hx, hy, fa, dims, ch)
-        ring.append((hx, hy, dims["rad"], kind, fam))
+        bed_in(p, ht, hkey, F, zg, fr, hx, hy, bw, dims["d"] + chim_out,
+               (dims["w"] * 0.5 - dims["ub"]) * 0.5, fa,
+               random.Random(20260804 + i), cv=gs_ * chim_out * 0.5)
+        ring.append((hx, hy, dims["rad"], kind, fam, rfam))
         house_slope = max(house_slope, max(ch) - min(ch))
     # ---- the Heartlight: plinth + a standing light, the town's whole identity ----
     for i in range(8):
@@ -1796,7 +2113,7 @@ def build_emberbrook(col, F, zg, fr):
     # about the build gets measured on the build.
     STATS["emberbrook_kinds"] = {KIND_NAME[k]: sum(1 for o in ring if o[3] == k)
                                  for k in range(HOUSE_KINDS)}
-    same_k, same_f = 1e9, 1e9
+    same_k, same_f, same_r, same_pair = 1e9, 1e9, 1e9, 1e9
     for j, o in enumerate(ring):
         for o2 in ring[j + 1:]:
             dd = math.hypot(o[0] - o2[0], o[1] - o2[1])
@@ -1804,11 +2121,34 @@ def build_emberbrook(col, F, zg, fr):
                 same_k = min(same_k, dd)
             if o[4] == o2[4]:
                 same_f = min(same_f, dd)
+            if o[5] == o2[5]:
+                same_r = min(same_r, dd)
+            if o[4] == o2[4] and o[5] == o2[5]:
+                same_pair = min(same_pair, dd)
     STATS["emberbrook_same_kind_min_u"] = round(same_k, 2) if same_k < 1e8 else None
     STATS["emberbrook_same_family_min_u"] = round(same_f, 2) if same_f < 1e8 else None
-    print("  emberbrook family: %s  closest same-massing %.2fu, same-tint %.2fu "
-          "(rule: none inside %.1fu)"
-          % (STATS["emberbrook_kinds"], same_k, same_f, KIN_R))
+    STATS["emberbrook_same_roof_min_u"] = round(same_r, 2) if same_r < 1e8 else None
+    # THE NUMBER THE DECOUPLING BUYS, and it is the one r25 could not have: how far
+    # apart the closest two houses are that share BOTH families.  In r25 one index
+    # chose both lists, so every same-tint pair was also a same-roof pair and this
+    # number was identical to same_f.
+    STATS["emberbrook_same_wall_and_roof_min_u"] = (round(same_pair, 2)
+                                                   if same_pair < 1e8 else None)
+    STATS["emberbrook_roof_families"] = {r: sum(1 for o in ring if o[5] == r)
+                                         for r in range(1, NFAM + 1)}
+    # ...and the realized per-channel MEAN of the shipped tints, which is the term
+    # the r14 palette solve was measured with averaged into it: move the family mean
+    # and ROOF_HEX silently stops meaning what it says.  Asserted nowhere, measured
+    # here, and carried in valley_build.json so a later round can see it drift.
+    for nm, ix in (("wall", 0), ("roof", 1)):
+        m = [sum(t[ix][c] for t in tints) / len(tints) for c in range(3)]
+        STATS["emberbrook_%s_tint_mean" % nm] = [round(v, 4) for v in m]
+    print("  emberbrook family: %s  closest same-massing %.2fu, same-wall %.2fu, "
+          "same-roof %.2fu, same-BOTH %.2fu (rule: none inside %.1fu)"
+          % (STATS["emberbrook_kinds"], same_k, same_f, same_r, same_pair, KIN_R))
+    print("  tint means wall %s roof %s (r25 roof family mean 0.912/0.906/0.896)"
+          % (STATS["emberbrook_wall_tint_mean"], STATS["emberbrook_roof_tint_mean"]))
+    HOUSE_TINTS["emberbrook"] = tints
     # the number that must never silently regress: the CLOSEST house centre to
     # the road centreline.  A house on the road is invisible in every gate this
     # repo owns and obvious in one frame — so it gets a number in valley_build.json.
@@ -3751,42 +4091,70 @@ def main():
     # from the class palette and would erase a tint applied before it.
     for key in ("emberbrook", "dellhollow"):
         if key in made:
-            STATS[key + "_tint_families"] = apply_house_tints(made[key], made[key + "_cls"])
+            STATS[key + "_tint_families"] = apply_house_tints(
+                made[key], made[key + "_cls"], HOUSE_TINTS.get(key))
     # ...and the LAST write to the water sheets', for the same reason.
     STATS["water_bathymetry"] = water_bathymetry(made, F, zg, fr)
 
-    # ---- THE PER-HOUSE CHIMNEY GATE (R13) ----------------------------------
+    # ---- THE PER-HOUSE CHIMNEY GATE (R13, extended R26) ---------------------
     # A GATE THAT MEASURES ITS OWN DRAWING CANNOT MEASURE ITS OWN BUILD (CLAUDE.md,
-    # _court_probe): this proves the three clauses hold for the parameters that were
+    # _court_probe): this proves the clauses hold for the parameters that were
     # handed to p.cube, which is necessary and not sufficient.  The build is
-    # confirmed by photographing it — see scratchpad/r13b.
+    # confirmed by photographing it.
+    #
+    # R26 ADDS THE TWO CLAUSES THE r25 GATE COULD NOT HAVE FAILED.  It was 14/14
+    # green on a stack the blind judge called oversized and standing at a hip apex,
+    # because nothing it measured was a SIZE and nothing it measured was a PLACE
+    # RELATIVE TO THE RIDGE IT EMERGES FROM.  (iv) contains a straddle inside its own
+    # ridge segment — the hip's `_hip_roof` ridge is only d * hipf long, and r25 put
+    # the stack at min(d * 0.26, ...), which is past that end for hipf < 0.52.
+    # (v) is the aspect ratio the round before this one solved by hand and then had
+    # no way to hold: exposed height over widest exposed plan.
     if CHIM_GATE:
-        ok = sum(1 for r in CHIM_GATE if r[0] and r[1] and r[2])
-        pm = [r[3] for r in CHIM_GATE]
-        wr = [r[4] for r in CHIM_GATE]
-        rc = [r[5] for r in CHIM_GATE]
+        NC = 6                                     # clauses
+        ok = sum(1 for r in CHIM_GATE if all(r[:NC]))
+        fm = [r[6] for r in CHIM_GATE]
+        wr = [r[7] for r in CHIM_GATE]
+        sg = [r[8] for r in CHIM_GATE if r[8] < 1e8]
+        rc = [r[9] for r in CHIM_GATE]
+        ars = [r[10] for r in CHIM_GATE]
+        vol = [r[11] for r in CHIM_GATE]
+        wid = [r[12] for r in CHIM_GATE]
         kinds_c = {}
         for r in CHIM_GATE:
-            kinds_c[r[6]] = kinds_c.get(r[6], 0) + 1
-        print("CHIMNEY GATE: %d/%d houses carry a stack "
-              "(i footprint-in-pad %d, ii inside-wall-rect %d, iii cap-above-ridge %d)  %s"
-              % (ok, len(CHIM_GATE), sum(1 for r in CHIM_GATE if r[0]),
-                 sum(1 for r in CHIM_GATE if r[1]), sum(1 for r in CHIM_GATE if r[2]),
-                 kinds_c))
-        print("  pad margin   min %+.3f  median %+.3f  max %+.3f u" %
-              (min(pm), float(np.median(pm)), max(pm)))
-        print("  wall recess  min %+.3f  median %+.3f  max %+.3f u  (+ve = behind the face)" %
+            kinds_c[r[13]] = kinds_c.get(r[13], 0) + 1
+        print("CHIMNEY GATE: %d/%d houses carry a stack  %s" % (ok, len(CHIM_GATE), kinds_c))
+        print("  (i) footed %d  (ii) no-gap %d  (iii) cap-above-ridge %d  "
+              "(iv) on-the-ridge %d  (v) broad-and-short %d  (vi) not-a-doorway-wide %d"
+              % tuple(sum(1 for r in CHIM_GATE if r[c]) for c in range(NC)))
+        print("  foot/pad     min %+.3f  median %+.3f  max %+.3f u" %
+              (min(fm), float(np.median(fm)), max(fm)))
+        print("  wall bite    min %+.3f  median %+.3f  max %+.3f u  (+ve = engaged)" %
               (min(wr), float(np.median(wr)), max(wr)))
+        if sg:
+            print("  ridge seg    min %+.3f  median %+.3f  max %+.3f u  (straddles only)" %
+                  (min(sg), float(np.median(sg)), max(sg)))
         print("  ridge clear  min %+.3f  median %+.3f  max %+.3f u" %
               (min(rc), float(np.median(rc)), max(rc)))
+        print("  aspect h/w   min %.3f  median %.3f  max %.3f   (ceiling 1.35; r25 max 2.5)" %
+              (min(ars), float(np.median(ars)), max(ars)))
+        print("  exposed vol  min %.4f  median %.4f  max %.4f u3  (r25 median 0.1181)" %
+              (min(vol), float(np.median(vol)), max(vol)))
+        print("  exposed wide min %.3f  median %.3f  max %.3f u   (ceiling %.2f; "
+              "r25 median 0.685)" % (min(wid), float(np.median(wid)), max(wid), 0.46))
         for i, r in enumerate(CHIM_GATE):
-            print("    house %2d  %s%s%s  pad %+.3f  wall %+.3f  ridge %+.3f  %s"
-                  % (i, "i" if r[0] else "-", "i" if r[1] else "-", "i" if r[2] else "-",
-                     r[3], r[4], r[5], r[6]))
+            print("    house %2d  %s  foot %+.3f  wall %+.3f  seg %+.3f  ridge %+.3f "
+                  " ar %.2f  w %.3f  vol %.4f  %s"
+                  % (i, "".join("i" if r[c] else "-" for c in range(NC)),
+                     r[6], r[7], min(r[8], 9.999), r[9], r[10], r[12], r[11], r[13]))
         STATS["chimneys"] = dict(built=ok, houses=len(CHIM_GATE), placement=kinds_c,
-                                 pad_margin_min=round(min(pm), 3),
-                                 wall_recess_min=round(min(wr), 3),
-                                 ridge_clear_min=round(min(rc), 3))
+                                 foot_margin_min=round(min(fm), 3),
+                                 wall_bite_min=round(min(wr), 3),
+                                 ridge_seg_min=round(min(sg), 3) if sg else None,
+                                 ridge_clear_min=round(min(rc), 3),
+                                 aspect_max=round(max(ars), 3),
+                                 exposed_w_median=round(float(np.median(wid)), 3),
+                                 exposed_vol_median=round(float(np.median(vol)), 4))
     for key in PROPKEYS:
         ob = made[key]
         if ob.data.materials:

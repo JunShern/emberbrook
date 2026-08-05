@@ -1,5 +1,5 @@
 {
- "build_s": 27.58,
+ "build_s": 19.15,
  "bushes": {
   "cards": 741,
   "core_tris": 11265,
@@ -28,15 +28,19 @@
   "trunks": 8
  },
  "chimneys": {
+  "aspect_max": 1.179,
   "built": 14,
+  "exposed_vol_median": 0.0547,
+  "exposed_w_median": 0.389,
+  "foot_margin_min": 0.239,
   "houses": 14,
-  "pad_margin_min": 0.083,
   "placement": {
    "breast": 7,
    "straddle": 7
   },
-  "ridge_clear_min": 0.312,
-  "wall_recess_min": 0.03
+  "ridge_clear_min": 0.32,
+  "ridge_seg_min": 0.06,
+  "wall_bite_min": 0.06
  },
  "contact_shadow": {
   "base": 0.44,
@@ -70,12 +74,31 @@
   "lplan": 3
  },
  "emberbrook_road_clear_u": 3.67,
+ "emberbrook_roof_families": {
+  "1": 3,
+  "2": 3,
+  "3": 3,
+  "4": 3,
+  "5": 2
+ },
+ "emberbrook_roof_tint_mean": [
+  0.8879,
+  0.8993,
+  0.8984
+ ],
  "emberbrook_same_family_min_u": 8.11,
  "emberbrook_same_kind_min_u": 7.35,
- "emberbrook_tint_families": 5,
+ "emberbrook_same_roof_min_u": 9.86,
+ "emberbrook_same_wall_and_roof_min_u": null,
+ "emberbrook_tint_families": 14,
+ "emberbrook_wall_tint_mean": [
+  0.8929,
+  0.8705,
+  0.8246
+ ],
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.32,
+ "field_s": 0.23,
  "h_range": [
   -6.18,
   50.9
@@ -167,7 +190,7 @@
   "verts": 27077
  },
  "step": 1.6,
- "terrain_s": 0.34,
+ "terrain_s": 0.19,
  "tile": [
   280.0,
   200.0
@@ -190,9 +213,9 @@
   ]
  ],
  "tributary_falls": 26,
- "tris": 370683,
+ "tris": 373971,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 5.96,
+ "veg_s": 3.85,
  "vista_crest_stations": 264,
  "water_bathymetry": {
   "dhfalls": {
@@ -276,5 +299,5 @@
   "road": 1.59,
   "water": 6.34
  },
- "zone_s": 0.114
+ "zone_s": 0.068
 }

@@ -2533,6 +2533,192 @@ regression view — village, pads, water unchanged).
   * The 20-face clump silhouette (f4c's carried item) is untouched here: no COLOR_0
     treatment reaches an outline.
 
+## ROUND 26 (r26) — THE EAVE, AND A GATE THAT COULD NOT FAIL
+
+**BET 1, second pass, driven by the blind verdict on r25.** The judge found the
+before/after pair unaided and ranked the new family clearly better — footprint variety,
+the porch canopy called "the single best detail", doorsteps read as modelled stone. What
+it kept is the docket this round answered, in its own words.
+
+### "NO EAVE OVERHANG ANYWHERE — WHICH IS WHY THE HOUSES READ AS BLOCKOUT REGARDLESS OF TEXTURE"
+
+Its prescription: *"a 0.25-0.4 m eave overhang plus a plinth course at the wall base is what
+makes a box become a building; without it no amount of texture will help."*
+
+r25 **did** have a roof plan of `w * 1.26` x `d * 1.14` — 0.26-0.34 u across the ridge, but
+only **0.10-0.17 at the verge**, and NOTHING HUNG DOWN AT THE DRIPLINE. Its "eave board" was
+`w * 1.31`, i.e. **WIDER than the roof above it**, so the roof edge landed ON TOP of the
+board and the assembly read as a string course sitting on the wall rather than as a roof
+oversailing it. The judge saw exactly what was built.
+
+**AN EAVE IS THREE THINGS AND r25 SHIPPED NONE OF THEM.** (1) the roof oversailing by a
+fixed distance, (2) a SOFFIT closing the underside — without it the overhang is a hole you
+see the ground through from any camera above the eave line — and (3) a FASCIA hanging below
+the dripline, which is the dark horizontal that separates roof from wall at 40 m where
+neither the shadow nor the tile texture survives. All three now, on ABSOLUTE numbers
+(`EAVE_U` 0.34, `EAVE_V` 0.27, `FASCIA_H` 0.19, `SOFFIT_Z` 0.07) rather than multiples of a
+jittered wall — R11's rule, which the gable window had already broken one line below where
+it was written down. `mass()` RETURNS its own eave half-extents and every roof in the family
+is sized from them, so the roof plan and the eave cannot drift apart again.
+
+The plinth is a COURSE: the wall steps out `PLINTH_OUT` 0.055 and the capping course steps
+out again at `COURSE_OUT` 0.105, so the base draws TWO horizontal shadow lines where r25's
+`1.07 x w` (0.07-0.09 u proud, and a fraction of a jittered dimension) drew none.
+
+### THE CHIMNEY, ROUND FIVE — AND THE GATE THAT WAS 14/14 GREEN ON THE DEFECT
+
+Blind, on r25: *"still oversized; the tower-house puts a stack at the apex of a hip roof —
+the least plausible position available."* Both halves are arithmetic.
+
+**PLACE.** `_hip_roof`'s ridge is `d * hipf` long and `hipf` draws 0.30..0.56, so the ridge
+half-length runs 0.17 d .. 0.32 d — and r25 put the straddle at `min(d * 0.26, ...)`, which
+on **any house with hipf < 0.52 lands the stack PAST THE END OF ITS OWN RIDGE**, on the hip
+slope, climbing toward the apex. The judge read the built object exactly. Containment in the
+ridge segment is now clause **(iv)**.
+
+**SCALE.** A house here is w ~ 2.2 u for a cottage a 1.45 u character walks into, so 1 u is
+about 3.2 m and r25's 0.685 u exposed course is a **2.2 m chimney** — the width of a doorway.
+A two-flue masonry stack is 0.6 m, i.e. 0.19 u. Measured on the same fourteen draws:
+
+| exposed stack, above the ridge | r25 | r26 |
+|---|---|---|
+| widest course (median) | 0.685 u | **0.389 u** |
+| visible volume (median) | 0.1181 u3 | **0.0547 u3** |
+| aspect h/w (median) | 0.616 | 1.018 |
+
+**AND THIS IS THE ROUND'S LESSON, WHICH IS NOT R13'S AND NOT R25'S.** R13: a gate that
+measures its own drawing cannot measure its own build. R25: a fix aimed at the part of an
+object the camera cannot see is not a fix. This one: **A GATE THAT MEASURES EVERY PROPERTY
+EXCEPT THE ONE THAT IS WRONG IS A GREEN LIGHT ON THE DEFECT.** r25's three clauses —
+footprint in the pad, footprint in the wall rect, cap above the ridge — were all true of a
+2.2 m chimney standing on a hip slope, and all three printed 14/14 while a blind judge was
+reading the object as implausible. Adding (iv) and (v) was not enough either: **r25's stacks
+measure 0.45-0.91 on aspect and would have PASSED (v)**, because r25 had already solved
+"broad and short" by hand. The clause that would actually have failed r25 is **(vi), a WIDTH
+ceiling** — and it only exists because the r25/r26 numbers were computed side by side before
+the clause was written. A ratchet on the shape without a ratchet on the size is how an object
+gets fixed twice and stays wrong.
+
+The breast also came out of the roof, which was r25's own open item: it stands OUTSIDE the
+gable wall, engaged by 0.16, projecting 0.40 — past the 0.27 verge dripline — on its own
+plinth and capping course, and `impression_house` RETURNS that projection so `bed_in` grows
+the trodden ring to cover it. A breast on bare grass beside a bedded cottage is the decal
+read bed_in exists to prevent, with the roles swapped. Gate **14/14 on all six clauses**,
+7 breast + 7 straddle.
+
+### PER-INSTANCE VARIATION: THE ASK WAS NOT FOR MORE VALUES
+
+The judge called this "the cheapest biggest win" and asked for "3-4 roof value variants".
+**r25 already had five**, spanning 1.51x in family luminance and — measured on the shipped
+GLB's own COLOR_0 x texture x factor — **2.05x in effective albedo**. Reading the ask as
+"add values" would have been the r14 mistake again.
+
+What was actually missing: **ONE index chose the roof list AND the wall list.** A house with
+the pale limewash always had the palette slate; a house with the earth daub always had the
+dark wet slate. Fourteen buildings carried FIVE combinations out of a possible twenty-five,
+and five roofs that always arrive with the same five walls read as one relationship, not five.
+The roof now runs its own stride through its own neighbour-difference pass, and a per-house
+jitter (+-5.5% value, +-3% warm/cool, clamped at 1.12) breaks the last tie.
+
+| | r25 | r26 |
+|---|---|---|
+| closest same-massing | 7.35 u | 7.35 u |
+| closest same WALL family | 8.11 u | 8.11 u |
+| closest same ROOF family | = same-wall | **9.86 u** |
+| closest sharing BOTH | = same-wall (8.11 u) | **none in the town** |
+| distinct roof COLOR_0 values | 168 | 192 |
+
+`ROOF_TINTS` was widened 1.35x about its own per-channel mean as well, because it is free:
+family luminance spread 1.51x -> 1.79x with the mean held (0.9072 -> 0.9066). There is no clip
+risk on that list the way there is on the walls — the tiles' COLOR_0 sits near 0.03/0.05/0.22,
+two decades under the 1.0 clamp — which is why the WALL list was NOT widened with it.
+
+### AND THE VALUE RATIO MOVED, WHICH IS THE BOXES AND NOT THE PAINT
+
+r25's own instrument note says the declared boxes are the wrong tool across a change that
+moves geometry. It is right again, for a new reason:
+
+| meadow plate | r25 | r26 | ref 3 |
+|---|---|---|---|
+| BOX-FREE whole-frame roof L | 0.294 | **0.305** | 0.397 |
+| BOX-FREE roof lit -> shade | .456 -> .096 | **.466 -> .103** | .540 -> .234 |
+| BOX-FREE roof/wall ratio | 0.550 | **0.572** | 0.778 |
+| declared-box roof/wall ratio | 0.859 | 0.940 | 0.823 |
+
+The box number moved 0.08 and **the paint did not move at all**. Measured on the artifact,
+not the render — effective albedo out of the shipped GLB (texture mean x factor x that
+primitive's own COLOR_0):
+
+  * `ow_f2_plaster` L709 **0.0713 -> 0.0704** (-1.3%)
+  * `ow_f2_tiles`   L709 **0.01605 -> 0.01607** (+0.1%)
+
+What changed inside those rectangles is the round's own deliverable: emberbrook's STONE
+vertices went **3072 -> 8760** and its WOOD **5928 -> 6816** — plinth courses, window sills
+and aprons, door surrounds, soffits, fascias, cobbles — while WALL stayed at 504 verts and
+ROOF at 930, because this round added no wall face and no roof face. **A BOX CANNOT TELL A
+STONE SILL FROM THE PLASTER AROUND IT**, so a wall box in r26 is measuring joinery. The
+box-free census, which is r25's own ratified before/after instrument, moved 0.550 -> 0.572,
+toward the reference, and the eave shadow it also contains is the thing the judge asked for.
+
+### THE WALLS-LESS ROOF: CROPPING, NOT A DEFECT — AND THE COUNT SAYS SO
+
+The judge flagged "a large blue roof plane with no walls under it" at two plate coordinates
+and asked whether it is real. **It is not.** Looked at wide, that house's near walls run off
+the BOTTOM EDGE of the frame and its far gable wall faces away from a camera that is 40 m up
+— from that boom the roof's own verge overhang occludes it, which is exactly what an overhang
+does. The arithmetic on the artifact closes it: the shipped GLB's `ow_f2_plaster` primitive
+carries **504 COLOR_0 vertices = 21 wall cubes**, and the town builds 14 main masses + 3
+L-plan wings + 4 lean-to sheds = 21. Every house has walls; no LOD drops them. Recorded, not
+fixed.
+
+### WINDOWS AND DOORS, AND A FIX THAT DOES NOT WORK HERE
+
+*"openings are flat dark rectangles with no frame, reveal or sill."* Half of that was the
+DOOR, which really did have no frame at all — one 0.11-thick slab standing 0.02 proud, the
+loudest opening on the building and the one place the eye goes for scale. It now has a STONE
+surround (two jambs + a lintel) standing 0.10 proud of a leaf that sits behind it.
+
+The other half is a depth problem, and **THE FIX THAT SUGGESTS ITSELF DOES NOT WORK AND WAS
+TRIED FIRST**: inset the pane. There is no boolean in this pipeline, the wall is a solid
+cube, and a pane pushed 0.06 behind the wall face is not a recessed window — it is a pane
+INSIDE an opaque box, invisible. A reveal here has to be built out of things standing PROUD.
+So the surround took half again the projection (0.075 -> 0.11), the sill became STONE and
+oversails, and an apron runs under it. The sill is what carries the read at 40 m: it is the
+only horizontal in the opening, so it is the only element taking the key while the head and
+one jamb throw shadow across the glass.
+
+### THE PADS
+
+The inner edge of the trodden ring was a CIRCLE of radius `max(bw, bd) * 0.56` round a
+RECTANGLE, so on every house it stood 0.4-0.7 u off the long walls and cut the short ones —
+a disc with a building dropped on it. It is now a superellipse (n = 4) on the house's own
+local axes, the outer edge wanders on three harmonics instead of two, six STONE cobbles sit
+against the plinth, and the DIRT faces take a deterministic per-face COLOR_0 mottle keyed on
+the polygon index — **no RNG**, because a set-ordered RNG draw is what cost r25 its
+reproducibility. **NO NEW CLASS**: DIRT has no entry in the class -> material map and renders
+on the matte, which is why COLOR_0 is the only thing that can break it up, and why the
+cobbles are STONE.
+
+### GATES, AND THE BUILD REPRODUCES
+
+Tris **370,683 -> 373,971** (+3,288) against a 1.4M ceiling. Two consecutive
+build + export runs on the shipping source are **byte-identical**
+(`d9b8ec94c8fad455741dbf8ba0cb17fa9c6cba8aafd0b653a7d83aad05a319bf`). `walk_engine_gate
+ow-valley` **GREEN** (2065/2065 cells, 0 lost, BVH 0 FAIL — the eaves, the breasts and the
+cobbles cost nothing), `playthrough_test` **86/0** with 21 same-scene pairs flood-filled and
+0 unreachable, `findability_test` **69/0**, `slice_test` **812/0**, `cine_test` **646/0**,
+`valley_verify` **OK**. Blind pack `docs/qa/ow-refs/blind-r26` (r26 + r25 + both references),
+NOT yet judged. Plates `r26-*`, silhouette board `r26-silhouettes.png`, paired before/after
+crops `plates/r26-crops/`.
+
+**OPEN, honestly.** The roof VALUE spread is now 1.79x by family and the roofs still read as
+one blue at 40 m, because every family is the same HUE — the variation is a value axis on a
+single pigment, and the reference's roofs differ in material, not only in tone. Whether that
+is worth a second roof colour is a palette question the r14 solve constrains and this round
+did not open.
+
+---
+
 ## ROUND 25 (r25) — THE HOUSE ROUND: fourteen copies of one outline, and a chimney measured
 
 **BET 1 of the director's slate.** Three blind critics, independently, on the r14 village:
