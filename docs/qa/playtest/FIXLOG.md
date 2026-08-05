@@ -2747,3 +2747,127 @@ measuring a different game than the run was. Reproducing an in-run hint needs th
 own flag state loaded first — the repro save is already on the report. Third round
 running that the words and the arrow are the suspects and the world is not: **0 walk legs
 aimed off the network in all three runs.**
+
+## Round 16 — 2026-08-05 · PT-20260805-010: the road out was a one-way wall
+
+Round 15 filed this undiagnosed and named the reason: `wayfind_probe` boots with an empty
+flag store, so pointed at a Chapter One stall it resolved a Chapter Two beat. The
+instrument half came first, and it changed the answer twice.
+
+### THE INSTRUMENT, TWICE — AND BOTH TIMES IT WAS MEASURING A MODAL
+
+**The seed is now DERIVED.** `wayfind_probe --from <beat>` takes flags, the beat ledger
+and the objective string from `adapter_emberbrook.checkpointsFromStory()` — the same
+replay of `story.json` the runs check point from — instead of two hand-written arrays
+that covered exactly one checkpoint. It then PRINTS `pendingBeat` and says whether it is
+the beat asked for. `--from=ch1.sigils` now reports
+
+    SEED --from=ch1.sigils: 18 flags, 16 beats, objective "North, out of the village — the Old Gate"
+       pendingBeat = "ch1.sigils"  OK
+
+**And the first ch1 run of it was still a lie.** Every station read `shown=false` with the
+route CORRECT at every one — and the frame, opened, showed the mapmaker's opening line in
+a dialogue box over an empty marker layer. The page boots with no flags, `ch1.open` fires
+on the first tick, and **a dialogue box is UILOCK, which hides `#exit-markers`.** A marker
+gate that reads a locked frame is measuring the lock. `drain()` closes the box before
+every station read and re-posts the seeded objective (a beat allowed to finish posts its
+own over the seed, so the picture was captioned for a different game).
+
+**`_court_probe` had the same bug in its own dialect and it is worse there.** Its `--way`
+drives in `emb-cine` stalled on leg 1 having travelled **0.00 m, in BOTH directions**,
+including over ground the shipped game walks — a geometry instrument reporting "the world
+is shut" about a modal that had frozen the body. It now boots with `nostory=1`.
+
+### THE SENTENCE, WHICH IS ROUND 14 AGAIN
+
+With the probe seeded, the arrow is right and the objective is not:
+
+| | |
+|---|---|
+| objective on screen | `◆ North, out of the village — the Old Gate` |
+| labelled way-marker | `◆ The Old Gate`, drawn at **(710, 587)** of 1280×720 — the BOTTOM of the frame |
+| the marker at the TOP, (690, 110) | `square>therise` — the road the player walked IN on |
+| shipped hint vs metre-shortest | AGREE at all four stations (`square>northlane`, 3 hops / 61.2 m) |
+
+The `square` camera faces south, so up-screen is south. "North" is true of the world and
+useless to a player who has no compass — and `ch1.open` had already used the same word
+for the same road in the other direction. In `run-20260805-022035` the agent alternated:
+*"Walk south towards the 'The Old Gate' exit marker"* (reading the arrow) and *"Walk north
+towards the northern exit"* (reading the banner), six times each. **A wayfinder cannot
+out-argue an objective**, second round running.
+
+Fixed the way round 14 fixed Lock Five — the compass word out, the first hop's own
+landmark in: **"The Old Gate — out of the village, past the tithe barn"**. `story_test`
+1112/0.
+
+### AND THEN THE WORLD TURNED OUT TO BE SHUT AFTER ALL
+
+Three rounds had said "0 walk legs aimed off the network, the world is not the suspect."
+That was true and it was not the same claim. `legs.json`, read for the first time at this
+end of the run:
+
+| steps | target | end | closed |
+|---|---|---|---|
+| 97, 98, 99, 102, 137, 165, 192, 193 | `[64.44, 1.98, −57.86]` — the seam | `[64.9, 1.36, −54.96]`, every time | **0.00 m of 2.94**, `slides 0` |
+
+Eight legs at one wall, 2.94 m short of the exit, and the harness had called them
+`onNetwork: true` because the TARGET is on the walk network.
+
+**`emb-cine` ships `walk_e_square-plaza__barn_l4 .. _l14`. There is no `l0`, `l1`, `l2` or
+`l3`.** The ribbon for the only road out of Emberbrook starts at map y 55.90; the plaza's
+own carved floor tiles stop short of it; and the strip between them — about x 63.8..65.8
+by y 55.0..55.9 — carries solid, rendered, plate-visible ground with **no walk network
+under it**. `_court_probe --grid ... "walk":true` prints that as `v`, and it is the only
+instrument here that could:
+
+    -54.8 lllllllllllllllllllllllllllllllll      -54.8 lllllllllllMMMMMMMMMlllllllllllll
+    -55.0 vlllllllllvvvvvvvvvllllllllllllll      -55.0 vlllllllllMMMMMMMMMMlllllllllllll
+    -55.5 vlllllllllvvvvvvvvvllllllllllllll  ->  -55.5 vlllllllllMMMMMMMMMMlllllllllllll
+    -55.8 vlllllllllHHvvvvvvvvlllllllllllll      -55.8 vllllllllMMMMMMMMMMMMllllllllllll
+    -56.0 lllllllllHHHHHHHHHHHlllllllllllll      -56.0 lllllllllHHHHHHMMMMMlllllllllllll
+              (before)                                       (after)
+
+**IT IS ONE-WAY.** Downhill the body finds the plaza floor within `STEP_DN`; uphill there
+is no walk floor at the next 0.075 m stride and `walkStep` refuses, with no slide. Driven
+tread-by-tread at four x lines:
+
+| x | square → gate | gate → square |
+|---|---|---|
+| 62.6, 63.2 | 3/3 legs | 3/3 |
+| **63.8, 64.4, 65.0, 65.6** | **STALL at z −54.95** | 3/3 |
+
+The scenegraph seam sits at **x 64.44 — dead centre of the closed strip** — and the
+way-marker draws over it. So the arrow was correct, the sentence was wrong, AND the thing
+they both pointed at was a wall.
+
+**A FLOOD FILL CANNOT SEE THIS.** `_court_probe --comp` from both sides reports **one
+component of 1058 cells**, because the fill rounds the west side on a 0.4 m lattice with
+no body box. CLAUDE.md's own line — *a fill that says CONNECTED has not said a body gets
+there* — earned again, and `playthrough_test`'s §W is that same kind of fill, which is
+how this survived every green gate in the repo.
+
+### THE FIX, AND WHY IT IS A CARRIER
+
+`tools/emb_lanepatch.py` appends the four missing segments to `emberbrook-master.blend`
+as `l4`'s own centreline continued backward — bearing, width and material from `l4`,
+heights ray-cast onto the master's own walk surfaces, reaching 0.85 m INSIDE the plaza
+floor so the two overlap rather than meet (`trim_to_rim`'s own rule, applied at the end
+where it failed). Four objects, 2316 → 2320, gated on exactly that count. Then
+`cine_bake.py --glb` (1.7 s, `walk=218 -> 222`).
+
+The doctrine fix is a lane waypoint plus a re-derive, and `walk_rederive.py` is that
+command — but it is hardcoded to Dellhollow's master, blockout and map, and
+`emb_blockout.py` regenerates the whole Emberbrook master in one pass. Rebuilding a live
+2316-object master to add four quads, overnight, in front of a three-hour receipt, is the
+trade CLAUDE.md already refuses for the Old Gate. So it is additive and revertible, and
+**`emb_blockout.py` would correctly erase it** — which is why the derivation bug is
+written into the tool's header rather than only into a commit message.
+
+**THE RECEIPT, on the instruments that found it:**
+
+* all four blocked x lines now drive `square → gate` 3/3;
+* `northlane → gate-court`, five legs down the quiet road, **5/5 both ways**;
+* the way-marker's own drawn pixel: `SIM.pick` used to return `emb_ground_valley`
+  (scenery) and now returns **`walk_e_square-plaza__barn_l2`** — a player clicking the
+  arrow aims at the road.
+
