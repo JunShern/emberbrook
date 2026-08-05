@@ -505,7 +505,9 @@
   }
 
   function clearHint() {
-    if (!hintEdge || !HAS_DOM) { hintEdge = null; return; }
+    if (!HAS_DOM) { hintEdge = null; return; }
+    undimRivals();
+    if (!hintEdge) { hintEdge = null; return; }
     var m = document.querySelector('#exit-markers > div[data-edge="' + cssEsc(hintEdge) + '"]');
     if (m) {
       var t = m.querySelector('.story-way'); if (t) t.remove();
@@ -513,6 +515,52 @@
       if (m.firstChild && m.firstChild.style) m.firstChild.style.scale = '';
     }
     hintEdge = null;
+  }
+
+  /* THE RIVAL ARROW — why the routed marker is not enough on its own (2026-08-05).
+   *
+   * `markersTick` draws ONE red triangle per live seam in the shot, and a camera-boundary
+   * cut is UNLABELLED by construction (play3d labels portals only; a town of named
+   * doorways is noise). So a shot with two seams shows two identical anonymous arrows,
+   * and the hint dresses exactly one of them.
+   *
+   * MEASURED, `run-20260805-040031`: at `therise` the player stood on the north road
+   * with the beat arrow captioned "The Waystone" drawn DOWN-screen (that camera looks
+   * back south over the square) and the bare `therise>square` arrow drawn UP-screen at
+   * ny 0.32. The agent aimed at ny 0.34 on 22 of its last 40 steps, crossed back into
+   * `square`, correctly aimed north again, and re-crossed — 46 seam crossings between
+   * two spawn points 5 m apart, `ch1.see.mochi` never firing in 147 steps. Its own words
+   * at step 122: "a red marker pointing at a spot in the midground and another red marker
+   * for 'The Waystone' lower down" — and it took the midground one. THE LABEL LOST TO
+   * SCREEN POSITION, because both arrows claimed the same thing with the same glyph.
+   *
+   * So while a beat hint is live the OTHER markers are demoted: still drawn (a player
+   * may always choose to leave), plainly secondary. Opacity and scale only — play3d
+   * pools these nodes and rewrites `transform` and `display` per frame and nothing else,
+   * which is the same contract the `scale = 1.3` above already relies on. Every node
+   * touched is remembered so the demotion is exactly reversible; a marker that dies out
+   * of the pool takes its inline style with it. */
+  var dimmed = [];
+  function dimRivals(keepId) {
+    if (!HAS_DOM) return;
+    undimRivals();
+    var all = document.querySelectorAll('#exit-markers > div[data-edge]');
+    for (var i = 0; i < all.length; i++) {
+      var m = all[i];
+      if (m.dataset.edge === keepId) continue;
+      if (m.style.display === 'none') continue;         // not in this shot: nothing to demote
+      m.style.opacity = '0.34';
+      if (m.firstChild && m.firstChild.style) m.firstChild.style.scale = '0.78';
+      dimmed.push(m);
+    }
+  }
+  function undimRivals() {
+    for (var i = 0; i < dimmed.length; i++) {
+      var m = dimmed[i];
+      m.style.opacity = '';
+      if (m.firstChild && m.firstChild.style) m.firstChild.style.scale = '';
+    }
+    dimmed.length = 0;
   }
   // The edge ids carry '>', '@', ':' and '.' — all meaningful inside an attribute
   // selector. CSS.escape is the browser's own answer; the fallback is for a headless
@@ -542,6 +590,7 @@
     var m = document.querySelector('#exit-markers > div[data-edge="' + cssEsc(want) + '"]');
     if (!m) { hintEdge = null; lastHint = null; return; }   // not drawn: say nothing
     hintEdge = want;
+    dimRivals(want);                                        // see dimRivals: the rival arrow
     var t = m.querySelector('.story-way');
     if (!t) {
       t = document.createElement('div'); t.className = 'story-way';

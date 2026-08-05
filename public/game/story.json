@@ -427,7 +427,7 @@
           }
         },
         {
-          "objective": "See to them, all four —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat back up the north road,}"
+          "objective": "See to them, all four —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
         }
       ]
     },
@@ -466,7 +466,7 @@
           }
         },
         {
-          "objective": "See to them (Poppy ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat back up the north road,}"
+          "objective": "See to them (Poppy ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
         }
       ]
     },
@@ -505,7 +505,7 @@
           }
         },
         {
-          "objective": "See to them (Mara and Pip ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat back up the north road,}"
+          "objective": "See to them (Mara and Pip ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
         }
       ]
     },
@@ -544,7 +544,7 @@
           }
         },
         {
-          "objective": "See to them (Finn ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat back up the north road,}"
+          "objective": "See to them (Finn ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
         }
       ]
     },
@@ -583,7 +583,7 @@
           }
         },
         {
-          "objective": "See to them (the cat is fine ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat back up the north road,}"
+          "objective": "See to them (the cat is fine ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
         }
       ]
     },
