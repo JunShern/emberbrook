@@ -3004,3 +3004,182 @@ A `--out` proposal differs from `public/world/scenegraph.json` in exactly one va
 (**23.294 -> 23.3**) plus the timestamp: **committed inputs no longer reproduce the
 committed artifact.** One re-derive closes it; left for the file's owner rather than
 rewritten by a vegetation lane.
+
+---
+
+# F5 (gallery Round 22, 2026-08-06) — BET 3: cards, the road edge, and the road leaving the wood
+
+One build cycle, three structural changes, every one measured on an instrument before
+it shipped. Plates `plates/f5-*`; working set `scratchpad/f5/`; blind pack (anonymized,
+mapping withheld from the judge) `scratchpad/f5/blindpack/`.
+
+## 1. The card-built bush family (the m1 wall, finally taken)
+
+`veg_land_clumps`' near-field instances (261 of 361, within 45 u of the road) keep the
+R24 lobed hulls as bushlang-style INTERIORS (COLOR_0 x0.78) and grow a leaf-cluster
+card shell — `veg_land_bushcards`, 2,859 mass + 2,649 rim cards, 11,016 tris — using
+the SHIPPED bush recipe (f4b's cards-vs-volume winner), constants imported from
+bushlang, y-up converted at exactly one place. Atlas baseColor bytes are sRGB (glTF),
+COLOR_0 LINEAR, and the translucency term is the one ow_detail.js already carries for
+`ow_valley_bushcard` (TRANS_MUL 0.85) — the shell inherits it by wearing the material.
+
+Two divergences from the bush recipe, both paid for by looking at build 1:
+  * density 3.10 -> 4.60, rim 7.2 -> 8.6 — a DIMMED single-solid hull still owned
+    stretches of outline at bush density (spec-sunlit: a leafy box).
+  * `CARD_FAM_GAIN` 1.35 post-floor — at canopy arithmetic the family landed a stop
+    under the meadow it stands in (crop-gorge-0: the crest row went L~0.15, the dh1
+    "reads as a hole" class). The volumes' old brightness was a 1.9-2.9x instance
+    boost on the bushcore tile — the accidental-lift class m1's judge preferred and f4
+    refused; it is NOT re-shipped, the gain is solved at family level on the honest
+    atlas.
+
+DETERMINISM: cards draw from POSITION-HASH RandomStates; the L2 scatter stream is
+untouched by construction. (The clump census DID change 399 -> 361 this round — that
+is the ROAD BEND re-seaming the scatter, a class comparison like r24's rocks, not a
+stream leak: with the map held fixed, two full builds are byte-identical.)
+
+## 2. The road edge (user, verbatim: "why is the path still a sharp geometric object")
+
+R22 blended the COLOURS across the seam and the boundary stayed drawable, because no
+geometry ever crossed the line. Three edits:
+  * `road_wobble` grows a metre-scale value-noise rag (+-0.31 u per side, clamped at
+    0.42 u halfwidth) under the existing ~10 u wander — the wander is invisible at
+    walking closeness; the boot-scale term is what was missing.
+  * the ribbon's OUTER vertex rows drop to terrain (`min(road_h+0.09, ground+0.025)`;
+    the mesh-true conform still lifts anything buried) — the whole ribbon rode at
+    +9 cm and that cliff line WAS half the "geometric object".
+  * `verge_scatter`: 571 fringe tufts + 119 fuzz cards whose individuals STRADDLE the
+    built edge (span -0.55..+0.40 u, overhanging the dirt), deterministic per
+    (station, side). The carriageway centre stays bare — the ribbon is the walk network.
+
+## 3. The canopy corridor (Bet-5 residual, upgraded to EXECUTE) — the road bent
+
+The residual said "at boom 40 the camera rides INSIDE the canopy for stations
+~78-172". MEASURED (scratchpad/f5/canopy_probe.js — in-page BFS distance-to-road
+trim + OWFIT census, nothing shipped):
+
+    station 90 (wood), shipped rig 0.70/0.16      veg%     note
+    base                                          43.9
+    trim canopy within  6 u of road               43.9     INERT
+    trim within 12 u                              43.9     INERT
+    trim within 20 u                              43.4     INERT
+    trim within 24 u                              37.3     and gate 22.2 -> 4.4 (!)
+    hide ALL canopy                                4.2     the ceiling
+    move the EYE LINE 10 u east                    5.9     the mechanism
+
+The veg pixels are crowns 20-40 u out, raked at GRAZING angle — no corridor trim
+reaches them without felling the stand (and r=24 deletes the gate frame's beloved
+road-side mass). So the ROAD moved: region pts 12-14, 6-7 u east onto the low bench
+(the first candidate line at 9-12 u offset sat on a 27-38 u HILL — the terrain
+refused it; the bench line with its own bent tangent measures 5-8% veg). Portals
+untouched; both ow-valley story anchors clear; walk_engine_gate GREEN (2065 = 2065
+cells, 0 lost); cam_sweep STATIONS re-derived (the station INDICES are the pins).
+
+## The census (shipped rig 0.70/0.16, before = HEAD worktree, after = shipped)
+
+    station   veg%            ground%          visible-ground m2
+    gate      22.2 -> 22.7    49.4 -> 48.9     2329 -> 2329
+    vista     23.0 -> 23.1    55.8 -> 55.6     2913 -> 2913
+    wood      43.8 ->  7.0    55.4 -> 91.4      311 ->  763
+    bend      31.3 -> 26.4    66.0 -> 71.8      615 ->  763
+    gorge     18.4 -> 13.9    68.4 -> 69.1      517 ->  501
+
+## Blind verdict (13 anonymized frames: 3 refs + 5 before + 5 after, fresh judge)
+
+Within matched pairs the AFTER wins meadow, closeup, wood-station and gate-station —
+the judge's own words on the closeup pair: "grass tufts overlapping and interrupting
+the path edge kill the line locally", and the BEFORE wood-station ranked LAST of 13
+("foreground foliage is faceted polygonal shards... the cliff-top shrub row is a line
+of identical green hemispheres"). THE MISGROUP OF THE NIGHT: the judge put OUR
+before-gorge into the REFERENCE group (rank 2, "a masterclass in path treatment") and
+took one actual reference for engine work — and then preferred that before-gorge to
+the after-gorge (rank 7, "the right-hand third dissolves into faceted foliage
+shards"). A confounded comparison, but an honest read of the card family at close
+range, and it agrees with the standing charge, WHICH IS NOT CLOSED: "no translucency
+anywhere — every bush is opaque and lit like rock... the set's single biggest tell";
+"the dark road is a constant-width ribbon" is STILL true at boom-40 distance (the
+metre rag is sub-pixel there — the aerial-scale fix the judge prescribes is the a/b
+worn apron + tuft overlap applied at the road's own scale).
+
+## Carried, named, not smoothed
+
+  * CLOSE-RANGE CARD READ: at walking distance the shell still shows flat shards on
+    silhouette edges (judge, e-frame). The atlas card art and/or a second small-card
+    tier at bush scale is the next honest step — art, not settings.
+  * TRANSLUCENCY IS WIRED AND INVISIBLE: owdTransAdd is live on bushcard (0.85) and a
+    blind judge still reads "opaque, lit like rock". Measure the term's actual
+    contribution on a backlit bush frame before sweeping it.
+  * AERIAL ROAD READ: constant-width ribbon at boom 40. The rag needs a second,
+    coarser octave (2-4 u amplitude modulation) or a worn-apron band scaled to the
+    aerial view.
+  * f5 gorge lost its own pair (confounded). Re-judge gorge alone next round.
+
+## Gates
+
+determinism byte-identical twice (33b0175a...) · VERIFY OK · walk_engine_gate GREEN ·
+slice_test 812/0 · cine_test 647/0 — the inherited "scenegraph.json is STALE" red is
+CLOSED (this lane's map edit fed the derive, so this lane re-derived; 15/15 arrivals
+clear).
+
+---
+
+## BET 12 (b12) — THE SKY: the gameplay frame could never see the sky, so the sky was painted where the frame looks
+
+Plates `b12-{gate,vista,refused-gate,sunview}.png` + `b12-base-{gate,refused-gate}.png` (the
+shipped control), blind pack `blind-b12/`. Prototype behind **`?sky2=1`** (play3d is
+coordinator-owned; the default path is untouched — main flips the default). User directive,
+verbatim, on `r27-refused-gate.png`: *"the sky is also clearly just a boring gray MS Paint
+picture."*
+
+**THE MECHANISM, NAMED FIRST.** The overworld sky is play3d-side and runtime-built: a
+vertex-coloured gradient dome `__owsky` (two constants, 0x3f7fc4 -> 0xcfe3ee), four
+`__owridge` painted-constant crest rings, and `scene.fog`. No sun, no clouds, no azimuthal
+variation — the flat two-tone fill the user saw. The IBL environment ("THE FILL IS THE SKY")
+is the LIGHTING env and is a separate object; it was not touched.
+
+**THE FINDING THAT SHAPED THE DESIGN, measured before designing: at the shipped rig
+(OWPITCH 0.70/OWTILT 0.16, df9a12d) the frame top sits 10 deg below horizontal, so the
+gameplay frame CANNOT contain the horizon, the dome, or any ring's crest against the dome —
+every visible far surface at 205-345 m is 36-60 m below eye.** The player's whole "sky" band
+was ONE ring's mid-body: a single flat fill. Painting the dome better would have changed
+nothing the player sees. (The pixel A/B that proved it: the band at the gate is ring 0's
+body; the dome enters no gameplay frame.)
+
+**WHAT SHIPPED (all gated on sky2):**
+* **The dome became a picture** — ShaderMaterial: horizon warmed toward the sun's own
+  azimuth (az 238 = OWSUN_DIR, now hoisted and shared, never a second copy), sun disk +
+  two-lobe glow exactly on the key light's direction, static procedural cumulus (fbm, no
+  texture, no motion — motion is Bet 11), ramp recalibrated so the horizon band lives where
+  a camera that looks up actually sees it. Owns the vistas.
+* **The rings became the sky the gameplay frame sees** — three rows per ring instead of
+  two: a LUMINOUS VALLEY-MIST zone (the sky's own horizon hue at that azimuth via `s2hor`,
+  warm sun-side, cool opposite) rising to a THIN DARK RIDGE STRIP at the crest; ring 0
+  dropped (b 14->4) so its silhouette enters the frame at high-eye stations; mist BANKS
+  (second crest-recipe noise line) lie on the band like the refs' white clumps. Fog keeps
+  R7's distances and re-derives its colour from the same palette.
+* **Colour space said out loud:** every hue is authored as sRGB hex and decoded by
+  THREE.Color into the linear working space; the palette was picked from shots taken
+  THROUGH the Neutral curve, never from raw hex.
+
+**THE MILKY WASH CAME BACK AND WAS CAUGHT BY THE RULER, NOT THE EYE.** First mist pass
+measured (190,193,192) L 0.75 chroma 2 against ref3's far band (120,165,193) L 0.60
+chroma 73 — the exact R5 defect. Recalibrated to blue-chromatic: the shipped band measures
+L 0.61-0.65, chroma 29-37 at the gate boxes.
+
+**A NaN COLUMN BECAME A BLACK FRAME, AND ONLY AT ONE RIG.** `pow(ts, 2.4)` with
+`ts = 0.5+0.5*dot()` a float-error hair under zero is NaN in GLSL; one NaN dome column in
+the beauty buffer and UnrealBloom smears it across the frame. It only reproduced at the
+refused rig because only that rig puts the exact anti-sun azimuth of the dome in frame —
+the shipped-rig gates were all green while the vista rig rendered 87% black. Clamped in
+the shader AND in the JS twin (`s2hor`).
+
+**LIGHTING NEUTRALITY, MEASURED (the k=I concern):** back-to-back paired runs, sky2 off/on,
+same poses, unchanged-region (ground) mean |delta| <= 0.8/255 on every station and ground
+L identical to three decimals (gate 0.467/0.467, vista 0.374/0.375, gorge 0.261/0.261).
+No light, no env, no grade uniform was touched; the backdrop share of the frame (changed
+pixels) is gate 19.3%, vista 7.8%, gorge 3.6%, refused-rig 33.2%.
+
+**Gates:** page boots clean with sky2=1 (CDP console probe: zero errors/warnings);
+default path proven untouched (diff is gated additions plus the OWSUN_DIR hoist, and the
+sky2-absent run reproduces the shipped frames); no bake ran, cine/slice untouched;
+transition/playthrough left to the playtest lane per the machine-sharing rule.

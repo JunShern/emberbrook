@@ -15994,3 +15994,23 @@ both towns · findability 69/0 · playthrough_test 86/0 (§W 21 pairs, 0 unreach
 zero console errors). FIXLOG round 30 has the full record. Instruments of the
 round: _court_probe --comp/--who (del-inn-int), adapter drive probes (scratchpad),
 follow-the-arrow scripted bot, wayhint dumps.
+
+## 2026-08-06 — F5 LANE (Bet 3 + scope upgrade): card bushes, the road edge, the road leaves the wood
+
+Gallery Round 22; the full record with instruments is docs/qa/ow-refs/LOOP.md §F5.
+Headlines only: (1) near-field veg_land_clumps became hull-interior + leaf-card
+shells (f4b recipe, position-hash streams, determinism byte-identical twice);
+(2) the road edge got GEOMETRY — metre rag on the halfwidth, outer lanes dropped to
+terrain, a 690-piece fringe straddling the seam (user's "sharp geometric object"
+complaint); (3) the canopy corridor was fixed by BENDING THE ROAD (region pts 12-14,
+6-7 u onto the low bench) after in-page trim probes measured canopy removal INERT to
+r=20 u — station 90 veg 43.8%→7.0% at the shipped 0.70/0.16 rig, gate/vista frames
+byte-stable. Blind judge (13 anonymized frames): after wins 4/5 matched pairs; our
+BEFORE-gorge was misgrouped into the reference set (rank 2) — and the standing
+structural charge is NOT closed: "no translucency anywhere... opaque and lit like
+rock" at close range. Residuals named in LOOP.md §F5 Carried. Also closed in
+passing: the inherited "scenegraph.json is STALE" slice/cine red (this lane's map
+edit fed the derive, so this lane re-derived; slice 812/0, cine 647/0).
+NOTE FOR THE PLAYTEST LANE: the ow-valley road moved between stations ~75-135; any
+wayhint polylines or recorded runs crossing that span want a re-derive. cam_sweep
+STATIONS re-derived in the same commit (c5f81cf).

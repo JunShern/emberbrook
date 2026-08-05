@@ -31,7 +31,17 @@ wider flights; ramps where the vocabulary allows (a canal town has ramps); one
 legible primary route from gate to waterline that the wayfinder and the eye agree
 on. Then regenerate. This is a map-and-generator rebuild, not another patch.
 
-## Bet 3 — Vegetation's card-built asset family (OPEN — reversing my own deferral)
+## Bet 3 — Vegetation's card-built asset family (SHIPPED 2026-08-06, residuals named — gallery Round 22, LOOP.md F5)
+**Shipped:** 261/361 near-field clumps converted to hull-interior + leaf-card shell
+(the f4b recipe; veg_land_bushcards); road-edge naturalization (metre rag + edge
+dropped to terrain + 571-tuft/119-card fringe straddling the seam — the coordinator's
+scope upgrade); and the canopy-corridor residual EXECUTED as a road bend (trimming
+measured inert to r=20; station-90 veg 43.8%→7.0% at the shipped rig). Blind judge:
+after wins 4/5 matched pairs; our before-gorge was misgrouped INTO the reference set.
+**Residuals (open, at LOOP.md F5 "Carried"):** close-range card read is still
+"flat shards"; translucency term wired but invisible to a blind judge — measure on a
+backlit frame before sweeping; aerial road still a constant-width ribbon (rag needs a
+coarser octave); gorge pair confounded, re-judge alone.
 **Evidence:** the blind gap question: "the references build vegetation from thin
 translucent cards; ours are opaque volumes — you cannot light your way out of a
 closed convex hull." I deferred the conversion when the clump UV fix closed most

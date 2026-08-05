@@ -359,6 +359,26 @@
     "closeup"
    ],
    "verdict": "Eave+soffit+fascia (three shadow lines where there were none), a real plinth course, the chimney HALVED (0.685->0.389 u \u2014 r25's was a 2.2 m stack once you do the units) with a six-clause gate whose lesson is the campaign's sharpest: 'a gate that measures every property except the one that is wrong is a green light on the defect' \u2014 r25 passed 14/14 on three true clauses about a wrong chimney. Variation decoupled (no two houses share both roof and wall families). Door surrounds and window reveals built from PROUD parts (an inset pane is invisible without booleans \u2014 tried, measured, rebuilt). BLIND VERDICT: stage order found unprompted, every mechanism credited, r26 ranked ABOVE one reference, and the exit line: 'a player registers a village and moves on \u2014 that's the correct outcome; architecture that isn't the subject shouldn't win.' BET 1 BANKED. Residuals on the slate: the dirt-oval pads still read as decals (grounding item), flat soffits, the tower-house proportion."
+  },
+  {
+   "n": 22,
+   "title": "BET 3 \u2014 the card-built bush family, the road stops being a tape, and the road leaves the wood",
+   "when": "2026-08-06 (Round 21, the camera round, lives on docs/qa/ow-camera/)",
+   "prefix": "f5",
+   "views": [
+    "meadow",
+    "gate",
+    "vista",
+    "gorge",
+    "closeup",
+    "wood-station",
+    "gate-station",
+    "wood-ab",
+    "gate-ab",
+    "roadband-ab",
+    "verge-close"
+   ],
+   "verdict": "THREE STRUCTURAL CHANGES IN ONE BUILD CYCLE, each measured before shipping. (1) THE CARD FAMILY: 261 of 361 near-field clumps keep their R24 lobed hulls as dark interiors and grow the shipped bush's card shell (f4b's A/B winner \u2014 density 4.6 + rim 8.6 after build 1's dimmed hulls still silhouetted; CARD_FAM_GAIN 1.35 after the family landed a stop under its meadow WITHOUT re-shipping the volumes' 1.9-2.9x accidental boost). (2) THE ROAD EDGE (user, verbatim: 'why is the path still a sharp geometric object'): metre-scale rag on the wobbled halfwidth, the outer vertex row dropped to terrain (the 9 cm ribbon cliff WAS half the line), and a 571-tuft + 119-card fringe STRADDLING the edge \u2014 R22 blended the colours and the boundary stayed drawable because no geometry ever crossed it. (3) THE CANOPY CORRIDOR, EXECUTED: canopy trimming measured INERT (r<=20 u moved station-90 veg 43.9% -> 43.9%; r=24 got 37.3% and deleted the gate frame's road-side mass) because the veg pixels are crowns 20-40 u out raked at grazing angle \u2014 so the ROAD BENT instead (region pts 12-14, 6-7 u onto the low bench; the first 9-12 u line sat on a 27-38 u hill and was refused by the terrain). Station 90 at the shipped rig: veg 43.8% -> 7.0%, visible ground 311 -> 763 m2; gate/vista byte-stable. BLIND VERDICT (13 anonymized frames, fresh judge): the after wins the matched pair on meadow, closeup, wood and gate-station ('c/e show the fix already working at ground level: grass tufts overlapping and interrupting the path edge kill the line locally'; the before wood-station ranked LAST \u2014 'a line of identical green hemispheres'). TWO STINGS, recorded not smoothed: the judge put OUR before-gorge in the REFERENCE group (rank 2) and preferred it to the after-gorge (rank 7, 'the right-hand third dissolves into faceted foliage shards') \u2014 a confounded comparison but an honest read of the card family at close range; and the structural charge STANDS at proximity: 'no translucency anywhere \u2014 every bush is opaque and lit like rock... the set's single biggest tell', plus 'the dark road is a constant-width ribbon' STILL true at boom-40 distance (the rag is sub-pixel there). Gates: determinism byte-identical twice, VERIFY OK, walk_engine_gate GREEN 2065=2065, slice 812/0 + cine 647/0 (closing the inherited scenegraph-stale red)."
   }
  ]
 }
