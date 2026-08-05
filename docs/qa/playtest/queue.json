@@ -10897,6 +10897,1808 @@
         },
         "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
       }
+    },
+    {
+      "id": "PT-20260805-013",
+      "created": "2026-08-05T05:05:56.750Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-044813",
+      "step": 138,
+      "source": "spine-detector",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "The player can leave the chapter on its first frame, and the objective follows them out",
+      "doing": "I read the opening narration by pressing the action button, then used the only prompt on screen.",
+      "expected": "To carry on with the objective the game was showing me.",
+      "happened": "I ended up somewhere with no way to advance the story, and the objective on screen (\"Step through the Old Gate\") still refers to where I was. Nothing here can continue the chapter.",
+      "probe": null,
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-136.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-137.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-138.jpg"
+      ],
+      "onscreen": {
+        "objective": "Step through the Old Gate",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-cine",
+        "shot": "gatefield",
+        "pos": [
+          76.69,
+          2.66,
+          -122.62
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "npc.met.emb.boy",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "npc.met.emb.girl",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff"
+        ],
+        "exits": [
+          "emb-cine>emb-cine@cut:barn__gate-court:0.698:gatefield>gateroad",
+          "emb-cine>ow-valley@old-gate"
+        ]
+      },
+      "repro": {
+        "sha": "b8b6f12a154c96275b2c71459def6b03bd453778",
+        "capturedAt": "2026-08-05T05:05:56.748Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "npc.met.emb.boy": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "emb-cine",
+            "cam": "gatefield",
+            "pos": [
+              69.666,
+              2.722,
+              -109.777
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.finn": 1,
+            "ch1.see.mochi": 1,
+            "ch1.pact": 1,
+            "ch1.sigils": 1,
+            "ch1.sendoff": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T05:05:42.311Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-014",
+      "created": "2026-08-05T05:08:14.310Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-044813",
+      "step": 156,
+      "source": "stuck-interview",
+      "kind": "blocker",
+      "severity": "P0",
+      "title": "Cannot interact with the NPC at 'The Lockhead' marker",
+      "doing": "I'm trying to talk to the person standing under the red 'The Lockhead' marker to complete my objective.",
+      "expected": "I expected an interaction prompt to appear, or for pressing the interact button to start a conversation with the NPC.",
+      "happened": "Nothing happens when I press interact. I've tried moving around to find the right spot, but I can't seem to trigger any dialogue or progress the objective.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          18.91,
+          24.07,
+          -4.81
+        ],
+        "to": [
+          19.19,
+          24.07,
+          -5.74
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-154.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-155.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-156.jpg"
+      ],
+      "onscreen": {
+        "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "gate",
+        "pos": [
+          18.91,
+          24.07,
+          -4.81
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "npc.met.emb.boy",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "npc.met.emb.girl",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived"
+        ],
+        "exits": [
+          "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+          "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+          "del-cine>ow-valley@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "b8b6f12a154c96275b2c71459def6b03bd453778",
+        "capturedAt": "2026-08-05T05:08:14.308Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "npc.met.emb.boy": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "gate",
+            "pos": [
+              4.888,
+              24.07,
+              -6.48
+            ],
+            "yaw": 3.0567
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.finn": 1,
+            "ch1.see.mochi": 1,
+            "ch1.pact": 1,
+            "ch1.sigils": 1,
+            "ch1.sendoff": 1,
+            "ch1.done": 1,
+            "ch2.road": 1,
+            "ch2.arrive": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T05:07:25.386Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-015",
+      "created": "2026-08-05T05:11:06.041Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-044813",
+      "step": 177,
+      "source": "stuck-interview",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Reached the red objective marker at The Lockhead but nothing happens",
+      "doing": "I was trying to find the lockhead by walking to the red marker under the roof of The Lockhead building.",
+      "expected": "I expected to find a person to talk to, get an interaction prompt, or have the objective update when I reached the marker.",
+      "happened": "I walked right up to the area under the red marker, but there's no one to interact with, no prompt appears, and the objective hasn't changed. I'm just stuck here.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          20.83,
+          24.07,
+          -6.26
+        ],
+        "to": [
+          20.5,
+          24.07,
+          -6.2
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-175.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-176.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-177.jpg"
+      ],
+      "onscreen": {
+        "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+        "prompts": [
+          "Down to the Shelf street? [E]"
+        ],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "gate",
+        "pos": [
+          20.83,
+          24.07,
+          -6.26
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "npc.met.emb.boy",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "npc.met.emb.girl",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived"
+        ],
+        "exits": [
+          "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+          "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+          "del-cine>ow-valley@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "b8b6f12a154c96275b2c71459def6b03bd453778",
+        "capturedAt": "2026-08-05T05:11:06.040Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "npc.met.emb.boy": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "gate",
+            "pos": [
+              4.888,
+              24.07,
+              -6.48
+            ],
+            "yaw": 3.0567
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.finn": 1,
+            "ch1.see.mochi": 1,
+            "ch1.pact": 1,
+            "ch1.sigils": 1,
+            "ch1.sendoff": 1,
+            "ch1.done": 1,
+            "ch2.road": 1,
+            "ch2.arrive": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T05:07:25.386Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-016",
+      "created": "2026-08-05T05:13:48.962Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-044813",
+      "step": 194,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P2",
+      "title": "Area transition trigger blocks path to objective building",
+      "doing": "I was trying to walk into The Lockhead building to reach the red objective marker.",
+      "expected": "I expected to be able to walk up to the building and find the person I'm looking for.",
+      "happened": "The trigger to leave the area ('Down to the Shelf street?') is placed right in the path to the building. I keep hitting it and getting the prompt instead of being able to easily walk past it to the objective.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          20.74,
+          24.07,
+          -5.89
+        ],
+        "to": [
+          20.5,
+          24.07,
+          -6.2
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-192.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-193.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-194.jpg"
+      ],
+      "onscreen": {
+        "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+        "prompts": [
+          "Down to the Shelf street? [E]"
+        ],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "gate",
+        "pos": [
+          20.74,
+          24.07,
+          -5.89
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "npc.met.emb.boy",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "npc.met.emb.girl",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived"
+        ],
+        "exits": [
+          "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+          "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+          "del-cine>ow-valley@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "b8b6f12a154c96275b2c71459def6b03bd453778",
+        "capturedAt": "2026-08-05T05:13:48.960Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "npc.met.emb.boy": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "gate",
+            "pos": [
+              4.888,
+              24.07,
+              -6.48
+            ],
+            "yaw": 3.0567
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.finn": 1,
+            "ch1.see.mochi": 1,
+            "ch1.pact": 1,
+            "ch1.sigils": 1,
+            "ch1.sendoff": 1,
+            "ch1.done": 1,
+            "ch2.road": 1,
+            "ch2.arrive": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T05:07:25.386Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-017",
+      "created": "2026-08-05T05:15:21.366Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-044813",
+      "step": 206,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Transition trigger for 'Shelf street' blocks access to 'The Lockhead' objective",
+      "doing": "I was trying to walk over to the NPC under 'The Lockhead' marker to complete my objective.",
+      "expected": "I expected to be able to walk onto the porch/deck area and talk to the NPC.",
+      "happened": "The trigger zone for 'Down to the Shelf street? [E]' seems to cover the whole path. I keep hitting it and can't seem to walk past it to get to the building where the objective is.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          20.74,
+          24.07,
+          -5.89
+        ],
+        "to": [
+          20.5,
+          24.07,
+          -6.2
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-204.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-205.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-206.jpg"
+      ],
+      "onscreen": {
+        "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+        "prompts": [
+          "Down to the Shelf street? [E]"
+        ],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "gate",
+        "pos": [
+          20.74,
+          24.07,
+          -5.89
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "npc.met.emb.boy",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "npc.met.emb.girl",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived"
+        ],
+        "exits": [
+          "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+          "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+          "del-cine>ow-valley@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "b8b6f12a154c96275b2c71459def6b03bd453778",
+        "capturedAt": "2026-08-05T05:15:21.363Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "npc.met.emb.boy": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "gate",
+            "pos": [
+              4.888,
+              24.07,
+              -6.48
+            ],
+            "yaw": 3.0567
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.finn": 1,
+            "ch1.see.mochi": 1,
+            "ch1.pact": 1,
+            "ch1.sigils": 1,
+            "ch1.sendoff": 1,
+            "ch1.done": 1,
+            "ch2.road": 1,
+            "ch2.arrive": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T05:07:25.386Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-018",
+      "created": "2026-08-05T05:16:54.822Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-044813",
+      "step": 218,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Cannot walk to 'The Lockhead' NPC, ground marked as not walkable",
+      "doing": "Trying to walk up to the NPC under the red 'The Lockhead' marker to progress the objective.",
+      "expected": "My character should walk up to the NPC so I can interact with them.",
+      "happened": "I can't get close to the NPC. The game keeps saying the ground around them isn't walkable, and I just end up stuck near the 'Down to the Shelf street' transition trigger.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          20.71,
+          24.07,
+          -6.03
+        ],
+        "to": [
+          20.5,
+          24.07,
+          -6.2
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-216.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-217.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-218.jpg"
+      ],
+      "onscreen": {
+        "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+        "prompts": [
+          "Down to the Shelf street? [E]"
+        ],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "gate",
+        "pos": [
+          20.71,
+          24.07,
+          -6.03
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "npc.met.emb.boy",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "npc.met.emb.girl",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived"
+        ],
+        "exits": [
+          "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+          "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+          "del-cine>ow-valley@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "b8b6f12a154c96275b2c71459def6b03bd453778",
+        "capturedAt": "2026-08-05T05:16:54.820Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "npc.met.emb.boy": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "gate",
+            "pos": [
+              4.888,
+              24.07,
+              -6.48
+            ],
+            "yaw": 3.0567
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.finn": 1,
+            "ch1.see.mochi": 1,
+            "ch1.pact": 1,
+            "ch1.sigils": 1,
+            "ch1.sendoff": 1,
+            "ch1.done": 1,
+            "ch2.road": 1,
+            "ch2.arrive": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T05:07:25.386Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-019",
+      "created": "2026-08-05T05:19:18.694Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-044813",
+      "step": 235,
+      "source": "stuck-interview",
+      "kind": "confusion",
+      "severity": "P1",
+      "title": "Cannot figure out how to reach 'The Lockhead' marker from the upper balcony",
+      "doing": "Trying to walk to the objective marker labeled 'The Lockhead'.",
+      "expected": "To be able to walk down to the marker or find a clear path to it.",
+      "happened": "I'm stuck on the upper balcony of the building. Clicking near the marker or on the stairs below doesn't work; my character either doesn't move or the game says I can't walk there. I can't see a way to get down to where the objective is pointing.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          54.15,
+          18.43,
+          -9.87
+        ],
+        "to": [
+          53.58,
+          15.2,
+          -12.95
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-233.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-234.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-235.jpg"
+      ],
+      "onscreen": {
+        "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "loop-stairs",
+        "pos": [
+          53.55,
+          18.43,
+          -9.87
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "npc.met.emb.boy",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "npc.met.emb.girl",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:armor-shop__shelf-homes:0.582:loop-stairs>shelf-east",
+          "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:loop-stairs>quay-west",
+          "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:loop-stairs>quay-west"
+        ]
+      },
+      "repro": {
+        "sha": "b8b6f12a154c96275b2c71459def6b03bd453778",
+        "capturedAt": "2026-08-05T05:19:18.692Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "npc.met.emb.boy": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "loop-stairs",
+            "pos": [
+              53.2,
+              18.75,
+              -9.48
+            ],
+            "yaw": 3.0567
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.finn": 1,
+            "ch1.see.mochi": 1,
+            "ch1.pact": 1,
+            "ch1.sigils": 1,
+            "ch1.sendoff": 1,
+            "ch1.done": 1,
+            "ch2.road": 1,
+            "ch2.arrive": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T05:07:25.386Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-020",
+      "created": "2026-08-05T05:25:11.162Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-044813",
+      "step": 287,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Quest NPC Dellhollow gives generic dialogue instead of advancing quest",
+      "doing": "I was trying to talk to Dellhollow to find out about the lockhead, since they have a quest marker over their head.",
+      "expected": "I expected Dellhollow to tell me about the lockhead or for the quest to update after speaking to them.",
+      "happened": "Dellhollow just repeats generic dialogue like 'Pot's on...' and the quest doesn't progress.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          0.14,
+          0,
+          -1.97
+        ],
+        "to": [
+          -1.24,
+          0,
+          1.05
+        ],
+        "scene": "del-cookhouse-int"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-285.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-286.jpg",
+        "docs/qa/playtest/runs/run-20260805-044813/frames/step-287.jpg"
+      ],
+      "onscreen": {
+        "objective": "Find whoever runs the locks — the lockhead, above Lock Five",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cookhouse-int",
+        "shot": null,
+        "pos": [
+          0.19,
+          0,
+          -1.97
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "npc.met.emb.boy",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "npc.met.emb.girl",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "npc.met.pell",
+          "npc.met.sorrel",
+          "npc.met.del.cook"
+        ],
+        "exits": [
+          "del-cookhouse-int>del-cine@cookhouse"
+        ]
+      },
+      "repro": {
+        "sha": "b8b6f12a154c96275b2c71459def6b03bd453778",
+        "capturedAt": "2026-08-05T05:25:11.160Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "npc.met.emb.boy": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "npc.met.pell": true,
+            "npc.met.sorrel": true,
+            "npc.met.del.cook": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cookhouse-int",
+            "cam": null,
+            "pos": [
+              3,
+              0.04,
+              -2.58
+            ],
+            "yaw": 0.7854
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.finn": 1,
+            "ch1.see.mochi": 1,
+            "ch1.pact": 1,
+            "ch1.sigils": 1,
+            "ch1.sendoff": 1,
+            "ch1.done": 1,
+            "ch2.road": 1,
+            "ch2.arrive": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T05:24:14.580Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
     }
   ]
 }
