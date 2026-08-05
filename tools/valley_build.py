@@ -3037,7 +3037,17 @@ def build_props(col, F, zg, fr):
         for f in p.bm.faces:
             if f not in before:
                 newv.update(f.verts)
-        for v in newv:
+        # ITERATING A SET OF BMVerts WHILE DRAWING FROM AN RNG IS NOT DETERMINISTIC
+        # (2026-08-05, measured).  A Python set of BMVert orders by hash, i.e. by
+        # memory address, so `jr` handed its three draws to a DIFFERENT vertex on
+        # every run: two builds from the same committed source produced two
+        # different props_valley bounding boxes (accessor 186 min/max moved 0.02 to
+        # 0.05 u) and 126 differing 4 kB blocks in scene.glb.  The build claimed to
+        # be deterministic and the ARTIFACT said otherwise — which is only visible
+        # if you rebuild and compare the artifact, never from the log.  index_update
+        # numbers the verts in the bmesh's own creation order, which is.
+        p.bm.verts.index_update()
+        for v in sorted(newv, key=lambda vv: vv.index):
             d = v.co - ctr
             if d.length < 1e-6:
                 continue
