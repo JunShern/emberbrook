@@ -9487,6 +9487,1042 @@
         },
         "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
       }
+    },
+    {
+      "id": "PT-20260805-006",
+      "created": "2026-08-05T01:40:01.622Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-013331",
+      "step": 44,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Cannot walk to the head-gate winches at Lock Five",
+      "doing": "I was trying to walk to the winches under the shelter to complete my objective.",
+      "expected": "I expected to be able to walk up to the winches and interact with them.",
+      "happened": "I keep getting told the area around the winches is not ground I can walk to, so I can't reach the objective.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          20.5,
+          24.07,
+          -6.49
+        ],
+        "to": [
+          20.5,
+          24.07,
+          -6.2
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-013331/frames/step-042.jpg",
+        "docs/qa/playtest/runs/run-20260805-013331/frames/step-043.jpg",
+        "docs/qa/playtest/runs/run-20260805-013331/frames/step-044.jpg"
+      ],
+      "onscreen": {
+        "objective": "Midnight, at Lock Five — the head-gate winches",
+        "prompts": [
+          "Down to the Shelf street? [E]"
+        ],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "gate",
+        "pos": [
+          20.5,
+          24.07,
+          -6.49
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam",
+          "ch2.maren",
+          "ch2.lockfive",
+          "ch2.supper",
+          "ch2.dock"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "story.ch2.maren-met",
+          "story.ch2.plan",
+          "story.ch2.supper",
+          "story.ch2.night",
+          "story.ch2.dock"
+        ],
+        "exits": [
+          "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+          "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+          "del-cine>ow-valley@dellhollow-valley-gate"
+        ]
+      },
+      "repro": {
+        "sha": "edde27bcc594364f52cbd4ebd90f534c6543d270",
+        "capturedAt": "2026-08-05T01:40:01.618Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "story.ch2.maren-met": true,
+            "story.ch2.plan": true,
+            "story.ch2.supper": true,
+            "story.ch2.night": true,
+            "story.ch2.dock": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "gate",
+            "pos": [
+              17.611,
+              24.07,
+              -5.948
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": true,
+            "ch2.jam": true,
+            "ch2.maren": true,
+            "ch2.lockfive": true,
+            "ch2.supper": true,
+            "ch2.dock": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T01:33:46.115Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-007",
+      "created": "2026-08-05T02:15:10.914Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-015721",
+      "step": 151,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Cannot interact with the two figures on the path",
+      "doing": "I walked up to the two people standing on the path of footprints and tried to talk to them.",
+      "expected": "I expected to be able to interact with them to progress the objective.",
+      "happened": "I pressed the interact button multiple times while standing right next to them, but nothing happened.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          36.29,
+          0.46,
+          -17.61
+        ],
+        "to": [
+          35.72,
+          0.46,
+          -17.34
+        ],
+        "scene": "emb-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-149.jpg",
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-150.jpg",
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-151.jpg"
+      ],
+      "onscreen": {
+        "objective": "See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-cine",
+        "shot": "orchard",
+        "pos": [
+          36.29,
+          0.46,
+          -17.61
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.mochi"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "npc.met.emb.shopkeep",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mochi"
+        ],
+        "exits": [
+          "emb-cine>emb-cine@cut:road-gate__orchard:0.750:orchard>arch"
+        ]
+      },
+      "repro": {
+        "sha": "08dd3d0491bb7c06f70abf275735c0a57d6fd3fd",
+        "capturedAt": "2026-08-05T02:15:10.913Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "npc.met.emb.shopkeep": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 3,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mochi": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "emb-cine",
+            "cam": "orchard",
+            "pos": [
+              42.627,
+              0.46,
+              -18.991
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.mochi": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T02:09:42.572Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-008",
+      "created": "2026-08-05T02:16:29.680Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-015721",
+      "step": 163,
+      "source": "stuck-interview",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Cannot interact with Poppy at her stall",
+      "doing": "I'm trying to talk to Poppy at her stall to progress the objective.",
+      "expected": "When I stand next to the figures under the red marker and press interact, a conversation should start.",
+      "happened": "I'm standing right at the red marker next to the figures, but pressing interact does absolutely nothing. I've tried moving around and pressing it from different angles, but I'm stuck.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          45.21,
+          0.46,
+          -19.08
+        ],
+        "to": [
+          45.74,
+          0.46,
+          -21.05
+        ],
+        "scene": "emb-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-161.jpg",
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-162.jpg",
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-163.jpg"
+      ],
+      "onscreen": {
+        "objective": "See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-cine",
+        "shot": "orchard",
+        "pos": [
+          45.21,
+          0.46,
+          -20.43
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.mochi"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "npc.met.emb.shopkeep",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mochi"
+        ],
+        "exits": [
+          "emb-cine>emb-cine@cut:road-gate__orchard:0.750:orchard>arch"
+        ]
+      },
+      "repro": {
+        "sha": "08dd3d0491bb7c06f70abf275735c0a57d6fd3fd",
+        "capturedAt": "2026-08-05T02:16:29.678Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "npc.met.emb.shopkeep": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 3,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mochi": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "emb-cine",
+            "cam": "orchard",
+            "pos": [
+              44.199,
+              0.46,
+              -20.085
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.mochi": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T02:09:42.572Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-009",
+      "created": "2026-08-05T02:19:09.381Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-015721",
+      "step": 188,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Overlapping interaction prompts for 'Leave Item Shop' and 'Talk to shopkeeper'",
+      "doing": "I was trying to leave the item shop after talking to the shopkeeper.",
+      "expected": "I expected to be able to press E to leave the shop.",
+      "happened": "The 'Leave Item Shop? [E]' prompt is overlapping with the 'Talk to the shopkeeper? [E]' prompt. Because they both use the same key, pressing E just makes me talk to the shopkeeper again instead of leaving.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          5.75,
+          0.03,
+          -5.38
+        ],
+        "to": [
+          4.26,
+          0,
+          -5.65
+        ],
+        "scene": "emb-item-int"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-186.jpg",
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-187.jpg",
+        "docs/qa/playtest/runs/run-20260805-015721/frames/step-188.jpg"
+      ],
+      "onscreen": {
+        "objective": "See to them (the cat is fine ✓) — Poppy at her stall, Mara at the Heartlight, Finn at the pond",
+        "prompts": [
+          "Leave Item Shop? [E]",
+          "Talk to the shopkeeper? [E]"
+        ],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-item-int",
+        "shot": null,
+        "pos": [
+          4.5,
+          0,
+          -5.6
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.mochi"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "npc.met.emb.shopkeep",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mochi"
+        ],
+        "exits": [
+          "emb-item-int>emb-cine@item-shop"
+        ]
+      },
+      "repro": {
+        "sha": "08dd3d0491bb7c06f70abf275735c0a57d6fd3fd",
+        "capturedAt": "2026-08-05T02:19:09.379Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "npc.met.emb.shopkeep": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 3,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mochi": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "emb-item-int",
+            "cam": null,
+            "pos": [
+              5.75,
+              0.03,
+              -5.38
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.mochi": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T02:18:28.542Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260805-010",
+      "created": "2026-08-05T02:40:16.500Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260805-022035",
+      "step": 151,
+      "source": "agent",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Old Gate exit loops back to Village Square",
+      "doing": "Walking north towards The Old Gate to leave the village per the objective.",
+      "expected": "Walking north through The Old Gate should transition to the world map or area outside the village.",
+      "happened": "Crossing the northern exit zone at The Old Gate repeatedly transitions back to the Village Square, creating an infinite scene loop.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          59.25,
+          0.18,
+          -12.51
+        ],
+        "to": [
+          58.78,
+          0.28,
+          -15.32
+        ],
+        "scene": "emb-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260805-022035/frames/step-149.jpg",
+        "docs/qa/playtest/runs/run-20260805-022035/frames/step-150.jpg",
+        "docs/qa/playtest/runs/run-20260805-022035/frames/step-151.jpg"
+      ],
+      "onscreen": {
+        "objective": "North, out of the village — the Old Gate",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "emb-cine",
+        "shot": "therise",
+        "pos": [
+          58.34,
+          0.39,
+          -17.98
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.mara",
+          "ch1.see.poppy",
+          "ch1.see.mochi",
+          "ch1.see.finn",
+          "ch1.pact"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "npc.met.mochi.waystone",
+          "story.ch1.reveal",
+          "npc.met.mara",
+          "npc.met.poppy",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "npc.met.emb.girl",
+          "story.ch1.seen.mara",
+          "story.ch1.seen",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mochi",
+          "story.ch1.seen.finn",
+          "story.ch1.pact",
+          "npc.met.rowan"
+        ],
+        "exits": [
+          "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+          "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:therise>square"
+        ]
+      },
+      "repro": {
+        "sha": "764c561fe9a5c35ad0da418bf68412e24de5c3bc",
+        "capturedAt": "2026-08-05T02:40:16.498Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2,
+            "hand-lamp": 1
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "npc.met.mochi.waystone": true,
+            "story.ch1.reveal": true,
+            "npc.met.mara": true,
+            "npc.met.poppy": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "npc.met.emb.girl": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen": 4,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.pact": true,
+            "npc.met.rowan": true
+          },
+          "at": {
+            "chapter": 1,
+            "scene": "emb-cine",
+            "cam": "therise",
+            "pos": [
+              58.337,
+              0.388,
+              -17.981
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": 1,
+            "ch1.waystone": 1,
+            "ch1.reveal": 1,
+            "ch1.rowan": 1,
+            "ch1.lake.handoff": 1,
+            "ch1.lake.wake": 1,
+            "ch1.lake.hearth": 1,
+            "ch1.lake.lamp": 1,
+            "ch1.meet": 1,
+            "ch1.lamps": 1,
+            "ch1.hush": 1,
+            "ch1.see.mara": 1,
+            "ch1.see.poppy": 1,
+            "ch1.see.mochi": 1,
+            "ch1.see.finn": 1,
+            "ch1.pact": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-05T02:37:27.741Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
     }
   ]
 }

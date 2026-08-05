@@ -2661,7 +2661,7 @@ rather than print it raw. Proven on the three states that matter:
 
 `story_test` **1112/0**, `node --check` clean, and the 122-character worst case measured
 by eye against `#story-obj`'s `white-space:nowrap` at 1280 px in
-`run-20260805-015721/frames/step-049.jpg`: one line, no ellipsis.
+`run-20260805-015721/frames/step-050.jpg`: one line, no ellipsis.
 
 **THE STEP BUDGET, STATED RATHER THAN RAISED.** Chapter One from NEW GAME costs ~48
 steps to `ch1.hush` in both runs, and Chapter Two's whole remaining spine cost **8 steps**
@@ -2722,9 +2722,9 @@ subsystem this hour. The measurement is the deliverable.
 gates the rest of Chapter One — at step 130 of 200. `ch1.see.poppy` went from *never in
 200 steps* to *step 57*, and at step 58 the agent's own goal line was *"Head north
 towards the north exit road to find the cat"*: it was reading the roster as the roster
-ticked. Verified by eye in `run-20260805-022035/frames/step-057.jpg` — the banner reads
-`◆ See to them (Mara and Pip ✓) — Poppy at her stall, Finn at the pond, the cat back up
-the north road`, with Mara dropped out of the line.
+ticked. Verified by eye in `run-20260805-022035/frames/step-060.jpg` — by then BOTH ticks
+have landed and the banner reads `◆ See to them (Poppy ✓) — Finn at the pond, the cat
+back up the north road`, naming exactly the two anchors still outstanding.
 
 ### AND THE BOTTLENECK MOVED AGAIN — PT-20260805-010, THE OLD GATE
 
