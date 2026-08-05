@@ -952,6 +952,23 @@
     var r = b ? routeTo(b.scene || scene(), bc) : null;
     var want = (r && r.edge) ? r.edge.id : null;
     var name = b ? destName(b, bc) : null;
+    /* THE ARRIVED SHOT (round 30, run-20260805-211913 step 88). routeTo answers
+     * {hops:0, edge:null} the moment the body stands in the objective's own shot —
+     * and clearHint then put every rival arrow back at FULL strength in the one
+     * shot where they are all guaranteed wrong. Measured: the agent rode the
+     * routed chain shelf->loop-stairs->quay->lockhead in seven legs, stood on the
+     * lockhead ramp with Odessa 14.5 m ahead, read "(unlabelled cut) to your right
+     * and above" over the seam OUT of the shot, aimed at it, and was carried back
+     * to the shelf. So on arrival the demotion STAYS ON with no arrow kept: every
+     * seam in the destination shot is a way out of it, and a player mid-objective
+     * should read them all as "not the way". The beat itself is the only thing
+     * here, and it needs no arrow — its trigger fires on its own ground. */
+    if (b && b.at && r && r.hops === 0 && name) {
+      if (hintEdge) clearHint();
+      dimRivals('');                    // '' matches no data-edge: demote them all
+      lastHint = { beat: b.id, edge: null, dest: name, hops: 0, aim: null, walked: null, crow: null };
+      return;
+    }
     if (!want || !name) { clearHint(); lastHint = null; return; }
     if (want !== hintEdge) clearHint();
     var m = document.querySelector('#exit-markers > div[data-edge="' + cssEsc(want) + '"]');
