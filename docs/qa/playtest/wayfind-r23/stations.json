@@ -1,0 +1,1708 @@
+[
+ {
+  "pos": [
+   58.11,
+   14.24,
+   -12.45
+  ],
+  "scene": "del-cine",
+  "shot": "quay-west",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Find whoever runs the locks — the lockhead, above Lock Five",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "del-cine",
+   "shot": "quay-west",
+   "beat": "ch2.jam",
+   "wantScene": "del-cine",
+   "wantCam": "lockhead",
+   "camAuthored": null,
+   "edge": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+   "hops": 1,
+   "dest": "The Lockhead",
+   "shown": true,
+   "labelled": true,
+   "drawn": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+   "last": {
+    "beat": "ch2.jam",
+    "edge": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+    "dest": "The Lockhead",
+    "hops": 1
+   }
+  },
+  "target": "lockfive",
+  "markers": [
+   {
+    "id": "del-cine>del-cookhouse-int@cookhouse",
+    "label": "Enter Cookhouse",
+    "kind": "door",
+    "to": "del-cookhouse-int",
+    "dist": 18.72,
+    "open": true,
+    "camTo": null,
+    "at": [
+     39.9,
+     14.07,
+     -16.8
+    ],
+    "shown": true,
+    "markerPx": [
+     820.6577758789062,
+     299.41900634765625
+    ],
+    "boxPx": [
+     820.658,
+     297.659
+    ],
+    "glyphPx": [
+     820.6577758789062,
+     299.41900634765625
+    ],
+    "seamPx": [
+     816.0105316039648,
+     416.41260186280476
+    ],
+    "arrowPx": [
+     820.657787493206,
+     301.2908877749409
+    ],
+    "liftPx": 117,
+    "liftFrac": 0.164,
+    "pick": [
+     {
+      "name": "qm_cookhouse001_1",
+      "pt": [
+       40.11,
+       16.57,
+       -15.58
+      ],
+      "d": 27.28
+     },
+     {
+      "name": "qm_cookhouse001_8",
+      "pt": [
+       40.11,
+       16.55,
+       -15.51
+      ],
+      "d": 27.35
+     },
+     {
+      "name": "qm_cookhouse001_8",
+      "pt": [
+       40.13,
+       16.53,
+       -15.43
+      ],
+      "d": 27.44
+     }
+    ],
+    "capPx": [
+     816.0105316039648,
+     396.41260186280476
+    ],
+    "capPick": [
+     {
+      "name": "qm_cookhouse001_1",
+      "pt": [
+       40.09,
+       14.1,
+       -15.58
+      ],
+      "d": 28.06
+     },
+     {
+      "name": "qm_cookhouse001",
+      "pt": [
+       40.12,
+       14.03,
+       -15.39
+      ],
+      "d": 28.26
+     },
+     {
+      "name": "qm_planking",
+      "pt": [
+       40.12,
+       14.02,
+       -15.36
+      ],
+      "d": 28.29
+     }
+    ],
+    "caps": [
+     {
+      "cap": 20,
+      "px": [
+       816.0105316039648,
+       396.41260186280476
+      ],
+      "pick": [
+       {
+        "name": "qm_cookhouse001_1",
+        "pt": [
+         40.09,
+         14.1,
+         -15.58
+        ],
+        "d": 28.06
+       },
+       {
+        "name": "qm_cookhouse001",
+        "pt": [
+         40.12,
+         14.03,
+         -15.39
+        ],
+        "d": 28.26
+       },
+       {
+        "name": "qm_planking",
+        "pt": [
+         40.12,
+         14.02,
+         -15.36
+        ],
+        "d": 28.29
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+    "label": "Up to the Valley Gate",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 36.77,
+    "open": true,
+    "camTo": null,
+    "at": [
+     22,
+     19.04,
+     -5.5
+    ],
+    "shown": false,
+    "markerPx": [
+     1242,
+     62
+    ],
+    "boxPx": [
+     1242,
+     62
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1578.3448855045208,
+     165.54041244727557
+    ],
+    "arrowPx": [
+     1600.0583405648865,
+     55.13346337791005
+    ],
+    "liftPx": 103.5,
+    "liftFrac": 0.145,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+    "label": "Down to the Shelf street",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 38.13,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.5,
+     24.07,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     609.33,
+     238.068
+    ],
+    "boxPx": [
+     609.33,
+     238.068
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1721.6117616551549,
+     -33.504373729838676
+    ],
+    "arrowPx": [
+     1749.1425442576297,
+     -157.01596181661418
+    ],
+    "liftPx": -271.6,
+    "liftFrac": -0.381,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 38.3,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.352,
+     22.57,
+     -3.32
+    ],
+    "shown": false,
+    "markerPx": [
+     694.429,
+     279.108
+    ],
+    "boxPx": [
+     694.429,
+     279.108
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1651.0185720704053,
+     25.193184709099114
+    ],
+    "arrowPx": [
+     1674.1271341546815,
+     -87.43671192331414
+    ],
+    "liftPx": -253.9,
+    "liftFrac": -0.356,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 1.76,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.65,
+     16.197,
+     -11.5
+    ],
+    "shown": true,
+    "markerPx": [
+     349.8437194824219,
+     140.28810119628906
+    ],
+    "boxPx": [
+     349.844,
+     138.528
+    ],
+    "glyphPx": [
+     349.8437194824219,
+     140.28810119628906
+    ],
+    "seamPx": [
+     355.55154286229515,
+     237.5315105489677
+    ],
+    "arrowPx": [
+     349.8437177891624,
+     139.25019120688268
+    ],
+    "liftPx": 97.2,
+    "liftFrac": 0.136,
+    "pick": [
+     {
+      "name": "qm_ground001",
+      "pt": [
+       59.88,
+       17.73,
+       -2.64
+      ],
+      "d": 45.83
+     },
+     {
+      "name": "qm_cliffface",
+      "pt": [
+       61.06,
+       17.41,
+       -0.67
+      ],
+      "d": 48.14
+     },
+     {
+      "name": "cliff_town_back",
+      "pt": [
+       67.22,
+       15.74,
+       9.6
+      ],
+      "d": 60.24
+     }
+    ],
+    "capPx": [
+     355.55154286229515,
+     217.5315105489677
+    ],
+    "capPick": [
+     {
+      "name": "walk_e_loop-landing__quay-deck_l0_t02",
+      "pt": [
+       54.87,
+       16.71,
+       -11.04
+      ],
+      "d": 36.35
+     },
+     {
+      "name": "ls_treads",
+      "pt": [
+       54.92,
+       16.69,
+       -10.96
+      ],
+      "d": 36.46
+     },
+     {
+      "name": "ls_treads",
+      "pt": [
+       54.96,
+       16.68,
+       -10.89
+      ],
+      "d": 36.54
+     }
+    ],
+    "caps": [
+     {
+      "cap": 20,
+      "px": [
+       355.55154286229515,
+       217.5315105489677
+      ],
+      "pick": [
+       {
+        "name": "walk_e_loop-landing__quay-deck_l0_t02",
+        "pt": [
+         54.87,
+         16.71,
+         -11.04
+        ],
+        "d": 36.35
+       },
+       {
+        "name": "ls_treads",
+        "pt": [
+         54.92,
+         16.69,
+         -10.96
+        ],
+        "d": 36.46
+       },
+       {
+        "name": "ls_treads",
+        "pt": [
+         54.96,
+         16.68,
+         -10.89
+        ],
+        "d": 36.54
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 3.89,
+    "open": true,
+    "camTo": null,
+    "at": [
+     61.793,
+     13.995,
+     -13.729
+    ],
+    "shown": true,
+    "markerPx": [
+     105.70084762573242,
+     287.279541015625
+    ],
+    "boxPx": [
+     105.709,
+     214.38
+    ],
+    "glyphPx": [
+     105.70084762573242,
+     287.279541015625
+    ],
+    "seamPx": [
+     116.01847239630366,
+     306.69400839324845
+    ],
+    "arrowPx": [
+     105.70865380755343,
+     211.10186929251591
+    ],
+    "liftPx": 19.4,
+    "liftFrac": 0.027,
+    "pick": [
+     {
+      "name": "wf_ground",
+      "pt": [
+       63.03,
+       14.24,
+       -12.67
+      ],
+      "d": 40.41
+     },
+     {
+      "name": "cliff_town_back",
+      "pt": [
+       83.45,
+       6.68,
+       9.6
+      ],
+      "d": 71.55
+     }
+    ],
+    "capPx": [
+     116.01847239630366,
+     287.279541015625
+    ],
+    "capPick": [
+     {
+      "name": "wf_ground",
+      "pt": [
+       62.71,
+       14.25,
+       -12.58
+      ],
+      "d": 40.27
+     },
+     {
+      "name": "qm_paving",
+      "pt": [
+       63.28,
+       14.03,
+       -11.95
+      ],
+      "d": 41.14
+     },
+     {
+      "name": "cliff_town_back",
+      "pt": [
+       82.74,
+       6.74,
+       9.6
+      ],
+      "d": 71.08
+     }
+    ],
+    "caps": [
+     {
+      "cap": 20,
+      "px": [
+       116.01847239630366,
+       287.279541015625
+      ],
+      "pick": [
+       {
+        "name": "wf_ground",
+        "pt": [
+         62.71,
+         14.25,
+         -12.58
+        ],
+        "d": 40.27
+       },
+       {
+        "name": "qm_paving",
+        "pt": [
+         63.28,
+         14.03,
+         -11.95
+        ],
+        "d": 41.14
+       },
+       {
+        "name": "cliff_town_back",
+        "pt": [
+         82.74,
+         6.74,
+         9.6
+        ],
+        "d": 71.08
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 4.2,
+    "open": true,
+    "camTo": null,
+    "at": [
+     58.783,
+     13.13,
+     -17.773
+    ],
+    "shown": true,
+    "markerPx": [
+     96.52669525146484,
+     280.7208557128906
+    ],
+    "boxPx": [
+     96.5267,
+     278.961
+    ],
+    "glyphPx": [
+     96.52669525146484,
+     280.7208557128906
+    ],
+    "seamPx": [
+     108.42672344291749,
+     385.5679091829534
+    ],
+    "arrowPx": [
+     96.52669152973871,
+     282.70562669268554
+    ],
+    "liftPx": 104.8,
+    "liftFrac": 0.147,
+    "pick": [
+     {
+      "name": "wf_ground",
+      "pt": [
+       63.4,
+       14.42,
+       -12.61
+      ],
+      "d": 40.65
+     },
+     {
+      "name": "cliff_town_back",
+      "pt": [
+       84,
+       7.03,
+       9.6
+      ],
+      "d": 71.84
+     }
+    ],
+    "capPx": [
+     108.42672344291749,
+     365.5679091829534
+    ],
+    "capPick": [
+     {
+      "name": "qm_rail001",
+      "pt": [
+       56.81,
+       14.6,
+       -19.77
+      ],
+      "d": 31.23
+     },
+     {
+      "name": "walk_e_quay-deck__pilot-cluster_landing",
+      "pt": [
+       58.19,
+       13.96,
+       -18.3
+      ],
+      "d": 33.35
+     },
+     {
+      "name": "wf_ground",
+      "pt": [
+       60.93,
+       12.68,
+       -15.35
+      ],
+      "d": 37.57
+     }
+    ],
+    "caps": [
+     {
+      "cap": 20,
+      "px": [
+       108.42672344291749,
+       365.5679091829534
+      ],
+      "pick": [
+       {
+        "name": "qm_rail001",
+        "pt": [
+         56.81,
+         14.6,
+         -19.77
+        ],
+        "d": 31.23
+       },
+       {
+        "name": "walk_e_quay-deck__pilot-cluster_landing",
+        "pt": [
+         58.19,
+         13.96,
+         -18.3
+        ],
+        "d": 33.35
+       },
+       {
+        "name": "wf_ground",
+        "pt": [
+         60.93,
+         12.68,
+         -15.35
+        ],
+        "d": 37.57
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 18.01,
+    "open": true,
+    "camTo": null,
+    "at": [
+     40.023,
+     11.13,
+     -19.275
+    ],
+    "shown": true,
+    "markerPx": [
+     790.2079467773438,
+     460.0871887207031
+    ],
+    "boxPx": [
+     790.208,
+     458.327
+    ],
+    "glyphPx": [
+     790.2079467773438,
+     460.0871887207031
+    ],
+    "seamPx": [
+     786.153817198194,
+     577.3176032209517
+    ],
+    "arrowPx": [
+     790.2079655083744,
+     462.35326696235813
+    ],
+    "liftPx": 117.2,
+    "liftFrac": 0.164,
+    "pick": [
+     {
+      "name": "qm_ground001",
+      "pt": [
+       41.16,
+       10.83,
+       -12.26
+      ],
+      "d": 32.49
+     },
+     {
+      "name": "cliff_town_back",
+      "pt": [
+       44.6,
+       0.97,
+       9.6
+      ],
+      "d": 56.71
+     }
+    ],
+    "capPx": [
+     786.153817198194,
+     557.3176032209517
+    ],
+    "capPick": [
+     {
+      "name": "walk_e_deep-stairs-head__deep-stairs-foot_l0_t07",
+      "pt": [
+       40.15,
+       11.27,
+       -18.63
+      ],
+      "d": 26.51
+     },
+     {
+      "name": "cliff_town_back",
+      "pt": [
+       44.58,
+       -4.46,
+       9.6
+      ],
+      "d": 59.13
+     }
+    ],
+    "caps": [
+     {
+      "cap": 20,
+      "px": [
+       786.153817198194,
+       557.3176032209517
+      ],
+      "pick": [
+       {
+        "name": "walk_e_deep-stairs-head__deep-stairs-foot_l0_t07",
+        "pt": [
+         40.15,
+         11.27,
+         -18.63
+        ],
+        "d": 26.51
+       },
+       {
+        "name": "cliff_town_back",
+        "pt": [
+         44.58,
+         -4.46,
+         9.6
+        ],
+        "d": 59.13
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 1.29,
+    "open": true,
+    "camTo": null,
+    "at": [
+     57.915,
+     15.93,
+     -10.075
+    ],
+    "shown": true,
+    "markerPx": [
+     281.687255859375,
+     137.23854064941406
+    ],
+    "boxPx": [
+     281.687,
+     135.479
+    ],
+    "glyphPx": [
+     281.687255859375,
+     137.23854064941406
+    ],
+    "seamPx": [
+     288.30225482232504,
+     229.52371503780373
+    ],
+    "arrowPx": [
+     281.68726595134,
+     135.3709777009103
+    ],
+    "liftPx": 92.3,
+    "liftFrac": 0.129,
+    "pick": [
+     {
+      "name": "qm_ground001",
+      "pt": [
+       62.85,
+       17.72,
+       -2.61
+      ],
+      "d": 47.44
+     },
+     {
+      "name": "cliff_town_back",
+      "pt": [
+       71.1,
+       15.73,
+       9.6
+      ],
+      "d": 62.3
+     }
+    ],
+    "capPx": [
+     288.30225482232504,
+     209.52371503780373
+    ],
+    "capPick": [
+     {
+      "name": "qm_ground001",
+      "pt": [
+       61.47,
+       15.33,
+       -4.71
+      ],
+      "d": 45.35
+     },
+     {
+      "name": "cliff_town_back",
+      "pt": [
+       71.14,
+       11.94,
+       9.6
+      ],
+      "d": 62.95
+     }
+    ],
+    "caps": [
+     {
+      "cap": 20,
+      "px": [
+       288.30225482232504,
+       209.52371503780373
+      ],
+      "pick": [
+       {
+        "name": "qm_ground001",
+        "pt": [
+         61.47,
+         15.33,
+         -4.71
+        ],
+        "d": 45.35
+       },
+       {
+        "name": "cliff_town_back",
+        "pt": [
+         71.14,
+         11.94,
+         9.6
+        ],
+        "d": 62.95
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "del-cine>ow-valley@dellhollow-valley-gate",
+    "label": "Leave Dellhollow",
+    "kind": "portal",
+    "to": "ow-valley",
+    "dist": 56.85,
+    "open": true,
+    "camTo": null,
+    "at": [
+     1.6,
+     24.04,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     691.991,
+     508.136
+    ],
+    "boxPx": [
+     691.991,
+     508.136
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     2913.11931935168,
+     -32.05994251242528
+    ],
+    "arrowPx": [
+     2984.9178319309895,
+     -178.05532639393005
+    ],
+    "liftPx": -540.2,
+    "liftFrac": -0.758,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "PT033-stall",
+  "want": [
+   58.11,
+   14.24,
+   -12.45
+  ],
+  "hop": {
+   "here": "quay-west",
+   "hops": 2,
+   "m": 22.88702511171051,
+   "path": [
+    {
+     "edge": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+     "from": "quay-west",
+     "to": "weave"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__moorage:0.273:weave>lockfive",
+     "from": "weave",
+     "to": "lockfive"
+    }
+   ],
+   "alts": [
+    {
+     "hops": 5,
+     "m": 43.8142821790344,
+     "first": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead"
+    },
+    {
+     "hops": 4,
+     "m": 48.89607008754899,
+     "first": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs"
+    }
+   ]
+  },
+  "uiClear": true
+ },
+ {
+  "pos": [
+   61.64,
+   14.24,
+   -14.34
+  ],
+  "scene": "del-cine",
+  "shot": "lockhead",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Find whoever runs the locks — the lockhead, above Lock Five",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "del-cine",
+   "shot": "lockhead",
+   "beat": "ch2.jam",
+   "wantScene": "del-cine",
+   "wantCam": "lockhead",
+   "camAuthored": null,
+   "edge": null,
+   "hops": 0,
+   "dest": "The Lockhead",
+   "shown": false,
+   "labelled": false,
+   "drawn": null,
+   "last": null
+  },
+  "target": "lockfive",
+  "markers": [
+   {
+    "id": "del-cine>del-cookhouse-int@cookhouse",
+    "label": "Enter Cookhouse",
+    "kind": "door",
+    "to": "del-cookhouse-int",
+    "dist": 21.88,
+    "open": true,
+    "camTo": null,
+    "at": [
+     39.9,
+     14.07,
+     -16.8
+    ],
+    "shown": false,
+    "markerPx": [
+     820.658,
+     296.386
+    ],
+    "boxPx": [
+     820.658,
+     296.386
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1740.183597455829,
+     223.2665451497335
+    ],
+    "arrowPx": [
+     1769.3687382327041,
+     122.37244965976942
+    ],
+    "liftPx": -73.1,
+    "liftFrac": -0.103,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+    "label": "Up to the Valley Gate",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 40.61,
+    "open": true,
+    "camTo": null,
+    "at": [
+     22,
+     19.04,
+     -5.5
+    ],
+    "shown": false,
+    "markerPx": [
+     1242,
+     62
+    ],
+    "boxPx": [
+     1242,
+     62
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1701.307468567729,
+     -17.773141732292807
+    ],
+    "arrowPx": [
+     1720.9048788609005,
+     -101.57217625596556
+    ],
+    "liftPx": -79.8,
+    "liftFrac": -0.112,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+    "label": "Down to the Shelf street",
+    "kind": "passage",
+    "to": "del-cine",
+    "dist": 41.94,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.5,
+     24.07,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     609.33,
+     238.068
+    ],
+    "boxPx": [
+     609.33,
+     238.068
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1792.7699262187894,
+     -150.04419822691293
+    ],
+    "arrowPx": [
+     1815.0547965755948,
+     -238.92404042515136
+    ],
+    "liftPx": -388.1,
+    "liftFrac": -0.544,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 42.15,
+    "open": true,
+    "camTo": null,
+    "at": [
+     20.352,
+     22.57,
+     -3.32
+    ],
+    "shown": false,
+    "markerPx": [
+     694.429,
+     279.108
+    ],
+    "boxPx": [
+     694.429,
+     279.108
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1694.2625256568306,
+     -111.25915810043102
+    ],
+    "arrowPx": [
+     1713.3196616885434,
+     -195.61449672568082
+    ],
+    "liftPx": -390.4,
+    "liftFrac": -0.547,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 5.65,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.65,
+     16.197,
+     -11.5
+    ],
+    "shown": false,
+    "markerPx": [
+     349.844,
+     141.276
+    ],
+    "boxPx": [
+     349.844,
+     141.276
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1225.7929734972233,
+     161.56993168068527
+    ],
+    "arrowPx": [
+     1242.319243431673,
+     54.43408572351862
+    ],
+    "liftPx": 20.3,
+    "liftFrac": 0.028,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-west>lockhead",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 0.01,
+    "open": true,
+    "camTo": null,
+    "at": [
+     61.793,
+     13.995,
+     -13.729
+    ],
+    "shown": false,
+    "markerPx": [
+     105.709,
+     215.888
+    ],
+    "boxPx": [
+     105.709,
+     215.888
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1065.9641970727919,
+     301.1981637441476
+    ],
+    "arrowPx": [
+     1079.61243991134,
+     188.06690398435288
+    ],
+    "liftPx": 85.3,
+    "liftFrac": 0.12,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:lockhead>quay-west",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 0.01,
+    "open": true,
+    "camTo": null,
+    "at": [
+     61.793,
+     13.995,
+     -13.729
+    ],
+    "shown": true,
+    "markerPx": [
+     1079.6124267578125,
+     192.89207458496094
+    ],
+    "boxPx": [
+     1079.61,
+     192.892
+    ],
+    "glyphPx": [
+     1079.6124267578125,
+     192.89207458496094
+    ],
+    "seamPx": [
+     1065.9641970727919,
+     301.1981637441476
+    ],
+    "arrowPx": [
+     1079.61243991134,
+     188.06690398435288
+    ],
+    "liftPx": 108.3,
+    "liftFrac": 0.152,
+    "pick": [
+     {
+      "name": "ls_treads",
+      "pt": [
+       58.85,
+       15.58,
+       -10.69
+      ],
+      "d": 32.91
+     },
+     {
+      "name": "walk_e_shelf-homes__market-stalls_l1_t05",
+      "pt": [
+       58.85,
+       15.58,
+       -10.69
+      ],
+      "d": 32.91
+     },
+     {
+      "name": "qm_stair_underworks",
+      "pt": [
+       58.18,
+       15.34,
+       -10.03
+      ],
+      "d": 33.89
+     }
+    ],
+    "capPx": [
+     1065.9641970727919,
+     281.1981637441476
+    ],
+    "capPick": [
+     {
+      "name": "walk_lm_market-stalls",
+      "pt": [
+       61.31,
+       14.24,
+       -13.15
+      ],
+      "d": 29.97
+     },
+     {
+      "name": "walk_e_market-stalls__lockhead_l0",
+      "pt": [
+       60.95,
+       14.07,
+       -12.79
+      ],
+      "d": 30.51
+     },
+     {
+      "name": "qm_paving",
+      "pt": [
+       60.84,
+       14.02,
+       -12.69
+      ],
+      "d": 30.66
+     }
+    ],
+    "caps": [
+     {
+      "cap": 20,
+      "px": [
+       1065.9641970727919,
+       281.1981637441476
+      ],
+      "pick": [
+       {
+        "name": "walk_lm_market-stalls",
+        "pt": [
+         61.31,
+         14.24,
+         -13.15
+        ],
+        "d": 29.97
+       },
+       {
+        "name": "walk_e_market-stalls__lockhead_l0",
+        "pt": [
+         60.95,
+         14.07,
+         -12.79
+        ],
+        "d": 30.51
+       },
+       {
+        "name": "qm_paving",
+        "pt": [
+         60.84,
+         14.02,
+         -12.69
+        ],
+        "d": 30.66
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 3.16,
+    "open": true,
+    "camTo": null,
+    "at": [
+     58.783,
+     13.13,
+     -17.773
+    ],
+    "shown": false,
+    "markerPx": [
+     96.5267,
+     277.771
+    ],
+    "boxPx": [
+     96.5267,
+     277.771
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1296.676920259893,
+     376.3336002245708
+    ],
+    "arrowPx": [
+     1319.336226965712,
+     259.3989052290011
+    ],
+    "liftPx": 98.6,
+    "liftFrac": 0.138,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 21.05,
+    "open": true,
+    "camTo": null,
+    "at": [
+     40.023,
+     11.13,
+     -19.275
+    ],
+    "shown": false,
+    "markerPx": [
+     790.208,
+     457.366
+    ],
+    "boxPx": [
+     790.208,
+     457.366
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1803.7875039934763,
+     347.0264668714542
+    ],
+    "arrowPx": [
+     1835.563091675922,
+     247.43740726553875
+    ],
+    "liftPx": -110.3,
+    "liftFrac": -0.155,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.222:lockhead>cottage",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 21.84,
+    "open": true,
+    "camTo": null,
+    "at": [
+     83.62,
+     12.982,
+     -16.936
+    ],
+    "shown": true,
+    "markerPx": [
+     38,
+     492.5975036621094
+    ],
+    "boxPx": [
+     38,
+     492.597
+    ],
+    "glyphPx": [
+     38,
+     492.5975036621094
+    ],
+    "seamPx": [
+     62.70712101520502,
+     645.5930633235162
+    ],
+    "arrowPx": [
+     32.42788687910085,
+     497.5719761221385
+    ],
+    "liftPx": 153,
+    "liftFrac": 0.215,
+    "pick": [
+     {
+      "name": "t2c_LH1_station_awning_1",
+      "pt": [
+       83.48,
+       15.5,
+       -16.7
+      ],
+      "d": 18.55
+     },
+     {
+      "name": "lk_station_4",
+      "pt": [
+       83.64,
+       14.82,
+       -15.38
+      ],
+      "d": 20.04
+     },
+     {
+      "name": "lk_station_1",
+      "pt": [
+       83.68,
+       14.64,
+       -15.03
+      ],
+      "d": 20.43
+     }
+    ],
+    "capPx": [
+     62.70712101520502,
+     625.5930633235162
+    ],
+    "capPick": [
+     {
+      "name": "walk_e_lockhead__keepers-cottage_l3",
+      "pt": [
+       83.61,
+       13.03,
+       -16.48
+      ],
+      "d": 19.99
+     },
+     {
+      "name": "lk_boardwalk",
+      "pt": [
+       83.62,
+       12.99,
+       -16.42
+      ],
+      "d": 20.06
+     },
+     {
+      "name": "lk_boardwalk_frame_1",
+      "pt": [
+       83.68,
+       12.69,
+       -15.96
+      ],
+      "d": 20.61
+     }
+    ],
+    "caps": [
+     {
+      "cap": 20,
+      "px": [
+       62.70712101520502,
+       625.5930633235162
+      ],
+      "pick": [
+       {
+        "name": "walk_e_lockhead__keepers-cottage_l3",
+        "pt": [
+         83.61,
+         13.03,
+         -16.48
+        ],
+        "d": 19.99
+       },
+       {
+        "name": "lk_boardwalk",
+        "pt": [
+         83.62,
+         12.99,
+         -16.42
+        ],
+        "d": 20.06
+       },
+       {
+        "name": "lk_boardwalk_frame_1",
+        "pt": [
+         83.68,
+         12.69,
+         -15.96
+        ],
+        "d": 20.61
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs",
+    "label": null,
+    "kind": "cut",
+    "to": "del-cine",
+    "dist": 5.3,
+    "open": true,
+    "camTo": null,
+    "at": [
+     57.915,
+     15.93,
+     -10.075
+    ],
+    "shown": false,
+    "markerPx": [
+     281.687,
+     132.797
+    ],
+    "boxPx": [
+     281.687,
+     132.797
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     1091.8461770350305,
+     171.31822282310887
+    ],
+    "arrowPx": [
+     1104.5579959991405,
+     64.67187451304865
+    ],
+    "liftPx": 38.5,
+    "liftFrac": 0.054,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   },
+   {
+    "id": "del-cine>ow-valley@dellhollow-valley-gate",
+    "label": "Leave Dellhollow",
+    "kind": "portal",
+    "to": "ow-valley",
+    "dist": 60.59,
+    "open": true,
+    "camTo": null,
+    "at": [
+     1.6,
+     24.04,
+     -6.2
+    ],
+    "shown": false,
+    "markerPx": [
+     691.991,
+     508.136
+    ],
+    "boxPx": [
+     691.991,
+     508.136
+    ],
+    "glyphPx": null,
+    "seamPx": [
+     2021.617765188413,
+     -148.91547744987358
+    ],
+    "arrowPx": [
+     2044.6586383122872,
+     -229.69039354126494
+    ],
+    "liftPx": -657.1,
+    "liftFrac": -0.922,
+    "pick": null,
+    "capPx": null,
+    "capPick": null,
+    "caps": null
+   }
+  ],
+  "station": "PT033-prev",
+  "want": [
+   61.64,
+   14.24,
+   -14.34
+  ],
+  "hop": {
+   "here": "lockhead",
+   "hops": 3,
+   "m": 22.925919390397844,
+   "path": [
+    {
+     "edge": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:lockhead>quay-west",
+     "from": "lockhead",
+     "to": "quay-west"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+     "from": "quay-west",
+     "to": "weave"
+    },
+    {
+     "edge": "del-cine>del-cine@cut:weave-huts__moorage:0.273:weave>lockfive",
+     "from": "weave",
+     "to": "lockfive"
+    }
+   ],
+   "alts": [
+    {
+     "hops": 4,
+     "m": 42.811966235687635,
+     "first": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.222:lockhead>cottage"
+    },
+    {
+     "hops": 5,
+     "m": 50.35119430061837,
+     "first": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:lockhead>quay-west"
+    }
+   ]
+  },
+  "uiClear": true
+ }
+]
