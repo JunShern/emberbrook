@@ -2299,8 +2299,28 @@ the whole argument for this instrument.
 
 **IT PREDATES TONIGHT — measured, not assumed.** The pre-re-derive `scene.glb`
 (`d63fd12`) was checked out under the same probe: floors, blockers and both drives came
-back **identical**. Filed, carried, and it wants a map line plus a district build, not a
-patch at 05:00.
+back **identical**.
+
+**AND THE MESH IS NAMED.** `--mesh` (through the `SIM.pad` fix below) gives the two
+records' own boxes, and `--at` says what they do to a body:
+
+| record | box |
+|---|---|
+| `walk_e_shelf-homes__market-stalls_landing001` | x 57.90..59.90, **top 15.30**, z −11.60..−9.60 |
+| `walk_e_shelf-homes__market-stalls_l1_t04` | x 57.57..58.73, **underside 15.93**, z −10.95..−9.45 |
+
+**The last tread ROOFS the landing it arrives at**, over the strip where they overlap in
+plan, with **0.63 m** of headroom against `BODY_H 1.30`. `--at` confirms it in one line:
+at `[58.3, −10.3]` a body at 15.30 is blocked *by `l1_t04`*; two-thirds of a metre south,
+at `[58.3, −11.3]`, the same height is **clear**. So the landing's west end is a separate
+room, reachable only by coming down the flight past the tread, and unleavable: east is
+0.63 m of headroom, west is `ls_rail`, below is a 1.06 m drop against `STEP_DN 0.8`. The
+drive is unambiguous — `[59.4,15.3,−10.3] → west` walks 2/2 legs by CLIMBING the flight
+instead of passing under it, and `[58.19,15.3,−11.3] → east` closes **0 m of 1.0 m**.
+
+The fix is one map line in round 12's own shape — move the l1 landing out from under the
+flight, or drop a tread — and it owes `walk_rederive` + the district build + `cine_solve`
++ the plates that see it. A build lane, not a patch at 06:00.
 
 ### THE STALE WALK RECORDS — four of the nine were free, five are a build lane
 
