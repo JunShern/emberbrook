@@ -3618,3 +3618,66 @@ from their walk records at build time — `gs_build` (valley-gate__inn), `ls_bui
 edge joins the set only when its art is carried in the same window; `waterfront_build.py` (which
 clears its own `wf_` prefix and rebuilds deterministically) is what made the deep stairs safe to
 do first. **The other 13 landings are still v1 and still 48–70% standable.**
+
+### THE RECEIPT RUN — `--from=ch2.jam --steps=120`: **MAREN BY FOOT, AND SEVEN OF NINE**
+
+`run-20260805-092547`, ~40 steps before it hard-stalled and was killed, **~$0.15**. Against
+round 20's run, which spent 36 of 80 steps on the deep stairs and fired NOTHING:
+
+| beat | step | |
+|---|---|---|
+| `ch2.jam` | 1 | |
+| `ch2.maren` | **28** | **the first time a run has reached Maren on foot** |
+| `ch2.lockfive` | 29 | |
+| `ch2.supper` | 32 | inside the Keepers' Cottage |
+| `ch2.dock` | 34 | |
+| `ch2.winches`, `ch2.landing` | **never** | the run died 2 beats from the end card |
+
+The route it took is worth recording because nobody had seen it walked: Lockhead -> west along
+the deck -> the Cookhouse (a 2-step detour) -> **down past the weave** -> the moorage deck at
+1.25 -> Maren -> the cottage -> supper -> out. **It never used the deep stairs**, which is its own
+finding: the flight this round fixed is not the spine's route from `ch2.jam`, it is the route the
+LAST run wandered onto and could not leave.
+
+**IT DIED ON THE KEEPERS' STEPS**, at `[94.22, 7.15, -23.16]`, four steps of zero gain, the agent's
+own last words *"walk down the green stairs"* and the adapter's `is not ground you can walk to`.
+That is round 14's other carried item — *"the keepers' steps do not drive end to end"* — and it is
+now the thing between `ch2.dock` and the end card.
+
+### AND THE KEEPERS' STEPS ARE A DIFFERENT DEFECT — MEASURED, AND THE FIX REVERTED
+
+`keepers-cottage__lock-five` and `weave-huts__moorage` were migrated to v2 in this same window
+(map -> blockout -> `walk_rederive` x2 -> `lg_build` + `cx_build` + `locksfoot_build` +
+`waterfront_build` -> glb) and **the result was worse, so it was reverted to the receipted commit**:
+
+| | v1 | v2 |
+|---|---|---|
+| keepers `--way` down, 25 legs | stalls (round 14: `[94.04, 6.77, -23.72]`) | **8/25**, `[94.11, 6.40, -23.85]` — one tread further |
+| keepers landings | 48% / 54% / 55% | 53% / 67% / 97% |
+| **moorage `--way` down, 23 legs** | — | **5/23** |
+| moorage landings | 63% / 68% / 57% | 79% / **59%** / 58% — `lf_lantern_1_1`, `cx_mr_slabs_2` |
+
+**WHY THE PIVOT SPLIT DOES NOTHING THERE.** The keepers' turns are **94, 25 and 27 degrees** — the
+offset ramps in above 80 and is ~0.24 m at the first pivot and ZERO at the other two. Its defect is
+not a switchback stack at all: `l0` is the steepest flight in the town at **2.63 m of rise over
+3.13 m of run (44 degrees)**, and on a flight that steep the tread TWO ABOVE you is
+`2 x 0.376 = 0.75 m` up — **inside `blocked()`'s `[+0.65, +1.30]` body window**. Measured on the
+shipped bundle: standing at `[94.11, -23.85]` on floor 6.02, `SIM.blocked` names
+`walk_e_keepers-cottage__lock-five_l0_t03` (top 6.77). **Every tread of that flight is roofed by
+its own flight ALONG ITS OWN LINE**, and no lateral offset can move a tread out from under the one
+above it. This is exactly round 14's `2*step + 0.07 <= 0.65`, i.e. `step <= 0.29`, and the only
+levers are the RISER (a smaller max rise per tread, which `n = ceil(rise/0.4)` fixes today) or the
+map's own gradient. `boxSolid` is triangle-exact through the BVH, so this is real geometry and not
+a bounding-box artefact — that was checked before believing it.
+
+**And the moorage flight is entangled with its own art, not its landings.** v2 moved the ribbon and
+`cx_build`/`locksfoot_build` faithfully rebuilt `cx_rail`, `cx_mr_slabs_2`, `wv_stair_treads` and
+`lf_lantern_1_1` onto it — and those are what the body now hits. A district builder that follows
+the walk network is not the same as a district that fits the body.
+
+**NEXT LANE, precisely scoped:** a MAX-RISER cap for steep stairs legs in `stairs_leg`
+(`ceil(rise/0.4)` -> a slope-aware divisor), swept on the offline whole-network model FIRST, then
+`keepers-cottage__lock-five` alone with `lg_build`. The receipt is `--way` 25/25 down and the same
+`--from=ch2.jam` run reaching `ch2.landing`.
+
+**BUDGET this round: ~$0.15 of the ~$0.40 approved for the receipt.**
