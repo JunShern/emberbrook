@@ -2605,9 +2605,28 @@ Under 1% on every term. `matclass`'s declared boxes on the after plate read roof
 **0.859** against r14's ratified 0.85 and the reference's 0.823.
 
 Tris **369,043 -> 370,683** (+1,640 region-wide, +117 a house) against a 1.4M ceiling.
-Gates: `walk_engine_gate ow-valley` GREEN (0 lost cells of 2065, BVH 0 FAIL — the house pads
-grew and stayed collidable-consistent), `findability_test` 69/0, `slice_test` 812/0,
-`cine_test` 646/0, `valley_verify` OK. Blind pack `docs/qa/ow-refs/blind-r25`, NOT yet judged.
+Gates all green on the shipped bundle: `walk_engine_gate ow-valley` GREEN (0 lost cells of
+2065, BVH 0 FAIL — the house pads grew and stayed collidable-consistent), `playthrough_test`
+**86/0** with §W 21 same-scene pairs flood-filled and 0 unreachable, `findability_test` 69/0,
+`slice_test` 812/0, `cine_test` 646/0, `valley_verify` OK. Blind pack
+`docs/qa/ow-refs/blind-r25`, NOT yet judged.
+
+### AND THE BUILD DID NOT REPRODUCE — found only by rebuilding the artifact
+
+Proving the family's before/after meant rebuilding from committed source and comparing, and
+the two builds disagreed: same length, same 36 meshes and 268 accessors, **126 differing 4 kB
+blocks** and accessor 186 (`props_valley` POSITION) min/max moved 0.02-0.05 u. One line in
+r24's outcrop pass — `newv` is a Python SET of BMVert, and a set of BMVert orders by HASH,
+i.e. by memory address, so `jr.uniform()` handed its three grain draws to a different vertex
+every run. The harmonics read `nrm` and were fine; only the grain moved, which is why it
+stayed under 0.05 u and was invisible by eye while every gate stayed green.
+
+**A CONTENT DIGEST THAT FLAPS CANNOT GATE ANYTHING, AND AN ART LANE CANNOT ATTRIBUTE AN A/B
+TO ITS OWN CHANGE WHILE THE BUILDER MOVES VERTICES UNDERNEATH IT.** Fixed with
+`bm.verts.index_update()` and a sorted iteration; two consecutive build+export runs are now
+byte-identical (`d06940d9...`). The r25 plates were re-shot afterwards, because a plate whose
+bundle nobody can rebuild cannot be A/B'd against a later one — which is the whole use of a
+plate in this loop.
 
 **OPEN, honestly.** The near-field chimney is improved and not solved: at the 10 u orbit
 cameras several stacks still stand taller above their ridge than a masonry stack would. The
