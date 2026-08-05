@@ -1,5 +1,14 @@
 'use strict';
 /* ============================================================
+   SCRIPT OF RECORD — INERT DATA, NOT RUNTIME (Bet 6, 2026-08-05).
+   The 2D engine that executed this file was deleted with the legacy-
+   runtime retirement (see chapter1.js header). Chapter Three is OUT
+   of the shipped game (Ch2's end card is terminal; user scope ruling
+   2026-08-02) and OUT of the style gate's default scope — this file
+   survives as future-chapter script material, displayed by story.html
+   via tools/build-story.mjs. Nothing loads it in the shipped game.
+   ============================================================ */
+/* ============================================================
    CHAPTER THREE — "The Lanternstead"  (painted scene edition)
 
    Beat 1 — the grey road: the first lamp, lamp to lamp.

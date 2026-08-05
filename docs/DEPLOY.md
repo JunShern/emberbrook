@@ -21,11 +21,12 @@ server; nothing in the shipped client talks to it.
 | `GET /play.html` → sends `public/play3d.html` | `dist/play.html` is a **real file** (byte copy of `play3d.html`) |
 | `GET /story.html` + `/assets/story-manifest.json` → rebuild the manifest per request | the manifest is **built once** by the build script and shipped |
 | `express.static('public')` | `dist` *is* public, by inclusion |
-| `express.static('docs')`, `POST /dev/save|promote|rebake`, `GET /join`, `GET /qr` | **not shipped** (dev-only, plus the dropped phone-controller path) |
+| `express.static('docs')`, `POST /dev/promote` | **not shipped** (dev-only) |
 
-**Nothing in the shipped client calls a `/dev/*` endpoint.** The three `/dev/*` posts
-are used only by `public/assets.html` and `public/bake-square.html`, and `/qr` only by
-`public/join-legacy.html` — all three are dev pages that the build does not include.
+**Nothing in the shipped client calls a `/dev/*` endpoint.** `/dev/promote` is used
+only by `public/assets.html`, a dev page the build does not include. (The 2D-era
+`/dev/save`, `/dev/rebake`, `/join`, `/qr` and the phone-controller relay were deleted
+with the legacy runtime, Bet 6 2026-08-05.)
 `play3d.html` and its modules make no request that a plain file server cannot answer.
 
 ## Inclusion, not exclusion

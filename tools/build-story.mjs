@@ -18,10 +18,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const MAIN = path.join(ROOT, 'public/js/main.js');
 const OUT = path.join(ROOT, 'public/assets/story-manifest.json');
-
-const mainSrc = fs.readFileSync(MAIN, 'utf8');
 
 const warnings = [];
 const warn = (msg) => { warnings.push(msg); console.warn('  ⚠ ' + msg); };
@@ -399,32 +396,31 @@ const ex1 = makeExtractor('public/js/chapter1.js');
 const ex2 = makeExtractor('public/js/chapter2.js');
 const ex3 = makeExtractor('public/js/chapter3.js');
 
-/* end-card text from the END_CARDS table in main.js — one entry per chapter */
+/* end cards, one per chapter — MOVED HERE VERBATIM from the retired 2D runtime's
+   public/js/main.js (deleted with the legacy engine, Bet 6, 2026-08-05). This table
+   was the only thing build-story read out of main.js; the 3D runtime's end cards
+   live in public/game/story.json (endCard steps) and are not this table. */
+const END_CARDS = [
+  { title: 'End of Chapter One', tag: '— Emberwake —',
+    lines: ['A mapmaker who dreams of roads. A lamplighter with the last warm flame.',
+      'A village that will forget it ever existed — unless they remember it back.'],
+    icon: '🕯', iconColor: '#e86e6e', next: 'A — onward: Chapter Two' },
+  { title: 'End of Chapter Two', tag: '— Dellhollow —',
+    lines: ['the river is the road'],
+    icon: '🛶', iconColor: '#3fa7c9', next: 'A — onward: Chapter Three' },
+  { title: 'End of Chapter Three', tag: '— The Lanternstead —',
+    lines: ['the necklace has its first light'],
+    icon: '🏮', iconColor: '#e8b25c', next: null },
+];
 function extractEndCard(idx) {
-  const at = mainSrc.indexOf('const END_CARDS = [');
-  if (at === -1) { warn('END_CARDS table not found in main.js'); return []; }
-  const open = mainSrc.indexOf('[', at);
-  const body = mainSrc.slice(open + 1, matchBracket(mainSrc, open));
-  const entry = topLevelItems(body, '{')[idx];
-  if (!entry) { warn(`END_CARDS: no entry ${idx}`); return []; }
+  const card = END_CARDS[idx];
+  if (!card) { warn(`END_CARDS: no entry ${idx}`); return []; }
   const lines = [];
-  const grab = (key) => {
-    const m = entry.match(new RegExp(key + ':\\s*' + STR.source));
-    return m ? unesc(m[1]) : null;
-  };
-  const title = grab('title'), tag = grab('tag'), next = grab('next');
-  if (title) lines.push(['system', title]);
-  if (tag) lines.push(['system', tag]);
-  const lb = entry.indexOf('lines:');
-  if (lb !== -1) {
-    const lo = entry.indexOf('[', lb);
-    const larr = entry.slice(lo + 1, matchBracket(entry, lo));
-    const re = new RegExp(STR.source, 'g');
-    let lm;
-    while ((lm = re.exec(larr))) lines.push(['system', unesc(lm[1])]);
-  }
+  if (card.title) lines.push(['system', card.title]);
+  if (card.tag) lines.push(['system', card.tag]);
+  for (const l of card.lines || []) lines.push(['system', l]);
   lines.push(['system', '— to be continued —']);
-  if (next) lines.push(['system', next]);
+  if (card.next) lines.push(['system', card.next]);
   if (lines.length < 3) warn(`END_CARDS entry ${idx}: too little text extracted`);
   return lines;
 }
@@ -611,7 +607,7 @@ const chapterOne = {
 
     B('End card', 'gate',
       'End of Chapter One.',
-      [{ context: 'the end card (END_CARDS, main.js)', lines: extractEndCard(0) }]),
+      [{ context: 'the end card (END_CARDS, build-story.mjs)', lines: extractEndCard(0) }]),
   ],
 };
 
@@ -776,7 +772,7 @@ const chapterTwo = {
 
     B('End card', 'landing',
       'End of Chapter Two.',
-      [{ context: 'the end card (END_CARDS, main.js)', lines: extractEndCard(1) }]),
+      [{ context: 'the end card (END_CARDS, build-story.mjs)', lines: extractEndCard(1) }]),
   ],
 };
 
@@ -890,7 +886,7 @@ const chapterThree = {
 
     B('End card', 'lanternstead',
       'End of Chapter Three.',
-      [{ context: 'the end card (END_CARDS, main.js)', lines: extractEndCard(2) }]),
+      [{ context: 'the end card (END_CARDS, build-story.mjs)', lines: extractEndCard(2) }]),
   ],
 };
 
@@ -1181,7 +1177,7 @@ const dlgLines = Object.values(DLG.nodes || {}).reduce((a, n) => a + (n.lines ||
 
 const manifest = {
   generated: new Date().toISOString(),
-  source: 'chapters: public/js/chapter1-3.js + END_CARDS(main.js) · bible: STORY.md · ' +
+  source: 'chapters: public/js/chapter1-3.js + END_CARDS(build-story.mjs) · bible: STORY.md · ' +
     'cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · ' +
     'places: public/townmap/*.map.json',
   stats: { blocks: nBlocks, lines: nLines,

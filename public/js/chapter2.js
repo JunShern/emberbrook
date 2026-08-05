@@ -1,5 +1,14 @@
 'use strict';
 /* ============================================================
+   SCRIPT OF RECORD — INERT DATA, NOT RUNTIME (Bet 6, 2026-08-05).
+   The 2D engine that executed this file was deleted with the legacy-
+   runtime retirement (see chapter1.js header for the full contract).
+   Survives as the ratified corpus for tools/dialogue_style.mjs and
+   docs/exemplars.md, and as build-story.mjs's source for story.html.
+   Edit the TEXT only as a canon change; nothing loads this file in
+   the shipped game.
+   ============================================================ */
+/* ============================================================
    CHAPTER TWO — "Dellhollow"  (painted scene edition)
 
    Beat 1  — the descent: map-is-wrong, the valley from above,

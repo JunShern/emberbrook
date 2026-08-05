@@ -1,62 +1,46 @@
 # Emberbrook 🕯
 
-A couch co-op story RPG for two players. The TV (a MacBook browser, fullscreened)
-is the game screen; each phone becomes a controller over your home Wi-Fi.
+A story JRPG prototype in the FFIX pre-rendered-background style: real-time
+characters walking through fixed, pre-rendered 3D scenes with exact-pixel depth
+occlusion, turn-based battles, and a chapter story that fires as you walk it.
+Single-player for the prototype (couch co-op is a later upgrade — user ruling
+2026-08-02; the 2D phone-controller prototype was retired 2026-08-05 and lives
+in git history).
 
 **Chapter One — Emberwake.** A traveling mapmaker arrives in a village that isn't
 on any map, an hour before the night that erases it. Two strangers — the only two
 the Hush cannot touch — are thrust together to carry the last warm flame in the
 valley. One knows the way; one holds the fire. A cat has opinions.
 
-Played in three acts: **P1 plays Vesper's arrival alone** (a forest road, a
-waystone from a dream), then **P2 plays Lake's lamplighting rounds alone**
-(beginning in his cottage), then their stories converge at the festival and
-it's one shared screen from there.
-
-The world is a set of hand-painted scenes (AI-generated in a fixed anime-film
-style, layout-controlled where gameplay demands it) with generated cel-anime
-character sprites, per-scene color grading, baked lighting states (festival
-night / the grey Hush), and a scene engine with walkable-area polygons,
-exits, occluders and a smoothed camera. Dev pages: `proto.html` (scene
-prototype), `viewer.html` (sprite-sheet inspector), `busts.html`,
-`maps-options.html`, `zoom-options.html`, `jrpg-options.html` (art direction
-history). `tools/genart.mjs` generates art via the Gemini API (key in `.env`).
+**Chapter Two — Dellhollow.** The river is the road: a canal town of locks and
+scaffold tiers, a log-jam, and a lockkeeper's daughter who joins the party.
 
 ## How to play
 
-1. Install & start (install needed once):
+```sh
+npm install
+npm start
+```
 
-   ```sh
-   npm install
-   npm start
-   ```
+Open **http://localhost:3000** — the chapter-select hub. **PLAY** starts or
+continues the game (`/play.html` is the engine page). `WASD`/arrows to move,
+`E` to talk or act, `Esc` for the menu, `H` for the developer scene menu.
 
-2. Connect the MacBook to the TV, open **http://localhost:3000**, fullscreen it
-   (`⌃⌘F`), and click once anywhere to enable music (`M` mutes).
+A built static version deploys to GitHub Pages — see `docs/DEPLOY.md`.
+Live demo: https://junshern.github.io/emberbrook/
 
-3. Each phone (on the **same Wi-Fi**) scans the QR code on screen, then claims a
-   keeper: **Vesper** (plays first) or **Lake** (enters in Act II).
+## Where truth lives
 
-4. Left thumb = walk. **A** = talk / act / advance dialogue. Some moments need
-   you both to **hold A together**.
-
-### Notes
-
-- Testing without phones: `WASD`+`E` plays Vesper, arrow keys+`Enter` plays Lake
-  (unclaimed roles are auto-claimed by the keyboard).
-- Dev mode: press `K` to toggle **keyboard override** — the keyboard then also
-  drives characters that phones have claimed, so you can test without touching
-  your phone. Phone input resumes whenever the keys are idle.
-- If a phone locks or drops, reopen the page and tap your keeper again — you
-  resume where you were.
-- If phones can't connect: System Settings → Network → Firewall → allow `node`.
-- Refreshing the TV page restarts the chapter.
-
-See `ROADMAP.md` for the world bible, planned party members, and chapters 2–10.
+- `CLAUDE.md` — the context index: every system's authoritative doc, one line each.
+- `STORY.md` — the story bible. `docs/VOICES.md` — dialogue voice law.
+- `public/townmap/` — the landmarks-first town layouts and the map viewer.
+- `docs/plans/` — the design canon (seam law, town legibility, combat, look pillars).
 
 ## Credits
 
-Character sprites, face portraits, and tileset from the CC0
+Character/scene art and music are original (generated: art via the Gemini API,
+music via Lyria). Animation donors: [Quaternius](https://quaternius.com/)
+Universal Animation Library (CC0) and [KayKit](https://kaylousberg.com/) (CC0).
+The retired 2D prototype used sprites/tiles from the CC0
 [Ninja Adventure asset pack](https://github.com/sparklinlabs/superpowers-asset-packs)
 by [Pixel-boy](https://twitter.com/2pblog1) / Sparklin Labs — thank you! ♥
-Everything else (engine, story, music, remaining art) is original.

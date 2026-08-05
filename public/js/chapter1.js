@@ -1,5 +1,19 @@
 'use strict';
 /* ============================================================
+   SCRIPT OF RECORD — INERT DATA, NOT RUNTIME (Bet 6, 2026-08-05).
+   The 2D engine that executed this file (join-legacy.html + engine.js/
+   field.js/main.js and the painted scene bundles) was DELETED with the
+   legacy-runtime retirement. This file survives because two shipping
+   gates treat its text as the ratified corpus:
+     · tools/dialogue_style.mjs measures every spoken box in it, and
+     · docs/exemplars.md quotes it verbatim ("change a line there and
+       you owe the same change in the chapter").
+   tools/build-story.mjs also extracts it for public/story.html, and
+   public/game/story.json lifts its prose ("no line here is newly
+   invented dialogue"). Edit the TEXT only as a canon change, never as
+   code; nothing loads this file in the shipped game.
+   ============================================================ */
+/* ============================================================
    CHAPTER ONE — "Emberwake"  (painted scene edition)
 
    Act I   — VESPER: a forest road with no name, a waystone from

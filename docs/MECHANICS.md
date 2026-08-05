@@ -94,6 +94,11 @@ feel found.
 
 ### 0.5 The pad (canonical input mapping)
 
+> **STATUS (2026-08-05):** the phone-controller prototype (`controller.html` + the
+> WebSocket relay) was retired with the legacy 2D runtime (single-player prototype
+> ruling 2026-08-02; Bet 6 cleanup). References to it below are DESIGN, kept for the
+> two-player upgrade; the files live in git history.
+
 The game is designed for a standard PlayStation/Xbox-class controller. The phone
 controller mirrors this layout in software — same buttons, same names — and is only a
 stand-in for the real thing. One mapping, defined here, for the whole game; every
@@ -133,8 +138,9 @@ close.
 
 ### 1.1 Item data model
 
-Item **definitions** are static content (proposed home: `public/js/items.js`, loaded
-before chapter files). Item **state** is display-authoritative and lives in one runtime
+Item **definitions** are static content (2D-era home was `public/js/items.js`, retired
+with the legacy runtime 2026-08-05; the shipped 3D runtime's registry is
+`public/game/items.json`). Item **state** is display-authoritative and lives in one runtime
 object, serialized with the future save system.
 
 ```js

@@ -67,7 +67,6 @@
   <button id="tab-characters" onclick="show('characters')">Characters</button>
   <button id="tab-scenes" onclick="show('scenes')">Scenes</button>
   <button id="tab-refs" onclick="show('refs')">References</button>
-  <button id="tab-pipeline" onclick="show('pipeline')">Scene Pipeline</button>
   <button id="tab-playbook" onclick="show('playbook')">Character Playbook</button>
   <button id="tab-story" onclick="show('story')">Story &amp; Dialogue</button>
 </div>
@@ -154,11 +153,6 @@ async function promote(group, name, slot, candidate) {
     body: JSON.stringify({ group, name, slot, candidate }),
   })).json();
   if (!r.ok) { status('promote failed'); return; }
-  if (group === 'scenes' && slot === 'maskraw.png') {
-    status('re-baking mask…');
-    await fetch('/dev/rebake', { method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ scene: name }) });
-  }
   status('done — ' + slot + ' updated');
   await loadManifest();
   render();
@@ -274,7 +268,7 @@ function renderScenes(host) {
       tdI.querySelector('.exprs').appendChild(e);
     }
     tr.appendChild(tdI);
-    // mask column: mask + maskraw, flood candidates promotable to maskraw (auto-rebake)
+    // mask column: mask + maskraw (2D-era slots; render only if the files exist)
     const tdM = $('<td><div class="exprs"></div></td>');
     for (const slot of ['mask.png', 'maskraw.png']) {
       if (!(data.files || []).find(f => f.name === slot)) continue;
@@ -332,7 +326,7 @@ function renderRefs(host) {
 }
 
 /* external review pages embedded as keep-alive iframe tabs */
-const FRAME_TABS = { pipeline: 'workflow.html', playbook: 'workflow-characters.html', story: 'story.html' };
+const FRAME_TABS = { playbook: 'workflow-characters.html', story: 'story.html' };
 function ensureFrame(tab) {
   let f = document.getElementById('frame-' + tab);
   if (!f) {
@@ -347,7 +341,7 @@ function ensureFrame(tab) {
 
 function show(tab) { TAB = tab; location.hash = tab; render(); }
 function render() {
-  for (const t of ['characters', 'scenes', 'refs', 'pipeline', 'playbook', 'story'])
+  for (const t of ['characters', 'scenes', 'refs', 'playbook', 'story'])
     document.getElementById('tab-' + t).classList.toggle('on', TAB === t);
   const host = document.getElementById('host');
   for (const f of document.querySelectorAll('.tabframe')) f.classList.remove('on');

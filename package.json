@@ -1,7 +1,7 @@
 {
   "name": "emberbrook",
   "version": "0.1.0",
-  "description": "A cozy couch co-op RPG for two \u2014 TV screen + phones as controllers",
+  "description": "A cozy FFIX-style JRPG prototype \u2014 pre-rendered 3D scenes, single-player (couch co-op is a later upgrade)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,7 +10,6 @@
   "dependencies": {
     "express": "^4.19.2",
     "pngjs": "^5.0.0",
-    "qrcode": "^1.5.4",
     "ws": "^8.18.0"
   },
   "devDependencies": {

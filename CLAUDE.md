@@ -21,11 +21,14 @@ git runs here, on branch `migration/3d-hybrid`.
   example, never by describing the style in the abstract). Every quote in it is verbatim
   from the script — change a line there and you owe the same change in the chapter.
   Ch3 is deliberately absent: it is not the house style (user ruling 2026-08-02).
-- **docs/plans/end-to-end-wiring.md** — the AUDIT of what stands between three
-  scripted chapters and one continuous playthrough (2026-08-02). Headline: the chapters
-  live in the LEGACY 2D runtime (join-legacy.html); play3d.html has no chapter runner,
-  no story flag, no end card. Carries the save-state schema, the chapter-handoff
-  contract, the story-flag proposal (`story.ch1.gate-open`), and the measured
+- **docs/plans/end-to-end-wiring.md** — the AUDIT of what stood between three
+  scripted chapters and one continuous playthrough (2026-08-02). Its headline finding —
+  the chapters lived in the LEGACY 2D runtime (join-legacy.html) — is RESOLVED and that
+  runtime is DELETED (Bet 6, 2026-08-05: join-legacy/controller/engine/sprites2/field/
+  story/items/assets/main.js, the painted 2D scene bundles, and the phone-controller
+  relay in server.js are gone; chapter1/2/3.js survive as INERT script-of-record data —
+  see their headers). Still carries the save-state schema, the chapter-handoff
+  contract, the story-flag design (`story.ch1.gate-open`), and the measured
   empty-Emberbrook finding. Read before any wiring work.
 - **docs/qa/MORNING.md** — the 2026-08-02 overnight brief: what shipped, the seven
   decisions waiting on the user, the honest reds, and the night's measurement lessons.

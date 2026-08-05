@@ -1,20 +1,20 @@
 {
- "generated": "2026-08-02T12:04:00.570Z",
- "source": "chapters: public/js/chapter1-3.js + END_CARDS(main.js) · bible: STORY.md · cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · places: public/townmap/*.map.json",
+ "generated": "2026-08-05T16:17:58.870Z",
+ "source": "chapters: public/js/chapter1-3.js + END_CARDS(build-story.mjs) · bible: STORY.md · cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · places: public/townmap/*.map.json",
  "stats": {
   "blocks": 153,
   "lines": 1103,
   "talkToBlocksFound": 48,
   "bibleSections": 9,
   "bibleSubs": 27,
-  "cast": 34,
-  "dialogueNodes": 111,
-  "dialogueLines": 160,
+  "cast": 42,
+  "dialogueNodes": 129,
+  "dialogueLines": 186,
   "towns": 2,
   "checks": {
    "error": 0,
-   "warn": 0,
-   "info": 31
+   "warn": 1,
+   "info": 47
   },
   "warnings": []
  },
@@ -226,7 +226,7 @@
          "(A waystone. Good — the road’s a real road, then.)"
         ],
         [
-         "vesper",
+         "vesper:surprised",
          "(…Wait.)"
         ],
         [
@@ -416,7 +416,7 @@
        "context": "talking to Rowan as Vesper, pre-Hush (leads into Vesper’s outro)",
        "lines": [
         [
-         "rowan",
+         "rowan:happy",
          "Now then! A guest, and on Emberwake of all nights. Welcome, my dear."
         ],
         [
@@ -424,7 +424,7 @@
          "Vesper. Mapmaker. I need to get through your gate, and I’m told you’re in charge."
         ],
         [
-         "rowan",
+         "rowan:happy",
          "In charge! Ha! I keep the ledger; the village keeps itself."
         ],
         [
@@ -436,7 +436,7 @@
          "Rules can be charted. Charting things is my whole profession."
         ],
         [
-         "rowan",
+         "rowan:happy",
          "…Ha! I like you. Stay the night, then — and stay for the Kindling Hour."
         ],
         [
@@ -448,11 +448,11 @@
          "Then leave at first light fed. One hour, the whole village, the year’s best told to the flame."
         ],
         [
-         "rowan",
+         "rowan:happy",
          "Three hundred years that flame has burned. In all of them, nobody here carried a grief alone."
         ],
         [
-         "rowan",
+         "rowan:happy",
          "That is not boasting, my dear. It is bookkeeping — I checked."
         ],
         [
@@ -476,7 +476,7 @@
          "(Tell him the stone is in your sketchbook. Say it out loud. …No.)"
         ],
         [
-         "rowan",
+         "rowan:grave",
          "As for the Gate — lamplighter business, child. His order built it, his order shut it."
         ],
         [
@@ -488,7 +488,7 @@
          "You’ll find him somewhere across the village, apologizing to lamps."
         ],
         [
-         "vesper",
+         "vesper:thinking",
          "Apologizing to lamps."
         ],
         [
@@ -591,7 +591,7 @@
          "The same evening, across the village, the last lamplighter rose from his grandmother’s table. He took down her flame."
         ],
         [
-         "lake",
+         "lake:tender",
          "(A year tonight since she set the lighter down. I miss her most at rounds-time.)"
         ],
         [
@@ -887,11 +887,11 @@
          "…what?"
         ],
         [
-         "rowan",
+         "rowan:happy",
          "The HOUR! Gather, neighbors — to the square!"
         ],
         [
-         "rowan",
+         "rowan:happy",
          "Lake — the flame."
         ]
        ]
@@ -911,7 +911,7 @@
          "Neighbors! The year turns!"
         ],
         [
-         "rowan",
+         "rowan:happy",
          "Three hundred years, and the warmth of every one of them — right here."
         ],
         [
@@ -927,7 +927,7 @@
          "You keep the memory — every minute, yours till you die. The flame keeps the WARMTH, and shines it on all of us, for good."
         ],
         [
-         "rowan",
+         "rowan:happy",
          "Who brings the first memory?"
         ],
         [
@@ -951,7 +951,7 @@
          "…My stall. My bread. Why doesn’t any of it feel like MINE?"
         ],
         [
-         "pip",
+         "pip:scared",
          "Mama?"
         ],
         [
@@ -991,7 +991,7 @@
          "…You know them? All of them?"
         ],
         [
-         "lake",
+         "lake:determined",
          "Every window in this village. Every name behind it."
         ],
         [
@@ -1007,7 +1007,7 @@
          "Why do YOU still hold your names?"
         ],
         [
-         "vesper",
+         "vesper:worried",
          "I got here an HOUR ago."
         ],
         [
@@ -1027,11 +1027,11 @@
          "Then we are not finished. Not yet."
         ],
         [
-         "rowan",
+         "rowan:grave",
          "See to them — all of them. They deserve their names back, even borrowed."
         ],
         [
-         "rowan",
+         "rowan:hollow",
          "Then come find me. I will be with my ledger — every word of it true, and not one of them mine."
         ],
         [
@@ -1080,11 +1080,11 @@
          "Every morning you burn your thumb on the first tray, and swear you won’t tomorrow."
         ],
         [
-         "poppy",
+         "poppy:hollow",
          "…Do I do it anyway?"
         ],
         [
-         "lake",
+         "lake:tender",
          "Every morning."
         ],
         [
@@ -1146,7 +1146,7 @@
          "Finn. You’re Finn."
         ],
         [
-         "finn",
+         "finn:happy",
          "…Finn. Huh. Short. I like it."
         ],
         [
@@ -1180,15 +1180,15 @@
        "context": "seeing to Mara & Pip, post-Hush",
        "lines": [
         [
-         "pip",
+         "pip:scared",
          "Tell her. TELL her!"
         ],
         [
-         "lake",
+         "lake:determined",
          "Mara. This is Pip. Your son, seven years old."
         ],
         [
-         "lake",
+         "lake:tender",
          "You waited out a snowstorm at the pass for him to be born."
         ],
         [
@@ -1200,7 +1200,7 @@
          "…You held my hand. TONIGHT. You said I’d remember tonight forever."
         ],
         [
-         "vesper",
+         "vesper:worried",
          "Pip. Look at me. I saw her holding your hand — an hour ago, by the stall."
         ],
         [
@@ -1216,7 +1216,7 @@
          "…Is it in ink?"
         ],
         [
-         "vesper",
+         "vesper:tender",
          "It is now."
         ],
         [
@@ -1304,7 +1304,7 @@
          "I wrote every line of this page — and tonight I read it like the minutes of somebody else’s village."
         ],
         [
-         "rowan",
+         "rowan:grave",
          "Ink keeps facts. It cannot keep what they WEIGHED."
         ],
         [
@@ -1332,7 +1332,7 @@
          "Every Heartlight in every valley is a child of that fire."
         ],
         [
-         "rowan",
+         "rowan:grave",
          "And the old Order kept one creed above all: light does not die — it is only ever carried."
         ],
         [
@@ -1352,15 +1352,15 @@
          "…I need to show you both something, and I need you to not be strange about it."
         ],
         [
-         "vesper",
+         "vesper:worried",
          "Since I was six years old, I have drawn one clearing. Over and over, in dreams."
         ],
         [
-         "vesper",
+         "vesper:worried",
          "Forty-one drawings of the same clearing."
         ],
         [
-         "vesper",
+         "vesper:determined",
          "I came here because the forty-first had YOUR gate in the corner."
         ],
         [
@@ -1388,7 +1388,7 @@
          "The map does not know fire. The flame does not know the way."
         ],
         [
-         "rowan",
+         "rowan:grave",
          "So it must be both of you, together."
         ],
         [
@@ -1436,11 +1436,11 @@
          "I’m scared to walk that road, and I’ll walk it. Both of those are true."
         ],
         [
-         "rowan",
+         "rowan:grave",
          "The old rite, then. Two keepers, one flame — say it and mean it, or the Gate will know."
         ],
         [
-         "rowan",
+         "rowan:grave",
          "“What they forgot, we keep. What we keep, we return.”"
         ],
         [
@@ -1472,11 +1472,11 @@
          "✦ Quest — The Long Rekindling ✦ — Carry the Last Spark to the Kindling, deep in the Whisperwood"
         ],
         [
-         "rowan",
+         "rowan:grave",
          "Twin sigils, before the Gate. The Lamplighters cut them, in the old days."
         ],
         [
-         "rowan",
+         "rowan:grave",
          "That road was always meant to be walked by two."
         ]
        ]
@@ -1557,7 +1557,7 @@
          "You said not yet. So it’s for WHEN."
         ],
         [
-         "vesper",
+         "vesper:tender",
          "For the record: this is now the best chart I carry."
         ],
         [
@@ -1593,7 +1593,7 @@
          "(I have wanted an unmapped road my whole life. I imagined it differently.)"
         ],
         [
-         "lake",
+         "lake:determined",
          "My grandmother had a saying for the rounds. The first lamp is the whole job — the rest is only more of it."
         ],
         [
@@ -1605,7 +1605,7 @@
          "…It always did. A little."
         ],
         [
-         "vesper",
+         "vesper:happy",
          "Then it goes in the book. Come on, partner — first lamp."
         ],
         [
@@ -1622,7 +1622,7 @@
      "summary": "End of Chapter One.",
      "blocks": [
       {
-       "context": "the end card (END_CARDS, main.js)",
+       "context": "the end card (END_CARDS, build-story.mjs)",
        "lines": [
         [
          "system",
@@ -4318,7 +4318,7 @@
          "Ten. And I’d say all ten again."
         ],
         [
-         "odessa",
+         "odessa:warm",
          "The no was what I owed my own heart. The bag is what I owed yours."
         ],
         [
@@ -4414,7 +4414,7 @@
          "✦  Maren joined the party  ✦"
         ],
         [
-         "lake",
+         "lake:determined",
          "(North, then. By water — the lighter warm against my chest, the old road keeping pace up on the rim.)"
         ],
         [
@@ -4459,7 +4459,7 @@
      "summary": "End of Chapter Two.",
      "blocks": [
       {
-       "context": "the end card (END_CARDS, main.js)",
+       "context": "the end card (END_CARDS, build-story.mjs)",
        "lines": [
         [
          "system",
@@ -5660,7 +5660,7 @@
      "summary": "End of Chapter Three.",
      "blocks": [
       {
-       "context": "the end card (END_CARDS, main.js)",
+       "context": "the end card (END_CARDS, build-story.mjs)",
        "lines": [
         [
          "system",
@@ -5751,9 +5751,11 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 937,
-    "h": 794
+    "moods": [
+     "grave"
+    ],
+    "w": 647,
+    "h": 817
    },
    "moodSpec": [
     "appraising",
@@ -5823,7 +5825,7 @@
    "lines": [
     {
      "text": "Mind the pitch kettle. It's hot, it's mine, and it doesn't care which.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "dialogue · boatwright.hail"
     },
@@ -5835,25 +5837,25 @@
     },
     {
      "text": "Nineteen days of stopped boats is nineteen days of stopped boats getting mended.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · boatwright.hail"
     },
     {
      "text": "Still ribs and tar. Come back when there's a hull worth looking at.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · boatwright.again"
     },
     {
      "text": "Frames in a week, planking in a month. Trust in about ten years.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · boatwright.time"
     },
     {
      "text": "You don't build a boat fast up here. The river checks your work personally.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "dialogue · boatwright.time"
     },
@@ -5865,7 +5867,7 @@
     },
     {
      "text": "Half this town smells of tar and the other half married into it.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · boatwright.smell"
     }
@@ -5912,19 +5914,19 @@
     },
     {
      "text": "Half this floor hangs over the gorge on brackets. It's held ninety years. Don't jump.",
-     "expr": null,
+     "expr": "wry",
      "variant": null,
      "where": "dialogue · chandler.hail"
     },
     {
      "text": "Oil's fresh, rope's dry, floor's still up. Same as yesterday.",
-     "expr": null,
+     "expr": "wry",
      "variant": null,
      "where": "dialogue · chandler.again"
     },
     {
      "text": "Look all you like. Everyone leaves with rope eventually.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · chandler.looking"
     }
@@ -5950,9 +5952,13 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 807,
-    "h": 816
+    "moods": [
+     "grave",
+     "happy",
+     "remembering"
+    ],
+    "w": 636,
+    "h": 600
    },
    "moodSpec": [
     "grave",
@@ -6067,6 +6073,129 @@
    ]
   },
   {
+   "id": "del.cook",
+   "name": "the cook",
+   "color": "#c0925f",
+   "portrait": "villager-woman",
+   "canon": null,
+   "voice": null,
+   "placements": [
+    {
+     "name": "the cook",
+     "npcId": "del.cook",
+     "entry": "del.cook.hail",
+     "scene": "del-cookhouse-int",
+     "district": "quay"
+    }
+   ],
+   "art": null,
+   "moodSpec": null,
+   "isMain": false,
+   "lineCount": 3,
+   "lines": [
+    {
+     "text": "Mind the range, it spits. Everything in this room is hotter than it looks.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cook.hail"
+    },
+    {
+     "text": "Two hundred meals a day when the locks run. Ninety now, and I still start at four.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cook.hail"
+    },
+    {
+     "text": "Pot's on. It's always on — that's the job.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cook.again"
+    }
+   ]
+  },
+  {
+   "id": "del.cookhouse.bargeman",
+   "name": "bargeman",
+   "color": "#7f8fa3",
+   "portrait": "villager-man",
+   "canon": null,
+   "voice": null,
+   "placements": [
+    {
+     "name": "bargeman",
+     "npcId": "del.cookhouse.bargeman",
+     "entry": "del.cookhouse.bargeman.hail",
+     "scene": "del-cookhouse-int",
+     "district": "quay"
+    }
+   ],
+   "art": null,
+   "moodSpec": null,
+   "isMain": false,
+   "lineCount": 3,
+   "lines": [
+    {
+     "text": "Stew and a bit of bread. Same as yesterday, and I'm not complaining.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cookhouse.bargeman.hail"
+    },
+    {
+     "text": "Cheaper than the inn and you eat standing up. Crews work that out by day three.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cookhouse.bargeman.hail"
+    },
+    {
+     "text": "Still waiting on the hatch. She serves in her own order.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cookhouse.bargeman.again"
+    }
+   ]
+  },
+  {
+   "id": "del.cookhouse.boy",
+   "name": "boy with a bowl",
+   "color": "#a3b06a",
+   "portrait": "child-boy",
+   "canon": null,
+   "voice": null,
+   "placements": [
+    {
+     "name": "boy with a bowl",
+     "npcId": "del.cookhouse.boy",
+     "entry": "del.cookhouse.boy.hail",
+     "scene": "del-cookhouse-int",
+     "district": "quay"
+    }
+   ],
+   "art": null,
+   "moodSpec": null,
+   "isMain": false,
+   "lineCount": 3,
+   "lines": [
+    {
+     "text": "I get the crusts when the pot's scraped. That's a wage, my mam says.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cookhouse.boy.hail"
+    },
+    {
+     "text": "You can sit there. Nobody's using it and I won't tell.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cookhouse.boy.hail"
+    },
+    {
+     "text": "Crusts aren't ready. Come back when the pot's down.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.cookhouse.boy.again"
+    }
+   ]
+  },
+  {
    "id": "del.deckhand",
    "name": "deckhand",
    "color": "#9aa38c",
@@ -6095,7 +6224,7 @@
     },
     {
      "text": "Three shops on this street, and I've been in all of them. I've bought a whistle.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · del.deckhand.hail"
     },
@@ -6130,7 +6259,7 @@
    "lines": [
     {
      "text": "That's my stick. I found it — don't ask where, it was in the river.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · del.gullgirl.hail"
     },
@@ -6142,9 +6271,132 @@
     },
     {
      "text": "Still my stick.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · del.gullgirl.again"
+    }
+   ]
+  },
+  {
+   "id": "del.inn.bargeman",
+   "name": "bargeman",
+   "color": "#8fa08c",
+   "portrait": "villager-man",
+   "canon": null,
+   "voice": null,
+   "placements": [
+    {
+     "name": "bargeman",
+     "npcId": "del.inn.bargeman",
+     "entry": "del.inn.bargeman.hail",
+     "scene": "del-inn-int",
+     "district": "shelf"
+    }
+   ],
+   "art": null,
+   "moodSpec": null,
+   "isMain": false,
+   "lineCount": 3,
+   "lines": [
+    {
+     "text": "Ashore since the locks shut. I've drunk this cellar dry in small honest amounts.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.inn.bargeman.hail"
+    },
+    {
+     "text": "My boat's third in the queue. Third of forty, and I've stopped saying that out loud.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.inn.bargeman.hail"
+    },
+    {
+     "text": "Still third. Ask me tomorrow and it'll still be third.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.inn.bargeman.again"
+    }
+   ]
+  },
+  {
+   "id": "del.inn.lodger",
+   "name": "lodger",
+   "color": "#9c8f9c",
+   "portrait": "elder-woman",
+   "canon": null,
+   "voice": null,
+   "placements": [
+    {
+     "name": "lodger",
+     "npcId": "del.inn.lodger",
+     "entry": "del.inn.lodger.hail",
+     "scene": "del-inn-int",
+     "district": "shelf"
+    }
+   ],
+   "art": null,
+   "moodSpec": null,
+   "isMain": false,
+   "lineCount": 3,
+   "lines": [
+    {
+     "text": "That's my bag by the stair. It's been packed since the locks shut.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.inn.lodger.hail"
+    },
+    {
+     "text": "I'm not carrying it up again. If the water moves, I want to hear it first.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.inn.lodger.hail"
+    },
+    {
+     "text": "Bag's still packed by the stair. So am I.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.inn.lodger.again"
+    }
+   ]
+  },
+  {
+   "id": "del.innkeep",
+   "name": "innkeeper",
+   "color": "#b8894f",
+   "portrait": "innkeeper",
+   "canon": null,
+   "voice": null,
+   "placements": [
+    {
+     "name": "innkeeper",
+     "npcId": "del.innkeep",
+     "entry": "del.innkeep.hail",
+     "scene": "del-inn-int",
+     "district": "shelf"
+    }
+   ],
+   "art": null,
+   "moodSpec": null,
+   "isMain": false,
+   "lineCount": 3,
+   "lines": [
+    {
+     "text": "Beds are upstairs and all of them are full. Nineteen days of crews and nowhere to send them.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.innkeep.hail"
+    },
+    {
+     "text": "You can have the bench by the fire. It's warm, it's free, and it's taken at nine.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.innkeep.hail"
+    },
+    {
+     "text": "Bench is still by the fire. Still taken at nine.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.innkeep.again"
     }
    ]
   },
@@ -6272,6 +6524,88 @@
    ]
   },
   {
+   "id": "del.yard.apprentice",
+   "name": "the boatwright's apprentice",
+   "color": "#a89660",
+   "portrait": "villager-woman",
+   "canon": null,
+   "voice": null,
+   "placements": [
+    {
+     "name": "the boatwright's apprentice",
+     "npcId": "del.yard.apprentice",
+     "entry": "del.yard.apprentice.hail",
+     "scene": "del-boatyard",
+     "district": "boatyard"
+    }
+   ],
+   "art": null,
+   "moodSpec": null,
+   "isMain": false,
+   "lineCount": 3,
+   "lines": [
+    {
+     "text": "I fetch, I hold, and I don't touch the adze. Two years of that so far.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.yard.apprentice.hail"
+    },
+    {
+     "text": "The boatwright's down at the kettle. Shout if you want him, he won't hear you.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.yard.apprentice.hail"
+    },
+    {
+     "text": "Still holding things. He'll want the mallet in a minute.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.yard.apprentice.again"
+    }
+   ]
+  },
+  {
+   "id": "del.yard.caulker",
+   "name": "caulker",
+   "color": "#94795a",
+   "portrait": "villager-man",
+   "canon": null,
+   "voice": null,
+   "placements": [
+    {
+     "name": "caulker",
+     "npcId": "del.yard.caulker",
+     "entry": "del.yard.caulker.hail",
+     "scene": "del-boatyard",
+     "district": "boatyard"
+    }
+   ],
+   "art": null,
+   "moodSpec": null,
+   "isMain": false,
+   "lineCount": 3,
+   "lines": [
+    {
+     "text": "Mind your feet round the frames. Oakum, mallet, and a seam that takes me all day.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.yard.caulker.hail"
+    },
+    {
+     "text": "Every hull in this yard leaks somewhere. Mine's this one, and it's winning.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.yard.caulker.hail"
+    },
+    {
+     "text": "Same seam as yesterday. Half a day left in it, I reckon.",
+     "expr": null,
+     "variant": null,
+     "where": "dialogue · del.yard.caulker.again"
+    }
+   ]
+  },
+  {
    "id": "eelwife",
    "name": "Eel-wife",
    "color": "#7fa39c",
@@ -6306,37 +6640,37 @@
    "lines": [
     {
      "text": "Two for a penny! Three if you carry them, and no, I won't skin them for you.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · eelwife.hail"
     },
     {
      "text": "You weren't buying. I priced you anyway — it's the principle of the stall.",
-     "expr": null,
+     "expr": "scowl",
      "variant": null,
      "where": "dialogue · eelwife.hail"
     },
     {
      "text": "That cat's been fed twice today. We have an understanding and no witnesses.",
-     "expr": null,
+     "expr": "sly",
      "variant": null,
      "where": "dialogue · eelwife.hail"
     },
     {
      "text": "Still two for a penny. The river hasn't changed its mind and neither have I.",
-     "expr": null,
+     "expr": "scowl",
      "variant": null,
      "where": "dialogue · eelwife.again"
     },
     {
      "text": "Boats stopped, mouths didn't. Best nineteen days I've had and I'll deny saying it.",
-     "expr": null,
+     "expr": "sly",
      "variant": null,
      "where": "dialogue · eelwife.trade"
     },
     {
      "text": "Ask me in the spring and I'll tell you it was a hardship. It will be true by then.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · eelwife.trade"
     }
@@ -6371,13 +6705,13 @@
     },
     {
      "text": "So I'm waiting. That's allowed — it's the main thing you can do at a den.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · emb.boy.hail"
     },
     {
      "text": "Still not here. I've got all evening.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · emb.boy.again"
     }
@@ -6406,19 +6740,19 @@
    "lines": [
     {
      "text": "You can't ring it. I asked. You have to be Elder Rowan or the bell falls on you.",
-     "expr": null,
+     "expr": "scared",
      "variant": null,
      "where": "dialogue · emb.girl.hail"
     },
     {
      "text": "That's not true but he said it, so it's a bit true.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · emb.girl.hail"
     },
     {
      "text": "Still can't ring it. I've been checking.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · emb.girl.again"
     }
@@ -6447,7 +6781,7 @@
    "lines": [
     {
      "text": "Come in, then. Two rooms and a fire, and tonight nobody wants any of the three.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · emb.innkeep.hail"
     },
@@ -6459,7 +6793,7 @@
     },
     {
      "text": "Kettle's still on. It's a very slow kettle tonight.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · emb.innkeep.again"
     }
@@ -6529,19 +6863,19 @@
    "lines": [
     {
      "text": "Evening. I'd walk up with you but I'm carrying a dish and it's not a steady one.",
-     "expr": null,
+     "expr": "worried",
      "variant": null,
      "where": "dialogue · emb.neighbour.hail"
     },
     {
      "text": "Whole lane's going up. You can tell by the doors — none of them shut properly.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · emb.neighbour.hail"
     },
     {
      "text": "Still carrying it. Getting there.",
-     "expr": null,
+     "expr": "worried",
      "variant": null,
      "where": "dialogue · emb.neighbour.again"
     }
@@ -6705,7 +7039,7 @@
     },
     {
      "text": "…Finn. Huh. Short. I like it.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
     },
@@ -6741,7 +7075,7 @@
     },
     {
      "text": "Nothing biting. Hasn't all week. I come down anyway, that's the arrangement.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · finn.hail"
     },
@@ -6759,7 +7093,7 @@
     },
     {
      "text": "Half the winter, hanging. Everyone's very fond of me in February.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · finn.smoke"
     }
@@ -6785,9 +7119,13 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 987,
-    "h": 759
+    "moods": [
+     "grumbling",
+     "happy",
+     "softened"
+    ],
+    "w": 798,
+    "h": 600
    },
    "moodSpec": [
     "grumbling",
@@ -6962,8 +7300,8 @@
      "worried",
      "wry"
     ],
-    "w": 872,
-    "h": 902
+    "w": 728,
+    "h": 907
    },
    "moodSpec": [
     "determined",
@@ -6976,11 +7314,11 @@
     "worried"
    ],
    "isMain": true,
-   "lineCount": 142,
+   "lineCount": 143,
    "lines": [
     {
      "text": "(A year tonight since she set the lighter down. I miss her most at rounds-time.)",
-     "expr": null,
+     "expr": "tender",
      "variant": null,
      "where": "Emberwake · Lake — the cottage"
     },
@@ -7154,7 +7492,7 @@
     },
     {
      "text": "Every window in this village. Every name behind it.",
-     "expr": null,
+     "expr": "determined",
      "variant": null,
      "where": "Emberwake · The Kindling Hour & the Hush"
     },
@@ -7196,7 +7534,7 @@
     },
     {
      "text": "Every morning.",
-     "expr": null,
+     "expr": "tender",
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
     },
@@ -7208,13 +7546,13 @@
     },
     {
      "text": "Mara. This is Pip. Your son, seven years old.",
-     "expr": null,
+     "expr": "determined",
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
     },
     {
      "text": "You waited out a snowstorm at the pass for him to be born.",
-     "expr": null,
+     "expr": "tender",
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
     },
@@ -7274,7 +7612,7 @@
     },
     {
      "text": "My grandmother had a saying for the rounds. The first lamp is the whole job — the rest is only more of it.",
-     "expr": null,
+     "expr": "determined",
      "variant": null,
      "where": "Emberwake · The ending — beyond the gate"
     },
@@ -7610,7 +7948,7 @@
     },
     {
      "text": "(North, then. By water — the lighter warm against my chest, the old road keeping pace up on the rim.)",
-     "expr": null,
+     "expr": "determined",
      "variant": null,
      "where": "Dellhollow · The landing — Maren joins"
     },
@@ -7829,6 +8167,12 @@
      "expr": "happy",
      "variant": null,
      "where": "The Lanternstead · The wall-map — Tally joins"
+    },
+    {
+     "text": "(Nothing down there but the Whisperwood. My lamps are the other way.)",
+     "expr": "determined",
+     "variant": null,
+     "where": "dialogue · emb.southroad.turnback"
     }
    ]
   },
@@ -7956,13 +8300,13 @@
     },
     {
      "text": "He'll tell you about the stick. Let him, it's shorter than you'd think.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · mara.hail"
     },
     {
      "text": "Twelfth lap. I've stopped counting out loud.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · mara.again"
     },
@@ -9058,13 +9402,13 @@
     },
     {
      "text": "That one's Bailiff, that one's Soup. The big one's called the Harbormistress.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · nib.hail"
     },
     {
      "text": "Don't TELL the harbormistress.",
-     "expr": null,
+     "expr": "scared",
      "variant": null,
      "where": "dialogue · nib.hail"
     },
@@ -9076,13 +9420,13 @@
     },
     {
      "text": "Soup! SOUP! …He knows his name. He just doesn't respect it.",
-     "expr": null,
+     "expr": "indignant",
      "variant": null,
      "where": "dialogue · nib.again"
     },
     {
      "text": "Me. Nobody said so, but nobody else does it, so it's me.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · nib.office"
     },
@@ -9100,7 +9444,7 @@
     },
     {
      "text": "I'm not allowed either. That's different, because I already went.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · nib.dock"
     }
@@ -9524,7 +9868,7 @@
     },
     {
      "text": "The no was what I owed my own heart. The bag is what I owed yours.",
-     "expr": null,
+     "expr": "warm",
      "variant": null,
      "where": "Dellhollow · The landing — Maren joins"
     },
@@ -9783,49 +10127,49 @@
     },
     {
      "text": "Watchman. Night shift. It is presently day, which is why I'm holding a wick-knife and a grudge.",
-     "expr": null,
+     "expr": "wry",
      "variant": null,
      "where": "dialogue · pell.hail"
     },
     {
      "text": "Every wick, every noon, so they burn every night. That's the whole trade.",
-     "expr": null,
+     "expr": "tired",
      "variant": null,
      "where": "dialogue · pell.hail"
     },
     {
      "text": "No ceremony to it, friend. Oil goes in, light comes out.",
-     "expr": null,
+     "expr": "tired",
      "variant": null,
      "where": "dialogue · pell.hail"
     },
     {
      "text": "And I'd thank the town to remember who carries the ladder.",
-     "expr": null,
+     "expr": "wry",
      "variant": null,
      "where": "dialogue · pell.hail"
     },
     {
      "text": "Sleep's for the day shift — which is now. Which is the grudge.",
-     "expr": null,
+     "expr": "tired",
      "variant": null,
      "where": "dialogue · pell.again"
     },
     {
      "text": "Two hundred and six, counting the strings over the water. I don't count those out loud.",
-     "expr": null,
+     "expr": "tired",
      "variant": null,
      "where": "dialogue · pell.count"
     },
     {
      "text": "One ladder. One me. You do the sum and then you understand my face.",
-     "expr": null,
+     "expr": "wry",
      "variant": null,
      "where": "dialogue · pell.count"
     },
     {
      "text": "Quiet enough. Gulls arguing, water working, somebody laughing at the cookhouse too late.",
-     "expr": null,
+     "expr": "tired",
      "variant": null,
      "where": "dialogue · pell.nights"
     },
@@ -9926,7 +10270,7 @@
     },
     {
      "text": "Mama?",
-     "expr": null,
+     "expr": "scared",
      "variant": null,
      "where": "Emberwake · The Kindling Hour & the Hush"
     },
@@ -9938,7 +10282,7 @@
     },
     {
      "text": "Tell her. TELL her!",
-     "expr": null,
+     "expr": "scared",
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
     },
@@ -9986,7 +10330,7 @@
     },
     {
      "text": "Still the good one. I checked.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · pip.again"
     },
@@ -9998,7 +10342,7 @@
     },
     {
      "text": "Mum's right there. That counts. She says it counts when she's the one saying it.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · pip.home"
     }
@@ -10144,7 +10488,7 @@
     },
     {
      "text": "…Do I do it anyway?",
-     "expr": null,
+     "expr": "hollow",
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
     },
@@ -10210,7 +10554,7 @@
     },
     {
      "text": "Still warm. Won't be by the time you've decided.",
-     "expr": null,
+     "expr": "stern",
      "variant": null,
      "where": "dialogue · poppy.again"
     },
@@ -10222,7 +10566,7 @@
     },
     {
      "text": "Up at four, and I'll be up at four tomorrow. It's a good complaint to have.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · poppy.day"
     }
@@ -10275,13 +10619,13 @@
     },
     {
      "text": "Now then! A guest, and on Emberwake of all nights. Welcome, my dear.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
     },
     {
      "text": "In charge! Ha! I keep the ledger; the village keeps itself.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
     },
@@ -10293,7 +10637,7 @@
     },
     {
      "text": "…Ha! I like you. Stay the night, then — and stay for the Kindling Hour.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
     },
@@ -10305,13 +10649,13 @@
     },
     {
      "text": "Three hundred years that flame has burned. In all of them, nobody here carried a grief alone.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
     },
     {
      "text": "That is not boasting, my dear. It is bookkeeping — I checked.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
     },
@@ -10323,7 +10667,7 @@
     },
     {
      "text": "As for the Gate — lamplighter business, child. His order built it, his order shut it.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
     },
@@ -10353,13 +10697,13 @@
     },
     {
      "text": "The HOUR! Gather, neighbors — to the square!",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The meet"
     },
     {
      "text": "Lake — the flame.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The meet"
     },
@@ -10371,7 +10715,7 @@
     },
     {
      "text": "Three hundred years, and the warmth of every one of them — right here.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The Kindling Hour & the Hush"
     },
@@ -10395,7 +10739,7 @@
     },
     {
      "text": "Who brings the first memory?",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The Kindling Hour & the Hush"
     },
@@ -10443,13 +10787,13 @@
     },
     {
      "text": "See to them — all of them. They deserve their names back, even borrowed.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The Kindling Hour & the Hush"
     },
     {
      "text": "Then come find me. I will be with my ledger — every word of it true, and not one of them mine.",
-     "expr": null,
+     "expr": "hollow",
      "variant": null,
      "where": "Emberwake · The Kindling Hour & the Hush"
     },
@@ -10491,7 +10835,7 @@
     },
     {
      "text": "Ink keeps facts. It cannot keep what they WEIGHED.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The pact"
     },
@@ -10521,7 +10865,7 @@
     },
     {
      "text": "And the old Order kept one creed above all: light does not die — it is only ever carried.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The pact"
     },
@@ -10569,7 +10913,7 @@
     },
     {
      "text": "So it must be both of you, together.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The pact"
     },
@@ -10605,13 +10949,13 @@
     },
     {
      "text": "The old rite, then. Two keepers, one flame — say it and mean it, or the Gate will know.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The pact"
     },
     {
      "text": "“What they forgot, we keep. What we keep, we return.”",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The pact"
     },
@@ -10635,13 +10979,13 @@
     },
     {
      "text": "Twin sigils, before the Gate. The Lamplighters cut them, in the old days.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The pact"
     },
     {
      "text": "That road was always meant to be walked by two.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "Emberwake · The pact"
     },
@@ -10689,19 +11033,19 @@
     },
     {
      "text": "Still not running it. Still standing where they put me.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · rowan.again"
     },
     {
      "text": "Forty years of who owes whom a hand. Nobody has ever asked to see it.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "dialogue · rowan.ledger"
     },
     {
      "text": "That's the trick of a ledger in a village. Keeping it is the whole of the work.",
-     "expr": null,
+     "expr": "grave",
      "variant": null,
      "where": "dialogue · rowan.ledger"
     },
@@ -10733,9 +11077,13 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 790,
-    "h": 696
+    "moods": [
+     "conspiring",
+     "happy",
+     "worried"
+    ],
+    "w": 788,
+    "h": 992
    },
    "moodSpec": [
     "conspiring",
@@ -11408,7 +11756,7 @@
     "wry"
    ],
    "isMain": true,
-   "lineCount": 199,
+   "lineCount": 200,
    "lines": [
     {
      "text": "(A waystone. Good — the road’s a real road, then.)",
@@ -11418,7 +11766,7 @@
     },
     {
      "text": "(…Wait.)",
-     "expr": null,
+     "expr": "surprised",
      "variant": null,
      "where": "Emberwake · The waystone & Mochi"
     },
@@ -11562,7 +11910,7 @@
     },
     {
      "text": "Apologizing to lamps.",
-     "expr": null,
+     "expr": "thinking",
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
     },
@@ -11640,7 +11988,7 @@
     },
     {
      "text": "I got here an HOUR ago.",
-     "expr": null,
+     "expr": "worried",
      "variant": null,
      "where": "Emberwake · The Kindling Hour & the Hush"
     },
@@ -11670,7 +12018,7 @@
     },
     {
      "text": "Pip. Look at me. I saw her holding your hand — an hour ago, by the stall.",
-     "expr": null,
+     "expr": "worried",
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
     },
@@ -11688,7 +12036,7 @@
     },
     {
      "text": "It is now.",
-     "expr": null,
+     "expr": "tender",
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
     },
@@ -11724,19 +12072,19 @@
     },
     {
      "text": "Since I was six years old, I have drawn one clearing. Over and over, in dreams.",
-     "expr": null,
+     "expr": "worried",
      "variant": null,
      "where": "Emberwake · The pact"
     },
     {
      "text": "Forty-one drawings of the same clearing.",
-     "expr": null,
+     "expr": "worried",
      "variant": null,
      "where": "Emberwake · The pact"
     },
     {
      "text": "I came here because the forty-first had YOUR gate in the corner.",
-     "expr": null,
+     "expr": "determined",
      "variant": null,
      "where": "Emberwake · The pact"
     },
@@ -11760,7 +12108,7 @@
     },
     {
      "text": "For the record: this is now the best chart I carry.",
-     "expr": null,
+     "expr": "tender",
      "variant": null,
      "where": "Emberwake · The ending — beyond the gate"
     },
@@ -11790,7 +12138,7 @@
     },
     {
      "text": "Then it goes in the book. Come on, partner — first lamp.",
-     "expr": null,
+     "expr": "happy",
      "variant": null,
      "where": "Emberwake · The ending — beyond the gate"
     },
@@ -12603,6 +12951,12 @@
      "expr": "thinking",
      "variant": null,
      "where": "The Lanternstead · The wall-map — Tally joins"
+    },
+    {
+     "text": "(South is eleven days of road I've surveyed. The lights north aren't on any map I carry.)",
+     "expr": "thinking",
+     "variant": null,
+     "where": "dialogue · emb.southroad.turnback.vesper"
     }
    ]
   },
@@ -12623,9 +12977,11 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 832,
-    "h": 791
+    "moods": [
+     "happy"
+    ],
+    "w": 830,
+    "h": 956
    },
    "moodSpec": [
     "focused",
@@ -12698,10 +13054,10 @@
        "note": "lowers goods from the road to the quay"
       },
       {
-       "id": "porters-yard",
-       "name": "Porters' Yard",
-       "class": "area",
-       "note": "mule teams and pallets — the crews that portage cargo when the locks are jammed"
+       "id": "valley-road",
+       "name": "The Valley Road",
+       "class": "portal",
+       "note": "THE MOUTH OF THE VALLEY ROAD — the town's land threshold, at the bottom edge of the gate frame. It is a PORTAL, not a place: it carries the overworld exit 'valley-gate-out' and the arrival spawn, and the carriageway runs on PAST it (tools/gate_lib.py SPINE) and off the bottom of the plate, so the road reads as continuing to the valley rather than stopping at a rim. mapVisible false: the town map screen still shows the arch (valley-gate) as the way in — this is the doorstep, not a destination."
       }
      ],
      "shelf": [
@@ -12817,7 +13173,7 @@
        "id": "moorage",
        "name": "Moorage",
        "class": "area",
-       "note": "the tar-dark boat waits here | FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of walkable pad on the river and walk_water_audit measured 607 samples of it standing on open water — the town's worst walk-on-water record. tools/landing_footprint.py finds NO all-landed rectangle of 1.5 m2 anywhere inside the disc; 3% of it is landed. The two rects stamped here are the moorage's REAL built landing, measured on lf_stage_moorage (largest all-landed rect 6.8 x 1.8) and lf_stage_moorage_w (1.0 x 3.0), both built by locksfoot_build.py and both largely OUTSIDE the old disc — which is exactly what that file's own comment says: 'everything the moorage WORKS with has to stand off it'. THE ONE PLACE NEW DECK IS OWED: the ruling asks for a modest pier under whatever of the staging still stands over water. | THE PIER IS BUILT 2026-08-01, and the third rect is it. Measured reason: with only the two staging rects the pad was an ISLAND — a connected-component sweep over walk_bodygate's own step rule put 3474 of its lattice nodes in a component containing nothing but itself, because town_blockout draws every incident ribbon to `pos` (76.09, 27) and `pos` is 4.3 m short of the staging. tools/waterfront_landings.py builds the connecting pier (7.6 m2 of planking on 2 joists and 4 piles, deck top 1.044, material and height both read off lf_stage_moorage so it continues that deck rather than inventing one) and this rect is measured all-landed over it. WIDTH 1.80 m, not the 2.00 m the landing rule asks for: walk_e_moorage__lock-five_l0 slopes down to 0.67 across the pier's east 0.14 m, and honouring it at full width would have put the deck 0.595 m under the pad — inside the 0.60 m rule by 5 mm, which the planking's own jitter would have spent."
+       "note": "the tar-dark boat waits here | FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of walkable pad on the river and walk_water_audit measured 607 samples of it standing on open water — the town's worst walk-on-water record. tools/landing_footprint.py finds NO all-landed rectangle of 1.5 m2 anywhere inside the disc; 3% of it is landed. The two rects stamped here are the moorage's REAL built landing, measured on lf_stage_moorage (largest all-landed rect 6.8 x 1.8) and lf_stage_moorage_w (1.0 x 3.0), both built by locksfoot_build.py and both largely OUTSIDE the old disc — which is exactly what that file's own comment says: 'everything the moorage WORKS with has to stand off it'. THE ONE PLACE NEW DECK IS OWED: the ruling asks for a modest pier under whatever of the staging still stands over water. | THE PIER IS BUILT 2026-08-01, and the third rect is it. Measured reason: with only the two staging rects the pad was an ISLAND — a connected-component sweep over walk_bodygate's own step rule put 3474 of its lattice nodes in a component containing nothing but itself, because town_blockout draws every incident ribbon to `pos` (76.09, 27) and `pos` is 4.3 m short of the staging. tools/waterfront_landings.py builds the connecting pier (7.6 m2 of planking on 2 joists and 4 piles, deck top 1.044, material and height both read off lf_stage_moorage so it continues that deck rather than inventing one) and this rect is measured all-landed over it. WIDTH 1.80 m, not the 2.00 m the landing rule asks for: walk_e_moorage__lock-five_l0 slopes down to 0.67 across the pier's east 0.14 m, and honouring it at full width would have put the deck 0.595 m under the pad — inside the 0.60 m rule by 5 mm, which the planking's own jitter would have spent. | THE WEST LINK IS BUILT 2026-08-05, and the FOURTH rect is it. The 2026-08-01 pier joined the staging to `pos`; it did not join the WEST STORE rect [70.9,71.9,26.2,29.2] to anything, because waterfront_landings' connective rect runs 2.0 m about `pos` and the west store is not in that column — so the one rect that ruling had already found to be an island stayed one, and it is a ONE-WAY PIT: walk_pad_tenant-shack (1.92..2.04) hangs 0.72 m over its 1.199 deck, which is a legal 0.79 m step DOWN and 0.16 m past STEP_UP coming back, with the pad's own slab 20 mm inside the body's blocking window over that floor ([1.85, 2.50]). The Chapter Two playtest agent stepped down at step 75 of run-20260805-054441 and was still on it at step 120 — 46 of 120 steps, filing five reports about pillars. tools/moorage_westlink.py measures the gap (2.46 m of open water; both banks lf_planking at top 1.199; the body window 1.85..2.50 CLEAR) and plank-links it; these FOUR rects are measured 228/228 all-landed over that deck. THE SHAPE IS THE MEASUREMENT: a 0.15 m occupancy scan of the body window (1.85..2.50 over a 1.199 floor) finds exactly two obstructions and they are at OPPOSITE CORNERS — the stair's t03/t04 undersides fill x 74.30..75.50 for y <= 28.50 (north-EAST), and lf_railings, the west store's own guard, fills a diagonal x 71.00..71.45 for y 28.95..29.55 (south-WEST). Of the six l2 treads only those two have an underside in that window at all: t02's is 2.55 (clears by 50 mm) and t05's TOP is 1.66 (under it). The only single rectangle that misses both corners is 0.15 m wide, which is why this is three overlapping rects and not one."
       },
       {
        "id": "tenant-shack",
@@ -13550,7 +13906,7 @@
      "lines": [
       {
        "text": "Mind the pitch kettle. It's hot, it's mine, and it doesn't care which.",
-       "expr": null,
+       "expr": "grave",
        "speaker": null
       },
       {
@@ -13560,7 +13916,7 @@
       },
       {
        "text": "Nineteen days of stopped boats is nineteen days of stopped boats getting mended.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -13575,7 +13931,7 @@
      "lines": [
       {
        "text": "Still ribs and tar. Come back when there's a hull worth looking at.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -13618,12 +13974,12 @@
      "lines": [
       {
        "text": "Frames in a week, planking in a month. Trust in about ten years.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       },
       {
        "text": "You don't build a boat fast up here. The river checks your work personally.",
-       "expr": null,
+       "expr": "grave",
        "speaker": null
       }
      ],
@@ -13643,7 +13999,7 @@
       },
       {
        "text": "Half this town smells of tar and the other half married into it.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -13670,7 +14026,7 @@
       },
       {
        "text": "Half this floor hangs over the gorge on brackets. It's held ninety years. Don't jump.",
-       "expr": null,
+       "expr": "wry",
        "speaker": null
       }
      ],
@@ -13685,7 +14041,7 @@
      "lines": [
       {
        "text": "Oil's fresh, rope's dry, floor's still up. Same as yesterday.",
-       "expr": null,
+       "expr": "wry",
        "speaker": null
       }
      ],
@@ -13722,7 +14078,7 @@
      "lines": [
       {
        "text": "Look all you like. Everyone leaves with rope eventually.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -13846,6 +14202,132 @@
    ]
   },
   {
+   "speaker": "del.cook",
+   "name": "the cook",
+   "color": "#c0925f",
+   "nodes": [
+    {
+     "id": "del.cook.hail",
+     "cond": "{\"notFlag\":\"npc.met.del.cook\"}",
+     "else": "del.cook.again",
+     "next": null,
+     "effects": "{\"setFlags\":{\"npc.met.del.cook\":true}}",
+     "lines": [
+      {
+       "text": "Mind the range, it spits. Everything in this room is hotter than it looks.",
+       "expr": null,
+       "speaker": null
+      },
+      {
+       "text": "Two hundred meals a day when the locks run. Ninety now, and I still start at four.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    },
+    {
+     "id": "del.cook.again",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "Pot's on. It's always on — that's the job.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
+   "speaker": "del.cookhouse.bargeman",
+   "name": "bargeman",
+   "color": "#7f8fa3",
+   "nodes": [
+    {
+     "id": "del.cookhouse.bargeman.hail",
+     "cond": "{\"notFlag\":\"npc.met.del.cookhouse.bargeman\"}",
+     "else": "del.cookhouse.bargeman.again",
+     "next": null,
+     "effects": "{\"setFlags\":{\"npc.met.del.cookhouse.bargeman\":true}}",
+     "lines": [
+      {
+       "text": "Stew and a bit of bread. Same as yesterday, and I'm not complaining.",
+       "expr": null,
+       "speaker": null
+      },
+      {
+       "text": "Cheaper than the inn and you eat standing up. Crews work that out by day three.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    },
+    {
+     "id": "del.cookhouse.bargeman.again",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "Still waiting on the hatch. She serves in her own order.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
+   "speaker": "del.cookhouse.boy",
+   "name": "boy with a bowl",
+   "color": "#a3b06a",
+   "nodes": [
+    {
+     "id": "del.cookhouse.boy.hail",
+     "cond": "{\"notFlag\":\"npc.met.del.cookhouse.boy\"}",
+     "else": "del.cookhouse.boy.again",
+     "next": null,
+     "effects": "{\"setFlags\":{\"npc.met.del.cookhouse.boy\":true}}",
+     "lines": [
+      {
+       "text": "I get the crusts when the pot's scraped. That's a wage, my mam says.",
+       "expr": null,
+       "speaker": null
+      },
+      {
+       "text": "You can sit there. Nobody's using it and I won't tell.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    },
+    {
+     "id": "del.cookhouse.boy.again",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "Crusts aren't ready. Come back when the pot's down.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
    "speaker": "del.deckhand",
    "name": "deckhand",
    "color": "#9aa38c",
@@ -13864,7 +14346,7 @@
       },
       {
        "text": "Three shops on this street, and I've been in all of them. I've bought a whistle.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -13901,7 +14383,7 @@
      "lines": [
       {
        "text": "That's my stick. I found it — don't ask where, it was in the river.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       },
       {
@@ -13921,6 +14403,132 @@
      "lines": [
       {
        "text": "Still my stick.",
+       "expr": "happy",
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
+   "speaker": "del.inn.bargeman",
+   "name": "bargeman",
+   "color": "#8fa08c",
+   "nodes": [
+    {
+     "id": "del.inn.bargeman.hail",
+     "cond": "{\"notFlag\":\"npc.met.del.inn.bargeman\"}",
+     "else": "del.inn.bargeman.again",
+     "next": null,
+     "effects": "{\"setFlags\":{\"npc.met.del.inn.bargeman\":true}}",
+     "lines": [
+      {
+       "text": "Ashore since the locks shut. I've drunk this cellar dry in small honest amounts.",
+       "expr": null,
+       "speaker": null
+      },
+      {
+       "text": "My boat's third in the queue. Third of forty, and I've stopped saying that out loud.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    },
+    {
+     "id": "del.inn.bargeman.again",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "Still third. Ask me tomorrow and it'll still be third.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
+   "speaker": "del.inn.lodger",
+   "name": "lodger",
+   "color": "#9c8f9c",
+   "nodes": [
+    {
+     "id": "del.inn.lodger.hail",
+     "cond": "{\"notFlag\":\"npc.met.del.inn.lodger\"}",
+     "else": "del.inn.lodger.again",
+     "next": null,
+     "effects": "{\"setFlags\":{\"npc.met.del.inn.lodger\":true}}",
+     "lines": [
+      {
+       "text": "That's my bag by the stair. It's been packed since the locks shut.",
+       "expr": null,
+       "speaker": null
+      },
+      {
+       "text": "I'm not carrying it up again. If the water moves, I want to hear it first.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    },
+    {
+     "id": "del.inn.lodger.again",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "Bag's still packed by the stair. So am I.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
+   "speaker": "del.innkeep",
+   "name": "innkeeper",
+   "color": "#b8894f",
+   "nodes": [
+    {
+     "id": "del.innkeep.hail",
+     "cond": "{\"notFlag\":\"npc.met.del.innkeep\"}",
+     "else": "del.innkeep.again",
+     "next": null,
+     "effects": "{\"setFlags\":{\"npc.met.del.innkeep\":true}}",
+     "lines": [
+      {
+       "text": "Beds are upstairs and all of them are full. Nineteen days of crews and nowhere to send them.",
+       "expr": null,
+       "speaker": null
+      },
+      {
+       "text": "You can have the bench by the fire. It's warm, it's free, and it's taken at nine.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    },
+    {
+     "id": "del.innkeep.again",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "Bench is still by the fire. Still taken at nine.",
        "expr": null,
        "speaker": null
       }
@@ -14056,6 +14664,90 @@
    ]
   },
   {
+   "speaker": "del.yard.apprentice",
+   "name": "the boatwright's apprentice",
+   "color": "#a89660",
+   "nodes": [
+    {
+     "id": "del.yard.apprentice.hail",
+     "cond": "{\"notFlag\":\"npc.met.del.yard.apprentice\"}",
+     "else": "del.yard.apprentice.again",
+     "next": null,
+     "effects": "{\"setFlags\":{\"npc.met.del.yard.apprentice\":true}}",
+     "lines": [
+      {
+       "text": "I fetch, I hold, and I don't touch the adze. Two years of that so far.",
+       "expr": null,
+       "speaker": null
+      },
+      {
+       "text": "The boatwright's down at the kettle. Shout if you want him, he won't hear you.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    },
+    {
+     "id": "del.yard.apprentice.again",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "Still holding things. He'll want the mallet in a minute.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
+   "speaker": "del.yard.caulker",
+   "name": "caulker",
+   "color": "#94795a",
+   "nodes": [
+    {
+     "id": "del.yard.caulker.hail",
+     "cond": "{\"notFlag\":\"npc.met.del.yard.caulker\"}",
+     "else": "del.yard.caulker.again",
+     "next": null,
+     "effects": "{\"setFlags\":{\"npc.met.del.yard.caulker\":true}}",
+     "lines": [
+      {
+       "text": "Mind your feet round the frames. Oakum, mallet, and a seam that takes me all day.",
+       "expr": null,
+       "speaker": null
+      },
+      {
+       "text": "Every hull in this yard leaks somewhere. Mine's this one, and it's winning.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    },
+    {
+     "id": "del.yard.caulker.again",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "Same seam as yesterday. Half a day left in it, I reckon.",
+       "expr": null,
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
    "speaker": "eelwife",
    "name": "Eel-wife",
    "color": "#7fa39c",
@@ -14069,17 +14761,17 @@
      "lines": [
       {
        "text": "Two for a penny! Three if you carry them, and no, I won't skin them for you.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       },
       {
        "text": "You weren't buying. I priced you anyway — it's the principle of the stall.",
-       "expr": null,
+       "expr": "scowl",
        "speaker": null
       },
       {
        "text": "That cat's been fed twice today. We have an understanding and no witnesses.",
-       "expr": null,
+       "expr": "sly",
        "speaker": null
       }
      ],
@@ -14094,7 +14786,7 @@
      "lines": [
       {
        "text": "Still two for a penny. The river hasn't changed its mind and neither have I.",
-       "expr": null,
+       "expr": "scowl",
        "speaker": null
       }
      ],
@@ -14131,12 +14823,12 @@
      "lines": [
       {
        "text": "Boats stopped, mouths didn't. Best nineteen days I've had and I'll deny saying it.",
-       "expr": null,
+       "expr": "sly",
        "speaker": null
       },
       {
        "text": "Ask me in the spring and I'll tell you it was a hardship. It will be true by then.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14163,7 +14855,7 @@
       },
       {
        "text": "So I'm waiting. That's allowed — it's the main thing you can do at a den.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14178,7 +14870,7 @@
      "lines": [
       {
        "text": "Still not here. I've got all evening.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14200,12 +14892,12 @@
      "lines": [
       {
        "text": "You can't ring it. I asked. You have to be Elder Rowan or the bell falls on you.",
-       "expr": null,
+       "expr": "scared",
        "speaker": null
       },
       {
        "text": "That's not true but he said it, so it's a bit true.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14220,7 +14912,7 @@
      "lines": [
       {
        "text": "Still can't ring it. I've been checking.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14242,7 +14934,7 @@
      "lines": [
       {
        "text": "Come in, then. Two rooms and a fire, and tonight nobody wants any of the three.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       },
       {
@@ -14262,7 +14954,7 @@
      "lines": [
       {
        "text": "Kettle's still on. It's a very slow kettle tonight.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14326,12 +15018,12 @@
      "lines": [
       {
        "text": "Evening. I'd walk up with you but I'm carrying a dish and it's not a steady one.",
-       "expr": null,
+       "expr": "worried",
        "speaker": null
       },
       {
        "text": "Whole lane's going up. You can tell by the doors — none of them shut properly.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14346,7 +15038,7 @@
      "lines": [
       {
        "text": "Still carrying it. Getting there.",
-       "expr": null,
+       "expr": "worried",
        "speaker": null
       }
      ],
@@ -14457,7 +15149,7 @@
       },
       {
        "text": "Nothing biting. Hasn't all week. I come down anyway, that's the arrangement.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14530,7 +15222,7 @@
      "lines": [
       {
        "text": "Half the winter, hanging. Everyone's very fond of me in February.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14659,6 +15351,28 @@
    ]
   },
   {
+   "speaker": "lake",
+   "name": "Lake",
+   "color": "#e0a94e",
+   "nodes": [
+    {
+     "id": "emb.southroad.turnback",
+     "cond": "{\"all\":[{\"flag\":\"story.ch1.lake-pov\"},{\"notFlag\":\"story.ch1.met\"}]}",
+     "else": "emb.southroad.turnback.vesper",
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "(Nothing down there but the Whisperwood. My lamps are the other way.)",
+       "expr": "determined",
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
    "speaker": "mara",
    "name": "Mara",
    "color": "#8a5a6b",
@@ -14677,7 +15391,7 @@
       },
       {
        "text": "He'll tell you about the stick. Let him, it's shorter than you'd think.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -14692,7 +15406,7 @@
      "lines": [
       {
        "text": "Twelfth lap. I've stopped counting out loud.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -15000,12 +15714,12 @@
      "lines": [
       {
        "text": "That one's Bailiff, that one's Soup. The big one's called the Harbormistress.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       },
       {
        "text": "Don't TELL the harbormistress.",
-       "expr": null,
+       "expr": "scared",
        "speaker": null
       },
       {
@@ -15025,7 +15739,7 @@
      "lines": [
       {
        "text": "Soup! SOUP! …He knows his name. He just doesn't respect it.",
-       "expr": null,
+       "expr": "indignant",
        "speaker": null
       }
      ],
@@ -15068,7 +15782,7 @@
      "lines": [
       {
        "text": "Me. Nobody said so, but nobody else does it, so it's me.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       },
       {
@@ -15093,7 +15807,7 @@
       },
       {
        "text": "I'm not allowed either. That's different, because I already went.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -15261,22 +15975,22 @@
      "lines": [
       {
        "text": "Watchman. Night shift. It is presently day, which is why I'm holding a wick-knife and a grudge.",
-       "expr": null,
+       "expr": "wry",
        "speaker": null
       },
       {
        "text": "Every wick, every noon, so they burn every night. That's the whole trade.",
-       "expr": null,
+       "expr": "tired",
        "speaker": null
       },
       {
        "text": "No ceremony to it, friend. Oil goes in, light comes out.",
-       "expr": null,
+       "expr": "tired",
        "speaker": null
       },
       {
        "text": "And I'd thank the town to remember who carries the ladder.",
-       "expr": null,
+       "expr": "wry",
        "speaker": null
       }
      ],
@@ -15291,7 +16005,7 @@
      "lines": [
       {
        "text": "Sleep's for the day shift — which is now. Which is the grudge.",
-       "expr": null,
+       "expr": "tired",
        "speaker": null
       }
      ],
@@ -15334,12 +16048,12 @@
      "lines": [
       {
        "text": "Two hundred and six, counting the strings over the water. I don't count those out loud.",
-       "expr": null,
+       "expr": "tired",
        "speaker": null
       },
       {
        "text": "One ladder. One me. You do the sum and then you understand my face.",
-       "expr": null,
+       "expr": "wry",
        "speaker": null
       }
      ],
@@ -15354,7 +16068,7 @@
      "lines": [
       {
        "text": "Quiet enough. Gulls arguing, water working, somebody laughing at the cookhouse too late.",
-       "expr": null,
+       "expr": "tired",
        "speaker": null
       },
       {
@@ -15401,7 +16115,7 @@
      "lines": [
       {
        "text": "Still the good one. I checked.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -15459,7 +16173,7 @@
      "lines": [
       {
        "text": "Mum's right there. That counts. She says it counts when she's the one saying it.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -15501,7 +16215,7 @@
      "lines": [
       {
        "text": "Still warm. Won't be by the time you've decided.",
-       "expr": null,
+       "expr": "stern",
        "speaker": null
       }
      ],
@@ -15559,7 +16273,7 @@
      "lines": [
       {
        "text": "Up at four, and I'll be up at four tomorrow. It's a good complaint to have.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -15601,7 +16315,7 @@
      "lines": [
       {
        "text": "Still not running it. Still standing where they put me.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       }
      ],
@@ -15644,12 +16358,12 @@
      "lines": [
       {
        "text": "Forty years of who owes whom a hand. Nobody has ever asked to see it.",
-       "expr": null,
+       "expr": "happy",
        "speaker": null
       },
       {
        "text": "That's the trick of a ledger in a village. Keeping it is the whole of the work.",
-       "expr": null,
+       "expr": "grave",
        "speaker": null
       }
      ],
@@ -15793,6 +16507,28 @@
    ]
   },
   {
+   "speaker": "vesper",
+   "name": "Vesper",
+   "color": "#3f8a7e",
+   "nodes": [
+    {
+     "id": "emb.southroad.turnback.vesper",
+     "cond": null,
+     "else": null,
+     "next": null,
+     "effects": null,
+     "lines": [
+      {
+       "text": "(South is eleven days of road I've surveyed. The lights north aren't on any map I carry.)",
+       "expr": "thinking",
+       "speaker": null
+      }
+     ],
+     "choices": []
+    }
+   ]
+  },
+  {
    "speaker": "weaponsmith",
    "name": "Weaponsmith",
    "color": "#a8737a",
@@ -15874,6 +16610,11 @@
  ],
  "checks": [
   {
+   "level": "warn",
+   "kind": "unreachable node",
+   "msg": "dialogue node “emb.southroad.turnback” is never reached — no npc opens it and nothing links to it"
+  },
+  {
    "level": "info",
    "kind": "undocumented voice",
    "msg": "Armorer speaks 4 line(s) but has no STORY.md entry and no VOICES.md voice"
@@ -15887,6 +16628,36 @@
    "level": "info",
    "kind": "undocumented voice",
    "msg": "Chandler speaks 4 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "undocumented voice",
+   "msg": "the cook speaks 3 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "no cut-in art",
+   "msg": "the cook speaks but has no cut-in art yet (falls back to the framed thumbnail)"
+  },
+  {
+   "level": "info",
+   "kind": "undocumented voice",
+   "msg": "bargeman speaks 3 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "no cut-in art",
+   "msg": "bargeman speaks but has no cut-in art yet (falls back to the framed thumbnail)"
+  },
+  {
+   "level": "info",
+   "kind": "undocumented voice",
+   "msg": "boy with a bowl speaks 3 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "no cut-in art",
+   "msg": "boy with a bowl speaks but has no cut-in art yet (falls back to the framed thumbnail)"
   },
   {
    "level": "info",
@@ -15907,6 +16678,36 @@
    "level": "info",
    "kind": "no cut-in art",
    "msg": "girl with a stick speaks but has no cut-in art yet (falls back to the framed thumbnail)"
+  },
+  {
+   "level": "info",
+   "kind": "undocumented voice",
+   "msg": "bargeman speaks 3 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "no cut-in art",
+   "msg": "bargeman speaks but has no cut-in art yet (falls back to the framed thumbnail)"
+  },
+  {
+   "level": "info",
+   "kind": "undocumented voice",
+   "msg": "lodger speaks 3 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "no cut-in art",
+   "msg": "lodger speaks but has no cut-in art yet (falls back to the framed thumbnail)"
+  },
+  {
+   "level": "info",
+   "kind": "undocumented voice",
+   "msg": "innkeeper speaks 3 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "no cut-in art",
+   "msg": "innkeeper speaks but has no cut-in art yet (falls back to the framed thumbnail)"
   },
   {
    "level": "info",
@@ -15937,6 +16738,26 @@
    "level": "info",
    "kind": "no cut-in art",
    "msg": "old woman on the stair speaks but has no cut-in art yet (falls back to the framed thumbnail)"
+  },
+  {
+   "level": "info",
+   "kind": "undocumented voice",
+   "msg": "the boatwright's apprentice speaks 3 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "no cut-in art",
+   "msg": "the boatwright's apprentice speaks but has no cut-in art yet (falls back to the framed thumbnail)"
+  },
+  {
+   "level": "info",
+   "kind": "undocumented voice",
+   "msg": "caulker speaks 3 line(s) but has no STORY.md entry and no VOICES.md voice"
+  },
+  {
+   "level": "info",
+   "kind": "no cut-in art",
+   "msg": "caulker speaks but has no cut-in art yet (falls back to the framed thumbnail)"
   },
   {
    "level": "info",
