@@ -54,11 +54,15 @@ and round 15 was killed by the loop pause before it could spend that permission.
 reduction, real horizon in frame, judged against the references' composition by a
 blind judge. Distance stays fixed (the one hard constraint).
 
-## Bet 6 — Legacy 2D runtime retirement (RUNNING — user-ordered 2026-08-05)
+## Bet 6 — Legacy 2D runtime retirement (BANKED 2026-08-05 — DAYLOG entry has the census)
 "This shouldn't still be around, please clean up any old content that is no longer
 used in our latest game." Trap known and named: chapter1/2.js are the SCRIPT OF
 RECORD for dialogue_style and exemplars.md — the gates' source of truth must move
 or the files stay as data. Verify-then-delete, the three-way method.
+**BANKED:** deleted in three verified commits (~650 MB / ~900 files): the 2D runtime +
+phone relay, the painted scene bundles (two ratified style anchors spared), the iso
+prototype + 24 tools. chapter1/2.js survive as INERT script-of-record data (option (a));
+the dialogue_style corpus proven byte-identical, all gates green.
 
 ## Standing method for every bet
 Blind judges on anonymized images; the picture is the verdict; wire-before-sweep;

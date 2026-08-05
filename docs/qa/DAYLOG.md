@@ -15821,3 +15821,55 @@ skip, and the suite stays green while the gate stops gating. Not diagnosed (the 
 error, no output past its banner). Instrument: `ps -Ao pid,etime,%cpu` — the signature is etime in
 minutes with %cpu 0.0 on a tool whose cost is sub-second. Next occurrence deserves a stack sample
 (`sample <pid> 5`) BEFORE the reap; two data points say pattern, a stack says cause.
+
+## 2026-08-05 — BET 6 BANKED: the legacy 2D runtime, the painted scene bundles and the iso prototype are DELETED (~650 MB, 900 files)
+
+The user's order ("this shouldn't still be around, please clean up any old content that
+is no longer used in our latest game") executed as three commits on the three-way method
+(referenced by no live file / named in no doc as live / inert by header), verify-then-delete:
+
+  1. **The legacy 2D runtime** (bf7b8a2): join-legacy.html, controller.html, js/{engine,
+     sprites2,field,story,items,assets,main}.js, the server's WebSocket phone relay +
+     /join + /qr + /dev/save + /dev/rebake (its target bakemask.py no longer existed),
+     the qrcode dep. play3d never touched any of it (grep: no WebSocket/controller use).
+  2. **The painted 2D scene bundles** (ae9b1dd, 339 MB): 15 dirs referenced only by the
+     spared chapter scripts; entrance/ and square/ pruned to the two RATIFIED style
+     anchors live files cite (entrance/main.png, square/festival.png). square3d/ and
+     lane3d/ untouched (map.json style.masterRefs).
+  3. **The painted-iso prototype** (7656b60, 302 MB): iso-proto/iso-review/ground-picker/
+     workflow.html, js/iso/, bake-core.js, render3d.js, assets/iso/, 24 iso-era tools
+     (slicers, keying, templates, height/containment gates, ground/prop generators),
+     docs/GROUND-SYSTEM.md, tools/PIPELINE.md, ROADMAP.md (self-declared deprecated).
+
+SPARED, with the failing proof or the reason:
+  * **chapter1/2.js — SCRIPT OF RECORD** (the slate's named trap, option (a)): headers
+    added declaring them INERT DATA; dialogue_style.mjs and docs/exemplars.md own their
+    text; build-story.mjs extracts them for story.html. PROOF the corpus is untouched:
+    dialogue_style before/after diff is line-number-only — 449 warnings / 1314 boxes /
+    PASS on both sides.
+  * **chapter3.js** — future-chapter script material (story.html displays it; out of the
+    game and out of the style gate's default scope by user ruling 2026-08-02).
+  * **main.js's END_CARDS** — moved VERBATIM into build-story.mjs (its only live
+    consumer); story-manifest before/after diff empty modulo the generated stamp and the
+    source label. server.js STORY_SOURCES repointed at build-story.mjs itself.
+  * **assets.html + workflow-characters.html + build-manifest.mjs** — live character-
+    factory review surface (gen-character.mjs writes what workflow-characters renders).
+    assets.html lost its dead Scene Pipeline tab and the /dev/rebake call.
+  * **docs/SCENE-LAYOUT.md** — looked iso-era, is NOT: its dressing doctrine is cited by
+    live Blender builders (emb_square_build.py, geometry_audit.py, embint_item_build.py).
+    A doc's era is decided by its READERS, not its subject.
+  * **qa_music.html, story.html, cine_regions.svg, review/** — live review surface.
+  * Script docs (chapter2/3-*.md) still name deleted 2D art as the staging they
+    describe — records, same status as the chapter files' own scene strings.
+  * MECHANICS.md keeps the pad/controller DESIGN with a STATUS note (two-player is a
+    deferred upgrade, not superseded work); items.js mention repointed at game/items.json.
+
+GATES, all green after: dialogue_style (identical output), story_test, build-story
+(manifest lossless), build-static --compress (reference integrity 254/254, cache-warm
+19.4 s), static_verify on dist, transition_test --port=3000. Pre-existing crash fixed
+in passing: build-manifest.mjs died on a char-manifest stage without a file.
+
+STILL NAMING THE DEAD, deliberately: docs/qa/MORNING.md, end-to-end-wiring.md and this
+log (history, past-tensed where they read as current); play3d.html:15 has a cosmetic
+"reference impl for render3d.js" comment — coordinator-owned file, flagged to main
+rather than edited.
