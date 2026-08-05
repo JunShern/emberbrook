@@ -4851,7 +4851,7 @@ second stage is round 19's plain lift clamp, because from there the straight lin
 and the hold in, the agent went **cottage -> crossing -> weave by step 7**. Round 27's run from
 the same start spent 45 steps and never left the cottage tier. **PT-045/046 are closed.** It
 then bounced `weave <-> crossing` for eighteen steps on a different arrow — filed as
-**PT-20260805-048**: in the `weave` shot the `weave>lockfive` seam projects to
+**PT-20260805-050**: in the `weave` shot the `weave>lockfive` seam projects to
 `[139, 488]` of 1280x720, the frame's LEFT MARGIN, the arrow draws at `[128, 468]` — `nx 0.100`
 — and `SIM.pick` at its own drawn pixel returns **`wv_piles`**, a stilt. The aim correctly does
 NOT engage there (from the weave tier the straight line to the seam IS ground), so this is
@@ -4874,7 +4874,7 @@ in, the drive still refused. `_court_probe --way` from that stand, one heading a
 and **every reverse drive walks back INTO it.** The columns around it carry
 `walk_e_weave-huts__moorage_l2_t03/t04` at 1.19–1.32 — the deck's own height — so a body at
 1.32 is wedged against the flight's treads. **PT-20260805-044 splits: its HUD half is fixed
-and measured, its world half is PT-20260805-047, and no arrow can cure that one.** Which is
+and measured, its world half is PT-20260805-049, and no arrow can cure that one.** Which is
 the mandate's rule kept in both directions — no HUD crutch for a world defect, no world edit
 to excuse a HUD defect.
 
