@@ -328,10 +328,22 @@ try {
   ok(!!door, 'the scene offers a door edge into an interior', edges);
   if (door) {
     const before = at0.scene;
-    await ev(cdp, `SIM.go(${door.i})`, 120000);
+    // SIM.go can REFUSE (busy transition, UILOCK, dialogue open) and its return is
+    // the only place that says so — a discarded refusal here spent an hour as
+    // "the interior bundle loaded" FAIL that no line of output could explain. The
+    // §4 walk can cross a camera band and start a shot cut, so the drive must let
+    // the transition system SETTLE first (the refusal is the game being correct:
+    // one door per fade). Settle, drive, and retry a busy refusal briefly.
+    const went = await ev(cdp, `(async()=>{ let r=null, tries=0;
+      for(; tries<40; tries++){
+        if(!SIM.transitions().busy){ r=SIM.go(${door.i}); if(!r||!r.error||r.error!=='busy') break; }
+        await new Promise(res=>setTimeout(res,250)); }
+      return { go:r||{error:'refused (falsy return)'}, tries,
+               uilock:!!(window.UILOCK&&UILOCK.active()), dialog:!!(window.Dialogue&&Dialogue.isOpen),
+               busy:SIM.transitions().busy }; })()`, 120000);
     const swapped = await ev(cdp, `(async()=>{for(let i=0;i<400;i++){ if(SIM.scene()!==${JSON.stringify(before)} && !SIM.transitions().busy) return SIM.scene(); await new Promise(r=>setTimeout(r,150)); } return SIM.scene();})()`, 240000);
     await ev(cdp, READY(600), 300000);
-    ok(swapped === door.to, `walked into ${door.to} (${door.label}) — the interior bundle loaded`, { swapped, want: door.to });
+    ok(swapped === door.to, `walked into ${door.to} (${door.label}) — the interior bundle loaded`, { swapped, want: door.to, atGo: went });
     const inside = await ev(cdp, `({scene:SIM.scene(), meshes:SIM.gpu().meshes, floors:SIM.floors(SIM.pos().x,SIM.pos().z).length})`);
     ok(inside.meshes > 0 && inside.floors > 0, 'the interior has geometry and standable floor under the player', inside);
     // and back out again — a one-way door is a trap in a static build too

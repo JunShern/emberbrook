@@ -15870,7 +15870,17 @@ story_test green, build-story manifest lossless, build-static --compress green
 the one FAIL (emb-cine -> emb-item-int swap never completes) is PRE-EXISTING, proven
 by running the same gate against the PRE-DELETION live deploy: identical 28/1, same
 door, same payload (logs: session scratchpad static_verify.rerun.log vs .live.log).
-An open defect of the static build, not of this cleanup — worth its own lane.
+[RESOLVED same evening, coordinator: a HARNESS RACE, not a build defect. The door
+swaps clean in <1 s when driven alone on /public AND on dist (scratchpad
+door_probe.mjs). static_verify's §4 walk crosses a camera band in emb-cine and
+starts a shot-cut fade; §5 drove the door mid-fade; SIM.go refused with
+{error:'busy'} — correct game behaviour — and §5 DISCARDED THE RETURN VALUE, so
+the refusal surfaced as "bundle didn't load". "Reproduced identically on the
+deploy" because the race travels with the harness, not the tree. Instrument
+patched (settle-then-drive + the refusal state recorded in the failure detail):
+dist now 29/0 ALL GREEN. The two "ok"s after the old FAIL were vacuous — they
+measured emb-cine's own floor. Same class as findability/percept: a harness that
+ignores its subject's answer cannot tell a refusal from a failure.]
 transition_test --port=3000: 161/7, but ALL seven failures are del-cine state
 (baseline drift, 16 -> 15 shots, battle-exit) and the Dellhollow lane held UNCOMMITTED
 writes to exactly those objects (del-cine/meta.json, del-cine/scene.glb,
