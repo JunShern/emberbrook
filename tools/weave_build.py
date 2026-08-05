@@ -44,6 +44,7 @@ from boatyard_lib import (stable_hash, REPO, new_mesh, join_meshes, box, obox, b
                           world_bbox, plank_fill, offset_poly, plane_z_fn, point_in_poly,
                           clip_halfplane, Corridor, place)
 from weave_lib import MAT, PAL, finish, audit_gltf_safe
+import ladder_derate as LD
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 PHASES = ["deck", "huts", "cottage", "ladder", "dress", "landing"]
@@ -1278,23 +1279,38 @@ if "ladder" in DO:
 
         t0, t1 = walk_in(0.0, 1.0)
         P0, P1 = A + d * t0, A + d * t1
-        for side in (-1, 1):
-            off = n * (0.46 * side)
-            parts.append(beam("lr", P0 + off, P1 + off, 0.10, 0.13, MDECK, COLL + "_DECK"))
-        k = 0
-        while k * 0.33 < L * (t1 - t0):
-            p = P0 + (P1 - P0) * ((k * 0.33) / max(L * (t1 - t0), 1e-6))
-            if not over_walk(p.x, p.y, p.z + 0.02, pad=0.10):
-                parts.append(beam("lg", p - n * 0.44, p + n * 0.44, 0.07, 0.05, MDECK,
-                                  COLL + "_DECK"))
-            k += 1
-        done(join_meshes(parts, "wv_fishdock_ladder", COLL + "_DECK"),
+        # IT IS A BLOCKED LADDER AND IT MUST LOOK BLOCKED (FIXLOG round 26).
+        # `dellhollow.routes.json` has always marked this edge `blocked: true` — it
+        # ships no walk ribbon and never did — and this builder drew it whole: two
+        # clean stringers and 25 evenly spaced rungs from the fish dock up to the
+        # weave tier, the most inviting object in the `lockfive` plate.  Round 24's
+        # playtest agent spent 22 of its first 24 steps at its foot.  The shape now
+        # comes from tools/ladder_derate.py, shared with town_blockout.py and with
+        # tools/del_ladder_derate.py (the carrier that applied it to the live master,
+        # because a full `weave_build -- all` no longer reproduces that master —
+        # measured 2026-08-05: 85 objects out where the master holds 138).
+        RUN = P1 - P0
+        Pt = lambda s, side: P0 + RUN * s + n * (side * 0.46)
+        ss = [k * 0.33 / max(L * (t1 - t0), 1e-6) for k in range(int(L * (t1 - t0) / 0.33) + 1)]
+        for s0, c0, s1, c1 in LD.rails():
+            parts.append(beam("lr", Pt(s0, c0), Pt(s1, c1), 0.10, 0.13, MDECK,
+                              COLL + "_DECK"))
+        for s in LD.rungs(ss):
+            p = P0 + RUN * s
+            if over_walk(p.x, p.y, p.z + 0.02, pad=0.10):
+                continue
+            parts.append(beam("lg", Pt(s, -0.96), Pt(s, +0.96), 0.07, 0.05, MDECK,
+                              COLL + "_DECK"))
+        s0, c0, s1, c1 = LD.bar()
+        parts.append(beam("lb", Pt(s0, c0), Pt(s1, c1), 0.10, 0.045, MDECK, COLL + "_DECK"))
+        s0, c0, s1, c1 = LD.dangle()
+        parts.append(beam("ld", Pt(s0, c0), Pt(s1, c1), 0.06, 0.045, MDECK, COLL + "_DECK"))
+        done(join_meshes([p for p in parts if p], "wv_fishdock_ladder", COLL + "_DECK"),
              T_(lf_deck=PAL["timber"]))
         log("BUILD", "wv_fishdock_ladder",
-            "stringers set 0.46 m outboard on both sides, BOTH ENDS walked in until "
-            "the whole run is clear (finding 98 — the rungs were filtered and the "
-            "stringers were not), every rung Corridor-tested before it is laid: the "
-            "climb is unchanged, the walking line is clear")
+            "stringers 0.46 m outboard, BOTH ENDS walked in until the whole run is "
+            "clear (finding 98), every rung Corridor-tested — and then DERATED: %s"
+            % LD.report(ss))
 
 
 # ===========================================================================

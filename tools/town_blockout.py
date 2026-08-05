@@ -13,8 +13,10 @@
 # Landmarks by class: structure (kind-shaped massing), area (flat disc, extent),
 # prop (small block), portal (posts + lintel), dressing (dark simplified block).
 
-import bpy, json, math
+import bpy, json, math, sys
 from mathutils import Vector
+
+sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
 
 TOWN_JSON = "/Users/junshernchan/projects/multiplayer-rpg/public/townmap/dellhollow.map.json"
 BLEND_OUT = "/Users/junshernchan/projects/multiplayer-rpg/tools/blends/dellhollow-town.blend"
@@ -394,12 +396,36 @@ for e in D["edges"]:
     if t == "winch":
         leg_box(nm, a + Vector((0, 0, 2.4)), b + Vector((0, 0, 1.2)), 0.08, 0.08, M_GRAY)
     elif t == "ladder":
+        # A LADDER EDGE SHIPS NO WALK RIBBON — it never has.  `routes_derive` marks
+        # every one of them `blocked: true` and `route_overlay`'s legend has called
+        # them "a way on that LOOKS walkable and is not" since it was written.  Round
+        # 24's playtest agent spent 22 of its first 24 steps at the foot of two of
+        # them, because the blockout drew them whole and evenly runged, exactly like
+        # the one flight that works.  So a ladder is built BROKEN from here on:
+        # tools/ladder_derate.py owns the shape, and the same module is what the
+        # district builders and tools/del_ladder_derate.py (the carrier that put this
+        # on the live Dellhollow master) use, so the three cannot drift apart.
+        # If a ladder edge is ever meant to be CLIMBABLE, it needs a walk ribbon
+        # first — and then it is not a ladder edge.
+        import ladder_derate as LD
         v = b - a
-        leg_box(nm + "_rail", a + Vector((0, 0, 0.1)), b, 0.5, 0.12, M_STAIR)
+        head = a + Vector((0, 0, 0.1))
         n = max(2, int(abs(v.z) / 0.45))
-        for r in range(n):
-            p = a + v * (r / n)
-            leg_box("%s_rung%02d" % (nm, r), p + Vector((-0.35, 0, 0.1)), p + Vector((0.35, 0, 0.1)), 0.3, 0.06, M_WOOD)
+        ss = [r / float(n) for r in range(n)]
+        X = Vector((0.35, 0, 0))                 # the rungs' own half-length, world X
+        P = lambda s, side: head + v * s + X * side
+        for i, (s0, c0, s1, c1) in enumerate(LD.rails()):
+            leg_box("%s_stile%d" % (nm, i), P(s0, c0), P(s1, c1), 0.09, 0.09, M_STAIR)
+        kept = LD.rungs(ss)
+        for r, s in enumerate(ss):
+            if s not in kept:
+                continue
+            leg_box("%s_rung%02d" % (nm, r), P(s, -1), P(s, +1), 0.3, 0.06, M_WOOD)
+        s0, c0, s1, c1 = LD.bar()
+        leg_box(nm + "_bar", P(s0, c0), P(s1, c1), 0.10, 0.05, M_WOOD)
+        s0, c0, s1, c1 = LD.dangle()
+        leg_box(nm + "_hang", P(s0, c0), P(s1, c1), 0.07, 0.05, M_WOOD)
+        print("  LADDER %s: %s" % (nm, LD.report(ss)))
     elif t == "stairs":
         v2 = ("%s__%s" % (e["from"], e["to"])) in STAIRS_V2
         if not v2:
