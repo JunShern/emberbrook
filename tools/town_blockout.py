@@ -268,7 +268,15 @@ RAIL_INS   = 1.05   # rail setback at a SPLIT end (LAND_LONG/2 + a body's half-w
 # mesh whose origin is nowhere near the stair, so "93 nodes in the stairs' box, all
 # scatter" was a wrong answer confidently obtained.  Ask for WORLD BOUNDING BOXES.
 # When the set covers every stairs edge, delete it and the `if` below with it.
-STAIRS_V2 = {"deep-stairs-head__deep-stairs-foot"}
+STAIRS_V2 = {"deep-stairs-head__deep-stairs-foot",
+             # 2026-08-05, PT-20260805-049: the moorage switchback's un-split hairpins
+             # stack l1 over l2 (and l0 over l1) inside the body window — UP stalled
+             # under walk_e_weave-huts__moorage_l1_t04 (bottom 4.00 over t01's 3.03)
+             # and DOWN was picked back up at the top hairpin, measured with
+             # _court_probe --way in the running game. Joined WITH its art: weave_build
+             # (wv_, owns l0/l1's decking) + locksfoot_build (lf_) + cx_build (cx_)
+             # re-run in the same window, per the ledger rule above.
+             "weave-huts__moorage"}
 
 
 def pivot_split(prev, w, nxt, asym=False):
@@ -298,6 +306,61 @@ def pivot_split(prev, w, nxt, asym=False):
     return w + n * off, w - n * off
 
 
+def lay_stair_rails(nm, railq):
+    """A RAIL MAY NOT STAND IN A BODY WINDOW OF ITS OWN EDGE (PT-20260805-049).
+
+    The pivot split moves sibling legs SIDEWAYS, so a leg's own 1.25 m side rail can
+    now stand over ANOTHER leg's corridor (bar_..._l1_railA stood over the relocated
+    l2's treads) or across a landing that the split laid beside the leg rather than
+    on its end (bar_..._l1_railB crossed the upper landing at head height).  The
+    invisible-wall sweep in walk_rederive is blind to both BY DESIGN — it sweeps a
+    rebuilt bar_ against OTHER edges' ribbons only.  So the rails of a v2 flight are
+    laid LAST, when every tread and landing of the edge exists, and each run is
+    marched at 0.15 m: a sample is cut where the rail slab would enter
+    [top+0.60, top+1.30] over any of this edge's own walk records under it (grown
+    0.35 m for the body box).  Kept sub-runs shorter than 0.5 m are dropped — a
+    post-length stub guards nothing.  The FIRST kept run inherits the bar's own
+    name so district builders (cx_build reads the six blockouts BY NAME) still find
+    it; later runs get _s<k>."""
+    walks = []
+    for o in bpy.data.objects:
+        if o.type == 'MESH' and o.name.startswith("walk_" + nm):
+            bb = [o.matrix_world @ Vector(c) for c in o.bound_box]
+            walks.append((min(p.x for p in bb) - 0.35, max(p.x for p in bb) + 0.35,
+                          min(p.y for p in bb) - 0.35, max(p.y for p in bb) + 0.35,
+                          max(p.z for p in bb)))
+    for name, ra, rb in railq:
+        L = (rb - ra).length
+        if L < 1e-6:
+            continue
+        n = max(2, int(L / 0.15))
+        keep = []
+        for k in range(n + 1):
+            p = ra.lerp(rb, k / n)
+            z0, z1 = p.z - 0.45, p.z + 0.45          # the slab about the rail line
+            cut = False
+            for x0, x1, y0, y1, top in walks:
+                if x0 <= p.x <= x1 and y0 <= p.y <= y1 and z1 > top + 0.60 and z0 < top + 1.30:
+                    cut = True; break
+            keep.append(not cut)
+        runs, s = [], None
+        for k in range(n + 1):
+            if keep[k] and s is None: s = k
+            if (not keep[k] or k == n) and s is not None:
+                e = k if keep[k] else k - 1
+                if (e - s) * (L / n) >= 0.5: runs.append((s, e))
+                s = None
+        for j, (s0, e0) in enumerate(runs):
+            leg_box(name if j == 0 else "%s_s%d" % (name, j),
+                    ra.lerp(rb, s0 / n), ra.lerp(rb, e0 / n), 0.06, 0.9, M_STAIR)
+        ncut = (n + 1) - sum(keep)
+        if not runs:
+            print("  RAIL %s: every sample inside its own edge's body window — NOT BUILT" % name)
+        elif ncut:
+            print("  RAIL %s: clipped %d of %d samples against own-edge walk windows -> %d run(s)"
+                  % (name, ncut, n + 1, len(runs)))
+
+
 def plan_trim(a, b, t):
     """pull b back toward a by t IN PLAN, keeping b's height (the riser count and
     every tread top are unchanged; only the run shortens, which walks the ladder
@@ -307,7 +370,7 @@ def plan_trim(a, b, t):
     return b - v.normalized() * t
 
 
-def stairs_leg(name, a, b, rail_ins=(0.0, 0.0)):
+def stairs_leg(name, a, b, rail_ins=(0.0, 0.0), rail_out=None):
     v = b - a; rise = b.z - a.z
     hl = Vector((v.x, v.y, 0)).length
     # side rails: stop walkers mounting flights sideways (the scoop-trap), read as
@@ -334,7 +397,10 @@ def stairs_leg(name, a, b, rail_ins=(0.0, 0.0)):
         up = Vector((0, 0, 0.55))
         for sgn, tag in ((1, "A"), (-1, "B")):
             ra = a + side * sgn + up + fwd_a; rb = b + side * sgn + up - fwd_b
-            leg_box("bar_%s_rail%s" % (name, tag), ra, rb, 0.06, 0.9, M_STAIR)
+            if rail_out is not None:
+                rail_out.append(("bar_%s_rail%s" % (name, tag), ra, rb))
+            else:
+                leg_box("bar_%s_rail%s" % (name, tag), ra, rb, 0.06, 0.9, M_STAIR)
     n = max(1, math.ceil(abs(rise) / 0.4))
     for t in range(n):
         p0 = a + v * (t / n); p1 = a + v * ((t + 1) / n)
@@ -442,6 +508,7 @@ for e in D["edges"]:
             for i in range(1, len(pts) - 1):
                 ends.append(pivot_split(pts[i - 1], pts[i], pts[i + 1], asym=(i == 1)))
             ends.append((pts[-1], pts[-1]))
+            railq = []
             for i in range(len(pts) - 1):
                 s, f = ends[i][1], ends[i + 1][0]
                 # set the LOWER end back off its landing; the upper end needs no
@@ -450,7 +517,8 @@ for e in D["edges"]:
                 elif i > 0 and s.z < f.z:              s = plan_trim(f, s, FOOT_TRIM)
                 stairs_leg("%s_l%d" % (nm, i), s, f,
                            rail_ins=(RAIL_INS if i > 0 else 0.0,
-                                     RAIL_INS if i + 1 < len(pts) - 1 else 0.0))
+                                     RAIL_INS if i + 1 < len(pts) - 1 else 0.0),
+                           rail_out=railq)
             for i in range(1, len(pts) - 1):
                 A, Dp = ends[i]
                 sep = Vector((Dp.x - A.x, Dp.y - A.y, 0))
@@ -466,6 +534,7 @@ for e in D["edges"]:
                 o.rotation_euler = (0, 0, ang)
                 o.data.materials.append(M_WOOD)
                 link_to(o, "PATHS")
+            lay_stair_rails(nm, railq)
     else:
         draw = chaikin(pts) if t in ("road", "path") else pts   # deck/bridge stay segmented
         wdt = 1.3 if t == "bridge" else 1.6
