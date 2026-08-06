@@ -16186,3 +16186,22 @@ swap, programs 13 -> 38 — another lane's uncommitted play3d-side runtime in th
 shared tree). ZERO ow-valley assertions failed; ow_detail.js loaded and re-armed
 clean through every swap. Not this lane's regression; re-run after the sky/
 play3d lane lands, same instruction as the 2026-08-05 note.
+
+## 2026-08-06 ~03:30 — PLAYTEST HARVEST lane: the Dellhollow pain inventory is written
+docs/plans/dellhollow-pain-inventory.md is the deliverable the circulation-redesign lane
+builds from. Headlines, each with its instrument in the doc: 37% of all recorded
+Dellhollow steps are stall steps (0 in Emberbrook, same runs); walk efficiency 52%
+town-wide (quay-west 30%, deep-stairs 9%); 55% of the walk network's floor cells sit in
+corridors under 1.25 m (two body widths); five of seven stair flights still v1, two of
+them measured failing BOTH ways this session (valley-gate__inn hairpin at
+[22.5,21.6,-3.9], quay-deck__pilot-cluster); the #1 defect is one basin at quay-west —
+a sub-metre wedge pocket [58.1,14.24,-12.2] (ls_rail + un-migrated market-stalls stair
+foot) one metre from the lockhead-return spawn, which IS the "exit loop" (PT-20260806-
+007..010). New named-blocker finds: loop-landing__quay-deck's own treads wall the quay
+promenade at [54.6,14.2,-13.3]; retired keepers'-steps art (lg_ks_*) still blocks the
+lock-five<->north-landing lane at x~90.4; the cottage plank ramp tapers to 0.16 m width
+(sub-body) — that is PT-20260806-002/003 (P0) and the NEW GAME run's final churn
+(terrain, not deadband: median close 0.79, aim-hold point reached at step 493).
+Triage this window: PT-20260805-067 + PT-20260806-001..011 -> 46 verified / 8 unverified
+/ 48 refuted. walk_engine_gate del-cine GREEN (0 lost of 3934) — the engine is not the
+problem. Fresh targeted LLM legs queued behind the coordinator's 650-step full bar.
