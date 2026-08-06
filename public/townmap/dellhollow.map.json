@@ -768,36 +768,26 @@
       "type": "road"
     },
     {
-      "from": "valley-gate",
+      "from": "gatehouse",
       "to": "winch-head",
       "type": "road",
       "waypoints": [
         [
-          18.6,
-          6.0,
+          18.5,
+          7.4,
           24.0
         ]
       ],
-      "note": "curves around the toll yard | STAMPED 2026-08-01: waypoint pulls the road's centreline to y>=5.7 past the winch — the ribbon stood 0.340 m ABOVE the gate stair's top treads across 60 cells (walkGround keeps the highest surface: the loop-stairs class, third instance) and REFUSED the descent at walk_pad_winch-head. Offline trace reproduces the N=10 zero without an API call."
+      "note": "BET 2 RE-ROOT 2026-08-06: was 'valley-gate -> winch-head'. The winch road now leaves from the GATEHOUSE and bows north (waypoint y 7.4) so the gate square fans clean: entry road west, gatehouse road, THE ONE DESCENT east, winch road along the north. The old valley-gate origin shared the descent's own head ground, and the wide (2.2 u) descent flight cannot coexist with a road ribbon inside walkGround's 0.73 step window there — the 2026-08-01 STAMP on the old edge (ribbon 0.340 m over the top treads REFUSED the descent) is the same class, solved this time by removing the road from the corridor instead of nudging it 0.3 u clear."
     },
     {
       "from": "valley-gate",
       "to": "inn",
       "type": "stairs",
-      "waypoints": [
-        [
-          21.0,
-          3.2,
-          22.3
-        ],
-        [
-          23.5,
-          3.0,
-          20.4
-        ]
-      ],
-      "note": "S-bend flight hugging the cliff side — re-sided so the lower flight no longer runs along the shop road (walkers were getting scooped up it)",
-      "_redline_2026-08-02": "USER REDLINE #2 (live play): 'The stairs leading back up to the gate are completely inaccessible. Completely get rid of those stairs, and have the transition point to the gate happen more or less where the Boatman's Rest is. Move the Boatman's Rest entry point to the next building before the item shop.' THIS EDGE IS CONDEMNED. It is NOT deleted in this pass, and the reason is measured: it is the ONLY walkable connection between the gate tier (h 24) and the rest of the town (h 19) — valley-gate's other two edges reach gatehouse and porters-yard, both on the gate tier, and winch-head__winch-foot is type 'winch', cargo only, never walkable. Deleting it here and now would strand the gate, the overworld exit on it, and every 'routable from valley-gate' assertion in cine_test. So the REPLACEMENT LANDS FIRST: passages 'gate-stair' below is a prompted transition standing on this flight's own foot landing, which is what the redline means by 'the transition point to the gate ... more or less where the Boatman's Rest is'. WHEN THE MESH GOES (Blender lane, costed in docs/qa/DAYLOG.md): delete this edge, delete 'valley-gate__inn' from shelf-west's owns.edges in dellhollow.cameras.json — the gate<->shelf-west camera cut is derived FROM it and vanishes with it — and re-bake. Until then the flight is still built, still walkable downhill, and the passage is the way back."
+      "width": 2.2,
+      "note": "THE ONE DESCENT (BET 2, user-ratified 2026-08-06): a single straight 2.2 u flight, no waypoints, no pivots — through the arch, straight down, the street ahead and the Boatmen's Rest on your right. 13 treads over ~8.3 u of run for the 5 u drop (31 deg — shallower than any leg of the S-bend it replaces). `width` is honoured by town_blockout stairs_leg (treads + rail offset scale together); the flight is in STAIRS_V2 so its rails are body-window-clipped against its own records.",
+      "_superseded_S_bend_2026-08-06": "REPLACES the 2-waypoint S-bend ([21,3.2,22.3],[23.5,3,20.4], 3 legs hugging the cliff side) AND the 'gate-stair' passage prompt, per the user's Bet 2 ruling (verbatim): 'even for the front gate going down to the shelf street with the shops, there are still two different ways to go down to the shelf level. One is a staircase that's a bit confusing, and I think we should just really simplify that descent... There's nothing to gain by adding more complex, interesting stairs that just confuse and frustrate our players.' This supersedes USER REDLINE #2's 'completely get rid of those stairs' remedy (2026-08-02, written when the flight was unclimbable): the CONFUSION is what goes, and it goes by making the descent one wide legible flight rather than by replacing walking with a teleport prompt. The passage is deleted in the same commit (delete-superseded ruling applies to geometry AND prompts); the descent must therefore drive clean BOTH ways — that receipt is this lane's gate.",
+      "_owed_closing_lane_2026-08-06": "The gate/shelf-west camera solve, the gate<->shelf-west cut seam (derived from this edge at t=0.319 of the OLD polyline), the 'gate' shot's arrival override [17.64,24.0,-5.0] (it stood on the deleted valley-gate__winch-head ribbon; that point now lands on the new flight's head treads at ~23.9 — re-search against the new plate), and the del-cine re-bake all go stale with this rebuild and are the closing bake lane's, per the phase law."
     },
     {
       "from": "inn",
@@ -1244,37 +1234,8 @@
     "tools/scenegraph_derive.mjs turns each one into a reciprocal pair of scene-internal edges (to === from, `cam` filled in, a prompt on `defaults.key`) — the same record the camera cuts already use, with a label instead of `auto`. play3d.html switches on nothing new.",
     "AN END IS EITHER A LANDMARK (`\"at\": \"<id>\"`, taking its walk pad, exactly as a door does) OR A STATED POINT (`\"pos\": [x, y, h]` in MAP coordinates, for a place with no landmark). A stated point's HEIGHT and its OWNING SHOT are still measured — walk surface, ownership regions — never declared."
   ],
-  "passages": [
-    {
-      "id": "gate-stair",
-      "ends": [
-        {
-          "id": "gate-stair-foot",
-          "name": "the gate stair's foot",
-          "pos": [
-            22.0,
-            5.5,
-            19.0
-          ],
-          "label": "Up to the Valley Gate"
-        },
-        {
-          "id": "gate-stair-head",
-          "name": "the gate road, just inside the gate",
-          "pos": [
-            20.5,
-            6.2,
-            24.0
-          ],
-          "label": "Down to the Shelf street"
-        }
-      ],
-      "note": "USER REDLINE #2, 2026-08-02 (live play): 'The stairs leading back up to the gate are completely inaccessible. Completely get rid of those stairs, and have the transition point to the gate happen more or less where the Boatman's Rest is.'",
-      "_doc_gate_end_amended": "2026-08-02: the constraint below is RELEASED \u2014 'valley-gate-out' moved to the 'valley-road' landmark 15 m west (USER REDLINE #4), so nothing stands on walk_pad_valley-gate any more. The stated point is LEFT WHERE IT IS: it works, it is measured, and moving a shipped prompt for tidiness is not a fix. Recorded so the next reader does not re-derive the old reason.",
-      "_doc_gate_end": "THE GATE END IS ALSO A STATED POINT, and it is 4.42 m east of walk_pad_valley-gate rather than on it, because the overworld exit 'valley-gate-out' already stands on that pad with a 2.2 m radius: a passage pad on top of it is two prompts on one square metre and one of them unreachable. The stair's own head (map y~3.5, x 18..21) is INSIDE that radius — 1.42 m — so it cannot be used. This is the first ground east of the gate that both clears the exit's pad (2.2 + 1.8 = 4.0 m floor) and has gate-tier walk surface under it: measured 24.07 at (20,5.5), (20,6.5) and (21,6.5) on the valley-gate__winch-head road ribbon.",
-      "_doc": "THE FOOT POINT IS STATED, NOT A LANDMARK, on purpose. It is the S-bend flight's foot landing — the ground walk_pad_inn stands on today (map x 20.70..23.30, y 4.20..6.80, top 19.04) — and it is where the redline says the gate transition goes: it is 'more or less where the Boatman's Rest is' because the Rest's prompt used to stand on this very landing, 4.7 m short of its own building. Giving the landing a landmark would put a second door-sized pad on the street and start a fight with the inn's; giving it a point does not. MEASURED separations at the shipped bundle: 4.75 m to the inn's new doorstep (26.6,6.7) and 4.10 m from that doorstep to walk_pad_item-shop — both clear of the 3.6 m two-prompt overlap, which tools/scenegraph_derive.mjs now checks and warns on. This passage is the REPLACEMENT ROUTE the condemned 'stairs valley-gate->inn' edge is waiting on; see that edge's _redline_2026-08-02."
-    }
-  ],
+  "passages": [],
+  "_passages_deleted_2026-08-06": "The 'gate-stair' passage (foot [22,5.5,19] <-> head [20.5,6.2,24], USER REDLINE #2's stopgap while the S-bend was unclimbable) is DELETED under the user's Bet 2 ruling: two ways down to the shelf confused; the descent is now ONE wide straight walkable flight (see edge valley-gate->inn, _superseded_S_bend_2026-08-06) and a teleport prompt beside a working stair is the second way down. Delete-superseded ruling. The del-cine scenegraph still carries the derived passage pair until the closing lane re-derives; noted in DAYLOG.",
   "parcels": [
     {
       "id": "p-gate",

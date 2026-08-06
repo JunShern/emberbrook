@@ -269,6 +269,15 @@ RAIL_INS   = 1.05   # rail setback at a SPLIT end (LAND_LONG/2 + a body's half-w
 # scatter" was a wrong answer confidently obtained.  Ask for WORLD BOUNDING BOXES.
 # When the set covers every stairs edge, delete it and the `if` below with it.
 STAIRS_V2 = {"deep-stairs-head__deep-stairs-foot",
+             # 2026-08-06, BET 2 (user-ratified): THE ONE DESCENT — the gate->shelf
+             # flight rebuilt as a single straight 2.2 u-wide run, no waypoints, no
+             # pivots (the S-bend and the 'gate-stair' passage both deleted; see the
+             # map edge's _superseded_S_bend_2026-08-06). In the set for the rail
+             # discipline (a rail may not stand in a body window of its own edge),
+             # not for pivot splitting — a straight flight has nothing to split.
+             # District art: gs_build (gs_) owns it; shelf_build's
+             # shelf_stair_underworks carries it — both re-run in the same window.
+             "valley-gate__inn",
              # 2026-08-05, PT-20260805-049: the moorage switchback's un-split hairpins
              # stack l1 over l2 (and l0 over l1) inside the body window — UP stalled
              # under walk_e_weave-huts__moorage_l1_t04 (bottom 4.00 over t01's 3.03)
@@ -370,7 +379,12 @@ def plan_trim(a, b, t):
     return b - v.normalized() * t
 
 
-def stairs_leg(name, a, b, rail_ins=(0.0, 0.0), rail_out=None):
+def stairs_leg(name, a, b, rail_ins=(0.0, 0.0), rail_out=None, width=1.4):
+    """`width` (map edge key "width", default 1.4) is the TREAD width, and the rail
+    offset scales WITH it — the 1.25 literal was tread half-width 0.7 + char radius
+    0.42 + margin, so a wider flight keeps the same clearance rule (w/2 + 0.55).
+    lay_stair_rails' own-edge sweep grows records by 0.35, so a scaled rail stays
+    0.20 clear of its own treads at any width (BET 2: the gate descent ships 2.2)."""
     v = b - a; rise = b.z - a.z
     hl = Vector((v.x, v.y, 0)).length
     # side rails: stop walkers mounting flights sideways (the scoop-trap), read as
@@ -378,9 +392,9 @@ def stairs_leg(name, a, b, rail_ins=(0.0, 0.0), rail_out=None):
     side = Vector((v.y, -v.x, 0))
     if side.length > 1e-6 and hl > 1.6:
         # wide enough that the walker's side-rays clear them ON the flight
-        # (tread half-width 0.7 + char radius 0.42 + margin), inset from both
+        # (tread half-width + char radius 0.42 + margin), inset from both
         # ends so junctions/landings stay open
-        side = side.normalized() * 1.25
+        side = side.normalized() * (width / 2 + 0.55)
         # rails guard the DROP, not the approach: begin where the flight has
         # descended 0.3 below its start (else rails fence the flat deck they
         # depart from — found blocking the quay crossing under volume physics)
@@ -418,7 +432,7 @@ def stairs_leg(name, a, b, rail_ins=(0.0, 0.0), rail_out=None):
         z = min(p0.z, p1.z) + abs(rise / n)
         bpy.ops.mesh.primitive_cube_add(location=((p0.x + p1.x) / 2, (p0.y + p1.y) / 2, z))
         o = bpy.context.active_object; o.name = "walk_%s_t%02d" % (name, t)
-        o.dimensions = (max(hl / n, 0.35), 1.4, 0.14)
+        o.dimensions = (max(hl / n, 0.35), width, 0.14)
         o.rotation_euler = (0, 0, math.atan2(v.y, v.x))
         o.data.materials.append(M_STAIR)
         link_to(o, "PATHS")
@@ -494,9 +508,10 @@ for e in D["edges"]:
         print("  LADDER %s: %s" % (nm, LD.report(ss)))
     elif t == "stairs":
         v2 = ("%s__%s" % (e["from"], e["to"])) in STAIRS_V2
+        ew = float(e.get("width", 1.4))
         if not v2:
             for i in range(len(pts) - 1):
-                stairs_leg("%s_l%d" % (nm, i), pts[i], pts[i + 1])
+                stairs_leg("%s_l%d" % (nm, i), pts[i], pts[i + 1], width=ew)
             for wp in pts[1:-1]:
                 bpy.ops.mesh.primitive_cube_add(location=(wp.x, wp.y, wp.z - 0.08))
                 o = bpy.context.active_object; o.name = "walk_" + nm + "_landing"
@@ -518,7 +533,7 @@ for e in D["edges"]:
                 stairs_leg("%s_l%d" % (nm, i), s, f,
                            rail_ins=(RAIL_INS if i > 0 else 0.0,
                                      RAIL_INS if i + 1 < len(pts) - 1 else 0.0),
-                           rail_out=railq)
+                           rail_out=railq, width=ew)
             for i in range(1, len(pts) - 1):
                 A, Dp = ends[i]
                 sep = Vector((Dp.x - A.x, Dp.y - A.y, 0))

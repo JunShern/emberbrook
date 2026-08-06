@@ -16205,3 +16205,44 @@ lock-five<->north-landing lane at x~90.4; the cottage plank ramp tapers to 0.16 
 Triage this window: PT-20260805-067 + PT-20260806-001..011 -> 46 verified / 8 unverified
 / 48 refuted. walk_engine_gate del-cine GREEN (0 lost of 3934) — the engine is not the
 problem. Fresh targeted LLM legs queued behind the coordinator's 650-step full bar.
+
+## 2026-08-06 ~02:45 — BET 2 LANE, iteration 1: THE ONE DESCENT (gate -> shelf)
+
+The user's ruling (verbatim in the slate): two ways down to the shelf confused; simplify the
+descent. BOTH prior ways are DELETED (delete-superseded applies to geometry AND prompts):
+the 3-leg S-bend `valley-gate->inn` (REDLINE #2's "completely inaccessible" stair) and the
+`gate-stair` teleport passage. Replaced by ONE straight 2.2 u flight, 13 treads, 31 deg, no
+waypoints — map edge `valley-gate->inn` now carries `width: 2.2` (new key, honoured by
+town_blockout `stairs_leg`: treads AND rail offset scale together, w/2+0.55). Edge joined
+STAIRS_V2 for the rail discipline. Winch road re-rooted `gatehouse->winch-head` (waypoint
+[18.5,7.4]) so no road ribbon shares the descent corridor — the 2026-08-01 STAMP class
+(ribbon 0.34 over treads refuses the descent) solved by removal, not nudging.
+
+THE CARRY, in one window per the ledger rule: town_blockout -> walk_rederive
+(--edge valley-gate__inn,gatehouse__winch-head,inn__item-shop --lm inn --drop
+valley-gate__winch-head; the inn pad re-derive was the _owed_bake from REDLINE #2's inn
+move; invisible-wall sweep CLEAN) -> shelf_build (underworks re-derived, 11 blocks) ->
+gate_roadchop (carriageway re-laid on the current graph; road_blocked already refuses paving
+over sub-tier walks — the machinery expected a descending stair) -> ga_build (threshold
+lantern re-FOUNDED clear at map (19.99,3.45); its brief's seam coordinates are stale, noted)
+-> gate_bunting_rehang (no-op, mast measured clear, 137 verts bit-identical) ->
+**tools/gate_stairwell_chop.py (NEW carrier)**: the corbel gallery's bracket run SKIPS the
+flight — 3 of 15 loose parts removed whole inside the swept body corridor (grown 0.45, +2.4
+headroom), town digest asserted unchanged, GSC_SRC_ snapshot + revert. The find that forced
+it: `_court_probe --who` named gate_corbels on 26 cells (stones to z 21.22 in the body
+window mid-flight); both --way drives stalled on it. THE GALLERY IS THE DESIGN — the lower
+flight legitimately runs UNDER it (measured headroom 2.69..4.60 m, an arcade) — only the
+brackets crossing the stairwell go. gs_build LAST, over final surroundings (first run's
+acceptance flagged gate_road +0.30/+0.35 over t01/t02; final run's acceptance list is empty).
+
+RECEIPTS (townwalk realtime, :3000): --way gate<->street 7/7 legs BOTH ways no stalls ·
+--comp one component, 331 cells, both seeds identical · walk_engine_gate GREEN 3962/3962,
+0 lost, BVH fail 0 · routes_derive --check clean · board with before/afters:
+docs/qa/dellhollow-circulation/index.html.
+
+STALE BY DESIGN (phase law, do not file as bugs): del-cine gate/shelf-west solve, plates,
+scenegraph passage pair, and the gate shot's arrival override ([17.64,24.0,-5.0] stood on
+the deleted winch ribbon; it happens to land on the new flight's head treads at ~23.9) —
+all carried as _owed_closing_lane notes in the map + cameras.json. routes.json is
+re-derived to the NEW map, so del-cine wayfinding around the gate is stale mid-phase —
+harvest lane: gate-area arrows in del-cine do not match the plates until the closing bake.

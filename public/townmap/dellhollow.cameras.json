@@ -159,10 +159,11 @@
     ],
     "edges": [
      "valley-gate__gatehouse",
-     "valley-gate__winch-head",
+     "gatehouse__winch-head",
      "valley-gate__valley-road",
      "winch-head__winch-foot"
     ],
+    "_doc_bet2_2026-08-06": "OWNERSHIP FOLLOWS THE MAP, NOT A RE-AIM: 'valley-gate__winch-head' was deleted and re-rooted as 'gatehouse__winch-head' by the Bet 2 descent rebuild (the wide ONE-DESCENT flight owns the old road's corridor; see the map edge notes). Same district, same frame intent. The SOLVE IS NOW STALE against the new geometry — re-solve, arrival re-search (this shot's arrivals override stood on the deleted ribbon) and re-bake are the closing lane's, per the phase law. This edit only keeps the owns list from referencing a nonexistent edge.",
     "_doc": "2026-08-02, USER REDLINE #4: 'porters-yard' and 'valley-gate__porters-yard' are GONE from the map (the yard was deleted; the ground is a road). This shot now owns the road's mouth landmark 'valley-road' and the road edge reaching it, which is what puts the overworld exit marker in this frame near its own bottom edge. FOR ANYONE READING A DIFF OF THE SOLVE: the owned hull's west lobe shrinks from an 8 m walk disc to a 2.6 m pad, so cine_solve legitimately re-frames the shot. That is the redline landing, not a regression."
    },
    "arrivals": {

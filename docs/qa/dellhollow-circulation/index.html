@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Dellhollow circulation — Bet 2</title>
+<style>
+ body{background:#191817;color:#ddd;font:14px/1.5 -apple-system,sans-serif;margin:24px;max-width:1500px}
+ h1{font-size:20px} h2{font-size:16px;margin-top:32px;border-top:1px solid #333;padding-top:16px}
+ .pair{display:flex;gap:12px;margin:10px 0;flex-wrap:wrap}
+ .pair figure{margin:0;flex:1 1 46%}
+ .pair img{width:100%;border:1px solid #333;border-radius:4px}
+ figcaption{color:#999;font-size:12px;margin-top:4px}
+ .receipt{background:#20241f;border-left:3px solid #6a5;padding:8px 12px;margin:8px 0;font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap}
+ .owed{background:#242019;border-left:3px solid #a95;padding:8px 12px;margin:8px 0;font-size:13px}
+ .kv{color:#8a8}
+</style>
+<h1>Dellhollow vertical circulation — Bet 2 (realtime tier, no bakes)</h1>
+<p>User ruling 2026-08-06, verbatim: <em>"even for the front gate going down to the shelf street
+with the shops, there are still two different ways to go down to the shelf level. One is a
+staircase that's a bit confusing, and I think we should just really simplify that descent...
+There's nothing to gain by adding more complex, interesting stairs that just confuse and
+frustrate our players."</em></p>
+
+<h2>Iteration 1 — THE ONE DESCENT (gate &rarr; shelf street)</h2>
+<p><span class="kv">What collapsed:</span> the 3-leg S-bend stair (2 pivots, 1.4 u treads,
+condemned by REDLINE #2 as unclimbable) and the "gate-stair" teleport passage — the two
+competing ways down — are both DELETED. <span class="kv">What replaced them:</span> ONE
+straight 2.2 u-wide flight, 13 treads, 31&deg; (shallower than any S-bend leg), from the arch
+straight down to the Boatmen's Rest doorstep. The winch road re-rooted valley-gate&rarr;gatehouse
+so the gate square fans clean; the corbel gallery got a real stairwell (3 brackets skipped,
+tools/gate_stairwell_chop.py); the lower flight runs under the gallery as an arcade with a
+measured 2.69..4.60 m of headroom.</p>
+
+<div class="receipt">ENGINE RECEIPTS (townwalk, real Chrome on :3000)
+_court_probe --way  gate pad -> flight -> inn doorstep -> street : 7/7 legs, BOTH ways, no stalls
+_court_probe --comp seeds gate-pad + street, box x12..33          : ONE component, 331 cells, both seeds identical
+walk_engine_gate    --scene townwalk                              : GREEN — 3962/3962 cells, 0 lost, BVH fail 0
+routes_derive --town dellhollow --check                           : clean (15 shots)
+gs_build acceptance (art over walk surface)                       : empty — was gate_road +0.30/+0.35 over t01/t02</div>
+
+<div class="pair">
+ <figure><img src="before/gate-looking-east.png"><figcaption>BEFORE — from the gate: the S-bend drops away right, the road crowds the head, the way down is a shadowed slot.</figcaption></figure>
+ <figure><img src="after/gate-looking-east.png"><figcaption>AFTER — one wide flight behind the rope fence; winch road re-rooted out of the corridor.</figcaption></figure>
+</div>
+<div class="pair">
+ <figure><img src="before/street-looking-west.png"><figcaption>BEFORE — from the street: the S-bend's striped lower flight dead-ends into the shop road.</figcaption></figure>
+ <figure><img src="after/street-looking-west.png"><figcaption>AFTER — the ONE flight lands at the Boatmen's Rest doorstep; rope fence reads as the line down.</figcaption></figure>
+</div>
+<div class="pair">
+ <figure><img src="after/mid-flight.png"><figcaption>AFTER — mid-flight, 2.2 u of tread width, gallery arcade above-right.</figcaption></figure>
+ <figure><img src="after/gate-arch-high-west.png"><figcaption>AFTER — the arch from above; the descent leaves frame-right.</figcaption></figure>
+</div>
+
+<div class="owed"><b>Owed (recorded, not hidden):</b> (1) the stairwell mouth reads as a dark
+pit from the gate until the slab cut edge gets fascia/cheek returns — art finishing on the
+realtime tier, this lane's next loop; (2) the del-cine solve/plates/scenegraph for gate +
+shelf-west are STALE against this geometry by design (phase law: bakes once at the end) —
+the map + cameras.json carry _owed_closing_lane notes; (3) ga_build's threshold-lantern brief
+still aims at the old stair seam (it re-founded clear, but the brief coordinates are stale).</div>
+</html>

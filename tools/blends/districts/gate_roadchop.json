@@ -180,18 +180,18 @@
   {
    "x0": 16.0,
    "x1": 22.0,
-   "columns": 297,
-   "shared": 297,
+   "columns": 259,
+   "shared": 259,
    "max_dz": 0.0,
    "over_10mm": 0,
    "gained": 0,
-   "lost": 15
+   "lost": 20
   },
   {
    "x0": 22.0,
    "x1": 29.6,
-   "columns": 227,
-   "shared": 227,
+   "columns": 192,
+   "shared": 192,
    "max_dz": 0.0,
    "over_10mm": 0,
    "gained": 0,
@@ -200,23 +200,23 @@
  ],
  "ground": {
   "before": {
-   "verts": 13127,
-   "polys": 13088
-  },
-  "after": {
    "verts": 14995,
    "polys": 14954
   },
+  "after": {
+   "verts": 14849,
+   "polys": 14812
+  },
   "refine": {
    "before": {
-    "verts": 4630,
-    "polys": 4616,
-    "edge": 1.043
+    "verts": 4484,
+    "polys": 4474,
+    "edge": 1.066
    },
    "after": {
-    "verts": 14995,
-    "polys": 14954,
-    "edge": 0.56
+    "verts": 14849,
+    "polys": 14812,
+    "edge": 0.562
    },
    "cuts": 1,
    "displaced_m": 0.03,
@@ -228,16 +228,16 @@
   }
  },
  "road": {
-  "nodes": 2837,
+  "nodes": 2929,
   "before": {
-   "verts": 6206,
-   "polys": 6204
-  },
-  "after": {
    "verts": 5674,
    "polys": 5668
   },
-  "widest_m": 7.8,
+  "after": {
+   "verts": 5858,
+   "polys": 5854
+  },
+  "widest_m": 8.84,
   "width_per_m": [
    {
     "x": -3,
@@ -337,74 +337,74 @@
    },
    {
     "x": 14,
-    "w": 7.54,
+    "w": 8.06,
     "y0": 1.26,
-    "y1": 8.8
+    "y1": 9.32
    },
    {
     "x": 15,
-    "w": 6.76,
+    "w": 8.32,
     "y0": 1.0,
-    "y1": 7.76
+    "y1": 9.32
    },
    {
     "x": 16,
-    "w": 6.24,
+    "w": 8.58,
     "y0": 1.0,
-    "y1": 7.24
+    "y1": 9.58
    },
    {
     "x": 17,
-    "w": 7.02,
+    "w": 8.58,
     "y0": 1.0,
-    "y1": 8.02
+    "y1": 9.58
    },
    {
     "x": 18,
-    "w": 7.28,
+    "w": 8.84,
     "y0": 1.0,
-    "y1": 8.28
+    "y1": 9.84
    },
    {
     "x": 19,
-    "w": 7.8,
+    "w": 8.84,
     "y0": 1.0,
-    "y1": 8.8
+    "y1": 9.84
    },
    {
     "x": 20,
-    "w": 7.02,
+    "w": 8.06,
     "y0": 2.04,
-    "y1": 9.06
+    "y1": 10.1
    },
    {
     "x": 21,
-    "w": 4.94,
-    "y0": 4.38,
-    "y1": 9.32
+    "w": 3.64,
+    "y0": 6.46,
+    "y1": 10.1
    },
    {
     "x": 22,
-    "w": 5.2,
-    "y0": 4.12,
-    "y1": 9.32
+    "w": 4.94,
+    "y0": 5.16,
+    "y1": 10.1
    },
    {
     "x": 23,
     "w": 5.2,
-    "y0": 4.38,
-    "y1": 9.58
+    "y0": 5.16,
+    "y1": 10.36
    },
    {
     "x": 24,
-    "w": 5.46,
-    "y0": 4.64,
-    "y1": 10.1
+    "w": 5.2,
+    "y0": 5.16,
+    "y1": 10.36
    },
    {
     "x": 25,
-    "w": 6.24,
-    "y0": 4.64,
+    "w": 5.72,
+    "y0": 5.16,
     "y1": 10.88
    },
    {
@@ -440,77 +440,26 @@
   ]
  },
  "parapet": {
-  "posts": 29,
+  "posts": 28,
   "before": {
-   "verts": 1152,
-   "polys": 830
-  },
-  "after": {
    "verts": 1760,
    "polys": 1266
   },
+  "after": {
+   "verts": 1648,
+   "polys": 1186
+  },
   "refused_into_prop": [
    {
-    "x": 14.38,
-    "y": 7.28,
-    "prop": "t2c_G3_awning_tollyard"
-   },
-   {
     "x": 15.33,
-    "y": 6.72,
+    "y": 7.32,
     "prop": "t2c_G3_awning_tollyard"
    }
   ]
  },
  "vegetation": {
-  "kept": 75,
-  "culled": [
-   {
-    "name": "veg_gate_chop_tuft_63",
-    "x": 10.769,
-    "y": 10.953,
-    "z": 23.825,
-    "rim_old": 11.869,
-    "rim_new": 9.101,
-    "why": "the previous lip carried this footprint, the new one does not"
-   },
-   {
-    "name": "veg_gate_chop_tuft_7",
-    "x": 10.8,
-    "y": 11.346,
-    "z": 23.825,
-    "rim_old": 11.784,
-    "rim_new": 9.119,
-    "why": "the previous lip carried this footprint, the new one does not"
-   },
-   {
-    "name": "veg_gate_tuft_106",
-    "x": 10.488,
-    "y": 11.92,
-    "z": 23.893,
-    "rim_old": 12.11,
-    "rim_new": 9.05,
-    "why": "the previous lip carried this footprint, the new one does not"
-   },
-   {
-    "name": "veg_gate_tuft_11",
-    "x": 11.25,
-    "y": 11.266,
-    "z": 24.045,
-    "rim_old": 10.072,
-    "rim_new": 9.496,
-    "why": "the previous lip carried this footprint, the new one does not"
-   },
-   {
-    "name": "veg_gate_tuft_48",
-    "x": 11.008,
-    "y": 11.413,
-    "z": 23.972,
-    "rim_old": 11.024,
-    "rim_new": 9.287,
-    "why": "the previous lip carried this footprint, the new one does not"
-   }
-  ],
+  "kept": 78,
+  "culled": [],
   "reseeded": {
    "clump": {
     "made": 0,
@@ -539,7 +488,7 @@
     ]
    },
    "fern": {
-    "made": 1,
+    "made": 2,
     "attempts": 24,
     "prototype": "veg_gate_fern_35",
     "x_range": [
@@ -555,334 +504,17 @@
  },
  "components": {
   "gate_yard": {
-   "components": 38,
+   "components": 11,
    "kept": 11,
-   "cut": [
-    {
-     "x": 6.05,
-     "y": 1.5,
-     "z": 24.199,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 3.35,
-     "y": 3.02,
-     "z": 24.199,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.18,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 4.25,
-     "y": 3.02,
-     "z": 24.199,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.163,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 5.15,
-     "y": 3.02,
-     "z": 24.199,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.143,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 3.02,
-     "z": 24.199,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.95,
-     "y": 3.02,
-     "z": 24.199,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.1,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 7.85,
-     "y": 3.02,
-     "z": 24.199,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.081,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 8.75,
-     "y": 3.02,
-     "z": 24.199,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.065,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 3.02,
-     "z": 27.029,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 3.2,
-     "z": 27.269,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 2.943,
-     "z": 27.339,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 2.686,
-     "z": 27.409,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 2.429,
-     "z": 27.479,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 2.171,
-     "z": 27.549,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 1.914,
-     "z": 27.619,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 1.657,
-     "z": 27.689,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 1.4,
-     "z": 27.759,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 1.143,
-     "z": 27.829,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 0.886,
-     "z": 27.899,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 0.629,
-     "z": 27.969,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 0.371,
-     "z": 28.039,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": 0.114,
-     "z": 28.109,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": -0.143,
-     "z": 28.179,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 6.05,
-     "y": -0.4,
-     "z": 28.249,
-     "verts": 8,
-     "rim_old": 12.46,
-     "rim_new": 9.121,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 10.95,
-     "y": 9.85,
-     "z": 23.855,
-     "verts": 8,
-     "rim_old": 11.26,
-     "rim_new": 9.235,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 12.141,
-     "y": 9.994,
-     "z": 24.204,
-     "verts": 8,
-     "rim_old": 9.129,
-     "rim_new": 9.129,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    },
-    {
-     "x": 11.546,
-     "y": 9.922,
-     "z": 24.932,
-     "verts": 8,
-     "rim_old": 9.597,
-     "rim_new": 9.597,
-     "why": "THE YARD: west of the palisade (x<15.2) is the entry road, and user redline #4 says there is no porters' yard on it"
-    }
-   ],
-   "verts_before": 324,
+   "cut": [],
+   "verts_before": 108,
    "verts_after": 108
   },
   "gate_clutter": {
-   "components": 105,
+   "components": 97,
    "kept": 97,
-   "cut": [
-    {
-     "x": 11.36,
-     "y": 10.97,
-     "z": 24.113,
-     "verts": 8,
-     "rim_old": 9.763,
-     "rim_new": 9.564,
-     "why": "stranded past the new lip"
-    },
-    {
-     "x": 11.36,
-     "y": 10.97,
-     "z": 24.238,
-     "verts": 8,
-     "rim_old": 9.763,
-     "rim_new": 9.564,
-     "why": "stranded past the new lip"
-    },
-    {
-     "x": 11.36,
-     "y": 10.97,
-     "z": 24.678,
-     "verts": 8,
-     "rim_old": 9.763,
-     "rim_new": 9.564,
-     "why": "stranded past the new lip"
-    },
-    {
-     "x": 11.185,
-     "y": 11.644,
-     "z": 24.134,
-     "verts": 24,
-     "rim_old": 10.303,
-     "rim_new": 9.445,
-     "why": "stranded past the new lip"
-    },
-    {
-     "x": 11.185,
-     "y": 11.644,
-     "z": 24.189,
-     "verts": 24,
-     "rim_old": 10.303,
-     "rim_new": 9.445,
-     "why": "stranded past the new lip"
-    },
-    {
-     "x": 11.185,
-     "y": 11.644,
-     "z": 24.244,
-     "verts": 24,
-     "rim_old": 10.303,
-     "rim_new": 9.445,
-     "why": "stranded past the new lip"
-    },
-    {
-     "x": 11.185,
-     "y": 11.644,
-     "z": 24.299,
-     "verts": 24,
-     "rim_old": 10.303,
-     "rim_new": 9.445,
-     "why": "stranded past the new lip"
-    },
-    {
-     "x": 11.17,
-     "y": 10.927,
-     "z": 24.12,
-     "verts": 20,
-     "rim_old": 10.361,
-     "rim_new": 9.433,
-     "why": "stranded past the new lip"
-    }
-   ],
-   "verts_before": 1724,
+   "cut": [],
+   "verts_before": 1584,
    "verts_after": 1584
   },
   "gate_bunting": {
