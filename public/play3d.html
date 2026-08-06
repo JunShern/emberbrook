@@ -2011,6 +2011,10 @@ addEventListener('DOMContentLoaded',()=>{
   mm.onchange=()=>{ if(window.Music&&Music.mute)Music.mute(mm.checked); };
 });
 const ray=new THREE.Raycaster(), DOWN=new THREE.Vector3(0,-1,0);
+// camera occlusion clamp state (see the CAMERA OCCLUSION CLAMP block in the rt
+// camera solve). CAMCLIP.d is the eased boom length; null = ?camclip=0.
+const CAMCLIP=(Q.get('camclip')==='0')?null:{d:1e9};
+const ccRay=new THREE.Raycaster(), _cc=new THREE.Vector3(), _ccd=new THREE.Vector3(), _cch=[];
 const wn=h=>h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();
 const isBar=o=>{let p=o;while(p){if(/^bar_/i.test(p.name))return true;p=p.parent;}return false;};
 // STANDABLE surfaces below (x, fromY): any up-facing visible geometry (raw world),
@@ -3949,9 +3953,38 @@ function frame(){requestAnimationFrame(frame);
      const DEAD=0.5; if(Math.abs(dd)>DEAD){ const p=dd>0?dd-DEAD:dd+DEAD;
        window.ORBIT.yaw+=Math.max(-0.003,Math.min(0.003,p*0.008)); } }
    const O=window.ORBIT, tx=P.x+O.panX, ty=P.y+1+O.panY, tz=P.z+O.panZ;
-   cam.position.set(tx+Math.cos(O.yaw)*Math.cos(O.pitch)*O.dist,
-                    ty+Math.sin(O.pitch)*O.dist,
-                    tz+Math.sin(O.yaw)*Math.cos(O.pitch)*O.dist);
+   // CAMERA OCCLUSION CLAMP (2026-08-06, user: rotating in the gorge "very quickly
+   // ends up behind the cliff"). The boom is 40 m and the gorge is narrower, so an
+   // unclamped orbit spends most yaws inside rock. Every frame: ray from the aim
+   // point out along the boom against `collide` (the SOLID world — bar_ invisible
+   // blockers and noStand foliage are deliberately not in the set); if the world
+   // intervenes, the boom shortens to just in front of the nearest hit and EASES
+   // back out when clear (snap in, slow out — the industry shape: a pop toward the
+   // player is hidden by the occluder that caused it, a pop away is not).
+   // ?camclip=0 disables. The gorge's authored-rail camera remains the composed
+   // long-term answer (slate); this keeps free rotation honest until then.
+   let bd=O.dist;
+   if(CAMCLIP&&collide.length){
+     const bx=Math.cos(O.yaw)*Math.cos(O.pitch), by=Math.sin(O.pitch), bz=Math.sin(O.yaw)*Math.cos(O.pitch);
+     ccRay.set(_cc.set(tx,ty,tz), _ccd.set(bx,by,bz)); ccRay.far=O.dist;
+     const ex=tx+bx*O.dist, ey=ty+by*O.dist, ez=tz+bz*O.dist;
+     const lx=Math.min(tx,ex),hx=Math.max(tx,ex),ly=Math.min(ty,ey),hy=Math.max(ty,ey),lz=Math.min(tz,ez),hz=Math.max(tz,ez);
+     _cch.length=0;
+     for(let i=0;i<collide.length;i++){ const o=collide[i], w=o.userData.wbox;
+       if(w&&(w.max.x<lx||w.min.x>hx||w.max.y<ly||w.min.y>hy||w.max.z<lz||w.min.z>hz)) continue;
+       if(isBar(o)) continue;
+       o.raycast(ccRay,_cch); }
+     let dHit=O.dist, hit=false;
+     for(let i=0;i<_cch.length;i++){ const d=_cch[i].distance;
+       if(d>2.5&&d<dHit){ dHit=d; hit=true; } }
+     if(hit) dHit=Math.max(3,dHit-0.6);
+     if(dHit<CAMCLIP.d) CAMCLIP.d=dHit;                       // snap in front of the occluder
+     else CAMCLIP.d=Math.min(dHit,CAMCLIP.d+(dHit-CAMCLIP.d)*0.05);  // ease back out
+     bd=Math.min(O.dist,CAMCLIP.d);
+   }
+   cam.position.set(tx+Math.cos(O.yaw)*Math.cos(O.pitch)*bd,
+                    ty+Math.sin(O.pitch)*bd,
+                    tz+Math.sin(O.yaw)*Math.cos(O.pitch)*bd);
    cam.lookAt(tx,ty,tz);
    // AIM UP off the boom axis (see THE OVERWORLD BOOM). rotateX after lookAt, not a
    // raised look-at point: the boom's own elevation must not move, only where it points.
@@ -4787,6 +4820,10 @@ sceneLoad().then(r=>{ if(r) TRANSLOG.push({scene:r.scene, kind:'boot', ms:Math.r
      canvas and drives charLight through window.__hush; the cut-ins are DOM above
      that canvas and stay warm, which is the entire point of the effect. -->
 <script src="js/hush.js"></script>
+<!-- AMBIENT LIFE (Bet 11): chimney smoke, water glints, dusk fireflies (hush-aware),
+     ow leaves/pollen, cloud drift — all amb_-prefixed scene.add()s, never in
+     collide/walkRef/allMeshes; one shared wind in window.__wind. ?ambient=0 kills. -->
+<script src="js/ambient.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/route_overlay.js"></script>
 <!-- OVERWORLD GROUND DETAIL. ow-* scenes only, and CONTENT only (geometry + materials):
