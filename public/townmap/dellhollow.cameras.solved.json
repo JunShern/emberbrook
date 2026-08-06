@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-08-06T10:42:56Z",
+ "generated": "2026-08-06T11:39:49Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -1168,24 +1168,24 @@
     }
    ],
    "pos": [
-    12.222,
-    25.401,
-    25.462
+    12.22,
+    25.407,
+    25.463
    ],
    "aim": [
-    27.382,
-    6.679,
+    27.385,
+    6.68,
     21.214
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 24.46,
-   "solvedDist": 24.46,
+   "dist": 24.47,
+   "solvedDist": 24.47,
    "capped": false,
    "samples": 382,
    "inFrameFrac": 1,
-   "zNear": 18.36,
-   "zFar": 32.97,
+   "zNear": 18.37,
+   "zFar": 32.98,
    "charPxNear": 113,
    "charPxFar": 63,
    "clip": [
@@ -1745,7 +1745,7 @@
    "name": "The Loop Stairs",
    "entry": false,
    "transit": true,
-   "shot": "The descent that forks: the shelf homes' little yard at the top of frame, ONE flight leaving it down the shelf wall, and a landing partway where the way splits — on to the market, or back down and across onto the harbour deck. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
+   "shot": "The descent to the market: the shelf homes' little yard at the top of frame and ONE wide flight leaving it east along the shelf wall, dropping to the market stalls from the north. Shot from out over the gorge so the tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
    "pin": false,
    "exitSeams": 2,
    "owns": {
@@ -7035,24 +7035,24 @@
     }
    ],
    "pos": [
-    52.142,
-    36.038,
-    9.974
+    52.145,
+    36.033,
+    9.971
    ],
    "aim": [
-    75.007,
+    75,
     27.715,
     4.802
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 24.88,
-   "solvedDist": 24.88,
+   "dist": 24.86,
+   "solvedDist": 24.86,
    "capped": false,
    "samples": 314,
    "inFrameFrac": 1,
    "zNear": 15.72,
-   "zFar": 39.6,
+   "zFar": 39.59,
    "charPxNear": 132,
    "charPxFar": 52,
    "clip": [
@@ -7341,9 +7341,9 @@
    },
    "margin": 0,
    "spawnTo": [
-    21.977,
-    21.378,
-    -5.443
+    22.556,
+    21.42,
+    -5.601
    ],
    "spawnFrom": [
     17.64,
@@ -7538,9 +7538,9 @@
     -27.64
    ],
    "spawnFrom": [
-    69.043,
-    1.92,
-    -26.28
+    67.88,
+    2.11,
+    -26.23
    ],
    "whatFrom": "tenant-shack__fish-dock@0..0.35",
    "whatTo": "tenant-shack__fish-dock@0.35..1"
@@ -7868,9 +7868,9 @@
  ],
  "orphans": [],
  "warnings": [
-  "arrival override shelf-west 'valley-gate__inn:gate' REJECTED: off the walk network (nearest surface none, authored 20.11) — is the coordinate still in MAP order [x, y, h]?",
   "arrival override gate 'valley-gate__inn:shelf-west': clears 0.50 m, under the 1.6 m target (derived point had 1.60 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut weave<->lockfive on 'weave-huts__moorage'@0.182: authored vTol 0.52 (town 1.6); own-edge floor dys under the band: [0, 0.14, 0.23, 0.37, 0.6, 0.67, 0.74, 0.83, 0.88]",
+  "arrival override lockfive 'tenant-shack__fish-dock:fishdock': clears 0.66 m, under the 1.6 m target (derived point had 1.75 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.401,0.499] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",

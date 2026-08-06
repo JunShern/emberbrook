@@ -49,13 +49,13 @@
    "entry": true,
    "transit": false,
    "pos": [
-    -16.945,
-    9.104,
-    36.55
+    -16.319,
+    9.26,
+    36.112
    ],
    "aim": [
-    13.885,
-    5.863,
+    13.314,
+    6.146,
     25.267
    ],
    "fov": 35,
@@ -64,12 +64,12 @@
     1400
    ],
    "rtClip": [
-    8.2412,
-    266.565
+    7.8808,
+    266.508
    ],
    "depth": {
-    "near": 16.48239517211914,
-    "far": 166.60281372070312,
+    "near": 15.761619567871094,
+    "far": 166.56736755371094,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -84,10 +84,10 @@
     -6
    ],
    "spawnFrom": "walk_pad_gatehouse",
-   "visibleFrac": 0.75,
+   "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-05T13:42:00Z",
-   "seconds": 200.0,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 186.5,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -111,14 +111,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    13.033,
-    22.331,
-    25.102
+    12.22,
+    25.407,
+    25.463
    ],
    "aim": [
-    26.504,
-    5.696,
-    21.327
+    27.385,
+    6.68,
+    21.214
    ],
    "fov": 35,
    "clip": [
@@ -126,12 +126,12 @@
     1400
    ],
    "rtClip": [
-    5.1789,
-    94.175
+    5.6381,
+    103.078
    ],
    "depth": {
-    "near": 10.357895851135254,
-    "far": 58.85918426513672,
+    "near": 11.276220321655273,
+    "far": 64.423828125,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -141,15 +141,15 @@
     "depth": "cameras/shelf-west/depth.png"
    },
    "spawn": [
-    22,
+    26.6,
     19.04,
-    -5.5
+    -6.7
    ],
    "spawnFrom": "walk_pad_inn",
-   "visibleFrac": 0.6094,
+   "visibleFrac": 0.7344,
    "probes": 64,
-   "baked": "2026-08-02T20:05:25Z",
-   "seconds": 405.5,
+   "baked": "2026-08-06T11:45:53Z",
+   "seconds": 152.6,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -210,8 +210,8 @@
    "spawnFrom": "walk_pad_armor-shop",
    "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-08-02T20:05:25Z",
-   "seconds": 531.3,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 148.4,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -235,14 +235,14 @@
    "entry": false,
    "transit": true,
    "pos": [
-    51.322,
-    28.051,
-    22.563
+    52.011,
+    26.749,
+    22.679
    ],
    "aim": [
-    55.675,
-    10.591,
-    17.741
+    56.206,
+    9.924,
+    18.033
    ],
    "fov": 35,
    "clip": [
@@ -250,12 +250,12 @@
     1400
    ],
    "rtClip": [
-    4.7755,
-    60.903
+    4.7053,
+    58.937
    ],
    "depth": {
-    "near": 9.55095386505127,
-    "far": 38.06452941894531,
+    "near": 9.410672187805176,
+    "far": 36.835411071777344,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -265,15 +265,31 @@
     "depth": "cameras/loop-stairs/depth.png"
    },
    "spawn": [
-    55.111,
-    17.092,
-    -10.579
+    55.9,
+    17.4,
+    -9
    ],
-   "spawnFrom": "walk_e_loop-landing__quay-deck_l0_t01",
+   "spawnFrom": "walk_e_shelf-homes__market-stalls_landing",
    "visibleFrac": 0.8906,
    "probes": 64,
-   "baked": "2026-08-01T15:44:43Z",
-   "seconds": 278.7
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 151.5,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "quay-west",
@@ -281,14 +297,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    36.544,
-    41.572,
-    24.054
+    36.85,
+    41.311,
+    23.759
    ],
    "aim": [
-    44.467,
-    15.656,
-    14.723
+    44.387,
+    16.659,
+    14.883
    ],
    "fov": 35,
    "clip": [
@@ -296,12 +312,12 @@
     1400
    ],
    "rtClip": [
-    10.857,
-    89.356
+    8.8072,
+    88.684
    ],
    "depth": {
-    "near": 21.71405029296875,
-    "far": 55.847599029541016,
+    "near": 17.614484786987305,
+    "far": 55.42760467529297,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -311,15 +327,15 @@
     "depth": "cameras/quay-west/depth.png"
    },
    "spawn": [
-    48.2,
-    14.04,
-    -12
+    39.9,
+    14.11,
+    -16.8
    ],
-   "spawnFrom": "walk_pad_notice-board",
-   "visibleFrac": 0.8594,
+   "spawnFrom": "walk_pad_cookhouse",
+   "visibleFrac": 0.9062,
    "probes": 64,
-   "baked": "2026-08-05T09:05:29Z",
-   "seconds": 535.4,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 153.4,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -359,11 +375,11 @@
    ],
    "rtClip": [
     7.7459,
-    88.861
+    69.308
    ],
    "depth": {
     "near": 15.491851806640625,
-    "far": 55.538002014160156,
+    "far": 43.317623138427734,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -378,10 +394,10 @@
     -15.15
    ],
    "spawnFrom": "walk_e_market-stalls__lockhead_l1",
-   "visibleFrac": 0.8,
+   "visibleFrac": 0.775,
    "probes": 40,
-   "baked": "2026-08-05T13:42:00Z",
-   "seconds": 155.3,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 148.6,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -405,14 +421,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    85.61,
-    35.538,
-    20.637
+    85.762,
+    35.508,
+    20.586
    ],
    "aim": [
-    87.901,
-    19.23,
-    11.88
+    88.04,
+    19.298,
+    11.882
    ],
    "fov": 35,
    "clip": [
@@ -420,12 +436,12 @@
     1400
    ],
    "rtClip": [
-    7.62,
-    88.049
+    7.6867,
+    69.213
    ],
    "depth": {
-    "near": 15.240012168884277,
-    "far": 55.030513763427734,
+    "near": 15.37348747253418,
+    "far": 43.2584114074707,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -440,10 +456,10 @@
     -22
    ],
    "spawnFrom": "walk_pad_keepers-cottage",
-   "visibleFrac": 0.9375,
+   "visibleFrac": 0.9531,
    "probes": 64,
-   "baked": "2026-08-05T13:42:00Z",
-   "seconds": 164.9,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 156.3,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -467,13 +483,13 @@
    "entry": false,
    "transit": true,
    "pos": [
-    59.783,
-    17.246,
-    19.568
+    59.217,
+    17.025,
+    19.964
    ],
    "aim": [
-    80.422,
-    22.776,
+    80.639,
+    22.765,
     9.147
    ],
    "fov": 35,
@@ -482,12 +498,12 @@
     1400
    ],
    "rtClip": [
-    2.1053,
-    159.152
+    2.2311,
+    160.301
    ],
    "depth": {
-    "near": 4.210643768310547,
-    "far": 99.47028350830078,
+    "near": 4.462226867675781,
+    "far": 100.18785095214844,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -502,10 +518,10 @@
     -22.8
    ],
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
-   "visibleFrac": 0.9333,
+   "visibleFrac": 0.8,
    "probes": 30,
-   "baked": "2026-08-05T13:42:00Z",
-   "seconds": 161.2,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 154.1,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -529,14 +545,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    38.979,
-    37.231,
-    22.758
+    38.049,
+    40.124,
+    23.542
    ],
    "aim": [
-    60.356,
-    20.529,
-    11.798
+    60.893,
+    22.276,
+    11.83
    ],
    "fov": 35,
    "clip": [
@@ -544,12 +560,12 @@
     1400
    ],
    "rtClip": [
-    8.1127,
-    174.566
+    8.0729,
+    179.92
    ],
    "depth": {
-    "near": 16.2254638671875,
-    "far": 109.103515625,
+    "near": 16.14577865600586,
+    "far": 112.4500961303711,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -564,10 +580,10 @@
     -22
    ],
    "spawnFrom": "walk_pad_pilot-cluster",
-   "visibleFrac": 0.8281,
+   "visibleFrac": 0.8906,
    "probes": 64,
-   "baked": "2026-08-05T17:32:00Z",
-   "seconds": 195.7,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 164.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -591,14 +607,14 @@
    "entry": false,
    "transit": true,
    "pos": [
-    30.869,
-    45.846,
-    10.611
+    31.886,
+    47.191,
+    10.931
    ],
    "aim": [
-    38.353,
-    22.813,
-    7.207
+    38.869,
+    25.701,
+    7.755
    ],
    "fov": 35,
    "clip": [
@@ -606,12 +622,12 @@
     1400
    ],
    "rtClip": [
-    7.0909,
-    96.113
+    7.6247,
+    97.509
    ],
    "depth": {
-    "near": 14.181818008422852,
-    "far": 60.070613861083984,
+    "near": 15.24941635131836,
+    "far": 60.943267822265625,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -621,15 +637,15 @@
     "depth": "cameras/deep-stairs/depth.png"
    },
    "spawn": [
-    39.75,
-    4.33,
-    -23.5
+    33.857,
+    4.9,
+    -26.684
    ],
-   "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.002",
-   "visibleFrac": 0.8438,
+   "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.001",
+   "visibleFrac": 0.9688,
    "probes": 64,
-   "baked": "2026-08-05T09:12:14Z",
-   "seconds": 335.2,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 178.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -690,8 +706,24 @@
    "spawnFrom": "walk_pad_pitch-kettle",
    "visibleFrac": 0.2812,
    "probes": 64,
-   "baked": "2026-07-30T23:01:04Z",
-   "seconds": 192.8
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 191.3,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "waterfront",
@@ -699,14 +731,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    56.586,
-    32.499,
-    8.991
+    57.013,
+    32.236,
+    8.781
    ],
    "aim": [
-    37.106,
-    25.409,
-    2.255
+    38.159,
+    25.373,
+    2.261
    ],
    "fov": 35,
    "clip": [
@@ -714,12 +746,12 @@
     1400
    ],
    "rtClip": [
-    4.5505,
-    171.385
+    4.6659,
+    171.598
    ],
    "depth": {
-    "near": 9.10097885131836,
-    "far": 107.11563873291016,
+    "near": 9.331817626953125,
+    "far": 107.24856567382812,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -729,15 +761,15 @@
     "depth": "cameras/waterfront/depth.png"
    },
    "spawn": [
-    30,
+    43,
     1.04,
-    -24
+    -26
    ],
-   "spawnFrom": "walk_pad_winch-foot",
-   "visibleFrac": 0.625,
-   "probes": 40,
-   "baked": "2026-08-05T09:12:21Z",
-   "seconds": 342.8,
+   "spawnFrom": "walk_pad_deep-stairs-foot",
+   "visibleFrac": 0.7031,
+   "probes": 64,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 212.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -761,13 +793,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    43.638,
-    50.143,
-    9.086
+    43.637,
+    50.13,
+    9.083
    ],
    "aim": [
-    54.602,
-    27.664,
+    54.595,
+    27.663,
     2.385
    ],
    "fov": 35,
@@ -776,12 +808,12 @@
     1400
    ],
    "rtClip": [
-    6.9668,
-    127.793
+    6.9605,
+    79.568
    ],
    "depth": {
-    "near": 13.93355941772461,
-    "far": 79.87088012695312,
+    "near": 13.921041488647461,
+    "far": 49.73030090332031,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -796,10 +828,10 @@
     -28.25
    ],
    "spawnFrom": "walk_e_fish-dock__winch-foot_l0",
-   "visibleFrac": 0.86,
+   "visibleFrac": 0.84,
    "probes": 50,
-   "baked": "2026-08-05T13:42:00Z",
-   "seconds": 184.6,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 190.8,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -823,14 +855,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    51.684,
-    35.675,
-    10.138
+    52.145,
+    36.033,
+    9.971
    ],
    "aim": [
-    75.459,
-    27.022,
-    4.76
+    75,
+    27.715,
+    4.802
    ],
    "fov": 35,
    "clip": [
@@ -838,12 +870,12 @@
     1400
    ],
    "rtClip": [
-    5.4268,
-    163.195
+    5.257,
+    162.339
    ],
    "depth": {
-    "near": 10.853614807128906,
-    "far": 101.99673461914062,
+    "near": 10.513954162597656,
+    "far": 101.46208953857422,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -853,15 +885,15 @@
     "depth": "cameras/lockfive/depth.png"
    },
    "spawn": [
-    75.15,
-    1.245,
-    -29.65
+    86.91,
+    0.04,
+    -28
    ],
-   "spawnFrom": "walk_lm_moorage",
+   "spawnFrom": "walk_pad_lock-five",
    "visibleFrac": 0.6406,
    "probes": 64,
-   "baked": "2026-08-05T17:28:42Z",
-   "seconds": 190.3,
+   "baked": "2026-08-06T11:45:53Z",
+   "seconds": 176.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -885,13 +917,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    121.021,
-    30.471,
-    6.263
+    121.118,
+    30.51,
+    6.321
    ],
    "aim": [
-    99.039,
-    27.382,
+    98.907,
+    27.388,
     0.728
    ],
    "fov": 35,
@@ -900,12 +932,12 @@
     1400
    ],
    "rtClip": [
-    6.3821,
-    332.052
+    6.402,
+    332.199
    ],
    "depth": {
-    "near": 12.764114379882812,
-    "far": 207.53269958496094,
+    "near": 12.804092407226562,
+    "far": 207.6243896484375,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -915,15 +947,15 @@
     "depth": "cameras/north-landing/depth.png"
    },
    "spawn": [
-    92.82,
+    92.37,
     0.07,
-    -27.729
+    -27.75
    ],
    "spawnFrom": "walk_e_lock-five__north-landing_l0",
-   "visibleFrac": 0.8333,
+   "visibleFrac": 0.8667,
    "probes": 30,
-   "baked": "2026-08-05T13:42:00Z",
-   "seconds": 186.1,
+   "baked": "2026-08-06T11:26:59Z",
+   "seconds": 174.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",

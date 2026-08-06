@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-06T10:42:56Z",
+ "generated": "2026-08-06T11:40:08Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -76,10 +76,10 @@
       -5
      ],
      "from": "shelf-west",
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.409:shelf-west>gate",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.272:shelf-west>gate",
      "aim": [
-      -0.999,
-      0.034
+      -0.988,
+      -0.151
      ],
      "seam": {
       "n": [
@@ -87,7 +87,7 @@
        -0.2624
       ],
       "t": 1.1,
-      "w": 1.9
+      "w": 1.4
      },
      "screen": {
       "behind": false,
@@ -159,7 +159,7 @@
       -6
      ],
      "from": null,
-     "via": "solved spawnCandidate (walk_pad_gatehouse) — the bake is stale",
+     "via": "cine.json spawn",
      "aim": null,
      "screen": {
       "behind": false,
@@ -190,17 +190,17 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      20.73,
-      19.04,
-      -5.1
+      19.37,
+      23.16,
+      -4.74
      ],
      "to": "shelf-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.841,
-      0.541
+      0.965,
+      -0.262
      ],
      "seam": {
       "n": [
@@ -208,27 +208,27 @@
        -0.2624
       ],
       "t": 1.1,
-      "w": 1.9
+      "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.409:gate>shelf-west",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.272:gate>shelf-west",
      "screen": {
       "behind": false,
       "ndc": [
-       0.012,
-       -0.255
+       0.036,
+       0.011
       ],
       "px": [
-       680,
-       482
+       696,
+       380
       ],
       "onScreen": true,
-      "edgeMargin": 0.745,
-      "depth": 40.872,
-      "charPx": 51,
+      "edgeMargin": 0.964,
+      "depth": 38.227,
+      "charPx": 54,
       "headNdc": [
-       0.012,
-       -0.133
+       0.037,
+       0.146
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -315,6 +315,7 @@
      "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
+      "exit:seam:valley-gate__inn",
       "entry:spawn:gate"
      ]
     },
@@ -387,15 +388,15 @@
      ]
     },
     {
-     "id": "gate:valley-gate__inn@0..0.409",
+     "id": "gate:valley-gate__inn@0..0.272",
      "class": "stairs",
      "from": "node:valley-gate",
      "to": "node:inn",
      "t": [
       0,
-      0.409
+      0.272
      ],
-     "length": 4.675,
+     "length": 3.11,
      "points": [
       [
        16.67,
@@ -408,20 +409,16 @@
        -4.37
       ],
       [
-       19.38,
+       19.37,
        22.64,
-       -4.74
-      ],
-      [
-       20.73,
-       21.96,
-       -5.1
+       -4.73
       ]
      ],
-     "source": "map edge valley-gate__inn@0..0.409",
+     "source": "map edge valley-gate__inn@0..0.272",
      "role": "spine",
      "connects": [
-      "entry:seam:valley-gate__inn"
+      "entry:seam:valley-gate__inn",
+      "exit:seam:valley-gate__inn"
      ]
     },
     {
@@ -586,6 +583,7 @@
      "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
+      "exit:seam:valley-gate__inn",
       "exit:portal:valley-road"
      ]
     }
@@ -608,10 +606,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 28,
+    "routeSamples": 27,
     "routeInFramePct": 100,
-    "routeLen": 42.139,
-    "spineLen": 42.139,
+    "routeLen": 40.574,
+    "spineLen": 40.574,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -619,8 +617,8 @@
     "exitsAtFrameEdge": [
      "portal:valley-road"
     ],
-    "minCharPx": 51,
-    "visibleFrac": 0.75
+    "minCharPx": 54,
+    "visibleFrac": 0.7812
    }
   },
   "shelf-west": {
@@ -629,15 +627,15 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      23.18,
-      20.11,
-      -3.53
+      22.56,
+      21.42,
+      -5.6
      ],
      "from": "gate",
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.409:gate>shelf-west",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.272:gate>shelf-west",
      "aim": [
-      0.841,
-      0.541
+      0.965,
+      -0.262
      ],
      "seam": {
       "n": [
@@ -645,25 +643,25 @@
        -0.2624
       ],
       "t": 1.1,
-      "w": 1.9
+      "w": 1.4
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.389,
-       -0.145
+       0.361,
+       -0.026
       ],
       "px": [
-       933,
-       440
+       914,
+       394
       ],
       "onScreen": true,
-      "edgeMargin": 0.611,
-      "depth": 24.46,
-      "charPx": 85,
+      "edgeMargin": 0.639,
+      "depth": 22.266,
+      "charPx": 93,
       "headNdc": [
-       0.394,
-       0.073
+       0.366,
+       0.216
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -699,15 +697,15 @@
        -0.206
       ],
       "px": [
-       448,
+       449,
        463
       ],
       "onScreen": true,
       "edgeMargin": 0.667,
-      "depth": 26.913,
+      "depth": 26.919,
       "charPx": 77,
       "headNdc": [
-       -0.337,
+       -0.336,
        -0.008
       ],
       "headOnScreen": true,
@@ -719,34 +717,34 @@
      "id": "door:inn",
      "kind": "door",
      "at": [
-      23.94,
+      28.48,
       19.07,
-      -5.53
+      -7.52
      ],
      "from": "del-inn-int",
      "via": "del-inn-int>del-cine@inn",
      "label": "Leave The Boatmen's Rest",
      "aim": [
-      0.995,
-      -0.102
+      0.989,
+      -0.149
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.261,
-       -0.314
+       -0.101,
+       -0.268
       ],
       "px": [
-       847,
-       504
+       604,
+       487
       ],
       "onScreen": true,
-      "edgeMargin": 0.686,
-      "depth": 23.579,
-      "charPx": 88,
+      "edgeMargin": 0.732,
+      "depth": 24.877,
+      "charPx": 83,
       "headNdc": [
-       0.264,
-       -0.09
+       -0.102,
+       -0.056
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -758,7 +756,7 @@
      "kind": "door",
      "at": [
       27.6,
-      19.07,
+      19.04,
       -7.38
      ],
      "from": "del-item-int",
@@ -772,19 +770,19 @@
       "behind": false,
       "ndc": [
        -0.045,
-       -0.283
+       -0.287
       ],
       "px": [
        642,
-       493
+       494
       ],
       "onScreen": true,
-      "edgeMargin": 0.717,
-      "depth": 24.432,
+      "edgeMargin": 0.713,
+      "depth": 24.443,
       "charPx": 85,
       "headNdc": [
-       -0.046,
-       -0.067
+       -0.045,
+       -0.071
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -798,7 +796,7 @@
      "kind": "door",
      "at": [
       26.6,
-      19.07,
+      19.04,
       -6.7
      ],
      "to": "del-inn-int",
@@ -806,8 +804,8 @@
      "prompt": "E",
      "label": "Enter The Boatmen's Rest",
      "aim": [
-      0.916,
-      -0.402
+      -0.917,
+      0.4
      ],
      "seam": null,
      "r": 1.8,
@@ -816,19 +814,19 @@
       "behind": false,
       "ndc": [
        0.044,
-       -0.287
+       -0.29
       ],
       "px": [
        702,
-       494
+       496
       ],
       "onScreen": true,
-      "edgeMargin": 0.713,
-      "depth": 24.334,
+      "edgeMargin": 0.71,
+      "depth": 24.345,
       "charPx": 85,
       "headNdc": [
        0.045,
-       -0.069
+       -0.073
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -857,7 +855,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.257,
+       -0.256,
        -0.279
       ],
       "px": [
@@ -866,10 +864,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.721,
-      "depth": 24.686,
+      "depth": 24.692,
       "charPx": 84,
       "headNdc": [
-       -0.26,
+       -0.259,
        -0.064
       ],
       "headOnScreen": true,
@@ -881,17 +879,17 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      20.73,
-      19.04,
-      -5.1
+      19.37,
+      23.16,
+      -4.74
      ],
      "to": "gate",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.999,
-      0.034
+      -0.988,
+      -0.151
      ],
      "seam": {
       "n": [
@@ -899,27 +897,27 @@
        -0.2624
       ],
       "t": 1.1,
-      "w": 1.9
+      "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.409:shelf-west>gate",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.272:shelf-west>gate",
      "screen": {
       "behind": false,
       "ndc": [
-       0.509,
-       -0.384
+       0.654,
+       0.2
       ],
       "px": [
-       1014,
-       531
+       1111,
+       307
       ],
       "onScreen": true,
-      "edgeMargin": 0.491,
-      "depth": 21.925,
-      "charPx": 94,
+      "edgeMargin": 0.346,
+      "depth": 20.648,
+      "charPx": 100,
       "headNdc": [
-       0.516,
-       -0.144
+       0.663,
+       0.464
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -964,7 +962,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.616,
-      "depth": 29.396,
+      "depth": 29.403,
       "charPx": 70,
       "headNdc": [
        -0.388,
@@ -978,35 +976,40 @@
    ],
    "routes": [
     {
-     "id": "shelf-west:valley-gate__inn@0.409..1",
+     "id": "shelf-west:valley-gate__inn@0.272..1",
      "class": "stairs",
      "from": "node:valley-gate",
      "to": "node:inn",
      "t": [
-      0.409,
+      0.272,
       1
      ],
-     "length": 6.766,
+     "length": 8.331,
      "points": [
       [
-       20.73,
-       21.96,
-       -5.1
+       19.37,
+       22.64,
+       -4.73
       ],
       [
-       22.2,
-       21.22,
-       -5.5
+       20.82,
+       21.91,
+       -5.13
       ],
       [
-       23.67,
-       20.48,
-       -5.9
+       22.26,
+       21.18,
+       -5.52
       ],
       [
-       25.13,
-       19.74,
-       -6.3
+       23.71,
+       20.46,
+       -5.91
+      ],
+      [
+       25.15,
+       19.73,
+       -6.31
       ],
       [
        26.6,
@@ -1014,10 +1017,10 @@
        -6.7
       ]
      ],
-     "source": "map edge valley-gate__inn@0.409..1",
+     "source": "map edge valley-gate__inn@0.272..1",
      "role": "spine",
      "connects": [
-      "entry:seam:valley-gate__inn",
+      "exit:seam:valley-gate__inn",
       "entry:door:inn",
       "entry:door:item-shop",
       "exit:door:inn"
@@ -1111,6 +1114,7 @@
      "role": "spine",
      "connects": [
       "entry:seam:item-shop__weapon-shop",
+      "entry:door:inn",
       "entry:door:item-shop",
       "exit:door:item-shop",
       "exit:seam:item-shop__weapon-shop"
@@ -1132,17 +1136,19 @@
     ]
    },
    "measure": {
-    "routeSamples": 15,
+    "routeSamples": 16,
     "routeInFramePct": 100,
-    "routeLen": 17.848,
-    "spineLen": 17.848,
+    "routeLen": 19.413,
+    "spineLen": 19.413,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [],
+    "exitsAtFrameEdge": [
+     "seam:valley-gate__inn"
+    ],
     "minCharPx": 70,
-    "visibleFrac": 0.6094
+    "visibleFrac": 0.7344
    }
   },
   "shelf-east": {
@@ -1708,15 +1714,15 @@
      "id": "seam:shelf-homes__market-stalls",
      "kind": "seam",
      "at": [
-      55.33,
-      17.65,
+      54.85,
+      17.97,
       -9
      ],
      "from": "quay-west",
-     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs",
+     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:quay-west>loop-stairs",
      "aim": [
-      -0.923,
-      0.384
+      -0.952,
+      0.306
      ],
      "seam": {
       "n": [
@@ -1729,20 +1735,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.104,
-       -0.033
+       0.151,
+       0.015
       ],
       "px": [
-       742,
-       397
+       773,
+       378
       ],
       "onScreen": true,
-      "edgeMargin": 0.896,
-      "depth": 18.713,
-      "charPx": 111,
+      "edgeMargin": 0.849,
+      "depth": 18.517,
+      "charPx": 112,
       "headNdc": [
-       0.106,
-       0.252
+       0.154,
+       0.303
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1804,17 +1810,17 @@
      "id": "seam:shelf-homes__market-stalls",
      "kind": "seam",
      "at": [
-      57.92,
-      15.93,
-      -10.07
+      57.49,
+      16.28,
+      -9.85
      ],
      "to": "quay-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.516,
-      -0.857
+      0.479,
+      -0.878
      ],
      "seam": {
       "n": [
@@ -1825,24 +1831,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:loop-stairs>quay-west",
+     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:loop-stairs>quay-west",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.164,
-       -0.331
+       -0.119,
+       -0.269
       ],
       "px": [
-       562,
-       511
+       592,
+       487
       ],
       "onScreen": true,
-      "edgeMargin": 0.669,
-      "depth": 18.76,
+      "edgeMargin": 0.731,
+      "depth": 18.775,
       "charPx": 110,
       "headNdc": [
-       -0.168,
-       -0.055
+       -0.121,
+       0.008
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1886,15 +1892,15 @@
      ]
     },
     {
-     "id": "loop-stairs:shelf-homes__market-stalls@0..0.677",
+     "id": "loop-stairs:shelf-homes__market-stalls@0..0.633",
      "class": "stairs",
      "from": "node:shelf-homes",
      "to": "node:market-stalls",
      "t": [
       0,
-      0.677
+      0.633
      ],
-     "length": 8.035,
+     "length": 7.462,
      "points": [
       [
        50.8,
@@ -1917,17 +1923,17 @@
        -9
       ],
       [
-       56.91,
-       16.69,
-       -9.54
+       56.7,
+       16.84,
+       -9.42
       ],
       [
-       57.92,
-       15.99,
-       -10.08
+       57.49,
+       16.29,
+       -9.85
       ]
      ],
-     "source": "map edge shelf-homes__market-stalls@0..0.677",
+     "source": "map edge shelf-homes__market-stalls@0..0.633",
      "role": "spine",
      "connects": [
       "entry:seam:armor-shop__shelf-homes",
@@ -1938,7 +1944,7 @@
     }
    ],
    "name": "The Loop Stairs",
-   "intent": "The descent that forks: the shelf homes' little yard at the top of frame, ONE flight leaving it down the shelf wall, and a landing partway where the way splits — on to the market, or back down and across onto the harbour deck. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
+   "intent": "The descent to the market: the shelf homes' little yard at the top of frame and ONE wide flight leaving it east along the shelf wall, dropping to the market stalls from the north. Shot from out over the gorge so the tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
    "district": "shelf",
    "owns": {
     "landmarks": [
@@ -1951,8 +1957,8 @@
    "measure": {
     "routeSamples": 9,
     "routeInFramePct": 100,
-    "routeLen": 10.836,
-    "spineLen": 10.836,
+    "routeLen": 10.263,
+    "spineLen": 10.263,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -2016,7 +2022,7 @@
      "kind": "seam",
      "at": [
       55.97,
-      13.93,
+      14,
       -16.15
      ],
      "from": "weave",
@@ -2031,25 +2037,25 @@
        -0.6416
       ],
       "t": 1.1,
-      "w": 1.75
+      "w": 1.4
      },
      "screen": {
       "behind": false,
       "ndc": [
        -0.634,
-       0.037
+       0.043
       ],
       "px": [
        246,
-       370
+       368
       ],
       "onScreen": true,
       "edgeMargin": 0.366,
-      "depth": 31.237,
+      "depth": 31.216,
       "charPx": 66,
       "headNdc": [
-       -0.645,
-       0.203
+       -0.646,
+       0.21
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2061,7 +2067,7 @@
      "kind": "seam",
      "at": [
       37.94,
-      12.42,
+      12.82,
       -19.54
      ],
      "from": "deep-stairs",
@@ -2076,25 +2082,25 @@
        -0.6801
       ],
       "t": 1.1,
-      "w": 2.25
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.408,
-       -0.514
+       0.41,
+       -0.466
       ],
       "px": [
-       946,
-       582
+       948,
+       563
       ],
       "onScreen": true,
-      "edgeMargin": 0.486,
-      "depth": 23.679,
-      "charPx": 87,
+      "edgeMargin": 0.534,
+      "depth": 23.548,
+      "charPx": 88,
       "headNdc": [
-       0.418,
-       -0.306
+       0.42,
+       -0.255
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2105,15 +2111,15 @@
      "id": "seam:shelf-homes__market-stalls",
      "kind": "seam",
      "at": [
-      59,
-      14.58,
-      -11.88
+      59.07,
+      14.25,
+      -12.74
      ],
      "from": "loop-stairs",
-     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:loop-stairs>quay-west",
+     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:loop-stairs>quay-west",
      "aim": [
-      0.516,
-      -0.857
+      0.479,
+      -0.878
      ],
      "seam": {
       "n": [
@@ -2126,20 +2132,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.638,
-       0.23
+       -0.666,
+       0.182
       ],
       "px": [
-       243,
-       296
+       224,
+       314
       ],
       "onScreen": true,
-      "edgeMargin": 0.362,
-      "depth": 35.724,
-      "charPx": 58,
+      "edgeMargin": 0.334,
+      "depth": 35.07,
+      "charPx": 59,
       "headNdc": [
-       -0.648,
-       0.379
+       -0.677,
+       0.333
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2282,7 +2288,7 @@
      "kind": "seam",
      "at": [
       58.04,
-      13.53,
+      13.84,
       -17.88
      ],
      "to": "weave",
@@ -2299,27 +2305,27 @@
        -0.6416
       ],
       "t": 1.1,
-      "w": 1.75
+      "w": 1.4
      },
      "r": null,
      "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.330:quay-west>weave",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.8,
-       -0.038
+       -0.803,
+       -0.007
       ],
       "px": [
-       134,
-       398
+       132,
+       387
       ],
       "onScreen": true,
-      "edgeMargin": 0.2,
-      "depth": 30.375,
+      "edgeMargin": 0.197,
+      "depth": 30.274,
       "charPx": 68,
       "headNdc": [
-       -0.815,
-       0.133
+       -0.818,
+       0.164
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2331,7 +2337,7 @@
      "kind": "seam",
      "at": [
       40.03,
-      10.87,
+      11.35,
       -21.48
      ],
      "to": "deep-stairs",
@@ -2348,27 +2354,27 @@
        -0.6801
       ],
       "t": 1.1,
-      "w": 2.25
+      "w": 1.9
      },
      "r": null,
      "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
      "screen": {
       "behind": false,
       "ndc": [
-       0.217,
-       -0.787
+       0.219,
+       -0.73
       ],
       "px": [
-       818,
-       686
+       819,
+       664
       ],
       "onScreen": true,
-      "edgeMargin": 0.213,
-      "depth": 23.007,
-      "charPx": 90,
+      "edgeMargin": 0.27,
+      "depth": 22.85,
+      "charPx": 91,
       "headNdc": [
-       0.223,
-       -0.58
+       0.224,
+       -0.519
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2379,17 +2385,17 @@
      "id": "seam:shelf-homes__market-stalls",
      "kind": "seam",
      "at": [
-      57.92,
-      15.93,
-      -10.07
+      57.49,
+      16.28,
+      -9.85
      ],
      "to": "loop-stairs",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.923,
-      0.384
+      -0.952,
+      0.306
      ],
      "seam": {
       "n": [
@@ -2400,24 +2406,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs",
+     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:quay-west>loop-stairs",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.545,
-       0.375
+       -0.522,
+       0.406
       ],
       "px": [
-       306,
-       240
+       321,
+       228
       ],
       "onScreen": true,
-      "edgeMargin": 0.455,
-      "depth": 36.622,
+      "edgeMargin": 0.478,
+      "depth": 36.588,
       "charPx": 57,
       "headNdc": [
-       -0.553,
-       0.522
+       -0.53,
+       0.554
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2562,8 +2568,7 @@
      "connects": [
       "entry:seam:market-stalls__lockhead",
       "entry:seam:shelf-homes__market-stalls",
-      "exit:seam:market-stalls__lockhead",
-      "exit:seam:shelf-homes__market-stalls"
+      "exit:seam:market-stalls__lockhead"
      ]
     },
     {
@@ -2598,8 +2603,7 @@
      "connects": [
       "entry:seam:market-stalls__lockhead",
       "entry:seam:shelf-homes__market-stalls",
-      "exit:seam:market-stalls__lockhead",
-      "exit:seam:shelf-homes__market-stalls"
+      "exit:seam:market-stalls__lockhead"
      ]
     },
     {
@@ -2766,20 +2770,20 @@
      ]
     },
     {
-     "id": "quay-west:shelf-homes__market-stalls@0.677..1",
+     "id": "quay-west:shelf-homes__market-stalls@0.633..1",
      "class": "stairs",
      "from": "node:shelf-homes",
      "to": "node:market-stalls",
      "t": [
-      0.677,
+      0.633,
       1
      ],
-     "length": 4.043,
+     "length": 4.615,
      "points": [
       [
-       57.92,
-       15.99,
-       -10.08
+       57.49,
+       16.29,
+       -9.85
       ],
       [
        58.9,
@@ -2797,12 +2801,12 @@
        -13
       ]
      ],
-     "source": "map edge shelf-homes__market-stalls@0.677..1",
+     "source": "map edge shelf-homes__market-stalls@0.633..1",
      "role": "spine",
      "connects": [
-      "entry:seam:shelf-homes__market-stalls",
       "exit:seam:shelf-homes__market-stalls",
       "entry:seam:market-stalls__lockhead",
+      "entry:seam:shelf-homes__market-stalls",
       "exit:seam:market-stalls__lockhead"
      ]
     }
@@ -2829,8 +2833,8 @@
    "measure": {
     "routeSamples": 46,
     "routeInFramePct": 100,
-    "routeLen": 64.179,
-    "spineLen": 39.827,
+    "routeLen": 64.751,
+    "spineLen": 40.399,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -2841,7 +2845,7 @@
      "seam:deep-stairs-head__deep-stairs-foot"
     ],
     "minCharPx": 57,
-    "visibleFrac": 0.8594
+    "visibleFrac": 0.9062
    }
   },
   "lockhead": {
@@ -3255,7 +3259,7 @@
      "seam:lockhead__keepers-cottage"
     ],
     "minCharPx": 75,
-    "visibleFrac": 0.8
+    "visibleFrac": 0.775
    }
   },
   "cottage": {
@@ -3309,12 +3313,12 @@
      "id": "seam:weave-huts__keepers-cottage",
      "kind": "seam",
      "at": [
-      91.27,
-      7.73,
-      -22.13
+      91.52,
+      7.75,
+      -22.11
      ],
      "from": "crossing",
-     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.823:crossing>cottage",
      "aim": [
       0.995,
       0.097
@@ -3325,25 +3329,25 @@
        0.0965
       ],
       "t": 1.1,
-      "w": 1.55
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.353,
-       -0.822
+       -0.376,
+       -0.812
       ],
       "px": [
-       435,
-       700
+       419,
+       696
       ],
       "onScreen": true,
-      "edgeMargin": 0.178,
-      "depth": 18.409,
+      "edgeMargin": 0.188,
+      "depth": 18.451,
       "charPx": 112,
       "headNdc": [
-       -0.369,
-       -0.589
+       -0.393,
+       -0.58
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3354,34 +3358,34 @@
      "id": "door:keepers-cottage",
      "kind": "door",
      "at": [
-      90.22,
-      9.15,
-      -20.36
+      90.54,
+      9.2,
+      -19.97
      ],
      "from": "del-cottage-int",
      "via": "del-cottage-int>del-cine@keepers-cottage",
      "label": "Leave Keepers' Cottage",
      "aim": [
       0.988,
-      -0.156
+      -0.152
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       -0.218,
-       -0.457
+       -0.239,
+       -0.408
       ],
       "px": [
-       525,
-       560
+       512,
+       541
       ],
       "onScreen": true,
-      "edgeMargin": 0.543,
-      "depth": 19.163,
-      "charPx": 108,
+      "edgeMargin": 0.592,
+      "depth": 19.517,
+      "charPx": 106,
       "headNdc": [
-       -0.228,
-       -0.218
+       -0.249,
+       -0.171
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3403,8 +3407,8 @@
      "prompt": "E",
      "label": "Enter Keepers' Cottage",
      "aim": [
-      0.824,
-      -0.566
+      0.714,
+      -0.7
      ],
      "seam": null,
      "r": 1.8,
@@ -3485,9 +3489,9 @@
      "id": "seam:weave-huts__keepers-cottage",
      "kind": "seam",
      "at": [
-      88.58,
-      7.55,
-      -22.39
+      88.83,
+      7.67,
+      -22.37
      ],
      "to": "crossing",
      "toKind": "shot",
@@ -3495,7 +3499,7 @@
      "label": null,
      "aim": [
       -0.995,
-      -0.096
+      -0.097
      ],
      "seam": {
       "n": [
@@ -3503,27 +3507,27 @@
        0.0965
       ],
       "t": 1.1,
-      "w": 1.55
+      "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:cottage>crossing",
+     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.823:cottage>crossing",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.098,
-       -0.924
+       -0.122,
+       -0.901
       ],
       "px": [
-       606,
-       739
+       590,
+       730
       ],
       "onScreen": true,
-      "edgeMargin": 0.076,
-      "depth": 17.936,
+      "edgeMargin": 0.099,
+      "depth": 17.928,
       "charPx": 115,
       "headNdc": [
-       -0.102,
-       -0.69
+       -0.128,
+       -0.666
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3600,30 +3604,25 @@
      ]
     },
     {
-     "id": "cottage:weave-huts__keepers-cottage@0.812..1",
+     "id": "cottage:weave-huts__keepers-cottage@0.823..1",
      "class": "bridge",
      "from": "node:weave-huts",
      "to": "node:keepers-cottage",
      "t": [
-      0.812,
+      0.823,
       1
      ],
-     "length": 4.057,
+     "length": 3.815,
      "points": [
       [
-       88.58,
-       7.58,
-       -22.39
+       88.82,
+       7.6,
+       -22.37
       ],
       [
-       89.92,
-       7.67,
-       -22.26
-      ],
-      [
-       91.27,
-       7.75,
-       -22.13
+       90.71,
+       7.71,
+       -22.18
       ],
       [
        92.61,
@@ -3631,7 +3630,7 @@
        -22
       ]
      ],
-     "source": "map edge weave-huts__keepers-cottage@0.812..1",
+     "source": "map edge weave-huts__keepers-cottage@0.823..1",
      "role": "spine",
      "connects": [
       "entry:seam:weave-huts__keepers-cottage",
@@ -3653,10 +3652,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 13,
+    "routeSamples": 12,
     "routeInFramePct": 100,
-    "routeLen": 15.865,
-    "spineLen": 15.865,
+    "routeLen": 15.623,
+    "spineLen": 15.623,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -3666,7 +3665,7 @@
      "seam:weave-huts__keepers-cottage"
     ],
     "minCharPx": 106,
-    "visibleFrac": 0.9375
+    "visibleFrac": 0.9531
    }
   },
   "crossing": {
@@ -3680,10 +3679,10 @@
       -22.78
      ],
      "from": "weave",
-     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:weave>crossing",
+     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.246:weave>crossing",
      "aim": [
       1,
-      -0.015
+      -0.01
      ],
      "seam": {
       "n": [
@@ -3720,15 +3719,15 @@
      "id": "seam:weave-huts__keepers-cottage",
      "kind": "seam",
      "at": [
-      85.74,
-      7.36,
-      -22.67
+      86.14,
+      7.51,
+      -22.63
      ],
      "from": "cottage",
-     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:cottage>crossing",
+     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.823:cottage>crossing",
      "aim": [
       -0.995,
-      -0.096
+      -0.097
      ],
      "seam": {
       "n": [
@@ -3736,25 +3735,25 @@
        0.0965
       ],
       "t": 1.1,
-      "w": 1.55
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.086,
-       0.058
+       0.094,
+       0.088
       ],
       "px": [
-       730,
-       362
+       735,
+       350
       ],
       "onScreen": true,
-      "edgeMargin": 0.914,
-      "depth": 29.866,
+      "edgeMargin": 0.906,
+      "depth": 30.139,
       "charPx": 69,
       "headNdc": [
-       0.088,
-       0.226
+       0.096,
+       0.255
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3767,17 +3766,17 @@
      "id": "seam:weave-huts__keepers-cottage",
      "kind": "seam",
      "at": [
-      75.19,
-      7.77,
-      -22.64
+      76.44,
+      7.66,
+      -22.7
      ],
      "to": "weave",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.949,
-      -0.315
+      -0.995,
+      -0.1
      ],
      "seam": {
       "n": [
@@ -3788,24 +3787,24 @@
       "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:crossing>weave",
+     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.246:crossing>weave",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.114,
-       -0.55
+       -0.086,
+       -0.457
       ],
       "px": [
-       595,
-       595
+       614,
+       559
       ],
       "onScreen": true,
-      "edgeMargin": 0.45,
-      "depth": 20.519,
-      "charPx": 101,
+      "edgeMargin": 0.543,
+      "depth": 21.666,
+      "charPx": 96,
       "headNdc": [
-       -0.118,
-       -0.326
+       -0.089,
+       -0.242
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3816,9 +3815,9 @@
      "id": "seam:weave-huts__keepers-cottage",
      "kind": "seam",
      "at": [
-      88.58,
-      7.55,
-      -22.39
+      88.83,
+      7.67,
+      -22.37
      ],
      "to": "cottage",
      "toKind": "shot",
@@ -3834,27 +3833,27 @@
        0.0965
       ],
       "t": 1.1,
-      "w": 1.55
+      "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.823:crossing>cottage",
      "screen": {
       "behind": false,
       "ndc": [
-       0.136,
-       0.186
+       0.14,
+       0.206
       ],
       "px": [
-       763,
-       313
+       766,
+       305
       ],
       "onScreen": true,
-      "edgeMargin": 0.814,
-      "depth": 32.182,
+      "edgeMargin": 0.794,
+      "depth": 32.342,
       "charPx": 64,
       "headNdc": [
-       0.139,
-       0.344
+       0.143,
+       0.364
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3864,35 +3863,30 @@
    ],
    "routes": [
     {
-     "id": "crossing:weave-huts__keepers-cottage@0.188..0.812",
+     "id": "crossing:weave-huts__keepers-cottage@0.246..0.823",
      "class": "bridge",
      "from": "node:weave-huts",
      "to": "node:keepers-cottage",
      "t": [
-      0.188,
-      0.812
+      0.246,
+      0.823
      ],
-     "length": 13.469,
+     "length": 12.454,
      "points": [
       [
-       75.19,
-       7.84,
-       -22.64
+       76.44,
+       7.73,
+       -22.7
       ],
       [
-       76.97,
-       7.68,
-       -22.73
+       78.39,
+       7.55,
+       -22.8
       ],
       [
-       78.74,
-       7.52,
-       -22.82
-      ],
-      [
-       80.52,
-       7.36,
-       -22.91
+       80.35,
+       7.38,
+       -22.9
       ],
       [
        82.3,
@@ -3900,27 +3894,27 @@
        -23
       ],
       [
-       83.87,
+       83.93,
        7.3,
-       -22.85
+       -22.84
       ],
       [
-       85.44,
-       7.39,
-       -22.7
+       85.56,
+       7.4,
+       -22.68
       ],
       [
-       87.01,
-       7.49,
-       -22.54
+       87.19,
+       7.5,
+       -22.53
       ],
       [
-       88.58,
-       7.58,
-       -22.39
+       88.82,
+       7.6,
+       -22.37
       ]
      ],
-     "source": "map edge weave-huts__keepers-cottage@0.188..0.812",
+     "source": "map edge weave-huts__keepers-cottage@0.246..0.823",
      "role": "vignette",
      "connects": [
       "exit:seam:weave-huts__keepers-cottage",
@@ -3938,17 +3932,17 @@
     ]
    },
    "measure": {
-    "routeSamples": 9,
+    "routeSamples": 8,
     "routeInFramePct": 100,
-    "routeLen": 13.469,
-    "spineLen": 13.469,
+    "routeLen": 12.454,
+    "spineLen": 12.454,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 64,
-    "visibleFrac": 0.9333
+    "visibleFrac": 0.8
    }
   },
   "weave": {
@@ -3958,7 +3952,7 @@
      "kind": "seam",
      "at": [
       59.23,
-      9.04,
+      12.53,
       -20.75
      ],
      "from": "quay-west",
@@ -3973,25 +3967,25 @@
        -0.6416
       ],
       "t": 1.1,
-      "w": 1.75
+      "w": 1.4
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.126,
-       -0.271
+       0.131,
+       0.053
       ],
       "px": [
-       757,
-       488
+       760,
+       364
       ],
       "onScreen": true,
-      "edgeMargin": 0.729,
-      "depth": 31.964,
-      "charPx": 65,
+      "edgeMargin": 0.869,
+      "depth": 30.656,
+      "charPx": 68,
       "headNdc": [
-       0.129,
-       -0.117
+       0.134,
+       0.22
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4047,15 +4041,15 @@
      "id": "seam:weave-huts__keepers-cottage",
      "kind": "seam",
      "at": [
-      72.4,
-      7.87,
-      -23.56
+      73.68,
+      7.94,
+      -22.98
      ],
      "from": "crossing",
-     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:crossing>weave",
+     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.246:crossing>weave",
      "aim": [
-      -0.949,
-      -0.315
+      -0.995,
+      -0.1
      ],
      "seam": {
       "n": [
@@ -4068,20 +4062,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.363,
-       -0.045
+       -0.366,
+       0.001
       ],
       "px": [
-       428,
-       401
+       426,
+       384
       ],
       "onScreen": true,
-      "edgeMargin": 0.637,
-      "depth": 40.426,
-      "charPx": 51,
+      "edgeMargin": 0.634,
+      "depth": 41.661,
+      "charPx": 50,
       "headNdc": [
-       -0.369,
-       0.08
+       -0.372,
+       0.123
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4095,7 +4089,7 @@
      "kind": "seam",
      "at": [
       58.04,
-      13.53,
+      13.84,
       -17.88
      ],
      "to": "quay-west",
@@ -4112,27 +4106,27 @@
        -0.6416
       ],
       "t": 1.1,
-      "w": 1.75
+      "w": 1.4
      },
      "r": null,
      "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.330:weave>quay-west",
      "screen": {
       "behind": false,
       "ndc": [
-       0.305,
-       0.179
+       0.306,
+       0.209
       ],
       "px": [
-       877,
-       315
+       878,
+       304
       ],
       "onScreen": true,
-      "edgeMargin": 0.695,
-      "depth": 31.054,
+      "edgeMargin": 0.694,
+      "depth": 30.938,
       "charPx": 67,
       "headNdc": [
-       0.311,
-       0.347
+       0.312,
+       0.378
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4192,9 +4186,9 @@
      "id": "seam:weave-huts__keepers-cottage",
      "kind": "seam",
      "at": [
-      75.19,
-      7.77,
-      -22.64
+      76.44,
+      7.66,
+      -22.7
      ],
      "to": "crossing",
      "toKind": "shot",
@@ -4202,7 +4196,7 @@
      "label": null,
      "aim": [
       1,
-      -0.015
+      -0.01
      ],
      "seam": {
       "n": [
@@ -4213,24 +4207,24 @@
       "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:weave>crossing",
+     "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.246:weave>crossing",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.383,
-       0.027
+       -0.409,
+       0.045
       ],
       "px": [
-       415,
-       373
+       397,
+       367
       ],
       "onScreen": true,
-      "edgeMargin": 0.617,
-      "depth": 43.025,
-      "charPx": 48,
+      "edgeMargin": 0.591,
+      "depth": 43.945,
+      "charPx": 47,
       "headNdc": [
-       -0.389,
-       0.146
+       -0.415,
+       0.161
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4297,10 +4291,10 @@
       ]
      ],
      "source": "map edge quay-deck__pilot-cluster@0.33..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
-      "exit:seam:quay-deck__pilot-cluster",
-      "entry:seam:quay-deck__pilot-cluster"
+      "entry:seam:quay-deck__pilot-cluster",
+      "exit:seam:quay-deck__pilot-cluster"
      ]
     },
     {
@@ -4361,9 +4355,8 @@
       ]
      ],
      "source": "map edge pilot-cluster__weave-huts@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
-      "entry:seam:quay-deck__pilot-cluster",
       "entry:seam:weave-huts__moorage",
       "entry:seam:weave-huts__keepers-cottage"
      ]
@@ -4517,10 +4510,7 @@
       ]
      ],
      "source": "map edge pilot-cluster__weave-north@0..1",
-     "role": "link",
-     "connects": [
-      "entry:seam:quay-deck__pilot-cluster"
-     ]
+     "role": "spur"
     },
     {
      "id": "weave:weave-huts__drying-decks",
@@ -4572,15 +4562,15 @@
      ]
     },
     {
-     "id": "weave:weave-huts__keepers-cottage@0..0.188",
+     "id": "weave:weave-huts__keepers-cottage@0..0.246",
      "class": "bridge",
      "from": "node:weave-huts",
      "to": "node:keepers-cottage",
      "t": [
       0,
-      0.188
+      0.246
      ],
-     "length": 4.05,
+     "length": 5.307,
      "points": [
       [
        71.45,
@@ -4598,12 +4588,12 @@
        -22.6
       ],
       [
-       75.19,
-       7.84,
-       -22.64
+       76.44,
+       7.73,
+       -22.7
       ]
      ],
-     "source": "map edge weave-huts__keepers-cottage@0..0.188",
+     "source": "map edge weave-huts__keepers-cottage@0..0.246",
      "role": "spine",
      "connects": [
       "entry:seam:weave-huts__moorage",
@@ -4634,15 +4624,15 @@
    "measure": {
     "routeSamples": 38,
     "routeInFramePct": 100,
-    "routeLen": 52.095,
-    "spineLen": 52.095,
+    "routeLen": 53.352,
+    "spineLen": 42.156,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 48,
-    "visibleFrac": 0.8281
+    "minCharPx": 47,
+    "visibleFrac": 0.8906
    }
   },
   "deep-stairs": {
@@ -4652,7 +4642,7 @@
      "kind": "seam",
      "at": [
       42.11,
-      10,
+      10.24,
       -23.41
      ],
      "from": "quay-west",
@@ -4667,25 +4657,25 @@
        -0.6801
       ],
       "t": 1.1,
-      "w": 2.25
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
        -0.168,
-       0.33
+       0.359
       ],
       "px": [
        559,
-       257
+       246
       ],
       "onScreen": true,
-      "edgeMargin": 0.67,
-      "depth": 25.653,
+      "edgeMargin": 0.641,
+      "depth": 25.62,
       "charPx": 81,
       "headNdc": [
        -0.17,
-       0.543
+       0.573
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4696,15 +4686,15 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      36.46,
-      1.07,
-      -25.05
+      36.71,
+      6.14,
+      -24.7
      ],
      "from": "waterfront",
-     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.874:waterfront>deep-stairs",
+     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.786:waterfront>deep-stairs",
      "aim": [
-      -0.99,
-      0.143
+      0.106,
+      0.994
      ],
      "seam": {
       "n": [
@@ -4712,25 +4702,25 @@
        -0.143
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.6
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.191,
-       -0.891
+       0.184,
+       -0.212
       ],
       "px": [
-       801,
-       726
+       796,
+       465
       ],
       "onScreen": true,
-      "edgeMargin": 0.109,
-      "depth": 23.619,
-      "charPx": 88,
+      "edgeMargin": 0.788,
+      "depth": 23.324,
+      "charPx": 89,
       "headNdc": [
-       0.193,
-       -0.672
+       0.186,
+       0.017
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4744,7 +4734,7 @@
      "kind": "seam",
      "at": [
       40.03,
-      10.87,
+      11.35,
       -21.48
      ],
      "to": "quay-west",
@@ -4761,7 +4751,7 @@
        -0.6801
       ],
       "t": 1.1,
-      "w": 2.25
+      "w": 1.9
      },
      "r": null,
      "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:deep-stairs>quay-west",
@@ -4769,19 +4759,19 @@
       "behind": false,
       "ndc": [
        0.014,
-       0.438
+       0.496
       ],
       "px": [
        681,
-       216
+       193
       ],
       "onScreen": true,
-      "edgeMargin": 0.562,
-      "depth": 26.715,
-      "charPx": 77,
+      "edgeMargin": 0.504,
+      "depth": 26.648,
+      "charPx": 78,
       "headNdc": [
        0.014,
-       0.644
+       0.703
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4792,9 +4782,9 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      39.28,
-      1.99,
-      -25.46
+      36.67,
+      6.39,
+      -25.08
      ],
      "to": "waterfront",
      "toKind": "shot",
@@ -4810,27 +4800,27 @@
        -0.143
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.6
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.874:deep-stairs>waterfront",
+     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.786:deep-stairs>waterfront",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.024,
-       -0.749
+       0.181,
+       -0.189
       ],
       "px": [
-       656,
-       672
+       793,
+       456
       ],
       "onScreen": true,
-      "edgeMargin": 0.251,
-      "depth": 23.973,
-      "charPx": 86,
+      "edgeMargin": 0.811,
+      "depth": 22.92,
+      "charPx": 90,
       "headNdc": [
-       -0.024,
-       -0.531
+       0.182,
+       0.045
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4840,15 +4830,15 @@
    ],
    "routes": [
     {
-     "id": "deep-stairs:deep-stairs-head__deep-stairs-foot@0.22..0.874",
+     "id": "deep-stairs:deep-stairs-head__deep-stairs-foot@0.22..0.786",
      "class": "stairs",
      "from": "node:deep-stairs-head",
      "to": "node:deep-stairs-foot",
      "t": [
       0.22,
-      0.874
+      0.786
      ],
-     "length": 21.37,
+     "length": 18.5,
      "points": [
       [
        40.02,
@@ -4901,22 +4891,17 @@
        -24.7
       ],
       [
-       35.76,
-       4.14,
-       -24.95
+       35.33,
+       4.32,
+       -24.89
       ],
       [
-       37.51,
-       3.38,
-       -25.21
-      ],
-      [
-       39.27,
-       2.62,
-       -25.46
+       36.66,
+       3.75,
+       -25.08
       ]
      ],
-     "source": "map edge deep-stairs-head__deep-stairs-foot@0.22..0.874",
+     "source": "map edge deep-stairs-head__deep-stairs-foot@0.22..0.786",
      "role": "vignette",
      "connects": [
       "entry:seam:deep-stairs-head__deep-stairs-foot",
@@ -4934,19 +4919,17 @@
     ]
    },
    "measure": {
-    "routeSamples": 13,
+    "routeSamples": 12,
     "routeInFramePct": 100,
-    "routeLen": 21.37,
-    "spineLen": 21.37,
+    "routeLen": 18.5,
+    "spineLen": 18.5,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [
-     "seam:deep-stairs-head__deep-stairs-foot"
-    ],
-    "minCharPx": 77,
-    "visibleFrac": 0.8438
+    "exitsAtFrameEdge": [],
+    "minCharPx": 78,
+    "visibleFrac": 0.9688
    }
   },
   "boatyard": {
@@ -5356,12 +5339,12 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      42.1,
-      1.04,
-      -25.87
+      39.49,
+      1.07,
+      -25.49
      ],
      "from": "deep-stairs",
-     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.874:deep-stairs>waterfront",
+     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.786:deep-stairs>waterfront",
      "aim": [
       0.99,
       -0.143
@@ -5372,25 +5355,25 @@
        -0.143
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.6
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.09,
-       -0.42
+       -0.031,
+       -0.24
       ],
       "px": [
-       612,
-       545
+       651,
+       476
       ],
       "onScreen": true,
-      "edgeMargin": 0.58,
-      "depth": 17.792,
-      "charPx": 116,
+      "edgeMargin": 0.76,
+      "depth": 20.24,
+      "charPx": 102,
       "headNdc": [
-       -0.092,
-       -0.136
+       -0.031,
+       0.014
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5542,17 +5525,17 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      39.28,
-      1.99,
-      -25.46
+      36.67,
+      6.39,
+      -25.08
      ],
      "to": "deep-stairs",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.99,
-      0.143
+      0.106,
+      0.994
      ],
      "seam": {
       "n": [
@@ -5560,27 +5543,27 @@
        -0.143
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.6
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.874:waterfront>deep-stairs",
+     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.786:waterfront>deep-stairs",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.027,
-       -0.093
+       0.02,
+       0.655
       ],
       "px": [
-       654,
-       420
+       685,
+       132
       ],
       "onScreen": true,
-      "edgeMargin": 0.907,
-      "depth": 20.151,
-      "charPx": 103,
+      "edgeMargin": 0.345,
+      "depth": 21.247,
+      "charPx": 97,
       "headNdc": [
-       -0.028,
-       0.166
+       0.02,
+       0.919
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5771,30 +5754,35 @@
      ]
     },
     {
-     "id": "waterfront:deep-stairs-head__deep-stairs-foot@0.874..1",
+     "id": "waterfront:deep-stairs-head__deep-stairs-foot@0.786..1",
      "class": "stairs",
      "from": "node:deep-stairs-head",
      "to": "node:deep-stairs-foot",
      "t": [
-      0.874,
+      0.786,
       1
      ],
-     "length": 4.102,
+     "length": 6.972,
      "points": [
       [
-       39.27,
-       2.62,
-       -25.46
+       36.66,
+       3.75,
+       -25.08
       ],
       [
-       40.51,
-       2.08,
-       -25.64
+       38.25,
+       3.06,
+       -25.31
       ],
       [
-       41.76,
-       1.54,
-       -25.82
+       39.83,
+       2.37,
+       -25.54
+      ],
+      [
+       41.42,
+       1.69,
+       -25.77
       ],
       [
        43,
@@ -5802,11 +5790,9 @@
        -26
       ]
      ],
-     "source": "map edge deep-stairs-head__deep-stairs-foot@0.874..1",
-     "role": "spine",
+     "source": "map edge deep-stairs-head__deep-stairs-foot@0.786..1",
+     "role": "link",
      "connects": [
-      "entry:seam:deep-stairs-head__deep-stairs-foot",
-      "exit:seam:deep-stairs-head__deep-stairs-foot",
       "entry:seam:fish-dock__winch-foot",
       "entry:seam:deep-stairs-foot__fish-dock",
       "exit:seam:fish-dock__winch-foot"
@@ -5843,7 +5829,6 @@
      "role": "spine",
      "connects": [
       "entry:seam:fish-dock__winch-foot",
-      "entry:seam:deep-stairs-head__deep-stairs-foot",
       "entry:seam:deep-stairs-foot__fish-dock",
       "exit:seam:fish-dock__winch-foot",
       "exit:seam:deep-stairs-foot__fish-dock"
@@ -5899,20 +5884,21 @@
     ]
    },
    "measure": {
-    "routeSamples": 22,
+    "routeSamples": 23,
     "routeInFramePct": 100,
-    "routeLen": 27.188,
-    "spineLen": 27.188,
+    "routeLen": 30.058,
+    "spineLen": 30.058,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
      "seam:fish-dock__winch-foot",
+     "seam:deep-stairs-head__deep-stairs-foot",
      "seam:deep-stairs-foot__fish-dock"
     ],
     "minCharPx": 67,
-    "visibleFrac": 0.625
+    "visibleFrac": 0.7031
    }
   },
   "fishdock": {
@@ -6067,8 +6053,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      0.951,
-      0.308
+      0.858,
+      0.514
      ],
      "seam": {
       "n": [
@@ -6405,7 +6391,7 @@
      "seam:fish-dock__winch-foot"
     ],
     "minCharPx": 66,
-    "visibleFrac": 0.86
+    "visibleFrac": 0.84
    }
   },
   "lockfive": {
@@ -6435,7 +6421,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.046,
+       -0.047,
        -0.551
       ],
       "px": [
@@ -6444,7 +6430,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.449,
-      "depth": 23.097,
+      "depth": 23.092,
       "charPx": 90,
       "headNdc": [
        -0.047,
@@ -6459,15 +6445,15 @@
      "id": "seam:tenant-shack__fish-dock",
      "kind": "seam",
      "at": [
-      69.04,
-      1.92,
-      -26.28
+      67.88,
+      2.11,
+      -26.23
      ],
      "from": "fishdock",
      "via": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:fishdock>lockfive",
      "aim": [
-      0.951,
-      0.308
+      0.858,
+      0.514
      ],
      "seam": {
       "n": [
@@ -6480,20 +6466,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.3,
-       -0.601
+       0.358,
+       -0.641
       ],
       "px": [
-       874,
-       615
+       913,
+       630
       ],
       "onScreen": true,
-      "edgeMargin": 0.399,
-      "depth": 20.474,
-      "charPx": 101,
+      "edgeMargin": 0.359,
+      "depth": 19.377,
+      "charPx": 107,
       "headNdc": [
-       0.305,
-       -0.35
+       0.365,
+       -0.376
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6534,10 +6520,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.783,
-      "depth": 37.064,
+      "depth": 37.059,
       "charPx": 56,
       "headNdc": [
-       -0.219,
+       -0.22,
        -0.064
       ],
       "headOnScreen": true,
@@ -6585,7 +6571,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.801,
-      "depth": 25.255,
+      "depth": 25.25,
       "charPx": 82,
       "headNdc": [
        0.182,
@@ -6634,7 +6620,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.123,
-      "depth": 17.779,
+      "depth": 17.774,
       "charPx": 116,
       "headNdc": [
        0.363,
@@ -6650,7 +6636,7 @@
      "kind": "seam",
      "at": [
       89.96,
-      -0.24,
+      -0.15,
       -27.86
      ],
      "to": "north-landing",
@@ -6675,19 +6661,19 @@
       "behind": false,
       "ndc": [
        -0.24,
-       -0.162
+       -0.155
       ],
       "px": [
-       511,
-       446
+       510,
+       443
       ],
       "onScreen": true,
       "edgeMargin": 0.76,
-      "depth": 39.62,
+      "depth": 39.597,
       "charPx": 52,
       "headNdc": [
-       -0.242,
-       -0.029
+       -0.243,
+       -0.022
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6975,7 +6961,7 @@
      "kind": "seam",
      "at": [
       92.65,
-      -0.46,
+      -0.49,
       -27.74
      ],
      "from": "lockfive",
@@ -6996,19 +6982,19 @@
       "behind": false,
       "ndc": [
        0.075,
-       0.036
+       0.033
       ],
       "px": [
        722,
-       370
+       371
       ],
       "onScreen": true,
       "edgeMargin": 0.925,
-      "depth": 29.364,
-      "charPx": 71,
+      "depth": 29.372,
+      "charPx": 70,
       "headNdc": [
        0.076,
-       0.218
+       0.214
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7022,7 +7008,7 @@
      "kind": "seam",
      "at": [
       89.96,
-      -0.24,
+      -0.15,
       -27.86
      ],
      "to": "lockfive",
@@ -7047,19 +7033,19 @@
       "behind": false,
       "ndc": [
        0.097,
-       0.118
+       0.127
       ],
       "px": [
        737,
-       339
+       335
       ],
       "onScreen": true,
-      "edgeMargin": 0.882,
-      "depth": 31.883,
+      "edgeMargin": 0.873,
+      "depth": 31.862,
       "charPx": 65,
       "headNdc": [
        0.099,
-       0.286
+       0.295
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7155,11 +7141,26 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 65,
-    "visibleFrac": 0.8333
+    "visibleFrac": 0.8667
    }
   }
  },
  "mismatch": [
+  {
+   "edge": "deep-stairs-head__deep-stairs-foot",
+   "t": [
+    0.786,
+    1
+   ],
+   "metres": 6.402,
+   "cameraUp": "waterfront",
+   "floorOwnedBy": "deep-stairs",
+   "at": [
+    39.83,
+    2.37,
+    -25.54
+   ]
+  },
   {
    "edge": "quay-deck__pilot-cluster",
    "t": [
@@ -7176,63 +7177,48 @@
    ]
   },
   {
-   "edge": "valley-gate__inn",
-   "t": [
-    0,
-    0.409
-   ],
-   "metres": 4.209,
-   "cameraUp": "gate",
-   "floorOwnedBy": "shelf-west",
-   "at": [
-    18.7,
-    22.98,
-    -4.55
-   ]
-  },
-  {
    "edge": "weave-huts__keepers-cottage",
    "t": [
     0,
-    0.188
+    0.246
    ],
-   "metres": 4.047,
+   "metres": 5.295,
    "cameraUp": "weave",
    "floorOwnedBy": "crossing",
    "at": [
-    73.29,
-    7.87,
-    -23.16
+    73.86,
+    7.89,
+    -22.9
+   ]
+  },
+  {
+   "edge": "shelf-homes__market-stalls",
+   "t": [
+    0.633,
+    1
+   ],
+   "metres": 4.003,
+   "cameraUp": "quay-west",
+   "floorOwnedBy": "loop-stairs",
+   "at": [
+    58.93,
+    15.08,
+    -11
    ]
   },
   {
    "edge": "weave-huts__keepers-cottage",
    "t": [
-    0.812,
+    0.823,
     1
    ],
-   "metres": 4.047,
+   "metres": 3.81,
    "cameraUp": "cottage",
    "floorOwnedBy": "crossing",
    "at": [
-    90.6,
+    90.71,
     7.71,
-    -22.2
-   ]
-  },
-  {
-   "edge": "deep-stairs-head__deep-stairs-foot",
-   "t": [
-    0.874,
-    1
-   ],
-   "metres": 3.769,
-   "cameraUp": "waterfront",
-   "floorOwnedBy": "deep-stairs",
-   "at": [
-    41.13,
-    1.81,
-    -25.73
+    -22.18
    ]
   },
   {
@@ -7248,21 +7234,6 @@
     73.14,
     7.04,
     -24.57
-   ]
-  },
-  {
-   "edge": "shelf-homes__market-stalls",
-   "t": [
-    0.677,
-    1
-   ],
-   "metres": 3.523,
-   "cameraUp": "quay-west",
-   "floorOwnedBy": "loop-stairs",
-   "at": [
-    58.95,
-    14.95,
-    -11.24
    ]
   },
   {
@@ -7311,6 +7282,21 @@
    ]
   },
   {
+   "edge": "valley-gate__inn",
+   "t": [
+    0,
+    0.272
+   ],
+   "metres": 2.799,
+   "cameraUp": "gate",
+   "floorOwnedBy": "shelf-west",
+   "at": [
+    18.02,
+    23.32,
+    -4.37
+   ]
+  },
+  {
    "edge": "armor-shop__shelf-homes",
    "t": [
     0.582,
@@ -7342,7 +7328,7 @@
   }
  ],
  "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 12 of 15 plates are stale against the solve — gate (0.63u), shelf-west (3.07u), loop-stairs (1.30u), quay-west (1.00u), cottage (0.15u), crossing (0.57u), weave (2.89u), deep-stairs (2.89u), waterfront (1.05u), fishdock (0.01u), lockfive (0.69u), north-landing (0.13u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 2 of 15 plates are stale against the solve — shelf-west (0.01u), lockfive (0.01u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
  ],
  "overrides": {}
 }
