@@ -36,7 +36,7 @@
    "surface_z": 3.6,
    "verts": 42,
    "polys": 40,
-   "cuts": 2,
+   "cuts": 0,
    "median_depth": 7.5,
    "ramp_scale": 0.533,
    "depth_min": 1.34,
@@ -67,12 +67,12 @@
    "cuts": 6,
    "median_depth": 4.1,
    "ramp_scale": 0.976,
-   "depth_min": 0.0,
+   "depth_min": 0.01,
    "depth_max": 4.62,
-   "alpha_min": 0.06,
+   "alpha_min": 0.065,
    "alpha_max": 0.97,
    "up_loops": 16640,
-   "samples": 8198
+   "samples": 8196
   },
   "lf_lock_water": {
    "surface_z": -1.4,
