@@ -16178,3 +16178,11 @@ pixels>25. No hysteresis added — nothing re-rolls, so there is nothing to hide
 NOTE: spawn/meta.json and zones.json byte-identical; bundle size unchanged; road walk
 surface DROPPED ~0.25 u along the corridor — any recorded run asserting absolute road
 Y wants a re-record.
+F6 addendum (~02:30): transition_test --port=8642 re-run to completion for
+attribution: every FAIL is the PRE-EXISTING del-* baseline-drift class already
+on record from 2026-08-05 (del-inn-int/del-cine/del-item-int doors + the
+repeated-counts aggregate + after-battle del-cine; delta +1 geo/+1 tex per
+swap, programs 13 -> 38 — another lane's uncommitted play3d-side runtime in the
+shared tree). ZERO ow-valley assertions failed; ow_detail.js loaded and re-armed
+clean through every swap. Not this lane's regression; re-run after the sky/
+play3d lane lands, same instruction as the 2026-08-05 note.
