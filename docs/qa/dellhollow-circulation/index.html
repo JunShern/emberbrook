@@ -104,4 +104,56 @@ the bays, so the fix gets a searched line (iteration 4), not an authored guess. 
 solve/plates/scenegraph stale by phase law; re-derived routes still name the deleted edge's seam
 because scenegraph is a derive input — self-heals at the closing bake. (3) loop-stairs shot
 re-solve is the closing lane's (owns updated in cameras.json).</div>
+
+<h2>Iteration 5 — THE COTTAGE CROSSING (plank ramp P0 + the severed postcard bridge)</h2>
+<p><span class="kv">What was wrong (pain inventory #3, P0, and a fresh find):</span> the
+cottage plank ramp's "taper below body width" was never the ribbon — it was the
+weave&rarr;cottage BRIDGE's own blockout rails and dressed parapet lying across the ramp's
+foot where the two ways converge on the doorstep (`--who`: bar_railA2 35 cells + cx_rail 8;
+down-drive stalled 0.89 m short of the door). And the bridge itself — the route §9.1 ruled
+"the only real one" cottage&rarr;moorage — did not cross AT ALL: `--pairs` no-path BOTH ways,
+a 0.2 m fill held a mid-span island of x 80.0..82.6, and the walls were the pops-of-colour
+washing line hung INSIDE the 1.1 m rail slot (t2c_W9_laundry, placed from a screen rectangle —
+the mechanism t2_color_pops' own G3/GB5 note convicts) plus rail corners meeting un-inset at
+the bends.</p>
+<p><span class="kv">What changed (generator rules + one carrier, no hand edits):</span>
+(a) bridge rails are now QUEUED and laid post-pass, clipped at 0.15 m against landmark floors
+and OTHER edges' ribbons — a bridge rail may not stand on another way's floor (body-volume
+window [+0.20,+1.50], because the engine refuses a shin-height rail that blocked()'s head
+window cannot see); (b) rails inset 0.55 at interior junctions (stairs_leg's own rule);
+(c) <b>the span widened 1.3&rarr;1.8</b> (map `width`, honoured for flat ribbons now) so the slot
+between its own rails is 1.6 m — two bodies, 0.4-lattice-robust; (d) NEW CARRIER
+tools/crossing_lane_chop.py: loose parts of the t2c dressing inside the walk SLOT (local-space
+test, not bbox — a bbox corridor took 22 innocent parts on the dry run) removed whole,
+CLC_SRC_* snapshots, town digest asserted. W9's washing was 10/10 parts in the slot and is
+GONE (re-hang outside the slot = pops lane debt); W5 keeps 9 of 12 boxes. Dressing carried in
+the same window: weave_build (wv_planking re-decks the wider span), cx_build (kerbs + parapet
+re-derive; SPAN_BARS globbed for split rail runs).</p>
+
+<div class="receipt">ENGINE RECEIPTS (townwalk, real Chrome on :3000)
+_court_probe --way  lockhead &lt;-&gt; cottage (the P0 ramp)      : 4/4 legs BOTH ways, no stalls (was 0.89 m short going down)
+_court_probe --pairs weave-pad &lt;-&gt; cottage-pad               : reached BOTH ways (was no-path both ways)
+_court_probe --way  cottage -&gt; weave (map line)              : 3/3 legs clean; weave -&gt; cottage clean on the fair line (5/5)
+_court_probe --comp 0.2 m, weave pad + cottage pad           : ONE component, 1046 cells, both seeds identical
+walk_engine_gate    --scene townwalk                          : GREEN — 0 lost, BVH fail 0
+routes_derive --check                                         : clean (15 shots) · seam_walk 9/9 · slice_test 811/1 (scenegraph stale = phase law)
+blockout determinism                                          : digest 715d68b6… identical across two builds</div>
+
+<div class="pair">
+ <figure><img src="cottage-before/span-west-looking-east.png"><figcaption>BEFORE — washing hangs INSIDE the rail slot at deck level; the 1.3 u span's own corners wedge both drives.</figcaption></figure>
+ <figure><img src="cottage-after/span-west-looking-east.png"><figcaption>AFTER — 1.8 u span re-decked, junction-inset rails, the walkway clear; the washing that hung in it is gone (re-hang owed to the pops lane).</figcaption></figure>
+</div>
+<div class="pair">
+ <figure><img src="cottage-before/doorstep-looking-east.png"><figcaption>BEFORE — the doorstep convergence: bridge rails + parapet run onto the pad and across the ramp foot.</figcaption></figure>
+ <figure><img src="cottage-after/doorstep-looking-east.png"><figcaption>AFTER — rails stop at the pad; ramp, bridge and doorstep are one open junction (flowerboxes survive on the rail).</figcaption></figure>
+</div>
+
+<div class="owed"><b>Owed (recorded, not hidden):</b> (1) one directional steering pocket
+remains at the doorstep: a greedy NE line from the span wedges at [90.36, 7.76, -22.18] where
+the ramp's chaikin bend roofs its own inside corner (l13/l14 over l15, 13 cells) — the fair
+line 0.3 m south drives 5/5 clean and the 0.4 m fill crosses; filed for the ramp-bend class,
+not fixed by force. (2) W9's washing owes a re-hang OUTSIDE the 1.8 u slot (t2_color_pops
+placement rect; any re-run of that pass re-installs it and owes crossing_lane_chop in the same
+window — the chop's header carries the contract). (3) crossing/cottage plates + scenegraph
+stale by phase law, closing lane's.</div>
 </html>

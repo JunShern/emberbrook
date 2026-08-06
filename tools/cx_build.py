@@ -660,8 +660,11 @@ log("BUILD", "cx_br_edges / cx_br_frame",
     "bearers and knee braces under them" % nboard)
 
 rail_parts = []
-SPAN_BARS = ["bar_e_weave-huts__keepers-cottage_rail%s%d" % (s, i)
-             for s in ("A", "B") for i in (0, 1, 2)]
+# GLOBBED, not enumerated (BET 2 iteration 5): town_blockout now clips bridge rails
+# against other ways' floors, so a rail leg may ship as several kept runs
+# (railA2, railA2_s1, ...) or not at all where it crossed the cottage doorstep.
+SPAN_BARS = sorted(o.name for o in bpy.data.objects
+                   if o.name.startswith("bar_e_weave-huts__keepers-cottage_rail"))
 rail_on_blockouts(SPAN_BARS, "cx_br_rail", rail_parts, bay=1.30)
 
 # =========================================================================

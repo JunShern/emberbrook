@@ -461,6 +461,72 @@ def stairs_leg(name, a, b, rail_ins=(0.0, 0.0), rail_out=None, width=1.4):
         link_to(o, "PATHS")
 
 LM_CLASS = {l["id"]: l for l in D["landmarks"]}
+
+# ---------- bridge rails: queued, laid AFTER every ribbon exists --------------
+# 2026-08-06 (BET 2 iteration 5, measured): A BRIDGE RAIL MAY NOT STAND ON ANOTHER
+# WAY'S FLOOR.  The weave-huts__keepers-cottage span and the lockhead__keepers-cottage
+# ramp CONVERGE on the cottage doorstep, and the bridge's rails — laid per-leg with no
+# clipping — ran all the way onto walk_pad_keepers-cottage and across the ramp's foot
+# corridor.  `_court_probe --who` over the ramp band named bar_..._railA2 on 35 cells
+# (plus cx_rail, its dressed twin, on 8) and the down-drive stalled 0.89 m short of the
+# door: pain inventory #3's P0, whose "taper" was this wall, not the ribbon.
+# So bridge rails are QUEUED here and laid after the edge loop, marched at 0.15 m like
+# lay_stair_rails, with two deliberate differences:
+#   * the clip set is every walk_ record EXCEPT the bridge's own ribbon (a bridge rail
+#     legitimately stands on its own deck's edge — clipping against itself deletes it),
+#     landmark floors and pads included, other edges' ribbons included (they all exist
+#     by post-pass time, so there is no build-order hole);
+#   * the vertical test is the BODY VOLUME [top+0.20, top+1.50], not blocked()'s head
+#     window [0.60, 1.30]: the bridge rail slab rides at [z+0.20, z+0.70], BELOW the
+#     head window over a floor at its own deck height — and the engine still refuses
+#     those cells (the --who receipt above).  A shin-height rail is a wall to the body.
+BRIDGE_RAILQ = []   # (name, ra, rb, own_edge_nm)
+
+
+def lay_bridge_rails():
+    if not BRIDGE_RAILQ:
+        return
+    walks = []
+    for o in bpy.data.objects:
+        if o.type == 'MESH' and o.name.startswith("walk_"):
+            bb = [o.matrix_world @ Vector(c) for c in o.bound_box]
+            walks.append((o.name,
+                          min(p.x for p in bb) - 0.35, max(p.x for p in bb) + 0.35,
+                          min(p.y for p in bb) - 0.35, max(p.y for p in bb) + 0.35,
+                          max(p.z for p in bb)))
+    for name, ra, rb, own in BRIDGE_RAILQ:
+        own_pfx = "walk_e_%s" % own
+        L = (rb - ra).length
+        if L < 1e-6:
+            continue
+        n = max(2, int(L / 0.15))
+        keep = []
+        for k in range(n + 1):
+            p = ra.lerp(rb, k / n)
+            z0, z1 = p.z - 0.25, p.z + 0.25      # the 0.5 m slab about the rail line
+            cut = False
+            for wn, x0, x1, y0, y1, top in walks:
+                if wn.startswith(own_pfx):
+                    continue
+                if x0 <= p.x <= x1 and y0 <= p.y <= y1 and z1 > top + 0.20 and z0 < top + 1.50:
+                    cut = True; break
+            keep.append(not cut)
+        runs, s = [], None
+        for k in range(n + 1):
+            if keep[k] and s is None: s = k
+            if (not keep[k] or k == n) and s is not None:
+                e2 = k if keep[k] else k - 1
+                if (e2 - s) * (L / n) >= 0.5: runs.append((s, e2))
+                s = None
+        for j, (s0, e0) in enumerate(runs):
+            leg_box(name if j == 0 else "%s_s%d" % (name, j),
+                    ra.lerp(rb, s0 / n), ra.lerp(rb, e0 / n), 0.08, 0.5, M_WOOD)
+        ncut = (n + 1) - sum(keep)
+        if not runs:
+            print("  BRIDGE RAIL %s: every sample on another way's floor — NOT BUILT" % name)
+        elif ncut:
+            print("  BRIDGE RAIL %s: clipped %d of %d samples against other-way floors -> %d run(s)"
+                  % (name, ncut, n + 1, len(runs)))
 # landmarks where a stairs flight terminates — flat ribbons must stop short of
 # these points or their tips hover over the descending treads (unwalkable lip)
 STAIR_ENDS = set()
@@ -604,15 +670,37 @@ for e in D["edges"]:
             lay_stair_rails(nm, railq)
     else:
         draw = chaikin(pts) if t in ("road", "path") else pts   # deck/bridge stay segmented
-        wdt = 1.3 if t == "bridge" else 1.6
+        # `width` honoured for flat ribbons too (BET 2: the crossing ships 1.8 — see the
+        # map edge's _bet2_2026-08-06_width for the measured slot arithmetic)
+        wdt = float(e.get("width", 1.3 if t == "bridge" else 1.6))
         for i in range(len(draw) - 1):
             leg_box("walk_%s_l%d" % (nm, i), draw[i], draw[i + 1], wdt, 0.14, M_WOOD)
         if t == "bridge":  # low rails so the span reads as a bridge in gray
             for i in range(len(draw) - 1):
                 up = Vector((0, 0, 0.45))
-                side = (draw[i + 1] - draw[i]).cross(Vector((0, 0, 1))).normalized() * 0.6
-                leg_box("bar_%s_railA%d" % (nm, i), draw[i] + up + side, draw[i + 1] + up + side, 0.08, 0.5, M_WOOD)
-                leg_box("bar_%s_railB%d" % (nm, i), draw[i] + up - side, draw[i + 1] + up - side, 0.08, 0.5, M_WOOD)
+                dv = draw[i + 1] - draw[i]
+                dn = Vector((dv.x, dv.y, 0)).normalized()
+                # rails ride the deck's own edge at any width (w/2 - 0.05); the 0.6
+                # literal was exactly that for the old 1.3 deck
+                side = dv.cross(Vector((0, 0, 1))).normalized() * (wdt / 2 - 0.05)
+                # RAILS INSET 0.55 AT INTERIOR JUNCTIONS (BET 2 iteration 5, measured):
+                # un-inset, the two legs' rails MEET at each bend and the inner corner
+                # pokes into the corridor — the west drive wedged on railB0/B1's corner
+                # at [74.65, 7.96, -22.9], and cx_build's parapet posts followed the bar
+                # lines into the l1/l2 bend.  0.55 is stairs_leg's own junction rule
+                # (body half-width + margin); span ends need none (the pad clip below
+                # already opens them).
+                ins_a = dn * 0.55 if i > 0 else Vector((0, 0, 0))
+                ins_b = dn * 0.55 if i + 1 < len(draw) - 1 else Vector((0, 0, 0))
+                # queued, not laid: see lay_bridge_rails above (BET 2 iteration 5)
+                BRIDGE_RAILQ.append(("bar_%s_railA%d" % (nm, i),
+                                     draw[i] + up + side + ins_a,
+                                     draw[i + 1] + up + side - ins_b, nm[2:]))
+                BRIDGE_RAILQ.append(("bar_%s_railB%d" % (nm, i),
+                                     draw[i] + up - side + ins_a,
+                                     draw[i + 1] + up - side - ins_b, nm[2:]))
+
+lay_bridge_rails()   # every ribbon and pad exists now — clip and lay the queued rails
 
 import os
 os.makedirs(os.path.dirname(BLEND_OUT), exist_ok=True)

@@ -1131,7 +1131,9 @@
           7.2
         ]
       ],
-      "note": "high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span. Takeoff swings gorge-ward immediately so the deck doesn't shadow the moorage switchback below (walkers rode it into a drop)."
+      "note": "high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span. Takeoff swings gorge-ward immediately so the deck doesn't shadow the moorage switchback below (walkers rode it into a drop).",
+      "width": 1.8,
+      "_bet2_2026-08-06_width": "WIDENED 1.3 -> 1.8 (Bet 2, cottage-crossing iteration). The span is the ONLY route cottage -> weave/moorage (pain inventory 9.1's verdict), and at 1.3 u the slot between its own deck rails measured 1.1 m — under two body widths, invisible to a 0.4 m reachability lattice, and the drives cornered on the rail lines even after the corridor was cleared of dressing (crossing_lane_chop) and the rails were junction-inset. 1.8 puts the rail faces at ~0.81 from the centreline: a 1.6 m slot, two bodies wide, lattice-robust. Carried by walk_rederive + weave_build (wv_planking re-decks from the walk faces) + cx_build (kerbs/parapet re-derive) in the same window."
     },
     {
       "from": "winch-foot",

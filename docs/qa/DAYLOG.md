@@ -16351,3 +16351,53 @@ RECEIPTS: the ch2.dock -> landing drive (`--way` lock-five pad -> north-landing)
 walk_engine_gate GREEN on the re-export. lf_railings' 31 band cells remain and did NOT
 stall the drive — locksfoot's own live furniture, out of this ticket's scope, measured
 and left. Inventory statuses updated for #1 (geometry half), #5, #6, #7 (half), #9.
+
+## 2026-08-06 ~05:45 — BET 2 ITERATION 5: THE COTTAGE CROSSING (#3's P0, and the bridge it exposed)
+
+THE "TAPER" WAS NEVER THE RIBBON. Inventory #3 shipped as "plank ramp tapers to 0.16 m"
+(a PCA census number on short chaikin legs); the engine said otherwise: the down-drive
+stalled 0.89 m short of the cottage door and `--who` over the ramp band named
+bar_e_weave-huts__keepers-cottage_railA2 on 35 cells + cx_rail on 8 — the BRIDGE's rails,
+laid per-leg with no clipping, running onto walk_pad_keepers-cottage and across the ramp
+foot where the two ways converge. lf_joists/planking, the bodygate's named suspects, held
+3 cells. MEASURE BEFORE BUILD, again: the fix was never "widen the ramp".
+
+AND THE BRIDGE ITSELF DID NOT CROSS. `--pairs` weave<->cottage no-path BOTH ways; a 0.2 m
+fill seeded mid-span held x 80.0..82.6 only; `--at`/`--who` named t2c_W9_laundry_planking
+(the pops-of-colour washing line, hung INSIDE the 1.1 m slot between the deck's own rails —
+placed from a screen rectangle, the mechanism t2_color_pops' G3/GB5 note convicts) and the
+un-inset rail corners at both bends. Pre-existing, proved on the HEAD bundle from a
+worktree on :3199 — identical stalls, so iteration 5's own rail clip was NOT the cause.
+With the ramp fixed this sever meant quay/shelf/cottage joined weave/moorage ONLY through
+the (also shut) #7 foot: §9.1's "the crossing is the only real route" was a route that did
+not exist in the shipped bytes.
+
+WHAT SHIPPED (generator rules + one carrier, all deterministic, digest 715d68b6 x2):
+ - town_blockout: bridge rails QUEUED and laid post-pass, marched 0.15 m, clipped against
+   landmark floors AND other edges' ribbons (not their own deck) in the BODY-VOLUME window
+   [top+0.20, top+1.50] — the engine refuses a shin-height rail that the stair-rail head
+   window [0.60,1.30] cannot see; rails inset 0.55 at interior junctions (stairs_leg's own
+   rule); `width` honoured for flat ribbons.
+ - map: weave-huts__keepers-cottage width 1.3 -> 1.8 (_bet2_2026-08-06_width carries the
+   slot arithmetic: rail faces ~0.81 off centre, 1.6 m slot, 0.4-lattice-robust).
+ - tools/crossing_lane_chop.py (NEW carrier, lockfive_lane_chop pattern): t2c parts inside
+   the walk SLOT removed whole — LOCAL-SPACE slot test, not bbox (the bbox corridor took
+   22 innocent parts on the dry run; the slot test took W9 10/10 — the whole line hung in
+   the walkway, removed whole, re-hang owed to the pops lane — and W5 3/12). CLC_SRC_*
+   snapshots, town digest asserted, idempotent (re-run printed 0).
+ - Carried in the same window: walk_rederive --edge weave-huts__keepers-cottage,
+   weave_build (wv_planking re-decks the 1.8 span), cx_build (kerbs+parapet re-derive;
+   SPAN_BARS now GLOBBED — a clipped rail ships as railA2 + railA2_s1).
+
+RECEIPTS (townwalk, :3000): ramp `--way` 4/4 BOTH ways no stalls · bridge `--pairs`
+reached BOTH ways (was no-path) · cottage->weave map line 3/3 clean; weave->cottage fair
+line 5/5 clean · 0.2 m `--comp` weave-pad + cottage-pad ONE component, 1046 cells ·
+walk_engine_gate GREEN 0 lost · routes --check clean · seam_walk 9/9 · slice_test 811/1
+(scenegraph stale = phase law) · frames LOOKED AT (SIM.tp arg order respected; HUD pos
+verified): board docs/qa/dellhollow-circulation/index.html iteration 5.
+
+RESIDUAL, measured and filed, not hidden: a greedy NE line from the span wedges at
+[90.36,7.76,-22.18] — the ramp's chaikin bend roofs its own inside corner (l13/l14 over
+l15, 13 cells); the fair line 0.3 m south drives 5/5 and the 0.4 m fill crosses. The
+chaikin-bend self-roof is a class (a path bend is a gentle pivot stack); it goes to the
+ramp-bend ticket, not to force-fixing one drive.
