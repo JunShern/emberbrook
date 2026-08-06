@@ -19,7 +19,7 @@ roofs/walls into reference bands) and no critic moved them off last place.
 on, doorsteps/awnings/yards. Build in the valley builder's own vocabulary; the
 r14 chimney lesson (three rounds of collar patches) says massing first.
 
-## Bet 2 — Dellhollow's vertical circulation is hostile by design (OPEN)
+## Bet 2 — Dellhollow's vertical circulation is hostile by design (BANKED 2026-08-06 ~20:15 — DAYLOG has the closing-bake receipts; board docs/qa/dellhollow-circulation/)
 **Evidence:** rounds 12–21: loop-stairs, deep stairs (switchback pivot), keepers'
 steps (44°, unfixable in place, retired), the roofed-landing census (16/17), the
 apron pit, the moorage ribbon/stair conflict ("the stair foot and that lane want
@@ -90,6 +90,21 @@ measured: seam_bank + wf stringers + t07 shadow); the NE doorstep wedge (deferre
 fair line 5/5); walk_rederive --report's pre-existing stale rows (cookhouse class) plus
 pilot/market landing rows from the landing-extension change — each re-derive owes its
 district carry in the same window.
+**BANKED (2026-08-06 closing bake, commits 5e762f2/0c5f6d3/38ce143 + records):** every
+debt above is PAID — all 7 walk-row carries taken and engine-receipted, chain re-derived
+at fixed point, ALL 15 plates re-baked on the ratified town, del-cine re-exported (275
+walk meshes/17 cuts), arrivals re-searched (ARRIVES INVISIBLE 4 -> 1, the survivor
+pre-existing). Gate battery: slice 776/0 · cine 636/1 · seam 266/4 + walk 8/9 (all
+attributed to the file-walker-vs-searched-build instrument family, engine receipts
+recorded) · walk_engine_gate GREEN both bundles · findability 69/0 · transition 162/6
+(one pinned play3d-domain signature, flagged to main) · playthrough 85/1 (the stair-foot
+fill caveat verbatim; climb 21/21 in-engine). THE PROOF: LLM leg run-20260806-184322
+walked gate -> waterline END TO END on the new plates, zero blockers en route — the leg
+that killed 2/2 runs before this bet. ONE residual carried, named, measured: the moorage
+west boardwalk-arm lane vs walk_e_weave-huts__moorage_l2_t05's own tread box at
+[73.4-73.8,-28.3] (Bet 2's original "same two metres of air" class at the rebuilt width;
+lane-waypoint fix, next window; east-arm approach + ch2.maren trigger receipted). Six
+repaired staircases are no longer needed to cross the town; one searched descent is.
 
 ## Bet 3 — Vegetation's card-built asset family (SHIPPED 2026-08-06, residuals named — gallery Round 22, LOOP.md F5)
 **Shipped:** 261/361 near-field clumps converted to hull-interior + leaf-card shell

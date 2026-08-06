@@ -16561,3 +16561,107 @@ rebuilt stair's FOOT row (fills report no-path where drives walk 11/11 and 13/13
 red across weave<->moorage or head<->fishdock is the instrument. RESIDUAL: the west
 waterfront knot [38.9-39.6, 1.0, -24.6..-25.2] (seam_bank + stringers + t07 shadow) — the
 boatyard LEAD's exact spot, now measured; lane drives to it from both sides.
+
+## 2026-08-06 ~20:00 — THE CLOSING BAKE: del-cine rejoins the town it photographs (Bet 2 phase close)
+
+The lane MORNING.md promised at ~12:00. Everything downstream of the ratified Bet 2
+geometry re-derived and re-baked; the stale-bundle era (playtest filings measuring the
+OLD town) ends at 0c5f6d3. Commits 5e762f2 / 0c5f6d3 / 38ce143 (+ records), all on origin.
+
+WALK-ROW CARRIES FIRST (they change the master, so they precede everything): all 7
+walk_rederive --report jobs taken — the cookhouse class (6.4-7.4 m + the 5.8 m pad; the
+2026-08-02 doorstep map edit finally lands, because "it re-composes a shipped plate" is
+no objection in a full-rebake window), pilot/market landings, lockhead__keepers-cottage,
+moorage__lock-five + lock-five__north-landing (0.9 m master lag; the map edges were never
+redesigned, so map wins). Sweep flagged ONE crossing (market railA over walk_lm_quay-deck,
+1.69 m clearance): the ENGINE judged it a shared corner — _court_probe --at clear at two of
+three points, the third blocked by the stair's own visible underworks, drives clean. All six
+carried edges re-receipted reached BOTH endpoints in the running engine. townwalk re-exported;
+COOKHOUSE DIVIDEND: the door arrival went 18.7%/0% -> 53.8%/100% from the pad carry alone,
+and dialogue_test's gullgirl arrival-clearance red is GONE.
+
+THE CHAIN: cine_solve -> routes -> scenegraph at FIXED POINT (converged in 1-2 iterations
+each round; routes reads scenegraph, so the loop is routes/scenegraph/checks). 275 walk
+meshes (was 289), 17 cuts (was 18 — the fork cut died with its flight). 12 of 15 cameras
+moved (shelf-west 3.2 u, weave 3.1 u, deep-stairs aim 3.0 u); shelf-east/lockhead/boatyard
+solved identical but their frustums saw chops (lockfive lane, market-flight head, rerouted
+boardwalk) — ALL 15 BAKED, 1-wide serial per the machine rule, 2576 s, every artifact
+verified on disk (mtime/size), depth same-session per camera. THE GLB IS A SEPARATE MODE:
+a full render pass does NOT re-export scene.glb — `--glb` does (7 s). The bundle sat at
+Aug 5's 289-mesh export until it was run; cine_test bundle parity is the gate that would
+have caught it shipping stale.
+
+ARRIVALS, THE OWED RE-SEARCHES (arrival_probe vs the NEW plates; town-wide ARRIVES
+INVISIBLE 4 -> 1, the survivor the documented pre-existing cottage>lockhead 68.1/17.9,
+byte-identical): gate>shelf-west 23.1/7.1 -> 81.3/100 (old override stood on the deleted
+flight; new point 3.30 m along the new one, distance-ranked per the gate ruling) ·
+fishdock>lockfive 14.3/14.3 -> 100/100 · inn door exit 3.3/0 -> 95.6/100 (door:inn on the
+street the inn fronts) · waterfront>deep-stairs derived spawn sat ON its own return seam —
+fixed on the third search. THE SEARCH METHOD GREW THREE RULES, each paid for: (1) ENGINE
+FLOORS LIE TO SPAWN SEARCHES — _court_probe --at grounds on ART (gate road paving at y 24,
+moorage boardwalk at y 2) that WALKLOCK cannot stand on; constrain candidates to WALK-MESH
+footprints out of the GLB. (2) AN AABB GRID POINT ON A ROTATED TREAD IS OFF-MESH — use
+triangle centroids. (3) ON A FOLDED EDGE, BAND-NORMAL SIDE IS NOT ARC SIDE — a tread one
+step BELOW the foot seam is already past the cut; go a full tread above vTol. An override
+JOINS the exit-seam framing: each one moved its camera 6-11 mm (solver proven deterministic,
+two runs byte-equal), so shelf-west/lockfive/deep-stairs baked twice. solve==cine.json exact.
+
+GATE TABLE (all run this window, singly):
+  slice_test        776/0  (the phase-law scenegraph-stale red CLOSED; the deep-stairs
+                            return-trigger red found and fixed)
+  cine_test         636/1  — the 1 is the deep-stairs<->waterfront round-trip SIM: the map
+                    polyline sits 2.65 BELOW the band at the seam's own t (outside vTol 1.6)
+                    because the built asym flight departs the waypoint line by up to 3 m —
+                    the file walker can NEVER fire a cut the real engine fires. In-engine
+                    receipts: driven descent fired the head cut pair; climb 21/21 on the
+                    shipped del-cine bundle. INSTRUMENT, same family as reach_probe's
+                    stair-foot caveat. A sim that drives the MAP cannot test a SEARCHED build.
+  seam_test        266/4 + seam_walk 8/9 — the SAME family, all on the two rebuilt seams:
+                    corrections at exactly the polyline's heights (y 1.07); and the
+                    weave<->crossing "oscillation" does NOT reproduce in the engine — a
+                    camera-aligned drive (SIM.shot then walk; a tp leaves the boot cam and
+                    gates every cut wrong — instrument note) crossed BOTH ways, zero
+                    corrections, zero ping-pong.
+  walk_engine_gate  GREEN on townwalk AND del-cine (file==engine, both bundles)
+  findability       69/0 · dialogue green · story green
+  transition_test   162/6 — the 16-shot literal in the TEST went stale when it.2 deleted
+                    the fork camera; it now reads cine.json's own count (a gate that
+                    hardcodes the world fails for being right). The 6 remaining share ONE
+                    signature: delta pinned at +1 geo/+1 tex across 16 epochs with
+                    meshes/walk/mats stable — a ONE-TIME post-battle lazy allocation
+                    breaking strict baseline equality. The pre-existing battle-exit class,
+                    play3d-domain, FLAGGED TO MAIN (not fixed here; play3d is
+                    coordinator-owned).
+  playthrough_test  85/1 — the 1 is §W ch2.jam->ch2.maren, the STANDING CAVEAT verbatim
+                    (fill lattice cannot cross the moorage switchback foot row); receipts:
+                    switchback climb 21/21 on del-cine, window-3 drives 11/11 both ways,
+                    and the LLM leg below WALKS it.
+  LLM leg           RECEIPT WITH ONE NAMED RESIDUAL (run-20260806-184322, 250 steps,
+                    ~$0.99). The descent that killed 2/2 runs before Bet 2 — gate ->
+                    shelf -> quay -> weave -> the searched switchback -> the WATERLINE —
+                    walked END TO END on the new plates with ZERO blockers filed en route
+                    (75/241 legs arrived, 0 aimed off the walk network). The agent reached
+                    y 1.25 at the moorage and interacted with the girl on the pier; ch2.maren
+                    did NOT fire in-steps because it approached along the WEST boardwalk arm
+                    and stalled 9 m short — engine names walk_e_weave-huts__moorage_l2_t05
+                    refusing the y 1.25 lane at [73.4-73.8,-28.3] — the TREAD'S OWN BOX,
+                    not a rail (it.8's BODY_SAMPLES fix stands): the flight and the west
+                    boardwalk lane want the same two metres of air, Bet 2's ORIGINAL
+                    evidence class, back at the rebuilt width in the it.7/it.8 coordinate
+                    band. Fix vocabulary is the map's own (a lane waypoint), next window. The east-arm approach and the beat's own
+                    trigger are receipted (playthrough fires ch2.maren; foot->pier leg in
+                    the 21/21 drive). A known named residual, not a new defect.
+
+PLATES LOOKED AT (gate, loop-stairs, shelf-west new-vs-old, deep-stairs, quay-west, weave):
+dressed, composed, exits in frame, no raw blockout; shelf-west's new frame is the same
+ratified door-composition family as the old. Look-items for the redteam loop: two floating
+pale plank slivers (quay-west mid-deck, weave upper bunting line) — the known pale-strip
+class, photographed in the plates.
+
+RESIDUALS, honestly named: (1) cottage>lockhead arrival 68.1/17.9 pre-existing; (2) the
+weave split (charPxFar 47 vs 50, ratcheted override with the argument recorded — the
+fishdock "only lever is splitting" precedent names the fix); (3) the transition_test
+one-time allocation (play3d-domain); (4) district-art carries NOT taken (qm_build derives
+walls FROM walk records — a re-run moves shipped red-teamed art; the cookhouse north door
+leaf stays owed per its 2026-08-02 flag); (5) west-waterfront knot + NE doorstep wedge
+unchanged (named in window 3); (6) cutin_edge chroma hole still open (standing).

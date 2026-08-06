@@ -118,3 +118,30 @@ plates and bundle predate all ten iterations. The closing bake (cine_solve + sce
 that leaves you the morning to walk the realtime tier (?scene=townwalk&rt=1) first.
 Residuals for after: west-waterfront knot (bank recut), stale walk rows (district
 carries), reach_probe's lattice-vs-stair-foot instrument note.
+
+## 20:20 ADDENDUM — the closing bake is DONE; Bet 2 is BANKED
+
+The ~12:00 lane ran (an account-credits outage cost 15:00-19:40; nothing was lost —
+the receipt and the LLM leg ran after restore). Commits 5e762f2 / 0c5f6d3 / 38ce143
++ records, all pushed. What it means for you:
+
+- **The playtest-correctness flag is CLEARED**: del-cine's 15 plates and bundle are
+  re-baked/re-exported from the ratified Bet 2 town. Filings measure the real town again.
+- **All 7 stale walk-row carries taken** (the 2026-08-02 cookhouse doorstep edit finally
+  landed: door arrival 18.7%/0% → 53.8%/100%, gullgirl's clearance red gone).
+- **Gates**: slice 776/0 · findability 69/0 · walk_engine_gate GREEN · playthrough 85/1
+  (the known stair-foot fill caveat; climb 21/21 in-engine) · transition 162/6 (one
+  pinned post-battle allocation signature, play3d-domain, flagged to main) · cine/seam
+  reds all one instrument family (a file walker cannot test a searched build; engine
+  receipts recorded in DAYLOG).
+- **The proof**: LLM leg run-20260806-184322 walked gate → waterline END TO END on the
+  new plates, zero blockers en route — the descent that killed 2/2 runs before Bet 2.
+  It stalled 9 m short of Maren on the WEST boardwalk arm: the switchback l2 tread's own
+  box owns the lane at [73.4-73.8,-28.3] (the "same two metres of air" class at the new
+  width). Lane-waypoint fix next window; the east approach and the beat trigger are fine.
+- **Bet 2 → BANKED** on the slate, that one residual carried by name.
+
+Worth your eyes when you have five minutes: the re-baked shelf-west / deep-stairs /
+quay-west / weave plates (docs/qa/dellhollow-circulation/ closing section links the
+before/afters), and the deploy is NOT yet refreshed with the new plates — that is the
+next lane's first move if you want the live demo current.
