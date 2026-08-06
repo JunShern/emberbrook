@@ -1,184 +1,90 @@
-# MORNING BRIEF — 2026-08-02
+# MORNING BRIEF — 2026-08-06
 
-Written at ~04:00 while the last plates bake. Supersedes RESUME.md (that file described
-the paused state; the lanes have since run). ~95 commits, all pushed and verified.
-
----
-
-## ✅ IT PLAYS END TO END (confirmed 13:00)
-
-`NEW GAME` on `/` → Chapter One in the lit Emberbrook → the Old Gate → the valley road →
-Dellhollow → Chapter Two's end card. **`playthrough_test` 51 passed / 0 failed** in real
-Chrome from a cleared save, and it never calls `Story.force`: **all 24 beats fire on their
-own triggers.** transition_test 168/0, story_test 1021/0, dialogue_test 1400/0,
-dialogue_style PASS, economy 225/0, seam_walk 10/10.
-
-The seal would have been PERMANENT, and a gate caught it: the map's `sealedUntil` named
-`ch1.gateOpen`, but the only thing that ever set that flag was an in-memory object inside
-the 2D engine play3d never loads. `story_test`'s flag ledger found it as a read with no
-writer — the class of bug that only shows up when a player reaches the gate.
-
-## DO THIS FIRST
-
-**Open `localhost:3000` and press NEW GAME.** Until tonight there was no front door: every
-hub card was a developer jump and a bare `/play.html` dropped you into Dellhollow. There is
-now a NEW GAME / CONTINUE door, and Chapters One and Two run **in the 3D world** — the story
-fires as you walk it, the Old Gate opens when you open it, and the valley road between the
-two towns is walked rather than skipped.
-
-Then open **`localhost:3000/story.html`** — the whole world on one self-updating page (see
-below), and the place to read what the dialogue now sounds like.
+Written ~06:50 while the Dellhollow after-receipts run. Supersedes the 2026-08-02 brief
+(in git history). Everything below is committed and pushed; HEAD lineage through `0d3b078`.
 
 ---
 
-## THE HEADLINE FINDING (it reframes "wire it up")
+## 🏁 THE STANDING BAR IS MET — the game completes from scratch, by an LLM player
 
-**The story was in the wrong runtime.** `chapter1.js` / `chapter2.js` were loaded by exactly
-one page — `join-legacy.html`, the old 2D canvas engine. `play.html` had no chapter runner,
-no cutscene player, no story flag, no end card, no second player. Your hub page had been
-saying so in plain text the whole time. The chapters were the script, the 3D towns were the
-stage, and nothing joined them. That bridge is what got built tonight.
+**`run-20260806-011853`: NEW GAME → the Chapter Two end card. All 28 beats on their own
+triggers, no `Story.force`, 492 steps, $1.18.** The artifact lives at
+`docs/qa/playtest/runs/run-20260806-011853/` (log + golden set). The chain that got there,
+each wall measured before it was fixed: PT-049 (moorage switchback → STAIRS_V2 migration +
+a new rail rule) → PT-050 (weave shot recomposed per seam canon) → PT-055 (the gate-court
+flank as ONE line of map) → round 30 (the hold/arrive deadband, the door the bargeman ate,
+the exit-walk false positive) → take 1 capped at 500 two beats short (walking, not stuck)
+→ take 2 finished with 158 steps to spare. Mechanical spine: playthrough_test 86/0.
 
----
+## 🎨 THE OVERWORLD SWEEP (your graphics steer, then your five complaints — all shipped)
 
-## WHAT SHIPPED
+- **Camera**: `OWPITCH/OWTILT 0.70/0.16` — the reference-matching composition (body at
+  frame-Y 0.734, more ground, more visible area). Plus a **camera occlusion clamp**
+  (your gorge complaint): the boom snaps in front of a blocking cliff and eases back out;
+  receipt: 10/12 yaws clamp at the cliff-hugging station, zero at open ones. `?camclip=0`.
+- **THE SKY IS REAL** (your "MS Paint" call): sun disk + glow on the true key direction,
+  golden-hour hue ramp, fbm clouds, mist-seated ridges. Blind judge: the sun-facing vista
+  ranked **behind only your two FFIX references**. Your giant blue dot = the camera's far
+  plane clipping the sky dome (fixed with one measured number, far 400→560, plus a 216/216
+  360-degree sweep gate). `?sky2=0` restores the old sky.
+- **Vegetation**: 5,500-card bush family over dark hulls on all near-road clumps; blind
+  after won 4/5 pairs. **The walked corridor is un-buried**: canopy trimming measured
+  inert, so the road BENT — station-90 vegetation 43.8%→7.0%, visible ground 311→763 m².
+- **The road**: was literally a causeway floating in its own trench (median 0.30 u, its
+  own shadow beneath it) — now conformed (0.035 u), shadow-cast off, fringe on the lip,
+  edge ragged + tufts straddling the seam per your "too distinct" note.
+- **Grass pop while walking**: the scatter RNG was seeded from YOUR position — every few
+  steps re-rolled the world. Now seeded from where the grass grows: 93% of instances
+  survive movement; visible pop 0.71%→0.10% of pixels.
+- **THE WORLD MOVES** (`public/js/ambient.js`): chimney smoke over the plates (depth-
+  occluded), river glints, dusk fireflies that obey the hush, drifting leaves, cloud
+  drift — one shared wind, 60 fps held, `?ambient=0`. Judge: fireflies "the most
+  convincing ambient effect in the whole pack."
+- Gallery rounds 21–24 + the sky/vegetation boards carry every verdict verbatim:
+  `docs/qa/gauntlet/`, `docs/qa/ow-camera/`, `docs/qa/ow-refs/`.
+- **Overworld now RESTS per your steer.** Residuals honestly named on the slate: bushes
+  still read opaque at close range, aerial road width, DPR pixelation (needs a measured
+  setPixelRatio trade), far-ring "paper terraces".
 
-**Dialogue — the flagship.** Every style failure is gone: **166 → 0**. No line runs three
-sentences (133 did), none breaks the word ceiling (25 did), nothing exceeds a 10-year-old's
-reading grade. It got *shorter while breathing more*: 12,534 → 11,880 words across 933 →
-1,016 boxes — the split-don't-gut trade. Chapter Two carried nearly all the fat (−8.4%); its
-examine text had been running as short essays. `docs/exemplars.md` holds the 42-line ratified
-style set, every quote verified verbatim against the shipped script.
+## 🏘 THE DELLHOLLOW PHASE (your 01:10 steer — opened and 7 iterations deep)
 
-**The story layer.** A chapter director in the 3D runtime, Chapters One and Two as data
-(`public/game/story.json`), a front door, save-state v2 that knows *where you are* with a
-migration that refuses to eat a v1 playthrough, and the Old Gate as a conditional edge that
-opens the frame the story flag turns.
+- **The inventory first**: `docs/plans/dellhollow-pain-inventory.md` — from all playtest
+  history + 4 fresh legs + instrument sweeps. Headline numbers: **55% of walk cells sit in
+  corridors under 1.25 m; town walk efficiency 52% (37% of steps are stalls, vs ZERO in
+  Emberbrook); the engine is innocent** (walk_engine_gate green — it's the layout).
+- **Bet 2, iterations 1–7** (board: `docs/qa/dellhollow-circulation/index.html`):
+  1. **THE ONE DESCENT** — gate→shelf collapsed to a single straight 2.2 u flight (your
+     named ask; the confusing second way down is gone).
+  2. **THE QUAY INTERCHANGE** — the loop-landing fork deleted, market flight w2.0.
+  3. **THE HEAD APRON** — a generator rule fixing a 0.6 m no-floor annulus; plaza↔pilot
+     was unreachable BOTH ways and now walks both ways.
+  4. Lock-five lane chop — dock→landing drives 4/4 both ways.
+  5. **THE COTTAGE CROSSING** (P0) — the killer was the bridge's own rails across the
+     ramp foot + a severed span; new generator rule: rails clip against the body window.
+  6. **THE SEARCHED FOOT** — the pilot hairpin relocated by a 588-candidate search
+     (authored candidates all measurably clipped something); pilot↔weave joins both ways.
+  7. Gate toll-yard verdict + **deep-stairs DECIDED: simplify, not retire** (spec'd,
+     execution next window).
+- **In flight right now**: three after-receipt playtest legs on the new geometry.
+- **Owed to a closing lane** (deliberately deferred per the fast-loop law): cine_solve +
+  scenegraph + del-cine plate rebake ONCE on ratified geometry; t04 lip chop; shop-row
+  widen-vs-demote call; deep-stairs execution; washing re-hang (pops lane debt).
 
-**Cut-ins.** Vesper (shipped yesterday), **Maren's suite (13 plates)**, Lake's suite, and 11
-NPC characters promoted from salvaged art to proper studio sets. **Rowan is parked red** —
-his ratified candidate-B identity is blocked on one mood (`hollow`), measured and recorded
-rather than forced.
+## ⚠️ Honest notes
 
-**Emberbrook is populated.** 11 NPCs were scened only to the dev walk bundle, so the town you
-actually play through was empty of people. Now dual-scened, with five posts re-measured
-against the cinematic bundle's own ground.
+- del-cine's PLATES ARE STALE against the new geometry until the closing bake — expected,
+  phase law, not a bug. transition_test carries 7 pre-existing del-* baseline fails
+  (attributed thrice); slice_test carries 1 scenegraph-stale line (phase law).
+- Two session-limit kills overnight (~03:25, reset 04:10): the Bet 2 lane's tree was HELD
+  not reverted, and the restart inherited it at zero cost — that hold decision is the
+  night's best process call. Monitors armed before a limit window don't survive it:
+  re-arm waits on every resume (now standing practice).
+- Gemini credits: topped up by you at ~00:50; overnight playtest spend ≈ $6.
 
-**The invisible wall you annotated on a screenshot is fixed.** `fx_dam4_spray` — a water-spray
-*effect card* — was standing across the Dellhollow slipway boardwalks as solid collision:
-the town's third-largest blocker and **87% of every blocked step in the boatyard district**.
-One regex, no rebake.
+## 💰 What's waiting on YOU (nothing blocks work; these are taste calls)
 
-**Dellhollow exits.** The gate stops being a place you can only leave from; the Boatmen's Rest
-gets its own building (see the question below); a new `passages` map record covers prompted
-transitions the player is meant to make but cannot walk.
-
-**The story page is now the single world view** (`/story.html`) and it **rebuilds itself** —
-change a line, refresh, see it. It telescopes world → chapters → beats → every line, plus
-per-character sheets (every line they speak anywhere, their canon, their voice, where they
-stand), per-town sheets, the NPC conversation graph, and a continuity-check panel.
-
-**Three new gates guard the story:** `dialogue_style.mjs`, `story_test.mjs` (971 assertions),
-`playthrough_test.mjs` (real Chrome, new game to end of Chapter Two). The style gate earned
-its keep immediately — widened to cover `story.json`, it caught 28 regressions where lifted
-lines had been re-condensed into walls of text.
-
-**Cameras — SHIPPED (updated 14:20; this supersedes the 11:55 correction below).** Seven of
-the eleven Emberbrook shots now render at the closer fov 20 lens and the plates are baked,
-committed and pushed. The town's median character height goes 59 → 65 px, and the shot that
-was pulled from night sign-off — the gate road, at 21.9% of its own ground visible behind
-tree canopy — comes back at **68.8%**. The other four are marked **closeness-limited** with
-the measurement that stopped them: a narrower lens stands the camera 1.8× further back, and
-on `orchard`, `square`, `pondlane` and `therise` that extra distance fills with foliage. All
-four keep their existing frames, byte for byte. `therise` is the one that is genuinely
-disappointing: it would have been the town's closest shot at 98 px, and its plate came back
-with 70% of the road it owns hidden, so it was refused. **The ants complaint is improved,
-not closed** — decision 5 below (an 18–22 shot round) is still the thing that closes it.
-
-**The 11:55 correction, kept for the record.** The earlier wording here said
-"every Emberbrook shot got closer", which overstated it. The *camera solutions* got closer
-and are committed (all eleven now carry the fov 20 lens; the mechanism turned out to be
-**the lens, not the angle**), and the draft measurements are real — gateroad 21.9% → 68.8%
-visible, square's long-red ratchet retiring green. **But no plates ever baked**, so the game
-still renders last night's framing. Cause: the visibility sweep hung — 8 h 25 m at 100% CPU
-with zero output — and because its output was buffered, "still running" was indistinguishable
-from "stuck". The lane was waiting on a result that was never coming when it hit the session
-limit. Process killed 11:55; the bake then ran under the approved fallback — which was
-written as 8 shots taking the new framing and 3 reverting, and finished 7 and 4 because
-`therise` failed on its own plate. Two claims in that paragraph did not survive the bake and
-are corrected above: square's ratchet did NOT retire green (it is back at 38, red, with the
-frame it was measured on), and "all eleven carry the fov 20 lens" is now seven.
-
----
-
-## DECISIONS WAITING FOR YOU
-
-1. **TWO-PLAYER — the load-bearing one.** The 3D runtime is single-body. Chapter One's climax
-   is two keepers on twin sigil plates; Chapter Two's is a six-hand winch. Tonight's build
-   makes those completable solo (Lake acts as a companion) so nothing soft-locks, marked
-   `// TWO-PLAYER PENDING:` in code. Build two bodies / re-stage as single-player + companion
-   / ship single-player — this shapes everything downstream.
-2. **The Boatmen's Rest building.** You asked to move its entrance "to the next building
-   before the item shop." Measured: **there is no building there** — inn and item shop sit
-   0.90 m apart. Also, the old prompt wasn't on a building at all; it stood on the gate
-   stair's landing, 4.7 m short of its own inn. It now sits on the taproom's gallery front.
-   If you meant a genuinely separate building, that's a new structure to author.
-3. **A timeline that's off by a day.** Chapter Two opens with one night on the road, but Lake
-   twice says "two days" / "two nights ago", and Pell's Warden sighting only works if two
-   nights have passed. The opening narration is probably a night short. Untouched pending
-   your ruling. (Also: a line gives Lake Vesper's eleven-day road count, and Vesper says
-   she's "watched it all week" about someone she's known two days.)
-4. **VOICES.md contradicts itself.** Several of its own PART 2 example lines break its
-   two-sentence rule. I enforced the rule; the examples need rewriting or the rule needs a
-   fragment exemption.
-5. **The camera ceiling — a scope call.** FF-parity is ~115 px of character height; this
-   slate delivers a median 65. The arithmetic says why: character size is bounded by *region
-   size*, and Emberbrook plays 11 shots over 180 m where Dellhollow plays 16 over 100 m.
-   That ~2.5× under-coverage **is** the ants complaint at root. Closing it fully is an 18–22
-   shot round — more cameras, not better ones.
-6. **Is Lake a stat-carrying party member or a narrative companion?** Decides whether he
-   needs a `growth.json` record (he currently has none).
-7. **The Chapter One ending.** It ends with both keepers stepping *through* the gate, but the
-   gate notch is stamped sealed to zero reachable ground. Mint a walkable stub (map →
-   blockout → dressing → re-bake) or end on the doors opening and cut away. Recommendation:
-   the cut — no re-bake, better FF grammar.
-
----
-
-## HONEST REDS AND OPEN ITEMS
-
-- **Two Emberbrook seam failures**, named and routed to a seam-or-map lane: `square<->pondlane`
-  (every seam position in its window overlaps `walk_pad_pips-den`) and a 4.7 m town-wide
-  mismatch against a 4.1 m budget. Proven **structurally immune** to camera work — seam
-  positions derive from ownership and walk geometry, never from where the camera stands — so
-  nobody needs to re-test that pairing again.
-- **Rowan's cut-in set** is parked on the `hollow` mood.
-- **The overworld art revamp did not start.** The camera round owned the GPU all night. The
-  Dellhollow apron chop is *measured and staged* as a single control-point edit, not built.
-- **Two items I asked lanes to fix don't exist in the repo**: the arch banner's "0.71 m
-  clearance" was never measured, and the "cookhouse door occluding the cookhouse" appears
-  nowhere. You *did* report the cookhouse door in conversation — it was never written down,
-  so it became unfindable. Process lesson: a verbal report that doesn't land in the repo
-  turns into a phantom.
-
----
-
-## THE NIGHT'S LESSON, WHICH IS WORTH MORE THAN ANY ONE FIX
-
-**Three recorded numbers turned out to be wrong**, all found by accident: the camera file's
-"interior bound" (measured at a lens no interior uses, and to the far *wall* rather than the
-far walkable floor), the waystone framing note (claimed the stone reads screen-left; it is
-dead centre at every lens — an *intent* that hardened into a *measurement*), and a 4.3 m seam
-mismatch that has always measured 4.7.
-
-Each was caught only because some lane happened to have a reason to re-derive it. **The ones
-nobody read closely tonight are still wrong, and nothing would currently tell us.** The
-flip side: all three were re-derivable in minutes *because their instrument was named* — a
-number recorded without its instrument cannot even be checked.
-
-Related, and the reason several claims in this file are trustworthy: a lane caught its own
-**false verification** — "I verified against commit X" where X already contained its own
-change, so the check compared a version against itself. It surfaced because a diff returned
-an impossible answer ("0 of 11 changed" on a file it had personally rewritten). The rule
-that came out of it: **a check that passes in a way too clean to be possible is a bug until
-proven otherwise.**
+1. **Walk the overworld** — everything above in one walk: `play3d.html?scene=ow-valley&rt=1`.
+2. **Walk Dellhollow's realtime tier** (`?scene=townwalk&rt=1`) — the new descent and
+   quay/pilot circulation are live there; the CINEMATIC town still shows old plates until
+   the closing bake (say the word and I run it — it is the one Blender-heavy step left).
+3. The DPR/retina sharpness trade (4× fragment cost) — measured proposal on the slate.
