@@ -5149,3 +5149,14 @@ A-vs-A noise floor, ground L equal to 3 decimals at every station (camclip=0 pin
 both sides — another lane's uncommitted camera clamp confounded the first pass with a
 whole-frame reframe worth 17/255 of edge shift) · rAF median 8.3 ms · ?sky2=0 exact ·
 gallery docs/qa/ow-refs/index.html §10 · LOOP.md BET 12 ROUND 3.
+
+---
+
+## F6 — two USER-reported playthrough items (2026-08-06, not the LLM playtester; same verification bar)
+
+| id | sev | title | verdict | fix | commit |
+|---|---|---|---|---|---|
+| USER-20260806-road | P1 | Road hovers above the ground with its own shadow underneath | **VERIFIED — measured 0.30u of air at the edge rows (0.37 interior) on the shipped GLB; F5's edge drop had sampled the UNtreated height field, missing the 0.28 road_notch** | build_road conforms every lane to O3.height (edge +0.02, interior +0.075, gully drop capped); verge fringe stands on max(terrain, ribbon); walk_road.castShadow=false at runtime. After: edge p50 0.035, interior 0.076 | `1dd0085` + `fe822e2` |
+| USER-20260806-grasspop | P1 | Grass assets visibly change every few steps while walking | **VERIFIED — the scatter's ONE RNG was seeded from the PLAYER position; 0 of 11,174 instances survived a 10 m move** | per-triangle/per-tuft world-coordinate seeding in ow_detail.js; overlap 93.1% (97.5% inside r0), isolated pop-pair near-band diff 0.99 -> 0.22 | `1dd0085` |
+
+Instruments and plates: docs/qa/ow-refs/LOOP.md §F6 (gallery Round 23).
