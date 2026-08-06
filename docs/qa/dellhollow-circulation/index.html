@@ -156,4 +156,47 @@ not fixed by force. (2) W9's washing owes a re-hang OUTSIDE the 1.8 u slot (t2_c
 placement rect; any re-run of that pass re-installs it and owes crossing_lane_chop in the same
 window — the chop's header carries the contract). (3) crossing/cottage plates + scenegraph
 stale by phase law, closing lane's.</div>
+
+<h2>Iteration 6 — THE SEARCHED FOOT (#7 closed; §9.5's #1 killer replaced)</h2>
+<p><span class="kv">The search, per doctrine (a searched line, never authored):</span> 588
+candidates for the hairpin's lower waypoint, evaluated with the GENERATOR'S OWN geometry
+(pivot_split/plan_trim copied verbatim) against two oracles — roofing vs the road/pad walk
+boxes, and a body-corridor ray-cast against a 75,076-triangle BVH of the master's art
+(scratchpad foot_search.py). <b>REJECTED:</b> the entire road band (plan 19.4..23.4 at every
+x 56..66 — any line landing at the pad from the east/north crosses over the pilot&rarr;weave
+road, 12-19 body-window samples each) and the west (wv_hut_pilot-cluster_0 fills to plan
+23.4). <b>WON:</b> the SOUTH ring — wp2 [60.0, 25.8, 10.2], descending outside the stilt
+field over the gorge face: road hits 0, art hits 0, grades 0.44/0.39.</p>
+<p><span class="kv">Two class defects the win exposed, both fixed in the generator/carriers:</span>
+(1) <b>the v2 pivot separation now scales with tread width</b> — PIVOT_OFF's 1.20 was swept at
+width 1.4 (1.0 m between tread edges); at width 2.0 that left 0.4 m and the new hairpin duly
+stacked (l1_t06 ON l2_t01's line at dy 1.20, up-drive wedged under it). max(1, w/1.4) keeps
+every 1.4 flight bit-identical (deep stairs, moorage, and the market flight all verified
+unmoved — market re-derive printed CURRENT/no-op). (2) <b>lg_wv_rail crossed the new head</b>
+(the legibility pass's weave railing; my search's head-zone filter wrongly excluded the hit
+as fixed-geometry — recorded as the search's own lesson) — NEW CARRIER tools/pilot_head_chop.py
+takes 3 of its 24 loose parts out of the flight's slot (PHC_SRC_ snapshot, digest-asserted;
+lg_build itself must never be re-run per its own header).</p>
+
+<div class="receipt">ENGINE RECEIPTS (townwalk, real Chrome on :3000)
+_court_probe --pairs plaza&lt;-&gt;pilot &middot; pilot&lt;-&gt;weave (all 4)   : reached (pilot&lt;-&gt;weave was no-path BOTH ways)
+_court_probe --way  pilot pad -&gt; weave-huts road              : 3/3 legs BOTH ways, no stalls — THE FOOT IS JOINED
+_court_probe --way  plaza -&gt; flight -&gt; pad (built line)       : 8/8 legs BOTH ways, no stalls
+old §9.4 killer pocket [60.4-61.8, 11.6]                       : geometry REPLACED — no y-11.6 walk floors remain there
+walk_engine_gate GREEN &middot; routes re-derived + --check clean &middot; seam_walk 9/9 &middot; slice_test 811/1 (phase law)
+re-verified on the same bytes: ramp 4/4 both ways &middot; bridge pairs both ways &middot; quay-west pocket-&gt;plaza &middot; promenade &middot; lock-five&lt;-&gt;north-landing 4/4 both ways
+blockout determinism: digest 0a014370&hellip; identical twice</div>
+
+<div class="pair">
+ <figure><img src="pilot-after/flight-from-plaza.png"><figcaption>AFTER — the plaza: ONE flight leaves south past the bunting (frame right); the market flight (left) unchanged, verified bit-identical.</figcaption></figure>
+ <figure><img src="pilot-after/road-looking-west-to-pad.png"><figcaption>AFTER — the weave tier: the road to the pilot pad runs at grade, un-roofed; the relocated switchback climbs the south face (left).</figcaption></figure>
+</div>
+
+<div class="owed"><b>Owed (recorded, not hidden):</b> (1) the DOWN drive wants the two hairpin
+landings as steering points — greedy corner cuts stall at each pivot on a pure two-point line
+(the fill and the 8/8 waypoint drives prove the corridor; the wayfinder's route nodes come from
+routes_derive which already routes via landings). (2) qm_build's underworks re-derived under the
+new line; the old line's masonry columns are gone with it. (3) plates/scenegraph stale by phase
+law. (4) foot_search.py's head-zone filter lesson recorded above — a future search should
+exclude fixed geometry by NAME, never by zone.</div>
 </html>

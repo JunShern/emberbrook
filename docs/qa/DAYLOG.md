@@ -16416,3 +16416,46 @@ processed (queue 64 verified / 8 unverified / 55 refuted). Deliverable complete:
 docs/plans/dellhollow-pain-inventory.md §9.5 is the final cost ranking. Total spend ~$1.30
 of 4-6 runs authorized; remaining budget reserved for AFTER-receipts on the re-exported
 Bet 2 bundle (same legs, same pins).
+
+## 2026-08-06 ~06:25 — BET 2 ITERATION 6: THE SEARCHED FOOT (#7 closed; §9.5's #1 killer replaced)
+
+THE SEARCH, per the free-standing-solid doctrine: 588 candidates for the pilot hairpin's
+lower waypoint, each evaluated with the GENERATOR'S OWN geometry (pivot_split/plan_trim
+copied verbatim into scratchpad foot_search.py) against two oracles — roofing vs the
+road/pad walk boxes, and a body-corridor ray-cast against a 75,076-tri BVH of the
+master's art. REJECTED: the whole road band (plan 19.4..23.4 at every x 56..66 — any
+line landing at the pad from the east/north crosses OVER the pilot->weave road; 12-19
+body-window samples each) and the west (wv_hut_pilot-cluster_0 fills to plan 23.4).
+WON: the SOUTH ring — wp2 [60.0, 25.8, 10.2], down the gorge face outside the stilt
+field: road hits 0, art hits 0, l1/l2 grades 0.44/0.39. Map note _bet2_2026-08-06_foot
+carries the arithmetic.
+
+TWO CLASS DEFECTS THE WIN EXPOSED, fixed at the class:
+ 1. THE v2 PIVOT SEPARATION NOW SCALES WITH TREAD WIDTH (town_blockout pivot_split,
+    width=ew): PIVOT_OFF 1.20 was swept at width 1.4 = 1.0 m between tread edges; at
+    width 2.0 the same separation leaves 0.4 m and the new hairpin duly stacked —
+    `--who` named l1_t06 ON l2_t01's walking line at dy 1.20 and the up-drive wedged
+    under the overhang. max(1, w/1.4) keeps every 1.4 flight bit-identical: deep
+    stairs and moorage untouched by construction, and the market flight VERIFIED
+    unmoved (walk_rederive printed CURRENT/no-op — no ls_build carry owed).
+ 2. lg_wv_rail CROSSED THE NEW HEAD (down-drive wedged on l0_t01; up threaded east of
+    it — a directional wall). THE SEARCH'S OWN MISS, recorded: its head-zone filter
+    excluded these BVH hits as "fixed geometry common to all candidates" — the filter
+    was drawn wider than the fixed geometry it meant to exclude and swallowed a real
+    wall. Exclude by NAME next time, never by zone. lg_build CANNOT be re-run (its
+    header: it derives the Keepers' Steps from records r22 retired — a re-run deletes
+    that stair), so NEW CARRIER tools/pilot_head_chop.py (lockfive pattern + slot test
+    + ls_reorigin gap fallback) takes 3 of lg_wv_rail's 24 loose parts out of the
+    flight slot. PHC_SRC_ snapshot, town digest asserted unchanged.
+
+RECEIPTS (townwalk :3000, bundle exported this window): pilot<->weave `--pairs` reached
+BOTH ways + the road drives 3/3 BOTH ways (was no-path both ways — the tier is joined) ·
+plaza<->pilot reached both ways · the flight drives 8/8 BOTH ways on its built line ·
+§9.4's killer pocket [60.4-61.8, 11.6] geometry REPLACED (no y-11.6 walk floors remain;
+PT-20260806-027/028/031/032/034's geometry half closed — guidance/marker half is the
+wayfind lane's) · walk_engine_gate GREEN · routes re-derived + --check clean · seam_walk
+9/9 · slice_test 811/1 (phase law) · REVERIFIED same bytes: cottage ramp 4/4, bridge
+pairs both ways, quay-west pocket->plaza, promenade, lock-five<->north-landing 4/4 —
+iterations 2/4/5's receipts all hold on the current bundle (the coordinator's relay
+listed lg_ks as open; it is not — refreshed receipt above). Frames LOOKED AT; board
+iteration 6 section. Blockout digest 0a014370 x2.

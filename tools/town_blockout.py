@@ -302,7 +302,7 @@ STAIRS_V2 = {"deep-stairs-head__deep-stairs-foot",
              "weave-huts__moorage"}
 
 
-def pivot_split(prev, w, nxt, asym=False):
+def pivot_split(prev, w, nxt, asym=False, width=1.4):
     """(arriving-leg END, departing-leg START) at an interior stairs waypoint.
 
     THE SPLIT IS ASYMMETRIC: the departing leg takes the WHOLE separation and the
@@ -310,13 +310,22 @@ def pivot_split(prev, w, nxt, asym=False):
     and the first leg cannot afford it (see the ribbon note above) — but it was also
     tried EVERYWHERE ELSE, where it is free of that constraint, and it was worse:
     balanced at pivots 2..4 drove 36/40 where asymmetric drove 40/40.  One line moved
-    per pivot is both the safer rule and the measured one."""
+    per pivot is both the safer rule and the measured one.
+
+    THE SEPARATION SCALES WITH TREAD WIDTH (BET 2 iteration 6, measured).  PIVOT_OFF's
+    1.20 was swept at width 1.4: separation 2.4 leaves 1.0 m between the two flights'
+    tread EDGES at the split ends.  At width 2.0 the same 2.4 leaves 0.4 m — less than
+    a body — and the searched pilot-cluster hairpin duly stacked: `--who` named l1_t06
+    ON l2_t01's walking line at dy 1.20 (inside the body window) and the up-drive
+    stalled under the overhang at [59.95, 9.47, -24.05].  max(1, width/1.4) keeps every
+    1.4-wide flight (deep stairs, moorage — both receipt-green) bit-identical and gives
+    a wide flight the same 1.0 m edge clearance the sweep validated."""
     a = Vector((w.x - prev.x, w.y - prev.y, 0))
     d = Vector((nxt.x - w.x, nxt.y - w.y, 0))
     if a.length < 1e-6 or d.length < 1e-6: return w, w
     a.normalize(); d.normalize()
     th = math.degrees(math.acos(max(-1.0, min(1.0, a.dot(d)))))
-    off = PIVOT_OFF * max(0.0, min(1.0, (th - PIVOT_KNEE) / PIVOT_SPAN))
+    off = PIVOT_OFF * max(1.0, width / 1.4) * max(0.0, min(1.0, (th - PIVOT_KNEE) / PIVOT_SPAN))
     if off < 1e-3: return w, w
     s = -a                                  # back along the arriving flight
     m = (s + d)                             # both flights lie roughly along m
@@ -639,7 +648,8 @@ for e in D["edges"]:
             # split every interior pivot, then lay the legs between the split ends
             ends = [(pts[0], pts[0])]
             for i in range(1, len(pts) - 1):
-                ends.append(pivot_split(pts[i - 1], pts[i], pts[i + 1], asym=(i == 1)))
+                ends.append(pivot_split(pts[i - 1], pts[i], pts[i + 1], asym=(i == 1),
+                                        width=ew))
             ends.append((pts[-1], pts[-1]))
             railq = []
             for i in range(len(pts) - 1):

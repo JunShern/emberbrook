@@ -902,13 +902,14 @@
           13.4
         ],
         [
-          63.4,
-          20.6,
-          10.6
+          60.0,
+          25.8,
+          10.2
         ]
       ],
       "note": "switchbacks threading down between the stilts — REDESIGNED 2026-08-06 (Bet 2): TWO waypoints, ONE wide-amplitude hairpin (138 deg, v2 offset ~1.0 u) east of the hut cluster, replacing the 3-waypoint thread whose last pivot stood INSIDE wv_hut_pilot-cluster_0_3 (SIM.blocked named it at the waypoint itself) and whose 88-deg hairpins earned only 0.14 u of v2 split. FIRST WAYPOINT AT 7.2 u FROM THE PLAZA CENTRE, deliberately: the stairs trim needs extent+0.6+0.6 to start the flight outside the plaza's own walk disc — the old first waypoint at 5.34 u forced the head to the disc CENTRE, which is why l0 overlaid the plaza floor and its rails fenced the deck (the deleted quay branch's disease, same class).",
-      "_bet2_2026-08-06": "STAIRS_V2 + width 2.0 + waypoint redesign; see note. Art: qm_build + weave_build re-run in the same window (wv_stair_treads was stale v1 art blocking the flight; qm_deck_frame's piles column-test against the walking lines)."
+      "_bet2_2026-08-06": "STAIRS_V2 + width 2.0 + waypoint redesign; see note. Art: qm_build + weave_build re-run in the same window (wv_stair_treads was stale v1 art blocking the flight; qm_deck_frame's piles column-test against the walking lines).",
+      "_bet2_2026-08-06_foot": "THE FOOT LINE IS SEARCHED, NOT AUTHORED (Bet 2 iteration 6, the free-standing-solid doctrine). The old wp2 [63.4,20.6,10.6] sent l2 down PARALLEL OVER the pilot->weave road inside the body window (treads +0.65..1.3 over the 8.6..9.1 road for x 60..63.4) - pilot<->weave no-path both ways, the tier's only flat link shut. A 588-candidate ring search (scratchpad foot_search.py: the generator's own pivot_split/plan_trim per candidate, roofing vs the road/pad walk boxes, body-corridor ray-cast against a 75k-tri BVH of the master's art) REJECTED the whole road band plan 19.4..23.4 for every x 56..66 (12-19 roof samples each - any line landing at the pad from east/north crosses over the road), and the west (wv_hut_pilot-cluster_0 to plan 23.4). The SOUTH ring won: wp2 [60.0,25.8,10.2] descends outside the stilt field over the gorge face - art hits 0, road hits 0, own-pad foot hits only (dy 0.52..0.60 on the last 1.4 m, the normal foot class), l1 grade 0.44, l2 grade 0.39. The road pilot->weave re-opens because nothing roofs it any more. Art carried by qm_build + weave_build in the same window (STAIRS_V2 ledger)."
     },
     {
       "from": "pilot-cluster",
