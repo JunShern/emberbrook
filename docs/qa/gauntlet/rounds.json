@@ -394,6 +394,32 @@
     "vista"
    ],
    "verdict": "The ow sky was a two-constant vertex dome + four painted-constant rings; measured first: at the shipped rig the frame top is 10 deg below horizontal, so the player's whole sky band is ONE ring's mid-body \u2014 painting the dome could change nothing the player sees. Shipped behind ?sky2=1 (default flip is main's): a shader dome (horizon warmed toward OWSUN_DIR's azimuth, sun disk+glow on the key, static fbm cumulus) and rings rebuilt as the visible sky \u2014 three rows, luminous valley-mist to a thin dark ridge strip, azimuth-aware palette, mist banks. Blind loop round 1 REFUSED the first build (wallpaper/paleness; old navy ranked above it) and its list became the build (per-ring rhythm, amplitude modulation, lower stack, darker strips, sun-side luminance ramp). Round 2 on current HEAD: the new sky wins EVERY matched pair \u2014 'c, without hesitation... the difference between paper and atmosphere' \u2014 and the sunview ranks 3rd behind only the two references. Lighting neutrality proven: unchanged-ground |d| <= 0.8/255, ground L identical to 3 decimals. Traps paid: the R5 milky wash reproduced and was caught by the ruler (ref3 band census); a GLSL pow NaN at the exact anti-sun dome column bloomed one rig's frame 87% black \u2014 clamped in shader AND JS twin."
+  },
+  {
+   "n": 24,
+   "title": "BET 11 \u2014 THE WORLD MOVES (visual half): chimney smoke, water glints, fireflies, near-field drift, cloud advection",
+   "when": "2026-08-06",
+   "prefix": "b11",
+   "views": [
+    "before-square",
+    "after-square",
+    "before-homerow",
+    "after-homerow",
+    "before-del",
+    "after-del",
+    "before-ow",
+    "after-ow",
+    "closeup-smoke",
+    "closeup-fireflies",
+    "closeup-water"
+   ],
+   "verdict": "MOTION ROUND \u2014 every plate here is a CONTACT SHEET (6 frames, 0.9 s apart, fixed viewpoint); judge by comparing frames within a sheet, not sheets side by side. Shipped as public/js/ambient.js (self-arming module, one script tag for main; play3d.html untouched \u2014 even the Bet 12 cloud drift is a runtime patch on the __owsky material): one GPU-computed Points system per effect, all motion in the vertex shader off static attributes + a clock, one shared wind (window.__wind). Smoke anchors DERIVE from *_chim meshes in the bundle (26 lit of Emberbrook's 50, deterministic per name hash); glints sample water_* surface triangles area-weighted PER MESH (a shared CDF gave one pool all 16000 and the vista pool zero \u2014 measured, fixed); fireflies hover over walk_* surfaces and GO OUT UNDER THE HUSH (uA eases to 0.002 with Hush.active(), measured); leaves/pollen wrap a box ~11 m down the VIEW axis (player-centred motes were 0 visible pixels at the 40 m boom \u2014 measured). Blind verdict (fresh Anthropic judge, $0 external, anonymized pack): both town pairs to the ambient build \u2014 the smoke is 'exactly the kind of ambient life a night town needs'; fireflies 'the most convincing ambient effect in the whole pack'; water sparkle 'genuinely re-randomize every frame, convincing'. REFUSALS TAKEN: the ow pair read 'no meaningful difference' (motes are sub-pixel at sheet scale \u2014 counts raised, still the weakest effect), and the smoke CLOSEUP failed round 1 ('a chain of 2-3 airbrushed cotton balls', a gap at the mouth, lean flipping frame to frame) \u2014 fixed by count 18->26, birth size over the mouth, turbulence halved and slowed (the shipped closeup-smoke strip is the post-fix build). Frame cost: below measurement noise (emb 8.33->8.33 ms avg; ow pairs 8.33/8.33 and 14.62/12.60 \u2014 the after run FASTER than its paired before). Battle pause proven (clock frozen under UILOCK 'battle'); in-place scene swap tears down and rebuilds (emb-cine -> emb-item-int: fx empty in the interior). Judge artifacts NOT this lane's: the homerow black rectangle by the lamp (in the before sheet too), the del upper-left void, the frozen diagonal streak texture on del's far water (baked plate art).",
+   "deficits": [
+    "ow near-field still under-reads at the gameplay boom \u2014 the one pair the judge called dead; leaves/pollen counts raised after the verdict, next lever is wind in the FOLIAGE (ow_detail reading window.__wind), which is content this module deliberately does not own",
+    "no smoke on ow-valley or Dellhollow: their chimneys are merged massing with no *_chim node names \u2014 derivation needs the valley/dellhollow builders to name or export stacks (one-line QA emit next time they run; Blender-heavy, not this lane's budget)",
+    "smoke is a soft-sprite plume: holds at gameplay distance, will not survive a first-person closeup (no noise texture, no lighting response) \u2014 judge-verified before and after the round-1 fix",
+    "birds and NPC idle wander (the rest of Bet 11) not started; audio half lives in Bet 8"
+   ]
   }
  ]
 }

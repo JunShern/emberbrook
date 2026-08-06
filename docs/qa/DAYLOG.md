@@ -16058,3 +16058,62 @@ records cite it, git didn't carry it); rescued into this commit. My in-progress
 LOOP.md section was swept into 1a7d7ea by another lane's pathspec commit —
 recorded, not repaired. Gemini wall irrelevant here: judges are Anthropic-side
 subagents.
+
+## 2026-08-06 — BET 11, the visual half: THE WORLD MOVES (ambient lane)
+
+WHAT SHIPPED. public/js/ambient.js — a new self-arming module (the followers/ow_detail
+contract: arms at load AND on 'eb-scene', everything amb_-prefixed and only ever
+scene.add()ed, never in collide/walkRef/allMeshes, ?ambient=0 kills it, per-effect
+?amb_smoke/glint/fly/leaf/sky=0). play3d.html IS NOT TOUCHED: main's whole integration
+is ONE script tag (after js/hush.js):
+  <script src="js/ambient.js"></script>
+Even the Bet 12 cloud drift ships as a RUNTIME PATCH on the __owsky ShaderMaterial
+(uT/uDrift uniforms + a two-rate advection in cd()), the ow_detail material-patch
+precedent — nothing edits the coordinator's file.
+
+THE EFFECTS, and where each anchor comes from (derived, never authored):
+- smoke: *_chim meshes in the bundle (emb-cine/emb-townwalk: 26 lit of 50, hash-picked
+  so the same houses smoke every visit; 676 particles, ONE draw call). ow-valley and
+  Dellhollow have NO named chimney nodes (merged massing) — no smoke there, honestly.
+- glints: water_* surface triangles, area-weighted PER MESH under one cap (a shared CDF
+  gave del-cine's upstream pool all 16000 points and the VISTA pool ZERO — measured as
+  0 anchors in the vista frustum, fixed with a proportional scale). Fade is on VIEW
+  depth, not player distance: the cine grammar frames water the body never stands near.
+- fireflies: emb-cine only (Emberwake dusk), hovering over walk_* surfaces (the walk
+  mesh y is the true ground, free). THE HUSH TAKES THEM: uA eases to 0 on Hush.active()
+  (measured 0.002 under hush, 0.994 after) — warm sparks are exactly the light the
+  hush confiscates.
+- leaves+pollen (ow): a wrap box centred ~11 m down the VIEW axis. Player-centred
+  motes measured 0 visible pixels at the 40 m boom — near-field means near the LENS.
+- ONE WIND: window.__wind {x,z,speed,t}; drift uses a CPU-ACCUMULATED integral
+  (wind*t re-prices the whole history through every gust — at t=600 s a 0.1 m/s gust
+  step teleports a mote 60 m).
+
+ALL MOTION IS IN THE VERTEX SHADER off static attributes + a clock: per-frame CPU is
+uniform writes. Frame cost below measurement noise (emb 8.33->8.33 ms; ow paired runs
+8.33/8.33 and 14.62/12.60 — the ambient run FASTER than its paired baseline).
+Battle pause proven (clock freezes under UILOCK._h.battle); in-place swap teardown
+proven (emb-cine -> emb-item-int leaves fx empty; interiors get nothing by rule).
+
+WHICH SPACE THE BYTES ARE IN (the r185 rule, honored): ShaderMaterials get
+#include <colorspace_fragment> ONLY on the town direct-to-canvas path; under the RT
+composer the OutputPass grades the linear buffer and the chunk would double-encode.
+
+BLIND LOOP (fresh Anthropic judge, $0 external, blind_pack, contact sheets of 6 frames
+0.9 s apart). Wins: both town pairs to the ambient build — smoke is "exactly the kind
+of ambient life a night town needs"; fireflies "the most convincing ambient effect in
+the whole pack"; water sparkle "genuinely re-randomize every frame — convincing".
+REFUSALS TAKEN AND SPENT: (1) the smoke CLOSEUP failed — "a chain of 2-3 airbrushed
+cotton balls", a gap at the mouth, lean flipping sign frame to frame; fixed by count
+18->26, birth size covering the mouth, turbulence halved and slowed to a stable
+downwind lean, re-shot before shipping. (2) the ow pair read "no meaningful
+difference" — motes are sub-pixel at sheet scale; counts raised, and honestly logged
+as the weakest effect. Judge artifacts NOT this lane's, verified against the before
+sheets: homerow's black rectangle by the lamp, del's upper-left void, the frozen
+diagonal streaks on del's far water (baked plate art).
+
+GALLERY: docs/qa/gauntlet/ Round 24 (b11-*, contact sheets + closeup strips).
+GATES: percept_test 414/414; transition_test run singly on :3000 (ambient not yet in
+the page, so it gates the unchanged runtime); story/dialogue untouched.
+RESIDUALS on the round record: ow/del smoke needs the builders to name their stacks;
+smoke won't survive first-person closeup; birds + NPC wander unstarted (audio = Bet 8).

@@ -195,3 +195,22 @@ continues when a lane slot frees — it is hygiene, not graphics.
 ## CAMERA (a rig that shows the horizon shows the whole system); band-vs-terrain
 ## hour-agreement (warm ground / cool veil) is a grade item; sun-disc height vs horizon
 ## colour tracks the ratified key's el 34 — moving it is a user call, not a lane's.
+
+## BET 11 — THE WORLD MOVES, visual half (2026-08-06, PROTOTYPE COMPLETE; awaiting
+## main's ONE-LINE include in play3d.html: `<script src="js/ambient.js"></script>`
+## after js/hush.js — play3d itself is untouched, the Bet 12 cloud drift ships as a
+## runtime patch on __owsky). Shipped in public/js/ambient.js, all default-on behind
+## the include, ?ambient=0 kills: chimney smoke (derived from *_chim bundle meshes —
+## 26 lit stacks in Emberbrook), river/pond glints (area-weighted per water mesh,
+## view-depth faded), fireflies at the Emberwake dusk (walk-surface anchored, GO OUT
+## UNDER THE HUSH — measured), near-field leaves/pollen in ow (lens-relative wrap
+## box), and slow two-rate cloud advection on the Bet 12 dome. One wind
+## (window.__wind) drives smoke, motes and clouds; all motion is vertex-shader off a
+## clock, frame cost below measurement noise, battle pause + eb-scene teardown
+## proven. Blind loop: both town pairs won ("exactly the kind of ambient life a
+## night town needs"; fireflies "the most convincing ambient effect in the whole
+## pack"); the smoke closeup REFUSED round 1 (cotton-ball chain, mouth gap) and the
+## fix is what shipped. Gallery Round 24 (b11-*, motion contact sheets).
+## REMAINING IN THE BET: birds off rooftops, NPC idle wander (unstarted); ow/del
+## smoke blocked on their builders naming chimney meshes (*_chim) or emitting
+## anchors; foliage wind is ow_detail's to take up via window.__wind. Audio = Bet 8.
