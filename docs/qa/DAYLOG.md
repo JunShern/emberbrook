@@ -16335,3 +16335,19 @@ Measured constraints (master bboxes): huts x 52.7..65.1 fill the north, cx_bays/
 the south, the road band y 20.2..22.7 is the ONLY at-grade corridor, and the pad's free
 faces all face it. Every authored candidate clips a hut, the rails, or re-roofs the road
 — the line gets SEARCHED (ring/clearance doctrine) against the master's own boxes.
+
+## 2026-08-06 ~05:25 — BET 2 ITERATION 4: THE RETIRED STAIR'S BODY LEAVES THE LANE (#9)
+
+NEW CARRIER tools/lockfive_lane_chop.py, on the gate_stairwell_chop pattern (loose parts
+wholly removed inside the lane's swept body corridor, derived from the CURRENT
+walk_e_lock-five__north-landing_* records at run time; LKC_SRC_* snapshots with fake
+users; town digest asserted unchanged; save/revert; idempotent — the re-run printed
+0 intersecting parts). Took 39/159 tread parts, 9/56 rail, 9/41 frame — the FOOT only;
+the porch scenery the r22 ruling kept survives, and a flight truncated above the dock
+reads "not a way" where the full flight read as an invitation.
+
+RECEIPTS: the ch2.dock -> landing drive (`--way` lock-five pad -> north-landing) walks
+4/4 legs BOTH WAYS, no stalls — the westbound stall at [90.38,-0.14,-27.57] is gone;
+walk_engine_gate GREEN on the re-export. lf_railings' 31 band cells remain and did NOT
+stall the drive — locksfoot's own live furniture, out of this ticket's scope, measured
+and left. Inventory statuses updated for #1 (geometry half), #5, #6, #7 (half), #9.
