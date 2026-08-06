@@ -673,7 +673,14 @@ const ITINERARY = [
     ok(cut.local === true, 'an in-scene edge is still routed as a LOCAL handoff (no swap)');
     ok(cut.after === cut.want, `the cut landed on shot '${cut.want}'`, cut);
     ok(cut.cuts === cut.cuts0 + 1, 'and it counted as exactly one cut', cut);
-    ok(cut.shots === 16, 'the re-entered town still knows all 16 of its shots', cut.shots);
+    // THE SHOT COUNT IS THE SHIPPED BUNDLE'S OWN, never a literal: the count was
+    // hardcoded 16 and went stale the day Bet 2 it.2 deleted the loop-landing fork
+    // camera (15 ratified shots) — the assertion then failed every run for a month
+    // of the number being right. cine.json is what the runtime itself loads.
+    const CINE_SHOTS = JSON.parse(readFileSync(join(HERE, '..',
+      'public/assets/scenes/del-cine/cine.json'), 'utf8')).cameras.length;
+    ok(cut.shots === CINE_SHOTS,
+       `the re-entered town still knows all ${CINE_SHOTS} of its shots`, cut.shots);
     ok(cut.edges > 30, `and its ${cut.edges} edges were re-bound on arrival`, cut.edges);
   }
   drainConsole();

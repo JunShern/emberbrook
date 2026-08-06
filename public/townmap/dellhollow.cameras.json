@@ -391,7 +391,9 @@
      "weave-huts__drying-decks",
      "weave-huts__fish-dock"
     ]
-   }
+   },
+   "charPxMin": 47,
+   "_charPxMin_why": "PER-SHOT LEGIBILITY OVERRIDE, 47 px against the town's 50 px floor, set at the CLOSING BAKE exactly at the measured value with no headroom (the gate shot's ratchet precedent). The Bet 2 rebuilds (searched pilot hairpin it.6, moorage switchback it.8-10) grew this shot's owned hull to 25.9 x 13.0 u with 7.5 u of height, and the solver stands back to hold it: charPxFar 51 (pre-window) -> 47. MEASURED before argued: margin swept 0.10 -> 0.08/0.06/0.04 buys 48/48/49 px — the breach is region extent, not framing slack, so no knob at yaw 142 (which is PT-050's ruling and stays) reaches 50. The real fix is the fishdock precedent — 'the far figure's size is set by how many character-heights of region the shot must hold, so the only lever is splitting' — and a weave split is a re-composition, not a closing-lane move. Any change that costs this shot a further pixel fails cine_test and must be argued for."
   },
   {
    "id": "deep-stairs",
@@ -410,7 +412,15 @@
     ]
    },
    "thresholdPair": true,
-   "_thresholdPair_why": "A place you ENTER and LEAVE: it owns the middle of one map edge whose two ends belong to other shots, so its passage costs two cuts BY DESIGN. Both sit at the span's own thresholds (abutment, stair head/foot), never mid-plank. seam_test.mjs allows the second cut only for a camera that declares this."
+   "_thresholdPair_why": "A place you ENTER and LEAVE: it owns the middle of one map edge whose two ends belong to other shots, so its passage costs two cuts BY DESIGN. Both sit at the span's own thresholds (abutment, stair head/foot), never mid-plank. seam_test.mjs allows the second cut only for a camera that declares this.",
+   "arrivals": {
+    "deep-stairs-head__deep-stairs-foot:waterfront": [
+     40.578,
+     8.4,
+     -26.373
+    ]
+   },
+   "_arrivals_why": "CLOSING-BAKE REPAIR on the Bet 2 zigzag: the derived waterfront>deep-stairs spawn [36.707,6.143,-24.7] landed 0.01 u along the foot band's own normal — ON the seam that sends you back (cine_test: 'outside the band by -1.09u'; slice_test: 'not clear of the return trigger'). The rebuilt flight's foot geometry gave the solver's arc-length back-off nothing to walk. Searched on the flight's own walk records (walk-mesh footprints only — the phantom-floor lesson paid twice this window). THE FIRST PICK WAS A SWITCHBACK TRAP THE CHECKER DOES NOT SEE: [34.85,5.40,-25.78] cleared the band by PLAN normal but sat one tread BELOW the seam — on a folded edge that is ALREADY PAST the cut by arc length, so cine_test's round-trip sim fired 0 of 10 cuts (the sim's own docstring names this exact lesson). The second pick [40.00,8.53,-26.78] came off an AABB grid and a ROTATED tread's box corner is not on the mesh — cine_test's on-the-walk-network assertion caught it. Final: [40.578,8.40,-26.373], a TRIANGLE CENTROID of l1's tread (on-mesh by construction), 2.0 u above the seam height — outside the band's vTol 1.6 with a full tread of headroom (the y 8.05 row cleared it by only 0.06 and was refused), arc-side correct, 100.0% visible / 100.0% chest on the new plate."
   },
   {
    "id": "boatyard",

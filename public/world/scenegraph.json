@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-06T11:40:11Z",
+ "generated": "2026-08-06T11:59:32Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -5869,9 +5869,9 @@
     "key": "deep-stairs"
    },
    "spawn": [
-    36.707,
-    6.143,
-    -24.7
+    40.578,
+    8.4,
+    -26.373
    ],
    "reciprocal": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.786:deep-stairs>waterfront",
    "source": "camera boundary 'waterfront' -> 'deep-stairs' (the same seam, back)"

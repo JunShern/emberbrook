@@ -607,13 +607,13 @@
    "entry": false,
    "transit": true,
    "pos": [
-    31.886,
-    47.191,
-    10.931
+    31.914,
+    47.198,
+    10.93
    ],
    "aim": [
-    38.869,
-    25.701,
+    38.895,
+    25.712,
     7.755
    ],
    "fov": 35,
@@ -622,12 +622,12 @@
     1400
    ],
    "rtClip": [
-    7.6247,
-    97.509
+    7.6233,
+    97.495
    ],
    "depth": {
-    "near": 15.24941635131836,
-    "far": 60.943267822265625,
+    "near": 15.246665954589844,
+    "far": 60.9345817565918,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -644,8 +644,8 @@
    "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.001",
    "visibleFrac": 0.9688,
    "probes": 64,
-   "baked": "2026-08-06T11:26:59Z",
-   "seconds": 178.9,
+   "baked": "2026-08-06T13:18:27Z",
+   "seconds": 185.3,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",

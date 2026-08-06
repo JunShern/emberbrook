@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-08-06T11:39:49Z",
+ "generated": "2026-08-06T11:59:26Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -5085,19 +5085,19 @@
     }
    ],
    "pos": [
-    31.886,
-    47.191,
-    10.931
+    31.914,
+    47.198,
+    10.93
    ],
    "aim": [
-    38.869,
-    25.701,
+    38.895,
+    25.712,
     7.755
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 22.82,
-   "solvedDist": 22.82,
+   "dist": 22.81,
+   "solvedDist": 22.81,
    "capped": false,
    "samples": 298,
    "inFrameFrac": 1,
@@ -7634,9 +7634,9 @@
     -25.492
    ],
    "spawnFrom": [
-    36.707,
-    6.143,
-    -24.7
+    40.578,
+    8.4,
+    -26.373
    ],
    "whatFrom": "deep-stairs-head__deep-stairs-foot@0.22..1",
    "whatTo": "landmark deep-stairs-foot"
