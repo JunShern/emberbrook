@@ -1,5 +1,5 @@
 {
- "build_s": 20.56,
+ "build_s": 26.11,
  "bushes": {
   "cards": 739,
   "core_tris": 10673,
@@ -98,7 +98,7 @@
  ],
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.26,
+ "field_s": 0.32,
  "h_range": [
   -6.18,
   50.9
@@ -195,7 +195,7 @@
   "verts": 27092
  },
  "step": 1.6,
- "terrain_s": 0.23,
+ "terrain_s": 0.24,
  "tile": [
   280.0,
   200.0
@@ -220,7 +220,7 @@
  "tributary_falls": 26,
  "tris": 387553,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 4.14,
+ "veg_s": 5.38,
  "verge_fringe": {
   "tris": 3664,
   "verge_cards": 119,
@@ -309,5 +309,5 @@
   "road": 1.61,
   "water": 6.34
  },
- "zone_s": 0.078
+ "zone_s": 0.087
 }
