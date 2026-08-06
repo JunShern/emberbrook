@@ -933,6 +933,8 @@
       "from": "weave-huts",
       "to": "moorage",
       "type": "stairs",
+      "width": 2.0,
+      "_bet2_2026-08-06_width": "Iteration 9: 1.4 -> 2.0. With the pivot furniture cleared (two cx_rail posts via cx_build's on_walk_ribbon guard, lf_lantern_1 via lantern_reseat) and the landing's up-side tongue trimmed (asymmetric extension), the l1/l2 junction STILL measured a ~0.6 m throat: this hairpin's arriving leg meets the 0.9-wide pivot pad BROADSIDE and t04's body shadow eats a third of it -- both greedy drives stalled 1.2 m short, _court_probe --way/--who receipts in the iteration-9 board section. Same ruling as pilot/market/gate: the Ch2 route to Maren is a main route, >= 2 body widths. LAND_LONG now scales max(1, w/1.4) with the edge width, so every 1.4-wide flight stays bit-identical.",
       "waypoints": [
         [
           76.2,
@@ -940,9 +942,9 @@
           5.6
         ],
         [
-          72.6,
-          26.9,
-          3.3
+          70.1,
+          29.4,
+          4.1
         ],
         [
           76.2,
@@ -950,6 +952,7 @@
           1.25
         ]
       ],
+      "_bet2_2026-08-06_wp2": "THE PIVOT IS SEARCHED, NOT AUTHORED (iteration 9, the foot_search pattern's third instance - scratchpad moorage_search.py, 510 candidates). The old wp2 [72.6,26.9,3.3] pivot was geometrically unsound at EVERY width tried: the arriving leg meets the landing near-antiparallel to the separation axis, so the pad points back UNDER the flight and t03/t04 roofed its own junction (16 cells, both drives stalled) - the same class the map's own note warned about, one level down. Single-hairpin replacements were all REJECTED: every east line roofs the moorage__lock-five through-lane dy 0.75-1.2 (13 candidates' samples). The 3-leg shape with wp2 swung SOUTH-WEST over the gorge face won: 127/510 clean of roof+art+self oracles, picked by clean-neighborhood robustness (24/27) then gentlest l2; grades 0.47/0.22/0.49/0.24, head/foot join-class art only.",
       "note": "double switchback east of the hut cluster, wide-amplitude hairpins so crossing legs clear each other vertically (tight hairpins let walkers mount the overhead leg). | FOOT LOWERED 1.70 -> 1.25 (2026-08-04, user report 'the ground around Maren has a bunch of holes'). town_blockout puts a 2.0x2.0x0.16 landing at every intermediate waypoint with its TOP at the waypoint's own height, so 1.70 stood the stair's foot 0.65 m over the moorage deck it lands on (measured deck 1.02-1.05 on walk_e_moorage__lock-five_l0, 1.25 on walk_lm_moorage). 0.65 m is 0.02 m PAST play3d's STEP_UP of 0.63: the step up was refused, and the same slab roofed the deck's only west-east through-route with 0.49 m of headroom. Maren stands on that lane, so the whole western waterfront could not reach her at all -- _court_probe --way stalled at x 77.53 walking west and, walking down the flight, put the body on the OVERHEAD leg at y 4.52, which is this note's own warning coming true. 1.25 is walk_lm_moorage's top: the landing merges with the pad instead of hovering over it, and its underside (1.09) drops below the body's blocking window from the lane. THE LANDING HEIGHT IS THE LANDMARK'S DECK HEIGHT -- a stairs waypoint at a deck is not free."
     },
     {

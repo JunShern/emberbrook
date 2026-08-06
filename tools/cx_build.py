@@ -207,6 +207,14 @@ def found(x, y, ztop, r=0.09, post_max=9.0, rake_max=3.0):
         nfail += 1
         FAILED.append((round(x, 2), round(y, 2), round(ztop, 2)))
         return []
+    # ...and the ENGINE's question (iteration 9): a post's column through a walk
+    # face's interior is a wall to the body even where the 0.35 m grid has no
+    # sample — two 6.4 m bay posts stood through the moorage__tenant-shack lane
+    # with the gate green, each dodging the pad's corner samples by 1.5 cm.
+    if blocks_body(x - 0.14, x + 0.14, y - 0.14, y + 0.14, -1e4, ztop):
+        nfail += 1
+        FAILED.append((round(x, 2), round(y, 2), round(ztop, 2)))
+        return []
     g = ground_z(GBVH, x, y, from_z=ztop - 0.02, depth=post_max + 1.0)
     if g is not None and 0.22 < ztop - g <= post_max and clear_between(KBVH, (x, y, g), (x, y, ztop)):
         npost += 1
@@ -221,6 +229,10 @@ def found(x, y, ztop, r=0.09, post_max=9.0, rake_max=3.0):
             if gg is not None and gg >= ztop - s - 0.10 and gg < ztop - 0.18 \
                     and clear_between(KBVH, (x, y, ztop), (x + dx, y + dy, gg - 0.10)):
                 if blocks_gate(min(x, x + dx) - 0.12, max(x, x + dx) + 0.12,
+                               min(y, y + dy) - 0.12, max(y, y + dy) + 0.12,
+                               -1e4, ztop):
+                    continue
+                if blocks_body(min(x, x + dx) - 0.12, max(x, x + dx) + 0.12,
                                min(y, y + dy) - 0.12, max(y, y + dy) + 0.12,
                                -1e4, ztop):
                     continue
@@ -284,6 +296,99 @@ for _o in bpy.data.objects:
             _x += GATE_STEP
 log("GATE", "%d sample points" % len(SAMPLES), "master_walk_qa's own grid, reproduced")
 
+# THE GATE'S GRID IS NOT THE ENGINE'S LATTICE (Bet 2 iteration 8, measured on the
+# moorage t04 lip).  The 0.35 m grid starts at each face's own min corner + 0.175, so
+# every face carries an UNSAMPLED margin up to ~0.35 m wide along its edges — and on a
+# ROTATED tread (every hairpin leg) the axis-aligned rows leave whole diagonal strips
+# unsampled.  rail_on_blockouts' solver walks a post ±0.06 at a time until the guard is
+# happy, which finds exactly those strips: two posts and two rail runs stood ON
+# walk_e_weave-huts__moorage l1 t03/t04's own interior (z +0.1..+1.3 over the treads,
+# inside the body window), 11 engine cells blocked, both hairpin drives stalled 0.8 m
+# short — with this pass's own guard green.  lip_diag.py in the session scratchpad is
+# the measurement; the four parts each dodge the nearest kept sample by 0.02..0.11 m.
+#
+# THE FIX IS A SECOND, FINER QUESTION, not a replacement: BODY_SAMPLES covers every
+# up-face at 0.10 m but EXEMPTS the outer 0.12 m ring of each face — a rail's whole job
+# is to stand at the edge of the surface you walk on (and consecutive treads of a raking
+# flight overlap in plan at their edges, which is why the plain keep-clear-of-every-
+# polygon test refused 23 of 24 posts when it was tried; the history above records it).
+# A solid over a face's INTERIOR is refused; a solid on its edge ring is the gate's own
+# business, unchanged.  Every face in REGION contributes, including the ones eff_top
+# excludes from SAMPLES — a lane running UNDER a flight is still a lane a bar can block,
+# and the z window keeps a tread's own furniture from condemning the deck below it.
+BODY_STEP, BODY_EDGE = 0.10, 0.12
+_BUCK = 0.6
+BODY_SAMPLES = {}
+WALK_FACES = []          # (raw poly, zfn) — every up-face, for the on-ribbon test
+_nbody = 0
+for _o in bpy.data.objects:
+    if _o.type != 'MESH' or not _o.name.startswith("walk_"):
+        continue
+    _b = world_bbox(_o)
+    if _b[1] < REGION[0] or _b[0] > REGION[1] or _b[3] < REGION[2] or _b[2] > REGION[3]:
+        continue
+    _Mx = _o.matrix_world
+    _N = _Mx.to_3x3().inverted().transposed()
+    for _p in _o.data.polygons:
+        if (_N @ _p.normal).normalized().z <= 0.5:
+            continue
+        _raw = [_Mx @ _o.data.vertices[_i].co for _i in _p.vertices]
+        _zfn = plane_z_fn(_raw)
+        WALK_FACES.append((_raw, _zfn))
+        _xs = [q.x for q in _raw]
+        _ys = [q.y for q in _raw]
+        _ed = [(_raw[_k], _raw[(_k + 1) % len(_raw)]) for _k in range(len(_raw))]
+        _x = min(_xs) + BODY_STEP / 2
+        while _x < max(_xs):
+            _y = min(_ys) + BODY_STEP / 2
+            while _y < max(_ys):
+                if point_in_poly(_x, _y, _raw):
+                    _dmin = 1e9
+                    for _a, _bv in _ed:
+                        _ex, _ey = _bv.x - _a.x, _bv.y - _a.y
+                        _L2 = _ex * _ex + _ey * _ey
+                        _t = 0.0 if _L2 < 1e-12 else max(0.0, min(1.0,
+                             ((_x - _a.x) * _ex + (_y - _a.y) * _ey) / _L2))
+                        _dx, _dy = _x - (_a.x + _t * _ex), _y - (_a.y + _t * _ey)
+                        _d = (_dx * _dx + _dy * _dy) ** 0.5
+                        if _d < _dmin:
+                            _dmin = _d
+                    if _dmin > BODY_EDGE:
+                        _key = (int(_x // _BUCK), int(_y // _BUCK))
+                        BODY_SAMPLES.setdefault(_key, []).append((_x, _y, _zfn(_x, _y)))
+                        _nbody += 1
+                _y += BODY_STEP
+            _x += BODY_STEP
+log("GATE", "%d body samples" % _nbody,
+    "0.10 m interior lattice, 0.12 m edge ring exempt — the engine's question")
+
+
+def on_walk_ribbon(x, y, floor):
+    """True when a solid FOUNDED at (x, y, floor) is standing ON a walk ribbon —
+    plan-inside a walk face whose surface is within 0.30 m of the solid's own
+    floor.  The edge-ring exemption above is for solids BESIDE a ribbon; a post
+    whose feet are on the ribbon itself is in the corridor no matter how close to
+    the edge it stands (iteration 8: two moorage-hairpin posts survived the ring
+    test on t03/t04's own treads and, with their body-radius shadow, closed the
+    one-thread ascent).  A face a step away in z (a raking flight's NEXT tread,
+    0.38 down) fails the 0.30 window and stays legal — the 23-of-24 history."""
+    for _raw, _zfn in WALK_FACES:
+        if point_in_poly(x, y, _raw) and abs(_zfn(x, y) - floor) <= 0.30:
+            return True
+    return False
+
+
+def blocks_body(x0, x1, y0, y1, z0, z1):
+    """True when a solid in this box stands over a walk face's INTERIOR inside the
+    body window (fz, fz + 2.00] — the question walkStep asks, at walkStep's own
+    resolution.  Edge-ring stations are exempt by construction of BODY_SAMPLES."""
+    for _ky in range(int(y0 // _BUCK), int(y1 // _BUCK) + 1):
+        for _kx in range(int(x0 // _BUCK), int(x1 // _BUCK) + 1):
+            for (sx, sy, sz) in BODY_SAMPLES.get((_kx, _ky), ()):
+                if x0 <= sx <= x1 and y0 <= sy <= y1 and z1 > sz + 0.005 and z0 < sz + 2.00:
+                    return True
+    return False
+
 
 def blocks_gate(x0, x1, y0, y1, z0, z1):
     """True when a solid in this box would be hit by one of the gate's two rays.
@@ -315,14 +420,30 @@ def blocks_gate(x0, x1, y0, y1, z0, z1):
 # of its own half-section.  `free_box` is still the guard for the bays, whose posts
 # stand out in the open where the corridor question is the right one.
 def clear_of_walk(x, y, r, z0=-1e9, z1=1e9):
-    """True when a solid of plan-radius `r` at (x, y) stands on no gate sample."""
-    return not blocks_gate(x - r - 0.01, x + r + 0.01, y - r - 0.01, y + r + 0.01, z0, z1)
+    """True when a solid of plan-radius `r` at (x, y) stands on no gate sample AND
+    on no walk-face interior (blocks_body — the iteration-8 addition; a solid the
+    grid misses can still stand in the engine's corridor)."""
+    if blocks_gate(x - r - 0.01, x + r + 0.01, y - r - 0.01, y + r + 0.01, z0, z1):
+        return False
+    return not blocks_body(x - r - 0.01, x + r + 0.01, y - r - 0.01, y + r + 0.01, z0, z1)
 
 
 def seg_clear_of_walk(a, b, r):
-    return not blocks_gate(min(a.x, b.x) - r, max(a.x, b.x) + r,
-                           min(a.y, b.y) - r, max(a.y, b.y) + r,
-                           min(a.z, b.z) - 0.10, max(a.z, b.z) + 0.10)
+    if blocks_gate(min(a.x, b.x) - r, max(a.x, b.x) + r,
+                   min(a.y, b.y) - r, max(a.y, b.y) + r,
+                   min(a.z, b.z) - 0.10, max(a.z, b.z) + 0.10):
+        return False
+    # the BAR, station by station: the fat plan bbox above keeps the gate's own
+    # conservatism, but a diagonal bar's bbox says nothing about where the bar IS —
+    # walk it at 0.12 m and ask blocks_body with the bar's own z at each station.
+    L = (b - a).length
+    n = max(1, int(L / 0.12))
+    for k in range(n + 1):
+        q = a.lerp(b, k / float(n))
+        if blocks_body(q.x - r - 0.02, q.x + r + 0.02, q.y - r - 0.02, q.y + r + 0.02,
+                       q.z - r - 0.10, q.z + r + 0.10):
+            return False
+    return True
 
 
 OUT_IN, OUT_W = 0.16, 0.52
@@ -535,6 +656,8 @@ def rail_on_blockouts(names, tag, parts, bay=1.30,
                 f = art_z(p.x, p.y, b[5] + 0.40, (b[5] - b[4]) + 1.2)
                 if f is None:
                     continue
+                if on_walk_ribbon(p.x, p.y, f):
+                    continue                 # standing ON the ribbon: never a post seat
                 if not clear_of_walk(p.x, p.y, 0.055, f - 0.12, f + RAIL_H + 0.06):
                     continue
                 floor, at = f, p
@@ -773,6 +896,8 @@ for (ax, ay, wz, ex, ey, fall, label) in BAYS:
             if G.free_box(q.x - 0.08, q.x + 0.08, q.y - 0.08, q.y + 0.08,
                           ztop - 0.20, ztop + 1.12) \
                     and not blocks_gate(q.x - 0.09, q.x + 0.09, q.y - 0.09, q.y + 0.09,
+                                        ztop - 0.20, ztop + 1.12) \
+                    and not blocks_body(q.x - 0.09, q.x + 0.09, q.y - 0.09, q.y + 0.09,
                                         ztop - 0.20, ztop + 1.12):
                 trial.append(q)
         if len(trial) >= 3:

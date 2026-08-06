@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-06T05:20:51Z",
+ "generated": "2026-08-06T08:51:05Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -4661,7 +4661,7 @@
       0,
       0.256
      ],
-     "length": 3.844,
+     "length": 5.477,
      "points": [
       [
        71.45,
@@ -4669,14 +4669,19 @@
        -24
       ],
       [
-       73.12,
-       7.05,
-       -24.56
+       73.03,
+       7.09,
+       -24.53
       ],
       [
-       74.78,
-       6.27,
-       -25.12
+       74.61,
+       6.35,
+       -25.06
+      ],
+      [
+       76.19,
+       5.6,
+       -25.6
       ]
      ],
      "source": "map edge weave-huts__moorage@0..0.256",
@@ -4916,10 +4921,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 37,
+    "routeSamples": 38,
     "routeInFramePct": 100,
-    "routeLen": 49.077,
-    "spineLen": 49.077,
+    "routeLen": 50.71,
+    "spineLen": 50.71,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -6975,12 +6980,12 @@
       0.256,
       1
      ],
-     "length": 11.554,
+     "length": 15.342,
      "points": [
       [
-       74.78,
-       6.27,
-       -25.12
+       76.19,
+       5.6,
+       -25.6
       ],
       [
        76.2,
@@ -6988,29 +6993,39 @@
        -25.6
       ],
       [
-       75,
-       4.83,
-       -26.03
+       74.68,
+       5.23,
+       -26.55
       ],
       [
-       73.8,
-       4.07,
-       -26.47
+       73.15,
+       4.85,
+       -27.5
       ],
       [
-       72.6,
-       3.3,
-       -26.9
+       71.63,
+       4.47,
+       -28.45
       ],
       [
-       73.8,
-       2.62,
-       -27.3
+       70.1,
+       4.1,
+       -29.4
       ],
       [
-       75,
-       1.93,
-       -27.7
+       71.63,
+       3.39,
+       -29.07
+      ],
+      [
+       73.15,
+       2.68,
+       -28.75
+      ],
+      [
+       74.68,
+       1.96,
+       -28.42
       ],
       [
        76.2,
@@ -7213,10 +7228,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 27,
+    "routeSamples": 29,
     "routeInFramePct": 100,
-    "routeLen": 35.686,
-    "spineLen": 35.686,
+    "routeLen": 39.474,
+    "spineLen": 39.474,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -7451,6 +7466,21 @@
    ]
   },
   {
+   "edge": "weave-huts__moorage",
+   "t": [
+    0,
+    0.256
+   ],
+   "metres": 5.003,
+   "cameraUp": "weave",
+   "floorOwnedBy": "lockfive",
+   "at": [
+    73.82,
+    6.72,
+    -24.8
+   ]
+  },
+  {
    "edge": "weave-huts__keepers-cottage",
    "t": [
     0,
@@ -7493,21 +7523,6 @@
     58.95,
     14.95,
     -11.24
-   ]
-  },
-  {
-   "edge": "weave-huts__moorage",
-   "t": [
-    0,
-    0.256
-   ],
-   "metres": 3.517,
-   "cameraUp": "weave",
-   "floorOwnedBy": "lockfive",
-   "at": [
-    73.12,
-    7.05,
-    -24.56
    ]
   },
   {

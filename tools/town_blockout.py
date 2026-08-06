@@ -665,15 +665,40 @@ for e in D["edges"]:
             for i in range(1, len(pts) - 1):
                 A, Dp = ends[i]
                 sep = Vector((Dp.x - A.x, Dp.y - A.y, 0))
+                cx_, cy_ = (A.x + Dp.x) / 2, (A.y + Dp.y) / 2
                 if sep.length > 1e-6:
-                    ang = math.atan2(sep.y, sep.x); lx = sep.length + LAND_CROSS
+                    ang = math.atan2(sep.y, sep.x)
+                    # THE LANDING'S EXTENSION IS ASYMMETRIC, LIKE THE SPLIT (BET 2
+                    # iteration 9, measured on the moorage l1/l2 pivot).  A symmetric
+                    # + LAND_CROSS box extends 0.70 past BOTH split ends — and past
+                    # the ARRIVING end that 0.70 runs UNDER the arriving flight's own
+                    # rising treads: t04 (0.84 over the pad, past STEP_UP 0.63)
+                    # roofed the tongue's cells and the open throat beside them
+                    # measured 0.7 m — under two bodies, and both greedy drives
+                    # through the junction stalled on it (with the furniture already
+                    # cleared: this strip was the LAST wall).  The up side now gets
+                    # 0.15 — enough to keep the foot tread's own join — and the down
+                    # side keeps the full 0.70 (nothing of this edge stands above a
+                    # departing leg's start; its treads all lie below).
+                    up_A = pts[i - 1].z >= pts[i + 1].z   # arriving side is the up side
+                    ext_a = 0.15 if up_A else LAND_CROSS / 2
+                    ext_d = LAND_CROSS / 2 if up_A else 0.15
+                    u = sep.normalized()
+                    lx = sep.length + ext_a + ext_d
+                    cx_ += u.x * (ext_d - ext_a) / 2
+                    cy_ += u.y * (ext_d - ext_a) / 2
                 else:   # a gentle turn: lay the slab ACROSS the way through
                     w = Vector((pts[i + 1].x - pts[i - 1].x, pts[i + 1].y - pts[i - 1].y, 0)).normalized()
                     ang = math.atan2(w.y, w.x) + math.pi / 2; lx = LAND_CROSS
                 bpy.ops.mesh.primitive_cube_add(
-                    location=((A.x + Dp.x) / 2, (A.y + Dp.y) / 2, pts[i].z - 0.08))
+                    location=(cx_, cy_, pts[i].z - 0.08))
                 o = bpy.context.active_object; o.name = "walk_" + nm + "_landing"
-                o.dimensions = (lx, LAND_LONG, 0.16)
+                # THE PAD SCALES WITH THE FLIGHT IT SERVES (iteration 9, same lesson
+                # as the width-scaled pivot split): LAND_LONG 0.90 was sized for 1.4
+                # treads meeting the pad end-on; a hairpin's arriving leg meets it
+                # BROADSIDE, and 0.90 minus one tread's body shadow is a needle.
+                # max(1, w/1.4) keeps every 1.4-wide flight bit-identical.
+                o.dimensions = (lx, LAND_LONG * max(1.0, ew / 1.4), 0.16)
                 o.rotation_euler = (0, 0, ang)
                 o.data.materials.append(M_WOOD)
                 link_to(o, "PATHS")
