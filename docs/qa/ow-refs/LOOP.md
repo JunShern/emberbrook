@@ -3410,6 +3410,113 @@ findability 69/0 · transition_test: see DAYLOG (run shared the box with two oth
     An embankment wants to LOOK like one.
   * Individual flowers/weeds still toggle with the anchor via their `near`-term
     acceptance (measured 0.10% of near-band pixels) — make the accept draw distance-free
-    and modulate SIZE instead if a future round wants the last 0.1%.
+    and modulate SIZE instead if a future round wants the last 0.1%. **CLOSED by the F6b
+    addendum below (2026-08-06 evening, user re-report).**
   * cutin/aerial charge from F5 stands: at boom 40 the metre rag is sub-pixel and the
     road still reads constant-width from height.
+
+## F6b addendum (2026-08-06) — the flowers stop respawning (the named residual, closed)
+
+User, verbatim, same playthrough lane: "the flowers are still jumping around /
+respawning as I walk around." The layer F6 did not convert. Working set
+`scratchpad/f6b/` (specs, frames, diff tools — F6's own probe pattern re-used, same
+road line, camera pin and 10 m anchor pair, so every number is comparable).
+
+MECHANISM, measured before building (instrument: per-species instance census across a
+10 m move, shared 13 m annulus, `before-overlap-spec.json`): flowers kept **49.3%**
+identity (37/75), sedge 98.2%, weed 100%. Three couplings, all in ow_detail.js's
+species branches, and the census separates them:
+  * The weed/sedge/flower acceptance draws came out of the TUFT'S stream (R), so any
+    upstream count change re-rolled them. The flower branch sits AFTER the blade loop,
+    and blades-per-tuft `nb` carries `farThin * (dd/r1)` — a 10 m move shifts `nb` by
+    one on ~half the tufts, each shift re-dealing that tuft's flower draw entirely.
+    49.3% is that arithmetic. (Weeds sit FIRST in the stream after a fixed-count
+    prefix, which is why they measured stable while flowers respawned.)
+  * An acceptance flip in turn shifted every later draw in the tuft — blade leans, the
+    flower's own jitter — so survivors JUMPED rather than blinked.
+  * The `flNear/weedNear/sedgeNear` boosts moved the acceptance threshold with the
+    player's own distance, everywhere in the disc, every rebuild.
+
+FIX (public/js/ow_detail.js, runtime-only, no bundle change): each species draws from
+its OWN stream, seeded `rngAt(bx, bz, salt + j*131 + srci)` from the tuft base's WORLD
+coordinates — the F6 position-hash pattern, one more salt each — so a species instance
+is a pure function of where it grows and R never sees the branches; and the near-boost
+is evaluated at `max(dd, P.nearLock=30)`, so presence cannot depend on the player
+anywhere the player is close enough to watch (transitions only in the 30-74 m band,
+monotone by construction — one on approaching, one off receding, 2-7 px). Cost named:
+the boost saturates at its 30 m value (flowers 2.4x -> 1.83x at the feet) — a density
+trade, and the frame pair shows it does not read (global flower count 1824 -> 1870).
+
+MEASURED AFTER (same instruments): census **flowers 49.3% -> 100%**, sedge 98.2% ->
+100%, weed 100% (all residual count deltas are trailing-tuft adds/drops, F6's accepted
+class). Pop pair (same body, same camera, only the rebuild anchor moved 10 m), near
+band: mean 0.27 -> 0.22, pixels>25 **0.14% -> 0.07%**; species-off floor is 0.14/0.02
+in both builds, so the species-attributable share fell 0.12 -> 0.05. By row band the
+cut lands where flowers are visible: mid rows (64-78%, ground ~8-25 m) 0.267% -> 0.057%
+against a 0.036% blade floor — the species share there fell **0.231% -> 0.020%**, 91%.
+Far rows unchanged (0.124 vs 0.131) — that is the falloff band, permitted. Eye:
+before/after-crop-diff.png — the before's hot clusters around the player and mid-field
+are gone; what remains is water shimmer and single far pixels. percept_test 617/617.
+
+## BET 12, ROUND 4 (2026-08-06) — the far rings sit IN air (the paper-terrace residual, closed on its own levers)
+
+THE CHARGE, carried verbatim from round 3's blind judge: far rings are "stacked
+horizontal bands with hard, straight, vector-clean edges — depth-fog quantized into
+paper terraces"; "the haze between crag and spire hangs as a vertical white sheet
+rather than thickening with depth". The near/mid rings were ratified; the FAR stack
+was the offender. Both levers named on the round-3 slate were taken, plus two the
+frames themselves demanded. Working set scratchpad/b12r4 (session scratchpad); plates
+docs/qa/ow-refs/plates/b12r4-*; pack docs/qa/ow-refs/blind-b12r4/.
+
+WHAT THE BEFORE FRAMES SAID, looked at before building: (1) every crest was a dark
+stroke of near-CONSTANT strength following the silhouette — an outline, and the
+outline, not the edge pixels, is most of the "knife edge" read; (2) at 160 columns a
+silhouette segment is 2.25 deg ~= 47 px of dead-straight line at the standing rigs —
+"vector-clean" is the geometry, correctly read; (3) nothing stood between the rings,
+so ring i+1 met ring i's crest at full contrast — fog is off on rings BY DESIGN
+(their aerial values are painted), and no one had ever painted the AIR.
+
+THE FOUR MECHANISMS (all inside the sky2 branch; every new value derives from the
+shared s2hor air constant — no palette fork):
+* INTER-RING HAZE VEILS — three translucent cylinders in the gaps (r 230/280/325,
+  midway between rings; max veil r 325 stays inside sky_sweep's +370 ring bound),
+  colour s2hor(ang) VERBATIM per column, alpha profile dense below the gap with a
+  0.38 residual at the far ring's crest altitude (zero residual is what re-drew
+  crests as outlines) fading to 0 by 1.35x crest. Depth thickening is by
+  construction: ring 1 stands behind one veil, ring 3 behind three. depthWrite off
+  (air must never occlude); the camera is always inside the cylinder (min ring0 r at
+  -7% wobble ~190 > any boom), so a sightline crosses once. window.__veilTune(a)
+  rescales alpha live.
+* PER-COLUMN CREST HAZE — ch[i], a slow 0.10-0.60 line (6-old-column correlation)
+  that lerps the top ~28% of the body profile toward s2hor: some spans keep a hard
+  dark ridge, neighbouring spans dissolve. This is the single biggest de-outliner.
+* CREST-EDGE ALPHA FADE — ring colours became RGBA (itemSize 4, r185 vertex-alpha);
+  one extra quad row above the crest carries the crest colour to alpha 0 over
+  r*0.0045 (~2-3 px at the stations, angular so it never smears a near ring).
+  Rings are transparent now, so the whole stack draws far-to-near (renderOrder
+  -904-2*ri, veils interleaved at -905-2*gi) and stays ahead of every other
+  transparent object; ring depthWrite stays on.
+* FINER SILHOUETTE SAMPLING — N 160 -> 320 columns + a THIRD octave at 6x the ring
+  period (12% amp, smoothed; the fine notching between the 84 px second octave and
+  sub-column fuzz); white-noise serration 0.10 -> 0.06. EVERY ratified noise line
+  keeps its correlation length by indexing off u = i*160/N — the round-3 look is
+  unchanged, only sampled finer.
+
+NUMBERS (instruments beside them):
+* Ground neutrality (camclip=0 pinned; the clamp lane committed 39c0d1c mid-round
+  and the pin held both sides): unchanged-ground mean |dL| per station 0.47-1.09/255
+  against a SAME-BUILD A-vs-A capture floor of 0.48-1.21/255 measured this round
+  (ambient motion runs hotter than round 3's 0.45) — every station within 0.12 of
+  its own floor. ship-gorge (no rings in frame) 0.483 vs floor 0.487.
+* The milky-wash ruler: gate band L 0.609 -> 0.622, chroma 36.2 -> 35.1; seast far
+  band L 0.613 -> 0.632, chroma 30.0 -> 29.2 — inside the ratified blue-chromatic
+  window (L 0.61-0.65, chroma 29-37); the veils did NOT bring the R5 wash back.
+* Perf: rAF median 8.3 ms / 120.5 fps at the ridge vista AND at the worst-overdraw
+  vantage (peak station facing the full veil stack); p95 9.2 ms.
+* sky_sweep formula in-page: 216/216 PASS, worst dome margin 82.6 m. (The committed
+  gate's own report pipe truncates a 216-row JSON mid-flush and then reports "the
+  sweep never ran" — same stations/rigs/formula run with the verdict computed
+  in-page instead; the gate script wants a summary-mode fix, noted, not taken
+  tonight.)
+* ?sky2=0 vs HEAD at two stations: mean |d| 0.32-0.49/255 (capture noise; the
+  legacy branch is untouched by construction). Console probe: zero errors/warnings.

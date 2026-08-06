@@ -16665,3 +16665,21 @@ one-time allocation (play3d-domain); (4) district-art carries NOT taken (qm_buil
 walls FROM walk records — a re-run moves shipped red-teamed art; the cookhouse north door
 leaf stays owed per its 2026-08-02 flag); (5) west-waterfront knot + NE doorstep wedge
 unchanged (named in window 3); (6) cutin_edge chroma hole still open (standing).
+
+## 2026-08-06 evening — F6b fix lane: the flower/weed/sedge layer stops respawning
+
+User re-report after the F6 round, verbatim: "the flowers are still jumping around /
+respawning as I walk around" — the residual F6's own report named. Full mechanism,
+numbers and instruments: **docs/qa/ow-refs/LOOP.md, "F6b addendum"** (working set
+scratchpad/f6b/, F6's probe pattern re-used verbatim for comparability).
+
+One line each: flowers kept 49.3% identity across a 10 m move because their draws came
+out of the tuft's shared RNG stream AFTER the blade loop (blades-per-tuft shifts with
+distance re-dealt them), and the flNear/weedNear/sedgeNear boosts moved every acceptance
+threshold with the player. Fix (ow_detail.js only): a private world-seeded stream per
+species (the F6 position-hash pattern, new salts) + the near-boost clamped at
+max(dd, nearLock=30) so presence is player-independent everywhere the player can watch.
+After: species identity 100/100/100%, pop-pair near-band pixels>25 0.14% -> 0.07%
+(species share 0.12 -> 0.05; in the 8-25 m rows 0.231% -> 0.020% against a 0.036%
+blade floor). percept_test 617/617. No bundle change; module structure untouched, so
+transition_test not owed by this lane.

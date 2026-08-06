@@ -264,6 +264,18 @@
     // unlike a blade it got no size compensation at all. Flowers are pulled INWARD, made
     // bigger, and given the same angular width floor the blades now get.
     flowers: 1.0,    // master scale, 0 = off
+    // F6b — THE NEAR-BOOST IS CLAMPED INSIDE THIS RADIUS (see the species branches in
+    // rebuild). flNear/weedNear/sedgeNear exist to spend a per-tuft probability where it
+    // can be seen, but a boost that keeps rising as the player approaches is a boost that
+    // MATERIALISES instances in front of a walking player: every rebuild moved every
+    // species' acceptance threshold everywhere in the disc, so flowers blinked in place
+    // at the player's feet ("the flowers are still jumping around / respawning") — the
+    // residual F6's own report named. Evaluating the boost at max(dd, nearLock) makes a
+    // species instance's presence a PURE FUNCTION OF WORLD COORDINATES anywhere inside
+    // nearLock; state changes only happen in the 30-74 m band, where a flower head is
+    // 2-7 px and shrinking. The cost is measured and accepted: the boost saturates at its
+    // 30 m value (flowers 2.4x -> 1.83x at the feet), a density trade, not a defect.
+    nearLock: 30,
     flPatchM: 13.0,  // metres per flower-patch cell
     flPatchT: 0.52,  // patch threshold — above this the patch may flower
     flPer: 0.115,    // heads per tuft inside a patch at full density
@@ -1041,6 +1053,13 @@
     // change as the player moves are the smooth distance terms (fall/grow/wg/farThin),
     // which add or drop TRAILING tufts and blades at the falloff band, individually
     // and far away. No hysteresis machinery is needed once nothing re-rolls.
+    // F6b (the residual that report named): the WEED/SEDGE/FLOWER branches were still
+    // player-coupled two ways — their acceptance probability carried an UNclamped
+    // near-boost (so the threshold moved everywhere in the disc, every rebuild), and
+    // their draws came out of the TUFT'S stream, so one acceptance flip re-rolled every
+    // later draw in that tuft (blade lean, the flower's own jitter — the "jumping").
+    // Each species now has its own world-seeded stream and the boost clamps at
+    // P.nearLock; see the branches below.
     var R = null, cx = p.x, cz = p.z, r1 = P.r1, r0 = P.r0, span = r1 - r0;
     // `budget` is a SAFETY VALVE, not a target. Cells are walked in x,z order, so a run that
     // actually hits the cap loses one whole side of the disc rather than thinning evenly.
@@ -1231,7 +1250,13 @@
               // the round spent it: `tuftDens` 10.5 -> 11.4 put 2 586 blades back in the
               // same breath, so it never reaches the total. Substitution bounds the cost of
               // a species; it does not pay for one.
-              var near = 1 - Math.min(1, dd / r1);
+              // F6b — the species near-boost is evaluated at max(dd, nearLock), so a
+              // species instance's presence never depends on the player's position while
+              // the player is close enough to watch it (see P.nearLock). It still tapers
+              // to 1.0 at r1 beyond the clamp, which is where adds/drops now happen —
+              // monotone by construction (the boost only rises as dd falls), so a pass
+              // through an area toggles an instance at most once each way, far out.
+              var near = 1 - Math.min(1, Math.max(dd, P.nearLock) / r1);
               // NEITHER OF THEM MAY BE A STRAGGLER. A stray is deliberately pushed PAST
               // the seam and now stands on top of the paving (see occTop), which is right
               // for a few short blades and wrong for a 0.37 m rosette: the first build put
@@ -1240,19 +1265,29 @@
               // a straggler is — a plant that has crossed the edge and GETS TRODDEN — and
               // neither of these two assets is that plant.
               var drewBig = isStray;
+              // F6b — A SPECIES STREAM IS ITS OWN, seeded from the tuft base's WORLD
+              // coordinates (the F6 position-hash pattern, one more salt). It used to
+              // draw from R, the tuft's stream — so the moment a weed's acceptance
+              // flipped (its threshold moved with the player, see `near` above), every
+              // draw AFTER it in this tuft shifted: the sedge and flower checks, every
+              // blade's lean and hue, the flower's own jitter. One threshold crossing
+              // re-rolled the whole tuft, which is "jumping around", not "blinking".
+              // With a private stream a flip changes exactly the one plant that flipped,
+              // and R never sees the species branches at all.
               if (P.weed > 0 && !drewBig && n + 5 < P.budget) {
                 var wv2 = weedAt(bx, bz);
                 if (wv2 > P.weedT) {
+                  var Rw = rngAt(bx, bz, 977 + j * 131 + srci);
                   var pw = P.weedPer * P.weed * (wv2 - P.weedT) / (1 - P.weedT) *
                            (1 + (P.weedFringe - 1) * frb) * (1 + (P.weedNear - 1) * near);
-                  if (R() < pw) {
-                    var ws = P.weedS * (1 + (R() - 0.5) * 2 * P.weedJ) * (1 + P.grow * (dd / r1));
-                    q.setFromAxisAngle(up, R() * Math.PI * 2);
-                    axis.set(Math.cos(R() * 6.283), 0, Math.sin(R() * 6.283));
+                  if (Rw() < pw) {
+                    var ws = P.weedS * (1 + (Rw() - 0.5) * 2 * P.weedJ) * (1 + P.grow * (dd / r1));
+                    q.setFromAxisAngle(up, Rw() * Math.PI * 2);
+                    axis.set(Math.cos(Rw() * 6.283), 0, Math.sin(Rw() * 6.283));
                     // a rosette sits ON the ground and takes its tilt from it, so the lean
                     // is a third of a blade's: a weed leaning 20 degrees is a weed that has
                     // been stepped on, which is a different story than the one being told.
-                    lean.setFromAxisAngle(axis, (R() - 0.5) * P.lean * 0.34);
+                    lean.setFromAxisAngle(axis, (Rw() - 0.5) * P.lean * 0.34);
                     q.multiply(lean);
                     vp.set(bx, by - 0.010, bz);
                     // the horizontal gain goes on BOTH ground axes, unlike a blade: this is
@@ -1260,7 +1295,7 @@
                     vs.set(ws * wg, ws, ws * wg);
                     m4.compose(vp, q, vs);
                     for (var ew = 0; ew < 16; ew++) WM.push(m4.elements[ew]);
-                    var wj = 0.92 + 0.16 * R();
+                    var wj = 0.92 + 0.16 * Rw();
                     WC.push(tr * wj, tg * wj * 1.02, tb * wj * 0.94);
                     n += 5; nW++; drewBig = true;
                     nb = Math.max(1, nb - 3);
@@ -1271,20 +1306,21 @@
                 var sv3 = sedgeAt(bx, bz);
                 if (sv3 > P.sedgeT) {
                   var flat = 1 + (P.sedgeFlat - 1) * Math.max(0, Math.min(1, (IDX.ny[t] - 0.86) / 0.14));
+                  var Rs = rngAt(bx, bz, 1409 + j * 131 + srci);
                   var ps = P.sedgePer * P.sedge * (sv3 - P.sedgeT) / (1 - P.sedgeT) *
                            (dryW > 0 ? P.sedgeDry : 1) * flat *
                            (1 + (P.sedgeNear - 1) * near);
-                  if (R() < ps) {
-                    var ss = P.sedgeS * (1 + (R() - 0.5) * 2 * P.sedgeJ) * (1 + P.grow * (dd / r1));
-                    q.setFromAxisAngle(up, R() * Math.PI * 2);
-                    axis.set(Math.cos(R() * 6.283), 0, Math.sin(R() * 6.283));
-                    lean.setFromAxisAngle(axis, (R() - 0.5) * P.lean * 0.45);
+                  if (Rs() < ps) {
+                    var ss = P.sedgeS * (1 + (Rs() - 0.5) * 2 * P.sedgeJ) * (1 + P.grow * (dd / r1));
+                    q.setFromAxisAngle(up, Rs() * Math.PI * 2);
+                    axis.set(Math.cos(Rs() * 6.283), 0, Math.sin(Rs() * 6.283));
+                    lean.setFromAxisAngle(axis, (Rs() - 0.5) * P.lean * 0.45);
                     q.multiply(lean);
                     vp.set(bx, by - 0.020, bz);
                     vs.set(ss * wg, ss, ss * wg);
                     m4.compose(vp, q, vs);
                     for (var es = 0; es < 16; es++) SM.push(m4.elements[es]);
-                    var sjt = 0.90 + 0.20 * R();
+                    var sjt = 0.90 + 0.20 * Rs();
                     // the COOL member of the family, and it is explicit rather than
                     // inherited: f2's `grassOnDry` finding is that a plant which takes its
                     // colour from its own ground cannot disagree with its own ground.
@@ -1334,21 +1370,25 @@
                   // flNear: the per-tuft probability is spent where the flowers can be SEEN.
                   // Tuft count grows as the annulus area, so a flat probability puts most of
                   // the population past 30 m by arithmetic alone — which is what it did.
+                  // F6b: same clamp (`near` carries it) and same private stream rule as
+                  // the weed — a flower's identity was the most player-coupled of the
+                  // three, because its draws sat after BOTH other branches in R.
+                  var Rf = rngAt(bx, bz, 1861 + j * 131 + srci);
                   var pp = P.flPer * P.flowers * (pv - P.flPatchT) / (1 - P.flPatchT) *
                            (1 + (P.flFringe - 1) * frb) *
-                           (1 + (P.flNear - 1) * (1 - Math.min(1, dd / r1)));
-                  if (R() < pp) {
+                           (1 + (P.flNear - 1) * near);
+                  if (Rf() < pp) {
                     var sp = FLOWER[(vhash(Math.floor(bx / 7), Math.floor(bz / 7)) * 3) | 0];
-                    var fh = P.flH * (0.75 + 0.5 * R());
-                    q.setFromAxisAngle(up, R() * Math.PI * 2);
-                    vp.set(bx + (R() - 0.5) * 0.2, by - 0.01, bz + (R() - 0.5) * 0.2);
+                    var fh = P.flH * (0.75 + 0.5 * Rf());
+                    q.setFromAxisAngle(up, Rf() * Math.PI * 2);
+                    vp.set(bx + (Rf() - 0.5) * 0.2, by - 0.01, bz + (Rf() - 0.5) * 0.2);
                     // the head gets the blades' angular floor too — r1 scaled Y only, so a
                     // flower was the one thing in the frame with no size compensation at all.
                     var fw = P.flW * wg;
                     vs.set(fw, fh, fw);
                     m4.compose(vp, q, vs);
                     for (var e2 = 0; e2 < 16; e2++) FM.push(m4.elements[e2]);
-                    var fj = 0.9 + 0.2 * R();
+                    var fj = 0.9 + 0.2 * Rf();
                     FC.push(sp[0] * fj, sp[1] * fj, sp[2] * fj);
                   }
                 }
