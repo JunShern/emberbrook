@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-06T09:47:31Z",
+ "generated": "2026-08-06T10:42:56Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -76,36 +76,36 @@
       -5
      ],
      "from": "shelf-west",
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.319:shelf-west>gate",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.409:shelf-west>gate",
      "aim": [
-      -0.85,
-      -0.527
+      -0.999,
+      0.034
      ],
      "seam": {
       "n": [
-       0.9834,
-       0.1817
+       0.965,
+       -0.2624
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.023,
-       0.01
+       0.034,
+       0.028
       ],
       "px": [
-       687,
-       380
+       695,
+       373
       ],
       "onScreen": true,
-      "edgeMargin": 0.977,
-      "depth": 37.017,
-      "charPx": 56,
+      "edgeMargin": 0.966,
+      "depth": 36.297,
+      "charPx": 57,
       "headNdc": [
-       0.023,
-       0.149
+       0.035,
+       0.17
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -130,20 +130,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.024,
-       -0.535
+       0.041,
+       -0.524
       ],
       "px": [
-       688,
-       590
+       700,
+       585
       ],
       "onScreen": true,
-      "edgeMargin": 0.465,
-      "depth": 24.93,
-      "charPx": 83,
+      "edgeMargin": 0.476,
+      "depth": 24.211,
+      "charPx": 86,
       "headNdc": [
-       0.024,
-       -0.34
+       0.042,
+       -0.323
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -159,25 +159,25 @@
       -6
      ],
      "from": null,
-     "via": "cine.json spawn",
+     "via": "solved spawnCandidate (walk_pad_gatehouse) — the bake is stale",
      "aim": null,
      "screen": {
       "behind": false,
       "ndc": [
-       0.008,
-       -0.207
+       0.021,
+       -0.191
       ],
       "px": [
-       677,
-       464
+       686,
+       457
       ],
       "onScreen": true,
-      "edgeMargin": 0.793,
-      "depth": 31.008,
-      "charPx": 67,
+      "edgeMargin": 0.809,
+      "depth": 30.288,
+      "charPx": 68,
       "headNdc": [
-       0.008,
-       -0.045
+       0.022,
+       -0.024
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -187,90 +187,48 @@
    ],
    "exits": [
     {
-     "id": "passage:gate-stair",
-     "kind": "passage",
-     "at": [
-      20.5,
-      24.07,
-      -6.2
-     ],
-     "to": "del-cine",
-     "toKind": "scene",
-     "prompt": "E",
-     "label": "Down to the Shelf street",
-     "aim": [
-      0.996,
-      -0.087
-     ],
-     "seam": null,
-     "r": 1.8,
-     "via": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.047,
-       0.089
-      ],
-      "px": [
-       640,
-       350
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.911,
-      "depth": 39.548,
-      "charPx": 52,
-      "headNdc": [
-       -0.048,
-       0.221
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      20.35,
-      22.57,
-      -3.32
+      20.73,
+      19.04,
+      -5.1
      ],
      "to": "shelf-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.997,
-      -0.074
+      0.841,
+      0.541
      ],
      "seam": {
       "n": [
-       0.9834,
-       0.1817
+       0.965,
+       -0.2624
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.409:gate>shelf-west",
      "screen": {
       "behind": false,
       "ndc": [
-       0.084,
-       -0.019
+       0.012,
+       -0.255
       ],
       "px": [
-       728,
-       391
+       680,
+       482
       ],
       "onScreen": true,
-      "edgeMargin": 0.916,
-      "depth": 40.203,
+      "edgeMargin": 0.745,
+      "depth": 40.872,
       "charPx": 51,
       "headNdc": [
-       0.085,
-       0.108
+       0.012,
+       -0.133
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -299,20 +257,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.079,
-       -0.774
+       0.1,
+       -0.77
       ],
       "px": [
-       725,
-       681
+       739,
+       680
       ],
       "onScreen": true,
-      "edgeMargin": 0.226,
-      "depth": 21.895,
-      "charPx": 95,
+      "edgeMargin": 0.23,
+      "depth": 21.176,
+      "charPx": 98,
       "headNdc": [
-       0.081,
-       -0.557
+       0.103,
+       -0.545
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -429,15 +387,15 @@
      ]
     },
     {
-     "id": "gate:valley-gate__inn@0..0.319",
+     "id": "gate:valley-gate__inn@0..0.409",
      "class": "stairs",
      "from": "node:valley-gate",
      "to": "node:inn",
      "t": [
       0,
-      0.319
+      0.409
      ],
-     "length": 3.649,
+     "length": 4.675,
      "points": [
       [
        16.67,
@@ -445,22 +403,25 @@
        -4
       ],
       [
-       18.25,
-       23.2,
-       -4.43
+       18.02,
+       23.32,
+       -4.37
       ],
       [
-       19.84,
-       22.41,
-       -4.86
+       19.38,
+       22.64,
+       -4.74
+      ],
+      [
+       20.73,
+       21.96,
+       -5.1
       ]
      ],
-     "source": "map edge valley-gate__inn@0..0.319",
+     "source": "map edge valley-gate__inn@0..0.409",
      "role": "spine",
      "connects": [
-      "entry:seam:valley-gate__inn",
-      "exit:passage:gate-stair",
-      "exit:seam:valley-gate__inn"
+      "entry:seam:valley-gate__inn"
      ]
     },
     {
@@ -647,10 +608,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 27,
+    "routeSamples": 28,
     "routeInFramePct": 100,
-    "routeLen": 41.113,
-    "spineLen": 41.113,
+    "routeLen": 42.139,
+    "spineLen": 42.139,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -673,36 +634,36 @@
       -3.53
      ],
      "from": "gate",
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.409:gate>shelf-west",
      "aim": [
-      0.997,
-      -0.074
+      0.841,
+      0.541
      ],
      "seam": {
       "n": [
-       0.9834,
-       0.1817
+       0.965,
+       -0.2624
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.332,
-       -0.187
+       0.389,
+       -0.145
       ],
       "px": [
-       895,
-       456
+       933,
+       440
       ],
       "onScreen": true,
-      "edgeMargin": 0.668,
-      "depth": 21.545,
-      "charPx": 96,
+      "edgeMargin": 0.611,
+      "depth": 24.46,
+      "charPx": 85,
       "headNdc": [
-       0.337,
-       0.06
+       0.394,
+       0.073
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -734,20 +695,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.472,
-       -0.25
+       -0.333,
+       -0.206
       ],
       "px": [
-       355,
-       480
+       448,
+       463
       ],
       "onScreen": true,
-      "edgeMargin": 0.528,
-      "depth": 23.999,
-      "charPx": 86,
+      "edgeMargin": 0.667,
+      "depth": 26.913,
+      "charPx": 77,
       "headNdc": [
-       -0.477,
-       -0.029
+       -0.337,
+       -0.008
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -772,20 +733,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.183,
-       -0.381
+       0.261,
+       -0.314
       ],
       "px": [
-       795,
-       530
+       847,
+       504
       ],
       "onScreen": true,
-      "edgeMargin": 0.619,
-      "depth": 20.664,
-      "charPx": 100,
+      "edgeMargin": 0.686,
+      "depth": 23.579,
+      "charPx": 88,
       "headNdc": [
-       0.186,
-       -0.126
+       0.264,
+       -0.09
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -810,20 +771,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.161,
-       -0.343
+       -0.045,
+       -0.283
       ],
       "px": [
-       564,
-       516
+       642,
+       493
       ],
       "onScreen": true,
-      "edgeMargin": 0.657,
-      "depth": 21.517,
-      "charPx": 96,
+      "edgeMargin": 0.717,
+      "depth": 24.432,
+      "charPx": 85,
       "headNdc": [
-       -0.163,
-       -0.098
+       -0.046,
+       -0.067
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -854,20 +815,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.06,
-       -0.348
+       0.044,
+       -0.287
       ],
       "px": [
-       632,
-       517
+       702,
+       494
       ],
       "onScreen": true,
-      "edgeMargin": 0.652,
-      "depth": 21.419,
-      "charPx": 97,
+      "edgeMargin": 0.713,
+      "depth": 24.334,
+      "charPx": 85,
       "headNdc": [
-       -0.061,
-       -0.101
+       0.045,
+       -0.069
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -896,62 +857,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.399,
-       -0.337
+       -0.257,
+       -0.279
       ],
       "px": [
-       404,
-       514
+       500,
+       491
       ],
       "onScreen": true,
-      "edgeMargin": 0.601,
-      "depth": 21.771,
-      "charPx": 95,
+      "edgeMargin": 0.721,
+      "depth": 24.686,
+      "charPx": 84,
       "headNdc": [
-       -0.405,
-       -0.095
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "passage:gate-stair",
-     "kind": "passage",
-     "at": [
-      22,
-      19.04,
-      -5.5
-     ],
-     "to": "del-cine",
-     "toKind": "scene",
-     "prompt": "E",
-     "label": "Up to the Valley Gate",
-     "aim": [
-      -0.996,
-      0.087
-     ],
-     "seam": null,
-     "r": 1.8,
-     "via": "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       0.337,
-       -0.442
-      ],
-      "px": [
-       898,
-       554
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.558,
-      "depth": 19.492,
-      "charPx": 106,
-      "headNdc": [
-       0.342,
-       -0.172
+       -0.26,
+       -0.064
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -962,45 +881,45 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      20.35,
-      22.57,
-      -3.32
+      20.73,
+      19.04,
+      -5.1
      ],
      "to": "gate",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.85,
-      -0.527
+      -0.999,
+      0.034
      ],
      "seam": {
       "n": [
-       0.9834,
-       0.1817
+       0.965,
+       -0.2624
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.319:shelf-west>gate",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.409:shelf-west>gate",
      "screen": {
       "behind": false,
       "ndc": [
-       0.583,
-       0.142
+       0.509,
+       -0.384
       ],
       "px": [
-       1064,
-       330
+       1014,
+       531
       ],
       "onScreen": true,
-      "edgeMargin": 0.417,
-      "depth": 19.524,
-      "charPx": 106,
+      "edgeMargin": 0.491,
+      "depth": 21.925,
+      "charPx": 94,
       "headNdc": [
-       0.592,
-       0.42
+       0.516,
+       -0.144
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1036,20 +955,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.515,
-       -0.174
+       -0.384,
+       -0.141
       ],
       "px": [
-       326,
-       451
+       414,
+       438
       ],
       "onScreen": true,
-      "edgeMargin": 0.485,
-      "depth": 26.482,
-      "charPx": 78,
+      "edgeMargin": 0.616,
+      "depth": 29.396,
+      "charPx": 70,
       "headNdc": [
-       -0.521,
-       0.027
+       -0.388,
+       0.04
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1059,35 +978,35 @@
    ],
    "routes": [
     {
-     "id": "shelf-west:valley-gate__inn@0.319..1",
+     "id": "shelf-west:valley-gate__inn@0.409..1",
      "class": "stairs",
      "from": "node:valley-gate",
      "to": "node:inn",
      "t": [
-      0.319,
+      0.409,
       1
      ],
-     "length": 7.792,
+     "length": 6.766,
      "points": [
       [
-       19.84,
-       22.41,
-       -4.86
+       20.73,
+       21.96,
+       -5.1
       ],
       [
-       21.53,
-       21.55,
-       -5.32
+       22.2,
+       21.22,
+       -5.5
       ],
       [
-       23.22,
-       20.7,
-       -5.78
+       23.67,
+       20.48,
+       -5.9
       ],
       [
-       24.91,
-       19.85,
-       -6.24
+       25.13,
+       19.74,
+       -6.3
       ],
       [
        26.6,
@@ -1095,10 +1014,10 @@
        -6.7
       ]
      ],
-     "source": "map edge valley-gate__inn@0.319..1",
+     "source": "map edge valley-gate__inn@0.409..1",
      "role": "spine",
      "connects": [
-      "exit:seam:valley-gate__inn",
+      "entry:seam:valley-gate__inn",
       "entry:door:inn",
       "entry:door:item-shop",
       "exit:door:inn"
@@ -1215,14 +1134,14 @@
    "measure": {
     "routeSamples": 15,
     "routeInFramePct": 100,
-    "routeLen": 18.874,
-    "spineLen": 18.874,
+    "routeLen": 17.848,
+    "spineLen": 17.848,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 78,
+    "minCharPx": 70,
     "visibleFrac": 0.6094
    }
   },
@@ -1765,65 +1684,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.257,
-       0.185
+       0.314,
+       0.112
       ],
       "px": [
-       845,
-       313
+       883,
+       341
       ],
       "onScreen": true,
-      "edgeMargin": 0.743,
-      "depth": 18.831,
-      "charPx": 110,
+      "edgeMargin": 0.686,
+      "depth": 17.48,
+      "charPx": 118,
       "headNdc": [
-       0.263,
-       0.473
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:loop-landing__quay-deck",
-     "kind": "seam",
-     "at": [
-      55.72,
-      17.24,
-      -9.35
-     ],
-     "from": "quay-west",
-     "via": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
-     "aim": [
-      0.447,
-      0.895
-     ],
-     "seam": {
-      "n": [
-       -0.4472,
-       -0.8944
-      ],
-      "t": 1.1,
-      "w": 1.9
-     },
-     "screen": {
-      "behind": false,
-      "ndc": [
-       0.023,
-       -0.027
-      ],
-      "px": [
-       687,
-       394
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.973,
-      "depth": 19.931,
-      "charPx": 104,
-      "headNdc": [
-       0.024,
-       0.24
+       0.322,
+       0.42
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1855,20 +1729,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.065,
-       0.046
+       0.104,
+       -0.033
       ],
       "px": [
-       715,
-       366
+       742,
+       397
       ],
       "onScreen": true,
-      "edgeMargin": 0.935,
-      "depth": 20.064,
-      "charPx": 103,
+      "edgeMargin": 0.896,
+      "depth": 18.713,
+      "charPx": 111,
       "headNdc": [
-       0.066,
-       0.312
+       0.106,
+       0.252
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1906,69 +1780,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.77,
-       0.234
+       0.867,
+       0.164
       ],
       "px": [
-       1190,
-       294
+       1255,
+       321
       ],
       "onScreen": true,
-      "edgeMargin": 0.23,
-      "depth": 18.63,
-      "charPx": 111,
+      "edgeMargin": 0.133,
+      "depth": 17.278,
+      "charPx": 120,
       "headNdc": [
-       0.789,
-       0.526
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:loop-landing__quay-deck",
-     "kind": "seam",
-     "at": [
-      54.65,
-      16.2,
-      -11.5
-     ],
-     "to": "quay-west",
-     "toKind": "shot",
-     "prompt": null,
-     "label": null,
-     "aim": [
-      -0.447,
-      -0.895
-     ],
-     "seam": {
-      "n": [
-       -0.4472,
-       -0.8944
-      ],
-      "t": 1.1,
-      "w": 1.9
-     },
-     "r": null,
-     "via": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:loop-stairs>quay-west",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       0.078,
-       -0.315
-      ],
-      "px": [
-       725,
-       505
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.685,
-      "depth": 17.937,
-      "charPx": 115,
-      "headNdc": [
-       0.08,
-       -0.025
+       0.89,
+       0.478
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2004,20 +1829,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.185,
-       -0.233
+       -0.164,
+       -0.331
       ],
       "px": [
-       548,
-       473
+       562,
+       511
       ],
       "onScreen": true,
-      "edgeMargin": 0.767,
-      "depth": 20.111,
-      "charPx": 103,
+      "edgeMargin": 0.669,
+      "depth": 18.76,
+      "charPx": 110,
       "headNdc": [
-       -0.189,
-       0.026
+       -0.168,
+       -0.055
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2107,7 +1932,6 @@
      "connects": [
       "entry:seam:armor-shop__shelf-homes",
       "exit:seam:armor-shop__shelf-homes",
-      "entry:seam:loop-landing__quay-deck",
       "entry:seam:shelf-homes__market-stalls",
       "exit:seam:shelf-homes__market-stalls"
      ]
@@ -2136,57 +1960,12 @@
     "exitsAtFrameEdge": [
      "seam:armor-shop__shelf-homes"
     ],
-    "minCharPx": 103,
+    "minCharPx": 110,
     "visibleFrac": 0.8906
    }
   },
   "quay-west": {
    "entries": [
-    {
-     "id": "seam:loop-landing__quay-deck",
-     "kind": "seam",
-     "at": [
-      53.44,
-      14,
-      -13.91
-     ],
-     "from": "loop-stairs",
-     "via": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:loop-stairs>quay-west",
-     "aim": [
-      -0.447,
-      -0.895
-     ],
-     "seam": {
-      "n": [
-       -0.4472,
-       -0.8944
-      ],
-      "t": 1.1,
-      "w": 1.9
-     },
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.444,
-       0.068
-      ],
-      "px": [
-       374,
-       358
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.556,
-      "depth": 32.954,
-      "charPx": 63,
-      "headNdc": [
-       -0.452,
-       0.227
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
     {
      "id": "seam:market-stalls__lockhead",
      "kind": "seam",
@@ -2212,20 +1991,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.682,
-       0.137
+       -0.679,
+       0.154
       ],
       "px": [
-       213,
-       331
+       216,
+       325
       ],
       "onScreen": true,
-      "edgeMargin": 0.318,
-      "depth": 35.346,
+      "edgeMargin": 0.321,
+      "depth": 34.929,
       "charPx": 59,
       "headNdc": [
-       -0.693,
-       0.286
+       -0.69,
+       0.305
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2236,41 +2015,41 @@
      "id": "seam:quay-deck__pilot-cluster",
      "kind": "seam",
      "at": [
-      56.36,
-      14,
-      -16.33
+      55.97,
+      13.93,
+      -16.15
      ],
      "from": "weave",
-     "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:weave>quay-west",
+     "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.330:weave>quay-west",
      "aim": [
-      -0.859,
-      0.513
+      -0.767,
+      0.642
      ],
      "seam": {
       "n": [
-       0.9285,
-       -0.3714
+       0.7671,
+       -0.6416
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 1.75
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.664,
-       0.024
+       -0.634,
+       0.037
       ],
       "px": [
-       226,
-       375
+       246,
+       370
       ],
       "onScreen": true,
-      "edgeMargin": 0.336,
-      "depth": 31.58,
+      "edgeMargin": 0.366,
+      "depth": 31.237,
       "charPx": 66,
       "headNdc": [
-       -0.676,
-       0.188
+       -0.645,
+       0.203
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2281,41 +2060,41 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      37.45,
-      13.13,
-      -18.06
+      37.94,
+      12.42,
+      -19.54
      ],
      "from": "deep-stairs",
      "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:deep-stairs>quay-west",
      "aim": [
-      -0.904,
-      0.427
+      -0.733,
+      0.68
      ],
      "seam": {
       "n": [
-       0.9044,
-       -0.4266
+       0.7331,
+       -0.6801
       ],
       "t": 1.1,
-      "w": 1.9
+      "w": 2.25
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.435,
-       -0.37
+       0.408,
+       -0.514
       ],
       "px": [
-       964,
-       526
+       946,
+       582
       ],
       "onScreen": true,
-      "edgeMargin": 0.565,
-      "depth": 25.066,
-      "charPx": 83,
+      "edgeMargin": 0.486,
+      "depth": 23.679,
+      "charPx": 87,
       "headNdc": [
-       0.444,
-       -0.17
+       0.418,
+       -0.306
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2347,20 +2126,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.642,
-       0.213
+       -0.638,
+       0.23
       ],
       "px": [
-       241,
-       302
+       243,
+       296
       ],
       "onScreen": true,
-      "edgeMargin": 0.358,
-      "depth": 36.14,
-      "charPx": 57,
+      "edgeMargin": 0.362,
+      "depth": 35.724,
+      "charPx": 58,
       "headNdc": [
-       -0.652,
-       0.359
+       -0.648,
+       0.379
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2385,20 +2164,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.083,
-       -0.131
+       0.099,
+       -0.113
       ],
       "px": [
-       728,
-       434
+       739,
+       428
       ],
       "onScreen": true,
-      "edgeMargin": 0.869,
-      "depth": 27.379,
-      "charPx": 76,
+      "edgeMargin": 0.887,
+      "depth": 26.962,
+      "charPx": 77,
       "headNdc": [
-       0.085,
-       0.056
+       0.101,
+       0.077
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2429,69 +2208,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.275,
-       -0.168
+       0.294,
+       -0.15
       ],
       "px": [
-       857,
-       449
+       870,
+       442
       ],
       "onScreen": true,
-      "edgeMargin": 0.725,
-      "depth": 26.577,
-      "charPx": 78,
+      "edgeMargin": 0.706,
+      "depth": 26.16,
+      "charPx": 79,
       "headNdc": [
-       0.281,
-       0.024
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:loop-landing__quay-deck",
-     "kind": "seam",
-     "at": [
-      54.65,
-      16.2,
-      -11.5
-     ],
-     "to": "loop-stairs",
-     "toKind": "shot",
-     "prompt": null,
-     "label": null,
-     "aim": [
-      0.447,
-      0.895
-     ],
-     "seam": {
-      "n": [
-       -0.4472,
-       -0.8944
-      ],
-      "t": 1.1,
-      "w": 1.9
-     },
-     "r": null,
-     "via": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.444,
-       0.334
-      ],
-      "px": [
-       373,
-       256
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.556,
-      "depth": 34.753,
-      "charPx": 60,
-      "headNdc": [
-       -0.452,
-       0.488
+       0.301,
+       0.046
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2527,20 +2257,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.819,
-       0.14
+       -0.817,
+       0.157
       ],
       "px": [
-       122,
-       330
+       123,
+       324
       ],
       "onScreen": true,
-      "edgeMargin": 0.181,
-      "depth": 35.427,
-      "charPx": 58,
+      "edgeMargin": 0.183,
+      "depth": 35.011,
+      "charPx": 59,
       "headNdc": [
-       -0.832,
-       0.288
+       -0.83,
+       0.308
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2551,45 +2281,45 @@
      "id": "seam:quay-deck__pilot-cluster",
      "kind": "seam",
      "at": [
-      58.78,
-      13.13,
-      -17.77
+      58.04,
+      13.53,
+      -17.88
      ],
      "to": "weave",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.213,
-      -0.977
+      0.382,
+      -0.924
      ],
      "seam": {
       "n": [
-       0.9285,
-       -0.3714
+       0.7671,
+       -0.6416
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 1.75
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+     "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.330:quay-west>weave",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.83,
-       -0.081
+       -0.8,
+       -0.038
       ],
       "px": [
-       114,
-       415
+       134,
+       398
       ],
       "onScreen": true,
-      "edgeMargin": 0.17,
-      "depth": 31.225,
-      "charPx": 66,
+      "edgeMargin": 0.2,
+      "depth": 30.375,
+      "charPx": 68,
       "headNdc": [
-       -0.845,
-       0.083
+       -0.815,
+       0.133
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2600,45 +2330,45 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      40.02,
-      11.13,
-      -19.27
+      40.03,
+      10.87,
+      -21.48
      ],
      "to": "deep-stairs",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.852,
-      -0.523
+      0.733,
+      -0.68
      ],
      "seam": {
       "n": [
-       0.9044,
-       -0.4266
+       0.7331,
+       -0.6801
       ],
       "t": 1.1,
-      "w": 1.9
+      "w": 2.25
      },
      "r": null,
      "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
      "screen": {
       "behind": false,
       "ndc": [
-       0.229,
-       -0.619
+       0.217,
+       -0.787
       ],
       "px": [
-       826,
-       622
+       818,
+       686
       ],
       "onScreen": true,
-      "edgeMargin": 0.381,
-      "depth": 25.334,
-      "charPx": 82,
+      "edgeMargin": 0.213,
+      "depth": 23.007,
+      "charPx": 90,
       "headNdc": [
-       0.234,
-       -0.427
+       0.223,
+       -0.58
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2674,20 +2404,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.55,
-       0.356
+       -0.545,
+       0.375
       ],
       "px": [
-       303,
-       247
+       306,
+       240
       ],
       "onScreen": true,
-      "edgeMargin": 0.45,
-      "depth": 37.038,
-      "charPx": 56,
+      "edgeMargin": 0.455,
+      "depth": 36.622,
+      "charPx": 57,
       "headNdc": [
-       -0.558,
-       0.501
+       -0.553,
+       0.522
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2754,11 +2484,8 @@
       ]
      ],
      "source": "map edge quay-deck__cookhouse@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
-      "entry:seam:loop-landing__quay-deck",
-      "exit:seam:loop-landing__quay-deck",
-      "entry:seam:deep-stairs-head__deep-stairs-foot",
       "entry:door:cookhouse",
       "exit:door:cookhouse"
      ]
@@ -2796,11 +2523,7 @@
       ]
      ],
      "source": "map edge quay-deck__notice-board@0..1",
-     "role": "link",
-     "connects": [
-      "entry:seam:loop-landing__quay-deck",
-      "exit:seam:loop-landing__quay-deck"
-     ]
+     "role": "spur"
     },
     {
      "id": "quay-west:quay-deck__market-stalls",
@@ -2835,10 +2558,8 @@
       ]
      ],
      "source": "map edge quay-deck__market-stalls@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
-      "entry:seam:loop-landing__quay-deck",
-      "exit:seam:loop-landing__quay-deck",
       "entry:seam:market-stalls__lockhead",
       "entry:seam:shelf-homes__market-stalls",
       "exit:seam:market-stalls__lockhead",
@@ -2954,23 +2675,18 @@
       ]
      ],
      "source": "map edge quay-deck__deep-stairs-head@0..1",
-     "role": "spine",
-     "connects": [
-      "entry:seam:loop-landing__quay-deck",
-      "exit:seam:loop-landing__quay-deck",
-      "entry:seam:deep-stairs-head__deep-stairs-foot"
-     ]
+     "role": "spur"
     },
     {
-     "id": "quay-west:quay-deck__pilot-cluster@0..0.483",
+     "id": "quay-west:quay-deck__pilot-cluster@0..0.33",
      "class": "stairs",
      "from": "node:quay-deck",
      "to": "node:pilot-cluster",
      "t": [
       0,
-      0.483
+      0.33
      ],
-     "length": 9.053,
+     "length": 6.084,
      "points": [
       [
        53.4,
@@ -2978,36 +2694,30 @@
        -14
       ],
       [
-       54.78,
-       13.85,
-       -15.15
+       54.56,
+       13.87,
+       -14.97
       ],
       [
-       56.15,
-       13.7,
-       -16.3
+       55.72,
+       13.75,
+       -15.94
       ],
       [
-       57.53,
-       13.55,
-       -17.45
+       56.89,
+       13.62,
+       -16.92
       ],
       [
-       58.9,
-       13.4,
-       -18.6
-      ],
-      [
-       59.16,
-       12.65,
-       -20.28
+       58.05,
+       13.49,
+       -17.89
       ]
      ],
-     "source": "map edge quay-deck__pilot-cluster@0..0.483",
-     "role": "spine",
+     "source": "map edge quay-deck__pilot-cluster@0..0.33",
+     "role": "link",
      "connects": [
-      "entry:seam:loop-landing__quay-deck",
-      "exit:seam:loop-landing__quay-deck",
+      "entry:seam:quay-deck__pilot-cluster",
       "exit:seam:quay-deck__pilot-cluster"
      ]
     },
@@ -3049,7 +2759,7 @@
       ]
      ],
      "source": "map edge deep-stairs-head__deep-stairs-foot@0..0.22",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:deep-stairs-head__deep-stairs-foot",
       "exit:seam:deep-stairs-head__deep-stairs-foot"
@@ -3117,19 +2827,20 @@
     ]
    },
    "measure": {
-    "routeSamples": 47,
+    "routeSamples": 46,
     "routeInFramePct": 100,
-    "routeLen": 67.148,
-    "spineLen": 67.148,
+    "routeLen": 64.179,
+    "spineLen": 39.827,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
      "seam:market-stalls__lockhead",
-     "seam:quay-deck__pilot-cluster"
+     "seam:quay-deck__pilot-cluster",
+     "seam:deep-stairs-head__deep-stairs-foot"
     ],
-    "minCharPx": 56,
+    "minCharPx": 57,
     "visibleFrac": 0.8594
    }
   },
@@ -3574,20 +3285,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.162,
-       0.076
+       0.177,
+       0.08
       ],
       "px": [
-       781,
-       355
+       791,
+       353
       ],
       "onScreen": true,
-      "edgeMargin": 0.838,
-      "depth": 19.676,
-      "charPx": 105,
+      "edgeMargin": 0.823,
+      "depth": 19.607,
+      "charPx": 106,
       "headNdc": [
-       0.169,
-       0.332
+       0.184,
+       0.336
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3619,20 +3330,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.366,
-       -0.823
+       -0.353,
+       -0.822
       ],
       "px": [
-       426,
+       435,
        700
       ],
       "onScreen": true,
-      "edgeMargin": 0.177,
-      "depth": 18.478,
+      "edgeMargin": 0.178,
+      "depth": 18.409,
       "charPx": 112,
       "headNdc": [
-       -0.383,
-       -0.591
+       -0.369,
+       -0.589
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3657,20 +3368,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.231,
-       -0.459
+       -0.218,
+       -0.457
       ],
       "px": [
-       517,
+       525,
        560
       ],
       "onScreen": true,
-      "edgeMargin": 0.541,
-      "depth": 19.231,
+      "edgeMargin": 0.543,
+      "depth": 19.163,
       "charPx": 108,
       "headNdc": [
-       -0.241,
-       -0.221
+       -0.228,
+       -0.218
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3701,20 +3412,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.49,
-       -0.767
+       -0.477,
+       -0.766
       ],
       "px": [
-       343,
-       679
+       351,
+       678
       ],
       "onScreen": true,
-      "edgeMargin": 0.233,
-      "depth": 18.691,
+      "edgeMargin": 0.234,
+      "depth": 18.622,
       "charPx": 111,
       "headNdc": [
-       -0.511,
-       -0.535
+       -0.498,
+       -0.534
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3750,20 +3461,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.421,
-       0.284
+       0.436,
+       0.288
       ],
       "px": [
-       955,
-       275
+       965,
+       273
       ],
       "onScreen": true,
-      "edgeMargin": 0.579,
-      "depth": 19.612,
+      "edgeMargin": 0.564,
+      "depth": 19.543,
       "charPx": 106,
       "headNdc": [
-       0.439,
-       0.549
+       0.455,
+       0.555
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3799,20 +3510,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.112,
+       -0.098,
        -0.924
       ],
       "px": [
-       597,
+       606,
        739
       ],
       "onScreen": true,
       "edgeMargin": 0.076,
-      "depth": 18.005,
+      "depth": 17.936,
       "charPx": 115,
       "headNdc": [
-       -0.117,
-       -0.691
+       -0.102,
+       -0.69
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3954,7 +3665,7 @@
      "door:keepers-cottage",
      "seam:weave-huts__keepers-cottage"
     ],
-    "minCharPx": 105,
+    "minCharPx": 106,
     "visibleFrac": 0.9375
    }
   },
@@ -3985,20 +3696,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.068,
-       0.022
+       0.063,
+       0.011
       ],
       "px": [
-       718,
-       376
+       714,
+       380
       ],
       "onScreen": true,
-      "edgeMargin": 0.932,
-      "depth": 28.106,
-      "charPx": 74,
+      "edgeMargin": 0.937,
+      "depth": 28.822,
+      "charPx": 72,
       "headNdc": [
-       0.07,
-       0.199
+       0.064,
+       0.184
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4030,20 +3741,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.092,
-       0.069
+       0.086,
+       0.058
       ],
       "px": [
-       734,
-       358
+       730,
+       362
       ],
       "onScreen": true,
-      "edgeMargin": 0.908,
-      "depth": 29.149,
-      "charPx": 71,
+      "edgeMargin": 0.914,
+      "depth": 29.866,
+      "charPx": 69,
       "headNdc": [
-       0.095,
-       0.241
+       0.088,
+       0.226
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4081,20 +3792,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.112,
-       -0.556
+       -0.114,
+       -0.55
       ],
       "px": [
-       597,
-       597
+       595,
+       595
       ],
       "onScreen": true,
-      "edgeMargin": 0.444,
-      "depth": 19.802,
-      "charPx": 105,
+      "edgeMargin": 0.45,
+      "depth": 20.519,
+      "charPx": 101,
       "headNdc": [
-       -0.116,
-       -0.323
+       -0.118,
+       -0.326
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4130,20 +3841,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.143,
-       0.199
+       0.136,
+       0.186
       ],
       "px": [
-       768,
-       308
+       763,
+       313
       ],
       "onScreen": true,
-      "edgeMargin": 0.801,
-      "depth": 31.466,
-      "charPx": 66,
+      "edgeMargin": 0.814,
+      "depth": 32.182,
+      "charPx": 64,
       "headNdc": [
-       0.147,
-       0.362
+       0.139,
+       0.344
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4236,7 +3947,7 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 66,
+    "minCharPx": 64,
     "visibleFrac": 0.9333
    }
   },
@@ -4246,41 +3957,41 @@
      "id": "seam:quay-deck__pilot-cluster",
      "kind": "seam",
      "at": [
-      59.18,
-      10.85,
-      -19.59
+      59.23,
+      9.04,
+      -20.75
      ],
      "from": "quay-west",
-     "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
+     "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.330:quay-west>weave",
      "aim": [
-      0.213,
-      -0.977
+      0.382,
+      -0.924
      ],
      "seam": {
       "n": [
-       0.9285,
-       -0.3714
+       0.7671,
+       -0.6416
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 1.75
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.09,
-       -0.109
+       0.126,
+       -0.271
       ],
       "px": [
-       733,
-       426
+       757,
+       488
       ],
       "onScreen": true,
-      "edgeMargin": 0.891,
-      "depth": 29.288,
-      "charPx": 71,
+      "edgeMargin": 0.729,
+      "depth": 31.964,
+      "charPx": 65,
       "headNdc": [
-       0.092,
-       0.063
+       0.129,
+       -0.117
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4291,12 +4002,12 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      72.08,
+      72.26,
       7.75,
-      -24.21
+      -24.27
      ],
      "from": "lockfive",
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
      "aim": [
       -0.948,
       0.319
@@ -4312,20 +4023,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.493,
-       -0.097
+       -0.389,
+       -0.071
       ],
       "px": [
-       341,
-       421
+       411,
+       411
       ],
       "onScreen": true,
-      "edgeMargin": 0.507,
-      "depth": 37.24,
-      "charPx": 56,
+      "edgeMargin": 0.611,
+      "depth": 39.958,
+      "charPx": 52,
       "headNdc": [
-       -0.501,
-       0.038
+       -0.395,
+       0.055
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4357,20 +4068,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.47,
-       -0.066
+       -0.363,
+       -0.045
       ],
       "px": [
-       356,
-       409
+       428,
+       401
       ],
       "onScreen": true,
-      "edgeMargin": 0.53,
-      "depth": 37.801,
-      "charPx": 55,
+      "edgeMargin": 0.637,
+      "depth": 40.426,
+      "charPx": 51,
       "headNdc": [
-       -0.478,
-       0.068
+       -0.369,
+       0.08
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4383,45 +4094,45 @@
      "id": "seam:quay-deck__pilot-cluster",
      "kind": "seam",
      "at": [
-      58.78,
-      13.13,
-      -17.77
+      58.04,
+      13.53,
+      -17.88
      ],
      "to": "quay-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.859,
-      0.513
+      -0.767,
+      0.642
      ],
      "seam": {
       "n": [
-       0.9285,
-       -0.3714
+       0.7671,
+       -0.6416
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 1.75
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:weave>quay-west",
+     "via": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.330:weave>quay-west",
      "screen": {
       "behind": false,
       "ndc": [
-       0.195,
-       0.153
+       0.305,
+       0.179
       ],
       "px": [
-       803,
-       325
+       877,
+       315
       ],
       "onScreen": true,
-      "edgeMargin": 0.805,
-      "depth": 29.183,
-      "charPx": 71,
+      "edgeMargin": 0.695,
+      "depth": 31.054,
+      "charPx": 67,
       "headNdc": [
-       0.2,
-       0.331
+       0.311,
+       0.347
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4432,17 +4143,17 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      74.78,
+      74.81,
       6.27,
-      -25.12
+      -25.13
      ],
      "to": "lockfive",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.444,
-      -0.896
+      -0.45,
+      -0.893
      ],
      "seam": {
       "n": [
@@ -4453,24 +4164,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.256:weave>lockfive",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.182:weave>lockfive",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.577,
-       -0.156
+       -0.468,
+       -0.129
       ],
       "px": [
-       284,
-       444
+       357,
+       434
       ],
       "onScreen": true,
-      "edgeMargin": 0.423,
-      "depth": 39.247,
-      "charPx": 53,
+      "edgeMargin": 0.532,
+      "depth": 41.888,
+      "charPx": 49,
       "headNdc": [
-       -0.587,
-       -0.029
+       -0.475,
+       -0.01
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4506,20 +4217,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.484,
-       0.012
+       -0.383,
+       0.027
       ],
       "px": [
-       347,
-       379
+       415,
+       373
       ],
       "onScreen": true,
-      "edgeMargin": 0.516,
-      "depth": 40.4,
-      "charPx": 51,
+      "edgeMargin": 0.617,
+      "depth": 43.025,
+      "charPx": 48,
       "headNdc": [
-       -0.492,
-       0.138
+       -0.389,
+       0.146
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4529,35 +4240,40 @@
    ],
    "routes": [
     {
-     "id": "weave:quay-deck__pilot-cluster@0.483..1",
+     "id": "weave:quay-deck__pilot-cluster@0.33..1",
      "class": "stairs",
      "from": "node:quay-deck",
      "to": "node:pilot-cluster",
      "t": [
-      0.483,
+      0.33,
       1
      ],
-     "length": 10.185,
+     "length": 13.154,
      "points": [
       [
-       59.16,
-       12.65,
-       -20.28
+       58.05,
+       13.49,
+       -17.89
       ],
       [
-       59.37,
-       12.04,
-       -21.66
+       58.9,
+       13.4,
+       -18.6
       ],
       [
-       59.58,
-       11.43,
-       -23.04
+       59.18,
+       12.6,
+       -20.4
       ],
       [
-       59.79,
-       10.81,
-       -24.42
+       59.45,
+       11.8,
+       -22.2
+      ],
+      [
+       59.73,
+       11,
+       -24
       ],
       [
        60,
@@ -4580,11 +4296,11 @@
        -22
       ]
      ],
-     "source": "map edge quay-deck__pilot-cluster@0.483..1",
+     "source": "map edge quay-deck__pilot-cluster@0.33..1",
      "role": "spine",
      "connects": [
-      "entry:seam:quay-deck__pilot-cluster",
-      "exit:seam:quay-deck__pilot-cluster"
+      "exit:seam:quay-deck__pilot-cluster",
+      "entry:seam:quay-deck__pilot-cluster"
      ]
     },
     {
@@ -4653,15 +4369,15 @@
      ]
     },
     {
-     "id": "weave:weave-huts__moorage@0..0.256",
+     "id": "weave:weave-huts__moorage@0..0.182",
      "class": "stairs",
      "from": "node:weave-huts",
      "to": "node:moorage",
      "t": [
       0,
-      0.256
+      0.182
      ],
-     "length": 5.477,
+     "length": 3.893,
      "points": [
       [
        71.45,
@@ -4669,22 +4385,17 @@
        -24
       ],
       [
-       73.03,
-       7.09,
-       -24.53
+       73.14,
+       7.04,
+       -24.57
       ],
       [
-       74.61,
-       6.35,
-       -25.06
-      ],
-      [
-       76.19,
-       5.6,
-       -25.6
+       74.82,
+       6.25,
+       -25.14
       ]
      ],
-     "source": "map edge weave-huts__moorage@0..0.256",
+     "source": "map edge weave-huts__moorage@0..0.182",
      "role": "spine",
      "connects": [
       "entry:seam:weave-huts__moorage",
@@ -4923,14 +4634,14 @@
    "measure": {
     "routeSamples": 38,
     "routeInFramePct": 100,
-    "routeLen": 50.71,
-    "spineLen": 50.71,
+    "routeLen": 52.095,
+    "spineLen": 52.095,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 51,
+    "minCharPx": 48,
     "visibleFrac": 0.8281
    }
   },
@@ -4940,41 +4651,41 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      37.68,
-      8.82,
-      -20.71
+      42.11,
+      10,
+      -23.41
      ],
      "from": "quay-west",
      "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:quay-west>deep-stairs",
      "aim": [
-      -0.852,
-      -0.523
+      0.733,
+      -0.68
      ],
      "seam": {
       "n": [
-       0.9044,
-       -0.4266
+       0.7331,
+       -0.6801
       ],
       "t": 1.1,
-      "w": 1.9
+      "w": 2.25
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.09,
-       0.226
+       -0.168,
+       0.33
       ],
       "px": [
-       732,
-       297
+       559,
+       257
       ],
       "onScreen": true,
-      "edgeMargin": 0.774,
-      "depth": 26.001,
-      "charPx": 80,
+      "edgeMargin": 0.67,
+      "depth": 25.653,
+      "charPx": 81,
       "headNdc": [
-       0.091,
-       0.435
+       -0.17,
+       0.543
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4985,41 +4696,41 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      38.8,
-      5.02,
-      -23.01
+      36.46,
+      1.07,
+      -25.05
      ],
      "from": "waterfront",
-     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.730:waterfront>deep-stairs",
+     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.874:waterfront>deep-stairs",
      "aim": [
-      0.556,
-      0.832
+      -0.99,
+      0.143
      ],
      "seam": {
       "n": [
-       -0.8662,
-       -0.4997
+       0.9897,
+       -0.143
       ],
       "t": 1.1,
-      "w": 2.6
+      "w": 1.4
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.036,
-       -0.279
+       0.191,
+       -0.891
       ],
       "px": [
-       648,
-       491
+       801,
+       726
       ],
       "onScreen": true,
-      "edgeMargin": 0.721,
-      "depth": 24.709,
-      "charPx": 84,
+      "edgeMargin": 0.109,
+      "depth": 23.619,
+      "charPx": 88,
       "headNdc": [
-       -0.036,
-       -0.063
+       0.193,
+       -0.672
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5032,45 +4743,45 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      40.02,
-      11.13,
-      -19.27
+      40.03,
+      10.87,
+      -21.48
      ],
      "to": "quay-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.904,
-      0.427
+      -0.733,
+      0.68
      ],
      "seam": {
       "n": [
-       0.9044,
-       -0.4266
+       0.7331,
+       -0.6801
       ],
       "t": 1.1,
-      "w": 1.9
+      "w": 2.25
      },
      "r": null,
      "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.220:deep-stairs>quay-west",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.032,
-       0.506
+       0.014,
+       0.438
       ],
       "px": [
-       650,
-       190
+       681,
+       216
       ],
       "onScreen": true,
-      "edgeMargin": 0.494,
-      "depth": 27.757,
-      "charPx": 75,
+      "edgeMargin": 0.562,
+      "depth": 26.715,
+      "charPx": 77,
       "headNdc": [
-       -0.032,
-       0.704
+       0.014,
+       0.644
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5081,45 +4792,45 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      37.68,
-      2.86,
-      -24.69
+      39.28,
+      1.99,
+      -25.46
      ],
      "to": "waterfront",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.964,
-      -0.267
+      0.99,
+      -0.143
      ],
      "seam": {
       "n": [
-       -0.8662,
-       -0.4997
+       0.9897,
+       -0.143
       ],
       "t": 1.1,
-      "w": 2.6
+      "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.730:deep-stairs>waterfront",
+     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.874:deep-stairs>waterfront",
      "screen": {
       "behind": false,
       "ndc": [
-       0.005,
-       -0.629
+       -0.024,
+       -0.749
       ],
       "px": [
-       675,
-       626
+       656,
+       672
       ],
       "onScreen": true,
-      "edgeMargin": 0.371,
-      "depth": 23.088,
-      "charPx": 90,
+      "edgeMargin": 0.251,
+      "depth": 23.973,
+      "charPx": 86,
       "headNdc": [
-       0.005,
-       -0.402
+       -0.024,
+       -0.531
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5129,15 +4840,15 @@
    ],
    "routes": [
     {
-     "id": "deep-stairs:deep-stairs-head__deep-stairs-foot@0.22..0.73",
+     "id": "deep-stairs:deep-stairs-head__deep-stairs-foot@0.22..0.874",
      "class": "stairs",
      "from": "node:deep-stairs-head",
      "to": "node:deep-stairs-foot",
      "t": [
       0.22,
-      0.73
+      0.874
      ],
-     "length": 16.689,
+     "length": 21.37,
      "points": [
       [
        40.02,
@@ -5190,12 +4901,22 @@
        -24.7
       ],
       [
-       35.01,
-       4.46,
-       -24.85
+       35.76,
+       4.14,
+       -24.95
+      ],
+      [
+       37.51,
+       3.38,
+       -25.21
+      ],
+      [
+       39.27,
+       2.62,
+       -25.46
       ]
      ],
-     "source": "map edge deep-stairs-head__deep-stairs-foot@0.22..0.73",
+     "source": "map edge deep-stairs-head__deep-stairs-foot@0.22..0.874",
      "role": "vignette",
      "connects": [
       "entry:seam:deep-stairs-head__deep-stairs-foot",
@@ -5213,16 +4934,18 @@
     ]
    },
    "measure": {
-    "routeSamples": 11,
+    "routeSamples": 13,
     "routeInFramePct": 100,
-    "routeLen": 16.689,
-    "spineLen": 16.689,
+    "routeLen": 21.37,
+    "spineLen": 21.37,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [],
-    "minCharPx": 75,
+    "exitsAtFrameEdge": [
+     "seam:deep-stairs-head__deep-stairs-foot"
+    ],
+    "minCharPx": 77,
     "visibleFrac": 0.8438
    }
   },
@@ -5588,12 +5311,12 @@
      "id": "seam:fish-dock__winch-foot",
      "kind": "seam",
      "at": [
-      43.11,
+      43.01,
       1.04,
-      -27.02
+      -27
      ],
      "from": "fishdock",
-     "via": "del-cine>del-cine@cut:fish-dock__winch-foot:0.454:fishdock>waterfront",
+     "via": "del-cine>del-cine@cut:fish-dock__winch-foot:0.442:fishdock>waterfront",
      "aim": [
       -0.982,
       0.189
@@ -5609,20 +5332,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.06,
-       -0.598
+       -0.014,
+       -0.524
       ],
       "px": [
-       632,
-       614
+       663,
+       585
       ],
       "onScreen": true,
-      "edgeMargin": 0.402,
-      "depth": 16.283,
-      "charPx": 127,
+      "edgeMargin": 0.476,
+      "depth": 16.61,
+      "charPx": 125,
       "headNdc": [
-       -0.062,
-       -0.292
+       -0.014,
+       -0.222
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5633,41 +5356,41 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      41.42,
-      1.38,
-      -25.73
+      42.1,
+      1.04,
+      -25.87
      ],
      "from": "deep-stairs",
-     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.730:deep-stairs>waterfront",
+     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.874:deep-stairs>waterfront",
      "aim": [
-      0.964,
-      -0.267
+      0.99,
+      -0.143
      ],
      "seam": {
       "n": [
-       -0.8662,
-       -0.4997
+       0.9897,
+       -0.143
       ],
       "t": 1.1,
-      "w": 2.6
+      "w": 1.4
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.118,
-       -0.372
+       -0.09,
+       -0.42
       ],
       "px": [
-       593,
-       527
+       612,
+       545
       ],
       "onScreen": true,
-      "edgeMargin": 0.628,
-      "depth": 18.106,
-      "charPx": 114,
+      "edgeMargin": 0.58,
+      "depth": 17.792,
+      "charPx": 116,
       "headNdc": [
-       -0.121,
-       -0.091
+       -0.092,
+       -0.136
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5699,20 +5422,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.182,
-       -0.62
+       -0.136,
+       -0.553
       ],
       "px": [
-       549,
-       622
+       581,
+       597
       ],
       "onScreen": true,
-      "edgeMargin": 0.38,
-      "depth": 16.066,
-      "charPx": 129,
+      "edgeMargin": 0.447,
+      "depth": 16.297,
+      "charPx": 127,
       "headNdc": [
-       -0.189,
-       -0.311
+       -0.141,
+       -0.247
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5744,20 +5467,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.076,
-       0.12
+       0.1,
+       0.151
       ],
       "px": [
-       723,
-       338
+       739,
+       326
       ],
       "onScreen": true,
-      "edgeMargin": 0.88,
-      "depth": 29.105,
+      "edgeMargin": 0.849,
+      "depth": 29.336,
       "charPx": 71,
       "headNdc": [
-       0.077,
-       0.301
+       0.101,
+       0.331
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5770,9 +5493,9 @@
      "id": "seam:fish-dock__winch-foot",
      "kind": "seam",
      "at": [
-      45.76,
-      0.93,
-      -27.53
+      45.66,
+      1.07,
+      -27.51
      ],
      "to": "fishdock",
      "toKind": "shot",
@@ -5791,24 +5514,24 @@
       "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:fish-dock__winch-foot:0.454:waterfront>fishdock",
+     "via": "del-cine>del-cine@cut:fish-dock__winch-foot:0.442:waterfront>fishdock",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.127,
-       -0.92
+       -0.072,
+       -0.797
       ],
       "px": [
-       587,
-       737
+       624,
+       690
       ],
       "onScreen": true,
-      "edgeMargin": 0.08,
-      "depth": 13.783,
-      "charPx": 150,
+      "edgeMargin": 0.203,
+      "depth": 14.066,
+      "charPx": 147,
       "headNdc": [
-       -0.132,
-       -0.57
+       -0.075,
+       -0.45
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5819,45 +5542,45 @@
      "id": "seam:deep-stairs-head__deep-stairs-foot",
      "kind": "seam",
      "at": [
-      37.68,
-      2.86,
-      -24.69
+      39.28,
+      1.99,
+      -25.46
      ],
      "to": "deep-stairs",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.556,
-      0.832
+      -0.99,
+      0.143
      ],
      "seam": {
       "n": [
-       -0.8662,
-       -0.4997
+       0.9897,
+       -0.143
       ],
       "t": 1.1,
-      "w": 2.6
+      "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.730:waterfront>deep-stairs",
+     "via": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.874:waterfront>deep-stairs",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.074,
-       0.072
+       -0.027,
+       -0.093
       ],
       "px": [
-       622,
-       356
+       654,
+       420
       ],
       "onScreen": true,
-      "edgeMargin": 0.926,
-      "depth": 21.331,
-      "charPx": 97,
+      "edgeMargin": 0.907,
+      "depth": 20.151,
+      "charPx": 103,
       "headNdc": [
-       -0.076,
-       0.32
+       -0.028,
+       0.166
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5893,20 +5616,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.297,
-       -0.918
+       -0.24,
+       -0.835
       ],
       "px": [
-       473,
-       737
+       511,
+       704
       ],
       "onScreen": true,
-      "edgeMargin": 0.082,
-      "depth": 13.555,
-      "charPx": 153,
+      "edgeMargin": 0.165,
+      "depth": 13.786,
+      "charPx": 150,
       "headNdc": [
-       -0.309,
-       -0.562
+       -0.249,
+       -0.481
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5942,20 +5665,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.163,
-       0.192
+       0.185,
+       0.221
       ],
       "px": [
-       782,
-       310
+       797,
+       299
       ],
       "onScreen": true,
-      "edgeMargin": 0.808,
-      "depth": 30.778,
+      "edgeMargin": 0.779,
+      "depth": 31.009,
       "charPx": 67,
       "headNdc": [
-       0.166,
-       0.365
+       0.189,
+       0.393
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5965,25 +5688,25 @@
    ],
    "routes": [
     {
-     "id": "waterfront:fish-dock__winch-foot@0.454..1",
+     "id": "waterfront:fish-dock__winch-foot@0.442..1",
      "class": "deck",
      "from": "node:fish-dock",
      "to": "node:winch-foot",
      "t": [
-      0.454,
+      0.442,
       1
      ],
-     "length": 16.725,
+     "length": 17.101,
      "points": [
       [
-       45.29,
+       45.66,
        1,
-       -27.44
+       -27.51
       ],
       [
-       44.15,
+       44.33,
        1,
-       -27.22
+       -27.26
       ],
       [
        43,
@@ -6036,7 +5759,7 @@
        -24
       ]
      ],
-     "source": "map edge fish-dock__winch-foot@0.454..1",
+     "source": "map edge fish-dock__winch-foot@0.442..1",
      "role": "spine",
      "connects": [
       "entry:seam:fish-dock__winch-foot",
@@ -6048,40 +5771,30 @@
      ]
     },
     {
-     "id": "waterfront:deep-stairs-head__deep-stairs-foot@0.73..1",
+     "id": "waterfront:deep-stairs-head__deep-stairs-foot@0.874..1",
      "class": "stairs",
      "from": "node:deep-stairs-head",
      "to": "node:deep-stairs-foot",
      "t": [
-      0.73,
+      0.874,
       1
      ],
-     "length": 8.783,
+     "length": 4.102,
      "points": [
       [
-       35.01,
-       4.46,
-       -24.85
+       39.27,
+       2.62,
+       -25.46
       ],
       [
-       36.6,
-       3.77,
-       -25.08
+       40.51,
+       2.08,
+       -25.64
       ],
       [
-       38.2,
-       3.08,
-       -25.31
-      ],
-      [
-       39.8,
-       2.39,
-       -25.54
-      ],
-      [
-       41.4,
-       1.69,
-       -25.77
+       41.76,
+       1.54,
+       -25.82
       ],
       [
        43,
@@ -6089,12 +5802,12 @@
        -26
       ]
      ],
-     "source": "map edge deep-stairs-head__deep-stairs-foot@0.73..1",
+     "source": "map edge deep-stairs-head__deep-stairs-foot@0.874..1",
      "role": "spine",
      "connects": [
+      "entry:seam:deep-stairs-head__deep-stairs-foot",
       "exit:seam:deep-stairs-head__deep-stairs-foot",
       "entry:seam:fish-dock__winch-foot",
-      "entry:seam:deep-stairs-head__deep-stairs-foot",
       "entry:seam:deep-stairs-foot__fish-dock",
       "exit:seam:fish-dock__winch-foot"
      ]
@@ -6186,10 +5899,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 24,
+    "routeSamples": 22,
     "routeInFramePct": 100,
-    "routeLen": 31.493,
-    "spineLen": 31.493,
+    "routeLen": 27.188,
+    "spineLen": 27.188,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -6238,10 +5951,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.515,
-      "depth": 30,
+      "depth": 29.989,
       "charPx": 69,
       "headNdc": [
-       -0.492,
+       -0.493,
        0.165
       ],
       "headOnScreen": true,
@@ -6253,12 +5966,12 @@
      "id": "seam:fish-dock__winch-foot",
      "kind": "seam",
      "at": [
-      48.41,
+      48.31,
       1.07,
-      -28.04
+      -28.02
      ],
      "from": "waterfront",
-     "via": "del-cine>del-cine@cut:fish-dock__winch-foot:0.454:waterfront>fishdock",
+     "via": "del-cine>del-cine@cut:fish-dock__winch-foot:0.442:waterfront>fishdock",
      "aim": [
       0.982,
       -0.189
@@ -6274,20 +5987,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.42,
-       -0.281
+       0.428,
+       -0.282
       ],
       "px": [
-       954,
+       960,
        492
       ],
       "onScreen": true,
-      "edgeMargin": 0.58,
-      "depth": 23.284,
+      "edgeMargin": 0.572,
+      "depth": 23.247,
       "charPx": 89,
       "headNdc": [
-       0.428,
-       -0.058
+       0.436,
+       -0.059
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6319,7 +6032,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.385,
+       0.384,
        -0.215
       ],
       "px": [
@@ -6327,11 +6040,11 @@
        467
       ],
       "onScreen": true,
-      "edgeMargin": 0.615,
-      "depth": 24.721,
+      "edgeMargin": 0.616,
+      "depth": 24.709,
       "charPx": 84,
       "headNdc": [
-       0.392,
+       0.391,
        -0.004
       ],
       "headOnScreen": true,
@@ -6370,7 +6083,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.593,
+       -0.594,
        0.057
       ],
       "px": [
@@ -6378,8 +6091,8 @@
        362
       ],
       "onScreen": true,
-      "edgeMargin": 0.407,
-      "depth": 31.533,
+      "edgeMargin": 0.406,
+      "depth": 31.521,
       "charPx": 66,
       "headNdc": [
        -0.602,
@@ -6394,9 +6107,9 @@
      "id": "seam:fish-dock__winch-foot",
      "kind": "seam",
      "at": [
-      45.76,
-      0.93,
-      -27.53
+      45.66,
+      1.07,
+      -27.51
      ],
      "to": "waterfront",
      "toKind": "shot",
@@ -6415,24 +6128,24 @@
       "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:fish-dock__winch-foot:0.454:fishdock>waterfront",
+     "via": "del-cine>del-cine@cut:fish-dock__winch-foot:0.442:fishdock>waterfront",
      "screen": {
       "behind": false,
       "ndc": [
-       0.641,
-       -0.333
+       0.65,
+       -0.316
       ],
       "px": [
-       1103,
-       512
+       1109,
+       505
       ],
       "onScreen": true,
-      "edgeMargin": 0.359,
-      "depth": 22.641,
-      "charPx": 91,
+      "edgeMargin": 0.35,
+      "depth": 22.568,
+      "charPx": 92,
       "headNdc": [
-       0.654,
-       -0.105
+       0.663,
+       -0.087
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6477,10 +6190,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.396,
-      "depth": 23.827,
+      "depth": 23.815,
       "charPx": 87,
       "headNdc": [
-       0.616,
+       0.615,
        -0.037
       ],
       "headOnScreen": true,
@@ -6540,15 +6253,15 @@
      ]
     },
     {
-     "id": "fishdock:fish-dock__winch-foot@0..0.454",
+     "id": "fishdock:fish-dock__winch-foot@0..0.442",
      "class": "deck",
      "from": "node:fish-dock",
      "to": "node:winch-foot",
      "t": [
       0,
-      0.454
+      0.442
      ],
-     "length": 13.916,
+     "length": 13.54,
      "points": [
       [
        59.09,
@@ -6581,22 +6294,22 @@
        -28.5
       ],
       [
-       48.96,
+       49.09,
        1,
-       -28.15
+       -28.17
       ],
       [
-       47.13,
+       47.37,
        1,
-       -27.79
+       -27.84
       ],
       [
-       45.29,
+       45.66,
        1,
-       -27.44
+       -27.51
       ]
      ],
-     "source": "map edge fish-dock__winch-foot@0..0.454",
+     "source": "map edge fish-dock__winch-foot@0..0.442",
      "role": "link",
      "connects": [
       "entry:seam:fish-dock__winch-foot",
@@ -6682,13 +6395,15 @@
    "measure": {
     "routeSamples": 23,
     "routeInFramePct": 100,
-    "routeLen": 34.059,
-    "spineLen": 34.059,
+    "routeLen": 33.683,
+    "spineLen": 33.683,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [],
+    "exitsAtFrameEdge": [
+     "seam:fish-dock__winch-foot"
+    ],
     "minCharPx": 66,
     "visibleFrac": 0.86
    }
@@ -6704,10 +6419,10 @@
       -29.15
      ],
      "from": "weave",
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.256:weave>lockfive",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.182:weave>lockfive",
      "aim": [
-      -0.444,
-      -0.896
+      -0.45,
+      -0.893
      ],
      "seam": {
       "n": [
@@ -6720,20 +6435,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.084,
-       -0.556
+       -0.046,
+       -0.551
       ],
       "px": [
-       616,
-       597
+       641,
+       595
       ],
       "onScreen": true,
-      "edgeMargin": 0.444,
-      "depth": 23.431,
-      "charPx": 88,
+      "edgeMargin": 0.449,
+      "depth": 23.097,
+      "charPx": 90,
       "headNdc": [
-       -0.085,
-       -0.336
+       -0.047,
+       -0.327
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6765,20 +6480,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.252,
-       -0.606
+       0.3,
+       -0.601
       ],
       "px": [
-       841,
-       617
+       874,
+       615
       ],
       "onScreen": true,
-      "edgeMargin": 0.394,
-      "depth": 20.807,
-      "charPx": 100,
+      "edgeMargin": 0.399,
+      "depth": 20.474,
+      "charPx": 101,
       "headNdc": [
-       0.256,
-       -0.359
+       0.305,
+       -0.35
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6810,20 +6525,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.239,
-       -0.212
+       -0.217,
+       -0.205
       ],
       "px": [
-       511,
-       465
+       526,
+       463
       ],
       "onScreen": true,
-      "edgeMargin": 0.761,
-      "depth": 37.397,
-      "charPx": 55,
+      "edgeMargin": 0.783,
+      "depth": 37.064,
+      "charPx": 56,
       "headNdc": [
-       -0.242,
-       -0.071
+       -0.219,
+       -0.064
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6836,9 +6551,9 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      74.78,
+      74.81,
       6.27,
-      -25.12
+      -25.13
      ],
      "to": "weave",
      "toKind": "shot",
@@ -6857,24 +6572,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.256:lockfive>weave",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
      "screen": {
       "behind": false,
       "ndc": [
-       0.143,
-       0.184
+       0.179,
+       0.199
       ],
       "px": [
-       768,
-       314
+       792,
+       308
       ],
       "onScreen": true,
-      "edgeMargin": 0.816,
-      "depth": 25.564,
-      "charPx": 81,
+      "edgeMargin": 0.801,
+      "depth": 25.255,
+      "charPx": 82,
       "headNdc": [
-       0.145,
-       0.395
+       0.182,
+       0.413
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6910,20 +6625,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.299,
-       -0.878
+       0.356,
+       -0.877
       ],
       "px": [
-       873,
+       911,
        721
       ],
       "onScreen": true,
-      "edgeMargin": 0.122,
-      "depth": 18.113,
-      "charPx": 114,
+      "edgeMargin": 0.123,
+      "depth": 17.779,
+      "charPx": 116,
       "headNdc": [
-       0.305,
-       -0.598
+       0.363,
+       -0.592
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6959,20 +6674,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.261,
-       -0.168
+       -0.24,
+       -0.162
       ],
       "px": [
-       497,
-       449
+       511,
+       446
       ],
       "onScreen": true,
-      "edgeMargin": 0.739,
-      "depth": 39.954,
+      "edgeMargin": 0.76,
+      "depth": 39.62,
       "charPx": 52,
       "headNdc": [
-       -0.263,
-       -0.036
+       -0.242,
+       -0.029
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6982,20 +6697,20 @@
    ],
    "routes": [
     {
-     "id": "lockfive:weave-huts__moorage@0.256..1",
+     "id": "lockfive:weave-huts__moorage@0.182..1",
      "class": "stairs",
      "from": "node:weave-huts",
      "to": "node:moorage",
      "t": [
-      0.256,
+      0.182,
       1
      ],
-     "length": 15.342,
+     "length": 16.926,
      "points": [
       [
-       76.19,
-       5.6,
-       -25.6
+       74.82,
+       6.25,
+       -25.14
       ],
       [
        76.2,
@@ -7048,7 +6763,7 @@
        -27
       ]
      ],
-     "source": "map edge weave-huts__moorage@0.256..1",
+     "source": "map edge weave-huts__moorage@0.182..1",
      "role": "link",
      "connects": [
       "exit:seam:weave-huts__moorage"
@@ -7240,8 +6955,8 @@
    "measure": {
     "routeSamples": 29,
     "routeInFramePct": 100,
-    "routeLen": 39.474,
-    "spineLen": 39.474,
+    "routeLen": 41.058,
+    "spineLen": 41.058,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -7280,20 +6995,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.077,
-       0.04
+       0.075,
+       0.036
       ],
       "px": [
-       724,
-       369
+       722,
+       370
       ],
       "onScreen": true,
-      "edgeMargin": 0.923,
-      "depth": 29.251,
+      "edgeMargin": 0.925,
+      "depth": 29.364,
       "charPx": 71,
       "headNdc": [
-       0.078,
-       0.222
+       0.076,
+       0.218
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7331,20 +7046,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.099,
-       0.122
+       0.097,
+       0.118
       ],
       "px": [
-       739,
-       337
+       737,
+       339
       ],
       "onScreen": true,
-      "edgeMargin": 0.878,
-      "depth": 31.771,
+      "edgeMargin": 0.882,
+      "depth": 31.883,
       "charPx": 65,
       "headNdc": [
-       0.1,
-       0.29
+       0.099,
+       0.286
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7449,45 +7164,30 @@
    "edge": "quay-deck__pilot-cluster",
    "t": [
     0,
-    0.483
+    0.33
    ],
-   "metres": 8.868,
+   "metres": 6.059,
    "cameraUp": "quay-west",
    "floorOwnedBy": "weave",
    "at": [
-    56.8,
-    13.63,
-    -16.84
+    55.72,
+    13.75,
+    -15.94
    ]
   },
   {
-   "edge": "deep-stairs-head__deep-stairs-foot",
-   "t": [
-    0.73,
-    1
-   ],
-   "metres": 8.077,
-   "cameraUp": "waterfront",
-   "floorOwnedBy": "deep-stairs",
-   "at": [
-    39,
-    2.73,
-    -25.42
-   ]
-  },
-  {
-   "edge": "weave-huts__moorage",
+   "edge": "valley-gate__inn",
    "t": [
     0,
-    0.256
+    0.409
    ],
-   "metres": 5.003,
-   "cameraUp": "weave",
-   "floorOwnedBy": "lockfive",
+   "metres": 4.209,
+   "cameraUp": "gate",
+   "floorOwnedBy": "shelf-west",
    "at": [
-    73.82,
-    6.72,
-    -24.8
+    18.7,
+    22.98,
+    -4.55
    ]
   },
   {
@@ -7521,6 +7221,36 @@
    ]
   },
   {
+   "edge": "deep-stairs-head__deep-stairs-foot",
+   "t": [
+    0.874,
+    1
+   ],
+   "metres": 3.769,
+   "cameraUp": "waterfront",
+   "floorOwnedBy": "deep-stairs",
+   "at": [
+    41.13,
+    1.81,
+    -25.73
+   ]
+  },
+  {
+   "edge": "weave-huts__moorage",
+   "t": [
+    0,
+    0.182
+   ],
+   "metres": 3.557,
+   "cameraUp": "weave",
+   "floorOwnedBy": "lockfive",
+   "at": [
+    73.14,
+    7.04,
+    -24.57
+   ]
+  },
+  {
    "edge": "shelf-homes__market-stalls",
    "t": [
     0.677,
@@ -7533,21 +7263,6 @@
     58.95,
     14.95,
     -11.24
-   ]
-  },
-  {
-   "edge": "valley-gate__inn",
-   "t": [
-    0,
-    0.319
-   ],
-   "metres": 3.283,
-   "cameraUp": "gate",
-   "floorOwnedBy": "shelf-west",
-   "at": [
-    18.25,
-    23.2,
-    -4.43
    ]
   },
   {
@@ -7626,6 +7341,8 @@
    ]
   }
  ],
- "warnings": [],
+ "warnings": [
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 12 of 15 plates are stale against the solve — gate (0.63u), shelf-west (3.07u), loop-stairs (1.30u), quay-west (1.00u), cottage (0.15u), crossing (0.57u), weave (2.89u), deep-stairs (2.89u), waterfront (1.05u), fishdock (0.01u), lockfive (0.69u), north-landing (0.13u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+ ],
  "overrides": {}
 }
