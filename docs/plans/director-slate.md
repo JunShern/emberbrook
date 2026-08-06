@@ -74,6 +74,23 @@ phone relay, the painted scene bundles (two ratified style anchors spared), the 
 prototype + 24 tools. chapter1/2.js survive as INERT script-of-record data (option (a));
 the dialogue_style corpus proven byte-identical, all gates green.
 
+## PHASE CHANGE 2026-08-06 ~01:10 (user, verbatim steers)
+The overworld overhaul RESTS once the in-flight lanes land (F6 road/grass, sky round
+2, Bet 11 motion, camera clamp). **New focus: DELLHOLLOW.** "A mix of heavy
+playtesting, as well as heavy critiquing and fixing the visual artifacts and
+geometrical artifacts of the town." Bet 2 is RATIFIED and sharpened by ruling:
+**"there's nothing to gain by adding more complex, interesting stairs that just
+confuse and frustrate our players"** — the gate->shelf descent (currently TWO
+confusing ways down) collapses to ONE simple, wide, legible route; the same
+simplicity bar applies to every flight and narrow pinch in the town. Geometry
+updates PRE-AUTHORIZED ("be prepared to update the underlying 3D model").
+THE FAST LOOP (user asked for it; it exists, declared here as the law of the
+phase): map/generator edit -> town_blockout (seconds, deterministic) ->
+walk_engine_gate + _court_probe + reach_probe (engine truth, no bake) +
+three_shots on the realtime tier (visual truth, no bake) + llm_playtester legs ->
+iterate. cine_solve + plate bakes run ONCE, at the end, on ratified geometry.
+Baking mid-iteration and trusting stale plates is the named anti-pattern.
+
 ## Standing method for every bet
 Blind judges on anonymized images; the picture is the verdict; wire-before-sweep;
 receipts by playtest run where playability is the claim; delete superseded work.
