@@ -16725,3 +16725,36 @@ raws into run-20260806-1-<town>-src (naive keys kept from the -naive runs, check
 from the new runs, provenance.json updated) and re-derive run-20260806-1-<town> via
 --replay; (4) regenerate run-20260806-1-findings.md from the two merged findings.json.
 ~52 calls total, inside the 60-80 budget.
+
+## 2026-08-06 ~22:00 — BET 12 ROUND 4 (sky lane): the far rings sit IN air; the paper-terrace residual closed at its own station
+
+THE CHARGE (round 3's blind residual, verbatim): far rings "stacked horizontal bands
+with hard, straight, vector-clean edges — depth-fog quantized into paper terraces";
+haze "hangs as a vertical white sheet rather than thickening with depth". Four
+mechanisms, all in the sky2 branch, every value derived from the shared s2hor air:
+inter-ring haze VEILS (3 translucent cylinders in the gaps, depth thickening by
+construction — ring 3 stands behind three of them; window.__veilTune live knob);
+PER-COLUMN CREST HAZE (the crest was a constant-strength dark stroke — an outline —
+now 0.10-0.60 per column, some ridges hard, neighbours dissolved); CREST-EDGE ALPHA
+FADE (RGBA rings, one r*0.0045 row, the silhouette dissolves not cuts; stack now
+draws far-to-near); FINER SAMPLING (320 columns + third octave at 6x ring period,
+every ratified noise line u-indexed so its correlation length is unchanged).
+
+BLIND LOOP, two fresh judges, packs docs/qa/ow-refs/blind-b12r4/: seast money pair
+NEW both rounds ("cutouts pasted onto the sky" now said of the OLD frame; round 1:
+"d's far edges are crisper than its own midground cliff — inverted atmospheric
+perspective, the single most reliable 'this is CG' signal"). Veil 0.32 lost east
+round 1 ("too soft; the winners sit between"), swept live to 0.20, east STILL old at
+round 2 with the mechanism named: "atmosphere should GRADE the planes apart, not
+erase them". Cap 2 reached — residual stands with two one-constant levers recorded
+in LOOP.md (crest-residual alpha 0.38->~0.15; ch[] scaled down on rings 2-3).
+
+MEASURED: ground neutrality before2-vs-after 0.50-1.21/255 vs same-build floor
+0.50-1.30, ground L equal to 3 decimals all six stations (FIRST measure was
+confounded 1.8-3.3 by F6b's 15d8510 landing mid-round — the grass moved, not the
+sky; re-based the before on current HEAD); band gate L 0.619 chroma 35.1 / seast
+L 0.628 chroma 29.2 (ratified window held, no R5 wash); 120.5 fps median at vista
+AND worst-overdraw peak; in-page sky-sweep formula 216/216 PASS margin 82.6 m (the
+committed gate truncates its own 216-row report pipe — summary-mode fix owed);
+?sky2=0 byte-noise-identical to HEAD; console clean. Plates b12r4-*, gallery §11,
+record LOOP.md BET 12 ROUND 4.

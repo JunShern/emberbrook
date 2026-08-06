@@ -554,4 +554,46 @@ canvas rendering at CSS resolution (no <code>setPixelRatio</code>) — a 4x frag
 coordinator, not a fog or LOD defect.
 </div>
 
+<h2>11 · Bet 12 round 4 — the far rings sit IN air (2026-08-06)</h2>
+<p class="sub">The round-3 residual, the blind judge's words: far rings still "stacked horizontal bands with hard,
+straight, vector-clean edges — depth-fog quantized into paper terraces"; "the haze between crag and spire hangs as a
+vertical white sheet rather than thickening with depth". Both named levers taken. Full record: LOOP.md, BET 12 ROUND 4.</p>
+
+<h3>Four mechanisms, same ratified palette (every new value is a lerp toward the shared <code>s2hor</code> air)</h3>
+<p><strong>(1) Inter-ring haze veils</strong> — three translucent cylinders in the gaps (r 230/280/325), colour
+<code>s2hor(ang)</code> verbatim, alpha dense below the gap with a 0.38-of-base residual at the far ring's crest
+altitude: ring 1 stands behind one veil, ring 3 behind three, so haze thickens with depth by construction. Base
+alpha 0.20 — the first build's 0.32 LOST the east pair to the old sky ("total dissolution ... reads as 'the map
+ends here'"); swept live with <code>window.__veilTune</code> and re-judged.
+<strong>(2) Per-column crest haze</strong> — the round-3 crest was a dark stroke of constant strength (an outline,
+most of the "knife edge" read); a slow 0.10–0.60 per-column term now lerps the top of the profile toward the air, so
+some spans keep a hard ridge and neighbours dissolve. <strong>(3) Crest-edge alpha fade</strong> — one extra quad row
+above the crest, r·0.0045 (~2–3 px), RGBA vertex colours; the silhouette dissolves instead of cutting.
+<strong>(4) Finer silhouette sampling</strong> — 160 → 320 columns (a segment was 47 px of dead-straight line) plus a
+third octave at 6x the ring period; every ratified noise line keeps its correlation length by u-indexing.</p>
+<div class="pair">
+<figure><img src="plates/b12r4-before-rv-seast.png"><figcaption><span class="tag t-bad">BEFORE</span>south-east vista: the far stack as paper terraces, one dark knife line per crest</figcaption></figure>
+<figure><img src="plates/b12r4-after-rv-seast.png"><figcaption><span class="tag t-new">AFTER</span>same pose: ranges in air; crest strength varies along each ridge</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="plates/b12r4-crop-before-seast.png"><figcaption><span class="tag t-bad">BEFORE 2x</span>the far band at 2x: constant-width dark strokes, straight segments</figcaption></figure>
+<figure><img src="plates/b12r4-crop-after-seast.png"><figcaption><span class="tag t-new">AFTER 2x</span>crest haze + fade + third octave: some ridges hard, some dissolved</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="plates/b12r4-before-far-y2.png"><figcaption><span class="tag t-bad">BEFORE</span>far rings as the subject (peak station): knife lines over pale bodies</figcaption></figure>
+<figure><img src="plates/b12r4-after-far-y2.png"><figcaption><span class="tag t-new">AFTER</span>same pose: the stack recedes through three thicknesses of air</figcaption></figure>
+</div>
+
+<div class="note grn" id="b12r4-verdict">
+<strong>Gates.</strong> sky_sweep formula 216/216 PASS (worst dome margin 82.6 m) · unchanged-ground mean |dL|
+0.47–1.09/255 against a same-build A-vs-A floor of 0.48–1.21 (every station within 0.12 of its own floor; band
+L 0.62, chroma 29–35 — still blue-chromatic, no milky wash) · rAF median 8.3 ms / 120 fps at both the vista and the
+worst-overdraw peak vantage · <code>?sky2=0</code> vs HEAD mean |d| 0.32–0.49 (capture noise) · console clean.
+<strong>Blind verdict (two fresh judges, anonymized packs, blind-b12r4/):</strong> the south-east money pair went
+NEW in both rounds — round 2, unprompted: the OLD frame's far slabs "read as cutouts pasted onto the sky ...
+g's grading is the correct call" — every paper/cutout/knife charge across both rounds lands on the old build only.
+The EAST pair stayed with the old sky (the new haze "erases separation instead of grading it"): standing residual,
+two one-constant levers named in LOOP.md, blind-round cap reached.
+</div>
+
 </div>

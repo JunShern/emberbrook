@@ -3327,7 +3327,8 @@ than thickening with depth" (g). Softened (2nd/8 and 3rd/8 WITH the charge), not
 the next levers are inter-ring haze gradation (fog is off on rings by design — a
 per-ring alpha veil toward the horizon hue would emulate it) and breaking the far rings'
 edge sharpness with a 1-2 px vertex-alpha crest fade. Neither attempted tonight — the
-round cap was reached and both touch the ratified band palette.
+round cap was reached and both touch the ratified band palette. (BOTH TAKEN in ROUND 4,
+below — this residual is closed there, blind-judged.)
 
 # F6 (gallery Round 23, 2026-08-06) — the road stops hovering, the grass stops re-rolling
 
@@ -3520,3 +3521,61 @@ NUMBERS (instruments beside them):
   tonight.)
 * ?sky2=0 vs HEAD at two stations: mean |d| 0.32-0.49/255 (capture noise; the
   legacy branch is untouched by construction). Console probe: zero errors/warnings.
+
+### BET 12 ROUND 4, THE BLIND LOOP (packs docs/qa/ow-refs/blind-b12r4/round1,round2)
+
+ROUND 1 (10 frames: 4 matched pairs + both FFIX refs, fresh Anthropic judge): SPLIT.
+The seast pair went to the new build "decisively" — new-seast ranked 3rd of 10, best
+non-reference frame, verbatim: "its far terraces lose edge sharpness as they recede,
+which is the one thing air reliably does ... d's far edges are crisper than its own
+midground cliff — inverted atmospheric perspective, the single most reliable 'this
+is CG' signal in the whole set." NO paper/knife/terrace language against any new
+frame — the round-3 charge did not reproduce. The far-y2 pair also went new (far
+ridges "more varied ... echo the world's actual landforms" vs "interchangeable round
+mounds"). BUT THE EAST PAIR WENT TO THE OLD SKY: at 0.32 the veils overshot — "b
+overshoots the fog until land and cloudbank are one substance — total dissolution
+doesn't read as far away, it reads as 'the map ends here'", and the judge handed
+over the dial: "d is too hard, b is too soft, and the two winners sit between them."
+The hv pair the judge called identical-in-distance (correct: that rig shows rings in
+a sliver; its distance is fogged REAL terrain).
+
+THE CORRECTION, measured then built: __veilTune swept 0.32/0.22/0.15 live at both
+stations — at east the planes become countable again by 0.22; at seast the win is
+CARRIED BY THE CREST HAZE AND FADE, not the veils (0.15-0.32 indistinguishable by
+eye there). VEIL_A 0.32 -> 0.20, profile shape kept.
+
+A CONFOUND CAUGHT BY THE RULER MID-ROUND: ground |dL| jumped to 1.8-3.3/255 on the
+re-measure — not the sky: the F6b lane committed the flower/sedge respawn fix
+(15d8510) between my before and after captures, and the GRASS moved. Re-captured
+the before on current HEAD (stash/pop of this lane's one held file): before2-vs-
+after ground |dL| 0.50-1.21/255 against a same-build A-vs-A floor of 0.50-1.30 —
+at/below floor everywhere except ship-gate (+0.17); ground L IDENTICAL to three
+decimals at all six stations. Band after the correction: gate L 0.619 chroma 35.1,
+seast L 0.628 chroma 29.2 — still inside the ratified blue-chromatic window.
+
+ROUND 2 (8 frames: 3 matched pairs on the F6b-current world + both refs, fresh
+judge): THE DE-PAPERING HELD, THE VEIL DIAL DID NOT FULLY RECOVER EAST. The seast
+money pair went new AGAIN, the judge's words: "g wins ... its distant plateau slabs
+are softened and lowered in contrast — they sit BEHIND the haze and recede. c
+presents the same slabs at near-full contrast with crisp stepped edges ... they read
+as cutouts pasted onto the sky. Same geometry, different atmospheric grading — g's
+grading is the correct call." ACROSS BOTH ROUNDS, EVERY paper/cutout/knife charge
+now lands on the OLD build only — the round-3 residual (far rings as paper
+terraces) is CLOSED at the station that raised it. BUT the east pair stayed with
+the old sky at 0.20 too, and this judge named the mechanism more precisely than the
+dial I turned: "atmosphere should GRADE the planes apart, not erase them, and e
+erases"; the refs' target, verbatim: "far terrain keeps its structure but loses
+contrast, saturation, and edge acuity PROGRESSIVELY, and fog occupies valleys
+BETWEEN planes rather than replacing the planes." (Round 2's far-y2 pair also went
+old on the same erasure read that round 1 gave new — the two judges agree the new
+build attenuates correctly and disagree only where it attenuates too far.)
+
+STANDING RESIDUAL, precisely named, two one-constant levers NOT taken (blind-round
+cap of 2 reached): (1) the veil ALPHA RESIDUAL AT CREST (0.38 of base) is the "fog
+replacing planes" term — drop toward ~0.15 so the fog sits in the gaps and each
+crest keeps its value step; (2) scale the CREST-HAZE amplitude (ch[]) DOWN on rings
+2-3 so adjacent far planes keep one countable step of separation. Both live inside
+the round-4 block; both want one fresh blind pair at east to validate. The judge's
+cross-cutting note for whoever takes it: within ~50 m the frames are "already
+competitive"; the untextured Dellhollow massif plate (a REAL-geometry LOD/lighting
+item, not this lane's) is the other named far-field falseness.
