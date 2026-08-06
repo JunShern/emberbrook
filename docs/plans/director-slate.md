@@ -36,12 +36,31 @@ deleted, both flights v2 at w2.0, basin/promenade/pocket paid — d9b5ff7) · it
 HEAD APRON (generator rule: an area-terminated flight bridges its own trim annulus —
 a3a1a67) · it.4 lock-five lane cleared of the retired stair's foot (lockfive_lane_chop,
 6806dcd). Board: docs/qa/dellhollow-circulation/index.html. Inventory statuses carry
-the receipts. NEXT, worst-cost first: #3 cottage plank ramp (P0, terrain — the taper
-below body width), #7's FOOT (l2 roofs the pilot->weave road; the line gets SEARCHED,
-constraints in DAYLOG ~05:00), #4 shop-row pinches, #8 deep-stairs ascent decision.
+the receipts.
+**Progress 2026-08-06 late window (iterations 5-7, on origin, engine-gated, no bakes):**
+it.5 THE COTTAGE CROSSING (fe5b051): #3's P0 was the weave bridge's rails across the ramp
+foot, NOT the ribbon; and the bridge itself was SEVERED mid-span by pops-of-colour washing
+in its 1.1 m rail slot — span widened 1.3->1.8, bridge rails post-pass-clipped +
+junction-inset (generator), crossing_lane_chop carrier; ramp 4/4 and bridge pairs BOTH
+ways. it.6 THE SEARCHED FOOT (f4b5f83): #7 closed — 588-candidate ring search won the
+SOUTH ring wp2 [60.0,25.8,10.2]; pivot separation now scales with tread width (the w2.0
+stack was v1's disease back at a new width); lg_wv_rail off the head (pilot_head_chop);
+pilot<->weave joined BOTH ways, §9.4's y-11.6 killer pocket geometry replaced. it.7
+MEASUREMENT VERDICTS on the current bundle: gate front door GREEN (exit<->pad 3/3 both
+ways, the toll-yard pin walks out north 2/2 — leg 1's 120-step kill predates it.1's
+bundle; residual named: the gatehouse->winch-head road line crosses gate_arch001's flank,
+markers lure along it) · #8 DECIDED: SIMPLIFY the deep stairs to a 3-leg <=0.55 zigzag
+(retire orphans fishdock — its only other link is the blocked-by-design ladder; BOTH
+directions measured dead on current bytes, r21's 40/40 no longer holds); candidate line
+screened, rejections recorded (head deck plate, weave-north hut at x>=43.3), execution
+next window with the search loop · t04 lip BLOCKER NAMED: cx_rail (the moorage parapet)
+on l0_t04/t05's own cells at [73.4-74.4,-26.8] — a chop-pattern fix with a cx_build
+re-run contract · #4 shop row drives CLEAN both ways on current bytes; pinch real
+(shelf_weapon_shop001_* 60 cells), widen-vs-demote is a shelf_build design call.
 Closing lane owes: cine_solve + scenegraph_derive + plate rebake on ratified geometry
 (loop-stairs owns changed; routes carry the stale seam id until then; slice_test's one
-red line is this).
+red line is this). Playtest lane owes AFTER-receipts on the current bundle: §9.3's gate
+leg, §9.4's pilot legs 2/4, the ch2.dock->landing leg.
 
 ## Bet 3 — Vegetation's card-built asset family (SHIPPED 2026-08-06, residuals named — gallery Round 22, LOOP.md F5)
 **Shipped:** 261/361 near-field clumps converted to hull-interior + leaf-card shell

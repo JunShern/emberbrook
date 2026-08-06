@@ -16459,3 +16459,41 @@ pairs both ways, quay-west pocket->plaza, promenade, lock-five<->north-landing 4
 iterations 2/4/5's receipts all hold on the current bundle (the coordinator's relay
 listed lg_ks as open; it is not — refreshed receipt above). Frames LOOKED AT; board
 iteration 6 section. Blockout digest 0a014370 x2.
+
+## 2026-08-06 ~06:55 — BET 2 ITERATION 7: MEASUREMENT VERDICTS (front door, deep-stairs decision, two named blockers)
+
+No geometry in this iteration — four verdicts, each with its instrument, on the bundle
+iterations 5-6 exported:
+
+GATE TOLL YARD (§9.5 #2, the coordinator's relay): leg 1's 120/120-step kill ran on
+c47bd403, BEFORE iteration 1's descent existed. Current bundle: overworld exit<->gate pad
+3/3 BOTH ways; the leg-1 pin [17.8,24.07,-5.5] is a wedge beside the descent head penned
+by gs_rail001 + gate_arch001 and WALKS OUT NORTH 2/2 — not a sealed pocket; the
+re-derived routes send Lockhead-bound players down the descent (route 2), not west.
+RESIDUAL NAMED: the gatehouse->winch-head road line crosses gate_arch001's solid flank
+(drives stall both ways; x 14.9-17.8 plan 6.5-7.5 walled by arch + t2c_G3 awning +
+gate_leaves001) — a lure only for winch-head wayfinding, no beat names it. AFTER-receipt
+(§9.3's leg, this bundle) is the playtest lane's.
+
+#8 DEEP STAIRS — DECIDED: SIMPLIFY, NOT RETIRE. Retire orphans the 1,446-cell fishdock
+component (only other link = the blocked-by-design ladder). And the flight measured DEAD
+BOTH WAYS on current bytes (built-line drives 3/10 down, 2/10 up — r21's 40/40 descent no
+longer holds; the town drifted around it, so the rebuild is a strict improvement).
+Replacement: 3-leg <=0.55 zigzag, w2.0, under the width-scaled v2 split. First candidate
+(head [35.2,17] -> [43.5,19.5,9.7] -> [35.5,22,5.4] -> foot) screened against a 67k-tri
+art BVH and REJECTED: head deck plate 75 in-tread hits, wv_hut_weave-north_0 at x>=43.3;
+wf_/veg_wf_ excluded BY NAME as re-derivable (the lg_wv_rail lesson applied same-day).
+Execution: next window, the #7 ring-search loop + waterfront_build carry.
+
+MOORAGE t04 LIP (§9.2, verified x3, folded per the brief): BLOCKER NAMED — cx_rail, the
+moorage parapet, holds 6 cells ON walk_e_weave-huts__moorage_l0 t04/t05's OWN ground at
+[73.4-74.4, 4.14-4.52, -26.8]; both hairpin drives stall 0.8-0.88 short. Fix shape: chop
+carrier (three in the repo) with a cx_build re-run contract, or fix rail_on_blockouts'
+guard — it clears the post's own tread, never the crossing flight's cells.
+
+#4 SHOP ROW: drives CLEAN 2/2 both ways on current bytes — the recorded stall
+[34.64,19.07,-8.31] does not reproduce. Pinch real: shelf_weapon_shop001_1/_2/_4 on 60
+cells. Widen-vs-demote = shelf_build design call, next window.
+
+Slate progress line updated (iterations 5-7); board iteration 7 section; inventory rows
+4/8 + §9.2 + §9.4-adjacent statuses carry these receipts.
