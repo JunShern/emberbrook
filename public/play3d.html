@@ -3978,8 +3978,21 @@ function frame(){requestAnimationFrame(frame);
      for(let i=0;i<_cch.length;i++){ const d=_cch[i].distance;
        if(d>2.5&&d<dHit){ dHit=d; hit=true; } }
      if(hit) dHit=Math.max(3,dHit-0.6);
-     if(dHit<CAMCLIP.d) CAMCLIP.d=dHit;                       // snap in front of the occluder
-     else CAMCLIP.d=Math.min(dHit,CAMCLIP.d+(dHit-CAMCLIP.d)*0.05);  // ease back out
+     // PERSISTENCE GATE + SOFT PULL (2026-08-06, user: "very jarring e.g. when I walk
+     // through the old gate or behind any occluder"). v1 snapped the boom in on the
+     // FIRST occluded frame, so passing under an arch lintel slammed the camera in and
+     // crawled it back out — a zoom pump for a half-second occlusion. Now: an occluder
+     // must hold the ray ~0.25s (15 frames) before the clamp engages at all — a brief
+     // pass never moves the camera, GHOST v2 keeps the body readable through it — and
+     // both directions EASE (in fast 0.30, out 0.10): committed occlusion still
+     // resolves in a few frames, nothing ever teleports.
+     // persistence is WALL-TIME, not frames: a frame-count gate stretches to seconds
+     // on a throttled/hidden tab and would also mis-time at 120Hz.
+     if(hit){ if(!CAMCLIP.t0) CAMCLIP.t0=performance.now(); } else CAMCLIP.t0=0;
+     if(CAMCLIP.d>O.dist) CAMCLIP.d=O.dist;   // init (1e9) + wheel zoom-out both land here
+     const want=(hit&&performance.now()-CAMCLIP.t0>=250)?dHit:O.dist;
+     if(want<CAMCLIP.d) CAMCLIP.d=Math.max(want,CAMCLIP.d+(want-CAMCLIP.d)*0.30);
+     else CAMCLIP.d=Math.min(want,CAMCLIP.d+(want-CAMCLIP.d)*0.10);
      bd=Math.min(O.dist,CAMCLIP.d);
    }
    cam.position.set(tx+Math.cos(O.yaw)*Math.cos(O.pitch)*bd,
