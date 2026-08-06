@@ -1,0 +1,343 @@
+[
+ {
+  "fid": "F9",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "woodroad",
+  "item": null,
+  "category": "navigation",
+  "where": "entire right side of the frame",
+  "bbox": [
+   0.65,
+   0,
+   1,
+   1
+  ],
+  "severity": 2,
+  "desc": "Pitch-black foliage completely obscures the right side of the scene, making it impossible to determine if it is a playable path or an impassable boundary.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The dense, dark pine trees clearly function as a standard impassable forest boundary wall rather than a confusing navigation path."
+  }
+ },
+ {
+  "fid": "F3",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": null,
+  "category": "navigation",
+  "where": "the heavily shadowed ground area across the foreground",
+  "bbox": [
+   0.48,
+   0,
+   0.99,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Pitch-black tree shadows obscure the terrain surface, making walkable routes indistinguishable.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tree shadows are semi-transparent dappled light, leaving ground textures and paths clearly visible underneath."
+  }
+ },
+ {
+  "fid": "F7",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": null,
+  "category": "occlusion",
+  "where": "entire right half of the scene",
+  "bbox": [
+   0.56,
+   0,
+   1,
+   0.96
+  ],
+  "severity": 2,
+  "desc": "Extremely dense and dark tree foliage obscures most of the space and potential paths on the right side of the screen.",
+  "support": 2,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Foreground foliage framing the right side of the camera view is a standard artistic choice that does not constitute a gameplay defect."
+  }
+ },
+ {
+  "fid": "F54",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": null,
+  "category": "occlusion",
+  "where": "large pine tree in the lower-left foreground",
+  "bbox": [
+   0,
+   0.21,
+   0.25,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "The dense evergreen tree severely obstructs the view of the building entrance, path, and surrounding walkable space.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Foreground foliage is a standard framing element in isometric environment art and does not constitute a defect."
+  }
+ },
+ {
+  "fid": "F47",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "dense tree foliage left of central building",
+  "bbox": [
+   0.08,
+   0.1,
+   0.42,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Thick dark foliage obscures the ground and left side of the house, hiding potential paths and entrances.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tree foliage around the house is standard environmental scenery and does not impede gameplay or obscure essential navigation."
+  }
+ },
+ {
+  "fid": "F57",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "tree canopy around the central building",
+  "bbox": [
+   0.08,
+   0,
+   0.6,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Dense foliage completely covers the area around the house, concealing paths and potential doors from view.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Tree canopies surrounding structures are normal environment art details rather than game-breaking occlusion issues."
+  }
+ },
+ {
+  "fid": "F60",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "navigation",
+  "where": "paved path on the right side",
+  "bbox": [
+   0.52,
+   0.328,
+   0.99,
+   0.618
+  ],
+  "severity": 1,
+  "desc": "The stone pathway cuts across the grass and disappears into dark foliage without a clear continuation.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The stone pathway on the right remains clearly visible as it curves across the grass toward the edge of the frame."
+  }
+ },
+ {
+  "fid": "F61",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "dense foliage behind main building",
+  "bbox": [
+   0.08,
+   0,
+   0.62,
+   0.53
+  ],
+  "severity": 2,
+  "desc": "Heavy tree foliage completely blocks view of the space behind the central building, hiding potential walkways and wall boundaries.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Dense foliage behind the building serves as standard background dressing and does not obstruct player movement."
+  }
+ },
+ {
+  "fid": "F62",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "navigation",
+  "where": "shadowed ground area on the right",
+  "bbox": [
+   0.33,
+   0.43,
+   0.99,
+   0.99
+  ],
+  "severity": 2,
+  "desc": "Extremely dark ambient shadows obscure the terrain and path boundaries, making it hard to see where walkable ground continues.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Terrain and path details remain easily readable despite the ambient shadows on the right side."
+  }
+ },
+ {
+  "fid": "F67",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "exit",
+  "where": "the doorway in the brick wall near the top center",
+  "bbox": [
+   0.66,
+   0,
+   0.76,
+   0.13
+  ],
+  "severity": 2,
+  "desc": "The doorway is submerged in deep shadow, making it difficult to identify as a usable portal or exit.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The wooden door and archway frame at the top center remain clearly recognizable as an entrance despite the dark lighting."
+  }
+ },
+ {
+  "fid": "F68",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "immersion",
+  "where": "the wooden partition in the middle of the paved area",
+  "bbox": [
+   0.41,
+   0.24,
+   0.52,
+   0.33
+  ],
+  "severity": 1,
+  "desc": "The wooden structures sit flatly on the ground without proper footings or ground blending.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "66.4,73.7,119.2,125.7",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 66.4,73.7,119.2,125.7"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The wooden structure is placed inside a recessed dirt cutout rather than sitting flatly on top of the paved floor."
+  }
+ },
+ {
+  "fid": "F74",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "exit",
+  "where": "dark doorway in the upper brick wall",
+  "bbox": [
+   0.64,
+   0,
+   0.78,
+   0.15
+  ],
+  "severity": 2,
+  "desc": "The doorway in the back wall is completely obscured in shadow, making it difficult to recognize as a path forward.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The doorway is easily distinguishable by its frame and wooden paneling, so the lighting shadow does not obscure its function."
+  }
+ },
+ {
+  "fid": "F78",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "exit",
+  "where": "Wooden door in top wall",
+  "bbox": [
+   0,
+   0.665,
+   0.14,
+   0.765
+  ],
+  "severity": 2,
+  "desc": "The doorway set into the rear brick wall is deeply shadowed, making it difficult to read as a usable entrance or exit.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The door outline and wood grain texture are still visible and clearly identifiable as a doorway."
+  }
+ }
+]

@@ -1,0 +1,513 @@
+[
+ {
+  "fid": "F7",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "woodroad",
+  "item": null,
+  "category": "navigation",
+  "where": "entire right side of the frame",
+  "bbox": [
+   0.65,
+   0,
+   1,
+   1
+  ],
+  "severity": 2,
+  "desc": "Pitch-black foliage completely obscures the right side of the scene, making it impossible to determine if it is a playable path or an impassable boundary.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The dense, dark pine trees clearly function as a standard impassable forest boundary wall rather than a confusing navigation path."
+  }
+ },
+ {
+  "fid": "F18",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "waystone",
+  "item": "exit:seam:waystone__road-gate",
+  "itemWhat": "the way out of this area on foot towards arch — a path that carries on out of the frame",
+  "verdict": "ABSENT",
+  "category": "navigation",
+  "where": "null",
+  "bbox": null,
+  "severity": 3,
+  "desc": "the way out of this area on foot towards arch: ABSENT — The road fades into darkness before reaching the edge of the frame, so an exit toward the arch is not shown.",
+  "census": {
+   "u": 0.5849,
+   "v": 0.3733,
+   "z": 41.34,
+   "charPx": 90,
+   "on": true,
+   "plateZ": 41.32,
+   "state": "clear",
+   "behindBy": 0.02
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The paved path remains clearly visible and continues all the way to the bottom edge of the frame."
+  }
+ },
+ {
+  "fid": "F5",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": null,
+  "category": "navigation",
+  "where": "the heavily shadowed ground area across the foreground",
+  "bbox": [
+   0.48,
+   0,
+   0.99,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Pitch-black tree shadows obscure the terrain surface, making walkable routes indistinguishable.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tree shadows are semi-transparent dappled light, leaving ground textures and paths clearly visible underneath."
+  }
+ },
+ {
+  "fid": "F12",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": null,
+  "category": "occlusion",
+  "where": "entire right half of the scene",
+  "bbox": [
+   0.56,
+   0,
+   1,
+   0.96
+  ],
+  "severity": 2,
+  "desc": "Extremely dense and dark tree foliage obscures most of the space and potential paths on the right side of the screen.",
+  "support": 2,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Foreground foliage framing the right side of the camera view is a standard artistic choice that does not constitute a gameplay defect."
+  }
+ },
+ {
+  "fid": "F20",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": "inn",
+  "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "stone building in upper center",
+  "bbox": [
+   0.246,
+   0.018,
+   0.411,
+   0.275
+  ],
+  "severity": 2,
+  "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — A small stone cottage with a chimney is visible, but lacks any sign or feature identifying it specifically as the inn.",
+  "census": {
+   "u": 0.3322,
+   "v": 0.2904,
+   "z": 68.85,
+   "charPx": 54,
+   "on": true,
+   "plateZ": 65.9,
+   "state": "occluded",
+   "behindBy": 2.94
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The complaint is based on the building lacking a sign or label identifying it as an inn, which is explicitly disallowed under the rules."
+  }
+ },
+ {
+  "fid": "F48",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "square",
+  "item": "item-shop",
+  "itemWhat": "Item Shop — a shop item (village general store — preserves, twine, lamp oil)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "northeast of square",
+  "bbox": [
+   0.59,
+   0.12,
+   0.71,
+   0.37
+  ],
+  "severity": 2,
+  "desc": "Item Shop: VISIBLE-BUT-ILLEGIBLE — Building located near the square, but lacks distinct trade signage.",
+  "census": {
+   "u": 0.2964,
+   "v": 0.4218,
+   "z": 48.3,
+   "charPx": 43,
+   "on": true,
+   "plateZ": 44.7,
+   "state": "occluded",
+   "behindBy": 3.6
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The building is plainly visible, and objecting to its lack of trade signage is a complaint about missing signs rather than art readability."
+  }
+ },
+ {
+  "fid": "F49",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "square",
+  "item": "inn",
+  "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "north edge of square",
+  "bbox": [
+   0.36,
+   0.05,
+   0.46,
+   0.23
+  ],
+  "severity": 2,
+  "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Small cottage visible in background without clear inn indicators.",
+  "census": {
+   "u": 0.6471,
+   "v": 0.3175,
+   "z": 52.34,
+   "charPx": 40,
+   "on": true,
+   "plateZ": 49.65,
+   "state": "occluded",
+   "behindBy": 2.7
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The cottage is clearly visible, and complaining about a lack of inn indicators is a complaint about missing signage or labels."
+  }
+ },
+ {
+  "fid": "F50",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "square",
+  "item": "bakery",
+  "itemWhat": "Poppy's bakery — a building (warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging | MOVED 2026-07-31 (coordinator): 1.5 m away from the inn — at (24.5,21.5) the two roofs shared a volume (4.03 m centres vs 4.96 m needed at cottage size + 1.14 roof oversail, measured by the square builder). Still on the square's west rim, west of the well.)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "west rim of square",
+  "bbox": [
+   0.21,
+   0.2,
+   0.35,
+   0.47
+  ],
+  "severity": 2,
+  "desc": "Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — Orange-roofed cottage on plaza edge, indistinguishable from ordinary houses.",
+  "census": {
+   "u": 0.829,
+   "v": 0.4788,
+   "z": 46.34,
+   "charPx": 45,
+   "on": true,
+   "plateZ": 43.12,
+   "state": "occluded",
+   "behindBy": 3.22
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The building is fully legible as a cottage, and expecting specific bakery signifiers on a standard house is a complaint about missing labels."
+  }
+ },
+ {
+  "fid": "F78",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": null,
+  "category": "occlusion",
+  "where": "large pine tree in the lower-left foreground",
+  "bbox": [
+   0,
+   0.21,
+   0.25,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "The dense evergreen tree severely obstructs the view of the building entrance, path, and surrounding walkable space.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Foreground foliage is a standard framing element in isometric environment art and does not constitute a defect."
+  }
+ },
+ {
+  "fid": "F62",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "dense tree foliage left of central building",
+  "bbox": [
+   0.08,
+   0.1,
+   0.42,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Thick dark foliage obscures the ground and left side of the house, hiding potential paths and entrances.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tree foliage around the house is standard environmental scenery and does not impede gameplay or obscure essential navigation."
+  }
+ },
+ {
+  "fid": "F70",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "tree canopy around the central building",
+  "bbox": [
+   0.08,
+   0,
+   0.6,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Dense foliage completely covers the area around the house, concealing paths and potential doors from view.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Tree canopies surrounding structures are normal environment art details rather than game-breaking occlusion issues."
+  }
+ },
+ {
+  "fid": "F73",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "navigation",
+  "where": "paved path on the right side",
+  "bbox": [
+   0.52,
+   0.328,
+   0.99,
+   0.618
+  ],
+  "severity": 1,
+  "desc": "The stone pathway cuts across the grass and disappears into dark foliage without a clear continuation.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The stone pathway on the right remains clearly visible as it curves across the grass toward the edge of the frame."
+  }
+ },
+ {
+  "fid": "F81",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "dense foliage behind main building",
+  "bbox": [
+   0.08,
+   0,
+   0.62,
+   0.53
+  ],
+  "severity": 2,
+  "desc": "Heavy tree foliage completely blocks view of the space behind the central building, hiding potential walkways and wall boundaries.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Dense foliage behind the building serves as standard background dressing and does not obstruct player movement."
+  }
+ },
+ {
+  "fid": "F82",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "navigation",
+  "where": "shadowed ground area on the right",
+  "bbox": [
+   0.33,
+   0.43,
+   0.99,
+   0.99
+  ],
+  "severity": 2,
+  "desc": "Extremely dark ambient shadows obscure the terrain and path boundaries, making it hard to see where walkable ground continues.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Terrain and path details remain easily readable despite the ambient shadows on the right side."
+  }
+ },
+ {
+  "fid": "F105",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "exit",
+  "where": "the doorway in the brick wall near the top center",
+  "bbox": [
+   0.66,
+   0,
+   0.76,
+   0.13
+  ],
+  "severity": 2,
+  "desc": "The doorway is submerged in deep shadow, making it difficult to identify as a usable portal or exit.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The wooden door and archway frame at the top center remain clearly recognizable as an entrance despite the dark lighting."
+  }
+ },
+ {
+  "fid": "F106",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "immersion",
+  "where": "the wooden partition in the middle of the paved area",
+  "bbox": [
+   0.41,
+   0.24,
+   0.52,
+   0.33
+  ],
+  "severity": 1,
+  "desc": "The wooden structures sit flatly on the ground without proper footings or ground blending.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "66.4,73.7,119.2,125.7",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 66.4,73.7,119.2,125.7"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The wooden structure is placed inside a recessed dirt cutout rather than sitting flatly on top of the paved floor."
+  }
+ },
+ {
+  "fid": "F112",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "exit",
+  "where": "dark doorway in the upper brick wall",
+  "bbox": [
+   0.64,
+   0,
+   0.78,
+   0.15
+  ],
+  "severity": 2,
+  "desc": "The doorway in the back wall is completely obscured in shadow, making it difficult to recognize as a path forward.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The doorway is easily distinguishable by its frame and wooden paneling, so the lighting shadow does not obscure its function."
+  }
+ },
+ {
+  "fid": "F116",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "exit",
+  "where": "Wooden door in top wall",
+  "bbox": [
+   0,
+   0.665,
+   0.14,
+   0.765
+  ],
+  "severity": 2,
+  "desc": "The doorway set into the rear brick wall is deeply shadowed, making it difficult to read as a usable entrance or exit.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The door outline and wood grain texture are still visible and clearly identifiable as a doorway."
+  }
+ }
+]

@@ -1,0 +1,6 @@
+{
+ "what": "merged raw judge replies for replay-derivation of the combined run",
+ "naiveFrom": "run-20260806-1-emberbrook-naive",
+ "checklistFrom": "run-20260806-1-emberbrook-checklist",
+ "mergedBy": "tools/scene_redteam.mjs --replay (see combined run findings.json)"
+}

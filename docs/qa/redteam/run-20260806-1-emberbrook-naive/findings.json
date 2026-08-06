@@ -1,0 +1,2634 @@
+{
+ "version": 1,
+ "town": "emberbrook",
+ "scene": "emb-cine",
+ "stamp": "20260806-1-emberbrook-naive",
+ "generated": "2026-08-06T19:51:08.690Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": false,
+ "modes": [
+  "naive"
+ ],
+ "n": 3,
+ "freshFrom": null,
+ "replaySources": {},
+ "plates": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0e1c40c3-51e1-4ef0-8908-896c9d91202e/scratchpad/pin-emb",
+ "cine": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0e1c40c3-51e1-4ef0-8908-896c9d91202e/scratchpad/pin-emb/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "woodroad",
+   "name": "The Whisperwood Road",
+   "replayOf": null,
+   "baked": "2026-08-02T11:41:56Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.185Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "waystone",
+   "name": "The Waystone",
+   "replayOf": null,
+   "baked": "2026-08-02T12:15:59Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.164Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "arch",
+   "name": "The Village Arch",
+   "replayOf": null,
+   "baked": "2026-08-02T20:20:29Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.190Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "orchard",
+   "name": "The Orchard Rows",
+   "replayOf": null,
+   "baked": "2026-08-02T19:48:21Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.173Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "therise",
+   "name": "The Rise",
+   "replayOf": null,
+   "baked": "2026-08-02T20:38:44Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.176Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "square",
+   "name": "Festival Square",
+   "replayOf": null,
+   "baked": "2026-08-02T19:48:21Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.182Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "pondlane",
+   "name": "Pond Lane",
+   "replayOf": null,
+   "baked": "2026-08-02T19:48:21Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.197Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "homerow",
+   "name": "Home Row",
+   "replayOf": null,
+   "baked": "2026-08-02T12:46:58Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.195Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "northlane",
+   "name": "The North Lane",
+   "replayOf": null,
+   "baked": "2026-08-02T13:00:24Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.187Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "gateroad",
+   "name": "The Quiet Road",
+   "replayOf": null,
+   "baked": "2026-08-02T22:42:37Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.167Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "gatefield",
+   "name": "The Old Gate",
+   "replayOf": null,
+   "baked": "2026-08-02T22:57:09Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-06T19:42:54.192Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  }
+ ],
+ "raw": 78,
+ "survivors": [
+  {
+   "fid": "F1",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "woodroad",
+   "item": null,
+   "category": "geometry",
+   "where": "jagged stepped edges of the circular paved area",
+   "bbox": [
+    0.22,
+    0.575,
+    0.67,
+    0.95
+   ],
+   "severity": 2,
+   "desc": "The perimeter of the circular stone pad has blocky, stair-stepped edges that clip awkwardly into the surrounding terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "43.9,59.4,-34.3,-21.8",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 43.9,59.4,-34.3,-21.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The circular paved area features prominent stair-stepped, blocky edges where it meets the ground terrain."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "gate-stair-occluded",
+    "where": "dellhollow.cameras.json gate._framing_note (stair 6.1% post-bake)"
+   }
+  },
+  {
+   "fid": "F8",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "woodroad",
+   "item": null,
+   "category": "geometry",
+   "where": "around the circular paved area in the lower center",
+   "bbox": [
+    0.226,
+    0.568,
+    0.664,
+    0.96
+   ],
+   "severity": 2,
+   "desc": "The perimeter of the circular paved area consists of jagged, stair-stepped blocky steps that look like unrefined grid geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "44,59.3,-34.5,-21.6",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 44,59.3,-34.5,-21.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The perimeter of the circle clearly consists of coarse, grid-like steps rather than a smooth geometric curve."
+   },
+   "alsoOn": [
+    {
+     "shot": "gatefield",
+     "fid": "F66",
+     "desc": "The perimeter of the paved area features blocky, stair-stepped edges that look like unfinished grid geometry."
+    }
+   ],
+   "triage": {
+    "bucket": "known",
+    "by": "gate-stair-occluded",
+    "where": "dellhollow.cameras.json gate._framing_note (stair 6.1% post-bake)"
+   }
+  },
+  {
+   "fid": "F10",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "woodroad",
+   "item": null,
+   "category": "geometry",
+   "where": "straight dark path leading upward",
+   "bbox": [
+    0.45,
+    0.115,
+    0.645,
+    0.595
+   ],
+   "severity": 1,
+   "desc": "The straight path plane clips directly into the terrain with razor-sharp, unblended edges.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "49.8,60.2,-25.4,-2.7",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 49.8,60.2,-25.4,-2.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The straight pathway plane cuts directly into the ground with completely flat, razor-sharp edges and no ground blending."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F13",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "woodroad",
+   "item": null,
+   "category": "geometry",
+   "where": "border of the circular paved area at the bottom",
+   "bbox": [
+    0.232,
+    0.554,
+    0.662,
+    0.952
+   ],
+   "severity": 2,
+   "desc": "The perimeter of the circular paved area has unnatural, pixelated stair-step edges where it intersects the grass.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "44.1,59.3,-34.3,-21.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 44.1,59.3,-34.3,-21.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The bottom edge of the circular pad shows obvious pixelated stair-stepping where the mesh intersects the grass."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F4",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "waystone",
+   "item": null,
+   "category": "immersion",
+   "where": "stone pedestal next to lamp post",
+   "bbox": [
+    0.465,
+    0.465,
+    0.53,
+    0.622
+   ],
+   "severity": 2,
+   "desc": "The pedestal is brightly lit in cool white light from an opposing angle, inconsistent with the warm orange light emitted by the adjacent lamp post.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "53.2,58.3,-14.2,-7.4",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 53.2,58.3,-14.2,-7.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The pedestal is brightly illuminated in cool white light from the upper-left, which directly contradicts the warm orange glow cast by the adjacent lamp post."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F5",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "waystone",
+   "item": null,
+   "category": "occlusion",
+   "where": "dense dark foliage on the right",
+   "bbox": [
+    0.58,
+    0,
+    1,
+    1
+   ],
+   "severity": 1,
+   "desc": "Dense, pitch-black foliage obscures the right portion of the frame, hiding the path's continuation and surrounding terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Uncut foreground foliage covers nearly the entire right side of the frame in pitch darkness, blocking the view of the play area."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F11",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "waystone",
+   "item": null,
+   "category": "immersion",
+   "where": "tree leaves above the lamp post",
+   "bbox": [
+    0.47,
+    0.28,
+    0.63,
+    0.42
+   ],
+   "severity": 1,
+   "desc": "The underside of the tree canopy above is brightly illuminated despite the light fixture having an opaque top cover.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "52.3,60,-9.2,-1.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 52.3,60,-9.2,-1.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Light bleeds upward onto the tree leaves above the lamp despite the fixture possessing a solid, opaque top cover."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F12",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "waystone",
+   "item": null,
+   "category": "navigation",
+   "where": "path ending under the tree canopy",
+   "bbox": [
+    0.51,
+    0.38,
+    0.63,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "The path vanishes into complete darkness beneath the tree canopy, making it unclear if the way forward is walkable.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The path disappears directly into pitch-black shadow, making it impossible to see where a player can walk."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F15",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "waystone",
+   "item": null,
+   "category": "geometry",
+   "where": "upper edge of the stone path section",
+   "bbox": [
+    0.51,
+    0.37,
+    0.63,
+    0.585
+   ],
+   "severity": 1,
+   "desc": "The stone path slabs end abruptly with exposed, floating edges that do not connect cleanly with the surrounding ground terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "53.8,60.4,-13.8,-4.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 53.8,60.4,-13.8,-4.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The end of the path slab hovers visibly above the ground mesh, creating an ungrounded floating edge and shadow gap."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F16",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "waystone",
+   "item": null,
+   "category": "navigation",
+   "where": "right half of the screen under tree canopy",
+   "bbox": [
+    0.6,
+    0,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "Dense foliage and shadow completely block the view of the environment, making it ambiguous whether the path continues or ends.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Dense tree foliage and deep shadows completely obscure the right side of the scene, hiding whether the pathway continues."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F2",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": null,
+   "category": "geometry",
+   "where": "the dark grey path slabs in the center of the terrain",
+   "bbox": [
+    0.43,
+    0.19,
+    0.61,
+    0.7
+   ],
+   "severity": 2,
+   "desc": "The path geometry clips flat and unnaturally into the ground plane with sharp, unintegrated edges.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "52.3,74.2,0.8,64.4",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 52.3,74.2,0.8,64.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The grey path geometry clips flatly into the terrain mesh with razor-sharp, unblended polygon edges visible near the center."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F6",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": null,
+   "category": "geometry",
+   "where": "center along the paved walkway",
+   "bbox": [
+    0.442,
+    0.442,
+    0.59,
+    0.588
+   ],
+   "severity": 2,
+   "desc": "A dark flat geometric plane clips cleanly into the terrain path, creating an unnatural jagged tear in the ground geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "53.4,62.4,6.8,21.3",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 53.4,62.4,6.8,21.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A dark geometric plane creates a harsh triangular slice straight through the center walkway mesh."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F14",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": null,
+   "category": "geometry",
+   "where": "center ground path mesh",
+   "bbox": [
+    0.186,
+    0.436,
+    0.693,
+    0.608
+   ],
+   "severity": 2,
+   "desc": "Dark geometric path polygons clip abruptly into the ground terrain with sharp edges and no blending.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "46.6,66,5.2,22.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 46.6,66,5.2,22.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dark path polygons sink into the green ground terrain with harsh, unblended straight edges."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F17",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": null,
+   "category": "occlusion",
+   "where": "pitch-black shadow cast by central building",
+   "bbox": [
+    0.26,
+    0.51,
+    0.58,
+    0.86
+   ],
+   "severity": 2,
+   "desc": "The pitch-black shadow cast by the roof completely obscures the building's base, entrances, and ground details underneath.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The shadow cast by the building's roof is completely pitch-black, hiding all ground details and structure underneath."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F18",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": null,
+   "category": "occlusion",
+   "where": "dense tree foliage on the right foreground",
+   "bbox": [
+    0.6,
+    0.31,
+    1,
+    1
+   ],
+   "severity": 1,
+   "desc": "Dense foreground trees obstruct the view of the terrain and potential navigation paths on the right side of the screen.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dense foreground trees on the right cover a massive portion of the screen, completely blocking vision of the playable terrain behind them."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F22",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": null,
+   "category": "occlusion",
+   "where": "shadow behind the central building",
+   "bbox": [
+    0.25,
+    0.52,
+    0.58,
+    0.85
+   ],
+   "severity": 2,
+   "desc": "Pitch-black shadow completely obscures the ground and structure below the roof, concealing paths and potential obstacles.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The pitch-black shadow behind the building conceals ground terrain, potential paths, and any objects underneath."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F23",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": null,
+   "category": "geometry",
+   "where": "green strip near lower left trees",
+   "bbox": [
+    0.11,
+    0.66,
+    0.23,
+    0.89
+   ],
+   "severity": 2,
+   "desc": "A bright green untextured object clips strangely into the terrain and foliage.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "47.4,56.1,25.5,34.8",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 47.4,56.1,25.5,34.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A bright cyan-green untextured polygon strip is clearly visible clipping through the ground and trees near the lower left."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F24",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": null,
+   "category": "immersion",
+   "where": "lamp post near center",
+   "bbox": [
+    0.46,
+    0.44,
+    0.59,
+    0.58
+   ],
+   "severity": 1,
+   "desc": "The active light source casts a sharp, dark shadow outward without illuminating its immediate surroundings.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "36.1,44.4,18.1,26",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 36.1,44.4,18.1,26"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The lamp post head is actively glowing white but casts no light onto the ground while projecting a long sunlight shadow."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F28",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": null,
+   "category": "occlusion",
+   "where": "pitch-black shadow cast by the roof",
+   "bbox": [
+    0.382,
+    0.518,
+    0.584,
+    0.856
+   ],
+   "severity": 2,
+   "desc": "An extremely dark roof shadow completely obscures the ground and terrain details, making it impossible to see objects or paths in that area.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The roof shadow lacks ambient lighting and creates a completely black dead zone where no ground details can be seen."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F29",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": null,
+   "category": "occlusion",
+   "where": "foreground tree foliage on the right side",
+   "bbox": [
+    0.602,
+    0.298,
+    1,
+    0.998
+   ],
+   "severity": 2,
+   "desc": "Dense foreground foliage blocks a large portion of the right side of the screen, obscuring the surrounding space and potential navigation routes.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The large tree canopy in the lower right foreground severely obscures gameplay space and navigation routes."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F30",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": null,
+   "category": "immersion",
+   "where": "arc of small bushes on the ground",
+   "bbox": [
+    0.381,
+    0.304,
+    0.775,
+    0.467
+   ],
+   "severity": 1,
+   "desc": "The small bushes are placed in an unnaturally rigid circular arc across the clearing, breaking environmental believability.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "27.3,48.3,11.7,27.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 27.3,48.3,11.7,27.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The small bushes are arranged in a perfectly smooth, artificial semi-circle across the clearing."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F19",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": null,
+   "category": "geometry",
+   "where": "ground path in the lower middle",
+   "bbox": [
+    0.415,
+    0.725,
+    0.582,
+    0.895
+   ],
+   "severity": 2,
+   "desc": "The paved path geometry features sharp, unblended polygonal edges clipping abruptly into the surrounding terrain mesh.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "55.3,61.6,14.3,21.3",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 55.3,61.6,14.3,21.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dark paved path mesh in the lower-middle area has hard, unblended polygonal edges that clip abruptly into the ground terrain."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F20",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": null,
+   "category": "occlusion",
+   "where": "large bush on the left",
+   "bbox": [
+    0.015,
+    0.178,
+    0.565,
+    0.805
+   ],
+   "severity": 2,
+   "desc": "A dense foreground bush occupies a major section of the camera frame, blocking sightlines to the surrounding town layout.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The massive, dense bush on the left dominates a significant portion of the frame and completely blocks line of sight to the town layout behind it."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F21",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": null,
+   "category": "navigation",
+   "where": "center ground area",
+   "bbox": [
+    0.41,
+    0.45,
+    0.85,
+    0.72
+   ],
+   "severity": 2,
+   "desc": "Deep shadows and dense foliage obscure the walkable terrain, making it ambiguous which way the player is intended to progress.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Harsh, dark cast shadows combined with surrounding foliage render the central walkable area dark and visually ambiguous for player navigation."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F25",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": null,
+   "category": "geometry",
+   "where": "ground pathway mesh near center bottom",
+   "bbox": [
+    0.416,
+    0.716,
+    0.584,
+    0.888
+   ],
+   "severity": 2,
+   "desc": "The ground path mesh segments are disjointed and misaligned, creating visible seams and clipping edges on the terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "55.3,61.7,14.5,21.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 55.3,61.7,14.5,21.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The path geometry segments at the center-bottom are noticeably misaligned and disjointed, creating obvious visual seams and terrain clipping."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F26",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": null,
+   "category": "occlusion",
+   "where": "foreground tree canopy on the left",
+   "bbox": [
+    0.016,
+    0.2,
+    0.57,
+    0.79
+   ],
+   "severity": 2,
+   "desc": "Extremely dense and dark foliage dominates the left side of the frame, severely obscuring paths and environment layout.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Extremely dark and dense foliage on the left side obscures major sections of the environment and intended navigation paths."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F31",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": null,
+   "category": "geometry",
+   "where": "center ground pathway",
+   "bbox": [
+    0.416,
+    0.725,
+    0.585,
+    0.898
+   ],
+   "severity": 2,
+   "desc": "The pathway mesh clips awkwardly through the terrain, leaving floating edges and untextured vertical gaps.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "55.3,61.7,14.3,21.3",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 55.3,61.7,14.3,21.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The central path geometry floats above the terrain plane, exposing unblended vertical edges and gaps."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F32",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": null,
+   "category": "occlusion",
+   "where": "foreground foliage on the left",
+   "bbox": [
+    0.03,
+    0.18,
+    0.56,
+    0.78
+   ],
+   "severity": 1,
+   "desc": "A large foreground bush severely blocks the player's view of the ground and playable path directly behind it.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The large foreground bush obscures the ground and playable pathway immediately behind it, hiding key play space from the player."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F27",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "square",
+   "item": null,
+   "category": "geometry",
+   "where": "ground terrain across the central plaza",
+   "bbox": [
+    0.485,
+    0.48,
+    0.65,
+    0.835
+   ],
+   "severity": 2,
+   "desc": "Black square holes and grid-shaped missing patches are visible in the ground terrain mesh.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "54.7,68.1,42.2,57.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 54.7,68.1,42.2,57.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Black square holes and missing grid tiles are clearly visible cut into the terrain mesh across the plaza."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F33",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "square",
+   "item": null,
+   "category": "geometry",
+   "where": "ground terrain near the bottom center",
+   "bbox": [
+    0.33,
+    0.885,
+    0.5,
+    0.955
+   ],
+   "severity": 2,
+   "desc": "The ground terrain mesh terminates in a jagged, blocky stepped edge with missing geometry exposing black void underneath.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "64.7,74.4,53.3,59.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 64.7,74.4,53.3,59.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The terrain mesh near the bottom center terminates in a blocky, stair-stepped edge exposing empty black void underneath."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F34",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "square",
+   "item": null,
+   "category": "geometry",
+   "where": "ground around the well structure on the right",
+   "bbox": [
+    0.62,
+    0.485,
+    0.652,
+    0.565
+   ],
+   "severity": 2,
+   "desc": "Several rectangular holes are cut into the ground plane mesh near the well, showing black untextured gaps.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "54.7,60.2,42.3,48.7",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 54.7,60.2,42.3,48.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Distinct rectangular missing mesh patches are visible in the ground surrounding the stone well structure."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F35",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "square",
+   "item": null,
+   "category": "occlusion",
+   "where": "bottom right corner of the screen",
+   "bbox": [
+    0.747,
+    0.488,
+    0.998,
+    0.996
+   ],
+   "severity": 2,
+   "desc": "A massive foreground roof severely occludes the ground and play area in the lower right section of the screen.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A massive foreground roof occupies the bottom-right corner, heavily occluding the ground and potential play area beneath it."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F36",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "square",
+   "item": null,
+   "category": "immersion",
+   "where": "center of the village square",
+   "bbox": [
+    0.474,
+    0.455,
+    0.528,
+    0.513
+   ],
+   "severity": 2,
+   "desc": "A bright, untextured white block sits inside the central pit, appearing as a placeholder light object rather than a finished asset.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "60.7,66.8,39.7,45.7",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 60.7,66.8,39.7,45.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A featureless, bright white glowing cube sits inside the central pit, clearly functioning as an unskinned placeholder light object."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F37",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": null,
+   "category": "geometry",
+   "where": "lower left edge of screen",
+   "bbox": [
+    0,
+    0.622,
+    0.17,
+    0.845
+   ],
+   "severity": 2,
+   "desc": "Untextured green blockout slabs on the path appear to be unfinished developer placeholder geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "71,80.8,53.9,64.7",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 71,80.8,53.9,64.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Flat, green-shaded rectangular slabs on the far lower-left edge are clearly untextured blockout geometry."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F38",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": null,
+   "category": "geometry",
+   "where": "stalls on the lower right",
+   "bbox": [
+    0.631,
+    0.668,
+    0.93,
+    1
+   ],
+   "severity": 1,
+   "desc": "The wooden roof panels on the market stalls visibly clip through one another at harsh angles.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "69.3,82.2,38.2,48.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 69.3,82.2,38.2,48.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden roof segments on the market stalls overlap and clip into one another at unnatural, intersecting angles."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F42",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": null,
+   "category": "geometry",
+   "where": "cyan step blocks on the lower left",
+   "bbox": [
+    0,
+    0.62,
+    0.22,
+    0.84
+   ],
+   "severity": 2,
+   "desc": "The cyan rectangular steps look like untextured placeholder geometry that does not blend into the terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "70.6,81.1,52.9,64.8",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 70.6,81.1,52.9,64.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cyan-colored steps on the lower left are untextured placeholder blocks that fail to blend with the surrounding ground."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "gate-stair-occluded",
+    "where": "dellhollow.cameras.json gate._framing_note (stair 6.1% post-bake)"
+   }
+  },
+  {
+   "fid": "F43",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": null,
+   "category": "navigation",
+   "where": "center dark foliage and foreground trees",
+   "bbox": [
+    0.05,
+    0.2,
+    0.55,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "Dense trees and dark foliage obscure the middle ground, leaving no clear visible path or direction for movement.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dark, dense tree foliage dominates the center of the screen, obscuring ground paths and making navigation unclear."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F50",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": null,
+   "category": "geometry",
+   "where": "lower left ground steps",
+   "bbox": [
+    0,
+    0.62,
+    0.22,
+    0.84
+   ],
+   "severity": 2,
+   "desc": "The blocky steps on the lower left appear to be untextured greybox geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "70.6,81.1,52.9,64.8",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 70.6,81.1,52.9,64.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The blocky steps in the lower left scene area lack proper textures and material detail, resembling greybox assets."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "gate-stair-occluded",
+    "where": "dellhollow.cameras.json gate._framing_note (stair 6.1% post-bake)"
+   }
+  },
+  {
+   "fid": "F51",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": null,
+   "category": "immersion",
+   "where": "background skyline",
+   "bbox": [
+    0.17,
+    0,
+    0.83,
+    0.14
+   ],
+   "severity": 2,
+   "desc": "Tree trunks in the background cut off abruptly against the sky without foliage tops or proper bases.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "113,116,76.9,79.9",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 113,116,76.9,79.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Bare tree trunks near the top skyline cut off flatly against the sky without foliage or natural tree tops."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F52",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": null,
+   "category": "occlusion",
+   "where": "center bush canopy",
+   "bbox": [
+    0.05,
+    0.1,
+    0.55,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "The dense central foliage hides the ground and paths underneath, making it unclear where the player can walk.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The large central tree canopy blocks the view of the terrain underneath, leaving no clear indication of walkable space."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F39",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "geometry",
+   "where": "plain beige box on the building facade at the top right",
+   "bbox": [
+    0.89,
+    0.24,
+    1,
+    0.44
+   ],
+   "severity": 2,
+   "desc": "A large untextured, flat box structure is attached to the upper side of the building.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "49.1,55.5,55.2,60.7",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 49.1,55.5,55.2,60.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A flat, untextured beige rectangular block is noticeably attached to the upper facade of the rightmost building."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F40",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "immersion",
+   "where": "sharp square shadow artifact on the path near the left lamp post",
+   "bbox": [
+    0.23,
+    0.71,
+    0.31,
+    0.81
+   ],
+   "severity": 2,
+   "desc": "A hard-edged, perfectly square black shadow box appears unexpectedly on the walkway path.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "33.4,39.4,47,53.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 33.4,39.4,47,53.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A perfectly rectangular pitch-black shadow box sits on the path near the lower-left lamp post."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F41",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "geometry",
+   "where": "large wooden wheel structure on the far right",
+   "bbox": [
+    0.9,
+    0.53,
+    1,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "A massive wooden wheel structure clips unnaturally into the building's stone wall.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "50.3,56.7,55.1,61.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 50.3,56.7,55.1,61.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The large wooden wheel on the right clips straight into the side wall of the building."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F44",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "immersion",
+   "where": "on path near lower left lantern",
+   "bbox": [
+    0.23,
+    0.71,
+    0.31,
+    0.81
+   ],
+   "severity": 2,
+   "desc": "A pitch-black rectangular plane sits flat on the walkway, appearing as a broken shadow artifact.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "33.4,39.4,47,53.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 33.4,39.4,47,53.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "An unnatural pitch-black rectangular artifact is lying flat on the walkway near the lower-left lantern."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F45",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "geometry",
+   "where": "upper right building extension",
+   "bbox": [
+    0.67,
+    0,
+    0.84,
+    0.24
+   ],
+   "severity": 2,
+   "desc": "An elevated section of the building overhangs and floats in mid-air without structural support underneath.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "42.2,50.9,57.5,65.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 42.2,50.9,57.5,65.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The elevated box structure on the upper right building hangs in mid-air without any supporting beams underneath."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F46",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "geometry",
+   "where": "on path near lower right building",
+   "bbox": [
+    0.68,
+    0.73,
+    0.77,
+    0.77
+   ],
+   "severity": 1,
+   "desc": "A wooden beam clips straight through the paved walkway surface.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "45.2,50.8,52.5,57",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 45.2,50.8,52.5,57"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A wooden beam on the ground near the lower-right building visibly clips right through the paved walkway surface."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F53",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "geometry",
+   "where": "solid black rectangular box next to the left lantern post",
+   "bbox": [
+    0.23,
+    0.71,
+    0.31,
+    0.81
+   ],
+   "severity": 2,
+   "desc": "A pitch-black rectangular block artifact is embedded on the path, suggesting missing lighting or broken shadow geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "33.4,39.4,47,53.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 33.4,39.4,47,53.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A solid black rectangular block is embedded on the walkway near the left lantern post."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F55",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "geometry",
+   "where": "large circular wooden wheel on the lower right",
+   "bbox": [
+    0.9,
+    0.53,
+    1,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "The massive wooden wheel clips directly into the ground terrain without visible support or housing.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "50.3,56.7,55.1,61.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 50.3,56.7,55.1,61.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The large wooden wheel clips straight through the ground terrain without proper housing or structural mounting."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F56",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "immersion",
+   "where": "untextured flat panel on the upper facade of the rightmost building",
+   "bbox": [
+    0.89,
+    0.25,
+    0.99,
+    0.44
+   ],
+   "severity": 1,
+   "desc": "A plain brown rectangular face on the upper wall appears untextured, resembling placeholder geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "49.2,55.2,55.1,60.7",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 49.2,55.2,55.1,60.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The upper facade of the right building features a flat, completely untextured brown panel."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F48",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "immersion",
+   "where": "street lamp beside the main path",
+   "bbox": [
+    0.55,
+    0.54,
+    0.58,
+    0.66
+   ],
+   "severity": 1,
+   "desc": "Modern street lamp posts conflict visually with the rustic, medieval cottage setting.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "64.4,70.3,69.5,74",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 64.4,70.3,69.5,74"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The sleek, modern post-mounted street lamps visually clash with the medieval wooden and stone architectural style of the scene."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F49",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "geometry",
+   "where": "chimney on the main roof",
+   "bbox": [
+    0.38,
+    0.29,
+    0.42,
+    0.39
+   ],
+   "severity": 1,
+   "desc": "The chimney clips directly through the roof tiles without flashing or structural framing.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "61.8,68.4,64.6,69.1",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 61.8,68.4,64.6,69.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The stone chimney intersects straight through the roof tiles without flashing, trim, or structural framing at the seam."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F58",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "geometry",
+   "where": "lower roof section on the central building",
+   "bbox": [
+    0.385,
+    0.555,
+    0.53,
+    0.75
+   ],
+   "severity": 1,
+   "desc": "The square roof section clips directly into the main building wall without a proper architectural transition.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "64.7,73.7,64,72.3",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 64.7,73.7,64,72.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The lower roof structure clips directly into the upper wall without flashing or a realistic architectural join."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F59",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "immersion",
+   "where": "upper building wall in the top left",
+   "bbox": [
+    0.105,
+    0,
+    0.24,
+    0.122
+   ],
+   "severity": 1,
+   "desc": "A flat orange plane on the upper building structure looks untextured compared to the rest of the scene.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "50,59.3,55.7,64.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 50,59.3,55.7,64.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A large flat orange polygon on the upper building structure appears completely untextured compared to adjacent detailed surfaces."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F63",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "geometry",
+   "where": "sunken path segment on the lower left",
+   "bbox": [
+    0.06,
+    0.52,
+    0.22,
+    0.67
+   ],
+   "severity": 1,
+   "desc": "The paved ground section cuts sharply into the surrounding terrain with a harsh, unblended rectangular edge.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "60.1,67.7,53.8,62.2",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 60.1,67.7,53.8,62.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The paved pathway on the left features harsh, unblended rectangular terracing edges where it meets the surrounding terrain."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F64",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gateroad",
+   "item": null,
+   "category": "occlusion",
+   "where": "right half of the screen",
+   "bbox": [
+    0.328,
+    0,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "Dense foreground trees and foliage completely obscure the right side of the view, blocking visibility of the surrounding terrain and potential hazards.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Dense tree trunks and dark foliage occupy nearly the entire right half of the frame, completely blocking the player's view of the terrain behind them."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F65",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gateroad",
+   "item": null,
+   "category": "navigation",
+   "where": "path leading into shadows on the right",
+   "bbox": [
+    0.466,
+    0.443,
+    0.584,
+    0.702
+   ],
+   "severity": 2,
+   "desc": "The cleared path curves directly into deep darkness beneath the trees, making it ambiguous whether the way forward continues or ends.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The lighter pathway curves off to the right into deep, unlit shadows under the trees, making it impossible to see where the route leads."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F69",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gateroad",
+   "item": null,
+   "category": "occlusion",
+   "where": "right half of the screen",
+   "bbox": [
+    0.432,
+    0,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "Dense dark foliage and pitch-black shadows obscure the right half of the viewport, blocking line of sight and hiding potential paths.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Extremely dark shadows and dense branches cover the right half of the viewport, completely obscuring sightlines and potential navigation routes."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F70",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gateroad",
+   "item": null,
+   "category": "immersion",
+   "where": "center-left ground patch",
+   "bbox": [
+    0,
+    0.448,
+    0.495,
+    0.688
+   ],
+   "severity": 2,
+   "desc": "The lighter ground patch has abrupt edges with no texture blending or ambient shading, appearing like a flat cutout over the grass.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "62.7,80.1,80.9,102.4",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 62.7,80.1,80.9,102.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The lighter dirt/grass patch in the center has a sharp, hard edge against the surrounding dark grass with no material blending or soft transitions."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F71",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gateroad",
+   "item": null,
+   "category": "geometry",
+   "where": "midground bench structure behind lamp post",
+   "bbox": [
+    0.328,
+    0.28,
+    0.412,
+    0.325
+   ],
+   "severity": 1,
+   "desc": "The grey rectangular block lacks grounding shadows and proper contact ambient occlusion with the dark grass beneath it.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "62.9,69.5,68.3,76.6",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 62.9,69.5,68.3,76.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The grey rectangular bench structure in the midground lacks contact shadows along its base, making it look ungrounded and disconnected from the grass below."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "emb-blockout-materials",
+    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+   }
+  },
+  {
+   "fid": "F75",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gateroad",
+   "item": null,
+   "category": "occlusion",
+   "where": "dense tree canopy on the right",
+   "bbox": [
+    0,
+    0.45,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "Extremely dense foreground foliage and deep shadows completely block visibility of the environment and any potential paths on the right side of the screen.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Heavy foreground foliage and shadow completely obstruct the right side of the view, obscuring the environment and potential paths."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F76",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gateroad",
+   "item": null,
+   "category": "navigation",
+   "where": "ground area in the foreground and center",
+   "bbox": [
+    0.45,
+    0,
+    1,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "Severe underexposure and heavy shadows make it difficult to distinguish readable pathways from impassable ground terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The scene suffers from extreme darkness and underexposure across the ground, making it very difficult to distinguish walkable paths from terrain obstacles."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F72",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gatefield",
+   "item": null,
+   "category": "geometry",
+   "where": "perimeter of the central paved courtyard",
+   "bbox": [
+    0.37,
+    0.32,
+    0.72,
+    0.72
+   ],
+   "severity": 2,
+   "desc": "The edge of the paved courtyard floor forms a jagged, blocky step pattern rather than a clean border or natural blending into the terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "65.6,81.1,108.8,124.8",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 65.6,81.1,108.8,124.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The edge of the paved courtyard floor shows a severe, blocky stair-stepped pattern where it meets the grass."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F73",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gatefield",
+   "item": null,
+   "category": "geometry",
+   "where": "cutout around the bench on the left side of the courtyard",
+   "bbox": [
+    0.41,
+    0.24,
+    0.52,
+    0.35
+   ],
+   "severity": 2,
+   "desc": "A square cutout in the paved floor exposes lower ground around the wooden structure, creating raw floating floor edges.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "66.4,73.8,118.6,125.7",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 66.4,73.8,118.6,125.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The rectangular cutout around the bench leaves paper-thin, unblended mesh edges exposed around the dirt pit."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F77",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gatefield",
+   "item": null,
+   "category": "geometry",
+   "where": "Patio ground perimeter",
+   "bbox": [
+    0.315,
+    0.37,
+    0.725,
+    0.72
+   ],
+   "severity": 2,
+   "desc": "The edge of the paved courtyard mesh has rough, jagged stair-step cuts where it meets the grass terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "64.2,81.2,108.7,122.8",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 64.2,81.2,108.7,122.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The patio mesh boundary clearly displays unnatural, blocky stair-step cuts along the perimeter."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  }
+ ],
+ "refuted": [
+  {
+   "fid": "F9",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "woodroad",
+   "item": null,
+   "category": "navigation",
+   "where": "entire right side of the frame",
+   "bbox": [
+    0.65,
+    0,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "Pitch-black foliage completely obscures the right side of the scene, making it impossible to determine if it is a playable path or an impassable boundary.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The dense, dark pine trees clearly function as a standard impassable forest boundary wall rather than a confusing navigation path."
+   }
+  },
+  {
+   "fid": "F3",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": null,
+   "category": "navigation",
+   "where": "the heavily shadowed ground area across the foreground",
+   "bbox": [
+    0.48,
+    0,
+    0.99,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "Pitch-black tree shadows obscure the terrain surface, making walkable routes indistinguishable.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The tree shadows are semi-transparent dappled light, leaving ground textures and paths clearly visible underneath."
+   }
+  },
+  {
+   "fid": "F7",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": null,
+   "category": "occlusion",
+   "where": "entire right half of the scene",
+   "bbox": [
+    0.56,
+    0,
+    1,
+    0.96
+   ],
+   "severity": 2,
+   "desc": "Extremely dense and dark tree foliage obscures most of the space and potential paths on the right side of the screen.",
+   "support": 2,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Foreground foliage framing the right side of the camera view is a standard artistic choice that does not constitute a gameplay defect."
+   }
+  },
+  {
+   "fid": "F54",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": null,
+   "category": "occlusion",
+   "where": "large pine tree in the lower-left foreground",
+   "bbox": [
+    0,
+    0.21,
+    0.25,
+    0.98
+   ],
+   "severity": 2,
+   "desc": "The dense evergreen tree severely obstructs the view of the building entrance, path, and surrounding walkable space.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Foreground foliage is a standard framing element in isometric environment art and does not constitute a defect."
+   }
+  },
+  {
+   "fid": "F47",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "occlusion",
+   "where": "dense tree foliage left of central building",
+   "bbox": [
+    0.08,
+    0.1,
+    0.42,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "Thick dark foliage obscures the ground and left side of the house, hiding potential paths and entrances.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The tree foliage around the house is standard environmental scenery and does not impede gameplay or obscure essential navigation."
+   }
+  },
+  {
+   "fid": "F57",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "occlusion",
+   "where": "tree canopy around the central building",
+   "bbox": [
+    0.08,
+    0,
+    0.6,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "Dense foliage completely covers the area around the house, concealing paths and potential doors from view.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Tree canopies surrounding structures are normal environment art details rather than game-breaking occlusion issues."
+   }
+  },
+  {
+   "fid": "F60",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "navigation",
+   "where": "paved path on the right side",
+   "bbox": [
+    0.52,
+    0.328,
+    0.99,
+    0.618
+   ],
+   "severity": 1,
+   "desc": "The stone pathway cuts across the grass and disappears into dark foliage without a clear continuation.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The stone pathway on the right remains clearly visible as it curves across the grass toward the edge of the frame."
+   }
+  },
+  {
+   "fid": "F61",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "occlusion",
+   "where": "dense foliage behind main building",
+   "bbox": [
+    0.08,
+    0,
+    0.62,
+    0.53
+   ],
+   "severity": 2,
+   "desc": "Heavy tree foliage completely blocks view of the space behind the central building, hiding potential walkways and wall boundaries.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Dense foliage behind the building serves as standard background dressing and does not obstruct player movement."
+   }
+  },
+  {
+   "fid": "F62",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": null,
+   "category": "navigation",
+   "where": "shadowed ground area on the right",
+   "bbox": [
+    0.33,
+    0.43,
+    0.99,
+    0.99
+   ],
+   "severity": 2,
+   "desc": "Extremely dark ambient shadows obscure the terrain and path boundaries, making it hard to see where walkable ground continues.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Terrain and path details remain easily readable despite the ambient shadows on the right side."
+   }
+  },
+  {
+   "fid": "F67",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gatefield",
+   "item": null,
+   "category": "exit",
+   "where": "the doorway in the brick wall near the top center",
+   "bbox": [
+    0.66,
+    0,
+    0.76,
+    0.13
+   ],
+   "severity": 2,
+   "desc": "The doorway is submerged in deep shadow, making it difficult to identify as a usable portal or exit.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden door and archway frame at the top center remain clearly recognizable as an entrance despite the dark lighting."
+   }
+  },
+  {
+   "fid": "F68",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gatefield",
+   "item": null,
+   "category": "immersion",
+   "where": "the wooden partition in the middle of the paved area",
+   "bbox": [
+    0.41,
+    0.24,
+    0.52,
+    0.33
+   ],
+   "severity": 1,
+   "desc": "The wooden structures sit flatly on the ground without proper footings or ground blending.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "66.4,73.7,119.2,125.7",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 66.4,73.7,119.2,125.7"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden structure is placed inside a recessed dirt cutout rather than sitting flatly on top of the paved floor."
+   }
+  },
+  {
+   "fid": "F74",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gatefield",
+   "item": null,
+   "category": "exit",
+   "where": "dark doorway in the upper brick wall",
+   "bbox": [
+    0.64,
+    0,
+    0.78,
+    0.15
+   ],
+   "severity": 2,
+   "desc": "The doorway in the back wall is completely obscured in shadow, making it difficult to recognize as a path forward.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The doorway is easily distinguishable by its frame and wooden paneling, so the lighting shadow does not obscure its function."
+   }
+  },
+  {
+   "fid": "F78",
+   "mode": "naive",
+   "town": "emberbrook",
+   "shot": "gatefield",
+   "item": null,
+   "category": "exit",
+   "where": "Wooden door in top wall",
+   "bbox": [
+    0,
+    0.665,
+    0.14,
+    0.765
+   ],
+   "severity": 2,
+   "desc": "The doorway set into the rear brick wall is deeply shadowed, making it difficult to read as a usable entrance or exit.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The door outline and wood grain texture are still visible and clearly identifiable as a doorway."
+   }
+  }
+ ],
+ "budget": {
+  "calls": 44,
+  "promptTok": 66216,
+  "replyTok": 70694,
+  "errors": 0,
+  "byStage": {
+   "naive": 33,
+   "refute-naive": 11
+  }
+ },
+ "bboxAgreement": {
+  "n": 0,
+  "hit": 0,
+  "frac": null
+ },
+ "calibration": null
+}
