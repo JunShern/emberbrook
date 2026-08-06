@@ -16758,3 +16758,13 @@ AND worst-overdraw peak; in-page sky-sweep formula 216/216 PASS margin 82.6 m (t
 committed gate truncates its own 216-row report pipe — summary-mode fix owed);
 ?sky2=0 byte-noise-identical to HEAD; console clean. Plates b12r4-*, gallery §11,
 record LOOP.md BET 12 ROUND 4.
+
+## 2026-08-06 ~22:10 — COORDINATOR: the deploy is LIVE AND VERIFIED (29/0 on the URL)
+
+static_verify --url https://junshern.github.io/emberbrook/ : ALL GREEN 29/0 against
+build 2026-08-06T19:40 (391 files, 0.51 GB). The deploy lane shipped the build and
+died mid-verify in the session-limit window; the coordinator ran the live verify to
+completion. The live site now carries: the full overworld sweep (sky/camera/vegetation/
+road/ambient/camclip v2/F6b flowers), the legacy deletion, all ten Dellhollow
+circulation iterations, the closing bake's 15 fresh plates, and the far-rings round.
+First deploy since 2026-08-03.
