@@ -210,3 +210,42 @@ shelf_stair_underworks (137 at [20.0, 22.9, −4.1]). **A cold ch2.arrive on thi
 cannot reach the town in 120 steps.** This is the measured "before" for Bet 2's ONE
 DESCENT; re-run the same leg on the re-exported bundle for the after. 8 leads filed
 (PT-20260806-018..025), triage pending this window.
+
+### 9.4 Fresh legs 2–4 (all on bundle del-cine c47bd403; Bet 2 iterations incl. fe5b051
+"THE COTTAGE CROSSING" landed in source AFTER these ran and had not re-exported the bundle —
+re-attribute nothing here to the new geometry until the after-runs)
+- **Leg 2, run-20260806-034459** (--from=ch2.jam → ch2.maren, 120 steps, $0.38): ch2.maren
+  NEVER fired. 116/120 steps pinned on the pilot-cluster mid-tier at [60.4–61.8, 11.6,
+  −18..−19.7] — the quay-deck__pilot-cluster landing.001 pocket. Median closed/leg 0.25.
+- **Leg 4, run-20260806-040032** (same start, WANDER/shops brief, 120 steps, $0.40): never
+  reached a shop — **fell into the SAME pocket within 12 steps** and spent 116/120 there,
+  median closed 0.16. Two goals, one trap: everything leaving the lockhead south-west lands
+  on the y11.6 deck and cannot leave it (triaged VERIFIED: PT-20260806-027/028/031/032/034;
+  short-hop claims refuted). With §3.5's both-ways flight stalls this makes
+  **quay-deck__pilot-cluster the single most reliably fatal element in the town**: 2/2
+  fresh runs, 100% of steps after entry.
+- **Leg 3, run-20260806-035832** (--from=ch2.dock → ch2.landing, 11 steps, $0.01, ZERO
+  reports): CLEAN — router took the crossing lane at y7.5, moorage switchback DOWN in one
+  step, landing fired. Sharpens §9.1: dock→landing has a working route; the drag in full
+  runs is the Lock Five exit arrow luring players down the ramp taper instead of it.
+- Gate addendum from leg 1's triage (PT-20260806-018..025, ALL VERIFIED): the pocket is on
+  the FLAT toll yard — --who names **t2c_G3_awning_tollyard_2 + gate_arch001 +
+  gate_parapet_1** walling [13–18, 24, −7..−4], and the routed Lockhead marker projects
+  WEST at [13.12, 24, −6.35] (into the walled yard) while the descent is EAST at x 19–23.
+  Geometry (dressing across the yard) AND guidance (marker pulls the wrong way).
+
+### 9.5 Final cost ranking (fresh legs folded in) — what the redesign should spend on
+1. quay-deck__pilot-cluster flight + landing pocket (§3.5, §9.4) — 232/240 fresh-leg steps
+2. the gate toll yard + gate→shelf descent (§3.4, §9.3/9.4) — 120/120 fresh-leg steps
+   (Bet 2 iteration 1 targets the descent; the TOLL-YARD POCKET is a separate item)
+3. quay-west basin: wedge pocket + loop-stairs foot + spawn placement (§3.1)
+4. cottage plank ramp taper + Lock Five arrow at its foot (§3.3, §9.1) — Bet 2 iteration 5
+5. moorage ascent t04 lip (§9.2)
+6. lock-five↔north-landing lg_ks art (§3.6)
+7. shelf shop row pinches (§2#4)
+8. deep-stairs ascent policy (§2#8)
+9. lockhead bridge percept (harness lane, §6)
+10. interiors' furniture pockets (cookhouse/inn)
+Runs this window: run-20260806-032313 ($0.51) · -034459 ($0.38) · -035832 ($0.01) ·
+-040032 ($0.40) — total ~$1.30 of the ~$2-3 authorized; the fifth/sixth runs are best
+spent as AFTER-receipts on the re-exported Bet 2 bundle, same legs, digests pinned.

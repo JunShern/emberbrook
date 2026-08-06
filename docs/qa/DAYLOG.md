@@ -16401,3 +16401,18 @@ RESIDUAL, measured and filed, not hidden: a greedy NE line from the span wedges 
 l15, 13 cells); the fair line 0.3 m south drives 5/5 and the 0.4 m fill crosses. The
 chaikin-bend self-roof is a class (a path bend is a gentle pivot stack); it goes to the
 ramp-bend ticket, not to force-fixing one drive.
+
+## 2026-08-06 ~04:50 — PLAYTEST HARVEST close-out: four targeted legs, one verdict
+All four legs on bundle del-cine c47bd403 (pre-Bet-2-export; digests pinned per run in the
+inventory §9). run-20260806-032313 (arrive->jam, $0.51): 120/120 steps dead on the gate
+toll yard — pocket walls NAMED (t2c_G3_awning_tollyard_2/gate_arch001/gate_parapet_1), and
+the routed Lockhead marker projects INTO the walled yard at [13.1,24,-6.4]. run-...-034459
+(jam->maren, $0.38) and run-...-040032 (same start, wander/shops brief, $0.40): BOTH died
+116/120 steps in the quay-deck__pilot-cluster landing pocket [60.4-61.8,11.6,-19] — the
+wander run never reached a shop, trapped within 12 steps. run-...-035832 (dock->landing,
+$0.01): CLEAN in 11 steps via the crossing lane — proving dock->landing drag is the Lock
+Five arrow luring players down the ramp taper, not the route. Triage: PT-20260806-018..036
+processed (queue 64 verified / 8 unverified / 55 refuted). Deliverable complete:
+docs/plans/dellhollow-pain-inventory.md §9.5 is the final cost ranking. Total spend ~$1.30
+of 4-6 runs authorized; remaining budget reserved for AFTER-receipts on the re-exported
+Bet 2 bundle (same legs, same pins).
