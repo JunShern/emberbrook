@@ -30,6 +30,18 @@ player — should never need six repaired staircases to cross one town.
 wider flights; ramps where the vocabulary allows (a canal town has ramps); one
 legible primary route from gate to waterline that the wayfinder and the eye agree
 on. Then regenerate. This is a map-and-generator rebuild, not another patch.
+**Progress 2026-08-06 (iterations 1-4, all on origin, engine-gated, no bakes):**
+it.1 THE ONE DESCENT (gate->shelf, 0abf9e8) · it.2 THE QUAY INTERCHANGE (fork+branch
+deleted, both flights v2 at w2.0, basin/promenade/pocket paid — d9b5ff7) · it.3 THE
+HEAD APRON (generator rule: an area-terminated flight bridges its own trim annulus —
+a3a1a67) · it.4 lock-five lane cleared of the retired stair's foot (lockfive_lane_chop,
+6806dcd). Board: docs/qa/dellhollow-circulation/index.html. Inventory statuses carry
+the receipts. NEXT, worst-cost first: #3 cottage plank ramp (P0, terrain — the taper
+below body width), #7's FOOT (l2 roofs the pilot->weave road; the line gets SEARCHED,
+constraints in DAYLOG ~05:00), #4 shop-row pinches, #8 deep-stairs ascent decision.
+Closing lane owes: cine_solve + scenegraph_derive + plate rebake on ratified geometry
+(loop-stairs owns changed; routes carry the stale seam id until then; slice_test's one
+red line is this).
 
 ## Bet 3 — Vegetation's card-built asset family (SHIPPED 2026-08-06, residuals named — gallery Round 22, LOOP.md F5)
 **Shipped:** 261/361 near-field clumps converted to hull-interior + leaf-card shell
