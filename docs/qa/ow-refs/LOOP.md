@@ -3228,3 +3228,103 @@ key — if the sky should say later-golden, the KEY moves, which is not this lan
 stands for the LLM playtester only). Packs committed: blind-b12/, blind-b12-r2/ (mapping
 is the coordinator's copy). `tools/blind_pack.mjs` itself was UNTRACKED until this commit —
 the lightrigs.json class: a tool two lanes' records cite that git did not carry.
+
+---
+
+## BET 12, ROUND 3 (2026-08-06) — the giant blue dot, and the rings' paper problem
+
+USER FEEDBACK, on a screenshot from a high vantage over Emberbrook (39.png): (1) "there's
+this giant blue dot" — an enormous pale-blue disc dominating the sky behind the ridge
+rings; (2) "the mountains in the distance look quite clearly fake"; (3) a pixelated
+stair-stepped boundary where real terrain meets the ridge backdrop.
+
+### The disc, mechanism NAMED before anything changed
+
+**The sky dome (r=360) and ridge rings (r<=345) are pinned at y=0 and follow the player
+in XZ ONLY (`OWSKYFOLLOW`, play3d frame()), while `_rtCam`'s far plane was 400 — so from
+a high eye the far side of the dome exceeded the frustum and was CLIPPED, and flat
+`scene.background` (S2.horC, pale blue) poured through the hole as a disc.** Proof was
+one variable in each direction: recolour `scene.background` red -> the disc turns red
+(plates b12r3-proof-redbg*.png); `cam.far=1000` -> gone. The old sky had the same latent
+hole; its background matched its dome so nothing showed. sky2's clouded, graded dome made
+the flat hole read as an object. Reproduced at the gate shelf (eye 88.4 m, domeMax 450.4
+vs far 400) before designing the fix.
+
+**Fix: far 400 -> 560** (one number; worst case measured, not guessed: max walkable y
+51.06 by SIM.floors census + max boom sin(1.35)*70 -> eye offset 138.9 m -> dome 498.9 m,
+rings ~509 m at their +7% wobble; 560 = worst case + 51 m). Nothing real exists between
+400 and the dome, so no new geometry becomes visible.
+
+**The standing gate: tools/ow_probe/sky_sweep.mjs** — 3 stations (valley floor, gate
+shelf, highest walkable cell) x 3 rigs (shipped / raised / the orbit handler's own clamp
+corner: pitch 1.35, dist 70) x 24 yaws, measured in the RUNNING game off the real cam.
+216/216 PASS, worst dome margin 83.4 m. It exists because every other gate was green
+while the sky had a hole in it: nothing ever measured the sky's own geometry against the
+frustum. Caveat recorded: the `peak` station is standable by SIM.floors; a walkStep
+flood-fill reachability proof was attempted and crashed the tab — reachability of that
+exact cell is UNPROVEN, but the analytic margin holds there regardless (+83.4 m).
+
+### The rings (three structural fixes, judged blind, twice)
+
+The believability tells were structural, not palette: TWO quad rows interpolating a 60 m
+gradient across single triangles; three zone colours meeting on boundaries PARALLEL to
+the crest; one smoothed octave per silhouette; and every ring a perfect CIRCLE centred on
+the player. What changed (same ratified palette anchors, s2hor endpoints untouched):
+seven-level body with a continuous mist->ridge profile whose transition altitude wobbles
+per column; near-crest value streaks with ~4-column correlation (spur facets); a second
+silhouette octave at 3x the ring period (28% amp, white-noise serration 0.22 -> 0.10);
++-7% slow RADIAL wobble so a crest line is a range, not an arc (rings stay 50 m apart —
+wobble cannot reorder them); cloud deck fades over el [-0.030, 0.030] instead of cutting
+at 0; and the skirt hem row is s2hor(ang) VERBATIM so the hem circle at y=-60 dissolves
+into the dome by construction.
+
+**Blind round A (fresh Anthropic judge, 8 frames: 3 matched pairs + 2 refs):** new build
+won two pairs "decisively" — new seast ranked 2nd of 8 behind only the FF9 reference; the
+judge independently named the disc "a giant solid pale-blue semicircle ... unmistakably
+the sky-sphere/fog-dome rim; the single worst artifact in the whole pack". One narrow
+loss: at the extreme top-down vantage the new band read as "featureless flat-gray sheet
+with a visible curved rim arc". That charge became the round-2 build (radial wobble +
+sub-horizon cloud fade + the dome-colour hem) and the arc is gone in the after frames.
+**Blind round B (fresh judge, final build vs old, same pairs + both FFIX refs):**
+see the round-B verdict block appended below the gallery entry.
+
+### Neutrality, perf, fallback
+
+Paired A/B at identical poses, `camclip=0` pinned on both sides (an uncommitted
+camera-clamp experiment from another lane lives in this working tree; unpinned it
+confounded the first measurement with a whole-frame reframe — measured, then excluded):
+unchanged-ground mean |dL| gate 0.74, vista 0.49, gorge (whole frame, no rings in shot)
+0.47, high-vantage 0.81 /255 against an A-vs-A capture noise floor of 0.45/255; ground L
+identical to three decimals everywhere. rAF median 8.3 ms (120 fps) at the ridge vista,
+p95 9.2 ms. `?sky2=0` still renders the old flat sky exactly (eyeballed at two rigs).
+
+### The stair-step seam (user item 3): mechanism named, fix NOT taken
+
+The seam is neither fog nor LOD: **the canvas renders at CSS resolution** (`R.setSize(W,
+H,false)`, no `setPixelRatio`), so on a retina display every rendered pixel is a 2x2
+block and any contrasty silhouette shows doubled stair-steps. The user's screenshot is
+2x the canvas size; my DPR-1 captures of the same seam are smooth, grade on or off.
+A real fix is 4x fragment cost (GTAO + bloom + grade at full device res) — not taken
+against the 60fps constraint; flagged to the coordinator/postfx lane as a decision.
+
+### Blind round B verdict (fresh judge, final build, decoded)
+
+Ranking of 8: REF1 > REF2 > **new-seast** > **new-east** > **new-highboom** > old-highboom
+> old-east > old-seast — every new frame above every old frame, the three news behind only
+the two references. All three matched pairs to the new build; verbatim: g-vs-d (seast)
+"**g wins, decisively.** d is g plus the largest, most central sky-dome cap in the pack";
+b-vs-e (east) "b shows the same clouds without the geometry rim"; c-vs-h (highboom) "a
+blank sky is weak, a blank sky with a visible seam is false" — the hem dissolve turned
+"broken" into merely "blank", which is the intended trade at a vantage that faces open
+haze. The judge's cross-cutting pattern names the OLD build's dome cap as "the single
+recurring falseness" (d, e, h) and finds NO arc in any new frame.
+
+**RESIDUAL, standing, the judge's words:** in the new frames the far rings are still
+"stacked horizontal bands with hard, straight, vector-clean edges — depth-fog quantized
+into paper terraces" (b), "a staircase of flat, identically-colored ridge bands with
+knife edges, and the haze between crag and spire hangs as a vertical white sheet rather
+than thickening with depth" (g). Softened (2nd/8 and 3rd/8 WITH the charge), not closed:
+the next levers are inter-ring haze gradation (fog is off on rings by design — a
+per-ring alpha veil toward the horizon hue would emulate it) and breaking the far rings'
+edge sharpness with a 1-2 px vertex-alpha crest fade. Neither attempted tonight — the
+round cap was reached and both touch the ratified band palette.

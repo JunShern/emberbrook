@@ -16117,3 +16117,42 @@ GATES: percept_test 414/414; transition_test run singly on :3000 (ambient not ye
 the page, so it gates the unchanged runtime); story/dialogue untouched.
 RESIDUALS on the round record: ow/del smoke needs the builders to name their stacks;
 smoke won't survive first-person closeup; birds + NPC wander unstarted (audio = Bet 8).
+
+## 2026-08-06 ~02:20 — BET 12 ROUND 3 (sky lane): the giant blue dot named and killed, rings de-papered, both blind-judged
+
+USER ITEMS (high-vantage screenshot): the "giant blue dot"; "mountains look quite
+clearly fake"; a stair-stepped terrain-vs-backdrop seam.
+
+THE DOT, MECHANISM FIRST: dome (r 360) + rings follow the player XZ-only at y=0
+while _rtCam far was 400 — a high eye pushes the dome's far side past the frustum
+and the clipped cap shows flat scene.background as a disc. Proved one variable
+each way (background red -> disc red; far 1000 -> gone), THEN fixed: far 400 ->
+560, sized from a measured worst case (max walk y 51.06 census + boom
+sin(1.35)*70 -> dome 498.9 m). NEW GATE tools/ow_probe/sky_sweep.mjs: 216 poses
+(3 stations x 3 rigs incl. the input clamps' own corner x 24 yaws) measured
+in-engine — 216/216 PASS, worst margin 83.4 m. It exists because every green gate
+we had measures the WORLD against the frustum and nothing measured the SKY.
+
+THE RINGS (palette anchors untouched): 7-level continuous body (was 2 rows/3
+zones), per-column transition wobble, spur streaks, second silhouette octave,
++-7% RADIAL wobble (a ring is a circle centred on the player — from a high eye
+its crest projects as a concentric ARC; the wobble makes it a range), cloud deck
+fades below el 0, skirt hem = s2hor verbatim so the hem circle dissolves into
+the dome BY CONSTRUCTION. Two fresh blind judges: round A — new wins 2/3 pairs
+"decisively", the loss ("curved rim arc") became the round-2 build; round B
+(final) — ALL THREE new frames above ALL THREE old, 3rd/4th/5th of 8 behind only
+the two FFIX references, disc named "the single recurring falseness" of the old
+build, no arc found in the new. RESIDUAL (open): far rings still "paper
+terraces ... knife edges" — softened, not closed; next levers in LOOP.md.
+
+NEUTRALITY (camclip=0 pinned — another lane's uncommitted camera clamp sat in
+this tree and its reframe confounded the first measurement, 17/255 of pure
+edge-shift): unchanged-ground |dL| 0.47-0.81/255 vs 0.45 noise floor, ground L
+equal to 3 decimals, all stations. 120 fps median. ?sky2=0 exact.
+
+SEAM (user item 3): named, not fixed — the canvas renders at CSS resolution (no
+setPixelRatio), so retina displays see 2x2 blocks on every contrasty silhouette;
+my DPR-1 captures of the same seam are smooth, grade on or off. A real fix is 4x
+fragment cost against the 60fps budget — coordinator's call, flagged.
+
+Plates docs/qa/ow-refs/plates/b12r3-*, gallery §10, record LOOP.md BET 12 ROUND 3.

@@ -5107,3 +5107,45 @@ broken, edge sealed, marker off-screen three straight steps) still files as befo
 story_test green · percept_test 504/504 · routes_derive --check clean (both towns) ·
 findability 69/0 · playthrough_test: see the round-30 DAYLOG entry (run singly at
 close of round).
+
+## Round 31 — 2026-08-06 · USER FEEDBACK: THE GIANT BLUE DOT (sky lane, not a PT filing)
+
+### §1 The blue dot — FIXED, mechanism named before the edit
+
+The user's high-vantage screenshot showed an enormous pale-blue disc behind the ridge
+rings. Cause: the sky dome (r=360) and rings follow the player XZ-only, pinned at y=0,
+and `_rtCam`'s far plane was 400 — a high eye (gate shelf: 88.4 m) pushes the dome's far
+side (450.4 m view depth) past the frustum, and the CLIPPED cap shows flat
+`scene.background` (pale blue) through the hole. Drive receipts: recolour the background
+red and the dot turns red; far=1000 and it is gone (plates b12r3-proof-redbg*).
+Fix: far 400 -> 560, sized off a measured worst case (max walkable y 51.06 by SIM.floors
+census + the orbit input clamps' own corner, pitch 1.35 dist 70 -> dome 498.9 m).
+Standing gate: `tools/ow_probe/sky_sweep.mjs`, 216 in-engine poses across 3 stations x
+3 rigs x 24 yaws — 216/216 PASS, worst margin 83.4 m. Every prior gate was green with a
+hole in the sky because nothing measured the SKY's geometry against the frustum.
+
+### §2 "The mountains look quite clearly fake" — IMPROVED, blind-judged twice
+
+Structural, not palette (anchors untouched): 7-level continuous ring body, per-column
+boundary wobble, spur streaks, second silhouette octave, +-7% radial wobble (a
+player-centred circle projects as a concentric ARC from altitude — now a range),
+cloud deck fades below el 0, skirt hem = the dome's own horizon colour so the hem circle
+dissolves by construction. Fresh blind judge, final build: all three new frames above
+all three old, ranks 3/4/5 of 8 behind only the two FFIX references; all matched pairs
+won. OPEN residual, judge verbatim: far rings still "paper terraces ... knife edges".
+
+### §3 The pixelated seam — NAMED, deliberately not fixed
+
+Neither fog nor LOD: the canvas renders at CSS resolution (`R.setSize(W,H,false)`, no
+`setPixelRatio`), so retina displays upscale every rendered pixel to a 2x2 block and
+every contrasty silhouette stair-steps. DPR-1 captures of the same seam are smooth,
+aerial grade on or off. A device-resolution render is 4x fragment cost against the
+60fps constraint — escalated to the coordinator on the slate rather than spent here.
+
+### §4 The receipts
+
+sky_sweep 216/216 (margin 83.4 m) · ground neutrality |dL| 0.47-0.81/255 vs 0.45/255
+A-vs-A noise floor, ground L equal to 3 decimals at every station (camclip=0 pinned on
+both sides — another lane's uncommitted camera clamp confounded the first pass with a
+whole-frame reframe worth 17/255 of edge shift) · rAF median 8.3 ms · ?sky2=0 exact ·
+gallery docs/qa/ow-refs/index.html §10 · LOOP.md BET 12 ROUND 3.

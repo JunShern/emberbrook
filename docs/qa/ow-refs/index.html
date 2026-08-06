@@ -508,4 +508,50 @@ the same three frames at the working-tree composer state, for the gallery only; 
 (sha256 <code>ae6ed412…</code>), so every difference after that is attributable to the edit.</li>
 </ul>
 
+<h2>10 · Bet 12 round 3 — the giant blue dot, and the rings stop being paper (2026-08-06)</h2>
+<p class="sub">User feedback on a high-vantage screenshot: a giant pale-blue disc behind the ridges; "the mountains
+in the distance look quite clearly fake"; a stair-stepped terrain-vs-backdrop seam. Full record: LOOP.md, BET 12 ROUND 3.</p>
+
+<h3>The disc — mechanism named, then removed with one number</h3>
+<p>The dome (r=360) and rings follow the player in XZ only, pinned at y=0, and the camera far plane was 400: from a
+high eye the dome's far side left the frustum, and the clipped cap showed flat <code>scene.background</code> through
+the hole. Proof in both directions: paint the background red and the disc turns red; raise far and it is gone.
+Fix: <code>_rtCam</code> far 400 → 560 (worst measured case 498.9 m + margin). Standing gate:
+<code>tools/ow_probe/sky_sweep.mjs</code> — 216 poses (3 stations × 3 rigs incl. max zoom + max pitch × 24 yaws),
+in-engine, PASS at 83.4 m worst margin.</p>
+<div class="pair">
+<figure><img src="plates/b12r3-before-userview.png"><figcaption><span class="tag t-bad">BEFORE</span>the user's vantage: the dome's clipped cap as a pale-blue disc behind the rings</figcaption></figure>
+<figure><img src="plates/b12r3-after-userview.png"><figcaption><span class="tag t-new">AFTER</span>same pose: clouds continue behind the crest line; ridge crests vary in depth (radial wobble)</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="plates/b12r3-proof-redbg.png"><figcaption><span class="tag t-bad">PROOF</span>scene.background set red — the "dot" IS the background through the far-plane hole</figcaption></figure>
+<figure><img src="plates/b12r3-proof-redbg-fixed.png"><figcaption><span class="tag t-new">PROOF</span>same red background after the far fix: zero red pixels — the dome owns every direction</figcaption></figure>
+</div>
+
+<h3>The rings — structural fixes, same ratified palette</h3>
+<p>Seven-level continuous body profile (was two rows / three zones — Mach bands and layer boundaries parallel to the
+crest), per-column transition-altitude wobble, near-crest spur streaks, a second silhouette octave, ±7% radial wobble
+(a crest line becomes a range, not a concentric arc), the cloud deck fading a few degrees below the horizon instead of
+cutting at el 0, and the skirt hem painted the dome's own horizon colour so the hem circle dissolves by construction.</p>
+<div class="pair">
+<figure><img src="plates/b12r3-before-seast.png"><figcaption><span class="tag t-bad">BEFORE</span>south-east vista — disc + terraced flat bands</figcaption></figure>
+<figure><img src="plates/b12r3-after-seast.png"><figcaption><span class="tag t-new">AFTER</span>blind judge (fresh, anonymized): ranked 2nd of 8, behind only the FFIX reference</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="plates/b12r3-before-highboom.png"><figcaption><span class="tag t-bad">BEFORE</span>top-down high boom — the arc rim the round-A judge called "the set's edge"</figcaption></figure>
+<figure><img src="plates/b12r3-after-highboom.png"><figcaption><span class="tag t-new">AFTER</span>hem = dome colour + sub-horizon cloud fade: no rim at any yaw (sky_sweep eye frames)</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="plates/b12r3-before-shipgate.png"><figcaption><span class="tag t-our">SHIPPED RIG before</span>gate band: one crest + flat gradient</figcaption></figure>
+<figure><img src="plates/b12r3-after-shipgate.png"><figcaption><span class="tag t-new">SHIPPED RIG after</span>layered silhouettes enter the band; ground unchanged (mean |dL| 0.74/255, L equal to 3 decimals)</figcaption></figure>
+</div>
+
+<div class="note grn">
+<strong>Gates.</strong> sky_sweep 216/216 PASS (margin 83.4 m) · ground neutrality ≤0.81/255 vs 0.45 noise floor,
+L identical to 3 decimals at every station · rAF median 8.3 ms (120 fps) · <code>?sky2=0</code> renders the old sky
+exactly · blind rounds A and B verdicts in LOOP.md. <strong>Named, not fixed:</strong> the stair-step seam is the
+canvas rendering at CSS resolution (no <code>setPixelRatio</code>) — a 4x fragment-cost decision left to the
+coordinator, not a fog or LOD defect.
+</div>
+
 </div>

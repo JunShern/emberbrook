@@ -195,6 +195,24 @@ continues when a lane slot frees — it is hygiene, not graphics.
 ## CAMERA (a rig that shows the horizon shows the whole system); band-vs-terrain
 ## hour-agreement (warm ground / cool veil) is a grade item; sun-disc height vs horizon
 ## colour tracks the ratified key's el 34 — moving it is a user call, not a lane's.
+##
+## BET 12 ROUND 3 (2026-08-06, SHIPPED on the branch): the user's "giant blue dot" was
+## the dome far-plane-clipped from high vantages (dome/rings follow XZ-only at y=0, far
+## was 400) with scene.background pouring through the hole — proof: background red ->
+## dot red; fix: _rtCam far 400->560 sized off a measured worst case; standing gate
+## tools/ow_probe/sky_sweep.mjs 216/216 in-engine poses, worst margin 83.4 m. Rings
+## de-papered structurally (7-level continuous body, boundary wobble, spur streaks,
+## 2nd silhouette octave, +-7% radial wobble, sub-horizon cloud fade, dome-colour hem)
+## on the SAME ratified palette anchors. Two fresh blind rounds: final build's three
+## frames rank 3/4/5 of 8 behind only the two FFIX refs, all matched pairs won, no arc
+## found. Ground neutrality 0.47-0.81/255 vs 0.45 floor; 120 fps; ?sky2=0 exact.
+## OPEN RESIDUALS: (1) far rings still "paper terraces / knife edges" (judge, both
+## rounds) — next levers: inter-ring haze veil, crest-edge vertex-alpha fade (both
+## touch the ratified band, not spent inside the round cap); (2) THE CANVAS RENDERS AT
+## CSS RESOLUTION (no setPixelRatio) — the user's "pixelated seam" is 2x2 device-pixel
+## blocks on every contrasty silhouette on retina; a fix is 4x fragment cost vs the
+## 60fps budget — COORDINATOR DECISION WANTED; (3) sky_sweep's `peak` station is
+## standable-but-reachability-unproven (the walkStep flood-fill probe crashes the tab).
 
 ## BET 11 — THE WORLD MOVES, visual half (2026-08-06, PROTOTYPE COMPLETE; awaiting
 ## main's ONE-LINE include in play3d.html: `<script src="js/ambient.js"></script>`
