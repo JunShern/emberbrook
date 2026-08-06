@@ -976,9 +976,10 @@
     return vnoise((x * RC5 - z * RS5) * s + 8.7, (x * RS5 + z * RC5) * s - 52.3);
   }
 
-  function rngAt(x, z) {
+  function rngAt(x, z, salt) {
     var s = (Math.imul(Math.round(x * 4) | 0, 374761393) ^
-             Math.imul(Math.round(z * 4) | 0, 668265263) ^ 20260804) >>> 0;
+             Math.imul(Math.round(z * 4) | 0, 668265263) ^
+             Math.imul((salt | 0) + 1, 2654435761) ^ 20260804) >>> 0;
     return function () { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
   }
 
@@ -1027,7 +1028,20 @@
     if (!OCC) OCC = buildOcc();
     var t0 = (performance && performance.now) ? performance.now() : 0;
 
-    var R = rngAt(p.x, p.z), cx = p.x, cz = p.z, r1 = P.r1, r0 = P.r0, span = r1 - r0;
+    // F6 — THE SCATTER IS SEEDED BY THE WORLD, NEVER BY THE PLAYER. This line used to
+    // read `var R = rngAt(p.x, p.z)`: ONE stream for the whole rebuild, seeded from the
+    // player's position — so every 9 m step (P.step) re-rolled every tuft's placement,
+    // height, species and jitter in the entire disc. Measured on the shipped build
+    // (scratchpad/f6): instance overlap in the 13 m shared annulus across a 10 m move
+    // was 0 OF 11,174 — a wholesale re-roll, which is the user's "the grass assets
+    // change every few steps I take". The RNG is now re-seeded per TRIANGLE (Rt, count
+    // rounding) and per TUFT (R, everything else) from the triangle centroid's WORLD
+    // coordinates — the same position-hash pattern the F5 card streams use — so a
+    // tuft's identity is a pure function of where it grows. The only things that may
+    // change as the player moves are the smooth distance terms (fall/grow/wg/farThin),
+    // which add or drop TRAILING tufts and blades at the falloff band, individually
+    // and far away. No hysteresis machinery is needed once nothing re-rolls.
+    var R = null, cx = p.x, cz = p.z, r1 = P.r1, r0 = P.r0, span = r1 - r0;
     // `budget` is a SAFETY VALVE, not a target. Cells are walked in x,z order, so a run that
     // actually hits the cap loses one whole side of the disc rather than thinning evenly.
     // If a future tune gets close, lower tuftDens; do not raise the cap.
@@ -1104,9 +1118,17 @@
             var ck2 = 1 + P.crestK * Math.max(0, Math.min(1, (0.985 - IDX.ny[t]) / 0.30));
 
             var want = IDX.area[t] * P.tuftDens * wgt * fall * cm * fk * ck2;
-            var kt = Math.floor(want); if (R() < want - kt) kt++;
+            // the triangle's own stream decides the fractional tuft; `want` moves
+            // smoothly with distance, so kt only ever gains/loses its LAST tuft
+            var Rt = rngAt(mx, mz, srci);
+            var kt = Math.floor(want); if (Rt() < want - kt) kt++;
 
             for (var j = 0; j < kt && n < P.budget; j++) {
+              // tuft j's stream is its own — seeded from the centroid AND j — so a
+              // neighbouring tuft appearing or vanishing cannot shift anyone else's
+              // draws (a shared stream would re-roll the tail of the triangle the
+              // moment `fall` changed kt by one)
+              R = rngAt(mx, mz, 61 + j * 131 + srci);
               var u = R(), w = R();
               if (u + w > 1) { u = 1 - u; w = 1 - w; }
               var bx = X[a] + u * (X[b] - X[a]) + w * (X[c] - X[a]);
@@ -1663,6 +1685,23 @@
     return /^ow-/.test(SKEY() || '');
   }
 
+  // F6 — THE ROAD MUST NOT CAST A SHADOW (user, verbatim: "There's literally even a
+  // shadow underneath the road that you can see that makes it stick out even more
+  // obviously"). walk_road is GROUND — after the F6 build fix it lies 2-8 cm proud
+  // inside its own worn notch — and a ground surface a few centimetres proud that
+  // casts a metre-wide silhouette band onto the verge is the single loudest "this is
+  // an object sitting ON the terrain" tell in the frame. play3d's ow block turns
+  // castShadow on for EVERY mesh (the walk_* ribbons are the visible ground out
+  // here, see play3d.html ~3190), so this module — which already owns the near-field
+  // ground read — turns the ROAD's cast back off, every tick, after any scene (re)build.
+  // receiveShadow stays TRUE: tree and gate shadows must still fall ACROSS the road
+  // (excluding walk_* from the shadow pass entirely is the old bug, not this fix).
+  function patchRoadShadow() {
+    var sc = SCN(); if (!sc) return;
+    var m = sc.getObjectByName('walk_road');
+    if (m && m.isMesh && m.castShadow) m.castShadow = false;
+  }
+
   var TICK = null, NPATCH = 0, NFOL = 0;
   function arm() {
     clear(); SRCS = null; OCC = null; LASTAT = null; NPATCH = 0; NFOL = 0;
@@ -1677,6 +1716,7 @@
       try {
         if (NPATCH < 2) NPATCH += patchGround();
         if (NFOL < 6) NFOL += patchAllFoliage();
+        patchRoadShadow();
         rebuild(false);
         pushUnis();
       } catch (e) {}

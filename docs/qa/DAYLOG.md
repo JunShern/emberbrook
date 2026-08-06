@@ -16156,3 +16156,25 @@ my DPR-1 captures of the same seam are smooth, grade on or off. A real fix is 4x
 fragment cost against the 60fps budget — coordinator's call, flagged.
 
 Plates docs/qa/ow-refs/plates/b12r3-*, gallery §10, record LOOP.md BET 12 ROUND 3.
+
+## 2026-08-06 ~02:00 — F6 LANE (user playthrough items): the road grounded, the grass world-anchored
+
+Gallery Round 23; full record with instruments docs/qa/ow-refs/LOOP.md §F6; plates f6-*.
+(1) THE ROAD HOVERED 0.30 u — measured on the shipped GLB (every walk_road vertex
+ray-cast onto ground_valley: edge rows p50 0.30, interior 0.37) — because the ribbon
+rode road_h+0.09 over a corridor road_notch had worn DOWN 0.28, and F5's edge drop
+sampled F.sample, the UNTREATED field. build_road now conforms every lane to O3.height
+(smoothed, interior +0.075, edge +0.02, drop capped 0.42 for the x~-45 gully
+embankment); verge fringe stands on max(terrain, ribbon); walk_road.castShadow=false
+at runtime (receiveShadow stays). AFTER: edge p50 0.035, interior 0.076. Gates:
+determinism byte-identical twice (459619fc), walk_engine_gate 2074=2074/0 lost,
+reach_probe gate->dellhollow-gate REACHED in-engine, slice 812/0.
+(2) THE GRASS RE-ROLLED EVERY 9 m — ow_detail's rebuild() drew every tuft from ONE RNG
+seeded off the PLAYER position; measured: 0 of 11,174 instances survived a 10 m move.
+Now seeded per-triangle/per-tuft from WORLD centroid coords (the F5 position-hash
+pattern): overlap 93.1% (97.5% inside the full-density radius; the residual IS the
+distance-LOD tail), isolated pop-pair near-band diff 0.99 -> 0.22 mean, 0.71% -> 0.10%
+pixels>25. No hysteresis added — nothing re-rolls, so there is nothing to hide.
+NOTE: spawn/meta.json and zones.json byte-identical; bundle size unchanged; road walk
+surface DROPPED ~0.25 u along the corridor — any recorded run asserting absolute road
+Y wants a re-record.

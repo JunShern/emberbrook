@@ -1242,9 +1242,33 @@ VERGE_CARD_PER_M = 0.30     # small broadleaf fuzz cards per metre per side
 VERGE_SPAN = (-0.55, 0.40)  # offset across the edge line: -ve OVERHANGS the road
 
 
-def verge_scatter(col, ground, F, zg, mats, hl, hr, T=None):
-    """Fringe tufts + fuzz cards straddling the road edge.  Returns stats."""
+def verge_scatter(col, ground, F, zg, mats, hl, hr, T=None, road=None):
+    """Fringe tufts + fuzz cards straddling the road edge.  Returns stats.
+
+    F6: an individual may overhang the ROAD (VERGE_SPAN reaches -0.55 u past the
+    edge), and its height used to come from the TERRAIN alone — which, before the
+    road was grounded, sat ~0.30 u BELOW the ribbon there, so every overhanging
+    tuft was buried under the carriageway.  Pass `road` (the built walk_road
+    object) and each individual stands on max(terrain, ribbon top): a tuft over
+    the dirt is planted on the dirt, a tuft over the lip is planted ON the lip —
+    the straddle finally sits on the blend line it was designed for."""
     T = T or Terrain(ground)
+    rbvh = None
+    if road is not None:
+        mw = road.matrix_world
+        rverts = [tuple(mw @ v.co) for v in road.data.vertices]
+        rpolys = [tuple(pg.vertices) for pg in road.data.polygons]
+        rbvh = BVHTree.FromPolygons(rverts, rpolys, all_triangles=False)
+
+    def _stand(px, py, ty):
+        """Highest of terrain-hit ty and the road surface at builder (px, py)."""
+        if rbvh is None:
+            return ty
+        hit = rbvh.ray_cast(Vector((float(px), float(py), 400.0)),
+                            Vector((0.0, 0.0, -1.0)))
+        if hit[0] is not None and hit[0].z > ty:
+            return float(hit[0].z)
+        return ty
     pal = _lin(PAL)
     paldry = _lin(PALDRY)
     xy = F.road
@@ -1276,7 +1300,7 @@ def verge_scatter(col, ground, F, zg, mats, hl, hr, T=None):
                 # tilt is slouch (a fringe stands worse than a lawn); _rot's
                 # tilt axis is world-fixed, so aiming it would be a lie anyway.
                 tuft_rows.append(dict(
-                    x=rx, y=s[0] - 0.02, z=rz,
+                    x=rx, y=_stand(px, py, s[0]) - 0.02, z=rz,
                     w=0.30 + rs.rand() * 0.26,
                     h=0.10 + rs.rand() * 0.13,
                     yaw=rs.uniform(0.0, 6.28),
@@ -1291,7 +1315,7 @@ def verge_scatter(col, ground, F, zg, mats, hl, hr, T=None):
                     continue
                 sz = np.array([rs.uniform(0.18, 0.34)])
                 ncard = 1
-                P = np.array([[rx, s[0] + sz[0] * 0.10, rz]])
+                P = np.array([[rx, _stand(px, py, s[0]) + sz[0] * 0.10, rz]])
                 N = np.array([[nx[k] * side, 0.55, -ny[k] * side]])
                 N = N / np.linalg.norm(N)
                 yaw = np.array([math.atan2(N[0, 2], N[0, 0]) + math.pi / 2.0

@@ -728,33 +728,49 @@ def road_wobble(F):
 ROAD_LANES = (1.0, 0.62, -0.62, -1.0)
 
 
-def build_road(col, F):
-    """walk_road — the visible road AND the walk network, on its authored z.
+def build_road(col, F, zg, fr):
+    """walk_road — the visible road AND the walk network, LYING IN its own worn notch.
 
     The edge is deliberately SCRUFFY (user note: clean edges read as paving):
-    the halfwidth wanders +-35% along the stations, independently per side."""
+    the halfwidth wanders +-35% along the stations, independently per side.
+
+    F6 — THE ROAD SAT ON A CUSHION OF AIR, and the measurement is the reason for
+    this shape (scratchpad/f6 road_gap_probe against the SHIPPED scene.glb, every
+    walk_road vertex ray-cast onto ground_valley): EDGE rows floated a median
+    0.30 u above the terrain mesh, INTERIOR rows 0.37 u, the whole corridor.
+    User, verbatim: "sitting above or hovering above the ground... literally even
+    a shadow underneath the road".  Mechanism: the ribbon rode F.road_h + 0.09
+    while O3.road_notch WEARS THE CORRIDOR DOWN by 0.28 (full depth to road_dist
+    1.5, i.e. past the ribbon edge) — and F5's edge drop sampled F.sample, the
+    UNTREATED field, missing both the notch and the crag term (0.28 + 0.025 IS
+    the measured 0.30).  So every lane now conforms to the TREATED ground
+    (O3.height = sample + crag + notch), box-smoothed over +-2 stations so
+    metre-scale treatment noise cannot ripple the carriageway: interior rows keep
+    0.075 u of sawtooth headroom, edge rows die at +0.02 — the road becomes the
+    floor of its own worn hollow, which is what the references' paths are
+    (depressions, never causeways).  The authored grade returns ONLY where the
+    ground falls away under the ribbon: the drop is capped 0.42 u below
+    F.road_h + 0.09, so the one real gully crossing (x ~ -45, measured 4.56 u of
+    air) stays an embankment instead of diving.  The mesh-true conform in
+    build_region (BVH against the actual jittered terrain) remains the piercing
+    safety net at +0.035."""
     xy = np.column_stack([F.road[:, 0], F.road[:, 1]])
     p = B.Prop("walk_road")
     tg = np.gradient(xy, axis=0)
     tg /= np.maximum(np.linalg.norm(tg, axis=1)[:, None], 1e-9)
     nx, ny = -tg[:, 1], tg[:, 0]
     hl, hr = road_wobble(F)
-    z = F.road_h + 0.09
+    z_grade = F.road_h + 0.09
 
     def lane(f):
         h = hl * f if f > 0 else hr * (-f)
         s = 1.0 if f > 0 else -1.0
         ex, ey = xy[:, 0] + nx * h * s, xy[:, 1] + ny * h * s
-        zz = z
-        if abs(f) >= 0.999:
-            # F5 — THE EDGE DIES INTO THE GROUND.  The whole ribbon rode at
-            # road_h + 0.09, so its boundary was a 9 cm cliff with its own shading
-            # step — half of "sharp geometric object" is that line.  The OUTER
-            # vertex row drops to the terrain where the terrain is lower (the
-            # fill side); where the ground is higher the mesh-true conform below
-            # already lifts it flush.  Middle lanes keep the crown.
-            t = F.sample(ex, ey)
-            zz = np.minimum(z, t + 0.025)
+        g = O3.height(F, zg, ex, ey, fr)
+        gp = np.pad(g, 2, mode="edge")
+        g = np.convolve(gp, np.full(5, 0.2), mode="valid")
+        clear = 0.02 if abs(f) >= 0.999 else 0.075
+        zz = np.maximum(g + clear, z_grade - 0.42)
         return list(zip(ex, ey, zz))
 
     lanes = [lane(f) for f in ROAD_LANES]
@@ -3982,7 +3998,7 @@ def main():
     _tb = build_tributaries(col, F, zg, fr)
     if _tb is not None:
         made["tributaries"] = _tb
-    made["road"] = build_road(col, F)
+    made["road"] = build_road(col, F, zg, fr)
     cw = build_causeway(col, F, zg, fr)
     if cw is not None:
         made["causeway"] = cw
@@ -4056,10 +4072,17 @@ def main():
     print("  planting took %.1fs" % t_veg)
 
     # ---- clearance safety net ---------------------------------------------
+    # F6: the ROAD is now BUILT from the same treated field this pass measures
+    # (build_road conforms every lane to O3.height), with its edge rows dying at
+    # +0.02 on purpose — lifting them back to +0.07 would re-open the very edge
+    # cliff the conform closed.  It keeps a token 0.01 so the pass still catches
+    # a vertex the smoothing pushed under the field; the mesh-true pass below is
+    # the real piercing gate.
     for key in ("road", "green", "dockpath", "dock", "damcrest"):
         if key not in made:
             continue
-        n = O3.conform_ribbon(made[key], F, zg, fr)
+        n = O3.conform_ribbon(made[key], F, zg, fr,
+                              clear=0.01 if key == "road" else 0.07)
         if n:
             print("  conform %-10s lifted %d verts clear of the treated ground"
                   % (key, n))
@@ -4226,7 +4249,8 @@ def main():
     # could not reach.  After road_verge (it reads nothing R22 writes, but the
     # fringe should stand on the blended colours it ships beside).
     _vobjs, STATS["verge_fringe"] = VL.verge_scatter(col, made["ground"], F, zg,
-                                                     mats, *_hlhr, T=TS)
+                                                     mats, *_hlhr, T=TS,
+                                                     road=made["road"])
     for ob_ in _vobjs:
         made[ob_.name] = ob_
 

@@ -3328,3 +3328,88 @@ the next levers are inter-ring haze gradation (fog is off on rings by design —
 per-ring alpha veil toward the horizon hue would emulate it) and breaking the far rings'
 edge sharpness with a 1-2 px vertex-alpha crest fade. Neither attempted tonight — the
 round cap was reached and both touch the ratified band palette.
+
+# F6 (gallery Round 23, 2026-08-06) — the road stops hovering, the grass stops re-rolling
+
+Two user complaints from the same playthrough hour, verbatim: (1) "The road seems to be
+sitting above or hovering above the ground... There's literally even a shadow underneath
+the road"; (2) "every time I move a couple of steps, the rendering updates, and so I see
+the terrain or the grass assets around me change." Both mechanisms were NAMED on an
+instrument before anything was built. Plates `plates/f6-*`; working set `scratchpad/f6/`.
+
+## 1. The road sat on 0.30 u of air, and F5 measured the wrong field
+
+Instrument first (scratchpad/f6 road_gap_probe: every walk_road vertex of the SHIPPED
+scene.glb ray-cast onto ground_valley): EDGE rows floated a MEDIAN 0.30 u above the
+terrain mesh, INTERIOR rows 0.37 u, uniformly along the whole corridor. Mechanism: the
+ribbon rode `F.road_h + 0.09` while `O3.road_notch` wears the corridor DOWN 0.28 u (full
+depth past the ribbon edge) — and F5's edge drop sampled `F.sample`, the UNTREATED field,
+missing the notch and crag terms. 0.28 + 0.025 IS the measured 0.30: the F5 edge "drop to
+terrain" landed on a field 28 cm above the terrain. The ribbon was a causeway floating in
+its own worn trench, with real air under its edge and a real cast shadow in the trench.
+
+The fix is two-sided, chosen by the reference read (worn paths are DEPRESSIONS, never
+causeways):
+  * `build_road` now conforms EVERY lane to the TREATED ground (`O3.height` = sample +
+    crag + notch), box-smoothed ±2 stations: interior rows keep 0.075 u of sawtooth
+    headroom, edge rows die at +0.02. The drop is capped 0.42 u below the authored grade,
+    so the one genuine gully crossing (x ~ -45, measured 4.56 u of air) stays an
+    embankment instead of diving. The analytic conform keeps a token 0.01 for the road
+    (0.07 would re-open the edge cliff); the mesh-true BVH conform stays the piercing
+    net at +0.035.
+  * `verge_scatter`'s straddling individuals now stand on max(terrain, ribbon top) — the
+    -0.55..+0.40 span used to take terrain height alone, which buried every overhanging
+    tuft ~0.30 u under the carriageway it was designed to soften.
+  * runtime: `walk_road.castShadow = false` (ow_detail.js patch, every tick). A ground
+    surface 2-8 cm proud must not draw its own silhouette band on the verge.
+    receiveShadow stays — tree/gate shadows still cross the road (losing those is the
+    OLD walk_-prefix bug, not this fix).
+
+MEASURED AFTER (same probe, same artifact class): edge p50 0.30 -> 0.035 (p90 0.089),
+interior p50 0.37 -> 0.076 (p90 0.132); only the capped gully bin stays proud (1.1 median,
+by design). Eye: f6-road-wood/bend/gate before/after — the rim highlight and the under-
+shadow are gone; f6-road-close-wood and f6-road-close-village are the walking-distance
+read, a worn track lying IN the meadow. f6-road-wood-shadowonly isolates the castShadow
+share on the old geometry.
+
+## 2. The grass was seeded by the player, so walking re-rolled the world
+
+Mechanism (public/js/ow_detail.js): rebuild() drew every tuft from ONE RNG seeded
+`rngAt(p.x, p.z)` — the PLAYER's position — so each 9 m step (P.step) re-rolled every
+placement, height, species and jitter in the 74 m disc. MEASURED on the shipped build:
+instance-position overlap in the 13 m shared annulus across a 10 m move was **0 of
+11,174**. The isolated pixel receipt (same body position, same camera, only the rebuild
+anchor moved — teleport-back inside the minMs window): near-band mean |dRGB| 0.99,
+0.71% of pixels moving >25/255, visible as whole clumps flickering (f6-pop-before-diff,
+amplified x6).
+
+Fix by design, not tuning: the RNG is re-seeded per TRIANGLE (count rounding) and per
+TUFT (everything else) from the triangle centroid's WORLD coordinates — the F5 position-
+hash card pattern brought into the runtime scatter. A tuft's identity is now a pure
+function of where it grows; the smooth distance terms (fall/grow/wgrow/farThin) remain
+player-relative on purpose and only add or drop TRAILING tufts/blades at the falloff
+band. No hysteresis machinery: nothing re-rolls, so there is nothing to hide.
+
+MEASURED AFTER: overlap 0% -> **93.1%** at 13 m (97.5% at 8 m — the residual IS the
+falloff band and the per-plant distance-acceptance terms, individually toggling, not
+re-rolls); pop-pair near band mean 0.99 -> 0.22, pixels>25 0.71% -> 0.10%
+(f6-pop-after-diff: the near field is black; what remains is the 64-74 m annulus edge
+recentering and the HUD marker).
+
+## Gates
+
+determinism byte-identical twice (459619fc...) · VERIFY OK · walk_engine_gate GREEN
+2074 = 2074 cells, 0 lost · reach_probe: emberbrook-gate -> dellhollow-valley-gate
+REACHED in the engine's own fill (178k cells, arrival dy 0.31) · slice_test 812/0 ·
+findability 69/0 · transition_test: see DAYLOG (run shared the box with two other lanes).
+
+## Carried, named, not smoothed
+
+  * The gully crossing (x ~ -45) is still a bare embankment with air under the ribbon —
+    honest geometry now (capped, deliberate), but undressed: no fill skirt, no stone.
+    An embankment wants to LOOK like one.
+  * Individual flowers/weeds still toggle with the anchor via their `near`-term
+    acceptance (measured 0.10% of near-band pixels) — make the accept draw distance-free
+    and modulate SIZE instead if a future round wants the last 0.1%.
+  * cutin/aerial charge from F5 stands: at boom 40 the metre rag is sub-pixel and the
+    road still reads constant-width from height.

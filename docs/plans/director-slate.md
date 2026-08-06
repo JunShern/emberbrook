@@ -76,7 +76,12 @@ the dialogue_style corpus proven byte-identical, all gates green.
 
 ## PHASE CHANGE 2026-08-06 ~01:10 (user, verbatim steers)
 The overworld overhaul RESTS once the in-flight lanes land (F6 road/grass, sky round
-2, Bet 11 motion, camera clamp). **New focus: DELLHOLLOW.** "A mix of heavy
+2, Bet 11 motion, camera clamp). **New focus: DELLHOLLOW.**
+## F6 road/grass: LANDED (2026-08-06 ~02:00, gallery Round 23, LOOP.md §F6). Road
+## hover was 0.30 u of measured air (F5 dropped the edge to the UNTREATED field);
+## ribbon now conforms to O3.height, castShadow off, edge p50 0.035. Grass pop was
+## the scatter RNG seeded off the PLAYER (0/11,174 instances survived a 10 m move);
+## world-anchored per-tuft seeding, overlap 93.1%. Determinism + walk gates green. "A mix of heavy
 playtesting, as well as heavy critiquing and fixing the visual artifacts and
 geometrical artifacts of the town." Bet 2 is RATIFIED and sharpened by ruling:
 **"there's nothing to gain by adding more complex, interesting stairs that just
