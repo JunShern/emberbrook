@@ -16306,3 +16306,32 @@ STALE BY DESIGN (phase law): scenegraph + del-cine solve/plates untouched; re-de
 routes still name seam:loop-landing__quay-deck because scenegraph is a derive input —
 self-heals at the closing lane's cine_solve/scenegraph_derive/bake. walk_rederive's
 walk_pad_loop-landing exception entry is inert (mesh gone) and kept as trap history.
+
+## 2026-08-06 ~05:00 — BET 2 ITERATION 3: THE HEAD APRON — an area-terminated flight owes one
+
+GENERATOR RULE, not a patch: town_blockout's stairs trim starts a flight at extent+0.6
+from an area disc's centre while the disc's own floor ends at extent — a designed 0.6 m
+annulus that nothing pave unless a neighbouring ribbon happens to. The new rule lays a
+flat `walk_e_<edge>_apron<n>` slab at the endpoint's own height from 0.4 inside the rim
+to 0.1 past the flight's start — BEFORE the first tread, so it cannot roof a descent
+(the thing the trim exists to prevent). Deterministic, global; exactly ONE apron exists
+town-wide today (the quay connector's head — every other area flight either collapses
+its trim inside a short edge or is paved by neighbours). Carried by walk_rederive
+--edge quay-deck__pilot-cluster (20 -> 21 records, invisible-wall sweep CLEAN),
+re-exported to townwalk (staging + atomic mv, meta.json stamped).
+
+RECEIPTS: plaza<->pilot-cluster reached BOTH WAYS (was no-path both ways), pocket->pilot
+reached; walk_engine_gate GREEN 3981/3981, 0 lost, BVH fail 0; seam_walk 9/9; routes
+--check clean; slice_test 811/1 (the 1 = scenegraph stale, phase law). Board updated:
+docs/qa/dellhollow-circulation/index.html iterations 2+3 section, before/afters looked
+at by eye (tp arg order trap: SIM.tp takes (x, plan, height) — the first capture put the
+body 15 m underground and photographed the inside of the cliff; the HUD pos line is the
+tell).
+
+ITERATION 4 IS SCOPED, not started: the connector's FOOT. l2 descends parallel over the
+pilot->weave deck road and roofs it in the body window (treads +0.65..1.3 over road
+8.6..9.1, x 60..63.4; pilot<->weave no-path both ways — same as at HEAD, no regression).
+Measured constraints (master bboxes): huts x 52.7..65.1 fill the north, cx_bays/wv_piles
+the south, the road band y 20.2..22.7 is the ONLY at-grade corridor, and the pad's free
+faces all face it. Every authored candidate clips a hut, the rails, or re-roofs the road
+— the line gets SEARCHED (ring/clearance doctrine) against the master's own boxes.

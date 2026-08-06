@@ -491,7 +491,36 @@ for e in D["edges"]:
                 r = 1.0   # inside the 1.3 pad half-width: flight and pad must overlap, never gap
             else:
                 continue
+            centre = pts[idx].copy()
             pts[idx] = trim_toward(pts[idx], pts[nbr], r)
+            # 2026-08-06 (BET 2 iteration 3, measured): AN AREA-TERMINATED FLIGHT OWES AN
+            # APRON.  The disc's own floor ends at `extent`; the trim above starts the
+            # flight at extent+0.6 — and NOTHING bridges the 0.6 m annulus between them
+            # unless some other edge's ribbon happens to pave it.  Measured on the quay
+            # flight's head (`--at`): deck floor 14.06 at [58,-17.2], flight floor 14.07
+            # at [58.4,-17.6], and the two cells between them have NO floor at deck
+            # height — contact was one diagonal cell, which walkStep's 0.075 m stride
+            # cannot cross.  v1 never met this because its short-edge guard collapsed
+            # the head to the disc CENTRE (the overlay disease iteration 2 fixed).  The
+            # apron is flat, at the endpoint's own height, laid from 0.4 INSIDE the rim
+            # to 0.1 past the flight's start — it stands BEFORE the first tread, so it
+            # cannot roof a descending flight (the thing the trim exists to prevent).
+            if lmc.get("class") == "area":
+                v = Vector((pts[idx].x - centre.x, pts[idx].y - centre.y, 0))
+                ext = lmc.get("extent", 3)
+                if v.length > ext + 1e-6:
+                    dirv = v.normalized()
+                    inner = centre + dirv * (ext - 0.4)
+                    outer = centre + dirv * (v.length + 0.1)
+                    mid = (inner + outer) / 2
+                    bpy.ops.mesh.primitive_cube_add(
+                        location=(mid.x, mid.y, pts[idx].z - 0.08))
+                    o = bpy.context.active_object
+                    o.name = "walk_%s_apron%d" % (nm, 0 if idx == 0 else 1)
+                    o.dimensions = ((outer - inner).length, float(e.get("width", 1.4)), 0.16)
+                    o.rotation_euler = (0, 0, math.atan2(dirv.y, dirv.x))
+                    o.data.materials.append(M_STAIR)
+                    link_to(o, "PATHS")
     elif t in ("deck", "road", "path", "bridge"):
         # stop flat ribbons short of stair junction points (pad bridges the gap)
         if e["from"] in STAIR_ENDS: pts[0] = trim_toward(pts[0], pts[1], 0.9)
