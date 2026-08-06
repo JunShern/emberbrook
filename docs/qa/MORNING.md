@@ -102,3 +102,19 @@ The redesigned circulation, receipted by a player-shaped agent on the new bundle
 - dock → ch2.landing: **13 steps, 0 reports.**
 Queue after triage: 69 verified / 8 unverified / 56 refuted. The closing bake stays
 held for your call (walk the realtime tier first: ?scene=townwalk&rt=1).
+
+## 10:55 ADDENDUM — window 3 complete; the closing bake is now the right next move
+
+Iterations 8-10 landed (49260f0, e296cb2): moorage switchback 2/4→**11/11 both ways**,
+deep stairs 3/10→**13/13 both ways** (both via candidate searches), the rail-guard
+sampling defect killed at the generator (0.35 m grid → 0.10 m body lattice — posts had
+stood inside flights with the guard green), shop row measured-and-cleared, five pockets
+closed as stale-bundle artifacts. Every worklist item is done; all gates green.
+
+THE FLAG THAT CHANGES THE PLAN: playtest filings now measure the OLD town — del-cine's
+plates and bundle predate all ten iterations. The closing bake (cine_solve + scenegraph
++ plates + del-cine re-export) is blocking playtest correctness, not just visuals.
+**Recommendation: I fire the closing bake lane at ~12:00 unless you say otherwise** —
+that leaves you the morning to walk the realtime tier (?scene=townwalk&rt=1) first.
+Residuals for after: west-waterfront knot (bank recut), stale walk rows (district
+carries), reach_probe's lattice-vs-stair-foot instrument note.
