@@ -30,9 +30,9 @@ git runs here, on branch `migration/3d-hybrid`.
   see their headers). Still carries the save-state schema, the chapter-handoff
   contract, the story-flag design (`story.ch1.gate-open`), and the measured
   empty-Emberbrook finding. Read before any wiring work.
-- **docs/qa/MORNING.md** — the 2026-08-02 overnight brief: what shipped, the seven
-  decisions waiting on the user, the honest reds, and the night's measurement lessons.
-  Read this before RESUME.md, which it supersedes.
+- **docs/qa/MORNING.md** — the 2026-08-06 overnight brief: THE BAR MET (full NEW GAME
+  to the end card, run-20260806-011853), the overworld graphics sweep, the Dellhollow
+  phase 7 iterations deep, and what the closing bake lane owes. Read this first.
 - **docs/qa/TOMORROW.md** — the 2026-08-03 plan: five tranches, the art calls the user
   DELEGATED to me (Old Gate structure, the bunting post, forest-vs-the-FFIX-refs), what is
   settled and must not be re-asked, and the standing risks. Read it before picking up work.
