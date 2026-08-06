@@ -16261,3 +16261,48 @@ deadband, the bargeman door arbitration, the exit-walk detector) -> take 1
 capped at 500 two beats short (walking, not stuck) -> take 2 at 650 finished
 with 158 steps to spare. Six new leads (PT-20260806-012..017) queued for the
 harvest lane's triage — a green receipt still harvests.
+
+## 2026-08-06 ~04:30 — BET 2 ITERATION 2 LANDED: the quay interchange (restart lane)
+
+RESTART AUDIT (predecessor killed mid-iteration; the diff was the handover): the held
+tree IS coherent. All three of its named follow-ups were already done in the tree —
+STAIRS_V2 carries shelf-homes__market-stalls + quay-deck__pilot-cluster, cameras.json
+loop-stairs `owns` dropped the deleted fork, ls_reorigin.py deletion staged (three-way
+verify re-run: every remaining reference is prose history in walk_rederive/
+waterfront_landings/DAYLOG/FIXLOG — nothing executes it; its one edge no longer exists).
+DERIVABILITY PROVEN, not assumed: blockout rebuilt from map+generator, content digest
+(embint_verify method: world verts 1e-5 + materials + lights) IDENTICAL,
+998f5c4c…9098, 408 objects — the blend is a build artifact, not hand-edited.
+
+WHAT ITERATION 2 IS (pain inventory #1/#6/#7): the loop-landing fork + its
+quay branch DELETED outright (the branch overlaid the plaza's own walk disc by
+construction — its foot treads/rails were the promenade wall); market flight v2 at
+width 2.0; quay-deck__pilot-cluster redesigned to TWO waypoints, one wide hairpin,
+width 2.0, head deliberately at 7.2 u so the trim starts the flight outside the disc.
+lay_stair_rails clip set extended to landmark floors (rails may not fence a disc).
+seam_walk journeys rewritten to the one-descent topology (it could not BOOT against
+the deleted edge); routes re-derived, --check CLEAN.
+
+RECEIPTS (townwalk realtime, :3000): walk_engine_gate GREEN 3975/3975 cells, 0 lost,
+BVH fail 0 · seam_walk 9/9 · slice_test 811/1 (the 1 = scenegraph stale, phase law) ·
+_court_probe: pocket [58.1,14.24,-12.2] -> plaza OK; yard <-> plaza OK BOTH ways down
+the v2 market flight; basin+market+lockhead+cookhouse ONE component (1377 cells in the
+interchange box). Defects #1/#6 are PAID by measurement.
+
+OPEN RED, measured with its instrument (#7's lower half; was failing both ways at HEAD
+too, so no regression shipped): (a) THE HEAD MOAT — the flight climbs from the huts to
+[58.4,14.07,-17.6] but the deck disc floor ends at extent 5.5 while the stairs trim
+starts the flight at extent+0.6: a 0.6 m annulus of NO FLOOR (`--at`: [58.4,-17.2] and
+[58,-17.6] have nothing at deck height; contact is one diagonal cell, walkStep's 0.075 m
+stride cannot cross it). v1 never exposed this because its 5.34 u waypoint collapsed the
+head to the DISC CENTRE (trim_toward's short-edge guard) — the old flight overlaid the
+plaza, the new one gaps it. GENERATOR defect, not map: an area-terminated flight owes a
+flat apron slab bridging rim -> head. (b) THE FOOT — pilot comp (flight + pad + hut
+ground at ~9) never joins the weave tier ground at 8.67-8.82: GAP dy 1.5-1.9 at
+[62.8..64.4, -20.8..-22] (`--pairs` pilot<->weave no-path both ways). Iteration 3 is
+these two joins.
+
+STALE BY DESIGN (phase law): scenegraph + del-cine solve/plates untouched; re-derived
+routes still name seam:loop-landing__quay-deck because scenegraph is a derive input —
+self-heals at the closing lane's cine_solve/scenegraph_derive/bake. walk_rederive's
+walk_pad_loop-landing exception entry is inert (mesh gone) and kept as trap history.

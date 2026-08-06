@@ -278,6 +278,20 @@ STAIRS_V2 = {"deep-stairs-head__deep-stairs-foot",
              # District art: gs_build (gs_) owns it; shelf_build's
              # shelf_stair_underworks carries it — both re-run in the same window.
              "valley-gate__inn",
+             # 2026-08-06, BET 2 iteration 2 (pain inventory defects #1/#6): the quay
+             # interchange. The market flight was v1 (its l2 rails penned the
+             # lockhead-return spawn pocket); width 2.0 from the map, ls_build re-run
+             # in the same window. The QUAY BRANCH (loop-landing__quay-deck) and its
+             # fork landmark are DELETED outright, not migrated: the fork stood 5.59 u
+             # from the plaza centre against an extent-5.5 disc, so the stairs trim
+             # could never start the flight outside the plaza's own floor and the whole
+             # branch overlaid it — unfixable by v2, redundant beside the flat
+             # quay-deck__market-stalls hop. See the market edge's _bet2_2026-08-06b.
+             "shelf-homes__market-stalls",
+             # ...and the shops->weave connector (inventory #7): v1, measured failing
+             # both ways, one 0.92 m leg, its head railA on the deck floor (7 cells).
+             # Art: qm_build re-run in the same window.
+             "quay-deck__pilot-cluster",
              # 2026-08-05, PT-20260805-049: the moorage switchback's un-split hairpins
              # stack l1 over l2 (and l0 over l1) inside the body window — UP stalled
              # under walk_e_weave-huts__moorage_l1_t04 (bottom 4.00 over t01's 3.03)
@@ -331,9 +345,18 @@ def lay_stair_rails(nm, railq):
     post-length stub guards nothing.  The FIRST kept run inherits the bar's own
     name so district builders (cx_build reads the six blockouts BY NAME) still find
     it; later runs get _s<k>."""
+    # 2026-08-06 (BET 2 iteration 2, measured): the clip set is the edge's OWN records
+    # PLUS every LANDMARK floor (walk_lm_* / walk_pad_*).  A flight that terminates on
+    # an `area` disc runs its side rails onto that disc's own floor — the quay branch's
+    # railA/railB stood on walk_lm_quay-deck fencing the promenade, and `--who` named
+    # them on 19 cells with the promenade crossing stalled from BOTH sides.  Landmark
+    # pads are built BEFORE the edge loop, so clipping against them is order-safe;
+    # OTHER EDGES' ribbons are deliberately not read here (edge build order is map
+    # order) — crossings against those remain walk_rederive's sweep's job.
     walks = []
     for o in bpy.data.objects:
-        if o.type == 'MESH' and o.name.startswith("walk_" + nm):
+        if o.type == 'MESH' and (o.name.startswith("walk_" + nm) or
+                                 o.name.startswith(("walk_lm_", "walk_pad_"))):
             bb = [o.matrix_world @ Vector(c) for c in o.bound_box]
             walks.append((min(p.x for p in bb) - 0.35, max(p.x for p in bb) + 0.35,
                           min(p.y for p in bb) - 0.35, max(p.y for p in bb) + 0.35,

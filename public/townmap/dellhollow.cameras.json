@@ -253,13 +253,12 @@
    "_framing_note": "This shot owns the JUNCTION as well as both flights, and that is still the whole point — but the junction MOVED, and why is worth keeping. It used to be the shelf-homes yard with both flights leaving it: the quay flight at 44.8 deg and the market flight at 17.4 deg, on plan bearings 6.34 deg apart. Two flights leaving one point on one bearing at gradients 27 deg apart MUST overlap in plan, and the shallower one's first tread then stands over the steeper one INSIDE walkGround's 0.73 m step-up window — so the quay flight's second and third treads could never catch a foot, and the flight was unwalkable from its head (0 of 72 held headings reached its foot, offline AND in the shipped game; nav-eval's oracle scored this shot 0.00 on three separate runs and seam-canon §10.3 had filed that as the walker's fault). The 2.60 m yard could not carry two 1.4 m flight heads in any case — short by 0.23 m. Map stamp c046f51 re-origined the quay flight onto the market flight's first landing (the new `loop-landing` portal), so ONE flight leaves the yard and forks at a landing: 88.5 deg apart at gradients 0.39 deg apart, which puts 55x of headroom between the ribbons and the step-up window. This shot owns the yard, the landing and both onward flights, so each still gets exactly ONE seam at its foot. THE PREMISE THAT WAS SPENT, recorded rather than quietly dropped: this shot was pitched as 'TWO flights leaving one yard' and it is now one descent that forks lower down. Navigation beat composition on the coordinator's ruling — town-legibility is this project's founding principle, and one clear entrance reads better than two competing heads on a pad too small for them.",
    "owns": {
     "landmarks": [
-     "shelf-homes",
-     "loop-landing"
+     "shelf-homes"
     ],
     "edges": [
-     "loop-landing__quay-deck",
      "shelf-homes__market-stalls"
-    ]
+    ],
+    "_doc_bet2_2026-08-06": "THE FORK IS GONE (Bet 2, user simplicity ruling): edge 'loop-landing__quay-deck' and the 'loop-landing' portal are deleted from the map — the branch overlaid the plaza's own walk disc by construction (the fork stood 5.59 u from the centre of an extent-5.5 area, so the stairs trim could never clear it) and the market flight already lands one flat hop from the plaza. The framing note above records the fork as the 2026-08-01 repair; this deletion completes the same argument ('one clear entrance reads better than two'). This shot now owns one descent. Re-solve/re-bake are the closing lane's."
    },
    "arrivals": {
     "armor-shop__shelf-homes:shelf-east": [

@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-06T01:38:30Z",
+ "generated": "2026-08-06T03:22:55Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -2061,43 +2061,6 @@
      ]
     },
     {
-     "id": "loop-stairs:loop-landing__quay-deck@0..0.5",
-     "class": "stairs",
-     "from": "node:loop-landing",
-     "to": "node:quay-deck",
-     "t": [
-      0,
-      0.5
-     ],
-     "length": 3.271,
-     "points": [
-      [
-       55.9,
-       17.4,
-       -9
-      ],
-      [
-       55.28,
-       16.55,
-       -10.25
-      ],
-      [
-       54.65,
-       15.7,
-       -11.5
-      ]
-     ],
-     "source": "map edge loop-landing__quay-deck@0..0.5",
-     "role": "spine",
-     "connects": [
-      "entry:seam:armor-shop__shelf-homes",
-      "entry:seam:loop-landing__quay-deck",
-      "entry:seam:shelf-homes__market-stalls",
-      "exit:seam:loop-landing__quay-deck",
-      "exit:seam:shelf-homes__market-stalls"
-     ]
-    },
-    {
      "id": "loop-stairs:shelf-homes__market-stalls@0..0.677",
      "class": "stairs",
      "from": "node:shelf-homes",
@@ -2155,19 +2118,17 @@
    "district": "shelf",
    "owns": {
     "landmarks": [
-     "shelf-homes",
-     "loop-landing"
+     "shelf-homes"
     ],
     "edges": [
-     "loop-landing__quay-deck",
      "shelf-homes__market-stalls"
     ]
    },
    "measure": {
-    "routeSamples": 12,
+    "routeSamples": 9,
     "routeInFramePct": 100,
-    "routeLen": 14.107,
-    "spineLen": 14.107,
+    "routeLen": 10.836,
+    "spineLen": 10.836,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -2736,40 +2697,6 @@
    ],
    "routes": [
     {
-     "id": "quay-west:loop-landing__quay-deck@0.5..1",
-     "class": "stairs",
-     "from": "node:loop-landing",
-     "to": "node:quay-deck",
-     "t": [
-      0.5,
-      1
-     ],
-     "length": 3.271,
-     "points": [
-      [
-       54.65,
-       15.7,
-       -11.5
-      ],
-      [
-       54.03,
-       14.85,
-       -12.75
-      ],
-      [
-       53.4,
-       14,
-       -14
-      ]
-     ],
-     "source": "map edge loop-landing__quay-deck@0.5..1",
-     "role": "spine",
-     "connects": [
-      "entry:seam:loop-landing__quay-deck",
-      "exit:seam:loop-landing__quay-deck"
-     ]
-    },
-    {
      "id": "quay-west:quay-deck__cookhouse",
      "class": "deck",
      "from": "node:quay-deck",
@@ -3043,7 +2970,7 @@
       0,
       0.483
      ],
-     "length": 6.938,
+     "length": 8.188,
      "points": [
       [
        53.4,
@@ -3051,24 +2978,29 @@
        -14
       ],
       [
-       54.8,
-       14,
-       -15.1
+       54.78,
+       13.85,
+       -15.15
       ],
       [
-       56.2,
-       14,
-       -16.2
+       56.15,
+       13.7,
+       -16.3
       ],
       [
-       57.6,
-       14,
-       -17.3
+       57.53,
+       13.55,
+       -17.45
       ],
       [
-       58.79,
-       13.05,
-       -17.78
+       58.9,
+       13.4,
+       -18.6
+      ],
+      [
+       59.69,
+       12.91,
+       -18.95
       ]
      ],
      "source": "map edge quay-deck__pilot-cluster@0..0.483",
@@ -3076,7 +3008,6 @@
      "connects": [
       "entry:seam:loop-landing__quay-deck",
       "exit:seam:loop-landing__quay-deck",
-      "entry:seam:quay-deck__pilot-cluster",
       "exit:seam:quay-deck__pilot-cluster"
      ]
     },
@@ -3186,10 +3117,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 49,
+    "routeSamples": 47,
     "routeInFramePct": 100,
-    "routeLen": 67.23,
-    "spineLen": 67.23,
+    "routeLen": 65.209,
+    "spineLen": 65.209,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -4606,37 +4537,37 @@
       0.483,
       1
      ],
-     "length": 8.184,
+     "length": 9.477,
      "points": [
       [
-       58.79,
-       13.05,
-       -17.78
-      ],
-      [
        59.69,
-       12.32,
-       -18.14
+       12.91,
+       -18.95
       ],
       [
-       60.6,
-       11.6,
-       -18.5
-      ],
-      [
-       59.3,
-       10.75,
+       60.92,
+       12.14,
        -19.5
       ],
       [
-       58,
-       9.9,
-       -20.5
+       62.16,
+       11.37,
+       -20.05
       ],
       [
-       58.55,
-       9.45,
-       -21.25
+       63.4,
+       10.6,
+       -20.6
+      ],
+      [
+       61.96,
+       10.07,
+       -21.07
+      ],
+      [
+       60.53,
+       9.53,
+       -21.53
       ],
       [
        59.09,
@@ -4982,8 +4913,8 @@
    "measure": {
     "routeSamples": 36,
     "routeInFramePct": 100,
-    "routeLen": 47.076,
-    "spineLen": 47.076,
+    "routeLen": 48.369,
+    "spineLen": 48.369,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -7490,13 +7421,13 @@
     0,
     0.483
    ],
-   "metres": 6.62,
+   "metres": 8.03,
    "cameraUp": "quay-west",
    "floorOwnedBy": "weave",
    "at": [
-    56,
-    14,
-    -16.05
+    56.48,
+    13.66,
+    -16.58
    ]
   },
   {
@@ -7647,21 +7578,6 @@
     49.44,
     19,
     -8.67
-   ]
-  },
-  {
-   "edge": "loop-landing__quay-deck",
-   "t": [
-    0.5,
-    1
-   ],
-   "metres": 2.795,
-   "cameraUp": "quay-west",
-   "floorOwnedBy": "loop-stairs",
-   "at": [
-    54.03,
-    14.85,
-    -12.75
    ]
   },
   {

@@ -162,18 +162,17 @@ const cat = (...a) => [].concat(...a);
 const JOURNEYS = () => ({dellhollow: [
   ['THE DESCENT, market flight  (shop street -> shelf-homes -> market -> lockhead)',
    cat(ep('armor-shop__shelf-homes',0.3,1), ep('shelf-homes__market-stalls',0,1), ep('market-stalls__lockhead',0,0.35)), 'shelf-east', 3],
-  // THE QUAY FLIGHT NO LONGER LEAVES THE YARD. Map stamp c046f51 re-origined it onto
-  // the market flight's first landing (the `loop-landing` portal at t~0.467 of
-  // shelf-homes__market-stalls), because its old head stood under the market flight's
-  // first tread inside walkGround's step-up window and could not catch a foot. So the
-  // walk to the harbour deck is now: the yard, the shared flight down to the landing,
-  // then the fork. Same two cuts, one more edge to name.
-  ['THE DESCENT, quay flight    (shop street -> shelf-homes -> the landing -> harbour deck -> cookhouse)',
-   cat(ep('armor-shop__shelf-homes',0.3,1), ep('shelf-homes__market-stalls',0,0.467),
-       ep('loop-landing__quay-deck',0,1), ep('quay-deck__cookhouse',0,0.7)), 'shelf-east', 2],
-  ['THE DESCENT, then east      (quay flight down, then across the plaza to the stalls)',
-   cat(ep('shelf-homes__market-stalls',0,0.467), ep('loop-landing__quay-deck',0,1),
-       ep('quay-deck__market-stalls',0,1)), 'loop-stairs', 1],
+  // THE QUAY BRANCH IS DELETED (Bet 2, 2026-08-06, user simplicity ruling — see the
+  // map's _bet2_2026-08-06b on shelf-homes__market-stalls). c046f51's fork landing
+  // ('loop-landing') and its edge 'loop-landing__quay-deck' are gone from the map:
+  // the branch overlaid the plaza's own walk disc by construction and the market
+  // flight already lands one flat hop from the deck. ONE way down. The walk to the
+  // harbour deck is now: the yard, the market flight, then west across the plaza.
+  ['THE DESCENT, to the deck    (shop street -> shelf-homes -> market flight -> plaza -> cookhouse)',
+   cat(ep('armor-shop__shelf-homes',0.3,1), ep('shelf-homes__market-stalls',0,1),
+       ep('quay-deck__market-stalls',1,0), ep('quay-deck__cookhouse',0,0.7)), 'shelf-east', 2],
+  ['THE DESCENT, then east      (market flight down, then east along the stalls to the lockhead)',
+   cat(ep('shelf-homes__market-stalls',0.467,1), ep('market-stalls__lockhead',0,0.35)), 'loop-stairs', 2],
   ['THE CLIMB BACK             (market -> shelf-homes -> shop street)',
    cat(ep('shelf-homes__market-stalls',1,0), ep('armor-shop__shelf-homes',1,0.5)), 'quay-west', 2],
   ['THE PLAZA, walked west     (the 4 cm double-cut in the shipped build)',
