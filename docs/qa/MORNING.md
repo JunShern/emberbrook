@@ -88,3 +88,17 @@ the exit-walk false positive) → take 1 capped at 500 two beats short (walking,
    quay/pilot circulation are live there; the CINEMATIC town still shows old plates until
    the closing bake (say the word and I run it — it is the one Blender-heavy step left).
 3. The DPR/retina sharpness trade (4× fragment cost) — measured proposal on the slate.
+
+---
+
+## 07:25 ADDENDUM — the after-receipts are in, all three GREEN
+
+The redesigned circulation, receipted by a player-shaped agent on the new bundle:
+- gate → ch2.jam: **67 steps, 0 reports** (this leg killed a fresh run 120/120 on the
+  old geometry).
+- jam → ch2.maren through the pilot cluster: **completed** (killed 2/2 runs before);
+  6 leads filed en route, instrument triage: 5 verified / 1 refuted — smaller pocket
+  class, queued for the next iteration window, none route-blocking (the leg finished).
+- dock → ch2.landing: **13 steps, 0 reports.**
+Queue after triage: 69 verified / 8 unverified / 56 refuted. The closing bake stays
+held for your call (walk the realtime tier first: ?scene=townwalk&rt=1).

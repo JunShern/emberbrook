@@ -19,17 +19,17 @@
  a{color:#c8a86a}
 </style>
 <h1>Emberbrook — LLM playtest queue</h1>
-<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-06T04:52:22.385Z.</p>
+<p class="sub">Filed by <code>tools/llm_playtester.mjs</code>, measured by <code>tools/playtest_triage.mjs</code>. Generated 2026-08-06T06:14:21.253Z.</p>
 <div class="warn"><b>An UNVERIFIED complaint is a lead, never a ticket.</b> These are an LLM's opinions about
 screenshots. This repo has a confabulation scar; the ratified workflow is judge&nbsp;→&nbsp;<b>measure on an
 instrument</b>&nbsp;→&nbsp;build. REFUTED entries matter as much as VERIFIED ones: the agent sees one still frame
 of a night-graded plate with no parallax and no camera control, so it is biased toward "I cannot find it",
 and the false-positive rate is this tool's calibration.</div>
 <div class="tally">
- <div><b style="color:#3fa96a">64</b>verified</div>
+ <div><b style="color:#3fa96a">69</b>verified</div>
  <div><b style="color:#8a7a5a">8</b>unverified</div>
- <div><b style="color:#b25a4a">55</b>refuted</div>
- <div><b>147</b>total</div>
+ <div><b style="color:#b25a4a">56</b>refuted</div>
+ <div><b>153</b>total</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
@@ -702,37 +702,94 @@ Fixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.<
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-031</code> (captured at 22002c13)</div>
 </div>
 <div class="e">
- <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+ <div class="hd"><span class="b" style="background:#666">REFUTED against the game · VERIFIED against the harness</span>
   <span class="sev">P1 · blocker</span>
-  <span class="ttl">Character stuck on wooden plank bridge geometry at Lock Five</span><span class="id">PT-20260806-002</span></div>
+  <span class="ttl">Character stuck on middle cliffside path</span><span class="id">PT-20260805-035</span></div>
  <dl>
-  <dt>I was doing</dt><dd>Attempting to walk down the plank bridge walkway to the Lock Five scene transition at [0.255, 0.889].</dd>
-  <dt>I expected</dt><dd>The character should walk down the bridge towards the exit arrow.</dd>
-  <dt>What happened</dt><dd>The character remains stuck at [0.365, 0.77] across multiple movement attempts, closing 0 meters.</dd>
-  <dt>On screen</dt><dd>objective: Midnight at Lock Five — out over the plank bridge</dd>
-  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+  <dt>I was doing</dt><dd>Trying to walk along or down from the middle platform near x=0.43, y=0.42</dd>
+  <dt>I expected</dt><dd>Character should navigate around obstacles to reach the destination</dd>
+  <dt>What happened</dt><dd>Character is completely stuck in place and cannot move in any direction despite multiple movement attempts</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs</dd>
  </dl>
- <pre>where I stood -&gt; where I pointed: reachable (1.3 m apart, 1 cells filled on foot)
-  BUT THE DRIVE STALLS. SIM.move from the same start reached [90.22,8.68,-21.69] and stopped 1.29 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
- <div class="fr"><img src="runs/run-20260805-235428/frames/step-154.jpg" loading="lazy"><img src="runs/run-20260805-235428/frames/step-155.jpg" loading="lazy"><img src="runs/run-20260805-235428/frames/step-156.jpg" loading="lazy"></div>
- <div class="meta">run run-20260805-235428 step 156 · found by agent · del-cine / cottage @ 90.22,8.68,-21.69
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-002</code> (captured at c210feeb)</div>
+ <pre>STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).
+BUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the
+route the game routes through (east, the quay-west&gt;weave cut) walks 3/3 legs BOTH ways, ending
+[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;
+only ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any
+direction', and that is FALSE.
+WHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier
+5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --
+'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.
+THE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc
+[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the
+ticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)
+shows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on
+walk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.
+Fixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.</pre>
+ <div class="fr"><img src="runs/run-20260805-105834/frames/step-055.jpg" loading="lazy"><img src="runs/run-20260805-105834/frames/step-056.jpg" loading="lazy"><img src="runs/run-20260805-105834/frames/step-057.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-105834 step 57 · found by agent · del-cine / quay-west @ 58.11,14.24,-12.84
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-035</code> (captured at fca1c303)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#666">REFUTED (round 24, recorded here in round 25)</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Character gets stuck navigating down stairs towards Lock Five</span><span class="id">PT-20260805-037</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to walk down the stairs from the upper walkway to the lower bridge to head left towards Lock Five.</dd>
+  <dt>I expected</dt><dd>My character should walk down the stairs and continue left along the lower bridge towards the objective.</dd>
+  <dt>What happened</dt><dd>My character reaches the stairs but then stops and cannot seem to navigate down them or across the lower bridge, leaving me stuck on the upper level.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>tools/playtest/wayfind_probe.mjs --from=ch2.supper --target=cottage (docs/qa/playtest/wayfind-r24)</dd>
+ </dl>
+ <pre>At the honest seed, the routed hint at this stand is SHOWN, LABELLED, dest &quot;Keepers' Cottage&quot;,
+lift 22.6 px, and its first hop is identical to the metre-shortest. No station printed
+SHIPPED HINT DISAGREES. Not a routing defect. FIXLOG round 24.</pre>
+ <div class="fr"><img src="runs/run-20260805-112819/frames/step-013.jpg" loading="lazy"><img src="runs/run-20260805-112819/frames/step-014.jpg" loading="lazy"><img src="runs/run-20260805-112819/frames/step-015.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-112819 step 15 · found by stuck-interview · del-cine / weave @ 61.77,11.6,-17.82
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-037</code> (captured at 690c1d4e)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#666">REFUTED as filed (round 24, recorded here in round 25)</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Character stuck on walkway near lantern, cannot reach Keepers' Cottage</span><span class="id">PT-20260805-038</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to walk left along the wooden dock towards the red arrow for the Keepers' Cottage.</dd>
+  <dt>I expected</dt><dd>My character should walk along the path to the entrance.</dd>
+  <dt>What happened</dt><dd>My character seems to be stuck on something invisible near the lantern and won't move left towards the objective, no matter where I click on the walkway.</dd>
+  <dt>On screen</dt><dd>objective: Supper at the keepers' cottage — you have been asked in</dd>
+  <dt>Measured by</dt><dd>tools/_court_probe.mjs --comp/--grid + tools/reach_probe.mjs</dd>
+ </dl>
+ <pre>--comp at the filed cell [61.85,1.25,-25.06] returns SEED UNSTANDABLE: under WALKLOCK there is
+no walk network under the cell the agent filed from. --grid walk:true shows why — the fish
+dock's east side at that z is a 0.4 m curtain of VISIBLE floor carrying no walk network, while
+the real exit lane is two metres SOUTH at z -27.0..-27.4, where the network runs continuously
+from x 58 to x 70. reach_probe maren -&gt; cottage door is ok=true. The ticket named a tier; the
+cause was a lane. FIXLOG round 24.
+THE LAUNDRY, SEPARATELY: t2c_W9_laundry_planking_5 leaves 1.28 m over walk against BODY_H 1.30
+and severs the crossing one tier up. Recorded in gate_cloth_headroom.py's UNFIXED register and
+deliberately NOT fixed — it owes a re-bake and the story steps over it (weave&gt;crossing is a cut
+whose spawn lands 9.3 m east).</pre>
+ <div class="fr"><img src="runs/run-20260805-112819/frames/step-053.jpg" loading="lazy"><img src="runs/run-20260805-112819/frames/step-054.jpg" loading="lazy"><img src="runs/run-20260805-112819/frames/step-055.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-112819 step 55 · found by stuck-interview · del-cine / fishdock @ 61.85,1.25,-25.06
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-038</code> (captured at 690c1d4e)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
   <span class="sev">P1 · bug</span>
-  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260806-004</span></div>
+  <span class="ttl">Player falls through upper deck walkway collision geometry</span><span class="id">PT-20260805-043</span></div>
  <dl>
-  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
-  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
-  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Through the Dellhollow gate — find whoever runs the locks&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
-  <dt>On screen</dt><dd>objective: Through the Dellhollow gate — find whoever runs the locks</dd>
-  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+  <dt>I was doing</dt><dd>Walking along the elevated walkway towards the Keepers' Cottage transition</dd>
+  <dt>I expected</dt><dd>To walk along the upper deck to reach the Keepers' Cottage entrance at [0.558, 0.272]</dd>
+  <dt>What happened</dt><dd>Stepping onto the upper walkway near [0.55, 0.33] repeatedly causes the character to fall through the floor back to the lower level at [0.375, 0.565] or [0.48, 0.64]</dd>
+  <dt>On screen</dt><dd>objective: Supper at the keepers' cottage — you have been asked in</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
  </dl>
- <pre>The body was in &quot;ow-valley&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.mara, ch1.see.poppy, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
- <div class="fr"><img src="runs/run-20260806-001811/frames/step-161.jpg" loading="lazy"><img src="runs/run-20260806-001811/frames/step-162.jpg" loading="lazy"><img src="runs/run-20260806-001811/frames/step-163.jpg" loading="lazy"></div>
- <div class="meta">run run-20260806-001811 step 163 · found by spine-detector · ow-valley / - @ 45.66,12.36,-32.22
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-004</code> (captured at f21557cc)</div>
+ <pre>where I stood -&gt; where I pointed: reachable (12.6 m apart, 559 cells filled on foot)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [77.06,1.07,-26.08] and stopped 2.23 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260805-134944/frames/step-076.jpg" loading="lazy"><img src="runs/run-20260805-134944/frames/step-077.jpg" loading="lazy"><img src="runs/run-20260805-134944/frames/step-078.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-134944 step 78 · found by agent · del-cine / lockfive @ 76.15,1.32,-27.11
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-043</code> (captured at 8ce6d0a3)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
@@ -1074,6 +1131,91 @@ Fixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.<
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-034</code> (captured at 8ba970bc)</div>
 </div>
 <div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Character stuck on upper platform, cannot navigate to Lock Five waypoint</span><span class="id">PT-20260806-037</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to click on the 'Lock Five' waypoint to go down to the lock apron as instructed by the objective.</dd>
+  <dt>I expected</dt><dd>My character should have found a path down the stairs or walkways to reach the waypoint.</dd>
+  <dt>What happened</dt><dd>My character seems stuck on the roof or upper platform and won't move towards the waypoint when I click it.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (14.5 m apart, 1887 cells filled, via 1 in-scene edge)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [61.74,11.6,-19.48] and stopped 14.21 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260806-055033/frames/step-028.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-029.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-030.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260806-055033 step 30 · found by stuck-interview · del-cine / weave @ 61.74,11.6,-19.38
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-037</code> (captured at 5c53dd3f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Walk blocked: the body closed 0 m of an intended 6.43 m, twice at the same place</span><span class="id">PT-20260806-039</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.12, 0.52]; my goal was &quot;Navigate to Lock Five at [0.12, 0.522] to reach the lock apron.&quot;.</dd>
+  <dt>I expected</dt><dd>To walk about 6.43 m and arrive there.</dd>
+  <dt>What happened</dt><dd>The character moved 0 m and stopped 6.43 m short — twice in this run. All five headings were pushed (5 bursts at ~162 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (6.4 m apart, 612 cells filled on foot)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [53.08,14.83,-12.81] and stopped 6.43 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260806-055033/frames/step-054.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-055-stall.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260806-055033 step 54 · found by walk-executor · del-cine / quay-west @ 53.08,14.83,-12.81
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-039</code> (captured at 5c53dd3f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Character stuck on elevated walkway, unable to pathfind to Lock Five exit</span><span class="id">PT-20260806-040</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I was trying to walk to the Lock Five exit by clicking on the red arrow marker.</dd>
+  <dt>I expected</dt><dd>I expected my character to automatically navigate down the walkways and stairs to reach the exit.</dd>
+  <dt>What happened</dt><dd>My character barely moved and seems stuck on the current platform, unable to find a path to the destination despite repeated clicks.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (11.2 m apart, 1168 cells filled, via 2 in-scene edges)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [61.77,11.6,-17.66] and stopped 10.83 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260806-055033/frames/step-087.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-088.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-089.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260806-055033 step 88 · found by stuck-interview · del-cine / weave @ 61.77,11.6,-18.38
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-040</code> (captured at 5c53dd3f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Character stuck on elevated walkway pathfinding to Lock Five</span><span class="id">PT-20260806-041</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Attempting to walk to the Lock Five exit arrow at [0.205, 0.585].</dd>
+  <dt>I expected</dt><dd>The character should pathfind along the wooden walkways down towards Lock Five.</dd>
+  <dt>What happened</dt><dd>The character makes virtually no progress (stuck at [0.525, 0.42]) across repeated movement commands.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (11.2 m apart, 1168 cells filled, via 2 in-scene edges)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [61.77,11.6,-17.66] and stopped 10.83 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260806-055033/frames/step-087.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-088.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-089.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260806-055033 step 88 · found by agent · del-cine / weave @ 61.77,11.6,-18.38
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-041</code> (captured at 5c53dd3f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Pathfinding to Lock Five exit marker is stuck</span><span class="id">PT-20260806-042</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Attempting to navigate to the Lock Five exit marker at [0.205, 0.576].</dd>
+  <dt>I expected</dt><dd>The character should walk along the wooden walkways down towards Lock Five.</dd>
+  <dt>What happened</dt><dd>The character remains stuck at [0.505, 0.43] across multiple movement attempts.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (14.5 m apart, 1887 cells filled, via 1 in-scene edge)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [61.78,11.6,-18.8] and stopped 14.45 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260806-055033/frames/step-104.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-105.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-106.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260806-055033 step 105 · found by agent · del-cine / weave @ 61.78,11.6,-19.29
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-042</code> (captured at 5c53dd3f)</div>
+</div>
+<div class="e">
  <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
   <span class="sev">P0 · confusion</span>
   <span class="ttl">End the test session as the game is stuck on a black screen and cannot continue.</span><span class="id">PT-20260803-006</span></div>
@@ -1184,6 +1326,22 @@ Fixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.<
  <div class="fr"><img src="runs/run-20260804-185107/frames/step-022.jpg" loading="lazy"><img src="runs/run-20260804-185107/frames/step-023.jpg" loading="lazy"><img src="runs/run-20260804-185107/frames/step-024.jpg" loading="lazy"></div>
  <div class="meta">run run-20260804-185107 step 24 · found by empty-room-detector · del-inn-int / - @ 2.07,0.04,-1.39
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260804-010</code> (captured at 9534b95d)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Stuck on lower dock, cannot climb stairs to Keepers' Cottage</span><span class="id">PT-20260805-039</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>trying to climb the wooden stairs to get up to the Keepers' Cottage for my objective</dd>
+  <dt>I expected</dt><dd>my character to walk up the stairs to the circular platform above</dd>
+  <dt>What happened</dt><dd>my character just shuffles around on the lower dock and won't actually go up the stairs, so I can't reach the objective marker</dd>
+  <dt>On screen</dt><dd>objective: Supper at the keepers' cottage — you have been asked in</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (NOT RUN)</dd>
+ </dl>
+ <pre>the reachability probe needs a running server: re-run this with --port=3000.</pre>
+ <div class="fr"><img src="runs/run-20260805-121612/frames/step-021.jpg" loading="lazy"><img src="runs/run-20260805-121612/frames/step-022.jpg" loading="lazy"><img src="runs/run-20260805-121612/frames/step-023.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-121612 step 23 · found by stuck-interview · del-cine / lockfive @ 71.48,3.3,-27.51
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-039</code> (captured at e9bf1ba7)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
@@ -1852,95 +2010,6 @@ Fixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.<
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-034</code> (captured at fca1c303)</div>
 </div>
 <div class="e">
- <div class="hd"><span class="b" style="background:#666">REFUTED against the game · VERIFIED against the harness</span>
-  <span class="sev">P1 · blocker</span>
-  <span class="ttl">Character stuck on middle cliffside path</span><span class="id">PT-20260805-035</span></div>
- <dl>
-  <dt>I was doing</dt><dd>Trying to walk along or down from the middle platform near x=0.43, y=0.42</dd>
-  <dt>I expected</dt><dd>Character should navigate around obstacles to reach the destination</dd>
-  <dt>What happened</dt><dd>Character is completely stuck in place and cannot move in any direction despite multiple movement attempts</dd>
-  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
-  <dt>Measured by</dt><dd>tools/_court_probe.mjs --way/--at + tools/playtest/seen_probe.mjs + tools/playtest/wayfind_probe.mjs</dd>
- </dl>
- <pre>STRAIGHT-LINE DRIVE TO THE CLICKED POINT: stalls (this triage run).
-BUT THE WORLD IS OPEN. _court_probe --way from the same cell [58.11,14.24,-12.8] toward the
-route the game routes through (east, the quay-west&gt;weave cut) walks 3/3 legs BOTH ways, ending
-[61.99,14.07,-14.39] / [58.63,14.39,-12.98], stalled: no. --at: ground clear east and south;
-only ls_rail west, a fence doing its job. The claim under test was 'trapped, cannot move in any
-direction', and that is FALSE.
-WHY THE STRAIGHT DRIVE STALLS: every point the agent clicked was WEST (x 33-53) or on the tier
-5 m above (y 19.07). SIM.move is not a pathfinder, and reach_probe's own answer says so --
-'reachable via 3 in-scene edges', i.e. by taking a cut, not by pushing through the fence.
-THE DEFECT IS THE AIM, AND ITS CAUSE IS MEASURED: seen_probe puts the body at charNdc
-[-0.623,0.238] = screen [241,274] of 1280x720 with 353/428 pixels through the plate, while the
-ticket says 'far right of the platform'; wayfind_probe --from=ch2.maren (the run's own state)
-shows the routed 'Lock Five' arrow at nx 0.076, lift 22 px, its click landing on
-walk_e_quay-deck__pilot-cluster_landing. The agent aimed nx 0.30-0.86 on 29 consecutive steps.
-Fixed in the percept (690c1d4): percept.you + percept.markers. FIXLOG round 23.</pre>
- <div class="fr"><img src="runs/run-20260805-105834/frames/step-055.jpg" loading="lazy"><img src="runs/run-20260805-105834/frames/step-056.jpg" loading="lazy"><img src="runs/run-20260805-105834/frames/step-057.jpg" loading="lazy"></div>
- <div class="meta">run run-20260805-105834 step 57 · found by agent · del-cine / quay-west @ 58.11,14.24,-12.84
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-035</code> (captured at fca1c303)</div>
-</div>
-<div class="e">
- <div class="hd"><span class="b" style="background:#666">REFUTED (round 24, recorded here in round 25)</span>
-  <span class="sev">P1 · bug</span>
-  <span class="ttl">Character gets stuck navigating down stairs towards Lock Five</span><span class="id">PT-20260805-037</span></div>
- <dl>
-  <dt>I was doing</dt><dd>I was trying to walk down the stairs from the upper walkway to the lower bridge to head left towards Lock Five.</dd>
-  <dt>I expected</dt><dd>My character should walk down the stairs and continue left along the lower bridge towards the objective.</dd>
-  <dt>What happened</dt><dd>My character reaches the stairs but then stops and cannot seem to navigate down them or across the lower bridge, leaving me stuck on the upper level.</dd>
-  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
-  <dt>Measured by</dt><dd>tools/playtest/wayfind_probe.mjs --from=ch2.supper --target=cottage (docs/qa/playtest/wayfind-r24)</dd>
- </dl>
- <pre>At the honest seed, the routed hint at this stand is SHOWN, LABELLED, dest &quot;Keepers' Cottage&quot;,
-lift 22.6 px, and its first hop is identical to the metre-shortest. No station printed
-SHIPPED HINT DISAGREES. Not a routing defect. FIXLOG round 24.</pre>
- <div class="fr"><img src="runs/run-20260805-112819/frames/step-013.jpg" loading="lazy"><img src="runs/run-20260805-112819/frames/step-014.jpg" loading="lazy"><img src="runs/run-20260805-112819/frames/step-015.jpg" loading="lazy"></div>
- <div class="meta">run run-20260805-112819 step 15 · found by stuck-interview · del-cine / weave @ 61.77,11.6,-17.82
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-037</code> (captured at 690c1d4e)</div>
-</div>
-<div class="e">
- <div class="hd"><span class="b" style="background:#666">REFUTED as filed (round 24, recorded here in round 25)</span>
-  <span class="sev">P1 · blocker</span>
-  <span class="ttl">Character stuck on walkway near lantern, cannot reach Keepers' Cottage</span><span class="id">PT-20260805-038</span></div>
- <dl>
-  <dt>I was doing</dt><dd>I was trying to walk left along the wooden dock towards the red arrow for the Keepers' Cottage.</dd>
-  <dt>I expected</dt><dd>My character should walk along the path to the entrance.</dd>
-  <dt>What happened</dt><dd>My character seems to be stuck on something invisible near the lantern and won't move left towards the objective, no matter where I click on the walkway.</dd>
-  <dt>On screen</dt><dd>objective: Supper at the keepers' cottage — you have been asked in</dd>
-  <dt>Measured by</dt><dd>tools/_court_probe.mjs --comp/--grid + tools/reach_probe.mjs</dd>
- </dl>
- <pre>--comp at the filed cell [61.85,1.25,-25.06] returns SEED UNSTANDABLE: under WALKLOCK there is
-no walk network under the cell the agent filed from. --grid walk:true shows why — the fish
-dock's east side at that z is a 0.4 m curtain of VISIBLE floor carrying no walk network, while
-the real exit lane is two metres SOUTH at z -27.0..-27.4, where the network runs continuously
-from x 58 to x 70. reach_probe maren -&gt; cottage door is ok=true. The ticket named a tier; the
-cause was a lane. FIXLOG round 24.
-THE LAUNDRY, SEPARATELY: t2c_W9_laundry_planking_5 leaves 1.28 m over walk against BODY_H 1.30
-and severs the crossing one tier up. Recorded in gate_cloth_headroom.py's UNFIXED register and
-deliberately NOT fixed — it owes a re-bake and the story steps over it (weave&gt;crossing is a cut
-whose spawn lands 9.3 m east).</pre>
- <div class="fr"><img src="runs/run-20260805-112819/frames/step-053.jpg" loading="lazy"><img src="runs/run-20260805-112819/frames/step-054.jpg" loading="lazy"><img src="runs/run-20260805-112819/frames/step-055.jpg" loading="lazy"></div>
- <div class="meta">run run-20260805-112819 step 55 · found by stuck-interview · del-cine / fishdock @ 61.85,1.25,-25.06
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-038</code> (captured at 690c1d4e)</div>
-</div>
-<div class="e">
- <div class="hd"><span class="b" style="background:#8a7a5a">UNVERIFIED</span>
-  <span class="sev">P1 · blocker</span>
-  <span class="ttl">Stuck on lower dock, cannot climb stairs to Keepers' Cottage</span><span class="id">PT-20260805-039</span></div>
- <dl>
-  <dt>I was doing</dt><dd>trying to climb the wooden stairs to get up to the Keepers' Cottage for my objective</dd>
-  <dt>I expected</dt><dd>my character to walk up the stairs to the circular platform above</dd>
-  <dt>What happened</dt><dd>my character just shuffles around on the lower dock and won't actually go up the stairs, so I can't reach the objective marker</dd>
-  <dt>On screen</dt><dd>objective: Supper at the keepers' cottage — you have been asked in</dd>
-  <dt>Measured by</dt><dd>tools/reach_probe.mjs (NOT RUN)</dd>
- </dl>
- <pre>the reachability probe needs a running server: re-run this with --port=3000.</pre>
- <div class="fr"><img src="runs/run-20260805-121612/frames/step-021.jpg" loading="lazy"><img src="runs/run-20260805-121612/frames/step-022.jpg" loading="lazy"><img src="runs/run-20260805-121612/frames/step-023.jpg" loading="lazy"></div>
- <div class="meta">run run-20260805-121612 step 23 · found by stuck-interview · del-cine / lockfive @ 71.48,3.3,-27.51
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-039</code> (captured at e9bf1ba7)</div>
-</div>
-<div class="e">
  <div class="hd"><span class="b" style="background:#666">THE HOLE IS VERIFIED · THE MECHANISM IS STILL UNNAMED · ONE SUSPECT REFUTED</span>
   <span class="sev">P1 · blocker</span>
   <span class="ttl">Walk blocked: the body closed 0 m of an intended 11.33 m, twice at the same place</span><span class="id">PT-20260805-040</span></div>
@@ -2012,20 +2081,19 @@ page that logs P.y per tick across the transition, not another fill.</pre>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
-  <span class="sev">P1 · bug</span>
-  <span class="ttl">Player falls through upper deck walkway collision geometry</span><span class="id">PT-20260805-043</span></div>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Walk blocked: the body closed 0 m of an intended 10.13 m, twice at the same place</span><span class="id">PT-20260805-053</span></div>
  <dl>
-  <dt>I was doing</dt><dd>Walking along the elevated walkway towards the Keepers' Cottage transition</dd>
-  <dt>I expected</dt><dd>To walk along the upper deck to reach the Keepers' Cottage entrance at [0.558, 0.272]</dd>
-  <dt>What happened</dt><dd>Stepping onto the upper walkway near [0.55, 0.33] repeatedly causes the character to fall through the floor back to the lower level at [0.375, 0.565] or [0.48, 0.64]</dd>
-  <dt>On screen</dt><dd>objective: Supper at the keepers' cottage — you have been asked in</dd>
-  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.51, 0.33]; my goal was &quot;Walk up the elevated walkway towards the top-right exit marker at [0.573, 0.243]&quot;.</dd>
+  <dt>I expected</dt><dd>To walk about 10.13 m and arrive there.</dd>
+  <dt>What happened</dt><dd>The character moved 0 m and stopped 10.13 m short — twice in this run. All five headings were pushed (5 bursts at ~157 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.</dd>
+  
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
  </dl>
- <pre>where I stood -&gt; where I pointed: reachable (12.6 m apart, 559 cells filled on foot)
-  BUT THE DRIVE STALLS. SIM.move from the same start reached [77.06,1.07,-26.08] and stopped 2.23 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
- <div class="fr"><img src="runs/run-20260805-134944/frames/step-076.jpg" loading="lazy"><img src="runs/run-20260805-134944/frames/step-077.jpg" loading="lazy"><img src="runs/run-20260805-134944/frames/step-078.jpg" loading="lazy"></div>
- <div class="meta">run run-20260805-134944 step 78 · found by agent · del-cine / lockfive @ 76.15,1.32,-27.11
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-043</code> (captured at 8ce6d0a3)</div>
+ <pre>where I stood -&gt; where I pointed: UNREACHABLE — [74.66,2,-27.47] -&gt; [83.98,7.38,-23.49]: 1 cells filled from the start, 1 from the target, and they never meet. Nearest standable cell to the target is 10.1 m away (at 74.8,1.12,-27.6, 6.26 m off in height); the two regions come within 10.03 m of each other between [74.8,1.12,-27.6] and [84,7.38,-23.6] — a 6.26 m step.</pre>
+ <div class="fr"><img src="runs/run-20260805-170550/frames/step-080.jpg" loading="lazy"><img src="runs/run-20260805-170550/frames/step-081-stall.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-170550 step 80 · found by walk-executor · del-cine / lockfive @ 74.66,2,-27.47
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-053</code> (captured at a2461edd)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
@@ -2095,18 +2163,18 @@ page that logs P.y per tick across the transition, not another fill.</pre>
 <div class="e">
  <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
   <span class="sev">P1 · blocker</span>
-  <span class="ttl">Walk blocked: the body closed 0 m of an intended 10.13 m, twice at the same place</span><span class="id">PT-20260805-053</span></div>
+  <span class="ttl">Walk blocked: the body closed 0 m of an intended 8.45 m, twice at the same place</span><span class="id">PT-20260805-054</span></div>
  <dl>
-  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.51, 0.33]; my goal was &quot;Walk up the elevated walkway towards the top-right exit marker at [0.573, 0.243]&quot;.</dd>
-  <dt>I expected</dt><dd>To walk about 10.13 m and arrive there.</dd>
-  <dt>What happened</dt><dd>The character moved 0 m and stopped 10.13 m short — twice in this run. All five headings were pushed (5 bursts at ~157 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.</dd>
+  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.54, 0.64]; my goal was &quot;Walk along the curved platform to the right toward the exit arrow at [0.654, 0.736].&quot;.</dd>
+  <dt>I expected</dt><dd>To walk about 8.45 m and arrive there.</dd>
+  <dt>What happened</dt><dd>The character moved 0 m and stopped 8.45 m short — twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.</dd>
   
   <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
  </dl>
- <pre>where I stood -&gt; where I pointed: UNREACHABLE — [74.66,2,-27.47] -&gt; [83.98,7.38,-23.49]: 1 cells filled from the start, 1 from the target, and they never meet. Nearest standable cell to the target is 10.1 m away (at 74.8,1.12,-27.6, 6.26 m off in height); the two regions come within 10.03 m of each other between [74.8,1.12,-27.6] and [84,7.38,-23.6] — a 6.26 m step.</pre>
- <div class="fr"><img src="runs/run-20260805-170550/frames/step-080.jpg" loading="lazy"><img src="runs/run-20260805-170550/frames/step-081-stall.jpg" loading="lazy"></div>
- <div class="meta">run run-20260805-170550 step 80 · found by walk-executor · del-cine / lockfive @ 74.66,2,-27.47
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-053</code> (captured at a2461edd)</div>
+ <pre>where I stood -&gt; where I pointed: UNREACHABLE — [74.66,2,-27.47] -&gt; [66.46,6.91,-29.5]: 1 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 8.6 m away (at 74.8,1.12,-27.6, 5.79 m off in height); the two regions come within 6.12 m of each other between [74.8,1.12,-27.6] and [68.8,6.91,-28.8] — a 5.79 m step.</pre>
+ <div class="fr"><img src="runs/run-20260805-170550/frames/step-083.jpg" loading="lazy"><img src="runs/run-20260805-170550/frames/step-084-stall.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-170550 step 82 · found by walk-executor · del-cine / lockfive @ 74.66,2,-27.47
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-054</code> (captured at a2461edd)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
@@ -2156,22 +2224,6 @@ page that logs P.y per tick across the transition, not another fill.</pre>
  <div class="fr"><img src="wayfind-r28-weave/weave arrival.jpg" loading="lazy"></div>
  <div class="meta">run run-20260805-154201 step 7 · found by lane · del-cine / weave @ 72.4,7.87,-23.56
  · no repro save</div>
-</div>
-<div class="e">
- <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
-  <span class="sev">P1 · blocker</span>
-  <span class="ttl">Walk blocked: the body closed 0 m of an intended 8.45 m, twice at the same place</span><span class="id">PT-20260805-054</span></div>
- <dl>
-  <dt>I was doing</dt><dd>I tried to walk to a point on screen at [0.54, 0.64]; my goal was &quot;Walk along the curved platform to the right toward the exit arrow at [0.654, 0.736].&quot;.</dd>
-  <dt>I expected</dt><dd>To walk about 8.45 m and arrive there.</dd>
-  <dt>What happened</dt><dd>The character moved 0 m and stopped 8.45 m short — twice in this run. All five headings were pushed (5 bursts at ~158 ms each) and none of them moved the body, so this is the world refusing rather than the harness running out of time. Something is in the way, or that ground is not connected to where I was standing.</dd>
-  
-  <dt>Measured by</dt><dd>tools/reach_probe.mjs (in the running page)</dd>
- </dl>
- <pre>where I stood -&gt; where I pointed: UNREACHABLE — [74.66,2,-27.47] -&gt; [66.46,6.91,-29.5]: 1 cells filled from the start, 48 from the target, and they never meet. Nearest standable cell to the target is 8.6 m away (at 74.8,1.12,-27.6, 5.79 m off in height); the two regions come within 6.12 m of each other between [74.8,1.12,-27.6] and [68.8,6.91,-28.8] — a 5.79 m step.</pre>
- <div class="fr"><img src="runs/run-20260805-170550/frames/step-083.jpg" loading="lazy"><img src="runs/run-20260805-170550/frames/step-084-stall.jpg" loading="lazy"></div>
- <div class="meta">run run-20260805-170550 step 82 · found by walk-executor · del-cine / lockfive @ 74.66,2,-27.47
- · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-054</code> (captured at a2461edd)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
@@ -2238,6 +2290,39 @@ page that logs P.y per tick across the transition, not another fill.</pre>
  <div class="fr"><img src="runs/run-20260805-194359/frames/step-186.jpg" loading="lazy"><img src="runs/run-20260805-194359/frames/step-187.jpg" loading="lazy"><img src="runs/run-20260805-194359/frames/step-188.jpg" loading="lazy"></div>
  <div class="meta">run run-20260805-194359 step 188 · found by spine-detector · emb-cine / gatefield @ 76.6,2.66,-126.24
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260805-057</code> (captured at a7be573f)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · blocker</span>
+  <span class="ttl">Character stuck on wooden plank bridge geometry at Lock Five</span><span class="id">PT-20260806-002</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>Attempting to walk down the plank bridge walkway to the Lock Five scene transition at [0.255, 0.889].</dd>
+  <dt>I expected</dt><dd>The character should walk down the bridge towards the exit arrow.</dd>
+  <dt>What happened</dt><dd>The character remains stuck at [0.365, 0.77] across multiple movement attempts, closing 0 meters.</dd>
+  <dt>On screen</dt><dd>objective: Midnight at Lock Five — out over the plank bridge</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (1.3 m apart, 1 cells filled on foot)
+  BUT THE DRIVE STALLS. SIM.move from the same start reached [90.22,8.68,-21.69] and stopped 1.29 m short, gaining nothing for 41 ticks. The lattice bridges what the stride and the body box cannot: this is a body trap, not an executor giving up. Name the mesh with tools/_court_probe.mjs --at / --way.</pre>
+ <div class="fr"><img src="runs/run-20260805-235428/frames/step-154.jpg" loading="lazy"><img src="runs/run-20260805-235428/frames/step-155.jpg" loading="lazy"><img src="runs/run-20260805-235428/frames/step-156.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260805-235428 step 156 · found by agent · del-cine / cottage @ 90.22,8.68,-21.69
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-002</code> (captured at c210feeb)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#3fa96a">VERIFIED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">The player can leave the chapter on its first frame, and the objective follows them out</span><span class="id">PT-20260806-004</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I read the opening narration by pressing the action button, then used the only prompt on screen.</dd>
+  <dt>I expected</dt><dd>To carry on with the objective the game was showing me.</dd>
+  <dt>What happened</dt><dd>I ended up somewhere with no way to advance the story, and the objective on screen (&quot;Through the Dellhollow gate — find whoever runs the locks&quot;) still refers to where I was. Nothing here can continue the chapter.</dd>
+  <dt>On screen</dt><dd>objective: Through the Dellhollow gate — find whoever runs the locks</dd>
+  <dt>Measured by</dt><dd>llm_playtester spine detector (public/game/story.json vs the running scene)</dd>
+ </dl>
+ <pre>The body was in &quot;ow-valley&quot; for three consecutive steps while none of the next un-fired beats in story.json lives there. Beats fired at the time: ch1.open, ch1.waystone, ch1.reveal, ch1.rowan, ch1.lake.handoff, ch1.lake.wake, ch1.lake.hearth, ch1.lake.lamp, ch1.meet, ch1.lamps, ch1.hush, ch1.see.mara, ch1.see.poppy, ch1.see.finn, ch1.see.mochi, ch1.pact, ch1.sigils, ch1.sendoff, ch1.done, ch2.road. This is a mechanical fact about the game, not a model opinion — there is nothing left to measure. What to DO about it is a design decision.</pre>
+ <div class="fr"><img src="runs/run-20260806-001811/frames/step-161.jpg" loading="lazy"><img src="runs/run-20260806-001811/frames/step-162.jpg" loading="lazy"><img src="runs/run-20260806-001811/frames/step-163.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260806-001811 step 163 · found by spine-detector · ow-valley / - @ 45.66,12.36,-32.22
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-004</code> (captured at f21557cc)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
@@ -2541,6 +2626,23 @@ page that logs P.y per tick across the transition, not another fill.</pre>
  <div class="fr"><img src="runs/run-20260806-040032/frames/step-100.jpg" loading="lazy"><img src="runs/run-20260806-040032/frames/step-101.jpg" loading="lazy"><img src="runs/run-20260806-040032/frames/step-102.jpg" loading="lazy"></div>
  <div class="meta">run run-20260806-040032 step 102 · found by stuck-interview · del-cine / weave @ 61.41,11.6,-19.53
  · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-036</code> (captured at 8ba970bc)</div>
+</div>
+<div class="e">
+ <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
+  <span class="sev">P1 · bug</span>
+  <span class="ttl">Cannot pathfind down to Lock Five exit marker from upper platform</span><span class="id">PT-20260806-038</span></div>
+ <dl>
+  <dt>I was doing</dt><dd>I'm clicking on the 'Lock Five' exit marker to leave the area.</dd>
+  <dt>I expected</dt><dd>My character should find a path down to the marker and exit.</dd>
+  <dt>What happened</dt><dd>My character just stands on the wooden platform above the marker and won't walk down to it.</dd>
+  <dt>On screen</dt><dd>objective: Down to the lock apron — the girl who was in the water</dd>
+  <dt>Measured by</dt><dd>tools/reach_probe.mjs + SIM.move (in the running page)</dd>
+ </dl>
+ <pre>where I stood -&gt; where I pointed: reachable (0.5 m apart, 1 cells filled on foot)
+  The ground is connected AND SIM.move drives it (ended [57.22,14.24,-17.1], 0.47 m from the target). So the world did not block the walk — the likely cause is the executor giving up at its 150 ms burst, or the way being unreadable rather than unwalkable.</pre>
+ <div class="fr"><img src="runs/run-20260806-055033/frames/step-040.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-041.jpg" loading="lazy"><img src="runs/run-20260806-055033/frames/step-042.jpg" loading="lazy"></div>
+ <div class="meta">run run-20260806-055033 step 42 · found by stuck-interview · del-cine / quay-west @ 57.22,14.24,-17.1
+ · repro: <code>node tools/llm_playtester.mjs --port=3000 --repro=PT-20260806-038</code> (captured at 5c53dd3f)</div>
 </div>
 <div class="e">
  <div class="hd"><span class="b" style="background:#b25a4a">REFUTED</span>
