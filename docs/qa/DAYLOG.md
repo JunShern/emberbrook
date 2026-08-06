@@ -16246,3 +16246,18 @@ the deleted winch ribbon; it happens to land on the new flight's head treads at 
 all carried as _owed_closing_lane notes in the map + cameras.json. routes.json is
 re-derived to the NEW map, so del-cine wayfinding around the gate is stale mid-phase —
 harvest lane: gate-area arrows in del-cine do not match the plates until the closing bake.
+
+## 2026-08-06 03:15 — THE FULL-GAME RECEIPT: run-20260806-011853 REACHES THE END CARD
+
+THE STANDING BAR IS MET. From a cleared save, NEW GAME -> ch2.landing at step 492:
+all 28 beats on their own triggers (ch1.open ... ch2.winches, ch2.landing), no
+Story.force anywhere, 461 walk legs (median closed 0.83), $1.18 of model calls.
+The artifact: docs/qa/playtest/runs/run-20260806-011853/ (log + golden set).
+
+The path here tonight, for the record: PT-049 (moorage switchback, STAIRS_V2
+migration + the rail rule) -> PT-050 (weave shot recomposition) -> PT-055 (the
+gate-court flank waypoints, one line of map) -> round 30 (the hold/arrive
+deadband, the bargeman door arbitration, the exit-walk detector) -> take 1
+capped at 500 two beats short (walking, not stuck) -> take 2 at 650 finished
+with 158 steps to spare. Six new leads (PT-20260806-012..017) queued for the
+harvest lane's triage — a green receipt still harvests.
