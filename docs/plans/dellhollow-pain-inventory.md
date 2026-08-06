@@ -173,3 +173,40 @@ this session (`comp_town.txt`, `way_*.txt`, `who_*.txt`, `narrow_census.mjs`,
 `stair_census.mjs`) — re-runnable in minutes; the numbers above are self-contained.
 Queue: 46 verified · 8 unverified · 48 refuted after this lane's triage of
 PT-20260805-067 + PT-20260806-001..011 (docs/qa/playtest-queue.md).
+
+## §9 Addendum — 2026-08-06 post-reset (fresh receipts; every run pinned to bundle del-cine c47bd403 / townwalk 50a72165, the SAME bytes §1–§8 measured. Bet 2's iteration-1 commit 0abf9e8 had NOT re-exported the shipped bundle when these ran.)
+
+### 9.1 dock→lockfive/landing drag, characterized (closes the coordinator's ask)
+Two runs, same stretch, same bundle:
+- run-20260806-001811 (died at cap): steps 497–500 oscillate [90.2,9.3,−20.4]↔[92.5,7.9,−21.5]
+  on the cottage plank ramp, closing 2.2–2.6 m of 2.9–4.0 m intended, noGain — churn at the
+  ramp's sub-body taper (§3.3).
+- run-20260806-011853 (the 28/28 GREEN run): paid **8 steps of the same oscillation**
+  (476–483, incl. noGain at 479/481), then ESCAPED — not down the ramp bottom but via
+  [91.21,8.3,−21.61] onto the **crossing lane at y7.5** (weave-huts__keepers-cottage), down
+  the migrated moorage switchback in one step (487→488, y7.87→1.25), landing at 492.
+**Verdict: terrain, not deadband, not aim** (median close healthy, r28 aim-hold reached in
+both runs). The ramp's last third (width 0.41→0.16 m, §3.3) is not a route; the crossing
+lane is the only real one. The redesign either widens the ramp bottom or makes the crossing
+THE route and stops routing/marking the ramp bottom as an exit.
+Even the green run concentrates its Dellhollow cost in the four basins: of its 296 del-cine
+steps — lockhead 79, quay-west 57, lockfive 56, loop-stairs 33 (65%).
+
+### 9.2 The moorage ascent is no longer "findability" — the t04 lip is VERIFIED three ways
+PT-20260806-015/016/017 (triaged this window): SIM.move from [73.4–75.0, 4.1–4.5, −26.3..−26.6]
+toward the l0/l1 hairpin [74.78, 6.27, −25.12] stalls 0.78–0.91 m short, 41 ticks no gain,
+three distinct starts. §3.2(a) upgrades from "one-thread findability" to: **the ascent's
+mid-flight is a drivable defect** — the cottage-transition marker above it draws players
+into it (three filings in one successful run). Geometry, with a guidance rider (the marker
+aims across the lip).
+
+### 9.3 Fresh targeted leg 1 — the gate tier eats an entire run (the Bet 2 "before" receipt)
+run-20260806-032313 (--from=ch2.arrive --stop-beat=ch2.jam, 120 steps, $0.51): the body
+spent ALL 120 steps in the gate shot, pinned at **[17.8, 24.07, −5.5]** from step ~10 —
+46 arrived walk legs of 157, dozens of "closed 0 m of ~4.7 m" toward the routed Lockhead
+marker, ch2.jam never fired. Consistent with §3.4's both-ways hairpin stall, the 546-cell
+gate component, and bodygate's gate_barrier (444 blocked steps at [15.4, 24.07, −3.8]) +
+shelf_stair_underworks (137 at [20.0, 22.9, −4.1]). **A cold ch2.arrive on this bundle
+cannot reach the town in 120 steps.** This is the measured "before" for Bet 2's ONE
+DESCENT; re-run the same leg on the re-exported bundle for the after. 8 leads filed
+(PT-20260806-018..025), triage pending this window.
