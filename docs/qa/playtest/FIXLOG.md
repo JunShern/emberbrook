@@ -5160,3 +5160,37 @@ gallery docs/qa/ow-refs/index.html §10 · LOOP.md BET 12 ROUND 3.
 | USER-20260806-grasspop | P1 | Grass assets visibly change every few steps while walking | **VERIFIED — the scatter's ONE RNG was seeded from the PLAYER position; 0 of 11,174 instances survived a 10 m move** | per-triangle/per-tuft world-coordinate seeding in ow_detail.js; overlap 93.1% (97.5% inside r0), isolated pop-pair near-band diff 0.99 -> 0.22 | `1dd0085` |
 
 Instruments and plates: docs/qa/ow-refs/LOOP.md §F6 (gallery Round 23).
+
+## Round 32 — 2026-08-06 · THE HARVEST: eleven fresh leads triaged, and the inventory written
+
+This round fixes nothing — it is the measurement round the circulation redesign builds
+from (docs/plans/dellhollow-pain-inventory.md is the deliverable; DAYLOG ~03:30 the
+summary). Triage of the two overnight runs' filings, each verdict a receipt:
+
+- **PT-20260806-002 / -003 (P0) VERIFIED** — cottage plank ramp, SIM.move from
+  [90.22,8.68,-21.69] stalls 1.29 m short, 41 ticks no gain. Root measured this round:
+  lockhead__keepers-cottage's leg widths taper 1.26 -> 0.16 m (stair census on the
+  shipped GLB) — the last third of the ramp is narrower than the 0.6 m body. The NEW
+  GAME run's final churn (steps 497-500, closes 2.2-2.6 of 2.9-4.0 m, noGain) is this
+  terrain: not deadband (median close 0.79), not aim (r28 aim-hold point reached at 493).
+- **PT-20260806-007..010 VERIFIED** — the "Lockhead exit loop". SIM.move from the run's
+  own positions [58.15/58.16, 14.24, -12.16/-12.39] gains NOTHING for 41 ticks; a drive
+  from [58.15,14.24,-12.3] — 30 cm away — walks 3/3 legs clean both ways. The pocket is
+  sub-stride: --who names ls_rail (west) + walk_e_shelf-homes__market-stalls
+  l2_t01/landing001 (north/east), and the lockhead-return spawn [59.19,14.0,-13.03] is
+  one metre from it. The loop is spawn -> wedge -> arrow still points at the cut ->
+  re-take exit. Half scenegraph (spawn placement), half geometry (the v1 stair foot).
+- **PT-20260806-005 / -006 / -011 REFUTED** — the lockhead bridge walks clean
+  (SIM.move ends 0.58-0.59 m from target). Percept lane, not world.
+- **PT-20260805-067 REFUTED** (loop-stairs, drive ends 0.56 m from target) and
+  **PT-20260806-001 REFUTED** (moorage ascent, 143 cells + drive) — both are
+  findability: r29's own receipt already called the ascent "one west-line thread".
+- **PT-20260806-004 VERIFIED** (spine detector, ow-valley residence) — spine lane's.
+
+Queue after: 46 verified / 8 unverified / 48 refuted. New named blockers for the ledger:
+loop-landing__quay-deck's own treads (t05/t06) wall the quay promenade at
+[54.6,14.2,-13.3] both ways; lg_ks_treads/rail/frame (the r22-retired flight's art)
+still block the lock-five<->north-landing lane, westbound stall [90.38,-0.14,-27.57];
+valley-gate__inn hairpin stalls BOTH ways ([22.51,21.61,-3.92] down, [22.53,19.77,-4.09]
+up) — the gate tier is a 546-cell component that never joins the shelf's 2,275.
+walk_engine_gate del-cine GREEN (0 lost of 3,934): the engine is not the problem.
