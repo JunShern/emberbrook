@@ -16683,3 +16683,45 @@ After: species identity 100/100/100%, pop-pair near-band pixels>25 0.14% -> 0.07
 (species share 0.12 -> 0.05; in the 8-25 m rows 0.231% -> 0.020% against a 0.036%
 blade floor). percept_test 617/617. No bundle change; module structure untouched, so
 transition_test not owed by this lane.
+
+## 2026-08-06 ~21:55 — JUDGE CALIBRATION: two standing [QUALITY] checklist families (sky/frame-edge, water read) — LIVE VALIDATION BLOCKED ON GEMINI SPEND CAP
+
+INSTRUMENT: the coordinator's held-out ground truth (scratchpad/redteam-groundtruth-20260806.md,
+5 user complaints filed before the sweep reported) scored run-20260806-1 at RECALL 3/5.
+Caught: paper-thin cliffs/world edges (naive), blocky placeholder geometry (naive),
+illegible doors (checklist shot-contract items). MISSED, both of one shape — a judge asked
+for findability defects volunteers no verdict on a surface: (A) THE SKY / frame-edge world
+(1 incidental sky mention in 242 findings) and (B) THE WATER'S VISUAL READ (42 water
+mentions, all checklist-absence/navigation, zero about the surface).
+
+THE FIX, at the checklist layer (the mode that exists to cover the naive judge's blind
+spots; naive is UNTOUCHED as the recall control): tools/scene_redteam.mjs now derives, per
+plate, up to three standing [QUALITY] items — `quality:sky` (applicability MEASURED off the
+plate's own depth pixels: 64x36 grid, raw>0.999; fires on emb pondlane 12.0% / therise 1.5%
+and on NO del-cine plate — Dellhollow's cameras genuinely never see sky, verified by eye on
+the gate plate, so its complaint-class lands on the second item), `quality:frame-edge-world`
+(every plate — does the world beyond the built set hold to the frame edges), and
+`quality:water-read` (any plate with a water-marked map feature in frame: kind
+water/dock/lock or a water-named landmark, judged against water-transparency.md's AS BUILT
+standard; 11/15 del plates, 7/11 emb plates). Quality items answer CONVINCING/WEAK/FAILING
+— a judgment with a reason, never PRESENT/ABSENT; CONVINCING is not a finding; WEAK=sev2,
+FAILING=sev3, category immersion. The checklist sceptic gained a [quality]-claim clause
+("it is normal for games" is not a refutation) and the stale emb-blockout-materials triage
+rule is now blockoutOnly (the dressed emb-cine plates are judged in art mode — with it live
+a real "water lacks texture" finding would be swallowed into the known bucket).
+
+VERIFIED: stub-judge end-to-end (derivation on both towns' pinned plates, parse, quality
+finding shape, refute path, dedup — the town's one water deduping across plates with
+per-shot descs in alsoOn — report render). NOT verified: live judge verdicts.
+
+BLOCKED, loudly: every gemini call 429s — "Your project has exceeded its monthly spending
+cap" (ai.studio spend cap; retried 4x/call with backoff, persistent; 0 tokens billed).
+This blocks the subset validation, the full checklist re-runs, the replay-merge into
+run-20260806-1, and EVERY other judge lane on this key (nav_eval, scene_redteam). Owed the
+moment the cap moves: (1) subset validation — del gate/crossing/waterfront/lockfive + emb
+pondlane/therise/square/homerow, checklist mode, pinned plates in scratchpad/pin-{del,emb}
+(16 calls); (2) full checklist pass both towns (remaining 18 plates, 36 calls); (3) merge
+raws into run-20260806-1-<town>-src (naive keys kept from the -naive runs, checklist keys
+from the new runs, provenance.json updated) and re-derive run-20260806-1-<town> via
+--replay; (4) regenerate run-20260806-1-findings.md from the two merged findings.json.
+~52 calls total, inside the 60-80 budget.

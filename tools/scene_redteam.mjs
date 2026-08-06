@@ -51,6 +51,32 @@
 //   the census says where it actually is. A confident location that disagrees with the
 //   census is itself a legibility finding.
 //
+// TWO STANDING QUALITY ITEM FAMILIES IN THE CHECKLIST (2026-08-06, judge-calibration
+// lane). Instrument: the coordinator scored run-20260806-1 against a held-out user
+// ground truth (5 complaints, filed before the sweep reported) — RECALL 3/5. Caught:
+// paper-thin cliffs/world edges (naive), blocky placeholder geometry (naive), illegible
+// doors (the checklist's shot-contract items). MISSED, both misses of the same shape —
+// a judge asked to find findability defects does not volunteer a VERDICT on a surface:
+//   (A) THE SKY / frame-edge world — the user calls the town-plate sky "boring"/flat
+//       and the world at the frame edges rough; the judge produced ONE incidental sky
+//       mention in 242 findings.
+//   (B) THE WATER'S VISUAL READ — 42 water mentions, ALL checklist-absence/navigation,
+//       zero about the surface itself (flatness, opacity, shore contact, reflections).
+// The fix is at the checklist layer — the mode that exists to cover the naive judge's
+// blind spots. Two standing [QUALITY] item families, derived per plate, never typed:
+//   SKY/BACKDROP — every plate whose own depth plate shows sky gets a sky item
+//       (applicability = sky-pixel fraction measured off the depth plate), and every
+//       plate gets a frame-edge-world item: does the world beyond the built set hold
+//       up to the camera, or visibly end/turn rough inside the frame?
+//   WATER READ — every plate holding a water-marked map feature in frame (landmark
+//       kind water/dock/lock, or a water-named feature) gets a water-surface item:
+//       does it read as water per docs/plans/water-transparency.md's AS BUILT standard
+//       (transparency toward the shallows, believable colour/flow/reflection, edge
+//       contact at banks and structures), or as a painted plane?
+// Quality items answer CONVINCING / WEAK / FAILING — a judgment with a reason, never
+// PRESENT/ABSENT — and CONVINCING is not a finding. The NAIVE prompt is untouched: it
+// stays naive as the recall control.
+//
 // STAGE 2 — VERIFY. Every finding from either mode must survive one of:
 //   (i)  an ADVERSARIAL second call on the same plate, asked to REFUTE it ("is this
 //        actually a problem, or normal for this style / a misreading of the picture?").
@@ -239,7 +265,12 @@ const TRACKED = [
   // "untextured greybox staircase" and "bright magenta polygon" findings into the
   // already-known bucket, which is the worst possible triage error — the tool would have
   // hidden its own best result behind a label meaning "nothing to do here".
-  {id: 'emb-blockout-materials', town: 'emberbrook',
+  // blockoutOnly (2026-08-06): the emb-cine plates are now the DRESSED bake and are
+  // judged in art mode; with this rule live it would swallow a real "the water lacks
+  // texture / detail" quality finding into the known bucket — the exact triage error
+  // the town-scoping comment above warns about. It applies only while the town is
+  // actually judged as a blockout.
+  {id: 'emb-blockout-materials', town: 'emberbrook', blockoutOnly: true,
    where: 'Emberbrook ships as a massing blockout; the dressing pass owns materials',
    terms: [['material', 'texture', 'untextured', 'grey', 'gray', 'flat shad', 'placeholder', 'low poly',
             'low-poly', 'faceted', 'detail', 'simplistic', 'unfinished look'], []]},
@@ -347,6 +378,27 @@ function bboxWorld(cam, bb) {
           cmd: `Blender -b tools/blends/${TOWN}-master.blend -P tools/geometry_audit.py -- --region ${r.join(',')}`};
 }
 
+// -------------------------------------------- THE QUALITY-AUDIT ITEM FAMILIES -
+// (2026-08-06 — see the calibration note in the header.) Applicability is DERIVED:
+// the sky item from the plate's own depth pixels, the water item from the map's own
+// water-marked features projected through the same census every other item uses.
+function skyFracOf(cam) {
+  const img = readPng(plateFiles(cam.id).depth);
+  const GX = 64, GY = 36; let sky = 0;
+  for (let gy = 0; gy < GY; gy++) for (let gx = 0; gx < GX; gx++) {
+    const x = Math.floor((gx + 0.5) / GX * img.width), y = Math.floor((gy + 0.5) / GY * img.height);
+    const i = (y * img.width + x) * 4;
+    if ((img.data[i] * 65536 + img.data[i + 1] * 256 + img.data[i + 2]) / 16777215 > 0.999) sky++;
+  }
+  return +(sky / (GX * GY)).toFixed(3);
+}
+// what marks a map feature as water-adjacent: its declared kind, or a water word in its
+// own id/name. Read from the map, never typed per shot.
+const WATER_KINDS = new Set(['water', 'dock', 'lock']);
+const WATER_RE = /\b(water|river|brook|pond|weir|moorage|slipway|lock|quay)\b/i;
+const WATER_FEATURES = MAP.landmarks.filter((l) =>
+  WATER_KINDS.has(l.kind) || WATER_RE.test(l.id + ' ' + (l.name || '')));
+
 // ------------------------------------------------------- THE CHECKLIST ITEMS -
 // DERIVED, NEVER TYPED. Four sources in order of authority:
 //   1. cameras.json owns.landmarks  — the shot's contract: it exists to show these
@@ -404,6 +456,36 @@ function checklistFor(id, cam) {
   }
   extra.sort((x, y) => (y.census.charPx || 0) - (x.census.charPx || 0));
   for (const e of extra.slice(0, Math.max(0, MAXITEMS - items.length))) push(e);
+  // ---- the standing [QUALITY] families (2026-08-06). Appended AFTER the cap on
+  // purpose: they are a fixed family of at most three, they never displace a contract
+  // landmark, and every plate carries them so runs stay comparable plate-to-plate.
+  const skyFrac = skyFracOf(cam);
+  if (skyFrac >= 0.005)
+    push({id: 'quality:sky', src: 'skyAudit', must: true, quality: true,
+          census: {state: 'quality-audit', on: true, skyFrac},
+          what: `[QUALITY] The sky — it covers about ${(skyFrac * 100).toFixed(0)}% of this frame. ` +
+                'Does it read as a real atmosphere at this scene\'s own hour — gradient, cloud ' +
+                'forms, horizon treatment where it meets the terrain — or as a flat fill / empty ' +
+                'gradient that just ends the world? Name what carries it or what it lacks.'});
+  push({id: 'quality:frame-edge-world', src: 'skyAudit', must: true, quality: true,
+        census: {state: 'quality-audit', on: true, skyFrac},
+        what: '[QUALITY] The world at the frame edges — the terrain, backdrop and distant ' +
+              'geometry BEYOND the built set, at the borders of the picture. Does the world ' +
+              'hold up all the way to every edge of the frame, or does it visibly end, thin ' +
+              'out, or turn rough and unfinished somewhere inside the frame (bare terrain, ' +
+              'abrupt cut-offs, missing backdrop)? Say where.'});
+  const wets = WATER_FEATURES.map((l) => ({l, cs: census(cam, l.pos)}))
+    .filter((w) => w.cs.on && w.cs.state !== 'behind-camera')
+    .sort((a, b) => (b.cs.charPx || 0) - (a.cs.charPx || 0));
+  if (wets.length)
+    push({id: 'quality:water-read', src: 'waterAudit', must: true, quality: true,
+          census: wets[0].cs,
+          what: `[QUALITY] The water surface — this frame holds water (near ${
+                wets.slice(0, 3).map((w) => w.l.name || w.l.id).join(', ')}). Does the surface ` +
+                'read as WATER — some transparency toward the shallows, believable colour, flow ' +
+                'or reflection, and convincing contact where it meets banks, decks and ' +
+                'structures — or as a painted / solid plane? Judge the surface AND its edge ' +
+                'contact; say what fails or what carries it.'});
   return items;
 }
 
@@ -553,6 +635,17 @@ function checklistPrompt(items) {
     '                         or it looks like some other kind of thing entirely',
     '  ABSENT                 you cannot see it anywhere in this frame at all',
     '',
+    'Items marked [QUALITY] are different: they are already in frame, so findability is',
+    'not the question — how well they HOLD UP is. For those items, and ONLY those, answer',
+    'with one of these tokens instead:',
+    '  CONVINCING   it holds up — it reads as the real thing at this scene\'s own hour',
+    '  WEAK         it reads, but visibly falls short — say exactly what falls short',
+    '  FAILING      it breaks the picture — it reads as a flat fill, a painted plane, or',
+    '               an unfinished edge of the world',
+    'For a [QUALITY] item, put the bbox around the specific area your judgment rests on,',
+    'and make "desc" a JUDGMENT with a reason — never a neutral description of what is',
+    'there.',
+    '',
     IS_BLOCKOUT ? STYLE_BLOCKOUT : STYLE_ART,
     '',
     'YOU ARE NOT TOLD WHERE ANYTHING IS. Do not guess a position to be helpful: if you',
@@ -597,6 +690,12 @@ function refutePrompt(claims, mode) {
     'find, hidden behind something, or does not read as the kind of thing it is. REFUTE if',
     'you can point straight at it and it is plainly legible, or if the complaint is really',
     'about a missing sign, label, icon or name rather than about the art.',
+    '',
+    'Claims tagged [quality] are JUDGMENTS that a sky, a backdrop, the world at the frame',
+    'edges, or a water surface fails to hold up as art (a flat fill, a painted plane, an',
+    'unfinished edge of the world). For those, UPHOLD if your own look at the frame agrees',
+    'it falls short in the way described; REFUTE only if the surface genuinely holds up in',
+    'this frame. "It is normal for games" is not a refutation of a quality claim.',
   ] : [
     'You are the sceptic on a game art review, and your job is to protect the team from',
     'wasted work. Below are criticisms somebody has made of THIS frame. For each one,',
@@ -609,7 +708,7 @@ function refutePrompt(claims, mode) {
     'refuting a weak criticism is the useful answer.',
   ];
   return [...head, '', IS_BLOCKOUT ? STYLE_BLOCKOUT : STYLE_ART, '', 'Claims:',
-    ...claims.map((c, i) => `  ${i + 1}. [${c.category}] ${c.where ? c.where + ': ' : ''}${c.desc}`),
+    ...claims.map((c, i) => `  ${i + 1}. [${c.quality ? 'quality' : c.category}] ${c.where ? c.where + ': ' : ''}${c.desc}`),
     '', 'Answer with JSON only, one entry per claim, in order:',
     '{"verdicts":[{"n":1,"verdict":"upheld","why":"one sentence"}]}',
   ].join('\n');
@@ -794,6 +893,19 @@ async function runShot(judge, id, inputPath, wantNaive, wantChecklist) {
           const v = String(a.verdict || '').toUpperCase().replace(/[^A-Z-]/g, '');
           it.judged = {verdict: v, where: String(a.where || '').slice(0, 90),
                        bbox: okBox(a.bbox), desc: String(a.desc || '').slice(0, 400)};
+          // [QUALITY] items carry a judgment, not a findability verdict. CONVINCING is
+          // the "it worked" answer; FAILING is sev 3; anything else (WEAK, or a stray
+          // findability token from a judge that ignored the instruction) is sev 2.
+          if (it.quality) {
+            if (v === 'CONVINCING' || v === 'FINDABLE') continue;
+            findings.push({fid: 'F' + (++SEQ), mode: 'checklist', town: TOWN, shot: id,
+                           item: it.id, itemWhat: it.what, verdict: v, quality: true,
+                           category: 'immersion', where: it.judged.where, bbox: it.judged.bbox,
+                           severity: v === 'FAILING' ? 3 : 2,
+                           desc: `${it.what.replace(/^\[QUALITY\] /, '').split(' — ')[0]}: ${v} — ${it.judged.desc}`,
+                           census: null, hint: bboxWorld(cam, it.judged.bbox)});
+            continue;
+          }
           if (v === 'FINDABLE') continue;                     // not a finding: it worked
           // ABSENT on something the census says is genuinely off-frame is the MAP's
           // problem to state, not this shot's defect, and cine_test already asserts it —
@@ -878,6 +990,7 @@ const groupsHit = (h, groups) => groups.every((g) => !g.length || g.some((t) => 
 function triage(f) {
   const h = hay(f);
   for (const t of TRACKED) { if (t.town && t.town !== TOWN) continue;
+    if (t.blockoutOnly && !IS_BLOCKOUT) continue;
     if (groupsHit(h, t.terms)) return {bucket: 'known', by: t.id, where: t.where}; }
   if (IS_BLOCKOUT && groupsHit(h, [['material', 'texture', 'colour', 'color', 'grey', 'gray', 'detail',
       'placeholder', 'flat', 'plain', 'bland', 'untextured', 'poly'], []]))
