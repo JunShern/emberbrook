@@ -57,10 +57,39 @@ next window with the search loop · t04 lip BLOCKER NAMED: cx_rail (the moorage 
 on l0_t04/t05's own cells at [73.4-74.4,-26.8] — a chop-pattern fix with a cx_build
 re-run contract · #4 shop row drives CLEAN both ways on current bytes; pinch real
 (shelf_weapon_shop001_* 60 cells), widen-vs-demote is a shelf_build design call.
-Closing lane owes: cine_solve + scenegraph_derive + plate rebake on ratified geometry
-(loop-stairs owns changed; routes carry the stale seam id until then; slice_test's one
-red line is this). Playtest lane owes AFTER-receipts on the current bundle: §9.3's gate
-leg, §9.4's pilot legs 2/4, the ch2.dock->landing leg.
+**Progress 2026-08-06 third window (iterations 8-10, on origin, engine-gated, no bakes):**
+it.8 THE GUARD LEARNS THE BODY QUESTION (49260f0): cx_build grew BODY_SAMPLES (0.10 m
+interior lattice, 0.12 m edge-ring exempt) + on_walk_ribbon + station-walked rail segs +
+the same test on found()/bay posts — the gate's 0.35 m grid leaves unsampled strips on
+every ROTATED tread and the rail solver found them (t04 lip: 2 posts + 2 bars on the
+flight's own interior, guard green; 2 bay posts full-height through the tenant lane,
+1.5 cm sample dodges). NEW CARRIER tools/lantern_reseat.py (locksfoot's find_free probes
+ONE height; the full-height re-search re-runs after every locksfoot pass). it.9 THE PIVOT
+IS SEARCHED: the moorage l1/l2 pivot was unsound at every parameter (landing meets the
+arriving leg broadside) — landing extension now asymmetric like the split, LAND_LONG
+scales with width, edge widened to 2.0, wp2 searched to [70.1,29.4,4.1] (510 candidates;
+single-hairpin rejected wholesale: every east line roofs the lockfive through-lane).
+SWITCHBACK 11/11 BOTH WAYS (was 2/4+2/4); tenant lane 3/3 both ways FIRST TIME. it.10
+DEEP STAIRS EXECUTED: searched 3-leg w2.0 zigzag wp1 [43.5,24.7,9.2] / wp2 [34,24.7,4.9]
+(2448 candidates), 13/13 BOTH WAYS (was 3/10+2/10, r21's descent-only superseded);
+"pivots":"asym" per-edge knob (the docstring's own 40/40 doctrine — third occurrence of
+the balanced-pivot self-roof class this window); fish-dock boardwalk re-routed at grade
+past the foot. Also closed by measurement: #4 shop row (the "pinch" is dead wall-edge
+beside a 5-6 m open corridor — reclassified, no build) and the five PT pockets
+037/039-042 (verified against the STALE Aug-5 del-cine export; current bytes have no
+walk floor within 2 m of the filed spots). Worklist item 1 (#6 lockfive lane) verified
+already green — the relay line predated it.4.
+Closing lane owes: cine_solve + scenegraph_derive + plate rebake + DEL-CINE RE-EXPORT on
+ratified geometry (loop-stairs owns changed; routes carry the stale seam id until then;
+slice_test's one red line is this; playtest filings measure the OLD town until the
+re-export). Playtest lane owes AFTER-receipts on the re-exported bundle — and inherits
+the standing caveat that reach_probe's lattice cannot cross the two rebuilt stair FEET
+(drives 11/11 and 13/13; fills say no-path — the instrument, not the town). Residuals:
+the west-waterfront knot [38.9-39.6,1.0,-24.6..-25.2] (the boatyard LEAD's spot, now
+measured: seam_bank + wf stringers + t07 shadow); the NE doorstep wedge (deferred,
+fair line 5/5); walk_rederive --report's pre-existing stale rows (cookhouse class) plus
+pilot/market landing rows from the landing-extension change — each re-derive owes its
+district carry in the same window.
 
 ## Bet 3 — Vegetation's card-built asset family (SHIPPED 2026-08-06, residuals named — gallery Round 22, LOOP.md F5)
 **Shipped:** 261/361 near-field clumps converted to hull-interior + leaf-card shell

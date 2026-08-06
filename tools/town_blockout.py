@@ -645,11 +645,19 @@ for e in D["edges"]:
                 o.dimensions = (2.0, 2.0, 0.16); o.data.materials.append(M_WOOD)
                 link_to(o, "PATHS")
         else:
-            # split every interior pivot, then lay the legs between the split ends
+            # split every interior pivot, then lay the legs between the split ends.
+            # `"pivots": "asym"` on the edge makes EVERY pivot asymmetric — the
+            # docstring's own measured doctrine (asym everywhere drove 40/40 where
+            # balanced-at-2..4 drove 36/40), applied per-edge because the pilot
+            # hairpin's SEARCHED geometry was validated with the balanced default
+            # and must not move under it (iteration 10; the deep-stairs rebuild is
+            # the first taker — its balanced pivot 2 swung l1's last treads over
+            # its own landing, the third occurrence of the class this window).
+            easym = e.get("pivots") == "asym"
             ends = [(pts[0], pts[0])]
             for i in range(1, len(pts) - 1):
-                ends.append(pivot_split(pts[i - 1], pts[i], pts[i + 1], asym=(i == 1),
-                                        width=ew))
+                ends.append(pivot_split(pts[i - 1], pts[i], pts[i + 1],
+                                        asym=(easym or i == 1), width=ew))
             ends.append((pts[-1], pts[-1]))
             railq = []
             for i in range(len(pts) - 1):

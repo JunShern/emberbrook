@@ -16497,3 +16497,67 @@ cells. Widen-vs-demote = shelf_build design call, next window.
 
 Slate progress line updated (iterations 5-7); board iteration 7 section; inventory rows
 4/8 + §9.2 + §9.4-adjacent statuses carry these receipts.
+
+## 2026-08-06 ~10:55 — BET 2 ITERATIONS 8-10: the moorage switchback and the deep stairs both drive BOTH ways
+
+Third circulation window. Worklist verdicts, each with its instrument (board sections 8-10):
+
+1 (#6 lockfive lane): VERIFIED ALREADY GREEN — 4/4 legs both ways on the current bundle;
+the worklist's "still blocks westbound" line predated iteration 4's chop. Zero work owed.
+
+3 (the five PT pockets 037/039-042): CLOSED AS STALE-BUNDLE ARTIFACTS — every filing and
+every queue verification ran against del-cine EXPORTED AUG 5 18:25 (run-055033 at sha
+5c53dd3 played old geometry: the old fork tread at 14.83, the old pilot landing at y11.6 —
+both REPLACED in it.2/it.6). On current bytes the filed positions have no walk floor within
+2 m (reach startOffset 2.0-2.33) and all three probe pairs report reached. LESSON FOR THE
+QUEUE: until the closing bake re-exports del-cine, playtest filings measure the OLD town.
+
+2 (t04 lip) grew three fixes deep, each measured before built:
+  a. cx_build guard: the gate's 0.35m grid leaves unsampled strips on every ROTATED tread
+     (lip_diag.py: 2 posts + 2 bars on l1 t03/t04's own interior, each dodging the nearest
+     sample by 0.02-0.11 m, guard green, both drives stalled). Fix: BODY_SAMPLES 0.10m
+     interior lattice with a 0.12m edge-ring exemption (the 23-of-24 history's constraint)
+     + on_walk_ribbon + station-walked rail segs + the same test on found()/bay posts (two
+     6.4m bay posts stood full-height through the tenant-shack lane, 1.5cm sample dodges).
+  b. tools/lantern_reseat.py (new carrier): lf_lantern_1 PIERCED landing.001 from below
+     (post z 1.67-4.01 through the 3.30 window); locksfoot's find_free probes ONE height so
+     a re-run reinstalls it — the carrier re-runs the search full-height after every
+     locksfoot pass (proved: caught the re-placed lamp twice this window).
+  c. the l1/l2 pivot was unsound at EVERY parameter (landing meets the arriving leg
+     broadside; trim + width 2.0 + LAND_LONG scale each measured, each left <0.7m throat):
+     wp2 SEARCHED (moorage_search.py, 510 candidates, roof/art/self oracles; single-hairpin
+     REJECTED wholesale — every east line roofs the lockfive through-lane 0.75-1.2):
+     [72.6,26.9,3.3] -> [70.1,29.4,4.1]. RECEIPTS: 11/11 both ways (was 2/4+2/4);
+     tenant-shack lane 3/3 both ways FIRST TIME (old flight's 1.05m headroom roof gone,
+     bay posts refused by the new guard); moorage+lockfive one 726-cell component.
+
+4 (#4 shop row): NEITHER widen NOR demote — RECLASSIFIED CLOSED. The 0.2m census "pinch"
+is the dead wall-edge strip beside the weapon-shop gable; the open corridor beside it is
+5-6 m wide (fill plan), the routed line keeps 1.5 m off the gable, drives 2/2 both ways,
+and the recorded stall was pre-it.2 bytes. A building face at a lane's edge is not a pinch.
+
+5 (#8 deep stairs): EXECUTED — searched 3-leg w2.0 zigzag (deepstairs_search.py, 2448
+candidates): wp1 [43.5,24.7,9.2] / wp2 [34,24.7,4.9], grades 0.48/0.47/0.48, both pivots
+SOUTH of wv_hut_weave-north_0 (every northern pivot roofs the quay plate or stands in the
+hut — the it.7 rejection generalized; old-line qm art proven re-derivable by measurement).
+NEW GENERATOR KNOB "pivots":"asym" (per-edge; the docstring's own 40/40-vs-36/40 doctrine)
+after the balanced pivot 2 swung l1 into its own landing — THIRD occurrence of the class
+this window. The fish-dock__winch-foot boardwalk re-routed by lane waypoints to cross the
+flight AT GRADE beside the foot pad. RECEIPTS: 13/13 BOTH ways (the flight measured 3/10
+down 2/10 up before; r21's descent-only ruling superseded); foot+fishdock one 663-cell
+component (the retire option would have orphaned it); routes --check ok.
+
+6 (NE doorstep wedge): DEFERRED unchanged (fair line 5/5; ramp-bend class, needs its own
+window).
+
+CLOSING BATTERY (final bundle): all 8 route pairs reached; moorage 11/11 + deep stairs
+13/13 + lockfive lane 4/4 + tenant lane 3/3, all both ways; walk_engine_gate GREEN 0 lost;
+routes --check ok; seam_walk 9/9; slice 811/1 (stale-scenegraph = phase law); findability
+69/0; three_shots frames LOOKED AT (flight dressed after the locksfoot carry that the
+FRAME, not the engine, convicted as missing).
+
+STANDING CAVEAT for the playtest lane: reach_probe's 0.4 lattice cannot cross either
+rebuilt stair's FOOT row (fills report no-path where drives walk 11/11 and 13/13) — a §W
+red across weave<->moorage or head<->fishdock is the instrument. RESIDUAL: the west
+waterfront knot [38.9-39.6, 1.0, -24.6..-25.2] (seam_bank + stringers + t07 shadow) — the
+boatyard LEAD's exact spot, now measured; lane drives to it from both sides.

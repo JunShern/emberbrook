@@ -1001,40 +1001,50 @@
           1.0
         ],
         [
-          35.2,
-          25.5,
+          42.2,
+          26.5,
+          1.0
+        ],
+        [
+          41.2,
+          24.8,
+          1.0
+        ],
+        [
+          38.0,
+          24.7,
+          1.0
+        ],
+        [
+          34.8,
+          25.4,
           1.0
         ]
       ],
-      "note": "long waterfront boardwalk snaking under the cliff"
+      "note": "long waterfront boardwalk snaking under the cliff",
+      "_bet2_2026-08-06_crossing": "Iteration 10: the boardwalk CROSSES the rebuilt deep stairs AT GRADE beside the foot pad (x ~41.4, flight z 1.4 vs lane 1.0) and then runs NORTH of the flight's l2 corridor (the old west leg at y 25.5 passed under mid-flight treads at dy 0.7-1.5 - _court_probe --who named l2_t05..t08 + wf_stair_stringers + bar_l2_railB walling 40+ cells of the lane; the OLD flight's l4 coincided with the same stretch, which is part of why the fishdock shot measured 47% walk efficiency). A lane waypoint is the map's own conflict-fix vocabulary."
     },
     {
       "from": "deep-stairs-head",
       "to": "deep-stairs-foot",
       "type": "stairs",
+      "width": 2.0,
+      "pivots": "asym",
+      "_bet2_2026-08-06_pivots": "asym at EVERY pivot (pivot_split's own measured doctrine): the balanced pivot 2 swung l1's arriving end 1.66 into the hairpin and t09 roofed landing.001's tongue (7 cells + one rail sliver, both drives stalled at the junction - _court_probe --who receipt, iteration 10). Per-edge knob because the pilot hairpin's searched geometry was validated under the balanced default.",
+      "_bet2_2026-08-06_simplify": "Iteration 10 (item 8, DECIDED it.7: simplify, not retire - retiring orphans the 1,446-cell fishdock component, and the 5-leg line measured DEAD BOTH WAYS on current bytes, 3/10 down 2/10 up). THE LINE IS SEARCHED (scratchpad deepstairs_search.py, 2448 candidates x roof/art/self oracles + the moorage window's own-foot-pad and old-line-art classifications): the 4-waypoint zigzag collapses to a 3-leg w2.0 zigzag, wp1 [43.5,24.7,9.2] / wp2 [34.0,24.7,4.9], grades 0.48/0.47/0.48 - both pivots SOUTH of wv_hut_weave-north_0 (x 42.4..48.8, the it.7 rejector: every pivot north of its face either roofs the quay deck plate or stands in the hut). 554/2448 clean; picked by clean-neighborhood (299) then balanced grades then least head art. The old descent-only ruling (r21: uphill 6/40 deliberate) is SUPERSEDED by the simplify decision: this flight drives both ways.",
       "waypoints": [
         [
-          40.5,
-          19.5,
-          10.8
+          43.5,
+          24.7,
+          9.2
         ],
         [
-          35.85,
-          21.5,
-          7.37
-        ],
-        [
-          39.75,
-          23.5,
-          4.33
-        ],
-        [
-          37.15,
-          25,
-          2.23
+          34.0,
+          24.7,
+          4.9
         ]
       ],
-      "note": "the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight) | leg-1 lengthened: post-stretch it was 46deg and the head pad bridged over it"
+      "note": "the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight)"
     },
     {
       "from": "deep-stairs-foot",
