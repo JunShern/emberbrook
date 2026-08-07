@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-05T16:17:58.870Z",
+ "generated": "2026-08-07T16:02:29.906Z",
  "source": "chapters: public/js/chapter1-3.js + END_CARDS(build-story.mjs) · bible: STORY.md · cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · places: public/townmap/*.map.json",
  "stats": {
   "blocks": 153,
@@ -13128,12 +13128,6 @@
        "name": "Deep Stairs (head)",
        "class": "portal",
        "note": "quiet corner of the quay; the discreet route down. Hidden from player map."
-      },
-      {
-       "id": "loop-landing",
-       "name": "Loop Stairs (landing)",
-       "class": "portal",
-       "note": "the loop stairs' fork. ONE flight leaves the shelf-homes yard; the quay branch leaves from HERE, not from the yard — its old head stood under the market flight's first tread (caught a foot 0/72, seam-canon §10.3 amendment). Hidden from the player map."
       }
      ],
      "weave": [
