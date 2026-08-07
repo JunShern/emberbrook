@@ -17746,3 +17746,69 @@ both closed detours, both fix options) and the moorage landmark's note carries t
 STALE-AGAINST-THE-SEARCHED-FLIGHT warning on rects 3/4. No master edit, no bundle re-export,
 no plate touched. `cine_test` 635/1 (the pre-attributed deep-stairs seam red, unchanged);
 `routes_derive --check` clean.
+
+## 2026-08-07 ~19:15 — THE ARMING FIX, TAKEN (coordinator reassigned it: the Dellhollow lane had closed)
+
+`tools/scene_redteam.mjs` — `quality:water-read` now arms on **measured visible water**,
+not on `census(cam, waterLandmark.pos)`. New `waterFracOf(cam)` rasterises the scene
+bundle's own water surfaces (`/(^|_)water(_|-|$)/i`, `walk_` dropped — so `lf_lock_water`
+counts and `lm_watermill_*` does not) through THE SHIPPED PROJECTION (`toImg`; this file
+still owns no second copy of it) into a 168x96 z-buffer and agrees every covered cell
+against the plate's own `depth.png`. Same shape as the `skyFracOf` precedent. The fraction
+is also PASSED INTO THE PROMPT — "water covers about X% of this frame … judge ONLY those
+pixels … put the bbox on the water itself" — because "a thread of water low in the frame"
+and "half this frame is water" are different questions and the judge was being asked the
+same one. `--water-census` prints it for a whole town in ~2 s with no API.
+
+### THE THRESHOLD IS 0.5% OF FRAME, and it is calibrated, not chosen
+
+PRINCIPLE FIRST: at the 1344x768 working frame, 0.5% is 5,161 px — a ribbon FOUR PIXELS
+TALL across the frame. "Transparency toward the shallows, reflection, and convincing
+contact where it meets banks" is not a question four pixels can answer, and an
+unanswerable question does not return "no finding", it returns a confabulation.
+
+THEN THE CALIBRATION SET AGREES, mechanically:
+
+| town | plate | water % | armed | the verdict it had given |
+|---|---|---|---|---|
+| dellhollow | fishdock | 28.84 | ARMED | – |
+| dellhollow | waterfront | 22.22 | ARMED | – |
+| dellhollow | crossing | 17.43 | ARMED | CONVINCING |
+| dellhollow | north-landing | 15.71 | ARMED | – |
+| dellhollow | lockfive | 9.77 | ARMED | CONVINCING |
+| dellhollow | gate | 6.93 | ARMED | WEAK |
+| dellhollow | boatyard | 6.27 | ARMED | – |
+| dellhollow | weave | 5.77 | ARMED | CONVINCING |
+| dellhollow | deep-stairs | 1.54 | ARMED | (round-3 FAILING->WEAK) |
+| dellhollow | **quay-west** | **0.00** | **suppressed** | **FAILING: "No water surface is visible anywhere near the Harbor Deck"** |
+| emberbrook | pondlane 9.24 · gatefield 2.36 · square 2.20 · northlane 2.13 · homerow 0.96 | | ARMED | |
+| emberbrook | **gateroad 0.45 · arch 0.12 · therise 0.11** | | **suppressed** | **all three FAILING, all three measured DISJOINT from every water pixel** |
+
+**It reproduces a hand adjudication.** The 2026-08-07 lane had already written that
+quay-west's FAILING is TRUE and not a regression because the census finds zero water in
+that frustum. The gate now reaches that conclusion mechanically and never asks. And
+`gatefield` (2.36%) arms for the FIRST TIME — the point test failing in the other
+direction: it never asked a plate that does show water. Tightest margin is gateroad 0.45%
+against homerow 0.96%, a 2x gap, so the number is not on a cliff.
+
+### VALIDATION — a three-point ladder that isolates the change
+
+| | pondlane `water-read` | northlane `water-read` |
+|---|---|---|
+| old plate, old arming (`run-20260806-2`) | FAILING | not asked |
+| **new plate**, old arming (`run-20260807-190224`) | FAILING, bbox moved onto a gravel path (0 water px) | not asked |
+| new plate, **new arming** (`run-20260807-191111-armfix`) | **WEAK** | **CONVINCING** |
+
+northlane's CONVINCING is the first `quality:water-read` CONVINCING this town has ever
+had (the class opened 0 CONVINCING / 5 FAILING), its bbox is **43.5% brook** — the judge is
+now looking at the water it is judging — and its words are about the geometry this lane
+fixed: "clear transparency revealing submerged ground rocks and forms convincing edge
+contacts with the surrounding terrain."
+
+**RESIDUAL, NAMED HONESTLY: pondlane's WEAK bbox still holds ZERO water pixels.** The gate
+armed it at 9.24%, but 5.5 of those points are the pond BEHIND THE WILLOW — the depth pass
+does not record alpha-cut leaf cards, so this census over-counts, in exactly the direction
+its own source comment declares (a gate that over-counts water suppresses less than it
+should, never more). Closing that needs a beauty-pass test, not a depth-pass one. Until
+then pondlane is a plate the judge is asked about water it cannot see, and its verdict
+should be read with that attached.
