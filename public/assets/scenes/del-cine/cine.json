@@ -86,8 +86,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-07T18:20:58Z",
-   "seconds": 206.7,
+   "baked": "2026-08-07T21:28:42Z",
+   "seconds": 196.6,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -520,8 +520,8 @@
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
    "visibleFrac": 0.8,
    "probes": 30,
-   "baked": "2026-08-07T18:01:47Z",
-   "seconds": 165.7,
+   "baked": "2026-08-07T21:15:27Z",
+   "seconds": 164.4,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -580,10 +580,10 @@
     -22
    ],
    "spawnFrom": "walk_pad_pilot-cluster",
-   "visibleFrac": 0.8906,
+   "visibleFrac": 0.9062,
    "probes": 64,
-   "baked": "2026-08-07T18:04:56Z",
-   "seconds": 185.6,
+   "baked": "2026-08-07T21:25:22Z",
+   "seconds": 178.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -644,8 +644,8 @@
    "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.001",
    "visibleFrac": 0.9688,
    "probes": 64,
-   "baked": "2026-08-07T16:33:01Z",
-   "seconds": 208.7,
+   "baked": "2026-08-07T21:31:59Z",
+   "seconds": 194.4,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -706,8 +706,8 @@
    "spawnFrom": "walk_pad_pitch-kettle",
    "visibleFrac": 0.2812,
    "probes": 64,
-   "baked": "2026-08-07T17:49:26Z",
-   "seconds": 415.7,
+   "baked": "2026-08-07T21:22:20Z",
+   "seconds": 216.7,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -768,8 +768,8 @@
    "spawnFrom": "walk_pad_deep-stairs-foot",
    "visibleFrac": 0.7031,
    "probes": 64,
-   "baked": "2026-08-07T18:11:30Z",
-   "seconds": 221.4,
+   "baked": "2026-08-07T21:09:25Z",
+   "seconds": 223.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -828,10 +828,10 @@
     -28.25
    ],
    "spawnFrom": "walk_e_fish-dock__winch-foot_l0",
-   "visibleFrac": 0.84,
+   "visibleFrac": 0.88,
    "probes": 50,
-   "baked": "2026-08-07T18:17:29Z",
-   "seconds": 193.9,
+   "baked": "2026-08-07T21:05:38Z",
+   "seconds": 184.0,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -855,14 +855,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    52.145,
-    36.033,
-    9.971
+    52.48,
+    36.362,
+    9.863
    ],
    "aim": [
-    75,
-    27.715,
-    4.802
+    74.689,
+    28.278,
+    4.839
    ],
    "fov": 35,
    "clip": [
@@ -870,12 +870,12 @@
     1400
    ],
    "rtClip": [
-    5.257,
-    162.339
+    5.1469,
+    161.632
    ],
    "depth": {
-    "near": 10.513954162597656,
-    "far": 101.46208953857422,
+    "near": 10.293846130371094,
+    "far": 101.02001953125,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -890,10 +890,10 @@
     -28
    ],
    "spawnFrom": "walk_pad_lock-five",
-   "visibleFrac": 0.6406,
+   "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-07T17:55:05Z",
-   "seconds": 336.1,
+   "baked": "2026-08-07T21:18:40Z",
+   "seconds": 189.3,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -932,11 +932,11 @@
     1400
    ],
    "rtClip": [
-    6.402,
+    6.4349,
     332.199
    ],
    "depth": {
-    "near": 12.804092407226562,
+    "near": 12.869773864746094,
     "far": 207.6243896484375,
     "width": 1344,
     "height": 768,
@@ -954,8 +954,8 @@
    "spawnFrom": "walk_e_lock-five__north-landing_l0",
    "visibleFrac": 0.8667,
    "probes": 30,
-   "baked": "2026-08-07T17:58:59Z",
-   "seconds": 188.5,
+   "baked": "2026-08-07T21:12:39Z",
+   "seconds": 191.4,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",

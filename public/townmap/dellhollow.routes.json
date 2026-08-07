@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-07T20:51:13Z",
+ "generated": "2026-08-07T21:01:53Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -4632,7 +4632,7 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 47,
-    "visibleFrac": 0.8906
+    "visibleFrac": 0.9062
    }
   },
   "deep-stairs": {
@@ -6391,7 +6391,7 @@
      "seam:fish-dock__winch-foot"
     ],
     "minCharPx": 66,
-    "visibleFrac": 0.84
+    "visibleFrac": 0.88
    }
   },
   "lockfive": {

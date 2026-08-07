@@ -12,17 +12,17 @@
   "water_pool-mid": {
    "was": 26.0,
    "now": 22.8,
-   "moved": 4
+   "moved": 0
   },
   "water_pool-upstream": {
    "was": 30.35,
    "now": 29.6,
-   "moved": 4
+   "moved": 0
   },
   "water_pool-downstream": {
    "was": 26.0,
    "now": 23.6,
-   "moved": 4
+   "moved": 0
   }
  },
  "shelves": {
@@ -138,7 +138,7 @@
    "verts": 275,
    "polys": 240,
    "welded_columns": 25,
-   "carved_verts": 112,
+   "carved_verts": 105,
    "z": [
     -4.35,
     0.15
@@ -188,7 +188,7 @@
    "verts": 162,
    "polys": 136,
    "welded_columns": 18,
-   "carved_verts": 93,
+   "carved_verts": 89,
    "z": [
     -7.75,
     -3.85

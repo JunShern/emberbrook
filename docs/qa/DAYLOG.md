@@ -18377,3 +18377,45 @@ re-export is owed and this census should be re-run after it.
 
 REPRODUCE ANY ROW: `node tools/scene_redteam.mjs --town <t> --replay <stamp> --stamp <out>
 [--no-aim] [--plates <pinned bake>]`, 0 calls, 0 tokens.
+
+### 2026-08-07 ADDENDUM 3 — CLOSE-OUT: the nine plates, and the decking cost re-priced against water-correct art
+
+Nine plates re-baked 1-wide serial off the water-fixed master (system free 85% -> 45%
+across the run; the Emberbrook lane was baking alongside throughout):
+fishdock 185.8 s · waterfront 225.7 · north-landing 193.1 · crossing 166.2 · lockfive 191.2 ·
+boatyard 218.9 · weave 180.8 · gate 198.4 · deep-stairs 196.3. **Total 1756 s.**
+
+**THE RIVER IS BACK, AND THE REAL DECKING COST IS NOW VISIBLE** (water-coloured fraction,
+pre-lane plate vs shipped plate):
+
+    fishdock      21.079 -> 20.920      waterfront   13.823 -> 13.820
+    north-landing  8.799 -> 10.414      crossing      3.948 ->  4.008
+    boatyard       2.132 ->  2.131      gate          0.384 ->  0.366
+    deep-stairs    0.318 ->  0.293
+    lockfive       2.181 ->  1.522   <- -30.2%, the flight's OWN decking
+    weave          1.692 ->  1.302   <- -23.1%, likewise
+
+**So addendum 1's headline was off by more than an order of magnitude.** The claim was that
+the flight cost the lockfive plate 98.3% of its water; the water-correct measurement is
+**30.2%**, confined to the two plates that actually look at the moorage. Everything else was
+the deleted transparency tranche. The 15.16 m2 water_cover figure is the plan area the
+flight's slabs stand over, which is real and worth keeping in the search — but the PLATE cost
+it was used to argue is 30%, not 98%, and that is a size where the connectivity fix plainly
+wins. **THE LESSON IS ADDENDUM 1's OWN, TURNED ON ITSELF: an interpretation recorded without
+the instrument that could falsify it will be believed. One more A/B falsified it.**
+
+INSTRUMENT NOTE, so it is not re-diagnosed as a defect: `findability_test.mjs` ran for
+**20 minutes without finishing** while nine serial Blender bakes and the Emberbrook lane
+were on the machine, and **0.35 s** on the same bytes once they finished (69/0 both times it
+completed). That is CPU starvation, not a hang and not a regression — the same family as
+"A TEST THAT CANNOT BOOT IS NOT A TEST THAT FAILED". Do not gate on a no-browser tool's
+wall-clock while heavy bakes are running.
+
+FINAL GATES on the shipped bytes, everything at its documented baseline:
+**cine_test 635/1** (the pre-attributed deep-stairs<->waterfront seam red, alone) ·
+slice 776/0 · findability 69/0 · story green · dialogue green · seam_test 266/4 ·
+seam_walk 8/9 · routes/cine_solve/scenegraph --check all clean ·
+**walk_engine_gate GREEN on BOTH bundles, 0 cells lost.**
+FINAL DRIVES, both ways: flight **23/23** · deck lane west<->east **6/6** · tenant-shack lane
+**3/3** · moorage__lock-five **3/3** · reach_probe **reached all four ways** ·
+one **547-cell** component from all three seeds.
