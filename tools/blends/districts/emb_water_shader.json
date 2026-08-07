@@ -87,102 +87,102 @@
    "other_mode_alpha_med": 0.574
   },
   "water_emb_brook": {
-   "verts": 3000,
-   "polys": 2250,
+   "verts": 1190,
+   "polys": 1719,
    "cuts": 0,
    "up_polys": 375,
-   "up_verts": 1500,
+   "up_verts": 595,
    "rings": [
     375,
     375
    ],
    "ring_mean_z": [
-    1.306,
+    1.02,
     1.426
    ],
    "normals_inverted": true,
    "open_sheet": false,
    "surface_z": [
-    -0.62,
+    -1.4,
     2.5
    ],
-   "median_depth_all": 0.342,
-   "median_depth_up": 0.388,
-   "depth_min": 0.0,
-   "depth_max": 1.072,
-   "bedless_up": 84,
-   "ramp_scale": 10.3026,
-   "alpha_min": 0.06,
+   "median_depth_all": 0.379,
+   "median_depth_up": 0.379,
+   "depth_min": 0.001,
+   "depth_max": 0.971,
+   "bedless_up": 34,
+   "ramp_scale": 10.5427,
+   "alpha_min": 0.066,
    "alpha_med": 0.97,
    "alpha_max": 0.97,
-   "other_mode_alpha_med": 0.215
+   "other_mode_alpha_med": 0.212
   },
   "water_emb_millpond": {
-   "verts": 656,
-   "polys": 492,
+   "verts": 214,
+   "polys": 352,
    "cuts": 0,
    "up_polys": 82,
-   "up_verts": 328,
+   "up_verts": 107,
    "rings": [
     82,
     82
    ],
    "ring_mean_z": [
-    4.082,
+    3.907,
     4.202
    ],
    "normals_inverted": true,
    "open_sheet": false,
    "surface_z": [
-    4.082,
+    3.302,
     4.202
    ],
-   "median_depth_all": 0.103,
-   "median_depth_up": 0.1,
+   "median_depth_all": 0.113,
+   "median_depth_up": 0.101,
    "depth_min": 0.003,
-   "depth_max": 2.34,
-   "bedless_up": 40,
-   "ramp_scale": 1.0,
-   "alpha_min": 0.061,
-   "alpha_med": 0.1,
-   "alpha_max": 0.766,
-   "other_mode_alpha_med": 0.1
+   "depth_max": 2.376,
+   "bedless_up": 10,
+   "ramp_scale": 39.425,
+   "alpha_min": 0.103,
+   "alpha_med": 0.97,
+   "alpha_max": 0.97,
+   "other_mode_alpha_med": 0.101
   },
   "water_emb_pond": {
-   "verts": 5664,
-   "polys": 4248,
+   "verts": 1556,
+   "polys": 2901,
    "cuts": 0,
    "up_polys": 708,
-   "up_verts": 2832,
+   "up_verts": 778,
    "rings": [
-    708,
+    706,
     708
    ],
    "ring_mean_z": [
-    0.68,
+    0.475,
     0.8
    ],
    "normals_inverted": true,
    "open_sheet": false,
    "surface_z": [
-    0.68,
+    -0.1,
     0.8
    ],
-   "median_depth_all": 0.263,
-   "median_depth_up": 0.283,
+   "median_depth_all": 0.29,
+   "median_depth_up": 0.285,
    "depth_min": 0.001,
    "depth_max": 5.075,
-   "bedless_up": 147,
-   "ramp_scale": 14.1205,
-   "alpha_min": 0.065,
+   "bedless_up": 42,
+   "ramp_scale": 14.059,
+   "alpha_min": 0.066,
    "alpha_med": 0.97,
    "alpha_max": 0.97,
-   "other_mode_alpha_med": 0.173
+   "other_mode_alpha_med": 0.174
   },
   "water_emb_river": {
    "verts": 2522,
    "polys": 2280,
-   "cuts": 0,
+   "cuts": 4,
    "up_polys": 2280,
    "up_verts": 2522,
    "rings": [

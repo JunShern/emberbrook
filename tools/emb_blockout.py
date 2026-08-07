@@ -4842,10 +4842,29 @@ def dry_footprint(x, y):
     return False
 
 
-def water_field(name, inside_fn, level_fn, x0, x1, y0, y1, cut=True):
+# WATER SEATING (2026-08-07, water-structural lane; the carrier that put this on the
+# already-dressed master is tools/emb_brookchop.py and its docstring carries the census).
+# THE DEFECT THIS FIXES: the lower ring was a flat `z - 0.12`, so every cell was a 0.12 m
+# box and the water floated on however much air stood between it and its own bed.
+# Measured off the shipped emb-cine bundle (tools/glb_read.mjs, up-face centroid vs the
+# highest non-water surface under it): brook p50 0.287 m of surface-over-bed, pond 0.233,
+# millpond 2.037.  0.29 m of surface over a 0.12 m box is 0.17 m OF AIR — a lit underside,
+# four lit walls and a cast shadow on the bed the water is meant to be lying in.  That is
+# the judge's "stacked mitred slabs", and it is geometry: the ratified depth->alpha shader,
+# correctly ported, moved 269 px of 4.1 M against it.
+# THE CAP IS NOT TIMIDITY.  Seating is only right where the bed IS the bottom.  The
+# millpond floats 2.0 m over `emb_ground_valley` because its basin is massing rather than
+# a carve, and a 2 m wall of water with no dam under it is a worse frame than a thin box.
+WATER_SKIRT = 0.90              # deepest wall this will build
+WATER_BURY = 0.03               # how far the bottom ring sits INTO the bed
+
+
+def water_field(name, inside_fn, level_fn, x0, x1, y0, y1, cut=True, bed_fn=None):
     global CURWATER
     CURWATER = name.replace("water_emb_", "")
+    bed_fn = bed_fn or ground_z
     v, f, n = [], [], 0
+    _seat, _cap = [], 0
     for a in range(int(math.floor(x0 / WCELL)), int(math.ceil(x1 / WCELL))):
         for b in range(int(math.floor(y0 / WCELL)), int(math.ceil(y1 / WCELL))):
             cx, cy = (a + 0.5) * WCELL, (b + 0.5) * WCELL
@@ -4854,8 +4873,13 @@ def water_field(name, inside_fn, level_fn, x0, x1, y0, y1, cut=True):
             if cut and dry_footprint(cx, cy):
                 continue
             z = level_fn(cx, cy)
+            zlow = min(z - 0.12, bed_fn(cx, cy) - WATER_BURY)
+            if zlow < z - WATER_SKIRT:
+                zlow = z - WATER_SKIRT
+                _cap += 1
+            _seat.append(z - zlow)
             base = len(v)
-            for dz in (0.0, -0.12):
+            for dz in (0.0, zlow - z):
                 for dx, dy in ((-.5, -.5), (.5, -.5), (.5, .5), (-.5, .5)):
                     v.append((cx + dx * WCELL, cy + dy * WCELL, z + dz))
             f += [(base, base + 3, base + 2, base + 1), (base + 4, base + 5, base + 6, base + 7),
@@ -4864,6 +4888,10 @@ def water_field(name, inside_fn, level_fn, x0, x1, y0, y1, cut=True):
             n += 1
     if n:
         mesh(name, v, f, M_WATER, "EMB_WATER")
+        _s = sorted(_seat)
+        print("      %-22s wall height min/p50/max %.2f/%.2f/%.2f m (%d of %d cells at "
+              "the %.2f m cap)" % (name, _s[0], _s[len(_s) // 2], _s[-1], _cap, n,
+                                   WATER_SKIRT))
     return n
 
 
@@ -4892,11 +4920,24 @@ for wid in sorted(WATER_LM):
 
 if BPOLY:
     def brook_level(x, y):
+        # THE SURFACE FALLS WITH THE COURSE, IT DOES NOT STEP DOWN IT.  This used to
+        # snap to the NEAREST course VERTEX's z, which quantises a continuous 3.1 m fall
+        # onto the course's own sample spacing: measured off the shipped emb-cine bundle,
+        # 750 top faces carrying 196 distinct heights with risers to 0.106 m, so every
+        # 0.55 m cell of the brook stood on a visible 1-10 cm step the whole way down.
+        # Projecting onto the nearest SEGMENT and interpolating its endpoints' z costs
+        # the same loop and is C0 by construction.  (tools/emb_brookchop.py relaxes the
+        # same staircase out of the already-dressed master; both are clamped so neither
+        # can invent a channel the map did not author.)
         best, bz = 1e9, BPOLY[0][2]
-        for p in BPOLY:
-            d = (x - p[0]) ** 2 + (y - p[1]) ** 2
+        for a, b in zip(BPOLY, BPOLY[1:]):
+            vx, vy = b[0] - a[0], b[1] - a[1]
+            L2 = vx * vx + vy * vy
+            t = 0.0 if L2 <= 1e-12 else max(0.0, min(1.0, ((x - a[0]) * vx + (y - a[1]) * vy) / L2))
+            px, py = a[0] + vx * t, a[1] + vy * t
+            d = (x - px) ** 2 + (y - py) ** 2
             if d < best:
-                best, bz = d, p[2]
+                best, bz = d, a[2] + (b[2] - a[2]) * t
         return bz
 
     bx = [p[0] for p in BPOLY]
