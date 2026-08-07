@@ -195,5 +195,199 @@ parity 218 vs 222; <code>square</code> charPxFar 37 against a 38 floor; <code>po
 visibleFrac 39%). Full receipts, with instruments, in <code>docs/qa/DAYLOG.md</code>
 (2026-08-07, round 3 item 1).</p>
 
+<hr style="border:0;border-top:1px solid #333;margin:3em 0">
+
+<h1>Round 2 of the same item: THE STRUCTURE
+  <span class="note">(2026-08-07 evening · <code>tools/emb_brookchop.py</code>)</span></h1>
+
+<p class="note">The pass above closed the shader question with a receipted null and named
+two next classes: <b>the slabs are geometry</b> and <b>the black plane is lighting</b>.
+This round measured both. The first is true and is fixed. <b>The second is refuted as
+stated</b>, and the measurement that refutes it is the most useful thing on this page.</p>
+
+<h2>1. Where the water actually is</h2>
+<p class="note">Instrument (no Blender, no browser, ~3 s): <code>tools/glb_read.mjs</code>
+over the shipped collision bundle <code>emb-cine/scene.glb</code>, every water triangle
+projected into the camera's own solved frustum and agreed against that plate's own
+<code>depth.png</code> decoded to metres (tolerance 0.30 m).</p>
+
+<table>
+<tr><th>plate</th><th>pond</th><th>brook</th><th>millpond</th><th>river</th><th>total visible water</th></tr>
+<tr><td>pondlane</td><td class="n">5.505%</td><td class="n">2.796%</td><td class="n">–</td><td class="n">1.421%</td><td class="n"><b>9.72%</b></td></tr>
+<tr><td>northlane</td><td class="n">–</td><td class="n">2.171%</td><td class="n">–</td><td class="n">–</td><td class="n">2.17%</td></tr>
+<tr><td>square</td><td class="n">0.219%</td><td class="n">1.950%</td><td class="n">–</td><td class="n">–</td><td class="n">2.17%</td></tr>
+<tr><td>homerow</td><td class="n">–</td><td class="n">0.689%</td><td class="n">0.175%</td><td class="n">–</td><td class="n">0.86%</td></tr>
+<tr><td>gateroad</td><td class="n">–</td><td class="n">0.461%</td><td class="n">–</td><td class="n">–</td><td class="n">0.46%</td></tr>
+<tr class="skip"><td>therise</td><td class="n">0.016%</td><td class="n">0.061%</td><td class="n">–</td><td class="n">0.059%</td><td class="n">0.14%</td></tr>
+<tr class="skip"><td>arch</td><td class="n">0.058%</td><td class="n">0.050%</td><td class="n">–</td><td class="n">0.024%</td><td class="n">0.13%</td></tr>
+</table>
+
+<div class="meas"><b>AND POND LANE'S POND IS BEHIND A HEDGE.</b> That 5.5% is a DEPTH-pass
+number. The beauty render at those pixels is the willow crown and the searsia scatter —
+named, not guessed: an AABB ray census from the camera to 284 pond-surface samples over
+the dressed bundle puts <code>veg_emb_wood_13_trunks/crownA/crownG</code> across 100% of
+them and <code>searsia_burchellii_*</code>/<code>searsia_lucida_*</code> across 46-100%.
+The town's namesake water is not in the town's pond camera.</div>
+
+<div class="pair">
+  <figure><img src="water-structure/mask-pondlane.jpg"><figcaption>pondlane — every water pixel the depth pass owns. RED = pond (entirely behind the willow in the beauty render), GREEN = brook, BLUE = the valley river. The green staircase at frame-left is the only water a player sees here.</figcaption></figure>
+  <figure><img src="water-structure/mask-northlane.jpg"><figcaption>northlane — the brook mask alone, and its silhouette IS the 0.55 m lattice</figcaption></figure>
+</div>
+
+<h2>2. The <code>quality:water-read</code> family is pointing at ground</h2>
+<table>
+<tr><th>plate</th><th>verdict</th><th>overlap of the judge's own bbox with real water</th><th>what those pixels are (owner probe)</th></tr>
+<tr><td>arch</td><td>FAILING</td><td class="n"><b>0 px (0.0%)</b></td><td>shadow gaps between plank/paving slabs</td></tr>
+<tr><td>therise</td><td>FAILING</td><td class="n"><b>0 px (0.0%)</b></td><td><code>emb_ground_valley</code> 86.8% + walk edges — a grass slope</td></tr>
+<tr><td>gateroad</td><td>FAILING</td><td class="n"><b>0 px (0.0%)</b></td><td>a pale gravel apron, L p50 <b>0.263</b> against a frame p50 of 0.047</td></tr>
+<tr><td>homerow</td><td>FAILING</td><td class="n">363 px (0.7% of bbox)</td><td>spring-house stone in shadow</td></tr>
+<tr><td>pondlane</td><td>FAILING</td><td class="n">11,304 px (16.9% of bbox)</td><td>mostly ground; the brook clips one corner</td></tr>
+</table>
+
+<div class="claim">"a completely featureless, <b>PITCH-BLACK</b> flat plane with no
+reflections, transparency, or believable wet shore contacts" — gateroad.</div>
+<div class="meas">It is the <b>BRIGHTEST large surface in its own frame</b>: median
+luminance 0.263 where the whole plate's median is 0.047. The family is not finding dark
+regions and blaming water. It is finding FLAT, TEXTURE-FREE regions of any luminance.
+<b>Adding a light source cannot move a verdict whose subject is already 5.6x the frame
+median</b>, which is what the previous round's "the black plane is LIGHTING" line
+predicted it would.</div>
+
+<div class="pair">
+  <figure><img src="water-structure/judgebox-gateroad.jpg"><figcaption>gateroad — YELLOW is the judge's own "water" bbox (a gravel apron); RED outlines the real brook, 200 px away behind the trees</figcaption></figure>
+  <figure><img src="water-structure/judgebox-therise.jpg"><figcaption>therise — the same, over a grass slope. Zero water pixels inside the box.</figcaption></figure>
+</div>
+
+<h2>3. What the geometry actually is: a raft of floating boxes</h2>
+<p class="note">Every up-facing water triangle's centroid against the highest non-water
+surface directly under it (same bundle, point-in-triangle).</p>
+<table>
+<tr><th>sheet</th><th>up faces</th><th>surface above its own bed: min / p10 / <b>p50</b> / p90 / max</th></tr>
+<tr><td>water_emb_brook</td><td class="n">750</td><td>-0.016 / 0.208 / <b>0.287</b> / 0.420 / 5.745 m</td></tr>
+<tr><td>water_emb_pond</td><td class="n">1416</td><td>-0.020 / 0.054 / <b>0.233</b> / 0.772 / 4.955 m</td></tr>
+<tr><td>water_emb_millpond</td><td class="n">164</td><td>1.795 / 1.855 / <b>2.037</b> / 2.182 / 2.299 m</td></tr>
+</table>
+<div class="meas"><code>water_field()</code> builds every body as INDEPENDENT 0.55 m cells,
+each a box <b>0.12 m thick</b>. A surface 0.29 m over its bed on a 0.12 m box is
+<b>0.17 m of air</b>: a lit underside, four lit walls, and a shadow cast onto the bed the
+water is meant to be lying in. That is the whole of "stacked mitred slabs" — and it is why
+a shader moved 269 pixels. A material cannot close an air gap.</div>
+
+<h2>4. The fix, and its receipts</h2>
+<p class="note">A CARRIER, never a rebuild. Three steps, and the middle one asserts the
+first: <code>emb_water_shader -- revert save</code> &rarr;
+<code>emb_brookchop -- save</code> &rarr; <code>emb_water_shader -- save</code>.
+<code>emb_blockout.py</code>'s <code>water_field</code> carries the same seating (and a
+segment-interpolated <code>brook_level</code>) so a future full rebuild agrees.</p>
+<table>
+<tr><th>sheet</th><th>verts / polys</th><th>bottom verts seated</th><th>wall height min/p50/max</th><th>boundary loop</th></tr>
+<tr><td>water_emb_brook</td><td class="n">3000/2250 &rarr; 1190/1719</td><td class="n">538 (3 capped)</td><td class="n">0.02 / <b>0.407</b> / 0.90 m</td><td class="n">241.06 &rarr; <b>187.24 m (-22.3%)</b></td></tr>
+<tr><td>water_emb_pond</td><td class="n">5664/4248 &rarr; 1556/2901</td><td class="n">630 (31 capped)</td><td class="n">0.02 / 0.305 / 0.90 m</td><td class="n">75.90 &rarr; <b>60.10 m (-20.8%)</b></td></tr>
+<tr><td>water_emb_millpond</td><td class="n">656/492 &rarr; 214/352</td><td class="n">70 (31 capped)</td><td class="n">0.02 / 0.129 / 0.90 m</td><td class="n">26.40 &rarr; <b>19.13 m (-27.5%)</b></td></tr>
+</table>
+<p class="note">Boundary length is the honest metric for a lattice silhouette: a staircase
+cut on a 0.55 m grid walks two legs of every triangle it could have walked one hypotenuse
+of, so it is measurably LONGER than the curve it approximates. Converged at 6 iterations
+(12 gives -22.5%). <code>water_emb_river</code> and <code>emb_dress_wheelpit_water</code>
+are open sheets (one ring, no bottom): reported and skipped, they have no air gap.</p>
+
+<div class="warn"><b>A REFUTED KNOB, SHIPPED AT ZERO WITH ITS RECEIPT.</b> The obvious
+second half was to relax the brook's z — the census reads 196 distinct top heights with
+level gaps to 0.106 m. It does not survive the weld: once the ring is ONE surface,
+edge-to-edge z differences are p90 0.023 / max 0.083 m over a 0.55 m span, which IS the
+channel's own fall (the blockout prints its steepest reach as 0.075 m/m &mdash; 0.041 m per
+cell). Same blend, same everything, <code>--zsmooth 60</code> vs <code>0</code>: risers
+p90/max 0.023/0.083 &rarr; <b>0.024/0.093</b>, distinct levels 376 &rarr; 514. It made the
+surface ROUGHER. An earlier repair inside it was worse: lifting a smoothed vertex to
+<code>bed + 1 cm</code> put <b>40 distinct levels across 0.80..0.86 into
+<code>water_emb_pond</code>, which ships as ONE flat level</b> — a bumpy pond manufactured
+by a repair, on a sheet whose staircase was never the complaint.</div>
+
+<h2>5. A third finding, handed off rather than built</h2>
+<div class="meas">pondlane's OTHER standing verdict — <code>quality:frame-edge-world</code>
+WEAK, "the steps on the far left edge appear as untextured, flat green block meshes that
+abruptly end the terrain geometry" — is <code>lm_field_10_ridge14/15</code>,
+<b>38.5% of that bbox</b> (owner probe). They are the blockout's crop ridges, 3.0 x 1.1 x
+0.22 m boxes in <code>M_LEAF_G</code>. <b><code>emb_dress.py</code> harvests every
+<code>lm_field_*</code> into <code>PLAN["fields"]</code> and never reads it</b> — one
+<code>.append</code>, zero consumers — so the worked parcels, their hedges, their
+drystone, their palings and their stooks all ship as raw gray massing. Not this lane's
+class and it costs a full re-dress; named with its number so the dressing lane starts
+from one.</div>
+
+<h2>6. The pictures — same camera, same grade, only the geometry differs</h2>
+<div class="pair">
+  <figure><img src="water-structure/pondlane-before.jpg"><figcaption>pondlane BEFORE — the brook as a chain of separate panels with bright pale rims and dark gaps between them</figcaption></figure>
+  <figure><img src="water-structure/pondlane-after.jpg"><figcaption>pondlane AFTER — one seated channel</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="water-structure/northlane-before.jpg"><figcaption>northlane BEFORE</figcaption></figure>
+  <figure><img src="water-structure/northlane-after.jpg"><figcaption>northlane AFTER</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="water-structure/square-before.jpg"><figcaption>square BEFORE</figcaption></figure>
+  <figure><img src="water-structure/square-after.jpg"><figcaption>square AFTER</figcaption></figure>
+</div>
+
+<h2>7. The blind pair — 2-0 for the fix, and both judges named the defect unprompted</h2>
+<p class="note">Same protocol as the round-1 pair that REFUTED the shader adaptation:
+<code>tools/blind_pack.mjs</code>, shuffled, re-encoded to strip every tell, no ownership
+framing, no charge list, no mention of what changed. Two independent judges, each asked
+only to score both frames and describe what they saw.</p>
+<table>
+<tr><th></th><th>the shipped plate</th><th>the seated water</th><th>would ship</th></tr>
+<tr><td>judge 1 (art director)</td><td class="n">6.0 / 10</td><td class="n"><b>7.5 / 10</b></td><td>the seated water</td></tr>
+<tr><td>judge 2 (environment artist)</td><td class="n">5.0 / 10</td><td class="n"><b>7.5 / 10</b></td><td>the seated water</td></tr>
+</table>
+<div class="claim">Judge 2, on the SHIPPED plate, with no idea what it was looking at:
+"a <b>stepped series of flat rectangular slabs with hard mitered seam lines and a beveled
+yellow-green trim border</b> — it looks like a low-poly staircase of solid-coloured quads,
+not a continuous surface … it reads as a raised wooden or stone deck/platform made of
+disconnected flat facets."</div>
+<div class="verdict">Judge 2 on the same region after: "the hard panel seams are gone and
+it shows a soft, plausible reflection band … it reads convincingly as water." Judge 1,
+independently: the before is "an undifferentiated dark-brown smear that reads as mud or
+shadow rather than a pond"; the after is "clearly readable as still water catching ambient
+sky light." <b>Neither judge was told a pond was supposed to be there.</b></div>
+<div class="warn"><b>Both judges independently flagged the same RESIDUAL, and it is not
+water:</b> "the pale mint-green slab … still reads as a flat untextured panel (unchanged)"
+— that is <code>lm_field_10_ridge14/15</code> from section 5. Judge 1 also names a "thin
+black curved sliver jutting from the ground beside the tree trunk", unchanged in both
+frames and not yet attributed.</div>
+
+<h2>8. What the fix did to the pixels — and what it says about the lighting hypothesis</h2>
+<table>
+<tr><th>pondlane, before &rarr; after</th><th></th></tr>
+<tr><td>pixels moving &gt; 8/255</td><td class="n">22,210 of 4,128,768 = <b>0.538%</b> (the shader pass moved 0.0065% — this is <b>83x</b>)</td></tr>
+<tr><td>median luminance INSIDE the moved region</td><td class="n">0.0513 &rarr; <b>0.1014</b></td></tr>
+<tr><td>5th-percentile luminance there</td><td class="n">0.0000 &rarr; <b>0.0185</b></td></tr>
+<tr><td>mean |luminance gradient| there</td><td class="n">0.00804 &rarr; <b>0.00647</b> (-20%: the rims)</td></tr>
+</table>
+<div class="verdict"><b>The black plane got twice as bright, and not one light was
+touched.</b> Half of "solid black flat plane" was the slab's own cast shadow on the bed it
+floated over, plus 10% transmission onto that shadowed bed. This is the direct receipt
+against "the black plane is LIGHTING" — the remaining darkness is the ratified emberwake
+grade, which is the hour Chapter One is set in.</div>
+
+<h2>9. Gates</h2>
+<ul class="note">
+<li><code>cine_test --town emberbrook</code> — <b>477 ok / 3 failed / 2 soft, identical
+before and after</b>. All three reds pre-existing and pre-attributed: bundle walk parity
+218 vs 222 (<code>walk_e_square-plaza__barn_l0..l3</code>) and <code>square</code>
+charPxFar 37 against its own 38 floor.</li>
+<li><code>slice_test</code> 776/0 · <code>seam_walk --town emberbrook</code> 10/10 ·
+<code>findability_test</code> 69 passed / 0 failed / 12 warn — all unchanged.</li>
+<li><code>routes_derive --town emberbrook --check</code> was <b>STALE</b> (since
+<code>a7be573</code>, 2026-08-05, not this lane's edit) and is <b>re-derived and committed</b>
+— nav-eval composites from routes, so a stale file is wrong scores.</li>
+<li><b>No walk mesh moved.</b> The carrier edits only meshes wearing
+<code>emb_dress_water</code> (five, all listed in its receipt) and every sheet's
+<code>dz_max</code> is 0.000 — no water top moved in z at all. The plan relaxation is
+&le; 0.28 m, and the "water top 0-0.73 m over a tread" relation it could create already
+holds at 177 sample pairs in the SHIPPED bundle (brook under the footbridge and at the
+weir), so it is not a new class; WALKLOCK governs the tread in <code>emb-</code> scenes
+regardless.</li>
+</ul>
+
 </body>
 </html>

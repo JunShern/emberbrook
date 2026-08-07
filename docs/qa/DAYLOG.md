@@ -17547,3 +17547,56 @@ rather than the source: the re-exported del-cine GLB differs from the previous e
 0 POSITION accessors, 0 index accessors, and COLOR_0 on exactly the 65 objects the
 manifest names. Shared townwalk bundle re-exported off the same master in the same
 window (town_export), per the shared-master rule.
+
+### THE BLIND PAIR: 2-0 FOR THE FIX, and both judges named the defect unprompted
+
+Same protocol as the round-1 pair that refuted the shader adaptation (`tools/blind_pack.mjs`,
+shuffled, re-encoded, no ownership framing, no charge list, no mention of what changed):
+
+| | shipped plate | seated water | would ship |
+|---|---|---|---|
+| judge 1 (art director) | 6.0/10 | **7.5/10** | the seated water |
+| judge 2 (environment artist) | 5.0/10 | **7.5/10** | the seated water |
+
+Judge 2 on the SHIPPED plate, knowing nothing: "a **stepped series of flat rectangular
+slabs with hard mitered seam lines and a beveled yellow-green trim border** — it looks like
+a low-poly staircase of solid-coloured quads, not a continuous surface". After: "the hard
+panel seams are gone … it reads convincingly as water." Judge 1 independently: before is
+"an undifferentiated dark-brown smear that reads as mud or shadow rather than a pond",
+after is "clearly readable as still water catching ambient sky light". **Neither was told a
+pond belonged there.** Both also flagged the same RESIDUAL — "the pale mint-green slab …
+still reads as a flat untextured panel (unchanged)", which is the `lm_field_10_ridge*`
+finding above; judge 1 adds an unattributed "thin black curved sliver jutting from the
+ground beside the tree trunk", present in both frames.
+
+### AND THE NUMBER THAT ANSWERS "THE BLACK PLANE IS LIGHTING"
+
+pondlane, before -> after, nothing changed but the geometry:
+
+| | |
+|---|---|
+| pixels moving > 8/255 | 22,210 of 4,128,768 = **0.538%** — the shader pass moved 0.0065%, so **83x** |
+| median luminance INSIDE the moved region | 0.0513 -> **0.1014** |
+| 5th-percentile luminance there | 0.0000 -> **0.0185** |
+| mean abs luminance gradient there | 0.00804 -> **0.00647** (-20%: the rims) |
+
+**The black plane got twice as bright and not one light was touched.** Half of "solid black
+flat plane" was the slab's own cast shadow on the bed it floated over, plus 10%
+transmission onto that shadowed bed. The remaining darkness is the ratified emberwake
+grade, which is the hour Chapter One is set in.
+
+### GATES
+
+`cine_test --town emberbrook` **477 ok / 3 failed / 2 soft, identical before and after** —
+all three reds pre-existing and pre-attributed (bundle walk parity 218 vs 222 on
+`walk_e_square-plaza__barn_l0..l3`; `square` charPxFar 37 against its own 38 floor).
+`slice_test` 776/0. `seam_walk --town emberbrook` 10/10. `findability_test` 69/0/12 warn.
+`routes_derive --town emberbrook --check` was STALE since `a7be573` (2026-08-05, not this
+lane's edit) and is re-derived and committed.
+
+**NO WALK MESH MOVED, by construction and by measurement.** The carrier edits only meshes
+wearing `emb_dress_water` (five, all named in its receipt) and every sheet's `dz_max` is
+0.000 — not one water top moved in z. The plan relaxation is <= 0.28 m, and the "water top
+0-0.73 m over a tread" relation it could create already holds at **177 sample pairs in the
+SHIPPED bundle** (the brook under the footbridge and at the weir, `water_vs_walk` census),
+so it is not a new class; WALKLOCK governs the tread in `emb-` scenes regardless.

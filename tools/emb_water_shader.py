@@ -97,6 +97,18 @@ over a 137 m range — 1-LSB quantisation, not a moved surface.  (A raw byte com
 says "changed" and a raw channel delta says "255"; both are the blue channel's last
 bit.  Compare depth in METRES or do not compare it.)
 
+AND THE SURFACE READ WAS NOT THE PROBLEM BECAUSE THE GEOMETRY WAS (2026-08-07 evening).
+The class this file could not move is closed by `tools/emb_brookchop.py`: every sheet was
+an independent 0.55 m cell 0.12 m thick, standing 0.29 m (brook) / 0.23 (pond) / 2.04
+(millpond) above its own bed — 0.17 m of AIR, a lit underside, four lit walls and a cast
+shadow.  That carrier RESHAPES the meshes this file bakes onto, so the two run in a fixed
+order and `emb_brookchop` asserts it:
+    emb_water_shader -- revert save  ->  emb_brookchop -- save  ->  emb_water_shader -- save
+Receipt of the pass that used that order: pondlane moved 0.538% of its pixels (83x this
+file's own 0.0065%), the moved region's median luminance went 0.051 -> 0.101 WITH NO LIGHT
+CHANGED, and two independent blind judges scored the result 7.5/10 against the untouched
+plate's 6.0 and 5.0 — the mirror image of the pair this file's own docstring records.
+
 THE REBUILD TRAP, NAMED BECAUSE DELLHOLLOW PAID IT: `locksfoot_build` once notched a
 pool through `join_meshes` and silently dropped the Col bake — 12 plates regressed
 with every gate green.  `emb_dress.py` REBUILDS the dressed blend and knows nothing
