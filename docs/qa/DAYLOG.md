@@ -17669,3 +17669,80 @@ town's own numbers separate the five plates that show water from the four that d
 and pass that fraction into the prompt so the judge knows how much water it is being asked
 about. NOT EDITED HERE: `scene_redteam.mjs` is the shared judge and the Dellhollow lane is
 running against it in this same window. Coordinator's call.
+
+## 2026-08-07 — BET 2 RESIDUAL, MEASURED: the moorage west arm is not a waypoint problem
+
+The named residual from the 20:20 addendum (LLM leg run-20260806-184322 stalled 9 m short of
+Maren on the WEST boardwalk arm, engine naming `walk_e_weave-huts__moorage_l2_t05` at
+[73.4-73.8,-28.3]) was taken up as a lane-waypoint fix. **It cannot be one, and the reason is
+arithmetic.** Everything below is `tools/_court_probe.mjs --scene del-cine` against the
+shipped bundle in the running game (`--at` / `--who` / `--grid --walk` / `--way` / `--pairs`);
+no file walker was used to reach any of it.
+
+**THE CLAIM REPRODUCES EXACTLY.** `--at [[73.4,-28.3],[73.6,-28.3],[73.8,-28.3]]`: the only
+floors near deck level are 1.25 and 1.21, and standing on either is blocked by
+`walk_e_weave-huts__moorage_l2_t05` at all three cells. `--who` over x 73.0..76.4 /
+z -30.6..-27.6 in the deck band [1.15,1.35] tallies **t05 88 cells, t06 46, lf_stair_stringers
+20, clear 92**.
+
+**THE ARITHMETIC.** play3d's `blocked()` tests `bodyBox(fy+STEP_UP+.02 .. fy+BODY_H)` with
+STEP_UP 0.63 and **BODY_H 1.30**, so over `walk_lm_moorage`'s 1.25 deck the window is
+**[1.92, 2.55]**. GLB tread boxes: t04 2.60..2.74 (clears by 50 mm), **t05 2.25..2.39**,
+**t06 1.89..2.03**, t07 1.54..1.68 (below the window — a legal 0.43 m step UP onto the
+flight). Headroom under t05 is **1.00 m** and under t06 **0.64 m** against a 1.30 m body: no
+line through, at any width. A stair descending onto a deck always puts ~2 treads in the body
+window (window 0.65 m, tread pitch 0.357 m) — that is normal. What is not normal here is that
+the searched l2 leg runs on the SAME BEARING as the west boardwalk, so its foot region spans
+the deck's whole width and there is nothing to walk around.
+
+**BOTH DETOURS CENSUSED, BOTH CLOSED.** North of the flight the deck is clear only at
+z -26.5..-26.7 — that is the `moorage__tenant-shack` lane itself, and its east end is on the
+flight's own north stringer (`lf_stair_stringers`, x 71.76..75.39 y 1.19..3.20 z -28.88..-26.92):
+`--at` at z -26.9 finds NO clear floor at x 74.8/75.0/75.2/75.4 (all `lf_stair_stringers`)
+while the same x at z -26.5 is clear, and a greedy `--way` on the map's straight line stalls
+at **[75.15,1.08,-26.81]**. South of the flight `walk_lm_moorage`'s pier rect is clear at
+z <= -30.3, but reaching it from the west link needs x 74.2..75.09 at z -29.9..-30.4, which is
+**open water** (no pad, no art — `--grid --walk` prints `.`), and the one column that IS pad,
+x 75.09..75.3, is blocked z -29.5..-30.1 by t05's body-padded footprint.
+
+**THE REAL SEVERITY IS WORSE THAN "9 m SHORT": THE WEST WATERFRONT IS A ONE-WAY PIT AGAIN** —
+the exact defect tools/moorage_westlink.py was built to close on 2026-08-05.
+  `--way` tenant lane -> west store deck   5/5, no stall (a legal step DOWN onto 1.25)
+  `--way` west store -> north               1/5, stalled [71.65,1.25,-28.00]; the frontier at
+          [71.4,-27.8] has floors 1.25/1.07/0.74 and every one is blocked by `lf_planking`
+          (the tenant lane's own deck overhead, in the window over 1.25)
+  `--way` the deck lane west->east          1/6, stalled [71.99,1.25,-28.59]
+  `--pairs` westdeck->maren                 **no-path**, west side a **92-cell** island against
+          the town's 3875; maren->westdeck no-path; the stall cell itself a component of ONE
+An instrument disagreement worth keeping: `--comp` at step 0.3 calls the west store and Maren
+ONE 608-cell component, and `--pairs` (reach_probe's own 0.4 lattice, what §W uses) calls it
+no-path at 92. The DRIVES agree with reach_probe. Same family as the standing stair-foot
+caveat — **a fill is a screen, the drive is the verdict**, and here the two screens disagree
+with each other before either disagrees with the body.
+
+**ROOT CAUSE, NAMED.** The moorage landmark's westlink rects 3 and 4 were shaped (2026-08-05)
+by a 0.15 m occupancy scan of the body window under the OLD l2 line — that note even records
+"of the six l2 treads only two have an underside in that window at all" and picks the one
+corridor that missed them. Iteration 9 then SEARCHED a new wp2 and widened the edge 1.4 -> 2.0,
+and the new treads land on exactly the corridor that was chosen to dodge the old ones.
+**A FOOTPRINT SOLVED AGAINST A FLIGHT IS INVALIDATED WHEN THAT FLIGHT IS RE-SEARCHED**, and
+nothing in the pipeline says so: moorage_search.py's oracles are roof/art/self, and it has no
+west-arm clearance oracle at all — the flight was free to land on the lane by construction.
+
+**NOT BUILT, DELIBERATELY.** Both real fixes are outside a one-line map edit and both were
+priced before being declined: (a) re-search wp2/foot so l2 descends over the water or the
+stage rather than across the deck — moorage_search.py plus the missing clearance oracle, then
+the it.9 receipt battery again; (b) re-run moorage_westlink.py to plank x 74.2..75.3 south to
+the pier rect at z -30.3 — new deck art, a locksfoot carry, and a re-bake of the moorage
+plates. The one waypoint that IS measured-clean (moorage__tenant-shack bent north to
+[75.10,26.35,1.06], `--way` **6/6 both ways** on current bytes) was ALSO declined: it clears
+the stringer foot but not the pit, and moving a 2.44 m ribbon 0.5 m north puts walk floor
+beyond `lf_planking`'s derived edge — walk-on-water until locksfoot_build is re-run, which is
+the district rebuild this lane was told not to do.
+
+Shipped instead: the measurement, on the map, where the next builder will look — the
+`weave-huts -> moorage` edge carries `_bet2_2026-08-07_westarm` (the census, the arithmetic,
+both closed detours, both fix options) and the moorage landmark's note carries the
+STALE-AGAINST-THE-SEARCHED-FLIGHT warning on rects 3/4. No master edit, no bundle re-export,
+no plate touched. `cine_test` 635/1 (the pre-attributed deep-stairs seam red, unchanged);
+`routes_derive --check` clean.
