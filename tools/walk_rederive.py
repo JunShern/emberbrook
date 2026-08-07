@@ -10,8 +10,9 @@ WHY THIS EXISTS, AND WHY IT IS NOT `ls_reorigin.py`.  That tool is this idea's f
 instance, hardcoded to one edge (`shelf-homes__quay-deck` -> `loop-landing__quay-deck`)
 because at the time there was exactly one.  Its own docstring set the rule for what to do
 when a third appeared: put it in a general place rather than adding a third special case.
-This is that general place.  `ls_reorigin.py` is left alone and still owns its edge — it
-carries a fork-specific rail gap that is not a general operation.
+This is that general place.  `ls_reorigin.py` is DELETED (2026-08-07, with Bet 2's
+loop-landing branch — map note `_bet2_2026-08-06b`): the edge it owned is gone, so the
+fork-specific rail gap it carried retired with it.  Mentions of it below are history.
 
 THE HOLE IT FILLS is CLAUDE.md's own doctrine: "a conflict fix is a landmark move or a
 lane waypoint — ONE LINE OF MAP, ONE COMMAND TO RE-DERIVE."  `town_blockout.py` raises
