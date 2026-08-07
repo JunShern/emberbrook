@@ -18257,3 +18257,9 @@ OWED, one command, ~30 min:
 (it does NOT touch `cine.json` — the merge block is guarded by `if result and not DRAFT`
 and `--glb` renders no cameras, verified in source). Prove it the same way this entry did:
 `wall_probe` on the written GLB must stop reading 0.120 m on every column.
+
+REAPED, not left running: the third `--glb` attempt was killed at 32:51 rather than
+abandoned. A 33-minute Blender whose output nobody in this window will commit is both the
+orphan hazard CLAUDE.md names and a silent-drift hazard — a bundle written to disk after its
+lane closes is a change nobody staged. Verified after the kill: no Blender of mine left,
+`emb-cine/scene.glb` still `Aug 5 04:11`, 13,013,456 B, clean in `git status`.
