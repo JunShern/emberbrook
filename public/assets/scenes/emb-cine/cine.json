@@ -31,7 +31,7 @@
    "look": "AgX - Medium High Contrast",
    "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 1.5,
+   "moon": 2.71,
    "moonColor": [
     0.65,
     0.75,
@@ -428,8 +428,8 @@
    "spawnFrom": "walk_lm_square-plaza.032",
    "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-08-07T17:54:28Z",
-   "seconds": 738.3,
+   "baked": "2026-08-07T19:11:12Z",
+   "seconds": 461.2,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -494,8 +494,8 @@
    "spawnFrom": "walk_pad_pips-den",
    "visibleFrac": 0.3906,
    "probes": 64,
-   "baked": "2026-08-07T17:54:28Z",
-   "seconds": 442.7,
+   "baked": "2026-08-07T18:46:28Z",
+   "seconds": 485.2,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -560,8 +560,8 @@
    "spawnFrom": "walk_pad_elder-house",
    "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-02T12:46:58Z",
-   "seconds": 703.3,
+   "baked": "2026-08-07T19:24:39Z",
+   "seconds": 699.1,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -626,8 +626,8 @@
    "spawnFrom": "walk_pad_barn",
    "visibleFrac": 0.5781,
    "probes": 64,
-   "baked": "2026-08-02T13:00:24Z",
-   "seconds": 666.5,
+   "baked": "2026-08-07T19:01:29Z",
+   "seconds": 777.0,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
