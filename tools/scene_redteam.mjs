@@ -9,6 +9,11 @@
 //                                                     # how much water each plate ACTUALLY
 //                                                     # shows, and which arm quality:water-read.
 //                                                     # No API, no browser, ~2 s.
+//   node tools/scene_redteam.mjs --town emberbrook --aim-census <stamp>[,<stamp>]
+//                                                     # WHERE a finished run's [QUALITY]
+//                                                     # verdicts pointed, measured against
+//                                                     # the subject each one names.
+//                                                     # No API, seconds.
 //   node tools/scene_redteam.mjs --replay <newStamp>,<oldStamp> --stamp <out>
 //                                                     # ONE report from several runs: each
 //                                                     # shot resolves from the first listed
@@ -89,6 +94,10 @@
 //        checklist verdict the ray census agrees with survives on the census, not on a
 //        second opinion. Geometry findings carry a `geometry_audit --region` command
 //        unprojected from their own bbox, so the next pass has an instrument, not a vibe.
+//        AND THE AIM CENSUS (2026-08-07): a [QUALITY] verdict whose own bbox holds none of
+//        the subject it names is REFUTED there, before the sceptic — the sceptic is shown
+//        the words and never the box, so it has never been able to catch a finding aimed
+//        at the wrong pixels. See "WHERE THE JUDGE POINTED" below.
 // SURVIVORS ONLY are reported. The refuted list is written to the run dir for audit,
 // because a metric that hides what it threw away cannot be checked.
 //
@@ -156,6 +165,17 @@ const REPLAY = opt('--replay', null);        // re-derive a finished run from it
 // threshold is a number about THIS town's plates, so it has to be readable without
 // spending a judge call to see it.
 const WATER_CENSUS = flag('--water-census');
+// `--aim-census <stamp>[,<stamp>…]` re-scores the [QUALITY] verdicts of FINISHED runs
+// against the aim census (aimOf) and prints them, no API and no re-judging: it is the
+// instrument the gate is built on, and it must be readable on its own so the gate's effect
+// on past runs is a table rather than a claim. Pair with --plates/--cine to score a run
+// against the bake it was actually judged against.
+const AIM_CENSUS = opt('--aim-census', null);
+// `--no-aim` still MEASURES the aim of every quality verdict and still reports it — it only
+// stops the census refuting on it. It exists so the A/B that justifies the gate is one flag
+// on a replay rather than a diff of the tool, and so a lane that distrusts the gate can see
+// the findings it would have removed without editing this file.
+const AIM_OFF = flag('--no-aim');
 
 // Emberbrook ships as a MASSING BLOCKOUT and is judged as one. Told to the judge, not
 // filtered out afterwards: a judge that spends its findings on "the materials are grey
@@ -481,13 +501,21 @@ function waterTris() {
   } catch (e) { _wtris = null; }
   return _wtris;
 }
-const _wfrac = new Map();
-function waterFracOf(cam) {
-  if (_wfrac.has(cam.id)) return _wfrac.get(cam.id);
+// THE LATTICE EVERY MASK IN THIS FILE SHARES. 168x96 is the water census's own grid and
+// the aim census below reads the same cells, so "how much water is in this frame" and
+// "how much water is inside this box" can never be two different measurements.
+const AIM_GX = 168, AIM_GY = 96;
+const _wmask = new Map();
+// the visible-water MASK, of which waterFracOf is just the total. Split out (2026-08-07)
+// so the aim census can ask the same question about a rectangle instead of a frame.
+function waterMaskOf(cam) {
+  if (_wmask.has(cam.id)) return _wmask.get(cam.id);
   const T = waterTris();
-  let frac = 0;
+  const GX = AIM_GX, GY = AIM_GY;
+  const vis = new Uint8Array(GX * GY);
+  let n = 0;
   if (T && T.count) {
-    const GX = 168, GY = 96, zb = new Float64Array(GX * GY).fill(Infinity);
+    const zb = new Float64Array(GX * GY).fill(Infinity);
     for (let t = 0; t < T.count; t++) {
       const s = [];
       let ok = true;
@@ -516,18 +544,111 @@ function waterFracOf(cam) {
         if (z < zb[i]) zb[i] = z;
       }
     }
-    let vis = 0;
     for (let gy = 0; gy < GY; gy++) for (let gx = 0; gx < GX; gx++) {
       const i = gy * GX + gx;
       if (!isFinite(zb[i])) continue;
       const d = depthAt(cam, (gx + 0.5) / GX, (gy + 0.5) / GY);
-      if (!d.sky && Math.abs(d.z - zb[i]) < 0.35) vis++;
+      if (!d.sky && Math.abs(d.z - zb[i]) < 0.35) { vis[i] = 1; n++; }
     }
-    frac = vis / (GX * GY);
   }
-  frac = +frac.toFixed(4);
-  _wfrac.set(cam.id, frac);
-  return frac;
+  const out = {GX, GY, m: vis, frac: +(n / (GX * GY)).toFixed(4)};
+  _wmask.set(cam.id, out);
+  return out;
+}
+const waterFracOf = (cam) => waterMaskOf(cam).frac;
+
+// ------------------------------------------- WHERE THE JUDGE POINTED (AIM) ---
+// (2026-08-07 — THE OPEN HALF OF THE ARMING FIX, and the same defect one layer in.)
+// The arming gate above fixes WHICH PLATE is asked. It cannot fix WHERE THE JUDGE POINTS.
+// An armed plate can still come back with a verdict whose bbox holds NONE of the thing it
+// names — Emberbrook's `pondlane` FAILING was measured with 16.9% of its box on water and
+// the rest on ground, and before arming, `gateroad`'s "pitch-black flat plane" sat on a
+// gravel apron 200 px from the nearest water pixel at 5.6x the frame's own median
+// luminance. A finding aimed at the wrong pixels is confabulation that SURVIVES TRIAGE:
+// it has a plate, a box, a severity and a sceptic's blessing, and it sends a builder at a
+// surface nobody complained about. This repo has paid for that twice (the pink-plank
+// confabulation; the Poppy findability defect).
+//
+// So each [QUALITY] family declares its SUBJECT as a mask on the shared lattice, and the
+// judge's own box is scored against it. THE ASYMMETRY IS THE WHOLE DESIGN: a box full of
+// water does NOT make the water verdict true (only the eye and the shader can say that),
+// so this census may only ever REFUTE — never uphold, never promote. It answers exactly
+// one question, mechanically: could the judgment possibly be about the named subject?
+//
+//   quality:water-read       subject = the visible-water mask (waterMaskOf) — the same
+//                            cells the arming gate counts, so arm and aim cannot disagree
+//   quality:sky              subject = sky cells of the plate's own depth.png
+//   quality:frame-edge-world subject = NOT MECHANISED, AND THAT IS A MEASUREMENT, NOT AN
+//                            OMISSION. "The world beyond the built set, at the borders of
+//                            the picture" has no mask this file can derive without first
+//                            deciding what "the built set" is, and both candidates were
+//                            built and run over all 11 findings on record (2026-08-07):
+//                            OUTER-BAND overlap (12% border) refutes 0 of 11 — a subject
+//                            that cannot be missed cannot refute anything — while the
+//                            FAR-DEPTH QUARTILE refutes 3, and one of the three is
+//                            `crossing`'s "raw white untextured geometry wedge protrudes
+//                            at the bottom right frame edge", a correct, well-aimed
+//                            finding that happens to be NEAR geometry. A rule that kills
+//                            that finding is worse than no rule. Two candidate subjects
+//                            that disagree with each other 3-to-0 are the evidence that
+//                            the subject is undefined, so this family is reported
+//                            `unmeasurable` and passes to the sceptic untouched.
+function skyMaskOf(cam) {
+  const GX = AIM_GX, GY = AIM_GY, m = new Uint8Array(GX * GY);
+  let n = 0;
+  for (let gy = 0; gy < GY; gy++) for (let gx = 0; gx < GX; gx++)
+    if (depthAt(cam, (gx + 0.5) / GX, (gy + 0.5) / GY).sky) { m[gy * GX + gx] = 1; n++; }
+  return {GX, GY, m, frac: +(n / (GX * GY)).toFixed(4)};
+}
+const _smask = new Map();
+const skyMaskCached = (cam) => { if (!_smask.has(cam.id)) _smask.set(cam.id, skyMaskOf(cam)); return _smask.get(cam.id); };
+const AIM_SUBJECT = {
+  'quality:water-read': {what: 'visible water', mask: waterMaskOf},
+  'quality:sky': {what: 'sky', mask: skyMaskCached},
+};
+// THE FLOOR, and why it is 2% of the judged box. PRINCIPLE FIRST: the judge is told to
+// "put the bbox on the water itself", and a box in which the named subject holds under one
+// fiftieth of the area is not a box drawn on that subject — whatever judgment is inside it
+// rests on the other 98%. THEN THE CALIBRATION (aim census over every [QUALITY] verdict
+// this repo holds, both towns, 2026-08-07): the non-absence water findings measure
+// 0,0,0,0,0,0,0 % and then 3.5, 5.7, 10.0, 16.7, 20.1, 31.9, 53.6, 54.5 %. NOTHING falls
+// between 0 and 3.5, so the floor sits in an empty gap rather than on a cliff, and moving
+// it to 5% would be the first choice that costs a real finding (pondlane 3.5%). Sky
+// verdicts measure 13.0-83.6% — armed, and on this record it never fires.
+const AIM_MIN = 0.02;
+// AN ABSENCE CLAIM AIMS AT WHERE THE SUBJECT IS NOT, SO THE AIM RULE INVERTS AND THE
+// CENSUS MUST ABSTAIN. Measured instances, all of them true and one of them already
+// hand-adjudicated as true: quay-west's "No water surface is visible anywhere near the
+// Harbor Deck" is a correct observation whose box necessarily contains zero water, and
+// homerow's "no visible water surface geometry ... near the spring house" is the same
+// shape. Refusing to score those is not a hole — the FRAME-WIDE version of that question
+// is exactly what the arming gate above already answers (quay-west measures 0.00% water
+// and is never asked). The regex is deliberately narrow: a negation within 40 characters
+// of a subject noun. It must NOT match "lacking transparency, water flow, or reflections"
+// or "lacking any depth, transparency, or specular response", both of which are ordinary
+// quality complaints on this record and both of which stay scorable.
+const AIM_ABSENCE_RE = /\b(no|not|none|nothing|without|devoid|absent|unrendered|missing)\b[^.]{0,40}\b(water|surface|shader|fluid|sky)\b/i;
+function aimOf(cam, itemId, bb, text) {
+  const S = AIM_SUBJECT[itemId];
+  if (!S) return {subject: null, state: 'unmeasurable', why: 'no derivable subject mask for this family'};
+  if (!Array.isArray(bb) || bb.length !== 4)
+    return {subject: S.what, state: 'unmeasurable', why: 'the judge returned no bbox'};
+  const M = S.mask(cam), {GX, GY, m} = M;
+  const x0 = Math.max(0, Math.floor(bb[0] * GX)), x1 = Math.min(GX - 1, Math.ceil(bb[2] * GX) - 1);
+  const y0 = Math.max(0, Math.floor(bb[1] * GY)), y1 = Math.min(GY - 1, Math.ceil(bb[3] * GY) - 1);
+  let cells = 0, hit = 0;
+  for (let gy = y0; gy <= y1; gy++) for (let gx = x0; gx <= x1; gx++) { cells++; if (m[gy * GX + gx]) hit++; }
+  if (!cells) return {subject: S.what, state: 'unmeasurable', why: 'the bbox covers no lattice cell'};
+  const cover = +(hit / cells).toFixed(4);
+  const num = `${(cover * 100).toFixed(1)}% of the judged box is ${S.what} ` +
+              `(${hit}/${cells} cells of the shot's own ${GX}x${GY} census; the frame holds ` +
+              `${(M.frac * 100).toFixed(1)}%)`;
+  const out = {subject: S.what, cells, hit, cover, frameFrac: M.frac, min: AIM_MIN};
+  if (AIM_ABSENCE_RE.test(String(text || '')))
+    return {...out, state: 'absence-claim',
+            why: `the verdict claims the subject is NOT there, so its box marks where it is ` +
+                 `missing — the aim rule inverts and this census abstains (${num})`};
+  return {...out, state: cover >= AIM_MIN ? 'on-subject' : 'misaimed', why: num};
 }
 
 // ------------------------------------------------------- THE CHECKLIST ITEMS -
@@ -972,6 +1093,26 @@ function bboxAgreement(shots) {
   return {n, hit, frac: n ? +(hit / n).toFixed(3) : null};
 }
 
+// the aim census, as a run-level number. Reported for the same reason bboxAgreement is:
+// a gate that throws findings away must say how many and on what measurement.
+function aimSummary(all) {
+  const out = {n: 0, refuted: 0, onSubject: 0, absenceClaim: 0, unmeasurable: 0,
+               min: AIM_MIN, applied: !AIM_OFF, byFamily: {}};
+  for (const f of all) {
+    if (!f.quality || !f.aim) continue;
+    out.n++;
+    const k = f.item || '?';
+    const F = out.byFamily[k] ||= {n: 0, refuted: 0, covers: []};
+    F.n++;
+    if (f.aim.cover != null) F.covers.push(f.aim.cover);
+    if (f.aim.state === 'misaimed') { out.refuted++; F.refuted++; }
+    else if (f.aim.state === 'on-subject') out.onSubject++;
+    else if (f.aim.state === 'absence-claim') out.absenceClaim++;
+    else out.unmeasurable++;
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------- THE RUN ----
 const CATS = ['navigation', 'occlusion', 'geometry', 'exit', 'immersion'];
 async function pool(items, n, fn) {
@@ -1073,7 +1214,18 @@ async function runShot(judge, id, inputPath, wantNaive, wantChecklist) {
     if (f.mode === 'checklist' && f.verdict === 'OCCLUDED' && f.census && f.census.state === 'occluded') {
       f.verify = {verdict: 'upheld', by: 'ray-census',
                   why: `the shot's own depth plate draws something ${f.census.behindBy} m nearer at that pixel`};
-    } else toRefute[f.mode].push(f);
+      continue;
+    }
+    // THE AIM CENSUS is measured here and APPLIED AFTER STAGE 2, below. It would be
+    // cheaper to drop a misaimed claim before the sceptic call, and that is what the first
+    // draft did — but the sceptic's reply is a POSITIONAL LIST, and `--replay` feeds a
+    // stored reply back into a claim list this file has re-derived. Removing one claim from
+    // the middle silently re-assigns every later verdict to the wrong claim, which is
+    // exactly the class of bug the replay path exists to make cheap to fix. Same batched
+    // call either way, and keeping the claim buys a better receipt: the report can show
+    // that the sceptic upheld a finding the instrument then refuted.
+    if (f.quality) f.aim = aimOf(cam, f.item, f.bbox, `${f.where || ''} ${f.desc || ''}`);
+    toRefute[f.mode].push(f);
   }
   for (const mode of ['naive', 'checklist']) {
     const claims = toRefute[mode];
@@ -1091,6 +1243,22 @@ async function runShot(judge, id, inputPath, wantNaive, wantChecklist) {
     // a claim the refuter never answered is NOT silently promoted
     for (const f of claims) if (!f.verify)
       f.verify = {verdict: 'refuted', by: 'no-verdict', why: 'the refuter returned no verdict for this claim'};
+  }
+  // ---- STAGE 2 (iii): THE AIM CENSUS OVERRIDES THE SCEPTIC, ONE WAY ONLY -----
+  // An instrument beats an opinion, and here the opinion was never even asked the right
+  // question: the sceptic is shown the CLAIM'S WORDS and never its box, so it has never
+  // once been in a position to notice that a verdict about water is drawn on gravel. The
+  // override is asymmetric BY CONSTRUCTION — a box full of water does not make a water
+  // verdict true, so this can refute and can never uphold or promote. What the sceptic
+  // said is kept on the finding rather than overwritten, because a gate that erases the
+  // opinion it overrode cannot be audited.
+  if (!AIM_OFF) for (const f of findings) {
+    if (!f.quality || !f.aim || f.aim.state !== 'misaimed') continue;
+    f.sceptic = f.verify || null;
+    f.verify = {verdict: 'refuted', by: 'aim-census',
+                why: `the verdict names ${f.aim.subject} but ${f.aim.why}` +
+                     (f.sceptic && f.sceptic.verdict === 'upheld'
+                       ? ` — the sceptic had upheld it ("${f.sceptic.why}")` : '')};
   }
   return {shot: id, items, findings, raw};
 }
@@ -1200,6 +1368,7 @@ function findingCard(f, plateSrc) {
     ${cropTile(f, plateSrc)}
     <div class="cb"><div class="q">${esc(f.desc)}</div>
       ${f.where ? `<div class="meta">where: ${esc(f.where)}</div>` : ''}
+      ${f.aim ? `<div class="meta">aim census: <b>${esc(f.aim.state)}</b> — ${esc(f.aim.why)}</div>` : ''}
       ${f.census ? `<div class="meta">ray census: <b>${esc(f.census.state)}</b>${
         f.census.state === 'occluded' ? ` (plate is ${f.census.behindBy} m nearer)` : ''}, ${
         f.census.charPx} px tall at ${f.census.z} m</div>` : ''}
@@ -1471,7 +1640,14 @@ it, not to believe it.</p>
 <div class="budget">Budget: ${run.budget.calls} judge calls
 (${Object.entries(run.budget.byStage).map(([k, v]) => `${k} ${v}`).join(', ')}) ·
 ${run.budget.promptTok.toLocaleString()} prompt + ${run.budget.replyTok.toLocaleString()} reply tokens ·
-${run.budget.errors} errors.${run.bboxAgreement && run.bboxAgreement.n ?
+${run.budget.errors} errors.${run.aimCensus && run.aimCensus.n ?
+` Aim census: ${run.aimCensus.refuted}/${run.aimCensus.n} [QUALITY] verdicts ${run.aimCensus.applied
+? 'were REFUTED' : 'would have been refuted (<code>--no-aim</code>: measured, not applied)'} because the
+judge's own box held under ${(run.aimCensus.min * 100).toFixed(0)}% of the subject the verdict names
+(water = the same visible-water mask the arming gate counts; sky = the plate's own depth). Every one is in
+<code>refuted.json</code> with its number. ${run.aimCensus.absenceClaim} claimed the subject was ABSENT —
+the aim rule inverts there and the census abstained; ${run.aimCensus.unmeasurable} had no derivable
+subject (frame-edge-world, and verdicts the judge returned without a box).` : ''}${run.bboxAgreement && run.bboxAgreement.n ?
 ` Box check: ${run.bboxAgreement.hit}/${run.bboxAgreement.n} (${(run.bboxAgreement.frac * 100).toFixed(0)}%) of the
 judge's checklist boxes contain the point the ray census projected — the drawn rectangles are
 only as trustworthy as that number.` : ''} Raw replies in <code>raw/</code>, findings in
@@ -1514,6 +1690,17 @@ only as trustworthy as that number.` : ''} Raw replies in <code>raw/</code>, fin
       ...byBucket(b).map((f) => `- [${f.shot}/${f.mode}/${f.category}/sev${f.severity}] ${f.desc}` +
         (f.alsoOn && f.alsoOn.length ? ` _(also on ${f.alsoOn.map((a) => a.shot).join(', ')})_` : '') +
         (f.hint ? `\n      ${f.hint.cmd}` : '')), '');
+  if (run.aimCensus && run.aimCensus.n) {
+    md.push('', '## 2b. Aim census — did the judge point at what it named?', '',
+      `${run.aimCensus.refuted} of ${run.aimCensus.n} [QUALITY] verdicts ` +
+      `${run.aimCensus.applied ? 'REFUTED' : 'MISAIMED (--no-aim: measured, not applied)'}: the judge's own box ` +
+      `held under ${(run.aimCensus.min * 100).toFixed(0)}% of the subject the verdict names. ` +
+      `${run.aimCensus.onSubject} on-subject, ${run.aimCensus.absenceClaim} absence-claim (census abstains), ` +
+      `${run.aimCensus.unmeasurable} unmeasurable.`, '',
+      ...Object.entries(run.aimCensus.byFamily).map(([k, v]) =>
+        `- \`${k}\` — ${v.refuted}/${v.n} refuted; box coverage ` +
+        `${v.covers.map((c) => (c * 100).toFixed(1) + '%').join(', ') || 'n/a'}`), '');
+  }
   md.push('', `## 3. Budget`, '',
     `${run.budget.calls} calls, ${run.budget.promptTok} prompt + ${run.budget.replyTok} reply tokens, ` +
     `${run.budget.errors} errors.`, '',
@@ -1532,6 +1719,39 @@ async function main() {
     const run = JSON.parse(fs.readFileSync(path.join(OUTDIR, 'findings.json'), 'utf8'));
     writeReport(run);
     console.log(`rerendered ${path.relative(ROOT, OUTDIR)}/index.html`);
+    return;
+  }
+  if (AIM_CENSUS) {
+    const stamps = AIM_CENSUS.split(',').map((s) => s.trim()).filter(Boolean);
+    console.log(`aim-census ${TOWN}/${SCENE} — plates ${path.relative(ROOT, PLATES)}, ` +
+                `floor ${(AIM_MIN * 100).toFixed(0)}% of the judged box`);
+    const tally = {};
+    for (const st of stamps) {
+      const fp = path.join(RTDIR, 'run-' + st, 'findings.json');
+      if (!fs.existsSync(fp)) { console.log(`  run-${st}: no findings.json`); continue; }
+      const R = JSON.parse(fs.readFileSync(fp, 'utf8'));
+      if (R.town !== TOWN) { console.log(`  run-${st}: town ${R.town}, not ${TOWN} — skipped`); continue; }
+      console.log(`\n  run-${st}  (${R.shots.length} plates, judged ${String(R.generated).slice(0, 16)})`);
+      for (const s of R.shots || []) for (const it of s.checklist || []) {
+        if (!/^quality:/.test(it.id) || !it.judged) continue;
+        const cam = camOf(s.shot); if (!cam || !plateFiles(s.shot).ok) continue;
+        const a = aimOf(cam, it.id, it.judged.bbox, `${it.judged.where || ''} ${it.judged.desc || ''}`);
+        const v = it.judged.verdict, finding = v !== 'CONVINCING' && v !== 'FINDABLE';
+        const k = it.id + (finding ? '' : ' (not a finding)');
+        tally[k] = tally[k] || {n: 0, misaimed: 0, absence: 0, unmeasurable: 0};
+        tally[k].n++;
+        if (a.state === 'misaimed') tally[k].misaimed++;
+        if (a.state === 'absence-claim') tally[k].absence++;
+        if (a.state === 'unmeasurable') tally[k].unmeasurable++;
+        console.log(`    ${s.shot.padEnd(14)} ${it.id.replace('quality:', '').padEnd(17)} ` +
+          `${v.padEnd(11)} ${(a.cover == null ? '   n/a' : (a.cover * 100).toFixed(1).padStart(6) + '%')} ` +
+          `${a.state.padEnd(12)} ${finding ? '' : '(no finding)'}`);
+      }
+    }
+    console.log('\n  ---- by family ----');
+    for (const [k, t] of Object.entries(tally).sort())
+      console.log(`  ${k.padEnd(42)} n=${String(t.n).padStart(3)}  misaimed ${t.misaimed}` +
+                  `  absence-claim ${t.absence}  unmeasurable ${t.unmeasurable}`);
     return;
   }
   if (WATER_CENSUS) {
@@ -1646,7 +1866,7 @@ async function main() {
                                 checklist: r.items.map((i) => ({id: i.id, src: i.src, what: i.what,
                                   census: i.census, judged: i.judged || null, suppressed: i.suppressed || null}))})),
     raw: all.length, survivors, refuted, budget: BUDGET,
-    bboxAgreement: null,
+    bboxAgreement: null, aimCensus: aimSummary(all),
     calibration: CALIBRATE ? scoreCalibration(survivors, refuted) : null,
   };
 
@@ -1693,6 +1913,10 @@ async function main() {
   }
   if (run.bboxAgreement && run.bboxAgreement.n)
     console.log(`bbox check: ${run.bboxAgreement.hit}/${run.bboxAgreement.n} judged boxes contain the census point`);
+  if (run.aimCensus && run.aimCensus.n)
+    console.log(`aim census: ${run.aimCensus.refuted}/${run.aimCensus.n} [QUALITY] verdicts refuted as misaimed ` +
+      `(${run.aimCensus.onSubject} on-subject, ${run.aimCensus.absenceClaim} absence-claim, ` +
+      `${run.aimCensus.unmeasurable} unmeasurable)`);
   console.log(`\nbudget: ${BUDGET.calls} calls, ${BUDGET.promptTok} prompt + ${BUDGET.replyTok} reply tokens, ` +
               `${BUDGET.errors} errors`);
   console.log(`report: ${path.relative(ROOT, OUTDIR)}/index.html`);

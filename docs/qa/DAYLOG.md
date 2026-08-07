@@ -18263,3 +18263,117 @@ abandoned. A 33-minute Blender whose output nobody in this window will commit is
 orphan hazard CLAUDE.md names and a silent-drift hazard — a bundle written to disk after its
 lane closes is a change nobody staged. Verified after the kill: no Blender of mine left,
 `emb-cine/scene.glb` still `Aug 5 04:11`, 13,013,456 B, clean in `git status`.
+
+## 2026-08-07 ~22:40 — THE AIM CENSUS: the arming fix's open half, closed. A [QUALITY] verdict must point at the thing it names
+
+Handed over by the water lane: *"The gate fixed WHICH PLATE is asked, not WHERE the judge
+points — 3 of 4 armed bboxes still hold no water."* Instrument, then decision, then the
+receipt that it costs nothing good. Tool: `tools/scene_redteam.mjs` only.
+
+### 1. THE INSTRUMENT — `--aim-census <stamp>[,<stamp>]`, no API, ~3 s a run
+
+Each [QUALITY] family declares its SUBJECT as a mask on the SAME 168x96 lattice the arming
+gate already counts on (`waterMaskOf` is `waterFracOf` split open; sky is the plate's own
+depth), and the judge's own bbox is scored against it. **It can only ever REFUTE** — a box
+full of water does not make a water verdict true — and that asymmetry is the whole design.
+It re-derives the water lane's hand figures independently: arch 0.0%, therise 0.0%,
+gateroad 0.0%, homerow 1.1% (they measured 0.7%), pondlane 16.7% (16.9%).
+
+### 2. MEASURED BEFORE ANY BEHAVIOUR CHANGED — every [QUALITY] finding this repo holds
+
+Population = verdicts that BECAME findings (WEAK/FAILING/ABSENT) over runs 20260806-1
+(both towns, replayed against their own pinned bakes), 064138, 185607-calib, round3,
+190224, 191111-armfix, 205035-round3water.
+
+| family | findings | bbox holds none of its subject | absence-claim (census abstains) | unmeasurable |
+|---|---|---|---|---|
+| emberbrook `water-read` | 12 | **6 (50%)** | 1 | 2 (no bbox) |
+| dellhollow `water-read` | 10 | **1 (10%)** | 4 | 0 |
+| emberbrook `sky` | 6 | 0 | 0 | 0 |
+| emberbrook `frame-edge-world` | 9 | — | — | 9 |
+| dellhollow `frame-edge-world` | 12 | — | — | 12 |
+
+Three of the six emberbrook misaims (arch, therise, gateroad) are the ones the ARMING gate
+already suppresses. **The rate that is still live after arming is 4 of 13 water findings,
+31%** — emberbrook `pondlane` WEAK and `homerow` WEAK and `gatefield` WEAK (0.0% each) and
+dellhollow `gate` WEAK (0.0%, on a plate that really does show 6.9% water). One in three is
+not a null; the fix is worth its complexity.
+
+### 3. WHAT `frame-edge-world` COST TO NOT BUILD
+
+Both candidate subjects were built and run over all 21 findings before being deleted.
+OUTER-BAND (12% border) refutes **0** — a subject that cannot be missed cannot refute
+anything. FAR-DEPTH QUARTILE refutes **3**, and one of the three is dellhollow `crossing`'s
+*"a raw white untextured geometry wedge protrudes at the bottom right frame edge"* — a
+correct, well-aimed finding that happens to sit on NEAR geometry. Two candidate subjects
+disagreeing 3-to-0 is the evidence that the subject is undefined; the family is reported
+`unmeasurable` and passes to the sceptic untouched. **A rule that kills `crossing` is worse
+than no rule.**
+
+### 4. TWO RULES THAT KEEP IT HONEST
+
+**THE FLOOR IS 2% OF THE JUDGED BOX.** Principle: the judge is told to "put the bbox on the
+water itself", and a box where the subject holds under one fiftieth of the area carries a
+judgment resting on the other 98%. Calibration: the non-absence water findings measure
+`0,0,0,0,0,0,0` then `3.5, 5.7, 10.0, 16.7, 20.1, 31.9, 53.6, 54.5` %. Nothing lands
+between 0 and 3.5, so the floor sits in an empty gap; 5% would be the first choice that
+costs a real finding (pondlane 3.5%, kept, with its number printed on its card).
+
+**AN ABSENCE CLAIM AIMS AT WHERE THE SUBJECT IS NOT, SO THE CENSUS ABSTAINS.** quay-west's
+*"No water surface is visible anywhere near the Harbor Deck"* is TRUE, was hand-adjudicated
+as true, and its box necessarily holds zero water. Five such claims are on record and all
+five are exempted by a deliberately narrow regex (a negation within 40 chars of a subject
+noun) that does NOT match the ordinary complaints "lacking transparency, water flow, or
+reflections" or "lacking any depth, transparency, or specular response". The FRAME-WIDE
+version of that question is what the arming gate already answers.
+
+### 5. AND IT IS APPLIED AFTER STAGE 2, NOT BEFORE — a replay bug caught in the draft
+
+The cheap implementation drops a misaimed claim before the sceptic call. **The sceptic's
+reply is a POSITIONAL LIST, and `--replay` feeds a stored reply into a claim list this file
+has re-derived** — removing one claim from the middle silently re-assigns every later
+verdict to the wrong claim. Same batched call either way, so the gate now runs AFTER stage 2
+and keeps what the sceptic said on the finding (`f.sceptic`). That buys the best receipt in
+the change: on `pondlane` the sceptic UPHELD the water claim with the words *"The ground and
+water plane appears as a simple dark glossy surface…"* — **the sceptic is shown the words
+and never the box, so it has never once been in a position to catch a misaim.**
+
+### 6. VALIDATION — replayed both towns, before/after, zero API
+
+`--no-aim` measures and reports but does not act, so the A/B is one flag on a replay.
+
+| replayed run | survivors before | after | quality survivors | calibration (5 user complaints) |
+|---|---|---|---|---|
+| dell 185607-calib | 87 | 87 | 2 → 2 | **2/5 strict, 5/5 lenient — UNCHANGED** |
+| dell 20260806-1 | 101 | 101 | 2 → 2 | – |
+| dell 064138 | 7 | **6** | 2 → 1 | – |
+| emb 20260806-1 | 103 | 103 | 3 → 3 | – |
+| emb 205035-round3water | 30 | 30 | 3 → 3 | – |
+| emb 191111-armfix | 12 | **11** | 3 → 2 | – |
+
+**The calibration set cannot be touched by construction** — all five user complaints are
+findability findings in naive/checklist mode and the census only scores [QUALITY] items —
+and the replay proves it rather than asserting it. Two survivors were removed in total; the
+other misaims had already been refuted by the sceptic (the gate changed their REASON to a
+number, which is the auditable half).
+
+**BOTH REMOVALS WERE LOOKED AT, not inferred from the number** (crops in the lane
+scratchpad, judge box in yellow):
+- `emb/pondlane` WEAK "simple dark reflection plane" — box is on jetty decking and dark
+  ground at the right; the pond is the green sliver at the far left. REFUTE CORRECT.
+- `del/gate` WEAK "harbor water surface: basic turquoise shader" — box is the top strip of
+  the frame, which is CAVERN WALL; the harbour is mid-left. REFUTE CORRECT, **and it is the
+  one debatable call in the set**: the WORDS are a fair description of water that is
+  elsewhere in the same frame. It is in `refuted.json` with its measurement, so a human can
+  rescue it; a finding whose box sends a builder to a cliff face cannot be acted on as it
+  stands.
+Also eyeballed and correct: `homerow` (a black corner strip), `gatefield` (a bench on
+paving), and the KEPT `pondlane` 3.5%.
+
+CAVEAT, stated: emberbrook's water mask comes from `emb-cine/scene.glb`, which the 21:30
+entry above proves is one release behind the dressed master (the brookchop weld is not in
+it). The sheets moved by centimetres, not metres, so no verdict here turns on it — but a
+re-export is owed and this census should be re-run after it.
+
+REPRODUCE ANY ROW: `node tools/scene_redteam.mjs --town <t> --replay <stamp> --stamp <out>
+[--no-aim] [--plates <pinned bake>]`, 0 calls, 0 tokens.
