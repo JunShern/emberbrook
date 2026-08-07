@@ -18123,3 +18123,105 @@ attempt is NOT another pivot search — both low-water pivots failed — it is e
 plank-and-pile decking it, or (b) a `self` oracle that models the district builders' derived
 planking rather than the walk centre-lines, which is the same hole `wv_planking` walked
 through. Either is its own window.
+
+### 2026-08-07 ADDENDUM 2 — THE RIVER WAS NOT DECKED, IT WAS DELETED. The A/B on a SECOND plate is what found it.
+
+The first addendum blamed the lockfive plate's lost water on the searched flight standing
+over the river, and priced it at 15.16 m2 of decking. **THAT DIAGNOSIS WAS WRONG, and it was
+wrong in the way this repo keeps warning about: an interpretation recorded without the
+instrument that could falsify it.** The falsifying instrument was one more A/B. The
+**fishdock** plate — camera at x 43-59, twenty-five metres from the moorage, which the
+flight's own ray-cast says sees NOTHING of it — had lost its river too: **21.079% ->
+~0% water-coloured pixels, with its moored rowboat sitting on dry riverbed.** A local
+decking change cannot do that.
+
+**MEASURED CAUSE, in the master rather than in the plate.** Comparing the pre-lane master
+(15d26c3) against the one this lane built, the water objects keep their bounding boxes
+EXACTLY and collapse in vertex count:
+
+    water_pool-mid        8648 -> 16 verts
+    water_pool-downstream 4290 ->  8
+    lf_lock_water           90 ->  8
+    water_pool-upstream       42 (unchanged)   riverbed 8 (unchanged)
+
+That is `docs/plans/water-transparency.md`'s tranche being thrown away. `t2_water_bed.py`
+carves the bathymetry and `t2_water_shader.py` subdivides each sheet to ~1.5 m and bakes a
+per-vertex depth->alpha `Col` attribute (its own header: "they ship as 8- and 16-vertex
+boxes, so a per-vertex depth attribute has nowhere to live"). **`locksfoot_build.py`'s deck
+phase REBUILDS `water_pool-mid`** — it notches the pool off the lock chamber by deleting the
+object and joining two fresh boxes — **and builds `lf_lock_water` as a fresh box.** Both come
+back undressed. Nothing fails, no gate goes red, and the river leaves the town.
+
+**THIS IS THE SAME SHAPE AS CLAUDE.md's emb_dress/emb_decimate RULE, in a place nobody had
+written it down: A PASS THAT REBUILDS A DRESSED DATABLOCK OWES THAT DRESSING'S RE-RUN IN THE
+SAME WINDOW.** It is also the same family as the DAYLOG's own 2026-08-07 Emberbrook entry
+("zero Col layers on all four sheets; t2 recipe never ported") — the same tranche, the other
+town, found the same way: by looking.
+
+FIXED: `t2_water_bed.py -- save` then `t2_water_shader.py -- save` (that order; the shader's
+header forbids the reverse), re-run against the restored master. Vertex counts return to
+pre-lane exactly: 8648 / 4290 / 90 / 42 / 8. The water+bed content digest does NOT return to
+the pre-lane value (735fc54a -> 14c5d3b9), because the shader measures each sheet's ramp
+against the CURRENT bed — which is why the rebake set below is every plate that shows water,
+not only the plates that see the flight. `locksfoot_build.py` now carries the rule in a
+comment at the point of destruction and prints an **OWED** log line naming the two tools and
+their order, so the next run of it says so out loud.
+
+RE-VERIFIED AFTER THE WATER FIX, master re-exported to both bundles and the chain re-derived
+to a fixed point: walk_engine_gate **GREEN** on del-cine, 0 lost · flight **23/23 both ways** ·
+deck lane west<->east **6/6 both ways** · cine_solve / routes / scenegraph --check all clean.
+
+PLATE REBAKE SET, chosen by MEASUREMENT rather than by the frustum: the water-coloured
+fraction of each pre-lane plate. Nine are over 0.15% and all nine are re-baked —
+fishdock 21.079 · waterfront 13.823 · north-landing 8.799 · crossing 3.948 · lockfive 2.181 ·
+boatyard 2.132 · weave 1.692 · gate 0.384 · deep-stairs 0.318. The six under it
+(shelf-west 0.081, lockhead 0.036, shelf-east 0.024, quay-west 0.001, loop-stairs 0,
+cottage 0) show no river and see none of the rebuilt flight, and are deliberately not baked.
+
+**AND THE FIRST ADDENDUM'S 15.16 m2 STANDS AS A NUMBER AND FALLS AS AN EXPLANATION.** The
+water_cover term in `moorage_search.py` is still worth having — a flight over the river does
+get planked and piled by locksfoot — but it was NOT what emptied the plates, and the two
+low-water lines were chased on a false premise. They still failed their DRIVES, so the
+conclusion (the shipped line is the only one that drives) is unchanged; only the motive for
+hunting them was wrong. Re-price the real decking cost against the water-correct plates
+before spending another window on it.
+
+### THE REALTIME CARRY, PUBLISHED — and proven on the bytes rather than the log
+
+`emberbrook-realtime.blend` took the carrier earlier in the window (`-- --xysmooth 0 save`;
+the silhouette relaxation is refused on a decimated sheet, see the tool's docstring), and
+the bundle it feeds is now re-exported: `tools/town_export.py` with `TOWNWALK_OUT` staging,
+EMBERBROOK TARGET ONLY — `tools/townwalk_live_refresh.sh` also refreshes
+dellhollow -> `public/assets/scenes/townwalk`, which belongs to the moorage west-arm lane in
+this window. `town_export` exit 0; `emb-townwalk/scene.glb` 91,465,888 B (was 91,468,836).
+
+THE PROOF IS A CENSUS OF THE SHIPPED GLBs, not the exporter's own report. Per (x, z) column
+to 1 mm, the vertical span of each sheet's own vertices — i.e. its wall:
+
+| bundle | sheet | columns | wall height min / p10 / p50 / p90 / max |
+|---|---|---|---|
+| emb-cine (PRE-carry, not yet re-exported) | brook | 595 | 0.120 / 0.120 / 0.131 / 0.161 / 0.226 |
+| emb-cine (PRE-carry) | pond | 778 | **0.120 / 0.120 / 0.120 / 0.120 / 0.120** |
+| emb-cine (PRE-carry) | millpond | 107 | **0.120 / 0.120 / 0.120 / 0.120 / 0.120** |
+| **emb-townwalk (AFTER)** | brook | 23 | 0.021 / 0.028 / **0.315** / 0.775 / 0.828 |
+| **emb-townwalk (AFTER)** | pond | 32 | 0.027 / 0.027 / 0.045 / 0.427 / 0.659 |
+| **emb-townwalk (AFTER)** | millpond | 6 | 0.019 / 0.019 / 0.027 / 0.045 / 0.045 |
+
+The before column is the whole argument: p10 = p50 = p90 = **0.120 m on every column of two
+sheets** — that is the flat box, stated by the shipped bytes. Read the AFTER rows as a
+SCREEN and not a distribution: decimation leaves few columns where a top and a bottom vertex
+still share an exact (x, z), so n is 6-32. What it proves is that the sheet is no longer a
+uniform 0.12 m box, which is the claim.
+
+**`emb_decimate --save` is NOT owed and here is why, with numbers.** CLAUDE.md's rule is
+that anyone who REBUILDS the realtime blend must re-run it. This was a five-mesh carrier,
+not a rebuild, and it REDUCES the budget it would be re-run to protect: brook 937 -> 876
+polys, pond 1770 -> 1599, millpond 205 -> 189. Nothing was added.
+
+### GATES, FINAL
+
+`cine_test --town emberbrook` **477 ok / 3 failed / 2 soft — identical to the pre-lane
+baseline** (bundle walk parity 218 vs 222; `square` charPxFar 37 vs its own 38 floor).
+`slice_test` **776/0**. `seam_walk --town emberbrook` **10/10**.
+`findability_test` **69 passed / 0 failed / 11 warn**.
+`routes_derive --town emberbrook --check` **ok** (STALE at lane start, re-derived, committed).
