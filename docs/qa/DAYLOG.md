@@ -18225,3 +18225,35 @@ baseline** (bundle walk parity 218 vs 222; `square` charPxFar 37 vs its own 38 f
 `slice_test` **776/0**. `seam_walk --town emberbrook` **10/10**.
 `findability_test` **69 passed / 0 failed / 11 warn**.
 `routes_derive --town emberbrook --check` **ok** (STALE at lane start, re-derived, committed).
+
+### TWO RESIDUALS THIS LANE LEAVES, both named with their measurement
+
+**1. THE SEATED WALL IS STILL A LIT EDGE.** LOOKED AT the shipped `pondlane` plate at 1:1:
+the brook now reads as one continuous channel — the chain of rims and the gaps between
+slabs are gone — but its near bank carries a pale-olive band the whole run. That is the
+water body's own SIDE WALL, now 0.41 m tall instead of 0.12 m, catching the moon where the
+V-cut channel drops away from the surrounding ground. It is a strictly better frame than a
+raft of separate rims (2/2 blind judges, and the `--zsmooth`/`--xysmooth` receipts) and it
+is not finished: the next move is bank geometry that closes over the wall, or the wall
+taking a bank material instead of the water's. NOT a shader question — the same lesson this
+whole round is.
+
+**2. `emb-cine/scene.glb` IS NOT RE-EXPORTED.** `cine_bake --glb` was run twice against the
+dressed master and did not complete either time inside the window (26 min at 90% CPU,
+Python-side glTF buffer build over the dressed scene; the first attempt died with the
+session). **The artifact on disk is the UNTOUCHED 2026-08-05 file** — proven, not assumed:
+mtime `Aug 5 04:11`, size 13,013,456 B, clean in `git status`, and its own wall census still
+reads 0.120 m on every column. So the tree carries no half-written bundle; it carries a
+bundle whose five water sheets are one release behind the master.
+
+WHAT THAT COSTS, honestly: `emb-cine/scene.glb` is the SHARED COLLISION for the cinematic
+cameras. Water is not collidable and not a `walk_` mesh, the occlusion oracle the runtime
+actually uses is `depth.png` and all four rebaked plates carry a fresh one, and `cine_test`'s
+bundle-parity assertion compares WALK meshes only — so nothing measured in this window is
+wrong because of it. It is a provenance debt, not a defect.
+
+OWED, one command, ~30 min:
+`Blender -b tools/blends/emberbrook-dressed.blend --python-exit-code 1 -P tools/cine_bake.py -- --town emberbrook --glb`
+(it does NOT touch `cine.json` — the merge block is guarded by `if result and not DRAFT`
+and `--glb` renders no cameras, verified in source). Prove it the same way this entry did:
+`wall_probe` on the written GLB must stop reading 0.120 m on every column.
