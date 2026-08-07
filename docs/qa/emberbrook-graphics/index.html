@@ -389,5 +389,46 @@ weir), so it is not a new class; WALKLOCK governs the tread in <code>emb-</code>
 regardless.</li>
 </ul>
 
+<h2>10. The calibrated re-judge: the verdict did NOT flip, and the instrument says why</h2>
+<p class="note"><code>scene_redteam --calibrate</code> first, as its own header demands:
+2/5 on the exact plate, 5/5 on any plate holding the object &mdash; in band, the judge has
+not drifted (<code>docs/qa/redteam/run-20260807-185607-calib/</code>). Then checklist mode
+on the rebaked plates (<code>run-20260807-190224</code>).</p>
+<table>
+<tr><th>plate</th><th>item</th><th>before</th><th>after</th><th>the bbox</th></tr>
+<tr><td>northlane</td><td>frame-edge-world</td><td>CONVINCING</td><td>CONVINCING</td><td>no water item on its contract</td></tr>
+<tr><td>pondlane</td><td>water-read</td><td>FAILING</td><td><b>FAILING</b></td><td><b>MOVED</b> [0.22,0.58,0.6,0.75] &rarr; [0.5,0.4,0.8,0.7]</td></tr>
+</table>
+<div class="meas">The new box contains <b>ZERO brook pixels</b> &mdash; none of the sheet
+this round reshaped &mdash; and its 19.3% "water" is the depth-pass pond the willow hides.
+LOOKED AT: it is <b>a dark gravel path with a bench and a bunting line on it</b>. Two
+independent BLIND judges given the same two plates with no contract at all scored the fix
+7.5 against 6.0 and 5.0 and described the exact defect it removed. <b>When a blind pair and
+a contract-fed judge disagree this hard, the contract-fed judge is measuring its own
+prior.</b></div>
+<div class="warn">Recorded because N=3: pondlane's <code>frame-edge-world</code> is still
+WEAK but its SUBJECT also moved, from the <code>lm_field</code> block meshes at frame-left
+to the tree line at top-left. At this N that is not separable from judge noise and is NOT
+claimed as a win.</div>
+
+<h2>11. The one-line cause, in the judge's own source</h2>
+<p class="note"><code>tools/scene_redteam.mjs:477</code> decides whether a plate is asked
+about its water:</p>
+<pre style="background:#22262c;padding:.6em .9em;border-radius:4px;overflow-x:auto;font-size:12.5px">const wets = WATER_FEATURES.map((l) =&gt; ({l, cs: census(cam, l.pos)}))
+  .filter((w) =&gt; w.cs.on &amp;&amp; w.cs.state !== 'behind-camera')</pre>
+<div class="claim">It is a POINT test on the water landmark's MAP POSITION. A water body
+whose centre projects inside the frame arms <code>quality:water-read</code> whether or not
+one pixel of that water survives the plate. That is why arch (0.13% water), therise (0.14%)
+and gateroad (0.46%, none of it inside the drawn box) all carry a FAILING water verdict,
+and why pondlane &mdash; whose pond is entirely behind a willow &mdash; carries one whose
+box holds no brook. <b>It is the same class as the Poppy defect CLAUDE.md already names: a
+test that projects a coordinate has not asked whether anything is visible there.</b></div>
+<div class="verdict">The fix is one condition, and the census that feeds it is 3 s with no
+Blender and no browser (section 1 of this page): arm the item only when the projected water
+clears a floor &mdash; about 0.5% of frame is where this town's own numbers separate the
+five plates that show water from the four that do not &mdash; and pass that fraction into
+the prompt. NOT EDITED HERE: <code>scene_redteam.mjs</code> is the shared judge and another
+lane is running against it in this window. Coordinator's call.</div>
+
 </body>
 </html>
