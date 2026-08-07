@@ -17841,3 +17841,46 @@ BEAUTY pass by the mill and its foliage, the same class as pondlane's pond behin
 willow. Its 0.736% whole-frame figure was ENTIRELY the noise floor. Reported so the plate is
 not credited with a change it did not make — and it is the second measured instance of the
 depth census over-counting visible water, which is the residual the arming gate carries.
+
+### THE BAKE LIST'S FLOOR, SET BY MEASUREMENT — and the northlane blind pair that did NOT win
+
+BAKED, 1-wide serial, each at its own shipped grade (`cine.json` appliedGrade), wall times
+from the run log:
+
+| plate | beauty | depth | visible water | at-water pixels moved (noise floor) |
+|---|---|---|---|---|
+| pondlane | 473.9 s | 11.3 s | 9.24% | 3.049% (0.093%) |
+| northlane | 765.4 s | – | 2.13% | 3.363% (0.505%) |
+| square | ~560 s | – | 2.20% | 1.568% (0.003%) |
+| homerow | ~780 s | – | 0.96% | 0.009% (0.751%) — **bought nothing** |
+
+NOT BAKED, each with its number:
+* `gateroad` 0.46%, `arch` 0.13%, `therise` 0.14% — geometry changed, below the floor.
+  **homerow at 0.96% is the receipt that the floor is real**: twice gateroad's water share
+  and it moved seven pixels. Their `quality:water-read` items are also now SUPPRESSED by
+  the arming fix, so no verdict depends on them. They are stale by at most 0.46% of pixels.
+* `gatefield` 2.33% — and **NOT stale**: every one of those pixels is `water_emb_river`,
+  the OPEN single-ring sheet the carrier reports and skips (no bottom ring, no air gap).
+  Its geometry did not move. (Its water-read item arms for the first time under the new
+  gate, which is a NEW question for the next round, not a regression.)
+* `orchard`, `waystone`, `woodroad` — 0.00% water, nothing to change.
+
+The run was killed by the harness partway into gateroad; the plate is byte-identical to
+what shipped (mtime and `git status` both clean), so the tree carries no half-baked frame.
+
+### THE NORTHLANE BLIND PAIR: A NULL, AND IT IS REPORTED AS ONE
+
+A third blind judge, same protocol, given northlane before/after: **"They are the same."**
+It scored both 5/10, listed the same four defects at the same positions in each, and backed
+its call with its own pixel diff ("mean channel delta 0.16/255 … consistent with
+compression or noise-seed artifacts"). That mean is a bad statistic for a localised change —
+the same frames measure 3.363% of AT-WATER pixels moved against a 0.505% floor — but the
+judge is reporting what it could SEE, and at northlane's overhead framing the brook is a
+2.1% sliver at the bottom-left corner. **So: the fix is visible at pondlane (2/2 blind
+judges, both preferring it and both naming the defect) and NOT visible at northlane (1/1
+blind judge, indistinguishable).** Recorded as a split, not averaged away.
+
+Its residual list is useful and none of it is water: a flat tan roof panel top-left, a
+brown untextured slab under the canopy, "faceted low-poly" stepping stones up the left path,
+and a hard-edged pale grey panel embedded in the lawn — the same undressed-massing family as
+the `lm_field_*` finding above.
