@@ -553,7 +553,11 @@ claim(CUTINS_REL, 'characters', 'dialogue.js reads it to pick cut-in vs framed t
 //   dialogue.js  bustUrl()  -> <id>/bust.png, <id>/expr-<mood>.png
 //   dialogue.js  cutin()    -> <id>/cutin.png, <id>/cutin-<mood>.png
 //   ui_kit.js / battle_turnbased.js -> <id>/bust.png
-const CAST_PATTERNS = [/^bust\.png$/, /^expr-[\w-]+\.png$/, /^cutin\.png$/, /^cutin-[\w-]+\.png$/];
+// pose(.png|-front.png) is ui_kit's POSE_NAMES battle-sprite fetch — it was missing
+// from this list and vesper (whose file is pose.png, not pose-front.png) shipped
+// with NO pose at all: the live verify's two 404s on 2026-08-07. The runtime tries
+// both names in order, so the build must carry whichever exists.
+const CAST_PATTERNS = [/^bust\.png$/, /^expr-[\w-]+\.png$/, /^cutin\.png$/, /^cutin-[\w-]+\.png$/, /^pose(-front)?\.png$/];
 for (const id of [...cast].sort()) {
   const dir = join(PUB, 'assets/characters', id);
   if (!existsSync(dir)) continue;                     // a speaker with no art is legal
