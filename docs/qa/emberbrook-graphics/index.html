@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Emberbrook graphics fix — round 3, item 1: THE WATER (2026-08-07)</title>
+<style>
+  body { font: 14px/1.5 -apple-system, sans-serif; margin: 2em auto; max-width: 1280px;
+         background: #16181c; color: #d8dce2; }
+  h1 { font-size: 20px; } h2 { font-size: 16px; margin-top: 2.2em; color: #eec97a; }
+  h3 { font-size: 14px; margin-top: 1.6em; color: #b8c4d0; }
+  .claim { border-left: 3px solid #b05555; padding: .2em .8em; margin: .6em 0;
+           color: #e2b0b0; background: #201a1a; }
+  .meas  { border-left: 3px solid #5588b0; padding: .2em .8em; margin: .6em 0;
+           background: #191d20; }
+  .verdict { border-left: 3px solid #55b077; padding: .2em .8em; margin: .6em 0;
+             background: #17201a; }
+  .warn { border-left: 3px solid #b0903f; padding: .2em .8em; margin: .6em 0;
+          background: #201d16; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 1em 0; }
+  .pair figure { margin: 0; }
+  .pair img { width: 100%; border: 1px solid #333; }
+  figcaption { font-size: 12px; color: #8a919c; padding: 2px 0; }
+  code { background: #22262c; padding: 1px 4px; border-radius: 3px; font-size: 12.5px; }
+  .note { color: #8a919c; font-size: 13px; }
+  table { border-collapse: collapse; margin: 1em 0; font-size: 13px; }
+  th, td { border: 1px solid #333; padding: 3px 9px; text-align: left; }
+  th { background: #21262c; color: #b8c4d0; }
+  td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.skip td { color: #7c828c; }
+</style>
+</head>
+<body>
+<h1>Emberbrook graphics fix — round 3, item 1: THE WATER
+  <span class="note">(2026-08-07 · <code>tools/emb_water_shader.py</code>)</span></h1>
+
+<p class="note">Worklist item 1 of the round-3 slate in <code>docs/qa/MORNING.md</code>. The
+standing complaint is the calibrated judge's <code>quality:water-read</code> family on the
+Emberbrook checklist sweep (<code>docs/qa/redteam/run-20260806-1/-2-emberbrook</code>):
+<b>0&nbsp;CONVINCING, 5&nbsp;FAILING + 1 VISIBLE-BUT-ILLEGIBLE</b> — the town's worst
+standing visual class. BEFORE images are the plates as they stood on
+<code>2026-08-02</code> (committed under <code>before/</code>); AFTER images are the live
+plates in <code>/assets/scenes/emb-cine/</code>. Serve repo <code>/public</code> and
+<code>/docs</code> on one port to view.</p>
+
+<h2>The claim</h2>
+<div class="claim">
+"The water surface reads as a <b>solid black flat plane</b> with no transparency, ripples,
+or soft bank contact" (pondlane) ·
+"an <b>untextured, flat black void</b> lacking transparency, water flow, or reflections"
+(arch) ·
+"a completely featureless, <b>pitch-black flat plane</b> with no reflections, transparency,
+or believable wet shore contacts" (gateroad) ·
+"Water lacks transparency or surface reflection, <b>blending into dark terrain</b>"
+(therise) ·
+"<b>No visible water surface</b> geometry or fluid shader is present" (homerow) ·
+"rendered so dark and unreflective that it is <b>indistinguishable from dark ground</b>"
+(pondlane, the <code>pond</code> landmark).
+</div>
+
+<h2>What was measured, in the order it was measured</h2>
+
+<h3>1 — the diagnosis holds, and it undercounted by one sheet</h3>
+<div class="meas"><b>Measured</b> (dry run of <code>tools/emb_water_shader.py</code> on
+<code>emberbrook-dressed.blend</code>): <b>five</b> meshes wear <code>emb_dress_water</code>,
+not the four the 09:45 census named — <code>water_emb_pond</code> (5,664 v),
+<code>water_emb_brook</code> (3,000 v), <code>water_emb_millpond</code> (656 v),
+<code>water_emb_river</code> (2,522 v after subdivision) and
+<code>emb_dress_wheelpit_water</code> (375 v), the mill's own dug pit, which the
+name-pattern census missed. None carried a <code>Col</code> layer; the material was one
+flat Principled at base (0.045, 0.075, 0.062), roughness 0.09, <b>Alpha a constant
+0.90</b>, bump 0.25. Dellhollow's ratified depth→alpha recipe
+(<code>docs/plans/water-transparency.md</code> AS BUILT) had never been ported.</div>
+
+<h3>2 — the sheets' normals are inverted, and the ratified script would have baked the underside</h3>
+<div class="meas"><b>Measured</b> twice, independently — in the shipped
+<code>emb-cine/scene.glb</code> and again in the blend: on all three closed sheets the
+<code>n.z&nbsp;&gt;&nbsp;+0.5</code> face group sits <b>0.12 m BELOW</b> the
+<code>n.z&nbsp;&lt;&nbsp;−0.5</code> group (pond 0.68 vs 0.80, brook 1.31 vs 1.43, millpond
+4.08 vs 4.20). <code>water_emb_river</code> and <code>emb_dress_wheelpit_water</code> are
+<b>open single-sided sheets</b> with only one group at all.
+<code>t2_water_shader</code>'s <code>normal.z &gt; 0.5</code> test — the ratified one —
+would have painted the depth fade on the underside of three sheets and skipped the river
+entirely, <b>with every line it prints looking correct</b>. The carrier finds the two
+near-vertical groups and takes the higher mean z as the top; a sheet with one group is
+open and all of it carries the fade.</div>
+
+<h3>3 — the obvious adaptation was wrong, and a blind pair is what proved it</h3>
+<p>Emberbrook's water is <b>0.10–0.39 m deep at the median</b> (per-vertex down-ray against
+a local BVH). Dellhollow normalises each sheet's ramp to its own median because its
+bathymetry is a flat slab 4–7.5 m down; carried here unexamined, that drives four of five
+sheets' median pixel to alpha 0.97. So the obvious adaptation was to read the ramp in
+<b>true metres</b> — leaving the whole town's water at alpha 0.10–0.45 — with the alpha
+floor lifted to 0.35 so the surface kept a specular lobe, plus roughness 0.09→0.16 and
+bump 0.25→0.45 to break the near-mirror that reflects unlit foliage.</p>
+<div class="warn"><b>It lost the blind pair, 0–2.</b> Two independent judges, given the
+before/after anonymised and shuffled (<code>tools/blind_pack.mjs</code>) with no ownership
+framing and no charge list, scored the change <b>2/10 against the untouched plate's
+3/10</b> and preferred the untouched plate — <i>both of them</i>, for the same reason:
+"the panels carry a cooler blue-black sheen that at least gestures at wet" and the change
+"reads unambiguously as a paved or tiled surface, not water at all." Blender's Principled
+blends the WHOLE shader against a Transparent BSDF, <i>specular included</i>, so at alpha
+0.35 the only water cue the frame had was spent on a view of unlit brown mud.</div>
+<div class="meas"><b>And they named the real defect, in both images:</b> "a stair-stepped
+series of flat rectangular slabs, each with a visible mitred edge … like a broken staircase
+built from glass or ceramic risers"; "each stepped panel has a distinct trim edge where it
+meets the surrounding dark ground — there's no soft blend or visible bank sloping down into
+a water line."</div>
+
+<h3>4 — so what shipped is the RATIFIED recipe, plus one rule the ratified one could not have</h3>
+<p><code>tools/emb_water_shader.py -- save</code>, every default as written:
+<code>--scale median</code> (the ratified normalisation), the ratified ramp 0.06 … 0.97,
+and <b>the shipped surface numbers untouched</b> (roughness 0.09, bump 0.25, base
+0.045/0.075/0.062) — the blind pair's verdict, honoured. The one thing that is not
+Dellhollow's:</p>
+<div class="verdict"><b>A SIDE WALL IS NOT A BOTTOM.</b> The ratified script has two cases —
+top ring takes the fade, <i>everything else</i> goes to 0.02 — and its stated reason
+("a ray entering a translucent top and leaving an equally translucent bottom renders
+1−(1−a)² instead of a") is about the BOTTOM RING ONLY. Dellhollow's sheets are flat boxes
+seen from above whose vertical walls are never on screen. Emberbrook's brook is a
+<b>stepped cascade</b> and its risers ARE visible water faces. Three cases now: top ring →
+ramp(depth), <b>bottom ring</b> → 0.02, <b>walls</b> → the water's own alpha. So the
+mitred trim edge softens at the bank without the risers being deleted.</div>
+
+<h3>4b — AND THE HONEST RESULT: correctly ported, the ratified recipe is a no-op here</h3>
+<div class="warn"><b>Measured on the shipped plate.</b> pondlane rebaked with the recipe
+above, diffed against the plate it replaced: <b>269 pixels of 4,128,768 move by more than
+8/255 — 0.007 %.</b> Looked at side by side at 1:1, the stepped sheets are unchanged.
+The reason is arithmetic and was visible in the table above: normalising a 0.28 m pond to a
+4 m reference is a ×14.1 ramp, which compresses the ENTIRE 0.06→0.97 fade into the first
+<b>2–7 cm</b> of depth — a band one or two pixels wide at this camera distance. Dellhollow's
+version of the same recipe spans metres because Dellhollow's water is metres deep.</div>
+<div class="claim"><b>So this is not a shader problem, and that is the finding.</b> Both
+things the judges actually named are out of a material's reach:
+<b>the stacked mitred slabs are GEOMETRY</b> — the brook is modelled as a staircase of
+0.4 m boxes and no alpha ramp can turn a riser into a bank — and
+<b>the black plane is LIGHTING</b>: there is no source for the water to reflect. That is
+this town's own doctrine, already written in CLAUDE.md from the night-grade lane:
+<i>adjusting an existing light has never moved this town; adding a new source always has.</i>
+Recommended next fix class, in order: (1) reshape the brook's cascade so risers blend into
+bank geometry; (2) add a source the water can carry — a moon glint or a lamp sited to throw
+across the pond.</div>
+<p class="note">What the pass is still worth keeping: the diagnosed defect (zero
+<code>Col</code> layers on all five sheets) is closed, the bake is idempotent and
+invertible, and any later geometry or lighting fix inherits a correct per-vertex depth
+attribute instead of having to discover this again.</p>
+
+<h3>5 — the frustum census is not the oracle here; the render is</h3>
+<div class="meas"><b>Measured.</b> A ray census against each plate's own
+<code>depth.png</code> put water on 8 of 11 cameras. A BEFORE/AFTER <b>draft render</b>
+with one variable changed says something different, and it is the one that counts:</div>
+<table>
+<tr><th>camera</th><th>water by depth-census</th><th>pixels the water material actually
+    moved</th><th>judge's water bbox</th><th>rebaked?</th></tr>
+<tr><td>pondlane</td><td class="n">2.46%</td><td class="n"><b>1.58%</b> draft / <b>1.35%</b> full plate</td><td>y 0.58–0.75</td><td>YES</td></tr>
+<tr><td>square</td><td class="n">0.29%</td><td class="n">—</td><td>ABSENT (no water found)</td><td>YES</td></tr>
+<tr class="skip"><td>gateroad</td><td class="n">0.19%</td><td class="n">0.064% (371 px)</td><td>y 0.47–0.70 — <b>the changed pixels are y 0.23–0.40</b></td><td>no</td></tr>
+<tr class="skip"><td>arch</td><td class="n">0.08%</td><td class="n">0.015% (87 px)</td><td>y 0.55–0.61 — <b>the changed pixels are y 0.19–0.20</b></td><td>no</td></tr>
+<tr class="skip"><td>homerow</td><td class="n">0.11%</td><td class="n">—</td><td>x 0–0.25, y 0–0.2</td><td>no</td></tr>
+<tr class="skip"><td>therise</td><td class="n">0.05%</td><td class="n">—</td><td>y 0.48–0.65</td><td>no</td></tr>
+<tr class="skip"><td>northlane / gatefield / woodroad / waystone / orchard</td><td class="n">0.21% / 0.03% / 0 / 0 / 0</td><td class="n">—</td><td>no <code>water-read</code> item</td><td>no</td></tr>
+</table>
+<p>The census–render gap is <b>foliage</b>: cine_bake's depth pass does not record the
+alpha-cut leaf cards that stand in front of the brook in the beauty render, so a
+depth-map occlusion test calls water visible where the picture shows a tree. An instrument
+calibrated on one pass cannot be trusted about another.</p>
+<div class="warn"><b>The honest headline is a judge-calibration finding.</b> On arch and
+gateroad the pixels the water material owns and the pixels the judge called water are in
+<b>different thirds of the frame</b> — disjoint. Those two <code>FAILING</code> verdicts
+are the <code>quality:water-read</code> family finding a dark region and blaming water for
+it. <b>No water shader can move them</b>; they belong to the crushed-black-shadow item
+(round 3, item 4). The water class was one real plate and several misattributions.</div>
+
+<h3>6 — depth.png is unchanged, proven rather than quoted</h3>
+<div class="meas">Rebaked <code>pondlane</code>, both depth maps decoded through the plate's
+own near/far (9.79 … 146.92 m): <b>14,308 of 1,032,192 pixels differ and every one of them
+by less than 0.001 m</b> — 1-LSB quantisation, not a moved surface. <code>square</code>: 4
+pixels, max channel delta 3. Note the trap: a raw byte compare says "changed" and a raw
+channel delta says "255", and both are the blue channel's last bit. <b>Compare depth in
+metres or do not compare it.</b></div>
+
+<h2>The pictures</h2>
+<div class="pair">
+  <figure><img src="before/pondlane.png"><figcaption>pondlane — BEFORE: the brook's stepped sheets read as stacked panes with a mitred trim edge against the ground</figcaption></figure>
+  <figure><img src="/assets/scenes/emb-cine/cameras/pondlane/bg.png"><figcaption>pondlane — AFTER the shipped recipe. 0.007% of pixels moved; if you cannot tell the two apart, that is the correct reading and it is section 4b.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="before/square.png"><figcaption>square — BEFORE (the brook enters at the lower-left corner)</figcaption></figure>
+  <figure><img src="/assets/scenes/emb-cine/cameras/square/bg.png"><figcaption>square — AFTER</figcaption></figure>
+</div>
+
+<h2>Gates</h2>
+<p class="note"><code>cine_test --town emberbrook</code> — 477 ok / 3 failed / 2 soft both
+before and after this lane; all three reds pre-existing (cinematic-vs-explore bundle walk
+parity 218 vs 222; <code>square</code> charPxFar 37 against a 38 floor; <code>pondlane</code>
+visibleFrac 39%). Full receipts, with instruments, in <code>docs/qa/DAYLOG.md</code>
+(2026-08-07, round 3 item 1).</p>
+
+</body>
+</html>

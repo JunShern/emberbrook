@@ -17033,3 +17033,150 @@ the scene to every edge of the frame"). quay-west water-read stays FAILING and i
 regression: "there is no water surface rendered anywhere around or beneath the quay deck" is
 true — the census finds ZERO water pixels in that frustum. Same standing item as
 run-20260806-1's "lower gorge completely black", and it is a camera-ownership question.
+
+## 2026-08-07 ~18:55 — ROUND 3 ITEM 1: EMBERBROOK'S WATER — recipe ported, and the class was mostly not water
+
+`tools/emb_water_shader.py` (an UNRUN draft at session start) is finished, RUN, and
+receipted; `tools/blends/districts/emb_water_shader.json` is its manifest. Shipped
+invocation: **`-- save`, every default as written** — the defaults ARE the shipped numbers.
+
+### FIVE THINGS THE DRAFT HAD WRONG, each found by an instrument, not by reading it
+
+1. **`Scene.ray_cast` cannot be the down-ray on this master.** Measured: 57 k rays over the
+   27 M-triangle dressed blend did not return in **16 minutes** (killed at RSS 9.78 GB, zero
+   output). Replaced by ONE `BVHTree` built only from evaluated meshes whose world AABB
+   overlaps a sheet's own footprint — **1,946 meshes / 209,592 verts / 215,038 polys** — and
+   all five sheets now bake in seconds inside a ~1 min blend load.
+
+2. **THE SHEETS' NORMALS ARE INVERTED, so the ratified `normal.z > 0.5` test picks the
+   UNDERSIDE.** Measured twice independently (emb-cine/scene.glb, then the blend): pond
+   +ring mean z **0.68** vs −ring **0.80**; brook 1.31 vs 1.43; millpond 4.08 vs 4.20. And
+   `water_emb_river` (2,280 polys) and `emb_dress_wheelpit_water` (336) are **OPEN
+   single-sided sheets with no second ring at all** — `t2_water_shader` would have skipped
+   the river entirely. The carrier finds both near-vertical groups and TAKES THE HIGHER MEAN
+   Z; a one-ring sheet is open and carries the fade whole. Same class as the gate-court
+   finding: A GATE THAT MEASURES ITS OWN DRAWING CANNOT MEASURE ITS OWN BUILD — every line
+   the ratified script prints would have looked correct.
+
+3. **The 09:45 census undercounted by one sheet.** `emb_dress_wheelpit_water` (375 v, the
+   mill's dug pit) wears `emb_dress_water`; a `water_emb_*` name pattern misses it. FIVE
+   sheets. (`emb_dress_leat_water*`/`emb_dress_buckwater*` wear `emb_dress_waterfall` — out
+   of scope for the bake, but still hidden from the down-ray or a waterfall card becomes
+   somebody's bed.)
+
+4. **A SIDE WALL IS NOT A BOTTOM.** The ratified script has two cases — top ring takes the
+   fade, EVERYTHING ELSE goes to 0.02 — and its stated reason (a ray through a translucent
+   top AND an equally translucent bottom renders 1-(1-a)^2) is about the BOTTOM RING ONLY.
+   Dellhollow's sheets are flat boxes seen from above whose walls are never on screen;
+   Emberbrook's brook is a STEPPED CASCADE and its risers ARE visible water faces. Three
+   cases now: top -> ramp(depth), BOTTOM -> 0.02, WALLS -> the water's own alpha.
+
+5. **THE OBVIOUS ADAPTATION LOST A BLIND PAIR, 0-2.** Emberbrook's water is 0.10-0.39 m deep
+   at the median (per-vertex, measured), so normalising each sheet to a 4 m reference — the
+   ratified `--scale median` — drives four of five sheets' median pixel to alpha 0.97. The
+   obvious fix was to read the ramp in TRUE METRES (alpha 0.10-0.45 town-wide), floor the
+   alpha at 0.35 so a specular lobe survived, and move roughness 0.09->0.16 / bump
+   0.25->0.45 to break the near-mirror. Baked, then judged: TWO INDEPENDENT BLIND JUDGES
+   (`tools/blind_pack.mjs`, shuffled, no ownership framing, no charge list) scored it
+   **2/10 against the untouched plate's 3/10 and both preferred the untouched plate**, both
+   naming the same reason — "the panels carry a cooler blue-black sheen that at least
+   gestures at wet", and the change "reads unambiguously as a paved or tiled surface, not
+   water at all". Blender's Principled blends the WHOLE shader against a Transparent BSDF,
+   SPECULAR INCLUDED, so at alpha 0.35 the only water cue the frame had was spent on a view
+   of unlit brown mud. **Reverted to the ratified numbers; the defaults now equal the ship.**
+
+### THE HEADLINE: CORRECTLY PORTED, THE RATIFIED RECIPE IS A NO-OP HERE
+
+`pondlane` and `square` rebaked with it, diffed against the plates they replaced:
+**269 px of 4,128,768 (0.0065%) and 89 px (0.0022%)** move by more than 8/255. LOOKED AT
+BOTH at 1:1 — the stepped sheets are unchanged. The arithmetic was in the table all along:
+normalising a 0.28 m pond to a 4 m reference is a x14.1 ramp, which compresses the entire
+0.06->0.97 fade into the first **2-7 cm** of depth, a band one or two pixels wide at this
+camera. Dellhollow's version spans metres because Dellhollow's water is metres deep.
+
+**So this is not a shader problem.** Both things the judges actually named are out of a
+material's reach: **the stacked mitred slabs are GEOMETRY** (the brook is modelled as a
+staircase of 0.4 m boxes; no alpha ramp turns a riser into a bank), and **the black plane is
+LIGHTING** — there is no source for the water to reflect, which is this town's own doctrine
+already in CLAUDE.md: *adjusting an existing light has never moved this town; adding a new
+source always has*. NEXT FIX CLASS, in order: (1) reshape the brook cascade so risers blend
+into bank geometry; (2) add a source the water can carry (moon glint, or a lamp sited to
+throw across the pond). What this pass is still worth: the diagnosed defect (zero `Col`
+layers on all five sheets) is closed, the bake is idempotent and invertible, and any later
+geometry/lighting fix inherits a correct per-vertex depth attribute.
+
+### AND A JUDGE-CALIBRATION FINDING, from the same instrument
+
+A BEFORE/AFTER draft render with ONE variable changed is the only oracle that says which
+pixels a material owns. It says:
+
+| plate | water by depth-census | pixels the water material MOVED | judge's water bbox |
+|---|---|---|---|
+| pondlane | 2.46% | 1.58% (draft) | y 0.58-0.75 — partial overlap |
+| gateroad | 0.19% | 0.064% (371 px) | y 0.47-0.70 vs changed pixels y **0.23-0.40** — DISJOINT |
+| arch | 0.08% | 0.015% (87 px) | y 0.55-0.61 vs changed pixels y **0.19-0.20** — DISJOINT |
+
+On arch and gateroad the pixels the water owns and the pixels the judge called water are in
+different thirds of the frame. Those two FAILING verdicts are the `quality:water-read`
+family finding a dark region and blaming water for it; **no water shader can move them**.
+They belong to round 3 item 4 (crushed-black shadows). **And the frustum census is not the
+oracle here**: a ray census against each plate's own depth.png put water on 8 of 11 cameras
+and overstated the render by 3-5x, because cine_bake's depth pass does not record the
+alpha-cut leaf cards that stand in front of the brook in the beauty render. AN INSTRUMENT
+CALIBRATED ON ONE PASS CANNOT BE TRUSTED ABOUT ANOTHER.
+
+### THE ARTIFACT (blend re-opened read-only; never the log)
+
+`emb_dress_water`: render_method **BLENDED**, blend_method BLEND, Base Color **UNLINKED** at
+the shipped (0.045,0.075,0.062), roughness 0.09, bump 0.25, Alpha **LINKED** <-
+`embws_depth_ramp` <- `embws_depth_attr` layer `Col`; `embws_mat0` snapshot holds the
+originals (DITHERED/HASHED). All five sheets carry a CORNER/FLOAT_COLOR `Col` whose rgb set
+is exactly {(1.0,1.0,1.0)}: wheelpit 1,344 loops (a 0.06/0.52/0.97 min/p10/p50), brook 9,000
+(0.02/0.02/0.97, 16.7% at SIDE_ALPHA = the bottom ring, 1 of 6 box faces), millpond 1,968
+(0.02/0.02/0.10), pond 16,992 (0.02/0.02/0.97), river 9,104 (0.06/0.69/0.97). `embws`
+geometry snapshot present on all five, so `revert save` restores.
+
+### BAKED (1-wide serial, each at ITS OWN shipped grade; wall times)
+
+- `pondlane` exp 1.00 / sky 0.65 / moon 1.50 — beauty **421.2 s**, depth 21.5 s (was 749.5 s)
+- `square`   exp 1.00 / sky 0.65 / moon 1.50 — beauty **722.1 s**, depth 16.2 s (was 471.5 s)
+- (the discarded metres/0.35 variant cost a further 470.6 + 409.0 s plus three 1008x576
+  draft plates; the draft loop at 28 spp is ~100-180 s/plate and is what should have been
+  run before the first full bake.)
+
+NOT BAKED, with the number: `arch` (87 px moved), `gateroad` (371 px), `therise` (census
+0.049%), `homerow` (0.105%), `northlane` (0.21% but NO `quality:water-read` item on its
+contract), `gatefield`/`woodroad`/`waystone`/`orchard` (0.00-0.03%). Nine plates below
+0.07% of pixels is invisible; a full pass picks them up. The DAYLOG's own precedent stands:
+a bake list needs a floor, and 0.06% bought nothing before.
+
+### DEPTH IS UNCHANGED, PROVEN NOT QUOTED — and the trap in proving it
+
+Both depth.png decoded through each plate's own near/far. `pondlane` (9.79..146.92 m):
+14,308 of 1,032,192 pixels differ, **MAX |delta| = 0.000074 m**. `square` (24.40..73.84 m):
+4 pixels, max 0.000009 m. **THE TRAP:** a raw byte compare says "changed" and a raw channel
+delta says "255" — both are the blue channel's last bit. COMPARE DEPTH IN METRES OR DO NOT
+COMPARE IT. (The first read of this nearly got written up as a depth regression.)
+
+### THE REALTIME TIER DOES NOT GET THIS, and the reason is measured
+
+Read out of the SHIPPED `public/assets/scenes/emb-townwalk/scene.glb` chunk table:
+`emb_dress_water` is ALREADY `alphaMode: BLEND` with `baseColorFactor`
+(0.045,0.075,0.062,**0.90**), and **0 of its 22 primitives carry `COLOR_0`** — the
+per-vertex fade cannot reach the runtime at all (the exporter skips a vertex colour that
+does not feed Base Color; finding 221 forbids feeding it). Carrying this pass there moves
+base colour ~0.01 linear and roughness 0.07 in a tier with no ray-traced specular, for a
+re-dress + `emb_decimate --save` + a 91 MB GLB re-export. NOT TAKEN; named in the tool's
+docstring so it is not re-derived.
+
+### GATES (before this lane -> after)
+
+`cine_test --town emberbrook` **477 ok / 3 failed / 2 soft, IDENTICAL both sides** — all
+three reds pre-existing (bundle walk parity 218 vs 222; `square` charPxFar 37 vs 38;
+`pondlane` visibleFrac 39%). `slice_test` 776/0. `seam_walk --town emberbrook` 10/10.
+`findability_test` 69/0/12 warn. NOT MINE, present, and named so nobody re-attributes them:
+`seam_test --town emberbrook` 177/2/1 (square<->pondlane seam overlap, town-wide 4.7 m vs a
+4.1 m budget) and `routes_derive --town emberbrook --check` **STALE** — both trace to the
+map/route edits of `a7be573` (2026-08-05), and this lane touched neither the map nor routes.
+
+Board: `docs/qa/emberbrook-graphics/index.html`.
