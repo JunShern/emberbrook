@@ -60,6 +60,31 @@ git runs here, on branch `migration/3d-hybrid`.
   Each prints its own faithfulness gate; roadchop's `repro` mode proves the copy bit-exact
   BEFORE it builds. tools/walk_rederive.py `--drop` takes a deleted map entity's walk records
   out (an orphaned walk record goes on paving the town).
+- **tools/emb_brookchop.py — EMBERBROOK'S WATER WAS A RAFT OF FLOATING BOXES** (2026-08-07):
+  every sheet an independent 0.55 m cell 0.12 m THICK standing 0.09–2.04 m above its own bed —
+  0.17 m of air, a lit underside, four lit walls and a shadow cast on the bed the water is
+  meant to lie in. THAT is the judged "stacked mitred slabs", and it is why the correctly
+  ported depth→alpha shader moved 269 pixels. The carrier welds each sheet into one strip,
+  relaxes the lattice silhouette (−22.3% boundary length) and seats the bottom ring on the
+  bed; emb_blockout's `water_field` carries the same seating so a rebuild agrees. It runs
+  BETWEEN emb_water_shader's revert and its re-bake — the file asserts that order — and is
+  NOT idempotent for `--xysmooth`. Receipt: at-water luminance p50 0.056 → 0.108 with NO
+  LIGHT TOUCHED, and the town's water class closed 0/6 FAILING → 0 FAILING.
+- **A JUDGE CAN BE ASKED ABOUT SOMETHING THAT IS NOT IN THE PICTURE** (2026-08-07, the Poppy
+  defect inside the reviewer): scene_redteam armed `quality:water-read` on a POINT test of the
+  water landmark's MAP POSITION, so four of Emberbrook's five FAILING water verdicts described
+  pixels holding ZERO water — gateroad's "pitch-black flat plane" is a pale gravel apron at
+  5.6× its own frame median. It now arms on MEASURED visible water (sheets rasterised through
+  the shipped projection, agreed against the plate's own depth.png; threshold 0.5% of frame,
+  `--water-census` prints it with no API). STILL OPEN: the gate fixes WHICH PLATE is asked,
+  not WHERE the judge points — armed bboxes can still hold no water.
+- **tools/plate_probe.py — GROUND LUMINANCE WITHOUT BLENDER** (2026-08-07): reconstructs a
+  world XYZ per pixel from a bundle's own solved camera + depth.png, derives normals from the
+  world-position gradient and splits a plate into GROUND/WALL/VOID — 15 plates in ~40 s. The
+  night-grade doctrine's "measure ground luminance on region probes" had no instrument until
+  this. It names a REGION, never an object: the world box is the input to a Blender ray census.
+  Traps at the tool: NEAREST-only depth resample, depth discontinuities faking grazing
+  normals, and *dark ≠ crushed* (crushed = dark AND locally flat).
 - **tools/town_blockout.py `STAIRS_V2` — the switchback pivot split; a flight not in the set
   is still the old geometry, and an edge joins it only when its district builder is re-run in
   the same window.** (Round 21: both flights of a switchback pivoted about ONE waypoint, so a
