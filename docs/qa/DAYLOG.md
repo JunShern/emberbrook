@@ -17600,3 +17600,16 @@ wearing `emb_dress_water` (five, all named in its receipt) and every sheet's `dz
 0-0.73 m over a tread" relation it could create already holds at **177 sample pairs in the
 SHIPPED bundle** (the brook under the footbridge and at the weir, `water_vs_walk` census),
 so it is not a new class; WALKLOCK governs the tread in `emb-` scenes regardless.
+
+## 2026-08-07 ~19:15 — DEPLOY LANE: round 3 is LIVE AND VERIFIED (29/0)
+
+Built from HEAD b0b32ae with a CLEAN public/ (pre-check, no half-written plates).
+`build-static --compress`: 392 files / 519.1 MB / 39.7 s, encode cache 234 hit /
+19 miss. All three build gates green — every .glb binary glTF, 16 bundle GLBs
+byte-identical to public/ on POSITION + indices, 255 referenced paths resolve
+(237 via the .webp rewrite). Local `static_verify`: ALL GREEN 29/0. Published with
+`deploy-ghpages.sh dist` (push verified 050bdce, Pages build queued by the script).
+LIVE stamp moved 2026-08-07T06:46 -> **2026-08-07T18:43**, and only then
+`static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**,
+zero failed requests, zero unexpected 4xx/5xx, zero console errors.
+The live site now carries the round-3 water/realtime-tier work.
