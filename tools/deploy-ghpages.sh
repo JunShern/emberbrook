@@ -75,3 +75,10 @@ echo
 gh api repos/:owner/:repo/pages --jq '"  LIVE AT: " + .html_url' 2>/dev/null \
   || echo "  URL will appear at Settings > Pages once the first build finishes"
 echo "  (first publish takes a few minutes to go live)"
+
+# TRIGGER THE PAGES BUILD EXPLICITLY (2026-08-07). Twice measured: a force-push to
+# gh-pages did NOT auto-trigger the Pages build — the site sat on the previous
+# build for 30+ min both times until a manual POST queued one. The API call is
+# idempotent-safe (a queued/running build just continues).
+gh api -X POST repos/:owner/:repo/pages/builds --jq '"  Pages build: " + .status' 2>/dev/null \
+  || echo "  (could not queue a Pages build via API — it may still auto-build)"
