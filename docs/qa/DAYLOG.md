@@ -17812,3 +17812,32 @@ its own source comment declares (a gate that over-counts water suppresses less t
 should, never more). Closing that needs a beauty-pass test, not a depth-pass one. Until
 then pondlane is a plate the judge is asked about water it cannot see, and its verdict
 should be read with that attached.
+
+### CORRECTION TO MY OWN NUMBER, ONE HOUR LATER — the raw pixel fraction was part noise
+
+The line above ("pondlane moved 0.538% of its pixels, 83x the shader pass") is a WHOLE-FRAME
+figure and it is contaminated. A geometry edit changes the BVH, so Cycles samples the whole
+frame differently and some of that 0.538% is render noise between two 128-spp renders. The
+honest decomposition splits the frame by the water mask (dilated by ~1% of frame width so
+the bank band counts as "at the water"), which gives BOTH the signal and its own noise
+floor in the same measurement:
+
+| plate | moved > 8/255 AT the water | moved elsewhere (= the noise floor) | L p50 at-water, before -> after | mean abs gradient there |
+|---|---|---|---|---|
+| pondlane | **3.049%** | 0.093% | 0.0560 -> **0.1082** | 0.00710 -> **0.00520** (-27%) |
+| northlane | **3.363%** | 0.505% | 0.0484 -> **0.0662** | 0.02374 -> 0.02241 (-6%) |
+| square | **1.568%** | 0.003% | 0.0115 -> **0.0392** | 0.00670 -> 0.00603 (-10%) |
+| homerow | 0.009% | 0.751% | — | — |
+
+pondlane's ratio is 33x its own noise floor and square's is 500x, so the change on those two
+is unambiguously the water; northlane's is 6.7x, still clear. **The claim that the water got
+about twice as bright with no light touched SURVIVES and is if anything stronger** (0.056 ->
+0.108 restricted to the water, against 0.051 -> 0.101 over the contaminated set), and the
+rim-gradient drop is bigger too (-27% vs -20%).
+
+**AND homerow's rebake bought nothing.** Seven pixels moved at its water and 30,401 moved
+elsewhere: its brook and millpond (0.96% of frame by the depth census) are occluded in the
+BEAUTY pass by the mill and its foliage, the same class as pondlane's pond behind the
+willow. Its 0.736% whole-frame figure was ENTIRELY the noise floor. Reported so the plate is
+not credited with a change it did not make — and it is the second measured instance of the
+depth census over-counting visible water, which is the residual the arming gate carries.
