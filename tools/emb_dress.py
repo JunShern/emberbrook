@@ -3258,6 +3258,10 @@ def dress_water():
     print("  WATER          %d town water meshes given the dressed surface; the far "
           "ground sheet given the scanned material so it stops reading as a pale slab "
           "behind the corner" % n)
+    print("  WATER          THIS REBUILD DROPPED THE DEPTH->ALPHA BAKE: re-run "
+          "tools/emb_water_shader.py -- save in the same window (the Dellhollow "
+          "regression class — a builder that touches water geometry orphans the "
+          "Col bake silently; graphics round 2, 2026-08-07)")
 
 
 if not NODRESS:
