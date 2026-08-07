@@ -18006,3 +18006,54 @@ TEST THAT FAILED" — do not read a mid-write bundle as a regression.
 0 failed / 11 warn (was 12 — one villager's plate read cleared; not claimed as a win).
 `routes_derive --town emberbrook --check` **ok, up to date** (it was STALE at lane start,
 inherited from `a7be573`, and is re-derived and committed).
+
+## 2026-08-07 ~20:55 — THE FINAL SWEEP: the water-read class is CLOSED, and the arming fix is what closed most of it
+
+`tools/scene_redteam.mjs --town emberbrook --mode checklist` over all eleven plates,
+against the four rebaked frames and under the recalibrated arming
+(`run-20260807-205035-round3water`). The class this round opened on:
+
+| | before (`run-20260806-1/-2`) | after |
+|---|---|---|
+| CONVINCING | 0 | **1** (northlane) |
+| WEAK | 0 | 3 (pondlane, homerow, gatefield) |
+| ABSENT | 1 (square) | 1 (square) |
+| **FAILING** | **5** (arch, therise, pondlane, homerow, gateroad) | **0** |
+| not asked | 5 plates with no water item | arch, therise, gateroad — suppressed by measurement |
+
+**ZERO FAILING.** But the attribution has to be exact, because three different things did
+three different amounts of work:
+
+* **arch, therise, gateroad**: their FAILING verdicts are gone because THE JUDGE IS NO
+  LONGER ASKED. Their water is 0.12 / 0.11 / 0.45% of frame and every one of those verdicts
+  was measured DISJOINT from any water pixel. That is the arming fix doing exactly its job
+  — it is not a pixel that changed, and it must never be reported as one.
+* **northlane CONVINCING** is the geometry: newly armed, on the seated brook, **54.6% of
+  its own bbox is water**, and its words are about the fix ("the dark water pool reflects
+  surrounding foliage cleanly and forms natural contact edges along the rocky banks").
+  This is the town's first ever water-read CONVINCING.
+* **homerow FAILING -> WEAK** is the prompt, not the plate: its rebake moved SEVEN pixels
+  at its water.
+* **pondlane FAILING -> WEAK** had both a rebaked plate and the new prompt; the earlier
+  three-point ladder (`run-20260807-190224`) shows the plate alone did not move it.
+* **gatefield WEAK is a NEW question, not a win.** It arms for the first time on its 2.33%
+  of `water_emb_river` — an OPEN sheet this carrier deliberately skips — so its geometry did
+  not change and nobody has ever looked at that water before.
+
+### THE RESIDUAL, MEASURED: the gate fixed WHICH plate is asked, not WHERE the judge points
+
+Overlap of each surviving verdict's own bbox with the visible-water mask:
+
+| plate | verdict | water inside its bbox |
+|---|---|---|
+| northlane | CONVINCING | **54.6%** |
+| pondlane | WEAK | 3.1% |
+| gatefield | WEAK | **0.0%** |
+| homerow | WEAK | **0.0%** |
+
+So the family still points at ground on three of four armed plates. **The next layer is the
+same census scoring the BBOX rather than the plate**: a `quality:water-read` finding whose
+box contains no water is refutable mechanically, and `scene_redteam` already has both the
+machinery (`bboxAgreement`, the stage-2 refutation pass) and now the measurement. Named and
+left, because it is a change to the shared judge's verdict pipeline rather than to its
+applicability gate, and one of those per window is enough.
