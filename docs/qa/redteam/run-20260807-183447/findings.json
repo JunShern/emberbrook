@@ -1,0 +1,819 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "20260807-183447",
+ "generated": "2026-08-07T18:36:11.173Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": false,
+ "modes": [
+  "naive",
+  "checklist"
+ ],
+ "n": 3,
+ "freshFrom": null,
+ "replaySources": {},
+ "plates": "public/assets/scenes/del-cine",
+ "cine": "public/assets/scenes/del-cine/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "boatyard",
+   "name": "The Boatyard",
+   "replayOf": null,
+   "baked": "2026-08-07T17:49:26Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-07T17:49:19.584Z",
+   "items": 14,
+   "char": null,
+   "checklist": [
+    {
+     "id": "slipway",
+     "src": "owns.landmark",
+     "what": "Slipway — a dock (boats hauled out of the upstream pool for repair)",
+     "census": {
+      "u": 0.4927,
+      "v": 0.6058,
+      "z": 27.31,
+      "charPx": 76,
+      "on": true,
+      "plateZ": 22.71,
+      "state": "occluded",
+      "behindBy": 4.6
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center bottom dock",
+      "bbox": [
+       0.383,
+       0.745,
+       0.608,
+       0.995
+      ],
+      "desc": "A timber ramp with wooden rails and a boat resting on it sits at the water's edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "drydock-frames",
+     "src": "owns.landmark",
+     "what": "Hull frames — a machine (ribbed skeletons of boats under repair)",
+     "census": {
+      "u": 0.6602,
+      "v": 0.5263,
+      "z": 28.91,
+      "charPx": 72,
+      "on": true,
+      "plateZ": 17.66,
+      "state": "occluded",
+      "behindBy": 11.25
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper right scaffolding",
+      "bbox": [
+       0.528,
+       0.203,
+       0.831,
+       0.448
+      ],
+      "desc": "The exposed ribbed wooden frame of a boat under construction stands on timber scaffolding against the cliff."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "boatwright-shed",
+     "src": "owns.landmark",
+     "what": "Boatwright's shed — a building",
+     "census": {
+      "u": 0.3311,
+      "v": 0.5039,
+      "z": 29.82,
+      "charPx": 69,
+      "on": true,
+      "plateZ": 30.69,
+      "state": "clear",
+      "behindBy": -0.87
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center-left building",
+      "bbox": [
+       0.195,
+       0.252,
+       0.422,
+       0.483
+      ],
+      "desc": "A wooden workshop building with a shingled roof sits alongside the boatyard work area."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "pitch-kettle",
+     "src": "owns.landmark",
+     "what": "Pitch kettle — a prop (tar smoke curling over the water — the smell of the boatyard)",
+     "census": {
+      "u": 0.3997,
+      "v": 0.67,
+      "z": 26.11,
+      "charPx": 79,
+      "on": true,
+      "plateZ": 22.93,
+      "state": "occluded",
+      "behindBy": 3.17
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No pitch kettle or curling tar smoke is visible in the scene."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "lockfour-overlook",
+     "src": "owns.landmark",
+     "what": "Lock Four overlook — a post (planked viewpoint under Lock Four's gates — spray and thunder; payoff of the boardwalk)",
+     "census": {
+      "u": 0.8819,
+      "v": 0.5664,
+      "z": 24.78,
+      "charPx": 84,
+      "on": true,
+      "plateZ": 22.61,
+      "state": "occluded",
+      "behindBy": 2.17
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center circular platform",
+      "bbox": [
+       0.383,
+       0.491,
+       0.621,
+       0.755
+      ],
+      "desc": "A wide circular wooden platform with a wooden railing juts out to overlook the slipway and water."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "lock-four-glimpse",
+     "src": "owns.landmark",
+     "what": "Lock Four (set dressing) — a dressing (upstream lock visible to the south, selling the staircase-of-water; NOT playable)",
+     "census": {
+      "u": 0.696,
+      "v": 0.5614,
+      "z": 23.63,
+      "charPx": 88,
+      "on": true,
+      "plateZ": 17.84,
+      "state": "occluded",
+      "behindBy": 5.79
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No canal lock or lock gate structure is visible anywhere in the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:winch-foot__slipway@0.20..1",
+     "src": "owns.edge",
+     "what": "the route between Cargo Winch (foot) and Slipway — a deck (boardwalk continues upstream into the yard)",
+     "census": {
+      "u": 0.3258,
+      "v": 0.5917,
+      "z": 28.89,
+      "charPx": 72,
+      "on": true,
+      "plateZ": 25.31,
+      "state": "occluded",
+      "behindBy": 3.57
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No cargo winch is present in this view, so this route cannot be identified."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:slipway__drydock-frames",
+     "src": "owns.edge",
+     "what": "the route between Slipway and Hull frames — a deck",
+     "census": {
+      "u": 0.5788,
+      "v": 0.565,
+      "z": 28.11,
+      "charPx": 74,
+      "on": true,
+      "plateZ": 23.9,
+      "state": "occluded",
+      "behindBy": 4.21
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper catwalk",
+      "bbox": [
+       0.477,
+       0.31,
+       0.638,
+       0.465
+      ],
+      "desc": "A raised wooden walkway along the cliff connects the platform area to the boat hull scaffolding."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:slipway__boatwright-shed",
+     "src": "owns.edge",
+     "what": "the route between Slipway and Boatwright's shed — a deck",
+     "census": {
+      "u": 0.4084,
+      "v": 0.5526,
+      "z": 28.57,
+      "charPx": 72,
+      "on": true,
+      "plateZ": 28.78,
+      "state": "clear",
+      "behindBy": -0.21
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "deck between shed and slipway",
+      "bbox": [
+       0.32,
+       0.465,
+       0.395,
+       0.715
+      ],
+      "desc": "An open wooden deck and timber path links the slipway to the boatwright's shed."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:boatwright-shed__pitch-kettle",
+     "src": "owns.edge",
+     "what": "the route between Boatwright's shed and Pitch kettle — a deck",
+     "census": {
+      "u": 0.3631,
+      "v": 0.5814,
+      "z": 27.96,
+      "charPx": 74,
+      "on": true,
+      "plateZ": 29.24,
+      "state": "clear",
+      "behindBy": -1.28
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "Since the pitch kettle is absent, this route cannot be traced."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:slipway__lockfour-overlook",
+     "src": "owns.edge",
+     "what": "the route between Slipway and Lock Four overlook — a deck (climbing boardwalk out to the overlook)",
+     "census": {
+      "u": 0.6778,
+      "v": 0.5871,
+      "z": 26.05,
+      "charPx": 79,
+      "on": true,
+      "plateZ": 17.97,
+      "state": "occluded",
+      "behindBy": 8.07
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "steps below overlook",
+      "bbox": [
+       0.39,
+       0.72,
+       0.59,
+       0.81
+      ],
+      "desc": "A short wooden deck and step structure connects the slipway directly to the circular overlook platform."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:winch-foot__slipway",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards waterfront — a path that carries on out of the frame",
+     "census": {
+      "u": 0.2399,
+      "v": 0.5888,
+      "z": 29.54,
+      "charPx": 70,
+      "on": true,
+      "plateZ": 23.63,
+      "state": "occluded",
+      "behindBy": 5.91
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "bottom left shoreline path",
+      "bbox": [
+       0,
+       0.7,
+       0.25,
+       0.85
+      ],
+      "desc": "A dirt path along the water's edge leads off the left edge of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "all frame edges",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "JUDGMENT: The cliff face, wall vegetation, structures, and water extend cleanly to all frame edges without missing geometry or unfinished borders."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Lock Four (set dressing), Lock Four overlook, Slipway). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.696,
+      "v": 0.5614,
+      "z": 23.63,
+      "charPx": 88,
+      "on": true,
+      "plateZ": 17.84,
+      "state": "occluded",
+      "behindBy": 5.79
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "bottom left water pool",
+      "bbox": [
+       0,
+       0.84,
+       0.38,
+       1
+      ],
+      "desc": "JUDGMENT: The water has realistic teal coloring, subtle surface ripples, transparency in the shallows, and clean contact boundaries with the shore and posts."
+     },
+     "suppressed": null
+    }
+   ]
+  }
+ ],
+ "raw": 13,
+ "survivors": [
+  {
+   "fid": "F4",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "immersion",
+   "where": "string of colorful flags near center",
+   "bbox": [
+    0.31,
+    0.249,
+    0.486,
+    0.468
+   ],
+   "severity": 1,
+   "desc": "The lower right end of the bunting flag line hangs and terminates in mid-air without attaching to any pole or wall.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "18.1,27.4,18.2,32.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 18.1,27.4,18.2,32.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The rightmost end of the flag line droops and ends abruptly in mid-air without connecting to the nearby wooden pole or cliff."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F9",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "immersion",
+   "where": "cacti along the top cliff face",
+   "bbox": [
+    0.32,
+    0,
+    0.52,
+    0.14
+   ],
+   "severity": 1,
+   "desc": "Foliage assets are embedded directly into the flat rock face without visible stems, soil, or crevices.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "16.9,26.9,17.4,21.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 16.9,26.9,17.4,21.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The foliage meshes at the top of the cliff are placed directly against the vertical rock texture without visible stems, soil, or crevices."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F10",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": "pitch-kettle",
+   "itemWhat": "Pitch kettle — a prop (tar smoke curling over the water — the smell of the boatyard)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "Pitch kettle: ABSENT — No pitch kettle or curling tar smoke is visible in the scene.",
+   "census": {
+    "u": 0.3997,
+    "v": 0.67,
+    "z": 26.11,
+    "charPx": 79,
+    "on": true,
+    "plateZ": 22.93,
+    "state": "occluded",
+    "behindBy": 3.17
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "There is no pitch kettle or tar smoke visible anywhere in this scene."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F11",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": "lock-four-glimpse",
+   "itemWhat": "Lock Four (set dressing) — a dressing (upstream lock visible to the south, selling the staircase-of-water; NOT playable)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "Lock Four (set dressing): ABSENT — No canal lock or lock gate structure is visible anywhere in the frame.",
+   "census": {
+    "u": 0.696,
+    "v": 0.5614,
+    "z": 23.63,
+    "charPx": 88,
+    "on": true,
+    "plateZ": 17.84,
+    "state": "occluded",
+    "behindBy": 5.79
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No canal lock or lock gate structure is visible within the frame."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F12",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": "path:winch-foot__slipway@0.20..1",
+   "itemWhat": "the route between Cargo Winch (foot) and Slipway — a deck (boardwalk continues upstream into the yard)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Cargo Winch (foot) and Slipway: ABSENT — No cargo winch is present in this view, so this route cannot be identified.",
+   "census": {
+    "u": 0.3258,
+    "v": 0.5917,
+    "z": 28.89,
+    "charPx": 72,
+    "on": true,
+    "plateZ": 25.31,
+    "state": "occluded",
+    "behindBy": 3.57
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No cargo winch is visible in the scene, rendering the route to it impossible to identify."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F13",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": "path:boatwright-shed__pitch-kettle",
+   "itemWhat": "the route between Boatwright's shed and Pitch kettle — a deck",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Boatwright's shed and Pitch kettle: ABSENT — Since the pitch kettle is absent, this route cannot be traced.",
+   "census": {
+    "u": 0.3631,
+    "v": 0.5814,
+    "z": 27.96,
+    "charPx": 74,
+    "on": true,
+    "plateZ": 29.24,
+    "state": "clear",
+    "behindBy": -1.28
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "Because the pitch kettle is missing from the view, this route cannot be traced."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  }
+ ],
+ "refuted": [
+  {
+   "fid": "F1",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "immersion",
+   "where": "string of flags across middle ground",
+   "bbox": [
+    0.428,
+    0.253,
+    0.487,
+    0.468
+   ],
+   "severity": 1,
+   "desc": "The string of bunting flags terminates mid-air on the left side without anchoring to any post or wall.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "18.1,23.1,18.5,24.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 18.1,23.1,18.5,24.2"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The left end of the flag string is anchored to a tall wooden beam on the roof structure."
+   }
+  },
+  {
+   "fid": "F2",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "geometry",
+   "where": "scaffold framework below upper-right hut",
+   "bbox": [
+    0.528,
+    0.218,
+    0.663,
+    0.34
+   ],
+   "severity": 1,
+   "desc": "The curved wooden scaffold beams float along the cliff face without visible vertical supports anchoring them to the ground.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "12.2,19.6,18.4,33.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 12.2,19.6,18.4,33.1"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The stilts and scaffolding underneath the upper huts extend down to rest on the lower wooden platforms and cliff ledges."
+   }
+  },
+  {
+   "fid": "F3",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "navigation",
+   "where": "circular wooden platform in center",
+   "bbox": [
+    0.376,
+    0.492,
+    0.617,
+    0.755
+   ],
+   "severity": 2,
+   "desc": "The large central circular platform is enclosed by railings without clear stairs or openings, making it ambiguous how a player accesses or leaves it.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The railing only covers the front edge of the circular platform, leaving the rear open where it meets the ground level."
+   }
+  },
+  {
+   "fid": "F5",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "geometry",
+   "where": "wooden roof framework in upper-center",
+   "bbox": [
+    0.477,
+    0.207,
+    0.681,
+    0.344
+   ],
+   "severity": 2,
+   "desc": "The wooden rafter framework on the slope is missing structural support on its left side, leaving beams floating over open space.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "11.6,21.4,18.3,33.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 11.6,21.4,18.3,33.7"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The left side of the upper-center roof frame is supported by vertical wooden posts resting on the cliff ledge below."
+   }
+  },
+  {
+   "fid": "F6",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "navigation",
+   "where": "entire village platform structure",
+   "bbox": [
+    0.018,
+    0.038,
+    0.98,
+    0.98
+   ],
+   "severity": 2,
+   "desc": "There are no visible stairs, ramps, or ladders connecting the various vertical platform tiers to one another or to the water level.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Walkable ground slopes and a wooden boat slipway connect the water level to the higher village platforms."
+   }
+  },
+  {
+   "fid": "F7",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "navigation",
+   "where": "central circular wooden platform",
+   "bbox": [
+    0.38,
+    0.49,
+    0.62,
+    0.76
+   ],
+   "severity": 2,
+   "desc": "Pathing onto the circular deck from the shore or surrounding structures is ambiguous, lacking clear stairs or ramps.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The circular deck merges directly with the rising dirt slope at its rear, providing a clear entrance without requiring stairs."
+   }
+  },
+  {
+   "fid": "F8",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "boatyard",
+   "item": null,
+   "category": "geometry",
+   "where": "large tilted boat hull on the left",
+   "bbox": [
+    0.02,
+    0.43,
+    0.32,
+    0.65
+   ],
+   "severity": 2,
+   "desc": "The large tilted boat hull clips unnaturally into surrounding scaffolding without visible structural support.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "22.5,35,24.5,31.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 22.5,35,24.5,31.2"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The boat hull sits supported within a custom wooden cradle frame on the shore rather than clipping unnaturally."
+   }
+  }
+ ],
+ "budget": {
+  "calls": 6,
+  "promptTok": 9837,
+  "replyTok": 15393,
+  "errors": 0,
+  "byStage": {
+   "naive": 3,
+   "checklist": 1,
+   "refute-naive": 1,
+   "refute-checklist": 1
+  }
+ },
+ "bboxAgreement": {
+  "n": 2,
+  "hit": 0,
+  "frac": 0
+ },
+ "calibration": null
+}

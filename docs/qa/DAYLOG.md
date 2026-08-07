@@ -17180,3 +17180,370 @@ three reds pre-existing (bundle walk parity 218 vs 222; `square` charPxFar 37 vs
 map/route edits of `a7be573` (2026-08-05), and this lane touched neither the map nor routes.
 
 Board: `docs/qa/emberbrook-graphics/index.html`.
+
+## 2026-08-07 ~20:10 — ROUND 3 ITEM 1, ROUND 2: THE WATER IS A RAFT OF FLOATING BOXES — and four of the five FAILING verdicts are not about water at all
+
+Follow-on to the 18:55 entry. That lane's headline was that the ratified depth->alpha
+recipe, correctly ported, is a NO-OP here and named two next fix classes: "the stacked
+mitred slabs are GEOMETRY" and "the black plane is LIGHTING". This lane measured both.
+**The first is true and is now fixed. The second is REFUTED as stated** — the pixels the
+judge calls water are not dark, are not water, and on four of five plates are not even
+adjacent to water.
+
+### INSTRUMENT (no Blender, no browser, 3 s): the water, projected
+
+`tools/glb_read.mjs` over the SHIPPED collision bundle `emb-cine/scene.glb`, projected
+into each camera's own solved frustum and agreed against that plate's own `depth.png`
+(decoded through its near/far, tolerance 0.30 m). Two things fall straight out.
+
+**(a) HOW MUCH WATER EACH PLATE ACTUALLY SHOWS**, by sheet:
+
+| plate | pond | brook | millpond | river | total |
+|---|---|---|---|---|---|
+| pondlane | 5.505% | 2.796% | – | 1.421% | **9.72%** |
+| northlane | – | 2.171% | – | – | 2.17% |
+| square | 0.219% | 1.950% | – | – | 2.17% |
+| homerow | – | 0.689% | 0.175% | – | 0.86% |
+| gateroad | – | 0.461% | – | – | 0.46% |
+| therise | 0.016% | 0.061% | – | 0.059% | 0.14% |
+| arch | 0.058% | 0.050% | – | 0.024% | 0.13% |
+
+**AND POND LANE'S POND IS BEHIND A HEDGE.** The 5.5% is a DEPTH-pass number: the beauty
+render at those pixels is the willow crown and the searsia scatter. Named, not guessed —
+AABB ray census from the camera to 284 pond-surface samples over the dressed realtime
+bundle puts `veg_emb_wood_13_trunks/crownA/crownG` across 100% of them and
+`searsia_burchellii_*`/`searsia_lucida_*` across 46-100%. LOOKED AT: the crop is solid
+foliage. The town's namesake water is not in the town's pond camera.
+
+**(b) THE `quality:water-read` FAMILY IS POINTING AT GROUND.** Overlap between each
+FAILING verdict's own bbox and the visible-water mask, same instrument:
+
+| plate | verdict | judge bbox | overlap with real water | what the pixels ARE (owner probe) |
+|---|---|---|---|---|
+| arch | FAILING | 0.55,0.55,0.62,0.61 | **0 px (0.0%)** | shadow gaps between plank/paving slabs |
+| therise | FAILING | 0.5,0.48,0.7,0.65 | **0 px (0.0%)** | `emb_ground_valley` 86.8% + walk edges — a grass slope |
+| gateroad | FAILING | 0.24,0.47,0.31,0.7 | **0 px (0.0%)** | a pale gravel apron, p50 L **0.263** against a frame p50 of 0.047 |
+| homerow | FAILING | 0,0,0.25,0.2 | 363 px (0.7% of bbox) | spring-house stone in shadow |
+| pondlane | FAILING | 0.22,0.58,0.6,0.75 | 11,304 px (16.9% of bbox) | mostly ground; the brook clips one corner |
+
+The 18:55 entry had this for arch and gateroad from a before/after draft diff. The
+projection census extends it to therise and homerow and **adds the finding that kills the
+lighting hypothesis as stated: gateroad's "completely featureless, PITCH-BLACK flat plane
+with no believable wet shore contacts" is the BRIGHTEST large surface in its frame** —
+0.263 median against the frame's 0.047. The family is not finding dark regions. It is
+finding FLAT, TEXTURE-FREE regions of any luminance and calling them water. Adding a
+source cannot move a verdict whose subject is already 5.6x the frame median.
+Figure: `docs/qa/emberbrook-graphics/water-structure/judgebox-gateroad.jpg` (judge bbox in
+yellow, the real water outlined in red, 200 px away behind the trees).
+
+### THE GEOMETRY: EVERY SHEET IS A 0.12 m BOX FLOATING OVER ITS OWN BED
+
+Same bundle, every up-facing water triangle's centroid against the highest non-water
+surface under it (`emb_ground_*`/`emb_pondbed_*`/`walk_*`, point-in-triangle):
+
+| sheet | up faces | surface ABOVE its bed  min / p10 / p50 / p90 / max |
+|---|---|---|
+| water_emb_brook | 750 | -0.016 / 0.208 / **0.287** / 0.420 / 5.745 m |
+| water_emb_pond | 1416 | -0.020 / 0.054 / **0.233** / 0.772 / 4.955 m |
+| water_emb_millpond | 164 | 1.795 / 1.855 / **2.037** / 2.182 / 2.299 m |
+
+`water_field()` builds every body as INDEPENDENT 0.55 m cells, each a box **0.12 m thick**.
+A surface 0.29 m over its bed on a 0.12 m box is **0.17 m OF AIR**: a lit underside, four
+lit walls, and a shadow cast onto the bed the water is supposed to be lying in. That is the
+whole of "stacked mitred slabs", and it is why a shader moved 269 px — a material cannot
+close an air gap. LOOKED AT, with the mask outlined on the plate
+(`water-structure/brook-before`): the brook renders as a chain of separate panels with
+bright pale-olive rims and dark gaps between them.
+
+### THE FIX: tools/emb_brookchop.py — A CARRIER, weld / relax / seat
+
+Run as the middle of a three-step chain the file itself asserts (the water shader
+subdivides the sheets and bakes a `Col` keyed to their vertices, so its snapshot must be
+reverted first and its bake re-run after):
+`emb_water_shader -- revert save` -> `emb_brookchop -- save` -> `emb_water_shader -- save`.
+`tools/emb_blockout.py`'s `water_field` carries the same seating and a segment-interpolated
+`brook_level`, so a future full rebuild agrees with what shipped.
+
+| sheet | verts/polys | seated bottom verts | wall height min/p50/max | boundary loop |
+|---|---|---|---|---|
+| water_emb_brook | 3000/2250 -> 1190/1719 | 538 (3 at the 0.90 m cap) | 0.02 / **0.407** / 0.90 m | 241.06 -> **187.24 m (-22.3%)** |
+| water_emb_pond | 5664/4248 -> 1556/2901 | 630 (31 capped) | 0.02 / 0.305 / 0.90 m | 75.90 -> **60.10 m (-20.8%)** |
+| water_emb_millpond | 656/492 -> 214/352 | 70 (31 capped) | 0.02 / 0.129 / 0.90 m | 26.40 -> **19.13 m (-27.5%)** |
+
+`water_emb_river` and `emb_dress_wheelpit_water` are OPEN sheets (one ring, no bottom) and
+are reported and skipped — no air gap to close. The 0.90 m cap is not timidity: the
+millpond floats 2.0 m over `emb_ground_valley` because its basin is massing rather than a
+carve, and a 2 m wall of water with no dam under it is a worse frame than a thin box. The
+capped counts are printed every run, because a capped sheet is a map finding.
+
+**THE BOUNDARY-LENGTH METRIC IS THE HONEST ONE FOR A LATTICE SILHOUETTE**: a staircase cut
+on a 0.55 m grid walks two legs of every triangle it could have walked one hypotenuse of,
+so it is measurably LONGER than the curve it approximates. -22% is the staircase leaving.
+Converged at 6 iterations (12 gives -22.5%).
+
+### AND A REFUTED KNOB, KEPT AT ZERO WITH ITS RECEIPT
+
+The obvious second half was to relax the brook's z: the census reads 196 distinct top
+heights over 750 faces with level gaps to 0.106 m, which sounds like a staircase. **It does
+not survive the weld.** Once the ring is ONE surface, edge-to-edge z differences are p90
+0.023 / max 0.083 m over a 0.55 m span — that IS the channel's own 4% fall, and the 0.106 m
+figure was the gap between two SEPARATE cells' heights, not a step anything can see. Run
+against it, same blend, same everything: `--zsmooth 60` vs `0` gave risers p90/max
+0.023/0.083 -> **0.024/0.093** and distinct levels 376 -> 514. The relaxation made the
+surface ROUGHER. An earlier version of the same repair was worse still: lifting a
+smoothed vertex to `bed + 1 cm` put **40 distinct levels across 0.80..0.86 into
+`water_emb_pond`, which ships as ONE flat level** — a bumpy pond manufactured by a repair,
+on a sheet whose staircase was never the complaint. `--zsmooth` ships at 0.
+
+### A THIRD FINDING, HANDED OFF RATHER THAN BUILT
+
+pondlane's OTHER standing verdict — `quality:frame-edge-world` WEAK, "the steps on the far
+left edge appear as untextured, flat green block meshes that abruptly end the terrain
+geometry" — is `lm_field_10_ridge14/15`, **38.5% of that bbox** (owner probe, same
+instrument). They are the blockout's crop ridges: 3.0 x 1.1 x 0.22 m boxes in `M_LEAF_G`.
+**`emb_dress.py` harvests every `lm_field_*` into `PLAN["fields"]` and then never reads it**
+(one `.append`, zero consumers, grep-verified) — so the worked parcels, their hedges, their
+drystone, their palings and their stooks all ship as raw gray massing. Not this lane's
+class and it costs a full re-dress; named with its measurement so the dressing lane starts
+from the number.
+
+### THE METAL KERNEL CACHE CORRUPTED MID-LANE, exactly as CLAUDE.md describes
+
+`pondlane` SIGABRTed at render start in 148 s while the same camera had drafted fine
+twenty minutes earlier. The `.ips` decodes to `free_tiny_botch` under
+`ccl::MetalKernelPipeline::compile` / `ccl::path_cache_get` — the documented signature.
+Quarantining `/var/folders/r_/*/C/org.blenderfoundation.blender` (681 MB) and re-running
+cleared it. The note in CLAUDE.md paid for itself in about four minutes; leaving it here as
+a second dated instance so it does not read as a one-off.
+
+## 2026-08-07 ~19:40 — DELLHOLLOW GRAPHICS ROUND 3, item 4: THE LIGHTING CLASS SPLIT IN TWO
+
+Board with every instrument and both before/after tables:
+docs/qa/dellhollow-graphics/index.html (round-3 item-4 section). Red-team fix loop,
+measure-first. The worklist filed six residuals under the town's LIGHTING doctrine
+("adjusting an existing light has never moved this town; ADDING a source always
+has"). The measurement says half of them are not a lighting problem, and that split
+is the finding.
+
+THE INSTRUMENT THE ROUND NEEDED AND THE TREE DID NOT HAVE — tools/plate_probe.py
+(new; no Blender, no browser, 15 plates in ~40 s). The world-building doctrine says
+"measure GROUND luminance on the region probes — the floor is what has to be read"
+and nothing could: plate_flat audits background leak, nav_eval asks an LLM,
+cine_visprobe needs Blender. plate_probe reconstructs a world XYZ per pixel from the
+bundle's OWN two files (cine.json's solved camera + the rgb24-viewz depth.png) and
+derives a per-pixel normal from the world-position gradient, splitting the frame into
+GROUND / WALL / VOID. Three traps paid for on the way, all recorded at the tool:
+depth is resampled NEAREST ONLY (bg 2688x1536 vs depth 1344x768 — a filtered tap
+averages the packed bytes of two different depths); a depth discontinuity fakes a
+grazing normal, so any sample whose neighbour is >1.5 m away in world space is
+dropped rather than classified; and DARK IS NOT CRUSHED — "crushed" is dark AND
+locally flat (L <= 24/255 with 5x5 sd <= 2), because a dark surface carrying texture
+is a shadow and one carrying none is a hole. IT NAMES A REGION, NEVER AN OBJECT: its
+world box is the INPUT to a Blender ray census, and skipping that second step is how
+round 3 has now three times carried a worklist item whose named object was wrong.
+
+THE CENSUS (before, all 15 plates). Crushed-black 7.4% (waterfront) to 29.9%
+(lockfive). Ground luminance p25, worst five: shelf-west 12.6, deep-stairs 13.6,
+lockfive 15.1, crossing 16.9, quay-west 20.5 (waterfront, the brightest, 105.6). So
+"crushed-black street shadows" is real: a quarter of the walkable floor of five
+plates sits under L 21/255.
+
+THEN THE SAME PIXELS WERE ASKED WHAT THEY ARE, and that is where the class split.
+A ray census at the master restricted to pixels at L <= 8/255, resolving each hit's
+ACTUAL base colour (flat socket, or nearest-corner Col for a vertex-colour material):
+
+  boatyard   lock_four_dam  mat_blackstone  n=209  albedo L 0.0085..0.0155 (med 0.0094)
+             slipway_ramp   mat_blackstone  n=  8  albedo L 0.0094..0.0096
+  n-landing  lf_crest_bay_* mat_blackstone         albedo L 0.0156..0.0258
+  lockfive   lf_barge_*     lf_matte               albedo L 0.0305
+  (flat)                    mat_stone_black_cap    albedo L 0.0287
+  --- the same probe on the "crushed street shadow" plates ---
+  quay-west  wv_hut_*       lf_shingle             albedo L 0.150..0.181
+             wv_hut_*       lf_stone               albedo L 0.124..0.139
+  (and the street materials themselves, resolved through their node trees, for scale:
+   mat_qm_paving / mat_qm_ground / mat_shelf_paving 0.137..0.72; m_wood 0.171;
+   lf_deck 0.26..0.41; mat_timber_dark 0.124..0.42)
+
+209 OF THE 279 BLACKEST PIXELS IN THE BOATYARD FRAME ARE ONE MATERIAL AT A MEDIAN
+ALBEDO OF 0.94% — a tenth of the darkest thing anyone in this town intended to be
+dark (m_wood 0.171, lf_stone 0.125, lf_deck 0.26-0.41).
+
+ITEM (c) BOATYARD BLACK SLABS — A 0.9% ALBEDO, NOT A SHADOW, AND THE LIGHTING
+FRAMING IS REFUSED. plate_probe's worst crushed region on boatyard is x 12.0..15.8,
+y 36.9..40.6, z 5.5..5.9: L mean 0.1/255, sd 0.4, over a 3.8 x 0.4 m face, plus a
+second UP-FACING patch at L mean 2.2. That is not a dark shadow, it is zero. A 0.94%
+reflector returns 0.94% of whatever arrives; at the shipped exposure (0.15, AgX) no
+lamp that would not also blow out its lit neighbours can bring it to a printable
+value — and pit_lantern's own header already records paying for that mistake once
+("moved the bbox median 5.3 -> 4.9/255, i.e. NOT AT ALL"). THE DOCTRINE IS ABOUT
+LIGHT AND THIS IS NOT A LIGHT.
+FIX: tools/dh_albedo_floor.py (new carrier) raises every base colour in the measured
+black family to a FLOOR of 0.055 preserving hue (c *= floor/L(c)) — the flat
+mat_stone_black_cap plus the per-vertex Col of mat_blackstone and lf_matte:
+18,660 loops over 65 objects, worst albedo before 0.00837.
+MATERIAL-SCOPED, AND THAT IS LOAD-BEARING: lock_four_dam is a joined mesh carrying
+eleven material slots over ONE shared Col layer whose MEDIAN vertex luminance is 1.0
+(mat_wallwood's loops are white there) — a mesh-scoped lift would have repainted the
+lockhouse. THE GATE IS THE ORDERING, ASSERTED: the build fails unless the family is
+still the darkest thing in Dellhollow — measured 0.0550 < mat_timber_dark 0.1238 — so
+locksfoot_build's art direction survives verbatim ("black ... its coursing, its wet
+nappe and its boil, nothing more") while the surface stops being unrenderable. 0.055
+sits between charcoal (~0.04) and wet slate (~0.06-0.08).
+Two receipt bugs caught in the carrier itself and fixed at the tool: the float32
+round-trip through the colour attribute landed a hair under the floor so the second
+run "lifted" every loop again by 1.0000001 (an epsilon fixes it), and a no-op run
+then OVERWROTE the manifest with an empty one — a receipt that lies is worse than no
+receipt, so a no-op now keeps the manifest.
+
+ITEM (e) CRUSHED STREET SHADOWS — A DIFFERENT DEFECT, DELIBERATELY NOT TOUCHED.
+On shelf-west and quay-west the blackest pixels land on lf_shingle 0.150-0.181,
+lf_stone 0.124-0.139, lf_deck 0.26-0.34: NORMAL reflectance in deep shade. Those
+really are unlit and the lighting doctrine really does govern them. Left alone on
+purpose, because THE CENSUS THAT WOULD SIZE THAT LAMP RECIPE IS CONTAMINATED BY THE
+MATERIAL BUG (mat_blackstone / lf_matte are in the top hits of boatyard,
+north-landing, lockfive AND crossing). Sizing a lamp against a number that is partly
+a 0.9% albedo solves for the wrong quantity. Order: fix the albedo, RE-MEASURE the
+crushed census on the new plates, then solve the class recipe on the class's median
+member. The before table is banked on the board so the re-measure has a subtrahend.
+
+ITEM (b) WATERLINE — HALF REFUTED, HALF CONFIRMED. plate_probe water walks the water
+mask's own distance transform outward from the shore in metres. "KNIFE-SHARP" IS
+REFUTED: every camera shows a 0.5-1.2 m gradient (fishdock L 78.0 -> 88.0 -> 101.1 ->
+111.5 across 0-0.15 / 0.15-0.3 / 0.3-0.5 / 0.5-0.8 m; waterfront 104.8 -> 123.7;
+weave 46.3 -> 101.3; deep-stairs 26.3 -> 58.9). "NO CONTACT BAND" IS CONFIRMED AND
+THE SIGN IS THE FINDING: the shore is monotonically DARKER than open water at every
+camera — that is the depth-alpha ramp working (shallow water is transparent and what
+it reveals is unlit bed), and it means there is ZERO positive contact signal anywhere
+in town: no band brighter than open water within 0.15 m of any shore on any plate.
+A foam ribbon is a new asset across 7+ plates; specified, not built.
+
+ITEM (a) BOIL — "UNTEXTURED" IS LITERALLY TRUE. lf_dam_boil on north-landing:
+703 x 146 px, 1.91% of the frame, at 30.4 m; L p50 114.8 / p95 214.8, sd 40.1;
+47.1% of its pixels locally flat (5x5 sd <= 2); up-facing 94.7%. And mat_boil_foam is
+a FLAT (0.55, 0.60, 0.62) — one constant, no texture, no vertex colour. So the judge's
+"untextured" is the material definition, not a perception: every bit of variation in
+those pixels is shading. boil_dress (round 1) fixed the SILHOUETTE and the TONE and
+both held; what it never gave the boil is surface variation. Named with its number;
+a Col break-up is one carrier and a 4-plate rebake that did not fit this window.
+
+ITEM (d) + THE "PLACEHOLDER PLANE" — MEASURED, THEN LOOKED AT. qm_stall_3's backboard
+on quay-west is 179 x 138 px at 29.4 m, L p50 82.5, local 5x5 sd p50 6.68 (only 18.2%
+flat), material mat_qm_paint_blue = derive(mat_wallwood, scale 2.40, tint
+0.17/0.34/0.52). So "flat, unshaded, no material texture" is NOT what the pixels say
+- the board carries mat_wallwood's plank texture and reads olive-teal (RGB
+76.7/80.6/61.3), not flat blue.
+LOOKING AT IT found the real defect, and it is structural: stall()
+puts the backboard `sb` at cy - sgn*(hy - 0.20), 0.10 thick, and the four posts at
++-(hy - 0.12), 0.11 thick - so the board spans hy-0.25..hy-0.15 and the posts span
+hy-0.175..hy-0.065: THEY OVERLAP BY ONLY 0.025 m AND THE BOARD STANDS 0.085 m PROUD OF
+THEM ON THE PLAZA SIDE. The 1.30 m panel therefore shows the plaza an unbroken painted
+face with its own frame buried behind it, and by eye nothing in the frame reads as
+holding it up. A board whose frame is behind it reads as a panel dropped on the deck -
+which is exactly what the judge wrote. One line of geometry; specified, not built.
+
+MEMORY-GATE FINDING, worth carrying: `vm.swapusage used` IS A HIGH-WATER RESIDUE, NOT
+A PRESSURE SIGNAL. macOS does not shrink the swap file when pressure ends, so it sat
+at 86-95% on this machine for an hour while `memory_pressure` reported 82% of system
+memory FREE. A gate on swap alone held this lane's first bake for three minutes on a
+number about the past and would have held it indefinitely. The bake driver now reads
+BOTH: swap <= 75% is the fast path, and above it the lane still runs when
+memory_pressure says >= 25% free — never when both are bad.
+
+ITEM (f1) DEEP-STAIRS WATER "NO NORMAL RIPPLES" — CONFIRMED, AND IT IS TOWN-WIDE.
+The plate's own reconstructed normals over the water mask give the surface tilt off
+vertical: p50 0.01 deg and p95 0.02 deg on EVERY camera in Dellhollow (deep-stairs,
+fishdock, weave, crossing, waterfront, lockfive, north-landing). The water sheets are
+geometrically flat to a hundredth of a degree — there is NO surface relief anywhere in
+this town, so there are no ripple normals for any light to catch. That is not a
+deep-stairs defect; water-transparency.md delivered DEPTH (per-vertex alpha off bed
+depth, restored in round 1 and extended in round 3 item 2) and never delivered
+SURFACE. Two further numbers say why deep-stairs is the one the judge singles out:
+its water's local 5x5 sd is 0.92 against fishdock 2.56 and waterfront 3.56 (the
+flattest-reading water in town), and its share of specular pixels (L > 200) is 0.01%
+against waterfront 0.87% and crossing 2.48% — a hundredfold. So the pool is both
+un-rippled AND unlit, and the previous lane's spec ("a lamp over this pool") is
+necessary but not sufficient: with a 0.01 deg normal, a lamp buys one flat highlight.
+
+NAMED FOR ROUND 4, NOT TOUCHED — THE HAZE CARDS ARE THE BIGGEST CRUSHED SURFACE LEFT.
+With the black family accounted for, the largest crushed region on lockfive is 6.00%
+of the frame at 87 m (world x 81..152, y 0..40) and on crossing 12.65% at 72 m. The ray
+census names them: fx_haze_east / mat_haze_east is the most-hit object in the crushed
+sample on lockfive (42 of 220) and weave (54 of 220); fx_haze_south on quay-west. NEITHER
+MATERIAL CARRIES A PRINCIPLED BSDF AT ALL (the albedo resolver walks the tree and returns
+nothing), which makes the gate plate's "distant cliff wall ends abruptly against a flat
+gray sky plane" (frame-edge WEAK) and lockfive's "flat, featureless dark void" plausibly
+ONE object seen from three cameras. It is a frame-edge item, not a floor one, and it needs
+its own census of what those cards shade to before anything is built.
+
+A METRIC LESSON, PAID INSIDE THIS ROUND. The first A/B was read off GROUND
+percentiles and said lockfive "barely moved" (p25 15.1 -> 15.3). That reading was
+WRONG, and the reason is that a ground percentile averages the whole floor of the
+frame, so a large fix confined to a few objects disappears into it. The metric the
+fix actually targets is the share of pixels at TRUE BLACK, and on that metric every
+baked plate moved: L <= 8/255 fell by 6-21% relative and the deepest blacks
+(L <= 4/255) by 9-24%. MEASURE THE THING THE FIX CHANGES, NOT THE THING THAT IS EASY
+TO AVERAGE.
+
+THE COLOUR-ONLY PROOF CAME FROM AN ARTIFACT, NOT AN ARGUMENT. After the rebakes,
+git status shows depth.png BYTE-IDENTICAL on every plate that had been baked against
+the current geometry (8 of the 10 - only their bg.png moved). Depth IS
+geometry; one moved vertex and those files differ. That is stronger than reading the
+carrier and observing it writes only colour-attribute values and one Base Color socket,
+and it is why walk_engine_gate and findability are not implicated: no walk cell, no body
+box, no camera solve can have moved. boatyard's AND cottage's depth DID change and that is a fix, not a
+contradiction - both were CLEAN in the round-3 item-2/3 frustum census so neither was
+rebaked there, and their depth maps still predated ds_shelf's bathymetry and
+qm_awning_fix's ridge. They are current with the master for the first time since round 1.
+
+THE RECEIPT, byte-exact (BEFORE plates extracted from git HEAD, not re-measured off a
+downscaled gallery jpg; plate_probe takes a PLATE_BUNDLE override so ONE instrument
+reads both bundles). Share of pixels at TRUE BLACK, before -> after:
+
+shot           | L<=8 %           | L<=4 %           | frame L p05     
+boatyard       |   7.04 ->   6.64 |   4.84 ->   4.42 |    4.3 ->    5.1
+lockfive       |  26.04 ->  22.06 |  13.01 ->  10.05 |    1.6 ->    1.8
+north-landing  |   8.32 ->   6.55 |   5.89 ->   4.55 |    3.1 ->    4.9
+crossing       |  17.33 ->  14.92 |   8.35 ->   6.39 |    2.5 ->    3.1
+weave          |  22.67 ->  21.73 |  10.78 ->  10.01 |    1.8 ->    2.1
+cottage        |  16.37 ->  15.87 |   9.56 ->   9.24 |    1.4 ->    1.4
+waterfront     |   5.52 ->   5.38 |   2.52 ->   2.44 |    7.3 ->    7.5
+lockhead       |  11.48 ->  11.44 |   5.49 ->   5.46 |    3.7 ->    3.7
+fishdock       |  22.34 ->  22.21 |  12.17 ->  12.01 |    1.6 ->    1.6
+gate           |   6.60 ->   6.25 |   1.39 ->   1.03 |    6.9 ->    7.3
+
+Every baked plate lost true-black: L<=8 down 0.3-4.0 points (lockfive 26.04 -> 22.06,
+crossing 17.33 -> 14.92, north-landing 8.32 -> 6.55) and the DEEPEST blacks (L<=4) down
+9-26% relative on the four plates the family dominates. The three the census barely
+touched (lockhead, fishdock, waterfront) moved 0.04-0.14 points, which is the frustum
+census being right about how little they see.
+
+BAKES: ten plates, 1-WIDE SERIAL, all rc=0. boatyard 420s (contended with the
+Emberbrook full-res batch), then 161-224s once that batch exited - which is the
+contention tell CLAUDE.md already records, measured again.
+
+THE JUDGE (scene_redteam --mode both --shots boatyard, pinned gemini-3.6-flash, 6 calls,
+0 errors, run-20260807-183447; no history, no ownership framing).
+  BEFORE, verbatim (run-20260806-1, same camera, naive): "The large horizontal surfaces
+  on the foreground structure appear as completely untextured, pitch-black voids" /
+  "Large sections of the building's lower structure are rendered as flat pitch-black
+  blocks lacking textures and lighting" / "completely flat, unshaded black geometry that
+  lacks lighting and texture detail."
+  AFTER: THE WORDS ARE GONE. Across all six replies the strings `pitch-black`,
+  `black void`, `untextured`, `unlit` and even `void` occur ZERO times. The six survivors
+  are different objects entirely (bunting terminating mid-air, scaffold beams without
+  vertical supports, no visible stairs onto the circular deck, hull clipping, foliage
+  without stems). [QUALITY] frame-edge-world CONVINCING; water-read CONVINCING
+  ("realistic teal coloring, subtle surface ripples, transparency in the shallows, and
+  clean contact boundaries").
+  NOT A CLEAN SWEEP, named: boatyard's four ABSENT verdicts (pitch-kettle,
+  lock-four-glimpse and the two routes through them) are the SAME sev-3 items
+  run-20260806-1 filed. Untouched here; a set-dressing / camera-ownership question.
+
+GATES on the final artifacts: cine_test 635/1 - the 1 is the PRE-ATTRIBUTED
+deep-stairs<->waterfront seam red (MORNING.md 20:20), same {"fired":0,"expected":10}
+signature it carried before this round · slice_test 776/0 · findability_test 69/0
+(12 warnings, unchanged). walk_engine_gate is not implicated and the ARTIFACT says so
+rather than the source: the re-exported del-cine GLB differs from the previous export on
+0 POSITION accessors, 0 index accessors, and COLOR_0 on exactly the 65 objects the
+manifest names. Shared townwalk bundle re-exported off the same master in the same
+window (town_export), per the shared-master rule.

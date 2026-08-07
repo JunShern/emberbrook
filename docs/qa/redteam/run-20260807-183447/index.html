@@ -1,0 +1,350 @@
+<meta charset="utf-8"><title>Scene red-team — dellhollow — run 20260807-183447</title>
+<style>
+:root{--bg:#14110e;--fg:#efe6d8;--dim:#a2957f;--line:#33291f;--hit:#5fb56b;--miss:#c9584a;
+      --naive:#e0a33c;--checklist:#5aa9d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+  font:14px/1.55 -apple-system,Segoe UI,Roboto,sans-serif}
+.pad{max-width:1240px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:38px 0 6px;border-bottom:1px solid var(--line);
+  padding-bottom:6px}h3{font-size:15px;margin:24px 0 4px}
+.small{color:var(--dim);font-size:12px}.blurb{color:var(--dim);margin:2px 0 10px;font-size:13px}
+code{background:#241d16;padding:1px 5px;border-radius:3px;font-size:12px}
+.verdict{background:#1e1912;border:1px solid var(--line);border-left:4px solid var(--naive);
+  padding:14px 16px;border-radius:6px;margin:14px 0 6px;font-size:16px;line-height:1.6}
+table{border-collapse:collapse;width:100%;margin-top:10px}
+th,td{border:1px solid var(--line);padding:9px;vertical-align:top;font-size:13px}
+th{background:#1e1912;text-align:left;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.refcell{width:210px}.refcell img{width:100%;border-radius:4px;display:block}
+.whatcell{width:250px}.said{color:var(--dim);font-style:italic;margin:4px 0}
+td.hit{background:#16240f}td.miss{background:#2a1512}
+td.hit b{color:var(--hit)}td.miss b{color:var(--miss)}
+.quote{margin-top:6px;padding-left:8px;border-left:2px solid var(--line)}
+.src{display:block;color:var(--dim);font-size:11px}
+.wrap{position:relative;display:block;line-height:0;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.wrap img.plate{width:100%;display:block}
+.bx{position:absolute;border:2px solid var(--naive);border-radius:2px;box-shadow:0 0 0 1px #0008}
+.bx.checklist{border-color:var(--checklist)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+.card{background:#1a1610;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.card.sev3{border-color:#6b3229}
+.ch{padding:8px 10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.pill{font-size:10.5px;padding:1px 6px;border-radius:99px;background:#2a2118;color:var(--dim);
+  text-transform:uppercase;letter-spacing:.04em}
+.pill.naive{background:#3a2c12;color:var(--naive)}.pill.checklist{background:#122c3a;color:var(--checklist)}
+.shot{margin-left:auto;font-size:12px;color:var(--dim)}
+.crop{width:100%;aspect-ratio:16/9;background:#000 no-repeat;border-bottom:1px solid var(--line)}
+.cb{padding:10px}.q{font-size:13px}
+.meta{color:var(--dim);font-size:11.5px;margin-top:5px}
+.meta.cmd{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;word-break:break-all;color:#8fa07d}
+.verify.upheld b{color:var(--hit)}.verify.refuted b{color:var(--miss)}
+.count{color:var(--dim);font-weight:400;font-size:12px}
+.empty{color:var(--dim);font-size:12px;padding:10px}
+.limits{background:#1c1712;border:1px solid var(--line);border-left:4px solid var(--miss);
+  padding:14px 18px;border-radius:6px}
+.limits li{margin:5px 0}
+section.shot{margin:18px 0 26px}
+.budget{color:var(--dim);font-size:12px;margin-top:8px}
+.sub{color:var(--dim);font-size:12.5px;font-weight:400;margin-top:8px;line-height:1.5}
+td.adj{width:190px}td.adj.hit{background:#16240f}td.adj.hit b{color:var(--hit)}
+td.adj.weak{background:#2a2410}td.adj.weak b{color:var(--naive)}
+td.adj.miss{background:#2a1512}td.adj.miss b{color:var(--miss)}
+.pill.sup{background:#22301f;color:#8fbf7f}
+</style>
+<div class="pad">
+<h1>Scene red-team — dellhollow</h1>
+<div class="small">run <code>20260807-183447</code> · judge <code>gemini:gemini-3.6-flash</code> (pinned) ·
+  1 plates · naive + checklist · naive N=3 ·
+  generated 2026-08-07T18:36:11.173Z by <code>tools/scene_redteam.mjs</code> · plates baked 2026-08-07T17:49:26Z</div>
+
+<h2>1 &nbsp;The prompts, verbatim</h2>
+<p class="blurb">Exactly what each judge call was asked (judge <code>gemini:gemini-3.6-flash</code>, pinned) —
+read these first; everything below is these prompts' output. The naive prompt is fixed for the whole
+run; the checklist and sceptic prompts are templates filled per plate — shown here filled with this
+run's own data. The style paragraph switches between art and blockout mode; this run used
+art mode, and that is the version shown.</p>
+<details class="prompt"><summary>Stage 1 — the naive critic (every plate, each of the N looks)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are a first-time player. The image is one frame of a video game, exactly what is on
+screen. You have never been here, you have no map, and nobody has told you anything.
+
+Critique this frame. Report anything that would make the place HARD TO UNDERSTAND or
+HARD TO PLAY. Use exactly these category tokens:
+  navigation  — you would not know where to go, or the way on is ambiguous
+  occlusion   — something blocks your understanding of the space
+  geometry    — incomplete, stray, floating, clipping, or plainly ugly geometry
+  exit        — a door or way out that does not read as a door or a way out
+  immersion   — floating objects, z-fighting, wrong scale, anything that breaks belief
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+RULES. Report only things you can actually point at in this image. Do NOT invent
+problems to fill the list, and do NOT list matters of taste. If the frame is fine,
+return an empty list — that is a valid and useful answer. At most 6 findings.
+severity: 3 = a player would be stuck or would think the game is broken, 2 = clearly
+wrong but survivable, 1 = a blemish.
+
+Answer with JSON only, in this exact shape:
+{&quot;findings&quot;:[{&quot;category&quot;:&quot;occlusion&quot;,&quot;where&quot;:&quot;a few words locating it in the frame&quot;,
+ &quot;bbox&quot;:[x0,y0,x1,y1],&quot;severity&quot;:2,&quot;desc&quot;:&quot;one sentence&quot;}]}
+bbox is in normalised image coordinates: x 0 at the left edge and 1 at the right, y 0
+at the top edge and 1 at the bottom.</pre></details>
+<details class="prompt"><summary>Stage 1 — the checklist auditor (filled for plate &quot;boatyard&quot;, 14 items derived from the map/ownership contract)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are auditing one frame of a video game. The designer says the things listed below
+are in this shot and that a player should be able to find them. For EACH item, decide
+which of these four is true, using the exact token:
+  FINDABLE               a first-time player would find it AND know what it is
+  OCCLUDED               it is hidden behind something else (say what hides it)
+  VISIBLE-BUT-ILLEGIBLE  part of it is on screen, but it does not read as what it is
+                         — too small, too dark, merged into its background, cropped,
+                         or it looks like some other kind of thing entirely
+  ABSENT                 you cannot see it anywhere in this frame at all
+
+Items marked [QUALITY] are different: they are already in frame, so findability is
+not the question — how well they HOLD UP is. For those items, and ONLY those, answer
+with one of these tokens instead:
+  CONVINCING   it holds up — it reads as the real thing at this scene's own hour
+  WEAK         it reads, but visibly falls short — say exactly what falls short
+  FAILING      it breaks the picture — it reads as a flat fill, a painted plane, or
+               an unfinished edge of the world
+For a [QUALITY] item, put the bbox around the specific area your judgment rests on,
+and make &quot;desc&quot; a JUDGMENT with a reason — never a neutral description of what is
+there.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+YOU ARE NOT TOLD WHERE ANYTHING IS. Do not guess a position to be helpful: if you
+cannot find it, ABSENT is the correct and useful answer. If you DO find it, give the
+bbox where you see it so your reading can be checked against the model.
+
+Two rules that keep the answers useful. (1) Names like &quot;shelf-west&quot; are the designers'
+internal names for other areas; a player never sees them, so NEVER report a missing
+sign, label or name as a problem — judge only whether the thing itself can be found and
+recognised for what it is. (2) Judge what is DRAWN, not what a game would normally add:
+no icons, markers or waypoints exist in this art and their absence is not a finding.
+
+Items:
+  1. Slipway — a dock (boats hauled out of the upstream pool for repair)
+  2. Hull frames — a machine (ribbed skeletons of boats under repair)
+  3. Boatwright's shed — a building
+  4. Pitch kettle — a prop (tar smoke curling over the water — the smell of the boatyard)
+  5. Lock Four overlook — a post (planked viewpoint under Lock Four's gates — spray and thunder; payoff of the boardwalk)
+  6. Lock Four (set dressing) — a dressing (upstream lock visible to the south, selling the staircase-of-water; NOT playable)
+  7. the route between Cargo Winch (foot) and Slipway — a deck (boardwalk continues upstream into the yard)
+  8. the route between Slipway and Hull frames — a deck
+  9. the route between Slipway and Boatwright's shed — a deck
+  10. the route between Boatwright's shed and Pitch kettle — a deck
+  11. the route between Slipway and Lock Four overlook — a deck (climbing boardwalk out to the overlook)
+  12. the way out of this area on foot towards waterfront — a path that carries on out of the frame
+  13. [QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.
+  14. [QUALITY] The water surface — this frame holds water (near Lock Four (set dressing), Lock Four overlook, Slipway). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.
+
+Answer with JSON only, one entry per item, in order:
+{&quot;items&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;FINDABLE&quot;,&quot;where&quot;:&quot;a few words&quot;,&quot;bbox&quot;:[x0,y0,x1,y1],
+ &quot;desc&quot;:&quot;one sentence saying how you recognised it, or what hides it, or why it does
+ not read&quot;}]}
+bbox is normalised: x 0 left to 1 right, y 0 top to 1 bottom. Use null when ABSENT.</pre></details>
+<details class="prompt"><summary>Stage 2 — the naive sceptic (shown with one real claim from this run; the live call lists every claim on the plate)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are the sceptic on a game art review, and your job is to protect the team from
+wasted work. Below are criticisms somebody has made of THIS frame. For each one,
+decide honestly whether it is a REAL problem for a player, or whether it is a
+misreading of the picture, a matter of taste, or simply normal for this art style.
+
+UPHOLD only if you can find the same thing in the frame yourself AND it would really
+cost a player something. REFUTE if the thing described is not there, is not what the
+critic thought it was, is normal for the style, or does not matter. Do not be polite:
+refuting a weak criticism is the useful answer.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+Claims:
+  1. [immersion] string of colorful flags near center: The lower right end of the bunting flag line hangs and terminates in mid-air without attaching to any pole or wall.
+
+Answer with JSON only, one entry per claim, in order:
+{&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
+<details class="prompt"><summary>Stage 2 — the checklist sceptic (contract-aware: told the object's existence is not in question; shown with one real claim)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are the sceptic on a game art review. The claims below are about objects that the
+DESIGNER'S OWN MAP says really are in this shot. That they belong here is NOT in
+question, and &quot;it is not there&quot; / &quot;this area would not have one&quot; / &quot;expecting it is
+arbitrary&quot; are NOT valid refutations. The only question is whether the claim about how
+well a player can FIND or READ the object is fair.
+
+UPHOLD if, looking at the frame yourself, you agree the object is genuinely hard to
+find, hidden behind something, or does not read as the kind of thing it is. REFUTE if
+you can point straight at it and it is plainly legible, or if the complaint is really
+about a missing sign, label, icon or name rather than about the art.
+
+Claims tagged [quality] are JUDGMENTS that a sky, a backdrop, the world at the frame
+edges, or a water surface fails to hold up as art (a flat fill, a painted plane, an
+unfinished edge of the world). For those, UPHOLD if your own look at the frame agrees
+it falls short in the way described; REFUTE only if the surface genuinely holds up in
+this frame. &quot;It is normal for games&quot; is not a refutation of a quality claim.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+Claims:
+  1. [navigation] Pitch kettle: ABSENT — No pitch kettle or curling tar smoke is visible in the scene.
+
+Answer with JSON only, one entry per claim, in order:
+{&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
+
+<h2>2 &nbsp;How well does this work?</h2>
+<div class="verdict">No calibration was scored in this run.</div>
+<p class="blurb">The gate is recall against complaints the user made <em>by hand</em>, before this tool
+existed. The judge is never told what the complaints are; it is shown the shipped plate that holds the
+object and asked to criticise it. Two numbers because there is a real ambiguity: <b>exact plate</b> counts
+the finding only on the one shot whose frame most nearly holds what the user circled; <b>any plate</b>
+counts it on any shot holding the same object. <b>Not reproducible, and said plainly:</b> all five
+references were screenshot from a free orbit camera, from angles no shipped plate holds — so this
+measures whether the same defect is <em>catchable from the shipped frames</em>, not whether the judge
+can reproduce the user's screenshots.</p>
+
+
+<h2>3 &nbsp;The sweep — surviving findings, triaged</h2>
+<p class="blurb">6 survivors from 13 raw findings over 1
+plates. Deduped across shots: a finding seen on more than one plate is listed once and says so.</p>
+
+
+<h3>Already known / tracked <span class="count">0</span></h3><p class="blurb">The judge re-found something the repo already knows about. Useful as a confirmation that the instrument sees real defects; not new work.</p>
+      <div class="grid"><div class="empty">nothing in this bucket</div></div>
+<h3>New, and looks real <span class="count">6</span></h3><p class="blurb">Not matched to anything tracked. This is the bucket that earns the tool its keep — and the bucket a human must read before anybody acts on it.</p>
+      <div class="grid"><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">boatyard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/boatyard.png');background-size:457% auto;background-position:39.8% 35.9%"></div>
+    <div class="cb"><div class="q">The lower right end of the bunting flag line hangs and terminates in mid-air without attaching to any pole or wall.</div>
+      <div class="meta">where: string of colorful flags near center</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The rightmost end of the flag line droops and ends abruptly in mid-air without connecting to the nearby wooden pole or cliff.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 18.1,27.4,18.2,32.9</div>
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">boatyard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/boatyard.png');background-size:500% auto;background-position:42.0% 7.0%"></div>
+    <div class="cb"><div class="q">Foliage assets are embedded directly into the flat rock face without visible stems, soil, or crevices.</div>
+      <div class="meta">where: cacti along the top cliff face</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The foliage meshes at the top of the cliff are placed directly against the vertical rock texture without visible stems, soil, or crevices.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 16.9,26.9,17.4,21.5</div>
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">boatyard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Pitch kettle: ABSENT — No pitch kettle or curling tar smoke is visible in the scene.</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 3.17 m nearer), 79 px tall at 26.11 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — There is no pitch kettle or tar smoke visible anywhere in this scene.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">boatyard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Lock Four (set dressing): ABSENT — No canal lock or lock gate structure is visible anywhere in the frame.</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 5.79 m nearer), 88 px tall at 23.63 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No canal lock or lock gate structure is visible within the frame.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">boatyard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Cargo Winch (foot) and Slipway: ABSENT — No cargo winch is present in this view, so this route cannot be identified.</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 3.57 m nearer), 72 px tall at 28.89 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No cargo winch is visible in the scene, rendering the route to it impossible to identify.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">boatyard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Boatwright's shed and Pitch kettle: ABSENT — Since the pitch kettle is absent, this route cannot be traced.</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 74 px tall at 27.96 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Because the pitch kettle is missing from the view, this route cannot be traced.</div>
+      
+      
+    </div></div></div>
+<h3>Style bar — waits for the dressing pass <span class="count">0</span></h3><p class="blurb">Material and detail complaints against a massing blockout. Correct observations, wrong stage.</p>
+      <div class="grid"><div class="empty">nothing in this bucket</div></div>
+
+<h2>4 &nbsp;Every plate, with its findings drawn on</h2>
+<p class="blurb">Boxes are the judge's own bboxes: <span style="color:var(--naive)">orange = naive</span>,
+<span style="color:var(--checklist)">blue = checklist</span>. This is the user's own annotated-screenshot
+format, machine-made.</p>
+
+<section class="shot"><h3>boatyard <span class="small">The Boatyard · bake 2026-08-07T17:49:26Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/boatyard.png" alt="">
+        <div class="bx naive" style="left:31.00%;top:24.90%;width:17.60%;height:21.90%"></div><div class="bx naive" style="left:32.00%;top:0.00%;width:20.00%;height:14.00%"></div></div>
+      <div class="small">6 surviving findings ·
+        7 refuted ·
+        14 checklist items</div></section>
+
+<h2>5 &nbsp;Limits — what this instrument structurally cannot see</h2>
+<div class="limits">
+<p>This tool looks at <b>pixels</b>. Seam-canon §10.3 (amended after the loop-stairs post-mortem) is the
+reason that sentence needs a warning label:</p>
+<p style="font-size:15px;margin:10px 0"><b>&ldquo;in frame&rdquo; &ne; &ldquo;visible&rdquo; &ne;
+&ldquo;unobstructed ray&rdquo; &ne; <span style="color:var(--miss)">catches a foot</span></b></p>
+<p>The loop-stairs flight was 72% visible, correctly framed, unoccluded and handsome — and unwalkable,
+because <code>walkGround</code> keeps the highest surface in the step window and the neighbouring
+flight's top tread covered its head. It caught a foot in 0 of 72 entries. <b>No critique of that plate
+could ever have found it.</b> What this tool cannot see, and where each of those defects <em>is</em>
+caught:</p>
+<ul>
+<li>whether a walk surface catches a foot &rarr; <code>tools/ls_nav_probe.mjs</code>, <code>seam_walk.mjs</code></li>
+<li>whether a solid blocks the body &rarr; WALKLOCK / <code>boxSolid</code>, <code>seam_test.mjs</code></li>
+<li>whether a naive reading of the frame actually <em>escapes</em> the shot &rarr; <code>tools/nav_eval.mjs</code> (it walks the answer)</li>
+<li>whether a seam fires where it should &rarr; <code>seam_test.mjs</code>, <code>transition_test.mjs</code></li>
+<li>true occlusion over a whole object, in metres &rarr; the bake ray-cast — the <em>only</em> visibility oracle — and <code>cine_visprobe.py</code></li>
+<li>anything outside the shipped fixed frames &rarr; nothing automated sees it. The user plays with a free orbit camera; all five reference frames were taken from angles no plate holds.</li>
+</ul>
+<p>A finding here is a <b>perception</b>, and a perception is not a measurement. Geometry findings ship
+with a <code>geometry_audit --region</code> command for exactly this reason: the next step is to measure
+it, not to believe it.</p>
+</div>
+
+<div class="budget">Budget: 6 judge calls
+(naive 3, checklist 1, refute-naive 1, refute-checklist 1) ·
+9,837 prompt + 15,393 reply tokens ·
+0 errors. Box check: 0/2 (0%) of the
+judge's checklist boxes contain the point the ray census projected — the drawn rectangles are
+only as trustworthy as that number. Raw replies in <code>raw/</code>, findings in
+<code>findings.json</code>, discarded claims in <code>refuted.json</code>.</div>
+</div>

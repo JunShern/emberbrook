@@ -1,0 +1,196 @@
+[
+ {
+  "fid": "F1",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "immersion",
+  "where": "string of flags across middle ground",
+  "bbox": [
+   0.428,
+   0.253,
+   0.487,
+   0.468
+  ],
+  "severity": 1,
+  "desc": "The string of bunting flags terminates mid-air on the left side without anchoring to any post or wall.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "18.1,23.1,18.5,24.2",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 18.1,23.1,18.5,24.2"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The left end of the flag string is anchored to a tall wooden beam on the roof structure."
+  }
+ },
+ {
+  "fid": "F2",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "geometry",
+  "where": "scaffold framework below upper-right hut",
+  "bbox": [
+   0.528,
+   0.218,
+   0.663,
+   0.34
+  ],
+  "severity": 1,
+  "desc": "The curved wooden scaffold beams float along the cliff face without visible vertical supports anchoring them to the ground.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "12.2,19.6,18.4,33.1",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 12.2,19.6,18.4,33.1"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The stilts and scaffolding underneath the upper huts extend down to rest on the lower wooden platforms and cliff ledges."
+  }
+ },
+ {
+  "fid": "F3",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "navigation",
+  "where": "circular wooden platform in center",
+  "bbox": [
+   0.376,
+   0.492,
+   0.617,
+   0.755
+  ],
+  "severity": 2,
+  "desc": "The large central circular platform is enclosed by railings without clear stairs or openings, making it ambiguous how a player accesses or leaves it.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The railing only covers the front edge of the circular platform, leaving the rear open where it meets the ground level."
+  }
+ },
+ {
+  "fid": "F5",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "geometry",
+  "where": "wooden roof framework in upper-center",
+  "bbox": [
+   0.477,
+   0.207,
+   0.681,
+   0.344
+  ],
+  "severity": 2,
+  "desc": "The wooden rafter framework on the slope is missing structural support on its left side, leaving beams floating over open space.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "11.6,21.4,18.3,33.7",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 11.6,21.4,18.3,33.7"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The left side of the upper-center roof frame is supported by vertical wooden posts resting on the cliff ledge below."
+  }
+ },
+ {
+  "fid": "F6",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "navigation",
+  "where": "entire village platform structure",
+  "bbox": [
+   0.018,
+   0.038,
+   0.98,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "There are no visible stairs, ramps, or ladders connecting the various vertical platform tiers to one another or to the water level.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Walkable ground slopes and a wooden boat slipway connect the water level to the higher village platforms."
+  }
+ },
+ {
+  "fid": "F7",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "navigation",
+  "where": "central circular wooden platform",
+  "bbox": [
+   0.38,
+   0.49,
+   0.62,
+   0.76
+  ],
+  "severity": 2,
+  "desc": "Pathing onto the circular deck from the shore or surrounding structures is ambiguous, lacking clear stairs or ramps.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The circular deck merges directly with the rising dirt slope at its rear, providing a clear entrance without requiring stairs."
+  }
+ },
+ {
+  "fid": "F8",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "geometry",
+  "where": "large tilted boat hull on the left",
+  "bbox": [
+   0.02,
+   0.43,
+   0.32,
+   0.65
+  ],
+  "severity": 2,
+  "desc": "The large tilted boat hull clips unnaturally into surrounding scaffolding without visible structural support.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "22.5,35,24.5,31.2",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 22.5,35,24.5,31.2"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The boat hull sits supported within a custom wooden cradle frame on the shore rather than clipping unnaturally."
+  }
+ }
+]

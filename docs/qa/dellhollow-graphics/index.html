@@ -311,5 +311,280 @@ edge of the frame".<br><br>
 rendered anywhere around or beneath the quay deck" — correct, and the census agrees: this
 camera sees <b>zero</b> water pixels. That is the same standing item as run-20260806-1's
 "lower gorge completely black" and it is a camera-ownership question, not a water one.</div>
+
+<h1 style="margin-top:3em">Dellhollow graphics fix — round 3, item 4 <span class="note">(2026-08-07 · the lighting/detail class)</span></h1>
+<p class="note">Worklist: boil close-read · waterline foam/shore band · boatyard black slabs ·
+railings/market-stand close-read · crushed-black street shadows · plus two the evening's judge
+named (deep-stairs "no normal ripples, refraction in the shallows", and the "teal-blue flat
+panel ... looks like a placeholder plane"). The worklist filed the whole set under the town's
+LIGHTING doctrine — <i>adjusting an existing light has never moved this town; ADDING a source
+always has</i>. <b>The measurement splits the set in two, and one half is not a lighting
+problem at all.</b> Before-images are the round-3 plates (<code>before4/</code>); after-images
+are live.</p>
+
+<h2>The instrument this round needed, and did not have</h2>
+<div class="meas">The doctrine says "measure GROUND luminance on the region probes — the floor
+is what has to be read", and nothing in the tree could. <code>plate_flat</code> audits
+background leak, <code>nav_eval</code> asks an LLM, <code>cine_visprobe</code> needs Blender.
+<b><code>tools/plate_probe.py</code></b> (new, no Blender, no browser) reconstructs a world XYZ
+for every pixel out of the bundle's own two files — <code>cine.json</code>'s solved camera and
+the <code>rgb24-viewz</code> <code>depth.png</code> — and derives a per-pixel normal from the
+world-position gradient, which splits the frame into GROUND / WALL / VOID. Three things it is
+careful about, each wrong once on the way here: depth is resampled NEAREST only (bg is
+2688&times;1536, depth is 1344&times;768, and a filtered tap averages the packed bytes of two
+different depths); a depth discontinuity fakes a grazing normal, so a sample whose neighbour is
+&gt;1.5 m away in world space is dropped rather than classified; and <b>dark is not crushed</b> —
+"crushed" means dark AND locally flat (L&nbsp;&le;&nbsp;24/255 with a 5&times;5 sd &le; 2),
+because a dark surface that still carries texture is a shadow and one that carries none is a
+hole, and they want different fixes.<br><br>
+<b>It names a REGION, never an object.</b> A world box out of it is the INPUT to a Blender ray
+census. Round 3 has now three times recorded a worklist item whose named object was the wrong
+one; skipping that second step is how.</div>
+
+<h2>The census that split the class</h2>
+<div class="meas">Crushed-black over all 15 del-cine plates: <b>7.4% (waterfront) to 29.9%
+(lockfive)</b> of pixels are dark-and-flat. Ground luminance by plate, worst five by 25th
+percentile: shelf-west 12.6 · deep-stairs 13.6 · lockfive 15.1 · crossing 16.9 · quay-west 20.5
+(waterfront, the brightest, is 105.6). So the claim "crushed-black street shadows" is real and
+a quarter of the walkable floor of five plates sits under L 21/255.<br><br>
+<b>Then the same pixels were asked WHAT THEY ARE.</b> A ray census at the master, restricted to
+the pixels at L &le; 8/255, resolving each hit's actual base colour — flat for a plain
+material, nearest-corner <code>Col</code> for a vertex-colour-driven one:
+<pre style="font-size:12px;color:#c8ccd4">boatyard    lock_four_dam   mat_blackstone       n=209   albedo L 0.0085 .. 0.0155  (med 0.0094)
+            slipway_ramp    mat_blackstone       n=  8   albedo L 0.0094 .. 0.0096
+n-landing   lf_crest_bay_*  mat_blackstone               albedo L 0.0156 .. 0.0258
+lockfive    lf_barge_*      lf_matte                     albedo L 0.0305
+(flat)                      mat_stone_black_cap          albedo L 0.0287
+--- versus, on the SAME probe, the plates the judge called "crushed street shadow" ---
+quay-west   wv_hut_*        lf_shingle                   albedo L 0.150 .. 0.181
+            wv_hut_*        lf_stone                     albedo L 0.124 .. 0.139
+(the street materials themselves, resolved through their node trees, for scale:)
+            mat_qm_paving / mat_qm_ground / mat_shelf_paving   albedo 0.137 .. 0.72
+            m_wood 0.171 · lf_deck 0.26..0.41 · mat_timber_dark 0.124..0.42</pre>
+<b>209 of the 279 blackest pixels in the boatyard frame are ONE material at a median albedo of
+0.94%.</b> That is a tenth of the darkest thing anyone in this town intended to be dark.</div>
+
+<h2>Item (c) — THE BOATYARD BLACK SLABS ARE A 0.9% ALBEDO, NOT A SHADOW</h2>
+<div class="claim">"The large horizontal surfaces on the foreground structure appear as
+completely untextured, pitch-black voids" / "large sections of the building's lower structure
+are rendered as flat pitch-black blocks" (boatyard, naive, sev 2 &times;3, run-20260806-1).
+Carried on the round-3 worklist inside the LIGHTING class.</div>
+<div class="meas"><b>Measured, and the lighting framing is REFUSED.</b> The worst crushed region
+on the boatyard plate is x 12.0..15.8, y 36.9..40.6, z 5.5..5.9 — <b>L mean 0.1/255 with a
+sd of 0.4</b> on a 3.8 &times; 0.4 m face, and a second UP-FACING patch at L mean 2.2. That is
+not a dark shadow; it is zero. The ray census above says why: it is
+<code>lock_four_dam</code>/<code>mat_blackstone</code> at a <b>median albedo of 0.0094</b>.
+A 0.94% reflector returns 0.94% of whatever arrives — at the shipped exposure (0.15, AgX) no
+lamp that would not also blow out its lit neighbours can bring it to a printable value.
+<code>pit_lantern</code>'s own header records paying for exactly that mistake once already
+("moved the bbox median 5.3 → 4.9/255, i.e. NOT AT ALL"). <b>The doctrine is about light and
+this is not a light.</b></div>
+<div class="meas"><b>Fix — <code>tools/dh_albedo_floor.py</code> (new carrier).</b> Raises every
+base colour in the measured black family to a FLOOR of <b>0.055</b>, preserving hue
+(<code>c &times;= floor / L(c)</code>): the flat <code>mat_stone_black_cap</code>, and the
+per-vertex <code>Col</code> of <code>mat_blackstone</code> and <code>lf_matte</code> —
+<b>18,660 loops over 65 objects</b>, worst albedo before <b>0.00837</b>.
+<b>MATERIAL-SCOPED, and that is load-bearing:</b> <code>lock_four_dam</code> is a joined mesh
+carrying eleven material slots over ONE shared <code>Col</code> layer whose median vertex
+luminance is 1.0, because <code>mat_wallwood</code>'s loops are white there — a mesh-scoped
+lift would have repainted the lockhouse.<br><br>
+<b>The gate is the ORDERING, asserted rather than assumed.</b> 0.055 sits between charcoal
+(~0.04) and wet slate (~0.06–0.08), and the build FAILS if the family is not still the darkest
+thing in Dellhollow: measured floor 0.0550 &lt; <code>mat_timber_dark</code> 0.1238, so
+locksfoot_build's art direction survives verbatim ("black … its coursing, its wet nappe and its
+boil, nothing more") while the surface stops being unrenderable. Idempotent, and the second run
+does not rewrite the receipt (a no-op that overwrote the manifest with an empty one was caught
+and fixed here — a receipt that lies is worse than no receipt).</div>
+
+<h2>Item (e) — the crushed STREET shadows are a different defect, and are deliberately not touched</h2>
+<div class="meas">On shelf-west and quay-west the blackest pixels land on
+<code>lf_shingle</code> 0.150–0.181, <code>lf_stone</code> 0.124–0.139,
+<code>lf_deck</code> 0.26–0.34 — <b>normal reflectance in deep shade</b>. Those really are
+unlit, and the lighting doctrine really does govern them. They are left alone on purpose:
+<b>the census that would size that lamp recipe is contaminated by the material bug above</b>
+(<code>mat_blackstone</code> / <code>lf_matte</code> are in the top hits of boatyard,
+north-landing, lockfive AND crossing). Sizing a lamp against a number that is partly a 0.9%
+albedo would be solving for the wrong quantity. The honest order is: fix the albedo, RE-MEASURE
+the crushed census on the new plates, then solve the class recipe on the class's median member.
+The before table is banked above so the re-measure has something to subtract from.</div>
+
+<h2>Item (b) — the waterline: HALF the claim is refuted, half is confirmed</h2>
+<div class="claim">"Knife-sharp waterline (no foam/shore blending)" — round-1 blind judge
+residual; "proper contact foam along the shore and posts" — run-20260807-round3, deep-stairs.</div>
+<div class="meas"><code>plate_probe water</code> walks the water mask's own distance transform
+outward from the shore, in metres, and reads L there. <b>"Knife-sharp" is REFUTED</b> — every
+camera shows a 0.5–1.2 m gradient, not an edge:
+<pre style="font-size:12px;color:#c8ccd4">                0-0.15m   0.15-0.3   0.3-0.5   0.5-0.8   0.8-1.2   1.2-2.0
+waterfront        104.8      112.2     119.4     123.7     123.9     124.4
+fishdock           78.0       88.0     101.1     111.5     108.3     106.1
+north-landing      81.7       83.7      85.6      91.8      97.7     101.7
+weave              46.3       54.2      59.7      75.9     101.3     101.5
+deep-stairs        26.3       40.8      58.9        -         -         -
+lockfive           50.6       53.1      54.5      63.1      34.2      24.6</pre>
+<b>"No contact band" is CONFIRMED, and the sign is the finding:</b> the shore is monotonically
+DARKER than open water at every camera. That is the depth-alpha ramp working — shallow water is
+transparent and what it reveals is unlit bed — and it means there is <b>zero positive contact
+signal anywhere in town</b>: no band brighter than open water within 0.15 m of any shore, at any
+plate. A foam ribbon is therefore a new asset across 7+ plates and a round of its own; it is
+specified here, not built.</div>
+
+
+<h2>Item (f1) — "no normal ripples": confirmed, and it is TOWN-WIDE</h2>
+<div class="claim">"The water surface reads as a flat teal plane without normal ripples,
+refraction in the shallows, or proper contact foam along the shore and posts" (deep-stairs,
+calibrated judge, run-20260807-round3 — the surviving WEAK after round 3 item 2).</div>
+<div class="meas">The plate's own reconstructed normals give the water surface's tilt off
+vertical: <b>p50 0.01&deg;, p95 0.02&deg; on EVERY camera in Dellhollow</b> (deep-stairs,
+fishdock, weave, crossing, waterfront, lockfive, north-landing). The sheets are geometrically
+flat to a hundredth of a degree — <b>there are no ripple normals anywhere in this town for any
+light to catch</b>. That is not a deep-stairs defect: <code>water-transparency.md</code>
+delivered DEPTH (per-vertex alpha off bed depth) and never delivered SURFACE.<br><br>
+Two more numbers say why deep-stairs is the one the judge singles out: its water's local
+5&times;5 sd is <b>0.92</b> against fishdock 2.56 and waterfront 3.56 — the flattest-reading
+water in town — and its share of specular pixels (L &gt; 200) is <b>0.01%</b> against
+waterfront 0.87% and crossing 2.48%, a hundredfold. The pool is both un-rippled AND unlit, so
+round 3 item 2's spec ("a lamp over this pool") is necessary and <b>not sufficient</b>: against
+a 0.01&deg; normal a lamp buys one flat highlight.</div>
+
+<h2>Item (a) — the boil: "untextured" is literally true</h2>
+<div class="claim">"The dressed boil still reads as flat white untextured slabs at plate
+distance" (round-1 blind judge residual).</div>
+<div class="meas"><code>lf_dam_boil</code> on north-landing: <b>703 &times; 146 px, 1.91% of the
+frame, at 30.4 m</b>; L p50 114.8 / p95 214.8, sd 40.1; <b>47.1% of its pixels are locally flat
+(5&times;5 sd &le; 2)</b>; up-facing 94.7%. And <code>mat_boil_foam</code> is a <b>flat
+(0.55, 0.60, 0.62) — one constant, no texture, no vertex colour</b>. So "untextured" is not a
+perception, it is the material definition; every bit of variation in those pixels is shading.
+<code>boil_dress</code> (round 1) fixed the SILHOUETTE (seeded jitter) and set the TONE, and
+those held — what it never gave the boil is surface variation. Named with its number; a
+<code>Col</code> break-up on <code>mat_boil_foam</code> is one carrier and a 4-plate rebake,
+which did not fit this window's bake budget.</div>
+
+<h2>Item (d) + the "placeholder plane" — the stall boards, close-read AND looked at</h2>
+<div class="meas"><code>qm_stall_3</code>'s backboard on quay-west: <b>179 &times; 138 px at
+29.4 m</b>, L p50 82.5, local 5&times;5 sd p50 6.68 (only 18.2% flat), <code>mat_qm_paint_blue</code>
+= <code>derive(mat_wallwood, scale 2.40, tint 0.17/0.34/0.52)</code>. <b>So "flat, unshaded, no
+material texture" is not what the pixels say</b> — the board carries mat_wallwood's plank
+texture and reads olive-teal (RGB 76.7/80.6/61.3), not flat blue.<br><br>
+<figure style="margin:1em 0"><img src="qw-stallboard.jpg" style="max-width:100%;border:1px solid #333">
+<figcaption>quay-west, centre crop (u 0.38&ndash;0.64, v 0.30&ndash;0.56) — the judge's
+"teal-blue flat panel". Two more of the same board bottom-left and bottom-right.</figcaption></figure>
+<b>Then it was LOOKED AT, and the real defect is structural.</b> <code>stall()</code> puts the
+backboard <code>sb</code> at <code>cy &minus; sgn&middot;(hy &minus; 0.20)</code>, 0.10 m thick, while the
+four posts stand at <code>&plusmn;(hy &minus; 0.12)</code>, 0.11 m thick. Worked through: the board
+spans <code>hy&minus;0.25 .. hy&minus;0.15</code> and the posts span <code>hy&minus;0.175 ..
+hy&minus;0.065</code> — <b>they overlap by only 0.025 m and the board stands 0.085 m proud of them
+on the plaza side</b>. So the 1.30 m panel shows the plaza an unbroken painted face with its own
+frame buried behind it, and by eye (crop above) nothing in the frame reads as holding it up.
+<b>A board whose frame is behind it reads as a panel dropped on the deck</b> — which is exactly
+what the judge wrote. The fix is one line of geometry (seat the board ON the posts, or give it a
+visible ledger); specified, not built, because it needs its own carrier and rebake.</div>
+
+
+
+<h2>The receipt — and a metric lesson paid inside this round</h2>
+<div class="meas"><b>The A/B is byte-exact:</b> the BEFORE plates were extracted from
+<code>git HEAD</code>, not re-measured off a downscaled gallery jpg, and
+<code>plate_probe</code> takes a <code>PLATE_BUNDLE</code> override so one instrument reads
+both bundles.<br><br>
+<b>The first reading was wrong and it is worth writing down why.</b> Read off GROUND
+percentiles, lockfive "barely moved" (p25 15.1 &rarr; 15.3) — because a ground percentile
+averages the whole floor of the frame, so a large fix confined to a few objects vanishes into
+it. The metric the fix actually targets is the SHARE OF PIXELS AT TRUE BLACK, and on that
+metric every baked plate moved. <b>Measure the thing the fix changes, not the thing that is
+easy to average.</b>
+<pre style="font-size:12px;color:#c8ccd4" id="abtable">shot           | L<=8 %           | L<=4 %           | frame L p05     
+boatyard       |   7.04 ->   6.64 |   4.84 ->   4.42 |    4.3 ->    5.1
+lockfive       |  26.04 ->  22.06 |  13.01 ->  10.05 |    1.6 ->    1.8
+north-landing  |   8.32 ->   6.55 |   5.89 ->   4.55 |    3.1 ->    4.9
+crossing       |  17.33 ->  14.92 |   8.35 ->   6.39 |    2.5 ->    3.1
+weave          |  22.67 ->  21.73 |  10.78 ->  10.01 |    1.8 ->    2.1
+cottage        |  16.37 ->  15.87 |   9.56 ->   9.24 |    1.4 ->    1.4
+waterfront     |   5.52 ->   5.38 |   2.52 ->   2.44 |    7.3 ->    7.5
+lockhead       |  11.48 ->  11.44 |   5.49 ->   5.46 |    3.7 ->    3.7
+fishdock       |  22.34 ->  22.21 |  12.17 ->  12.01 |    1.6 ->    1.6
+gate           |   6.60 ->   6.25 |   1.39 ->   1.03 |    6.9 ->    7.3</pre></div>
+
+
+<h2>The colour-only proof, and it came from an artifact rather than an argument</h2>
+<div class="meas"><code>git status</code> after the rebakes: <b><code>depth.png</code> is
+BYTE-IDENTICAL on every plate that had been baked against the current geometry</b>
+(8 of the 10 — only their <code>bg.png</code> moved). Depth is
+geometry; if a single vertex had moved, those files would differ. That is a stronger
+statement than reading <code>dh_albedo_floor</code> and observing that it writes nothing but
+colour-attribute values and one Base Color socket, and it is why <code>walk_engine_gate</code>
+and <code>findability</code> are not implicated by this round: no walk cell, no body box and no
+camera solve can have moved.<br><br>
+<b>boatyard's and cottage's depth DID change, and that is a fix, not a contradiction.</b> Both
+were CLEAN in the round-3 item-2/3 frustum census, so neither was re-baked there and their depth
+maps still predated <code>ds_shelf</code>'s bathymetry and <code>qm_awning_fix</code>'s ridge.
+They are current with the master for the first time since round 1.</div>
+
+
+<h2>Blind-ish verdict — the calibrated judge on the plate that carried the complaint</h2>
+<div class="verdict"><code>scene_redteam --town dellhollow --mode both --shots boatyard</code>,
+judge pinned <code>gemini-3.6-flash</code>, N=3 naive looks + checklist, 6 calls, 0 errors —
+<code>docs/qa/redteam/run-20260807-183447/</code>. The judge gets no history and no ownership
+framing, so the comparison is against run-20260806-1's replies on the same camera.<br><br>
+<b>BEFORE, verbatim (boatyard, naive, run-20260806-1):</b> "The large horizontal surfaces on the
+foreground structure appear as completely untextured, pitch-black voids" · "Large sections of the
+building's lower structure are rendered as flat pitch-black blocks lacking textures and lighting"
+· "The lower portion of the building consists of completely flat, unshaded black geometry that
+lacks lighting and texture detail."<br><br>
+<b>AFTER: the words are gone.</b> Across all six replies (3 naive + checklist + 2 adversarial),
+the strings <code>pitch-black</code>, <code>black void</code>, <code>untextured</code>,
+<code>unlit</code> and even <code>void</code> occur <b>zero times</b>. The six surviving findings
+are about entirely different objects — bunting that terminates mid-air, scaffold beams without
+vertical supports, no visible stairs onto the circular deck, the boat hull clipping its
+scaffolding, foliage embedded in rock without stems. <b>[QUALITY] frame-edge-world CONVINCING ·
+water-read CONVINCING</b> ("realistic teal coloring, subtle surface ripples, transparency in the
+shallows, and clean contact boundaries").<br><br>
+<b>Not a clean sweep, and the unchanged parts are named:</b> the four ABSENT verdicts on boatyard
+(pitch-kettle, lock-four-glimpse and the two routes through them) are the SAME sev-3 items
+run-20260806-1 filed — untouched by this round, and a set-dressing/camera-ownership question, not
+a lighting or material one.</div>
+
+<h2>Gates</h2>
+<div class="meas"><code>cine_test</code> 635/1 — the 1 is the PRE-ATTRIBUTED
+<code>deep-stairs&harr;waterfront</code> seam red (MORNING.md 20:20; same
+<code>{"fired":0,"expected":10}</code> signature it had before this round and after rounds 1
+and 3.2/3.3) · <code>slice_test</code> 776/0 · <code>findability_test</code> 69/0 (12 warnings,
+unchanged). <code>walk_engine_gate</code> and the walk cycle are <b>not implicated and the
+artifact says so</b>: 0 POSITION and 0 index accessors differ in the re-exported GLB.</div>
+
+<h2>Named for round 4 — the haze cards are the biggest crushed surface left</h2>
+<div class="meas">Once the black family is accounted for, the largest crushed region on
+<b>lockfive</b> is 6.00% of the frame at <b>87 m</b> (world x 81..152, y 0..40) and on
+<b>crossing</b> 12.65% at <b>72 m</b>. The ray census names them: <code>fx_haze_east</code>
+(<code>mat_haze_east</code>) is the single most-hit object in the crushed sample on lockfive
+(42 of 220) and weave (54 of 220), with <code>fx_haze_south</code> on quay-west.
+<b>Neither material carries a Principled BSDF at all</b> — the albedo resolver walks the tree
+and comes back with nothing — so the "far cliff wall ends abruptly against a flat gray plane"
+(gate, frame-edge WEAK) and lockfive's "flat, featureless dark void" are very likely the same
+object seen from three cameras. Not measured further and not touched: it needs its own census
+of what those cards actually shade to, and it is a frame-edge item, not a floor one.</div>
+
+<h2>Skipped rebakes, receipted</h2>
+<div class="meas">Frustum census, 112&times;64 rays per camera against the 65 changed objects
+(7,168 rays/camera): boatyard 20.79% · lockfive 17.34% · north-landing 16.64% · crossing 11.96%
+· weave 4.91% · cottage 4.24% · waterfront 3.24% · lockhead 2.39% · fishdock 1.79% · gate 1.20%
+— all ten re-baked, 1-WIDE SERIAL. NOT re-baked, with their numbers: <b>deep-stairs 5 rays
+(0.07%) · quay-west 12 (0.17%) · shelf-east 17 (0.24%)</b>; loop-stairs and shelf-west are
+CLEAN at 0. Those three lag the master by a change that covers under a quarter of one percent
+of their pixels.</div>
+
+
+<h2>The ten rebaked plates — before / after</h2>
+<p class="note">Left: <code>before4/</code> (the round-3 item-2/3 bake). Right: live.</p>
+<div class="pair"><figure><img src="before4/boatyard.jpg"><figcaption>boatyard — before</figcaption></figure><figure><img src="after4/boatyard.jpg"><figcaption>boatyard — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/lockfive.jpg"><figcaption>lockfive — before</figcaption></figure><figure><img src="after4/lockfive.jpg"><figcaption>lockfive — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/north-landing.jpg"><figcaption>north-landing — before</figcaption></figure><figure><img src="after4/north-landing.jpg"><figcaption>north-landing — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/crossing.jpg"><figcaption>crossing — before</figcaption></figure><figure><img src="after4/crossing.jpg"><figcaption>crossing — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/weave.jpg"><figcaption>weave — before</figcaption></figure><figure><img src="after4/weave.jpg"><figcaption>weave — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/cottage.jpg"><figcaption>cottage — before</figcaption></figure><figure><img src="after4/cottage.jpg"><figcaption>cottage — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/waterfront.jpg"><figcaption>waterfront — before</figcaption></figure><figure><img src="after4/waterfront.jpg"><figcaption>waterfront — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/lockhead.jpg"><figcaption>lockhead — before</figcaption></figure><figure><img src="after4/lockhead.jpg"><figcaption>lockhead — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/fishdock.jpg"><figcaption>fishdock — before</figcaption></figure><figure><img src="after4/fishdock.jpg"><figcaption>fishdock — after (albedo floor 0.055)</figcaption></figure></div>
+<div class="pair"><figure><img src="before4/gate.jpg"><figcaption>gate — before</figcaption></figure><figure><img src="after4/gate.jpg"><figcaption>gate — after (albedo floor 0.055)</figcaption></figure></div>
+
 </body>
 </html>
