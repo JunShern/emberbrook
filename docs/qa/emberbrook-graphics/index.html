@@ -356,16 +356,22 @@ black curved sliver jutting from the ground beside the tree trunk", unchanged in
 frames and not yet attributed.</div>
 
 <h2>8. What the fix did to the pixels — and what it says about the lighting hypothesis</h2>
+<p class="note">A whole-frame pixel fraction is NOT the honest measure here: a geometry edit
+reshuffles the BVH, so Cycles samples the whole frame differently and part of any raw delta
+is render noise between two 128-spp renders. Splitting by the water mask (dilated ~1% of
+frame width so the bank band counts as "at the water") gives the signal AND its own noise
+floor in one measurement.</p>
 <table>
-<tr><th>pondlane, before &rarr; after</th><th></th></tr>
-<tr><td>pixels moving &gt; 8/255</td><td class="n">22,210 of 4,128,768 = <b>0.538%</b> (the shader pass moved 0.0065% — this is <b>83x</b>)</td></tr>
-<tr><td>median luminance INSIDE the moved region</td><td class="n">0.0513 &rarr; <b>0.1014</b></td></tr>
-<tr><td>5th-percentile luminance there</td><td class="n">0.0000 &rarr; <b>0.0185</b></td></tr>
-<tr><td>mean |luminance gradient| there</td><td class="n">0.00804 &rarr; <b>0.00647</b> (-20%: the rims)</td></tr>
+<tr><th>plate</th><th>moved &gt;8/255 AT the water</th><th>moved elsewhere (the noise floor)</th><th>L p50 at-water, before &rarr; after</th><th>mean |gradient| there</th></tr>
+<tr><td>pondlane</td><td class="n"><b>3.049%</b></td><td class="n">0.093%</td><td class="n">0.0560 &rarr; <b>0.1082</b></td><td class="n">0.00710 &rarr; <b>0.00520</b> (-27%)</td></tr>
+<tr><td>northlane</td><td class="n"><b>3.363%</b></td><td class="n">0.505%</td><td class="n">0.0484 &rarr; <b>0.0662</b></td><td class="n">0.02374 &rarr; 0.02241 (-6%)</td></tr>
+<tr><td>square</td><td class="n"><b>1.568%</b></td><td class="n">0.003%</td><td class="n">0.0115 &rarr; <b>0.0392</b></td><td class="n">0.00670 &rarr; 0.00603 (-10%)</td></tr>
+<tr class="skip"><td>homerow</td><td class="n">0.009%</td><td class="n">0.751%</td><td colspan="2">its water is occluded in the BEAUTY pass — seven pixels moved at it; the rebake bought nothing</td></tr>
 </table>
 <div class="verdict"><b>The black plane got twice as bright, and not one light was
-touched.</b> Half of "solid black flat plane" was the slab's own cast shadow on the bed it
-floated over, plus 10% transmission onto that shadowed bed. This is the direct receipt
+touched</b> — 0.0560 &rarr; 0.1082 on pondlane's own water, against a 0.093% noise floor,
+i.e. a 33x signal-to-noise. Half of "solid black flat plane" was the slab's own cast shadow
+on the bed it floated over, plus 10% transmission onto that shadowed bed. This is the direct receipt
 against "the black plane is LIGHTING" — the remaining darkness is the ratified emberwake
 grade, which is the hour Chapter One is set in.</div>
 
