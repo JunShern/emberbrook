@@ -5,6 +5,10 @@
 //   node tools/scene_redteam.mjs --town emberbrook    # (blockout mode arms itself)
 //   node tools/scene_redteam.mjs --shots gate,waterfront --mode naive
 //   node tools/scene_redteam.mjs --judge stub --dry   # harness self-check, no API
+//   node tools/scene_redteam.mjs --town emberbrook --water-census
+//                                                     # how much water each plate ACTUALLY
+//                                                     # shows, and which arm quality:water-read.
+//                                                     # No API, no browser, ~2 s.
 //   node tools/scene_redteam.mjs --replay <newStamp>,<oldStamp> --stamp <out>
 //                                                     # ONE report from several runs: each
 //                                                     # shot resolves from the first listed
@@ -128,6 +132,7 @@ import fs from 'fs';
 import path from 'path';
 import {PNG} from 'pngjs';
 import {loadCine, camBasis, project, charPx, m2r, r2m, PUB, ROOT, rd} from './cine_regions.mjs';
+import {loadGlb as _loadGlb} from './glb_read.mjs';
 
 // ------------------------------------------------------------------ args ----
 const ARGS = process.argv.slice(2);
@@ -147,6 +152,10 @@ const MAXITEMS = +opt('--max-items', 12);
 const N = +opt('--n', 3);                              // independent looks per plate, naive mode
 const TAG = opt('--tag', null);
 const REPLAY = opt('--replay', null);        // re-derive a finished run from its stored replies
+// `--water-census` prints waterFracOf for every camera of the town and exits: the arming
+// threshold is a number about THIS town's plates, so it has to be readable without
+// spending a judge call to see it.
+const WATER_CENSUS = flag('--water-census');
 
 // Emberbrook ships as a MASSING BLOCKOUT and is judged as one. Told to the judge, not
 // filtered out afterwards: a judge that spends its findings on "the materials are grey
@@ -393,11 +402,133 @@ function skyFracOf(cam) {
   return +(sky / (GX * GY)).toFixed(3);
 }
 // what marks a map feature as water-adjacent: its declared kind, or a water word in its
-// own id/name. Read from the map, never typed per shot.
+// own id/name. Read from the map, never typed per shot. USED ONLY TO NAME the water in
+// the prompt now — arming is `waterFracOf`, below.
 const WATER_KINDS = new Set(['water', 'dock', 'lock']);
 const WATER_RE = /\b(water|river|brook|pond|weir|moorage|slipway|lock|quay)\b/i;
 const WATER_FEATURES = MAP.landmarks.filter((l) =>
   WATER_KINDS.has(l.kind) || WATER_RE.test(l.id + ' ' + (l.name || '')));
+
+// ---------------------------------------------- HOW MUCH WATER IS ON SCREEN --
+// (2026-08-07, emb water-structural lane. THE DEFECT THIS REPLACES: `quality:water-read`
+// used to arm on `census(cam, waterLandmark.pos)` — A POINT TEST ON THE LANDMARK'S MAP
+// POSITION. A water body whose CENTRE projected inside the frame armed the item whether
+// or not one pixel of that water survived the plate, so Emberbrook's `arch` (0.13% of
+// frame is water), `therise` (0.14%) and `gateroad` (0.46%, and none of it inside the box
+// the judge drew) each carried a FAILING water verdict, and `pondlane` — whose pond is
+// entirely behind a willow — carried one whose bbox contained ZERO water pixels. Asked
+// about water it cannot see, the judge picks the flattest, texture-poorest ground in the
+// frame and reports it as bad water: gateroad's is a gravel apron at L p50 0.263 against
+// a frame median of 0.047, i.e. the BRIGHTEST large surface in the picture described as a
+// "pitch-black flat plane". It is the Poppy defect in CLAUDE.md's own words — A TEST THAT
+// PROJECTS A COORDINATE HAS NOT ASKED WHETHER ANYTHING IS VISIBLE THERE.
+//
+// So arming is now MEASURED, in exactly the shape `skyFracOf` already established: the
+// bundle's own water surfaces, projected through THE SHIPPED PROJECTION (`toImg` — this
+// file still owns no second copy of it) into a coarse z-buffer, and every covered cell
+// agreed against the plate's own depth.png. The fraction is also PASSED INTO THE PROMPT,
+// because "there is a thread of water low in this frame" and "half this frame is water"
+// are different questions and the judge was being asked the same one.
+//
+// WHAT IT IS NOT: a beauty-pass oracle. cine_bake's depth pass does not record alpha-cut
+// leaf cards, so a sheet standing behind foliage still counts here (measured: pondlane's
+// pond is 5.5% by this census and 0% to the eye, hidden by `veg_emb_wood_13`). That
+// direction is deliberate — this gate exists to SUPPRESS an unanswerable question, and a
+// gate that over-counts water suppresses less than it should rather than more.
+// `lm_watermill_*` and `walk_pad_watermill` must NOT match, and `lf_lock_water` must:
+// hence `water` bounded by a separator or the end, plus the explicit walk_ drop below.
+const WATER_MESH_RE = /(^|_)water(_|-|$)/i;
+// THE THRESHOLD, and why it is 0.5% of frame. THE PRINCIPLE FIRST: at this file's own
+// 1344x768 working frame, 0.5% is 5,161 px — spread along a 1344-wide ribbon that is FOUR
+// PIXELS TALL. "Some transparency toward the shallows, believable colour, flow or
+// reflection, and convincing contact where it meets banks" is not a question four pixels
+// can answer, so below this the item is not hard, it is UNANSWERABLE, and an unanswerable
+// question does not return "no finding" — it returns a confabulation.
+// THEN THE CALIBRATION, run with `--water-census` on both towns (2026-08-07):
+//   Dellhollow, the calibration set: every plate that produced a substantive water verdict
+//   arms — crossing 17.4% CONVINCING, waterfront 22.2%, fishdock 28.8%, north-landing
+//   15.7%, lockfive 9.8% CONVINCING, gate 6.9% WEAK, weave 5.8% CONVINCING, boatyard 6.3%,
+//   deep-stairs 1.5%. And `quay-west` — whose FAILING verdict reads "No water surface is
+//   visible anywhere near the Harbor Deck" and which the 2026-08-07 lane had already
+//   hand-adjudicated as TRUE and not a regression — measures 0.00% and is SUPPRESSED. The
+//   gate reproduces that hand adjudication mechanically.
+//   Emberbrook: the three plates whose FAILING bbox was measured DISJOINT from every water
+//   pixel — arch 0.12%, therise 0.11%, gateroad 0.45% — all suppress, and the five that
+//   really do show water arm. gatefield (2.36%) arms for the first time, which is the
+//   point test failing in the OTHER direction: it never asked.
+// The tightest margin is gateroad 0.45% against homerow 0.96%, a 2x gap, so the number is
+// not sitting on a cliff. Raise it and Dellhollow's deep-stairs (1.5%) is the next to go.
+const WATER_FRAC_MIN = 0.005;
+let _wtris;
+function waterTris() {
+  if (_wtris !== undefined) return _wtris;
+  _wtris = null;
+  const gp = path.join(SCENE_DIR, 'scene.glb');
+  if (!fs.existsSync(gp)) return _wtris;
+  try {
+    const G = _loadGlb(gp);
+    // glb_read hands back the RUNTIME frame (+x east, +y up, +z south); every camera in
+    // this file is in the map's Blender frame (+x east, +y north, +z up).
+    const f = G.trisFlat(new RegExp(WATER_MESH_RE.source, 'i'));
+    const keep = [];
+    for (let t = 0; t < f.count; t++) {
+      if (/^walk_/.test(f.names[f.node[t]])) continue;
+      const o = t * 9;
+      for (let k = 0; k < 3; k++)
+        keep.push(f.pos[o + k * 3], -f.pos[o + k * 3 + 2], f.pos[o + k * 3 + 1]);
+    }
+    _wtris = {count: keep.length / 9, pos: Float64Array.from(keep)};
+  } catch (e) { _wtris = null; }
+  return _wtris;
+}
+const _wfrac = new Map();
+function waterFracOf(cam) {
+  if (_wfrac.has(cam.id)) return _wfrac.get(cam.id);
+  const T = waterTris();
+  let frac = 0;
+  if (T && T.count) {
+    const GX = 168, GY = 96, zb = new Float64Array(GX * GY).fill(Infinity);
+    for (let t = 0; t < T.count; t++) {
+      const s = [];
+      let ok = true;
+      for (let k = 0; k < 3; k++) {
+        const o = t * 9 + k * 3;
+        const im = toImg(cam, [T.pos[o], T.pos[o + 1], T.pos[o + 2]]);
+        if (im.behind) { ok = false; break; }
+        s.push([im.u * GX, im.v * GY, im.z]);
+      }
+      if (!ok) continue;
+      const x0 = Math.max(0, Math.floor(Math.min(s[0][0], s[1][0], s[2][0])));
+      const x1 = Math.min(GX - 1, Math.ceil(Math.max(s[0][0], s[1][0], s[2][0])));
+      const y0 = Math.max(0, Math.floor(Math.min(s[0][1], s[1][1], s[2][1])));
+      const y1 = Math.min(GY - 1, Math.ceil(Math.max(s[0][1], s[1][1], s[2][1])));
+      if (x1 < x0 || y1 < y0) continue;
+      const d = (s[1][0] - s[0][0]) * (s[2][1] - s[0][1]) - (s[2][0] - s[0][0]) * (s[1][1] - s[0][1]);
+      if (Math.abs(d) < 1e-9) continue;
+      for (let gy = y0; gy <= y1; gy++) for (let gx = x0; gx <= x1; gx++) {
+        const px = gx + 0.5, py = gy + 0.5;
+        const w0 = ((s[1][0] - px) * (s[2][1] - py) - (s[2][0] - px) * (s[1][1] - py)) / d;
+        const w1 = ((s[2][0] - px) * (s[0][1] - py) - (s[0][0] - px) * (s[2][1] - py)) / d;
+        const w2 = 1 - w0 - w1;
+        if (w0 < 0 || w1 < 0 || w2 < 0) continue;
+        const z = w0 * s[0][2] + w1 * s[1][2] + w2 * s[2][2];
+        const i = gy * GX + gx;
+        if (z < zb[i]) zb[i] = z;
+      }
+    }
+    let vis = 0;
+    for (let gy = 0; gy < GY; gy++) for (let gx = 0; gx < GX; gx++) {
+      const i = gy * GX + gx;
+      if (!isFinite(zb[i])) continue;
+      const d = depthAt(cam, (gx + 0.5) / GX, (gy + 0.5) / GY);
+      if (!d.sky && Math.abs(d.z - zb[i]) < 0.35) vis++;
+    }
+    frac = vis / (GX * GY);
+  }
+  frac = +frac.toFixed(4);
+  _wfrac.set(cam.id, frac);
+  return frac;
+}
 
 // ------------------------------------------------------- THE CHECKLIST ITEMS -
 // DERIVED, NEVER TYPED. Four sources in order of authority:
@@ -474,18 +605,23 @@ function checklistFor(id, cam) {
               'hold up all the way to every edge of the frame, or does it visibly end, thin ' +
               'out, or turn rough and unfinished somewhere inside the frame (bare terrain, ' +
               'abrupt cut-offs, missing backdrop)? Say where.'});
+  // ARMED ON MEASURED WATER, NOT ON A PROJECTED LANDMARK ORIGIN — see waterFracOf.
+  const wfrac = waterFracOf(cam);
   const wets = WATER_FEATURES.map((l) => ({l, cs: census(cam, l.pos)}))
     .filter((w) => w.cs.on && w.cs.state !== 'behind-camera')
     .sort((a, b) => (b.cs.charPx || 0) - (a.cs.charPx || 0));
-  if (wets.length)
+  if (wfrac >= WATER_FRAC_MIN)
     push({id: 'quality:water-read', src: 'waterAudit', must: true, quality: true,
-          census: wets[0].cs,
-          what: `[QUALITY] The water surface — this frame holds water (near ${
-                wets.slice(0, 3).map((w) => w.l.name || w.l.id).join(', ')}). Does the surface ` +
-                'read as WATER — some transparency toward the shallows, believable colour, flow ' +
-                'or reflection, and convincing contact where it meets banks, decks and ' +
-                'structures — or as a painted / solid plane? Judge the surface AND its edge ' +
-                'contact; say what fails or what carries it.'});
+          census: {state: 'quality-audit', on: true, waterFrac: wfrac,
+                   near: wets.slice(0, 3).map((w) => w.l.id)},
+          what: `[QUALITY] The water surface — water covers about ${
+                (wfrac * 100).toFixed(1)}% of this frame${wets.length ? ` (near ${
+                wets.slice(0, 3).map((w) => w.l.name || w.l.id).join(', ')})` : ''}. Judge ` +
+                'ONLY those pixels. Does that surface read as WATER — some transparency ' +
+                'toward the shallows, believable colour, flow or reflection, and convincing ' +
+                'contact where it meets banks, decks and structures — or as a painted / ' +
+                'solid plane? Judge the surface AND its edge contact; say what fails or what ' +
+                'carries it, and put the bbox on the water itself.'});
   return items;
 }
 
@@ -1396,6 +1532,19 @@ async function main() {
     const run = JSON.parse(fs.readFileSync(path.join(OUTDIR, 'findings.json'), 'utf8'));
     writeReport(run);
     console.log(`rerendered ${path.relative(ROOT, OUTDIR)}/index.html`);
+    return;
+  }
+  if (WATER_CENSUS) {
+    const T = waterTris();
+    console.log(`water-census ${TOWN}/${SCENE} — ${T ? T.count : 0} water triangles in ` +
+                `${path.relative(ROOT, path.join(SCENE_DIR, 'scene.glb'))}, ` +
+                `arming threshold ${(WATER_FRAC_MIN * 100).toFixed(1)}% of frame`);
+    for (const c of CINE.cameras) {
+      if (!plateFiles(c.id).ok) continue;
+      const f = waterFracOf(camOf(c.id));
+      console.log(`  ${c.id.padEnd(16)} ${(f * 100).toFixed(2).padStart(6)}%   ` +
+                  `${f >= WATER_FRAC_MIN ? 'ARMED' : 'suppressed'}`);
+    }
     return;
   }
   const judge = JUDGES[JUDGE_NAME];
