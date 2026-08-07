@@ -16878,3 +16878,13 @@ water cyan-plane (unaddressed this round), Emberbrook water (probe never reporte
 — re-diagnose), boil read, waterline blending, railings/stands.
 SUBAGENT BUDGET: the session hit its 200-agent cap; coordinator runs lane work
 in-line from here (or the user raises CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION).
+
+## 2026-08-07 ~09:20 — COORDINATOR: the round-2 deploy is LIVE AND VERIFIED (29/0)
+
+static_verify --url on build 2026-08-07T06:46 (392 files): ALL GREEN 29/0. The live
+site now carries graphics rounds 1+2 (restored water, legible doors, de-quilted
+gorge, lit pit, paved ribbon) plus the pose-plate fix. Deploy-pipeline lessons
+banked this cycle, each at the tool: deploy-ghpages defaults to dist-c (pass the
+dir); pushes don't auto-trigger the Pages build (the script queues one now,
+f66f85b); a verify straight after publish verifies the cache. Everything committed
+is shipped. Round 3 worklist stands in the 07:55 entry.
