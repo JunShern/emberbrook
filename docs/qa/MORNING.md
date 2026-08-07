@@ -1,3 +1,38 @@
+# HANDOVER — 2026-08-07 14:35 (read this section first; the 08-06 brief below is history)
+
+The previous session ran ~44 h and closed cleanly. CURRENT STATE, all pushed (HEAD c4f05b6):
+
+- **LIVE + VERIFIED 29/0**: https://junshern.github.io/emberbrook/ (build 2026-08-07T06:46)
+  carries graphics rounds 1+2 and the pose-plate fix. Deploy lessons are IN THE TOOLS
+  (deploy-ghpages.sh: pass the dir explicitly, script now queues the Pages build itself).
+- **The calibrated judge**: tools/scene_redteam.mjs checklist mode carries [QUALITY]
+  families (sky, frame-edge-world, water-read) validated at zero stage-2 refutals —
+  built from the user's own five complaints (recall was 3/5 naive; the families cover
+  the misses). Findings: docs/qa/redteam/run-20260806-1-findings.md (+ run-20260807-064138,
+  the round-2 re-judge: FAILING -> WEAK, zero FAILING left on the seven plates).
+- **Graphics rounds 1-2 BANKED** (boards: docs/qa/dellhollow-graphics/index.html):
+  water-transparency regression found+restored, 5 legible shop doors, gorgewall
+  de-quilt, pit lantern, ribbon paving. Blind after won every pair.
+
+**THE NEXT WORK — round 3, measured and ready (dispatch as parallel lanes):**
+1. EMBERBROOK WATER (the town-wide 0-CONVINCING/6-FAILING class): DIAGNOSIS DONE
+   (DAYLOG 2026-08-07 09:45) — all four water_emb_* sheets have ZERO color layers;
+   port Dellhollow's t2_water_shader depth-alpha recipe as an emb carrier, rebake the
+   water-visible emb plates (HEAVY master, 1-wide serial).
+2. deep-stairs water "flat untextured cyan plane" (a sheet the round-1 restore missed).
+3. quay-west deck sliver (ribbon paving edge-on — round 2's noted residual).
+4. Boil close-read, waterline foam/shore band, boatyard black slabs, railings/market
+   stands, crushed-black street shadows (lighting class: ADD a source, per doctrine).
+5. Town skies (emb WEAK x2, pondlane) — a dedicated round; baked into plates, not the ow dome.
+Also standing: the moorage tread lane-waypoint (bake-lane residual, DAYLOG 20:20 entry),
+PT-009 prompt overlap (play3d-owned), the DPR/retina trade (slate), far-rings east
+vantage (LOOP.md BET 12 R4).
+
+Method unchanged: RED-TEAM FIX LOOP (measure before build), blind verdicts, the fast
+no-bake loop for geometry, bakes serial, commit --only + push + verify per batch.
+
+---
+
 # MORNING BRIEF — 2026-08-06
 
 Written ~06:50 while the Dellhollow after-receipts run. Supersedes the 2026-08-02 brief

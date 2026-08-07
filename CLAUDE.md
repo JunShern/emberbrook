@@ -30,7 +30,8 @@ git runs here, on branch `migration/3d-hybrid`.
   see their headers). Still carries the save-state schema, the chapter-handoff
   contract, the story-flag design (`story.ch1.gate-open`), and the measured
   empty-Emberbrook finding. Read before any wiring work.
-- **docs/qa/MORNING.md** — the 2026-08-06 overnight brief: THE BAR MET (full NEW GAME
+- **docs/qa/MORNING.md** — TOP SECTION = the 2026-08-07 HANDOVER (current state + the
+  measured round-3 worklist; read it first). Below it, the 2026-08-06 brief: THE BAR MET (full NEW GAME
   to the end card, run-20260806-011853), the overworld graphics sweep, the Dellhollow
   phase 7 iterations deep, and what the closing bake lane owes. Read this first.
 - **docs/qa/TOMORROW.md** — the 2026-08-03 plan: five tranches, the art calls the user
