@@ -695,9 +695,45 @@ if GLB_ONLY:
         print("GLB     %d camera-ray-only backdrop mesh(es) dropped from the collision "
               "bundle (visible_camera with no diffuse/glossy/shadow visibility is a "
               "picture, not a place)" % nback)
-    with contextlib.redirect_stdout(io.StringIO()):
-        bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, "scene.glb"),
-                                  export_yup=True, export_cameras=False, export_lights=False)
+    # ===== WHY THIS EXPORT USED TO NEVER FINISH, AND THE ONE LINE THAT FIXES IT =====
+    # MEASURED, not guessed (2026-08-07): `--glb` against the DRESSED Emberbrook master was
+    # run three times by an earlier lane and reaped at 26, 32 and 33 minutes without
+    # completing. A 20-minute `sample(1)` of the fourth run says where every second went:
+    # **5776 of 5776 main-thread samples were inside `gc_collect_main`** — CPython's CYCLIC
+    # GARBAGE COLLECTOR — reached through `_Py_HandlePending` from inside the glTF
+    # exporter's own operator, with `deduce_unreachable` / `subtype_traverse` /
+    # `visit_decref` under it. Not glTF, not Blender, not the geometry: the GC.
+    #
+    # The mechanism is the exporter's shape meeting CPython's policy. The exporter builds
+    # tens of millions of small Python objects (per-primitive dicts, per-attribute lists),
+    # and a generational collection is triggered by ALLOCATION COUNT while its cost is
+    # O(LIVE SET). So the more of the scene it has already built, the more expensive every
+    # subsequent collection is, and it keeps re-walking the same live graph: the run does
+    # not hang, it goes quadratic. A 27 M-triangle town is simply the first scene here big
+    # enough for that to pass a work window.
+    #
+    # `gc.freeze()` moves everything already alive into a permanent generation that is
+    # never traversed, and `gc.disable()` stops collections for the duration. Reference
+    # counting still frees everything acyclic, which is nearly all of what the exporter
+    # makes; the trade is peak memory for a run that terminates. Restored afterwards.
+    import gc
+    _gcwas = gc.isenabled()
+    gc.collect()
+    gc.freeze()
+    gc.disable()
+    _t_glb = time.time()
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, "scene.glb"),
+                                      export_yup=True, export_cameras=False,
+                                      export_lights=False)
+    finally:
+        gc.unfreeze()
+        if _gcwas:
+            gc.enable()
+    print("GLB     export_scene.gltf %.1fs with the cyclic GC frozen+disabled (see the "
+          "note above: 5776/5776 sampled main-thread frames of the un-frozen run were in "
+          "gc_collect_main)" % (time.time() - _t_glb))
     n_walk = sum(1 for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('walk_'))
     json.dump({"exported": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                "source": MASTER,

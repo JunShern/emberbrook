@@ -50,11 +50,25 @@ shutil.copyfile(os.path.join(OUT, "background.png"), os.path.join(OUT, "stylized
 # runtime GLB they become giant opaque boxes. Convention: fx_* = render-only.
 import re
 FX = re.compile(r"^(fx_|FOG|.*haze|ridge_upstream|far_town|v10_)", re.I)
-stripped = 0
+stripped = backdrops = 0
 for o in list(bpy.data.objects):
-    if o.type == 'MESH' and FX.match(o.name):
-        bpy.data.objects.remove(o, do_unlink=True); stripped += 1
-print("fx helpers stripped from runtime export:", stripped)
+    if o.type != 'MESH':
+        continue
+    # AND THE SAME RULE AS A PROPERTY RATHER THAN A NAME, because a name convention only
+    # catches the lanes that read it.  Emberbrook's `far_horizon` backdrop (emb_dress.py)
+    # is 1800 m of skirt and ridge that is deliberately visible to CAMERA RAYS AND NOTHING
+    # ELSE, so it cannot bounce a photon or cast a shadow — and it must not reach a runtime
+    # bundle either, where walkGround and the BVH would take it for world.  IF NOTHING BUT
+    # THE CAMERA MAY SEE IT, IT IS A PICTURE AND NOT A PLACE.  `tools/cine_bake.py --glb`
+    # carries the identical test; Dellhollow has no such object and exports unchanged.
+    backdrop = (o.visible_camera and not o.visible_diffuse
+                and not o.visible_glossy and not o.visible_shadow)
+    if FX.match(o.name) or backdrop:
+        bpy.data.objects.remove(o, do_unlink=True)
+        stripped += 1
+        backdrops += 1 if backdrop else 0
+print("fx helpers stripped from runtime export: %d (of which %d camera-ray-only backdrops)"
+      % (stripped, backdrops))
 
 # --- GLB (all meshes + the camera) -------------------------------------------
 with contextlib.redirect_stdout(io.StringIO()):
