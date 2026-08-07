@@ -1,0 +1,1597 @@
+[
+ {
+  "pos": [
+   59.1,
+   1.4,
+   -42.1
+  ],
+  "scene": "emb-cine",
+  "shot": "square",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Follow the road north",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "emb-cine",
+   "shot": "square",
+   "beat": "ch1.sigils",
+   "wantScene": "emb-cine",
+   "wantCam": "gatefield",
+   "edge": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+   "hops": 3,
+   "dest": "The Old Gate",
+   "shown": true,
+   "labelled": true,
+   "drawn": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+   "last": {
+    "beat": "ch1.sigils",
+    "edge": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+    "dest": "The Old Gate",
+    "hops": 3
+   }
+  },
+  "target": "gatefield",
+  "markers": [
+   {
+    "id": "emb-cine>emb-item-int@item-shop",
+    "label": "Enter Item Shop",
+    "kind": "door",
+    "to": "emb-item-int",
+    "dist": 12.18,
+    "open": true,
+    "camTo": null,
+    "at": [
+     71.059,
+     1.57,
+     -39.765
+    ],
+    "shown": true,
+    "markerPx": [
+     446.804,
+     246.143
+    ],
+    "seamPx": [
+     452.53818712922634,
+     317.9604514905816
+    ],
+    "arrowPx": [
+     446.80361636130925,
+     248.3681982151109
+    ],
+    "liftPx": 71.8,
+    "liftFrac": 0.101,
+    "pick": [
+     {
+      "name": "walk_lm_square-plaza037",
+      "pt": [
+       71.03,
+       1.5,
+       -34.55
+      ],
+      "d": 52.16
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       71.04,
+       1.38,
+       -34.39
+      ],
+      "d": 52.35
+     },
+     {
+      "name": "walk_lm_square-plaza037",
+      "pt": [
+       71.04,
+       1.36,
+       -34.36
+      ],
+      "d": 52.39
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-inn-int@inn",
+    "label": "Enter The Ember Hearth",
+    "kind": "door",
+    "to": "emb-inn-int",
+    "dist": 4.64,
+    "open": true,
+    "camTo": null,
+    "at": [
+     56.678,
+     1.57,
+     -38.143
+    ],
+    "shown": true,
+    "markerPx": [
+     787.532,
+     194.853
+    ],
+    "seamPx": [
+     783.4168958299811,
+     258.8002260500485
+    ],
+    "arrowPx": [
+     787.5315336840404,
+     189.97048256699037
+    ],
+    "liftPx": 63.9,
+    "liftFrac": 0.09,
+    "pick": [
+     {
+      "name": "lm_inn_body",
+      "pt": [
+       56.19,
+       3.73,
+       -36.36
+      ],
+      "d": 51.21
+     },
+     {
+      "name": "lm_inn_base",
+      "pt": [
+       55.65,
+       2.6,
+       -34.74
+      ],
+      "d": 53.26
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       55.06,
+       1.38,
+       -32.99
+      ],
+      "d": 55.48
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-bakery-int@bakery",
+    "label": "Enter Poppy's bakery",
+    "kind": "door",
+    "to": "emb-bakery-int",
+    "dist": 7.88,
+    "open": true,
+    "camTo": null,
+    "at": [
+     51.818,
+     1.57,
+     -45.115
+    ],
+    "shown": true,
+    "markerPx": [
+     958.667,
+     278.272
+    ],
+    "seamPx": [
+     948.9131700686316,
+     348.52145241643467
+    ],
+    "arrowPx": [
+     958.6671503312675,
+     278.6199094598294
+    ],
+    "liftPx": 70.2,
+    "liftFrac": 0.099,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       49.59,
+       1.4,
+       -40.59
+      ],
+      "d": 51.57
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       45.85,
+       -4.28,
+       -33.89
+      ],
+      "d": 61.12
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 10.79,
+    "open": true,
+    "camTo": null,
+    "at": [
+     59.272,
+     0.947,
+     -30.445
+    ],
+    "shown": true,
+    "markerPx": [
+     689.588,
+     110.444
+    ],
+    "seamPx": [
+     688.3463520236719,
+     181.92053884695204
+    ],
+    "arrowPx": [
+     689.5884544987164,
+     115.17358368072766
+    ],
+    "liftPx": 71.5,
+    "liftFrac": 0.1,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       57.66,
+       0.63,
+       -23.07
+      ],
+      "d": 63.42
+     },
+     {
+      "name": "walk_e_road-gate__square-plaza_l4",
+      "pt": [
+       57.64,
+       0.59,
+       -23.01
+      ],
+      "d": 63.5
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       55.76,
+       -4.28,
+       -14.68
+      ],
+      "d": 73.32
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 21.24,
+    "open": true,
+    "camTo": null,
+    "at": [
+     80.255,
+     1.125,
+     -46.464
+    ],
+    "shown": true,
+    "markerPx": [
+     190.874,
+     401.995
+    ],
+    "seamPx": [
+     206.0632134266192,
+     470.79791773823183
+    ],
+    "arrowPx": [
+     190.8736800302944,
+     400.84347563246075
+    ],
+    "liftPx": 68.8,
+    "liftFrac": 0.096,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       81.25,
+       0.97,
+       -42.45
+      ],
+      "d": 47.71
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       83.17,
+       -4.28,
+       -36.66
+      ],
+      "d": 55.76
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:square>homerow",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 14.96,
+    "open": true,
+    "camTo": null,
+    "at": [
+     49.975,
+     1.939,
+     -54.254
+    ],
+    "shown": true,
+    "markerPx": [
+     1119.5,
+     440.543
+    ],
+    "seamPx": [
+     1102.3144007087594,
+     506.7348165820064
+    ],
+    "arrowPx": [
+     1119.4980984652213,
+     435.64511442686296
+    ],
+    "liftPx": 66.2,
+    "liftFrac": 0.093,
+    "pick": [
+     {
+      "name": "lm_watermill_roof",
+      "pt": [
+       56.28,
+       13.46,
+       -61.12
+      ],
+      "d": 27.83
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       47.72,
+       1.71,
+       -51.21
+      ],
+      "d": 45.43
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       43.37,
+       -4.28,
+       -46.16
+      ],
+      "d": 54.39
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 15.69,
+    "open": true,
+    "camTo": null,
+    "at": [
+     64.441,
+     1.98,
+     -57.859
+    ],
+    "shown": true,
+    "markerPx": [
+     710.016,
+     586.697
+    ],
+    "seamPx": [
+     707.1791699343732,
+     657.6410218082376
+    ],
+    "arrowPx": [
+     710.0162946667281,
+     587.3269502705701
+    ],
+    "liftPx": 70.9,
+    "liftFrac": 0.1,
+    "pick": [
+     {
+      "name": "walk_e_square-plaza__barn_l2",
+      "pt": [
+       63.74,
+       1.77,
+       -55.13
+      ],
+      "d": 37.73
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       63.68,
+       1.5,
+       -54.94
+      ],
+      "d": 38.06
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       62.52,
+       -4.28,
+       -50.81
+      ],
+      "d": 45.26
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 16.51,
+    "open": true,
+    "camTo": null,
+    "at": [
+     73.466,
+     1.36,
+     -50.311
+    ],
+    "shown": true,
+    "markerPx": [
+     390.316,
+     450.292
+    ],
+    "seamPx": [
+     399.2088185052928,
+     521.9108850066972
+    ],
+    "arrowPx": [
+     390.31570675147015,
+     451.64254839981584
+    ],
+    "liftPx": 71.6,
+    "liftFrac": 0.1,
+    "pick": [
+     {
+      "name": "walk_lm_square-plaza048",
+      "pt": [
+       73.71,
+       1.36,
+       -46.8
+      ],
+      "d": 43.1
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       73.72,
+       1.3,
+       -46.74
+      ],
+      "d": 43.18
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       74.42,
+       -4.28,
+       -41.29
+      ],
+      "d": 51.01
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 59.64,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.572,
+     -0.327,
+     17.712
+    ],
+    "shown": false,
+    "markerPx": [
+     698.511,
+     178.156
+    ],
+    "seamPx": [
+     622.5527200553322,
+     -130.79150926599226
+    ],
+    "arrowPx": [
+     622.2844755366885,
+     -187.5896046849747
+    ],
+    "liftPx": -308.9,
+    "liftFrac": -0.433,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   }
+  ],
+  "station": "A-square-centre",
+  "want": [
+   59.1,
+   1.4,
+   -42.1
+  ],
+  "hop": {
+   "here": "square",
+   "hops": 3,
+   "m": 61.21029602324003,
+   "path": [
+    {
+     "edge": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+     "from": "square",
+     "to": "northlane"
+    },
+    {
+     "edge": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
+     "from": "northlane",
+     "to": "gateroad"
+    },
+    {
+     "edge": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gateroad>gatefield",
+     "from": "gateroad",
+     "to": "gatefield"
+    }
+   ],
+   "alts": []
+  },
+  "uiClear": true
+ },
+ {
+  "pos": [
+   64.9,
+   1.4,
+   -55
+  ],
+  "scene": "emb-cine",
+  "shot": "square",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Follow the road north",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "emb-cine",
+   "shot": "square",
+   "beat": "ch1.sigils",
+   "wantScene": "emb-cine",
+   "wantCam": "gatefield",
+   "edge": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+   "hops": 3,
+   "dest": "The Old Gate",
+   "shown": true,
+   "labelled": true,
+   "drawn": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+   "last": {
+    "beat": "ch1.sigils",
+    "edge": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+    "dest": "The Old Gate",
+    "hops": 3
+   }
+  },
+  "target": "gatefield",
+  "markers": [
+   {
+    "id": "emb-cine>emb-item-int@item-shop",
+    "label": "Enter Item Shop",
+    "kind": "door",
+    "to": "emb-item-int",
+    "dist": 16.43,
+    "open": true,
+    "camTo": null,
+    "at": [
+     71.059,
+     1.57,
+     -39.765
+    ],
+    "shown": true,
+    "markerPx": [
+     446.804,
+     243.412
+    ],
+    "seamPx": [
+     452.53818712922634,
+     317.9604514905816
+    ],
+    "arrowPx": [
+     446.80361636130925,
+     248.3681982151109
+    ],
+    "liftPx": 74.5,
+    "liftFrac": 0.105,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       71.03,
+       1.38,
+       -34.18
+      ],
+      "d": 52.52
+     },
+     {
+      "name": "walk_lm_square-plaza037",
+      "pt": [
+       71.03,
+       1.36,
+       -34.15
+      ],
+      "d": 52.56
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       71.25,
+       -4.28,
+       -26.32
+      ],
+      "d": 62.21
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-inn-int@inn",
+    "label": "Enter The Ember Hearth",
+    "kind": "door",
+    "to": "emb-inn-int",
+    "dist": 18.76,
+    "open": true,
+    "camTo": null,
+    "at": [
+     56.678,
+     1.57,
+     -38.143
+    ],
+    "shown": true,
+    "markerPx": [
+     787.532,
+     191.81
+    ],
+    "seamPx": [
+     783.4168958299811,
+     258.8002260500485
+    ],
+    "arrowPx": [
+     787.5315336840404,
+     189.97048256699037
+    ],
+    "liftPx": 67,
+    "liftFrac": 0.094,
+    "pick": [
+     {
+      "name": "lm_inn_body",
+      "pt": [
+       56.2,
+       3.89,
+       -36.35
+      ],
+      "d": 51.13
+     },
+     {
+      "name": "lm_inn_base",
+      "pt": [
+       55.58,
+       2.6,
+       -34.5
+      ],
+      "d": 53.47
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       54.99,
+       1.37,
+       -32.74
+      ],
+      "d": 55.7
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-bakery-int@bakery",
+    "label": "Enter Poppy's bakery",
+    "kind": "door",
+    "to": "emb-bakery-int",
+    "dist": 16.4,
+    "open": true,
+    "camTo": null,
+    "at": [
+     51.818,
+     1.57,
+     -45.115
+    ],
+    "shown": true,
+    "markerPx": [
+     958.667,
+     274.291
+    ],
+    "seamPx": [
+     948.9131700686316,
+     348.52145241643467
+    ],
+    "arrowPx": [
+     958.6671503312675,
+     278.6199094598294
+    ],
+    "liftPx": 74.2,
+    "liftFrac": 0.104,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       49.49,
+       1.4,
+       -40.33
+      ],
+      "d": 51.8
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       45.72,
+       -4.28,
+       -33.57
+      ],
+      "d": 61.39
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 24.74,
+    "open": true,
+    "camTo": null,
+    "at": [
+     59.272,
+     0.947,
+     -30.445
+    ],
+    "shown": true,
+    "markerPx": [
+     689.588,
+     111.183
+    ],
+    "seamPx": [
+     688.3463520236719,
+     181.92053884695204
+    ],
+    "arrowPx": [
+     689.5884544987164,
+     115.17358368072766
+    ],
+    "liftPx": 70.7,
+    "liftFrac": 0.099,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       57.67,
+       0.63,
+       -23.15
+      ],
+      "d": 63.35
+     },
+     {
+      "name": "walk_e_road-gate__square-plaza_l4",
+      "pt": [
+       57.66,
+       0.6,
+       -23.09
+      ],
+      "d": 63.42
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       55.78,
+       -4.28,
+       -14.77
+      ],
+      "d": 73.24
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 17.04,
+    "open": true,
+    "camTo": null,
+    "at": [
+     80.255,
+     1.125,
+     -46.464
+    ],
+    "shown": true,
+    "markerPx": [
+     190.874,
+     405.52
+    ],
+    "seamPx": [
+     206.0632134266192,
+     470.79791773823183
+    ],
+    "arrowPx": [
+     190.8736800302944,
+     400.84347563246075
+    ],
+    "liftPx": 65.3,
+    "liftFrac": 0.092,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       81.22,
+       0.98,
+       -42.67
+      ],
+      "d": 47.54
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       83.15,
+       -4.28,
+       -36.9
+      ],
+      "d": 55.58
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:square>homerow",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 13.43,
+    "open": true,
+    "camTo": null,
+    "at": [
+     49.975,
+     1.939,
+     -54.254
+    ],
+    "shown": true,
+    "markerPx": [
+     1119.5,
+     439.22
+    ],
+    "seamPx": [
+     1102.3144007087594,
+     506.7348165820064
+    ],
+    "arrowPx": [
+     1119.4980984652213,
+     435.64511442686296
+    ],
+    "liftPx": 67.5,
+    "liftFrac": 0.095,
+    "pick": [
+     {
+      "name": "lm_watermill_roof",
+      "pt": [
+       56.27,
+       13.47,
+       -61.09
+      ],
+      "d": 27.85
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       47.69,
+       1.7,
+       -51.14
+      ],
+      "d": 45.49
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       43.33,
+       -4.28,
+       -46.09
+      ],
+      "d": 54.45
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 2.89,
+    "open": true,
+    "camTo": null,
+    "at": [
+     64.441,
+     1.98,
+     -57.859
+    ],
+    "shown": true,
+    "markerPx": [
+     710.016,
+     582.864
+    ],
+    "seamPx": [
+     707.1791699343732,
+     657.6410218082376
+    ],
+    "arrowPx": [
+     710.0162946667281,
+     587.3269502705701
+    ],
+    "liftPx": 74.8,
+    "liftFrac": 0.105,
+    "pick": [
+     {
+      "name": "walk_e_square-plaza__barn_l2",
+      "pt": [
+       63.7,
+       1.74,
+       -54.96
+      ],
+      "d": 37.86
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       63.64,
+       1.45,
+       -54.75
+      ],
+      "d": 38.22
+     },
+     {
+      "name": "walk_lm_square-plaza027",
+      "pt": [
+       63.62,
+       1.36,
+       -54.69
+      ],
+      "d": 38.33
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 7.84,
+    "open": true,
+    "camTo": null,
+    "at": [
+     73.466,
+     1.36,
+     -50.311
+    ],
+    "shown": true,
+    "markerPx": [
+     390.316,
+     454.876
+    ],
+    "seamPx": [
+     399.2088185052928,
+     521.9108850066972
+    ],
+    "arrowPx": [
+     390.31570675147015,
+     451.64254839981584
+    ],
+    "liftPx": 67,
+    "liftFrac": 0.094,
+    "pick": [
+     {
+      "name": "walk_lm_square-plaza048",
+      "pt": [
+       73.7,
+       1.48,
+       -47.15
+      ],
+      "d": 42.76
+     },
+     {
+      "name": "walk_lm_square-plaza048",
+      "pt": [
+       73.71,
+       1.36,
+       -47.03
+      ],
+      "d": 42.93
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       73.72,
+       1.3,
+       -46.97
+      ],
+      "d": 43.02
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 73.24,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.572,
+     -0.327,
+     17.712
+    ],
+    "shown": false,
+    "markerPx": [
+     698.511,
+     178.156
+    ],
+    "seamPx": [
+     622.5527200553322,
+     -130.79150926599226
+    ],
+    "arrowPx": [
+     622.2844755366885,
+     -187.5896046849747
+    ],
+    "liftPx": -308.9,
+    "liftFrac": -0.433,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   }
+  ],
+  "station": "B-square-south-lip",
+  "want": [
+   64.9,
+   1.4,
+   -55
+  ],
+  "hop": {
+   "here": "square",
+   "hops": 3,
+   "m": 47.51383607561175,
+   "path": [
+    {
+     "edge": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+     "from": "square",
+     "to": "northlane"
+    },
+    {
+     "edge": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
+     "from": "northlane",
+     "to": "gateroad"
+    },
+    {
+     "edge": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gateroad>gatefield",
+     "from": "gateroad",
+     "to": "gatefield"
+    }
+   ],
+   "alts": []
+  },
+  "uiClear": true
+ },
+ {
+  "pos": [
+   64.4,
+   2,
+   -62
+  ],
+  "scene": "emb-cine",
+  "shot": "northlane",
+  "canvas": [
+   1280,
+   713
+  ],
+  "obj": "◆ Follow the road north",
+  "prompt": null,
+  "wayhint": {
+   "off": false,
+   "scene": "emb-cine",
+   "shot": "northlane",
+   "beat": "ch1.sigils",
+   "wantScene": "emb-cine",
+   "wantCam": "gatefield",
+   "edge": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
+   "hops": 2,
+   "dest": "The Old Gate",
+   "shown": true,
+   "labelled": true,
+   "drawn": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
+   "last": {
+    "beat": "ch1.sigils",
+    "edge": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
+    "dest": "The Old Gate",
+    "hops": 2
+   }
+  },
+  "target": "gatefield",
+  "markers": [
+   {
+    "id": "emb-cine>emb-item-int@item-shop",
+    "label": "Enter Item Shop",
+    "kind": "door",
+    "to": "emb-item-int",
+    "dist": 23.21,
+    "open": true,
+    "camTo": null,
+    "at": [
+     71.059,
+     1.57,
+     -39.765
+    ],
+    "shown": false,
+    "markerPx": [
+     446.804,
+     243.76
+    ],
+    "seamPx": [
+     -621.9109168216705,
+     747.2297030937666
+    ],
+    "arrowPx": [
+     -664.3639356996283,
+     666.9471238097074
+    ],
+    "liftPx": 503.5,
+    "liftFrac": 0.706,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-inn-int@inn",
+    "label": "Enter The Ember Hearth",
+    "kind": "door",
+    "to": "emb-inn-int",
+    "dist": 25.08,
+    "open": true,
+    "camTo": null,
+    "at": [
+     56.678,
+     1.57,
+     -38.143
+    ],
+    "shown": false,
+    "markerPx": [
+     787.532,
+     189.201
+    ],
+    "seamPx": [
+     -560.9534624024484,
+     319.6621076134799
+    ],
+    "arrowPx": [
+     -594.4166946248256,
+     236.10182921600136
+    ],
+    "liftPx": 130.5,
+    "liftFrac": 0.183,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-bakery-int@bakery",
+    "label": "Enter Poppy's bakery",
+    "kind": "door",
+    "to": "emb-bakery-int",
+    "dist": 21.06,
+    "open": true,
+    "camTo": null,
+    "at": [
+     51.818,
+     1.57,
+     -45.115
+    ],
+    "shown": false,
+    "markerPx": [
+     958.667,
+     273.62
+    ],
+    "seamPx": [
+     -274.4774080560221,
+     176.16650915888508
+    ],
+    "arrowPx": [
+     -298.1982209215728,
+     92.583724714629
+    ],
+    "liftPx": -97.5,
+    "liftFrac": -0.137,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 31.35,
+    "open": true,
+    "camTo": null,
+    "at": [
+     59.272,
+     0.947,
+     -30.445
+    ],
+    "shown": false,
+    "markerPx": [
+     689.588,
+     113.258
+    ],
+    "seamPx": [
+     -881.0107645615026,
+     439.61111100749525
+    ],
+    "arrowPx": [
+     -925.1525003047848,
+     357.30708650987276
+    ],
+    "liftPx": 326.4,
+    "liftFrac": 0.458,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 21.33,
+    "open": true,
+    "camTo": null,
+    "at": [
+     80.255,
+     1.125,
+     -46.464
+    ],
+    "shown": false,
+    "markerPx": [
+     190.874,
+     405.772
+    ],
+    "seamPx": [
+     -370.0059086551813,
+     1085.7160604047353
+    ],
+    "arrowPx": [
+     -408.21759183219626,
+     1011.9750125908422
+    ],
+    "liftPx": 679.9,
+    "liftFrac": 0.954,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:square>homerow",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 14.26,
+    "open": true,
+    "camTo": null,
+    "at": [
+     49.975,
+     1.939,
+     -54.254
+    ],
+    "shown": false,
+    "markerPx": [
+     1119.5,
+     436.957
+    ],
+    "seamPx": [
+     42.07581523433788,
+     93.84396315712773
+    ],
+    "arrowPx": [
+     27.08523366134507,
+     9.990630517708638
+    ],
+    "liftPx": -343.1,
+    "liftFrac": -0.481,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 4.13,
+    "open": true,
+    "camTo": null,
+    "at": [
+     64.441,
+     1.98,
+     -57.859
+    ],
+    "shown": false,
+    "markerPx": [
+     710.016,
+     582.337
+    ],
+    "seamPx": [
+     173.00402348687135,
+     423.6228189142968
+    ],
+    "arrowPx": [
+     159.19533995336025,
+     339.8586588776009
+    ],
+    "liftPx": -158.7,
+    "liftFrac": -0.223,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:northlane>square",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 4.13,
+    "open": true,
+    "camTo": null,
+    "at": [
+     64.441,
+     1.98,
+     -57.859
+    ],
+    "shown": true,
+    "markerPx": [
+     159.195,
+     335.713
+    ],
+    "seamPx": [
+     173.00402348687135,
+     423.6228189142968
+    ],
+    "arrowPx": [
+     159.19533995336025,
+     339.8586588776009
+    ],
+    "liftPx": 87.9,
+    "liftFrac": 0.123,
+    "pick": [
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       60.53,
+       1.38,
+       -57.48
+      ],
+      "d": 58
+     },
+     {
+      "name": "walk_lm_square-plaza027",
+      "pt": [
+       60.51,
+       1.36,
+       -57.47
+      ],
+      "d": 58.02
+     },
+     {
+      "name": "emb_ground_far",
+      "pt": [
+       54.92,
+       -4.28,
+       -56.63
+      ],
+      "d": 66.01
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 22.57,
+    "open": true,
+    "camTo": null,
+    "at": [
+     65.242,
+     2.544,
+     -85.154
+    ],
+    "shown": true,
+    "markerPx": [
+     1212.95,
+     216.331
+    ],
+    "seamPx": [
+     1197.1661413208778,
+     302.15139766143255
+    ],
+    "arrowPx": [
+     1212.9476902307863,
+     217.20940661572558
+    ],
+    "liftPx": 85.8,
+    "liftFrac": 0.12,
+    "pick": [
+     {
+      "name": "veg_emb_wood_14_crownG",
+      "pt": [
+       62.44,
+       2.96,
+       -86.57
+      ],
+      "d": 59.79
+     },
+     {
+      "name": "emb_ground_valley",
+      "pt": [
+       61.93,
+       2.46,
+       -86.87
+      ],
+      "d": 60.56
+     },
+     {
+      "name": "veg_emb_wood_15_crownG",
+      "pt": [
+       61.73,
+       2.24,
+       -86.99
+      ],
+      "d": 60.88
+     }
+    ],
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 12.55,
+    "open": true,
+    "camTo": null,
+    "at": [
+     73.466,
+     1.36,
+     -50.311
+    ],
+    "shown": false,
+    "markerPx": [
+     390.316,
+     456.362
+    ],
+    "seamPx": [
+     -150.6423983554481,
+     772.1440302326636
+    ],
+    "arrowPx": [
+     -177.36638581685554,
+     692.466668536177
+    ],
+    "liftPx": 315.8,
+    "liftFrac": 0.443,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   },
+   {
+    "id": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+    "label": null,
+    "kind": "cut",
+    "to": "emb-cine",
+    "dist": 80.07,
+    "open": true,
+    "camTo": null,
+    "at": [
+     54.572,
+     -0.327,
+     17.712
+    ],
+    "shown": false,
+    "markerPx": [
+     698.511,
+     178.156
+    ],
+    "seamPx": [
+     -2820.9848757307864,
+     579.881812970979
+    ],
+    "arrowPx": [
+     -2924.5885864609068,
+     500.13051428242795
+    ],
+    "liftPx": 401.7,
+    "liftFrac": 0.563,
+    "pick": null,
+    "capPx": null,
+    "capPick": null
+   }
+  ],
+  "station": "D-northlane",
+  "want": [
+   64.4,
+   2,
+   -62
+  ],
+  "hop": {
+   "here": "northlane",
+   "hops": 2,
+   "m": 43.10565479575703,
+   "path": [
+    {
+     "edge": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
+     "from": "northlane",
+     "to": "gateroad"
+    },
+    {
+     "edge": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gateroad>gatefield",
+     "from": "gateroad",
+     "to": "gatefield"
+    }
+   ],
+   "alts": []
+  },
+  "uiClear": true
+ }
+]

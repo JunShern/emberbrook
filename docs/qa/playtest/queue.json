@@ -32387,6 +32387,1782 @@
         },
         "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
       }
+    },
+    {
+      "id": "PT-20260806-043",
+      "created": "2026-08-06T18:53:42.958Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260806-184322",
+      "step": 77,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Cannot interact with the girl on the lock apron to progress objective",
+      "doing": "I walked down to the lock apron and stood next to the girl to talk to her, as the objective says.",
+      "expected": "Pressing interact should start a conversation with the girl and update my objective.",
+      "happened": "I pressed interact multiple times but nothing happened. I'm just standing next to her and can't progress.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          72.31,
+          1.25,
+          -30.07
+        ],
+        "to": [
+          72.87,
+          1.25,
+          -33.1
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-075.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-076.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-077.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "lockfive",
+        "pos": [
+          72.87,
+          1.25,
+          -30.07
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.creel"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+          "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+          "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+        ]
+      },
+      "repro": {
+        "sha": "0c5f6d3e3a6cd283c36cf7b82b11b305ddfc49a8",
+        "capturedAt": "2026-08-06T18:53:42.949Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.creel": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "lockfive",
+            "pos": [
+              72.79,
+              1.245,
+              -29.15
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": 1,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-06T18:51:09.070Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260806-044",
+      "created": "2026-08-06T18:57:46.396Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260806-184322",
+      "step": 95,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Character stuck on lower dock platform, unable to move",
+      "doing": "Trying to move around the lower dock platform to find the lock apron or interact with the character next to me.",
+      "expected": "To be able to walk along the docks, go up the stairs, or talk to the character to progress the objective.",
+      "happened": "I am stuck on this small wooden platform. Every time I try to move left, right, or up the stairs, my character barely moves and I can't get anywhere. Interacting also does nothing.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          70.93,
+          1.25,
+          -29.37
+        ],
+        "to": [
+          70.01,
+          4.1,
+          -30.9
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-093.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-094.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-095.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "lockfive",
+        "pos": [
+          71.41,
+          1.25,
+          -29.36
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.creel"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+          "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+          "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+        ]
+      },
+      "repro": {
+        "sha": "0c5f6d3e3a6cd283c36cf7b82b11b305ddfc49a8",
+        "capturedAt": "2026-08-06T18:57:46.391Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.creel": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "lockfive",
+            "pos": [
+              72.79,
+              1.245,
+              -29.15
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": 1,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-06T18:51:09.070Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260806-045",
+      "created": "2026-08-06T19:01:25.146Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260806-184322",
+      "step": 113,
+      "source": "stuck-interview",
+      "kind": "confusion",
+      "severity": "P1",
+      "title": "Stuck next to girl, can't progress objective 'Down to the lock apron'",
+      "doing": "Trying to interact with the girl next to me or find a path further down to the lock apron.",
+      "expected": "To be able to talk to the girl to advance the objective, or find a clear path to walk further down.",
+      "happened": "Interacting with the girl did nothing, and I can't seem to walk any further down or to the left; my movement commands just fail.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          73.42,
+          1.25,
+          -29.15
+        ],
+        "to": [
+          69.93,
+          4.1,
+          -30.7
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-111.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-112.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-113.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "lockfive",
+        "pos": [
+          72.14,
+          1.25,
+          -29.29
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.creel"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+          "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+          "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+        ]
+      },
+      "repro": {
+        "sha": "0c5f6d3e3a6cd283c36cf7b82b11b305ddfc49a8",
+        "capturedAt": "2026-08-06T19:01:25.139Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.creel": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "lockfive",
+            "pos": [
+              72.79,
+              1.245,
+              -29.15
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": 1,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-06T18:51:09.070Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260806-046",
+      "created": "2026-08-06T19:04:27.905Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260806-184322",
+      "step": 127,
+      "source": "stuck-interview",
+      "kind": "blocker",
+      "severity": "P1",
+      "title": "Character stuck on lower pier platform, unable to navigate stairs or walkways",
+      "doing": "I was trying to move around the lower dock area, specifically trying to go up the wooden stairs/ramp or walk further left along the pier to reach my objective.",
+      "expected": "My character should walk to the locations I click on the stairs or the adjacent pier sections.",
+      "happened": "My character seems to be trapped in a small area on the lower platform. Every time I try to move away, up the stairs, or further down the dock, I get stuck and barely move at all.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          71.7,
+          1.25,
+          -29.36
+        ],
+        "to": [
+          69.44,
+          4.1,
+          -29.27
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-125.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-126.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-127.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "lockfive",
+        "pos": [
+          70.72,
+          1.25,
+          -29.1
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.creel"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+          "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+          "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+        ]
+      },
+      "repro": {
+        "sha": "0c5f6d3e3a6cd283c36cf7b82b11b305ddfc49a8",
+        "capturedAt": "2026-08-06T19:04:27.899Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.creel": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "lockfive",
+            "pos": [
+              72.79,
+              1.245,
+              -29.15
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": 1,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-06T18:51:09.070Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260806-047",
+      "created": "2026-08-06T19:06:55.992Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260806-184322",
+      "step": 139,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P0",
+      "title": "Character stuck on dock geometry next to girl",
+      "doing": "Trying to walk along the dock towards the lock apron.",
+      "expected": "The character should walk along the wooden path.",
+      "happened": "The character is stuck in place and cannot move in any direction.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          70.75,
+          1.25,
+          -29.16
+        ],
+        "to": [
+          70.18,
+          4.1,
+          -31.31
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-137.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-138.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-139.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "lockfive",
+        "pos": [
+          71.42,
+          1.25,
+          -29.35
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.creel"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+          "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+          "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+        ]
+      },
+      "repro": {
+        "sha": "0c5f6d3e3a6cd283c36cf7b82b11b305ddfc49a8",
+        "capturedAt": "2026-08-06T19:06:55.987Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.creel": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "lockfive",
+            "pos": [
+              72.79,
+              1.245,
+              -29.15
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": 1,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-06T18:51:09.070Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260806-048",
+      "created": "2026-08-06T19:09:19.533Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260806-184322",
+      "step": 151,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Player stuck on lower wooden pier, unable to navigate to lock apron",
+      "doing": "I was trying to walk around the wooden pier structure, either up the stairs or along the path to the left, to find a way down to the lock apron as instructed by the objective.",
+      "expected": "I expected my character to walk to the places I clicked and eventually find a path leading to the lock apron.",
+      "happened": "My character barely moves when I click on the stairs or walkways, and I seem to be stuck on this small section of the pier. None of the exit arrows are active for my objective either.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          70.73,
+          1.25,
+          -29.14
+        ],
+        "to": [
+          69.88,
+          4.1,
+          -30.48
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-149.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-150.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-151.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "lockfive",
+        "pos": [
+          71.39,
+          1.25,
+          -29.31
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.creel"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+          "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+          "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+        ]
+      },
+      "repro": {
+        "sha": "0c5f6d3e3a6cd283c36cf7b82b11b305ddfc49a8",
+        "capturedAt": "2026-08-06T19:09:19.528Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.creel": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "lockfive",
+            "pos": [
+              72.79,
+              1.245,
+              -29.15
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": 1,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-06T18:51:09.070Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260806-049",
+      "created": "2026-08-06T19:12:04.269Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260806-184322",
+      "step": 163,
+      "source": "stuck-interview",
+      "kind": "bug",
+      "severity": "P1",
+      "title": "Character stuck on lower pier platform",
+      "doing": "Trying to move off the small wooden platform towards the lock apron or up the stairs.",
+      "expected": "The character should walk in the clicked direction.",
+      "happened": "The character is stuck and barely moves regardless of where I click.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          70.91,
+          1.25,
+          -29.38
+        ],
+        "to": [
+          70.19,
+          4.1,
+          -31.34
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-161.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-162.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-163.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "lockfive",
+        "pos": [
+          70.9,
+          1.25,
+          -29.38
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.creel"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+          "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+          "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+        ]
+      },
+      "repro": {
+        "sha": "0c5f6d3e3a6cd283c36cf7b82b11b305ddfc49a8",
+        "capturedAt": "2026-08-06T19:12:04.264Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.creel": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "lockfive",
+            "pos": [
+              72.79,
+              1.245,
+              -29.15
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": 1,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-06T18:51:09.070Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
+    },
+    {
+      "id": "PT-20260806-050",
+      "created": "2026-08-06T19:18:48.717Z",
+      "verification": {
+        "status": "UNVERIFIED",
+        "instrument": null,
+        "evidence": null,
+        "at": null
+      },
+      "run": "run-20260806-184322",
+      "step": 200,
+      "source": "stuck-interview",
+      "kind": "confusion",
+      "severity": "P2",
+      "title": "Unclear how to get 'Down to the lock apron'",
+      "doing": "Trying to find a way down to the lock apron or interact with the girl next to me to progress the objective.",
+      "expected": "To find a path leading down to the lower level or for interacting with the girl to trigger a conversation or event.",
+      "happened": "I can't find any walkable path down to the boats or lower level, and interacting with the girl standing next to me does nothing. I'm stuck on this platform.",
+      "probe": {
+        "kind": "reach",
+        "from": [
+          70.74,
+          1.25,
+          -28.61
+        ],
+        "to": [
+          70.98,
+          4.54,
+          -28.68
+        ],
+        "scene": "del-cine"
+      },
+      "frames": [
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-198.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-199.jpg",
+        "docs/qa/playtest/runs/run-20260806-184322/frames/step-200.jpg"
+      ],
+      "onscreen": {
+        "objective": "Down to the lock apron — the girl who was in the water",
+        "prompts": [],
+        "dialogue": null,
+        "card": null
+      },
+      "truth": {
+        "scene": "del-cine",
+        "shot": "lockfive",
+        "pos": [
+          70.74,
+          1.25,
+          -28.61
+        ],
+        "beats": [
+          "ch1.open",
+          "ch1.waystone",
+          "ch1.reveal",
+          "ch1.rowan",
+          "ch1.lake.handoff",
+          "ch1.lake.wake",
+          "ch1.lake.hearth",
+          "ch1.lake.lamp",
+          "ch1.meet",
+          "ch1.lamps",
+          "ch1.hush",
+          "ch1.see.poppy",
+          "ch1.see.mara",
+          "ch1.see.finn",
+          "ch1.see.mochi",
+          "ch1.pact",
+          "ch1.sigils",
+          "ch1.sendoff",
+          "ch1.done",
+          "ch2.road",
+          "ch2.arrive",
+          "ch2.jam"
+        ],
+        "flags": [
+          "story.ch1.started",
+          "story.ch1.waystone",
+          "story.ch1.reveal",
+          "story.ch1.vesper-done",
+          "story.ch1.lake-pov",
+          "story.ch1.lake-woke",
+          "story.ch1.lake-flame",
+          "story.ch1.rounds",
+          "story.ch1.met",
+          "story.ch1.lamps",
+          "lake-joined",
+          "story.ch1.lamps-done",
+          "story.ch1.hush",
+          "story.ch1.seen.poppy",
+          "story.ch1.seen.mara",
+          "story.ch1.seen.finn",
+          "story.ch1.seen.mochi",
+          "story.ch1.pact",
+          "story.ch1.gate-open",
+          "story.ch1.sendoff",
+          "story.ch1.done",
+          "story.ch2.road",
+          "story.ch2.arrived",
+          "story.ch2.jam",
+          "npc.met.creel"
+        ],
+        "exits": [
+          "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+          "del-cine>del-cine@cut:tenant-shack__fish-dock:0.340:lockfive>fishdock",
+          "del-cine>del-cine@cut:lock-five__north-landing:0.163:lockfive>north-landing"
+        ]
+      },
+      "repro": {
+        "sha": "0c5f6d3e3a6cd283c36cf7b82b11b305ddfc49a8",
+        "capturedAt": "2026-08-06T19:18:48.711Z",
+        "save": {
+          "v": 2,
+          "party": [
+            {
+              "id": "vesper",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 34,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "lake",
+              "active": true,
+              "level": 1,
+              "xp": 0,
+              "hp": 32,
+              "equip": {
+                "weapon": "walking-staff",
+                "armor": "quilted-vest"
+              }
+            },
+            {
+              "id": "maren",
+              "active": false,
+              "level": 1,
+              "xp": 0,
+              "hp": 28,
+              "equip": {
+                "weapon": null,
+                "armor": null
+              }
+            }
+          ],
+          "gold": 30,
+          "inventory": {
+            "tonic": 2
+          },
+          "flags": {
+            "story.ch1.started": true,
+            "story.ch1.waystone": true,
+            "story.ch1.reveal": true,
+            "story.ch1.vesper-done": true,
+            "story.ch1.lake-pov": true,
+            "story.ch1.lake-woke": true,
+            "story.ch1.lake-flame": true,
+            "story.ch1.rounds": true,
+            "story.ch1.met": true,
+            "story.ch1.lamps": 3,
+            "lake-joined": true,
+            "story.ch1.lamps-done": true,
+            "story.ch1.hush": true,
+            "story.ch1.seen.poppy": true,
+            "story.ch1.seen.mara": true,
+            "story.ch1.seen.finn": true,
+            "story.ch1.seen.mochi": true,
+            "story.ch1.pact": true,
+            "story.ch1.gate-open": true,
+            "story.ch1.sendoff": true,
+            "story.ch1.done": true,
+            "story.ch2.road": true,
+            "story.ch2.arrived": true,
+            "story.ch2.jam": true,
+            "npc.met.creel": true
+          },
+          "at": {
+            "chapter": 2,
+            "scene": "del-cine",
+            "cam": "lockfive",
+            "pos": [
+              72.79,
+              1.245,
+              -29.15
+            ],
+            "yaw": null
+          },
+          "beats": {
+            "ch1.open": true,
+            "ch1.waystone": true,
+            "ch1.reveal": true,
+            "ch1.rowan": true,
+            "ch1.lake.handoff": true,
+            "ch1.lake.wake": true,
+            "ch1.lake.hearth": true,
+            "ch1.lake.lamp": true,
+            "ch1.meet": true,
+            "ch1.lamps": true,
+            "ch1.hush": true,
+            "ch1.see.poppy": true,
+            "ch1.see.mara": true,
+            "ch1.see.finn": true,
+            "ch1.see.mochi": true,
+            "ch1.pact": true,
+            "ch1.sigils": true,
+            "ch1.sendoff": true,
+            "ch1.done": true,
+            "ch2.road": true,
+            "ch2.arrive": 1,
+            "ch2.jam": 1
+          },
+          "meta": {
+            "savedAt": "2026-08-06T18:51:09.070Z",
+            "playSeconds": 0
+          }
+        },
+        "how": "node tools/llm_playtester.mjs --port=3000 --repro=<this id>"
+      }
     }
   ]
 }

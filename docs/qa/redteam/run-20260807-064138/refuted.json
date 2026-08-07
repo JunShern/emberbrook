@@ -1,0 +1,32 @@
+[
+ {
+  "fid": "F6",
+  "mode": "checklist",
+  "town": "dellhollow",
+  "shot": "quay-west",
+  "item": "exit:seam:shelf-homes__market-stalls",
+  "itemWhat": "the way out of this area on foot towards loop-stairs — a path that carries on out of the frame",
+  "verdict": "ABSENT",
+  "category": "navigation",
+  "where": "",
+  "bbox": null,
+  "severity": 3,
+  "desc": "the way out of this area on foot towards loop-stairs: ABSENT — The path toward loop-stairs is not visible in this frame.",
+  "census": {
+   "u": 0.239,
+   "v": 0.2968,
+   "z": 36.59,
+   "charPx": 57,
+   "on": true,
+   "plateZ": 35.99,
+   "state": "clear",
+   "behindBy": 0.6
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "A prominent set of blocky stone stairs leading down the cliffside is clearly visible on the right side of the frame."
+  }
+ }
+]
