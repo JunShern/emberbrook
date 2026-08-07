@@ -18419,3 +18419,50 @@ seam_walk 8/9 · routes/cine_solve/scenegraph --check all clean ·
 FINAL DRIVES, both ways: flight **23/23** · deck lane west<->east **6/6** · tenant-shack lane
 **3/3** · moorage__lock-five **3/3** · reach_probe **reached all four ways** ·
 one **547-cell** component from all three seeds.
+
+## 2026-08-07 ~23:15 — DEPLOY LANE: round 4 (wave 2) is LIVE AND VERIFIED (29/0)
+
+Built from HEAD **6634321** with a CLEAN `public/` (pre-check held; HEAD moved from
+38b00bd to 6634321 between the two checks, a CLAUDE.md-only commit — no art in flight).
+`build-static --compress`: **392 files / 518.6 MB / 23.3 s**, encode cache **234 hit /
+19 miss / 0 demoted**. The 19 misses map ONE-FOR-ONE onto the 19 art files this wave
+changed (9 del-cine bg + 9 depth are lossless-PNG passthrough, 4 emb-cine bg,
+del-cine `stylized.png`, townwalk `background`/`stylized`, and 3 scene GLBs:
+del-cine, emb-townwalk, townwalk) — the cache key doing exactly its job, no more.
+All three build gates green: every `.glb` binary glTF, **16 bundle GLBs byte-identical
+to `public/`** on POSITION + indices, **255 referenced paths resolve** (237 via the
+`.webp` rewrite). The two standing non-fatal warnings (`dialogue.js: expr-warm.png`,
+`followers.js: mochi/pose-front.png`) are unchanged from round 3.
+
+Local `static_verify`: **ALL GREEN 29/0**. Published with `deploy-ghpages.sh dist`
+(push verified **52d7991**, Pages build queued by the script). LIVE stamp moved
+`2026-08-07T18:43:42.076Z` -> **`2026-08-07T21:59:22.999Z`**, and only then
+`static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**,
+zero failed requests, zero unexpected 4xx/5xx, zero console errors. Screenshot LOOKED
+AT (`static-verify-live.png`): the Duskpad battle, both wolves lit, party portraits
+and the turn-order rail all drawn — pixel-for-pixel the local tree's frame.
+
+**What this deploy carries that round 3 did not** — tonight's second wave:
+* **Emberbrook seated water.** `emb-cine` `homerow`/`northlane`/`pondlane`/`square`
+  rebaked 1-wide serial at their own shipped grades (bg + depth), `cine.json` stamps,
+  and the realtime-tier carry re-exported into `emb-townwalk/scene.glb`.
+* **Dellhollow west arm reopened, with the river back.** `del-cine`'s nine water plates
+  (boatyard, crossing, deep-stairs, fishdock, gate, lockfive, north-landing, waterfront,
+  weave) + `scene.glb` + `meta.json`, the hub thumbnail `stylized.png` following its
+  entry plate, the shared `townwalk` bundle, `dellhollow.map/routes/cameras.solved`,
+  and `world/scenegraph.json`.
+
+**A STAMP IS NOT A PLATE — so the art was checked on the wire too.** BUILD.json moving
+proves a tree published; it does not prove the plate a player looks at changed. Five of
+the rebaked artifacts fetched from the URL and compared against `dist/`:
+`del-cine/gate/bg.webp` 762018 · `del-cine/waterfront/bg.webp` 657690 ·
+`emb-cine/pondlane/bg.webp` 957040 · `emb-cine/northlane/bg.webp` 1003062 ·
+`del-cine/scene.glb` 36446340 — **all five identical, live vs built.**
+
+INSTRUMENT NOTE (second sighting, so it is recorded as a pattern rather than an
+incident): the push produced **TWO Pages builds on the same commit** — one `errored`
+("Page build failed") at 22:05:18 and one `built` at 22:05:19. That is the push-triggered
+build racing the one `deploy-ghpages.sh` queues explicitly. **Read the build LIST, never
+the newest row alone**: a lane that saw only the `errored` row would have re-deployed a
+site that was already publishing correctly. The stamp poll is the honest gate — it moved,
+and the live 29/0 is what settles it.
