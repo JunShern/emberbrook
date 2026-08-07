@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Dellhollow graphics fix — round 1 (2026-08-06 night)</title>
+<style>
+  body { font: 14px/1.5 -apple-system, sans-serif; margin: 2em auto; max-width: 1280px;
+         background: #16181c; color: #d8dce2; }
+  h1 { font-size: 20px; } h2 { font-size: 16px; margin-top: 2.2em; color: #eec97a; }
+  .claim { border-left: 3px solid #b05555; padding: .2em .8em; margin: .6em 0;
+           color: #e2b0b0; background: #201a1a; }
+  .meas  { border-left: 3px solid #5588b0; padding: .2em .8em; margin: .6em 0;
+           background: #191d20; }
+  .verdict { border-left: 3px solid #55b077; padding: .2em .8em; margin: .6em 0;
+             background: #17201a; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 1em 0; }
+  .pair figure { margin: 0; }
+  .pair img { width: 100%; border: 1px solid #333; }
+  figcaption { font-size: 12px; color: #8a919c; padding: 2px 0; }
+  code { background: #22262c; padding: 1px 4px; border-radius: 3px; font-size: 12.5px; }
+  .note { color: #8a919c; font-size: 13px; }
+</style>
+</head>
+<body>
+<h1>Dellhollow graphics fix — round 1 <span class="note">(2026-08-06 night · commit 02b9c01 + plates)</span></h1>
+<p class="note">Worklist: the user's five verbatim complaints + red-team sweep 20260806-1
+(<code>docs/qa/redteam/run-20260806-1-findings.md</code>, fc10395). Every claim taken was
+MEASURED on an instrument before anything was built — the pixel ray-census replays the
+solved camera of the exact plate the judge saw and names the mesh under each complained
+pixel. Before-images are the closing-bake plates (baked 2026-08-06 ~12:00); after-images
+are the live plates (<code>/assets/scenes/del-cine/</code>). Serve repo <code>/public</code>
+and <code>/docs</code> on one port to view.</p>
+
+<h2>Fix 1 — THE WATER BAKE, RESTORED <span class="note">(waterfront sev3 ×2 · north-landing sev3 · user complaint 3)</span></h2>
+<div class="claim">"The cliff surface is a single-sided paper-thin polygon sheet with no backface
+or volumetric geometry beneath it" · "ends abruptly ... exposing a hollow gap underneath"
+(waterfront, naive, sev3, upheld) — "An untextured flat orange rectangle holding primitive
+grey blocks floats in mid-air" (north-landing, naive, sev3, upheld) — and the user:
+"the water's visual read".</div>
+<div class="meas"><b>Measured</b> (pixel ray-census, <code>scratchpad/pixel_probe.py</code>,
+calibrated on the walk-lantern pixel to the exact mesh): the whole tan "marble floor" across
+waterfront's right half IS <code>water_pool-mid</code> (z 0.20 under every probed pixel); the
+north-landing "orange rectangle" IS <code>water_pool-downstream</code>; the "hollow gap" was
+opaque unlit water in the bank's shadow. Root cause: <code>water_pool-mid</code> and
+<code>-downstream</code> were bare 16/8-vertex boxes with <b>no <code>Col</code> colour
+attribute</b> — <code>locksfoot_build.py:850</code> notched the mid pool through
+<code>join_meshes</code> after tranche 2 shipped and silently dropped the ratified
+depth→alpha bake (<code>water_pool-upstream</code> kept its layer, alpha 0.02–0.97;
+<code>t2_water_shader.py:178</code> records mid at 26,512 baked verts). </div>
+<p><b>Fix class:</b> re-run of the SHIPPED recipe, not a new look — <code>t2_water_bed</code>'s
+four shelves verified present, then <code>t2_water_shader.py -- save</code>: mid 8,648 verts
+alpha 0.06–0.97 · downstream 4,290 · <code>lf_lock_water</code> 90; verified in the re-opened
+artifact. The restoration is what the user ratified in
+<code>docs/plans/water-transparency.md</code> (AS BUILT).</p>
+<div class="pair">
+  <figure><img src="before/waterfront.jpg"><figcaption>waterfront — BEFORE (the "marble floor" + the black hollow under the bank)</figcaption></figure>
+  <figure><img src="/assets/scenes/del-cine/cameras/waterfront/bg.png"><figcaption>waterfront — AFTER (water reads as water; the bank runs into the shallows)</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="before/north-landing.jpg"><figcaption>north-landing — BEFORE (the salmon slab + grey blocks)</figcaption></figure>
+  <figure><img src="/assets/scenes/del-cine/cameras/north-landing/bg.png"><figcaption>north-landing — AFTER (tail water + white churn)</figcaption></figure>
+</div>
+
+<h2>Fix 2 — FIVE LEGIBLE SHOP DOORS <span class="note">(user complaint 5 · checklist door verdicts)</span></h2>
+<div class="claim">"Enter Weapon Shop: VISIBLE-BUT-ILLEGIBLE — darkened wall opening lacks clear
+door framing or interactive cues" · "Enter Cookhouse: ... too dark and merges into the
+surrounding shadowed wood" · Boatmen's Rest / Item Shop / Armor Shop "OCCLUDED — obscured in
+shadow" — and the user: "every enterable front should read as an entrance a player recognizes".</div>
+<div class="meas"><b>Measured:</b> each doorway was <code>doorway()</code>'s dark
+<code>mat_timber_dark</code> slab on a dark wall. Ray-census from each door's OWNING solved
+camera: 4/5 door slabs are <b>directly visible</b> — the OCCLUDED verdicts were
+shadow-perceptual, so legibility (not camera work) is the right fix class. The cookhouse door
+faces south while quay-west shoots from the north — geometrically invisible in that one plate
+(its own roof blocks the ray by ~3 m): a camera-ownership note for the seam lane, not a
+dressing defect; the south door is the real, walkable entrance.</div>
+<p><b>Fix class:</b> <code>tools/door_legibility.py</code> — additive carrier, 62 objects in
+<code>DOOR_LEGIBILITY</code>: painted panel in each shop's accent paint, light freshwood
+IN-FRAME pilasters (proud side-jambs would clip the built window frames — the armor shop's
+window frame overlaps its own door slab), stone threshold at the measured street level, and a
+warm glow from the town's own lit-window materials (<code>mat_*_window_a</code>): a transom
+where measured headroom allows (cookhouse, 0.69 m), lit panes in the door's upper half under
+the pentices elsewhere (0.03–0.48 m headroom). Street levels re-measured in-session and
+asserted (drift gate ±0.08). walk_engine_gate GREEN after (0 lost cells of 4,097).</p>
+<div class="pair">
+  <figure><img src="before/shelf-east.jpg"><figcaption>shelf-east — BEFORE (weapon + armor fronts)</figcaption></figure>
+  <figure><img src="/assets/scenes/del-cine/cameras/shelf-east/bg.png"><figcaption>shelf-east — AFTER</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="before/shelf-west.jpg"><figcaption>shelf-west — BEFORE (inn + item fronts)</figcaption></figure>
+  <figure><img src="/assets/scenes/del-cine/cameras/shelf-west/bg.png"><figcaption>shelf-west — AFTER</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="before/quay-west.jpg"><figcaption>quay-west — BEFORE (cookhouse)</figcaption></figure>
+  <figure><img src="/assets/scenes/del-cine/cameras/quay-west/bg.png"><figcaption>quay-west — AFTER</figcaption></figure>
+</div>
+
+<h2>Fix 3 — THE TAIL-RACE BOIL <span class="note">(north-landing "primitive grey blocks" · user complaint 4)</span></h2>
+<div class="meas"><b>Measured:</b> the blocks are <code>lf_dam_boil</code> — twenty axis-aligned
+box prisms in flat dark grey. <b>Fix:</b> <code>tools/boil_dress.py</code> — seeded vertex
+jitter (±0.22 m plan, ±0.10 m z) + <code>mat_boil_foam</code> at the water shader's own
+foam-lobe tone; the finding-86 surface-straddle contract re-asserted after the edit
+(z −4.21..−3.58 over −3.80). With the restored water alpha, the shader's AO foam band now
+rings the lumps and the whole group reads as churn (see the north-landing pair above).</div>
+
+<h2>Frustum-affected set &amp; gates</h2>
+<div class="meas">64×36 ray-census per solved camera against the changed objects: 12 of 15
+plates affected (loop-stairs, lockhead, cottage CLEAN) — waterfront 20.4% of frame ·
+fishdock 28.4% · crossing 13.1% · north-landing 15.7% · lockfive 8.8% · weave 4.9% ·
+boatyard 4.8% · gate 6.2% · deep-stairs 1.1% · shelf-east/west + quay-west (doors &lt;0.5%
+each). All 12 re-baked, 1-wide serial (~3.2 min/plate). Gates: walk_engine_gate del-cine
+GREEN (file 4,097 = engine 4,097 cells) · routes_derive --check clean · findability +
+dialogue + cine/slice: see DAYLOG entry.</div>
+
+<h2>Blind verdict</h2>
+<div class="verdict" id="verdict"><b>AFTER WINS ALL FOUR PAIRS.</b> Two fresh Anthropic-side
+judges, shuffled anonymized packs (blind_pack), zero external spend, 2026-08-07 ~02:55.<br><br>
+<b>Water pack</b> (full waterfront + north-landing plates): north-landing before 3/10 ("reads
+as a broken or work-in-progress build ... the water didn't load") → after 5/10; waterfront
+before 4/10 ("the missing water hollows out half the frame") → after 6/10 ("the water sells
+the space"). Pair verdicts verbatim: "a flawed river beats a missing one decisively" ·
+"img-d [after] by a clear margin."<br><br>
+<b>Doors pack</b> (identical crops, shelf-west + shelf-east): after wins both — shelf-west
+"reads better as shipped art, and clearly better for enterable doorways ... the door
+left-of-center has a lit four-pane window in it, which both confirms it is a door and says
+the building is occupied; in [before] that door is unlit and effectively invisible";
+shelf-east "reads better on both counts." Ranking across the four: after-SE &gt; after-SW &gt;
+before-SE ≈ before-SW. The judge's mechanism, verbatim: "a lit opening is the single
+strongest enterability cue these frames have, and wherever it's absent the buildings read
+as sealed props."<br><br>
+<b>Judge residuals, recorded</b> (all pre-existing classes or refinements, none a
+regression): the dressed boil still reads as "flat white untextured slabs" at plate
+distance; knife-sharp waterline (no foam/shore blending); the dam/lock massing reads
+untextured; crushed-black street shadow floors; blown-out white awning/stall panels;
+"the window locates the building, not the door itself" — the weapon door's frame/step
+survive in geometry but are shadow-crushed at plate distance.</div>
+
+<h2>Deferred, honestly</h2>
+<ul class="note">
+<li>The bank-crest silhouette at waterfront is still a heightfield horizon (much softer
+against real water); shoreline rock lumps remain an option if the judge still reads it thin.</li>
+<li>Sky/backdrop class + any NEW water look — waits for the calibrated judge lane (a183373
+checklist families, unvalidated; Gemini spend-capped tonight).</li>
+<li>quay-west cannot see the cookhouse's real door (measured) — seam/camera-ownership lane.</li>
+<li>Railings/market-stand detail pass (user complaint 4, remainder) — not reached this round.</li>
+</ul>
+</body>
+</html>

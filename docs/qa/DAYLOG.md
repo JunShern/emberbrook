@@ -16768,3 +16768,62 @@ completion. The live site now carries: the full overworld sweep (sky/camera/vege
 road/ambient/camclip v2/F6b flowers), the legacy deletion, all ten Dellhollow
 circulation iterations, the closing bake's 15 fresh plates, and the far-rings round.
 First deploy since 2026-08-03.
+
+## 2026-08-07 ~02:50 — DELLHOLLOW GRAPHICS FIX ROUND 1 (worklist: user's five complaints + sweep 20260806-1)
+
+Board with before/afters + instruments: docs/qa/dellhollow-graphics/index.html.
+Every claim MEASURED before built (pixel ray-census replaying the plate's own solved
+camera; calibrated on the walk-lantern pixel).
+
+1. THE WATER BAKE WAS A REGRESSION, RESTORED, 12 plates. The waterfront "paper-thin
+   cliff + hollow gap" (sev3 x2) and north-landing "orange rectangle + grey blocks"
+   (sev3) are all THE WATER: water_pool-mid / -downstream were bare 16/8-vert boxes
+   with NO Col layer — locksfoot_build.py:850 notched the mid pool via join_meshes
+   after tranche 2 and dropped the ratified depth-alpha bake (upstream kept its Col;
+   t2_water_shader.py:178 records mid at 26,512 baked verts). Re-ran the SHIPPED
+   recipe (t2w shelves verified present first): mid 8648 verts alpha 0.06-0.97,
+   downstream 4290, lf_lock_water 90; verified in the re-opened artifact. NOT a new
+   water look — the ratified water-transparency.md AS BUILT state, restored.
+2. DOORS: tools/door_legibility.py (additive carrier, 62 objects, DOOR_LEGIBILITY):
+   painted panel per shop accent + freshwood IN-FRAME pilasters (proud jambs clip the
+   built window frames; armor's window frame overlaps its own door slab) + stone
+   threshold at the MEASURED street (drift gate +-0.08) + glow from the town's own
+   mat_*_window_a: transom where headroom exists (cookhouse 0.69 m), lit panes under
+   the pentices elsewhere (0.03-0.48 m). PANE HEIGHT IS CAMERA-MEASURED: at 1.58 the
+   weapon panes sat exactly behind strung lantern shelf_lantern_hang_8 — carrier drops
+   to 1.30 when the owning camera's ray is blocked (weapon+inn lowered). Ray-census:
+   4/5 panels DIRECTLY visible from their owning cameras — the checklist "OCCLUDED"
+   verdicts were shadow-perceptual. TWO FINDINGS FOR THE SEAM LANE: quay-west cannot
+   see the cookhouse's real (south) door — its own roof blocks by ~3 m, measured; and
+   NO del-cine camera sees df_cookhouse at all (64x36 census, 0 hits) — the town's
+   tavern entrance exists only in the realtime tier.
+3. BOIL: tools/boil_dress.py — seeded jitter + mat_boil_foam at the shader's foam
+   tone; finding-86 straddle re-asserted (z -4.21..-3.58 over -3.80). Reads as churn.
+
+Frustum census (64x36 rays/camera vs changed objects): 12/15 plates affected
+(loop-stairs, lockhead, cottage CLEAN); all 12 re-baked 1-wide serial ~2.7 min/plate;
+del-cine GLB re-exported (also fixes a carrier naming collision: "pane"+"l" == "panel",
+Blender minted a .001 — caught in the 22:40 townwalk export, renamed pane_l/_r).
+
+GATES on final artifacts: walk_engine_gate del-cine GREEN (4097=4097 cells, 0 lost) ·
+routes --check clean (only diff on re-derive: stamp + the stale-deep-stairs warning
+cleared) · findability 69/0 · dialogue green · slice 776/0 · cine_test 635/1 — the 1
+is the PRE-ATTRIBUTED deep-stairs seam red (file walker vs searched build, MORNING.md
+20:20; present before this round).
+
+Session note: weekly limit killed the lane ~23:20 mid-verdict; account restored 02:34,
+state HELD (nothing lost). Blind verdicts (fresh Anthropic-side judges, blind_pack, $0
+external — Gemini capped): recorded on the board when the two judges returned.
+
+Deferred, named: bank-crest silhouette at waterfront (much softer vs real water; shore
+rocks if the judge still reads it thin) · boatyard's pitch-black slab faces (sev2
+family, untouched) · sky/backdrop class + any NEW water look (calibrated-judge lane,
+a183373) · railings/market-stand detail (complaint 4 remainder) · quay-west/cookhouse
+camera ownership (seam lane).
+BLIND VERDICTS (2026-08-07 ~02:55, two fresh judges): AFTER WINS ALL FOUR PAIRS.
+Water: north-landing 3->5 ("the water didn't load" -> "a flawed river beats a missing
+one decisively"), waterfront 4->6 ("the water sells the space"). Doors: both plates —
+shelf-west "clearly better for enterable doorways", shelf-east "better on both counts";
+mechanism verbatim: "a lit opening is the single strongest enterability cue these
+frames have." Judge residuals added to the board (boil-as-slabs, knife waterline,
+dam massing, crushed shadow floors, blown awning panels).

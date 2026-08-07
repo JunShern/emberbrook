@@ -74,6 +74,8 @@ if old:
 
 sc = bpy.context.scene
 dg = bpy.context.evaluated_depsgraph_get()
+cams_pre = {c["id"]: c for c in json.load(
+    open(REPO + "/public/townmap/dellhollow.cameras.solved.json"))["cameras"]}
 
 
 def axes(face):
@@ -167,11 +169,31 @@ for shop, cx, cy, face, w, h, ref_street, paint_n, glow_n, stone_n, cam_id in DO
                bot + h + 0.38, 0.045, 0.06, 0.34, MTD)
         OB("lintel", 0, 0.055, bot + h + 0.62, w + 0.44, 0.18, 0.14, MFRESH)
     else:
+        # NAMING: pane_l, never "pane"+"l" — "panel" collides with the door
+        # panel's own name and Blender silently mints a .001 (caught in the
+        # 2026-08-06 townwalk export)
+        # PANE HEIGHT IS MEASURED AGAINST THE OWNING CAMERA: at 1.58 the weapon
+        # shop's panes sat exactly behind strung lantern shelf_lantern_hang_8
+        # (pixel probe, shelf-east px 1182,460..480) — the one glow element the
+        # treatment exists for, occluded by a 20 cm lantern 5 m out of frame
+        # centre.  The carrier drops to 1.30 when the 1.58 centre's ray from the
+        # owning camera first-hits anything that is not this door or its shop.
+        pz = 1.58
+        ppos = Vector(P(0, 0.16, bot + pz))
+        cpos = Vector(cams_pre[cam_id]["pos"]) if cam_id in cams_pre else None
+        if cpos is not None:
+            dvec = ppos - cpos
+            phit, ploc, _, _, pob, _ = sc.ray_cast(dg, cpos, dvec.normalized(),
+                                                   distance=dvec.length - 0.05)
+            if phit and not pob.name.startswith("df_%s" % shop):
+                pz = 1.30
+                print("    %s: pane 1.58 occluded by %s from %s -> lowered to 1.30"
+                      % (shop, pob.name, cam_id))
         for k in (-1.0, 1.0):
-            OB("pane%s" % ('l' if k < 0 else 'r'), k * w * 0.20, 0.140,
-           bot + 1.58, 0.24, 0.03, 0.34, GLOW)
-            OB("panebar%s" % ('l' if k < 0 else 'r'), k * w * 0.20, 0.150,
-               bot + 1.58, 0.26, 0.02, 0.05, MTD)
+            OB("pane_%s" % ('l' if k < 0 else 'r'), k * w * 0.20, 0.140,
+               bot + pz, 0.24, 0.03, 0.34, GLOW)
+            OB("panebar_%s" % ('l' if k < 0 else 'r'), k * w * 0.20, 0.150,
+               bot + pz, 0.26, 0.02, 0.05, MTD)
 
     # ---- the stone threshold at the measured street
     OB("step", 0, 0.115, (street - 0.14 + bot) / 2 + 0.01, w + 0.34, 0.36,
