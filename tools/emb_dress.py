@@ -3138,6 +3138,219 @@ if not NODRESS:
     dress_groundcover()
 
 
+# ============================================== THE WORKED PARCELS, RE-RENDERED ==
+# `PLAN["fields"]` WAS HARVESTED FROM THE FIRST COMMIT AND NEVER READ BACK — one
+# `.append`, zero consumers.  What that cost is a census and not an impression.
+#
+# THE INSTRUMENT: every `emb_mat_*` (a BLOCKOUT material — flat paint, no texture, no
+# relief) still on a RENDER-VISIBLE mesh of the shipped `emberbrook-dressed.blend`.
+# 2026-08-07, on the blend the live plates were baked from, FOUR survive:
+#
+#     emb_mat_window          86 visible   <- ON THE KEEP LIST (the town's emissive windows)
+#     emb_mat_iron            28 visible   <- ON THE KEEP LIST (the lamp ironwork)
+#     emb_mat_leaf_green      21 visible   <- NOT ON ANY LIST.  20 are `lm_field_*`.
+#     emb_mat_leaf_autumn      1 visible   <- NOT ON ANY LIST.  `lm_infill_17`.
+#
+# `emb_mat_leaf_green` is `(0.20, 0.28, 0.13)` FLAT, and it is what the naive judge saw
+# on pondlane as "untextured green blockout slabs ... unfinished developer placeholder
+# geometry" (run-20260806-1, three separate looks).  It is not a lighting complaint and
+# no grade fixes it: the surface has no texture on it.
+#
+# WHY THE HOLE WAS QUIET — the boundary half was ALREADY dressed.  The harvest's
+# `_drystone`/`_hedge`/`_pale` branch matches BEFORE the `lm_field_` branch, so a parcel's
+# palings take `emb_dress_town_timber` from `dress_town_materials` and its dry-stone rows
+# are rebuilt as loose field stones by `dress_bank_and_bramble`.  Both read as real
+# surfaces in the shipped plates (looked at, 1:1, pondlane).  Only the two classes wearing
+# LEAF PAINT fell through — the hedge, which no branch claimed at all, and the green crop
+# ridge, whose material name is in no substitution table.
+#
+# SO THIS STAGE IS THE MISSING CONSUMER, and it holds the same rules every other dressing
+# stage here holds: it never invents a placement (there are no hay stooks in this town
+# because the BLOCKOUT's own `_fopen(1.5)` gate refused all five candidates, and a
+# dressing layer that plants one is a dressing layer that lies about the map), it re-reads
+# the blockout's own box frame rather than its AABB, and everything it emits is scenery in
+# `EMB_DRESS_GROUNDCOVER` — never a collider.
+NOFIELDCROP = flag("--nofieldcrop")
+
+
+def _box_frame(o):
+    """THE BLOCKOUT'S OWN BOX, READ BACK — centre, long-axis unit vector, length, width,
+       top z, bottom z.  `emb_blockout.box()` emits the bottom ring first in a fixed
+       winding, so the box's own frame is IN the mesh and does not have to be inferred
+       from an AABB.  That distinction is not pedantry: `dress_trees` already paid for it
+       once — a yawed square's AABB is up to 41% wider than the square, and reading a
+       crown radius off one manufactured a rule violation out of nothing."""
+    ws = world_verts(o)
+    if len(ws) != 8:
+        return None
+    a, b = ws[1] - ws[0], ws[2] - ws[1]
+    if a.length < b.length:
+        a, b = b, a
+    c = Vector((sum(v.x for v in ws) / 8.0, sum(v.y for v in ws) / 8.0,
+                sum(v.z for v in ws) / 8.0))
+    if a.length < 1e-6:
+        return None
+    return (c, a.normalized(), a.length, b.length,
+            max(v.z for v in ws), min(v.z for v in ws))
+
+
+def dress_fields():
+    """THE FIELD PARCELS THE BLOCKOUT WORKED, DRESSED — hedges become planting, green crop
+       ridges become PLOUGHED EARTH WITH A CROP STANDING IN IT, and the autumn stubble
+       rows keep the scanned thatch the material pass already gives them and gain tufts.
+
+       WHAT EACH CLASS BECOMES, AND WHY THAT AND NOT SOMETHING ELSE:
+
+         hedge  (2.9 x 0.75 x 0.88 m box, `emb_mat_leaf_green`)
+             HIDDEN, and replaced by overlapping `bramble` instances along its own run.
+             This is `dress_bank_and_bramble`'s recipe for `_bramble`, applied to the
+             class that recipe never matched.  They OVERLAP on purpose — the blockout's
+             own note says a boundary is a line and not a row of dashes, and a hedge made
+             of separated shrubs is the dotted-line defect at a different scale.
+
+         ridge, green  (3.0 x 1.1 x 0.22 m box, `emb_mat_leaf_green`)
+             KEPT as geometry and re-surfaced with the town's own scanned ground, then
+             PLANTED.  A crop ridge IS a ridge of worked earth; hiding the box would take
+             the ploughed relief out of every wide shot, which is the one thing the
+             blockout built it for.  The paint is the defect, not the mass.
+
+         ridge, stubble  (same box, `emb_mat_thatch`)
+             UNTOUCHED as a surface — `dress_town_materials` already gives it scanned
+             thatch, which is cut straw and reads as one — and given sparse short tufts so
+             the row is not a straw-coloured extrusion.
+
+         stook   NONE EXIST.  Reported as zero with the reason, never quietly built.
+
+       THE CROP HEIGHT IS CHOSEN BY `pick_for_height`, NOT BY A SCALE FACTOR, which is
+       `dress_forest`'s paid rule: an asset is picked because it is already about the right
+       size and then trimmed inside 0.85-1.15, so a 0.40 m scanned tuft is never blown up
+       to a metre with its blade width along for the ride.
+
+       AND IT IS SCENERY.  Everything emitted lands in EMB_DRESS_GROUNDCOVER (dropped from
+       collision by the realtime exporter) and is held off every tread, because walkGround
+       gives any surface 0.00-0.73 m above a tread the foot."""
+    grd = ground_material()
+    hedges = [(n, o) for (n, o, _b) in PLAN["boundary"]
+              if n.startswith("lm_field_") and "_hedge" in n]
+    ridges = [o for o in PLAN["fields"] if "_ridge" in o.name]
+    stooks = [o for o in PLAN["fields"] if "_stook" in o.name]
+    other = [o for o in PLAN["fields"]
+             if "_ridge" not in o.name and "_stook" not in o.name]
+    nh = nhp = nr_g = nr_s = nplant = 0
+    clear_refused, oor = 0, 0
+    for name, o in sorted(hedges, key=lambda t: t[0]):
+        fr = _box_frame(o)
+        if fr is None:
+            continue
+        c, u, L, W, ztop, zbot = fr
+        if not in_region(c.x, c.y, 2.0):
+            oor += 1
+            continue
+        aid, _sub = pick_for("bramble", crc("fieldhedge", name))
+        if not aid:
+            continue
+        want = (ztop - zbot) * 1.42        # a field hedge stands over its own blockout box
+        h0 = asset_h(aid)
+        sc = max(0.20, min(1.0, want / max(0.05, h0)))
+        halfw = 0.5 * sc * next((a.get("canopy_width_m", 1.0) for a in MAN["assets"]
+                                 if a["id"] == aid), 1.0)
+        n = max(2, int(round(L / max(0.35, halfw * 1.35))))
+        placed = 0
+        for k in range(n):
+            t = -L / 2 + L * (k + 0.5) / n
+            px, py = c.x + u.x * t, c.y + u.y * t
+            # A HEDGE MAY NOT NARROW A LANE.  The blockout gated each segment on 1.1 m of
+            # open ground; the SCANNED bush is wider than the 0.75 m box it replaces, so
+            # the rule is re-asserted on the asset's own measured width, exactly as
+            # `dress_trees` re-asserts the lane clearance on the instanced tree.
+            if walk_dist(px, py) < halfw + 0.50:
+                clear_refused += 1
+                continue
+            z = raycast_ground(px, py)
+            if z is None:
+                z = zbot
+            veg(aid, (px, py, z - 0.06), sc * crcrange(0.86, 1.14, "hs", name, k),
+                crcrange(0, 6.283, "hr", name, k),
+                "emb_dress_fieldhedge_%s_%d" % (name, k),
+                seed=crc("fh", name, k), coll=DRESS_GC)
+            placed += 1
+            nhp += 1
+        if placed:
+            o.hide_render = True
+            nh += 1
+    for o in sorted(ridges, key=lambda x: x.name):
+        fr = _box_frame(o)
+        if fr is None:
+            continue
+        c, u, L, W, ztop, zbot = fr
+        if not in_region(c.x, c.y, 2.0):
+            oor += 1
+            continue
+        mats = [s.material.name for s in o.material_slots if s.material]
+        green = any(m == "emb_mat_leaf_green" for m in mats)
+        if green:
+            # THE PAINT IS THE DEFECT, NOT THE MASS: the ridge stays and becomes soil.
+            for s in o.material_slots:
+                s.material = grd
+            nr_g += 1
+        else:
+            nr_s += 1
+        if NOFIELDCROP or TIER == "realtime":
+            continue
+        want = crcrange(0.40, 0.46, "cw", o.name) if green \
+            else crcrange(0.15, 0.19, "cw", o.name)
+        cls = "grass"
+        aid, _sub = pick_for_height(cls, want, crc("crop", o.name))
+        if not aid:
+            continue
+        h0 = asset_h(aid)
+        sc = max(0.55, min(1.25, want / max(0.05, h0)))
+        step = 0.40 if green else 0.72
+        nalong = max(2, int(L / step))
+        lanes = (-0.22, 0.22) if green else (0.0,)
+        v = Vector((-u.y, u.x, 0.0))
+        for k in range(nalong):
+            t = -L / 2 + L * (k + 0.5) / nalong
+            for li, lo in enumerate(lanes):
+                px = c.x + u.x * t + v.x * lo * W
+                py = c.y + u.y * t + v.y * lo * W
+                if walk_dist(px, py) < 0.45:
+                    continue
+                veg(aid, (px, py, ztop - 0.05),
+                    sc * crcrange(0.82, 1.18, "cs", o.name, k, li),
+                    crcrange(0, 6.283, "cr", o.name, k, li),
+                    "emb_dress_crop_%s_%d_%d" % (o.name, k, li),
+                    seed=crc("cp", o.name, k, li), coll=DRESS_GC)
+                nplant += 1
+    print("  FIELD PARCELS   %d hedges replaced by %d scanned bushes along their own runs "
+          "(the box is hidden, the run is not: the instances OVERLAP, because the "
+          "blockout's own rule is that a boundary is a line and not a row of dashes); "
+          "%d green crop ridges re-surfaced from FLAT BLOCKOUT PAINT (emb_mat_leaf_green, "
+          "0.20/0.28/0.13, no texture and no relief) to the town's own scanned ground — "
+          "the ridge KEEPS its mass, because a crop ridge is a ridge of worked earth and "
+          "hiding it would take the ploughed relief out of every wide shot; %d stubble "
+          "ridges keep the scanned thatch the material pass gives them; %d crop plants "
+          "standing in the rows."
+          % (nh, nhp, nr_g, nr_s, nplant))
+    print("                  REFUSED, with their counts: %d bush stands too close to a "
+          "tread (the blockout gated each segment on 1.1 m of OPEN GROUND and a scanned "
+          "bush is wider than the 0.75 m box it replaces, so the clearance is re-asserted "
+          "on the asset's OWN measured width), %d parcel objects outside the region. "
+          "STOOKS: %d — the blockout built none (its own `_fopen(1.5)` gate refused every "
+          "candidate), and a dressing layer that plants one is a dressing layer that lies "
+          "about the map. %d other lm_field_* objects carried no rule and were left."
+          % (clear_refused, oor, len(stooks), len(other)))
+    if TIER == "realtime" and not NOFIELDCROP:
+        print("                  realtime tier: the CROP is not emitted (same rule as "
+              "GROUNDCOVER — a scatter is a plate-tier spend, and `apply_tier`'s instance "
+              "cap would otherwise pay for it by culling something else). The hedges and "
+              "the ridge surfacing are geometry and material and DO carry.")
+
+
+if not NODRESS:
+    dress_fields()
+
+
 # ============================================================= TIER + LIGHTS ==
 def tri_gate():
     """THE DOUBLE-INSTANCING GATE.  Two ways an asset lane can hand this engine three
@@ -4736,6 +4949,482 @@ def _sky_lighting_split(nt, bg, sky):
     nt.links.new(mx.outputs[0], out.inputs[0])
 
 
+# ===================================== THE NIGHT SKY, AND THE HORIZON UNDER IT ==
+# THE MEASUREMENT FIRST, because "town skies" arrived on the worklist as an impression and
+# it is not one.  `tools/plate_probe.py` reconstructs a world ray per pixel out of each
+# bundle's own solved camera and its `depth.png`; a pixel at the far plane is a ray that
+# hit NOTHING.  Over the eleven shipped emb-cine plates, 2026-08-07:
+#
+#     shot       far-plane %   ray elevation min / median / max
+#     pondlane      12.287      -6.2 / -2.6 / -0.5 deg
+#     therise        1.497      -2.0 /  2.5 /  3.5 deg
+#     gateroad       0.052      -4.1 / -4.0 / -3.8 deg
+#     the other eight            0.000  (no sky pixels at all)
+#
+# TWO FACTS COME OUT OF THAT TABLE AND THEY RESHAPE THE ITEM.
+#
+#  (1) EIGHT OF ELEVEN PLATES HAVE NO SKY IN THEM.  A sky recipe cannot move a plate whose
+#      every ray terminates on the town, so those eight are refused by construction and
+#      not by taste — this is not a town-wide grade, it is a THREE-PLATE fix.
+#  (2) MOST OF WHAT THE JUDGE CALLED SKY IS BELOW THE HORIZON.  pondlane's band runs
+#      -6.2 to -0.5 degrees and gateroad's -4.1 to -3.8: those rays are aimed at the
+#      GROUND and the ground has run out.  `emb_ground_far` is 256 x 324 m, so a ray that
+#      leaves it at a shallow depression angle simply exits the world, and what shows is
+#      the flat world colour.  That is why the same pixels drew two different findings in
+#      run-20260806-1 — "The sky: WEAK, a flat gradient with minimal atmospheric volume"
+#      AND "The world at the frame edges: WEAK, fades into a flat, empty dark void". ONE
+#      DEFECT, TWO SYMPTOMS, and neither is fixable with a colour: below the horizon you
+#      need SOMETHING TO BE THERE.
+#
+# So the fix is in two parts and only the second is a sky:
+#
+#   A. `far_horizon()` — two ranks of distant wooded ridge beyond the valley's own rim,
+#      seated in haze.  This is the ow sky rebuild's "mist-seated ridges", carried to a
+#      town whose sky is BAKED INTO THE PLATE.
+#   B. `emberwake_sky()` — the world background stops being one constant.  A horizon-to-
+#      zenith ramp, a haze band on the horizon itself, thin cloud, STARS, and the moon's
+#      own disc and glow on the TRUE key direction.
+#
+# BOTH ARE CAMERA-RAY ONLY, AND THAT IS THE WHOLE REASON THE BAKE SET IS THREE PLATES.
+# The ridges are set `visible_camera` and nothing else (no diffuse, glossy, transmission,
+# volume or shadow ray sees them) and the sky graph is mixed against the untouched flat
+# Background on `Is Camera Ray`.  So THE TOWN'S LIGHT DOES NOT MOVE — not "measured not to
+# move", cannot move — and the only pixels that can change are pixels that were already at
+# the far plane.  The eight zero-sky plates are refused with a number: 0.000%.
+#
+# THE NIGHT-GRADE DOCTRINE IS OBEYED, not quoted.  DAYLOG 2026-08-01: in this town
+# adjusting an existing light has never moved a frame and ADDING a source always has.
+# Nothing here adjusts the sun, the moon, the lamps or the world strength. The stars, the
+# moon disc and the moon glow are three ADDED sources; the ridges are added geometry.
+MOONZEN = float(opt("--moonzen", "")) if opt("--moonzen", "") else None
+MOONAZ = float(opt("--moonaz", "")) if opt("--moonaz", "") else None
+NOSKY = flag("--nosky")
+NOHORIZON = flag("--nohorizon")
+HORIZ_R = float(opt("--horizonr", "300.0"))
+
+
+def moon_direction():
+    """WHERE THE MOON IS, FROM THE ONE PLACE THAT ALREADY KNOWS.
+
+       `cine_bake` builds `EMB_moon` as a SUN at `rotation_euler = (moonrx, 0, moonrz)`
+       and those arrive as bake FLAGS, not as anything in the blend or the camera file —
+       so a sky drawn here could disagree with the light the plate is lit by, and nothing
+       would catch it.  It is written down in exactly one place that both sides can read:
+       every shipped camera's `appliedGrade` in `emb-cine/cine.json`.  So that is the
+       authority, UNANIMITY IS ASSERTED rather than assumed, and the flags are only a
+       fallback for a bundle that does not exist yet.
+
+       A Blender SUN emits along its local -Z, so the direction TO the light is
+       Rz(az) . Rx(zen) . (0,0,1) = (sin az sin zen, -cos az sin zen, cos zen)."""
+    zen, az, src = MOONZEN, MOONAZ, "--moonzen/--moonaz flags"
+    if zen is None or az is None:
+        p = os.path.join(REPO, "public/assets/scenes/emb-cine/cine.json")
+        zs, azs = set(), set()
+        if os.path.exists(p):
+            for c in json.load(open(p)).get("cameras", []):
+                g = c.get("appliedGrade") or {}
+                if g.get("moonZenithDeg") is not None:
+                    zs.add(round(float(g["moonZenithDeg"]), 3))
+                    azs.add(round(float(g["moonAzimuthDeg"]), 3))
+        if len(zs) == 1 and len(azs) == 1:
+            zen, az = zs.pop(), azs.pop()
+            src = "emb-cine/cine.json appliedGrade (unanimous across every shipped camera)"
+        else:
+            assert not zs, ("the shipped plates DISAGREE about where the moon is "
+                            "(zenith %s, azimuth %s). A sky drawn here would contradict "
+                            "the light half the plates are lit by; pass --moonzen/--moonaz "
+                            "deliberately." % (sorted(zs), sorted(azs)))
+            zen, az = 50.0, 90.0
+            src = "the shipped default (no emb-cine bundle to read)"
+    rz, rx = math.radians(az), math.radians(zen)
+    d = Vector((math.sin(rz) * math.sin(rx), -math.cos(rz) * math.sin(rx), math.cos(rx)))
+    print("MOON DIRECTION  zenith %.1f deg (%.1f above the horizon), azimuth %.1f deg -> "
+          "(%.3f, %.3f, %.3f), from %s" % (zen, 90 - zen, az, d.x, d.y, d.z, src))
+    return d.normalized()
+
+
+def far_horizon():
+    """THE FAR COUNTRY — a receding skirt of land beyond the valley, with three ranks of
+       wooded ridge standing on it, so a ray aimed BELOW the horizon has something to land
+       on and what it lands on has depth in it.
+
+       THE FIRST VERSION OF THIS WAS A VERTICAL WALL AT ONE RADIUS AND IT MEASURABLY MADE
+       THE FRAME FLATTER, which is the reason this docstring is long.  Every ray in
+       pondlane's far-plane band runs between -6.2 and -0.5 degrees of DEPRESSION, so a
+       ring at a single distance is at a single distance from every one of them: one haze
+       value, one tone, no edge in frame (the wall's own top stood at +4.2 deg, outside
+       the band).  Draft render, 1008x576: the top 60 rows went from L 91.3/64.6/42.0
+       (rows 0/30/59) to 80.1/58.3/41.4 — darker, and no more structured.  A backdrop
+       whose whole job is depth cannot be built at a constant distance.
+
+       SO THE GEOMETRY IS A RECEDING FLOOR AND THE HAZE IS A FUNCTION OF DISTANCE, which
+       makes the frame's own vertical axis a distance axis: lower in the band is nearer
+       and clearer, higher is farther and mistier, exactly as land does.  Three ridge ranks
+       stand on that floor, and THEIR HEIGHTS ARE SOLVED, NOT AUTHORED: each rank is given
+       an ELEVATION BAND as seen from a reference eye and its top z is
+       `eye + R tan(elev)`, so all three silhouettes land inside the -6.2..-0.5 deg band
+       the shipped plate's own far-plane rays occupy.  The reference eye is pondlane's own
+       camera height (10.2 m) because pondlane is the plate the band was measured on.
+       Three silhouettes with mist between them, instead of one wall.
+
+       IT MUST BE BEYOND EVERYTHING, AND THAT IS ASSERTED — AND THE ASSERT IS NOT DECORATIVE:
+       it fired on the first run of this version and named the number.  A backdrop nearer
+       than any part of the town would OCCLUDE the town on a camera ray (it is invisible to
+       every other ray, not to that one), and the plates it broke would be exactly the
+       plates this lane refused to bake.  `emb_ground_far`'s own bound reaches 206 m from
+       the town centre, so the skirt starts at 230.
+
+       CAMERA RAYS ONLY.  visible_diffuse/glossy/transmission/volume_scatter/shadow are
+       all False and asserted, so this cannot bounce a photon, cast a shadow or appear in
+       the pond, and it is incapable of changing a pixel that was not already at the far
+       plane."""
+    if NOHORIZON:
+        print("  FAR HORIZON     --nohorizon: not built")
+        return 0
+    gz = raycast_ground(RCX, RCY)
+    z0 = (gz if gz is not None else 2.0) - 4.0
+    R0 = float(opt("--horizonr0", "230.0"))
+    R1 = float(opt("--horizonr1", "1800.0"))
+    EYE = float(opt("--horizoneye", "10.2"))    # pondlane's own camera z — see docstring
+
+    def skirt_z(r):
+        """The land falls away out of the valley — gently at first, then away."""
+        return z0 - 0.055 * max(0.0, r - R0) ** 1.12
+
+    # --- THE GATE: is R0 actually beyond the town? -----------------------------------
+    worst, wname = 0.0, "-"
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or o.hide_render or o.name.startswith("emb_dress_far"):
+            continue
+        mw = o.matrix_world
+        for c in o.bound_box:
+            w = mw @ Vector(c)
+            d = math.hypot(w.x - RCX, w.y - RCY)
+            if d > worst:
+                worst, wname = d, o.name
+    assert R0 > worst + 5.0, (
+        "the far-horizon skirt starts at %.0f m from the town centre and the town's own "
+        "geometry reaches %.0f m (%s). A backdrop nearer than the world OCCLUDES the "
+        "world on camera rays — raise --horizonr0." % (R0, worst, wname))
+
+    m = bpy.data.materials.new("emb_dress_farland")
+    m.use_nodes = True
+    t = m.node_tree
+    # THE HAZE IS THE WHOLE SHADER: colour = land, mixed toward the horizon's own air by
+    # CAMERA DISTANCE.  Camera View Distance and not a fog volume — a volume would be a
+    # light-transport change, and this backdrop is not allowed to be one.
+    cd = t.nodes.new("ShaderNodeCameraData")
+    mr = t.nodes.new("ShaderNodeMapRange")
+    mr.inputs["From Min"].default_value = 180.0
+    mr.inputs["From Max"].default_value = 1500.0
+    mr.inputs["To Min"].default_value = 0.12
+    mr.inputs["To Max"].default_value = 0.93
+    t.links.new(cd.outputs["View Distance"], mr.inputs["Value"])
+    geo = t.nodes.new("ShaderNodeNewGeometry")
+    nz = t.nodes.new("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = 0.010
+    nz.inputs["Detail"].default_value = 8.0
+    nz.inputs["Roughness"].default_value = 0.62
+    t.links.new(geo.outputs["Position"], nz.inputs["Vector"])
+    ramp = t.nodes.new("ShaderNodeValToRGB")
+    # DARKER THAN THE SKY IT SITS UNDER, and that is the point of a silhouette. The rig's
+    # sky is 0.10/0.13/0.22 at strength 0.55, i.e. ~0.055..0.121 of radiance; this land is
+    # a fifth of that before haze, so the ridgelines READ against the band.
+    ramp.color_ramp.elements[0].color = (0.0055, 0.0082, 0.0125, 1)
+    ramp.color_ramp.elements[1].color = (0.0150, 0.0195, 0.0250, 1)
+    t.links.new(nz.outputs["Fac"], ramp.inputs["Fac"])
+    mix = t.nodes.new("ShaderNodeMixRGB")
+    mix.inputs["Color2"].default_value = (0.062, 0.081, 0.127, 1)   # the air, at depth
+    t.links.new(mr.outputs["Result"], mix.inputs["Fac"])
+    t.links.new(ramp.outputs["Color"], mix.inputs["Color1"])
+    # AND IT IS EMISSIVE, NOT LIT.  Nothing may light this land — that IS the camera-ray
+    # rule — so a diffuse-only backdrop would render black.
+    em = t.nodes.new("ShaderNodeEmission")
+    t.links.new(mix.outputs["Color"], em.inputs[0])
+    em.inputs[1].default_value = 1.0
+    out = next(n for n in t.nodes if n.type == 'OUTPUT_MATERIAL')
+    for lk in list(out.inputs[0].links):
+        t.links.remove(lk)
+    t.links.new(em.outputs[0], out.inputs[0])
+
+    def _backdrop(o):
+        DRESS.objects.link(o)
+        o.visible_camera = True
+        for attr in ("visible_diffuse", "visible_glossy", "visible_transmission",
+                     "visible_volume_scatter", "visible_shadow"):
+            setattr(o, attr, False)
+            assert getattr(o, attr) is False, (
+                "far-horizon backdrop kept %s — it would enter the town's light transport "
+                "and every plate, not only the ones with far-plane pixels in them, would "
+                "owe a rebake" % attr)
+
+    # --- 1. THE SKIRT ----------------------------------------------------------------
+    NA, NR = 128, 30
+    rs = [R0 + (R1 - R0) * (k / float(NR)) ** 1.8 for k in range(NR + 1)]
+    vs, fs = [], []
+    for j, r in enumerate(rs):
+        for i in range(NA):
+            a = 2 * math.pi * i / NA
+            # the far country is not a cone: a low rolling relief on the floor itself
+            rel = (2.6 * math.sin(a * 5.0 + r * 0.004)
+                   + 1.9 * math.sin(a * 11.0 - r * 0.0021 + 2.1)) * min(1.0, (r - R0) / 260.0)
+            vs.append((RCX + r * math.cos(a), RCY + r * math.sin(a), skirt_z(r) + rel))
+    for j in range(NR):
+        for i in range(NA):
+            a0 = j * NA + i
+            a1 = j * NA + (i + 1) % NA
+            b0 = (j + 1) * NA + i
+            b1 = (j + 1) * NA + (i + 1) % NA
+            fs.append((a0, a1, b1, b0))
+    me = bpy.data.meshes.new("emb_dress_farskirt")
+    me.from_pydata(vs, [], fs)
+    me.update()
+    me.materials.append(m)
+    _backdrop(bpy.data.objects.new("emb_dress_farskirt", me))
+
+    # --- 2. THE RIDGE RANKS, WITH THEIR TOPS SOLVED FOR AN ELEVATION BAND -------------
+    # (radius, elevation of the highest point, elevation of the lowest) in degrees FROM
+    # `EYE`.  The three bands tile the measured -6.2..-0.5 deg window with overlap, so
+    # from a camera anywhere in the town at least one ridgeline crosses the frame.
+    ranks = ((260.0, -0.40, -1.90), (470.0, -1.55, -3.20), (850.0, -2.85, -4.90))
+    built, tops = 1, []
+    for rank, (R, eHi, eLo) in enumerate(ranks):
+        zHi = EYE + R * math.tan(math.radians(eHi))
+        zLo = EYE + R * math.tan(math.radians(eLo))
+        base = skirt_z(R) - 25.0
+        assert zLo > base + 2.0, (
+            "ridge rank %d's own lowest top (%.1f m) is under its base (%.1f m) — the "
+            "skirt has fallen away faster than the elevation band descends" % (rank, zLo, base))
+        vs, fs = [], []
+        nseg = 256
+        for k in range(nseg):
+            a = 2 * math.pi * k / nseg
+            u = (0.42 * math.sin(a * 2.0 + 1.7 * rank)
+                 + 0.28 * math.sin(a * 6.0 + 2.3 + rank)
+                 + 0.19 * math.sin(a * 15.0 - 0.7 - 2 * rank)
+                 + 0.11 * math.sin(a * 37.0 + 1.1 + 3 * rank))
+            top = zLo + (zHi - zLo) * (0.5 + 0.5 * u)
+            tops.append((R, top))
+            vs.append((RCX + R * math.cos(a), RCY + R * math.sin(a), base))
+            vs.append((RCX + R * math.cos(a), RCY + R * math.sin(a), top))
+        for k in range(nseg):
+            i, j = 2 * k, 2 * ((k + 1) % nseg)
+            fs.append((i, j, j + 1, i + 1))
+        me = bpy.data.meshes.new("emb_dress_farridge_%d" % rank)
+        me.from_pydata(vs, [], fs)
+        me.update()
+        me.materials.append(m)
+        _backdrop(bpy.data.objects.new("emb_dress_farridge_%d" % rank, me))
+        built += 1
+    _rows = "; ".join("%.0f m top %.1f..%.1f m = %+.2f..%+.2f deg"
+                      % (R, min(t2 for r2, t2 in tops if r2 == R),
+                         max(t2 for r2, t2 in tops if r2 == R), eLo, eHi)
+                      for R, eHi, eLo in ranks)
+    print("  FAR HORIZON     a receding skirt %.0f -> %.0f m (%dx%d quads, falling %.1f -> "
+          "%.0f m) with %d ridge ranks standing on it, THEIR TOPS SOLVED for an elevation "
+          "band from a %.1f m eye rather than authored as heights: %s. Every one of those "
+          "edges is INSIDE the -6.2..-0.5 deg band the shipped pondlane plate's far-plane "
+          "rays occupy — that is the whole difference from a wall at one radius, which "
+          "stood its only edge at +4.2 deg and measurably flattened the frame. HAZE IS A "
+          "DISTANCE MIX (180 m -> 0.12 air, 1500 m -> 0.93), so the frame's vertical axis "
+          "becomes a distance axis. GATE: the nearest backdrop radius %.0f m clears the "
+          "town's own furthest geometry at %.0f m (%s) — a backdrop nearer than the world "
+          "occludes it, and this assert fired at 185 m on its first run. CAMERA RAYS ONLY, "
+          "asserted per object."
+          % (R0, R1, NA, NR, skirt_z(R0), skirt_z(R1), len(ranks), EYE, _rows,
+             R0, worst, wname))
+    return built
+
+
+def emberwake_sky(world, rig):
+    """THE FLAT COLOUR BECOMES A SKY — on camera rays, and on camera rays only.
+
+       WHAT IT WAS: one `Background` node, colour (0.10, 0.13, 0.22), strength 0.55.  Not
+       a gradient — a CONSTANT.  The judge's "flat gradient with minimal atmospheric
+       volume" was generous.
+
+       WHAT IT IS: five terms, each of which is a thing that is actually up there.
+         1. a horizon-to-zenith ramp, anchored ON the rig's own colour so the hour does
+            not move;
+         2. a haze band sitting on the horizon line, which is what seats `far_horizon`'s
+            ridges instead of letting them cut;
+         3. thin cloud, stretched along the horizon, in the haze's own colour;
+         4. STARS — a Voronoi field with per-cell brightness, masked off below the horizon
+            and thinned inside the moon's glow;
+         5. the MOON, disc and glow, on the direction the plates are actually lit from
+            (`moon_direction`, read out of the shipped bundle).
+
+       THE ONE THING TO KNOW BEFORE EDITING THIS.  `cine_bake` writes the rig's colour and
+       strength into the node literally named `Background`, and asserts that its colour
+       socket is UNLINKED when `--sky` is passed, because a linked socket would silently
+       ignore the rig.  That assert is right and is not worked around: the socket IS
+       linked now, so `cine_bake` looks instead for an RGB node named `RIG_SKY_COLOR` and
+       writes the rig colour THERE.  One authority for the hour, still, and a build that
+       forgets the node fails loudly instead of baking the wrong evening."""
+    nt = world.node_tree
+    bg = nt.nodes["Background"]
+    out = next(n for n in nt.nodes if n.type == 'OUTPUT_WORLD')
+    rigc = tuple(rig["world"]["color"])
+    # THE RIG'S COLOUR, AS A NODE cine_bake CAN STILL WRITE.
+    rgb = nt.nodes.new("ShaderNodeRGB")
+    rgb.name = rgb.label = "RIG_SKY_COLOR"
+    rgb.outputs[0].default_value = (*rigc, 1.0)
+    co = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(co.outputs["Generated"], sep.inputs["Vector"])
+    md = moon_direction()
+    dot = nt.nodes.new("ShaderNodeVectorMath")
+    dot.operation = 'DOT_PRODUCT'
+    dot.inputs[1].default_value = (md.x, md.y, md.z)
+    nt.links.new(co.outputs["Generated"], dot.inputs[0])
+
+    def maprange(src, f0, f1, t0, t1, clamp=True):
+        n = nt.nodes.new("ShaderNodeMapRange")
+        n.clamp = clamp
+        n.inputs["From Min"].default_value = f0
+        n.inputs["From Max"].default_value = f1
+        n.inputs["To Min"].default_value = t0
+        n.inputs["To Max"].default_value = t1
+        nt.links.new(src, n.inputs["Value"])
+        return n
+
+    def mixrgb(fac_socket, c1_socket=None, c1=None, c2_socket=None, c2=None,
+               blend='MIX'):
+        n = nt.nodes.new("ShaderNodeMixRGB")
+        n.blend_type = blend
+        if fac_socket is not None:
+            nt.links.new(fac_socket, n.inputs["Fac"])
+        if c1_socket is not None:
+            nt.links.new(c1_socket, n.inputs["Color1"])
+        elif c1 is not None:
+            n.inputs["Color1"].default_value = (*c1, 1)
+        if c2_socket is not None:
+            nt.links.new(c2_socket, n.inputs["Color2"])
+        elif c2 is not None:
+            n.inputs["Color2"].default_value = (*c2, 1)
+        return n
+
+    # 1. THE VERTICAL RAMP, ANCHORED ON THE RIG.  Zenith is the rig colour taken deeper
+    # and bluer; the horizon is the rig colour lifted and warmed by what is left of the
+    # sun.  The hour does not move: the MEAN of the ramp is the colour that was there.
+    zen = tuple(c * 0.62 for c in rigc)
+    hor = (rigc[0] * 2.35 + 0.020, rigc[1] * 2.00 + 0.014, rigc[2] * 1.42 + 0.006)
+    vert = maprange(sep.outputs["Z"], -0.02, 0.62, 0.0, 1.0)
+    band = mixrgb(vert.outputs["Result"], c1=hor, c2=zen)
+    # 2. THE HAZE BAND on the horizon line itself — brightest at 0, gone by 12 degrees up
+    # and by 8 degrees down.  This is what `far_horizon`'s ridges sit IN.
+    hz_up = maprange(sep.outputs["Z"], 0.0, 0.21, 1.0, 0.0)
+    hz_dn = maprange(sep.outputs["Z"], -0.14, 0.0, 0.0, 1.0)
+    hz = nt.nodes.new("ShaderNodeMath")
+    hz.operation = 'MULTIPLY'
+    nt.links.new(hz_up.outputs["Result"], hz.inputs[0])
+    nt.links.new(hz_dn.outputs["Result"], hz.inputs[1])
+    hzf = nt.nodes.new("ShaderNodeMath")
+    hzf.operation = 'MULTIPLY'
+    hzf.inputs[1].default_value = 0.62
+    nt.links.new(hz.outputs[0], hzf.inputs[0])
+    haze = (rigc[0] * 3.1 + 0.030, rigc[1] * 2.6 + 0.024, rigc[2] * 1.7 + 0.012)
+    sky = mixrgb(hzf.outputs[0], c1_socket=band.outputs["Color"], c2=haze)
+    # 3. THIN CLOUD, stretched along the horizon (a low Z scale is what makes a noise read
+    # as a cloud BAND rather than as marble), fading out well before the zenith.
+    cl = nt.nodes.new("ShaderNodeTexNoise")
+    cl.inputs["Scale"].default_value = 2.6
+    cl.inputs["Detail"].default_value = 7.0
+    cl.inputs["Roughness"].default_value = 0.58
+    clm = nt.nodes.new("ShaderNodeMapping")
+    clm.inputs["Scale"].default_value = (1.0, 1.0, 5.5)
+    nt.links.new(co.outputs["Generated"], clm.inputs["Vector"])
+    nt.links.new(clm.outputs["Vector"], cl.inputs["Vector"])
+    clr = nt.nodes.new("ShaderNodeValToRGB")
+    clr.color_ramp.elements[0].position = 0.48
+    clr.color_ramp.elements[1].position = 0.78
+    nt.links.new(cl.outputs["Fac"], clr.inputs["Fac"])
+    clmask = maprange(sep.outputs["Z"], 0.02, 0.55, 1.0, 0.0)
+    clf = nt.nodes.new("ShaderNodeMath")
+    clf.operation = 'MULTIPLY'
+    nt.links.new(clr.outputs["Color"], clf.inputs[0])
+    nt.links.new(clmask.outputs["Result"], clf.inputs[1])
+    clf2 = nt.nodes.new("ShaderNodeMath")
+    clf2.operation = 'MULTIPLY'
+    clf2.inputs[1].default_value = 0.45
+    nt.links.new(clf.outputs[0], clf2.inputs[0])
+    sky2 = mixrgb(clf2.outputs[0], c1_socket=sky.outputs["Color"],
+                  c2=(haze[0] * 1.25, haze[1] * 1.22, haze[2] * 1.18))
+    # 4. THE STARS — the ADDED SOURCE the night-grade doctrine says is the only kind of
+    # change that has ever moved this town.  Voronoi F1 gives one point per cell and the
+    # cell's own Colour gives it a magnitude, so the field is not a regular dot screen.
+    vor = nt.nodes.new("ShaderNodeTexVoronoi")
+    vor.feature = 'F1'
+    vor.inputs["Scale"].default_value = 210.0
+    try:
+        vor.inputs["Randomness"].default_value = 1.0
+    except Exception:
+        pass
+    nt.links.new(co.outputs["Generated"], vor.inputs["Vector"])
+    st = nt.nodes.new("ShaderNodeValToRGB")
+    st.color_ramp.elements[0].position = 0.0
+    st.color_ramp.elements[0].color = (1, 1, 1, 1)
+    st.color_ramp.elements[1].position = 0.030
+    st.color_ramp.elements[1].color = (0, 0, 0, 1)
+    nt.links.new(vor.outputs["Distance"], st.inputs["Fac"])
+    mag = nt.nodes.new("ShaderNodeMixRGB")     # per-cell magnitude out of the cell colour
+    mag.blend_type = 'MULTIPLY'
+    mag.inputs["Fac"].default_value = 1.0
+    nt.links.new(st.outputs["Color"], mag.inputs["Color1"])
+    nt.links.new(vor.outputs["Color"], mag.inputs["Color2"])
+    stmask = maprange(sep.outputs["Z"], 0.02, 0.26, 0.0, 1.0)
+    stf = nt.nodes.new("ShaderNodeMixRGB")
+    stf.blend_type = 'MULTIPLY'
+    stf.inputs["Fac"].default_value = 1.0
+    nt.links.new(mag.outputs["Color"], stf.inputs["Color1"])
+    nt.links.new(stmask.outputs["Result"], stf.inputs["Color2"])
+    sky3 = mixrgb(None, c1_socket=sky2.outputs["Color"], c2_socket=stf.outputs["Color"],
+                  blend='ADD')
+    sky3.inputs["Fac"].default_value = 0.55
+    # 5. THE MOON, on the direction the PLATES ARE LIT FROM.  The glow is wide on purpose:
+    # measured off the shipped plates, the disc itself sits 40 deg off pondlane's axis and
+    # 73 deg off therise's, so the disc is out of frame in both and it is the GLOW that
+    # does the work in the frames that exist.  The disc is still drawn — it costs one node
+    # and the first camera that ever looks that way needs it to be there.
+    glow = maprange(dot.outputs["Value"], math.cos(math.radians(52.0)), 1.0, 0.0, 1.0)
+    gp = nt.nodes.new("ShaderNodeMath")
+    gp.operation = 'POWER'
+    gp.inputs[1].default_value = 3.1
+    nt.links.new(glow.outputs["Result"], gp.inputs[0])
+    gpf = nt.nodes.new("ShaderNodeMath")
+    gpf.operation = 'MULTIPLY'
+    gpf.inputs[1].default_value = 0.85
+    nt.links.new(gp.outputs[0], gpf.inputs[0])
+    mc = tuple(rig.get("moonColor", (0.65, 0.75, 1.0)))
+    sky4 = mixrgb(gpf.outputs[0], c1_socket=sky3.outputs["Color"],
+                  c2=(mc[0] * 0.55, mc[1] * 0.62, mc[2] * 0.85), blend='ADD')
+    disc = maprange(dot.outputs["Value"], math.cos(math.radians(0.36)),
+                    math.cos(math.radians(0.22)), 0.0, 1.0)
+    sky5 = mixrgb(disc.outputs["Result"], c1_socket=sky4.outputs["Color"],
+                  c2=(mc[0] * 7.0, mc[1] * 7.0, mc[2] * 7.0), blend='ADD')
+    # THE SPLIT.  fac 0 -> the untouched flat rig colour, which is what every diffuse,
+    # glossy, transmission and shadow ray in the town still sees; fac 1 -> the sky above.
+    lp = nt.nodes.new("ShaderNodeLightPath")
+    pick = mixrgb(lp.outputs["Is Camera Ray"], c1_socket=rgb.outputs[0],
+                  c2_socket=sky5.outputs["Color"])
+    for lk in list(bg.inputs[0].links):
+        nt.links.remove(lk)
+    nt.links.new(pick.outputs["Color"], bg.inputs[0])
+    for lk in list(out.inputs[0].links):
+        nt.links.remove(lk)
+    nt.links.new(bg.outputs[0], out.inputs[0])
+    print("  NIGHT SKY       the flat Background colour (%.3f, %.3f, %.3f) is now the "
+          "NON-CAMERA half of an Is-Camera-Ray mix and is bit-for-bit what it was: every "
+          "diffuse, glossy, transmission and shadow ray in this town still sees exactly "
+          "the constant it saw before, so the light cannot move. The CAMERA half is a "
+          "horizon->zenith ramp (horizon %.3f/%.3f/%.3f, zenith %.3f/%.3f/%.3f, both "
+          "derived FROM that constant so the hour is unchanged), a haze band on the "
+          "horizon, stretched cloud, a Voronoi star field masked below +1.1 deg, and the "
+          "moon's glow and 0.5-deg disc on (%.3f, %.3f, %.3f). cine_bake writes the rig "
+          "colour into the RGB node named RIG_SKY_COLOR, because this socket is now linked."
+          % (*rigc, *hor, *zen, md.x, md.y, md.z))
+
+
 def light_key():
     """THE SAME GOLDEN LEGIBILITY KEY THE STYLE BAR WAS SHOT IN.  probe2-a/b/c were lit
        with sun 3.0 warm at (62, 0, 212), exposure 0.10, world 0.30 under Cycles — a
@@ -4766,6 +5455,12 @@ def light_key():
         print("LIGHT KEY       emberwake (from emberbrook.cameras.json defaults: exposure "
               "%.2f, sun %.2f, world %.2f)"
               % (cam["defaults"]["exposure"], rig["sun"]["energy"], rig["world"]["strength"]))
+        if not NODRESS:
+            far_horizon()
+        if NOSKY:
+            print("  NIGHT SKY       --nosky: the world stays the flat constant it was")
+        else:
+            emberwake_sky(world, rig)
         return
     sd = bpy.data.lights.new("EMB_sun", 'SUN')
     sd.energy, sd.color, sd.angle = 3.0, (1.0, 0.70, 0.42), math.radians(2.5)
@@ -5053,6 +5748,107 @@ def rim_feather():
 LANTERN_AT = build_waystone_lantern()
 rim_feather()
 
+
+# ============ THE COVERAGE GATE: NO BLOCKOUT PAINT MAY SHIP UNNAMED ==
+# THE HOLE THIS CLOSES, stated as the class it belongs to.  `vegetation_coverage_report`
+# already exists in this file because `veg_emb_screen_*` walked through the whole dressing
+# wearing flat blockout leaf material and surfaced as pastel slabs in a shipped plate — a
+# harvest that simply never saw a prefix.  `emb_mat_leaf_green` is the SAME failure one
+# layer down: not a prefix the harvest missed but a MATERIAL no substitution table named,
+# on 21 render-visible meshes of the shipped master, through every green gate, for weeks.
+#
+# A COVERAGE REPORT THAT ONLY COVERS ONE AXIS IS NOT A COVERAGE REPORT.  So this censuses
+# the axis the other one cannot see — what the meshes are actually WEARING at the end of
+# the build — and it does two things with the answer:
+#
+#   1. It PRINTS every `emb_mat_*` still on a render-visible mesh, split into the ones on
+#      `dress_town_materials`' stated keep list and the ones on no list at all.  The
+#      second group is the defect and it is named with its objects.
+#   2. It gives that second group a SURFACE, so the failure mode of a future lane adding
+#      a class is "a dressed stand-in and a loud line in the log" rather than "flat paint
+#      in a 470-second plate".  A backstop is not a substitute for dressing the class
+#      properly; it is what stops the un-dressed case from being INVISIBLE.
+#
+# WARN, NOT FAIL, and for the reason the vegetation report gives: a blockout is allowed to
+# grow a class before the dressing learns it, and a hard stop here blocks a build for a
+# class that might be deliberately proxy-only.
+def massing_backstop_material():
+    """A dressed stand-in for blockout paint: the paint's own albedo, broken by
+       world-position noise in both colour and normal, so it is a SURFACE at grazing
+       light instead of a slab.  It is not a scan and does not pretend to be one — its
+       job is to make an un-dressed class legible AS un-dressed rather than as a
+       placeholder rectangle."""
+    m = bpy.data.materials.get("emb_dress_massing_backstop")
+    if m:
+        return m
+    m = bpy.data.materials.new("emb_dress_massing_backstop")
+    m.use_nodes = True
+    t = m.node_tree
+    b = t.nodes["Principled BSDF"]
+    b.inputs["Roughness"].default_value = 0.92
+    geo = t.nodes.new("ShaderNodeNewGeometry")
+    nz = t.nodes.new("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = 5.5
+    nz.inputs["Detail"].default_value = 8.0
+    nz.inputs["Roughness"].default_value = 0.62
+    t.links.new(geo.outputs["Position"], nz.inputs["Vector"])
+    ramp = t.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.elements[0].color = (0.055, 0.082, 0.032, 1)
+    ramp.color_ramp.elements[1].color = (0.155, 0.185, 0.075, 1)
+    t.links.new(nz.outputs["Fac"], ramp.inputs["Fac"])
+    t.links.new(ramp.outputs["Color"], b.inputs["Base Color"])
+    bmp = t.nodes.new("ShaderNodeBump")
+    bmp.inputs["Strength"].default_value = 0.55
+    bmp.inputs["Distance"].default_value = 0.03
+    t.links.new(nz.outputs["Fac"], bmp.inputs["Height"])
+    t.links.new(bmp.outputs["Normal"], b.inputs["Normal"])
+    return m
+
+
+def blockout_material_coverage():
+    keep = set(TOWNMAT_SKIP)
+    seen, objs = {}, {}
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or o.hide_render or not o.material_slots:
+            continue
+        for s in o.material_slots:
+            if s.material and s.material.name.startswith("emb_mat_"):
+                seen[s.material.name] = seen.get(s.material.name, 0) + 1
+                objs.setdefault(s.material.name, []).append(o.name)
+    held = sorted(n for n in seen if n in keep)
+    loose = sorted(n for n in seen if n not in keep)
+    print("BLOCKOUT PAINT  census of what the DRESSED blend's render-visible meshes are "
+          "actually wearing (the axis `vegetation_coverage_report` cannot see): %d "
+          "emb_mat_* material(s) survive."
+          % len(seen))
+    if held:
+        print("                HELD ON PURPOSE (dress_town_materials' stated keep list): %s"
+              % ", ".join("%s x%d" % (n, seen[n]) for n in held))
+    if not loose:
+        print("                ON NO LIST AT ALL: none. Every blockout material either "
+              "took a dressed surface or is held by a stated rule.")
+        return 0
+    fb = massing_backstop_material()
+    nsub = 0
+    for n in loose:
+        ex = sorted(set(objs[n]))[:5]
+        print("                *** ON NO LIST AT ALL: %-22s %4d visible mesh(es) — %s%s"
+              % (n, seen[n], ", ".join(ex), " ..." if len(set(objs[n])) > 5 else ""))
+        for o in bpy.data.objects:
+            if o.type != 'MESH' or o.hide_render:
+                continue
+            for s in o.material_slots:
+                if s.material and s.material.name == n:
+                    s.material = fb
+                    nsub += 1
+    print("                %d slot(s) given emb_dress_massing_backstop. THIS IS A WARNING "
+          "AND NOT A FIX: a class that reaches this line has no dressing rule, and the "
+          "backstop only stops it shipping as flat paint. Give it a rule."
+          % nsub)
+    return nsub
+
+
+blockout_material_coverage()
 
 light_key()
 

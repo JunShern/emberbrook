@@ -188,12 +188,31 @@ if RIG:
     w_spec = RIG.get("world") or {}
     if w_spec:
         bg = sc.world.node_tree.nodes["Background"]
+        # ONE AUTHORITY FOR THE HOUR, THROUGH A LINKED SOCKET.
+        # A world whose sky is a NODE GRAPH rather than a constant cannot take the rig's
+        # colour in `Background.Color` — the link would win and the rig would be silently
+        # ignored, which is exactly the failure the `--sky` assert below exists to refuse.
+        # So a graph that wants the rig's colour publishes an RGB node named
+        # `RIG_SKY_COLOR` and the rig is written THERE. Emberbrook's `emberwake_sky`
+        # (tools/emb_dress.py) does this: its flat rig colour is still what every
+        # non-camera ray sees, and the sky is the camera half of an Is-Camera-Ray mix.
+        # A blend that links the socket and forgets the node FAILS HERE rather than
+        # baking the wrong evening.
+        _rignode = sc.world.node_tree.nodes.get("RIG_SKY_COLOR")
+        _tgt, _where = bg.inputs[0], "Background.Color"
+        if bg.inputs[0].links:
+            assert _rignode is not None and _rignode.type == 'RGB', (
+                "the world's sky colour socket is LINKED and there is no RGB node named "
+                "RIG_SKY_COLOR to write the rig's colour into — defaults.lightRig.world."
+                "color would be silently ignored and the plate would bake at an hour "
+                "nothing states. Rebuild the blend with a sky graph that publishes it.")
+            _tgt, _where = _rignode.outputs[0], "RIG_SKY_COLOR (the sky socket is linked)"
         if "color" in w_spec:
-            bg.inputs[0].default_value = tuple(w_spec["color"]) + (1.0,)
+            _tgt.default_value = tuple(w_spec["color"]) + (1.0,)
         if "strength" in w_spec: bg.inputs[1].default_value = w_spec["strength"]
-        print("  sky    %-12s strength %.2f  color %s"
+        print("  sky    %-12s strength %.2f  color %s  <- %s"
               % (sc.world.name, bg.inputs[1].default_value,
-                 tuple(round(c, 2) for c in bg.inputs[0].default_value[:3])))
+                 tuple(round(c, 2) for c in _tgt.default_value[:3]), _where))
     # THE CENSUS, asserted rather than believed. This grade only works if the light is
     # where the story says it is, and "the lamps carry the town" is a claim about object
     # count and wattage that costs nothing to check and everything to get wrong. The roll
@@ -224,9 +243,14 @@ if RIG:
 # The sky override lands AFTER the rig block so it wins over defaults.lightRig.world.
 if SKY_OVR:
     _bg = sc.world.node_tree.nodes["Background"]
-    assert not _bg.inputs[0].links, (
-        "sky colour socket is LINKED (a Sky Texture is wired into it) — the rig's colour "
-        "would be silently ignored. Build the plate blend with `emb_dress --key emberwake`.")
+    assert (not _bg.inputs[0].links
+            or sc.world.node_tree.nodes.get("RIG_SKY_COLOR") is not None), (
+        "sky colour socket is LINKED and the graph publishes no RIG_SKY_COLOR node — the "
+        "rig's colour would be silently ignored. Build the plate blend with "
+        "`emb_dress --key emberwake`.")
+    # NOTE what this override does and does not reach when the socket IS linked: strength
+    # scales the WHOLE Background, so both halves of an Is-Camera-Ray sky move together
+    # and the per-camera `--sky` grade still means what it meant.
     _bg.inputs[1].default_value = float(SKY_OVR)
     print("GRADE OVERRIDE  sky strength -> %.3f" % _bg.inputs[1].default_value)
 
@@ -648,11 +672,29 @@ if todo:
 # ================================================================== 3) GLB =====
 if GLB_ONLY:
     bpy.context.view_layer.material_override = None
+    # A CAMERA-RAY-ONLY OBJECT IS A BACKDROP, AND A BACKDROP IS NOT COLLISION.
+    # `visible_camera` alone used to mean "in the world", and it stopped meaning that the
+    # moment a town shipped geometry that ONLY the camera may see: Emberbrook's
+    # `far_horizon` ridge ring is 300-490 m out, is set visible to camera rays and to no
+    # other ray precisely so it cannot enter the town's light transport — and this filter
+    # would have written it into the SHARED COLLISION BUNDLE, where walkGround, the BVH
+    # and every ray the runtime casts would have taken it for world. The rule the
+    # ray-visibility mask already states is the right one: if nothing but the camera may
+    # see it, it is a picture, not a place.
+    nback = 0
     for o in list(bpy.data.objects):
         if o.type != 'MESH': continue
         if o.name.startswith('walk_'): continue        # collision pads: hide_render by design
-        if (not o.visible_camera) or o.hide_render or o.hide_viewport:
+        backdrop = (o.visible_camera and not o.visible_diffuse
+                    and not o.visible_glossy and not o.visible_shadow)
+        if backdrop:
+            nback += 1
+        if (not o.visible_camera) or o.hide_render or o.hide_viewport or backdrop:
             bpy.data.objects.remove(o, do_unlink=True)
+    if nback:
+        print("GLB     %d camera-ray-only backdrop mesh(es) dropped from the collision "
+              "bundle (visible_camera with no diffuse/glossy/shadow visibility is a "
+              "picture, not a place)" % nback)
     with contextlib.redirect_stdout(io.StringIO()):
         bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, "scene.glb"),
                                   export_yup=True, export_cameras=False, export_lights=False)
