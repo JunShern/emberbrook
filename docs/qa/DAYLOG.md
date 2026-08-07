@@ -16888,3 +16888,15 @@ banked this cycle, each at the tool: deploy-ghpages defaults to dist-c (pass the
 dir); pushes don't auto-trigger the Pages build (the script queues one now,
 f66f85b); a verify straight after publish verifies the cache. Everything committed
 is shipped. Round 3 worklist stands in the 07:55 entry.
+
+## 2026-08-07 ~09:45 — COORDINATOR (in-line round 3, item 1): the Emberbrook water diagnosis
+
+MEASURED (read-only Blender probe on emberbrook-dressed.blend, water_emb_* census):
+all four sheets — brook (3000 v), millpond (656 v), pond (5664 v), river (468 v) —
+have ZERO color-attribute layers and share the one flat `emb_dress_water` material.
+The judge's town-wide "solid black flat plane" (0 CONVINCING / 6 FAILING) is exactly
+this: no depth-alpha bake ever existed here — Dellhollow's tranche-2 recipe
+(t2_water_shader: per-vertex Col alpha from bed depth, material reads it) never had
+an Emberbrook adaptation. Fix shape: an emb water carrier porting that recipe to the
+water_emb_ family + rebake of the water-visible emb plates (heavy master — serial).
+Queued as round 3's first build item.
