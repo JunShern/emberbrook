@@ -16900,3 +16900,124 @@ this: no depth-alpha bake ever existed here — Dellhollow's tranche-2 recipe
 an Emberbrook adaptation. Fix shape: an emb water carrier porting that recipe to the
 water_emb_ family + rebake of the water-visible emb plates (heavy master — serial).
 Queued as round 3's first build item.
+
+## 2026-08-07 ~18:10 — DELLHOLLOW GRAPHICS ROUND 3, items 2+3: BOTH CLAIMS NAMED THE WRONG OBJECT
+
+Board with before/afters + every instrument: docs/qa/dellhollow-graphics/index.html
+(round-3 section). Red-team fix loop, measure-first. Both worklist items were carried
+with an attribution that the instrument refuted, and that is the finding.
+
+ITEM 2 — deep-stairs "flat untextured cyan plane" was NOT a sheet the round-1 restore
+missed. Pixel ray-census on deep-stairs' own solved camera: the sheet is
+`water_pool-mid`, and the master census says it HAS the restored bake (Col present,
+t2ws set, 8648 verts, manifest median 4.10 / ramp x0.976). All four m_water sheets
+carry it. What is flat is the BED: a down-ray census under the camera's whole visible
+water band (x 38..58, y 21..31, walk + water hidden) returns z -3.90 — the untouched
+`riverbed` slab — in 108 of 121 cells, a CONSTANT 4.10 m of depth, which the ramp maps
+to its ceiling: alpha p10 0.641 / p50 0.970 / p90 0.970, 68.1% of the frame's water
+pixels >= 0.95. ONE FLAT DEPTH GIVES ONE FLAT ALPHA. water-transparency.md's own
+sentence governs — the bathymetry is the deliverable, the shader is the cheap part —
+and W2's three shelves (lockfive, boatyard, cottage-steps) were nominated by
+t2_probe_shore against the cameras that existed then; this reach was not one.
+FIX: tools/ds_shelf.py (new carrier) lays `t2w_bed_deep-stairs`, 496 verts / 450 quads
+of mat_rock over x 36..60 x y 20..32 — two incommensurate wavelengths + seeded jitter,
+tapered to the slab at its own border (76 free border verts, 0.000 m off the slab),
+clamped so it never comes within 0.75 m of the surface (cannot breach; wf_skiff_walk
+sits at z 0.37) and never sinks below terrain already there (bed + 0.06). Bed depth
+0.75 / 2.72 / 3.16 / 3.72 / 4.04 m where it was one number. Then the SHIPPED recipe,
+t2_water_shader.py -- save.
+THE ALPHA RECEIPT, re-sampled through the same cameras (168x96 rays, nearest-corner
+Col.a per water hit) — before -> after, p50 / p90 / share of water pixels >= 0.95:
+  deep-stairs  0.970 -> 0.758 · 0.970 -> 0.884 · 68.1% -> 0.0%  (range now 0.087..0.908)
+  waterfront   0.970 -> 0.970 · 0.970 -> 0.970 · 85.2% -> 55.8%
+  fishdock     0.970 -> 0.970 · 0.970 -> 0.970 · 95.7% -> 75.5%
+The ramp ceiling is GONE from deep-stairs entirely, and two sunlit cameras got a third
+to a fifth of their water off the ceiling as a side benefit.
+FAITHFULNESS GATE ON THE RE-BAKE: water_pool-mid's manifest entry is byte-identical
+(median 4.10, ramp x0.976, 8648 verts, 8196 samples, alpha 0.065..0.97) — the per-sheet
+ramp did not rescale, which is what proves no other camera's water moved by side effect.
+The only other town-wide delta: water_pool-downstream, 12 of 4290 verts, depth_min
+0.04->0.02, alpha_min 0.078->0.070 — those 12 rays land on `lf_dam_boil`, which
+boil_dress jittered AFTER round 1's water bake. Named, not hidden.
+
+ITEM 3 — the quay-west "deck sliver (ribbon edge-on)" is neither deck nor ribbon.
+Scanline extraction of the two bright strips (u 0.42..0.49 / v 0.423..0.436 and
+u 0.53..0.60 / v 0.449..0.456) then a pixel ray-census on those exact pixels: every hit
+is `qm_awning_3` / `qm_awning_4`, mat_qm_awning. Round 2's paving ribbon
+(`walk_e_market-stalls__lockhead_l0`, the ONE renderable walk record in the master) is
+not visible from that camera at all — 0 hits in a 336x192 census. Two structural
+defects, both in qm_build.py:
+ (1) PITCH. stall() takes the lip from awning_lip() (walk ground + AWN_CLEAR 2.24) and
+     the ridge as max(zc+2.30, lip+0.26); wherever headroom drives the lip the second
+     term wins, so the canvas ships with 0.26 m of fall over 0.98 m of depth — a 15 deg
+     sheet. quay-west looks down at ~19 deg, within ~4 deg of the canvas, so it collapses
+     to a ~25 px strip, and as the only sunlit surface in a shadowed pocket it blows out
+     to near-white. (Round 1's blind judge had already filed "blown-out white awning/
+     stall panels" as a residual — same object, found by eye a round earlier.)
+ (2) WINDING. qm_awning_0/1/3/4 carried 0 of 12 faces pointing up; only qm_awning_2
+     (opposite sign on y) and every shelf_awning_* were right. awning() appends its
+     quads with one fixed winding, so the normals follow the sign of (y_out - y_wall).
+     CYCLES SHADES TWO-SIDED, WHICH IS WHY EVERY PLATE HID IT — the realtime tier's
+     backface culling would not have.
+FIX: tools/qm_awning_fix.py (new carrier; qm_build derives walls FROM walk records and
+must not run against the live master). Raises the RIDGE only, per awning, until the
+pitch reaches 0.52 m or the ray-cast finds something 0.12 m above it, and flips the
+winding. THE LIP DOES NOT MOVE — it is the headroom contract and the gate asserts it to
+1e-6. Result: fall 0.26 -> 0.52 m (15 -> 28.0 deg) on 0/1/3/4; 0.26 -> 0.30 m (17.1 deg)
+on awning 2, capped by qm_notice_board measured above it; 12/12 up-faces on all five.
+Headroom under awning 3's lip stays the measured 2.29 m over qm_paving (district rule
+2.24, master corridor 2.05).
+
+ITEM 2, ITERATION 2 — REFUSED BY ITS OWN SEARCH, AND THAT IS THE RECEIPT. Iteration 1
+was LOOKED AT, not just measured: over the deep-stairs water mask the plate moved
+L mean 103.2 -> 94.8, sd 10.94 -> 9.07. Darker, less saturated, NO MORE STRUCTURE. The
+bathymetry is real and it is not what this frame needed — the pool is in full shadow, so
+what a partly transparent surface reveals is UNLIT rock and the composite is one tone
+either way. So iteration 2 took the other lever (put something IN the water, the way
+fishdock — same material, same shader, judged CONVINCING — is broken by piles, a skiff
+and a boat): tools/ds_rocks.py SEARCHES boulder sites rather than authoring them. 608
+candidates on a 0.5 m grid, each asked in order — >= 1.20 m of water under it · nothing
+non-terrain within CLEAR · INSIDE THE FRAME · the camera's ray reaches it through the
+surface. ZERO SURVIVORS at CLEAR 0.85 / 0.60 / 0.40 m (52 too shallow · 416/389/356
+within a prop · 107/126/145 outside the frame · 33/41/55 behind something). The wharf
+fills the reach; the water this camera sees is all under it. The script's own assertion
+refuses to hand-place, so the master carries NO boulders.
+AND THE SEARCH'S FIRST DRAFT PAID FOR THE SAME LESSON THIS REPO KEEPS BUYING: it found
+six sites and EVERY ONE projected to v > 1.10 — below the bottom edge of the frame. It
+tested "unobstructed ray" and never tested "in frame" (seam-canon 10.3, that exact
+distinction). The in-frame test is now the fourth gate.
+RESIDUAL, NAMED: the deep-stairs pool still reads flatter than fishdock's and the
+measured reason is LIGHT, not depth — no glint, no ripple highlight, no reflection,
+because nothing lights it; and the one geometric lever left has nowhere to stand. That
+hands round 3's item 4 a specific target on its own doctrine ("ADD a source"): a lamp
+over this pool, not another bake.
+
+BLIND VERDICT (fresh Anthropic-side judge, shuffled anonymized pack via blind_pack, no
+history, no ownership framing, $0 external): quay-west AFTER 7/10 vs BEFORE 5/10. Verbatim
+on the before: "a bright white/pink diagonal streak crossing the plaza floor ... no clear
+source or geometric logic — reads as a rendering artifact/glare streak, not a scene element"
+/ "floating line with no attachment to any geometry". The judge chose the after for exactly
+that reason. NEW RESIDUAL from the same judge, present in BOTH plates so not a regression:
+"the teal-blue flat panel on the plaza floor, center of frame ... flat, unshaded, no material
+texture, looks like a placeholder plane rather than a built prop" — measured to be
+`qm_stall_3`'s painted board (mat_qm_paint_blue). Filed for round 4.
+
+PLATES: frustum census (112x64 rays/camera against the changed objects) named 11 of 15
+affected — deep-stairs, quay-west, gate, loop-stairs, lockhead, crossing, weave, waterfront,
+fishdock, north-landing, lockfive (shelf-east, shelf-west, cottage, boatyard CLEAN). All 11
+re-baked 1-WIDE SERIAL, 144.9-235.5 s each (round 1's baseline was 2.7-3.2 min, so no
+contention with the emberbrook lane's own bake, which is the doctrine's own test). Per-plate
+mean |delta| ran 0.011-1.107/255, every one localized to the changed objects: no regrade,
+no camera drift. del-cine GLB re-exported (walk=275).
+
+GATES on the final artifacts: walk_engine_gate del-cine GREEN (file 4097 = engine 4097
+cells, 0 lost, BVH FAIL 0) · routes_derive --check clean (15 shots) · findability 69/0 ·
+slice 776/0 · cine_test 635/1 — the 1 is the PRE-ATTRIBUTED deep-stairs<->waterfront seam
+red (MORNING.md 20:20), unchanged and present before this round.
+
+NOT DONE, deliberately: public/assets/scenes/townwalk/scene.glb was already dirty in the
+shared tree from another lane when this round started, so the realtime tier was NOT
+re-exported off this master. The two edits are a submerged bed and an awning pitch — neither
+moves a walk record — but the bundle now lags the master by them, and whoever owns that
+working copy should re-export from the master they intend to ship (town_export.py), never
+`git checkout` it.
