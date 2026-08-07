@@ -2,8 +2,17 @@
 
     Blender -b tools/blends/emberbrook-dressed.blend --python-exit-code 1 \
         -P tools/emb_brookchop.py -- [save] [revert save]
-        [--zclamp 0.12] [--zsmooth 60] [--xysmooth 6] [--xyclamp 0.28]
+        [--zclamp 0.12] [--zsmooth 0] [--xysmooth 6] [--xyclamp 0.28]
         [--skirt 0.90] [--bury 0.03] [--sheets a,b]
+
+AS SHIPPED, 2026-08-07: `-- save` on `emberbrook-dressed.blend` (every default as
+written), and `-- --xysmooth 0 save` on `emberbrook-realtime.blend` — see the last
+paragraph for why the two tiers differ.  RECEIPT: pondlane moved 0.538% of its pixels
+against the plate it replaced (83x what the depth->alpha shader pass moved), the moved
+region's median luminance went 0.051 -> 0.101 and its mean |gradient| 0.0080 -> 0.0065
+WITH NO LIGHT CHANGED, and two independent blind judges scored the result 7.5/10 against
+the shipped plate's 6.0 and 5.0, both describing the removed defect without being told
+what to look for.
 
 A CARRIER, NEVER A REBUILD (CLAUDE.md, the gate_rimchop rule).  Emberbrook is dressed;
 `emb_blockout` + `emb_dress` would re-derive 27 M triangles to move five sheets.  This
