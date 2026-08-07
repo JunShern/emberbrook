@@ -88,16 +88,33 @@ WHAT THIS FILE MAY NOT DO: it must not move a top surface more than `--zclamp`, 
 move any vertex in XY more than `--xyclamp`, and must not put a water surface below its
 own bed.  All three are asserted after the edit, per sheet, and printed.
 
-Idempotent and invertible: pre-edit geometry lives in each object's `embbc` prop, so
-`revert save` restores it whatever the flags were.  Receipt at
-tools/blends/districts/emb_brookchop.json every run.
+Invertible, and NOT IDEMPOTENT — read this before running it twice.  The weld and the
+seat are both fixed points (a welded mesh re-welds to itself, a seated bottom re-seats to
+the same bed), but `--xysmooth` RELAXES AGAIN: a second run moves the boundary another
+`--xyclamp` because the clamp is measured against THAT run's starting position.  To re-run
+with different flags, `revert save` FIRST.  Pre-edit geometry lives in each object's
+`embbc` prop, so the revert is exact.  Receipt at
+tools/blends/districts/emb_brookchop.<blend>.json every run — one per blend, because this
+carrier is run against both tiers.
+
+THE REALTIME TIER TAKES THE WELD AND THE SEAT, NOT THE SILHOUETTE (shipped
+`--xysmooth 0`).  `emberbrook-realtime.blend` carries the same sheets after
+`emb_decimate`, and decimation tilts faces out of the up-ring: the brook reports 924
+boundary vertices of 1042 and a 570 m top-ring boundary against the dressed tier's 438 and
+241 m.  On that mesh "the boundary loop" is largely interior seams, and relaxing them
+would tear the surface rather than round a staircase.  The air gap is the defect that
+carries; the silhouette relaxation is refused where the instrument cannot see one.
 """
 import bpy, sys, os, json, bmesh, math
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 REPO = "/Users/junshernchan/projects/multiplayer-rpg"
-MANIFEST = os.path.join(REPO, "tools/blends/districts/emb_brookchop.json")
+# ONE RECEIPT PER BLEND. This carrier runs against BOTH tiers (the dressed plate master
+# and emberbrook-realtime.blend) and a single filename let the second run overwrite the
+# first's numbers, which is exactly the kind of quiet loss a receipt exists to prevent.
+MANIFEST = os.path.join(REPO, "tools/blends/districts/emb_brookchop.%s.json"
+                        % os.path.splitext(os.path.basename(bpy.data.filepath or "unknown"))[0])
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 SAVE = "save" in argv
@@ -344,6 +361,15 @@ for o in sorted(WOBJ, key=lambda x: x.name):
     bot_faces = set(minus if zp > zm else plus)
     top_v = sorted({v for i in top_faces for v in me.polygons[i].vertices})
     bot_v = sorted({v for i in bot_faces for v in me.polygons[i].vertices})
+    # A VERTEX THAT IS BOTH A TOP AND A BOTTOM IS NOT SEATABLE, and on this town's other
+    # tier it is not hypothetical: `emberbrook-realtime.blend` carries the SAME sheets
+    # after `emb_decimate`, and its collapsed triangles put 375 vertices in both rings.
+    # Seating one of those writes the bed height onto a surface vertex — measured, the
+    # first run against the realtime tier moved a TOP vertex 0.900 m and the z clamp
+    # caught it. Only bottom-exclusive vertices are seated; the count is printed, so a
+    # tier where the rings have fused says so instead of being quietly half-seated.
+    shared = sorted(set(top_v) & set(bot_v))
+    bot_only = [v for v in bot_v if v not in set(shared)]
     world = [M @ v.co for v in me.vertices]
     z0 = {vi: world[vi].z for vi in top_v}
     xy0 = {vi: (world[vi].x, world[vi].y) for vi in range(len(world))}
@@ -439,7 +465,7 @@ for o in sorted(WOBJ, key=lambda x: x.name):
     for vi in top_v:
         tk.setdefault((round(xy0[vi][0], KEY), round(xy0[vi][1], KEY)), vi)
     paired = 0
-    for vi in bot_v:
+    for vi in bot_only:
         p = tk.get((round(xy0[vi][0], KEY), round(xy0[vi][1], KEY)))
         if p is None:
             continue
@@ -448,7 +474,7 @@ for o in sorted(WOBJ, key=lambda x: x.name):
 
     # ============================================================ 3. SEAT =====
     capped, bedless, seated, depths = 0, 0, 0, []
-    for vi in bot_v:
+    for vi in bot_only:
         p = tk.get((round(xy0[vi][0], KEY), round(xy0[vi][1], KEY)))
         topz = world[p].z if p is not None else world[vi].z + 0.12
         b = bed_under(world[vi].x, world[vi].y, topz)
@@ -513,6 +539,7 @@ for o in sorted(WOBJ, key=lambda x: x.name):
         top_z_span_after=[round(min(wnow[vi].z for vi in top_v), 3),
                           round(max(wnow[vi].z for vi in top_v), 3)],
         seated=seated, capped=capped, bedless=bedless,
+        ring_shared_verts=len(shared), bottom_only_verts=len(bot_only),
         surface_below_bed=[below0, below], restored_to_shipped_z=lifted,
         boundary_perimeter=[round(perim0, 2), round(perim(wnow), 2)],
         wall_height_min=round(min(depths), 3) if depths else None,
