@@ -17021,3 +17021,15 @@ re-exported off this master. The two edits are a submerged bed and an awning pit
 moves a walk record — but the bundle now lags the master by them, and whoever owns that
 working copy should re-export from the master they intend to ship (town_export.py), never
 `git checkout` it.
+
+CALIBRATED JUDGE, re-run on the two plates (scene_redteam --mode checklist --shots
+deep-stairs,quay-west, judge pinned gemini-3.6-flash, 4 calls, 0 errors,
+run-20260807-round3): DEEP-STAIRS WATER-READ FAILING -> WEAK. The verbatim residual is the
+one this round already named — "reads as a flat teal plane without normal ripples,
+refraction in the shallows" — i.e. LIGHT, not depth; the "untextured cyan plane, hard
+polygonal edges" charge is gone. deep-stairs frame-edge CONVINCING; quay-west frame-edge
+WEAK -> CONVINCING ("the cliff walls, rock geometry, and constructed decks believably fill
+the scene to every edge of the frame"). quay-west water-read stays FAILING and it is NOT a
+regression: "there is no water surface rendered anywhere around or beneath the quay deck" is
+true — the census finds ZERO water pixels in that frustum. Same standing item as
+run-20260806-1's "lower gorge completely black", and it is a camera-ownership question.

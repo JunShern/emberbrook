@@ -294,5 +294,22 @@ kind of thing that instantly reads as broken/unfinished to a player."<br><br>
 rather than a built prop." That is <code>qm_stall_3</code>'s painted board
 (<code>mat_qm_paint_blue</code>), measured by the same ray-census. Filed for round 4, not
 touched here.</div>
+
+<h2>Calibrated judge, re-run on the two plates</h2>
+<div class="verdict"><code>tools/scene_redteam.mjs --mode checklist --shots
+deep-stairs,quay-west</code>, judge pinned <code>gemini-3.6-flash</code>, 4 calls, 0 errors —
+<code>docs/qa/redteam/run-20260807-round3/</code>.<br><br>
+<b>deep-stairs water-read: FAILING &rarr; WEAK.</b> Was "flat untextured cyan plane, hard
+polygonal edges" (run-20260806-1). Now, verbatim: "The water surface reads as a flat teal
+plane without normal ripples, refraction in the shallows" — the polygonal-edge and
+untextured-cyan charges are gone, and what remains is <b>exactly the residual named above:
+ripples and highlights, which need a light, not more depth</b>.<br><br>
+<b>deep-stairs frame-edge: CONVINCING. quay-west frame-edge: WEAK &rarr; CONVINCING</b> —
+"The cliff walls, rock geometry, and constructed decks believably fill the scene to every
+edge of the frame".<br><br>
+<b>quay-west water-read: FAILING, and it is not a regression.</b> "There is no water surface
+rendered anywhere around or beneath the quay deck" — correct, and the census agrees: this
+camera sees <b>zero</b> water pixels. That is the same standing item as run-20260806-1's
+"lower gorge completely black" and it is a camera-ownership question, not a water one.</div>
 </body>
 </html>

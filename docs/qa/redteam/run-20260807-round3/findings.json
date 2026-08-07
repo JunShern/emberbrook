@@ -1,0 +1,817 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "20260807-round3",
+ "generated": "2026-08-07T17:11:44.569Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": false,
+ "modes": [
+  "checklist"
+ ],
+ "n": 3,
+ "freshFrom": null,
+ "replaySources": {},
+ "plates": "public/assets/scenes/del-cine",
+ "cine": "public/assets/scenes/del-cine/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "quay-west",
+   "name": "The Harbour Deck",
+   "replayOf": null,
+   "baked": "2026-08-07T16:33:01Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-07T16:32:56.037Z",
+   "items": 17,
+   "char": null,
+   "checklist": [
+    {
+     "id": "cookhouse",
+     "src": "owns.landmark",
+     "what": "Cookhouse — a building (warm windows over the gorge at night; the tavern-warmth hub)",
+     "census": {
+      "u": 0.6472,
+      "v": 0.5751,
+      "z": 26.16,
+      "charPx": 79,
+      "on": true,
+      "plateZ": 26.27,
+      "state": "clear",
+      "behindBy": -0.11
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper right structure",
+      "bbox": [
+       0.65,
+       0,
+       0.98,
+       0.25
+      ],
+      "desc": "The large wooden building at the upper right with warm illuminated windows overlooking the canyon."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "notice-board",
+     "src": "owns.landmark",
+     "what": "Notice board — a prop",
+     "census": {
+      "u": 0.4369,
+      "v": 0.4527,
+      "z": 32.82,
+      "charPx": 63,
+      "on": true,
+      "plateZ": 32.78,
+      "state": "clear",
+      "behindBy": 0.04
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center deck edge",
+      "bbox": [
+       0.4,
+       0.47,
+       0.6,
+       0.64
+      ],
+      "desc": "Two wooden posting boards mounted on posts situated near the edge of the central platform."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quay-deck",
+     "src": "owns.landmark",
+     "what": "Harbor Deck — a plaza (social core; night-on-the-quay scene)",
+     "census": {
+      "u": 0.281,
+      "v": 0.4584,
+      "z": 32.45,
+      "charPx": 64,
+      "on": true,
+      "plateZ": 32.06,
+      "state": "clear",
+      "behindBy": 0.39
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center wooden plaza",
+      "bbox": [
+       0.05,
+       0.38,
+       0.55,
+       0.57
+      ],
+      "desc": "The main open wooden deck platform serving as the primary hub area."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "deep-stairs-head",
+     "src": "owns.landmark",
+     "what": "Deep Stairs (head) — a stairhead (quiet corner of the quay; the discreet route down. Hidden from player map.)",
+     "census": {
+      "u": 0.8186,
+      "v": 0.6165,
+      "z": 24.7,
+      "charPx": 84,
+      "on": true,
+      "plateZ": 24.69,
+      "state": "clear",
+      "behindBy": 0.02
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "right edge of central deck",
+      "bbox": [
+       0.63,
+       0.57,
+       0.78,
+       0.73
+      ],
+      "desc": "The top landing of the stairs leading down the cliff face on the right."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "market-stalls",
+     "src": "owns.landmark",
+     "what": "Market stalls — a stalls",
+     "census": {
+      "u": 0.1629,
+      "v": 0.4226,
+      "z": 34.92,
+      "charPx": 59,
+      "on": true,
+      "plateZ": 34.44,
+      "state": "clear",
+      "behindBy": 0.49
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper left pathway",
+      "bbox": [
+       0.16,
+       0.28,
+       0.25,
+       0.38
+      ],
+      "desc": "Small covered wooden stalls with hanging lanterns along the upper left path."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:quay-deck__cookhouse",
+     "src": "owns.edge",
+     "what": "the route between Harbor Deck and Cookhouse — a deck (RE-ROUTED 2026-08-02d with the door (see the cookhouse landmark's _redline): the approach hugs the same outer rail as the deep-stairs deck edge, so it reaches the north front instead of crossing the market to the building's blind south side. THE WAYPOINT IS LOAD-BEARING, not decoration: scenegraph_derive's streetDir takes the LAST waypoint as the street direction, and the return spawn is the doorstep plus 2.9 m along it. Left at (46.9,12) the spawn landed at (42.3,15.2) — inside the cookhouse's own footprint — and only the off-network search would have saved it.)",
+     "census": {
+      "u": 0.4445,
+      "v": 0.5105,
+      "z": 29.3,
+      "charPx": 71,
+      "on": true,
+      "plateZ": 24.61,
+      "state": "occluded",
+      "behindBy": 4.69
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper left ramp and stairs",
+      "bbox": [
+       0.2,
+       0.21,
+       0.34,
+       0.39
+      ],
+      "desc": "The stepped wooden path climbing the cliff face toward the upper structures."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:quay-deck__notice-board",
+     "src": "owns.edge",
+     "what": "the route between Harbor Deck and Notice board — a deck",
+     "census": {
+      "u": 0.3594,
+      "v": 0.4555,
+      "z": 32.63,
+      "charPx": 63,
+      "on": true,
+      "plateZ": 32.51,
+      "state": "clear",
+      "behindBy": 0.12
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center deck surface",
+      "bbox": [
+       0.35,
+       0.42,
+       0.52,
+       0.55
+      ],
+      "desc": "The direct deck path across the central plaza to the notice boards."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:quay-deck__deep-stairs-head",
+     "src": "owns.edge",
+     "what": "the route between Harbor Deck and Deep Stairs (head) — a deck (hugs the outer rail away from the market bustle)",
+     "census": {
+      "u": 0.5134,
+      "v": 0.5268,
+      "z": 28.58,
+      "charPx": 72,
+      "on": true,
+      "plateZ": 28.39,
+      "state": "clear",
+      "behindBy": 0.19
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "deck extending right",
+      "bbox": [
+       0.5,
+       0.52,
+       0.68,
+       0.65
+      ],
+      "desc": "The wooden walkway extending rightward from the main plaza to the stairhead."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:quay-deck__market-stalls",
+     "src": "owns.edge",
+     "what": "the route between Harbor Deck and Market stalls — a deck",
+     "census": {
+      "u": 0.2198,
+      "v": 0.4399,
+      "z": 33.69,
+      "charPx": 61,
+      "on": true,
+      "plateZ": 33.56,
+      "state": "clear",
+      "behindBy": 0.13
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "left side of main deck",
+      "bbox": [
+       0.12,
+       0.38,
+       0.3,
+       0.5
+      ],
+      "desc": "The deck section connecting the central plaza to the market stalls."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:deep-stairs-head__deep-stairs-foot@0..0.22",
+     "src": "owns.edge",
+     "what": "the route between Deep Stairs (head) and Deep Stairs (foot) — a stairs (the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight))",
+     "census": {
+      "u": 0.6384,
+      "v": 1.0984,
+      "z": 23.83,
+      "charPx": 87,
+      "on": false,
+      "state": "off-frame"
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower right cliff face",
+      "bbox": [
+       0.61,
+       0.63,
+       0.82,
+       0.99
+      ],
+      "desc": "The multi-flight staircase descending along the right cliff face."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "door:door:cookhouse",
+     "src": "doorPad",
+     "what": "a door / entrance you can go through (\"Enter Cookhouse\")",
+     "census": {
+      "u": 0.6472,
+      "v": 0.5751,
+      "z": 26.16,
+      "charPx": 79,
+      "on": true,
+      "plateZ": 26.27,
+      "state": "clear",
+      "behindBy": -0.11
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "cookhouse right facade",
+      "bbox": [
+       0.93,
+       0.1,
+       0.97,
+       0.2
+      ],
+      "desc": "A wooden door on the right side of the illuminated cookhouse building."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:market-stalls__lockhead",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards lockhead — a path that carries on out of the frame",
+     "census": {
+      "u": 0.0914,
+      "v": 0.4215,
+      "z": 35.01,
+      "charPx": 59,
+      "on": true,
+      "plateZ": 34.68,
+      "state": "clear",
+      "behindBy": 0.33
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper right frame edge",
+      "bbox": [
+       0.9,
+       0.18,
+       1,
+       0.26
+      ],
+      "desc": "The wooden elevated walkway continuing off the right edge of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:quay-deck__pilot-cluster",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards weave — a path that carries on out of the frame",
+     "census": {
+      "u": 0.0985,
+      "v": 0.5035,
+      "z": 30.27,
+      "charPx": 68,
+      "on": true,
+      "plateZ": 27.07,
+      "state": "occluded",
+      "behindBy": 3.2
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "far left deck edge",
+      "bbox": [
+       0,
+       0.42,
+       0.08,
+       0.5
+      ],
+      "desc": "The wooden walkway leading off the left border of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:deep-stairs-head__deep-stairs-foot",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards deep-stairs — a path that carries on out of the frame",
+     "census": {
+      "u": 0.6093,
+      "v": 0.8648,
+      "z": 22.85,
+      "charPx": 91,
+      "on": true,
+      "plateZ": 31.96,
+      "state": "clear",
+      "behindBy": -9.11
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "bottom right corner stairs",
+      "bbox": [
+       0.61,
+       0.85,
+       0.78,
+       1
+      ],
+      "desc": "The bottom steps of the deep stairs extending beyond the lower border."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:shelf-homes__market-stalls",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards loop-stairs — a path that carries on out of the frame",
+     "census": {
+      "u": 0.239,
+      "v": 0.2968,
+      "z": 36.59,
+      "charPx": 57,
+      "on": true,
+      "plateZ": 35.99,
+      "state": "clear",
+      "behindBy": 0.6
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper left staircase",
+      "bbox": [
+       0.22,
+       0.21,
+       0.32,
+       0.32
+      ],
+      "desc": "The ascending stone and wood steps leading out toward the upper cliff path."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "all frame borders",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "The cliff walls, rock geometry, and constructed decks believably fill the scene to every edge of the frame without unrendered gaps or cut-offs."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Harbor Deck). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.281,
+      "v": 0.4584,
+      "z": 32.45,
+      "charPx": 64,
+      "on": true,
+      "plateZ": 32.06,
+      "state": "clear",
+      "behindBy": 0.39
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "ground under harbor deck",
+      "bbox": [
+       0.05,
+       0.38,
+       0.55,
+       0.65
+      ],
+      "desc": "There is no water surface rendered anywhere around or beneath the quay deck, leaving only dry earth and rock beneath the structures."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "deep-stairs",
+   "name": "The Deep Stairs",
+   "replayOf": null,
+   "baked": "2026-08-07T16:33:01Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-07T16:29:55.441Z",
+   "items": 8,
+   "char": null,
+   "checklist": [
+    {
+     "id": "path:deep-stairs-head__deep-stairs-foot@0.22..1",
+     "src": "owns.edge",
+     "what": "the route between Deep Stairs (head) and Deep Stairs (foot) — a stairs (the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight))",
+     "census": {
+      "u": 0.5373,
+      "v": 0.4815,
+      "z": 26.88,
+      "charPx": 77,
+      "on": true,
+      "plateZ": 26.88,
+      "state": "clear",
+      "behindBy": 0
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "long zigzag staircase on cliff face",
+      "bbox": [
+       0.301,
+       0.328,
+       0.726,
+       0.951
+      ],
+      "desc": "The long wooden staircase zigzags down the central cliff face connecting upper and lower deck levels."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:deep-stairs-head__deep-stairs-foot",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards quay-west — a path that carries on out of the frame",
+     "census": {
+      "u": 0.5078,
+      "v": 0.2519,
+      "z": 26.65,
+      "charPx": 78,
+      "on": true,
+      "plateZ": 30.94,
+      "state": "clear",
+      "behindBy": -4.29
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "wooden walkway at bottom left",
+      "bbox": [
+       0,
+       0.837,
+       0.355,
+       0.996
+      ],
+      "desc": "The broad wooden pier extends off the left edge of the screen, providing an obvious pedestrian exit."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "cookhouse",
+     "src": "mapVisible",
+     "what": "Cookhouse — a building (warm windows over the gorge at night; the tavern-warmth hub)",
+     "census": {
+      "u": 0.5532,
+      "v": 0.113,
+      "z": 30.64,
+      "charPx": 68,
+      "on": true,
+      "plateZ": 28.9,
+      "state": "occluded",
+      "behindBy": 1.73
+     },
+     "judged": {
+      "verdict": "VISIBLE-BUT-ILLEGIBLE",
+      "where": "top center building structure",
+      "bbox": [
+       0.342,
+       0,
+       0.638,
+       0.137
+      ],
+      "desc": "While wooden buildings are visible along the upper cliff, none read clearly as a cookhouse or tavern hub without distinct features or glowing windows."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "weave-north",
+     "src": "mapVisible",
+     "what": "Westweave cluster — a building cluster (third stilt cluster, tucked under the quay's shadow)",
+     "census": {
+      "u": 0.2908,
+      "v": 0.3126,
+      "z": 30.69,
+      "charPx": 67,
+      "on": true,
+      "plateZ": 27.62,
+      "state": "occluded",
+      "behindBy": 3.07
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "building cluster on left under shadow",
+      "bbox": [
+       0,
+       0.161,
+       0.461,
+       0.715
+      ],
+      "desc": "The cluster of wooden stilt buildings nestled under the shadow of the upper quay is clearly visible on the left."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quay-deck",
+     "src": "mapVisible",
+     "what": "Harbor Deck — a plaza (social core; night-on-the-quay scene)",
+     "census": {
+      "u": 0.2535,
+      "v": 0.1457,
+      "z": 37.41,
+      "charPx": 55,
+      "on": true,
+      "plateZ": 20.45,
+      "state": "occluded",
+      "behindBy": 16.96
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "bottom left wooden harbor platform",
+      "bbox": [
+       0,
+       0.837,
+       0.355,
+       0.996
+      ],
+      "desc": "The wide wooden deck bordering the water on the lower left clearly forms the quay platform."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "market-stalls",
+     "src": "mapVisible",
+     "what": "Market stalls — a stalls",
+     "census": {
+      "u": 0.1547,
+      "v": 0.1545,
+      "z": 40.1,
+      "charPx": 52,
+      "on": true,
+      "plateZ": 38.24,
+      "state": "occluded",
+      "behindBy": 1.86
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "covered wooden booth under stilt house",
+      "bbox": [
+       0.203,
+       0.715,
+       0.396,
+       0.892
+      ],
+      "desc": "A small wooden stall structure with a roof and platform sits near the base of the central stilt building."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "entire outer boundary of the frame",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "JUDGMENT: The cliff rock face, wooden structures, and terrain consistently enclose the scene, holding up completely to every edge without abrupt cut-offs or missing geometry."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Harbor Deck). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.2535,
+      "v": 0.1457,
+      "z": 37.41,
+      "charPx": 55,
+      "on": true,
+      "plateZ": 20.45,
+      "state": "occluded",
+      "behindBy": 16.96
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "blue water at bottom left",
+      "bbox": [
+       0,
+       0.924,
+       0.488,
+       1
+      ],
+      "desc": "JUDGMENT: The water surface reads as a flat teal plane without normal ripples, refraction in the shallows, or proper contact foam along the shore and posts."
+     },
+     "suppressed": null
+    }
+   ]
+  }
+ ],
+ "raw": 3,
+ "survivors": [
+  {
+   "fid": "F3",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "quay-west",
+   "item": "quality:water-read",
+   "itemWhat": "[QUALITY] The water surface — this frame holds water (near Harbor Deck). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+   "verdict": "FAILING",
+   "quality": true,
+   "category": "immersion",
+   "where": "ground under harbor deck",
+   "bbox": [
+    0.05,
+    0.38,
+    0.55,
+    0.65
+   ],
+   "severity": 3,
+   "desc": "The water surface: FAILING — There is no water surface rendered anywhere around or beneath the quay deck, leaving only dry earth and rock beneath the structures.",
+   "census": null,
+   "hint": {
+    "region": "40.5,66,8.5,21.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 40.5,66,8.5,21.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "There is no rendered water surface beneath or surrounding the decks, revealing only dry rock and canyon ground."
+   },
+   "alsoOn": [
+    {
+     "shot": "deep-stairs",
+     "fid": "F2",
+     "desc": "The water surface: WEAK — JUDGMENT: The water surface reads as a flat teal plane without normal ripples, refraction in the shallows, or proper contact foam along the shore and posts."
+    }
+   ],
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F1",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "deep-stairs",
+   "item": "cookhouse",
+   "itemWhat": "Cookhouse — a building (warm windows over the gorge at night; the tavern-warmth hub)",
+   "verdict": "VISIBLE-BUT-ILLEGIBLE",
+   "category": "navigation",
+   "where": "top center building structure",
+   "bbox": [
+    0.342,
+    0,
+    0.638,
+    0.137
+   ],
+   "severity": 2,
+   "desc": "Cookhouse: VISIBLE-BUT-ILLEGIBLE — While wooden buildings are visible along the upper cliff, none read clearly as a cookhouse or tavern hub without distinct features or glowing windows.",
+   "census": {
+    "u": 0.5532,
+    "v": 0.113,
+    "z": 30.64,
+    "charPx": 68,
+    "on": true,
+    "plateZ": 28.9,
+    "state": "occluded",
+    "behindBy": 1.73
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The wooden structures along the upper cliff are generic modular buildings with no visual cues, such as smoke, open seating, or unique lighting, to identify them as a cookhouse."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  }
+ ],
+ "refuted": [],
+ "budget": {
+  "calls": 4,
+  "promptTok": 7472,
+  "replyTok": 11227,
+  "errors": 0,
+  "byStage": {
+   "checklist": 2,
+   "refute-checklist": 2
+  }
+ },
+ "bboxAgreement": {
+  "n": 15,
+  "hit": 7,
+  "frac": 0.467
+ },
+ "calibration": null
+}
