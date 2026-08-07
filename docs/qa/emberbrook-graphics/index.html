@@ -430,5 +430,54 @@ five plates that show water from the four that do not &mdash; and pass that frac
 the prompt. NOT EDITED HERE: <code>scene_redteam.mjs</code> is the shared judge and another
 lane is running against it in this window. Coordinator's call.</div>
 
+<h2>12. The family fix, taken — and validated</h2>
+<p class="note">The coordinator reassigned the arming fix once the Dellhollow lane closed.
+<code>quality:water-read</code> now arms on <b>measured visible water</b>:
+<code>waterFracOf(cam)</code> rasterises the scene bundle's own water surfaces through the
+shipped projection into a 168&times;96 z-buffer and agrees every covered cell against the
+plate's own <code>depth.png</code> &mdash; the same shape as the <code>skyFracOf</code>
+precedent this file already had. The fraction is passed <i>into the prompt</i>:
+"water covers about X% of this frame … judge ONLY those pixels … put the bbox on the water
+itself". <code>node tools/scene_redteam.mjs --town &lt;t&gt; --water-census</code> prints it
+for a whole town in ~2 s with no API.</p>
+
+<div class="meas"><b>The threshold is 0.5% of frame, and it is calibrated, not chosen.</b>
+Principle first: 0.5% of 1344&times;768 is 5,161 px &mdash; a ribbon FOUR PIXELS TALL across
+the frame, and "transparency toward the shallows, reflection, convincing bank contact" is
+not a question four pixels can answer. Then the calibration set agrees, mechanically:</p>
+<table>
+<tr><th>plate</th><th>water %</th><th></th><th>the verdict it had given</th></tr>
+<tr><td>dellhollow fishdock / waterfront / crossing / north-landing</td><td class="n">28.8 / 22.2 / 17.4 / 15.7</td><td>ARMED</td><td>crossing CONVINCING</td></tr>
+<tr><td>dellhollow lockfive / gate / boatyard / weave</td><td class="n">9.8 / 6.9 / 6.3 / 5.8</td><td>ARMED</td><td>CONVINCING, WEAK, –, CONVINCING</td></tr>
+<tr><td>dellhollow deep-stairs</td><td class="n">1.5</td><td>ARMED</td><td>round-3 FAILING&rarr;WEAK</td></tr>
+<tr><td><b>dellhollow quay-west</b></td><td class="n"><b>0.00</b></td><td><b>suppressed</b></td><td><b>FAILING: "No water surface is visible anywhere near the Harbor Deck"</b></td></tr>
+<tr><td>emberbrook pondlane / gatefield / square / northlane / homerow</td><td class="n">9.24 / 2.36 / 2.20 / 2.13 / 0.96</td><td>ARMED</td><td></td></tr>
+<tr><td><b>emberbrook gateroad / arch / therise</b></td><td class="n"><b>0.45 / 0.12 / 0.11</b></td><td><b>suppressed</b></td><td><b>all three FAILING, all three measured DISJOINT from every water pixel</b></td></tr>
+</table>
+<div class="verdict"><b>It reproduces a hand adjudication.</b> The earlier lane had already
+written that quay-west's FAILING is TRUE and not a regression because the census finds zero
+water in that frustum; the gate now reaches that conclusion mechanically and never asks.
+And <code>gatefield</code> arms for the FIRST time &mdash; the point test failing in the
+other direction. Tightest margin is gateroad 0.45% against homerow 0.96%, a 2x gap.</div>
+
+<h3>The validation ladder &mdash; three points, one variable each</h3>
+<table>
+<tr><th></th><th>pondlane <code>water-read</code></th><th>northlane <code>water-read</code></th></tr>
+<tr><td>old plate, old arming</td><td>FAILING</td><td>not asked</td></tr>
+<tr><td><b>new plate</b>, old arming</td><td>FAILING &mdash; bbox moved onto a gravel path, 0 water px</td><td>not asked</td></tr>
+<tr><td>new plate, <b>new arming</b></td><td><b>WEAK</b></td><td><b>CONVINCING</b></td></tr>
+</table>
+<div class="verdict">northlane's is <b>the first <code>quality:water-read</code> CONVINCING
+this town has ever had</b> (the class opened 0 CONVINCING / 5 FAILING), its bbox is
+<b>43.5% brook</b> &mdash; the judge is finally looking at the water it is judging &mdash;
+and its words are about the geometry this round fixed: "clear transparency revealing
+submerged ground rocks and forms convincing edge contacts with the surrounding terrain."</div>
+<div class="warn"><b>RESIDUAL, named honestly: pondlane's WEAK bbox still holds ZERO water
+pixels.</b> The gate armed pondlane at 9.24%, but 5.5 of those points are the pond BEHIND
+THE WILLOW: cine_bake's depth pass does not record alpha-cut leaf cards, so this census
+over-counts &mdash; in exactly the direction its own source comment declares (a gate that
+over-counts water suppresses less than it should, never more). Closing it needs a
+beauty-pass test, not a depth-pass one.</div>
+
 </body>
 </html>
