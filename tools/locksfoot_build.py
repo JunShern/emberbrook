@@ -757,6 +757,17 @@ if "deck" in DO:
         py = y + out
         while py < y + 1.2 and COR.top_at(x, py) is not None:
             py += 0.04
+        # A GUARD THAT COULD NOT GET OUTBOARD MUST NOT BE BUILT (2026-08-07, measured).
+        # This walk gives up at 1.2 m and, before this line, PLANTED THE POST ANYWAY —
+        # so the log line below ("none in a walking line") was a claim the code did not
+        # make true.  It came due when the searched moorage flight's hairpin landing
+        # moved out over the water inside this band: `_court_probe --who` named
+        # `lf_railings` on 7 cells at x 69.3..69.7, z -29.7..-30.3, and the climb up the
+        # flight STALLED there (23/23 down, 11/23 up) while the fill still called it one
+        # component.  Same family as lay_stair_rails' dropped stub: a guard standing in
+        # a walking line is worse than a missing guard.
+        if COR.top_at(x, py) is not None:
+            return None
         return (x, py, z)
 
     rails = []

@@ -17884,3 +17884,111 @@ Its residual list is useful and none of it is water: a flat tan roof panel top-l
 brown untextured slab under the canopy, "faceted low-poly" stepping stones up the left path,
 and a hard-edged pale grey panel embedded in the lawn — the same undressed-massing family as
 the `lm_field_*` finding above.
+
+## 2026-08-07 — THE MOORAGE WEST ARM IS OPEN, AND THE SEARCH GREW THE ORACLE THAT WOULD HAVE SAVED IT
+
+The 20:05 residual (15d26c3) taken up and BUILT. Option (a): the l2 waypoint and the foot
+re-searched, with the oracle that iteration 9 did not have. Everything below is measured;
+every connectivity claim is `tools/_court_probe.mjs --scene del-cine` against the SHIPPED
+bundle in the RUNNING engine, never a file walker.
+
+**THE ORACLE FIRST, BECAUSE THE DEFECT WAS THE ORACLE.** `moorage_search.py` lived in a
+scratchpad with roof/art/self oracles and no west-arm oracle at all, so the searched flight
+was free to land on the west boardwalk BY CONSTRUCTION. It is now `tools/moorage_search.py`,
+in git, and it carries **westarm**: the corridor (the moorage landmark's own west-store rect,
+the four 2026-08-05 westlink rects and the pier rect) is lattices at 0.15 m; each cell's
+floor is measured off the WALK RECORDS ONLY (a del-* scene is WALKLOCK — grounding a search
+on art is the 2026-08-06 arrivals lesson); the body window is play3d's own
+`[fy+STEP_UP+0.02, fy+BODY_H]`; a cell is blocked when a tread or landing slab enters that
+window with the body's 0.30 m half-width added in plan, because `blocked()` tests a BOX. The
+candidate is REJECTED unless the clear cells still flood-fill from the west store to the pier.
+
+**ITS TEST IS THE TWO FLIGHTS WHOSE VERDICT WAS ALREADY MEASURED IN THE ENGINE**, which is
+the only kind of self-test worth having here (`-- selftest`, 693 corridor cells):
+
+    A  no flight at all       693/693 clear, fill reaches all 336 pier cells   CONNECTED
+    B  the shipped it.9 line  543/693 clear, fill reaches 270, pier cells 0    SEVERED
+       tightest slab 0.63 m of headroom under t06 — the engine measured 0.64
+    C  the pre-it.9 line      640/693 clear, fill reaches 640, pier 315        CONNECTED
+
+C is the load-bearing case: it blocks 53 cells and still connects, because the westlink rects
+were SHAPED to dodge that line's t03/t04. **So the oracle had to be a connectivity test and
+not a headroom threshold** — a min-headroom rule would have rejected the very line the
+corridor was solved against.
+
+**WHAT THE SWEEP FOUND, AND THE FINDING IS IN THE REJECTIONS.** 8085 candidates over wp2
+(x 68.6..75.6, y 26.9..31.9, z 3.2..5.0) x foot y 28.1..31.1: 5406 rejected on grade,
+**1696 on west-arm**, 983 survivors, 40 clean of roof+art+self. **Every candidate with the
+foot at y 28.1 was rejected** — with the foot where the map had it the flight MUST cross the
+corridor at deck height, at any pivot. Moving the foot 2.5 m south along the pier is what
+opens the arm. A 0.25 m fine grid around the basin (`-- search fine`) gave 51 clean and
+picked the winner on iteration 9's own rule, clean-neighbourhood robustness then gentlest leg:
+
+    wp2  [70.1, 29.4, 4.1] -> [68.85, 30.4, 3.95]     foot [76.2, 28.1] -> [76.2, 30.6]
+    grades 0.47 / 0.21 / 0.41 / 0.07   clean neighbours 9/27
+    corridor cells lost, per rect (`-- detail`, oriented boxes):
+        SHIPPED   west-store 0/140  link1 0/59  link2 31/147  link3 44/56  link4 52/52  pier 63/336
+        NEW       west-store 0/140  link1 0/59  link2  0/147  link3  4/56  link4  6/52  pier  0/336
+    **link4 52/52 is the severance in one number**, and it is now 6/52.
+
+Measured on the MASTER AS BUILT (not the model): 672 of 693 cells clear, the west store
+reaching all 326 pier cells, and **exactly one record left in the window — `l2_t05`, 21 cells**
+(AABB, so conservative against a rotated tread). Rails do not appear: `lay_stair_rails` clips
+them against `walk_lm_*`, which is why the oracle excludes them and why that exclusion had to
+be checked against the build rather than assumed.
+
+**A SECOND DEFECT, FOUND ONLY BY THE DRIVE.** With the flight rebuilt, the descent walked
+23/23 and the CLIMB stalled 11/23 at the wp2 hairpin. `--who` over the junction named
+**`lf_railings` on 7 cells at x 69.3..69.7, z -29.7..-30.3**. `locksfoot_build.py`'s
+`outer_edge()` walks a guard post outboard of the deck's river lip, gives up after 1.2 m —
+**and planted the post anyway**. Its own log line has always read "every post set outboard by
+search, none in a walking line"; the code did not make that true, and nothing came due until
+this flight's landing moved out over the water inside that band. Fixed by refusing the post
+(`if COR.top_at(x, py) is not None: return None`) — the same rule `lay_stair_rails` already
+applies to a stub. A guard standing in a walking line is worse than a missing guard.
+
+**AND A THIRD, PAID FOR IN 345 OBJECTS.** `locksfoot_build.py -- deck` and
+`weave_build.py -- deck` CLEAR THE WHOLE DISTRICT'S `lf_*` / `wv_*` and rebuild only their own
+phase: a deck-only run took lf 108 -> 6 and wv 38 -> 5 (barges, lanterns, cleats, mooring
+posts, the lock machinery, the boats). Caught by counting the file, not by the log, which
+printed a clean "REBUILD 220 lf_ objects cleared" and nothing else. Restored from a pre-flight
+copy and re-run with `-- all`. **A PHASE FLAG THAT SCOPES THE BUILD BUT NOT THE CLEAR-OUT IS A
+DELETE COMMAND**; run these builders with `all` or not at all.
+
+**THE DRIVE BATTERY, BOTH WAYS, ON THE SHIPPED del-cine BUNDLE** (redline's numbers in
+brackets):
+
+    the flight, tread by tread (22 built records)   23/23 down  23/23 up
+    the deck lane west <-> east                       6/6   [was 1/6, stalled 71.99]
+    tenant lane -> west store deck                    5/5   [5/5, a legal step DOWN]
+    tenant-shack lane                                 3/3 both ways
+    moorage__lock-five lane                           3/3 both ways
+    reach_probe westdeck <-> maren        REACHED BOTH WAYS  [was no-path BOTH ways]
+    reach_probe weststore <-> maren       REACHED BOTH WAYS
+    --comp: west deck, moorage and lock-five are ONE 547-cell component from all three
+            seeds  [was a 92-cell island against the town's 3875]
+
+**RESIDUAL, NAMED, PRE-EXISTING AND NOT THIS FLIGHT'S:** climbing from the west store back UP
+onto `walk_pad_tenant-shack` still stalls at [71.4, 1.25, -28.00] on `lf_planking` — that is
+the 2026-08-05 westlink note's own 0.72 m step, 0.16 m past STEP_UP, the reason the plank link
+was built. It is no longer a PIT, because the boardwalk east is open 6/6 and the whole west
+deck is in the town's component; it is a step you walk around. Fixing it is a pad-height edit
+on `tenant-shack`, its own job.
+
+**RE-DERIVED IN THE SAME WINDOW** (STAIRS_V2's law — an edge joins a flight only when its
+district builder re-runs): town_blockout -> `walk_rederive --edge weave-huts__moorage save`
+(26 records withdrawn, 31 installed) -> weave_build all -> locksfoot_build all -> cx_build ->
+lantern_reseat (which caught the re-placed `lf_lantern_1` again, digest-faithful) ->
+town_export -> `cine_bake --glb`. cine_solve/routes/scenegraph iterated to a FIXED POINT
+(converged in 1). **Only ONE camera moved: lockfive, 0.335 u.**
+
+GATES: walk_engine_gate **GREEN on BOTH bundles**, 0 cells lost, `SIM.bvh().fail 0` ·
+slice 776/0 · findability 69/0 · story green · dialogue green · routes --check clean ·
+cine_solve/scenegraph --check clean · seam_test 266/4 and seam_walk 8/9 (both at their
+2026-08-06 baselines) · cine_test 633/3 = the pre-attributed deep-stairs<->waterfront seam
+red, plus two that the bake closes (scenegraph-stale and lockfive baked!=solved).
+
+PLATES: the ray-cast, not the frustum, decided the bake list. An angular frustum test called
+seven cameras affected; casting from each solved eye to all 22 rebuilt records in the master
+(the bake's own oracle) says gate 0/22 and lockhead 0/22 see NOTHING, and the real list is
+north-landing 18/22, fishdock 10/22, weave 9/22, lockfive 7/22, crossing 5/22.

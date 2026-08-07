@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-06T21:33:33Z",
+ "generated": "2026-08-07T19:47:39Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -4001,7 +4001,7 @@
       -24.27
      ],
      "from": "lockfive",
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.143:lockfive>weave",
      "aim": [
       -0.948,
       0.319
@@ -4158,7 +4158,7 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.182:weave>lockfive",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.143:weave>lockfive",
      "screen": {
       "behind": false,
       "ndc": [
@@ -4362,15 +4362,15 @@
      ]
     },
     {
-     "id": "weave:weave-huts__moorage@0..0.182",
+     "id": "weave:weave-huts__moorage@0..0.143",
      "class": "stairs",
      "from": "node:weave-huts",
      "to": "node:moorage",
      "t": [
       0,
-      0.182
+      0.143
      ],
-     "length": 3.893,
+     "length": 3.868,
      "points": [
       [
        71.45,
@@ -4378,17 +4378,17 @@
        -24
       ],
       [
-       73.14,
+       73.13,
        7.04,
-       -24.57
+       -24.56
       ],
       [
-       74.82,
-       6.25,
-       -25.14
+       74.8,
+       6.26,
+       -25.13
       ]
      ],
-     "source": "map edge weave-huts__moorage@0..0.182",
+     "source": "map edge weave-huts__moorage@0..0.143",
      "role": "spine",
      "connects": [
       "entry:seam:weave-huts__moorage",
@@ -4624,8 +4624,8 @@
    "measure": {
     "routeSamples": 38,
     "routeInFramePct": 100,
-    "routeLen": 53.352,
-    "spineLen": 42.156,
+    "routeLen": 53.327,
+    "spineLen": 42.131,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -6405,7 +6405,7 @@
       -29.15
      ],
      "from": "weave",
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.182:weave>lockfive",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.143:weave>lockfive",
      "aim": [
       -0.45,
       -0.893
@@ -6421,20 +6421,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.047,
-       -0.551
+       -0.013,
+       -0.547
       ],
       "px": [
-       641,
-       595
+       663,
+       594
       ],
       "onScreen": true,
-      "edgeMargin": 0.449,
-      "depth": 23.092,
-      "charPx": 90,
+      "edgeMargin": 0.453,
+      "depth": 22.872,
+      "charPx": 91,
       "headNdc": [
-       -0.047,
-       -0.327
+       -0.014,
+       -0.321
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6466,20 +6466,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.358,
-       -0.641
+       0.402,
+       -0.638
       ],
       "px": [
-       913,
-       630
+       942,
+       629
       ],
       "onScreen": true,
-      "edgeMargin": 0.359,
-      "depth": 19.377,
-      "charPx": 107,
+      "edgeMargin": 0.362,
+      "depth": 19.157,
+      "charPx": 108,
       "headNdc": [
-       0.365,
-       -0.376
+       0.41,
+       -0.37
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6511,20 +6511,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.217,
-       -0.205
+       -0.198,
+       -0.201
       ],
       "px": [
-       526,
-       463
+       539,
+       461
       ],
       "onScreen": true,
-      "edgeMargin": 0.783,
-      "depth": 37.059,
+      "edgeMargin": 0.799,
+      "depth": 36.838,
       "charPx": 56,
       "headNdc": [
-       -0.22,
-       -0.064
+       -0.2,
+       -0.058
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6558,24 +6558,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+     "via": "del-cine>del-cine@cut:weave-huts__moorage:0.143:lockfive>weave",
      "screen": {
       "behind": false,
       "ndc": [
-       0.179,
-       0.199
+       0.211,
+       0.209
       ],
       "px": [
-       792,
-       308
+       814,
+       304
       ],
       "onScreen": true,
-      "edgeMargin": 0.801,
-      "depth": 25.25,
-      "charPx": 82,
+      "edgeMargin": 0.789,
+      "depth": 25.029,
+      "charPx": 83,
       "headNdc": [
-       0.182,
-       0.413
+       0.214,
+       0.425
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6611,20 +6611,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.356,
-       -0.877
+       0.404,
+       -0.876
       ],
       "px": [
-       911,
-       721
+       943,
+       720
       ],
       "onScreen": true,
-      "edgeMargin": 0.123,
-      "depth": 17.774,
-      "charPx": 116,
+      "edgeMargin": 0.124,
+      "depth": 17.554,
+      "charPx": 118,
       "headNdc": [
-       0.363,
-       -0.592
+       0.412,
+       -0.588
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6660,20 +6660,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.24,
-       -0.155
+       -0.222,
+       -0.15
       ],
       "px": [
-       510,
-       443
+       523,
+       442
       ],
       "onScreen": true,
-      "edgeMargin": 0.76,
-      "depth": 39.597,
-      "charPx": 52,
+      "edgeMargin": 0.778,
+      "depth": 39.376,
+      "charPx": 53,
       "headNdc": [
-       -0.243,
-       -0.022
+       -0.224,
+       -0.017
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6683,20 +6683,20 @@
    ],
    "routes": [
     {
-     "id": "lockfive:weave-huts__moorage@0.182..1",
+     "id": "lockfive:weave-huts__moorage@0.143..1",
      "class": "stairs",
      "from": "node:weave-huts",
      "to": "node:moorage",
      "t": [
-      0.182,
+      0.143,
       1
      ],
-     "length": 16.926,
+     "length": 21.993,
      "points": [
       [
-       74.82,
-       6.25,
-       -25.14
+       74.8,
+       6.26,
+       -25.13
       ],
       [
        76.2,
@@ -6704,44 +6704,54 @@
        -25.6
       ],
       [
-       74.68,
-       5.23,
-       -26.55
+       74.73,
+       5.27,
+       -26.56
       ],
       [
-       73.15,
-       4.85,
-       -27.5
+       73.26,
+       4.94,
+       -27.52
       ],
       [
-       71.63,
-       4.47,
-       -28.45
+       71.79,
+       4.61,
+       -28.48
       ],
       [
-       70.1,
-       4.1,
-       -29.4
+       70.32,
+       4.28,
+       -29.44
       ],
       [
-       71.63,
-       3.39,
-       -29.07
+       68.85,
+       3.95,
+       -30.4
       ],
       [
-       73.15,
-       2.68,
-       -28.75
+       70.69,
+       3.28,
+       -30.45
       ],
       [
-       74.68,
-       1.96,
-       -28.42
+       72.53,
+       2.6,
+       -30.5
+      ],
+      [
+       74.36,
+       1.93,
+       -30.55
       ],
       [
        76.2,
        1.25,
-       -28.1
+       -30.6
+      ],
+      [
+       76.15,
+       1.13,
+       -28.8
       ],
       [
        76.09,
@@ -6749,7 +6759,7 @@
        -27
       ]
      ],
-     "source": "map edge weave-huts__moorage@0.182..1",
+     "source": "map edge weave-huts__moorage@0.143..1",
      "role": "link",
      "connects": [
       "exit:seam:weave-huts__moorage"
@@ -6939,10 +6949,10 @@
     ]
    },
    "measure": {
-    "routeSamples": 29,
+    "routeSamples": 31,
     "routeInFramePct": 100,
-    "routeLen": 41.058,
-    "spineLen": 41.058,
+    "routeLen": 46.125,
+    "spineLen": 46.125,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -6950,7 +6960,7 @@
     "exitsAtFrameEdge": [
      "seam:tenant-shack__fish-dock"
     ],
-    "minCharPx": 52,
+    "minCharPx": 53,
     "visibleFrac": 0.6406
    }
   },
@@ -7225,15 +7235,15 @@
    "edge": "weave-huts__moorage",
    "t": [
     0,
-    0.182
+    0.143
    ],
-   "metres": 3.557,
+   "metres": 3.539,
    "cameraUp": "weave",
    "floorOwnedBy": "lockfive",
    "at": [
-    73.14,
+    73.13,
     7.04,
-    -24.57
+    -24.56
    ]
   },
   {
@@ -7327,6 +7337,8 @@
    ]
   }
  ],
- "warnings": [],
+ "warnings": [
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 1 of 15 plates are stale against the solve — lockfive (0.56u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+ ],
  "overrides": {}
 }

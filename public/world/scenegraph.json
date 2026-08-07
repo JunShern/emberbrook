@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-06T11:59:32Z",
+ "generated": "2026-08-07T19:47:41Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -3536,6 +3536,20 @@
        2.07
       ],
       [
+       76.95,
+       -28,
+       81.54,
+       -26.23,
+       1.07
+      ],
+      [
+       81.38,
+       -28.79,
+       87.03,
+       -26.41,
+       0.67
+      ],
+      [
        72.08,
        -25.47,
        73.31,
@@ -3578,130 +3592,116 @@
        6.04
       ],
       [
-       74.76,
-       -29.01,
-       76.51,
-       -26.96,
+       74.82,
+       -29.12,
+       76.61,
+       -26.95,
        5.67
       ],
       [
-       73.07,
-       -28.96,
-       74.82,
-       -26.91,
-       5.29
+       73.25,
+       -29.29,
+       75.04,
+       -27.13,
+       5.34
       ],
       [
-       71.37,
-       -28.91,
-       73.12,
-       -26.86,
-       4.92
+       71.68,
+       -29.47,
+       73.48,
+       -27.31,
+       5.01
       ],
       [
-       69.68,
-       -28.86,
-       71.43,
-       -26.82,
-       4.54
+       70.12,
+       -29.65,
+       71.91,
+       -27.48,
+       4.68
       ],
       [
-       70.28,
-       -31.88,
-       71.85,
-       -29.77,
-       4.17
+       68.55,
+       -29.83,
+       70.34,
+       -27.66,
+       4.35
       ],
       [
-       70.93,
-       -31.54,
-       72.5,
-       -29.43,
-       3.81
+       69.12,
+       -32.93,
+       70.37,
+       -30.8,
+       4.02
       ],
       [
-       71.58,
-       -31.2,
-       73.15,
-       -29.09,
-       3.46
+       70.04,
+       -32.77,
+       71.29,
+       -30.65,
+       3.63
       ],
       [
-       72.22,
-       -30.86,
-       73.8,
-       -28.75,
-       3.1
+       70.96,
+       -32.62,
+       72.21,
+       -30.49,
+       3.25
       ],
       [
-       72.87,
-       -30.53,
-       74.44,
-       -28.41,
-       2.74
+       71.88,
+       -32.47,
+       73.13,
+       -30.34,
+       2.86
       ],
       [
-       73.52,
+       72.8,
+       -32.32,
+       74.05,
        -30.19,
-       75.09,
-       -28.08,
-       2.39
+       2.48
       ],
       [
-       74.17,
-       -29.85,
-       75.74,
-       -27.74,
-       2.03
+       73.72,
+       -32.16,
+       74.97,
+       -30.04,
+       2.09
       ],
       [
-       74.82,
-       -29.51,
-       76.39,
-       -27.4,
-       1.68
+       74.64,
+       -32.01,
+       75.89,
+       -29.89,
+       1.71
       ],
       [
        75.1,
-       -28.18,
-       77.24,
-       -26.84,
+       -30.47,
+       77.43,
+       -26.9,
        1.32
       ],
       [
        75.54,
-       -28.78,
-       77.2,
-       -25.38,
+       -28.72,
+       77.23,
+       -25.37,
        5.6
       ],
       [
-       68.81,
-       -31.88,
-       71.6,
-       -27.43,
-       4.1
+       67.76,
+       -32.79,
+       70.09,
+       -28.54,
+       3.95
       ],
       [
-       75.54,
-       -28.67,
-       77.19,
-       -27.08,
+       75.41,
+       -31.39,
+       77.38,
+       -29.42,
        1.25
-      ],
-      [
-       76.95,
-       -28,
-       81.54,
-       -26.23,
-       1.07
-      ],
-      [
-       81.38,
-       -28.79,
-       87.03,
-       -26.41,
-       0.67
       ],
       [
        70.9,
@@ -5539,7 +5539,7 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:weave-huts__moorage:0.182:weave>lockfive",
+   "id": "del-cine>del-cine@cut:weave-huts__moorage:0.143:weave>lockfive",
    "camFrom": "weave",
    "cam": {
     "key": "lockfive"
@@ -5549,8 +5549,8 @@
     1.25,
     -29.15
    ],
-   "reciprocal": "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
-   "source": "camera boundary 'weave' -> 'lockfive' where the walk network crosses landmark weave-huts into weave-huts__moorage@0..1; seam slid to weave-huts__moorage@t=0.182, band half-width 1.9u measured off the walk surface, clearance margin 0u"
+   "reciprocal": "del-cine>del-cine@cut:weave-huts__moorage:0.143:lockfive>weave",
+   "source": "camera boundary 'weave' -> 'lockfive' where the walk network crosses landmark weave-huts into weave-huts__moorage@0..1; seam slid to weave-huts__moorage@t=0.143, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -5575,7 +5575,7 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:weave-huts__moorage:0.182:lockfive>weave",
+   "id": "del-cine>del-cine@cut:weave-huts__moorage:0.143:lockfive>weave",
    "camFrom": "lockfive",
    "cam": {
     "key": "weave"
@@ -5585,7 +5585,7 @@
     7.75,
     -24.271
    ],
-   "reciprocal": "del-cine>del-cine@cut:weave-huts__moorage:0.182:weave>lockfive",
+   "reciprocal": "del-cine>del-cine@cut:weave-huts__moorage:0.143:weave>lockfive",
    "source": "camera boundary 'lockfive' -> 'weave' (the same seam, back)"
   },
   {
@@ -6558,7 +6558,7 @@
  "warnings": [
   "cut square<->pondlane on 'square-plaza__pond-jetty': every seam position in t=[0.714,0.846] overlaps another path (walk_pad_pips-den) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "arrival override gate 'valley-gate__inn:shelf-west': clears 0.50 m, under the 1.6 m target (derived point had 1.60 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
-  "cut weave<->lockfive on 'weave-huts__moorage'@0.182: authored vTol 0.52 (town 1.6); own-edge floor dys under the band: [0, 0.14, 0.23, 0.37, 0.6, 0.67, 0.74, 0.83, 0.88]",
+  "cut weave<->lockfive on 'weave-huts__moorage'@0.143: authored vTol 0.52 (town 1.6); own-edge floor dys under the band: [0, 0.14, 0.23, 0.37, 0.6, 0.67, 0.74, 0.83, 0.88]",
   "arrival override lockfive 'tenant-shack__fish-dock:fishdock': clears 0.66 m, under the 1.6 m target (derived point had 1.75 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.401,0.499] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
