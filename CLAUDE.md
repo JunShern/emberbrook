@@ -86,6 +86,18 @@ git runs here, on branch `migration/3d-hybrid`.
   far-depth one would have killed crossing's real white-wedge finding, so an undefined
   subject gets no gate. `--aim-census` measures a finished run with no API; `--no-aim` is
   the A/B.
+- **tools/moorage_search.py — A SEARCH IS ONLY AS HONEST AS ITS ORACLES** (2026-08-07). It
+  lived in a scratchpad with roof/art/self oracles and NO west-arm oracle, so iteration 9's
+  searched flight was free to land on the west boardwalk BY CONSTRUCTION — it severed the
+  corridor and put the west waterfront back to a 92-cell one-way island that reach_probe
+  called no-path both ways, weeks after `moorage_westlink.py` had closed exactly that. The
+  `westarm` oracle is a CONNECTIVITY test, not a headroom threshold (its selftest's case C
+  blocks 53 of 693 corridor cells and still connects; a threshold would have rejected the
+  answer). Winner reopened it: deck lane 1/6 → 6/6, reach_probe REACHED both ways, one
+  547-cell component. **THE ORACLE IS A SCREEN, THE DRIVE IS THE VERDICT** — two low-water
+  alternatives passed the oracle and failed the drive, one roofed by derived planking that
+  `self_roof` cannot see because it tests centre-lines. Same family as `_court_probe`: a gate
+  that measures its own drawing cannot measure its own build.
 - **tools/plate_probe.py — GROUND LUMINANCE WITHOUT BLENDER** (2026-08-07): reconstructs a
   world XYZ per pixel from a bundle's own solved camera + depth.png, derives normals from the
   world-position gradient and splits a plate into GROUND/WALL/VOID — 15 plates in ~40 s. The
