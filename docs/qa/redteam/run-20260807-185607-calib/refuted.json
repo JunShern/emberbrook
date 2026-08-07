@@ -1,0 +1,602 @@
+[
+ {
+  "fid": "F2",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "navigation",
+  "where": "dock and lower village area on the left",
+  "bbox": [
+   0,
+   0.35,
+   0.38,
+   0.95
+  ],
+  "severity": 2,
+  "desc": "The dense overlap of roofs, wooden platforms, and walkways makes it hard to distinguish navigable paths from drop-offs into the water.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The strong visual contrast between the blue water and the wooden walkways and stairs makes navigable surfaces easily distinguishable."
+  }
+ },
+ {
+  "fid": "F7",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-west",
+  "item": null,
+  "category": "occlusion",
+  "where": "below the central platform structures",
+  "bbox": [
+   0.44,
+   0.52,
+   0.73,
+   0.81
+  ],
+  "severity": 2,
+  "desc": "Deep pitch-black shadows beneath the upper deck obscure the ground details and potential walkable paths beneath.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The area beneath the platform is well-lit with ambient light, leaving barrels, crates, and architecture clearly visible."
+  }
+ },
+ {
+  "fid": "F10",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-west",
+  "item": null,
+  "category": "geometry",
+  "where": "mid-left platform edge",
+  "bbox": [
+   0.26,
+   0.48,
+   0.33,
+   0.58
+  ],
+  "severity": 2,
+  "desc": "The diagonal pulley rail clips through the wooden platform edge without a cut-out.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "27.4,41.5,0.4,13.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 27.4,41.5,0.4,13.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The pulley rail structure runs alongside the platform edge rather than clipping through the wooden flooring."
+  }
+ },
+ {
+  "fid": "F17",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-west",
+  "item": null,
+  "category": "navigation",
+  "where": "center middle ground platform and roofs",
+  "bbox": [
+   0.26,
+   0.35,
+   0.67,
+   0.62
+  ],
+  "severity": 2,
+  "desc": "Overlapping roof structures and dark shadow contrast obscure the walkable pathways, making it unclear where the player can safely walk.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The main wooden walkways and platform paths are clearly readable and continuous throughout the scene."
+  }
+ },
+ {
+  "fid": "F4",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "geometry",
+  "where": "bottom left roof intersecting cliff face",
+  "bbox": [
+   0.095,
+   0.77,
+   0.28,
+   1
+  ],
+  "severity": 1,
+  "desc": "The roof structure clips directly into the rock wall on the left without any fitting edge or surrounding frame.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "40.1,54.4,-1.4,4.7",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 40.1,54.4,-1.4,4.7"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The roof at the bottom left extends toward the frame edge naturally beside the cliff face rather than visually clipping into it."
+  }
+ },
+ {
+  "fid": "F11",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "occlusion",
+  "where": "center ground path in deep shadow",
+  "bbox": [
+   0.33,
+   0.27,
+   0.65,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Deep, pitch-black cast shadows completely obscure the ground terrain, making elevation changes and path boundaries impossible to read.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The shadowed path area retains visible ground textures and clear contrast, making terrain details easy to read."
+  }
+ },
+ {
+  "fid": "F12",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "geometry",
+  "where": "top left wooden framework attached to cliff",
+  "bbox": [
+   0.19,
+   0,
+   0.48,
+   0.15
+  ],
+  "severity": 1,
+  "desc": "Wooden platform beams clip directly into the raw cliff rock without supporting joints or wall anchors.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-50.7,36.8,1.1,36.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -50.7,36.8,1.1,36.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Embedding wooden beams directly into rock geometry is a standard environment art practice for cliffside structures and does not impede gameplay."
+  }
+ },
+ {
+  "fid": "F13",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "immersion",
+  "where": "upper right background cavern wall",
+  "bbox": [
+   0.65,
+   0.02,
+   0.82,
+   0.25
+  ],
+  "severity": 1,
+  "desc": "The background geometry terminates into flat black unlit void spaces without distance fog or natural lighting integration.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-50.3,46.4,12,82.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -50.3,46.4,12,82.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The upper right background features visible rock geometry and distant lit structures rather than an unlit void."
+  }
+ },
+ {
+  "fid": "F34",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "quay-west",
+  "item": null,
+  "category": "occlusion",
+  "where": "lower left multi-tiered walkways",
+  "bbox": [
+   0,
+   0.55,
+   0.4,
+   0.8
+  ],
+  "severity": 2,
+  "desc": "Harsh black shadows completely obscure the elevation, layout, and boundaries of lower-level walkways.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The lower-left walkways are illuminated by lanterns and direct light, leaving paths, fences, and elevation changes clearly visible."
+  }
+ },
+ {
+  "fid": "F54",
+  "mode": "checklist",
+  "town": "dellhollow",
+  "shot": "quay-west",
+  "item": "exit:seam:shelf-homes__market-stalls",
+  "itemWhat": "the way out of this area on foot towards loop-stairs — a path that carries on out of the frame",
+  "verdict": "ABSENT",
+  "category": "navigation",
+  "where": "",
+  "bbox": null,
+  "severity": 3,
+  "desc": "the way out of this area on foot towards loop-stairs: ABSENT — No path leading out towards loop-stairs is visible in this frame.",
+  "census": {
+   "u": 0.239,
+   "v": 0.2968,
+   "z": 36.59,
+   "charPx": 57,
+   "on": true,
+   "plateZ": 35.99,
+   "state": "clear",
+   "behindBy": 0.6
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "A clear stepped stone staircase leading down the cliff face is prominently visible on the right side."
+  }
+ },
+ {
+  "fid": "F45",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "navigation",
+  "where": "walkway in the center of the frame",
+  "bbox": [
+   0.45,
+   0.25,
+   0.65,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Extremely deep shadows obscure the wooden walkway, making it difficult to discern walkable pathways from open drops.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The cast shadows across the walkway do not obscure the path or make boundaries hard to distinguish."
+  }
+ },
+ {
+  "fid": "F59",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "occlusion",
+  "where": "shadowed area beneath left building",
+  "bbox": [
+   0.363,
+   0,
+   0.65,
+   0.3
+  ],
+  "severity": 2,
+  "desc": "Deep pitch-black shadows completely black out the geometry beneath the upper-left building, making it impossible to discern depth or spatial layout.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The area beneath the upper-left building clearly shows vertical support pillars, hanging banners, and visible wall geometry rather than pitch-black darkness."
+  }
+ },
+ {
+  "fid": "F63",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "occlusion",
+  "where": "deep shadow in central cliff cavity",
+  "bbox": [
+   0.452,
+   0.137,
+   0.618,
+   0.532
+  ],
+  "severity": 2,
+  "desc": "Deep pitch-black shadows obscure the cavity behind the stairs, making it impossible to tell if there is a path or ledge inside.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The central cavity is not completely pitch-black, as a lit doorway with an illuminated lantern is clearly visible inside at the top."
+  }
+ },
+ {
+  "fid": "F70",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "occlusion",
+  "where": "dark shadowed recess in central cliff",
+  "bbox": [
+   0.45,
+   0.12,
+   0.62,
+   0.8
+  ],
+  "severity": 2,
+  "desc": "Harsh direct lighting casts a deep shadow over the central cliff recess, completely obscuring paths and doorways.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The shadow does not completely obscure pathways or doorways, as the illuminated passageway and lantern inside the cliff recess remain visible."
+  }
+ },
+ {
+  "fid": "F61",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "immersion",
+  "where": "large boat structure on the left",
+  "bbox": [
+   0.02,
+   0.44,
+   0.32,
+   0.64
+  ],
+  "severity": 2,
+  "desc": "The large boat hull is perched at an impossibly steep tilt over small wooden shacks without realistic support.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "22.4,34.8,24.8,31",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 22.4,34.8,24.8,31"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tilted boat hull is an intentional stylized design element supported by visible wooden posts and underlying structures."
+  }
+ },
+ {
+  "fid": "F62",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "geometry",
+  "where": "timber framework in upper center",
+  "bbox": [
+   0.53,
+   0.21,
+   0.81,
+   0.34
+  ],
+  "severity": 1,
+  "desc": "Exposed skeletal timber framing appears incomplete and floats disconnected from adjacent buildings.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "6.8,19.6,18.4,24.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 6.8,19.6,18.4,24.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The timber framework is grounded on vertical support posts along the cliff face rather than floating in air."
+  }
+ },
+ {
+  "fid": "F73",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "navigation",
+  "where": "central circular wooden platform",
+  "bbox": [
+   0.381,
+   0.49,
+   0.618,
+   0.747
+  ],
+  "severity": 2,
+  "desc": "The central circular wooden platform is completely enclosed by a railing with no visible openings, stairs, or connected paths.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The railing only borders the front curve of the platform, leaving the sides and rear open to adjacent walkways."
+  }
+ },
+ {
+  "fid": "F78",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "boatyard",
+  "item": null,
+  "category": "navigation",
+  "where": "central circular wooden platform",
+  "bbox": [
+   0.362,
+   0.488,
+   0.616,
+   0.76
+  ],
+  "severity": 2,
+  "desc": "The elevated platform has no visible stairs, steps, or ramps connecting it to lower or higher ground levels, making navigable routes unclear.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The platform sits flush with the adjacent building walkway on the left, forming a continuous navigable route."
+  }
+ },
+ {
+  "fid": "F92",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "fishdock",
+  "item": null,
+  "category": "occlusion",
+  "where": "shadowed area under the upper right structures",
+  "bbox": [
+   0.63,
+   0.32,
+   0.9,
+   0.57
+  ],
+  "severity": 1,
+  "desc": "Deep cast shadows completely obscure the ground terrain and potential pathways along the cliffside behind the main walkway.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Ground terrain, props, and vegetation remain clearly visible beneath the upper structures despite being in shadow."
+  }
+ },
+ {
+  "fid": "F94",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "fishdock",
+  "item": null,
+  "category": "navigation",
+  "where": "far right end of the long wooden walkway",
+  "bbox": [
+   0.61,
+   0.87,
+   0.76,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "The main wooden walkway ends abruptly at the right edge without any stairs, ladder, or clear connection leading up into the village.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "A pier terminating at a dead end on one side is standard level design, as primary access to the village is provided via the dock structure on the left."
+  }
+ },
+ {
+  "fid": "F109",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "geometry",
+  "where": "stairs in center middle ground",
+  "bbox": [
+   0.48,
+   0.52,
+   0.61,
+   0.61
+  ],
+  "severity": 2,
+  "desc": "The stair steps float in mid-air without side stringers or structural beams anchoring them.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "63.1,85.3,20.5,31.1",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 63.1,85.3,20.5,31.1"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The stair treads are anchored from beneath by a central spine stringer rather than floating without support."
+  }
+ },
+ {
+  "fid": "F105",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "north-landing",
+  "item": null,
+  "category": "immersion",
+  "where": "green tree cones on cliff face",
+  "bbox": [
+   0.22,
+   0.38,
+   0.27,
+   0.52
+  ],
+  "severity": 1,
+  "desc": "The conical trees stick horizontally out of the vertical rock wall without roots or supporting ledges.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "98.5,103.7,19.5,23.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 98.5,103.7,19.5,23.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Simplified cone trees placed along steep terrain are standard for this low-poly stylized art direction."
+  }
+ }
+]

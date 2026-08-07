@@ -1,0 +1,262 @@
+[
+ {
+  "fid": "F4",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": "item-shop",
+  "itemWhat": "Item Shop — a shop item (village general store — preserves, twine, lamp oil)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "far upper left building",
+  "bbox": [
+   0.004,
+   0.027,
+   0.137,
+   0.297
+  ],
+  "severity": 2,
+  "desc": "Item Shop: VISIBLE-BUT-ILLEGIBLE — Reads as a generic blocky building without identifying shop features.",
+  "census": {
+   "u": 0.7669,
+   "v": 0.2658,
+   "z": 74.19,
+   "charPx": 50,
+   "on": true,
+   "plateZ": 71.76,
+   "state": "occluded",
+   "behindBy": 2.43
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "In an untextured massing blockout, generic blocky buildings lacking specific surface details or shop features are expected."
+  }
+ },
+ {
+  "fid": "F21",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "square",
+  "item": "item-shop",
+  "itemWhat": "Item Shop — a shop item (village general store — preserves, twine, lamp oil)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "upper building",
+  "bbox": [
+   0.052,
+   0.364,
+   0.236,
+   0.459
+  ],
+  "severity": 2,
+  "desc": "Item Shop: VISIBLE-BUT-ILLEGIBLE — Generic blockout house without distinctive shop features.",
+  "census": {
+   "u": 0.2964,
+   "v": 0.4218,
+   "z": 48.3,
+   "charPx": 43,
+   "on": true,
+   "plateZ": 44.7,
+   "state": "occluded",
+   "behindBy": 3.6
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The upper building is clearly visible in the layout, and complaining about a lack of specific shop features on a blockout mesh is invalid."
+  }
+ },
+ {
+  "fid": "F22",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "square",
+  "item": "inn",
+  "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "northeast building",
+  "bbox": [
+   0.12,
+   0.59,
+   0.36,
+   0.72
+  ],
+  "severity": 2,
+  "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Unlabeled building mesh lacking clear signage or inn identifying traits.",
+  "census": {
+   "u": 0.6471,
+   "v": 0.3175,
+   "z": 52.34,
+   "charPx": 40,
+   "on": true,
+   "plateZ": 49.65,
+   "state": "occluded",
+   "behindBy": 2.7
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The building is plainly visible, and demanding clear signage or labeled traits on a blockout structure is not a valid criticism."
+  }
+ },
+ {
+  "fid": "F23",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "square",
+  "item": "bakery",
+  "itemWhat": "Poppy's bakery — a building (warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging | MOVED 2026-07-31 (coordinator): 1.5 m away from the inn — at (24.5,21.5) the two roofs shared a volume (4.03 m centres vs 4.96 m needed at cottage size + 1.14 roof oversail, measured by the square builder). Still on the square's west rim, west of the well.)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "west square building",
+  "bbox": [
+   0.201,
+   0.212,
+   0.47,
+   0.35
+  ],
+  "severity": 2,
+  "desc": "Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — Cottage structure indistinguishable from standard village residences.",
+  "census": {
+   "u": 0.829,
+   "v": 0.4788,
+   "z": 46.34,
+   "charPx": 45,
+   "on": true,
+   "plateZ": 43.12,
+   "state": "occluded",
+   "behindBy": 3.22
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The building is fully legible in the space, and expecting distinct bakery props on a massing blockout is improper."
+  }
+ },
+ {
+  "fid": "F36",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": "quality:water-read",
+  "itemWhat": "[QUALITY] The water surface — water covers about 0.9% of this frame (near Brook spring). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+  "verdict": "WEAK",
+  "quality": true,
+  "category": "immersion",
+  "where": "water surface near spring house",
+  "bbox": [
+   0,
+   0,
+   0.12,
+   0.08
+  ],
+  "severity": 2,
+  "desc": "The water surface: WEAK — JUDGMENT: The water surface appears as a completely flat dark plane lacking any depth, transparency, or specular response, though its location at the spring outlet is clear.",
+  "census": null,
+  "hint": {
+   "region": "16.2,25.7,62.3,67.5",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 16.2,25.7,62.3,67.5"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "Flat, untextured surfaces and missing transparency or specular details are standard and intended for an untextured blockout model."
+  }
+ },
+ {
+  "fid": "F39",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "gateroad",
+  "item": "quality:frame-edge-world",
+  "itemWhat": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+  "verdict": "WEAK",
+  "quality": true,
+  "category": "immersion",
+  "where": "frame boundaries",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "severity": 2,
+  "desc": "The world at the frame edges: WEAK — Dense trees cover the borders, though heavy shadows obscure background depth.",
+  "census": null,
+  "hint": {
+   "region": "27.2,93.3,-31.6,112.6",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 27.2,93.3,-31.6,112.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The frame edges are fully populated with 3D trees and background structures that integrate seamlessly without revealing void or unfinished terrain."
+  }
+ },
+ {
+  "fid": "F41",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": "quality:frame-edge-world",
+  "itemWhat": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+  "verdict": "WEAK",
+  "quality": true,
+  "category": "immersion",
+  "where": "top right border",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "severity": 2,
+  "desc": "The world at the frame edges: WEAK — JUDGMENT: Peripheral areas dissolve into pitch darkness and unfinished background edges.",
+  "census": null,
+  "hint": {
+   "region": "49.1,89.3,101.6,130.5",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 49.1,89.3,101.6,130.5"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The top right border features a complete brick wall running continuously off-frame rather than dissolving into pitch darkness or unfinished edges."
+  }
+ },
+ {
+  "fid": "F42",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": "quality:water-read",
+  "itemWhat": "[QUALITY] The water surface — water covers about 2.4% of this frame. Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+  "verdict": "WEAK",
+  "quality": true,
+  "category": "immersion",
+  "where": "recessed channels near gate",
+  "bbox": [
+   0.612,
+   0.248,
+   0.78,
+   0.335
+  ],
+  "severity": 2,
+  "desc": "The water surface: WEAK — JUDGMENT: Lacks clear fluid characteristics and reads mostly as dark, flat shadow planes.",
+  "census": null,
+  "hint": {
+   "region": "73.4,82.3,120.2,127",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 73.4,82.3,120.2,127"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "Surface details and material characteristics like water fluid effects are explicitly intended to be untextured placeholder shapes at this blockout stage."
+  }
+ }
+]

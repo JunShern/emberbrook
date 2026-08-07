@@ -1,0 +1,1135 @@
+{
+ "version": 1,
+ "town": "emberbrook",
+ "scene": "emb-cine",
+ "stamp": "20260807-190224",
+ "generated": "2026-08-07T19:03:08.020Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": true,
+ "modes": [
+  "checklist"
+ ],
+ "n": 3,
+ "freshFrom": null,
+ "replaySources": {},
+ "plates": "public/assets/scenes/emb-cine",
+ "cine": "public/assets/scenes/emb-cine/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "pondlane",
+   "name": "Pond Lane",
+   "replayOf": null,
+   "baked": "2026-08-07T18:46:28Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-07T18:46:16.146Z",
+   "items": 16,
+   "char": null,
+   "checklist": [
+    {
+     "id": "pond",
+     "src": "owns.landmark",
+     "what": "The Pond — a water (NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow | RULING 2026-08-01: r12 (from the mechanical extents-x2) swallowed the jetty, smokehouse, weir and brook-mouth and nearly touched the river. r9 is still generous. The JETTY legitimately overhangs water (assert its walk pad is landward); smokehouse/weir re-snap to the r9 shore at build; brook-mouth is clear at r9.)",
+     "census": {
+      "u": 0.5127,
+      "v": 0.4314,
+      "z": 35.12,
+      "charPx": 59,
+      "on": true,
+      "plateZ": 35.1,
+      "state": "clear",
+      "behindBy": 0.02
+     },
+     "judged": {
+      "verdict": "OCCLUDED",
+      "where": "",
+      "bbox": null,
+      "desc": "The main body of the pond is completely hidden behind the dense central tree canopy and foliage."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "pond-jetty",
+     "src": "owns.landmark",
+     "what": "Pond jetty — a dock (short fishing jetty; frogs; where kids dare each other)",
+     "census": {
+      "u": 0.6067,
+      "v": 0.5183,
+      "z": 28.77,
+      "charPx": 72,
+      "on": true,
+      "plateZ": 28.49,
+      "state": "clear",
+      "behindBy": 0.28
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center midground near foliage",
+      "bbox": [
+       0.572,
+       0.47,
+       0.66,
+       0.555
+      ],
+      "desc": "Recognised as the wooden plank dock structure extending into the dark water edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "washline-green",
+     "src": "owns.landmark",
+     "what": "Washline green — a field",
+     "census": {
+      "u": 0.1939,
+      "v": 0.5531,
+      "z": 27.01,
+      "charPx": 77,
+      "on": true,
+      "plateZ": 26.97,
+      "state": "clear",
+      "behindBy": 0.04
+     },
+     "judged": {
+      "verdict": "OCCLUDED",
+      "where": "",
+      "bbox": null,
+      "desc": "Hidden from view behind the thick central cluster of trees."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "brook-bridge",
+     "src": "owns.landmark",
+     "what": "Brook footbridge — a prop (plank-and-rail crossing where Pond Lane steps over the brook)",
+     "census": {
+      "u": 0.3963,
+      "v": 0.7318,
+      "z": 19.99,
+      "charPx": 104,
+      "on": true,
+      "plateZ": 19.8,
+      "state": "clear",
+      "behindBy": 0.19
+     },
+     "judged": {
+      "verdict": "OCCLUDED",
+      "where": "",
+      "bbox": null,
+      "desc": "Hidden behind the dense midground bushes along the brook's course."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "brook-mouth",
+     "src": "owns.landmark",
+     "what": "Brook mouth — a prop (where the village brook slips into the river — the town's name, made visible)",
+     "census": {
+      "u": 0.5163,
+      "v": 0.3519,
+      "z": 45.9,
+      "charPx": 45,
+      "on": true,
+      "plateZ": 42.68,
+      "state": "occluded",
+      "behindBy": 3.22
+     },
+     "judged": {
+      "verdict": "OCCLUDED",
+      "where": "",
+      "bbox": null,
+      "desc": "Hidden behind the low foliage and terrain in the midground background."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "east-cottages",
+     "src": "owns.landmark",
+     "what": "Riverside cottages (vista) — a dressing (implied-scale massing NE between pond and river bend; a jetty lantern doubled in the water)",
+     "census": {
+      "u": 0.2979,
+      "v": 0.333,
+      "z": 44.56,
+      "charPx": 46,
+      "on": true,
+      "plateZ": 39.15,
+      "state": "occluded",
+      "behindBy": 5.41
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top center distance beyond trees",
+      "bbox": [
+       0.09,
+       0.2,
+       0.205,
+       0.615
+      ],
+      "desc": "Recognised by the distant roof shapes of cottages visible through the tree line."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "pond-weir",
+     "src": "owns.landmark",
+     "what": "Weir & sluice — a prop (small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course. | RE-SNAP at build: pond shrinks to r9 (see pond note) — weir sits at the r9 west shore on the stamped course. | SNAPPED 2026-08-01 by the builder on the coordinator's stamp: the point where the stamped brook course crosses the pond's r9 WEST shore (measured 9.04 m from the pond centre). | finn's post (shipped ch1 script; see square-plaza note).)",
+     "census": {
+      "u": 0.4569,
+      "v": 0.569,
+      "z": 26.7,
+      "charPx": 78,
+      "on": true,
+      "plateZ": 26.36,
+      "state": "clear",
+      "behindBy": 0.34
+     },
+     "judged": {
+      "verdict": "OCCLUDED",
+      "where": "",
+      "bbox": null,
+      "desc": "Obscured by the dense shrubbery in the middle distance."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "smokehouse",
+     "src": "owns.landmark",
+     "what": "Finn's smokehouse — a hut (small smokehouse + fish drying racks by the jetty; an upturned skiff on the bank. | RE-SNAP at build: with the pond at r9, sit ON THE SHORE near the jetty root (searched) — a smokehouse stands by water, not in it. | MOVED 2026-08-01 by the builder on the coordinator's stamp (pond to r9): SEARCHED onto the shore beside the jetty ROOT — 3.3 m from the deck's landward end, 11.45 m from the pond centre (dry at r9), 4.6 m off the deck, clear of the brook by 2.6 m and of every lane by 3.1 m. Its map position (88,49.5) stood inside the pond and 2.50 m from the jetty, sharing its volume. | STAMPED micro-move 0.58 m (2b): clears the pond's r9 rim by measurement (was one cell in).)",
+     "census": {
+      "u": 0.7576,
+      "v": 0.5846,
+      "z": 25.59,
+      "charPx": 81,
+      "on": true,
+      "plateZ": 25.66,
+      "state": "clear",
+      "behindBy": -0.07
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "midground right near cottage",
+      "bbox": [
+       0.298,
+       0.698,
+       0.628,
+       0.844
+      ],
+      "desc": "Recognised as a small stone hut with a shingled roof and stone chimney."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "pips-den",
+     "src": "owns.landmark",
+     "what": "Pip's den — a prop (STAMPED 2026-08-01 at the builder's east-bank spot, 3.3 m downstream of the footbridge, 1.7 m off the water, under the bank — hidden from the lane, which is MORE den-like: a proper hideout isn't visible from the bridge it hides beneath. | CONFLICT STAMP: moved +1.0 m east (78.6->79.6) — its walk pad's west edge clipped walk_lm_square-plaza by 0.9 m with a +0.28 m step inside walkGround's foot-stealing band (measured true-top-face, 0.33 m2). Landmark move per doctrine; the 28 m plaza mesh stays.)",
+     "census": {
+      "u": 0.5121,
+      "v": 0.6395,
+      "z": 23.06,
+      "charPx": 90,
+      "on": true,
+      "plateZ": 22.79,
+      "state": "clear",
+      "behindBy": 0.27
+     },
+     "judged": {
+      "verdict": "OCCLUDED",
+      "where": "",
+      "bbox": null,
+      "desc": "Hidden beneath the bank foliage near the brook edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:square-plaza__pond-jetty@0.78..1",
+     "src": "owns.edge",
+     "what": "the route between Festival Square and Pond jetty — a road (pond lane east, curling with the shore)",
+     "census": {
+      "u": 0.673,
+      "v": 0.8115,
+      "z": 18.06,
+      "charPx": 115,
+      "on": true,
+      "plateZ": 17.55,
+      "state": "clear",
+      "behindBy": 0.51
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "foreground extending to jetty",
+      "bbox": [
+       0.65,
+       0.15,
+       1,
+       0.6
+      ],
+      "desc": "Recognised as the open ground lane winding from the foreground toward the jetty area."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:pond-jetty__brook-bridge",
+     "src": "owns.edge",
+     "what": "the route between Pond jetty and Brook footbridge — a path (Pond Lane crosses the brook here)",
+     "census": {
+      "u": 0.5205,
+      "v": 0.6058,
+      "z": 24.38,
+      "charPx": 85,
+      "on": true,
+      "plateZ": 22.65,
+      "state": "occluded",
+      "behindBy": 1.74
+     },
+     "judged": {
+      "verdict": "OCCLUDED",
+      "where": "",
+      "bbox": null,
+      "desc": "The pathway along the brook is blocked from sight by the dense middle ground bushes."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:pond-jetty__washline-green",
+     "src": "owns.edge",
+     "what": "the route between Pond jetty and Washline green — a path (round the north shore)",
+     "census": {
+      "u": 0.4068,
+      "v": 0.5351,
+      "z": 27.89,
+      "charPx": 74,
+      "on": true,
+      "plateZ": 27.86,
+      "state": "clear",
+      "behindBy": 0.03
+     },
+     "judged": {
+      "verdict": "OCCLUDED",
+      "where": "",
+      "bbox": null,
+      "desc": "Hidden behind the central cluster of trees and shrubs."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:square-plaza__pond-jetty",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards square — a path that carries on out of the frame",
+     "census": {
+      "u": 0.6533,
+      "v": 0.6398,
+      "z": 23.1,
+      "charPx": 90,
+      "on": true,
+      "plateZ": 23.11,
+      "state": "clear",
+      "behindBy": -0.01
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "bottom foreground leading off-screen",
+      "bbox": [
+       0.7,
+       0,
+       1,
+       0.3
+      ],
+      "desc": "Recognised as the main ground path continuing past the bunting posts out of the bottom frame edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:sky",
+     "src": "skyAudit",
+     "what": "[QUALITY] The sky — it covers about 12% of this frame. Does it read as a real atmosphere at this scene's own hour — gradient, cloud forms, horizon treatment where it meets the terrain — or as a flat fill / empty gradient that just ends the world? Name what carries it or what it lacks.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0.12
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "top edge sky gradient",
+      "bbox": [
+       0,
+       0,
+       0.13,
+       1
+      ],
+      "desc": "JUDGMENT: The sky is a flat, featureless blue gradient lacking cloud forms or realistic atmospheric haze."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0.12
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "top left foliage cut-offs",
+      "bbox": [
+       0,
+       0.15,
+       0.15,
+       0.35
+      ],
+      "desc": "JUDGMENT: The background tree line thins out abruptly into the bare sky gradient at the top left edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Brook footbridge, Weir & sluice, Pond jetty). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.3963,
+      "v": 0.7318,
+      "z": 19.99,
+      "charPx": 104,
+      "on": true,
+      "plateZ": 19.8,
+      "state": "clear",
+      "behindBy": 0.19
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "dark ground plane around jetty",
+      "bbox": [
+       0.5,
+       0.4,
+       0.8,
+       0.7
+      ],
+      "desc": "JUDGMENT: The water surface reads as a solid, flat black plane with no transparency, flow, or believable reflections."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "northlane",
+   "name": "The North Lane",
+   "replayOf": null,
+   "baked": "2026-08-07T19:01:29Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-07T19:01:16.857Z",
+   "items": 9,
+   "char": null,
+   "checklist": [
+    {
+     "id": "barn",
+     "src": "owns.landmark",
+     "what": "Tithe barn — a building (harvest stores; cats in the rafters)",
+     "census": {
+      "u": 0.4458,
+      "v": 0.5704,
+      "z": 53.32,
+      "charPx": 69,
+      "on": true,
+      "plateZ": 49.83,
+      "state": "occluded",
+      "behindBy": 3.49
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center, rectangular building",
+      "bbox": [
+       0.36,
+       0.23,
+       0.52,
+       0.59
+      ],
+      "desc": "Recognised as the rectangular building with red-tiled roof attached directly to the round dovecote tower."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "back-lane-closed",
+     "src": "owns.landmark",
+     "what": "Back lane (closed) — a prop (lane between barn and square edge running to unseen homes; stacked Emberwake barrels close it)",
+     "census": {
+      "u": 0.2751,
+      "v": 0.325,
+      "z": 58.32,
+      "charPx": 63,
+      "on": true,
+      "plateZ": 57.3,
+      "state": "occluded",
+      "behindBy": 1.02
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "nowhere in frame",
+      "bbox": null,
+      "desc": "No closed lane with stacked barrels is visible anywhere in this frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "dovecote",
+     "src": "owns.landmark",
+     "what": "Dovecote — a tower (round dove tower near the tithe barn — the district needs a vertical accent that is not the gate.)",
+     "census": {
+      "u": 0.4596,
+      "v": 0.8024,
+      "z": 49.69,
+      "charPx": 75,
+      "on": true,
+      "plateZ": 47.25,
+      "state": "occluded",
+      "behindBy": 2.43
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower-center, round tower",
+      "bbox": [
+       0.38,
+       0.56,
+       0.52,
+       0.88
+      ],
+      "desc": "Recognised as the round stone tower with a peaked red tile roof adjacent to the tithe barn."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:square-plaza__barn@0.573..1",
+     "src": "owns.edge",
+     "what": "the route between Festival Square and Tithe barn — a road (north lane between walls)",
+     "census": {
+      "u": 0.0781,
+      "v": 0.6305,
+      "z": 52.9,
+      "charPx": 70,
+      "on": true,
+      "plateZ": 53.1,
+      "state": "clear",
+      "behindBy": -0.2
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "nowhere in frame",
+      "bbox": null,
+      "desc": "No north lane between walls is visible in this frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:barn__gate-court@0..0.30",
+     "src": "owns.edge",
+     "what": "the route between Tithe barn and Sigil Gate court — a road (THE QUIET ROAD (stamped): 41.1 m of continuously curving, wooded, incident-free, lampless road from past the barn to the court — arrives 35 deg off the town's bearing so the eye never follows the road home. beyond_warmth rule applies: no households seed beyond the barn on this axis.)",
+     "census": {
+      "u": 1.3002,
+      "v": 0.6127,
+      "z": 52.34,
+      "charPx": 71,
+      "on": false,
+      "state": "off-frame"
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "middle-right road",
+      "bbox": [
+       0.51,
+       0.33,
+       1,
+       0.63
+      ],
+      "desc": "Recognised as the continuous, curving paved road winding through the trees east of the barn."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:square-plaza__barn",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards square — a path that carries on out of the frame",
+     "census": {
+      "u": 0.1352,
+      "v": 0.5941,
+      "z": 53.48,
+      "charPx": 69,
+      "on": true,
+      "plateZ": 53.47,
+      "state": "clear",
+      "behindBy": 0.01
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "middle-left path edge",
+      "bbox": [
+       0,
+       0.51,
+       0.21,
+       0.67
+      ],
+      "desc": "Recognised as the paved pathway that exits the frame along the left edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:barn__gate-court",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards gateroad — a path that carries on out of the frame",
+     "census": {
+      "u": 0.9351,
+      "v": 0.4239,
+      "z": 55.76,
+      "charPx": 66,
+      "on": true,
+      "plateZ": 55.73,
+      "state": "clear",
+      "behindBy": 0.03
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "middle-right path edge",
+      "bbox": [
+       0.52,
+       0.33,
+       1,
+       0.63
+      ],
+      "desc": "Recognised as the paved path continuing through the woods and exiting past the right edge of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "watermill",
+     "src": "mapVisible",
+     "what": "The watermill — a building (USER-LOVED 2026-08-01: overshot wheel + leat + small millpond on the brook's steeper upper run; grinds the orchard's grain — Poppy's flour comes from here. The wheel's creak is the village's heartbeat sound. POSITION SNAPS to the stamped brook course (builder proposes both together). | STAMPED snap; WHEEL RULING: option (b) — 2.0 m mill dam, 2.2 m overshot wheel, visible millpond impoundment (basin carved, dam + head gate). Picturesque beats strict hydrology here; (a) 1.5 m wheel and (c) breastshot recorded as alternates. | USER RE-RULING 2026-07-31 (style probe round 1): the mill at TWICE the probe's scale — overshot wheel 2.2 -> 4.4 m dia, total fall 4.6 m as built in probe r2 (a 4.4 m overshot wheel + crown launder needs >4.0 m head: dam crest 1.78 impounding the pond, tail water -3.05), building mass scaled with the wheel. Probe round 2 renders are the visual reference. | ENGINE-LANE STAMP 2026-07-31 (delegated authority, dinner hour): footprint field added [8.6,9.4,10.3] (W x D x eave; ridge ~12.0 as built) — emb_blockout's mill branch reads it, doorstep re-derives outside the 2x body (pad moves 1.74 m along the mill lane, ~(47.60,60.26)). FALL CORRECTED against the stamped brook's measured profile: the corner gives 2.74 m at a 20 m stone-walled rejoin (crest 4.14 = the blockout's own impoundment, tail 1.40 = the brook 20 m downstream); there is no head anywhere on this brook (0.68 m in 26 m from the spring; 2.4 m over its whole length). WHEEL RE-RULED BREASTSHOT (the wheel ruling's recorded alternate c), fed at axle height, DIAMETER 4.4 m UNCHANGED — same disc, same stone pit, launder arrives at mid-height. Named alternative preserved for the user: keep 'overshot' by raising the crest to 6.00 = a 4.03 m embankment ring on the valley floor (rejected under the terrain doctrine the blockout's own millpond comment states).)",
+     "census": {
+      "u": 0.2736,
+      "v": 0.1471,
+      "z": 62.34,
+      "charPx": 59,
+      "on": true,
+      "plateZ": 54.86,
+      "state": "occluded",
+      "behindBy": 7.48
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top left corner",
+      "bbox": [
+       0.08,
+       0,
+       0.43,
+       0.23
+      ],
+      "desc": "Recognised by the prominent wooden waterwheel mounted against the mill building near the top left."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "entire frame boundary",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "Terrain, dense foliage, and built structures extend fully to all four frame edges without any unfinished void or abrupt cut-offs."
+     },
+     "suppressed": null
+    }
+   ]
+  }
+ ],
+ "raw": 13,
+ "survivors": [
+  {
+   "fid": "F3",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "pond",
+   "itemWhat": "The Pond — a water (NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow | RULING 2026-08-01: r12 (from the mechanical extents-x2) swallowed the jetty, smokehouse, weir and brook-mouth and nearly touched the river. r9 is still generous. The JETTY legitimately overhangs water (assert its walk pad is landward); smokehouse/weir re-snap to the r9 shore at build; brook-mouth is clear at r9.)",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "The Pond: OCCLUDED — The main body of the pond is completely hidden behind the dense central tree canopy and foliage.",
+   "census": {
+    "u": 0.5127,
+    "v": 0.4314,
+    "z": 35.12,
+    "charPx": 59,
+    "on": true,
+    "plateZ": 35.1,
+    "state": "clear",
+    "behindBy": 0.02
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The main body of the pond is completely obscured by the dense central tree and shrub canopy."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F4",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "washline-green",
+   "itemWhat": "Washline green — a field",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "Washline green: OCCLUDED — Hidden from view behind the thick central cluster of trees.",
+   "census": {
+    "u": 0.1939,
+    "v": 0.5531,
+    "z": 27.01,
+    "charPx": 77,
+    "on": true,
+    "plateZ": 26.97,
+    "state": "clear",
+    "behindBy": 0.04
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "Washline green is entirely blocked from view by the thick central cluster of trees."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F5",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "brook-bridge",
+   "itemWhat": "Brook footbridge — a prop (plank-and-rail crossing where Pond Lane steps over the brook)",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "Brook footbridge: OCCLUDED — Hidden behind the dense midground bushes along the brook's course.",
+   "census": {
+    "u": 0.3963,
+    "v": 0.7318,
+    "z": 19.99,
+    "charPx": 104,
+    "on": true,
+    "plateZ": 19.8,
+    "state": "clear",
+    "behindBy": 0.19
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The brook footbridge is hidden behind the dense midground bushes and trees."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F6",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "brook-mouth",
+   "itemWhat": "Brook mouth — a prop (where the village brook slips into the river — the town's name, made visible)",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "Brook mouth: OCCLUDED — Hidden behind the low foliage and terrain in the midground background.",
+   "census": {
+    "u": 0.5163,
+    "v": 0.3519,
+    "z": 45.9,
+    "charPx": 45,
+    "on": true,
+    "plateZ": 42.68,
+    "state": "occluded",
+    "behindBy": 3.22
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "ray-census",
+    "why": "the shot's own depth plate draws something 3.22 m nearer at that pixel"
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F7",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "pond-weir",
+   "itemWhat": "Weir & sluice — a prop (small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course. | RE-SNAP at build: pond shrinks to r9 (see pond note) — weir sits at the r9 west shore on the stamped course. | SNAPPED 2026-08-01 by the builder on the coordinator's stamp: the point where the stamped brook course crosses the pond's r9 WEST shore (measured 9.04 m from the pond centre). | finn's post (shipped ch1 script; see square-plaza note).)",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "Weir & sluice: OCCLUDED — Obscured by the dense shrubbery in the middle distance.",
+   "census": {
+    "u": 0.4569,
+    "v": 0.569,
+    "z": 26.7,
+    "charPx": 78,
+    "on": true,
+    "plateZ": 26.36,
+    "state": "clear",
+    "behindBy": 0.34
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The weir and sluice are completely obscured by the dense foliage in the middle distance."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F8",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "pips-den",
+   "itemWhat": "Pip's den — a prop (STAMPED 2026-08-01 at the builder's east-bank spot, 3.3 m downstream of the footbridge, 1.7 m off the water, under the bank — hidden from the lane, which is MORE den-like: a proper hideout isn't visible from the bridge it hides beneath. | CONFLICT STAMP: moved +1.0 m east (78.6->79.6) — its walk pad's west edge clipped walk_lm_square-plaza by 0.9 m with a +0.28 m step inside walkGround's foot-stealing band (measured true-top-face, 0.33 m2). Landmark move per doctrine; the 28 m plaza mesh stays.)",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "Pip's den: OCCLUDED — Hidden beneath the bank foliage near the brook edge.",
+   "census": {
+    "u": 0.5121,
+    "v": 0.6395,
+    "z": 23.06,
+    "charPx": 90,
+    "on": true,
+    "plateZ": 22.79,
+    "state": "clear",
+    "behindBy": 0.27
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "Pip's den is fully hidden beneath the foliage along the bank edge."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F9",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "path:pond-jetty__brook-bridge",
+   "itemWhat": "the route between Pond jetty and Brook footbridge — a path (Pond Lane crosses the brook here)",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "the route between Pond jetty and Brook footbridge: OCCLUDED — The pathway along the brook is blocked from sight by the dense middle ground bushes.",
+   "census": {
+    "u": 0.5205,
+    "v": 0.6058,
+    "z": 24.38,
+    "charPx": 85,
+    "on": true,
+    "plateZ": 22.65,
+    "state": "occluded",
+    "behindBy": 1.74
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "ray-census",
+    "why": "the shot's own depth plate draws something 1.74 m nearer at that pixel"
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F10",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "path:pond-jetty__washline-green",
+   "itemWhat": "the route between Pond jetty and Washline green — a path (round the north shore)",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "the route between Pond jetty and Washline green: OCCLUDED — Hidden behind the central cluster of trees and shrubs.",
+   "census": {
+    "u": 0.4068,
+    "v": 0.5351,
+    "z": 27.89,
+    "charPx": 74,
+    "on": true,
+    "plateZ": 27.86,
+    "state": "clear",
+    "behindBy": 0.03
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The path connecting the pond jetty to Washline green is entirely blocked from view by central trees."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F11",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "quality:sky",
+   "itemWhat": "[QUALITY] The sky — it covers about 12% of this frame. Does it read as a real atmosphere at this scene's own hour — gradient, cloud forms, horizon treatment where it meets the terrain — or as a flat fill / empty gradient that just ends the world? Name what carries it or what it lacks.",
+   "verdict": "WEAK",
+   "quality": true,
+   "category": "immersion",
+   "where": "top edge sky gradient",
+   "bbox": [
+    0,
+    0,
+    0.13,
+    1
+   ],
+   "severity": 2,
+   "desc": "The sky: WEAK — JUDGMENT: The sky is a flat, featureless blue gradient lacking cloud forms or realistic atmospheric haze.",
+   "census": null,
+   "hint": {
+    "region": "67.7,85.3,53,67",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 67.7,85.3,53,67"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The sky at the top of the frame is a flat, uniform blue gradient lacking any atmospheric depth or clouds."
+   },
+   "triage": {
+    "bucket": "style-bar",
+    "by": "blockout-dressing",
+    "where": "waits for the dressing pass"
+   }
+  },
+  {
+   "fid": "F12",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "quality:frame-edge-world",
+   "itemWhat": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+   "verdict": "WEAK",
+   "quality": true,
+   "category": "immersion",
+   "where": "top left foliage cut-offs",
+   "bbox": [
+    0,
+    0.15,
+    0.15,
+    0.35
+   ],
+   "severity": 2,
+   "desc": "The world at the frame edges: WEAK — JUDGMENT: The background tree line thins out abruptly into the bare sky gradient at the top left edge.",
+   "census": null,
+   "hint": {
+    "region": "84.4,192.4,63.4,153.1",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 84.4,192.4,63.4,153.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The tree line at the top left abruptly thins into sparse, bare trunks against the plain sky background."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F13",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "pondlane",
+   "item": "quality:water-read",
+   "itemWhat": "[QUALITY] The water surface — this frame holds water (near Brook footbridge, Weir & sluice, Pond jetty). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+   "verdict": "FAILING",
+   "quality": true,
+   "category": "immersion",
+   "where": "dark ground plane around jetty",
+   "bbox": [
+    0.5,
+    0.4,
+    0.8,
+    0.7
+   ],
+   "severity": 3,
+   "desc": "The water surface: FAILING — JUDGMENT: The water surface reads as a solid, flat black plane with no transparency, flow, or believable reflections.",
+   "census": null,
+   "hint": {
+    "region": "71.2,96.1,40.5,54.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 71.2,96.1,40.5,54.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The water surface appears as a solid, flat dark plane without reflections, transparency, or flow."
+   },
+   "triage": {
+    "bucket": "style-bar",
+    "by": "blockout-dressing",
+    "where": "waits for the dressing pass"
+   }
+  },
+  {
+   "fid": "F1",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": "back-lane-closed",
+   "itemWhat": "Back lane (closed) — a prop (lane between barn and square edge running to unseen homes; stacked Emberwake barrels close it)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "nowhere in frame",
+   "bbox": null,
+   "severity": 3,
+   "desc": "Back lane (closed): ABSENT — No closed lane with stacked barrels is visible anywhere in this frame.",
+   "census": {
+    "u": 0.2751,
+    "v": 0.325,
+    "z": 58.32,
+    "charPx": 63,
+    "on": true,
+    "plateZ": 57.3,
+    "state": "occluded",
+    "behindBy": 1.02
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No closed back lane containing stacked barrels is visible anywhere in this frame."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F2",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": "path:square-plaza__barn@0.573..1",
+   "itemWhat": "the route between Festival Square and Tithe barn — a road (north lane between walls)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "nowhere in frame",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Festival Square and Tithe barn: ABSENT — No north lane between walls is visible in this frame.",
+   "census": {
+    "u": 0.0781,
+    "v": 0.6305,
+    "z": 52.9,
+    "charPx": 70,
+    "on": true,
+    "plateZ": 53.1,
+    "state": "clear",
+    "behindBy": -0.2
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No north lane enclosed by walls is shown in this frame."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  }
+ ],
+ "refuted": [],
+ "budget": {
+  "calls": 4,
+  "promptTok": 8969,
+  "replyTok": 13289,
+  "errors": 0,
+  "byStage": {
+   "checklist": 2,
+   "refute-checklist": 2
+  }
+ },
+ "bboxAgreement": {
+  "n": 7,
+  "hit": 3,
+  "frac": 0.429
+ },
+ "calibration": null
+}
