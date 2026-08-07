@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-05T19:10:37Z",
+ "generated": "2026-08-07T18:17:23Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -4628,34 +4628,34 @@
      "id": "portal:old-gate",
      "kind": "portal",
      "at": [
-      78,
+      76.4,
       2.8,
-      -126.7
+      -127.11
      ],
      "from": "ow-valley",
      "via": "ow-valley>emb-cine@old-gate",
      "label": "Enter Emberbrook",
      "aim": [
-      0.647,
-      -0.763
+      0.641,
+      -0.768
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.41,
-       0.597
+       0.323,
+       0.636
       ],
       "px": [
-       948,
-       155
+       889,
+       140
       ],
       "onScreen": true,
-      "edgeMargin": 0.403,
-      "depth": 57.649,
+      "edgeMargin": 0.364,
+      "depth": 58.167,
       "charPx": 64,
       "headNdc": [
-       0.418,
-       0.737
+       0.329,
+       0.775
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4726,8 +4726,8 @@
      "prompt": "E",
      "label": "Leave Emberbrook",
      "aim": [
-      0,
-      1
+      -0.486,
+      0.874
      ],
      "seam": null,
      "r": 2.2,
