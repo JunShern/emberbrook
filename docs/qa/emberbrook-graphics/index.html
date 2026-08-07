@@ -522,5 +522,34 @@ water is refutable mechanically, and <code>scene_redteam</code> already has the 
 changes the shared judge's verdict pipeline rather than its applicability gate, and one of
 those per window is enough.</div>
 
+<h2>14. The realtime tier, carried and published — proven on the bytes</h2>
+<p class="note"><code>emberbrook-realtime.blend</code> took the carrier with
+<code>--xysmooth 0</code> (the silhouette relaxation is refused on a decimated sheet — see
+the tool's docstring), and its bundle is re-exported: <code>tools/town_export.py</code>
+with <code>TOWNWALK_OUT</code> staging, <b>emberbrook target only</b>, because
+<code>townwalk_live_refresh.sh</code> also refreshes dellhollow&rarr;<code>townwalk</code>
+which belongs to another lane in this window. Exit 0; <code>emb-townwalk/scene.glb</code>
+91,465,888 B.</p>
+<p class="note">The proof is a census of the SHIPPED GLBs, not the exporter's report: per
+(x,z) column to 1 mm, the vertical span of each sheet's own vertices — its wall.</p>
+<table>
+<tr><th>bundle</th><th>sheet</th><th>columns</th><th>wall height min / p10 / p50 / p90 / max</th></tr>
+<tr><td>emb-cine (PRE-carry)</td><td>brook</td><td class="n">595</td><td class="n">0.120 / 0.120 / 0.131 / 0.161 / 0.226</td></tr>
+<tr><td>emb-cine (PRE-carry)</td><td>pond</td><td class="n">778</td><td class="n"><b>0.120 / 0.120 / 0.120 / 0.120 / 0.120</b></td></tr>
+<tr><td>emb-cine (PRE-carry)</td><td>millpond</td><td class="n">107</td><td class="n"><b>0.120 / 0.120 / 0.120 / 0.120 / 0.120</b></td></tr>
+<tr><td><b>emb-townwalk (AFTER)</b></td><td>brook</td><td class="n">23</td><td class="n">0.021 / 0.028 / <b>0.315</b> / 0.775 / 0.828</td></tr>
+<tr><td><b>emb-townwalk (AFTER)</b></td><td>pond</td><td class="n">32</td><td class="n">0.027 / 0.027 / 0.045 / 0.427 / 0.659</td></tr>
+<tr><td><b>emb-townwalk (AFTER)</b></td><td>millpond</td><td class="n">6</td><td class="n">0.019 / 0.019 / 0.027 / 0.045 / 0.045</td></tr>
+</table>
+<div class="meas">The BEFORE rows are the whole argument: p10 = p50 = p90 = <b>0.120 m on
+every column of two sheets</b> — the flat box, stated by the shipped bytes. Read the AFTER
+rows as a SCREEN, not a distribution: decimation leaves few columns where a top and a bottom
+vertex still share an exact (x,z), so n is 6&ndash;32. What they prove is that the sheet is
+no longer a uniform 0.12 m box.</div>
+<div class="verdict"><code>emb_decimate --save</code> is <b>NOT owed</b>, with numbers:
+CLAUDE.md's rule binds anyone who REBUILDS the realtime blend. This was a five-mesh carrier
+and it REDUCES the budget that rule protects — brook 937&rarr;876 polys, pond
+1770&rarr;1599, millpond 205&rarr;189. Nothing was added.</div>
+
 </body>
 </html>
