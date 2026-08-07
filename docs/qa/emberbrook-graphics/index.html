@@ -485,5 +485,42 @@ over-counts &mdash; in exactly the direction its own source comment declares (a 
 over-counts water suppresses less than it should, never more). Closing it needs a
 beauty-pass test, not a depth-pass one.</div>
 
+<h2>13. THE FINAL SWEEP — the class is closed, with the credit split three ways</h2>
+<p class="note"><code>scene_redteam --town emberbrook --mode checklist</code>, all eleven
+plates, against the four rebaked frames and under the recalibrated arming
+(<code>docs/qa/redteam/run-20260807-205035-round3water/</code>).</p>
+<table>
+<tr><th></th><th>before (run-20260806-1/-2)</th><th>after</th></tr>
+<tr><td>CONVINCING</td><td class="n">0</td><td class="n"><b>1</b> — northlane</td></tr>
+<tr><td>WEAK</td><td class="n">0</td><td class="n">3 — pondlane, homerow, gatefield</td></tr>
+<tr><td>ABSENT</td><td class="n">1 — square</td><td class="n">1 — square</td></tr>
+<tr><td><b>FAILING</b></td><td class="n"><b>5</b> — arch, therise, pondlane, homerow, gateroad</td><td class="n"><b>0</b></td></tr>
+<tr class="skip"><td>not asked</td><td>—</td><td>arch, therise, gateroad: suppressed by measurement</td></tr>
+</table>
+<div class="verdict"><b>Zero FAILING.</b> But three different things did three different
+amounts of the work, and they are not interchangeable:
+<ul>
+<li><b>arch, therise, gateroad</b> — gone because THE JUDGE IS NO LONGER ASKED. Their water
+is 0.12 / 0.11 / 0.45% of frame and every verdict was measured disjoint from any water
+pixel. Not a pixel changed there and it must never be reported as one.</li>
+<li><b>northlane CONVINCING</b> — this one IS the geometry: newly armed, on the seated
+brook, <b>54.6% of its own bbox is water</b>, and its words are about the fix ("the dark
+water pool reflects surrounding foliage cleanly and forms natural contact edges along the
+rocky banks"). The town's first ever water-read CONVINCING.</li>
+<li><b>homerow FAILING&rarr;WEAK</b> is the prompt, not the plate: its rebake moved SEVEN
+pixels at its water.</li>
+<li><b>gatefield WEAK is a NEW question, not a win</b> — it arms for the first time on
+2.33% of <code>water_emb_river</code>, the open sheet this carrier skips, so its geometry
+never moved and nobody had looked at that water before.</li>
+</ul></div>
+<div class="warn"><b>RESIDUAL, measured: the gate fixed WHICH plate is asked, not WHERE the
+judge points.</b> Water inside each surviving verdict's own bbox — northlane
+<b>54.6%</b>, pondlane 3.1%, gatefield <b>0.0%</b>, homerow <b>0.0%</b>. The next layer is
+this same census scoring the BBOX rather than the plate: a water finding whose box holds no
+water is refutable mechanically, and <code>scene_redteam</code> already has the machinery
+(<code>bboxAgreement</code>, the stage-2 refutation pass). Left for the coordinator — it
+changes the shared judge's verdict pipeline rather than its applicability gate, and one of
+those per window is enough.</div>
+
 </body>
 </html>
