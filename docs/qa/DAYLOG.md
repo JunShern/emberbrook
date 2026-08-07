@@ -16827,3 +16827,38 @@ shelf-west "clearly better for enterable doorways", shelf-east "better on both c
 mechanism verbatim: "a lit opening is the single strongest enterability cue these
 frames have." Judge residuals added to the board (boil-as-slabs, knife waterline,
 dam massing, crushed shadow floors, blown awning panels).
+
+## 2026-08-07 ~00:40 — JUDGE CALIBRATION close-out: [QUALITY] families validated LIVE, checklist re-run both towns, run-20260806-1 replay-merged
+
+Spend cap lifted; the owed sequence ran. 48 flash calls total (subset 15, remainder 33,
+merges/replays 0), 104k prompt + 124k reply tokens, 0 errors — inside the 60-80 budget.
+Dellhollow was RE-PINNED first (scratchpad/pin-del2): graphics round 1 (02b9c01/2a5cf84)
+rebaked 12 del-cine plates (11:2x -> 22:0x stamps, water bake restored, shop doors);
+emb-cine stamps unchanged, pin-emb kept.
+
+THE ITEMS FIRE WITH REAL JUDGMENTS, zero refuted at stage 2 town-wide. Verbatim samples:
+pondlane water-read FAILING "The water surface reads as a solid black flat plane with no
+transparency, ripples, or soft bank contact" (confirmed by eye on the plate); pondlane sky
+WEAK "very plain, smooth blue gradient lacking cloud structures or atmospheric haze";
+loop-stairs frame-edge FAILING "untextured white polygon plane at the bottom-left edge";
+lockfive frame-edge FAILING "flat, featureless dark void ... abrupt, unrendered border".
+
+VERDICT TABLE (26 plates): del frame-edge 10 CONVINCING / 3 WEAK (gate, shelf-east, weave)
+/ 2 FAILING (loop-stairs, lockfive); del water-read 8 CONVINCING / 1 WEAK (shelf-east) /
+2 FAILING (quay-west "lower gorge completely black", deep-stairs "flat untextured cyan
+plane, hard polygonal edges"). emb frame-edge 8 CONVINCING / 3 WEAK; emb water-read 0
+CONVINCING / 6 FAILING (+1 stray ABSENT on square) — the pond/brook/river read is
+Emberbrook's standing worst visual class, systematically caught for the first time.
+emb sky: WEAK on both plates that show sky (therise, pondlane).
+
+THE WATER DELTA IS THE RESTORE RECEIPT: old-bake naive raw (fishdock) — "A wooden boat is
+perched high above dry ground ... without any water"; current bake water-read fishdock =
+CONVINCING. The restore did NOT reach quay-west's gorge bottom or deep-stairs' sheet —
+both named with bboxes in the run.
+
+MERGE, with provenance: new checklist raws (run-20260806-2-<town>-checklist, the per-pass
+record) merged into run-20260806-1-<town>-src (naive keys kept; provenance.json states the
+del naive-vs-checklist bake split), combined run-20260806-1-<town> re-derived via --replay
+against the current pins, findings.md regenerated. Deltas: del survivors 100 -> 101
+(raw 125 -> 135), emb 97 -> 103 (raw 117 -> 130); quality survivors 2 del + 3 emb (deduped
+town-wide with per-shot descs in alsoOn).

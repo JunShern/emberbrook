@@ -3,7 +3,7 @@
  "town": "emberbrook",
  "scene": "emb-cine",
  "stamp": "20260806-1-emberbrook",
- "generated": "2026-08-06T19:56:25.751Z",
+ "generated": "2026-08-07T01:51:08.372Z",
  "generator": "tools/scene_redteam.mjs",
  "judge": "gemini:gemini-3.6-flash (replayed from run-20260806-1-emberbrook-src)",
  "model": "gemini-3.6-flash",
@@ -34,7 +34,7 @@
    "baked": "2026-08-02T11:41:56Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.185Z",
-   "items": 4,
+   "items": 5,
    "char": null,
    "checklist": [
     {
@@ -53,14 +53,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "circular paved area in foreground",
+      "where": "bottom center of frame",
       "bbox": [
-       0.246,
-       0.577,
-       0.653,
-       0.958
+       0.22,
+       0.57,
+       0.67,
+       0.95
       ],
-      "desc": "The circular paved ground surrounded by scattered stones clearly marks the arrival clearing."
+      "desc": "A circular paved ground area encircled by scattered stones at the start of the path."
      },
      "suppressed": null
     },
@@ -80,14 +80,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "paved straight path between clearing and waystone",
+      "where": "middle ground path",
       "bbox": [
-       0.452,
-       0.122,
-       0.646,
-       0.595
+       0.45,
+       0.12,
+       0.64,
+       0.59
       ],
-      "desc": "A paved road connects the circular clearing directly to the lit waystone."
+      "desc": "A straight paved road connecting the circular clearing to the illuminated waystone."
      },
      "suppressed": null
     },
@@ -107,14 +107,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "path continuing past the waystone off top edge",
+      "where": "top center path section",
       "bbox": [
-       0.542,
+       0.54,
        0,
-       0.648,
-       0.125
+       0.65,
+       0.12
       ],
-      "desc": "The paved pathway extends past the waystone structure and exits at the top edge of the image."
+      "desc": "The paved pathway continues past the waystone and bench directly off the top edge of the frame."
      },
      "suppressed": null
     },
@@ -134,9 +134,31 @@
      },
      "judged": {
       "verdict": "ABSENT",
-      "where": "none",
+      "where": "",
       "bbox": null,
-      "desc": "No door or gateway visual exists in this outdoor forest scene."
+      "desc": "There is no doorway or gateway structure in this open woodland clearing."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "entire frame border",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "CONVINCING: Forest floor, tree canopies, and atmospheric shadows extend cleanly to all four frame edges without unrendered gaps or sharp boundary cut-offs."
      },
      "suppressed": null
     }
@@ -149,7 +171,7 @@
    "baked": "2026-08-02T12:15:59Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.164Z",
-   "items": 6,
+   "items": 7,
    "char": null,
    "checklist": [
     {
@@ -168,14 +190,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "center of frame on the edge of the paved path",
+      "where": "beside the lamp along the path",
       "bbox": [
        0.465,
-       0.465,
+       0.466,
        0.529,
        0.622
       ],
-      "desc": "The stone marker stands illuminated on the edge of the path next to a road lantern."
+      "desc": "The stone marker sits beside the illuminated lantern along the paved path."
      },
      "suppressed": null
     },
@@ -193,14 +215,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "lower section of the paved road",
+      "where": "paved path above waystone",
       "bbox": [
-       0.241,
-       0.58,
-       0.54,
-       1
+       0.381,
+       0.388,
+       0.627,
+       0.584
       ],
-      "desc": "The stone path extends from the bottom left up to the waystone."
+      "desc": "The paved road leads from the waystone up towards the upper woods."
      },
      "suppressed": null
     },
@@ -220,14 +242,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "upper section of the paved road",
+      "where": "paved path below waystone",
       "bbox": [
-       0.4,
-       0.379,
-       0.628,
-       0.588
+       0.24,
+       0.584,
+       0.532,
+       1
       ],
-      "desc": "The stone road continues past the waystone under the tree canopy."
+      "desc": "The paved road leads from the waystone down towards the lower-left foreground."
      },
      "suppressed": null
     },
@@ -247,14 +269,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "bottom left corner where path exits frame",
+      "where": "bottom-left edge of path",
       "bbox": [
-       0.241,
-       0.89,
-       0.398,
+       0.24,
+       0.93,
+       0.395,
        1
       ],
-      "desc": "The road extends beyond the bottom-left edge of the frame, marking a clear exit route."
+      "desc": "The paved path continues straight off the bottom-left edge of the screen."
      },
      "suppressed": null
     },
@@ -273,10 +295,15 @@
       "behindBy": 0.02
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "null",
-      "bbox": null,
-      "desc": "The road fades into darkness before reaching the edge of the frame, so an exit toward the arch is not shown."
+      "verdict": "FINDABLE",
+      "where": "top-right exit of path",
+      "bbox": [
+       0.56,
+       0.388,
+       0.627,
+       0.462
+      ],
+      "desc": "The path carries on under the trees out of the upper boundary of the frame."
      },
      "suppressed": null
     },
@@ -296,11 +323,33 @@
      },
      "judged": {
       "verdict": "ABSENT",
-      "where": "null",
+      "where": "not in frame",
       "bbox": null,
-      "desc": "No village arch or timber gate is present in this dense woodland scene."
+      "desc": "The timber arch structure is not visible in this section of the road."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "all frame borders",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "Ground terrain, grass textures, and foliage extend naturally across all outer frame edges without unrendered boundaries."
+     },
+     "suppressed": null
     }
    ]
   },
@@ -311,7 +360,7 @@
    "baked": "2026-08-02T20:20:29Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.190Z",
-   "items": 12,
+   "items": 14,
    "char": null,
    "checklist": [
     {
@@ -330,14 +379,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "center-right wooden gate frame",
+      "where": "timber archway over central path",
       "bbox": [
        0.56,
        0.38,
-       0.629,
-       0.608
+       0.61,
+       0.61
       ],
-      "desc": "The low timber arch stands across the path leading into the village area."
+      "desc": "Recognised by the dark wooden arch structure spanning directly across the paved walking path."
      },
      "suppressed": null
     },
@@ -357,7 +406,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No river or water vista is visible anywhere in this frame."
+      "desc": "The valley river vista is not visible anywhere in this frame."
      },
      "suppressed": "census agrees it is not in this frame (cine_test owns that)"
     },
@@ -377,14 +426,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "center ground paved path segment",
+      "where": "paved path leading from foreground to arch",
       "bbox": [
-       0.2,
-       0.44,
-       0.57,
-       0.595
+       0.56,
+       0.47,
+       0.75,
+       0.99
       ],
-      "desc": "The dark stone path stretches across the ground leading up to the village arch."
+      "desc": "Recognised by the paved stone walkway connecting the lower foreground to the village arch."
      },
      "suppressed": null
     },
@@ -404,14 +453,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "path spur branching upper right of center",
+      "where": "path branching left toward open barn",
       "bbox": [
-       0.45,
-       0.43,
+       0.2,
+       0.46,
        0.57,
-       0.49
+       0.59
       ],
-      "desc": "A path branch splits off near the arch toward the upper middle region."
+      "desc": "Recognised as the paved spur branching off to the left side of the scene."
      },
      "suppressed": null
     },
@@ -431,14 +480,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "path continuing past timber arch",
+      "where": "path leading from arch into background square",
       "bbox": [
-       0.58,
-       0.57,
-       0.7,
-       0.615
+       0.45,
+       0.28,
+       0.55,
+       0.45
       ],
-      "desc": "The path continues straight past the village arch toward the lit square in the background."
+      "desc": "Recognised as the paved route extending past the timber arch toward the distant illuminated square."
      },
      "suppressed": null
     },
@@ -457,10 +506,15 @@
       "behindBy": 0.93
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "No path leading off towards the orchard out of the frame edge is shown in this shot."
+      "verdict": "FINDABLE",
+      "where": "path exiting off the left edge",
+      "bbox": [
+       0,
+       0.42,
+       0.2,
+       0.51
+      ],
+      "desc": "Recognised as the paved path continuing past the barn off the left frame border."
      },
      "suppressed": null
     },
@@ -480,14 +534,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "bottom right dark walkway",
+      "where": "path exiting off the bottom right edge",
       "bbox": [
-       0.58,
        0.6,
+       0.85,
        0.77,
        1
       ],
-      "desc": "The paved walkway extends downwards directly out of the bottom frame edge."
+      "desc": "Recognised by the stone path leading directly off the bottom-right corner of the screen."
      },
      "suppressed": null
     },
@@ -506,15 +560,10 @@
       "behindBy": 0.01
      },
      "judged": {
-      "verdict": "FINDABLE",
-      "where": "far left edge of paved ground",
-      "bbox": [
-       0,
-       0.45,
-       0.2,
-       0.51
-      ],
-      "desc": "The stone path extends to the far left boundary of the frame."
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No third distinct path leading out of the frame edge is visible in this shot."
      },
      "suppressed": null
     },
@@ -534,14 +583,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "open barn structure on left",
+      "where": "open-sided timber shelter on left",
       "bbox": [
-       0.036,
+       0.03,
        0.14,
        0.26,
-       0.422
+       0.42
       ],
-      "desc": "An open-sided wooden barn with a sloped roof stands on the left side of the scene."
+      "desc": "Recognised by the pitched roof supported on timber posts with an open interior next to the path."
      },
      "suppressed": null
     },
@@ -561,14 +610,14 @@
      },
      "judged": {
       "verdict": "VISIBLE-BUT-ILLEGIBLE",
-      "where": "stone building in upper center",
+      "where": "gabled house in upper left background",
       "bbox": [
-       0.246,
-       0.018,
-       0.411,
-       0.275
+       0.24,
+       0.12,
+       0.41,
+       0.27
       ],
-      "desc": "A small stone cottage with a chimney is visible, but lacks any sign or feature identifying it specifically as the inn."
+      "desc": "It appears as a generic distant village building without distinguishing inn features or legible detail."
      },
      "suppressed": null
     },
@@ -587,12 +636,17 @@
       "behindBy": 2.43
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "No item shop or general store front is identifiable in this shot."
+      "verdict": "VISIBLE-BUT-ILLEGIBLE",
+      "where": "distant structures in background square",
+      "bbox": [
+       0.43,
+       0.15,
+       0.53,
+       0.26
+      ],
+      "desc": "The general store is obscured among the small distant background structures and foliage."
      },
-     "suppressed": "ABSENT on a scenery item, not on the shot contract"
+     "suppressed": null
     },
     {
      "id": "festival-dais",
@@ -609,12 +663,66 @@
       "behindBy": -0.97
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "No low wooden festival dais is visible in the frame."
+      "verdict": "VISIBLE-BUT-ILLEGIBLE",
+      "where": "low wooden structure in lit background plaza",
+      "bbox": [
+       0.45,
+       0.16,
+       0.53,
+       0.24
+      ],
+      "desc": "Too small and distant in the background lighting to clearly read as a festival dais."
      },
-     "suppressed": "ABSENT on a scenery item, not on the shot contract"
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "scene perimeters and backdrop horizon",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "JUDGMENT: The dense tree canopy, distant rooftops, and ground geometry form a complete and natural border with no unrendered gaps or abrupt terrain cutoffs."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Pond jetty, Brook footbridge, The Pond). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.9202,
+      "v": 0.2391,
+      "z": 86,
+      "charPx": 43,
+      "on": true,
+      "plateZ": 61.66,
+      "state": "occluded",
+      "behindBy": 24.34
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "channel bed under path footbridge",
+      "bbox": [
+       0.55,
+       0.55,
+       0.62,
+       0.61
+      ],
+      "desc": "JUDGMENT: The water surface underneath the footbridge is rendered as an untextured, flat black void lacking transparency, water flow, or reflections."
+     },
+     "suppressed": null
     }
    ]
   },
@@ -625,7 +733,7 @@
    "baked": "2026-08-02T19:48:21Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.173Z",
-   "items": 6,
+   "items": 7,
    "char": null,
    "checklist": [
     {
@@ -646,7 +754,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No apple orchard rows, ladders, or baskets are present in this view."
+      "desc": "No apple trees in rows, ladders, or apple baskets are visible in this scene."
      },
      "suppressed": null
     },
@@ -666,14 +774,14 @@
      },
      "judged": {
       "verdict": "VISIBLE-BUT-ILLEGIBLE",
-      "where": "roofed structure on the left",
+      "where": "center left structure",
       "bbox": [
        0.226,
-       0.355,
-       0.577,
-       0.848
+       0.358,
+       0.58,
+       0.82
       ],
-      "desc": "The structure's roof is visible, but the area underneath is pitch black in shadow, hiding any press, apple crates, or straw needed to identify it as a cider press barn."
+      "desc": "A roof structure is visible, but the area underneath is pitch black, making it impossible to see any cider press, crates, or straw to identify it as a cider press barn."
      },
      "suppressed": null
     },
@@ -695,7 +803,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "The path connecting the Village Arch to the orchard rows is not in frame."
+      "desc": "Neither the Village Arch nor the orchard rows are present in this frame."
      },
      "suppressed": null
     },
@@ -717,7 +825,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No path connecting orchard rows to the cider press barn is present."
+      "desc": "There is no orchard row present to form a path connecting to the barn."
      },
      "suppressed": null
     },
@@ -739,7 +847,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No designated path leading out of frame towards an arch is visible."
+      "desc": "No distinct path leading off-screen towards an arch is visible."
      },
      "suppressed": null
     },
@@ -761,9 +869,31 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "The timber Village Arch gate is not visible in this shot."
+      "desc": "The timber arch gate is not visible in this view."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "all frame edges",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "Terrain, foliage, and structures extend seamlessly to all four borders of the frame without any unrendered voids or cut-off edges."
+     },
+     "suppressed": null
     }
    ]
   },
@@ -774,7 +904,7 @@
    "baked": "2026-08-02T20:38:44Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.176Z",
-   "items": 12,
+   "items": 15,
    "char": null,
    "checklist": [
     {
@@ -793,14 +923,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "lower center ground",
+      "where": "foreground paved ground",
       "bbox": [
-       0.41,
-       0.47,
-       0.6,
-       0.9
+       0,
+       0.439,
+       1,
+       1
       ],
-      "desc": "The paved stone path connecting the foreground area to the central square."
+      "desc": "Paved pathway leading from the foreground up toward the central square."
      },
      "suppressed": null
     },
@@ -820,14 +950,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "bottom left corner",
+      "where": "bottom-left foreground path",
       "bbox": [
        0,
-       0.88,
+       0.8,
        0.23,
        1
       ],
-      "desc": "The dirt pathway exiting the lower left corner of the frame."
+      "desc": "The path continues directly off the bottom-left edge of the frame."
      },
      "suppressed": null
     },
@@ -846,15 +976,15 @@
       "behindBy": 0.7
      },
      "judged": {
-      "verdict": "FINDABLE",
-      "where": "far left edge",
+      "verdict": "OCCLUDED",
+      "where": "left midground foliage",
       "bbox": [
        0,
-       0.24,
+       0.242,
        0.18,
-       0.51
+       0.49
       ],
-      "desc": "The open-sided timber barn structure situated at the left side of the scene."
+      "desc": "Structure behind tree branches and dense leaves on the left."
      },
      "suppressed": null
     },
@@ -874,14 +1004,14 @@
      },
      "judged": {
       "verdict": "VISIBLE-BUT-ILLEGIBLE",
-      "where": "background center",
+      "where": "right midground cottage",
       "bbox": [
-       0.37,
-       0,
-       0.52,
-       0.2
+       0.686,
+       0.173,
+       0.953,
+       0.56
       ],
-      "desc": "A building is visible in the background behind the square, but lacks identifying signage or features distinguishing it as an inn."
+      "desc": "Reads as a standard cottage without clear signage identifying it as an inn."
      },
      "suppressed": null
     },
@@ -901,9 +1031,9 @@
      },
      "judged": {
       "verdict": "ABSENT",
-      "where": "",
+      "where": "not present",
       "bbox": null,
-      "desc": "No general item shop building with recognizable storefront or props is visible in this frame."
+      "desc": "Item shop is not visible anywhere in this shot."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -923,14 +1053,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "center square floor",
+      "where": "square center background",
       "bbox": [
-       0.52,
-       0.32,
-       0.59,
+       0.47,
+       0.21,
+       0.75,
        0.36
       ],
-      "desc": "A low raised wooden platform set up on the ground in the square area."
+      "desc": "Low wooden platform stage set up in the plaza."
      },
      "suppressed": null
     },
@@ -950,9 +1080,9 @@
      },
      "judged": {
       "verdict": "ABSENT",
-      "where": "",
+      "where": "not present",
       "bbox": null,
-      "desc": "The village bell mounted on a post is not visible in this shot."
+      "desc": "Village bell post is not visible in the shot."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -972,14 +1102,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "upper middle ground",
+      "where": "center background square",
       "bbox": [
        0.46,
-       0.21,
-       0.71,
+       0.2,
+       0.75,
        0.45
       ],
-      "desc": "The central open village plaza adorned with overhead bunting lights and market setups."
+      "desc": "Open village plaza dressed with seating and tables."
      },
      "suppressed": null
     },
@@ -999,9 +1129,9 @@
      },
      "judged": {
       "verdict": "ABSENT",
-      "where": "",
+      "where": "not present",
       "bbox": null,
-      "desc": "The glowing magical flame on its pedestal is not present or lit in this scene."
+      "desc": "The magical flame and pedestal are not present."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -1021,14 +1151,14 @@
      },
      "judged": {
       "verdict": "VISIBLE-BUT-ILLEGIBLE",
-      "where": "center left background",
+      "where": "left center building",
       "bbox": [
-       0.28,
+       0.285,
        0.07,
-       0.47,
-       0.4
+       0.473,
+       0.41
       ],
-      "desc": "A stone cottage stands near the square, but lacks visible bakery features or signs to identify it as Poppy's bakery."
+      "desc": "Stone structure lacks distinct visual features identifying it as a bakery."
      },
      "suppressed": null
     },
@@ -1047,17 +1177,12 @@
       "behindBy": 24.87
      },
      "judged": {
-      "verdict": "FINDABLE",
-      "where": "mid-ground right",
-      "bbox": [
-       0.68,
-       0.17,
-       0.96,
-       0.56
-      ],
-      "desc": "The prominent keeper's cottage with a red-tiled roof and chimney flanking the square."
+      "verdict": "ABSENT",
+      "where": "not present",
+      "bbox": null,
+      "desc": "Keeper's cottage is not visible in this frame."
      },
-     "suppressed": null
+     "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
     {
      "id": "market-row",
@@ -1075,14 +1200,85 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "inside festival square",
+      "where": "plaza background",
       "bbox": [
        0.47,
-       0.23,
-       0.71,
+       0.21,
+       0.74,
        0.33
       ],
-      "desc": "A row of wooden market stalls and wooden tables arranged in the plaza."
+      "desc": "Arrangement of market tables and wooden stalls across the square."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:sky",
+     "src": "skyAudit",
+     "what": "[QUALITY] The sky — it covers about 2% of this frame. Does it read as a real atmosphere at this scene's own hour — gradient, cloud forms, horizon treatment where it meets the terrain — or as a flat fill / empty gradient that just ends the world? Name what carries it or what it lacks.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0.015
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "upper center sky patch",
+      "bbox": [
+       0.62,
+       0,
+       0.73,
+       0.12
+      ],
+      "desc": "Visible sky area is a flat gradient with minimal atmospheric volume."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0.015
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "lower frame boundaries",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "Deep shadows near lower boundaries merge ground elements into dark shapes."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Brook footbridge, Weir & sluice, Brook spring). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.8227,
+      "v": 0.3045,
+      "z": 49.28,
+      "charPx": 42,
+      "on": true,
+      "plateZ": 19.77,
+      "state": "occluded",
+      "behindBy": 29.52
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "ground channel area",
+      "bbox": [
+       0.5,
+       0.48,
+       0.7,
+       0.65
+      ],
+      "desc": "Water lacks transparency or surface reflection, blending into dark terrain."
      },
      "suppressed": null
     }
@@ -1095,7 +1291,7 @@
    "baked": "2026-08-02T19:48:21Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.182Z",
-   "items": 28,
+   "items": 30,
    "char": null,
    "checklist": [
     {
@@ -1114,14 +1310,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "center village plaza",
+      "where": "center plaza",
       "bbox": [
-       0.18,
-       0.2,
-       0.85,
-       0.92
+       0.218,
+       0.213,
+       0.936,
+       0.735
       ],
-      "desc": "Open central square decorated with lights, stalls, and surrounded by village buildings."
+      "desc": "Central open square surrounded by structures and stalls."
      },
      "suppressed": null
     },
@@ -1141,14 +1337,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "plaza center",
+      "where": "square center",
       "bbox": [
-       0.45,
-       0.45,
-       0.55,
-       0.57
+       0.452,
+       0.448,
+       0.571,
+       0.552
       ],
-      "desc": "Glowing flame resting on a circular stone pedestal at the plaza center."
+      "desc": "Glowing central pedestal pit emitting light."
      },
      "suppressed": null
     },
@@ -1168,14 +1364,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "around square center",
+      "where": "lower square",
       "bbox": [
-       0.26,
-       0.46,
-       0.7,
-       0.72
+       0.27,
+       0.462,
+       0.688,
+       0.706
       ],
-      "desc": "Row of wooden market stalls and benches ringing the central plaza."
+      "desc": "Row of wooden benches and market stalls in the plaza."
      },
      "suppressed": null
     },
@@ -1195,14 +1391,14 @@
      },
      "judged": {
       "verdict": "VISIBLE-BUT-ILLEGIBLE",
-      "where": "northeast of square",
+      "where": "east house",
       "bbox": [
-       0.59,
-       0.12,
-       0.71,
-       0.37
+       0.778,
+       0.247,
+       0.922,
+       0.539
       ],
-      "desc": "Building located near the square, but lacks distinct trade signage."
+      "desc": "Appears as a standard cottage without clear shop trade indicators."
      },
      "suppressed": null
     },
@@ -1222,14 +1418,14 @@
      },
      "judged": {
       "verdict": "VISIBLE-BUT-ILLEGIBLE",
-      "where": "north edge of square",
+      "where": "northeast building",
       "bbox": [
-       0.36,
-       0.05,
-       0.46,
-       0.23
+       0.587,
+       0.119,
+       0.718,
+       0.376
       ],
-      "desc": "Small cottage visible in background without clear inn indicators."
+      "desc": "Reads as a generic wooden structure rather than an inn."
      },
      "suppressed": null
     },
@@ -1249,14 +1445,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "west side of plaza",
+      "where": "west of square center",
       "bbox": [
+       0.363,
        0.36,
-       0.36,
-       0.43,
-       0.47
+       0.432,
+       0.468
       ],
-      "desc": "Wooden notice frame with pinned paper standing beside the square path."
+      "desc": "Standing wooden notice board frame near the bell."
      },
      "suppressed": null
     },
@@ -1276,14 +1472,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "east side of plaza",
+      "where": "east side of square",
       "bbox": [
-       0.62,
-       0.44,
-       0.68,
-       0.55
+       0.622,
+       0.442,
+       0.688,
+       0.559
       ],
-      "desc": "Circular stone well with upright timber frame."
+      "desc": "Circular stone well structure with timber winch frame."
      },
      "suppressed": null
     },
@@ -1303,14 +1499,14 @@
      },
      "judged": {
       "verdict": "VISIBLE-BUT-ILLEGIBLE",
-      "where": "west rim of square",
+      "where": "west house",
       "bbox": [
-       0.21,
-       0.2,
-       0.35,
+       0.211,
+       0.202,
+       0.355,
        0.47
       ],
-      "desc": "Orange-roofed cottage on plaza edge, indistinguishable from ordinary houses."
+      "desc": "Looks like a normal residential cottage without bakery signifiers."
      },
      "suppressed": null
     },
@@ -1330,14 +1526,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "west edge of square",
+      "where": "west edge of plaza",
       "bbox": [
        0.27,
-       0.46,
-       0.44,
-       0.61
+       0.462,
+       0.442,
+       0.566
       ],
-      "desc": "Wooden market stall positioned in front of the western cottage."
+      "desc": "Wooden stall structure situated near the western plaza boundary."
      },
      "suppressed": null
     },
@@ -1357,14 +1553,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "northeast of Heartlight",
+      "where": "east of center fire",
       "bbox": [
-       0.51,
+       0.508,
        0.37,
-       0.6,
-       0.46
+       0.604,
+       0.462
       ],
-      "desc": "Low rectangular wooden stage platform next to central fire."
+      "desc": "Low rectangular wooden platform near the plaza center."
      },
      "suppressed": null
     },
@@ -1386,10 +1582,10 @@
       "verdict": "FINDABLE",
       "where": "next to notice board",
       "bbox": [
-       0.39,
-       0.38,
-       0.43,
-       0.46
+       0.404,
+       0.378,
+       0.429,
+       0.456
       ],
       "desc": "Small bell mounted on a wooden post."
      },
@@ -1413,7 +1609,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "Village Arch area is off-screen."
+      "desc": "No arch or corresponding road section in this frame."
      },
      "suppressed": null
     },
@@ -1433,14 +1629,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "northeast plaza ground",
+      "where": "east plaza connection",
       "bbox": [
-       0.52,
-       0.32,
-       0.64,
-       0.45
+       0.7,
+       0.49,
+       0.8,
+       0.6
       ],
-      "desc": "Open ground leading from plaza center toward the northeast building."
+      "desc": "Clear ground connecting central plaza to east house."
      },
      "suppressed": null
     },
@@ -1460,14 +1656,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "north plaza path",
+      "where": "northeast pathway",
       "bbox": [
-       0.41,
-       0.22,
-       0.52,
-       0.38
+       0.54,
+       0.32,
+       0.62,
+       0.42
       ],
-      "desc": "Unpaved path leading north toward the upper cottage."
+      "desc": "Open ground leading toward northeast building."
      },
      "suppressed": null
     },
@@ -1487,14 +1683,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "west plaza ground",
+      "where": "west central path",
       "bbox": [
-       0.35,
+       0.36,
        0.42,
-       0.46,
-       0.5
+       0.43,
+       0.49
       ],
-      "desc": "Short path connecting central area to the notice board."
+      "desc": "Short open ground path reaching notice board."
      },
      "suppressed": null
     },
@@ -1514,14 +1710,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "east plaza ground",
+      "where": "east plaza path",
       "bbox": [
-       0.53,
-       0.48,
+       0.55,
+       0.47,
        0.63,
-       0.54
+       0.52
       ],
-      "desc": "Clear path connecting Heartlight area to the village well."
+      "desc": "Clear ground extending from square center to well."
      },
      "suppressed": null
     },
@@ -1541,14 +1737,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "west plaza path",
+      "where": "west plaza connection",
       "bbox": [
-       0.28,
+       0.31,
+       0.4,
        0.38,
-       0.42,
-       0.5
+       0.48
       ],
-      "desc": "Walkway leading from center plaza to western cottage entrance."
+      "desc": "Open ground linking square to west house."
      },
      "suppressed": null
     },
@@ -1570,7 +1766,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "Pond jetty route is off-screen."
+      "desc": "Pond jetty lane is not visible in shot."
      },
      "suppressed": null
     },
@@ -1589,10 +1785,15 @@
       "behindBy": 0.13
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "Cottage route is not visible in frame."
+      "verdict": "FINDABLE",
+      "where": "upper north path",
+      "bbox": [
+       0.38,
+       0.18,
+       0.46,
+       0.26
+      ],
+      "desc": "Path leading upward to north cottage."
      },
      "suppressed": null
     },
@@ -1614,7 +1815,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "Tithe barn road is off-screen."
+      "desc": "Tithe barn road is not present in frame."
      },
      "suppressed": null
     },
@@ -1636,7 +1837,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "Footbridge route is outside visible frame."
+      "desc": "Brook footbridge route is outside visible frame."
      },
      "suppressed": null
     },
@@ -1655,15 +1856,15 @@
       "behindBy": 0
      },
      "judged": {
-      "verdict": "FINDABLE",
-      "where": "northeast building doorway",
+      "verdict": "VISIBLE-BUT-ILLEGIBLE",
+      "where": "east house wall",
       "bbox": [
-       0.6,
-       0.28,
-       0.63,
-       0.36
+       0.785,
+       0.405,
+       0.815,
+       0.47
       ],
-      "desc": "Doorway visible on the front face of the northeast building."
+      "desc": "Door opening is obscured in deep shadow."
      },
      "suppressed": null
     },
@@ -1682,10 +1883,15 @@
       "behindBy": 0.04
      },
      "judged": {
-      "verdict": "OCCLUDED",
-      "where": "north cottage front",
-      "bbox": null,
-      "desc": "Door is hidden behind lower building structures and angle of view."
+      "verdict": "FINDABLE",
+      "where": "northeast house entrance",
+      "bbox": [
+       0.605,
+       0.286,
+       0.638,
+       0.361
+      ],
+      "desc": "Clearly defined door frame on front wall."
      },
      "suppressed": null
     },
@@ -1705,14 +1911,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "west cottage front",
+      "where": "west house front",
       "bbox": [
-       0.31,
-       0.36,
-       0.34,
-       0.44
+       0.311,
+       0.366,
+       0.344,
+       0.452
       ],
-      "desc": "Wooden entrance door beneath the roof overhang."
+      "desc": "Visible entrance door facing plaza."
      },
      "suppressed": null
     },
@@ -1731,15 +1937,10 @@
       "behindBy": 1.03
      },
      "judged": {
-      "verdict": "FINDABLE",
-      "where": "northeast corner exit",
-      "bbox": [
-       0.65,
-       0,
-       0.85,
-       0.15
-      ],
-      "desc": "Dirt path extending beyond the top right edge of frame."
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "Path toward the rise is not visible."
      },
      "suppressed": null
     },
@@ -1758,15 +1959,10 @@
       "behindBy": 0.01
      },
      "judged": {
-      "verdict": "FINDABLE",
-      "where": "far right exit",
-      "bbox": [
-       0.85,
-       0.2,
-       0.99,
-       0.35
-      ],
-      "desc": "Path leading off-screen on the right boundary."
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "Pond lane exit is outside frame boundaries."
      },
      "suppressed": null
     },
@@ -1786,14 +1982,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "far left exit",
+      "where": "top edge path",
       "bbox": [
+       0.48,
        0,
-       0.35,
-       0.15,
-       0.5
+       0.58,
+       0.1
       ],
-      "desc": "Path continuing off-screen to the west."
+      "desc": "Path leading off frame through upper treeline."
      },
      "suppressed": null
     },
@@ -1813,14 +2009,58 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "top edge center exit",
+      "where": "top right exit",
       "bbox": [
-       0.42,
+       0.68,
        0,
-       0.55,
-       0.1
+       0.78,
+       0.12
       ],
-      "desc": "Road leading off the top edge of the map frame."
+      "desc": "Path extending off upper right edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "frame perimeter",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "JUDGMENT: Peripheral terrain fades abruptly into pitch darkness rather than natural scenery."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Weir & sluice, Brook footbridge, Pond jetty). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.0796,
+      "v": 0.8627,
+      "z": 37.18,
+      "charPx": 56,
+      "on": true,
+      "plateZ": 36.74,
+      "state": "clear",
+      "behindBy": 0.44
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No water surface present in this scene."
      },
      "suppressed": null
     }
@@ -1833,7 +2073,7 @@
    "baked": "2026-08-02T19:48:21Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.197Z",
-   "items": 13,
+   "items": 16,
    "char": null,
    "checklist": [
     {
@@ -1851,10 +2091,15 @@
       "behindBy": 0.02
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "No body of water or pond is visible in this frame."
+      "verdict": "VISIBLE-BUT-ILLEGIBLE",
+      "where": "dark ground in midground",
+      "bbox": [
+       0.22,
+       0.58,
+       0.6,
+       0.75
+      ],
+      "desc": "The body of water is rendered so dark and unreflective that it is indistinguishable from dark ground or heavy shadow under the trees."
      },
      "suppressed": null
     },
@@ -1873,10 +2118,15 @@
       "behindBy": 0.28
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "No jetty or fishing dock is present in this frame."
+      "verdict": "FINDABLE",
+      "where": "wooden deck under center foliage",
+      "bbox": [
+       0.467,
+       0.57,
+       0.553,
+       0.68
+      ],
+      "desc": "A small wooden planked jetty is visible extending toward the dark water body beneath the central trees."
      },
      "suppressed": null
     },
@@ -1895,10 +2145,10 @@
       "behindBy": 0.04
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
+      "verdict": "OCCLUDED",
+      "where": "behind central tree canopy",
       "bbox": null,
-      "desc": "No washline green or drying field is visible in this frame."
+      "desc": "The field is hidden behind the dense central trees and foliage."
      },
      "suppressed": null
     },
@@ -1917,10 +2167,10 @@
       "behindBy": 0.19
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
+      "verdict": "OCCLUDED",
+      "where": "behind foliage and bank",
       "bbox": null,
-      "desc": "No brook or footbridge is present in this frame."
+      "desc": "The brook footbridge is occluded by the thick midground trees."
      },
      "suppressed": null
     },
@@ -1939,10 +2189,10 @@
       "behindBy": 3.22
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
+      "verdict": "OCCLUDED",
+      "where": "behind midground trees",
       "bbox": null,
-      "desc": "The brook mouth is not visible in this shot."
+      "desc": "The brook mouth is hidden behind the dense central vegetation."
      },
      "suppressed": null
     },
@@ -1962,14 +2212,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "roofs in trees at top center",
+      "where": "upper background amidst tree tops",
       "bbox": [
-       0.388,
-       0.093,
-       0.613,
-       0.161
+       0.383,
+       0.092,
+       0.471,
+       0.155
       ],
-      "desc": "Small cottage roofs are visible nestled in the dense tree canopy in the background vista."
+      "desc": "Distant cottage roofs are visible nestled in the trees along the upper background ridge."
      },
      "suppressed": null
     },
@@ -1988,10 +2238,10 @@
       "behindBy": 0.32
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
+      "verdict": "OCCLUDED",
+      "where": "behind central trees",
       "bbox": null,
-      "desc": "No weir or sluice mechanism is visible in this frame."
+      "desc": "The weir and sluice structure is hidden behind the heavy midground foliage."
      },
      "suppressed": null
     },
@@ -2010,10 +2260,10 @@
       "behindBy": -0.07
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
+      "verdict": "OCCLUDED",
+      "where": "behind central tree canopy",
       "bbox": null,
-      "desc": "Finn's smokehouse is not present in this shot."
+      "desc": "The smokehouse is occluded by the dense trees near the center of the frame."
      },
      "suppressed": null
     },
@@ -2032,10 +2282,10 @@
       "behindBy": 0.27
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
+      "verdict": "OCCLUDED",
+      "where": "beneath the bank under foliage",
       "bbox": null,
-      "desc": "Pip's den is not visible in this frame."
+      "desc": "Pip's den is hidden under the bank behind the midground trees."
      },
      "suppressed": null
     },
@@ -2054,10 +2304,15 @@
       "behindBy": 0.51
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "The route to the pond jetty is not visible in this shot."
+      "verdict": "FINDABLE",
+      "where": "open central lane under festoons",
+      "bbox": [
+       0.2,
+       0.65,
+       0.6,
+       0.98
+      ],
+      "desc": "The open ground path curling toward the jetty area under the string lights is clearly identifiable as a road."
      },
      "suppressed": null
     },
@@ -2076,10 +2331,10 @@
       "behindBy": 1.74
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
+      "verdict": "OCCLUDED",
+      "where": "behind central trees",
       "bbox": null,
-      "desc": "The path between the jetty and brook footbridge is not in this frame."
+      "desc": "This section of path is hidden behind the midground tree growth."
      },
      "suppressed": null
     },
@@ -2098,10 +2353,10 @@
       "behindBy": 0.03
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
+      "verdict": "OCCLUDED",
+      "where": "behind north shore trees",
       "bbox": null,
-      "desc": "The path to Washline green is not present in this frame."
+      "desc": "The path around the north shore is occluded by the tree canopy."
      },
      "suppressed": null
     },
@@ -2120,10 +2375,86 @@
       "behindBy": -0.01
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "The egress path from the pond area toward the square is not in view in this camera angle."
+      "verdict": "FINDABLE",
+      "where": "far left foreground steps",
+      "bbox": [
+       0,
+       0.622,
+       0.25,
+       0.99
+      ],
+      "desc": "A set of stepping paths/slabs leads directly off the left edge of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:sky",
+     "src": "skyAudit",
+     "what": "[QUALITY] The sky — it covers about 12% of this frame. Does it read as a real atmosphere at this scene's own hour — gradient, cloud forms, horizon treatment where it meets the terrain — or as a flat fill / empty gradient that just ends the world? Name what carries it or what it lacks.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0.12
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "top 12% sky band",
+      "bbox": [
+       0,
+       0,
+       1,
+       0.12
+      ],
+      "desc": "The sky is a very plain, smooth blue gradient lacking cloud structures or atmospheric haze depth above the tree line."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0.12
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "far left edge steps",
+      "bbox": [
+       0,
+       0.622,
+       0.24,
+       0.84
+      ],
+      "desc": "The steps on the far left edge appear as untextured, flat green block meshes that abruptly end the terrain geometry."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Brook footbridge, Weir & sluice, Pond jetty). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.3963,
+      "v": 0.7318,
+      "z": 19.99,
+      "charPx": 104,
+      "on": true,
+      "plateZ": 19.8,
+      "state": "clear",
+      "behindBy": 0.19
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "center dark water area",
+      "bbox": [
+       0.22,
+       0.58,
+       0.6,
+       0.75
+      ],
+      "desc": "The water surface reads as a solid black flat plane with no transparency, ripples, or soft bank contact."
      },
      "suppressed": null
     }
@@ -2136,7 +2467,7 @@
    "baked": "2026-08-02T12:46:58Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.195Z",
-   "items": 18,
+   "items": 20,
    "char": null,
    "checklist": [
     {
@@ -2155,14 +2486,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "bottom left cottage",
+      "where": "top central cottage",
       "bbox": [
-       0.023,
-       0.447,
-       0.238,
-       0.937
+       0.356,
+       0,
+       0.592,
+       0.445
       ],
-      "desc": "A stone cottage with a tiled roof situated on the left side of the scene."
+      "desc": "A stone cottage with a red-tiled roof situated in the upper central section of the scene."
      },
      "suppressed": null
     },
@@ -2182,14 +2513,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "center-right cottage",
+      "where": "middle right cottage",
       "bbox": [
-       0.552,
-       0.223,
-       0.806,
-       0.672
+       0.549,
+       0.221,
+       0.807,
+       0.673
       ],
-      "desc": "A cottage with a red tiled roof and a wooden front door located in the center-right area."
+      "desc": "A stone cottage with an orange-tiled roof and wooden crates piled by its entrance."
      },
      "suppressed": null
     },
@@ -2209,14 +2540,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "upper center cottage",
+      "where": "bottom left building",
       "bbox": [
-       0.359,
-       0,
-       0.592,
-       0.444
+       0.017,
+       0.448,
+       0.233,
+       0.93
       ],
-      "desc": "A stone and plaster house with a tiled roof located near the top center of the village."
+      "desc": "A cottage with orange roof tiles on the lower left side of the lane."
      },
      "suppressed": null
     },
@@ -2236,14 +2567,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "wooden bench near central path",
+      "where": "bottom left stone pad",
       "bbox": [
-       0.236,
-       0.648,
+       0.237,
+       0.647,
        0.317,
        0.712
       ],
-      "desc": "A simple wooden bench resting beside the path near the lower-left area."
+      "desc": "A simple wooden bench sitting on a stone pad beside the path."
      },
      "suppressed": null
     },
@@ -2265,7 +2596,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No water spring is visible anywhere in this frame."
+      "desc": "The spring source is completely hidden in the dark tree shadows with no visible water."
      },
      "suppressed": null
     },
@@ -2287,7 +2618,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No closed upper lane or festival cart is present in this view."
+      "desc": "No cart or closed upper lane boundary is visible in this frame."
      },
      "suppressed": null
     },
@@ -2307,7 +2638,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No distant rooftops or vista are visible beyond the dense trees."
+      "desc": "The dense foliage background completely blocks any view of distant rooftops."
      },
      "suppressed": "census agrees it is not in this frame (cine_test owns that)"
     },
@@ -2327,7 +2658,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No hillside cottages or distant vistas are drawn in the background."
+      "desc": "No hillside cottages or distant vistas are visible beyond the tree line."
      },
      "suppressed": "census agrees it is not in this frame (cine_test owns that)"
     },
@@ -2347,14 +2678,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "large building on the right",
+      "where": "upper right structure",
       "bbox": [
        0.68,
        0,
        1,
-       0.711
+       0.746
       ],
-      "desc": "A large mill building featuring a prominent wooden watermill wheel on its right side."
+      "desc": "A large mill structure on the right side of the frame with an attached mill wheel."
      },
      "suppressed": null
     },
@@ -2373,10 +2704,15 @@
       "behindBy": 1.98
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "There is no stone spring house in the scene."
+      "verdict": "FINDABLE",
+      "where": "top left stone hut",
+      "bbox": [
+       0.094,
+       0,
+       0.21,
+       0.142
+      ],
+      "desc": "A small stone hut with a dark doorway under the trees at the top left."
      },
      "suppressed": null
     },
@@ -2398,7 +2734,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "No second bench outside Lake's home is visible."
+      "desc": "Only wooden crates and barrels sit outside Lake's home; no bench is present there."
      },
      "suppressed": null
     },
@@ -2416,14 +2752,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "paved path on the lower left",
+      "where": "main paved pathway",
       "bbox": [
        0.222,
-       0.654,
-       0.676,
-       0.874
+       0.653,
+       0.675,
+       0.87
       ],
-      "desc": "The paved stone walkway leading from the western edge through the lower village area."
+      "desc": "The paved stone path extending horizontally across the central lower section."
      },
      "suppressed": null
     },
@@ -2442,15 +2778,10 @@
       "behindBy": -0.16
      },
      "judged": {
-      "verdict": "FINDABLE",
-      "where": "path connecting the lower-left and center-right cottages",
-      "bbox": [
-       0.222,
-       0.654,
-       0.676,
-       0.874
-      ],
-      "desc": "The paved walkway connecting Mara & Pip's cottage directly across to Lake's home."
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No paved path or marked trail directly connects these two cottages."
      },
      "suppressed": null
     },
@@ -2469,10 +2800,15 @@
       "behindBy": 2.86
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "No paved path connects Mara & Pip's cottage to Rowan's house directly."
+      "verdict": "FINDABLE",
+      "where": "paved lane between houses",
+      "bbox": [
+       0.222,
+       0.653,
+       0.675,
+       0.87
+      ],
+      "desc": "The paved stone lane passing between Rowan's house and Mara & Pip's cottage."
      },
      "suppressed": null
     },
@@ -2491,10 +2827,15 @@
       "behindBy": 0.03
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "There is no established path leading between Rowan's house and the bench."
+      "verdict": "FINDABLE",
+      "where": "path spur to bench",
+      "bbox": [
+       0.223,
+       0.647,
+       0.335,
+       0.79
+      ],
+      "desc": "The short paved branch leading from the main lane to the bench pad."
      },
      "suppressed": null
     },
@@ -2514,14 +2855,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "path leading toward the mill",
+      "where": "right path branch",
       "bbox": [
-       0.51,
-       0.654,
-       0.8,
-       0.8
+       0.64,
+       0.65,
+       0.845,
+       0.99
       ],
-      "desc": "The paved path extending east from the central walkway toward the watermill entrance."
+      "desc": "The paved stone walkway branching off toward the watermill building."
      },
      "suppressed": null
     },
@@ -2541,14 +2882,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "wooden door on Lake's home",
+      "where": "door of Lake's home",
       "bbox": [
-       0.687,
+       0.685,
        0.52,
        0.729,
-       0.646
+       0.64
       ],
-      "desc": "The main wooden entryway set into the front wall of Lake's home."
+      "desc": "The dark wooden doorway facing the stone path at Lake's cottage."
      },
      "suppressed": null
     },
@@ -2568,14 +2909,63 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "path continuing off-screen at bottom right",
+      "where": "bottom right lane edge",
       "bbox": [
-       0.68,
-       0.722,
-       0.836,
+       0.66,
+       0.7,
+       0.845,
        1
       ],
-      "desc": "The paved path extending beyond the bottom right edge of the frame."
+      "desc": "The stone path leading continuously out of the bottom right frame edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "entire frame boundaries",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "JUDGMENT: The dense canopy, stone structures, and terrain extend naturally to all four image borders without revealing unrendered gaps or bare void."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Brook spring). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.2394,
+      "v": 0.2021,
+      "z": 55.04,
+      "charPx": 67,
+      "on": true,
+      "plateZ": 55.03,
+      "state": "clear",
+      "behindBy": 0.01
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "top left near spring house",
+      "bbox": [
+       0,
+       0,
+       0.25,
+       0.2
+      ],
+      "desc": "JUDGMENT: No visible water surface geometry or fluid shader is present near the spring house or mill wheel, leaving the water feature entirely unrendered."
      },
      "suppressed": null
     }
@@ -2588,7 +2978,7 @@
    "baked": "2026-08-02T13:00:24Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.187Z",
-   "items": 8,
+   "items": 9,
    "char": null,
    "checklist": [
     {
@@ -2605,7 +2995,17 @@
       "state": "occluded",
       "behindBy": 3.49
      },
-     "judged": null,
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top center region",
+      "bbox": [
+       0.36,
+       0.23,
+       0.52,
+       0.52
+      ],
+      "desc": "Recognised by its orange tiled roof, stone chimney, and position adjacent to the dovecote tower."
+     },
      "suppressed": null
     },
     {
@@ -2622,7 +3022,12 @@
       "state": "occluded",
       "behindBy": 1.02
      },
-     "judged": null,
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No closed lane with stacked barrels is visible in this frame."
+     },
      "suppressed": null
     },
     {
@@ -2639,7 +3044,17 @@
       "state": "occluded",
       "behindBy": 2.43
      },
-     "judged": null,
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center lower area",
+      "bbox": [
+       0.38,
+       0.55,
+       0.52,
+       0.88
+      ],
+      "desc": "Recognised as a circular stone tower with a tiled conical roof situated next to the barn."
+     },
      "suppressed": null
     },
     {
@@ -2656,7 +3071,12 @@
       "state": "clear",
       "behindBy": -0.2
      },
-     "judged": null,
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "There is no north lane enclosed by stone walls depicted in this view."
+     },
      "suppressed": null
     },
     {
@@ -2671,7 +3091,17 @@
       "on": false,
       "state": "off-frame"
      },
-     "judged": null,
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "middle right path",
+      "bbox": [
+       0.51,
+       0.34,
+       0.99,
+       0.62
+      ],
+      "desc": "Recognised as the long, gently curving paved road passing through the trees to the east."
+     },
      "suppressed": null
     },
     {
@@ -2688,7 +3118,17 @@
       "state": "clear",
       "behindBy": 0.01
      },
-     "judged": null,
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "middle left edge",
+      "bbox": [
+       0,
+       0.51,
+       0.21,
+       0.67
+      ],
+      "desc": "Recognised as the stone-paved walkway exiting the frame on the left."
+     },
      "suppressed": null
     },
     {
@@ -2705,7 +3145,17 @@
       "state": "clear",
       "behindBy": 0.03
      },
-     "judged": null,
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "middle right edge",
+      "bbox": [
+       0.7,
+       0.33,
+       1,
+       0.52
+      ],
+      "desc": "Recognised as the curving path carrying directly off the right side of the screen."
+     },
      "suppressed": null
     },
     {
@@ -2722,7 +3172,39 @@
       "state": "occluded",
       "behindBy": 7.48
      },
-     "judged": null,
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top left corner",
+      "bbox": [
+       0.08,
+       0,
+       0.43,
+       0.23
+      ],
+      "desc": "Recognised by the timber mill building structure and waterwheel visible under the foliage."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "all frame borders",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "The terrain, foliage, and paths extend naturally to every border without exposing empty space or cut-off geometry."
+     },
      "suppressed": null
     }
    ]
@@ -2734,7 +3216,7 @@
    "baked": "2026-08-02T22:42:37Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.167Z",
-   "items": 12,
+   "items": 14,
    "char": null,
    "checklist": [
     {
@@ -2753,14 +3235,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "across mid-ground",
+      "where": "middle ground unpaved road",
       "bbox": [
-       0.448,
        0,
-       0.7,
-       0.59
+       0.44,
+       0.49,
+       0.69
       ],
-      "desc": "The wide, unpaved curving road sweeps across the middle ground through the trees."
+      "desc": "The wide, unpaved road curves continuously through the grassy terrain in the middle ground."
      },
      "suppressed": null
     },
@@ -2780,14 +3262,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "foreground path leading down",
+      "where": "far left edge",
       "bbox": [
-       0.68,
-       0.314,
-       1,
-       0.575
+       0,
+       0.45,
+       0.12,
+       0.68
       ],
-      "desc": "A foot path branches downward and extends past the bottom edge of the frame."
+      "desc": "The dirt path extends uninterrupted directly past the left edge of the frame."
      },
      "suppressed": null
     },
@@ -2807,14 +3289,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "top-center background",
+      "where": "top left near Dovecote",
       "bbox": [
+       0.13,
        0,
-       0.25,
-       0.194,
-       0.432
+       0.23,
+       0.26
       ],
-      "desc": "The stone tithe barn building with red tiled roofing is visible in the background next to the dovecote."
+      "desc": "The substantial stone storehouse building with a tiled roof stands beside the Dovecote tower."
      },
      "suppressed": null
     },
@@ -2834,14 +3316,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "upper left background",
+      "where": "top left corner",
       "bbox": [
+       0.094,
        0.017,
-       0.18,
-       0.283,
-       0.271
+       0.141,
+       0.259
       ],
-      "desc": "The distinctive round stone dove tower with a conical roof stands beside the tithe barn."
+      "desc": "The tall, round stone Dovecote tower topped with a conical roof is clearly visible."
      },
      "suppressed": null
     },
@@ -2863,7 +3345,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "The closed back lane with stacked Emberwake barrels is not visible in this frame."
+      "desc": "No lane blocked by stacked Emberwake barrels can be seen in this shot."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -2885,7 +3367,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "The watermill with its water wheel and millpond is not present in this shot."
+      "desc": "The watermill structure and wheel are not visible anywhere in this frame."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -2904,12 +3386,12 @@
       "behindBy": 2.33
      },
      "judged": {
-      "verdict": "ABSENT",
+      "verdict": "OCCLUDED",
       "where": "",
       "bbox": null,
-      "desc": "Rowan's house is not visible in this frame."
+      "desc": "Rowan's house is hidden behind the Tithe barn and surrounding foliage."
      },
-     "suppressed": "ABSENT on a scenery item, not on the shot contract"
+     "suppressed": null
     },
     {
      "id": "hillside-cottage",
@@ -2929,7 +3411,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "Mara & Pip's cottage does not appear in this view."
+      "desc": "Mara & Pip's cottage is not present within this camera angle."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -2951,7 +3433,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "The brook footbridge is not in this scene."
+      "desc": "The wooden footbridge is not visible in this view."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -2973,7 +3455,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "Pip's den hideout is absent from this view."
+      "desc": "Pip's den under the riverbank cannot be seen in this frame."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -2995,7 +3477,7 @@
       "verdict": "ABSENT",
       "where": "",
       "bbox": null,
-      "desc": "The closed upper lane is not visible in this frame."
+      "desc": "The upper lane closed by a festival cart is outside the frame."
      },
      "suppressed": "ABSENT on a scenery item, not on the shot contract"
     },
@@ -3014,12 +3496,66 @@
       "behindBy": 20.88
      },
      "judged": {
-      "verdict": "ABSENT",
-      "where": "",
-      "bbox": null,
-      "desc": "Grandmother's bench outside the keeper's cottage is not present in this frame."
+      "verdict": "FINDABLE",
+      "where": "beside path past lamp post",
+      "bbox": [
+       0.17,
+       0.28,
+       0.21,
+       0.33
+      ],
+      "desc": "The low bench sits along the path near the illuminated lamp post."
      },
-     "suppressed": "ABSENT on a scenery item, not on the shot contract"
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "all frame borders",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "The terrain, village structures, and dense tree foliage extend naturally to every edge of the image without unrendered voids or abrupt boundaries."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — this frame holds water (near Brook footbridge). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+     "census": {
+      "u": 0.1322,
+      "v": 0.2271,
+      "z": 79.25,
+      "charPx": 47,
+      "on": true,
+      "plateZ": 78.69,
+      "state": "clear",
+      "behindBy": 0.56
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "center dark channel",
+      "bbox": [
+       0.24,
+       0.47,
+       0.31,
+       0.7
+      ],
+      "desc": "The water channel reads as a completely featureless, pitch-black flat plane with no reflections, transparency, or believable wet shore contacts."
+     },
+     "suppressed": null
     }
    ]
   },
@@ -3030,7 +3566,7 @@
    "baked": "2026-08-02T22:57:09Z",
    "supersededBake": null,
    "plateMtime": "2026-08-06T19:42:54.192Z",
-   "items": 11,
+   "items": 12,
    "char": null,
    "checklist": [
     {
@@ -3049,14 +3585,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "center right court plaza",
+      "where": "",
       "bbox": [
-       0.374,
-       0.118,
-       0.836,
-       0.712
+       0.396,
+       0.119,
+       0.814,
+       0.715
       ],
-      "desc": "Large dark flagstone court leading up to the gate wall."
+      "desc": "Large dark flag-stoned court before the old gate wall."
      },
      "suppressed": null
     },
@@ -3076,14 +3612,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "top right wall",
+      "where": "",
       "bbox": [
-       0.664,
+       0.492,
        0,
-       0.763,
-       0.125
+       0.814,
+       0.237
       ],
-      "desc": "Tall wooden double door set into the stone perimeter wall."
+      "desc": "Masonry wall structure spanning the passage at the end of the court."
      },
      "suppressed": null
     },
@@ -3103,14 +3639,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "left side of gate apron",
+      "where": "",
       "bbox": [
-       0.627,
-       0.203,
-       0.686,
+       0.621,
+       0.205,
+       0.684,
        0.317
       ],
-      "desc": "Western stone pedestal plate set into the paved court."
+      "desc": "Western stone plate prop set into the court surface before the gate."
      },
      "suppressed": null
     },
@@ -3130,14 +3666,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "right side of gate apron",
+      "where": "",
       "bbox": [
-       0.713,
-       0.211,
-       0.763,
-       0.332
+       0.714,
+       0.21,
+       0.765,
+       0.325
       ],
-      "desc": "Eastern stone pedestal plate set into the paved court."
+      "desc": "Eastern stone plate prop set into the court surface before the gate."
      },
      "suppressed": null
     },
@@ -3157,14 +3693,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "west rim of court",
+      "where": "",
       "bbox": [
-       0.419,
-       0.24,
-       0.522,
-       0.342
+       0.421,
+       0.241,
+       0.519,
+       0.332
       ],
-      "desc": "Wooden stile structure located along the western rim of the court."
+      "desc": "Wooden stile structure set into the western rim cutout of the court floor."
      },
      "suppressed": null
     },
@@ -3182,9 +3718,9 @@
      },
      "judged": {
       "verdict": "OCCLUDED",
-      "where": "behind the gate wall",
+      "where": "",
       "bbox": null,
-      "desc": "The vista beyond the gate is completely hidden behind the closed stone wall."
+      "desc": "Hidden from view behind the closed wooden gate and solid masonry wall."
      },
      "suppressed": null
     },
@@ -3202,14 +3738,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "bottom left to court",
+      "where": "",
       "bbox": [
-       0.165,
-       0.548,
-       0.505,
+       0.163,
+       0.527,
+       0.498,
        1
       ],
-      "desc": "Straight paved path connecting the lower forest area to the main court."
+      "desc": "Paved stone road leading into the court from the southwest."
      },
      "suppressed": null
     },
@@ -3229,14 +3765,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "court center to gate",
+      "where": "",
       "bbox": [
-       0.587,
-       0.118,
-       0.796,
-       0.34
+       0.58,
+       0.119,
+       0.795,
+       0.25
       ],
-      "desc": "Paved court surface leading directly to the old gate threshold."
+      "desc": "Paved court section connecting the main plaza directly to the gate portal."
      },
      "suppressed": null
     },
@@ -3255,15 +3791,10 @@
       "behindBy": 0.01
      },
      "judged": {
-      "verdict": "FINDABLE",
-      "where": "court floor to western stile",
-      "bbox": [
-       0.419,
-       0.27,
-       0.51,
-       0.35
-      ],
-      "desc": "Short path section extending from the main plaza to the trailhead stile."
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No separate path is drawn as the trailhead sits directly on the court rim."
      },
      "suppressed": null
     },
@@ -3283,14 +3814,14 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "bottom left edge",
+      "where": "",
       "bbox": [
-       0.165,
-       0.78,
-       0.332,
+       0.163,
+       0.75,
+       0.35,
        1
       ],
-      "desc": "Path continuing off the bottom-left edge of the screen."
+      "desc": "Road segment exiting the bottom-left boundary of the viewport."
      },
      "suppressed": null
     },
@@ -3310,21 +3841,43 @@
      },
      "judged": {
       "verdict": "FINDABLE",
-      "where": "top right wooden doors",
+      "where": "",
       "bbox": [
-       0.664,
+       0.665,
        0,
-       0.763,
-       0.125
+       0.76,
+       0.14
       ],
-      "desc": "Wooden gate doors serving as the entrance exit."
+      "desc": "Wooden doorway integrated into the northern gate structure."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "Terrain, foliage, and structures complete the frame cleanly to all edges."
      },
      "suppressed": null
     }
    ]
   }
  ],
- "raw": 117,
+ "raw": 130,
  "survivors": [
   {
    "fid": "F1",
@@ -3391,7 +3944,7 @@
    "alsoOn": [
     {
      "shot": "gatefield",
-     "fid": "F104",
+     "fid": "F114",
      "desc": "The perimeter of the paved area features blocky, stair-stepped edges that look like unfinished grid geometry."
     }
    ],
@@ -3478,10 +4031,10 @@
    "itemWhat": "a door / entrance you can go through (\"Leave Emberbrook\")",
    "verdict": "ABSENT",
    "category": "navigation",
-   "where": "none",
+   "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "a door / entrance you can go through (\"Leave Emberbrook\"): ABSENT — No door or gateway visual exists in this outdoor forest scene.",
+   "desc": "a door / entrance you can go through (\"Leave Emberbrook\"): ABSENT — There is no doorway or gateway structure in this open woodland clearing.",
    "census": {
     "u": 0.4528,
     "v": 0.7409,
@@ -3496,7 +4049,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "There is no visible door or exit gateway depicted in this outdoor forest setting."
+    "why": "There is no visible door or entrance structure anywhere in this open clearing to indicate an exit."
    },
    "triage": {
     "bucket": "new",
@@ -3728,9 +4281,9 @@
     "why": "The grey path geometry clips flatly into the terrain mesh with razor-sharp, unblended polygon edges visible near the center."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
@@ -3802,41 +4355,34 @@
    }
   },
   {
-   "fid": "F19",
+   "fid": "F18",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "arch",
-   "item": "exit:seam:road-gate__orchard",
-   "itemWhat": "the way out of this area on foot towards orchard — a path that carries on out of the frame",
+   "item": "exit:seam:waystone__road-gate",
+   "itemWhat": "the way out of this area on foot towards waystone — a path that carries on out of the frame",
    "verdict": "ABSENT",
    "category": "navigation",
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "the way out of this area on foot towards orchard: ABSENT — No path leading off towards the orchard out of the frame edge is shown in this shot.",
+   "desc": "the way out of this area on foot towards waystone: ABSENT — No third distinct path leading out of the frame edge is visible in this shot.",
    "census": {
-    "u": 0.114,
-    "v": 0.4474,
-    "z": 53.19,
-    "charPx": 70,
+    "u": 0.6846,
+    "v": 0.9205,
+    "z": 29.11,
+    "charPx": 127,
     "on": true,
-    "plateZ": 52.26,
-    "state": "occluded",
-    "behindBy": 0.93
+    "plateZ": 29.1,
+    "state": "clear",
+    "behindBy": 0.01
    },
    "hint": null,
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "No clear path or exit leading off toward an orchard is identifiable at any edge of the frame."
+    "why": "No third clear path exiting the frame toward a waystone can be identified in this view."
    },
-   "alsoOn": [
-    {
-     "shot": "orchard",
-     "fid": "F45",
-     "desc": "the way out of this area on foot towards arch: ABSENT — No designated path leading out of frame towards an arch is visible."
-    }
-   ],
    "triage": {
     "bucket": "known",
     "by": "exit-out-of-frame",
@@ -3844,7 +4390,203 @@
    }
   },
   {
+   "fid": "F19",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": "inn",
+   "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
+   "verdict": "VISIBLE-BUT-ILLEGIBLE",
+   "category": "navigation",
+   "where": "gabled house in upper left background",
+   "bbox": [
+    0.24,
+    0.12,
+    0.41,
+    0.27
+   ],
+   "severity": 2,
+   "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — It appears as a generic distant village building without distinguishing inn features or legible detail.",
+   "census": {
+    "u": 0.3322,
+    "v": 0.2904,
+    "z": 68.85,
+    "charPx": 54,
+    "on": true,
+    "plateZ": 65.9,
+    "state": "occluded",
+    "behindBy": 2.94
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The upper-left house lacks any sign or distinct architectural markings that would identify it as an inn."
+   },
+   "alsoOn": [
+    {
+     "shot": "square",
+     "fid": "F55",
+     "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Reads as a generic wooden structure rather than an inn."
+    }
+   ],
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F20",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": "item-shop",
+   "itemWhat": "Item Shop — a shop item (village general store — preserves, twine, lamp oil)",
+   "verdict": "VISIBLE-BUT-ILLEGIBLE",
+   "category": "navigation",
+   "where": "distant structures in background square",
+   "bbox": [
+    0.43,
+    0.15,
+    0.53,
+    0.26
+   ],
+   "severity": 2,
+   "desc": "Item Shop: VISIBLE-BUT-ILLEGIBLE — The general store is obscured among the small distant background structures and foliage.",
+   "census": {
+    "u": 0.7669,
+    "v": 0.2658,
+    "z": 74.19,
+    "charPx": 50,
+    "on": true,
+    "plateZ": 71.76,
+    "state": "occluded",
+    "behindBy": 2.43
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The structures in the background square are far away and partially obscured by trees, making an item shop unreadable."
+   },
+   "alsoOn": [
+    {
+     "shot": "square",
+     "fid": "F54",
+     "desc": "Item Shop: VISIBLE-BUT-ILLEGIBLE — Appears as a standard cottage without clear shop trade indicators."
+    }
+   ],
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
    "fid": "F21",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": "festival-dais",
+   "itemWhat": "Festival dais — a prop (low wooden dais near the Heartlight where the Kindling Hour queue forms — ch1 staging. | rowan's festival post (ch1 beats 11/23 — the Hour is called here).)",
+   "verdict": "VISIBLE-BUT-ILLEGIBLE",
+   "category": "navigation",
+   "where": "low wooden structure in lit background plaza",
+   "bbox": [
+    0.45,
+    0.16,
+    0.53,
+    0.24
+   ],
+   "severity": 2,
+   "desc": "Festival dais: VISIBLE-BUT-ILLEGIBLE — Too small and distant in the background lighting to clearly read as a festival dais.",
+   "census": {
+    "u": 0.4653,
+    "v": 0.2658,
+    "z": 74.19,
+    "charPx": 50,
+    "on": true,
+    "plateZ": 75.17,
+    "state": "clear",
+    "behindBy": -0.97
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The distant wooden structures in the lit background plaza are too far and small to clearly discern as a festival dais."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F22",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "arch",
+   "item": "quality:water-read",
+   "itemWhat": "[QUALITY] The water surface — this frame holds water (near Pond jetty, Brook footbridge, The Pond). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.",
+   "verdict": "FAILING",
+   "quality": true,
+   "category": "immersion",
+   "where": "channel bed under path footbridge",
+   "bbox": [
+    0.55,
+    0.55,
+    0.62,
+    0.61
+   ],
+   "severity": 3,
+   "desc": "The water surface: FAILING — JUDGMENT: The water surface underneath the footbridge is rendered as an untextured, flat black void lacking transparency, water flow, or reflections.",
+   "census": null,
+   "hint": {
+    "region": "56.1,61.7,5.3,12.5",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 56.1,61.7,5.3,12.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The channel bed beneath the footbridge appears as a completely flat, dark void without any visible water texture, reflection, or depth."
+   },
+   "alsoOn": [
+    {
+     "shot": "therise",
+     "fid": "F53",
+     "desc": "The water surface: FAILING — Water lacks transparency or surface reflection, blending into dark terrain."
+    },
+    {
+     "shot": "square",
+     "fid": "F65",
+     "desc": "The water surface: ABSENT — No water surface present in this scene."
+    },
+    {
+     "shot": "pondlane",
+     "fid": "F101",
+     "desc": "The water surface: FAILING — The water surface reads as a solid black flat plane with no transparency, ripples, or soft bank contact."
+    },
+    {
+     "shot": "homerow",
+     "fid": "F109",
+     "desc": "The water surface: FAILING — JUDGMENT: No visible water surface geometry or fluid shader is present near the spring house or mill wheel, leaving the water feature entirely unrendered."
+    },
+    {
+     "shot": "gateroad",
+     "fid": "F128",
+     "desc": "The water surface: FAILING — The water channel reads as a completely featureless, pitch-black flat plane with no reflections, transparency, or believable wet shore contacts."
+    }
+   ],
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F23",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "orchard",
@@ -3869,13 +4611,13 @@
     "why": "The shadow cast by the building's roof is completely pitch-black, hiding all ground details and structure underneath."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F22",
+   "fid": "F24",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "orchard",
@@ -3906,7 +4648,7 @@
    }
   },
   {
-   "fid": "F27",
+   "fid": "F28",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "orchard",
@@ -3937,7 +4679,7 @@
    }
   },
   {
-   "fid": "F28",
+   "fid": "F29",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "orchard",
@@ -3965,13 +4707,13 @@
     "why": "A bright cyan-green untextured polygon strip is clearly visible clipping through the ground and trees near the lower left."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F29",
+   "fid": "F30",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "orchard",
@@ -4030,9 +4772,9 @@
     "why": "The roof shadow lacks ambient lighting and creates a completely black dead zone where no ground details can be seen."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
@@ -4112,7 +4854,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "Orchard rows: ABSENT — No apple orchard rows, ladders, or baskets are present in this view.",
+   "desc": "Orchard rows: ABSENT — No apple trees in rows, ladders, or apple baskets are visible in this scene.",
    "census": {
     "u": 0.5346,
     "v": 0.564,
@@ -4127,7 +4869,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "No orchard rows, ladders, or apple baskets are in view anywhere in this frame."
+    "why": "No orchard rows, fruit trees, ladders, or baskets appear anywhere in this frame."
    },
    "triage": {
     "bucket": "new",
@@ -4144,15 +4886,15 @@
    "itemWhat": "Cider press barn — a openbarn (open-sided barn at the orchard edge: press, apple crates, straw. Emberwake is the payoff of autumn.)",
    "verdict": "VISIBLE-BUT-ILLEGIBLE",
    "category": "navigation",
-   "where": "roofed structure on the left",
+   "where": "center left structure",
    "bbox": [
     0.226,
-    0.355,
-    0.577,
-    0.848
+    0.358,
+    0.58,
+    0.82
    ],
    "severity": 2,
-   "desc": "Cider press barn: VISIBLE-BUT-ILLEGIBLE — The structure's roof is visible, but the area underneath is pitch black in shadow, hiding any press, apple crates, or straw needed to identify it as a cider press barn.",
+   "desc": "Cider press barn: VISIBLE-BUT-ILLEGIBLE — A roof structure is visible, but the area underneath is pitch black, making it impossible to see any cider press, crates, or straw to identify it as a cider press barn.",
    "census": {
     "u": 0.333,
     "v": 0.6593,
@@ -4167,7 +4909,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The structure's interior and underneath area are in pitch-black shadow, making it impossible to identify as a cider press barn."
+    "why": "The structure's roof is clear, but the area beneath it is completely obscured in deep shadow, rendering any identifying details illegible."
    },
    "triage": {
     "bucket": "new",
@@ -4187,7 +4929,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "the route between Village Arch and Orchard rows: ABSENT — The path connecting the Village Arch to the orchard rows is not in frame.",
+   "desc": "the route between Village Arch and Orchard rows: ABSENT — Neither the Village Arch nor the orchard rows are present in this frame.",
    "census": {
     "u": 0.3022,
     "v": 0.3675,
@@ -4202,7 +4944,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "Neither the Village Arch nor any route connecting it to an orchard is present in this frame."
+    "why": "Neither the Village Arch nor any orchard rows are in view within this shot."
    },
    "triage": {
     "bucket": "new",
@@ -4222,7 +4964,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "the route between Orchard rows and Cider press barn: ABSENT — No path connecting orchard rows to the cider press barn is present.",
+   "desc": "the route between Orchard rows and Cider press barn: ABSENT — There is no orchard row present to form a path connecting to the barn.",
    "census": {
     "u": 0.4376,
     "v": 0.6099,
@@ -4237,7 +4979,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "There are no orchard rows in this view and no path connecting them to the barn."
+    "why": "Without any visible orchard rows in the frame, no path connecting them to the barn can be seen."
    },
    "triage": {
     "bucket": "new",
@@ -4246,7 +4988,42 @@
    }
   },
   {
-   "fid": "F23",
+   "fid": "F45",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "orchard",
+   "item": "exit:seam:road-gate__orchard",
+   "itemWhat": "the way out of this area on foot towards arch — a path that carries on out of the frame",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the way out of this area on foot towards arch: ABSENT — No distinct path leading off-screen towards an arch is visible.",
+   "census": {
+    "u": 0.3873,
+    "v": 0.4843,
+    "z": 35.88,
+    "charPx": 58,
+    "on": true,
+    "plateZ": 29.42,
+    "state": "occluded",
+    "behindBy": 6.46
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "There is no defined path or exit route leading towards an arch visible in this camera view."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "exit-out-of-frame",
+    "where": "DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame"
+   }
+  },
+  {
+   "fid": "F25",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "therise",
@@ -4280,7 +5057,7 @@
    }
   },
   {
-   "fid": "F24",
+   "fid": "F26",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "therise",
@@ -4311,7 +5088,7 @@
    }
   },
   {
-   "fid": "F25",
+   "fid": "F27",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "therise",
@@ -4342,7 +5119,7 @@
    }
   },
   {
-   "fid": "F30",
+   "fid": "F32",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "therise",
@@ -4376,7 +5153,7 @@
    }
   },
   {
-   "fid": "F31",
+   "fid": "F33",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "therise",
@@ -4407,7 +5184,7 @@
    }
   },
   {
-   "fid": "F37",
+   "fid": "F39",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "therise",
@@ -4435,13 +5212,13 @@
     "why": "The central path geometry floats above the terrain plane, exposing unblended vertical edges and gaps."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F38",
+   "fid": "F40",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "therise",
@@ -4472,47 +5249,47 @@
    }
   },
   {
-   "fid": "F46",
+   "fid": "F48",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "therise",
-   "item": "inn",
-   "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
-   "verdict": "VISIBLE-BUT-ILLEGIBLE",
-   "category": "navigation",
-   "where": "background center",
+   "item": "cider-press",
+   "itemWhat": "Cider press barn — a openbarn (open-sided barn at the orchard edge: press, apple crates, straw. Emberwake is the payoff of autumn.)",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "left midground foliage",
    "bbox": [
-    0.37,
     0,
-    0.52,
-    0.2
+    0.242,
+    0.18,
+    0.49
    ],
    "severity": 2,
-   "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — A building is visible in the background behind the square, but lacks identifying signage or features distinguishing it as an inn.",
+   "desc": "Cider press barn: OCCLUDED — Structure behind tree branches and dense leaves on the left.",
    "census": {
-    "u": 0.3803,
-    "v": 0.3848,
-    "z": 33.7,
-    "charPx": 61,
+    "u": 0.0876,
+    "v": 0.5319,
+    "z": 25.16,
+    "charPx": 82,
     "on": true,
-    "plateZ": 19.58,
+    "plateZ": 24.46,
     "state": "occluded",
-    "behindBy": 14.12
+    "behindBy": 0.7
    },
    "hint": null,
    "verify": {
     "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "The structure in the background center is a generic building without any visual details or characteristics that identify it as an inn."
+    "by": "ray-census",
+    "why": "the shot's own depth plate draws something 0.7 m nearer at that pixel"
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F47",
+   "fid": "F50",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "therise",
@@ -4520,15 +5297,15 @@
    "itemWhat": "Poppy's bakery — a building (warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging | MOVED 2026-07-31 (coordinator): 1.5 m away from the inn — at (24.5,21.5) the two roofs shared a volume (4.03 m centres vs 4.96 m needed at cottage size + 1.14 roof oversail, measured by the square builder). Still on the square's west rim, west of the well.)",
    "verdict": "VISIBLE-BUT-ILLEGIBLE",
    "category": "navigation",
-   "where": "center left background",
+   "where": "left center building",
    "bbox": [
-    0.28,
+    0.285,
     0.07,
-    0.47,
-    0.4
+    0.473,
+    0.41
    ],
    "severity": 2,
-   "desc": "Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — A stone cottage stands near the square, but lacks visible bakery features or signs to identify it as Poppy's bakery.",
+   "desc": "Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — Stone structure lacks distinct visual features identifying it as a bakery.",
    "census": {
     "u": 0.2619,
     "v": 0.3251,
@@ -4543,8 +5320,15 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The stone cottage appears as an ordinary unadorned building with no visual features distinguishing it as a bakery."
+    "why": "The building is partially hidden behind trees and lacks any visual architectural features to communicate its function as a bakery."
    },
+   "alsoOn": [
+    {
+     "shot": "square",
+     "fid": "F56",
+     "desc": "Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — Looks like a normal residential cottage without bakery signifiers."
+    }
+   ],
    "triage": {
     "bucket": "new",
     "by": null,
@@ -4552,7 +5336,96 @@
    }
   },
   {
-   "fid": "F26",
+   "fid": "F51",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": "quality:sky",
+   "itemWhat": "[QUALITY] The sky — it covers about 2% of this frame. Does it read as a real atmosphere at this scene's own hour — gradient, cloud forms, horizon treatment where it meets the terrain — or as a flat fill / empty gradient that just ends the world? Name what carries it or what it lacks.",
+   "verdict": "WEAK",
+   "quality": true,
+   "category": "immersion",
+   "where": "upper center sky patch",
+   "bbox": [
+    0.62,
+    0,
+    0.73,
+    0.12
+   ],
+   "severity": 2,
+   "desc": "The sky: WEAK — Visible sky area is a flat gradient with minimal atmospheric volume.",
+   "census": null,
+   "hint": {
+    "region": "65.1,91.1,64.5,130.3",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 65.1,91.1,64.5,130.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The visible sky in the background is a flat, featureless blue fill lacking atmospheric depth or texture."
+   },
+   "alsoOn": [
+    {
+     "shot": "pondlane",
+     "fid": "F99",
+     "desc": "The sky: WEAK — The sky is a very plain, smooth blue gradient lacking cloud structures or atmospheric haze depth above the tree line."
+    }
+   ],
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F52",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "therise",
+   "item": "quality:frame-edge-world",
+   "itemWhat": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+   "verdict": "WEAK",
+   "quality": true,
+   "category": "immersion",
+   "where": "lower frame boundaries",
+   "bbox": [
+    0,
+    0,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "The world at the frame edges: WEAK — Deep shadows near lower boundaries merge ground elements into dark shapes.",
+   "census": null,
+   "hint": {
+    "region": "-19.4,126.5,12.7,149.1",
+    "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region -19.4,126.5,12.7,149.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "Extremely harsh dark shadows along the lower border obscure terrain details and cause ground features to lose readability."
+   },
+   "alsoOn": [
+    {
+     "shot": "square",
+     "fid": "F64",
+     "desc": "The world at the frame edges: WEAK — JUDGMENT: Peripheral terrain fades abruptly into pitch darkness rather than natural scenery."
+    },
+    {
+     "shot": "pondlane",
+     "fid": "F100",
+     "desc": "The world at the frame edges: WEAK — The steps on the far left edge appear as untextured, flat green block meshes that abruptly end the terrain geometry."
+    }
+   ],
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F31",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "square",
@@ -4586,7 +5459,7 @@
    }
   },
   {
-   "fid": "F32",
+   "fid": "F37",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "square",
@@ -4620,7 +5493,7 @@
    }
   },
   {
-   "fid": "F33",
+   "fid": "F38",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "square",
@@ -4648,13 +5521,13 @@
     "why": "Distinct rectangular missing mesh patches are visible in the ground surrounding the stone well structure."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F39",
+   "fid": "F46",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "square",
@@ -4685,7 +5558,7 @@
    }
   },
   {
-   "fid": "F40",
+   "fid": "F47",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "square",
@@ -4713,13 +5586,13 @@
     "why": "A featureless, bright white glowing cube sits inside the central pit, clearly functioning as an unskinned placeholder light object."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F51",
+   "fid": "F57",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "square",
@@ -4730,7 +5603,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "the route between Village Arch and Festival Square: ABSENT — Village Arch area is off-screen.",
+   "desc": "the route between Village Arch and Festival Square: ABSENT — No arch or corresponding road section in this frame.",
    "census": {
     "u": 0.4828,
     "v": 0.2016,
@@ -4745,7 +5618,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The route and area leading to the Village Arch are off-screen and completely outside the visible frame."
+    "why": "No village arch or connecting road to it is present in this frame."
    },
    "triage": {
     "bucket": "new",
@@ -4754,7 +5627,7 @@
    }
   },
   {
-   "fid": "F52",
+   "fid": "F58",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "square",
@@ -4765,7 +5638,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "the route between Festival Square and Pond jetty: ABSENT — Pond jetty route is off-screen.",
+   "desc": "the route between Festival Square and Pond jetty: ABSENT — Pond jetty lane is not visible in shot.",
    "census": {
     "u": 0.2771,
     "v": 0.6191,
@@ -4780,7 +5653,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The path to the Pond jetty is located outside the visible camera view."
+    "why": "The route leading to a pond jetty is not captured within the visible frame."
    },
    "triage": {
     "bucket": "new",
@@ -4789,42 +5662,7 @@
    }
   },
   {
-   "fid": "F53",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "square",
-   "item": "path:square-plaza__hillside-cottage@0..0.73",
-   "itemWhat": "the route between Festival Square and Mara & Pip's cottage — a road (home lane west, up the rise)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
-   "bbox": null,
-   "severity": 3,
-   "desc": "the route between Festival Square and Mara & Pip's cottage: ABSENT — Cottage route is not visible in frame.",
-   "census": {
-    "u": 0.7337,
-    "v": 0.6535,
-    "z": 40.88,
-    "charPx": 51,
-    "on": true,
-    "plateZ": 40.76,
-    "state": "clear",
-    "behindBy": 0.13
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "The route to Mara & Pip's cottage is off-screen and not depicted in this image."
-   },
-   "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
-   }
-  },
-  {
-   "fid": "F54",
+   "fid": "F59",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "square",
@@ -4835,7 +5673,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "the route between Festival Square and Tithe barn: ABSENT — Tithe barn road is off-screen.",
+   "desc": "the route between Festival Square and Tithe barn: ABSENT — Tithe barn road is not present in frame.",
    "census": {
     "u": 0.5286,
     "v": 0.8569,
@@ -4850,7 +5688,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The road connecting to the Tithe barn lies outside the framed area."
+    "why": "There is no visible path or road leading to a tithe barn in this view."
    },
    "triage": {
     "bucket": "new",
@@ -4859,7 +5697,7 @@
    }
   },
   {
-   "fid": "F55",
+   "fid": "F60",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "square",
@@ -4870,7 +5708,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "the route between Brook footbridge and Festival Square: ABSENT — Footbridge route is outside visible frame.",
+   "desc": "the route between Brook footbridge and Festival Square: ABSENT — Brook footbridge route is outside visible frame.",
    "census": {
     "u": 0.3872,
     "v": 0.6463,
@@ -4885,7 +5723,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The route from the Brook footbridge is off-screen."
+    "why": "The route connecting to the brook footbridge lies completely outside the frame boundaries."
    },
    "triage": {
     "bucket": "new",
@@ -4894,33 +5732,38 @@
    }
   },
   {
-   "fid": "F56",
+   "fid": "F61",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "square",
-   "item": "door:door:inn",
-   "itemWhat": "a door / entrance you can go through (\"Enter The Ember Hearth\")",
-   "verdict": "OCCLUDED",
-   "category": "occlusion",
-   "where": "north cottage front",
-   "bbox": null,
+   "item": "door:door:item-shop",
+   "itemWhat": "a door / entrance you can go through (\"Enter Item Shop\")",
+   "verdict": "VISIBLE-BUT-ILLEGIBLE",
+   "category": "navigation",
+   "where": "east house wall",
+   "bbox": [
+    0.785,
+    0.405,
+    0.815,
+    0.47
+   ],
    "severity": 2,
-   "desc": "a door / entrance you can go through (\"Enter The Ember Hearth\"): OCCLUDED — Door is hidden behind lower building structures and angle of view.",
+   "desc": "a door / entrance you can go through (\"Enter Item Shop\"): VISIBLE-BUT-ILLEGIBLE — Door opening is obscured in deep shadow.",
    "census": {
-    "u": 0.612,
-    "v": 0.3629,
-    "z": 50.39,
-    "charPx": 41,
+    "u": 0.3535,
+    "v": 0.4458,
+    "z": 47.34,
+    "charPx": 44,
     "on": true,
-    "plateZ": 50.35,
+    "plateZ": 47.34,
     "state": "clear",
-    "behindBy": 0.04
+    "behindBy": 0
    },
    "hint": null,
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The entrance door of the north cottage is hidden from view due to the camera angle and building geometry."
+    "why": "The entrance to the east house is shrouded in dark shadows, making it difficult to read as a usable doorway."
    },
    "triage": {
     "bucket": "new",
@@ -4929,7 +5772,77 @@
    }
   },
   {
-   "fid": "F57",
+   "fid": "F62",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "square",
+   "item": "exit:seam:road-gate__square-plaza",
+   "itemWhat": "the way out of this area on foot towards therise — a path that carries on out of the frame",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the way out of this area on foot towards therise: ABSENT — Path toward the rise is not visible.",
+   "census": {
+    "u": 0.5378,
+    "v": 0.255,
+    "z": 56.1,
+    "charPx": 37,
+    "on": true,
+    "plateZ": 55.07,
+    "state": "occluded",
+    "behindBy": 1.03
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The exit path toward the rise is not visible anywhere in the scene."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "exit-out-of-frame",
+    "where": "DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame"
+   }
+  },
+  {
+   "fid": "F63",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "square",
+   "item": "exit:seam:square-plaza__pond-jetty",
+   "itemWhat": "the way out of this area on foot towards pondlane — a path that carries on out of the frame",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the way out of this area on foot towards pondlane: ABSENT — Pond lane exit is outside frame boundaries.",
+   "census": {
+    "u": 0.1609,
+    "v": 0.6601,
+    "z": 41.55,
+    "charPx": 50,
+    "on": true,
+    "plateZ": 41.54,
+    "state": "clear",
+    "behindBy": 0.01
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The path leading to pond lane falls outside the rendered camera view."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "exit-out-of-frame",
+    "where": "DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame"
+   }
+  },
+  {
+   "fid": "F66",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "pondlane",
@@ -4957,13 +5870,13 @@
     "why": "Flat, green-shaded rectangular slabs on the far lower-left edge are clearly untextured blockout geometry."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F58",
+   "fid": "F67",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "pondlane",
@@ -4997,7 +5910,7 @@
    }
   },
   {
-   "fid": "F65",
+   "fid": "F71",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "pondlane",
@@ -5031,7 +5944,7 @@
    }
   },
   {
-   "fid": "F66",
+   "fid": "F72",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "pondlane",
@@ -5062,7 +5975,7 @@
    }
   },
   {
-   "fid": "F74",
+   "fid": "F79",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "pondlane",
@@ -5096,7 +6009,7 @@
    }
   },
   {
-   "fid": "F75",
+   "fid": "F80",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "pondlane",
@@ -5130,7 +6043,7 @@
    }
   },
   {
-   "fid": "F76",
+   "fid": "F81",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "pondlane",
@@ -5161,18 +6074,23 @@
    }
   },
   {
-   "fid": "F84",
+   "fid": "F90",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "pond",
    "itemWhat": "The Pond — a water (NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow | RULING 2026-08-01: r12 (from the mechanical extents-x2) swallowed the jetty, smokehouse, weir and brook-mouth and nearly touched the river. r9 is still generous. The JETTY legitimately overhangs water (assert its walk pad is landward); smokehouse/weir re-snap to the r9 shore at build; brook-mouth is clear at r9.)",
-   "verdict": "ABSENT",
+   "verdict": "VISIBLE-BUT-ILLEGIBLE",
    "category": "navigation",
-   "where": "",
-   "bbox": null,
-   "severity": 3,
-   "desc": "The Pond: ABSENT — No body of water or pond is visible in this frame.",
+   "where": "dark ground in midground",
+   "bbox": [
+    0.22,
+    0.58,
+    0.6,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "The Pond: VISIBLE-BUT-ILLEGIBLE — The body of water is rendered so dark and unreflective that it is indistinguishable from dark ground or heavy shadow under the trees.",
    "census": {
     "u": 0.5127,
     "v": 0.4314,
@@ -5187,7 +6105,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "There is no body of water or pond present anywhere in this frame."
+    "why": "The central ground/pond area is rendered as a dark, flat surface that fails to read clearly as a body of water."
    },
    "triage": {
     "bucket": "new",
@@ -5196,53 +6114,18 @@
    }
   },
   {
-   "fid": "F85",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "pondlane",
-   "item": "pond-jetty",
-   "itemWhat": "Pond jetty — a dock (short fishing jetty; frogs; where kids dare each other)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
-   "bbox": null,
-   "severity": 3,
-   "desc": "Pond jetty: ABSENT — No jetty or fishing dock is present in this frame.",
-   "census": {
-    "u": 0.6067,
-    "v": 0.5183,
-    "z": 28.77,
-    "charPx": 72,
-    "on": true,
-    "plateZ": 28.49,
-    "state": "clear",
-    "behindBy": 0.28
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "No jetty or fishing dock structure is visible in the scene."
-   },
-   "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
-   }
-  },
-  {
-   "fid": "F86",
+   "fid": "F91",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "washline-green",
    "itemWhat": "Washline green — a field",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "behind central tree canopy",
    "bbox": null,
-   "severity": 3,
-   "desc": "Washline green: ABSENT — No washline green or drying field is visible in this frame.",
+   "severity": 2,
+   "desc": "Washline green: OCCLUDED — The field is hidden behind the dense central trees and foliage.",
    "census": {
     "u": 0.1939,
     "v": 0.5531,
@@ -5257,27 +6140,27 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "No clotheslines or designated washline green area can be seen in this shot."
+    "why": "The field is entirely occluded behind the dense tree canopy in the center of the frame."
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F87",
+   "fid": "F92",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "brook-bridge",
    "itemWhat": "Brook footbridge — a prop (plank-and-rail crossing where Pond Lane steps over the brook)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "behind foliage and bank",
    "bbox": null,
-   "severity": 3,
-   "desc": "Brook footbridge: ABSENT — No brook or footbridge is present in this frame.",
+   "severity": 2,
+   "desc": "Brook footbridge: OCCLUDED — The brook footbridge is occluded by the thick midground trees.",
    "census": {
     "u": 0.3963,
     "v": 0.7318,
@@ -5292,27 +6175,27 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "There is no brook or footbridge visible anywhere in the frame."
+    "why": "The footbridge is completely hidden behind the thick midground trees and foliage."
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F88",
+   "fid": "F93",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "brook-mouth",
    "itemWhat": "Brook mouth — a prop (where the village brook slips into the river — the town's name, made visible)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "behind midground trees",
    "bbox": null,
-   "severity": 3,
-   "desc": "Brook mouth: ABSENT — The brook mouth is not visible in this shot.",
+   "severity": 2,
+   "desc": "Brook mouth: OCCLUDED — The brook mouth is hidden behind the dense central vegetation.",
    "census": {
     "u": 0.5163,
     "v": 0.3519,
@@ -5326,28 +6209,28 @@
    "hint": null,
    "verify": {
     "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "No brook mouth or flowing water inlet is present in the frame."
+    "by": "ray-census",
+    "why": "the shot's own depth plate draws something 3.22 m nearer at that pixel"
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F89",
+   "fid": "F94",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "pond-weir",
    "itemWhat": "Weir & sluice — a prop (small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course. | RE-SNAP at build: pond shrinks to r9 (see pond note) — weir sits at the r9 west shore on the stamped course. | SNAPPED 2026-08-01 by the builder on the coordinator's stamp: the point where the stamped brook course crosses the pond's r9 WEST shore (measured 9.04 m from the pond centre). | finn's post (shipped ch1 script; see square-plaza note).)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "behind central trees",
    "bbox": null,
-   "severity": 3,
-   "desc": "Weir & sluice: ABSENT — No weir or sluice mechanism is visible in this frame.",
+   "severity": 2,
+   "desc": "Weir & sluice: OCCLUDED — The weir and sluice structure is hidden behind the heavy midground foliage.",
    "census": {
     "u": 0.4569,
     "v": 0.569,
@@ -5362,27 +6245,27 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "No weir or sluice control mechanism is visible in this shot."
+    "why": "The weir and sluice structure is fully occluded behind the midground trees."
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F90",
+   "fid": "F95",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "smokehouse",
    "itemWhat": "Finn's smokehouse — a hut (small smokehouse + fish drying racks by the jetty; an upturned skiff on the bank. | RE-SNAP at build: with the pond at r9, sit ON THE SHORE near the jetty root (searched) — a smokehouse stands by water, not in it. | MOVED 2026-08-01 by the builder on the coordinator's stamp (pond to r9): SEARCHED onto the shore beside the jetty ROOT — 3.3 m from the deck's landward end, 11.45 m from the pond centre (dry at r9), 4.6 m off the deck, clear of the brook by 2.6 m and of every lane by 3.1 m. Its map position (88,49.5) stood inside the pond and 2.50 m from the jetty, sharing its volume. | STAMPED micro-move 0.58 m (2b): clears the pond's r9 rim by measurement (was one cell in).)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "behind central tree canopy",
    "bbox": null,
-   "severity": 3,
-   "desc": "Finn's smokehouse: ABSENT — Finn's smokehouse is not present in this shot.",
+   "severity": 2,
+   "desc": "Finn's smokehouse: OCCLUDED — The smokehouse is occluded by the dense trees near the center of the frame.",
    "census": {
     "u": 0.7576,
     "v": 0.5846,
@@ -5397,27 +6280,27 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "No building matching a smokehouse is shown in this view."
+    "why": "The smokehouse is blocked from view by the large central trees."
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F91",
+   "fid": "F96",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "pips-den",
    "itemWhat": "Pip's den — a prop (STAMPED 2026-08-01 at the builder's east-bank spot, 3.3 m downstream of the footbridge, 1.7 m off the water, under the bank — hidden from the lane, which is MORE den-like: a proper hideout isn't visible from the bridge it hides beneath. | CONFLICT STAMP: moved +1.0 m east (78.6->79.6) — its walk pad's west edge clipped walk_lm_square-plaza by 0.9 m with a +0.28 m step inside walkGround's foot-stealing band (measured true-top-face, 0.33 m2). Landmark move per doctrine; the 28 m plaza mesh stays.)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "beneath the bank under foliage",
    "bbox": null,
-   "severity": 3,
-   "desc": "Pip's den: ABSENT — Pip's den is not visible in this frame.",
+   "severity": 2,
+   "desc": "Pip's den: OCCLUDED — Pip's den is hidden under the bank behind the midground trees.",
    "census": {
     "u": 0.5121,
     "v": 0.6395,
@@ -5432,62 +6315,27 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "Pip's den is not visible anywhere in this frame."
+    "why": "Pip's den is completely hidden beneath the bank and trees."
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F92",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "pondlane",
-   "item": "path:square-plaza__pond-jetty@0.78..1",
-   "itemWhat": "the route between Festival Square and Pond jetty — a road (pond lane east, curling with the shore)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
-   "bbox": null,
-   "severity": 3,
-   "desc": "the route between Festival Square and Pond jetty: ABSENT — The route to the pond jetty is not visible in this shot.",
-   "census": {
-    "u": 0.673,
-    "v": 0.8115,
-    "z": 18.06,
-    "charPx": 115,
-    "on": true,
-    "plateZ": 17.55,
-    "state": "clear",
-    "behindBy": 0.51
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "The path connecting to the pond jetty is not present in this shot."
-   },
-   "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
-   }
-  },
-  {
-   "fid": "F93",
+   "fid": "F97",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "path:pond-jetty__brook-bridge",
    "itemWhat": "the route between Pond jetty and Brook footbridge — a path (Pond Lane crosses the brook here)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "behind central trees",
    "bbox": null,
-   "severity": 3,
-   "desc": "the route between Pond jetty and Brook footbridge: ABSENT — The path between the jetty and brook footbridge is not in this frame.",
+   "severity": 2,
+   "desc": "the route between Pond jetty and Brook footbridge: OCCLUDED — This section of path is hidden behind the midground tree growth.",
    "census": {
     "u": 0.5205,
     "v": 0.6058,
@@ -5501,28 +6349,28 @@
    "hint": null,
    "verify": {
     "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "Because neither the jetty nor the footbridge are in view, the path between them is also absent."
+    "by": "ray-census",
+    "why": "the shot's own depth plate draws something 1.74 m nearer at that pixel"
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F94",
+   "fid": "F98",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "pondlane",
    "item": "path:pond-jetty__washline-green",
    "itemWhat": "the route between Pond jetty and Washline green — a path (round the north shore)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "behind north shore trees",
    "bbox": null,
-   "severity": 3,
-   "desc": "the route between Pond jetty and Washline green: ABSENT — The path to Washline green is not present in this frame.",
+   "severity": 2,
+   "desc": "the route between Pond jetty and Washline green: OCCLUDED — The path around the north shore is occluded by the tree canopy.",
    "census": {
     "u": 0.4068,
     "v": 0.5351,
@@ -5537,51 +6385,16 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The route leading toward Washline green is not visible in this angle."
-   },
-   "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
-   }
-  },
-  {
-   "fid": "F95",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "pondlane",
-   "item": "exit:seam:square-plaza__pond-jetty",
-   "itemWhat": "the way out of this area on foot towards square — a path that carries on out of the frame",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
-   "bbox": null,
-   "severity": 3,
-   "desc": "the way out of this area on foot towards square: ABSENT — The egress path from the pond area toward the square is not in view in this camera angle.",
-   "census": {
-    "u": 0.6533,
-    "v": 0.6398,
-    "z": 23.1,
-    "charPx": 90,
-    "on": true,
-    "plateZ": 23.11,
-    "state": "clear",
-    "behindBy": -0.01
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "The egress route leading away from the pond area toward the square is not shown."
+    "why": "The path around the north shore is fully obscured by the tree canopy."
    },
    "triage": {
     "bucket": "known",
-    "by": "exit-out-of-frame",
-    "where": "DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame"
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F59",
+   "fid": "F68",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5609,13 +6422,13 @@
     "why": "A flat, untextured beige rectangular block is noticeably attached to the upper facade of the rightmost building."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F60",
+   "fid": "F69",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5649,7 +6462,7 @@
    }
   },
   {
-   "fid": "F61",
+   "fid": "F70",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5683,7 +6496,7 @@
    }
   },
   {
-   "fid": "F67",
+   "fid": "F76",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5717,7 +6530,7 @@
    }
   },
   {
-   "fid": "F68",
+   "fid": "F77",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5751,7 +6564,7 @@
    }
   },
   {
-   "fid": "F69",
+   "fid": "F78",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5785,7 +6598,7 @@
    }
   },
   {
-   "fid": "F77",
+   "fid": "F86",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5819,7 +6632,7 @@
    }
   },
   {
-   "fid": "F79",
+   "fid": "F88",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5853,7 +6666,7 @@
    }
   },
   {
-   "fid": "F80",
+   "fid": "F89",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5881,13 +6694,13 @@
     "why": "The upper facade of the right building features a flat, completely untextured brown panel."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F96",
+   "fid": "F105",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5898,7 +6711,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "Brook spring: ABSENT — No water spring is visible anywhere in this frame.",
+   "desc": "Brook spring: ABSENT — The spring source is completely hidden in the dark tree shadows with no visible water.",
    "census": {
     "u": 0.2394,
     "v": 0.2021,
@@ -5913,16 +6726,16 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "No water spring or brook feature is visible anywhere in this frame."
+    "why": "No spring source or visible water can be seen in the dark, shadowed trees at the top left."
    },
    "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
    }
   },
   {
-   "fid": "F97",
+   "fid": "F106",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "homerow",
@@ -5933,7 +6746,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "Upper lane (closed): ABSENT — No closed upper lane or festival cart is present in this view.",
+   "desc": "Upper lane (closed): ABSENT — No cart or closed upper lane boundary is visible in this frame.",
    "census": {
     "u": 0.2687,
     "v": 0.5292,
@@ -5948,7 +6761,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "There is no closed lane or festival cart shown in the rendered scene."
+    "why": "No closed upper lane or cart is visible within this frame."
    },
    "triage": {
     "bucket": "new",
@@ -5957,42 +6770,7 @@
    }
   },
   {
-   "fid": "F98",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "homerow",
-   "item": "spring-house",
-   "itemWhat": "Spring house — a hut (stone hut over the brook spring — cold store for butter and milk. Snaps to the stamped spring point.)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
-   "bbox": null,
-   "severity": 3,
-   "desc": "Spring house: ABSENT — There is no stone spring house in the scene.",
-   "census": {
-    "u": 0.1791,
-    "v": 0.1011,
-    "z": 57.64,
-    "charPx": 64,
-    "on": true,
-    "plateZ": 55.66,
-    "state": "occluded",
-    "behindBy": 1.98
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "No spring house structure is present in the visible area."
-   },
-   "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
-   }
-  },
-  {
-   "fid": "F99",
+   "fid": "F107",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "homerow",
@@ -6003,7 +6781,7 @@
    "where": "",
    "bbox": null,
    "severity": 3,
-   "desc": "Grandmother's bench: ABSENT — No second bench outside Lake's home is visible.",
+   "desc": "Grandmother's bench: ABSENT — Only wooden crates and barrels sit outside Lake's home; no bench is present there.",
    "census": {
     "u": 0.2831,
     "v": 0.6908,
@@ -6018,7 +6796,7 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "Only a single wooden bench is visible in the frame near the trees."
+    "why": "The area outside Lake's home contains only stacked crates and boxes, with no bench present."
    },
    "triage": {
     "bucket": "new",
@@ -6027,77 +6805,7 @@
    }
   },
   {
-   "fid": "F100",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "homerow",
-   "item": "path:hillside-cottage__elder-house",
-   "itemWhat": "the route between Mara & Pip's cottage and Rowan's house — a path (WAYPOINT WITHDRAWN 2026-07-31: the stamped bow [20.4,31.9] lies inside elder-house's built footprint — measured by the closing round. Root cause is doorstep derivation (both houses' doorsteps derive from far-side edges, so the lane crosses both footprints; no ribbon width fits between them, centres 3.99 m apart). REAL FIX, next slate: blockout rule 'a house on a THROUGH street gets its doorstep beside the street'. Until then Home Row carries ~6 documented walk offenders. Applies at next blockout run.)",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
-   "bbox": null,
-   "severity": 3,
-   "desc": "the route between Mara & Pip's cottage and Rowan's house: ABSENT — No paved path connects Mara & Pip's cottage to Rowan's house directly.",
-   "census": {
-    "u": 0.5675,
-    "v": 0.4436,
-    "z": 50.15,
-    "charPx": 74,
-    "on": true,
-    "plateZ": 47.28,
-    "state": "occluded",
-    "behindBy": 2.86
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "No direct paved pathway connects the cottages in the frame."
-   },
-   "triage": {
-    "bucket": "known",
-    "by": "canopy-over-road",
-    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
-   }
-  },
-  {
-   "fid": "F101",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "homerow",
-   "item": "path:elder-house__home-lane-end",
-   "itemWhat": "the route between Rowan's house and Hilltop bench — a path",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "",
-   "bbox": null,
-   "severity": 3,
-   "desc": "the route between Rowan's house and Hilltop bench: ABSENT — There is no established path leading between Rowan's house and the bench.",
-   "census": {
-    "u": 0.3091,
-    "v": 0.3384,
-    "z": 51.95,
-    "charPx": 71,
-    "on": true,
-    "plateZ": 51.92,
-    "state": "clear",
-    "behindBy": 0.03
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "upheld",
-    "by": "adversarial-judge:checklist",
-    "why": "No established or paved path leads directly to the visible bench from the nearby cottage."
-   },
-   "triage": {
-    "bucket": "new",
-    "by": null,
-    "where": null
-   }
-  },
-  {
-   "fid": "F63",
+   "fid": "F74",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -6131,7 +6839,7 @@
    }
   },
   {
-   "fid": "F64",
+   "fid": "F75",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -6165,7 +6873,7 @@
    }
   },
   {
-   "fid": "F71",
+   "fid": "F83",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -6199,7 +6907,7 @@
    }
   },
   {
-   "fid": "F72",
+   "fid": "F84",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -6227,13 +6935,13 @@
     "why": "A large flat orange polygon on the upper building structure appears completely untextured compared to adjacent detailed surfaces."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F83",
+   "fid": "F104",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -6267,7 +6975,77 @@
    }
   },
   {
-   "fid": "F102",
+   "fid": "F110",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": "back-lane-closed",
+   "itemWhat": "Back lane (closed) — a prop (lane between barn and square edge running to unseen homes; stacked Emberwake barrels close it)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "Back lane (closed): ABSENT — No closed lane with stacked barrels is visible in this frame.",
+   "census": {
+    "u": 0.2751,
+    "v": 0.325,
+    "z": 58.32,
+    "charPx": 63,
+    "on": true,
+    "plateZ": 57.3,
+    "state": "occluded",
+    "behindBy": 1.02
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No closed lane with stacked barrels can be seen or identified in this view."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F111",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "northlane",
+   "item": "path:square-plaza__barn@0.573..1",
+   "itemWhat": "the route between Festival Square and Tithe barn — a road (north lane between walls)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Festival Square and Tithe barn: ABSENT — There is no north lane enclosed by stone walls depicted in this view.",
+   "census": {
+    "u": 0.0781,
+    "v": 0.6305,
+    "z": 52.9,
+    "charPx": 70,
+    "on": true,
+    "plateZ": 53.1,
+    "state": "clear",
+    "behindBy": -0.2
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "There is no visible lane enclosed by stone walls anywhere in this shot."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F112",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gateroad",
@@ -6298,7 +7076,7 @@
    }
   },
   {
-   "fid": "F103",
+   "fid": "F113",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gateroad",
@@ -6329,7 +7107,7 @@
    }
   },
   {
-   "fid": "F107",
+   "fid": "F117",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gateroad",
@@ -6360,7 +7138,7 @@
    }
   },
   {
-   "fid": "F108",
+   "fid": "F118",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gateroad",
@@ -6388,13 +7166,13 @@
     "why": "The lighter dirt/grass patch in the center has a sharp, hard edge against the surrounding dark grass with no material blending or soft transitions."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F109",
+   "fid": "F119",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gateroad",
@@ -6422,13 +7200,13 @@
     "why": "The grey rectangular bench structure in the midground lacks contact shadows along its base, making it look ungrounded and disconnected from the grass below."
    },
    "triage": {
-    "bucket": "known",
-    "by": "emb-blockout-materials",
-    "where": "Emberbrook ships as a massing blockout; the dressing pass owns materials"
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   },
   {
-   "fid": "F113",
+   "fid": "F123",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gateroad",
@@ -6459,7 +7237,7 @@
    }
   },
   {
-   "fid": "F114",
+   "fid": "F124",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gateroad",
@@ -6490,7 +7268,42 @@
    }
   },
   {
-   "fid": "F110",
+   "fid": "F127",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "gateroad",
+   "item": "elder-house",
+   "itemWhat": "Rowan's house — a building (the elder and ledger-keeper's house — forty years of ledgers on the shelves. STORY.md: Rowan runs Emberbrook by cheerfully denying he runs it. (Was mislabeled 'Keeper's house' — the keeper's cottage is Lake's, per §2.))",
+   "verdict": "OCCLUDED",
+   "category": "occlusion",
+   "where": "",
+   "bbox": null,
+   "severity": 2,
+   "desc": "Rowan's house: OCCLUDED — Rowan's house is hidden behind the Tithe barn and surrounding foliage.",
+   "census": {
+    "u": 0.9521,
+    "v": 0.2099,
+    "z": 75.87,
+    "charPx": 49,
+    "on": true,
+    "plateZ": 73.54,
+    "state": "occluded",
+    "behindBy": 2.33
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "ray-census",
+    "why": "the shot's own depth plate draws something 2.33 m nearer at that pixel"
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "canopy-over-road",
+    "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F120",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gatefield",
@@ -6524,7 +7337,7 @@
    }
   },
   {
-   "fid": "F111",
+   "fid": "F121",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gatefield",
@@ -6558,7 +7371,7 @@
    }
   },
   {
-   "fid": "F115",
+   "fid": "F125",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gatefield",
@@ -6592,7 +7405,7 @@
    }
   },
   {
-   "fid": "F117",
+   "fid": "F129",
    "mode": "checklist",
    "town": "emberbrook",
    "shot": "gatefield",
@@ -6600,10 +7413,10 @@
    "itemWhat": "Downstream (vista beyond the Gate) — a dressing (past the Sigil Gate the river bends into the hills — the way Vesper's maps point (toward Dellhollow) | RE-NOTED 2026-08-01 ROUND 3 (ruling, user + coordinator): this is PURE VISTA. It is seen from the GATE SIDE, across the water, and is NEVER reached. There is no bridge anywhere in this map and none is to be added: the game's one river crossing is Dellhollow's dam crest, far downstream. With the round-3 tail the channel runs west of it through the notch, so the vista now stands ~20 m beyond the east bank instead of ~14 - still a far-bank silhouette, and if a camera ever wants it closer that is a landmark move, not a crossing. | CROSSING AMENDMENT 2026-08-01: the road now crosses at the gate court and runs the east bank, so 'seen from the gate side, across the water' is superseded — the vista is seen FROM the road's own bank looking down the gorge. Still NEVER REACHED: no path leaves the road for it, and no bridge exists anywhere (the dam crest remains the river's only span).)",
    "verdict": "OCCLUDED",
    "category": "occlusion",
-   "where": "behind the gate wall",
+   "where": "",
    "bbox": null,
    "severity": 2,
-   "desc": "Downstream (vista beyond the Gate): OCCLUDED — The vista beyond the gate is completely hidden behind the closed stone wall.",
+   "desc": "Downstream (vista beyond the Gate): OCCLUDED — Hidden from view behind the closed wooden gate and solid masonry wall.",
    "census": {
     "u": 1.5152,
     "v": 0.1383,
@@ -6616,12 +7429,47 @@
    "verify": {
     "verdict": "upheld",
     "by": "adversarial-judge:checklist",
-    "why": "The vista beyond the gate is completely occluded from view by the solid stone wall and closed wooden gate."
+    "why": "The vista beyond the gate is completely hidden from view by the solid masonry wall and closed wooden gate."
    },
    "triage": {
     "bucket": "known",
     "by": "canopy-over-road",
     "where": "DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)"
+   }
+  },
+  {
+   "fid": "F130",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "gatefield",
+   "item": "path:gate-court__forest-trailhead",
+   "itemWhat": "the route between Sigil Gate court and Whisperwood trailhead — a path (WAYPOINT WITHDRAWN 2026-08-01 (mini-round 2b): [84,76.8] now lies BEYOND the re-snapped trailhead and 3.8 m off the stamped channel, so the lane doubled back on itself to reach a stile 1.5 m short of it. The run is 7.6 m inside the court's own r10 floor and is swallowed by it.)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Sigil Gate court and Whisperwood trailhead: ABSENT — No separate path is drawn as the trailhead sits directly on the court rim.",
+   "census": {
+    "u": 0.5818,
+    "v": 0.3204,
+    "z": 54.65,
+    "charPx": 68,
+    "on": true,
+    "plateZ": 54.64,
+    "state": "clear",
+    "behindBy": 0.01
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The path to the wood begins directly at the rim of the court, so no separate connecting route exists between them."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
    }
   }
  ],
@@ -6650,36 +7498,6 @@
     "verdict": "refuted",
     "by": "adversarial-judge:naive",
     "why": "The dense, dark pine trees clearly function as a standard impassable forest boundary wall rather than a confusing navigation path."
-   }
-  },
-  {
-   "fid": "F18",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "waystone",
-   "item": "exit:seam:waystone__road-gate",
-   "itemWhat": "the way out of this area on foot towards arch — a path that carries on out of the frame",
-   "verdict": "ABSENT",
-   "category": "navigation",
-   "where": "null",
-   "bbox": null,
-   "severity": 3,
-   "desc": "the way out of this area on foot towards arch: ABSENT — The road fades into darkness before reaching the edge of the frame, so an exit toward the arch is not shown.",
-   "census": {
-    "u": 0.5849,
-    "v": 0.3733,
-    "z": 41.34,
-    "charPx": 90,
-    "on": true,
-    "plateZ": 41.32,
-    "state": "clear",
-    "behindBy": 0.02
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "refuted",
-    "by": "adversarial-judge:checklist",
-    "why": "The paved path remains clearly visible and continues all the way to the bottom edge of the frame."
    }
   },
   {
@@ -6735,147 +7553,42 @@
    }
   },
   {
-   "fid": "F20",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "arch",
-   "item": "inn",
-   "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
-   "verdict": "VISIBLE-BUT-ILLEGIBLE",
-   "category": "navigation",
-   "where": "stone building in upper center",
-   "bbox": [
-    0.246,
-    0.018,
-    0.411,
-    0.275
-   ],
-   "severity": 2,
-   "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — A small stone cottage with a chimney is visible, but lacks any sign or feature identifying it specifically as the inn.",
-   "census": {
-    "u": 0.3322,
-    "v": 0.2904,
-    "z": 68.85,
-    "charPx": 54,
-    "on": true,
-    "plateZ": 65.9,
-    "state": "occluded",
-    "behindBy": 2.94
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "refuted",
-    "by": "adversarial-judge:checklist",
-    "why": "The complaint is based on the building lacking a sign or label identifying it as an inn, which is explicitly disallowed under the rules."
-   }
-  },
-  {
-   "fid": "F48",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "square",
-   "item": "item-shop",
-   "itemWhat": "Item Shop — a shop item (village general store — preserves, twine, lamp oil)",
-   "verdict": "VISIBLE-BUT-ILLEGIBLE",
-   "category": "navigation",
-   "where": "northeast of square",
-   "bbox": [
-    0.59,
-    0.12,
-    0.71,
-    0.37
-   ],
-   "severity": 2,
-   "desc": "Item Shop: VISIBLE-BUT-ILLEGIBLE — Building located near the square, but lacks distinct trade signage.",
-   "census": {
-    "u": 0.2964,
-    "v": 0.4218,
-    "z": 48.3,
-    "charPx": 43,
-    "on": true,
-    "plateZ": 44.7,
-    "state": "occluded",
-    "behindBy": 3.6
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "refuted",
-    "by": "adversarial-judge:checklist",
-    "why": "The building is plainly visible, and objecting to its lack of trade signage is a complaint about missing signs rather than art readability."
-   }
-  },
-  {
    "fid": "F49",
    "mode": "checklist",
    "town": "emberbrook",
-   "shot": "square",
+   "shot": "therise",
    "item": "inn",
    "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
    "verdict": "VISIBLE-BUT-ILLEGIBLE",
    "category": "navigation",
-   "where": "north edge of square",
+   "where": "right midground cottage",
    "bbox": [
-    0.36,
-    0.05,
-    0.46,
-    0.23
+    0.686,
+    0.173,
+    0.953,
+    0.56
    ],
    "severity": 2,
-   "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Small cottage visible in background without clear inn indicators.",
+   "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Reads as a standard cottage without clear signage identifying it as an inn.",
    "census": {
-    "u": 0.6471,
-    "v": 0.3175,
-    "z": 52.34,
-    "charPx": 40,
+    "u": 0.3803,
+    "v": 0.3848,
+    "z": 33.7,
+    "charPx": 61,
     "on": true,
-    "plateZ": 49.65,
+    "plateZ": 19.58,
     "state": "occluded",
-    "behindBy": 2.7
+    "behindBy": 14.12
    },
    "hint": null,
    "verify": {
     "verdict": "refuted",
     "by": "adversarial-judge:checklist",
-    "why": "The cottage is clearly visible, and complaining about a lack of inn indicators is a complaint about missing signage or labels."
+    "why": "The complaint relies on the lack of a sign identifying it as an inn, which is explicitly discounted as a valid reason for refutation."
    }
   },
   {
-   "fid": "F50",
-   "mode": "checklist",
-   "town": "emberbrook",
-   "shot": "square",
-   "item": "bakery",
-   "itemWhat": "Poppy's bakery — a building (warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging | MOVED 2026-07-31 (coordinator): 1.5 m away from the inn — at (24.5,21.5) the two roofs shared a volume (4.03 m centres vs 4.96 m needed at cottage size + 1.14 roof oversail, measured by the square builder). Still on the square's west rim, west of the well.)",
-   "verdict": "VISIBLE-BUT-ILLEGIBLE",
-   "category": "navigation",
-   "where": "west rim of square",
-   "bbox": [
-    0.21,
-    0.2,
-    0.35,
-    0.47
-   ],
-   "severity": 2,
-   "desc": "Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — Orange-roofed cottage on plaza edge, indistinguishable from ordinary houses.",
-   "census": {
-    "u": 0.829,
-    "v": 0.4788,
-    "z": 46.34,
-    "charPx": 45,
-    "on": true,
-    "plateZ": 43.12,
-    "state": "occluded",
-    "behindBy": 3.22
-   },
-   "hint": null,
-   "verify": {
-    "verdict": "refuted",
-    "by": "adversarial-judge:checklist",
-    "why": "The building is fully legible as a cottage, and expecting specific bakery signifiers on a standard house is a complaint about missing labels."
-   }
-  },
-  {
-   "fid": "F78",
+   "fid": "F87",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "homerow",
@@ -6901,7 +7614,37 @@
    }
   },
   {
-   "fid": "F62",
+   "fid": "F108",
+   "mode": "checklist",
+   "town": "emberbrook",
+   "shot": "homerow",
+   "item": "path:hillside-cottage__lake-home",
+   "itemWhat": "the route between Mara & Pip's cottage and Lake's home (the keeper's cottage) — a path",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Mara & Pip's cottage and Lake's home (the keeper's cottage): ABSENT — No paved path or marked trail directly connects these two cottages.",
+   "census": {
+    "u": 0.4226,
+    "v": 0.6825,
+    "z": 45.77,
+    "charPx": 81,
+    "on": true,
+    "plateZ": 45.93,
+    "state": "clear",
+    "behindBy": -0.16
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:checklist",
+    "why": "A clear, dark grey paved path lined with street lamps directly connects the cottage on the left to Lake's home on the right."
+   }
+  },
+  {
+   "fid": "F73",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -6927,7 +7670,7 @@
    }
   },
   {
-   "fid": "F70",
+   "fid": "F82",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -6953,7 +7696,7 @@
    }
   },
   {
-   "fid": "F73",
+   "fid": "F85",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -6979,7 +7722,7 @@
    }
   },
   {
-   "fid": "F81",
+   "fid": "F102",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -7005,7 +7748,7 @@
    }
   },
   {
-   "fid": "F82",
+   "fid": "F103",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "northlane",
@@ -7031,7 +7774,7 @@
    }
   },
   {
-   "fid": "F105",
+   "fid": "F115",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gatefield",
@@ -7057,7 +7800,7 @@
    }
   },
   {
-   "fid": "F106",
+   "fid": "F116",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gatefield",
@@ -7086,7 +7829,7 @@
    }
   },
   {
-   "fid": "F112",
+   "fid": "F122",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gatefield",
@@ -7112,7 +7855,7 @@
    }
   },
   {
-   "fid": "F116",
+   "fid": "F126",
    "mode": "naive",
    "town": "emberbrook",
    "shot": "gatefield",
@@ -7146,9 +7889,9 @@
   "byStage": {}
  },
  "bboxAgreement": {
-  "n": 40,
-  "hit": 18,
-  "frac": 0.45
+  "n": 50,
+  "hit": 23,
+  "frac": 0.46
  },
  "calibration": null
 }

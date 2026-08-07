@@ -54,7 +54,7 @@ td.adj.miss{background:#2a1512}td.adj.miss b{color:var(--miss)}
 <h1>Scene red-team — dellhollow</h1>
 <div class="small">run <code>20260806-1-dellhollow</code> · judge <code>gemini:gemini-3.6-flash (replayed from run-20260806-1-dellhollow-src)</code> (pinned) ·
   15 plates · naive + checklist · naive N=3 ·
-  generated 2026-08-06T19:56:15.009Z by <code>tools/scene_redteam.mjs</code> · plates baked 2026-08-06T11:26:59Z .. 2026-08-06T13:18:27Z</div>
+  generated 2026-08-07T01:51:03.911Z by <code>tools/scene_redteam.mjs</code> · plates baked 2026-08-06T11:26:59Z .. 2026-08-06T22:15:20Z</div>
 
 <h2>1 &nbsp;The prompts, verbatim</h2>
 <p class="blurb">Exactly what each judge call was asked (judge <code>gemini:gemini-3.6-flash (replayed from run-20260806-1-dellhollow-src)</code>, pinned) —
@@ -88,7 +88,7 @@ Answer with JSON only, in this exact shape:
  &quot;bbox&quot;:[x0,y0,x1,y1],&quot;severity&quot;:2,&quot;desc&quot;:&quot;one sentence&quot;}]}
 bbox is in normalised image coordinates: x 0 at the left edge and 1 at the right, y 0
 at the top edge and 1 at the bottom.</pre></details>
-<details class="prompt"><summary>Stage 1 — the checklist auditor (filled for plate &quot;quay-west&quot;, 15 items derived from the map/ownership contract)</summary>
+<details class="prompt"><summary>Stage 1 — the checklist auditor (filled for plate &quot;quay-west&quot;, 17 items derived from the map/ownership contract)</summary>
 <pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are auditing one frame of a video game. The designer says the things listed below
 are in this shot and that a player should be able to find them. For EACH item, decide
 which of these four is true, using the exact token:
@@ -98,6 +98,17 @@ which of these four is true, using the exact token:
                          — too small, too dark, merged into its background, cropped,
                          or it looks like some other kind of thing entirely
   ABSENT                 you cannot see it anywhere in this frame at all
+
+Items marked [QUALITY] are different: they are already in frame, so findability is
+not the question — how well they HOLD UP is. For those items, and ONLY those, answer
+with one of these tokens instead:
+  CONVINCING   it holds up — it reads as the real thing at this scene's own hour
+  WEAK         it reads, but visibly falls short — say exactly what falls short
+  FAILING      it breaks the picture — it reads as a flat fill, a painted plane, or
+               an unfinished edge of the world
+For a [QUALITY] item, put the bbox around the specific area your judgment rests on,
+and make &quot;desc&quot; a JUDGMENT with a reason — never a neutral description of what is
+there.
 
 The scene is a finished hand-stylised illustration; a painterly or simplified look is
 the intended art style and is not a problem in itself.
@@ -128,6 +139,8 @@ Items:
   13. the way out of this area on foot towards weave — a path that carries on out of the frame
   14. the way out of this area on foot towards deep-stairs — a path that carries on out of the frame
   15. the way out of this area on foot towards loop-stairs — a path that carries on out of the frame
+  16. [QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.
+  17. [QUALITY] The water surface — this frame holds water (near Harbor Deck). Does the surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it.
 
 Answer with JSON only, one entry per item, in order:
 {&quot;items&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;FINDABLE&quot;,&quot;where&quot;:&quot;a few words&quot;,&quot;bbox&quot;:[x0,y0,x1,y1],
@@ -165,11 +178,17 @@ find, hidden behind something, or does not read as the kind of thing it is. REFU
 you can point straight at it and it is plainly legible, or if the complaint is really
 about a missing sign, label, icon or name rather than about the art.
 
+Claims tagged [quality] are JUDGMENTS that a sky, a backdrop, the world at the frame
+edges, or a water surface fails to hold up as art (a flat fill, a painted plane, an
+unfinished edge of the world). For those, UPHOLD if your own look at the frame agrees
+it falls short in the way described; REFUTE only if the surface genuinely holds up in
+this frame. &quot;It is normal for games&quot; is not a refutation of a quality claim.
+
 The scene is a finished hand-stylised illustration; a painterly or simplified look is
 the intended art style and is not a problem in itself.
 
 Claims:
-  1. [occlusion] the route between Valley Gate and Inn: OCCLUDED — The stair flight descending from the upper area is hidden behind the upper platform deck and support beams.
+  1. [navigation] lower harbor building cluster: Inn: VISIBLE-BUT-ILLEGIBLE — The buildings at the harbor level are too small, shadowed, and distant to uniquely identify which structure is the Boatmen's Rest inn.
 
 Answer with JSON only, one entry per claim, in order:
 {&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
@@ -187,24 +206,24 @@ can reproduce the user's screenshots.</p>
 
 
 <h2>3 &nbsp;The sweep — surviving findings, triaged</h2>
-<p class="blurb">100 survivors from 125 raw findings over 15
+<p class="blurb">101 survivors from 127 raw findings over 15
 plates. Deduped across shots: a finding seen on more than one plate is listed once and says so.</p>
 
 
 <h3>Already known / tracked <span class="count">16</span></h3><p class="blurb">The judge re-found something the repo already knows about. Useful as a confirmation that the instrument sees real defects; not new work.</p>
-      <div class="grid"><div class="card sev2">
+      <div class="grid"><div class="card sev3">
     <div class="ch"><span class="pill checklist">checklist</span>
-      <span class="pill cat">occlusion</span>
-      <span class="pill sev">sev 2</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
       
       <span class="shot">shelf-west</span>
       
     </div>
-    <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:294% auto;background-position:58.5% 49.0%"></div>
-    <div class="cb"><div class="q">the route between Valley Gate and Inn: OCCLUDED — The stair flight descending from the upper area is hidden behind the upper platform deck and support beams.</div>
+    <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Valley Gate and Inn: ABSENT — The specified stair descent is not visible in frame.</div>
       
       <div class="meta">ray census: <b>occluded</b> (plate is 5.42 m nearer), 95 px tall at 21.87 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by ray-census — the shot's own depth plate draws something 5.42 m nearer at that pixel</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The stair descent connecting these areas is not visible from this camera position.</div>
       
       
     </div></div><div class="card sev3">
@@ -216,25 +235,10 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       
     </div>
     <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">the way out of this area on foot towards shelf-east: ABSENT — No path leading off-frame towards shelf-east is present in this view.</div>
+    <div class="cb"><div class="q">the way out of this area on foot towards gate: ABSENT — No gate path exits the frame from this angle.</div>
       
-      <div class="meta">ray census: <b>clear</b>, 70 px tall at 29.4 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No walkable path extending towards shelf-east is visible within this camera angle.</div>
-      
-      
-    </div></div><div class="card sev3">
-    <div class="ch"><span class="pill checklist">checklist</span>
-      <span class="pill cat">navigation</span>
-      <span class="pill sev">sev 3</span>
-      
-      <span class="shot">loop-stairs</span>
-      
-    </div>
-    <div class="crop" style="background-image:url('plates/loop-stairs.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">the way out of this area on foot towards shelf-east: ABSENT — No path continuing off-screen to the east along the upper shelf is visible in the scene.</div>
-      <div class="meta">where: none</div>
-      <div class="meta">ray census: <b>occluded</b> (plate is 4.9 m nearer), 120 px tall at 17.28 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The upper platform ends abruptly at the building structure and cliff face, showing no visible pathway continuing eastward off-screen.</div>
+      <div class="meta">ray census: <b>occluded</b> (plate is 5.1 m nearer), 100 px tall at 20.65 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No exit path towards a gate can be identified from this frame angle.</div>
       
       
     </div></div><div class="card sev2">
@@ -426,15 +430,60 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       
     </div>
     <div class="crop" style="background-image:url('plates/lockfive.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">the way out of this area on foot towards north-landing: ABSENT — No third foot path exit is present in this view.</div>
+    <div class="cb"><div class="q">Lock Five: ABSENT — The lock basin and lock gates are not present in this camera view.</div>
+      <div class="meta">where: not visible</div>
+      <div class="meta">ray census: <b>occluded</b> (plate is 12.79 m nearer), 56 px tall at 36.72 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No lock basin or lock gates are visible anywhere within this camera frame.</div>
       
-      <div class="meta">ray census: <b>clear</b>, 52 px tall at 39.6 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No third foot path exit leading out of the area is legible in this frame.</div>
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">north-landing</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/north-landing.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the way out of this area on foot towards lockfive: ABSENT — No pedestrian exit path leading out of the frame toward Lock Five is visible in this view.</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 65 px tall at 31.86 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The boardwalk leads inward toward the central village structures rather than exiting the frame, leaving no clear pedestrian exit path visible.</div>
       
       
     </div></div></div>
-<h3>New, and looks real <span class="count">84</span></h3><p class="blurb">Not matched to anything tracked. This is the bucket that earns the tool its keep — and the bucket a human must read before anybody acts on it.</p>
+<h3>New, and looks real <span class="count">85</span></h3><p class="blurb">Not matched to anything tracked. This is the bucket that earns the tool its keep — and the bucket a human must read before anybody acts on it.</p>
       <div class="grid"><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">gate</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gate.png');background-size:500% auto;background-position:33.0% 31.0%"></div>
+    <div class="cb"><div class="q">Inn: VISIBLE-BUT-ILLEGIBLE — The buildings at the harbor level are too small, shadowed, and distant to uniquely identify which structure is the Boatmen's Rest inn.</div>
+      <div class="meta">where: lower harbor building cluster</div>
+      <div class="meta">ray census: <b>occluded</b> (plate is 14.16 m nearer), 45 px tall at 46.21 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The harbor-level structures on the left are small, heavily shadowed, and clustered together, making individual buildings like the inn impossible to identify.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">gate</span>
+      <span class="pill also">+4 more shots</span>
+    </div>
+    <div class="crop" style="background-image:url('plates/gate.png');background-size:208% auto;background-position:24.0% 19.0%"></div>
+    <div class="cb"><div class="q">The world at the frame edges: WEAK — The top-left background fades into a flat, empty dark void with starkly cut mountain silhouettes rather than a fully rendered sky and horizon.</div>
+      <div class="meta">where: top-left upper backdrop</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The top-left backdrop consists of a dark, featureless void behind sharp cliff boundaries rather than a rendered sky.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 14.4,145.5,-2.7,72.6</div>
+      <div class="meta">also on: shelf-east, loop-stairs, weave, lockfive</div>
+    </div></div><div class="card sev2">
     <div class="ch"><span class="pill naive">naive</span>
       <span class="pill cat">geometry</span>
       <span class="pill sev">sev 2</span>
@@ -462,7 +511,7 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <div class="meta">where: diagonal supports under upper platform</div>
       
       <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The diagonal wooden support beams beneath the upper platform extend outward into mid-air without resting against any lower wall or structure.</div>
-      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.3,32.9,3.5,11.4</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.3,32.6,3.5,11.4</div>
       
     </div></div><div class="card sev2">
     <div class="ch"><span class="pill naive">naive</span>
@@ -477,7 +526,7 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <div class="meta">where: under the upper wooden walkway</div>
       
       <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The diagonal support beams under the upper walkway float freely over the open space rather than connecting to a supporting pillar or cliff face.</div>
-      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.3,30.7,2.1,11.9</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.3,30.7,2.3,11.9</div>
       
     </div></div><div class="card sev2">
     <div class="ch"><span class="pill naive">naive</span>
@@ -509,19 +558,19 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The long diagonal cable passes straight through the lower floor surface without any visible mounting bracket or anchor hardware.</div>
       <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 22.9,38.4,8.6,20</div>
       
-    </div></div><div class="card sev3">
+    </div></div><div class="card sev2">
     <div class="ch"><span class="pill checklist">checklist</span>
       <span class="pill cat">navigation</span>
-      <span class="pill sev">sev 3</span>
+      <span class="pill sev">sev 2</span>
       
       <span class="shot">shelf-west</span>
       
     </div>
-    <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">the route between Item Shop (chandlery skin) and Weapon Shop: ABSENT — The road section leading to the Weapon Shop is not visible because the Weapon Shop is not in this shot.</div>
-      
+    <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:500% auto;background-position:63.4% 57.6%"></div>
+    <div class="cb"><div class="q">the route between Item Shop (chandlery skin) and Weapon Shop: VISIBLE-BUT-ILLEGIBLE — Path section behind platform supports is obscured by darkness.</div>
+      <div class="meta">where: shadowed passageway</div>
       <div class="meta">ray census: <b>clear</b>, 73 px tall at 28.45 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The Weapon Shop is out of frame, making the route connecting to it absent from this view.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The path section beneath and behind the platform supports is heavily shadowed and obscured.</div>
       
       
     </div></div><div class="card sev2">
@@ -532,28 +581,28 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <span class="shot">shelf-west</span>
       
     </div>
-    <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:500% auto;background-position:8.0% 57.8%"></div>
-    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter The Boatmen's Rest&quot;): OCCLUDED — The door to enter the Inn is obscured in shadow beneath the lower overhang.</div>
-      
+    <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:500% auto;background-position:12.0% 57.5%"></div>
+    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter The Boatmen's Rest&quot;): OCCLUDED — Entrance is obscured by roof overhang and deep shadow.</div>
+      <div class="meta">where: inn front entrance</div>
       <div class="meta">ray census: <b>clear</b>, 85 px tall at 24.34 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The entryway is completely cast in deep shadow underneath the lower overhang structure.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The front doorway is completely submerged in dark shadow beneath the roof overhang.</div>
       
       
-    </div></div><div class="card sev2">
+    </div></div><div class="card sev3">
     <div class="ch"><span class="pill checklist">checklist</span>
-      <span class="pill cat">occlusion</span>
-      <span class="pill sev">sev 2</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
       
       <span class="shot">shelf-west</span>
-      
+      <span class="pill also">+1 more shot</span>
     </div>
-    <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:303% auto;background-position:49.5% 48.5%"></div>
-    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Item Shop&quot;): OCCLUDED — The entrance door to the Item Shop is hidden behind its counter facade and side walls.</div>
+    <div class="crop" style="background-image:url('plates/shelf-west.png');background-size:397% auto;background-position:53.8% 49.5%"></div>
+    <div class="cb"><div class="q">Weapon Shop: VISIBLE-BUT-ILLEGIBLE — Building lacks distinctive weapon visual cues in this view.</div>
+      <div class="meta">where: adjacent shop structure</div>
+      <div class="meta">ray census: <b>occluded</b> (plate is 11.23 m nearer), 64 px tall at 32.21 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The structure shows generic wooden architecture without any visual cues indicating a weapon shop.</div>
       
-      <div class="meta">ray census: <b>clear</b>, 84 px tall at 24.69 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The doorway into the shop is occluded by the counter facade and wall framing.</div>
-      
-      
+      <div class="meta">also on: shelf-east</div>
     </div></div><div class="card sev3">
     <div class="ch"><span class="pill checklist">checklist</span>
       <span class="pill cat">navigation</span>
@@ -563,25 +612,10 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       
     </div>
     <div class="crop" style="background-image:url('plates/shelf-east.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">Weapon Shop: ABSENT — No shop weapons are visible in the scene.</div>
-      
-      <div class="meta">ray census: <b>clear</b>, 94 px tall at 21.95 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — There are no weapons displayed or visible anywhere in the scene to identify a weapon shop.</div>
-      
-      
-    </div></div><div class="card sev3">
-    <div class="ch"><span class="pill checklist">checklist</span>
-      <span class="pill cat">navigation</span>
-      <span class="pill sev">sev 3</span>
-      
-      <span class="shot">shelf-east</span>
-      
-    </div>
-    <div class="crop" style="background-image:url('plates/shelf-east.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">Armor Shop: ABSENT — No armor pieces are visible on display.</div>
+    <div class="cb"><div class="q">Armor Shop: ABSENT — No shop armor items are visible.</div>
       
       <div class="meta">ray census: <b>clear</b>, 120 px tall at 17.22 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No armor pieces or display racks are visible in the scene to signal an armor shop.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No armor pieces or visual cues indicating an armor shop are visible anywhere in the environment.</div>
       
       
     </div></div><div class="card sev2">
@@ -592,26 +626,11 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <span class="shot">shelf-east</span>
       
     </div>
-    <div class="crop" style="background-image:url('plates/shelf-east.png');background-size:400% auto;background-position:67.0% 56.5%"></div>
-    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Weapon Shop&quot;): VISIBLE-BUT-ILLEGIBLE — Darkened wall opening lacks clear door framing or interactive cues.</div>
-      <div class="meta">where: shadowed facade of right building</div>
+    <div class="crop" style="background-image:url('plates/shelf-east.png');background-size:500% auto;background-position:45.0% 41.0%"></div>
+    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Weapon Shop&quot;): VISIBLE-BUT-ILLEGIBLE — Dark opening heavily obscured by roof shadow.</div>
+      <div class="meta">where: shadowed building wall</div>
       <div class="meta">ray census: <b>clear</b>, 94 px tall at 21.93 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The wall opening on the right building is obscured by deep shadow and lacks framing or visual cues to clearly read as an entrance.</div>
-      
-      
-    </div></div><div class="card sev2">
-    <div class="ch"><span class="pill checklist">checklist</span>
-      <span class="pill cat">occlusion</span>
-      <span class="pill sev">sev 2</span>
-      
-      <span class="shot">shelf-east</span>
-      
-    </div>
-    <div class="crop" style="background-image:url('plates/shelf-east.png');background-size:435% auto;background-position:33.5% 7.5%"></div>
-    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Armor Shop&quot;): OCCLUDED — Hidden behind elevated wooden structures and roofs.</div>
-      <div class="meta">where: behind upper platform roofs</div>
-      <div class="meta">ray census: <b>clear</b>, 120 px tall at 17.2 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The entrance is completely occluded from view behind the elevated wooden platforms and roofs.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The wall opening on the central building is heavily cast in deep shadow, making it difficult to distinguish an interactive doorway.</div>
       
       
     </div></div><div class="card sev2">
@@ -622,13 +641,28 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <span class="shot">shelf-east</span>
       
     </div>
-    <div class="crop" style="background-image:url('plates/shelf-east.png');background-size:263% auto;background-position:51.5% 29.0%"></div>
-    <div class="cb"><div class="q">Inn: VISIBLE-BUT-ILLEGIBLE — Reads as a generic wooden structure without identifying inn features.</div>
-      <div class="meta">where: upper central wooden building</div>
-      <div class="meta">ray census: <b>occluded</b> (plate is 8.43 m nearer), 64 px tall at 32.17 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The upper central building lacks any signage or distinguishing features, making it read as a generic wooden structure.</div>
+    <div class="crop" style="background-image:url('plates/shelf-east.png');background-size:500% auto;background-position:63.5% 66.0%"></div>
+    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Armor Shop&quot;): VISIBLE-BUT-ILLEGIBLE — Recessed dark doorway hidden under deep overhangs.</div>
+      <div class="meta">where: lower right structure base</div>
+      <div class="meta">ray census: <b>clear</b>, 120 px tall at 17.2 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The entryway at the base of the lower right building is obscured by deep shadows under the roof overhang.</div>
       
       
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">shelf-east</span>
+      <span class="pill also">+2 more shots</span>
+    </div>
+    <div class="crop" style="background-image:url('plates/shelf-east.png');background-size:500% auto;background-position:93.5% 35.0%"></div>
+    <div class="cb"><div class="q">The water surface: WEAK — Water reads as a plain dark plane with minimal shore integration or specular reflections.</div>
+      <div class="meta">where: far right water body</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The body of water on the right side appears as a flat, solid dark surface lacking specular highlights or shoreline details.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -11.5,50.2,10.2,78.6</div>
+      <div class="meta">also on: quay-west, deep-stairs</div>
     </div></div><div class="card sev2">
     <div class="ch"><span class="pill naive">naive</span>
       <span class="pill cat">immersion</span>
@@ -733,21 +767,6 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       
       <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Thin horizontal white planes clearly float suspended in the air in front of the central buildings.</div>
       <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 39.6,51.6,8.8,17.5</div>
-      
-    </div></div><div class="card sev2">
-    <div class="ch"><span class="pill checklist">checklist</span>
-      <span class="pill cat">navigation</span>
-      <span class="pill sev">sev 2</span>
-      
-      <span class="shot">quay-west</span>
-      
-    </div>
-    <div class="crop" style="background-image:url('plates/quay-west.png');background-size:500% auto;background-position:79.5% 16.0%"></div>
-    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Cookhouse&quot;): VISIBLE-BUT-ILLEGIBLE — The recessed doorway under the cookhouse eaves is too dark and merges into the surrounding shadowed wood.</div>
-      <div class="meta">where: front facade of cookhouse</div>
-      <div class="meta">ray census: <b>clear</b>, 79 px tall at 26.16 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Deep shadows beneath the eaves make recessed doorways blend completely into the dark surrounding woodwork, rendering the entrance illegible.</div>
-      
       
     </div></div><div class="card sev2">
     <div class="ch"><span class="pill naive">naive</span>
@@ -922,11 +941,11 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <span class="shot">cottage</span>
       
     </div>
-    <div class="crop" style="background-image:url('plates/cottage.png');background-size:500% auto;background-position:37.3% 51.5%"></div>
-    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Keepers' Cottage&quot;): OCCLUDED — The entrance to the cottage is hidden behind the wooden scaffolding and collapsed walkway timbers.</div>
-      <div class="meta">where: behind collapsed bridge timbers</div>
+    <div class="crop" style="background-image:url('plates/cottage.png');background-size:500% auto;background-position:39.0% 58.0%"></div>
+    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Keepers' Cottage&quot;): OCCLUDED — The cottage doorway is hidden behind the pile of collapsed wooden beams and bridge debris.</div>
+      <div class="meta">where: behind the collapsed bridge timbers</div>
       <div class="meta">ray census: <b>clear</b>, 111 px tall at 18.62 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The cottage doorway is completely occluded from view by the surrounding collapsed wooden bridge scaffolding and planks.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The cottage doorway is completely obscured from view behind the pile of broken wooden beams and bridge debris.</div>
       
       
     </div></div><div class="card sev2">
@@ -1170,6 +1189,21 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 32.6,47.4,17.9,30.5</div>
       
     </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">deep-stairs</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/deep-stairs.png');background-size:313% auto;background-position:27.0% 30.0%"></div>
+    <div class="cb"><div class="q">Cookhouse: VISIBLE-BUT-ILLEGIBLE — Wooden buildings are visible on the upper stilt platforms, but without distinct features, signage, or glowing interior light, none can be identified as a cookhouse.</div>
+      <div class="meta">where: buildings on upper stilt platform</div>
+      <div class="meta">ray census: <b>occluded</b> (plate is 1.73 m nearer), 68 px tall at 30.64 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The structures along the top platform are generic wooden boxes without any cookhouse details, signage, or interior illumination to identify them.</div>
+      
+      
+    </div></div><div class="card sev2">
     <div class="ch"><span class="pill naive">naive</span>
       <span class="pill cat">immersion</span>
       <span class="pill sev">sev 2</span>
@@ -1271,7 +1305,7 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
     <div class="cb"><div class="q">Pitch kettle: ABSENT — No pitch kettle or curling tar smoke is present in the scene.</div>
       
       <div class="meta">ray census: <b>occluded</b> (plate is 3.17 m nearer), 79 px tall at 26.11 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No pitch kettle or tar smoke can be seen anywhere in this camera frame.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — There is no pitch kettle or curling tar smoke present anywhere in this frame.</div>
       
       
     </div></div><div class="card sev3">
@@ -1283,10 +1317,25 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       
     </div>
     <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">Lock Four (set dressing): ABSENT — No upstream water lock gates or Lock Four set dressing are visible in the scene.</div>
+    <div class="cb"><div class="q">Lock Four overlook: ABSENT — No lock overlook post or spray-covered viewpoint under lock gates exists here.</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 2.17 m nearer), 84 px tall at 24.78 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No lock overlook post or spray-covered viewpoint is visible in the scene.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">boatyard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Lock Four (set dressing): ABSENT — No lock structure or lock gates are visible anywhere in this frame.</div>
       
       <div class="meta">ray census: <b>occluded</b> (plate is 5.79 m nearer), 88 px tall at 23.63 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — There are no lock gates or Lock Four set dressing features visible in this view.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No lock structure or lock gates exist within this scene.</div>
       
       
     </div></div><div class="card sev3">
@@ -1298,10 +1347,10 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       
     </div>
     <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">the route between Cargo Winch (foot) and Slipway: ABSENT — The cargo winch and its connecting deck route are not present in this view.</div>
+    <div class="cb"><div class="q">the route between Cargo Winch (foot) and Slipway: ABSENT — No cargo winch exists in this shot to form a route with.</div>
       
       <div class="meta">ray census: <b>occluded</b> (plate is 3.57 m nearer), 72 px tall at 28.89 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No cargo winch or connecting deck pathway is present in the frame.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No cargo winch is present in this view, making the route non-existent.</div>
       
       
     </div></div><div class="card sev3">
@@ -1313,10 +1362,25 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       
     </div>
     <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">the route between Boatwright's shed and Pitch kettle: ABSENT — The route cannot exist because the pitch kettle is absent.</div>
+    <div class="cb"><div class="q">the route between Boatwright's shed and Pitch kettle: ABSENT — Pitch kettle is absent from the scene.</div>
       
       <div class="meta">ray census: <b>clear</b>, 74 px tall at 27.96 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The route cannot be identified as the pitch kettle is not present in the scene.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Since the pitch kettle is absent from the scene, this route cannot be traced.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">boatyard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/boatyard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Slipway and Lock Four overlook: ABSENT — Lock Four overlook is absent from the scene.</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 8.07 m nearer), 79 px tall at 26.05 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Because the Lock Four overlook is missing from this view, the route cannot exist.</div>
       
       
     </div></div><div class="card sev2">
@@ -1403,40 +1467,10 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       
     </div>
     <div class="crop" style="background-image:url('plates/waterfront.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">Cargo Winch (foot): ABSENT — Cargo Winch (foot) is not visible in this scene.</div>
+    <div class="cb"><div class="q">Cargo Winch (foot): ABSENT — No winch mechanism or machine with a drum or crank is present at the quay level.</div>
       
       <div class="meta">ray census: <b>clear</b>, 71 px tall at 29.22 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The cargo winch mechanism at the foot of the cliff is not visible or identifiable in this frame.</div>
-      
-      
-    </div></div><div class="card sev3">
-    <div class="ch"><span class="pill checklist">checklist</span>
-      <span class="pill cat">navigation</span>
-      <span class="pill sev">sev 3</span>
-      
-      <span class="shot">waterfront</span>
-      
-    </div>
-    <div class="crop" style="background-image:url('plates/waterfront.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">the route between Cargo Winch (foot) and Slipway: ABSENT — The route connected to the Cargo Winch is not present as the cargo winch is absent.</div>
-      
-      <div class="meta">ray census: <b>occluded</b> (plate is 12.02 m nearer), 62 px tall at 33.35 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Because the cargo winch is not visible, the route connecting it to the slipway cannot be traced or read.</div>
-      
-      
-    </div></div><div class="card sev3">
-    <div class="ch"><span class="pill checklist">checklist</span>
-      <span class="pill cat">navigation</span>
-      <span class="pill sev">sev 3</span>
-      
-      <span class="shot">waterfront</span>
-      
-    </div>
-    <div class="crop" style="background-image:url('plates/waterfront.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">the route between Fish dock and Cargo Winch (foot): ABSENT — The route between Fish dock and Cargo Winch is absent.</div>
-      
-      <div class="meta">ray census: <b>clear</b>, 133 px tall at 15.58 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The route between the fish dock and cargo winch cannot be identified due to the missing or obscured winch.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No cargo winch mechanism, drum, or crank is visible anywhere along the quay level in this frame.</div>
       
       
     </div></div><div class="card sev2">
@@ -1580,15 +1614,15 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <span class="pill sev">sev 3</span>
       
       <span class="shot">lockfive</span>
-      
+      <span class="pill also">+1 more shot</span>
     </div>
     <div class="crop" style="background-image:url('plates/lockfive.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
-    <div class="cb"><div class="q">Dam Crest Gate: ABSENT — No iron-banded gate barring a dam crest path is visible in this frame.</div>
-      
+    <div class="cb"><div class="q">Dam Crest Gate: ABSENT — The iron-banded gate barring the dam-crest walkway is not visible in this frame.</div>
+      <div class="meta">where: not visible</div>
       <div class="meta">ray census: <b>occluded</b> (plate is 11.28 m nearer), 58 px tall at 35.94 m</div>
-      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No iron-banded gate barring a dam crest path can be seen anywhere in this cliffside dock environment.</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The iron-banded dam-crest gate is not present in this view of the environment.</div>
       
-      
+      <div class="meta">also on: north-landing</div>
     </div></div><div class="card sev2">
     <div class="ch"><span class="pill naive">naive</span>
       <span class="pill cat">immersion</span>
@@ -1602,7 +1636,7 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <div class="meta">where: lower right background</div>
       
       <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A flat brown platform with grey blocks sits floating in mid-air on the right side without any supporting structure underneath.</div>
-      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88,98.4,31.6,44.9</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.2,98.4,31.6,44.8</div>
       
     </div></div><div class="card sev1">
     <div class="ch"><span class="pill naive">naive</span>
@@ -1632,7 +1666,7 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
       <div class="meta">where: floating brown platform on the right</div>
       
       <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The flat brown plane carrying loose grey blocks on the right side floats completely unsupported in mid-air.</div>
-      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 87.9,98.2,31.6,44.9</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.1,98.2,31.6,44.8</div>
       
     </div></div><div class="card sev1">
     <div class="ch"><span class="pill naive">naive</span>
@@ -1703,96 +1737,96 @@ plates. Deduped across shots: a finding seen on more than one plate is listed on
 <span style="color:var(--checklist)">blue = checklist</span>. This is the user's own annotated-screenshot
 format, machine-made.</p>
 
-<section class="shot"><h3>gate <span class="small">The Valley Gate · bake 2026-08-06T11:26:59Z</span></h3>
+<section class="shot"><h3>gate <span class="small">The Valley Gate · bake 2026-08-06T22:07:32Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/gate.png" alt="">
-        </div>
-      <div class="small">0 surviving findings ·
+        <div class="bx checklist" style="left:27.00%;top:22.00%;width:12.00%;height:18.00%"></div><div class="bx checklist" style="left:0.00%;top:0.00%;width:48.00%;height:38.00%"></div></div>
+      <div class="small">2 surviving findings ·
         3 refuted ·
-        12 checklist items</div></section>
-<section class="shot"><h3>shelf-west <span class="small">The Shelf — shop street, west · bake 2026-08-06T11:45:53Z</span></h3>
+        14 checklist items</div></section>
+<section class="shot"><h3>shelf-west <span class="small">The Shelf — shop street, west · bake 2026-08-06T22:15:20Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/shelf-west.png" alt="">
-        <div class="bx naive" style="left:17.20%;top:84.00%;width:7.30%;height:11.50%"></div><div class="bx naive" style="left:41.50%;top:37.50%;width:34.00%;height:22.00%"></div><div class="bx naive" style="left:49.50%;top:37.20%;width:26.30%;height:22.60%"></div><div class="bx naive" style="left:69.50%;top:40.00%;width:6.00%;height:19.00%"></div><div class="bx naive" style="left:17.00%;top:87.00%;width:6.00%;height:8.50%"></div><div class="bx checklist" style="left:41.50%;top:38.00%;width:34.00%;height:22.00%"></div><div class="bx checklist" style="left:6.00%;top:52.50%;width:4.00%;height:10.50%"></div><div class="bx checklist" style="left:33.00%;top:37.00%;width:33.00%;height:23.00%"></div></div>
+        <div class="bx naive" style="left:17.20%;top:84.00%;width:7.30%;height:11.50%"></div><div class="bx naive" style="left:41.50%;top:37.50%;width:34.00%;height:22.00%"></div><div class="bx naive" style="left:49.50%;top:37.20%;width:26.30%;height:22.60%"></div><div class="bx naive" style="left:69.50%;top:40.00%;width:6.00%;height:19.00%"></div><div class="bx naive" style="left:17.00%;top:87.00%;width:6.00%;height:8.50%"></div><div class="bx checklist" style="left:54.30%;top:51.50%;width:18.20%;height:12.30%"></div><div class="bx checklist" style="left:9.50%;top:52.00%;width:5.00%;height:11.00%"></div><div class="bx checklist" style="left:41.20%;top:37.20%;width:25.20%;height:24.70%"></div></div>
       <div class="small">10 surviving findings ·
         3 refuted ·
-        12 checklist items</div></section>
-<section class="shot"><h3>shelf-east <span class="small">The Shelf — shop street, east · bake 2026-08-06T11:26:59Z</span></h3>
+        13 checklist items</div></section>
+<section class="shot"><h3>shelf-east <span class="small">The Shelf — shop street, east · bake 2026-08-06T22:15:20Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/shelf-east.png" alt="">
-        <div class="bx checklist" style="left:61.00%;top:44.00%;width:12.00%;height:25.00%"></div><div class="bx checklist" style="left:22.00%;top:0.00%;width:23.00%;height:15.00%"></div><div class="bx checklist" style="left:40.00%;top:10.00%;width:23.00%;height:38.00%"></div></div>
-      <div class="small">5 surviving findings ·
+        <div class="bx checklist" style="left:42.00%;top:35.00%;width:6.00%;height:12.00%"></div><div class="bx checklist" style="left:61.00%;top:60.00%;width:5.00%;height:12.00%"></div><div class="bx checklist" style="left:87.00%;top:25.00%;width:13.00%;height:20.00%"></div></div>
+      <div class="small">4 surviving findings ·
         4 refuted ·
-        12 checklist items</div></section>
+        14 checklist items</div></section>
 <section class="shot"><h3>loop-stairs <span class="small">The Loop Stairs · bake 2026-08-06T11:26:59Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/loop-stairs.png" alt="">
         <div class="bx naive" style="left:0.00%;top:88.00%;width:26.60%;height:8.50%"></div><div class="bx naive" style="left:0.00%;top:88.00%;width:27.00%;height:9.00%"></div><div class="bx naive" style="left:0.00%;top:88.00%;width:26.00%;height:8.00%"></div><div class="bx naive" style="left:30.00%;top:93.00%;width:15.00%;height:7.00%"></div></div>
-      <div class="small">5 surviving findings ·
-        1 refuted ·
-        5 checklist items</div></section>
-<section class="shot"><h3>quay-west <span class="small">The Harbour Deck · bake 2026-08-06T11:26:59Z</span></h3>
-      <div class="wrap"><img class="plate" src="plates/quay-west.png" alt="">
-        <div class="bx naive" style="left:40.30%;top:41.90%;width:21.00%;height:4.40%"></div><div class="bx naive" style="left:40.80%;top:41.00%;width:20.70%;height:5.50%"></div><div class="bx naive" style="left:40.70%;top:41.50%;width:20.70%;height:5.00%"></div><div class="bx checklist" style="left:75.00%;top:10.00%;width:9.00%;height:12.00%"></div></div>
       <div class="small">4 surviving findings ·
         1 refuted ·
-        15 checklist items</div></section>
+        6 checklist items</div></section>
+<section class="shot"><h3>quay-west <span class="small">The Harbour Deck · bake 2026-08-06T22:07:32Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/quay-west.png" alt="">
+        <div class="bx naive" style="left:40.30%;top:41.90%;width:21.00%;height:4.40%"></div><div class="bx naive" style="left:40.80%;top:41.00%;width:20.70%;height:5.50%"></div><div class="bx naive" style="left:40.70%;top:41.50%;width:20.70%;height:5.00%"></div></div>
+      <div class="small">3 surviving findings ·
+        2 refuted ·
+        17 checklist items</div></section>
 <section class="shot"><h3>lockhead <span class="small">The Lockhead · bake 2026-08-06T11:26:59Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/lockhead.png" alt="">
         <div class="bx naive" style="left:82.50%;top:29.30%;width:9.20%;height:4.40%"></div><div class="bx naive" style="left:15.00%;top:87.20%;width:5.30%;height:12.60%"></div><div class="bx naive" style="left:82.90%;top:29.20%;width:8.60%;height:5.00%"></div><div class="bx naive" style="left:82.90%;top:29.10%;width:8.50%;height:3.50%"></div><div class="bx naive" style="left:48.50%;top:84.80%;width:4.70%;height:8.50%"></div></div>
       <div class="small">5 surviving findings ·
         0 refuted ·
-        6 checklist items</div></section>
+        7 checklist items</div></section>
 <section class="shot"><h3>cottage <span class="small">Keepers' Spur · bake 2026-08-06T11:26:59Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/cottage.png" alt="">
-        <div class="bx naive" style="left:24.00%;top:6.00%;width:24.00%;height:29.00%"></div><div class="bx naive" style="left:28.00%;top:26.00%;width:56.00%;height:66.00%"></div><div class="bx naive" style="left:79.00%;top:68.00%;width:7.00%;height:13.00%"></div><div class="bx naive" style="left:6.60%;top:29.80%;width:26.90%;height:22.80%"></div><div class="bx naive" style="left:26.80%;top:41.10%;width:35.70%;height:42.90%"></div><div class="bx naive" style="left:23.80%;top:55.50%;width:17.70%;height:7.00%"></div><div class="bx naive" style="left:23.00%;top:5.50%;width:28.00%;height:30.00%"></div><div class="bx naive" style="left:41.20%;top:26.50%;width:42.80%;height:60.50%"></div><div class="bx checklist" style="left:27.50%;top:43.00%;width:19.50%;height:17.00%"></div></div>
+        <div class="bx naive" style="left:24.00%;top:6.00%;width:24.00%;height:29.00%"></div><div class="bx naive" style="left:28.00%;top:26.00%;width:56.00%;height:66.00%"></div><div class="bx naive" style="left:79.00%;top:68.00%;width:7.00%;height:13.00%"></div><div class="bx naive" style="left:6.60%;top:29.80%;width:26.90%;height:22.80%"></div><div class="bx naive" style="left:26.80%;top:41.10%;width:35.70%;height:42.90%"></div><div class="bx naive" style="left:23.80%;top:55.50%;width:17.70%;height:7.00%"></div><div class="bx naive" style="left:23.00%;top:5.50%;width:28.00%;height:30.00%"></div><div class="bx naive" style="left:41.20%;top:26.50%;width:42.80%;height:60.50%"></div><div class="bx checklist" style="left:30.00%;top:48.00%;width:18.00%;height:20.00%"></div></div>
       <div class="small">9 surviving findings ·
         0 refuted ·
-        6 checklist items</div></section>
-<section class="shot"><h3>crossing <span class="small">The Crossing · bake 2026-08-06T11:26:59Z</span></h3>
+        7 checklist items</div></section>
+<section class="shot"><h3>crossing <span class="small">The Crossing · bake 2026-08-06T22:07:32Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/crossing.png" alt="">
         <div class="bx naive" style="left:74.50%;top:78.50%;width:25.50%;height:21.50%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:62.00%;height:52.00%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:55.00%;height:55.00%"></div><div class="bx naive" style="left:39.00%;top:47.00%;width:5.00%;height:7.00%"></div><div class="bx naive" style="left:78.00%;top:74.00%;width:22.00%;height:26.00%"></div><div class="bx naive" style="left:75.80%;top:74.60%;width:24.20%;height:25.40%"></div><div class="bx naive" style="left:39.20%;top:48.10%;width:5.00%;height:6.40%"></div><div class="bx naive" style="left:67.20%;top:14.80%;width:6.30%;height:33.20%"></div></div>
       <div class="small">8 surviving findings ·
         0 refuted ·
-        8 checklist items</div></section>
-<section class="shot"><h3>weave <span class="small">The Weave · bake 2026-08-06T11:26:59Z</span></h3>
+        10 checklist items</div></section>
+<section class="shot"><h3>weave <span class="small">The Weave · bake 2026-08-06T22:07:32Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/weave.png" alt="">
         <div class="bx naive" style="left:15.00%;top:30.00%;width:45.00%;height:55.00%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:23.00%;height:40.00%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:23.50%;height:45.00%"></div><div class="bx naive" style="left:62.50%;top:29.00%;width:8.00%;height:4.20%"></div><div class="bx naive" style="left:32.00%;top:40.00%;width:56.00%;height:35.00%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:26.00%;height:43.00%"></div><div class="bx naive" style="left:53.00%;top:32.00%;width:7.00%;height:10.00%"></div></div>
       <div class="small">7 surviving findings ·
         3 refuted ·
-        12 checklist items</div></section>
-<section class="shot"><h3>deep-stairs <span class="small">The Deep Stairs · bake 2026-08-06T13:18:27Z</span></h3>
+        14 checklist items</div></section>
+<section class="shot"><h3>deep-stairs <span class="small">The Deep Stairs · bake 2026-08-06T22:07:32Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/deep-stairs.png" alt="">
-        <div class="bx naive" style="left:35.60%;top:43.30%;width:34.10%;height:26.70%"></div><div class="bx naive" style="left:35.00%;top:42.00%;width:34.00%;height:27.00%"></div></div>
-      <div class="small">2 surviving findings ·
+        <div class="bx naive" style="left:35.60%;top:43.30%;width:34.10%;height:26.70%"></div><div class="bx naive" style="left:35.00%;top:42.00%;width:34.00%;height:27.00%"></div><div class="bx checklist" style="left:11.00%;top:16.00%;width:32.00%;height:28.00%"></div></div>
+      <div class="small">3 surviving findings ·
         3 refuted ·
-        6 checklist items</div></section>
-<section class="shot"><h3>boatyard <span class="small">The Boatyard · bake 2026-08-06T11:26:59Z</span></h3>
+        8 checklist items</div></section>
+<section class="shot"><h3>boatyard <span class="small">The Boatyard · bake 2026-08-06T22:07:32Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/boatyard.png" alt="">
         <div class="bx naive" style="left:65.00%;top:61.80%;width:24.80%;height:36.70%"></div><div class="bx naive" style="left:85.30%;top:2.70%;width:14.50%;height:12.20%"></div><div class="bx naive" style="left:53.20%;top:56.80%;width:3.10%;height:6.50%"></div><div class="bx naive" style="left:52.60%;top:21.10%;width:14.20%;height:13.30%"></div><div class="bx naive" style="left:61.00%;top:58.80%;width:38.00%;height:40.70%"></div><div class="bx naive" style="left:43.00%;top:25.00%;width:5.60%;height:21.80%"></div><div class="bx naive" style="left:60.60%;top:60.60%;width:38.70%;height:39.00%"></div><div class="bx naive" style="left:84.30%;top:2.70%;width:15.70%;height:13.60%"></div></div>
-      <div class="small">12 surviving findings ·
+      <div class="small">14 surviving findings ·
         1 refuted ·
-        12 checklist items</div></section>
-<section class="shot"><h3>waterfront <span class="small">The Waterfront — winch foot · bake 2026-08-06T11:26:59Z</span></h3>
+        14 checklist items</div></section>
+<section class="shot"><h3>waterfront <span class="small">The Waterfront — winch foot · bake 2026-08-06T21:37:17Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/waterfront.png" alt="">
         <div class="bx naive" style="left:41.00%;top:63.00%;width:11.00%;height:9.00%"></div><div class="bx naive" style="left:70.00%;top:47.00%;width:17.00%;height:42.00%"></div><div class="bx naive" style="left:46.00%;top:0.00%;width:36.00%;height:58.00%"></div><div class="bx naive" style="left:71.00%;top:47.00%;width:16.00%;height:43.00%"></div><div class="bx naive" style="left:41.00%;top:63.00%;width:11.00%;height:8.00%"></div><div class="bx naive" style="left:44.00%;top:5.00%;width:38.00%;height:70.00%"></div><div class="bx naive" style="left:70.00%;top:48.00%;width:17.00%;height:42.00%"></div><div class="bx naive" style="left:42.00%;top:64.00%;width:10.00%;height:7.00%"></div><div class="bx naive" style="left:46.00%;top:1.00%;width:34.00%;height:54.00%"></div></div>
-      <div class="small">12 surviving findings ·
+      <div class="small">10 surviving findings ·
         1 refuted ·
-        11 checklist items</div></section>
-<section class="shot"><h3>fishdock <span class="small">The Fish Dock · bake 2026-08-06T11:26:59Z</span></h3>
+        13 checklist items</div></section>
+<section class="shot"><h3>fishdock <span class="small">The Fish Dock · bake 2026-08-06T22:07:32Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/fishdock.png" alt="">
         <div class="bx naive" style="left:35.00%;top:60.00%;width:60.00%;height:38.00%"></div><div class="bx naive" style="left:87.40%;top:2.80%;width:12.20%;height:59.40%"></div><div class="bx naive" style="left:3.80%;top:74.20%;width:13.10%;height:11.80%"></div><div class="bx naive" style="left:0.00%;top:20.00%;width:11.50%;height:28.00%"></div></div>
       <div class="small">4 surviving findings ·
         4 refuted ·
-        11 checklist items</div></section>
-<section class="shot"><h3>lockfive <span class="small">Lock Five · bake 2026-08-06T11:45:53Z</span></h3>
+        13 checklist items</div></section>
+<section class="shot"><h3>lockfive <span class="small">Lock Five · bake 2026-08-06T22:07:32Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/lockfive.png" alt="">
         <div class="bx naive" style="left:0.00%;top:0.00%;width:47.00%;height:58.00%"></div><div class="bx naive" style="left:44.00%;top:43.00%;width:16.00%;height:23.00%"></div><div class="bx naive" style="left:57.00%;top:28.00%;width:36.00%;height:28.00%"></div><div class="bx naive" style="left:25.00%;top:25.00%;width:60.00%;height:70.00%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:48.00%;height:60.00%"></div><div class="bx naive" style="left:48.00%;top:48.00%;width:13.00%;height:15.00%"></div><div class="bx naive" style="left:38.00%;top:58.00%;width:22.00%;height:27.00%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:45.00%;height:60.00%"></div></div>
       <div class="small">10 surviving findings ·
         0 refuted ·
-        12 checklist items</div></section>
-<section class="shot"><h3>north-landing <span class="small">North Landing · bake 2026-08-06T11:26:59Z</span></h3>
+        14 checklist items</div></section>
+<section class="shot"><h3>north-landing <span class="small">North Landing · bake 2026-08-06T21:40:37Z</span></h3>
       <div class="wrap"><img class="plate" src="plates/north-landing.png" alt="">
         <div class="bx naive" style="left:71.20%;top:63.10%;width:28.80%;height:12.40%"></div><div class="bx naive" style="left:72.00%;top:81.20%;width:9.10%;height:18.80%"></div><div class="bx naive" style="left:71.00%;top:63.00%;width:29.00%;height:12.00%"></div><div class="bx naive" style="left:72.00%;top:81.00%;width:9.00%;height:19.00%"></div><div class="bx naive" style="left:47.00%;top:22.00%;width:13.00%;height:37.00%"></div><div class="bx naive" style="left:62.80%;top:71.20%;width:12.70%;height:28.80%"></div><div class="bx naive" style="left:27.00%;top:47.00%;width:31.00%;height:11.50%"></div></div>
-      <div class="small">7 surviving findings ·
+      <div class="small">8 surviving findings ·
         1 refuted ·
-        12 checklist items</div></section>
+        14 checklist items</div></section>
 
 <h2>5 &nbsp;Limits — what this instrument structurally cannot see</h2>
 <div class="limits">
@@ -1821,7 +1855,7 @@ it, not to believe it.</p>
 <div class="budget">Budget: 0 judge calls
 () ·
 0 prompt + 0 reply tokens ·
-0 errors. Box check: 18/71 (25%) of the
+0 errors. Box check: 21/76 (28%) of the
 judge's checklist boxes contain the point the ray census projected — the drawn rectangles are
 only as trustworthy as that number. Raw replies in <code>raw/</code>, findings in
 <code>findings.json</code>, discarded claims in <code>refuted.json</code>.</div>

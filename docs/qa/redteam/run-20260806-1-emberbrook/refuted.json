@@ -26,36 +26,6 @@
   }
  },
  {
-  "fid": "F18",
-  "mode": "checklist",
-  "town": "emberbrook",
-  "shot": "waystone",
-  "item": "exit:seam:waystone__road-gate",
-  "itemWhat": "the way out of this area on foot towards arch — a path that carries on out of the frame",
-  "verdict": "ABSENT",
-  "category": "navigation",
-  "where": "null",
-  "bbox": null,
-  "severity": 3,
-  "desc": "the way out of this area on foot towards arch: ABSENT — The road fades into darkness before reaching the edge of the frame, so an exit toward the arch is not shown.",
-  "census": {
-   "u": 0.5849,
-   "v": 0.3733,
-   "z": 41.34,
-   "charPx": 90,
-   "on": true,
-   "plateZ": 41.32,
-   "state": "clear",
-   "behindBy": 0.02
-  },
-  "hint": null,
-  "verify": {
-   "verdict": "refuted",
-   "by": "adversarial-judge:checklist",
-   "why": "The paved path remains clearly visible and continues all the way to the bottom edge of the frame."
-  }
- },
- {
   "fid": "F5",
   "mode": "naive",
   "town": "emberbrook",
@@ -108,147 +78,42 @@
   }
  },
  {
-  "fid": "F20",
-  "mode": "checklist",
-  "town": "emberbrook",
-  "shot": "arch",
-  "item": "inn",
-  "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
-  "verdict": "VISIBLE-BUT-ILLEGIBLE",
-  "category": "navigation",
-  "where": "stone building in upper center",
-  "bbox": [
-   0.246,
-   0.018,
-   0.411,
-   0.275
-  ],
-  "severity": 2,
-  "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — A small stone cottage with a chimney is visible, but lacks any sign or feature identifying it specifically as the inn.",
-  "census": {
-   "u": 0.3322,
-   "v": 0.2904,
-   "z": 68.85,
-   "charPx": 54,
-   "on": true,
-   "plateZ": 65.9,
-   "state": "occluded",
-   "behindBy": 2.94
-  },
-  "hint": null,
-  "verify": {
-   "verdict": "refuted",
-   "by": "adversarial-judge:checklist",
-   "why": "The complaint is based on the building lacking a sign or label identifying it as an inn, which is explicitly disallowed under the rules."
-  }
- },
- {
-  "fid": "F48",
-  "mode": "checklist",
-  "town": "emberbrook",
-  "shot": "square",
-  "item": "item-shop",
-  "itemWhat": "Item Shop — a shop item (village general store — preserves, twine, lamp oil)",
-  "verdict": "VISIBLE-BUT-ILLEGIBLE",
-  "category": "navigation",
-  "where": "northeast of square",
-  "bbox": [
-   0.59,
-   0.12,
-   0.71,
-   0.37
-  ],
-  "severity": 2,
-  "desc": "Item Shop: VISIBLE-BUT-ILLEGIBLE — Building located near the square, but lacks distinct trade signage.",
-  "census": {
-   "u": 0.2964,
-   "v": 0.4218,
-   "z": 48.3,
-   "charPx": 43,
-   "on": true,
-   "plateZ": 44.7,
-   "state": "occluded",
-   "behindBy": 3.6
-  },
-  "hint": null,
-  "verify": {
-   "verdict": "refuted",
-   "by": "adversarial-judge:checklist",
-   "why": "The building is plainly visible, and objecting to its lack of trade signage is a complaint about missing signs rather than art readability."
-  }
- },
- {
   "fid": "F49",
   "mode": "checklist",
   "town": "emberbrook",
-  "shot": "square",
+  "shot": "therise",
   "item": "inn",
   "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
   "verdict": "VISIBLE-BUT-ILLEGIBLE",
   "category": "navigation",
-  "where": "north edge of square",
+  "where": "right midground cottage",
   "bbox": [
-   0.36,
-   0.05,
-   0.46,
-   0.23
+   0.686,
+   0.173,
+   0.953,
+   0.56
   ],
   "severity": 2,
-  "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Small cottage visible in background without clear inn indicators.",
+  "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Reads as a standard cottage without clear signage identifying it as an inn.",
   "census": {
-   "u": 0.6471,
-   "v": 0.3175,
-   "z": 52.34,
-   "charPx": 40,
+   "u": 0.3803,
+   "v": 0.3848,
+   "z": 33.7,
+   "charPx": 61,
    "on": true,
-   "plateZ": 49.65,
+   "plateZ": 19.58,
    "state": "occluded",
-   "behindBy": 2.7
+   "behindBy": 14.12
   },
   "hint": null,
   "verify": {
    "verdict": "refuted",
    "by": "adversarial-judge:checklist",
-   "why": "The cottage is clearly visible, and complaining about a lack of inn indicators is a complaint about missing signage or labels."
+   "why": "The complaint relies on the lack of a sign identifying it as an inn, which is explicitly discounted as a valid reason for refutation."
   }
  },
  {
-  "fid": "F50",
-  "mode": "checklist",
-  "town": "emberbrook",
-  "shot": "square",
-  "item": "bakery",
-  "itemWhat": "Poppy's bakery — a building (warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging | MOVED 2026-07-31 (coordinator): 1.5 m away from the inn — at (24.5,21.5) the two roofs shared a volume (4.03 m centres vs 4.96 m needed at cottage size + 1.14 roof oversail, measured by the square builder). Still on the square's west rim, west of the well.)",
-  "verdict": "VISIBLE-BUT-ILLEGIBLE",
-  "category": "navigation",
-  "where": "west rim of square",
-  "bbox": [
-   0.21,
-   0.2,
-   0.35,
-   0.47
-  ],
-  "severity": 2,
-  "desc": "Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — Orange-roofed cottage on plaza edge, indistinguishable from ordinary houses.",
-  "census": {
-   "u": 0.829,
-   "v": 0.4788,
-   "z": 46.34,
-   "charPx": 45,
-   "on": true,
-   "plateZ": 43.12,
-   "state": "occluded",
-   "behindBy": 3.22
-  },
-  "hint": null,
-  "verify": {
-   "verdict": "refuted",
-   "by": "adversarial-judge:checklist",
-   "why": "The building is fully legible as a cottage, and expecting specific bakery signifiers on a standard house is a complaint about missing labels."
-  }
- },
- {
-  "fid": "F78",
+  "fid": "F87",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "homerow",
@@ -274,7 +139,37 @@
   }
  },
  {
-  "fid": "F62",
+  "fid": "F108",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": "path:hillside-cottage__lake-home",
+  "itemWhat": "the route between Mara & Pip's cottage and Lake's home (the keeper's cottage) — a path",
+  "verdict": "ABSENT",
+  "category": "navigation",
+  "where": "",
+  "bbox": null,
+  "severity": 3,
+  "desc": "the route between Mara & Pip's cottage and Lake's home (the keeper's cottage): ABSENT — No paved path or marked trail directly connects these two cottages.",
+  "census": {
+   "u": 0.4226,
+   "v": 0.6825,
+   "z": 45.77,
+   "charPx": 81,
+   "on": true,
+   "plateZ": 45.93,
+   "state": "clear",
+   "behindBy": -0.16
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "A clear, dark grey paved path lined with street lamps directly connects the cottage on the left to Lake's home on the right."
+  }
+ },
+ {
+  "fid": "F73",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "northlane",
@@ -300,7 +195,7 @@
   }
  },
  {
-  "fid": "F70",
+  "fid": "F82",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "northlane",
@@ -326,7 +221,7 @@
   }
  },
  {
-  "fid": "F73",
+  "fid": "F85",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "northlane",
@@ -352,7 +247,7 @@
   }
  },
  {
-  "fid": "F81",
+  "fid": "F102",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "northlane",
@@ -378,7 +273,7 @@
   }
  },
  {
-  "fid": "F82",
+  "fid": "F103",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "northlane",
@@ -404,7 +299,7 @@
   }
  },
  {
-  "fid": "F105",
+  "fid": "F115",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "gatefield",
@@ -430,7 +325,7 @@
   }
  },
  {
-  "fid": "F106",
+  "fid": "F116",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "gatefield",
@@ -459,7 +354,7 @@
   }
  },
  {
-  "fid": "F112",
+  "fid": "F122",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "gatefield",
@@ -485,7 +380,7 @@
   }
  },
  {
-  "fid": "F116",
+  "fid": "F126",
   "mode": "naive",
   "town": "emberbrook",
   "shot": "gatefield",

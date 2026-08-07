@@ -1,0 +1,67 @@
+[
+ {
+  "fid": "F13",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "therise",
+  "item": "inn",
+  "itemWhat": "Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)",
+  "verdict": "VISIBLE-BUT-ILLEGIBLE",
+  "category": "navigation",
+  "where": "right midground cottage",
+  "bbox": [
+   0.686,
+   0.173,
+   0.953,
+   0.56
+  ],
+  "severity": 2,
+  "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Reads as a standard cottage without clear signage identifying it as an inn.",
+  "census": {
+   "u": 0.3803,
+   "v": 0.3848,
+   "z": 33.7,
+   "charPx": 61,
+   "on": true,
+   "plateZ": 19.58,
+   "state": "occluded",
+   "behindBy": 14.12
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The complaint relies on the lack of a sign identifying it as an inn, which is explicitly discounted as a valid reason for refutation."
+  }
+ },
+ {
+  "fid": "F45",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": "path:hillside-cottage__lake-home",
+  "itemWhat": "the route between Mara & Pip's cottage and Lake's home (the keeper's cottage) — a path",
+  "verdict": "ABSENT",
+  "category": "navigation",
+  "where": "",
+  "bbox": null,
+  "severity": 3,
+  "desc": "the route between Mara & Pip's cottage and Lake's home (the keeper's cottage): ABSENT — No paved path or marked trail directly connects these two cottages.",
+  "census": {
+   "u": 0.4226,
+   "v": 0.6825,
+   "z": 45.77,
+   "charPx": 81,
+   "on": true,
+   "plateZ": 45.93,
+   "state": "clear",
+   "behindBy": -0.16
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "A clear, dark grey paved path lined with street lamps directly connects the cottage on the left to Lake's home on the right."
+  }
+ }
+]

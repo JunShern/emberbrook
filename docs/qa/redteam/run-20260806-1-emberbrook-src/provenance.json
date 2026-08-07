@@ -1,6 +1,7 @@
 {
  "what": "merged raw judge replies for replay-derivation of the combined run",
  "naiveFrom": "run-20260806-1-emberbrook-naive",
- "checklistFrom": "run-20260806-1-emberbrook-checklist",
- "mergedBy": "tools/scene_redteam.mjs --replay (see combined run findings.json)"
+ "checklistFrom": "run-20260806-2-emberbrook-checklist",
+ "mergedBy": "tools/scene_redteam.mjs --replay (see combined run findings.json)",
+ "checklistNote": "2026-08-07: checklist replies REPLACED by the quality-item pass (run-20260806-2, tools/scene_redteam.mjs with the [QUALITY] sky/frame-edge/water families). emb-cine plates unchanged since the naive pass (bake stamps identical), so both stages were judged against the same pixels."
 }

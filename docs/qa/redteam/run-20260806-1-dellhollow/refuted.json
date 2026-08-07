@@ -272,7 +272,7 @@
   }
  },
  {
-  "fid": "F27",
+  "fid": "F30",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "loop-stairs",
@@ -298,7 +298,7 @@
   }
  },
  {
-  "fid": "F38",
+  "fid": "F40",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "quay-west",
@@ -324,7 +324,37 @@
   }
  },
  {
-  "fid": "F50",
+  "fid": "F44",
+  "mode": "checklist",
+  "town": "dellhollow",
+  "shot": "quay-west",
+  "item": "exit:seam:shelf-homes__market-stalls",
+  "itemWhat": "the way out of this area on foot towards loop-stairs — a path that carries on out of the frame",
+  "verdict": "ABSENT",
+  "category": "navigation",
+  "where": "",
+  "bbox": null,
+  "severity": 3,
+  "desc": "the way out of this area on foot towards loop-stairs: ABSENT — No exit path towards loop-stairs is visible in this shot.",
+  "census": {
+   "u": 0.239,
+   "v": 0.2968,
+   "z": 36.59,
+   "charPx": 57,
+   "on": true,
+   "plateZ": 35.99,
+   "state": "clear",
+   "behindBy": 0.6
+  },
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "A clear set of blocky, looping stairs winding down along the right side of the cliff is plainly visible as an exit path."
+  }
+ },
+ {
+  "fid": "F52",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "weave",
@@ -353,7 +383,7 @@
   }
  },
  {
-  "fid": "F51",
+  "fid": "F53",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "weave",
@@ -379,7 +409,7 @@
   }
  },
  {
-  "fid": "F60",
+  "fid": "F61",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "weave",
@@ -405,7 +435,7 @@
   }
  },
  {
-  "fid": "F70",
+  "fid": "F75",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "deep-stairs",
@@ -431,7 +461,7 @@
   }
  },
  {
-  "fid": "F78",
+  "fid": "F80",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "deep-stairs",
@@ -457,7 +487,7 @@
   }
  },
  {
-  "fid": "F85",
+  "fid": "F87",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "deep-stairs",
@@ -483,7 +513,7 @@
   }
  },
  {
-  "fid": "F86",
+  "fid": "F91",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "boatyard",
@@ -512,7 +542,7 @@
   }
  },
  {
-  "fid": "F92",
+  "fid": "F99",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "waterfront",
@@ -541,7 +571,7 @@
   }
  },
  {
-  "fid": "F102",
+  "fid": "F112",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "fishdock",
@@ -567,7 +597,7 @@
   }
  },
  {
-  "fid": "F103",
+  "fid": "F113",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "fishdock",
@@ -593,7 +623,7 @@
   }
  },
  {
-  "fid": "F111",
+  "fid": "F121",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "fishdock",
@@ -622,7 +652,7 @@
   }
  },
  {
-  "fid": "F112",
+  "fid": "F122",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "fishdock",
@@ -651,7 +681,7 @@
   }
  },
  {
-  "fid": "F109",
+  "fid": "F116",
   "mode": "naive",
   "town": "dellhollow",
   "shot": "north-landing",

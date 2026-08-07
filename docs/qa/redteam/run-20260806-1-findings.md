@@ -1,53 +1,57 @@
 # Scene red-team 20260806-1 — flat findings list
 
-First geometry/visual-quality sweep of the CURRENT world: 15 del-cine plates (baked 2026-08-06, commits 0c5f6d3/38ce143, HEAD da69f9a) and 11 dressed emb-cine plates (baked 2026-08-02, first sweep on current bytes).
+First geometry/visual-quality sweep of the CURRENT world, REGENERATED 2026-08-07 after the checklist re-run with the standing [QUALITY] item families (sky/frame-edge-world, water read — added after the recall-3/5 scoring; see tools/scene_redteam.mjs header). 15 del-cine plates and 11 emb-cine plates.
 
 Judge gemini-3.6-flash (pinned), temp 0.4, naive N=3 looks/plate. Emberbrook judged in ART mode (`--no-blockout`): the emb-cine plates are the dressed bake, so the blockout style bar no longer applies.
-Naive pass ran first and unseeded (no checklist, no docs); checklist pass second, as shipped.
-Full reports: `run-20260806-1-dellhollow/index.html`, `run-20260806-1-emberbrook/index.html`. Per-pass untouched records: `run-20260806-1-<town>-{naive,checklist}/`.
+Naive pass ran first and unseeded (no checklist, no docs); checklist pass RE-RUN 2026-08-07 with the [QUALITY] families (run-20260806-2-<town>-checklist). PROVENANCE SPLIT ON DELLHOLLOW: graphics round 1 (02b9c01/2a5cf84) rebaked 12 del-cine plates between the passes — the naive replies were judged against the pre-round-1 bake (2026-08-06T11:2x), the checklist replies against the current one (2026-08-06T22:0x, water-transparency bake restored, shop doors added). Naive findings on those 12 plates describe superseded pixels; the water delta (old checklist absences vs new CONVINCING reads) is itself the restore receipt. emb-cine plates are unchanged between passes.
+Full reports: `run-20260806-1-dellhollow/index.html`, `run-20260806-1-emberbrook/index.html`. Per-pass untouched records: `run-20260806-1-<town>-naive/`, `run-20260806-2-<town>-checklist/`.
 
-Confidence: naive findings carry `support` = how many of the N=3 independent looks raised it; checklist findings are single-look verdicts and carry the stage-2 channel that upheld them (ray-census = the plate's own depth agrees; adversarial-judge = a second sceptic call). The judge emits no numeric confidence; these are the only confidence signals the tool records.
+Confidence: naive findings carry `support` = how many of the N=3 independent looks raised it; checklist findings are single-look verdicts and carry the stage-2 channel that upheld them (ray-census = the plate's own depth agrees; adversarial-judge = a second sceptic call). [QUALITY] items answer CONVINCING/WEAK/FAILING — a judgment, not a findability verdict — and only WEAK/FAILING become findings. The judge emits no numeric confidence; these are the only confidence signals the tool records.
 
-## dellhollow — 100 surviving findings (25 refuted at stage 2)
+## dellhollow — 101 surviving findings (26 refuted at stage 2)
 
-### severity 3 (17)
+### severity 3 (19)
 
 - **boatyard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
   > Pitch kettle: ABSENT — No pitch kettle or curling tar smoke is present in the scene.
 - **boatyard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Lock Four (set dressing): ABSENT — No upstream water lock gates or Lock Four set dressing are visible in the scene.
+  > Lock Four overlook: ABSENT — No lock overlook post or spray-covered viewpoint under lock gates exists here.
 - **boatyard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > the route between Cargo Winch (foot) and Slipway: ABSENT — The cargo winch and its connecting deck route are not present in this view.
+  > Lock Four (set dressing): ABSENT — No lock structure or lock gates are visible anywhere in this frame.
+- **boatyard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > the route between Cargo Winch (foot) and Slipway: ABSENT — No cargo winch exists in this shot to form a route with.
 - **boatyard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Boatwright's shed and Pitch kettle: ABSENT — The route cannot exist because the pitch kettle is absent.
+  > the route between Boatwright's shed and Pitch kettle: ABSENT — Pitch kettle is absent from the scene.
+- **boatyard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > the route between Slipway and Lock Four overlook: ABSENT — Lock Four overlook is absent from the scene.
+- **gate** · checklist · immersion · sev 3 · confidence: upheld by adversarial-judge:checklist _(also on shelf-east, loop-stairs, weave, lockfive)_
+  > The world at the frame edges: WEAK — The top-left background fades into a flat, empty dark void with starkly cut mountain silhouettes rather than a fully rendered sky and horizon.
 - **lockfive** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Dam Crest Gate: ABSENT — No iron-banded gate barring a dam crest path is visible in this frame.
-- **lockfive** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the way out of this area on foot towards north-landing: ABSENT — No third foot path exit is present in this view.
-- **loop-stairs** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > the way out of this area on foot towards shelf-east: ABSENT — No path continuing off-screen to the east along the upper shelf is visible in the scene.
+  > Lock Five: ABSENT — The lock basin and lock gates are not present in this camera view.
+- **lockfive** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded _(also on north-landing)_
+  > Dam Crest Gate: ABSENT — The iron-banded gate barring the dam-crest walkway is not visible in this frame.
+- **north-landing** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > the way out of this area on foot towards lockfive: ABSENT — No pedestrian exit path leading out of the frame toward Lock Five is visible in this view.
 - **north-landing** · naive · geometry · sev 3 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > An untextured flat orange rectangle holding primitive grey blocks floats in mid-air without supports or material, appearing as unfinished placeholder geometry.
 - **shelf-east** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Weapon Shop: ABSENT — No shop weapons are visible in the scene.
-- **shelf-east** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Armor Shop: ABSENT — No armor pieces are visible on display.
-- **shelf-west** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Item Shop (chandlery skin) and Weapon Shop: ABSENT — The road section leading to the Weapon Shop is not visible because the Weapon Shop is not in this shot.
-- **shelf-west** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the way out of this area on foot towards shelf-east: ABSENT — No path leading off-frame towards shelf-east is present in this view.
+  > Armor Shop: ABSENT — No shop armor items are visible.
+- **shelf-east** · checklist · immersion · sev 3 · confidence: upheld by adversarial-judge:checklist _(also on quay-west, deep-stairs)_
+  > The water surface: WEAK — Water reads as a plain dark plane with minimal shore integration or specular reflections.
+- **shelf-west** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > the route between Valley Gate and Inn: ABSENT — The specified stair descent is not visible in frame.
+- **shelf-west** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > the way out of this area on foot towards gate: ABSENT — No gate path exits the frame from this angle.
+- **shelf-west** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded _(also on shelf-east)_
+  > Weapon Shop: VISIBLE-BUT-ILLEGIBLE — Building lacks distinctive weapon visual cues in this view.
 - **waterfront** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Cargo Winch (foot): ABSENT — Cargo Winch (foot) is not visible in this scene.
-- **waterfront** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > the route between Cargo Winch (foot) and Slipway: ABSENT — The route connected to the Cargo Winch is not present as the cargo winch is absent.
-- **waterfront** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Fish dock and Cargo Winch (foot): ABSENT — The route between Fish dock and Cargo Winch is absent.
+  > Cargo Winch (foot): ABSENT — No winch mechanism or machine with a drum or crank is present at the quay level.
 - **waterfront** · naive · geometry · sev 3 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The cliff surface is a single-sided paper-thin polygon sheet with no backface or volumetric geometry beneath it.
 - **waterfront** · naive · geometry · sev 3 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The cliff surface ends abruptly as a paper-thin single-sided mesh, exposing a hollow gap underneath.
 
-### severity 2 (64)
+### severity 2 (63)
 
 - **boatyard** · naive · immersion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The large horizontal surfaces on the foreground structure appear as completely untextured, pitch-black voids.
@@ -58,7 +62,7 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
 - **boatyard** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The lower portion of the building consists of completely flat, unshaded black geometry that lacks lighting and texture detail.
 - **cottage** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > a door / entrance you can go through ("Enter Keepers' Cottage"): OCCLUDED — The entrance to the cottage is hidden behind the wooden scaffolding and collapsed walkway timbers.
+  > a door / entrance you can go through ("Enter Keepers' Cottage"): OCCLUDED — The cottage doorway is hidden behind the pile of collapsed wooden beams and bridge debris.
 - **cottage** · naive · occlusion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > An extremely dark shadow completely hides the terrain and potential pathways in the upper cave area.
 - **cottage** · naive · navigation · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -89,6 +93,8 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > A flat grey rectangular plane floats in mid-air without any supporting structure.
 - **crossing** · naive · navigation · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > A continuous line of stacked blocks completely obstructs the narrow sloped path, leaving it ambiguous whether it is an accessible route or a barrier.
+- **deep-stairs** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > Cookhouse: VISIBLE-BUT-ILLEGIBLE — Wooden buildings are visible on the upper stilt platforms, but without distinct features, signage, or glowing interior light, none can be identified as a cookhouse.
 - **deep-stairs** · naive · geometry · sev 2 · confidence: 2/3 looks; upheld by adversarial-judge:naive
   > The wooden stair treads float in mid-air without visible structural supports, posts, or stringers underneath.
 - **deep-stairs** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -97,6 +103,8 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > Extremely dark pitch-black shadows obscure the ground and stilt structure, making it impossible to read vertical depth or determine if there are walkable paths below.
 - **fishdock** · naive · navigation · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Multiple overlapping wooden staircases and broken platforms visually clutter the cliff face, making walkable routes ambiguous.
+- **gate** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > Inn: VISIBLE-BUT-ILLEGIBLE — The buildings at the harbor level are too small, shadowed, and distant to uniquely identify which structure is the Boatmen's Rest inn.
 - **lockfive** · naive · navigation · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Extremely dark lighting leaves the left half of the environment completely unlit, obscuring navigable space and terrain context.
 - **lockfive** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -127,8 +135,6 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > The narrow elevated walkway disappears into a dense cluster of wooden beams, making the route forward ambiguous.
 - **north-landing** · naive · navigation · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The main wooden walkway leads directly into a dense mesh of structural beams, making it ambiguous where the player can actually walk forward.
-- **quay-west** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > a door / entrance you can go through ("Enter Cookhouse"): VISIBLE-BUT-ILLEGIBLE — The recessed doorway under the cookhouse eaves is too dark and merges into the surrounding shadowed wood.
 - **quay-west** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Thin grey rectangular planes hover mid-air without attachment or structural support.
 - **quay-west** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -136,17 +142,13 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
 - **quay-west** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Two thin horizontal white planes are floating in mid-air with no structural support or attachment to surrounding objects.
 - **shelf-east** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > a door / entrance you can go through ("Enter Weapon Shop"): VISIBLE-BUT-ILLEGIBLE — Darkened wall opening lacks clear door framing or interactive cues.
-- **shelf-east** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > a door / entrance you can go through ("Enter Armor Shop"): OCCLUDED — Hidden behind elevated wooden structures and roofs.
-- **shelf-east** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Inn: VISIBLE-BUT-ILLEGIBLE — Reads as a generic wooden structure without identifying inn features.
-- **shelf-west** · checklist · occlusion · sev 2 · confidence: upheld by ray-census; ray census: occluded
-  > the route between Valley Gate and Inn: OCCLUDED — The stair flight descending from the upper area is hidden behind the upper platform deck and support beams.
+  > a door / entrance you can go through ("Enter Weapon Shop"): VISIBLE-BUT-ILLEGIBLE — Dark opening heavily obscured by roof shadow.
+- **shelf-east** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > a door / entrance you can go through ("Enter Armor Shop"): VISIBLE-BUT-ILLEGIBLE — Recessed dark doorway hidden under deep overhangs.
+- **shelf-west** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > the route between Item Shop (chandlery skin) and Weapon Shop: VISIBLE-BUT-ILLEGIBLE — Path section behind platform supports is obscured by darkness.
 - **shelf-west** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > a door / entrance you can go through ("Enter The Boatmen's Rest"): OCCLUDED — The door to enter the Inn is obscured in shadow beneath the lower overhang.
-- **shelf-west** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > a door / entrance you can go through ("Enter Item Shop"): OCCLUDED — The entrance door to the Item Shop is hidden behind its counter facade and side walls.
+  > a door / entrance you can go through ("Enter The Boatmen's Rest"): OCCLUDED — Entrance is obscured by roof overhang and deep shadow.
 - **shelf-west** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The pulley cable extends down and penetrates directly into the stone ground without any anchor or spool structure.
 - **shelf-west** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -219,7 +221,7 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
 - **weave** · naive · immersion · sev 1 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Wooden crates are stacked at an unnaturally steep angle directly on a sloped roof without sliding or having visible support.
 
-### refuted at stage 2 (25) — not findings; kept for audit
+### refuted at stage 2 (26) — not findings; kept for audit
 
 - **boatyard** · naive · immersion · sev 1 · 1/3 looks · REFUTED by adversarial-judge:naive: The left end of the flag line is explicitly anchored to a vertical wooden post on the roof below.
   > The decorative flag line floats in mid-air on its left end without attaching to any wall, post, or roof.
@@ -247,6 +249,8 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > The steps feature disjointed, floating planks and steep vertical drops, making it visually unclear if this is a usable staircase or impassable terrain.
 - **north-landing** · naive · immersion · sev 1 · 1/3 looks · REFUTED by adversarial-judge:naive: Simplified conical foliage protruding directly from rock walls is a standard convention for this stylized art style.
   > Stylized tree tops are attached directly to the vertical cliff wall without any trunks or soil.
+- **quay-west** · checklist · navigation · sev 3 · single look · REFUTED by adversarial-judge:checklist: A clear set of blocky, looping stairs winding down along the right side of the cliff is plainly visible as an exit path.
+  > the way out of this area on foot towards loop-stairs: ABSENT — No exit path towards loop-stairs is visible in this shot.
 - **quay-west** · naive · navigation · sev 2 · 1/3 looks · REFUTED by adversarial-judge:naive: The green tiled rooftops, wooden plank walkways, and dirt ground terrain use distinct textures and structural cues that keep traversable paths clearly distinguishable.
   > Walkways, rooftops, and ground terrain share identical textures and blocky geometry, making it ambiguous which surfaces are traversable.
 - **shelf-east** · naive · geometry · sev 1 · 1/3 looks · REFUTED by adversarial-judge:naive: The lantern bracket is mounted to the wooden roof beam structure rather than floating or clipping unsupported through shingles.
@@ -272,69 +276,57 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
 - **weave** · naive · navigation · sev 2 · 1/3 looks · REFUTED by adversarial-judge:naive: The stairs lead directly up to the platform and structure in the upper right corner.
   > The wooden stairs going up the right cliffside end abruptly against a sheer rock face with no visible landing or continuation.
 
-## emberbrook — 97 surviving findings (18 refuted at stage 2)
+## emberbrook — 103 surviving findings (15 refuted at stage 2)
 
-### severity 3 (28)
+### severity 3 (19)
 
-- **arch** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded _(also on orchard)_
-  > the way out of this area on foot towards orchard: ABSENT — No path leading off towards the orchard out of the frame edge is shown in this shot.
+- **arch** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > the way out of this area on foot towards waystone: ABSENT — No third distinct path leading out of the frame edge is visible in this shot.
+- **arch** · checklist · immersion · sev 3 · confidence: upheld by adversarial-judge:checklist _(also on therise, square, pondlane, homerow, gateroad)_
+  > The water surface: FAILING — JUDGMENT: The water surface underneath the footbridge is rendered as an untextured, flat black void lacking transparency, water flow, or reflections.
+- **gatefield** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > the route between Sigil Gate court and Whisperwood trailhead: ABSENT — No separate path is drawn as the trailhead sits directly on the court rim.
 - **homerow** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Brook spring: ABSENT — No water spring is visible anywhere in this frame.
+  > Brook spring: ABSENT — The spring source is completely hidden in the dark tree shadows with no visible water.
 - **homerow** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Upper lane (closed): ABSENT — No closed upper lane or festival cart is present in this view.
-- **homerow** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Spring house: ABSENT — There is no stone spring house in the scene.
+  > Upper lane (closed): ABSENT — No cart or closed upper lane boundary is visible in this frame.
 - **homerow** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Grandmother's bench: ABSENT — No second bench outside Lake's home is visible.
-- **homerow** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > the route between Mara & Pip's cottage and Rowan's house: ABSENT — No paved path connects Mara & Pip's cottage to Rowan's house directly.
-- **homerow** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Rowan's house and Hilltop bench: ABSENT — There is no established path leading between Rowan's house and the bench.
+  > Grandmother's bench: ABSENT — Only wooden crates and barrels sit outside Lake's home; no bench is present there.
+- **northlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > Back lane (closed): ABSENT — No closed lane with stacked barrels is visible in this frame.
+- **northlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > the route between Festival Square and Tithe barn: ABSENT — There is no north lane enclosed by stone walls depicted in this view.
 - **orchard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Orchard rows: ABSENT — No apple orchard rows, ladders, or baskets are present in this view.
+  > Orchard rows: ABSENT — No apple trees in rows, ladders, or apple baskets are visible in this scene.
 - **orchard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > the route between Village Arch and Orchard rows: ABSENT — The path connecting the Village Arch to the orchard rows is not in frame.
+  > the route between Village Arch and Orchard rows: ABSENT — Neither the Village Arch nor the orchard rows are present in this frame.
 - **orchard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > the route between Orchard rows and Cider press barn: ABSENT — No path connecting orchard rows to the cider press barn is present.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > The Pond: ABSENT — No body of water or pond is visible in this frame.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Pond jetty: ABSENT — No jetty or fishing dock is present in this frame.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Washline green: ABSENT — No washline green or drying field is visible in this frame.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Brook footbridge: ABSENT — No brook or footbridge is present in this frame.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Brook mouth: ABSENT — The brook mouth is not visible in this shot.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Weir & sluice: ABSENT — No weir or sluice mechanism is visible in this frame.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Finn's smokehouse: ABSENT — Finn's smokehouse is not present in this shot.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > Pip's den: ABSENT — Pip's den is not visible in this frame.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Festival Square and Pond jetty: ABSENT — The route to the pond jetty is not visible in this shot.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > the route between Pond jetty and Brook footbridge: ABSENT — The path between the jetty and brook footbridge is not in this frame.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Pond jetty and Washline green: ABSENT — The path to Washline green is not present in this frame.
-- **pondlane** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the way out of this area on foot towards square: ABSENT — The egress path from the pond area toward the square is not in view in this camera angle.
+  > the route between Orchard rows and Cider press barn: ABSENT — There is no orchard row present to form a path connecting to the barn.
+- **orchard** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > the way out of this area on foot towards arch: ABSENT — No distinct path leading off-screen towards an arch is visible.
 - **square** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > the route between Village Arch and Festival Square: ABSENT — Village Arch area is off-screen.
+  > the route between Village Arch and Festival Square: ABSENT — No arch or corresponding road section in this frame.
 - **square** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Festival Square and Pond jetty: ABSENT — Pond jetty route is off-screen.
+  > the route between Festival Square and Pond jetty: ABSENT — Pond jetty lane is not visible in shot.
 - **square** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Festival Square and Mara & Pip's cottage: ABSENT — Cottage route is not visible in frame.
+  > the route between Festival Square and Tithe barn: ABSENT — Tithe barn road is not present in frame.
 - **square** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Festival Square and Tithe barn: ABSENT — Tithe barn road is off-screen.
+  > the route between Brook footbridge and Festival Square: ABSENT — Brook footbridge route is outside visible frame.
+- **square** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
+  > the way out of this area on foot towards therise: ABSENT — Path toward the rise is not visible.
 - **square** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > the route between Brook footbridge and Festival Square: ABSENT — Footbridge route is outside visible frame.
+  > the way out of this area on foot towards pondlane: ABSENT — Pond lane exit is outside frame boundaries.
 - **woodroad** · checklist · navigation · sev 3 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > a door / entrance you can go through ("Leave Emberbrook"): ABSENT — No door or gateway visual exists in this outdoor forest scene.
+  > a door / entrance you can go through ("Leave Emberbrook"): ABSENT — There is no doorway or gateway structure in this open woodland clearing.
 
-### severity 2 (52)
+### severity 2 (67)
 
+- **arch** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded _(also on square)_
+  > Inn: VISIBLE-BUT-ILLEGIBLE — It appears as a generic distant village building without distinguishing inn features or legible detail.
+- **arch** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded _(also on square)_
+  > Item Shop: VISIBLE-BUT-ILLEGIBLE — The general store is obscured among the small distant background structures and foliage.
+- **arch** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > Festival dais: VISIBLE-BUT-ILLEGIBLE — Too small and distant in the background lighting to clearly read as a festival dais.
 - **arch** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The path geometry clips flat and unnaturally into the ground plane with sharp, unintegrated edges.
 - **arch** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -342,13 +334,15 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
 - **arch** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Dark geometric path polygons clip abruptly into the ground terrain with sharp edges and no blending.
 - **gatefield** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: off-frame
-  > Downstream (vista beyond the Gate): OCCLUDED — The vista beyond the gate is completely hidden behind the closed stone wall.
+  > Downstream (vista beyond the Gate): OCCLUDED — Hidden from view behind the closed wooden gate and solid masonry wall.
 - **gatefield** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The edge of the paved courtyard floor forms a jagged, blocky step pattern rather than a clean border or natural blending into the terrain.
 - **gatefield** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > A square cutout in the paved floor exposes lower ground around the wooden structure, creating raw floating floor edges.
 - **gatefield** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The edge of the paved courtyard mesh has rough, jagged stair-step cuts where it meets the grass terrain.
+- **gateroad** · checklist · occlusion · sev 2 · confidence: upheld by ray-census; ray census: occluded
+  > Rowan's house: OCCLUDED — Rowan's house is hidden behind the Tithe barn and surrounding foliage.
 - **gateroad** · naive · occlusion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Dense foreground trees and foliage completely obscure the right side of the view, blocking visibility of the surrounding terrain and potential hazards.
 - **gateroad** · naive · navigation · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -376,7 +370,7 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
 - **homerow** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The massive wooden wheel clips directly into the ground terrain without visible support or housing.
 - **orchard** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Cider press barn: VISIBLE-BUT-ILLEGIBLE — The structure's roof is visible, but the area underneath is pitch black in shadow, hiding any press, apple crates, or straw needed to identify it as a cider press barn.
+  > Cider press barn: VISIBLE-BUT-ILLEGIBLE — A roof structure is visible, but the area underneath is pitch black, making it impossible to see any cider press, crates, or straw to identify it as a cider press barn.
 - **orchard** · naive · occlusion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The pitch-black shadow cast by the roof completely obscures the building's base, entrances, and ground details underneath.
 - **orchard** · naive · occlusion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -387,6 +381,24 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > An extremely dark roof shadow completely obscures the ground and terrain details, making it impossible to see objects or paths in that area.
 - **orchard** · naive · occlusion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Dense foreground foliage blocks a large portion of the right side of the screen, obscuring the surrounding space and potential navigation routes.
+- **pondlane** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > The Pond: VISIBLE-BUT-ILLEGIBLE — The body of water is rendered so dark and unreflective that it is indistinguishable from dark ground or heavy shadow under the trees.
+- **pondlane** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > Washline green: OCCLUDED — The field is hidden behind the dense central trees and foliage.
+- **pondlane** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > Brook footbridge: OCCLUDED — The brook footbridge is occluded by the thick midground trees.
+- **pondlane** · checklist · occlusion · sev 2 · confidence: upheld by ray-census; ray census: occluded
+  > Brook mouth: OCCLUDED — The brook mouth is hidden behind the dense central vegetation.
+- **pondlane** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > Weir & sluice: OCCLUDED — The weir and sluice structure is hidden behind the heavy midground foliage.
+- **pondlane** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > Finn's smokehouse: OCCLUDED — The smokehouse is occluded by the dense trees near the center of the frame.
+- **pondlane** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > Pip's den: OCCLUDED — Pip's den is hidden under the bank behind the midground trees.
+- **pondlane** · checklist · occlusion · sev 2 · confidence: upheld by ray-census; ray census: occluded
+  > the route between Pond jetty and Brook footbridge: OCCLUDED — This section of path is hidden behind the midground tree growth.
+- **pondlane** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > the route between Pond jetty and Washline green: OCCLUDED — The path around the north shore is occluded by the tree canopy.
 - **pondlane** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Untextured green blockout slabs on the path appear to be unfinished developer placeholder geometry.
 - **pondlane** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -399,8 +411,8 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > Tree trunks in the background cut off abruptly against the sky without foliage tops or proper bases.
 - **pondlane** · naive · occlusion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The dense central foliage hides the ground and paths underneath, making it unclear where the player can walk.
-- **square** · checklist · occlusion · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
-  > a door / entrance you can go through ("Enter The Ember Hearth"): OCCLUDED — Door is hidden behind lower building structures and angle of view.
+- **square** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: clear
+  > a door / entrance you can go through ("Enter Item Shop"): VISIBLE-BUT-ILLEGIBLE — Door opening is obscured in deep shadow.
 - **square** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > Black square holes and grid-shaped missing patches are visible in the ground terrain mesh.
 - **square** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -411,10 +423,14 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > A massive foreground roof severely occludes the ground and play area in the lower right section of the screen.
 - **square** · naive · immersion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > A bright, untextured white block sits inside the central pit, appearing as a placeholder light object rather than a finished asset.
-- **therise** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Inn: VISIBLE-BUT-ILLEGIBLE — A building is visible in the background behind the square, but lacks identifying signage or features distinguishing it as an inn.
-- **therise** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded
-  > Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — A stone cottage stands near the square, but lacks visible bakery features or signs to identify it as Poppy's bakery.
+- **therise** · checklist · occlusion · sev 2 · confidence: upheld by ray-census; ray census: occluded
+  > Cider press barn: OCCLUDED — Structure behind tree branches and dense leaves on the left.
+- **therise** · checklist · navigation · sev 2 · confidence: upheld by adversarial-judge:checklist; ray census: occluded _(also on square)_
+  > Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — Stone structure lacks distinct visual features identifying it as a bakery.
+- **therise** · checklist · immersion · sev 2 · confidence: upheld by adversarial-judge:checklist _(also on pondlane)_
+  > The sky: WEAK — Visible sky area is a flat gradient with minimal atmospheric volume.
+- **therise** · checklist · immersion · sev 2 · confidence: upheld by adversarial-judge:checklist _(also on square, pondlane)_
+  > The world at the frame edges: WEAK — Deep shadows near lower boundaries merge ground elements into dark shapes.
 - **therise** · naive · geometry · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The paved path geometry features sharp, unblended polygonal edges clipping abruptly into the surrounding terrain mesh.
 - **therise** · naive · occlusion · sev 2 · confidence: 1/3 looks; upheld by adversarial-judge:naive
@@ -477,10 +493,8 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
 - **woodroad** · naive · geometry · sev 1 · confidence: 1/3 looks; upheld by adversarial-judge:naive
   > The straight path plane clips directly into the terrain with razor-sharp, unblended edges.
 
-### refuted at stage 2 (18) — not findings; kept for audit
+### refuted at stage 2 (15) — not findings; kept for audit
 
-- **arch** · checklist · navigation · sev 2 · single look · REFUTED by adversarial-judge:checklist: The complaint is based on the building lacking a sign or label identifying it as an inn, which is explicitly disallowed under the rules.
-  > Inn: VISIBLE-BUT-ILLEGIBLE — A small stone cottage with a chimney is visible, but lacks any sign or feature identifying it specifically as the inn.
 - **arch** · naive · navigation · sev 2 · 1/3 looks · REFUTED by adversarial-judge:naive: The tree shadows are semi-transparent dappled light, leaving ground textures and paths clearly visible underneath.
   > Pitch-black tree shadows obscure the terrain surface, making walkable routes indistinguishable.
 - **arch** · naive · occlusion · sev 2 · 2/3 looks · REFUTED by adversarial-judge:naive: Foreground foliage framing the right side of the camera view is a standard artistic choice that does not constitute a gameplay defect.
@@ -493,6 +507,8 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > The doorway in the back wall is completely obscured in shadow, making it difficult to recognize as a path forward.
 - **gatefield** · naive · exit · sev 2 · 1/3 looks · REFUTED by adversarial-judge:naive: The door outline and wood grain texture are still visible and clearly identifiable as a doorway.
   > The doorway set into the rear brick wall is deeply shadowed, making it difficult to read as a usable entrance or exit.
+- **homerow** · checklist · navigation · sev 3 · single look · REFUTED by adversarial-judge:checklist: A clear, dark grey paved path lined with street lamps directly connects the cottage on the left to Lake's home on the right.
+  > the route between Mara & Pip's cottage and Lake's home (the keeper's cottage): ABSENT — No paved path or marked trail directly connects these two cottages.
 - **homerow** · naive · occlusion · sev 2 · 1/3 looks · REFUTED by adversarial-judge:naive: Foreground foliage is a standard framing element in isometric environment art and does not constitute a defect.
   > The dense evergreen tree severely obstructs the view of the building entrance, path, and surrounding walkable space.
 - **northlane** · naive · occlusion · sev 2 · 1/3 looks · REFUTED by adversarial-judge:naive: The tree foliage around the house is standard environmental scenery and does not impede gameplay or obscure essential navigation.
@@ -505,14 +521,8 @@ Confidence: naive findings carry `support` = how many of the N=3 independent loo
   > Heavy tree foliage completely blocks view of the space behind the central building, hiding potential walkways and wall boundaries.
 - **northlane** · naive · navigation · sev 2 · 1/3 looks · REFUTED by adversarial-judge:naive: Terrain and path details remain easily readable despite the ambient shadows on the right side.
   > Extremely dark ambient shadows obscure the terrain and path boundaries, making it hard to see where walkable ground continues.
-- **square** · checklist · navigation · sev 2 · single look · REFUTED by adversarial-judge:checklist: The building is plainly visible, and objecting to its lack of trade signage is a complaint about missing signs rather than art readability.
-  > Item Shop: VISIBLE-BUT-ILLEGIBLE — Building located near the square, but lacks distinct trade signage.
-- **square** · checklist · navigation · sev 2 · single look · REFUTED by adversarial-judge:checklist: The cottage is clearly visible, and complaining about a lack of inn indicators is a complaint about missing signage or labels.
-  > Inn: VISIBLE-BUT-ILLEGIBLE — Small cottage visible in background without clear inn indicators.
-- **square** · checklist · navigation · sev 2 · single look · REFUTED by adversarial-judge:checklist: The building is fully legible as a cottage, and expecting specific bakery signifiers on a standard house is a complaint about missing labels.
-  > Poppy's bakery: VISIBLE-BUT-ILLEGIBLE — Orange-roofed cottage on plaza edge, indistinguishable from ordinary houses.
-- **waystone** · checklist · navigation · sev 3 · single look · REFUTED by adversarial-judge:checklist: The paved path remains clearly visible and continues all the way to the bottom edge of the frame.
-  > the way out of this area on foot towards arch: ABSENT — The road fades into darkness before reaching the edge of the frame, so an exit toward the arch is not shown.
+- **therise** · checklist · navigation · sev 2 · single look · REFUTED by adversarial-judge:checklist: The complaint relies on the lack of a sign identifying it as an inn, which is explicitly discounted as a valid reason for refutation.
+  > Inn: VISIBLE-BUT-ILLEGIBLE — Reads as a standard cottage without clear signage identifying it as an inn.
 - **woodroad** · naive · navigation · sev 2 · 1/3 looks · REFUTED by adversarial-judge:naive: The dense, dark pine trees clearly function as a standard impassable forest boundary wall rather than a confusing navigation path.
   > Pitch-black foliage completely obscures the right side of the scene, making it impossible to determine if it is a playable path or an impassable boundary.
 

@@ -1,6 +1,7 @@
 {
  "what": "merged raw judge replies for replay-derivation of the combined run",
  "naiveFrom": "run-20260806-1-dellhollow-naive",
- "checklistFrom": "run-20260806-1-dellhollow-checklist",
- "mergedBy": "tools/scene_redteam.mjs --replay (see combined run findings.json)"
+ "checklistFrom": "run-20260806-2-dellhollow-checklist",
+ "mergedBy": "tools/scene_redteam.mjs --replay (see combined run findings.json)",
+ "checklistNote": "2026-08-07: checklist replies REPLACED by the quality-item pass (run-20260806-2, tools/scene_redteam.mjs with the [QUALITY] sky/frame-edge/water families). DELLHOLLOW ONLY: the checklist pass was judged against the graphics-round-1 rebake (02b9c01/2a5cf84, 12 plates rebaked 2026-08-06T22:0x, water-transparency bake restored, shop doors added) while the naive replies here remain judged against the PRE-round-1 bake (2026-08-06T11:2x). The combined run pins the CURRENT bake; naive findings on the 12 rebaked plates describe superseded pixels."
 }
