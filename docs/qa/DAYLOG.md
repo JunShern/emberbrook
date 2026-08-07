@@ -16862,3 +16862,19 @@ del naive-vs-checklist bake split), combined run-20260806-1-<town> re-derived vi
 against the current pins, findings.md regenerated. Deltas: del survivors 100 -> 101
 (raw 125 -> 135), emb 97 -> 103 (raw 117 -> 130); quality survivors 2 del + 3 emb (deduped
 town-wide with per-shot descs in alsoOn).
+
+## 2026-08-07 ~07:55 — COORDINATOR: graphics round 2 closed (finished in-line after the limit kill)
+
+The lane died twice (session limits) with no transcript; the tree was the handover
+both times. Master edits 6ba0a16 (gorgewall de-quilt 3.3->16.7 m tile + linked sun;
+walk ribbon dressed as paving; quay-west pit lantern at the measured bay). All 7
+frustum-affected plates verified complete + eyeballed, committed 8e69316. No map
+geometry moved -> no GLB/walk cycle. CALIBRATED RE-JUDGE (run-20260807-064138,
+11 calls): the two FAILING frame-edge items read WEAK now — "distant cliff wall
+ends abruptly against a flat gray sky plane" (composition note, not a void), water
+"basic turquoise, simple contact edges" WEAK. Zero FAILING on the seven plates.
+Residuals to round 3: the quay-west deck sliver (ribbon edge-on), deep-stairs
+water cyan-plane (unaddressed this round), Emberbrook water (probe never reported
+— re-diagnose), boil read, waterline blending, railings/stands.
+SUBAGENT BUDGET: the session hit its 200-agent cap; coordinator runs lane work
+in-line from here (or the user raises CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION).
