@@ -867,6 +867,23 @@ if "lock" in DO:
     join_meshes(slab, "water_pool-mid", COLL + "_PROPS")
     log("EDIT", "water_pool-mid", "notched x %.2f..%.2f y %.2f..%.2f — the pool no longer "
         "stands over the lock chamber or its walk pad" % (HX0, pb[1], pb[2], y_n))
+    # THIS PASS DESTROYS THE WATER-TRANSPARENCY TRANCHE, AND IT IS SILENT ABOUT IT
+    # (2026-08-07, measured).  The notch above REBUILDS `water_pool-mid` out of two fresh
+    # boxes and the chamber's `lf_lock_water` below is a fresh box too — so both come back
+    # as 8- and 16-vertex slabs with NO `Col` attribute, which is exactly the state
+    # docs/plans/water-transparency.md exists to remove.  Measured across one re-run:
+    # water_pool-mid 8648 -> 16 verts, water_pool-downstream 4290 -> 8, lf_lock_water
+    # 90 -> 8.  Nothing failed; the gates were green; the RIVER SIMPLY WAS NOT IN THE
+    # PLATES any more (the fishdock plate went from 21.1% water-coloured pixels to ~0 and
+    # its moored boat sat on dry bed).  Same shape as the emb_dress/emb_decimate rule in
+    # CLAUDE.md: A PASS THAT REBUILDS A DRESSED DATABLOCK OWES THAT DRESSING'S RE-RUN IN
+    # THE SAME WINDOW.  The order is fixed and t2_water_shader's own header states it:
+    #     t2_water_bed.py -- save        (the bathymetry IS the deliverable)
+    #     t2_water_shader.py -- save     (never before the bed)
+    log("OWED", "t2 water chain", "this pass rebuilt water_pool-mid and lf_lock_water as "
+        "flat slabs — RUN tools/t2_water_bed.py THEN tools/t2_water_shader.py (in that "
+        "order, both with `save`) BEFORE any export or bake, or the river ships opaque "
+        "and the plates lose it entirely")
 
     # floor + the water standing in it
     parts.append(box("lf_lock_floor", CH_X0, CH_X1, y_s, y_n, CH_FLOOR - 0.35, CH_FLOOR,
