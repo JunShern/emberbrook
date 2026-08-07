@@ -76,8 +76,16 @@ git runs here, on branch `migration/3d-hybrid`.
   pixels holding ZERO water — gateroad's "pitch-black flat plane" is a pale gravel apron at
   5.6× its own frame median. It now arms on MEASURED visible water (sheets rasterised through
   the shipped projection, agreed against the plate's own depth.png; threshold 0.5% of frame,
-  `--water-census` prints it with no API). STILL OPEN: the gate fixes WHICH PLATE is asked,
-  not WHERE the judge points — armed bboxes can still hold no water.
+  `--water-census` prints it with no API). It now also asks WHERE the judge pointed: `aimOf`
+  scores each `[QUALITY]` bbox against its own subject mask (water = that same visible-water
+  census; sky = the plate's depth) and REFUTES, after stage 2, any verdict whose box holds
+  under 2% of what it names — 31% of the post-arming water findings were aimed at ZERO water,
+  and the sceptic can never catch that because IT IS SHOWN THE WORDS AND NEVER THE BOX.
+  Absence claims abstain (their box marks where the subject *isn't*); `frame-edge-world` is
+  left unmeasurable ON PURPOSE — its two candidate subjects disagreed 3-to-0 and the
+  far-depth one would have killed crossing's real white-wedge finding, so an undefined
+  subject gets no gate. `--aim-census` measures a finished run with no API; `--no-aim` is
+  the A/B.
 - **tools/plate_probe.py — GROUND LUMINANCE WITHOUT BLENDER** (2026-08-07): reconstructs a
   world XYZ per pixel from a bundle's own solved camera + depth.png, derives normals from the
   world-position gradient and splits a plate into GROUND/WALL/VOID — 15 plates in ~40 s. The
