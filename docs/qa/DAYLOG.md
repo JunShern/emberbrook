@@ -17992,3 +17992,17 @@ PLATES: the ray-cast, not the frustum, decided the bake list. An angular frustum
 seven cameras affected; casting from each solved eye to all 22 rebuilt records in the master
 (the bake's own oracle) says gate 0/22 and lockhead 0/22 see NOTHING, and the real list is
 north-landing 18/22, fishdock 10/22, weave 9/22, lockfive 7/22, crossing 5/22.
+
+### GATES AFTER THE REBAKE
+
+`cine_test --town emberbrook` **477 ok / 3 failed / 2 soft — identical to the pre-lane
+baseline**, all three reds pre-existing and pre-attributed (bundle walk parity 218 vs 222
+on `walk_e_square-plaza__barn_l0..l3`; `square` charPxFar 37 against its own 38 floor).
+NOTE, so it is not re-attributed later: the FIRST run of it after the bakes returned
+476/4, taken while `cine_bake --glb` was mid-write on `emb-cine/scene.glb`; re-run once the
+export settled it is 477/3. Same class as CLAUDE.md's "A TEST THAT CANNOT BOOT IS NOT A
+TEST THAT FAILED" — do not read a mid-write bundle as a regression.
+`slice_test` 776/0. `seam_walk --town emberbrook` 10/10. `findability_test` 69 passed /
+0 failed / 11 warn (was 12 — one villager's plate read cleared; not claimed as a win).
+`routes_derive --town emberbrook --check` **ok, up to date** (it was STALE at lane start,
+inherited from `a7be573`, and is re-derived and committed).
