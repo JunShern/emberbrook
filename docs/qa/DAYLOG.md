@@ -17613,3 +17613,59 @@ LIVE stamp moved 2026-08-07T06:46 -> **2026-08-07T18:43**, and only then
 `static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**,
 zero failed requests, zero unexpected 4xx/5xx, zero console errors.
 The live site now carries the round-3 water/realtime-tier work.
+
+### THE CALIBRATED RE-JUDGE: pondlane's water-read DID NOT FLIP, and the instrument says why
+
+`tools/scene_redteam.mjs --calibrate` FIRST (the documented gate): 2/5 on the exact plate,
+5/5 on any plate holding the object — in band, judge has not drifted
+(`docs/qa/redteam/run-20260807-185607-calib/`). Then checklist mode on the rebaked plates
+(`run-20260807-190224`).
+
+`northlane` `quality:frame-edge-world` CONVINCING, no water item on its contract.
+`pondlane` `quality:water-read` **still FAILING** — and **ITS BBOX MOVED**, from
+[0.22,0.58,0.6,0.75] to **[0.5,0.4,0.8,0.7]**, a completely different third of the frame.
+Measured against the visible-water mask: the new box contains **ZERO brook pixels** — none
+of the sheet this lane reshaped — and its 19.3% "water" is the depth-pass pond, which the
+willow hides in the beauty render. LOOKED AT: the new box is **a dark gravel path with a
+bench and a bunting line on it**.
+
+So the honest answer to "did the FAILING verdicts move" is **NO, and the reason is now
+measured rather than guessed**: the `quality:water-read` family on this town does not track
+water. Given a frame with no legible water in it, it selects a flat, texture-poor ground
+region and reports it as bad water — bright (gateroad's gravel apron, L p50 0.263 against a
+frame 0.047), dark (therise's grass slope, pondlane's path), stone (homerow), or shadow
+(arch). Two independent BLIND judges given the same two plates with no contract at all
+scored the fix 7.5 against 6.0 and 5.0 and described the exact defect it removed. **When a
+blind pair and a contract-fed judge disagree this hard, the contract-fed judge is measuring
+its own prior.** The family needs a water-PRESENCE gate before its verdict is worth
+tracking: the census in this entry is that gate and it is 3 s and free — a shot whose
+frustum holds under ~0.5% water should not be asked whether its water reads.
+
+Second-order note, recorded because N=3: pondlane's `frame-edge-world` WEAK is still WEAK
+but its subject also moved, from the `lm_field` block meshes at frame-left to the tree line
+at top-left. At this N that is not separable from judge noise and is NOT claimed as a win.
+
+### AND THE ONE-LINE CAUSE, FOUND IN THE JUDGE'S OWN SOURCE — handed to the coordinator, NOT edited
+
+`tools/scene_redteam.mjs:477` decides whether a plate is asked about its water:
+
+```js
+const wets = WATER_FEATURES.map((l) => ({l, cs: census(cam, l.pos)}))
+  .filter((w) => w.cs.on && w.cs.state !== 'behind-camera')
+```
+
+**It is a POINT test on the water LANDMARK'S MAP POSITION.** A water body whose centre
+projects inside the frame arms `quality:water-read`, whether or not one pixel of that water
+survives the plate. That is why `arch` (0.13% water), `therise` (0.14%) and `gateroad`
+(0.46%, and none of it inside the box the judge drew) all carry a FAILING water verdict, and
+why `pondlane` — whose pond is 100% behind a willow — carries one whose bbox contains zero
+brook pixels. It is the same class as the Poppy defect CLAUDE.md already names: **a test
+that projects a coordinate has not asked whether anything is visible there.**
+
+The fix is one condition and the census that feeds it is 3 s with no Blender and no
+browser: arm the item only when the water sheets' triangles, projected and agreed against
+the plate's own `depth.png`, cover more than a floor (~0.5% of the frame is where this
+town's own numbers separate the five plates that show water from the four that do not),
+and pass that fraction into the prompt so the judge knows how much water it is being asked
+about. NOT EDITED HERE: `scene_redteam.mjs` is the shared judge and the Dellhollow lane is
+running against it in this same window. Coordinator's call.
