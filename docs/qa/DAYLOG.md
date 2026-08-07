@@ -18057,3 +18057,69 @@ box contains no water is refutable mechanically, and `scene_redteam` already has
 machinery (`bboxAgreement`, the stage-2 refutation pass) and now the measurement. Named and
 left, because it is a change to the shared judge's verdict pipeline rather than to its
 applicability gate, and one of those per window is enough.
+
+### 2026-08-07 ADDENDUM — the water cost, and TWO low-water lines that the drive refused
+
+**THE PLATE CONVICTED THE BUILD THE NUMBERS HAD PASSED.** With the west arm receipted and
+the lockfive plate re-baked, the A/B against the old plate showed the moorage's foreground
+water GONE. Measured, not impressioned (teal mask, b>r+18 & g>r+10 & b>40, on the 2688x1536
+plates): **90,030 water pixels -> 1,542, a 98.3% loss; the lower-left quadrant 7.49% -> 0.01%**.
+Cause: the searched line's l2 leg and its wp2 landing stand over the river between the pier
+and the staging, and `locksfoot_build` planks and piles EVERY walk ribbon it is handed. So a
+connectivity fix silently spent one of the town's ratified look pillars
+(docs/plans/water-transparency.md).
+
+`moorage_search.py` grew a **water_cover** term for it — the plan area of a candidate's tread
+and landing slabs standing over open water (no walk record under, no landmark footprint
+around), in m2, REPORTED and not rejected, because it is a trade against corridor clearance
+and the trade should be visible. In those units:
+
+    the it.9 line (severed the arm)      8.48 m2
+    the SHIPPED line [68.85,30.4,3.95]  15.16 m2   <- what the plate lost
+    the best low-water clean candidate   5.56 m2
+
+**AND THEN THE DRIVE REFUSED BOTH LOW-WATER CANDIDATES.** Each was built end to end
+(blockout -> walk_rederive -> weave/locksfoot/cx -> lantern_reseat -> export) and driven:
+
+    wp2 [69.6, 27.4, 4.4] foot y 31.1   water 7.56, blocked 32, goal 334/336
+        FLIGHT stalled at the wp2 hairpin BOTH ways, 12/22 and 11/22. `--who` named
+        **`wv_planking` on 30 cells over l2_t00** — weave's DECKING of l1 standing in the
+        body window of l2's first tread. The `self` oracle cannot see it: self_roof tests
+        the leg CENTRE-LINES, and what stood there is a district builder's derived plank,
+        which the search does not model at all.
+    wp2 [70.6, 27.9, 4.1] foot y 31.1   water 5.56, blocked 26, goal 330/336, and the
+        MOST ROBUST candidate in the entire clean set (17/27 clean neighbours)
+        CORRIDOR severed anyway: deck lane **2/6** west->east and **5/6** east->west,
+        while this oracle's own flood fill called it CONNECTED on the 0.15 m lattice.
+
+**THE LESSON IS THE ONE THIS REPO KEEPS PAYING FOR, IN A NEW PLACE: THE ORACLE IS A SCREEN
+AND THE DRIVE IS THE VERDICT.** westarm reliably rejects the disaster case — 1696 of 8085
+candidates, including EVERY candidate with the foot at y 28.1 — and it certifies nothing.
+Both facts are now in the tool's own header so the next builder does not re-learn them.
+
+REVERTED to the receipted line [68.85, 30.4, 3.95] / foot [76.2, 30.6, 1.25] (commit
+72962250), master restored from HEAD and BOTH BUNDLES RE-EXPORTED FROM IT rather than
+checked out — a bundle is a cron-class artifact and `git checkout` is the wrong reflex
+(2026-08-05). Chain re-derived to a fixed point; the routes' own "1 of 15 plates stale"
+warning is now EMPTY and boatyard's visibleFrac read 0.64 -> 0.75.
+
+RE-RECEIPTED AFTER THE RESTORE, every number reproduced: flight **23/23 both ways** · deck
+lane west<->east **6/6 both ways** · tenant lane -> west store 5/5 · tenant-shack lane 3/3
+both ways · moorage__lock-five 3/3 both ways · reach_probe westdeck<->maren and
+weststore<->maren **REACHED all four ways** · one **547-cell** component from all three
+seeds · walk_engine_gate **GREEN on BOTH bundles**, 0 lost, bvh fail 0 · slice 776/0 ·
+findability 69/0 · story green · dialogue green · routes/scenegraph/cine_solve --check
+clean · seam 266/4 + seam_walk 8/9 at baseline · **cine_test 635/1**, the 1 being the
+pre-attributed deep-stairs<->waterfront seam red.
+
+PLATES: lockfive 204.7 s and north-landing 193.9 s, then fishdock / weave / crossing —
+the five the RAY-CAST (not the frustum) named as seeing the rebuilt flight. gate and
+lockhead see 0 of 22 records and were deliberately not baked.
+
+**OPEN, MEASURED, NAMED:** the shipped line decks 15.16 m2 of river and costs the lockfive
+plate 98.3% of its visible water. It is the price of the only line that drives. The next
+attempt is NOT another pivot search — both low-water pivots failed — it is either
+(a) teaching `locksfoot_build` to leave a stair over water on OPEN stringers instead of
+plank-and-pile decking it, or (b) a `self` oracle that models the district builders' derived
+planking rather than the walk centre-lines, which is the same hole `wv_planking` walked
+through. Either is its own window.

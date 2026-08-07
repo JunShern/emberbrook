@@ -31,6 +31,34 @@
 #              candidate is REJECTED unless the clear cells still flood-fill from the
 #              west store rect to the pier rect.
 #
+#   water    — NOT a rejection, a REPORTED COST in m2 (see water_cover).  A flight that
+#              solves the corridor by walking out over the river DECKS the river, because
+#              locksfoot planks and piles every walk ribbon it is handed.
+#
+# ============================================================================
+# AND THE ORACLE IS STILL A SCREEN.  THE DRIVE IS THE VERDICT.  (2026-08-07, paid twice
+# in one window.)  After the shipped line was receipted, the water cost sent the search
+# looking for a cheaper one, and the two best low-water candidates BOTH passed every
+# oracle here and BOTH failed in the engine:
+#
+#   wp2 [69.6, 27.4, 4.4] foot y 31.1   water 7.56 m2, westarm blocked 32, goal 334/336
+#       -> the FLIGHT stalled at the wp2 hairpin BOTH ways (12/22, 11/22).
+#          `_court_probe --who` named `wv_planking` on 30 cells over l2_t00: weave's
+#          DECKING of l1 stands in the body window of l2's first tread.  The `self`
+#          oracle missed it because self_roof tests the leg CENTRE-LINES (dplan <=
+#          WIDTH/2) and the thing that actually stood there is the district builder's
+#          derived plank, which is not modelled here at all.
+#   wp2 [70.6, 27.9, 4.1] foot y 31.1   water 5.56 m2, westarm blocked 26, goal 330/336,
+#       the most robust candidate in the whole clean set at 17/27 clean neighbours
+#       -> the CORRIDOR was severed anyway: deck lane 2/6 west->east, 5/6 east->west,
+#          with this oracle's own flood fill calling it CONNECTED on the 0.15 lattice.
+#
+# So: westarm is a SCREEN that reliably rejects the disaster case (it rejected 1696 of
+# 8085, including every foot at y 28.1) and it does NOT certify a survivor.  Drive every
+# candidate you intend to build, both ways, before you believe it.  A SEARCH ORACLE CAN
+# ONLY EVER SAY 'NOT OBVIOUSLY BROKEN'.
+# ============================================================================
+#
 #              WHY: the westlink rects (moorage_westlink.py, 2026-08-05) were shaped by
 #              an occupancy scan of the body window under the OLD l2 line.  Iteration 9
 #              re-searched wp2 and widened the edge 1.4 -> 2.0, and the new treads landed
@@ -234,6 +262,45 @@ def slabs_of(legs, landings):
         out.append(("landing", _obb(c.x, c.y, z - 0.08, lx, ly, 0.16,
                                     math.atan2(u.y, u.x))))
     return out
+
+# ---- the WATER-COVER cost (2026-08-07, found by LOOKING at the plate) -------------
+# A flight that solves the corridor by walking out over the river DECKS THE RIVER: the
+# first winner here took the lockfive plate's visible water from 90,030 px to 1,542 --
+# 98.3% of it, and the lower-left quadrant from 7.49% to 0.01% -- because locksfoot
+# planks and piles every walk ribbon it is handed.  Transparent flowing water is one of
+# this town's ratified look pillars (docs/plans/water-transparency.md), so the search
+# has to be able to SEE that cost.  Reported in m2, not rejected: it is a trade against
+# corridor clearance and the ranking makes the trade explicit.
+_LMRECT = []
+for _l in MAPJ["landmarks"]:
+    for _r in (_l.get("footprint") or []):
+        _LMRECT.append(_r)
+
+def water_cover(legs, landings, step=0.20):
+    """Plan area of the flight's slabs that stands over OPEN WATER -- no walk record
+    under it and no landmark footprint rect around it."""
+    a = 0.0
+    for (nm, b) in slabs_of(legs, landings):
+        cx, cy, cz, hx, hy, hz, c, s_ = b
+        if cz > 6.0:            # the upper tier is over the gorge face, not the river
+            continue
+        i = -hx
+        while i <= hx:
+            j = -hy
+            while j <= hy:
+                x = cx + i * c + j * s_
+                y = cy - i * s_ + j * c
+                over = any(r[0] <= x <= r[1] and r[2] <= y <= r[3] for r in _LMRECT)
+                if not over:
+                    for (bx0, bx1, by0, by1, top) in _WALKBOX:
+                        if bx0 <= x <= bx1 and by0 <= y <= by1 and top > -1.0:
+                            over = True; break
+                if not over:
+                    a += step * step
+                j += step
+            i += step
+    return round(a, 2)
+
 
 def west_arm(legs, landings, verbose=False):
     """REJECT unless the west store still reaches the pier under this flight.
@@ -447,7 +514,8 @@ def judge(wps, foot, verbose=False):
             "foot_art": foot_art, "self": len(selfr), "self_sample": selfr[:3],
             "westarm_ok": wa[0], "westarm_blocked": wa[1],
             "westarm_head": round(wa[2], 2), "westarm_worst": wa[3],
-            "westarm_goal": wa[4]}, grades, legs, landings
+            "westarm_goal": wa[4],
+            "water": water_cover(legs, landings)}, grades, legs, landings
 
 
 # =================================================================================
@@ -495,9 +563,10 @@ if MODE == "detail":
                 if _in(r, x, y):
                     per[n][1] += 1
                     if bad: per[n][0] += 1
-        print("wp %s foot_y %.1f  grades %s  blocked %d  goal %d  head %.2f" %
+        print("wp %s foot_y %.1f  grades %s  blocked %d  goal %d  head %.2f  "
+              "WATER-DECKED %.2f m2" %
               (d[:3], d[3], grades, res["westarm_blocked"], res["westarm_goal"],
-               res["westarm_head"]))
+               res["westarm_head"], res["water"]))
         print("   " + "  ".join("%s %d/%d" % (n, per[n][0], per[n][1]) for n in RECTN))
     sys.exit(0)
 

@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-07T19:47:39Z",
+ "generated": "2026-08-07T20:51:13Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -6961,7 +6961,7 @@
      "seam:tenant-shack__fish-dock"
     ],
     "minCharPx": 53,
-    "visibleFrac": 0.6406
+    "visibleFrac": 0.75
    }
   },
   "north-landing": {
@@ -7337,8 +7337,6 @@
    ]
   }
  ],
- "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 1 of 15 plates are stale against the solve — lockfive (0.56u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
- ],
+ "warnings": [],
  "overrides": {}
 }
