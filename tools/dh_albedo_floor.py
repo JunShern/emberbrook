@@ -67,8 +67,17 @@ verbatim — "black ... its coursing, its wet nappe and its boil, nothing more" 
 while the surface stops being unrenderable.  The gate below asserts that
 ordering rather than trusting it.
 
-Idempotent (a second run finds nothing under the floor).  `restore` puts the
-measured original values back from the manifest.
+Idempotent (a second run finds nothing under the floor).
+
+`restore` IS PARTIAL AND SAYS SO.  It puts the flat Base Color sockets back from the
+manifest, and it CANNOT put the vertex colours back: the lift is
+`c *= floor / L(c)`, so every loop was scaled by its OWN factor and the manifest
+records the layer's minimum, not 18,660 per-loop originals.  Writing a plausible-
+looking inverse would silently flatten a layer that used to vary.  The way back for
+the vertex colours is `git checkout tools/blends/dellhollow-master.blend`, which is
+exact; the script prints that instead of pretending.  (Recording the full originals
+would make this reversible and would also put ~18k colours in a manifest nobody
+reads — if a future round wants that, it is a deliberate trade, not an oversight.)
 """
 import bpy, os, sys, json
 
@@ -169,12 +178,7 @@ for ob in bpy.data.objects:
             c = tuple(d.color[:3])
             n_tot += 1
             if RESTORE:
-                if oldrec and lum(c) <= oldrec["floor"] + 1e-6 and lum(c) > 0:
-                    # undo the exact scaling: c_before = c * (L_before_min/floor) is
-                    # not recoverable per-vertex, so restore is only offered when the
-                    # manifest recorded the ORIGINAL layer wholesale.
-                    pass
-                continue
+                continue        # see the RESTORE note below — this path is honest, not lossy
             nc = lifted(c, FLOOR)
             if nc:
                 before_lo = min(before_lo, lum(c))
@@ -229,6 +233,11 @@ if not RESTORE:
         print("MANIFEST", MANIFEST)
     else:
         print("MANIFEST kept (nothing lifted this run — a no-op does not rewrite the receipt)")
+
+if RESTORE:
+    print("RESTORE covered the FLAT sockets only. The per-loop vertex colours are NOT "
+          "reversible from this manifest (each loop was scaled by its own factor); "
+          "use `git checkout tools/blends/dellhollow-master.blend` for those.")
 
 if SAVE:
     bpy.ops.wm.save_mainfile()

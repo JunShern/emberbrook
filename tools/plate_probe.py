@@ -41,6 +41,13 @@ now twice recorded a worklist item whose named object was the wrong one.
 
 Camera convention matches the bake: Blender Z-up, `sensor_fit` VERTICAL so `fov` is
 angle_y, aim via `to_track_quat('-Z','Y')`.
+
+ENV: `PLATE_BUNDLE` points at a different bundle directory (one holding `cine.json`
+and `cameras/<shot>/{bg,depth}.png`).  That is how the A/B is made honest — extract
+the BEFORE plates straight out of `git show HEAD:...` into a scratch bundle and read
+BOTH with this one instrument, instead of comparing live pixels against a downscaled,
+re-compressed gallery jpg.  `UPCOS`, `DARK`, `FLAT` and `STEP_MAX` override the
+thresholds; the defaults are the ones every number in the round-3 receipts used.
 """
 import os, sys, json, math
 import numpy as np
