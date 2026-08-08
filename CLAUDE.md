@@ -356,6 +356,25 @@ git runs here, on branch `migration/3d-hybrid`.
   MISS, never a build failure; depth.png is deliberately uncached because its encode
   carries the byte-exact round-trip proof. A cache keyed on the source alone would serve
   stale art the first time a quality setting moved — invisibly.
+- **DEPLOYING FROM A CLEAN WORKTREE, AND THE TWO THINGS THAT LOOK LIKE FAILURES AND ARE NOT**
+  (2026-08-08). Build from a detached `git worktree` at origin's tip whenever the main tree is
+  dirty — a lane's uncommitted module WILL otherwise be published (measured: a main-tree build
+  differed from the worktree build by another lane's uncommitted `js/battle_world.js`). The
+  worktree needs two things git does not carry: the main repo's `node_modules` SYMLINKED in
+  (static_verify needs `ws`) and **`EB_BUILD_CACHE`** pointed at the main repo's warm
+  `.build-cache`. Then:
+  (1) **`dist` SIZE AFTER A PUSH IS A LIE** — `deploy-ghpages.sh` turns `dist` into its own
+  throwaway git repo IN PLACE, so `dist/.git` (~500 files / ~364 MB) inflates any later `du`/
+  `find`, and THE SCRIPT'S OWN PRE-FLIGHT prints the inflated number on a rerun because it counts
+  before its `rm -rf .git`. Two of us built a whole false "the cold cache changed the build"
+  theory on that number. Measure before deploying, or exclude `.git`.
+  (2) **A PAGES BUILD CAN STALL IN `building` FOREVER** — measured: `updated_at` frozen at
+  `created_at` for 32 minutes, then it completed the instant a re-queue displaced it. A HEALTHY
+  build updates within ~70 s (73 s and 63 s measured). **If `updated_at == created_at` past ~3
+  min, `gh api -X POST repos/<o>/<r>/pages/builds` — the stamp will never move on its own.**
+  Also: a long push DIES WITH ITS FOREGROUND TOOL CALL (launch `(nohup … &)`; `setsid` does not
+  exist on macOS), and an INCREMENTAL push is minutes — the 60-90 minute transfers were
+  full-tree first pushes.
 - **node tools/static_verify.mjs** drives a built tree off `python3 -m http.server`;
   **`--url https://…` drives THE DEPLOY**. Only the live run can see a file that
   committed code fetches and git does not carry (the lightrigs.json class).
