@@ -17,6 +17,15 @@
 // is ALREADY rendering with a solved key, a PMREM environment ("THE FILL IS THE
 // SKY") and RenderPass -> GTAO -> bloom -> Output.
 //
+// ==================== AND IT NEVER FALLS BACK TO THE DIORAMA ================
+// USER RULING 2026-08-08: "if we go with the world setup then we shouldn't be
+// maintaining the diorama. Rather if we need a fallback, we should just fallback
+// to the 'nearest feasible' place." A refusal therefore RELOCATES WITHIN THE
+// WORLD — see stageArena and the measured ring/bearing ladder above it — and the
+// line that used to call the diorama's own create() is gone. The DOM stage
+// remains only as the crash guard on a thrown exception. `?arena=world` is still
+// OPT-IN and battle_stage3d.js is still what a default page draws.
+//
 // This module stages the same fight in that live scene instead. It adds nothing
 // to `collide`, `walkRef` or `allMeshes` (the followers.js rule — a combatant can
 // never block the player, by construction), it creates NO renderer, NO camera and
@@ -255,7 +264,56 @@
   // DRAWN scene instead, minus the things that are not occluders by construction:
   // walk meshes, the sky dome / ridge rings / haze veils (they are always behind
   // everything), the ambient particle systems, and our own bodies.
-  const _rc = { ray: null, v0: null, v1: null, set: null, stamp: 0 };
+  // ---- AND GROUND SCATTER IS NOT AN OCCLUDER, WHICH IS WHERE THE SECONDS WERE -
+  // MEASURED (docs/qa/battle-world/raycost.json, ow-valley, the shipped bundle):
+  // one visibility ray against this set cost 11,696 us, and 11,629 us of it —
+  // **99.4%** — was SIX InstancedMeshes of ground scatter: veg_owd_short (60,590
+  // instances), _med (56,126), _seed (16,017), _weed, _flower, _sedge. 137,356
+  // instances between them. Every other object in the valley — the two 27k-tri
+  // terrain sheets, the whole town, the tree canopies, the hedge banks — costs
+  // 4.2 us EACH, because play3d gives every ordinary mesh a three-mesh-bvh tree
+  // and an accelerated raycast. An InstancedMesh gets neither: three's raycast
+  // loops the instance list, so cost tracks INSTANCE COUNT and the tree with
+  // 37,280 triangles is three thousand times cheaper than the grass with six.
+  //
+  // THE RULE IS DERIVED, NOT A NAME LIST: an instanced piece shorter than
+  // SCATTER_H is ground detail. The player WALKS THROUGH it (play3d marks veg_
+  // `noStand`, so it is not in `collide` either), and a knee-high tuft between
+  // the boom and a body's ankle sample is a FALSE refusal — precisely the kind
+  // the relocation ruling exists to stop paying for. The hedge bank that made
+  // this set come from the drawn scene in the first place is NOT affected: it is
+  // `veg_field` and `veg_canopy_whisperwood*`, ordinary meshes, still in.
+  // Cost after the rule: 66 us/ray, one solvePlacement 278 ms -> 1.5 ms.
+  const SCATTER_H = 1.5;
+  const _scatH = typeof WeakMap === 'function' ? new WeakMap() : null;
+  function pieceHeight(o) {
+    if (_scatH && _scatH.has(o)) return _scatH.get(o);
+    let h = Infinity;
+    try {
+      const g = o.geometry;
+      if (g) {
+        if (!g.boundingBox) g.computeBoundingBox();
+        h = g.boundingBox.max.y - g.boundingBox.min.y;
+        // the tallest instance decides, sampled — a scatter with one 4 m outlier
+        // is not ground detail
+        const im = o.instanceMatrix && o.instanceMatrix.array;
+        if (im) {
+          let s = 0;
+          const n = o.count || (im.length / 16), step = Math.max(1, Math.floor(n / 64));
+          for (let i = 0; i < n; i += step) {
+            const b = i * 16;
+            const sy = Math.sqrt(im[b + 4] * im[b + 4] + im[b + 5] * im[b + 5] + im[b + 6] * im[b + 6]);
+            if (sy > s) s = sy;
+          }
+          h *= (s || 1);
+        }
+        h *= Math.abs(o.scale ? o.scale.y : 1);
+      }
+    } catch (e) { h = Infinity; }
+    if (_scatH) _scatH.set(o, h);
+    return h;
+  }
+  const _rc = { ray: null, v0: null, v1: null, set: null, stamp: 0, dropped: [] };
   const NOT_OCCLUDER = /^(__owsky|__owridge|__owveil|amb_|bw_)/;
   function occluders() {
     const TH = T();
@@ -265,16 +323,21 @@
     if (!sc) return null;
     // rebuilt at most every 2 s: a battle is short and the region does not change
     if (_rc.set && (now() - _rc.stamp) < 2000) return _rc.set;
-    const out = [];
+    const out = [], dropped = [];
     sc.traverse((o) => {
       if (!(o.isMesh || o.isInstancedMesh) || o.isSkinnedMesh) return;
       if (o.userData && (o.userData.isWalk || o.userData.isBattleWorld)) return;
       if (NOT_OCCLUDER.test(o.name || '')) return;
       let a = o;
       while (a) { if (a.userData && a.userData.isBattleWorld) return; a = a.parent; }
-      if (o.visible) out.push(o);
+      if (!o.visible) return;
+      if (o.isInstancedMesh && pieceHeight(o) < SCATTER_H) {
+        dropped.push({ name: o.name || '(anon)', n: o.count, h: +pieceHeight(o).toFixed(2) });
+        return;
+      }
+      out.push(o);
     });
-    _rc.set = out; _rc.stamp = now();
+    _rc.set = out; _rc.stamp = now(); _rc.dropped = dropped;
     return out;
   }
   function camPoseFor(P, yaw, pitch, dist) {
@@ -463,9 +526,19 @@
   // measured and reverted — it cost 39.8 points of "the camera did not swing"
   // and bought zero staging sites, because scoring plans that are all already
   // `ok` cannot change which cells stage.
+  // THE YAW LADDER, in one place, because two things now walk it: solveArena
+  // itself and the geometry screen that decides which of its rungs solveArena is
+  // even allowed to pay for (see screenYaws).
+  const YAWS = [0, 0.5, -0.5, 1.05, -1.05, 1.6, -1.6, 2.1, -2.1, Math.PI];
   function solveArena(o) {
     const base = (window.ORBIT && window.ORBIT.yaw) || 0;
-    const cands = [0, 0.5, -0.5, 1.05, -1.05, 1.6, -1.6, 2.1, -2.1, Math.PI];
+    // `o.yaws` restricts the sweep to a subset of YAWS **IN YAWS' OWN ORDER**.
+    // That ordering is the whole correctness argument for the cheap screen: the
+    // subset is a superset of the yaws that can place with vis:true, so the
+    // FIRST member of the subset that places is the first member of the full
+    // list that places, and the plan returned is the same object it would have
+    // been. (See screenYaws for why the superset relation holds.)
+    const cands = o.yaws ? YAWS.filter(d => o.yaws.indexOf(d) >= 0) : YAWS;
     const pitches = camOn() ? CAM.solve.pitches : [CFG.cam.pitch];
     let best = null;
     const okPlans = [];
@@ -502,6 +575,127 @@
   }
   function camOn() {
     return !!(CAM.on && !BCAM_OFF);
+  }
+
+  // ==================== THE RELOCATION LADDER (the ruling) ====================
+  // "THE BATTLE FIGHTS IN THE REAL WORLD, AND THERE IS NO DIORAMA FALLBACK"
+  // (user ruling 2026-08-08). A refusal RELOCATES WITHIN THE WORLD; it does not
+  // switch arenas. The ladder below is the one tools/battle_world_probe.mjs
+  // `--relocate` measured over 160 ow-valley road cells:
+  //
+  //   ring 0 (where the player stands) -> 5 m -> 8 m -> 11 m -> 13 m,
+  //   EIGHT BEARINGS A RING, first ring/bearing the solver accepts wins.
+  //
+  // MEASURED: 5 m -> 89.4% of cells, 8 m -> 98.8%, 13 m -> 100%, and 15 / 20 /
+  // 30 / 40 / 60 / 100 m are all flat at 100% — everything past 13 m is dead
+  // weight, which is why the ladder stops there. ZERO residual class. Every
+  // accepted site was re-confirmed through this same solveArena, 160/160 planOk.
+  // Relocation distance p50 5.0 m, p90 8.0, max 13.0 — one sideways step, which
+  // is what makes the opening camera move sufficient and a fade/cut/travel beat
+  // unjustified.
+  //
+  // THE BINDING VARIABLE IS BEARING, NOT DISTANCE: 41 of the 57 cells the old
+  // search refused stage at the SAME 5 m radius on a different compass bearing.
+  // A search that walks one direction out and asks the solver once was measuring
+  // its own first guess, not the world.
+  //
+  // THE ARENA MOVES, THE PLAYER DOES NOT. The player's own body is hidden for
+  // the fight and drawn as a combatant in the formation (see chSaved), so
+  // centring the arena on a neighbouring cell puts the party THERE and leaves
+  // nothing behind — the same picture a teleport would give, with the teardown
+  // obligation discharged by construction: this path never calls SIM.tp(), so
+  // "the player is returned exactly where they stood" cannot fail. The camera
+  // reaches the new centre through ORBIT's pan, which play3d applies relative to
+  // the player's live position every frame.
+  const RELOC = {
+    // {R metres, ph phase in radians, n bearings}. The 13 m ring is offset half a
+    // step so its bearings decorrelate from the rings below it — the probe's own
+    // rule, kept so the shipped ladder IS the measured one.
+    rings: [{ R: 0, ph: 0, n: 1 }, { R: 5, ph: 0, n: 8 }, { R: 8, ph: 0, n: 8 },
+            { R: 11, ph: 0, n: 8 }, { R: 13, ph: Math.PI / 8, n: 8 }],
+    // How far the arena's floor may sit above or below the player's own. The
+    // ladder is a sideways step, not a climb: without this a 13 m ring can find
+    // standable ground on a valley shelf ten metres up and stage the fight on a
+    // ledge the player is looking up at.
+    maxRise: 4.0,
+  };
+  // A CANDIDATE CENTRE, asked of the ENGINE. Column census first (on a valley
+  // wall the top surface is a cliff thirty metres up, so `floors` is a list and
+  // the nearest rung to the player is the one they could be standing on), then
+  // the body test SIM.blocked — which is also the thing that returns the
+  // blocking mesh's name when a bearing is refused.
+  function centreAt(x, z, P0) {
+    const S = window.SIM;
+    const f = (S.floors(x, z) || []).filter(v => isFinite(v));
+    if (!f.length) return null;
+    let y = f[0];
+    for (const v of f) if (Math.abs(v - P0.y) < Math.abs(y - P0.y)) y = v;
+    if (Math.abs(y - P0.y) > RELOC.maxRise) return null;
+    if (S.blocked(x, z, y)) return null;
+    return { x: x, y: y, z: z };
+  }
+  // THE CHEAP SCREEN, AND WHY IT CANNOT CHANGE A VERDICT. `vis:false` is a
+  // STRICT RELAXATION of `vis:true` — solvePlacement's visibility branch can
+  // only ever REJECT a slot the geometry already accepted — so a yaw that cannot
+  // lay the formation down geometrically cannot place with the camera test on
+  // either, at ANY pitch (with vis off, pitch is not read at all: it feeds only
+  // `eye`, and `eye` is only used inside the visibility branch). So the yaws this
+  // returns are a SUPERSET of the yaws solveArena could have accepted, and
+  // restricting the sweep to them leaves the returned plan identical.
+  // IT IS THE WHOLE PERFORMANCE ARGUMENT: a refused candidate costs ten
+  // raycast-free placements instead of ten yaws x four pitches of nine-sample
+  // body visibility. The probe verified the equivalence empirically as well
+  // (`--verify`, 10 candidates, 0 disagreements against the real solveArena).
+  function screenYaws(o) {
+    const base = (window.ORBIT && window.ORBIT.yaw) || 0;
+    const out = [];
+    for (const d of YAWS) {
+      const p = solvePlacement(Object.assign({}, o, { yaw: base + d, vis: false }));
+      if (p.ok) out.push(d);
+    }
+    return out;
+  }
+  // WHERE THIS FIGHT STANDS. Walks the ladder, returns the first accepted site
+  // with the plan the shipped solver produced for it, or null — and null here
+  // means the world refused every bearing on every ring, which the sweep has
+  // never once seen. Callers treat null as a crash guard, not as a fallback.
+  function stageArena(slots) {
+    const S = window.SIM;
+    const p = S.pos();
+    const P0 = { x: p.x, y: p.y, z: p.z };
+    const t0 = now();
+    let cands = 0, screened = 0, solved = 0, best = null;
+    const whys = [];
+    for (const ring of RELOC.rings) {
+      for (let a = 0; a < ring.n; a++) {
+        const th = ring.ph + a * Math.PI * 2 / ring.n;
+        const at = ring.R === 0 ? P0
+          : centreAt(P0.x + Math.cos(th) * ring.R, P0.z + Math.sin(th) * ring.R, P0);
+        if (!at) continue;
+        cands++;
+        const viable = screenYaws({ slots: slots, at: at });
+        if (!viable.length) { screened++; continue; }
+        solved++;
+        const plan = solveArena({ slots: slots, at: at, yaws: viable });
+        if (plan && plan.ok) {
+          return { plan: plan, at: at, R: ring.R,
+                   bearing: +(th % (Math.PI * 2)).toFixed(3),
+                   d: +Math.hypot(at.x - P0.x, at.z - P0.z).toFixed(2),
+                   dy: +(at.y - P0.y).toFixed(2),
+                   cands: cands, screened: screened, solved: solved,
+                   ms: Math.round(now() - t0) };
+        }
+        if (plan) {
+          // kept ONLY for cfg.forcePlace, the QA lever that stages a fight the
+          // world refused so a picture of the refusal can be taken
+          if (!best || plan.placed.length > best.placed.length) { best = plan; best.__at = at; }
+          for (const f of plan.failed) if (whys.length < 8) whys.push(f.why);
+        }
+      }
+    }
+    return { plan: null, bestPlan: best, at: best ? best.__at : null, R: null,
+             cands: cands, screened: screened, solved: solved, whys: whys,
+             ms: Math.round(now() - t0) };
   }
 
   // Slot geometry, borrowed from BattleStage3D.CFG.form so the two stages block
@@ -601,21 +795,22 @@
     const art = (S3D && S3D.art) || { models: {}, base: 'assets/', modelDir: 'monsters/3d/' };
 
     const party = (cfg.party || []), foes = (cfg.foes || []);
-    const plan = solveArena({ slots: slotsFor(party, foes) });
-
-    // A FIGHT THAT CANNOT STAND DOES NOT STAND. If the real ground refuses even
-    // one combatant the world arena RETURNS NULL, which battle_turnbased already
-    // handles: it falls through to the DOM stage. (The right production answer is
-    // to fall back to the diorama instead — one line, and it is called out in the
-    // return; a spike that silently degrades to a worse look would hide exactly
-    // the number §Q2 exists to measure.)
-    if (!plan.ok && !cfg.forcePlace) {
-      console.warn('[BattleWorld] placement refused', plan.failed);
-      window.__BW_LAST_PLAN = plan;
+    // A REFUSAL RELOCATES; IT DOES NOT SWITCH ARENAS (user ruling 2026-08-08).
+    // stageArena walks the measured ring/bearing ladder and hands back the site
+    // it staged on. Returning null here is NOT a fallback to the diorama any
+    // more — it is the crash guard, reached only if the world refused all 25
+    // sites, which the 160-cell sweep never saw once.
+    const site = stageArena(slotsFor(party, foes));
+    const plan = site.plan || (cfg.forcePlace ? site.bestPlan : null);
+    if (!plan) {
+      console.warn('[BattleWorld] every ring and bearing refused', site);
+      window.__BW_LAST_SITE = site;
       window.BattleWorld.refused++;
       return null;
     }
     window.__BW_LAST_PLAN = plan;
+    window.__BW_LAST_SITE = site;
+    if (site.R) window.BattleWorld.relocated++;
 
     const root = new TH.Group();
     root.name = 'bw_root';
@@ -636,6 +831,16 @@
     // before the fix: the foes' feet projected at y 778 of 813. Every pose the
     // shot solver emits therefore carries tilt 0, and teardown restores 0.16.
     const P0 = (function () { const p = S.pos(); return { x: p.x, y: p.y, z: p.z }; })();
+    // TWO ANCHORS, AND CONFUSING THEM IS THE ONE WAY RELOCATION BREAKS.
+    // P0 = where the PLAYER'S BODY is. It is the origin ORBIT's pan is measured
+    //      from (play3d recomputes `target = P + pan` every frame), so every
+    //      world aim -> pan conversion has to go through it and it must never be
+    //      the arena's centre.
+    // A0 = where the FIGHT is — the site the ladder staged on, which is P0 only
+    //      when the ladder accepted ring 0. Everything about the arena's own
+    //      geometry (which side of the axis a body stands on, the 180-degree
+    //      reference eye, the degenerate aim) is measured from here.
+    const A0 = { x: plan.basis.centre[0], y: plan.basis.centre[1], z: plan.basis.centre[2] };
     const baseYaw = (plan && plan.basis) ? plan.basis.yaw : O.yaw;
     const basePitch = (plan && plan.basis && plan.basis.pitch != null) ? plan.basis.pitch : CFG.cam.pitch;
 
@@ -739,7 +944,7 @@
     // party's side when partySide is -1. Derived, never assumed from the id.
     function sideSign(b) {
       const rx = Math.sin(baseYaw), rz = -Math.cos(baseYaw);
-      const d = (b.home.x - P0.x) * rx + (b.home.z - P0.z) * rz;
+      const d = (b.home.x - A0.x) * rx + (b.home.z - A0.z) * rz;
       return d < 0 ? -1 : 1;
     }
     function solveShot(kind, o) {
@@ -770,7 +975,7 @@
       // AIM: the subject group's own centre of mass at chest height.
       let n = 0;
       for (const s2 of subjP) { pose.ax += s2.p.x; pose.ay += s2.p.y + s2.b.h * 0.52; pose.az += s2.p.z; n++; }
-      if (!n) { pose.ax = P0.x; pose.ay = P0.y + 1; pose.az = P0.z; n = 1; }
+      if (!n) { pose.ax = A0.x; pose.ay = A0.y + 1; pose.az = A0.z; n = 1; }
       pose.ax /= n; pose.ay /= n; pose.az /= n;
       // DISTANCE: solved so every one of the subject's own extremes — feet, head,
       // and its own measured half-width either side — lands inside the fill band.
@@ -1065,13 +1270,17 @@
     // refused if it would put the eye on the other one.
     (function openingShot() {
       camBasis(baseYaw, basePitch, camB);
-      axisRef = axisSign(P0.x + camB.boom.x * CFG.cam.dist, P0.z + camB.boom.z * CFG.cam.dist);
+      axisRef = axisSign(A0.x + camB.boom.x * CFG.cam.dist, A0.z + camB.boom.z * CFG.cam.dist);
       if (!camOn()) {
         // THE SPIKE'S OWN POSE, to the number: one boom, one pitch, tilt to zero,
         // the pan left where the player had it, eased over CFG.cam.ms. This is
         // what `?bcam=0` gets and it is what the before column measures.
-        goTo({ kind: 'fixed', ax: P0.x + camSaved.panX, ay: P0.y + 1 + camSaved.panY,
-               az: P0.z + camSaved.panZ, yaw: baseYaw, pitch: CFG.cam.pitch,
+        // A0, NOT P0: the spike wrote P0 here because the arena WAS the player's
+        // own cell and the two were the same point. With the ladder they are not,
+        // and aiming the ?bcam=0 arm at the player would frame the place the
+        // fight ISN'T. The pan offset the player had is preserved either way.
+        goTo({ kind: 'fixed', ax: A0.x + camSaved.panX, ay: A0.y + 1 + camSaved.panY,
+               az: A0.z + camSaved.panZ, yaw: baseYaw, pitch: CFG.cam.pitch,
                dist: CFG.cam.dist, fov: camSaved.fov == null ? 42 : camSaved.fov, tilt: 0 },
               CFG.cam.ms, 'out', 'entry(fixed)');
         return;
@@ -1444,6 +1653,15 @@
       get frames() { return W.R.info.render.frame; },
       get ticks() { return ticks; },
       plan: plan,
+      // WHERE THIS FIGHT STAGED, and how far from the player it moved to do it —
+      // the receipt the relocation ruling is checkable against, off the live
+      // stage. `player` is the body's own position at create(): this path never
+      // moves it, and teardown asserts it is still there.
+      site: { R: site.R, d: site.d == null ? 0 : site.d, dy: site.dy == null ? 0 : site.dy,
+              bearing: site.bearing == null ? null : site.bearing,
+              at: { x: +A0.x.toFixed(3), y: +A0.y.toFixed(3), z: +A0.z.toFixed(3) },
+              player: { x: +P0.x.toFixed(3), y: +P0.y.toFixed(3), z: +P0.z.toFixed(3) },
+              cands: site.cands, screened: site.screened, solved: site.solved, ms: site.ms },
       anchor: anchor,
       tierOf(id) { return bodies[id] ? bodies[id].tier : null; },
       tiers() { const o = {}; for (const id of order) o[id] = bodies[id].tier; return o; },
@@ -1614,6 +1832,11 @@
       // field-by-field from the copy taken at create(), the player's body
       // visibility restored by identity. It touches no `at`, emits no 'eb-scene',
       // writes no save, and never calls SIM.tp().
+      // THAT LAST CLAUSE IS NOW LOAD-BEARING. Relocation moves the ARENA, not the
+      // player, so "the player is returned exactly where they stood, whatever
+      // distance the fight relocated" is true by construction rather than by a
+      // restore that could be forgotten: there is no player-position write on
+      // this path to undo. Do not "improve" relocation by teleporting the body.
       destroy() {
         if (deadStage) return;
         deadStage = true;
@@ -1663,8 +1886,11 @@
   // back at runtime (BattleWorld.enabled = false) and get the diorama.
   const api = {
     version: 1, on: true, installed: false, enabled: true, _live: null,
-    created: 0, refused: 0,
+    created: 0, refused: 0, relocated: 0, crashed: 0,
     CFG: CFG,
+    // THE LADDER, live — an instrument can shorten it or widen a ring without a
+    // code change, the same way --vismin / --bcam / --pitches work.
+    RELOC: RELOC,
     // THE SHOT TABLE, live. `BattleWorld.CAM.on = false` is the A/B switch the
     // board is built from — one build, one flag, everything else identical.
     CAM: CAM,
@@ -1672,13 +1898,26 @@
     solve(o) { return solveArena(o || { slots: slotsFor([{ id: 'a' }, { id: 'b' }], [{ id: 'm0' }, { id: 'm1' }]) }); },
     solveArena: solveArena,
     solveFixed: solvePlacement,
+    // THE SHIPPED STAGING PATH, callable. createWorldStage calls exactly this, so
+    // an instrument that times `stage()` is timing what a battle pays, and one
+    // that reads its `.R` is reading how far the fight really moved.
+    stage(slots) {
+      return stageArena(slots || slotsFor([{ id: 'a' }, { id: 'b' }], [{ id: 'm0' }, { id: 'm1' }]));
+    },
+    screenYaws: screenYaws,
     slotsFor: slotsFor,
     worldReady: worldReady,
     _debug() {
       return { on: true, installed: api.installed, enabled: api.enabled,
                worldReady: worldReady(), live: !!api._live,
                three: T() ? T().REVISION : null,
-               lastPlan: window.__BW_LAST_PLAN || null };
+               created: api.created, refused: api.refused,
+               relocated: api.relocated, crashed: api.crashed,
+               rings: RELOC.rings.map(r => r.R),
+               occluders: (occluders() || []).length,
+               scatterDropped: _rc.dropped.slice(),
+               lastPlan: window.__BW_LAST_PLAN || null,
+               lastSite: window.__BW_LAST_SITE || null };
     },
   };
   window.BattleWorld = api;
@@ -1686,13 +1925,22 @@
   function patch(mod) {
     if (!mod || mod.__bwPatched) return mod;
     const orig = mod.create;
+    // THERE IS NO DIORAMA FALLBACK ON THIS PATH (user ruling 2026-08-08). The
+    // world arena used to answer a refusal by calling `orig` — the diorama — and
+    // that line is deleted. A refusal now relocates inside createWorldStage (see
+    // stageArena), and if even that fails we return NULL, which battle_turnbased
+    // resolves to its DOM stage: the coarsest tier, a crash guard, and NOT a
+    // second arena to maintain. `BattleWorld.enabled = false` still hands the
+    // whole page back to the diorama in one assignment — that is the A/B switch
+    // the boards are built from and it is deliberately not a fallback.
     mod.create = function (cfg) {
       if (!api.enabled) return orig.call(mod, cfg);
-      let st = null;
-      try { st = createWorldStage(cfg); }
-      catch (e) { console.warn('[BattleWorld] world arena failed, falling back to the diorama', e); st = null; }
-      if (st) return st;
-      return orig.call(mod, cfg);
+      try { return createWorldStage(cfg); }
+      catch (e) {
+        console.warn('[BattleWorld] world arena threw — DOM stage (crash guard)', e);
+        api.crashed++;
+        return null;
+      }
     };
     mod.__bwPatched = true;
     api.installed = true;

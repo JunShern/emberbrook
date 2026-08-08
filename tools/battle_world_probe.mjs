@@ -463,10 +463,11 @@ const TEARDOWN = `(async () => {
   // ground refuses, and the diorama answers instead).
   const pr = window.Battle.start({ zone: zone, group: ['reed-nibbler'], seed: 99,
       backdrop: zd && zd.battleBackdrop }, party, { speed: 0, autoplay: true, fade: () => Promise.resolve() });
-  let sawWorld = null, sawCanvases = null;
+  let sawWorld = null, sawCanvases = null, sawSite = null;
   for (let i = 0; i < 200; i++) {
     const s = window.__EBB_SCREEN && window.__EBB_SCREEN.stage;
-    if (s) { sawWorld = !!s.world; sawCanvases = document.querySelectorAll('canvas').length; break; }
+    if (s) { sawWorld = !!s.world; sawCanvases = document.querySelectorAll('canvas').length;
+             sawSite = s.site || null; break; }
     await new Promise(r => setTimeout(r, 50));
   }
   const res = await pr;
@@ -487,12 +488,165 @@ const TEARDOWN = `(async () => {
   scene.traverse(o => { if (o.userData && o.userData.isBattleWorld) residue.push(o.name || '(anon)'); });
   const roots = document.querySelectorAll('.ebb-root').length;
   return { outcome: res && res.outcome, sawWorldStage: sawWorld, canvasesDuringBattle: sawCanvases,
+           sawSite: sawSite,
            bwCreated: window.BattleWorld ? window.BattleWorld.created : null,
            bwRefused: window.BattleWorld ? window.BattleWorld.refused : null,
            plan: window.__BW_LAST_PLAN ? { ok: window.__BW_LAST_PLAN.ok, failed: window.__BW_LAST_PLAN.failed } : null,
            base, after, residue, ebbRoots: roots,
            sceneEvents, uilock: !!(window.UILOCK && UILOCK.active()),
            battleActive: !!window.Battle.active };
+})()`;
+
+// ---- MODE: stageperf ------------------------------------------------------
+// A BATTLE MUST NOT TAKE SECONDS TO START, so the ladder is timed on the path a
+// battle actually walks: BattleWorld.stage(), the same call createWorldStage
+// makes, at real cells the player can stand on. Cells come from placement.json,
+// which labels each one with the OLD single-solve verdict — so the sample can be
+// split into the fast path (cells that stage where the player stands) and the
+// SLOW PATH (cells the old search refused, which are now the ones that walk the
+// rings). Reports both, because a p95 taken only over cells that never relocate
+// is not a measurement of relocation.
+const stageDriver = (pts) => `(async () => {
+  const PTS = ${JSON.stringify(pts)};
+  const out = [];
+  const slots = BattleWorld.slotsFor([{id:'vesper'},{id:'maren'}], [{id:'m0'},{id:'m1'}]);
+  for (const p of PTS) {
+    const f = SIM.floors(p.x, p.z) || [];
+    let y = f.length ? f[0] : p.y;
+    for (const v of f) if (Math.abs(v - p.y) < Math.abs(y - p.y)) y = v;
+    SIM.tp(p.x, p.z, y);
+    SIM.tick(3);
+    const P = SIM.pos();
+    if (!isFinite(P.y) || Math.abs(P.y - p.y) > 3) { out.push({ from: [p.x, p.z], was: p.ok, skipped: true }); continue; }
+    // THE MEASUREMENT. One call, cold — the occluder set is rebuilt at most every
+    // 2 s inside the module, which is the same cache a real battle gets.
+    const t0 = performance.now();
+    const s = BattleWorld.stage(slots);
+    const ms = performance.now() - t0;
+    out.push({ from: [p.x, p.z], was: p.ok, ok: !!s.plan, R: s.R,
+               d: s.d == null ? 0 : s.d, dy: s.dy == null ? 0 : s.dy,
+               bearing: s.bearing == null ? null : s.bearing,
+               cands: s.cands, screened: s.screened, solved: s.solved,
+               yawDelta: s.plan ? s.plan.yawDelta : null,
+               ms: +ms.toFixed(1) });
+  }
+  return out;
+})()`;
+
+// ---- MODE: raycost --------------------------------------------------------
+// WHERE THE SECONDS GO. The staging solve is raycasts and nothing else, so this
+// splits the bill: the geometry half (ground / blocked, vis:false) against the
+// visibility half (vis:true), then times the module's OWN occluder set one mesh
+// at a time so the worst offenders can be named rather than guessed at.
+const rayDriver = `(async () => {
+  const TH = window.THREE;
+  const P = SIM.pos();
+  const slots = BattleWorld.slotsFor([{id:'vesper'},{id:'maren'}], [{id:'m0'},{id:'m1'}]);
+  const base = (window.ORBIT && window.ORBIT.yaw) || 0;
+  const t = (f, n) => { const t0 = performance.now(); for (let i = 0; i < n; i++) f(i); return (performance.now() - t0) / n; };
+  const msGeom = t(i => BattleWorld.solveFixed({ slots: slots, at: P, yaw: base + i * 0.31, vis: false }), 10);
+  const msVis  = t(i => BattleWorld.solveFixed({ slots: slots, at: P, yaw: base + i * 0.31, vis: true  }), 10);
+  // the occluder set, as the module builds it
+  const set = [];
+  scene.traverse(o => {
+    if (!(o.isMesh || o.isInstancedMesh) || o.isSkinnedMesh) return;
+    if (o.userData && (o.userData.isWalk || o.userData.isBattleWorld)) return;
+    if (/^(__owsky|__owridge|__owveil|amb_|bw_)/.test(o.name || '')) return;
+    if (o.visible) set.push(o);
+  });
+  const rc = new TH.Raycaster();
+  const dirs = [];
+  for (let i = 0; i < 24; i++) dirs.push(new TH.Vector3(Math.cos(i), 0.35, Math.sin(i)).normalize());
+  const eye = new TH.Vector3(P.x, P.y + 3.5, P.z);
+  const per = [];
+  for (const o of set) {
+    const t0 = performance.now();
+    for (const d of dirs) { rc.set(eye, d); rc.far = 40; rc.intersectObject(o, true); }
+    per.push({ name: o.name || '(anon)', us: +((performance.now() - t0) / dirs.length * 1000).toFixed(1),
+               tris: o.geometry && o.geometry.index ? o.geometry.index.count / 3
+                     : (o.geometry && o.geometry.attributes.position ? o.geometry.attributes.position.count / 3 : null),
+               bvh: !!(o.geometry && o.geometry.boundsTree),
+               inst: !!o.isInstancedMesh, accel: o.raycast === (window.MeshBVHLib && MeshBVHLib.acceleratedRaycast) });
+  }
+  per.sort((a, b) => b.us - a.us);
+  // WHAT THE EXPENSIVE ONES ACTUALLY ARE. An InstancedMesh raycast loops every
+  // instance, so cost tracks instance COUNT and not triangle count — and whether
+  // the thing is tall enough to hide a body is the only question that decides
+  // whether it belongs in an occluder set at all.
+  for (const p of per.slice(0, 15)) {
+    const o = set.find(m => (m.name || '(anon)') === p.name);
+    if (!o) continue;
+    p.count = o.isInstancedMesh ? o.count : 1;
+    const bb = new TH.Box3().setFromObject(o);
+    p.height = +(bb.max.y - bb.min.y).toFixed(2);
+    if (o.isInstancedMesh && o.geometry) {
+      o.geometry.computeBoundingBox();
+      const g = o.geometry.boundingBox;
+      p.pieceH = +((g.max.y - g.min.y) * (o.scale ? o.scale.y : 1)).toFixed(2);
+    }
+  }
+  const t0 = performance.now();
+  for (const d of dirs) { rc.set(eye, d); rc.far = 40; rc.intersectObjects(set, true); }
+  const usWholeSet = (performance.now() - t0) / dirs.length * 1000;
+  // 'set' above is the RAW drawn set — every visible mesh, the rule as it stood
+  // before ground scatter was measured out of it. What the module actually uses
+  // is its own, so report both: the difference IS the fix. (Plain quotes: a
+  // backtick in a comment inside a template literal ends the literal — CLAUDE.md
+  // names this trap and it cost this lane one silently stale artifact.)
+  const dbg = BattleWorld._debug();
+  return { rawDrawnSet: set.length, moduleOccluders: dbg.occluders,
+           moduleDropped: dbg.scatterDropped,
+           occluders: set.length, withBVH: per.filter(p => p.bvh).length,
+           accelerated: per.filter(p => p.accel).length,
+           instanced: per.filter(p => p.inst).length,
+           bvhStats: SIM.bvh ? SIM.bvh() : null,
+           usPerRayWholeSet: +usWholeSet.toFixed(1),
+           msSolveGeomOnly: +msGeom.toFixed(1), msSolveWithVis: +msVis.toFixed(1),
+           worst: per.slice(0, 15) };
+})()`;
+
+// TRIGGER TO FIRST BATTLE FRAME, end to end: the clock starts on Battle.start —
+// the call an encounter makes — and stops on the first frame the world stage has
+// ticked. Nothing is mocked and the entry fade is included, because the player's
+// wait includes it.
+const e2eDriver = (spot) => `(async () => {
+  const GS2 = window.GS, RU = window.Rules;
+  GS2.setFlags({ 'maren-joined': true });
+  const f = SIM.floors(${spot[0]}, ${spot[1]}) || [];
+  SIM.tp(${spot[0]}, ${spot[1]}, f.length ? f[0] : null);
+  SIM.tick(3);
+  const pos0 = SIM.pos();
+  const items = GS2.data.items.items, growth = GS2.data.growth;
+  const party = GS2.activeParty().filter(c => ['vesper','maren'].indexOf(c.id) >= 0)
+                 .map(c => RU.derive.partyMember(growth, items, c));
+  const zone = SIM.zone(pos0.x, pos0.z) || 'meadow';
+  const zd = GS2.data.encounters.zones[zone] || GS2.data.encounters.zones.meadow;
+  const t0 = performance.now();
+  const pr = window.Battle.start({ zone: zone, group: ['reed-nibbler','reed-nibbler'], seed: 7,
+      backdrop: zd && zd.battleBackdrop }, party, { speed: 1 });
+  pr.then(()=>{}, ()=>{});
+  let tStage = null, tFrame = null, st = null;
+  for (let i = 0; i < 1200; i++) {
+    const s = window.__EBB_SCREEN && window.__EBB_SCREEN.stage;
+    if (s) { st = s; tStage = performance.now() - t0; break; }
+    await new Promise(r => requestAnimationFrame(r));
+  }
+  if (st) for (let i = 0; i < 600; i++) {
+    if (st.ticks >= 1) { tFrame = performance.now() - t0; break; }
+    await new Promise(r => requestAnimationFrame(r));
+  }
+  const site = st && st.site ? st.site : null;
+  const world = st ? !!st.world : null;
+  // tear the fight down again so the next spot starts clean
+  try { if (st) st.destroy(); } catch (e) { }
+  const s2 = window.__EBB_SCREEN;
+  try { if (s2 && s2.destroy) s2.destroy(); } catch (e) { }
+  window.__EBB_SCREEN = null; window.Battle.active = false;
+  document.querySelectorAll('.ebb-root').forEach(n => n.remove());
+  try { window.UILOCK && UILOCK.unlock('battle'); } catch (e) { }
+  return { at: [${spot[0]}, ${spot[1]}], world: world, site: site,
+           msToStage: tStage == null ? null : +tStage.toFixed(0),
+           msToFirstFrame: tFrame == null ? null : +tFrame.toFixed(0) };
 })()`;
 
 // FPS IS COUNTED IN rAF CALLBACKS, NOT IN renderer.info.render.frame. The world's
@@ -599,6 +753,82 @@ const FPSDRIVE = (worldMode) => `(async () => {
   console.log(`knobs: visMin=${knobs.visMin}  CAM.on=${knobs.camOn}  pitches=[${knobs.pitches}]`
             + `   [vis test = ${knobs.visMin > 0 ? 'NINE-SAMPLE (new)' : 'TWO SPINE RAYS (old)'};`
             + ` sweep = ${knobs.camOn ? (knobs.pitches.length > 1 ? 'yaw x pitch, best (new)' : 'yaw only, BEST (isolated)') : 'yaw only, first (old)'}]`);
+
+  if (MODE === 'raycost') {
+    await ev(cdp, `SIM.tp(-66.88, 45.62, (SIM.floors(-66.88,45.62)||[0])[0]); SIM.tick(3); true`);
+    const r = await ev(cdp, rayDriver, 600000);
+    console.log(JSON.stringify(r, null, 2));
+    writeFileSync(join(OUT, 'raycost.json'), JSON.stringify(r, null, 2));
+    cdp.close(); kill(); process.exit(0);
+  }
+
+  if (MODE === 'stageperf') {
+    const src = JSON.parse(readFileSync(join(OUT, 'placement.json'), 'utf8')).rows
+      .filter(r => r.ok !== null && isFinite(r.x));
+    // BOTH PATHS, INTERLEAVED, so a drifting machine cannot be mistaken for a
+    // difference between them: every other cell is one the old search refused.
+    const good = src.filter(r => r.ok), bad = src.filter(r => !r.ok);
+    const half = Math.max(1, Math.floor(N / 2));
+    const pick = [];
+    for (let i = 0; i < half; i++) {
+      if (bad[i]) pick.push(bad[i]);
+      if (good[i]) pick.push(good[i]);
+    }
+    console.log(`stageperf: ${pick.length} cells (${pick.filter(r => !r.ok).length} the old search REFUSED), rings [${'0,5,8,11,13'}]`);
+    const rows = [];
+    const CH = 3;
+    const t0 = Date.now();
+    for (let i = 0; i < pick.length; i += CH) {
+      const r = await ev(cdp, stageDriver(pick.slice(i, i + CH)), 900000);
+      rows.push(...r);
+      const el = (Date.now() - t0) / 1000;
+      process.stdout.write(`  ${rows.length}/${pick.length}  ${el.toFixed(0)}s   \r`);
+    }
+    const live = rows.filter(r => !r.skipped);
+    const srt = a => a.slice().sort((x, y) => x - y);
+    const pct = (a, p) => (a.length ? a[Math.min(a.length - 1, Math.floor(a.length * p))] : null);
+    const band = (rs) => {
+      const ms = srt(rs.map(r => r.ms));
+      return { n: rs.length, ok: rs.filter(r => r.ok).length,
+               p50: pct(ms, 0.5), p95: pct(ms, 0.95), max: ms[ms.length - 1] };
+    };
+    // END TO END, WORST-CASE-WEIGHTED: the five slowest cells this sample found,
+    // five spread evenly through the rest, and a control that stages where the
+    // player stands. A p95 taken over easy cells is not a worst case.
+    const bySlow = live.slice().sort((a, b) => b.ms - a.ms);
+    const worst = bySlow.slice(0, 5).map(r => r.from);
+    const rest = bySlow.slice(5);
+    const spread = [];
+    for (let i = 0; i < 5 && rest.length; i++) spread.push(rest[Math.floor(i * rest.length / 5)].from);
+    const control = (live.find(r => r.was && r.R === 0) || live[0]).from;
+    const e2e = [];
+    for (const sp of [control].concat(worst, spread)) {
+      process.stdout.write(`\n  e2e ${sp} ... `);
+      try { const r = await ev(cdp, e2eDriver(sp), 300000); e2e.push(r); console.log(`${r.msToFirstFrame} ms  world=${r.world}  moved=${r.site ? r.site.d : '?'} m`); }
+      catch (err) { console.log('EXCEPTION ' + err.message); e2e.push({ at: sp, error: err.message }); }
+      await sleep(800);
+    }
+    const e2ems = srt(e2e.filter(r => r.msToFirstFrame != null).map(r => r.msToFirstFrame));
+    const summary = {
+      arm: { visMin: knobs.visMin, camOn: knobs.camOn, pitches: knobs.pitches },
+      sampled: live.length, skipped: rows.length - live.length,
+      ok: live.filter(r => r.ok).length,
+      rate: +(live.filter(r => r.ok).length / Math.max(1, live.length) * 100).toFixed(1),
+      solve_ms_all: band(live),
+      solve_ms_oldRefused: band(live.filter(r => !r.was)),
+      solve_ms_oldStaged: band(live.filter(r => r.was)),
+      ringHistogram: [0, 5, 8, 11, 13].map(R => [R, live.filter(r => r.ok && r.R === R).length]),
+      dist: { p50: pct(srt(live.filter(r => r.ok).map(r => r.d)), 0.5),
+              p90: pct(srt(live.filter(r => r.ok).map(r => r.d)), 0.9),
+              max: srt(live.filter(r => r.ok).map(r => r.d)).slice(-1)[0] },
+      e2e_ms_toFirstFrame: { n: e2ems.length, p50: pct(e2ems, 0.5), p95: pct(e2ems, 0.95), max: e2ems[e2ems.length - 1] },
+      e2e: e2e,
+      residual: live.filter(r => !r.ok).map(r => r.from),
+    };
+    console.log('\n' + JSON.stringify(summary, null, 2));
+    writeFileSync(join(OUT, 'stageperf.json'), JSON.stringify({ summary, rows }, null, 2));
+    cdp.close(); kill(); process.exit(0);
+  }
 
   if (MODE === 'place' && RELOC != null) {
     const maxR = parseFloat(RELOC);
@@ -776,10 +1006,16 @@ const FPSDRIVE = (worldMode) => `(async () => {
   }
 
   if (MODE === 'teardown') {
-    await ev(cdp, `SIM.tp(38.12, -26.88, SIM.floors(38.12,-26.88)[0]); SIM.tick(3); true`);
+    // `--at=x,z` picks the cell. The default stages where the player stands; a
+    // cell the ladder RELOCATES from is the one that proves the ruling's own
+    // obligation ("the player is returned exactly where they stood, whatever
+    // distance the fight relocated"), so the receipt must be taken at both.
+    const AT = arg('at', '38.12,-26.88').split(',').map(parseFloat);
+    console.log(`teardown at ${AT}`);
+    await ev(cdp, `SIM.tp(${AT[0]}, ${AT[1]}, SIM.floors(${AT[0]},${AT[1]})[0]); SIM.tick(3); true`);
     const r = await ev(cdp, TEARDOWN, 300000);
     console.log(JSON.stringify(r, null, 2));
-    writeFileSync(join(OUT, 'teardown.json'), JSON.stringify(r, null, 2));
+    writeFileSync(join(OUT, arg('outfile', 'teardown.json')), JSON.stringify(r, null, 2));
     cdp.close(); kill(); process.exit(0);
   }
 
