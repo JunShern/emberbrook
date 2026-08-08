@@ -37,11 +37,11 @@
 // A REAL GPU (no --use-angle), frames asserted climbing before every capture, and
 // Chrome launched + reaped through its own --user-data-dir prefix via cdp.mjs.
 import { spawn } from 'node:child_process';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import { freePort, findPage } from './cdp.mjs';
+import { freePort, findPage, sweepStaleProfiles } from './cdp.mjs';
 
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
@@ -67,6 +67,12 @@ const URL = `http://localhost:${PORT}/play3d.html?scene=ow-valley&rt=1&nomusic=1
           + (ARENA ? `&arena=${encodeURIComponent(ARENA)}` : '');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// EVERY PROFILE THIS TOOL HAS EVER LEFT BEHIND, before it makes another one. A
+// run of this tool costs ~100 MB of Chrome profile and twelve of them had already
+// accumulated; the repo's rule about a browser tool reaping after itself is about
+// swap, but the disk half is free to honour. Only this tool's own prefix is
+// touched, and only entries older than the default age.
+sweepStaleProfiles('battle-ko-shots-');
 const profile = join(process.env.TMPDIR || '/tmp', 'battle-ko-shots-' + process.pid);
 const chrome = spawn(CHROME, [
   `--remote-debugging-port=${CDP_PORT}`, `--user-data-dir=${profile}`,
@@ -77,7 +83,12 @@ const chrome = spawn(CHROME, [
   URL,
 ], { stdio: 'ignore' });
 let closing = false;
-const kill = () => { if (!closing) { closing = true; try { chrome.kill('SIGKILL'); } catch (e) { } } };
+const kill = () => {
+  if (closing) return;
+  closing = true;
+  try { chrome.kill('SIGKILL'); } catch (e) { }
+  try { rmSync(profile, { recursive: true, force: true }); } catch (e) { }
+};
 process.on('exit', kill);
 process.on('SIGINT', () => { kill(); process.exit(130); });
 
