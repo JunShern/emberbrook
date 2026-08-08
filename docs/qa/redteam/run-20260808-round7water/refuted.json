@@ -1,0 +1,315 @@
+[
+ {
+  "fid": "F5",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "lower tree on the right cliff",
+  "bbox": [
+   0.66,
+   0.59,
+   0.78,
+   0.78
+  ],
+  "severity": 1,
+  "desc": "The lower tree's leaf clusters float in mid-air with visible gaps between them and the trunk.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-0.8,11,-0.3,4.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -0.8,11,-0.3,4.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Layered, stylized leaf clusters with slight spacing are standard for this painterly/low-poly foliage art style."
+  }
+ },
+ {
+  "fid": "F13",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "tree on the right cliff face",
+  "bbox": [
+   0.696,
+   0.247,
+   0.914,
+   0.628
+  ],
+  "severity": 1,
+  "desc": "The tree trunk and foliage clip directly out of the smooth cliff rock face without roots or an anchor.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-0.8,12.9,-6.7,4.2",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -0.8,12.9,-6.7,4.2"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tree is visibly anchored to the cliff wall by a wooden scaffolding frame structure behind it."
+  }
+ },
+ {
+  "fid": "F14",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "geometry",
+  "where": "fence posts along the lower path edge",
+  "bbox": [
+   0.413,
+   0.58,
+   0.462,
+   0.998
+  ],
+  "severity": 1,
+  "desc": "The bottom of the wooden fence posts float slightly above the sloping rock terrain instead of meeting the ground.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-1.9,13.9,6.1,10.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -1.9,13.9,6.1,10.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The fence posts are mounted onto a continuous wooden beam running along the edge of the path rather than floating above the ground."
+  }
+ },
+ {
+  "fid": "F22",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "lower bush on the right cliff face",
+  "bbox": [
+   0.667,
+   0.598,
+   0.79,
+   0.781
+  ],
+  "severity": 1,
+  "desc": "The bush cluster floats against the sheer rock face without any visible trunk, root, or soil supporting it.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-1,10.9,-0.5,4.3",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -1,10.9,-0.5,4.3"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Placing foliage clusters directly onto cliff walls to decorate sheer surfaces is standard practice for stylized environments."
+  }
+ },
+ {
+  "fid": "F2",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "immersion",
+  "where": "water surface in the middle ground",
+  "bbox": [
+   0.393,
+   0.48,
+   0.439,
+   0.545
+  ],
+  "severity": 1,
+  "desc": "A wooden plank floats on the water surface without visible physics or support structures.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "99.9,107.6,30.6,37.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 99.9,107.6,30.6,37.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Wooden planks naturally float on water, so requiring supporting structures beneath floating debris in a dock environment is unnecessary."
+  }
+ },
+ {
+  "fid": "F10",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "geometry",
+  "where": "floating rectangular plane on the water near the pier",
+  "bbox": [
+   0.392,
+   0.48,
+   0.44,
+   0.543
+  ],
+  "severity": 2,
+  "desc": "A thin rectangular plane floats unexplained over the water near the dock structure.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "100.1,107.5,30.6,37.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 100.1,107.5,30.6,37.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The object is an intended wooden plank floating on the harbor water as environmental clutter rather than an untextured technical geometry error."
+  }
+ },
+ {
+  "fid": "F20",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "immersion",
+  "where": "floating board in the water",
+  "bbox": [
+   0.393,
+   0.481,
+   0.439,
+   0.545
+  ],
+  "severity": 1,
+  "desc": "A green wooden board floats flat on the water surface without any supporting structure or physics interaction.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "99.9,107.5,30.6,37.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 99.9,107.5,30.6,37.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Wood naturally possesses buoyancy, so floating flat on the water surface without underlying pillars is expected physics behavior."
+  }
+ },
+ {
+  "fid": "F40",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "navigation",
+  "where": "upper walkway network along the cliff face",
+  "bbox": [
+   0.42,
+   0.18,
+   0.68,
+   0.55
+  ],
+  "severity": 2,
+  "desc": "Overlapping wooden platforms, ladders, and structural supports blend together against the dark rock wall, making walkable routes ambiguous.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The upper cliff walkways are clearly delineated by distinct platforms, guardrails, and lighting that form readable tiered routes."
+  }
+ },
+ {
+  "fid": "F41",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "immersion",
+  "where": "rock wall texture on the far left background",
+  "bbox": [
+   0,
+   0,
+   0.48,
+   0.48
+  ],
+  "severity": 1,
+  "desc": "The large cavern/cliff wall on the left terminates abruptly into dark shadow, making the environment boundary feel incomplete.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "72.8,151.2,1.8,50.8",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 72.8,151.2,1.8,50.8"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The dark areas on the cavern wall represent normal atmospheric shadowing rather than unfinished environment geometry."
+  }
+ },
+ {
+  "fid": "F45",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "immersion",
+  "where": "left background wall and horizon",
+  "bbox": [
+   0,
+   0,
+   0.48,
+   0.55
+  ],
+  "severity": 1,
+  "desc": "The massive dark cliff wall on the left terminates abruptly into a flat empty backdrop, revealing the edge of the world geometry.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "82.5,151.2,1.8,50.8",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 82.5,151.2,1.8,50.8"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The rock face extends across the background into atmospheric fog rather than terminating to reveal missing world geometry."
+  }
+ },
+ {
+  "fid": "F37",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "north-landing",
+  "item": null,
+  "category": "navigation",
+  "where": "central elevated walkway and scaffolding",
+  "bbox": [
+   0.05,
+   0.35,
+   0.52,
+   0.58
+  ],
+  "severity": 2,
+  "desc": "The main wooden walkway leads directly into a complex web of scaffolding, making the intended path forward ambiguous.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The green walkway clearly serves as a straightforward main route into the village architecture, which is standard environmental level design."
+  }
+ }
+]

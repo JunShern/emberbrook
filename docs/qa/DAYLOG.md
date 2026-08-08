@@ -21283,3 +21283,240 @@ documented pair, unchanged; the live run's zero-404 audit is the receipt.
 Cleanup: this lane's worktree removed, scratch `dist` and both `static-verify*.png` deleted,
 zero orphaned Chrome (`ppid 1` root check clean). The two stale worktrees from earlier
 sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+------------------------------------------------------------
+## 2026-08-08 — DELLHOLLOW GRAPHICS ROUND 7: ONE HANDED-OVER ITEM IS REFUTED AT THE
+## JUDGE'S OWN BOX. THE OTHER IS THE WATER — AND THE WATER IS A MIRROR, SO WHAT IT SHOWS
+## CHANGES WITH DISTANCE
+
+Board with every table: docs/qa/dellhollow-graphics/index.html (round-7 section). Judge run
+docs/qa/redteam/run-20260808-round7water/index.html. Commits 06108d2e (carrier + master),
+05289439 (the five plates), and the instrument + board below.
+
+ROUND 6 HANDED OVER TWO ITEMS. THE FIRST IS REFUTED, AND THE REFUTATION IS ROUND 6'S OWN
+OPENING LESSON APPLIED TO ROUND 6: READ THE BOX, NOT THE SENTENCE.
+
+(1) "THE FAR FIELD IS GREYBOX" — NEITHER NAMED PLATE SHOWS ONE. Every `[QUALITY]` bbox in
+`run-20260808-round6phase/findings.json` put on the geometry by a marched ray census over all
+fifteen cameras:
+  gate       frame-edge WEAK  u 0.00..0.47 v 0.00..0.40, 18.78% of frame:
+             **83.2% `cliff_east_closure | mat_rock_gorgewall` at 168 m** — a TEXTURED rock,
+             wearing round 4's own named veining residual. 2.3% water. Not a placeholder.
+  shelf-east frame-edge WEAK  u 0.00..0.26 v 0.50..0.99, 12.71% of frame:
+             **42.1% `shelf_cliffface` + 45.6% `shelf_home_b/_c` roof shingle AT 8..14 m**,
+             distance p50 **11 m**. NEAR-FIELD HOUSING. The handover carried the 5.80% figure,
+             which was round 6's measurement of round FIVE's box (u 0.50..1.00 v 0.00..0.30) —
+             superseded when the verdict moved to the opposite corner of the frame.
+  AND THE JUDGE'S WORDS AND ITS BOX DISAGREE ON THAT PLATE: the sentence says "background rock
+  and sky geometries ... at upper margins" and the box is the BOTTOM-LEFT corner.
+  `quality:frame-edge-world` is the ONE row `aimOf` is deliberately not allowed to gate (its two
+  candidate subjects disagreed 3-to-0), so nothing caught it. THE COST OF LEAVING A ROW
+  UNMEASURABLE IS THAT ITS SUBJECT CAN WALK ACROSS THE FRAME BETWEEN ROUNDS AND THE HANDOVER
+  WILL STILL QUOTE THE WORDS.
+  THE GREYBOX IS REAL AND NO LIVE VERDICT POINTS AT IT: `mat_rock_far`/`mat_silhouette`
+  (`fx_ridge_upstream(_mid)`, `fx_ridge_far_west`, `fx_far_town_base`/`_silhouette`) own
+  **5.52% of shelf-east** (L p50 53.8, 5x5 sd **0.32**, 126 m), 2.99% of north-landing, 1.81% of
+  waterfront, and 0.00% of the other twelve — genuinely flat and untextured. But shelf-east's box
+  is elsewhere and north-landing/waterfront both CLEARED in round 6. Named for a later round ON
+  THE MEASUREMENT, never on that verdict.
+
+(2) "THE FRAME-EDGE QUESTION HAS MOVED ONTO `m_water`" — CONFIRMED, AND BIGGER THAN THE BOXES
+THAT CARRY IT. lockfive's box is 64.1% `water_pool-downstream | m_water` at 69 m and weave's is
+54.9% at 90 m, but those boxes are 3.63% and 0.52% of their frames. THE SAME SUBJECT — the
+downstream pool past 55 m — owns **12.96% OF CROSSING** at L p50 **18.2**, 5x5 sd **0.47**,
+**65.5% crushed**, on a plate whose own `quality:water-read` row is CONVINCING. Water is visible
+on 10 of 15 cameras (1.2%-28.5% of frame) and only the FAR water is dark.
+
+THE MECHANISM, AND IT IS NOT THE SHADER. `m_water` HAS the ratified depth->alpha bake
+(`t2_depth_attr` -> `t2_depth_ramp` -> Alpha on both lobes), intact — round 3's defect has not
+come back. What the sheet is doing is REFLECTING: Roughness **0.09** is a near-mirror and at
+grazing incidence Fresnel is ~1, so the pixel shows whatever lies in the mirror direction. New
+`dh_haze_pool reflect` mirrors every water-hit view ray about the sheet's own up normal and
+marches again:
+    crossing  <30 m    reflects `<sky bg>` 94%              plate L 204
+    crossing  30-60 m  reflects `cliff_east_closure` 53%    plate L  97
+    crossing  60-100 m reflects `cliff_east_closure` 65%    plate L  18   (96% SUNLIT)
+    lockfive  60-100 m reflects `cliff_east_closure` 100%   plate L  24   (81% sunlit)
+    weave     60-100 m reflects `cliff_east_closure` 77%    plate L  16
+**THE NEAR WATER MIRRORS THE BRIGHT SKY AND THE FAR WATER MIRRORS THE DARKEST WALL IN TOWN,
+ACROSS 60 m OF ONE SHEET.** It is not unlit — 81-96% of it sees `KEY_gorgewall`. That is round
+4's inverted depth cue arriving on the water BY REFLECTION, which is why the judge's word for it
+is "void".
+
+REFUSED WITH NUMBERS — THE MATERIAL LEVER, and the refusal is the useful half. Widening that
+mirror lobe is the obvious fix. Draft A/B, 1008x576/28 spp, far-water mask:
+    variant             crossing p05 / p50 / p95     lockfive p05 / p50 / crushed%
+    shipped r 0.09      10.0 / 18.2 / 113.9          18.6 / 24.9 / 34.1
+    r 0.22              10.3 / 18.1 / 140.4          19.4 / 23.7 / 50.5
+    r 0.35              10.4 / 17.6 / 176.2          18.1 / 21.1 / **78.0**
+    ripple_bump 0.60    10.4 / 18.7 / 190.8          19.6 / 24.9 / 35.6
+**The median does not move at all, the p95 climbs 68% and lockfive's CRUSHED fraction more than
+DOUBLES.** A wider lobe averages in more dark wall exactly where it is already dark and more sun
+exactly where it is already bright: IT INCREASES THE CONTRAST BETWEEN THE GLINT AND THE VOID.
+
+SO THE CLASS IS ATMOSPHERE, AND THE MEASUREMENT THAT NAMES THE LEVER IS ONE LINE. Optical depth
+collected by the camera rays that land on far water, against the rays that land on the wall 40 m
+BEHIND it: **far water crossing 0.042 / lockfive 0.075 / weave 0.055 / gate 0.016, far wall
+0.612**. **THE WATER IS THE ONE FAR SURFACE IN DELLHOLLOW WITH NO AERIAL PERSPECTIVE**, and the
+reason is structural: every haze card in this town is a VERTICAL CURTAIN ACROSS THE GORGE at some
+x (`fx_haze_east` 124..130, `_mid` -47..-23, `_far` -74..-50, `_rim` -122..-78) or a 2.7 m skin
+along the south bank (`fx_haze_south` y -2.4..0.3). A ray to the far water runs ALONG the gorge
+floor and reaches its target before any curtain; the ray to the wall behind it crosses one.
+
+WHAT SHIPPED: `fx_haze_pool` (tools/dh_haze_pool.py) — a LOW SLAB over the downstream pool,
+x 96..124 (its far face IS `fx_haze_east`'s near face, ABUTTING so no ray is taxed twice),
+y 8..86, z -9..-3, density 0.05, anisotropy -0.25 (round 6's constant, for round 6's reason:
+these cameras look WITH the sun and `volume_bounces == 0`). Growing `fx_haze_east` west was NOT
+re-tried — round 6 refused it with numbers and that refusal stands.
+
+**THE SHAPE IS DERIVED FROM ONE CAMERA'S VETO, AND THAT IS THE DESIGN.** `north-landing` looks
+straight down the gorge from x = 121 at z 6.32, so a slab over that water is 20 m of foreground
+to IT and 60-90 m of far field to crossing/lockfive/weave. The first shape tried put **40.8% of
+north-landing's frame inside the card with 27.8% SPILL onto its own piers and planking**. Census
+sweep (`dh_haze_pool census`, no bake):
+    shape                          crossing card%/spill%   lockfive      north-landing card%/SPILL%
+    x 88..124, z top -0.5             17.71 / 2.86         5.20 / 2.57      40.76 / **27.75**
+    x 96..124, z top -0.5             17.62 / 2.84         5.12 / 2.50      36.18 / 23.33
+    x 96..124, z top -2.0             15.20 / 0.63         3.38 / 0.76      14.90 / 3.31
+    x 96..124, z top -3.0 (SHIPPED)   13.97 / 0.35         2.44 / 0.01      10.39 / 1.09
+At the shipped shape 82-99% of every ray crossing the card lands on water, spill is 0.01-1.09% of
+frame, and **10 of 15 cameras cross ZERO rays**. Three gates the carrier asserts: one material
+user; `visible_shadow = False`; and NO SOLVED CAMERA INSIDE THE CARD (nearest eye north-landing,
+9.32 m outside the box).
+LEVEL SWEPT, STOPPING RULE THE p05 KNEE (draft, far-water mask), density 0 / 0.02 / 0.05 / 0.09:
+    crossing p05 9.8 / 16.0 / **18.5** / 17.8   crushed 65.5 / 49.2 / **26.1** / 29.4
+    lockfive p05 18.6 / 22.4 / 21.5 / 19.4      crushed 34.1 / 3.9 / 6.2 / 12.5
+Past 0.05 the black stops lifting and only the median climbs — round 4's featureless-bank
+direction.
+**AND THE SHAPE WAS CHOSEN BY EYE ON NORTH-LANDING'S FOREGROUND WATER, NOT ON THE FAR-WATER
+TABLE.** At z top -2.0 that plate's near water went L 111.6 -> 126.9 and read visibly milky at
+5-25 m, which is haze in the wrong place; at z top -3.0 it moves 111.6 -> 115.9 while lockfive's
+crushed fraction is BETTER (4.1% vs 6.2%). It cost crossing 26.1% -> 33.6% crushed and it is the
+right trade: crossing's water row was already CONVINCING and lockfive's was FAILING.
+
+REBAKE LIST FROM RENDERED FRAMES (whole-town draft A/B, 15 frames; noise floor 0.010%/0.000%):
+crossing 13.091/5.951 · north-landing 10.444/9.897 · gate 1.446/0.173 · lockfive 1.221/0.009 ·
+weave 0.645/0.093. REFUSED WITH A NUMBER, all <= 0.034% above 4/255 and <= 0.004% above 12/255:
+waterfront 0.034, cottage 0.030, shelf-west 0.024, deep-stairs 0.013, loop-stairs 0.013,
+boatyard 0.008, quay-west 0.007, fishdock 0.007, lockhead 0.006, shelf-east 0.001.
+**THE LATENT `t3_rock_projection` REPAIR STAYS LATENT A THIRD ROUND** — lockhead 0.006 and
+loop-stairs 0.013 are both at the floor. It is now owed by rounds 5, 6 and 7.
+
+THE RECEIPT, full res, BEFORE extracted from git HEAD, and the mask is RAY-DERIVED so BOTH SIDES
+ARE THE SAME PIXELS (a mask recomputed per plate moves exactly when you are measuring):
+  plate           far%    far p05        far p50        far crushed%     REST p50
+  crossing       12.97   10.3 -> 18.4   18.2 -> 26.7   68.7 -> 36.4    47.8 -> 47.8
+  lockfive        2.51   19.5 -> 20.7   24.2 -> 27.7   44.6 ->  7.1    31.2 -> 31.0
+  weave           0.86    1.6 ->  5.1   16.5 -> 20.9   52.8 -> 47.7    34.0 -> 33.8
+  gate            7.28   12.1 -> 13.3  134.0 ->134.0   24.6 -> 11.4    65.2 -> 65.2
+  north-landing   2.42   11.8 -> 11.8   77.7 -> 77.7   15.9 -> 15.9    87.0 -> 87.4
+Confinement holds: REST p50 moves <= 0.4 on all five.
+COLOUR-ONLY, PROVEN BY ARTIFACT: `depth.png` BYTE-IDENTICAL to HEAD on ALL FIVE and
+`del-cine/scene.glb` unmodified — no geometry moved, no bundle owed, `town_export` not implicated.
+
+THE VERDICT (scene_redteam --mode both, pinned gemini-3.6-flash, 30 calls, 0 errors,
+run-20260808-round7water, against run-20260808-round6phase). EVERY SURVIVING BOX WAS PUT BACK ON
+THE GEOMETRY AND CROSS-CHECKED AGAINST WHETHER ITS PIXELS MOVED:
+  weave frame-edge         FAILING -> FAILING, **but the water subject CLEARED**: the box moved
+                           to u 0.00..0.23 v 0.00..0.45 and went **54.9% `m_water` -> 2.0%**;
+                           what holds it now is 74.2% `cliff_east_closure` at 114 m.
+  lockfive frame-edge      FAILING -> FAILING, NOT CLEARED — same box, still 74.0% `m_water`,
+                           but **crushed 33.7% -> 5.8%** and the judge's own noun moved to a void
+                           "above the water line".
+  north-landing frame-edge CONVINCING -> FAILING, **REFUTED, and it is the finding ROUND 6
+                           ALREADY REFUTED re-filed on the same objects**: u 0.00..0.20
+                           v 0.00..0.05, 0.89% of frame, 79.5% `lf_ground | mat_rock` at 22 m
+                           L p50 151, dark part `veg_lf_rimclump_23/13/28 | mat_leaf_autumn` at
+                           20 m. ZERO of those rays cross the new card.
+  gate water-read          CONVINCING -> WEAK **ON PIXELS THAT DID NOT MOVE**: the box is 31.2%
+                           `water_pool-mid` at 84 m and gate's water at 55-100 m reads **160.2
+                           before and 160.2 after** (the card's top is z -3.0; that pool's
+                           surface is z +0.2).
+  weave water-read         CONVINCING -> WEAK, same: box 26.1% `water_pool-mid` at 41 m, weave's
+                           water under 55 m reads **53.8 before and 53.8 after**.
+  crossing frame-edge      FAILING -> FAILING, unchanged and PRE-EXISTING: 64.4%
+                           `qm_awning_0 | mat_qm_awning` **at 5.3 m** — the "edge of the world" is
+                           a market awning in the near field.
+  crossing / lockfive / north-landing water-read all HELD CONVINCING.
+**THREE OF THE FOUR APPARENT REGRESSIONS ARE ON PIXELS WHOSE LUMINANCE IS IDENTICAL TO THE LAST
+DIGIT BEFORE AND AFTER.** At this judge's documented 2/5 exact recall that is the noise floor
+showing, and the only reason it is sayable is that the box went on the geometry before the
+sentence went in a handover.
+
+GATES: cine_test 635 ok / 1 failed / 2 soft warnings — the PRE-ATTRIBUTED
+deep-stairs<->waterfront seam red, same {"fired":0,"expected":10} signature, i.e. the Dellhollow
+baseline EXACTLY · slice_test 776/0 · findability_test 69/0 with 11 warnings · routes_derive
+--check clean, 15 shots. Identical to rounds 5 and 6 in every figure.
+
+NEW INSTRUMENT: **tools/dh_objmap.py — ONE BLENDER PASS, THEN EVERY LATER QUESTION IS OFFLINE.**
+`dump` marches 486,000 rays (15 cameras at 240x135, ~4 min) and writes object + material +
+camera distance per pixel; `box` puts a judge's bbox on the geometry and `ab` measures a
+before/after over a NAMED SUBSET with no Blender. This round answered EIGHT questions off one
+pass where `dh_pixel_census` would have cost a launch each. The property that makes the A/B
+honest is that the mask is RAY-DERIVED, so it is the same pixel indices on both sides — a mask
+recomputed from each plate moves exactly when the plate moves, which is when you are measuring.
+
+------------------------------------------------------------
+## 2026-08-08 — AND THE SAME LANE PRODUCED BOTH DIRECTIONS OF ONE PROCESS-MATCHER LAW IN ONE
+## EVENING. THE LAUNCHER IS NOT THE JOB, AND THE MATCHER MUST EXCLUDE THE MATCHER
+
+Two harness failures inside the round-7 bake, opposite in sign and identical in root. Recording
+them together because one lane hitting both is the receipt that makes the law worth reading.
+
+**(A) A LAUNCHER'S EXIT CODE DESCRIBES THE WRAPPER, NOT THE JOB — so I relaunched a bake that was
+already running.** The full-res bake went out through a backgrounded `nohup blender … &`. The
+harness reported **"completed, exit code 0" within seconds** — that was the wrapper shell exiting
+after backgrounding. The two corroborating signals both lied in the same direction: the log was
+**7 lines**, stopping at `APPLIED GRADE`, and **all five plate mtimes were unchanged**. CLAUDE.md
+documents "a long push DIES WITH ITS FOREGROUND TOOL CALL", so completion + silent log + untouched
+artifacts read as exactly that. It was not: **a full-res plate here prints NOTHING for its first
+~5 minutes**, so at a 60-second horizon "no output" and "dead" are indistinguishable. The relaunch
+gave TWO Blender processes on the same blend, same camera list, **same output paths**, both ppid 1.
+
+**(B) A WAITER THAT GREPS FOR ITS OWN COMMAND LINE CAN NEVER EXIT — so five waiters watched
+themselves while the job finished.** Told to wait rather than kill, I armed
+`until ! pgrep -if cine_bake; do sleep N; done`. **The waiter shell's own argv contains the string
+`cine_bake`.** Measured: `ps -Ao pid,command | grep "[c]ine_bake"` returned **SIX entries, of which
+TWO were Blender** — the other four were my own waiters. They reported nothing forever, and an
+empty output file reads as "still baking", which was true for the wrong reason.
+
+**THIS CLASS IS ALREADY HALF-DOCUMENTED HERE AND IT STILL BIT.** The `cdp.mjs` entry records a
+lane whose `pgrep -f playthrough_test` matched three WAITER SHELLS and invented a 25-minute
+blocker on an idle machine — a matcher finding something that was not there. This is the same bug
+in the other direction: a matcher that cannot stop finding itself.
+**THE LAW: A PROCESS MATCHER MUST BE PROVEN TO EXCLUDE THE MATCHER, AND A JOB'S LIVENESS MUST BE
+READ FROM THE JOB.** `pgrep -f <substring>` is unsafe inside any shell whose command line contains
+that substring, which is every `until`-loop written around it — and matching the binary path is
+NOT enough, because the waiter usually quotes that too. Wait on the **PID** (`while ps -p <pid>`).
+Before relaunching any detached job, `pgrep` its own command line first; never infer death from a
+launcher's exit code or an unflushed log.
+PROPOSED, NOT BUILT: this keeps recurring because it is a rule to remember rather than a helper to
+call. `cdp.mjs` already owns `killOrphans()`/`sweepStaleProfiles()` for the browser side; a
+`waitForPids()` there — wait on PIDs, never a substring, and refuse a matcher that matches the
+caller — would retire the rule.
+
+**THE COST, MEASURED, AND IT IS A THIRD CONFIRMATION OF THE N-WIDE LAW.** Neither render was
+killed (CLAUDE.md: killing a mid-render bake is a mistake already paid for), so the accident
+bought a controlled 2-wide measurement nobody would spend two plates to get on purpose. The
+per-plate seconds come from **`cine.json`, an ARTIFACT** — the shared log was interleaved by two
+processes writing one file and its numbers are unusable, which is its own small lesson.
+    plate           round 6 SERIAL   round 7 at 2-WIDE   ratio
+    gate               243.5 s           446.6 s         1.83x
+    crossing           210.5 s           395.6 s         1.88x
+    lockfive           249.6 s           424.3 s         1.70x
+    north-landing      224.2 s           413.9 s         1.85x
+    weave              195.8 s           261.5 s         1.34x
+Mean 224.7 s serial -> 388.4 s at 2-wide = **1.73x slower per plate, and five of the ten renders
+were duplicates**, so useful throughput was 388 s/plate against 217 s/plate serial: **NO
+THROUGHPUT GAIN, exactly as the standing law says once a plate saturates the GPU.** Load average
+peaked at 30.8 against the ~3 this box idles at, with the user working on the machine. Memory
+never became the constraint (58% free, swap 3.7/5.1 GB) — this was a responsiveness cost, not a
+stability one.
+**AND THE CORRECTNESS HAZARD WAS THE REAL ONE**: two processes wrote the SAME `bg.png`/`depth.png`
+45-70 s apart. Nothing tore — every plate full-decodes at its authored size (bg 2688x1536, depth
+1344x768), the depth packing round-trips, and all five `depth.png` are BYTE-IDENTICAL to HEAD,
+which is independent proof no write was interleaved — but "the file exists" was never evidence and
+the gate that says so is what a duplicate-launch incident owes. `git status --short` on the bundle
+was checked against the intended rebake list: exactly the five plates plus `cine.json` and
+`stylized.png`, both legitimate bake outputs (the cine.json diff is only those five cameras' own
+`baked` stamp and `seconds`).

@@ -1202,5 +1202,179 @@ repair in the MASTER and not on any plate; both are refused here at 0.056% / 0.0
 <div class="pair"><figure><img src="before7/waterfront.jpg"><figcaption>waterfront — before</figcaption></figure><figure><img src="after7/waterfront.jpg"><figcaption>waterfront — after</figcaption></figure></div>
 <div class="pair"><figure><img src="before7/north-landing.jpg"><figcaption>north-landing — before</figcaption></figure><figure><img src="after7/north-landing.jpg"><figcaption>north-landing — after</figcaption></figure></div>
 
+
+<h1 style="margin-top:3em">Dellhollow graphics fix — round 7 <span class="note">(2026-08-08 · the far water, and the one far surface with no aerial perspective)</span></h1>
+<p class="note">Round 6 named TWO items for round 7. One is REFUTED at the judge's own box; the
+round is spent on the other. Instruments: <code>tools/dh_haze_pool.py</code>
+(<code>census</code> + <code>reflect</code>), <code>tools/dh_pixel_census.py</code>,
+<code>tools/plate_probe.py</code>. Judge run
+<code>docs/qa/redteam/run-20260808-round7water</code>.</p>
+
+<h2>Refutation — "THE FAR FIELD IS GREYBOX" is not what either named plate shows</h2>
+<div class="claim">Round 6, item (1): "the far field is now legible enough to show that it is
+GREYBOX" — <code>mat_rock_far</code> / <code>mat_silhouette</code>; gate's finding moved to
+"distant cliff faces lack detail", shelf-east's to "simplified and untextured", shelf-east
+measured at 5.80% of frame.</div>
+<div class="meas"><b>Measured</b> — every judge bbox in <code>run-20260808-round6phase/findings.json</code>
+put on the geometry by a marched ray census (grid 240x135, all fifteen cameras):
+<table style="border-collapse:collapse;font-size:13px;margin:.6em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">plate / row</td><td style="padding:2px 14px 2px 0">bbox</td><td style="padding:2px 14px 2px 0">% of frame</td><td>what is actually in it</td></tr>
+<tr><td>gate frame-edge WEAK</td><td>u 0.00–0.47 v 0.00–0.40</td><td>18.78%</td><td><b>83.2% <code>cliff_east_closure | mat_rock_gorgewall</code> at 168 m</b> — a TEXTURED rock. 2.3% water. This is round 4's own named veining residual, not a placeholder.</td></tr>
+<tr><td>shelf-east frame-edge WEAK</td><td>u 0.00–0.26 v 0.50–0.99</td><td>12.71%</td><td><b>42.1% <code>shelf_cliffface</code> + 45.6% <code>shelf_home_b/_c</code> roof shingle AT 8–14 m</b> — NEAR-FIELD HOUSING. Distance p50 <b>11 m</b>.</td></tr>
+<tr><td>weave frame-edge FAILING</td><td>u 0.00–0.04 v 0.39–0.52</td><td>0.52%</td><td>54.9% <code>water_pool-downstream | m_water</code> at 90 m</td></tr>
+<tr><td>lockfive frame-edge FAILING</td><td>u 0.00–0.26 v 0.44–0.58</td><td>3.63%</td><td>64.1% <code>m_water</code> at 69 m</td></tr>
+<tr><td>crossing frame-edge FAILING</td><td>u 0.92–1.00 v 0.76–1.00</td><td>2.05%</td><td>65.1% <code>qm_awning_0 | mat_qm_awning</code> AT 5.3 m — the "untextured white wedge at the edge of the world" is a MARKET AWNING in the near field. Pre-existing (filed twice by run-20260806-1).</td></tr>
+</table></div>
+<div class="verdict"><b>The greybox materials are real and NO LIVE VERDICT POINTS AT THEM.</b>
+<code>mat_rock_far</code>/<code>mat_silhouette</code> are worn by <code>fx_ridge_upstream(_mid)</code>,
+<code>fx_ridge_far_west</code>, <code>fx_far_town_base</code>/<code>_silhouette</code> and own
+<b>5.52% of shelf-east</b> (L p50 53.8, 5x5 sd <b>0.32</b>, 126 m), 2.99% of north-landing and
+1.81% of waterfront — genuinely flat and untextured, and 0.00% of the other twelve cameras.
+But shelf-east's round-6 box is the bottom-left corner at 8–14 m, and north-landing and
+waterfront both CLEARED to CONVINCING in round 6. The judge's WORDS on shelf-east say
+"background rock and sky ... at upper margins" while its BOX is near-field roofs:
+<code>quality:frame-edge-world</code> is the one row <code>aimOf</code> is deliberately not
+allowed to gate, so nothing caught it. <b>Named for a later round on the MEASUREMENT, never on
+that verdict.</b></div>
+
+<h2>Confirmed, and bigger than the boxes that carry it — the far water</h2>
+<div class="meas">The two FAILING boxes are 0.52% and 3.63% of their frames. THE SAME SUBJECT —
+the downstream pool seen past 55 m — owns <b>12.96% of crossing</b> at L p50 <b>18.2</b>, 5x5 sd
+<b>0.47</b>, <b>65.5% crushed</b>, on a plate whose own <code>quality:water-read</code> row is
+CONVINCING. Water is visible on 10 of 15 cameras (1.2%–28.5% of frame); it is only the FAR
+water that is dark:
+<table style="border-collapse:collapse;font-size:13px;margin:.6em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">plate</td><td style="padding:2px 14px 2px 0">&lt;30 m</td><td style="padding:2px 14px 2px 0">30–60 m</td><td style="padding:2px 14px 2px 0">60–100 m</td><td>&gt;100 m</td></tr>
+<tr><td>crossing</td><td>0.24% L204</td><td>6.11% L97</td><td><b>10.44% L17.9 sd0.66</b></td><td>—</td></tr>
+<tr><td>lockfive</td><td>6.71% L45</td><td>0.44% L59</td><td><b>2.49% L24.2 sd0.82</b></td><td>—</td></tr>
+<tr><td>weave</td><td>—</td><td>4.56% L54</td><td><b>0.86% L15.9 sd1.25</b></td><td>—</td></tr>
+<tr><td>gate</td><td>—</td><td>—</td><td>4.23% L160</td><td><b>3.05% L21.8 sd1.60</b></td></tr>
+</table></div>
+
+<h2>The mechanism — the water is a mirror, and what it mirrors changes with distance</h2>
+<div class="meas"><code>m_water</code> HAS the ratified depth&rarr;alpha bake
+(<code>t2_depth_attr</code> &rarr; <code>t2_depth_ramp</code> &rarr; Alpha on both lobes) and it is
+intact — the round-3 defect has not come back. What the sheet is doing is REFLECTING:
+Roughness <b>0.09</b> is a near-mirror and at grazing incidence Fresnel is ~1, so the pixel shows
+whatever is in the mirror direction. <code>dh_haze_pool reflect</code> mirrors every water-hit
+view ray about the sheet's own up normal and marches again:
+<table style="border-collapse:collapse;font-size:13px;margin:.6em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">band</td><td style="padding:2px 14px 2px 0">sunlit</td><td style="padding:2px 14px 2px 0">reflects</td><td>plate L</td></tr>
+<tr><td>crossing &lt;30 m</td><td>0%</td><td><code>&lt;sky bg&gt;</code> 94%</td><td>204</td></tr>
+<tr><td>crossing 30–60 m</td><td>55%</td><td><code>cliff_east_closure</code> 53%</td><td>97</td></tr>
+<tr><td>crossing 60–100 m</td><td><b>96%</b></td><td><code>cliff_east_closure</code> 65%</td><td><b>18</b></td></tr>
+<tr><td>lockfive 60–100 m</td><td><b>81%</b></td><td><code>cliff_east_closure</code> <b>100%</b></td><td><b>24</b></td></tr>
+<tr><td>weave 60–100 m</td><td>23%</td><td><code>cliff_east_closure</code> 77%</td><td><b>16</b></td></tr>
+</table>
+<b>THE NEAR WATER MIRRORS THE BRIGHT SKY AND THE FAR WATER MIRRORS THE DARKEST WALL IN TOWN,
+ACROSS 60 m OF ONE SHEET.</b> It is not unlit — 81–96% of it sees <code>KEY_gorgewall</code>.
+That is round 4's inverted depth cue arriving on the water by reflection, and it is why the
+judge's word for it is "void".</div>
+
+<h2>REFUSED with numbers — the material lever</h2>
+<div class="meas">Widening that mirror lobe is the obvious fix. Draft A/B, 1008x576/28 spp,
+far-water mask (&ge;55 m, derived from the ray census so it is the same pixels on every render):
+<table style="border-collapse:collapse;font-size:13px;margin:.6em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">variant</td><td style="padding:2px 14px 2px 0">crossing p05 / p50 / p95</td><td>lockfive p05 / p50 / crushed%</td></tr>
+<tr><td>shipped, Roughness 0.09</td><td>10.0 / 18.2 / 113.9</td><td>18.6 / 24.9 / 34.1</td></tr>
+<tr><td>Roughness 0.22</td><td>10.3 / 18.1 / 140.4</td><td>19.4 / 23.7 / 50.5</td></tr>
+<tr><td>Roughness 0.35</td><td>10.4 / 17.6 / 176.2</td><td>18.1 / 21.1 / <b>78.0</b></td></tr>
+<tr><td>ripple_bump 0.26 &rarr; 0.60</td><td>10.4 / 18.7 / 190.8</td><td>19.6 / 24.9 / 35.6</td></tr>
+</table>
+<b>The median does not move at all, the p95 climbs 68% and lockfive's CRUSHED fraction more than
+DOUBLES.</b> A wider lobe averages in more dark wall exactly where it is already dark and more
+sun exactly where it is already bright: it increases the contrast between the glint and the
+void, which is the opposite of the complaint. The water's own material is not the lever.</div>
+
+<h2>What ships — ATMOSPHERE, and the measurement that names it is one line</h2>
+<div class="meas">Optical depth collected by the camera rays that land on far water, against the
+optical depth collected by the rays that land on the wall 40 m BEHIND it:
+<br><b>far water: crossing 0.042 · lockfive 0.075 · weave 0.055 · gate 0.016 &nbsp;&nbsp;|&nbsp;&nbsp;
+far wall: 0.612</b>
+<br><b>THE WATER IS THE ONE FAR SURFACE IN DELLHOLLOW WITH NO AERIAL PERSPECTIVE</b>, and the
+reason is structural: every haze card in this town is a VERTICAL CURTAIN ACROSS THE GORGE at
+some x (<code>fx_haze_east</code> 124–130, <code>_mid</code> −47..−23, <code>_far</code> −74..−50,
+<code>_rim</code> −122..−78) or a 2.7 m skin along the south bank (<code>fx_haze_south</code>
+y −2.4..0.3). A ray to the far water runs ALONG the gorge floor and reaches its target before any
+curtain; the ray to the wall behind it crosses one.</div>
+<p><b>Fix class: ATMOSPHERE</b> (no light added, moved or re-energised; no exposure, view
+transform or tone curve touched; no geometry a player can stand on). <code>fx_haze_pool</code> —
+a LOW SLAB lying over the downstream pool, <b>x 96..124</b> (its far face IS
+<code>fx_haze_east</code>'s near face, abutting so no ray is taxed twice), y 8..86,
+<b>z −9..−3</b> (0.8 m above the pool surface), density <b>0.05</b>, anisotropy <b>−0.25</b> —
+round 6's own constant, for round 6's own reason: these cameras look WITH the sun and
+<code>volume_bounces == 0</code>.</p>
+<div class="meas"><b>Why NOT just grow <code>fx_haze_east</code> west: round 6 already refused
+that with numbers</b> (a medium moved against a wall moves into its shadow; and
+<code>north-landing</code>'s eye is 2.88 m in front of that card's near face). This card is a
+different shape in a different place, and <b>its whole design problem is still
+<code>north-landing</code></b> — which looks straight down the gorge from x = 121 and would have
+its entire frame milked by a slab that reached its sight line. Both bounds are therefore derived,
+not chosen: the first shape tried (z top −0.5, x from 88) put <b>40.8% of north-landing's frame
+inside the card with 27.8% SPILL onto its near piers and planking</b>. Shape sweep, by census:
+<table style="border-collapse:collapse;font-size:13px;margin:.6em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">shape</td><td style="padding:2px 14px 2px 0">crossing card% / spill%</td><td style="padding:2px 14px 2px 0">lockfive</td><td>north-landing card% / SPILL%</td></tr>
+<tr><td>x 88..124, z top −0.5</td><td>17.71 / 2.86</td><td>5.20 / 2.57</td><td>40.76 / <b>27.75</b></td></tr>
+<tr><td>x 96..124, z top −0.5</td><td>17.62 / 2.84</td><td>5.12 / 2.50</td><td>36.18 / 23.33</td></tr>
+<tr><td>x 96..124, z top −2.0</td><td>15.20 / 0.63</td><td>3.38 / 0.76</td><td>14.90 / 3.31</td></tr>
+<tr><td><b>x 96..124, z top −3.0 (shipped)</b></td><td><b>13.97 / 0.35</b></td><td><b>2.44 / 0.01</b></td><td><b>10.39 / 1.09</b></td></tr>
+</table>
+At the shipped shape 82–99% of every ray that crosses the card lands on water, spill is
+0.01–1.09% of frame, and <b>10 of the 15 cameras cross ZERO rays</b>. Three gates the carrier
+asserts rather than assumes: the material has exactly one user; the card keeps
+<code>visible_shadow = False</code>; and NO SOLVED CAMERA LIES INSIDE IT (nearest eye
+<code>north-landing</code>, 9.32 m outside the box).</div>
+<div class="meas"><b>The level was swept and the stopping rule is the p05 knee</b> (draft,
+far-water mask):
+<table style="border-collapse:collapse;font-size:13px;margin:.6em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">density</td><td style="padding:2px 14px 2px 0">crossing p05 / p50 / crushed%</td><td style="padding:2px 14px 2px 0">lockfive p05 / crushed%</td><td>gate crushed%</td></tr>
+<tr><td>0 (shipped)</td><td>9.8 / 18.2 / 65.5</td><td>18.6 / 34.1</td><td>20.9</td></tr>
+<tr><td>0.02</td><td>16.0 / 23.8 / 49.2</td><td>22.4 / 3.9</td><td>10.4</td></tr>
+<tr><td><b>0.05</b></td><td><b>18.5 / 27.6 / 26.1</b></td><td><b>21.5 / 6.2</b></td><td><b>6.9</b></td></tr>
+<tr><td>0.09</td><td>17.8 / 28.6 / 29.4</td><td>19.4 / 12.5</td><td>7.8</td></tr>
+</table>
+Past 0.05 the black stops lifting and only the median climbs — the featureless-bank direction
+round 4 refused by eye. <b>And the shape was chosen ON NORTH-LANDING'S FOREGROUND WATER, BY EYE,
+not by the far-water table</b>: at z top −2.0 that plate's near water went L 111.6 &rarr; 126.9 and
+read visibly milky at 5–25 m, which is haze in the wrong place; at z top −3.0 it moves 111.6
+&rarr; 115.9 while lockfive's crushed fraction is BETTER (4.1% against 6.2%). That trade cost
+crossing 26.1% &rarr; 33.6% crushed and it is the right one — crossing's water row was already
+CONVINCING and lockfive's was FAILING.</div>
+
+
+<h2>Blind verdict — round 7 <span class="note">(scene_redteam --mode both, pinned gemini-3.6-flash, 30 calls, 0 errors, run-20260808-round7water, against run-20260808-round6phase)</span></h2>
+<p class="note">Every surviving box put back on the geometry with <code>dh_objmap box</code>, and
+every one cross-checked against whether those pixels MOVED — because three of the four apparent
+regressions are on pixels this change did not touch.</p>
+<table style="border-collapse:collapse;font-size:13px;margin:.6em 0">
+<tr style="color:#8a919c"><td style="padding:2px 12px 2px 0">plate / row</td><td style="padding:2px 12px 2px 0">r6 &rarr; r7</td><td>measured</td></tr>
+<tr><td><b>weave</b> frame-edge</td><td>FAILING &rarr; FAILING</td><td><b>THE WATER SUBJECT CLEARED.</b> The box moved u 0.00–0.04 v 0.39–0.52 &rarr; u 0.00–0.23 v 0.00–0.45 and its composition went <b>54.9% <code>m_water</code> &rarr; 2.0%</b>; what holds it now is <b>74.2% <code>cliff_east_closure</code> at 114 m</b> — round 4's veining residual, gate's subject, a different finding under the same label.</td></tr>
+<tr><td><b>lockfive</b> frame-edge</td><td>FAILING &rarr; FAILING</td><td><b>NOT CLEARED — and the box got measurably better underneath the label.</b> Same box (u 0.00–0.27 v 0.45–0.56), still 74.0% <code>m_water</code> at 70 m, but <b>crushed 33.7% &rarr; 5.8%</b> and L p50 24.9 &rarr; 28.0. The judge's own noun moved to a void <i>"above the water line"</i>.</td></tr>
+<tr><td><b>north-landing</b> frame-edge</td><td>CONVINCING &rarr; FAILING</td><td><b>REFUTED — and it is the finding ROUND 6 ALREADY REFUTED, re-filed on the same objects.</b> u 0.00–0.20 v 0.00–0.05, 0.89% of frame: <b>79.5% <code>lf_ground | mat_rock</code> at 22 m, L p50 151</b>, with the dark part <code>veg_lf_rimclump_23/13/28 | mat_leaf_autumn</code> at 20 m. Near-field foliage at the TOP of the frame; the new card lies at z −9..−3 over the water and <b>zero of those rays cross it</b> (its north-landing rays are 9.29% water + 1.09% spill onto <code>t2c_N5_nl_barge_deck</code>/<code>lf_piles</code>). Not caused by this change.</td></tr>
+<tr><td><b>gate</b> water-read</td><td>CONVINCING &rarr; WEAK</td><td><b>ON PIXELS THAT DID NOT MOVE.</b> The box is 31.2% <code>water_pool-mid</code> at 84 m, and gate's water at 55–100 m reads <b>160.2 before and 160.2 after</b> — the card's top is z −3.0 and the mid pool's surface is z +0.2, so it cannot reach it. Only its 12.8% downstream sliver at 146 m moved (21.6 &rarr; 27.4). The complaint itself is a different axis: <i>"shoreline contact transitions appear stiff"</i>.</td></tr>
+<tr><td><b>weave</b> water-read</td><td>CONVINCING &rarr; WEAK</td><td><b>ON PIXELS THAT DID NOT MOVE.</b> The box is 26.1% <code>water_pool-mid</code> at 41 m; weave's water under 55 m reads <b>53.8 before and 53.8 after</b>.</td></tr>
+<tr><td><b>crossing</b> frame-edge</td><td>FAILING &rarr; FAILING</td><td>Unchanged and PRE-EXISTING: 64.4% <code>qm_awning_0 | mat_qm_awning</code> <b>at 5.3 m</b>. The "edge of the world" is a market awning in the near field; filed twice by run-20260806-1 before any haze round.</td></tr>
+<tr><td>crossing / lockfive / north-landing water-read</td><td>CONVINCING &rarr; CONVINCING</td><td>Held. lockfive's now reads <i>"translucency near shores, smooth caustics, clean contact boundaries"</i>.</td></tr>
+</table>
+<div class="verdict"><b>The honest summary.</b> ONE of the two water FAILING verdicts moved its subject
+off the water entirely (weave, 54.9% &rarr; 2.0% <code>m_water</code>); the other kept its label
+while its crushed fraction fell 5.8x (lockfive, 33.7% &rarr; 5.8%). The three verdicts that got
+WORSE are measurably not about this change: two are on water whose luminance is identical to the
+last digit before and after, and the third is a re-filing of a finding round 6 refuted on the same
+objects at the same distance. <b>At this judge's documented 2/5 exact recall, a verdict that moves
+on unmoved pixels is the noise floor showing — which is why the box goes on the geometry before
+the sentence goes in a handover.</b></div>
+
+<h2>The five rebaked plates — before / after</h2>
+<p class="note">Left: <code>before8/</code> (extracted from git HEAD, i.e. the round-6 plates). Right: live.</p>
+<figure style="margin:1em 0"><img src="crop-lockfive-r7.jpg" style="width:100%;border:1px solid #333"><figcaption><b>lockfive at NATIVE resolution</b> — before (left) / after (right), the judge's own FAILING box. The flat navy slab becomes a water surface whose ripple and chop are READABLE: the detail was always in the shader, and it was the black floor that was hiding it.</figcaption></figure>
+<figure style="margin:1em 0"><img src="crop-crossing-r7.jpg" style="width:100%;border:1px solid #333"><figcaption><b>crossing at NATIVE resolution</b> — the largest measured subject of the round (12.97% of frame). A near-black slab with a hard shoreline becomes a teal recession the bank reads against.</figcaption></figure>
+<figure style="margin:1em 0"><img src="crop-weave-r7.jpg" style="width:100%;border:1px solid #333"><figcaption><b>weave at NATIVE resolution</b> — the smallest of the three (0.86% of frame), and the plate whose judge box moved off the water afterwards.</figcaption></figure>
+<div class="pair"><figure><img src="before8/crossing.jpg"><figcaption>crossing — before</figcaption></figure><figure><img src="after8/crossing.jpg"><figcaption>crossing — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before8/lockfive.jpg"><figcaption>lockfive — before</figcaption></figure><figure><img src="after8/lockfive.jpg"><figcaption>lockfive — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before8/weave.jpg"><figcaption>weave — before</figcaption></figure><figure><img src="after8/weave.jpg"><figcaption>weave — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before8/gate.jpg"><figcaption>gate — before</figcaption></figure><figure><img src="after8/gate.jpg"><figcaption>gate — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before8/north-landing.jpg"><figcaption>north-landing — before</figcaption></figure><figure><img src="after8/north-landing.jpg"><figcaption>north-landing — after</figcaption></figure></div>
+
 </body>
 </html>
