@@ -19750,3 +19750,127 @@ two of the three rows on this commit say `errored` and the deploy is fine.
 Note `gh api .../compare/<round5>...<round6>` returns **404 "no common ancestor"** — each
 deploy is its own single-commit throwaway repo, so there is no gh-pages-side diff to read.
 The source-side `git diff` plus the byte comparison above is the whole audit trail.
+
+---
+
+## 2026-08-08 — BATTLE WAVE 2, LANE A: THE KO AND THE VICTORY ARE EVENTS (slate BET I)
+
+Board with every frame and every number: **docs/qa/battle-ko/index.html**.
+Instrument built for this lane: **tools/battle_ko_shots.mjs**
+(`--port --tag --out [--arena=world] [--only=ko|victory] [--noreact]`). It drives the KO
+the way `battle_turnbased` drives it — `setDead(id,true)` then `flinch(id)`, in that order —
+samples `stage.at()`/`stage.anchor()` every 34 ms across a 3 s window, renders SYNCHRONOUSLY
+at eight offsets, and runs a second scenario that plays a real autoplay battle to its end and
+photographs the victory sequence. Files: `public/js/battle_stage3d.js`,
+`public/js/battle_turnbased.js`, `public/js/battle_world.js`.
+
+### What was measured on the shipped build, with the instrument that measured it
+
+| claim | before | after | instrument |
+|---|---|---|---|
+| the corpse sinks below its own floor | **0.550 m** | **0.000 m** | `stage.at(id).y` vs the y it had alive |
+| anything left where it died | gone at **842 ms** | gone at **2260 ms** | `at(id).alpha` |
+| the KILLING blow's own feedback | **104.6** | **167.7** | mean luminance of the victim's screen box 60 ms after the blow, out of `stage.snapshot()`. Idle 121.2, a survivable hit 213.3. |
+| the victim's ally reacts | **3.0** | **14.0** | mean \|ΔL\| over that body's own box vs a frame one tick before the blow |
+| the killer's ally reacts | **7.3** | **10.5** | same |
+| the tally box covers the party | **vesper inside it, maren behind the blur** | **nobody** | the box's `getBoundingClientRect` vs every projected anchor, read WHILE the box is up |
+| last foe down -> tally on screen | 1812 ms | 2985 ms | wall clock |
+
+**THE DEFECT THAT WAS NOT IN THE AUDIT, and it is the sharp one.** `battle_turnbased` calls
+`syncHp()` — therefore `setDead()` therefore `markDead()` — **before** `hitShake()` — therefore
+`flinch()` — and `flinch()` returns early on a body that is already dead. So **the loudest blow
+in the fight was the one blow in the game with no flash, no sparks and no shock ring**: the
+victim's own screen box read *darker sixty milliseconds after being killed (104.6) than it did
+standing idle (121.2)*, against 213.3 for a blow it survived. The impact package is now its own
+function (`impactFx`) and `markDead` calls it. A kill is at least as loud as a scratch.
+
+### What was built
+
+**The KO is five beats**, `CFG.ko`: the blow lands (impactFx, scaled up + the 150 ms KO
+hit-stop) -> the body is driven back along the blow's own axis (0.62 m, away from `actorId`)
+-> it falls **onto the floor under where it landed** -> **IT LIES THERE, solid, for 760 ms**
+-> it dissolves into rising motes in the zone's own haze and leaves a ground mark.
+`restY = groundY(landing x, z)` — never `y0 - 0.55`, which was the defect, and a floater's
+`floatY` is tweened to 0 so a dead wisp comes down. A fallen ALLY never dissolves: she lies
+where she fell at 0.22 alpha until an item stands her up.
+
+**The residue** is the blob-shadow texture in the zone's own dirt at 0.34 — no new texture, no
+new load path, and it is disposed by the same `scene.traverse` in `destroy()` as everything else.
+
+**THE OTHERS REACT.** The killer's beat is a **hold**: `markDead` writes `holdUntil` on the body
+that struck, and `act()`'s plant reads it every frame, so the killer stands over the one it
+felled instead of tweening home while it falls. `act()`'s tween now runs `attackerHold` ms
+longer with `uu = clamp(u*dur/total,0,1)` standing in for the old `u`, so arriveU, holdU and
+procSwing's window land on **exactly the wall-clock instants they did before** — the swing's
+tempo does not move. Everybody else turns toward the body with a lean under it, composed on
+`bob` (the node `procRecoil` composes on) so a clip and a reaction never fight.
+
+**TWO SIDES DO NOT REACT THE SAME WAY, and that is a number.** The first pass scaled one
+amplitude down for the far side: the party got 0.18 rad and a pixel delta of **7.52 against a
+do-nothing floor of 7.30** — invisible, because a party member is *already facing the foes*, so
+"turn to look" has almost no bearing to travel. Split into two: the victim's own side RECOILS
+away (0.26 rad), the side that did the killing LEANS IN and holds (0.22). 7.30 -> 10.45.
+
+**The victory is a beat**: `pacing.winHold` 900 (the field alone while the last body settles
+and the reactions play) -> `stage.cheer()` -> `pacing.winCheer` 620 -> the tally. It used to
+fire the cheer on the same line that appended the box. `speed:0` still snaps.
+
+**The tally stands on the side of the frame the party is NOT on**, and which side that is is
+**asked, never assumed**: `partySideOnScreen()` averages the stage's own projected party
+anchors, because the world arena solves its camera yaw against terrain and `CFG.partySide` is
+not the answer there. The scrim is a masked child so the party's half stays unblurred; no class
+= centred and fully dimmed, which is the DOM stage's case.
+
+**`?arena=world` got the same beat, and the sink mattered more there**: the diorama's 0.55 m
+put a body under a procedural dish; this stage stands its bodies on terrain out of `SIM.ground`,
+so the identical line drove a corpse **0.55 m through solid rock**. Measured after: 0.000 m,
+corpse present to 2239 ms, reaction rotations 0.63 / 0.22 rad. It also gained `at(id)` (it had
+none) so ONE instrument can measure both arenas.
+
+### Two instrument lessons, both paid for in this lane
+
+1. **`stage.anchor()` CANNOT SEE A REACTION, BY CONSTRUCTION.** It projects the **pivot** and a
+   **constant height**, so every procedural layer in `battle_stage3d` is invisible to it — the
+   swing, the recoil, the flee turn and this reaction all live on `bob`, which anchor never
+   reads. The first version of the measurement reported 3-5 px whether the reaction fired or
+   not, i.e. it would have called the whole feature a no-op with the feature working. The metric
+   is now a **pixel diff of the body's own box against a frame taken one tick before the blow**,
+   with the rotation reported beside it as the mechanism check. A gate that measures the wrong
+   node measures nothing.
+2. **A BACKTICK IN A COMMENT INSIDE A TEMPLATE LITERAL — paid again, in a TOOL this time.**
+   CLAUDE.md's trap is written up for CSS in `public/js/*`; it is the same trap in a page-driver
+   string in `tools/*.mjs`. `node --check` caught it in one second. Plain quotes.
+3. **A STATIC FLEX ITEM PAINTS BELOW A POSITIONED SIBLING.** The new scrim is
+   `position:absolute` and the outro box was static, so the dim and the blur landed ON TOP of
+   the panel and the backdrop plate showed straight through the VICTORY box. Photographed
+   before it was found; `.ebb-obox` is now `position:relative;z-index:1`.
+
+### Gates
+
+- `battle_sim` **ALL ENVELOPES GREEN** + 6 engine property tests · `encounter_sim` **GREEN**
+  (the kernel was read and never edited, which is why these pass by not being affected).
+- `arena_playtest --port=3000`: **nogl PASS · serial PASS** (all torn down, all unlocked, no
+  context leak, warm heap drift 1.9 MB across six serial battles). **organic FAIL "no hostile
+  zone reachable"** — **NOT THIS LANE'S**, and proven so: the same suite fails identically
+  against a pristine HEAD copy of the three files served from a scratch tree
+  (`git show HEAD:public/js/<f>` over a symlink farm of `public/`, `python3 -m http.server`).
+- `transition_test --port=3000`: **167 ok / 1 failed**, the failure being
+  `after battle: del-cine|shelf-west geo +2`. **THE A/B IS EXACT AND IT IS THE RECEIPT**: the
+  scratch tree above, served on ONE port, scores **164/4 with HEAD's three files and 164/4 with
+  this lane's three files — the same four assertions, the same deltas, byte-identical output**.
+  This lane moves `transition_test` by **zero**. The `geo +2` is real and pre-existing at this
+  working tree; note the tree also carries **another lane's uncommitted edits to four monster
+  GLBs** (`bramble-shade`, `reed-nibbler`, `scree-shell`, `weir-eel`), which is the first place
+  to look. Console gate **green** (no errors across the whole run — the backtick trap's own gate).
+
+### Where a camera was wanted and refused (BET B's inbox)
+
+Not taken, on the standing constraint: the four backdrop plates were generated from a prompt
+carrying the arena camera's exact height, tilt and fov (`public/assets/battle/MANIFEST.md`), so
+a shot on the kill is a re-shoot of the diorama's world, not a tuning change. Two places asked
+for one and got a procedural answer instead:
+- **a slow push toward the body during the 760 ms hold** — the hold is the beat, and a static
+  wide is the weakest possible frame for it;
+- **a move onto the party for the victory cheer** — the tally box was moved off them instead,
+  which is the fix available without a camera.
+Both are free under BET A (`?arena=world` has no painted band to honour) and cheap under BET B.

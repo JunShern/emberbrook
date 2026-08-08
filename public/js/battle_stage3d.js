@@ -359,6 +359,55 @@
       cheerMs: 900,
       cheerStagger: 120,  // ms between party members — a chorus, not a chorus line
     },
+
+    // ===== THE KO IS A BEAT (2026-08-08, BET I) ===============================
+    // WHAT WAS THERE: opacity to 0 over 720 ms, a 0.55 m sink, `visible = false`.
+    // MEASURED on the shipped build (tools/battle_ko_shots.mjs --tag=before):
+    //   * the body ended 0.550 m BELOW the floor it was standing on. In the
+    //     diorama that is under a dished disc; in `?arena=world` it is 0.55 m
+    //     through solid rock, on a ledge, in the frame;
+    //   * alpha 1 -> 0, gone at 842 ms, and `before-ko-t620.png` is a patch of
+    //     grass with no evidence anything died on it;
+    //   * every OTHER body moved 3-5 px against its own pre-blow anchor over the
+    //     whole three seconds, which is idle-clip noise. NOBODY REACTED;
+    //   * and the killing blow had NO FLASH AT ALL. battle_turnbased calls
+    //     syncHp() (-> setDead -> markDead) BEFORE hitShake() (-> flinch), and
+    //     flinch returns early on a dead body — so the loudest blow in the fight
+    //     was the ONE blow with no flash, no sparks and no shock ring. Measured
+    //     as mean luminance of the victim's own screen box 60 ms after the blow:
+    //     idle 119.5, survivable hit 214.5, KILLING blow 104.6 — the kill was
+    //     DARKER than standing still. That is why impactFx() exists and why
+    //     markDead is the thing that calls it.
+    // The beat: the blow lands -> the body staggers -> it falls -> IT LIES THERE
+    // -> it leaves, and it leaves a mark. Five phases, no camera move (the plates
+    // pin the arena camera by construction — assets/battle/MANIFEST.md).
+    ko: {
+      knockM: 0.62,       // metres the body is driven along the blow's own axis
+      knockMs: 300,
+      fallMs: 520,        // and comes to rest ON THE FLOOR UNDER WHERE IT LANDED,
+                          // which is groundY here and real terrain in the world arena.
+                          // THE SINK IS GONE: there is nothing under a body to sink into.
+      holdMs: 760,        // THE BEAT THAT DID NOT EXIST. The corpse lies there, solid.
+      dissolveMs: 620,    // ...and only then does it leave
+      motes: 16,          // rising, in the zone's own haze — it dissolves, not evaporates
+      partyAlpha: 0.22,   // a fallen ALLY stays on the field, faded. It never dissolves.
+      residue: true,      // and something is left where it fell
+      residueA: 0.34, residueK: 1.7,
+      attackerHold: 380,  // THE KILLER STANDS OVER IT before walking home. This is a
+                          // hold on act()'s own plant, not a new tween and not a camera move.
+      // THE OTHERS REACT. Amplitudes are radians on the body's `bob` — the same
+      // parent node procRecoil composes on, so a clip and a reaction never fight.
+      // `look` is a FRACTION of the true bearing to the body that fell, so a
+      // reaction never spins a body past what it could actually see.
+      // TWO SIDES DO NOT REACT THE SAME WAY, and the first pass proved it with a
+      // number: scaling ONE amplitude down for the far side gave the party 0.18 rad
+      // and a pixel delta of 7.52 against a do-nothing floor of 7.30 — invisible,
+      // because a party member is ALREADY facing the foes, so "turn to look" has
+      // almost no bearing to travel. The victim's own side RECOILS (away, `lean`);
+      // the side that did the killing LEANS IN and holds (`leanIn`).
+      react: { ms: 640, delay: 130, stagger: 110, lean: 0.26, leanIn: 0.22,
+               look: 0.55, allyK: 0.5 },
+    },
   };
 
   // ===== ZONE PALETTES ======================================================
@@ -1267,8 +1316,13 @@
         id, side, root, pivot, bob, shadow: sh, obj: null, mixer: null, actions: null,
         h: CFG.charH, w: 1, tier: 'proxy', home: root.position.clone(), facing,
         bobAmp: 0.05, bobPhase: Math.random() * 6.283, dead: false, ring: null,
-        billboard: false, floatY: 0, mats: null, baseShadow: 0.85,
+        billboard: false, floatY: 0, floatY0: 0, mats: null, baseShadow: 0.85,
         flash: 0, emis: null, procT: 0, procKind: null,
+        // THE KILLER'S HOLD (CFG.ko.attackerHold). A timestamp on the stage's own
+        // virtual clock that act()'s plant reads every frame; markDead is the only
+        // thing that ever writes it. `acting` keeps a KO reaction off a body that
+        // is mid-swing.
+        holdUntil: 0, acting: false,
       };
       bodies[id] = b; order.push(id);
       return b;
@@ -1318,6 +1372,7 @@
       b.baseShadow = CFG.shadow.on ? (opt.float ? 0.30 : 0.44) : (opt.float ? 0.42 : 0.85);
       b.shadow.material.opacity = b.baseShadow;
       b.floatY = opt.floatY || 0;
+      b.floatY0 = b.floatY;       // a floater's hover comes DOWN when it dies (markDead)
       b.bob.position.y = b.floatY;
       collectMats(b);
     }
@@ -2373,15 +2428,33 @@
       const nx = st ? st.nx : dir, nz = st ? st.nz : 0;
       const dYaw = st ? st.dYaw : 0;
       let planted = false;
-      tween(total, (u) => {
-        // out fast, plant, strike, walk back — a strike, not a slide
-        const p = u < arriveU ? easeOut(u / arriveU)
-                : u < holdU ? 1
-                : 1 - easeInOut((u - holdU) / (1 - holdU));
+      // ===== THE PLANT CAN BE HELD (2026-08-08, BET I) ==========================
+      // The tween runs `attackerHold` ms LONGER than it used to, and `uu` is the
+      // old u saturating at 1 — so arriveU, holdU and procSwing's window all land
+      // on exactly the wall-clock instants they did before and the swing's tempo
+      // does not change. What the extra room buys is the RETURN, which is now
+      // driven off the stage clock against a deadline `markDead` can push out: if
+      // this blow kills, the body that struck stands over the one it felled for
+      // CFG.ko.attackerHold and then walks home. Without the extra duration the
+      // tween would end mid-hold and snap the body back.
+      b.holdUntil = 0; b.acting = true;
+      const t0 = vnow();
+      const dur = total + CFG.ko.attackerHold;
+      tween(dur, (u) => {
+        const uu = clamp(u * dur / total, 0, 1);
+        const el = vnow() - t0;
+        // out fast, plant, strike, hold if a death is being staged, walk back
+        let p;
+        if (uu < arriveU) p = easeOut(uu / arriveU);
+        else {
+          const holdEnd = Math.max(budget, b.holdUntil ? b.holdUntil - t0 : 0);
+          p = el <= holdEnd ? 1
+            : 1 - easeInOut(clamp((el - holdEnd) / CFG.act.returnMs, 0, 1));
+        }
         worldMove(b, nx * travel * p, nz * travel * p);
         b.root.rotation.y = homeYaw + dYaw * Math.min(1, p * 1.35);
-        if (!clipped) procSwing(b, clamp((u - swingA) / (1 - swingA), 0, 1));
-        if (!planted && u >= arriveU) {
+        if (!clipped) procSwing(b, clamp((uu - swingA) / (1 - swingA), 0, 1));
+        if (!planted && uu >= arriveU) {
           planted = true;
           // dirt where the foot plants, AT THE STRIKE STATION — it used to be
           // thrown at a point 1.08 m from home whatever the body did next
@@ -2390,6 +2463,7 @@
       }, () => {
         b.pivot.position.set(0, 0, 0);
         b.root.rotation.y = homeYaw;
+        b.holdUntil = 0; b.acting = false;
         if (!clipped) procSwing(b, 1);
       });
       return budget;
@@ -2479,22 +2553,26 @@
     // the body goes hot, it is shoved, the ground says where, and the camera
     // registers the blow. Individually each is a gimmick; together they are the
     // difference between "a number appeared" and "that connected".
-    function flinch(id) {
-      const b = bodies[id];
-      if (!b || b.dead) return;
-      // The return value is deliberately NOT captured: unlike act() and markDead(),
-      // the hit does not stand its procedural layer down. See procRecoil.
-      oneShot(b, 'hit');
-      // HIT-STOP. The first thing that happens on the frame the blow lands is
-      // that nothing happens, for 90 ms. It is set BEFORE the tweens below are
-      // created so they are born into the freeze at u = 0 and the hot white
-      // flash frame is the one that is HELD — which is the whole effect.
-      hitStop(CFG.act.hitStop.ms);
+    // ---- THE IMPACT PACKAGE, AND WHY IT IS ITS OWN FUNCTION ------------------
+    // Flash, sparks, shock ring, shake, hit-stop. It used to live inside flinch()
+    // alone, and that is a measured bug: battle_turnbased fires syncHp() —
+    // therefore setDead() therefore markDead() — BEFORE hitShake(), and flinch()
+    // returns early on a body that is already dead. So the ONE blow that kills
+    // somebody was the one blow with no feedback at all (measured: the victim's
+    // screen box read 104.6 mean luminance 60 ms after a killing blow against
+    // 214.5 after a survivable one and 119.5 standing idle — the kill was darker
+    // than doing nothing). markDead calls this now, so a death is at least as loud
+    // as a scratch. `ko` scales the same package rather than inventing a second one.
+    function impactFx(b, ko) {
+      const F = CFG.fx;
+      // HIT-STOP FIRST. The tweens below must be BORN into the freeze at u = 0 so
+      // the hot white flash frame is the one that is HELD — that is the effect.
+      hitStop(ko ? CFG.act.hitStop.ko : CFG.act.hitStop.ms);
       // THE FLASH SURVIVES REDUCED MOTION. It is not motion — it is the single
       // piece of information "this body is the one that was hit", and a player
       // who has asked for less movement still needs to know who got struck.
-      flashOn(b, CFG.fx.flash);
-      tween(CFG.fx.flashMs, (u) => { b.flash = CFG.fx.flash * (1 - u) * (1 - u); applyFlash(b); },
+      flashOn(b, F.flash);
+      tween(F.flashMs, (u) => { b.flash = F.flash * (1 - u) * (1 - u); applyFlash(b); },
             () => { b.flash = 0; applyFlash(b); });
       if (RM) return;
       b.pivot.getWorldPosition(_rp);
@@ -2505,10 +2583,19 @@
       // against. Amber over hot white reads; so does the wider spawn radius,
       // which puts half the burst outside the body on frame one.
       burst(new TH.Vector3(hx, b.root.position.y + b.floatY + b.h * 0.55, hz),
-            0xffb851, CFG.fx.sparks,
-            { speed: 3.4, size: 0.30, ms: CFG.fx.sparkMs, gravity: 8, spread: b.w * 0.45 });
+            0xffb851, Math.round(F.sparks * (ko ? 1.45 : 1)),
+            { speed: ko ? 4.2 : 3.4, size: 0.30, ms: F.sparkMs, gravity: 8, spread: b.w * 0.45 });
       shockRing(hx, hz, 0xfff2d8);
-      shake(CFG.fx.shake, CFG.fx.shakeMs);
+      shake(ko ? F.shakeKo : F.shake, ko ? 420 : F.shakeMs);
+    }
+    function flinch(id) {
+      const b = bodies[id];
+      if (!b || b.dead) return;
+      // The return value is deliberately NOT captured: unlike act() and markDead(),
+      // the hit does not stand its procedural layer down. See procRecoil.
+      oneShot(b, 'hit');
+      impactFx(b, false);
+      if (RM) return;
       const dir = b.side === 'party' ? partySide() : foeSide();   // knocked AWAY from the enemy
       tween(CFG.act.flinchMs, (u) => {
         const p = u < 0.25 ? easeOut(u / 0.25) : 1 - easeInOut((u - 0.25) / 0.75);
@@ -2519,40 +2606,164 @@
         procRecoil(b, u);      // ALWAYS, clip or no clip — see procRecoil's note
       }, () => { b.pivot.position.set(0, 0, 0); procRecoil(b, 1); });
     }
+    // ===== THE KO, AS FIVE BEATS ==============================================
+    // THE BLOW LANDS -> THE BODY STAGGERS -> IT FALLS -> IT LIES THERE -> IT
+    // LEAVES, and it leaves a mark. See CFG.ko for the measurement each phase is
+    // answering. NO CAMERA MOVE anywhere in here, deliberately: the four backdrop
+    // plates were generated from a prompt carrying this camera's exact height,
+    // tilt and fov (assets/battle/MANIFEST.md), so a shot on the kill is not a
+    // tuning change to this stage, it is a re-shoot of its world. Where the beat
+    // wanted one is written down in the DAYLOG instead.
     function markDead(b, instant) {
       b.dead = true;
       // a procedural lean or a hit flash must never be what a corpse is wearing
       b.bob.rotation.set(0, 0, 0);
       b.flash = 0; applyFlash(b);
       if (b.id === targetId) { targetId = null; targetRing.visible = false; }
+      clearTimeout(b._backT);                 // a pending return-to-idle must not raise the dead
+      const K = CFG.ko;
       if (instant) {
+        // A BODY THAT WAS ALREADY DEAD WHEN THE STAGE WAS BUILT gets no beat, by
+        // definition: nobody saw it die. It sits at its rest pose, on the floor.
         b.pivot.rotation.z = b.side === 'foe' ? 0 : Math.PI * 0.42;
-        b.root.position.y = b.home.y - (b.side === 'foe' ? 0.55 : 0);
-        setOpacity(b, b.side === 'foe' ? 0 : 0.22);
+        b.root.position.y = b.home.y;
+        setOpacity(b, b.side === 'foe' ? 0 : K.partyAlpha);
         if (b.side === 'foe' && b.obj) b.obj.visible = false;
         return;
       }
       const fell = oneShot(b, 'die', true);
-      // A DEATH IS THE LOUDEST BEAT IN A TURN AND GETS THE LOUDEST SHAKE. It
-      // also gets its own burst in the zone's dirt rather than in sparks: the
-      // body hits the ground, and what a body hitting the ground throws up is
-      // the ground.
-      if (!RM) {
-        // a death is the loudest beat, so it gets the longest hold as well as the
-        // loudest shake — same mechanism, one number
-        hitStop(CFG.act.hitStop.ko);
-        shake(CFG.fx.shakeKo, 420);
-        dustAt(b.root.position.x, b.root.position.z, 1.9);
-      }
-      const y0 = b.root.position.y, r0 = b.pivot.rotation.z;
-      const sink = b.side === 'foe' ? 0.55 : 0.0;
-      const endA = b.side === 'foe' ? 0 : 0.22;
-      tween(RM ? 260 : 720, (u) => {
+      // (1) THE BLOW LANDS — see impactFx. This is the fix for the killing blow
+      //     having been the ONE blow in the game with no feedback.
+      impactFx(b, true);
+      if (!RM) dustAt(b.root.position.x, b.root.position.z, 1.9);
+
+      // WHICH WAY IT IS KNOCKED. Away from whoever struck it — the stage's own
+      // actor marker, which battle_turnbased sets on the announce, and the nearest
+      // living enemy when nobody is marked (a console driver, a status death).
+      const src = (actorId && bodies[actorId] && bodies[actorId] !== b) ? bodies[actorId] : nearestFoe(b);
+      let kx, kz;
+      if (src) {
+        const dx = b.home.x - src.home.x, dz = b.home.z - src.home.z;
+        const L = Math.hypot(dx, dz) || 1; kx = dx / L; kz = dz / L;
+      } else { kx = b.side === 'party' ? partySide() : foeSide(); kz = 0; }
+      // AND THE KILLER HOLDS. act()'s plant reads this every frame, so the body
+      // that landed the blow stays at its strike station over the one it felled
+      // instead of tweening home while it falls. No new tween, no camera.
+      if (src && !src.dead && src !== b) src.holdUntil = vnow() + K.attackerHold;
+      if (!RM) reactToKO(b);
+
+      // (2)+(3) THE STAGGER AND THE FALL. The rest height is the floor UNDER
+      // WHERE THE BODY LANDED — never `y0 - 0.55`, which is the defect: a body
+      // 0.55 m under the dish here is a body 0.55 m inside a rock in ?arena=world.
+      const wx = b.home.x + kx * K.knockM, wz = b.home.z + kz * K.knockM;
+      const y0 = b.root.position.y, r0 = b.pivot.rotation.z, f0 = b.floatY;
+      const restY = groundY(wx, wz);
+      const topple = b.side === 'foe' ? Math.PI * 0.5 : Math.PI * 0.42;
+      const fallMs = K.knockMs + K.fallMs;
+      tween(RM ? 200 : fallMs, (u) => {
+        const kp = easeOut(clamp(u * (fallMs / K.knockMs), 0, 1));
+        worldMove(b, kx * K.knockM * kp, kz * K.knockM * kp);
+        b.pivot.position.y = Math.sin(kp * Math.PI) * 0.09;   // a little air under the stagger
         const e = easeInOut(u);
-        if (!fell && !RM) b.pivot.rotation.z = lerp(r0, b.side === 'foe' ? Math.PI * 0.5 : Math.PI * 0.42, e);
-        b.root.position.y = lerp(y0, y0 - sink, e);
-        setOpacity(b, lerp(1, endA, u));               // the fade is INFORMATION; it survives reduced motion
-      }, () => { if (b.side === 'foe' && b.obj) b.obj.visible = false; });
+        // the topple is the FALLBACK: a body with a Death clip is already falling,
+        // and rotating it as well lays it out flat on its own animation
+        if (!fell && !RM) b.pivot.rotation.z = lerp(r0, topple, e);
+        b.root.position.y = lerp(y0, restY, e);
+        // AND A FLOATER COMES DOWN. floatY is the hover; a dead wisp that keeps it
+        // is a corpse hanging in the air, and anchor() reads floatY too.
+        if (f0) { b.floatY = f0 * (1 - e); b.bob.position.y = b.floatY; }
+      }, () => {
+        b.pivot.position.y = 0;
+        b.root.position.y = restY;
+        if (f0) { b.floatY = 0; b.bob.position.y = 0; }
+        koSettled(b, wx, wz);
+      });
+    }
+    // (4) THE HOLD AND (5) THE LEAVING. A fallen ALLY never leaves — she lies
+    // where she fell at partyAlpha until an item stands her up, which is the one
+    // piece of information the old fade already had right.
+    function koSettled(b, wx, wz) {
+      const K = CFG.ko;
+      if (b.side !== 'foe') { setOpacity(b, K.partyAlpha); return; }
+      if (RM) { setOpacity(b, 0); if (b.obj) b.obj.visible = false; return; }
+      tween(K.holdMs, () => { }, () => {
+        if (dead || !b.dead) return;          // revived inside the hold: nothing to dissolve
+        koResidue(b, wx, wz);
+        // IT DISSOLVES RATHER THAN EVAPORATES, and what goes up is the zone's own
+        // haze — the same one-line-per-zone rule the dirt puff and the props follow.
+        burst(new TH.Vector3(wx, groundY(wx, wz) + b.h * 0.35, wz), zone.haze, K.motes,
+              { speed: 0.7, up: 1.35, size: 0.26, ms: K.dissolveMs + 240, gravity: -1.2,
+                spread: b.w * 0.4, opacity: 0.8, grow: 0.7 });
+        tween(K.dissolveMs, (u) => { if (b.dead) setOpacity(b, 1 - easeInOut(u)); },
+              () => { if (!b.dead) return; setOpacity(b, 0); if (b.obj) b.obj.visible = false; });
+      });
+    }
+    // SOMETHING IS LEFT WHERE IT FELL. The audit's words were "no corpse, no
+    // dissolve, no residue"; this is the third. It is the blob-shadow texture in
+    // the zone's own dirt — so it costs no new texture, it is disposed by the
+    // scene traverse in destroy() like everything else in here, and it reads as
+    // the shadow that stayed behind rather than as a decal somebody added.
+    function koResidue(b, wx, wz) {
+      if (!CFG.ko.residue || RM) return;
+      const K = CFG.ko;
+      const geo = new TH.PlaneGeometry(1, 1);
+      const mat = new TH.MeshBasicMaterial({ map: blobShadow(), transparent: true,
+        depthWrite: false, color: C(zone.dirt).multiplyScalar(0.42), opacity: 0 });
+      const m = new TH.Mesh(geo, mat);
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(wx, groundY(wx, wz) + 0.045, wz);
+      const s = clamp(b.w * K.residueK, 0.7, 3.6);
+      m.scale.set(s, s * 0.66, 1);
+      m.renderOrder = 2;
+      scene.add(m);
+      tween(K.dissolveMs, (u) => { mat.opacity = K.residueA * easeOut(u); });
+    }
+    // ===== THE OTHERS REACT ===================================================
+    // "The loudest event a turn can produce leaves the frame in the same state it
+    // started" (audit section 6.1). Measured before this: every other body moved
+    // 3-5 screen px against its own pre-blow anchor across three seconds, which is
+    // idle-clip noise. The killer's reaction is the HOLD in act(); everybody else
+    // gets a turn of the head toward the body that fell, with a recoil under it.
+    // NO NEW CLIP — there is none to source, and this composes on `bob` exactly
+    // the way procRecoil does, so a body with a Hit clip and a body without get
+    // the same reaction.
+    const _qA = new TH.Quaternion(), _qB = new TH.Quaternion(), _UP = new TH.Vector3(0, 1, 0);
+    function lookLean(b, yaw, lean) {
+      _qA.setFromAxisAngle(_UP, yaw);
+      _qB.setFromAxisAngle(leanAxis(b), lean);
+      b.bob.quaternion.copy(_qA).multiply(_qB);
+    }
+    function reactToKO(victim) {
+      const K = CFG.ko.react;
+      let i = 0, j = 0;
+      for (const id of order) {
+        const o = bodies[id];
+        if (!o || o === victim || o.dead || o.fleeing) continue;
+        if (o.id === actorId) continue;        // the killer's beat is the hold, not a flinch
+        const ally = o.side === victim.side;   // ITS OWN SIDE recoils; the other side leans in
+        reactBeat(o, victim, ally ? -K.lean : K.leanIn,
+                  ally ? K.look : K.look * K.allyK,
+                  K.delay + (ally ? (i++) * K.stagger : 90 + (j++) * K.stagger));
+      }
+    }
+    function reactBeat(b, at, lean, look, delay) {
+      const K = CFG.ko.react;
+      // THE TURN GOES ON `bob`, NOT ON `root` — root.rotation.y IS the facing every
+      // lunge, knockback and marker in this file is derived from (see turnAway).
+      const dx = at.home.x - b.home.x, dz = at.home.z - b.home.z;
+      let dy = Math.atan2(dx, dz) - b.facing;      // local forward is +Z: see leanAxis
+      while (dy > Math.PI) dy -= 2 * Math.PI;
+      while (dy < -Math.PI) dy += 2 * Math.PI;
+      const yaw = clamp(dy, -1.2, 1.2) * look;
+      tween(Math.max(1, delay), () => { }, () => {
+        if (dead || b.dead || b.fleeing || b.acting) return;
+        tween(K.ms, (u) => {
+          // snap, HOLD the look, come back. The hold is the whole point: a body
+          // that turns and instantly turns back has twitched, not reacted.
+          const s = u < 0.18 ? easeOut(u / 0.18) : u < 0.55 ? 1 : 1 - easeInOut((u - 0.55) / 0.45);
+          lookLean(b, yaw * s, lean * s);      // `lean` is SIGNED: away = recoil, toward = watch
+        }, () => { b.bob.rotation.set(0, 0, 0); });
+      });
     }
     function revive(b) {
       b.dead = false;
@@ -2562,6 +2773,9 @@
       b.bob.rotation.set(0, 0, 0);          // a procedural lean must not outlive the body's death
       b.flash = 0; applyFlash(b);
       b.root.position.y = b.home.y;
+      // a floater that came down when it died goes back up when it stands up
+      b.floatY = b.floatY0 || 0;
+      b.bob.position.y = b.floatY;
       setOpacity(b, 1);
       if (b.actions && b.actions.idle) { b.actions.idle.reset().fadeIn(0.2).play(); }
     }
@@ -3061,8 +3275,21 @@
       at(id) {
         const b = bodies[id]; if (!b) return null;
         const v = new (T().Vector3)(); b.pivot.getWorldPosition(v);
+        // `alpha` so "the corpse evaporated" is a NUMBER rather than an
+        // impression: setOpacity writes every material this body owns, so the
+        // first one's opacity is the body's. A body whose obj has been hidden
+        // outright reads 0 whatever its materials say.
+        const alpha = (b.obj && b.obj.visible === false) ? 0
+                    : (b.mats && b.mats.length && b.mats[0].transparent ? b.mats[0].opacity : 1);
+        // `bob` is the node every PROCEDURAL layer composes on — the swing, the
+        // recoil, the flee turn and the KO reaction. anchor() cannot see any of
+        // them (it projects the PIVOT and a constant height), so a harness asking
+        // "did this body react" has to read the rotation itself or diff pixels.
         return { x: v.x, y: v.y + b.floatY, z: v.z, h: b.h, w: b.w,
-                 side: b.side, dead: b.dead, tier: b.tier };
+                 side: b.side, dead: b.dead, tier: b.tier, alpha: +alpha.toFixed(3),
+                 floorY: +groundY(v.x, v.z).toFixed(3),
+                 bob: { x: +b.bob.rotation.x.toFixed(4), y: +b.bob.rotation.y.toFixed(4),
+                        z: +b.bob.rotation.z.toFixed(4) } };
       },
       // WHAT THE FRAME SOLVE DECIDED, and what it was aiming at. The scalars are
       // the four the search turned; `m` is the projected reading it settled on

@@ -369,8 +369,13 @@
 .ebb-qrow{display:grid;align-items:center;gap:9px;position:relative;padding:3px 0;
   grid-template-columns:1em 38px minmax(6.5em,10em) 15em 3em;border-radius:6px;
   transition:opacity 180ms linear}
+/* THE FOE THUMBNAIL. It used to be image-rendering:pixelated, because the art
+   behind it was a 16 px hand-drawn sprite. It is now a 256 px render OF THE MODEL
+   THE ARENA STAGES (tools/monster_icons.mjs), so nearest-neighbour down to 28 px
+   would throw away eight pixels in nine and alias what it kept. Smooth is the
+   correct filter for the art that is actually there. */
 .ebb-qic{width:28px;height:28px;justify-self:center;border-radius:5px;
-  background:#0c0e2acc center/contain no-repeat;image-rendering:pixelated;
+  background:#0c0e2acc center/contain no-repeat;
   box-shadow:inset 0 0 0 1px var(--eb-rule)}
 .ebb-qname{font:600 var(--eb-fs-sm)/1.15 var(--eb-face);color:var(--eb-ink-dim);letter-spacing:.02em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -422,11 +427,33 @@
    moment: a wider box that rises into place, a headline set at the top of the
    ramp, and the two numbers that matter — experience and gold — promoted out of
    the row list into their own pair of big amber readouts. */
+/* WHERE THE BOX SITS IS A MEASURED FIX (2026-08-08, BET I). The tally used to be
+   dead centre over a full-bleed dim + blur, and tools/battle_ko_shots.mjs put a
+   number on the obvious: in a 1600x813 frame the box occupied x 520-1080 and
+   Vesper's own projected anchor was INSIDE it, with Maren behind the blur. The
+   screen celebrated the party by hiding it. So the box now stands on the side of
+   the frame the party is NOT on — measured from the stage's own anchors at outro
+   time, never assumed from CFG.partySide, because the world arena solves its own
+   camera yaw — and the scrim is masked so it fades out over the party's half.
+   No class = centred and fully dimmed, which is the DOM stage's own case. */
 .ebb-outro{position:absolute;inset:0;z-index:8;display:flex;align-items:center;
-  justify-content:center;background:#0305158c;
-  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
-  animation:eb-fade 200ms var(--eb-ease-out)}
-.ebb-obox{min-width:min(560px,86vw);overflow:hidden;
+  justify-content:center;animation:eb-fade 200ms var(--eb-ease-out)}
+.ebb-oscrim{position:absolute;inset:0;background:#0305158c;
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.ebb-outro.pleft{justify-content:flex-end;padding-right:clamp(16px,4.5vw,80px)}
+.ebb-outro.pright{justify-content:flex-start;padding-left:clamp(16px,4.5vw,80px)}
+.ebb-outro.pleft .ebb-oscrim{
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,transparent 20%,#000 46%,#000 100%);
+  mask-image:linear-gradient(90deg,transparent 0,transparent 20%,#000 46%,#000 100%)}
+.ebb-outro.pright .ebb-oscrim{
+  -webkit-mask-image:linear-gradient(270deg,transparent 0,transparent 20%,#000 46%,#000 100%);
+  mask-image:linear-gradient(270deg,transparent 0,transparent 20%,#000 46%,#000 100%)}
+/* POSITIONED, and that is load-bearing rather than cosmetic: the scrim beside it
+   is position:absolute, and a STATIC flex item paints BELOW a positioned sibling
+   in the same stacking context — so without this the dim + blur landed ON TOP of
+   the panel and the backdrop plate showed straight through the VICTORY box.
+   Photographed once (docs/qa/battle-ko/, first after-run) before it was found. */
+.ebb-obox{position:relative;z-index:1;min-width:min(560px,86vw);overflow:hidden;
   animation:ebb-orise 420ms var(--eb-ease-out) both}
 @keyframes ebb-orise{from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:none}}
 .ebb-ohead{display:block;padding:11px 20px;font:800 var(--eb-fs-xl)/1.2 var(--eb-face);
@@ -1485,11 +1512,28 @@
     // the caller) and animates from the party's real pre-battle values to where
     // GS is about to put them. If the two ever disagreed the bar would be lying,
     // which is why they read the SAME function rather than two copies of k.
-    function outro(result) {
+    // WHICH HALF OF THE FRAME THE PARTY IS IN, ASKED RATHER THAN ASSUMED. The
+    // diorama writes its handedness down once (BattleStage3D.CFG.partySide) but the
+    // world arena SOLVES its camera yaw against the terrain, so the only honest
+    // answer is where the bodies actually project this frame. null = no stage (the
+    // DOM stage), and the box stays centred exactly as it was.
+    function partySideOnScreen() {
+      if (!stage || !stage.anchor || !S.state) return null;
+      let sum = 0, n = 0;
+      for (const c of S.state.party) {
+        let a = null; try { a = stage.anchor(c.id); } catch (e) { }
+        if (!a || a.vis === false) continue;
+        sum += a.x; n++;
+      }
+      if (!n) return null;
+      const w = root.getBoundingClientRect().width || window.innerWidth || 1;
+      return (sum / n) < w / 2 ? 'pleft' : 'pright';
+    }
+    async function outro(result) {
       const titles = { victory: 'Victory', defeat: 'Defeated', fled: 'Escaped' };
       const box = document.createElement('div');
-      box.className = 'ebb-outro';
       const win = result.outcome === 'victory';
+      box.className = 'ebb-outro' + (win ? (' ' + (partySideOnScreen() || '')) : '').trimEnd();
       const drops = (result.drops || []).map(id => cfg.itemName(id));
       const xpEach = win ? cfg.xpShare(result.xp) : 0;
 
@@ -1525,7 +1569,8 @@
           '</div>'
         : '';
 
-      box.innerHTML = '<div class="eb-win ebb-obox"><span class="ebb-ohead">' +
+      box.innerHTML = '<div class="ebb-oscrim"></div>' +
+        '<div class="eb-win ebb-obox"><span class="ebb-ohead">' +
         esc(titles[result.outcome] || result.outcome) + '</span><div class="ebb-obody">' +
         spoils +
         (plan.length ? '<div class="ebb-tally">' + plan.map((p, i) =>
@@ -1539,12 +1584,26 @@
         rows.map(r => '<div class="ebb-orow"><span>' + esc(r[0]) + '</span><span class="n">' +
           esc(r[1]) + '</span></div>').join('') +
         '</div><div class="ebb-ofoot">ENTER TO CONTINUE</div></div>';
-      root.appendChild(box);
       // the message band has nothing left to say and no one left to point at, so
       // it steps off the top of the arena rather than sitting there empty
       setActorChip(null); setCmdTitle(null); logLine('');
       qq('seat').textContent = '';      // and the seat chip, or it hangs in the corner alone
-      if (stage && win) stage.cheer();
+      // ===== THE VICTORY IS A BEAT, NOT A STATE CHANGE (2026-08-08, BET I) =====
+      // MEASURED before this: 1812 ms after the last foe went down the tally box
+      // was on screen — and in between, nothing happened. The cheer fired on the
+      // SAME line that appended the box, so the one victory pose this cast has was
+      // played behind a dimmed, blurred panel that covered the party (Vesper's own
+      // anchor was inside the box; see docs/qa/battle-ko/before-win-3-tally.png).
+      // The order is now: THE FIELD ALONE while the last body settles and the
+      // survivors' reactions play out, THEN the cheer, THEN — once it has been on
+      // screen long enough to be a picture — the tally.
+      // speed 0 (every suite, every automated caller) still gets all of it at once.
+      if (win && stage) {
+        await wait(beat('winHold'));
+        try { stage.cheer(); } catch (e) { }
+        await wait(beat('winCheer'));
+      }
+      root.appendChild(box);
 
       // --- the animation ---------------------------------------------------
       const goldRow = box.querySelector('.ogold'), xpRow = box.querySelector('.oxp');
@@ -1757,6 +1816,15 @@
       ko: 820,         // a death gets its own moment
       flee: 850,
       settle: 320,     // the gap between one actor finishing and the next starting
+      // ---- THE VICTORY BEAT (2026-08-08, BET I) ----
+      // winHold covers the last KO's own staging: the blow, the stagger, the fall,
+      // the hold and the dissolve run 2.2 s from contact and `ko` above has
+      // already spent 820 ms of it, so the field is empty of the fight by the time
+      // the party cheers. winCheer is how long the cheer is the ONLY thing on
+      // screen before the tally arrives — the hop is 900 ms, so this shows its
+      // first two thirds and the box lands while the party is still up.
+      winHold: 900,
+      winCheer: 620,
     },
     // ---- the victory tally (also * speed; speed:0 snaps to final values) ----
     tally: { goldMs: 700, perXpMs: 26, legMinMs: 420, upFlashMs: 620 },
@@ -1881,9 +1949,16 @@
             },
             // the party's own bust art, through ui_kit's one convention — the
             // status table shows the same faces the dialogue boxes do
-            // the foe's queue thumbnail: the same 16px sprite the DOM stage uses,
-            // rendered pixelated at 22px. Convention, not a list — a new monster
-            // needs no entry anywhere.
+            // THE FOE'S QUEUE THUMBNAIL, and it is the same art the DOM stage uses.
+            // The lookup never changed and never needs to: convention, not a list.
+            // WHAT CHANGED IS WHAT IS AT THE END OF IT (2026-08-08). These were 16 px
+            // hand-drawn sprites whose colours contradicted the bodies — duskpad's
+            // was salmon-pink over a grey wolf, scree shell's green over a red crab,
+            // 105 degrees of mean-hue disagreement — so the panel that exists for the
+            // player to PLAN with showed creatures in colours they do not have. They
+            // are now rendered FROM the arena's own GLBs by tools/monster_icons.mjs,
+            // which makes agreement structural instead of remembered. Measured with
+            // tools/monster_regrade.py --icons: worst hue error 164 degrees -> 24.5.
             foeIcon: (mid) => monsterUrl(mid),
             bustFor: (charId) => {
               const k = EB();

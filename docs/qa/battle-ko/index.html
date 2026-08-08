@@ -1,0 +1,200 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Battle — THE KO AND THE VICTORY ARE EVENTS (BET I)</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #0d1017; color: #dfe3ea;
+         font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif; }
+  .wrap { max-width: 1500px; margin: 0 auto; padding: 34px 22px 90px; }
+  h1 { font-size: 27px; margin: 0 0 6px; letter-spacing: -.01em; }
+  h2 { font-size: 20px; margin: 44px 0 8px; border-bottom: 1px solid #262c39; padding-bottom: 7px; }
+  h3 { font-size: 15px; margin: 26px 0 6px; color: #f0b45c; letter-spacing: .04em; text-transform: uppercase; }
+  p, li { max-width: 86ch; }
+  .sub { color: #8d97a8; margin: 0 0 22px; }
+  code { font: 12.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: #161b26;
+         padding: 1px 5px; border-radius: 4px; }
+  table { border-collapse: collapse; margin: 12px 0 6px; font-size: 13.5px; }
+  th, td { border: 1px solid #262c39; padding: 5px 11px; text-align: left; vertical-align: top; }
+  th { background: #161b26; color: #a9b3c4; font-weight: 600; }
+  td.n { font: 12.5px ui-monospace, Menlo, monospace; text-align: right; }
+  .good { color: #7fd18a; } .bad { color: #e88f8f; } .warn { color: #e5c07b; }
+  .strip { display: grid; gap: 10px; margin: 12px 0 4px;
+           grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  figure { margin: 0; }
+  figure img { width: 100%; display: block; border: 1px solid #262c39; border-radius: 5px; background: #000; }
+  figcaption { font-size: 12px; color: #8d97a8; margin-top: 5px; }
+  .pair { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; margin: 12px 0; }
+  @media (max-width: 900px) { .pair { grid-template-columns: 1fr; } }
+  .note { background: #141a24; border-left: 3px solid #f0b45c; padding: 10px 15px; margin: 16px 0;
+          border-radius: 0 5px 5px 0; }
+  .neg { border-left-color: #e88f8f; }
+</style>
+<div class="wrap">
+
+<h1>THE KO AND THE VICTORY ARE EVENTS</h1>
+<p class="sub">Battle wave 2, lane A — slate <b>BET I</b>
+(<code>docs/plans/battle-presentation-inventory.md</code> §6.1, §10.7). 2026-08-08.
+Instrument: <code>node tools/battle_ko_shots.mjs --port=3000 --tag=&lt;tag&gt; [--arena=world] [--noreact]</code>,
+1600×813, real GPU, <code>nomusic=1</code>, party [vesper, maren], seed 4242.
+<b>No camera move anywhere in this bet</b> — see the last section for why, and for where one was wanted.</p>
+
+<h2>§1 The five things that were measured before a line was changed</h2>
+<p>The KO scenario drives the stage <em>exactly the way <code>battle_turnbased</code> drives it</em> —
+<code>setDead(id,true)</code> and then <code>flinch(id)</code>, in that order — because the order of those
+two calls turned out to be one of the defects.</p>
+
+<table>
+<tr><th>claim</th><th>before</th><th>after</th><th>how it was measured</th></tr>
+<tr><td>the body sinks through the floor</td>
+    <td class="n bad">0.550 m</td><td class="n good">0.000 m</td>
+    <td><code>stage.at(id).y</code> at 34 ms, against the y the same body had alive. In
+        <code>?arena=world</code> that 0.55 m was through real terrain.</td></tr>
+<tr><td>anything left where it died</td>
+    <td class="n bad">gone at 842 ms</td><td class="n good">gone at 2260 ms</td>
+    <td><code>at(id).alpha</code>. The corpse now falls, <b>lies there for 760 ms solid</b>, then
+        dissolves and leaves a ground mark.</td></tr>
+<tr><td>the killing blow flashes</td>
+    <td class="n bad">104.6</td><td class="n good">167.7</td>
+    <td>mean luminance of the victim's own screen box 60 ms after the blow, out of a
+        <b>synchronous</b> stage render. Idle reads 121; a survivable hit reads 213.
+        <b>The kill used to be darker than standing still.</b></td></tr>
+<tr><td>the victim's ally reacts</td>
+    <td class="n bad">3.0</td><td class="n good">14.0</td>
+    <td>mean |ΔL| over that body's own screen box against a frame taken one tick before the
+        blow. Rotation: <code>bob</code> 0 → 0.63 rad.</td></tr>
+<tr><td>the killer's ally reacts</td>
+    <td class="n bad">7.3</td><td class="n good">10.5</td>
+    <td>same metric. Her floor is higher because her idle clip moves her; the reaction clears it.</td></tr>
+<tr><td>the tally covers the party</td>
+    <td class="bad">vesper inside the box, maren behind the blur</td>
+    <td class="good">nobody</td>
+    <td>the box's own <code>getBoundingClientRect</code> against every body's projected anchor,
+        read <b>while the box is on screen</b>.</td></tr>
+<tr><td>last foe down → tally on screen</td>
+    <td class="n">1812 ms</td><td class="n">2985 ms</td>
+    <td>wall clock in the driver. The added time is the held moment and the cheer — see §4.</td></tr>
+</table>
+
+<div class="note neg">
+<b>The one that was not in the audit.</b> <code>battle_turnbased</code> calls <code>syncHp()</code>
+— therefore <code>setDead()</code> therefore <code>markDead()</code> — <b>before</b> <code>hitShake()</code>
+— therefore <code>flinch()</code> — and <code>flinch()</code> returns early on a body that is already
+dead. So the loudest blow in the fight was the <b>one blow in the game with no flash, no sparks and no
+shock ring</b>. That is what the 104.6 above is. The impact package is now its own function
+(<code>impactFx</code>) and <code>markDead</code> calls it.
+</div>
+
+<h2>§2 The KO, frame by frame</h2>
+<h3>before — the evaporation</h3>
+<div class="strip">
+  <figure><img src="before-ko-t80.jpg"><figcaption>+80 ms — the victim is standing, solid, unlit. No flash.</figcaption></figure>
+  <figure><img src="before-ko-t340.jpg"><figcaption>+340 ms — translucent, sinking.</figcaption></figure>
+  <figure><img src="before-ko-t620.jpg"><figcaption>+620 ms — <b>a patch of grass.</b> The killer is walking home; the surviving wolf and Maren have not moved.</figcaption></figure>
+  <figure><img src="before-ko-t1500.jpg"><figcaption>+1500 ms — the frame is in the state it started in.</figcaption></figure>
+</div>
+
+<h3>after — the blow, the stagger, the fall, THE HOLD, the leaving</h3>
+<div class="strip">
+  <figure><img src="after-ko-t80.jpg"><figcaption>+80 ms — the blow lands: flash, amber burst, shock ring, a 150 ms hit-stop.</figcaption></figure>
+  <figure><img src="after-ko-t340.jpg"><figcaption>+340 ms — the body is driven back and toppling; <b>the killer is still at its strike station</b>, not tweening home.</figcaption></figure>
+  <figure><img src="after-ko-t1000.jpg"><figcaption>+1000 ms — <b>the corpse is lying on the ground</b>, on the floor under where it landed, at full opacity.</figcaption></figure>
+  <figure><img src="after-ko-t2100.jpg"><figcaption>+2100 ms — dissolving into rising motes in the zone's own haze, leaving a mark.</figcaption></figure>
+</div>
+
+<h2>§3 THE OTHERS REACT</h2>
+<p>The A/B is on <b>one build</b>: <code>--noreact</code> zeroes <code>CFG.ko.react</code>'s amplitudes
+before the blow, so the only difference between the two frames is whether the survivors react — the
+staging, the fall and the hold underneath are identical.</p>
+<div class="pair">
+  <figure><img src="after-noreact-ko-t340.jpg"><figcaption>reaction OFF — the surviving wolf and Maren stand exactly as they were.</figcaption></figure>
+  <figure><img src="after-ko-t340.jpg"><figcaption>reaction ON — the wolf has swung round toward its fallen packmate and dipped; Maren has leaned in.</figcaption></figure>
+</div>
+<p><b>Two sides do not react the same way, and that is a measurement rather than a preference.</b>
+The first pass scaled one amplitude down for the far side and gave the party 0.18 rad and a pixel
+delta of 7.52 against a do-nothing floor of 7.30 — <i>invisible</i>, because a party member is
+already facing the foes and "turn to look" has almost no bearing to travel. The victim's own side now
+<b>recoils</b> (away from the blow, 0.26 rad); the side that did the killing <b>leans in and holds</b>
+(0.22 rad). No clip was added — there is none to source — and both compose on the <code>bob</code>
+node exactly the way <code>procRecoil</code> does, so a body with a Hit clip and a body without get
+the same reaction.</p>
+
+<div class="note">
+<b>An instrument note worth keeping.</b> The first version of this measurement used
+<code>stage.anchor(id)</code> and reported 3–5 px whether the reaction fired or not.
+<code>anchor()</code> projects the <b>pivot</b> and a <b>constant height</b>, so it is blind to every
+procedural layer in <code>battle_stage3d</code> by construction — the swing, the recoil, the flee turn
+and this reaction all live on <code>bob</code>, which <code>anchor</code> never reads. A gate built on
+it would have called the whole feature a no-op. It has to be pixels.
+</div>
+
+<h2>§4 The victory, as a beat</h2>
+<p>The cheer used to fire on the same line that appended the tally box, so the one victory pose this
+cast has was played <b>behind a dimmed, blurred panel that covered the party</b>. The order is now:
+the field alone while the last body settles and the survivors' reactions play out
+(<code>pacing.winHold</code> 900 ms), then the cheer, then — once it has been on screen long enough to
+be a picture (<code>pacing.winCheer</code> 620 ms) — the tally. <code>speed: 0</code> (every suite,
+every automated caller) still gets all of it at once.</p>
+<div class="pair">
+  <figure><img src="before-win-3-tally.jpg"><figcaption>before — Vesper is <b>inside</b> the box, Maren is behind the blur, and the cheer is happening where nobody can see it.</figcaption></figure>
+  <figure><img src="after-win-3-tally.jpg"><figcaption>after — the party is on the clear half of the frame, unblurred, mid-cheer; the box stands where the foes were.</figcaption></figure>
+</div>
+<div class="strip">
+  <figure><img src="after-win-0-down.jpg"><figcaption>the last foe goes down</figcaption></figure>
+  <figure><img src="after-win-1-hold700.jpg"><figcaption>+700 ms — the held moment: the body is on the ground and the field is the only thing on screen</figcaption></figure>
+  <figure><img src="after-win-2-hold1400.jpg"><figcaption>+1400 ms — still there, still no box</figcaption></figure>
+  <figure><img src="after-win-4-tally-late.jpg"><figcaption>the tally runs</figcaption></figure>
+</div>
+<p><b>Which side the box stands on is asked, never assumed.</b> The diorama writes its handedness down
+once (<code>CFG.partySide</code>) but the world arena <i>solves</i> its camera yaw against the terrain,
+so the only honest answer is where the bodies actually project at outro time. No stage (the DOM
+fallback) = centred and fully dimmed, exactly as before.</p>
+<p class="sub">A CSS trap paid for once and written down in the source: the scrim is
+<code>position:absolute</code> and a <b>static flex item paints below a positioned sibling</b>, so the
+first build put the dim and the blur <em>on top of</em> the panel and the backdrop plate showed
+straight through the VICTORY box. <code>.ebb-obox</code> is now positioned.</p>
+
+<h2>§5 <code>?arena=world</code> — the same beat, and the sink that mattered most</h2>
+<p>The diorama's 0.55 m sink put a body under a procedural dish. This stage stands its bodies on real
+terrain solved out of <code>SIM.ground</code>, so the same line drove a corpse <b>0.55 m through solid
+rock</b>. The rest height is now the real floor under wherever the body landed — asked of the scene,
+never assumed to be a plane. Measured: sink <b>0.000 m</b>, corpse present until 2239 ms, reaction
+rotations 0.63 / 0.22 rad.</p>
+<div class="strip">
+  <figure><img src="after-world-ko-t340.jpg"><figcaption>+340 ms — the killer holds over the body, which is on the path rather than in it</figcaption></figure>
+  <figure><img src="after-world-ko-t1000.jpg"><figcaption>+1000 ms — the corpse lies on real ground; the surviving wolf has turned</figcaption></figure>
+  <figure><img src="after-world-win-3-tally.jpg"><figcaption>the victory beat in the world arena — the box found the party's side off the solved yaw</figcaption></figure>
+</div>
+
+<h2>§6 What was refused</h2>
+<ul>
+  <li><b>A camera move, anywhere.</b> The four backdrop plates were generated from a prompt carrying
+      this camera's exact height, tilt and fov (<code>public/assets/battle/MANIFEST.md</code>), so a
+      shot on the kill is not a tuning change to the diorama — it is a re-shoot of its world, and the
+      camera language is a separate gated bet (BET B). Where one was wanted: <b>a slow push toward the
+      body during the 760 ms hold</b>, and <b>a move onto the party for the victory cheer</b>. Both are
+      written into the DAYLOG rather than built.</li>
+  <li><b>A new clip.</b> The reaction is procedural composition on <code>bob</code> because there is no
+      CC0 "react to a death" donor to source, and the file's own rule is that a body without a clip
+      must still be seen to do the thing.</li>
+  <li><b>Anything in <code>battle_rules.js</code>.</b> Read, never edited. No number, no turn order, no
+      damage. <code>battle_sim</code> and <code>encounter_sim</code> stay green by not being affected.</li>
+</ul>
+
+<h2>§7 Gates</h2>
+<table>
+<tr><th>gate</th><th>result</th></tr>
+<tr><td><code>node tools/battle_sim.mjs</code></td><td class="good">ALL ENVELOPES GREEN · 6 engine property tests passed</td></tr>
+<tr><td><code>node tools/encounter_sim.mjs</code></td><td class="good">ENCOUNTER INTEGRATION GREEN</td></tr>
+<tr><td><code>node tools/arena_playtest.mjs --port=3000</code></td>
+    <td><span class="good">nogl PASS · serial PASS</span> (teardown total, no context leak, warm heap drift 1.9 MB) ·
+        <span class="warn">organic FAIL "no hostile zone reachable"</span> — <b>reproduced identically on a
+        pristine HEAD checkout of the three files</b>, so it is not this lane's.</td></tr>
+<tr><td><code>node tools/transition_test.mjs --port=3000</code></td>
+    <td><span class="warn">167 ok / 1 failed</span> — <code>after battle: del-cine|shelf-west geo +2</code>.
+        <b>The same server run against a pristine HEAD copy of the three files scores byte-identically
+        (164/4 on that host, same four assertions, same deltas), and swapping this lane's files in
+        changes nothing at all</b> — the receipt is in the DAYLOG. Console gate green:
+        no errors across the whole run.</td></tr>
+</table>
+
+</div>

@@ -411,7 +411,8 @@
       g.add(bob);
       root.add(g);
       const b = { id: rec.id, side: rec.side, root: g, bob: bob, obj: null, home: g.position.clone(),
-                  tier: 'none', dead: false, h: 1.7, w: 0.7, mixer: null, actions: null, flash: 0 };
+                  tier: 'none', dead: false, h: 1.7, w: 0.7, mixer: null, actions: null, flash: 0,
+                  holdUntil: 0, alpha: 1 };   // the killer's hold, and the alpha this stage set
       bodies[rec.id] = b; order.push(rec.id);
       return b;
     }
@@ -576,22 +577,112 @@
             () => { root.remove(m); geo.dispose(); mat.dispose(); });
     }
 
+    // ===== THE KO IS A BEAT HERE TOO, AND THE SINK WAS WORSE HERE ==============
+    // The diorama's 0.55 m sink put a body under a procedural dish. THIS stage
+    // stands its bodies on real terrain solved out of SIM.ground, so the same
+    // line drove a corpse 0.55 m THROUGH SOLID ROCK, in frame, on a ledge. The
+    // rest height is now the real floor under wherever the body landed — asked of
+    // the scene, never assumed to be a plane. Phases and numbers are read from
+    // BattleStage3D.CFG.ko so the two stages stage the same death; this one has no
+    // particle system, so its dissolve is the fade plus the ring it already had.
+    function koCfg() {
+      const S3D = window.BattleStage3D;
+      return (S3D && S3D.CFG && S3D.CFG.ko) || { knockM: 0.62, knockMs: 300, fallMs: 520,
+        holdMs: 760, dissolveMs: 620, partyAlpha: 0.22, attackerHold: 380,
+        react: { ms: 640, delay: 130, stagger: 110, lean: 0.26, leanIn: 0.22,
+                 look: 0.55, allyK: 0.5 } };
+    }
+    function setAlpha(b, a) {
+      b.alpha = a;                    // what the STAGE set — see at()
+      b.root.traverse((o) => {
+        if (o.isMesh && o.material) { o.material.transparent = true; o.material.opacity = a; }
+      });
+    }
     function markDead(b, instant) {
       if (b.dead) return;
       b.dead = true;
+      b.bob.rotation.set(0, 0, 0);
+      const K = koCfg();
+      clearTimeout(b._backT);                 // a pending return-to-idle must not raise the dead
       oneShot(b, 'die', true);
       if (instant) { b.root.visible = false; return; }
-      const y0 = b.root.position.y;
-      tween(720, (u) => {
-        b.root.position.y = y0 - u * 0.55;
-        b.root.traverse((o) => { if (o.isMesh && o.material) {
-          o.material.transparent = true; o.material.opacity = 1 - u; } });
-      }, () => { b.root.visible = false; });
-      shake(CFG.fx.shakeKo, 420);
+      // (1) THE BLOW LANDS. battle_turnbased sets dead BEFORE it calls flinch and
+      // flinch returns early on a dead body, so without this the killing blow is
+      // the one blow with no feedback — the same defect measured in the diorama.
+      flashOn(b); shockRing(b); shake(CFG.fx.shakeKo, 420);
+      // (2) THE STAGGER, away from whoever struck it — and THE KILLER HOLDS
+      const src = (actorId && bodies[actorId] && bodies[actorId] !== b) ? bodies[actorId] : null;
+      if (src && !src.dead) src.holdUntil = now() + K.attackerHold;
+      let kx = 1, kz = 0;
+      if (src) {
+        const dx = b.home.x - src.home.x, dz = b.home.z - src.home.z;
+        const L = Math.hypot(dx, dz) || 1; kx = dx / L; kz = dz / L;
+      }
+      reactToKO(b);
+      const x1 = b.home.x + kx * K.knockM, z1 = b.home.z + kz * K.knockM;
+      // (3) THE FALL, ONTO THE REAL GROUND. A column with no floor under it keeps
+      // the body's own height rather than guessing — a refusal, not a drop.
+      let restY = b.home.y;
+      try { const g = window.SIM && window.SIM.ground(x1, z1, b.home.y);
+            if (g != null && Math.abs(g - b.home.y) < 2.2) restY = g; } catch (e) { }
+      const y0 = b.root.position.y, fall = K.knockMs + K.fallMs;
+      tween(fall, (u) => {
+        const kp = 1 - Math.pow(1 - clamp(u * (fall / K.knockMs), 0, 1), 3);
+        b.root.position.x = b.home.x + kx * K.knockM * kp;
+        b.root.position.z = b.home.z + kz * K.knockM * kp;
+        b.root.position.y = lerp(y0, restY, u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2)
+                          + Math.sin(kp * Math.PI) * 0.09;
+      }, () => {
+        b.root.position.set(x1, restY, z1);
+        if (b.side !== 'foe') { setAlpha(b, K.partyAlpha); return; }
+        // (4) IT LIES THERE — the beat that did not exist — and (5) then it goes
+        tween(K.holdMs, () => { }, () => {
+          if (deadStage || !b.dead) return;
+          tween(K.dissolveMs, (u) => { if (b.dead) setAlpha(b, 1 - u); },
+                () => { if (b.dead) b.root.visible = false; });
+        });
+      });
+    }
+    // ===== THE OTHERS REACT ===================================================
+    // Same rule as the diorama's (battle_stage3d reactToKO): the killer's beat is
+    // the hold at its strike station, everybody else turns to look with a recoil
+    // under it, and the turn goes on `bob` because root.rotation.y is the facing
+    // every lunge here is derived from. No clip is added — there is none to source.
+    const _qA = new TH.Quaternion(), _qB = new TH.Quaternion();
+    const _UP = new TH.Vector3(0, 1, 0), _LN = new TH.Vector3(1, 0, 0);
+    function reactToKO(victim) {
+      const K = koCfg().react;
+      let i = 0, j = 0;
+      for (const id of order) {
+        const o = bodies[id];
+        if (!o || o === victim || o.dead || o.id === actorId) continue;
+        const ally = o.side === victim.side;    // recoil on its own side, lean in on the other
+        reactBeat(o, victim, ally ? -K.lean : (K.leanIn || K.lean * 0.85),
+                  ally ? K.look : K.look * K.allyK,
+                  K.delay + (ally ? (i++) * K.stagger : 90 + (j++) * K.stagger), K.ms);
+      }
+    }
+    function reactBeat(b, at, lean, look, delay, ms) {
+      const dx = at.home.x - b.home.x, dz = at.home.z - b.home.z;
+      let dy = Math.atan2(dx, dz) - b.root.rotation.y;
+      while (dy > Math.PI) dy -= 2 * Math.PI;
+      while (dy < -Math.PI) dy += 2 * Math.PI;
+      const yaw = clamp(dy, -1.2, 1.2) * look;
+      tween(Math.max(1, delay), () => { }, () => {
+        if (deadStage || b.dead) return;
+        tween(ms, (u) => {
+          const s = u < 0.18 ? 1 - Math.pow(1 - u / 0.18, 3)
+                  : u < 0.55 ? 1 : 1 - (u - 0.55) / 0.45;
+          _qA.setFromAxisAngle(_UP, yaw * s);
+          _qB.setFromAxisAngle(_LN, lean * s);      // SIGNED: away = recoil, toward = watch
+          b.bob.quaternion.copy(_qA).multiply(_qB);
+        }, () => { b.bob.rotation.set(0, 0, 0); });
+      });
     }
     function revive(b) {
       if (!b.dead) return;
       b.dead = false; b.root.visible = true; b.root.position.copy(b.home);
+      b.bob.rotation.set(0, 0, 0);          // a KO reaction must not outlive the body's death
       b.root.traverse((o) => { if (o.isMesh && o.material) o.material.opacity = 1; });
       if (b.actions && b.actions.idle) b.actions.idle.reset().fadeIn(0.2).play();
     }
@@ -631,14 +722,23 @@
       oneShot(b, 'attack');
       const total = budget + 320;
       const arriveU = clamp((budget * 0.62) / total, 0.05, 0.95);
-      const holdU = clamp(budget / total, arriveU, 0.98);
-      tween(total, (u) => {
-        const p = u < arriveU ? (1 - Math.pow(1 - u / arriveU, 3))
-                : u < holdU ? 1
-                : 1 - (u - holdU) / (1 - holdU);
+      // THE PLANT CAN BE HELD, exactly as in the diorama: if this blow kills, the
+      // killer stands over the body it felled instead of walking home while it
+      // falls. The tween runs `attackerHold` longer so it cannot end mid-hold.
+      const K = koCfg();
+      b.holdUntil = 0;
+      const t0 = now(), dur = total + K.attackerHold;
+      tween(dur, (u) => {
+        const uu = clamp(u * dur / total, 0, 1), el = now() - t0;
+        let p;
+        if (uu < arriveU) p = 1 - Math.pow(1 - uu / arriveU, 3);
+        else {
+          const holdEnd = Math.max(budget, b.holdUntil ? b.holdUntil - t0 : 0);
+          p = el <= holdEnd ? 1 : 1 - clamp((el - holdEnd) / 320, 0, 1);
+        }
         b.root.position.x = b.home.x + nx * travel * p;
         b.root.position.z = b.home.z + nz * travel * p;
-      }, () => { b.root.position.copy(b.home); });
+      }, () => { b.root.position.copy(b.home); b.holdUntil = 0; });
       return budget;
     }
     function flinch(id) {
@@ -733,6 +833,26 @@
       // **maren**, so the audit's own impact captures had Vesper attacking her own
       // party member. An id is not a side.
       sides() { const o = {}; for (const id of order) o[id] = bodies[id].side; return o; },
+      // WHERE A BODY ACTUALLY IS, in world metres — the diorama's own QA accessor
+      // (battle_stage3d :3061), implemented here so ONE instrument can measure both
+      // arenas. `floorY` is the REAL ground under the body (SIM.ground), which is
+      // the whole point in this stage: a KO that sinks 0.55 m in the diorama sinks
+      // 0.55 m through solid rock here. QA path only — it allocates.
+      at(id) {
+        const b = bodies[id]; if (!b) return null;
+        // THE ALPHA THIS STAGE SET, not a survey of the model's own materials: a
+        // sourced GLB can ship a legitimately transparent mesh at opacity 0 (an
+        // eye decal, a cut-out), and taking the minimum over the tree reported a
+        // fully solid body as ALREADY GONE at 1 ms. A stage reports what it did.
+        const alpha = b.root.visible === false ? 0 : (b.alpha == null ? 1 : b.alpha);
+        let fy = null;
+        try { fy = window.SIM ? window.SIM.ground(b.root.position.x, b.root.position.z, b.home.y) : null; } catch (e) { }
+        return { x: b.root.position.x, y: b.root.position.y, z: b.root.position.z,
+                 h: b.h, w: b.w, side: b.side, dead: b.dead, tier: b.tier,
+                 alpha: +alpha.toFixed(3), floorY: fy == null ? null : +fy.toFixed(3),
+                 bob: { x: +b.bob.rotation.x.toFixed(4), y: +b.bob.rotation.y.toFixed(4),
+                        z: +b.bob.rotation.z.toFixed(4) } };
+      },
       clipsOf(id) { const b = bodies[id]; return b && b.actions ? Object.keys(b.actions) : []; },
       setTarget(id) { targetId = id && bodies[id] && !bodies[id].dead ? id : null; },
       setActor(id) { actorId = id && bodies[id] && !bodies[id].dead ? id : null; },

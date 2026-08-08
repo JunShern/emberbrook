@@ -1,0 +1,53 @@
+{
+  "tag": "after-noreact",
+  "arena": "diorama",
+  "when": "2026-08-08T06:32:39.931Z",
+  "ko": {
+    "victim": "m0",
+    "actor": "vesper",
+    "foes": [
+      "m0",
+      "m1"
+    ],
+    "allies": [
+      "vesper",
+      "maren"
+    ],
+    "aliveY": 0.023,
+    "minY": 0.023,
+    "endY": 0.092,
+    "sinkBelowAliveM": 0,
+    "alphaAlive": 1,
+    "alphaEnd": 0,
+    "goneAtMs": 2254,
+    "react": {
+      "m1": {
+        "dxPx": 5.4,
+        "dyPx": 3.6,
+        "dhPx": 3.4,
+        "bobRad": 0,
+        "pxDiff": 3
+      },
+      "vesper": {
+        "dxPx": 763.4,
+        "dyPx": 17.9,
+        "dhPx": 8.6,
+        "bobRad": 0,
+        "pxDiff": 15.6
+      },
+      "maren": {
+        "dxPx": 6.4,
+        "dyPx": 0.6,
+        "dhPx": 3.2,
+        "bobRad": 0,
+        "pxDiff": 7.3
+      }
+    },
+    "lum": {
+      "base": 122.01,
+      "hit": 212.72,
+      "kill": 169.41
+    },
+    "frames": 562
+  }
+}
