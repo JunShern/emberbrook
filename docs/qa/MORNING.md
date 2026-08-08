@@ -4,22 +4,27 @@ An overnight window, ~17:00 → 06:45. Round 3 of the graphics loop CLOSED, the 
 fix shipped, and the BATTLE PRESENTATION ARC opened and delivered its first wave. All work is
 committed and pushed (branch `migration/3d-hybrid`).
 
-## THE ONE THING THAT IS NOT DONE: THE LIVE SITE IS STALE
-The deploy is **still on build `2026-08-07T21:59:22Z`** — it carries the reopened west arm and
-Emberbrook's seated water, but NOT the fields/skies work, NOT dpr 2, NOT any of the battle wave.
-A deploy lane has been fighting this for hours; the cause is mine and it is instructive:
-- I built from a CLEAN GIT WORKTREE (correct instinct — the main tree held four lanes' in-flight
-  code and a normal build would have shipped half-written battle modules).
-- **A fresh worktree has a COLD `.build-cache`, and the cold build produced a DIFFERENT TREE:
-  915 MB / 896 files against the known-good 519 MB / 392.** That is the open question worth
-  answering first thing: if the cold build keeps originals beside their `.webp`, then
-  `build-static.mjs`'s inclusion logic has been depending on cache state for CORRECTNESS, not
-  just speed. The diff is queued as the lane's first deliverable.
-- Then the push itself: the first died WITH ITS FOREGROUND TOOL CALL (a long push is bounded by
-  the call, not the network — worth putting in the deploy tooling), the second I killed at a
-  measured 143 KB/s while carrying the bloated payload.
-**To finish it: build in the main repo (or a worktree with `.build-cache` COPIED in), confirm
-~390 files / ~520 MB, push detached (`setsid nohup`), verify the live stamp moves.**
+## THE DEPLOY IS LIVE AND VERIFIED — and my diagnosis of it was WRONG, twice
+Live: **build `2026-08-08T05:34:57Z`, static_verify 29/0 local AND against the URL**, with the
+plate bytes compared on the wire (pondlane moved 957040 → 902084, so the ART shipped, not just
+the stamp). It carries everything below except the battle wave commits that landed after the
+build sha `d95f3e04` — a follow-up deploy is the next lane's cheap first move.
+**WHAT I GOT WRONG, recorded because I put the wrong version in this file first:**
+- I reported a "cold cache produced a 915 MB / 896-file tree" and inferred a build bug where
+  `build-static.mjs`'s correctness depended on cache state. **BOTH FALSE.** `deploy-ghpages.sh`
+  turns `dist` into its OWN throwaway git repo in place, so I was measuring `dist/.git`
+  (503 files / 364 MB). Excluding it: 393 files / 545 MB — the normal shape. The build was never
+  cold either (244 hit / 9 miss, the 9 being exactly the changed art). **The script's own
+  pre-flight has the same trap** — it counts before its `rm -rf .git` and prints the inflated
+  number on a rerun. MEASURE WHAT THE NUMBER INCLUDES BEFORE BUILDING A THEORY ON IT.
+- What was actually true: the pushes kept dying. One died WITH ITS FOREGROUND TOOL CALL (a long
+  push is bounded by the call, not the network — this belongs in the deploy tooling), and the
+  link ran 70–143 KB/s with 21% retransmits, so a ~530 MB push takes 60–90 minutes. Also
+  **`setsid` does not exist on macOS** and silently killed a launch; `(nohup … &)` is what works.
+- The clean-worktree method was VINDICATED, not the villain: the file-list diff against a
+  main-repo build differs by `js/battle_world.js` — another lane's uncommitted module, which a
+  normal build would have published. Building from a worktree needs two things git does not
+  carry: `node_modules` symlinked in, and `EB_BUILD_CACHE` pointed at the main repo's warm cache.
 
 ## WHAT SHIPPED (all verified, all pushed)
 - **Both towns' water classes are closed.** Emberbrook went 0 CONVINCING / 6 FAILING → 0 FAILING.
