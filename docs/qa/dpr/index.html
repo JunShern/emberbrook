@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Device pixel ratio — the field renderer at 1, 1.5 and 2 (2026-08-07)</title>
+<style>
+  body { font: 14px/1.5 -apple-system, sans-serif; margin: 2em auto; max-width: 1280px;
+         background: #16181c; color: #d8dce2; }
+  h1 { font-size: 20px; } h2 { font-size: 16px; margin-top: 2.4em; color: #eec97a; }
+  h3 { font-size: 14px; margin-top: 1.6em; color: #c8cdd4; font-weight: 600; }
+  .claim { border-left: 3px solid #b05555; padding: .2em .8em; margin: .6em 0;
+           color: #e2b0b0; background: #201a1a; }
+  .meas  { border-left: 3px solid #5588b0; padding: .2em .8em; margin: .6em 0;
+           background: #191d20; }
+  .verdict { border-left: 3px solid #55b077; padding: .2em .8em; margin: .6em 0;
+             background: #17201a; }
+  .trio { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 1em 0; }
+  .trio figure { margin: 0; }
+  .trio img { width: 100%; display: block; border: 1px solid #333; background:#000; }
+  figcaption { font-size: 12px; color: #8a919c; padding: 3px 0; }
+  figcaption b { color: #d8dce2; }
+  code { background: #22262c; padding: 1px 4px; border-radius: 3px; font-size: 12.5px; }
+  .note { color: #8a919c; font-size: 13px; }
+  table { border-collapse: collapse; margin: 1em 0; font-size: 13px; }
+  th, td { border: 1px solid #333; padding: 4px 10px; text-align: right; }
+  th { background: #1d2126; color: #c8cdd4; }
+  td:first-child, th:first-child { text-align: left; }
+  tr.hi td { background: #1a2320; }
+  .bad { color: #e2a0a0; } .ok { color: #96d3a8; }
+</style>
+</head>
+<body>
+
+<h1>Device pixel ratio — the field renderer at 1, 1.5 and 2
+  <span class="note">(capture lane, 2026-08-07)</span></h1>
+
+<div class="claim">The user's long-standing complaint: the field looks <b>pixelated</b> —
+contrasty silhouettes and seams come apart — while the battle screen does not.
+(DAYLOG 2026-08-06 ~02:00 F6/B12; <code>docs/plans/director-slate.md</code> OPEN RESIDUAL 2.)</div>
+
+<div class="meas"><b>The mechanism, measured.</b> <code>public/play3d.html:163</code> builds its
+renderer as <code>new THREE.WebGLRenderer({antialias:true}); R.setSize(1344,768,false)</code>
+and <b>never calls <code>setPixelRatio</code></b>, so the drawing buffer is 1344×768 forever
+and CSS stretches it to the window. On a retina panel that is <b>one rendered pixel per 2×2
+device pixels</b>. <code>public/js/battle_stage3d.js:610</code> <i>does</i> call
+<code>renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2))</code> — which is exactly
+why the battle screen is sharp and the field is not.
+<br><br>
+<b>And the plates are already authored at 2×.</b> Every <code>stylized.png</code> and every
+per-camera <code>bg.png</code> in <code>public/assets/scenes/*/</code> measures
+<b>2688×1536</b> — precisely twice the canvas. Today's shipped setting downsamples the
+pre-rendered art to half its authored resolution before the player ever sees it. The detail
+is on disk and is being thrown away every frame.</div>
+
+<p class="note"><b>How these were captured.</b> <code>docs/qa/dpr/dpr_shots.mjs</code>
+(through <code>tools/cdp.mjs</code>: OS-assigned port, own profile prefix, reaped).
+One headless Chrome on the real GPU (<code>ANGLE Metal Renderer: Apple M1 Max</code>) driven at
+<code>Emulation.setDeviceMetricsOverride deviceScaleFactor: 2</code>, css viewport 1344×756, so
+every frame below is <b>2688×1512 real device pixels</b> — what a retina screen actually shows.
+The pixel ratio is applied at runtime through the page's own top-level bindings
+(<code>R</code>, and <code>PFXRIG.composer</code> for the post-fx path, whose render target is
+also built at 1344×768 and has to be resized with it; GTAO's <code>ao_res 0.5</code> ratio is
+preserved). <b>Nothing under <code>public/</code> was edited</b> — this is a capture, not a fix.
+Console clean on every run. Drawing buffers confirmed per shot: 1344×768 · 2016×1152 · 2688×1536.</p>
+
+<h2>1 — Overworld, ridge and sky silhouette <span class="note">(ow-valley, real-time + GTAO composer)</span></h2>
+<div class="trio">
+  <figure><a href="ow-ridge-dpr1.jpg"><img src="ow-ridge-dpr1.jpg"></a><figcaption><b>dpr 1</b> — shipped today</figcaption></figure>
+  <figure><a href="ow-ridge-dpr1_5.jpg"><img src="ow-ridge-dpr1_5.jpg"></a><figcaption><b>dpr 1.5</b></figcaption></figure>
+  <figure><a href="ow-ridge-dpr2.jpg"><img src="ow-ridge-dpr2.jpg"></a><figcaption><b>dpr 2</b> — the full fix</figcaption></figure>
+</div>
+
+<h3>Crop A — the roofline against the sky (400×300 real device pixels, shown at 2×)</h3>
+<div class="trio">
+  <figure><a href="ow-roof-dpr1-crop.png"><img src="ow-roof-dpr1-crop.png"></a><figcaption><b>dpr 1</b> · acutance 1.48 — the diagonal is a smear two device pixels wide; the shingle rows have dissolved</figcaption></figure>
+  <figure><a href="ow-roof-dpr1_5-crop.png"><img src="ow-roof-dpr1_5-crop.png"></a><figcaption><b>dpr 1.5</b> · 1.83</figcaption></figure>
+  <figure><a href="ow-roof-dpr2-crop.png"><img src="ow-roof-dpr2-crop.png"></a><figcaption><b>dpr 2</b> · 2.24 — one clean edge, shingle rows and plank seams back</figcaption></figure>
+</div>
+
+<h3>Crop B — the character's silhouette against the hill (400×300 real device pixels, shown at 2×)</h3>
+<div class="trio">
+  <figure><a href="ow-ridge-dpr1-crop.png"><img src="ow-ridge-dpr1-crop.png"></a><figcaption><b>dpr 1</b> · acutance 3.18 — hair reads as one orange mass, grass blades are mush</figcaption></figure>
+  <figure><a href="ow-ridge-dpr1_5-crop.png"><img src="ow-ridge-dpr1_5-crop.png"></a><figcaption><b>dpr 1.5</b> · 4.10</figcaption></figure>
+  <figure><a href="ow-ridge-dpr2-crop.png"><img src="ow-ridge-dpr2-crop.png"></a><figcaption><b>dpr 2</b> · 5.16 — hair strands, the scarf's edge, individual blades</figcaption></figure>
+</div>
+
+<h2>2 — Town, a character body on a pre-rendered plate <span class="note">(del-cine · shot lockhead)</span></h2>
+<div class="trio">
+  <figure><a href="del-lockhead-dpr1.jpg"><img src="del-lockhead-dpr1.jpg"></a><figcaption><b>dpr 1</b> — shipped today</figcaption></figure>
+  <figure><a href="del-lockhead-dpr1_5.jpg"><img src="del-lockhead-dpr1_5.jpg"></a><figcaption><b>dpr 1.5</b></figcaption></figure>
+  <figure><a href="del-lockhead-dpr2.jpg"><img src="del-lockhead-dpr2.jpg"></a><figcaption><b>dpr 2</b> — the full fix</figcaption></figure>
+</div>
+<h3>Crop — Vesper on the walkway, railing behind her (400×300 real device pixels, shown at 2×)</h3>
+<div class="trio">
+  <figure><a href="del-lockhead-dpr1-crop.png"><img src="del-lockhead-dpr1-crop.png"></a><figcaption><b>dpr 1</b> · acutance 4.07</figcaption></figure>
+  <figure><a href="del-lockhead-dpr1_5-crop.png"><img src="del-lockhead-dpr1_5-crop.png"></a><figcaption><b>dpr 1.5</b> · 4.33</figcaption></figure>
+  <figure><a href="del-lockhead-dpr2-crop.png"><img src="del-lockhead-dpr2-crop.png"></a><figcaption><b>dpr 2</b> · 6.69</figcaption></figure>
+</div>
+<div class="verdict"><b>The important part of the trade, and it goes the other way from the
+worry.</b> The fear was that a sharpened 3D body would sit badly on a fixed-resolution plate.
+It does not — because <b>the plate sharpens too</b>. The bg.png is 2688×1536, so at dpr 2 it is
+finally sampled 1:1: the railing pickets, the plank ends, the bunting and the crate lids all
+come back <i>in the same step</i> that sharpens Vesper. The body and the backdrop gain
+resolution together, so the character sits <i>better</i> integrated at dpr 2 than at dpr 1,
+not worse. At dpr 1 the plate is the blurrier of the two and she reads as a slightly crisper
+sticker on mush.</div>
+
+<h2>3 — Strong diagonals: railings and rooflines <span class="note">(del-cine · shot quay-west)</span></h2>
+<div class="trio">
+  <figure><a href="del-quay-dpr1.jpg"><img src="del-quay-dpr1.jpg"></a><figcaption><b>dpr 1</b> — shipped today</figcaption></figure>
+  <figure><a href="del-quay-dpr1_5.jpg"><img src="del-quay-dpr1_5.jpg"></a><figcaption><b>dpr 1.5</b></figcaption></figure>
+  <figure><a href="del-quay-dpr2.jpg"><img src="del-quay-dpr2.jpg"></a><figcaption><b>dpr 2</b> — the full fix</figcaption></figure>
+</div>
+<h3>Crop — the balcony railing run (400×300 real device pixels, shown at 2×)</h3>
+<div class="trio">
+  <figure><a href="del-quay-dpr1-crop.png"><img src="del-quay-dpr1-crop.png"></a><figcaption><b>dpr 1</b> · acutance 4.02 — post edges doubled and soft</figcaption></figure>
+  <figure><a href="del-quay-dpr1_5-crop.png"><img src="del-quay-dpr1_5-crop.png"></a><figcaption><b>dpr 1.5</b> · 4.11</figcaption></figure>
+  <figure><a href="del-quay-dpr2-crop.png"><img src="del-quay-dpr2-crop.png"></a><figcaption><b>dpr 2</b> · 5.21 — each picket is its own object again</figcaption></figure>
+</div>
+<p class="note">The nine full frames are shipped as quality-95 4:4:4 JPEG (46 MB of PNG became 14 MB); measured on the crop regions the encode moves acutance by +1.5 to +2.9% <i>uniformly across all three settings</i>, against a dpr 1 -> dpr 2 gap of +62%, so it cannot flatter or flatten the comparison. <b>Every crop is lossless PNG</b> — the crops are the evidence.<br>Acutance = mean absolute neighbour difference on luminance over the crop. A
+proxy for iteration only; the pictures are the verdict.</p>
+
+<h2>The cost</h2>
+<p class="note">10 s settled rAF window per setting, headless Chrome on the real GPU
+(Apple M1 Max, ANGLE Metal), first 5 frames dropped. <code>docs/qa/dpr/fps.json</code> carries
+all three runs.</p>
+
+<h3>What the renderer actually costs (vsync off — <code>UNCAP=1</code>)</h3>
+<p class="note">The only run that can tell 61 fps from 119 fps apart: with vsync on, every
+frame time quantises to 8.3 / 16.6 / 25 ms and the table says nothing about headroom.</p>
+<table>
+<tr><th>viewpoint</th><th>dpr</th><th>median ms</th><th>p95 ms</th><th>median fps</th><th>p5 fps</th><th>60 fps?</th></tr>
+<tr><td>ow-valley (real-time + GTAO)</td><td>1</td><td>3.8</td><td>5.2</td><td>263</td><td>192</td><td class="ok">yes</td></tr>
+<tr><td>ow-valley</td><td>1.5</td><td>7.6</td><td>8.5</td><td>132</td><td>118</td><td class="ok">yes</td></tr>
+<tr class="hi"><td>ow-valley</td><td>2</td><td>12.7</td><td>13.3</td><td>79</td><td>75</td><td class="ok">yes — 12.7 of the 16.7 ms budget, 24% spare</td></tr>
+<tr><td>del-cine lockhead (plate)</td><td>1</td><td>3.5</td><td>4.7</td><td>286</td><td>213</td><td class="ok">yes</td></tr>
+<tr><td>del-cine lockhead</td><td>1.5</td><td>3.7</td><td>4.8</td><td>270</td><td>208</td><td class="ok">yes</td></tr>
+<tr class="hi"><td>del-cine lockhead</td><td>2</td><td>3.8</td><td>4.9</td><td>263</td><td>204</td><td class="ok">yes — <b>+9% frame time, i.e. free</b></td></tr>
+</table>
+<div class="meas"><b>The cost is not 4× and it is not uniform.</b> A plate scene pays
+<b>+0.3 ms (+9%)</b> for four times the fragments — it is draw-call bound, not fill bound, and
+the extra pixels are a background blit and two character meshes. The overworld pays
+<b>3.3×</b> (3.8 → 12.7 ms) because it runs the whole post-fx chain — GTAO, the aerial grade,
+MSAA on a half-float target — over four times the area. That is the real bill, and it still
+lands inside a 60 fps budget on this machine with 24% to spare. Nothing here says what a
+weaker GPU does; the overworld is the scene that would need re-testing on one.</div>
+
+<h3>What the player feels (vsync on, 120 Hz panel)</h3>
+<table>
+<tr><th>viewpoint</th><th>dpr</th><th>median fps</th><th>p5 fps</th><th>reading</th></tr>
+<tr><td>ow-valley</td><td>1</td><td>120</td><td>118</td><td>locked 120</td></tr>
+<tr><td>ow-valley</td><td>1.5</td><td>120</td><td>112</td><td>locked 120</td></tr>
+<tr class="hi"><td>ow-valley</td><td>2</td><td>61</td><td class="bad">39</td><td>drops to a locked <b>60</b>; ~5% of frames land on a 25 ms hitch</td></tr>
+<tr><td>del-cine lockhead</td><td>1 / 1.5 / 2</td><td>120</td><td>100</td><td>unchanged at every setting</td></tr>
+</table>
+<p class="note">This is the honest cost to a ProMotion user: the overworld goes from 120 fps to
+60 fps. On a 60 Hz TV — the couch-co-op target this game is built for — nothing changes: 12.7 ms
+fits inside 16.7 ms and the overworld holds 60 at every setting.</p>
+<p class="note"><b>Machine state, disclosed:</b> the first run was taken while another lane's
+Blender <code>emberbrook --glb</code> export held the CPU and swap sat at 32.8/33.8 GB. It was
+re-measured after that export finished (swap 5.5/7.2 GB): the plate rows were identical and
+ow-valley dpr 2 moved 65 → 61 median fps, i.e. the load did not change any verdict. Both runs
+are in <code>fps.json</code>.</p>
+
+<h2>The trade, plainly</h2>
+<div class="verdict">
+<p><b>One line of code</b> (<code>R.setPixelRatio(Math.min(devicePixelRatio||1, 2))</code>, plus
+building the post-fx render target at the same ratio — the composer's target is hard-coded to
+1344×768 and would otherwise silently cap the whole real-time path back to today's resolution).</p>
+<p><b>What it buys:</b> every rendered edge stops being two device pixels wide, and the
+pre-rendered plates — already authored at 2688×1536 and currently downsampled to half —
+are shown at their real resolution for the first time. The town scenes gain the most, because
+the plate <i>is</i> the picture there.</p>
+<p><b>What it costs:</b> nothing measurable in plate scenes (+9% frame time). In the overworld,
+3.3× the frame time: 12.7 ms of a 16.7 ms budget on an M1 Max. 60 fps holds; 120 fps does not.</p>
+<p><b>The knob if 2 is too expensive elsewhere:</b> 1.5 costs 7.6 ms in the overworld (locked
+120 fps) and buys roughly half the sharpening — clearly better than 1 in every crop above,
+clearly short of 2. It is a real middle setting, not a compromise that pleases nobody. But it
+does <i>not</i> line the plates up 1:1, which is where most of the town gain comes from.</p>
+</div>
+
+<p class="note">Instrument: <code>docs/qa/dpr/dpr_shots.mjs</code> ·
+<code>node docs/qa/dpr/dpr_shots.mjs</code> (server on :3000) ·
+<code>FPS_ONLY=1 UNCAP=1 node …</code> for the cost table alone.</p>
+
+</body>
+</html>

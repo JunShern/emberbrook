@@ -1,0 +1,39 @@
+{
+ "instrument": "docs/qa/dpr/dpr_shots.mjs (FPS_ONLY=1 [UNCAP=1]), headless Chrome, ANGLE Metal / Apple M1 Max, 10 s rAF window per setting, first 5 frames dropped",
+ "note": "vsync-on is what the player feels on a 120 Hz panel (frame times quantise to 8.3/16.6/25 ms). vsync-off (UNCAP=1) is the renderer's TRUE cost — the only way to tell 61 fps from 119 fps apart.",
+ "runs": [
+  {
+   "run": "vsync-on, machine BUSY (Blender emberbrook --glb export running, swap 32.8/33.8 GB)",
+   "rows": [
+    {"view": "ow-ridge", "pr": 1, "medMs": 8.3, "p95Ms": 9.7, "medFps": 120.5, "p5Fps": 103.1},
+    {"view": "ow-ridge", "pr": 1.5, "medMs": 8.3, "p95Ms": 9.4, "medFps": 120.5, "p5Fps": 106.4},
+    {"view": "ow-ridge", "pr": 2, "medMs": 15.3, "p95Ms": 17.8, "medFps": 65.4, "p5Fps": 56.2},
+    {"view": "del-lockhead", "pr": 1, "medMs": 8.3, "p95Ms": 9.3, "medFps": 120.5, "p5Fps": 107.5},
+    {"view": "del-lockhead", "pr": 1.5, "medMs": 8.3, "p95Ms": 9.7, "medFps": 120.5, "p5Fps": 103.1},
+    {"view": "del-lockhead", "pr": 2, "medMs": 8.3, "p95Ms": 9.3, "medFps": 120.5, "p5Fps": 107.5}
+   ]
+  },
+  {
+   "run": "vsync-on, machine IDLE (export finished, swap 5.5/7.2 GB)",
+   "rows": [
+    {"view": "ow-ridge", "pr": 1, "medMs": 8.3, "p95Ms": 8.5, "medFps": 120.5, "p5Fps": 117.6},
+    {"view": "ow-ridge", "pr": 1.5, "medMs": 8.3, "p95Ms": 8.9, "medFps": 120.5, "p5Fps": 112.4},
+    {"view": "ow-ridge", "pr": 2, "medMs": 16.5, "p95Ms": 25.5, "medFps": 60.6, "p5Fps": 39.2},
+    {"view": "del-lockhead", "pr": 1, "medMs": 8.3, "p95Ms": 10.0, "medFps": 120.5, "p5Fps": 100.0},
+    {"view": "del-lockhead", "pr": 1.5, "medMs": 8.3, "p95Ms": 10.0, "medFps": 120.5, "p5Fps": 100.0},
+    {"view": "del-lockhead", "pr": 2, "medMs": 8.3, "p95Ms": 10.0, "medFps": 120.5, "p5Fps": 100.0}
+   ]
+  },
+  {
+   "run": "vsync-OFF (UNCAP=1), machine IDLE — the renderer's true frame cost",
+   "rows": [
+    {"view": "ow-ridge", "pr": 1, "medMs": 3.8, "p95Ms": 5.2, "medFps": 263.2, "p5Fps": 192.3},
+    {"view": "ow-ridge", "pr": 1.5, "medMs": 7.6, "p95Ms": 8.5, "medFps": 131.6, "p5Fps": 117.6},
+    {"view": "ow-ridge", "pr": 2, "medMs": 12.7, "p95Ms": 13.3, "medFps": 78.7, "p5Fps": 75.2},
+    {"view": "del-lockhead", "pr": 1, "medMs": 3.5, "p95Ms": 4.7, "medFps": 285.7, "p5Fps": 212.8},
+    {"view": "del-lockhead", "pr": 1.5, "medMs": 3.7, "p95Ms": 4.8, "medFps": 270.3, "p5Fps": 208.3},
+    {"view": "del-lockhead", "pr": 2, "medMs": 3.8, "p95Ms": 4.9, "medFps": 263.2, "p5Fps": 204.1}
+   ]
+  }
+ ]
+}
