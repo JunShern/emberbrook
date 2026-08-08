@@ -586,5 +586,199 @@ of their pixels.</div>
 <div class="pair"><figure><img src="before4/fishdock.jpg"><figcaption>fishdock — before</figcaption></figure><figure><img src="after4/fishdock.jpg"><figcaption>fishdock — after (albedo floor 0.055)</figcaption></figure></div>
 <div class="pair"><figure><img src="before4/gate.jpg"><figcaption>gate — before</figcaption></figure><figure><img src="after4/gate.jpg"><figcaption>gate — after (albedo floor 0.055)</figcaption></figure></div>
 
+<h1 style="margin-top:3em">Dellhollow graphics fix — round 4 <span class="note">(2026-08-08 · the east frame-edge)</span></h1>
+<p class="note">Round 3 handed this over as round 4's top item. <b>The measurement refutes all
+three of its claims</b>, and the object under the complaint is a different one. Red-team fix
+loop, measure-first. Before-images are extracted from <code>git HEAD</code> (not re-measured
+off a gallery jpg); both sides are read by ONE instrument through <code>PLATE_BUNDLE</code>.</p>
+
+<h2>The claim, verbatim from the round-3 handover</h2>
+<div class="claim"><code>fx_haze_east</code> / <code>mat_haze_east</code> is the most-hit object
+in the crushed sample on lockfive (42 of 220) and weave (54 of 220); <code>fx_haze_south</code>
+on quay-west. <b>Neither material carries a Principled BSDF at all</b> … plausibly ONE object
+behind three separate frame-edge complaints.</div>
+
+<h2>Refutation 1 — "no Principled BSDF" is the design, not a defect</h2>
+<div class="meas"><code>mat_haze_east</code> is a <b>two-node Volume Scatter</b>
+(0.48/0.50/0.60, anisotropy 0.3) with no surface shader — and so are <code>mat_haze_far</code>,
+<code>_mid</code>, <code>_rim</code>, <code>_south</code> and <code>mat_spray</code>. An albedo
+resolver that walks the tree looking for a surface BSDF returns nothing on <b>all six</b>. It
+found its own blind spot, not a broken material.</div>
+
+<h2>Refutation 2 — the card is an ATTENUATOR, and the census that named it did not march through it</h2>
+<div class="meas">New instrument <code>tools/dh_pixel_census.py</code>. It models the BEAUTY
+pass rather than the ray-caster's world: objects with <code>hide_render</code> are dropped, and
+a <b>render-only volume card</b> (a material with a Volume link and no Surface link) is
+MARCHED THROUGH, accumulating <code>tau = density &times; path</code>, until the ray lands on
+something that actually shades. Both halves are failures this repo has already written down —
+"a first-hit tally that does not drop <code>hide_render</code> objects is a lie about the frame"
+and "VOLUME CARDS ARE MESHES TO A RAY-CASTER".
+<br><br>Re-run on 400-sample draws of each plate's largest crushed region:
+<pre style="font-size:12px;color:#c8ccd4">plate      largest crushed region     FIRST OPAQUE HIT (marched)                          fx_haze_east tau
+lockfive   5.97% of frame @ 89 m     cliff_east_closure | mat_rock_gorgewall   83.2%    0.0555..0.0587
+                                     water_pool-downstream | m_water           12.2%
+weave      6.86% of frame @ 102 m    cliff_east_closure | mat_rock_gorgewall   96.0%    0.0564..0.0596
+gate (r2)  0.93% of frame @ 160 m    cliff_east_closure | mat_rock_gorgewall   91.8%    0.0554..0.0561
+crossing  11.40% of frame @ 72 m     water_pool-downstream | m_water           76.2%    (8% of rays)
+                                     cliff_far_toe | mat_rock_farwall          14.5%
+gate (r1)  1.51% of frame @ 135 m    water_pool-downstream | m_water           99.2%    (0.2% of rays)</pre>
+The card's own optical depth over those same rays is <b>tau 0.055&ndash;0.060 — a 5.4% wash</b>.
+It was standing in front of the answer. Stage 1 (world position reconstructed from
+<code>depth.png</code>) and stage 2 (the cast) agree to <b>0.03&ndash;0.29 m mean</b>: two
+independent instruments, and the bake's depth pass already deletes every haze object, so the
+depth map was never fooled.</div>
+
+<h2>Refutation 3 — <code>fx_haze_south</code> on quay-west is refuted outright</h2>
+<div class="meas">Quay-west's largest crushed region (0.40% of frame, 24&ndash;27 m) is
+<code>qm_stair_underworks | mat_qm_stone_dark</code> <b>62.8%</b> + <code>seam_bank |
+mat_rock</code> <b>26.0%</b>, and <b>ZERO</b> rays through it cross any haze card.
+<code>fx_haze_south</code> is untouched by this round.</div>
+
+<h2>So what IS the defect — the far field has no aerial perspective</h2>
+<div class="meas"><code>cliff_east_closure</code> is <b>6,020 m&sup2;</b> of wall (2,205 verts,
+x 140.5..154.1, y −13..85.5, z −16..32.5, mean world normal −0.994/−0.002/0.113 — it faces the
+town) at <b>92&ndash;170 m</b>, wearing <code>mat_rock_gorgewall</code> at a <b>16.7 m texture
+period</b>. It reads L p50 <b>9.8</b> (weave) to 52.6 (gate) while the town 20 m from the lens
+reads 23&ndash;73. <b>The most distant surface in Dellhollow is also its darkest, which inverts
+the depth cue.</b>
+<br><br>The object that exists to supply that cue under-delivers by an order of magnitude, for a
+structural reason: <b>it is a 6 m curtain, not a medium</b>, so its optical depth is the same
+5.4% whether what is behind it is 90 m out or 170 m out. A distance cue that does not vary with
+distance is not a distance cue.</div>
+
+<h2>The fix, and its class — ATMOSPHERE, not light and not grade</h2>
+<div class="meas">Nothing is added, moved or re-energised, and no exposure or view transform is
+touched, so the town's lighting doctrine ("adjusting an existing light has never moved this
+town; ADDING a source always has") is deliberately <b>not</b> the governing rule. It is also
+not available: <code>KEY_gorgewall</code> <b>already exists</b> — a 3 W sun at
+<b>N&middot;L +0.842</b> dedicated to this very wall — and the gate lane already probed and
+REJECTED raising it, because at 3 W it prints the 16.7 m texture period as a quilt across a
+98 m wall. <b>More light makes a tiling artefact legible; more haze hides it AND lifts the
+black.</b> That is why the haze is the correct lever and not merely the available one.
+<br><br><code>tools/dh_haze_east_depth.py</code> makes <code>mat_haze_east</code>'s density a
+<b>world-Z ramp</b>: 0.102 at the gorge floor falling to 0.027 at the rim (&times;11.1 / &times;2.9),
+which is both what valley haze does and what keeps the wash from reading as one flat card.</div>
+
+<h2>The sweep — the level is measured, and 0.110 was refused BY EYE</h2>
+<div class="meas">1008&times;576/28 spp, against the shipped plate's own wall mask (pixels whose
+<code>depth.png</code> reconstructs to world x &ge; 138 — exactly <code>cliff_east_closure</code>):
+<pre style="font-size:12px;color:#c8ccd4">variant                  lockfive wall p05/p50/p95      gate wall p05/p95     REST p50
+shipped   0.009167          7.3 / 38.3 / 60.3            11.3 / 105.6       24.8 / 76.2
+uniform   0.060            18.7 / 38.3 / 54.6            22.8 / 184.6       24.9 / 76.2
+uniform   0.110            23.1 / 36.8 / 49.7            27.1 / 202.2       24.7 / 76.2
+ramp 0.068 -> 0.018        17.4 / 38.5 / 55.6            20.0 / 151.2       24.7 / 76.2
+ramp 0.102 -> 0.027  &lt;--   20.7 / 37.9 / 53.3            23.1 / 168.0       24.7 / 76.2</pre>
+The shipped ramp <b>dominates</b> uniform 0.060 at equal cost: more black lifted (lockfive p05
+20.7 vs 18.7) and <b>less</b> forward-scatter blowout where the sun rakes through the card
+toward the gate camera (p95 168.0 vs 184.6). Uniform 0.110 lifts more and was
+<b>REFUSED BY EYE</b> — it dissolves the wall into a featureless bank, trading one of the
+judge's words for the other.</div>
+<div class="pair"><figure><img src="sweep-lockfive.jpg"><figcaption>lockfive density sweep — 0.009167 / 0.030 / 0.060 / 0.110</figcaption></figure><figure><img src="sweep-gate.jpg"><figcaption>gate density sweep — same rungs</figcaption></figure></div>
+
+<h2>And the new card is IN FAMILY — in the only quantity that compares</h2>
+<div class="meas"><b>Density is not the wash.</b> These cards are 2.7 m to 44 m thick, so
+ranking them by density ranks nothing. Crosswise <code>tau</code> (density &times; thinnest span):
+<pre style="font-size:12px;color:#c8ccd4">mat_haze_rim     density 0.01350   tau 0.5940   wash 44.8%
+mat_haze_far     density 0.00800   tau 0.1920   wash 17.5%
+mat_haze_mid     density 0.00340   tau 0.0816   wash  7.8%
+mat_haze_south   density 0.02778   tau 0.0750   wash  7.2%
+mat_spray        density 0.01100   tau 0.0396   wash  3.9%
+mat_haze_east    density 0.10200   tau 0.6120   wash 45.8%   &lt;- this card, at its densest rung</pre>
+<code>fx_haze_south</code> at 0.0278 was <b>three times</b> the east card's old density and
+delivered a <b>thinner</b> wash. That is how the east card sat mid-table on density while
+delivering a tenth of its siblings' effect.</div>
+
+<h2>Why raising it is safe, measured — the spill census</h2>
+<div class="meas">This repo has paid once for a haze card that became visible AS a card (the
+"salmon card"), so the question is not "is 11&times; a lot" but "what else is behind this card".
+<code>dh_pixel_census frustum</code> casts 128&times;72 per camera and splits the rays crossing
+the card into BEHIND (they land on the far wall / far water — the intended effect) and SPILL
+(they land on anything else, where the wash would print the card's silhouette over a near
+object):
+<pre style="font-size:12px;color:#c8ccd4">camera      card%   behind%   spill%   spill objects
+lockfive    20.55    20.55     0.00    —
+gate        16.13    16.08     0.05    world background x5
+crossing    14.85    14.77     0.09    cliff_town_d x8
+weave        8.13     7.99     0.14    cliff_town_d x11, lf_riverbed_tail x2
+the other 11 cameras 0.00      0.00    0 of 9,216 rays cross the card</pre>
+Spill is 0.00&ndash;0.14% of frame. <b>The rebake list is exactly those four plates</b>; the
+other eleven are REFUSED WITH A NUMBER, not skipped.</div>
+
+<h2>The receipt — full res, BEFORE out of git HEAD</h2>
+<div class="meas">
+<pre style="font-size:12px;color:#c8ccd4">shot      wall%  wall L p05      wall p50       wall 5x5sd   wall crushed%   REST p50      frame L&lt;=8%
+lockfive  20.5   6.9 -> 20.6   37.5 -> 37.6   2.69->1.59   26.6 -> 18.3   23.5 -> 23.2  22.82 -> 20.74
+weave      7.8   5.7 -> 20.0    9.8 -> 23.1   0.80->0.53   86.6 -> 59.5   46.0 -> 46.1  21.74 -> 19.32
+crossing  14.1   9.1 -> 21.9   44.4 -> 39.7   3.31->1.64    9.1 ->  6.0   38.9 -> 39.0  15.55 -> 14.61
+gate      15.9  10.8 -> 22.9   52.6 -> 49.2   3.03->1.74    6.9 ->  3.7   72.9 -> 72.9   6.42 ->  6.10</pre>
+<b>REST p50 moves by at most 0.3/255 on every plate</b> — the change is confined to the subject
+at full res, exactly as the spill census predicted.
+<br><br><b>The colour-only proof is an artifact, not an argument:</b> <code>depth.png</code> is
+BYTE-IDENTICAL against git HEAD on all four plates. <code>cine_bake</code> deletes every haze
+object before the depth pass, so this could not have moved a walk cell, a body box or a camera
+solve — which is why <code>walk_engine_gate</code> is not implicated and <code>town_export</code>
+is not owed. No geometry changed at all.
+<br><br>Bakes: <b>1-WIDE SERIAL, all rc=0</b> — lockfive 223 s, weave 194 s, crossing 200 s,
+gate 226 s (843 s total).</div>
+
+<h2>The judge — did the three frame-edge complaints move?</h2>
+<div class="verdict"><b>lockfive CLEARED · weave CLEARED · crossing's darkness pair CLEARED ·
+gate MOVED BUT NOT CLEARED, and the subject changed.</b>
+<code>scene_redteam --mode both</code>, pinned gemini-3.6-flash, 24 calls, 0 errors,
+<code>run-20260808-round4haze</code>; before = <code>run-20260806-1</code> (naive) +
+<code>run-20260806-2</code> (checklist), no ownership framing.
+<ul>
+<li><b>lockfive</b> — three darkness/void survivors before ("an unnatural pitch-black void",
+"the left half completely unlit", "extreme darkness conceals spatial boundaries") &rarr;
+<b>ZERO</b>. All eight lockfive survivors are now floating stair treads, railings and path
+clutter: different objects. The checklist "Lock Five: ABSENT" verdict also cleared.</li>
+<li><b>weave</b> — <b>7 survivors &rarr; 1</b>. All three void survivors gone ("untextured dark
+purple void along the screen edge", "a featureless dark purple void borders the cliffside",
+"terminates abruptly into a flat, dark untextured void wall").</li>
+<li><b>crossing</b> — both "pitch-black shadow completely obscures the left half" survivors
+gone. The bottom-right untextured white wedge SURVIVES and is <b>pre-existing</b>:
+<code>run-20260806-1</code> filed it twice before this round.</li>
+<li><b>gate</b> — still frame-edge WEAK, but the VOID half is gone: the judge now calls the
+background <i>"atmospheric fog"</i> and <i>"the background mountain"</i> rather than "a flat,
+empty dark void … rather than a fully rendered sky and horizon". What is upheld is a
+<b>different and real defect the void was hiding</b>.</li>
+</ul></div>
+<div class="pair"><figure><img src="crop-gate.jpg"><figcaption>gate wall crop, native res — before / after</figcaption></figure><figure><img src="crop-weave.jpg"><figcaption>weave wall crop, native res — before / after</figcaption></figure></div>
+
+<h2>Named for round 5 — the defect the void was concealing, measured</h2>
+<div class="meas">The judge's own bbox on gate (F8, u 0.42..0.52, v 0.00..0.30) re-cast at
+3,600 rays through <code>dh_pixel_census</code>'s marcher: <b>cliff_east_closure 47.6%</b> meets
+<b><code>cliff_town_a</code> / <code>cliff_town_d</code> 19.4%</b> across that boundary. Those
+are the south town wall, <b>x 58..135, top clamped perfectly flat at z = 37.0</b>, and
+<code>cliff_east_closure</code> begins at <b>x = 140.5</b> — <b>a 5.5 m gap in plan and a
+dead-straight silhouette</b>, which is exactly the "perfectly straight vertical line" the judge
+names. It was always there; a black backdrop was hiding it and a bright one is not.
+<b>A defect you can see beats one a void was concealing.</b> Not fixed here.</div>
+
+<h2>The honest residual, named</h2>
+<div class="meas">The wall keeps <b>less of its own veining</b> (5&times;5 sd 2.69&rarr;1.59 on
+lockfive, 3.31&rarr;1.64 on crossing, 3.03&rarr;1.74 on gate). That is deliberate and it is the
+same trade twice: the "detail" being softened is <code>mat_rock_gorgewall</code>'s 16.7 m
+texture period repeating six times across a 98 m wall — the exact artefact that made the gate
+lane refuse to light this surface. Weave is also still the darkest of the four after the fix
+(wall p50 23.1 against 37.6 / 39.7 / 49.2), so if any plate wants a second rung it is that one.</div>
+
+<h2>Gates</h2>
+<div class="meas"><code>cine_test</code> <b>635 ok / 1 failed</b> — the PRE-ATTRIBUTED
+deep-stairs&harr;waterfront seam red, same <code>{"fired":0,"expected":10}</code> signature, i.e.
+the Dellhollow baseline exactly &middot; <code>slice_test</code> <b>776/0</b> &middot;
+<code>findability_test</code> <b>69/0</b>, 11 warnings — and findability reads
+<code>depth.png</code> and never <code>bg.png</code> (grep: 0 occurrences), so the 12&rarr;11
+delta against the round-3 note is <b>not attributable to this change</b> &middot;
+<code>routes_derive --check</code> clean, 15 shots. <code>walk_engine_gate</code> not
+implicated — byte-identical depth.</div>
+
+<h2>The four rebaked plates — before / after</h2>
+<p class="note">Left: <code>before5/</code> (extracted from git HEAD). Right: live.</p>
+<div class="pair"><figure><img src="before5/lockfive.jpg"><figcaption>lockfive — before</figcaption></figure><figure><img src="after5/lockfive.jpg"><figcaption>lockfive — after (graded east haze)</figcaption></figure></div>
+<div class="pair"><figure><img src="before5/weave.jpg"><figcaption>weave — before</figcaption></figure><figure><img src="after5/weave.jpg"><figcaption>weave — after (graded east haze)</figcaption></figure></div>
+<div class="pair"><figure><img src="before5/crossing.jpg"><figcaption>crossing — before</figcaption></figure><figure><img src="after5/crossing.jpg"><figcaption>crossing — after (graded east haze)</figcaption></figure></div>
+<div class="pair"><figure><img src="before5/gate.jpg"><figcaption>gate — before</figcaption></figure><figure><img src="after5/gate.jpg"><figcaption>gate — after (graded east haze)</figcaption></figure></div>
+
 </body>
 </html>

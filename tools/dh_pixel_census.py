@@ -389,13 +389,18 @@ def stage_frustum():
                 "%s %.2f%%" % (k, 100.0 * v / n) for k, v in subjc.most_common(6))))
 
 
-if MODE == "frustum":
-    stage_frustum()
-elif MODE == "sample":
-    stage_sample()
-elif MODE == "rays":
-    stage_rays()
-elif MODE == "cover":
-    stage_cover()
-else:
-    raise SystemExit(__doc__)
+# Guarded so the marcher can be IMPORTED by a one-off probe without the module
+# dispatching on whatever `--` arguments happened to be on the command line.
+# `_march` + `_classify` are the reusable half of this tool and a caller that wants
+# them should not have to fake an argv to get them.
+if __name__ == "__main__":
+    if MODE == "frustum":
+        stage_frustum()
+    elif MODE == "sample":
+        stage_sample()
+    elif MODE == "rays":
+        stage_rays()
+    elif MODE == "cover":
+        stage_cover()
+    else:
+        raise SystemExit(__doc__)

@@ -1,0 +1,271 @@
+[
+ {
+  "fid": "F1",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "geometry",
+  "where": "top edge of the cliff wall near the center",
+  "bbox": [
+   0.466,
+   0,
+   0.478,
+   0.24
+  ],
+  "severity": 1,
+  "desc": "A sharp vertical seam cuts straight through the cliff mesh where terrain assets meet.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "27,151.6,-4.5,7.7",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 27,151.6,-4.5,7.7"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "This is an open mesh termination exposing the background void rather than a seam where two terrain assets join."
+  }
+ },
+ {
+  "fid": "F7",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "navigation",
+  "where": "central wooden buildings and walkways",
+  "bbox": [
+   0.43,
+   0.472,
+   0.77,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "Overlapping roofs and dense wooden structures obscure the path below, making the connection between the upper cliff and lower dock unclear.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The stairways, ramps, and platforms connecting the upper cliff and lower docks are clearly visible and legible from this perspective."
+  }
+ },
+ {
+  "fid": "F11",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "immersion",
+  "where": "upper right cliff face",
+  "bbox": [
+   0.755,
+   0.03,
+   0.868,
+   0.12
+  ],
+  "severity": 1,
+  "desc": "A roof canopy structure floats high against the cliff side without visible support columns or attachments.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "79.7,94.7,11.9,18.3",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 79.7,94.7,11.9,18.3"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The canopy roof near the upper right cliff is properly attached to support beams anchored into the platform below."
+  }
+ },
+ {
+  "fid": "F18",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "navigation",
+  "where": "main pathway on the right hillside",
+  "bbox": [
+   0.715,
+   0.19,
+   0.93,
+   0.75
+  ],
+  "severity": 2,
+  "desc": "Harsh dark shadows combined with overlapping fences make it difficult to discern walkable ground from drop-offs along the cliff path.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The broad dirt pathway along the right hillside is clearly delineated by fences and easily readable."
+  }
+ },
+ {
+  "fid": "F3",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "exit",
+  "where": "dark opening on the upper cliffside",
+  "bbox": [
+   0.255,
+   0.072,
+   0.326,
+   0.19
+  ],
+  "severity": 2,
+  "desc": "The pitch-black cave opening lacks visual cues or clear path connections, making it ambiguous whether it serves as a playable route or non-interactive backdrop.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The elevated wooden bridge leads directly into the cave opening, providing a clear path connection."
+  }
+ },
+ {
+  "fid": "F4",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "geometry",
+  "where": "upper right cliffside staircase",
+  "bbox": [
+   0.77,
+   0.14,
+   0.92,
+   0.31
+  ],
+  "severity": 1,
+  "desc": "The wooden staircase built into the steep cliff face terminates abruptly into the terrain without a clear landing or pathway transition.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "50.3,69.6,-3.4,20.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 50.3,69.6,-3.4,20.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The staircase transitions smoothly onto the upper plateau ground next to the building rather than terminating abruptly."
+  }
+ },
+ {
+  "fid": "F12",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "navigation",
+  "where": "center-right village roofs and boardwalks",
+  "bbox": [
+   0.47,
+   0.43,
+   0.89,
+   0.76
+  ],
+  "severity": 2,
+  "desc": "The visual similarity between wooden roofs and wooden walkways makes it ambiguous which elevated surfaces are walkable paths and which are building tops.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The sloped green roofs are easily distinguished from the flat brown boardwalks equipped with railings."
+  }
+ },
+ {
+  "fid": "F14",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "navigation",
+  "where": "center village walkways and rooftops",
+  "bbox": [
+   0.17,
+   0.28,
+   0.9,
+   0.9
+  ],
+  "severity": 2,
+  "desc": "Rooftops and wooden walkways share identical colors and textures, making it difficult to distinguish navigable paths from non-walkable roofs.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The green-tinted sloped roof surfaces have distinct color and geometry from the flat brown walkway planks."
+  }
+ },
+ {
+  "fid": "F15",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "exit",
+  "where": "cave entrance in the upper cliff",
+  "bbox": [
+   0.25,
+   0.06,
+   0.32,
+   0.19
+  ],
+  "severity": 1,
+  "desc": "The dark cave opening at the top left lacks lighting or framing, making it ambiguous whether it is an accessible tunnel or decorative cliff geometry.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The cave entrance is framed and directly serviced by the upper wooden walkway structure, clearly signalling it as an accessible passage."
+  }
+ },
+ {
+  "fid": "F30",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "navigation",
+  "where": "foreground upper deck railing panels",
+  "bbox": [
+   0.591,
+   0.282,
+   0.97,
+   0.56
+  ],
+  "severity": 2,
+  "desc": "The dense row of cloth panels along the upper deck railing blocks sightlines to the walkways and structures behind it.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Decorative cloth panels mounted on a deck railing naturally obscure sightlines behind them and serve as normal environmental set dressing."
+  }
+ }
+]

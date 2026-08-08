@@ -1,0 +1,2495 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "20260808-round4haze",
+ "generated": "2026-08-08T15:16:24.117Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": false,
+ "modes": [
+  "naive",
+  "checklist"
+ ],
+ "n": 3,
+ "freshFrom": null,
+ "replaySources": {},
+ "plates": "public/assets/scenes/del-cine",
+ "cine": "public/assets/scenes/del-cine/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "gate",
+   "name": "The Valley Gate",
+   "replayOf": null,
+   "baked": "2026-08-08T15:10:22Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-08T15:10:19.499Z",
+   "items": 14,
+   "char": null,
+   "checklist": [
+    {
+     "id": "valley-gate",
+     "src": "owns.landmark",
+     "what": "Valley Gate — a gate (town's only land entrance; arch + palisade)",
+     "census": {
+      "u": 0.5455,
+      "v": 0.4988,
+      "z": 35.49,
+      "charPx": 58,
+      "on": true,
+      "plateZ": 35.5,
+      "state": "clear",
+      "behindBy": -0.01
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "archway spanning main upper path",
+      "bbox": [
+       0.468,
+       0.223,
+       0.632,
+       0.512
+      ],
+      "desc": "Wooden gate structure with an elevated roof over the path."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "gatehouse",
+     "src": "owns.landmark",
+     "what": "Gatehouse (toll) — a building",
+     "census": {
+      "u": 0.5105,
+      "v": 0.5974,
+      "z": 30.3,
+      "charPx": 68,
+      "on": true,
+      "plateZ": 30.28,
+      "state": "clear",
+      "behindBy": 0.02
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "building beside the gate arch",
+      "bbox": [
+       0.528,
+       0.32,
+       0.709,
+       0.632
+      ],
+      "desc": "Small timber toll building positioned directly along the path."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "winch-head",
+     "src": "owns.landmark",
+     "what": "Cargo Winch (head) — a machine (lowers goods from the road to the quay)",
+     "census": {
+      "u": 0.4335,
+      "v": 0.3764,
+      "z": 45.06,
+      "charPx": 46,
+      "on": true,
+      "plateZ": 40.7,
+      "state": "occluded",
+      "behindBy": 4.36
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "crane frame at cliff edge",
+      "bbox": [
+       0.38,
+       0.223,
+       0.495,
+       0.36
+      ],
+      "desc": "Heavy wooden winch structure set at the gorge rim."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "valley-road",
+     "src": "owns.landmark",
+     "what": "The Valley Road — a road head (THE MOUTH OF THE VALLEY ROAD — the town's land threshold, at the bottom edge of the gate frame. It is a PORTAL, not a place: it carries the overworld exit 'valley-gate-out' and the arrival spawn, and the carriageway runs on PAST it (tools/gate_lib.py SPINE) and off the bottom of the plate, so the road reads as continuing to the valley rather than stopping at a rim. mapVisible false: the town map screen still shows the arch (valley-gate) as the way in — this is the doorstep, not a destination.)",
+     "census": {
+      "u": 0.5501,
+      "v": 0.8874,
+      "z": 21.19,
+      "charPx": 98,
+      "on": true,
+      "plateZ": 21.18,
+      "state": "clear",
+      "behindBy": 0.01
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "dirt road at bottom right",
+      "bbox": [
+       0.41,
+       0.54,
+       0.706,
+       0.998
+      ],
+      "desc": "Broad dirt carriageway leading off the bottom edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:valley-gate__gatehouse",
+     "src": "owns.edge",
+     "what": "the route between Valley Gate and Gatehouse (toll) — a road",
+     "census": {
+      "u": 0.5294,
+      "v": 0.5442,
+      "z": 32.9,
+      "charPx": 63,
+      "on": true,
+      "plateZ": 23.46,
+      "state": "occluded",
+      "behindBy": 9.43
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "path beneath the gate arch",
+      "bbox": [
+       0.485,
+       0.44,
+       0.585,
+       0.58
+      ],
+      "desc": "Dirt walkway connecting the gate passage to the toll booth."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:gatehouse__winch-head",
+     "src": "owns.edge",
+     "what": "the route between Gatehouse (toll) and Cargo Winch (head) — a road (BET 2 RE-ROOT 2026-08-06: was 'valley-gate -> winch-head'. The winch road now leaves from the GATEHOUSE and bows north (waypoint y 7.4) so the gate square fans clean: entry road west, gatehouse road, THE ONE DESCENT east, winch road along the north. The old valley-gate origin shared the descent's own head ground, and the wide (2.2 u) descent flight cannot coexist with a road ribbon inside walkGround's 0.73 step window there — the 2026-08-01 STAMP on the old edge (ribbon 0.340 m over the top treads REFUSED the descent) is the same class, solved this time by removing the road from the corridor instead of nudging it 0.3 u clear.)",
+     "census": {
+      "u": 0.4645,
+      "v": 0.4653,
+      "z": 37.68,
+      "charPx": 55,
+      "on": true,
+      "plateZ": 34.39,
+      "state": "occluded",
+      "behindBy": 3.29
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "track leading north to winch",
+      "bbox": [
+       0.43,
+       0.35,
+       0.51,
+       0.48
+      ],
+      "desc": "Side track curving from the gatehouse to the cargo winch."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:valley-gate__valley-road",
+     "src": "owns.edge",
+     "what": "the route between Valley Gate and The Valley Road — a road (THE ENTRY ROAD. The player walks IN up this and OUT down it (USER REDLINE #4). It passes the toll house's own door (t2c_G5_gatehouse_door, x 10.9..12.1 at y 3.56) on its north side and holds a verge off the chopped gorge lip: carriageway half-width 1.87 m against Terrain.rim() 9.05..9.20 over x 1.2..10.6, so the guard rail stands between the paving and the drop instead of 4 m out on empty apron. SUPERSEDES 'valley-gate__porters-yard'.)",
+     "census": {
+      "u": 0.5472,
+      "v": 0.6441,
+      "z": 28.34,
+      "charPx": 73,
+      "on": true,
+      "plateZ": 28.32,
+      "state": "clear",
+      "behindBy": 0.02
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "main path along upper cliff",
+      "bbox": [
+       0.42,
+       0.55,
+       0.7,
+       0.998
+      ],
+      "desc": "Primary dirt road running between the gate and lower boundary."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:winch-head__winch-foot",
+     "src": "owns.edge",
+     "what": "the route between Cargo Winch (head) and Cargo Winch (foot) — a winch (cargo only — NOT walkable; pure set dressing)",
+     "census": {
+      "u": 0.291,
+      "v": 0.7286,
+      "z": 49.45,
+      "charPx": 42,
+      "on": true,
+      "plateZ": 33.71,
+      "state": "occluded",
+      "behindBy": 15.74
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "cables stretching to harbor",
+      "bbox": [
+       0.28,
+       0.28,
+       0.39,
+       0.66
+      ],
+      "desc": "Vertical cable lines connecting upper winch head to lower docks."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:valley-gate__inn",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards shelf-west — a path that carries on out of the frame",
+     "census": {
+      "u": 0.5181,
+      "v": 0.4946,
+      "z": 38.23,
+      "charPx": 54,
+      "on": true,
+      "plateZ": 35.72,
+      "state": "occluded",
+      "behindBy": 2.5
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "road exiting frame bottom right",
+      "bbox": [
+       0.65,
+       0.85,
+       0.96,
+       1
+      ],
+      "desc": "Dirt path continuing past the lower right frame edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "door:portal:valley-road",
+     "src": "doorPad",
+     "what": "a door / entrance you can go through (\"Leave Dellhollow\")",
+     "census": {
+      "u": 0.5501,
+      "v": 0.8849,
+      "z": 21.18,
+      "charPx": 98,
+      "on": true,
+      "plateZ": 21.24,
+      "state": "clear",
+      "behindBy": -0.06
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "gateway arch passage",
+      "bbox": [
+       0.47,
+       0.225,
+       0.63,
+       0.51
+      ],
+      "desc": "Open wooden archway marking the exit route."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "inn",
+     "src": "mapVisible",
+     "what": "Inn — The Boatmen's Rest — a shop inn (travelers stranded waiting for lock passage)",
+     "census": {
+      "u": 0.462,
+      "v": 0.5477,
+      "z": 46.21,
+      "charPx": 45,
+      "on": true,
+      "plateZ": 32.05,
+      "state": "occluded",
+      "behindBy": 14.16
+     },
+     "judged": {
+      "verdict": "VISIBLE-BUT-ILLEGIBLE",
+      "where": "waterfront cluster near harbor",
+      "bbox": [
+       0.25,
+       0.21,
+       0.39,
+       0.42
+      ],
+      "desc": "Blends in with surrounding wooden structures without defining signage."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "item-shop",
+     "src": "mapVisible",
+     "what": "Item Shop (chandlery skin) — a shop item (lamp oil, rope, pitch, provisions; cantilevered out over the gorge)",
+     "census": {
+      "u": 0.4155,
+      "v": 0.5102,
+      "z": 49.17,
+      "charPx": 42,
+      "on": true,
+      "plateZ": 32.6,
+      "state": "occluded",
+      "behindBy": 16.56
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "cantilevered building over gorge",
+      "bbox": [
+       0.53,
+       0.32,
+       0.706,
+       0.63
+      ],
+      "desc": "Timber shop building extending over the cliff wall edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "top center sky boundary",
+      "bbox": [
+       0.46,
+       0,
+       0.485,
+       0.26
+      ],
+      "desc": "Vertical seam where cliff geometry ends abruptly against background fog."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — water covers about 6.9% of this frame (near Harbor Deck, Fish dock, Moorage). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "waterFrac": 0.0693,
+      "near": [
+       "quay-deck",
+       "fish-dock",
+       "moorage"
+      ]
+     },
+     "judged": {
+      "verdict": "WEAK",
+      "where": "harbor water surface",
+      "bbox": [
+       0,
+       0.38,
+       0.28,
+       0.88
+      ],
+      "desc": "Lacks convincing depth transparency and soft foam at shore contact."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "crossing",
+   "name": "The Crossing",
+   "replayOf": null,
+   "baked": "2026-08-08T15:06:36Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-08T15:06:33.637Z",
+   "items": 10,
+   "char": null,
+   "checklist": [
+    {
+     "id": "path:weave-huts__keepers-cottage",
+     "src": "owns.edge",
+     "what": "the route between Weave huts and Keepers' Cottage — a bridge (high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span. Takeoff swings gorge-ward immediately so the deck doesn't shadow the moorage switchback below (walkers rode it into a drop).)",
+     "census": {
+      "u": 0.5045,
+      "v": 0.534,
+      "z": 26.51,
+      "charPx": 78,
+      "on": true,
+      "plateZ": 19.91,
+      "state": "occluded",
+      "behindBy": 6.61
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No high plank bridge spanning across the water basin is present in this view."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:weave-huts__keepers-cottage",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards weave — a path that carries on out of the frame",
+     "census": {
+      "u": 0.4572,
+      "v": 0.7285,
+      "z": 21.67,
+      "charPx": 96,
+      "on": true,
+      "plateZ": 21.57,
+      "state": "clear",
+      "behindBy": 0.1
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "wide path along the cliff on the right",
+      "bbox": [
+       0.27,
+       0.73,
+       0.75,
+       0.93
+      ],
+      "desc": "A broad dirt and plank path runs along the cliff edge and continues off the right side of the screen."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "weave-huts",
+     "src": "mapVisible",
+     "what": "Weave huts — a building cluster (laundry lines, rickety balconies)",
+     "census": {
+      "u": 0.3157,
+      "v": 0.9456,
+      "z": 17.56,
+      "charPx": 118,
+      "on": true,
+      "plateZ": 27.62,
+      "state": "clear",
+      "behindBy": -10.06
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No cluster of huts with laundry lines can be seen in this frame."
+     },
+     "suppressed": "ABSENT on a scenery item, not on the shot contract"
+    },
+    {
+     "id": "lockhead",
+     "src": "mapVisible",
+     "what": "The Lockhead — a post (the senior lockkeeper's working post, overlooking Lock Five below — Odessa's station by day; she lives at the Keepers' Cottage)",
+     "census": {
+      "u": 0.7823,
+      "v": 0.2264,
+      "z": 21.05,
+      "charPx": 98,
+      "on": true,
+      "plateZ": 21.34,
+      "state": "clear",
+      "behindBy": -0.29
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "wooden post platform overlooking the basin",
+      "bbox": [
+       0.23,
+       0.45,
+       0.6,
+       0.61
+      ],
+      "desc": "An elevated wooden post and deck structure with lanterns sits directly above the lock basin."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "lock-five",
+     "src": "mapVisible",
+     "what": "Lock Five — a lock (the basin + gates — the scene's namesake centerpiece; boat gained here; anchors the water exit north)",
+     "census": {
+      "u": 0.412,
+      "v": 0.7231,
+      "z": 35.35,
+      "charPx": 59,
+      "on": true,
+      "plateZ": 21.56,
+      "state": "occluded",
+      "behindBy": 13.78
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "the water basin surrounded by piers and rock walls",
+      "bbox": [
+       0.22,
+       0,
+       0.78,
+       0.52
+      ],
+      "desc": "The water basin framed by timber docks and stone cliff walls fills the left side of the scene."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "keepers-cottage",
+     "src": "mapVisible",
+     "what": "Keepers' Cottage — a building (Maren and Odessa's house — Odessa is the senior lockkeeper of Dellhollow (akin to village chief), Maren her daughter. 'The house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lantern-lit underside is what Locksfoot sees from below.)",
+     "census": {
+      "u": 0.598,
+      "v": 0.3302,
+      "z": 35.47,
+      "charPx": 58,
+      "on": true,
+      "plateZ": 31.01,
+      "state": "occluded",
+      "behindBy": 4.46
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "wooden house with pitched roof and lanterns",
+      "bbox": [
+       0.47,
+       0.44,
+       0.99,
+       0.78
+      ],
+      "desc": "A large wooden building with chimneys, roof vents, and attached deck platforms is positioned over the locks."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "dam-crest-gate",
+     "src": "mapVisible",
+     "what": "Dam Crest Gate — a gate (iron-banded gate barring the dam-crest walk to the far shore — closed this chapter; townsfolk say the far-side stairs are 'not kept' anymore)",
+     "census": {
+      "u": 0.3636,
+      "v": 0.6741,
+      "z": 35.5,
+      "charPx": 58,
+      "on": true,
+      "plateZ": 35.46,
+      "state": "clear",
+      "behindBy": 0.04
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No iron-banded gate barring a dam-crest walkway is present in this shot."
+     },
+     "suppressed": "ABSENT on a scenery item, not on the shot contract"
+    },
+    {
+     "id": "north-landing",
+     "src": "mapVisible",
+     "what": "North Landing — a dock (the last pier before the gorge narrows — the night boat slips out from here | FOOTPRINT STAMPED 2026-08-01 (same ruling): 61% landed on wv_planking + nl_pier. Two measured all-landed rects hold 20.4 m2 against the single best rect's 12.0. | THIRD RECT ADDED 2026-08-01 with the landing under it: same defect as the fish dock, same shape — the two decked bands are 2.6 m apart, `pos` (105.65, 27) is in the gap, and the pad fell into four islands (2598 + 2408 + 88 + 52 lattice nodes) the moment the disc went. 4.7 m2 of planking (tools/waterfront_landings.py, deck top -0.950, capped under walk_e_lock-five__north-landing_l1), measured all-landed.)",
+     "census": {
+      "u": 0.5417,
+      "v": 0.4403,
+      "z": 51.82,
+      "charPx": 40,
+      "on": true,
+      "plateZ": 30.88,
+      "state": "occluded",
+      "behindBy": 20.94
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "timber pier extending into the water on the left",
+      "bbox": [
+       0.51,
+       0,
+       0.77,
+       0.35
+      ],
+      "desc": "A long timber pier with railings sits along the left edge of the basin."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "bottom right corner frame edge",
+      "bbox": [
+       0.75,
+       0.91,
+       1,
+       1
+      ],
+      "desc": "The environment abruptly terminates into an unfinished grey plane at the bottom right corner of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — water covers about 17.5% of this frame (near Lock Five, North Landing). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "waterFrac": 0.1751,
+      "near": [
+       "lock-five",
+       "north-landing"
+      ]
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "water surface in the lock basin",
+      "bbox": [
+       0.22,
+       0,
+       0.78,
+       0.5
+      ],
+      "desc": "The water exhibits believable specular light highlights, gentle wave texture, and good tonal blending along the docks."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "weave",
+   "name": "The Weave",
+   "replayOf": null,
+   "baked": "2026-08-08T15:03:16Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-08T15:03:13.623Z",
+   "items": 14,
+   "char": null,
+   "checklist": [
+    {
+     "id": "pilot-cluster",
+     "src": "owns.landmark",
+     "what": "Stilt Cluster (pilot slice) — a building cluster (ADOPT AS-IS: the proven pilot scene geometry anchors this district)",
+     "census": {
+      "u": 0.5386,
+      "v": 0.6574,
+      "z": 31.17,
+      "charPx": 66,
+      "on": true,
+      "plateZ": 36.06,
+      "state": "clear",
+      "behindBy": -4.9
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center foreground stilt buildings",
+      "bbox": [
+       0.23,
+       0.3,
+       0.53,
+       0.98
+      ],
+      "desc": "The cluster of wooden huts elevated on tall wooden stilts above the water and lower shore."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "weave-north",
+     "src": "owns.landmark",
+     "what": "Westweave cluster — a building cluster (third stilt cluster, tucked under the quay's shadow)",
+     "census": {
+      "u": 0.8645,
+      "v": 0.8112,
+      "z": 23.88,
+      "charPx": 87,
+      "on": true,
+      "plateZ": 23.89,
+      "state": "clear",
+      "behindBy": -0.01
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "far left beneath quay shadow",
+      "bbox": [
+       0,
+       0.39,
+       0.17,
+       0.61
+      ],
+      "desc": "The wooden huts and platforms tucked beneath the shadow of the upper quay structure on the far left."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "weave-huts",
+     "src": "owns.landmark",
+     "what": "Weave huts — a building cluster (laundry lines, rickety balconies)",
+     "census": {
+      "u": 0.3197,
+      "v": 0.5398,
+      "z": 39.49,
+      "charPx": 52,
+      "on": true,
+      "plateZ": 40.51,
+      "state": "clear",
+      "behindBy": -1.02
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "along cliff face extending right",
+      "bbox": [
+       0.31,
+       0.3,
+       0.95,
+       0.8
+      ],
+      "desc": "The row of wooden huts built along the cliff face with hanging flags and balconies."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "drying-decks",
+     "src": "owns.landmark",
+     "what": "Drying decks — a deck (laundry lines and fish racks strung between the clusters | FOOTPRINT STAMPED 2026-08-01 (same ruling): 55% landed on wv_planking, 6.5-6.7 m above the water. One measured all-landed rect, 19.6 m2 of the 49 m2 square. | SECOND RECT ADDED 2026-08-01 with the apron under it: the deck's south edge is at y 26.70, this landmark's `pos` is at y 26.00, and the drying decks came off the walk network entirely when the disc went. The apron is at the deck's EAST END, not at `pos`, and that is a measurement rather than a preference: the Weave hangs t2c_W1_laundry_deckA (z 7.02..8.57 along y 25.92..26.07) and t2c_WV2_dryingdeck_awning (canopy to z 7.90) directly over `pos`, so a body standing on this 6.915 m pad (7.57..8.21) collides with both — walk_bodygate counts 3445 + 1733 blocked steps there. Nothing hangs over x > 67.60, and walk_e_weave-huts__drying-decks_l0 arrives at x 67.29..70.91, so the way in is the east corner. 0.7 m2 of apron (tools/waterfront_landings.py, deck top 6.719), cantilevered: all four candidate piles were refused because their columns cross walk_e_tenant-shack__fish-dock five metres below. THE AIRSPACE OVER THE SOUTH EDGE IS AN OPEN FINDING for the art round — the drying decks' own dressing stands in their doorway.)",
+     "census": {
+      "u": 0.3512,
+      "v": 0.7013,
+      "z": 34.27,
+      "charPx": 60,
+      "on": true,
+      "plateZ": 32.37,
+      "state": "occluded",
+      "behindBy": 1.91
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center-left elevated platforms",
+      "bbox": [
+       0.22,
+       0.59,
+       0.5,
+       0.85
+      ],
+      "desc": "The elevated wooden deck platforms with hanging lines and frames situated between the hut clusters."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:quay-deck__pilot-cluster",
+     "src": "owns.edge",
+     "what": "the route between Harbor Deck and Stilt Cluster (pilot slice) — a stairs (switchbacks threading down between the stilts — REDESIGNED 2026-08-06 (Bet 2): TWO waypoints, ONE wide-amplitude hairpin (138 deg, v2 offset ~1.0 u) east of the hut cluster, replacing the 3-waypoint thread whose last pivot stood INSIDE wv_hut_pilot-cluster_0_3 (SIM.blocked named it at the waypoint itself) and whose 88-deg hairpins earned only 0.14 u of v2 split. FIRST WAYPOINT AT 7.2 u FROM THE PLAZA CENTRE, deliberately: the stairs trim needs extent+0.6+0.6 to start the flight outside the plaza's own walk disc — the old first waypoint at 5.34 u forced the head to the disc CENTRE, which is why l0 overlaid the plaza floor and its rails fenced the deck (the deleted quay branch's disease, same class).)",
+     "census": {
+      "u": 0.6855,
+      "v": 0.536,
+      "z": 30.43,
+      "charPx": 68,
+      "on": true,
+      "plateZ": 29,
+      "state": "occluded",
+      "behindBy": 1.44
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "left of stilt cluster",
+      "bbox": [
+       0.17,
+       0.28,
+       0.36,
+       0.52
+      ],
+      "desc": "The wooden stairs and landings threading down between the upper docks and the stilt huts."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:pilot-cluster__weave-huts",
+     "src": "owns.edge",
+     "what": "the route between Stilt Cluster (pilot slice) and Weave huts — a deck (plank walk bending around the stilt posts)",
+     "census": {
+      "u": 0.4162,
+      "v": 0.5916,
+      "z": 35.33,
+      "charPx": 59,
+      "on": true,
+      "plateZ": 35.39,
+      "state": "clear",
+      "behindBy": -0.06
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "between stilt cluster and weave huts",
+      "bbox": [
+       0.28,
+       0.52,
+       0.51,
+       0.7
+      ],
+      "desc": "The plank walkway bending around the wooden stilt posts to connect the hut clusters."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:pilot-cluster__weave-north",
+     "src": "owns.edge",
+     "what": "the route between Stilt Cluster (pilot slice) and Westweave cluster — a deck (plank walk west under the quay)",
+     "census": {
+      "u": 0.68,
+      "v": 0.7241,
+      "z": 27.52,
+      "charPx": 75,
+      "on": true,
+      "plateZ": 24.09,
+      "state": "occluded",
+      "behindBy": 3.44
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "under upper quay on left",
+      "bbox": [
+       0.13,
+       0.56,
+       0.27,
+       0.69
+      ],
+      "desc": "The lower plank deck extending westwards underneath the main quay structure."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:weave-huts__drying-decks",
+     "src": "owns.edge",
+     "what": "the route between Weave huts and Drying decks — a deck",
+     "census": {
+      "u": 0.3343,
+      "v": 0.6148,
+      "z": 36.88,
+      "charPx": 56,
+      "on": true,
+      "plateZ": 34.46,
+      "state": "occluded",
+      "behindBy": 2.42
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "connecting huts to drying decks",
+      "bbox": [
+       0.52,
+       0.64,
+       0.72,
+       0.8
+      ],
+      "desc": "The wooden plank deck forming the walk between the weave huts and the drying deck area."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:weave-huts__fish-dock",
+     "src": "owns.edge",
+     "what": "the route between Weave huts and Fish dock — a ladder (rickety ladder down the hut piles to the fish dock — the fisher-kid's route)",
+     "census": {
+      "u": 0.3547,
+      "v": 0.7909,
+      "z": 35.12,
+      "charPx": 59,
+      "on": true,
+      "plateZ": 30.68,
+      "state": "occluded",
+      "behindBy": 4.44
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "dock pilings down to water",
+      "bbox": [
+       0.06,
+       0.68,
+       0.1,
+       0.85
+      ],
+      "desc": "A wooden ladder attached to the pilings leading down to the lower fish dock level."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:quay-deck__pilot-cluster",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards quay-west — a path that carries on out of the frame",
+     "census": {
+      "u": 0.6529,
+      "v": 0.3957,
+      "z": 30.94,
+      "charPx": 67,
+      "on": true,
+      "plateZ": 27.49,
+      "state": "occluded",
+      "behindBy": 3.45
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "far left edge deck",
+      "bbox": [
+       0,
+       0.49,
+       0.06,
+       0.58
+      ],
+      "desc": "The wooden plank path leading off the left edge of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:weave-huts__moorage",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards lockfive — a path that carries on out of the frame",
+     "census": {
+      "u": 0.266,
+      "v": 0.5646,
+      "z": 41.89,
+      "charPx": 49,
+      "on": true,
+      "plateZ": 38.52,
+      "state": "occluded",
+      "behindBy": 3.37
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top right upper walkway",
+      "bbox": [
+       0.85,
+       0,
+       1,
+       0.2
+      ],
+      "desc": "The upper walkway and stairs carrying on out of the frame at the top right."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:weave-huts__keepers-cottage",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards crossing — a path that carries on out of the frame",
+     "census": {
+      "u": 0.2957,
+      "v": 0.4774,
+      "z": 43.95,
+      "charPx": 47,
+      "on": true,
+      "plateZ": 43.67,
+      "state": "clear",
+      "behindBy": 0.27
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper left dark tunnel in cliff",
+      "bbox": [
+       0.25,
+       0.07,
+       0.32,
+       0.2
+      ],
+      "desc": "The elevated walkway leading into a dark rock tunnel in the cliff face."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "FAILING",
+      "where": "top left upper backdrop",
+      "bbox": [
+       0,
+       0,
+       0.3,
+       0.4
+      ],
+      "desc": "The cliff backdrop terminates abruptly at the top left, leaving an unfinished empty dark void visible beyond the mountain edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — water covers about 5.6% of this frame (near Harbor Deck, Moorage, Lock Five). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "waterFrac": 0.0561,
+      "near": [
+       "quay-deck",
+       "moorage",
+       "lock-five"
+      ]
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "bottom left water surface",
+      "bbox": [
+       0,
+       0.66,
+       0.43,
+       1
+      ],
+      "desc": "The stylized turquoise water has believable tone, clear shallow variations near the shore, and good contact lighting against the wooden piles and boats."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "lockfive",
+   "name": "Lock Five",
+   "replayOf": null,
+   "baked": "2026-08-08T15:00:02Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-08T14:59:59.317Z",
+   "items": 14,
+   "char": null,
+   "checklist": [
+    {
+     "id": "moorage",
+     "src": "owns.landmark",
+     "what": "Moorage — a dock (the tar-dark boat waits here | FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of walkable pad on the river and walk_water_audit measured 607 samples of it standing on open water — the town's worst walk-on-water record. tools/landing_footprint.py finds NO all-landed rectangle of 1.5 m2 anywhere inside the disc; 3% of it is landed. The two rects stamped here are the moorage's REAL built landing, measured on lf_stage_moorage (largest all-landed rect 6.8 x 1.8) and lf_stage_moorage_w (1.0 x 3.0), both built by locksfoot_build.py and both largely OUTSIDE the old disc — which is exactly what that file's own comment says: 'everything the moorage WORKS with has to stand off it'. THE ONE PLACE NEW DECK IS OWED: the ruling asks for a modest pier under whatever of the staging still stands over water. | THE PIER IS BUILT 2026-08-01, and the third rect is it. Measured reason: with only the two staging rects the pad was an ISLAND — a connected-component sweep over walk_bodygate's own step rule put 3474 of its lattice nodes in a component containing nothing but itself, because town_blockout draws every incident ribbon to `pos` (76.09, 27) and `pos` is 4.3 m short of the staging. tools/waterfront_landings.py builds the connecting pier (7.6 m2 of planking on 2 joists and 4 piles, deck top 1.044, material and height both read off lf_stage_moorage so it continues that deck rather than inventing one) and this rect is measured all-landed over it. WIDTH 1.80 m, not the 2.00 m the landing rule asks for: walk_e_moorage__lock-five_l0 slopes down to 0.67 across the pier's east 0.14 m, and honouring it at full width would have put the deck 0.595 m under the pad — inside the 0.60 m rule by 5 mm, which the planking's own jitter would have spent. | THE WEST LINK IS BUILT 2026-08-05, and the FOURTH rect is it. The 2026-08-01 pier joined the staging to `pos`; it did not join the WEST STORE rect [70.9,71.9,26.2,29.2] to anything, because waterfront_landings' connective rect runs 2.0 m about `pos` and the west store is not in that column — so the one rect that ruling had already found to be an island stayed one, and it is a ONE-WAY PIT: walk_pad_tenant-shack (1.92..2.04) hangs 0.72 m over its 1.199 deck, which is a legal 0.79 m step DOWN and 0.16 m past STEP_UP coming back, with the pad's own slab 20 mm inside the body's blocking window over that floor ([1.85, 2.50]). The Chapter Two playtest agent stepped down at step 75 of run-20260805-054441 and was still on it at step 120 — 46 of 120 steps, filing five reports about pillars. tools/moorage_westlink.py measures the gap (2.46 m of open water; both banks lf_planking at top 1.199; the body window 1.85..2.50 CLEAR) and plank-links it; these FOUR rects are measured 228/228 all-landed over that deck. THE SHAPE IS THE MEASUREMENT: a 0.15 m occupancy scan of the body window (1.85..2.50 over a 1.199 floor) finds exactly two obstructions and they are at OPPOSITE CORNERS — the stair's t03/t04 undersides fill x 74.30..75.50 for y <= 28.50 (north-EAST), and lf_railings, the west store's own guard, fills a diagonal x 71.00..71.45 for y 28.95..29.55 (south-WEST). Of the six l2 treads only those two have an underside in that window at all: t02's is 2.55 (clears by 50 mm) and t05's TOP is 1.66 (under it). The only single rectangle that misses both corners is 0.15 m wide, which is why this is three overlapping rects and not one. | RE-MEASURED AGAINST THE SEARCHED FLIGHT AND STILL GOOD, 2026-08-07: the 2026-08-05 occupancy scan that shaped rects 3 and 4 was run under the OLD l2 line, and iteration 9's searched line landed on top of them (t05 underside 2.25, t06 1.89, both inside the [1.92, 2.55] window over this deck) -- the west link was severed for a day. The FLIGHT was moved, not these rects: l2 now descends over the water to a foot at y 30.6 and the corridor measures 672 of 693 cells clear with the west store reaching all 326 pier cells, engine-receipted (deck lane 6/6 both ways, reach_probe westdeck<->maren reached both ways). THE RECTS THEMSELVES ARE UNCHANGED and their 228/228 landing measurement still stands. The oracle that now protects them lives in tools/moorage_search.py; the flight's own edge carries the receipts under _bet2_2026-08-07_westarm.)",
+     "census": {
+      "u": 0.5245,
+      "v": 0.7016,
+      "z": 26.68,
+      "charPx": 78,
+      "on": true,
+      "plateZ": 17.9,
+      "state": "occluded",
+      "behindBy": 8.78
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "stilt docks over water",
+      "bbox": [
+       0.28,
+       0.52,
+       0.6,
+       0.88
+      ],
+      "desc": "The wooden dock landing and stilt walkways extend over the water near the moored boats."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "tenant-shack",
+     "src": "owns.landmark",
+     "what": "Tenant's shack — a building",
+     "census": {
+      "u": 0.662,
+      "v": 0.7664,
+      "z": 21.12,
+      "charPx": 98,
+      "on": true,
+      "plateZ": 18.57,
+      "state": "occluded",
+      "behindBy": 2.55
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "building under lower deck",
+      "bbox": [
+       0.715,
+       0.61,
+       0.898,
+       0.785
+      ],
+      "desc": "The small stilted wooden shack with illuminated windows stands beneath the main deck."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "lock-five",
+     "src": "owns.landmark",
+     "what": "Lock Five — a lock (the basin + gates — the scene's namesake centerpiece; boat gained here; anchors the water exit north)",
+     "census": {
+      "u": 0.4027,
+      "v": 0.6011,
+      "z": 36.49,
+      "charPx": 57,
+      "on": true,
+      "plateZ": 36.48,
+      "state": "clear",
+      "behindBy": 0.02
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "waterway lock structure",
+      "bbox": [
+       0.312,
+       0.385,
+       0.398,
+       0.515
+      ],
+      "desc": "The wooden lock basin frame and blue gates are visible along the central canal."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "dam-crest-gate",
+     "src": "owns.landmark",
+     "what": "Dam Crest Gate — a gate (iron-banded gate barring the dam-crest walk to the far shore — closed this chapter; townsfolk say the far-side stairs are 'not kept' anymore)",
+     "census": {
+      "u": 0.3521,
+      "v": 0.5697,
+      "z": 35.72,
+      "charPx": 58,
+      "on": true,
+      "plateZ": 24.32,
+      "state": "occluded",
+      "behindBy": 11.4
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "none",
+      "bbox": null,
+      "desc": "The iron-banded gate barring the dam crest walk is not visible in this frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:weave-huts__moorage",
+     "src": "owns.edge",
+     "what": "the route between Weave huts and Moorage — a stairs (double switchback east of the hut cluster, wide-amplitude hairpins so crossing legs clear each other vertically (tight hairpins let walkers mount the overhead leg).)",
+     "census": {
+      "u": 0.6089,
+      "v": 0.5259,
+      "z": 24.34,
+      "charPx": 85,
+      "on": true,
+      "plateZ": 32.32,
+      "state": "clear",
+      "behindBy": -7.99
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "cliffside staircases",
+      "bbox": [
+       0.4,
+       0.23,
+       0.6,
+       0.66
+      ],
+      "desc": "A set of wooden switchback stairs climbs the cliff between the lower moorage and upper huts."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:moorage__tenant-shack",
+     "src": "owns.edge",
+     "what": "the route between Moorage and Tenant's shack — a deck",
+     "census": {
+      "u": 0.5853,
+      "v": 0.7302,
+      "z": 23.9,
+      "charPx": 87,
+      "on": true,
+      "plateZ": 24.13,
+      "state": "clear",
+      "behindBy": -0.23
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "plank boardwalk to shack",
+      "bbox": [
+       0.35,
+       0.66,
+       0.62,
+       0.85
+      ],
+      "desc": "A low wooden deck walkway connects the moorage landing to the tenant's shack area."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:moorage__lock-five",
+     "src": "owns.edge",
+     "what": "the route between Moorage and Lock Five — a deck (waterline boardwalk curving to the lock gates)",
+     "census": {
+      "u": 0.4541,
+      "v": 0.6435,
+      "z": 31.59,
+      "charPx": 66,
+      "on": true,
+      "plateZ": 31.05,
+      "state": "clear",
+      "behindBy": 0.53
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "boardwalk along water",
+      "bbox": [
+       0.26,
+       0.52,
+       0.39,
+       0.63
+      ],
+      "desc": "A wooden deck runs along the waterline leading from the moorage up to the lock gates."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:tenant-shack__fish-dock@0..0.35",
+     "src": "owns.edge",
+     "what": "the route between Tenant's shack and Fish dock — a deck",
+     "census": {
+      "u": 0.7667,
+      "v": 1.0146,
+      "z": 15.92,
+      "charPx": 130,
+      "on": false,
+      "state": "off-frame"
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "pier platform on left",
+      "bbox": [
+       0,
+       0.535,
+       0.32,
+       0.63
+      ],
+      "desc": "A broad timber and stone walkway leads from the shack toward the fish dock."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:weave-huts__moorage",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards weave — a path that carries on out of the frame",
+     "census": {
+      "u": 0.6056,
+      "v": 0.3956,
+      "z": 25.03,
+      "charPx": 83,
+      "on": true,
+      "plateZ": 25.05,
+      "state": "clear",
+      "behindBy": -0.03
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top right walkway exit",
+      "bbox": [
+       0.675,
+       0,
+       0.75,
+       0.08
+      ],
+      "desc": "A elevated wooden walkway extends past the upper huts off the top-right frame boundary."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:tenant-shack__fish-dock",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards fishdock — a path that carries on out of the frame",
+     "census": {
+      "u": 0.7018,
+      "v": 0.9381,
+      "z": 17.55,
+      "charPx": 118,
+      "on": true,
+      "plateZ": 19.24,
+      "state": "clear",
+      "behindBy": -1.68
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "left edge pier exit",
+      "bbox": [
+       0,
+       0.535,
+       0.29,
+       0.635
+      ],
+      "desc": "The timber dock platform continues straight off the left edge of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:lock-five__north-landing",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards north-landing — a path that carries on out of the frame",
+     "census": {
+      "u": 0.3888,
+      "v": 0.5752,
+      "z": 39.38,
+      "charPx": 53,
+      "on": true,
+      "plateZ": 39.58,
+      "state": "clear",
+      "behindBy": -0.2
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "right edge catwalk exit",
+      "bbox": [
+       0.85,
+       0.28,
+       1,
+       0.36
+      ],
+      "desc": "A wooden catwalk with handrails extends continuously off the right edge of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "weave-huts",
+     "src": "mapVisible",
+     "what": "Weave huts — a building cluster (laundry lines, rickety balconies)",
+     "census": {
+      "u": 0.7113,
+      "v": 0.3128,
+      "z": 21.99,
+      "charPx": 94,
+      "on": true,
+      "plateZ": 14.11,
+      "state": "occluded",
+      "behindBy": 7.88
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper cliffside structures",
+      "bbox": [
+       0.66,
+       0,
+       0.99,
+       0.32
+      ],
+      "desc": "A cluster of multi-level wooden huts built onto the upper cliff face."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:frame-edge-world",
+     "src": "skyAudit",
+     "what": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "skyFrac": 0
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "frame borders and rock face",
+      "bbox": [
+       0,
+       0,
+       1,
+       1
+      ],
+      "desc": "The cliff geometry, atmospheric sky, and wooden platforms seamlessly fill every edge of the frame without unrendered gaps."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quality:water-read",
+     "src": "waterAudit",
+     "what": "[QUALITY] The water surface — water covers about 10.1% of this frame (near Moorage, Lock Five, North Landing). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+     "census": {
+      "state": "quality-audit",
+      "on": true,
+      "waterFrac": 0.1008,
+      "near": [
+       "moorage",
+       "lock-five",
+       "north-landing"
+      ]
+     },
+     "judged": {
+      "verdict": "CONVINCING",
+      "where": "water surface in foreground",
+      "bbox": [
+       0,
+       0.52,
+       0.7,
+       1
+      ],
+      "desc": "The water displays believable teal coloration, transparency near shallow shores, and realistic contact lines against the wooden piles and boats."
+     },
+     "suppressed": null
+    }
+   ]
+  }
+ ],
+ "raw": 33,
+ "survivors": [
+  {
+   "fid": "F8",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "geometry",
+   "where": "top center cliff edge",
+   "bbox": [
+    0.46,
+    0,
+    0.48,
+    0.25
+   ],
+   "severity": 2,
+   "desc": "The cliff geometry cuts off abruptly in a straight vertical line, exposing the background void.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "27.1,152.1,-4.2,8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 27.1,152.1,-4.2,8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Near the top center of the image, the cliff wall geometry abruptly terminates in a perfectly straight vertical line, revealing the background atmospheric fog behind it."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F9",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "immersion",
+   "where": "lower tree cluster on the right cliff wall",
+   "bbox": [
+    0.66,
+    0.59,
+    0.78,
+    0.78
+   ],
+   "severity": 1,
+   "desc": "The foliage cluster floats in mid-air off the cliff side without a visible trunk or connection to the rock.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "-0.8,11,-0.3,4.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -0.8,11,-0.3,4.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The smaller lower cluster of green and orange foliage on the right hangs in front of the cliff wall with no visible trunk or support connecting it to the rock."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F13",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "geometry",
+   "where": "top center cliff edge",
+   "bbox": [
+    0.472,
+    0,
+    0.478,
+    0.25
+   ],
+   "severity": 2,
+   "desc": "The cliff geometry abruptly terminates in a sharp vertical edge against the background mountain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "52.3,122.2,-2.9,5.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 52.3,122.2,-2.9,5.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cliff face near the top center ends abruptly in an unmodeled, straight vertical edge against the distant background mountain and sky."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F19",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "inn",
+   "itemWhat": "Inn — The Boatmen's Rest — a shop inn (travelers stranded waiting for lock passage)",
+   "verdict": "VISIBLE-BUT-ILLEGIBLE",
+   "category": "navigation",
+   "where": "waterfront cluster near harbor",
+   "bbox": [
+    0.25,
+    0.21,
+    0.39,
+    0.42
+   ],
+   "severity": 2,
+   "desc": "Inn: VISIBLE-BUT-ILLEGIBLE — Blends in with surrounding wooden structures without defining signage.",
+   "census": {
+    "u": 0.462,
+    "v": 0.5477,
+    "z": 46.21,
+    "charPx": 45,
+    "on": true,
+    "plateZ": 32.05,
+    "state": "occluded",
+    "behindBy": 14.16
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The buildings along the waterfront form a dense cluster of similar wooden geometry, making it impossible to read which structure functions as an inn."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F20",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "quality:frame-edge-world",
+   "itemWhat": "[QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.",
+   "verdict": "WEAK",
+   "quality": true,
+   "category": "immersion",
+   "where": "top center sky boundary",
+   "bbox": [
+    0.46,
+    0,
+    0.485,
+    0.26
+   ],
+   "severity": 3,
+   "desc": "The world at the frame edges: WEAK — Vertical seam where cliff geometry ends abruptly against background fog.",
+   "census": null,
+   "hint": {
+    "region": "24.6,152.1,-2.7,8.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 24.6,152.1,-2.7,8.2"
+   },
+   "aim": {
+    "subject": null,
+    "state": "unmeasurable",
+    "why": "no derivable subject mask for this family"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "A sharp vertical seam is clearly visible near the top center where the cliff wall geometry abruptly terminates against the background fog."
+   },
+   "alsoOn": [
+    {
+     "shot": "crossing",
+     "fid": "F24",
+     "desc": "The world at the frame edges: FAILING — The environment abruptly terminates into an unfinished grey plane at the bottom right corner of the frame."
+    },
+    {
+     "shot": "weave",
+     "fid": "F22",
+     "desc": "The world at the frame edges: FAILING — The cliff backdrop terminates abruptly at the top left, leaving an unfinished empty dark void visible beyond the mountain edge."
+    }
+   ],
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F21",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "quality:water-read",
+   "itemWhat": "[QUALITY] The water surface — water covers about 6.9% of this frame (near Harbor Deck, Fish dock, Moorage). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+   "verdict": "WEAK",
+   "quality": true,
+   "category": "immersion",
+   "where": "harbor water surface",
+   "bbox": [
+    0,
+    0.38,
+    0.28,
+    0.88
+   ],
+   "severity": 2,
+   "desc": "The water surface: WEAK — Lacks convincing depth transparency and soft foam at shore contact.",
+   "census": null,
+   "hint": {
+    "region": "7.8,125.6,12.2,72.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 7.8,125.6,12.2,72.6"
+   },
+   "aim": {
+    "subject": "visible water",
+    "cells": 2352,
+    "hit": 1041,
+    "cover": 0.4426,
+    "frameFrac": 0.0693,
+    "min": 0.02,
+    "state": "on-subject",
+    "why": "44.3% of the judged box is visible water (1041/2352 cells of the shot's own 168x96 census; the frame holds 6.9%)"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The water surface meets the shoreline and wooden pilings with a harsh, unblended edge, lacking foam or depth transparency."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F5",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right corner of the frame",
+   "bbox": [
+    0.915,
+    0.755,
+    0.999,
+    0.999
+   ],
+   "severity": 2,
+   "desc": "An untextured white polygon clips into the bottom right corner of the scene.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "61.4,70,12.7,17.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,70,12.7,17.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "There is a noticeable untextured white wedge cutting into the geometry at the bottom right corner of the frame."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F6",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "immersion",
+   "where": "floating plank over the water",
+   "bbox": [
+    0.393,
+    0.488,
+    0.439,
+    0.545
+   ],
+   "severity": 2,
+   "desc": "A flat board floats unsupported in mid-air above the water surface near the pier.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "99.9,107.7,30.6,37.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 99.9,107.7,30.6,37.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A greenish wooden board is hovering in mid-air above the water without any physical support attached to the dock or seabed."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F10",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right corner",
+   "bbox": [
+    0.915,
+    0.755,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "An untextured bright grey plane cuts abruptly through the terrain geometry along the bottom right edge.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "61.5,70,12.7,17.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.5,70,12.7,17.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "An unrendered bright grey polygon clips directly through the terrain at the bottom right edge."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F16",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right corner",
+   "bbox": [
+    0.917,
+    0.758,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "An untextured white wedge cuts into the scene along the bottom-right frame edge.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "61.5,70,12.7,17.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.5,70,12.7,17.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "An untextured white geometry artifact intrudes into the frame along the bottom right corner."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F17",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "immersion",
+   "where": "in the water near the center dock",
+   "bbox": [
+    0.393,
+    0.488,
+    0.437,
+    0.542
+   ],
+   "severity": 1,
+   "desc": "A wooden board floats static in mid-air right above the water surface without support.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "100.2,107,30.8,37.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 100.2,107,30.8,37.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A plank is clearly floating in mid-air above the water near the middle of the dock structure without any visible support."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F23",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": "path:weave-huts__keepers-cottage",
+   "itemWhat": "the route between Weave huts and Keepers' Cottage — a bridge (high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span. Takeoff swings gorge-ward immediately so the deck doesn't shadow the moorage switchback below (walkers rode it into a drop).)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Weave huts and Keepers' Cottage: ABSENT — No high plank bridge spanning across the water basin is present in this view.",
+   "census": {
+    "u": 0.5045,
+    "v": 0.534,
+    "z": 26.51,
+    "charPx": 78,
+    "on": true,
+    "plateZ": 19.91,
+    "state": "occluded",
+    "behindBy": 6.61
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No high plank bridge spanning across the open water basin can be seen anywhere in this frame."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F2",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center midground walkway network",
+   "bbox": [
+    0.16,
+    0.3,
+    0.56,
+    0.58
+   ],
+   "severity": 2,
+   "desc": "The dense layering of roofs, railings, and elevated platforms makes it difficult to discern walkable pathways from non-traversable architecture.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dense, overlapping layers of stilts, roofs, and platforms in the center midground obscure clear pathing and make navigation difficult to read."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F25",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": null,
+   "category": "geometry",
+   "where": "wooden stairs near center",
+   "bbox": [
+    0.451,
+    0.455,
+    0.61,
+    0.665
+   ],
+   "severity": 2,
+   "desc": "The wooden stair steps float in mid-air without structural supports or pillars holding them up.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "65.8,94.7,21.3,32.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 65.8,94.7,21.3,32.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The central wooden stair treads float in mid-air without any stringers, side beams, or vertical posts supporting them."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F26",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": null,
+   "category": "navigation",
+   "where": "dock pathways in lower center",
+   "bbox": [
+    0.3,
+    0.515,
+    0.67,
+    0.88
+   ],
+   "severity": 2,
+   "desc": "Multiple overlapping tiers of docks and ramps create a confusing tangle where walkable paths cannot be clearly distinguished.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The overlapping dock tiers, disjointed ramps, and clutter of posts conceal clear walkable paths from the landing boats to the main walkways."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F27",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": null,
+   "category": "geometry",
+   "where": "wooden railing at bottom center",
+   "bbox": [
+    0.273,
+    0.895,
+    0.458,
+    1
+   ],
+   "severity": 1,
+   "desc": "The wooden railing segment in the foreground ends abruptly with unattached beams floating in space.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "61.4,72.9,29,37",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,72.9,29,37"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The light wood railing segment in the bottom foreground ends abruptly with unattached horizontal beams suspended in space."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F28",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": null,
+   "category": "geometry",
+   "where": "center staircase steps",
+   "bbox": [
+    0.475,
+    0.45,
+    0.616,
+    0.665
+   ],
+   "severity": 2,
+   "desc": "The wooden staircase steps float independently in mid-air without any stringers or support beams holding them.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "66.1,85,21.2,30.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 66.1,85,21.2,30.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The individual treads of the central staircase hover independently in space without any supporting stringers or underlying framework."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F29",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": null,
+   "category": "immersion",
+   "where": "bottom-center railing frame",
+   "bbox": [
+    0.27,
+    0.898,
+    0.456,
+    0.998
+   ],
+   "severity": 1,
+   "desc": "The wooden railing section near the bottom floats above the water without vertical posts anchoring it to the pier structure.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "67.4,72.8,29.1,36.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 67.4,72.8,29.1,36.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden railing frame near the bottom center floats above the water without vertical posts anchoring it to the dock structure."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F31",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": null,
+   "category": "geometry",
+   "where": "the central wooden staircase leading up the cliffside",
+   "bbox": [
+    0.42,
+    0.45,
+    0.66,
+    0.61
+   ],
+   "severity": 2,
+   "desc": "The stair treads float in mid-air without structural side stringers or supports connecting them.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "64.5,93.2,20.1,30",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 64.5,93.2,20.1,30"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The central stair treads completely lack side stringers or underside beams, leaving them floating unnaturally in mid-air."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F32",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": null,
+   "category": "navigation",
+   "where": "the overlapping boardwalks and stairs near the water landing",
+   "bbox": [
+    0.52,
+    0.3,
+    0.88,
+    0.65
+   ],
+   "severity": 2,
+   "desc": "Multiple overlapping platforms, posts, and stairs meet at chaotic angles, making the readable path up from the docks ambiguous.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The chaotic overlap of boardwalks, posts, and stairs near the water makes the playable navigation path ambiguous for a player to read."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F33",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": "dam-crest-gate",
+   "itemWhat": "Dam Crest Gate — a gate (iron-banded gate barring the dam-crest walk to the far shore — closed this chapter; townsfolk say the far-side stairs are 'not kept' anymore)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "none",
+   "bbox": null,
+   "severity": 3,
+   "desc": "Dam Crest Gate: ABSENT — The iron-banded gate barring the dam crest walk is not visible in this frame.",
+   "census": {
+    "u": 0.3521,
+    "v": 0.5697,
+    "z": 35.72,
+    "charPx": 58,
+    "on": true,
+    "plateZ": 24.32,
+    "state": "occluded",
+    "behindBy": 11.4
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The iron-banded dam crest gate is obscured or not visible anywhere along the upper walkways or cliffside in this frame."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  }
+ ],
+ "refuted": [
+  {
+   "fid": "F1",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "geometry",
+   "where": "top edge of the cliff wall near the center",
+   "bbox": [
+    0.466,
+    0,
+    0.478,
+    0.24
+   ],
+   "severity": 1,
+   "desc": "A sharp vertical seam cuts straight through the cliff mesh where terrain assets meet.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "27,151.6,-4.5,7.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 27,151.6,-4.5,7.7"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "This is an open mesh termination exposing the background void rather than a seam where two terrain assets join."
+   }
+  },
+  {
+   "fid": "F7",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "navigation",
+   "where": "central wooden buildings and walkways",
+   "bbox": [
+    0.43,
+    0.472,
+    0.77,
+    0.98
+   ],
+   "severity": 2,
+   "desc": "Overlapping roofs and dense wooden structures obscure the path below, making the connection between the upper cliff and lower dock unclear.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The stairways, ramps, and platforms connecting the upper cliff and lower docks are clearly visible and legible from this perspective."
+   }
+  },
+  {
+   "fid": "F11",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "immersion",
+   "where": "upper right cliff face",
+   "bbox": [
+    0.755,
+    0.03,
+    0.868,
+    0.12
+   ],
+   "severity": 1,
+   "desc": "A roof canopy structure floats high against the cliff side without visible support columns or attachments.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "79.7,94.7,11.9,18.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 79.7,94.7,11.9,18.3"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The canopy roof near the upper right cliff is properly attached to support beams anchored into the platform below."
+   }
+  },
+  {
+   "fid": "F18",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "navigation",
+   "where": "main pathway on the right hillside",
+   "bbox": [
+    0.715,
+    0.19,
+    0.93,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "Harsh dark shadows combined with overlapping fences make it difficult to discern walkable ground from drop-offs along the cliff path.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The broad dirt pathway along the right hillside is clearly delineated by fences and easily readable."
+   }
+  },
+  {
+   "fid": "F3",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "exit",
+   "where": "dark opening on the upper cliffside",
+   "bbox": [
+    0.255,
+    0.072,
+    0.326,
+    0.19
+   ],
+   "severity": 2,
+   "desc": "The pitch-black cave opening lacks visual cues or clear path connections, making it ambiguous whether it serves as a playable route or non-interactive backdrop.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The elevated wooden bridge leads directly into the cave opening, providing a clear path connection."
+   }
+  },
+  {
+   "fid": "F4",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "upper right cliffside staircase",
+   "bbox": [
+    0.77,
+    0.14,
+    0.92,
+    0.31
+   ],
+   "severity": 1,
+   "desc": "The wooden staircase built into the steep cliff face terminates abruptly into the terrain without a clear landing or pathway transition.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "50.3,69.6,-3.4,20.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 50.3,69.6,-3.4,20.4"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The staircase transitions smoothly onto the upper plateau ground next to the building rather than terminating abruptly."
+   }
+  },
+  {
+   "fid": "F12",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center-right village roofs and boardwalks",
+   "bbox": [
+    0.47,
+    0.43,
+    0.89,
+    0.76
+   ],
+   "severity": 2,
+   "desc": "The visual similarity between wooden roofs and wooden walkways makes it ambiguous which elevated surfaces are walkable paths and which are building tops.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The sloped green roofs are easily distinguished from the flat brown boardwalks equipped with railings."
+   }
+  },
+  {
+   "fid": "F14",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center village walkways and rooftops",
+   "bbox": [
+    0.17,
+    0.28,
+    0.9,
+    0.9
+   ],
+   "severity": 2,
+   "desc": "Rooftops and wooden walkways share identical colors and textures, making it difficult to distinguish navigable paths from non-walkable roofs.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The green-tinted sloped roof surfaces have distinct color and geometry from the flat brown walkway planks."
+   }
+  },
+  {
+   "fid": "F15",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "exit",
+   "where": "cave entrance in the upper cliff",
+   "bbox": [
+    0.25,
+    0.06,
+    0.32,
+    0.19
+   ],
+   "severity": 1,
+   "desc": "The dark cave opening at the top left lacks lighting or framing, making it ambiguous whether it is an accessible tunnel or decorative cliff geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The cave entrance is framed and directly serviced by the upper wooden walkway structure, clearly signalling it as an accessible passage."
+   }
+  },
+  {
+   "fid": "F30",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockfive",
+   "item": null,
+   "category": "navigation",
+   "where": "foreground upper deck railing panels",
+   "bbox": [
+    0.591,
+    0.282,
+    0.97,
+    0.56
+   ],
+   "severity": 2,
+   "desc": "The dense row of cloth panels along the upper deck railing blocks sightlines to the walkways and structures behind it.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Decorative cloth panels mounted on a deck railing naturally obscure sightlines behind them and serve as normal environmental set dressing."
+   }
+  }
+ ],
+ "budget": {
+  "calls": 24,
+  "promptTok": 41614,
+  "replyTok": 47438,
+  "errors": 0,
+  "byStage": {
+   "naive": 12,
+   "checklist": 4,
+   "refute-naive": 4,
+   "refute-checklist": 4
+  }
+ },
+ "bboxAgreement": {
+  "n": 19,
+  "hit": 6,
+  "frac": 0.316
+ },
+ "aimCensus": {
+  "n": 4,
+  "refuted": 0,
+  "onSubject": 1,
+  "absenceClaim": 0,
+  "unmeasurable": 3,
+  "min": 0.02,
+  "applied": true,
+  "byFamily": {
+   "quality:frame-edge-world": {
+    "n": 3,
+    "refuted": 0,
+    "covers": []
+   },
+   "quality:water-read": {
+    "n": 1,
+    "refuted": 0,
+    "covers": [
+     0.4426
+    ]
+   }
+  }
+ },
+ "calibration": null
+}

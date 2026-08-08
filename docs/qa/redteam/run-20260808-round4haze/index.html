@@ -1,0 +1,619 @@
+<meta charset="utf-8"><title>Scene red-team — dellhollow — run 20260808-round4haze</title>
+<style>
+:root{--bg:#14110e;--fg:#efe6d8;--dim:#a2957f;--line:#33291f;--hit:#5fb56b;--miss:#c9584a;
+      --naive:#e0a33c;--checklist:#5aa9d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+  font:14px/1.55 -apple-system,Segoe UI,Roboto,sans-serif}
+.pad{max-width:1240px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:38px 0 6px;border-bottom:1px solid var(--line);
+  padding-bottom:6px}h3{font-size:15px;margin:24px 0 4px}
+.small{color:var(--dim);font-size:12px}.blurb{color:var(--dim);margin:2px 0 10px;font-size:13px}
+code{background:#241d16;padding:1px 5px;border-radius:3px;font-size:12px}
+.verdict{background:#1e1912;border:1px solid var(--line);border-left:4px solid var(--naive);
+  padding:14px 16px;border-radius:6px;margin:14px 0 6px;font-size:16px;line-height:1.6}
+table{border-collapse:collapse;width:100%;margin-top:10px}
+th,td{border:1px solid var(--line);padding:9px;vertical-align:top;font-size:13px}
+th{background:#1e1912;text-align:left;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.refcell{width:210px}.refcell img{width:100%;border-radius:4px;display:block}
+.whatcell{width:250px}.said{color:var(--dim);font-style:italic;margin:4px 0}
+td.hit{background:#16240f}td.miss{background:#2a1512}
+td.hit b{color:var(--hit)}td.miss b{color:var(--miss)}
+.quote{margin-top:6px;padding-left:8px;border-left:2px solid var(--line)}
+.src{display:block;color:var(--dim);font-size:11px}
+.wrap{position:relative;display:block;line-height:0;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.wrap img.plate{width:100%;display:block}
+.bx{position:absolute;border:2px solid var(--naive);border-radius:2px;box-shadow:0 0 0 1px #0008}
+.bx.checklist{border-color:var(--checklist)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+.card{background:#1a1610;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.card.sev3{border-color:#6b3229}
+.ch{padding:8px 10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.pill{font-size:10.5px;padding:1px 6px;border-radius:99px;background:#2a2118;color:var(--dim);
+  text-transform:uppercase;letter-spacing:.04em}
+.pill.naive{background:#3a2c12;color:var(--naive)}.pill.checklist{background:#122c3a;color:var(--checklist)}
+.shot{margin-left:auto;font-size:12px;color:var(--dim)}
+.crop{width:100%;aspect-ratio:16/9;background:#000 no-repeat;border-bottom:1px solid var(--line)}
+.cb{padding:10px}.q{font-size:13px}
+.meta{color:var(--dim);font-size:11.5px;margin-top:5px}
+.meta.cmd{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;word-break:break-all;color:#8fa07d}
+.verify.upheld b{color:var(--hit)}.verify.refuted b{color:var(--miss)}
+.count{color:var(--dim);font-weight:400;font-size:12px}
+.empty{color:var(--dim);font-size:12px;padding:10px}
+.limits{background:#1c1712;border:1px solid var(--line);border-left:4px solid var(--miss);
+  padding:14px 18px;border-radius:6px}
+.limits li{margin:5px 0}
+section.shot{margin:18px 0 26px}
+.budget{color:var(--dim);font-size:12px;margin-top:8px}
+.sub{color:var(--dim);font-size:12.5px;font-weight:400;margin-top:8px;line-height:1.5}
+td.adj{width:190px}td.adj.hit{background:#16240f}td.adj.hit b{color:var(--hit)}
+td.adj.weak{background:#2a2410}td.adj.weak b{color:var(--naive)}
+td.adj.miss{background:#2a1512}td.adj.miss b{color:var(--miss)}
+.pill.sup{background:#22301f;color:#8fbf7f}
+</style>
+<div class="pad">
+<h1>Scene red-team — dellhollow</h1>
+<div class="small">run <code>20260808-round4haze</code> · judge <code>gemini:gemini-3.6-flash</code> (pinned) ·
+  4 plates · naive + checklist · naive N=3 ·
+  generated 2026-08-08T15:16:24.117Z by <code>tools/scene_redteam.mjs</code> · plates baked 2026-08-08T15:00:02Z .. 2026-08-08T15:10:22Z</div>
+
+<h2>1 &nbsp;The prompts, verbatim</h2>
+<p class="blurb">Exactly what each judge call was asked (judge <code>gemini:gemini-3.6-flash</code>, pinned) —
+read these first; everything below is these prompts' output. The naive prompt is fixed for the whole
+run; the checklist and sceptic prompts are templates filled per plate — shown here filled with this
+run's own data. The style paragraph switches between art and blockout mode; this run used
+art mode, and that is the version shown.</p>
+<details class="prompt"><summary>Stage 1 — the naive critic (every plate, each of the N looks)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are a first-time player. The image is one frame of a video game, exactly what is on
+screen. You have never been here, you have no map, and nobody has told you anything.
+
+Critique this frame. Report anything that would make the place HARD TO UNDERSTAND or
+HARD TO PLAY. Use exactly these category tokens:
+  navigation  — you would not know where to go, or the way on is ambiguous
+  occlusion   — something blocks your understanding of the space
+  geometry    — incomplete, stray, floating, clipping, or plainly ugly geometry
+  exit        — a door or way out that does not read as a door or a way out
+  immersion   — floating objects, z-fighting, wrong scale, anything that breaks belief
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+RULES. Report only things you can actually point at in this image. Do NOT invent
+problems to fill the list, and do NOT list matters of taste. If the frame is fine,
+return an empty list — that is a valid and useful answer. At most 6 findings.
+severity: 3 = a player would be stuck or would think the game is broken, 2 = clearly
+wrong but survivable, 1 = a blemish.
+
+Answer with JSON only, in this exact shape:
+{&quot;findings&quot;:[{&quot;category&quot;:&quot;occlusion&quot;,&quot;where&quot;:&quot;a few words locating it in the frame&quot;,
+ &quot;bbox&quot;:[x0,y0,x1,y1],&quot;severity&quot;:2,&quot;desc&quot;:&quot;one sentence&quot;}]}
+bbox is in normalised image coordinates: x 0 at the left edge and 1 at the right, y 0
+at the top edge and 1 at the bottom.</pre></details>
+<details class="prompt"><summary>Stage 1 — the checklist auditor (filled for plate &quot;gate&quot;, 14 items derived from the map/ownership contract)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are auditing one frame of a video game. The designer says the things listed below
+are in this shot and that a player should be able to find them. For EACH item, decide
+which of these four is true, using the exact token:
+  FINDABLE               a first-time player would find it AND know what it is
+  OCCLUDED               it is hidden behind something else (say what hides it)
+  VISIBLE-BUT-ILLEGIBLE  part of it is on screen, but it does not read as what it is
+                         — too small, too dark, merged into its background, cropped,
+                         or it looks like some other kind of thing entirely
+  ABSENT                 you cannot see it anywhere in this frame at all
+
+Items marked [QUALITY] are different: they are already in frame, so findability is
+not the question — how well they HOLD UP is. For those items, and ONLY those, answer
+with one of these tokens instead:
+  CONVINCING   it holds up — it reads as the real thing at this scene's own hour
+  WEAK         it reads, but visibly falls short — say exactly what falls short
+  FAILING      it breaks the picture — it reads as a flat fill, a painted plane, or
+               an unfinished edge of the world
+For a [QUALITY] item, put the bbox around the specific area your judgment rests on,
+and make &quot;desc&quot; a JUDGMENT with a reason — never a neutral description of what is
+there.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+YOU ARE NOT TOLD WHERE ANYTHING IS. Do not guess a position to be helpful: if you
+cannot find it, ABSENT is the correct and useful answer. If you DO find it, give the
+bbox where you see it so your reading can be checked against the model.
+
+Two rules that keep the answers useful. (1) Names like &quot;shelf-west&quot; are the designers'
+internal names for other areas; a player never sees them, so NEVER report a missing
+sign, label or name as a problem — judge only whether the thing itself can be found and
+recognised for what it is. (2) Judge what is DRAWN, not what a game would normally add:
+no icons, markers or waypoints exist in this art and their absence is not a finding.
+
+Items:
+  1. Valley Gate — a gate (town's only land entrance; arch + palisade)
+  2. Gatehouse (toll) — a building
+  3. Cargo Winch (head) — a machine (lowers goods from the road to the quay)
+  4. The Valley Road — a road head (THE MOUTH OF THE VALLEY ROAD — the town's land threshold, at the bottom edge of the gate frame. It is a PORTAL, not a place: it carries the overworld exit 'valley-gate-out' and the arrival spawn, and the carriageway runs on PAST it (tools/gate_lib.py SPINE) and off the bottom of the plate, so the road reads as continuing to the valley rather than stopping at a rim. mapVisible false: the town map screen still shows the arch (valley-gate) as the way in — this is the doorstep, not a destination.)
+  5. the route between Valley Gate and Gatehouse (toll) — a road
+  6. the route between Gatehouse (toll) and Cargo Winch (head) — a road (BET 2 RE-ROOT 2026-08-06: was 'valley-gate -&gt; winch-head'. The winch road now leaves from the GATEHOUSE and bows north (waypoint y 7.4) so the gate square fans clean: entry road west, gatehouse road, THE ONE DESCENT east, winch road along the north. The old valley-gate origin shared the descent's own head ground, and the wide (2.2 u) descent flight cannot coexist with a road ribbon inside walkGround's 0.73 step window there — the 2026-08-01 STAMP on the old edge (ribbon 0.340 m over the top treads REFUSED the descent) is the same class, solved this time by removing the road from the corridor instead of nudging it 0.3 u clear.)
+  7. the route between Valley Gate and The Valley Road — a road (THE ENTRY ROAD. The player walks IN up this and OUT down it (USER REDLINE #4). It passes the toll house's own door (t2c_G5_gatehouse_door, x 10.9..12.1 at y 3.56) on its north side and holds a verge off the chopped gorge lip: carriageway half-width 1.87 m against Terrain.rim() 9.05..9.20 over x 1.2..10.6, so the guard rail stands between the paving and the drop instead of 4 m out on empty apron. SUPERSEDES 'valley-gate__porters-yard'.)
+  8. the route between Cargo Winch (head) and Cargo Winch (foot) — a winch (cargo only — NOT walkable; pure set dressing)
+  9. the way out of this area on foot towards shelf-west — a path that carries on out of the frame
+  10. a door / entrance you can go through (&quot;Leave Dellhollow&quot;)
+  11. Inn — The Boatmen's Rest — a shop inn (travelers stranded waiting for lock passage)
+  12. Item Shop (chandlery skin) — a shop item (lamp oil, rope, pitch, provisions; cantilevered out over the gorge)
+  13. [QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.
+  14. [QUALITY] The water surface — water covers about 6.9% of this frame (near Harbor Deck, Fish dock, Moorage). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.
+
+Answer with JSON only, one entry per item, in order:
+{&quot;items&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;FINDABLE&quot;,&quot;where&quot;:&quot;a few words&quot;,&quot;bbox&quot;:[x0,y0,x1,y1],
+ &quot;desc&quot;:&quot;one sentence saying how you recognised it, or what hides it, or why it does
+ not read&quot;}]}
+bbox is normalised: x 0 left to 1 right, y 0 top to 1 bottom. Use null when ABSENT.</pre></details>
+<details class="prompt"><summary>Stage 2 — the naive sceptic (shown with one real claim from this run; the live call lists every claim on the plate)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are the sceptic on a game art review, and your job is to protect the team from
+wasted work. Below are criticisms somebody has made of THIS frame. For each one,
+decide honestly whether it is a REAL problem for a player, or whether it is a
+misreading of the picture, a matter of taste, or simply normal for this art style.
+
+UPHOLD only if you can find the same thing in the frame yourself AND it would really
+cost a player something. REFUTE if the thing described is not there, is not what the
+critic thought it was, is normal for the style, or does not matter. Do not be polite:
+refuting a weak criticism is the useful answer.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+Claims:
+  1. [geometry] top center cliff edge: The cliff geometry cuts off abruptly in a straight vertical line, exposing the background void.
+
+Answer with JSON only, one entry per claim, in order:
+{&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
+<details class="prompt"><summary>Stage 2 — the checklist sceptic (contract-aware: told the object's existence is not in question; shown with one real claim)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are the sceptic on a game art review. The claims below are about objects that the
+DESIGNER'S OWN MAP says really are in this shot. That they belong here is NOT in
+question, and &quot;it is not there&quot; / &quot;this area would not have one&quot; / &quot;expecting it is
+arbitrary&quot; are NOT valid refutations. The only question is whether the claim about how
+well a player can FIND or READ the object is fair.
+
+UPHOLD if, looking at the frame yourself, you agree the object is genuinely hard to
+find, hidden behind something, or does not read as the kind of thing it is. REFUTE if
+you can point straight at it and it is plainly legible, or if the complaint is really
+about a missing sign, label, icon or name rather than about the art.
+
+Claims tagged [quality] are JUDGMENTS that a sky, a backdrop, the world at the frame
+edges, or a water surface fails to hold up as art (a flat fill, a painted plane, an
+unfinished edge of the world). For those, UPHOLD if your own look at the frame agrees
+it falls short in the way described; REFUTE only if the surface genuinely holds up in
+this frame. &quot;It is normal for games&quot; is not a refutation of a quality claim.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+Claims:
+  1. [navigation] waterfront cluster near harbor: Inn: VISIBLE-BUT-ILLEGIBLE — Blends in with surrounding wooden structures without defining signage.
+
+Answer with JSON only, one entry per claim, in order:
+{&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
+
+<h2>2 &nbsp;How well does this work?</h2>
+<div class="verdict">No calibration was scored in this run.</div>
+<p class="blurb">The gate is recall against complaints the user made <em>by hand</em>, before this tool
+existed. The judge is never told what the complaints are; it is shown the shipped plate that holds the
+object and asked to criticise it. Two numbers because there is a real ambiguity: <b>exact plate</b> counts
+the finding only on the one shot whose frame most nearly holds what the user circled; <b>any plate</b>
+counts it on any shot holding the same object. <b>Not reproducible, and said plainly:</b> all five
+references were screenshot from a free orbit camera, from angles no shipped plate holds — so this
+measures whether the same defect is <em>catchable from the shipped frames</em>, not whether the judge
+can reproduce the user's screenshots.</p>
+
+
+<h2>3 &nbsp;The sweep — surviving findings, triaged</h2>
+<p class="blurb">21 survivors from 31 raw findings over 4
+plates. Deduped across shots: a finding seen on more than one plate is listed once and says so.</p>
+
+
+<h3>Already known / tracked <span class="count">4</span></h3><p class="blurb">The judge re-found something the repo already knows about. Useful as a confirmation that the instrument sees real defects; not new work.</p>
+      <div class="grid"><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">crossing</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/crossing.png');background-size:500% auto;background-position:41.6% 51.6%"></div>
+    <div class="cb"><div class="q">A flat board floats unsupported in mid-air above the water surface near the pier.</div>
+      <div class="meta">where: floating plank over the water</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A greenish wooden board is hovering in mid-air above the water without any physical support attached to the dock or seabed.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 99.9,107.7,30.6,37.6</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">lockfive</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/lockfive.png');background-size:476% auto;background-position:53.0% 56.0%"></div>
+    <div class="cb"><div class="q">The wooden stair steps float in mid-air without structural supports or pillars holding them up.</div>
+      <div class="meta">where: wooden stairs near center</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The central wooden stair treads float in mid-air without any stringers, side beams, or vertical posts supporting them.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 65.8,94.7,21.3,32.6</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">lockfive</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/lockfive.png');background-size:465% auto;background-position:54.5% 55.8%"></div>
+    <div class="cb"><div class="q">The wooden staircase steps float independently in mid-air without any stringers or support beams holding them.</div>
+      <div class="meta">where: center staircase steps</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The individual treads of the central staircase hover independently in space without any supporting stringers or underlying framework.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 66.1,85,21.2,30.4</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">lockfive</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/lockfive.png');background-size:417% auto;background-position:54.0% 53.0%"></div>
+    <div class="cb"><div class="q">The stair treads float in mid-air without structural side stringers or supports connecting them.</div>
+      <div class="meta">where: the central wooden staircase leading up the cliffside</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The central stair treads completely lack side stringers or underside beams, leaving them floating unnaturally in mid-air.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 64.5,93.2,20.1,30</div>
+      
+    </div></div></div>
+<h3>New, and looks real <span class="count">17</span></h3><p class="blurb">Not matched to anything tracked. This is the bucket that earns the tool its keep — and the bucket a human must read before anybody acts on it.</p>
+      <div class="grid"><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gate</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gate.png');background-size:400% auto;background-position:47.0% 12.5%"></div>
+    <div class="cb"><div class="q">The cliff geometry cuts off abruptly in a straight vertical line, exposing the background void.</div>
+      <div class="meta">where: top center cliff edge</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Near the top center of the image, the cliff wall geometry abruptly terminates in a perfectly straight vertical line, revealing the background atmospheric fog behind it.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 27.1,152.1,-4.2,8</div>
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gate</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gate.png');background-size:500% auto;background-position:72.0% 68.5%"></div>
+    <div class="cb"><div class="q">The foliage cluster floats in mid-air off the cliff side without a visible trunk or connection to the rock.</div>
+      <div class="meta">where: lower tree cluster on the right cliff wall</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The smaller lower cluster of green and orange foliage on the right hangs in front of the cliff wall with no visible trunk or support connecting it to the rock.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -0.8,11,-0.3,4.4</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gate</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gate.png');background-size:400% auto;background-position:47.5% 12.5%"></div>
+    <div class="cb"><div class="q">The cliff geometry abruptly terminates in a sharp vertical edge against the background mountain.</div>
+      <div class="meta">where: top center cliff edge</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The cliff face near the top center ends abruptly in an unmodeled, straight vertical edge against the distant background mountain and sky.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 52.3,122.2,-2.9,5.1</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">gate</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gate.png');background-size:476% auto;background-position:32.0% 31.5%"></div>
+    <div class="cb"><div class="q">Inn: VISIBLE-BUT-ILLEGIBLE — Blends in with surrounding wooden structures without defining signage.</div>
+      <div class="meta">where: waterfront cluster near harbor</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 14.16 m nearer), 45 px tall at 46.21 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The buildings along the waterfront form a dense cluster of similar wooden geometry, making it impossible to read which structure functions as an inn.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">gate</span>
+      <span class="pill also">+2 more shots</span>
+    </div>
+    <div class="crop" style="background-image:url('plates/gate.png');background-size:385% auto;background-position:47.3% 13.0%"></div>
+    <div class="cb"><div class="q">The world at the frame edges: WEAK — Vertical seam where cliff geometry ends abruptly against background fog.</div>
+      <div class="meta">where: top center sky boundary</div>
+      <div class="meta">aim census: <b>unmeasurable</b> — no derivable subject mask for this family</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — A sharp vertical seam is clearly visible near the top center where the cliff wall geometry abruptly terminates against the background fog.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 24.6,152.1,-2.7,8.2</div>
+      <div class="meta">also on: crossing, weave</div>
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">gate</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gate.png');background-size:200% auto;background-position:14.0% 63.0%"></div>
+    <div class="cb"><div class="q">The water surface: WEAK — Lacks convincing depth transparency and soft foam at shore contact.</div>
+      <div class="meta">where: harbor water surface</div>
+      <div class="meta">aim census: <b>on-subject</b> — 44.3% of the judged box is visible water (1041/2352 cells of the shot's own 168x96 census; the frame holds 6.9%)</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The water surface meets the shoreline and wooden pilings with a harsh, unblended edge, lacking foam or depth transparency.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 7.8,125.6,12.2,72.6</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">crossing</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/crossing.png');background-size:410% auto;background-position:95.7% 87.7%"></div>
+    <div class="cb"><div class="q">An untextured white polygon clips into the bottom right corner of the scene.</div>
+      <div class="meta">where: bottom right corner of the frame</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — There is a noticeable untextured white wedge cutting into the geometry at the bottom right corner of the frame.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,70,12.7,17.2</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">crossing</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/crossing.png');background-size:408% auto;background-position:95.8% 87.8%"></div>
+    <div class="cb"><div class="q">An untextured bright grey plane cuts abruptly through the terrain geometry along the bottom right edge.</div>
+      <div class="meta">where: bottom right corner</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — An unrendered bright grey polygon clips directly through the terrain at the bottom right edge.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.5,70,12.7,17.2</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">crossing</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/crossing.png');background-size:413% auto;background-position:95.9% 87.9%"></div>
+    <div class="cb"><div class="q">An untextured white wedge cuts into the scene along the bottom-right frame edge.</div>
+      <div class="meta">where: bottom right corner</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — An untextured white geometry artifact intrudes into the frame along the bottom right corner.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.5,70,12.7,17.2</div>
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">crossing</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/crossing.png');background-size:500% auto;background-position:41.5% 51.5%"></div>
+    <div class="cb"><div class="q">A wooden board floats static in mid-air right above the water surface without support.</div>
+      <div class="meta">where: in the water near the center dock</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A plank is clearly floating in mid-air above the water near the middle of the dock structure without any visible support.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 100.2,107,30.8,37.6</div>
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">crossing</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/crossing.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Weave huts and Keepers' Cottage: ABSENT — No high plank bridge spanning across the water basin is present in this view.</div>
+      
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 6.61 m nearer), 78 px tall at 26.51 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No high plank bridge spanning across the open water basin can be seen anywhere in this frame.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">weave</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/weave.png');background-size:250% auto;background-position:36.0% 44.0%"></div>
+    <div class="cb"><div class="q">The dense layering of roofs, railings, and elevated platforms makes it difficult to discern walkable pathways from non-traversable architecture.</div>
+      <div class="meta">where: center midground walkway network</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The dense, overlapping layers of stilts, roofs, and platforms in the center midground obscure clear pathing and make navigation difficult to read.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">lockfive</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/lockfive.png');background-size:270% auto;background-position:48.5% 69.8%"></div>
+    <div class="cb"><div class="q">Multiple overlapping tiers of docks and ramps create a confusing tangle where walkable paths cannot be clearly distinguished.</div>
+      <div class="meta">where: dock pathways in lower center</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The overlapping dock tiers, disjointed ramps, and clutter of posts conceal clear walkable paths from the landing boats to the main walkways.</div>
+      
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">lockfive</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/lockfive.png');background-size:500% auto;background-position:36.6% 94.8%"></div>
+    <div class="cb"><div class="q">The wooden railing segment in the foreground ends abruptly with unattached beams floating in space.</div>
+      <div class="meta">where: wooden railing at bottom center</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The light wood railing segment in the bottom foreground ends abruptly with unattached horizontal beams suspended in space.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,72.9,29,37</div>
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">lockfive</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/lockfive.png');background-size:500% auto;background-position:36.3% 94.8%"></div>
+    <div class="cb"><div class="q">The wooden railing section near the bottom floats above the water without vertical posts anchoring it to the pier structure.</div>
+      <div class="meta">where: bottom-center railing frame</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The wooden railing frame near the bottom center floats above the water without vertical posts anchoring it to the dock structure.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 67.4,72.8,29.1,36.5</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">lockfive</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/lockfive.png');background-size:278% auto;background-position:70.0% 47.5%"></div>
+    <div class="cb"><div class="q">Multiple overlapping platforms, posts, and stairs meet at chaotic angles, making the readable path up from the docks ambiguous.</div>
+      <div class="meta">where: the overlapping boardwalks and stairs near the water landing</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The chaotic overlap of boardwalks, posts, and stairs near the water makes the playable navigation path ambiguous for a player to read.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">lockfive</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/lockfive.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Dam Crest Gate: ABSENT — The iron-banded gate barring the dam crest walk is not visible in this frame.</div>
+      <div class="meta">where: none</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 11.4 m nearer), 58 px tall at 35.72 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The iron-banded dam crest gate is obscured or not visible anywhere along the upper walkways or cliffside in this frame.</div>
+      
+      
+    </div></div></div>
+<h3>Style bar — waits for the dressing pass <span class="count">0</span></h3><p class="blurb">Material and detail complaints against a massing blockout. Correct observations, wrong stage.</p>
+      <div class="grid"><div class="empty">nothing in this bucket</div></div>
+
+<h2>4 &nbsp;Every plate, with its findings drawn on</h2>
+<p class="blurb">Boxes are the judge's own bboxes: <span style="color:var(--naive)">orange = naive</span>,
+<span style="color:var(--checklist)">blue = checklist</span>. This is the user's own annotated-screenshot
+format, machine-made.</p>
+
+<section class="shot"><h3>gate <span class="small">The Valley Gate · bake 2026-08-08T15:10:22Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/gate.png" alt="">
+        <div class="bx naive" style="left:46.00%;top:0.00%;width:2.00%;height:25.00%"></div><div class="bx naive" style="left:66.00%;top:59.00%;width:12.00%;height:19.00%"></div><div class="bx naive" style="left:47.20%;top:0.00%;width:0.60%;height:25.00%"></div><div class="bx checklist" style="left:25.00%;top:21.00%;width:14.00%;height:21.00%"></div><div class="bx checklist" style="left:46.00%;top:0.00%;width:2.50%;height:26.00%"></div><div class="bx checklist" style="left:0.00%;top:38.00%;width:28.00%;height:50.00%"></div></div>
+      <div class="small">6 surviving findings ·
+        1 refuted ·
+        14 checklist items</div></section>
+<section class="shot"><h3>crossing <span class="small">The Crossing · bake 2026-08-08T15:06:36Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/crossing.png" alt="">
+        <div class="bx naive" style="left:91.50%;top:75.50%;width:8.40%;height:24.40%"></div><div class="bx naive" style="left:39.30%;top:48.80%;width:4.60%;height:5.70%"></div><div class="bx naive" style="left:91.50%;top:75.50%;width:8.50%;height:24.50%"></div><div class="bx naive" style="left:91.70%;top:75.80%;width:8.30%;height:24.20%"></div><div class="bx naive" style="left:39.30%;top:48.80%;width:4.40%;height:5.40%"></div></div>
+      <div class="small">6 surviving findings ·
+        3 refuted ·
+        10 checklist items</div></section>
+<section class="shot"><h3>weave <span class="small">The Weave · bake 2026-08-08T15:03:16Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/weave.png" alt="">
+        <div class="bx naive" style="left:16.00%;top:30.00%;width:40.00%;height:28.00%"></div></div>
+      <div class="small">1 surviving finding ·
+        5 refuted ·
+        14 checklist items</div></section>
+<section class="shot"><h3>lockfive <span class="small">Lock Five · bake 2026-08-08T15:00:02Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/lockfive.png" alt="">
+        <div class="bx naive" style="left:45.10%;top:45.50%;width:15.90%;height:21.00%"></div><div class="bx naive" style="left:30.00%;top:51.50%;width:37.00%;height:36.50%"></div><div class="bx naive" style="left:27.30%;top:89.50%;width:18.50%;height:10.50%"></div><div class="bx naive" style="left:47.50%;top:45.00%;width:14.10%;height:21.50%"></div><div class="bx naive" style="left:27.00%;top:89.80%;width:18.60%;height:10.00%"></div><div class="bx naive" style="left:42.00%;top:45.00%;width:24.00%;height:16.00%"></div><div class="bx naive" style="left:52.00%;top:30.00%;width:36.00%;height:35.00%"></div></div>
+      <div class="small">8 surviving findings ·
+        1 refuted ·
+        14 checklist items</div></section>
+
+<h2>5 &nbsp;Limits — what this instrument structurally cannot see</h2>
+<div class="limits">
+<p>This tool looks at <b>pixels</b>. Seam-canon §10.3 (amended after the loop-stairs post-mortem) is the
+reason that sentence needs a warning label:</p>
+<p style="font-size:15px;margin:10px 0"><b>&ldquo;in frame&rdquo; &ne; &ldquo;visible&rdquo; &ne;
+&ldquo;unobstructed ray&rdquo; &ne; <span style="color:var(--miss)">catches a foot</span></b></p>
+<p>The loop-stairs flight was 72% visible, correctly framed, unoccluded and handsome — and unwalkable,
+because <code>walkGround</code> keeps the highest surface in the step window and the neighbouring
+flight's top tread covered its head. It caught a foot in 0 of 72 entries. <b>No critique of that plate
+could ever have found it.</b> What this tool cannot see, and where each of those defects <em>is</em>
+caught:</p>
+<ul>
+<li>whether a walk surface catches a foot &rarr; <code>tools/ls_nav_probe.mjs</code>, <code>seam_walk.mjs</code></li>
+<li>whether a solid blocks the body &rarr; WALKLOCK / <code>boxSolid</code>, <code>seam_test.mjs</code></li>
+<li>whether a naive reading of the frame actually <em>escapes</em> the shot &rarr; <code>tools/nav_eval.mjs</code> (it walks the answer)</li>
+<li>whether a seam fires where it should &rarr; <code>seam_test.mjs</code>, <code>transition_test.mjs</code></li>
+<li>true occlusion over a whole object, in metres &rarr; the bake ray-cast — the <em>only</em> visibility oracle — and <code>cine_visprobe.py</code></li>
+<li>anything outside the shipped fixed frames &rarr; nothing automated sees it. The user plays with a free orbit camera; all five reference frames were taken from angles no plate holds.</li>
+</ul>
+<p>A finding here is a <b>perception</b>, and a perception is not a measurement. Geometry findings ship
+with a <code>geometry_audit --region</code> command for exactly this reason: the next step is to measure
+it, not to believe it.</p>
+</div>
+
+<div class="budget">Budget: 24 judge calls
+(naive 12, checklist 4, refute-naive 4, refute-checklist 4) ·
+41,614 prompt + 47,438 reply tokens ·
+0 errors. Aim census: 0/4 [QUALITY] verdicts were REFUTED because the
+judge's own box held under 2% of the subject the verdict names
+(water = the same visible-water mask the arming gate counts; sky = the plate's own depth). Every one is in
+<code>refuted.json</code> with its number. 0 claimed the subject was ABSENT —
+the aim rule inverts there and the census abstained; 3 had no derivable
+subject (frame-edge-world, and verdicts the judge returned without a box). Box check: 6/19 (32%) of the
+judge's checklist boxes contain the point the ray census projected — the drawn rectangles are
+only as trustworthy as that number. Raw replies in <code>raw/</code>, findings in
+<code>findings.json</code>, discarded claims in <code>refuted.json</code>.</div>
+</div>
