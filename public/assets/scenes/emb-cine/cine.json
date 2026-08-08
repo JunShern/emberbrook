@@ -31,7 +31,7 @@
    "look": "AgX - Medium High Contrast",
    "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 2.71,
+   "moon": 3.75,
    "moonColor": [
     0.65,
     0.75,
@@ -230,8 +230,8 @@
    "spawnFrom": "walk_pad_road-gate",
    "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-08-02T20:20:29Z",
-   "seconds": 1139.0,
+   "baked": "2026-08-07T23:53:40Z",
+   "seconds": 402.3,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -296,8 +296,8 @@
    "spawnFrom": "walk_lm_orchard",
    "visibleFrac": 0.7,
    "probes": 10,
-   "baked": "2026-08-02T19:48:21Z",
-   "seconds": 483.6,
+   "baked": "2026-08-07T23:13:46Z",
+   "seconds": 479.8,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -341,11 +341,11 @@
    ],
    "rtClip": [
     5.0468,
-    256.561
+    482.239
    ],
    "depth": {
     "near": 10.093521118164062,
-    "far": 160.35086059570312,
+    "far": 301.3996276855469,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -362,8 +362,8 @@
    "spawnFrom": "walk_e_road-gate__square-plaza_l4",
    "visibleFrac": 0.5,
    "probes": 50,
-   "baked": "2026-08-02T20:38:44Z",
-   "seconds": 819.6,
+   "baked": "2026-08-08T00:14:27Z",
+   "seconds": 417.5,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -428,8 +428,8 @@
    "spawnFrom": "walk_lm_square-plaza.032",
    "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-08-07T19:11:12Z",
-   "seconds": 461.2,
+   "baked": "2026-08-07T23:45:11Z",
+   "seconds": 424.5,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -473,11 +473,11 @@
    ],
    "rtClip": [
     4.8955,
-    235.068
+    420.283
    ],
    "depth": {
     "near": 9.791011810302734,
-    "far": 146.91720581054688,
+    "far": 262.6769714355469,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -494,8 +494,8 @@
    "spawnFrom": "walk_pad_pips-den",
    "visibleFrac": 0.3906,
    "probes": 64,
-   "baked": "2026-08-07T18:46:28Z",
-   "seconds": 485.2,
+   "baked": "2026-08-08T00:06:01Z",
+   "seconds": 450.4,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -560,8 +560,8 @@
    "spawnFrom": "walk_pad_elder-house",
    "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-07T19:24:39Z",
-   "seconds": 699.1,
+   "baked": "2026-08-07T23:05:11Z",
+   "seconds": 729.1,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -671,11 +671,11 @@
    ],
    "rtClip": [
     8.5283,
-    389.563
+    515.529
    ],
    "depth": {
     "near": 17.056686401367188,
-    "far": 243.47677612304688,
+    "far": 322.2055969238281,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -692,8 +692,8 @@
    "spawnFrom": "walk_e_barn__gate-court_l11",
    "visibleFrac": 0.6875,
    "probes": 64,
-   "baked": "2026-08-02T22:42:37Z",
-   "seconds": 725.2,
+   "baked": "2026-08-07T23:27:25Z",
+   "seconds": 694.4,
    "appliedGrade": {
     "exposure": 0.7799999713897705,
     "viewTransform": "AgX",
