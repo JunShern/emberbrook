@@ -82,6 +82,37 @@ DONOR SWAP: PER-CLIP DONORS (added 2026-07-31, late; supersedes the single-donor
 
   (UAL has no full jump arc, only Start/Loop/Land, so the jump stays on KayKit.)
 
+PERFORMANCE CLIPS (added 2026-08-08, the battle-cast lane). Cheer and Use_Item, because
+  the arena ASKS FOR SIX INTENTS and the rigs bound four: `stage.clipsOf()` returned
+  ["idle","attack","hit","die"] for every body in the game, so the victory pose of this
+  game was the whole party standing in their idles (docs/qa/battle-audit/seq-6-cheer.png)
+  and drinking a tonic was a body standing perfectly still. Measured, not assumed --
+  docs/plans/battle-presentation-inventory.md §6.
+
+  DONOR: KAYKIT, and it is NOT a reversal of "WHY UAL AND NOT KAYKIT" below. That
+  argument is about the COMBAT set, where UAL has an equal or better clip; UAL has NO
+  cheer and NO item-use at all (its 46 actions carry Dance_Loop, Interact and
+  PickUp_Table -- a dance, a lever pull and a table reach, none of which is either of
+  these beats). So the choice is KayKit's clip or no clip, and no clip is the defect.
+  The chibi-neutral problem is handled the way Jump_Full_Short has handled it since
+  2026-07-31: the kaykit donor is arm_solve='idle', so the constant offset is solved
+  from the KayKit IDLE and the clip's own envelope transfers intact.
+
+      Cheer     <- KayKit rogue 'Cheer'     1.667 s, 51 keys
+      Use_Item  <- KayKit rogue 'Use_Item'  1.600 s, 49 keys
+
+  NO TAIL TRIM, and it was measured before it was skipped (per-key channel delta over
+  the donor's own samplers): neither clip has a single static tail key, unlike
+  Sword_Attack (11 dead of 47) and Death01 (16 of 73). `end=` is for a dead tail; these
+  have none.
+
+  THE THIRD INTENT, FLEE, IS DELIBERATELY NOT A RETARGET. A body that runs away is a
+  body running: battle_stage3d binds `flee` to the rig's OWN Walking_A and drives the
+  retreat as a tween, so every body in the game -- including every monster GLB, none of
+  which has anything cheer-shaped -- gets the beat with no new asset. A donor dodge
+  (KayKit Dodge_Backward, 0.4 s) was considered and rejected: it reads as a dodge, and
+  the beat has to read as leaving.
+
 COMBAT CLIPS (added 2026-08-02, the combat-clips lane). The shipped rigs carried a
   LOCOMOTION set and nothing else, so the battle stage's oneShot(b,'attack') found no
   clip and the party's whole attack was a body sliding forward on its idle pose. These
@@ -503,6 +534,14 @@ CLIPS = [
          stance=False, hang='coat', ref='Idle_Loop'),
     dict(name='Death_A', donor='ual', src=OPT.get('death', 'Death01'),
          stance=False, hang='coat', ref='Idle_Loop', end=56),
+    # THE PERFORMANCE SET (see PERFORMANCE CLIPS above). KayKit, not UAL, because UAL
+    # HAS NEITHER MOTION -- and the KayKit donor already carries the idle-solved arm
+    # offset the jump has shipped on since 2026-07-31, so these two ride a recipe this
+    # file has been shipping for a week rather than a new one.
+    dict(name='Cheer', donor='kaykit', src=OPT.get('cheer', 'Cheer'),
+         stance=False, hang='coat'),
+    dict(name='Use_Item', donor='kaykit', src=OPT.get('item', 'Use_Item'),
+         stance=False, hang='coat'),
 ]
 # A donor-clip override on the command line is a DIFFERENT clip with a different tail,
 # so its measured trim does not apply. Drop it rather than cut a stranger at frame 36.

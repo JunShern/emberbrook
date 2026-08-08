@@ -86,7 +86,14 @@ print("ACTIONS:", [(a.name, tuple(round(v, 1) for v in a.frame_range)) for a in 
 # arena picks them up with no edit and its procedural swing stands itself down.
 LOCO = ['Idle', 'Walking_A', 'Jump_Full_Short']
 COMBAT = ['Attack', 'Hit_A', 'Death_A']
-assert VARIANTS or set(acts) == set(LOCO) | set(COMBAT), acts
+# THE PERFORMANCE SET (2026-08-08, the battle-cast lane). battle_stage3d's CLIP table
+# asks for SIX intents -- idle, attack, hit, die, item, cheer -- and the shipped rigs
+# bound four, so the game's victory pose was the party standing in their idles. These
+# two are the other two, and they go through the SAME gate the combat clips do: a clip
+# that never leaves the idle envelope is the defect, whatever it is called.
+PERF = ['Cheer', 'Use_Item']
+GATED = COMBAT + PERF          # every clip that moves, held to THE COMBAT GATE below
+assert VARIANTS or set(acts) == set(LOCO) | set(GATED), acts
 assert not any(m.name.lower().startswith('icosphere') for m in meshes)
 assert len(bpy.data.images) == 3 and all(min(i.size) == 4096 for i in bpy.data.images)
 
@@ -350,7 +357,12 @@ for clip in LOCO:
 #     the 10 the first draft used: a crossing of the surface is what the gate is looking
 #     for, and it is exactly what a coarse sample steps over.
 SWING_ARM_MIN = 60.0     # deg off vertical the attack's peak upper arm must exceed
-SWING_TRAVEL = {'Attack': 40.0, 'Hit_A': 8.0, 'Death_A': 40.0}   # deg of peak-to-trough
+# G1's travel bar is PER CLIP because the beats are not the same size: a strike throws
+# the arm, a flinch does not, and a drink lifts one hand. Each is pinned just under the
+# clip's own MEASURED travel (see the numbers in DAYLOG 2026-08-08), so the bar catches a
+# transfer that collapsed the motion and does not encode a wish about how big it should be.
+SWING_TRAVEL = {'Attack': 40.0, 'Hit_A': 8.0, 'Death_A': 40.0,
+                'Cheer': 60.0, 'Use_Item': 24.0}   # deg of peak-to-trough
 MAX_STEP = 90.0          # deg, one limb axis, one frame @30fps -- the reconstruction limit
 RETURN_MAX = 20.0        # deg per axis, mean over the 8 axes, last frame vs first
 FOOT_CEIL = 0.30         # m, highest a foot-contact vertex may go (a step, not a leap)
@@ -378,7 +390,7 @@ def foot_z():
 
 print("\nTHE COMBAT GATE  (swing>=%.0f | step<=%.0f | return<=%.0f | foot<=%.2f | "
       "hand>=%+.3f)" % (SWING_ARM_MIN, MAX_STEP, RETURN_MAX, FOOT_CEIL, COMBAT_CLEAR_FLOOR))
-for clip in COMBAT:
+for clip in GATED:
     a = bpy.data.actions[clip]
     C0, C1 = (int(round(v)) for v in a.frame_range)
     el = {s: [] for s in 'LR'}
@@ -485,7 +497,7 @@ SHEET = [v for v in OPT.get('sheet', '').split(',') if v]
 SHEET_N = int(OPT.get('sheetn', '8'))
 if SHEET:
     sc.render.resolution_x, sc.render.resolution_y = 400, 540
-    for clip in COMBAT:
+    for clip in GATED:
         C0, C1 = (int(round(v)) for v in bpy.data.actions[clip].frame_range)
         frames = [C0 + round(i * (C1 - C0) / (SHEET_N - 1)) for i in range(SHEET_N)]
         for view in SHEET:
