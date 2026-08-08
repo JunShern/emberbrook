@@ -86,6 +86,27 @@ git runs here, on branch `migration/3d-hybrid`.
   far-depth one would have killed crossing's real white-wedge finding, so an undefined
   subject gets no gate. `--aim-census` measures a finished run with no API; `--no-aim` is
   the A/B.
+- **`blockout_material_coverage()` in emb_dress — A COVERAGE REPORT ON ONE AXIS IS NOT A
+  COVERAGE REPORT** (2026-08-08). `vegetation_coverage_report` censuses the PREFIXES the
+  harvest claimed; this censuses what render-visible meshes are WEARING at the end of the
+  build. `emb_mat_leaf_green` (21 meshes, 20 of them `lm_field_*`) and `emb_mat_leaf_autumn`
+  had shipped as flat untextured paint through every green gate for weeks, on no keep list
+  and matched by no substitution rule — and the new census found three more (`lm_infill_*_
+  fruit0_crown`) on its FIRST run. Related trap, same day: `PLAN["fields"]` had one `.append`
+  and no reader, but three of its five classes were already dressed by an EARLIER matching
+  rule — so "the plan has no consumer" sized the defect at 38.5% of a frame when
+  `plate_probe` measured at most 2.464%. Right mechanism, wrong magnitude by an order:
+  MEASURE THE PIXELS, not the plan.
+- **IF NOTHING BUT THE CAMERA MAY SEE IT, IT IS A PICTURE AND NOT A PLACE** (2026-08-08).
+  `cine_bake --glb` and `town_export` both drop `visible_camera`-only meshes. `visible_camera`
+  alone stopped meaning "in the world" the moment a town shipped an 1800 m backdrop skirt —
+  without the filter that skirt walks straight into the walkable bundle.
+- **A GATE THAT COMPARES TWO DERIVED ARTIFACTS SAYS THEY DISAGREE, NEVER WHICH IS STALE**
+  (2026-08-08). Emberbrook's THREE "pre-attributed, known-red" cine_test failures were one
+  cause: `emb-townwalk/scene.glb` was four walk meshes behind its master. Re-exporting took
+  the town 477/3/2 -> **480/0/2**, and the long-standing "square closeness ratchet" went with
+  it — it was never a camera question. An attribution is a hypothesis; re-derive before you
+  inherit one.
 - **tools/gltf_fast_index.py — THE EXPORTER IS QUADRATIC, AND THE BLEND YOU AIM IT AT IS THE
   WHOLE STORY** (2026-08-08). io_scene_gltf2's `__append_unique_and_get_index`
   (`blender/exp/exporter.py:413`) is `x in LIST` per node/mesh/accessor and no gltf2_io class
