@@ -20172,3 +20172,93 @@ from mid-value terrain — with known shader-side answers, instead of a property
 the whole arena. Recommendation unchanged in shape, stronger in confidence: both
 paths, one flag, the diorama as the fallback. If the ruling goes to BET E, none
 of this work is touched — no plate moved and no diorama camera moved.
+
+---
+
+## 2026-08-08 — CLEANUP LANE: `sides()` ON BOTH ARENAS, AND THE STAGING-RATE CONFOUND SEPARATED
+
+Two small items, both useful whichever way the diorama-vs-world ruling goes.
+
+### ITEM 1 — THE DIORAMA NOW HAS `sides()`, SO NO INSTRUMENT HAS TO GUESS
+
+`battle_stage3d`'s stage object gained one read-only accessor, the same shape
+and semantics as `battle_world`'s (`battle_world.js:1427`):
+
+    sides() { const o = {}; for (const id of order) o[id] = bodies[id].side; return o; }
+
+The value is the one `newBody(id, side, ...)` was CONSTRUCTED with — already
+visible per body through `at(id).side`, never as a map. No behaviour changed;
+it allocates and touches nothing. `transition_test` 168/0 after.
+
+Instruments updated to ask the stage and to PRINT WHICH PATH ANSWERED
+(`stage.sides()` -> `stage.at().side` -> labelled id pattern):
+`tools/battle_camera.mjs`, `tools/battle_world_probe.mjs`,
+`tools/battle_ko_shots.mjs`, `tools/battle_cast_shots.mjs`.
+`tools/battle_shots.mjs` already reported its path (d865ee80) and needed no edit;
+it now resolves through `stage.sides()` in the diorama column too.
+
+**THE PARTITION PROOF** — `node tools/battle_camera.mjs --mode=sides`, new mode,
+receipt at `docs/qa/battle-camera/sides.json`. One site, one group, both arenas:
+
+    diorama  build order ["m0","m1","vesper","maren"]   party=[vesper,maren] foes=[m0,m1]  partition OK
+    world    build order ["vesper","maren","m0","m1"]   party=[vesper,maren] foes=[m0,m1]  partition OK
+
+Both via `stage.sides()`. The mode asserts the map covers the roster exactly once
+— nothing missing, nothing on both sides, nothing invented — and exits 3 if not.
+**The build orders printed above are the whole reason the old fallback was a
+defect waiting**: the diorama stages foes FIRST and `battle_world` the party
+first, so an id-pattern column was correct in one arena by accident of somebody
+else's array order. The mode also prints what `/^m\d+$/` would have said, so a
+future divergence lands in a log rather than in a photograph.
+
+### ITEM 2 — THE 68.8% -> 64.4% DROP, DECOMPOSED. IT IS ALL INSTRUMENT
+
+The camera lane reported the world-arena staging rate falling over the same 160
+road cells with two changes confounded — a stricter visibility test and a sweep
+that became yaw x pitch — and costed the separation at a 25-minute run. Run.
+
+Both knobs turned out to be reachable with no code hack, because each change
+already had an off switch in the module's own config, so `battle_world_probe`
+grew two flags that set them and read them back:
+
+  * `--vismin=0` — the nine-sample refusal is `vf < CFG.place.visMin`, so at 0 it
+    can never fire and the two spine rays are the whole gate: byte-for-byte the
+    spike's test.
+  * `--bcam=0` — `BattleWorld.CAM.on = false`, which `solveArena` already treats
+    as "the spike's own behaviour, to the line": one fixed pitch, return the
+    FIRST yaw that places, no `scoreView` ranking.
+
+`node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160
+--vismin=<0|0.67> --bcam=<0|1>`, four arms, same 160 cells, receipts condensed
+to `docs/qa/battle-world/factorial.json`:
+
+| vis test \ sweep        | yaw only, first (old) | yaw x pitch, best (new) |
+|-------------------------|-----------------------|-------------------------|
+| two spine rays (old)    | **68.8%** (110/160)   | 69.4% (111/160)         |
+| nine samples, 67% (new) | 62.5% (100/160)       | **64.4%** (103/160)     |
+
+**Both published corners reproduce EXACTLY** — 68.8 and 64.4, and the old corner
+matches the shipped `placement.json` per zone as well (water 17/29, forest 25/48,
+crag 18/24, meadow 50/59). That is what makes the two interior cells worth
+reading at all.
+
+**THE ANSWER: the stricter instrument costs 6.3 points on its own (68.8 -> 62.5)
+and the pitch sweep GIVES BACK 1.9 (62.5 -> 64.4). The net is the published
+-4.4. The pitch sweep is not a regression and never was — it is a gain at BOTH
+test settings (+0.6 with the old test, +1.9 with the new) and it does not lose a
+single cell in any zone at either.** Per zone under the new test, the pitch axis
+took forest 20 -> 23 and left water, crag and meadow untouched. The interaction
+has the sign the code comment predicted: the boom axis rescues MORE cells when
+the test is strict, because partial-body occlusion behind a crest is exactly what
+a different boom elevation fixes and a two-ray test could not see in the first
+place.
+
+**WHAT THIS RUN CANNOT SAY, stated rather than smoothed over.** `--bcam` bundles
+TWO changes: the pitch axis and best-of rather than first-that-places. The
+measurable side effect of that bundle is `yawTurned` — the fraction of staged
+fights where the arena swings off the player's own heading — going **52.7% ->
+91.9%** (old test) and **49.0% -> 89.3%** (new). "Where the world is open the
+camera does not swing" was a stated property of the spike and best-of erodes it,
+but this factorial cannot attribute that to the pitch axis versus best-of. A
+fifth arm separates them with no code change — `CAM.on = true` with
+`CAM.solve.pitches = [0.27]` — and was not run.

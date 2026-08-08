@@ -36,6 +36,22 @@ const N = parseInt(arg('n', '120'), 10);
 const OUT = join(ROOT, arg('out', 'docs/qa/battle-world'));
 const HEAD = argv.includes('--head');
 const WORLD = arg('arena', 'world');
+// ---- THE TWO KNOBS THAT SEPARATE THE CONFOUNDED STAGING-RATE CHANGE --------
+// The rate moved 68.8% -> 64.4% over the same 160 road cells while TWO things
+// changed at once, and DAYLOG named them as confounded:
+//   (a) the visibility test got stricter — two spine rays became two spine rays
+//       PLUS nine samples across the body's own box, refused below 67% visible.
+//       `--vismin=0` restores the old verdict exactly: the nine-sample refusal
+//       is `vf < CFG.place.visMin`, so at 0 it can never fire and the two spine
+//       rays are the whole test, which is byte-for-byte the spike's own gate.
+//   (b) the sweep became yaw x pitch and takes the BEST rather than the first.
+//       `--bcam=0` sets BattleWorld.CAM.on = false, which solveArena already
+//       treats as "the spike's own behaviour, to the line": one fixed pitch,
+//       return the first yaw that places, no scoreView ranking.
+// Neither knob is a code change and neither moves a default — both are read at
+// solve time out of the module's own config.
+const VISMIN = arg('vismin', null);      // null = leave CFG.place.visMin alone
+const BCAM = arg('bcam', null);          // '0' = yaw-only sweep (spike behaviour)
 const CDP_PORT = await freePort();
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -231,10 +247,19 @@ const battleDriver = (spot, opts) => `(async () => {
   const grab = () => st.snapshot();
   await new Promise(r => setTimeout(r, 700));
   shots.opening = grab();
-  // /^m/ MATCHES 'maren'. Ask the stage which side a body is on, or match the
-  // kernel's actual foe id scheme (battle_rules.derive.foesFromGroup -> 'm'+i).
-  const sides = st.sides ? st.sides() : null;
-  const foes = Object.keys(st.tiers()).filter(k => sides ? sides[k] === 'foe' : /^m\d+$/.test(k));
+  // AN ID IS NOT A SIDE — /^m/ MATCHES 'maren'. BOTH arenas carry sides() now
+  // (battle_world.js :1427, battle_stage3d.js :3259), the per-body value
+  // newBody() was constructed with. Ask the stage, say which path answered, and
+  // keep the kernel's id scheme only as a labelled last resort.
+  let sidesVia = 'stage.sides()';
+  let sides = st.sides ? st.sides() : null;
+  if (!sides && st.at) { sidesVia = 'stage.at().side'; sides = {}; for (const k of Object.keys(st.tiers())) { const a = st.at(k); if (a && a.side) sides[k] = a.side; } }
+  if (!sides || !Object.keys(sides).length) { sidesVia = 'id-pattern-fallback'; sides = {}; for (const k of Object.keys(st.tiers())) sides[k] = /^m\d+$/.test(k) ? 'foe' : 'party'; }
+  const foes = Object.keys(st.tiers()).filter(k => sides[k] === 'foe');
+  const allies = Object.keys(st.tiers()).filter(k => sides[k] === 'party');
+  if (!foes.length) throw new Error('no foe-side body on the stage: ' + JSON.stringify(sides));
+  if (allies.indexOf(foes[0]) >= 0) throw new Error('side resolution returned a party member');
+  const sideResolution = { via: sidesVia, party: allies, foes: foes };
   st.setActor('vesper'); st.setTarget(foes[0]);
   st.act('vesper', 'attack');
   await new Promise(r => setTimeout(r, 210));
@@ -269,7 +294,7 @@ const battleDriver = (spot, opts) => `(async () => {
            clips: Object.keys(st.tiers()).reduce((o,k)=>(o[k]=st.clipsOf(k),o),{}),
            frames: st.frames, framesGained: st.frames - f0, fps:+fps.toFixed(1),
            info0, info1, anchors, canvas:[rect.width, rect.height],
-           world: !!st.world, shots };
+           world: !!st.world, sideResolution, shots };
 })()`;
 
 // ---- MODE: fps / teardown -------------------------------------------------
@@ -422,6 +447,19 @@ const FPSDRIVE = (worldMode) => `(async () => {
   const inj = await ev(cdp, INJECT, 60000);
   console.log('inject:', JSON.stringify(inj));
 
+  // THE KNOBS, APPLIED AND READ BACK OUT OF THE MODULE. A run that says which
+  // arm of the factorial it is cannot be mistaken for another arm's numbers.
+  const knobs = await ev(cdp, `(() => {
+    const BW = window.BattleWorld;
+    if (!BW) return { ok: false };
+    ${VISMIN == null ? '' : `BW.CFG.place.visMin = ${parseFloat(VISMIN)};`}
+    ${BCAM == null ? '' : `BW.CAM.on = ${BCAM === '0' || BCAM === 'false' ? 'false' : 'true'};`}
+    return { ok: true, visMin: BW.CFG.place.visMin, camOn: BW.CAM.on };
+  })()`, 30000);
+  console.log(`knobs: visMin=${knobs.visMin}  CAM.on=${knobs.camOn}`
+            + `   [vis test = ${knobs.visMin > 0 ? 'NINE-SAMPLE (new)' : 'TWO SPINE RAYS (old)'};`
+            + ` sweep = ${knobs.camOn ? 'yaw x pitch, best (new)' : 'yaw only, first (old)'}]`);
+
   if (MODE === 'place') {
     const all = JSON.parse(readFileSync(arg('pts', join(ROOT, 'tools/_bw_roadpts.json')), 'utf8'));
     const pts = all.slice(0, N);
@@ -448,6 +486,9 @@ const FPSDRIVE = (worldMode) => `(async () => {
     const blockers = {};
     for (const r of usable) for (const b of (r.rawBlockers || [])) blockers[b] = (blockers[b] || 0) + 1;
     const summary = {
+      arm: { visMin: knobs.visMin, camOn: knobs.camOn,
+             visTest: knobs.visMin > 0 ? 'nine-sample' : 'two-spine-rays',
+             sweep: knobs.camOn ? 'yaw x pitch (best)' : 'yaw only (first)' },
       sampled: rows.length, skipped: skipped.length, usable: usable.length,
       ok: ok.length, fail: bad.length,
       rate: +(ok.length / Math.max(1, usable.length) * 100).toFixed(1),
@@ -494,6 +535,15 @@ const FPSDRIVE = (worldMode) => `(async () => {
       delete r.shots;
       meta[s.name] = r;
       console.log(`ok  fps=${r.fps}  frames+${r.framesGained}  tiers=${JSON.stringify(r.tiers)}`);
+      // SAY WHICH PATH RESOLVED THE SIDES, and prove the map partitions the roster.
+      if (r.sideResolution) {
+        const sr = r.sideResolution, ids = Object.keys(r.tiers || {});
+        const cover = sr.party.concat(sr.foes);
+        const ok = ids.length && cover.length === ids.length && ids.every(i => cover.indexOf(i) >= 0)
+                   && !sr.party.some(i => sr.foes.indexOf(i) >= 0);
+        console.log(`    sides via ${sr.via} · party=[${sr.party}] foes=[${sr.foes}] · partition ${ok ? 'OK' : 'BROKEN'}`);
+        if (!ok) { console.error('side map does not partition the body set'); process.exitCode = 3; }
+      }
       await ev(cdp, `(async()=>{ const s=window.__EBB_SCREEN;
         if (s && s.stage) { try { s.stage.destroy(); } catch(e){} }
         if (s && s.destroy) { try { s.destroy(); } catch(e){} }

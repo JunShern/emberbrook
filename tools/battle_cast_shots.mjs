@@ -130,14 +130,19 @@ async function evalPage(cdp, expr, timeoutMs) {
 // pattern only as a labelled last resort. The `cheer` beat KOs EVERY foe, so a
 // side test that is wrong there kills the party. See tools/battle_shots.mjs.
 const FOES_JS = `
+    let _sideVia = 'id-pattern-fallback';
     const _sideOf = (id) => {
-      if (typeof st.sides === 'function') { const s = st.sides(); if (s && s[id]) return s[id]; }
-      if (typeof st.at === 'function') { const a = st.at(id); if (a && a.side) return a.side; }
+      if (typeof st.sides === 'function') { const s = st.sides(); if (s && s[id]) { _sideVia = 'stage.sides()'; return s[id]; } }
+      if (typeof st.at === 'function') { const a = st.at(id); if (a && a.side) { _sideVia = 'stage.at().side'; return a.side; } }
       return /^m[0-9]+$/.test(id) ? 'foe' : 'party';
     };
-    const foes = Object.keys(st.tiers()).filter(k => _sideOf(k) === 'foe');
+    const _ids = Object.keys(st.tiers());
+    const foes = _ids.filter(k => _sideOf(k) === 'foe');
+    const _party = _ids.filter(k => _sideOf(k) === 'party');
+    const sideResolution = { via: _sideVia, party: _party, foes: foes };
     if (!foes.length) throw new Error('no foe-side body on the stage');
     if (foes.indexOf('vesper') >= 0 || foes.some(f => _sideOf(f) !== 'foe')) throw new Error('side resolution returned a party member');
+    if (_party.length + foes.length !== _ids.length) throw new Error('side map does not partition the body set: ' + JSON.stringify(sideResolution));
 `;
 
 // THE BEATS, page-side. Each one drives the stage's OWN public verbs — the same
@@ -230,6 +235,7 @@ const drive = (s) => `(async () => {
   ${BEATS[s.beat] || ''}
   const f1 = st.frames;
   return { ok: true, tiers: st.tiers(), clips, held, equipped,
+           sideResolution: (typeof sideResolution !== 'undefined' ? sideResolution : null),
            frames: f1, framesGained: f1 - f0, shots };
 })()`;
 
@@ -264,8 +270,14 @@ const drive = (s) => `(async () => {
       writeFileSync(join(OUT, `${TAG}-${s.name}-frame.png`), Buffer.from(full.data, 'base64'));
     }
     meta[s.name] = { tiers: r.tiers, clips: r.clips, held: r.held, equipped: r.equipped,
+                     sideResolution: r.sideResolution || null,
                      framesGained: r.framesGained, shots: Object.keys(r.shots || {}) };
     console.log(`ok  frames+${r.framesGained}  held=${JSON.stringify(r.held)}  clips.vesper=${JSON.stringify((r.clips || {}).vesper)}`);
+    if (r.sideResolution) {
+      const sr = r.sideResolution, ids = Object.keys(r.tiers || {});
+      const ok = sr.party.length + sr.foes.length === ids.length && !sr.party.some(i => sr.foes.indexOf(i) >= 0);
+      console.log(`    sides via ${sr.via} · party=[${sr.party}] foes=[${sr.foes}] · partition ${ok ? 'OK' : 'BROKEN'}`);
+    }
     await evalPage(cdp, `(async()=>{ const s=window.__EBB_SCREEN;
       if (window.Battle) { try { window.Battle._forceEnd && window.Battle._forceEnd(); } catch(e){} }
       if (s && s.stage) { try { s.stage.destroy(); } catch(e){} }

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // battle_camera.mjs — THE INSTRUMENT FOR THE SHOT LANGUAGE (BET B, world arena).
 //
+//   node tools/battle_camera.mjs --port=3000 --mode=sides       # stage.sides() partitions, both arenas
 //   node tools/battle_camera.mjs --port=3000 --mode=shots       # the contact sheet, both arenas
 //   node tools/battle_camera.mjs --port=3000 --mode=legibility  # the numbers, 4 sites, cam off vs on
 //   node tools/battle_camera.mjs --port=3000 --mode=moves       # the KO push and the victory move
@@ -97,6 +98,25 @@ async function ev(cdp, expr, ms) {
 }
 const png = (name, uri) => { if (uri) writeFileSync(join(OUT, name), Buffer.from(uri.slice(uri.indexOf(',') + 1), 'base64')); };
 
+// SAY WHICH PATH ANSWERED, AND PROVE IT PARTITIONS. A side map that silently
+// came from an id pattern is the defect this convention exists to make visible,
+// so every run prints the path — and asserts the map covers every body on the
+// stage exactly once, with no id on both sides and none missing.
+function sideReport(tag, r) {
+  const ids = Object.keys(r.tiers || {});
+  const sides = r.sides || {};
+  const party = ids.filter(i => sides[i] === 'party'), foes = ids.filter(i => sides[i] === 'foe');
+  const missing = ids.filter(i => sides[i] !== 'party' && sides[i] !== 'foe');
+  const overlap = party.filter(i => foes.indexOf(i) >= 0);
+  const extra = Object.keys(sides).filter(i => ids.indexOf(i) < 0);
+  const ok = !missing.length && !overlap.length && !extra.length && ids.length > 0;
+  console.log(`  sides[${tag}] via ${r.sidesVia || 'stage.sides()'} · party=[${party}] foes=[${foes}]`
+            + ` · partition ${ok ? 'OK' : 'BROKEN'}`
+            + (ok ? '' : ` missing=[${missing}] overlap=[${overlap}] extra=[${extra}]`));
+  if (!ok) throw new Error('side map does not partition the body set: ' + JSON.stringify({ ids, sides }));
+  return { party, foes, via: r.sidesVia || 'stage.sides()' };
+}
+
 const READY = `(async () => {
   for (let i = 0; i < 400; i++) {
     if (window.SIM && window.GS && window.GS.ok && window.Battle && window.Rules && window.THREE
@@ -144,14 +164,23 @@ window.__BC.startAt = async function (x, z, group, opts) {
     await new Promise(r => setTimeout(r, 100));
   }
   await new Promise(r => setTimeout(r, opts.settle == null ? 1500 : opts.settle));
-  // AN ID IS NOT A SIDE — but the DIORAMA still has no sides() accessor (the
-  // spike's board asked for one), so for that column only, fall back to the
-  // kernel's own foe id scheme. /^m/ alone matches **maren**, which is exactly
-  // how the audit's impact captures ended up staging Vesper against her own
-  // party member; /^m\\d+$/ is the one-character stopgap.
-  const sides = st.sides ? st.sides()
-    : Object.keys(st.tiers()).reduce((o, k) => (o[k] = /^m\\d+$/.test(k) ? 'foe' : 'party', o), {});
-  return { ok: true, zone: zone, world: !!st.world, tiers: st.tiers(), sides: sides,
+  // AN ID IS NOT A SIDE. BOTH arenas now carry sides() — the per-body value
+  // newBody() was constructed with (battle_world.js :1427, battle_stage3d.js
+  // :3259) — so this asks the stage and REPORTS WHICH PATH ANSWERED. The id
+  // pattern is a labelled last resort: /^m/ matches **maren**, and even
+  // /^m\\d+$/ is a guess about battle_rules' private id scheme that was safe
+  // in the diorama column only by accident of build order.
+  let sidesVia = 'stage.sides()';
+  let sides = st.sides ? st.sides() : null;
+  if (!sides) {
+    sidesVia = 'stage.at().side';
+    sides = Object.keys(st.tiers()).reduce((o, k) => { const a = st.at && st.at(k); if (a && a.side) o[k] = a.side; return o; }, {});
+    if (!Object.keys(sides).length) {
+      sidesVia = 'id-pattern-fallback';
+      sides = Object.keys(st.tiers()).reduce((o, k) => (o[k] = /^m\\d+$/.test(k) ? 'foe' : 'party', o), {});
+    }
+  }
+  return { ok: true, zone: zone, world: !!st.world, tiers: st.tiers(), sides: sides, sidesVia: sidesVia,
            cam: st.cam ? st.cam() : null, plan: st.plan || null };
 };
 window.__BC.end = async function () {
@@ -334,6 +363,41 @@ const SITES = [
   //   dio = the shipped diorama (BattleWorld.enabled = false)
   //   off = the world arena on the spike's single solved pose (CAM.on = false)
   //   on  = the world arena with the shot language
+  // ------------------------------------------------------------------ sides
+  // THE ACCESSOR'S OWN RECEIPT, in BOTH arenas. `stage.sides()` is the value
+  // newBody() was constructed with; the claim it has to support is that it
+  // PARTITIONS the stage's roster — every body on exactly one side, none
+  // missing, none invented. The build orders differ between the two stages
+  // (the diorama stages foes first, battle_world the party first), which is
+  // exactly what made the old id-pattern fallback safe by accident in one
+  // column and wrong in the other, so both are printed with their orders.
+  if (MODE === 'sides') {
+    const S = SITES.find(s => s.name === arg('site', 'meadow')) || SITES[0];
+    const out = { site: S.name, group: S.group, arenas: {} };
+    let bad = 0;
+    for (const [tag, opt] of [['diorama', 'false, world:false'], ['world', 'true, world:true']]) {
+      const [c1, c2] = opt.split(', ');
+      const r = await ev(cdp, `window.__BC.startAt(${S.at[0]}, ${S.at[1]}, ${JSON.stringify(S.group)}, {cam:${c1}, ${c2}})`, 300000);
+      if (!r.ok) { console.log(tag, 'FAILED', r.why); out.arenas[tag] = { ok: false, why: r.why }; bad++; continue; }
+      const ids = Object.keys(r.tiers);
+      console.log(`${tag}: build order ${JSON.stringify(ids)}`);
+      let res = null;
+      try { res = sideReport(tag, r); } catch (e) { console.error('  ' + e.message); bad++; }
+      if (res) {
+        // the id pattern, computed alongside, so the divergence is on the record
+        const pat = ids.filter(i => /^m\d+$/.test(i));
+        const same = pat.length === res.foes.length && pat.every(i => res.foes.indexOf(i) >= 0);
+        console.log(`  /^m\\d+$/ would have said foes=[${pat}] — ${same ? 'same answer here' : 'DIFFERENT'}`);
+        out.arenas[tag] = { ok: true, order: ids, via: res.via, party: res.party, foes: res.foes,
+                            idPatternFoes: pat, idPatternAgrees: same };
+      }
+      await ev(cdp, `window.__BC.end()`, 60000);
+    }
+    console.log('\n' + JSON.stringify(out, null, 2));
+    writeFileSync(join(OUT, 'sides.json'), JSON.stringify(out, null, 2));
+    cdp.close(); kill(); process.exit(bad ? 3 : 0);
+  }
+
   if (MODE === 'shots') {
     const site = arg('site', 'meadow');
     const S = SITES.find(s => s.name === site) || SITES[0];
@@ -343,8 +407,7 @@ const SITES = [
       const [c1, c2] = opt.split(', ');
       const r = await ev(cdp, `window.__BC.startAt(${S.at[0]}, ${S.at[1]}, ${JSON.stringify(S.group)}, {cam:${c1}, ${c2}})`, 300000);
       if (!r.ok) { console.log(tag, 'FAILED', r.why); meta.runs[tag] = r; continue; }
-      const foes = Object.keys(r.sides).filter(k => r.sides[k] === 'foe');
-      const party = Object.keys(r.sides).filter(k => r.sides[k] === 'party');
+      const { foes, party } = sideReport(`${S.name}/${tag}`, r);
       // ONE CONTINUOUS BEAT SEQUENCE, photographed on the way past. Timings are
       // the shipped pacing's own (announce 300 / approach 260 / wind 300 /
       // damage 640 / ko 820 / winHold 900 / winCheer 620).
@@ -438,8 +501,7 @@ const SITES = [
       const tag = on ? 'on' : 'off';
       const r = await ev(cdp, `window.__BC.startAt(${S.at[0]}, ${S.at[1]}, ${JSON.stringify(S.group)}, {cam:${on}})`, 300000);
       if (!r.ok) { meta.ko[tag] = { ok: false, why: r.why }; continue; }
-      const foes = Object.keys(r.sides).filter(k => r.sides[k] === 'foe');
-      const party = Object.keys(r.sides).filter(k => r.sides[k] === 'party');
+      const { foes, party } = sideReport(`${S.name}/ko-${tag}`, r);
       // THE KO PUSH — sampled on the same clock the beat runs on
       const ko = await ev(cdp, `(async () => {
         const st = window.__BC.stage();

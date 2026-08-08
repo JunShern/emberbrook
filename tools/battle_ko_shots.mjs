@@ -121,16 +121,21 @@ async function evalPage(cdp, expr, timeoutMs) {
   return r.result && r.result.value;
 }
 
-// AN ID IS NOT A SIDE (battle_shots.mjs, d865ee80). Ask the stage.
+// AN ID IS NOT A SIDE (battle_shots.mjs, d865ee80). Ask the stage — BOTH arenas
+// carry sides() now (battle_world.js :1427, battle_stage3d.js :3259), the value
+// newBody() was constructed with. The path that answered is REPORTED, never
+// assumed, and the id pattern is a labelled last resort.
 const SIDE_JS = `
+  let SIDE_VIA = 'id-pattern-fallback';
   const sideOf = (id) => {
-    if (typeof st.sides === 'function') { const s = st.sides(); if (s && s[id]) return s[id]; }
-    if (typeof st.at === 'function') { const a = st.at(id); if (a && a.side) return a.side; }
+    if (typeof st.sides === 'function') { const s = st.sides(); if (s && s[id]) { SIDE_VIA = 'stage.sides()'; return s[id]; } }
+    if (typeof st.at === 'function') { const a = st.at(id); if (a && a.side) { SIDE_VIA = 'stage.at().side'; return a.side; } }
     return /^m\\d+$/.test(id) ? 'foe' : 'party';
   };
   const roster = Object.keys(st.tiers()).map(id => ({ id, side: sideOf(id) }));
   const FOES = roster.filter(r => r.side === 'foe').map(r => r.id);
   const ALLIES = roster.filter(r => r.side !== 'foe').map(r => r.id);
+  const SIDE_RES = { via: SIDE_VIA, party: ALLIES, foes: FOES };
   if (FOES.length < 2) throw new Error('need two foes: ' + JSON.stringify(roster));
   if (ALLIES.indexOf(FOES[0]) >= 0) throw new Error('an id is not a side');
 `;
@@ -278,7 +283,7 @@ const koDrive = `(async () => {
     }
     await new Promise(r => setTimeout(r, 34));
   }
-  return { ok: true, kind: 'ko', victim: VICTIM, other: OTHER, actor: ACTOR, foes: FOES, allies: ALLIES,
+  return { ok: true, kind: 'ko', victim: VICTIM, other: OTHER, actor: ACTOR, foes: FOES, allies: ALLIES, sideResolution: SIDE_RES,
            noreact: ${NOREACT ? 'true' : 'false'},
            before, series, shots, pxDiff, lum: { base: baseLum, hit: hitLum, kill: killLum },
            frames: st.frames, framesGained: st.frames - f0 };
@@ -353,6 +358,12 @@ const TEARDOWN = `(async () => {
     const r = await evalPage(cdp, koDrive, 300000);
     if (!r.ok) { console.log('FAILED:', r.why); }
     else {
+      if (r.sideResolution) {
+        const sr = r.sideResolution;
+        const cover = sr.party.concat(sr.foes);
+        const ok = cover.length === new Set(cover).size;
+        console.log(`\n    sides via ${sr.via} · party=[${sr.party}] foes=[${sr.foes}] · partition ${ok ? 'OK' : 'BROKEN'}`);
+      }
       if (r.framesGained < 30) console.log(`\n    WARNING: only ${r.framesGained} frames — canvas may be stalled`);
       for (const [k, uri] of Object.entries(r.shots)) png(uri, join(OUT, `${TAG}-ko-${k}.png`));
       const V = r.victim, base = r.before;

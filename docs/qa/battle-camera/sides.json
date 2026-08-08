@@ -1,0 +1,55 @@
+{
+  "site": "meadow",
+  "group": [
+    "duskpad",
+    "duskpad"
+  ],
+  "arenas": {
+    "diorama": {
+      "ok": true,
+      "order": [
+        "m0",
+        "m1",
+        "vesper",
+        "maren"
+      ],
+      "via": "stage.sides()",
+      "party": [
+        "vesper",
+        "maren"
+      ],
+      "foes": [
+        "m0",
+        "m1"
+      ],
+      "idPatternFoes": [
+        "m0",
+        "m1"
+      ],
+      "idPatternAgrees": true
+    },
+    "world": {
+      "ok": true,
+      "order": [
+        "vesper",
+        "maren",
+        "m0",
+        "m1"
+      ],
+      "via": "stage.sides()",
+      "party": [
+        "vesper",
+        "maren"
+      ],
+      "foes": [
+        "m0",
+        "m1"
+      ],
+      "idPatternFoes": [
+        "m0",
+        "m1"
+      ],
+      "idPatternAgrees": true
+    }
+  }
+}

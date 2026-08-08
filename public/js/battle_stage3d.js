@@ -3257,6 +3257,20 @@
       anchor,
       tierOf(id) { return bodies[id] ? bodies[id].tier : null; },
       tiers() { const o = {}; for (const id of order) o[id] = bodies[id].tier; return o; },
+      // WHICH SIDE A BODY IS ON — the value `newBody(id, side, ...)` was
+      // CONSTRUCTED with, never an inference. Same shape and semantics as
+      // battle_world's accessor (battle_world.js :1427) so one instrument can
+      // ask both arenas the same question.
+      //
+      // AN ID IS NOT A SIDE. Every instrument that wanted "which bodies are
+      // foes" against this stage fell back to matching the id — `/^m/`, which
+      // also matches **maren**, and even the narrower `/^m\d+$/` is a guess
+      // about battle_rules.derive.foesFromGroup's private id scheme. The
+      // fallback was safe here only by ACCIDENT OF BUILD ORDER (this file
+      // stages foes before the party; battle_world stages the party first, so
+      // the same line there selects a party member and lunges at her).
+      // Read-only: it allocates a fresh object and touches nothing.
+      sides() { const o = {}; for (const id of order) o[id] = bodies[id].side; return o; },
       // WHICH CLIPS A BODY ACTUALLY BOUND. `clipped` — the flag that stands the
       // procedural swing down — is the mixer's own answer and is therefore
       // invisible from outside; this makes it observable, so "the cast has real

@@ -1,0 +1,163 @@
+{
+  "what": "THE 2x2 THAT SEPARATES THE CONFOUNDED STAGING-RATE CHANGE (68.8% -> 64.4%).",
+  "how": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=<0|0.67> --bcam=<0|1>",
+  "cells": "the same 160 road cells (tools/_bw_roadpts.json[0:160]) in all four arms",
+  "knobs": {
+    "--vismin=0": "the OLD visibility test: the nine-sample refusal is `vf < CFG.place.visMin`, so at 0 it can never fire and the two spine rays are the whole gate -- byte-for-byte the spike's own test",
+    "--vismin=0.67": "the SHIPPED test: two spine rays PLUS nine samples across the body's own box, refused below 67% visible",
+    "--bcam=0": "BattleWorld.CAM.on = false, which solveArena already treats as the spike's own behaviour to the line: one fixed pitch (0.27), return the FIRST yaw that places, no scoreView ranking",
+    "--bcam=1": "the SHIPPED sweep: yaw x pitch over CAM.solve.pitches, take the BEST by scoreView rather than the first"
+  },
+  "confound_inside_bcam": "--bcam bundles TWO changes: the pitch axis AND best-of rather than first-that-places. They are separable with one more arm (CAM.on=true, CAM.solve.pitches=[0.27]) which was not run.",
+  "when": "2026-08-08",
+  "arms": {
+    "oldvis-yawonly": {
+      "arm": {
+        "visMin": 0,
+        "camOn": false,
+        "visTest": "two-spine-rays",
+        "sweep": "yaw only (first)"
+      },
+      "sampled": 160,
+      "usable": 160,
+      "ok": 110,
+      "fail": 50,
+      "rate": 68.8,
+      "rateFixedYaw": 32.5,
+      "yawTurned": 52.7,
+      "occludedSlotsFixedYaw": 1364,
+      "rawCleanPct": 66.3,
+      "byZone": {
+        "water": {
+          "n": 29,
+          "ok": 17
+        },
+        "forest": {
+          "n": 48,
+          "ok": 25
+        },
+        "crag": {
+          "n": 24,
+          "ok": 18
+        },
+        "meadow": {
+          "n": 59,
+          "ok": 50
+        }
+      }
+    },
+    "newvis-yawonly": {
+      "arm": {
+        "visMin": 0.67,
+        "camOn": false,
+        "visTest": "nine-sample",
+        "sweep": "yaw only (first)"
+      },
+      "sampled": 160,
+      "usable": 160,
+      "ok": 100,
+      "fail": 60,
+      "rate": 62.5,
+      "rateFixedYaw": 31.9,
+      "yawTurned": 49,
+      "occludedSlotsFixedYaw": 1461,
+      "rawCleanPct": 65.9,
+      "byZone": {
+        "water": {
+          "n": 29,
+          "ok": 13
+        },
+        "forest": {
+          "n": 48,
+          "ok": 20
+        },
+        "crag": {
+          "n": 24,
+          "ok": 18
+        },
+        "meadow": {
+          "n": 59,
+          "ok": 49
+        }
+      }
+    },
+    "oldvis-yawpitch": {
+      "arm": {
+        "visMin": 0,
+        "camOn": true,
+        "visTest": "two-spine-rays",
+        "sweep": "yaw x pitch (best)"
+      },
+      "sampled": 160,
+      "usable": 160,
+      "ok": 111,
+      "fail": 49,
+      "rate": 69.4,
+      "rateFixedYaw": 32.5,
+      "yawTurned": 91.9,
+      "occludedSlotsFixedYaw": 1364,
+      "rawCleanPct": 63.1,
+      "byZone": {
+        "water": {
+          "n": 29,
+          "ok": 17
+        },
+        "forest": {
+          "n": 48,
+          "ok": 26
+        },
+        "crag": {
+          "n": 24,
+          "ok": 18
+        },
+        "meadow": {
+          "n": 59,
+          "ok": 50
+        }
+      }
+    },
+    "newvis-yawpitch": {
+      "arm": {
+        "visMin": 0.67,
+        "camOn": true,
+        "visTest": "nine-sample",
+        "sweep": "yaw x pitch (best)"
+      },
+      "sampled": 160,
+      "usable": 160,
+      "ok": 103,
+      "fail": 57,
+      "rate": 64.4,
+      "rateFixedYaw": 31.9,
+      "yawTurned": 89.3,
+      "occludedSlotsFixedYaw": 1461,
+      "rawCleanPct": 63,
+      "byZone": {
+        "water": {
+          "n": 29,
+          "ok": 13
+        },
+        "forest": {
+          "n": 48,
+          "ok": 23
+        },
+        "crag": {
+          "n": 24,
+          "ok": 18
+        },
+        "meadow": {
+          "n": 59,
+          "ok": 49
+        }
+      }
+    }
+  },
+  "conclusion": {
+    "stricter_test_alone_pts": -6.3,
+    "stricter_test_alone_pts_at_new_sweep": -5.0,
+    "pitch_sweep_alone_pts_at_old_test": 0.6,
+    "pitch_sweep_alone_pts_at_new_test": 1.9,
+    "net_published": -4.4,
+    "plain": "ALL of the drop is the instrument, and then some. The stricter test costs 6.3 points on its own; the yaw x pitch sweep GIVES BACK 1.9, and never costs a cell in any zone at either test setting. The pitch sweep is not a regression."
+  }
+}
