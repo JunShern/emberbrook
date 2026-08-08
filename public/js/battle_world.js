@@ -171,7 +171,25 @@
       // loss (crag: the low boom put both foes behind the crest of their own
       // slope and half the frame under a bank).
       pitches: [0.16, 0.22, 0.28, 0.34],
-      yawKeep: 4,             // how many placeable yaws go on to the pitch sweep
+      // KEEP THE FIRST PLACEABLE YAW — how many placeable yaws go on to the
+      // ranking, and it is ONE. Rank the PITCH axis; never re-pick the yaw. This
+      // is where "the player's own current heading is ALWAYS tried first, so
+      // where the world is open the camera does not swing" actually lives.
+      // MEASURED, docs/qa/battle-world/factorial.json, 160 road cells per arm:
+      // at 4 the camera swung off the player's heading on 89.3% of staged cells
+      // against the spike's 49.0%, and BOUGHT NOTHING — a ranking scores
+      // `okPlans` and every member of `okPlans` is already `ok`, so it cannot
+      // make a cell fail (arms 5-6: best-of reproduced its yaw-only partner's
+      // staging rate per zone, symmetric difference 0 cells). At 1 the staging
+      // rate is unchanged — 103/160, THE SAME 103 CELLS, symmetric difference 0
+      // — and yawTurned falls to 49.5%, the spike's own 49.0% to within half a
+      // point. IN CELLS IT IS ALREADY BETTER THAN THE SPIKE: 52 staged cells keep
+      // the player's heading here against the spike's 51, because the extra
+      // pitches give that heading more chances to place than 0.27 alone did. The
+      // rate reads 0.5 higher only because the pitch axis also staged 3 cells the
+      // spike could not, and all three of those need a turn.
+      // Set it back to 4 to reproduce the shipped arm.
+      yawKeep: 1,
       backCap: 30,            // metres of clear depth behind a body that counts as "sky"
       wBack: 3.0, wBoom: 1.4, wPitch: 0.0,
     },
@@ -436,9 +454,15 @@
   // yaw at one fixed elevation and took the first yaw that placed. With the
   // camera free there is a second axis for nothing: a slot that no yaw can see
   // at 0.27 rad is often in plain sight from 0.34, because the thing in the way
-  // is a crest rather than a wall. The sweep is yaw x pitch, it takes the BEST
-  // rather than the first, and the score is the nine-sample body visibility with
-  // clear background depth as the tie-break.
+  // is a crest rather than a wall.
+  // THE TWO AXES ARE NOT SELECTED THE SAME WAY, AND THAT ASYMMETRY IS THE POINT.
+  // The YAW is still the spike's rule — the FIRST that places, the player's own
+  // heading first of all (CAM.solve.yawKeep = 1, and the receipt is written
+  // there). Only the PITCH is ranked, by scoreView: nine-sample body visibility
+  // with clear background depth as the tie-break. Ranking yaw as well was
+  // measured and reverted — it cost 39.8 points of "the camera did not swing"
+  // and bought zero staging sites, because scoring plans that are all already
+  // `ok` cannot change which cells stage.
   function solveArena(o) {
     const base = (window.ORBIT && window.ORBIT.yaw) || 0;
     const cands = [0, 0.5, -0.5, 1.05, -1.05, 1.6, -1.6, 2.1, -2.1, Math.PI];
@@ -455,10 +479,13 @@
           // the line: the first yaw that places, at the one fixed pitch. The A/B
           // on this page is one build, one flag.
           if (!camOn()) return plan;
-          break;                       // this yaw is solved; try the next one
+          break;                       // this yaw is solved; stop sampling pitch
         }
         if (!best || plan.placed.length > best.placed.length) best = plan;
       }
+      // AND AT yawKeep = 1 THIS IS THE SPIKE'S YAW RULE WITH THE CAMERA ON: the
+      // first yaw that places is the only one that reaches the ranking below, so
+      // the ranking can only move the boom. A larger yawKeep re-opens best-of.
       if (okPlans.length >= CAM.solve.yawKeep) break;
     }
     if (!okPlans.length) return best;

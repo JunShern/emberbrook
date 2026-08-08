@@ -20330,3 +20330,85 @@ one-line seventh arm for whoever owns the change.
 
 Receipt: `docs/qa/battle-world/factorial.json` (`arms.oldvis-bestyaw`,
 `arms.newvis-bestyaw`, `yaw_attribution`).
+
+---
+
+## 2026-08-08 — THE SEVENTH ARM, BUILT: RANK THE PITCH, KEEP THE FIRST YAW
+
+The entry above ends "a one-line seventh arm for whoever owns the change." Built,
+measured, shipped.
+
+**THE CHANGE IS ONE VALUE**: `CAM.solve.yawKeep` 4 -> 1 in
+`public/js/battle_world.js`. Nothing else in `solveArena` moved, because the
+collection loop already carried the knob — it breaks at
+`okPlans.length >= CAM.solve.yawKeep`, so at 1 the FIRST placeable yaw is the
+only plan that ever reaches the `scoreView` ranking and the ranking can only move
+the boom. The shot table, the 180-rule, the KO/victory moves and `?arena=world`'s
+inert-by-default status are untouched; the rest of the diff is the comment that
+carries the receipt (and two comments that had gone false — the module still said
+"the sweep is yaw x pitch, it takes the BEST rather than the first").
+
+### THE SEVENTH ARM BESIDE THE SIX (same 160 road cells, same instrument)
+
+| arm (vis test x sweep)                       | staging rate  | `yawTurned` |
+|----------------------------------------------|---------------|-------------|
+| old test x yaw only, FIRST (spike)            | 68.8% 110/160 | 52.7%       |
+| old test x yaw only, BEST                     | 68.8% 110/160 | 93.6%       |
+| old test x yaw x pitch, best                  | 69.4% 111/160 | 91.9%       |
+| new test x yaw only, FIRST                    | 62.5% 100/160 | 49.0%       |
+| new test x yaw only, BEST                     | 62.5% 100/160 | 91.0%       |
+| new test x yaw x pitch, best (was shipped)    | 64.4% 103/160 | 89.3%       |
+| **new test x pitch ranked, FIRST yaw (SHIPPED)** | **64.4% 103/160** | **49.5%** |
+
+    node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=0.67 --bcam=1
+
+**THE STAGING PREDICTION HELD EXACTLY, AND AS A SET.** 103/160, per zone
+13/23/18/49, and the ok set is THE SAME 103 CELLS as the shipped arm — symmetric
+difference 0 on the row coordinates. Both sides were measured in the SAME WINDOW
+on this machine, not read off the published table: the shipped arm was re-run
+first and reproduced its published summary field for field (103, 64.4,
+`yawTurned` 89.3, `rateFixedYaw` 31.9, `occludedSlotsFixedYaw` 1461), which is
+what makes the set comparison an A/B of one value rather than of two runs.
+
+**THE SWING PREDICTION IS OFF BY 0.5 POINTS, AND THE HALF-POINT IS MEASURABLE,
+NOT NOISE.** Predicted `<= 49%`; measured **49.5%** (89.3 -> 49.5, a 39.8-point
+drop). In CELLS the change already beats the spike — **52** staged cells keep the
+player's own heading against the spike's **51**, which is the extra pitches
+giving yaw 0 more chances to place, exactly the mechanism the prediction named.
+The rate reads higher only because the denominator grew with it: the pitch axis
+stages 3 cells the spike cannot, and all 3 of those need a turn, so 51/103 =
+49.5% against 49/100 = 49.0%. A RATE PREDICTION WHOSE NUMERATOR ARGUMENT IS RIGHT
+CAN STILL MISS ON THE DENOMINATOR — the prediction reasoned about yaw 0's
+chances and forgot that the same axis moves `ok`. Reported as a miss on purpose;
+the bar (staging unchanged, the swing back to the spike's level) is met.
+
+**FLAG-OFF UNCHANGED**, measured not asserted (`--mode=regress`, no `?arena=`):
+`BattleWorld` = `{version 1, on false, installed false, why "flag off"}`,
+`BattleStage3D.__bwPatched` false, and a real battle fought to its end with
+`world:false` — the DIORAMA answered, 4 bodies, 2 canvases, identical to the
+committed spike receipt. Structural too: the whole diff sits inside the
+flag-on body, after the `if (!FLAG) return` that freezes the stub.
+
+### THE GATE DID NOT MAKE 168/0, AND THE CONTROL SAYS IT IS NOT THIS CHANGE
+
+`transition_test --port=3000`, run SERIALLY with nothing of this lane's running,
+returned **167/1 twice** — the standing `after battle: del-cine|shelf-west is back
+to its baseline` delta `{geo:+2}`, on runs whose worst scene load was **45.5 s and
+45.6 s**. That is the exact signature the 2026-08-08 concurrency note already
+pinned to load, and the machine was NOT quiet in the sense that note means: load
+average 6.0 from the user's own apps (Claude Helper GPU 33%, WindowServer 26%),
+swap 3.9 of 5.1 GB. **A THIRD RUN WITH THE PRISTINE HEAD FILE IN PLACE RETURNED
+THE SAME 167/1**, same assertion, same `{geo:2, tex:0, meshes:0, mats:0}` delta,
+worst load 45.7 s — this lane's `public/js/battle_world.js` swapped out for
+HEAD's, sha-verified out and back (`74ae95b4…` restored byte-identical). So the
+red is the machine, not the change, measured rather than argued. Structurally it
+could not have been: `transition_test`'s URL carries no `?arena=world`, so the
+whole diff sits behind the `if (!FLAG) return` that publishes the frozen stub.
+**Anyone who wants the 168/0 must re-run it on a genuinely idle machine — this
+lane could not produce one and says so rather than reporting a number it did not
+get.**
+
+Receipt: `docs/qa/battle-world/factorial.json`
+(`arms.newvis-yawpitch-firstyaw`, `yaw_attribution.restoration_MEASURED`,
+`how7` — which also records that reproducing arms 3-6 now needs
+`BW.CAM.solve.yawKeep = 4` set in the page, since the default moved).
