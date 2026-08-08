@@ -62,6 +62,30 @@ const WORLD = arg('arena', 'world');
 const VISMIN = arg('vismin', null);      // null = leave CFG.place.visMin alone
 const BCAM = arg('bcam', null);          // '0' = yaw-only sweep (spike behaviour)
 const PITCHES = arg('pitches', null);    // e.g. '0.27' — CAM.solve.pitches, comma-separated
+// ---- THE RELOCATION SWEEP (--relocate) ------------------------------------
+// THE RULING THIS MEASURES (CLAUDE.md, 2026-08-08): when placement refuses a
+// spot the game RELOCATES WITHIN THE WORLD to the nearest feasible staging
+// site and never falls back to the diorama, so DISTANCE IS NOT A CONSTRAINT —
+// the search radius is whatever gives full coverage. `--mode=place` already
+// walks each road cell into the nearest standable ENCOUNTER cell within 11 m
+// and then asks the solver ONCE; that is not the ruling's mechanism, it is the
+// zone model. `--relocate=<maxR>` keeps walking outward, ring by ring, until
+// the shipped solver ACCEPTS, and records the ring it accepted at — so ONE run
+// yields the whole radius-to-coverage curve (coverage(R) = cells whose first
+// accepting ring is <= R), the relocation-distance distribution, and the
+// residual set. Nothing in public/ is touched and no default moves: the solver
+// called is the shipped `BattleWorld.solveArena` at the shipped config.
+//
+// THE SOUND CHEAP SCREEN. A candidate that no yaw can lay the formation onto
+// GEOMETRICALLY (floor + SIM.blocked, `vis:false`) can never pass with the
+// visibility test ON — vis:false is a strict relaxation of the same test — so
+// it is refused for ten cheap solvePlacement calls instead of the 40 ray-heavy
+// ones a full solveArena costs. No false negatives by construction; the screen
+// can only skip work the shipped solver was going to refuse anyway.
+const RELOC = arg('relocate', null);     // metres, e.g. '100' — enables the sweep
+const RINGS = arg('rings', '5,8,11,13,15,17,20,24,27,30,35,40,48,60,72,85,100');
+const SOLVECAP = parseInt(arg('solvecap', '80'), 10);  // full solves per cell, then the cell is capped
+const VERIFY = argv.includes('--verify');  // run the REAL solveArena on every candidate and compare
 const CDP_PORT = await freePort();
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -221,6 +245,110 @@ const placeDriver = (pts) => `(async () => {
                why: plan.failed.length ? plan.failed[0].why : null });
   }
   return out;
+})()`;
+
+// ---- MODE: place --relocate=<maxR> ----------------------------------------
+// Same 160 road cells, same solver, same knobs — but the walk does not stop at
+// the first standable encounter cell. Rings out to maxR, 8 bearings a ring (odd
+// rings past 11 m offset half a step so bearings decorrelate), FIRST ring whose
+// candidate the shipped solver accepts wins. The first three rings are 5/8/11 m
+// at bearing 0, which is `placeDriver`'s own ladder to the line, so `first` is
+// exactly the cell the control staged on and `zone0` is the control's zone label.
+const relocDriver = (pts, rings, cap) => `(async () => {
+  const PTS = ${JSON.stringify(pts)};
+  const RINGS = ${JSON.stringify(rings)};
+  const CAP = ${cap};
+  const YAWS = [0, 0.5, -0.5, 1.05, -1.05, 1.6, -1.6, 2.1, -2.1, Math.PI];  // solveArena's own list
+  const out = [];
+  const slots = BattleWorld.slotsFor([{id:'vesper'},{id:'maren'}], [{id:'m0'},{id:'m1'}]);
+  const FIGHT = ['meadow','forest','crag','water'];
+  const base = (window.ORBIT && window.ORBIT.yaw) || 0;
+  const PIT = (BattleWorld.CAM && BattleWorld.CAM.on) ? BattleWorld.CAM.solve.pitches.slice()
+                                                      : [BattleWorld.CFG.cam.pitch];
+  const VERIFY = ${VERIFY ? 'true' : 'false'};
+  let mismatch = 0, verified = 0;
+  const bucket = (w) => !w ? 'null'
+      : (/^blocked by /.test(w) ? w
+      : (/^only \\d+% of the body/.test(w) ? 'nine-sample body visibility < visMin'
+      : w));
+  // THE SOUND CHEAP SCREEN. vis:false is a strict relaxation of vis:true, so a
+  // yaw that cannot lay the formation down geometrically cannot place with the
+  // camera test on either. Returns the yaws that survive — solveArena's verdict
+  // depends on NO OTHER yaw, so evaluating only these gives the same ok/not-ok
+  // for a fraction of the raycasts. ('--verify' proves it against the real
+  // solveArena on every candidate — plain quotes: a backtick in a comment
+  // inside a template literal ends the literal, CLAUDE.md's own trap.)
+  const geom = (P) => {
+    const whys = []; const viable = [];
+    for (const d of YAWS) {
+      const p = BattleWorld.solveFixed({ slots: slots, at: P, yaw: base + d, pitch: 0.27, vis: false });
+      if (p.ok) viable.push(d);
+      else for (const f of p.failed) whys.push(bucket(f.why));
+    }
+    return { ok: viable.length > 0, viable: viable, whys: whys };
+  };
+  // the shipped test, restricted to the surviving yaws
+  const feasible = (P, viable, sink) => {
+    for (const d of viable) {
+      for (const pit of PIT) {
+        const p = BattleWorld.solveFixed({ slots: slots, at: P, yaw: base + d, pitch: pit, vis: true });
+        if (p.ok) return true;
+        if (sink) for (const f of p.failed) sink(bucket(f.why));
+      }
+    }
+    return false;
+  };
+  for (const p of PTS) {
+    const t0 = performance.now();
+    let first = null, staged = null, cands = 0, screened = 0, solved = 0, capped = false, yawsViable = 0;
+    const whyCount = {};
+    const bump = (s) => { whyCount[s] = (whyCount[s] || 0) + 1; };
+    for (let ri = 0; ri < RINGS.length && !staged && !capped; ri++) {
+      const R = RINGS[ri];
+      const ph = (ri % 2 && R > 11) ? Math.PI / 8 : 0;
+      for (let a = 0; a < 8; a++) {
+        const th = ph + a * Math.PI / 4;
+        const x = p[0] + Math.cos(th) * R, z = p[1] + Math.sin(th) * R;
+        const zn = SIM.zone(x, z);
+        if (!zn || FIGHT.indexOf(zn) < 0) continue;
+        const f = SIM.floors(x, z);
+        if (!f.length) continue;
+        SIM.tp(x, z, f[0]);
+        SIM.tick(3);
+        const P = SIM.pos();
+        if (!isFinite(P.y) || Math.abs(P.y - f[0]) > 3) continue;
+        cands++;
+        if (!first) first = { x:+P.x.toFixed(2), y:+P.y.toFixed(2), z:+P.z.toFixed(2),
+                              R: R, zone: SIM.zone(P.x, P.z) };
+        const g = geom(P);
+        if (VERIFY) {
+          const truth = BattleWorld.solveArena({ slots: slots });
+          const mine = g.ok && feasible(P, g.viable, null);
+          verified++;
+          if (!!(truth && truth.ok) !== !!mine) mismatch++;
+        }
+        if (!g.ok) { screened++; for (const w of g.whys) bump(w); continue; }
+        solved++;
+        yawsViable += g.viable.length;
+        if (feasible(P, g.viable, bump)) {
+          const plan = BattleWorld.solveArena({ slots: slots });   // the shipped plan, for its yaw/relief
+          staged = { x:+P.x.toFixed(2), y:+P.y.toFixed(2), z:+P.z.toFixed(2), R: R,
+                     zone: SIM.zone(P.x, P.z), yawDelta: plan ? plan.yawDelta : null,
+                     planOk: !!(plan && plan.ok),
+                     d: +Math.hypot(P.x - p[0], P.z - p[1]).toFixed(2),
+                     relief: plan ? plan.relief : null };
+          break;
+        }
+        if (solved >= CAP) { capped = true; break; }
+      }
+    }
+    const whys = Object.entries(whyCount).sort((a,b) => b[1]-a[1]).slice(0, 6);
+    out.push({ from: p, zone0: first ? first.zone : null, first: first,
+               ok: !!staged, staged: staged, capped: capped,
+               cands: cands, screened: screened, solved: solved, yawsViable: yawsViable,
+               ms: Math.round(performance.now() - t0), whys: whys });
+  }
+  return { rows: out, verified: verified, mismatch: mismatch };
 })()`;
 
 // ---- MODE: battle ---------------------------------------------------------
@@ -471,6 +599,69 @@ const FPSDRIVE = (worldMode) => `(async () => {
   console.log(`knobs: visMin=${knobs.visMin}  CAM.on=${knobs.camOn}  pitches=[${knobs.pitches}]`
             + `   [vis test = ${knobs.visMin > 0 ? 'NINE-SAMPLE (new)' : 'TWO SPINE RAYS (old)'};`
             + ` sweep = ${knobs.camOn ? (knobs.pitches.length > 1 ? 'yaw x pitch, best (new)' : 'yaw only, BEST (isolated)') : 'yaw only, first (old)'}]`);
+
+  if (MODE === 'place' && RELOC != null) {
+    const maxR = parseFloat(RELOC);
+    const rings = RINGS.split(',').map(parseFloat).filter(r => r <= maxR + 1e-6);
+    const all = JSON.parse(readFileSync(arg('pts', join(ROOT, 'tools/_bw_roadpts.json')), 'utf8'));
+    const pts = all.slice(0, N);
+    console.log(`relocate: rings [${rings}] m x 8 bearings, solve cap ${SOLVECAP}/cell, ${pts.length} road cells`);
+    const rows = [];
+    let vTot = 0, vMis = 0;
+    const CH = 4;
+    const t0 = Date.now();
+    for (let i = 0; i < pts.length; i += CH) {
+      const r = await ev(cdp, relocDriver(pts.slice(i, i + CH), rings, SOLVECAP), 1800000);
+      rows.push(...r.rows); vTot += r.verified; vMis += r.mismatch;
+      const el = (Date.now() - t0) / 1000;
+      process.stdout.write(`  ${rows.length}/${pts.length}  ${el.toFixed(0)}s  eta ${(el / rows.length * (pts.length - rows.length)).toFixed(0)}s   \r`);
+    }
+    const ZONES = ['meadow', 'forest', 'crag', 'water'];
+    const zoneOf = r => r.zone0 || 'null';
+    const nZone = {}; for (const r of rows) nZone[zoneOf(r)] = (nZone[zoneOf(r)] || 0) + 1;
+    // coverage(R) = cells whose FIRST ACCEPTING RING is <= R. One run, whole curve.
+    const curve = rings.map(R => {
+      const inR = rows.filter(r => r.ok && r.staged.R <= R);
+      const byZone = {};
+      for (const z of Object.keys(nZone)) {
+        byZone[z] = { n: nZone[z], ok: inR.filter(r => zoneOf(r) === z).length };
+      }
+      return { R, ok: inR.length, of: rows.length,
+               rate: +(inR.length / Math.max(1, rows.length) * 100).toFixed(1), byZone };
+    });
+    const moved = rows.filter(r => r.ok).map(r => r.staged.d).sort((a, b) => a - b);
+    const movedBeyond = rows.filter(r => r.ok && r.staged.R > 11).map(r => r.staged.d).sort((a, b) => a - b);
+    const pct = (a, p) => (a.length ? a[Math.min(a.length - 1, Math.floor(a.length * p))] : null);
+    const residual = rows.filter(r => !r.ok);
+    const resWhy = {};
+    for (const r of residual) for (const [w, c] of r.whys) resWhy[w] = (resWhy[w] || 0) + c;
+    const summary = {
+      arm: { visMin: knobs.visMin, camOn: knobs.camOn, pitches: knobs.pitches,
+             visTest: knobs.visMin > 0 ? 'nine-sample' : 'two-spine-rays',
+             sweep: knobs.camOn ? (knobs.pitches.length > 1 ? 'yaw x pitch (best)' : 'yaw only (best)') : 'yaw only (first)',
+             relocate: maxR, rings, solveCap: SOLVECAP },
+      verify: VERIFY ? { candidates: vTot, mismatchVsSolveArena: vMis } : null,
+      sampled: rows.length, ok: rows.filter(r => r.ok).length, fail: residual.length,
+      rate: +(rows.filter(r => r.ok).length / Math.max(1, rows.length) * 100).toFixed(1),
+      capped: rows.filter(r => r.capped).length,
+      curve,
+      dist_all: { p50: pct(moved, 0.5), p90: pct(moved, 0.9), max: moved[moved.length - 1] },
+      dist_relocated: { n: movedBeyond.length, p50: pct(movedBeyond, 0.5), p90: pct(movedBeyond, 0.9),
+                        max: movedBeyond[movedBeyond.length - 1] },
+      ringHistogram: rings.map(R => [R, rows.filter(r => r.ok && r.staged.R === R).length]),
+      residual: residual.map(r => ({ from: r.from, zone0: r.zone0, cands: r.cands,
+                                     screened: r.screened, solved: r.solved, capped: r.capped,
+                                     whys: r.whys })),
+      residualWhy: Object.entries(resWhy).sort((a, b) => b[1] - a[1]).slice(0, 12),
+      cost: { candTotal: rows.reduce((s, r) => s + r.cands, 0),
+              screenedTotal: rows.reduce((s, r) => s + r.screened, 0),
+              solvedTotal: rows.reduce((s, r) => s + r.solved, 0),
+              msTotal: rows.reduce((s, r) => s + r.ms, 0) },
+    };
+    console.log('\n' + JSON.stringify(summary, null, 2));
+    writeFileSync(join(OUT, 'relocate.json'), JSON.stringify({ summary, rows }, null, 2));
+    cdp.close(); kill(); process.exit(0);
+  }
 
   if (MODE === 'place') {
     const all = JSON.parse(readFileSync(arg('pts', join(ROOT, 'tools/_bw_roadpts.json')), 'utf8'));

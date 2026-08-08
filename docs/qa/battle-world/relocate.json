@@ -1,0 +1,7173 @@
+{
+  "summary": {
+    "arm": {
+      "visMin": 0.67,
+      "camOn": true,
+      "pitches": [
+        0.16,
+        0.22,
+        0.28,
+        0.34
+      ],
+      "visTest": "nine-sample",
+      "sweep": "yaw x pitch (best)",
+      "relocate": 100,
+      "rings": [
+        5,
+        8,
+        11,
+        13,
+        15,
+        17,
+        20,
+        24,
+        27,
+        30,
+        35,
+        40,
+        48,
+        60,
+        72,
+        85,
+        100
+      ],
+      "solveCap": 80
+    },
+    "verify": null,
+    "sampled": 160,
+    "ok": 160,
+    "fail": 0,
+    "rate": 100,
+    "capped": 0,
+    "curve": [
+      {
+        "R": 5,
+        "ok": 143,
+        "of": 160,
+        "rate": 89.4,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 22
+          },
+          "forest": {
+            "n": 48,
+            "ok": 39
+          },
+          "crag": {
+            "n": 24,
+            "ok": 23
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 8,
+        "ok": 158,
+        "of": 160,
+        "rate": 98.8,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 28
+          },
+          "forest": {
+            "n": 48,
+            "ok": 47
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 11,
+        "ok": 159,
+        "of": 160,
+        "rate": 99.4,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 28
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 13,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 15,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 17,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 20,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 24,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 27,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 30,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 35,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 40,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 48,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 60,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 72,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 85,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      },
+      {
+        "R": 100,
+        "ok": 160,
+        "of": 160,
+        "rate": 100,
+        "byZone": {
+          "water": {
+            "n": 29,
+            "ok": 29
+          },
+          "forest": {
+            "n": 48,
+            "ok": 48
+          },
+          "crag": {
+            "n": 24,
+            "ok": 24
+          },
+          "meadow": {
+            "n": 59,
+            "ok": 59
+          }
+        }
+      }
+    ],
+    "dist_all": {
+      "p50": 5,
+      "p90": 8,
+      "max": 13
+    },
+    "dist_relocated": {
+      "n": 1,
+      "p50": 13,
+      "p90": 13,
+      "max": 13
+    },
+    "ringHistogram": [
+      [
+        5,
+        143
+      ],
+      [
+        8,
+        15
+      ],
+      [
+        11,
+        1
+      ],
+      [
+        13,
+        1
+      ],
+      [
+        15,
+        0
+      ],
+      [
+        17,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        24,
+        0
+      ],
+      [
+        27,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        35,
+        0
+      ],
+      [
+        40,
+        0
+      ],
+      [
+        48,
+        0
+      ],
+      [
+        60,
+        0
+      ],
+      [
+        72,
+        0
+      ],
+      [
+        85,
+        0
+      ],
+      [
+        100,
+        0
+      ]
+    ],
+    "residual": [],
+    "residualWhy": [],
+    "cost": {
+      "candTotal": 307,
+      "screenedTotal": 26,
+      "solvedTotal": 281,
+      "msTotal": 2232325
+    }
+  },
+  "rows": [
+    {
+      "from": [
+        -49.38,
+        23.12
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -45.84,
+        "y": 30,
+        "z": 26.66,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -45.84,
+        "y": 30,
+        "z": 26.66,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 3016,
+      "whys": []
+    },
+    {
+      "from": [
+        10.62,
+        -16.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 15.62,
+        "y": 14.86,
+        "z": -16.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 15.62,
+        "y": 14.86,
+        "z": -16.88,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.587
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 7073,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          12
+        ]
+      ]
+    },
+    {
+      "from": [
+        -61.88,
+        45.62
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -66.88,
+        "y": 25.75,
+        "z": 45.62,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -65.42,
+        "y": 25.68,
+        "z": 42.08,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.204
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 20,
+      "ms": 28067,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          149
+        ],
+        [
+          "blocked by emberbrook_1",
+          24
+        ],
+        [
+          "blocked by emberbrook_4",
+          12
+        ],
+        [
+          "blocked by emberbrook_5",
+          4
+        ],
+        [
+          "blocked by emberbrook_3",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          2
+        ]
+      ]
+    },
+    {
+      "from": [
+        56.88,
+        -41.88
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 60.42,
+        "y": 21.72,
+        "z": -38.34,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 60.42,
+        "y": 21.72,
+        "z": -38.34,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.418
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 14,
+      "whys": []
+    },
+    {
+      "from": [
+        39.38,
+        -33.12
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 44.38,
+        "y": 16.24,
+        "z": -33.12,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 44.38,
+        "y": 16.24,
+        "z": -33.12,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.003
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 2904,
+      "whys": []
+    },
+    {
+      "from": [
+        -58.12,
+        66.88
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -53.12,
+        "y": 27.14,
+        "z": 66.88,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -54.58,
+        "y": 27.32,
+        "z": 70.42,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.084
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 19,
+      "ms": 21456,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          92
+        ],
+        [
+          "blocked by emberbrook_4",
+          28
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        33.12,
+        -26.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 38.12,
+        "y": 14.07,
+        "z": -26.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 38.12,
+        "y": 14.07,
+        "z": -26.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.703
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 7848,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          19
+        ],
+        [
+          "blocked by dellhollow_2",
+          10
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -55.62,
+        35.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -50.62,
+        "y": 26.21,
+        "z": 35.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -50.62,
+        "y": 26.21,
+        "z": 35.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.17
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 12757,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          32
+        ]
+      ]
+    },
+    {
+      "from": [
+        58.12,
+        -40.62
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 63.12,
+        "y": 20.49,
+        "z": -40.62,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 63.12,
+        "y": 20.49,
+        "z": -40.62,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.894
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 1,
+      "ms": 15,
+      "whys": []
+    },
+    {
+      "from": [
+        -60.62,
+        58.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -60.62,
+        "y": 26.66,
+        "z": 63.12,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -60.62,
+        "y": 26.66,
+        "z": 63.12,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.514
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 6775,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          7
+        ]
+      ]
+    },
+    {
+      "from": [
+        -11.88,
+        4.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -8.34,
+        "y": 14.26,
+        "z": 7.92,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -8.34,
+        "y": 14.26,
+        "z": 7.92,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.353
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2832,
+      "whys": []
+    },
+    {
+      "from": [
+        55.62,
+        -43.12
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 52.08,
+        "y": 11.66,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 61.28,
+        "y": 22.56,
+        "z": -37.46,
+        "R": 8,
+        "zone": "crag",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 8,
+        "relief": 3.24
+      },
+      "capped": false,
+      "cands": 5,
+      "screened": 2,
+      "solved": 3,
+      "yawsViable": 17,
+      "ms": 5681,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          67
+        ],
+        [
+          "no floor within 2.2 m",
+          61
+        ],
+        [
+          "blocked by dellhollow_2",
+          34
+        ],
+        [
+          "blocked by dellhollow_3",
+          8
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          5
+        ],
+        [
+          "blocked by ground_valley_3",
+          2
+        ]
+      ]
+    },
+    {
+      "from": [
+        35.62,
+        -29.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 40.62,
+        "y": 18.17,
+        "z": -29.38,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 39.16,
+        "y": 14.59,
+        "z": -25.84,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.896
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 9,
+      "ms": 7927,
+      "whys": [
+        [
+          "no floor within 2.2 m",
+          26
+        ],
+        [
+          "blocked by dellhollow_2",
+          12
+        ],
+        [
+          "occluded from the battle camera",
+          12
+        ],
+        [
+          "blocked by dellhollow_4",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -55.62,
+        49.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -52.08,
+        "y": 29.05,
+        "z": 45.84,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -55.62,
+        "y": 26.45,
+        "z": 60.38,
+        "R": 11,
+        "zone": "forest",
+        "yawDelta": -1.6,
+        "planOk": true,
+        "d": 11,
+        "relief": 0.438
+      },
+      "capped": false,
+      "cands": 8,
+      "screened": 1,
+      "solved": 7,
+      "yawsViable": 60,
+      "ms": 23198,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          528
+        ],
+        [
+          "blocked by emberbrook_4",
+          116
+        ],
+        [
+          "no floor within 2.2 m",
+          52
+        ],
+        [
+          "blocked by emberbrook_3",
+          28
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          25
+        ],
+        [
+          "blocked by emberbrook_5",
+          16
+        ]
+      ]
+    },
+    {
+      "from": [
+        -59.38,
+        48.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -62.92,
+        "y": 26.01,
+        "z": 44.58,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -59.38,
+        "y": 27.6,
+        "z": 43.12,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 3.142,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.227
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 16,
+      "ms": 4286,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          143
+        ],
+        [
+          "blocked by emberbrook_1",
+          20
+        ],
+        [
+          "blocked by emberbrook_6",
+          20
+        ],
+        [
+          "blocked by emberbrook_3",
+          16
+        ],
+        [
+          "blocked by emberbrook_4",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          3
+        ]
+      ]
+    },
+    {
+      "from": [
+        40.62,
+        -34.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 45.62,
+        "y": 16.24,
+        "z": -34.38,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 45.62,
+        "y": 16.24,
+        "z": -34.38,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.033
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 2119,
+      "whys": []
+    },
+    {
+      "from": [
+        -14.38,
+        9.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -9.38,
+        "y": 14.61,
+        "z": 9.38,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -9.38,
+        "y": 14.61,
+        "z": 9.38,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.688
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1894,
+      "whys": []
+    },
+    {
+      "from": [
+        34.38,
+        -28.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 39.38,
+        "y": 13.92,
+        "z": -28.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 39.38,
+        "y": 13.92,
+        "z": -28.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.153
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 13535,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          28
+        ],
+        [
+          "blocked by dellhollow_2",
+          5
+        ]
+      ]
+    },
+    {
+      "from": [
+        -51.88,
+        48.12
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -46.88,
+        "y": 24.58,
+        "z": 48.12,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -46.88,
+        "y": 24.58,
+        "z": 48.12,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.322
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1984,
+      "whys": []
+    },
+    {
+      "from": [
+        59.38,
+        -40.62
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 64.38,
+        "y": 20.77,
+        "z": -40.62,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 64.38,
+        "y": 20.77,
+        "z": -40.62,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.117
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 2,
+      "ms": 3480,
+      "whys": []
+    },
+    {
+      "from": [
+        26.88,
+        -21.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 31.88,
+        "y": 14.24,
+        "z": -21.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 31.88,
+        "y": 14.24,
+        "z": -21.88,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.315
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1807,
+      "whys": []
+    },
+    {
+      "from": [
+        -13.12,
+        5.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -9.58,
+        "y": 14.61,
+        "z": 9.16,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -9.58,
+        "y": 14.61,
+        "z": 9.16,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.669
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1694,
+      "whys": []
+    },
+    {
+      "from": [
+        54.38,
+        -39.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 57.92,
+        "y": 22.21,
+        "z": -35.84,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 57.92,
+        "y": 22.21,
+        "z": -35.84,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.094
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 5,
+      "ms": 2866,
+      "whys": []
+    },
+    {
+      "from": [
+        -59.38,
+        45.62
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -64.38,
+        "y": 28.87,
+        "z": 45.62,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -65.04,
+        "y": 25.54,
+        "z": 39.96,
+        "R": 8,
+        "zone": "forest",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.171
+      },
+      "capped": false,
+      "cands": 6,
+      "screened": 3,
+      "solved": 3,
+      "yawsViable": 25,
+      "ms": 2003,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          215
+        ],
+        [
+          "no floor within 2.2 m",
+          90
+        ],
+        [
+          "blocked by emberbrook_4",
+          40
+        ],
+        [
+          "blocked by emberbrook_3",
+          20
+        ],
+        [
+          "blocked by emberbrook_5",
+          4
+        ],
+        [
+          "blocked by emberbrook_6",
+          2
+        ]
+      ]
+    },
+    {
+      "from": [
+        58.12,
+        -41.88
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 61.66,
+        "y": 22.12,
+        "z": -38.34,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 61.66,
+        "y": 22.12,
+        "z": -38.34,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 3.152
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 7,
+      "ms": 710,
+      "whys": []
+    },
+    {
+      "from": [
+        -3.12,
+        4.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 1.88,
+        "y": 14.16,
+        "z": 4.38,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 1.88,
+        "y": 14.16,
+        "z": 4.38,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.912
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 10971,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          27
+        ]
+      ]
+    },
+    {
+      "from": [
+        54.38,
+        -41.88
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 57.92,
+        "y": 19.96,
+        "z": -38.34,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 57.92,
+        "y": 19.96,
+        "z": -38.34,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 3.61
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 15,
+      "whys": []
+    },
+    {
+      "from": [
+        23.12,
+        -20.62
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 28.12,
+        "y": 14.26,
+        "z": -20.62,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 28.12,
+        "y": 14.26,
+        "z": -20.62,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.187
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1591,
+      "whys": []
+    },
+    {
+      "from": [
+        -29.38,
+        16.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -25.84,
+        "y": 19.81,
+        "z": 20.42,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -25.84,
+        "y": 19.81,
+        "z": 20.42,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.193
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 2960,
+      "whys": []
+    },
+    {
+      "from": [
+        -58.12,
+        48.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -58.12,
+        "y": 27.46,
+        "z": 43.12,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -58.12,
+        "y": 27.46,
+        "z": 43.12,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 3.111
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 7,
+      "ms": 14435,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          37
+        ],
+        [
+          "blocked by emberbrook_6",
+          8
+        ],
+        [
+          "blocked by portal_markers_2",
+          3
+        ]
+      ]
+    },
+    {
+      "from": [
+        9.38,
+        -18.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 12.92,
+        "y": 15.01,
+        "z": -14.58,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 4.38,
+        "y": 15.31,
+        "z": -18.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.457
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 23,
+      "ms": 38402,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          210
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          2
+        ]
+      ]
+    },
+    {
+      "from": [
+        19.38,
+        -21.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 22.92,
+        "y": 14.47,
+        "z": -18.34,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 22.92,
+        "y": 14.47,
+        "z": -18.34,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.845
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2953,
+      "whys": []
+    },
+    {
+      "from": [
+        -39.38,
+        20.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -34.38,
+        "y": 23.72,
+        "z": 20.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -34.38,
+        "y": 23.72,
+        "z": 20.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 3.771
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 7539,
+      "whys": []
+    },
+    {
+      "from": [
+        4.38,
+        -6.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 9.38,
+        "y": 14.35,
+        "z": -6.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -0.62,
+        "y": 15.35,
+        "z": -6.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.671
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 0,
+      "solved": 4,
+      "yawsViable": 40,
+      "ms": 41701,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          440
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          15
+        ]
+      ]
+    },
+    {
+      "from": [
+        29.38,
+        -24.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 34.38,
+        "y": 14.14,
+        "z": -24.38,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 34.38,
+        "y": 14.14,
+        "z": -24.38,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.811
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2441,
+      "whys": []
+    },
+    {
+      "from": [
+        3.12,
+        -4.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 8.12,
+        "y": 14.3,
+        "z": -4.38,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 3.12,
+        "y": 14.56,
+        "z": 0.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.878
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 30,
+      "ms": 50199,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          390
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -55.62,
+        38.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -50.62,
+        "y": 26.84,
+        "z": 38.12,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -47.62,
+        "y": 25.15,
+        "z": 38.12,
+        "R": 8,
+        "zone": "meadow",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 8,
+        "relief": 2.664
+      },
+      "capped": false,
+      "cands": 7,
+      "screened": 0,
+      "solved": 7,
+      "yawsViable": 58,
+      "ms": 74066,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          653
+        ],
+        [
+          "no floor within 2.2 m",
+          28
+        ],
+        [
+          "blocked by emberbrook_4",
+          20
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          16
+        ],
+        [
+          "blocked by emberbrook_3",
+          8
+        ],
+        [
+          "blocked by ground_valley_1",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        29.38,
+        -25.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 34.38,
+        "y": 13.99,
+        "z": -25.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 34.38,
+        "y": 13.99,
+        "z": -25.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.601
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2490,
+      "whys": []
+    },
+    {
+      "from": [
+        55.62,
+        -39.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 60.62,
+        "y": 20.65,
+        "z": -39.38,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 60.62,
+        "y": 20.65,
+        "z": -39.38,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.26
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 4206,
+      "whys": []
+    },
+    {
+      "from": [
+        60.62,
+        -40.62
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 65.62,
+        "y": 20.98,
+        "z": -40.62,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 65.62,
+        "y": 20.98,
+        "z": -40.62,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.424
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 2374,
+      "whys": []
+    },
+    {
+      "from": [
+        -1.88,
+        1.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 3.12,
+        "y": 14.32,
+        "z": 1.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 3.12,
+        "y": 14.32,
+        "z": 1.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.321
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 17638,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          86
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -54.38,
+        55.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -49.38,
+        "y": 26.28,
+        "z": 55.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.72,
+        "y": 27.75,
+        "z": 61.28,
+        "R": 8,
+        "zone": "forest",
+        "yawDelta": 1.6,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.887
+      },
+      "capped": false,
+      "cands": 5,
+      "screened": 1,
+      "solved": 4,
+      "yawsViable": 35,
+      "ms": 4918,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          317
+        ],
+        [
+          "blocked by emberbrook_4",
+          72
+        ],
+        [
+          "no floor within 2.2 m",
+          27
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          14
+        ],
+        [
+          "blocked by emberbrook_3",
+          13
+        ],
+        [
+          "blocked by emberbrook_5",
+          12
+        ]
+      ]
+    },
+    {
+      "from": [
+        -64.38,
+        49.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -67.92,
+        "y": 25.93,
+        "z": 52.92,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -67.92,
+        "y": 25.93,
+        "z": 52.92,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": -1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.154
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 6,
+      "ms": 929,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          18
+        ],
+        [
+          "blocked by emberbrook_4",
+          8
+        ],
+        [
+          "blocked by emberbrook_1",
+          8
+        ],
+        [
+          "blocked by emberbrook_3",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -45.62,
+        21.88
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": -42.08,
+        "y": 30,
+        "z": 25.42,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": -45.62,
+        "y": 30,
+        "z": 26.88,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 1705,
+      "whys": [
+        [
+          "no floor within 2.2 m",
+          31
+        ]
+      ]
+    },
+    {
+      "from": [
+        -65.62,
+        53.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -65.62,
+        "y": 29.53,
+        "z": 58.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -65.62,
+        "y": 29.53,
+        "z": 58.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.408
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 1,
+      "ms": 1656,
+      "whys": []
+    },
+    {
+      "from": [
+        -63.12,
+        51.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -66.66,
+        "y": 28.73,
+        "z": 55.42,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -63.12,
+        "y": 26.3,
+        "z": 59.88,
+        "R": 8,
+        "zone": "forest",
+        "yawDelta": 2.1,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.405
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 2,
+      "solved": 2,
+      "yawsViable": 16,
+      "ms": 32535,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          66
+        ],
+        [
+          "blocked by emberbrook_4",
+          49
+        ],
+        [
+          "no floor within 2.2 m",
+          40
+        ],
+        [
+          "blocked by emberbrook_3",
+          20
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          8
+        ],
+        [
+          "blocked by emberbrook_5",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -55.62,
+        34.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -50.62,
+        "y": 26.16,
+        "z": 34.38,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -50.62,
+        "y": 26.16,
+        "z": 34.38,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.833
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 10295,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          45
+        ]
+      ]
+    },
+    {
+      "from": [
+        -38.12,
+        18.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -33.12,
+        "y": 21.74,
+        "z": 18.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -33.12,
+        "y": 21.74,
+        "z": 18.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.176
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2669,
+      "whys": []
+    },
+    {
+      "from": [
+        -15.62,
+        11.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -10.62,
+        "y": 15.32,
+        "z": 11.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -10.62,
+        "y": 15.32,
+        "z": 11.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.888
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 8,
+      "ms": 2518,
+      "whys": []
+    },
+    {
+      "from": [
+        3.12,
+        -6.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 8.12,
+        "y": 15.09,
+        "z": -6.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 3.12,
+        "y": 14.88,
+        "z": -1.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.723
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 30,
+      "ms": 44538,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          400
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -16.88,
+        10.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -11.88,
+        "y": 15.36,
+        "z": 10.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -11.88,
+        "y": 15.36,
+        "z": 10.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.854
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2283,
+      "whys": []
+    },
+    {
+      "from": [
+        36.88,
+        -30.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 41.88,
+        "y": 16.23,
+        "z": -30.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 40.42,
+        "y": 14.56,
+        "z": -27.08,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 3.142,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.282
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 9,
+      "ms": 11132,
+      "whys": [
+        [
+          "blocked by dellhollow_2",
+          40
+        ],
+        [
+          "occluded from the battle camera",
+          37
+        ],
+        [
+          "blocked by dellhollow_1",
+          4
+        ],
+        [
+          "no floor within 2.2 m",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          3
+        ]
+      ]
+    },
+    {
+      "from": [
+        -36.88,
+        18.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -31.88,
+        "y": 21.24,
+        "z": 18.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -31.88,
+        "y": 21.24,
+        "z": 18.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.873
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2299,
+      "whys": []
+    },
+    {
+      "from": [
+        -56.88,
+        55.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -51.88,
+        "y": 30.51,
+        "z": 55.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -53.34,
+        "y": 30.05,
+        "z": 59.16,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.27
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 7384,
+      "whys": [
+        [
+          "no floor within 2.2 m",
+          30
+        ],
+        [
+          "occluded from the battle camera",
+          2
+        ],
+        [
+          "blocked by emberbrook_6",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -50.62,
+        25.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -45.62,
+        "y": 30,
+        "z": 25.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -45.62,
+        "y": 30,
+        "z": 25.62,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 2285,
+      "whys": []
+    },
+    {
+      "from": [
+        -53.12,
+        50.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -48.12,
+        "y": 25.66,
+        "z": 50.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.12,
+        "y": 25.66,
+        "z": 50.62,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.599
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 10589,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          4
+        ],
+        [
+          "blocked by emberbrook_4",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -31.88,
+        16.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -28.34,
+        "y": 20.39,
+        "z": 20.42,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -28.34,
+        "y": 20.39,
+        "z": 20.42,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.331
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 2731,
+      "whys": []
+    },
+    {
+      "from": [
+        -60.62,
+        76.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -55.62,
+        "y": 27.61,
+        "z": 76.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -55.62,
+        "y": 27.61,
+        "z": 76.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.867
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2955,
+      "whys": []
+    },
+    {
+      "from": [
+        -58.12,
+        65.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -53.12,
+        "y": 28.49,
+        "z": 65.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -54.58,
+        "y": 27.23,
+        "z": 69.16,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.136
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 18,
+      "ms": 20439,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          110
+        ],
+        [
+          "blocked by emberbrook_4",
+          4
+        ],
+        [
+          "blocked by emberbrook_6",
+          4
+        ],
+        [
+          "blocked by emberbrook_1",
+          4
+        ],
+        [
+          "blocked by emberbrook_5",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        71.88
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -51.88,
+        "y": 27.26,
+        "z": 71.88,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -51.88,
+        "y": 27.26,
+        "z": 71.88,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.388
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 15294,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          54
+        ]
+      ]
+    },
+    {
+      "from": [
+        3.12,
+        -11.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 8.12,
+        "y": 15.9,
+        "z": -11.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -0.42,
+        "y": 15.63,
+        "z": -8.34,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.696
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 30,
+      "ms": 21037,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          232
+        ]
+      ]
+    },
+    {
+      "from": [
+        -51.88,
+        25.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -46.88,
+        "y": 30,
+        "z": 25.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -46.88,
+        "y": 30,
+        "z": 25.62,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 2760,
+      "whys": []
+    },
+    {
+      "from": [
+        11.88,
+        -16.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 16.88,
+        "y": 14.69,
+        "z": -16.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 6.88,
+        "y": 15.67,
+        "z": -16.88,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.594
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 0,
+      "solved": 4,
+      "yawsViable": 40,
+      "ms": 19773,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          388
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          17
+        ]
+      ]
+    },
+    {
+      "from": [
+        -64.38,
+        55.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -64.38,
+        "y": 26.11,
+        "z": 60.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -64.38,
+        "y": 26.11,
+        "z": 60.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.336
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 9,
+      "ms": 16816,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          44
+        ],
+        [
+          "blocked by emberbrook_4",
+          8
+        ],
+        [
+          "blocked by emberbrook_5",
+          8
+        ],
+        [
+          "blocked by emberbrook_3",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -55.62,
+        48.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -52.08,
+        "y": 26.05,
+        "z": 44.58,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -52.08,
+        "y": 26.05,
+        "z": 44.58,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.968
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 31549,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          87
+        ],
+        [
+          "blocked by emberbrook_4",
+          8
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          5
+        ]
+      ]
+    },
+    {
+      "from": [
+        58.12,
+        -45.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": 53.12,
+        "y": 4.25,
+        "z": -45.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": 61.66,
+        "y": 7.94,
+        "z": -49.16,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.443
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 0,
+      "solved": 4,
+      "yawsViable": 15,
+      "ms": 5552,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          68
+        ],
+        [
+          "blocked by dellhollow_2",
+          41
+        ],
+        [
+          "no floor within 2.2 m",
+          24
+        ],
+        [
+          "blocked by ground_valley_3",
+          4
+        ],
+        [
+          "blocked by dellhollow_3",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -61.88,
+        54.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -65.42,
+        "y": 29.18,
+        "z": 57.92,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -65.42,
+        "y": 29.18,
+        "z": 57.92,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.262
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 9348,
+      "whys": []
+    },
+    {
+      "from": [
+        -50.62,
+        24.38
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -47.08,
+        "y": 24.3,
+        "z": 27.92,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -50.62,
+        "y": 26.08,
+        "z": 32.38,
+        "R": 8,
+        "zone": "meadow",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.132
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 1,
+      "solved": 3,
+      "yawsViable": 25,
+      "ms": 39057,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          193
+        ],
+        [
+          "no floor within 2.2 m",
+          44
+        ],
+        [
+          "blocked by oldgate_3",
+          36
+        ],
+        [
+          "blocked by ground_valley_2",
+          8
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          8
+        ],
+        [
+          "blocked by oldgate_2",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        56.88,
+        -43.12
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 60.42,
+        "y": 20.34,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 60.42,
+        "y": 20.34,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.649
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 1,
+      "ms": 15,
+      "whys": []
+    },
+    {
+      "from": [
+        -55.62,
+        41.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -50.62,
+        "y": 26.81,
+        "z": 41.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -49.96,
+        "y": 25.98,
+        "z": 47.54,
+        "R": 8,
+        "zone": "forest",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.448
+      },
+      "capped": false,
+      "cands": 7,
+      "screened": 2,
+      "solved": 5,
+      "yawsViable": 44,
+      "ms": 72658,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          431
+        ],
+        [
+          "no floor within 2.2 m",
+          76
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          19
+        ],
+        [
+          "blocked by emberbrook_4",
+          16
+        ],
+        [
+          "blocked by emberbrook_1",
+          8
+        ],
+        [
+          "blocked by portal_markers_2",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        -21.88,
+        15.62
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -16.88,
+        "y": 17.25,
+        "z": 15.62,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -16.88,
+        "y": 17.25,
+        "z": 15.62,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.776
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2990,
+      "whys": []
+    },
+    {
+      "from": [
+        -33.12,
+        16.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -29.58,
+        "y": 20.69,
+        "z": 20.42,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -29.58,
+        "y": 20.69,
+        "z": 20.42,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.675
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 2998,
+      "whys": []
+    },
+    {
+      "from": [
+        -58.12,
+        76.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -53.12,
+        "y": 27.26,
+        "z": 76.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -53.12,
+        "y": 27.26,
+        "z": 76.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.973
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2600,
+      "whys": []
+    },
+    {
+      "from": [
+        -50.62,
+        49.38
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -45.62,
+        "y": 24.32,
+        "z": 49.38,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -45.65,
+        "y": 28.57,
+        "z": 61.39,
+        "R": 13,
+        "zone": "forest",
+        "yawDelta": 3.142,
+        "planOk": true,
+        "d": 13,
+        "relief": 1.207
+      },
+      "capped": false,
+      "cands": 16,
+      "screened": 0,
+      "solved": 16,
+      "yawsViable": 127,
+      "ms": 172621,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          1440
+        ],
+        [
+          "blocked by emberbrook_4",
+          120
+        ],
+        [
+          "no floor within 2.2 m",
+          62
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          56
+        ],
+        [
+          "blocked by emberbrook_3",
+          24
+        ],
+        [
+          "blocked by emberbrook_6",
+          20
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        46.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -60.42,
+        "y": 26.03,
+        "z": 43.34,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.88,
+        "y": 25.87,
+        "z": 46.88,
+        "R": 8,
+        "zone": "forest",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 1.687
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 28,
+      "ms": 42214,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          235
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          23
+        ],
+        [
+          "blocked by emberbrook_3",
+          16
+        ],
+        [
+          "blocked by emberbrook_1",
+          12
+        ],
+        [
+          "blocked by emberbrook_5",
+          8
+        ],
+        [
+          "blocked by emberbrook_4",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        5.62,
+        -14.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 10.62,
+        "y": 15.6,
+        "z": -14.38,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 10.62,
+        "y": 15.6,
+        "z": -14.38,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.622
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 8681,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          12
+        ]
+      ]
+    },
+    {
+      "from": [
+        5.62,
+        -10.62
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 10.62,
+        "y": 14.92,
+        "z": -10.62,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 0.62,
+        "y": 15.92,
+        "z": -10.62,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.203
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 0,
+      "solved": 4,
+      "yawsViable": 40,
+      "ms": 40441,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          438
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          2
+        ]
+      ]
+    },
+    {
+      "from": [
+        -53.12,
+        28.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -48.12,
+        "y": 25.41,
+        "z": 28.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -49.58,
+        "y": 26.06,
+        "z": 31.66,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.961
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 15,
+      "ms": 14277,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          78
+        ],
+        [
+          "no floor within 2.2 m",
+          20
+        ],
+        [
+          "blocked by oldgate_3",
+          16
+        ],
+        [
+          "blocked by oldgate_2",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        1.88,
+        -8.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 6.88,
+        "y": 15.73,
+        "z": -8.12,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -1.66,
+        "y": 14.98,
+        "z": -4.58,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.229
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 30,
+      "ms": 30507,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          260
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          7
+        ]
+      ]
+    },
+    {
+      "from": [
+        -19.38,
+        16.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -14.38,
+        "y": 17.22,
+        "z": 16.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -14.38,
+        "y": 17.22,
+        "z": 16.88,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.326
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 4588,
+      "whys": []
+    },
+    {
+      "from": [
+        -59.38,
+        59.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -55.84,
+        "y": 26.65,
+        "z": 62.92,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -55.84,
+        "y": 26.65,
+        "z": 62.92,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": -1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.469
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 9,
+      "ms": 12552,
+      "whys": [
+        [
+          "blocked by emberbrook_4",
+          32
+        ],
+        [
+          "occluded from the battle camera",
+          25
+        ],
+        [
+          "blocked by emberbrook_1",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -59.38,
+        66.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -54.38,
+        "y": 27.08,
+        "z": 66.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -54.38,
+        "y": 27.08,
+        "z": 66.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.589
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 17690,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          68
+        ],
+        [
+          "blocked by emberbrook_4",
+          28
+        ],
+        [
+          "blocked by emberbrook_3",
+          12
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        45.62
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -51.88,
+        "y": 29.24,
+        "z": 45.62,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.88,
+        "y": 25.93,
+        "z": 45.62,
+        "R": 8,
+        "zone": "forest",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 2.834
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 2,
+      "solved": 2,
+      "yawsViable": 20,
+      "ms": 26570,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          176
+        ],
+        [
+          "no floor within 2.2 m",
+          52
+        ],
+        [
+          "blocked by portal_markers_2",
+          4
+        ],
+        [
+          "blocked by emberbrook_4",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          4
+        ],
+        [
+          "blocked by emberbrook_1",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -6.88,
+        5.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -1.88,
+        "y": 14.13,
+        "z": 5.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -1.88,
+        "y": 14.13,
+        "z": 5.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.44
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2345,
+      "whys": []
+    },
+    {
+      "from": [
+        51.88,
+        -43.12
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 48.34,
+        "y": 12.29,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 48.34,
+        "y": 12.29,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.298
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 5421,
+      "whys": [
+        [
+          "blocked by dellhollow_2",
+          4
+        ],
+        [
+          "occluded from the battle camera",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        48.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -53.34,
+        "y": 25.85,
+        "z": 44.58,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.88,
+        "y": 25.84,
+        "z": 48.12,
+        "R": 8,
+        "zone": "forest",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.923
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 20,
+      "ms": 31360,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          135
+        ],
+        [
+          "blocked by emberbrook_4",
+          16
+        ],
+        [
+          "blocked by emberbrook_5",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          8
+        ],
+        [
+          "blocked by portal_markers_2",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        66.88
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -51.88,
+        "y": 27.21,
+        "z": 66.88,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -53.34,
+        "y": 27.4,
+        "z": 70.42,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.36
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 20,
+      "ms": 23488,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          115
+        ],
+        [
+          "blocked by emberbrook_4",
+          28
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          7
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        53.12
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -53.34,
+        "y": 30.73,
+        "z": 56.66,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -53.34,
+        "y": 30.73,
+        "z": 56.66,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.629
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 2,
+      "ms": 11709,
+      "whys": [
+        [
+          "no floor within 2.2 m",
+          9
+        ],
+        [
+          "occluded from the battle camera",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        25.62,
+        -20.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 30.62,
+        "y": 14.26,
+        "z": -20.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 30.62,
+        "y": 14.26,
+        "z": -20.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.108
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1976,
+      "whys": []
+    },
+    {
+      "from": [
+        -13.12,
+        8.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -8.12,
+        "y": 14.28,
+        "z": 8.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -8.12,
+        "y": 14.28,
+        "z": 8.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.399
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2995,
+      "whys": []
+    },
+    {
+      "from": [
+        -51.88,
+        28.12
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -46.88,
+        "y": 24.2,
+        "z": 28.12,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -57.54,
+        "y": 40.46,
+        "z": 22.46,
+        "R": 8,
+        "zone": "meadow",
+        "yawDelta": 1.6,
+        "planOk": true,
+        "d": 8,
+        "relief": 2.36
+      },
+      "capped": false,
+      "cands": 8,
+      "screened": 0,
+      "solved": 8,
+      "yawsViable": 50,
+      "ms": 81019,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          498
+        ],
+        [
+          "no floor within 2.2 m",
+          100
+        ],
+        [
+          "blocked by oldgate_3",
+          36
+        ],
+        [
+          "blocked by ground_valley_3",
+          16
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          13
+        ],
+        [
+          "blocked by ground_valley_2",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        -53.12,
+        24.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -49.58,
+        "y": 26.08,
+        "z": 27.92,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -49.58,
+        "y": 26.08,
+        "z": 27.92,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 3.142,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.167
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 9,
+      "ms": 33355,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          82
+        ],
+        [
+          "blocked by oldgate_3",
+          16
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          8
+        ],
+        [
+          "no floor within 2.2 m",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        63.12,
+        -44.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 68.12,
+        "y": 11.9,
+        "z": -44.38,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 63.12,
+        "y": 21.88,
+        "z": -39.38,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.942
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 22,
+      "whys": [
+        [
+          "no floor within 2.2 m",
+          16
+        ],
+        [
+          "blocked by dellhollow_2",
+          2
+        ],
+        [
+          "blocked by ground_valley_3",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        60.62,
+        -44.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 64.16,
+        "y": 20.55,
+        "z": -40.84,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 64.16,
+        "y": 20.55,
+        "z": -40.84,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.947
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 2,
+      "ms": 15,
+      "whys": []
+    },
+    {
+      "from": [
+        -60.62,
+        75.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -55.62,
+        "y": 27.59,
+        "z": 75.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -55.62,
+        "y": 27.59,
+        "z": 75.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.568
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2891,
+      "whys": []
+    },
+    {
+      "from": [
+        -51.88,
+        29.38
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -46.88,
+        "y": 24.17,
+        "z": 29.38,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.34,
+        "y": 30,
+        "z": 25.84,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.13
+      },
+      "capped": false,
+      "cands": 5,
+      "screened": 1,
+      "solved": 4,
+      "yawsViable": 29,
+      "ms": 42563,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          317
+        ],
+        [
+          "no floor within 2.2 m",
+          52
+        ],
+        [
+          "blocked by oldgate_3",
+          28
+        ],
+        [
+          "blocked by ground_valley_2",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          11
+        ],
+        [
+          "blocked by ground_valley_1",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        9.38,
+        -15.62
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 14.38,
+        "y": 14.97,
+        "z": -15.62,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 4.38,
+        "y": 15.97,
+        "z": -15.62,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.477
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 0,
+      "solved": 4,
+      "yawsViable": 37,
+      "ms": 45056,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          420
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          5
+        ]
+      ]
+    },
+    {
+      "from": [
+        -59.38,
+        78.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -54.38,
+        "y": 27.32,
+        "z": 78.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -54.38,
+        "y": 27.32,
+        "z": 78.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.216
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2876,
+      "whys": []
+    },
+    {
+      "from": [
+        -30.62,
+        16.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -27.08,
+        "y": 20.08,
+        "z": 20.42,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -27.08,
+        "y": 20.08,
+        "z": 20.42,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.14
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 2884,
+      "whys": []
+    },
+    {
+      "from": [
+        -43.12,
+        24.38
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -46.66,
+        "y": 23.88,
+        "z": 27.92,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.78,
+        "y": 26.08,
+        "z": 30.04,
+        "R": 8,
+        "zone": "meadow",
+        "yawDelta": 2.1,
+        "planOk": true,
+        "d": 8,
+        "relief": 1.968
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 12,
+      "ms": 19188,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          86
+        ],
+        [
+          "blocked by oldgate_3",
+          48
+        ],
+        [
+          "no floor within 2.2 m",
+          30
+        ],
+        [
+          "blocked by ground_valley_2",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        -54.38,
+        46.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -49.38,
+        "y": 25.96,
+        "z": 46.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -49.38,
+        "y": 25.96,
+        "z": 46.88,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.175
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 10243,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          36
+        ],
+        [
+          "blocked by emberbrook_1",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -58.12,
+        69.38
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -53.12,
+        "y": 27.34,
+        "z": 69.38,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -53.12,
+        "y": 27.34,
+        "z": 69.38,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.346
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 13742,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          44
+        ],
+        [
+          "blocked by emberbrook_6",
+          8
+        ],
+        [
+          "blocked by emberbrook_3",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        18.12,
+        -19.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 23.12,
+        "y": 14.39,
+        "z": -19.38,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 23.12,
+        "y": 14.39,
+        "z": -19.38,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.375
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1950,
+      "whys": []
+    },
+    {
+      "from": [
+        -51.88,
+        31.88
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -46.88,
+        "y": 23.87,
+        "z": 31.88,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.34,
+        "y": 25.87,
+        "z": 35.42,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.285
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 17,
+      "ms": 19449,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          110
+        ],
+        [
+          "no floor within 2.2 m",
+          40
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          6
+        ],
+        [
+          "blocked by ground_valley_3",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -0.62,
+        -1.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 4.38,
+        "y": 14.81,
+        "z": -1.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 2.92,
+        "y": 14.39,
+        "z": 1.66,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.152
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 20,
+      "ms": 49754,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          205
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          15
+        ]
+      ]
+    },
+    {
+      "from": [
+        -59.38,
+        50.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -53.72,
+        "y": 26.19,
+        "z": 56.28,
+        "R": 8,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -53.72,
+        "y": 26.19,
+        "z": 56.28,
+        "R": 8,
+        "zone": "water",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.258
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 9,
+      "ms": 10432,
+      "whys": [
+        [
+          "blocked by emberbrook_4",
+          20
+        ],
+        [
+          "occluded from the battle camera",
+          20
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        60.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -51.88,
+        "y": 26.59,
+        "z": 60.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -60.42,
+        "y": 26.77,
+        "z": 64.16,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.436
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 1,
+      "solved": 2,
+      "yawsViable": 19,
+      "ms": 15279,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          57
+        ],
+        [
+          "blocked by emberbrook_4",
+          28
+        ],
+        [
+          "blocked by emberbrook_3",
+          24
+        ],
+        [
+          "no floor within 2.2 m",
+          23
+        ],
+        [
+          "blocked by emberbrook_5",
+          8
+        ],
+        [
+          "blocked by emberbrook_1",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        4.38,
+        -9.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 9.38,
+        "y": 15.24,
+        "z": -9.38,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -0.62,
+        "y": 15.84,
+        "z": -9.38,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.065
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 0,
+      "solved": 4,
+      "yawsViable": 40,
+      "ms": 49824,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          422
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          9
+        ]
+      ]
+    },
+    {
+      "from": [
+        55.62,
+        -46.88
+      ],
+      "zone0": "water",
+      "first": {
+        "x": 50.62,
+        "y": 0.91,
+        "z": -46.88,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": 52.08,
+        "y": 3.97,
+        "z": -50.42,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.852
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 9,
+      "ms": 4458,
+      "whys": [
+        [
+          "no floor within 2.2 m",
+          17
+        ],
+        [
+          "blocked by dellhollow_3",
+          5
+        ],
+        [
+          "blocked by dellhollow_2",
+          3
+        ]
+      ]
+    },
+    {
+      "from": [
+        -14.38,
+        6.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -9.38,
+        "y": 14.22,
+        "z": 6.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -9.38,
+        "y": 14.22,
+        "z": 6.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.482
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2194,
+      "whys": []
+    },
+    {
+      "from": [
+        4.38,
+        -8.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 9.38,
+        "y": 14.76,
+        "z": -8.12,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -0.62,
+        "y": 15.59,
+        "z": -8.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.953
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 0,
+      "solved": 4,
+      "yawsViable": 40,
+      "ms": 38194,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          442
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          16
+        ]
+      ]
+    },
+    {
+      "from": [
+        33.12,
+        -29.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 38.12,
+        "y": 13.64,
+        "z": -29.38,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 38.12,
+        "y": 13.64,
+        "z": -29.38,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.602
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 9409,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          11
+        ],
+        [
+          "blocked by dellhollow_2",
+          6
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          2
+        ]
+      ]
+    },
+    {
+      "from": [
+        -43.12,
+        20.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -43.12,
+        "y": 30,
+        "z": 25.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -43.12,
+        "y": 30,
+        "z": 25.62,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 3.142,
+        "planOk": true,
+        "d": 5,
+        "relief": 0
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 1,
+      "ms": 6001,
+      "whys": []
+    },
+    {
+      "from": [
+        -58.12,
+        74.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -53.12,
+        "y": 27.52,
+        "z": 74.38,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -53.12,
+        "y": 27.52,
+        "z": 74.38,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.38
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 6,
+      "whys": []
+    },
+    {
+      "from": [
+        -18.12,
+        11.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -13.12,
+        "y": 15.75,
+        "z": 11.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -13.12,
+        "y": 15.75,
+        "z": 11.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.823
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2095,
+      "whys": []
+    },
+    {
+      "from": [
+        59.38,
+        -44.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 64.38,
+        "y": 16.88,
+        "z": -44.38,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 62.92,
+        "y": 20.14,
+        "z": -40.84,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.388
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 1,
+      "ms": 3942,
+      "whys": [
+        [
+          "no floor within 2.2 m",
+          26
+        ]
+      ]
+    },
+    {
+      "from": [
+        24.38,
+        -23.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 27.92,
+        "y": 14.23,
+        "z": -19.58,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 27.92,
+        "y": 14.23,
+        "z": -19.58,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.381
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1781,
+      "whys": []
+    },
+    {
+      "from": [
+        -56.88,
+        43.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -51.88,
+        "y": 26.13,
+        "z": 43.12,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -64.88,
+        "y": 25.82,
+        "z": 43.12,
+        "R": 8,
+        "zone": "forest",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.146
+      },
+      "capped": false,
+      "cands": 6,
+      "screened": 0,
+      "solved": 6,
+      "yawsViable": 50,
+      "ms": 12488,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          512
+        ],
+        [
+          "blocked by emberbrook_4",
+          64
+        ],
+        [
+          "blocked by emberbrook_3",
+          28
+        ],
+        [
+          "blocked by emberbrook_1",
+          16
+        ],
+        [
+          "no floor within 2.2 m",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          10
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        65.62
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -51.88,
+        "y": 27.07,
+        "z": 65.62,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -53.34,
+        "y": 27.29,
+        "z": 69.16,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.316
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 19,
+      "ms": 977,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          140
+        ],
+        [
+          "blocked by emberbrook_4",
+          8
+        ],
+        [
+          "blocked by emberbrook_3",
+          8
+        ],
+        [
+          "blocked by emberbrook_5",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          3
+        ]
+      ]
+    },
+    {
+      "from": [
+        58.12,
+        -39.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 63.12,
+        "y": 21.88,
+        "z": -39.38,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 63.12,
+        "y": 21.88,
+        "z": -39.38,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.942
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 1678,
+      "whys": []
+    },
+    {
+      "from": [
+        -54.38,
+        36.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -49.38,
+        "y": 26.87,
+        "z": 36.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -50.84,
+        "y": 26.09,
+        "z": 33.34,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.456
+      },
+      "capped": false,
+      "cands": 6,
+      "screened": 0,
+      "solved": 6,
+      "yawsViable": 43,
+      "ms": 17074,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          445
+        ],
+        [
+          "no floor within 2.2 m",
+          38
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          15
+        ],
+        [
+          "blocked by emberbrook_4",
+          12
+        ],
+        [
+          "blocked by ground_valley_1",
+          12
+        ],
+        [
+          "blocked by ground_valley_3",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        -56.88,
+        69.38
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -51.88,
+        "y": 27.33,
+        "z": 69.38,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -51.88,
+        "y": 27.33,
+        "z": 69.38,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": -1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.351
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 923,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          75
+        ],
+        [
+          "blocked by emberbrook_3",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          2
+        ]
+      ]
+    },
+    {
+      "from": [
+        -3.12,
+        0.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 1.88,
+        "y": 14.48,
+        "z": 0.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 1.88,
+        "y": 14.48,
+        "z": 0.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.539
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 13176,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          59
+        ]
+      ]
+    },
+    {
+      "from": [
+        -1.88,
+        -0.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 3.12,
+        "y": 14.68,
+        "z": -0.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 3.12,
+        "y": 14.68,
+        "z": -0.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.841
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 19754,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          81
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -53.12,
+        49.38
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -48.12,
+        "y": 25.49,
+        "z": 49.38,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.12,
+        "y": 25.49,
+        "z": 49.38,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.908
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 47,
+      "whys": [
+        [
+          "nine-sample body visibility < visMin",
+          9
+        ],
+        [
+          "occluded from the battle camera",
+          5
+        ],
+        [
+          "blocked by emberbrook_4",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -58.12,
+        54.38
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -53.12,
+        "y": 28.83,
+        "z": 54.38,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -63.78,
+        "y": 26.2,
+        "z": 60.04,
+        "R": 8,
+        "zone": "meadow",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 8,
+        "relief": 0.397
+      },
+      "capped": false,
+      "cands": 4,
+      "screened": 1,
+      "solved": 3,
+      "yawsViable": 26,
+      "ms": 25806,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          131
+        ],
+        [
+          "blocked by emberbrook_4",
+          82
+        ],
+        [
+          "no floor within 2.2 m",
+          27
+        ],
+        [
+          "blocked by emberbrook_3",
+          24
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          17
+        ],
+        [
+          "blocked by emberbrook_1",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        59.38,
+        -43.12
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 62.92,
+        "y": 21.54,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 62.92,
+        "y": 21.54,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 3.129
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 2426,
+      "whys": []
+    },
+    {
+      "from": [
+        39.38,
+        -30.62
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 44.38,
+        "y": 16.23,
+        "z": -30.62,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 42.92,
+        "y": 20.18,
+        "z": -27.08,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.418
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 11,
+      "ms": 9153,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          36
+        ],
+        [
+          "blocked by dellhollow_2",
+          20
+        ],
+        [
+          "no floor within 2.2 m",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        -11.88,
+        5.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -8.34,
+        "y": 14.42,
+        "z": 9.16,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -8.34,
+        "y": 14.42,
+        "z": 9.16,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.601
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2335,
+      "whys": []
+    },
+    {
+      "from": [
+        -0.62,
+        0.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 4.38,
+        "y": 14.3,
+        "z": 0.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 2.92,
+        "y": 13.93,
+        "z": 4.16,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.022
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 20,
+      "ms": 33849,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          163
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -26.88,
+        15.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -23.34,
+        "y": 19.01,
+        "z": 19.16,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -23.34,
+        "y": 19.01,
+        "z": 19.16,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.007
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 8,
+      "ms": 2408,
+      "whys": []
+    },
+    {
+      "from": [
+        14.38,
+        -19.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 17.92,
+        "y": 13.79,
+        "z": -15.84,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 9.38,
+        "y": 15.32,
+        "z": -19.38,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.562
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 30,
+      "ms": 32387,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          242
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          16
+        ]
+      ]
+    },
+    {
+      "from": [
+        39.38,
+        -34.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 44.38,
+        "y": 16.17,
+        "z": -34.38,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 44.38,
+        "y": 16.17,
+        "z": -34.38,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.329
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 3492,
+      "whys": []
+    },
+    {
+      "from": [
+        -55.62,
+        46.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -50.62,
+        "y": 29.48,
+        "z": 46.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -59.16,
+        "y": 27.7,
+        "z": 43.34,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 1.6,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.571
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 7,
+      "ms": 15430,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          47
+        ],
+        [
+          "no floor within 2.2 m",
+          25
+        ],
+        [
+          "blocked by emberbrook_6",
+          8
+        ],
+        [
+          "blocked by emberbrook_3",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          2
+        ]
+      ]
+    },
+    {
+      "from": [
+        -10.62,
+        4.38
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -7.08,
+        "y": 14.2,
+        "z": 7.92,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -7.08,
+        "y": 14.2,
+        "z": 7.92,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.318
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2186,
+      "whys": []
+    },
+    {
+      "from": [
+        -54.38,
+        49.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -49.38,
+        "y": 25.98,
+        "z": 49.38,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -49.38,
+        "y": 25.98,
+        "z": 49.38,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.319
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 9,
+      "ms": 14263,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          14
+        ],
+        [
+          "blocked by emberbrook_4",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          3
+        ]
+      ]
+    },
+    {
+      "from": [
+        -60.62,
+        73.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -55.62,
+        "y": 27.54,
+        "z": 73.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -55.62,
+        "y": 27.54,
+        "z": 73.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.09
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 3865,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        -53.12,
+        30.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -48.12,
+        "y": 25.27,
+        "z": 30.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -49.58,
+        "y": 26.15,
+        "z": 34.16,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.279
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawsViable": 17,
+      "ms": 20702,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          128
+        ],
+        [
+          "no floor within 2.2 m",
+          31
+        ],
+        [
+          "blocked by oldgate_3",
+          8
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -9.38,
+        3.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -5.84,
+        "y": 14.08,
+        "z": 6.66,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -5.84,
+        "y": 14.08,
+        "z": 6.66,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.081
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2912,
+      "whys": []
+    },
+    {
+      "from": [
+        1.88,
+        -6.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 6.88,
+        "y": 15.53,
+        "z": -6.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -1.66,
+        "y": 14.73,
+        "z": -3.34,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.957
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 30,
+      "ms": 34528,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          282
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          13
+        ]
+      ]
+    },
+    {
+      "from": [
+        -53.12,
+        25.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -48.12,
+        "y": 30,
+        "z": 25.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -48.12,
+        "y": 30,
+        "z": 25.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.13
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 2573,
+      "whys": []
+    },
+    {
+      "from": [
+        0.62,
+        -3.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 5.62,
+        "y": 14.84,
+        "z": -3.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 0.62,
+        "y": 14.32,
+        "z": 1.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.541
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 30,
+      "ms": 39774,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          294
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        16.88,
+        -21.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 20.42,
+        "y": 14.56,
+        "z": -18.34,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 20.42,
+        "y": 14.56,
+        "z": -18.34,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": -0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.278
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 14610,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          5
+        ]
+      ]
+    },
+    {
+      "from": [
+        36.88,
+        -31.88
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 41.88,
+        "y": 12.83,
+        "z": -31.88,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 41.88,
+        "y": 12.83,
+        "z": -31.88,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.919
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 8,
+      "ms": 27809,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          31
+        ],
+        [
+          "blocked by dellhollow_2",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          7
+        ],
+        [
+          "blocked by ground_valley_1",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        60.62,
+        -43.12
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 64.16,
+        "y": 21.76,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 64.16,
+        "y": 21.76,
+        "z": -39.58,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 3.611
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 5,
+      "ms": 1672,
+      "whys": []
+    },
+    {
+      "from": [
+        31.88,
+        -28.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 36.88,
+        "y": 13.78,
+        "z": -28.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 36.88,
+        "y": 13.78,
+        "z": -28.12,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.007
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 4151,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          3
+        ]
+      ]
+    },
+    {
+      "from": [
+        -54.38,
+        48.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -49.38,
+        "y": 25.95,
+        "z": 48.12,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -49.38,
+        "y": 25.95,
+        "z": 48.12,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.689
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 9143,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          26
+        ],
+        [
+          "blocked by emberbrook_1",
+          4
+        ],
+        [
+          "blocked by emberbrook_4",
+          4
+        ],
+        [
+          "blocked by emberbrook_5",
+          4
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -53.12,
+        48.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -48.12,
+        "y": 25.38,
+        "z": 48.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -49.58,
+        "y": 26.28,
+        "z": 44.58,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 2.1,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.527
+      },
+      "capped": false,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawsViable": 30,
+      "ms": 44295,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          312
+        ],
+        [
+          "blocked by emberbrook_4",
+          32
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          28
+        ],
+        [
+          "blocked by emberbrook_1",
+          8
+        ],
+        [
+          "blocked by emberbrook_3",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -41.88,
+        23.12
+      ],
+      "zone0": "water",
+      "first": {
+        "x": -45.42,
+        "y": 30,
+        "z": 26.66,
+        "R": 5,
+        "zone": "water"
+      },
+      "ok": true,
+      "staged": {
+        "x": -45.42,
+        "y": 30,
+        "z": 26.66,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 3,
+      "ms": 2328,
+      "whys": []
+    },
+    {
+      "from": [
+        18.12,
+        -21.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 21.66,
+        "y": 14.52,
+        "z": -18.34,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 21.66,
+        "y": 14.52,
+        "z": -18.34,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.354
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 1489,
+      "whys": []
+    },
+    {
+      "from": [
+        58.12,
+        -48.12
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 63.12,
+        "y": 11.08,
+        "z": -48.12,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 53.12,
+        "y": 6.4,
+        "z": -48.12,
+        "R": 5,
+        "zone": "water",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.835
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 4,
+      "ms": 86,
+      "whys": [
+        [
+          "no floor within 2.2 m",
+          16
+        ],
+        [
+          "blocked by dellhollow_2",
+          4
+        ]
+      ]
+    },
+    {
+      "from": [
+        -18.12,
+        10.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -13.12,
+        "y": 15.48,
+        "z": 10.62,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -13.12,
+        "y": 15.48,
+        "z": 10.62,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.842
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2933,
+      "whys": []
+    },
+    {
+      "from": [
+        -23.12,
+        16.88
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -18.12,
+        "y": 17.72,
+        "z": 16.88,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -18.12,
+        "y": 17.72,
+        "z": 16.88,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.95
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 9,
+      "ms": 2318,
+      "whys": []
+    },
+    {
+      "from": [
+        35.62,
+        -28.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": 40.62,
+        "y": 18.5,
+        "z": -28.12,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": 39.16,
+        "y": 15.04,
+        "z": -24.58,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": -1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.573
+      },
+      "capped": false,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 12615,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          36
+        ],
+        [
+          "no floor within 2.2 m",
+          23
+        ],
+        [
+          "blocked by dellhollow_2",
+          13
+        ]
+      ]
+    },
+    {
+      "from": [
+        20.62,
+        -20.62
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 24.16,
+        "y": 13.66,
+        "z": -17.08,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 24.16,
+        "y": 13.66,
+        "z": -17.08,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 1.05,
+        "planOk": true,
+        "d": 5,
+        "relief": 1.453
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 13416,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          12
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          8
+        ]
+      ]
+    },
+    {
+      "from": [
+        16.88,
+        -19.38
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": 21.88,
+        "y": 14.4,
+        "z": -19.38,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": 21.88,
+        "y": 14.4,
+        "z": -19.38,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.204
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2416,
+      "whys": []
+    },
+    {
+      "from": [
+        58.12,
+        -49.38
+      ],
+      "zone0": "crag",
+      "first": {
+        "x": 63.12,
+        "y": 10.89,
+        "z": -49.38,
+        "R": 5,
+        "zone": "crag"
+      },
+      "ok": true,
+      "staged": {
+        "x": 63.12,
+        "y": 10.89,
+        "z": -49.38,
+        "R": 5,
+        "zone": "crag",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.364
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 1,
+      "ms": 2260,
+      "whys": []
+    },
+    {
+      "from": [
+        -61.88,
+        58.12
+      ],
+      "zone0": "forest",
+      "first": {
+        "x": -61.88,
+        "y": 26.63,
+        "z": 63.12,
+        "R": 5,
+        "zone": "forest"
+      },
+      "ok": true,
+      "staged": {
+        "x": -61.88,
+        "y": 26.63,
+        "z": 63.12,
+        "R": 5,
+        "zone": "forest",
+        "yawDelta": 0.5,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.728
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 7464,
+      "whys": [
+        [
+          "occluded from the battle camera",
+          10
+        ],
+        [
+          "nine-sample body visibility < visMin",
+          1
+        ]
+      ]
+    },
+    {
+      "from": [
+        -6.88,
+        3.12
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -3.34,
+        "y": 14.13,
+        "z": 6.66,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -3.34,
+        "y": 14.13,
+        "z": 6.66,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 0.187
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2411,
+      "whys": []
+    },
+    {
+      "from": [
+        -36.88,
+        15.62
+      ],
+      "zone0": "meadow",
+      "first": {
+        "x": -33.34,
+        "y": 22.24,
+        "z": 19.16,
+        "R": 5,
+        "zone": "meadow"
+      },
+      "ok": true,
+      "staged": {
+        "x": -33.34,
+        "y": 22.24,
+        "z": 19.16,
+        "R": 5,
+        "zone": "meadow",
+        "yawDelta": 0,
+        "planOk": true,
+        "d": 5,
+        "relief": 2.604
+      },
+      "capped": false,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawsViable": 10,
+      "ms": 2417,
+      "whys": []
+    }
+  ]
+}

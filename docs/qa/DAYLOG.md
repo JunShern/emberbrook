@@ -21664,3 +21664,63 @@ documented pair, unchanged; the live run's zero-404 audit is the receipt.
 Cleanup: this lane's worktree removed, scratch `dist`, live fetches and both `static-verify*.png`
 deleted, zero orphaned Chrome (`ppid 1` root check clean). The two stale worktrees from earlier
 sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+------------------------------------------------------------
+
+## 2026-08-08 ~22:35 — MEASUREMENT LANE: THE RELOCATION RADIUS. THE ANSWER IS 13 m, AND THE VARIABLE WAS NEVER DISTANCE
+
+The user's ruling ("if we need a fallback, we should just fallback to the 'nearest feasible' place")
+deletes the diorama and makes the search radius free. This lane measured the radius it actually
+costs. Board: `docs/qa/battle-world/index.html` §Q2b · arms in `factorial.json`
+(`reloc-control-11m`, `reloc-sweep-r100`) · rows in `docs/qa/battle-world/relocate.json`.
+
+**CONTROL, FIRST.** Shipped configuration, the same 160 ow-valley road cells:
+`103/160 = 64.4%`, meadow 49/59 · crag 18/24 · forest 23/48 · water 13/29 — the published arm
+reproduced cell for cell at today's `yawKeep = 1` (it was measured at 4).
+
+**THE CURVE.** Coverage by search radius, one run, same solver, same knobs:
+`5 m 89.4% · 8 m 98.8% · 11 m 99.4% · 13 m 100% · flat to 100 m`. Per zone at 13 m: 59/59, 48/48,
+24/24, 29/29. **The residual class is empty** — zero of 160 cells refuse at any radius, no cell hit
+the per-cell solve cap, and each accepted site was re-confirmed by the shipped `solveArena` itself
+(160/160 `planOk`).
+
+**THE FINDING THAT MATTERS: THE BINDING VARIABLE WAS BEARING, NOT DISTANCE.** 41 of the 57 cells the
+shipped behaviour refuses stage at the SAME 5 m radius on a different compass bearing; 14 need 8 m,
+one 11 m, one 13 m. The 64.4% was measuring a search that walked ONE direction out of the road and
+then asked the solver once — not a world that will not hold a fight. The 100 m the ruling was
+willing to pay is never reached.
+
+**DISTANCE DISTRIBUTION** (for the builder staging the arrival): road cell to fight, p50 5.0 m /
+p90 8.0 m / max 13.0 m over all 160; over the 57 the control refused, the same 5.0/8.0/13.0; measured
+from where the control had already put them, p50 5.7 / p90 12.0 / **max 15.0 m**. Typical relocation
+is one sideways step, so the opening camera move covers it — nothing here justifies a fade, a cut or
+a travel beat.
+
+**THE NAMED COLLIDERS ARE A POLISH ITEM, NOT A BLOCKER.** Across every rejected candidate:
+`emberbrook_4` 895, `emberbrook_3` 269, `dellhollow_2` 206, `oldgate_3` 188, `emberbrook_1` 128,
+`emberbrook_5` 88, `emberbrook_6` 71, `ground_valley_*` 103, `portal_markers_2` 19 — the two towns'
+own colliders at the gates, exactly as the spike named them. **Not one dead-ends a cell**; the search
+walks around each of them. Fixing them at source buys a shorter walk, never a fight that could not
+otherwise happen. And they are not the dominant refusal: **14 484 of ~16 900 slot rejections are
+"occluded from the battle camera"** — foliage and terrain between the boom and a body. That is why
+turning the arena rescues a cell and why moving it further barely matters.
+
+**INSTRUMENT CHANGE, DISCLOSED** (`tools/battle_world_probe.mjs` only; no shipped module, default or
+shot-table value touched, `?arena=world` still inert). `--relocate=<maxR>` rings outward
+(5·8·11·13·15·17·20·24·27·30·35·40·48·60·72·85·100 m, eight bearings a ring, the first three rings
+identical to `placeDriver`'s own ladder) until the shipped solver accepts, and records the accepting
+ring — so ONE run is the whole curve. `--rings`, `--solvecap`, `--verify` alongside it.
+
+**AND THE SCREEN THAT MADE IT AFFORDABLE, WITH ITS PROOF.** A failing `solveArena` costs ~20 s, so a
+136-candidate search per cell is four hours. Each candidate is first offered ten GEOMETRY-ONLY
+placements (`vis:false`), which return the yaws that can hold the formation at all; only those yaws
+pay for the ray-heavy visibility test. `vis:false` is a strict RELAXATION of `vis:true`, so a yaw it
+refuses can never pass with the camera on — the verdict is identical by construction. It was proved
+by measurement as well: `--verify` runs the real `solveArena` on every candidate beside the screen,
+**10 candidates, 0 disagreements**. Whole sweep: 307 candidates reached, 26 screened, 281 full
+solves, 37 min.
+
+**A TRAP PAID AGAIN, VERBATIM FROM CLAUDE.md.** A backtick inside a COMMENT inside a template literal
+ends the literal; `node --check` reported "Invalid left-hand side expression in postfix operation"
+pointing at the template's first line, thirty lines from the actual character. Plain quotes in
+comments, in JS as in CSS.

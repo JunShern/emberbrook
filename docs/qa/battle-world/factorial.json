@@ -1,311 +1,958 @@
 {
-  "what": "THE 2x2 THAT SEPARATES THE CONFOUNDED STAGING-RATE CHANGE (68.8% -> 64.4%).",
-  "how": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=<0|0.67> --bcam=<0|1>",
-  "cells": "the same 160 road cells (tools/_bw_roadpts.json[0:160]) in all four arms",
-  "knobs": {
-    "--vismin=0": "the OLD visibility test: the nine-sample refusal is `vf < CFG.place.visMin`, so at 0 it can never fire and the two spine rays are the whole gate -- byte-for-byte the spike's own test",
-    "--vismin=0.67": "the SHIPPED test: two spine rays PLUS nine samples across the body's own box, refused below 67% visible",
-    "--bcam=0": "BattleWorld.CAM.on = false, which solveArena already treats as the spike's own behaviour to the line: one fixed pitch (0.27), return the FIRST yaw that places, no scoreView ranking",
-    "--bcam=1": "the SHIPPED sweep: yaw x pitch over CAM.solve.pitches, take the BEST by scoreView rather than the first"
-  },
-  "confound_inside_bcam": "--bcam bundles TWO changes: the pitch axis AND best-of rather than first-that-places. RESOLVED 2026-08-08 by the fifth and sixth arms below (CAM.on=true with CAM.solve.pitches=[0.27], at both visibility settings) -- see yaw_attribution.",
-  "when": "2026-08-08",
-  "arms": {
-    "oldvis-yawonly": {
-      "arm": {
-        "visMin": 0,
-        "camOn": false,
-        "visTest": "two-spine-rays",
-        "sweep": "yaw only (first)"
-      },
-      "sampled": 160,
-      "usable": 160,
-      "ok": 110,
-      "fail": 50,
-      "rate": 68.8,
-      "rateFixedYaw": 32.5,
-      "yawTurned": 52.7,
-      "occludedSlotsFixedYaw": 1364,
-      "rawCleanPct": 66.3,
-      "byZone": {
-        "water": {
-          "n": 29,
-          "ok": 17
-        },
-        "forest": {
-          "n": 48,
-          "ok": 25
-        },
-        "crag": {
-          "n": 24,
-          "ok": 18
-        },
-        "meadow": {
-          "n": 59,
-          "ok": 50
-        }
-      }
+ "what": "THE 2x2 THAT SEPARATES THE CONFOUNDED STAGING-RATE CHANGE (68.8% -> 64.4%).",
+ "how": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=<0|0.67> --bcam=<0|1>",
+ "cells": "the same 160 road cells (tools/_bw_roadpts.json[0:160]) in all four arms",
+ "knobs": {
+  "--vismin=0": "the OLD visibility test: the nine-sample refusal is `vf < CFG.place.visMin`, so at 0 it can never fire and the two spine rays are the whole gate -- byte-for-byte the spike's own test",
+  "--vismin=0.67": "the SHIPPED test: two spine rays PLUS nine samples across the body's own box, refused below 67% visible",
+  "--bcam=0": "BattleWorld.CAM.on = false, which solveArena already treats as the spike's own behaviour to the line: one fixed pitch (0.27), return the FIRST yaw that places, no scoreView ranking",
+  "--bcam=1": "the SHIPPED sweep: yaw x pitch over CAM.solve.pitches, take the BEST by scoreView rather than the first"
+ },
+ "confound_inside_bcam": "--bcam bundles TWO changes: the pitch axis AND best-of rather than first-that-places. RESOLVED 2026-08-08 by the fifth and sixth arms below (CAM.on=true with CAM.solve.pitches=[0.27], at both visibility settings) -- see yaw_attribution.",
+ "when": "2026-08-08",
+ "arms": {
+  "oldvis-yawonly": {
+   "arm": {
+    "visMin": 0,
+    "camOn": false,
+    "visTest": "two-spine-rays",
+    "sweep": "yaw only (first)"
+   },
+   "sampled": 160,
+   "usable": 160,
+   "ok": 110,
+   "fail": 50,
+   "rate": 68.8,
+   "rateFixedYaw": 32.5,
+   "yawTurned": 52.7,
+   "occludedSlotsFixedYaw": 1364,
+   "rawCleanPct": 66.3,
+   "byZone": {
+    "water": {
+     "n": 29,
+     "ok": 17
     },
-    "newvis-yawonly": {
-      "arm": {
-        "visMin": 0.67,
-        "camOn": false,
-        "visTest": "nine-sample",
-        "sweep": "yaw only (first)"
-      },
-      "sampled": 160,
-      "usable": 160,
-      "ok": 100,
-      "fail": 60,
-      "rate": 62.5,
-      "rateFixedYaw": 31.9,
-      "yawTurned": 49,
-      "occludedSlotsFixedYaw": 1461,
-      "rawCleanPct": 65.9,
-      "byZone": {
-        "water": {
-          "n": 29,
-          "ok": 13
-        },
-        "forest": {
-          "n": 48,
-          "ok": 20
-        },
-        "crag": {
-          "n": 24,
-          "ok": 18
-        },
-        "meadow": {
-          "n": 59,
-          "ok": 49
-        }
-      }
+    "forest": {
+     "n": 48,
+     "ok": 25
     },
-    "oldvis-yawpitch": {
-      "arm": {
-        "visMin": 0,
-        "camOn": true,
-        "visTest": "two-spine-rays",
-        "sweep": "yaw x pitch (best)"
-      },
-      "sampled": 160,
-      "usable": 160,
-      "ok": 111,
-      "fail": 49,
-      "rate": 69.4,
-      "rateFixedYaw": 32.5,
-      "yawTurned": 91.9,
-      "occludedSlotsFixedYaw": 1364,
-      "rawCleanPct": 63.1,
-      "byZone": {
-        "water": {
-          "n": 29,
-          "ok": 17
-        },
-        "forest": {
-          "n": 48,
-          "ok": 26
-        },
-        "crag": {
-          "n": 24,
-          "ok": 18
-        },
-        "meadow": {
-          "n": 59,
-          "ok": 50
-        }
-      }
+    "crag": {
+     "n": 24,
+     "ok": 18
     },
-    "newvis-yawpitch": {
-      "arm": {
-        "visMin": 0.67,
-        "camOn": true,
-        "visTest": "nine-sample",
-        "sweep": "yaw x pitch (best)"
-      },
-      "sampled": 160,
-      "usable": 160,
-      "ok": 103,
-      "fail": 57,
-      "rate": 64.4,
-      "rateFixedYaw": 31.9,
-      "yawTurned": 89.3,
-      "occludedSlotsFixedYaw": 1461,
-      "rawCleanPct": 63,
-      "byZone": {
-        "water": {
-          "n": 29,
-          "ok": 13
-        },
-        "forest": {
-          "n": 48,
-          "ok": 23
-        },
-        "crag": {
-          "n": 24,
-          "ok": 18
-        },
-        "meadow": {
-          "n": 59,
-          "ok": 49
-        }
-      }
-    },
-    "oldvis-bestyaw": {
-      "arm": {
-        "visMin": 0,
-        "camOn": true,
-        "pitches": [
-          0.27
-        ],
-        "visTest": "two-spine-rays",
-        "sweep": "yaw only, BEST (isolated)"
-      },
-      "sampled": 160,
-      "usable": 160,
-      "ok": 110,
-      "fail": 50,
-      "rate": 68.8,
-      "rateFixedYaw": 32.5,
-      "yawTurned": 93.6,
-      "occludedSlotsFixedYaw": 1364,
-      "rawCleanPct": 63.6,
-      "byZone": {
-        "water": {
-          "n": 29,
-          "ok": 17
-        },
-        "forest": {
-          "n": 48,
-          "ok": 25
-        },
-        "crag": {
-          "n": 24,
-          "ok": 18
-        },
-        "meadow": {
-          "n": 59,
-          "ok": 50
-        }
-      }
-    },
-    "newvis-bestyaw": {
-      "arm": {
-        "visMin": 0.67,
-        "camOn": true,
-        "pitches": [
-          0.27
-        ],
-        "visTest": "nine-sample",
-        "sweep": "yaw only, BEST (isolated)"
-      },
-      "sampled": 160,
-      "usable": 160,
-      "ok": 100,
-      "fail": 60,
-      "rate": 62.5,
-      "rateFixedYaw": 31.9,
-      "yawTurned": 91,
-      "occludedSlotsFixedYaw": 1461,
-      "rawCleanPct": 63.4,
-      "byZone": {
-        "water": {
-          "n": 29,
-          "ok": 13
-        },
-        "forest": {
-          "n": 48,
-          "ok": 20
-        },
-        "crag": {
-          "n": 24,
-          "ok": 18
-        },
-        "meadow": {
-          "n": 59,
-          "ok": 49
-        }
-      }
-    },
-    "newvis-yawpitch-firstyaw": {
-      "arm": {
-        "visMin": 0.67,
-        "camOn": true,
-        "pitches": [
-          0.16,
-          0.22,
-          0.28,
-          0.34
-        ],
-        "yawKeep": 1,
-        "visTest": "nine-sample",
-        "sweep": "PITCH ranked, FIRST placeable yaw (the change)"
-      },
-      "sampled": 160,
-      "usable": 160,
-      "ok": 103,
-      "fail": 57,
-      "rate": 64.4,
-      "rateFixedYaw": 31.9,
-      "yawTurned": 49.5,
-      "occludedSlotsFixedYaw": 1461,
-      "rawCleanPct": 65.6,
-      "byZone": {
-        "water": {
-          "n": 29,
-          "ok": 13
-        },
-        "forest": {
-          "n": 48,
-          "ok": 23
-        },
-        "crag": {
-          "n": 24,
-          "ok": 18
-        },
-        "meadow": {
-          "n": 59,
-          "ok": 49
-        }
-      }
+    "meadow": {
+     "n": 59,
+     "ok": 50
     }
+   }
   },
-  "conclusion": {
-    "stricter_test_alone_pts": -6.3,
-    "stricter_test_alone_pts_at_new_sweep": -5.0,
-    "pitch_sweep_alone_pts_at_old_test": 0.6,
-    "pitch_sweep_alone_pts_at_new_test": 1.9,
-    "net_published": -4.4,
-    "plain": "ALL of the drop is the instrument, and then some. The stricter test costs 6.3 points on its own; the yaw x pitch sweep GIVES BACK 1.9, and never costs a cell in any zone at either test setting. The pitch sweep is not a regression."
+  "newvis-yawonly": {
+   "arm": {
+    "visMin": 0.67,
+    "camOn": false,
+    "visTest": "nine-sample",
+    "sweep": "yaw only (first)"
+   },
+   "sampled": 160,
+   "usable": 160,
+   "ok": 100,
+   "fail": 60,
+   "rate": 62.5,
+   "rateFixedYaw": 31.9,
+   "yawTurned": 49,
+   "occludedSlotsFixedYaw": 1461,
+   "rawCleanPct": 65.9,
+   "byZone": {
+    "water": {
+     "n": 29,
+     "ok": 13
+    },
+    "forest": {
+     "n": 48,
+     "ok": 20
+    },
+    "crag": {
+     "n": 24,
+     "ok": 18
+    },
+    "meadow": {
+     "n": 59,
+     "ok": 49
+    }
+   }
   },
-  "how5": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=<0|0.67> --bcam=1 --pitches=0.27   (the --pitches flag is new to the INSTRUMENT, same shape as --vismin/--bcam: it overwrites BattleWorld.CAM.solve.pitches at solve time and reads it back. Nothing in public/ changed and no default moved. 0.27 == CFG.cam.pitch, the elevation the yaw-only arms already gate placement at.)",
-  "when5": "2026-08-08",
-  "yaw_attribution": {
-    "question": "of the yawTurned rise 52.7 -> 91.9 (old test) and 49.0 -> 89.3 (new test), how much is BEST-OF selection and how much is the extra PITCH samples?",
-    "yawTurned_oldtest": {
-      "first_one_pitch": 52.7,
-      "best_one_pitch": 93.6,
-      "best_four_pitches": 91.9,
-      "pts_from_bestof": 40.9,
-      "pts_from_pitch_axis": -1.7
+  "oldvis-yawpitch": {
+   "arm": {
+    "visMin": 0,
+    "camOn": true,
+    "visTest": "two-spine-rays",
+    "sweep": "yaw x pitch (best)"
+   },
+   "sampled": 160,
+   "usable": 160,
+   "ok": 111,
+   "fail": 49,
+   "rate": 69.4,
+   "rateFixedYaw": 32.5,
+   "yawTurned": 91.9,
+   "occludedSlotsFixedYaw": 1364,
+   "rawCleanPct": 63.1,
+   "byZone": {
+    "water": {
+     "n": 29,
+     "ok": 17
     },
-    "yawTurned_newtest": {
-      "first_one_pitch": 49.0,
-      "best_one_pitch": 91.0,
-      "best_four_pitches": 89.3,
-      "pts_from_bestof": 42.0,
-      "pts_from_pitch_axis": -1.7
+    "forest": {
+     "n": 48,
+     "ok": 26
     },
-    "staging_from_bestof_pts": 0.0,
-    "staging_from_pitch_axis_pts": {
-      "oldtest": 0.6,
-      "newtest": 1.9
+    "crag": {
+     "n": 24,
+     "ok": 18
     },
-    "cell_identity": "the fifth arm's 110 ok cells at the old test are THE SAME 110 CELLS as the shipped spike run's placement.json -- symmetric difference 0, not merely the same count. Ranking among already-placeable plans cannot make a cell fail: solveArena scores okPlans, and every member of okPlans is ok by construction.",
-    "plain": "BEST-OF IS THE WHOLE SWING AND BUYS NO STAGING; THE PITCH AXIS IS THE WHOLE STAGING GAIN AND SLIGHTLY REDUCES THE SWING. Holding the pitch axis at the spike's single 0.27 and changing ONLY first-that-places to best-by-scoreView moves yawTurned 49.0 -> 91.0 (new test) and 52.7 -> 93.6 (old test) -- more than the full published erosion -- while the staging rate and every zone count stay EXACTLY where the yaw-only arms left them (62.5%, 13/20/18/49; 68.8%, 17/25/18/50). Adding the other three pitches on top gives back the +1.9 staging and takes 1.7 points OFF the swing.",
-    "restoration_cost": "ZERO staging sites, by the same argument the cell-identity check measures: ranking never changes ok/fail. Ranking the PITCH axis only and keeping the FIRST placeable yaw (the spike's rule, which is where 'the player's own current heading is ALWAYS tried first' lives) would keep all 103/160 and return yawTurned to <= 49%. NOT MEASURED -- it is not expressible through config and would be a change to solveArena, which this lane did not make.",
-    "restoration_MEASURED": "BUILT AND MEASURED 2026-08-08 as the seventh arm (arms.newvis-yawpitch-firstyaw). CAM.solve.yawKeep 4 -> 1 in public/js/battle_world.js, which is the whole change: the collection loop already broke at `okPlans.length >= yawKeep`, so at 1 the first placeable yaw is the only plan that reaches the ranking and the ranking can only move the boom. PREDICTION HELD ON STAGING, EXACTLY: 103/160, 64.4%, per zone 13/23/18/49, and THE SAME 103 CELLS as the shipped arm -- symmetric difference 0, re-measured in the same window (the shipped arm was re-run first, on this machine, and reproduced its published summary field for field: 103, 64.4, yawTurned 89.3, rateFixedYaw 31.9, occludedSlotsFixedYaw 1461). SWING: yawTurned 89.3 -> 49.5, a 39.8-point drop. THE '<= 49%' PREDICTION IS OFF BY 0.5 AND THE REASON IS MEASURABLE, NOT NOISE: in CELLS the change already beats the spike -- 52 staged cells keep the player's own heading here against the spike's 51 (the extra pitches give yaw 0 more chances to place, exactly as predicted) -- but the pitch axis also stages 3 cells the spike could not, and all 3 need a turn, so the RATE is 51/103 = 49.5% against 49/100 = 49.0%. The property is restored at the spike's level for zero staging sites."
+    "meadow": {
+     "n": 59,
+     "ok": 50
+    }
+   }
   },
-  "how7": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=0.67 --bcam=1   (no --pitches: the seventh arm is the SHIPPED default after the change). REPRODUCING ARMS 3-6 NOW NEEDS ONE MORE KNOB: the default yawKeep is 1 from 2026-08-08, so any 'best-of yaw' arm must set BW.CAM.solve.yawKeep = 4 in the page before solving. Arms 1-2 (--bcam=0) are unaffected -- that path returns the first ok plan before the ranking is reached.",
-  "when7": "2026-08-08"
+  "newvis-yawpitch": {
+   "arm": {
+    "visMin": 0.67,
+    "camOn": true,
+    "visTest": "nine-sample",
+    "sweep": "yaw x pitch (best)"
+   },
+   "sampled": 160,
+   "usable": 160,
+   "ok": 103,
+   "fail": 57,
+   "rate": 64.4,
+   "rateFixedYaw": 31.9,
+   "yawTurned": 89.3,
+   "occludedSlotsFixedYaw": 1461,
+   "rawCleanPct": 63,
+   "byZone": {
+    "water": {
+     "n": 29,
+     "ok": 13
+    },
+    "forest": {
+     "n": 48,
+     "ok": 23
+    },
+    "crag": {
+     "n": 24,
+     "ok": 18
+    },
+    "meadow": {
+     "n": 59,
+     "ok": 49
+    }
+   }
+  },
+  "oldvis-bestyaw": {
+   "arm": {
+    "visMin": 0,
+    "camOn": true,
+    "pitches": [
+     0.27
+    ],
+    "visTest": "two-spine-rays",
+    "sweep": "yaw only, BEST (isolated)"
+   },
+   "sampled": 160,
+   "usable": 160,
+   "ok": 110,
+   "fail": 50,
+   "rate": 68.8,
+   "rateFixedYaw": 32.5,
+   "yawTurned": 93.6,
+   "occludedSlotsFixedYaw": 1364,
+   "rawCleanPct": 63.6,
+   "byZone": {
+    "water": {
+     "n": 29,
+     "ok": 17
+    },
+    "forest": {
+     "n": 48,
+     "ok": 25
+    },
+    "crag": {
+     "n": 24,
+     "ok": 18
+    },
+    "meadow": {
+     "n": 59,
+     "ok": 50
+    }
+   }
+  },
+  "newvis-bestyaw": {
+   "arm": {
+    "visMin": 0.67,
+    "camOn": true,
+    "pitches": [
+     0.27
+    ],
+    "visTest": "nine-sample",
+    "sweep": "yaw only, BEST (isolated)"
+   },
+   "sampled": 160,
+   "usable": 160,
+   "ok": 100,
+   "fail": 60,
+   "rate": 62.5,
+   "rateFixedYaw": 31.9,
+   "yawTurned": 91,
+   "occludedSlotsFixedYaw": 1461,
+   "rawCleanPct": 63.4,
+   "byZone": {
+    "water": {
+     "n": 29,
+     "ok": 13
+    },
+    "forest": {
+     "n": 48,
+     "ok": 20
+    },
+    "crag": {
+     "n": 24,
+     "ok": 18
+    },
+    "meadow": {
+     "n": 59,
+     "ok": 49
+    }
+   }
+  },
+  "newvis-yawpitch-firstyaw": {
+   "arm": {
+    "visMin": 0.67,
+    "camOn": true,
+    "pitches": [
+     0.16,
+     0.22,
+     0.28,
+     0.34
+    ],
+    "yawKeep": 1,
+    "visTest": "nine-sample",
+    "sweep": "PITCH ranked, FIRST placeable yaw (the change)"
+   },
+   "sampled": 160,
+   "usable": 160,
+   "ok": 103,
+   "fail": 57,
+   "rate": 64.4,
+   "rateFixedYaw": 31.9,
+   "yawTurned": 49.5,
+   "occludedSlotsFixedYaw": 1461,
+   "rawCleanPct": 65.6,
+   "byZone": {
+    "water": {
+     "n": 29,
+     "ok": 13
+    },
+    "forest": {
+     "n": 48,
+     "ok": 23
+    },
+    "crag": {
+     "n": 24,
+     "ok": 18
+    },
+    "meadow": {
+     "n": 59,
+     "ok": 49
+    }
+   }
+  },
+  "reloc-control-11m": {
+   "arm": {
+    "visMin": 0.67,
+    "camOn": true,
+    "pitches": [
+     0.16,
+     0.22,
+     0.28,
+     0.34
+    ],
+    "visTest": "nine-sample",
+    "sweep": "yaw x pitch (best)",
+    "note": "SHIPPED DEFAULTS, re-run 2026-08-08 as the control for the radius sweep. yawKeep is now 1 (it was 4 when newvis-yawpitch was measured) and the rate, the cells and every zone reproduce exactly."
+   },
+   "sampled": 160,
+   "usable": 160,
+   "ok": 103,
+   "fail": 57,
+   "rate": 64.4,
+   "rateFixedYaw": 31.9,
+   "yawTurned": 49.5,
+   "occludedSlotsFixedYaw": 1461,
+   "rawCleanPct": 65.6,
+   "byZone": {
+    "water": {
+     "n": 29,
+     "ok": 13
+    },
+    "forest": {
+     "n": 48,
+     "ok": 23
+    },
+    "crag": {
+     "n": 24,
+     "ok": 18
+    },
+    "meadow": {
+     "n": 59,
+     "ok": 49
+    }
+   },
+   "blockers": [
+    [
+     "emberbrook_4",
+     15
+    ],
+    [
+     "dellhollow_2",
+     6
+    ],
+    [
+     "emberbrook_3",
+     5
+    ],
+    [
+     "emberbrook_1",
+     4
+    ],
+    [
+     "ground_valley_3",
+     4
+    ],
+    [
+     "emberbrook_6",
+     2
+    ],
+    [
+     "oldgate_3",
+     2
+    ],
+    [
+     "ground_valley_1",
+     1
+    ]
+   ]
+  },
+  "reloc-sweep-r100": {
+   "arm": {
+    "visMin": 0.67,
+    "camOn": true,
+    "pitches": [
+     0.16,
+     0.22,
+     0.28,
+     0.34
+    ],
+    "visTest": "nine-sample",
+    "sweep": "yaw x pitch (best)",
+    "relocate": 100,
+    "rings": [
+     5,
+     8,
+     11,
+     13,
+     15,
+     17,
+     20,
+     24,
+     27,
+     30,
+     35,
+     40,
+     48,
+     60,
+     72,
+     85,
+     100
+    ],
+    "solveCap": 80,
+    "note": "THE RULING'S OWN MECHANISM, measured. Same 160 road cells, same shipped solver and knobs, but the walk out of the road does not stop at the first standable encounter cell: it rings outward (8 bearings a ring) until solveArena ACCEPTS. coverage(R) = cells whose first accepting ring is <= R, so one run is the whole curve."
+   },
+   "sampled": 160,
+   "ok": 160,
+   "fail": 0,
+   "rate": 100,
+   "capped": 0,
+   "curve": [
+    {
+     "R": 5,
+     "ok": 143,
+     "of": 160,
+     "rate": 89.4,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 22
+      },
+      "forest": {
+       "n": 48,
+       "ok": 39
+      },
+      "crag": {
+       "n": 24,
+       "ok": 23
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 8,
+     "ok": 158,
+     "of": 160,
+     "rate": 98.8,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 28
+      },
+      "forest": {
+       "n": 48,
+       "ok": 47
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 11,
+     "ok": 159,
+     "of": 160,
+     "rate": 99.4,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 28
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 13,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 15,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 17,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 20,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 24,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 27,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 30,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 35,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 40,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 48,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 60,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 72,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 85,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    },
+    {
+     "R": 100,
+     "ok": 160,
+     "of": 160,
+     "rate": 100,
+     "byZone": {
+      "water": {
+       "n": 29,
+       "ok": 29
+      },
+      "forest": {
+       "n": 48,
+       "ok": 48
+      },
+      "crag": {
+       "n": 24,
+       "ok": 24
+      },
+      "meadow": {
+       "n": 59,
+       "ok": 59
+      }
+     }
+    }
+   ],
+   "ringHistogram": [
+    [
+     5,
+     143
+    ],
+    [
+     8,
+     15
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     15,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     20,
+     0
+    ],
+    [
+     24,
+     0
+    ],
+    [
+     27,
+     0
+    ],
+    [
+     30,
+     0
+    ],
+    [
+     35,
+     0
+    ],
+    [
+     40,
+     0
+    ],
+    [
+     48,
+     0
+    ],
+    [
+     60,
+     0
+    ],
+    [
+     72,
+     0
+    ],
+    [
+     85,
+     0
+    ],
+    [
+     100,
+     0
+    ]
+   ],
+   "dist_all": {
+    "p50": 5,
+    "p90": 8,
+    "max": 13
+   },
+   "dist_controlRefusedCells": {
+    "n": 57,
+    "d_from_road_cell": {
+     "p50": 5.0,
+     "p90": 8.0,
+     "max": 13.0
+    },
+    "ring": {
+     "5": 41,
+     "8": 14,
+     "11": 1,
+     "13": 1
+    },
+    "displacement_from_the_control_landing_spot": {
+     "p50": 5.7,
+     "p90": 12.0,
+     "max": 15.0
+    }
+   },
+   "residual": {
+    "cells": 0,
+    "note": "EMPTY. Every one of the 160 cells stages within 13 m; there is no class relocation cannot solve."
+   },
+   "refusalCensus_rejectedCandidates": [],
+   "screen": {
+    "what": "ten geometry-only solvePlacement calls (vis:false) return the yaws that can hold the formation at all; only those yaws pay for the ray-heavy visibility test. vis:false is a strict relaxation of vis:true, so the verdict is identical by construction.",
+    "verified": {
+     "candidates": 10,
+     "mismatchVsSolveArena": 0,
+     "how": "--verify runs the real solveArena on every candidate and compares"
+    }
+   },
+   "cost": {
+    "candTotal": 307,
+    "screenedTotal": 26,
+    "solvedTotal": 281,
+    "msTotal": 2232325
+   }
+  }
+ },
+ "conclusion": {
+  "stricter_test_alone_pts": -6.3,
+  "stricter_test_alone_pts_at_new_sweep": -5.0,
+  "pitch_sweep_alone_pts_at_old_test": 0.6,
+  "pitch_sweep_alone_pts_at_new_test": 1.9,
+  "net_published": -4.4,
+  "plain": "ALL of the drop is the instrument, and then some. The stricter test costs 6.3 points on its own; the yaw x pitch sweep GIVES BACK 1.9, and never costs a cell in any zone at either test setting. The pitch sweep is not a regression."
+ },
+ "how5": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=<0|0.67> --bcam=1 --pitches=0.27   (the --pitches flag is new to the INSTRUMENT, same shape as --vismin/--bcam: it overwrites BattleWorld.CAM.solve.pitches at solve time and reads it back. Nothing in public/ changed and no default moved. 0.27 == CFG.cam.pitch, the elevation the yaw-only arms already gate placement at.)",
+ "when5": "2026-08-08",
+ "yaw_attribution": {
+  "question": "of the yawTurned rise 52.7 -> 91.9 (old test) and 49.0 -> 89.3 (new test), how much is BEST-OF selection and how much is the extra PITCH samples?",
+  "yawTurned_oldtest": {
+   "first_one_pitch": 52.7,
+   "best_one_pitch": 93.6,
+   "best_four_pitches": 91.9,
+   "pts_from_bestof": 40.9,
+   "pts_from_pitch_axis": -1.7
+  },
+  "yawTurned_newtest": {
+   "first_one_pitch": 49.0,
+   "best_one_pitch": 91.0,
+   "best_four_pitches": 89.3,
+   "pts_from_bestof": 42.0,
+   "pts_from_pitch_axis": -1.7
+  },
+  "staging_from_bestof_pts": 0.0,
+  "staging_from_pitch_axis_pts": {
+   "oldtest": 0.6,
+   "newtest": 1.9
+  },
+  "cell_identity": "the fifth arm's 110 ok cells at the old test are THE SAME 110 CELLS as the shipped spike run's placement.json -- symmetric difference 0, not merely the same count. Ranking among already-placeable plans cannot make a cell fail: solveArena scores okPlans, and every member of okPlans is ok by construction.",
+  "plain": "BEST-OF IS THE WHOLE SWING AND BUYS NO STAGING; THE PITCH AXIS IS THE WHOLE STAGING GAIN AND SLIGHTLY REDUCES THE SWING. Holding the pitch axis at the spike's single 0.27 and changing ONLY first-that-places to best-by-scoreView moves yawTurned 49.0 -> 91.0 (new test) and 52.7 -> 93.6 (old test) -- more than the full published erosion -- while the staging rate and every zone count stay EXACTLY where the yaw-only arms left them (62.5%, 13/20/18/49; 68.8%, 17/25/18/50). Adding the other three pitches on top gives back the +1.9 staging and takes 1.7 points OFF the swing.",
+  "restoration_cost": "ZERO staging sites, by the same argument the cell-identity check measures: ranking never changes ok/fail. Ranking the PITCH axis only and keeping the FIRST placeable yaw (the spike's rule, which is where 'the player's own current heading is ALWAYS tried first' lives) would keep all 103/160 and return yawTurned to <= 49%. NOT MEASURED -- it is not expressible through config and would be a change to solveArena, which this lane did not make.",
+  "restoration_MEASURED": "BUILT AND MEASURED 2026-08-08 as the seventh arm (arms.newvis-yawpitch-firstyaw). CAM.solve.yawKeep 4 -> 1 in public/js/battle_world.js, which is the whole change: the collection loop already broke at `okPlans.length >= yawKeep`, so at 1 the first placeable yaw is the only plan that reaches the ranking and the ranking can only move the boom. PREDICTION HELD ON STAGING, EXACTLY: 103/160, 64.4%, per zone 13/23/18/49, and THE SAME 103 CELLS as the shipped arm -- symmetric difference 0, re-measured in the same window (the shipped arm was re-run first, on this machine, and reproduced its published summary field for field: 103, 64.4, yawTurned 89.3, rateFixedYaw 31.9, occludedSlotsFixedYaw 1461). SWING: yawTurned 89.3 -> 49.5, a 39.8-point drop. THE '<= 49%' PREDICTION IS OFF BY 0.5 AND THE REASON IS MEASURABLE, NOT NOISE: in CELLS the change already beats the spike -- 52 staged cells keep the player's own heading here against the spike's 51 (the extra pitches give yaw 0 more chances to place, exactly as predicted) -- but the pitch axis also stages 3 cells the spike could not, and all 3 need a turn, so the RATE is 51/103 = 49.5% against 49/100 = 49.0%. The property is restored at the spike's level for zero staging sites."
+ },
+ "how7": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=0.67 --bcam=1   (no --pitches: the seventh arm is the SHIPPED default after the change). REPRODUCING ARMS 3-6 NOW NEEDS ONE MORE KNOB: the default yawKeep is 1 from 2026-08-08, so any 'best-of yaw' arm must set BW.CAM.solve.yawKeep = 4 in the page before solving. Arms 1-2 (--bcam=0) are unaffected -- that path returns the first ok plan before the ranking is reached.",
+ "when7": "2026-08-08",
+ "relocation_sweep": {
+  "what": "DOES THE NEAREST-FEASIBLE RELOCATION RULING COVER THE WORLD, AND AT WHAT RADIUS.",
+  "how": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --relocate=100  [--verify]",
+  "when": "2026-08-08",
+  "answer": "YES, AND THE RADIUS IS 13 m. 100% of 160 road cells stage; 89.4% at 5 m, 98.8% at 8 m, 99.4% at 11 m, 100% at 13 m, flat to 100 m. No residual class.",
+  "finding": "THE BINDING VARIABLE WAS NEVER DISTANCE, IT WAS BEARING: 41 of the 57 cells the shipped behaviour refuses stage at the SAME 5 m radius on a different compass bearing. The 64.4% was measuring a search that tried one direction, not a world that refuses to hold a fight."
+ }
 }

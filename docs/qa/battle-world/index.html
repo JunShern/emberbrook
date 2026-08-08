@@ -221,6 +221,81 @@ are diagnosable rather than mysterious: <code>emberbrook_4</code> (12), <code>em
 Those are exactly the places the encounter director is least likely to fire, so the real-world
 refusal rate is a little better than 31.2%; nobody has measured how much better.</p>
 
+<h2>Q2b — HOW FAR MUST THE FIGHT MOVE FOR THE WORLD TO ALWAYS HOLD IT? (the radius sweep)</h2>
+<p>The user's ruling of 2026-08-08 deletes the diorama fallback: when placement refuses a spot the
+game <b>relocates within the world</b> to the nearest feasible staging site, because the diorama is
+itself a teleport to a place the player never sees again — so <b>distance is not a constraint to
+minimise</b> and the search radius is simply whatever gives full coverage. This measures that radius.</p>
+
+<p><b>Control first.</b> The shipped configuration over the same 160 road cells reproduces the
+published number exactly — <b>103/160 = 64.4%</b>, meadow 49/59, crag 18/24, forest 23/48, water
+13/29 — at today's <code>yawKeep = 1</code> as it did at 4. Every number below sits on that control.</p>
+
+<p><b>What actually changed in the instrument.</b> <code>--mode=place</code> walks each road cell into
+the <i>first standable encounter cell</i> within 11 m and asks the solver <b>once</b>. That is the zone
+model, not the ruling's mechanism. <code>--relocate=&lt;maxR&gt;</code> keeps walking — rings at
+5·8·11·13·15·17·20·24·27·30·35·40·48·60·72·85·100 m, eight bearings a ring — until the shipped
+<code>solveArena</code> accepts, and records the ring it accepted at. One run is therefore the whole
+curve: coverage(R) = the cells whose first accepting ring is ≤ R.</p>
+
+<table>
+<tr><th>search radius</th><th class="n">stages</th><th class="n">rate</th><th class="n">meadow 59</th><th class="n">forest 48</th><th class="n">crag 24</th><th class="n">water 29</th></tr>
+<tr><td>11 m, one bearing <i>(shipped — the control)</i></td><td class="n">103/160</td><td class="n warn">64.4%</td><td class="n">83.1%</td><td class="n bad">47.9%</td><td class="n">75.0%</td><td class="n bad">44.8%</td></tr>
+<tr><td>5 m</td><td class="n">143/160</td><td class="n">89.4%</td><td class="n good">100%</td><td class="n">81.3%</td><td class="n">95.8%</td><td class="n">75.9%</td></tr>
+<tr><td>8 m</td><td class="n">158/160</td><td class="n">98.8%</td><td class="n good">100%</td><td class="n">97.9%</td><td class="n good">100%</td><td class="n">96.6%</td></tr>
+<tr><td>11 m</td><td class="n">159/160</td><td class="n">99.4%</td><td class="n good">100%</td><td class="n good">100%</td><td class="n good">100%</td><td class="n">96.6%</td></tr>
+<tr><td><b>13 m</b></td><td class="n"><b>160/160</b></td><td class="n good"><b>100%</b></td><td class="n good">100%</td><td class="n good">100%</td><td class="n good">100%</td><td class="n good">100%</td></tr>
+<tr><td>15 · 20 · 30 · 40 · 60 · 100 m</td><td class="n">160/160</td><td class="n good">100%</td><td class="n good">100%</td><td class="n good">100%</td><td class="n good">100%</td><td class="n good">100%</td></tr>
+</table>
+
+<div class="box">
+<h3 style="margin-top:0">THE BINDING VARIABLE WAS NEVER DISTANCE. IT WAS BEARING.</h3>
+<p><b>41 of the 57 cells the shipped behaviour refuses stage at the SAME 5 m radius, on a different
+compass bearing.</b> Fourteen more need 8 m, one needs 11 m, one needs 13 m. The 64.4% was measuring a
+search that tried <i>one</i> direction out of the road and then gave up — not a world that will not
+hold a fight. Nothing beyond 13 m is ever reached, so the 100 m the ruling was willing to pay is not
+needed and the curve is flat from 13 m to 100 m.</p>
+</div>
+
+<table>
+<tr><th>relocation distance</th><th class="n">p50</th><th class="n">p90</th><th class="n">max</th></tr>
+<tr><td>all 160 cells, road cell &rarr; where the fight stages</td><td class="n">5.0 m</td><td class="n">8.0 m</td><td class="n">13.0 m</td></tr>
+<tr><td>the 57 cells the control refused, road cell &rarr; fight</td><td class="n">5.0 m</td><td class="n">8.0 m</td><td class="n">13.0 m</td></tr>
+<tr><td>the 57, measured from where the control had put them</td><td class="n">5.7 m</td><td class="n">12.0 m</td><td class="n">15.0 m</td></tr>
+</table>
+<p><b>What that means for the arrival.</b> Typical relocation is <b>one sideways step, not a journey</b>:
+a body already 5 m off the road ends up 5.7 m from where a naive walk put it, and the worst case in
+160 cells is 15 m. An arrival staged as a short walk — or simply as the opening camera move already in
+<code>CAM.shots.round</code> — covers the whole distribution. Nothing here justifies a travel montage,
+a fade, or a cut.</p>
+
+<p><b>The residual class is empty.</b> Zero of 160 cells fail at any radius, no cell hit the per-cell
+solve cap, and every accepted site was re-confirmed by calling the shipped <code>solveArena</code>
+itself (<code>staged.planOk</code> true, 160/160). The named colliders still refuse <i>sites</i> —
+across every rejected candidate the census is <code>emberbrook_4</code> (895), <code>emberbrook_3</code>
+(269), <code>dellhollow_2</code> (206), <code>oldgate_3</code> (188), <code>emberbrook_1</code> (128),
+<code>emberbrook_5</code> (88), <code>emberbrook_6</code> (71), the <code>ground_valley_*</code> shells
+(103) and <code>portal_markers_2</code> (19) — but not one of them dead-ends a <i>cell</i>: the search
+walks around the town's own collider every time. <b>Fixing them at source would buy a shorter walk, not
+a fight that could not otherwise happen</b>, so it is a polish item and not a blocker. The dominant
+refusal is not a collider at all: <b>14 484 of the ~16 900 slot rejections are "occluded from the
+battle camera"</b> — foliage and terrain between the boom and a body — which is why turning the arena
+(bearing) is what rescues a cell and why moving it further does almost nothing.</p>
+
+<div class="box">
+<h3 style="margin-top:0">HOW A 40-MINUTE SWEEP FITS IN 37 MINUTES: A SCREEN THAT CANNOT LIE</h3>
+<p>A failing <code>solveArena</code> costs ~20 s (40 placements × 4 slots × up to 11 rays each against
+the drawn scene). Searching 136 candidates a cell at that price is four hours. So each candidate is
+first offered ten <b>geometry-only</b> placements (<code>vis:false</code> — floor and
+<code>SIM.blocked</code>, no rays), which return the yaws that can hold the formation at all; only
+those yaws pay for the visibility test. <code>vis:false</code> is a strict <i>relaxation</i> of
+<code>vis:true</code>, so a yaw it refuses can never pass with the camera test on and the verdict is
+identical <b>by construction</b>. It was also proved by measurement: <code>--verify</code> runs the
+real <code>solveArena</code> on every candidate alongside the screen —
+<b>10 candidates, 0 disagreements</b>. Total cost of the 160-cell sweep: 307 candidates reached,
+26 screened out, 281 full solves, 37 min wall clock.</p>
+</div>
+
 <h2>Q3 — TEARDOWN</h2>
 <p>A real battle (autopilot, speed 0, played to victory) at a spot the solver accepts, with
 <code>BattleWorld.created = 1 / refused = 0</code> proving the <b>world</b> path is what was torn
@@ -384,10 +459,12 @@ the light model is already the field's.</p>
 <h2>HOW TO REPRODUCE</h2>
 <pre class="mono" style="background:#0b0906;border:1px solid var(--edge);padding:12px 14px;border-radius:5px;overflow-x:auto">
 node tools/battle_world_probe.mjs --mode=place    --port=3000 --n=160   # the distribution
+node tools/battle_world_probe.mjs --mode=place    --port=3000 --n=160 --relocate=100   # Q2b, the radius curve
+node tools/battle_world_probe.mjs --mode=place    --port=3000 --n=4 --relocate=13 --verify  # the screen, proved
 node tools/battle_world_probe.mjs --mode=battle   --port=3000           # the captures
 node tools/battle_world_probe.mjs --mode=fps      --port=3000           # vsync off, both paths
 node tools/battle_world_probe.mjs --mode=teardown --port=3000           # the residue table
 node tools/battle_world_probe.mjs --mode=regress  --port=3000           # flag OFF proof
 </pre>
 <p class="sub">Receipts in this directory: <code>placement.json</code> · <code>battle.json</code> ·
-<code>fps.json</code> · <code>teardown.json</code> · <code>regress.json</code>.</p>
+<code>fps.json</code> · <code>teardown.json</code> · <code>regress.json</code> · <code>relocate.json</code> · <code>factorial.json</code>.</p>
