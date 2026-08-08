@@ -718,6 +718,20 @@ git runs here, on branch `migration/3d-hybrid`.
   which mutes at source).
 
 ## Scope rulings (user decisions that bound the work)
+- **THE BATTLE FIGHTS IN THE REAL WORLD, AND THERE IS NO DIORAMA FALLBACK** (user ruling
+  2026-08-08, leaning to the world arena and then ruling out the fallback outright: *"if we go
+  with the world setup then we shouldn't be maintaining the diorama. Rather if we need a
+  fallback, we should just fallback to the 'nearest feasible' place"*). When placement refuses a
+  spot, RELOCATE WITHIN THE WORLD — do not switch arenas. Their reasoning, which is the durable
+  part: **the diorama is itself a teleport, to a generic place the player will never see again,
+  so moving 100 m to somewhere they recognise is STRICTLY BETTER than a parallel universe.**
+  DISTANCE IS THEREFORE NOT THE CONSTRAINT — the search radius is whatever gives full coverage.
+  I argued against this by invoking the story layer's no-teleport rule and WAS WRONG: that rule
+  governs BEATS (so narrative cannot skip the walk between towns), not where a modal battle
+  stages. What still binds: teardown stays total (the player is returned exactly where they
+  were), and maintaining two arenas is what produced the two-lighting-models defect in the first
+  place. NOTE the measured baseline this ruling acts on: the 64.4% staging rate ALREADY includes
+  an 11 m nearest-feasible walk, so "search further" is the lever, not a new idea.
 - **SINGLE-PLAYER FOR THE PROTOTYPE** (user ruling 2026-08-02, verbatim: "Let's leave the
   two-player version of the game as an upgrade for later, and in the prototype we can keep
   things as single-player"). The 3D runtime is single-body and STAYS so. Chapter One's climax
