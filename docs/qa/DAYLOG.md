@@ -20904,3 +20904,99 @@ window (walk=275 both sides).
 OWED, NAMED: the deploy lane published the round-4 plates at 23:15 yesterday and these five
 supersede four of them (gate, weave, crossing, lockfive) plus cottage. A FOLLOW-UP DEPLOY IS
 OWED — this lane did not race it.
+
+------------------------------------------------------------
+## 2026-08-08 ~17:20 — DEPLOY LANE: round 10 is LIVE AND VERIFIED (29/0). Dellhollow round 5 is on the site, and this is the first deploy since round 3 whose BUNDLES legitimately moved
+
+**WHY THIS DEPLOY EXISTED.** Round 5 closed with `OWED, NAMED` in its own DAYLOG entry: five
+rebaked plates superseding four the previous deploy had published, and the graphics lane
+deliberately did not race the deploy. Discharged here.
+
+Built from a throwaway `git worktree` detached at `origin/migration/3d-hybrid` —
+**c0aeb55b** (a65012db generator+instrument+master, af8aee81 the five plates, 24d6315d both
+bundles, c0aeb55b docs/board) — with `EB_BUILD_CACHE` pointed at the main repo's warm
+`.build-cache`. `build-static --compress`: **392 files / 520.7 MB / 10.9 s**, cache
+**244 hit / 9 miss / 9 stored**. Three build gates green: every `.glb` binary glTF,
+**16 bundle GLBs byte-identical to `public/`** on POSITION + indices, **256 referenced paths
+resolve** (237 via the `.webp` rewrite). Local `static_verify`: **ALL GREEN 29/0**.
+
+`deploy-ghpages.sh dist` published **b268fb44** (push verified by the script; pre-flight
+printed the clean `578 MB, 393 files`). LIVE stamp `2026-08-08T15:33:43.592Z` ->
+**`2026-08-08T17:14:22.381Z`**; `static_verify --url https://junshern.github.io/emberbrook`:
+**ALL GREEN 29/0**, zero failed requests, zero unexpected 4xx/5xx, zero console errors. The
+live screenshot is the default battle diorama — Vesper and two Duskpads lit and shadowed,
+turn rail with rendered portraits — i.e. unchanged from round 9, which is correct: nothing
+this round touches a battle asset.
+
+**THE NINE CACHE MISSES ARE THE WHOLE DELTA, AND THEY RECONCILE TO THE BYTE.**
+`git diff --stat 8da5d6a7 c0aeb55b -- public/` names 17 paths. Nine of them are encoded
+artifacts and all nine missed: the five `del-cine/cameras/{cottage,crossing,gate,lockfive,
+weave}/bg.png`, `del-cine/stylized.png`, `townwalk/stylized.png`, and **both `scene.glb`**.
+The build's own line reads `lossy 7 plates 41.5 MB -> 3.8 MB`, and those seven sources sum to
+43,491,508 bytes = **41.48 MiB** — the diff and the encoder agree exactly. The other eight
+diff paths are the five `depth.png` (never encoded — `SWAP_DENY`, staged as lossless PNG),
+`cine.json`, `meta.json`, and `townwalk/background.png`, which the build never claims at all
+(the inclusion-not-exclusion rule earning its keep for the 76th time).
+
+**THE BUNDLES MOVED THIS ROUND AND THAT IS THE POINT, NOT A RED FLAG.** Rounds 8-9 were
+colour-only and their `scene.glb` files were expected identical; round 5 moved master
+geometry, so `cine_bake --glb` and `town_export.py` both re-ran (walk=275 both sides). The
+scene-geometry gate is what makes a moved bundle safe to ship rather than frightening: it
+digests POSITION + every primitive's indices in the **compressed output** against `public/`,
+and it passed on all 16 with two of them freshly re-exported and freshly DRACO'd.
+
+**THE ART IS ON THE SITE, BY SHA, NOT BY STAMP.** Fetched from the live URL and compared to
+`dist` — eight for eight:
+
+| path | live bytes | live vs dist |
+|---|---:|---|
+| `del-cine/cameras/cottage/bg.webp` | 697300 | **sha256 MATCH** `806c8081…` |
+| `del-cine/cameras/crossing/bg.webp` | 495192 | **sha256 MATCH** `149276bc…` |
+| `del-cine/cameras/gate/bg.webp` | 728862 | **sha256 MATCH** `9c903316…` |
+| `del-cine/cameras/lockfive/bg.webp` | 415818 | **sha256 MATCH** `18cbb445…` |
+| `del-cine/cameras/weave/bg.webp` | 670484 | **sha256 MATCH** `aaa99e19…` |
+| `del-cine/stylized.webp` | 728862 | **sha256 MATCH** `9c903316…` (= gate, as in round 9) |
+| `del-cine/scene.glb` | 36453848 | **sha256 MATCH** `f7030691…` |
+| `townwalk/scene.glb` | 36510060 | **sha256 MATCH** `5546744d…` |
+
+**AND THE FOUR SUPERSEDED PLATES CARRY NEW BYTES, CHECKED AT BOTH ENDS.** At source, every
+one of the five `bg.png` differs between the round-9 deploy's tree (`8da5d6a7`) and this one:
+gate `5212abae…`->`ad572de3…`, weave `d5878e33…`->`aea1e9de…`, crossing `171f9cd8…`->
+`55b04b05…`, lockfive `937245e0…`->`ace2ef62…`, cottage `7ed79fb1…`->`87e36fd8…`. On the wire
+the shipped sizes moved off the round-9 table in all five rows (gate 726034->728862, weave
+673082->670484, crossing 494832->495192, lockfive 415084->415818, stylized 726034->728862).
+No stale plate survived the supersession.
+
+**DEPTH MOVED THIS TIME — SAID PLAINLY, BECAUSE ROUND 9 PROVED THE OPPOSITE.** Round 9's
+headline was `live == dist == previous deploy` on all four `depth.png`, i.e. colour-only.
+Here all five depth plates MOVED against `8da5d6a7` (`861ced83…`->`d9445292…` on gate, and so
+on), which is exactly what "master geometry moved" must look like — a round that re-exports
+bundles and leaves depth untouched would be the suspicious one. What still has to hold is
+that the PIPELINE does not move it: `public/` == `dist` == live, byte-identical on all five.
+So the depth bytes changed in the BAKE, by intent, and changed nowhere else.
+
+**NOT REBAKED, AND VISIBLY SO.** The generator fix also repaired a silent texture regression
+on `lockhead` and `loop-stairs` (15.3% -> 0.004% changed pixels), but the graphics lane
+refused to rebake them at the measurable floor. The receipt that the refusal is what shipped:
+both plates' `bg.png` are **byte-identical between `8da5d6a7` and `c0aeb55b`**
+(`59c3ff12…`, `9fb03d8e…`), so the live site still serves round-4's bytes for them. The
+repair is latent in the generator, not on the site — which is the honest state, and the next
+lane to rebake those two cameras is the one that ships it.
+
+**THE ~70 s PAGES TELL HOLDS ON A SIXTH SAMPLE.** Stamp moved between the 60 s and 75 s poll
+after the push landed — band now 63/72/73/75/~75 s across six deploys. No stall, no re-POST
+needed. The push itself ran ~50 s for a 578 MB tree with two 36 MB bundles in the delta;
+launched detached per the standing rule.
+
+**GATES NOT RUN, NAMED.** `transition_test` skipped for the third deploy running: `uptime`
+read load 3.25/2.99/4.60 and swap **3.90 of 5.12 GB (76%, above the 75% gate)** with the user
+at the machine. Same reasoning as rounds 8-9 — a test run under the condition it is trying to
+rule out is not evidence, and a number reported from a run that never happened is worse than
+a gap. The build's own reference-integrity advisory (`js/dialogue.js` `expr-warm.png`,
+`js/followers.js` `mochi/pose-front.png`) is the standing documented pair, unchanged: both
+are `<img>.src`/`fetch` loads the shim rescues, and the live run's zero-404 audit is the
+receipt.
+
+Cleanup: this lane's worktree removed, scratch `dist` and both `static-verify*.png` deleted,
+zero orphaned Chrome (`ppid 1` root check clean). The two stale worktrees from earlier
+sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
