@@ -20412,3 +20412,77 @@ Receipt: `docs/qa/battle-world/factorial.json`
 (`arms.newvis-yawpitch-firstyaw`, `yaw_attribution.restoration_MEASURED`,
 `how7` — which also records that reproducing arms 3-6 now needs
 `BW.CAM.solve.yawKeep = 4` set in the page, since the default moved).
+
+---
+
+## 2026-08-08 ~15:30 — DEPLOY LANE: round 8 is LIVE AND VERIFIED (29/0). `?arena=world` now gives the shot language on the live site
+
+**WHY THIS DEPLOY EXISTED.** The world-arena camera language and its swing fix were
+committed but not live, so `?arena=world` on the deploy answered with the spike's old
+fixed pose — the user was about to make the diorama-versus-real-valley ruling BY LOOKING,
+and the live site would have shown them the wrong half of the proposal. A design ruling
+made against a stale deploy is a ruling made about nothing.
+
+Built from a throwaway `git worktree` detached at `origin/migration/3d-hybrid` —
+**d6b3492c** — with `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`
+(the main tree was dirty with eight lanes' art edits, as usual). `build-static --compress`:
+**392 files / 520.8 MB / 2.5 s**, cache **253 hit / 0 miss / 0 stored**. Three build gates
+green: every `.glb` binary glTF, **16 bundle GLBs byte-identical to `public/`** on
+POSITION + indices, **256 referenced paths resolve** (237 via the `.webp` rewrite). Local
+`static_verify`: **ALL GREEN 29/0**.
+
+`deploy-ghpages.sh dist` published **b3598f3b** (push verified by the script; pre-flight
+printed the clean `579 MB, 393 files`). LIVE stamp `2026-08-08T08:33:33.836Z` ->
+**`2026-08-08T14:13:45.715Z`**; `static_verify --url https://junshern.github.io/emberbrook`:
+**ALL GREEN 29/0**, zero failed requests, zero unexpected 4xx/5xx, zero console errors.
+
+**WHAT IT ADDS.** Five commits: `43eafac4` `53d2f9c5` `c06a6629` (the camera language),
+`c77ee96a` (the diorama's `sides()` accessor) and `3158f46a` (the yaw fix — rank the pitch,
+keep the first placeable yaw).
+
+**BYTE COMPARISON, live vs `dist`, sha256-identical on all three** — and the sizes against
+round 7 are what prove the new code shipped rather than a new stamp:
+
+| file | bytes | was (round 7 live) |
+|---|---:|---|
+| `js/battle_world.js` | 93181 | 49778 |
+| `js/battle_stage3d.js` | 192301 | 191322 |
+| `js/battle_turnbased.js` | 118267 | 118267 — **unchanged** |
+
+**THE DEFAULT IS UNCHANGED, PROVEN FOUR WAYS RATHER THAN ASSERTED.** The ask was to prove
+it, and the size table above is only the first half of the answer:
+
+1. **`git diff --stat e8bdbde0 d6b3492c -- public/js public/play3d.html public/game public/lib`
+   names TWO files.** Everything else in the runtime — `play3d.html`, `battle_turnbased.js`,
+   every `game/*.json`, `lib/three.min.js` — is byte-identical to what round 7 already
+   shipped. The diff is the proof; nothing had to be reasoned about.
+2. **The entire `battle_stage3d.js` delta is 14 lines and 12 of them are comment**: one
+   `sides()` accessor appended to the returned object literal, which allocates a fresh `{}`
+   and reads `bodies[id].side`. It mutates nothing and no shipped caller invokes it.
+3. **`battle_world.js` returns before it does anything.** The flag is read once
+   (`FLAG = Q.get('arena') === 'world'`), and without it the module assigns ONE frozen
+   object — `{version:1, on:false, installed:false, why:'flag off — open with ?arena=world'}`
+   — and returns: no patch, no listener, no allocation, above every line of the 822 added.
+4. **Empirically, on the live site.** The live `play3d.html` still carries
+   `<script src="js/battle_world.js"></script>` (line 5054) — the tag is there, the module
+   self-disables — and the live `static_verify` run went through a real battle at 29/0 with
+   **zero console errors**. Its screenshot is the DEFAULT DIORAMA: Vesper and two Duskpads on
+   the forest plate, both wolves lit and shadowed, contact shadow under her feet, command
+   menu and the turn-order rail with its rendered wolf portraits. The frame is round 7's
+   frame. That is what "the flag is inert" looks like from outside.
+
+**THE PAGES BUILD BEHAVED, AND THE ~70 s TELL HELD ON A FOURTH SAMPLE.** `b3598f3b`
+produced the documented twin — `errored` 14:18:57Z->14:18:58Z, then `built`
+14:18:58Z->**14:20:13Z (75 s)** — against round 5's 73 s, round 6's 63 s and round 7's 72 s.
+No stall, no re-POST. Read the LIST, never the newest row. The whole publish (pre-flight,
+throwaway repo, force-push, verification, Pages POST) ran in **~50 s** for a three-file
+delta on a 579 MB tree; launched detached per the standing rule. Round-6 doctrine followed
+with zero deviations.
+
+**`transition_test` WAS SKIPPED, DELIBERATELY, AND THE THREAD STAYS OPEN.** The standing
+167/1 wants an idle machine to become 168/0. At the end of this deploy `uptime` read load
+**6.58 / 8.35 / 7.44** and swap **3.96 of 5.12 GB (77%, above the 75% gate)** — zero
+Blender, but the load is the user's own browser and the other lanes. Running it here would
+have reproduced exactly the ambiguity the previous lane already paid to resolve, so this
+lane reports no number rather than a number that could not mean anything. **A test run
+under the condition it is trying to rule out is not evidence.**
