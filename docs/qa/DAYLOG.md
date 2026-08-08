@@ -19680,3 +19680,73 @@ immediately after the harness's own readiness check returned true — the same
 intermittent already filed in docs/qa/ow-refs/LOOP.md as provenance-unknown. The
 re-run passed that section. It is a race between `Page.reload` committing and the
 next `Runtime.evaluate`, not a game defect.
+
+## 2026-08-08 ~06:35 — DEPLOY LANE: round 6 is LIVE AND VERIFIED (29/0). The delta is ONE file, and the Pages build STALLED
+
+Built from a throwaway `git worktree` detached at `origin/migration/3d-hybrid` —
+**27749c3f** — with `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`, the
+recipe round 5 proved (the main tree was dirty with four lanes again).
+`build-static --compress`: **392 files / 520.6 MB / 2.7 s**, cache **253 hit / 0 miss /
+0 stored / 0 demoted**. Three build gates green: every `.glb` binary glTF, **16 bundle
+GLBs byte-identical to `public/`** on POSITION + indices, **256 referenced paths resolve**
+(237 via the `.webp` rewrite) — the same numbers as round 5, which is what a
+one-file delta should look like. Local `static_verify`: **ALL GREEN 29/0**.
+
+`deploy-ghpages.sh dist` published **ea10ca96** (push verified by the script). LIVE stamp
+`2026-08-08T05:34:57.608Z` -> **`2026-08-08T05:54:15.380Z`**;
+`static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**, zero
+failed requests, zero unexpected 4xx/5xx, zero console errors. Screenshot LOOKED AT: the
+Duskpad battle with both wolves lit and shadowed, Vesper's contact shadow under her feet,
+the command menu and the turn-order rail drawn (placeholder foe icons there are the
+battle-audit's standing finding, not a deploy defect).
+
+**WHAT IT ADDS:** exactly one shipped file. `git diff d95f3e04 27749c3f -- public/` is
+`play3d.html | 25 ++++` and nothing else — the RT-scene teardown leak fix (`7545d2fd`):
+`contactShadow`, a page singleton only ever DRAWN in a real-time scene and never given
+back, which took `transition_test` 162/6 -> 168/0. Everything else live was already
+there at round 5 (dpr 2, the Emberbrook fields/skies, the whole battle wave).
+
+**THE RECEIPT IS A BEFORE/AFTER PAIR, NOT A STAMP.** `play.html` was fetched from the
+live URL BEFORE the push (`e8fc1dee…`, `grep -c contactShadow.geometry.dispose` = **0**)
+and after (`7ff97c64…`, count = **1**). Five files byte-compared live vs `dist`, all
+sha256-identical: `play.html` and `play3d.html` (346532, the changed file),
+`js/battle_stage3d.js` (176890), `game/lightrigs.json` (4081) and
+`emb-cine/pondlane/bg.webp` (902084 — unchanged from round 5, the control).
+
+### AN INCREMENTAL PUSH IS MINUTES, NOT AN HOUR — the 60-90 min figure was FULL-TREE
+
+Round 5's transfers ran 60-90 minutes at 70-143 KB/s and that number went into the
+handover as the cost of a deploy. **It is the cost of a FIRST push.** This one shipped
+the same 579 MB tree in **under 5 minutes**, because git sends only the objects the
+remote lacks and `gh-pages` already held every unchanged blob — the throwaway repo is
+new each time, but the OBJECTS are not. So refreshing the demo for a small delta is
+cheap; only a deploy that moves a lot of art pays the hour. Launch detached anyway
+(`(nohup … &)`; **`setsid` does not exist on macOS**) — a foreground tool call still
+reaps a push that outlives it.
+
+### A PAGES BUILD CAN STALL IN `building` FOREVER, AND ONLY A SECOND POST CLEARS IT
+
+New failure mode, and it is NOT the documented errored/built pair. On `ea10ca96` the
+build list read:
+
+    errored  06:00:38Z -> 06:00:39Z   ea10ca96   "Page build failed."   <- the usual twin
+    errored  06:00:39Z -> 06:32:47Z   ea10ca96   "Page build failed."   <- STALLED 32 min
+    built    06:32:47Z -> 06:33:50Z   ea10ca96                          <- re-queued, 63 s
+
+The middle row sat in `building` for **32 minutes with `updated_at` frozen at
+`created_at`** while the live stamp never moved; it only flipped to `errored` at
+**06:32:47Z — the exact second the re-queued build was created**, i.e. it was DISPLACED
+by the new POST rather than failing on its own. The tree was not the cause: nothing
+changed between the stalled attempt and the successful one, and the same 68.53 MB
+`emb-townwalk/scene.glb` large-file warning rides every push including round 5's `built`.
+
+**THE TELL, and it is cheap:** a healthy Pages build updates within ~70 s (round 5:
+73 s; this one: 63 s). If `updated_at == created_at` and more than ~3 minutes have
+passed, the build is stuck — re-POST `repos/:owner/:repo/pages/builds` (the call
+`deploy-ghpages.sh` already makes once) instead of polling the stamp, which will never
+move. Polling alone cost 30 minutes here. And read the LIST, never the newest row:
+two of the three rows on this commit say `errored` and the deploy is fine.
+
+Note `gh api .../compare/<round5>...<round6>` returns **404 "no common ancestor"** — each
+deploy is its own single-commit throwaway repo, so there is no gh-pages-side diff to read.
+The source-side `git diff` plus the byte comparison above is the whole audit trail.
