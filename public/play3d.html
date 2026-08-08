@@ -112,6 +112,29 @@ fetch('game/worldbounds.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=
 }).catch(()=>{});
 sceneParams(Q0);
 const W=1344,H=768;
+// ===== THE DEVICE PIXEL RATIO (2026-08-08) ==================================
+// This page shipped for months with NO setPixelRatio at all, so the drawing
+// buffer was 1344x768 whatever the panel was, and a retina display blew every
+// contrasty silhouette up into 2x2 device-pixel blocks. That is the user's own
+// long-standing "pixelated seam" complaint, and it is not a sharpening request:
+// EVERY BAKED PLATE IS 2688x1536 — exactly twice this canvas — so dpr 1 was
+// downsampling the authored art by half before the player ever saw it. dpr 2 is
+// not "sharper than authored", it is finally 1:1 with the art.
+// COST, measured (docs/qa/dpr, M1 Max, vsync off = the renderer's true cost):
+//   plate scenes (del-cine lockhead)  3.5 -> 3.8 ms/frame  (+9%, draw-call bound)
+//   overworld     (ow-valley ridge)   3.8 -> 12.7 ms/frame (3.3x, p5 75 fps)
+// vsync on, 120 Hz: towns stay at 120; the overworld drops to a locked 60 with
+// ~5% of frames on a 25 ms hitch. 60 holds everywhere measured, worst scene with
+// ~24% of the 16.7 ms budget spare. Capped at 2 — the same expression
+// battle_stage3d.js already uses, so the field and the battle finally agree.
+// ?dpr=1 restores the old behaviour; ?dpr=<n> forces any ratio (clamped 0.5..4).
+const PR=(function(){ const q=Q0.get('dpr');
+  if(q!=null && isFinite(parseFloat(q))) return Math.max(0.5,Math.min(4,parseFloat(q)));
+  return Math.min(window.devicePixelRatio||1, 2); })();
+// The composer's render target, GTAO, bloom and the FXAA texel all derive from
+// THESE, never from W,H — setPixelRatio alone would leave the post chain pinned
+// at 1344x768 and silently cap the whole real-time path back to today's pixels.
+const RW=Math.max(2,Math.round(W*PR)), RH=Math.max(2,Math.round(H*PR));
 // per-character sheet layout (cols,rows,dirs); extend as cast is added
 const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2,n:6}} };
 const CFG=SHEETS[CHAR]||SHEETS.vesper;
@@ -160,7 +183,11 @@ function loadMeta(ep){
       const f=walkFloors(P.x,P.z); P.y=f.length?f.reduce((a,b)=>Math.abs(a-j.spawn[1])<Math.abs(b-j.spawn[1])?a:b):j.spawn[1];
       ch.position.set(P.x,P.y,P.z);}}}).catch(()=>{});
 }
-const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false);
+const R=new THREE.WebGLRenderer({antialias:true});
+// ORDER MATTERS: setPixelRatio BEFORE setSize, and setSize's third argument stays
+// false — the canvas is laid out by the stylesheet (`canvas{width:100%;height:100%}`),
+// so three must set the DRAWING BUFFER (W*PR x H*PR) and leave the CSS box alone.
+R.setPixelRatio(PR); R.setSize(W,H,false);
 // ===== COLOUR MANAGEMENT (three r185; r128 had none) =========================
 // Both of these are r185 DEFAULTS and are written out anyway, because the whole
 // point of the upgrade is that the pipeline's colour handling is now declared
@@ -912,11 +939,24 @@ function pfxBuild(){
   const rt=new THREE.WebGLRenderTarget(W,H,{type:THREE.HalfFloatType, samples:PFX.samples});
   rt.texture.name='pfx.rt1';
   const composer=new THREE.EffectComposer(R, rt);
+  // THE COMPOSER IS THE SECOND HALF OF THE PIXEL-RATIO FIX (2026-08-08). When it
+  // is handed a render target it takes that target's PIXEL size as its CSS size
+  // (EffectComposer.js: `this._width = renderTarget.width`), so the whole post
+  // chain stayed pinned at 1344x768 and setPixelRatio on the renderer alone would
+  // have capped the real-time path right back to today's resolution — invisibly,
+  // since the frame still fills the canvas. The rt is therefore constructed at the
+  // CSS size and resized once here: setSize() multiplies by the composer's own
+  // _pixelRatio (= R.getPixelRatio() = PR, read at construction) and re-sizes
+  // rt1, rt2 and every pass together. This is a RESIZE ONLY — no colour space is
+  // touched, because r185 renders into a non-XR target in the LINEAR working space
+  // whatever the target declares, and declaring SRGBColorSpace would allocate
+  // SRGB8_ALPHA8 and round-trip the encode away (see the three-upgrade board).
+  composer.setSize(W,H);
   const render=new THREE.RenderPass(scene, cam);
   composer.addPass(render);
   let ao=null;
   if(PFX.aoIntensity>0){
-    ao=new THREE.GTAOPass(scene, cam, W, H);
+    ao=new THREE.GTAOPass(scene, cam, RW, RH);
     ao.output=THREE.GTAOPass.OUTPUT.Default;
     ao.blendIntensity=PFX.aoIntensity;
     ao.updateGtaoMaterial({radius:PFX.aoRadius, thickness:PFX.aoThickness,
@@ -927,7 +967,9 @@ function pfxBuild(){
     // pass.setSize(composerWidth, composerHeight) on the way in, so a GTAOPass
     // constructed at half res is silently resized back to full and the saving is
     // measured as zero — which is exactly what the first run of this reported.
-    if(PFX.aoRes!==1) ao.setSize(Math.max(2,Math.round(W*PFX.aoRes)), Math.max(2,Math.round(H*PFX.aoRes)));
+    // aoRes is a fraction of the COMPOSER's effective size, not of 1344x768 — at
+    // dpr 2 the half-res AO buffer is 1344x768, which is what "half" has to mean.
+    if(PFX.aoRes!==1) ao.setSize(Math.max(2,Math.round(RW*PFX.aoRes)), Math.max(2,Math.round(RH*PFX.aoRes)));
     if(Q.get('gbuf')!=='0') gbufArm(ao);          // see THE G-BUFFER IS COLOUR-BLIND
   }
   // the aerial split rides GTAO's depth, so it exists only where GTAO does, and
@@ -979,7 +1021,7 @@ function pfxBuild(){
     // a wall; the STRENGTH stays, so a lit window still glows — it just glows the
     // size of a window. Paired with OWEMIT 3.4 -> 2.2 below; the two are one fix.
     const BR=OWCAM ? PFXNUM('bloom_r_ow',0.075) : PFX.bloomRadius;
-    bloom=new THREE.UnrealBloomPass(new THREE.Vector2(W,H),
+    bloom=new THREE.UnrealBloomPass(new THREE.Vector2(RW,RH),
       PFX.bloomStrength, BR, PFX.bloomThreshold);
     composer.addPass(bloom);
   }
@@ -1003,9 +1045,12 @@ function pfxBuild(){
   // knows where the sky is needs a mask and a mask is another thing to get wrong.
   // three's bundle carries no SMAAPass and no FXAAShader (checked, not assumed), so
   // this is written out rather than imported.
+  let aa=null;
   if(PFXNUM('pfx_aa',1)>0){
-    composer.addPass(new THREE.ShaderPass({
-      uniforms:{ tDiffuse:{value:null}, texel:{value:new THREE.Vector2(1/W,1/H)},
+    aa=new THREE.ShaderPass({
+      // texel is ONE DEVICE PIXEL. Left at 1/1344,1/768 the FXAA taps would land a
+      // full 2 px away at dpr 2 and the pass would blur instead of antialias.
+      uniforms:{ tDiffuse:{value:null}, texel:{value:new THREE.Vector2(1/RW,1/RH)},
                  aa:{value:PFXNUM('pfx_aa',1)}, dith:{value:PFXNUM('pfx_dither',0.45)} },
       vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
       fragmentShader:[
@@ -1039,11 +1084,26 @@ function pfxBuild(){
         '  float n=fract(52.9829189*fract(dot(gl_FragCoord.xy, vec2(0.06711056,0.00583715))));',
         '  o+=(n-0.5)*(dith/255.0)*2.0;',
         '  gl_FragColor=vec4(o,m.a);',
-        '}'].join('\n')}));
+        '}'].join('\n')});
+    composer.addPass(aa);
   }
+  // A RESIZE MUST STAY A RESIZE (2026-08-08). EffectComposer.setSize() re-sizes
+  // rt1, rt2 and EVERY pass to the new effective size — which silently undoes the
+  // half-res AO above (the same trap the addPass comment already records) and
+  // leaves the FXAA texel pointing at the old pixel. Both are re-derived here, so
+  // a composer.setSize()/setPixelRatio() from anywhere lands a consistent chain
+  // instead of a half-fixed one. No colour space is touched: a resize is a resize.
+  const _setSize=composer.setSize.bind(composer);
+  composer.setSize=function(w,h){
+    _setSize(w,h);
+    const ew=Math.max(2,Math.round(w*composer._pixelRatio)), eh=Math.max(2,Math.round(h*composer._pixelRatio));
+    if(ao&&PFX.aoRes!==1) ao.setSize(Math.max(2,Math.round(ew*PFX.aoRes)), Math.max(2,Math.round(eh*PFX.aoRes)));
+    if(aa) aa.material.uniforms.texel.value.set(1/ew,1/eh);
+  };
   window.__postfx={on:true, family:RT?'realtime':'plate(forced)', ms:+(performance.now()-t0).toFixed(1),
-                   passes:composer.passes.length, ao:!!ao, bloom:!!bloom, grade:!!grade, ...PFX};
-  return {composer, render, ao, bloom, grade, rt};
+                   passes:composer.passes.length, ao:!!ao, bloom:!!bloom, grade:!!grade, ...PFX,
+                   pr:PR, rtPx:[rt.width,rt.height], aoPx:ao?[ao.width,ao.height]:null};
+  return {composer, render, ao, bloom, grade, rt, aa};
 }
 // THE COMPOSER IS SCENE-SCOPED, and it is scene-scoped for renderer.info.
 // transition_test walks 20+ doors and requires renderer.info to come back to its
@@ -4182,9 +4242,15 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
    // The window FOLLOWS the character instead of sitting at one scene's coordinates:
    // eighteen fixed cameras put them in eighteen different places on screen.
    const s=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.85,P.z).project(cam);
-   const cx=Math.round((s.x*0.5+0.5)*W), cy=Math.round((s.y*0.5+0.5)*H);
-   const w=Math.min(280,W), h=Math.min(300,H);
-   const x0=Math.max(0,Math.min(W-w,cx-(w>>1))), y0=Math.max(0,Math.min(H-h,cy-(h>>1)));
+   // IN DEVICE PIXELS, off the canvas itself — readPixels indexes the DRAWING
+   // BUFFER, which is W*PR x H*PR since 2026-08-08. Sized off the constants this
+   // read the character's window at a quarter of the frame's area, in the wrong
+   // corner. The 280x300 window is still the same picture: it scales with PR, so
+   // magentaPixels scales as PR^2 and every threshold on it is a lower bound.
+   const cv=R.domElement, BW=cv.width, BH=cv.height, k=R.getPixelRatio();
+   const cx=Math.round((s.x*0.5+0.5)*BW), cy=Math.round((s.y*0.5+0.5)*BH);
+   const w=Math.min(Math.round(280*k),BW), h=Math.min(Math.round(300*k),BH);
+   const x0=Math.max(0,Math.min(BW-w,cx-(w>>1))), y0=Math.max(0,Math.min(BH-h,cy-(h>>1)));
    const gl=R.getContext(),px=new Uint8Array(w*h*4);
    gl.readPixels(x0,y0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,px);
    let mag=0;for(let i=0;i<w*h;i++){if(px[i*4]>200&&px[i*4+2]>200&&px[i*4+1]<80)mag++;}
