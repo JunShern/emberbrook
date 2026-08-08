@@ -20744,3 +20744,163 @@ run's zero-404 audit is the receipt.
 Cleanup: this lane's worktree removed, scratch `dist` and both `static-verify*.png` deleted,
 zero orphaned Chrome (`ppid 1` root check clean). The two stale worktrees from earlier
 sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+------------------------------------------------------------
+## 2026-08-08 — DELLHOLLOW GRAPHICS ROUND 5: THE FLAT TOP IS NOT IN ANY FRAME, THE
+## STRAIGHT LINE IS A GRAZING SILHOUETTE, AND THE WALL'S OWN GENERATOR WAS A TIME BOMB
+
+Board: docs/qa/dellhollow-graphics/index.html (round-5 section). Judge run
+docs/qa/redteam/run-20260808-170205-calib/index.html. Commits a65012db (generator + instrument + master), af8aee81 (the five plates), 24d6315d (both bundles) (generator + instrument + master, then the five plates and the two bundles).
+
+ROUND 4 HANDED THIS OVER AS ROUND 5'S ONE ITEM: "`cliff_town_a`/`cliff_town_d`, the south
+town wall, x 58..135, TOP CLAMPED PERFECTLY FLAT AT z = 37.0 ... a dead-straight silhouette
+against the sky." THREE REFUTATIONS, and the third is the one worth keeping.
+
+(1) THE FLAT TOP IS NOT VISIBLE IN A SINGLE FRAME. `z = 37.0` is real — every top-row vertex
+sits exactly there, by the builder's own constant `Z1` — but a marched ray census of ALL
+FIFTEEN solved cameras (grid 200x112, tools/dh_pixel_census's `_march` through a small probe)
+finds **ZERO columns anywhere** in which any `cliff_town_*` patch is silhouetted against the
+world background, and the background owns **0.00-0.03% of every frame**. DELLHOLLOW IS A
+CLOSED GORGE: THERE IS NO SKY IN IT TO BE FLAT AGAINST. The builder's own docstring had
+already claimed this ("no solved camera stands above z = 36.5 and every one looks down") and
+the claim STANDS; the handover inherited a plan-view fact as a picture fact.
+
+(2) THE JUDGE NEVER SAID "SKY" OR "HORIZONTAL". Its three naive passes on gate each named a
+VERTICAL line, independently, at bboxes u 0.466..0.478 / 0.46..0.48 / 0.472..0.478, v 0..0.25:
+"a sharp vertical seam", "cuts off abruptly in a straight vertical line", "abruptly terminates
+in a sharp vertical edge against the background mountain".
+
+(3) SO WHAT IT IS. A SEAM CENSUS — every pixel where a `cliff_town_*` patch is horizontally
+adjacent to `cliff_east_closure`, at grid 240x135 on all fifteen cameras — finds the seam on
+exactly THREE plates and puts it, on gate, at **u 0.465..0.477**: the judge's own box to three
+decimals. Its wall-side hit points run **x 103.9..134.1, y -2.5..-0.35, z 9.3..30.0, 122..153 m
+out**. It is the wall's FORWARD CRESTS seen at grazing incidence against the closure behind
+them, and the y values sit on `Y_FRONT = -0.35` — the builder's own front clamp, which flattens
+every crest that reaches it into ONE PLANE (measured 574 of tier a's 2,200 vertices, 26.1%;
+19.5% inside the seam's own z band). weave carries the same seam at u 0.256..0.265, crossing 2 px
+at u 0.994. The other twelve cameras: ZERO seam pixels.
+
+AND WHY ROUND 4 MADE IT LOUDER, WHICH IS THE HONEST HALF. The seam's two sides are 4 m apart
+in depth and the east haze card sits at x 124..130, so rays to the closure cross it and rays to
+`cliff_town_a` (which ends at x = 112) never do. Measured on the shipped plates, before vs
+after round 4, in a band either side of the seam:
+    v 0.10..0.20   closure  31.2 -> 62.4    town wall 106.1 -> 106.5   |step| 74.9 -> 44.1
+    v 0.00..0.10   closure 117.0 -> 163.5   town wall  92.5 ->  92.5   |step| 24.5 -> 71.0
+At the TOP of the frame — where the judge's box is — ROUND 4 TRIPLED THE CONTRAST ACROSS A
+RAZOR-STRAIGHT EDGE. That is the whole of why the void cleared and the frame-edge finding did
+not. An atmosphere that is keyed to a PLANE IN THE WORLD rather than to distance along the view
+washes one side of a grazing seam and not the other.
+
+THE FIX, AND THE TWO THINGS REFUSED INSIDE THE ROUND ARE WORTH MORE THAN IT.
+
+REFUSED #1 — MORE RELIEF CANNOT BREAK A GRAZING SILHOUETTE. The obvious fix for a flat plane
+is to stop making it flat: the front clamp becomes a smooth FOLD (`0.35 + sqrt((d-0.35)^2 +
+F^2)`, F = 0.80 swept against the mesh's own 1.00 m column spacing), which takes the flat
+count 574 -> 0 and gives those crests 0.506 m of relief. THE GATE SEAM DID NOT MOVE: 32 seam
+pixels, u 0.465..0.477, line-fit residual 6.5 px -> 7.0 px. **AT GRAZING INCIDENCE A WALL'S
+SILHOUETTE IS THE ENVELOPE OF ITS CRESTS OVER TENS OF METRES, AND AN ENVELOPE IS STRAIGHT
+HOWEVER THE CRESTS WANDER.** Only mass at a DIFFERENT DEPTH breaks it.
+AND IT COST THE LOOK, which is the second reason it is out: the fold attenuates the depth
+field's own gradient by t/sqrt(t^2+F^2) — 22% at d = 1.35 m — and the term it takes that out of
+is the horizontal strata bias, which exists for exactly one reason: `mat_rock_townwall` is
+object-xy mapped and runs as long VERTICAL fibres, and the horizontal crosscut in the GEOMETRY
+is what breaks them. Draft-baked at 1008x576/28 spp, the fold changed 16.95% of lockhead and
+15.08% of loop-stairs and both came back as a face of hanging vertical strands.
+
+REFUSED #2, AND IT IS THE FINDING OF THE ROUND — **A GENERATOR THAT UNCONDITIONALLY
+RE-ASSERTS A NUMBER A LATER CARRIER OWNS IS A TIME BOMB.** Chasing that same lockhead
+regression after the fold was removed and it DID NOT GO AWAY produced the real cause:
+`t2_cliff_south.derive_material()` set `mat_rock_townwall`'s Mapping rotation to 90 deg and
+scale to 1.05 ON EVERY RUN. The shipped material carries **rotation 0, scale 0.55** — put there
+by `tools/t3_rock_projection.py`, which had MEASURED that exact rotation as the cause of the
+judge's "severe vertical texture stretching" on loop-stairs / lockhead / cottage and shipped
+four probe renders to prove it. So the wall's own builder silently reverted the fix for the
+defect it was being re-run to help, on three plates, and the only tell was a picture.
+It cost nothing for weeks because nobody re-ran the builder. Fixed by seeding the mapping ONLY
+when the material is created and printing what it found otherwise; the run now announces
+`Mapping LEFT AS FOUND: rotation (0.0, 0.0, 0.0) scale (0.55, ...)`. With that, the same build's
+delta at lockhead falls **15.299% -> 0.004%** and loop-stairs **13.490% -> 0.009%**, against a
+measured two-render noise floor of 0.010%.
+THE INSTRUMENT THAT CAUGHT IT IS WORTH NAMING: a full A/B of every camera at draft resolution
+(`cine_bake --draft --res 1008x576 --samples 28`, 15 s a frame) BEFORE any real bake. Two
+independent draft renders of the same master differ by 0.01% of frame above 4/255 and 0.00%
+above 12/255 — denoised Cycles is effectively deterministic — so a draft A/B is a real
+instrument, not a preview, and it costs 4 minutes for a whole town.
+
+WHAT SHIPPED, both in `tools/t2_cliff_south.py` so neither can come back:
+  * **THE WALL REACHES THE EAST CLOSURE.** `X1` was 135.0, inherited from the 8-vertex
+    placeholder cube (loc x 50, scale x 85) and never reconciled with `cliff_east_closure`,
+    which `t2_cliff_east.py` starts at x = 140.5 and tops out at z = 32.48. The town's two
+    enclosing walls were **5.5 m apart in plan and 4.5 m apart in height** and the south wall
+    ENDED IN MID-AIR. `X1 = 141.5` puts its last metre inside the closure's own face.
+  * **BUTTRESSES** (x 112.0 / 124.5 / 135.5, half-widths 4.6/3.1/5.2 m, reaches 2.60/1.35/3.40 m,
+    dying back above z 29/26/31) — mass standing PROUD of the face, spanning the seam's own
+    measured x extent, at deliberately unequal depths. This is the only lever that touches an
+    envelope. Measured: the gate seam's lateral wander goes **u 0.465..0.477 -> 0.444..0.469**
+    (32 -> 67 plate px) across 4 -> 7 columns, and weave's 0.256..0.265 -> 0.219..0.231, and by eye the razor line becomes a lobed rock
+    mass. The wall's front bound is now TWO limits and not one: `Y_FRONT` plus the buttress's
+    own reach is the DESIGNED limit, and the clearance ray-cast (now reaching past
+    `FRONT_FREE = 4.20` instead of stopping at y = +0.4) is the MEASURED one. Nothing at all
+    stands between the wall and y = +2.4 over x 65..145 — the town's own ground starts there —
+    which is why there is room for mass at that corner and why it had to be measured first.
+
+THE REPRO GATE, RUN BEFORE ANY EDIT, because re-running a generator against a live master is
+how a carrier gets reverted (see REFUSED #2). Digesting every `cliff_town_*` mesh, re-running
+the UNCHANGED builder dry, and digesting again: **west, a and d differ — 42 of 5,960 vertices,
+max exactly 0.3000 m.** All of it the clearance ray-cast, which is a function of town geometry
+that has moved since the wall was last built. The generator is faithful to within its own
+measured bound; it is NOT a pure function, and that is worth knowing before trusting one.
+
+REBAKE LIST, DERIVED FROM RENDERED FRAMES rather than from a frustum (draft A/B, % of frame
+changed above 4/255 and above 12/255; noise floor 0.010% / 0.000%):
+    weave     4.959 / 1.273     cottage 3.616 / 2.899     lockfive 2.610 / 0.003
+    gate      1.592 / 0.413     crossing 0.571 / 0.438
+  REFUSED WITH A NUMBER, all at or below the noise floor: loop-stairs 0.009, north-landing
+  0.007, shelf-west 0.006, boatyard 0.006, waterfront 0.005, lockhead 0.004, shelf-east 0.004,
+  quay-west 0.003, deep-stairs 0.001, fishdock 0.001.
+BAKES: five plates, 1-WIDE SERIAL in one Blender process, all rc=0 — gate 211.5 s,
+weave 176.0 s, cottage 179.3 s, crossing 202.9 s, lockfive 240.7 s (1021.2 s total incl. the
+depth passes). `memory_pressure -Q` read 87-88% free before every spawn and no second Blender
+ran at any point; the user was at the machine.
+
+GEOMETRY MOVED, SO THE SHARED BUNDLE IS OWED — unlike round 4, whose depth.png was
+byte-identical. `cliff_town_a`/`_d` are in BOTH `del-cine/scene.glb` and the shared
+`townwalk/scene.glb`, so `tools/town_export.py` was re-run in the same window and `cine_test`
+bundle parity is the receipt. Nothing walkable moved: the buttresses stand in empty air at
+y -0.35..+3.05 over x 105..141 and the town's nearest geometry there is at y +2.4.
+
+THE VERDICT. `scene_redteam --calibrate` (which runs the whole town, both modes, n=3, pinned
+gemini-3.6-flash — 71 calls, 0 errors, run-20260808-170205-calib) against round 4's own
+run-20260808-round4haze. THE CLAIM UNDER TEST WAS WHETHER GATE'S FRAME-EDGE FINDING MOVES:
+  ALL THREE naive passes that named the seam are GONE. "a sharp vertical seam", "cuts off
+  abruptly in a straight vertical line, exposing the background void" and "abruptly terminates
+  in a sharp vertical edge against the background mountain" — 3 mentions of that language in
+  the round-4 report, ZERO in this one, on any plate.
+  THE CHECKLIST ROW SURVIVES AS WEAK AND ITS SUBJECT MOVED AGAIN, which is the honest half:
+  "The world at the frame edges: WEAK — Vertical seam where cliff geometry ends abruptly
+  against background fog" (gate, crossing, weave) is now "Dense cloud layer cuts off somewhat
+  abruptly against cliff geometry" (gate, shelf-east, weave, waterfront, north-landing). It is
+  no longer about the cliff's edge; it is about THE HAZE CARD'S OWN EDGE, and it now names two
+  plates this change never touched. That is round 6's item, and it is the same class round 4
+  found and half-fixed: a card has a silhouette, a medium does not.
+  NOT CAUSED BY THIS CHANGE, checked rather than assumed: gate's new sev1 "sharp, unrefined
+  low-polygon cliff geometry ... protrudes prominently into the foreground" is boxed at
+  u 0.65..1.00, v 0.65..0.97 — the right-hand FOREGROUND cliff, nowhere near the buttresses at
+  u 0.44..0.47, v 0.00..0.30.
+  The judge's own calibration gate came out at its documented 2/5 exact / 5/5 any-plate, i.e.
+  unmoved, so nothing here is a judge that drifted.
+
+AND A LEAK CHECK, because extending a wall past its own skirt (`cliff_town_skirt` stops at
+x = 137) could have opened one: the `sky` census on the shipped master reads world background
+0.03% at gate and 0.00% at all fourteen others — bit-for-bit the pre-change figures.
+
+GATES: cine_test 635 ok / 1 failed / 2 soft warnings — the PRE-ATTRIBUTED
+deep-stairs<->waterfront seam red, same {"fired":0,"expected":10} signature, i.e. the
+Dellhollow baseline EXACTLY, and the bundle parity that would have caught a stale export is
+inside those 635 · slice_test 776/0 · findability_test 69/0 with 11 warnings · routes_derive
+--check clean, 15 shots. `cine_bake --glb` and `tools/town_export.py` both re-run in this
+window (walk=275 both sides).
+
+OWED, NAMED: the deploy lane published the round-4 plates at 23:15 yesterday and these five
+supersede four of them (gate, weave, crossing, lockfive) plus cottage. A FOLLOW-UP DEPLOY IS
+OWED — this lane did not race it.

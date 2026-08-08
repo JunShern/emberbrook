@@ -154,6 +154,28 @@ git runs here, on branch `migration/3d-hybrid`.
   dark void" to "atmospheric fog" (what survives there is a different, real defect the void hid).
   **DENSITY IS NOT THE WASH** — crosswise τ put `mat_haze_rim` at 0.594 and the east card at
   0.055, so it read mid-table on density while delivering a tenth of its siblings' effect.
+- **tools/dh_seam_census.py — WHICH TWO OBJECTS MAKE THIS EDGE, AND IS IT STRAIGHT**
+  (2026-08-08). `seam` counts the pixels where set A abuts set B and reports the u span, the
+  RMS residual from a best-fit line IN PLATE PIXELS, and the world x/y/z of the A-side hits;
+  `sky` asks the same against the world background; `box` puts a judge's bbox on the geometry.
+  It reproduced the judge's own gate bbox (0.466..0.478) to three decimals at u 0.465..0.477 —
+  and REFUTED the round-4 handover that named `cliff_town_*`'s dead-flat z = 37.0 top as the
+  defect: **zero silhouette columns on all fifteen cameras and world background 0.00–0.03% of
+  every frame. Dellhollow is a closed gorge; there is no sky in it to be flat against.**
+  THE DURABLE LAW IT MEASURED: **AT GRAZING INCIDENCE A WALL'S SILHOUETTE IS THE ENVELOPE OF
+  ITS CRESTS OVER TENS OF METRES, AND AN ENVELOPE IS STRAIGHT HOWEVER THE CRESTS WANDER** —
+  unflattening the clamp that made 26.1% of `cliff_town_a` one plane moved the residual
+  6.5 px → 7.0 px, i.e. not at all. Only MASS AT A DIFFERENT DEPTH (the new `BUTTRESSES` in
+  t2_cliff_south) touches an envelope: u span 32 → 67 plate px. The straightness figure is a
+  SCREEN — grid-quantised, and a tilted straight line scores well — read it with the u span
+  and then look at the plate.
+- **A WHOLE-TOWN DRAFT A/B IS A RULER, NOT A PREVIEW** (2026-08-08). `cine_bake --draft --res
+  1008x576 --samples 28` is 15 s a frame, so all fifteen Dellhollow cameras cost four minutes,
+  and **two independent draft renders of the SAME master differ by 0.01% of frame above 4/255
+  and 0.00% above 12/255** — denoised Cycles is effectively deterministic, so that is a real
+  noise floor and a rebake list can be derived from RENDERED FRAMES instead of from a frustum.
+  It is strictly better: the frustum said the wall was 24% of lockhead, and the picture said
+  the change there was zero. Do this before every plate bake that touches shared geometry.
 - **tools/plate_probe.py — GROUND LUMINANCE WITHOUT BLENDER** (2026-08-07): reconstructs a
   world XYZ per pixel from a bundle's own solved camera + depth.png, derives normals from the
   world-position gradient and splits a plate into GROUND/WALL/VOID — 15 plates in ~40 s. The
@@ -739,6 +761,20 @@ git runs here, on branch `migration/3d-hybrid`.
   inside double quotes wherever it appears. **Use single quotes for commit messages, or
   a heredoc.** Do not amend a pushed shared branch to fix cosmetic damage — rewriting
   history other lanes have fetched costs more than the missing word.
+- **A GENERATOR THAT UNCONDITIONALLY RE-ASSERTS A NUMBER A LATER CARRIER OWNS IS A TIME BOMB**
+  (2026-08-08, measured). `t2_cliff_south.derive_material()` set `mat_rock_townwall`'s Mapping
+  rotation to 90° and scale to 1.05 on EVERY run, under a comment reading "Idempotent" — it was
+  idempotent with respect to itself and not with respect to the world. The shipped material
+  carries rotation 0 / scale 0.55, put there by `tools/t3_rock_projection.py`, which had already
+  MEASURED that rotation as the cause of the judge's "severe vertical texture stretching" on
+  loop-stairs/lockhead/cottage. So re-running the wall's own builder silently reverted the fix
+  for the defect it was being re-run to help, on three plates: 15.3% of lockhead and 13.5% of
+  loop-stairs changed and the wall came back as hanging vertical strands. **THE ONLY TELL WAS A
+  PICTURE** — no gate, no digest and no log line said anything. Seed a value on CREATION and
+  print what you find thereafter; two tools may not both own one number. Also why a REPRO GATE
+  belongs before any edit to a live generator: re-running t2_cliff_south unchanged moved 42 of
+  5,960 vertices by up to 0.30 m (its clearance ray-cast is a function of town geometry that
+  has moved since), so it is faithful to within a measured bound and is NOT a pure function.
 - **IF YOU HOLD A MASTER EDIT ACROSS A CRON TICK, YOU HAVE PUBLISHED IT** (2026-08-05,
   measured). `tools/townwalk_live_refresh.sh` exports the SHARED explore bundle
   (`public/assets/scenes/townwalk/scene.glb`, the `walkSceneKey` every town's `cine_solve`

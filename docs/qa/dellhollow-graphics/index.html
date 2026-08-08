@@ -780,5 +780,192 @@ implicated — byte-identical depth.</div>
 <div class="pair"><figure><img src="before5/crossing.jpg"><figcaption>crossing — before</figcaption></figure><figure><img src="after5/crossing.jpg"><figcaption>crossing — after (graded east haze)</figcaption></figure></div>
 <div class="pair"><figure><img src="before5/gate.jpg"><figcaption>gate — before</figcaption></figure><figure><img src="after5/gate.jpg"><figcaption>gate — after (graded east haze)</figcaption></figure></div>
 
+<h1 style="margin-top:3em">Dellhollow graphics fix — round 5 <span class="note">(2026-08-08 · the vertical seam, and the generator that reverted a fix)</span></h1>
+<p class="note">Round 4 named one item for round 5. <b>All three of its claims are refuted</b>,
+the judge's own bbox is reproduced to three decimals by a new seam census, and the two things
+this round REFUSED are worth more than the thing it built. Commits a65012db · af8aee81 · 24d6315d.</p>
+
+<h2>The claim, verbatim from the round-4 handover</h2>
+<div class="claim"><code>cliff_town_a</code> / <code>cliff_town_d</code>, the south town wall,
+x 58..135, <b>top clamped perfectly flat at z = 37.0</b>, ending 5.5 m short of
+<code>cliff_east_closure</code> at x = 140.5. <b>A dead-straight silhouette against the sky.</b></div>
+
+<h2>Refutation 1 — there is no sky in Dellhollow, and the flat top is in no frame at all</h2>
+<div class="meas">The clamp is real: every top-row vertex sits at exactly z = 37.0, by the
+builder's own constant <code>Z1</code>. It is also <b>invisible</b>. A marched ray census of
+all FIFTEEN solved cameras (grid 200&times;112, through <code>dh_pixel_census</code>'s own
+marcher so <code>hide_render</code> objects are dropped and volume cards are passed through)
+finds <b>ZERO columns</b> in which any <code>cliff_town_*</code> patch is silhouetted against
+the world background, on any camera — and the background owns <b>0.00–0.03% of every frame</b>.
+Dellhollow is a closed gorge. The builder's own docstring had already said so ("no solved
+camera stands above z = 36.5 and every one looks down") and <b>the claim stands</b>; the
+handover inherited a plan-view fact as a picture fact.</div>
+
+<h2>Refutation 2 — the judge said VERTICAL, three times, and pointed at one place</h2>
+<div class="meas">Its three independent naive passes on gate:
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr><td style="padding:2px 10px 2px 0"><code>naive_0</code></td><td style="padding:2px 10px 2px 0">bbox u 0.466..0.478, v 0.00..0.24</td><td>"A sharp vertical seam cuts straight through the cliff mesh where terrain assets meet."</td></tr>
+<tr><td style="padding:2px 10px 2px 0"><code>naive_1</code></td><td style="padding:2px 10px 2px 0">bbox u 0.460..0.480, v 0.00..0.25</td><td>"The cliff geometry cuts off abruptly in a straight vertical line, exposing the background void."</td></tr>
+<tr><td style="padding:2px 10px 2px 0"><code>naive_2</code></td><td style="padding:2px 10px 2px 0">bbox u 0.472..0.478, v 0.00..0.25</td><td>"…abruptly terminates in a sharp vertical edge against the background mountain."</td></tr>
+</table>
+Nothing horizontal, nothing about a sky.</div>
+
+<h2>Refutation 3 — what the line actually is: A SEAM CENSUS</h2>
+<div class="meas">Every pixel where a <code>cliff_town_*</code> patch is horizontally adjacent to
+<code>cliff_east_closure</code>, grid 240&times;135, all fifteen cameras. The seam exists on
+exactly <b>three</b> plates:
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 12px 2px 0">camera</td><td style="padding:2px 12px 2px 0">seam px</td><td style="padding:2px 12px 2px 0">u span</td><td style="padding:2px 12px 2px 0">line-fit residual</td><td>world, wall side</td></tr>
+<tr><td><b>gate</b></td><td>32</td><td><b>0.465..0.477</b></td><td>6.5 px</td><td>x 103.9..134.1 &nbsp; y &minus;2.5..&minus;0.35 &nbsp; z 9.3..30.0 &nbsp; 122–153 m</td></tr>
+<tr><td><b>weave</b></td><td>16</td><td>0.256..0.265</td><td>7.9 px</td><td>x 133.7..135.0 &nbsp; 105–107 m</td></tr>
+<tr><td><b>crossing</b></td><td>2</td><td>0.994</td><td>—</td><td>x 134.4..134.9 &nbsp; 79 m</td></tr>
+<tr><td colspan="5" class="note">the other twelve cameras: <b>0 seam pixels</b></td></tr>
+</table>
+The gate figure is <b>the judge's own box to three decimals</b>. And the wall-side y values sit
+on <b>&minus;0.35</b> — <code>Y_FRONT</code>, the builder's front clamp, which flattens every
+crest that reaches it into ONE PLANE: measured <b>574 of tier a's 2,200 vertices (26.1%)</b>,
+19.5% inside the seam's own z band. It is the wall's forward crests seen at grazing incidence
+against a wall 4 m behind them.</div>
+
+<h2>And round 4 made it louder — measured on its own plates</h2>
+<div class="meas">The seam's two sides are 4 m apart in depth, and <code>fx_haze_east</code> is a
+card at x 124..130: rays to the closure cross it, rays to <code>cliff_town_a</code> (which ends
+at x = 112) never do.
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">band</td><td style="padding:2px 14px 2px 0">closure side L</td><td style="padding:2px 14px 2px 0">town-wall side L</td><td>|step|</td></tr>
+<tr><td>v 0.10..0.20</td><td>31.2 &rarr; 62.4</td><td>106.1 &rarr; 106.5</td><td>74.9 &rarr; <b>44.1</b></td></tr>
+<tr><td>v 0.00..0.10</td><td>117.0 &rarr; 163.5</td><td>92.5 &rarr; 92.5</td><td>24.5 &rarr; <b>71.0</b></td></tr>
+</table>
+At the TOP of the frame — where the judge's box is — <b>round 4 tripled the contrast across a
+razor-straight edge</b>. That is the whole of why the void cleared and the frame-edge finding
+did not. An atmosphere keyed to a PLANE IN THE WORLD rather than to distance along the view
+washes one side of a grazing seam and not the other.</div>
+
+<h2>Refused #1 — MORE RELIEF CANNOT BREAK A GRAZING SILHOUETTE</h2>
+<div class="meas">The obvious fix for a flat plane is to stop making it flat: replace the front
+clamp with a smooth fold, <code>0.35 + sqrt((d&minus;0.35)² + F²)</code>, F = 0.80 swept against
+the mesh's own 1.00 m column spacing. Flat vertices <b>574 &rarr; 0</b>; the formerly-flat
+crests gain <b>0.506 m</b> of relief. <b>The gate seam did not move</b>: 32 seam pixels,
+u 0.465..0.477, residual 6.5 &rarr; 7.0 px.
+<br><b>AT GRAZING INCIDENCE A WALL'S SILHOUETTE IS THE ENVELOPE OF ITS CRESTS OVER TENS OF
+METRES, AND AN ENVELOPE IS STRAIGHT HOWEVER THE CRESTS WANDER.</b> Only mass at a different
+depth touches an envelope.
+<br>It also cost the look: the fold attenuates the depth field's gradient by
+t/&radic;(t²+F²) — 22% at d = 1.35 m — and the term it takes that out of is the horizontal
+strata bias, which exists for exactly one reason (<code>mat_rock_townwall</code> is object-xy
+mapped and runs as long vertical fibres; the horizontal crosscut in the GEOMETRY is what breaks
+them). Draft-baked: <b>lockhead 16.95%</b> and <b>loop-stairs 15.08%</b> of frame changed, and
+both came back as a face of hanging vertical strands.</div>
+
+<h2>Refused #2 — the finding of the round: A GENERATOR THAT RE-ASSERTS A NUMBER A LATER CARRIER OWNS IS A TIME BOMB</h2>
+<div class="meas">The lockhead regression <b>survived removing the fold</b>, which is what
+found the real cause. <code>t2_cliff_south.derive_material()</code> set
+<code>mat_rock_townwall</code>'s Mapping rotation to 90° and scale to 1.05 <b>on every run</b>.
+The shipped material carries <b>rotation 0, scale 0.55</b> — put there by
+<code>tools/t3_rock_projection.py</code>, which had already MEASURED that exact rotation as the
+cause of the judge's "severe vertical texture stretching" on <b>loop-stairs, lockhead and
+cottage</b> and shipped four probe renders to prove it.
+<br>So the wall's own builder silently reverted the fix for the defect it was being re-run to
+help, on three plates, and <b>the only tell was a picture</b>. It cost nothing for weeks
+because nobody re-ran the builder. Now the mapping is seeded only on creation and the run
+prints <code>Mapping LEFT AS FOUND: rotation (0.0, 0.0, 0.0) scale (0.55, …)</code>.
+With that, the same build's delta falls <b>lockhead 15.299% &rarr; 0.004%</b> and
+<b>loop-stairs 13.490% &rarr; 0.009%</b>.</div>
+
+<h2>The instrument that caught it — a whole-town draft A/B is a ruler, not a preview</h2>
+<div class="meas"><code>cine_bake --draft --res 1008x576 --samples 28</code> is <b>15 s a
+frame</b>, so all fifteen cameras cost four minutes. Two independent draft renders of the SAME
+master differ by <b>0.01% of frame above 4/255 and 0.00% above 12/255</b> — denoised Cycles is
+effectively deterministic — so that is a real noise floor and every number below is signal. A
+rebake list derived from rendered frames beats one derived from a frustum: the frustum said the
+wall was 24% of lockhead, and the picture said the change there was zero.</div>
+
+<h2>What shipped — both in the generator, so neither can come back</h2>
+<div class="verdict"><b>The wall reaches the east closure.</b> <code>X1</code> was 135.0,
+inherited from the 8-vertex placeholder cube (loc x 50, scale x 85) and never reconciled with
+<code>cliff_east_closure</code>, which <code>t2_cliff_east.py</code> starts at x = 140.5 and
+tops at z = 32.48. The town's two enclosing walls were <b>5.5 m apart in plan and 4.5 m apart
+in height</b>, and the south wall ended in mid-air. <code>X1 = 141.5</code> puts its last metre
+inside the closure's own face.
+<br><b>Buttresses</b> at x 112.0 / 124.5 / 135.5 (half-widths 4.6 / 3.1 / 5.2 m, reaches
+2.60 / 1.35 / 3.40 m, dying back above z 29 / 26 / 31) — mass standing PROUD of the face,
+spanning the seam's own measured x extent, at deliberately unequal depths. Gate seam lateral
+wander <b>u 0.465..0.477 &rarr; 0.448..0.473</b> (32 &rarr; 67 plate px) across 4 &rarr; 7
+columns. The wall's front bound is now TWO limits: <code>Y_FRONT</code> plus the buttress's own
+reach is the DESIGNED one, and the clearance ray-cast — now reaching past
+<code>FRONT_FREE = 4.20</code> instead of stopping at y = +0.4 — is the MEASURED one. Nothing
+stands between the wall and y = +2.4 over x 65..145 (the town's own ground starts there), which
+is why there is room for mass at that corner and why it was measured before anything was built.</div>
+
+<h2>The repro gate, run BEFORE any edit</h2>
+<div class="meas">Digest every <code>cliff_town_*</code> mesh, re-run the UNCHANGED builder dry,
+digest again: <b>west, a and d differ — 42 of 5,960 vertices, max exactly 0.3000 m</b>, all of
+it the clearance ray-cast, which is a function of town geometry that has moved since the wall
+was last built. The generator is faithful to within its own measured bound and is <b>not</b> a
+pure function. Worth knowing before re-running one against a live master — see Refused #2 for
+what happens when you do not check.</div>
+
+<h2>Rebake list, derived from rendered frames</h2>
+<div class="meas">% of frame changed above 4/255 and above 12/255, draft A/B, against a
+0.010% / 0.000% noise floor:
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 16px 2px 0">rebaked</td><td style="padding:2px 16px 2px 0">&gt;4/255</td><td style="padding:2px 16px 2px 0">&gt;12/255</td><td style="padding:2px 16px 2px 0">refused with a number</td><td>&gt;4/255</td></tr>
+<tr><td>weave</td><td>4.959%</td><td>1.273%</td><td>loop-stairs</td><td>0.009%</td></tr>
+<tr><td>cottage</td><td>3.616%</td><td>2.899%</td><td>north-landing</td><td>0.007%</td></tr>
+<tr><td>lockfive</td><td>2.610%</td><td>0.003%</td><td>shelf-west / boatyard</td><td>0.006%</td></tr>
+<tr><td>gate</td><td>1.592%</td><td>0.413%</td><td>waterfront</td><td>0.005%</td></tr>
+<tr><td>crossing</td><td>0.571%</td><td>0.438%</td><td>lockhead / shelf-east</td><td>0.004%</td></tr>
+<tr><td></td><td></td><td></td><td>quay-west</td><td>0.003%</td></tr>
+<tr><td></td><td></td><td></td><td>deep-stairs / fishdock</td><td>0.001%</td></tr>
+</table>
+Geometry moved, so unlike round 4 the shared bundle is owed: <code>cliff_town_a</code>/<code>_d</code>
+are in both <code>del-cine/scene.glb</code> and <code>townwalk/scene.glb</code>, and
+<code>tools/town_export.py</code> was re-run in the same window. Nothing walkable moved — the
+buttresses stand in empty air.</div>
+
+<h2>Gates</h2>
+<div class="meas"><code>cine_test</code> <b>635 ok / 1 failed / 2 soft warnings</b> — the
+PRE-ATTRIBUTED deep-stairs&harr;waterfront seam red, same
+<code>{"fired":0,"expected":10}</code> signature, i.e. the Dellhollow baseline exactly (and the
+bundle parity that would have caught a stale export is inside those 635) &middot;
+<code>slice_test</code> <b>776/0</b> &middot; <code>findability_test</code> <b>69/0</b>, 11
+warnings &middot; <code>routes_derive --check</code> clean, 15 shots. Both collision bundles
+re-exported in the same window (<code>cine_bake --glb</code> and <code>town_export.py</code>,
+walk=275 both sides). Leak check: the <code>sky</code> census on the shipped master reads world
+background <b>0.03% at gate and 0.00% at all fourteen others</b> — bit-for-bit the pre-change
+figures, so extending the wall past its own skirt (<code>cliff_town_skirt</code> stops at
+x = 137) opened nothing.</div>
+
+<h2>Blind verdict — round 5</h2>
+<div class="verdict"><code>scene_redteam --calibrate</code> (whole town, both modes, n = 3,
+pinned gemini-3.6-flash, 71 calls, 0 errors, <code>run-20260808-170205-calib</code>) against
+round 4's own <code>run-20260808-round4haze</code>.
+<br><b>ALL THREE naive passes that named the seam are GONE.</b> "a sharp vertical seam", "cuts
+off abruptly in a straight vertical line, exposing the background void", "abruptly terminates
+in a sharp vertical edge against the background mountain" — <b>3 mentions of that language in
+the round-4 report, ZERO in this one, on any plate.</b>
+<br>The checklist row survives as WEAK and <b>its subject moved again</b>, which is the honest
+half: "The world at the frame edges: WEAK — <i>Vertical seam where cliff geometry ends abruptly
+against background fog</i>" (gate, crossing, weave) is now "<i>Dense cloud layer cuts off
+somewhat abruptly against cliff geometry</i>" (gate, shelf-east, weave, waterfront,
+north-landing). It is no longer about the cliff's edge but about <b>the haze card's own
+edge</b>, and it now names two plates this change never touched. <b>That is round 6's item</b>,
+and it is the same class round 4 found and half-fixed: a card has a silhouette, a medium does
+not.
+<br>Checked rather than assumed: gate's new sev1 "sharp, unrefined low-polygon cliff geometry …
+protrudes prominently into the foreground" is boxed at u 0.65..1.00, v 0.65..0.97 — the
+right-hand FOREGROUND cliff, nowhere near the buttresses at u 0.44..0.47, v 0.00..0.30. And the
+judge's own calibration gate came out at its documented <b>2/5 exact, 5/5 any-plate</b>, i.e.
+unmoved.</div>
+
+<h2>The five rebaked plates — before / after</h2>
+<p class="note">Left: <code>before6/</code> (extracted from git HEAD, i.e. the round-4 plates). Right: live.</p>
+<figure style="margin:1em 0"><img src="crop-gate-r5.jpg" style="width:100%;border:1px solid #333"><figcaption>gate seam at NATIVE resolution — before (left) / after (right). u 0.415..0.530, v 0.00..0.30.</figcaption></figure>
+<div class="pair"><figure><img src="before6/gate.jpg"><figcaption>gate — before</figcaption></figure><figure><img src="after6/gate.jpg"><figcaption>gate — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before6/weave.jpg"><figcaption>weave — before</figcaption></figure><figure><img src="after6/weave.jpg"><figcaption>weave — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before6/cottage.jpg"><figcaption>cottage — before</figcaption></figure><figure><img src="after6/cottage.jpg"><figcaption>cottage — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before6/crossing.jpg"><figcaption>crossing — before</figcaption></figure><figure><img src="after6/crossing.jpg"><figcaption>crossing — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before6/lockfive.jpg"><figcaption>lockfive — before</figcaption></figure><figure><img src="after6/lockfive.jpg"><figcaption>lockfive — after</figcaption></figure></div>
+
 </body>
 </html>
