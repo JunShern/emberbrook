@@ -2178,6 +2178,20 @@
       // GLB on disk. Empty/absent = this body runs on procSwing, which is a
       // legitimate answer, not a failure.
       clipsOf(id) { const b = bodies[id]; return b && b.actions ? Object.keys(b.actions) : []; },
+      // WHERE A BODY ACTUALLY IS, in world metres, THIS FRAME. anchor() answers in
+      // screen pixels, which is what the DOM needs and is useless for the one claim
+      // the contact pass has to make: "the attacker reached the target". That claim
+      // is a distance in metres between two bodies, so the harness needs the metres.
+      // THE PIVOT, NOT THE ROOT: the root is the slot the body was staged into and
+      // the pivot carries the lunge and the knockback, so the pivot is where the
+      // body IS. Read-only, allocates, QA path only — never call it per frame from
+      // the game.
+      at(id) {
+        const b = bodies[id]; if (!b) return null;
+        const v = new (T().Vector3)(); b.pivot.getWorldPosition(v);
+        return { x: v.x, y: v.y + b.floatY, z: v.z, h: b.h, w: b.w,
+                 side: b.side, dead: b.dead, tier: b.tier };
+      },
       setTarget(id) { targetId = id && bodies[id] && !bodies[id].dead ? id : null; },
       setActor(id) { actorId = id && bodies[id] && !bodies[id].dead ? id : null; },
       act, flinch,
