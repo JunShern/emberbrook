@@ -309,6 +309,39 @@ git runs here, on branch `migration/3d-hybrid`.
   from a prompt carrying the arena camera's exact height/tilt/fov and must be re-shot if it moves —
   a camera language is not a tuning change to the diorama, it is incompatible with how its world is
   drawn. That fact orders the whole slate.
+  **SO THE CAMERA LANGUAGE WAS BUILT WHERE IT COSTS NOTHING** (bet B, 2026-08-08, world arena only;
+  board docs/qa/battle-camera/index.html, instrument tools/battle_camera.mjs, `?bcam=0` is the A/B
+  on one build). A SHOT TABLE PLUS A SOLVER — round/decide/strike/impact/ko/victory — where the
+  table carries INTENT (who is in frame, what fraction of it they fill, boom elevation, lens, move
+  duration) and NOT ONE METRE VALUE IS A CAMERA POSITION: every pose is solved against each body's
+  own measured Box3. **THE 180-DEGREE RULE IS A REFUSAL INSIDE THE SOLVE**, both halves reading
+  `CFG.partySide` (which the world arena now READS instead of hardcoding): the eye may not cross the
+  party→foe axis, and every party body must still project outboard of every foe body *with the
+  perspective divide* — an ordering taken on a flat dot product is wrong the moment two bodies
+  differ in depth. A crossing swing is halved, then dropped, then the camera KEEPS THE POSE IT HAS.
+  576 shots, 0 violations. **IT NEVER CUTS** pending §11.11's ruling (`cut:false` on every row).
+  Two beats got the moves the KO lane wanted and could not have: a push across `CFG.ko.holdMs` and
+  a 0.95 rad swing to three-quarter FRONT of the party for the cheer. Costs 0.1% of the frame.
+  THREE THINGS IT MEASURED THAT ARE WORTH MORE THAN THE FEATURE:
+  (1) **A SHOT MUST BE SOLVED WHERE THE BODY WILL BE, NOT WHERE IT IS** — the strike shot is asked
+  for the instant `act()` starts, with the attacker still five metres away, so framing the pair from
+  her home slot made a wide shot of a gap she was closing; it now takes the strike station `act()`
+  has already derived.
+  (2) **TWO RAYS ARE NOT A SILHOUETTE, AND FIXING THAT MOVED THE STAGING RATE DOWN 68.8% → 64.4%**
+  (forest 52.1→47.9, water 58.6→44.8). Nine samples across the body's own box, refuse below 67%
+  visible. Same shape as the spike's own 86.3→68.8 drop when its occluder set stopped being
+  `collide`: the world did not get worse, the instrument stopped lying. Do not loosen it back.
+  (3) **THE CAMERA OWNS SIZE AND OCCLUSION; IT DOES NOT OWN TONAL SEPARATION.** Worst-case foe
+  height 13.0→17.8% of frame (crag) and 12.8→20.1% (water) with occlusion equal or better — but RGB
+  silhouette contrast FELL at meadow and water, because the fixed pose sometimes happens to back the
+  cast with sky. A cast-only rim light is not available (three.js tests a light's layers against the
+  CAMERA, never per object) and a fresnel via onBeforeCompile would give this module its first
+  shader — which is the whole reason the r185 colour class is *deleted* here rather than managed.
+  OPEN, and it is the remaining legibility gap.
+  Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
+  the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
+  passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
+  luminance (the cutin_edge lesson: a gate that measures brightness cannot see colour).
 - Modules (public/js/): game_state (GS), battle_rules (pure kernel — untouchable),
   battle_turnbased + battle_stage3d, encounters, ui_kit (FF-blue), shop, menu, npc,
   dialogue, **story_runtime**, followers, hush, route_overlay, music. Each self-arms at

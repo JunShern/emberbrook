@@ -20049,3 +20049,126 @@ repo, force-push, push verification, Pages POST — ran in **under two minutes**
 seven files on a 579 MB tree. Launched detached (`(nohup … &)`) per the standing rule.
 Round-6 doctrine followed with zero deviations and zero surprises; the recipe in CLAUDE.md's
 "Shipping it" is now proven twice on incremental deltas.
+
+------------------------------------------------------------
+## BATTLE WAVE 3 — A CAMERA LANGUAGE, WHERE IT COSTS NOTHING (2026-08-08)
+
+Board: **docs/qa/battle-camera/index.html**. Instrument: **tools/battle_camera.mjs**
+(modes: shots · legibility · assert · moves · fps · regress). Code:
+`public/js/battle_world.js` only — the diorama's camera, the four plates and the
+default path are untouched, and `?arena=world` is still not the default.
+
+**Why here and not there.** `assets/battle/MANIFEST.md` states the four backdrop
+plates were generated from a prompt carrying the arena camera's exact height,
+tilt and fov and must be re-shot if it moves. In the world arena there is no
+backdrop, so BET B is free — which is what makes this lane EVIDENCE for the open
+BET A / BET E ruling rather than a commitment to either answer.
+
+**What it is.** A shot table (round · decide · strike · impact · ko · victory)
+plus a solver. The table carries intent; not one metre value in it is a camera
+position. Every pose is solved from the bodies the shot must show, using each
+body's own measured Box3 height and width — the discipline the contact fix used
+for the strike station. `?bcam=0` turns it off and leaves the spike's single
+solved pose, which is what every before/after on the board is.
+
+**The 180-degree rule is a refusal inside the solve**, not a warning outside it.
+Both halves read `BattleStage3D.CFG.partySide` (the world arena now READS it;
+the spike had the party's screen side hardcoded in `slotsFor`): the eye may not
+cross the party→foe axis, and every party body must still project outboard of
+every foe body — taken WITH the perspective divide, because an ordering on a
+flat dot product is wrong the moment two bodies sit at different depths. A
+crossing swing is halved, then dropped, and if the geometry still crosses the
+camera keeps the pose it has. Measured: **576 shots** (4 sites × 3 encounter
+shapes × every actor/target pairing), **0 violations, 20 softened, 0 refused**.
+
+**No cuts.** §11.11 leaves "may the battle cut?" open for the coordinator, so
+every transition is an eased move and `cut` is a per-shot field, `false`
+everywhere. Flipping one is one branch in `goTo`.
+
+**The two moves BET I wanted and refused**: a push across `CFG.ko.holdMs`
+(1.35 m of boom over the beat the corpse is already lying there) and a 0.95 rad
+swing to three-quarter FRONT of the party plus a 0.89 m dolly for the cheer,
+inside `winHold + winCheer`. Both are 0.000 with the flag off.
+
+### THE THREE MEASUREMENTS THAT OUTLIVE THE FEATURE
+
+1. **A SHOT MUST BE SOLVED WHERE THE BODY WILL BE, NOT WHERE IT IS.** The strike
+   shot is requested the instant `act()` starts, with the attacker still at her
+   home slot ~5 m away; framing the pair from there produced a wide shot of a gap
+   she was closing, stale by the time she arrived. `act()` already derives the
+   strike station from both bodies' widths — it now hands that position to the
+   solver.
+2. **TWO RAYS ARE NOT A SILHOUETTE, AND FIXING IT MOVED THE STAGING RATE DOWN.**
+   68.8% → **64.4%** (forest 52.1 → 47.9, water 58.6 → 44.8, crag unchanged at
+   75.0), `battle_world_probe --mode=place --n=160`, same 160 road cells. Nine
+   samples across the body's own box (three heights × three lateral offsets on
+   the camera's screen-right), refuse below 67% visible. This is the same shape
+   as the spike's own 86.3 → 68.8 drop when its occluder set stopped being
+   `collide`: **the world did not get worse, the instrument stopped lying.** The
+   boom is a second free axis now (the sweep is yaw × pitch, because a body no
+   yaw can see at 0.27 rad is often in plain sight from 0.34) and that bought
+   some of it back, not all; the two changes are confounded in this one figure
+   and separating them costs another 25-minute run nobody has made.
+3. **THE CAMERA OWNS SIZE AND OCCLUSION AND DOES NOT OWN TONAL SEPARATION.**
+   Worst-case foe height 13.0 → 17.8% of frame (crag) and 12.8 → 20.1% (water),
+   up at all four sites, with occlusion equal or better everywhere — but RGB
+   silhouette contrast FELL at meadow (18.1 → 9.6) and water (29.5 → 15.4),
+   because the fixed 9.6 m pose sometimes happens to back the cast with SKY and a
+   frame tightened for size backs it with mid-tone rock. A cast-only rim light is
+   NOT AVAILABLE: three.js's WebGLRenderer tests a light's layers against the
+   **camera**, never per object (`WebGLRenderer.js:1393`). A fresnel through
+   `onBeforeCompile` would work and would give this module its first shader —
+   which is exactly why the r185 colour-management class of bug is *deleted*
+   here rather than managed. **Left open on purpose; it is the remaining
+   legibility gap and it deserves its own decision.**
+
+### METER FIXES (both are lessons this repo had already paid for once)
+
+- **Occlusion is an INTERSECTION, never a ratio of areas.** Both the real and the
+  depth-test-off silhouettes carry a halo the body did not draw (GTAO darkens the
+  ground around a body that writes depth; bloom bleeds outward) and the two passes
+  do not carry the same halo — a fully visible Maren measured **"−136% occluded"**.
+  `1 − |visible ∩ free| / |free|` is immune to both. Depth WRITE has to go off with
+  depth test, or the xray pass perturbs the AO the other pass has.
+- **Contrast is RGB, never luminance.** Straight out of `cutin_edge`'s halo term
+  (a rim of the wrong hue at the right brightness was invisible to it on 79 of 112
+  shipped plates): a teal eel on tan rock is 6 units apart in luminance and 39 in
+  RGB, and it reads.
+
+### GATE FORENSICS — two gates failed and NEITHER was this lane
+
+Both were settled the only way this can be settled: run the SAME gate against a
+`git worktree` of the parent commit on a second port.
+- `arena_playtest`'s **organic** suite failed twice on this branch
+  (`no hostile zone reachable`) and passed on the parent — then **both fail
+  identically when run concurrently**, which equalises the load. `findHostile()`
+  asks `SIM.walkFloors`/`SIM.ground` the moment the world reports ready; under
+  load the region's meshes are not queryable yet. Serial and unloaded: PASS.
+- `transition_test` returned **167/1** once (the standing after-battle geometry
+  delta) on a run whose worst scene load was **45.5 s**; serially it is
+  **168/0**. Its URL carries no `?arena=world`, so `battle_world.js` is the frozen
+  inert object throughout and cannot allocate anything at all.
+Also green: `battle_sim` (ALL ENVELOPES GREEN + 6 property tests), `encounter_sim`,
+`battle_camera --mode=assert` (576/0). `battle_rules.js` untouched and unreachable.
+
+**FLAG OFF IS TODAY'S GAME, proved rather than asserted**: page opened with no
+`?arena=world`, real battle fought — `BattleWorld` frozen `{on:false,
+installed:false}`, `BattleStage3D.__bwPatched === false`, the DIORAMA answered
+(2 canvases, `stage.cam` undefined), `cam.fov` 42/42/42, ORBIT and player position
+identical before and after. **The lens is the one thing this lane could have
+leaked** — nothing else in this game writes `cam.fov` after construction, and a
+battle that left a 27° lens on the overworld would be a silent permanent
+regression no ORBIT receipt could see — so it is saved at `create()`, restored in
+`destroy()`, and every run asserts 42 after teardown on all three columns.
+
+**VERDICT (lane's own words, on the board).** The camera language moves me
+further toward the world, for a structural reason rather than an aesthetic one:
+in the world the camera is an instrument and in the diorama it is a constant, and
+under BET E making it an instrument is a re-bake of the backdrop for every angle a
+shot wants. But it does not close the question. The diorama's meadow frame is
+still the most readable picture on the board. What changed is what the remaining
+gap costs: it is now one localised problem — the cast does not separate tonally
+from mid-value terrain — with known shader-side answers, instead of a property of
+the whole arena. Recommendation unchanged in shape, stronger in confidence: both
+paths, one flag, the diorama as the fallback. If the ruling goes to BET E, none
+of this work is touched — no plate moved and no diorama camera moved.
