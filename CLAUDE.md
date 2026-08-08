@@ -745,6 +745,24 @@ git runs here, on branch `migration/3d-hybrid`.
   shorter walk, never a fight that could not otherwise happen. The real refusal reason is
   OCCLUSION: 14,484 of ~16,900 slot rejections are "body hidden from the battle camera", which is
   why turning the arena rescues a cell and walking further barely does.
+  **SHIPPED 2026-08-08** in `public/js/battle_world.js` (`stageArena` — ring 0 → 5 → 8 → 11 → 13 m,
+  8 bearings a ring, first acceptance wins; nothing past 13 m because the sweep is flat there). The
+  fallback INTO the diorama is DELETED: `null` now means the world refused all 25 sites and the DOM
+  stage is the crash guard only. `?arena=world` stays OPT-IN — battle_stage3d is still the default
+  arena. **THE ARENA MOVES, THE PLAYER DOES NOT** — the player's body is hidden and drawn as a
+  combatant, so this path still never calls `SIM.tp()` and "returned exactly where they stood"
+  holds by construction, not by a restore (proved to full float precision after a 5 m relocation,
+  `docs/qa/battle-world/teardown-relocated.json`). Two anchors in that file and confusing them is
+  the one way it breaks: `P0` is the player (ORBIT's pan is measured from it), `A0` is the fight.
+  **AND SHIPPING IT COST ONE MEASUREMENT, NOT A REWRITE**: the first timing was 32 s per staging
+  solve, and `--mode=raycost` billed it per mesh — 99.4% of every visibility ray was SIX
+  `InstancedMesh` ground scatters (137,356 instances, pieces 0.24–0.74 m). Every ordinary mesh
+  costs 4.2 µs because play3d gives it a BVH; **an InstancedMesh gets none, so a 37k-triangle tree
+  is three thousand times cheaper than six-triangle grass.** Instanced pieces under 1.5 m are now
+  excluded as ground detail (the player walks through them — `noStand`, not in `collide`), the
+  hedge banks that motivated the drawn-scene set are ordinary meshes and stay. After: 150/150 cells
+  stage, solve p50 16.2 ms / p95 234 / max 407, **trigger to first battle frame p50 688 ms, p95
+  871, max 871** (`docs/qa/battle-world/stageperf.json`, §Q2c of that board).
 - **SINGLE-PLAYER FOR THE PROTOTYPE** (user ruling 2026-08-02, verbatim: "Let's leave the
   two-player version of the game as an upgrade for later, and in the prototype we can keep
   things as single-player"). The 3D runtime is single-body and STAYS so. Chapter One's climax

@@ -296,6 +296,61 @@ real <code>solveArena</code> on every candidate alongside the screen —
 26 screened out, 281 full solves, 37 min wall clock.</p>
 </div>
 
+<h2>Q2c — IT IS SHIPPED, AND THE COST OF SHIPPING IT WAS SIX PIECES OF GRASS</h2>
+<p>The ladder measured in Q2b is now <b>the staging path in <code>battle_world.js</code></b>:
+<code>stageArena()</code> walks ring&nbsp;0 (where the player stands) → 5 → 8 → 11 → 13 m, eight
+bearings a ring, first acceptance wins; the 13&nbsp;m ring is offset half a step exactly as the sweep
+had it. Nothing past 13&nbsp;m, because the sweep is flat there. <b>The line that used to answer a
+refusal by calling the diorama's own <code>create()</code> is deleted.</b> Returning <code>null</code>
+now means <i>the world refused all 25 sites</i> — the DOM stage is the crash guard on a thrown
+exception and nothing else. <code>?arena=world</code> remains opt-in and
+<code>battle_stage3d.js</code> is still what a default page draws.</p>
+
+<p><b>The arena moves; the player does not.</b> The player's body is hidden for the fight and drawn as
+a combatant, so centring the formation on a neighbouring cell gives the same picture a teleport would
+— and it discharges the ruling's teardown obligation <i>by construction</i>: this path still never
+calls <code>SIM.tp()</code>, so "returned exactly where they stood, whatever distance the fight
+relocated" cannot fail. There are two anchors now and confusing them is the one way it breaks:
+<code>P0</code> is the player (ORBIT's pan is measured from it), <code>A0</code> is the fight.</p>
+
+<div class="box">
+<h3 style="margin-top:0">A BATTLE MUST NOT TAKE SECONDS TO START — AND IT TOOK FORTY</h3>
+<p>First measurement of the shipped ladder: staging solve <b>max 32.0 s</b>, trigger to first battle
+frame <b>40.2 s</b>. The ladder was not the cause and neither was the solver.
+<code>--mode=raycost</code> billed one visibility ray per mesh: <b>11,696&nbsp;µs a ray, of which
+11,629&nbsp;µs — 99.4% — was six <code>InstancedMesh</code> ground scatters</b>
+(<code>veg_owd_short</code> 60,590 instances, <code>_med</code> 56,126, <code>_seed</code> 16,017,
+plus weed/flower/sedge; 137,356 instances, pieces 0.24–0.74&nbsp;m tall). Every <i>ordinary</i> mesh in
+the valley costs <b>4.2&nbsp;µs</b>, because play3d gives each one a three-mesh-bvh tree and an
+accelerated raycast. An InstancedMesh gets neither — three's raycast loops the instance list — so the
+tree with 37,280 triangles is three thousand times cheaper than the grass with six.</p>
+<p>The rule is derived, not a name list: <b>an instanced piece shorter than 1.5&nbsp;m is ground
+detail, not an occluder.</b> The player walks through it (play3d marks <code>veg_</code>
+<code>noStand</code>, so it is not in <code>collide</code> either), and a knee-high tuft between the
+boom and a body's ankle sample is a <i>false refusal</i> — the exact thing the relocation ruling
+exists to stop paying for. The hedge bank that made this set come from the drawn scene in the first
+place is <code>veg_field</code> and <code>veg_canopy_whisperwood*</code>: ordinary meshes, still in.
+One <code>solvePlacement</code>: <b>278 ms → 1.5 ms</b>.</p>
+</div>
+
+<p><b>After, on the shipped path</b> (<code>stageperf.json</code>, 150 ow-valley cells, 50 of them
+cells the old single-solve search refused; <code>BattleWorld.stage()</code> timed cold at each):</p>
+<table>
+<tr><th></th><th>cells</th><th>staged</th><th>p50</th><th>p95</th><th>max</th></tr>
+<tr><td>all</td><td>150</td><td>150 (100%)</td><td>16.2 ms</td><td>234.2 ms</td><td>407.1 ms</td></tr>
+<tr><td>cells the old search REFUSED</td><td>50</td><td>50 (100%)</td><td>95.2 ms</td><td>336.3 ms</td><td>407.1 ms</td></tr>
+<tr><td>cells it already staged</td><td>100</td><td>100 (100%)</td><td>6.5 ms</td><td>101.4 ms</td><td>174.1 ms</td></tr>
+</table>
+<p>Rings: <b>0 → 93 cells, 5 m → 53, 8 m → 4, 11 m → 0, 13 m → 0</b>. Every one of the 50 refusals
+staged at 5 or 8 m. Relocation distance p50 0, p90 5, max 8 m. Zero residual.
+<b>Trigger to first battle frame</b>, 11 spots, the real <code>Battle.start</code> through the real
+entry fade: <b>p50 688 ms, p95 871 ms, max 871 ms</b> — the staging solve is 7–418 ms of that and the
+fade is the rest. <i>Acceptable</i>: the worst battle in the sample starts in under a second, and the
+opening camera move still covers a p90 of 8 m with no fade, no cut and no travel beat.</p>
+<p class="sub">The stratum labels come from <code>placement.json</code>, which predates the arm
+bookkeeping and is a different solver arm — which is why 7 cells it recorded as staging in place now
+take one 5 m step. It is a sampling label, not a control.</p>
+
 <h2>Q3 — TEARDOWN</h2>
 <p>A real battle (autopilot, speed 0, played to victory) at a spot the solver accepts, with
 <code>BattleWorld.created = 1 / refused = 0</code> proving the <b>world</b> path is what was torn
@@ -317,6 +372,23 @@ down, not a silent fallback to the diorama.</p>
 <tr><td><code>eb-scene</code> events emitted</td><td class="n" colspan="2"><span class="good">0</span></td></tr>
 <tr><td>residual <code>bw_</code> nodes / <code>.ebb-root</code> / UILOCK / Battle.active</td><td class="n" colspan="2"><span class="good">0 / 0 / released / false</span></td></tr>
 </table>
+<div class="box">
+<h3 style="margin-top:0">AND THE SAME RECEIPT AFTER A <i>RELOCATED</i> FIGHT — which is the one the ruling owes</h3>
+<p><code>teardown-relocated.json</code>, taken at <code>(&minus;50.62, 41.88)</code>, a cell the old
+search refused: the ladder staged the fight <b>5 m away on bearing 2.356 rad, 1.04 m lower</b>
+(<code>site.R = 5</code>, live off the stage). After it: <b>player position identical to full float
+precision</b> — <code>&minus;50.62, 26.814723588293532, 41.88</code>, the same digits it started with —
+ORBIT identical field by field <i>including</i> <code>tilt 0.16</code> and pan 0/0/0,
+<code>GS.state.at</code> unchanged, the save still <code>null</code>, zero <code>eb-scene</code>
+events, zero <code>bw_</code> residue, one canvas, UILOCK released. It could not have been otherwise:
+relocation moves the arena, never the body.</p>
+<p><b>One counter is not flat, in both runs:</b> textures +3 and shader programs +2, identically at a
+relocating cell (<code>teardown-relocated.json</code>) and at a ring-0 cell
+(<code>teardown-inplace.json</code>). That is the monster GLB and its materials entering three's own
+caches on first use — a cache, not a leak, and measurably nothing to do with relocation. The 06:06
+baseline above read them flat only because its run never saw the world stage come up
+(<code>sawWorldStage: null</code>).</p>
+</div>
 <p>Worth one line beside <code>transition_test</code>'s standing <code>geo+1/tex+1</code> drift: this
 path's own teardown census returns <b>every</b> counter to base in <code>ow-valley</code>. That is a
 different scene and a different measurement point from the failing del-* doors, so it is not a claim
@@ -389,6 +461,28 @@ built (<code>b4ee7c48</code>), i.e. not this lane and not any battle stage. The 
 one that matters here: it is what catches a module that fails to parse, and it is green.
 <code>battle_rules.js</code> is untouched and unreachable from this module.</li>
 </ol>
+
+<div class="box">
+<h3 style="margin-top:0">UPDATE 2026-08-08 — THE RELOCATION LANE RE-RAN IT, AND TWO ITEMS ABOVE HAVE MOVED</h3>
+<p>Item&nbsp;2 is out of date in the way that matters: <b><code>battle_world.js</code> now IS in
+<code>play3d.html</code>'s script list</b> (the patch below landed), so the flag-off proof is no
+longer an injection — it is <i>the shipped page</i>, which is a stronger test than the one it
+replaces. Re-run after the relocation ladder and the occluder-set change:
+<span class="mono">BattleWorld = {version:1, on:false, installed:false}</span>,
+<span class="mono">BattleStage3D.__bwPatched === false</span>, real battle
+<span class="mono">world:false</span>, 2 canvases, 4 bodies, 119.9 fps — the diorama, unchanged.</p>
+<p>Gates after the change: <code>battle_sim</code> ALL ENVELOPES GREEN + 6 property tests ·
+<code>encounter_sim</code> GREEN · <code>arena_playtest</code> <b>ARENA PLAYTEST GREEN</b> (all
+suites, and it exercises the <i>default</i> diorama path) · <code>transition_test</code>
+<b>167 ok / 1 failed</b>, the standing <code>after battle: del-cine|shelf-west</code>
+<code>{geo:+2}</code> assertion. <b>Own control run:</b> HEAD's <code>battle_world.js</code> swapped
+in (sha <code>74ae95b4…</code>) and the gate re-run returned <b>the same 167/1</b>, same assertion,
+same delta, worst scene load 46.4 s against this run's 46.3 s, load average 7.27 from the user's own
+apps — then restored byte-identical (<code>9fde66b8…</code>). The red is the machine, measured and
+not argued, exactly as the earlier lane's control found. Structurally it could not be this change:
+<code>transition_test</code>'s URL carries no <code>?arena=world</code>, so the whole diff sits
+behind the <code>if (!FLAG) return</code>.</p>
+</div>
 
 <h2>THE PATCH <code>play3d.html</code> WOULD NEED</h2>
 <p><b>One line, and only to ship the file</b> — the mechanism needs no hook at all:</p>
@@ -464,7 +558,14 @@ node tools/battle_world_probe.mjs --mode=place    --port=3000 --n=4 --relocate=1
 node tools/battle_world_probe.mjs --mode=battle   --port=3000           # the captures
 node tools/battle_world_probe.mjs --mode=fps      --port=3000           # vsync off, both paths
 node tools/battle_world_probe.mjs --mode=teardown --port=3000           # the residue table
+node tools/battle_world_probe.mjs --mode=teardown --port=3000 --at=-50.62,41.88 --outfile=teardown-relocated.json
 node tools/battle_world_probe.mjs --mode=regress  --port=3000           # flag OFF proof
+node tools/battle_world_probe.mjs --mode=stageperf --port=3000 --n=200  # Q2c, the shipped ladder timed + end to end
+node tools/battle_world_probe.mjs --mode=raycost  --port=3000           # Q2c, where the seconds go, per mesh
 </pre>
 <p class="sub">Receipts in this directory: <code>placement.json</code> · <code>battle.json</code> ·
-<code>fps.json</code> · <code>teardown.json</code> · <code>regress.json</code> · <code>relocate.json</code> · <code>factorial.json</code>.</p>
+<code>fps.json</code> · <code>teardown.json</code> · <code>teardown-relocated.json</code> ·
+<code>teardown-inplace.json</code> · <code>regress.json</code> · <code>relocate.json</code> ·
+<code>factorial.json</code> · <code>stageperf.json</code> · <code>raycost.json</code> ·
+<code>reloc/</code> (the plates after) · <code>head-control/</code> (the same three spots through
+HEAD's module, sha-verified in and out — the frames are the same frame).</p>

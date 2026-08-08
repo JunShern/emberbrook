@@ -21724,3 +21724,137 @@ solves, 37 min.
 ends the literal; `node --check` reported "Invalid left-hand side expression in postfix operation"
 pointing at the template's first line, thirty lines from the actual character. Plain quotes in
 comments, in JS as in CSS.
+
+## 2026-08-08 ~23:50 — BATTLE ARENA COMMIT LANE: THE RELOCATION LADDER IS THE SHIPPED STAGING PATH, THE DIORAMA FALLBACK IS DELETED, AND THE SECONDS WERE SIX PIECES OF GRASS
+
+Executing the ruling (CLAUDE.md, "THE BATTLE FIGHTS IN THE REAL WORLD, AND THERE
+IS NO DIORAMA FALLBACK") on the measurement the previous lane produced.
+
+**What the shipped module did before this:** it solved ONCE, at the player's own
+cell, and returned `null` on refusal — and the install patch then called the
+diorama's own `create()`. There was no walk of any kind in `battle_world.js`; the
+single-bearing walk lived in the PROBE, where it was moving the harness off a
+road into an encounter zone. So the ladder is an addition, not a replacement, and
+the fallback deletion is one line in `patch()`.
+
+**THE LADDER, AS SHIPPED** (`stageArena`): ring 0 = where the player stands, then
+5 / 8 / 11 / 13 m, EIGHT bearings a ring, the 13 m ring phase-offset half a step
+(the probe's own rule, kept so the shipped ladder IS the measured one), first
+ring/bearing `solveArena` accepts wins. Nothing past 13 m: the sweep is flat from
+13 to 100. Ring 0 first is what keeps today's behaviour exactly where the world
+already stages — 93 of 150 sampled cells never move at all.
+
+**THE ARENA MOVES, THE PLAYER DOES NOT — and that is a design decision worth the
+sentence.** The ruling could be read as teleporting the player. It does not need
+to be: the player's body is already hidden for the fight and drawn as a combatant
+in the formation, so centring the arena on a neighbouring cell puts the party
+THERE and leaves nothing behind. The picture is what a teleport would give and
+the teardown obligation is discharged BY CONSTRUCTION — this path still never
+calls `SIM.tp()`, so "the player is returned exactly where they stood, whatever
+distance the fight relocated" has no restore that could be forgotten. Two anchors
+now, and confusing them is the one way relocation breaks: `P0` is the player
+(play3d recomputes the camera target as `playerPos + ORBIT.pan` every frame, so
+every world-aim → pan conversion must go through it) and `A0` is the fight (side
+of the axis, the 180-degree reference eye, the degenerate aim, and the `?bcam=0`
+arm's aim — that last one was a live bug for ten minutes: the spike wrote `P0`
+there because the two points were the same point).
+
+**PERFORMANCE WAS THE RISK AND IT WAS REAL: the first measurement was 32 s.**
+`--mode=stageperf` times the shipped `BattleWorld.stage()` at real cells and then
+runs the real `Battle.start` end to end. First run, n=8: staging solve max
+**31,974 ms**, trigger to first battle frame **40,242 ms**. Unshippable, and the
+ladder was not the cause — a single `solvePlacement` with visibility on cost
+**278 ms**.
+
+**`--mode=raycost` billed one ray per mesh, and the answer was not the solver.**
+11,696 µs per visibility ray, of which **11,629 µs — 99.4% — was SIX
+`InstancedMesh` ground scatters**: `veg_owd_short` (60,590 instances),
+`_med` (56,126), `_seed` (16,017), `_weed`, `_flower`, `_sedge`. 137,356
+instances between them, world piece heights **0.24–0.74 m**. Every ORDINARY mesh
+in the valley costs **4.2 µs** — both 27k-triangle terrain sheets, the whole
+town, the tree canopies, the hedge banks — because play3d gives each one a
+three-mesh-bvh tree and `acceleratedRaycast`. **An InstancedMesh gets neither:
+three's raycast loops the instance list, so cost tracks INSTANCE COUNT and the
+tree with 37,280 triangles is three thousand times cheaper than the grass with
+six.** This is the same shape as every other trap in this repo — the expensive
+thing was not the big thing.
+
+Fix, derived rather than name-listed: **an instanced piece shorter than 1.5 m is
+ground detail, not an occluder.** The player literally walks through it (play3d
+marks `veg_` `noStand`, so it is not in `collide` either) and a knee-high tuft
+between the boom and a body's ankle sample is a FALSE refusal — precisely what
+the relocation ruling exists to stop paying for. The hedge bank that made this
+set come from the drawn scene in the first place (`veg_field`,
+`veg_canopy_whisperwood*`) is ordinary meshes and is untouched. One
+`solvePlacement`: **278 ms → 1.5 ms**.
+
+**AFTER, on the shipped path** (`stageperf.json`, 150 ow-valley cells, 50 of them
+cells the old single-solve search refused):
+- **150/150 stage. Zero residual.**
+- staging solve **p50 16.2 ms, p95 234.2, max 407.1**; old-refused cells p50
+  95.2 / p95 336.3 / max 407.1; old-staged p50 6.5 / max 174.1.
+- rings **0:93, 5:53, 8:4, 11:0, 13:0** — every one of the 50 refusals staged at
+  5 or 8 m. Distance p50 0, p90 5, max 8 m.
+- **trigger to first battle frame, 11 spots, the real `Battle.start` through the
+  real entry fade: p50 688 ms, p95 871, max 871.** VERDICT: acceptable. The worst
+  battle in the sample starts in under a second and the solve is 7–418 ms of it.
+
+**THE CHEAP SCREEN, PORTED WITH ITS CORRECTNESS ARGUMENT.** Each candidate first
+gets ten geometry-only placements (`vis:false`); only the surviving yaws pay for
+the ray-heavy test. `vis:false` is a strict relaxation of `vis:true` AND pitch is
+not read at all with vis off, so the surviving set is a SUPERSET of what
+`solveArena` could accept — and because `o.yaws` filters in `YAWS`' own order,
+the first accepted yaw is the first the full sweep would have accepted. Same
+plan, not merely the same verdict.
+
+**WHAT IS NOW UNREACHABLE:** the world path calling `BattleStage3D.create` as a
+fallback. A thrown exception is caught and returns `null` → battle_turnbased's
+DOM stage, the crash guard, and `BattleWorld.crashed++` counts it.
+**WHAT STILL RUNS BY DEFAULT: everything.** `?arena=world` is opt-in;
+`battle_stage3d.js` is the default arena; `BattleWorld.enabled = false` still
+hands the page back to the diorama in one assignment (that is the A/B switch the
+boards are built from, deliberately not a fallback).
+
+**GATES.** `battle_sim` ALL ENVELOPES GREEN + 6 property tests · `encounter_sim`
+GREEN · `arena_playtest` **ARENA PLAYTEST GREEN** (all suites; it exercises the
+DEFAULT diorama path, so it doubles as a flag-off receipt) · `transition_test`
+**167/1**, the standing `after battle: del-cine|shelf-west {geo:+2}`. **I ran my
+own control**: HEAD's `battle_world.js` swapped in (sha `74ae95b4…`), gate
+re-run, **same 167/1**, same assertion, same delta, worst scene load 46.4 s
+against my run's 46.3 s at load average 7.27 — then restored byte-identical
+(`9fde66b8…`). The red is the machine, and it could not have been the change:
+`transition_test`'s URL carries no `?arena=world`, so the whole diff sits behind
+`if (!FLAG) return`. Flag-off proof re-run and now STRONGER than the spike's —
+`battle_world.js` is in `play3d.html`'s script list, so `regress.json` measures
+the shipped page rather than an injection: `{on:false, installed:false}`,
+`__bwPatched false`, real battle `world:false`, 2 canvases, 4 bodies.
+
+**AND I LOOKED.** `--mode=battle` through both builds at the same three spots,
+HEAD's module sha-verified in and out: `docs/qa/battle-world/reloc/` vs
+`head-control/`. The frames are the same frame — no visual regression from the
+ladder or from dropping ground scatter out of the occluder set.
+
+**RESIDUALS, NAMED.**
+1. *The opening `round` plate does not contain the foes at the probe's three
+   default spots.* It reproduces on HEAD, so it is NOT this lane's — but it is a
+   real framing question for whoever owns the shot language, and the spots are
+   ROAD cells (roads never spawn encounters), so it may also be an artefact of
+   testing where a fight cannot fire. Measure before building.
+2. *Textures +3 / shader programs +2 across a battle*, identically at a
+   relocating and a ring-0 cell: the monster GLB entering three's own caches.
+   A cache, not a leak, and nothing to do with relocation.
+3. *`RELOC.maxRise = 4.0` is a judgement, not a measurement.* It stops the ladder
+   staging a fight on a shelf ten metres above the player. No sampled cell came
+   near it; if a region ever exhausts the ladder, this is the first knob to
+   question.
+4. *The stratum labels in `stageperf.json` come from `placement.json`*, which
+   predates the arm bookkeeping and is a different solver arm — which is why 7
+   cells it recorded as staging in place now take one 5 m step. A sampling label,
+   not a control.
+5. *`cutin_edge`-class hole:* `--mode=raycost` names the worst meshes but nothing
+   gates on ray cost. A future bundle that ships a tall instanced scatter would
+   re-introduce the 30-second staging solve with every gate green.
+
+Receipts: `docs/qa/battle-world/index.html` §Q2c (new) · `stageperf.json` ·
+`raycost.json` · `teardown-relocated.json` · `teardown-inplace.json` ·
+`regress.json` · `reloc/` · `head-control/`.
