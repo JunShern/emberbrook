@@ -763,12 +763,28 @@ git runs here, on branch `migration/3d-hybrid`.
   hedge banks that motivated the drawn-scene set are ordinary meshes and stay. After: 150/150 cells
   stage, solve p50 16.2 ms / p95 234 / max 407, **trigger to first battle frame p50 688 ms, p95
   871, max 871** (`docs/qa/battle-world/stageperf.json`, §Q2c of that board).
-  **AND NOTHING GATES ON RAY COST — THIS HOLE IS OPEN.** The 1.5 m rule is a height threshold, not
-  a budget: a bundle that ships a TALL instanced scatter restores the 32-second staging solve with
-  every gate in this repo GREEN, because no gate measures the cost of a visibility ray. Same shape
-  as `cutin_edge` having no chroma term — a gate that measures the wrong axis cannot see the
-  defect. The cheap guard, if someone wants it: assert per-ray cost in `--mode=raycost` against a
-  ceiling in whatever gate already loads the ow bundle.
+  **AND THE RAY COST IS NOW GATED** (2026-08-08). The 1.5 m rule is a height threshold, not a
+  budget — a bundle shipping a TALL instanced scatter would restore the 32-second solve with every
+  gate green. **tools/ray_budget.mjs** closes it by asserting the CAUSAL COUNT rather than a clock:
+  `W` = unaccelerated triangle tests per visibility ray (Σ instanceCount × tris over the occluder
+  set for every mesh three cannot BVH-accelerate; an InstancedMesh always counts). **CEILING 9761,
+  DERIVED**: the same solve cost 32,000 ms at W = 1,040,096 and 407 ms at W ≈ 0, so K = 0.0304 ms
+  per unit W; holding the worst staging solve ≤ 1 s allows 593 ms → 19,522, halved for a machine
+  2× slower than this laptop. Current tree **W = 2 — 0.02% of budget**. Microseconds are REPORTED,
+  never asserted: raycost's per-mesh numbers bottom out at the timer's own 4.2 µs quantum. It reads
+  `SCATTER_H`, `NOT_OCCLUDER` and `pieceHeight` OUT OF battle_world.js at run time, so the gate
+  moves when the constant does; extraction failure is an error, never a fallback. **PROVED RED
+  BEFORE GREEN**: `--induce=3.0` retunes ow_detail's shipped `hMax` so the scatter clears 1.5 m —
+  W 2 → 892,502, 70.8 → 13,029 µs/ray, implied staging 27.5 s, exit 1
+  (`docs/qa/battle-world/raybudget-induced.json`); `--selftest` (0.03 s) drives the state machine.
+  **AND IT EXPOSED THAT EVERY HEADLESS GATE HERE IS HALF-BLIND**: transition_test /
+  playthrough_test / trigger_probe / arena_playtest all run `--use-angle=swiftshader`, and
+  ow_detail REFUSES to place the scatter on software WebGL — so those pages cannot see the runtime
+  half at all. Hence four verdicts: RED is fatal everywhere (bundle-borne instancing shows under
+  swiftshader too), SKIPPED is a NOTE and never a pass, INCONCLUSIVE is fatal on a real GPU. It
+  rides as a PREFLIGHT IN EVERY MODE of battle_world_probe (the one real-GPU instrument here; red
+  aborts with exit 3), in transition_test's ow-valley leg (953 ms), and standalone at **2.1 s** —
+  `node tools/ray_budget.mjs --port=3000`.
 - **SINGLE-PLAYER FOR THE PROTOTYPE** (user ruling 2026-08-02, verbatim: "Let's leave the
   two-player version of the game as an upgrade for later, and in the prototype we can keep
   things as single-player"). The 3D runtime is single-body and STAYS so. Chapter One's climax
