@@ -19278,3 +19278,198 @@ NOTE ON AUTHORSHIP: this lane's runtime edits to `battle_stage3d.js` /
 `battle_turnbased.js` are carried inside lane BAT-CONTACT's commit 088c8703 — a pathspec
 commit over a shared dirty tree, the trap CLAUDE.md already documents. Nothing was lost and
 both lanes' work was gated with both in place; recording it so the archaeology is possible.
+
+------------------------------------------------------------
+
+## 2026-08-08 ~05:5x — BATTLE BET-3 SPIKE: `?arena=world`, FIGHT WHERE YOU STAND
+
+Lane: battle bet-3 spike. Brief: prove or disprove
+`docs/plans/battle-presentation-inventory.md` §10 **BET A** behind a flag, change no
+default behaviour, return evidence. **Additive only** — `git diff --stat` on
+`play3d.html`, `battle_stage3d.js` and `battle_turnbased.js` is EMPTY for this lane; the
+two new files are `public/js/battle_world.js` and `tools/battle_world_probe.mjs`.
+Board with the side-by-sides and the verdict: **docs/qa/battle-world/index.html**.
+
+**VERDICT: SHIP BEHIND THE FLAG, DO NOT PROMOTE TO DEFAULT YET, DO NOT FALL BACK TO
+BET E.** Every structural claim in BET A is confirmed. The one claim that is NOT is
+that a real valley can stage a readable fight wherever the encounter director fires.
+
+### The mechanism, and why it needs no hook in a coordinator-owned file
+`play3d.html` is ONE classic `<script>` (lines 10–4922), so its top-level `const scene`,
+`const R`, `let cam` and `const ch` are **global LEXICAL bindings**: not properties of
+`window`, but visible by unqualified name to every later classic script. `renderFrame` is a
+function declaration, so it IS on `window`. So a module loaded after it can put bodies in
+the world scene and let the page's own loop draw them. **The only patch play3d would need
+is the one line that ships the file** (`<script src="js/battle_world.js"></script>` after
+`battle_turnbased.js`); the alternative, if the coordinator would rather not depend on
+lexical bindings that would break the day the page becomes a module, is one line publishing
+`window.__WORLD = {scene, cam, R, ch, render, orbit}`. Both are in the receipts page.
+The stage attaches by wrapping `BattleStage3D.create` through a `window` accessor (the
+module is lazily injected during the entry fade, so it does not exist at load).
+
+### Q1 — borrowing the renderer/camera/post chain: YES, and four things it cost
+Instrument: `battle_world_probe --mode=fps|battle`, probes read out of the running page.
+- contexts alive during a battle **2 → 1**; `scene.environment` null → the region's PMREM;
+  envMaps 0/182 → every Standard/Physical material; `NoToneMapping` → the page's curve;
+  hand-rolled 4-pass grade → RenderPass→GTAO→grade→bloom→Output→AA (`__postfx`: 6 passes,
+  2.8 ms); hand-written shaders in the module **0**.
+- **THE r185 COLOUR TRAPS DO NOT APPLY, BECAUSE THERE IS NOTHING TO GET WRONG.** The module
+  writes no shader, allocates no render target and creates no light, so `LIN2DISP`, the
+  SRGB8_ALPHA8 round-trip and `IU()=×π` are all constraints on *having a second rig*.
+  Deleting the rig deletes the class of bug. This is the strongest structural argument for
+  BET A and it is not an aesthetic one.
+- **You cannot assign the camera.** play3d rebuilds `cam`'s pose from `window.ORBIT` + the
+  player EVERY frame; an assignment is overwritten in 16 ms. Drive ORBIT; restore it field
+  by field.
+- **`OWTILT` = 0.16 rad puts the whole fight in the bottom third of the frame.** The boom is
+  aimed UP about its own X *after* `lookAt` (THE OVERWORLD BOOM), so the aim point sits at
+  `0.5 + 0.5·tan(0.16)/tan(21°) = 71%` down the frame. **Measured before the fix: the foes'
+  feet projected at y 778 of 813, under the party status window.** Ease tilt to 0, restore it.
+- **The UI already composites, with zero CSS change**: `.ebb-root` carries no background and
+  `.ebb-3d .ebb-bg{display:none}`, so the battle chrome was already built to sit over
+  whatever canvas is behind it.
+- **INSTRUMENT TRAP, and it is general**: `renderer.info.render.frame` counts once per
+  `render()` CALL, and a composer calls it once per pass — **measured 22 renders per
+  presented frame**. The first version of this probe reported "2653 fps". `stage.frames` is
+  a valid "is it stalled" oracle and is NOT a frame rate; only rAF counts presented frames.
+
+### Q2 — does the real ground support it? 68.8%, and the distribution is the finding
+160 of `ow-valley/zones.json`'s 576 road cells, each walked perpendicular into the nearest
+standable ENCOUNTER zone within 11 m (roads rate 0 in `encounters.js` — a fight fires beside
+the road), player teleported and settled, then a 2×2 solved against **the engine's own**
+`SIM.ground` / `SIM.floors` / `SIM.blocked` plus a camera-visibility ray.
+
+| measure | value |
+|---|---|
+| stages with the camera left where the player had it | **32.5%** |
+| stages with the arena's yaw swept for a clear view | **68.8%** |
+| of the successes, needed the camera to turn | 52.7% |
+| ideal slot has floor + body box before any search | 66.3% of 640 |
+| footprint relief | p50 0.82 m · p90 2.65 m · max 3.77 m |
+
+By zone: meadow 50/59 (84.7%) · crag 18/24 (75.0%) · water 17/29 (58.6%) · **forest 25/48
+(52.1%)**. Named refusals come straight out of `SIM.blocked`, which returns the mesh:
+`emberbrook_4` (12), `emberbrook_3` (6), `dellhollow_2` (5), `emberbrook_1` (4),
+`ground_valley_3` (4), `oldgate_3` (2) — the two towns' colliders where the road meets a gate.
+
+**FOLIAGE IS THE TRAP, AND IT IS THE SAME SHAPE AS `_court_probe` AND `walk_engine_gate`:
+THE SET THAT ANSWERS "CAN A BODY STAND HERE" IS NOT THE SET THAT ANSWERS "CAN THE CAMERA SEE
+IT".** `collide` deliberately excludes the region's `noStand` foliage (a player may walk
+through a bush), so `SIM.blocked` passes a slot inside a hedge AND a `collide`-based
+visibility ray calls it plainly visible. Measured: the first forest capture had the entire
+party invisible inside the hedge bank with the solver reporting `occluded: 0`. The check now
+builds its occluder set from the DRAWN scene (minus walk meshes, sky dome / ridge rings /
+haze veils, the ambient particle systems and our own bodies), and **the pass rate fell 86.3%
+→ 68.8% the moment it became honest. That 17.5-point drop IS the foliage.**
+
+### Q3 — teardown is total, and the four tickets are not what the audit says they are
+A real battle (autopilot, speed 0, to victory) with `BattleWorld.created=1 / refused=0`
+proving the WORLD path is what was torn down. Every counter identical: geometries 84→84,
+textures 68→68, programs 56→56, scene children 22→22, `collide` 31→31, `allMeshes` 55→55,
+canvases 1→1, ORBIT (yaw/pitch/**tilt**/dist/pan) identical, player position identical,
+`ch.visible` restored, `GS.state.at` identical, `emberbrook-save` still null, **0 `eb-scene`
+events**, 0 residual `bw_` nodes, 0 `.ebb-root`, UILOCK released, `Battle.active` false.
+
+It cannot add a fifth ticket for a structural reason: **it never assigns `cam`** (there is
+no camera state for a battle to leave behind — only ORBIT, six numbers, copied back and
+checked), **it never moves the player** (no `SIM.tp`, no `at`, no save, no `eb-scene`), and
+**play3d's own `CAMCLIP` boom clamp keeps running through the battle** — which is the
+mechanism PT-20260803-025 was about, inherited rather than routed around.
+
+**CORRECTION THE AUDIT OWES.** §10 BET A and §11.12 call these "four OPEN tickets".
+`docs/qa/playtest/queue.json` says: **PT-20260803-009 VERIFIED** (fixed, closed on a
+re-driven full encounter), **-019 REFUTED** (the harness's stuck detector fired on a fight
+that had already been won), **-025 and -028 REFUTED** (`reach_probe` found the ground
+connected both times). The blast-radius argument for BET A is weaker than stated, which cuts
+IN FAVOUR of the bet.
+
+### Q4 — frame budget: the world arena is FASTER, and the diorama's own comment is wrong
+Same spot, same four bodies, real GPU, headless 1600×900, dpr 1, and
+**`--disable-gpu-vsync --disable-frame-rate-limit`** — without which both paths return
+exactly 120.0 fps and the measurement is of the display, not the renderer.
+
+| configuration | fps (presented frames) | canvases |
+|---|---|---|
+| field, no battle | 251.6 | 1 |
+| **world arena**, 4 bodies | **243.5** | 1 |
+| **diorama**, 4 bodies | **184.7** | 2 |
+
+World = **96.8% of the field idling** (four skinned bodies + two rings cost 3.2% of a frame
+already carrying GTAO and bloom) and **+31.8% over the diorama**. `battle_stage3d.js`'s
+architecture comment argues the second context is free because "the world renderer is drawing
+a frozen frame nobody can see… there is no frame budget being wasted, only one being
+reclaimed" — but `phys()`'s own comment is explicit that the world **keeps rendering** under a
+modal panel. **The reclaim never happened; the page really does run both renderers.**
+
+### Q5 — the picture: better in three zones of four, and less legible in all of them
+Verdict written after opening every capture (repo rule). The water and crag frames are the
+best battle images this game has produced — a stone ledge above the real river with the real
+town behind it is a *place*; a painted dune with plastic reeds is a backdrop, and the audit's
+"two pictures in one frame" problem is simply gone because one sun, one PMREM environment and
+one GTAO fall on the cast and the ground together. **But the plates are more legible**: two
+clean silhouettes against a low-contrast painted field with a horizon at 42% is a
+composition, and the valley is rock, foliage, houses and cast shadows. The forest frame is
+honestly WORSE than the forest plate as a battle screen, even though the plate is a lie about
+the ground. That is a STAGING problem (BET G, in world space) and not an argument against
+BET A — but it must be solved before the diorama is deleted.
+
+Defects the spike found in itself, all named on the board: the KO sinks a body 0.55 m and on
+a real ledge that means **through solid rock** (a world KO wants a dissolve, not a sink);
+ground markers are flat discs and clip through sloped stone; two rays are not a silhouette
+(Maren still staged half behind a stilt); relief p90 2.65 m fights the shared ground line the
+whole UI assumes; and on refusal the spike returns null, which drops to the **DOM** stage —
+shipping behaviour must be world → diorama → DOM, one line.
+
+### A HARNESS BUG IN THE AUDIT'S OWN INSTRUMENT — `/^m/` MATCHES `maren`
+`tools/battle_shots.mjs` picks the foes with
+`Object.keys(st.tiers()).filter(k => /^m/.test(k))`. The kernel names foes `m0`, `m1`
+(`battle_rules.derive.foesFromGroup`), the party is built first, and **`maren` sorts first
+and matches**. So every impact capture taken with Maren in the party set the TARGET to Maren,
+lunged Vesper at her, flinched her and KO'd her. This lane inherited the same line in its own
+driver and watched Maren fade out of four frames before finding it — half an hour spent
+proving the body was in the scene, correctly scaled, visible, unoccluded and rasterising
+(magenta-paint pixel census, `SIM.pick` naming the nearest world mesh 5 m BEHIND her) before
+looking at the filter. **AN ID IS NOT A SIDE.** `battle_world.js`'s stage exposes `sides()`;
+the diorama should grow the same accessor, `/^m\d+$/` is the one-character stopgap, and
+`docs/qa/battle-audit/audit-impact-*.png` should be re-shot.
+
+### Gates
+`battle_sim` ALL ENVELOPES GREEN + 6 engine property tests · `encounter_sim` ENCOUNTER
+INTEGRATION GREEN · `transition_test --port=3000` **162 ok / 6 failed, console gate clean** —
+the same 162/6 already attributed (b4ee7c48) to a `geo+1/tex+1` leak that reproduces on a
+pristine HEAD and with the 3D arena never built, so not this lane. The console gate is the one
+that matters here (it is what catches a module that fails to parse) and it is green.
+`battle_rules.js` untouched and unreachable from this module.
+
+### Default-path regression proof (four independent arguments)
+1. **No shipped file was edited** — `git diff --stat public/play3d.html
+   public/js/battle_stage3d.js public/js/battle_turnbased.js` is empty for this lane.
+2. **No page loads the module** — it is in no script list; the probe injects it at runtime.
+3. **Loaded with the flag off it does nothing** — worst case tested directly
+   (`--mode=regress`): `BattleWorld = {version:1, on:false, installed:false}` frozen,
+   `BattleStage3D.__bwPatched === false`, and a real battle came up on the DIORAMA
+   (`stage.world === false`, canvases 2). Receipt `docs/qa/battle-world/regress.json`.
+4. **The gates above.**
+
+### Wave 1 landed mid-lane and every number was re-measured after it
+`b698e6ee` (05:03) gave play3d `setPixelRatio(min(dpr,2))` — which closes audit §7.1's DPR
+asymmetry; the world path never had the question because it inherits whatever the field does.
+`088c8703` (05:32) landed BET C and BET G in the diorama and moved the seam to
+`stage.act(id, kind, targetId, contactMs) → ms the blow lands`. The spike was already
+compatible (a stage that answers nothing keeps the whole budget), but BET C's arithmetic is
+world-space arithmetic and now runs here too: the strike station is half of each body's own
+measured Box3 width plus a hand's reach, **and in the world the gap is whatever the terrain
+made it, so a constant lunge could never have worked**. The four zone side-by-sides on the
+board are pre-wave-1 on both sides (like for like against the audit's plates); the impact
+frame, the beat strip, placement, fps, teardown and the regression proof are all post-wave-1.
+
+### Recommendation
+Land the flag. Then BET C and **BET G in world space** — where they are the same work —
+re-measure the 31.2% refusal rate, and take the promote/delete decision with that number in
+hand. BET B (camera language) and BET D (one light model) are, exactly as the audit
+predicted, nearly free the moment this lands: the camera is already unpinned and the light
+model is already the field's. **Keep the diorama as the fallback the world path falls to
+when the ground refuses.**
+
+Reproduce: `node tools/battle_world_probe.mjs --mode=place|battle|fps|teardown|regress
+--port=3000`. Receipts: `docs/qa/battle-world/{placement,battle,fps,teardown,regress}.json`.

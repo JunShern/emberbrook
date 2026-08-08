@@ -411,7 +411,7 @@
       g.add(bob);
       root.add(g);
       const b = { id: rec.id, side: rec.side, root: g, bob: bob, obj: null, home: g.position.clone(),
-                  tier: 'none', dead: false, h: 1.7, mixer: null, actions: null, flash: 0 };
+                  tier: 'none', dead: false, h: 1.7, w: 0.7, mixer: null, actions: null, flash: 0 };
       bodies[rec.id] = b; order.push(rec.id);
       return b;
     }
@@ -432,6 +432,11 @@
       ownDispose(obj);
       b.bob.add(obj);
       b.obj = obj; b.tier = opt.tier || 'model'; b.h = targetH;
+      // THE BODY'S OWN WIDTH, out of the Box3 the loader measured, scaled the way
+      // the body was. act()'s strike station is derived from it — a duskpad is
+      // 2.07 m across and a party rig 0.73, and a constant stand-off cannot know that.
+      const k = opt.noScale ? 1 : targetH / h;
+      b.w = Math.max(0.25, Math.max(box.max.x - box.min.x, box.max.z - box.min.z) * k);
     }
 
     // The proxy solid, borrowed in spirit from battle_stage3d's: a spike does not
@@ -591,24 +596,50 @@
       if (b.actions && b.actions.idle) b.actions.idle.reset().fadeIn(0.2).play();
     }
 
-    function act(id, kind) {
-      const b = bodies[id]; if (!b || b.dead) return;
-      if (kind === 'flee') return;
-      if (kind === 'item') { oneShot(b, 'item'); return; }
-      const tgt = targetId && bodies[targetId] ? bodies[targetId] : null;
-      // the lunge is toward the TARGET, in world space, which is the one thing the
-      // diorama's fixed-axis lunge could not be
-      let dx = 0, dz = 0;
-      if (tgt) {
-        dx = tgt.root.position.x - b.home.x; dz = tgt.root.position.z - b.home.z;
-        const L = Math.hypot(dx, dz) || 1; dx /= L; dz /= L;
+    // THE SEAM MOVED UNDER THIS SPIKE, ON PURPOSE (battle wave 1, 088c8703):
+    // `stage.act(id, kind, targetId, contactMs) -> ms the blow lands`, and
+    // battle_turnbased waits for THAT return rather than a fixed 300 ms wind. A
+    // stage that answers nothing keeps the whole budget, so the spike was already
+    // compatible — but BET C's arithmetic is world-space arithmetic and reads
+    // BETTER here than in the diorama, because the gap is whatever the terrain
+    // made it rather than a constant 5.21 m. So it is implemented, not borrowed.
+    function act(id, kind, tid, contactMs) {
+      const b = bodies[id]; if (!b || b.dead) return 0;
+      const budget = (typeof contactMs === 'number' && contactMs > 0) ? contactMs : CFG.fx.lungeMs;
+      if (kind === 'flee') return 0;
+      if (kind === 'item') { oneShot(b, 'item'); return budget; }
+      // who is being hit: the caller's name, else the player's cursor, else the
+      // nearest living enemy — a body must always have something to walk at
+      const named = (tid != null && bodies[tid] && !bodies[tid].dead && bodies[tid].side !== b.side)
+        ? bodies[tid] : null;
+      const cur = targetId && bodies[targetId] && bodies[targetId].side !== b.side ? bodies[targetId] : null;
+      let tgt = named || cur;
+      if (!tgt) {
+        for (const oid of order) {
+          const o = bodies[oid];
+          if (o.side !== b.side && !o.dead) { tgt = o; break; }
+        }
+      }
+      let nx = 0, nz = 0, travel = CFG.fx.lungeM;
+      if (tgt && tgt !== b) {
+        nx = tgt.root.position.x - b.home.x; nz = tgt.root.position.z - b.home.z;
+        const L = Math.hypot(nx, nz) || 1; nx /= L; nz /= L;
+        // THE STRIKE STATION comes from the two BODIES, not from a constant: stop
+        // half of each body's own measured width apart, plus a hand's reach.
+        travel = Math.max(0, L - ((b.w + tgt.w) / 2 * 1.05 + 0.22));
       }
       oneShot(b, 'attack');
-      tween(CFG.fx.lungeMs, (u) => {
-        const e = u < 0.42 ? (u / 0.42) : 1 - (u - 0.42) / 0.58;
-        b.root.position.x = b.home.x + dx * CFG.fx.lungeM * e;
-        b.root.position.z = b.home.z + dz * CFG.fx.lungeM * e;
+      const total = budget + 320;
+      const arriveU = clamp((budget * 0.62) / total, 0.05, 0.95);
+      const holdU = clamp(budget / total, arriveU, 0.98);
+      tween(total, (u) => {
+        const p = u < arriveU ? (1 - Math.pow(1 - u / arriveU, 3))
+                : u < holdU ? 1
+                : 1 - (u - holdU) / (1 - holdU);
+        b.root.position.x = b.home.x + nx * travel * p;
+        b.root.position.z = b.home.z + nz * travel * p;
       }, () => { b.root.position.copy(b.home); });
+      return budget;
     }
     function flinch(id) {
       const b = bodies[id]; if (!b || b.dead) return;

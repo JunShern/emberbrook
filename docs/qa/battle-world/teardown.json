@@ -1,0 +1,88 @@
+{
+  "outcome": "victory",
+  "sawWorldStage": null,
+  "canvasesDuringBattle": null,
+  "bwCreated": 1,
+  "bwRefused": 0,
+  "plan": {
+    "ok": true,
+    "failed": []
+  },
+  "base": {
+    "geo": 84,
+    "tex": 68,
+    "progs": 56,
+    "sceneKids": 22,
+    "collide": 31,
+    "allMeshes": 55,
+    "canvases": 1,
+    "orbit": {
+      "yaw": -1.4869,
+      "pitch": 0.7,
+      "tilt": 0.16,
+      "dist": 40,
+      "panX": 0,
+      "panY": 0,
+      "panZ": 0
+    },
+    "pos": {
+      "x": 38.12,
+      "y": 14.074164342250896,
+      "z": -26.88
+    },
+    "chVisible": true,
+    "at": {
+      "chapter": 1,
+      "scene": "ow-valley",
+      "cam": null,
+      "pos": [
+        0,
+        2,
+        0
+      ],
+      "yaw": null
+    },
+    "save": null
+  },
+  "after": {
+    "geo": 84,
+    "tex": 68,
+    "progs": 56,
+    "sceneKids": 22,
+    "collide": 31,
+    "allMeshes": 55,
+    "canvases": 1,
+    "orbit": {
+      "yaw": -1.4869,
+      "pitch": 0.7,
+      "tilt": 0.16,
+      "dist": 40,
+      "panX": 0,
+      "panY": 0,
+      "panZ": 0
+    },
+    "pos": {
+      "x": 38.12,
+      "y": 14.074164342250896,
+      "z": -26.88
+    },
+    "chVisible": true,
+    "at": {
+      "chapter": 1,
+      "scene": "ow-valley",
+      "cam": null,
+      "pos": [
+        0,
+        2,
+        0
+      ],
+      "yaw": null
+    },
+    "save": null
+  },
+  "residue": [],
+  "ebbRoots": 0,
+  "sceneEvents": 0,
+  "uilock": false,
+  "battleActive": false
+}

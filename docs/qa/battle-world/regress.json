@@ -1,0 +1,35 @@
+{
+  "inject": {
+    "already": false,
+    "on": false,
+    "installed": false
+  },
+  "battleWorld": {
+    "version": 1,
+    "on": false,
+    "installed": false,
+    "why": "flag off — open with ?arena=world"
+  },
+  "patchedStage3d": false,
+  "battle": {
+    "ok": true,
+    "world": false,
+    "fps": 120,
+    "dt": 4,
+    "plan": null,
+    "bw": {
+      "version": 1,
+      "on": false,
+      "installed": false,
+      "why": "flag off — open with ?arena=world"
+    },
+    "rendersPerFrame": 1,
+    "calls": 1,
+    "tris": 1,
+    "geo": 70,
+    "tex": 65,
+    "canvases": 2,
+    "dpr": 1,
+    "bodies": 4
+  }
+}

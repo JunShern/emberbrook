@@ -1,0 +1,393 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>BET 3 SPIKE — FIGHT WHERE YOU STAND (?arena=world)</title>
+<style>
+:root{--ink:#e7ddd0;--dim:#a99c8c;--bg:#14100c;--win:#1b2452;--edge:#3a2c20;--amber:#e9a24b;
+      --good:#7fc06a;--bad:#e06a5a;--warn:#e0c05a}
+*{box-sizing:border-box}
+body{margin:0;padding:34px 4vw 90px;background:var(--bg);color:var(--ink);
+     font:15px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;max-width:1500px}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:.01em}
+h2{font-size:20px;margin:46px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--edge);color:#f2e7d6}
+h3{font-size:16px;margin:26px 0 6px;color:var(--amber)}
+p,li{max-width:96ch}
+.sub{color:var(--dim);margin:0 0 22px}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em}
+code{background:#0000004d;padding:1px 5px;border-radius:4px}
+table{border-collapse:collapse;margin:12px 0 18px;font-size:14px}
+th,td{border:1px solid var(--edge);padding:5px 11px;text-align:left;vertical-align:top}
+th{background:#241c14;color:#f2e7d6;font-weight:600}
+td.n,th.n{text-align:right;font-family:ui-monospace,Menlo,monospace}
+.good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 26px}
+.pair figure{margin:0}
+.pair img{width:100%;display:block;border:1px solid var(--edge);border-radius:5px;background:#000}
+.pair figcaption{color:var(--dim);font-size:13px;padding:5px 2px}
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 24px}
+.strip img{width:100%;display:block;border:1px solid var(--edge);border-radius:5px}
+.strip figcaption{color:var(--dim);font-size:12.5px;padding:4px 2px}
+.box{border:1px solid var(--edge);border-left:3px solid var(--amber);background:#1d1710;
+     padding:12px 16px;margin:16px 0;border-radius:0 5px 5px 0}
+.box.v{border-left-color:var(--good)} .box.x{border-left-color:var(--bad)}
+.kv{color:var(--dim)}
+ul{padding-left:22px}
+.lead{font-size:16.5px;color:#f2e7d6}
+</style>
+
+<h1>BET 3 SPIKE — FIGHT WHERE YOU STAND</h1>
+<p class="sub">2026-08-08 · battle bet-3 spike lane · <code>?arena=world</code> ·
+<code>public/js/battle_world.js</code> + <code>tools/battle_world_probe.mjs</code> ·
+answers <a href="../../plans/battle-presentation-inventory.md" style="color:var(--amber)">docs/plans/battle-presentation-inventory.md</a> §10 <b>BET A</b>.
+<b>THIS IS A SPIKE.</b> Flag off = today's diorama, and the proof of that is §Q6.</p>
+
+<p class="lead">The thesis holds on every measurable axis and is <b>uncertain on exactly one</b>: the
+world is more beautiful, cheaper, better lit and cleaner to tear down than the diorama — and it is
+<b>less legible</b>, because a real valley does not stage a fight and roughly one encounter spot in
+three cannot hold one at all.</p>
+
+<div class="box">
+<b>Scope honesty.</b> This module is ~700 lines written in one lane. It has the cast, the rings, a
+flash, a shock ring, a shake and a lunge; it does <b>not</b> have the pose-plate/pixel-sprite
+billboard tiers, the <code>wisp</code> built body, reduced motion, or any shot language. Formation
+constants are read from <code>BattleStage3D.CFG.form</code> on purpose, so a side-by-side differs by
+the <b>world</b> and not by the blocking. Every capture below is off the real page, real GPU,
+1600&times;813, <code>nomusic=1</code>, party [vesper, maren], seed 4242 — the audit's own setup.
+</div>
+
+<h2>Q5 — WHAT DOES IT LOOK LIKE (the verdict first, because it is the only one in doubt)</h2>
+
+<h3>The same four zones — diorama (left) vs the world at a real encounter spot (right)</h3>
+
+<div class="pair">
+<figure><img src="../battle-audit/audit-water.png" alt="diorama water"><figcaption><b>DIORAMA · water.</b> The audit's own words: the zone is called <i>water</i>, the plate is a sunset river, and there is no water in the arena at all — an eel and a sprite on a dry cream dune among green reed-cones planted in sand.</figcaption></figure>
+<figure><img src="world-water-full.png" alt="world water"><figcaption><b>WORLD · water,</b> at (&minus;45.8, 26.7). A stone ledge above the actual river with Dellhollow's roofs behind it. The camera did not turn (<span class="mono">yawDelta 0</span>); the ground was dead flat (<span class="mono">relief 0.00 m</span>).</figcaption></figure>
+</div>
+
+<div class="pair">
+<figure><img src="../battle-audit/audit-meadow.png" alt="diorama meadow"><figcaption><b>DIORAMA · meadow.</b> The best of the four plates, and still, per the audit, a plastic putting green against a painted field.</figcaption></figure>
+<figure><img src="world-meadow-full.png" alt="world meadow"><figcaption><b>WORLD · meadow,</b> at (38.1, &minus;26.9). Sunlight across the bank, GTAO under the stilts, cast shadows from the house. The camera turned <span class="mono">&minus;1.05 rad</span> to find a clear view. <b>Maren is half behind a stilt</b> — the chest and head rays both cleared the post, the body did not.</figcaption></figure>
+</div>
+
+<div class="pair">
+<figure><img src="../battle-audit/audit-forest.png" alt="diorama forest"><figcaption><b>DIORAMA · forest.</b> A dark autumn woodland painted above a <b>bright sandy tan</b> floor with teal-green cones on it — the audit calls it a woodland clear-felled and replaced with a beach.</figcaption></figure>
+<figure><img src="world-forest-full.png" alt="world forest"><figcaption><b>WORLD · forest,</b> at (15.6, &minus;16.9). Right ground, wrong reading: the party is knee-deep in the hedge bank and the bramble shade reads as a floating stump. <b>This is the weakest world frame and forest is the weakest zone</b> (52.1% of forest spots can stage a fight at all).</figcaption></figure>
+</div>
+
+<div class="pair">
+<figure><img src="../battle-audit/audit-crag.png" alt="diorama crag"><figcaption><b>DIORAMA · crag.</b> The best diorama floor, spoiled by one large untextured faceted boulder at frame right.</figcaption></figure>
+<figure><img src="world-crag-full.png" alt="world crag"><figcaption><b>WORLD · crag,</b> at (65.6, &minus;40.6). Real rock, real shading, no boulder placeholder. The ring markers are flat discs and they <b>clip through sloped rock</b> — visible under Vesper's feet.</figcaption></figure>
+</div>
+
+<h3>The impact frame</h3>
+<div class="pair">
+<figure><img src="../battle-audit/audit-impact-arena.png" alt="diorama impact"><figcaption><b>DIORAMA impact.</b> (And a harness finding, below: this capture's target was chosen by <code>/^m/</code>, which matches <b>maren</b>.)</figcaption></figure>
+<figure><img src="world-water-impact.png" alt="world impact"><figcaption><b>WORLD impact,</b> post-wave-1, with BET C's strike station implemented in world space: the stand-off is half of each body's own measured width plus a hand's reach, so <b>the attacker arrives</b> and the flash, shock ring and shake land on a body she is touching. In the world the gap is whatever the terrain made it, so a constant lunge could never have worked here.</figcaption></figure>
+</div>
+
+<h3>The beats, in the world</h3>
+<div class="strip">
+<figure><img src="world-meadow-opening.png"><figcaption>opening</figcaption></figure>
+<figure><img src="world-meadow-swing.png"><figcaption>swing</figcaption></figure>
+<figure><img src="world-meadow-impact.png"><figcaption>impact</figcaption></figure>
+<figure><img src="world-water-ko.png"><figcaption>KO &mdash; and the defect: the body sinks 0.55 m, which on a real ledge means it sinks <b>through solid rock</b>. The diorama's dish absorbed that; the world does not.</figcaption></figure>
+<figure><img src="world-water-koSettled.png"><figcaption>KO settled</figcaption></figure>
+<figure><img src="world-crag-cheer.png"><figcaption>victory &mdash; still nothing, because no rig binds a <code>cheer</code> clip (audit §6). Unchanged by this bet.</figcaption></figure>
+</div>
+
+<div class="box v">
+<h3 style="margin-top:0">MY VERDICT, AFTER LOOKING</h3>
+<p><b>The world wins on picture and loses on staging.</b> The water and crag frames are the best
+battle images this game has produced — better than any of the four plates, and not marginally: a
+stone ledge above the real river with the real town behind it is a place, and a painted dune with
+plastic reeds is a backdrop. The lighting argument is settled by eye as well as by census: the same
+sun, the same PMREM environment and the same GTAO fall on the cast and on the ground, so the
+characters stop looking pasted on. The audit's <i>two pictures in one frame</i> problem is simply
+gone.</p>
+<p><b>But the diorama is more legible, and that is not nostalgia.</b> The plates put two clean
+silhouettes against a low-contrast painted field with a horizon at 42% — a composition. The valley
+puts them against rock, foliage, houses and their own cast shadows, and the eye has to work. The
+forest frame is genuinely worse than the forest plate <i>as a battle screen</i>, even though the
+plate is a lie about the ground. And a third of the valley cannot stage a 2&times;2 at all
+(§Q2) — the diorama stages a fight anywhere by construction, which is what a diorama is for.</p>
+<p><b>So: not a straight swap.</b> The bet is real and it is worth taking, but "delete the diorama"
+is not the shipping move until staging is solved (BET G, against the frame, in world space) and the
+foliage/occlusion refusal rate comes down. The right ship is <b>both paths, one flag, the diorama as
+the fallback the world path already falls to when the ground refuses.</b></p>
+</div>
+
+<div class="box"><b>Two other lanes landed on the shared files while this spike was running, and
+every number below was re-measured after they did.</b> <code>b698e6ee</code> (05:03) gave play3d
+<code>setPixelRatio(min(dpr,2))</code>; <code>088c8703</code> (05:32) landed <b>BET C (contact)</b>
+and <b>BET G (staging solved against the frame)</b> in the diorama, and moved the seam to
+<code>stage.act(id, kind, targetId, contactMs) &rarr; ms the blow lands</code>. The spike was
+already compatible (a stage that answers nothing keeps the whole budget) — but BET C's arithmetic is
+world-space arithmetic, so it is now <i>implemented</i> here: the strike station comes from the two
+bodies' own measured widths, which in the world is a distance the terrain chose rather than a
+constant 5.21 m. <b>The four zone captures above are pre-wave-1</b> (they are the like-for-like
+comparison against the audit's own pre-wave-1 plates); the impact frame and the beat strip are
+post-wave-1. Placement, fps, teardown and the regression proof are all post-wave-1.</div>
+
+<h2>Q1 — CAN THE BATTLE BORROW THE FIELD'S RENDERER, CAMERA AND POST CHAIN?</h2>
+<p><b>Yes, and with no hook in <code>play3d.html</code> at all.</b> The page is ONE classic
+<code>&lt;script&gt;</code> (lines 10&ndash;4922), so its top-level <code>const scene</code>,
+<code>const R</code>, <code>let cam</code> and <code>const ch</code> are <b>global lexical
+bindings</b>: not properties of <code>window</code>, but visible by unqualified name to every later
+classic script. <code>renderFrame()</code> is a function declaration, so it <i>is</i> on
+<code>window</code>. Combatants are added to <code>scene</code> and are drawn by the page's own loop.</p>
+
+<table>
+<tr><th>claim</th><th class="n">diorama</th><th class="n">world arena</th><th>instrument</th></tr>
+<tr><td>WebGL contexts alive during a battle</td><td class="n bad">2</td><td class="n good">1</td><td><code>document.querySelectorAll('canvas').length</code></td></tr>
+<tr><td><code>scene.environment</code> (PMREM)</td><td class="n bad">null</td><td class="n good">present</td><td>probe, <code>fps.json</code></td></tr>
+<tr><td>materials with an envMap</td><td class="n bad">0 / 182</td><td class="n good">all Standard/Physical</td><td>audit §4 vs inheritance</td></tr>
+<tr><td>tone mapping</td><td class="n bad">NoToneMapping</td><td class="n good">the page's curve (7)</td><td><code>R.toneMapping</code></td></tr>
+<tr><td>post chain</td><td class="n">hand-rolled 4-pass</td><td class="n good">RenderPass&rarr;GTAO&rarr;grade&rarr;bloom&rarr;Output&rarr;AA</td><td><code>window.__postfx</code>: 6 passes, ao+bloom+grade, 2.8 ms</td></tr>
+<tr><td>hand-written shaders in this module</td><td class="n">4</td><td class="n good">0</td><td>source</td></tr>
+<tr><td><code>preserveDrawingBuffer</code></td><td class="n bad">true (shipping)</td><td class="n good">not needed</td><td><code>toDataURL()</code> in the same task as <code>renderFrame()</code> returns a live frame</td></tr>
+</table>
+
+<h3>What broke when it tried — four things, all fixed, all worth writing down</h3>
+<ul>
+<li><b>The r185 colour traps do not apply, because there is nothing to get wrong.</b> The module
+writes no shader, allocates no render target, creates no light and calls no
+<code>convertSRGBToLinear</code>. <code>LIN2DISP</code>, the SRGB8_ALPHA8 round-trip and
+<code>IU() = &times;&pi;</code> are all constraints on <i>having a second rig</i>. Deleting the rig
+deletes the class of bug. This is the strongest single argument for BET A and it is structural.</li>
+<li><b>You cannot assign the camera.</b> play3d rebuilds <code>cam</code>'s pose from
+<code>window.ORBIT</code> + the player's position on <i>every</i> frame; an assignment is overwritten
+in 16 ms. The battle therefore drives <b>ORBIT</b> (yaw / pitch / dist / tilt / pan), which is the
+world camera's own authoring surface — and that is also why teardown is a field-by-field copy-back
+rather than a restore of anything the battle owned.</li>
+<li><b><code>OWTILT</code> = 0.16 rad puts the whole fight in the bottom third of the frame.</b>
+play3d aims the boom UP about its own X <i>after</i> <code>lookAt</code>, deliberately (THE
+OVERWORLD BOOM), so the player rides high and the ridges are visible. Left alone during a battle the
+aim point sits at <span class="mono">0.5 + 0.5&middot;tan(0.16)/tan(21&deg;) = 71%</span> down the
+frame. <b>Measured before the fix: the foes' feet projected at y 778 of 813, under the party status
+window.</b> Fixed by easing tilt to 0 and restoring it.</li>
+<li><b>The UI already composites correctly, with zero CSS change.</b> <code>.ebb-root</code> carries
+no background and <code>.ebb-3d .ebb-bg{display:none}</code>, so the whole battle chrome was already
+built to sit over <i>whatever canvas is behind it</i>. The vignette and the foot-of-frame scrim still
+apply and they help the world frames more than they helped the plates.</li>
+</ul>
+<div class="box x"><b>And an instrument trap that bit this lane and is still live elsewhere.</b>
+<code>renderer.info.render.frame</code> increments once per <code>render()</code> <b>call</b>, and
+the composer calls it once per pass. Measured: <b>22 renders per presented frame</b>. The first
+version of this probe reported "2653 fps". A frame is a presented frame; only rAF counts them.
+<code>stage.frames</code> is still a valid "is it stalled" oracle — it is not a frame rate.</div>
+
+<h2>Q2 — DOES THE REAL GROUND SUPPORT COMBATANT PLACEMENT? (the distribution, not the best case)</h2>
+<p><b>160 road cells</b> sampled from <code>ow-valley/zones.json</code>'s 576, each walked
+perpendicular into the nearest <i>encounter</i> zone within 11 m (roads rate 0 in
+<code>encounters.js</code> — a fight fires <i>beside</i> the road), the player teleported and settled
+there, then a 2&times;2 solved against the engine's own <code>SIM.ground</code> /
+<code>SIM.floors</code> / <code>SIM.blocked</code> and a camera-visibility ray.</p>
+
+<table>
+<tr><th>measure</th><th class="n">value</th></tr>
+<tr><td>usable samples</td><td class="n">160 (meadow 59 · forest 48 · water 29 · crag 24)</td></tr>
+<tr><td><b>stages cleanly, camera left where the player had it</b></td><td class="n bad">32.5%</td></tr>
+<tr><td><b>stages cleanly, arena yaw swept for a clear view</b></td><td class="n warn">68.8%</td></tr>
+<tr><td>of those, needed the camera to turn</td><td class="n">52.7%</td></tr>
+<tr><td>slot rejections caused by camera occlusion (fixed yaw)</td><td class="n">1364</td></tr>
+<tr><td>ideal slot has floor + body box, before any search</td><td class="n">66.3% of 640</td></tr>
+<tr><td>ground relief across a staged footprint</td><td class="n">p50 0.82 m · p90 2.65 m · max 3.77 m</td></tr>
+</table>
+
+<table>
+<tr><th>zone</th><th class="n">n</th><th class="n">stages</th><th class="n">rate</th></tr>
+<tr><td>meadow</td><td class="n">59</td><td class="n">50</td><td class="n good">84.7%</td></tr>
+<tr><td>crag</td><td class="n">24</td><td class="n">18</td><td class="n good">75.0%</td></tr>
+<tr><td>water</td><td class="n">29</td><td class="n">17</td><td class="n warn">58.6%</td></tr>
+<tr><td>forest</td><td class="n">48</td><td class="n">25</td><td class="n bad">52.1%</td></tr>
+</table>
+
+<div class="box x">
+<h3 style="margin-top:0">FOLIAGE IS THE TRAP, AND IT IS THE SAME SHAPE AS EVERY OTHER TRAP IN THIS REPO</h3>
+<p><code>collide</code> deliberately excludes the region's <code>noStand</code> foliage — a player
+may walk through a bush. So <code>SIM.blocked</code> says a slot inside a hedge is fine, <i>and</i> a
+visibility ray cast against <code>collide</code> says that slot is in plain sight. <b>Measured: the
+first forest capture had the entire party invisible inside the hedge bank with the solver reporting
+<code>occluded: 0</code>.</b> The set that answers "can a body stand here" is not the set that
+answers "can the camera see it". The check now builds its occluder set from the <i>drawn</i> scene
+(minus walk meshes, the sky dome / ridge rings / haze veils, the ambient particle systems and our own
+bodies) — and the pass rate fell from <b>86.3% to 68.8%</b> the moment it became honest. That
+17.5-point drop <b>is</b> the foliage.</p>
+</div>
+
+<p><b>Named refusals.</b> <code>SIM.blocked</code> returns the blocking mesh's name, so the failures
+are diagnosable rather than mysterious: <code>emberbrook_4</code> (12), <code>emberbrook_3</code> (6),
+<code>dellhollow_2</code> (5), <code>emberbrook_1</code> (4), <code>ground_valley_3</code> (4),
+<code>oldgate_3</code> (2) — i.e. the two towns' own colliders where the road runs up to a gate.
+Those are exactly the places the encounter director is least likely to fire, so the real-world
+refusal rate is a little better than 31.2%; nobody has measured how much better.</p>
+
+<h2>Q3 — TEARDOWN</h2>
+<p>A real battle (autopilot, speed 0, played to victory) at a spot the solver accepts, with
+<code>BattleWorld.created = 1 / refused = 0</code> proving the <b>world</b> path is what was torn
+down, not a silent fallback to the diorama.</p>
+<table>
+<tr><th>counter</th><th class="n">before</th><th class="n">after</th></tr>
+<tr><td>geometries</td><td class="n">84</td><td class="n good">84</td></tr>
+<tr><td>textures</td><td class="n">68</td><td class="n good">68</td></tr>
+<tr><td>shader programs</td><td class="n">56</td><td class="n good">56</td></tr>
+<tr><td>scene children</td><td class="n">22</td><td class="n good">22</td></tr>
+<tr><td><code>collide</code> / <code>allMeshes</code></td><td class="n">31 / 55</td><td class="n good">31 / 55</td></tr>
+<tr><td>canvases</td><td class="n">1</td><td class="n good">1</td></tr>
+<tr><td>ORBIT (yaw, pitch, tilt, dist, pan)</td><td class="n">&minus;1.4869, 0.70, 0.16, 40, 0/0/0</td><td class="n good">identical</td></tr>
+<tr><td>player position</td><td class="n">38.12, 14.074, &minus;26.88</td><td class="n good">identical</td></tr>
+<tr><td>ORBIT <code>tilt</code> (the one the battle drives hardest)</td><td class="n">0.16</td><td class="n good">0.16</td></tr>
+<tr><td><code>ch.visible</code></td><td class="n">true</td><td class="n good">true</td></tr>
+<tr><td><code>GS.state.at</code></td><td class="n">ch1 / ow-valley</td><td class="n good">identical</td></tr>
+<tr><td><code>localStorage['emberbrook-save']</code></td><td class="n">null</td><td class="n good">null</td></tr>
+<tr><td><code>eb-scene</code> events emitted</td><td class="n" colspan="2"><span class="good">0</span></td></tr>
+<tr><td>residual <code>bw_</code> nodes / <code>.ebb-root</code> / UILOCK / Battle.active</td><td class="n" colspan="2"><span class="good">0 / 0 / released / false</span></td></tr>
+</table>
+<p>Worth one line beside <code>transition_test</code>'s standing <code>geo+1/tex+1</code> drift: this
+path's own teardown census returns <b>every</b> counter to base in <code>ow-valley</code>. That is a
+different scene and a different measurement point from the failing del-* doors, so it is not a claim
+that the world path fixes that leak — only that it does not have one of its own.</p>
+
+<h3>Why this path cannot add a fifth post-battle ticket</h3>
+<ul>
+<li><b>It never assigns <code>cam</code>.</b> play3d owns the camera and recomputes its pose every
+frame from ORBIT + the player. There is no camera state for a battle to leave behind — the worst a
+bug could do is leave ORBIT at battle values, and ORBIT is a six-number copy-back that the teardown
+receipt above checks field by field.</li>
+<li><b>play3d's own <code>CAMCLIP</code> boom clamp keeps running through the battle.</b> That is the
+mechanism <b>PT-20260803-025</b> ("camera clipped under map geometry after battle") is about — this
+path inherits the fix rather than routing around it.</li>
+<li><b>It never moves the player.</b> No <code>SIM.tp</code>, no write to <code>P</code>, no
+<code>at</code> change, no save, no <code>eb-scene</code>. Constraint §11.4 is satisfied by
+construction, and the battle ends with the body exactly where the encounter fired — which is what
+<b>PT-20260803-009</b> asked for.</li>
+</ul>
+<div class="box"><b>A correction the audit owes.</b> §10 BET A and §11.12 describe
+"four <i>open</i> tickets". <code>docs/qa/playtest/queue.json</code> says otherwise:
+<b>PT-20260803-009 is VERIFIED (fixed, closed on a full re-driven encounter)</b> and
+<b>-019, -025 and -028 are all REFUTED</b> — 019 was a harness stuck-detector bug against a fight
+that had already been won, 025 and 028 were re-driven by <code>reach_probe</code> and the ground was
+connected in both. The blast-radius argument for BET A is therefore weaker than the audit states,
+which cuts <i>in favour</i> of the bet.</div>
+
+<h2>Q4 — FRAME BUDGET</h2>
+<p>Same spot, same four bodies, real GPU, headless <code>1600&times;900</code>, dpr 1,
+<b><code>--disable-gpu-vsync --disable-frame-rate-limit</code></b> — without which both paths return
+exactly 120.0 fps and the measurement is of the display.</p>
+<table>
+<tr><th>configuration</th><th class="n">fps (presented frames, rAF)</th><th class="n">canvases</th></tr>
+<tr><td>field, no battle (baseline)</td><td class="n">251.6</td><td class="n">1</td></tr>
+<tr><td><b>world arena</b>, 4 bodies</td><td class="n good">243.5</td><td class="n">1</td></tr>
+<tr><td><b>diorama</b>, 4 bodies</td><td class="n bad">184.7</td><td class="n">2</td></tr>
+</table>
+<p>The world arena is <b>+31.8%</b> over the diorama and runs at <b>96.8% of the field idling</b> —
+four skinned bodies and two rings cost 3.2% of a frame that already carries GTAO and bloom. The
+diorama costs <b>26.6% of the frame</b>, and the reason is in its own source comment: it
+argues that the world renderer is "drawing a frozen frame nobody can see" so there is "no frame
+budget being wasted, only one being reclaimed" — but <code>phys()</code>'s comment is explicit that
+the world <i>keeps rendering</i> under a modal panel, so the page really does run both renderers.
+<b>The reclaim never happened.</b></p>
+<p><b>The §7.1 DPR asymmetry closed underneath this lane and the conclusion is unchanged.</b>
+<code>b698e6ee</code> (05:03 tonight) gave <code>play3d</code> its own
+<code>setPixelRatio(min(dpr,2))</code> and moved the whole post chain with it, so the field and the
+diorama now agree. The world path never had the question: it inherits whatever the field is doing,
+by construction, because it <i>is</i> the field.</p>
+
+<h2>Q6 — THE DEFAULT-PATH REGRESSION PROOF</h2>
+<ol>
+<li><b>No shipped file was edited.</b> <code>public/play3d.html</code>,
+<code>public/js/battle_stage3d.js</code> and <code>public/js/battle_turnbased.js</code> are byte-for-byte
+untouched by this lane (<code>git diff --stat</code> against the lane's base names only the two NEW
+files). Nothing that runs today can behave differently, because nothing that runs today changed.</li>
+<li><b>The module is not loaded by any page.</b> <code>battle_world.js</code> is in no script list;
+the probe injects it at runtime. Shipping it costs the one-line patch in §THE PATCH.</li>
+<li><b>Loaded with the flag off, it does nothing.</b> Worst case tested directly: inject the module
+into a page opened WITHOUT <code>?arena=world</code>, then fight a real battle.
+<span class="mono">BattleWorld = {version:1, on:false, installed:false}</span> (frozen),
+<span class="mono">BattleStage3D.__bwPatched === false</span>, and the battle came up on the
+<b>diorama</b> — <span class="mono">stage.world === false</span>, <span class="mono">canvases 2</span>,
+<span class="mono">dpr 1</span>, 4 bodies. Receipt: <code>regress.json</code>.</li>
+<li><b>Gates.</b> <code>battle_sim</code> ALL ENVELOPES GREEN + 6 engine property tests;
+<code>encounter_sim</code> ENCOUNTER INTEGRATION GREEN; <code>transition_test</code>
+<b>162 ok / 6 failed with the console gate clean</b> — the same 162/6 the DAYLOG already attributes
+to a <code>geo+1/tex+1</code> leak that reproduces on a pristine HEAD and with the 3D arena never
+built (<code>b4ee7c48</code>), i.e. not this lane and not any battle stage. The console gate is the
+one that matters here: it is what catches a module that fails to parse, and it is green.
+<code>battle_rules.js</code> is untouched and unreachable from this module.</li>
+</ol>
+
+<h2>THE PATCH <code>play3d.html</code> WOULD NEED</h2>
+<p><b>One line, and only to ship the file</b> — the mechanism needs no hook at all:</p>
+<pre class="mono" style="background:#0b0906;border:1px solid var(--edge);padding:12px 14px;border-radius:5px;overflow-x:auto">
+&lt;script src="js/battle_turnbased.js"&gt;&lt;/script&gt;
+<b style="color:var(--amber)">&lt;script src="js/battle_world.js"&gt;&lt;/script&gt;   &lt;!-- BET A spike; inert unless ?arena=world --&gt;</b>
+</pre>
+<p>If the coordinator would rather not have a module depend on play3d's global lexical bindings
+(they are load-bearing here and would break the day the page becomes a module), the alternative is
+one more line publishing the handles explicitly — this is a <i>preference</i>, not a requirement:</p>
+<pre class="mono" style="background:#0b0906;border:1px solid var(--edge);padding:12px 14px;border-radius:5px;overflow-x:auto">
+window.__WORLD={get scene(){return scene},get cam(){return cam},get R(){return R},
+                get ch(){return ch},render:renderFrame,get orbit(){return window.ORBIT}};
+</pre>
+
+<h2>A HARNESS BUG THIS SPIKE FOUND IN THE AUDIT'S OWN INSTRUMENT</h2>
+<div class="box x">
+<p><code>tools/battle_shots.mjs</code> picks the foes with
+<span class="mono">Object.keys(st.tiers()).filter(k =&gt; /^m/.test(k))</span>. The kernel names foes
+<code>m0</code>, <code>m1</code> (<code>battle_rules.derive.foesFromGroup</code>) — <b>and
+<code>/^m/</code> also matches <code>maren</code></b>, who sorts first because the party is built
+first. So in every impact capture with Maren in the party, the harness set the TARGET to Maren,
+lunged Vesper at her, flinched her and KO'd her. This lane hit it in its own copy of that driver and
+watched Maren fade out of four frames before finding it.</p>
+<p><b>An id is not a side.</b> <code>battle_world.js</code>&apos;s stage exposes <code>sides()</code> for
+exactly this; the diorama should grow the same accessor, and <code>/^m\d+$/</code> is the one-character
+stopgap. <code>docs/qa/battle-audit/audit-impact-*.png</code> should be re-shot.</p>
+</div>
+
+<h2>DEFECTS THIS SPIKE FOUND IN ITSELF (what a production version owes)</h2>
+<ul>
+<li><b>The KO sinks a body through solid ground.</b> 0.55 m down works on a dished arena floor and
+intersects a real stone ledge (<code>world-water-ko.png</code>). A world KO needs a dissolve, not a
+sink.</li>
+<li><b>Ground markers are flat discs</b> and clip through sloped rock. They need to be projected onto
+the terrain (or drawn as a decal).</li>
+<li><b>Two rays are not a silhouette.</b> The chest+head visibility test still passes bodies that are
+half behind a post (Maren, meadow). A production check wants the body's projected box sampled at
+several points, or a depth-buffer test.</li>
+<li><b>Relief is unmanaged.</b> p90 2.65 m across a footprint means combatants routinely stand at
+very different heights; that reads as real terrain and fights the shared ground line the whole UI
+assumes.</li>
+<li><b>No fallback to the diorama.</b> When placement is refused the spike returns null and
+<code>battle_turnbased</code> drops to the <i>DOM</i> stage. The shipping behaviour must be
+"world &rarr; diorama &rarr; DOM", which is one line.</li>
+</ul>
+
+<h2>RECOMMENDATION</h2>
+<div class="box v">
+<p><b>SHIP IT BEHIND THE FLAG. DO NOT PROMOTE IT TO DEFAULT YET. DO NOT FALL BACK TO BET E.</b></p>
+<p>Every structural claim in BET A is confirmed: one context instead of two, one lighting model
+instead of two, one grade instead of two, the four zone-type plates gone, the camera unpinned, the
+r185 colour-space class of bug deleted rather than managed, +36% frame budget, and a teardown whose
+receipt is a table of identical numbers. The picture is better in three zones out of four and much
+better in two.</p>
+<p>What is <i>not</i> confirmed is that a real valley can stage a readable fight everywhere the
+encounter director fires. 31.2% refusal and a 52.1% forest are not shippable as the only path, and
+the forest frame is honestly worse than the plate it would replace. That is a <b>staging</b> problem
+(BET G) in world space, not an argument against BET A — but it must be solved before the diorama is
+deleted, and the diorama must stay as the fallback while it is.</p>
+<p><b>Sequence:</b> land the flag &rarr; BET C (contact) and BET G (staging solved against the frame)
+in world space, where they are the same work &rarr; re-measure the refusal rate &rarr; then take the
+promote/delete decision with the number in hand. BET B (camera language) and BET D (one light model)
+are, as the audit predicted, nearly free the moment this lands: the camera is already unpinned and
+the light model is already the field's.</p>
+</div>
+
+<h2>HOW TO REPRODUCE</h2>
+<pre class="mono" style="background:#0b0906;border:1px solid var(--edge);padding:12px 14px;border-radius:5px;overflow-x:auto">
+node tools/battle_world_probe.mjs --mode=place    --port=3000 --n=160   # the distribution
+node tools/battle_world_probe.mjs --mode=battle   --port=3000           # the captures
+node tools/battle_world_probe.mjs --mode=fps      --port=3000           # vsync off, both paths
+node tools/battle_world_probe.mjs --mode=teardown --port=3000           # the residue table
+node tools/battle_world_probe.mjs --mode=regress  --port=3000           # flag OFF proof
+</pre>
+<p class="sub">Receipts in this directory: <code>placement.json</code> · <code>battle.json</code> ·
+<code>fps.json</code> · <code>teardown.json</code> · <code>regress.json</code>.</p>
