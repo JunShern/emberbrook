@@ -7,7 +7,7 @@
  "footprint": {
   "x": [
    -35.0,
-   135.0
+   141.5
   ],
   "z": [
    -9.0,
@@ -110,6 +110,30 @@
    1.7
   ]
  ],
+ "buttresses": [
+  [
+   112.0,
+   4.6,
+   2.6,
+   29.0,
+   3.0
+  ],
+  [
+   124.5,
+   3.1,
+   1.35,
+   26.0,
+   2.4
+  ],
+  [
+   135.5,
+   5.2,
+   3.4,
+   31.0,
+   3.4
+  ]
+ ],
+ "front_free": 4.2,
  "tiers": {
   "west": {
    "verts": 292,
@@ -172,22 +196,22 @@
    "depth_max": 6.38
   },
   "d": {
-   "verts": 712,
-   "polys": 654,
+   "verts": 922,
+   "polys": 859,
    "x": [
     112.0,
-    135.0
+    141.5
    ],
    "col_m": 1.55,
    "mean_edge": 1.365,
    "depth_min": 0.35,
-   "depth_max": 5.95
+   "depth_max": 6.47
   }
  },
- "total_verts": 5960,
- "total_polys": 5572,
- "clearance_clamped": 3,
- "clearance_worst_m": 0.047,
+ "total_verts": 6170,
+ "total_polys": 5777,
+ "clearance_clamped": 52,
+ "clearance_worst_m": 3.697,
  "placeholder": {
   "name": "cliff_town",
   "loc": [
