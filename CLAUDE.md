@@ -814,9 +814,21 @@ git runs here, on branch `migration/3d-hybrid`.
   carries rotation 0 / scale 0.55, put there by `tools/t3_rock_projection.py`, which had already
   MEASURED that rotation as the cause of the judge's "severe vertical texture stretching" on
   loop-stairs/lockhead/cottage. So re-running the wall's own builder silently reverted the fix
-  for the defect it was being re-run to help, on three plates: 15.3% of lockhead and 13.5% of
-  loop-stairs changed and the wall came back as hanging vertical strands. **THE ONLY TELL WAS A
-  PICTURE** — no gate, no digest and no log line said anything. Seed a value on CREATION and
+  for the defect it was being re-run to help: 15.3% of lockhead and 13.5% of loop-stairs changed
+  and the wall came back as hanging vertical strands. **THE ONLY TELL WAS A PICTURE** — no gate,
+  no digest and no log line said anything.
+  **SCOPE CORRECTED 2026-08-08 (this entry said "on three plates" and that clause invented three
+  rounds of phantom debt).** Those percentages were round 5's OWN DRAFT A/B against its own
+  in-flight blend — NOT shipped plates. A later lane extracted ALL 34 committed
+  `dellhollow-master.blend` revisions from the t3 ship to HEAD and swept them in one Blender:
+  **34 of 34 read rotation 0 / scale 0.55.** The only blend that ever held 90/1.05 was round 5's
+  uncommitted scratchpad experiment, and `t2_cliff_south.py` was never re-run between the t3 ship
+  and round 5 — so nothing defective was ever committed, let alone baked. Rounds 6 and 7 each
+  inherited "the repair is still owed", each correctly measured those cameras at the floor, and
+  each read "unchanged" as "not yet shipped". **A NOTE'S SCOPE IS PART OF ITS CLAIM**: "on three
+  plates" and "on three draft frames" send three rounds to different places, and the only way out
+  was to re-derive the premise instead of inheriting it. The LESSON above stands unchanged — a
+  generator that unconditionally re-asserts a number another tool owns is a time bomb. Seed a value on CREATION and
   print what you find thereafter; two tools may not both own one number. Also why a REPRO GATE
   belongs before any edit to a live generator: re-running t2_cliff_south unchanged moved 42 of
   5,960 vertices by up to 0.30 m (its clearance ray-cast is a function of town geometry that
