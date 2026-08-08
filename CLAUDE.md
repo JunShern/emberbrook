@@ -135,6 +135,25 @@ git runs here, on branch `migration/3d-hybrid`.
   alternatives passed the oracle and failed the drive, one roofed by derived planking that
   `self_roof` cannot see because it tests centre-lines. Same family as `_court_probe`: a gate
   that measures its own drawing cannot measure its own build.
+- **tools/dh_pixel_census.py — A RAY-CASTER STOPS AT THE FIRST HIT, AND A HAZE CARD IS NOT THE
+  ANSWER IT LANDS ON** (2026-08-08). It drops `hide_render` objects and MARCHES THROUGH
+  render-only volume cards (a Volume link with no Surface link), accumulating τ = density × path,
+  so the object it names is the one actually making the pixel. This overturned ALL THREE of round
+  3's handover claims about `fx_haze_east`: it is not "missing a Principled BSDF" (six haze
+  materials are two-node Volume Scatters, so an albedo resolver hunting a surface BSDF returns
+  nothing on all of them — the resolver found its own blind spot); it is not the crushed-pixel
+  culprit (a 5.4% wash standing IN FRONT of `cliff_east_closure`, which is 83–96% of every crushed
+  region); and `fx_haze_south` is not implicated at quay-west at all (zero rays cross it).
+  THE REAL DEFECT WAS AN INVERTED DEPTH CUE: the town's most DISTANT surface was also its DARKEST,
+  because the card meant to supply aerial perspective is a 6 m CURTAIN, not a medium — its τ is
+  identical whether the wall is 90 m or 170 m out. Fixed as ATMOSPHERE (a world-Z density ramp,
+  `tools/dh_haze_east_depth.py`), explicitly NOT as light: `KEY_gorgewall` already exists and
+  raising it was rejected once because it prints the rock's 16.7 m texture period as a quilt —
+  more light makes a tiling artefact legible, more haze hides it AND lifts the black. Judge:
+  lockfive and weave CLEARED, crossing's pitch-black pair CLEARED, gate moved from "a flat, empty
+  dark void" to "atmospheric fog" (what survives there is a different, real defect the void hid).
+  **DENSITY IS NOT THE WASH** — crosswise τ put `mat_haze_rim` at 0.594 and the east card at
+  0.055, so it read mid-table on density while delivering a tenth of its siblings' effect.
 - **tools/plate_probe.py — GROUND LUMINANCE WITHOUT BLENDER** (2026-08-07): reconstructs a
   world XYZ per pixel from a bundle's own solved camera + depth.png, derives normals from the
   world-position gradient and splits a plate into GROUND/WALL/VOID — 15 plates in ~40 s. The
