@@ -19473,3 +19473,16 @@ when the ground refuses.**
 
 Reproduce: `node tools/battle_world_probe.mjs --mode=place|battle|fps|teardown|regress
 --port=3000`. Receipts: `docs/qa/battle-world/{placement,battle,fps,teardown,regress}.json`.
+
+ADDENDUM, battle-cast lane — **THE TWO FIXED EARLY RETURNS, PROVEN ON THE REAL MENU
+PATH** and not only through the stage's verbs (a capture that drives `stage.act()` proves
+the STAGE; it does not prove `battle_turnbased` ever calls it). Headless Chrome through
+`cdp.mjs`, driving `window.__EBB_SCREEN.onKey()` — the same actions the capture-phase key
+listener feeds it — on a real `Battle.start`:
+
+    menu:  Attack | Item | Flee
+    FLEE   -> "Cornered — no escape!"      (the action fired `stepIn(by,'flee')`, which
+                                            used to be skipped outright, then `stage.flee`)
+    ITEM   -> "Vesper uses Tonic." / "Vesper recovers 23 HP."
+    console errors: none, both runs
+
