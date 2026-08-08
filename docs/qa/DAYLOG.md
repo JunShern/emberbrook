@@ -20262,3 +20262,71 @@ camera does not swing" was a stated property of the spike and best-of erodes it,
 but this factorial cannot attribute that to the pitch axis versus best-of. A
 fifth arm separates them with no code change — `CAM.on = true` with
 `CAM.solve.pitches = [0.27]` — and was not run.
+
+---
+
+## 2026-08-08 — MEASUREMENT LANE: THE FIFTH ARM. THE SWING IS BEST-OF; THE STAGING IS PITCH
+
+The previous entry ends "a fifth arm separates them ... and was not run." Run, at
+BOTH visibility settings, over the same 160 road cells.
+
+**ONE INSTRUMENT KNOB, AND IT IS NOT IN `public/`.** The arm was NOT expressible
+with the existing flags: the probe's knob block set `CFG.place.visMin` and
+`CAM.on` and nothing else. `tools/battle_world_probe.mjs` grew `--pitches`, the
+same shape as its two neighbours — it overwrites `BattleWorld.CAM.solve.pitches`
+at solve time and reads it back into the arm record. `--bcam=1 --pitches=0.27` is
+therefore the new sweep machinery (the `yawKeep` collection plus the `scoreView`
+ranking) with the extra pitch samples taken away, and 0.27 is `CFG.cam.pitch` —
+the exact elevation the yaw-only arms already gate placement at. No module
+changed, no default moved, `?arena=world` still inert.
+
+    node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 \
+         --vismin=<0|0.67> --bcam=1 --pitches=0.27
+
+### THE SIX ARMS
+
+| arm (vis test x sweep)                  | staging rate  | `yawTurned` |
+|-----------------------------------------|---------------|-------------|
+| old test x yaw only, FIRST (spike)       | 68.8% 110/160 | 52.7%       |
+| old test x yaw only, **BEST** (new)      | 68.8% 110/160 | **93.6%**   |
+| old test x yaw x pitch, best (shipped)   | 69.4% 111/160 | 91.9%       |
+| new test x yaw only, FIRST               | 62.5% 100/160 | 49.0%       |
+| new test x yaw only, **BEST** (new)      | 62.5% 100/160 | **91.0%**   |
+| new test x yaw x pitch, best (shipped)   | 64.4% 103/160 | 89.3%       |
+
+### THE ATTRIBUTION, PLAINLY
+
+**ALL of the swing erosion is best-of selection, and MORE than all of it: the
+pitch axis pulls the swing back down.** Changing only first-that-places to
+best-by-`scoreView`, at the spike's single elevation, moves `yawTurned`
+49.0 -> 91.0 (new test, +42.0 points) and 52.7 -> 93.6 (old test, +40.9). The
+published erosions were +40.3 and +39.2. Adding the other three pitches on top
+takes 1.7 points back OFF the swing at both settings — a lower boom finds the
+player's own heading placeable more often, which is the sign the code comment
+predicts.
+
+**AND best-of buys ZERO staging.** Both new arms reproduce their yaw-only
+partner's rate EXACTLY and per zone: 68.8% / 17-25-18-50 and 62.5% /
+13-20-18-49. Stronger than the counts — the fifth arm's 110 ok cells at the old
+test are **THE SAME 110 CELLS** as the shipped spike `placement.json`,
+symmetric difference 0. That is not luck, it is structural: `solveArena` ranks
+`okPlans`, and every member of `okPlans` is already `ok`. **A RANKING CANNOT
+MAKE A CELL FAIL.** So the whole +1.9 belongs to the pitch axis, inside the
+placement loop, and none of it to the ranking.
+
+The two effects are therefore fully separable, which answers the open question
+the factorial could not: the property "where the world is open the camera does
+not swing" and the +1.9 staging points **are not in tension.**
+
+**RESTORATION COST: ZERO STAGING SITES** — recommendation only, not built. Rank
+the PITCH axis and keep the FIRST placeable yaw (the spike's rule, which is where
+"the player's own current heading is ALWAYS tried first" actually lives). Every
+one of the 103 cells survives, because ranking never changes `ok`, and
+`yawTurned` should return to <= 49% — at most 49%, because the extra pitches give
+yaw 0 more chances to place than it had at 0.27 alone. THE `<= 49%` IS A
+PREDICTION, NOT A MEASUREMENT: that variant is not expressible through config and
+would be an edit to `solveArena`, which a measurement lane does not make. It is a
+one-line seventh arm for whoever owns the change.
+
+Receipt: `docs/qa/battle-world/factorial.json` (`arms.oldvis-bestyaw`,
+`arms.newvis-bestyaw`, `yaw_attribution`).

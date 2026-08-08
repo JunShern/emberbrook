@@ -50,8 +50,18 @@ const WORLD = arg('arena', 'world');
 //       return the first yaw that places, no scoreView ranking.
 // Neither knob is a code change and neither moves a default — both are read at
 // solve time out of the module's own config.
+//   (c) AND --bcam ITSELF BUNDLES TWO THINGS: the pitch AXIS and best-of-rather-
+//       than-first. `--pitches=0.27` overwrites CAM.solve.pitches with the ONE
+//       elevation the spike used (= CFG.cam.pitch), so `--bcam=1 --pitches=0.27`
+//       is the new sweep machinery — yawKeep collection plus the scoreView
+//       ranking — with the extra pitch samples taken away. That is the fifth arm
+//       of the factorial and the only one that can attribute the yawTurned
+//       erosion (52.7 -> 91.9%) to best-of versus the pitch axis. Same shape as
+//       the two above: a list read at solve time, no default moved, nothing in
+//       public/ touched.
 const VISMIN = arg('vismin', null);      // null = leave CFG.place.visMin alone
 const BCAM = arg('bcam', null);          // '0' = yaw-only sweep (spike behaviour)
+const PITCHES = arg('pitches', null);    // e.g. '0.27' — CAM.solve.pitches, comma-separated
 const CDP_PORT = await freePort();
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -454,11 +464,13 @@ const FPSDRIVE = (worldMode) => `(async () => {
     if (!BW) return { ok: false };
     ${VISMIN == null ? '' : `BW.CFG.place.visMin = ${parseFloat(VISMIN)};`}
     ${BCAM == null ? '' : `BW.CAM.on = ${BCAM === '0' || BCAM === 'false' ? 'false' : 'true'};`}
-    return { ok: true, visMin: BW.CFG.place.visMin, camOn: BW.CAM.on };
+    ${PITCHES == null ? '' : `BW.CAM.solve.pitches = ${JSON.stringify(PITCHES.split(',').map(parseFloat))};`}
+    return { ok: true, visMin: BW.CFG.place.visMin, camOn: BW.CAM.on,
+             pitches: BW.CAM.solve.pitches.slice() };
   })()`, 30000);
-  console.log(`knobs: visMin=${knobs.visMin}  CAM.on=${knobs.camOn}`
+  console.log(`knobs: visMin=${knobs.visMin}  CAM.on=${knobs.camOn}  pitches=[${knobs.pitches}]`
             + `   [vis test = ${knobs.visMin > 0 ? 'NINE-SAMPLE (new)' : 'TWO SPINE RAYS (old)'};`
-            + ` sweep = ${knobs.camOn ? 'yaw x pitch, best (new)' : 'yaw only, first (old)'}]`);
+            + ` sweep = ${knobs.camOn ? (knobs.pitches.length > 1 ? 'yaw x pitch, best (new)' : 'yaw only, BEST (isolated)') : 'yaw only, first (old)'}]`);
 
   if (MODE === 'place') {
     const all = JSON.parse(readFileSync(arg('pts', join(ROOT, 'tools/_bw_roadpts.json')), 'utf8'));
@@ -486,9 +498,11 @@ const FPSDRIVE = (worldMode) => `(async () => {
     const blockers = {};
     for (const r of usable) for (const b of (r.rawBlockers || [])) blockers[b] = (blockers[b] || 0) + 1;
     const summary = {
-      arm: { visMin: knobs.visMin, camOn: knobs.camOn,
+      arm: { visMin: knobs.visMin, camOn: knobs.camOn, pitches: knobs.pitches,
              visTest: knobs.visMin > 0 ? 'nine-sample' : 'two-spine-rays',
-             sweep: knobs.camOn ? 'yaw x pitch (best)' : 'yaw only (first)' },
+             sweep: knobs.camOn
+               ? (knobs.pitches.length > 1 ? 'yaw x pitch (best)' : 'yaw only (best)')
+               : 'yaw only (first)' },
       sampled: rows.length, skipped: skipped.length, usable: usable.length,
       ok: ok.length, fail: bad.length,
       rate: +(ok.length / Math.max(1, usable.length) * 100).toFixed(1),

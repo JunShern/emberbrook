@@ -8,7 +8,7 @@
     "--bcam=0": "BattleWorld.CAM.on = false, which solveArena already treats as the spike's own behaviour to the line: one fixed pitch (0.27), return the FIRST yaw that places, no scoreView ranking",
     "--bcam=1": "the SHIPPED sweep: yaw x pitch over CAM.solve.pitches, take the BEST by scoreView rather than the first"
   },
-  "confound_inside_bcam": "--bcam bundles TWO changes: the pitch axis AND best-of rather than first-that-places. They are separable with one more arm (CAM.on=true, CAM.solve.pitches=[0.27]) which was not run.",
+  "confound_inside_bcam": "--bcam bundles TWO changes: the pitch axis AND best-of rather than first-that-places. RESOLVED 2026-08-08 by the fifth and sixth arms below (CAM.on=true with CAM.solve.pitches=[0.27], at both visibility settings) -- see yaw_attribution.",
   "when": "2026-08-08",
   "arms": {
     "oldvis-yawonly": {
@@ -150,6 +150,82 @@
           "ok": 49
         }
       }
+    },
+    "oldvis-bestyaw": {
+      "arm": {
+        "visMin": 0,
+        "camOn": true,
+        "pitches": [
+          0.27
+        ],
+        "visTest": "two-spine-rays",
+        "sweep": "yaw only, BEST (isolated)"
+      },
+      "sampled": 160,
+      "usable": 160,
+      "ok": 110,
+      "fail": 50,
+      "rate": 68.8,
+      "rateFixedYaw": 32.5,
+      "yawTurned": 93.6,
+      "occludedSlotsFixedYaw": 1364,
+      "rawCleanPct": 63.6,
+      "byZone": {
+        "water": {
+          "n": 29,
+          "ok": 17
+        },
+        "forest": {
+          "n": 48,
+          "ok": 25
+        },
+        "crag": {
+          "n": 24,
+          "ok": 18
+        },
+        "meadow": {
+          "n": 59,
+          "ok": 50
+        }
+      }
+    },
+    "newvis-bestyaw": {
+      "arm": {
+        "visMin": 0.67,
+        "camOn": true,
+        "pitches": [
+          0.27
+        ],
+        "visTest": "nine-sample",
+        "sweep": "yaw only, BEST (isolated)"
+      },
+      "sampled": 160,
+      "usable": 160,
+      "ok": 100,
+      "fail": 60,
+      "rate": 62.5,
+      "rateFixedYaw": 31.9,
+      "yawTurned": 91,
+      "occludedSlotsFixedYaw": 1461,
+      "rawCleanPct": 63.4,
+      "byZone": {
+        "water": {
+          "n": 29,
+          "ok": 13
+        },
+        "forest": {
+          "n": 48,
+          "ok": 20
+        },
+        "crag": {
+          "n": 24,
+          "ok": 18
+        },
+        "meadow": {
+          "n": 59,
+          "ok": 49
+        }
+      }
     }
   },
   "conclusion": {
@@ -159,5 +235,32 @@
     "pitch_sweep_alone_pts_at_new_test": 1.9,
     "net_published": -4.4,
     "plain": "ALL of the drop is the instrument, and then some. The stricter test costs 6.3 points on its own; the yaw x pitch sweep GIVES BACK 1.9, and never costs a cell in any zone at either test setting. The pitch sweep is not a regression."
+  },
+  "how5": "node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160 --vismin=<0|0.67> --bcam=1 --pitches=0.27   (the --pitches flag is new to the INSTRUMENT, same shape as --vismin/--bcam: it overwrites BattleWorld.CAM.solve.pitches at solve time and reads it back. Nothing in public/ changed and no default moved. 0.27 == CFG.cam.pitch, the elevation the yaw-only arms already gate placement at.)",
+  "when5": "2026-08-08",
+  "yaw_attribution": {
+    "question": "of the yawTurned rise 52.7 -> 91.9 (old test) and 49.0 -> 89.3 (new test), how much is BEST-OF selection and how much is the extra PITCH samples?",
+    "yawTurned_oldtest": {
+      "first_one_pitch": 52.7,
+      "best_one_pitch": 93.6,
+      "best_four_pitches": 91.9,
+      "pts_from_bestof": 40.9,
+      "pts_from_pitch_axis": -1.7
+    },
+    "yawTurned_newtest": {
+      "first_one_pitch": 49.0,
+      "best_one_pitch": 91.0,
+      "best_four_pitches": 89.3,
+      "pts_from_bestof": 42.0,
+      "pts_from_pitch_axis": -1.7
+    },
+    "staging_from_bestof_pts": 0.0,
+    "staging_from_pitch_axis_pts": {
+      "oldtest": 0.6,
+      "newtest": 1.9
+    },
+    "cell_identity": "the fifth arm's 110 ok cells at the old test are THE SAME 110 CELLS as the shipped spike run's placement.json -- symmetric difference 0, not merely the same count. Ranking among already-placeable plans cannot make a cell fail: solveArena scores okPlans, and every member of okPlans is ok by construction.",
+    "plain": "BEST-OF IS THE WHOLE SWING AND BUYS NO STAGING; THE PITCH AXIS IS THE WHOLE STAGING GAIN AND SLIGHTLY REDUCES THE SWING. Holding the pitch axis at the spike's single 0.27 and changing ONLY first-that-places to best-by-scoreView moves yawTurned 49.0 -> 91.0 (new test) and 52.7 -> 93.6 (old test) -- more than the full published erosion -- while the staging rate and every zone count stay EXACTLY where the yaw-only arms left them (62.5%, 13/20/18/49; 68.8%, 17/25/18/50). Adding the other three pitches on top gives back the +1.9 staging and takes 1.7 points OFF the swing.",
+    "restoration_cost": "ZERO staging sites, by the same argument the cell-identity check measures: ranking never changes ok/fail. Ranking the PITCH axis only and keeping the FIRST placeable yaw (the spike's rule, which is where 'the player's own current heading is ALWAYS tried first' lives) would keep all 103/160 and return yawTurned to <= 49%. NOT MEASURED -- it is not expressible through config and would be a change to solveArena, which this lane did not make."
   }
 }
