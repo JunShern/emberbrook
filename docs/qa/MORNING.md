@@ -1,4 +1,70 @@
-# HANDOVER — 2026-08-07 14:35 (read this section first; the 08-06 brief below is history)
+# HANDOVER — 2026-08-08 06:45 (READ THIS SECTION FIRST; everything below is history)
+
+An overnight window, ~17:00 → 06:45. Round 3 of the graphics loop CLOSED, the device-pixel-ratio
+fix shipped, and the BATTLE PRESENTATION ARC opened and delivered its first wave. All work is
+committed and pushed (branch `migration/3d-hybrid`).
+
+## THE ONE THING THAT IS NOT DONE: THE LIVE SITE IS STALE
+The deploy is **still on build `2026-08-07T21:59:22Z`** — it carries the reopened west arm and
+Emberbrook's seated water, but NOT the fields/skies work, NOT dpr 2, NOT any of the battle wave.
+A deploy lane has been fighting this for hours; the cause is mine and it is instructive:
+- I built from a CLEAN GIT WORKTREE (correct instinct — the main tree held four lanes' in-flight
+  code and a normal build would have shipped half-written battle modules).
+- **A fresh worktree has a COLD `.build-cache`, and the cold build produced a DIFFERENT TREE:
+  915 MB / 896 files against the known-good 519 MB / 392.** That is the open question worth
+  answering first thing: if the cold build keeps originals beside their `.webp`, then
+  `build-static.mjs`'s inclusion logic has been depending on cache state for CORRECTNESS, not
+  just speed. The diff is queued as the lane's first deliverable.
+- Then the push itself: the first died WITH ITS FOREGROUND TOOL CALL (a long push is bounded by
+  the call, not the network — worth putting in the deploy tooling), the second I killed at a
+  measured 143 KB/s while carrying the bloated payload.
+**To finish it: build in the main repo (or a worktree with `.build-cache` COPIED in), confirm
+~390 files / ~520 MB, push detached (`setsid nohup`), verify the live stamp moves.**
+
+## WHAT SHIPPED (all verified, all pushed)
+- **Both towns' water classes are closed.** Emberbrook went 0 CONVINCING / 6 FAILING → 0 FAILING.
+  The cause was never lighting or shading: every water sheet was a 0.12 m-thick box floating
+  0.17 m above its own bed, with a lit underside and a shadow cast on the bed it was meant to lie
+  in. Seating them doubled the water's brightness with NO LIGHT TOUCHED. Dellhollow's deep-stairs
+  "cyan plane" was its flat riverbed pinning the alpha ramp; its quay-west "deck sliver" was two
+  market awnings, four of five of which had zero up-faces from a generator winding bug that
+  Cycles' two-sided shading hid.
+- **THE WEST WATERFRONT IS OPEN AGAIN.** It had regressed to a 92-cell one-way pit (reach_probe
+  no-path both ways) because a searched stair landed on the corridor an earlier fix's planks were
+  shaped to dodge. Fixed by giving the SEARCH the west-arm clearance oracle it never had; now one
+  547-cell component, engine-receipted both ways. A builder was also found silently deleting the
+  water-transparency bake — caught by A/B-ing a plate 25 m away that had lost its river.
+- **dpr 2 (`?dpr=1` reverts).** The plates are authored at 2688x1536, EXACTLY twice the canvas —
+  we were downsampling the art by half. Six hard-coded 1344x768 sites had to move together and
+  five fail silently; measured cost is +9% on plate scenes, 60 fps holds everywhere.
+- **BATTLE WAVE 1**: contact distance at the damage event 6.54 m → 1.32 m with turn wall-clock
+  UNCHANGED, staging solved against the frame, the cast finally cheers/uses items/flees, weapons
+  in hand, and `?arena=world` shipped INERT — fighting in the real valley is ONE context, ZERO
+  new shaders and 31.8% FASTER than the diorama, but the painted plates are still more legible.
+
+## WHAT NEEDS YOUR TASTE (nothing is blocked on it)
+1. **Walk a battle.** `play3d.html` → fight. Then try `?arena=world` and tell me which world you
+   want the game to fight in — that single answer orders the whole battle slate.
+2. The battle slate's next bets are ranked and dispatchable in
+   `docs/plans/battle-presentation-inventory.md`: a CAMERA LANGUAGE (gated on the backdrop
+   question above), KO/victory as events (measured: nobody in the frame reacts to a kill), and
+   monsters that look like one game (six creatures, four art styles).
+
+## HONEST NOTES
+- **A still frame cannot show a time freeze.** The harness lane reported "still no hit-stop" from
+  a screenshot; the contact lane MEASURED hit-stop on a clock (90 ms, 150 on KO). The measurement
+  stands and the screenshot claim is unsupported — do not file it as a defect without a clock.
+- The audit's "four open post-battle tickets" were WRONG: one is verified fixed, three refuted.
+  The world-arena risk argument was weaker than stated.
+- `transition_test` is 162/6. Those six are NOT the battle (proven with the 3D stage never
+  constructed) and NOT dpr — they are one resource leaked ONCE on a round trip through the
+  real-time scene, in `play3d.html`. A lane is on it.
+- Five worklist attributions were REFUTED by measurement before anything was built. That is the
+  loop working, and it is why so little of tonight was spent on the thing each item named.
+
+---
+
+# HANDOVER — 2026-08-07 14:35 (history from here down)
 
 The previous session ran ~44 h and closed cleanly. CURRENT STATE, all pushed (HEAD c4f05b6):
 
