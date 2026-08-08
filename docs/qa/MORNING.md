@@ -7,8 +7,9 @@ committed and pushed (branch `migration/3d-hybrid`).
 ## THE DEPLOY IS LIVE AND VERIFIED — and my diagnosis of it was WRONG, twice
 Live: **build `2026-08-08T05:34:57Z`, static_verify 29/0 local AND against the URL**, with the
 plate bytes compared on the wire (pondlane moved 957040 → 902084, so the ART shipped, not just
-the stamp). It carries everything below except the battle wave commits that landed after the
-build sha `d95f3e04` — a follow-up deploy is the next lane's cheap first move.
+the stamp). Built from `d95f3e04`, so it carries EVERYTHING in this handover — dpr 2, the fields
+and skies, and the whole battle wave. The only gameplay change after it is the RT-teardown leak
+fix (`7545d2fd`), which a follow-up deploy is taking.
 **WHAT I GOT WRONG, recorded because I put the wrong version in this file first:**
 - I reported a "cold cache produced a 915 MB / 896-file tree" and inferred a build bug where
   `build-static.mjs`'s correctness depended on cache state. **BOTH FALSE.** `deploy-ghpages.sh`
