@@ -5307,8 +5307,17 @@ def emberwake_sky(world, rig):
     # 1. THE VERTICAL RAMP, ANCHORED ON THE RIG.  Zenith is the rig colour taken deeper
     # and bluer; the horizon is the rig colour lifted and warmed by what is left of the
     # sun.  The hour does not move: the MEAN of the ramp is the colour that was there.
+    # THE LEVELS ARE SWEPT AGAINST THE SHIPPED PLATE, NOT CHOSEN.  Round 1 of these
+    # numbers (hor = rigc*2.35 + 0.020, haze = rigc*3.1 + 0.030, band 0.62) BAKED, and the
+    # plate refuted them: `plate_probe` on the rebaked pondlane read the remaining
+    # far-plane pixels at L p50 **171.5**, against the pre-lane plate's 49.7 and against
+    # that plate's own GROUND p50 of 26.8 — a 6.4x band at the top edge of a night frame,
+    # which is the `frame-edge-world` complaint in a new costume rather than a sky. Halved
+    # here (measured luma 0.210 -> 0.132 of the mixed horizon before the rig's strength),
+    # which lands the band near L 90: brighter than the flat constant it replaces, because
+    # a dusk horizon IS brighter than its zenith, and not a light leak.
     zen = tuple(c * 0.62 for c in rigc)
-    hor = (rigc[0] * 2.35 + 0.020, rigc[1] * 2.00 + 0.014, rigc[2] * 1.42 + 0.006)
+    hor = (rigc[0] * 1.30 + 0.010, rigc[1] * 1.30 + 0.010, rigc[2] * 1.05 + 0.004)
     vert = maprange(sep.outputs["Z"], -0.02, 0.62, 0.0, 1.0)
     band = mixrgb(vert.outputs["Result"], c1=hor, c2=zen)
     # 2. THE HAZE BAND on the horizon line itself — brightest at 0, gone by 12 degrees up
@@ -5321,9 +5330,9 @@ def emberwake_sky(world, rig):
     nt.links.new(hz_dn.outputs["Result"], hz.inputs[1])
     hzf = nt.nodes.new("ShaderNodeMath")
     hzf.operation = 'MULTIPLY'
-    hzf.inputs[1].default_value = 0.62
+    hzf.inputs[1].default_value = 0.45
     nt.links.new(hz.outputs[0], hzf.inputs[0])
-    haze = (rigc[0] * 3.1 + 0.030, rigc[1] * 2.6 + 0.024, rigc[2] * 1.7 + 0.012)
+    haze = (rigc[0] * 1.70 + 0.014, rigc[1] * 1.70 + 0.014, rigc[2] * 1.25 + 0.006)
     sky = mixrgb(hzf.outputs[0], c1_socket=band.outputs["Color"], c2=haze)
     # 3. THIN CLOUD, stretched along the horizon (a low Z scale is what makes a noise read
     # as a cloud BAND rather than as marble), fading out well before the zenith.
