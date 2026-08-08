@@ -19874,3 +19874,124 @@ for one and got a procedural answer instead:
 - **a move onto the party for the victory cheer** — the tally box was moved off them instead,
   which is the fix available without a camera.
 Both are free under BET A (`?arena=world` has no painted band to honour) and cheap under BET B.
+
+------------------------------------------------------------
+## 2026-08-08 — BATTLE WAVE 2, LANE B: BET H, MONSTERS THAT LOOK LIKE ONE GAME
+
+Board: **docs/qa/battle-monsters/index.html**. Instruments: `tools/monster_lineup.mjs`
+(+ `docs/qa/battle-monsters/lineup.html`), `tools/monster_regrade.py`,
+`tools/monster_icons.mjs` (+ `icons.html`), `tools/monster_board.py`.
+Commits `c3230641` (tools) · `6353c7ad` (GLBs) · `dd82f752` (icons) · `8274f103` (board).
+
+### THE FRAME THAT INVERTED THE BRIEF
+
+The audit's §8 — *"six creatures, at least four art directions"* — was true as a feeling
+and unphotographable: the game never puts more than three monsters on screen, never at one
+distance, never under one plate. `monster_lineup.mjs` stages all six at one scale, one light
+rig, one camera, and `--chars vesper,maren` puts **the ratified party rigs in the same row**.
+
+**THE NAIVE READING IS BACKWARDS AND THE PICTURE SAYS SO**
+(`docs/qa/battle-monsters/lineup-before-after.png`). The instinct is that the grey wolf is
+the odd one out among five cartoon creatures. Beside Vesper it inverts: **duskpad is the one
+in the game's register** — naturalistic, desaturated, real animal proportions — and the four
+Quaternius *Cute Animated Monsters* chibis are the outliers (ball bodies, oversized black
+almond eyes with a white specular dot, cream teeth). A pass that had "harmonised" the wolf
+toward the blobs would have moved the whole cast away from the party. **"What style?" is not
+a taste question in this repo while ratified character art exists — put it in the frame.**
+
+### THE AXES, AND THE TWO THAT DID NOT MATTER
+
+Albedo measured **area-weighted**: each triangle sampled from its baseColor texture at the UV
+centroid *or* its flat `baseColorFactor`, weighted by world-space area — one rule for a
+painted model and a flat one, which is what makes "textured vs flat" comparable at all.
+
+| axis | measured | verdict |
+|---|---|---|
+| poly density | 1000–1962 tris, 1–7 prims, one skin each | **REFUTED.** 1.96× across all six, same author, same budget. |
+| textured vs flat | 3 painted 512², 3 flat; **2 → 393** distinct albedo colours | REAL, **not visible**: a foe is ~18 % of frame height and baked form-shading reads like a flat field there. Recorded, not acted on. |
+| albedo VALUE | V50 **0.227 → 0.821** (3.6×, 1.85 stops); V95 to 0.906 | REAL, fixed. |
+| albedo SATURATION | S **0.055 → 0.533** (9.4×) | REAL, fixed. |
+| proportion / stylisation | 4 chibi, 1 naturalistic quadruped, 1 stylised serpent | **LOUDEST, REFUSED** — see below. |
+
+### THE TARGET, MEASURED — AND THE GATE THAT WAS WRONG FIRST
+
+Party albedo off the shipping rigs' baseColor maps (`vesper-v2`/`maren-v1`/`lake-v1`):
+**S50 0.333–0.452, V05 0.192–0.216, V50 0.306–0.443, V95 0.718–0.784.**
+
+**The first gate demanded a creature's median equal the PARTY's median and it produced a
+worse picture that scored better** — the reed nibbler, "a round, harmless-looking grazer",
+became a near-black olive lump you had to hunt for on the grass. The error is statistical: a
+party median is taken over a whole human (dark boots, dark hair, mid cloth) while a
+two-colour creature's median *is* its body. **The gate is the party's RANGE, not its centre**
+— `V50 ∈ [0.192, 0.784]`, `V95 ≤ 0.784`, `S ≤ 0.452` — and saturation is a **ceiling, never a
+floor**, or a grey wolf fails for being grey. Against that gate duskpad and brook-sprite pass
+untouched and the other four fail, which is what the lineup shows by eye. *That agreement is
+the reason to trust the gate.*
+
+Second thing written into the tool: **the value move is a GAIN, not a gamma.** A gamma solved
+on the median is fine for a 300-colour map and catastrophic for a 2-colour one — it wanted
+γ 4.17 for reed-nibbler and took its black eyes from 0.117 to 0.000 in the same stroke.
+
+Graded (S / V50 / V95): reed-nibbler 0.490/0.821/0.821 → 0.402/0.580/0.580 ·
+weir-eel 0.378/0.657/0.906 → 0.348/0.520/0.717 · scree-shell 0.533/0.255/0.435 →
+0.427/0.341/0.580 · bramble-shade 0.499/0.227/0.290 → 0.438/0.341/0.435. duskpad and
+brook-sprite **untouched**. `monsters.json` was never opened: no balance number moved.
+
+**A DESTRUCTIVE GRADE MUST BE IDEMPOTENT, AND GIT IS THE ARCHIVE.** `monster_regrade.py`
+never reads the file it is about to write — source bytes come from `git show 633b51fb:<path>`
+— so running it twice equals running it once, the RECIPE stays the whole description of the
+difference, and a model dropped from the recipe is **restored** in the same run rather than
+silently keeping an old grade. Geometry/skins/UVs/animations are copied accessor by accessor
+and re-censused after the write: tris, prims, node counts and clip lists identical.
+
+### THE FOE ICONS WERE LYING, AND NOW THEY CANNOT
+
+Audit §7.3. Mean-hue disagreement icon-vs-model, before → after: reed-nibbler 95.8°→**4.4°**,
+scree-shell 105.2°→**1.5°**, weir-eel 164.0°→**24.5°**, bramble-shade 51.6°→**0.1°**;
+duskpad's model is achromatic so the error is chroma, **S +0.43 → S +0.03**. Each icon is now
+a 256 px alpha render of the same GLB the arena stages. `.ebb-qic` lost
+`image-rendering:pixelated` — correct for 16 px art, wrong for a 256 px render.
+**AND THE MEASURE ITSELF WAS WRONG FIRST**: comparing hues printed "grey" for duskpad and said
+nothing, hiding the headline defect. A grey model has no hue to disagree with; what the salmon
+icon did was invent saturation the wolf does not have.
+brook-sprite is drawn from `BattleStage3D.PROXY.sprite` instead of its GLB, because its
+shipped body is CODE (`build:'wisp'`) — rendering the unused grey ghost would put the lie back
+the other way round. The path stayed `assets/monsters/placeholder/<id>.png`: `monsterUrl()`
+and `build-static.mjs` both name it and an icon fix is not worth a rename across three files.
+
+### REFUSED, WITH A PRICE
+
+**The four chibi meshes.** The loudest remaining incoherence is the painted cartoon face —
+on bramble-shade/scree-shell/brook-sprite the almond eye, its white glint, the cream teeth and
+the purple tongue are **in the 512² texture**; on reed-nibbler and weir-eel they are separate
+geometry. No material grade reaches either. Costed: (a) repaint the three atlases — cheapest,
+no rig work, no intake gate, but generative iteration on unlabelled UV islands where a bad
+repaint is instantly visible; (b) regenerate through the character factory four times over,
+plus re-solving `MON` height/yaw/bob and re-shooting every board that photographs them — a
+lane of its own. Named and left, at the end of a palette pass, under a *playable prototype*
+steer. The ruler is built and committed for whoever takes it.
+
+### GATES
+
+- `battle_sim` **ALL ENVELOPES GREEN** + 6 property tests · `encounter_sim` **GREEN**.
+- **`transition_test --port=3000` — `PASS 168 assertions ok, 0 failed`**, console gate green
+  (66 messages, all optional-asset 404s). This includes
+  `after battle: del-cine|shelf-west is back to its baseline (geo 622, tex 38)` — **the
+  `geo +2` the BET I lane reported an hour earlier, and whose first suspect it named as "another
+  lane's uncommitted edits to four monster GLBs", was NOT the GLBs**: with the finished grade in
+  the tree the assertion is green. The suspicion was reasonable and the receipt now closes it.
+- `arena_playtest --port=3000` — **nogl PASS · serial PASS**; **organic FAIL "no hostile zone
+  reachable"**, pre-existing and already receipted against pristine HEAD by the BET I lane
+  tonight. Nothing here can reach `SIM.zone`/`walkFloors`.
+- `dialogue_test` not run: no portrait/bust/cut-in/thumbnail path touched.
+
+### A CONCURRENCY SCAR, FOR THE RECORD
+
+**`57162c9a` (BET I) published this lane's two in-flight `battle_turnbased.js` hunks** — the
+`.ebb-qic` filter change and the `foeIcon` comment — inside its own commit, and pushed them.
+Nothing was lost and both hunks are correct, but they are committed under another lane's
+message and are absent from this lane's shas. Same trap as 2026-08-03: `git commit -m … --
+<pathspec>` re-reads those paths from the WORKING TREE and ignores the index. **Not amended**
+— rewriting a pushed shared branch costs more than the misattribution. The standing rule
+holds: with a dirty shared tree, `git commit --only <paths>`, and read `git diff <path>`
+before you commit anything you did not write.
