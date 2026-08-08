@@ -21858,3 +21858,78 @@ ladder or from dropping ground scatter out of the occluder set.
 Receipts: `docs/qa/battle-world/index.html` §Q2c (new) · `stageperf.json` ·
 `raycost.json` · `teardown-relocated.json` · `teardown-inplace.json` ·
 `regress.json` · `reloc/` · `head-control/`.
+
+------------------------------------------------------------
+## 2026-08-08 ~23:00 — DEPLOY LANE: round 13 is LIVE AND VERIFIED (29/0). The world-arena relocation ladder is on the site, and the DEFAULT GAME IS BYTE-IDENTICAL — which is this round's real claim
+
+**WHY THIS DEPLOY EXISTED.** The measurement lane's ring/bearing ladder and the deletion of
+the diorama fallback (`b970ef2e` module + probe, `7e4184c4` receipts, `4a7ac08d` board + docs,
+`04d1117b`/`80a0063a` docs) were committed but not live, so `?arena=world` on the site still
+answered with the pre-ladder module. The user cannot evaluate an opt-in arena from a deploy
+that does not carry it.
+
+Built from a throwaway `git worktree` detached at `origin/migration/3d-hybrid` — **04d1117b** —
+with `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`. `build-static --compress`:
+**392 files / 520.7 MB / 3.0 s**. Three build gates green: every `.glb` binary glTF, **16 bundle
+GLBs byte-identical to `public/`** on POSITION + indices, **256 referenced paths resolve** (237
+via the `.webp` rewrite). Local `static_verify`: **ALL GREEN 29/0**.
+
+**THE CACHE MISS LIST IS EMPTY, AND THAT IS THE SHAPE OF THE CHANGE.** `253 hit / 0 miss / 0
+stored`, 319.4 MB served — the first deploy of the twelve whose encode work was ZERO. It follows
+from the source diff and is worth stating as a prediction that held: `git diff --stat 4e006470
+04d1117b -- public/` names **one path**, `public/js/battle_world.js` (+276/-28), and JS is not an
+encoded artifact. No plate, no bundle, no `depth.png` moved, so nothing could miss. The GLB pass
+reported **16/16 from cache** (532 MB -> 270 MB), which is the same fact told by the cache rather
+than by the diff: a bundle whose bytes had moved cannot hit a key that is `sha256` of those bytes.
+
+`deploy-ghpages.sh dist` published **2c86f916** (push verified by the script; pre-flight printed
+the clean `579 MB, 393 files`). LIVE stamp `2026-08-08T21:02:06.359Z` ->
+**`2026-08-08T22:34:16.626Z`**, moved between the 46 s and 61 s poll — at or just under the low
+edge of the band, which now reads ~55/63/72/72/73/75/~75/105 s over nine deploys. No stall, no
+re-POST. `static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**, zero
+failed requests, zero unexpected 4xx/5xx, zero console errors.
+
+**THE NEGATIVE CONTROLS ARE THE POINT OF THIS ROUND'S TABLE.** `?arena=world` is opt-in and
+`battle_stage3d` is still the default arena, so "the new module shipped" is only half the claim;
+the other half is that nothing else moved. Live fetched, `sha256`, against `dist` AND against the
+round-12 deploy's own live copy:
+
+| path | bytes | live vs dist | vs round-12 deploy |
+|---|---:|---|---|
+| `js/battle_world.js` | 107767 | **MATCH** `9fde66b8…` | **DIFFERS** (r12 `74ae95b4…`, 93181 B) |
+| `js/battle_stage3d.js` | 192301 | **MATCH** `cacaa9d7…` | **SAME** — control |
+| `js/battle_turnbased.js` | 118267 | **MATCH** `cdf3a1a0…` | **SAME** — control |
+| `play3d.html` | 346532 | **MATCH** `7ff97c64…` | **SAME** — control |
+
+Three SAMEs against one DIFFERS: the default battle path, its caller and the page that wires
+them are byte-for-byte round 12's. Same discipline as round 12's two untouched plates — a
+differs-check that never prints SAME is not a check. Three plates spot-checked on the wire for
+the same reason (`del-cine/gate/bg.webp` 732494, `emb-cine/woodroad/bg.webp` 732990,
+`del-cine/gate/depth.png` 2634167) all equal `dist`.
+
+**THE LADDER IS ON THE WIRE, READ OUT OF THE LIVE FILE RATHER THAN ASSUMED.** `RELOC.rings` in
+the deployed `battle_world.js` reads `{R:0,n:1}, {R:5,n:8}, {R:8,n:8}, {R:11,n:8}, {R:13,n:8,
+ph:pi/8}` — the measured ladder, 25 sites, the 13 m ring phase-offset half a step exactly as the
+probe ran it. **AND A WORD COUNT WOULD HAVE LIED ABOUT THE FALLBACK**: `diorama` appears 28
+times in the new file against 22 in round 12's, i.e. it went UP. Every one of the 28 is a
+COMMENT; the code path at the refusal now sets `BattleWorld.refused++` and returns `null` as a
+crash guard ("Returning null here is NOT a fallback to the diorama any more"), and the only
+non-comment `BattleStage3D` references left are the monster model table, the `_live` bookkeeping
+and the A/B switch itself. A grep count is a search, not a receipt — read the lines.
+
+**THE LIVE SCREENSHOT IS ROUND 12's FRAME, WHICH IS THE CORRECT RESULT.** Vesper and two
+Duskpads on the golden woodroad, command menu, turn rail and HP bars drawn. `static_verify`
+never passes `?arena=world`, so a changed frame here would have meant the opt-in leaked into
+the default — it did not.
+
+**GATES NOT RUN, NAMED.** `transition_test` skipped for the sixth deploy running: standing-order
+reason (the user is at the machine, build+network only), not the swap gate — swap read a steady
+**3.57 of 5.12 GB (69.7%)** across the whole window, under the 75% bar. The build's
+reference-integrity advisory (`js/dialogue.js` `expr-warm.png`, `js/followers.js`
+`mochi/pose-front.png`) is the standing documented pair, unchanged; the live run's zero-404 audit
+is the receipt.
+
+Cleanup: this lane's worktree removed, scratch `dist`, both live fetch dirs and both
+`static-verify*.png` deleted, zero orphaned Chrome (`ppid 1` root check clean). The two stale
+worktrees from earlier sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were
+left alone.
