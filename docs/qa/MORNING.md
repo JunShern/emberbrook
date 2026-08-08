@@ -48,6 +48,27 @@ fix (`7545d2fd`), which a follow-up deploy is taking.
   in hand, and `?arena=world` shipped INERT — fighting in the real valley is ONE context, ZERO
   new shaders and 31.8% FASTER than the diorama, but the painted plates are still more legible.
 
+## BATTLE WAVE 2 (added 09:30, after the handover above was written)
+- **THE KO IS A BEAT, and the kill used to be the one blow with NO feedback.** The ordering
+  defect the audit missed: `syncHp()` -> `setDead` runs BEFORE `hitShake()` -> `flinch`, and
+  `flinch` returns early on a dead body — so the loudest blow in the fight had no flash, no
+  sparks, no ring. MEASURED: the victim's screen box read **104.6 luminance 60 ms after being
+  killed vs 121.2 standing idle**. The kill was darker than doing nothing. Now: blow -> driven
+  back -> falls ONTO the floor beneath it (sink 0.550 -> **0.000 m**; in the world arena it had
+  been sinking bodies through solid rock) -> lies solid 760 ms -> dissolves. The killer holds
+  over the body; allies react (and the two sides needed DIFFERENT amplitudes — one shared number
+  gave the party 7.52 px against a 7.30 do-nothing floor, invisible, because a party member
+  already faces the foes). Victory is a sequence, and the tally box no longer covers the party.
+- **THE MONSTER REGISTER — the naive reading was BACKWARDS.** One frame of all six monsters at
+  one scale WITH the party rigs settles it: the grey wolf is IN the game's register and the four
+  chibi creatures are the outliers, so "harmonise the monsters" would have moved the whole cast
+  away from the party. Palette regraded into the party's RANGE (not its median — an equal-median
+  gate produced a worse picture that scored better), geometry untouched, and the foe icons now
+  render from the same GLBs the arena stages (hue error 96° -> 4°). Refused with costs on the
+  board: the cartoon faces live in atlases and geometry, out of a material grade's reach.
+- Gates: `transition_test` **168/0**, battle_sim/encounter_sim green. Boards:
+  `docs/qa/battle-{ko,monsters}/index.html`.
+
 ## WHAT NEEDS YOUR TASTE (nothing is blocked on it)
 1. **Walk a battle.** `play3d.html` → fight. Then try `?arena=world` and tell me which world you
    want the game to fight in — that single answer orders the whole battle slate.
