@@ -270,6 +270,23 @@ git runs here, on branch `migration/3d-hybrid`.
   silhouettes on a low-contrast painting is a composition. THE OCCLUDER SET IS NOT THE COLLIDE SET:
   building it from `collide` (which excludes noStand foliage) reported a party inside a hedge as
   fully visible; from the DRAWN scene the pass rate fell 86.3 -> 68.8%.
+  **THE MONSTER REGISTER: THE WOLF IS THE REFERENCE, THE CHIBIS ARE THE OUTLIERS** (bet H,
+  2026-08-08 — the naive reading was BACKWARDS and one picture settled it). Put all six monsters
+  in ONE frame at one scale/rig/camera WITH the ratified party rigs and it is obvious: duskpad
+  (naturalistic, desaturated, real animal proportions) is in the game's register and the four
+  Quaternius *Cute Animated Monsters* chibis — ball bodies, oversized black almond eyes, cream
+  teeth — are not. **A pass that "harmonised" the wolf toward the blobs would have moved the whole
+  cast away from the party.** All six are CC0 Quaternius (MANIFEST.md); brook-sprite ships as a
+  CODE wisp, its GLB is only the fallback. Measured axes: poly density REFUTED (1000-1962 tris,
+  same author/budget); textured-vs-flat real but not the problem at a foe's ~18% of frame height;
+  albedo VALUE (1.85 stops) and SATURATION (9.4x) are the real ones. THE GATE IS THE PARTY'S
+  RANGE, NOT ITS MEDIAN: `V50 ∈ [0.192,0.784]`, `V95 ≤ 0.784`, `S ≤ 0.452` with saturation a
+  CEILING NEVER A FLOOR (or a grey wolf fails for being grey) — an equal-median gate produced a
+  worse picture that scored better, and a value *gamma* wanted γ 4.17 and drove black eyes to
+  0.000 (it is a GAIN). tools/monster_regrade.py is idempotent by never reading what it writes
+  (source bytes from a pinned rev). Foe icons are now renders of the same GLBs the arena stages:
+  mean hue error 95.8°→4.4°, 105.2°→1.5°, 51.6°→0.1°. STILL OPEN and costed both ways: the cartoon
+  faces live in three 512² atlases and in two meshes' geometry — no material grade reaches them.
   **THE KO IS A BEAT, AND THE KILL USED TO BE THE ONE BLOW WITH NO FEEDBACK** (bet I, 2026-08-08).
   The sharp defect was ORDERING, and it was not in the audit: `battle_turnbased` runs `syncHp()`
   (-> `setDead` -> `markDead`) BEFORE `hitShake()` (-> `flinch`), and `flinch` RETURNS EARLY ON A
