@@ -4992,6 +4992,12 @@ sceneLoad().then(r=>{ if(r) TRANSLOG.push({scene:r.scene, kind:'boot', ms:Math.r
 <script src="js/game_state.js"></script>
 <script src="js/battle_rules.js"></script>
 <script src="js/battle_turnbased.js"></script>
+<!-- BET 3 spike: fight in the real ow-valley instead of the diorama. INERT unless ?arena=world
+     (measured: BattleWorld frozen off, BattleStage3D unpatched, battle comes up on the diorama).
+     It reads this page's own `scene`/`cam`/`R`/`ch`/`renderFrame` as CLASSIC-SCRIPT LEXICAL
+     GLOBALS — that binding is what makes the hook-free version possible, and it breaks the day
+     this page becomes a module. Receipts: docs/qa/battle-world/index.html. -->
+<script src="js/battle_world.js"></script>
 <script src="js/encounters.js"></script>
 <script src="js/ui_kit.js"></script>
 <script src="js/shop.js"></script>
