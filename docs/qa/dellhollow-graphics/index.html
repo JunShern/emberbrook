@@ -1376,5 +1376,29 @@ the sentence goes in a handover.</b></div>
 <div class="pair"><figure><img src="before8/gate.jpg"><figcaption>gate — before</figcaption></figure><figure><img src="after8/gate.jpg"><figcaption>gate — after</figcaption></figure></div>
 <div class="pair"><figure><img src="before8/north-landing.jpg"><figcaption>north-landing — before</figcaption></figure><figure><img src="after8/north-landing.jpg"><figcaption>north-landing — after</figcaption></figure></div>
 
+<h2>The &ldquo;latent <code>t3_rock_projection</code> repair&rdquo; never existed &mdash; a three-round debt, refuted with no bake</h2>
+<p class="note">Rounds 5, 6 and 7 each closed owing a deliberate rebake of <b>lockhead</b> and <b>loop-stairs</b>, on the
+claim that they carried round&nbsp;5&rsquo;s texture repair &ldquo;in the MASTER and on no plate&rdquo;. The lane sent to ship
+it measured the premise first. <b>The premise is false: both plates already carry the repair.</b></p>
+<div class="meas">
+<p>The defect is one material&rsquo;s Mapping node &mdash; <code>mat_rock_townwall</code> rotation&nbsp;90&deg;&nbsp;/&nbsp;scale&nbsp;1.05
+(<code>t2_cliff_south.derive_material</code>) against rotation&nbsp;0&nbsp;/&nbsp;scale&nbsp;0.55 (<code>t3_rock_projection</code>,
+shipped <code>ec95c8d6</code>, 2026-08-01). <b>A plate can only carry the defect if the master it was baked from carried it.</b></p>
+<ul>
+<li>Current master: <b>rotation (0,0,0), scale 0.55</b> &mdash; repaired.</li>
+<li><b>All 34 committed <code>dellhollow-master.blend</code> revisions from <code>ec95c8d6</code> to HEAD: rotation (0,0,0), scale 0.55.
+Every one.</b> Swept in ONE Blender launch, re-opening each extracted revision with <code>bpy.ops.wm.open_mainfile</code>. No render.</li>
+<li>The only blend that has ever held rotation&nbsp;90&nbsp;/&nbsp;1.05 is round&nbsp;5&rsquo;s own uncommitted experiment blend.</li>
+</ul>
+<p>So round&nbsp;5&rsquo;s <b>15.299% / 13.490%</b> was its OWN transient regression, measured against a control that was
+<em>already</em> repaired &mdash; and &ldquo;0.004% / 0.009% after the generator fix&rdquo; means the master was returned to the
+state the shipped plates were already baked from. Round&nbsp;5 wrote a true sentence about its own build; rounds 6 and 7
+inherited it as a claim about the shipped bundle. <b>A claim about an artifact&rsquo;s state must be re-derived from the
+artifact, not inherited through handovers</b> &mdash; an owed item that never gets tested is indistinguishable from a real one.</p>
+</div>
+<figure style="margin:1em 0"><img src="crop-rockproj-lockhead.jpg" style="width:100%;border:1px solid #333"><figcaption><b>lockhead at NATIVE resolution.</b> Left: the 2026-08-01 DEFECT probe (rot 90) &mdash; hard vertical combing, long unbroken fibres running the full height. Middle: the REPAIR probe (rot 0 / 0.55) &mdash; mottled rock with cracks and horizontal breaks. Right: <b>the shipped plate</b>, baked 2026-08-07T18:14Z &mdash; the repair, sharper only because the plate is 2688&times;1536 against the probes&rsquo; 1344&times;768. Darker and higher-contrast is rounds 1&ndash;7 of grade/albedo/haze, not mapping.</figcaption></figure>
+<figure style="margin:1em 0"><img src="crop-rockproj-loop-stairs.jpg" style="width:100%;border:1px solid #333"><figcaption><b>loop-stairs at NATIVE resolution</b> &mdash; shipped plate against <code>t3fixA_loop-stairs</code>: the same scalloped columns, the same mottle, zero vertical fibres.</figcaption></figure>
+<figure style="margin:1em 0"><img src="crop-rockproj-cottage.jpg" style="width:100%;border:1px solid #333"><figcaption><b>cottage</b> &mdash; the third camera the original defect was filed on. Framing moved (round 5&rsquo;s buttresses are on this wall) so this is not a pixel A/B; the texture character is the repaired one on both. Cottage was rebaked in round 5 anyway, i.e. definitively post-repair.</figcaption></figure>
+
 </body>
 </html>

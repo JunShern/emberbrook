@@ -21520,3 +21520,69 @@ the gate that says so is what a duplicate-launch incident owes. `git status --sh
 was checked against the intended rebake list: exactly the five plates plus `cine.json` and
 `stylized.png`, both legitimate bake outputs (the cine.json diff is only those five cameras' own
 `baked` stamp and `seconds`).
+
+## THE "LATENT `t3_rock_projection` REPAIR" NEVER EXISTED — a three-round debt, refuted
+## (2026-08-08, deliberate-ship lane; NO BAKE RAN, and that is the result)
+
+Rounds 5, 6 and 7 each closed carrying the same owed item: lockhead and loop-stairs "carry round
+5's `t3_rock_projection` repair in the MASTER and on no plate", refused every round because a
+picture-derived rebake list can never see a repair made in an earlier round.  Round 7 stated it
+as a trap and asked for a deliberate ship.  **THE LANE SENT TO SHIP IT MEASURED THE PREMISE FIRST
+AND THE PREMISE IS FALSE.**  Both plates already carry the repair.  No camera qualified, no
+Blender render was launched.
+
+WHAT WAS ACTUALLY MEASURED, and it is a state question, not a picture question.  The defect is one
+material's Mapping node: `mat_rock_townwall` rotation 90 deg / scale 1.05 (`t2_cliff_south`'s
+`derive_material`) versus rotation 0 / scale 0.55 (`t3_rock_projection`, shipped ec95c8d6,
+2026-08-01).  A plate can only carry the defect if the master it was baked from carried it.
+
+  * **CURRENT MASTER: rotation (0,0,0), scale 0.55.**  Repaired, as round 5 left it.
+  * **ALL 34 COMMITTED `dellhollow-master.blend` REVISIONS from ec95c8d6 to HEAD: rotation
+    (0,0,0), scale 0.55.  Every single one.**  Swept in ONE Blender launch by re-opening each
+    extracted revision with `bpy.ops.wm.open_mainfile` — 34 revisions in one process, no render.
+  * The ONLY blend on this machine that has ever held rotation 90 / scale 1.05 is round 5's own
+    uncommitted experiment blend in its scratchpad (`exp.blend`, mtime 2026-08-08 17:02 BST); its
+    control (`ctl.blend`, 17:04) reads rotation 0 / 0.55.
+
+**SO THE 15.299% / 13.490% WAS ROUND 5's OWN TRANSIENT REGRESSION, MEASURED AGAINST A CONTROL
+THAT WAS ALREADY REPAIRED — and "0.004% / 0.009% after the generator fix" means the master was
+returned to the state the shipped plates were ALREADY baked from.**  Round 5 wrote a true
+sentence about its own build ("the builder silently reverted the fix on three plates" — three
+DRAFT frames of its own A/B) and rounds 6 and 7 inherited it as a claim about the SHIPPED
+bundle.  Nobody re-derived it, because each round's own instrument (the draft A/B) correctly
+reported the plates as unchanged, which reads identically to "the repair is still owed".
+
+BY EYE, WHICH IS THE VERDICT AND NOT THE NUMBER — `docs/qa/dellhollow-graphics/crop-rockproj-*.jpg`,
+native-resolution crops of the affected `cliff_town_a` face:
+  * `crop-rockproj-lockhead.jpg` — three panels at the same normalized box: the 2026-08-01 DEFECT
+    probe (`t3tex105`, rot 90) is unmistakable hard vertical combing, long unbroken fibres running
+    the full height with no variation; the REPAIR probe (`t3rot0s55`) is mottled rock with cracks
+    and horizontal breaks; **the SHIPPED plate (baked 2026-08-07T18:14Z) is the repair probe** —
+    same isotropic mottle, sharper only because the plate is 2688x1536 against the probes' 1344x768.
+    Darker and higher-contrast than the probe, which is rounds 1-7 of grade/albedo/haze, not mapping.
+  * `crop-rockproj-loop-stairs.jpg` — shipped plate against `t3fixA_loop-stairs`: the same scalloped
+    columns, the same mottle, ZERO vertical fibres.
+  * `crop-rockproj-cottage.jpg` — the third camera the original defect was filed on.  Framing moved
+    (round 5's buttresses are on this wall) so it is not a pixel A/B; the texture character is the
+    repaired one on both.  Cottage was rebaked in round 5 anyway, i.e. definitively post-repair.
+
+BAKE STAMPS, for the record, since they were the thing the premise was going to be checked
+against: loop-stairs 2026-08-07T17:06:29Z, lockhead 2026-08-07T18:14:12Z — both DO predate round
+5's commit (a65012db, 2026-08-08 17:09 UTC).  **THE STAMP TEST WOULD HAVE CONFIRMED THE PREMISE
+AND THE STAMP TEST IS WRONG**, because it assumes the master was defective in the interval.  It
+never was: `t2_cliff_south.py` has exactly three commits (two on 2026-07-30, one in round 5) and
+was not re-run between the t3 ship and round 5 — which is what round 5's own "it cost nothing for
+weeks because nobody re-ran the builder" already said, read forward instead of backward.
+
+**THE LESSON, and it is why this is written up at the length of a shipped round: A CLAIM ABOUT AN
+ARTIFACT'S STATE MUST BE RE-DERIVED FROM THE ARTIFACT, NOT INHERITED THROUGH HANDOVERS.**  This
+one survived three rounds and two handover documents at zero cost per round precisely because it
+was cheap to defer — an owed item that never gets tested is indistinguishable from a real one.
+The re-derivation cost one Blender launch with no render in it.  The rebake it was asking for
+would have cost two 150-180 s plates plus a commit, and would have produced two byte-different
+plates of an unchanged picture.
+
+NOTHING MOVED: `git status --short` clean on `public/assets/scenes/del-cine/`,
+`public/assets/scenes/townwalk/` and `tools/blends/` — the master was opened read-only (mtime
+unchanged, no `save`), no plate rebaked, no bundle owed, no gate run because nothing in the game
+tree changed.  The only additions are the three receipt crops.
