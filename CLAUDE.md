@@ -275,9 +275,26 @@ git runs here, on branch `migration/3d-hybrid`.
   THAT is the whole of transition_test's long-standing 162/6: doors 16-19 are exactly the first
   REVISITS of the three states baselined before the run's first ow-valley leg, every delta a
   byte-identical `{geo:1, tex:1}`. Disposing it in `sceneDispose()` (the JS objects stay; the
-  next RT frame re-uploads 4 verts and a 64x64 canvas) takes the gate to **168/0**. `occRing`/
-  `occDia` are the same pattern, measured LATENT — fixed so the gate cannot go red
-  nondeterministically. `DEPTHQ` is the same shape and DELIBERATELY LEFT: it uploads in the
+  next RT frame re-uploads 4 verts and a 64x64 canvas) fixed a REAL leak and produced one 168/0.
+  **CORRECTED 2026-08-09 — THE SENTENCE THAT USED TO SIT HERE WAS BACKWARDS.** It said `occRing`/
+  `occDia` were "fixed so the gate cannot go red nondeterministically". Disposing them in the same
+  breath did the OPPOSITE: because three.js re-registers a geometry only when it is next DRAWN,
+  disposing them per scene makes their residency mean "was the occlusion indicator up for one
+  rendered frame at any point in this scene's life" — decided afresh each visit by frame parity
+  (`++occT%6`), arrival body position and load. Measured: one probe run drifted FOUR del-cine
+  states by exactly two (shelf-west 624/622/624/624, gate 2073/2075/2075, cottage 367/365), and
+  doors 3 and 19 are the same edge, shot and position yet read 622 and 624. Named by
+  dispose-and-watch (`tools/gpu_baseline_probe.mjs`): of 2348 geometries, exactly TWO belong to a
+  non-drawable object — a RingGeometry and an OctahedronGeometry under `ch`, no maps, giving the
+  `{geo:±2, tex:0}` fingerprint of every red. **SO 168/0 IS NOT A REPRODUCIBLE BASELINE — IT WAS
+  ONE LUCKY DRAW.** The gate reads **157-168 ok**; eleven assertions are exposed. A failure whose
+  payload is exactly `{geo:±2, tex:0, meshes:0, mats:0}` on a `del-cine|<shot>` state (or the
+  roll-up after one) is this and is NOT a regression; ANYTHING ELSE IS REAL. The fix is two halves
+  and needs both: drop the occRing/occDia dispose (keep contactShadow's — its visibility IS a
+  function of the scene branch) AND warm them once at boot so their two geometries sit inside
+  every baseline, which is the deal `DEPTHQ` already has. Tolerating ±2 in `gpuCheck` was rejected:
+  it would blind the gate to a real two-geometry leak.
+  `DEPTHQ` is the same shape and DELIBERATELY LEFT: it uploads in the
   first plate scene, so it is inside every baseline — it would only bite a run that booted in a
   real-time scene. "Built once, never disposed" is safe ONLY for an object every baseline has
   already drawn. (The battle stage is invisible to this gate by construction — it builds its own
