@@ -91,6 +91,12 @@ default moved, and if you rule for the diorama, nothing here is touched.
   own 86.3 → 68.8 drop when its occluder set stopped being the collide set.
 - fps cost of a running camera move: **0.1%**. Flag-off proof: diorama answers, lens restored,
   `transition_test` 168/0.
+- **AND THE CAMERA STOPPED SWINGING** (14:55). The shot solver had started RANKING candidate yaws
+  instead of taking the first placeable one, which took camera-swings-off-your-heading from 49% to
+  89% — eroding the spike's own stated property. Measured across seven 160-cell arms: the swing is
+  ALL from best-of ranking, and best-of buys ZERO staging (a ranking cannot make a passing cell
+  fail — its candidates already passed). One value changed (`yawKeep` 4 → 1): **swing 89.3% →
+  49.5%, staging unchanged at 103/160 AND THE SAME 103 CELLS, symmetric difference 0.**
 **The lane's verdict, and mine after looking:** the world is better on picture and on structure —
 in the world the camera is an INSTRUMENT, in the diorama it is a CONSTANT — but the diorama's
 meadow frame is still the most READABLE picture on the board. What changed is the size of the
