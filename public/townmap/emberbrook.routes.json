@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-07T18:17:23Z",
+ "generated": "2026-08-08T02:26:03Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -1698,20 +1698,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.05,
-       0.408
+       0.049,
+       0.435
       ],
       "px": [
-       706,
-       227
+       705,
+       217
       ],
       "onScreen": true,
-      "edgeMargin": 0.592,
-      "depth": 53.98,
-      "charPx": 38,
+      "edgeMargin": 0.565,
+      "depth": 52.916,
+      "charPx": 39,
       "headNdc": [
-       0.052,
-       0.493
+       0.051,
+       0.522
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1743,20 +1743,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.552,
-       -0.302
+       -0.569,
+       -0.286
       ],
       "px": [
-       301,
-       500
+       289,
+       494
       ],
       "onScreen": true,
-      "edgeMargin": 0.448,
-      "depth": 41.686,
-      "charPx": 50,
+      "edgeMargin": 0.431,
+      "depth": 40.622,
+      "charPx": 51,
       "headNdc": [
-       -0.568,
-       -0.212
+       -0.586,
+       -0.193
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1788,20 +1788,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.594,
-       -0.331
+       0.607,
+       -0.315
       ],
       "px": [
-       1071,
-       511
+       1080,
+       505
       ],
       "onScreen": true,
-      "edgeMargin": 0.406,
-      "depth": 40.396,
-      "charPx": 51,
+      "edgeMargin": 0.393,
+      "depth": 39.332,
+      "charPx": 53,
       "headNdc": [
-       0.611,
-       -0.239
+       0.625,
+       -0.22
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1833,20 +1833,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.083,
-       -0.618
+       0.082,
+       -0.609
       ],
       "px": [
-       728,
-       621
+       727,
+       618
       ],
       "onScreen": true,
-      "edgeMargin": 0.382,
-      "depth": 37.526,
-      "charPx": 55,
+      "edgeMargin": 0.391,
+      "depth": 36.462,
+      "charPx": 57,
       "headNdc": [
        0.085,
-       -0.528
+       -0.516
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1878,20 +1878,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.272,
-       -0.345
+       -0.281,
+       -0.33
       ],
       "px": [
-       490,
-       517
+       483,
+       511
       ],
       "onScreen": true,
-      "edgeMargin": 0.655,
-      "depth": 40.915,
-      "charPx": 51,
+      "edgeMargin": 0.67,
+      "depth": 39.851,
+      "charPx": 52,
       "headNdc": [
-       -0.279,
-       -0.254
+       -0.29,
+       -0.236
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1916,20 +1916,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.183,
-       0.055
+       -0.19,
+       0.078
       ],
       "px": [
-       549,
-       363
+       544,
+       354
       ],
       "onScreen": true,
-      "edgeMargin": 0.817,
-      "depth": 46.55,
-      "charPx": 44,
+      "edgeMargin": 0.81,
+      "depth": 45.486,
+      "charPx": 46,
       "headNdc": [
-       -0.188,
-       0.145
+       -0.195,
+       0.17
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1955,19 +1955,19 @@
       "behind": false,
       "ndc": [
        0.127,
-       0.235
+       0.26
       ],
       "px": [
-       757,
-       294
+       758,
+       284
       ],
       "onScreen": true,
-      "edgeMargin": 0.765,
-      "depth": 49.741,
-      "charPx": 42,
+      "edgeMargin": 0.74,
+      "depth": 48.677,
+      "charPx": 43,
       "headNdc": [
-       0.13,
-       0.323
+       0.131,
+       0.351
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1992,20 +1992,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.35,
-       0.004
+       0.356,
+       0.027
       ],
       "px": [
-       907,
-       382
+       912,
+       374
       ],
       "onScreen": true,
-      "edgeMargin": 0.65,
-      "depth": 45.724,
-      "charPx": 45,
+      "edgeMargin": 0.644,
+      "depth": 44.66,
+      "charPx": 46,
       "headNdc": [
-       0.359,
-       0.094
+       0.366,
+       0.119
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2036,20 +2036,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.293,
-       0.108
+       -0.302,
+       0.132
       ],
       "px": [
-       475,
-       342
+       469,
+       333
       ],
       "onScreen": true,
-      "edgeMargin": 0.707,
-      "depth": 47.344,
-      "charPx": 44,
+      "edgeMargin": 0.698,
+      "depth": 46.28,
+      "charPx": 45,
       "headNdc": [
-       -0.3,
-       0.198
+       -0.31,
+       0.224
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2078,20 +2078,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.224,
-       0.274
+       0.227,
+       0.3
       ],
       "px": [
-       823,
-       279
+       824,
+       269
       ],
       "onScreen": true,
-      "edgeMargin": 0.726,
-      "depth": 50.385,
-      "charPx": 41,
+      "edgeMargin": 0.7,
+      "depth": 49.321,
+      "charPx": 42,
       "headNdc": [
-       0.229,
-       0.362
+       0.232,
+       0.39
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2120,20 +2120,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.483,
-       0.023
+       0.492,
+       0.045
       ],
       "px": [
-       996,
-       375
+       1002,
+       367
       ],
       "onScreen": true,
-      "edgeMargin": 0.517,
-      "depth": 45.911,
-      "charPx": 45,
+      "edgeMargin": 0.508,
+      "depth": 44.847,
+      "charPx": 46,
       "headNdc": [
-       0.495,
-       0.113
+       0.504,
+       0.138
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2169,20 +2169,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.076,
-       0.49
+       0.075,
+       0.517
       ],
       "px": [
-       723,
-       196
+       722,
+       185
       ],
       "onScreen": true,
-      "edgeMargin": 0.51,
-      "depth": 56.101,
-      "charPx": 37,
+      "edgeMargin": 0.483,
+      "depth": 55.037,
+      "charPx": 38,
       "headNdc": [
        0.077,
-       0.573
+       0.603
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2218,20 +2218,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.678,
-       -0.32
+       -0.699,
+       -0.304
       ],
       "px": [
-       216,
-       507
+       202,
+       501
       ],
       "onScreen": true,
-      "edgeMargin": 0.322,
-      "depth": 41.548,
-      "charPx": 50,
+      "edgeMargin": 0.301,
+      "depth": 40.484,
+      "charPx": 51,
       "headNdc": [
-       -0.697,
-       -0.23
+       -0.719,
+       -0.211
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2267,20 +2267,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.722,
-       -0.421
+       0.739,
+       -0.407
       ],
       "px": [
-       1157,
-       546
+       1169,
+       540
       ],
       "onScreen": true,
-      "edgeMargin": 0.278,
-      "depth": 39.212,
-      "charPx": 53,
+      "edgeMargin": 0.261,
+      "depth": 38.148,
+      "charPx": 54,
       "headNdc": [
-       0.744,
-       -0.329
+       0.762,
+       -0.311
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2317,19 +2317,19 @@
       "behind": false,
       "ndc": [
        0.105,
-       -0.845
+       -0.842
       ],
       "px": [
        743,
-       708
+       707
       ],
       "onScreen": true,
-      "edgeMargin": 0.155,
-      "depth": 34.677,
-      "charPx": 60,
+      "edgeMargin": 0.158,
+      "depth": 33.613,
+      "charPx": 62,
       "headNdc": [
        0.109,
-       -0.754
+       -0.748
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2365,20 +2365,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.376,
-       -0.464
+       -0.39,
+       -0.451
       ],
       "px": [
-       419,
-       562
+       410,
+       557
       ],
       "onScreen": true,
-      "edgeMargin": 0.536,
-      "depth": 39.452,
-      "charPx": 52,
+      "edgeMargin": 0.549,
+      "depth": 38.388,
+      "charPx": 54,
       "headNdc": [
-       -0.388,
-       -0.373
+       -0.402,
+       -0.357
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3018,8 +3018,8 @@
      "seam:square-plaza__hillside-cottage",
      "seam:square-plaza__barn"
     ],
-    "minCharPx": 37,
-    "visibleFrac": 0.7656
+    "minCharPx": 38,
+    "visibleFrac": 0.7969
    }
   },
   "pondlane": {

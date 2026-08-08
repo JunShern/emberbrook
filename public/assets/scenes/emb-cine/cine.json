@@ -31,7 +31,7 @@
    "look": "AgX - Medium High Contrast",
    "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 3.75,
+   "moon": 1.5,
    "moonColor": [
     0.65,
     0.75,
@@ -391,14 +391,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    69.821,
-    76.803,
-    32.048
+    69.662,
+    76.24,
+    31.104
    ],
    "aim": [
-    64.162,
-    44.711,
-    2.706
+    64.188,
+    45.194,
+    2.718
    ],
    "fov": 35,
    "clip": [
@@ -406,12 +406,12 @@
     1400
    ],
    "rtClip": [
-    12.1988,
-    118.148
+    11.7395,
+    114.553
    ],
    "depth": {
-    "near": 24.397541046142578,
-    "far": 73.84255981445312,
+    "near": 23.479045867919922,
+    "far": 71.59586334228516,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -426,10 +426,10 @@
     -45.8
    ],
    "spawnFrom": "walk_lm_square-plaza.032",
-   "visibleFrac": 0.7656,
+   "visibleFrac": 0.7969,
    "probes": 64,
-   "baked": "2026-08-07T23:45:11Z",
-   "seconds": 424.5,
+   "baked": "2026-08-08T02:25:52Z",
+   "seconds": 450.3,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
