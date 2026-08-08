@@ -194,6 +194,26 @@ git runs here, on branch `migration/3d-hybrid`.
   conversion, applied once at the light object so the ratified numbers still read as
   themselves. Colour management also means a hand `convertSRGBToLinear` is now a DOUBLE
   conversion: two were deleted, look for a third before adding one.
+- **THE PAGE RENDERS AT THE DEVICE PIXEL RATIO, CAPPED AT 2** (2026-08-08). It never did before,
+  so a retina display showed 2x2 device-pixel blocks on every contrasty silhouette — the user's
+  standing "pixelated seam". THE FACT THAT DECIDED IT: every plate is 2688x1536, EXACTLY twice
+  the 1344x768 canvas, so dpr 1 was downsampling the authored art by half; dpr 2 is 1:1 with the
+  art, not a sharpening. Measured cost: a plate scene +9% frame time (draw-call bound, not fill
+  bound), ow-valley 3.3x (12.7 ms, still inside 16.7 with 24% spare); GTAO+aerial grade is 42%
+  of that frame and half-rate GTAO is the named prize if it ever needs one. `?dpr=1` restores
+  the old behaviour, `?dpr=<n>` clamps 0.5..4.
+  **SIX HARD-CODED 1344x768 SITES HAD TO MOVE WITH IT, AND FIVE FAIL SILENTLY.** The composer is
+  the trap: **EffectComposer handed a render target takes that target's PIXEL size as its CSS
+  size** (`this._width = renderTarget.width`), so `setPixelRatio` ALONE leaves the whole
+  real-time chain at 1344x768 with no error and no visual tell. The subtlest is the **FXAA/dither
+  `texel` uniform — a ShaderPass has no `setSize`**, so a stale texel BLURS instead of
+  antialiasing (it is why the board's own dpr-2 column understated the fix). Also GTAO's
+  constructor, the `ao_res` fraction, bloom's resolution, and `SIM.paint`'s `gl.readPixels`
+  window (which otherwise probes a quarter of the frame, in the wrong corner). A RESIZE IS A
+  RESIZE: no colour space was touched. There is deliberately NO window-resize handler —
+  `setSize(W,H,false)` plus CSS sizing makes a window resize a pure CSS event (proof:
+  tools/../docs/qa/dpr/dpr_resize.mjs, 16/0). Known gap: `PR` is read once at load, so dragging
+  a window from a 1x to a retina monitor stays at 1x until reload.
 - **THE FILL IS THE SKY** (2026-08-03). `scene.environment` — a 128x64 float equirect
   written from the town rig's own colours (or the ow rig's), PMREM'd — REPLACES the flat
   hemisphere+ambient fill rather than stacking on it, in charLight() and in the ow block.
