@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QA — Battle presentation audit (2026-08-08)</title>
+<style>
+ :root{color-scheme:dark}
+ body{margin:0;background:#0d1014;color:#d8cfc2;font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif}
+ main{max-width:1240px;margin:0 auto;padding:38px 22px 90px}
+ h1{font:600 30px/1.2 Georgia,serif;color:#f0e3cd;margin:0 0 .35em;letter-spacing:.01em}
+ h2{font:600 20px/1.3 Georgia,serif;color:#e9a24b;margin:2.6em 0 .5em}
+ h3{font:600 16px/1.3 Georgia,serif;color:#cbb894;margin:1.8em 0 .4em}
+ .sub{color:#8e8377;margin:0 0 2em;font-size:14px}
+ p{max-width:82ch}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1em 0}
+ .pair.three{grid-template-columns:1fr 1fr 1fr}
+ figure{margin:0}
+ figure img{width:100%;display:block;border:1px solid #2a2f36;border-radius:5px;background:#000}
+ figcaption{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#8e8377;padding-top:6px;line-height:1.5}
+ figcaption b{color:#d8cfc2;font-weight:600}
+ .note{border-left:3px solid #3d4a5c;background:#141922;padding:12px 16px;margin:1.4em 0;border-radius:0 5px 5px 0;max-width:82ch}
+ .note.red{border-left-color:#8a4a3a;background:#1c1613}
+ .note.ok{border-left-color:#4a7a52;background:#131a14}
+ code{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:#1a1f27;padding:1px 5px;border-radius:3px;color:#c8b89a}
+ table{border-collapse:collapse;margin:1.2em 0;font-size:13.5px}
+ th,td{border:1px solid #2a2f36;padding:5px 11px;text-align:left}
+ th{background:#161b22;color:#cbb894;font-weight:600}
+ td.n{font-family:ui-monospace,Menlo,monospace;text-align:right}
+ .rank{display:inline-block;background:#e9a24b;color:#14100a;font-weight:700;border-radius:3px;padding:1px 7px;margin-right:6px;font-size:13px}
+ @media (max-width:820px){.pair,.pair.three{grid-template-columns:1fr}}
+</style></head><body><main>
+
+<h1>Battle presentation — what it actually looks like</h1>
+<p class="sub">2026-08-08, battle-graphics-audit lane · no shipped file edited ·
+full inventory + ranked slate: <code>docs/plans/battle-presentation-inventory.md</code><br>
+Captured with <code>node tools/battle_shots.mjs --port=3000 --tag=audit --out=docs/qa/battle-audit</code>
+and <code>node tools/arena_playtest.mjs --port=3000 --gpu --eval=&lt;probe&gt;</code> —
+real GL (not swiftshader), 1600&times;813, <code>nomusic=1</code>, seed 4242,
+<code>stage.frames</code> asserted climbing before every capture.</p>
+
+<div class="note"><b>The framing.</b> <code>director-slate.md</code> Bet 10 — "attack lunges,
+hit flash + shake, damage number motion, turn camera punch-ins, KO/victory beats" — <b>already
+shipped</b>, on 2026-08-02. The user is looking at the result of that juice pass and calling it
+unimpressive. <b>Bet 10 is spent; what is left is structural.</b></div>
+
+<h2>1 · The camera does not move — and it cannot</h2>
+
+<table>
+<tr><th>measurement (89 samples, 3.0 s at rest)</th><th>value</th></tr>
+<tr><td>camera position span, x / y / z</td><td class="n">0.0126 / 0.0024 / 0.0039 m</td></tr>
+<tr><td>one screen pixel at 11.6 m, fov 34&deg;, 813 px</td><td class="n">8.7 mm</td></tr>
+<tr><td><b>total camera movement in 3 seconds</b></td><td class="n"><b>1.4 px</b></td></tr>
+<tr><td>idle-drift periods (<code>CFG.drift.px/py/pz</code>)</td><td class="n">103 / 153 / 217 s</td></tr>
+<tr><td>a meadow fight, at the shipped pacing</td><td class="n">~20&ndash;40 s</td></tr>
+</table>
+
+<p>One pose, built once (<code>battle_stage3d.js:651</code>) and copied back every frame
+(<code>:2094</code>), looking at a <b>fixed world point</b>, never at the actor and never at the
+target. The intro sweep runs once for 1050 ms and never again. On a turn change: nothing. On a
+KO: a 0.19 m shake. On victory: nothing. The drift's full amplitude is 17 px but its cycle is
+103 seconds — <b>a player never sees one.</b></p>
+
+<div class="note red"><b>And it is pinned.</b> <code>public/assets/battle/MANIFEST.md</code>
+states the contract in its own words: the four backdrop plates were generated to a prompt
+containing the arena camera's exact height, tilt and fov, and <i>"if the arena camera moves,
+this paragraph moves with it and the plates are re-shot."</i> The backdrop is one curved band
+built around the rest pose alone. <b>A camera language is not a tuning change to this stage —
+it is incompatible with the way its world is drawn.</b></div>
+
+<h2>2 · The four zones, as the player sees them</h2>
+
+<div class="pair">
+  <figure><img src="audit-meadow.png" alt="Meadow battle, whole frame">
+  <figcaption><b>meadow</b> — the best of the four, and still a plastic putting green in front
+  of a painting. Note the seam: painted grass with flowers and a specular river above,
+  a smooth untextured gradient below. <b>36% of the frame width</b> between the nearest party
+  body and the nearest foe is bare floor.</figcaption></figure>
+  <figure><img src="audit-crag.png" alt="Crag battle, whole frame">
+  <figcaption><b>crag</b> — the best floor (its grain setting earns it), spoiled by the
+  untextured faceted boulder at frame right, the single most placeholder-looking object in
+  the game. The <b>"Scree Shell" name tag is half behind the turn-order window</b> — the
+  staging has no knowledge of where the UI is.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="audit-forest.png" alt="Forest battle, whole frame">
+  <figcaption><b>forest</b> — the plate is a dark autumn woodland of vertical trunks; the 3D
+  floor under it is <b>bright sandy tan</b> and the grass tufts are <b>teal cones on sand</b>.
+  It reads as a woodland that has been clear-felled and replaced with a beach.</figcaption></figure>
+  <figure><img src="audit-water.png" alt="Water battle, whole frame">
+  <figcaption><b>water</b> — the zone is called <i>water</i>, the plate is a sunset river, and
+  <b>there is no water in the arena at all</b>. The eel and the sprite fight on a dry cream
+  dune among green reeds planted in sand. The brook sprite's two additive shells read as an
+  opaque white pearl once the bloom hits them.</figcaption></figure>
+</div>
+
+<div class="note">Four plates, 1344&times;768, generated with <code>tools/genart.mjs</code>
+(<code>gemini-2.5-flash-image</code>) — <b>the only pre-rendered art in this game not baked
+through the repo's own Blender/Cycles/AgX plate pipeline</b>. They are keyed to the zone
+<i>type</i>, not the place. <code>ow-valley/zones.json</code> is a 224&times;160 grid over a
+280&times;200 m tile: <b>35,840 cells, five zone types, four images.</b></div>
+
+<h2>3 · The attacker never reaches the target</h2>
+
+<figure><img src="audit-impact-swing.png" alt="The swing, 210 ms in">
+<figcaption><b>the swing, 210 ms in</b> (synchronous render). Vesper is at x&asymp;630 px at
+full lunge; the wolf she is attacking is at x&asymp;1170 px. <b>540 px of empty grass between
+the swing and the hit.</b> She is also <b>empty-handed</b> — no rig in the game carries a
+weapon, so the economy's entire payoff ("sell drop, buy weapon, equip, hit harder") has zero
+visual consequence. Maren, at left, stands in her neutral idle throughout.</figcaption></figure>
+
+<table>
+<tr><th>the number this is</th><th>value</th></tr>
+<tr><td>minimum party&harr;foe slot distance</td><td class="n">5.21 m</td></tr>
+<tr><td>maximum</td><td class="n">9.47 m</td></tr>
+<tr><td><code>CFG.act.lungeM</code></td><td class="n">1.35 m</td></tr>
+<tr><td><b>fraction of the gap the attacker covers</b></td><td class="n"><b>25.9%</b></td></tr>
+</table>
+
+<figure><img src="audit-impact-arena.png" alt="The impact frame">
+<figcaption><b>impact</b> — the struck wolf is hot white inside a bright amber ground disc while
+its twin beside it is grey, so <i>which one</i> was hit is unambiguous: that part works. But the
+blow lands on a body <b>four metres from the attacker</b>, and there is <b>no hit-stop</b> —
+the mixer and every tween run straight through contact, so the frame the damage lands is never
+held. The pieces of the hit package are right; the geometry is wrong.</figcaption></figure>
+
+<h2>4 · The KO is an evaporation and the victory does not exist</h2>
+
+<div class="pair three">
+  <figure><img src="seq-3-impact.png" alt="impact"><figcaption><b>impact</b></figcaption></figure>
+  <figure><img src="seq-4-ko.png" alt="KO, 340 ms">
+  <figcaption><b>KO +340 ms</b> — the wolf on its side, translucent, sinking, with a dust puff.
+  <b>This beat reads.</b></figcaption></figure>
+  <figure><img src="seq-5-ko-settled.png" alt="KO settled">
+  <figcaption><b>KO +1.2 s</b> — <b>an empty patch of grass.</b> No corpse, no dissolve, no
+  residue; the camera does not move and nobody else in the frame reacts. The survivors are back
+  in neutral idles the same second.</figcaption></figure>
+</div>
+
+<figure><img src="seq-6-cheer.png" alt="the victory pose">
+<figcaption><b>this is <code>stage.cheer()</code> — the victory pose of this game.</b> Measured,
+not guessed: <code>stage.clipsOf()</code> returns
+<code>["idle","attack","hit","die"]</code> for <i>every</i> body. The stage asks for six intents;
+<b><code>cheer</code> and <code>item</code> bind nothing on every character in the game</b>, and
+neither has a procedural fallback. <code>flee</code> returns before doing anything at all
+(<code>battle_stage3d.js:1661</code>). Using a tonic is a body standing perfectly still while a
+green number appears.</figcaption></figure>
+
+<h2>5 · What the grade is covering for</h2>
+
+<div class="pair">
+  <figure><img src="audit-meadow-arena.png" alt="meadow, graded">
+  <figcaption><b>grade on</b> (shipped) — bloom, contrast, split-tone, vignette, grain, over the
+  plate <i>and</i> the arena.</figcaption></figure>
+  <figure><img src="nopost-meadow.png" alt="meadow, ungraded">
+  <figcaption><b><code>CFG.post.on = false</code></b> — the same frame ungraded. The floor is a
+  pale wash with a beige smear where the "trodden centre" is, and the fog haze band at the seam
+  becomes an obvious pale bar. <b>The grade is doing the work of hiding how flat the floor is</b>
+  — a fine thing for a grade to do and a terrible thing to depend on.</figcaption></figure>
+</div>
+
+<table>
+<tr><th>arena census (one settled meadow battle, 2 party + 2 foes)</th><th></th></tr>
+<tr><td>meshes / triangles</td><td class="n">182 / 197,907</td></tr>
+<tr><td>of which procedural scatter (4-sided grass cones + 3 props)</td><td class="n"><b>157 meshes</b></td></tr>
+<tr><td>the ground</td><td class="n">1 mesh, <code>MeshLambertMaterial({vertexColors})</code>, 4,320 tris, <b>no texture</b></td></tr>
+<tr><td><b>materials carrying no texture map at all</b></td><td class="n"><b>174 of 182 (95.6%)</b></td></tr>
+<tr><td>normal maps / roughness maps in the whole scene</td><td class="n">2 / 2</td></tr>
+<tr><td><code>scene.environment</code></td><td class="n"><b>null</b></td></tr>
+<tr><td>materials with an <code>envMap</code></td><td class="n"><b>0</b></td></tr>
+<tr><td><code>renderer.toneMapping</code></td><td class="n"><code>NoToneMapping</code></td></tr>
+<tr><td>lights</td><td class="n">5 (hemi 1.38, key 2.70, fill 0.69, <b>rim 3.93</b>, ambient 0.38)</td></tr>
+</table>
+
+<div class="note red"><b>The arena and the world it replaces are two different games.</b>
+<b>Every battle in this game happens in <code>ow-valley</code></b> — <code>zones.json</code>
+exists for that scene alone, so the director no-ops everywhere else. <code>ow-valley</code> is a
+<b>real-time</b> scene: honest geometry, a solved key, <code>scene.environment</code> = a PMREM
+of the region's own sky, and the RT postfx family <b>RenderPass &rarr; GTAO &rarr; bloom &rarr;
+Output</b>. At the instant a battle starts, the battle tears all of that down and builds a
+second WebGL context containing a procedural disc, five hand-tuned lights, no environment map,
+no AO and no tone mapping. The party rigs bring 9 <code>MeshStandardMaterial</code> and 1
+<code>MeshPhysicalMaterial</code> into a scene with <b>no environment for them to reflect</b> —
+the same character, in the same second, is lit by an IBL in the field and by a hemisphere in
+the battle.</div>
+
+<h2>6 · Two more measured joins</h2>
+
+<p><b>DPR asymmetry.</b> <code>battle_stage3d.js:610</code> calls
+<code>setPixelRatio(min(devicePixelRatio, 2))</code>. <b><code>play3d.html</code> never calls
+<code>setPixelRatio</code> at all</b> — the field renders at CSS pixels. On a Retina display the
+battle therefore draws <b>4&times; the fragments the field does</b>, and nobody has priced it.
+Headless at dpr 1 the arena idles at <b>120 fps</b>, so this is not a measured problem — it is
+an unmeasured one, and it belongs in the DPR lane's findings.</p>
+
+<p><b>The turn-order panel disagrees with the field.</b> Foe icons are the 16&times;16
+placeholder sprites. Duskpad's icon is <b>salmon-pink</b>; the duskpad on the field is a
+<b>grey wolf</b>. Bramble Shade's icon is <b>bright green</b>; the model is a <b>black
+root-ball</b>. The panel that exists so the player can plan shows monsters in colours and shapes
+they do not have — next to 30 px painted busts for the party, two art registers in one table.</p>
+
+<h2>7 · What is already right — do not spend a bet re-doing these</h2>
+
+<div class="pair">
+  <figure><img src="audit-fb-plate.png" alt="fallback: pose plates">
+  <figcaption><b><code>disable.partyModel</code></b> — the party fall to their chroma-keyed
+  pose plates on camera-facing planes, bottom-anchored, casting cutout shadows.</figcaption></figure>
+  <figure><img src="audit-fb-proxy.png" alt="fallback: proxy solids">
+  <figcaption><b><code>partyModel,foeModel,billboard</code> killed</b> — everything on procedural
+  proxy solids, still lit, still shadowed, still graded. <b>No holes.</b></figcaption></figure>
+</div>
+
+<div class="note ok">The fallback chain is <b>real and photographed, not asserted</b>; the party
+are the same GLB files the overworld uses; the seam between stage and screen is clean (8 verbs,
+no battle state, no <code>GS</code>); teardown is total and gated by
+<code>arena_playtest</code>; and the cast shadows, rim light, grade, hit package, markers, turn
+queue, pacing beats and victory tally are all shipped and all tuned against pictures. <b>The
+grade in particular is why the frames hold together at all.</b> A rebuild that discards any of
+this is a regression.</div>
+
+<h2>8 · The slate, in one screen</h2>
+
+<table>
+<tr><th>#</th><th>bet</th><th>changes</th><th>cost</th><th>risk</th></tr>
+<tr><td><span class="rank">1</span></td><td><b>CONTACT</b></td>
+    <td>attacker travels to a strike station off the target's own body; damage timed to the clip's contact frame; <b>hit-stop</b> at impact</td><td>small</td><td>low</td></tr>
+<tr><td><span class="rank">2</span></td><td><b>A CAMERA LANGUAGE</b></td>
+    <td>a shot table + solver: round / decide / strike / impact / KO / victory, with a 180&deg;-rule that never crosses the axis</td><td>medium</td><td>medium — <b>gated on the backdrop</b></td></tr>
+<tr><td><span class="rank">3</span></td><td><b>FIGHT WHERE YOU STAND</b></td>
+    <td>borrow <code>play3d</code>'s real <code>ow-valley</code> scene and camera; delete the dish, the four plates, the band, the second rig, the second context</td><td>large</td><td><b>high</b> — <code>play3d</code> custody + 4 open post-battle queue tickets. Ship behind <code>?arena=world</code> with the diorama as the fallback.</td></tr>
+<tr><td>4</td><td>THE CAST FIGHTS</td><td>cheer / item / guard clips + a weapon socket fed by <code>GS</code></td><td>medium</td><td>low</td></tr>
+<tr><td>5</td><td>STAGING SOLVED AGAINST THE FRAME</td><td>slots chosen so bodies land in a target band, nothing under a window, the 36% hole closes</td><td>small&ndash;med</td><td>low</td></tr>
+<tr><td>6</td><td>ONE LIGHT MODEL</td><td>the field's rig + a PMREM environment + the field's grade</td><td>low under #3</td><td>the r185 colour-space trap, already paid once</td></tr>
+<tr><td>7</td><td>KO / VICTORY ARE EVENTS</td><td>a hold, a dissolve, survivors reacting; a victory move and poses</td><td>low&ndash;med</td><td>depends on #2 and #4</td></tr>
+<tr><td>8</td><td>MONSTERS LOOK LIKE ONE GAME</td><td>one art direction for six creatures; foe icons rendered from the models</td><td>high (art)</td><td>low</td></tr>
+<tr><td>9</td><td>BAKE THE DIORAMA FROM THE PLACE</td><td><b>only if #3 is refused</b> — <code>cine_bake</code> a cube/wide plate per region, textured floor</td><td>high</td><td>it is the answer that already failed to satisfy once</td></tr>
+</table>
+
+<p><b>Sequencing.</b> Wave 1 ships now and needs no ruling: <b>#1 + #5 together, #4 in parallel</b>
+in the character factory — none of them touches <code>play3d.html</code>, needs a plate, or
+needs a decision. Wave 2 needs a ruling: <b>#3 behind a flag</b>, and if granted <b>#2 and #6
+follow it almost for free</b>, then #7. Wave 3: #8. <b>#9 only if #3 is refused.</b></p>
+
+<h2>9 · Open questions</h2>
+<p><b>(a)</b> Bet #3 or bet #9 — borrow the world, or keep a diorama and bake it from the real
+place? Everything downstream depends on this one call.
+<b>(b)</b> May the battle camera <i>cut</i>? <code>seam-canon.md</code> governs walk-triggered
+camera changes in a town, and the battle screen is modal and non-navigational — so a cut on a
+beat is arguably not a "passage". That reading should be confirmed before #2 ships cuts.
+<b>(c)</b> Do weapons appear in hand? #4's socket makes the equipment economy visible and
+changes the turnaround spec's "hands empty" rule for every future character.</p>
+
+</main></body></html>
