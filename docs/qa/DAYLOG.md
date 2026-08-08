@@ -19535,3 +19535,82 @@ icons in the turn-order panel.
 `docs/qa/battle-audit/index.html` carries the correction as a banner above §3 and a new
 §3b, so a reader sees which plates were suspect, why they in fact stand, and what the
 corrected re-shoot shows. The "before" narrative is NOT overwritten by "after" images.
+
+## 2026-08-08 ~05:50 — DEPLOY LANE: round 5 is LIVE AND VERIFIED (29/0), built from a CLEAN WORKTREE
+
+The main tree was DIRTY with four lanes' in-flight edits, so this deploy was built from a
+throwaway `git worktree` detached at `origin/migration/3d-hybrid` — **d95f3e04** — with
+`EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`. `build-static --compress`:
+**392 files / 520.6 MB / 3.5 s**, cache **253 hit / 0 miss / 0 demoted**. All three build
+gates green: every `.glb` binary glTF, **16 bundle GLBs byte-identical to `public/`** on
+POSITION + indices, **256 referenced paths resolve** (237 via the `.webp` rewrite). Local
+`static_verify`: **ALL GREEN 29/0**. Published with `deploy-ghpages.sh dist` (push verified
+**b9d7a30**, Pages build queued by the script). LIVE stamp moved
+`2026-08-07T21:59:22.999Z` -> **`2026-08-08T05:34:57.608Z`**, and only then
+`static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**, zero failed
+requests, zero unexpected 4xx/5xx, zero console errors. Screenshot LOOKED AT: the Duskpad
+battle, both wolves lit and shadowed, Vesper's cut-in, command menu and the turn-order rail
+all drawn (the placeholder foe icons in that rail are the battle-audit's own standing
+finding, not a deploy defect).
+
+**A STAMP IS NOT A PLATE.** Seven changed artifacts fetched from the URL and byte-compared
+against `dist/` — `emb-cine` `pondlane` 902084 · `therise` 1122594 · `arch` 844544 ·
+`orchard` 698934 · `square` 944436 · `gateroad` 794988 `bg.webp`, plus
+`emb-townwalk/stylized.webp` 370362 — **all seven sha256-identical, live vs built**. And
+`pondlane/bg.webp` moved **957040 -> 902084** against the round-4 deploy, so the plate a
+player looks at really changed rather than only the stamp.
+
+**What this deploy carries that the 21:59 build did not:** the Emberbrook fields dressing
+(`dress_fields` re-surfaces the 13 green crop ridges and replaces 6 hedges with 24 scanned
+bushes — the 21 render-visible meshes still wearing flat `emb_mat_leaf_green`), the
+far-horizon + `emberwake_sky` structural answer to the sky item (pondlane far-plane pixels
+12.287% -> 1.662%, depth far range 146.92 -> 262.68 m), the realtime-tier carry
+(`emb-townwalk/scene.glb` 222 walk meshes) that took `cine_test --town emberbrook` from
+477/3 to **480/0**, plus everything the branch landed overnight: DPR-2, the battle
+contact/staging ruler, `?arena=world` inert.
+
+### THE SIZE SCARE, AND THE ONE-LINE CAUSE: `find dist` COUNTS THE DEPLOY SCRIPT'S OWN REPO
+
+Mid-lane the build was called bloated at **915 MB / 896 files** against a known-good
+519 MB / 392, and a rebuild-and-redeploy was ordered on that number. **The number was an
+artifact of when it was measured.** `deploy-ghpages.sh` makes `dist` its own throwaway git
+repo *in place* — so after a push, `dist/.git` holds a full loose-object copy of the site:
+**503 files / 364 MB**. Measured with `.git` excluded the tree was **393 files / 545.1 MB**,
+the exact shape of the round-4 deploy. Two independent confirmations: an extension census
+found **zero stems carrying both an original and a `.webp`** (237 webp / 48 png / 43 json /
+29 glb / 21 js / 8 mp3 / 5 html / 1 wasm / 1 nojekyll = 393), and the script's own
+pre-flight — which runs BEFORE its `rm -rf .git` — printed `914 MB, 896 files` on the rerun
+and `579 MB, 393 files` on the clean one. **The pre-flight that guards GitHub's ~1 GB soft
+cap counts a previous attempt's throwaway repo**, which is the same trap in the tool itself.
+Measure `dist` with `-not -path "*/.git/*"`, or measure before a deploy, never after one.
+
+### AND THE FILE-LIST DIFF THAT SETTLED IT ALSO JUSTIFIED THE WHOLE METHOD
+
+Warm build in the MAIN repo vs the clean-worktree build, `find | sort` against `find | sort`:
+**three files differ in total.**
+
+| only in | file | why |
+|---|---|---|
+| worktree build | `.nojekyll` | written by `deploy-ghpages.sh`, not by the build |
+| main-repo build | **`js/battle_world.js`** | **another lane's UNCOMMITTED module** |
+| main-repo build | `assets/scenes/townwalk/meta.json` | **gitignored** — a runtime file git does not carry |
+
+The middle row is the receipt for building deploys out of a clean worktree: a build from the
+dirty main tree would have published an in-flight battle module, silently, with every gate
+green. The third row is a fresh sighting of the `lightrigs.json` class (committed code
+fetches a file `.gitignore` excludes); it is a per-bundle optional on a dev scene and the
+live 29/0 covers it, but a clean-tree build is the only thing that can ever see it.
+
+**A KILLED PUSH IS SAFE, AND IT IS ALSO EXPENSIVE.** Two pushes died before this one — the
+first when its foreground tool call was reaped, the second killed deliberately on the bad
+size number, at 327 MB of ~530 already uploaded. Both times `gh-pages` stayed exactly at the
+round-4 sha and the live site kept serving the verified 21:59 build, because a force-push
+updates the remote ref atomically at the end: **there is no half-published state.** What it
+does cost is the entire transfer, and this link ran 70-143 KB/s with a 21% retransmit rate,
+i.e. 60-90 minutes a try. Launch the deploy detached — `(nohup bash tools/deploy-ghpages.sh
+dist > log 2>&1 &)`; **`setsid` does not exist on macOS** and silently kills the launch —
+then poll the remote ref with BOUNDED waits.
+
+INSTRUMENT NOTE (**third sighting**, now unambiguous): the push again produced **TWO Pages
+builds on the same commit** — `errored` at 05:40:40 and `built` at 05:40:41, both on
+b9d7a30. Read the build LIST, never the newest row; the stamp poll is the honest gate.
