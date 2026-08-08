@@ -732,6 +732,19 @@ git runs here, on branch `migration/3d-hybrid`.
   were), and maintaining two arenas is what produced the two-lighting-models defect in the first
   place. NOTE the measured baseline this ruling acts on: the 64.4% staging rate ALREADY includes
   an 11 m nearest-feasible walk, so "search further" is the lever, not a new idea.
+  **MEASURED AND SATISFIABLE — 100% COVERAGE AT 13 m** (2026-08-08, 160 ow-valley road cells,
+  every accepted site re-confirmed through the shipped `solveArena`, 160/160 planOk): 5 m gives
+  89.4%, 8 m gives 98.8%, **13 m gives 100%**, and 15/20/30/40/60/100 m are flat. ZERO residual
+  class — no cell refuses at any radius. **AND THE BINDING VARIABLE WAS NEVER DISTANCE, IT WAS
+  BEARING**: 41 of the 57 cells the shipped search refuses stage at the SAME 5 m radius on a
+  different compass bearing. The old number measured a search that walked ONE direction out of
+  the road and asked the solver once — not a world that will not hold a fight. Relocation is one
+  sideways step (p50 5.0 m, p90 8.0, max 13.0), so the opening camera move covers the whole
+  distribution: NO fade, NO cut, NO travel beat is justified. The towns' gate colliders
+  (`emberbrook_4` etc.) dominate the named rejections but dead-end NOTHING — fixing them buys a
+  shorter walk, never a fight that could not otherwise happen. The real refusal reason is
+  OCCLUSION: 14,484 of ~16,900 slot rejections are "body hidden from the battle camera", which is
+  why turning the arena rescues a cell and walking further barely does.
 - **SINGLE-PLAYER FOR THE PROTOTYPE** (user ruling 2026-08-02, verbatim: "Let's leave the
   two-player version of the game as an upgrade for later, and in the prototype we can keep
   things as single-player"). The 3D runtime is single-body and STAYS so. Chapter One's climax
