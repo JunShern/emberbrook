@@ -763,6 +763,12 @@ git runs here, on branch `migration/3d-hybrid`.
   hedge banks that motivated the drawn-scene set are ordinary meshes and stay. After: 150/150 cells
   stage, solve p50 16.2 ms / p95 234 / max 407, **trigger to first battle frame p50 688 ms, p95
   871, max 871** (`docs/qa/battle-world/stageperf.json`, §Q2c of that board).
+  **AND NOTHING GATES ON RAY COST — THIS HOLE IS OPEN.** The 1.5 m rule is a height threshold, not
+  a budget: a bundle that ships a TALL instanced scatter restores the 32-second staging solve with
+  every gate in this repo GREEN, because no gate measures the cost of a visibility ray. Same shape
+  as `cutin_edge` having no chroma term — a gate that measures the wrong axis cannot see the
+  defect. The cheap guard, if someone wants it: assert per-ray cost in `--mode=raycost` against a
+  ceiling in whatever gate already loads the ow bundle.
 - **SINGLE-PLAYER FOR THE PROTOTYPE** (user ruling 2026-08-02, verbatim: "Let's leave the
   two-player version of the game as an upgrade for later, and in the prototype we can keep
   things as single-player"). The 3D runtime is single-body and STAYS so. Chapter One's climax
