@@ -18944,3 +18944,97 @@ that warning is the refusal restated.
 artifacts tells you they disagree and NOT which one is stale, and a lane that reads
 "pre-attributed" stops asking. The tell here was available all along — one of the two
 numbers matched the master and the other did not.
+
+------------------------------------------------------------
+## 2026-08-08 — DPR LANE: the field renders at the device pixel ratio (capped 2), and the composer had to move with it
+
+The user's long-standing "pixelated" complaint was measured last night
+(docs/qa/dpr/index.html): `public/play3d.html` never called `setPixelRatio`, so the drawing
+buffer was 1344x768 forever and a retina panel showed one rendered pixel per 2x2 device
+pixels — while `battle_stage3d.js:701` had been calling
+`renderer.setPixelRatio(Math.min(devicePixelRatio||1,2))` all along, which is exactly why the
+battle screen looked sharp and the field did not. THE REFRAMING FINDING is the one that
+settles it: every plate is 2688x1536, EXACTLY twice the canvas, so dpr 1 was downsampling the
+authored art by half before the player ever saw it. dpr 2 is not "sharper than authored"; it
+is finally 1:1 with the art. SHIPPED at the capped 2 by coordinator ruling; `?dpr=1` restores
+the old behaviour, `?dpr=<n>` forces any ratio (clamped 0.5..4).
+
+**THE FIX IS TWO PLACES AND IT WAS ACTUALLY SIX.** `renderer.setPixelRatio` alone would have
+capped the whole real-time path straight back to today's pixels, silently, because
+`EffectComposer` HANDED A RENDER TARGET TAKES THAT TARGET'S PIXEL SIZE AS ITS CSS SIZE
+(`this._width = renderTarget.width`) — so the composer would have stayed at 1344x768 with no
+error and no visual tell, since the frame still fills the canvas. Fixed by building the target
+at the CSS size and calling `composer.setSize(W,H)` once, which multiplies by the composer's
+own ratio and moves rt1, rt2 and every pass together. The other four: GTAOPass's construction
+size; the `ao_res 0.5` override (0.5 must mean half of what is DRAWN, not half of 1344x768);
+UnrealBloomPass's resolution vector; and **the FXAA/dither `texel` uniform**, which a
+`ShaderPass` does not resize because `Pass.setSize` is empty. Plus `SIM.paint()`'s
+`gl.readPixels` window, which indexed the DRAWING BUFFER with the CSS constants and would have
+read a quarter of the frame in the wrong corner. A `composer.setSize` wrapper now re-derives
+the aoRes override and the texel on every resize, so the chain cannot be half-fixed again.
+
+**AND THE CAPTURE BOARD'S OWN dpr-2 COLUMN WAS UNDERSTATING THE FIX, by that texel.** The
+capture lane resized the composer at runtime but nothing updated `texel`, so FXAA sampled
+1/1344 on a 2688-wide buffer and BLURRED where it should have antialiased. Measured by setting
+that one uniform two ways on one shipped frame (acutance, the board's own metric):
+roofline 2.23 -> 2.40 (+7.6%), silhouette 5.15 -> 5.80 (+12.5%) — and 2.23/5.15 reproduce the
+board's published 2.24/5.16 to the second decimal, which is what identifies the cause.
+A PASS THAT IS RESIZED BUT NOT RE-PARAMETERISED IS NOT RESIZED.
+
+PROOF, on the shipped default (`SHIPPED=1 node docs/qa/dpr/dpr_shots.mjs`, a new mode that
+loads the page once per URL setting and never touches the ratio; crop boxes recovered from the
+published crop PNGs by normalised cross-correlation, ncc >= 0.9994):
+
+| crop | board dpr1 | shipped ?dpr=1 | board dpr2 | shipped DEFAULT |
+|---|---|---|---|---|
+| ow roofline | 1.48 | 1.47 | 2.24 | 2.40 |
+| ow silhouette | 3.18 | 3.19 | 5.16 | 5.80 |
+| del-cine lockhead | 4.07 | **4.07** | 6.69 | **6.69** |
+| del-cine quay | 4.02 | **4.02** | 5.21 | **5.21** |
+
+The two plate rows are EXACT — a plate scene runs the direct path with no composer, so it is
+deterministic. Buffers per shot, console clean: `2688x1536 · rt 2688x1536 · GTAO 1344x768 ·
+texel 1/2688,1/1536`; at `?dpr=1`: `1344x768 · 1344x768 · 672x384 · 1/1344,1/768`. I LOOKED at
+both crop pairs: at dpr 1 the lockhead plank wall is mush, the crate slats are gone and the
+mooring line is a fat soft diagonal; at the default the planks have grain, the slats are back,
+the moss speckles and the rope is one clean thin line. Overworld: grass blades instead of
+smears, hair strands instead of an orange mass.
+
+RESIZE. **There is no window-resize handler in this page and there must not be one** —
+`setSize(W,H,false)` plus `canvas{width:100%;height:100%}` means a window resize is a pure CSS
+event and the buffer is W x H x PR whatever the window does. That is a claim, so it is measured:
+`node docs/qa/dpr/dpr_resize.mjs` — 16 ok / 0 failed across three CSS viewports (800x450,
+1920x1080, back) and a composer ratio round trip 2 -> 1 -> 2. Two things in it are load-bearing
+beyond the sizes: the probe pixel reads (186,158,142) at EVERY step (a resize is a resize — no
+colour space was touched anywhere in this change, per the r185 rule that a non-XR target renders
+in the linear working space whatever it declares), and the character-pixel count scales 4.07x
+with PR^2, which is the receipt on the `SIM.paint` readback fix. KNOWN GAP, reported not fixed:
+PR is read once at load, so dragging the window from a 1x monitor to a retina one mid-session
+stays at 1x until a reload (the reverse is harmless — the buffer stays at 2x and CSS downscales).
+
+COST on the shipped default (vsync on, 10 s settled rAF window, swap 4.6/6.1 GB, other lanes
+active): ow-valley ridge median 15.2 ms / 65.8 fps, p95 17.5, **max 18.5 in 781 frames**;
+del-cine lockhead 8.3 ms / 120.5 fps, unchanged from dpr 1. 60 fps holds everywhere measured.
+
+**THE HITCH WAS THE MACHINE, NOT A PASS.** The capture board recorded "~5% of frames on a 25 ms
+hitch" at dpr 2. Two IDENTICAL back-to-back runs of the shipped default, same Chrome session,
+same URL: 0.30% of frames over 20 ms, then 21.76%. A configuration whose hitch rate moves 70x
+between two runs of itself is contention. Attribution anyway, vsync OFF, one page load per
+variant, ow-valley ridge: shipped default 12.7 ms; `?dpr=1` 4.0 (the ratio itself is 8.7 ms);
+`?ao_i=0` 7.4 (**GTAO + the aerial grade are 5.3 ms, 42% of the frame**); `?bloom_s=0` 10.9
+(bloom 1.8); `?pfx_aa=0` 11.5 (FXAA+dither 1.2); `?ao_res=0.25` 11.6 (1.1). So a mitigation is
+named and priced — half-rate GTAO is the prize, quarter-res AO buys 1.1 ms for softer contact
+shadows — and NEITHER IS PROPOSED: the frame fits 16.7 ms with 24% spare.
+
+GATES. `transition_test --port=3000`: 162 ok / 6 failed. The same 6 fail on a PRISTINE HEAD
+`play3d.html` served beside the identical assets (symlink tree + `python3 -m http.server`), so
+they are the battle lanes' in-flight `geo+1/tex+1` leak after door 16 (the first door past a
+battle; `programs 12 -> 38` is the battle's shaders) and not this change. Console gate clean in
+every run of every instrument here. `tools/cine_test.mjs`'s depth assertion message was fixed:
+it called 1344x768 "the runtime drawing-buffer resolution", which is now false — the assertion
+itself still stands because depth.png is sampled by UV and is resolution-independent by
+construction, so it is about the BAKE contract, not the canvas. That was the only gate in
+`tools/` carrying a runtime pixel-size claim.
+
+FOR THE BATTLE LANES: `battle_stage3d.js` already ships the identical capped expression and
+needs no change. Nothing in this lane touched it or `battle_world.js`.

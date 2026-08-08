@@ -258,7 +258,12 @@ if (!NO_BUNDLE) {
          `shot '${cam.id}': the BAKED camera is the SOLVED camera (pos/aim/fov identical)`,
          {baked: [b.pos, b.aim, b.fov], solved: [s.pos, s.aim, s.fov]});
       ok(b.depth && b.depth.width === 1344 && b.depth.height === 768,
-         `shot '${cam.id}': depth baked at the runtime drawing-buffer resolution 1344x768`, b.depth);
+         // NOT "the drawing-buffer resolution" any more (2026-08-08, dpr lane): the
+         // buffer is 1344x768 x the device pixel ratio and is 2688x1536 on a retina
+         // panel. The depth map stays 1344x768 because the shader samples it by UV —
+         // it is a per-pixel DISTANCE FIELD, resolution-independent by construction.
+         // This assertion is about the BAKE contract, not about the canvas.
+         `shot '${cam.id}': depth baked at the pipeline's working frame 1344x768`, b.depth);
       ok(b.depth && b.depth.encoding === 'rgb24-viewz',
          `shot '${cam.id}': depth encoding is the one play3d.html's shader decodes`);
       ok(b.depth && b.depth.far > b.depth.near && b.depth.near > 0,

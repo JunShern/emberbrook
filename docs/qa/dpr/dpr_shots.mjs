@@ -6,6 +6,14 @@
  * Nothing in public/ is edited: the pixel ratio is applied at runtime through the
  * page's own top-level bindings (R = the WebGLRenderer, PFXRIG = the post-fx rig),
  * which a global Runtime.evaluate can see because play3d.html is a classic script.
+ *
+ * SHIPPED=1 (2026-08-08, the implementation lane). The runtime patch above was the
+ * right instrument while public/ carried no fix. Now that play3d.html ships
+ * setPixelRatio + a composer that follows it, the thing to photograph is THE PAGE
+ * ITSELF: SHIPPED=1 loads each view once per entry in URLPRS (default `def,1` —
+ * the flag default, then ?dpr=1) and NEVER calls __dpr. Files take a `-ship-<tag>`
+ * suffix and the fps table goes to fps-shipped.json, so the original board's
+ * artefacts are never overwritten by the proof that the fix landed.
  */
 import { spawn } from 'child_process';
 import { rmSync, mkdirSync, writeFileSync } from 'fs';
@@ -19,6 +27,8 @@ const CW = 1344, CH = 756;                       // css viewport; #s is 100vw x 
 const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const FPS_ONLY = process.env.FPS_ONLY === '1';   // re-measure the cost without re-shooting
+const SHIPPED = process.env.SHIPPED === '1';     // photograph the page's OWN ratio, no runtime patch
+const URLPRS = (process.env.URLPRS || 'def,1').split(',');   // 'def' = no ?dpr at all
 
 const VIEWS = [
   { key: 'ow-ridge', scene: 'ow-valley',
@@ -32,7 +42,8 @@ const VIEWS = [
 ];
 const RATIOS = [1, 1.5, 2];
 
-const urlFor = s => `http://localhost:${PORT}/play3d.html?scene=${s}&nomusic=1&nostory=1&v=${Date.now()}`;
+const urlFor = (s, tag) => `http://localhost:${PORT}/play3d.html?scene=${s}&nomusic=1&nostory=1`
+  + (tag && tag !== 'def' ? `&dpr=${tag}` : '') + `&v=${Date.now()}`;
 const profile = join(process.env.TMPDIR || '/tmp', 'dpr-shots-profile');
 killOrphans(profile); rmSync(profile, { recursive: true, force: true });
 const chrome = spawn(CHROME, [
@@ -85,6 +96,9 @@ async function waitLive(cdp) {
 // THE PATCH. Installed fresh after every navigate (a page load wipes it).
 const INSTALL = `
 window.__dpr = function(pr){
+  // pr === null: REPORT ONLY, change nothing. That is SHIPPED mode — the page's own
+  // ratio is the measurement, so touching it would destroy what is being measured.
+  if (pr != null){
   R.setPixelRatio(pr);                       // three re-runs setSize(W,H,false) itself
   try{
     if (typeof PFXRIG!=='undefined' && PFXRIG && PFXRIG.composer){
@@ -93,10 +107,14 @@ window.__dpr = function(pr){
                                        Math.max(2,Math.round(768*pr*0.5)));  // ao_res 0.5, kept
     }
   }catch(e){}
+  }
   try{ SIM.px(4,4,1,1); }catch(e){}           // force one render through the shipped path
   return JSON.stringify({pr:R.getPixelRatio(), buf:[R.domElement.width,R.domElement.height],
     css:[innerWidth,innerHeight], devicePixelRatio:window.devicePixelRatio,
     pfx:(typeof PFXRIG!=='undefined'&&PFXRIG)?[PFXRIG.composer.renderTarget1.width,PFXRIG.composer.renderTarget1.height]:null,
+    ao:(typeof PFXRIG!=='undefined'&&PFXRIG&&PFXRIG.ao)?[PFXRIG.ao.width,PFXRIG.ao.height]:null,
+    texel:(typeof PFXRIG!=='undefined'&&PFXRIG&&PFXRIG.aa)?
+      [Math.round(1/PFXRIG.aa.material.uniforms.texel.value.x),Math.round(1/PFXRIG.aa.material.uniforms.texel.value.y)]:null,
     gl:(function(){try{const g=R.getContext();const x=g.getExtension('WEBGL_debug_renderer_info');
       return x?g.getParameter(x.UNMASKED_RENDERER_WEBGL):g.getParameter(g.RENDERER)}catch(e){return 'n/a'}})()});
 };
@@ -121,6 +139,43 @@ const stats = a => {
   let cur = VIEWS[0].scene;
   await ev(cdp, INSTALL); await sleep(2500);
   const fpsTable = [];
+  // ---- SHIPPED MODE: one page load per (view, url setting), no runtime patch ----
+  if (SHIPPED) {
+    for (const v of VIEWS) {
+      for (const tag of URLPRS) {
+        await cdp.send('Page.navigate', { url: urlFor(v.scene, tag) });
+        await sleep(1500);
+        if (!await waitLive(cdp)) { console.error('never populated: ' + v.scene + ' ' + tag); continue; }
+        await ev(cdp, INSTALL); await sleep(2500);
+        const r = await ev(cdp, `(async()=>{try{${v.expr}; return 'ok'}catch(e){return 'EXC '+e.message}})()`);
+        if (String(r).startsWith('EXC')) { console.error(v.key, tag, r); continue; }
+        await sleep(v.settle);
+        const info = await ev(cdp, `window.__dpr(null)`);       // REPORT ONLY
+        await sleep(600);
+        if (!FPS_ONLY) {
+          const out = join(OUTDIR, `${v.key}-ship-${tag}.png`);
+          const shot = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+          const b64 = shot.result && shot.result.data;
+          if (!b64) { console.error('no data', v.key, tag); continue; }
+          mkdirSync(dirname(out), { recursive: true }); writeFileSync(out, Buffer.from(b64, 'base64'));
+          console.log(`WROTE ${out}  ${info}`);
+        } else console.log(`SHIPPED ${v.key} url=${tag} ${info}`);
+        if (v.fps) {
+          const raw = await ev(cdp, `window.__fps(10000)`);
+          let arr = []; try { arr = JSON.parse(raw); } catch (e) { }
+          arr = arr.slice(5);
+          const st = stats(arr);
+          fpsTable.push({ view: v.key, url: tag, ...st });
+          console.log(`FPS ${v.key} url=${tag} ` + JSON.stringify(st));
+        }
+      }
+    }
+    mkdirSync(OUTDIR, { recursive: true });
+    writeFileSync(join(OUTDIR, 'fps-shipped.json'), JSON.stringify(fpsTable, null, 1));
+    const u = [...new Set(CONSOLE)];
+    console.log(u.length ? ('CONSOLE (' + u.length + '):\n  ' + u.join('\n  ')) : 'CONSOLE CLEAN');
+    cdp.close(); kill(); process.exit(0);
+  }
   for (const v of VIEWS) {
     if (v.scene !== cur) {
       await cdp.send('Page.navigate', { url: urlFor(v.scene) });

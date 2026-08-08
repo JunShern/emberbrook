@@ -1,0 +1,42 @@
+[
+ {
+  "view": "ow-ridge",
+  "url": "def",
+  "n": 781,
+  "medMs": 15.2,
+  "p95Ms": 17.5,
+  "maxMs": 18.5,
+  "medFps": 65.8,
+  "p5Fps": 57.1
+ },
+ {
+  "view": "ow-ridge",
+  "url": "1",
+  "n": 1196,
+  "medMs": 8.3,
+  "p95Ms": 9,
+  "maxMs": 10.4,
+  "medFps": 120.5,
+  "p5Fps": 111.1
+ },
+ {
+  "view": "del-lockhead",
+  "url": "def",
+  "n": 1196,
+  "medMs": 8.3,
+  "p95Ms": 9,
+  "maxMs": 10.4,
+  "medFps": 120.5,
+  "p5Fps": 111.1
+ },
+ {
+  "view": "del-lockhead",
+  "url": "1",
+  "n": 1196,
+  "medMs": 8.3,
+  "p95Ms": 9.2,
+  "maxMs": 10.4,
+  "medFps": 120.5,
+  "p5Fps": 108.7
+ }
+]

@@ -183,5 +183,184 @@ does <i>not</i> line the plates up 1:1, which is where most of the town gain com
 <code>node docs/qa/dpr/dpr_shots.mjs</code> (server on :3000) ·
 <code>FPS_ONLY=1 UNCAP=1 node …</code> for the cost table alone.</p>
 
+<hr style="border:0;border-top:1px solid #333;margin:3em 0">
+
+<h1>AS SHIPPED <span class="note">(implementation lane, 2026-08-08)</span></h1>
+
+<div class="verdict"><b>Shipped at dpr 2, capped, default on.</b>
+<code>public/play3d.html</code> now computes
+<code>PR = Math.min(window.devicePixelRatio || 1, 2)</code> — the same expression
+<code>battle_stage3d.js:701</code> already used, so the field and the battle finally agree —
+and calls <code>R.setPixelRatio(PR)</code> before <code>R.setSize(W,H,false)</code>.
+<code>?dpr=1</code> restores the old behaviour; <code>?dpr=&lt;n&gt;</code> forces any ratio
+(clamped 0.5..4). Everything below is measured on the shipped default, not on a runtime patch.</div>
+
+<h2>The second half of the fix — every hard-coded target dimension</h2>
+<p class="note">The board above predicted one: the composer's render target. There were
+<b>five</b>, and one of them was not a target at all.</p>
+<table>
+<tr><th>what</th><th>was</th><th>now</th><th>if it had been missed</th></tr>
+<tr><td><code>WebGLRenderTarget</code> handed to <code>EffectComposer</code></td><td>1344×768</td><td><code>composer.setSize(W,H)</code> → 2688×1536</td><td>the whole real-time path silently capped back to today's pixels</td></tr>
+<tr><td><code>GTAOPass(scene,cam,W,H)</code></td><td>1344×768</td><td><code>RW,RH</code> (<code>addPass</code> re-sizes it anyway; now it is right before it is)</td><td>—</td></tr>
+<tr><td>the <code>ao_res 0.5</code> override</td><td>0.5 × 1344×768</td><td>0.5 × <b>effective</b> = 1344×768 at dpr 2</td><td>AO at a quarter of the frame — "half" has to mean half of what is drawn</td></tr>
+<tr><td><code>UnrealBloomPass</code> resolution</td><td>1344×768</td><td><code>RW,RH</code></td><td>—</td></tr>
+<tr><td><b>the FXAA/dither <code>texel</code> uniform</b></td><td>1/1344, 1/768</td><td>1/RW, 1/RH</td><td class="bad">FXAA taps land a full 2 px away: the pass <b>blurs instead of antialiasing</b>. See below.</td></tr>
+<tr><td><code>SIM.paint()</code>'s <code>gl.readPixels</code> window</td><td>indexed with W,H</td><td>indexed off <code>R.domElement.width/height</code></td><td>the character-rasterised probe reads a quarter of the frame, in the wrong corner</td></tr>
+</table>
+<p class="note"><b>EffectComposer's own trap.</b> Handed a render target it takes that target's
+<i>pixel</i> size as its <i>CSS</i> size (<code>this._width = renderTarget.width</code>), so
+<code>renderer.setPixelRatio</code> alone leaves the whole chain at 1344×768 with no error and
+no visual tell — the frame still fills the canvas. The target is therefore built at the CSS
+size and resized once with <code>composer.setSize(W,H)</code>, which multiplies by the
+composer's own ratio and moves rt1, rt2 and every pass together. <b>No colour space was
+touched anywhere in this change</b> — r185 renders into a non-XR target in the linear working
+space whatever the target declares, and declaring <code>SRGBColorSpace</code> would allocate
+<code>SRGB8_ALPHA8</code> and round-trip the encode away. A resize is a resize.</p>
+
+<h2>The board's dpr-2 column was <i>understating</i> the fix</h2>
+<div class="meas">The capture lane applied the ratio at runtime and resized the composer, but
+nothing updated the FXAA pass's <code>texel</code> uniform — a <code>ShaderPass</code> has no
+<code>setSize</code>, so it kept sampling 1/1344 on a 2688-wide buffer. Measured directly, by
+setting that one uniform two ways on the same shipped frame:
+<table>
+<tr><th>ow-valley crop</th><th><code>texel = 1/1344</code> (= the board's dpr-2 column)</th><th><code>texel = 1/2688</code> (shipped)</th><th>delta</th></tr>
+<tr><td>roofline</td><td>2.23</td><td>2.40</td><td class="ok">+7.6%</td></tr>
+<tr><td>character silhouette</td><td>5.15</td><td>5.80</td><td class="ok">+12.5%</td></tr>
+</table>
+2.23 and 5.15 reproduce the board's published 2.24 and 5.16 to the second decimal, which is
+what identifies the cause. <b>The one uniform is the whole difference.</b></div>
+
+<h2>The proof: the shipped default reproduces the dpr-2 column, and <code>?dpr=1</code> the dpr-1 column</h2>
+<p class="note"><code>SHIPPED=1 node docs/qa/dpr/dpr_shots.mjs</code> — the same instrument, a
+new mode that loads the page once per URL setting and <b>never touches the ratio</b>. Crops are
+taken at the same boxes as the board above (recovered from the published crop PNGs by
+normalised cross-correlation, ncc ≥ 0.9994). Acutance is the board's own metric and this
+implementation reproduces all eight published numbers exactly.</p>
+<table>
+<tr><th>crop</th><th>board dpr 1</th><th>shipped <code>?dpr=1</code></th><th>board dpr 2</th><th>shipped DEFAULT</th></tr>
+<tr><td>ow-valley roofline</td><td>1.48</td><td class="ok">1.47</td><td>2.24</td><td class="ok">2.40</td></tr>
+<tr><td>ow-valley silhouette</td><td>3.18</td><td class="ok">3.19</td><td>5.16</td><td class="ok">5.80</td></tr>
+<tr class="hi"><td>del-cine lockhead</td><td>4.07</td><td class="ok">4.07</td><td>6.69</td><td class="ok">6.69</td></tr>
+<tr class="hi"><td>del-cine quay railing</td><td>4.02</td><td class="ok">4.02</td><td>5.21</td><td class="ok">5.21</td></tr>
+</table>
+<p class="note">The two plate rows land <b>exactly</b> on the board's numbers — a plate scene runs
+the direct path with no composer, so it is deterministic. The two overworld rows land on the
+dpr-1 column exactly and <i>above</i> the dpr-2 column, by the FXAA texel measured above.</p>
+
+<h3>Shipped default vs <code>?dpr=1</code> — the crops (400×300 real device pixels, shown at 2×)</h3>
+<div class="trio" style="grid-template-columns:1fr 1fr">
+  <figure><a href="del-lockhead-ship-1-crop.png"><img src="del-lockhead-ship-1-crop.png"></a><figcaption><b><code>?dpr=1</code></b> — the plank wall is mush, the crate slats are gone, the mooring line is a fat soft diagonal</figcaption></figure>
+  <figure><a href="del-lockhead-ship-def-crop.png"><img src="del-lockhead-ship-def-crop.png"></a><figcaption><b>shipped default</b> — individual planks with grain, crate slats, moss speckle, hair strands, and the rope is one clean thin line</figcaption></figure>
+</div>
+<div class="trio" style="grid-template-columns:1fr 1fr">
+  <figure><a href="ow-ridge-ship-1-crop.png"><img src="ow-ridge-ship-1-crop.png"></a><figcaption><b><code>?dpr=1</code></b> — grass blades are smears, the distant fence posts are indistinct</figcaption></figure>
+  <figure><a href="ow-ridge-ship-def-crop.png"><img src="ow-ridge-ship-def-crop.png"></a><figcaption><b>shipped default</b> — individual blades, the scarf edge, readable fence posts, ground grain</figcaption></figure>
+</div>
+<h3>The full frames</h3>
+<div class="trio" style="grid-template-columns:1fr 1fr">
+  <figure><a href="del-lockhead-ship-1.jpg"><img src="del-lockhead-ship-1.jpg"></a><figcaption><code>?dpr=1</code> · del-cine lockhead</figcaption></figure>
+  <figure><a href="del-lockhead-ship-def.jpg"><img src="del-lockhead-ship-def.jpg"></a><figcaption><b>shipped default</b> · del-cine lockhead</figcaption></figure>
+  <figure><a href="del-quay-ship-1.jpg"><img src="del-quay-ship-1.jpg"></a><figcaption><code>?dpr=1</code> · del-cine quay-west</figcaption></figure>
+  <figure><a href="del-quay-ship-def.jpg"><img src="del-quay-ship-def.jpg"></a><figcaption><b>shipped default</b> · del-cine quay-west</figcaption></figure>
+  <figure><a href="ow-ridge-ship-1.jpg"><img src="ow-ridge-ship-1.jpg"></a><figcaption><code>?dpr=1</code> · ow-valley ridge</figcaption></figure>
+  <figure><a href="ow-ridge-ship-def.jpg"><img src="ow-ridge-ship-def.jpg"></a><figcaption><b>shipped default</b> · ow-valley ridge</figcaption></figure>
+</div>
+<p class="note">Full frames are quality-95 4:4:4 JPEG, the same encode the board above uses and
+for the same reason. <b>The crops are lossless PNG and are the evidence</b>; every acutance
+number in this section is measured on a crop.</p>
+
+<p class="note">Buffer census on the shipped default, per shot, console clean:
+<code>drawingBuffer 2688×1536 · composer rt 2688×1536 · GTAO 1344×768 · texel 1/2688,1/1536</code>.
+With <code>?dpr=1</code>: <code>1344×768 · 1344×768 · 672×384 · 1/1344,1/768</code>.</p>
+
+<h2>The resize proof</h2>
+<p class="note"><b>There is no window-resize handler in play3d.html, and there must not be one.</b>
+<code>R.setSize(W,H,false)</code>'s third argument is <code>false</code> and the canvas is laid
+out by the stylesheet (<code>canvas{width:100%;height:100%}</code>), so a window resize is a pure
+CSS event: the drawing buffer is W×H×PR whatever the window does. That is a claim, so it was
+measured — <code>node docs/qa/dpr/dpr_resize.mjs</code>, <b>16 ok / 0 failed</b>:</p>
+<pre style="background:#191d20;padding:.8em;overflow-x:auto;font-size:12px;line-height:1.45">== 1  BOOT at the shipped default
+     {"buf":[2688,1536],"pr":2,"css":[1344,756],"rt":[2688,1536],"rt2":[2688,1536],"ao":[1344,768],"texel":[2688,1536],"rgb":[186,158,142],"magenta":74907}
+  ok   drawing buffer is 2688x1536 at pr 2
+  ok   composer rt1+rt2 follow the ratio
+  ok   GTAO is half of the EFFECTIVE size (ao_res 0.5)
+  ok   the FXAA texel is one device pixel
+  ok   the frame has pixels and the character is rasterised
+== 2  CSS RESIZES (updateStyle:false — the buffer must not move)
+  ok   css 800x450: buffer/rt/ao/texel unchanged (css box now 800,450)
+  ok   css 800x450: still drawing (rgb 186,158,142, 74209 char px)
+  ok   css 1920x1080: buffer/rt/ao/texel unchanged (css box now 1920,1080)
+  ok   css 1920x1080: still drawing (rgb 186,158,142, 74163 char px)
+  ok   css 1344x756: buffer/rt/ao/texel unchanged (css box now 1344,756)
+  ok   css 1344x756: still drawing (rgb 186,158,142, 74381 char px)
+== 3  COMPOSER RATIO ROUND TRIP 2 -> 1 -> 2
+  ok   pr 1: buf 1344,768 rt 1344,768 ao 672,384 texel 1344,768 all consistent
+  ok   pr 1: still drawing (rgb 186,158,142, 18488 char px)
+  ok   pr 2: buf 2688,1536 rt 2688,1536 ao 1344,768 texel 2688,1536 all consistent
+  ok   pr 2: still drawing (rgb 186,158,142, 75242 char px)
+  ok   console clean across the whole probe
+PASS  16 ok, 0 failed</pre>
+<p class="note">Two things in there are load-bearing beyond the sizes. <b>The grade did not
+move:</b> the same probe pixel reads (186,158,142) at every step — a resize is a resize, no
+colour space shifted. And <b>the character-pixel count scales as PR²</b> (18,488 → 75,242 =
+4.07×), which is the receipt on the <code>SIM.paint</code> readback fix; every threshold on that
+count in the repo is a lower bound (<code>&gt;0</code>, <code>&gt;40</code>, <code>&gt;60</code>),
+so more pixels can never turn a pass into a fail.</p>
+<p class="note"><b>The one gap, reported not fixed.</b> <code>PR</code> is read once at load.
+Dragging the window from a 1× monitor to a retina one mid-session leaves the buffer at 1× until
+a reload. The reverse (retina → 1×) is harmless: the buffer stays at 2× and CSS downscales.
+A <code>matchMedia('(resolution: …)')</code> listener calling <code>composer.setSize</code> would
+close it — the chain is already consistent under that call, as §3 above proves — but it is
+unmeasured and out of this lane's scope.</p>
+
+<h2>The cost on the shipped default</h2>
+<p class="note">Same instrument, same 10 s settled rAF window, <b>vsync on</b> (what the player
+feels). <code>docs/qa/dpr/fps-shipped.json</code>.</p>
+<table>
+<tr><th>viewpoint</th><th>URL</th><th>median ms</th><th>p95 ms</th><th>max ms</th><th>median fps</th><th>reading</th></tr>
+<tr class="hi"><td>ow-valley ridge</td><td><i>default</i> (pr 2)</td><td>15.2</td><td>17.5</td><td>18.5</td><td>65.8</td><td class="ok">60 holds — <b>no 25 ms frame in 781</b></td></tr>
+<tr><td>ow-valley ridge</td><td><code>?dpr=1</code></td><td>8.3</td><td>9.0</td><td>10.4</td><td>120.5</td><td>locked 120</td></tr>
+<tr class="hi"><td>del-cine lockhead</td><td><i>default</i> (pr 2)</td><td>8.3</td><td>9.0</td><td>10.4</td><td>120.5</td><td class="ok">unchanged from dpr 1</td></tr>
+<tr><td>del-cine lockhead</td><td><code>?dpr=1</code></td><td>8.3</td><td>9.2</td><td>10.4</td><td>120.5</td><td>locked 120</td></tr>
+</table>
+<p class="note"><b>Machine state, disclosed:</b> swap 4.6/6.1 GB used, no Blender running, other
+agent lanes active on the same machine throughout.</p>
+
+<h2>The hitch: not a pass, the machine</h2>
+<div class="meas">The board recorded "~5% of frames on a 25 ms hitch" at dpr 2. <b>It does not
+reproduce as a property of the build.</b> Two <i>identical</i> back-to-back runs of the shipped
+default, same Chrome session, same URL, vsync on:
+<table>
+<tr><th>run</th><th>median ms</th><th>p95 ms</th><th>max ms</th><th>% frames &gt; 20 ms</th><th>% &gt; 24 ms</th></tr>
+<tr><td>ow-valley default, run 1</td><td>15.9</td><td>17.9</td><td>25.3</td><td class="ok">0.30%</td><td class="ok">0.15%</td></tr>
+<tr><td>ow-valley default, run 2</td><td>16.6</td><td>26.3</td><td>34.7</td><td class="bad">21.76%</td><td class="bad">18.10%</td></tr>
+</table>
+0.3% → 21.8% on the same configuration is contention, not a pass. The <code>SHIPPED=1</code>
+capture run above saw <b>zero</b> frames over 20 ms in 781.</div>
+<p class="note"><b>Where the dpr-2 overworld frame actually goes</b> (vsync OFF, the renderer's
+true cost, one page load per variant, <code>ow-valley</code> ridge):</p>
+<table>
+<tr><th>variant</th><th>median ms</th><th>p95 ms</th><th>attributed</th></tr>
+<tr class="hi"><td>shipped default, dpr 2</td><td>12.7</td><td>13.7</td><td>—</td></tr>
+<tr><td><code>?dpr=1</code></td><td>4.0</td><td>5.6</td><td>the ratio itself: <b>8.7 ms</b></td></tr>
+<tr><td><code>?ao_i=0</code> (GTAO + the aerial grade gone)</td><td>7.4</td><td>8.4</td><td><b>5.3 ms — 42% of the frame</b></td></tr>
+<tr><td><code>?bloom_s=0</code></td><td>10.9</td><td>11.7</td><td>bloom 1.8 ms (14%)</td></tr>
+<tr><td><code>?pfx_aa=0</code></td><td>11.5</td><td>12.4</td><td>FXAA + dither 1.2 ms</td></tr>
+<tr><td><code>?ao_res=0.25</code> (AO at 672×384)</td><td>11.6</td><td>12.8</td><td>1.1 ms</td></tr>
+</table>
+<p class="note"><b>So the mitigation, if one is ever wanted, is named and priced — but it is not
+needed and is not being shipped.</b> GTAO plus the aerial grade is 5.3 ms of the 12.7 ms
+overworld frame at dpr 2, and dropping the AO buffer to quarter-res buys 1.1 ms of that for a
+visible softening of the contact shadows. Running GTAO at half rate (every other frame, reusing
+the buffer) is the larger prize. Neither is proposed here: the frame already fits 16.7 ms with
+24% spare and the hitch turned out to be the machine.</p>
+
+<p class="note">Instruments: <code>SHIPPED=1 node docs/qa/dpr/dpr_shots.mjs</code> ·
+<code>node docs/qa/dpr/dpr_resize.mjs</code> · attribution by a scratch variant sweep on the
+same <code>tools/cdp.mjs</code> plumbing (numbers above; the script was a one-off and is not
+kept). Gates: <code>tools/transition_test.mjs --port=3000</code> — 162 ok / 6 failed, and the
+SAME 6 fail on a pristine HEAD <code>play3d.html</code> served beside the same assets, so they
+belong to the battle lanes' in-flight <code>geo+1/tex+1</code> leak and not to this change.</p>
+
 </body>
 </html>
