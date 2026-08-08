@@ -86,8 +86,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-07T21:28:42Z",
-   "seconds": 196.6,
+   "baked": "2026-08-08T15:10:22Z",
+   "seconds": 222.9,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -520,8 +520,8 @@
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
    "visibleFrac": 0.8,
    "probes": 30,
-   "baked": "2026-08-07T21:15:27Z",
-   "seconds": 164.4,
+   "baked": "2026-08-08T15:06:36Z",
+   "seconds": 197.0,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -582,8 +582,8 @@
    "spawnFrom": "walk_pad_pilot-cluster",
    "visibleFrac": 0.9062,
    "probes": 64,
-   "baked": "2026-08-07T21:25:22Z",
-   "seconds": 178.9,
+   "baked": "2026-08-08T15:03:16Z",
+   "seconds": 191.2,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -892,8 +892,8 @@
    "spawnFrom": "walk_pad_lock-five",
    "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-07T21:18:40Z",
-   "seconds": 189.3,
+   "baked": "2026-08-08T15:00:02Z",
+   "seconds": 220.1,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
