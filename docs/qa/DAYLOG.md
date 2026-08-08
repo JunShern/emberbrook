@@ -18824,3 +18824,95 @@ coordinator calls. `tools/glb_census.mjs <a.glb> [b.glb ...]` is the new ruler f
 conversation: magic/version/declared-length out of the header, then nodes, meshes,
 primitives, accessors, bufferViews, materials, vertices, triangles and walk_* counts,
 several files side by side.
+
+------------------------------------------------------------
+2026-08-08 BATTLE GRAPHICS AUDIT: the arena inventoried, measured and photographed;
+a ranked slate of structural bets filed. NO SHIPPED FILE EDITED — this lane read,
+measured, captured and proposed. Two artifacts:
+  docs/plans/battle-presentation-inventory.md  (the inventory + the slate + constraints)
+  docs/qa/battle-audit/index.html              (the captures, annotated)
+
+THE FRAMING THAT CHANGED THE BRIEF: director-slate Bet 10 ("attack lunges, hit flash +
+shake, damage number motion, turn camera punch-ins, KO/victory beats") ALREADY SHIPPED,
+2026-08-02, docs/qa/battle3d/BEFORE-AFTER.md. The user is looking at the result of the
+juice pass and calling it unimpressive. BET 10 IS SPENT; the remaining gap is structural.
+
+MEASURED (instruments: battle_shots.mjs --tag=audit --out=docs/qa/battle-audit;
+arena_playtest.mjs --gpu --eval=<probe>; real GL, 1600x813, seed 4242, stage.frames
+asserted climbing before every capture):
+- THE CAMERA MOVES 12.6 mm IN 3 SECONDS = 1.4 SCREEN PIXELS (89 samples of
+  stage.camera.position; 1 px = 8.7 mm at 11.6 m / fov 34 / 813 px). One pose, built once
+  (battle_stage3d.js:651) and copied back every frame (:2094), looking at a FIXED world
+  point, never at the actor or the target. The idle drift's periods are 103/153/217 s
+  against a 20-40 s fight, so a player never sees one cycle. "Fixed camera angle" is the
+  number, not an impression.
+- AND IT IS PINNED BY THE ART. public/assets/battle/MANIFEST.md states the contract in its
+  own words: the four plates were generated to a prompt carrying the arena camera's exact
+  height/tilt/fov, and "if the arena camera moves, this paragraph moves with it and the
+  plates are re-shot". The backdrop is one curved band built around the rest pose alone.
+  A CAMERA LANGUAGE IS NOT A TUNING CHANGE TO THIS STAGE — it is incompatible with the way
+  its world is drawn. That is the dependency graph of the whole slate.
+- THE ATTACKER NEVER REACHES THE TARGET: lungeM 1.35 m against a 5.21 m minimum slot gap
+  = 25.9%. The flash/sparks/shock-ring fire on a body four metres from the swing
+  (audit-impact-swing.png). No hit-stop; damage fires on a fixed pacing.wind 300 ms, not on
+  the clip's contact frame. The cast are also EMPTY-HANDED — no rig carries a weapon, so
+  the economy's whole visible payoff is zero.
+- CLIP COVERAGE, from stage.clipsOf() on every body: ["idle","attack","hit","die"]. The
+  stage asks for six intents; `cheer` and `item` bind NOTHING on every character in the
+  game and have no procedural fallback. seq-6-cheer.png IS the victory pose of this game:
+  everyone standing in their idle. `flee` returns before doing anything (:1661).
+- THE KO IS AN EVAPORATION: opacity->0, sink 0.55 m, obj.visible=false (:1801/:1821).
+  seq-4-ko reads; seq-5-ko-settled is an empty patch of grass, camera unmoved, nobody
+  reacting.
+- ARENA CENSUS: 182 meshes / 197,907 tris, of which 157 MESHES ARE THE PROCEDURAL SCATTER
+  (22 tufts x 7 four-sided cones + 3 props, Math.random placed per battle). The ground is
+  ONE untextured MeshLambertMaterial({vertexColors}) disc. 174 OF 182 MATERIALS (95.6%)
+  CARRY NO TEXTURE MAP AT ALL; 2 normal maps and 2 roughness maps in the whole scene.
+- AND THE TWO LIGHTING MODELS. scene.environment = null, 0 materials with an envMap,
+  toneMapping = NoToneMapping, 5 hand-tuned lights. EVERY BATTLE IN THIS GAME HAPPENS IN
+  ow-valley (zones.json exists for that scene alone, so the director no-ops everywhere
+  else) — an RT scene with honest geometry, a solved key, a PMREM environment and
+  RenderPass->GTAO->bloom->Output. The battle tears that down and replaces it with a
+  procedural diorama and four Gemini images. The party rigs bring 9 MeshStandardMaterial +
+  1 MeshPhysicalMaterial into a scene with NO ENVIRONMENT FOR THEM TO REFLECT: the same
+  character, in the same second, is lit by an IBL in the field and a hemisphere in battle.
+- THE PLATES ARE THE ONLY PRE-RENDERED ART IN THIS GAME NOT BAKED THROUGH THE REPO'S OWN
+  Blender/Cycles/AgX pipeline (genart.mjs, gemini-2.5-flash-image, 1344x768), and they are
+  keyed to the zone TYPE: 35,840 encounter cells over a 280x200 m tile resolve to FOUR
+  static images. Forest's 3D floor is bright sandy tan under a dark woodland plate with
+  teal cones for grass; the `water` zone has NO WATER IN THE ARENA AT ALL.
+- STAGING: 36% of the frame width between the nearest party body and the nearest foe is
+  bare floor; foes are 89-115 px tall in an 813 px frame against the party's 186-225 px
+  (stage.anchor()). Slots come from six magic constants that never read the camera, the
+  frame or the creature. In crag the "Scree Shell" tag sits half behind the turn window.
+- DPR ASYMMETRY, unmeasured and flagged to the DPR lane: battle_stage3d.js:610 sets
+  setPixelRatio(min(dpr,2)); play3d.html NEVER CALLS setPixelRatio. On a Retina display
+  the battle draws 4x the fragments the field does and nobody has priced it. Headless at
+  dpr 1 the arena idles at 120 fps, so this is an unmeasured problem, not a measured one.
+- The turn-order panel disagrees with the field: duskpad's 16px icon is salmon, its model
+  is a grey wolf; bramble-shade's icon is bright green, its model is a black root-ball.
+
+THE SLATE, top three (full text + costs/risks/proofs in the plan doc):
+  1. CONTACT — approach to a strike station off the target's own body, damage on the
+     clip's contact frame, HIT-STOP. Small, low risk, one file, no art, no ruling. It is
+     the frame the player looks at every turn. If one thing ships, this.
+  2. A CAMERA LANGUAGE — a shot table + solver (round/decide/strike/impact/ko/victory)
+     with a 180-degree rule that never crosses the axis. GATED ON THE BACKDROP.
+  3. FIGHT WHERE YOU STAND — borrow play3d's real ow-valley scene and camera; delete the
+     dish, the four plates, the band, the second rig, the second context. Highest ceiling
+     by a distance (it solves the two-pictures, four-plates, two-rigs AND camera-pinning
+     problems at once) and the highest risk: play3d is coordinator custody, and
+     queue.json already carries FOUR open post-battle camera/softlock tickets
+     (PT-20260803-009/-019/-025/-028) in exactly that blast radius. Recommend it behind
+     `?arena=world` with the diorama kept as the fallback, the same way the DOM stage is
+     kept behind the arena today.
+Then: 4 the cast fights (cheer/item clips + a weapon socket), 5 staging solved against the
+frame, 6 one light model with the field, 7 KO/victory as events, 8 monsters that look like
+one game, 9 (ONLY IF 3 IS REFUSED) bake the diorama from the real place with cine_bake.
+
+THREE CALLS ARE THE USER'S / COORDINATOR'S, and everything downstream waits on the first:
+(a) borrow the world, or bake a better diorama? (b) MAY THE BATTLE CAMERA CUT — seam-canon
+governs walk-triggered camera changes and the battle screen is modal and non-navigational,
+so a cut on a beat is arguably not a "passage", but that reading should be confirmed rather
+than assumed. (c) do weapons appear in hand (it changes the turnaround spec's "hands empty"
+rule for every future character).
