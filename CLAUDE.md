@@ -270,6 +270,24 @@ git runs here, on branch `migration/3d-hybrid`.
   silhouettes on a low-contrast painting is a composition. THE OCCLUDER SET IS NOT THE COLLIDE SET:
   building it from `collide` (which excludes noStand foliage) reported a party inside a hedge as
   fully visible; from the DRAWN scene the pass rate fell 86.3 -> 68.8%.
+  **THE KO IS A BEAT, AND THE KILL USED TO BE THE ONE BLOW WITH NO FEEDBACK** (bet I, 2026-08-08).
+  The sharp defect was ORDERING, and it was not in the audit: `battle_turnbased` runs `syncHp()`
+  (-> `setDead` -> `markDead`) BEFORE `hitShake()` (-> `flinch`), and `flinch` RETURNS EARLY ON A
+  DEAD BODY — so the loudest blow in the fight had no flash, no sparks and no ring. Measured: the
+  victim's screen box read **104.6 luminance 60 ms after being killed, against 121.2 standing
+  idle** and 213.3 for a blow it survived. THE KILL WAS DARKER THAN DOING NOTHING. Now five beats
+  (blow -> driven back -> falls ONTO the floor under it via `SIM.ground`, never `y0-0.55` -> lies
+  solid 760 ms -> dissolves and leaves a mark): sink 0.550 -> **0.000 m**, body gone at 842 ->
+  2260 ms, kill feedback 104.6 -> 167.7. The killer HOLDS over the body (`holdUntil` read per
+  frame) with the swing's tempo provably unmoved. Reactions are composed on `bob`, and TWO SIDES
+  DO NOT REACT THE SAME WAY — one amplitude gave the party 7.52 px against a do-nothing floor of
+  7.30 (invisible, because a party member already faces the foes), so the victim's side recoils
+  away and the killer's side leans in. Victory is a sequence (hold -> cheer -> tally) with the
+  tally placed on the side the party is NOT on, asked from the stage's own projected anchors.
+  CSS trap paid: a `position:absolute` scrim paints BELOW a positioned sibling, so the first build
+  dimmed and blurred the VICTORY panel itself. `stage.anchor()` CANNOT SEE ANY PROCEDURAL LAYER —
+  it projects the pivot and a constant height, so a gate on swing/recoil/reaction must diff pixels
+  or read `bob` (`at()` now returns `bob`, `alpha`, `floorY`).
   **AND THE BACKDROP PINS THE CAMERA**: assets/battle/MANIFEST.md says the four plates were generated
   from a prompt carrying the arena camera's exact height/tilt/fov and must be re-shot if it moves —
   a camera language is not a tuning change to the diorama, it is incompatible with how its world is
