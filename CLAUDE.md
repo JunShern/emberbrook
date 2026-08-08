@@ -227,6 +227,38 @@ git runs here, on branch `migration/3d-hybrid`.
   WALKLOCK (walk network is law in /^(del-|townwalk)/ scenes); GHOST v2 stencil;
   UILOCK modal contract; in-place scene swaps via transitionTo() + 'eb-scene'
   CustomEvent module contract (see sgAnnounce comment; ?reload=1 = fallback).
+- **THE BATTLE PRESENTATION ARC** (2026-08-08; audit + slate: docs/plans/battle-presentation-inventory.md,
+  boards docs/qa/battle-{audit,contact,cast,world}/). The measured start: the camera moved 12.6 mm
+  in 3 s (fixed), the attacker covered 1.35 m of a 5.21 m gap so every impact fired 4 m from the
+  swing, `clipsOf()` returned the same four clips for EVERY body (so the victory pose was everyone
+  standing in their idle, and using an item was standing perfectly still), 95.6% of arena materials
+  carried no texture, and the screen ran a SECOND renderer with no environment and no tone mapping.
+  SHIPPED SO FAR: **CONTACT** — strike station derived from both bodies' own measured Box3 widths,
+  damage timed to a contact frame DERIVED per clip (resample the rotation tracks through the mixer's
+  own interpolants, sum arm-chain angular change, argmax — no marker exists in glTF and the old code
+  applied one hand-measured 37% to every creature), plus hit-stop on one virtual stage clock;
+  6.54 m -> 1.32 m at the damage event with turn wall-clock UNCHANGED (+0.05%, paid out of the
+  announce beat). **STAGING** solved against the frame's own projection at 2v1/2v2/2v3.
+  **THE CAST ACTS** — cheer/use-item/flee clips through the house retarget+verify pipeline, and a
+  WEAPON SOCKET: shaft axis derived forearm->hand in the hand bone's frame, bone world scale divided
+  back out; `WEAPONS` keys items.json and reaches the arena through battle_turnbased's `weaponOf`
+  callback SO THE STAGE STILL NEVER READS GS. Art owed under `assets/weapons/3d/<item>.glb` —
+  authored art supersedes the code recipes with no code change; an equipped weapon with neither is
+  an EMPTY HAND, never a placeholder cube.
+  **`?arena=world` — FIGHT WHERE YOU STAND, shipped INERT** (public/js/battle_world.js). Borrowing
+  the field's renderer/camera/PMREM/post chain makes contexts 2->1, writes ZERO shaders (the r185
+  colour rules are constraints on HAVING a second rig — deleting the rig deletes the bug class) and
+  is FASTER than the diorama (243.5 vs 184.7 fps: the old "the second context is free, the world
+  draws a frozen frame" comment was wrong, the world keeps rendering under the modal). Teardown
+  measured total. NOT default: 68.8% of sampled encounter cells can stage a readable fight (only
+  after a yaw sweep; forest 52.1%), and **the plates are more legible than the valley** — two clean
+  silhouettes on a low-contrast painting is a composition. THE OCCLUDER SET IS NOT THE COLLIDE SET:
+  building it from `collide` (which excludes noStand foliage) reported a party inside a hedge as
+  fully visible; from the DRAWN scene the pass rate fell 86.3 -> 68.8%.
+  **AND THE BACKDROP PINS THE CAMERA**: assets/battle/MANIFEST.md says the four plates were generated
+  from a prompt carrying the arena camera's exact height/tilt/fov and must be re-shot if it moves —
+  a camera language is not a tuning change to the diorama, it is incompatible with how its world is
+  drawn. That fact orders the whole slate.
 - Modules (public/js/): game_state (GS), battle_rules (pure kernel — untouchable),
   battle_turnbased + battle_stage3d, encounters, ui_kit (FF-blue), shop, menu, npc,
   dialogue, **story_runtime**, followers, hush, route_overlay, music. Each self-arms at
