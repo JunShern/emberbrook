@@ -551,5 +551,287 @@ CLAUDE.md's rule binds anyone who REBUILDS the realtime blend. This was a five-m
 and it REDUCES the budget that rule protects — brook 937&rarr;876 polys, pond
 1770&rarr;1599, millpond 205&rarr;189. Nothing was added.</div>
 
+<h2>15. ROUND 3, ITEMS "the fields are undressed" and "town skies" — and both claims were
+  the wrong size until they were measured</h2>
+
+<p class="note">2026-08-07 late. Two worklist items, one master edit, one bake set. Both
+arrived as impressions and both changed shape under an instrument, so the measurements come
+first and the build second — and in one case the measurement is the more useful artifact.</p>
+
+<h3>15a. The fields: the claim was real, and it was 21 meshes rather than 38% of a frame</h3>
+
+<div class="claim">Handover: <q>emb_dress harvests every <code>lm_field_*</code> landmark into
+<code>PLAN["fields"]</code> and NEVER READS IT — one <code>.append</code>, zero consumers.
+So the worked parcels, hedges, drystone walls, palings and stooks all ship as RAW GRAY
+MASSING. That is 38.5% of pondlane's <code>frame-edge-world</code> bbox.</q></div>
+
+<div class="meas"><b>The consumer really is missing</b> — <code>PLAN["fields"]</code> has one
+<code>.append</code> at <code>emb_dress.py:210</code> and no reader. <b>But three of the five
+named classes were already dressed</b>, and by a branch nobody noticed: the harvest's
+<code>_drystone/_hedge/_pale</code> test matches <em>before</em> the <code>lm_field_</code>
+test, so a parcel's <b>palings</b> take <code>emb_dress_town_timber</code> from
+<code>dress_town_materials</code> and its <b>dry-stone rows</b> are rebuilt as loose field
+stones by <code>dress_bank_and_bramble</code>. Looked at, 1:1, on the shipped
+<code>pondlane</code>: both read as real surfaces.</div>
+
+<div class="meas"><b>THE INSTRUMENT THAT SIZED IT.</b> Every <code>emb_mat_*</code> — a
+BLOCKOUT material, flat paint with no texture and no relief — still on a
+<b>render-visible</b> mesh of the shipped <code>emberbrook-dressed.blend</code>. Four
+survive:
+<table>
+<tr><th>blockout material</th><th>visible meshes</th><th>status</th></tr>
+<tr><td><code>emb_mat_window</code></td><td class="n">86</td><td>on the stated keep list (the town's emissive windows)</td></tr>
+<tr><td><code>emb_mat_iron</code></td><td class="n">28</td><td>on the stated keep list (the lamp ironwork)</td></tr>
+<tr><td><code>emb_mat_leaf_green</code></td><td class="n"><b>21</b></td><td><b>on no list at all</b> — 20 are <code>lm_field_*</code></td></tr>
+<tr><td><code>emb_mat_leaf_autumn</code></td><td class="n"><b>1</b></td><td><b>on no list at all</b> — <code>lm_infill_17</code></td></tr>
+</table>
+That is the whole defect, exactly: <b>two materials that are neither substituted nor held by
+a rule</b>, carrying 6 hedges and 13 green crop ridges. <code>emb_mat_leaf_green</code> is
+<code>(0.20, 0.28, 0.13)</code> flat, and it is what run-20260806-1's naive judge saw on
+pondlane in three separate looks — <q>untextured green blockout slabs on the path appear to
+be unfinished developer placeholder geometry</q>.</div>
+
+<div class="warn"><b>THE 38.5% DOES NOT SURVIVE, and the honest number is much smaller.</b>
+<code>plate_probe</code> reconstructs a world XYZ per pixel from each bundle's own solved
+camera and <code>depth.png</code>, so a pixel counted inside a field object's own box IS the
+visible surface at that point — a tight test, not a loose one. Field objects occupy:
+<table>
+<tr><th>plate</th><th>field %</th><th>drystone</th><th>hedge</th><th>pale</th><th>ridge</th></tr>
+<tr><td>homerow</td><td class="n"><b>2.464</b></td><td class="n">0.000</td><td class="n">0.360</td><td class="n">1.034</td><td class="n">1.085</td></tr>
+<tr><td>orchard</td><td class="n"><b>2.103</b></td><td class="n">0.070</td><td class="n">1.203</td><td class="n">0.000</td><td class="n">0.829</td></tr>
+<tr><td>pondlane</td><td class="n"><b>1.190</b></td><td class="n">0.027</td><td class="n">0.000</td><td class="n">0.098</td><td class="n">1.075</td></tr>
+<tr><td>gateroad</td><td class="n"><b>1.000</b></td><td class="n">0.000</td><td class="n">0.000</td><td class="n">0.806</td><td class="n">0.231</td></tr>
+<tr><td>square</td><td class="n">0.467</td><td class="n">0.144</td><td class="n">0.074</td><td class="n">0.028</td><td class="n">0.228</td></tr>
+<tr><td>therise</td><td class="n">0.425</td><td class="n">0.000</td><td class="n">0.360</td><td class="n">0.000</td><td class="n">0.066</td></tr>
+<tr><td>arch</td><td class="n">0.202</td><td class="n">0.000</td><td class="n">0.202</td><td class="n">0.000</td><td class="n">0.000</td></tr>
+<tr class="skip"><td>gatefield · northlane · waystone · woodroad</td><td class="n">0.000</td><td class="n">0.000</td><td class="n">0.000</td><td class="n">0.000</td><td class="n">0.000</td></tr>
+</table>
+<b>At most 2.5% of any plate, and zero on four of eleven.</b> The claim is right about the
+mechanism and wrong about the magnitude by more than an order. Recorded because a worklist
+that carries a 38.5% is a worklist that prices the next window wrong.</div>
+
+<h3>15b. What was built</h3>
+<div class="verdict"><code>dress_fields()</code>, the consumer, in the house style — it never
+invents a placement:
+<ul>
+<li><b>Hedges</b> (6): the box is hidden and replaced by <b>24 scanned bushes</b> along its
+own run, OVERLAPPING, because the blockout's own note says a boundary is a line and not a
+row of dashes. The lane clearance is re-asserted on the ASSET's measured width, not on the
+0.75 m box it replaces — 0 refused at 0.50 m of margin.</li>
+<li><b>Green crop ridges</b> (13): the box KEEPS its mass and takes the town's own scanned
+ground. A crop ridge <em>is</em> a ridge of worked earth; hiding it would take the ploughed
+relief out of every wide shot. The paint was the defect, not the mass.</li>
+<li><b>Stubble ridges</b> (23): untouched — <code>dress_town_materials</code> already gives
+them scanned thatch, which is cut straw.</li>
+<li><b>274 crop plants</b> standing in the rows, height chosen by <code>pick_for_height</code>
+(pick the asset that is already the right size, then trim inside 0.85–1.15) rather than by a
+scale factor. Scenery: <code>EMB_DRESS_GROUNDCOVER</code>, never a collider.</li>
+<li><b>Stooks: 0, and deliberately.</b> The blockout built none — its own
+<code>_fopen(1.5)</code> gate refused every candidate — and a dressing layer that plants one
+is a dressing layer that lies about the map.</li>
+</ul></div>
+
+<div class="verdict"><b>AND THE GATE THAT WOULD HAVE CAUGHT IT.</b>
+<code>blockout_material_coverage()</code> runs at the end of every build and censuses what
+the render-visible meshes are <em>wearing</em> — the axis <code>vegetation_coverage_report</code>
+(which censuses <em>prefixes the harvest claimed</em>) structurally cannot see. Anything not
+on the stated keep list is printed with its objects and given a dressed backstop material, so
+the failure mode of a future lane adding a class is <q>a loud line in the log</q> and not
+<q>flat paint in a 470-second plate</q>. <b>It found three more on its first run</b> —
+<code>lm_infill_06/17/19_fruit0_crown</code>, the orchard fruit-tree crowns, which nothing in
+this lane was looking for.</div>
+
+<h3>15c. Town skies: eight of eleven plates have no sky in them, and pondlane's is under the
+  horizon</h3>
+
+<div class="claim">Round-3 worklist item 5: <q>Town skies (emb WEAK x2, pondlane) — a
+dedicated round; baked into plates, not the ow dome.</q> The judge's own words
+(run-20260806-1, checklist): <q>The sky: WEAK — Visible sky area is a flat gradient with
+minimal atmospheric volume</q> (therise, also pondlane) and, on the same plates,
+<q>The world at the frame edges: WEAK — the background fades into a flat, empty dark
+void</q>.</div>
+
+<div class="meas"><b>WHAT THE SKY ACTUALLY IS.</b> One <code>Background</code> node, colour
+<code>(0.10, 0.13, 0.22)</code>, strength 0.55, from
+<code>emberbrook.cameras.json defaults.lightRig.world</code>. Not a flat gradient — a flat
+<b>constant</b>. The judge was generous.</div>
+
+<div class="meas"><b>AND HOW MUCH OF IT THERE IS.</b> <code>plate_probe</code>: a pixel at the
+far plane is a ray that hit nothing. Over all eleven shipped emb-cine plates —
+<table>
+<tr><th>plate</th><th>far-plane %</th><th>ray elevation min / median / max</th><th>sky L p05/p50/p95</th></tr>
+<tr><td><b>pondlane</b></td><td class="n"><b>12.287</b></td><td class="n">-6.2 / -2.6 / <b>-0.5</b> deg</td><td class="n">6.2 / 49.7 / 115.1</td></tr>
+<tr><td><b>therise</b></td><td class="n">1.497</td><td class="n">-2.0 / +2.5 / +3.5 deg</td><td class="n">11.4 / 112.7 / 115.3</td></tr>
+<tr><td>gateroad</td><td class="n">0.052</td><td class="n">-4.1 / -4.0 / -3.8 deg</td><td class="n">1.1 / 18.8 / 63.1</td></tr>
+<tr class="skip"><td>the other eight</td><td class="n">0.000</td><td>no sky pixels at all</td><td>—</td></tr>
+</table>
+<b>Two facts reshape the item.</b> (1) EIGHT OF ELEVEN PLATES HAVE NO SKY IN THEM — this is
+not a town-wide grade, it is a three-plate fix, and the other eight are refused by
+construction. (2) MOST OF WHAT THE JUDGE CALLED SKY IS BELOW THE HORIZON: pondlane's band
+runs −6.2 to −0.5 degrees of <em>depression</em> and gateroad's −4.1 to −3.8. Those rays are
+aimed at the GROUND and the ground has run out (<code>emb_ground_far</code> is 256 × 324 m).
+<b>That is why the same pixels drew two different findings.</b> One defect, two symptoms, and
+neither is fixable with a colour: below the horizon you need something to <em>be</em>
+there.</div>
+
+<h3>15d. What was built for the sky, and the refutation it cost</h3>
+<div class="warn"><b>THE FIRST VERSION WAS A VERTICAL RIDGE WALL AT ONE RADIUS AND IT
+MEASURABLY MADE THE FRAME FLATTER.</b> A ring at 300 m is at one distance from every ray in
+the band, so it renders one haze value and one tone, and its only edge stood at +4.2 deg —
+outside the band entirely. Draft render, 1008×576, same camera and grade, top 60 rows
+(rows 0/30/59): L <b>91.3 / 64.6 / 42.0</b> before → <b>80.1 / 58.3 / 41.4</b> after. Darker,
+and no more structured. <b>A backdrop whose whole job is depth cannot be built at a constant
+distance.</b> Kept as the docstring of what replaced it.</div>
+
+<div class="verdict"><code>far_horizon()</code> — a <b>receding skirt</b> of land from 230 m
+to 1800 m (128 × 30 quads, falling −2.2 m → −211 m) with <b>three ridge ranks standing on
+it</b>, and the ranks' tops are <b>solved, not authored</b>: each is given an elevation band
+from a reference eye (pondlane's own camera z, 10.2 m) and its top is
+<code>eye + R·tan(elev)</code> —
+<table>
+<tr><th>rank</th><th>radius</th><th>top z</th><th>elevation from the 10.2 m eye</th></tr>
+<tr><td>0</td><td class="n">260 m</td><td class="n">1.7 .. 8.0 m</td><td class="n">−1.90 .. −0.40 deg</td></tr>
+<tr><td>1</td><td class="n">470 m</td><td class="n">−15.4 .. −3.0 m</td><td class="n">−3.20 .. −1.55 deg</td></tr>
+<tr><td>2</td><td class="n">850 m</td><td class="n">−58.8 .. −35.5 m</td><td class="n">−4.90 .. −2.85 deg</td></tr>
+</table>
+All three edges land INSIDE the measured −6.2 .. −0.5 deg band. Haze is a CAMERA-DISTANCE mix
+(180 m → 0.12 air, 1500 m → 0.93), so the frame's vertical axis becomes a distance axis, which
+is what "mist-seated ridges" means as a shader.</div>
+
+<div class="verdict"><code>emberwake_sky()</code> — the flat constant becomes a horizon→zenith
+ramp (both ends DERIVED from that constant, so the hour does not move), a haze band on the
+horizon, stretched cloud, a Voronoi star field masked below +1.1 deg, and the moon's glow and
+0.5-deg disc on the direction the plates are actually lit from. That direction is read out of
+<code>emb-cine/cine.json</code>'s own <code>appliedGrade</code> and <b>unanimity across every
+shipped camera is asserted</b> rather than assumed — otherwise the sky and the moonlight have
+two authorities and nothing catches a disagreement. THE STARS, THE GLOW AND THE DISC ARE
+THREE <em>ADDED</em> SOURCES, which is the town's own measured night-grade law: adjusting an
+existing light has never moved this town and adding one always has.</div>
+
+<div class="meas"><b>THE LIGHT CANNOT MOVE, BY CONSTRUCTION — and that is what holds the bake
+set down.</b> The backdrop is <code>visible_camera</code> and nothing else
+(<code>visible_diffuse/glossy/transmission/volume_scatter/shadow</code> all False, asserted
+per object), and the sky graph is the CAMERA half of an <code>Is Camera Ray</code> mix whose
+other half is the untouched flat <code>Background</code>. So every diffuse, glossy,
+transmission and shadow ray in the town still sees exactly the constant it saw before, and the
+only pixels that <em>can</em> change are pixels that were already at the far plane.</div>
+
+<div class="warn"><b>THE GATE FIRED, AND NAMED THE NUMBER.</b> A backdrop nearer than the
+world would OCCLUDE the world on a camera ray. The inner radius is checked against the
+world-space bound of every non-backdrop mesh before anything is built — and on the first run
+it refused: <q>the far-horizon skirt starts at 185 m and the town's own geometry reaches
+206 m (<code>emb_ground_far</code>)</q>. 230 m is set from that measurement.</div>
+
+<div class="warn"><b>AND ONE SHARED TOOL HAD TO LEARN TWO THINGS.</b> (1) <code>cine_bake</code>
+asserted that the world's sky-colour socket is UNLINKED whenever <code>--sky</code> is passed,
+because a linked socket would silently ignore the rig — right, and not worked around: the
+socket IS linked now, so the graph publishes an RGB node named <code>RIG_SKY_COLOR</code> and
+the rig is written there. One authority for the hour, and a blend that forgets the node fails
+loudly instead of baking the wrong evening. (2) <code>--glb</code> deleted every mesh that was
+not <code>visible_camera</code> and kept every mesh that was — which would have written a
+1800 m backdrop into the SHARED COLLISION BUNDLE, where walkGround and the BVH would have
+taken it for world. <b>If nothing but the camera may see it, it is a picture and not a
+place</b>, and that is now the filter.</div>
+
+<h3>15e. The pictures — same camera, same grade, only the master differs</h3>
+<p class="note">BEFORE is the plate as it stood at <code>HEAD</code> before this lane
+(extracted with <code>git show</code>); AFTER is the live plate. Both cropped with the SAME
+box, computed from the field objects' own world boxes projected through the plate's own
+solved camera.</p>
+
+<div class="pair">
+<figure><img src="round3/pondlane-sky-before.jpg"><figcaption>pondlane — sky, BEFORE: one flat slate rectangle</figcaption></figure>
+<figure><img src="round3/pondlane-sky-after.jpg"><figcaption>pondlane — sky, AFTER: a pale haze band over an undulating ridgeline</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="round3/pondlane-fields-before.jpg"><figcaption>pondlane — fields, BEFORE (the olive slab, lower left)</figcaption></figure>
+<figure><img src="round3/pondlane-fields-after.jpg"><figcaption>pondlane — fields, AFTER</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="round3/orchard-fields-before.jpg"><figcaption>orchard — BEFORE (pale-green slab, upper left)</figcaption></figure>
+<figure><img src="round3/orchard-fields-after.jpg"><figcaption>orchard — AFTER</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="round3/gateroad-fields-before.jpg"><figcaption>gateroad — BEFORE (green patch left of the pier)</figcaption></figure>
+<figure><img src="round3/gateroad-fields-after.jpg"><figcaption>gateroad — AFTER</figcaption></figure>
+</div>
+
+<h3>15f. The bake set, and the one plate that bought nothing</h3>
+<table>
+<tr><th>plate</th><th>field cov</th><th>FIELD moved</th><th>SKY moved</th><th>REST moved (noise)</th><th>wall</th></tr>
+<tr><td>pondlane</td><td class="n">1.190%</td><td class="n"><b>55.298%</b></td><td class="n">81.635%</td><td class="n">9.618%</td><td class="n">589 + 564 s</td></tr>
+<tr><td>therise</td><td class="n">0.231%</td><td class="n"><b>57.420%</b></td><td class="n">67.241%</td><td class="n">2.657%</td><td class="n">524 + 506 s</td></tr>
+<tr><td>arch</td><td class="n">0.112%</td><td class="n"><b>19.417%</b></td><td class="n">—</td><td class="n">1.531%</td><td class="n">510 s</td></tr>
+<tr><td>orchard</td><td class="n">1.613%</td><td class="n"><b>18.658%</b></td><td class="n">—</td><td class="n">0.748%</td><td class="n">515 s</td></tr>
+<tr><td>square</td><td class="n">0.434%</td><td class="n"><b>14.926%</b></td><td class="n">—</td><td class="n">2.493%</td><td class="n">535 s</td></tr>
+<tr><td>gateroad</td><td class="n">1.000%</td><td class="n"><b>7.337%</b></td><td class="n">0.000% cov</td><td class="n">0.257%</td><td class="n">819 s</td></tr>
+<tr><td>homerow</td><td class="n">2.393%</td><td class="n">0.329%</td><td class="n">—</td><td class="n"><b>1.029%</b></td><td class="n">847 s</td></tr>
+<tr class="skip"><td>gatefield · northlane · waystone · woodroad</td><td class="n">0.000%</td><td colspan="3">REFUSED — 0.000% field pixels AND 0.000% far-plane pixels; both edits are incapable of touching them</td><td class="n">~2400 s not spent</td></tr>
+</table>
+<div class="warn"><b>homerow's 847-second bake BOUGHT NOTHING, and that is the receipt that
+the floor is real.</b> Its field pixels moved 0.329% against its own 1.029% whole-frame
+noise — BELOW noise — while it has the LARGEST field AABB coverage in the town. Its field
+objects are occluded in the beauty pass. The identical lesson the water lane learned on the
+identical plate six hours earlier (its water moved SEVEN pixels). <b>AABB containment is a
+tight test for "is this surface visible" and still not tight enough for "is this surface
+UNOCCLUDED at the moment of the change".</b></div>
+<div class="meas"><b>THE DEPTH PASS CONFIRMS THE BACKDROP INDEPENDENTLY.</b> pondlane's depth
+far range went 146.92 → <b>262.68 m</b> and gateroad's 243.48 → 322.21 m: those rays are
+landing on the ridge rank solved at 260 m. Far-plane fraction pondlane
+<b>12.287% → 1.662%</b> (86.5% of the empty band terminated), gateroad
+<b>0.052% → 0.000%</b>, therise 1.497% → 1.492% (scattered slivers between roofs, not a
+horizon).</div>
+
+<h3>15g. The verdicts, honestly — the pixels moved and the calibrated judge did not register it</h3>
+<div class="verdict"><b>BY EYE</b> (1:1 and on the matched crops above): the flat olive-green
+slab at pondlane's lower left is gone; orchard's pale-green slab at upper left is gone;
+gateroad's green patch left of the pier is gone; the palings and field stones are unchanged,
+because they were already dressed. pondlane's horizon is a pale haze band over an undulating
+dark ridgeline instead of one flat slate rectangle.</div>
+<div class="warn"><b>BY THE CALIBRATED JUDGE</b>
+(<code>run-20260808-005259-round3fieldsky</code>, checklist, 38 survivors of 51 raw, 11
+refuted, aim census refuted 4 of 10 [QUALITY] verdicts as misaimed) — against the
+immediately-preceding sweep the [QUALITY] families <b>did not flip</b>:
+<table>
+<tr><th>family</th><th>run-20260807-205035 (before)</th><th>run-20260808-005259 (after)</th></tr>
+<tr><td><code>quality:sky</code></td><td>therise WEAK</td><td>therise WEAK</td></tr>
+<tr><td><code>quality:frame-edge-world</code></td><td>square WEAK</td><td>square WEAK</td></tr>
+<tr><td><code>quality:water-read</code></td><td>square ABSENT</td><td>homerow FAILING</td></tr>
+</table>
+Read straight: <b>therise's sky verdict did not move</b>, and its own measurement says why —
+1.492% of frame in slivers between roofs, so there is no horizon in that frame for a horizon
+to fix. <b>pondlane, the plate that actually changed, carries no surviving [QUALITY] verdict
+in EITHER sweep</b>, so there was nothing to flip; its win is in the pixels and in the eye.
+The new homerow water FAILING is on a plate whose pixels moved 1.029% (Cycles noise) with no
+water edit in this lane, so it is judge variance on an ARMED plate — recorded rather than
+explained away.</div>
+<div class="meas"><b>THE MISMATCH IS THE FINDING.</b> 86.5% of a plate's empty band was
+filled and 55% of its field pixels repainted, and the checklist judge's [QUALITY] families
+were silent. A sweep is a screen for the classes it names and aims at; it is not a measure of
+what a lane did.</div>
+
+<h3>15h. Gates, and the residuals</h3>
+<div class="verdict"><code>cine_test --town emberbrook</code> <b>477 / 3 / 2 — identical to
+the pre-lane baseline</b>, all three pre-attributed. Its two soft warnings are pondlane's
+visibleFrac 39% and "3 stale: woodroad, waystone, gatefield" — which are three of the four
+plates this lane REFUSED, so the warning is the refusal restated. <code>slice_test</code>
+<b>776/0</b>. <code>seam_walk</code> <b>10/10</b>. <code>findability_test</code>
+<b>69 / 0 / 11 warn</b>. <code>routes_derive --check</code> <b>ok</b>.</div>
+<div class="warn"><b>RESIDUALS, each with its measurement.</b>
+<ol>
+<li><b>The horizon band is still bright.</b> pondlane's remaining far-plane pixels read
+L p50 <b>144.7</b> against that plate's own ground p50 of <b>26.5</b> — 5.5x, down from 6.4x.
+And the second measurement is more useful than the first: halving the mixed-horizon linear
+luma (0.210 → 0.132) moved L only <b>16%</b>, because AgX is compressive up there.
+<b>A sky level is not a linear knob</b> — sweep it on the PLATE, at two rungs at least.</li>
+<li><b>therise's sky WEAK is a framing question, not a sky question</b> (1.492%, slivers).</li>
+<li><b>The ridge silhouette is a sum of four sines on a 256-segment ring</b> — it reads as
+land at 1:1, but its rhythm is periodic by construction; a crc-driven profile is the honest
+next version.</li>
+<li><b>Three <code>lm_infill_*_fruit0_crown</code> meshes now ship on the BACKSTOP material</b>,
+not on a dressing rule. The backstop is a warning, not a fix.</li>
+<li><b>The bake floor needs an occlusion term</b> — see homerow above.</li>
+</ol></div>
+
 </body>
 </html>

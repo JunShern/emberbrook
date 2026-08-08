@@ -18467,6 +18467,266 @@ the newest row alone**: a lane that saw only the `errored` row would have re-dep
 site that was already publishing correctly. The stamp poll is the honest gate — it moved,
 and the live 29/0 is what settles it.
 
+## 2026-08-07 ~23:55 — ROUND 3, ITEMS "THE FIELDS ARE UNDRESSED" + "TOWN SKIES": both claims were the wrong size, and the instrument that sized them is the durable part
+
+Board: `docs/qa/emberbrook-graphics/index.html` §15. One master edit, one bake set, three jobs.
+
+### 1. THE FIELDS — the consumer really was missing, and it was 21 meshes, not 38% of a frame
+
+`PLAN["fields"]` has one `.append` (`emb_dress.py:210`) and no reader — the handover's
+mechanism is exactly right. **But three of the five named classes were already dressed**, by
+a branch nobody had noticed: the harvest's `_drystone/_hedge/_pale` test matches BEFORE the
+`lm_field_` test, so a parcel's palings take `emb_dress_town_timber` and its dry-stone rows
+are rebuilt as loose field stones by `dress_bank_and_bramble`. LOOKED AT, 1:1, on the shipped
+`pondlane`: both read as real surfaces.
+
+**THE INSTRUMENT** (read-only Blender census on the shipped `emberbrook-dressed.blend`):
+every `emb_mat_*` — a blockout material, flat paint, no texture, no relief — still on a
+RENDER-VISIBLE mesh. Four survive:
+
+| material | visible meshes | status |
+|---|---|---|
+| `emb_mat_window` | 86 | on `dress_town_materials`' stated keep list |
+| `emb_mat_iron` | 28 | on the stated keep list |
+| **`emb_mat_leaf_green`** | **21** | **on no list at all** — 20 are `lm_field_*` |
+| **`emb_mat_leaf_autumn`** | **1** | **on no list at all** — `lm_infill_17` |
+
+That is the defect exactly: **two materials that are neither substituted nor held by a rule**,
+carrying 6 hedges and 13 green crop ridges. `emb_mat_leaf_green` is `(0.20,0.28,0.13)` FLAT,
+and it is what run-20260806-1's naive judge saw on pondlane in three independent looks
+("untextured green blockout slabs ... unfinished developer placeholder geometry").
+
+**THE 38.5% DOES NOT SURVIVE.** `plate_probe` reconstructs a world XYZ per pixel from the
+bundle's own solved camera and `depth.png`, so a pixel counted inside a field object's own
+box IS the visible surface there — a tight test, not a loose one. Field objects occupy
+**at most 2.5% of any plate and 0.000% of four of eleven**: homerow 2.464, orchard 2.103,
+pondlane 1.190, gateroad 1.000, square 0.467, therise 0.425, arch 0.202, and
+gatefield/northlane/waystone/woodroad 0.000. The claim is right about the mechanism and
+wrong about the magnitude by more than an order of magnitude. Recorded because a worklist
+carrying a 38.5% prices the next window wrong.
+
+**BUILT** — `dress_fields()`, in the house style, never inventing a placement:
+6 hedges hidden and replaced by 24 scanned bushes along their own runs (OVERLAPPING — the
+blockout's own rule is that a boundary is a line, not a row of dashes; lane clearance
+re-asserted on the ASSET's measured width, 0 refused at 0.50 m of margin); 13 green crop
+ridges KEEP their mass and take the town's own scanned ground (a crop ridge IS a ridge of
+worked earth — hiding the box would take the ploughed relief out of every wide shot; the
+paint was the defect, not the mass); 23 stubble ridges untouched (they already get scanned
+thatch, which is cut straw); 274 crop plants standing in the rows, height chosen by
+`pick_for_height` and not by a scale factor; **stooks 0, deliberately** — the blockout built
+none (its own `_fopen(1.5)` gate refused every candidate) and a dressing layer that plants
+one is a dressing layer that lies about the map.
+
+**AND THE GATE THAT WOULD HAVE CAUGHT IT.** `blockout_material_coverage()` runs at the end of
+every build and censuses what the render-visible meshes are WEARING — the axis
+`vegetation_coverage_report` (which censuses PREFIXES THE HARVEST CLAIMED) structurally
+cannot see. Anything off the stated keep list is printed with its objects and given a dressed
+backstop, so a future lane's new class fails as a loud log line rather than as flat paint in
+a 470-second plate. **It found three more on its first run** —
+`lm_infill_06/17/19_fruit0_crown`, orchard fruit-tree crowns, which nothing here was hunting.
+
+### 2. TOWN SKIES — eight of eleven plates have no sky in them, and pondlane's is UNDER the horizon
+
+**WHAT THE SKY IS**: one `Background` node, colour `(0.10,0.13,0.22)`, strength 0.55, out of
+`emberbrook.cameras.json defaults.lightRig.world`. Not a flat gradient — a flat CONSTANT.
+
+**HOW MUCH OF IT THERE IS** (`plate_probe`; a far-plane pixel is a ray that hit nothing):
+
+| plate | far-plane % | ray elevation min / med / max |
+|---|---|---|
+| pondlane | **12.287** | −6.2 / −2.6 / **−0.5** deg |
+| therise | 1.497 | −2.0 / +2.5 / +3.5 deg |
+| gateroad | 0.052 | −4.1 / −4.0 / −3.8 deg |
+| the other eight | **0.000** | no sky pixels at all |
+
+Two facts reshape the item. (1) **A THREE-PLATE FIX, NOT A TOWN-WIDE GRADE** — a sky recipe
+cannot move a plate whose every ray terminates on the town. (2) **MOST OF WHAT THE JUDGE
+CALLED SKY IS BELOW THE HORIZON**: those rays are aimed at the GROUND and the ground has run
+out (`emb_ground_far` is 256 × 324 m). That is why the same pixels drew two different findings
+in run-20260806-1 — "The sky: WEAK, a flat gradient with minimal atmospheric volume" AND "The
+world at the frame edges: WEAK, fades into a flat, empty dark void". ONE DEFECT, TWO SYMPTOMS,
+and neither is fixable with a colour.
+
+**THE FIRST BUILD WAS REFUTED BY ITS OWN DRAFT.** A vertical ridge wall at one radius (300 m)
+is at ONE distance from every ray in the band: one haze value, one tone, and its only edge at
++4.2 deg, outside the band. Draft 1008×576, same camera and grade, top 60 rows (0/30/59):
+L **91.3/64.6/42.0 → 80.1/58.3/41.4**. Darker and no more structured. A backdrop whose whole
+job is depth cannot be built at a constant distance. Kept as the docstring of what replaced it.
+
+**BUILT** — `far_horizon()`: a receding skirt 230 → 1800 m (128×30 quads, falling −2.2 →
+−211 m) with THREE ridge ranks standing on it whose tops are SOLVED, not authored — each rank
+gets an elevation band from a reference eye (pondlane's own camera z, 10.2 m) and its top is
+`eye + R·tan(elev)`: 260 m → 1.7..8.0 m = −1.90..−0.40 deg; 470 m → −15.4..−3.0 m =
+−3.20..−1.55 deg; 850 m → −58.8..−35.5 m = −4.90..−2.85 deg. All three edges inside the
+measured band. Haze is a CAMERA-DISTANCE mix (180 m → 0.12 air, 1500 m → 0.93), so the frame's
+vertical axis becomes a distance axis — which is what "mist-seated ridges" means as a shader.
+And `emberwake_sky()`: a horizon→zenith ramp (both ends derived FROM the rig constant, so the
+hour does not move), a horizon haze band, stretched cloud, a Voronoi star field masked below
++1.1 deg, and the moon's glow and 0.5-deg disc on the direction the plates are lit from —
+read out of `emb-cine/cine.json`'s own `appliedGrade` with **unanimity across every shipped
+camera asserted**, because otherwise the sky and the moonlight have two authorities and
+nothing catches a disagreement. The stars, the glow and the disc are three ADDED sources,
+which is this town's own measured night-grade law.
+
+**THE LIGHT CANNOT MOVE, BY CONSTRUCTION.** The backdrop is `visible_camera` and nothing else
+(diffuse/glossy/transmission/volume/shadow all False, asserted per object) and the sky graph
+is the CAMERA half of an `Is Camera Ray` mix whose other half is the untouched flat
+`Background`. Every non-camera ray still sees exactly the constant it saw before, so the only
+pixels that CAN change are pixels already at the far plane — which is what holds the refusal
+set to four plates at 0.000%.
+
+**THE GATE FIRED AND NAMED THE NUMBER.** A backdrop nearer than the world OCCLUDES the world
+on a camera ray. The inner radius is checked against the world-space bound of every
+non-backdrop mesh before anything is built, and on the first run it refused: the skirt started
+at 185 m and `emb_ground_far` reaches 206 m from the town centre. 230 m comes from that.
+
+**TWO THINGS A SHARED TOOL HAD TO LEARN** (`tools/cine_bake.py`):
+(1) it asserted the world's sky-colour socket is UNLINKED whenever `--sky` is passed, because
+a linked socket would silently ignore the rig — right, and NOT worked around: the socket is
+linked now, so the graph publishes an RGB node named `RIG_SKY_COLOR` and the rig is written
+there; a blend that links the socket and forgets the node FAILS instead of baking the wrong
+evening. (2) `--glb` kept every mesh that was `visible_camera`, which would have written an
+1800 m backdrop into the SHARED COLLISION BUNDLE where walkGround and the BVH take it for
+world. **If nothing but the camera may see it, it is a picture and not a place** — that is
+now the filter, and it prints what it dropped.
+
+### 3. THE BAKE SET, AND THE ONE PLATE THAT BOUGHT NOTHING
+
+Baked 1-WIDE SERIAL off the re-dressed master (`emb_dress --region all --tier plate --key
+emberwake --noshoot` -> `emb_brookchop -- save` -> `emb_water_shader -- save`, the order
+those two files assert), each plate at its OWN shipped grade read out of `cine.json`'s
+`appliedGrade`. `plate_probe` split the pixel delta against the pre-lane plates BY MASK, so
+each claim carries its own noise floor:
+
+| plate | field cov | field pixels moved | far-plane (sky) moved | REST moved = noise | wall |
+|---|---|---|---|---|---|
+| pondlane | 1.190% | **55.298%** | 81.635% | 9.618% | 589 s + 564 s (re-tune) |
+| therise | 0.231% | **57.420%** | 67.241% | 2.657% | 524 s + 506 s (re-tune) |
+| arch | 0.112% | **19.417%** | — | 1.531% | 510 s |
+| orchard | 1.613% | **18.658%** | — | 0.748% | 515 s |
+| square | 0.434% | **14.926%** | — | 2.493% | 535 s |
+| gateroad | 1.000% | **7.337%** | 0.000% cov | 0.257% | 819 s |
+| homerow | 2.393% | **0.329%** | — | **1.029%** | 847 s |
+
+**homerow's 847-second bake BOUGHT NOTHING and that is the receipt that the floor is real**:
+its field pixels moved 0.329% against its own 1.029% whole-frame noise, i.e. BELOW noise.
+Its field objects have the largest AABB coverage of any plate (2.393%) and are OCCLUDED in
+the beauty pass — the identical lesson the water lane learned on the identical plate six
+hours earlier (its water moved SEVEN pixels). **AABB containment is a tight test for "is
+this surface visible" and still not tight enough for "is this surface UNOCCLUDED at the
+moment of the change".** The next lane should refuse homerow on that basis, not on coverage.
+
+**REFUSED, with their numbers**: `gatefield`, `northlane`, `waystone`, `woodroad` — 0.000%
+field pixels AND 0.000% far-plane pixels. Both edits are incapable of touching them (the
+backdrop and the sky graph are camera-ray-only and can only replace far-plane pixels; the
+field edit only touches `lm_field_*` surfaces). Four plates x ~600 s not spent.
+
+**AND THE DEPTH PASS CONFIRMS THE BACKDROP INDEPENDENTLY.** pondlane's depth far range went
+146.92 -> **262.68 m** and gateroad's 243.48 -> 322.21 m: the rays are landing on the ridge
+rank solved at 260 m. Far-plane fraction pondlane **12.287% -> 1.662%** (86.5% of the empty
+band terminated), gateroad **0.052% -> 0.000%**, therise 1.497% -> 1.492% (its band is
+scattered slivers between roofs, not a horizon).
+
+### 4. THE VERDICTS, HONESTLY — the pixels moved and the calibrated judge did not register it
+
+BY EYE (mine, at 1:1 and on matched crops, `docs/qa/emberbrook-graphics/round3/`): the flat
+olive-green slab that sat at pondlane's lower left is gone; orchard's pale-green slab at
+upper left is gone; gateroad's green patch left of the pier is gone; the fence palings and
+field stones are unchanged (they were already dressed). pondlane's horizon is now a pale
+haze band over an undulating dark ridgeline instead of one flat slate rectangle.
+
+BY THE CALIBRATED JUDGE (`scene_redteam --town emberbrook --mode checklist`,
+`run-20260808-005259-round3fieldsky`, 38 survivors of 51 raw, 11 refuted, aim census refuted
+4 of 10 [QUALITY] verdicts as misaimed) — **against the immediately-preceding sweep
+`run-20260807-205035-round3water` the [QUALITY] families did NOT flip**:
+
+| family | 20260807-205035 (before) | 20260808-005259 (after) |
+|---|---|---|
+| `quality:sky` | therise WEAK | therise WEAK |
+| `quality:frame-edge-world` | square WEAK | square WEAK |
+| `quality:water-read` | square ABSENT | homerow FAILING |
+
+Read that straight. **therise's sky verdict did not move** — and its own measurement says
+why: therise shows 1.492% far-plane in scattered slivers between roofs, so there is no
+horizon in that frame for a horizon to fix, and the judge's words changed from "lacks
+atmospheric depth or cloud structure" to "plain blue gradient lacking cloud detail" without
+changing its mind. **pondlane — the plate that actually changed — carries no surviving
+[QUALITY] verdict in EITHER sweep**, so there was nothing there to flip; its win is in the
+pixels and in the eye, not on this instrument. The new `homerow` water FAILING is on a plate
+whose pixels moved 1.029% (Cycles noise) with no water edit in this lane at all, so it is
+judge variance on an ARMED plate (0.90% visible water) and not a regression — recorded
+rather than explained away, because a class that reads FAILING deserves the next window
+whichever lane's number it is.
+
+**THE USEFUL FINDING IS THE MISMATCH ITSELF**: 86.5% of a plate's empty band was filled and
+55% of its field pixels were repainted, and the checklist judge's [QUALITY] families were
+silent on it. Those families are armed and aimed per plate; on the two plates that moved
+they were either already refuted by the aim census or pointed elsewhere. A sweep is a screen
+for the classes it names, and it is not a measure of what a lane did.
+
+### 5. GATES (all at their stated baselines)
+
+`cine_test --town emberbrook` **477 ok / 3 failed / 2 soft — identical to the pre-lane
+baseline**, all three pre-attributed (bundle walk parity 218 vs 222; the four
+`walk_e_square-plaza__barn_l*` meshes; `square` charPxFar 37 vs its own 38 floor). The two
+soft warnings are pondlane's visibleFrac 39% and "3 stale: woodroad, waystone, gatefield" —
+which are exactly three of the four plates this lane REFUSED, so the warning is the refusal
+restated. `slice_test` **776/0**. `seam_walk --town emberbrook` **10/10**.
+`findability_test` **69 passed / 0 failed / 11 warn**. `routes_derive --check` **ok**.
+
+### 6. THE GLB DEBT — diagnosed, not closed, and handed on with two stack samples
+
+`cine_bake --glb` on the dressed master had already been reaped at 26, 32 and 33 minutes by
+the previous lane. It was attempted twice more here and reaped again; **the artifact on disk
+is still the untouched 2026-08-05 file** (mtime `Aug 5 04:11`, 13,013,456 B, clean in
+`git status`, verified after each kill). Coordinator has given it a dedicated lane. What this
+lane leaves it is a CAUSE rather than another attempt — `sample(1)` on the running Blender,
+twice:
+
+  * **UNFROZEN RUN, t = 1200 s: 5776 of 5776 main-thread samples inside `gc_collect_main`** —
+    CPython's cyclic garbage collector, reached from `_Py_HandlePending` inside the glTF
+    operator, with `deduce_unreachable` / `subtype_traverse` / `visit_decref` under it. A
+    generational collection is triggered by allocation COUNT and costs O(LIVE SET), so an
+    exporter that builds tens of millions of small Python objects re-walks its own live graph
+    over and over. Not a hang — a quadratic.
+  * `gc.freeze()` + `gc.disable()` around the export is now in `cine_bake.py`. It changed the
+    memory profile completely (a monotonic climb to 5.7 GB became an oscillation between
+    0.2 and 3 GB) and **did not make the run finish**, which is itself the useful half:
+  * **GC-FROZEN RUN, t = 1700 s: 4355 of 4431 samples in `list_contains` ->
+    `PyObject_RichCompareBool` -> `object_richcompare`** — an `x in LIST` membership test on
+    object IDENTITY, O(n) per call over a list that grows with the scene. THAT is the
+    remaining quadratic, and it wants a dict/set. The GC was the first quadratic standing in
+    front of the second.
+
+(The lane that took this over located it as `io_scene_gltf2`'s
+`__append_unique_and_get_index`, `blender/exp/exporter.py:413`, and shipped
+`tools/gltf_fast_index.py`.)
+
+NOT URGENT for this lane's own work and stated as such: water is not collidable, the runtime's
+occlusion oracle is `depth.png` and all nine rebaked plates carry a fresh one, and
+`cine_test`'s bundle-parity assertion compares WALK meshes only. It IS load-bearing for the
+judge's new aim census, which builds Emberbrook's water subject mask from that bundle.
+
+### 7. RESIDUALS THIS LANE LEAVES, each with its measurement
+
+1. **THE HORIZON BAND IS STILL BRIGHT.** After halving, pondlane's remaining far-plane pixels
+   read L p50 **144.7** against that plate's own GROUND p50 of **26.5** — 5.5x, down from
+   6.4x. And the second measurement is the more useful one: halving the mixed-horizon linear
+   luma (0.210 -> 0.132) moved L only 16%, because AgX is compressive up there. **A sky level
+   is not a linear knob** — the next sweep must be run on the PLATE, not on the node, and
+   two rungs at least.
+2. **therise's sky verdict did not move** and its own number says why (1.492% of frame in
+   scattered slivers between roofs, no horizon in the frame). If that WEAK is to be closed it
+   is a framing question, not a sky question.
+3. **The ridge silhouette is a sum of four sines on a 256-segment ring.** It reads as land at
+   1:1 (looked at) but its rhythm is periodic by construction; a crc-driven profile would be
+   the honest next version.
+4. **`emb_mat_leaf_autumn`/`emb_mat_leaf_green` on `lm_infill_*_fruit0_crown`** (3 meshes) now
+   ship on the BACKSTOP material, not on a dressing rule. The backstop is a warning, not a
+   fix: the orchard fruit trees want a rule of their own.
+5. **The bake floor needs an occlusion term.** homerow has the largest field AABB coverage in
+   the town (2.393%) and moved BELOW its own noise. Coverage is necessary and not sufficient.
+
 ## 2026-08-08 ~02:30 — TOOL LANE: the glTF exporter's second quadratic, found, fixed and PROVEN BYTE-NEUTRAL — and emb-cine's provenance debt re-measured (it was never what it looked like)
 
 **WHERE THE QUADRATIC ACTUALLY WAS.** Vendor code, one function:
