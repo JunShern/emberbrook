@@ -716,6 +716,20 @@ if GLB_ONLY:
     # never traversed, and `gc.disable()` stops collections for the duration. Reference
     # counting still frees everything acyclic, which is nearly all of what the exporter
     # makes; the trade is peak memory for a run that terminates. Restored afterwards.
+    #
+    # AND THAT WAS ONLY THE FIRST OF TWO QUADRATICS. With the GC out of the way a second
+    # `sample <pid>` of the still-stalled run put 4355 of 4431 main-thread frames in
+    # `list_contains -> PyObject_RichCompareBool -> object_richcompare` — an identity
+    # membership test against a list that grows with the scene. It is the exporter's
+    # `__append_unique_and_get_index` (blender/exp/exporter.py:413), called once per
+    # node / mesh / accessor / bufferView, and tools/gltf_fast_index.py gives it an
+    # O(1) index side-table from OUR side (see that file: it is a workaround with an
+    # owner, not a fork, and EMB_GLTF_FAST_INDEX=0 turns it off). Emberbrook-dressed
+    # expands 1993 collection instances into ~17.9k nodes against gray's 2304 — 8x the
+    # objects is 64x that function, which is the whole 26-33 minute band.
+    sys.path.insert(0, os.path.join(REPO, "tools"))
+    import gltf_fast_index
+    gltf_fast_index.apply()
     import gc
     _gcwas = gc.isenabled()
     gc.collect()
@@ -731,9 +745,11 @@ if GLB_ONLY:
         gc.unfreeze()
         if _gcwas:
             gc.enable()
-    print("GLB     export_scene.gltf %.1fs with the cyclic GC frozen+disabled (see the "
-          "note above: 5776/5776 sampled main-thread frames of the un-frozen run were in "
-          "gc_collect_main)" % (time.time() - _t_glb))
+    print("GLB     export_scene.gltf %.1fs with the cyclic GC frozen+disabled and "
+          "__append_unique_and_get_index de-quadratic'd (see the note above: the two "
+          "stack samples of the never-finishing run named gc_collect_main and "
+          "list_contains)" % (time.time() - _t_glb))
+    gltf_fast_index.report()
     n_walk = sum(1 for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('walk_'))
     json.dump({"exported": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                "source": MASTER,

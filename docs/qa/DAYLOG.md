@@ -18466,3 +18466,101 @@ build racing the one `deploy-ghpages.sh` queues explicitly. **Read the build LIS
 the newest row alone**: a lane that saw only the `errored` row would have re-deployed a
 site that was already publishing correctly. The stamp poll is the honest gate — it moved,
 and the live 29/0 is what settles it.
+
+## 2026-08-08 ~02:30 — TOOL LANE: the glTF exporter's second quadratic, found, fixed and PROVEN BYTE-NEUTRAL — and emb-cine's provenance debt re-measured (it was never what it looked like)
+
+**WHERE THE QUADRATIC ACTUALLY WAS.** Vendor code, one function:
+
+    Blender.app/Contents/Resources/5.1/scripts/addons_core/io_scene_gltf2/
+        blender/exp/exporter.py:413   GlTF2Exporter.__append_unique_and_get_index
+            if obj in target: return target.index(obj)     # O(n) then O(n) again
+
+`__to_reference()` calls it once for EVERY child-of-root property — node, mesh,
+accessor, bufferView, material, texture — against the list still being built, and no
+class in `io/com/gltf2_io.py` defines `__eq__`, so every comparison is
+`object_richcompare`, identity. That is exactly the `list_contains ->
+PyObject_RichCompareBool -> object_richcompare` stack 3b22761d sampled.
+
+**THE SIZE OF IT, MEASURED RATHER THAN ESTIMATED.** The `emberbrook-dressed` export
+writes **6,360,379 nodes** (counted off the produced GLB's JSON chunk: 6,360,379
+occurrences of `"mesh":`, against **1,370 meshes / 3,032 accessors / 3,117
+bufferViews** — the mesh cache dedups perfectly, the NODE list is what explodes).
+Those nodes are the depsgraph's own instance census of that blend (6,379,586 mesh
+instances), reached through the exporter's `is_instancer` **Duplis** branch in
+`blender/exp/tree.py:457`, which is NOT gated by `export_gn_mesh`. So the vendor
+function performs ~n²/2 = **2.0 x 10^13** identity comparisons. One such comparison
+costs **9.0 ns** in Blender 5.1's own CPython 3.13.9 (micro-benchmarked at N=2000 and
+N=20000, same figure both) — **about 50 hours in that one function alone.** The 26-33
+minute band was never a slow export; it was the first 3% of one.
+
+**THE FIX, AND WHY IT IS ON OUR SIDE OF THE FENCE.** `tools/gltf_fast_index.py`:
+THE LIST STAYS (it defines the output ORDER — a glTF reference IS an index into it)
+and an id()-keyed side-table is added purely for MEMBERSHIP. The fast path is taken
+only when `type(obj).__eq__ is object.__eq__`, i.e. when `==` provably cannot be
+anything but `is`; the STRINGS appended to `extensions_used`/`extensions_required`
+dedup BY VALUE and fall through to the vendor's own two lines untouched. A hit is
+confirmed against the list (`target[i] is obj`) and the table is rebuilt whenever
+`len(target)` moved without us, so external mutation can make it stale but not wrong.
+`EMB_GLTF_FAST_INDEX=0` runs the vendor code. It patches the in-memory class from our
+process — NOT the Blender installation, which would be invisible to git, lost on the
+next Blender update, and imposed on every other tool on this machine. The real fix is
+upstream in glTF-Blender-IO; the module's header is the bug report.
+`Blender -b --python-exit-code 1 -P tools/gltf_fast_index.py -- --selftest` runs the
+vendor implementation and the replacement side by side over identity objects, strings,
+value-eq objects, unhashable value-eq objects, a mixed list and an externally mutated
+list, and demands the same return AND the same resulting list at every step: ALL PASS.
+
+**EXACT OUTPUT SEMANTICS, PROVEN ON THE BYTES, NOT ARGUED.** The GLB IS the object
+set — same nodes, same meshes, same order, same buffers — so the receipt is sha256:
+
+    emb-cine (cine_bake.py --glb off emberbrook-master.blend, the bundle's own source)
+      patch OFF  ffda3de77252cab77c9aa1510b3bd5f28724719135c60c9d5985e7118ca359fd  1.6s
+      patch ON   ffda3de77252cab77c9aa1510b3bd5f28724719135c60c9d5985e7118ca359fd  1.3s
+      git HEAD   ffda3de77252cab77c9aa1510b3bd5f28724719135c60c9d5985e7118ca359fd
+    townwalk (town_export.py off dellhollow-master.blend)
+      patch ON   f1a961cacc5adc6ec42fc99f25ee403ac63e268e3dbd1125173119932163f333  174s
+      patch OFF  f1a961cacc5adc6ec42fc99f25ee403ac63e268e3dbd1125173119932163f333  185s
+      shipped    f1a961cacc5adc6ec42fc99f25ee403ac63e268e3dbd1125173119932163f333
+      (275 walk meshes both ways; exported to a scratch TOWNWALK_OUT, the shared
+       bundle was never written). **cine_test 635/1** — the one red is the
+      pre-attributed deep-stairs<->waterfront seam, unmoved.
+
+**INSTRUMENT: `sample <pid> <seconds>`**, macOS's own stack sampler, run against the
+LIVE Blender four times through the fixed export. `list_contains` frames: **0, 0, 0
+and 4** (the 4 in a 5 s sample of the JSON-encode phase), against 3b22761d's **4355 of
+4431**. The remaining time is `blender::bke::mesh_validate_impl` in C++ across TBB
+threads — `nodes.py:286` calls `blender_object.data.validate()` ONCE PER NODE, so a
+mesh instanced 444 times is validated 444 times. That is the next quadratic-adjacent
+cost and it is also vendor code; it is linear in nodes, not in n², so it did not have
+to be paid tonight.
+
+**AND THE THING THAT MATTERED MORE THAN THE FIX — emb-cine WAS NOT BEHIND.**
+`public/assets/scenes/emb-cine/meta.json` names its source: **`tools/blends/
+emberbrook-master.blend`**, the GRAY blockout, whose census (2304 mesh objects,
+205,652 tris, 17 materials) matches the shipped bundle's own census EXACTLY, and whose
+re-export tonight came out **sha256-identical to git HEAD**. `emberbrook-dressed.blend`
+is a DERIVATIVE of that master (emb_dress.py harvests the blockout and re-renders it
+with library assets) and is the PLATE source, not the collision source. Exporting the
+dressed master into this bundle produces **1,897,208,512 bytes** — 146x the shipped
+13,013,456 — of which **1.7 GB is node JSON** and only 191 MB is geometry: 6.36 million
+one-line nodes for scattered leaves and grass blades. **A COLLISION BUNDLE MADE OF
+FOLIAGE INSTANCES IS THE SAME MISTAKE AS A BACKDROP IN THE COLLISION BUNDLE, ONE ORDER
+OF MAGNITUDE LOUDER** — the rule already written in `cine_bake.py --glb` ("if nothing
+but the camera may see it, it is a picture, not a place") has an unwritten sibling for
+dressing scatter, and writing it is a CONTENT decision this lane did not take.
+That 1.9 GB artifact did reach the working tree at 02:06 and was restored with
+`git checkout` at 02:24 (13,013,456 B, ffda3de7, `git status` clean) — the one case
+where checkout is the right reflex: a tracked file with a known-good committed version
+and a bad working copy. It was never committed, never pushed, never built.
+
+**SO THE PROVENANCE DEBT IS STILL OPEN, and now it is stated correctly**: the emb-cine
+collision bundle is byte-current with the blend it declares, and the open question is
+whether the DRESSED master's structural water work (emb_brookchop / emb_water_shader
+run on `emberbrook-dressed.blend` and `emberbrook-realtime.blend`, never on the gray
+master) belongs in it. Closing it needs a scatter filter in the `--glb` block, or a
+ruling that the judge's water subject mask should read `emb-townwalk/scene.glb`
+(the decimated realtime tier, 91 MB, which DOES carry the dressing) instead. Both are
+coordinator calls. `tools/glb_census.mjs <a.glb> [b.glb ...]` is the new ruler for that
+conversation: magic/version/declared-length out of the header, then nodes, meshes,
+primitives, accessors, bufferViews, materials, vertices, triangles and walk_* counts,
+several files side by side.

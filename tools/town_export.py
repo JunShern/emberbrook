@@ -71,6 +71,18 @@ print("fx helpers stripped from runtime export: %d (of which %d camera-ray-only 
       % (stripped, backdrops))
 
 # --- GLB (all meshes + the camera) -------------------------------------------
+# THE SAME EXPORTER QUADRATIC cine_bake.py --glb pays: io_scene_gltf2's
+# __append_unique_and_get_index (blender/exp/exporter.py:413) is an `x in LIST`
+# identity test called once per node/mesh/accessor/bufferView, so the export is
+# O(N^2) in the objects it writes. tools/gltf_fast_index.py gives it an O(1) index
+# side-table without touching the Blender installation; EMB_GLTF_FAST_INDEX=0 runs
+# the vendor code. Dellhollow is small enough that it never showed here — and its
+# bytes are PROVEN unchanged by the patch (both ways, sha256-identical), which is
+# the only reason it is on: a speedup that moved this bundle would be a bug.
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import gltf_fast_index
+gltf_fast_index.apply()
 with contextlib.redirect_stdout(io.StringIO()):
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, "scene.glb"),
                               export_format='GLB',
@@ -78,5 +90,6 @@ with contextlib.redirect_stdout(io.StringIO()):
                               # (collision only): they MUST still export.
                               use_visible=False, use_renderable=False, use_selection=False,
                               export_yup=True, export_cameras=True, export_lights=False)
+gltf_fast_index.report()
 n_walk = sum(1 for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('walk_'))
 print("EXPORT OK -> %s | ortho %.1f | walk meshes: %d" % (OUT, span, n_walk))
