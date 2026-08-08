@@ -1,0 +1,2501 @@
+{
+  "_schema": "THE CHAPTER SCRIPT, as data. public/js/story_runtime.js reads this and owns no line, no flag name, no coordinate and no camera id of its own — adding a beat is an edit HERE, never a code change. FIELDS. beats[]: {id, chapter, scene, cam, at:[x,y,z], r, vTol, when, once, do[]}. A beat fires on the physics tick when EVERY stated trigger holds: `scene` is the scenegraph node, `cam` the baked shot that must be up, `at`+`r` a proximity circle in runtime coords, `when` a condition in dialogue.js's OWN language (flag/notFlag/flagIs/flagAtLeast/hasItem/goldAtLeast/all/any/not — there is exactly one condition language in this project). `once` defaults true and is ledgered in GS.state.beats, i.e. IN THE SAVE, so a reload cannot replay a cutscene. do[] steps: {dialogue:id} plays a node from `nodes` below through the ordinary dialogue window; {setFlags}/{incFlags}/{giveItem,qty}/{gold} go through GS and nowhere else; {objective}/{banner}/{toast}/{endCard}/{wait}/{shot}/{chapter}/{save} are presentation. THERE IS NO TELEPORT STEP, on purpose: a beat never moves the player across a scene, because the corridor between the towns is WALKED (chapter2.js:261 fakes it with a fade and a coordinate; that is the anti-pattern this layer retires). nodes/speakers: injected into dialogue.js at load (Dialogue.inject) — the story does not get a second renderer.",
+  "_provenance": "Chapters One and Two ONLY (user scope ruling 2026-08-02); chapter3.js is out of scope and Chapter Two's end card is TERMINAL. Beat staging follows docs/plans/ch1-staging-audit.md's beat table against the ratified Emberbrook map; the flag contract is docs/plans/end-to-end-wiring.md §6. Prose is lifted from the SHIPPED public/js/chapter1.js and chapter2.js, condensed — those files were rewritten to docs/VOICES.md at HEAD 2e4e461, so the voice is the ratified one and no line here is newly invented dialogue.",
+  "_twoPlayerPending": "THE 3D RUNTIME IS SINGLE-BODY and the user has NOT yet ruled on co-op (end-to-end-wiring R1: build two bodies / re-stage with Lake as an AI companion / ship single-player). Chapter One's climax is two keepers on twin sigil plates and Chapter Two's is a six-hand winch. Both are staged here so ONE player can complete them, with Lake acting as a companion who takes the far plate and the far bar himself. Every such site is marked TWO-PLAYER PENDING in the node it lives in. Nothing here soft-locks in either world: if a second body lands, these beats become two-actor by adding a hold step, not by rewriting the chapter.",
+  "version": 1,
+  "_start_doc": "WHERE A NEW GAME BEGINS — one fact, one place, three consumers. public/index.html's NEW GAME card, tools/playthrough_test.mjs and tools/llm_playtester.mjs each used to carry their own literal URL, which is how the front door and the two instruments that certify it could have drifted apart without anyone noticing. THE POSITION MOVED 2026-08-03 (PT-20260803-002/-008): the game used to take shot 'woodroad's baked fallback spawn, which is walk_pad_arrival-clearing — THE SAME POINT as the map's 'valley-road-south' exit, r 2.2. So the first frame of a brand-new game stood the player on an exit pad with 'Leave Emberbrook? [E]' as the only prompt on screen, and the LLM playtester took it, twice, landing in ow-valley where no unfired beat lives while the objective still read 'Follow the road north'. The user's remedy: 'spawn the character inside Emberbrook to begin with'. This point is 7.0 m up the Whisperwood road from that pad, MEASURED IN THE RUNNING GAME (SIM.walkFloors at (53.7, 21.2) = -0.385, one floor, shot 'woodroad', no edge in range) and still 3.5 m short of the arrival-clearing->waystone cut band, so the opening shot, the opening beat and the road she walks in on are all unchanged. The exit itself is now DENIED rather than moved — see emberbrook.map.json 'valley-road-south'. NOT A SPAWN THE RUNTIME READS: play3d.html knows nothing about this block; it is the front door's and the harnesses' shared constant, and an arrival edge or a save's `at` outranks it exactly as before.",
+  "start": {
+    "chapter": 1,
+    "scene": "emb-cine",
+    "cam": "woodroad",
+    "pos": [53.7, -0.385, 21.2]
+  },
+  "speakers": {
+    "narrator": {
+      "name": "",
+      "color": "var(--eb-amber)",
+      "portrait": false
+    }
+  },
+  "beats": [
+    {
+      "id": "ch1.open",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "woodroad",
+      "when": {
+        "notFlag": "story.ch1.started"
+      },
+      "do": [
+        {
+          "setFlags": {
+            "story.ch1.started": true
+          }
+        },
+        {
+          "banner": {
+            "title": "— VESPER —",
+            "sub": "a mapmaker, a long way from home",
+            "ms": 3600
+          }
+        },
+        {
+          "dialogue": "story.ch1.open"
+        },
+        {
+          "objective": "Follow the road north"
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+    {
+      "id": "ch1.waystone",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "waystone",
+      "at": [
+        56.4,
+        -0.1,
+        10.2
+      ],
+      "r": 6.0,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.started"
+          },
+          {
+            "notFlag": "story.ch1.waystone"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.waystone"
+        },
+        {
+          "setFlags": {
+            "story.ch1.waystone": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦ A cat is following Vesper",
+            "color": "#d9a441"
+          }
+        },
+        {
+          "objective": "Find the village at the end of the road"
+        }
+      ]
+    },
+    {
+      "id": "ch1.reveal",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "square",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.waystone"
+          },
+          {
+            "notFlag": "story.ch1.reveal"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.reveal"
+        },
+        {
+          "setFlags": {
+            "story.ch1.reveal": true
+          }
+        },
+        {
+          "objective": "Emberwake — greet the villagers (Poppy at her bread stall, Mara by the Heartlight)"
+        }
+      ]
+    },
+    {
+      "id": "ch1.rowan",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "square",
+      "at": [
+        60.4,
+        1.5,
+        -42.4
+      ],
+      "r": 3.4,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.reveal"
+          },
+          {
+            "flag": "npc.met.poppy"
+          },
+          {
+            "flag": "npc.met.mara"
+          },
+          {
+            "notFlag": "story.ch1.vesper-done"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.rowan"
+        },
+        {
+          "setFlags": {
+            "story.ch1.vesper-done": true
+          }
+        },
+        {
+          "objective": "Find the lamplighter — “somewhere across the village, apologizing to lamps”"
+        }
+      ]
+    },
+
+    {
+      "_doc_act": "LAKE'S ACT — the four beats below are the 3-D staging of chapter1.js playVesperOutro + playLakeIntro (~line 668-708), and the player PLAYS it. The user's ask, verbatim: “I never get to play as Lake at any point… we start with Lake in his home and about to do his rounds. In the current game, we basically skip over that entire part.” Every spoken line here is lifted from the shipped 2-D script without a word changed; what is new is that the walking between them is the player's. NOTHING IS TELEPORTED: the handoff is a change of protagonist (SIM.pov), not of place — Lake has been in his grandmother's cottage all evening — and the cottage door out is the ordinary scenegraph edge emb-lake-int>emb-cine@lake-home, taken by the player, arriving in shot 'homerow' at the top of his own lane. The room he walks is the one the interior blend already dresses: her chair with the shawl still on it, the mantel hook under her portrait, the tally of rounds cut beside it, and the lamp hook by the door (emb-lake-int scene.glb: chair_gran_seat, hook_tip, rounds_mark_*, lamphook_peg).",
+      "id": "ch1.lake.handoff",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.vesper-done"
+          },
+          {
+            "notFlag": "story.ch1.lake-pov"
+          }
+        ]
+      },
+      "do": [
+        {
+          "pov": {
+            "as": "lake",
+            "scene": "emb-lake-int",
+            "spawn": [
+              3.37,
+              0.03,
+              -1.3
+            ],
+            "_spawn_is": "walk_pad_table — grandmother's table, the chair he rises from. Her chair is the far one, and her shawl is still over its back."
+          }
+        },
+        {
+          "setFlags": {
+            "story.ch1.lake-pov": true
+          }
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+    {
+      "id": "ch1.lake.wake",
+      "chapter": 1,
+      "scene": "emb-lake-int",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.lake-pov"
+          },
+          {
+            "notFlag": "story.ch1.lake-woke"
+          }
+        ]
+      },
+      "do": [
+        {
+          "banner": {
+            "title": "— LAKE —",
+            "sub": "the last lamplighter of Emberbrook",
+            "ms": 3200
+          }
+        },
+        {
+          "dialogue": "story.ch1.lake.wake"
+        },
+        {
+          "setFlags": {
+            "story.ch1.lake-woke": true
+          }
+        },
+        {
+          "objective": "Take her flame down from the mantel"
+        }
+      ]
+    },
+    {
+      "id": "ch1.lake.hearth",
+      "chapter": 1,
+      "scene": "emb-lake-int",
+      "at": [
+        4.1,
+        0.02,
+        -4.13
+      ],
+      "r": 1.2,
+      "_at_is": "walk_pad_hearth — the mantel. Her flame hangs on hook_tip above it, her portrait above that, and the rounds tally is cut into the breast beside it. r is 1.2 so this cannot fire from the table (2.85 m) and the door beat cannot fire from here (1.97 m); the order of his own room is the order of the scene.",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.lake-woke"
+          },
+          {
+            "notFlag": "story.ch1.lake-flame"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.lake.hearth"
+        },
+        {
+          "setFlags": {
+            "story.ch1.lake-flame": true
+          }
+        },
+        {
+          "objective": "Her hand-lamp — the hook by the door"
+        }
+      ]
+    },
+    {
+      "id": "ch1.lake.lamp",
+      "chapter": 1,
+      "scene": "emb-lake-int",
+      "at": [
+        6.05,
+        0.02,
+        -4.42
+      ],
+      "r": 1.2,
+      "_at_is": "walk_pad_door, under lamphook_peg. The door EDGE is the same point at r 1.8, so the beat's circle sits inside the prompt's: he reaches the lamp before he can reach for the latch. If he leaves anyway, ch1.meet is gated on story.ch1.rounds and he has to come back for it — which is correct. A lamplighter does not walk the round without the lamp.",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.lake-flame"
+          },
+          {
+            "notFlag": "story.ch1.rounds"
+          }
+        ]
+      },
+      "do": [
+        {
+          "giveItem": "hand-lamp"
+        },
+        {
+          "dialogue": "story.ch1.lake.lamp"
+        },
+        {
+          "setFlags": {
+            "story.ch1.rounds": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦  Grandmother's hand-lamp  ✦",
+            "color": "#e0a94e"
+          }
+        },
+        {
+          "objective": "Three lamps before the Kindling Hour — pond lane first"
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+
+    {
+      "id": "ch1.meet",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "pondlane",
+      "_doc_when": "story.ch1.rounds (the hand-lamp beat) joined this condition on 2026-08-03: the meeting is now the END of Lake's playable act, not the start of it, so it must not be reachable by a Lake who walked out of his grandmother's house empty-handed.",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.vesper-done"
+          },
+          {
+            "flag": "story.ch1.rounds"
+          },
+          {
+            "notFlag": "story.ch1.met"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.meet"
+        },
+        {
+          "setFlags": {
+            "story.ch1.met": true,
+            "story.ch1.lamps": 1,
+            "lake-joined": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦  Lake joined the party  ✦",
+            "color": "#e0a94e"
+          }
+        },
+        {
+          "pov": {
+            "as": "vesper-v2",
+            "_doc": "THE HANDBACK, and it is the same cut as the handoff — same scene, no spawn, no coordinate, nobody moved. Lake's act ends where it was always going to end: the moment the two of them are standing on the pond lane together, the party exists and the player carries Vesper again for the rest of the chapter and all of Chapter Two. Lake does not leave; he becomes what growth.json's lake-joined already says he is (user ruling 2026-08-02: “Lake as a party member”). Everything downstream of this line — ch1.lamps through ch2.landing, every findability post, every playthrough anchor — is unchanged by the whole act, because after it the body is the one they all assumed."
+          }
+        },
+        {
+          "objective": "Close the ring — two lamps left, up in the square"
+        }
+      ]
+    },
+    {
+      "id": "ch1.lamps",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "square",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.met"
+          },
+          {
+            "notFlag": "story.ch1.lamps-done"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.lamps"
+        },
+        {
+          "setFlags": {
+            "story.ch1.lamps": 3,
+            "story.ch1.lamps-done": true
+          }
+        },
+        {
+          "objective": "The Kindling Hour"
+        }
+      ]
+    },
+    {
+      "id": "ch1.hush",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "square",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.lamps-done"
+          },
+          {
+            "notFlag": "story.ch1.hush"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.hush"
+        },
+        {
+          "setFlags": {
+            "story.ch1.hush": true
+          }
+        },
+        {
+          "banner": {
+            "title": "The Hush has come to Emberbrook",
+            "sub": "the village loses its heart",
+            "ms": 4200
+          }
+        },
+        {
+          "objective": "See to them, all four —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
+        }
+      ]
+    },
+    {
+      "id": "ch1.see.poppy",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "at": [
+        51.4,
+        1.5,
+        -43.0
+      ],
+      "r": 3.2,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.hush"
+          },
+          {
+            "notFlag": "story.ch1.seen.poppy"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.see.poppy"
+        },
+        {
+          "setFlags": {
+            "story.ch1.seen.poppy": true
+          }
+        },
+        {
+          "incFlags": {
+            "story.ch1.seen": 1
+          }
+        },
+        {
+          "objective": "See to them (Poppy ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
+        }
+      ]
+    },
+    {
+      "id": "ch1.see.mara",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "at": [
+        62.13,
+        1.5,
+        -44.5
+      ],
+      "r": 3.2,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.hush"
+          },
+          {
+            "notFlag": "story.ch1.seen.mara"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.see.mara"
+        },
+        {
+          "setFlags": {
+            "story.ch1.seen.mara": true
+          }
+        },
+        {
+          "incFlags": {
+            "story.ch1.seen": 1
+          }
+        },
+        {
+          "objective": "See to them (Mara and Pip ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
+        }
+      ]
+    },
+    {
+      "id": "ch1.see.finn",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "at": [
+        86.0,
+        1.0,
+        -48.0
+      ],
+      "r": 3.4,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.hush"
+          },
+          {
+            "notFlag": "story.ch1.seen.finn"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.see.finn"
+        },
+        {
+          "setFlags": {
+            "story.ch1.seen.finn": true
+          }
+        },
+        {
+          "incFlags": {
+            "story.ch1.seen": 1
+          }
+        },
+        {
+          "objective": "See to them (Finn ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
+        }
+      ]
+    },
+    {
+      "id": "ch1.see.mochi",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "at": [
+        56.6,
+        -0.21,
+        12.2
+      ],
+      "r": 3.4,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.hush"
+          },
+          {
+            "notFlag": "story.ch1.seen.mochi"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.see.mochi"
+        },
+        {
+          "setFlags": {
+            "story.ch1.seen.mochi": true
+          }
+        },
+        {
+          "incFlags": {
+            "story.ch1.seen": 1
+          }
+        },
+        {
+          "objective": "See to them (the cat is fine ✓) —{!story.ch1.seen.poppy: Poppy at her stall,}{!story.ch1.seen.mara: Mara at the Heartlight,}{!story.ch1.seen.finn: Finn at the pond,}{!story.ch1.seen.mochi: the cat out at the Waystone,}"
+        }
+      ]
+    },
+    {
+      "id": "ch1.pact",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "square",
+      "at": [
+        60.4,
+        1.5,
+        -42.4
+      ],
+      "r": 3.4,
+      "when": {
+        "all": [
+          {
+            "flagAtLeast": {
+              "story.ch1.seen": 4
+            }
+          },
+          {
+            "notFlag": "story.ch1.pact"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.pact"
+        },
+        {
+          "setFlags": {
+            "story.ch1.pact": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦  Mochi joined the party  ✦",
+            "color": "#d9a441"
+          }
+        },
+        {
+          "banner": {
+            "title": "✦ Quest — The Long Rekindling ✦",
+            "sub": "carry the Last Spark to the Kindling, deep in the Whisperwood",
+            "ms": 4600
+          }
+        },
+        {
+          "objective": "The Old Gate — out of the village, past the tithe barn"
+        }
+      ]
+    },
+    {
+      "id": "ch1.sigils",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "gatefield",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.pact"
+          },
+          {
+            "notFlag": "story.ch1.gate-open"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.sigils"
+        },
+        {
+          "setFlags": {
+            "story.ch1.gate-open": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦ The Old Gate stands open",
+            "color": "#e0a94e"
+          }
+        },
+        {
+          "objective": "Step through the Old Gate"
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+    {
+      "id": "ch1.sendoff",
+      "chapter": 1,
+      "scene": "emb-cine",
+      "cam": "gatefield",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.gate-open"
+          },
+          {
+            "notFlag": "story.ch1.sendoff"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch1.sendoff"
+        },
+        {
+          "setFlags": {
+            "story.ch1.sendoff": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦ Poppy's tin, Mara's ribbon, Pip's map to the moon",
+            "color": "#d9a441"
+          }
+        },
+        {
+          "objective": "Step through the Old Gate"
+        }
+      ]
+    },
+    {
+      "id": "ch1.done",
+      "chapter": 1,
+      "scene": "ow-valley",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.gate-open"
+          },
+          {
+            "notFlag": "story.ch1.done"
+          }
+        ]
+      },
+      "do": [
+        {
+          "setFlags": {
+            "story.ch1.done": true
+          }
+        },
+        {
+          "chapter": 2
+        },
+        {
+          "endCard": {
+            "title": "Chapter One — Emberwake",
+            "lines": [
+              "The Order of Lamplighters kept one creed: light does not die — it is only ever carried.",
+              "On the grey road north, theirs was the last light walking."
+            ],
+            "ms": 15000
+          }
+        },
+        {
+          "banner": {
+            "title": "CHAPTER TWO",
+            "sub": "Dellhollow — the town that stopped waiting",
+            "ms": 4200
+          }
+        },
+        {
+          "objective": "Follow the valley road down to Dellhollow"
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+    {
+      "id": "ch2.road",
+      "chapter": 2,
+      "scene": "ow-valley",
+      "_doc_at": "THE DELLHOLLOW VALLEY GATE, IN RUNTIME COORDINATES. Was [184.88, 12.01, -136.19] until 2026-08-03: valley.region.json's portal 'dellhollow-valley-gate' is [184.88, 136.19, 12.01] in REGION order (x, map-y, elevation), and it was pasted in here with the axes swapped and map-y negated but THE TILE OFFSET NEVER APPLIED. The one transform is stated in tools/scenegraph_derive.mjs:853 — T(p) = [p[0]-CX, p[2], CY-p[1]], CX,CY = world.json regions[].tile.origin = [140, 100] — and it reproduces the plan position of ALL THREE valley portals to 0.000 m against the shipped scenegraph edges: emberbrook-gate x/z -57.40/65.61, old-gate -51.58/26.17, this one 44.88/-36.19 (the derive re-grounds y off the walk surface, so its y differs by <0.7 m). The old point was OFF THE 280x200 TERRAIN TILE ENTIRELY (|x|>140, |z|>100) and 279.7 m from any ground a player can reach, so this beat could only ever fire by teleport — which is exactly what the harness did to it, and why every gate stayed green. Found by playthrough_test's §W reachability fill.",
+      "at": [
+        44.88,
+        12.01,
+        -36.19
+      ],
+      "r": 30.0,
+      "vTol": 40,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.done"
+          },
+          {
+            "notFlag": "story.ch2.road"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.road"
+        },
+        {
+          "setFlags": {
+            "story.ch2.road": true
+          }
+        },
+        {
+          "_doc_objective": "WAS \"Down into the hollow \u2014 find whoever runs the locks\" until playtest round 6. This beat fires AT the Dellhollow valley gate (r 30), so the banner that names the next step is on screen while the player stands at the door \u2014 and it named a DIRECTION where it meant a PLACE. Round 5's agent read it as a heading, walked past the gate at y 12.65 and down the riverbed, and spent 56 of its 60 steps at y -2 .. -4.6. It did exactly what the game told it to. The prose keeps \"down\" (Lake: \"Down, then.\") because the town IS stacked down the inside of the gorge; it is the persistent BANNER that has to name the door, which the exit marker now also reads: Enter Dellhollow.",
+   "objective": "Through the Dellhollow gate — find whoever runs the locks"
+        }
+      ]
+    },
+    {
+      "id": "ch2.arrive",
+      "chapter": 2,
+      "scene": "del-cine",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch1.done"
+          },
+          {
+            "notFlag": "story.ch2.arrived"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.arrive"
+        },
+        {
+          "setFlags": {
+            "story.ch2.arrived": true
+          }
+        },
+        {
+          "objective": "Find whoever runs the locks — the lockhead, above Lock Five"
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+    {
+      "id": "ch2.jam",
+      "chapter": 2,
+      "scene": "del-cine",
+      "at": [
+        78.93,
+        14.07,
+        -15.6
+      ],
+      "r": 3.6,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch2.arrived"
+          },
+          {
+            "notFlag": "story.ch2.jam"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.jam"
+        },
+        {
+          "setFlags": {
+            "story.ch2.jam": true
+          }
+        },
+        {
+          "objective": "Down to the lock apron — the girl who was in the water"
+        }
+      ]
+    },
+    {
+      "id": "ch2.maren",
+      "chapter": 2,
+      "scene": "del-cine",
+      "at": [
+        79.7,
+        0.83,
+        -27.13
+      ],
+      "r": 3.6,
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch2.jam"
+          },
+          {
+            "notFlag": "story.ch2.maren-met"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.maren"
+        },
+        {
+          "setFlags": {
+            "story.ch2.maren-met": true
+          }
+        },
+        {
+          "objective": "Look at Lock Five yourselves"
+        }
+      ]
+    },
+    {
+      "id": "ch2.lockfive",
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "lockfive",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch2.maren-met"
+          },
+          {
+            "notFlag": "story.ch2.plan"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.lockfive"
+        },
+        {
+          "setFlags": {
+            "story.ch2.plan": true
+          }
+        },
+        {
+          "objective": "Supper at the keepers' cottage — you have been asked in"
+        }
+      ]
+    },
+    {
+      "id": "ch2.supper",
+      "chapter": 2,
+      "scene": "del-cottage-int",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch2.plan"
+          },
+          {
+            "notFlag": "story.ch2.supper"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.supper"
+        },
+        {
+          "setFlags": {
+            "story.ch2.supper": true,
+            "story.ch2.night": true
+          }
+        },
+        {
+          "objective": "Out on the night quay"
+        },
+        {
+          "save": true
+        }
+      ]
+    },
+    {
+      "id": "ch2.dock",
+      "chapter": 2,
+      "scene": "del-cine",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch2.supper"
+          },
+          {
+            "notFlag": "story.ch2.dock"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.dock"
+        },
+        {
+          "setFlags": {
+            "story.ch2.dock": true
+          }
+        },
+        {
+          "objective": "Midnight at Lock Five — out over the plank bridge"
+        }
+      ]
+    },
+    {
+      "id": "ch2.winches",
+      "chapter": 2,
+      "scene": "del-cine",
+      "cam": "lockfive",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch2.dock"
+          },
+          {
+            "notFlag": "story.ch2.gates-open"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.winches"
+        },
+        {
+          "setFlags": {
+            "story.ch2.gates-open": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦ The head gates stand open",
+            "color": "#3fa7c9"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ch2.landing",
+      "chapter": 2,
+      "scene": "del-cine",
+      "when": {
+        "all": [
+          {
+            "flag": "story.ch2.gates-open"
+          },
+          {
+            "notFlag": "story.ch2.done"
+          }
+        ]
+      },
+      "do": [
+        {
+          "dialogue": "story.ch2.flume"
+        },
+        {
+          "dialogue": "story.ch2.landing"
+        },
+        {
+          "setFlags": {
+            "story.ch2.done": true,
+            "maren-joined": true
+          }
+        },
+        {
+          "toast": {
+            "text": "✦  Maren joined the party  ✦",
+            "color": "#3fa7c9"
+          }
+        },
+        {
+          "banner": {
+            "title": "✦ North on the river ✦",
+            "sub": "the flume behind them, the grey marshes ahead",
+            "ms": 4600
+          }
+        },
+        {
+          "endCard": {
+            "title": "Chapter Two — Dellhollow",
+            "lines": [
+              "The current took the little boat the moment it felt her — north, quick and cold.",
+              "Down the water her father drew wrong, and her mother let her go to fix.",
+              "",
+              "END OF THE PLAYABLE CHAPTERS."
+            ],
+            "ms": 20000
+          }
+        },
+        {
+          "objective": null
+        },
+        {
+          "save": true
+        }
+      ]
+    }
+  ],
+  "nodes": {
+    "story.ch1.open": {
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "On the last night of autumn, a mapmaker walked into a valley that was not on any of her maps."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "annoyed",
+          "text": "(Eleven days out of Harrowmere. Two of them on a road my own survey says is a river.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "(There are lights up ahead. Lights mean somebody who can tell me where I am.)"
+        }
+      ]
+    },
+    "story.ch1.waystone": {
+      "lines": [
+        {
+          "speaker": "vesper",
+          "text": "(A waystone. Good — the road's a real road, then.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "surprised",
+          "text": "(…Wait.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "(I've drawn this stone. This exact stone — the face, the crack through its chin.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "(It's in my sketchbook right now. And I have never been here in my life.)"
+        },
+        {
+          "speaker": "mochi",
+          "text": "Mrrp."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "GAH— …a cat. Hello. Don't sneak up on people in haunted forests."
+        },
+        {
+          "speaker": "mochi",
+          "text": "Mrrp."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "There are lights up the road. Come on. If anyone can explain my sketchbook, it's whoever lives here."
+        }
+      ]
+    },
+    "story.ch1.reveal": {
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "The wood thinned, and there was an arch with harvest wreaths on it, and past the arch a square full of lamplight and people."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "surprised",
+          "text": "(A festival. Of course. I arrive somewhere for the first time in my life and it's the one night they're all outside.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "tender",
+          "text": "(That warmth is not weather. I have been cold for eleven days and I stopped being cold at the arch.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "(Right. Somebody here knows what a gate on my chart is doing in a valley that isn't.)"
+        }
+      ]
+    },
+    "story.ch1.rowan": {
+      "lines": [
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "Now then! A guest, and on Emberwake of all nights. Welcome, my dear."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "Vesper. Mapmaker. I need to get through your gate, and I'm told you're in charge."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "In charge! Ha! I keep the ledger; the village keeps itself."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "And nobody opens the Old Gate, child. It hasn't a key — it has RULES."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "wry",
+          "text": "Rules can be charted. Charting things is my whole profession."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "…Ha! I like you. Stay the night, then — and stay for the Kindling Hour."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "Three hundred years that flame has burned. In all of them, nobody here carried a grief alone."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "That is not boasting, my dear. It is bookkeeping — I checked."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "As for the Gate — lamplighter business, child. His order built it, his order shut it."
+        },
+        {
+          "speaker": "rowan",
+          "text": "Ask HIM. The quiet one with the flame that never goes out."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "You'll find him somewhere across the village, apologizing to lamps."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "Apologizing to lamps."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "Ha! You'll see."
+        }
+      ]
+    },
+    "story.ch1.lake.wake": {
+      "_note": "chapter1.js playLakeIntro (~line 692), ported. The narrate box there is two sentences — “…rose from his grandmother's table. He took down her flame.” — and the two sentences are now two beats apart, because the second one is something the PLAYER does. Not a word of either is changed; the table box plays where he rises, and the flame box plays at the mantel where the flame actually hangs.",
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "The same evening, across the village, the last lamplighter rose from his grandmother's table."
+        }
+      ]
+    },
+    "story.ch1.lake.hearth": {
+      "_note": "At walk_pad_hearth: her flame on the mantel hook, her portrait over it, the rounds tally cut into the breast beside it, her boots still by the fire. The line is verbatim from chapter1.js:696 — in the 2-D script he says it after crossing the room; here he says it standing under her picture, which is where it was always about.",
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "He took down her flame."
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "(A year tonight since she set the lighter down. I miss her most at rounds-time.)"
+        }
+      ]
+    },
+    "story.ch1.lake.lamp": {
+      "_note": "At walk_pad_door, under lamphook_peg — the hook by the door, the fact the line already states. Four lines, verbatim from chapter1.js:702-706, in their shipped order. Seed #3 (the hand-lamp) is granted by the beat's giveItem step immediately before the first of them, as chapter1.js:701 grants it immediately before the same line.",
+      "lines": [
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "(Her hand-lamp, off the hook by the door. Tonight I'm not pretending it's for the light.)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "thinking",
+          "text": "(The job, the way she gave it to me: carry the flame from the village's heart to a lamppost near every home.)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "(So nobody sleeps outside the warmth. She said it the way you'd say “fetch the water.”)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "(Three lamps left before the Kindling Hour. Pond lane first — that's the order.)"
+        }
+      ]
+    },
+    "story.ch1.meet": {
+      "_note": "chapter1.js playMeet (~line 709). REWRITTEN STAGING 2026-08-03, not rewritten lines: this node used to open with a `system` box — “Down on the pond lane a young man was standing under a dark lamp…” — which was written for a version of Chapter One where the player was Vesper for the whole of it and came upon Lake mid-round. He is now the one holding the lighter, so that box was describing the player to himself, and it is gone. Nothing replaces it, because the 2-D script has no narration here either: playMeet opens on Vesper's own first line and so does this.",
+      "lines": [
+        {
+          "speaker": "vesper",
+          "expr": "happy",
+          "text": "Excuse me. You look official — you're holding fire."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "wry",
+          "text": "Are you the lamplighter, or do I keep collecting cats until one talks?"
+        },
+        {
+          "speaker": "lake",
+          "expr": "worried",
+          "text": "Oh. Um. Yes? The first one. Lake. The cats don't talk, to my knowledge."
+        },
+        {
+          "speaker": "vesper",
+          "text": "Vesper. Mapmaker."
+        },
+        {
+          "speaker": "lake",
+          "expr": "wry",
+          "text": "I know. Poppy's told half the square about you."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "Your elder says the Old Gate is your family's business, and I need it open."
+        },
+        {
+          "speaker": "lake",
+          "expr": "surprised",
+          "text": "The— nobody crosses the Gate. It hasn't opened in my lifetime."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "Because this valley isn't on any chart I own. And I walked here anyway."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "wry",
+          "text": "Something on the other side of that gate has been sending me MAIL, Lake. I intend to answer it in person."
+        },
+        {
+          "speaker": "lake",
+          "expr": "worried",
+          "text": "…what?"
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "Ask me after. Three lamps left, and the ring closes before full dark — that's the order she gave me."
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "(One. While this lamp burns, every house on the lane sits inside the village's heart. Dark lamp, dull street.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "…You're apologizing to it."
+        },
+        {
+          "speaker": "lake",
+          "expr": "sad",
+          "text": "It's been a long year for the lane."
+        },
+        {
+          "speaker": "lake",
+          "text": "Two more, up in the square. Walk with me."
+        }
+      ]
+    },
+    "story.ch1.lamps": {
+      "lines": [
+        {
+          "speaker": "lake",
+          "expr": "thinking",
+          "text": "(Two. “Light them like you mean it,” she said, “or they gutter by midnight.”)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "wry",
+          "text": "(She never once explained what the meaning involved. I improvise.)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "weary",
+          "text": "(Three. The ring is closed before full dark, same as every night of my life.)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "happy",
+          "text": "(A lit lamp near every door. Now the Hour can start.)"
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "The HOUR! Gather, neighbors — to the square!"
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "Lake — the flame."
+        }
+      ]
+    },
+    "story.ch1.hush": {
+      "lines": [
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "Neighbors! The year turns!"
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "Three hundred years, and the warmth of every one of them — right here."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "You know the trade. Bring the year's best, and tell it to the flame."
+        },
+        {
+          "speaker": "rowan",
+          "text": "You keep the memory — every minute, yours till you die. The flame keeps the WARMTH, and shines it on all of us, for good."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "Who brings the first memory?"
+        },
+        {
+          "speaker": "poppy",
+          "expr": "laughing",
+          "text": "The flood! The spring flood — the whole town in my bakery, bailing water with soup pots, and LAUGHING, gods help us—"
+        },
+        {
+          "speaker": "pip",
+          "expr": "happy",
+          "text": "This is the BEST night."
+        },
+        {
+          "speaker": "pip",
+          "expr": "scared",
+          "text": "…Why did the music stop?"
+        },
+        {
+          "speaker": "system",
+          "text": "It did not happen slowly. Between one heartbeat and the next, the light of Emberbrook — three hundred years of it — stood up and left."
+        },
+        {
+          "speaker": "system",
+          "text": "Moths came off the Heartlight the way sparks come off a struck flint, and did not climb, and did not go anywhere."
+        },
+        {
+          "speaker": "poppy",
+          "expr": "hollow",
+          "text": "…My stall. My bread. Why doesn't any of it feel like MINE?"
+        },
+        {
+          "speaker": "pip",
+          "expr": "scared",
+          "text": "Mama?"
+        },
+        {
+          "speaker": "mara",
+          "expr": "distressed",
+          "text": "…I'm sorry — whose child— no. I know whose. Mine."
+        },
+        {
+          "speaker": "mara",
+          "expr": "distressed",
+          "text": "I can say it, and it weighs NOTHING— someone's crying. Why is someone crying?"
+        },
+        {
+          "speaker": "pip",
+          "expr": "scared",
+          "text": "Mama. It's me, it's Pip. You KNOW me!"
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "Everyone stay where you are. Names! Say your names, out loud — say them NOW."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "hollow",
+          "text": "…I know my name. It just doesn't feel like mine to say."
+        },
+        {
+          "speaker": "lake",
+          "expr": "worried",
+          "text": "Rowan. Your name is Rowan."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "…You know them? All of them?"
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "Every window in this village. Every name behind it."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "You two. The stranger and the lamplighter. Everyone in this square is a stranger wearing a neighbor's face — except you."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "I got here an HOUR ago."
+        },
+        {
+          "speaker": "lake",
+          "expr": "thinking",
+          "text": "And keepers don't make tellings. We keep our own — Grandmother's one hard rule."
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "…My lighter's still warm. Every other flame in Emberbrook just died — not this one."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "Then we are not finished. Not yet."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "See to them — all of them. They deserve their names back, even borrowed."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "hollow",
+          "text": "Then come find me. I will be with my ledger — every word of it true, and not one of them mine."
+        }
+      ]
+    },
+    "story.ch1.see.poppy": {
+      "lines": [
+        {
+          "speaker": "poppy",
+          "expr": "hollow",
+          "text": "…My stall. My bread. My hands — I know every burn scar on them. Why does none of it feel like MINE?"
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "You're Poppy. You bake."
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "Every morning you burn your thumb on the first tray, and swear you won't tomorrow."
+        },
+        {
+          "speaker": "poppy",
+          "expr": "hollow",
+          "text": "…Do I do it anyway?"
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "Every morning."
+        },
+        {
+          "speaker": "poppy",
+          "expr": "hollow",
+          "text": "The round warm things. I know the word — it just sounds like nobody's when I say it."
+        },
+        {
+          "speaker": "poppy",
+          "expr": "worried",
+          "text": "Say it to me, love."
+        },
+        {
+          "speaker": "vesper",
+          "text": "Honeybuns."
+        },
+        {
+          "speaker": "poppy",
+          "expr": "happy",
+          "text": "HONEYBUNS. Say more words. Both of you."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "I'm writing this down. All of it — who you are, and who you are to each other."
+        },
+        {
+          "speaker": "poppy",
+          "expr": "tender",
+          "text": "Good, love. Write the thumb. The thumb feels true."
+        }
+      ]
+    },
+    "story.ch1.see.mara": {
+      "lines": [
+        {
+          "speaker": "pip",
+          "expr": "scared",
+          "text": "Tell her. TELL her!"
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "Mara. This is Pip. Your son, seven years old."
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "You waited out a snowstorm at the pass for him to be born."
+        },
+        {
+          "speaker": "mara",
+          "expr": "distressed",
+          "text": "I believe you. That is the worst of it — every word lands like a fact about a stranger."
+        },
+        {
+          "speaker": "pip",
+          "expr": "scared",
+          "text": "…You held my hand. TONIGHT. You said I'd remember tonight forever."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "Pip. Look at me. I saw her holding your hand — an hour ago, by the stall."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "I'm a mapmaker. I keep records of true things."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "So I am telling you: it is TRUE."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "It happened, and I have it."
+        },
+        {
+          "speaker": "pip",
+          "text": "…Is it in ink?"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "tender",
+          "text": "It is now."
+        },
+        {
+          "speaker": "mara",
+          "expr": "distressed",
+          "text": "Whoever you two are — whatever you still carry — do not waste it. Please."
+        }
+      ]
+    },
+    "story.ch1.see.finn": {
+      "lines": [
+        {
+          "speaker": "finn",
+          "expr": "hollow",
+          "text": "My name… I can say the word, friend. It just isn't MINE anymore."
+        },
+        {
+          "speaker": "finn",
+          "expr": "hollow",
+          "text": "Hands still know the knots, though. Funny what stays."
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "Finn. You're Finn."
+        },
+        {
+          "speaker": "finn",
+          "expr": "happy",
+          "text": "…Finn. Huh. Short. I like it."
+        },
+        {
+          "speaker": "finn",
+          "expr": "puzzled",
+          "text": "One thing for your book, mapmaker. The fish stopped circlin' the moment it happened."
+        },
+        {
+          "speaker": "finn",
+          "expr": "puzzled",
+          "text": "Like they'd been countin' down to it."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "wry",
+          "text": "Fish don't count."
+        },
+        {
+          "speaker": "finn",
+          "text": "Didn't think so either. This morning I was wrong about a lot of things."
+        }
+      ]
+    },
+    "story.ch1.see.mochi": {
+      "lines": [
+        {
+          "speaker": "vesper",
+          "expr": "surprised",
+          "text": "The cat. The cat is FINE?!"
+        },
+        {
+          "speaker": "system",
+          "text": "(Mochi is purring. Mochi has, if anything, improved.)"
+        },
+        {
+          "speaker": "lake",
+          "text": "Cats don't keep their hearts where moths can reach. My grandmother used to say that."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "annoyed",
+          "text": "Your grandmother said that. Casually. As common knowledge."
+        },
+        {
+          "speaker": "lake",
+          "expr": "wry",
+          "text": "She said a lot of things. She was a lamplighter too."
+        },
+        {
+          "speaker": "system",
+          "text": "(He is watching the north road. He does not usually watch anything.)"
+        }
+      ]
+    },
+    "story.ch1.pact": {
+      "_note": "TWO-PLAYER PENDING — the shipped beat ends on `bothHold: HOLD A — swear it together`, two players holding one button. Single-body staging: the oath is one confirmation and Lake speaks his half. The line that carries it is unchanged.",
+      "lines": [
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "Look at this. The year four-twenty-nine. The flood. A wedding."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "I wrote every line of this page — and tonight I read it like the minutes of somebody else's village."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "Ink keeps facts. It cannot keep what they WEIGHED."
+        },
+        {
+          "speaker": "rowan",
+          "text": "Our flame was first drawn from a shrine deep in the Whisperwood. The Kindling."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "And the old Order kept one creed above all: light does not die — it is only ever carried."
+        },
+        {
+          "speaker": "rowan",
+          "text": "Whatever THAT was tonight, it did not put our flame out, children. It carried it off. Whole."
+        },
+        {
+          "speaker": "lake",
+          "expr": "worried",
+          "text": "Nobody knows the way. The Gate's been shut three hundred years, and the road's gone."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "…I need to show you both something, and I need you to not be strange about it."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "Since I was six years old, I have drawn one clearing. Over and over, in dreams."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "Forty-one drawings of the same clearing."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "I came here because the forty-first had YOUR gate in the corner."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "Girl… that is the Kindling. That is the heart of the Whisperwood."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "It has been CALLING you. Forty-one times it called."
+        },
+        {
+          "speaker": "rowan",
+          "text": "The map does not know fire. The flame does not know the way."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "So it must be both of you, together."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "annoyed",
+          "text": "We met an hour ago."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "Then you have an hour's head start on resenting each other. Marvelous."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "Understand what you carry, boy. That little flame is the last live fire in the valley."
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "I'm scared to walk that road, and I'll walk it. Both of those are true."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "The old rite, then. Two keepers, one flame — say it and mean it, or the Gate will know."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "“What they forgot, we keep. What we keep, we return.”"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "What they forgot, we keep. What we keep, we return."
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "What they forgot, we keep. What we keep, we return."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "…The cat is going with you."
+        },
+        {
+          "speaker": "lake",
+          "expr": "annoyed",
+          "text": "He's not my—"
+        },
+        {
+          "speaker": "rowan",
+          "expr": "happy",
+          "text": "It was not a question, boy."
+        },
+        {
+          "speaker": "rowan",
+          "text": "That cat has been watching the north road all evening. Take the hint."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "Twin sigils, before the Gate. The Lamplighters cut them, in the old days."
+        },
+        {
+          "speaker": "rowan",
+          "expr": "grave",
+          "text": "That road was always meant to be walked by two."
+        }
+      ]
+    },
+    "story.ch1.sigils": {
+      "_note": "TWO-PLAYER PENDING — the shipped climax is two players standing two plates 510 px apart, both held for 1.2 s (chapter1.js:249-262). Single-body staging: Vesper takes the near plate and LAKE WALKS TO THE FAR ONE HIMSELF as a companion. The plates, the hold and the rite are otherwise unchanged, so a second body turns this back into the authored beat by making his walk a hold.",
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "The gate court has no lamp. It is the one place in Emberbrook nobody's warmth was ever asked to reach, and tonight that is no longer a distinction."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "Two plates. Cut into the road, one either side. Worn smooth."
+        },
+        {
+          "speaker": "lake",
+          "expr": "thinking",
+          "text": "The sigils. Grandmother walked me up here once and would not tell me what they were for."
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "I'll take the far one. Stand on yours — and don't step off, whatever it does."
+        },
+        {
+          "speaker": "system",
+          "text": "(He crosses the court and sets both boots on the far plate. The stone under Vesper warms, slowly, like a hand.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "surprised",
+          "text": "It's reading us."
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "Then let it read. What they forgot, we keep."
+        },
+        {
+          "speaker": "system",
+          "text": "Something enormous and patient took its hands off the doors. They came apart at the seam with a sound like a held breath let go."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "wry",
+          "text": "…Three hundred years, and it opens like a garden gate."
+        },
+        {
+          "speaker": "lake",
+          "expr": "sad",
+          "text": "It was never locked, Vesper. It was just shut."
+        }
+      ]
+    },
+    "story.ch1.sendoff": {
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "(Footsteps on the gate road behind them: Poppy, Mara and Pip, come up from the square to see them off.)"
+        },
+        {
+          "speaker": "poppy",
+          "expr": "stern",
+          "text": "Take this, love. Nobody leaves Emberbrook hungry — I'm reliably informed that's MY law."
+        },
+        {
+          "speaker": "poppy",
+          "expr": "tender",
+          "text": "Honeybuns, a dozen. And the tin comes back, love — that's how I'll know you did."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "wry",
+          "text": "It comes back. That's in ink now."
+        },
+        {
+          "speaker": "mara",
+          "expr": "hollow",
+          "text": "Festival ribbon, from the square. There's no festival to fly it — so take it somewhere that's going somewhere."
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "It'll fly, Mara. I'll find it wind."
+        },
+        {
+          "speaker": "pip",
+          "expr": "happy",
+          "text": "Wait! I made you a map, and it goes to the MOON."
+        },
+        {
+          "speaker": "pip",
+          "expr": "happy",
+          "text": "You said not yet. So it's for when."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "tender",
+          "text": "For the record: this is now the best chart I carry."
+        },
+        {
+          "speaker": "mara",
+          "text": "Pip, love. Let them walk."
+        },
+        {
+          "speaker": "system",
+          "text": "Beyond the Old Gate, the road ran grey — soft and wrong, like snow that refused to melt, and the whole of it was moths."
+        },
+        {
+          "speaker": "lake",
+          "expr": "weary",
+          "text": "That's where the light went. Some of it never made it to the sky."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "(I have wanted an unmapped road my whole life. I imagined it differently.)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "My grandmother had a saying for the rounds. The first lamp is the whole job — the rest is only more of it."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "happy",
+          "text": "Then it goes in the book. Come on, partner — first lamp."
+        }
+      ]
+    },
+    "story.ch2.road": {
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "The road left the moths behind somewhere in the second hour, and then the valley simply stopped and went down."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "surprised",
+          "text": "…That is not on the sheet. That is not on ANY sheet."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "surprised",
+          "text": "My north chart says gentle fall to marsh. That is a gorge, and there is a town stacked down the inside of it."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "(Forty years that sheet has been in print. Somebody drew this from a rumour and everybody after copied him.)"
+        },
+        {
+          "speaker": "lake",
+          "text": "Vesper."
+        },
+        {
+          "speaker": "lake",
+          "expr": "worried",
+          "text": "On the far bank. The bow — did you see him bow?"
+        },
+        {
+          "speaker": "mochi",
+          "text": "Mrrp."
+        },
+        {
+          "speaker": "system",
+          "text": "(Mochi is not purring. Mochi has flattened himself against Vesper's boot and is looking at a place on the opposite wall where nothing is standing.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "worried",
+          "text": "…New page. “A hooded man, courteous, on the wrong side of a river.”"
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "Down, then. Somebody in that town moves boats for a living, and we need to be moved."
+        }
+      ]
+    },
+    "story.ch2.arrive": {
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "Dellhollow was built the way a stair is built, and it was loudly alive."
+        },
+        {
+          "speaker": "system",
+          "text": "Queues, gulls, a fish auction. And a hundred lanterns never once lit from a Heartlight."
+        },
+        {
+          "speaker": "lake",
+          "expr": "worried",
+          "text": "There's no flame here. Not one."
+        },
+        {
+          "speaker": "lake",
+          "expr": "surprised",
+          "text": "And they're — fine. They're better than fine."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "wry",
+          "text": "You say that like it's an accusation."
+        },
+        {
+          "speaker": "lake",
+          "expr": "wry",
+          "text": "I say it like a lamplighter who has just found out his whole family's job might have been optional."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "Later. River first. Find whoever tells the water what to do."
+        }
+      ]
+    },
+    "story.ch2.jam": {
+      "lines": [
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Nineteen days, and not one boat through Lock Five. Before you ask: no, and no, and I'll say it again this afternoon."
+        },
+        {
+          "speaker": "vesper",
+          "text": "We only need to go downstream."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "So does the queue. There is a river-eel nesting on the sluice grate — forty feet of tenant with a lease she wrote herself."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "You do not evict a nesting Tenant. You wait for spring, or you learn to walk on water."
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "And if somebody wanted to go tonight?"
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Then somebody would be arguing with my daughter, not with me."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "warm",
+          "text": "Apron's down the steps. She's the wet one."
+        }
+      ]
+    },
+    "story.ch2.maren": {
+      "lines": [
+        {
+          "speaker": "maren",
+          "expr": "happy",
+          "text": "You're the flame people. Word came up the stair before you did."
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "I've been down at that grate every morning for nineteen days."
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "There's a flume behind Lock Five, dry since my father's time. It runs past her."
+        },
+        {
+          "speaker": "lake",
+          "text": "Past a nesting eel."
+        },
+        {
+          "speaker": "maren",
+          "expr": "wry",
+          "text": "OVER her, technically. Ma's said no nine times, which is how I know it works."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "Show us the lock."
+        },
+        {
+          "speaker": "maren",
+          "expr": "happy",
+          "text": "Ha! Finally. Down the deep stairs, and mind the third tread, it lies."
+        }
+      ]
+    },
+    "story.ch2.lockfive": {
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "Lock Five held its water flat and green."
+        },
+        {
+          "speaker": "system",
+          "text": "Under the grate, something as long as the chamber shifted its weight and did not look up."
+        },
+        {
+          "speaker": "lake",
+          "expr": "worried",
+          "text": "…She's looking at us."
+        },
+        {
+          "speaker": "maren",
+          "expr": "wry",
+          "text": "She looks at everyone. She's a landlord."
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "There. The flume mouth, above the head gates."
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "Open both gates and the head drops enough to fill it."
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "One run, four minutes, out the tailwater below her."
+        },
+        {
+          "speaker": "vesper",
+          "text": "And the gates?"
+        },
+        {
+          "speaker": "maren",
+          "expr": "thinking",
+          "text": "Two winches. Ma has the only key to one of them and she sleeps with it. Midnight, then."
+        },
+        {
+          "speaker": "maren",
+          "expr": "wry",
+          "text": "Ma will feed you first. She always feeds people before she tells them no."
+        }
+      ]
+    },
+    "story.ch2.supper": {
+      "lines": [
+        {
+          "speaker": "odessa",
+          "expr": "warm",
+          "text": "Sit. Both of you at the good table, and don't argue, the argument's after."
+        },
+        {
+          "speaker": "system",
+          "text": "(The doorframe by the hearth carries a column of pencil marks. They stop, hard, eleven years up.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "(There is one drawer in this house with a bright keyhole. Everything else is worn dull.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "(That drawer is opened often, and by one person.)"
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Her father drew the north river from memory the night before he went down it."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "He was wrong. That is the whole of the story and I have never once told it shorter."
+        },
+        {
+          "speaker": "lake",
+          "expr": "sad",
+          "text": "…My grandmother kept a rule she never explained either."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Then you know what they are. They're a wall with a person behind it."
+        },
+        {
+          "speaker": "system",
+          "text": "Night came down the gorge while the plates were still on the table, the way it does in a place with walls that high."
+        }
+      ]
+    },
+    "story.ch2.dock": {
+      "lines": [
+        {
+          "speaker": "vesper",
+          "text": "Grid town. Every street named after a number."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "(I grew up on a hill where nothing had a name. That is why I do this.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "sad",
+          "text": "(Somebody should have written it down, so I write everything down.)"
+        },
+        {
+          "speaker": "lake",
+          "text": "You never say where you're from."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "wry",
+          "text": "Nowhere, yet. It's under survey."
+        },
+        {
+          "speaker": "maren",
+          "expr": "wry",
+          "text": "Flame people. Quiet. Ma's asleep and I've got twenty minutes of her being asleep."
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "Lock Five. Now."
+        }
+      ]
+    },
+    "story.ch2.winches": {
+      "_note": "TWO-PLAYER PENDING — the shipped beat is a SIX-HAND set piece: two `bothHold` steps (chapter2.js:1474 the left winch, :1506 the seized widow-winch that only turns when Odessa puts her own hands on the bar). Single-body staging: Lake takes the left bar as a companion and Odessa arrives for the widow-winch exactly as authored, so the beat still needs three pairs of hands and the player owns one of them. Restoring co-op is turning the two narrated pulls back into two holds.",
+      "lines": [
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "Left one first. It's honest."
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "Both of you on the bar — Lake, you're taller, take the top."
+        },
+        {
+          "speaker": "system",
+          "text": "(The left gate came up in six long pulls, and the water changed its mind about which way it was going.)"
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "Right. Now the widow."
+        },
+        {
+          "speaker": "system",
+          "text": "(The second winch did not move. It had not moved in eleven years and it had opinions about tonight.)"
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Move."
+        },
+        {
+          "speaker": "maren",
+          "expr": "surprised",
+          "text": "…Ma."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "I said MOVE, girl, you're on my bar."
+        },
+        {
+          "speaker": "system",
+          "text": "(Three pairs of hands. The widow-winch turned, complaining, and the head gates of Lock Five stood open at midnight for the first time since her husband drowned.)"
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "The flume takes four minutes. Bail with the pumpkin, it's better than it looks."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Go on, then. Before I remember I said no."
+        }
+      ]
+    },
+    "story.ch2.flume": {
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "The Tenant rose alongside as the water took the boat."
+        },
+        {
+          "speaker": "system",
+          "text": "She put one flat eye against the hull, and thought about it."
+        },
+        {
+          "speaker": "lake",
+          "expr": "worried",
+          "text": "Nobody move."
+        },
+        {
+          "speaker": "system",
+          "text": "(She sank without hurry. Whatever the inspection had been about, they had passed it.)"
+        },
+        {
+          "speaker": "system",
+          "text": "Then a mile of roaring black at four minutes flat, and no time at all to be frightened in."
+        }
+      ]
+    },
+    "story.ch2.landing": {
+      "lines": [
+        {
+          "speaker": "system",
+          "text": "Odessa was on the landing before the sun was. Of course she was."
+        },
+        {
+          "speaker": "system",
+          "text": "She had her lantern, a rope's-end over one shoulder — and a bag."
+        },
+        {
+          "speaker": "maren",
+          "expr": "surprised",
+          "text": "…Ma. That's my bag."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Packed a week ago. You were going north the moment that eel gave you an excuse — I've watched it come the way I watch weather."
+        },
+        {
+          "speaker": "maren",
+          "expr": "indignant",
+          "text": "A WEEK? You packed it a week ago and you still said no! Nine times you said no!"
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Ten. And I'd say all ten again."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "warm",
+          "text": "The no was what I owed my own heart. The bag is what I owed yours."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "The boat's yours. It was always going to be yours — I only kept the tar on while it waited."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "Mapmaker. A word."
+        },
+        {
+          "speaker": "system",
+          "text": "(From inside her coat she takes an oilskin tube, worn glossy at the cap.)"
+        },
+        {
+          "speaker": "system",
+          "text": "(She sets it in Vesper's hands, and keeps her own on it a moment longer.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "(The drawer. The one bright keyhole. She went home in the dark, then — and stood in front of eleven years, and turned the key.)"
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "His chart. The north river — every reach and shoal of it, to the grey marshes."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "He drew it from memory, the night before. It's wrong."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "She'll want to fix it. Don't let her do that alone."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "sad",
+          "text": "…I've been correcting a wrong map by myself for eleven years, harbormistress. I don't recommend it to anyone."
+        },
+        {
+          "speaker": "vesper",
+          "expr": "determined",
+          "text": "She won't be alone."
+        },
+        {
+          "speaker": "maren",
+          "expr": "determined",
+          "text": "Ma — I'll send word. Every town with a fish-queue between here and wherever—"
+        },
+        {
+          "speaker": "odessa",
+          "expr": "warm",
+          "text": "You'll send charts. A chart is a daughter's hand on paper."
+        },
+        {
+          "speaker": "odessa",
+          "expr": "grave",
+          "text": "I'll have the charts."
+        },
+        {
+          "speaker": "maren",
+          "expr": "happy",
+          "text": "Right — stations! Flame people amidships."
+        },
+        {
+          "speaker": "maren",
+          "expr": "wry",
+          "text": "Cat wherever the cat decides. I'm not fighting the cat."
+        },
+        {
+          "speaker": "lake",
+          "expr": "determined",
+          "text": "(North, then. By water — the lighter warm against my chest, the old road keeping pace up on the rim.)"
+        },
+        {
+          "speaker": "lake",
+          "expr": "tender",
+          "text": "(Grandmother — the round's gotten strange. But I swear it's still the round.)"
+        },
+        {
+          "speaker": "vesper",
+          "expr": "thinking",
+          "text": "(New page. “Party of three, one boat, one cat. One wrong chart to put right.”)"
+        }
+      ]
+    }
+  }
+}

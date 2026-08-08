@@ -1,0 +1,2496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Town Map Viewer</title>
+<style>
+  :root{
+    --bg:#12151b; --panel:#1a1f28; --panel2:#212734; --line:#2f3947;
+    --ink:#dfe6f0; --dim:#8b97a8; --dimmer:#5d6878;
+    --ok:#7ee08a; --warn:#ffd75e; --err:#ff7a7a; --info:#6fd3ff;
+    --accent:#ffb35a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  #app{display:flex;flex-direction:column;height:100%}
+
+  header{
+    padding:8px 14px; border-bottom:1px solid var(--line); background:var(--panel);
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  }
+  header h1{font-size:15px;margin:0;letter-spacing:.03em}
+  header h1 .town{color:var(--accent)}
+  header .premise{color:var(--dim);font-size:11px;max-width:min(60ch,50vw);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  header .spacer{flex:1}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .seg button{
+    background:transparent;border:0;color:var(--dim);font:inherit;
+    padding:3px 10px;cursor:pointer;border-right:1px solid var(--line);
+  }
+  .seg button:last-child{border-right:0}
+  .seg button.on{background:var(--panel2);color:var(--accent)}
+  .seg button:hover{color:var(--ink)}
+  header input[type=text]{
+    background:var(--bg);border:1px solid var(--line);color:var(--ink);
+    font:inherit;padding:3px 6px;border-radius:4px;width:120px;
+  }
+
+  #body{display:flex;flex:1;min-height:0}
+  #views{flex:1;min-height:0;overflow:auto;padding:10px 12px 30px;display:flex;flex-direction:column}
+  #views2d{flex:none}
+  /* nothing overlays the 3D viewport any more — the POV shot lives in the
+     sidebar, so this panel is free to take the whole column */
+  #view3d{flex:1;min-height:240px;position:relative;border:1px solid var(--line);
+    border-radius:5px;background:#0d1015;overflow:hidden}
+  #view3d[hidden]{display:none}
+  #canvasWrap{position:absolute;inset:0}
+  #canvasWrap canvas{display:block;width:100%;height:100%;touch-action:none}
+  #hint3d{position:absolute;left:10px;bottom:8px;color:var(--dimmer);font-size:11px;
+    pointer-events:none;user-select:none}
+  #err3d{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    padding:24px;color:var(--err);text-align:center;font-size:13px}
+  #err3d[hidden]{display:none}
+  #lmCard{
+    position:absolute;max-width:280px;background:var(--panel);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:5px;padding:8px 10px;font-size:12px;
+    box-shadow:0 6px 20px rgba(0,0,0,.5);z-index:5;
+  }
+  #lmCard[hidden]{display:none}
+  #lmCard h4{margin:0 0 5px;font-size:13px;color:var(--accent)}
+  #lmCard dl{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin:0}
+  #lmCard dt{color:var(--dim)}
+  #lmCard dd{margin:0}
+  #lmCard .close{position:absolute;top:4px;right:7px;cursor:pointer;color:var(--dim);
+    background:none;border:0;font:inherit;font-size:14px;line-height:1}
+  #lmCard .close:hover{color:var(--ink)}
+  #lmCard .note{color:var(--dim);margin-top:5px;border-top:1px dotted #232b36;padding-top:4px}
+
+  /* camera list strip */
+  #camStrip{
+    position:absolute;left:8px;top:8px;display:flex;flex-wrap:wrap;gap:4px;
+    align-items:center;font-size:11px;color:var(--dim);z-index:4;max-width:60%;
+  }
+  #camStrip .cambtn{
+    background:rgba(26,31,40,.86);border:1px solid var(--line);color:var(--dim);
+    font:inherit;padding:2px 7px;border-radius:3px;cursor:pointer;
+  }
+  #camStrip .cambtn:hover{color:var(--ink);border-color:#9ad0ff}
+  #camStrip .cambtn.on{color:#12151b;background:var(--accent);border-color:var(--accent)}
+
+  /* POV panel — strict 1344:768 shot preview, docked at the TOP of the sidebar.
+     It owns its own small WebGL canvas (a second renderer over the SAME scene),
+     so it no longer overlays the 3D viewport and needs no scissor gymnastics. */
+  #povPanel{
+    position:sticky;top:0;z-index:4;
+    background:var(--panel);border-bottom:1px solid var(--line);
+    box-shadow:0 6px 16px rgba(0,0,0,.4);
+  }
+  #povPanel[hidden]{display:none}
+  #povHead{
+    position:relative;padding:5px 26px 5px 10px;font-size:11px;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);display:flex;gap:6px 8px;align-items:center;
+    flex-wrap:wrap;line-height:1.5;
+  }
+  #povHead .povmeta{color:var(--dimmer)}
+  #povHead .close{
+    position:absolute;top:3px;right:6px;cursor:pointer;color:var(--dim);
+    background:none;border:0;font:inherit;font-size:14px;line-height:1;
+  }
+  #povHead .close:hover{color:var(--ink)}
+  #povHead .seg button{padding:1px 8px;font-size:11px}
+  /* strict 1344:768 at whatever width the sidebar gives us */
+  #povBody{position:relative;width:100%;aspect-ratio:1344/768;background:#0d1015}
+  #povBody canvas{display:block;width:100%;height:100%}
+  #side{
+    width:420px;flex:none;border-left:1px solid var(--line);background:var(--panel);
+    overflow:auto;padding:0 0 30px;
+  }
+
+  .viewblock{margin-bottom:14px}
+  .viewblock h2{
+    font-size:11px;margin:0 0 4px;color:var(--dim);text-transform:uppercase;
+    letter-spacing:.12em;font-weight:600;
+  }
+  .viewblock h2 span{color:var(--dimmer);text-transform:none;letter-spacing:0;font-weight:400}
+  svg.map{width:100%;height:auto;display:block;background:#0d1015;border:1px solid var(--line);border-radius:5px}
+
+  /* --- svg element styling --- */
+  .parcel rect{cursor:pointer}
+  .parcel:hover rect{fill-opacity:.16;stroke-opacity:1}
+  .parcel text{pointer-events:none;user-select:none}
+  .lm text{pointer-events:none;user-select:none}
+  .band text{pointer-events:none}
+  .edgelabel{pointer-events:none}
+
+  /* --- side panel --- */
+  section{border-bottom:1px solid var(--line);padding:10px 12px}
+  section > h3{
+    margin:0 0 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--dim);font-weight:600;
+  }
+  .muted{color:var(--dim)}
+  .dimmer{color:var(--dimmer)}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin-bottom:8px}
+  .kv dt{color:var(--dim)}
+  .kv dd{margin:0}
+  ul.tight{list-style:none;margin:0 0 8px;padding:0}
+  ul.tight li{padding:1px 0;border-bottom:1px dotted #232b36}
+  ul.tight li:last-child{border-bottom:0}
+  .pill{
+    display:inline-block;padding:0 5px;border-radius:3px;font-size:10px;
+    border:1px solid currentColor;vertical-align:1px;
+  }
+  .sev-err{color:var(--err)} .sev-warn{color:var(--warn)}
+  .sev-info{color:var(--info)} .sev-ok{color:var(--ok)}
+  .swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:0px}
+  button.act{
+    background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+    font:inherit;padding:5px 10px;border-radius:4px;cursor:pointer;
+  }
+  button.act:hover{border-color:var(--accent);color:var(--accent)}
+  .parcelrow{
+    display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:4px;cursor:pointer;
+  }
+  .parcelrow:hover{background:var(--panel2)}
+  .parcelrow.on{background:var(--panel2);outline:1px solid var(--accent)}
+  textarea.fallback{
+    width:100%;height:190px;background:#0d1015;color:var(--ink);border:1px solid var(--line);
+    border-radius:4px;font:11px/1.4 ui-monospace,Menlo,monospace;padding:6px;margin-top:6px;
+  }
+  details summary{cursor:pointer;color:var(--dim);outline:none}
+  details summary:hover{color:var(--ink)}
+  .legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:11px;color:var(--dim)}
+  .legend .item{display:flex;align-items:center;gap:5px}
+  .legend svg{flex:none}
+  .err-box{color:var(--err);padding:20px;font-size:14px}
+  code{background:#0d1015;padding:0 4px;border-radius:3px;color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>townmap <span class="town" id="townName">…</span></h1>
+    <span class="premise" id="premise"></span>
+    <span class="spacer"></span>
+    <label class="muted">town <input type="text" id="townInput" spellcheck="false"></label>
+    <div class="seg" id="viewSeg">
+      <button data-view="3d">3D</button>
+      <button data-view="elevation">elevation</button>
+      <button data-view="plan">plan</button>
+      <button data-view="both">both</button>
+    </div>
+    <div class="seg">
+      <button id="btnLabels" class="on">labels</button>
+      <button id="btnFrustums" class="on">frustums</button>
+      <button id="btnReload">reload</button>
+    </div>
+  </header>
+  <div id="body">
+    <div id="views">
+      <!-- 2D projections: innerHTML is rebuilt on every render() -->
+      <div id="views2d"></div>
+      <!-- 3D view: persistent, never rebuilt (it owns a WebGL context) -->
+      <div id="view3d" hidden>
+        <div id="canvasWrap"></div>
+        <div id="camStrip"></div>
+        <div id="lmCard" hidden></div>
+        <div id="hint3d">left-drag orbit &middot; wheel zoom &middot; right- or shift-drag pan
+          &middot; click a pin, a parcel box, or a camera gizmo</div>
+        <div id="err3d" hidden></div>
+      </div>
+    </div>
+    <div id="side">
+      <!-- POV shot preview: persistent (it owns a WebGL context), so it lives
+           OUTSIDE #sideBody, which is rebuilt wholesale on every render() -->
+      <div id="povPanel" hidden>
+        <div id="povHead"></div>
+        <div id="povBody"></div>
+      </div>
+      <div id="sideBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- vendored locally; no CDNs. GLTFLoader is deliberately not needed: the
+     town JSON is the model, so nothing is loaded through Blender or GLB. -->
+<script src="../lib/three.min.js"></script>
+<script>
+"use strict";
+/* ============================================================================
+   townmap viewer — dev planning tool.
+   Loads public/townmap/<town>.map.json and renders elevation + plan SVG
+   projections, derives per-parcel scene contracts, and validates the graph.
+   Town-agnostic: everything is driven by the JSON. No external deps.
+   ========================================================================== */
+
+// ---------------------------------------------------------------- constants
+const DISTRICT_COLORS = [
+  "#ff9f5a", "#6fd3ff", "#b48cff", "#7ee08a",
+  "#ffd75e", "#ff7a9c", "#59d3c0", "#c9a06a", "#9fb4ff", "#ffa0d8"
+];
+// Walk paths are the map's main content now, so every edge style is drawn a
+// step heavier than it was when edges were mere connectivity hints.
+const EDGE_STYLE = {
+  road : { stroke:"#a8bcd4", width:4.4, dash:null,      label:"road"  },
+  deck : { stroke:"#8ba0b8", width:2.8, dash:null,      label:"deck"  },
+  stairs:{ stroke:"#ffd75e", width:2.8, dash:"6 4.5",   label:"stairs", ticks:true },
+  path : { stroke:"#7ee08a", width:2.6, dash:"2 4",     label:"path"  },
+  bridge:{ stroke:"#d8b06a", width:3.2, dash:null,      label:"bridge" },
+  ladder:{ stroke:"#ffb35e", width:2.2, dash:"2 2",     label:"ladder", ticks:true },
+  winch: { stroke:"#ff7a9c", width:1.4, dash:"2 3",     label:"winch (non-walkable)", cable:true },
+};
+const EDGE_FALLBACK = { stroke:"#5d6878", width:2.0, dash:"3 3", label:"?" };
+
+// Stair budget, single source of the camera convention (the Blender massing tool that mirrored it is retired).
+const TREAD_RISE_AIM = 0.4;   // implied tread count = ceil(rise / this)
+const MAX_TREAD_RISE = 0.5;   // hard rule that the implied count must satisfy
+
+// Scenes are non-overlapping vignettes; parcels should be separated by a
+// deliberate gutter (implied off-screen travel) rather than sitting flush.
+const MIN_GUTTER = 2.0;
+
+// canvas geometry (logical units; svg scales via viewBox)
+const CW = 1280, CH = 520;
+const PAD = { l:78, r:34, t:26, b:40 };
+
+// ------------------------------------------------------------------- state
+const state = {
+  town: "dellhollow",
+  map: null,
+  view: "3d",       // the 3D shot-review view is the main panel
+  selected: null,   // parcel id — shared by all three views + the POV panel
+  labels: true,
+  frustums: true,
+  loadError: null,
+};
+
+// ----------------------------------------------------------------- helpers
+const esc = s => String(s == null ? "" : s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const num = n => (Math.round(n * 100) / 100);
+const posStr = p => Array.isArray(p) ? `[${p.map(num).join(", ")}]` : "[?]";
+
+function districtColor(map, districtId){
+  const list = map.districts || [];
+  const i = list.findIndex(d => d.id === districtId);
+  if (i >= 0) return DISTRICT_COLORS[i % DISTRICT_COLORS.length];
+  // unknown district: stable hash so it still gets a colour
+  let h = 0; for (const c of String(districtId)) h = (h * 31 + c.charCodeAt(0)) | 0;
+  return DISTRICT_COLORS[Math.abs(h) % DISTRICT_COLORS.length];
+}
+function edgeStyle(type){ return EDGE_STYLE[type] || EDGE_FALLBACK; }
+
+/* ============================================================================
+   LANDMARK TAXONOMY — what a landmark IS, not just where it sits.
+
+     structure  a built thing; the classic pin. May be `enterable` with an
+                `interiorSceneKey`, which implies a SEPARATE interior scene.
+     area       a region, not a point: carries `extent` (radius in world
+                units) and draws as a ground disc rather than a pin.
+     prop       a small dressing-scale object; a dot, labelled on demand only.
+     portal     a scene door — the entry/exit points the walk paths hang off.
+     dressing   depicted, never built or entered; ghosted, needs no parcel.
+
+   Maps authored before the taxonomy carry no `class` at all, so the default
+   is "structure": every old pin keeps rendering exactly as it did.
+   ========================================================================== */
+const LM_CLASSES = ["portal", "area", "structure", "prop", "dressing"];
+const LM_CLASS_ORDER = LM_CLASSES;      // brief/panel grouping order
+const LM_CLASS_LABEL = {
+  portal:"portals", area:"areas", structure:"structures",
+  prop:"props", dressing:"dressing",
+};
+const AREA_DEFAULT_EXTENT = 2.5;
+const PORTAL_EDGE_SLACK = 3.0;          // a portal should sit near a parcel face
+
+function lmClass(l){
+  const c = String((l && l.class) || "").toLowerCase();
+  if (LM_CLASSES.includes(c)) return c;
+  if (!c && l && l.kind === "dressing") return "dressing";   // pre-taxonomy hint
+  return "structure";
+}
+function lmExtent(l){
+  const e = Number(l && l.extent);
+  return isFinite(e) && e > 0 ? e : AREA_DEFAULT_EXTENT;
+}
+function isEnterable(l){ return !!(l && l.enterable); }
+/** Landmarks grouped in the canonical presentation order, empties dropped. */
+function groupByClass(landmarks){
+  return LM_CLASS_ORDER
+    .map(k => ({ klass:k, label:LM_CLASS_LABEL[k],
+                 items:(landmarks || []).filter(l => lmClass(l) === k) }))
+    .filter(g => g.items.length);
+}
+
+/* ============================================================================
+   WALK PATHS — the first-class layer.
+
+   An edge is no longer an abstract "these two things connect": it is the
+   DESIGNED WALK between them. `edges[].waypoints` holds intermediate control
+   points (S-bends, switchbacks, boardwalk curves) between the two landmark
+   positions. The polyline (from-pos -> waypoints -> to-pos) is the contract
+   handed to the scene builder; the viewer only *smooths* it for display and
+   never rewrites it. Edges without waypoints stay plain two-point runs, so
+   older maps keep rendering exactly as before.
+   ========================================================================== */
+
+/** Full authored polyline of an edge in town space, or null if it dangles. */
+function edgePoints(e, lmById){
+  const a = lmById.get(e.from), b = lmById.get(e.to);
+  if (!a || !b) return null;
+  const mid = Array.isArray(e.waypoints)
+    ? e.waypoints.filter(w => Array.isArray(w) && w.length >= 3)
+                 .map(w => [+w[0], +w[1], +w[2]])
+    : [];
+  return [a.pos.slice(0, 3), ...mid, b.pos.slice(0, 3)];
+}
+function edgeWaypointCount(e){
+  return Array.isArray(e.waypoints) ? e.waypoints.length : 0;
+}
+
+/**
+ * Per-segment and whole-path measurements of a walk polyline. `worst` is the
+ * steepest segment in degrees — the number that decides whether a flight of
+ * stairs actually fits, now that a path can switchback instead of running
+ * straight at whatever angle its endpoints imply.
+ */
+function polylineStats(pts){
+  let rise = 0, run = 0, len = 0, worst = 0, worstAt = -1;
+  const segs = [];
+  for (let i = 0; i + 1 < pts.length; i++){
+    const p = pts[i], q = pts[i + 1];
+    const h = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    const dz = Math.abs(q[2] - p[2]);
+    const ang = h > 1e-9 ? Math.atan2(dz, h) * 180 / Math.PI : (dz > 1e-9 ? 90 : 0);
+    rise += dz; run += h; len += Math.hypot(h, dz);
+    segs.push({ i, rise: dz, run: h, angle: ang });
+    if (ang > worst){ worst = ang; worstAt = i; }
+  }
+  return { rise, run, len, worst, worstAt, segs, count: segs.length };
+}
+
+/** Slab test: does the segment p->q intersect the axis-aligned box b? */
+function segmentHitsBox(p, q, b){
+  let t0 = 0, t1 = 1;
+  for (let i = 0; i < 3; i++){
+    const d = q[i] - p[i];
+    if (Math.abs(d) < 1e-12){
+      if (p[i] < b.min[i] || p[i] > b.max[i]) return false;
+      continue;
+    }
+    let ta = (b.min[i] - p[i]) / d, tb = (b.max[i] - p[i]) / d;
+    if (ta > tb){ const t = ta; ta = tb; tb = t; }
+    if (ta > t0) t0 = ta;
+    if (tb < t1) t1 = tb;
+    if (t0 > t1) return false;
+  }
+  return true;
+}
+function polylineHitsBox(pts, b){
+  for (let i = 0; i + 1 < pts.length; i++)
+    if (segmentHitsBox(pts[i], pts[i + 1], b)) return true;
+  return false;
+}
+
+/**
+ * Smoothed 2D path data for an SVG polyline: quadratic through the midpoints,
+ * which rounds every corner without ever leaving the corridor the control
+ * points describe. Two-point runs stay dead straight.
+ */
+/**
+ * Material-aware path rendering: timber construction (stairs, decks, ladders)
+ * is SEGMENTED — straight legs, hard corners, a landing at every waypoint.
+ * Curves are reserved for earth types (road, path). The authored waypoints are
+ * identical either way; only the display interpretation differs, and at scene
+ * build segmented waypoints become landing platforms.
+ */
+const SEGMENTED_TYPES = { stairs: 1, deck: 1, ladder: 1, bridge: 1 };
+
+/** Straight-legged SVG path (timber types). */
+function polyPathD(pts){
+  let d = `M ${num(pts[0][0])} ${num(pts[0][1])}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${num(pts[i][0])} ${num(pts[i][1])}`;
+  return d;
+}
+
+/** Dense linear sample of a straight-legged path, for tick placement. */
+function polySample(pts, perSeg){
+  const out = [];
+  for (let i = 0; i < pts.length - 1; i++)
+    for (let t = 0; t < perSeg; t++){
+      const k = t / perSeg;
+      out.push([pts[i][0] + (pts[i+1][0] - pts[i][0]) * k,
+                pts[i][1] + (pts[i+1][1] - pts[i][1]) * k]);
+    }
+  out.push(pts[pts.length - 1]);
+  return out;
+}
+
+function smoothPathD(pts){
+  if (!pts || pts.length < 2) return "";
+  const P = pts.map(p => [num(p[0]), num(p[1])]);
+  if (P.length === 2) return `M ${P[0][0]} ${P[0][1]} L ${P[1][0]} ${P[1][1]}`;
+  let d = `M ${P[0][0]} ${P[0][1]}`;
+  for (let i = 1; i < P.length - 1; i++){
+    const end = (i === P.length - 2)
+      ? P[P.length - 1]
+      : [num((P[i][0] + P[i + 1][0]) / 2), num((P[i][1] + P[i + 1][1]) / 2)];
+    d += ` Q ${P[i][0]} ${P[i][1]} ${end[0]} ${end[1]}`;
+  }
+  return d;
+}
+
+/** Dense sample of the same quadratic smoothing, for tick placement. */
+function smoothSample(pts, perSeg){
+  if (!pts || pts.length < 2) return [];
+  const n = perSeg || 8;
+  if (pts.length === 2){
+    const out = [];
+    for (let s = 0; s <= n; s++){
+      const t = s / n;
+      out.push([pts[0][0] + (pts[1][0] - pts[0][0]) * t,
+                pts[0][1] + (pts[1][1] - pts[0][1]) * t]);
+    }
+    return out;
+  }
+  const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const out = [pts[0].slice()];
+  let from = pts[0];
+  for (let i = 1; i < pts.length - 1; i++){
+    const ctrl = pts[i];
+    const to = (i === pts.length - 2) ? pts[pts.length - 1] : mid(pts[i], pts[i + 1]);
+    for (let s = 1; s <= n; s++){
+      const t = s / n, u = 1 - t;
+      out.push([u*u*from[0] + 2*u*t*ctrl[0] + t*t*to[0],
+                u*u*from[1] + 2*u*t*ctrl[1] + t*t*to[1]]);
+    }
+    from = to;
+  }
+  return out;
+}
+
+// ============================================================== derivation
+// NOTE: mirrored 1:1 by tools/townmap_derive.mjs (headless unit-check).
+
+function inBounds(pos, b){
+  return pos[0] >= b.min[0] && pos[0] <= b.max[0]
+      && pos[1] >= b.min[1] && pos[1] <= b.max[1]
+      && pos[2] >= b.min[2] && pos[2] <= b.max[2];
+}
+function parcelsContaining(lm, parcels){
+  return parcels.filter(p => inBounds(lm.pos, p.bounds));
+}
+
+// --- parcel box relationships -------------------------------------------
+// Scenes are non-overlapping vignettes by default. Bounds that overlap (or sit
+// flush with no gutter) imply shared geometry across a cut, which is exactly
+// what the vignette model avoids: a gutter is deliberate off-screen travel.
+
+/** Per-axis gap between two boxes; 0 on an axis means they overlap there. */
+function boxSeparation(a, b){
+  return [0,1,2].map(i => Math.max(0, a.min[i] - b.max[i], b.min[i] - a.max[i]));
+}
+/** Signed overlap extent per axis; negative means a gap on that axis. */
+function boxOverlapExtents(a, b){
+  return [0,1,2].map(i => Math.min(a.max[i], b.max[i]) - Math.max(a.min[i], b.min[i]));
+}
+/** Strict overlap: shared volume. Merely touching is a zero-gutter case. */
+function boxesOverlap(a, b){ return boxOverlapExtents(a, b).every(e => e > 0); }
+/** Widest separating gap; 0 when the boxes overlap or touch exactly. */
+function boxGutter(a, b){ return Math.max(...boxSeparation(a, b)); }
+function overlapBox(a, b){
+  const min = [0,1,2].map(i => Math.max(a.min[i], b.min[i]));
+  const max = [0,1,2].map(i => Math.min(a.max[i], b.max[i]));
+  return { min, max, size: [0,1,2].map(i => max[i] - min[i]) };
+}
+
+const COMPASS = ["east","north-east","north","north-west",
+                 "west","south-west","south","south-east"];
+/** Compass-ish bearing from one point to another (+x = east, +y = north). */
+function compassDir(from, to){
+  const dx = to[0] - from[0], dy = to[1] - from[1], dz = to[2] - from[2];
+  const horiz = Math.hypot(dx, dy);
+  let dir;
+  if (horiz < 1e-6) dir = "in place";
+  else {
+    let ang = Math.atan2(dy, dx) * 180 / Math.PI;
+    if (ang < 0) ang += 360;
+    dir = COMPASS[Math.round(ang / 45) % 8];
+  }
+  if (Math.abs(dz) > 0.5) dir += (dz > 0 ? " and up" : " and down");
+  return dir;
+}
+function boundsCentre(b){ return [0,1,2].map(i => (b.min[i] + b.max[i]) / 2); }
+
+/** Per-parcel scene contract: contents, internal edges, derived exits. */
+function deriveContracts(map){
+  const parcels  = map.parcels  || [];
+  const edges    = map.edges    || [];
+  const lmById   = new Map((map.landmarks || []).map(l => [l.id, l]));
+
+  const contentsOf = new Map(parcels.map(p => [p.id, []]));
+  for (const lm of (map.landmarks || []))
+    for (const p of parcelsContaining(lm, parcels)) contentsOf.get(p.id).push(lm);
+
+  const contracts = parcels.map(p => {
+    const landmarks = contentsOf.get(p.id);
+    const insideIds = new Set(landmarks.map(l => l.id));
+    const internalEdges = [], derivedExits = [];
+
+    for (const e of edges){
+      const a = insideIds.has(e.from), b = insideIds.has(e.to);
+      if (a && b){ internalEdges.push(e); continue; }
+      if (a === b) continue;                      // neither endpoint inside
+      const nearId = a ? e.from : e.to;
+      const farId  = a ? e.to   : e.from;
+      const far    = lmById.get(farId) || null;
+      const neighbours = far
+        ? parcelsContaining(far, parcels).filter(q => q.id !== p.id)
+        : [];
+      derivedExits.push({
+        edge:e, type:e.type, nearId, near:lmById.get(nearId) || null, farId, far, neighbours,
+        // bearing from this parcel's centre out toward the far endpoint
+        direction: far ? compassDir(boundsCentre(p.bounds), far.pos) : "unknown",
+        // optional: matte sightline — depict the far element as distant scenery
+        handoff: e.handoff === "explicit",
+        handoffFrom: e.handoffFrom || null,
+        warning: !far
+          ? `dangling edge endpoint "${farId}" — no such landmark`
+          : (neighbours.length === 0
+              ? `UNASSIGNED — "${far.name}" is in no other parcel`
+              : null),
+      });
+    }
+    const townExits = (map.exits || []).filter(x => insideIds.has(x.at));
+    return { parcel:p, landmarks, internalEdges, derivedExits, townExits };
+  });
+
+  return { contracts, contentsOf, lmById };
+}
+
+/** Graph validation. Reports; never mutates the source data. */
+function validate(map){
+  const parcels = map.parcels || [], edges = map.edges || [];
+  const lmById = new Map((map.landmarks || []).map(l => [l.id, l]));
+  const { contracts } = deriveContracts(map);
+
+  // Set dressing is deliberately parcel-less: a "Lock Four, glimpsed upstream"
+  // marker exists to be depicted from somewhere else, not to be built. It is
+  // reported for information only, never as an error.
+  const orphanLandmarks = [], multiParcelLandmarks = [], dressingNoParcel = [];
+  for (const lm of (map.landmarks || [])){
+    const ps = parcelsContaining(lm, parcels);
+    if (ps.length === 0){
+      if (lm.kind === "dressing") dressingNoParcel.push(lm);
+      else orphanLandmarks.push(lm);
+    }
+    else if (ps.length > 1) multiParcelLandmarks.push({ lm, parcels: ps });
+  }
+  const danglingEdges = edges.filter(e => !lmById.has(e.from) || !lmById.has(e.to));
+  const floatingEdges = edges.filter(e => {
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    if (!a || !b) return false;                        // covered by dangling
+    return parcelsContaining(a, parcels).length === 0
+        && parcelsContaining(b, parcels).length === 0;
+  });
+  const parcelsNoExits = contracts.filter(c => c.derivedExits.length === 0 && !c.parcel.transit).map(c => c.parcel);  // transit vignettes own no landmarks/exits BY DESIGN (canon 2026-07-29)
+  const flatStairs = edges.filter(e => {
+    if (e.type !== "stairs") return false;
+    const pts = edgePoints(e, lmById);
+    return pts && polylineStats(pts).rise === 0;
+  });
+
+  // Climbability is a pure data check, now measured on the WALK POLYLINE
+  // rather than on the straight line between endpoints: a switchbacked flight
+  // is climbable even when its endpoints are nearly stacked. A stairs edge is
+  // OK when EVERY segment's rise <= its horizontal run (<= 45 deg); the worst
+  // segment is what gets reported, alongside the whole-flight totals.
+  const steepStairs = [];
+  for (const e of edges){
+    if (e.type !== "stairs") continue;
+    const pts = edgePoints(e, lmById);
+    if (!pts) continue;
+    const st = polylineStats(pts);
+    if (st.worst > 45 + 1e-9){
+      steepStairs.push({ edge:e, pts, stats:st,
+        rise: st.rise, run: st.run, slope: st.worst,
+        seg: st.worstAt, segs: st.count,
+        worstSeg: st.segs[st.worstAt] || null,
+        treads: Math.max(1, Math.ceil(st.rise / TREAD_RISE_AIM)) });
+    }
+  }
+
+  // --- walk paths that cut through a parcel they neither start nor end in --
+  // Endpoints still decide which parcel an edge belongs to (and what its exits
+  // are), but a waypointed path can now wander: a polyline that slices through
+  // a third parcel implies geometry in a scene that never asked for it.
+  const transitEdges = [];
+  for (const e of edges){
+    const pts = edgePoints(e, lmById);
+    if (!pts) continue;
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    const own = new Set([...parcelsContaining(a, parcels),
+                         ...parcelsContaining(b, parcels)].map(p => p.id));
+    const through = parcels.filter(p => !own.has(p.id) && polylineHitsBox(pts, p.bounds));
+    if (through.length) transitEdges.push({ edge:e, pts, through });
+  }
+  // --- parcel box hygiene -----------------------------------------------
+  const parcelOverlaps = [], tightGutters = [];
+  for (let i = 0; i < parcels.length; i++){
+    for (let j = i + 1; j < parcels.length; j++){
+      const a = parcels[i], b = parcels[j];
+      if (boxesOverlap(a.bounds, b.bounds)){
+        parcelOverlaps.push({ a, b, box: overlapBox(a.bounds, b.bounds) });
+      } else {
+        const g = boxGutter(a.bounds, b.bounds);
+        if (g < MIN_GUTTER) tightGutters.push({ a, b, gutter: g });
+      }
+    }
+  }
+
+  // --- sightlines (optional edge fields) ---------------------------------
+  // edge.handoff === "explicit" marks a MATTE SIGHTLINE: the downstream scene
+  // depicts the upstream element as distant NON-PLAYABLE imagery only (a matte
+  // or billboard placed before the backdrop render, never exported to
+  // scene.glb, no collision, no occlusion). It is NOT shared geometry and NOT
+  // a build-order dependency; the scenes stay independently buildable.
+  // edge.handoffFrom, when present, names the depicted element's parcel.
+  const handoffEdges = [];
+  for (const e of edges){
+    if (e.handoff !== "explicit") continue;
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    const pa = a ? parcelsContaining(a, parcels) : [];
+    const pb = b ? parcelsContaining(b, parcels) : [];
+    const involved = [...new Set([...pa, ...pb])];
+    const upstream = e.handoffFrom
+      ? (parcels.find(p => p.id === e.handoffFrom) || null)
+      : null;
+    handoffEdges.push({
+      edge:e, involved, upstream,
+      pair: involved.map(p => p.id).join(" <-> ") || "(no parcels)",
+      depicted: upstream ? upstream.id : "either side (no handoffFrom given)",
+      badUpstream: !!(e.handoffFrom && !upstream),
+    });
+  }
+
+  const districtIds = new Set((map.districts || []).map(d => d.id));
+  const unknownDistricts = (map.landmarks || []).filter(l => l.district && !districtIds.has(l.district));
+  const badExitAnchors = (map.exits || []).filter(x => !lmById.has(x.at));
+  const parcelIds = new Set(parcels.map(p => p.id));
+  const badStartRevealed = (((map.mapDiscovery || {}).startRevealed) || []).filter(id => !parcelIds.has(id));
+
+  return { orphanLandmarks, dressingNoParcel, multiParcelLandmarks, danglingEdges,
+           floatingEdges, parcelsNoExits, flatStairs, steepStairs, transitEdges,
+           unknownDistricts, badExitAnchors, badStartRevealed,
+           parcelOverlaps, tightGutters, handoffEdges };
+}
+
+// ============================================================== projection
+/**
+ * Build a world->pixel projector for one of the two views.
+ *   elevation: horizontal = x (along gorge), vertical = z (height, up)
+ *   plan:      horizontal = x (along gorge), vertical = y (cliff 0 -> river)
+ * Uniform scale on both axes so 1u reads the same in either direction.
+ */
+function makeProjector(map, view){
+  const hi = 0;                       // horizontal axis is always world x
+  const vi = view === "elevation" ? 2 : 1;
+  const flipV = view === "elevation"; // z grows up on screen
+
+  let hmin = Infinity, hmax = -Infinity, vmin = Infinity, vmax = -Infinity;
+  const eat = (h, v) => {
+    if (h < hmin) hmin = h; if (h > hmax) hmax = h;
+    if (v < vmin) vmin = v; if (v > vmax) vmax = v;
+  };
+  for (const l of (map.landmarks || [])) eat(l.pos[hi], l.pos[vi]);
+  for (const p of (map.parcels || [])){
+    eat(p.bounds.min[hi], p.bounds.min[vi]);
+    eat(p.bounds.max[hi], p.bounds.max[vi]);
+  }
+  if (view === "elevation") for (const d of (map.districts || [])) eat(hmin, d.z);
+  if (!isFinite(hmin)){ hmin = 0; hmax = 10; vmin = 0; vmax = 10; }
+
+  const m = 3;                                    // world-unit margin
+  hmin -= m; hmax += m; vmin -= m; vmax += m;
+  const spanH = Math.max(hmax - hmin, 1e-6), spanV = Math.max(vmax - vmin, 1e-6);
+  const availW = CW - PAD.l - PAD.r, availH = CH - PAD.t - PAD.b;
+  const s = Math.min(availW / spanH, availH / spanV);
+  const offX = PAD.l + (availW - spanH * s) / 2;
+  const offY = PAD.t + (availH - spanV * s) / 2;
+
+  const X = h => offX + (h - hmin) * s;
+  const Y = v => flipV ? (offY + (vmax - v) * s) : (offY + (v - vmin) * s);
+  return {
+    view, hi, vi, s, X, Y,
+    px : pos => [X(pos[hi]), Y(pos[vi])],
+    rect: b => {                                  // project a 3D box to a 2D rect
+      const x1 = X(b.min[hi]), x2 = X(b.max[hi]);
+      const y1 = Y(b.min[vi]), y2 = Y(b.max[vi]);
+      return { x:Math.min(x1,x2), y:Math.min(y1,y2),
+               w:Math.abs(x2-x1), h:Math.abs(y2-y1) };
+    },
+    domain: { hmin, hmax, vmin, vmax },
+  };
+}
+
+// ============================================================== svg drawing
+
+/** Small shape hinting at a landmark's kind, drawn centred on (0,0). */
+function kindGlyph(kind, color, solid){
+  const fill   = solid ? color : "none";
+  const dash   = solid ? "" : ` stroke-dasharray="2 1.6"`;
+  const a = ` fill="${fill}" stroke="${color}" stroke-width="1.4"${dash}`;
+  const k = String(kind || "");
+  if (k === "gate")
+    return `<path d="M -5 5 L -5 -1 A 5 5 0 0 1 5 -1 L 5 5"${a}/>`;
+  if (k === "plaza")
+    return `<path d="M 0 -6 L 7 0 L 0 6 L -7 0 Z"${a}/>`;
+  if (k === "stalls")
+    return `<path d="M -6 4 L 0 -5 L 6 4 Z"${a}/><path d="M -6 4 L 6 4" stroke="${color}" stroke-width="1.4"/>`;
+  if (k === "dock" || k === "stairfoot" || k === "stairhead")
+    return `<rect x="-7" y="-2.5" width="14" height="5" rx="1"${a}/>`
+         + (k === "stairhead" ? `<path d="M -4 -2.5 L -4 -6 L 4 -6" stroke="${color}" stroke-width="1.2" fill="none"/>` : "")
+         + (k === "stairfoot" ? `<path d="M -4 2.5 L -4 6 L 4 6" stroke="${color}" stroke-width="1.2" fill="none"/>` : "");
+  if (k === "post")
+    return `<path d="M 0 6 L 0 -2" stroke="${color}" stroke-width="1.4"/><circle cx="0" cy="-4" r="3.2"${a}/>`;
+  if (k === "machine")
+    return `<path d="M -5 -3 L 0 -6 L 5 -3 L 5 3 L 0 6 L -5 3 Z"${a}/>`;
+  if (k === "lock")
+    return `<rect x="-7" y="-5" width="3.5" height="10"${a}/><rect x="3.5" y="-5" width="3.5" height="10"${a}/>`;
+  if (k === "prop")
+    return `<rect x="-2.5" y="-2.5" width="5" height="5"${a}/>`;
+  if (k === "dressing")
+    return `<rect x="-5" y="-4" width="10" height="8" fill="none" stroke="${color}" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.8"/>`;
+  if (k === "building-cluster")
+    return `<rect x="-6.5" y="-4" width="7" height="7"${a}/><rect x="-0.5" y="-6" width="7" height="9"${a}/>`;
+  if (k.startsWith("shop-"))              // box with a hanging sign
+    return `<rect x="-5" y="-4" width="10" height="8"${a}/><path d="M 5 -1 L 9 -1" stroke="${color}" stroke-width="1.2"/><rect x="7" y="-1" width="4" height="3.5"${a}/>`;
+  // building + anything unknown
+  return `<rect x="-5" y="-4.5" width="10" height="9"${a}/>`;
+}
+
+/**
+ * Perpendicular tick marks (stairs treads) spread by arc length along a
+ * polyline, so they follow a switchbacked flight instead of cutting the
+ * corners of the straight endpoint-to-endpoint line.
+ */
+function tickMarksAlong(pts, color){
+  if (!pts || pts.length < 2) return "";
+  const seg = [];
+  let total = 0;
+  for (let i = 0; i + 1 < pts.length; i++){
+    const L = Math.hypot(pts[i+1][0] - pts[i][0], pts[i+1][1] - pts[i][1]);
+    seg.push({ a: pts[i], b: pts[i+1], L, at: total });
+    total += L;
+  }
+  if (total < 6) return "";
+  const n = Math.min(40, Math.max(2, Math.round(total / 13)));
+  const t = 3.6;
+  let out = "", k = 0;
+  for (let i = 1; i < n; i++){
+    const d = total * i / n;
+    while (k < seg.length - 1 && d > seg[k].at + seg[k].L) k++;
+    const s = seg[k];
+    if (s.L < 1e-6) continue;
+    const f = Math.max(0, Math.min(1, (d - s.at) / s.L));
+    const ux = (s.b[0] - s.a[0]) / s.L, uy = (s.b[1] - s.a[1]) / s.L;
+    const cx = s.a[0] + (s.b[0] - s.a[0]) * f, cy = s.a[1] + (s.b[1] - s.a[1]) * f;
+    const nx = -uy, ny = ux;
+    out += `<path d="M ${num(cx - nx*t)} ${num(cy - ny*t)} L ${num(cx + nx*t)} ${num(cy + ny*t)}"
+            stroke="${color}" stroke-width="1.2" opacity="0.85"/>`;
+  }
+  return out;
+}
+/** Straight-segment convenience wrapper (legend swatches). */
+function tickMarks(x1, y1, x2, y2, color){
+  return tickMarksAlong([[x1,y1],[x2,y2]], color);
+}
+
+function renderSvg(map, view){
+  const pj = makeProjector(map, view);
+  const parcels = map.parcels || [], lmById = new Map((map.landmarks||[]).map(l=>[l.id,l]));
+  let out = "";
+
+  // --- frame + axis labels ---------------------------------------------
+  const vAxis = view === "elevation" ? "z (height, water 0)" : "y (cliff 0 -> river)";
+  out += `<rect x="0" y="0" width="${CW}" height="${CH}" fill="#0d1015"/>`;
+  out += `<text x="${CW - PAD.r}" y="${CH - 12}" fill="#5d6878" font-size="11" text-anchor="end">x (along gorge) -&gt;</text>`;
+  out += `<text x="10" y="${PAD.t - 10}" fill="#5d6878" font-size="11">${esc(vAxis)}</text>`;
+
+  // --- district tier bands (elevation only) ----------------------------
+  if (view === "elevation"){
+    out += `<g class="bands">`;
+    for (const d of (map.districts || [])){
+      const c = districtColor(map, d.id);
+      const yc = pj.Y(d.z), half = Math.max(6, 1.1 * pj.s);
+      out += `<g class="band">
+        <rect x="${PAD.l - 46}" y="${num(yc - half)}" width="${CW - PAD.l - PAD.r + 52}" height="${num(half*2)}"
+              fill="${c}" opacity="0.055"/>
+        <path d="M ${PAD.l - 46} ${num(yc)} L ${CW - PAD.r + 6} ${num(yc)}"
+              stroke="${c}" stroke-width="0.7" opacity="0.28" stroke-dasharray="2 6"/>
+        <text x="6" y="${num(yc - 2)}" fill="${c}" font-size="10" opacity="0.85">${esc(d.name)}</text>
+        <text x="6" y="${num(yc + 9)}" fill="#5d6878" font-size="9">z=${num(d.z)}</text>
+      </g>`;
+    }
+    out += `</g>`;
+  }
+
+  // --- parcel boxes -----------------------------------------------------
+  out += `<g class="parcels">`;
+  for (const p of parcels){
+    const r = pj.rect(p.bounds);
+    const sel = state.selected === p.id;
+    const col = sel ? "#ffb35a" : "#7f8ea3";
+    out += `<g class="parcel" data-parcel="${esc(p.id)}">
+      <title>${esc(p.name)} — ${esc(p.sceneKey)}\n${esc(p.intent || "")}</title>
+      <rect x="${num(r.x)}" y="${num(r.y)}" width="${num(r.w)}" height="${num(r.h)}" rx="2"
+            fill="${col}" fill-opacity="${sel ? 0.13 : 0.05}"
+            stroke="${col}" stroke-opacity="${sel ? 1 : 0.55}"
+            stroke-width="${sel ? 1.8 : 1}" stroke-dasharray="${sel ? "" : "6 4"}"/>
+      <text x="${num(r.x + 4)}" y="${num(r.y + 11)}" fill="${col}" font-size="10"
+            opacity="${sel ? 1 : 0.75}">${esc(p.id)}</text>
+    </g>`;
+  }
+  out += `</g>`;
+
+  // --- walk paths -------------------------------------------------------
+  // Every edge is drawn as its full designed polyline, gently smoothed. The
+  // authored control points are marked so the walk's design reads as authored
+  // intent rather than an accident of projection.
+  out += `<g class="edges">`;
+  for (const e of (map.edges || [])){
+    const pts3 = edgePoints(e, lmById);
+    if (!pts3) continue;                             // dangling -> validation panel
+    const P = pts3.map(p => pj.px(p));
+    const st = edgeStyle(e.type);
+    const dash = st.dash ? ` stroke-dasharray="${st.dash}"` : "";
+    const nwp = pts3.length - 2;
+    const seg = SEGMENTED_TYPES[e.type];
+    out += `<path d="${seg ? polyPathD(P) : smoothPathD(P)}"
+             stroke="${st.stroke}" stroke-width="${st.width}" fill="none"
+             stroke-linecap="round" stroke-linejoin="${seg ? "miter" : "round"}" opacity="0.95"${dash}><title>${esc(e.from)} -> ${esc(e.to)} (${esc(e.type)})${nwp ? `\n${nwp} waypoint(s)` : ""}${e.note ? "\n" + esc(e.note) : ""}</title></path>`;
+    if (st.ticks) out += tickMarksAlong(seg ? polySample(P, 8) : smoothSample(P, 8), st.stroke);
+    for (let i = 1; i < P.length - 1; i++)
+      out += `<circle cx="${num(P[i][0])}" cy="${num(P[i][1])}" r="1.6"
+               fill="${st.stroke}" opacity="0.55"/>`;
+    if (st.cable && state.labels){
+      const S = smoothSample(P, 8);
+      const m = S[Math.floor(S.length / 2)] || P[0];
+      out += `<text class="edgelabel" x="${num(m[0])}" y="${num(m[1] - 4)}"
+               fill="${st.stroke}" font-size="9" text-anchor="middle" opacity="0.9">non-walkable</text>`;
+    }
+  }
+  out += `</g>`;
+
+  // --- landmarks --------------------------------------------------------
+  out += `<g class="landmarks">`;
+  const lms = map.landmarks || [];
+  lms.forEach((l, i) => {
+    const [x,y] = pj.px(l.pos);
+    const c = districtColor(map, l.district);
+    const solid = l.mapVisible !== false;
+    const dy = [-11, -21, 15][i % 3];
+    out += `<g class="lm" data-lm="${esc(l.id)}" transform="translate(${num(x)},${num(y)})">
+      <title>${esc(l.name)} [${esc(l.kind)}] ${esc(posStr(l.pos))}\ndistrict: ${esc(l.district)}\nmapVisible: ${l.mapVisible !== false}${l.note ? "\n" + esc(l.note) : ""}</title>
+      ${kindGlyph(l.kind, c, solid)}`;
+    if (state.labels){
+      out += `<text x="9" y="${dy + 4}" fill="${c}" font-size="10"
+               opacity="${solid ? 0.95 : 0.6}"
+               ${solid ? "" : 'font-style="italic"'}>${esc(l.name)}</text>`;
+      if (dy < 0)
+        out += `<path d="M 6 0 L 9 ${dy + 2}" stroke="${c}" stroke-width="0.6" opacity="0.35"/>`;
+    }
+    out += `</g>`;
+  });
+  out += `</g>`;
+
+  return `<svg class="map" viewBox="0 0 ${CW} ${CH}" xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet">${out}</svg>`;
+}
+
+// ================================================================== legend
+function renderLegend(map){
+  let edgeBits = "";
+  for (const [k, st] of Object.entries(EDGE_STYLE)){
+    const dash = st.dash ? ` stroke-dasharray="${st.dash}"` : "";
+    const ticks = st.ticks ? tickMarks(2, 7, 38, 7, st.stroke) : "";
+    edgeBits += `<span class="item"><svg width="40" height="14">
+      <path d="M 2 7 L 38 7" stroke="${st.stroke}" stroke-width="${st.width}" fill="none"${dash}/>${ticks}
+    </svg>${esc(st.label)}</span>`;
+  }
+  const kinds = [...new Set((map.landmarks||[]).map(l => l.kind))].sort();
+  let kindBits = "";
+  for (const k of kinds){
+    kindBits += `<span class="item"><svg width="22" height="18" viewBox="-11 -9 22 18">
+      ${kindGlyph(k, "#8b97a8", true)}</svg>${esc(k)}</span>`;
+  }
+  let distBits = "";
+  for (const d of (map.districts || [])){
+    distBits += `<span class="item"><i class="swatch" style="background:${districtColor(map,d.id)}"></i>${esc(d.name)} <span class="dimmer">z=${num(d.z)}</span></span>`;
+  }
+  return `<section>
+    <h3>legend</h3>
+    <div class="legend" style="margin-bottom:8px">${distBits}</div>
+    <div class="legend" style="margin-bottom:8px">${edgeBits}</div>
+    <div class="legend" style="margin-bottom:8px">${kindBits}</div>
+    <div class="legend"><span class="item"><svg width="22" height="18" viewBox="-11 -9 22 18">${kindGlyph("building","#8b97a8",false)}</svg>hollow + dashed + italic label = <code>mapVisible:false</code></span></div>
+  </section>`;
+}
+
+// ======================================================== markdown brief
+/** Self-contained scene-build contract for one parcel, as markdown. */
+/** Stair budget for one edge, as a short markdown fragment (or "" if not stairs). */
+function stairNote(map, e){
+  if (e.type !== "stairs") return "";
+  const a = (map.landmarks||[]).find(l => l.id === e.from);
+  const b = (map.landmarks||[]).find(l => l.id === e.to);
+  if (!a || !b) return "";
+  const rise = Math.abs(a.pos[2] - b.pos[2]);
+  const run = Math.hypot(b.pos[0] - a.pos[0], b.pos[1] - a.pos[1]);
+  const treads = Math.max(1, Math.ceil(rise / TREAD_RISE_AIM));
+  const slope = run > 1e-9 ? Math.atan2(rise, run) * 180 / Math.PI : 90;
+  const warn = run < rise
+    ? ` **SUSPECT: run < rise (${num(slope)} deg) — the flight will not fit; either widen the horizontal gap or accept a ladder/lift**`
+    : "";
+  return ` — rise ${num(rise)}u over run ${num(run)}u (${num(slope)} deg), ` +
+         `${treads} treads at ${num(rise/treads)}u each (max ${MAX_TREAD_RISE}u)${warn}`;
+}
+
+function parcelBrief(map, c){
+  const p = c.parcel;
+  const b = p.bounds;
+  const size = [b.max[0]-b.min[0], b.max[1]-b.min[1], b.max[2]-b.min[2]];
+  const districtsHere = [...new Set(c.landmarks.map(l => l.district))]
+    .map(id => (map.districts || []).find(d => d.id === id) || { id, name:id, z:"?" });
+  const L = [];
+  const push = (...xs) => L.push(...xs);
+
+  push(`# Scene contract — ${p.name}  (\`${p.sceneKey}\`)`, "");
+  push(`**Town:** ${map.displayName || map.town}  |  **Parcel:** \`${p.id}\``, "");
+  if (map.premise) push(`> ${map.premise}`, "");
+  push(`**Units:** ${map.units || "world units (1u ~ 1m); player character ~1.7u tall"}`, "");
+  push("");
+
+  push(`## Intent`, "", p.intent || "_(no intent recorded)_", "");
+
+  push(`## Bounds`, "");
+  push("```");
+  push(`min  ${posStr(b.min)}`);
+  push(`max  ${posStr(b.max)}`);
+  push(`size ${posStr(size)}   (x along-gorge, y cliff->river, z height)`);
+  push("```", "");
+  if (districtsHere.length){
+    push(`Tiers present: ` + districtsHere.map(d => `**${d.name}** (z=${d.z})`).join(", "), "");
+  }
+
+  // Proposed shot — same convention as tools/townmap_massing.py's cam_<id>.
+  const cs = deriveParcelCamera(p);
+  push(`## Proposed shot (camera \`cam_${p.id}\`)`, "");
+  push("```");
+  push(`yaw ${num(cs.yaw)} deg, pitch ${num(cs.pitch)} deg, margin ${num(cs.margin * 100)}%  (${cs.authored ? "authored in parcels[].camera" : "deterministic default"})`);
+  push(`projection ${cs.projection}${cs.projection === "persp" ? `, vertical fov ${num(cs.fov)} deg (horizontal ${num(cs.variants.persp.hfov)} deg)` : ""}`);
+  const ovar = cs.variants.ortho;
+  push(`ortho scale ${num(ovar.width)}u wide x ${num(ovar.height)}u tall, aspect 1344:768`);
+  push(`camera at ${posStr(cs.pos.map(num))} looking at ${posStr(cs.target.map(num))}`);
+  push("```");
+  push(`Review it in the viewer's 3D tab (click the \`cam:${p.id}\` gizmo) or render it with \`tools/townmap_massing.py\`.`, "");
+
+  push(`## Landmark manifest (${c.landmarks.length})`, "");
+  if (c.landmarks.length){
+    push(`| id | name | kind | pos [x,y,z] | on player map | residents | note |`);
+    push(`|---|---|---|---|---|---|---|`);
+    for (const l of c.landmarks){
+      push(`| \`${l.id}\` | ${l.name} | ${l.kind} | ${posStr(l.pos)} | ${l.mapVisible === false ? "no (hidden)" : "yes"} | ${(l.residents||[]).join(", ") || "—"} | ${l.note || ""} |`);
+    }
+  } else push("_none — this parcel contains no landmarks._");
+  push("");
+
+  push(`## Walk topology`, "");
+  push(`### Internal connections (${c.internalEdges.length})`, "");
+  if (c.internalEdges.length){
+    for (const e of c.internalEdges){
+      push(`- \`${e.from}\` --**${e.type}**--> \`${e.to}\`${stairNote(map, e)}${e.note ? ` — ${e.note}` : ""}`);
+    }
+  } else push("_none._");
+  push("");
+
+  push(`### Exits from this parcel (${c.derivedExits.length})`, "");
+  push(`Exits are **logical** connections, not shared geometry. This scene is a self-contained vignette: build your own local mouth on this side of the cut and let the neighbouring scene build its own. Nothing has to line up across the boundary.`, "");
+  if (c.derivedExits.length){
+    for (const x of c.derivedExits){
+      const nb = x.neighbours.map(n => `\`${n.id}\` (${n.sceneKey})`).join(" / ") || "**UNASSIGNED**";
+      const nearPos = x.near ? posStr(x.near.pos) : "[?]";
+      const farPos  = x.far  ? posStr(x.far.pos)  : "[?]";
+      const farName = x.far ? x.far.name : x.farId;
+      push(`- **${x.type}** exit toward **${x.direction}** connecting to ${farName} \`${x.farId}\` ${farPos} (${nb}) ` +
+           `— design your own local mouth (stairhead/arch/door); no geometry is shared across the cut.`);
+      push(`  - anchored on this side at \`${x.nearId}\` ${nearPos}`);
+      const sn = stairNote(map, x.edge);
+      if (sn) push(`  -${sn.replace(/^ — /, " ")}`);
+      if (x.edge && x.edge.note) push(`  - ${x.edge.note}`);
+      if (x.type === "winch") push(`  - cargo only; NOT walkable — render as set dressing, no traversal.`);
+      if (x.handoff){
+        push(`  - **MATTE SIGHTLINE** — see the Sightlines section below.`);
+      }
+      if (x.warning) push(`  - WARNING: ${x.warning}`);
+    }
+  } else push("_none — this parcel is unreachable (see validation)._");
+  push("");
+
+  // Sightlines: only present when the JSON opts in via edge.handoff === "explicit".
+  const sightlines = c.derivedExits.filter(x => x.handoff);
+  if (sightlines.length){
+    push(`## Sightlines (${sightlines.length})`, "");
+    push(`These crossings are marked \`handoff: "explicit"\`, meaning a **matte sightline**: this scene depicts the far element as distant scenery. It is a matte/billboard placed before the backdrop render — **never exported to \`scene.glb\`, no collision, no occlusion**. No geometry is shared, and there is no build-order dependency: this scene can be built now.`, "");
+    for (const x of sightlines){
+      const element = x.far ? x.far.name : x.farId;
+      const upstream = x.handoffFrom
+        || (x.neighbours[0] ? x.neighbours[0].id : null);
+      push(`- **${x.edge.type}** \`${x.edge.from}\` -> \`${x.edge.to}\` (toward ${x.direction})`);
+      push(`  - SIGHTLINE: this scene should depict **${element}** in the distance as a non-playable matte. ` +
+           (upstream
+             ? `Use a render of \`${upstream}\` if available; otherwise an image-gen placeholder matching its map position/description is fine — it will be swapped for a true render later. `
+             : `Use an image-gen placeholder matching its map position/description; it will be swapped for a true render later. `) +
+           `No geometry is shared; no build-order dependency.`);
+      if (x.far) push(`  - depicted element sits at ${posStr(x.far.pos)}${x.far.note ? ` — ${x.far.note}` : ""}`);
+      if (x.edge.note) push(`  - ${x.edge.note}`);
+    }
+    push("");
+  }
+
+  if (c.townExits.length){
+    push(`### Town-level exits anchored here (${c.townExits.length})`, "");
+    for (const x of c.townExits){
+      const at = (map.landmarks||[]).find(l => l.id === x.at);
+      push(`- \`${x.id}\` at \`${x.at}\` ${at ? posStr(at.pos) : ""} — mode **${x.mode}** -> \`${x.to}\`${x.note ? ` — ${x.note}` : ""}`);
+    }
+    push("");
+  }
+
+  const md = (map.mapDiscovery || {});
+  if (md.rule){
+    push(`## Map discovery`, "");
+    push(`Unit: ${md.unit || "parcel"}. ${md.rule}`, "");
+    const hidden = c.landmarks.filter(l => l.mapVisible === false);
+    if (hidden.length)
+      push(`Hidden here (never auto-revealed): ` + hidden.map(l => `\`${l.id}\``).join(", "), "");
+    if ((md.startRevealed||[]).includes(p.id))
+      push(`This parcel is revealed at game start.`, "");
+    push("");
+  }
+
+  push(`## Mood`, "");
+  const moods = c.landmarks.filter(l => l.note).map(l => `- **${l.name}:** ${l.note}`);
+  if (map.premise) push(`Town premise: ${map.premise}`, "");
+  push(`Parcel intent: ${p.intent || "—"}`, "");
+  if (moods.length){ push("", `Landmark notes:`, ""); push(...moods); }
+  push("");
+  push(`_Massing reference: \`tools/townmap_massing.py\` renders this parcel from camera \`cam_${p.id}\`._`);
+  push(`_Generated from \`public/townmap/${map.town}.map.json\` by the townmap viewer._`);
+  return L.join("\n");
+}
+
+// =================================================== side panel rendering
+function renderContract(map, c){
+  if (!c) return `<section><h3>parcel contract</h3><p class="muted">Click a parcel box in a view, or a row above, to derive its scene contract.</p></section>`;
+  const p = c.parcel;
+  const b = p.bounds;
+  let h = `<section><h3>parcel contract</h3>`;
+  h += `<dl class="kv">
+    <dt>name</dt><dd>${esc(p.name)}</dd>
+    <dt>id</dt><dd><code>${esc(p.id)}</code></dd>
+    <dt>sceneKey</dt><dd><code>${esc(p.sceneKey)}</code></dd>
+    <dt>bounds</dt><dd class="dimmer">${esc(posStr(b.min))} .. ${esc(posStr(b.max))}</dd>
+  </dl>`;
+  h += `<p style="margin:0 0 10px">${esc(p.intent || "")}</p>`;
+
+  h += `<h3>landmarks contained (${c.landmarks.length})</h3><ul class="tight">`;
+  for (const l of c.landmarks){
+    const col = districtColor(map, l.district);
+    h += `<li><i class="swatch" style="background:${col}"></i>
+      <b>${esc(l.name)}</b> <span class="dimmer">${esc(l.kind)}</span>
+      <span class="dimmer">${esc(posStr(l.pos))}</span>
+      ${l.mapVisible === false ? '<span class="pill sev-warn">hidden</span>' : ""}
+      ${(l.residents||[]).length ? `<div class="dimmer" style="padding-left:14px">residents: ${esc((l.residents||[]).join(", "))}</div>` : ""}
+    </li>`;
+  }
+  if (!c.landmarks.length) h += `<li class="muted">none</li>`;
+  h += `</ul>`;
+
+  h += `<h3>internal edges (${c.internalEdges.length})</h3><ul class="tight">`;
+  for (const e of c.internalEdges){
+    const st = edgeStyle(e.type);
+    h += `<li><span style="color:${st.stroke}">${esc(e.type)}</span>
+      <code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code></li>`;
+  }
+  if (!c.internalEdges.length) h += `<li class="muted">none</li>`;
+  h += `</ul>`;
+
+  h += `<h3>derived exits (${c.derivedExits.length})</h3>
+    <p class="dimmer" style="margin:0 0 6px">Exits are <b>logical</b> connections, not shared
+    geometry. Design your own local mouth on this side of the cut.</p><ul class="tight">`;
+  for (const x of c.derivedExits){
+    const st = edgeStyle(x.type);
+    const nb = x.neighbours.length
+      ? x.neighbours.map(n => `<code>${esc(n.id)}</code>`).join(" / ")
+      : `<span class="sev-err">WARNING: unassigned</span>`;
+    h += `<li><span style="color:${st.stroke}">${esc(x.type)}</span>
+      exit toward <b>${esc(x.direction)}</b>
+      ${x.handoff ? '<span class="pill sev-info">matte sightline</span>' : ""}<br>
+      <span style="padding-left:14px" class="dimmer">connecting to</span>
+      <b>${esc(x.far ? x.far.name : x.farId)}</b>
+      <span class="dimmer">${esc(x.far ? posStr(x.far.pos) : "")}</span> in ${nb}
+      <div style="padding-left:14px" class="dimmer">from <code>${esc(x.nearId)}</code>;
+        design your own mouth (stairhead / arch / door) &mdash; no geometry is shared across the cut</div>
+      ${x.handoff ? `<div class="sev-info" style="padding-left:14px">SIGHTLINE: depict
+        <b>${esc(x.far ? x.far.name : x.farId)}</b> in the distance as a non-playable matte
+        ${x.handoffFrom ? `(use a render of <code>${esc(x.handoffFrom)}</code> if available)` : ""};
+        never exported to scene.glb, no collision or occlusion</div>` : ""}
+      ${x.warning ? `<div class="sev-err" style="padding-left:14px">${esc(x.warning)}</div>` : ""}
+    </li>`;
+  }
+  if (!c.derivedExits.length) h += `<li class="sev-err">none — parcel is unreachable</li>`;
+  h += `</ul>`;
+
+  if (c.townExits.length){
+    h += `<h3>town exits anchored here (${c.townExits.length})</h3><ul class="tight">`;
+    for (const x of c.townExits){
+      h += `<li><code>${esc(x.id)}</code> at <code>${esc(x.at)}</code>
+        <span class="dimmer">${esc(x.mode)} &rarr; ${esc(x.to)}</span>
+        ${x.note ? `<div class="dimmer" style="padding-left:14px">${esc(x.note)}</div>` : ""}</li>`;
+    }
+    h += `</ul>`;
+  }
+
+  h += `<div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+    <button class="act" id="copyBrief" data-parcel="${esc(p.id)}">Copy parcel brief</button>
+    <span id="copyStatus" class="muted"></span>
+  </div>
+  <details id="briefDetails" style="margin-top:8px"><summary>raw markdown (fallback)</summary>
+    <textarea class="fallback" id="briefText" spellcheck="false" readonly></textarea>
+  </details>`;
+  h += `</section>`;
+  return h;
+}
+
+function renderValidation(map){
+  const v = validate(map);
+  const groups = [
+    ["err",  "landmarks in no parcel", v.orphanLandmarks,
+      l => `<code>${esc(l.id)}</code> ${esc(posStr(l.pos))} <span class="dimmer">district ${esc(l.district)}</span>`],
+    ["warn", "parcel bounds overlap (scenes should be separate vignettes)", v.parcelOverlaps,
+      o => `<code>${esc(o.a.id)}</code> &cap; <code>${esc(o.b.id)}</code>
+            <div class="dimmer" style="padding-left:14px">overlap box
+            ${esc(posStr(o.box.min))} .. ${esc(posStr(o.box.max))}
+            (size ${esc(posStr(o.box.size))})</div>`],
+    ["warn", `parcels with gutter &lt; ${MIN_GUTTER}u (no off-screen travel implied)`, v.tightGutters,
+      g => `<code>${esc(g.a.id)}</code> / <code>${esc(g.b.id)}</code>
+            <span class="dimmer">gap ${num(g.gutter)}u</span>`],
+    ["warn", "landmarks in 2+ parcels (symptom of overlapping bounds)", v.multiParcelLandmarks,
+      m => `<code>${esc(m.lm.id)}</code> &rarr; ${m.parcels.map(p=>`<code>${esc(p.id)}</code>`).join(", ")}`],
+    ["info", "sightline pairs (matte depiction; no shared geometry)", v.handoffEdges,
+      h => `<code>${esc(h.edge.from)}</code> &rarr; <code>${esc(h.edge.to)}</code>
+            <span class="dimmer">${esc(h.pair)}</span>
+            <div style="padding-left:14px" class="dimmer">depicted element's parcel:
+              <code>${esc(h.depicted)}</code> &mdash; distant non-playable matte,
+              no build-order dependency</div>
+            ${h.badUpstream ? `<div class="sev-err" style="padding-left:14px">handoffFrom "${esc(h.edge.handoffFrom)}" is not a parcel id</div>` : ""}`],
+    ["err",  "edges with unknown endpoint id", v.danglingEdges,
+      e => `<code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code>`],
+    ["err",  "edges with neither endpoint in any parcel", v.floatingEdges,
+      e => `<code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code>`],
+    ["err",  "parcels with zero derived exits", v.parcelsNoExits,
+      p => `<code>${esc(p.id)}</code> ${esc(p.name)}`],
+    ["warn", "stairs edges with zero z-span", v.flatStairs,
+      e => `<code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code>`],
+    ["warn", "stairs steeper than 45 deg (run &lt; rise)", v.steepStairs,
+      s => `<code>${esc(s.edge.from)}</code> &rarr; <code>${esc(s.edge.to)}</code>
+            <span class="dimmer">rise ${num(s.rise)} / run ${num(s.run)} =
+            ${num(s.slope)} deg, ${s.treads} treads</span>`],
+    ["warn", "landmarks with unknown district", v.unknownDistricts,
+      l => `<code>${esc(l.id)}</code> &rarr; ${esc(l.district)}`],
+    ["err",  "town exits at unknown landmark", v.badExitAnchors,
+      x => `<code>${esc(x.id)}</code> at <code>${esc(x.at)}</code>`],
+    ["warn", "mapDiscovery.startRevealed unknown parcel", v.badStartRevealed,
+      id => `<code>${esc(id)}</code>`],
+  ];
+  const total = groups.filter(g => g[0] !== "info").reduce((n,g) => n + g[2].length, 0);
+  let h = `<section><h3>validation
+    <span class="pill ${total ? "sev-err" : "sev-ok"}">${total ? total + " issue(s)" : "clean"}</span></h3>`;
+  for (const [sev, title, items, fmt] of groups){
+    const cls = sev === "err" ? "sev-err" : sev === "warn" ? "sev-warn" : "sev-info";
+    if (!items.length){
+      h += `<div class="dimmer" style="padding:1px 0">${esc(title)}: 0</div>`;
+      continue;
+    }
+    h += `<div style="margin:6px 0 2px"><span class="${cls}">${sev.toUpperCase()}</span>
+      ${esc(title)}: <b>${items.length}</b></div><ul class="tight">`;
+    for (const it of items) h += `<li>${fmt(it)}</li>`;
+    h += `</ul>`;
+  }
+  h += `<p class="dimmer" style="margin:8px 0 0">Findings are reported, never auto-fixed —
+    <code>${esc(state.town)}.map.json</code> is human-authored.</p></section>`;
+  return h;
+}
+
+function renderParcelList(map, contracts){
+  let h = `<section><h3>parcels (${contracts.length})</h3>`;
+  for (const c of contracts){
+    const on = state.selected === c.parcel.id ? " on" : "";
+    h += `<div class="parcelrow${on}" data-parcel="${esc(c.parcel.id)}">
+      <b>${esc(c.parcel.name)}</b>
+      <span class="dimmer">${esc(c.parcel.sceneKey)}</span>
+      <span class="spacer" style="flex:1"></span>
+      <span class="dimmer">${c.landmarks.length}L / ${c.derivedExits.length}X</span>
+    </div>`;
+  }
+  h += `<div class="dimmer" style="margin-top:6px">L = landmarks contained, X = derived exits</div></section>`;
+  return h;
+}
+
+/* ============================================================================
+   Parcel scene cameras — the single source of truth.
+
+   This mirrors make_ortho_camera() in tools/townmap_massing.py exactly, so the
+   frustum you review in the browser is the shot the Blender script renders.
+   Keep the two in sync: same 3/4 offset, same ortho framing, same aspect.
+
+   Everything here is pure math in TOWN coordinates (x along gorge, y cliff ->
+   river, z height) with no THREE dependency, so it can be unit-checked
+   headlessly and read by the brief generator.
+
+   Optional per-parcel override in the JSON:
+       parcels[].camera = { yaw: <deg about the up axis>,
+                            pitch: <deg above the horizon>,
+                            margin: <fraction, default 0.1>,
+                            projection: "ortho" | "persp",   // default "ortho"
+                            fov: <vertical fov in deg, default 35, persp only> }
+   When absent, the deterministic default below is used.
+
+   BOTH projections are always computed, from the same framing intent: same
+   view direction, same target (the bounds centre), same margin. Only the
+   distance differs — for perspective we solve the distance at which the eight
+   bounds corners exactly fill the frame minus the margin, which is what the
+   ortho window does by construction. The viewer's POV panel can therefore flip
+   between them live without changing any data. `projection` in the JSON only
+   picks which one is the *default* display; nothing downstream is affected.
+   ========================================================================== */
+
+const CAM_ASPECT = 1344 / 768;          // parcel render resolution
+const CAM_DEFAULT_DIR = [1, -1, 0.78];  // +X, -Y, +Z off the bounds centre
+const CAM_DEFAULT_MARGIN = 0.10;        // ~10% slack around the bounds
+const CAM_DEFAULT_FOV = 35;             // VERTICAL fov in degrees (three.js convention)
+
+const v3 = {
+  sub:  (a, b) => [a[0]-b[0], a[1]-b[1], a[2]-b[2]],
+  add:  (a, b) => [a[0]+b[0], a[1]+b[1], a[2]+b[2]],
+  mul:  (a, s) => [a[0]*s, a[1]*s, a[2]*s],
+  dot:  (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2],
+  cross:(a, b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]],
+  len:  a => Math.hypot(a[0], a[1], a[2]),
+  norm: a => { const l = Math.hypot(a[0],a[1],a[2]) || 1; return [a[0]/l, a[1]/l, a[2]/l]; },
+};
+
+function boundsCorners(b){
+  const out = [];
+  for (let i = 0; i < 8; i++)
+    out.push([ (i & 1) ? b.max[0] : b.min[0],
+               (i & 2) ? b.max[1] : b.min[1],
+               (i & 4) ? b.max[2] : b.min[2] ]);
+  return out;
+}
+
+/**
+ * Proposed scene camera for one parcel, in BOTH projections.
+ *
+ * `projOverride` ("ortho" | "persp" | null) is a VIEWER-ONLY display choice
+ * used by the POV panel's live toggle; null means "use whatever the JSON
+ * authored", which is ortho unless parcels[].camera.projection says otherwise.
+ *
+ * The returned object always carries `.variants.ortho` and `.variants.persp`;
+ * the effective variant is also spread onto the top level so existing callers
+ * (gizmo builder, POV camera, brief generator) keep reading `pos`, `near`,
+ * `far`, `width`, `height` without caring which projection is in play.
+ */
+function deriveParcelCamera(parcel, projOverride){
+  const b = parcel.bounds;
+  const centre = [0,1,2].map(i => (b.min[i] + b.max[i]) / 2);
+  const diag = v3.len(v3.sub(b.max, b.min));
+
+  // --- direction: authored override, else the deterministic default -------
+  const ov = parcel.camera || null;
+  let yaw, pitch, margin, authored = false;
+  if (ov && (ov.yaw !== undefined || ov.pitch !== undefined)){
+    authored = true;
+    const d0 = CAM_DEFAULT_DIR;
+    yaw   = ov.yaw   !== undefined ? ov.yaw   : Math.atan2(d0[1], d0[0]) * 180 / Math.PI;
+    pitch = ov.pitch !== undefined ? ov.pitch : Math.atan2(d0[2], Math.hypot(d0[0], d0[1])) * 180 / Math.PI;
+    margin = ov.margin !== undefined ? ov.margin : CAM_DEFAULT_MARGIN;
+  } else {
+    const d0 = CAM_DEFAULT_DIR;
+    yaw   = Math.atan2(d0[1], d0[0]) * 180 / Math.PI;
+    pitch = Math.atan2(d0[2], Math.hypot(d0[0], d0[1])) * 180 / Math.PI;
+    margin = (ov && ov.margin !== undefined) ? ov.margin : CAM_DEFAULT_MARGIN;
+    if (ov && ov.margin !== undefined) authored = true;
+  }
+  if (ov && (ov.projection !== undefined || ov.fov !== undefined)) authored = true;
+  const authoredProjection = (ov && ov.projection === "ortho") ? "ortho" : "persp";   // CANON (user, 2026-07-29): perspective is the default; ortho is a per-shot exception
+  const fov = (ov && ov.fov !== undefined) ? ov.fov : CAM_DEFAULT_FOV;
+  const projection = (projOverride === "ortho" || projOverride === "persp")
+    ? projOverride : authoredProjection;
+
+  const ry = yaw * Math.PI / 180, rp = pitch * Math.PI / 180;
+  const dir = v3.norm([Math.cos(rp) * Math.cos(ry),
+                       Math.cos(rp) * Math.sin(ry),
+                       Math.sin(rp)]);
+
+  // --- camera basis (up = town +z, matching Blender's to_track_quat) ------
+  // Independent of distance: forward is just -dir, so both variants share it.
+  const forward = v3.mul(dir, -1);
+  let upRef = [0, 0, 1];
+  if (Math.abs(v3.dot(forward, upRef)) > 0.999) upRef = [0, 1, 0];   // looking straight down
+  const right = v3.norm(v3.cross(forward, upRef));
+  const up = v3.norm(v3.cross(right, forward));
+
+  // Corner offsets from the bounds centre, in camera axes. `w` is depth
+  // measured along forward, so a corner's depth from an eye at distance d is
+  // simply (d + w).
+  const corners = boundsCorners(b).map(c => {
+    const o = v3.sub(c, centre);
+    return { u: v3.dot(o, right), v: v3.dot(o, up), w: v3.dot(o, forward) };
+  });
+
+  // --- ORTHO: fixed stand-off, window sized to frame all 8 corners --------
+  const oDist = Math.max(diag * 1.6, 10);
+  let maxX = 0, maxY = 0, oFar = 0;
+  for (const c of corners){
+    maxX = Math.max(maxX, Math.abs(c.u));
+    maxY = Math.max(maxY, Math.abs(c.v));
+    oFar = Math.max(oFar, oDist + c.w);
+  }
+  // ortho_scale spans the LARGER sensor axis; aspect >= 1 so that is width
+  const orthoScale = Math.max(2 * maxX, 2 * maxY * CAM_ASPECT) * (1 + margin);
+  const orthoVariant = {
+    projection: "ortho",
+    dist: oDist,
+    pos: v3.add(centre, v3.mul(dir, oDist)),
+    orthoScale,
+    width: orthoScale,
+    height: orthoScale / CAM_ASPECT,
+    near: 0.1,
+    far: oFar + 0.5,
+  };
+
+  // --- PERSP: same intent, solve the distance that fills the same frame ---
+  // Half-extents at depth z are z*tanV (vertical) and z*tanH (horizontal); we
+  // want the bounds to occupy 1/(1+margin) of that, matching the ortho margin.
+  const tanV = Math.tan(fov * Math.PI / 360);
+  const tanH = tanV * CAM_ASPECT;
+  let pDist = 0;
+  for (const c of corners){
+    pDist = Math.max(pDist,
+      Math.abs(c.u) * (1 + margin) / tanH - c.w,
+      Math.abs(c.v) * (1 + margin) / tanV - c.w);
+  }
+  pDist = Math.max(pDist, diag * 0.25, 1);
+  let pNear = Infinity, pFar = 0;
+  for (const c of corners){
+    pNear = Math.min(pNear, pDist + c.w);
+    pFar  = Math.max(pFar,  pDist + c.w);
+  }
+  const perspVariant = {
+    projection: "persp",
+    dist: pDist,
+    pos: v3.add(centre, v3.mul(dir, pDist)),
+    fov,                                                  // vertical, degrees
+    hfov: 2 * Math.atan(tanH) * 180 / Math.PI,            // implied horizontal
+    // framed window at the target plane, for reference/parity with orthoScale
+    width: 2 * pDist * tanH,
+    height: 2 * pDist * tanV,
+    near: Math.max(0.05, pNear - 0.5),
+    far: pFar + 0.5,
+  };
+
+  const chosen = projection === "persp" ? perspVariant : orthoVariant;
+
+  return {
+    parcelId: parcel.id, authored, authoredProjection, yaw, pitch, margin, fov,
+    dir, target: centre,
+    right, up, forward,
+    aspect: CAM_ASPECT,
+    // ortho window stays exposed unconditionally: the brief and the massing
+    // script speak ortho, and reading it must not depend on the display toggle
+    orthoScale,
+    variants: { ortho: orthoVariant, persp: perspVariant },
+    ...chosen,
+  };
+}
+
+/* ============================================================================
+   3D view — Three.js r128 (vendored at ../lib/three.min.js, global THREE).
+
+   The town JSON *is* the model: this builds straight from the graph, with no
+   Blender step and no GLB in the loop. Reloading the data rebuilds the scene.
+
+   Coordinate mapping, town -> three (keeps "up" up):
+       three.x = town.x   (along gorge)
+       three.y = town.z   (height)
+       three.z = -town.y  (cliff at 0, river toward -z)
+   That mapping is a proper rotation, so cross products survive it and the
+   town-space camera basis above can be converted axis by axis.
+
+   Visual language mirrors the SVG views and tools/townmap_massing.py: pins for
+   landmarks, thin lines for edges, wireframe parcel boxes. Nothing here is
+   representational -- same reason as the Blender diagram.
+
+   The POV panel now lives at the top of the right sidebar, so it can no longer
+   be a scissored region of the main canvas. It gets its own small renderer over
+   the SAME Scene instead: one scene graph, two WebGLRenderers, rendered back to
+   back in a single rAF. The two views therefore cannot drift, and neither one
+   overlays the other.
+
+   Selection dims context: when a parcel is selected, everything outside its
+   bounds drops to DIM_ALPHA in BOTH renders, dimmed labels disappear unless
+   hovered, and edges that cross the boundary (exactly one endpoint inside) sit
+   at EXIT_ALPHA because those are the parcel's exits.
+   ========================================================================== */
+const TV = (function(){
+  const PIN_R = 0.15, PIN_H = 2.0, HEAD_R = 0.38;
+  const LABEL_WORLD_H = 1.5, LABEL_MIN_PX = 10, LABEL_MAX_PX = 19;
+  const LABEL_POV_H = 0.85;              // annotation size inside the POV shot
+  const DASH = { stairs:[0.55, 0.4], winch:[0.3, 0.28] };
+  // tube radius per walkable type — paths are the map's main content now.
+  // winch deliberately absent: non-walkable, stays a thin dashed cable.
+  const TUBE_R = { road:0.22, deck:0.16, path:0.12, stairs:0.14, bridge:0.15, ladder:0.10 };
+  const GIZMO = 1.5;
+  const DIM_ALPHA = 0.15;                // outside the selected parcel
+  const EXIT_ALPHA = 0.5;                // edges with exactly one end inside
+
+  let ok = false, inited = false, started = false, raf = 0;
+  let renderer, scene, camera, wrap, target;
+  let povRenderer = null;
+  let root = null, camGroup = null;
+  let pinPicks = [], parcelPicks = [], camPicks = [], labels = [];
+  let labelByLm = new Map(), pinsByLm = new Map(), parcelObjs = new Map(), camObjs = new Map();
+  let edgeObjs = [], insideByParcel = new Map();
+  let hoveredId = null, selectedLmId = null, selectedParcelId = null;
+  let povParcelId = null, povCam = null, povDismissedFor = null;
+  let projOverride = null;               // null = per-parcel authored projection
+  let mainActive = false;
+  let orbit = { theta: 0.24, phi: 1.29, radius: 60 };
+  let ray = null;
+  const pointer = { x: 0, y: 0 };
+
+  const t3  = p => new THREE.Vector3(p[0], p[2], -p[1]);          // town point
+  const t3v = v => new THREE.Vector3(v[0], v[2], -v[1]);          // town vector
+
+  // ---------------------------------------------------------------- helpers
+  function dimColor(hex){
+    const c = new THREE.Color(hex);
+    const hsl = { h:0, s:0, l:0 };
+    c.getHSL(hsl);
+    c.setHSL(hsl.h, hsl.s * 0.32, hsl.l * 0.40);   // darker + desaturated
+    return c;
+  }
+
+  function roundRect(g, x, y, w, h, r){
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y,     x + w, y + h, r);
+    g.arcTo(x + w, y + h, x,     y + h, r);
+    g.arcTo(x,     y + h, x,     y,     r);
+    g.arcTo(x,     y,     x + w, y,     r);
+    g.closePath();
+  }
+
+  /** Screen-facing text sprite drawn on a canvas texture. */
+  function makeLabel(text, colorHex, fontPx){
+    const px = fontPx || 30;
+    const FONT = `600 ${px}px ui-monospace, Menlo, Consolas, monospace`;
+    const pad = 10;
+    const cv = document.createElement("canvas");
+    let g = cv.getContext("2d");
+    g.font = FONT;
+    const w = Math.ceil(g.measureText(text).width) + pad * 2;
+    const h = px + pad * 2;
+    cv.width = w; cv.height = h;          // resizing resets the 2d state
+    g = cv.getContext("2d");
+    g.font = FONT;
+    g.textBaseline = "middle";
+    g.fillStyle = "rgba(13,16,21,0.80)";
+    roundRect(g, 0, 0, w, h, 8); g.fill();
+    g.strokeStyle = colorHex; g.globalAlpha = 0.55; g.lineWidth = 2;
+    roundRect(g, 1, 1, w - 2, h - 2, 8); g.stroke(); g.globalAlpha = 1;
+    g.fillStyle = colorHex;
+    g.fillText(text, pad, h / 2 + 1);
+
+    const tex = new THREE.CanvasTexture(cv);
+    tex.minFilter = THREE.LinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: tex, transparent: true, depthTest: false, depthWrite: false,
+    }));
+    sp.renderOrder = 20;
+    sp.userData.aspect = w / h;
+    return sp;
+  }
+
+  function disposeTree(obj){
+    obj.traverse(o => {
+      if (o.geometry) o.geometry.dispose();
+      if (o.material){
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        for (const m of mats){ if (m.map) m.map.dispose(); m.dispose(); }
+      }
+    });
+  }
+
+  // -------------------------------------------------------------- bootstrap
+  function init(){
+    if (inited) return ok;
+    inited = true;
+    wrap = document.getElementById("canvasWrap");
+    if (typeof THREE === "undefined"){
+      const e = document.getElementById("err3d");
+      e.hidden = false;
+      e.textContent = "Three.js did not load. Expected it at ../lib/three.min.js. "
+                    + "The 2D views and all panels still work.";
+      return false;
+    }
+    // preserveDrawingBuffer keeps the canvas readable after compositing, so
+    // screenshots and readPixels QA of the POV shot actually capture pixels
+    // instead of an empty buffer. Negligible cost for a scene this small.
+    renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(1, 1, false);
+    wrap.appendChild(renderer.domElement);
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0d1015);
+
+    camera = new THREE.PerspectiveCamera(45, 1, 0.1, 4000);
+    target = new THREE.Vector3();
+    ray = new THREE.Raycaster();
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.74));
+    const key = new THREE.DirectionalLight(0xffffff, 0.60);
+    key.position.set(40, 70, 40);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0x88aaff, 0.22);
+    fill.position.set(-50, 20, -40);
+    scene.add(fill);
+
+    bindControls();
+    new ResizeObserver(resize).observe(document.getElementById("view3d"));
+    ok = true;
+    return true;
+  }
+
+  // ------------------------------------------------------------ scene build
+  function build(map){
+    if (!init()) return;
+    if (root){ scene.remove(root); disposeTree(root); }
+    root = new THREE.Group();
+    scene.add(root);
+    pinPicks = []; parcelPicks = []; camPicks = []; labels = [];
+    labelByLm = new Map(); pinsByLm = new Map();
+    parcelObjs = new Map(); camObjs = new Map();
+    edgeObjs = []; insideByParcel = new Map();
+    hoveredId = null; selectedLmId = null; selectedParcelId = null;
+    povParcelId = null; povCam = null; povDismissedFor = null;
+    document.getElementById("povPanel").hidden = true;
+
+    const landmarks = map.landmarks || [];
+    const parcels = map.parcels || [];
+    const lmById = new Map(landmarks.map(l => [l.id, l]));
+
+    // Which landmarks each parcel contains — the basis for selection dimming.
+    for (const p of parcels)
+      insideByParcel.set(p.id, new Set(
+        landmarks.filter(l => inBounds(l.pos, p.bounds)).map(l => l.id)));
+
+    // --- world extent (town units) --------------------------------------
+    const ex = { x:[Infinity,-Infinity], y:[Infinity,-Infinity], z:[Infinity,-Infinity] };
+    const eat = p => {
+      ex.x[0] = Math.min(ex.x[0], p[0]); ex.x[1] = Math.max(ex.x[1], p[0]);
+      ex.y[0] = Math.min(ex.y[0], p[1]); ex.y[1] = Math.max(ex.y[1], p[1]);
+      ex.z[0] = Math.min(ex.z[0], p[2]); ex.z[1] = Math.max(ex.z[1], p[2]);
+    };
+    for (const l of landmarks) eat(l.pos);
+    for (const p of parcels){ eat(p.bounds.min); eat(p.bounds.max); }
+    if (!isFinite(ex.x[0])){ ex.x = [0,10]; ex.y = [0,10]; ex.z = [0,10]; }
+
+    // --- ground plane, grid and river-side water strip (orientation) -----
+    const gw = (ex.x[1] - ex.x[0]) + 80, gd = (ex.y[1] - ex.y[0]) + 80;
+    const gcx = (ex.x[0] + ex.x[1]) / 2, gcy = (ex.y[0] + ex.y[1]) / 2;
+
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(gw, gd),
+      new THREE.MeshBasicMaterial({ color:0x151a21 }));
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.set(gcx, -0.06, -gcy);
+    root.add(ground);
+
+    const gridSize = Math.max(gw, gd);
+    const grid = new THREE.GridHelper(gridSize, Math.max(4, Math.round(gridSize / 10)),
+                                      0x2a3340, 0x1b2129);
+    grid.position.set(gcx, -0.04, -gcy);
+    grid.material.transparent = true;
+    grid.material.opacity = 0.45;
+    root.add(grid);
+
+    const wDepth = 46;
+    const water = new THREE.Mesh(
+      new THREE.PlaneGeometry(gw, wDepth),
+      new THREE.MeshBasicMaterial({ color:0x102431 }));
+    water.rotation.x = -Math.PI / 2;
+    water.position.set(gcx, -0.02, -(ex.y[1] - 3 + wDepth / 2));
+    root.add(water);
+
+    // --- landmarks: pin (cylinder + sphere cap) + label ------------------
+    const cylGeo = new THREE.CylinderGeometry(PIN_R, PIN_R, PIN_H, 8);
+    const headGeo = new THREE.SphereGeometry(HEAD_R, 14, 10);
+    for (const lm of landmarks){
+      const hex = districtColor(map, lm.district);
+      const hidden = lm.mapVisible === false;
+      const col = hidden ? dimColor(hex) : new THREE.Color(hex);
+      // transparent up-front so selection dimming is a pure opacity tweak
+      const mat = new THREE.MeshLambertMaterial({ color: col, transparent: true, opacity: 1 });
+      const base = t3(lm.pos);
+
+      const cyl = new THREE.Mesh(cylGeo, mat);
+      cyl.position.set(base.x, base.y + PIN_H / 2, base.z);
+      const head = new THREE.Mesh(headGeo, mat);
+      head.position.set(base.x, base.y + PIN_H, base.z);
+      cyl.userData.lm = lm; head.userData.lm = lm;
+      root.add(cyl); root.add(head);
+      pinPicks.push(cyl, head);
+      pinsByLm.set(lm.id, { mat, baseColor: col.clone() });
+
+      const sp = makeLabel(lm.name || lm.id, hidden ? "#93a1b3" : hex);
+      sp.position.set(base.x, base.y + PIN_H + HEAD_R + 0.9, base.z);
+      sp.userData.isLandmarkLabel = true;
+      sp.userData.lmId = lm.id;
+      root.add(sp);
+      labels.push(sp);
+      labelByLm.set(lm.id, sp);
+    }
+
+    // --- walk paths: the designed polyline, gently smoothed --------------
+    // Each edge is a Catmull-Rom (centripetal, so switchbacks never overshoot)
+    // through from-pos -> waypoints -> to-pos, sampled ~8 points per authored
+    // segment. Walkable types get a tube so the walk reads as the map's main
+    // content; stairs keep their dashed line (plus a faint tube for body) and
+    // the non-walkable winch stays a thin dashed cable.
+    for (const e of (map.edges || [])){
+      const pts = edgePoints(e, lmById);
+      if (!pts) continue;                           // dangling -> validation panel
+      const st = edgeStyle(e.type);
+      const cps = pts.map(p => { const v = t3(p); v.y += PIN_H * 0.5; return v; });
+      // timber types run straight leg-to-leg (landings at waypoints);
+      // earth types (road/path) keep the gentle curve
+      let curve;
+      if (SEGMENTED_TYPES[e.type]){
+        curve = new THREE.CurvePath();
+        for (let i = 0; i < cps.length - 1; i++)
+          curve.add(new THREE.LineCurve3(cps[i], cps[i + 1]));
+      } else {
+        curve = new THREE.CatmullRomCurve3(cps);
+      }
+      const divisions = Math.max(2, (cps.length - 1) * 8);
+      const sampled = SEGMENTED_TYPES[e.type] ? cps : curve.getPoints(divisions);
+      const dash = DASH[e.type];
+      const parts = [];
+
+      if (TUBE_R[e.type] !== undefined){
+        const faint = !!dash;                       // stairs: body under the dashes
+        const mat = new THREE.MeshBasicMaterial({
+          color: st.stroke, transparent: true, opacity: faint ? 0.34 : 0.92,
+        });
+        const tube = new THREE.Mesh(
+          new THREE.TubeGeometry(curve, divisions, TUBE_R[e.type], 6, false), mat);
+        tube.userData.edge = e;
+        root.add(tube);
+        parts.push({ mat, baseOpacity: mat.opacity });
+      }
+      if (dash || TUBE_R[e.type] === undefined){
+        const geo = new THREE.BufferGeometry().setFromPoints(sampled);
+        let line, baseOpacity;
+        if (dash){
+          baseOpacity = 0.95;
+          line = new THREE.Line(geo, new THREE.LineDashedMaterial({
+            color: st.stroke, dashSize: dash[0], gapSize: dash[1],
+            transparent: true, opacity: baseOpacity,
+          }));
+          line.computeLineDistances();             // required for dashes
+        } else {
+          baseOpacity = 0.9;
+          line = new THREE.Line(geo, new THREE.LineBasicMaterial({
+            color: st.stroke, transparent: true, opacity: baseOpacity,
+          }));
+        }
+        line.userData.edge = e;
+        root.add(line);
+        parts.push({ mat: line.material, baseOpacity });
+      }
+      edgeObjs.push({ edge: e, parts });
+    }
+
+    // --- parcels: wireframe box + a faint pickable shell -----------------
+    for (const p of parcels){
+      const mn = p.bounds.min, mx = p.bounds.max;
+      const sx = Math.max(mx[0] - mn[0], 0.01);
+      const sy = Math.max(mx[2] - mn[2], 0.01);      // town z -> three y
+      const sz = Math.max(mx[1] - mn[1], 0.01);      // town y -> three z
+      const c = new THREE.Vector3((mn[0] + mx[0]) / 2, (mn[2] + mx[2]) / 2,
+                                  -(mn[1] + mx[1]) / 2);
+      const box = new THREE.BoxGeometry(sx, sy, sz);
+      const edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(box),
+        new THREE.LineBasicMaterial({ color:0x7f8ea3, transparent:true, opacity:0.5 }));
+      edges.position.copy(c);
+      const shell = new THREE.Mesh(box, new THREE.MeshBasicMaterial({
+        color:0x7f8ea3, transparent:true, opacity:0.045,
+        depthWrite:false, side:THREE.DoubleSide,
+      }));
+      shell.position.copy(c);
+      shell.userData.parcel = p;
+      root.add(edges); root.add(shell);
+      parcelPicks.push(shell);
+      parcelObjs.set(p.id, { edges, shell });
+    }
+
+    // --- parcel scene cameras: gizmo + ortho frustum ---------------------
+    camGroup = new THREE.Group();
+    root.add(camGroup);
+    for (const p of parcels) buildCamera(p);
+
+    frameTown(ex);
+    applySelection();
+    applyLabels();
+    applyFrustums();
+    buildCamStrip(map);
+    resize();
+  }
+
+  /**
+   * The view volume of a spec, as wireframe line segments in camera-local
+   * space (looking down local -Z). Ortho is a rectangular prism; perspective
+   * is a true frustum pyramid — near rect, far rect, and the four rays that
+   * would meet at the eye.
+   */
+  function frustumGeometry(spec){
+    if (spec.projection !== "persp"){
+      const depth = Math.max(spec.far - spec.near, 0.1);
+      const geo = new THREE.EdgesGeometry(
+        new THREE.BoxGeometry(spec.width, spec.height, depth));
+      // BoxGeometry is centred; shift it down the view axis
+      geo.translate(0, 0, -(spec.near + depth / 2));
+      return geo;
+    }
+    const tanV = Math.tan(spec.fov * Math.PI / 360);
+    const tanH = tanV * spec.aspect;
+    const rect = z => [                       // z is a positive depth
+      [-tanH * z,  tanV * z, -z], [ tanH * z,  tanV * z, -z],
+      [ tanH * z, -tanV * z, -z], [-tanH * z, -tanV * z, -z],
+    ];
+    // draw the near plane where the camera actually clips, and the far plane
+    // just past the parcel, so the pyramid reads as the real view volume
+    const n = rect(Math.max(spec.near, spec.dist * 0.02));
+    const f = rect(spec.far);
+    const pts = [];
+    const seg = (a, b) => { pts.push(...a, ...b); };
+    for (let i = 0; i < 4; i++){
+      seg(n[i], n[(i + 1) % 4]);              // near rect
+      seg(f[i], f[(i + 1) % 4]);              // far rect
+      seg([0, 0, 0], f[i]);                   // eye -> far corner (through near)
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    return geo;
+  }
+
+  /**
+   * One parcel camera: a gizmo at the computed position plus its view volume.
+   * `projOverride` (the POV panel's live toggle) decides which projection is
+   * drawn, so the gizmo always matches the shot in the panel.
+   */
+  function buildCamera(parcel){
+    const spec = deriveParcelCamera(parcel, projOverride);
+
+    // town-space basis -> three-space basis. Camera convention: local -Z is
+    // forward, so the third basis column is -forward.
+    const right = t3v(spec.right).normalize();
+    const up    = t3v(spec.up).normalize();
+    const fwd   = t3v(spec.forward).normalize();
+    const holder = new THREE.Object3D();
+    holder.matrixAutoUpdate = false;
+    holder.matrix.makeBasis(right, up, fwd.clone().negate());
+    holder.matrix.setPosition(t3(spec.pos));
+    holder.matrixWorld.copy(holder.matrix);
+
+    // --- gizmo: body + lens cone, drawn along local -Z -------------------
+    const gizMat = new THREE.MeshLambertMaterial({ color: 0x9ad0ff });
+    const body = new THREE.Mesh(
+      new THREE.BoxGeometry(GIZMO * 0.95, GIZMO * 0.7, GIZMO * 1.05), gizMat);
+    const lens = new THREE.Mesh(
+      new THREE.ConeGeometry(GIZMO * 0.42, GIZMO * 0.8, 12), gizMat);
+    lens.rotation.x = -Math.PI / 2;                 // cone +Y -> local -Z
+    lens.position.set(0, 0, -GIZMO * 0.85);
+    body.userData.parcelId = parcel.id;
+    lens.userData.parcelId = parcel.id;
+    holder.add(body); holder.add(lens);
+    camPicks.push(body, lens);
+
+    // --- view volume: box prism for ortho, pyramid for perspective -------
+    const frustum = new THREE.LineSegments(
+      frustumGeometry(spec),
+      new THREE.LineBasicMaterial({ color:0x6fd3ff, transparent:true, opacity:0.28 }));
+    holder.add(frustum);
+
+    camGroup.add(holder);
+
+    const lab = makeLabel("cam:" + parcel.id, "#9ad0ff", 26);
+    const lp = t3(spec.pos);
+    lab.position.set(lp.x, lp.y + GIZMO * 1.4, lp.z);
+    lab.userData.isCamLabel = true;
+    camGroup.add(lab);
+    labels.push(lab);
+
+    camObjs.set(parcel.id, { spec, holder, frustum, gizMat, label: lab });
+  }
+
+  /**
+   * Rebuild every camera gizmo. Needed on a projection flip: the two variants
+   * differ in stand-off distance as well as volume shape, so the whole rig
+   * moves, not just its wireframe.
+   */
+  function rebuildCameras(){
+    if (!root || !camGroup || !state.map) return;
+    root.remove(camGroup);
+    disposeTree(camGroup);
+    labels = labels.filter(sp => !sp.userData.isCamLabel);
+    camPicks = []; camObjs = new Map();
+    camGroup = new THREE.Group();
+    root.add(camGroup);
+    for (const p of (state.map.parcels || [])) buildCamera(p);
+    applySelection();
+    applyFrustums();
+  }
+
+  /** Initial camera: close to the 2D elevation view, then free to orbit. */
+  function frameTown(ex){
+    target.set((ex.x[0] + ex.x[1]) / 2, (ex.z[0] + ex.z[1]) / 2, -(ex.y[0] + ex.y[1]) / 2);
+    const span = Math.max(ex.x[1] - ex.x[0], ex.z[1] - ex.z[0], ex.y[1] - ex.y[0], 10);
+    orbit.radius = (span / (2 * Math.tan(camera.fov * Math.PI / 360))) * 1.5;
+    orbit.theta = 0.24;      // slight yaw off dead-on, for depth
+    orbit.phi = 1.29;        // just above the horizon: elevation-like
+    updateCamera();
+  }
+
+  function updateCamera(){
+    const sp = Math.sin(orbit.phi), cp = Math.cos(orbit.phi);
+    camera.position.set(
+      target.x + orbit.radius * sp * Math.sin(orbit.theta),
+      target.y + orbit.radius * cp,
+      target.z + orbit.radius * sp * Math.cos(orbit.theta));
+    camera.lookAt(target);
+  }
+
+  // ------------------------------------------------------------- controls
+  function bindControls(){
+    const el = renderer.domElement;
+    let dragging = null, lx = 0, ly = 0, moved = 0;
+
+    el.addEventListener("contextmenu", e => e.preventDefault());
+
+    el.addEventListener("pointerdown", e => {
+      dragging = (e.button === 2 || e.shiftKey) ? "pan" : "orbit";
+      lx = e.clientX; ly = e.clientY; moved = 0;
+      el.setPointerCapture(e.pointerId);
+    });
+
+    el.addEventListener("pointermove", e => {
+      const r = el.getBoundingClientRect();
+      pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+      pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+      if (!dragging){ hover(); return; }
+      const dx = e.clientX - lx, dy = e.clientY - ly;
+      lx = e.clientX; ly = e.clientY;
+      moved += Math.abs(dx) + Math.abs(dy);
+      if (dragging === "orbit"){
+        orbit.theta -= dx * 0.006;
+        orbit.phi = Math.max(0.05, Math.min(Math.PI - 0.05, orbit.phi - dy * 0.006));
+      } else {
+        // pan in the camera plane, scaled so the drag tracks the cursor
+        const k = 2 * orbit.radius * Math.tan(camera.fov * Math.PI / 360) / r.height;
+        const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0);
+        const up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+        target.addScaledVector(right, -dx * k).addScaledVector(up, dy * k);
+      }
+      updateCamera();
+    });
+
+    const endDrag = e => {
+      if (dragging && moved < 5) pick();          // a click, not a drag
+      dragging = null;
+      if (el.hasPointerCapture && el.hasPointerCapture(e.pointerId))
+        el.releasePointerCapture(e.pointerId);
+    };
+    el.addEventListener("pointerup", endDrag);
+    el.addEventListener("pointercancel", () => { dragging = null; });
+
+    el.addEventListener("wheel", e => {
+      e.preventDefault();
+      orbit.radius = Math.max(4, Math.min(1200, orbit.radius * Math.exp(e.deltaY * 0.0012)));
+      updateCamera();
+    }, { passive:false });
+  }
+
+  // -------------------------------------------------------------- picking
+  function hover(){
+    if (!root) return;
+    ray.setFromCamera(pointer, camera);
+    const camHit = ray.intersectObjects(camPicks, false)[0];
+    const pinHit = camHit ? null : ray.intersectObjects(pinPicks, false)[0];
+    const id = pinHit ? pinHit.object.userData.lm.id : null;
+    renderer.domElement.style.cursor = (camHit || pinHit) ? "pointer" : "default";
+    if (id !== hoveredId){ hoveredId = id; applyLabels(); }
+  }
+
+  function pick(){
+    if (!root) return;
+    ray.setFromCamera(pointer, camera);
+
+    // cameras first: small gizmos floating outside the parcel shells
+    const camHit = ray.intersectObjects(camPicks, false)[0];
+    if (camHit){
+      hideCard(); selectedLmId = null;
+      openPov(camHit.object.userData.parcelId);
+      return;
+    }
+    // then pins: they sit inside the parcel shells
+    const pin = ray.intersectObjects(pinPicks, false)[0];
+    if (pin){
+      selectedLmId = pin.object.userData.lm.id;
+      showCard(pin.object.userData.lm);
+      applySelection(); applyLabels();
+      return;
+    }
+    const par = ray.intersectObjects(parcelPicks, false)[0];
+    if (par){
+      hideCard();
+      selectedLmId = null;
+      selectParcel(par.object.userData.parcel.id);   // shared selection state
+      return;
+    }
+    hideCard();
+    selectedLmId = null;
+    applySelection(); applyLabels();
+  }
+
+  // ------------------------------------------------------------- info card
+  function showCard(lm){
+    const el = document.getElementById("lmCard");
+    const col = districtColor(state.map, lm.district);
+    el.style.borderLeftColor = col;
+    el.innerHTML = `<button class="close" title="close">&times;</button>
+      <h4>${esc(lm.name || lm.id)}</h4>
+      <dl>
+        <dt>id</dt><dd><code>${esc(lm.id)}</code></dd>
+        <dt>kind</dt><dd>${esc(lm.kind || "-")}</dd>
+        <dt>district</dt><dd><i class="swatch" style="background:${col}"></i>${esc(lm.district || "-")}</dd>
+        <dt>pos</dt><dd>${esc(posStr(lm.pos))}</dd>
+        <dt>on map</dt><dd>${lm.mapVisible === false
+          ? '<span class="sev-warn">no (hidden)</span>' : "yes"}</dd>
+        ${(lm.residents||[]).length
+          ? `<dt>residents</dt><dd>${esc((lm.residents||[]).join(", "))}</dd>` : ""}
+      </dl>
+      ${lm.note ? `<div class="note">${esc(lm.note)}</div>` : ""}`;
+    el.hidden = false;
+    const box = document.getElementById("view3d").getBoundingClientRect();
+    const px = (pointer.x + 1) / 2 * box.width;
+    const py = (1 - pointer.y) / 2 * box.height;
+    el.style.left = Math.max(8, Math.min(box.width - 300, px + 14)) + "px";
+    el.style.top  = Math.max(8, Math.min(Math.max(8, box.height - 170), py + 12)) + "px";
+  }
+  function hideCard(){ document.getElementById("lmCard").hidden = true; }
+
+  // ------------------------------------------------------------ POV panel
+  /**
+   * The POV panel's own renderer. A second WebGL context over the same Scene
+   * is cheaper to reason about than scissoring the main canvas now that the
+   * panel sits in the sidebar rather than on top of the viewport, and it can
+   * never be clipped or half-composited by the panel's own chrome.
+   */
+  function povInit(){
+    startLoop();                 // the POV renders even while a 2D tab is up
+    if (povRenderer) return povRenderer;
+    povRenderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+    povRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    povRenderer.setSize(1, 1, false);
+    const body = document.getElementById("povBody");
+    body.appendChild(povRenderer.domElement);
+    new ResizeObserver(povResize).observe(body);
+    return povRenderer;
+  }
+
+  function povResize(){
+    if (!povRenderer) return;
+    const r = document.getElementById("povBody").getBoundingClientRect();
+    const w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+    povRenderer.setSize(w, h, false);
+  }
+
+  /** Build the THREE camera for a spec, in whichever projection it carries. */
+  function makePovCamera(s){
+    let cam;
+    if (s.projection === "persp"){
+      cam = new THREE.PerspectiveCamera(s.fov, s.aspect, s.near, s.far);
+    } else {
+      cam = new THREE.OrthographicCamera(
+        -s.width / 2, s.width / 2, s.height / 2, -s.height / 2, s.near, s.far);
+    }
+    const right = t3v(s.right).normalize();
+    const up    = t3v(s.up).normalize();
+    const fwd   = t3v(s.forward).normalize();
+    cam.matrixAutoUpdate = false;
+    cam.matrix.makeBasis(right, up, fwd.clone().negate());
+    cam.matrix.setPosition(t3(s.pos));
+    cam.matrixWorld.copy(cam.matrix);
+    cam.matrixWorldInverse.copy(cam.matrixWorld).invert();
+    return cam;
+  }
+
+  function openPov(parcelId){
+    const entry = camObjs.get(parcelId);
+    if (!entry) return;
+    povParcelId = parcelId;
+    povDismissedFor = null;
+    const s = entry.spec;
+
+    povInit();
+    povCam = makePovCamera(s);
+
+    document.getElementById("povPanel").hidden = false;
+    const parcel = (state.map.parcels || []).find(p => p.id === parcelId) || {};
+    const isP = s.projection === "persp";
+    const lens = isP
+      ? `fov ${num(s.fov)}&deg; v / ${num(s.variants.persp.hfov)}&deg; h
+         &middot; eye ${num(s.dist)}u out`
+      : `ortho ${num(s.variants.ortho.width)}u`;
+    document.getElementById("povHead").innerHTML =
+      `<b>${esc(parcel.name || parcelId)}</b>
+       <span class="dimmer">${esc(parcel.sceneKey || "")}</span>
+       <span class="seg" id="povProj">
+         <button data-proj="ortho" class="${isP ? "" : "on"}">ortho</button>
+         <button data-proj="persp" class="${isP ? "on" : ""}">persp</button>
+       </span>
+       <span class="povmeta">yaw ${num(s.yaw)}&deg; &middot; pitch ${num(s.pitch)}&deg;
+         &middot; margin ${num(s.margin * 100)}% &middot; ${lens}
+         &middot; 1344:768</span>
+       <span class="pill ${s.authored ? "sev-warn" : "sev-info"}">${s.authored ? "authored" : "default"}</span>
+       ${projOverride && projOverride !== s.authoredProjection
+          ? `<span class="pill sev-warn">viewer override</span>` : ""}
+       <button class="close" id="povClose" title="close">&times;</button>`;
+
+    // shared selection, force-select (no-op when it is already the selection,
+    // which also keeps openPov <- syncPov <- render from recursing)
+    if (selectedParcelId !== parcelId) selectParcel(parcelId, true);
+    else applySelection();
+    povResize();
+  }
+
+  function closePov(byUser){
+    if (byUser) povDismissedFor = povParcelId;
+    povParcelId = null; povCam = null;
+    document.getElementById("povPanel").hidden = true;
+    applySelection();
+  }
+
+  /**
+   * The POV is the selected parcel's shot, so the panel simply follows the
+   * shared selection: selecting a parcel opens it, deselecting collapses it.
+   * An explicit close sticks until the selection moves elsewhere.
+   */
+  function syncPov(){
+    if (!selectedParcelId){
+      povDismissedFor = null;
+      if (povParcelId) closePov();
+      return;
+    }
+    if (povParcelId === selectedParcelId) return;
+    if (povDismissedFor === selectedParcelId) return;
+    if (camObjs.has(selectedParcelId)) openPov(selectedParcelId);
+  }
+
+  /** Live ortho|persp toggle: moves every gizmo and re-frames the POV shot. */
+  function setProjection(p){
+    projOverride = (p === "ortho" || p === "persp") ? p : null;
+    rebuildCameras();
+    if (povParcelId){
+      const keep = povParcelId;
+      povParcelId = null;                   // force openPov to redo the header
+      openPov(keep);
+    }
+  }
+
+  function buildCamStrip(map){
+    const strip = document.getElementById("camStrip");
+    strip.innerHTML = `<span class="dimmer">cameras:</span>` +
+      (map.parcels || []).map(p =>
+        `<button class="cambtn" data-cam="${esc(p.id)}" title="${esc(p.name || p.id)}">${esc(p.id)}</button>`
+      ).join("");
+  }
+
+  // ------------------------------------------------------- visual state
+  /**
+   * Landmark ids inside the selected parcel, or null when nothing is selected
+   * (in which case everything keeps its uniform appearance).
+   */
+  function selectionSet(){
+    if (!selectedParcelId) return null;
+    return insideByParcel.get(selectedParcelId) || new Set();
+  }
+
+  function applySelection(){
+    const inSel = selectionSet();
+
+    for (const [id, o] of parcelObjs){
+      const on = id === selectedParcelId;
+      o.edges.material.color.set(on ? 0xffb35a : 0x7f8ea3);
+      o.edges.material.opacity = on ? 1.0 : (inSel ? DIM_ALPHA : 0.45);
+      o.shell.material.color.set(on ? 0xffb35a : 0x7f8ea3);
+      o.shell.material.opacity = on ? 0.10 : (inSel ? 0.012 : 0.04);
+    }
+
+    // pins: full strength inside the selected parcel, faint context outside
+    for (const [id, o] of pinsByLm){
+      const on = id === selectedLmId;
+      o.mat.color.copy(o.baseColor);
+      o.mat.opacity = (!inSel || inSel.has(id)) ? 1 : DIM_ALPHA;
+      if (!o.mat.emissive) o.mat.emissive = new THREE.Color();
+      o.mat.emissive.setHex(on ? 0x5a3c10 : 0x000000);
+    }
+
+    // edges: both ends inside = full; exactly one inside = this parcel's exit,
+    // held at EXIT_ALPHA so the way out stays readable; neither = context
+    for (const eo of edgeObjs){
+      let f = 1;                                     // opacity factor on each part
+      if (inSel){
+        const n = (inSel.has(eo.edge.from) ? 1 : 0) + (inSel.has(eo.edge.to) ? 1 : 0);
+        f = n === 2 ? 1 : n === 1 ? EXIT_ALPHA : DIM_ALPHA;
+      }
+      for (const part of eo.parts) part.mat.opacity = part.baseOpacity * f;
+    }
+
+    for (const [id, o] of camObjs){
+      const on = id === selectedParcelId;
+      o.gizMat.color.setHex(on ? 0xffb35a : 0x9ad0ff);
+      o.gizMat.transparent = true;
+      o.gizMat.opacity = on ? 1 : (inSel ? DIM_ALPHA : 1);
+      o.frustum.material.color.setHex(on ? 0xffb35a : 0x6fd3ff);
+      o.frustum.material.opacity = on ? 0.62 : (inSel ? 0.06 : 0.16);
+      o.label.material.opacity = on ? 1 : (inSel ? 0.25 : 1);
+    }
+
+    for (const btn of document.querySelectorAll("#camStrip .cambtn"))
+      btn.classList.toggle("on", btn.dataset.cam === selectedParcelId);
+  }
+
+  /**
+   * Dimmed labels are hidden outright rather than faded: a wall of ghost text
+   * over the selected scene is worse than no text. Hovering a dimmed pin still
+   * brings its label back.
+   */
+  function applyLabels(){
+    const inSel = selectionSet();
+    for (const [id, sp] of labelByLm){
+      const dimmed = !!inSel && !inSel.has(id);
+      sp.visible = dimmed
+        ? (id === hoveredId)
+        : (state.labels || id === hoveredId || id === selectedLmId);
+    }
+  }
+
+  function applyFrustums(){
+    if (!camGroup) return;
+    for (const [, o] of camObjs){
+      o.frustum.visible = state.frustums;
+      o.label.visible = state.frustums;
+      o.holder.visible = true;                 // gizmos stay pickable
+    }
+  }
+
+  // -------------------------------------------------------------- runtime
+  function startLoop(){
+    if (!ok || started) return;
+    started = true;
+    loop();
+  }
+
+  function resize(){
+    if (!ok) return;
+    const box = document.getElementById("view3d").getBoundingClientRect();
+    if (box.width < 1 || box.height < 1) return;      // hidden behind a 2D tab
+    const w = Math.round(box.width), h = Math.round(box.height);
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+
+  /**
+   * Labels are world-space sprites, so they shrink with distance. Clamp the
+   * on-screen height so they stay legible zoomed out and never dominate up
+   * close.
+   */
+  function scaleLabels(cam, viewH){
+    const proj = 1 / Math.tan(cam.fov * Math.PI / 360);
+    for (const sp of labels){
+      if (!sp.visible) continue;
+      const d = Math.max(0.001, cam.position.distanceTo(sp.position));
+      let px = LABEL_WORLD_H * proj * viewH / (2 * d);
+      px = Math.min(LABEL_MAX_PX, Math.max(LABEL_MIN_PX, px));
+      const wh = px * 2 * d / (proj * viewH);
+      sp.scale.set(wh * sp.userData.aspect, wh, 1);
+    }
+  }
+
+  /**
+   * A fixed world size, used for the POV shot in BOTH projections: under ortho
+   * there is no perspective divide so it is the only sensible size, and under
+   * perspective letting the annotation shrink with depth is exactly right.
+   * Kept smaller than the orbit view's: in the POV the labels sit over a framed
+   * shot, and at full size they swamp it.
+   */
+  function scaleLabelsWorld(){
+    for (const sp of labels){
+      if (!sp.visible) continue;
+      sp.scale.set(LABEL_POV_H * sp.userData.aspect, LABEL_POV_H, 1);
+    }
+  }
+
+  /**
+   * One rAF drives both renderers over the one Scene: the POV shot first, then
+   * the orbit view. They are separate WebGL contexts, so each owns its own
+   * framebuffer and there is no scissor state to leak between them; the only
+   * shared mutable state is per-render sprite scaling and camGroup visibility,
+   * both set immediately before the render call that reads them.
+   */
+  function loop(){
+    raf = requestAnimationFrame(loop);
+    if (!ok || !root) return;
+
+    // --- POV shot: same scene, own renderer, in the sidebar --------------
+    const povOn = povCam && povRenderer && !document.getElementById("povPanel").hidden;
+    if (povOn){
+      // the shot itself should not contain the camera rig that frames it
+      camGroup.visible = false;
+      scaleLabelsWorld();          // fixed world size in both projections
+      povRenderer.render(scene, povCam);
+      camGroup.visible = true;
+    }
+
+    // --- main orbit view ------------------------------------------------
+    if (mainActive && !document.getElementById("view3d").hidden){
+      scaleLabels(camera, renderer.domElement.clientHeight || 1);
+      renderer.render(scene, camera);
+    }
+  }
+
+  return {
+    available(){ return typeof THREE !== "undefined"; },
+    build,
+    /**
+     * The loop stays alive across view switches: the POV panel lives in the
+     * sidebar now, so it must keep rendering while the 2D tabs are showing.
+     * `mainActive` gates only the orbit view's render call.
+     */
+    show(){
+      if (!init()) return;
+      mainActive = true;
+      resize();
+      startLoop();
+    },
+    hide(){ mainActive = false; },
+    setSelectedParcel(id){
+      selectedParcelId = id;
+      if (root){ applySelection(); applyLabels(); syncPov(); }
+    },
+    setLabels(){ if (root) applyLabels(); },
+    setFrustums(){ if (root) applyFrustums(); },
+    openPov, closePov, setProjection,
+    projection(){ return projOverride; },
+    closeCard(){ hideCard(); selectedLmId = null; if (root){ applySelection(); applyLabels(); } },
+    cameraSpec(parcelId){ const e = camObjs.get(parcelId); return e ? e.spec : null; },
+    _dbg(){ return { scene, camera, povCam, renderer, povRenderer, root,
+                     camObjs, labels, edgeObjs, insideByParcel, projOverride,
+                     povParcelId, selectedParcelId }; },
+  };
+})();
+// ================================================================== render
+function render(){
+  const views2d = document.getElementById("views2d");
+  const view3d  = document.getElementById("view3d");
+  // only #sideBody is rebuilt: #povPanel is a sibling and owns a WebGL context
+  const sideEl  = document.getElementById("sideBody");
+
+  if (state.loadError){
+    document.getElementById("townName").textContent = state.town;
+    views2d.innerHTML = `<div class="err-box">Failed to load
+      <code>${esc(state.town)}.map.json</code><br><br>${esc(state.loadError)}</div>`;
+    view3d.hidden = true; TV.hide();
+    document.getElementById("povPanel").hidden = true;
+    sideEl.innerHTML = "";
+    return;
+  }
+  const map = state.map;
+  if (!map){ views2d.innerHTML = `<p class="muted">loading…</p>`; return; }
+
+  document.getElementById("townName").textContent = map.displayName || map.town || state.town;
+  document.getElementById("premise").textContent = map.premise || "";
+  document.getElementById("townInput").value = state.town;
+  for (const b of document.querySelectorAll("#viewSeg button"))
+    b.classList.toggle("on", b.dataset.view === state.view);
+  document.getElementById("btnLabels").classList.toggle("on", state.labels);
+  document.getElementById("btnFrustums").classList.toggle("on", state.frustums);
+
+  // --- 3D main panel vs the 2D projection tabs --------------------------
+  const is3d = state.view === "3d";
+  view3d.hidden = !is3d;
+  if (is3d){
+    views2d.innerHTML = "";
+    TV.show();
+  } else {
+    TV.hide();
+    const views = state.view === "both" ? ["elevation","plan"] : [state.view];
+    const subtitle = { elevation:"x horizontal, z vertical (height) — primary for this cliff town",
+                       plan:"x horizontal, y vertical (cliff 0 at top -> river below)" };
+    views2d.innerHTML = views.map(v =>
+      `<div class="viewblock"><h2>${v} <span>— ${esc(subtitle[v])}</span></h2>${renderSvg(map, v)}</div>`
+    ).join("");
+  }
+  TV.setSelectedParcel(state.selected);
+  TV.setLabels();
+  TV.setFrustums();
+
+  const { contracts } = deriveContracts(map);
+  const sel = contracts.find(c => c.parcel.id === state.selected) || null;
+  sideEl.innerHTML = renderParcelList(map, contracts)
+                   + renderContract(map, sel)
+                   + renderValidation(map)
+                   + renderLegend(map);
+
+  // fill the fallback textarea with the brief up-front
+  if (sel){
+    const ta = document.getElementById("briefText");
+    if (ta) ta.value = parcelBrief(map, sel);
+  }
+}
+
+// ================================================================== events
+/**
+ * The one selection state, shared by the 2D views, the 3D parcel boxes, the
+ * camera gizmos, the camera strip and the contract panel.
+ * `force` suppresses the toggle-off behaviour (opening a POV should select,
+ * never deselect).
+ */
+function selectParcel(id, force){
+  state.selected = (!force && state.selected === id) ? null : id;
+  render();
+}
+
+document.addEventListener("click", ev => {
+  const row = ev.target.closest(".parcelrow, .parcel");
+  if (row && row.dataset.parcel){ selectParcel(row.dataset.parcel); return; }
+
+  const cam = ev.target.closest("#camStrip .cambtn");
+  if (cam){ TV.openPov(cam.dataset.cam); return; }
+
+  const proj = ev.target.closest("#povProj button");
+  if (proj){ TV.setProjection(proj.dataset.proj); return; }
+
+  if (ev.target.closest("#povClose")){ TV.closePov(true); return; }
+  if (ev.target.closest("#lmCard .close")){ TV.closeCard(); return; }
+
+  const copy = ev.target.closest("#copyBrief");
+  if (copy){
+    const map = state.map;
+    const { contracts } = deriveContracts(map);
+    const c = contracts.find(k => k.parcel.id === copy.dataset.parcel);
+    if (!c) return;
+    const md = parcelBrief(map, c);
+    const status = document.getElementById("copyStatus");
+    const ta = document.getElementById("briefText");
+    if (ta) ta.value = md;
+    const fallback = msg => {
+      status.textContent = msg + " — copy from the box below:";
+      status.className = "sev-warn";
+      const d = document.getElementById("briefDetails");
+      if (d) d.open = true;
+      if (ta){ ta.focus(); ta.select(); }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(md).then(() => {
+        status.textContent = `copied (${md.length} chars)`;
+        status.className = "sev-ok";
+        setTimeout(() => { status.textContent = ""; }, 2500);
+      }).catch(e => fallback("clipboard blocked"));
+    } else fallback("no clipboard API");
+    return;
+  }
+
+  const vb = ev.target.closest("#viewSeg button");
+  if (vb){ state.view = vb.dataset.view; render(); return; }
+  if (ev.target.closest("#btnLabels")){ state.labels = !state.labels; render(); return; }
+  if (ev.target.closest("#btnFrustums")){ state.frustums = !state.frustums; render(); return; }
+  if (ev.target.closest("#btnReload")){ load(state.town); return; }
+});
+
+document.getElementById("townInput").addEventListener("keydown", ev => {
+  if (ev.key === "Enter"){
+    const t = ev.target.value.trim();
+    if (t){
+      const u = new URL(location.href);
+      u.searchParams.set("town", t);
+      history.replaceState(null, "", u);
+      load(t);
+    }
+  }
+});
+
+// ==================================================================== load
+async function load(town){
+  state.town = town;
+  state.map = null;
+  state.loadError = null;
+  state.selected = null;
+  render();
+  try {
+    const res = await fetch(`${encodeURIComponent(town)}.map.json?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    const map = await res.json();
+    if (!map.parcels || !map.landmarks) throw new Error("missing landmarks/parcels arrays");
+    state.map = map;
+  } catch (e){
+    state.loadError = e.message || String(e);
+  }
+  // The JSON is the model: rebuilding the 3D scene is the whole update path.
+  if (state.map && TV.available()) TV.build(state.map);
+  render();
+}
+
+const params = new URLSearchParams(location.search);
+const v0 = params.get("view");
+if (v0 && ["3d","elevation","plan","both"].includes(v0)) state.view = v0;
+load(params.get("town") || "dellhollow");
+</script>
+</body>
+</html>

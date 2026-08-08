@@ -1,0 +1,7 @@
+{
+ "exported": "2026-08-08T16:52:31Z",
+ "source": "tools/blends/dellhollow-master.blend",
+ "tool": "tools/cine_bake.py --glb",
+ "walkMeshes": 275,
+ "note": "SHARED collision for every cinematic camera of del-cine. The art (background + depth per camera) lives in cameras/<id>/ and is indexed by cine.json."
+}

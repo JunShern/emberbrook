@@ -1,0 +1,21 @@
+{
+  "_schema": "shopId → stock (item ids from items.json; prices come from there), rates, and the interior scene the shop lives in (interiorSceneKey matches the town map / scenegraph). Shops buy anything sellable at sellRate * price.",
+  "rates": { "buyRate": 1.0, "sellRate": 0.5 },
+  "shops": {
+    "del-item": {
+      "name": "The Chandlery (item shop)", "sceneKey": "del-item-int",
+      "keeper": "chandler",
+      "stock": ["tonic", "hale-tonic"]
+    },
+    "del-weapon": {
+      "name": "Weapon Shop", "sceneKey": "del-weapon-int",
+      "keeper": "weaponsmith",
+      "stock": ["walking-staff", "river-cudgel", "boat-hook"]
+    },
+    "del-armor": {
+      "name": "Armor Shop", "sceneKey": "del-armor-int",
+      "keeper": "armorer",
+      "stock": ["quilted-vest", "oilskin-coat", "timber-jack"]
+    }
+  }
+}

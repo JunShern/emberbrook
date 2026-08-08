@@ -1,0 +1,1583 @@
+{
+  "town": "emberbrook",
+  "displayName": "Emberbrook",
+  "walkSceneKey": "emb-townwalk",
+  "_doc_walkSceneKey": "the town's EXPLORABLE scene key — stated role, not inferred (district fixed-camera bundles carry the whole town's collision, so pad names cannot identify the walk scene). This is the real-time DEVELOPER view; the game routes players into playSceneKey. Built by tools/emb_blockout.py. | REPOINTED 2026-08-01 (camera lane, 2x round): was `emb-walk`, a one-off tools/emb_export.py bundle last written 07-31T04:43 against the 1x town — every camera solved against it was solved against a town that no longer exists (its walk bounds max out at x 31 where the map now runs to x 118). `emb-townwalk` is the SAME master exported by the ten-minute cron (tools/townwalk_live_refresh.sh -> tools/town_export.py), so the walk geometry the solver measures is the geometry the blockout currently builds: 162 walk_ meshes at 2x against emb-walk's 139 at 1x. emb-walk is left on disk as the superseded bundle and is named by nothing.",
+  "playSceneKey": "emb-cine",
+  "_doc_playSceneKey": "the scene the GAME sends players to — the town played as a sequence of FIXED pre-rendered shots (the FF grammar this project exists for). Deliberately separate from walkSceneKey: the real-time bundle stays the developer's explore view, and which of the two the scene graph wires is a data choice, not a naming coincidence.",
+  "cameraFile": "townmap/emberbrook.cameras.json",
+  "_doc_cameraFile": "the hand-authored camera INTENT for playSceneKey. tools/cine_solve.mjs --town emberbrook solves it against this map + the walkSceneKey walk geometry (emb-townwalk) into emberbrook.cameras.solved.json — the one numeric truth cine_bake.py and play3d.html both read.",
+  "premise": "The home village: a valley farming settlement gathered around its living Heartlight — one of the last — where the village brook meets the river. Warm, low, earthbound; everything Dellhollow is not. The river is the story's spine: Vesper arrives along it, and leaves through the Sigil Gate to follow it downstream.",
+  "units": "world units (1u ~ 1m). Axes: x = west-east, y = south-north, z = height (village sits on a gentle rise, z 0..3).",
+  "primaryView": "plan",
+  "mapDiscovery": {
+    "unit": "parcel",
+    "rule": "Entering a parcel's scene reveals it and its mapVisible landmarks (Vesper inks the map as she walks).",
+    "startRevealed": [
+      "p-entrance"
+    ]
+  },
+  "style": {
+    "masterRefs": [
+      "public/assets/scenes/square3d/stylized.png",
+      "public/assets/scenes/lane3d/stylized.png"
+    ],
+    "palette": "warm autumn village: timber-framed cottages with stone bases, thatch and wood-shingle roofs, cobble paths, pumpkins and bunting (festival season), the Heartlight's amber glow at the center",
+    "motifs": [
+      "the Heartlight flame (MAGICAL — this town's soul, per STORY.md)",
+      "festival bunting + pumpkin stalls",
+      "the pond's evening mirror",
+      "orchard rows",
+      "dry-stone walls along lanes"
+    ],
+    "mood": "golden late afternoon into dusk; the Heartlight brightening as the sky dims"
+  },
+  "exits": [
+    {
+      "id": "valley-road-south",
+      "at": "arrival-clearing",
+      "mode": "land",
+      "to": "overworld",
+      "deny": true,
+      "denyUntil": "story.ch1.done",
+      "denyDialogue": "emb.southroad.turnback",
+      "denyLabel": "Back down the Whisperwood road",
+      "_doc_deny": "PT-20260803-002, re-found as PT-20260803-008 (LLM playtester, both rounds). The game's first frame stood the player ON this exit's own pad — cine.json's woodroad spawn and this exit are the same point, walk_pad_arrival-clearing — so \"Leave Emberbrook? [E]\" was the ONLY prompt on screen, and taking it dropped a brand-new game into ow-valley where no unfired beat lives. Chapter One became unadvanceable while the objective banner still read \"Follow the road north\", naming the place they had just left. The spine detector proved it mechanically: the body in ow-valley for three consecutive steps with none of the next unfired beats there. USER'S REMEDY, verbatim 2026-08-03: \"maybe just spawn the character inside Emberbrook to begin with, and don't let them exit from the whisperwood side until after Ch1? Just use a denial prompt like 'This is where I just came from, I should follow the path toward those lights in the distance'\". Both halves shipped: story.json's `start` moved the new-game spawn 7.0 m up the road (off this pad, still in shot 'woodroad'), and this block denies the exit until story.ch1.done. IT IS A DENIAL, NOT A SEAL, and the difference is the point: `sealed`/`sealedUntil` withholds the edge, the prompt AND the marker, which is right for a gate nobody can see through and WRONG for a road the player can see, walked in on, and would otherwise learn nothing from. A denied edge keeps its prompt, loses its transition, and answers in the character's own voice.",
+      "note": "the river road south through the Whisperwood — upstream, the way Vesper's journey came; the arrival scene begins here. DENIED until story.ch1.done: the prompt stands and Vesper refuses it out loud."
+    },
+    {
+      "id": "forest-north",
+      "at": "forest-trailhead",
+      "mode": "land",
+      "to": "overworld-forest",
+      "note": "into the Whisperwood (Ch1 trail)"
+    },
+    {
+      "id": "sigil-gate-downstream",
+      "at": "sigil-gate",
+      "mode": "land",
+      "to": "downriver (toward Dellhollow)",
+      "sealed": true,
+      "sealedUntil": "story.ch1.gate-open",
+      "_doc_sealedUntil": "USER REPORT 2026-08-02: \"there's no entry marker for entering Emberbrook from the old gate.\" ROOT CAUSE was not the marker layer — the transition was never wired: valley.region.json's 'old-gate' portal carried target:null and this exit carries sealed:true, so tools/scenegraph_derive.mjs emitted no edge and nothing could render. The pairing is now DECLARED on both sides (portal 'old-gate' names this exit) and the edge is withheld only by the seal. FLAG PROVENANCE, not invented: chapter1.js already owns `Chapter1.flags.gateOpen`, set at chapter1.js:255 when both keepers hold the twin sigil plates before the Old Gate — the Chapter One beat that opens it. A PERSISTED flag store already exists too: `GS.state.flags` (game_state.js), written by dialogue.json nodes' `setFlags`/`incFlags` and read by `Dialogue.check`, saved to localStorage by GS.save/serialize. The two are simply not connected: chapter1.js keeps `gateOpen` in its own object. RENAMED 2026-08-02 'ch1.gateOpen' -> 'story.ch1.gate-open' to match the flag namespace ratified in docs/plans/end-to-end-wiring.md section 6 (npc.met.* is owned by dialogue.json, story.* by story.json, and a bare legacy name only where one already existed, e.g. maren-joined). BOTH RUNTIME HALVES HAVE NOW LANDED: public/game/story.json's ch1.sigils beat sets it through GS.setFlags when the keepers stand the twin plates, and play3d.html's sgLive() evaluates the derived edge's `when` on every physics tick — so the pair is a real conditional edge, absent until the flag turns and live the frame it does. So this is a namespaced promotion of the flag that already exists, and it costs two lines neither of which is this lane's to write — (1) chapter1.js:255 also sets GS.state.flags['ch1.gateOpen'] (that file belongs to the chapter-rewrite lane), (2) play3d.html's sgBind, which today takes every edge whose `from` matches the scene, filters on an edge's `requires` (coordinator-owned). Until both land, sealed means NO edge, NO prompt and NO marker — the honest presentation, and the one a red arrow onto a shut gate would break.",
+      "note": "SEALED at story start; opens in Ch1. Beyond it, road and river continue downstream to Dellhollow."
+    }
+  ],
+  "districts": [
+    {
+      "id": "entrance",
+      "name": "Village Entrance",
+      "z": 0
+    },
+    {
+      "id": "square",
+      "name": "Festival Square",
+      "z": 1.5
+    },
+    {
+      "id": "lanes",
+      "name": "Pond Lane",
+      "z": 1
+    },
+    {
+      "id": "homerow",
+      "name": "Home Row",
+      "z": 2
+    },
+    {
+      "id": "gatefield",
+      "name": "Gate Field",
+      "z": 2.5
+    },
+    {
+      "id": "woodroad",
+      "name": "Whisperwood Road",
+      "z": -0.3
+    }
+  ],
+  "_doc_landmark_footprint_doorFace": [
+    "TWO OPTIONAL LANDMARK FIELDS, both stamped 2026-08-01 on the dressing lane's measurements.",
+    "`footprint`: [W, D, wallHeight] in metres, the building's own body. emb_blockout reads it in",
+    "place of its per-class literal, and BOTH the massing and bodysize() use it — which matters",
+    "because the DOORSTEP is derived by pushing out from the landmark past that body's half-depth.",
+    "The watermill's 2x re-rule moved the building and not the literal, so the mill's own walk pad",
+    "ended up 1.12 m INSIDE the dressed footprint: a doorstep for a building that no longer existed.",
+    "Any landmark whose built size stops matching its class default should carry this field rather",
+    "than have a second literal added to the builder.",
+    "`doorFace`: a COMPASS BEARING IN DEGREES (0 = +y, 90 = +x) naming the outward normal of the wall",
+    "the door is in. A bearing rather than a face token, because a landmark is yawed to its own site,",
+    "so 'the south wall' is only meaningful against a rotation the map does not otherwise state; a",
+    "bearing is checkable with one measurement. It exists because the doorstep is derived from the",
+    "ARRIVING EDGE's bearing while the door is built into a wall, and the two can disagree —",
+    "measured at the watermill as 34 degrees, which is the kind of almost-right a player reads as",
+    "wrong. Where a landmark carries it, the builder puts the door in that wall and the dressing lane",
+    "orients its yard, steps and lucam to match."
+  ],
+  "landmarks": [
+    {
+      "id": "road-gate",
+      "name": "Village Arch",
+      "class": "portal",
+      "kind": "gate",
+      "district": "entrance",
+      "pos": [
+        60.0,
+        8.0,
+        0
+      ],
+      "mapVisible": true,
+      "note": "low timber arch over the south road; harvest wreaths"
+    },
+    {
+      "id": "waystone",
+      "name": "Waystone",
+      "class": "prop",
+      "kind": "prop",
+      "district": "woodroad",
+      "pos": [
+        56.0,
+        -12.0,
+        -0.2
+      ],
+      "mapVisible": false,
+      "note": "USER REDLINE 2026-08-01: the Waystone stands OUTSIDE the village gate, on the quiet Whisperwood road where Vesper first walks in. Mossy marker: EMBERBROOK, and the hand-scratched note. STORY canon: where Mochi hires himself to Vesper (drawing 41's gate brought her here). The wood presses close on both sides of the road. | WAYSTONE LANTERN STAMP 2026-08-01 (night-lighting round): a traveller's lantern stands at the waystone — 900 W warm point, 0.9 m out from the stone face, 0.5 m above its measured top. The stone is LIT, never self-luminous (the Heartlight lesson: emissive surfaces cannot shade); the carved sigils may carry at most 0.35 surface glow (ruled: Dglow). This lamp is NOT part of the 14-lamp roll — it is a road-shrine lamp beyond the town's warmth by design; beyond_warmth and the LAMP_ROLL=14 assert stand. It exists because the opening frame needs a warm anchor: night reads by warm/cool contrast, not darkness (measured, this round). | LANTERN PROP AMENDMENT 2026-08-01 (coordinator, plate review): the original stamp specified the LIGHT and no lane ever placed the OBJECT — both lampless plates shipped with an authorless glow (defect found on the artifact, woodroad + waystone frames). The stamp now names the physical prop: a hooded traveller's road-lantern on a short wooden post at the stamped offset (0.9 m out from the stone face), post sized so the lamp housing sits 0.5 m above the stone's measured top — the LIGHT position IS the lamp-housing position, one authority, never two. Warm glass, small flame visible; housing may be modestly emissive but the POINT light does the shading (Heartlight lesson unchanged). Prop lives in emb_dress (both tiers — walkers must see the lantern the plates show); cine_bake's anchorlight keeps emitting the photons."
+    },
+    {
+      "id": "orchard",
+      "name": "Orchard rows",
+      "class": "area",
+      "extent": 10,
+      "kind": "field",
+      "district": "entrance",
+      "pos": [
+        40.0,
+        24.0,
+        0.6
+      ],
+      "mapVisible": true,
+      "residents": [
+        "pip"
+      ],
+      "note": "apple rows either side of the approach; ladders and baskets"
+    },
+    {
+      "id": "square-plaza",
+      "name": "Festival Square",
+      "class": "area",
+      "extent": 14,
+      "kind": "plaza",
+      "district": "square",
+      "pos": [
+        64.0,
+        44.0,
+        1.5
+      ],
+      "mapVisible": true,
+      "residents": [
+        "mara"
+      ],
+      "note": "cobbled heart of the village; stalls and bunting in season | CH1 AUDIT: finn moved to pond-weir.residents — the shipped script posts him at the pond (beat 7); long-term post is user question Q-finn."
+    },
+    {
+      "id": "heartlight",
+      "name": "The Heartlight",
+      "class": "structure",
+      "enterable": false,
+      "kind": "heartlight",
+      "district": "square",
+      "pos": [
+        64.0,
+        44.0,
+        1.5
+      ],
+      "mapVisible": true,
+      "note": "THE magical flame on its stone pedestal — story core; treat with reverence in every shot | MATERIAL RULING 2026-08-01, RETRACTED AND CORRECTED same day (cef5d61): the plinth and cap were NEVER emissive — emb_mat_heartlight is on the flame mesh alone and always was; the prior note rested on measurement boxes that lapped the flame. The true clipper was the flame kit's EMBER BED, built at alpha 0.92 without the shells' facing-fade rule — a construction fault at the flame's foot, fixed in the kit, not a material reassignment. The 5200 W canon light was never touched by any of this."
+    },
+    {
+      "id": "item-shop",
+      "name": "Item Shop",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "emb-item-int",
+      "kind": "shop-item",
+      "district": "square",
+      "pos": [
+        74.0,
+        38.0,
+        1.5
+      ],
+      "mapVisible": true,
+      "residents": [
+        "shopkeep"
+      ],
+      "note": "village general store — preserves, twine, lamp oil"
+    },
+    {
+      "id": "inn",
+      "name": "Inn — The Ember Hearth",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "emb-inn-int",
+      "kind": "shop-inn",
+      "district": "square",
+      "pos": [
+        54.0,
+        36.0,
+        1.5
+      ],
+      "mapVisible": true,
+      "residents": [
+        "innkeep"
+      ],
+      "note": "small — two rooms and a warm parlour; rarely a stranger in it"
+    },
+    {
+      "id": "notice-board",
+      "name": "Notice board",
+      "class": "prop",
+      "kind": "prop",
+      "district": "square",
+      "pos": [
+        69.0,
+        39.0,
+        1.5
+      ],
+      "mapVisible": false,
+      "note": "festival duties rota; a child's drawing of the Heartlight pinned up | CH1 POSTER (shipped text, for the dressing pass): \"EMBERWAKE TONIGHT — bring a memory worth keeping. And a chair. We are short of chairs.\""
+    },
+    {
+      "id": "well",
+      "name": "Village well",
+      "class": "prop",
+      "kind": "prop",
+      "district": "square",
+      "pos": [
+        56.5,
+        46.0,
+        1.5
+      ],
+      "mapVisible": false,
+      "note": "nudged 2.5 m off the square->hillside-cottage lane (2x scale put it in the road)"
+    },
+    {
+      "id": "pond",
+      "name": "The Pond",
+      "class": "area",
+      "extent": 9,
+      "kind": "water",
+      "district": "lanes",
+      "pos": [
+        92.0,
+        52.0,
+        0.8
+      ],
+      "mapVisible": true,
+      "note": "NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow | RULING 2026-08-01: r12 (from the mechanical extents-x2) swallowed the jetty, smokehouse, weir and brook-mouth and nearly touched the river. r9 is still generous. The JETTY legitimately overhangs water (assert its walk pad is landward); smokehouse/weir re-snap to the r9 shore at build; brook-mouth is clear at r9."
+    },
+    {
+      "id": "pond-jetty",
+      "name": "Pond jetty",
+      "class": "structure",
+      "enterable": false,
+      "kind": "dock",
+      "district": "lanes",
+      "pos": [
+        86.0,
+        48.0,
+        1
+      ],
+      "mapVisible": true,
+      "note": "short fishing jetty; frogs; where kids dare each other"
+    },
+    {
+      "id": "washline-green",
+      "name": "Washline green",
+      "class": "area",
+      "extent": 3,
+      "kind": "field",
+      "district": "lanes",
+      "pos": [
+        82.0,
+        60.0,
+        1
+      ],
+      "mapVisible": false,
+      "residents": [
+        "townsfolk-b"
+      ]
+    },
+    {
+      "id": "hillside-cottage",
+      "name": "Mara & Pip's cottage",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "homerow",
+      "pos": [
+        45.24,
+        58.64,
+        2.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "mara",
+        "pip"
+      ],
+      "note": "REDLINE 2026-07-31: was 'Vesper's home' (canon violation — she arrives a stranger). Reassigned to Mara & Pip, core Ch1 villagers (Pip: seven, one good stick; Mara: his steady mother) — position approximate, cross-check chapter1.js. | MOVED 2026-07-31 (searched, not authored — tools/emb_probe_cottage.py): 2.40 m from (22,27), the ONLY lawful candidate: junction clears at 2.10 m set-back, bench->Heartlight ray (20.8 m) misses the footprint, still touches all three lanes. Fallback measured nonexistent: no bench position within 8 m opens the ray with the cottage at (22,27) — lake-home and elder-house stand on the same line. | 2026-07-31 close: interiorSceneKey (emb-cottage-int) WITHDRAWN until the room exists — the interiors lane built 4 of 5 and this one is backlogged (task list + docs/qa). Re-add the key when the bundle ships; cine_test's every-door-wired assertion stays strict."
+    },
+    {
+      "id": "lake-home",
+      "name": "Lake's home (the keeper's cottage)",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "emb-lake-int",
+      "kind": "building",
+      "district": "homerow",
+      "pos": [
+        34.0,
+        48.0,
+        2
+      ],
+      "mapVisible": true,
+      "residents": [
+        "lake"
+      ],
+      "note": "the lamplighter household: brass lighter above the hearth (STORY.md §2), herbs over the door, grandmother's sayings in the walls. Mochi's old home — he left the year she died."
+    },
+    {
+      "id": "elder-house",
+      "name": "Rowan's house",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "homerow",
+      "pos": [
+        38.0,
+        62.0,
+        2.2
+      ],
+      "mapVisible": true,
+      "residents": [
+        "rowan"
+      ],
+      "note": "the elder and ledger-keeper's house — forty years of ledgers on the shelves. STORY.md: Rowan runs Emberbrook by cheerfully denying he runs it. (Was mislabeled 'Keeper's house' — the keeper's cottage is Lake's, per §2.)"
+    },
+    {
+      "id": "home-lane-end",
+      "name": "Hilltop bench",
+      "class": "prop",
+      "kind": "prop",
+      "district": "homerow",
+      "pos": [
+        28.0,
+        58.0,
+        2.6
+      ],
+      "mapVisible": false,
+      "note": "bench with the whole village in view — quiet story beats live here"
+    },
+    {
+      "id": "gate-court",
+      "name": "Sigil Gate court",
+      "class": "area",
+      "extent": 10,
+      "kind": "plaza",
+      "district": "gatefield",
+      "pos": [
+        78,
+        122,
+        2.8
+      ],
+      "mapVisible": true,
+      "note": "flag-stoned court before the old gate"
+    },
+    {
+      "id": "sigil-gate",
+      "name": "The Old Gate",
+      "class": "portal",
+      "kind": "gate",
+      "district": "gatefield",
+      "pos": [
+        78,
+        130,
+        2.9
+      ],
+      "mapVisible": true,
+      "state": "sealed",
+      "note": "SHIPPED CANON (chapter1.js + STORY.md §1): 'the Old Gate' is what every line calls it; the SIGILS are the twin plates in the ground before it (built as separate props) that open only for two standing them together. Sealed at story start; opens in Ch1; downstream road+river beyond. | TERRAIN RULING 2026-08-01 (user): the Old Gate is the BOTTLENECK between the valley and two mountain cliff bluffs — its masonry built wall-to-wall into living rock so there is no way around; the river/brook exit the valley through the same pinch (a barred water-arch or alongside), and the shadowed gorge beyond IS the road toward Dellhollow. The north end of the valley funnels: forested bluffs converge, the wood climbs their slopes. Concept art variants in docs/qa/emberbrook/concepts/ (notch / valleys-end / ancient-seal), user choosing; blockout carries coarse bluff massing now, dressed cliffs follow the chosen concept. | DESIGN REFINEMENT 2026-08-01 (user): NOT a drain beside the gate — the river runs DIRECTLY PARALLEL to the road and flows UNDER the Old Gate itself: one wide structure spanning the whole notch, twin doors over the road, heavy DRAINAGE BARS (barred water-arches) over the river's passage beside them. Water passes through the gate; people must pass through the doors. GEOGRAPHY STATUS: the water-gap/hanging-valley reading is PROPOSED, not user-ratified — an overworld draft is being built so the user can judge it against their own vision of how the land leads to Dellhollow. Do not hard-bake overworld-dependent facts beyond this valley. | REFINEMENT 2 (user): the water passage is NOT an arch — arches are for humans. The drainage grate sits LOW, at water level only (a culvert grate slightly taller than the waterline), with plain coursed masonry wall above it. Only the road's doorway is arched. | SECLUSION RULING 2026-08-01 (user): the gate is TOO CLOSE to the town center. It moves to a genuinely secluded position — a quiet, wooded, incident-free stretch between the town's last warmth (the barn/dovecote area) and the court, designed as a MEASURED environment shift: village roofs fall out of sight past a threshold, lamp warmth ends at the barn, the forest closes in, then the sealed gate. Builder proposes the new gate/court/trailhead coordinates (notch, bluffs, and river tail move together) for the coordinator's stamp. | SECLUSION STAMP 2026-08-01: moved to [78,130] per the measured proposal — 87.1 m from the square (was 39.8), 41.1 m quiet stretch (was 0.0), roofs strict-zero from 38.9 m, seal re-proven 0.00/0.00/0 m2, notch 21.9 m rock-to-rock with the founded wall dead on gate-final.png. FINDING: seclusion is bought by the ROAD'S SHAPE, not its length — the road curves continuously and arrives 35 deg off the town's bearing (straight longer roads measured WORSE: the eye follows a clear road surface home). | CROSSING STAMP 2026-08-01 (user-ratified flavor 1): a second flag-stoned court on the VALLEY side of the gate, 8.0 m along the channel — the culvert-court crossing: the river runs under the paved court, the road crosses on the stone and leaves the gate on the EAST bank; no bridge, no span exists. Ratio-derived from the world court (1.151 grate-widths), which was itself seated from the town's own before-gate court length. The 3D apron builds with the dressing pass."
+    },
+    {
+      "id": "forest-trailhead",
+      "name": "Whisperwood trailhead",
+      "class": "portal",
+      "kind": "trailhead",
+      "district": "gatefield",
+      "pos": [
+        70.44,
+        122,
+        2.8
+      ],
+      "mapVisible": true,
+      "note": "stile + first waystone of the forest trail (Ch1) | RE-SNAPPED 2026-08-01 by the builder (mini-round 2b), 7.0 m back along its own edge from (90,78): the STAMPED river tail put the old position 3.0 m INSIDE the channel and its walk pad 3.9 m under the water — the blockout's river-clearance gate failed the build outright at 5a46a2b. Searched inward along the gate-court edge to the first offset clearing the water's edge by 4.5 m; it lands at 4.79 m, 7.56 m from the court centre, so the stile is now a THRESHOLD on the court's east rim (its pad is skipped and its footprint is cut out of the floor) and the edge's old [84,76.8] waypoint is withdrawn as an overshoot. COORDINATOR: ratify or restamp — the trail leaving from the court's own rim rather than from open ground beside the river is a design change, not just a move. | RATIFIED 2026-08-01 (2b): with the river tail against the gate there is no legal position outside the court — the Whisperwood trail now leaves from the gate court's own rim. Design note: the two ways out of the valley stand side by side — the sealed stone gate and the humble stile — which is a contrast worth a camera someday. | RE-SNAPPED AGAIN 2026-08-01 ROUND 3 (builder, PENDING RATIFICATION with the tail tightening it follows from): bringing the channel kerb-tight to the road left the 2b position 0.16 m from the water's edge. Searched by the SAME rule 2b used and on the same rim radius (7.56 m from the gate court's centre, swept from due east southward, first offset clearing the water's edge by 4.5 m): -33.5 deg, (82.30, 69.83), clearance 4.53 m. The ratified design fact is untouched - the stile is still a threshold on the gate court's own rim, the humble way out beside the sealed stone one; it has moved 6.4 m around that rim from ENE to ESE because the water now owns the court's north-east quarter. | Re-searched at the new court: 7.56 m due WEST of it, opposite the river — still the stile beside the sealed gate."
+    },
+    {
+      "id": "barn",
+      "name": "Tithe barn",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "gatefield",
+      "pos": [
+        66.0,
+        68.0,
+        2.4
+      ],
+      "mapVisible": true,
+      "note": "harvest stores; cats in the rafters"
+    },
+    {
+      "id": "brook-spring",
+      "name": "Brook spring",
+      "class": "prop",
+      "district": "homerow",
+      "pos": [
+        29.0,
+        63.0,
+        2.5
+      ],
+      "mapVisible": true,
+      "note": "cold spring under the hilltop — the brook rises here"
+    },
+    {
+      "id": "brook-bridge",
+      "name": "Brook footbridge",
+      "class": "prop",
+      "district": "lanes",
+      "pos": [
+        76.0,
+        52.0,
+        1.25
+      ],
+      "mapVisible": true,
+      "note": "plank-and-rail crossing where Pond Lane steps over the brook"
+    },
+    {
+      "id": "brook-mouth",
+      "name": "Brook mouth",
+      "class": "prop",
+      "district": "lanes",
+      "pos": [
+        103.0,
+        53.6,
+        0.1
+      ],
+      "mapVisible": true,
+      "note": "where the village brook slips into the river — the town's name, made visible"
+    },
+    {
+      "id": "river-vista",
+      "name": "The River (vista)",
+      "class": "dressing",
+      "district": "entrance",
+      "pos": [
+        114.0,
+        28.0,
+        -0.6
+      ],
+      "mapVisible": true,
+      "note": "the valley river Vesper has followed for weeks — glimpsed east of the road on arrival; not walkable"
+    },
+    {
+      "id": "downstream-vista",
+      "name": "Downstream (vista beyond the Gate)",
+      "class": "dressing",
+      "district": "gatefield",
+      "pos": [
+        110,
+        140,
+        -0.7
+      ],
+      "mapVisible": true,
+      "note": "past the Sigil Gate the river bends into the hills — the way Vesper's maps point (toward Dellhollow) | RE-NOTED 2026-08-01 ROUND 3 (ruling, user + coordinator): this is PURE VISTA. It is seen from the GATE SIDE, across the water, and is NEVER reached. There is no bridge anywhere in this map and none is to be added: the game's one river crossing is Dellhollow's dam crest, far downstream. With the round-3 tail the channel runs west of it through the notch, so the vista now stands ~20 m beyond the east bank instead of ~14 - still a far-bank silhouette, and if a camera ever wants it closer that is a landmark move, not a crossing. | CROSSING AMENDMENT 2026-08-01: the road now crosses at the gate court and runs the east bank, so 'seen from the gate side, across the water' is superseded — the vista is seen FROM the road's own bank looking down the gorge. Still NEVER REACHED: no path leaves the road for it, and no bridge exists anywhere (the dam crest remains the river's only span)."
+    },
+    {
+      "id": "bakery",
+      "name": "Poppy's bakery",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "emb-bakery-int",
+      "kind": "building",
+      "district": "square",
+      "pos": [
+        47.2,
+        45.4,
+        1.5
+      ],
+      "mapVisible": true,
+      "residents": [
+        "poppy"
+      ],
+      "note": "warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging | MOVED 2026-07-31 (coordinator): 1.5 m away from the inn — at (24.5,21.5) the two roofs shared a volume (4.03 m centres vs 4.96 m needed at cottage size + 1.14 roof oversail, measured by the square builder). Still on the square's west rim, west of the well."
+    },
+    {
+      "id": "far-rooftops-nw",
+      "name": "Far rooftops (vista)",
+      "class": "dressing",
+      "district": "homerow",
+      "pos": [
+        16.0,
+        72.0,
+        3.4
+      ],
+      "mapVisible": true,
+      "note": "implied-scale massing: a further tier of homes NW — chimneys, smoke, lit windows; never walkable"
+    },
+    {
+      "id": "hillside-cottages",
+      "name": "Hillside cottages (vista)",
+      "class": "dressing",
+      "district": "homerow",
+      "pos": [
+        14.0,
+        50.0,
+        3.1
+      ],
+      "mapVisible": true,
+      "note": "implied-scale massing west of Home Row; laundry lines, lamplight at dusk"
+    },
+    {
+      "id": "upper-lane-closed",
+      "name": "Upper lane (closed)",
+      "class": "prop",
+      "district": "homerow",
+      "pos": [
+        34.0,
+        55.0,
+        2.2
+      ],
+      "mapVisible": true,
+      "note": "lane visibly continues NW past Lake's home; closed at the threshold with a festival cart — soft closure, not a wall"
+    },
+    {
+      "id": "back-lane-closed",
+      "name": "Back lane (closed)",
+      "class": "prop",
+      "district": "gatefield",
+      "pos": [
+        58.0,
+        63.0,
+        2.1
+      ],
+      "mapVisible": true,
+      "note": "lane between barn and square edge running to unseen homes; stacked Emberwake barrels close it"
+    },
+    {
+      "id": "east-cottages",
+      "name": "Riverside cottages (vista)",
+      "class": "dressing",
+      "district": "lanes",
+      "pos": [
+        100.0,
+        64.0,
+        0.9
+      ],
+      "mapVisible": true,
+      "note": "implied-scale massing NE between pond and river bend; a jetty lantern doubled in the water"
+    },
+    {
+      "id": "arrival-clearing",
+      "name": "Arrival clearing",
+      "class": "area",
+      "extent": 5,
+      "district": "woodroad",
+      "pos": [
+        52.0,
+        -28.0,
+        -0.5
+      ],
+      "mapVisible": true,
+      "note": "THE GAME'S FIRST GROUND: a small clearing on the Whisperwood road where Vesper's arrival scene begins — quiet, dusk, the wood close, the village not yet visible. The road climbs gently north toward the arch; the waystone waits along the way."
+    },
+    {
+      "id": "watermill",
+      "name": "The watermill",
+      "class": "structure",
+      "kind": "building",
+      "district": "homerow",
+      "pos": [
+        52.2,
+        63.4,
+        2.0
+      ],
+      "mapVisible": true,
+      "note": "USER-LOVED 2026-08-01: overshot wheel + leat + small millpond on the brook's steeper upper run; grinds the orchard's grain — Poppy's flour comes from here. The wheel's creak is the village's heartbeat sound. POSITION SNAPS to the stamped brook course (builder proposes both together). | STAMPED snap; WHEEL RULING: option (b) — 2.0 m mill dam, 2.2 m overshot wheel, visible millpond impoundment (basin carved, dam + head gate). Picturesque beats strict hydrology here; (a) 1.5 m wheel and (c) breastshot recorded as alternates. | USER RE-RULING 2026-07-31 (style probe round 1): the mill at TWICE the probe's scale — overshot wheel 2.2 -> 4.4 m dia, total fall 4.6 m as built in probe r2 (a 4.4 m overshot wheel + crown launder needs >4.0 m head: dam crest 1.78 impounding the pond, tail water -3.05), building mass scaled with the wheel. Probe round 2 renders are the visual reference. | ENGINE-LANE STAMP 2026-07-31 (delegated authority, dinner hour): footprint field added [8.6,9.4,10.3] (W x D x eave; ridge ~12.0 as built) — emb_blockout's mill branch reads it, doorstep re-derives outside the 2x body (pad moves 1.74 m along the mill lane, ~(47.60,60.26)). FALL CORRECTED against the stamped brook's measured profile: the corner gives 2.74 m at a 20 m stone-walled rejoin (crest 4.14 = the blockout's own impoundment, tail 1.40 = the brook 20 m downstream); there is no head anywhere on this brook (0.68 m in 26 m from the spring; 2.4 m over its whole length). WHEEL RE-RULED BREASTSHOT (the wheel ruling's recorded alternate c), fed at axle height, DIAMETER 4.4 m UNCHANGED — same disc, same stone pit, launder arrives at mid-height. Named alternative preserved for the user: keep 'overshot' by raising the crest to 6.00 = a 4.03 m embankment ring on the valley floor (rejected under the terrain doctrine the blockout's own millpond comment states).",
+      "footprint": [
+        8.6,
+        9.4,
+        10.3
+      ],
+      "doorFace": 232.1
+    },
+    {
+      "id": "spring-house",
+      "name": "Spring house",
+      "class": "structure",
+      "kind": "hut",
+      "district": "homerow",
+      "pos": [
+        25.4,
+        65.4,
+        2.55
+      ],
+      "mapVisible": true,
+      "note": "stone hut over the brook spring — cold store for butter and milk. Snaps to the stamped spring point."
+    },
+    {
+      "id": "pond-weir",
+      "name": "Weir & sluice",
+      "class": "prop",
+      "district": "lanes",
+      "pos": [
+        83.0,
+        52.2,
+        0.85
+      ],
+      "mapVisible": true,
+      "note": "small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course. | RE-SNAP at build: pond shrinks to r9 (see pond note) — weir sits at the r9 west shore on the stamped course. | SNAPPED 2026-08-01 by the builder on the coordinator's stamp: the point where the stamped brook course crosses the pond's r9 WEST shore (measured 9.04 m from the pond centre). | finn's post (shipped ch1 script; see square-plaza note).",
+      "residents": [
+        "finn"
+      ]
+    },
+    {
+      "id": "cider-press",
+      "name": "Cider press barn",
+      "class": "structure",
+      "kind": "openbarn",
+      "district": "entrance",
+      "pos": [
+        47.0,
+        27.0,
+        0.7
+      ],
+      "mapVisible": true,
+      "note": "open-sided barn at the orchard edge: press, apple crates, straw. Emberwake is the payoff of autumn."
+    },
+    {
+      "id": "dovecote",
+      "name": "Dovecote",
+      "class": "structure",
+      "kind": "tower",
+      "district": "gatefield",
+      "pos": [
+        71.4,
+        67.6,
+        2.35
+      ],
+      "mapVisible": true,
+      "note": "round dove tower near the tithe barn — the district needs a vertical accent that is not the gate."
+    },
+    {
+      "id": "festival-dais",
+      "name": "Festival dais",
+      "class": "prop",
+      "district": "square",
+      "pos": [
+        60.4,
+        40.4,
+        1.5
+      ],
+      "mapVisible": true,
+      "note": "low wooden dais near the Heartlight where the Kindling Hour queue forms — ch1 staging. | rowan's festival post (ch1 beats 11/23 — the Hour is called here).",
+      "residents": [
+        "rowan"
+      ]
+    },
+    {
+      "id": "village-bell",
+      "name": "Village bell",
+      "class": "prop",
+      "district": "square",
+      "pos": [
+        68.0,
+        40.5,
+        1.5
+      ],
+      "mapVisible": true,
+      "note": "bell on a post beside the notice board."
+    },
+    {
+      "id": "pips-den",
+      "name": "Pip's den",
+      "class": "prop",
+      "district": "lanes",
+      "pos": [
+        79.6,
+        50.0,
+        1.15
+      ],
+      "mapVisible": true,
+      "note": "STAMPED 2026-08-01 at the builder's east-bank spot, 3.3 m downstream of the footbridge, 1.7 m off the water, under the bank — hidden from the lane, which is MORE den-like: a proper hideout isn't visible from the bridge it hides beneath. | CONFLICT STAMP: moved +1.0 m east (78.6->79.6) — its walk pad's west edge clipped walk_lm_square-plaza by 0.9 m with a +0.28 m step inside walkGround's foot-stealing band (measured true-top-face, 0.33 m2). Landmark move per doctrine; the 28 m plaza mesh stays."
+    },
+    {
+      "id": "smokehouse",
+      "name": "Finn's smokehouse",
+      "class": "structure",
+      "kind": "hut",
+      "district": "lanes",
+      "pos": [
+        83.38,
+        43.59,
+        1.0
+      ],
+      "mapVisible": true,
+      "note": "small smokehouse + fish drying racks by the jetty; an upturned skiff on the bank. | RE-SNAP at build: with the pond at r9, sit ON THE SHORE near the jetty root (searched) — a smokehouse stands by water, not in it. | MOVED 2026-08-01 by the builder on the coordinator's stamp (pond to r9): SEARCHED onto the shore beside the jetty ROOT — 3.3 m from the deck's landward end, 11.45 m from the pond centre (dry at r9), 4.6 m off the deck, clear of the brook by 2.6 m and of every lane by 3.1 m. Its map position (88,49.5) stood inside the pond and 2.50 m from the jetty, sharing its volume. | STAMPED micro-move 0.58 m (2b): clears the pond's r9 rim by measurement (was one cell in)."
+    },
+    {
+      "id": "grandmothers-bench",
+      "name": "Grandmother's bench",
+      "class": "prop",
+      "district": "homerow",
+      "pos": [
+        36.0,
+        51.8,
+        2.0
+      ],
+      "mapVisible": true,
+      "note": "the bench outside the keeper's cottage — nobody has moved it. Quiet story beat."
+    },
+    {
+      "id": "sigil-plate-w",
+      "class": "prop",
+      "district": "gatefield",
+      "pos": [
+        76.6,
+        123.5,
+        2.8
+      ],
+      "note": "CH1 STAMP (audit 0939b33, beat 28): one of the two sigil plates — the chapter co-op set piece. Separation 2.8 m; BOTH must sit inside the gatefield camera frame. Previously existed only as a sentence in sigil-gate's note."
+    },
+    {
+      "id": "sigil-plate-e",
+      "class": "prop",
+      "district": "gatefield",
+      "pos": [
+        79.4,
+        123.5,
+        2.8
+      ],
+      "note": "CH1 STAMP (audit 0939b33, beat 28): one of the two sigil plates — the chapter co-op set piece. Separation 2.8 m; BOTH must sit inside the gatefield camera frame. Previously existed only as a sentence in sigil-gate's note."
+    },
+    {
+      "id": "poppy-stall",
+      "class": "prop",
+      "district": "square",
+      "pos": [
+        50.19,
+        45.15,
+        1.5
+      ],
+      "residents": [
+        "poppy"
+      ],
+      "note": "CH1 STAMP (audit, beat 5): Poppy's festival stall — \"My stall. My bread.\" is the load-bearing line of her post-Hush recovery. Plaza rim, in front of the bakery."
+    },
+    {
+      "id": "market-row",
+      "name": "The market row",
+      "class": "prop",
+      "kind": "market",
+      "district": "square",
+      "pos": [
+        66.0,
+        47.46,
+        1.5
+      ],
+      "mapVisible": true,
+      "rowAxisDeg": 150,
+      "rowOffset": 4.0,
+      "stallSlots": [
+        -8.7,
+        -5.8,
+        -2.9,
+        2.9,
+        5.8,
+        8.7
+      ],
+      "stallSize": [
+        2.4,
+        1.6
+      ],
+      "thresholdAt": [
+        66.0,
+        47.46
+      ],
+      "thresholdGap": 5.8,
+      "footprint": [
+        [
+          72.1,
+          74.97,
+          41.82,
+          44.41
+        ],
+        [
+          69.58,
+          72.46,
+          43.27,
+          45.86
+        ],
+        [
+          67.07,
+          69.95,
+          44.72,
+          47.31
+        ],
+        [
+          62.05,
+          64.93,
+          47.62,
+          50.21
+        ],
+        [
+          59.54,
+          62.42,
+          49.07,
+          51.66
+        ],
+        [
+          57.03,
+          59.9,
+          50.52,
+          53.11
+        ]
+      ],
+      "buntingRingR": 10.08,
+      "buntingPosts": 12,
+      "buntingH": 3.2,
+      "note": "SEARCHED, not authored (dressing lane 2026-08-01, 24 bearings x 8 offsets against the 10 lane mouths the map's own edges derive). The 5.8 m THRESHOLD HOLE at the row centre is the point of the record: seam-canon 4 says a cut sits on a threshold and never mid-span of open floor, and the across-the-square cut derives from this. Stalls stand 4.94 m from the Heartlight at the tightest, against a 1.44 m stall half-diagonal and the 2.30 m kerb ring = 1.20 m of clear aisle. Bunting cords cross a lane head at 3.20 m, over a body and never through one; posts are SEARCHED round the ring and a post that cannot clear a mouth is refused, so the ring opens where the town has roads (11 of 12 seated). PROPS, NO POSTS: the lamp roll stays 14. | STAMPED 2026-08-01 (coordinator, from the dressing lane's seated search): six stalls on the 150-deg axis with the 5.8 m threshold hole — the across-the-square cut's map fact. Seating measured: stall-to-nearest-landmark 6.12/5.07/4.94/4.94/6.25/6.14 m; tightest aisle 1.20 m clear. Generative params carried WITH derived footprints so the row re-derives if the plaza moves; bunting as ring parameters (posts searched against lane mouths, never frozen). Footprints are AABBs of yawed stalls (over-report by design, flagged); true shape derivable from axis+slots+size. Props — lamp roll stays 14.",
+      "_redline_2026-08-02": "FIXED 2026-08-02 (festival-square walkability lane) — the builder half of it. tools/emb_blockout.py now derives TRUE ORIENTED rects for the AREA-FLOOR CUT ONLY (new foot_rects_cut(), from this landmark's own rowAxisDeg + stallSlots + stallSize — the same three numbers the massing builds the stalls from), and the cut's pad drops from 0.28 + CELL/2 = 0.505 to 0.28. multi_foot()'s AABB is UNCHANGED and still serves every placement/clearance test, where over-reporting is correct and protective: over-reporting a KEEP-OUT costs a refused placement, over-reporting a FLOOR CUT costs the player a piece of the town with no mesh and no reason. MEASURED on the builder's own cell loop: square-plaza 1862 -> 2150 cells, 377.1 -> 435.4 m2 (+58.3); orchard +5.5, washline-green +2.0, gate-court +3.6, arrival-clearing 0.0; +343 cells town-wide. Registered costing predicted +23.9 (rects) and +54.7 (both); measured +23.3 and +58.3. MEASURED on the SHIPPED GLB (standable-cell census, r14 disc, builder-aligned grid): 1939 -> 2220 cells, 392.6 -> 449.6 m2 (+56.9), ZERO cells lost anywhere. Cell map: docs/qa/refs/square_walkfloor_20260802.png. Rebuilt through master -> cine_bake --glb -> emb_dress --tier realtime -> emb_decimate --save -> emb-townwalk; cameras re-solved (square moved 0.06u, charPxFar unmoved at 37); routes re-derived, --check CLEAN. The `square` PLATE is stale against the solve by 0.06u and is not yet re-baked. AND THE BIGGER CAUSE, FOUND WHILE VERIFYING THIS ONE AND NOT FIXED HERE: the shipped runtime's MeshBVH accelerated raycast cannot find 1007 of the disc's cells — 204 m2, 34% of Festival Square — that ARE in the GLB. Same bundle, same page, MeshBVH suppressed: 2220 cells / 449.6 m2, exactly the file's own census; MeshBVH on: 1213 / 245.6. At player level a straight 4.5 m walk across open plaza at z=-46 travels 0.00 m with the BVH on and 4.88 m with it off. So THIS footprint fix is real and lands in the artifact (+56.9 m2), but the player only receives +9.7 m2 of it until play3d.html's raycast is fixed — that file is coordinator-owned and the measurement is the handover. See DAYLOG 2026-08-02 (evening). NOTE KEPT from the original redline, because it is still the trap: walk_bodygate CANNOT see either defect — it enumerates samples from the walk meshes' own AABBs and scores steps between two points that both have floor, so it reported 0.00% blocked over this exact square. Verify with the standable-cell census AND with the engine. --- ORIGINAL REDLINE, VERBATIM, KEPT AS THE RECORD OF THE ASK --- USER REDLINE, 2026-08-02 (annotated frame: docs/qa/refs/user_square_invisible_20260802.png). VERBATIM: 'Invisible geometries / something blocking me from walking here.' The ellipse sits on the open ground between the market row's awning, the barrels and the well — i.e. squarely on THIS landmark's footprint pad. It is a SECOND, INDEPENDENT confirmation of the AREA-FLOOR FOOTPRINT CUT already measured for Festival Square (docs/qa/DAYLOG.md 2026-08-02, nav_eval lane): the walk floor is not blocked, it is ABSENT — emb_blockout.py's area-floor loop drops any 0.45 m cell whose centre falls inside a landmark footprint padded by 0.28 + CELL/2 = 0.505 m, so walkGround returns null and the step is refused with no mesh to ray-cast. market-row is the single biggest contributor: 30.8 m2 of the square's 77.4 m2 of refused-with-nothing-on-it, and each stall refuses 13.96 m2 while occupying 3.84.\nTHE CAUSE, located 2026-08-02 and NOT YET FIXED: multi_foot() in tools/emb_blockout.py:1104 returns every rectangle with rotation HARDCODED 0.0, while the stalls themselves are massed yawed at this landmark's own rowAxisDeg (150 deg) from stallSlots/stallSize a few lines later. The builder's comment at :1388 states the over-reporting is deliberate — 'the rectangles can serve the cut-and-clear rules (where over-reporting is safe) while the massing uses the true oriented size'. THAT PREMISE IS THE BUG. Over-reporting is safe when REFUSING A PLACEMENT and unsafe when DELETING WALK FLOOR, and the same rects are used for both. The fix is to derive true oriented rects from rowAxisDeg + stallSlots + stallSize for the area-floor cut specifically, leaving the AABB over-report in place for placement refusal where it is correct.\nCOSTED on the builder's own cell loop: 410.7 m2 as shipped -> 434.6 (+23.9) with true yawed rects -> 443.5 (+32.8) with pad 0.28 instead of 0.505 -> 465.3 (+54.7) with both. QUEUED, not built: it is a Blender rebuild of emb-cine + emb-townwalk plus a dressing re-run and emb_decimate --save, and another lane owns the GPU. NOTE for whoever builds it: walk_bodygate CANNOT see this defect — it enumerates samples from the walk meshes' own AABBs and scores steps between two points that both have floor, so it reported 0.00% blocked over this exact square. Verify with the standable-cell census, not the body gate."
+    }
+  ],
+  "edges": [
+    {
+      "from": "road-gate",
+      "to": "orchard",
+      "type": "path",
+      "waypoints": [
+        [
+          47.0,
+          20.4,
+          0.45
+        ]
+      ],
+      "note": "spur into the rows — now branches from inside the arch (orchard is village-side)"
+    },
+    {
+      "from": "road-gate",
+      "to": "square-plaza",
+      "type": "road",
+      "waypoints": [
+        [
+          57.0,
+          26.0,
+          0.7
+        ],
+        [
+          61.6,
+          35.0,
+          1.2
+        ]
+      ],
+      "note": "STAMPED retype 2026-08-01: was waystone->square-plaza, which forked the wood road around the arch and bypassed the reveal. Chain is now clearing -> waystone -> arch -> square; same waypoints."
+    },
+    {
+      "from": "square-plaza",
+      "to": "item-shop",
+      "type": "road"
+    },
+    {
+      "from": "square-plaza",
+      "to": "inn",
+      "type": "road"
+    },
+    {
+      "from": "square-plaza",
+      "to": "notice-board",
+      "type": "path"
+    },
+    {
+      "from": "square-plaza",
+      "to": "well",
+      "type": "path"
+    },
+    {
+      "from": "square-plaza",
+      "to": "pond-jetty",
+      "type": "road",
+      "waypoints": [
+        [
+          74.0,
+          47.0,
+          1.3
+        ],
+        [
+          81.0,
+          46.4,
+          1.1
+        ]
+      ],
+      "note": "pond lane east, curling with the shore"
+    },
+    {
+      "from": "pond-jetty",
+      "to": "washline-green",
+      "type": "path",
+      "waypoints": [
+        [
+          83.0,
+          55.0,
+          1
+        ]
+      ],
+      "note": "round the north shore"
+    },
+    {
+      "from": "square-plaza",
+      "to": "hillside-cottage",
+      "type": "road",
+      "waypoints": [
+        [
+          55.0,
+          49.6,
+          1.8
+        ]
+      ],
+      "note": "home lane west, up the rise"
+    },
+    {
+      "from": "hillside-cottage",
+      "to": "lake-home",
+      "type": "path",
+      "waypoints": [
+        [
+          39.0,
+          50.4,
+          2
+        ]
+      ]
+    },
+    {
+      "from": "hillside-cottage",
+      "to": "elder-house",
+      "type": "path",
+      "note": "WAYPOINT WITHDRAWN 2026-07-31: the stamped bow [20.4,31.9] lies inside elder-house's built footprint — measured by the closing round. Root cause is doorstep derivation (both houses' doorsteps derive from far-side edges, so the lane crosses both footprints; no ribbon width fits between them, centres 3.99 m apart). REAL FIX, next slate: blockout rule 'a house on a THROUGH street gets its doorstep beside the street'. Until then Home Row carries ~6 documented walk offenders. Applies at next blockout run."
+    },
+    {
+      "from": "elder-house",
+      "to": "home-lane-end",
+      "type": "path",
+      "waypoints": [
+        [
+          32.4,
+          61.0,
+          2.4
+        ]
+      ]
+    },
+    {
+      "from": "square-plaza",
+      "to": "barn",
+      "type": "road",
+      "waypoints": [
+        [
+          64.6,
+          56.0,
+          1.9
+        ],
+        [
+          64.0,
+          63.0,
+          2.2
+        ]
+      ],
+      "note": "north lane between walls"
+    },
+    {
+      "from": "barn",
+      "to": "gate-court",
+      "type": "road",
+      "waypoints": [
+        [
+          67,
+          79,
+          2.5
+        ],
+        [
+          63,
+          93,
+          2.6
+        ],
+        [
+          68,
+          107,
+          2.7
+        ],
+        [
+          74,
+          117,
+          2.78
+        ]
+      ],
+      "note": "THE QUIET ROAD (stamped): 41.1 m of continuously curving, wooded, incident-free, lampless road from past the barn to the court — arrives 35 deg off the town's bearing so the eye never follows the road home. beyond_warmth rule applies: no households seed beyond the barn on this axis."
+    },
+    {
+      "from": "gate-court",
+      "to": "sigil-gate",
+      "type": "path",
+      "waypoints": [
+        [74.6, 122.5, 2.8],
+        [74.6, 125.0, 2.8],
+        [76.5, 127.3, 2.85]
+      ],
+      "note": "PT-20260805-055: the court centre line crosses the culvert CHANNEL HEAD (map x 75.5..81, y 123.0..124.5 — visible paving, no walk record), so a straight gate-court->sigil-gate polyline is exactly the line wayAim fails closed on and the full NEW GAME receipt died pounding. THE FLANK IS THE DESIGN: the pad wraps the channel on x<=75.4 and x>=81.5. These waypoints are the west flank, verbatim from the measured drive (_court_probe --way, 4/4 legs BOTH ways, run-20260805-182057): the polyline is the fix, the geometry was always passable."
+    },
+    {
+      "from": "gate-court",
+      "to": "forest-trailhead",
+      "type": "path",
+      "note": "WAYPOINT WITHDRAWN 2026-08-01 (mini-round 2b): [84,76.8] now lies BEYOND the re-snapped trailhead and 3.8 m off the stamped channel, so the lane doubled back on itself to reach a stile 1.5 m short of it. The run is 7.6 m inside the court's own r10 floor and is swallowed by it."
+    },
+    {
+      "from": "pond-jetty",
+      "to": "brook-bridge",
+      "type": "path",
+      "note": "Pond Lane crosses the brook here"
+    },
+    {
+      "from": "brook-bridge",
+      "to": "square-plaza",
+      "type": "path"
+    },
+    {
+      "from": "square-plaza",
+      "to": "bakery",
+      "type": "path"
+    },
+    {
+      "from": "arrival-clearing",
+      "to": "waystone",
+      "type": "road",
+      "note": "the quiet road through the wood — trees close on both sides, village hidden until the arch"
+    },
+    {
+      "from": "waystone",
+      "to": "road-gate",
+      "type": "road",
+      "note": "the last stretch: the wood thins, the arch and the first lamplight appear"
+    },
+    {
+      "from": "hillside-cottage",
+      "to": "watermill",
+      "type": "path",
+      "note": "mill lane"
+    },
+    {
+      "from": "orchard",
+      "to": "cider-press",
+      "type": "path"
+    }
+  ],
+  "_doc_parcels": [
+    "PARCEL PASS 2026-08-01 (camera/data lane, coordinator authority delegated for this batch;",
+    "ch1-staging-audit.md stamp 4 + stamp 7). Two things were wrong and they were different things.",
+    "",
+    "(1) MEMBERSHIP IS DERIVED FROM `bounds`, NOT FROM `members` — tools/townmap_derive.mjs and",
+    "viewer.html both call parcelsContaining(), which tests the landmark's position against the box.",
+    "`members` is the AUTHORED statement of the same fact, and the two had drifted a whole scale",
+    "apart: 24 landmarks were named in no `members` list and 5 fell inside no box at all. Every",
+    "`members` array below is now exactly what its bounds contain, so a reader and a tool cannot",
+    "disagree, and the four vista/dressing landmarks that sat outside every box (river-vista,",
+    "downstream-vista, far-rooftops-nw, hillside-cottages) are inside the parcel whose camera",
+    "already framed them — a vista is scenery OF a scene, and a landmark in no parcel has no scene",
+    "contract and therefore no sceneKey.",
+    "",
+    "(2) SIX LANDMARKS SAT IN TWO PARCELS AT ONCE (washline-green, brook-bridge, bakery,",
+    "east-cottages, pips-den, poppy-stall) because neighbouring boxes overlapped across them. The",
+    "boxes were moved off each other along the axis that separates them and NOT resized around their",
+    "own contents: p-square's east face 82 -> 74 (nothing of the square's stands east of the item",
+    "shop at 74; the pond lane's footbridge and Pip's den do), p-homerow's south face 42 -> 47 (its",
+    "own southernmost member is Lake's home at y=48; the bakery and Poppy's stall at y~45 are the",
+    "square's), p-entrance's north face 30 -> 28, p-woodroad's north face 2 -> -2. Every landmark is",
+    "now in EXACTLY one parcel (was 6 doubled and 5 homeless), the sub-2 m gutters are gone, and 3 of",
+    "the 4 box overlaps with them. THE ONE THAT REMAINS IS STRUCTURAL AND IS LEFT STANDING WITH ITS",
+    "REASON: p-square n p-homerow over [46,47]..[54,56]. Home Row's lane and the square's west rim",
+    "interleave in x — the watermill at x=52.2 is Home Row's and the bakery at x=47.2 is the square's",
+    "— so no single plane separates them, and the box holds NO landmark either way. Closing it would",
+    "mean cutting the plaza's own floor out of its parcel to buy a warning.",
+    "",
+    "(3) p-gateroad IS MINTED (deferred at the seclusion round, agreed then; audit stamp 7). The old",
+    "p-gatefield ran y 60..142 — 82 m from the tithe barn to the Old Gate, i.e. the town's last warm",
+    "building AND the deliberately unwarm court AND the 41.1 m of quiet road that the seclusion round",
+    "built to separate them, all under one scene contract. Chapter One stages on that road twice",
+    "(beat 27's refusal, beat 29's send-off), so it is a place, not a gutter. The split is made at",
+    "the road's own shape: p-gateroad holds the barn, the dovecote and the closed back lane (the",
+    "town's last warmth, the `beyond_warmth` rule's own boundary) and the corridor the road curves",
+    "through; p-gatefield keeps the court, the gate, the plates, the stile and the downstream vista.",
+    "The 2 m gutter between them at y=114..116 falls on open wooded road, which is where the village",
+    "roofs have been out of sight for 75 m already."
+  ],
+  "parcels": [
+    {
+      "id": "p-entrance",
+      "name": "Village Entrance",
+      "sceneKey": "emb-entrance",
+      "draft": true,
+      "members": [
+        "road-gate",
+        "orchard",
+        "cider-press",
+        "river-vista"
+      ],
+      "bounds": {
+        "min": [
+          24.0,
+          0.0,
+          -1
+        ],
+        "max": [
+          118.0,
+          28.0,
+          4
+        ]
+      },
+      "camera": {
+        "note": "From inside the village looking back down the road through the arch — orchard rows framing, valley haze beyond",
+        "draft": true,
+        "projection": "persp"
+      },
+      "intent": "Arrival: the arch, the orchard rows with their ladders, the cider press, the river glimpsed east; homecoming warmth. STORY.md: this is where the OPENING vignette lands — Vesper comes up out of the wood at dusk on Emberwake itself, festival bunting up, lamps being lit. The vignette now STARTS one parcel south (p-woodroad, minted at the 2x round, which took the waystone with it); this parcel is the reveal it climbs to. Golden-hour/dusk grade is canon here."
+    },
+    {
+      "id": "p-square",
+      "name": "Festival Square",
+      "sceneKey": "emb-square",
+      "draft": true,
+      "members": [
+        "square-plaza",
+        "heartlight",
+        "item-shop",
+        "inn",
+        "notice-board",
+        "well",
+        "bakery",
+        "festival-dais",
+        "village-bell",
+        "poppy-stall"
+      ],
+      "bounds": {
+        "min": [
+          46.0,
+          30.0,
+          -0.5
+        ],
+        "max": [
+          74.0,
+          56.0,
+          5
+        ]
+      },
+      "camera": {
+        "note": "Across the plaza with the Heartlight center-frame, shop and inn flanking, bunting overhead — the postcard of home",
+        "draft": true,
+        "projection": "persp"
+      },
+      "intent": "The heart: Heartlight on its pedestal, festival stalls, shop + inn fronts IMPLIED SCALE: square sized for a Kindling Hour CROWD of background villagers (non-interactable); named cast are the interactive minority. Rooflines of the wider town visible past every frame edge."
+    },
+    {
+      "id": "p-lane",
+      "name": "Pond Lane",
+      "sceneKey": "emb-lane",
+      "draft": true,
+      "members": [
+        "pond",
+        "pond-jetty",
+        "washline-green",
+        "brook-bridge",
+        "brook-mouth",
+        "pond-weir",
+        "pips-den",
+        "smokehouse",
+        "east-cottages"
+      ],
+      "bounds": {
+        "min": [
+          76.0,
+          40.0,
+          -0.5
+        ],
+        "max": [
+          106.0,
+          66.0,
+          4
+        ]
+      },
+      "camera": {
+        "note": "Low along the shore at dusk: jetty silhouette, the Heartlight's glow mirrored in the pond",
+        "draft": true,
+        "projection": "persp"
+      },
+      "intent": "The quiet scene: pond mirror, jetty, washing lines; frogs and fireflies"
+    },
+    {
+      "id": "p-homerow",
+      "name": "Home Row",
+      "sceneKey": "emb-homerow",
+      "draft": true,
+      "members": [
+        "hillside-cottage",
+        "lake-home",
+        "elder-house",
+        "home-lane-end",
+        "watermill",
+        "spring-house",
+        "brook-spring",
+        "grandmothers-bench",
+        "upper-lane-closed",
+        "hillside-cottages",
+        "far-rooftops-nw"
+      ],
+      "bounds": {
+        "min": [
+          12.0,
+          47.0,
+          0.5
+        ],
+        "max": [
+          54.0,
+          74.0,
+          5
+        ]
+      },
+      "camera": {
+        "note": "Up the home lane: Vesper's charts in the window, the bench and the whole village falling away behind",
+        "draft": true,
+        "projection": "persp"
+      },
+      "intent": "Where the kids live: three cottages, herb door, the overlook bench"
+    },
+    {
+      "id": "p-gateroad",
+      "name": "The Quiet Road",
+      "sceneKey": "emb-gateroad",
+      "draft": true,
+      "members": [
+        "barn",
+        "dovecote",
+        "back-lane-closed"
+      ],
+      "bounds": {
+        "min": [
+          56,
+          58,
+          0.5
+        ],
+        "max": [
+          74,
+          114,
+          6.0
+        ]
+      },
+      "camera": {
+        "note": "The north lane's head at the tithe barn, the dovecote against the sky, and the road curving away north into the wood — the last warm frame, with the way out of it already visible.",
+        "draft": true,
+        "projection": "persp"
+      },
+      "intent": "MINTED 2026-08-01 (deferred at the seclusion round; ch1-staging-audit stamp 7). The town's last warmth and the road that leaves it: tithe barn, dovecote, the back lane closed with Emberwake barrels, then 41.1 m of continuously curving, wooded, lampless, incident-free road on which Chapter One stages TWICE — beat 27's gate refusal and beat 29's send-off. The `beyond_warmth` build rule is this parcel's own: no household seeds north of the barn on this axis. Its north face at y=114 is where the road bends the last time before the court; the village roofs have been out of sight since y~92."
+    },
+    {
+      "id": "p-gatefield",
+      "name": "Gate Field",
+      "sceneKey": "emb-gatefield",
+      "draft": true,
+      "members": [
+        "gate-court",
+        "sigil-gate",
+        "sigil-plate-w",
+        "sigil-plate-e",
+        "forest-trailhead",
+        "downstream-vista"
+      ],
+      "bounds": {
+        "min": [
+          62,
+          116,
+          -1
+        ],
+        "max": [
+          114,
+          142,
+          6.0
+        ]
+      },
+      "camera": {
+        "note": "The court facing the sealed Sigil Gate square-on, BOTH sigil plates in the ground before it, the trailhead stile on the west rim, the river down the east — Ch1's set-piece stage",
+        "draft": true,
+        "projection": "persp"
+      },
+      "intent": "The old edge of the village: sealed gate + the twin sigil plates, the humble stile beside the stone doors, the gorge the river leaves through | SPLIT 2026-08-01: the tithe barn and the 41.1 m of quiet road went to p-gateroad (see its intent). What is left is the court and only the court — the one unwarm scene in the town, 82 m of span reduced to 26."
+    },
+    {
+      "id": "p-woodroad",
+      "name": "Whisperwood Road",
+      "sceneKey": "emb-wood",
+      "draft": true,
+      "members": [
+        "arrival-clearing",
+        "waystone"
+      ],
+      "bounds": {
+        "min": [
+          42,
+          -34,
+          -2
+        ],
+        "max": [
+          66,
+          -2,
+          4
+        ]
+      },
+      "camera": {
+        "note": "THE OPENING SHOT of the game: Vesper on the quiet wood road at dusk, trees pressing close, the waystone catching the last light; the village is a warm glow ahead, not yet seen. Second shot may carry her to the arch.",
+        "draft": true,
+        "projection": "persp"
+      },
+      "intent": "Arrival: the wood, the stone, the long walk that ends at a lit arch."
+    }
+  ],
+  "notes": "2026-08-01 CAMERA/DATA LANE AT 2x: walkSceneKey emb-walk -> emb-townwalk (the 1x export the six cameras had all been solved against); the six shots re-solved and a SEVENTH added (woodroad, the game's first frame — p-woodroad had a parcel and no camera); every mid-edge split re-derived off the 2x plaza floor; parcel pass (all 45 landmarks in exactly one parcel, was 24 named in none and 6 in two) and p-gateroad minted; journeys re-authored off three withdrawn edges. THE FINDING, MEASURED: at 2x no framing reaches the 50 px legibility floor on five of the seven shots — swept 468 angles and 5 lenses per shot — because a 35-degree lens holds about 20 m of span at 50 px and the plaza alone is 25 m across. Per-shot charPxMin floors carry the numbers. | Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs. | 2026-08-01: laneIncident ruling added (user: 'yes I want this'). | 2026-08-01 round 2 redlines (user agreed all + one addition): area extents x2 (plaza 14/pond 12/court 10/orchard 10); well off the lane; WHISPERWOOD ARRIVAL — new woodroad district + p-woodroad parcel (sceneKey emb-wood, the game's opening scene), waystone moved OUTSIDE the gate onto the wood road, overworld exit now at the arrival clearing; brook gets a builder-proposed wandering course (see brook._doc constraints); lamps STAY 14 (user accepted sparser pools as the story's truth). | 2026-08-01: interior densification ruling (user: village too sparse at 2x). | 2026-08-01: forest ruling — thicken at blockout; veg quality bar (2026-modern) at dressing with a taste-probe gate. | 2026-08-01: lived-in features canonized (mill, spring house, weir, cider press, dovecote, dais, bell, Pip's den, smokehouse, bench) + dressing tier doc. | 2026-08-01 STAMP: brook course + mill/spring snaps + wheel option (b) + arch edge retype + four collision moves + den east-bank + pond r9 (supersedes the old brook-bridge 0.75m ask — 2 plaza cells accepted instead). | 2026-08-01: infill refinement — households with gardens/paths/trees, not packed roofs. | 2026-08-01: Old Gate = cliff bottleneck ruling; concepts generated for user pick. | 2026-08-01: river tail stamped to seal the notch (water-gap); bluffs re-snap to it. | 2026-08-01: gate = river-under-gate with drainage bars; overworld geography draft commissioned (water-gap unratified). | 2026-08-01 2b stamps: notch SEALED (0.00 m strip, flood-fill 0 m² beyond the gate); smokehouse micro-move; forest-trailhead at the court rim ratified. DEFERRED pending the overworld geography ruling: tightening the channel to the gate-final reference framing (6.9 m wall vs the reference's kerb-tight water) and any density-back-into-the-valley redline. | 2026-08-01: no-unclaimed-acre farmland ruling. | 2026-08-01 town-model review: coexistence ruling (boundaries/village trees/contained square) + gate seclusion (round 4). | 2026-08-01 SECLUSION STAMP: gate/court/trailhead/vista moved per measured proposal; washline-green__gate-court WITHDRAWN (no village loop to a gate 63 m out in the wood; pond->square->barn is the loop; preserves square enclosure 11/16); beyond_warmth build rule ratified (the densification rule almost suburbanised the quiet road — 27 wilderness households refused).",
+  "river": {
+    "_doc": "USER REDLINE 2026-08-01 morning: the straight-line river 'does not meet the bar of realism'. The river is now an authored COURSE (polyline of [x, y, bankWidth]) with real meanders, still east of town, still flowing south->north (downstream, toward Dellhollow beyond the Old Gate). Vista only, never walkable. The blockout carves/builds from this course; do not regenerate it as an axis strip. | TAIL AMENDED 2026-08-01 (builder-proposed, stamped): the stamped course left 32 m of walkable ground beside the gate — the bottleneck wasn't sealed. The tail now brings the channel against the gate's east side so GATE + WATER fill the notch together (the water-gap reading: the river carved the only breach; the Order gated it — barred water-arch at the cleft floor per the chosen C concept). downstream-vista stays on the far bank looking back through the gap. | TAIL TIGHTENED 2026-08-01 ROUND 3 (builder-proposed, stamped, PENDING COORDINATOR RATIFICATION): the sealed notch held but did not LOOK like the ratified reference docs/qa/emberbrook/concepts/gate-final.png, which puts the channel immediately beside the road behind a kerb and runs it through the notch PARALLEL to the road. The 2b tail crossed the pinch line obliquely at 12.50 m wide with 6.90 m of founded wall between the doorway and the water. Two authored points replaced by four so the course turns east of the gate court and then runs DUE NORTH through the gap, and the bank width tapers 11 -> 9 -> 6 m in the constriction and opens to 9 m past it (a water gap narrows the water: that is what a water gap IS). Measured on the build: founded wall 6.90 -> 3.10 m, channel across the pinch 12.50 -> 7.05 m, the notch rock-to-rock 28.8 -> 19.6 m, against the reference's ~3.5 m / ~4.5 m / ~15 m. Sinuosity 1.058 -> 1.096; tightest bend ratio 2.91 (unchanged, and it is elsewhere). THE SEAL SURVIVES UNCHANGED: 0.00 m strip both flanks, 0 m2 of gorge reachable. COST, stated rather than buried: the gate court's east rim loses cells to the 3.5 m bank rule, and forest-trailhead had to be re-snapped a second time (see its own note). downstream-vista stays PURE VISTA on the far bank — seen from the gate side across the water, never reached, and no bridge exists in this map: the game's one river crossing is Dellhollow's dam crest, far downstream. | Tail re-stamped with the secluded gate: six points to the new notch at y~130.",
+    "course": [
+      [
+        118,
+        -10,
+        13
+      ],
+      [
+        112,
+        6,
+        12
+      ],
+      [
+        117,
+        22,
+        11
+      ],
+      [
+        124,
+        38,
+        12
+      ],
+      [
+        116,
+        54,
+        11
+      ],
+      [
+        98,
+        70,
+        11
+      ],
+      [
+        95,
+        86,
+        10
+      ],
+      [
+        94,
+        104,
+        9
+      ],
+      [
+        93,
+        120,
+        8
+      ],
+      [
+        88,
+        128,
+        7
+      ],
+      [
+        86.5,
+        136,
+        6
+      ],
+      [
+        88,
+        148,
+        9
+      ]
+    ],
+    "level": -0.6,
+    "flow": "south-to-north (downstream; Dellhollow lies downstream beyond the Old Gate)"
+  },
+  "brook": {
+    "_doc": "USER-AGREED 2026-08-01: the brook needs a real wandering course like the river's (current sinuosity 1.015 = a ditch). The COURSE IS TO BE PROPOSED BY THE BUILDER (searched/measured, then stamped by the coordinator) under these CONSTRAINTS: springs under the hilltop (near home-lane-end); passes Home Row on its NORTH side so each home lane crosses it AT MOST ONCE, each crossing a small bridge; does NOT cut cells from the r14 plaza; crosses Pond Lane exactly at the brook-bridge landmark (canon: Lake's rounds stop 07); feeds the pond; confluence into the river course; sinuosity target >= 1.15. | STAMPED 2026-08-01: builder-searched course, sinuosity 1.174, zero home-lane crossings, ONE Pond Lane crossing pinned at brook-bridge, 2 plaza cells accepted (zero unreachable while the crossing is canon-pinned). Home-lane plank-bridge rule is in for future redlines.",
+    "polyline": [
+      [
+        29.0,
+        63.0,
+        2.5
+      ],
+      [
+        32.2,
+        66.8,
+        2.46
+      ],
+      [
+        36.4,
+        68.6,
+        2.42
+      ],
+      [
+        40.6,
+        66.4,
+        2.38
+      ],
+      [
+        44.2,
+        68.4,
+        2.34
+      ],
+      [
+        47.6,
+        65.8,
+        2.28
+      ],
+      [
+        51.0,
+        67.6,
+        2.18
+      ],
+      [
+        55.0,
+        66.0,
+        1.82
+      ],
+      [
+        58.8,
+        68.2,
+        1.72
+      ],
+      [
+        62.4,
+        64.2,
+        1.62
+      ],
+      [
+        66.4,
+        61.0,
+        1.54
+      ],
+      [
+        70.6,
+        62.0,
+        1.46
+      ],
+      [
+        73.8,
+        57.6,
+        1.36
+      ],
+      [
+        75.4,
+        53.6,
+        1.28
+      ],
+      [
+        76.0,
+        52.0,
+        1.25
+      ],
+      [
+        77.2,
+        51.0,
+        1.2
+      ],
+      [
+        78.8,
+        53.2,
+        1.1
+      ],
+      [
+        82.4,
+        51.4,
+        0.96
+      ],
+      [
+        86.6,
+        55.0,
+        0.86
+      ],
+      [
+        90.8,
+        51.6,
+        0.74
+      ],
+      [
+        95.0,
+        55.2,
+        0.62
+      ],
+      [
+        98.8,
+        51.4,
+        0.42
+      ],
+      [
+        101.8,
+        54.4,
+        0.22
+      ],
+      [
+        103.0,
+        53.6,
+        0.1
+      ]
+    ],
+    "feeds": "pond",
+    "confluence": [
+      108.0,
+      54.0,
+      -0.5
+    ],
+    "widthM": 1.2
+  },
+  "lamps": {
+    "_doc": "STORY.md §2 CANON, build guidance: a lamppost near every home; Lake's dusk rounds run in fixed order — low ground first (POND LANE, where moths rise off the water at dusk), then inward, ENDING at the lamps nearest the Heartlight: 'closing the ring' before full dark. Lamp placement + route must stage this. Lake carries the brass LIGHTER (a seed-ember) on the rounds — the Heartlight itself never leaves its pedestal. RULING 2026-07-31: the roll is FOURTEEN lamps (KEYEMB_lamp_00..13) — the gate court gets NO lamp, per the plan's §1 reading of STORY.md ('nobody's warmth reaches the Old Gate') and checked against shipped chapter1.js. The Gate Field is the town's one unwarm frame. Note: LIGHTS are KEYEMB_lamp_*, POSTS are emb_lamp_*."
+  },
+  "impliedScale": {
+    "_doc": "USER RULING 2026-07-31: Emberbrook must READ as a lovely, lively town with deep history and a vibrant community — that is what a Heartlight DOES for a town — while chapter one stays focused and tight. Build the town to HINT at being much larger than the playable area: the player does not (and should not) have access to the whole town. Techniques, in canon order of preference: (1) non-walkable massing beyond every playable edge — further rooftops, chimney smoke, lit windows, hillside cottages, always composed into the camera frames; (2) lanes that visibly CONTINUE but are closed at the threshold (festival carts, stacked barrels, a hedge stile — soft, believable closures, never invisible walls); (3) at the Kindling Hour the square is CROWDED with background villagers — non-interactable or barely so; named cast are the interactive minority. The walk network stays exactly as tight as the parcels; the LOOK says big, the WALK says chapter one. | DENSIFICATION RULING 2026-08-01 (user, at 2x review): the village interior itself is TOO SPARSE — the large/populated/lively directive applies INSIDE the bounds, not only at the rim. Blockout-level implementation: deterministic INFILL of non-enterable background homes and structures filling the space between the playable lanes (clusters of 2-4 cottages with gardens, hedgerows, outbuildings, field strips) so every frame reads as a town, not houses on a lawn; closed lanes lead INTO visible clusters (a lane that ends at three more roofs says 'more town'); density gradient — thickest around Festival Square and Home Row, thinning toward the Gate Field and the wood. All infill is lm_-class massing at blockout, real dressed buildings at the district pass; never walkable, never enterable, GateGrid-gated off every lane and area. Target: from any playable lane, 2+ non-playable roofs visible in most directions. | REFINEMENT 2026-08-01 (user, from the mid-build snapshot): the infill overcorrected into unrealistic clutter — cottages packed wall-to-wall. A village cottage is a HOUSEHOLD: each infill home gets its own garden plot (hedge or fence), a fruit tree or two, a shed/woodpile, and a visible access path/track (non-walkable geometry is fine, but nobody builds a house with no way to reach it — tracks may join the real lanes or fade into implied ones). Spacing reads village-true: roughly 6-12 m between cottages, varied, with the FOREST filling between garden plots rather than more houses. Density comes from LIFE per household, not roofs per square metre. The 2+-roofs-visible target stands, met by depth and arrangement, not packing."
+  },
+  "laneIncident": {
+    "_doc": "USER RULING 2026-08-01: with distances doubled, lanes need MID-LANE INCIDENT to pace the walk — 'a cart, a shrine, a neighbor's fence' class of thing. Implementation is the district pass's dressing layer (post-blockout-ratification): every lane longer than ~15 m gets 1-2 incidents of domestic, familiar life — a handcart, a woodpile, a fence gate, a bench, laundry, beehives, a stile, apple crates — placed by SEARCH off the lane edge (never on walk surface), gated like all solids. LORE BUDGET NOTE: no invented shrine-institutions — in this town the lane punctuation with MEANING is Lake's lamp ring, which already exists; incidents are secular village life around it. Incidents cluster near homes and thin toward the Gate Field (the unwarm end thins to nothing)."
+  },
+  "forest": {
+    "_doc": "USER RULINGS 2026-08-01: (1) THICKNESS — blockout stage: the forest is the village's CONTAINER, not a rim decoration. Thicken it hard: the wood presses in around and between the outer houses and along the main paths' outer sides, closes every horizon, and swallows the space beyond the infill clusters. Much of the perceived sparseness is missing forest. (2) QUALITY — dressing/bake stage, ON THE RADAR as a hard bar: the low-poly cone trees are placeholders only. The shipped vegetation must read natural/realistic to a modern-2026-game bar IN THE BAKED PLATES (pre-rendered backgrounds can afford film-weight trees at zero runtime cost — that is the architecture's whole advantage). GATE: before mass-producing the forest, a taste PROBE — one fixed camera, 2-3 tree treatments (geometry-node realistic / textured painterly / current stylized) — goes to the user, and the ratified treatment must keep Emberbrook and Dellhollow coherent as one game. | FARMLAND RULING 2026-08-01 (user): cleared land is welcome IF visibly CLAIMED for farming — the objection was never to open ground, it was to unclaimed emptiness between village and treeline. THE RULE: every acre between the village and the wood is either forest or WORKED land — field strips with boundaries (hedges/stone rows/fences), crop rows or autumn stubble, pasture, orchard extensions, haystacks — reading as somebody's livelihood. At blockout: field-parcel massing with boundary lines; at dressing: the crops, stubble, and farm clutter. No ambiguous green voids."
+  },
+  "dressing": {
+    "_doc": "USER-LOVED 2026-08-01, dressing-tier (district pass, not landmarks): stepping stones at one informal brook crossing; terraced kitchen gardens behind cottages; root-cellar doors in the Home Row rise; hay stooks + threshing floor by the tithe barn; lantern-maker's workbench (wicks, oil jars, glass) near the item shop; geese on the washline green; Mochi sunning ledges (waystone top, mill windowsill); drying racks + upturned skiff at the jetty. EXCLUDED BY RULING: wayside shrines (the Heartlight owns meaning) and fae-flavored anything (the Whisperwood's strangeness is Act 2 property)."
+  },
+  "coexistence": {
+    "_doc": "USER RULING 2026-08-01 (the town-model review — supersedes styling details of earlier rulings where they conflict): 'This is a village that has stood itself up in the middle of a dense forest, and it coexists peacefully with nature rather than stripping away all nature to make space for its houses.' THREE CONSEQUENCES: (1) HOUSEHOLD BOUNDARIES lose the suburban trimmed-hedge vocabulary — irregular stone rows, split-rail/paling fragments, bramble clumps, PARTIAL enclosure; claimed, not manicured. (2) VILLAGE TREES: large individual trees scattered AMONG the houses and over the lanes — several species shapes and sizes (broadleaf crowns + slimmer forms alongside the forest conifers), so the wood visibly continues through the village. Blockout: varied canopy massing; QUALITY stays the dressing-stage bar. (3) THE SQUARE IS A CONTAINED ROOM: more buildings + trees closing the ring around Festival Square so it reads as its own space."
+  },
+  "emberwake": {
+    "darkLamps": [
+      3,
+      12,
+      13
+    ],
+    "_doc": "CH1 STAMP (corrected against the BUILT roll, 1400a33): the three lamps dark on Emberwake night by emb_blockout roll index. 03 = pond-jetty (chapter1.js lamp1 — the pond-lane lamp, \"moths rise off the water at dusk\"); 12+13 = the square's two ring-closers (lamp2/lamp3). BUILT ROLL ORDER, recorded so this cannot drift again: 00 road-gate, 01 orchard, 02 washline-green, 03 pond-jetty, 04 lake-home, 05 hillside-cottage, 06 elder-house, 07 barn, 08 brook-bridge, 09 bakery, 10 inn, 11 item-shop, 12 square-ring1, 13 square-ring0. Prior stamp said 01 believing it was pond-lane; 01 is the orchard."
+  }
+}

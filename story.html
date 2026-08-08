@@ -1,0 +1,556 @@
+<style>
+#eb-wip{position:fixed;left:0;right:0;top:0;z-index:99999;background:#2b1d10ee;
+  color:#f0d9b5;font:13px/1.5 system-ui,sans-serif;padding:7px 40px 7px 14px;
+  border-bottom:1px solid #5c4326;text-align:center;backdrop-filter:blur(3px)}
+#eb-wip b{color:#e9a24b}
+#eb-wip button{position:absolute;right:6px;top:3px;background:none;border:0;
+  color:#c8ab84;font-size:17px;cursor:pointer;line-height:1;padding:4px 8px}
+#eb-wip button:hover{color:#fff}
+@media(max-width:600px){#eb-wip{font-size:11px;padding-right:34px}}
+</style>
+<div id="eb-wip" role="status">
+  <b>Emberbrook — work in progress.</b>
+  An early prototype: expect rough edges, and a story that does not finish yet.
+  <button aria-label="Dismiss" onclick="this.parentNode.remove();try{localStorage.setItem('eb-wip-hid','1')}catch(e){}">&times;</button>
+</div>
+<script>try{if(localStorage.getItem('eb-wip-hid'))document.getElementById('eb-wip').remove()}catch(e){}</script>
+<meta charset="utf-8">
+<title>Emberbrook — story &amp; dialogue</title>
+<style>
+  html, body { height: 100%; }
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif;
+    margin: 0; padding: 22px 26px 18px; box-sizing: border-box; display: flex; flex-direction: column; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; display: inline-block; }
+  .sub { font-style: italic; opacity: .7; margin: 4px 0 14px; }
+  #cols { display: flex; gap: 16px; flex: 1; min-height: 0; }
+  .col { background: #1d1710; border: 1px solid #9c7a4c; border-radius: 10px; overflow-y: auto; min-height: 0; }
+  #c-chapters { flex: 0 0 250px; }
+  #c-beats { flex: 0 0 330px; }
+  #c-blocks { flex: 1; background: #1a140e; }
+  .colhead { position: sticky; top: 0; background: #241c14; border-bottom: 1px solid #9c7a4c;
+    font-variant: small-caps; color: #e0a94e; font-size: 15px; padding: 8px 14px; z-index: 2; }
+  .item { padding: 10px 14px; border-bottom: 1px solid #2c2318; cursor: pointer; }
+  .item:hover { background: #241c14; }
+  .item.on { background: #3a2c1a; border-left: 3px solid #e0a94e; padding-left: 11px; }
+  .item .t { font-variant: small-caps; color: #e0a94e; font-size: 16px; }
+  .item.on .t { color: #f2d16b; }
+  .item .s { font-size: 12.5px; font-style: italic; opacity: .65; margin-top: 2px; }
+  .item .scene { display: inline-block; font-size: 10.5px; font-style: normal; font-variant: small-caps;
+    color: #8fb0c9; border: 1px solid #4f7291aa; border-radius: 5px; padding: 0 6px; margin-left: 6px; vertical-align: 1px; }
+  .item .n { opacity: .5; font-size: 12px; margin-right: 6px; }
+  .beathead { padding: 14px 20px 4px; }
+  .beathead .bt { font-variant: small-caps; color: #e0a94e; font-size: 21px; }
+  .beathead .bs { font-style: italic; opacity: .7; font-size: 14px; margin-top: 2px; }
+  .block { margin: 14px 20px 20px; border: 1px solid #3a2c1a; border-radius: 10px; background: #1d1710; overflow: hidden; }
+  .block .ctx { background: #241c14; border-bottom: 1px solid #3a2c1a; padding: 6px 14px;
+    font-size: 12.5px; font-style: italic; color: #d9c9a3; }
+  .lines { padding: 10px 16px 12px; }
+  .line { display: flex; gap: 10px; padding: 5px 0; align-items: baseline; }
+  .who { flex: 0 0 128px; text-align: right; font-variant: small-caps; font-size: 14.5px; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 10px; font-variant: normal; font-style: italic; color: #17120e;
+    background: #9c7a4c; border-radius: 5px; padding: 0 5px; margin-left: 5px; vertical-align: 1px; }
+  .vbadge { display: inline-block; font-size: 10px; font-style: italic; color: #d9c9a3;
+    border: 1px solid #9c7a4c88; border-radius: 5px; padding: 0 5px; margin-right: 7px; vertical-align: 1px; }
+  .txt { flex: 1; font-size: 15px; line-height: 1.45; }
+  .txt.paren { font-style: italic; opacity: .85; }
+  .line.narrate .txt, .line.system .txt { font-style: italic; color: #a89f90; }
+  .line.narrate .who, .line.system .who { color: #7d7469; }
+  .line.banner { justify-content: center; }
+  .line.banner .who { display: none; }
+  .line.banner .txt { flex: none; text-align: center; font-variant: small-caps; font-size: 16px; color: #e0a94e;
+    border: 1px solid #9c7a4c; border-radius: 8px; padding: 4px 22px; background: #241c14; }
+  .line.toast .who { display: none; }
+  .line.toast { justify-content: center; }
+  .line.toast .txt { flex: none; font-size: 12.5px; color: #f2d16b; background: #3a2c1a;
+    border: 1px solid #e0a94e88; border-radius: 999px; padding: 2px 14px; }
+  .planned { margin: 18px 22px; font-style: italic; opacity: .7; line-height: 1.5; max-width: 640px; }
+  .hint { padding: 30px 24px; font-style: italic; opacity: .45; }
+  .meta { font-size: 11.5px; opacity: .45; font-style: italic; margin-top: 8px; }
+  a { color: #8fb0c9; }
+  /* --- story bible (left-column group + markdown reading panes) --- */
+  .ghead { padding: 10px 14px 4px; font-size: 12px; font-variant: small-caps; letter-spacing: 2px;
+    color: #9c7a4c; border-bottom: 1px solid #2c2318; }
+  .ghead.bible { color: #d9c9a3; background: #1a140e; border-bottom: 1px solid #9c7a4c66; padding: 11px 14px 6px; }
+  .item.bible { padding-top: 8px; padding-bottom: 8px; }
+  .item.bible .t { color: #d9c9a3; font-size: 14px; }
+  .item.bible.on .t { color: #f2d16b; }
+  .item.sub .t { font-size: 14.5px; }
+  .md { padding: 6px 20px 18px; font-size: 14.5px; line-height: 1.55; color: #e8dcbe; }
+  .md.wide { font-size: 15px; max-width: 700px; }
+  .md p { margin: 10px 0; }
+  .md strong { color: #f2d16b; font-weight: 600; }
+  .md em { color: #d9c9a3; }
+  .md ul, .md ol { margin: 10px 0; padding-left: 22px; }
+  .md li { margin: 6px 0; }
+  .md .mdh { font-variant: small-caps; color: #e0a94e; font-size: 16px; margin: 16px 0 2px; }
+  .md hr { border: none; border-top: 1px solid #3a2c1a; margin: 14px 0; }
+  .md code { background: #241c14; border: 1px solid #3a2c1a; border-radius: 4px; padding: 0 4px; font-size: 12.5px; }
+  /* --- cast / places / talk / checks --- */
+  .card { margin: 14px 20px; padding: 12px 16px; border: 1px solid #3a2c1a; border-radius: 10px; background: #1d1710; }
+  .card .nm { font-variant: small-caps; font-size: 20px; }
+  .card .meta2 { font-size: 12.5px; opacity: .7; margin-top: 4px; font-style: italic; }
+  .pill { display: inline-block; font-size: 10.5px; font-variant: small-caps; border-radius: 999px;
+    padding: 1px 9px; margin: 3px 5px 0 0; border: 1px solid #9c7a4c88; color: #d9c9a3; }
+  .pill.main { border-color: #e0a94e; color: #f2d16b; }
+  .pill.art { border-color: #4f7291; color: #8fb0c9; }
+  .pill.none { border-color: #6b4a4a; color: #c98d8d; }
+  .where { font-size: 11px; font-style: italic; opacity: .5; margin-left: 8px; }
+  .node { margin: 12px 20px; border: 1px solid #3a2c1a; border-radius: 8px; overflow: hidden; }
+  .node .nh { background: #241c14; padding: 5px 12px; font-size: 12px; font-family: ui-monospace, monospace; color: #d9c9a3; }
+  .node .cond { font-size: 11.5px; font-style: italic; color: #8fb0c9; padding: 4px 12px 0; }
+  .choice { padding: 4px 12px 4px 26px; font-size: 13.5px; color: #f2d16b; position: relative; }
+  .choice:before { content: '▸'; position: absolute; left: 12px; opacity: .7; }
+  .choice .goto { font-family: ui-monospace, monospace; font-size: 11px; opacity: .55; margin-left: 8px; }
+  .chk { padding: 8px 20px; border-bottom: 1px solid #2c2318; font-size: 13.5px; line-height: 1.45; }
+  .chk .lv { display: inline-block; font-size: 10px; font-variant: small-caps; border-radius: 4px;
+    padding: 0 6px; margin-right: 8px; vertical-align: 1px; }
+  .lv.error { background: #7d3030; color: #ffe0e0; }
+  .lv.warn { background: #7d6030; color: #ffeccd; }
+  .lv.info { background: #2f4658; color: #cfe4f2; }
+  .chk .kind { font-style: italic; opacity: .55; font-size: 11.5px; margin-left: 6px; }
+  .ok { padding: 26px 24px; color: #9fbf8f; font-style: italic; }
+</style>
+<h1>Emberbrook — story &amp; dialogue</h1>
+<span id="toplinks" style="font-size:13px;opacity:.7"> · <a href="/">▶ the game</a></span>
+<div class="sub">the whole world in one place — the bible, the chapters line by line, every character, every town,
+  the NPC conversation graph, and a continuity check. <strong>This page rebuilds itself:</strong> it is derived from
+  STORY.md, the chapter sources, dialogue.json, npcs.json, VOICES.md and the townmaps, and the server regenerates it
+  whenever any of those is newer — change a line, refresh, see it.</div>
+<div id="cols">
+  <div class="col" id="c-chapters"><div class="colhead">story</div><div id="chapters"></div></div>
+  <div class="col" id="c-beats"><div class="colhead" id="h-mid">beats</div><div id="beats"><div class="hint">choose a chapter</div></div></div>
+  <div class="col" id="c-blocks"><div class="colhead" id="h-right">dialogue</div><div id="blocks"><div class="hint">choose a beat</div></div></div>
+</div>
+
+<script>
+'use strict';
+if (window.self !== window.top) document.getElementById('toplinks').style.display = 'none';
+const SPEAKERS = {
+  vesper:  { name: 'Vesper',       color: '#3f8a7e' },
+  lake:  { name: 'Lake',         color: '#e0a94e' },
+  rowan: { name: 'Elder Rowan',  color: '#8a6bae' },
+  poppy: { name: 'Baker Poppy',  color: '#c9584a' },
+  finn:  { name: 'Fisher Finn',  color: '#4f7291' },
+  pip:   { name: 'Pip',          color: '#7a9950' },
+  mara:  { name: 'Mara',         color: '#8a5a6b' },
+  mochi: { name: 'Mochi',        color: '#d9a441' },
+  tally: { name: 'Friar Tally',  color: '#d97b3f' },
+  stranger: { name: '???',       color: '#8a8698' },
+  system:  { name: '✦',          color: '#a89f90' },
+  narrate: { name: '~',          color: '#a89f90' },
+};
+let M = null, CH = null, BT = null;
+let MODE = 'ch', BS = null, BSUB = null;   // story-bible state: mode, section index, sub index
+let CAST = null, CSUB = null;              // cast: character index, pane
+let TOWN = null, TSUB = null;              // places: town index, pane
+let TSP = null, TND = null;                // npc dialogue: speaker index, node index
+const castList = () => M.cast || [];
+const townList = () => (M.world && M.world.towns) || [];
+const talkList = () => M.talk || [];
+const checkList = () => M.checks || [];
+const $ = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstElementChild; };
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const bibleSections = () => (M.bible && M.bible.sections) || [];
+
+function applyHash() {
+  let m = location.hash.match(/^#cast\/(\d+)(?:\/(\w+))?$/);
+  if (m && castList().length) {
+    MODE = 'cast'; CH = BT = BS = BSUB = null;
+    CAST = Math.min(+m[1], castList().length - 1); CSUB = m[2] || 'lines'; return;
+  }
+  m = location.hash.match(/^#place\/(\d+)(?:\/(\w+))?$/);
+  if (m && townList().length) {
+    MODE = 'town'; CH = BT = BS = BSUB = null;
+    TOWN = Math.min(+m[1], townList().length - 1); TSUB = m[2] || 'landmarks'; return;
+  }
+  m = location.hash.match(/^#talk\/(\d+)(?:\/n(\d+))?$/);
+  if (m && talkList().length) {
+    MODE = 'talk'; CH = BT = BS = BSUB = null;
+    TSP = Math.min(+m[1], talkList().length - 1);
+    TND = m[2] !== undefined ? +m[2] : null; return;
+  }
+  if (/^#checks$/.test(location.hash)) { MODE = 'checks'; CH = BT = BS = BSUB = null; return; }
+  m = location.hash.match(/^#bible\/(\d+)(?:\/s(\d+))?$/);
+  if (m && bibleSections().length) {
+    MODE = 'bible'; CH = null; BT = null;
+    BS = Math.min(+m[1], bibleSections().length - 1);
+    const subs = bibleSections()[BS].subs || [];
+    BSUB = m[2] !== undefined && subs.length ? Math.min(+m[2], subs.length - 1) : null;
+    return;
+  }
+  MODE = 'ch'; BS = null; BSUB = null;
+  m = location.hash.match(/^#ch(\d+)(?:\/b(\d+))?$/);
+  CH = m ? Math.min(+m[1], M.chapters.length - 1) : 0;
+  BT = m && m[2] !== undefined ? +m[2] : null;
+}
+function setHash() {
+  const h = MODE === 'bible'
+    ? '#bible/' + BS + (BSUB !== null ? '/s' + BSUB : '')
+    : MODE === 'cast' ? '#cast/' + CAST + '/' + (CSUB || 'lines')
+    : MODE === 'town' ? '#place/' + TOWN + '/' + (TSUB || 'landmarks')
+    : MODE === 'talk' ? '#talk/' + TSP + (TND !== null ? '/n' + TND : '')
+    : MODE === 'checks' ? '#checks'
+    : (CH === null ? '' : '#ch' + CH + (BT !== null ? '/b' + BT : ''));
+  if (location.hash !== h) history.replaceState(null, '', h || '#');
+}
+
+/* minimal markdown renderer for the story bible (headings, bold, italics, lists, rules, code) */
+function mdInline(s) {
+  return s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+function mdRender(src) {
+  const out = [];
+  for (let b of src.split(/\n\s*\n/)) {
+    b = b.trim();
+    if (!b) continue;
+    if (/^---+$/.test(b)) { out.push('<hr>'); continue; }
+    const h = b.match(/^#{2,4}\s+(.+?)(\n[\s\S]*)?$/);
+    if (h) { out.push(`<div class="mdh">${mdInline(esc(h[1]))}</div>`); b = (h[2] || '').trim(); if (!b) continue; }
+    if (/^(\s*)([-*]|\d+\.)\s+/.test(b)) {
+      const items = [];
+      for (const ln of b.split('\n')) {
+        if (/^\s*([-*]|\d+\.)\s+/.test(ln)) items.push(ln.replace(/^\s*([-*]|\d+\.)\s+/, ''));
+        else if (items.length) items[items.length - 1] += ' ' + ln.trim();
+      }
+      const tag = /^\s*\d+\./.test(b) ? 'ol' : 'ul';
+      out.push(`<${tag}>` + items.map(i => `<li>${mdInline(esc(i))}</li>`).join('') + `</${tag}>`);
+      continue;
+    }
+    out.push(`<p>${mdInline(esc(b.replace(/\n/g, ' ')))}</p>`);
+  }
+  return out.join('');
+}
+
+function renderChapters() {
+  const host = document.getElementById('chapters');
+  host.innerHTML = '';
+  const secs = bibleSections();
+  if (secs.length) {
+    host.appendChild($('<div class="ghead bible">✦ the story bible</div>'));
+    secs.forEach((sec, i) => {
+      const el = $(`<div class="item bible ${MODE === 'bible' && i === BS ? 'on' : ''}">
+        <div class="t">${esc(sec.title)}</div></div>`);
+      el.onclick = () => { MODE = 'bible'; BS = i; BSUB = null; CH = null; BT = null; setHash(); renderAll(); };
+      host.appendChild(el);
+    });
+    host.appendChild($('<div class="ghead">chapters</div>'));
+  }
+  M.chapters.forEach((ch, i) => {
+    const el = $(`<div class="item ${MODE === 'ch' && i === CH ? 'on' : ''}">
+      <div class="t">${esc(ch.title)}</div><div class="s">${esc(ch.sub || '')}</div></div>`);
+    el.onclick = () => { MODE = 'ch'; CH = i; BT = null; BS = null; BSUB = null; setHash(); renderAll(); };
+    host.appendChild(el);
+  });
+  // ---- the world (places) ----
+  if (townList().length) {
+    host.appendChild($('<div class="ghead">the world</div>'));
+    townList().forEach((t, i) => {
+      const el = $(`<div class="item ${MODE === 'town' && i === TOWN ? 'on' : ''}">
+        <div class="t">${esc(t.name)}</div>
+        <div class="s">${t.residents.length} resident(s) · ${Object.keys(t.landmarks).length} district(s)</div></div>`);
+      el.onclick = () => { MODE = 'town'; TOWN = i; TSUB = 'landmarks'; setHash(); renderAll(); };
+      host.appendChild(el);
+    });
+  }
+  // ---- the cast: mains first, then by how much they speak ----
+  if (castList().length) {
+    host.appendChild($('<div class="ghead">the cast</div>'));
+    const order = castList().map((c, i) => ({ c, i }))
+      .sort((a, b) => (b.c.isMain - a.c.isMain) || (b.c.lineCount - a.c.lineCount));
+    for (const { c, i } of order) {
+      const el = $(`<div class="item ${MODE === 'cast' && i === CAST ? 'on' : ''}">
+        <div class="t" style="color:${c.color || '#d9c9a3'}">${esc(c.name)}${c.isMain ? ' <span class="pill main">main</span>' : ''}</div>
+        <div class="s">${c.lineCount} line(s)${c.art ? '' : ' · no cut-in'}</div></div>`);
+      el.onclick = () => { MODE = 'cast'; CAST = i; CSUB = 'lines'; setHash(); renderAll(); };
+      host.appendChild(el);
+    }
+  }
+  // ---- the npc conversation graph ----
+  if (talkList().length) {
+    host.appendChild($('<div class="ghead">npc dialogue</div>'));
+    talkList().forEach((t, i) => {
+      const el = $(`<div class="item ${MODE === 'talk' && i === TSP ? 'on' : ''}">
+        <div class="t" style="color:${t.color || '#d9c9a3'}">${esc(t.name)}</div>
+        <div class="s">${t.nodes.length} node(s)</div></div>`);
+      el.onclick = () => { MODE = 'talk'; TSP = i; TND = null; setHash(); renderAll(); };
+      host.appendChild(el);
+    });
+  }
+  // ---- continuity checks ----
+  const cs = (M.stats && M.stats.checks) || {};
+  host.appendChild($('<div class="ghead">integrity</div>'));
+  const cel = $(`<div class="item ${MODE === 'checks' ? 'on' : ''}">
+    <div class="t">continuity checks</div>
+    <div class="s">${cs.error || 0} error · ${cs.warn || 0} warning · ${cs.info || 0} note</div></div>`);
+  cel.onclick = () => { MODE = 'checks'; setHash(); renderAll(); };
+  host.appendChild(cel);
+
+  const st = M.stats || {};
+  host.appendChild($(`<div class="meta" style="padding:10px 14px">built ${esc((M.generated || '').slice(0, 16).replace('T', ' '))}
+    · ${st.lines || 0} scripted + ${st.dialogueLines || 0} npc lines · ${st.cast || 0} cast</div>`));
+}
+
+function renderBibleSection(host) {
+  const sec = bibleSections()[BS];
+  host.appendChild($(`<div class="beathead"><div class="bt">${esc(sec.title)}</div></div>`));
+  if (sec.body) host.appendChild($(`<div class="md">${mdRender(sec.body)}</div>`));
+  if (sec.subs && sec.subs.length) {
+    host.appendChild($('<div class="ghead">in this section</div>'));
+    sec.subs.forEach((sub, i) => {
+      const el = $(`<div class="item sub ${i === BSUB ? 'on' : ''}">
+        <div class="t"><span class="n">${i + 1}</span>${esc(sub.title)}</div></div>`);
+      el.onclick = () => {
+        const col = document.getElementById('c-beats'); const st = col.scrollTop;
+        BSUB = i; setHash(); renderBeats(); col.scrollTop = st; renderBlocks();
+      };
+      host.appendChild(el);
+    });
+  }
+}
+
+const subItem = (label, key, cur, onPick) => {
+  const el = $(`<div class="item sub ${key === cur ? 'on' : ''}"><div class="t">${esc(label)}</div></div>`);
+  el.onclick = onPick;
+  return el;
+};
+
+function renderCastMid(host) {
+  const c = castList()[CAST];
+  const art = c.art
+    ? `<span class="pill art">cut-in · ${c.art.moods.length} mood(s)</span>`
+    : `<span class="pill none">no cut-in art</span>`;
+  host.appendChild($(`<div class="card">
+    <div class="nm" style="color:${c.color || '#e0a94e'}">${esc(c.name)}</div>
+    <div class="meta2">${c.lineCount} line(s) across the game${c.isMain ? ' · main character' : ''}</div>
+    <div>${c.isMain ? '<span class="pill main">main</span>' : ''}${art}
+      ${(c.placements || []).map(p => `<span class="pill">${esc(p.district || p.scene)}</span>`).join('')}</div>
+  </div>`));
+  const pick = (k) => () => { CSUB = k; setHash(); renderBeats(); renderBlocks(); };
+  host.appendChild($('<div class="ghead">read</div>'));
+  host.appendChild(subItem(`every line (${c.lineCount})`, 'lines', CSUB, pick('lines')));
+  if (c.canon) host.appendChild(subItem('who they are — STORY.md', 'canon', CSUB, pick('canon')));
+  if (c.voice) host.appendChild(subItem('how they speak — VOICES.md', 'voice', CSUB, pick('voice')));
+  if (c.placements && c.placements.length) host.appendChild(subItem('where they stand', 'where', CSUB, pick('where')));
+}
+
+function renderTownMid(host) {
+  const t = townList()[TOWN];
+  host.appendChild($(`<div class="card">
+    <div class="nm">${esc(t.name)}</div>
+    ${t.premise ? `<div class="meta2">${esc(t.premise)}</div>` : ''}
+    <div>${(t.districts || []).map(d => `<span class="pill">${esc(d)}</span>`).join('')}</div>
+  </div>`));
+  const pick = (k) => () => { TSUB = k; setHash(); renderBeats(); renderBlocks(); };
+  host.appendChild($('<div class="ghead">read</div>'));
+  host.appendChild(subItem(`landmarks (${Object.values(t.landmarks).reduce((a, v) => a + v.length, 0)})`, 'landmarks', TSUB, pick('landmarks')));
+  host.appendChild(subItem(`who lives here (${t.residents.length})`, 'residents', TSUB, pick('residents')));
+  host.appendChild(subItem(`scenes staged here (${t.beats.length})`, 'beats', TSUB, pick('beats')));
+}
+
+function renderTalkMid(host) {
+  const t = talkList()[TSP];
+  host.appendChild($(`<div class="card"><div class="nm" style="color:${t.color || '#e0a94e'}">${esc(t.name)}</div>
+    <div class="meta2">${t.nodes.length} dialogue node(s) — the NPC conversation graph</div></div>`));
+  host.appendChild($('<div class="ghead">nodes</div>'));
+  t.nodes.forEach((n, i) => {
+    const first = (n.lines[0] && n.lines[0].text) || (n.choices[0] && n.choices[0].text) || '—';
+    const el = $(`<div class="item sub ${i === TND ? 'on' : ''}">
+      <div class="t" style="font-family:ui-monospace,monospace;font-size:12.5px">${esc(n.id)}</div>
+      <div class="s">${esc(first.slice(0, 70))}</div></div>`);
+    el.onclick = () => { TND = i; setHash(); renderBeats(); renderBlocks(); };
+    host.appendChild(el);
+  });
+}
+
+function renderChecksMid(host) {
+  const cs = checkList();
+  if (!cs.length) { host.appendChild($('<div class="ok">✓ nothing to report — the world hangs together.</div>')); return; }
+  const cs2 = { error: 'breaks the game or the fiction', warn: 'probably wrong', info: 'worth knowing' };
+  let last = null;
+  for (const c of cs) {
+    if (c.level !== last) { host.appendChild($(`<div class="ghead">${c.level} — ${cs2[c.level] || ''}</div>`)); last = c.level; }
+    host.appendChild($(`<div class="chk"><span class="lv ${c.level}">${c.level}</span>${esc(c.msg)}<span class="kind">${esc(c.kind)}</span></div>`));
+  }
+}
+
+function renderBeats() {
+  const host = document.getElementById('beats');
+  host.innerHTML = '';
+  if (MODE === 'bible') { renderBibleSection(host); return; }
+  if (MODE === 'cast') { renderCastMid(host); return; }
+  if (MODE === 'town') { renderTownMid(host); return; }
+  if (MODE === 'talk') { renderTalkMid(host); return; }
+  if (MODE === 'checks') { renderChecksMid(host); return; }
+  if (CH === null) { host.appendChild($('<div class="hint">choose a chapter</div>')); return; }
+  M.chapters[CH].beats.forEach((b, i) => {
+    const el = $(`<div class="item ${i === BT ? 'on' : ''}">
+      <div class="t"><span class="n">${i + 1}</span>${esc(b.title)}<span class="scene">${esc(b.scene)}</span></div>
+      <div class="s">${esc(b.summary)}</div></div>`);
+    el.onclick = () => { BT = i; setHash(); renderBeats(); renderBlocks(); };
+    host.appendChild(el);
+  });
+}
+
+function lineRow(l) {
+  const [whoRaw, text, variant] = l;
+  const [whoBase, expr] = whoRaw.split(':');
+  const special = ['narrate', 'banner', 'toast', 'system'].includes(whoBase);
+  const sp = SPEAKERS[whoBase] || { name: whoBase, color: '#d9c9a3' };
+  const paren = text.startsWith('(');
+  const row = $(`<div class="line ${special ? whoBase : ''}"></div>`);
+  const who = $(`<div class="who" style="color:${sp.color}">${esc(sp.name)}${expr ? `<span class="badge">${esc(expr)}</span>` : ''}</div>`);
+  const txt = $(`<div class="txt ${paren ? 'paren' : ''}">${variant ? `<span class="vbadge">${esc(variant)}</span>` : ''}${esc(text)}</div>`);
+  row.appendChild(who); row.appendChild(txt);
+  return row;
+}
+
+function renderCastRight(host) {
+  const c = castList()[CAST];
+  const head = (t, sub) => host.appendChild($(`<div class="beathead"><div class="bt">${esc(t)}</div>
+    <div class="bs">${esc(sub)}</div></div>`));
+  if (CSUB === 'canon' && c.canon) { head(c.name, 'who they are — STORY.md'); host.appendChild($(`<div class="md wide">${mdRender(c.canon)}</div>`)); return; }
+  if (CSUB === 'voice' && c.voice) { head(c.name, 'how they speak — VOICES.md'); host.appendChild($(`<div class="md wide">${mdRender(c.voice.body)}</div>`)); return; }
+  if (CSUB === 'where') {
+    head(c.name, 'where they stand in the world');
+    for (const p of c.placements) host.appendChild($(`<div class="card">
+      <div class="nm" style="font-size:16px">${esc(p.district || '—')}</div>
+      <div class="meta2">scene: ${esc(p.scene)} · npc id <code>${esc(p.npcId || '')}</code>${p.entry ? ` · opens <code>${esc(p.entry)}</code>` : ''}</div></div>`));
+    return;
+  }
+  head(c.name, `every line — ${c.lineCount} across chapters and NPC dialogue`);
+  if (!c.lines.length) { host.appendChild($('<div class="hint">this character speaks nowhere yet</div>')); return; }
+  let lastWhere = null, box = null;
+  for (const l of c.lines) {
+    if (l.where !== lastWhere) {
+      box = $(`<div class="block"><div class="ctx">${esc(l.where)}</div><div class="lines"></div></div>`);
+      host.appendChild(box); lastWhere = l.where;
+    }
+    const who = l.expr ? `<span class="badge">${esc(l.expr)}</span>` : '';
+    box.querySelector('.lines').appendChild($(`<div class="line">
+      <div class="who" style="color:${c.color || '#d9c9a3'}">${who}</div>
+      <div class="txt ${l.text.startsWith('(') ? 'paren' : ''}">${l.variant ? `<span class="vbadge">${esc(l.variant)}</span>` : ''}${esc(l.text)}</div></div>`));
+  }
+}
+
+function renderTownRight(host) {
+  const t = townList()[TOWN];
+  host.appendChild($(`<div class="beathead"><div class="bt">${esc(t.name)}</div>
+    <div class="bs">${esc(TSUB === 'residents' ? 'who lives here' : TSUB === 'beats' ? 'scenes staged here' : 'landmarks, by district')}</div></div>`));
+  if (TSUB === 'residents') {
+    if (!t.residents.length) { host.appendChild($('<div class="hint">nobody is placed here yet</div>')); return; }
+    for (const r of t.residents) {
+      const ci = castList().findIndex(c => c.id === r.id);
+      const el = $(`<div class="card"><div class="nm" style="font-size:16px">${esc(r.name)}</div>
+        <div class="meta2">${esc(r.district || '—')}${ci >= 0 ? ` · ${castList()[ci].lineCount} line(s)` : ''}</div></div>`);
+      if (ci >= 0) { el.style.cursor = 'pointer'; el.onclick = () => { MODE = 'cast'; CAST = ci; CSUB = 'lines'; setHash(); renderAll(); }; }
+      host.appendChild(el);
+    }
+    return;
+  }
+  if (TSUB === 'beats') {
+    if (!t.beats.length) { host.appendChild($('<div class="hint">no chapter beats are staged here</div>')); return; }
+    for (const b of t.beats) host.appendChild($(`<div class="card">
+      <div class="nm" style="font-size:16px">${esc(b.title)}</div>
+      <div class="meta2">${esc(b.ch)} · scene <code>${esc(b.scene)}</code></div></div>`));
+    return;
+  }
+  for (const [district, ls] of Object.entries(t.landmarks)) {
+    const box = $(`<div class="block"><div class="ctx">${esc(district)}</div><div class="lines"></div></div>`);
+    for (const l of ls) box.querySelector('.lines').appendChild($(`<div class="line">
+      <div class="who" style="color:#8fb0c9">${esc(l.class)}</div>
+      <div class="txt">${esc(l.name)}${l.note ? `<div style="font-size:12.5px;opacity:.6;font-style:italic;margin-top:2px">${esc(l.note.slice(0, 260))}</div>` : ''}</div></div>`));
+    host.appendChild(box);
+  }
+}
+
+function renderTalkRight(host) {
+  const t = talkList()[TSP];
+  if (TND === null) { host.appendChild($('<div class="hint">choose a dialogue node</div>')); return; }
+  const n = t.nodes[TND];
+  host.appendChild($(`<div class="beathead"><div class="bt">${esc(t.name)}</div>
+    <div class="bs"><code>${esc(n.id)}</code></div></div>`));
+  const box = $('<div class="node"></div>');
+  box.appendChild($(`<div class="nh">${esc(n.id)}${n.next ? ` → ${esc(n.next)}` : ''}${n.else ? ` · else → ${esc(n.else)}` : ''}</div>`));
+  if (n.cond) box.appendChild($(`<div class="cond">shown when ${esc(n.cond)}</div>`));
+  const lines = $('<div class="lines"></div>');
+  for (const l of n.lines) lines.appendChild($(`<div class="line">
+    <div class="who" style="color:${t.color || '#d9c9a3'}">${esc(l.speaker || t.name)}${l.expr ? `<span class="badge">${esc(l.expr)}</span>` : ''}</div>
+    <div class="txt ${l.text.startsWith('(') ? 'paren' : ''}">${esc(l.text)}</div></div>`));
+  box.appendChild(lines);
+  for (const c of n.choices) {
+    const el = $(`<div class="choice">${esc(c.text)}<span class="goto">${c.goto ? '→ ' + esc(c.goto) : '(ends)'}</span></div>`);
+    if (c.goto) {
+      const gi = t.nodes.findIndex(x => x.id === c.goto);
+      if (gi >= 0) { el.style.cursor = 'pointer'; el.onclick = () => { TND = gi; setHash(); renderBeats(); renderBlocks(); }; }
+    }
+    box.appendChild(el);
+  }
+  if (n.effects) box.appendChild($(`<div class="cond">sets ${esc(n.effects)}</div>`));
+  host.appendChild(box);
+}
+
+function renderBlocks() {
+  const host = document.getElementById('blocks');
+  host.innerHTML = '';
+  if (MODE === 'cast') { renderCastRight(host); document.getElementById('c-blocks').scrollTop = 0; return; }
+  if (MODE === 'town') { renderTownRight(host); document.getElementById('c-blocks').scrollTop = 0; return; }
+  if (MODE === 'talk') { renderTalkRight(host); document.getElementById('c-blocks').scrollTop = 0; return; }
+  if (MODE === 'checks') {
+    const cs = checkList();
+    const errs = cs.filter(c => c.level !== 'info').length;
+    host.appendChild($(`<div class="beathead"><div class="bt">continuity checks</div>
+      <div class="bs">run fresh on every load, straight off the story sources</div></div>`));
+    host.appendChild($(`<div class="md wide">${errs
+      ? `<p><strong>${errs}</strong> thing(s) look wrong. These are story-level breaks the test gauntlet cannot see — it checks that the game <em>runs</em>, not that the world <em>hangs together</em>.</p>`
+      : '<p>✓ No errors and no warnings. Every NPC opens a node that exists, every dialogue node is reachable, and every scripted expression has art. The notes on the left are the known backlog, not faults.</p>'}
+      <p>Read the list in the middle column. Each row names the source it came from.</p></div>`));
+    return;
+  }
+  if (MODE === 'bible') {
+    const sec = bibleSections()[BS];
+    const subs = sec.subs || [];
+    if (!subs.length) { host.appendChild($('<div class="hint">this section has no sub-parts — read it in the middle column</div>')); return; }
+    if (BSUB === null) { host.appendChild($('<div class="hint">choose a part of this section</div>')); return; }
+    const sub = subs[BSUB];
+    host.appendChild($(`<div class="beathead"><div class="bt">${esc(sub.title)}</div>
+      <div class="bs">${esc(sec.title)} — the story bible</div></div>`));
+    host.appendChild($(`<div class="md wide">${mdRender(sub.body)}</div>`));
+    document.getElementById('c-blocks').scrollTop = 0;
+    return;
+  }
+  if (CH === null || BT === null) { host.appendChild($('<div class="hint">choose a beat</div>')); return; }
+  const b = M.chapters[CH].beats[BT];
+  host.appendChild($(`<div class="beathead"><div class="bt">${esc(b.title)}</div>
+    <div class="bs">${esc(b.scene)} — ${esc(b.summary)}</div></div>`));
+  if (!b.blocks.length) {
+    host.appendChild($(`<div class="planned">${esc(b.summary)}<br><br>(planned — no dialogue written yet; see STORY.md)</div>`));
+    return;
+  }
+  for (const bl of b.blocks) {
+    const box = $(`<div class="block"><div class="ctx">${esc(bl.context)}</div><div class="lines"></div></div>`);
+    const lines = box.querySelector('.lines');
+    for (const l of bl.lines) lines.appendChild(lineRow(l));
+    host.appendChild(box);
+  }
+  document.getElementById('c-blocks').scrollTop = 0;
+}
+
+function renderAll() {
+  const MID = { bible: 'section', cast: 'character', town: 'place', talk: 'nodes', checks: 'findings', ch: 'beats' };
+  const RIGHT = { bible: 'reading', cast: 'their lines', town: 'detail', talk: 'the node', checks: 'summary', ch: 'dialogue' };
+  document.getElementById('h-mid').textContent = MID[MODE] || 'beats';
+  document.getElementById('h-right').textContent = RIGHT[MODE] || 'dialogue';
+  renderChapters(); renderBeats(); renderBlocks(); window.__done = true;
+}
+
+window.addEventListener('hashchange', () => { applyHash(); renderAll(); });
+(async () => {
+  M = await (await fetch('assets/story-manifest.json?t=' + Date.now())).json();
+  applyHash();
+  if (MODE === 'ch' && CH === null) CH = 0;
+  renderAll();
+})();
+</script>

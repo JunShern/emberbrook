@@ -1,0 +1,221 @@
+{
+  "built": "2026-08-08T19:04:26.243Z",
+  "generator": "tools/build-static.mjs",
+  "flags": {
+    "webp": true,
+    "webpDepth": false,
+    "glb": true,
+    "plateMax": 0,
+    "noDevScenes": false,
+    "story": true
+  },
+  "cache": {
+    "enabled": true,
+    "hits": 245,
+    "misses": 8,
+    "stored": 8,
+    "demoted": 0
+  },
+  "seconds": 10.1,
+  "totals": {
+    "bytes": 545943521,
+    "files": 392,
+    "byCategory": {
+      "scenes": 398585863,
+      "characters": 108530047,
+      "music": 22454149,
+      "code": 4661106,
+      "other": 11712356
+    }
+  },
+  "scenes": [
+    {
+      "key": "del-cine",
+      "bytes": 84802798,
+      "files": 34,
+      "why": "scenes.js registry: Chapter 2 — DELLHOLLOW (jump in at a place)"
+    },
+    {
+      "key": "emb-townwalk",
+      "bytes": 72228195,
+      "files": 3,
+      "why": "scenes.js registry: Developer tools (not part of the game)"
+    },
+    {
+      "key": "emb-cine",
+      "bytes": 49399138,
+      "files": 26,
+      "why": "scenes.js registry: Chapter 1 — EMBERBROOK, the home village (jump in at a place)"
+    },
+    {
+      "key": "ow-valley",
+      "bytes": 45257845,
+      "files": 4,
+      "why": "scenes.js registry: ▶ PLAY — the connected slice (start here)"
+    },
+    {
+      "key": "townwalk",
+      "bytes": 36789032,
+      "files": 2,
+      "why": "scenes.js registry: Developer tools (not part of the game)"
+    },
+    {
+      "key": "del-boatyard",
+      "bytes": 14967952,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 2 — DELLHOLLOW (jump in at a place)"
+    },
+    {
+      "key": "del-weapon-int",
+      "bytes": 12235940,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 2 — DELLHOLLOW (jump in at a place)"
+    },
+    {
+      "key": "del-cookhouse-int",
+      "bytes": 11948416,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 2 — DELLHOLLOW (jump in at a place)"
+    },
+    {
+      "key": "del-armor-int",
+      "bytes": 11696510,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 2 — DELLHOLLOW (jump in at a place)"
+    },
+    {
+      "key": "del-item-int",
+      "bytes": 10986793,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 2 — DELLHOLLOW (jump in at a place)"
+    },
+    {
+      "key": "del-inn-int",
+      "bytes": 10622780,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 2 — DELLHOLLOW (jump in at a place)"
+    },
+    {
+      "key": "del-cottage-int",
+      "bytes": 8545356,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 2 — DELLHOLLOW (jump in at a place)"
+    },
+    {
+      "key": "emb-item-int",
+      "bytes": 7693049,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 1 — EMBERBROOK, the home village (jump in at a place)"
+    },
+    {
+      "key": "emb-inn-int",
+      "bytes": 7516665,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 1 — EMBERBROOK, the home village (jump in at a place)"
+    },
+    {
+      "key": "emb-lake-int",
+      "bytes": 7246644,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 1 — EMBERBROOK, the home village (jump in at a place)"
+    },
+    {
+      "key": "emb-bakery-int",
+      "bytes": 6648750,
+      "files": 4,
+      "why": "scenes.js registry: Chapter 1 — EMBERBROOK, the home village (jump in at a place)"
+    }
+  ],
+  "cast": [
+    "0",
+    "1",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "2",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "3",
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "35",
+    "36",
+    "37",
+    "38",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "armorer",
+    "boatwright",
+    "chandler",
+    "child-boy",
+    "child-girl",
+    "creel",
+    "del.cook",
+    "del.cookhouse.bargeman",
+    "del.cookhouse.boy",
+    "del.deckhand",
+    "del.gullgirl",
+    "del.inn.bargeman",
+    "del.inn.lodger",
+    "del.innkeep",
+    "del.netmender",
+    "del.quayfisher",
+    "del.stairgran",
+    "del.yard.apprentice",
+    "del.yard.caulker",
+    "eelwife",
+    "elder-woman",
+    "emb.boy",
+    "emb.girl",
+    "emb.innkeep",
+    "emb.miller",
+    "emb.neighbour",
+    "emb.shopkeep",
+    "emb.townsfolk",
+    "finn",
+    "fisher",
+    "hobb",
+    "innkeeper",
+    "lake",
+    "mara",
+    "maren",
+    "mochi",
+    "narrator",
+    "nib",
+    "odessa",
+    "pell",
+    "pip",
+    "poppy",
+    "rowan",
+    "sorrel",
+    "system",
+    "tally",
+    "vesper",
+    "villager-man",
+    "villager-woman",
+    "weaponsmith"
+  ],
+  "missing": []
+}

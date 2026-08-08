@@ -1,0 +1,977 @@
+{
+ "_doc": [
+  "BAKED CINEMATIC CAMERAS for del-cine \u2014 what tools/cine_bake.py actually",
+  "rendered, per camera. GENERATED; the authored intent is",
+  "public/townmap/dellhollow.cameras.json and the solved numbers are",
+  "public/townmap/dellhollow.cameras.solved.json (this file must agree with it \u2014",
+  "tools/cine_test.mjs asserts every link of that chain).",
+  "public/play3d.html builds its THREE.PerspectiveCamera from pos/aim/fov/rtClip",
+  "here, and its depth quad from depth.near/far + cameras/<id>/depth.png, so the",
+  "shipped image and the shipped occlusion come from one bake of one camera.",
+  "pos/aim are MAP/Blender coords [x, y, h]; spawn is RUNTIME [x, h, -y]."
+ ],
+ "sceneKey": "del-cine",
+ "generator": "tools/cine_bake.py",
+ "defaults": {
+  "aspect": 1.75,
+  "charH": 1.7,
+  "exposure": 0.15,
+  "view_transform": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "beautyRes": [
+   2688,
+   1536
+  ],
+  "samples": 128,
+  "denoised": true,
+  "plateSource": "tools/blends/dellhollow-master.blend",
+  "appliedGrade": {
+   "exposure": 0.15000000596046448,
+   "viewTransform": "AgX",
+   "look": "AgX - Medium High Contrast",
+   "sky": 2.0999999046325684,
+   "sunEnergy": null,
+   "moon": null,
+   "moonColor": null,
+   "moonZenithDeg": null,
+   "moonAzimuthDeg": null,
+   "warmAnchorGlow": null,
+   "lampWatts": null,
+   "waystoneLanternW": null,
+   "waystoneLanternAt": null,
+   "waystoneLanternOn": null
+  }
+ },
+ "cameras": [
+  {
+   "id": "gate",
+   "name": "The Valley Gate",
+   "entry": true,
+   "transit": false,
+   "pos": [
+    -16.319,
+    9.26,
+    36.112
+   ],
+   "aim": [
+    13.314,
+    6.146,
+    25.267
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    7.8808,
+    264.685
+   ],
+   "depth": {
+    "near": 15.761619567871094,
+    "far": 165.4280242919922,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/gate/bg.png",
+    "depth": "cameras/gate/depth.png"
+   },
+   "spawn": [
+    11.33,
+    24.04,
+    -6
+   ],
+   "spawnFrom": "walk_pad_gatehouse",
+   "visibleFrac": 0.7812,
+   "probes": 64,
+   "baked": "2026-08-08T18:49:13Z",
+   "seconds": 243.5,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "shelf-west",
+   "name": "The Shelf \u2014 shop street, west",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    12.22,
+    25.407,
+    25.463
+   ],
+   "aim": [
+    27.385,
+    6.68,
+    21.214
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    5.6381,
+    103.078
+   ],
+   "depth": {
+    "near": 11.276220321655273,
+    "far": 64.423828125,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/shelf-west/bg.png",
+    "depth": "cameras/shelf-west/depth.png"
+   },
+   "spawn": [
+    26.6,
+    19.04,
+    -6.7
+   ],
+   "spawnFrom": "walk_pad_inn",
+   "visibleFrac": 0.7344,
+   "probes": 64,
+   "baked": "2026-08-06T22:15:20Z",
+   "seconds": 139.4,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "shelf-east",
+   "name": "The Shelf \u2014 shop street, east",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    58.629,
+    2.903,
+    26.575
+   ],
+   "aim": [
+    43.78,
+    7.728,
+    20.267
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    3.0559,
+    264.984
+   ],
+   "depth": {
+    "near": 6.111888885498047,
+    "far": 165.6152801513672,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/shelf-east/bg.png",
+    "depth": "cameras/shelf-east/depth.png"
+   },
+   "spawn": [
+    44.3,
+    19.04,
+    -9
+   ],
+   "spawnFrom": "walk_pad_armor-shop",
+   "visibleFrac": 1.0,
+   "probes": 64,
+   "baked": "2026-08-08T18:49:13Z",
+   "seconds": 168.0,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "loop-stairs",
+   "name": "The Loop Stairs",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    52.011,
+    26.749,
+    22.679
+   ],
+   "aim": [
+    56.206,
+    9.924,
+    18.033
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.7053,
+    58.937
+   ],
+   "depth": {
+    "near": 9.410672187805176,
+    "far": 36.835411071777344,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/loop-stairs/bg.png",
+    "depth": "cameras/loop-stairs/depth.png"
+   },
+   "spawn": [
+    55.9,
+    17.4,
+    -9
+   ],
+   "spawnFrom": "walk_e_shelf-homes__market-stalls_landing",
+   "visibleFrac": 0.8906,
+   "probes": 64,
+   "baked": "2026-08-07T17:06:29Z",
+   "seconds": 148.7,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "quay-west",
+   "name": "The Harbour Deck",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    36.85,
+    41.311,
+    23.759
+   ],
+   "aim": [
+    44.387,
+    16.659,
+    14.883
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    8.8072,
+    88.684
+   ],
+   "depth": {
+    "near": 17.614484786987305,
+    "far": 55.42760467529297,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/quay-west/bg.png",
+    "depth": "cameras/quay-west/depth.png"
+   },
+   "spawn": [
+    39.9,
+    14.11,
+    -16.8
+   ],
+   "spawnFrom": "walk_pad_cookhouse",
+   "visibleFrac": 0.9062,
+   "probes": 64,
+   "baked": "2026-08-07T16:33:01Z",
+   "seconds": 182.0,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "lockhead",
+   "name": "The Lockhead",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    81.47,
+    33.082,
+    23.958
+   ],
+   "aim": [
+    73.527,
+    15.241,
+    15.262
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    7.7459,
+    69.308
+   ],
+   "depth": {
+    "near": 15.491851806640625,
+    "far": 43.317623138427734,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/lockhead/bg.png",
+    "depth": "cameras/lockhead/depth.png"
+   },
+   "spawn": [
+    71.84,
+    14.07,
+    -15.15
+   ],
+   "spawnFrom": "walk_e_market-stalls__lockhead_l1",
+   "visibleFrac": 0.775,
+   "probes": 40,
+   "baked": "2026-08-07T18:14:12Z",
+   "seconds": 159.0,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "cottage",
+   "name": "Keepers' Spur",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    85.762,
+    35.508,
+    20.586
+   ],
+   "aim": [
+    88.04,
+    19.298,
+    11.882
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    7.6867,
+    61.961
+   ],
+   "depth": {
+    "near": 15.37348747253418,
+    "far": 38.725711822509766,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/cottage/bg.png",
+    "depth": "cameras/cottage/depth.png"
+   },
+   "spawn": [
+    92.61,
+    7.87,
+    -22
+   ],
+   "spawnFrom": "walk_pad_keepers-cottage",
+   "visibleFrac": 0.9531,
+   "probes": 64,
+   "baked": "2026-08-08T16:50:40Z",
+   "seconds": 181.1,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "crossing",
+   "name": "The Crossing",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    59.217,
+    17.025,
+    19.964
+   ],
+   "aim": [
+    80.639,
+    22.765,
+    9.147
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    2.051,
+    160.301
+   ],
+   "depth": {
+    "near": 4.102058410644531,
+    "far": 100.18785095214844,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/crossing/bg.png",
+    "depth": "cameras/crossing/depth.png"
+   },
+   "spawn": [
+    78.4,
+    7.97,
+    -22.8
+   ],
+   "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
+   "visibleFrac": 0.8,
+   "probes": 30,
+   "baked": "2026-08-08T18:49:13Z",
+   "seconds": 210.5,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "weave",
+   "name": "The Weave",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    38.049,
+    40.124,
+    23.542
+   ],
+   "aim": [
+    60.893,
+    22.276,
+    11.83
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    8.0729,
+    177.99
+   ],
+   "depth": {
+    "near": 16.14577865600586,
+    "far": 111.24384307861328,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/weave/bg.png",
+    "depth": "cameras/weave/depth.png"
+   },
+   "spawn": [
+    59.09,
+    9.04,
+    -22
+   ],
+   "spawnFrom": "walk_pad_pilot-cluster",
+   "visibleFrac": 0.9062,
+   "probes": 64,
+   "baked": "2026-08-08T18:49:13Z",
+   "seconds": 195.8,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "deep-stairs",
+   "name": "The Deep Stairs",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    31.914,
+    47.198,
+    10.93
+   ],
+   "aim": [
+    38.895,
+    25.712,
+    7.755
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    7.6233,
+    97.495
+   ],
+   "depth": {
+    "near": 15.246665954589844,
+    "far": 60.9345817565918,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/deep-stairs/bg.png",
+    "depth": "cameras/deep-stairs/depth.png"
+   },
+   "spawn": [
+    33.857,
+    4.9,
+    -26.684
+   ],
+   "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.001",
+   "visibleFrac": 0.9688,
+   "probes": 64,
+   "baked": "2026-08-07T21:31:59Z",
+   "seconds": 194.4,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "boatyard",
+   "name": "The Boatyard",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    19.111,
+    51.212,
+    14.775
+   ],
+   "aim": [
+    19.111,
+    26.565,
+    3.802
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    6.0233,
+    52.674
+   ],
+   "depth": {
+    "near": 12.046516418457031,
+    "far": 32.92135238647461,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/boatyard/bg.png",
+    "depth": "cameras/boatyard/depth.png"
+   },
+   "spawn": [
+    22,
+    1.64,
+    -28.5
+   ],
+   "spawnFrom": "walk_pad_pitch-kettle",
+   "visibleFrac": 0.2812,
+   "probes": 64,
+   "baked": "2026-08-07T21:22:20Z",
+   "seconds": 216.7,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "waterfront",
+   "name": "The Waterfront \u2014 winch foot",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    57.013,
+    32.236,
+    8.781
+   ],
+   "aim": [
+    38.159,
+    25.373,
+    2.261
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.6659,
+    171.598
+   ],
+   "depth": {
+    "near": 9.331817626953125,
+    "far": 107.24856567382812,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/waterfront/bg.png",
+    "depth": "cameras/waterfront/depth.png"
+   },
+   "spawn": [
+    43,
+    1.04,
+    -26
+   ],
+   "spawnFrom": "walk_pad_deep-stairs-foot",
+   "visibleFrac": 0.7031,
+   "probes": 64,
+   "baked": "2026-08-08T18:49:13Z",
+   "seconds": 240.9,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "fishdock",
+   "name": "The Fish Dock",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    43.637,
+    50.13,
+    9.083
+   ],
+   "aim": [
+    54.595,
+    27.663,
+    2.385
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    6.9605,
+    79.568
+   ],
+   "depth": {
+    "near": 13.921041488647461,
+    "far": 49.73030090332031,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/fishdock/bg.png",
+    "depth": "cameras/fishdock/depth.png"
+   },
+   "spawn": [
+    54.945,
+    1.07,
+    -28.25
+   ],
+   "spawnFrom": "walk_e_fish-dock__winch-foot_l0",
+   "visibleFrac": 0.88,
+   "probes": 50,
+   "baked": "2026-08-07T21:05:38Z",
+   "seconds": 184.0,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "lockfive",
+   "name": "Lock Five",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    52.48,
+    36.362,
+    9.863
+   ],
+   "aim": [
+    74.689,
+    28.278,
+    4.839
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    5.1469,
+    161.632
+   ],
+   "depth": {
+    "near": 10.293846130371094,
+    "far": 101.02001953125,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/lockfive/bg.png",
+    "depth": "cameras/lockfive/depth.png"
+   },
+   "spawn": [
+    86.91,
+    0.04,
+    -28
+   ],
+   "spawnFrom": "walk_pad_lock-five",
+   "visibleFrac": 0.75,
+   "probes": 64,
+   "baked": "2026-08-08T18:49:13Z",
+   "seconds": 249.6,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "north-landing",
+   "name": "North Landing",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    121.118,
+    30.51,
+    6.321
+   ],
+   "aim": [
+    98.907,
+    27.388,
+    0.728
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    6.4349,
+    332.199
+   ],
+   "depth": {
+    "near": 12.869773864746094,
+    "far": 207.6243896484375,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/north-landing/bg.png",
+    "depth": "cameras/north-landing/depth.png"
+   },
+   "spawn": [
+    92.37,
+    0.07,
+    -27.75
+   ],
+   "spawnFrom": "walk_e_lock-five__north-landing_l0",
+   "visibleFrac": 0.8667,
+   "probes": 30,
+   "baked": "2026-08-08T18:49:13Z",
+   "seconds": 224.2,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  }
+ ]
+}

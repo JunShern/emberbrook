@@ -1,0 +1,147 @@
+<style>
+#eb-wip{position:fixed;left:0;right:0;top:0;z-index:99999;background:#2b1d10ee;
+  color:#f0d9b5;font:13px/1.5 system-ui,sans-serif;padding:7px 40px 7px 14px;
+  border-bottom:1px solid #5c4326;text-align:center;backdrop-filter:blur(3px)}
+#eb-wip b{color:#e9a24b}
+#eb-wip button{position:absolute;right:6px;top:3px;background:none;border:0;
+  color:#c8ab84;font-size:17px;cursor:pointer;line-height:1;padding:4px 8px}
+#eb-wip button:hover{color:#fff}
+@media(max-width:600px){#eb-wip{font-size:11px;padding-right:34px}}
+</style>
+<div id="eb-wip" role="status">
+  <b>Emberbrook — work in progress.</b>
+  An early prototype: expect rough edges, and a story that does not finish yet.
+  <button aria-label="Dismiss" onclick="this.parentNode.remove();try{localStorage.setItem('eb-wip-hid','1')}catch(e){}">&times;</button>
+</div>
+<script>try{if(localStorage.getItem('eb-wip-hid'))document.getElementById('eb-wip').remove()}catch(e){}</script>
+<meta charset="utf-8"><title>Emberbrook — chapter select</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--bg:#140f0c;--card:#221913;--ink:#ece0d0;--dim:#a89179;--warm:#e9a24b;--line:#3a2c20}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}
+  header{padding:28px 24px 8px;max-width:1100px;margin:0 auto}
+  h1{margin:0 0 4px;font-size:26px;letter-spacing:.3px}
+  h1 .fl{color:var(--warm)}
+  .sub{color:var(--dim);margin:0 0 6px}
+  .note{color:var(--dim);font-size:13px;background:#1c150f;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:12px 0 0}
+  .note b{color:var(--ink)}
+  main{max-width:1100px;margin:0 auto;padding:8px 24px 60px}
+  h2{margin:30px 0 4px;font-size:15px;text-transform:uppercase;letter-spacing:1.5px;color:var(--warm)}
+  h2 .c{color:var(--dim);text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;margin-left:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:12px}
+  a.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:transform .12s,border-color .12s,box-shadow .12s}
+  a.card:hover{transform:translateY(-3px);border-color:var(--warm);box-shadow:0 8px 24px #0008}
+  .thumb{aspect-ratio:16/9;background:#0b0806 center/cover no-repeat;position:relative}
+  .thumb::after{content:"▶ walk";position:absolute;right:8px;bottom:8px;background:#000a;color:var(--warm);font-size:12px;padding:3px 9px;border-radius:20px;opacity:0;transition:opacity .12s}
+  a.card:hover .thumb::after{opacity:1}
+  .meta{padding:10px 13px}
+  .name{font-weight:600}
+  .desc{color:var(--dim);font-size:12.5px;margin-top:2px}
+  .pill{display:inline-block;font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+</style>
+<header>
+  <h1>Ember<span class="fl">brook</span> — chapter select</h1>
+  <p class="sub">Hit <b>PLAY</b> for the game, or jump straight in at any place. <b>H</b> in-game opens the developer menu.</p>
+  <div class="note" style="margin-bottom:8px">
+  <b>Review tools:</b>
+  <a href="story.html" style="color:var(--warm)"><b>Story &amp; world</b></a> ·
+  <a href="townmap/viewer.html?town=dellhollow" style="color:var(--warm)">Dellhollow map</a> ·
+  <a href="townmap/viewer.html?town=emberbrook" style="color:var(--warm)">Emberbrook map</a> </div>
+<div class="note">Controls: <b>WASD</b> or <b>arrow keys</b> to move, <b>E</b> at a door or a person, <b>Esc</b> for the menu. Chapters One and Two run in the world now: the story fires as you walk it, the Old Gate opens when you open it, and the valley road between the two towns is walked, not skipped.</div>
+</header>
+<!-- THE FRONT DOOR. Until 2026-08-02 there was none: every card was a developer
+     jump and a bare /play.html landed in Dellhollow. NEW GAME clears the save and
+     opens Chapter One on its own first ground; CONTINUE is built from the save's
+     own `at` (scene + shot + position), which is the only resume authority. -->
+<main id="m">
+  <div id="door" class="grid" style="margin:6px 0 26px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))"></div>
+</main>
+<script src="game/scenes.js"></script>
+<script>
+const SCENES = window.SCENE_REGISTRY;
+const m = document.getElementById('m');
+function renderGroups(into, groups) {
+  for (const [group, list] of Object.entries(groups)) {
+    const h = document.createElement('h2'); h.innerHTML = group + ' <span class="c">'+list.length+' scenes</span>'; into.appendChild(h);
+    const grid = document.createElement('div'); grid.className = 'grid';
+    for (const [key,name,desc] of list) {
+      const a = document.createElement('a'); a.className='card'; a.href='play.html?scene='+key+'&v='+Date.now();   // bust the HTML cache on every hub click
+      const skey = key.split('&')[0];   // keys can carry query flags (…&rt=1); the thumbnail path cannot
+      a.innerHTML = `<div class="thumb" style="background-image:url('assets/scenes/${skey}/stylized.webp')"></div>
+        <div class="meta"><div class="name">${name}<span class="pill">${key}</span></div><div class="desc">${desc}</div></div>`;
+      grid.appendChild(a);
+    }
+    into.appendChild(grid);
+  }
+}
+// ---- NEW GAME / CONTINUE ---------------------------------------------------
+// The save is read here directly rather than through GS, because the hub loads no
+// game module: this page only needs the slot's `at`, and the runtime is what owns
+// the schema. Keys and defaults mirror game_state.js (SAVE_KEY + its legacy key).
+const SAVE_KEYS = ['emberbrook-save', 'emberbrook-save-v1'];
+function readSave() {
+  for (const k of SAVE_KEYS) {
+    try { const raw = localStorage.getItem(k); if (!raw) continue;
+      const st = JSON.parse(raw); if (st && typeof st === 'object') return st; } catch (e) { }
+  }
+  return null;
+}
+// Chapter One's own first ground: the Whisperwood road, the entry shot of emb-cine
+// (townmap/emberbrook.map.json's p-woodroad — "the game's opening scene").
+// THE POINT IS NOT LITERAL HERE ANY MORE. story.json's `start` is the one place that
+// says where a new game begins, because this card and the two instruments that certify
+// it (playthrough_test, llm_playtester) each used to carry their own copy of the URL.
+// The literal below is the FALLBACK for a fetch that fails, and it is the pre-fix
+// position on purpose: a front door that cannot read the story must still open.
+const NEW_FALLBACK = 'play.html?scene=emb-cine&cam=woodroad&fade=1&v=' + Date.now();
+function newUrlFrom(start) {
+  if (!start || !start.scene) return NEW_FALLBACK;
+  const q = new URLSearchParams({ scene: start.scene, fade: '1', v: String(Date.now()) });
+  if (start.cam) q.set('cam', start.cam);
+  if (Array.isArray(start.pos)) { q.set('sx', start.pos[0]); q.set('sy', start.pos[1]); q.set('sz', start.pos[2]); }
+  if (start.yaw != null) q.set('yaw', start.yaw);
+  return 'play.html?' + q.toString();
+}
+function continueUrl(st) {
+  const at = st && st.at;
+  if (!at || !at.scene) return null;
+  const q = new URLSearchParams({ scene: at.scene, fade: '1', v: String(Date.now()) });
+  if (at.cam) q.set('cam', at.cam);
+  if (Array.isArray(at.pos)) { q.set('sx', at.pos[0]); q.set('sy', at.pos[1]); q.set('sz', at.pos[2]); }
+  if (at.yaw != null) q.set('yaw', at.yaw);
+  return 'play.html?' + q.toString();
+}
+function doorCard(href, name, desc, tone) {
+  const a = document.createElement('a'); a.className = 'card'; a.href = href;
+  a.style.borderColor = tone || 'var(--warm)';
+  a.innerHTML = '<div class="meta" style="padding:16px 18px">' +
+    '<div class="name" style="font-size:19px;color:' + (tone || 'var(--warm)') + '">' + name + '</div>' +
+    '<div class="desc" style="margin-top:5px">' + desc + '</div></div>';
+  return a;
+}
+(function frontDoor() {
+  const host = document.getElementById('door');
+  const st = readSave(), cont = continueUrl(st);
+  if (cont) {
+    const ch = (st.at && st.at.chapter) || 1;
+    const where = (st.at && st.at.scene) + (st.at && st.at.cam ? ' · ' + st.at.cam : '');
+    host.appendChild(doorCard(cont, '▶ CONTINUE',
+      'Chapter ' + ch + ' — ' + where +
+      (st.meta && st.meta.savedAt ? '<br><span style="opacity:.7">saved ' + String(st.meta.savedAt).replace('T', ' ').slice(0, 16) + '</span>' : '')));
+  }
+  const nw = doorCard(NEW_FALLBACK, '✦ NEW GAME',
+    'Chapter One — “Emberwake”. A mapmaker walks into a valley that is not on any of her maps.',
+    cont ? 'var(--dim)' : 'var(--warm)');
+  nw.addEventListener('click', () => { try { SAVE_KEYS.forEach(k => localStorage.removeItem(k)); } catch (e) { } });
+  host.appendChild(nw);
+  // The card is up immediately on the fallback and re-pointed when the story answers,
+  // so a slow fetch delays nothing and a failed one still leaves a working door.
+  fetch('game/story.json?v=' + Date.now()).then(r => r.ok ? r.json() : null)
+    .then(j => { if (j && j.start) nw.href = newUrlFrom(j.start); }).catch(() => { });
+})();
+// The launcher shows CURRENT scenes and nothing else. There is no "Legacy archive"
+// section any more: superseded bundles are DELETED, not collapsed out of sight
+// (user ruling 2026-08-02). If a card is here, the bundle is live.
+renderGroups(m, SCENES);
+</script>

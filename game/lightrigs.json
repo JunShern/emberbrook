@@ -1,0 +1,72 @@
+{
+  "_doc": [
+    "RUNTIME LIGHT RIGS FOR TOWNS WHOSE cameras.json CARRIES NONE.",
+    "",
+    "public/play3d.html's charLight() asks public/townmap/<town>.cameras.json for",
+    "defaults.lightRig FIRST, because that is the file tools/cine_bake.py bakes the",
+    "plates from — one source, no copy, no drift. This file is the FALLBACK, and it",
+    "exists for exactly one town: Dellhollow's plates were baked with a full rig that",
+    "was never written into its cameras.json, so the bake reads nothing, applies",
+    "nothing, and the blend's own lights are what land in the picture.",
+    "",
+    "EVERY NUMBER BELOW IS A MEASUREMENT WITH ITS INSTRUMENT NAMED. Nothing here was",
+    "chosen. If a town later gains a real defaults.lightRig, delete its block here —",
+    "a fallback that shadows a live source is the drift this project keeps paying for.",
+    "",
+    "THE STANDING PROPOSAL (character-lighting lane -> coordinator, 2026-08-02):",
+    "dellhollow.cameras.json should carry defaults.lightRig with exactly the numbers",
+    "below. Written with today's values it is a NO-OP for the bake (cine_bake would",
+    "set the objects to what they already are) and it retires this file. It was not",
+    "done in this lane because dellhollow.cameras.json belongs to the Dellhollow lane."
+  ],
+  "towns": {
+    "dellhollow": {
+      "_derivation": [
+        "INSTRUMENT 1 — the blend, read directly. tools/blends/dellhollow-master.blend",
+        "copied to scratch (the lane was mid-write on the original) and opened headless:",
+        "204 lights, of which exactly ONE is a SUN.",
+        "    SUN_key   energy 12.0   color (1.0, 0.79, 0.56)",
+        "              rotation_euler (53.285, -0.0, 112.380) deg   loc (52, 41, 17.5)",
+        "    World Background  color (0.8, 0.8, 0.8)  strength 2.1",
+        "    View  AgX / 'AgX - Medium High Contrast' / exposure 0.15",
+        "Through play3d's own sunDirFromBlender (the transform the overworld lane",
+        "verified against cast shadows) that is direction-to-sun (0.741, 0.598, -0.305),",
+        "ELEVATION 36.7 deg — a real daylight key, not the skylight-only frame that",
+        "del-cine/cine.json's `\"sunEnergy\": null` suggests. That null means only that",
+        "cameras.json named no sun for the bake to override; it is not a statement",
+        "about the blend.",
+        "",
+        "INSTRUMENT 2 — the rig, already written down. tools/look_golden.py IS this",
+        "light: 'SUN_key energy 5.0 -> 12.0, color -> (1.0, 0.79, 0.56),",
+        "rotation_euler.x -> 0.93 (Y and Z are the district builds azimuth and are NOT",
+        "touched), World strength 1.6 -> 2.1'. 0.93 rad = 53.28 deg, which is the blend's",
+        "53.285 to three decimals. The two instruments agree.",
+        "",
+        "CORRECTION TO look_golden.py's OWN DOCSTRING, recorded here because it will",
+        "mislead the next reader: it glosses rotation_euler.x 0.93 as '~53 deg",
+        "elevation'. 53.3 is the rotation, and the ELEVATION is 90 - 53.3 = 36.7 deg.",
+        "The repo's verified conversion is unambiguous (Emberbrook's (56,0,212) is",
+        "recorded at elevation 34 in play3d's overworld block), so the docstring is",
+        "off by the complement.",
+        "",
+        "THE AZIMUTH WAS CROSS-CHECKED BEFORE THE BLEND WAS OPENED, and this is the",
+        "part worth keeping. tools/gate_light.py's header states 'SUN_key's direction",
+        "is -0.86,-0.35,-0.38'. Inverting that through the same transform gives",
+        "rot_x 67.9, rot_z 111.8 — the rot_z matches the blend's 112.38 to half a",
+        "degree, and the rot_x does NOT, because that comment predates look_golden.py",
+        "moving the sun from 1.1858 rad to 0.93. A stale note that is right about the",
+        "half nobody changed."
+      ],
+      "sun": {
+        "object": "SUN_key",
+        "energy": 12.0,
+        "color": [1.0, 0.79, 0.56],
+        "rotationEulerDeg": [53.285, 0.0, 112.38]
+      },
+      "world": {
+        "color": [0.8, 0.8, 0.8],
+        "strength": 2.1
+      }
+    }
+  }
+}

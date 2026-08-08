@@ -1,0 +1,1723 @@
+{
+  "town": "dellhollow",
+  "walkSceneKey": "townwalk",
+  "_doc_walkSceneKey": "the town's EXPLORABLE scene key — stated role, not inferred (district fixed-camera bundles carry the whole town's collision, so pad names cannot identify the walk scene). This is the real-time DEVELOPER view; the game routes players into playSceneKey.",
+  "playSceneKey": "del-cine",
+  "_doc_playSceneKey": "the scene the GAME sends players to — the town played as a sequence of FIXED pre-rendered shots (the FF grammar this project exists for). Deliberately separate from walkSceneKey: the real-time bundle stays as the developer's explore view, and which of the two the scene graph wires is a data choice, not a naming coincidence.",
+  "cameraFile": "townmap/dellhollow.cameras.json",
+  "_doc_cameraFile": "the authored shot list, and which walk records each shot OWNS. tools/cine_solve.mjs solves it into townmap/dellhollow.cameras.solved.json, tools/scenegraph_derive.mjs derives the silent camera-cut edges from that, tools/cine_bake.py bakes the art. Adding or re-aiming a camera is an edit THERE, never here.",
+  "_doc_landmark_footprint": [
+    "`footprint` on a class-'area' landmark: a LIST of axis-aligned rectangles [x0,x1,y0,y1] in MAP coordinates. Their union IS the pad; `extent` stays the fallback for any landmark that has no footprint, and nothing else about the landmark changes.",
+    "RULED by the coordinator 2026-08-01 after walk_water_audit found the town's four worst walk-on-water records were the four `area` pads: the derive turns `extent` into a filled disc, and at the waterfront that disc is parked on the river.",
+    "A LIST rather than one rectangle because these landings are L-shaped - fish-dock keeps 18.7 m2 of real deck as two rects against 10.4 as one, north-landing 20.4 against 12.0.",
+    "EVERY RECT MUST BE MEASURED-LANDED, and tools/landing_footprint.py's all-landed rule IS the definition: on a 0.2 m grid, from just under the pad's top surface, the first RENDER-VISIBLE hit must be a solid within 0.60 m of the foot (walk_water_audit's own rule, so the two instruments cannot disagree). A rectangle that has not been measured that way is not a legal footprint.",
+    "NOT THE SAME FIELD AS EMBERBROOK'S: emberbrook.map.json's watermill carries `footprint` as [W,D,wallHeight], a STRUCTURE BODY read by emb_blockout. The two are told apart by shape - a list of 4-number rects here, a 3-number vector there - and a derive that reads one must never be handed the other."
+  ],
+  "displayName": "Dellhollow",
+  "premise": "A lock-town: the river descends the gorge in a staircase of locks, and the town exists to pass boats down them. Its vertical architecture mirrors the river's own descent.",
+  "units": "world units (1u ~ 1m). Axes: x = along-gorge (downstream/north positive), y = cliff face (0) toward river (~30), z = height (water ~0).",
+  "primaryView": "elevation",
+  "mapDiscovery": {
+    "unit": "parcel",
+    "rule": "Entering a parcel's scene reveals that parcel region and its mapVisible landmarks on the player map (Vesper is a mapmaker — the map inks itself in as she walks it). Landmarks with mapVisible:false are never auto-revealed; they appear only via in-person discovery or story events.",
+    "startRevealed": [
+      "p-gate"
+    ]
+  },
+  "exits": [
+    {
+      "id": "valley-gate-out",
+      "at": "valley-road",
+      "mode": "land",
+      "to": "overworld",
+      "note": "the single land entrance; doubles as exit. Anchored at the ROAD'S MOUTH, not at the arch — see _redline_2026-08-02b.",
+      "_redline_2026-08-02b": "MOVED 2026-08-02 under USER REDLINE #4 (see the note on the 'valley-road' landmark): 'I thought that the exit marker should be right at the bottom of this screenshot ... so right at the bottom edge.' `at` goes 'valley-gate' -> 'valley-road'. THIS IS THE FIX REDLINE #1 WAS ASKING FOR AND #1's own resolution missed: the analysis below is arithmetically correct and answers the wrong question. It proves the exit stood where the SPAWN stood; the user was telling us that BOTH were in the wrong place, because they read this ground as a road and a road's exit belongs at its mouth. scenegraph_derive puts the trigger on the landmark and backs the arrival off along the first street edge toward the gate (2.2 + 1.1 = 3.3 m), so the player now materialises ON the road facing up it and leaves by walking down it.",
+      "_redline_2026-08-02": "SUPERSEDED BY _redline_2026-08-02b ABOVE — kept because the measurements in it are still true and the reasoning is the trap. USER REDLINE #1 (live play): 'I can't find any exit point from the main entrance gate to exit back to the overworld — I just found it placed very confusingly NOT at the entrance where I first spawned.' HELD, NOT MOVED, and here is the history that says why. This exit has sat at 'valley-gate' since the map was founded (bdec2ac); `git log -S valley-gate-out` finds exactly one commit, so it was never moved for a seam reason or any other. MEASURED against the shipped scenegraph: the exit trigger stands ON the gate at runtime [16.67, 24.04, -4] and the arrival from the overworld spawns at [13.58, 24.07, -5.16] — 3.30 m away, one step outside its own 2.2 m radius, which is the spawn-backoff rule working. THE EXIT WAS ALREADY AT THE SPAWN. What was wrong is that the player could not GET BACK to either: the gate tier's only walkable connection to the rest of the town is the 'stairs valley-gate->inn' flight, and USER REDLINE #2 reports that flight is unclimbable. An exit you cannot reach reads exactly like an exit in the wrong place. The fix is REDLINE #2's passage, not a move — moving this exit down to the shelf street would have put the way out of town somewhere that is not the gate, which is what the redline asks us NOT to do."
+    },
+    {
+      "id": "water-gate-north",
+      "at": "lock-five",
+      "mode": "water",
+      "to": "overworld-north",
+      "note": "story exit: night departure by boat with Maren"
+    }
+  ],
+  "districts": [
+    {
+      "id": "gate-tier",
+      "name": "Gate Tier",
+      "z": 24.0
+    },
+    {
+      "id": "shelf",
+      "name": "The Shelf",
+      "z": 19.0
+    },
+    {
+      "id": "quay",
+      "name": "The Quay",
+      "z": 14.0
+    },
+    {
+      "id": "weave",
+      "name": "The Weave",
+      "z": 9.0
+    },
+    {
+      "id": "locksfoot",
+      "name": "Locksfoot",
+      "z": 1.0
+    },
+    {
+      "id": "keepers-spur",
+      "name": "Keepers' Spur",
+      "z": 7.8
+    },
+    {
+      "id": "boatyard",
+      "name": "The Boatyard",
+      "z": 2.0
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "valley-gate",
+      "name": "Valley Gate",
+      "class": "portal",
+      "kind": "gate",
+      "district": "gate-tier",
+      "pos": [
+        16.67,
+        4,
+        24.0
+      ],
+      "mapVisible": true,
+      "note": "town's only land entrance; arch + palisade",
+      "_redline_2026-08-02c_status": "DISCHARGED 2026-08-02 by USER REDLINE #4 (see the 'valley-road' landmark). #4 states it outright: 'The blue-line chop of REDLINE #3 is SUBSUMED by this: narrowing to a road is the chop, done for the right reason.' The BLOCKED verdict below was correct at the time and is now void, because the thing it was blocked on — a standing ruling protecting the Porters' Yard — protected a landmark that should never have existed. Terrain.rim()'s first two control points went to the derived line ((1.2, 9.20), (10.6, 9.05)) exactly as the last paragraph specifies, and the yard went with them; carried by tools/gate_roadchop.py, not by a re-run of gate_build.py.",
+      "_redline_2026-08-02c": "USER REDLINE #3, 2026-08-02 (annotated frame: docs/qa/refs/user_gate_landing_bluecut_20260802.png). VERBATIM: 'for the entrance scene, we should basically chop off all of the landing area that's on the left of this blue line and replace that with a cliff that slopes down to the boatyard. We should bring in the current railing to where the blue line is.'\nTHE LINE, DERIVED (2026-08-02, gate-gorge lane). The annotation is NOT the plate: it is a 1754x984 crop of it. Registered by normalised cross-correlation against the shipped bg.png (best fit scale 1.232, plate crop x 312..2473, y 310..1522, NCC 0.969, and the registration was CONFIRMED by re-cropping the plate to that box and putting the line back on it). So the teal column 670-674 (centre 672) is plate column 1140 of 2688 = u 0.4241 of frame width, NOT the 0.383 a straight multiply gives.\nLANDMARK CHECK: gate_arch's leftmost projected column is u 0.4642 (px 1248), so the cut falls 108 px = 4.0% of frame width LEFT of the stone arch pillar, which is what the user's own words say. The naive 0.383 would have landed 220 px left of it.\nIN THE WORLD: un-projected through the solved gate camera (pos -15.487, 9.27, 36.601; aim 15.468, 6.017, 25.273; fov 35 vertical, aspect 1.75) onto the tier plane z = 24.0, that screen column is the line y = 9.20 at x = 1 falling to y = 8.18 at x = 40 — i.e. essentially the CONSTANT LINE y ~= 8.7, because the camera itself stands at y = 9.27 and is looking along it. LEFT of the line = y greater than 8.7 = the gorge/boatyard side.\nWHAT IT WOULD CUT, measured off the shipped depth map (every pixel un-projected, tier-top = z 22..25.6): 61,197 px = 5.93% of the frame, world y 8.9..12.44, x 1.2..36.4. **53.8% of those pixels stand on walk_lm_porters-yard's own 8x8 m pad (x 2..10, y 4..12)**; the cut would take the band y 9.0..12.0 = 24 m2 of that 64 m2 pad. East of x = 11.5 there is almost nothing left to cut: Terrain.rim() already reads 8.40 at x=13 and 7.10 at x=16 against a blue line at 8.87 and 8.80 — gate_rimchop.py took that ground on 2026-08-02.\n**BLOCKED, AND IT IS THE USER'S CALL.** Parts (1) and (3) — the chop and the railing move — are therefore a chop of the PORTERS' YARD and almost nothing else, and the yard is under a standing ruling not to be cut (DAYLOG 2026-08-02, measured: over x 1.2..10 walk_lm_porters-yard genuinely reaches y = 12.00 against a 12.46 rim). Two instructions collide and the lane did NOT resolve it. To do it, the yard's pad has to shrink (map: porters-yard extent 4 -> ~2.5, or pos y 8 -> ~6.5) and Terrain.rim()'s first two control points go (1.2, 9.20), (10.6, 9.05).\nPART (2) IS BUILT: tools/gate_gorgeface.py. See the AS BUILT note in docs/plans/cliff-completion.md.",
+      "_redline_2026-08-02c_supersedes": "SUPERSEDES the earlier reading of the 2026-07-31 annotation ('Unused space, just chop off to keep the lane narrow, replace with the more-realistic cliff face?', docs/qa/refs/user_gate_tier_annotated.png), which was read as the tier's GORGE-SIDE RIM and built as tools/gate_rimchop.py (commit a214146). The user on seeing it: 'the lane didn't even get chopped. The amount of space on the landing area of the gate shot is exactly the same as before, and only the plants got moved.' THE LESSON: the cut the user wants is defined IN THE GATE FRAME, not in the map's plan view, and any 'chop' on this tier must be verified by opening the gate plate before and after."
+    },
+    {
+      "id": "gatehouse",
+      "name": "Gatehouse (toll)",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "gate-tier",
+      "pos": [
+        11.33,
+        6,
+        24.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "toll-keeper"
+      ]
+    },
+    {
+      "id": "winch-head",
+      "name": "Cargo Winch (head)",
+      "class": "structure",
+      "enterable": false,
+      "kind": "machine",
+      "district": "gate-tier",
+      "pos": [
+        27.33,
+        8,
+        24.0
+      ],
+      "mapVisible": true,
+      "note": "lowers goods from the road to the quay"
+    },
+    {
+      "id": "inn",
+      "name": "Inn — The Boatmen's Rest",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-inn-int",
+      "doorstepFromMap": true,
+      "kind": "shop-inn",
+      "district": "shelf",
+      "pos": [
+        26.6,
+        6.7,
+        19.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "innkeep"
+      ],
+      "note": "travelers stranded waiting for lock passage",
+      "_redline_2026-08-02": "MOVED (22.0,5.5) -> (26.6,6.7) by USER REDLINE #2 below: 'Move the Boatman's Rest entry point to the next building before the item shop.' MEASURED, and the measurement is why it moved only 4.7 m: THERE IS NO BUILDING BETWEEN THE INN AND THE ITEM SHOP. shelf_build.py puts the inn's body at x 25.30..29.40 and the item shop's at x 30.30..35.00 — 0.90 m apart — so 'the next building before the item shop' can only be the inn's OWN street frontage. The old point was not on a building at all: walk_pad_inn (x 20.70..23.30) is the GATE STAIR'S LANDING, and shelf_build.py's own header says the inn 'begins at x=24.80, 1.5 m east of its pad' because the three flights of that stair occupy the ground above it. So the entry prompt used to stand on an empty landing 4.7 m short of the inn; it now stands 0.6 m off the taproom's gallery front, between the gable door and the item shop. The landing it vacated is what USER REDLINE #2 gives to the gate transition (passages 'gate-stair').",
+      "_owed_bake_2026-08-02": "The door LEAF is still on the west gable at (25.30, 3.80) facing x- (shelf_build.py doorway(parts, IX0+0.02, 3.80, ...)), i.e. facing the landing the prompt just left. Owed to the Blender lane: one doorway() on the taproom's y+ street wall between the windows at wx 25.60/26.90/28.20, and a re-derived walk_pad_inn on the new map point. Until that bake the prompt is correct and the art is not — `doorstepFromMap` on this landmark is the flag that says so, and it becomes a no-op the moment the pad is re-derived."
+    },
+    {
+      "id": "item-shop",
+      "name": "Item Shop (chandlery skin)",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-item-int",
+      "kind": "shop-item",
+      "district": "shelf",
+      "pos": [
+        30.0,
+        9,
+        19.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "chandler"
+      ],
+      "note": "lamp oil, rope, pitch, provisions; cantilevered out over the gorge"
+    },
+    {
+      "id": "weapon-shop",
+      "name": "Weapon Shop",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-weapon-int",
+      "kind": "shop-weapon",
+      "district": "shelf",
+      "pos": [
+        37.8,
+        5.5,
+        19.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "smith"
+      ]
+    },
+    {
+      "id": "armor-shop",
+      "name": "Armor Shop",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-armor-int",
+      "kind": "shop-armor",
+      "district": "shelf",
+      "pos": [
+        44.3,
+        9,
+        19.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "outfitter"
+      ],
+      "note": "cantilevered over the gorge, twin to the item shop"
+    },
+    {
+      "id": "shelf-homes",
+      "name": "Shelf homes",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "shelf",
+      "pos": [
+        50.8,
+        9,
+        19.0
+      ],
+      "mapVisible": false,
+      "residents": [
+        "townsfolk-a",
+        "townsfolk-b"
+      ],
+      "note": "flavor pair of houses closing the street"
+    },
+    {
+      "id": "quay-deck",
+      "name": "Harbor Deck",
+      "class": "area",
+      "extent": 5.5,
+      "kind": "plaza",
+      "district": "quay",
+      "pos": [
+        53.4,
+        14,
+        14.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "hobb",
+        "pell",
+        "porters"
+      ],
+      "note": "social core; night-on-the-quay scene"
+    },
+    {
+      "id": "cookhouse",
+      "name": "Cookhouse",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-cookhouse-int",
+      "doorstepFromMap": true,
+      "kind": "building",
+      "district": "quay",
+      "pos": [
+        39.9,
+        16.8,
+        14.07
+      ],
+      "mapVisible": true,
+      "residents": [
+        "cook"
+      ],
+      "note": "warm windows over the gorge at night; the tavern-warmth hub",
+      "_redline_2026-08-02d": "MOVED (40.4,11.0) -> (39.9,16.8), from the building's SOUTH side to its NORTH front, because the cookhouse occluded its own doorstep. MEASURED from the solved `quay-west` camera (body column, 9 heights x 3 lateral offsets, ray-cast against the master): old trigger 0/27 clear and old derived spawn 2/27, blocker `qm_cookhouse` itself 27/27 and 22/27 — the player exited BEHIND the building with the whole cookhouse between them and the camera. `qm_build.py`'s own note says why: the cookhouse was moved NORTH of walk_pad_cookhouse so its lit front faces the gorge, and the doorstep kept deriving from the pad. The new point is on walk_e_quay-deck__deep-stairs-head_l1 at z 14.070, 1.2 m off the north wall: 27/27 clear, and the derived return spawn (42.77,16.8) is 27/27 clear too. The approach edge below was re-routed onto the same north deck so the derived spawn no longer lands inside the building.",
+      "_owed_bake_2026-08-02": "The door LEAF is on the SOUTH face at (39.85, 12.94) facing y- (qm_build.py doorway(parts, 39.85, CY0-0.02, ..., 'y-')), i.e. onto the pad the prompt just left — and that face is 0/27 visible from the only camera that owns this landmark. The diagnosis this fix was dispatched from said the door was already on the north front; it is not, and there is no mesh with `door` in its name anywhere near the cookhouse (it is joined into `qm_cookhouse`). Owed to the Blender lane: one doorway() on the north front between the four lit windows at wx 38.10/39.30/40.50/41.70 (a 1.10 m leaf at 39.85 collides with two of them, so the window run has to re-space), and a re-derived walk_pad_cookhouse on the new map point. Until that bake the prompt is correct and the art is not — `doorstepFromMap` is the flag that says so, and it becomes a no-op the moment the pad is re-derived."
+    },
+    {
+      "id": "market-stalls",
+      "name": "Market stalls",
+      "class": "area",
+      "extent": 3,
+      "kind": "stalls",
+      "district": "quay",
+      "pos": [
+        59.09,
+        13,
+        14.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "fishmonger"
+      ]
+    },
+    {
+      "id": "notice-board",
+      "name": "Notice board",
+      "class": "prop",
+      "kind": "prop",
+      "district": "quay",
+      "pos": [
+        48.2,
+        12,
+        14.0
+      ],
+      "mapVisible": false
+    },
+    {
+      "id": "lockhead",
+      "name": "The Lockhead",
+      "class": "prop",
+      "kind": "post",
+      "district": "quay",
+      "pos": [
+        80.73,
+        16,
+        14.0
+      ],
+      "mapVisible": true,
+      "residents": [],
+      "staffedBy": [
+        "odessa"
+      ],
+      "note": "the senior lockkeeper's working post, overlooking Lock Five below — Odessa's station by day; she lives at the Keepers' Cottage"
+    },
+    {
+      "id": "deep-stairs-head",
+      "name": "Deep Stairs (head)",
+      "class": "portal",
+      "kind": "stairhead",
+      "district": "quay",
+      "pos": [
+        35.2,
+        17,
+        14.0
+      ],
+      "mapVisible": false,
+      "note": "quiet corner of the quay; the discreet route down. Hidden from player map."
+    },
+    {
+      "id": "pilot-cluster",
+      "name": "Stilt Cluster (pilot slice)",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building-cluster",
+      "district": "weave",
+      "pos": [
+        59.09,
+        22,
+        9.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "sorrel"
+      ],
+      "note": "ADOPT AS-IS: the proven pilot scene geometry anchors this district"
+    },
+    {
+      "id": "weave-huts",
+      "name": "Weave huts",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building-cluster",
+      "district": "weave",
+      "pos": [
+        71.45,
+        24,
+        7.83
+      ],
+      "mapVisible": true,
+      "residents": [
+        "creel",
+        "nib"
+      ],
+      "note": "laundry lines, rickety balconies"
+    },
+    {
+      "id": "lock-five",
+      "name": "Lock Five",
+      "class": "structure",
+      "enterable": false,
+      "kind": "lock",
+      "district": "locksfoot",
+      "pos": [
+        86.91,
+        28,
+        0.0
+      ],
+      "mapVisible": true,
+      "note": "the basin + gates — the scene's namesake centerpiece; boat gained here; anchors the water exit north"
+    },
+    {
+      "id": "moorage",
+      "name": "Moorage",
+      "class": "area",
+      "extent": 4,
+      "footprint": [
+        [
+          72.6,
+          79.4,
+          31.3,
+          33.1
+        ],
+        [
+          70.9,
+          71.9,
+          26.2,
+          29.2
+        ],
+        [
+          75.09,
+          76.89,
+          27,
+          31.3
+        ],
+        [
+          71.5,
+          72.6,
+          27.75,
+          28.85
+        ],
+        [
+          72.3,
+          73.85,
+          27.75,
+          29.9
+        ],
+        [
+          73.4,
+          74.45,
+          28.75,
+          29.9
+        ],
+        [
+          74.2,
+          75.3,
+          28.95,
+          29.9
+        ]
+      ],
+      "kind": "dock",
+      "district": "locksfoot",
+      "pos": [
+        76.09,
+        27,
+        1.0
+      ],
+      "mapVisible": true,
+      "note": "the tar-dark boat waits here | FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of walkable pad on the river and walk_water_audit measured 607 samples of it standing on open water — the town's worst walk-on-water record. tools/landing_footprint.py finds NO all-landed rectangle of 1.5 m2 anywhere inside the disc; 3% of it is landed. The two rects stamped here are the moorage's REAL built landing, measured on lf_stage_moorage (largest all-landed rect 6.8 x 1.8) and lf_stage_moorage_w (1.0 x 3.0), both built by locksfoot_build.py and both largely OUTSIDE the old disc — which is exactly what that file's own comment says: 'everything the moorage WORKS with has to stand off it'. THE ONE PLACE NEW DECK IS OWED: the ruling asks for a modest pier under whatever of the staging still stands over water. | THE PIER IS BUILT 2026-08-01, and the third rect is it. Measured reason: with only the two staging rects the pad was an ISLAND — a connected-component sweep over walk_bodygate's own step rule put 3474 of its lattice nodes in a component containing nothing but itself, because town_blockout draws every incident ribbon to `pos` (76.09, 27) and `pos` is 4.3 m short of the staging. tools/waterfront_landings.py builds the connecting pier (7.6 m2 of planking on 2 joists and 4 piles, deck top 1.044, material and height both read off lf_stage_moorage so it continues that deck rather than inventing one) and this rect is measured all-landed over it. WIDTH 1.80 m, not the 2.00 m the landing rule asks for: walk_e_moorage__lock-five_l0 slopes down to 0.67 across the pier's east 0.14 m, and honouring it at full width would have put the deck 0.595 m under the pad — inside the 0.60 m rule by 5 mm, which the planking's own jitter would have spent. | THE WEST LINK IS BUILT 2026-08-05, and the FOURTH rect is it. The 2026-08-01 pier joined the staging to `pos`; it did not join the WEST STORE rect [70.9,71.9,26.2,29.2] to anything, because waterfront_landings' connective rect runs 2.0 m about `pos` and the west store is not in that column — so the one rect that ruling had already found to be an island stayed one, and it is a ONE-WAY PIT: walk_pad_tenant-shack (1.92..2.04) hangs 0.72 m over its 1.199 deck, which is a legal 0.79 m step DOWN and 0.16 m past STEP_UP coming back, with the pad's own slab 20 mm inside the body's blocking window over that floor ([1.85, 2.50]). The Chapter Two playtest agent stepped down at step 75 of run-20260805-054441 and was still on it at step 120 — 46 of 120 steps, filing five reports about pillars. tools/moorage_westlink.py measures the gap (2.46 m of open water; both banks lf_planking at top 1.199; the body window 1.85..2.50 CLEAR) and plank-links it; these FOUR rects are measured 228/228 all-landed over that deck. THE SHAPE IS THE MEASUREMENT: a 0.15 m occupancy scan of the body window (1.85..2.50 over a 1.199 floor) finds exactly two obstructions and they are at OPPOSITE CORNERS — the stair's t03/t04 undersides fill x 74.30..75.50 for y <= 28.50 (north-EAST), and lf_railings, the west store's own guard, fills a diagonal x 71.00..71.45 for y 28.95..29.55 (south-WEST). Of the six l2 treads only those two have an underside in that window at all: t02's is 2.55 (clears by 50 mm) and t05's TOP is 1.66 (under it). The only single rectangle that misses both corners is 0.15 m wide, which is why this is three overlapping rects and not one. | RE-MEASURED AGAINST THE SEARCHED FLIGHT AND STILL GOOD, 2026-08-07: the 2026-08-05 occupancy scan that shaped rects 3 and 4 was run under the OLD l2 line, and iteration 9's searched line landed on top of them (t05 underside 2.25, t06 1.89, both inside the [1.92, 2.55] window over this deck) -- the west link was severed for a day. The FLIGHT was moved, not these rects: l2 now descends over the water to a foot at y 30.6 and the corridor measures 672 of 693 cells clear with the west store reaching all 326 pier cells, engine-receipted (deck lane 6/6 both ways, reach_probe westdeck<->maren reached both ways). THE RECTS THEMSELVES ARE UNCHANGED and their 228/228 landing measurement still stands. The oracle that now protects them lives in tools/moorage_search.py; the flight's own edge carries the receipts under _bet2_2026-08-07_westarm."
+    },
+    {
+      "id": "tenant-shack",
+      "name": "Tenant's shack",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "locksfoot",
+      "pos": [
+        69.91,
+        26,
+        2.0
+      ],
+      "mapVisible": true,
+      "residents": [
+        "tenant"
+      ]
+    },
+    {
+      "id": "fish-dock",
+      "name": "Fish dock",
+      "class": "area",
+      "extent": 4,
+      "footprint": [
+        [
+          56.49,
+          61.69,
+          29.6,
+          31.6
+        ],
+        [
+          56.49,
+          61.69,
+          24.4,
+          26
+        ],
+        [
+          58.09,
+          60.09,
+          26,
+          29.6
+        ]
+      ],
+      "kind": "dock",
+      "district": "locksfoot",
+      "pos": [
+        59.09,
+        28,
+        1.0
+      ],
+      "mapVisible": false,
+      "residents": [
+        "fisher-kid"
+      ],
+      "note": "FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of pad on the river, 188 samples of it measured standing on open water. The first two rects are the fish dock's two real wharves, north and south. | THIRD RECT ADDED 2026-08-01 with the landing under it: the wharves are 3.6 m apart and the landmark's own `pos` (59.09, 28) is in the water between them, so every ribbon town_blockout draws to this landmark ended over the channel — the walk-water audit's 43 samples on tenant-shack__fish-dock, and, once the disc went, a fish dock in two disconnected pieces (1076 + 786 lattice nodes, neither reaching the network). tools/waterfront_landings.py planks the 2.0 m the walkway needs (6.9 m2 on 2 joists and 6 piles, deck top 1.050, capped 0.02 m under walk_e_tenant-shack__fish-dock_l1 so the ribbon is not buried in it) and this rect is measured all-landed over it. The channel either side of the walkway is left open, which is what a fish dock is for."
+    },
+    {
+      "id": "winch-foot",
+      "name": "Cargo Winch (foot)",
+      "class": "prop",
+      "kind": "machine",
+      "district": "locksfoot",
+      "pos": [
+        30.0,
+        24,
+        1.0
+      ],
+      "mapVisible": false,
+      "note": "receives goods lowered from Gate Tier via the quay | FOOTPRINT STAMPED 2026-08-01 (same ruling): the extent-4 disc is 61% landed on wf_planking — its fault is a square overhanging an L-shaped deck, not missing deck. Two measured all-landed rects hold 18.7 m2 against the single best rect's 10.4, which is the whole reason the schema is a LIST."
+    },
+    {
+      "id": "deep-stairs-foot",
+      "name": "Deep Stairs (foot)",
+      "class": "portal",
+      "kind": "stairfoot",
+      "district": "locksfoot",
+      "pos": [
+        43.0,
+        26,
+        1.0
+      ],
+      "mapVisible": false
+    },
+    {
+      "id": "keepers-cottage",
+      "name": "Keepers' Cottage",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-cottage-int",
+      "kind": "building",
+      "district": "keepers-spur",
+      "pos": [
+        92.61,
+        22,
+        7.83
+      ],
+      "mapVisible": true,
+      "residents": [
+        "odessa",
+        "maren"
+      ],
+      "_steps_retired_2026-08-05": "THE PORCH STEPS DOWN TO THE BASIN ARE SCENERY NOW, and the walk records are gone (coordinator ruling). The `stairs keepers-cottage->lock-five` edge carried 2.63 m of rise over 3.13 m of run on its first leg — 40 degrees, the steepest flight in the town — and at that grade the tread TWO ABOVE you sits 0.75 m up, inside blocked()'s [+0.65, +1.30] body window, so every tread was roofed along the flight's own line (measured: standing at [94.11, -23.85] on floor 6.02, SIM.blocked names walk_e_keepers-cottage__lock-five_l0_t03). Three fixes were BUILT and measured and none cured it: the v2 pivot split (turns are 94/25/27 deg, the offset ramp barely engages), a per-edge riser cap (0.28 -> drive 8/25 to 10/34: a smaller riser buys vertical clearance and spends horizontal), and a full REGRADE to 25 degrees (landings 48/54/55%% -> 93/84/92%%, but the split's own 2.40 m displacement put two legs over the lock basin — the river's near bank is y~26 — and every waypoint set that stays dry falls back to 14/24 because the rungs then sit closer than a tread is wide). 4 m of y between this porch and the bank cannot hold both. A STAIR THAT CANNOT BE WALKED MUST NOT CARRY WALK RECORDS: it was a trap the metre-Dijkstra preferred, and run-20260805-014451 had already walked ch2.dock -> winches -> END CARD in six steps without it. The way down is cottage -> weave bridge -> the moorage flight, which is the route the 2026-08-05 receipt run actually walked. THE ART STAYS (lg_ks_* in the master) and is now UNREPRODUCIBLE BY ITS OWN BUILDER: lg_build.py derives it from `walk_e_keepers-cottage__lock-five_*`, which no longer exist, so re-running lg_build DELETES the visible stair. If that flight ever needs rebuilding, restore this edge first.",
+      "note": "Maren and Odessa's house — Odessa is the senior lockkeeper of Dellhollow (akin to village chief), Maren her daughter. 'The house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lantern-lit underside is what Locksfoot sees from below."
+    },
+    {
+      "id": "lock-four-glimpse",
+      "name": "Lock Four (set dressing)",
+      "class": "dressing",
+      "kind": "dressing",
+      "district": "locksfoot",
+      "pos": [
+        14.0,
+        30,
+        4.33
+      ],
+      "mapVisible": false,
+      "note": "upstream lock visible to the south, selling the staircase-of-water; NOT playable"
+    },
+    {
+      "id": "valley-road",
+      "name": "The Valley Road",
+      "class": "portal",
+      "kind": "road-head",
+      "district": "gate-tier",
+      "pos": [
+        1.6,
+        6.2,
+        24.0
+      ],
+      "mapVisible": false,
+      "note": "THE MOUTH OF THE VALLEY ROAD — the town's land threshold, at the bottom edge of the gate frame. It is a PORTAL, not a place: it carries the overworld exit 'valley-gate-out' and the arrival spawn, and the carriageway runs on PAST it (tools/gate_lib.py SPINE) and off the bottom of the plate, so the road reads as continuing to the valley rather than stopping at a rim. mapVisible false: the town map screen still shows the arch (valley-gate) as the way in — this is the doorstep, not a destination.",
+      "_replaces": "REPLACES the 'porters-yard' landmark (class area, extent 4, resident porter-chief) deleted here on 2026-08-02 under USER REDLINE #4 below. porter-chief was authored NOWHERE (not npcs.json, not any dialogue) and the 8x8 m pad had never carried anything, so the deletion cost nothing; what it BOUGHT is the whole point — the pad was a walk record, gate_build's carriageway is laid on the walk graph, and a 8 m disc of walk therefore paved a 64 m2 plaza across the bottom third of the gate plate. Delete the disc and the same builder lays a 3.74 m road.",
+      "_redline_2026-08-02": "USER REDLINE #4, 2026-08-02 — THE GATE SCENE IS A ROAD, NOT A PLACE. This supersedes both the 'THE YARD IS NOT THE PROBLEM AND MUST NOT BE CUT' ruling (DAYLOG 2026-08-02) and the 'HELD, NOT MOVED' resolution of USER REDLINE #1, and it explains why neither of them landed.\nVERBATIM: 'what you are currently calling the porter's yard is not meant to be an occupied space, and I thought this is just literally where the character should walk in. This is supposed to be the path where the character walks into the village and enters the village from... I thought that the exit marker should be right at the bottom of this screenshot... so right at the bottom edge. The path should extend past that bottom edge, and it should clearly look like a path. I think we should not be having any sort of porter's yard or anything like that at this entry scene. It should literally just be the path that leads the player into the gate of the town.'\nTHE MISUNDERSTANDING, stated so it is not repeated: the map modelled this ground as an AREA landmark (a yard, class 'area', extent 4, with a resident) and every downstream rule then protected it as a PLACE — the walk floor filled it, the clearance tests defended it, and the 'is it used?' test passed because 64 m2 of empty paving is walkable. The user has only ever read it as a ROAD. That is why: (a) they called it 'completely empty' while the measurements called it 'used'; (b) their chop line looked like it contradicted a standing ruling when it never did; (c) REDLINE #1's exit felt 'very confusingly NOT at the entrance' — an exit anchored to the 'valley-gate' LANDMARK sits at the gate, but a road's exit belongs at the ROAD'S MOUTH, off the bottom of the gate plate.\nCORROBORATION, measured 2026-08-02: 'porter-chief', the yard's only listed resident, IS AUTHORED NOWHERE — not in npcs.json, not in any dialogue. The yard has never had anything on it, so nothing is lost by deleting it.\nWHAT THIS ASKS FOR: (1) DELETE the porters-yard landmark and its walk pad; there is no yard at the entry scene. (2) The ground becomes a PATH — road-width, directional, legibly a road surface rather than a plaza, running from the gate down toward the camera. (3) The path RUNS OFF THE BOTTOM EDGE of the gate frame, so it reads as continuing to the overworld rather than stopping at a rim. (4) MOVE the overworld exit 'valley-gate-out' to the path's mouth near that bottom edge, and move the arrival spawn with it, so the player enters walking UP the road and leaves by walking DOWN it. (5) The blue-line chop of REDLINE #3 is SUBSUMED by this: narrowing to a road is the chop, done for the right reason."
+    },
+    {
+      "id": "weave-north",
+      "name": "Westweave cluster",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building-cluster",
+      "district": "weave",
+      "pos": [
+        48.2,
+        20,
+        10.25
+      ],
+      "mapVisible": true,
+      "residents": [
+        "townsfolk-d"
+      ],
+      "note": "third stilt cluster, tucked under the quay's shadow"
+    },
+    {
+      "id": "drying-decks",
+      "name": "Drying decks",
+      "class": "area",
+      "extent": 3.5,
+      "footprint": [
+        [
+          61.77,
+          68.77,
+          26.7,
+          29.5
+        ],
+        [
+          67.2,
+          68.77,
+          26.25,
+          26.7
+        ]
+      ],
+      "kind": "deck",
+      "district": "weave",
+      "pos": [
+        65.27,
+        26,
+        6.67
+      ],
+      "mapVisible": false,
+      "note": "laundry lines and fish racks strung between the clusters | FOOTPRINT STAMPED 2026-08-01 (same ruling): 55% landed on wv_planking, 6.5-6.7 m above the water. One measured all-landed rect, 19.6 m2 of the 49 m2 square. | SECOND RECT ADDED 2026-08-01 with the apron under it: the deck's south edge is at y 26.70, this landmark's `pos` is at y 26.00, and the drying decks came off the walk network entirely when the disc went. The apron is at the deck's EAST END, not at `pos`, and that is a measurement rather than a preference: the Weave hangs t2c_W1_laundry_deckA (z 7.02..8.57 along y 25.92..26.07) and t2c_WV2_dryingdeck_awning (canopy to z 7.90) directly over `pos`, so a body standing on this 6.915 m pad (7.57..8.21) collides with both — walk_bodygate counts 3445 + 1733 blocked steps there. Nothing hangs over x > 67.60, and walk_e_weave-huts__drying-decks_l0 arrives at x 67.29..70.91, so the way in is the east corner. 0.7 m2 of apron (tools/waterfront_landings.py, deck top 6.719), cantilevered: all four candidate piles were refused because their columns cross walk_e_tenant-shack__fish-dock five metres below. THE AIRSPACE OVER THE SOUTH EDGE IS AN OPEN FINDING for the art round — the drying decks' own dressing stands in their doorway."
+    },
+    {
+      "id": "slipway",
+      "name": "Slipway",
+      "class": "area",
+      "extent": 4,
+      "kind": "dock",
+      "district": "boatyard",
+      "pos": [
+        19.33,
+        27,
+        2.0
+      ],
+      "mapVisible": true,
+      "note": "boats hauled out of the upstream pool for repair"
+    },
+    {
+      "id": "drydock-frames",
+      "name": "Hull frames",
+      "class": "structure",
+      "enterable": false,
+      "kind": "machine",
+      "district": "boatyard",
+      "pos": [
+        14.0,
+        25,
+        2.58
+      ],
+      "mapVisible": true,
+      "note": "ribbed skeletons of boats under repair"
+    },
+    {
+      "id": "boatwright-shed",
+      "name": "Boatwright's shed",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "boatyard",
+      "pos": [
+        24.67,
+        24,
+        2.58
+      ],
+      "mapVisible": true,
+      "residents": [
+        "boatwright"
+      ]
+    },
+    {
+      "id": "pitch-kettle",
+      "name": "Pitch kettle",
+      "class": "prop",
+      "kind": "prop",
+      "district": "boatyard",
+      "pos": [
+        22.0,
+        28.5,
+        1.6
+      ],
+      "mapVisible": false,
+      "note": "tar smoke curling over the water — the smell of the boatyard"
+    },
+    {
+      "id": "lockfour-overlook",
+      "name": "Lock Four overlook",
+      "class": "prop",
+      "kind": "post",
+      "district": "boatyard",
+      "pos": [
+        8.67,
+        29,
+        3.75
+      ],
+      "mapVisible": false,
+      "note": "planked viewpoint under Lock Four's gates — spray and thunder; payoff of the boardwalk"
+    },
+    {
+      "id": "north-landing",
+      "name": "North Landing",
+      "class": "area",
+      "extent": 3,
+      "footprint": [
+        [
+          102.65,
+          108.65,
+          24,
+          26
+        ],
+        [
+          102.65,
+          108.65,
+          28.6,
+          30
+        ],
+        [
+          104.65,
+          106.65,
+          26,
+          28.6
+        ]
+      ],
+      "kind": "dock",
+      "district": "locksfoot",
+      "pos": [
+        105.65,
+        27,
+        -1.0
+      ],
+      "mapVisible": true,
+      "note": "the last pier before the gorge narrows — the night boat slips out from here | FOOTPRINT STAMPED 2026-08-01 (same ruling): 61% landed on wv_planking + nl_pier. Two measured all-landed rects hold 20.4 m2 against the single best rect's 12.0. | THIRD RECT ADDED 2026-08-01 with the landing under it: same defect as the fish dock, same shape — the two decked bands are 2.6 m apart, `pos` (105.65, 27) is in the gap, and the pad fell into four islands (2598 + 2408 + 88 + 52 lattice nodes) the moment the disc went. 4.7 m2 of planking (tools/waterfront_landings.py, deck top -0.950, capped under walk_e_lock-five__north-landing_l1), measured all-landed."
+    },
+    {
+      "id": "dam-crest-gate",
+      "name": "Dam Crest Gate",
+      "class": "portal",
+      "kind": "gate",
+      "district": "locksfoot",
+      "pos": [
+        87,
+        30,
+        0.9
+      ],
+      "mapVisible": true,
+      "state": "closed",
+      "note": "iron-banded gate barring the dam-crest walk to the far shore — closed this chapter; townsfolk say the far-side stairs are 'not kept' anymore"
+    }
+  ],
+  "edges": [
+    {
+      "from": "valley-gate",
+      "to": "gatehouse",
+      "type": "road"
+    },
+    {
+      "from": "gatehouse",
+      "to": "winch-head",
+      "type": "road",
+      "waypoints": [
+        [
+          18.5,
+          7.4,
+          24.0
+        ]
+      ],
+      "note": "BET 2 RE-ROOT 2026-08-06: was 'valley-gate -> winch-head'. The winch road now leaves from the GATEHOUSE and bows north (waypoint y 7.4) so the gate square fans clean: entry road west, gatehouse road, THE ONE DESCENT east, winch road along the north. The old valley-gate origin shared the descent's own head ground, and the wide (2.2 u) descent flight cannot coexist with a road ribbon inside walkGround's 0.73 step window there — the 2026-08-01 STAMP on the old edge (ribbon 0.340 m over the top treads REFUSED the descent) is the same class, solved this time by removing the road from the corridor instead of nudging it 0.3 u clear."
+    },
+    {
+      "from": "valley-gate",
+      "to": "inn",
+      "type": "stairs",
+      "width": 2.2,
+      "note": "THE ONE DESCENT (BET 2, user-ratified 2026-08-06): a single straight 2.2 u flight, no waypoints, no pivots — through the arch, straight down, the street ahead and the Boatmen's Rest on your right. 13 treads over ~8.3 u of run for the 5 u drop (31 deg — shallower than any leg of the S-bend it replaces). `width` is honoured by town_blockout stairs_leg (treads + rail offset scale together); the flight is in STAIRS_V2 so its rails are body-window-clipped against its own records.",
+      "_superseded_S_bend_2026-08-06": "REPLACES the 2-waypoint S-bend ([21,3.2,22.3],[23.5,3,20.4], 3 legs hugging the cliff side) AND the 'gate-stair' passage prompt, per the user's Bet 2 ruling (verbatim): 'even for the front gate going down to the shelf street with the shops, there are still two different ways to go down to the shelf level. One is a staircase that's a bit confusing, and I think we should just really simplify that descent... There's nothing to gain by adding more complex, interesting stairs that just confuse and frustrate our players.' This supersedes USER REDLINE #2's 'completely get rid of those stairs' remedy (2026-08-02, written when the flight was unclimbable): the CONFUSION is what goes, and it goes by making the descent one wide legible flight rather than by replacing walking with a teleport prompt. The passage is deleted in the same commit (delete-superseded ruling applies to geometry AND prompts); the descent must therefore drive clean BOTH ways — that receipt is this lane's gate.",
+      "_owed_closing_lane_2026-08-06": "The gate/shelf-west camera solve, the gate<->shelf-west cut seam (derived from this edge at t=0.319 of the OLD polyline), the 'gate' shot's arrival override [17.64,24.0,-5.0] (it stood on the deleted valley-gate__winch-head ribbon; that point now lands on the new flight's head treads at ~23.9 — re-search against the new plate), and the del-cine re-bake all go stale with this rebuild and are the closing bake lane's, per the phase law."
+    },
+    {
+      "from": "inn",
+      "to": "item-shop",
+      "type": "road",
+      "waypoints": [
+        [
+          26.0,
+          6.3,
+          19.0
+        ]
+      ],
+      "note": "street bows toward the rail — glimpse of the gorge between buildings"
+    },
+    {
+      "from": "item-shop",
+      "to": "weapon-shop",
+      "type": "road",
+      "waypoints": [
+        [
+          33.9,
+          7.7,
+          19.0
+        ]
+      ],
+      "note": "serpentine back toward the cliff wall"
+    },
+    {
+      "from": "weapon-shop",
+      "to": "armor-shop",
+      "type": "road",
+      "waypoints": [
+        [
+          41.05,
+          6.4,
+          19.0
+        ]
+      ]
+    },
+    {
+      "from": "armor-shop",
+      "to": "shelf-homes",
+      "type": "road",
+      "waypoints": [
+        [
+          47.55,
+          8.2,
+          19.0
+        ]
+      ]
+    },
+    {
+      "from": "quay-deck",
+      "to": "cookhouse",
+      "type": "deck",
+      "waypoints": [
+        [
+          45.6,
+          16.8,
+          14.0
+        ]
+      ],
+      "note": "RE-ROUTED 2026-08-02d with the door (see the cookhouse landmark's _redline): the approach hugs the same outer rail as the deep-stairs deck edge, so it reaches the north front instead of crossing the market to the building's blind south side. THE WAYPOINT IS LOAD-BEARING, not decoration: scenegraph_derive's streetDir takes the LAST waypoint as the street direction, and the return spawn is the doorstep plus 2.9 m along it. Left at (46.9,12) the spawn landed at (42.3,15.2) — inside the cookhouse's own footprint — and only the off-network search would have saved it."
+    },
+    {
+      "from": "quay-deck",
+      "to": "notice-board",
+      "type": "deck"
+    },
+    {
+      "from": "quay-deck",
+      "to": "market-stalls",
+      "type": "deck"
+    },
+    {
+      "from": "market-stalls",
+      "to": "lockhead",
+      "type": "deck",
+      "waypoints": [
+        [
+          68.36,
+          15.5,
+          14.0
+        ],
+        [
+          75.32,
+          14.8,
+          14.0
+        ]
+      ],
+      "note": "deck bends around the crane base then out to the Lockhead"
+    },
+    {
+      "from": "quay-deck",
+      "to": "deep-stairs-head",
+      "type": "deck",
+      "waypoints": [
+        [
+          45.6,
+          16.8,
+          14.0
+        ],
+        [
+          39.75,
+          17.6,
+          14.0
+        ]
+      ],
+      "note": "hugs the outer rail away from the market bustle"
+    },
+    {
+      "from": "winch-head",
+      "to": "winch-foot",
+      "type": "winch",
+      "note": "cargo only — NOT walkable; pure set dressing"
+    },
+    {
+      "from": "quay-deck",
+      "to": "pilot-cluster",
+      "type": "stairs",
+      "width": 2.0,
+      "waypoints": [
+        [
+          58.9,
+          18.6,
+          13.4
+        ],
+        [
+          60.0,
+          25.8,
+          10.2
+        ]
+      ],
+      "note": "switchbacks threading down between the stilts — REDESIGNED 2026-08-06 (Bet 2): TWO waypoints, ONE wide-amplitude hairpin (138 deg, v2 offset ~1.0 u) east of the hut cluster, replacing the 3-waypoint thread whose last pivot stood INSIDE wv_hut_pilot-cluster_0_3 (SIM.blocked named it at the waypoint itself) and whose 88-deg hairpins earned only 0.14 u of v2 split. FIRST WAYPOINT AT 7.2 u FROM THE PLAZA CENTRE, deliberately: the stairs trim needs extent+0.6+0.6 to start the flight outside the plaza's own walk disc — the old first waypoint at 5.34 u forced the head to the disc CENTRE, which is why l0 overlaid the plaza floor and its rails fenced the deck (the deleted quay branch's disease, same class).",
+      "_bet2_2026-08-06": "STAIRS_V2 + width 2.0 + waypoint redesign; see note. Art: qm_build + weave_build re-run in the same window (wv_stair_treads was stale v1 art blocking the flight; qm_deck_frame's piles column-test against the walking lines).",
+      "_bet2_2026-08-06_foot": "THE FOOT LINE IS SEARCHED, NOT AUTHORED (Bet 2 iteration 6, the free-standing-solid doctrine). The old wp2 [63.4,20.6,10.6] sent l2 down PARALLEL OVER the pilot->weave road inside the body window (treads +0.65..1.3 over the 8.6..9.1 road for x 60..63.4) - pilot<->weave no-path both ways, the tier's only flat link shut. A 588-candidate ring search (scratchpad foot_search.py: the generator's own pivot_split/plan_trim per candidate, roofing vs the road/pad walk boxes, body-corridor ray-cast against a 75k-tri BVH of the master's art) REJECTED the whole road band plan 19.4..23.4 for every x 56..66 (12-19 roof samples each - any line landing at the pad from east/north crosses over the road), and the west (wv_hut_pilot-cluster_0 to plan 23.4). The SOUTH ring won: wp2 [60.0,25.8,10.2] descends outside the stilt field over the gorge face - art hits 0, road hits 0, own-pad foot hits only (dy 0.52..0.60 on the last 1.4 m, the normal foot class), l1 grade 0.44, l2 grade 0.39. The road pilot->weave re-opens because nothing roofs it any more. Art carried by qm_build + weave_build in the same window (STAIRS_V2 ledger)."
+    },
+    {
+      "from": "pilot-cluster",
+      "to": "weave-huts",
+      "type": "deck",
+      "waypoints": [
+        [
+          63.73,
+          21,
+          8.65
+        ],
+        [
+          67.59,
+          23.2,
+          8.18
+        ]
+      ],
+      "note": "plank walk bending around the stilt posts"
+    },
+    {
+      "from": "weave-huts",
+      "to": "moorage",
+      "type": "stairs",
+      "width": 2.0,
+      "_bet2_2026-08-06_width": "Iteration 9: 1.4 -> 2.0. With the pivot furniture cleared (two cx_rail posts via cx_build's on_walk_ribbon guard, lf_lantern_1 via lantern_reseat) and the landing's up-side tongue trimmed (asymmetric extension), the l1/l2 junction STILL measured a ~0.6 m throat: this hairpin's arriving leg meets the 0.9-wide pivot pad BROADSIDE and t04's body shadow eats a third of it -- both greedy drives stalled 1.2 m short, _court_probe --way/--who receipts in the iteration-9 board section. Same ruling as pilot/market/gate: the Ch2 route to Maren is a main route, >= 2 body widths. LAND_LONG now scales max(1, w/1.4) with the edge width, so every 1.4-wide flight stays bit-identical.",
+      "waypoints": [
+        [
+          76.2,
+          25.6,
+          5.6
+        ],
+        [
+          68.85,
+          30.4,
+          3.95
+        ],
+        [
+          76.2,
+          30.6,
+          1.25
+        ]
+      ],
+      "_bet2_2026-08-06_wp2": "THE PIVOT IS SEARCHED, NOT AUTHORED (iteration 9, the foot_search pattern's third instance - scratchpad moorage_search.py, 510 candidates). The old wp2 [72.6,26.9,3.3] pivot was geometrically unsound at EVERY width tried: the arriving leg meets the landing near-antiparallel to the separation axis, so the pad points back UNDER the flight and t03/t04 roofed its own junction (16 cells, both drives stalled) - the same class the map's own note warned about, one level down. Single-hairpin replacements were all REJECTED: every east line roofs the moorage__lock-five through-lane dy 0.75-1.2 (13 candidates' samples). The 3-leg shape with wp2 swung SOUTH-WEST over the gorge face won: 127/510 clean of roof+art+self oracles, picked by clean-neighborhood robustness (24/27) then gentlest l2; grades 0.47/0.22/0.49/0.24, head/foot join-class art only.",
+      "_bet2_2026-08-07_westarm": "THE WEST ARM WAS SEVERED BY THIS FLIGHT AND IS OPEN AGAIN (measured, fixed and re-measured 2026-08-07; the severance census this key used to carry is in docs/qa/DAYLOG.md under the same date). WHAT HAPPENED: iteration 9 searched wp2 with roof/art/self oracles and NO WEST-ARM ORACLE, so the l2 leg was free to descend ACROSS the moorage deck on the same bearing the west boardwalk runs. t05 (2.25..2.39) and t06 (1.89..2.03) sat inside play3d's blocking window over the 1.25 deck ([fy+STEP_UP+0.02, fy+BODY_H] = [1.92, 2.55]) -- 1.00 m and 0.64 m of headroom against BODY_H 1.30, no line through at any width. The west waterfront was a one-way 92-cell island and reach_probe said no-path both ways. THE FIX IS STRUCTURAL AND IN TWO PARTS. (1) tools/moorage_search.py is now IN THE REPO and carries a WESTARM oracle: the corridor (this landmark's west-store + four westlink rects + the pier rect) is lattices at 0.15 m, each cell's floor measured off the WALK RECORDS, and a candidate is REJECTED unless the clear cells still flood-fill from the west store to the pier. Its self-test is the two flights whose corridor verdict was already measured in the engine: no flight CONNECTED, the it.9 line SEVERED at 0.63 m (the engine measured 0.64), the pre-it.9 line CONNECTED. It rejected 1696 of 8085 candidates on that oracle alone, INCLUDING every candidate with the foot at y 28.1 -- with the foot there the flight MUST cross the corridor at deck height, which is the whole finding. (2) wp2 and the FOOT were re-searched with it: [70.1,29.4,4.1] -> [68.85,30.4,3.95] and foot [76.2,28.1,1.25] -> [76.2,30.6,1.25]. l2 now descends over the WATER and lands at the south end of the pier rect, so it crosses the corridor high (t05 is the only record left in the window at all, on 21 of 693 cells, none of them on the west store, link1 or link2). RECEIPTS, the running engine on the shipped del-cine bundle: the flight drives 23/23 tread by tread BOTH ways; the deck lane west<->east 6/6 both ways (was 1/6); reach_probe westdeck<->maren REACHED both ways (was no-path both ways) and the west deck, the moorage and lock-five are ONE 547-cell component; tenant-shack lane 3/3 and moorage__lock-five 3/3, both ways. RESIDUAL, PRE-EXISTING AND NOT THIS FLIGHT'S: climbing from the west store back UP onto walk_pad_tenant-shack still stalls at [71.4,1.25,-28.00] on lf_planking -- that is the 2026-08-05 westlink note's own 0.72 m step, 0.16 m past STEP_UP, and it is no longer a PIT because the boardwalk east is open. DO NOT re-search this flight without running the westarm oracle: a footprint solved against a flight is invalidated when that flight is re-searched.",
+
+      "note": "double switchback east of the hut cluster, wide-amplitude hairpins so crossing legs clear each other vertically (tight hairpins let walkers mount the overhead leg). | FOOT LOWERED 1.70 -> 1.25 (2026-08-04, user report 'the ground around Maren has a bunch of holes'). town_blockout puts a 2.0x2.0x0.16 landing at every intermediate waypoint with its TOP at the waypoint's own height, so 1.70 stood the stair's foot 0.65 m over the moorage deck it lands on (measured deck 1.02-1.05 on walk_e_moorage__lock-five_l0, 1.25 on walk_lm_moorage). 0.65 m is 0.02 m PAST play3d's STEP_UP of 0.63: the step up was refused, and the same slab roofed the deck's only west-east through-route with 0.49 m of headroom. Maren stands on that lane, so the whole western waterfront could not reach her at all -- _court_probe --way stalled at x 77.53 walking west and, walking down the flight, put the body on the OVERHEAD leg at y 4.52, which is this note's own warning coming true. 1.25 is walk_lm_moorage's top: the landing merges with the pad instead of hovering over it, and its underside (1.09) drops below the body's blocking window from the lane. THE LANDING HEIGHT IS THE LANDMARK'S DECK HEIGHT -- a stairs waypoint at a deck is not free."
+    },
+    {
+      "from": "moorage",
+      "to": "tenant-shack",
+      "type": "deck"
+    },
+    {
+      "from": "moorage",
+      "to": "lock-five",
+      "type": "deck",
+      "waypoints": [
+        [
+          81.5,
+          27.2,
+          0.6
+        ]
+      ],
+      "note": "waterline boardwalk curving to the lock gates"
+    },
+    {
+      "from": "tenant-shack",
+      "to": "fish-dock",
+      "type": "deck",
+      "waypoints": [
+        [
+          65.27,
+          27.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "from": "fish-dock",
+      "to": "winch-foot",
+      "type": "deck",
+      "waypoints": [
+        [
+          50.8,
+          28.5,
+          1.0
+        ],
+        [
+          43.0,
+          27,
+          1.0
+        ],
+        [
+          42.2,
+          26.5,
+          1.0
+        ],
+        [
+          41.2,
+          24.8,
+          1.0
+        ],
+        [
+          38.0,
+          24.7,
+          1.0
+        ],
+        [
+          34.8,
+          25.4,
+          1.0
+        ]
+      ],
+      "note": "long waterfront boardwalk snaking under the cliff",
+      "_bet2_2026-08-06_crossing": "Iteration 10: the boardwalk CROSSES the rebuilt deep stairs AT GRADE beside the foot pad (x ~41.4, flight z 1.4 vs lane 1.0) and then runs NORTH of the flight's l2 corridor (the old west leg at y 25.5 passed under mid-flight treads at dy 0.7-1.5 - _court_probe --who named l2_t05..t08 + wf_stair_stringers + bar_l2_railB walling 40+ cells of the lane; the OLD flight's l4 coincided with the same stretch, which is part of why the fishdock shot measured 47% walk efficiency). A lane waypoint is the map's own conflict-fix vocabulary."
+    },
+    {
+      "from": "deep-stairs-head",
+      "to": "deep-stairs-foot",
+      "type": "stairs",
+      "width": 2.0,
+      "pivots": "asym",
+      "_bet2_2026-08-06_pivots": "asym at EVERY pivot (pivot_split's own measured doctrine): the balanced pivot 2 swung l1's arriving end 1.66 into the hairpin and t09 roofed landing.001's tongue (7 cells + one rail sliver, both drives stalled at the junction - _court_probe --who receipt, iteration 10). Per-edge knob because the pilot hairpin's searched geometry was validated under the balanced default.",
+      "_bet2_2026-08-06_simplify": "Iteration 10 (item 8, DECIDED it.7: simplify, not retire - retiring orphans the 1,446-cell fishdock component, and the 5-leg line measured DEAD BOTH WAYS on current bytes, 3/10 down 2/10 up). THE LINE IS SEARCHED (scratchpad deepstairs_search.py, 2448 candidates x roof/art/self oracles + the moorage window's own-foot-pad and old-line-art classifications): the 4-waypoint zigzag collapses to a 3-leg w2.0 zigzag, wp1 [43.5,24.7,9.2] / wp2 [34.0,24.7,4.9], grades 0.48/0.47/0.48 - both pivots SOUTH of wv_hut_weave-north_0 (x 42.4..48.8, the it.7 rejector: every pivot north of its face either roofs the quay deck plate or stands in the hut). 554/2448 clean; picked by clean-neighborhood (299) then balanced grades then least head art. The old descent-only ruling (r21: uphill 6/40 deliberate) is SUPERSEDED by the simplify decision: this flight drives both ways.",
+      "waypoints": [
+        [
+          43.5,
+          24.7,
+          9.2
+        ],
+        [
+          34.0,
+          24.7,
+          4.9
+        ]
+      ],
+      "note": "the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight)"
+    },
+    {
+      "from": "deep-stairs-foot",
+      "to": "fish-dock",
+      "type": "deck"
+    },
+    {
+      "from": "lockhead",
+      "to": "keepers-cottage",
+      "type": "path",
+      "waypoints": [
+        [
+          85.36,
+          17.5,
+          12.25
+        ],
+        [
+          89.23,
+          19,
+          10.25
+        ],
+        [
+          90.65,
+          21,
+          8.77
+        ]
+      ],
+      "note": "winding spur along the cliff to the cottage"
+    },
+    {
+      "from": "weave-huts",
+      "to": "fish-dock",
+      "type": "ladder",
+      "note": "rickety ladder down the hut piles to the fish dock — the fisher-kid's route"
+    },
+    {
+      "from": "lockhead",
+      "to": "lock-five",
+      "type": "ladder",
+      "note": "gate-crew maintenance ladder bolted to the cliff — Odessa's shortcut to the gates"
+    },
+    {
+      "from": "valley-gate",
+      "to": "valley-road",
+      "type": "road",
+      "waypoints": [
+        [
+          11.33,
+          6.4,
+          24.0
+        ],
+        [
+          6.3,
+          6.6,
+          24.0
+        ]
+      ],
+      "note": "THE ENTRY ROAD. The player walks IN up this and OUT down it (USER REDLINE #4). It passes the toll house's own door (t2c_G5_gatehouse_door, x 10.9..12.1 at y 3.56) on its north side and holds a verge off the chopped gorge lip: carriageway half-width 1.87 m against Terrain.rim() 9.05..9.20 over x 1.2..10.6, so the guard rail stands between the paving and the drop instead of 4 m out on empty apron. SUPERSEDES 'valley-gate__porters-yard'."
+    },
+    {
+      "from": "pilot-cluster",
+      "to": "weave-north",
+      "type": "deck",
+      "waypoints": [
+        [
+          53.4,
+          21.5,
+          9.75
+        ]
+      ],
+      "note": "plank walk west under the quay"
+    },
+    {
+      "from": "weave-huts",
+      "to": "drying-decks",
+      "type": "deck",
+      "waypoints": [
+        [
+          67.59,
+          25.5,
+          7.13
+        ]
+      ]
+    },
+    {
+      "from": "weave-huts",
+      "to": "keepers-cottage",
+      "type": "bridge",
+      "waypoints": [
+        [
+          74.5,
+          22.6,
+          7.9
+        ],
+        [
+          82.3,
+          23.0,
+          7.2
+        ]
+      ],
+      "note": "high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span. Takeoff swings gorge-ward immediately so the deck doesn't shadow the moorage switchback below (walkers rode it into a drop).",
+      "width": 1.8,
+      "_bet2_2026-08-06_width": "WIDENED 1.3 -> 1.8 (Bet 2, cottage-crossing iteration). The span is the ONLY route cottage -> weave/moorage (pain inventory 9.1's verdict), and at 1.3 u the slot between its own deck rails measured 1.1 m — under two body widths, invisible to a 0.4 m reachability lattice, and the drives cornered on the rail lines even after the corridor was cleared of dressing (crossing_lane_chop) and the rails were junction-inset. 1.8 puts the rail faces at ~0.81 from the centreline: a 1.6 m slot, two bodies wide, lattice-robust. Carried by walk_rederive + weave_build (wv_planking re-decks from the walk faces) + cx_build (kerbs/parapet re-derive) in the same window."
+    },
+    {
+      "from": "winch-foot",
+      "to": "slipway",
+      "type": "deck",
+      "waypoints": [
+        [
+          24.67,
+          26,
+          1.4
+        ]
+      ],
+      "note": "boardwalk continues upstream into the yard"
+    },
+    {
+      "from": "slipway",
+      "to": "drydock-frames",
+      "type": "deck"
+    },
+    {
+      "from": "slipway",
+      "to": "boatwright-shed",
+      "type": "deck"
+    },
+    {
+      "from": "boatwright-shed",
+      "to": "pitch-kettle",
+      "type": "deck"
+    },
+    {
+      "from": "slipway",
+      "to": "lockfour-overlook",
+      "type": "deck",
+      "waypoints": [
+        [
+          12.67,
+          28.5,
+          2.93
+        ]
+      ],
+      "note": "climbing boardwalk out to the overlook"
+    },
+    {
+      "from": "lock-five",
+      "to": "north-landing",
+      "type": "deck",
+      "waypoints": [
+        [
+          97.83,
+          27.5,
+          -0.8
+        ]
+      ],
+      "note": "descending past the gates to the last pier"
+    },
+    {
+      "from": "shelf-homes",
+      "to": "market-stalls",
+      "type": "stairs",
+      "waypoints": [
+        [
+          55.9,
+          9.0,
+          17.4
+        ],
+        [
+          58.9,
+          10.6,
+          15.3
+        ]
+      ],
+      "width": 2.0,
+      "_bet2_2026-08-06": "STAIRS_V2 + width 2.0 (pain inventory #1: the lockhead-return spawn's wedge pocket at [58.1, 14.24, -12.2] was penned by this flight's l2 rails + ls_rail — `--who` 40+19 cells). Art carried by ls_build in the same window.",
+      "note": "loop stair runs east along the shelf wall then drops to the market from the north; 3u+ clear of the quay flight at every height",
+      "_bet2_2026-08-06b": "THE QUAY BRANCH AND ITS FORK ARE DELETED (user simplicity ruling, Bet 2): edge 'loop-landing__quay-deck' and portal landmark 'loop-landing' [55.9, 9, 17.4] are gone. The branch was (a) REDUNDANT — this flight lands at the market pad, which sits on the plaza's own east edge, one flat hop (quay-deck__market-stalls) from everything the branch served — and (b) GEOMETRICALLY DEGENERATE: the fork stood 5.59 u from the plaza centre against an extent-5.5 disc, so the stairs trim rule (extent+0.6) could never start the flight outside the floor and the whole branch overlaid the plaza's own walk disc — which is WHY its foot treads and rails have walled the promenade since it was built (pain inventory #1/#6; `--who` named them; both promenade drives stalled). ONE way down, on this flight; the fork point survives only as this edge's first waypoint. ls_reorigin.py (the branch's one-edge carrier) is retired with it. Camera 'loop-stairs' owns updated; scenegraph/plates stale by phase law, closing lane's."
+    }
+  ],
+  "_doc_passages": [
+    "A PASSAGE is a PROMPTED transition between two places inside this town, for a connection the player is meant to make and cannot walk. It is not a walk edge and must never become one: `edges` means walkable ground, and every consumer treats it that way (cine_regions looks for its ribbon, routes_derive walks it, the blockout builds a flight for it). A passage carries no ground.",
+    "tools/scenegraph_derive.mjs turns each one into a reciprocal pair of scene-internal edges (to === from, `cam` filled in, a prompt on `defaults.key`) — the same record the camera cuts already use, with a label instead of `auto`. play3d.html switches on nothing new.",
+    "AN END IS EITHER A LANDMARK (`\"at\": \"<id>\"`, taking its walk pad, exactly as a door does) OR A STATED POINT (`\"pos\": [x, y, h]` in MAP coordinates, for a place with no landmark). A stated point's HEIGHT and its OWNING SHOT are still measured — walk surface, ownership regions — never declared."
+  ],
+  "passages": [],
+  "_passages_deleted_2026-08-06": "The 'gate-stair' passage (foot [22,5.5,19] <-> head [20.5,6.2,24], USER REDLINE #2's stopgap while the S-bend was unclimbable) is DELETED under the user's Bet 2 ruling: two ways down to the shelf confused; the descent is now ONE wide straight walkable flight (see edge valley-gate->inn, _superseded_S_bend_2026-08-06) and a teleport prompt beside a working stair is the second way down. Delete-superseded ruling. The del-cine scenegraph still carries the derived passage pair until the closing lane re-derives; noted in DAYLOG.",
+  "parcels": [
+    {
+      "id": "p-gate",
+      "name": "Valley Gate",
+      "sceneKey": "del-gate",
+      "draft": true,
+      "bounds": {
+        "min": [
+          -3.4,
+          0,
+          22.5
+        ],
+        "max": [
+          31.8,
+          12.5,
+          27.5
+        ]
+      },
+      "_doc_bounds": "min.x went 1.5 -> -3.4 on 2026-08-02 (USER REDLINE #4): the ground sheet was extended west (gate_lib GX0 1.20 -> -3.22) so the carriageway crosses the gate frame's own bottom edge with ground under it instead of stopping at a rim inside frame. The parcel has to contain what it is responsible for.",
+      "members": [
+        "valley-gate",
+        "gatehouse",
+        "winch-head",
+        "valley-road"
+      ],
+      "camera": {
+        "yaw": 20,
+        "pitch": 24,
+        "viewHeight": 13,
+        "draft": true,
+        "note": "From inside town looking back upstream at the arch — arrival framed on rim rock, winch silhouette right, the road running out of frame left",
+        "projection": "persp"
+      },
+      "intent": "Arrival: the valley road running in through the gate arch, tollhouse on its cliff side, winch-head beyond; the drop into the gorge past the guard rail. NO YARD — USER REDLINE #4, 2026-08-02: this scene is a road, not a place."
+    },
+    {
+      "id": "p-shelf-w",
+      "name": "The Shelf (west)",
+      "sceneKey": "del-shelf-west",
+      "draft": true,
+      "bounds": {
+        "min": [
+          17.5,
+          1.0,
+          17.5
+        ],
+        "max": [
+          42.3,
+          13.5,
+          22.5
+        ]
+      },
+      "members": [
+        "inn",
+        "item-shop",
+        "weapon-shop"
+      ],
+      "camera": {
+        "yaw": 140,
+        "pitch": 20,
+        "viewHeight": 11,
+        "draft": true,
+        "note": "Down the street eastward: inn front-left, shops receding, lanterns strung overhead, gorge air beyond the rail",
+        "projection": "persp"
+      },
+      "intent": "Shop street, upper run: the Boatmen's Rest + item and weapon shops, signs and awnings, everyday lanterns"
+    },
+    {
+      "id": "p-shelf-e",
+      "name": "The Shelf (east)",
+      "sceneKey": "del-shelf-east",
+      "draft": true,
+      "bounds": {
+        "min": [
+          39.8,
+          4.5,
+          17.5
+        ],
+        "max": [
+          55.3,
+          13.5,
+          22.5
+        ]
+      },
+      "members": [
+        "armor-shop",
+        "shelf-homes"
+      ],
+      "camera": {
+        "yaw": -155,
+        "pitch": 21,
+        "viewHeight": 10,
+        "draft": true,
+        "note": "Looking back westward up the street: armor shop cantilevered over the void, homes closing the row, second-stair head in frame",
+        "projection": "persp"
+      },
+      "intent": "Shop street, lower run: armor shop over the gorge, the Shelf homes, and the loop stair dropping toward the market"
+    },
+    {
+      "id": "p-quay-mkt",
+      "name": "Quay Market",
+      "sceneKey": "del-quay-market",
+      "draft": true,
+      "bounds": {
+        "min": [
+          30.7,
+          6.5,
+          12.5
+        ],
+        "max": [
+          63.6,
+          21.5,
+          17.5
+        ]
+      },
+      "members": [
+        "cookhouse",
+        "quay-deck",
+        "market-stalls",
+        "notice-board",
+        "deep-stairs-head"
+      ],
+      "camera": {
+        "yaw": 107,
+        "pitch": 22,
+        "viewHeight": 13,
+        "draft": true,
+        "note": "From over the gorge at the deck: cookhouse glow left, stalls center, the Shelf's lights rising behind; deep-stairs corner shadowed far left",
+        "projection": "persp"
+      },
+      "intent": "The heart: harbor deck crowd space, market, cookhouse, notice board; night-on-the-quay stage; lanterns at dusk"
+    },
+    {
+      "id": "p-lockhead",
+      "name": "The Lockhead",
+      "sceneKey": "del-lockhead",
+      "draft": true,
+      "bounds": {
+        "min": [
+          76.2,
+          11.5,
+          12.5
+        ],
+        "max": [
+          85.2,
+          20.5,
+          17.5
+        ]
+      },
+      "members": [
+        "lockhead"
+      ],
+      "camera": {
+        "yaw": 60,
+        "pitch": 26,
+        "viewHeight": 11,
+        "draft": true,
+        "note": "From high over the basin: Odessa's post on its jetty of deck, the maintenance ladder plunging, Lock Five and the dam small and thunderous far below",
+        "projection": "persp"
+      },
+      "intent": "The overlook: the senior lockkeeper's post at the deck's end, long approach walk, the whole lock machinery readable below"
+    },
+    {
+      "id": "p-westweave",
+      "name": "Westweave",
+      "sceneKey": "del-westweave",
+      "draft": true,
+      "bounds": {
+        "min": [
+          43.7,
+          15.5,
+          8.8
+        ],
+        "max": [
+          52.7,
+          24.5,
+          13.8
+        ]
+      },
+      "members": [
+        "weave-north"
+      ],
+      "camera": {
+        "yaw": -95,
+        "pitch": 24,
+        "viewHeight": 10,
+        "draft": true,
+        "note": "Tucked under the quay's shadow — stilts overhead, laundry light filtering down between platforms",
+        "projection": "persp"
+      },
+      "intent": "The under-quay cluster: cramped, shadowed, stilt forest; the town's poorer corner with its own charm"
+    },
+    {
+      "id": "p-weave",
+      "name": "The Weave",
+      "sceneKey": "del-weave",
+      "draft": true,
+      "bounds": {
+        "min": [
+          54.6,
+          17.5,
+          5.2
+        ],
+        "max": [
+          76.0,
+          30.5,
+          12.5
+        ]
+      },
+      "members": [
+        "pilot-cluster",
+        "weave-huts",
+        "drying-decks"
+      ],
+      "camera": {
+        "yaw": -110,
+        "pitch": 26,
+        "viewHeight": 14,
+        "draft": true,
+        "note": "From the cliff shoulder out over the stilt clusters — gorge and far wall receding behind; the pilot slice's proven drama angle",
+        "projection": "persp"
+      },
+      "intent": "Scaffold residential heart around the ADOPTED pilot cluster; drying decks, plank walks, ladder down to the fish dock"
+    },
+    {
+      "id": "p-crossing",
+      "name": "The Crossing",
+      "sceneKey": "del-crossing",
+      "draft": true,
+      "bounds": {
+        "min": [
+          71.5,
+          17.5,
+          5.5
+        ],
+        "max": [
+          92.5,
+          27.5,
+          11.5
+        ]
+      },
+      "members": [],
+      "camera": {
+        "yaw": 175,
+        "pitch": 12,
+        "viewHeight": 12,
+        "draft": true,
+        "note": "Side-on to the span: the plank bridge sagging across frame, basin far below, cottage lights at the far end",
+        "projection": "persp"
+      },
+      "intent": "TRANSIT VIGNETTE (blessed 2026-07-29): the postcard crossing — no landmarks by design; the scene IS the walk. Wind, bunting, basin below, cottage lights ahead.",
+      "transit": true,
+      "throughEdges": [
+        [
+          "weave-huts",
+          "keepers-cottage"
+        ]
+      ]
+    },
+    {
+      "id": "p-boatyard",
+      "name": "The Boatyard",
+      "sceneKey": "del-boatyard",
+      "draft": true,
+      "bounds": {
+        "min": [
+          4.2,
+          19.5,
+          0.1
+        ],
+        "max": [
+          29.2,
+          33.5,
+          7.2
+        ]
+      },
+      "members": [
+        "slipway",
+        "drydock-frames",
+        "boatwright-shed",
+        "pitch-kettle",
+        "lockfour-overlook"
+      ],
+      "camera": {
+        "yaw": -12,
+        "pitch": 12,
+        "viewHeight": 15,
+        "draft": true,
+        "note": "low along the slipway looking upstream — hulls looming, Lock Four closing the view. yaw corrected from 170 (which faced DOWNstream, contradicting this note — district agent caught it)",
+        "projection": "persp"
+      },
+      "intent": "Upstream water level: slipway with hauled-out hulls, boatwright at work, boardwalk out to the thundering overlook"
+    },
+    {
+      "id": "p-waterfront",
+      "name": "The Waterfront",
+      "sceneKey": "del-waterfront",
+      "draft": true,
+      "bounds": {
+        "min": [
+          25.5,
+          19.5,
+          -0.5
+        ],
+        "max": [
+          63.6,
+          32.5,
+          4.5
+        ]
+      },
+      "members": [
+        "winch-foot",
+        "fish-dock",
+        "deep-stairs-foot"
+      ],
+      "camera": {
+        "yaw": 150,
+        "pitch": 16,
+        "viewHeight": 12,
+        "draft": true,
+        "note": "Along the boardwalk under the cliff: fish racks, the winch platform, the deep stairs vanishing up into shadow",
+        "projection": "persp"
+      },
+      "intent": "The long boardwalk stretch: fish dock, cargo winch foot, the discreet stairs' hidden mouth"
+    },
+    {
+      "id": "p-lockfive",
+      "name": "Lock Five",
+      "sceneKey": "del-lockfive",
+      "draft": true,
+      "bounds": {
+        "min": [
+          65.4,
+          21.5,
+          -1.5
+        ],
+        "max": [
+          91.5,
+          34.5,
+          5.5
+        ]
+      },
+      "members": [
+        "moorage",
+        "tenant-shack",
+        "lock-five",
+        "dam-crest-gate"
+      ],
+      "camera": {
+        "yaw": 157,
+        "pitch": 14,
+        "viewHeight": 13,
+        "draft": true,
+        "note": "Low in the gorge looking downstream: the black dam + waterwheels ahead, moored boat, cottage lantern-lit above the basin — the 'house over the locks' sightline",
+        "projection": "persp"
+      },
+      "intent": "Water level centerpiece: the dam with its three wheels, lock gates, the tar-dark boat at moorage, closed crest gate to the far shore"
+    },
+    {
+      "id": "p-northlanding",
+      "name": "North Landing",
+      "sceneKey": "del-northlanding",
+      "draft": true,
+      "bounds": {
+        "min": [
+          101.2,
+          22.5,
+          -2.5
+        ],
+        "max": [
+          110.2,
+          31.5,
+          2.5
+        ]
+      },
+      "members": [
+        "north-landing"
+      ],
+      "camera": {
+        "yaw": -30,
+        "pitch": 18,
+        "viewHeight": 11,
+        "draft": true,
+        "note": "From the pier looking back upstream: the dam's black mass and wheels behind, town lights stacked up the cliff above — the goodbye shot",
+        "projection": "persp"
+      },
+      "intent": "The last pier: night-departure stage; gorge narrowing north, the whole town visible rising behind"
+    },
+    {
+      "id": "p-cottage",
+      "name": "Keepers' Spur",
+      "sceneKey": "del-cottage",
+      "draft": true,
+      "bounds": {
+        "min": [
+          88.1,
+          17.5,
+          6.3
+        ],
+        "max": [
+          97.1,
+          26.5,
+          11.3
+        ]
+      },
+      "members": [
+        "keepers-cottage"
+      ],
+      "camera": {
+        "yaw": 76,
+        "pitch": 18,
+        "viewHeight": 10,
+        "draft": true,
+        "note": "Intimate from over the basin: cottage against the cliff, balcony over the drop, warm windows, supper laid out",
+        "projection": "persp"
+      },
+      "intent": "The cottage over the locks: balcony platform river-side, path from the Lockhead, steps down to the basin"
+    }
+  ],
+  "river": {
+    "note": "The staircase of water — the town's reason to exist. WIDENED 3x (2026-07-29, user): near bank unchanged at y~26, far bank ~74, far wall ~84. Dams/locks span the full width.",
+    "axis": "x",
+    "centerY": 50,
+    "width": 48,
+    "gorge": {
+      "nearWallY": 0,
+      "farWallY": 84,
+      "note": "town clings to the near (WEST) wall; far wall is a distant backdrop across the water. WEST, not south: this file's +x is downstream and downstream is north (world canon restamp 2026-08-01 — Dellhollow's anchor rotation is +33, its local downstream heading 33 deg east of world north), so the near wall the town clings to is the LEFT bank looking downstream, which world.json calls the west bank and the road's own side. The old 'south' predated the restamp and contradicted this file's own units line."
+    },
+    "pools": [
+      {
+        "id": "pool-upstream",
+        "from": -20,
+        "to": 14,
+        "level": 3.6
+      },
+      {
+        "id": "pool-mid",
+        "from": 14,
+        "to": 87,
+        "level": 0.2
+      },
+      {
+        "id": "pool-downstream",
+        "from": 87,
+        "to": 130,
+        "level": -3.8,
+        "note": "deepened 2026-07-29 (user ruling): dam-five drop 1.8->4.0 so the ref-6b breast wheels read at true scale"
+      }
+    ],
+    "dams": [
+      {
+        "id": "dam-four",
+        "x": 14,
+        "drop": 3.4,
+        "lock": "lock-four-glimpse",
+        "note": "weir + Lock Four (set dressing, upstream)"
+      },
+      {
+        "id": "dam-five",
+        "x": 87,
+        "drop": 4.0,
+        "lock": "lock-five",
+        "note": "weir + Lock Five — black stone dam per ref 6b: three waterwheels on its face, crest walkway with cargo, thundering spill gates",
+        "crossing": {
+          "planned": true,
+          "state": "closed",
+          "note": "Per master ref 6b: the dam crest doubles as a bridge to the far shore. Gated SHUT this chapter (no far-side town yet) — model the crest + closed gate, no detail beyond. Future district hook."
+        },
+        "waterwheels": 3
+      }
+    ]
+  },
+  "style": {
+    "masterRef": "public/assets/refs/dellhollow-master-6b.png",
+    "palette": "weathered PAINTED timber — oxblood red, moss green, faded blue — over brown scaffold structure; black stone for the dam; teal-green water; autumn oranges on the rim trees",
+    "motifs": [
+      "festival bunting strung across the gorge and between houses",
+      "moored flat barges with cargo (pumpkins, crates) in the calm pool above the dam",
+      "waterwheels on the dam faces",
+      "hanging lanterns (ordinary, warm)",
+      "rope, cleats, cargo clutter on every deck",
+      "autumn trees crowning both rims"
+    ],
+    "mood": "late-afternoon sunset down the gorge, warm haze, water thunder at the dam"
+  }
+}

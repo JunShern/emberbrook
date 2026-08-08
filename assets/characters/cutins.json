@@ -1,0 +1,401 @@
+{
+ "armorer": {
+  "expr": [
+   "grave"
+  ],
+  "h": 817,
+  "head": {
+   "chin": 0.384,
+   "crown": 0.045,
+   "eye": 0.184
+  },
+  "w": 647
+ },
+ "boatwright": {
+  "expr": [
+   "grave",
+   "happy"
+  ],
+  "h": 959,
+  "head": {
+   "chin": 0.303,
+   "crown": 0.043,
+   "eye": 0.155
+  },
+  "w": 868
+ },
+ "chandler": {
+  "expr": [
+   "happy",
+   "worried",
+   "wry"
+  ],
+  "h": 868,
+  "head": {
+   "chin": 0.394,
+   "crown": 0.065,
+   "eye": 0.241
+  },
+  "w": 939
+ },
+ "child-boy": {
+  "expr": [
+   "happy",
+   "scared"
+  ],
+  "h": 999,
+  "head": {
+   "chin": 0.428,
+   "crown": 0.019,
+   "eye": 0.282
+  },
+  "w": 742
+ },
+ "child-girl": {
+  "expr": [
+   "happy",
+   "scared"
+  ],
+  "h": 956,
+  "head": {
+   "chin": 0.429,
+   "crown": 0.03,
+   "eye": 0.287
+  },
+  "w": 918
+ },
+ "creel": {
+  "expr": [
+   "grave",
+   "happy",
+   "remembering"
+  ],
+  "h": 600,
+  "head": {
+   "chin": 0.336,
+   "crown": 0.028,
+   "eye": 0.19
+  },
+  "w": 636
+ },
+ "eelwife": {
+  "expr": [
+   "happy",
+   "scowl",
+   "sly"
+  ],
+  "h": 970,
+  "head": {
+   "chin": 0.373,
+   "crown": 0.036,
+   "eye": 0.239
+  },
+  "w": 922
+ },
+ "elder-woman": {
+  "expr": [
+   "grave",
+   "happy"
+  ],
+  "h": 916,
+  "head": {
+   "chin": 0.49,
+   "crown": 0.025,
+   "eye": 0.316
+  },
+  "w": 664
+ },
+ "finn": {
+  "expr": [
+   "happy",
+   "hollow",
+   "puzzled"
+  ],
+  "h": 724,
+  "head": {
+   "chin": 0.512,
+   "crown": 0.025,
+   "eye": 0.328
+  },
+  "w": 868
+ },
+ "fisher": {
+  "expr": [
+   "happy",
+   "worried"
+  ],
+  "h": 940,
+  "head": {
+   "chin": 0.497,
+   "crown": 0.03,
+   "eye": 0.316
+  },
+  "w": 749
+ },
+ "hobb": {
+  "expr": [
+   "grumbling",
+   "happy",
+   "softened"
+  ],
+  "h": 600,
+  "head": {
+   "chin": 0.335,
+   "crown": 0.034,
+   "eye": 0.207
+  },
+  "w": 798
+ },
+ "innkeeper": {
+  "expr": [
+   "happy",
+   "worried"
+  ],
+  "h": 912,
+  "head": {
+   "chin": 0.29,
+   "crown": 0.029,
+   "eye": 0.184
+  },
+  "w": 627
+ },
+ "lake": {
+  "expr": [
+   "annoyed",
+   "determined",
+   "happy",
+   "hollow",
+   "sad",
+   "surprised",
+   "tender",
+   "thinking",
+   "weary",
+   "worried",
+   "wry"
+  ],
+  "h": 907,
+  "head": {
+   "chin": 0.302,
+   "crown": 0.016,
+   "eye": 0.196
+  },
+  "w": 728
+ },
+ "mara": {
+  "expr": [
+   "distressed",
+   "happy",
+   "hollow"
+  ],
+  "h": 600,
+  "head": {
+   "chin": 0.722,
+   "crown": 0.012,
+   "eye": 0.462
+  },
+  "w": 567
+ },
+ "maren": {
+  "expr": [
+   "annoyed",
+   "awed",
+   "crushed",
+   "determined",
+   "happy",
+   "indignant",
+   "sad",
+   "surprised",
+   "tender",
+   "thinking",
+   "worried",
+   "wry"
+  ],
+  "h": 864,
+  "head": {
+   "chin": 0.365,
+   "crown": 0.025,
+   "eye": 0.239
+  },
+  "w": 513
+ },
+ "mochi": {
+  "h": 714,
+  "head": {
+   "chin": 0.547,
+   "crown": 0.016,
+   "eye": 0.348
+  },
+  "hscale": 0.86,
+  "w": 846
+ },
+ "nib": {
+  "expr": [
+   "happy",
+   "indignant",
+   "scared"
+  ],
+  "h": 941,
+  "head": {
+   "chin": 0.373,
+   "crown": 0.024,
+   "eye": 0.243
+  },
+  "w": 700
+ },
+ "odessa": {
+  "expr": [
+   "grave",
+   "warm"
+  ],
+  "h": 717,
+  "head": {
+   "chin": 0.315,
+   "crown": 0.024,
+   "eye": 0.203
+  },
+  "w": 636
+ },
+ "pell": {
+  "expr": [
+   "tired",
+   "wry"
+  ],
+  "h": 826,
+  "head": {
+   "chin": 0.379,
+   "crown": 0.014,
+   "eye": 0.211
+  },
+  "w": 966
+ },
+ "pip": {
+  "expr": [
+   "happy",
+   "hollow",
+   "scared"
+  ],
+  "h": 792,
+  "head": {
+   "chin": 0.437,
+   "crown": 0.017,
+   "eye": 0.295
+  },
+  "w": 1003
+ },
+ "poppy": {
+  "expr": [
+   "happy",
+   "hollow",
+   "laughing",
+   "stern",
+   "tender",
+   "worried"
+  ],
+  "h": 952,
+  "head": {
+   "chin": 0.37,
+   "crown": 0.028,
+   "eye": 0.253
+  },
+  "w": 716
+ },
+ "rowan": {
+  "expr": [
+   "grave",
+   "happy",
+   "hollow"
+  ],
+  "h": 795,
+  "head": {
+   "chin": 0.35,
+   "crown": 0.028,
+   "eye": 0.241
+  },
+  "w": 932
+ },
+ "sorrel": {
+  "expr": [
+   "conspiring",
+   "happy",
+   "worried"
+  ],
+  "h": 992,
+  "head": {
+   "chin": 0.383,
+   "crown": 0.025,
+   "eye": 0.248
+  },
+  "w": 788
+ },
+ "tally": {
+  "expr": [
+   "awed",
+   "earnest",
+   "happy"
+  ],
+  "h": 740,
+  "head": {
+   "chin": 0.342,
+   "crown": 0.025,
+   "eye": 0.209
+  },
+  "w": 931
+ },
+ "vesper": {
+  "expr": [
+   "annoyed",
+   "determined",
+   "happy",
+   "sad",
+   "surprised",
+   "tender",
+   "thinking",
+   "worried",
+   "wry"
+  ],
+  "h": 865,
+  "head": {
+   "chin": 0.378,
+   "crown": 0.0,
+   "eye": 0.252
+  },
+  "w": 610
+ },
+ "villager-man": {
+  "expr": [
+   "happy",
+   "worried"
+  ],
+  "h": 766,
+  "head": {
+   "chin": 0.388,
+   "crown": 0.027,
+   "eye": 0.237
+  },
+  "w": 723
+ },
+ "villager-woman": {
+  "expr": [
+   "worried"
+  ],
+  "h": 905,
+  "head": {
+   "chin": 0.423,
+   "crown": 0.022,
+   "eye": 0.273
+  },
+  "w": 935
+ },
+ "weaponsmith": {
+  "expr": [
+   "happy"
+  ],
+  "h": 956,
+  "head": {
+   "chin": 0.323,
+   "crown": 0.028,
+   "eye": 0.203
+  },
+  "w": 830
+ }
+}

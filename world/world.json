@@ -1,0 +1,591 @@
+{
+  "_doc": [
+    "WORLD MAP \u2014 top of the geography hierarchy (user-ratified 2026-07-30).",
+    "LOW-RES source of truth for the whole game world: major landmarks, the river",
+    "spine, region envelopes, and the chapter/portal graph. Detail lives DOWNWARD:",
+    "each region envelope refines to world/regions/<id>.region.json, and town",
+    "landmarks refine further to public/townmap/<town>.map.json (their own local",
+    "frames, placed by the region's townAnchors). Coordinates: one world frame for",
+    "world+region levels, [x, y, h] = east, north, height, in miniature world units",
+    "(character = 1.45u). Region files must refine parent features within",
+    "'tolerance' \u2014 validated by tools/worldmap_validate.mjs, consistency by",
+    "construction, not negotiation. Rasters: low-res paintable masks may join or",
+    "replace polygon stamps at this level as the world grows ('masks' slots).",
+    "Towns are impressions at overworld scale \u2014 landmark geometry is NOT the town",
+    "model shrunk; scales are decoupled by design.",
+    "THE RIVER'S GROWTH IS ENGINEERED, NOT ONLY GATHERED (canon, 2026-08-01): the gorge carries the whole EAST DRAINAGE OF THE MASSIF - every ravine off the far wall and the bench feeds it, and the named ones are stamped as region tributaries. Below Dellhollow the LONG REACH is not a natural widening but the DAM'S IMPOUNDMENT: the weir and locks hold the water back, which is why 12u of river becomes 18u at the Moorage and why a boat can leave there and nowhere upstream."
+  ],
+  "version": 1,
+  "units": "miniature-world-units",
+  "tolerance": {
+    "riverRefine": 8.0,
+    "roadRefine": 10.0
+  },
+  "zoneRegistry": {
+    "types": [
+      "meadow",
+      "forest",
+      "crag",
+      "road",
+      "water"
+    ],
+    "_doc": "Global encounter taxonomy. Regions may use a subset; appending new types here is the only way to extend it."
+  },
+  "masks": {
+    "forest": null,
+    "height": null
+  },
+  "landmarks": [
+    {
+      "id": "whisperwood-entrance",
+      "name": "Whisperwood Road",
+      "class": "feature",
+      "pos": [
+        80.01,
+        22.75,
+        28.0
+      ],
+      "note": "The ONE way into Emberbrook: the forest road out of the deep Whisperwood, arriving from the SOUTH along the river's west bank (upstream of the Old Gate the road is still the west bank's; it changes bank AT the gate). Ch1 fiction ground. RE-DERIVED from emberbrook.map.json's own arrival-clearing (the town's 'valley-road-south' exit) at the impression scale."
+    },
+    {
+      "id": "emberbrook",
+      "name": "Emberbrook",
+      "class": "town",
+      "pos": [
+        82,
+        48,
+        26.0
+      ],
+      "refinesTo": "townmap/emberbrook.map.json",
+      "note": "Ch1 start. A clearing in the Whisperwood highland with the river on its east side, built against the gatewall; the town controls the Old Gate at its north shoulder. Bottleneck of Vesper's journey by geology."
+    },
+    {
+      "id": "old-gate",
+      "name": "The Old Gate",
+      "class": "portal",
+      "pos": [
+        88.42,
+        73.83,
+        26.5
+      ],
+      "note": "The ONLY breach in the gatewall between the Whisperwood highland and the valley - the notch the river itself cut, at Emberbrook's north shoulder. ONE wall across the pinch: the road's arched doorway on dry founded ground WEST of the channel's centreline, the low water grate beside it, both standing on the village's own (west) bank. AND IT IS WHERE THE TRAVELLER CHANGES BANK (2026-08-01): past the doorway the river runs CULVERTED under a paved masonry court for 4.25u and the road crosses on the paving to the EAST bank, which is the bank Dellhollow actually stands on. No bridge, no span - the water is briefly under stone. Reachable only through the town. RE-DERIVED 2026-08-01 from emberbrook.map.json at HEAD (the seclusion stamp 306554a): the town's sigil-gate stands 82.3 m from the settled centroid on bearing 14.0 deg, which is 26.61u at the impression scale."
+    },
+    {
+      "id": "ember-falls",
+      "name": "Ember Falls",
+      "class": "feature",
+      "pos": [
+        95.4,
+        80.0,
+        17.0
+      ],
+      "note": "The falls at the GORGE HEAD, just below the Old Gate: the river \u2014 born far upstream in the Whisperwood \u2014 plunges off the sill at the gatewall's foot and the valley begins. (Restamped 2026-08-01: this landmark was mis-read as the river's SOURCE; the source is the Whisperwood springs upstream of Emberbrook.) RE-SEATED to the sill: the channel clears the gatewall's outer face at y=78.9 and the plunge is the reach immediately below it, 6.2u downstream of the gate."
+    },
+    {
+      "id": "dellhollow",
+      "name": "Dellhollow",
+      "class": "town",
+      "pos": [
+        196.46,
+        144.87,
+        5.06
+      ],
+      "refinesTo": "townmap/dellhollow.map.json",
+      "note": "Ch2. Straddles the canyon via its locks; the town's mass is on the EAST bank - the RIGHT bank looking downstream - and it is entered high at the Valley Gate on the east rim. The dam crest below is the only span of the river in the world. CHIRALITY CORRECTED 2026-08-01 (user ruling, enacting the diagnostic in commit 0cebd6a): this note used to say WEST/LEFT bank, and the world tile MIRRORED the town to satisfy it. Dellhollow AS BUILT - fitted from seven shipped walk pads, identity transform, det +1.0000 - is a RIGHT-BANK town facing downstream. The sentence was the error, so the sentence moved and the mirror came out: townAnchors.dellhollow.impression.mirrorY is DELETED and the derivation puts the town SE of the water by itself. Seat still GATE-ANCHORED at 0.2661 u/m with the Valley Gate as the fixed pin."
+    },
+    {
+      "id": "dellhollow-moorage",
+      "name": "The Moorage",
+      "class": "feature",
+      "pos": [
+        200.96,
+        152.87,
+        1.3
+      ],
+      "note": "The town's upstream water door: the boat mooring on the EAST (road-side) bank where the tar-dark boat waits; Ch2 finale departs downstream. BANK CORRECTED 2026-08-01 with the chirality flip - 'road-side' is the fact, and the road's side is now the east bank. CORRECTED 2026-08-01 (coordinator ruling): this note used to say 'below the locks' and the town map does not agree - dellhollow.map.json puts moorage at local x=76.09 and lock-five at x=86.91, so the Moorage sits UPSTREAM of the locks and the town's own water exit is at lock-five / north-landing. The town map is the authority; a wrong sentence outlives a wrong number."
+    },
+    {
+      "id": "pass-hollowmere",
+      "name": "Hollowmere Pass (sealed)",
+      "class": "portal",
+      "pos": [
+        146,
+        190,
+        24.0
+      ],
+      "state": "sealed",
+      "note": "Future-chapter hook on the NORTH rim. BANK RESTATED 2026-08-01 with the chirality flip: the reachable bench is now the EAST (right) bank, so this pass stands on the FAR side of the water, in the same unreachable wall-and-rim country as farPlateau. It was already sealed; it is now sealed AND across the river, and reaching it is a later chapter's problem, not this corridor's. Hollowmere's OUTLET is the far-bank tributary that joins the gorge below it (region file: tributaries) - a mere needs an outlet, and the outlet is what makes the pass visible from the road."
+    }
+  ],
+  "riverSpine": {
+    "_doc": "Coarse course for the ENTIRE river. Regions refine within tolerance.riverRefine. width/height sampled at each point; monotonically descending height is validated. SOURCE (user, 2026-08-01): the springs deep in the Whisperwood, upstream of Emberbrook. The course runs NORTH through the village, under the Old Gate, over Ember Falls into the gorge, then NORTH-EAST past Dellhollow and on off this region toward an estuary and the sea \u2014 schematic and late-game; no coast is drawn here.",
+    "points": [
+      {
+        "pos": [
+          106,
+          26,
+          29.4
+        ],
+        "width": 2.0,
+        "note": "THE SOURCE: the springs deep in the Whisperwood, at the foot of the south rim \u2014 the river is born here, far upstream of Emberbrook, and runs north to the village"
+      },
+      {
+        "pos": [
+          102,
+          34,
+          28.4
+        ],
+        "width": 2.8
+      },
+      {
+        "pos": [
+          98,
+          43,
+          27.2
+        ],
+        "width": 3.4,
+        "note": "the arrival reach: the forest road runs beside the water on the river's west bank \u2014 Ch1's first ground"
+      },
+      {
+        "pos": [
+          94,
+          52,
+          25.2
+        ],
+        "width": 4.2,
+        "note": "runs EAST of Emberbrook, past the village's own bank; the village brook joins here"
+      },
+      {
+        "pos": [
+          95,
+          62,
+          24.6
+        ],
+        "width": 4.6
+      },
+      {
+        "pos": [
+          94.68,
+          73.83,
+          23.8
+        ],
+        "width": 4.5,
+        "note": "THE NOTCH - the river passes under the Old Gate on a low water grate; the road's arched doorway stands beside it, and both are on the village's own (west) bank. The channel runs DUE NORTH through the gap, parallel to the road, as emberbrook.map.json's round-3 tail stamps it. PAST THE DOORWAY the grate feeds a CULVERT: the water runs under the gate court for 4.25u and the road crosses on the paving to the east bank."
+      },
+      {
+        "pos": [
+          95.4,
+          80.0,
+          17.0
+        ],
+        "width": 5.0,
+        "note": "EMBER FALLS \u2014 the plunge off the sill at the gatewall's foot, just below the gate: the head of the gorge"
+      },
+      {
+        "pos": [
+          102,
+          92,
+          14.0
+        ],
+        "width": 6.0,
+        "note": "the gorge proper"
+      },
+      {
+        "pos": [
+          112,
+          102,
+          12.2
+        ],
+        "width": 7.0
+      },
+      {
+        "pos": [
+          124,
+          112,
+          10.8
+        ],
+        "width": 8.0
+      },
+      {
+        "pos": [
+          138,
+          122,
+          9.6
+        ],
+        "width": 9.0,
+        "note": "the pocket terrace opens on the road's (east) bank"
+      },
+      {
+        "pos": [
+          154,
+          132,
+          8.4
+        ],
+        "width": 10.0
+      },
+      {
+        "pos": [
+          170,
+          141,
+          6.8
+        ],
+        "width": 11.0,
+        "note": "narrows toward Dellhollow's gorge"
+      },
+      {
+        "pos": [
+          182,
+          148,
+          4.6
+        ],
+        "width": 12.0,
+        "note": "the pool above the locks"
+      },
+      {
+        "pos": [
+          192,
+          153,
+          1.0
+        ],
+        "width": 12.0,
+        "note": "through the locks \u2014 the drop the town exists for"
+      },
+      {
+        "pos": [
+          202,
+          161,
+          -1.0
+        ],
+        "width": 18.0,
+        "note": "below the locks: navigable; the Moorage on the road's bank"
+      },
+      {
+        "pos": [
+          220,
+          172,
+          -1.8
+        ],
+        "width": 22.0,
+        "note": "the walls stand back and the LONG REACH begins \u2014 north-east through deep wood, unrun in living memory"
+      },
+      {
+        "pos": [
+          244,
+          190,
+          -2.5
+        ],
+        "width": 28.0,
+        "continues": true,
+        "note": "hands the corridor to the next region still widening: many days yet, and then the estuary and the SEA (schematic \u2014 late-game, no coast on this tile)"
+      }
+    ],
+    "navigableFrom": "dellhollow-moorage",
+    "minNavigableWidth": 14
+  },
+  "massifs": [
+    {
+      "id": "northwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          0,
+          168
+        ],
+        [
+          210,
+          168
+        ],
+        [
+          210,
+          196
+        ],
+        [
+          0,
+          196
+        ]
+      ],
+      "crest": 40,
+      "note": "north rim of the FAR (left-bank) side; carries the sealed Hollowmere Pass notch. SIDE RESTATED 2026-08-01 with the chirality flip: this rim used to be called 'the reachable side' and is now across the water from the road, continuous with the far wall. The rim runs out at x~210, where the gorge's own walls take the river on to the Long Reach."
+    },
+    {
+      "id": "westwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          0,
+          0
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          22,
+          185
+        ],
+        [
+          0,
+          185
+        ]
+      ],
+      "crest": 38,
+      "note": "west rim of the Whisperwood highland bowl"
+    },
+    {
+      "id": "southwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          0,
+          0
+        ],
+        [
+          280,
+          0
+        ],
+        [
+          280,
+          22
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "crest": 36,
+      "note": "south rim of the Whisperwood highland; the river's springs rise at its foot"
+    },
+    {
+      "id": "gatewall",
+      "kind": "ridge",
+      "blob": [
+        [
+          53,
+          93
+        ],
+        [
+          121,
+          37
+        ],
+        [
+          131,
+          49
+        ],
+        [
+          63,
+          105
+        ]
+      ],
+      "crest": 34,
+      "note": "the spur sealing the Whisperwood highland off from the valley; the Old Gate \u2014 set in the notch the river cut \u2014 is its only breach"
+    },
+    {
+      "id": "farwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          90.48,
+          88.54
+        ],
+        [
+          101.71,
+          102.01
+        ],
+        [
+          112.41,
+          113.87
+        ],
+        [
+          126.38,
+          122.35
+        ],
+        [
+          137.06,
+          132.1
+        ],
+        [
+          153.68,
+          140.14
+        ],
+        [
+          163.72,
+          146.04
+        ],
+        [
+          178.96,
+          155.43
+        ],
+        [
+          190.39,
+          162.77
+        ],
+        [
+          205.58,
+          170.53
+        ],
+        [
+          214.45,
+          177.85
+        ],
+        [
+          199.89,
+          190.06
+        ],
+        [
+          197.52,
+          187.73
+        ],
+        [
+          178.79,
+          177.82
+        ],
+        [
+          171.57,
+          172.93
+        ],
+        [
+          151.17,
+          160.31
+        ],
+        [
+          147.87,
+          158.23
+        ],
+        [
+          124.96,
+          146.75
+        ],
+        [
+          115.64,
+          138.02
+        ],
+        [
+          100.24,
+          128.45
+        ],
+        [
+          87.81,
+          114.96
+        ],
+        [
+          73.53,
+          97.11
+        ]
+      ],
+      "crest": 30,
+      "note": "the gorge's far (WEST / left-bank) wall: tall cliff the player cannot cross in ch1-2; the forested plateau above is visible-but-unreachable ch3 territory across the water. SIDE FLIPPED 2026-08-01 with the corridor (it was the EAST wall while the bench was west). The blob is no longer a straight quad but a BAND OFFSET FROM THE RIVER'S OWN SMOOTHED AXIS (8u to 27u off the centreline, arc 62 to 224): a quad cannot be flipped corner by corner, because each corner finds its own nearest reach and the quad shears. Its upstream end stands inside the gatewall spur, which is where the gorge's west wall comes from."
+    },
+    {
+      "id": "emberwood",
+      "kind": "forestbelt",
+      "blob": [
+        [
+          22,
+          18
+        ],
+        [
+          22,
+          93
+        ],
+        [
+          53,
+          93
+        ],
+        [
+          121,
+          37
+        ],
+        [
+          121,
+          18
+        ]
+      ],
+      "note": "dense Whisperwood filling the highland bowl; the river rises in it and Emberbrook clears a pocket beside the water"
+    }
+  ],
+  "regions": [
+    {
+      "id": "valley",
+      "name": "The Emberbrook Valley",
+      "chapters": [
+        1,
+        2
+      ],
+      "file": "world/regions/valley.region.json",
+      "envelope": [
+        [
+          10,
+          10
+        ],
+        [
+          270,
+          10
+        ],
+        [
+          270,
+          195
+        ],
+        [
+          10,
+          195
+        ]
+      ],
+      "tile": {
+        "size": [
+          280.0,
+          200.0
+        ],
+        "origin": [
+          140.0,
+          100.0
+        ],
+        "_doc": "THE TERRAIN TILE and the world coords of its centre - the blender/runtime origin. Published HERE because two tools were deriving it independently and disagreed: valley_map.py hardcoded 280x200 (origin 140,100) while scenegraph_derive.mjs took it from the massifs' extent (280x196, origin 140,98). The 2u gap put every ow-valley arrival 2u north of the road ribbon it was derived on - the 3 'arrival stands on walk network' reds. Runtime coords are rx = wx - origin[0], rz = origin[1] - wy."
+      },
+      "exits": [
+        {
+          "id": "gorge-water-exit",
+          "kind": "river",
+          "at": [
+            244,
+            190
+          ],
+          "spinePoint": 17,
+          "carries": {
+            "navigable": true,
+            "width": 28
+          },
+          "note": "Ch3 boat departure, into the Long Reach. Next region attaches here and is handed a 28u river still widening \u2014 days yet to the estuary and the sea (schematic, late-game)."
+        },
+        {
+          "id": "pass-hollowmere",
+          "kind": "road",
+          "at": [
+            146,
+            190
+          ],
+          "state": "sealed"
+        }
+      ],
+      "sceneKey": "ow-valley",
+      "_doc_sceneKey": "explicit runtime scene key \u2014 the scene graph derives from THIS, never from naming conventions ('ow-'+id was a coincidence, not a contract)"
+    }
+  ],
+  "graph": {
+    "_doc": "Chapter/portal flow. Nodes are landmarks/exits; the player's world-map UI and chapter gating read this.",
+    "edges": [
+      {
+        "from": "emberbrook",
+        "to": "dellhollow",
+        "via": "road",
+        "chapter": 2
+      },
+      {
+        "from": "dellhollow-moorage",
+        "to": "gorge-water-exit",
+        "via": "river",
+        "chapter": 3,
+        "mode": "boat"
+      }
+    ]
+  }
+}
