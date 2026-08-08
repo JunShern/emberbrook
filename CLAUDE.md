@@ -86,6 +86,22 @@ git runs here, on branch `migration/3d-hybrid`.
   far-depth one would have killed crossing's real white-wedge finding, so an undefined
   subject gets no gate. `--aim-census` measures a finished run with no API; `--no-aim` is
   the A/B.
+- **tools/gltf_fast_index.py — THE EXPORTER IS QUADRATIC, AND THE BLEND YOU AIM IT AT IS THE
+  WHOLE STORY** (2026-08-08). io_scene_gltf2's `__append_unique_and_get_index`
+  (`blender/exp/exporter.py:413`) is `x in LIST` per node/mesh/accessor and no gltf2_io class
+  defines `__eq__`, so N child-of-root properties cost O(N²) identity compares at a
+  micro-benchmarked 9 ns — emberbrook-dressed's 6.36 M nodes would take ~50 HOURS, and the
+  26–33 minute band four attempts hit was the first 3% of it. We fix it FROM OUR SIDE (the
+  Blender install is untouched): the list still defines output ORDER, an `id()`-keyed
+  side-table answers MEMBERSHIP, fast path only when `type(obj).__eq__ is object.__eq__`.
+  `EMB_GLTF_FAST_INDEX=0` reverts; the gate is byte-identity of both towns' bundles
+  (measured: same sha256 patch on/off, cine_test 635/1).
+  **AND THE 146x TRAP: `emb-cine/scene.glb`'s source is `emberbrook-master.blend` — THE GRAY
+  BLOCKOUT — not `-dressed`.** Aim `--glb` at the dressed master and the exporter's Duplis
+  branch walks 6.36 M scattered leaf/grass instances into 6,360,379 one-line NODES against
+  1,370 meshes: a 1.9 GB bundle of which 1.7 GB is node JSON. Dressing scatter belongs in a
+  plate, never in a collision bundle — the unwritten sibling of "if nothing but the camera
+  may see it, it is a picture, not a place".
 - **tools/moorage_search.py — A SEARCH IS ONLY AS HONEST AS ITS ORACLES** (2026-08-07). It
   lived in a scratchpad with roof/art/self oracles and NO west-arm oracle, so iteration 9's
   searched flight was free to land on the west boardwalk BY CONSTRUCTION — it severed the
