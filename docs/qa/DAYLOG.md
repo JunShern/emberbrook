@@ -21201,3 +21201,85 @@ instruments for.
 
 OWED, NAMED: a deploy.  These seven plates supersede five of round 5's and two nobody had
 touched since 2026-08-06; this lane did not race the deploy lane for it.
+
+------------------------------------------------------------
+## 2026-08-08 ~19:15 — DEPLOY LANE: round 11 is LIVE AND VERIFIED (29/0). Dellhollow round 6's seven phase-function plates are on the site, and the BUNDLES DID NOT MOVE — which is the receipt, not an omission
+
+**WHY THIS DEPLOY EXISTED.** The graphics round-6 entry above closes with `OWED, NAMED: a
+deploy` — seven rebaked `del-cine` plates superseding five of round 5's and two nobody had
+touched since 2026-08-06. Discharged here.
+
+Built from a throwaway `git worktree` detached at `origin/migration/3d-hybrid` —
+**8185bee3** (6b78129e instruments + carrier + master, e18f4fc7 the seven plates, 8185bee3
+docs/board/judge run) — with `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`.
+`build-static --compress`: **392 files / 520.7 MB / 9.2 s**, cache **245 hit / 8 miss /
+8 stored / 0 demoted**. Three build gates green: every `.glb` binary glTF, **16 bundle GLBs
+byte-identical to `public/`**, **256 referenced paths resolve** (237 via the `.webp` rewrite).
+Local `static_verify`: **ALL GREEN 29/0**.
+
+**THE EIGHT CACHE MISSES ARE THE WHOLE DELTA, AND THEY RECONCILE TO THE SOURCE SHA.**
+`git diff --stat c0aeb55b 8185bee3 -- public/` names 10 paths. Eight are encoded artifacts and
+all eight missed — the seven `del-cine/cameras/{lockfive,gate,waterfront,north-landing,
+crossing,weave,shelf-east}/bg.png` plus `del-cine/stylized.png`. Checked at the entry, not by
+the count: each source's sha256 prefix names a cache directory whose entry carries this
+build's mtime. **`stylized.png` and `gate/bg.png` share ONE entry** (`a5d3d747…`) because they
+are byte-identical sources — 8 misses across 7 stored blobs, and the cache key being
+sha(source) is exactly why. The other two diff paths are `shelf-east/depth.png` (never
+encoded — `SWAP_DENY`, staged as lossless PNG) and `cine.json`.
+
+**NO BUNDLE MOVED, AND THAT IS THE ROUND'S OWN CLAIM MADE GOOD.** The change is a MATERIAL
+phase-function edit (haze anisotropy 0.30 -> -0.25), so no geometry moved and no re-export was
+owed. Two independent confirmations: `del-cine/scene.glb` is absent from the source diff, and
+**all 16 GLBs came from the cache** (532 MB -> 270 MB, 16/16) — a moved bundle cannot hit a
+cache keyed on its own bytes. The geometry gate then digested POSITION + every primitive's
+indices in the compressed output against `public/` and passed 16/16. A round that shipped a
+bundle here would have contradicted the graphics lane's receipt; it did not.
+
+`deploy-ghpages.sh dist` published **323143b6** (push verified by the script; pre-flight
+printed the clean `579 MB, 393 files`; push ~45 s). LIVE stamp `2026-08-08T17:14:22.381Z` ->
+**`2026-08-08T19:04:26.243Z`**; `static_verify --url https://junshern.github.io/emberbrook`:
+**ALL GREEN 29/0**, zero failed requests, zero unexpected 4xx/5xx, zero console errors. Live
+screenshot is the default battle diorama, unchanged from round 10 — correct, nothing this
+round touches a battle asset.
+
+**THE ART IS ON THE SITE, BY SHA — AND EVERY ROW ALSO DIFFERS FROM ROUND 5's BYTES.** Fetched
+live, compared to `dist`, and compared to the previous deploy's own blob at `b268fb44`:
+
+| path | live bytes | live vs dist | vs round-5 deploy |
+|---|---:|---|---|
+| `lockfive/bg.webp` | 409622 | **MATCH** `e71121cd…` | DIFFERS (r5 `18cbb445…`, 415818 B) |
+| `gate/bg.webp` | 732324 | **MATCH** `a8cf92cc…` | DIFFERS (r5 `9c903316…`, 728862 B) |
+| `waterfront/bg.webp` | 656152 | **MATCH** `e58d5ce6…` | DIFFERS (r5 `87e1ae7e…`, 657690 B) |
+| `north-landing/bg.webp` | 551424 | **MATCH** `7ba0b928…` | DIFFERS (r5 `9576add1…`, 549502 B) |
+| `crossing/bg.webp` | 490692 | **MATCH** `2478fd43…` | DIFFERS (r5 `149276bc…`, 495192 B) |
+| `weave/bg.webp` | 671298 | **MATCH** `e015f16a…` | DIFFERS (r5 `aaa99e19…`, 670484 B) |
+| `shelf-east/bg.webp` | 797170 | **MATCH** `ca75d23d…` | DIFFERS (r5 `d8cfc0e4…`, 806248 B) |
+| `del-cine/stylized.webp` | 732324 | **MATCH** `a8cf92cc…` (= gate) | DIFFERS (r5 `9c903316…`) |
+
+Seven for seven superseded, no stale plate survived. Note `waterfront` and `shelf-east` were
+NOT in round 5's five — round 5's `cottage` is untouched here and still serves its own bytes.
+
+**THE ONE-LSB DEPTH DELTA IS THE DEPTH CATCHING UP, AND THE PIPELINE DID NOT TOUCH IT.**
+`shelf-east/depth.png` moved 3 bytes on disk (25 px of 1,032,192 at 1 LSB) because its
+previous bake was 2026-08-06 and a plate refused on the beauty frame keeps its old depth map.
+What had to hold is that nothing downstream moved it: **`public/` == `dist` == live,
+byte-identical** (`f78aa520…`, 2121203 B), and the other six depth plates are `public/` ==
+`dist` byte-identical too. So the depth bytes changed in the BAKE, by intent, and changed
+nowhere else.
+
+**THE PAGES TELL RAN LONG THIS TIME — 90-105 s, ABOVE THE BAND.** Six previous deploys moved
+the stamp at 63/72/73/75/~75 s; this one was still on the old stamp at the 90 s poll and moved
+by 105 s. No re-POST was needed and the build never showed `updated_at == created_at` past the
+3-minute rule, so the band is 63-105 s over seven samples rather than 63-75 s over six. Worth
+recording because the re-POST threshold is calibrated on it.
+
+**GATES NOT RUN, NAMED.** `transition_test` skipped for the fourth deploy running: swap read
+**3.90 of 5.12 GB (76%, above the 75% gate)** at the start of the window with the user at the
+machine, and 3.87 GB at the end. Same reasoning as rounds 8-10 — a number reported from a run
+that never happened is worse than a gap. The build's reference-integrity advisory
+(`js/dialogue.js` `expr-warm.png`, `js/followers.js` `mochi/pose-front.png`) is the standing
+documented pair, unchanged; the live run's zero-404 audit is the receipt.
+
+Cleanup: this lane's worktree removed, scratch `dist` and both `static-verify*.png` deleted,
+zero orphaned Chrome (`ppid 1` root check clean). The two stale worktrees from earlier
+sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
