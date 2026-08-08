@@ -19486,3 +19486,52 @@ listener feeds it — on a real `Battle.start`:
     ITEM   -> "Vesper uses Tonic." / "Vesper recovers 23 HP."
     console errors: none, both runs
 
+
+------------------------------------------------------------
+06:35 HARNESS-FIX lane — **AN ID IS NOT A SIDE.** `tools/battle_shots.mjs` chose the
+body it attacks with `/^m/`, **which also matches `maren`**. The tool then drove
+`setTarget` / `act` / `flinch` at that id, so a party member could be targeted, lunged
+at, flinched and KO'd in a capture published as the game's behaviour.
+
+**What it actually invalidated: THE TOOL, NOT THE PLATES.** Measured rather than
+assumed. `battle_stage3d` builds the FOES first (`:1951` before `:1996`), so
+`Object.keys(tiers())` is `["m0","m1","vesper","maren"]` and the bad filter still
+returned `m0`. The published `docs/qa/battle-audit/audit-impact-{swing,arena}.png` and
+`seq-*.png` are therefore CORRECTLY TARGETED — visible in the plates themselves, where
+the target ring, the hit flash and the KO'd body are all a wolf. No audit finding is
+withdrawn. The tool was correct by accident of another file's array order, which is not
+correctness: `battle_world` builds the PARTY first (`battle_world.js:268`), and the same
+line there selects `maren` — reproduced live, `node tools/battle_shots.mjs --arena=world`
+printing build order `["vesper","maren","m0","m1"]`.
+
+FIX: ask the stage. `stage.sides()` (battle_world `:735`), else `stage.at(id).side`
+(battle_stage3d `:3060`, the value `newBody()` was constructed with), with `/^m\d+$/`
+demoted to a LABELLED last resort. The resolution is PRINTED with every run and the
+target is ASSERTED not to be a party member before a frame is shot — the old tool could
+not be publicly wrong about a thing it never printed. Same treatment applied to
+`tools/battle_cast_shots.mjs` (its `cheer` beat KOs EVERY id it matches, so a bad side
+test there kills the party). `tools/battle_world_probe.mjs` was already fixed by the
+world spike. New `--arena=<name>` flag on battle_shots is the A/B that proves the
+accessor and not the pattern is doing the work.
+
+RECEIPT, diorama run:
+    sides via stage.at().side | build order ["m0","m1","vesper","maren"]
+    actor vesper (party) -> target m0 (foe) | party=["vesper","maren"] foes=["m0","m1"]
+    OK: target is NOT in the party
+RECEIPT, `--arena=world` (where `/^m/` returns `maren`):
+    sides via stage.sides() | build order ["vesper","maren","m0","m1"] -> target m0 (foe)
+
+RE-SHOT (`--only=impact --tag=recheck`, seed 4242, same party, 06:32), added ALONGSIDE
+the originals, which are kept unedited as the evidence of the bug:
+`recheck-impact-swing.png`, `recheck-impact-hit.png`, `recheck-impact-ko.png` (a KO frame
+the tool now shoots at all) and `recheck-impact.png`. LOOKED AT, not inferred: Vesper now
+stands INSIDE the target's own ring holding a staff — the 540 px of empty grass in the
+03:05 plate and the empty hand are both gone (tonight's contact/staging/weapon-socket
+work) — the struck wolf flashes white while its twin stays grey, and at KO+340 ms it is
+rolled on its back while Vesper has already tweened home and NOBODY IN THE FRAME REACTS.
+Findings that survive the new build: no hit-stop, no reaction to a kill, placeholder foe
+icons in the turn-order panel.
+
+`docs/qa/battle-audit/index.html` carries the correction as a banner above §3 and a new
+§3b, so a reader sees which plates were suspect, why they in fact stand, and what the
+corrected re-shoot shows. The "before" narrative is NOT overwritten by "after" images.

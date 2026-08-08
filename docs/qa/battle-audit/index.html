@@ -35,12 +35,33 @@ full inventory + ranked slate: <code>docs/plans/battle-presentation-inventory.md
 Captured with <code>node tools/battle_shots.mjs --port=3000 --tag=audit --out=docs/qa/battle-audit</code>
 and <code>node tools/arena_playtest.mjs --port=3000 --gpu --eval=&lt;probe&gt;</code> —
 real GL (not swiftshader), 1600&times;813, <code>nomusic=1</code>, seed 4242,
-<code>stage.frames</code> asserted climbing before every capture.</p>
+<code>stage.frames</code> asserted climbing before every capture.<br>
+<b>Amended 2026-08-08 06:32</b> — harness side-selection bug found and fixed; <code>recheck-*</code>
+plates added by <code>node tools/battle_shots.mjs --port=3000 --only=impact --tag=recheck
+--out=docs/qa/battle-audit</code>. Read the correction banner below before &sect;3.</p>
 
 <div class="note"><b>The framing.</b> <code>director-slate.md</code> Bet 10 — "attack lunges,
 hit flash + shake, damage number motion, turn camera punch-ins, KO/victory beats" — <b>already
 shipped</b>, on 2026-08-02. The user is looking at the result of that juice pass and calling it
 unimpressive. <b>Bet 10 is spent; what is left is structural.</b></div>
+
+<div class="note red" id="harness-correction"><b>Harness correction, 2026-08-08 06:30 — AN ID IS
+NOT A SIDE.</b> The tool that shot every picture in &sect;3 picked the body it attacks with the
+regex <code>/^m/</code>, <b>which also matches <code>maren</code></b>. The captures below were
+therefore suspected of showing a party member being targeted, lunged at, flinched and KO'd.
+<b>Measured, they are not:</b> <code>battle_stage3d</code> builds the <i>foes first</i>
+(<code>:1951</code> before <code>:1996</code>), so the body order is
+<code>["m0","m1","vesper","maren"]</code> and the bad filter still landed on <code>m0</code> —
+visible in the plates themselves, where the target ring and the hit flash are on a wolf.
+<b>The &sect;3 captures stand. The tool did not.</b> It was correct by accident of another
+file's array order: run the same line against the <code>?arena=world</code> spike stage, whose
+order is <code>["vesper","maren","m0","m1"]</code>, and <code>/^m/</code> selects
+<b><code>maren</code></b>. Fixed in <code>tools/battle_shots.mjs</code> (and
+<code>battle_cast_shots.mjs</code>) by <b>asking the stage</b> — <code>stage.sides()</code>, else
+<code>stage.at(id).side</code>, with the id pattern demoted to a labelled last resort — and by
+<b>asserting the target is not a party member before a frame is shot</b>. See
+<a href="#reshoot" style="color:#e9a24b">&sect;3b</a> for the corrected re-shoot. The originals
+are kept, unedited, because they are the evidence of the harness bug.</div>
 
 <h2>1 · The camera does not move — and it cannot</h2>
 
@@ -98,7 +119,7 @@ through the repo's own Blender/Cycles/AgX plate pipeline</b>. They are keyed to 
 <i>type</i>, not the place. <code>ow-valley/zones.json</code> is a 224&times;160 grid over a
 280&times;200 m tile: <b>35,840 cells, five zone types, four images.</b></div>
 
-<h2>3 · The attacker never reaches the target</h2>
+<h2>3 · The attacker never reaches the target <span style="font:400 13px/1 ui-monospace,Menlo,monospace;color:#8e8377">— as of 2026-08-08 03:05; see <a href="#reshoot" style="color:#e9a24b">&sect;3b</a></span></h2>
 
 <figure><img src="audit-impact-swing.png" alt="The swing, 210 ms in">
 <figcaption><b>the swing, 210 ms in</b> (synchronous render). Vesper is at x&asymp;630 px at
@@ -122,10 +143,56 @@ blow lands on a body <b>four metres from the attacker</b>, and there is <b>no hi
 the mixer and every tween run straight through contact, so the frame the damage lands is never
 held. The pieces of the hit package are right; the geometry is wrong.</figcaption></figure>
 
+<h2 id="reshoot">3b · The corrected re-shoot — same tool, fixed side resolution, 3.5 hours later</h2>
+
+<p>The two plates above were re-shot at <b>06:32</b> with the repaired
+<code>tools/battle_shots.mjs</code> (<code>--tag=recheck</code>, same shot list, same seed 4242,
+same party). <b>The originals are untouched above and are still the audit's evidence for what the
+game looked like at 03:05.</b> What changed between the two rows is <i>the game</i> — the contact
+pass, the staging, the weapon socket and the cast clips all shipped in the intervening hours —
+so read this row as <b>after</b>, never as a replacement for the picture above it.</p>
+
+<div class="note ok"><b>The side receipt this run printed</b>, which is the thing the old tool
+never printed and could therefore never be wrong in public about:<br>
+<code>sides via stage.at().side | build order ["m0","m1","vesper","maren"]</code><br>
+<code>actor vesper (party) -&gt; target m0 (foe) | party=["vesper","maren"] foes=["m0","m1"]</code><br>
+<code>OK: target is NOT in the party</code><br>
+And the same tool with <code>--arena=world</code>, where the old regex would have hit Maren:<br>
+<code>sides via stage.sides() | build order ["vesper","maren","m0","m1"]</code> &rarr;
+<code>target m0 (foe)</code>.</div>
+
+<div class="pair three">
+  <figure><img src="recheck-impact-swing.png" alt="corrected swing">
+  <figcaption><b>swing, 210 ms</b> (recheck) — <b>Vesper is standing beside the wolf</b>, not half
+  a frame away from it, and she is <b>holding a staff</b>. Compare &sect;3's plate: the 540 px of
+  empty grass is gone, and so is the empty hand. Maren, far left, is still in her neutral idle
+  through the whole exchange.</figcaption></figure>
+  <figure><img src="recheck-impact-hit.png" alt="corrected impact">
+  <figcaption><b>impact</b> (recheck) — the target flashes hot white inside its amber disc with
+  the attacker <b>inside the same ring</b>, weapon up. Its untargeted twin, centre frame, stays
+  grey: which body was hit is still unambiguous. The frame is not held — <b>no hit-stop</b>, the
+  &sect;3 finding stands.</figcaption></figure>
+  <figure><img src="recheck-impact-ko.png" alt="corrected KO +340 ms">
+  <figcaption><b>KO +340 ms</b> (recheck, new frame — the tool now shoots the KO too). The wolf is
+  <b>rolled onto its back, legs up</b>, still solid. Vesper has already tweened home and is back
+  in idle beside Maren, and <b>nobody in the frame reacts to the kill</b> — the &sect;4 finding
+  stands on the new build.</figcaption></figure>
+</div>
+
+<figure><img src="recheck-impact.png" alt="corrected whole frame">
+<figcaption><b>the whole frame</b> (recheck, rest state) — the command menu, the turn-order panel
+and the foe name tags over the new staging. The two duskpads now sit <b>nearer the centre</b> and
+the party reads as a pair rather than as two figures parked at the frame edge. Unchanged: the
+placeholder foe icons in the panel (&sect;6), and the <code>music off</code> toast, which sits
+<b>over the bottom-right corner of the turn-order window</b> in every whole-frame capture this
+harness takes.</figcaption></figure>
+
 <h2>4 · The KO is an evaporation and the victory does not exist</h2>
 
 <div class="pair three">
-  <figure><img src="seq-3-impact.png" alt="impact"><figcaption><b>impact</b></figcaption></figure>
+  <figure><img src="seq-3-impact.png" alt="impact"><figcaption><b>impact</b> (03:05 capture; the
+  KO'd body in these three is a <b>wolf</b> — checked by eye against the harness bug in the
+  banner above)</figcaption></figure>
   <figure><img src="seq-4-ko.png" alt="KO, 340 ms">
   <figcaption><b>KO +340 ms</b> — the wolf on its side, translucent, sinking, with a dust puff.
   <b>This beat reads.</b></figcaption></figure>

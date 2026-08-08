@@ -124,12 +124,27 @@ async function evalPage(cdp, expr, timeoutMs) {
   return r.result && r.result.value;
 }
 
+// AN ID IS NOT A SIDE. `/^m/` matches `maren`; even the narrower `/^m\d+$/` used
+// here is a guess about somebody else's id scheme, so ask the stage instead
+// (stage.sides() on battle_world, stage.at().side on battle_stage3d) and keep the
+// pattern only as a labelled last resort. The `cheer` beat KOs EVERY foe, so a
+// side test that is wrong there kills the party. See tools/battle_shots.mjs.
+const FOES_JS = `
+    const _sideOf = (id) => {
+      if (typeof st.sides === 'function') { const s = st.sides(); if (s && s[id]) return s[id]; }
+      if (typeof st.at === 'function') { const a = st.at(id); if (a && a.side) return a.side; }
+      return /^m[0-9]+$/.test(id) ? 'foe' : 'party';
+    };
+    const foes = Object.keys(st.tiers()).filter(k => _sideOf(k) === 'foe');
+    if (!foes.length) throw new Error('no foe-side body on the stage');
+    if (foes.indexOf('vesper') >= 0 || foes.some(f => _sideOf(f) !== 'foe')) throw new Error('side resolution returned a party member');
+`;
+
 // THE BEATS, page-side. Each one drives the stage's OWN public verbs — the same
 // ones battle_turnbased calls — and snapshots on a timeline measured in ms from the
 // call, so the same picture comes back on every run.
 const BEATS = {
-  swing: `
-    const foes = Object.keys(st.tiers()).filter(k => /^m[0-9]+$/.test(k));
+  swing: FOES_JS + `
     st.setTarget(foes[0]); st.setActor('vesper');
     shots.rest = st.snapshot();
     st.act('vesper', 'attack', foes[0], 560);
@@ -165,8 +180,7 @@ const BEATS = {
     }
     await hold(320); shots.tally = st.snapshot();
     await hold(300); shots.tally2 = st.snapshot();`,
-  cheer: `
-    const foes = Object.keys(st.tiers()).filter(k => /^m[0-9]+$/.test(k));
+  cheer: FOES_JS + `
     for (const f of foes) st.ko(f);
     await hold(900);
     st.cheer();
