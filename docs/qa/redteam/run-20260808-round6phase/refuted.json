@@ -1,0 +1,477 @@
+[
+ {
+  "fid": "F4",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "background cliff on the top left",
+  "bbox": [
+   0,
+   0,
+   0.46,
+   0.39
+  ],
+  "severity": 2,
+  "desc": "The background cliff abruptly cuts off into flat gray placeholder geometry, exposing untextured level boundaries.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "14.7,152.1,-2.7,72.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 14.7,152.1,-2.7,72.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The background cliff fades naturally into atmospheric haze and fog rather than terminating in flat placeholder geometry."
+  }
+ },
+ {
+  "fid": "F5",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "geometry",
+  "where": "wooden fence posts along the cliff path",
+  "bbox": [
+   0.41,
+   0.55,
+   0.46,
+   0.99
+  ],
+  "severity": 1,
+  "desc": "The fence posts clip directly into the uneven rock terrain without natural anchors or proper ground alignment.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-1.8,14.9,6.1,11",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -1.8,14.9,6.1,11"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The fence posts follow the path edge naturally according to the simplified, blocky construction style of the scene."
+  }
+ },
+ {
+  "fid": "F6",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "navigation",
+  "where": "covered archway along the main path",
+  "bbox": [
+   0.46,
+   0.22,
+   0.6,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "The primary path leads into a heavily shadowed, cluttered structure, making it ambiguous where the player can walk next.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The path through the archway is clearly lit by lanterns and completely open, presenting no navigation ambiguity."
+  }
+ },
+ {
+  "fid": "F13",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "geometry",
+  "where": "rock ridge on the left side of the path",
+  "bbox": [
+   0.153,
+   0.6,
+   0.425,
+   1
+  ],
+  "severity": 2,
+  "desc": "The cliff wall along the path is a paper-thin hollow mesh with visible open edges underneath.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-1.6,64.2,7.4,34.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -1.6,64.2,7.4,34.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The rock ridge is a fully sculpted solid 3D terrain mesh rather than a paper-thin hollow shell."
+  }
+ },
+ {
+  "fid": "F14",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "base of the tree on the right cliff",
+  "bbox": [
+   0.75,
+   0.57,
+   0.81,
+   0.72
+  ],
+  "severity": 1,
+  "desc": "The tree trunk attaches awkwardly to the sheer cliff face without visible roots or soil grounding.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-1.2,3.2,-1,3.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -1.2,3.2,-1,3.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tree on the cliff is anchored to a visible wooden support framework attached directly to the rock face."
+  }
+ },
+ {
+  "fid": "F17",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "geometry",
+  "where": "autumn trees on the right cliff wall",
+  "bbox": [
+   0.698,
+   0.245,
+   0.915,
+   0.62
+  ],
+  "severity": 2,
+  "desc": "The tree's foliage and trunk clip directly into the vertical rock cliff face without a natural ledge or root structure.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-0.7,12.7,-6.7,4.2",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -0.7,12.7,-6.7,4.2"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Stylized trees growing out of rock faces with built-in wooden supports are intentional thematic details, not broken geometry."
+  }
+ },
+ {
+  "fid": "F18",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "banner line across the central path",
+  "bbox": [
+   0.422,
+   0.408,
+   0.603,
+   0.584
+  ],
+  "severity": 1,
+  "desc": "The line of decorative flags appears to float in mid-air without clear attachment points on either end.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "4.6,18.5,1.8,10.5",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 4.6,18.5,1.8,10.5"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The banner string is clearly tied to the wooden building on the right and a post structure on the left."
+  }
+ },
+ {
+  "fid": "F19",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "geometry",
+  "where": "background cliff wall at top left",
+  "bbox": [
+   0,
+   0,
+   0.46,
+   0.388
+  ],
+  "severity": 2,
+  "desc": "The upper background rock wall forms an unmodeled flat texture plane terminating abruptly at the level boundary.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "14.7,152.1,-2.7,72.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 14.7,152.1,-2.7,72.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The background rock wall features consistent texture and lighting that recedes into fog, not an unmodeled flat plane."
+  }
+ },
+ {
+  "fid": "F15",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "navigation",
+  "where": "upper center path near background structures",
+  "bbox": [
+   0.12,
+   0.35,
+   0.26,
+   0.49
+  ],
+  "severity": 2,
+  "desc": "The main street leads into dense shadows and complex overhead scaffolding in the background, making it unclear whether the path continues or hits a dead end.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The ground street clearly remains visible and open as it passes under the background scaffolding."
+  }
+ },
+ {
+  "fid": "F16",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "occlusion",
+  "where": "foreground roof on the bottom left",
+  "bbox": [
+   0.485,
+   0.095,
+   0.996,
+   0.56
+  ],
+  "severity": 1,
+  "desc": "The large roof in the lower-left foreground heavily obstructs the view of the ground path and space behind it.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "This is an elevated camera perspective meant to showcase the village layout, not an in-game camera obstruction issue."
+  }
+ },
+ {
+  "fid": "F22",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "occlusion",
+  "where": "center path between buildings in deep shadow",
+  "bbox": [
+   0.33,
+   0.27,
+   0.72,
+   0.92
+  ],
+  "severity": 2,
+  "desc": "Harsh cast shadows completely obscure the ground terrain and pathing through the center of the village, hiding potential obstacles or routes.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The ground details and path outlines remain completely legible within the shadow areas."
+  }
+ },
+ {
+  "fid": "F23",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "geometry",
+  "where": "bunting line on the right roof",
+  "bbox": [
+   0.67,
+   0.32,
+   0.81,
+   0.56
+  ],
+  "severity": 1,
+  "desc": "The suspended bunting wire clips directly through the wooden roof tiles of the structure on the right.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "43.7,50.4,8.8,14.2",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 43.7,50.4,8.8,14.2"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The bunting string hangs in open air between lantern posts and does not penetrate the roof tiles."
+  }
+ },
+ {
+  "fid": "F24",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "shelf-east",
+  "item": null,
+  "category": "navigation",
+  "where": "upper center cliff walkway area",
+  "bbox": [
+   0.36,
+   0.13,
+   0.47,
+   0.26
+  ],
+  "severity": 2,
+  "desc": "It is unclear whether the elevated wooden platform and bridge in the background are playable pathways or non-interactive scenery.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Elevated background structures are standard environmental design and do not pose a visual bug or game-breaking issue."
+  }
+ },
+ {
+  "fid": "F2",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "geometry",
+  "where": "bottom left wooden walkway structure",
+  "bbox": [
+   0.15,
+   0.74,
+   0.38,
+   0.99
+  ],
+  "severity": 2,
+  "desc": "The wooden walkway consists of fragmented, disconnected, and floating planks with inconsistent gaps.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "69.3,87.3,20.9,38.8",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 69.3,87.3,20.9,38.8"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The fragmented and gapped planks are an intentional environmental art choice depicting a worn, dilapidated wooden dock."
+  }
+ },
+ {
+  "fid": "F10",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "immersion",
+  "where": "middle left in the water",
+  "bbox": [
+   0.488,
+   0.393,
+   0.545,
+   0.437
+  ],
+  "severity": 1,
+  "desc": "A wooden platform floats freely on top of the water without any pilings or supporting structures beneath it.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "84.2,109.6,21.4,32.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 84.2,109.6,21.4,32.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Wooden debris and platform segments naturally float on water, so the absence of vertical pilings is entirely expected."
+  }
+ },
+ {
+  "fid": "F21",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "geometry",
+  "where": "in the water below the pier",
+  "bbox": [
+   0.392,
+   0.49,
+   0.437,
+   0.54
+  ],
+  "severity": 1,
+  "desc": "A wooden plank structure floats isolated in the water with no visible support or connection to the docks.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "100.3,106.8,30.8,37.7",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 100.3,106.8,30.8,37.7"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Wooden structures naturally float on the water surface, making rigid supports unnecessary for floating platform debris."
+  }
+ },
+ {
+  "fid": "F67",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "north-landing",
+  "item": null,
+  "category": "navigation",
+  "where": "wooden scaffolding structures along the cliff",
+  "bbox": [
+   0.35,
+   0,
+   0.52,
+   0.32
+  ],
+  "severity": 2,
+  "desc": "The dense cluster of timber supports and ramps along the cliff makes walkable paths ambiguous and hard to distinguish from decorative structure.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The primary walkable route is clearly highlighted with a distinct green moss surface, easily distinguishing it from decorative timber framing."
+  }
+ }
+]

@@ -169,6 +169,38 @@ git runs here, on branch `migration/3d-hybrid`.
   t2_cliff_south) touches an envelope: u span 32 → 67 plate px. The straightness figure is a
   SCREEN — grid-quantised, and a tilted straight line scores well — read it with the u span
   and then look at the plate.
+- **tools/dh_haze_medium.py — TAU IS NOT THE WASH, AND THE PHASE FUNCTION IS THE LEVER**
+  (2026-08-08, round 6). FIRST: **A REPORT THAT DEDUPLICATES A CHECKLIST ROW PRINTS THE FIRST
+  PLATE'S SENTENCE OVER FOUR OTHER PLATES' ANSWERS.** Round 5 handed over "the haze card's own
+  edge, on five plates"; read per plate out of `findings.json` with each bbox put on the
+  geometry, they were five different subjects — one card edge (gate), one darkness residual
+  (weave), two upstream far-field plates that ZERO east-card rays reach, and one aimed at
+  bright near-field foliage at 20 m (north-landing, refuted). Read the ROW, never the roll-up.
+  THE REFUSAL: thickening the card into a 16.5 m medium at *exactly preserved optical depth*
+  (0.102x6.00 = 0.037091x16.50) GAVE BACK MOST OF ROUND 4 — far-field p05 gate 14.7→7.6, weave
+  13.9→4.5, lockfive 17.3→6.1. **EXTINCTION IS A PROPERTY OF THE MEDIUM; IN-SCATTER IS A
+  PROPERTY OF HOW MUCH LIGHT REACHES IT — a medium moved against a wall moves into its shadow.**
+  It also never reached its subject (the town wall's mass is NEARER than the medium's near face).
+  WHAT WORKED IS ONE NUMBER: `mat_haze_east` anisotropy **0.30 → −0.25**. Same tau, same albedo,
+  same geometry — only the angular distribution. **DELLHOLLOW'S CAMERAS LOOK WITH THE SUN, NOT
+  INTO IT**, so a forward phase function threw the card's light away from every lens except
+  `gate`'s, which looks across the rake — which is why gate BLEW OUT WHITE while the other four
+  went BLACK. They are the two ends of one phase function, so one number moves both correctly
+  (far-field crushed weave 85.6→8.6%, lockfive 25.5→0.9%, waterfront 21.9→0.0%; gate p95
+  167.0→135.7). And it is principled, not a preference: **`cycles.volume_bounces == 0`** — this
+  bake does no multiple scattering, which is exactly what makes real forward-scattering haze
+  bright in back-scatter, so a negative g is the single-scatter stand-in for the bounces not
+  paid for. Stop at the **p05 KNEE** (−0.50 lifts only the median = the featureless-bank
+  direction). Grade a slab LADDER monotone in distance (mid 0.286 < far 0.480 < rim 0.594) or
+  you have rebuilt the inverted depth cue. THREE SMALLER RULES BANKED: **a fix can blind its own
+  instrument** — round 4's node-driven ramp made `dh_pixel_census` print `tau=driven` for the one
+  card in town whose tau was the question (now evaluated; and a ray that STOPS INSIDE a card now
+  closes its segment, which was free while the card stood in empty air and is the whole
+  measurement once geometry stands inside it); **a plate refused on the BEAUTY frame keeps its
+  OLD depth.png** (shelf-east's was a round behind — they are different artifacts and a
+  picture-derived rebake list governs only one); and **no solved camera may lie inside a volume
+  card** — `north-landing`'s eye is 2.88 m off the east card's near face, so a medium grown
+  toward the town would have milked its whole frame with nothing in the pipeline saying so.
 - **A WHOLE-TOWN DRAFT A/B IS A RULER, NOT A PREVIEW** (2026-08-08). `cine_bake --draft --res
   1008x576 --samples 28` is 15 s a frame, so all fifteen Dellhollow cameras cost four minutes,
   and **two independent draft renders of the SAME master differ by 0.01% of frame above 4/255

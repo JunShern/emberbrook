@@ -21000,3 +21000,204 @@ receipt.
 Cleanup: this lane's worktree removed, scratch `dist` and both `static-verify*.png` deleted,
 zero orphaned Chrome (`ppid 1` root check clean). The two stale worktrees from earlier
 sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+------------------------------------------------------------
+## 2026-08-08 — DELLHOLLOW GRAPHICS ROUND 6: FIVE PLATES WERE FIVE FINDINGS PRINTED UNDER
+## ONE PLATE'S SENTENCE. The structural fix is REFUSED with numbers; what ships is a PHASE
+## FUNCTION, and one number moves both ends of the problem
+
+Board with every table: docs/qa/dellhollow-graphics/index.html (round-6 section). Judge run
+docs/qa/redteam/run-20260808-round6phase/index.html. Commits 6b78129e (instruments + carrier
++ master), e18f4fc7 (the seven plates).
+
+ROUND 5 HANDED THIS OVER AS ROUND 6'S ONE ITEM: "`fx_haze_east` is still a CURTAIN AT ONE X
+(x 124..130), so aerial perspective is keyed to A PLANE IN THE WORLD rather than to distance
+along the view ... the judge's surviving frame-edge row has moved its subject to the card's
+own edge — gate, shelf-east, weave, waterfront, north-landing — TWO OF WHICH nobody has
+touched, which is good independent evidence the finding is real."
+
+REFUTATION 0, AND IT REORGANISES THE WHOLE ROUND. **THE FIVE PLATES ARE NOT ONE FINDING.**
+`scene_redteam`'s report DEDUPLICATES a checklist row across plates and prints the FIRST
+plate's wording over all of them, so "Dense cloud layer cuts off somewhat abruptly against
+cliff geometry" is gate's sentence and nobody else's. Read per plate out of the run's own
+`findings.json`, with each plate's own judge bbox put on the geometry by `dh_seam_census box`
+and its dark pixels named by a marched `dh_pixel_census` sample:
+
+  gate           WEAK     u 0.00..0.47 v 0.00..0.38   86.5% cliff_east_closure, meeting
+                          cliff_town_d/a at u 0.456..0.468.  THE HANDOVER'S MECHANISM, AND IT
+                          IS REAL: step across that seam on the shipped plate, v 0.00..0.10,
+                          closure L 153.0 vs town wall 79.2 -> |step| 73.8.
+  weave          WEAK     u 0.00..0.45 v 0.00..0.20   45.3% cliff_east_closure + 23.2%
+                          cliff_town_a/d.  NOT A STEP — 6.4 / 3.2 / 8.9 L across the same
+                          three bands.  It is DARKNESS (box L p50 19.2, 53.3% crushed), i.e.
+                          round 4's OWN named residual, not a card edge.
+  shelf-east     WEAK     u 0.50..1.00 v 0.00..0.30   cliff_far_toe 32.0% + cliff_far 27.5%
+                          + fx_far_town_base 20.0% + fx_ridge_upstream_mid 11.5% at 100-142 m.
+                          THE UPSTREAM FAR FIELD, 5.80% of frame crushed.  ZERO rays cross
+                          fx_haze_east.  Round 4 never reached it.
+  waterfront     FAILING  u 0.78..0.82 v 0.00..0.10   76.7% fx_ridge_upstream_mid at 109 m +
+                          23.3% fx_far_town_base at 101 m.  Upstream again, zero east rays.
+  north-landing  FAILING  u 0.00..0.34 v 0.00..0.075  91.7% `lf_ground` at 19-30 m, box L p50
+                          145.6; the crushed 4.9% is veg_lf_rimclump_23/13/28 | mat_leaf_autumn
+                          at 19-22 m, and NO VOLUME CARD IS CROSSED BY ANY RAY.  **REFUTED** —
+                          near-field foliage, not a far-field void.
+AND THE JUDGE'S SEVERITY IS INVERTED AGAINST THE MEASUREMENT: the two FAILING verdicts are
+aimed at 0.09% and 0.12% of frame; the WEAK one at shelf-east at 5.80%.
+
+TWO SILENCES IN THE INSTRUMENT, BOTH FIXED, AND THE FIRST IS A RULE.
+(1) **ROUND 4'S FIX MADE ROUND 4'S INSTRUMENT BLIND TO ROUND 4'S SUBJECT.** Making
+`mat_haze_east`'s density a node-driven world-Z ramp meant `dh_pixel_census` reported it as
+`density=driven` with TAU OMITTED — `cover` printed a dash and `frustum`'s tau column printed
+0.0000 for the one card in town whose tau was the whole question. It now recognises that exact
+chain (Geometry.Position -> SeparateXYZ.Z -> MapRange) and integrates at the segment midpoint,
+which is EXACT for a linear ramp.
+(2) A RAY THAT STOPS INSIDE A CARD NEVER CLOSED ITS SEGMENT, so it scored tau 0. Latent and
+free while the card was a 6 m curtain in empty air — and the entire measurement the moment a
+card is asked to become a medium that town geometry stands inside.
+Also added `--uv`, so a judge's own bbox can be sampled directly instead of hoping the dark
+thing inside it is the plate's largest crushed component (on waterfront it is not).
+
+REFUSED — THE STRUCTURAL FIX, AND IT FAILS IN TWO INDEPENDENT WAYS.  The obvious answer to
+"tau is keyed to a plane" is to give the medium DEPTH: move `fx_haze_east`'s far face from
+x = 130 to x = 140.5 (`cliff_east_closure`'s own front face), keep the near face where round
+4's spill census measured it, divide the density ramp by the same 2.75. Optical depth through
+a full crossing is then unchanged to the last digit (0.102 x 6.00 = 0.037091 x 16.50 =
+0.612000).
+  (a) **TAU IS NOT THE WASH.  A MEDIUM MOVED AGAINST A WALL MOVES INTO ITS SHADOW.**
+      Extinction is a property of the medium; IN-SCATTER is a property of how much light
+      reaches it.  Far field (>= 90 m), shipped -> slab:
+        gate     p05 14.7 -> 7.6   p50 47.7 -> 46.2
+        weave    p05 13.9 -> 4.5   p50 18.3 -> 7.8
+        lockfive p05 17.3 -> 6.1   p50 37.1 -> 38.0
+      It gives back most of what round 4 won.
+  (b) **AND IT DOES NOT REACH WHAT IT WAS AIMED AT.**  The grading was supposed to come from
+      cliff_town_a/_d standing inside the medium.  The town wall's luminance across the gate
+      seam moved 81.0 -> 79.5 / 67.8 -> 65.6 / 43.7 -> 42.5 — nothing.  Round 5's seam census
+      gives the wall-side hits as x 103.9..134.1 and the MASS of that is nearer than x = 124:
+      the medium was thickened past most of its own subject.  The gate step at v 0..0.10 did
+      fall 71.5 -> 38.2, but by killing the haze's brightness rather than lifting the wall's,
+      and the two bands below it got WORSE (41.7 -> 56.6, 26.5 -> 34.2).
+  `--x1` is kept in the carrier as the reproduction of that refusal.
+
+WHAT SHIPPED: **`mat_haze_east` anisotropy 0.30 -> -0.25.**  Tau untouched, scattering albedo
+untouched, geometry untouched — only the ANGULAR distribution of scattered light. The class is
+ATMOSPHERE, and inside atmosphere it is a PHASE FUNCTION and not a level. Two measured facts
+make it the right lever and neither is a preference:
+  (1) **DELLHOLLOW'S CAMERAS LOOK WITH THE SUN, NOT INTO IT.**  For a camera with the key
+      behind it the sun->medium->lens path is a near-180-degree turn, which a FORWARD-scattering
+      phase function suppresses.  `gate` is the one camera that looks across the rake — which
+      is exactly why gate was the one plate that BLEW OUT WHITE while the other four went
+      BLACK.  THEY ARE THE TWO ENDS OF ONE PHASE FUNCTION, so one number moves both, in
+      opposite directions, correctly.
+  (2) **`cycles.volume_bounces == 0`.**  This bake does no multiple volume scattering at all,
+      and multiple scattering is precisely what makes real forward-scattering haze bright in
+      back-scatter.  A negative g is the single-scatter stand-in for the bounces the render
+      does not pay for.
+THE SWEEP'S STOPPING RULE IS THE p05 KNEE (1008x576/28 spp, far-field mask; g = +0.30 shipped,
+0.00, -0.25, -0.50) — past -0.25 the black stops lifting and only the median keeps climbing,
+which is the "featureless bank" direction round 4 refused by eye:
+    gate      p05 14.7 / 17.2 / 18.0 / 17.8    p50 47.7 / 51.8 / 55.0 / 59.2
+    weave     p05 13.9 / 17.1 / 17.5 / 17.1    p50 18.3 / 24.4 / 27.5 / 30.0
+    lockfive  p05 17.3 / 22.8 / 25.0 / 25.8    p50 37.1 / 41.6 / 44.3 / 47.1
+    crossing  p05  8.0 / 10.2 / 11.7 / 11.3    p50 38.5 / 42.8 / 45.7 / 49.7
+
+AND THE UPSTREAM LADDER — **THE TOWN ALREADY KNEW THE ANSWER ON ONE SIDE.**  `fx_haze_mid`
+(24 m) / `fx_haze_far` (24 m) / `fx_haze_rim` (44 m) are ALREADY slabs at graded distance;
+their defect is LEVEL — a ray to the upstream far field at 100-140 m collected tau
+0.086 + 0.024 against the east closure's 0.612.  Shipped rung x3.5 / x2.5, chosen because it
+is the one that KEEPS THE LADDER MONOTONE IN DISTANCE: crosswise tau mid 0.286 < far 0.480 <
+rim 0.594.  The next rung up (x5.0 / x3.5) puts `far` at 0.672, PAST the rim behind it — an
+inverted depth cue, the very defect round 4 was fixing.  `fx_haze_rim` is untouched: 0 of
+138,240 rays across all fifteen cameras cross it, and raising something no camera can see is
+not a fix.
+
+A NEW GATE IN THE CARRIER, AND IT IS WHY THE SLAB WAS NEVER GROWN TOWARD THE TOWN: **NO SOLVED
+CAMERA MAY LIE INSIDE ANY CARD.**  `north-landing`'s eye sits at x = 121.12, 2.88 m in front of
+the east card's near face.  A medium grown toward the town would have swallowed that camera and
+washed its whole frame, and nothing else in the pipeline would have said so — the plate would
+simply have come back milky.  The margin is a DISTANCE TO THE BOX, not to the nearest face
+plane; every camera in this gorge is a hair from some card's z plane while being a hundred
+metres outside it in x.
+
+THE RECEIPT, full res, BEFORE extracted from git HEAD into a scratch bundle, both sides read
+through plate_probe's PLATE_BUNDLE override.  FAR = pixels the shipped depth.png reconstructs
+to >= 90 m (the upstream analogue of round 4's x >= 138 wall mask; it works in any direction):
+
+  plate           far%   far p05        far p50        far p95         far crushed      REST p50
+  gate           22.7   13.0 -> 15.1   47.5 -> 54.8   167.0 -> 135.7  12.0 ->  9.2   74.5 -> 74.6
+  weave           8.5   13.6 -> 17.4   18.3 -> 27.6    46.7 ->  55.0  85.6 ->  8.6   45.8 -> 45.7
+  crossing       12.8    7.8 -> 11.6   38.2 -> 45.5    50.7 ->  56.9  19.4 -> 13.9   41.2 -> 44.3
+  lockfive       20.5   17.2 -> 25.2   36.6 -> 44.0    53.5 ->  59.9  25.5 ->  0.9   23.0 -> 23.8
+  shelf-east     12.4    1.0 ->  3.6   11.3 -> 13.7    89.4 -> 110.6  47.7 -> 38.2  102.4 -> 102.5
+  waterfront      1.7   17.6 -> 50.3   67.8 -> 87.8    98.5 -> 112.6  21.9 ->  0.0  111.8 -> 111.8
+  north-landing   8.8    1.6 ->  4.3   29.6 -> 42.3   139.0 -> 139.7  25.5 -> 21.7   97.9 ->  97.8
+
+Confinement holds: REST p50 moves <= 0.9 on six of seven.  CROSSING IS THE EXCEPTION AT +3.1
+and it is named rather than smoothed — 18.1% of that frame's rays cross the east card and some
+of what they land on is nearer than the 90 m cut, so part of its "near field" is behind the
+card by construction.
+
+COST, MEASURED, because the brief was right that a volumetric can multiply a 200 s plate: A
+PHASE FUNCTION IS FREE AND THE SLAB WOULD NOT HAVE BEEN.  Full-res beauty, 1-wide serial,
+against round 5's times for the same cameras: lockfive 240.7 -> 247.9 s (+3.0%), gate 211.5 ->
+241.7, crossing 202.9 -> 208.8, weave 176.0 -> 194.1; shelf-east 166.2, north-landing 222.4,
+waterfront 239.2 (no round-5 baseline — refused there).  Seven plates, 1520.3 s of beauty.
+`memory_pressure -Q` read 88% free before every spawn; no second Blender ran at any point.
+
+REBAKE LIST FROM RENDERED FRAMES (whole-town draft A/B, 15 frames in 3.8 min; noise floor
+0.010% / 0.000%): lockfive 20.336/3.654 · gate 16.230/8.580 · crossing 15.572/2.284 · weave
+7.807/2.758 · shelf-east 6.955/5.283 · north-landing 4.024/2.219 · waterfront 2.063/1.711.
+REFUSED WITH A NUMBER, all <= 0.007% above 12/255: cottage 0.133/0.002, boatyard 0.076/0.007,
+shelf-west 0.062/0.002, lockhead 0.056/0.001, quay-west 0.049/0.002, loop-stairs 0.041/0.002,
+deep-stairs 0.039/0.002, fishdock 0.035/0.000.
+**AND THE LATENT TEXTURE REPAIR STAYS LATENT, DELIBERATELY**: lockhead and loop-stairs carry
+round 5's `t3_rock_projection` repair in the MASTER and on no plate; both are refused here, so
+this round does not ship it and it is still owed.
+
+COLOUR-ONLY, PROVEN BY ARTIFACT: `depth.png` is BYTE-IDENTICAL against git HEAD on six of the
+seven.  **shelf-east differs on 25 pixels of 1,032,192 (0.0024%), max 1 LSB of the packed
+24-bit depth** — round-off, and the reason it moved at all is worth keeping: SHELF-EAST'S LAST
+BAKE WAS 2026-08-06, BEFORE ROUND 5 MOVED THE TOWN WALL.  **A PLATE REFUSED ON THE BEAUTY FRAME
+KEEPS ITS OLD DEPTH MAP** — they are different artifacts and a picture-derived rebake list only
+governs one of them.  `del-cine/scene.glb` came out of this bake UNMODIFIED IN GIT, which is
+the collision receipt: no geometry moved, no bundle is owed, town_export not implicated.
+
+GATES: cine_test 635 ok / 1 failed / 2 soft warnings — the PRE-ATTRIBUTED
+deep-stairs<->waterfront seam red, same {"fired":0,"expected":10} signature, i.e. the
+Dellhollow baseline EXACTLY · slice_test 776/0 · findability_test 69/0 with 11 warnings ·
+routes_derive --check clean, 15 shots.  Identical to round 5's receipt in every figure.
+
+THE VERDICT (scene_redteam --mode both, pinned gemini-3.6-flash, 42 calls, 0 errors,
+run-20260808-round6phase, seven plates, against run-20260808-170205-calib).  THE CLAIM UNDER
+TEST WAS WHETHER THE FRAME-EDGE ROW CLEARS ON THE FIVE:
+  waterfront     FAILING -> **CONVINCING**.  CLEARED.
+  north-landing  FAILING -> **CONVINCING**.  CLEARED.
+  gate           WEAK -> WEAK, SUBJECT MOVED OFF THE HAZE EDGE: "distant cliff faces LACK
+                 DETAIL and fade into simple background haze" — round 4's own named veining
+                 residual, now the loudest thing in that box.
+  shelf-east     WEAK -> WEAK, subject moved off "flat and dark" onto "simplified and
+                 UNTEXTURED", and its bbox moved from u 0.50..1.00 v 0.00..0.30 to
+                 u 0.00..0.26 v 0.50..0.99 — a different part of the frame.
+  weave          WEAK -> FAILING, subject moved to u 0.00..0.04 v 0.39..0.52: **47.0%
+                 `water_pool-downstream | m_water` at 81-97 m.**  The "plain blue void" IS THE
+                 WATER SURFACE.
+  (also) lockfive CONVINCING -> FAILING at u 0.00..0.26 v 0.44..0.58: 66.0% `m_water` at
+  57-79 m + 15.6% mat_blackstone spill bays at 36 m.  Water again.  And crossing CONVINCING ->
+  FAILING on the untextured white wedge at u 0.92..1.00 v 0.76..1.00, which is PRE-EXISTING
+  (filed twice by run-20260806-1, before any haze round).
+"Dense cloud layer": 1 mention on these seven plates in round 5, ZERO in round 6.  "Black
+void": 4 -> 1.  Survivors on the seven plates 59 -> 49.
+
+NAMED FOR ROUND 7, MEASURED RATHER THAN LEFT AS A PERCEPTION.
+(1) **THE FAR FIELD IS NOW LEGIBLE ENOUGH TO SHOW THAT IT IS GREYBOX.**  fx_ridge_upstream /
+_mid / fx_ridge_far_west wear `mat_rock_far` and fx_far_town_base / _silhouette wear
+`mat_silhouette`; the lift put 38.2% (was 47.7%) of shelf-east's far field above the crush
+floor and the judge immediately called it "simplified and untextured".  LIFTING A BLACK SHAPE
+REVEALS WHAT SHAPE IT IS — the same trade round 4 recorded in the other direction.
+(2) **THE FRAME-EDGE QUESTION HAS MOVED ONTO `m_water`** on weave and lockfive — 47% and 66%
+of those boxes, at 57-97 m, reading as "a plain blue void" and "a flat dark void".  Dellhollow's
+water AT DISTANCE is the next subject, and it is the class Emberbrook's water lane already has
+instruments for.
+
+OWED, NAMED: a deploy.  These seven plates supersede five of round 5's and two nobody had
+touched since 2026-08-06; this lane did not race the deploy lane for it.

@@ -967,5 +967,240 @@ unmoved.</div>
 <div class="pair"><figure><img src="before6/crossing.jpg"><figcaption>crossing — before</figcaption></figure><figure><img src="after6/crossing.jpg"><figcaption>crossing — after</figcaption></figure></div>
 <div class="pair"><figure><img src="before6/lockfive.jpg"><figcaption>lockfive — before</figcaption></figure><figure><img src="after6/lockfive.jpg"><figcaption>lockfive — after</figcaption></figure></div>
 
+
+<h1 style="margin-top:3em">Dellhollow graphics fix — round 6 <span class="note">(2026-08-08 · five plates, five findings; and a phase function)</span></h1>
+<p class="note">Round 5 named one item and five plates for round 6. <b>The five plates were
+never one finding</b> — the report deduplicates a checklist row under the first plate's
+wording. One of the five is refuted outright, two are a defect on the opposite side of the
+gorge that no round has touched, and the structural fix the item implies is <b>refused with
+numbers</b>. What ships is one number that moves both ends of the problem at once.
+Commits 6b78129e &middot; e18f4fc7.</p>
+
+<h2>The claim, verbatim from the round-5 handover</h2>
+<div class="claim"><code>fx_haze_east</code> is still a <b>CURTAIN AT ONE X</b> (a 6 m box at
+x 124..130), so aerial perspective is keyed to <b>a plane in the world</b> rather than to
+distance along the view. The judge's surviving frame-edge row has moved its subject to
+<b>the card's own edge</b>: "dense cloud layer cuts off somewhat abruptly against cliff
+geometry" on <b>gate, shelf-east, weave, waterfront, north-landing</b> — two of which nobody
+has touched.</div>
+
+<h2>Refutation 0 — the five plates are five different answers, printed under one sentence</h2>
+<div class="meas">The row is a CHECKLIST question asked of every plate ("the world at the frame
+edges"), and the report merges its survivors under the first plate's text. Per plate, out of
+the run's own <code>findings.json</code>, with each judge bbox put on the geometry by
+<code>dh_seam_census box</code> (120-ray grid) and its dark pixels named by a marched
+<code>dh_pixel_census</code> sample:
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 12px 2px 0">plate</td><td style="padding:2px 12px 2px 0">verdict</td><td style="padding:2px 12px 2px 0">its own bbox</td><td style="padding:2px 12px 2px 0">what is actually in the box</td><td>reading</td></tr>
+<tr><td><b>gate</b></td><td>WEAK</td><td>u 0.00..0.47 v 0.00..0.38</td><td>86.5% <code>cliff_east_closure</code>, meeting <code>cliff_town_d/a</code> at u 0.456..0.468</td><td><b>the handover's mechanism, and it is real</b></td></tr>
+<tr><td><b>weave</b></td><td>WEAK</td><td>u 0.00..0.45 v 0.00..0.20</td><td>45.3% <code>cliff_east_closure</code> + 23.2% <code>cliff_town_a/d</code>; crushed sample 71.5% <code>cliff_east_closure | mat_rock_gorgewall</code> at 110–120 m</td><td>DARKNESS, not an edge — round 4's own named residual</td></tr>
+<tr><td><b>shelf-east</b></td><td>WEAK</td><td>u 0.50..1.00 v 0.00..0.30</td><td><code>cliff_far_toe</code> 32.0% + <code>cliff_far</code> 27.5% + <code>fx_far_town_base</code> 20.0% + <code>fx_ridge_upstream_mid</code> 11.5% at 100–142 m</td><td>THE UPSTREAM FAR FIELD. Zero rays cross <code>fx_haze_east</code></td></tr>
+<tr><td><b>waterfront</b></td><td>FAILING</td><td>u 0.78..0.82 v 0.00..0.10</td><td>76.7% <code>fx_ridge_upstream_mid</code> at 109 m + 23.3% <code>fx_far_town_base</code> at 101 m</td><td>upstream again. Zero rays cross <code>fx_haze_east</code></td></tr>
+<tr><td><b>north-landing</b></td><td>FAILING</td><td>u 0.00..0.34 v 0.00..0.075</td><td>91.7% <code>lf_ground</code> at 19–30 m, box L p50 <b>145.6</b>; the crushed 4.9% is <code>veg_lf_rimclump_23/13/28 | mat_leaf_autumn</code> at <b>19–22 m</b>, and <b>no volume card is crossed by any ray</b></td><td><b>REFUTED</b> — near-field foliage, not a far-field void</td></tr>
+</table>
+And the judge's severity is inverted against the measurement: the two <b>FAILING</b> verdicts
+are aimed at <b>0.09%</b> and <b>0.12%</b> of frame, the <b>WEAK</b> one at shelf-east at
+<b>5.80%</b>.</div>
+
+<h2>The instrument had gone blind to its own subject</h2>
+<div class="meas">Round 4 made <code>mat_haze_east</code>'s density a node-driven world-Z ramp,
+and from that moment <code>dh_pixel_census</code> — the tool written to measure that card —
+reported it as <code>density=driven</code> with <b>tau omitted</b>: <code>cover</code> printed
+a dash and the tau column printed 0.0000 for the one card in town whose tau was the whole
+question. Fixed by recognising that exact chain (Geometry.Position &rarr; SeparateXYZ.Z &rarr;
+MapRange) and integrating it at the segment midpoint, which is EXACT for a linear ramp.
+<br>And a second silence in the same marcher, latent until this round: <b>a ray that stops
+INSIDE a card never closed its segment</b>, so it scored tau 0. With a 6 m curtain standing in
+empty air nothing ever terminated inside one and it cost nothing — the moment a card is asked
+to become a medium that town geometry stands inside, that partial path IS the measurement.
+Both fixed in <code>tools/dh_pixel_census.py</code>; <code>--uv</code> added so a judge's own
+bbox can be sampled directly.</div>
+
+<h2>REFUSED — the structural fix, and it fails in two independent ways</h2>
+<div class="meas">The obvious answer to "tau is keyed to a plane" is to give the medium DEPTH:
+move <code>fx_haze_east</code>'s far face from x = 130 to x = 140.5 (<code>cliff_east_closure</code>'s
+own front face), keep the near face where round 4's spill census measured it, and divide the
+density ramp by the same 2.75. <b>Optical depth through a full crossing is then unchanged to
+the last digit</b> (0.102 &times; 6.00 = 0.037091 &times; 16.50 = 0.612000).
+<br><b>(1) TAU IS NOT THE WASH. A MEDIUM MOVED AGAINST A WALL MOVES INTO ITS SHADOW.</b>
+Extinction is a property of the medium; in-scatter is a property of how much light reaches it.
+Far-field luminance (pixels &ge; 90 m by the shipped <code>depth.png</code>), shipped &rarr; slab:
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">plate</td><td style="padding:2px 14px 2px 0">far p05</td><td style="padding:2px 14px 2px 0">far p50</td><td>far crushed</td></tr>
+<tr><td>gate</td><td>14.7 &rarr; <b>7.6</b></td><td>47.7 &rarr; 46.2</td><td>12.8% &rarr; 15.3%</td></tr>
+<tr><td>weave</td><td>13.9 &rarr; <b>4.5</b></td><td>18.3 &rarr; <b>7.8</b></td><td>83.5% &rarr; 83.3%</td></tr>
+<tr><td>lockfive</td><td>17.3 &rarr; <b>6.1</b></td><td>37.1 &rarr; 38.0</td><td>25.8% &rarr; 26.6%</td></tr>
+</table>
+It gives back most of what round 4 won.
+<br><b>(2) AND IT DOES NOT REACH THE THING IT WAS AIMED AT.</b> The grading was supposed to come
+from <code>cliff_town_a</code>/<code>_d</code> standing inside the medium. The town wall's
+measured luminance across the gate seam moved <b>81.0 &rarr; 79.5 / 67.8 &rarr; 65.6 / 43.7
+&rarr; 42.5</b> — nothing. Round 5's seam census gives the wall-side hits as x 103.9..134.1 and
+the mass of that is <b>nearer than x = 124</b>: the medium was thickened past most of its own
+subject. The gate step at v 0..0.10 did fall 71.5 &rarr; 38.2, but by killing the haze's
+brightness rather than lifting the wall's — and the two bands below it got WORSE
+(41.7 &rarr; 56.6, 26.5 &rarr; 34.2). <code>--x1</code> is kept in the carrier as the
+reproduction of that refusal.</div>
+
+<h2>What shipped — a PHASE FUNCTION, and one number moves both ends</h2>
+<div class="verdict"><b><code>mat_haze_east</code> anisotropy 0.30 &rarr; &minus;0.25.</b> Tau
+untouched, scattering albedo untouched, geometry untouched: only the ANGULAR distribution of
+scattered light changes. Two measured facts make it the right lever, and neither is a preference:
+<br><b>(1) Dellhollow's cameras look WITH the sun, not into it.</b> For a camera with the key
+behind it the sun&rarr;medium&rarr;lens path is a near-180&deg; turn, which a forward-scattering
+phase function suppresses. <code>gate</code> is the one camera that looks across the rake —
+which is exactly why gate was the one plate that blew out white while the other four went
+black. <b>They are the two ends of ONE phase function</b>, so one number moves both, in
+opposite directions, correctly.
+<br><b>(2) <code>cycles.volume_bounces == 0</code>.</b> This bake does no multiple volume
+scattering at all, and multiple scattering is precisely what makes real forward-scattering haze
+bright in back-scatter. A negative g is the single-scatter stand-in for the bounces the render
+does not pay for.</div>
+
+<h2>The sweep, and its stopping rule is the p05 KNEE</h2>
+<div class="meas">1008&times;576 / 28 spp, read through the shipped plate's own far-field mask
+(&ge; 90 m). Past &minus;0.25 the black stops lifting and only the median keeps climbing — the
+"featureless bank" direction round 4 refused by eye.
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">g</td><td style="padding:2px 14px 2px 0">gate p05 / p50 / p95</td><td style="padding:2px 14px 2px 0">weave p05 / p50</td><td style="padding:2px 14px 2px 0">lockfive p05 / p50</td><td>crossing p05 / p50</td></tr>
+<tr><td>+0.30 (shipped)</td><td>14.7 / 47.7 / 166.0</td><td>13.9 / 18.3</td><td>17.3 / 37.1</td><td>8.0 / 38.5</td></tr>
+<tr><td>0.00</td><td>17.2 / 51.8 / 144.6</td><td>17.1 / 24.4</td><td>22.8 / 41.6</td><td>10.2 / 42.8</td></tr>
+<tr><td><b>&minus;0.25</b></td><td><b>18.0 / 55.0 / 137.1</b></td><td><b>17.5 / 27.5</b></td><td><b>25.0 / 44.3</b></td><td><b>11.7 / 45.7</b></td></tr>
+<tr><td>&minus;0.50</td><td>17.8 / 59.2 / 136.3</td><td>17.1 / 30.0</td><td>25.8 / 47.1</td><td>11.3 / 49.7</td></tr>
+</table>
+Far-field crushed at &minus;0.25: gate 12.8% &rarr; <b>8.2%</b>, weave 83.5% &rarr; <b>8.8%</b>,
+lockfive 25.8% &rarr; <b>1.1%</b>, crossing 19.1% &rarr; <b>14.5%</b>. Near field unmoved
+(REST p50 77.4 &rarr; 77.4 / 49.2 &rarr; 49.1 / 24.5 &rarr; 25.1).</div>
+
+<h2>And the upstream ladder — the town already knew the answer on one side</h2>
+<div class="meas"><code>fx_haze_mid</code> (24 m) / <code>fx_haze_far</code> (24 m) /
+<code>fx_haze_rim</code> (44 m) are ALREADY slabs at graded distance. Their defect is LEVEL: a
+ray to the upstream far field at 100–140 m collected tau 0.086 + 0.024 against the east
+closure's 0.612. Shipped rung <b>&times;3.5 / &times;2.5</b>, chosen because it is the one that
+KEEPS THE LADDER MONOTONE IN DISTANCE — crosswise tau <b>mid 0.286 &lt; far 0.480 &lt; rim
+0.594</b>. The next rung up (&times;5.0 / &times;3.5) puts <code>far</code> at 0.672, PAST the
+rim behind it, which is an inverted depth cue again: the very defect round 4 was fixing.
+<code>fx_haze_rim</code> is untouched — <b>0 of 138,240 rays across all fifteen cameras cross
+it</b>, and raising something no camera can see is not a fix.
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 14px 2px 0">far field (&ge;90 m)</td><td style="padding:2px 14px 2px 0">shipped</td><td style="padding:2px 14px 2px 0">&times;2.0/&times;1.5</td><td style="padding:2px 14px 2px 0">&times;3.5/&times;2.5</td><td>&times;5.0/&times;3.5</td></tr>
+<tr><td>shelf-east p05 / p50 / crushed</td><td>1.0 / 11.4 / 64.4%</td><td>2.3 / 12.4 / 60.2%</td><td><b>3.6 / 13.5 / 56.2%</b></td><td>4.9 / 14.3 / 54.6%</td></tr>
+<tr><td>waterfront p05 / p50 / crushed</td><td>17.8 / 71.2 / 22.9%</td><td>33.1 / 80.2 / 0.0%</td><td><b>50.5 / 91.4 / 0.0%</b></td><td>64.6 / 100.7 / 0.0%</td></tr>
+<tr><td>north-landing p05 / p50 / crushed</td><td>2.3 / 31.9 / 27.4%</td><td>3.6 / 40.7 / 25.8%</td><td><b>4.9 / 46.3 / 24.2%</b></td><td>6.0 / 50.3 / 24.0%</td></tr>
+<tr><td colspan="5" class="note">REST p50 (the near field, the confinement check): 104.1 &rarr; 104.0 &middot; 112.4 &rarr; 112.4 &middot; 99.3 &rarr; 99.0</td></tr>
+</table></div>
+
+<h2>The receipt — full res, BEFORE extracted from git HEAD, both sides read by ONE instrument</h2>
+<div class="meas">Far field = pixels the shipped <code>depth.png</code> reconstructs to &ge; 90 m
+from the eye (the upstream analogue of round 4's "world x &ge; 138" wall mask, and it works in
+any direction). REST = everything nearer, the confinement check.
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 12px 2px 0">plate</td><td style="padding:2px 12px 2px 0">far%</td><td style="padding:2px 12px 2px 0">far p05</td><td style="padding:2px 12px 2px 0">far p50</td><td style="padding:2px 12px 2px 0">far p95</td><td style="padding:2px 12px 2px 0">far crushed</td><td style="padding:2px 12px 2px 0">REST p50</td><td>far 5&times;5 sd</td></tr>
+<tr><td>gate</td><td>22.7%</td><td>13.0 &rarr; <b>15.1</b></td><td>47.5 &rarr; <b>54.8</b></td><td>167.0 &rarr; <b>135.7</b></td><td>12.0% &rarr; <b>9.2%</b></td><td>74.5 &rarr; 74.6</td><td>2.04 &rarr; 1.95</td></tr>
+<tr><td>weave</td><td>8.5%</td><td>13.6 &rarr; <b>17.4</b></td><td>18.3 &rarr; <b>27.6</b></td><td>46.7 &rarr; 55.0</td><td>85.6% &rarr; <b>8.6%</b></td><td>45.8 &rarr; 45.7</td><td>0.52 &rarr; 0.56</td></tr>
+<tr><td>crossing</td><td>12.8%</td><td>7.8 &rarr; <b>11.6</b></td><td>38.2 &rarr; <b>45.5</b></td><td>50.7 &rarr; 56.9</td><td>19.4% &rarr; <b>13.9%</b></td><td>41.2 &rarr; <b>44.3</b></td><td>1.53 &rarr; 1.37</td></tr>
+<tr><td>lockfive</td><td>20.5%</td><td>17.2 &rarr; <b>25.2</b></td><td>36.6 &rarr; <b>44.0</b></td><td>53.5 &rarr; 59.9</td><td>25.5% &rarr; <b>0.9%</b></td><td>23.0 &rarr; 23.8</td><td>1.58 &rarr; 1.47</td></tr>
+<tr><td>shelf-east</td><td>12.4%</td><td>1.0 &rarr; <b>3.6</b></td><td>11.3 &rarr; <b>13.7</b></td><td>89.4 &rarr; 110.6</td><td>47.7% &rarr; <b>38.2%</b></td><td>102.4 &rarr; 102.5</td><td>1.23 &rarr; 1.26</td></tr>
+<tr><td>waterfront</td><td>1.7%</td><td>17.6 &rarr; <b>50.3</b></td><td>67.8 &rarr; <b>87.8</b></td><td>98.5 &rarr; 112.6</td><td>21.9% &rarr; <b>0.0%</b></td><td>111.8 &rarr; 111.8</td><td>3.08 &rarr; 2.50</td></tr>
+<tr><td>north-landing</td><td>8.8%</td><td>1.6 &rarr; <b>4.3</b></td><td>29.6 &rarr; <b>42.3</b></td><td>139.0 &rarr; 139.7</td><td>25.5% &rarr; <b>21.7%</b></td><td>97.9 &rarr; 97.8</td><td>3.17 &rarr; 3.16</td></tr>
+</table>
+Confinement holds: REST p50 moves &le; 0.9 on six of seven. <b>crossing is the exception at
++3.1</b> and it is named rather than smoothed — 18.1% of that frame's rays cross the east card
+and some of what they land on is nearer than the 90 m cut, so part of its "near field" is behind
+the card by construction.</div>
+
+<h2>Cost, measured, because a volumetric can multiply a 200 s plate</h2>
+<div class="meas">A PHASE FUNCTION IS FREE AND THE SLAB WOULD NOT HAVE BEEN. Full-res beauty,
+1-wide serial, against round 5's own times for the same cameras:
+<b>lockfive 240.7 &rarr; 247.9 s</b> (+3.0%), <b>gate 211.5 &rarr; 241.7 s</b>,
+<b>crossing 202.9 &rarr; 208.8 s</b>, <b>weave 176.0 &rarr; 194.1 s</b>; shelf-east 166.2,
+north-landing 222.4, waterfront 239.2 (no round-5 baseline — they were refused). Seven plates,
+<b>1520.3 s</b> of beauty. <code>memory_pressure -Q</code> read 88% free before every spawn and
+no second Blender ran at any point; the user was at the machine.</div>
+
+<h2>It is colour-only, and the ARTIFACT says so rather than the argument</h2>
+<div class="meas"><code>depth.png</code> is <b>byte-identical against git HEAD on six of the
+seven</b> plates (<code>cine_bake</code> deletes every haze/fog/smoke object before the depth
+pass, so it cannot move). <b>shelf-east differs on 25 pixels of 1,032,192 (0.0024%), maximum
+1 LSB of the packed 24-bit depth</b> — round-off, not geometry, and the reason it moved at all
+is worth keeping: <b>shelf-east's last bake was 2026-08-06, i.e. BEFORE round 5 moved the town
+wall.</b> A plate refused on the BEAUTY frame keeps its OLD DEPTH MAP, and those are different
+artifacts. And <code>del-cine/scene.glb</code> came out of this bake <b>unmodified in git</b>,
+which is the collision receipt: no geometry moved, so no bundle is owed and
+<code>town_export</code> is not implicated.</div>
+
+<h2>Gates</h2>
+<div class="meas"><code>cine_test</code> <b>635 ok / 1 failed / 2 soft warnings</b> — the
+PRE-ATTRIBUTED deep-stairs&harr;waterfront seam red, same
+<code>{"fired":0,"expected":10}</code> signature, i.e. the Dellhollow baseline exactly &middot;
+<code>slice_test</code> <b>776/0</b> &middot; <code>findability_test</code> <b>69/0</b>, 11
+warnings &middot; <code>routes_derive --check</code> clean, 15 shots. Identical to round 5's
+receipt in every figure.</div>
+
+<h2>Blind verdict — round 6</h2>
+<div class="verdict"><code>scene_redteam --mode both</code>, pinned gemini-3.6-flash, 42 calls,
+0 errors, <code>run-20260808-round6phase</code>, on the seven rebaked plates, against round 5's
+<code>run-20260808-170205-calib</code>. THE CLAIM UNDER TEST: does the frame-edge row clear on
+the five plates round 5 named?
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 12px 2px 0">plate</td><td style="padding:2px 12px 2px 0">round 5</td><td style="padding:2px 12px 2px 0">round 6</td><td>and what its subject is now</td></tr>
+<tr><td><b>waterfront</b></td><td>FAILING</td><td><b>CONVINCING</b></td><td>CLEARED — "extend naturally to all four frame edges"</td></tr>
+<tr><td><b>north-landing</b></td><td>FAILING</td><td><b>CONVINCING</b></td><td>CLEARED — "extend seamlessly to every edge"</td></tr>
+<tr><td><b>gate</b></td><td>WEAK</td><td>WEAK</td><td>subject moved OFF the haze edge: "distant cliff faces LACK DETAIL and fade into simple background haze" — round 4's own named veining residual, now the loudest thing in that box</td></tr>
+<tr><td><b>shelf-east</b></td><td>WEAK</td><td>WEAK</td><td>subject moved off "flat and dark" onto "simplified and UNTEXTURED", and its bbox moved from u 0.50..1.00 v 0.00..0.30 to u 0.00..0.26 v 0.50..0.99 — a different part of the frame</td></tr>
+<tr><td><b>weave</b></td><td>WEAK</td><td>FAILING</td><td>subject moved to u 0.00..0.04, v 0.39..0.52 — <b>47.0% <code>water_pool-downstream | m_water</code> at 81–97 m</b>. The "plain blue void" is the WATER SURFACE</td></tr>
+<tr><td>lockfive</td><td>CONVINCING</td><td>FAILING</td><td>u 0.00..0.26, v 0.44..0.58 — <b>66.0% <code>m_water</code> at 57–79 m</b> + 15.6% <code>mat_blackstone</code> spill bays at 36 m. Water again</td></tr>
+<tr><td>crossing</td><td>CONVINCING</td><td>FAILING</td><td>u 0.92..1.00, v 0.76..1.00 — the untextured white wedge, <b>PRE-EXISTING</b> (filed twice by <code>run-20260806-1</code>, before any haze round)</td></tr>
+</table>
+<b>"Dense cloud layer": 1 mention on these seven plates in round 5, ZERO in round 6. "Black
+void": 4 &rarr; 1.</b> Survivors on the seven plates 59 &rarr; 49. Two of the five cleared
+outright; on the other three the atmosphere finding is gone and what the question now lands on
+is <b>the water surface</b> and <b>untextured backdrop cards</b> — both measured, both real,
+neither atmosphere. A defect you can see beats one a void was concealing, twice over.</div>
+
+<h2>Named for round 7, measured rather than left as a perception</h2>
+<div class="meas"><b>(1) THE FAR FIELD IS NOW LEGIBLE ENOUGH TO SHOW THAT IT IS GREYBOX.</b>
+<code>fx_ridge_upstream</code> / <code>_mid</code> / <code>fx_ridge_far_west</code> wear
+<code>mat_rock_far</code> and <code>fx_far_town_base</code> / <code>_silhouette</code> wear
+<code>mat_silhouette</code>; the lift put 38.2% (was 47.7%) of shelf-east's far field above the
+crush floor and the judge immediately called it "simplified and untextured". Lifting a black
+shape reveals what shape it is. <b>(2) THE FRAME-EDGE QUESTION HAS MOVED ONTO
+<code>m_water</code></b> on weave and lockfive — 47% and 66% of those boxes, at 57–97 m, read
+as a "plain blue void" / "flat dark void". Dellhollow's water at distance is the next subject,
+and it is the class Emberbrook's own water lane already has instruments for.</div>
+
+<h2>Rebake list, derived from rendered frames</h2>
+<div class="meas">Whole-town draft A/B (<code>cine_bake --draft --res 1008x576 --samples 28</code>,
+15 frames in 3.8 min), % of frame changed above 4/255 and above 12/255, against the ratified
+0.010% / 0.000% noise floor:
+<table style="border-collapse:collapse;font-size:12.5px;margin:.5em 0">
+<tr style="color:#8a919c"><td style="padding:2px 16px 2px 0">rebaked</td><td style="padding:2px 16px 2px 0">&gt;4/255</td><td style="padding:2px 16px 2px 0">&gt;12/255</td><td style="padding:2px 16px 2px 0">refused with a number</td><td style="padding:2px 16px 2px 0">&gt;4/255</td><td>&gt;12/255</td></tr>
+<tr><td>lockfive</td><td>20.336%</td><td>3.654%</td><td>cottage</td><td>0.133%</td><td>0.002%</td></tr>
+<tr><td>gate</td><td>16.230%</td><td>8.580%</td><td>boatyard</td><td>0.076%</td><td>0.007%</td></tr>
+<tr><td>crossing</td><td>15.572%</td><td>2.284%</td><td>shelf-west</td><td>0.062%</td><td>0.002%</td></tr>
+<tr><td>weave</td><td>7.807%</td><td>2.758%</td><td>lockhead</td><td>0.056%</td><td>0.001%</td></tr>
+<tr><td>shelf-east</td><td>6.955%</td><td>5.283%</td><td>quay-west</td><td>0.049%</td><td>0.002%</td></tr>
+<tr><td>north-landing</td><td>4.024%</td><td>2.219%</td><td>loop-stairs</td><td>0.041%</td><td>0.002%</td></tr>
+<tr><td>waterfront</td><td>2.063%</td><td>1.711%</td><td>deep-stairs</td><td>0.039%</td><td>0.002%</td></tr>
+<tr><td></td><td></td><td></td><td>fishdock</td><td>0.035%</td><td>0.000%</td></tr>
+</table>
+The eight refused are all <b>&le; 0.007% above 12/255</b> — three orders under the seven baked
+(1.7–8.6%) — i.e. a change no pixel shows at the visible threshold.
+<br><b>AND THE LATENT TEXTURE REPAIR STAYS LATENT, DELIBERATELY.</b>
+<code>lockhead</code> and <code>loop-stairs</code> carry round 5's <code>t3_rock_projection</code>
+repair in the MASTER and not on any plate; both are refused here at 0.056% / 0.041%, so
+<b>this round does not ship it</b> and it is still owed.</div>
+
+<h2>The seven rebaked plates — before / after</h2>
+<p class="note">Left: <code>before7/</code> (extracted from git HEAD, i.e. the round-5 plates). Right: live.</p>
+<figure style="margin:1em 0"><img src="crop-gate-r6.jpg" style="width:100%;border:1px solid #333"><figcaption>gate at NATIVE resolution — before (left) / after (right), u 0.30..0.55, v 0.00..0.32. The blown-out white bank with a hard boundary becomes an even haze with the wall's strata visible through it.</figcaption></figure>
+<div class="pair"><figure><img src="before7/gate.jpg"><figcaption>gate — before</figcaption></figure><figure><img src="after7/gate.jpg"><figcaption>gate — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before7/weave.jpg"><figcaption>weave — before</figcaption></figure><figure><img src="after7/weave.jpg"><figcaption>weave — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before7/lockfive.jpg"><figcaption>lockfive — before</figcaption></figure><figure><img src="after7/lockfive.jpg"><figcaption>lockfive — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before7/crossing.jpg"><figcaption>crossing — before</figcaption></figure><figure><img src="after7/crossing.jpg"><figcaption>crossing — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before7/shelf-east.jpg"><figcaption>shelf-east — before</figcaption></figure><figure><img src="after7/shelf-east.jpg"><figcaption>shelf-east — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before7/waterfront.jpg"><figcaption>waterfront — before</figcaption></figure><figure><img src="after7/waterfront.jpg"><figcaption>waterfront — after</figcaption></figure></div>
+<div class="pair"><figure><img src="before7/north-landing.jpg"><figcaption>north-landing — before</figcaption></figure><figure><img src="after7/north-landing.jpg"><figcaption>north-landing — after</figcaption></figure></div>
+
 </body>
 </html>
