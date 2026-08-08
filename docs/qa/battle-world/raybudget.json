@@ -1,0 +1,74 @@
+{
+  "at": "2026-08-08T22:59:02.091Z",
+  "induced": null,
+  "ceiling": 9761,
+  "kMsPerTest": 0.030375,
+  "baseStageMs": 407,
+  "census": {
+    "scene": "ow-valley",
+    "softwareGL": false,
+    "scatterH": 1.5,
+    "occluders": 51,
+    "dropped": [
+      {
+        "name": "veg_owd_short",
+        "n": 60590,
+        "h": 0.38
+      },
+      {
+        "name": "veg_owd_med",
+        "n": 56126,
+        "h": 0.53
+      },
+      {
+        "name": "veg_owd_seed",
+        "n": 16017,
+        "h": 0.74
+      },
+      {
+        "name": "veg_owd_weed",
+        "n": 2179,
+        "h": 0.27
+      },
+      {
+        "name": "veg_owd_sedge",
+        "n": 939,
+        "h": 0.64
+      },
+      {
+        "name": "veg_owd_flower",
+        "n": 1505,
+        "h": 0.24
+      }
+    ],
+    "W": 2,
+    "kept": [
+      {
+        "name": "__contact_shadow",
+        "n": 1,
+        "tris": 2,
+        "inst": false,
+        "bvh": false,
+        "w": 2
+      }
+    ],
+    "instMeshes": 6,
+    "instTotal": 137356,
+    "tallestPieceH": 0.742,
+    "owd": {
+      "draws": 6,
+      "blades": 151140,
+      "tris": 1040096,
+      "hMin": 0.105,
+      "hMax": 0.36
+    },
+    "usPerRay": 70.8
+  },
+  "verdict": {
+    "ok": true,
+    "state": "GREEN",
+    "W": 2,
+    "impliedStageMs": 407,
+    "why": "W = 2 / 9761 (0.02% of budget, 9759 to spare); implied worst staging solve ~407 ms"
+  }
+}

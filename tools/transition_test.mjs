@@ -37,6 +37,14 @@
 //             baseline, and GS.save is booby-trapped so a save/load round trip
 //             would be caught rather than merely not-needed.
 //   CONSOLE   zero errors and zero unhandled rejections for the whole run.
+//   RAYBUDGET the first time the itinerary stands in ow-valley, the drawn scene's
+//             UNACCELERATED visibility-ray work is censused against a measured
+//             ceiling (tools/ray_budget.mjs). It lives here because this suite is
+//             already in ow-valley with a Chrome open, and it costs ~0.15 s. What
+//             it exists to stop: an InstancedMesh ground scatter taller than
+//             battle_world's SCATTER_H re-entering the world arena's occluder set,
+//             where it has no BVH — that is the 32-second staging solve, and no
+//             other gate in this repo measures the cost of a ray.
 //
 // Plus two integration walks the unit assertions cannot reach:
 //   BATTLE    a fight mid-town, then a door. Proves the UILOCK interplay: no
@@ -49,6 +57,7 @@ import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { freePort, killOrphans, findPage, GAME_PAGE, sweepStaleProfiles } from './cdp.mjs';
+import { censusExpr, verdict } from './ray_budget.mjs';
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -449,7 +458,7 @@ const ITINERARY = [
   // ---- THE GAUNTLET --------------------------------------------------------
   head(`GAUNTLET — ${DOORS} mixed transitions`);
   const rows = [];
-  let musicChecked = 0, musicSameTrack = 0, worstDrift = 0;
+  let musicChecked = 0, musicSameTrack = 0, worstDrift = 0, rayBudgetDone = false;
   for (let i = 0; i < DOORS; i++) {
     const [to, ret] = ITINERARY[Math.floor(i / 2) % ITINERARY.length];
     const target = (i % 2 === 0) ? to : ret;
@@ -530,6 +539,41 @@ const ITINERARY = [
       ok(post.enc.graceWhy === 'scene' || post.enc.grace > 0,
          `door ${i}: encounter director re-graced on arrival`,
          { why: post.enc.graceWhy, grace: post.enc.grace });
+
+    // ---- RAY BUDGET (tools/ray_budget.mjs) ---------------------------------
+    // ONCE, the first time the itinerary stands in ow-valley. It rides here rather
+    // than in a gate of its own because this suite already boots Chrome, already
+    // doors into ow-valley three times, and a gate nobody runs is not a gate —
+    // the marginal cost is one Runtime.evaluate, measured at ~0.15 s of a ~4 min run.
+    // WHAT IT CATCHES: an instanced ground scatter TALLER than battle_world's
+    // SCATTER_H walks back into the world arena's visibility-occluder set, where
+    // it has no BVH, and restores the 32-second staging solve with every other gate
+    // in this repo green. The 1.5 m rule is a height threshold, not a budget.
+    if (post.scene === 'ow-valley' && !rayBudgetDone) {
+      rayBudgetDone = true;
+      // the scatter is placed against the live camera and throttled; give it a beat
+      const owd = await ev(cdp, `(async () => { for (let i = 0; i < 40; i++) {
+        if (window.OWD && OWD.state().draws > 0) return OWD.state().draws;
+        await new Promise(r => setTimeout(r, 100)); } return 0; })()`, 30000);
+      const t0 = Date.now();
+      const census = await ev(cdp, censusExpr(), 60000);
+      const v = verdict(census);
+      // MEASURED, THE FIRST TIME THIS RAN: this suite spawns Chrome with
+      // --use-angle=swiftshader on purpose, and ow_detail.js refuses to place the
+      // scatter under software WebGL — so the RUNTIME half of the budget is not
+      // visible from here and the verdict comes back SKIPPED. It is reported as a
+      // note rather than a pass, because a gate that prints "ok" for something it
+      // could not see is the exact failure this whole lane exists to close. A RED
+      // is still fatal here: instancing that came out of a BUNDLE is present under
+      // swiftshader too. The full surface belongs to `node tools/ray_budget.mjs`.
+      if (v.skipped) note(`  ray budget SKIPPED: ${v.why}`);
+      else ok(v.ok, `door ${i}: ow-valley visibility-ray budget — ${v.state}. ${v.why}`,
+         { W: census && census.W, kept: census && census.kept,
+           dropped: census && census.dropped, instTotal: census && census.instTotal });
+      note(`  ray budget censused ${census && census.occluders} occluders in ${Date.now() - t0}ms ` +
+           `(OWD draws=${owd}, ${census && census.instTotal} instanced pieces in the drawn scene, ` +
+           `tallest piece ${census && census.tallestPieceH}m vs SCATTER_H ${census && census.scatterH}m)`);
+    }
 
     rows.push({ i, to: target, shot: post.shot || '-', ms: r.ms,
                 geo: post.gpu.geometries, tex: post.gpu.textures,

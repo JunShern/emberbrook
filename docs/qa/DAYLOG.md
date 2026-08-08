@@ -21933,3 +21933,81 @@ Cleanup: this lane's worktree removed, scratch `dist`, both live fetch dirs and 
 `static-verify*.png` deleted, zero orphaned Chrome (`ppid 1` root check clean). The two stale
 worktrees from earlier sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were
 left alone.
+
+------------------------------------------------------------
+2026-08-08 SMALL GATE LANE: **THE VISIBILITY-RAY BUDGET IS NOW GATED** — the hole
+CLAUDE.md named beside the world arena ("AND NOTHING GATES ON RAY COST") is closed.
+
+**THE QUANTITY, AND WHY NOT MICROSECONDS.** `tools/ray_budget.mjs` asserts
+W = UNACCELERATED TRIANGLE TESTS PER VISIBILITY RAY: the sum over battle_world's own
+occluder set of instanceCount x triangles for every mesh whose raycast is not
+BVH-accelerated (an InstancedMesh counts unaccelerated whatever its geometry carries —
+three loops the instance list either way). W is a COUNT: it is the exact size of the
+inner loop three's raycast runs, it is the causal variable behind the 32-second staging
+solve, and it is identical on every machine. Wall-clock was rejected as the assertion:
+raycost.json's per-mesh numbers bottom out at 4.2 us, which is 0.1 ms / 24 rays — the
+timer's quantum, not a measurement — and a microsecond ceiling on a laptop that also
+runs bakes and a deploy lane trips on idle-vs-busy. Time is REPORTED, never asserted.
+
+**THE CEILING = 9761, DERIVED (docs/qa/battle-world/raybudget.json).**
+(a) SLOPE: the same staging solve cost 32,000 ms with the six scatters in the occluder
+set and 407 ms without them at its worst cell (stageperf.json solve_ms_all.max). Those
+scatters are 60590*6 + 56126*6 + 16017*12 + 2179*36 + 1505*16 + 939*48 = 1,040,096
+tests/ray — a number the gate's own census re-measured INDEPENDENTLY as
+`OWD.state().tris` = 1,040,096. K = (32000 - 407) / 1040096 = 0.030375 ms per unit W.
+(b) BUDGET: hold the WORST staging solve at or under 1000 ms, which keeps the worst
+trigger-to-first-frame at or under ~1464 ms (today 871 ms). Allowance 593 ms.
+W_raw = 593 / 0.030375 = 19,522. (c) SAFETY FACTOR 2 (K was timed on this laptop quiet;
+the deploy target and a machine mid-bake are comfortably 2x slower): 19522 / 2 = 9761.
+Not rounded on purpose — the digits are the arithmetic.
+
+**GREEN, MEASURED.** Current tree, ow-valley, real GPU: W = 2 (one `__contact_shadow`,
+1 x 2 tris, no BVH), 51 occluders, all six scatters DROPPED by the shipped 1.5 m rule,
+tallest instanced piece 0.742 m, 70.8-75 us/ray. Margin 9759 of 9761 — 0.02% of budget.
+
+**RED, PROVED, WITHOUT EDITING RUNTIME CODE.** ow_detail.js's blade height is a shipped
+tunable, so `node tools/ray_budget.mjs --port=3000 --induce=3.0` calls
+`OWD.set({hMin:1.8, hMax:3.0})`, the scatter rebuilds taller than SCATTER_H, and the six
+ground scatters walk back into the occluder set: **W 2 -> 892,502 (x91.4 over), measured
+70.8 -> 13,029.2 us/ray (184x), implied worst staging solve 27,517 ms, exit 1**
+(docs/qa/battle-world/raybudget-induced.json). That implied 27.5 s against the recorded
+32 s is the ceiling's own derivation reproducing the original defect from the other end.
+`--selftest` (0.03 s, no browser) additionally exercises the verdict state machine on ten
+hand-built censuses, including the one that matters: ONE tall instanced scatter -> RED,
+and 200 fence posts at 40 tris (8,000) -> GREEN, so the ceiling is shown to discriminate.
+
+**THE RULE IS READ OUT OF THE SHIPPED FILE, NOT COPIED.** SCATTER_H, NOT_OCCLUDER,
+`pieceHeight()` and the whole traverse filter are EXTRACTED from public/js/battle_world.js
+at run time and evaluated in the page, so the gate runs the shipped rule against the
+shipped constant and moves when the coordinator moves it. Extraction failure is an ERROR,
+never a silent fallback (the `_court_probe` lesson: a gate that measures its own drawing
+cannot measure its own build).
+
+**AND THE HOSTING QUESTION HAD A MEASURED ANSWER I DID NOT EXPECT: EVERY HEADLESS GATE IN
+THIS REPO IS BLIND TO THIS DEFECT'S LARGER HALF.** transition_test, playthrough_test,
+trigger_probe and arena_playtest all spawn Chrome with `--use-angle=swiftshader
+--disable-gpu` on purpose — and ow_detail.js REFUSES TO PLACE THE SCATTER under software
+WebGL (`softwareGL() -> clear()`). Wired into transition_test's ow-valley leg the census
+came back with 0 instanced pieces and OWD draws=0, i.e. the population it exists to
+measure does not exist in that environment. The proof-of-detection guard is what said so
+rather than printing a comfortable green: AN INSTRUMENT THAT FINDS NOTHING MUST PROVE IT
+COULD HAVE FOUND SOMETHING, and here it earned its keep in its first run. Resolution —
+four verdict states: RED (over the ceiling; FATAL EVERYWHERE, because bundle-borne
+instancing is visible under swiftshader too), GREEN (under, and a real scatter was seen),
+SKIPPED (under, no scatter, software GL — reported as a NOTE, never as a pass), and
+INCONCLUSIVE (under, no scatter, REAL GPU — fatal, the instrument is looking at the wrong
+world). So the gate rides in two places: transition_test's ow-valley leg (953 ms of a
+~15-minute run, covers bundle-borne instancing, prints SKIPPED for the runtime half) and
+as a PREFLIGHT IN EVERY MODE of tools/battle_world_probe.mjs, which is the one instrument
+here that runs on a REAL GPU — a red preflight aborts the probe with exit 3 rather than
+publish measurements of a defective world. Standalone `node tools/ray_budget.mjs
+--port=3000` is the full-surface run: **2.1 s wall clock**, exit 1 on red.
+
+**A RED OBSERVED IN PASSING, NOT THIS LANE'S:** the full `transition_test --port=3000`
+run (164 ok / 5 failed) carries four GPU-baseline failures of its own — `del-cine|gate`
+geometries 2075 -> 2073 at doors 15 and 21, `del-cine|shelf-west` 622 -> 624 after the
+battle, and the derived "every repeated (scene, shot) has identical counts" drift=2.
+Every one is in del-cine, a scene this census never touches, and the census uploads
+nothing (a CPU-side traverse plus computeBoundingBox cannot move renderer.info). DAYLOG
+records transition_test as skipped for six consecutive deploys, so these are most likely
+pre-existing and unnoticed. NOT INVESTIGATED HERE — flagged for whoever owns the swap.

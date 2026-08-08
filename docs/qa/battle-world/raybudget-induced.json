@@ -1,0 +1,82 @@
+{
+  "at": "2026-08-08T22:40:10.132Z",
+  "induced": 3,
+  "ceiling": 9761,
+  "kMsPerTest": 0.030375,
+  "baseStageMs": 407,
+  "census": {
+    "scene": "ow-valley",
+    "scatterH": 1.5,
+    "occluders": 54,
+    "dropped": [
+      {
+        "name": "veg_owd_weed",
+        "n": 2179,
+        "h": 0.27
+      },
+      {
+        "name": "veg_owd_sedge",
+        "n": 939,
+        "h": 0.64
+      },
+      {
+        "name": "veg_owd_flower",
+        "n": 1505,
+        "h": 0.24
+      }
+    ],
+    "W": 892502,
+    "kept": [
+      {
+        "name": "veg_owd_short",
+        "n": 60590,
+        "tris": 6,
+        "inst": true,
+        "bvh": false,
+        "w": 363540
+      },
+      {
+        "name": "veg_owd_med",
+        "n": 56126,
+        "tris": 6,
+        "inst": true,
+        "bvh": false,
+        "w": 336756
+      },
+      {
+        "name": "veg_owd_seed",
+        "n": 16017,
+        "tris": 12,
+        "inst": true,
+        "bvh": false,
+        "w": 192204
+      },
+      {
+        "name": "__contact_shadow",
+        "n": 1,
+        "tris": 2,
+        "inst": false,
+        "bvh": false,
+        "w": 2
+      }
+    ],
+    "instMeshes": 6,
+    "instTotal": 137356,
+    "tallestPieceH": 6.191,
+    "owd": {
+      "draws": 6,
+      "blades": 151140,
+      "tris": 1040096,
+      "hMin": 1.7999999999999998,
+      "hMax": 3
+    },
+    "usPerRay": 13062.5
+  },
+  "verdict": {
+    "ok": false,
+    "state": "RED",
+    "W": 892502,
+    "impliedStageMs": 27517,
+    "why": "W = 892502 unaccelerated triangle tests per visibility ray, ceiling 9761 (x91.4 over). Implied worst staging solve ~27517 ms. Offenders: veg_owd_short 60590x6 INSTANCED no-BVH, veg_owd_med 56126x6 INSTANCED no-BVH, veg_owd_seed 16017x12 INSTANCED no-BVH, __contact_shadow 1x2 no-BVH"
+  }
+}

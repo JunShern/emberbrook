@@ -22,6 +22,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { freePort, findPage, killOrphans, sweepStaleProfiles } from './cdp.mjs';
+import { censusExpr, verdict as rayVerdict } from './ray_budget.mjs';
 
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
@@ -720,6 +721,29 @@ const FPSDRIVE = (worldMode) => `(async () => {
   if (!ready.ready) { console.error('world never became ready'); kill(); process.exit(2); }
   console.log(`world ready  three r${ready.three}  scene=${ready.scene}  env=${ready.env}  tone=${ready.tone}`);
   console.log('postfx:', JSON.stringify(ready.postfx));
+
+  // ---- RAY-BUDGET PREFLIGHT (tools/ray_budget.mjs) -------------------------
+  // EVERY MODE, before any of them measures anything. This probe runs on a REAL
+  // GPU (no swiftshader flags above, unlike every other headless gate here), which
+  // makes it the one instrument in the repo that can see ow_detail's runtime
+  // scatter — and the scatter is where the 32-second staging solve came from.
+  // `--mode=raycost` already bills a ray per mesh; what was missing was anyone
+  // ASSERTING on the bill. `--no-raybudget` skips it. A red preflight aborts:
+  // every number this probe would print next is a measurement of a defect, and
+  // publishing those as if they described the shipped game is how a stale artifact
+  // becomes a canon note.
+  if (!argv.includes('--no-raybudget')) {
+    const rb = await ev(cdp, censusExpr({ timing: true }), 300000);
+    const rv = rayVerdict(rb);
+    console.log(`ray budget: ${rv.state}  ${rv.why}` +
+                (rb && rb.usPerRay != null ? `   [${rb.usPerRay} us/ray measured on this machine]` : ''));
+    if (!rv.ok) {
+      console.error('ray-budget preflight FAILED — refusing to measure a defective world. ' +
+                    'Run `node tools/ray_budget.mjs --port=' + PORT + '` for the full census, ' +
+                    'or pass --no-raybudget to measure anyway.');
+      cdp.close(); kill(); process.exit(3);
+    }
+  }
 
   if (MODE === 'regress') {
     // THE DEFAULT-PATH PROOF. No flag in the URL; inject the module anyway (this
