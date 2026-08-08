@@ -22086,11 +22086,15 @@ unconditionally, so its residency IS a function of (scene, shot).
 
 ### THE BASELINE CLAIM, RE-DERIVED — READ THIS BEFORE ATTRIBUTING THE NEXT RED
 
-**168/0 IS NOT A REPRODUCIBLE BASELINE ON THIS TREE. IT IS ONE LUCKY DRAW.** Of the 168
-assertions, 163 are deterministic; the five that can flip are the per-(scene,shot) GPU
-baselines on del-cine's shots plus the derived roll-up. Today the honest statement is:
+**168/0 IS NOT A REPRODUCIBLE BASELINE ON THIS TREE. IT IS ONE LUCKY DRAW.** COUNTED, not
+guessed, off the run's own log: the suite makes **15** `is back to its baseline` assertions
+plus **1** derived roll-up, and **10** of the 15 are on a `del-cine|<shot>` state. Those
+eleven are the exposed set. (The interiors are exposed in principle by the same mechanism —
+`del-inn-int` and `del-cookhouse-int` BOTH showed `ring=true` in the probe — but held their
+counts in both runs; ow-valley is a real-time scene and never moved.) Today the honest
+statement is:
 
-> `transition_test --port=3000` reads **163-168 ok**. Any failure whose payload is exactly
+> `transition_test --port=3000` reads **157-168 ok**. Any failure whose payload is exactly
 > `{geo: +/-2, tex: 0, meshes: 0, mats: 0}` on a `del-cine|<shot>` state, or the derived
 > "identical counts" assertion that follows from one, is occRing/occDia and is **not** a
 > regression. **Anything else is real** — a geo delta that is not +/-2, any texture delta,
