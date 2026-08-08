@@ -19995,3 +19995,57 @@ message and are absent from this lane's shas. Same trap as 2026-08-03: `git comm
 — rewriting a pushed shared branch costs more than the misattribution. The standing rule
 holds: with a dirty shared tree, `git commit --only <paths>`, and read `git diff <path>`
 before you commit anything you did not write.
+
+---
+
+## 2026-08-08 ~09:45 — DEPLOY LANE: round 7 is LIVE AND VERIFIED (29/0). The battle wave is on the site
+
+Built from a throwaway `git worktree` detached at `origin/migration/3d-hybrid` —
+**e8bdbde0** — with `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`
+(the main tree was again dirty, and its branch had already moved to 8385b5db).
+`build-static --compress`: **392 files / 520.7 MB / 2.6 s**, cache **253 hit / 0 miss /
+0 stored**. Three build gates green: every `.glb` binary glTF, **16 bundle GLBs
+byte-identical to `public/`** on POSITION + indices, **256 referenced paths resolve**
+(237 via the `.webp` rewrite). Local `static_verify`: **ALL GREEN 29/0**.
+
+`deploy-ghpages.sh dist` published **a47d1da7** (push verified by the script; pre-flight
+printed the clean `579 MB, 393 files`). LIVE stamp `2026-08-08T05:54:15.380Z` ->
+**`2026-08-08T08:33:33.836Z`**; `static_verify --url https://junshern.github.io/emberbrook`:
+**ALL GREEN 29/0**, zero failed requests, zero unexpected 4xx/5xx, zero console errors.
+
+**WHAT IT ADDS — the battle wave, both bets.** BET I, the KO and the victory as events
+(`57162c9a`, `199245c2`: `battle_stage3d.js`, `battle_turnbased.js`, `battle_world.js`) and
+BET H, the monster palette regrade plus the foe icons (`c3230641`, `6353c7ad`, `dd82f752`:
+four graded monster GLBs, six icons rendered from the models they name). The previous live
+build predated all five.
+
+**THE SCREENSHOT IS PART OF THE RECEIPT, AND IT IS WHAT SHOWS BET H.** The live
+`static-verify` frame is the Duskpad battle, and the turn-order rail now carries **rendered
+wolf portraits** where round 6's frame carried the 16 px placeholder sprites — the standing
+"placeholder foe icons" caveat on every deploy note since round 4 is now discharged. Both
+wolves lit and shadowed, Vesper's contact shadow under her feet, command menu drawn.
+
+**BYTE COMPARISON, live vs `dist`, seven files, all sha256-identical** — and each carries
+its post-commit size, so this proves the NEW art shipped and not merely a new stamp:
+
+| file | bytes | was |
+|---|---:|---|
+| `assets/monsters/3d/bramble-shade.glb` | 427940 | 402776 (pre-`6353c7ad`) |
+| `assets/monsters/3d/scree-shell.glb` | 389268 | 372408 |
+| `assets/monsters/placeholder/duskpad.png` | 15468 | 250 (the 16 px sprite) |
+| `assets/monsters/placeholder/bramble-shade.png` | 23840 | 330 |
+| `js/battle_stage3d.js` | 191322 | 176890 live at round 6 |
+| `js/battle_turnbased.js` | 118267 | — |
+| `js/battle_world.js` | 49778 | — |
+
+**THE PAGES BUILD BEHAVED, AND THE ~70 s TELL HELD.** `a47d1da7` produced the documented
+twin — `errored` 08:38:57Z->08:38:58Z, then `built` 08:38:58Z->**08:40:10Z (72 s)** — against
+round 5's 73 s and round 6's 63 s. No stall, no re-POST needed. Round 6's rule is now
+confirmed on a third sample: read the LIST, and a build whose `updated_at` has not moved
+within ~3 minutes is stuck rather than slow.
+
+**AND THE INCREMENTAL-PUSH FINDING HELD TOO.** The whole publish — pre-flight, throwaway
+repo, force-push, push verification, Pages POST — ran in **under two minutes** for a delta of
+seven files on a 579 MB tree. Launched detached (`(nohup … &)`) per the standing rule.
+Round-6 doctrine followed with zero deviations and zero surprises; the recipe in CLAUDE.md's
+"Shipping it" is now proven twice on incremental deltas.
