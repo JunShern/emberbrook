@@ -48,6 +48,17 @@ Densities are read off the Volume Scatter / Principled Volume `Density` socket. 
 node-DRIVEN density cannot be read statically and is reported as `density=driven`
 with tau omitted rather than silently taken as its default (mat_smoke's default is
 0.0 and its real density is a noise texture).
+
+ONE DRIVEN CHAIN IS EVALUATED, AND IT HAD TO BE (round 6, 2026-08-08).  Round 4 made
+`mat_haze_east`'s density a WORLD-Z RAMP — Geometry.Position -> SeparateXYZ.Z ->
+MapRange -> Density — and from that moment THIS TOOL COULD NO LONGER MEASURE THE CARD
+IT WAS BUILT TO MEASURE: `cover` printed a dash and `frustum`'s tau column printed
+0.0000 for the one card in town whose tau was the whole question.  A fix that makes an
+instrument blind to its own subject is a fix that cannot be checked twice.  So that
+exact chain is now recognised and integrated: tau over a segment = density(midpoint Z)
+x length, which is EXACT for a linear ramp (the mean of a linear function over a
+segment is its midpoint value) and approximate only where MapRange's clamp bites
+inside the segment.  Everything else linked is still honestly `driven`.
 """
 import os, sys, json, math
 
@@ -90,7 +101,17 @@ def stage_sample():
     else:
         raise SystemExit("unknown --mask %s" % mask)
 
-    if region >= 0:                      # the nth-largest connected crushed component
+    # A JUDGE'S BBOX IS A UV BOX.  Without this the only way to ask "what is the dark
+    # thing inside the box the judge drew" was to hope it was the plate's own largest
+    # crushed component, which on waterfront it is not.
+    uv = arg("--uv")
+    if uv:
+        u0, v0, u1, v1 = [float(x) for x in uv.split(",")]
+        keep = np.zeros(m.shape, bool)
+        keep[int(v0 * H):int(v1 * H), int(u0 * W):int(u1 * W)] = True
+        m = m & keep
+
+    if region >= 0:                    # the nth-largest connected crushed component
         from collections import deque
         ms = m[::2, ::2]
         seen = np.zeros(ms.shape, bool)
@@ -138,9 +159,54 @@ def stage_sample():
 
 
 # ------------------------------------------------- stage 2 helpers (Blender) ---
+def _zramp(sock):
+    """Recognise the ONE driven-density chain this repo installs — Geometry.Position ->
+    SeparateXYZ.Z -> MapRange -> Density — and return ('zramp', z0, z1, d0, d1, clamp).
+    Anything else linked returns None and stays honestly `driven`."""
+    try:
+        mr = sock.links[0].from_node
+        if mr.type != 'MAP_RANGE' or not mr.inputs['Value'].is_linked:
+            return None
+        sep = mr.inputs['Value'].links[0]
+        if sep.from_node.type != 'SEPXYZ' or sep.from_socket.name != 'Z':
+            return None
+        geo = sep.from_node.inputs['Vector']
+        if not geo.is_linked or geo.links[0].from_node.type != 'NEW_GEOMETRY' \
+                or geo.links[0].from_socket.name != 'Position':
+            return None
+        return ('zramp',
+                float(mr.inputs['From Min'].default_value),
+                float(mr.inputs['From Max'].default_value),
+                float(mr.inputs['To Min'].default_value),
+                float(mr.inputs['To Max'].default_value),
+                bool(mr.clamp))
+    except Exception:
+        return None
+
+
+def density_at(dens, z):
+    """A density spec evaluated at a world Z.  float -> itself; zramp -> the ramp."""
+    if dens is None or isinstance(dens, float):
+        return dens
+    _, z0, z1, d0, d1, clamp = dens
+    t = 0.0 if z1 == z0 else (z - z0) / (z1 - z0)
+    if clamp:
+        t = min(1.0, max(0.0, t))
+    return d0 + t * (d1 - d0)
+
+
+def fmt_density(dens):
+    if dens is None:
+        return "driven"
+    if isinstance(dens, float):
+        return "%.6f" % dens
+    return "zramp z %.1f..%.1f -> %.6f..%.6f" % (dens[1], dens[2], dens[3], dens[4])
+
+
 def _volume_only(mat):
-    """(is_render_only_volume, density_or_None, colour) — a material that shades a
-    volume and NOT a surface.  Density None => node-driven, unreadable statically."""
+    """(is_render_only_volume, density_spec, colour) — a material that shades a volume
+    and NOT a surface.  The density spec is a float, a ('zramp', ...) tuple, or None
+    for a driven chain this tool cannot read statically."""
     if mat is None or not mat.use_nodes:
         return False, None, None
     for n in mat.node_tree.nodes:
@@ -150,7 +216,12 @@ def _volume_only(mat):
         if vol is not None and vol.is_linked and not (surf is not None and surf.is_linked):
             src = vol.links[0].from_node
             di = src.inputs.get('Density')
-            dens = None if (di is None or di.is_linked) else float(di.default_value)
+            if di is None:
+                dens = None
+            elif di.is_linked:
+                dens = _zramp(di)
+            else:
+                dens = float(di.default_value)
             ci = src.inputs.get('Color')
             col = None if ci is None else [round(float(v), 4) for v in ci.default_value[:3]]
             return True, dens, col
@@ -179,6 +250,7 @@ def _march(sc, dg, origin, direction, vol, skip, maxdist=2000.0, maxsteps=64):
     {card: tau}, [passed cards])."""
     from mathutils import Vector
     o = Vector(origin); dv = Vector(direction).normalized()
+    p0 = Vector(origin)
     taus = {}; inside = {}; travelled = 0.0
     for _ in range(maxsteps):
         ok, loc, nrm, idx, ob, mw = sc.ray_cast(dg, o, dv, distance=maxdist - travelled)
@@ -193,10 +265,13 @@ def _march(sc, dg, origin, direction, vol, skip, maxdist=2000.0, maxsteps=64):
             continue
         if nm in vol:
             if nm in inside:                       # exit face -> close the segment
-                path = travelled - inside.pop(nm)
+                d0 = inside.pop(nm)
+                path = travelled - d0
                 dens = vol[nm][0]
                 if dens is not None:
-                    taus[nm] = taus.get(nm, 0.0) + dens * path
+                    # midpoint rule: EXACT for a constant and for a linear ramp
+                    mid = p0 + dv * (d0 + 0.5 * path)
+                    taus[nm] = taus.get(nm, 0.0) + density_at(dens, mid.z) * path
                 else:
                     taus[nm] = None
             else:
@@ -212,8 +287,29 @@ def _march(sc, dg, origin, direction, vol, skip, maxdist=2000.0, maxsteps=64):
                     mat = ob.material_slots[si].material.name
         except Exception:
             pass
+        # A RAY THAT STOPS INSIDE A CARD STILL CROSSED PART OF IT.  While the east card
+        # was a 6 m curtain in empty air nothing ever terminated inside one, so leaving
+        # the open segment unclosed cost nothing and read as tau 0.  The moment a card
+        # becomes a MEDIUM that town geometry stands inside, that silence is the whole
+        # measurement — the partial path in front of the near surface IS the gradient.
+        _close(taus, inside, travelled, p0, dv, vol)
         return nm, mat, travelled, taus, list(taus.keys())
+    _close(taus, inside, travelled, p0, dv, vol)
     return None, None, None, taus, list(taus.keys())
+
+
+def _close(taus, inside, at, p0, dv, vol):
+    for nm, d0 in list(inside.items()):
+        path = at - d0
+        if path <= 0:
+            continue
+        dens = vol[nm][0]
+        if dens is None:
+            taus[nm] = None
+        else:
+            mid = p0 + dv * (d0 + 0.5 * path)
+            taus[nm] = taus.get(nm, 0.0) + density_at(dens, mid.z) * path
+    inside.clear()
 
 
 # ------------------------------------------------------------------ stage 2 ---
@@ -225,7 +321,7 @@ def stage_rays():
     vol, skip = _classify()
     print("RENDER-ONLY VOLUME CARDS (marched through, never counted as a hit):")
     for k, (d, c) in sorted(vol.items()):
-        print("   %-28s density=%s colour=%s" % (k, "driven" if d is None else "%.6f" % d, c))
+        print("   %-28s density=%s colour=%s" % (k, fmt_density(d), c))
     print("NOT IN THE RENDER (hide_render / out of scene), %d objects%s"
           % (len(skip), (": " + ", ".join(sorted(skip)[:12])) if skip else ""))
     for path in arg("--in", "/tmp/dh_pixel_census.json").split(","):
