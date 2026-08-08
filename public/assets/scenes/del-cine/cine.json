@@ -65,11 +65,11 @@
    ],
    "rtClip": [
     7.8808,
-    266.508
+    264.685
    ],
    "depth": {
     "near": 15.761619567871094,
-    "far": 166.56736755371094,
+    "far": 165.4280242919922,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -86,8 +86,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-08T15:10:22Z",
-   "seconds": 222.9,
+   "baked": "2026-08-08T16:50:40Z",
+   "seconds": 213.2,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -437,11 +437,11 @@
    ],
    "rtClip": [
     7.6867,
-    69.213
+    61.961
    ],
    "depth": {
     "near": 15.37348747253418,
-    "far": 43.2584114074707,
+    "far": 38.725711822509766,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -458,8 +458,8 @@
    "spawnFrom": "walk_pad_keepers-cottage",
    "visibleFrac": 0.9531,
    "probes": 64,
-   "baked": "2026-08-07T18:07:46Z",
-   "seconds": 167.9,
+   "baked": "2026-08-08T16:50:40Z",
+   "seconds": 181.1,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -520,8 +520,8 @@
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
    "visibleFrac": 0.8,
    "probes": 30,
-   "baked": "2026-08-08T15:06:36Z",
-   "seconds": 197.0,
+   "baked": "2026-08-08T16:50:40Z",
+   "seconds": 204.6,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -561,11 +561,11 @@
    ],
    "rtClip": [
     8.0729,
-    179.92
+    177.99
    ],
    "depth": {
     "near": 16.14577865600586,
-    "far": 112.4500961303711,
+    "far": 111.24384307861328,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -582,8 +582,8 @@
    "spawnFrom": "walk_pad_pilot-cluster",
    "visibleFrac": 0.9062,
    "probes": 64,
-   "baked": "2026-08-08T15:03:16Z",
-   "seconds": 191.2,
+   "baked": "2026-08-08T16:50:40Z",
+   "seconds": 177.7,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -892,8 +892,8 @@
    "spawnFrom": "walk_pad_lock-five",
    "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-08T15:00:02Z",
-   "seconds": 220.1,
+   "baked": "2026-08-08T16:50:40Z",
+   "seconds": 242.5,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
