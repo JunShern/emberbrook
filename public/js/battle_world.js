@@ -41,9 +41,21 @@
 // A spike, not a product. Deliberately absent, and each one is future work rather
 // than an oversight: the hit package beyond flash + shake + a ground ring; the
 // pose-plate / pixel-sprite billboard tiers (a body that has no GLB gets the proxy
-// solid and stays there); reduced-motion; a shot language (BET B). Formation
-// constants are BORROWED from BattleStage3D.CFG.form on purpose, so a side-by-side
-// differs by the WORLD and not by the blocking.
+// solid and stays there); reduced-motion. Formation constants are BORROWED from
+// BattleStage3D.CFG.form on purpose, so a side-by-side differs by the WORLD and
+// not by the blocking.
+//
+// ==================== WAVE 3: THE SHOT LANGUAGE (BET B) =====================
+// BET B is GATED ON THE DIORAMA and FREE HERE, and that asymmetry is the whole
+// reason it was built in this file. assets/battle/MANIFEST.md states that the
+// four backdrop plates were generated from a prompt carrying the arena camera's
+// exact height, tilt and fov, and that "if the arena camera moves, this
+// paragraph moves with it and the plates are re-shot". IN THE WORLD ARENA THERE
+// IS NO BACKDROP, SO THE CAMERA IS FREE. Nothing below touches the diorama's
+// camera, invalidates a plate, or changes what the flag-off game does.
+// See CAM, solveShot, solveShotSafe (the 180-degree refusal) and the rig in
+// tick(). Board: docs/qa/battle-camera/index.html. `?bcam=0` turns it off and
+// leaves the spike's single solved pose, which is what the board's A/B is.
 //
 // ============================ THE CAMERA ====================================
 // It does not touch `cam`. The overworld camera is recomputed from `window.ORBIT`
@@ -61,6 +73,10 @@
   const Q = HAS_DOM && typeof location !== 'undefined'
     ? new URLSearchParams(location.search || '') : null;
   const FLAG = !!(Q && Q.get('arena') === 'world');
+  // `?bcam=0` turns the shot language off and leaves the spike's single solved
+  // pose. It exists so the before/after board is ONE BUILD with one switch —
+  // the same discipline the KO lane's `--noreact` A/B used.
+  const BCAM_OFF = !!(Q && Q.get('bcam') === '0');
 
   if (!HAS_DOM) return;                       // node (battle_sim / encounter_sim): nothing at all
   if (!FLAG) {
@@ -110,7 +126,88 @@
           lungeM: 1.35, lungeMs: 620, flinchM: 0.42, flinchMs: 330, ringMs: 430 },
     // A body that cannot find real ground within this many metres of the sampled
     // column is REFUSED its slot and the solver tries the next candidate.
-    place: { probeR: 0.42, maxDrop: 2.2, ring: [0, 0.5, -0.5, 1.0, -1.0, 1.6, -1.6] },
+    place: { probeR: 0.42, maxDrop: 2.2, ring: [0, 0.5, -0.5, 1.0, -1.0, 1.6, -1.6],
+             // the fraction of a body's own box that must have a clear line to
+             // the battle camera before its slot is accepted (see visFrac)
+             visMin: 0.67 },
+  };
+
+  // ======================= THE SHOT LANGUAGE (wave 3) ========================
+  // BET B, built HERE and nowhere else. The diorama's camera is pinned to four
+  // painted plates by `assets/battle/MANIFEST.md` ("if the arena camera moves,
+  // this paragraph moves with it and the plates are re-shot"). In the world
+  // arena there is no backdrop, so the camera is free — which is why a camera
+  // language costs nothing here and a re-bake there.
+  //
+  // A SHOT IS DERIVED, NEVER TYPED. Every pose below is solved from the bodies
+  // it has to show: their real positions, their own measured heights and their
+  // own measured widths (the same discipline the contact fix used for the strike
+  // station). What the table carries is INTENT — who is in frame, how much of
+  // the frame they fill, how high the boom rides, how long the lens is, and how
+  // long the move takes. Not one metre value in it is a camera position.
+  //
+  // AND IT NEVER CUTS. §11.11 of the inventory leaves "may the battle cut?" open
+  // for the coordinator, so every transition here is a MOVE with an ease. `cut`
+  // exists as a per-shot policy and every shipped value is `false`; flipping one
+  // is a one-word change once the ruling lands.
+  const CAM = {
+    on: true,                 // ?bcam=0, or BattleWorld.CAM.on = false at runtime
+    // THE LENS. play3d's own overworld camera is 42 deg vertical and this is the
+    // only place in the battle that ever moves it (restored on teardown). A
+    // longer lens is a legibility instrument, not a zoom: at a fixed framing it
+    // pushes the eye back, which compresses the background and drops its spatial
+    // frequency — the thing that makes a body read against rock and foliage.
+    fov: { rest: 34, tight: 27, min: 24, max: 46 },
+    dist: { min: 4.6, max: 24 },
+    pitch: { min: 0.075, max: 0.52 },
+    // A CAMERA THAT IS ALIVE. The audit measured the diorama's drift at a 103 s
+    // period — a cycle no player ever sees a whole one of. This is 5.4 s.
+    drift: { amp: 0.055, ms: 5400 },
+    // THE BASE POSE IS SOLVED AGAINST THE TERRAIN, not chosen. See scoreView().
+    solve: {
+      // THE BAND IS NOT SYMMETRIC ABOUT THE SPIKE'S 0.27 ON PURPOSE. Dropping the
+      // boom is what buys a background instead of a floor — but below ~0.15 the
+      // NEAR ground rises into the frame and eats the fight, which is a measured
+      // loss (crag: the low boom put both foes behind the crest of their own
+      // slope and half the frame under a bank).
+      pitches: [0.16, 0.22, 0.28, 0.34],
+      yawKeep: 4,             // how many placeable yaws go on to the pitch sweep
+      backCap: 30,            // metres of clear depth behind a body that counts as "sky"
+      wBack: 3.0, wBoom: 1.4, wPitch: 0.0,
+    },
+    // ---- THE TABLE ----------------------------------------------------------
+    // show   : which bodies the shot is contractually about
+    // fillH/V: the fraction of the frame the subject group spans, per axis
+    // dPitch : boom elevation RELATIVE to the solved base (a strike rides low)
+    // yawOff : radians around the arena, SIGNED BY HANDEDNESS and hard-refused
+    //          if it would cross the axis (see axisOk)
+    // lead   : push the subject off centre, in fractions of the half-frame
+    // ms/ease: the move, never a cut
+    shots: {
+      round:   { show: 'all',    fillH: 0.86, fillV: 0.74, dPitch: 0.00, fov: 'rest',  yawOff: 0.00, lead: 0.00, ms: 900, ease: 'out',  cut: false },
+      // `show:'actor'` resolves to the deciding body AND its current target when
+      // the player has one — a "medium on the character deciding" that loses the
+      // thing they are aiming at is not a shot, it is a bug with a lens on it.
+      decide:  { show: 'actor',  fillH: 0.58, fillV: 0.50, dPitch: -0.02, fov: 'tight', yawOff: 0.30, lead: 0.12, ms: 620, ease: 'io',  cut: false },
+      strike:  { show: 'pair',   fillH: 0.66, fillV: 0.58, dPitch: -0.07, fov: 'rest',  yawOff: 0.22, lead: 0.00, ms: 380, ease: 'io',  cut: false },
+      impact:  { show: 'pair',   fillH: 0.78, fillV: 0.68, dPitch: -0.07, fov: 'rest',  yawOff: 0.22, lead: 0.00, ms: 170, ease: 'out', cut: false },
+      // MEASURED AND LOOSENED: at 0.40/0.46 the push ended on a 5.4 m boom and
+      // the fallen body filled the frame edge to edge — a close-up with no
+      // ground, no ring and nobody else in it. A KO is a beat in a fight, not a
+      // portrait; it keeps its neighbours.
+      ko:      { show: 'victim', fillH: 0.30, fillV: 0.36, dPitch: 0.03, fov: 'tight', yawOff: 0.16, lead: 0.14, ms: 420, ease: 'out', cut: false,
+                 // THE SLOW PUSH the KO lane wanted and refused: it runs across
+                 // CFG.ko.holdMs — the beat where the body is already lying there
+                 // — so the move is the thing that makes the hold legible rather
+                 // than a pause. Ends before the dissolve begins.
+                 push: { k: 0.86, ms: 1180, ease: 'lin' } },
+      victory: { show: 'party',  fillH: 0.62, fillV: 0.66, dPitch: -0.05, fov: 'tight', yawOff: 0.95, lead: 0.00, ms: 780, ease: 'io',  cut: false,
+                 // AND THE MOVE ONTO THE PARTY. yawOff swings the boom around to
+                 // three-quarter FRONT of the party — it stops well short of the
+                 // axis, so the shot the tally lands on is still on the same side
+                 // of the line as every other shot in the fight.
+                 push: { k: 0.88, ms: 900, ease: 'lin' } },
+    },
   };
 
   // ============================ THE SOLVER ==================================
@@ -162,11 +259,54 @@
     _rc.set = out; _rc.stamp = now();
     return out;
   }
-  function camPoseFor(P, yaw) {
-    const p = CFG.cam.pitch, d = CFG.cam.dist;
+  function camPoseFor(P, yaw, pitch, dist) {
+    const p = pitch == null ? CFG.cam.pitch : pitch, d = dist == null ? CFG.cam.dist : dist;
     return { x: P.x + Math.cos(yaw) * Math.cos(p) * d,
              y: P.y + 1 + Math.sin(p) * d,
              z: P.z + Math.sin(yaw) * Math.cos(p) * d };
+  }
+  // HOW FAR THE WORLD IS BEHIND A BODY — the whole legibility argument in one
+  // ray. The spike's honest verdict was that the world loses on legibility
+  // ("two clean silhouettes on a low-contrast painted field is a composition;
+  // the valley is rock, foliage, houses and cast shadows"). What actually makes
+  // a silhouette read is DEPTH BEHIND IT: a body with a cliff 1 m behind it is
+  // camouflage, the same body with thirty metres of air behind it is a
+  // silhouette. So the base pose is not chosen — it is searched, and this is
+  // the thing it is searched on. Returns metres, capped.
+  // TWO RAYS ARE NOT A SILHOUETTE — the spike's own named defect, and the thing
+  // that let a party stand half behind a stilt with `occluded: 0`. This samples
+  // the body's own BOX: three heights by three lateral offsets, using the
+  // camera's own screen-right so the samples straddle the silhouette rather than
+  // the world axes. Returns the fraction of the body that has a clear line.
+  // MEASURED CONSEQUENCE: it is what demotes the crag's low boom, where the foes
+  // sat behind the crest of the near slope and both centre rays cleared it.
+  function visFrac(eye, x, y, z, h, w, yaw) {
+    const rx = Math.sin(yaw), rz = -Math.cos(yaw);
+    const hw = Math.max(0.12, (w || 0.7) * 0.42);
+    let ok = 0, n = 0;
+    for (const fy of [0.28, 0.62, 0.92]) {
+      for (const fx of [-1, 0, 1]) {
+        n++;
+        if (seesPoint(eye, x + rx * hw * fx, y + h * fy, z + rz * hw * fx)) ok++;
+      }
+    }
+    return n ? ok / n : 1;
+  }
+  function backDepth(eye, x, y, z) {
+    const set = occluders();
+    const TH = T();
+    const cap = CAM.solve.backCap;
+    if (!set || !set.length || !TH) return cap;
+    if (!_rc.ray) { _rc.ray = new TH.Raycaster(); _rc.v0 = new TH.Vector3(); _rc.v1 = new TH.Vector3(); }
+    _rc.v0.set(eye.x, eye.y, eye.z);
+    _rc.v1.set(x - eye.x, y - eye.y, z - eye.z);
+    const d0 = _rc.v1.length();
+    if (d0 <= 0.01) return cap;
+    _rc.ray.set(_rc.v0, _rc.v1.normalize());
+    _rc.ray.far = d0 + cap;
+    const hits = _rc.ray.intersectObjects(set, true);
+    for (const h of hits) { if (h.distance > d0 + 0.35) return Math.min(cap, h.distance - d0); }
+    return cap;
   }
   function seesPoint(eye, x, y, z) {
     const set = occluders();
@@ -192,9 +332,10 @@
     const rx = Math.sin(yaw), rz = -Math.cos(yaw);
     const fx = -Math.cos(yaw), fz = -Math.sin(yaw);
     const k = o.scale == null ? CFG.scale : o.scale;
-    const eye = camPoseFor(P, yaw);
+    const pitch = o.pitch == null ? CFG.cam.pitch : o.pitch;
+    const eye = camPoseFor(P, yaw, pitch);
     const vis = o.vis !== false;
-    const out = { basis: { yaw, right: [rx, rz], fwd: [fx, fz], centre: [P.x, P.y, P.z], eye },
+    const out = { basis: { yaw, pitch, right: [rx, rz], fwd: [fx, fz], centre: [P.x, P.y, P.z], eye },
                   placed: [], failed: [], occluded: 0 };
 
     for (const s of o.slots) {
@@ -217,12 +358,22 @@
         if (y == null || Math.abs(y - P.y) > CFG.place.maxDrop) { lastWhy = 'no floor within ' + CFG.place.maxDrop + ' m'; continue; }
         const b = S.blocked(x, z, y);
         if (b) { lastWhy = 'blocked by ' + b; continue; }
-        // TWO RAYS, chest and head: a single chest ray calls a body standing
-        // behind a low wall visible because the wall's top edge missed the ray.
-        if (vis && (!seesPoint(eye, x, y + 0.9, z) || !seesPoint(eye, x, y + 1.5, z))) {
-          lastWhy = 'occluded from the battle camera'; out.occluded++; continue;
+        // NINE SAMPLES ACROSS THE BODY'S OWN BOX, not two rays down its spine.
+        // A slot is refused when less than `visMin` of the body has a line to
+        // the battle camera — the spike passed a body that was half behind a
+        // stilt because its chest and head rays both cleared the post.
+        // CHEAP FIRST, HONEST SECOND. The two spine rays reject most bad slots
+        // for two raycasts; only a slot that survives them pays for the nine-
+        // sample body test. Same verdict, a fraction of the cost — which matters
+        // because the sweep is now yaw x pitch rather than yaw alone.
+        if (vis) {
+          if (!seesPoint(eye, x, y + 0.9, z) || !seesPoint(eye, x, y + 1.5, z)) {
+            lastWhy = 'occluded from the battle camera'; out.occluded++; continue;
+          }
+          const vf = visFrac(eye, x, y, z, s.h || 1.7, s.w || 0.7, yaw);
+          if (vf < CFG.place.visMin) { lastWhy = 'only ' + Math.round(vf * 100) + '% of the body is visible from the battle camera'; out.occluded++; continue; }
         }
-        done = { id: s.id, side: s.side, x: x, y: y + CFG.lift, z: z,
+        done = { id: s.id, side: s.side, h: s.h || 1.7, w: s.w || 0.8, x: x, y: y + CFG.lift, z: z,
                  yaw: Math.atan2(-rx * Math.sign(s.ax || 1), -rz * Math.sign(s.ax || 1)),
                  slot: [ax, az], drop: +(y - P.y).toFixed(3), tries: tries };
         break;
@@ -242,17 +393,88 @@
   // handful of raycasts and it converts most of the "there was a shack in the way"
   // failures into a fight the player can see. The player's own current heading is
   // ALWAYS tried first, so where the world is open the camera does not swing.
+  // THE PITCH IS SOLVED TOO, AND ON THE SAME EVIDENCE. Given a placeable yaw,
+  // score each candidate boom elevation by (a) how much clear depth sits behind
+  // each body from that eye — the silhouette argument above — and (b) whether
+  // the world intervenes between the eye and the arena, because play3d's CAMCLIP
+  // would then haul the boom in and throw the framing away. A low boom is not
+  // preferred on taste: it wins when the terrain lets it, and loses where a bank
+  // behind the fight means the only clear background is the ground.
+  function scoreView(plan, pitch) {
+    const P = { x: plan.basis.centre[0], y: plan.basis.centre[1], z: plan.basis.centre[2] };
+    const eye = camPoseFor(P, plan.basis.yaw, pitch);
+    let back = 0, seen = 0, n = 0, backMin = 1e9;
+    for (const r of plan.placed) {
+      n++;
+      const cy = r.y + (r.h || 1.5) * 0.6;
+      seen += visFrac(eye, r.x, r.y, r.z, r.h || 1.7, r.w || 0.8, plan.basis.yaw);
+      const bd = backDepth(eye, r.x, cy, r.z) / CAM.solve.backCap;
+      back += bd;
+      if (bd < backMin) backMin = bd;
+    }
+    if (!n) return { score: -1, back: 0, seen: 0, boom: false };
+    // THE WORST-PLACED BODY IS THE ONE THAT FAILS TO READ, so the depth term is
+    // half the mean and half the minimum — the same lesson BET G's staging solve
+    // learned when pricing foe silhouette (score the mean first, the minimum
+    // second; pricing only the mean buys a good average and one invisible body).
+    const backScore = 0.5 * (back / n) + 0.5 * backMin;
+    // the boom's own line, so the shot the solver picked is the shot CAMCLIP lets it keep
+    const boomClear = seesPoint(eye, P.x, P.y + 1, P.z);
+    const S = CAM.solve;
+    // VISIBILITY DOMINATES. A background thirty metres deep is worth nothing if
+    // the body in front of it is behind a crest: the weights are a ranking, and
+    // this one is not close (measured — the crag's low boom scored best on
+    // back-depth alone and hid both foes behind the near slope).
+    const score = (seen / n) * 6
+      + S.wBack * backScore
+      + S.wBoom * (boomClear ? 1 : 0)
+      - S.wPitch * (pitch / 0.31);
+    return { score: +score.toFixed(4), back: +(back / n * CAM.solve.backCap).toFixed(2),
+             seen: +(seen / n).toFixed(3), of: n, boom: boomClear, pitch: +pitch.toFixed(3) };
+  }
+  // THE ARENA TURNS **AND THE BOOM RISES** TO FIND A CLEAR VIEW. The spike swept
+  // yaw at one fixed elevation and took the first yaw that placed. With the
+  // camera free there is a second axis for nothing: a slot that no yaw can see
+  // at 0.27 rad is often in plain sight from 0.34, because the thing in the way
+  // is a crest rather than a wall. The sweep is yaw x pitch, it takes the BEST
+  // rather than the first, and the score is the nine-sample body visibility with
+  // clear background depth as the tie-break.
   function solveArena(o) {
     const base = (window.ORBIT && window.ORBIT.yaw) || 0;
     const cands = [0, 0.5, -0.5, 1.05, -1.05, 1.6, -1.6, 2.1, -2.1, Math.PI];
+    const pitches = camOn() ? CAM.solve.pitches : [CFG.cam.pitch];
     let best = null;
+    const okPlans = [];
     for (const d of cands) {
-      const plan = solvePlacement(Object.assign({}, o, { yaw: base + d }));
-      plan.yawDelta = +d.toFixed(3);
-      if (plan.ok) return plan;
-      if (!best || plan.placed.length > best.placed.length) best = plan;
+      for (const pit of pitches) {
+        const plan = solvePlacement(Object.assign({}, o, { yaw: base + d, pitch: pit }));
+        plan.yawDelta = +d.toFixed(3);
+        if (plan.ok) {
+          okPlans.push(plan);
+          // WITHOUT THE CAMERA LANGUAGE THIS IS THE SPIKE'S OWN BEHAVIOUR, to
+          // the line: the first yaw that places, at the one fixed pitch. The A/B
+          // on this page is one build, one flag.
+          if (!camOn()) return plan;
+          break;                       // this yaw is solved; try the next one
+        }
+        if (!best || plan.placed.length > best.placed.length) best = plan;
+      }
+      if (okPlans.length >= CAM.solve.yawKeep) break;
     }
-    return best;
+    if (!okPlans.length) return best;
+    let win = null;
+    for (const plan of okPlans) {
+      for (const p of CAM.solve.pitches) {
+        const s = scoreView(plan, p);
+        if (!win || s.score > win.s.score) win = { plan: plan, s: s };
+      }
+    }
+    win.plan.basis.pitch = win.s.pitch;
+    win.plan.view = win.s;
+    return win.plan;
+  }
+  function camOn() {
+    return !!(CAM.on && !BCAM_OFF);
   }
 
   // Slot geometry, borrowed from BattleStage3D.CFG.form so the two stages block
@@ -263,10 +485,15 @@
     const f = (S3D && S3D.CFG && S3D.CFG.form) || {
       partyX: 3.2, partyDx: 1.05, partyZ: 0.35, partyDz: 2.0,
       foeX: 3.4, foeZ: -0.8, foeRank: 2.1, foeSpread: 3.2, foeJog: 0.78, foeChevron: 0.5 };
+    // HANDEDNESS IS WRITTEN DOWN IN EXACTLY ONE PLACE, and it is not here:
+    // BattleStage3D.CFG.partySide. -1 = the party is on screen LEFT. Every shot
+    // in the camera language and the 180-degree assertion that guards them read
+    // the same sign out of the same field, so flipping it flips the whole game.
+    const PS = partySide();
     const out = [];
     party.forEach((c, i) => {
-      out.push({ id: c.id, side: 'party',
-                 ax: -(f.partyX + i * f.partyDx),
+      out.push({ id: c.id, side: 'party', h: 1.7, w: 0.75,
+                 ax: PS * (f.partyX + i * f.partyDx),
                  az: f.partyZ + (i - (party.length - 1) / 2) * f.partyDz });
     });
     const n = foes.length;
@@ -283,9 +510,18 @@
         if (i < front) { ax = f.foeX; az = f.foeZ + (i - (front - 1) / 2) * sp; }
         else { const j = i - front; ax = f.foeX + f.foeRank; az = f.foeZ + (j - (back - 1) / 2) * sp - f.foeJog; }
       }
-      out.push({ id: c.id, side: 'foe', ax: ax, az: az });
+      // the creature's OWN height out of the MON registry, so the visibility
+      // samples straddle the body that is actually going to stand there
+      const md = ((window.BattleStage3D && window.BattleStage3D.MON) || {})[c.ref] || {};
+      const h = md.h || 1.3;
+      out.push({ id: c.id, side: 'foe', h: h, w: h * 1.15, ax: -PS * ax, az: az });
     });
     return out;
+  }
+  function partySide() {
+    const S3D = window.BattleStage3D;
+    const v = (S3D && S3D.CFG && S3D.CFG.partySide);
+    return (v == null ? -1 : v) < 0 ? -1 : 1;
   }
 
   // ============================ CAST ========================================
@@ -362,19 +598,289 @@
     // ---- the camera: ORBIT is the only thing we touch, and we own the copy ----
     const O = window.ORBIT;
     const camSaved = { yaw: O.yaw, pitch: O.pitch, dist: O.dist, tilt: O.tilt,
-                       panX: O.panX, panY: O.panY, panZ: O.panZ };
+                       panX: O.panX, panY: O.panY, panZ: O.panZ,
+                       fov: W.cam ? W.cam.fov : null };
     // THE TILT MUST GO TO ZERO, and finding that out was worth the spike on its
     // own. play3d aims the overworld boom UP by OWTILT (0.16 rad) about its own X
     // AFTER lookAt, deliberately, so the player sits high in frame and the ridges
     // are visible ("THE OVERWORLD BOOM"). Left alone during a battle it puts the
     // aim point at 0.5 + 0.5*tan(0.16)/tan(21deg) = 71% down the frame, i.e. the
     // whole fight in the bottom third, under the party status window. Measured
-    // before the fix: the foes' feet projected at y 778 of 813.
-    const camFrom = { pitch: O.pitch, dist: O.dist, tilt: O.tilt, yaw: O.yaw };
-    const camTo = { pitch: CFG.cam.pitch, dist: CFG.cam.dist, tilt: 0,
-                    yaw: (plan && plan.basis) ? plan.basis.yaw : O.yaw };
-    // shortest arc, so a 180-degree arena flip does not swing the long way round
-    camTo.yaw = camFrom.yaw + (((camTo.yaw - camFrom.yaw + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI);
+    // before the fix: the foes' feet projected at y 778 of 813. Every pose the
+    // shot solver emits therefore carries tilt 0, and teardown restores 0.16.
+    const P0 = (function () { const p = S.pos(); return { x: p.x, y: p.y, z: p.z }; })();
+    const baseYaw = (plan && plan.basis) ? plan.basis.yaw : O.yaw;
+    const basePitch = (plan && plan.basis && plan.basis.pitch != null) ? plan.basis.pitch : CFG.cam.pitch;
+
+    // ======================= THE SHOT SOLVER ================================
+    // Every pose is derived from the bodies the shot must show. Nothing here is
+    // a camera position; the table upstairs carries intent and this turns it
+    // into (aim, yaw, pitch, dist, fov) against the real cast.
+    const camB = { boom: {}, fwd: {}, right: {}, up: {} };
+    function camBasis(yaw, pitch, out) {
+      const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      out.boom.x = cy * cp; out.boom.y = sp; out.boom.z = sy * cp;      // aim -> eye
+      out.fwd.x = -out.boom.x; out.fwd.y = -out.boom.y; out.fwd.z = -out.boom.z;
+      out.right.x = sy; out.right.y = 0; out.right.z = -cy;             // play3d's own pan basis
+      out.up.x = -cy * sp; out.up.y = cp; out.up.z = -sy * sp;          // right x fwd
+      return out;
+    }
+    const dot3 = (a, x, y, z) => a.x * x + a.y * y + a.z * z;
+    // WHICH SIDE OF THE FRAME A BODY LANDS ON, exactly — the perspective divide
+    // included, because an ordering taken on a flat dot product is wrong the
+    // moment two bodies are at different depths.
+    function screenX(pose, x, y, z) {
+      camBasis(pose.yaw, pose.pitch, camB);
+      const ex = pose.ax + camB.boom.x * pose.dist,
+            ey = pose.ay + camB.boom.y * pose.dist,
+            ez = pose.az + camB.boom.z * pose.dist;
+      const vx = x - ex, vy = y - ey, vz = z - ez;
+      const w = dot3(camB.fwd, vx, vy, vz);
+      if (w <= 0.05) return dot3(camB.right, vx, vy, vz) > 0 ? 9 : -9;   // behind the lens
+      const tanV = Math.tan(pose.fov * Math.PI / 360);
+      const tanH = tanV * (W.cam ? W.cam.aspect : 16 / 9);
+      return dot3(camB.right, vx, vy, vz) / (w * tanH);
+    }
+    // THE 180-DEGREE RULE, AS A REFUSAL. Two independent tests, because they
+    // fail differently: (1) the EYE must stay on the side of the party->foe axis
+    // it started on — cross the line and the whole fight mirrors; (2) every
+    // party body must still project outboard of every foe body, which is the
+    // thing the player actually experiences. `partySide()` is the only place the
+    // handedness is written and both tests read it.
+    let axisRef = 0;                  // the side of the axis the fight was solved from
+    // THE RIG's own state, declared before anything that writes it.
+    const RIG = { cur: null, from: null, to: null, t0: 0, ms: 1, ease: 'out',
+                  kind: null, next: null, refusals: 0, lastRefusal: null,
+                  log: [], moves: 0 };
+    function sides() {
+      const p = [], f = [];
+      for (const id of order) {
+        const b = bodies[id];
+        if (!b || b.root.visible === false) continue;
+        (b.side === 'foe' ? f : p).push(b);
+      }
+      return { p, f };
+    }
+    function axisSign(eyeX, eyeZ) {
+      const s = sides();
+      if (!s.p.length || !s.f.length) return 0;
+      let px = 0, pz = 0, fx = 0, fz = 0;
+      for (const b of s.p) { px += b.home.x; pz += b.home.z; }
+      for (const b of s.f) { fx += b.home.x; fz += b.home.z; }
+      px /= s.p.length; pz /= s.p.length; fx /= s.f.length; fz /= s.f.length;
+      const ax = fx - px, az = fz - pz, bx = eyeX - px, bz = eyeZ - pz;
+      const cr = ax * bz - az * bx;
+      return cr > 0 ? 1 : cr < 0 ? -1 : 0;
+    }
+    function axisCheck(pose) {
+      camBasis(pose.yaw, pose.pitch, camB);
+      const ex = pose.ax + camB.boom.x * pose.dist, ez = pose.az + camB.boom.z * pose.dist;
+      const sgn = axisSign(ex, ez);
+      const s = sides();
+      let pMax = -Infinity, pMin = Infinity, fMax = -Infinity, fMin = Infinity;
+      for (const b of s.p) { const x = screenX(pose, b.root.position.x, b.root.position.y + b.h * 0.5, b.root.position.z); if (x > pMax) pMax = x; if (x < pMin) pMin = x; }
+      for (const b of s.f) { const x = screenX(pose, b.root.position.x, b.root.position.y + b.h * 0.5, b.root.position.z); if (x > fMax) fMax = x; if (x < fMin) fMin = x; }
+      const PS = partySide();
+      // one side empty (a KO'd line, the victory shot) = nothing to cross
+      const both = s.p.length > 0 && s.f.length > 0;
+      const order2 = !both || (PS < 0 ? pMax < fMin : pMin > fMax);
+      const gap = !both ? null : +(PS < 0 ? fMin - pMax : pMin - fMax).toFixed(4);
+      const sideOk = !both || axisRef === 0 || sgn === axisRef;
+      return { ok: !!(order2 && sideOk), order: !!order2, side: sideOk, gap: gap,
+               sgn: sgn, ref: axisRef, party: both ? [+pMin.toFixed(3), +pMax.toFixed(3)] : null,
+               foe: both ? [+fMin.toFixed(3), +fMax.toFixed(3)] : null };
+    }
+
+    function subjectsFor(kind, o) {
+      o = o || {};
+      const live = order.map(id => bodies[id]).filter(b => b && b.root.visible !== false);
+      const sh = CAM.shots[kind] || CAM.shots.round;
+      const pick = (ids) => ids.map(id => bodies[id]).filter(b => b && b.root.visible !== false);
+      if (sh.show === 'actor') {
+        const l = pick([o.actor || actorId].concat(o.target || targetId ? [o.target || targetId] : []));
+        return l.length ? l : live;
+      }
+      if (sh.show === 'pair') {
+        const l = pick([o.actor || actorId, o.target || targetId].filter(Boolean));
+        return l.length ? l : live;
+      }
+      if (sh.show === 'victim') { const l = pick([o.victim].filter(Boolean)); return l.length ? l : live; }
+      if (sh.show === 'party') { const l = live.filter(b => b.side !== 'foe' && !b.dead); return l.length ? l : live; }
+      return live;
+    }
+    // The side of the arena a body stands on, in the arena's own basis: -1 is the
+    // party's side when partySide is -1. Derived, never assumed from the id.
+    function sideSign(b) {
+      const rx = Math.sin(baseYaw), rz = -Math.cos(baseYaw);
+      const d = (b.home.x - P0.x) * rx + (b.home.z - P0.z) * rz;
+      return d < 0 ? -1 : 1;
+    }
+    function solveShot(kind, o) {
+      o = o || {};
+      const sh = CAM.shots[kind] || CAM.shots.round;
+      const subj = subjectsFor(kind, o);
+      const fov = clamp(typeof sh.fov === 'number' ? sh.fov : (CAM.fov[sh.fov] || CAM.fov.rest),
+                        CAM.fov.min, CAM.fov.max);
+      const pitch = clamp(basePitch + (sh.dPitch || 0) + (o._dp || 0), CAM.pitch.min, CAM.pitch.max);
+      // WHICH WAY THE BOOM SWINGS is derived from who the shot is about: toward
+      // the end of the axis the subject FACES, so a shot on a body shows its
+      // front. A pair takes the attacker's sign. Capped well short of the axis.
+      let s = 0;
+      if (sh.show === 'actor' || sh.show === 'pair') { const a = bodies[o.actor || actorId]; if (a) s = sideSign(a); }
+      else if (sh.show === 'victim') { const v = bodies[o.victim]; if (v) s = sideSign(v); }
+      else if (sh.show === 'party') s = partySide();
+      const yawOff = clamp((sh.yawOff || 0) * s, -1.05, 1.05);
+      const pose = { kind: kind, ax: 0, ay: 0, az: 0, yaw: baseYaw + yawOff, pitch: pitch,
+                     dist: CFG.cam.dist, fov: fov, tilt: 0 };
+      // WHERE A BODY WILL BE WHEN THE SHOT IS ON SCREEN, not where it is when the
+      // shot is asked for. The strike shot is requested the instant act() starts,
+      // with the attacker still at home five metres away — framing the pair from
+      // there produced a wide shot of a gap she was about to close, and by the
+      // time she arrived the frame was two seconds stale. `o.pos` carries the
+      // strike station act() has already derived from both bodies' own widths.
+      const posOf = (b) => (o.pos && o.pos[b.id]) || b.root.position;
+      const subjP = subj.map(b => ({ b: b, p: posOf(b) }));
+      // AIM: the subject group's own centre of mass at chest height.
+      let n = 0;
+      for (const s2 of subjP) { pose.ax += s2.p.x; pose.ay += s2.p.y + s2.b.h * 0.52; pose.az += s2.p.z; n++; }
+      if (!n) { pose.ax = P0.x; pose.ay = P0.y + 1; pose.az = P0.z; n = 1; }
+      pose.ax /= n; pose.ay /= n; pose.az /= n;
+      // DISTANCE: solved so every one of the subject's own extremes — feet, head,
+      // and its own measured half-width either side — lands inside the fill band.
+      // Two passes, because `lead` moves the aim and the aim moves the fit.
+      const fit = () => {
+        camBasis(pose.yaw, pose.pitch, camB);
+        const tanV = Math.tan(pose.fov * Math.PI / 360);
+        const tanH = tanV * (W.cam ? W.cam.aspect : 16 / 9);
+        let d = CAM.dist.min;
+        for (const s2 of subjP) {
+          const b = s2.b, hw = b.w / 2;
+          for (const sx of [-1, 1]) for (const sy of [0, 1]) {
+            const px = s2.p.x + camB.right.x * hw * sx,
+                  py = s2.p.y + (sy ? b.h * 1.08 : -0.05),
+                  pz = s2.p.z + camB.right.z * hw * sx;
+            const vx = px - pose.ax, vy = py - pose.ay, vz = pz - pose.az;
+            const u = dot3(camB.right, vx, vy, vz), v = dot3(camB.up, vx, vy, vz), w = dot3(camB.fwd, vx, vy, vz);
+            const dh = Math.abs(u) / (Math.max(0.05, sh.fillH) * tanH) - w;
+            const dv = Math.abs(v) / (Math.max(0.05, sh.fillV) * tanV) - w;
+            if (dh > d) d = dh;
+            if (dv > d) d = dv;
+          }
+        }
+        pose.dist = clamp(d, CAM.dist.min, CAM.dist.max);
+        return tanH;
+      };
+      const tanH = fit();
+      if (sh.lead) {
+        // LOOKING ROOM, on the side the subject is facing away from. `lead` is a
+        // fraction of the half-frame; the sign comes from which side of the
+        // arena the subject stands on, never from the table.
+        camBasis(pose.yaw, pose.pitch, camB);
+        const k = (s || 1) * sh.lead * pose.dist * tanH;
+        pose.ax -= camB.right.x * k; pose.az -= camB.right.z * k;
+        fit();
+      }
+      pose._subj = subjP;
+      return pose;
+    }
+    // CAN THE SHOT SEE ITS OWN SUBJECT — nine samples per body, from this pose's
+    // own eye. `boomClear` only ever asked about the line to the aim point; the
+    // strike shot rides low and the thing that eats it is knee-high foliage in
+    // front of the attacker, which a single boom ray flies straight over.
+    function subjVis(pose) {
+      camBasis(pose.yaw, pose.pitch, camB);
+      const eye = { x: pose.ax + camB.boom.x * pose.dist, y: pose.ay + camB.boom.y * pose.dist,
+                    z: pose.az + camB.boom.z * pose.dist };
+      let worst = 1;
+      for (const s2 of (pose._subj || [])) {
+        const v = visFrac(eye, s2.p.x, s2.p.y, s2.p.z, s2.b.h, s2.b.w, pose.yaw);
+        if (v < worst) worst = v;
+      }
+      return worst;
+    }
+    // THE HARD REFUSAL. A shot that would cross the axis is not softened and not
+    // shipped: the swing is halved, then dropped, and if the geometry still
+    // crosses (two bodies interleaved on the line) the camera KEEPS THE POSE IT
+    // HAS. A camera language that can mirror the fight is worse than one angle.
+    // AND THE BOOM MUST HAVE A LINE. play3d's CAMCLIP hauls the boom in when the
+    // world intervenes (it is the fix PT-20260803-025 is about, and it keeps
+    // running through a battle by design) — so a shot solved into a bank does
+    // not get refused, it gets silently re-framed at 3 m by somebody else's
+    // easing. Lifting the boom is the cheaper answer than losing the shot.
+    function boomClear(pose) {
+      camBasis(pose.yaw, pose.pitch, camB);
+      return seesPoint({ x: pose.ax + camB.boom.x * pose.dist,
+                         y: pose.ay + camB.boom.y * pose.dist,
+                         z: pose.az + camB.boom.z * pose.dist }, pose.ax, pose.ay, pose.az);
+    }
+    function solveShotSafe(kind, o) {
+      const sh = CAM.shots[kind] || CAM.shots.round;
+      const saveOff = sh.yawOff;
+      let fallback = null, lastChk = null;
+      for (const k of [1, 0.5, 0]) {
+        for (const dp of [0, 0.09, 0.19]) {
+          sh.yawOff = saveOff * k;
+          const pose = solveShot(kind, Object.assign({}, o, { _dp: dp }));
+          const chk = axisCheck(pose);
+          sh.yawOff = saveOff;
+          lastChk = chk;
+          if (!chk.ok) break;                      // a bigger pitch cannot fix handedness
+          pose.axis = chk; pose.softened = k; pose.lifted = dp;
+          pose.vis = +subjVis(pose).toFixed(3);
+          if (boomClear(pose) && pose.vis >= CFG.place.visMin) return pose;
+          if (!fallback || pose.vis > fallback.vis) fallback = pose;
+        }
+      }
+      if (fallback) return fallback;
+      RIG.refusals++; RIG.lastRefusal = { kind: kind, chk: lastChk };
+      return null;
+    }
+
+    // ======================= THE RIG (moves, never cuts) ====================
+    const EASE = {
+      lin: u => u,
+      out: u => 1 - Math.pow(1 - u, 3),
+      io: u => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2),
+    };
+    function shortArc(from, to) {
+      return from + (((to - from + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI);
+    }
+    function poseNow() {
+      const p = { kind: RIG.kind, ax: P0.x + O.panX, ay: P0.y + 1 + O.panY, az: P0.z + O.panZ,
+                  yaw: O.yaw, pitch: O.pitch, dist: O.dist, fov: W.cam ? W.cam.fov : 42, tilt: O.tilt };
+      return p;
+    }
+    function goTo(pose, ms, ease, why) {
+      if (!pose) return false;
+      RIG.from = RIG.cur ? Object.assign({}, RIG.cur) : poseNow();
+      RIG.to = Object.assign({}, pose);
+      RIG.to.yaw = shortArc(RIG.from.yaw, RIG.to.yaw);
+      RIG.t0 = now(); RIG.ms = Math.max(1, ms || 600); RIG.ease = ease || 'io';
+      RIG.kind = pose.kind || RIG.kind;
+      RIG.moves++;
+      RIG.log.push({ t: +(now() - camT0).toFixed(0), kind: RIG.kind, why: why || null,
+                     dist: +pose.dist.toFixed(2), fov: +pose.fov.toFixed(1),
+                     pitch: +pose.pitch.toFixed(3), yaw: +pose.yaw.toFixed(3) });
+      if (RIG.log.length > 200) RIG.log.shift();
+      return true;
+    }
+    // THE ONE ENTRY POINT the stage's verbs call. A shot that the 180-degree
+    // check refuses leaves the camera where it is and is counted.
+    function shot(kind, o) {
+      if (!camOn()) return false;
+      const sh = CAM.shots[kind]; if (!sh) return false;
+      const pose = solveShotSafe(kind, o);
+      if (!pose) return false;
+      RIG.next = null;
+      const ok = goTo(pose, (o && o.ms) || sh.ms, sh.cut ? 'lin' : sh.ease, (o && o.why) || kind);
+      if (ok && sh.push && !(o && o.nopush)) {
+        // the queued second leg: a slow dolly that starts when the move lands
+        const p2 = Object.assign({}, pose);
+        p2.dist = clamp(pose.dist * sh.push.k, CAM.dist.min, CAM.dist.max);
+        RIG.next = { pose: p2, ms: sh.push.ms, ease: sh.push.ease, why: kind + '-push' };
+      }
+      return ok;
+    }
     const camT0 = now();
     // The player's own body is a combatant now (or would be a duplicate standing
     // in the middle of her own battle), so it is hidden and restored by identity.
@@ -504,6 +1010,7 @@
         if (deadStage || !g || b.tier !== 'proxy') return;
         setVisual(b, g.scene, 1.7, { tier: 'model' });
         rigUp(b, g);
+        reframeOpening();
         if (c.dead) markDead(b, true);
       }).catch(() => { });
       if (c.dead) markDead(b, true);
@@ -519,10 +1026,52 @@
         if (md.yaw) g.scene.rotation.y += md.yaw;
         setVisual(b, g.scene, md.h, { tier: 'model' });
         rigUp(b, g);
+        reframeOpening();
         if (c.dead) markDead(b, true);
       }).catch(() => { });
       if (c.dead) markDead(b, true);
     });
+
+    // ---- THE OPENING SHOT ----------------------------------------------------
+    // Solved now, because the bodies exist now. `axisRef` is the side of the
+    // party->foe axis this fight was staged from, and every later shot is
+    // refused if it would put the eye on the other one.
+    (function openingShot() {
+      camBasis(baseYaw, basePitch, camB);
+      axisRef = axisSign(P0.x + camB.boom.x * CFG.cam.dist, P0.z + camB.boom.z * CFG.cam.dist);
+      if (!camOn()) {
+        // THE SPIKE'S OWN POSE, to the number: one boom, one pitch, tilt to zero,
+        // the pan left where the player had it, eased over CFG.cam.ms. This is
+        // what `?bcam=0` gets and it is what the before column measures.
+        goTo({ kind: 'fixed', ax: P0.x + camSaved.panX, ay: P0.y + 1 + camSaved.panY,
+               az: P0.z + camSaved.panZ, yaw: baseYaw, pitch: CFG.cam.pitch,
+               dist: CFG.cam.dist, fov: camSaved.fov == null ? 42 : camSaved.fov, tilt: 0 },
+              CFG.cam.ms, 'out', 'entry(fixed)');
+        return;
+      }
+      shot('round', { ms: CFG.cam.ms, why: 'entry' });
+    })();
+    // A MODEL ARRIVING CHANGES THE SUBJECT'S OWN MEASUREMENTS — the proxy is
+    // 0.52 m across and a duskpad is 2.07 — so the opening frame is re-solved
+    // when the real cast lands, and ONLY while nothing else has asked for a shot.
+    let acted = false;
+    function reframeOpening() {
+      if (deadStage || acted || !camOn() || RIG.kind !== 'round') return;
+      shot('round', { ms: 420, why: 'reframe(models)' });
+    }
+    // ALWAYS SETTLE BACK TO REST. The rule set BET B names: never cross the axis,
+    // at most one move per beat, and always return to the shot the whole fight is
+    // readable from. A later shot request cancels a pending return, so a fast
+    // exchange never fights itself.
+    let restT = 0;
+    function restLater(ms) {
+      clearTimeout(restT);
+      restT = setTimeout(() => { if (!deadStage) shot('round', { why: 'settle' }); }, ms);
+    }
+    function shotB(kind, o) {          // every verb goes through here
+      clearTimeout(restT);
+      return shot(kind, o);
+    }
 
     // ---- markers: two rings on the REAL ground -------------------------------
     function ringMesh(colour) {
@@ -606,6 +1155,13 @@
       clearTimeout(b._backT);                 // a pending return-to-idle must not raise the dead
       oneShot(b, 'die', true);
       if (instant) { b.root.visible = false; return; }
+      // (0) THE CAMERA GOES TO THE BODY, AND THEN IT PUSHES IN. The KO lane
+      // wanted exactly this and refused it in the diorama, where the plate is
+      // pinned to one pose: a slow dolly across CFG.ko.holdMs, so the 760 ms the
+      // corpse lies there is a move rather than a pause. It ends before the
+      // dissolve; the return to rest is scheduled past both.
+      shotB('ko', { victim: b.id });
+      restLater(K.holdMs + K.dissolveMs + 320);
       // (1) THE BLOW LANDS. battle_turnbased sets dead BEFORE it calls flinch and
       // flinch returns early on a dead body, so without this the killing blow is
       // the one blow with no feedback — the same defect measured in the diorama.
@@ -719,6 +1275,13 @@
         // half of each body's own measured width apart, plus a hand's reach.
         travel = Math.max(0, L - ((b.w + tgt.w) / 2 * 1.05 + 0.22));
       }
+      // THE STRIKE SHOT — low three-quarter, framed on the two bodies that are
+      // about to touch, and it lands while the attacker is still walking in.
+      acted = true;
+      const station = {};
+      station[id] = { x: b.home.x + nx * travel, y: b.home.y, z: b.home.z + nz * travel };
+      shotB('strike', { actor: id, target: tgt && tgt !== b ? tgt.id : null, pos: station,
+                        ms: Math.min(420, Math.max(200, budget * 0.7)) });
       oneShot(b, 'attack');
       const total = budget + 320;
       const arriveU = clamp((budget * 0.62) / total, 0.05, 0.95);
@@ -743,6 +1306,10 @@
     }
     function flinch(id) {
       const b = bodies[id]; if (!b || b.dead) return;
+      // THE IMPACT — the same angle, pushed in. A cut here would be a different
+      // design and §11.11 has not been ruled on; a push is not a cut.
+      shotB('impact', { actor: actorId, target: id });
+      restLater(940);                      // pacing.damage + settle: back to rest
       oneShot(b, 'hit');
       flashOn(b); shockRing(b); shake(CFG.fx.shake);
       const ax = b.home.x - (bodies[actorId] ? bodies[actorId].home.x : b.home.x);
@@ -786,16 +1353,41 @@
       const dt = Math.min(clock.getDelta(), 0.1);
       const t = (now() - camT0) / 1000;
 
-      // the push-in, eased once, then held. Restored field-by-field on teardown.
-      const u = clamp((now() - camT0) / CFG.cam.ms, 0, 1);
-      const e = 1 - Math.pow(1 - u, 3);
-      O.dist = lerp(camFrom.dist, camTo.dist, e);
-      O.pitch = lerp(camFrom.pitch, camTo.pitch, e);
-      O.tilt = lerp(camFrom.tilt, camTo.tilt, e);
-      O.yaw = lerp(camFrom.yaw, camTo.yaw, e);
+      // ---- THE CAMERA, one move at a time -----------------------------------
+      // The rig eases from pose to pose; a queued second leg (the KO's slow push,
+      // the victory dolly) starts the frame the first one lands. ORBIT is the
+      // only surface written, exactly as the spike established, so teardown is
+      // still a six-number copy-back.
+      if (RIG.to) {
+        const u = clamp((now() - RIG.t0) / RIG.ms, 0, 1);
+        const e = (EASE[RIG.ease] || EASE.io)(u);
+        const A = RIG.from, B = RIG.to;
+        const cur = RIG.cur || (RIG.cur = {});
+        cur.kind = B.kind; cur.fov = lerp(A.fov, B.fov, e);
+        cur.ax = lerp(A.ax, B.ax, e); cur.ay = lerp(A.ay, B.ay, e); cur.az = lerp(A.az, B.az, e);
+        cur.yaw = lerp(A.yaw, B.yaw, e); cur.pitch = lerp(A.pitch, B.pitch, e);
+        cur.dist = lerp(A.dist, B.dist, e); cur.tilt = lerp(A.tilt == null ? camSaved.tilt : A.tilt, B.tilt || 0, e);
+        if (u >= 1 && RIG.next) {
+          const nx = RIG.next; RIG.next = null;
+          goTo(nx.pose, nx.ms, nx.ease, nx.why);
+        }
+      }
+      const C = RIG.cur;
+      if (C) {
+        O.yaw = C.yaw; O.pitch = C.pitch; O.dist = C.dist; O.tilt = C.tilt;
+        // A CAMERA THAT IS ALIVE — 5.4 s, not the diorama's 103 s cycle that no
+        // player ever sees a whole one of. Amplitude is centimetres on the aim.
+        const D = CAM.drift, ph = (now() - camT0) / D.ms * Math.PI * 2;
+        const dx = camOn() ? Math.sin(ph) * D.amp : 0;
+        const dy = camOn() ? Math.sin(ph * 0.61 + 1.3) * D.amp * 0.55 : 0;
+        const dz = camOn() ? Math.cos(ph * 0.83 + 0.4) * D.amp : 0;
+        O.panX = C.ax - P0.x + dx; O.panY = C.ay - P0.y - 1 + dy; O.panZ = C.az - P0.z + dz;
+        // THE LENS. play3d never touches fov after construction, so this is the
+        // one write and teardown restores the number it found.
+        if (W.cam && Math.abs(W.cam.fov - C.fov) > 0.005) { W.cam.fov = C.fov; W.cam.updateProjectionMatrix(); }
+      }
       // THE SHAKE rides the pan offsets, which are the camera's own aim point —
       // so a shake can never leave the camera somewhere ORBIT does not describe.
-      O.panX = camSaved.panX; O.panY = camSaved.panY; O.panZ = camSaved.panZ;
       if (shakeAmp > 0) {
         const su = clamp((now() - shakeT0) / shakeDur, 0, 1);
         if (su >= 1) shakeAmp = 0;
@@ -854,15 +1446,39 @@
                         z: +b.bob.rotation.z.toFixed(4) } };
       },
       clipsOf(id) { const b = bodies[id]; return b && b.actions ? Object.keys(b.actions) : []; },
-      setTarget(id) { targetId = id && bodies[id] && !bodies[id].dead ? id : null; },
-      setActor(id) { actorId = id && bodies[id] && !bodies[id].dead ? id : null; },
+      // THE CURSOR MOVES, THE FRAME FOLLOWS. Re-solving `decide` when the player
+      // picks a different foe is what keeps the thing being aimed at in shot —
+      // `show:'actor'` resolves to the deciding body AND its target.
+      setTarget(id) {
+        const was = targetId;
+        targetId = id && bodies[id] && !bodies[id].dead ? id : null;
+        if (targetId && targetId !== was && actorId && RIG.kind === 'decide') shotB('decide', { ms: 380 });
+      },
+      // WHOSE TURN IT IS, as a shot. setActor(null) deliberately does NOT return
+      // to rest: battle_turnbased clears the actor at settle() and announces the
+      // action 300 ms later, so a return here would be a move the player sees
+      // undone. The beat that follows owns the camera; restLater owns the rest.
+      setActor(id) {
+        const was = actorId;
+        actorId = id && bodies[id] && !bodies[id].dead ? id : null;
+        if (actorId && actorId !== was) shotB('decide', {});
+      },
       act: act, flinch: flinch,
       ko(id) { const b = bodies[id]; if (b && !b.dead) markDead(b, false); },
       setDead(id, on) {
         const b = bodies[id]; if (!b) return;
         if (on && !b.dead) markDead(b, false); else if (!on && b.dead) revive(b);
       },
-      cheer() { for (const id of order) { const b = bodies[id]; if (b.side === 'party' && !b.dead) oneShot(b, 'cheer'); } },
+      // THE VICTORY MOVE — the second thing the KO lane wanted and could not
+      // have. The boom swings round to three-quarter FRONT of the party (it
+      // stops 54 deg short of the axis, so the shot the tally lands on is on the
+      // same side of the line as every other shot in the fight) and dollies in
+      // while they cheer. battle_turnbased gives it winHold + winCheer = 1520 ms
+      // before the box arrives.
+      cheer() {
+        shotB('victory', {});
+        for (const id of order) { const b = bodies[id]; if (b.side === 'party' && !b.dead) oneShot(b, 'cheer'); }
+      },
       // ONE synchronous render through the PAGE's renderFrame(), so a QA photograph
       // is of the player's pipeline (GTAO + bloom + OutputPass), never a second one.
       // No preserveDrawingBuffer is needed: toDataURL in the same task as the draw
@@ -874,6 +1490,95 @@
       },
       fx: { shake: shake, flash: (id) => bodies[id] && flashOn(bodies[id]),
             ring: (id) => bodies[id] && shockRing(bodies[id]) },
+      // ---- THE CAMERA, AS QA SURFACE ---------------------------------------
+      // Everything an instrument needs to assert the shot language without
+      // knowing anything about how it is implemented.
+      cam() {
+        const c = RIG.cur;
+        return { on: camOn(), kind: RIG.kind, actor: actorId, target: targetId,
+                 moves: RIG.moves, refusals: RIG.refusals,
+                 lastRefusal: RIG.lastRefusal, base: { yaw: +baseYaw.toFixed(4), pitch: +basePitch.toFixed(4) },
+                 view: plan.view || null, axisRef: axisRef,
+                 pose: c ? { ax: +c.ax.toFixed(3), ay: +c.ay.toFixed(3), az: +c.az.toFixed(3),
+                             yaw: +c.yaw.toFixed(4), pitch: +c.pitch.toFixed(4),
+                             dist: +c.dist.toFixed(3), fov: +c.fov.toFixed(2) } : null,
+                 axis: c ? axisCheck(c) : null,
+                 orbit: { yaw: +O.yaw.toFixed(4), pitch: +O.pitch.toFixed(4), dist: +O.dist.toFixed(3),
+                          tilt: +O.tilt.toFixed(4), panX: +O.panX.toFixed(3), panY: +O.panY.toFixed(3), panZ: +O.panZ.toFixed(3) },
+                 fov: W.cam ? +W.cam.fov.toFixed(2) : null, log: RIG.log.slice(-24) };
+      },
+      // SOLVE EVERY SHOT IN THE TABLE against the cast as it stands and report
+      // the 180-degree check for each — the automated assertion BET B asks for.
+      shotTable(o) {
+        o = o || {};
+        const out = [];
+        for (const kind of Object.keys(CAM.shots)) {
+          const opt = Object.assign({ actor: actorId || order[0], target: null, victim: null }, o[kind] || {});
+          if (!opt.target) { for (const id of order) if (bodies[id].side === 'foe' && !bodies[id].dead) { opt.target = id; break; } }
+          if (!opt.victim) opt.victim = opt.target;
+          const raw = solveShot(kind, opt);
+          const chk = axisCheck(raw);
+          const safe = solveShotSafe(kind, opt);
+          out.push({ kind: kind, show: CAM.shots[kind].show, cut: !!CAM.shots[kind].cut,
+                     dist: +raw.dist.toFixed(2), fov: +raw.fov.toFixed(1),
+                     pitch: +raw.pitch.toFixed(3), yawOff: +(raw.yaw - baseYaw).toFixed(3),
+                     axis: chk, refused: !safe, softened: safe ? safe.softened : null });
+        }
+        return out;
+      },
+      // drive one shot by name (the contact sheet), and the 'why' goes in the log
+      shotTo(kind, o) { return shotB(kind, Object.assign({ why: 'qa' }, o || {})); },
+      // ---- pixels: what an instrument needs to MEASURE legibility -----------
+      // Toggling a body's visibility and re-rendering is how a silhouette is
+      // extracted honestly (the frame with the body minus the frame without it).
+      // `xray` drops depth testing on the cast, so the SAME diff yields the
+      // silhouette the body WOULD have had unoccluded — occlusion is then one
+      // subtraction rather than an assertion.
+      qa: {
+        ids() { return order.slice(); },
+        show(id, on) { const b = bodies[id]; if (b) b.root.visible = !!on; },
+        showAll(on) { for (const id of order) if (!bodies[id].dead) bodies[id].root.visible = !!on; },
+        // DEPTH WRITE GOES WITH DEPTH TEST. Leaving depthWrite on while depthTest
+        // is off scribbles the body's depth over the terrain's, and GTAO reads
+        // that buffer — so the "free" silhouette came back with a different AO
+        // ring around it and the occlusion figure went NEGATIVE. Both flags are
+        // saved per material and restored, never assumed to have been true.
+        xray(on) {
+          for (const id of order) {
+            const b = bodies[id]; if (!b || !b.obj) continue;
+            b.obj.traverse((o2) => {
+              if (!o2.isMesh || !o2.material) return;
+              const ms = Array.isArray(o2.material) ? o2.material : [o2.material];
+              for (const m of ms) {
+                if (on) {
+                  if (!m.__bcSave) m.__bcSave = { t: m.depthTest, w: m.depthWrite, o: o2.renderOrder };
+                  m.depthTest = false; m.depthWrite = false;
+                } else if (m.__bcSave) {
+                  m.depthTest = m.__bcSave.t; m.depthWrite = m.__bcSave.w; m.__bcSave = null;
+                }
+                m.needsUpdate = true;
+              }
+              o2.renderOrder = on ? 999 : 0;
+            });
+          }
+        },
+        // the body's own world box, projected — the region a mask lives in
+        box(id) {
+          const b = bodies[id]; if (!b || !W.cam) return null;
+          const cv = W.R.domElement, rect = cv.getBoundingClientRect();
+          const bx = new TH.Box3().setFromObject(b.root);
+          let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+          for (let i = 0; i < 8; i++) {
+            _v.set(i & 1 ? bx.max.x : bx.min.x, i & 2 ? bx.max.y : bx.min.y, i & 4 ? bx.max.z : bx.min.z).project(W.cam);
+            const px = (_v.x * 0.5 + 0.5) * rect.width, py = (-_v.y * 0.5 + 0.5) * rect.height;
+            if (px < x0) x0 = px; if (px > x1) x1 = px;
+            if (py < y0) y0 = py; if (py > y1) y1 = py;
+          }
+          return { x0: x0, y0: y0, x1: x1, y1: y1, w: rect.width, h: rect.height,
+                   side: b.side, dead: b.dead, tier: b.tier };
+        },
+      },
+      draw() { if (W.render) W.render(); return W.R.info.render.frame; },
       // ---- TEARDOWN: TOTAL, AND EVERY LINE OF IT IS A RESTORE ---------------
       // The audit's constraint (§11.12) and the four post-battle queue tickets.
       // What this path CAN leak is not a context (it never made one) but WORLD
@@ -886,6 +1591,7 @@
         if (deadStage) return;
         deadStage = true;
         if (raf) cancelAnimationFrame(raf);
+        clearTimeout(restT);
         tweens.length = 0;
         for (const id of order) { try { clearTimeout(bodies[id]._backT); } catch (e) { } }
         for (const m of mixers) { try { m.stopAllAction(); m.uncacheRoot(m.getRoot()); } catch (e) { } }
@@ -899,6 +1605,13 @@
         O.yaw = camSaved.yaw; O.pitch = camSaved.pitch; O.dist = camSaved.dist;
         O.tilt = camSaved.tilt;
         O.panX = camSaved.panX; O.panY = camSaved.panY; O.panZ = camSaved.panZ;
+        // AND THE LENS. The shot language is the only thing in this game that
+        // ever writes cam.fov after construction; a battle that left a 27 deg
+        // lens on the overworld would be a silent, permanent regression that no
+        // ORBIT receipt could see.
+        if (W.cam && camSaved.fov != null && W.cam.fov !== camSaved.fov) {
+          W.cam.fov = camSaved.fov; W.cam.updateProjectionMatrix();
+        }
         if (W.ch && chSaved !== null) W.ch.visible = chSaved;
         if (window.BattleStage3D && window.BattleStage3D._live === stage) {
           window.BattleStage3D._live = null;
@@ -925,6 +1638,10 @@
     version: 1, on: true, installed: false, enabled: true, _live: null,
     created: 0, refused: 0,
     CFG: CFG,
+    // THE SHOT TABLE, live. `BattleWorld.CAM.on = false` is the A/B switch the
+    // board is built from — one build, one flag, everything else identical.
+    CAM: CAM,
+    camOn() { return camOn(); },
     solve(o) { return solveArena(o || { slots: slotsFor([{ id: 'a' }, { id: 'b' }], [{ id: 'm0' }, { id: 'm1' }]) }); },
     solveArena: solveArena,
     solveFixed: solvePlacement,
