@@ -22011,3 +22011,108 @@ Every one is in del-cine, a scene this census never touches, and the census uplo
 nothing (a CPU-side traverse plus computeBoundingBox cannot move renderer.info). DAYLOG
 records transition_test as skipped for six consecutive deploys, so these are most likely
 pre-existing and unnoticed. NOT INVESTIGATED HERE — flagged for whoever owns the swap.
+
+------------------------------------------------------------
+## 2026-08-09 — `transition_test`: THE RED IS ADJUDICATED, AND IT IS THE GATE'S OWN
+
+**THE RUN.** `node tools/transition_test.mjs --port=3000`, serial, nothing else of this
+lane's running, machine quiet at the start (load 1-min 1.65, swap 69.7% of 5120M, memory
+free 81%): **167 assertions ok, 1 failed**, 10 min 40 s wall clock. Console gate green
+(66 messages, all optional-asset 404s). Full log:
+`docs/qa/transition-test/run-20260809-0016-quiet.log`.
+
+The one red:
+
+    FAIL after battle: del-cine|shelf-west is back to its baseline (geo 622, tex 38)
+         {"delta":{"geo":2,"tex":0,"meshes":0,"mats":0}, ... }
+
+The other three reds a lane reported in passing yesterday (`del-cine|gate` 2075 -> 2073 at
+doors 15 and 21, and the derived "every repeated (scene, shot) has identical counts") were
+**green in this run** — doors 15 and 21 both read `gate` 2073, and the roll-up read 12
+repeats across 12 states with zero drift.
+
+### THE ADJUDICATION: ALL FOUR ARE ONE DEFECT, AND IT IS NOT A REGRESSION
+
+**`renderer.info.memory.geometries` AT A (SCENE, SHOT) IS NOT A FUNCTION OF (SCENE, SHOT).**
+`tools/gpu_baseline_probe.mjs` (new; drives transition_test's own itinerary and its own
+battle leg, then names the resident geometries by disposing each one and watching the
+counter) reproduces the drift on FOUR del-cine states in ONE run
+(`docs/qa/transition-test/gpu-baseline-probe-20260809.log`):
+
+    del-cine|shelf-west   624, 622, 624, 624
+    del-cine|gate         2073, 2075, 2075        <- the exact pair the lane reported, sign flipped
+    del-cine|cottage      367, 365
+
+Doors 3 and 19 are the SAME edge, the SAME shot and the SAME position (27.60, -7.38) and
+read 622 and 624. Doors 5 and 15 are the same edge, shot and position (4.89, -6.48) and
+read 2073 and 2075. So it is not the arrival, not the camera and not the plate.
+
+**NAMED, BY DISPOSE-AND-WATCH.** At the failing snapshot: 2348 distinct geometries in the
+live graph, 615 resident, and exactly TWO of those belong to an object that is not
+currently drawable — a `RingGeometry` and an `OctahedronGeometry` under `ch`. Those are
+**`occRing` and `occDia`** (play3d.html:1537-1538), the occlusion indicator. Their material
+is `mkMat()`, which has no map, so they are worth **2 geometries and 0 textures** — the
+fingerprint of every one of these reds, and the reason none of them moved `tex`, `meshes`
+(allMeshes.length) or `mats` (SCENEMATS.size).
+
+**THE MECHANISM, AND WHOSE COMMIT IT IS.** `7545d2fd` (the contactShadow fix that took the
+gate 162/6 -> 168/0) added `occRing.geometry.dispose(); occDia.geometry.dispose();` to
+`sceneDispose()` — verified absent at `7545d2fd^`, present at HEAD. three.js re-registers a
+geometry only when it is next DRAWN, and these two are drawn only while `occCheck()`'s
+camera->body ray hits. So after that commit their residency means **"was the indicator up
+for at least one rendered frame at ANY point during this scene's life"** — which is decided
+afresh on every visit, by frame parity (`++occT%6`), by where the body was mid-arrival, and
+by load. EVERY reading in the probe had `ring === false` AT THE SNAPSHOT and still carried
+the +2: the flag you can see is not the residency you are measuring.
+
+That commit was the right fix for contactShadow and the wrong one for these two. Before it
+they uploaded once and stayed (monotone: a one-time false +2 on any baseline taken before
+the first occlusion event — the "measured +2 geo on a later round trip" its own comment
+records). After it they are a coin flip per visit. **Neither treatment makes the assertion
+well-founded.** contactShadow's dispose must STAY: the real-time branch turns it on
+unconditionally, so its residency IS a function of (scene, shot).
+
+- `del-cine|gate` 2075 -> 2073 at doors 15/21 — **NOT a regression. Nondeterminism,
+  reproduced with the sign flipped.**
+- `after battle: del-cine|shelf-west` geo +2 — **same object, same mechanism.** Red in the
+  clean run only because that run's baseline happened to be the 622 draw.
+- the derived "identical counts" drift — **derived from the same, red whenever any state
+  drifts.**
+- **THE BATTLE WINDOW IS EXONERATED, MEASURED NOT ASSUMED.** A minimal repro (boot -> inn ->
+  town, fight, inn -> town) moves the counter by **zero**, and in the full probe the
+  post-fight snapshot in town read 365 -> 365. `b970ef2e`/`4a7ac08d`, `57162c9a`/`199245c2`,
+  `e2d18009`/`c0f72334`, `088c8703`, `6353c7ad`/`dd82f752`, `b698e6ee` are all clear of it;
+  so is `battle_world.js`, which without `?arena=world` never installs.
+
+### THE BASELINE CLAIM, RE-DERIVED — READ THIS BEFORE ATTRIBUTING THE NEXT RED
+
+**168/0 IS NOT A REPRODUCIBLE BASELINE ON THIS TREE. IT IS ONE LUCKY DRAW.** Of the 168
+assertions, 163 are deterministic; the five that can flip are the per-(scene,shot) GPU
+baselines on del-cine's shots plus the derived roll-up. Today the honest statement is:
+
+> `transition_test --port=3000` reads **163-168 ok**. Any failure whose payload is exactly
+> `{geo: +/-2, tex: 0, meshes: 0, mats: 0}` on a `del-cine|<shot>` state, or the derived
+> "identical counts" assertion that follows from one, is occRing/occDia and is **not** a
+> regression. **Anything else is real** — a geo delta that is not +/-2, any texture delta,
+> any movement in `meshes` or `mats`, or a red outside the GPU section.
+
+### THE FIX IS NAMED AND NOT TAKEN
+
+`public/play3d.html` is coordinator-owned, so this lane measured and stopped. The fix is two
+halves and needs both, in `sceneDispose()` and at boot:
+
+1. **Delete** `occRing.visible=occDia.visible=false; occRing.geometry.dispose(); occDia.geometry.dispose();`
+   from `sceneDispose()` (keep contactShadow's — see above).
+2. **Warm them once at boot**: `occRing.visible=occDia.visible=true`, one rendered frame,
+   then false. That puts their 2 geometries inside EVERY baseline the gate takes — the
+   deal `DEPTHQ` already has, and the one the same comment names as the only safe form of
+   "built once, never disposed".
+
+Half 1 alone restores the latent monotone +2. Half 2 alone does nothing while they are
+disposed every scene. Cost of the pair: a 24-segment ring and an octahedron resident for the
+life of the page. **REJECTED ALTERNATIVE:** teaching `gpuCheck` to tolerate a 2-geometry
+delta — that blinds the gate to a real two-geometry leak, which is the one thing it exists
+to catch.
+
+Instrument: `node tools/gpu_baseline_probe.mjs --port=3000` (~8 min, real Chrome through
+cdp.mjs, reaps its own profile). Receipts in `docs/qa/transition-test/`.
