@@ -1,0 +1,62 @@
+{
+  "battleWorld": {
+    "version": 1,
+    "on": false,
+    "installed": false,
+    "why": "flag off — open with ?arena=world"
+  },
+  "before": {
+    "fov": 42,
+    "orbit": {
+      "yaw": -1.4869,
+      "pitch": 0.7,
+      "tilt": 0.16,
+      "dist": 40,
+      "panX": 0,
+      "panY": 0,
+      "panZ": 0
+    },
+    "pos": {
+      "x": -57.84763973688786,
+      "y": 26.439239587934907,
+      "z": 60.57563159891342
+    },
+    "canvases": 1
+  },
+  "battle": {
+    "ok": true,
+    "world": false,
+    "hasCam": false,
+    "canvases": 2,
+    "fov": 42,
+    "orbit": {
+      "yaw": -1.4869,
+      "pitch": 0.7,
+      "tilt": 0.16,
+      "dist": 40,
+      "panX": 0,
+      "panY": 0,
+      "panZ": 0
+    },
+    "bodies": 4,
+    "patched": false,
+    "after": {
+      "fov": 42,
+      "orbit": {
+        "yaw": -1.4869,
+        "pitch": 0.7,
+        "tilt": 0.16,
+        "dist": 40,
+        "panX": 0,
+        "panY": 0,
+        "panZ": 0
+      },
+      "pos": {
+        "x": -57.84763973688786,
+        "y": 26.439239587934907,
+        "z": 60.57563159891342
+      },
+      "canvases": 1
+    }
+  }
+}

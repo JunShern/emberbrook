@@ -1,0 +1,1517 @@
+{
+  "site": "crag",
+  "ko": {
+    "off": {
+      "samples": [
+        {
+          "t": 42,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 83,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 175,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 216,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 258,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 300,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 341,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 430,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 471,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 512,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 553,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 595,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 635,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 677,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 718,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 807,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 850,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 891,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 933,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 974,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1016,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1108,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1149,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1191,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1233,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1275,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1316,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1357,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1399,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1441,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1482,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1524,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1614,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1658,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1699,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1741,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1783,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1825,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1866,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1907,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1949,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 1991,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2033,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2075,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2116,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2205,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2247,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2289,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2330,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2374,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2416,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2458,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2499,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2541,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2582,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2623,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2666,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2707,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2750,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2791,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        },
+        {
+          "t": 2833,
+          "dist": 9.6,
+          "fov": 42,
+          "kind": "fixed"
+        }
+      ],
+      "cam": {
+        "on": false,
+        "kind": "fixed",
+        "actor": "vesper",
+        "target": "m0",
+        "moves": 1,
+        "refusals": 0,
+        "lastRefusal": null,
+        "base": {
+          "yaw": -1.4869,
+          "pitch": 0.27
+        },
+        "view": null,
+        "axisRef": 1,
+        "pose": {
+          "ax": 65.6,
+          "ay": 21.992,
+          "az": -40.6,
+          "yaw": -1.4869,
+          "pitch": 0.27,
+          "dist": 9.6,
+          "fov": 42
+        },
+        "axis": {
+          "ok": true,
+          "order": true,
+          "side": true,
+          "gap": 0.7618,
+          "sgn": 1,
+          "ref": 1,
+          "party": [
+            -0.438,
+            -0.372
+          ],
+          "foe": [
+            0.39,
+            0.39
+          ]
+        },
+        "orbit": {
+          "yaw": -1.4869,
+          "pitch": 0.27,
+          "dist": 9.6,
+          "tilt": 0,
+          "panX": 0,
+          "panY": 0,
+          "panZ": 0
+        },
+        "fov": 42,
+        "log": [
+          {
+            "t": 3,
+            "kind": "fixed",
+            "why": "entry(fixed)",
+            "dist": 9.6,
+            "fov": 42,
+            "pitch": 0.27,
+            "yaw": -1.487
+          }
+        ]
+      },
+      "travel": 0
+    },
+    "on": {
+      "samples": [
+        {
+          "t": 107,
+          "dist": 8.366,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 191,
+          "dist": 9.02,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 232,
+          "dist": 9.237,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 273,
+          "dist": 9.39,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 314,
+          "dist": 9.504,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 356,
+          "dist": 9.571,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 440,
+          "dist": 9.622,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 482,
+          "dist": 9.625,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 524,
+          "dist": 9.596,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 564,
+          "dist": 9.548,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 606,
+          "dist": 9.501,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 647,
+          "dist": 9.453,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 688,
+          "dist": 9.406,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 729,
+          "dist": 9.358,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 814,
+          "dist": 9.263,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 856,
+          "dist": 9.215,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 898,
+          "dist": 9.168,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 939,
+          "dist": 9.12,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 980,
+          "dist": 9.072,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1022,
+          "dist": 9.025,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1105,
+          "dist": 8.93,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1146,
+          "dist": 8.882,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1187,
+          "dist": 8.835,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1227,
+          "dist": 8.787,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1269,
+          "dist": 8.74,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1311,
+          "dist": 8.692,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1352,
+          "dist": 8.645,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1394,
+          "dist": 8.597,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1436,
+          "dist": 8.549,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1478,
+          "dist": 8.501,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1519,
+          "dist": 8.454,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1610,
+          "dist": 8.35,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1652,
+          "dist": 8.302,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1694,
+          "dist": 8.277,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 1736,
+          "dist": 8.277,
+          "fov": 27,
+          "kind": "ko"
+        },
+        {
+          "t": 2017,
+          "dist": 8.281,
+          "fov": 27.04,
+          "kind": "round"
+        },
+        {
+          "t": 2058,
+          "dist": 8.352,
+          "fov": 27.82,
+          "kind": "round"
+        },
+        {
+          "t": 2100,
+          "dist": 8.431,
+          "fov": 28.68,
+          "kind": "round"
+        },
+        {
+          "t": 2141,
+          "dist": 8.501,
+          "fov": 29.45,
+          "kind": "round"
+        },
+        {
+          "t": 2224,
+          "dist": 8.62,
+          "fov": 30.76,
+          "kind": "round"
+        },
+        {
+          "t": 2265,
+          "dist": 8.67,
+          "fov": 31.31,
+          "kind": "round"
+        },
+        {
+          "t": 2306,
+          "dist": 8.714,
+          "fov": 31.79,
+          "kind": "round"
+        },
+        {
+          "t": 2347,
+          "dist": 8.752,
+          "fov": 32.21,
+          "kind": "round"
+        },
+        {
+          "t": 2388,
+          "dist": 8.786,
+          "fov": 32.57,
+          "kind": "round"
+        },
+        {
+          "t": 2429,
+          "dist": 8.814,
+          "fov": 32.89,
+          "kind": "round"
+        },
+        {
+          "t": 2469,
+          "dist": 8.838,
+          "fov": 33.15,
+          "kind": "round"
+        },
+        {
+          "t": 2511,
+          "dist": 8.858,
+          "fov": 33.37,
+          "kind": "round"
+        },
+        {
+          "t": 2552,
+          "dist": 8.874,
+          "fov": 33.54,
+          "kind": "round"
+        },
+        {
+          "t": 2594,
+          "dist": 8.887,
+          "fov": 33.68,
+          "kind": "round"
+        },
+        {
+          "t": 2636,
+          "dist": 8.897,
+          "fov": 33.79,
+          "kind": "round"
+        },
+        {
+          "t": 2677,
+          "dist": 8.904,
+          "fov": 33.87,
+          "kind": "round"
+        },
+        {
+          "t": 2719,
+          "dist": 8.909,
+          "fov": 33.93,
+          "kind": "round"
+        },
+        {
+          "t": 2761,
+          "dist": 8.913,
+          "fov": 33.96,
+          "kind": "round"
+        },
+        {
+          "t": 2802,
+          "dist": 8.914,
+          "fov": 33.99,
+          "kind": "round"
+        }
+      ],
+      "cam": {
+        "on": true,
+        "kind": "round",
+        "actor": "vesper",
+        "target": "m0",
+        "moves": 8,
+        "refusals": 0,
+        "lastRefusal": null,
+        "base": {
+          "yaw": -1.4869,
+          "pitch": 0.16
+        },
+        "view": {
+          "score": 7.4899,
+          "back": 1.16,
+          "seen": 1,
+          "of": 4,
+          "boom": true,
+          "pitch": 0.16
+        },
+        "axisRef": 1,
+        "pose": {
+          "ax": 65.457,
+          "ay": 21.489,
+          "az": -40.476,
+          "yaw": -1.4866,
+          "pitch": 0.1601,
+          "dist": 8.914,
+          "fov": 33.99
+        },
+        "axis": {
+          "ok": true,
+          "order": true,
+          "side": true,
+          "gap": 1.0676,
+          "sgn": 1,
+          "ref": 1,
+          "party": [
+            -0.623,
+            -0.55
+          ],
+          "foe": [
+            0.517,
+            0.517
+          ]
+        },
+        "orbit": {
+          "yaw": -1.4866,
+          "pitch": 0.1601,
+          "dist": 8.914,
+          "tilt": 0,
+          "panX": -0.115,
+          "panY": -0.525,
+          "panZ": 0.178
+        },
+        "fov": 33.99,
+        "log": [
+          {
+            "t": 249,
+            "kind": "round",
+            "why": "entry",
+            "dist": 8.91,
+            "fov": 34,
+            "pitch": 0.16,
+            "yaw": -1.487
+          },
+          {
+            "t": 536,
+            "kind": "round",
+            "why": "reframe(models)",
+            "dist": 8.91,
+            "fov": 34,
+            "pitch": 0.16,
+            "yaw": -1.487
+          },
+          {
+            "t": 815,
+            "kind": "round",
+            "why": "reframe(models)",
+            "dist": 8.91,
+            "fov": 34,
+            "pitch": 0.16,
+            "yaw": -1.487
+          },
+          {
+            "t": 922,
+            "kind": "decide",
+            "why": "decide",
+            "dist": 7.99,
+            "fov": 27,
+            "pitch": 0.14,
+            "yaw": -1.787
+          },
+          {
+            "t": 3061,
+            "kind": "decide",
+            "why": "decide",
+            "dist": 13.86,
+            "fov": 27,
+            "pitch": 0.14,
+            "yaw": -1.787
+          },
+          {
+            "t": 3127,
+            "kind": "ko",
+            "why": "ko",
+            "dist": 9.62,
+            "fov": 27,
+            "pitch": 0.19,
+            "yaw": -1.327
+          },
+          {
+            "t": 3554,
+            "kind": "ko",
+            "why": "ko-push",
+            "dist": 8.28,
+            "fov": 27,
+            "pitch": 0.19,
+            "yaw": -1.327
+          },
+          {
+            "t": 5075,
+            "kind": "round",
+            "why": "settle",
+            "dist": 8.92,
+            "fov": 34,
+            "pitch": 0.16,
+            "yaw": -1.487
+          }
+        ]
+      },
+      "travel": 1.348
+    }
+  },
+  "victory": {
+    "off": {
+      "samples": [
+        {
+          "t": 42,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 83,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 175,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 216,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 258,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 299,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 341,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 383,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 424,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 516,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 558,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 599,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 641,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 683,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 725,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 767,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 808,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 900,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 941,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 982,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1025,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1066,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1107,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1150,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1191,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1233,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1321,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1363,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1405,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1446,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1487,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1529,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1570,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        },
+        {
+          "t": 1612,
+          "dist": 9.6,
+          "yaw": -1.4869,
+          "kind": "fixed"
+        }
+      ],
+      "cam": {
+        "on": false,
+        "kind": "fixed",
+        "actor": "vesper",
+        "target": "m0",
+        "moves": 1,
+        "refusals": 0,
+        "lastRefusal": null,
+        "base": {
+          "yaw": -1.4869,
+          "pitch": 0.27
+        },
+        "view": null,
+        "axisRef": 1,
+        "pose": {
+          "ax": 65.6,
+          "ay": 21.992,
+          "az": -40.6,
+          "yaw": -1.4869,
+          "pitch": 0.27,
+          "dist": 9.6,
+          "fov": 42
+        },
+        "axis": {
+          "ok": true,
+          "order": true,
+          "side": true,
+          "gap": 0.7618,
+          "sgn": 1,
+          "ref": 1,
+          "party": [
+            -0.438,
+            -0.372
+          ],
+          "foe": [
+            0.39,
+            0.39
+          ]
+        },
+        "orbit": {
+          "yaw": -1.4869,
+          "pitch": 0.27,
+          "dist": 9.6,
+          "tilt": 0,
+          "panX": 0,
+          "panY": 0,
+          "panZ": 0
+        },
+        "fov": 42,
+        "log": [
+          {
+            "t": 3,
+            "kind": "fixed",
+            "why": "entry(fixed)",
+            "dist": 9.6,
+            "fov": 42,
+            "pitch": 0.27,
+            "yaw": -1.487
+          }
+        ]
+      },
+      "yawSwing": 0,
+      "travel": 0
+    },
+    "on": {
+      "samples": [
+        {
+          "t": 167,
+          "dist": 8.916,
+          "yaw": -1.4873,
+          "kind": "victory"
+        },
+        {
+          "t": 250,
+          "dist": 8.923,
+          "yaw": -1.5007,
+          "kind": "victory"
+        },
+        {
+          "t": 290,
+          "dist": 8.933,
+          "yaw": -1.5209,
+          "kind": "victory"
+        },
+        {
+          "t": 332,
+          "dist": 8.951,
+          "yaw": -1.5543,
+          "kind": "victory"
+        },
+        {
+          "t": 373,
+          "dist": 8.977,
+          "yaw": -1.6045,
+          "kind": "victory"
+        },
+        {
+          "t": 414,
+          "dist": 9.014,
+          "yaw": -1.6758,
+          "kind": "victory"
+        },
+        {
+          "t": 499,
+          "dist": 9.127,
+          "yaw": -1.8915,
+          "kind": "victory"
+        },
+        {
+          "t": 541,
+          "dist": 9.202,
+          "yaw": -2.0362,
+          "kind": "victory"
+        },
+        {
+          "t": 583,
+          "dist": 9.265,
+          "yaw": -2.1572,
+          "kind": "victory"
+        },
+        {
+          "t": 624,
+          "dist": 9.315,
+          "yaw": -2.2521,
+          "kind": "victory"
+        },
+        {
+          "t": 665,
+          "dist": 9.351,
+          "yaw": -2.3217,
+          "kind": "victory"
+        },
+        {
+          "t": 706,
+          "dist": 9.377,
+          "yaw": -2.3715,
+          "kind": "victory"
+        },
+        {
+          "t": 747,
+          "dist": 9.394,
+          "yaw": -2.4042,
+          "kind": "victory"
+        },
+        {
+          "t": 787,
+          "dist": 9.404,
+          "yaw": -2.4236,
+          "kind": "victory"
+        },
+        {
+          "t": 829,
+          "dist": 9.409,
+          "yaw": -2.4333,
+          "kind": "victory"
+        },
+        {
+          "t": 918,
+          "dist": 9.411,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 959,
+          "dist": 9.36,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1001,
+          "dist": 9.307,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1042,
+          "dist": 9.255,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1084,
+          "dist": 9.203,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1125,
+          "dist": 9.15,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1166,
+          "dist": 9.098,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1208,
+          "dist": 9.046,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1292,
+          "dist": 8.941,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1334,
+          "dist": 8.889,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1376,
+          "dist": 8.837,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1417,
+          "dist": 8.784,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1459,
+          "dist": 8.732,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1501,
+          "dist": 8.68,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1542,
+          "dist": 8.628,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1584,
+          "dist": 8.576,
+          "yaw": -2.4369,
+          "kind": "victory"
+        },
+        {
+          "t": 1625,
+          "dist": 8.523,
+          "yaw": -2.4369,
+          "kind": "victory"
+        }
+      ],
+      "cam": {
+        "on": true,
+        "kind": "victory",
+        "actor": "vesper",
+        "target": "m0",
+        "moves": 10,
+        "refusals": 0,
+        "lastRefusal": null,
+        "base": {
+          "yaw": -1.4869,
+          "pitch": 0.16
+        },
+        "view": {
+          "score": 7.4899,
+          "back": 1.16,
+          "seen": 1,
+          "of": 4,
+          "boom": true,
+          "pitch": 0.16
+        },
+        "axisRef": 1,
+        "pose": {
+          "ax": 68.251,
+          "ay": 22.168,
+          "az": -40.124,
+          "yaw": -2.4369,
+          "pitch": 0.11,
+          "dist": 8.523,
+          "fov": 27
+        },
+        "axis": {
+          "ok": true,
+          "order": true,
+          "side": true,
+          "gap": 1.5603,
+          "sgn": 1,
+          "ref": 1,
+          "party": [
+            -0.111,
+            0.095
+          ],
+          "foe": [
+            1.655,
+            1.655
+          ]
+        },
+        "orbit": {
+          "yaw": -2.4369,
+          "pitch": 0.11,
+          "dist": 8.523,
+          "tilt": 0,
+          "panX": 2.677,
+          "panY": 0.19,
+          "panZ": 0.478
+        },
+        "fov": 27,
+        "log": [
+          {
+            "t": 249,
+            "kind": "round",
+            "why": "entry",
+            "dist": 8.91,
+            "fov": 34,
+            "pitch": 0.16,
+            "yaw": -1.487
+          },
+          {
+            "t": 536,
+            "kind": "round",
+            "why": "reframe(models)",
+            "dist": 8.91,
+            "fov": 34,
+            "pitch": 0.16,
+            "yaw": -1.487
+          },
+          {
+            "t": 815,
+            "kind": "round",
+            "why": "reframe(models)",
+            "dist": 8.91,
+            "fov": 34,
+            "pitch": 0.16,
+            "yaw": -1.487
+          },
+          {
+            "t": 922,
+            "kind": "decide",
+            "why": "decide",
+            "dist": 7.99,
+            "fov": 27,
+            "pitch": 0.14,
+            "yaw": -1.787
+          },
+          {
+            "t": 3061,
+            "kind": "decide",
+            "why": "decide",
+            "dist": 13.86,
+            "fov": 27,
+            "pitch": 0.14,
+            "yaw": -1.787
+          },
+          {
+            "t": 3127,
+            "kind": "ko",
+            "why": "ko",
+            "dist": 9.62,
+            "fov": 27,
+            "pitch": 0.19,
+            "yaw": -1.327
+          },
+          {
+            "t": 3554,
+            "kind": "ko",
+            "why": "ko-push",
+            "dist": 8.28,
+            "fov": 27,
+            "pitch": 0.19,
+            "yaw": -1.327
+          },
+          {
+            "t": 5075,
+            "kind": "round",
+            "why": "settle",
+            "dist": 8.92,
+            "fov": 34,
+            "pitch": 0.16,
+            "yaw": -1.487
+          },
+          {
+            "t": 6184,
+            "kind": "victory",
+            "why": "victory",
+            "dist": 9.41,
+            "fov": 27,
+            "pitch": 0.11,
+            "yaw": -2.437
+          },
+          {
+            "t": 6971,
+            "kind": "victory",
+            "why": "victory-push",
+            "dist": 8.28,
+            "fov": 27,
+            "pitch": 0.11,
+            "yaw": -2.437
+          }
+        ]
+      },
+      "yawSwing": 0.95,
+      "travel": 0.888
+    }
+  }
+}

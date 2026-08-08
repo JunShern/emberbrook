@@ -1,0 +1,433 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>THE BATTLE CAMERA — a shot language where it costs nothing (?arena=world)</title>
+<style>
+:root{--ink:#e7ddd0;--dim:#a99c8c;--bg:#14100c;--edge:#3a2c20;--amber:#e9a24b;
+      --good:#7fc06a;--bad:#e06a5a;--warn:#e0c05a}
+*{box-sizing:border-box}
+body{margin:0;padding:34px 4vw 90px;background:var(--bg);color:var(--ink);
+     font:15px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;max-width:1620px}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:.01em}
+h2{font-size:20px;margin:48px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--edge);color:#f2e7d6}
+h3{font-size:16px;margin:26px 0 6px;color:var(--amber)}
+p,li{max-width:98ch}
+.sub{color:var(--dim);margin:0 0 22px}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em}
+code{background:#0000004d;padding:1px 5px;border-radius:4px}
+table{border-collapse:collapse;margin:12px 0 18px;font-size:14px}
+th,td{border:1px solid var(--edge);padding:5px 11px;text-align:left;vertical-align:top}
+th{background:#241c14;color:#f2e7d6;font-weight:600}
+td.n,th.n{text-align:right;font-family:ui-monospace,Menlo,monospace}
+.good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:10px 0 8px}
+.trio img{width:100%;display:block;border:1px solid var(--edge);border-radius:5px;background:#000}
+.trio figure{margin:0}
+.trio figcaption{color:var(--dim);font-size:12.5px;padding:4px 2px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 24px}
+.pair figure{margin:0}
+.pair img{width:100%;display:block;border:1px solid var(--edge);border-radius:5px;background:#000}
+.pair figcaption{color:var(--dim);font-size:13px;padding:5px 2px}
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:10px 0 22px}
+.strip img{width:100%;display:block;border:1px solid var(--edge);border-radius:5px}
+.strip figcaption{color:var(--dim);font-size:12px;padding:4px 2px}
+.box{border:1px solid var(--edge);border-left:3px solid var(--amber);background:#1d1710;
+     padding:12px 16px;margin:16px 0;border-radius:0 5px 5px 0}
+.box.v{border-left-color:var(--good)} .box.x{border-left-color:var(--bad)}
+.hdr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-weight:700;color:#f2e7d6;
+     font-size:13.5px;letter-spacing:.06em;margin-top:18px}
+.hdr div{padding:5px 8px;background:#241c14;border:1px solid var(--edge);border-radius:4px}
+ul{padding-left:22px}
+.lead{font-size:16.5px;color:#f2e7d6}
+.rowlab{color:var(--amber);font-weight:700;margin:22px 0 2px;font-size:14px;letter-spacing:.08em}
+</style>
+
+<h1>THE BATTLE CAMERA — a shot language, built where it costs nothing</h1>
+<p class="sub">2026-08-08 · battle wave 3 · <code>?arena=world</code> · <code>public/js/battle_world.js</code> +
+<code>tools/battle_camera.mjs</code> · answers
+<a href="../../plans/battle-presentation-inventory.md" style="color:var(--amber)">docs/plans/battle-presentation-inventory.md</a>
+§10 <b>BET B</b>, and it is <b>evidence for the open BET A / BET E ruling rather than a commitment to either</b>.</p>
+
+<p class="lead">BET B is <b>gated on the diorama</b> and free in the world.
+<code>public/assets/battle/MANIFEST.md</code> says the four backdrop plates were generated from a prompt
+carrying the arena camera's exact height, tilt and field of view, and that <i>"if the arena camera moves,
+this paragraph moves with it and the plates are re-shot."</i> <b>In the world arena there is no backdrop,
+so the camera is free.</b> This lane therefore built the shot language <b>only</b> behind the existing
+flag: the diorama's camera is untouched, no plate is invalidated, <code>?arena=world</code> is still not
+the default, and flag-off is byte-for-byte today's game (§8).</p>
+
+<div class="box">
+<b>What shipped.</b> A <b>shot table plus a solver</b> (six kinds: round · decide · strike · impact · ko ·
+victory), the <b>180-degree rule as a hard refusal inside the solve</b> plus a 576-shot assertion, a
+<b>legibility attack</b> on the world's one measured weakness, and the <b>two camera moves the KO lane
+wanted and refused</b> — a slow push across the KO's own 760 ms hold, and a move onto the party for the
+cheer. <b>It never cuts</b>: §11.11 leaves "may the battle cut?" open for the coordinator, so every
+transition is an eased MOVE and <code>cut</code> is a per-shot policy field whose shipped value is
+<code>false</code> everywhere.
+</div>
+
+<h2>§1 THE CONTACT SHEET — the same beats, three ways, one build</h2>
+<p>Every frame below is off the real page at the same encounter spot (meadow, 38.12 / &minus;26.88),
+party [vesper, maren], seed 4242, driven by <b>the stage's own verbs</b> — <code>setActor</code> /
+<code>act</code> / <code>flinch</code> / <code>ko</code> / <code>cheer</code> — never by the shot solver,
+so what is photographed is the game and not the instrument. One build, one switch:
+<code>BattleWorld.enabled</code> picks the arena and <code>BattleWorld.CAM.on</code> picks the camera.</p>
+
+<div class="hdr"><div>DIORAMA (shipped default)</div><div>WORLD, spike's single pose</div><div>WORLD + SHOT LANGUAGE</div></div>
+
+<div class="rowlab">OPENING</div>
+<div class="trio">
+<figure><img src="shot-dio-opening.jpg"></figure>
+<figure><img src="shot-off-opening.jpg"></figure>
+<figure><img src="shot-on-opening.jpg"></figure>
+</div>
+<div class="rowlab">DECIDE — whose turn it is</div>
+<div class="trio">
+<figure><img src="shot-dio-decide.jpg"></figure>
+<figure><img src="shot-off-decide.jpg"></figure>
+<figure><img src="shot-on-decide.jpg"></figure>
+</div>
+<div class="rowlab">STRIKE</div>
+<div class="trio">
+<figure><img src="shot-dio-strike.jpg"></figure>
+<figure><img src="shot-off-strike.jpg"></figure>
+<figure><img src="shot-on-strike.jpg"></figure>
+</div>
+<div class="rowlab">IMPACT</div>
+<div class="trio">
+<figure><img src="shot-dio-impact.jpg"></figure>
+<figure><img src="shot-off-impact.jpg"></figure>
+<figure><img src="shot-on-impact.jpg"></figure>
+</div>
+<div class="rowlab">KO</div>
+<div class="trio">
+<figure><img src="shot-dio-ko.jpg"></figure>
+<figure><img src="shot-off-ko.jpg"></figure>
+<figure><img src="shot-on-ko.jpg"></figure>
+</div>
+<div class="rowlab">KO SETTLED</div>
+<div class="trio">
+<figure><img src="shot-dio-koSettled.jpg"></figure>
+<figure><img src="shot-off-koSettled.jpg"></figure>
+<figure><img src="shot-on-koSettled.jpg"></figure>
+</div>
+<div class="rowlab">VICTORY</div>
+<div class="trio">
+<figure><img src="shot-dio-victory.jpg"></figure>
+<figure><img src="shot-off-victory.jpg"></figure>
+<figure><img src="shot-on-victory.jpg"></figure>
+</div>
+
+<h2>§2 THE SHOT TABLE, AND HOW EACH SHOT DERIVES</h2>
+<p><b>Not one metre value in the table is a camera position.</b> The table carries INTENT — who must be in
+frame, how much of the frame they fill, how high the boom rides, how long the lens is, how long the move
+takes. The solver turns that into <code>(aim, yaw, pitch, dist, fov)</code> against the cast as it actually
+stands, using each body's <b>own measured Box3 height and width</b> — the same discipline the contact fix
+used when it derived the strike station from both bodies' widths.</p>
+
+<table>
+<tr><th>shot</th><th>shows</th><th>fill H / V</th><th>lens</th><th>boom</th><th>swing</th><th>move</th><th>what it is derived from</th></tr>
+<tr><td><code>round</code></td><td>every living body</td><td class="n">0.86 / 0.74</td><td class="n">34&deg;</td><td>solved base</td><td class="n">0</td><td class="n">900 ms</td><td>the whole group's extremes — feet, heads, and each body's own half-width either side of the camera's screen-right</td></tr>
+<tr><td><code>decide</code></td><td>the deciding body <b>and its current target</b></td><td class="n">0.58 / 0.50</td><td class="n">27&deg;</td><td>&minus;0.02</td><td class="n">0.30</td><td class="n">620 ms</td><td>re-solved when the player moves the cursor; a "medium on the character deciding" that loses what they are aiming at is a bug with a lens on it</td></tr>
+<tr><td><code>strike</code></td><td>attacker + target</td><td class="n">0.66 / 0.58</td><td class="n">34&deg;</td><td>&minus;0.07 (low)</td><td class="n">0.22</td><td class="n">&le;420 ms</td><td>the attacker at <b>the strike station act() has already derived</b>, not at the home slot she is about to leave</td></tr>
+<tr><td><code>impact</code></td><td>attacker + target</td><td class="n">0.78 / 0.68</td><td class="n">34&deg;</td><td>&minus;0.07</td><td class="n">0.22</td><td class="n">170 ms</td><td>the same angle, pushed in. A push is not a cut</td></tr>
+<tr><td><code>ko</code></td><td>the body that fell</td><td class="n">0.30 / 0.36</td><td class="n">27&deg;</td><td>+0.03</td><td class="n">0.16</td><td class="n">420 ms + <b>1180 ms push</b></td><td>the victim's own box where it landed; the push runs across <code>CFG.ko.holdMs</code></td></tr>
+<tr><td><code>victory</code></td><td>the surviving party</td><td class="n">0.62 / 0.66</td><td class="n">27&deg;</td><td>&minus;0.05</td><td class="n">0.95</td><td class="n">780 ms + <b>900 ms dolly</b></td><td>the party's own group box; the swing is 54&deg; toward the end of the axis they FACE, so the cheer is seen three-quarter front</td></tr>
+</table>
+
+<p><b>Two derivations worth naming, because both were measured as defects first.</b></p>
+<ul>
+<li><b>The subject's position is where it WILL be, not where it is.</b> The strike shot is requested the
+instant <code>act()</code> starts, with the attacker still at her home slot five metres away. Framing the
+pair from there produced a wide shot of a gap she was about to close, and the frame was stale by the time
+she arrived. <code>act()</code> already derives the strike station from both bodies' widths — it now hands
+that position to the shot solver.</li>
+<li><b>The boom must have a line, and so must the subject.</b> play3d's <code>CAMCLIP</code> hauls the boom
+in when the world intervenes (it keeps running through a battle, which is how this path inherits the fix
+<b>PT-20260803-025</b> is about) — so a shot solved into a bank is not refused, it is silently re-framed at
+3 m by somebody else's easing. Each shot therefore tests the boom's own line AND nine samples across each
+subject's body, and lifts the boom (+0.09, +0.19 rad) rather than losing the shot.</li>
+</ul>
+
+<h2>§3 THE 180-DEGREE RULE — a refusal inside the solve, and an assertion outside it</h2>
+<p><code>BattleStage3D.CFG.partySide</code> is the only place the handedness of this game is written down.
+Wave 3 made the world arena <b>read it</b> (the spike had the party's screen side hardcoded into
+<code>slotsFor</code>), and both halves of the rule read the same field:</p>
+<ol>
+<li><b>THE EYE MAY NOT CROSS THE AXIS.</b> The axis is the line through the party centroid and the foe
+centroid; the side the fight was staged from is recorded at <code>create()</code> as
+<code>axisRef</code>, and any pose whose eye lands on the other side is refused.</li>
+<li><b>EVERY PARTY BODY MUST STILL PROJECT OUTBOARD OF EVERY FOE BODY.</b> Taken with the real
+perspective divide, not a flat dot product — an ordering taken on a dot product is wrong the moment two
+bodies sit at different depths.</li>
+</ol>
+<p><b>A refused shot is not softened into something else and shipped.</b> The swing is halved, then dropped
+to zero; if the geometry still crosses (two bodies interleaved on the line) <b>the camera keeps the pose it
+has</b> and the refusal is counted on <code>stage.cam().refusals</code>. A camera language that can mirror
+the fight is worse than one angle.</p>
+
+<table>
+<tr><th>shot kind</th><th class="n">solved</th><th class="n">axis violations</th><th class="n">swing softened</th><th class="n">refused</th><th class="n">min axis gap (normalised screen x)</th></tr>
+<tr><td><code>round</code></td><td class="n">96</td><td class="n good">0</td><td class="n">0</td><td class="n">0</td><td class="n">0.756</td></tr>
+<tr><td><code>decide</code></td><td class="n">96</td><td class="n good">0</td><td class="n">8</td><td class="n">0</td><td class="n">0.459</td></tr>
+<tr><td><code>strike</code></td><td class="n">96</td><td class="n good">0</td><td class="n">5</td><td class="n">0</td><td class="n">0.582</td></tr>
+<tr><td><code>impact</code></td><td class="n">96</td><td class="n good">0</td><td class="n">5</td><td class="n">0</td><td class="n">0.678</td></tr>
+<tr><td><code>ko</code></td><td class="n">96</td><td class="n good">0</td><td class="n">2</td><td class="n">0</td><td class="n">1.208</td></tr>
+<tr><td><code>victory</code></td><td class="n">96</td><td class="n good">0</td><td class="n">0</td><td class="n">0</td><td class="n">1.221</td></tr>
+<tr><th>total</th><th class="n">576</th><th class="n good">0</th><th class="n">20</th><th class="n">0</th><th class="n">&mdash;</th></tr>
+</table>
+<p class="sub"><code>node tools/battle_camera.mjs --mode=assert</code> — four sites &times; three encounter
+shapes (1, 2 and 3 foes) &times; <b>every (actor, target) pairing the fight can produce</b>, not one
+photographed shot. Exit code is nonzero on any violation. Receipt: <code>assert.json</code>.</p>
+
+<h2>§4 LEGIBILITY — the world's one real weakness, measured before and after</h2>
+<p>The BET A spike's honest verdict: <i>"the world wins on picture and LOSES on legibility — two clean
+silhouettes on a low-contrast painted field is a composition; the valley is rock, foliage, houses and cast
+shadows."</i> That is a claim about pixels, so it is measured in pixels.</p>
+
+<div class="box">
+<h3 style="margin-top:0">THE METER, and it is a subtraction rather than a heuristic</h3>
+<p>Render the frame with a body, render it without: <b>the difference IS that body's silhouette</b> —
+shadow, rim, alpha and all. Render it again with the cast's depth test <i>and depth write</i> off and the
+difference is the silhouette it <b>would</b> have had unoccluded.</p>
+<ul>
+<li><b>occlusion</b> = 1 &minus; (visible &cap; free) / free. <b>An intersection, not a ratio of areas</b>:
+both masks carry a halo the body did not draw (GTAO darkens the ground around a body that writes depth,
+bloom bleeds outward from a bright one) and the two passes do not carry the same halo — which is how a
+fully visible Maren first measured <b>"&minus;136% occluded"</b>.</li>
+<li><b>silhouette contrast</b> = RGB distance between the body's own edge band and the background ring just
+outside it, read off the <i>background</i> frame so a body's own rim light cannot inflate the number it is
+scored against. <b>RGB, not luminance</b> — this repo has already paid for the luminance-only version once
+(<code>cutin_edge</code>'s halo term: a rim of the wrong hue at the right brightness was invisible to it on
+79 of 112 shipped plates). A teal eel on tan rock is 6 units apart in luminance and 39 in RGB, and it
+reads.</li>
+<li><b>foe apparent height</b>, % of frame height, out of the silhouette's own bbox.
+<b>clutter</b> = luminance stdev of that background ring.</li>
+</ul>
+</div>
+
+<table>
+<tr><th>site</th><th class="n">foe height, mean</th><th class="n">foe height, worst</th><th class="n">occlusion, mean</th><th class="n">occlusion, worst</th><th class="n">silhouette contrast (RGB)</th><th class="n">background clutter</th></tr>
+<tr><td>meadow</td><td class="n">22.5 &rarr; <b class="good">24.5%</b></td><td class="n">18.8 &rarr; <b class="good">21.9%</b></td><td class="n">.05 &rarr; <b class="good">.03</b></td><td class="n">.124 &rarr; <b class="good">.058</b></td><td class="n bad">18.1 &rarr; 9.6</td><td class="n bad">41.9 &rarr; 55.6</td></tr>
+<tr><td><b>forest</b> (the spike's worst zone)</td><td class="n">24.2 &rarr; <b class="good">30.3%</b></td><td class="n">14.6 &rarr; <b class="good">18.8%</b></td><td class="n">.13 &rarr; .13</td><td class="n">.268 &rarr; .273</td><td class="n">12.0 &rarr; 11.9</td><td class="n">22.3 &rarr; 23.3</td></tr>
+<tr><td>water</td><td class="n">19.7 &rarr; <b class="good">27.7%</b></td><td class="n">12.8 &rarr; <b class="good">20.1%</b></td><td class="n">.05 &rarr; <b class="good">.02</b></td><td class="n">.157 &rarr; <b class="good">.061</b></td><td class="n bad">29.5 &rarr; 15.4</td><td class="n bad">14.1 &rarr; 29.0</td></tr>
+<tr><td>crag</td><td class="n">13.3 &rarr; <b class="good">18.7%</b></td><td class="n">13.0 &rarr; <b class="good">17.8%</b></td><td class="n">.05 &rarr; <b class="good">.04</b></td><td class="n">.120 &rarr; <b class="good">.093</b></td><td class="n good">20.1 &rarr; 20.8</td><td class="n good">17.7 &rarr; 17.0</td></tr>
+</table>
+<p class="sub">Left of each arrow: the world arena on the spike's single solved pose (<code>?bcam=0</code>).
+Right: the same build with the shot language. Same site, same seed, same party, same encounter — one
+build, one switch. Receipt: <code>legibility.json</code>.</p>
+
+<div class="box v">
+<b>WHAT MOVED, PLAINLY.</b> <b>Foe apparent height is up at every one of the four sites</b>, by +9% at
+meadow, +25% at forest, +41% at crag and +40% at water — and the worst-case foe, which is the one that
+actually fails to read, is up everywhere too, including <b>13.0% &rarr; 17.8% at crag</b>, the site where
+the audit's own complaint ("the thing the player is aiming at is the smallest object on screen") was
+sharpest. Occlusion is equal or better everywhere. <b>That is what the camera controls</b>, and the lever
+is the shot solve: a longer lens (34&deg;/27&deg; against the field's 42&deg;) with the distance solved from
+the subject's own box, instead of one 9.6 m boom for every fight in the valley.
+</div>
+<div class="box x">
+<b>AND WHAT DID NOT, WHICH IS THE HONEST HALF.</b> <b>Silhouette contrast falls at meadow and water and is
+flat at forest and slightly UP at crag</b>, and background clutter rises at meadow and water. The cause is visible in the
+pictures below and it is not a bug in the solve: the fixed 9.6 m pose sometimes happens to back the cast
+with <i>sky</i>, and the shot language, framing tighter for size, backs them with mid-tone rock instead.
+<b>Luminance/RGB separation from the background is terrain luck, not a camera parameter</b> — the honest
+answer for it is a light or a shader on the cast, and this module deliberately writes <b>zero shaders</b>
+(that is the whole reason the r185 colour-management class of bug is <i>deleted</i> here rather than
+managed). Three.js's WebGLRenderer tests a light's layers against the <b>camera</b>, not against each
+object, so a cast-only rim light is not available without a material hook. <b>Named, measured, and left
+open</b> — see §9 residuals.
+</div>
+
+<h3>The same site, both poses — this is what the numbers are describing</h3>
+<div class="pair">
+<figure><img src="leg-crag-off.jpg"><figcaption><b>crag, fixed pose.</b> Foes at 13.1% of frame height on a rock face, seen from above; the party is a pair of dolls on a ledge.</figcaption></figure>
+<figure><img src="leg-crag-on.jpg"><figcaption><b>crag, shot language.</b> Same fight: 18.3%, sky behind the ridge, all four bodies reading. Contrast and clutter both unchanged — this is the case where the trade is free.</figcaption></figure>
+</div>
+<div class="pair">
+<figure><img src="leg-water-off.jpg"><figcaption><b>water, fixed pose.</b> The better <i>postcard</i> — Dellhollow's roofs behind the gorge — and the worse battle screen: the eel is 12.8% tall against foliage and rooftops.</figcaption></figure>
+<figure><img src="leg-water-on.jpg"><figcaption><b>water, shot language.</b> 20.1% worst-case, the whole cast on one clean band of rock, party left and foes right with the ledge as a ground line. Its RGB contrast is <i>lower</i> (14.6 vs 29.2) because the rock is mid-tone where the sky was bright. Both numbers are true; only one of them is the fight.</figcaption></figure>
+</div>
+
+<h2>§5 THE TWO MOVES — a slow push on the KO, and a move onto the party</h2>
+<p>Both were wanted by the KO/victory lane (BET I) and refused there, for the reason this whole document
+starts from: the diorama's plate is pinned to one pose. In the world they are two entries in the table.</p>
+
+<table>
+<tr><th>move</th><th class="n">flag off</th><th class="n">flag on</th><th>what it rides</th></tr>
+<tr><td>KO — the boom pushes in across the hold</td><td class="n">0.000 m</td><td class="n good">1.35 m (9.63 &rarr; 8.28 m)</td><td><code>CFG.ko.holdMs</code> = 760 ms, the beat where the corpse is already lying there; it ends before the dissolve</td></tr>
+<tr><td>VICTORY — the boom swings to three-quarter front and dollies</td><td class="n">0.000 rad / 0.000 m</td><td class="n good">0.95 rad / 0.89 m (9.41 &rarr; 8.52 m)</td><td><code>pacing.winHold</code> 900 + <code>winCheer</code> 620 ms, before the tally box arrives</td></tr>
+</table>
+<p class="sub">Measured on the stage's own clock by <code>--mode=moves</code> (the pose is sampled every
+40 ms while the beat runs). The KO figures above are the first measured pass at <code>fill 0.40/0.46</code>;
+they were <b>loosened to 0.30/0.36 after looking</b> — the push ended on a 5.4 m boom with the body filling
+the frame edge to edge, which is a portrait and not a beat in a fight. Receipt: <code>moves.json</code>.</p>
+
+<div class="strip">
+<figure><img src="ko-on-t340.jpg"><figcaption>KO +340 ms — the killer holds over the body</figcaption></figure>
+<figure><img src="ko-on-t1000.jpg"><figcaption>+1000 ms — mid-push, the corpse solid on real rock</figcaption></figure>
+<figure><img src="ko-on-t2100.jpg"><figcaption>+2100 ms — dissolving</figcaption></figure>
+<figure><img src="ko-off-t1000.jpg"><figcaption>the same instant with the camera off: the boom has not moved 1 mm</figcaption></figure>
+</div>
+<div class="strip">
+<figure><img src="vic-on-t400.jpg"><figcaption>victory +400 ms — the swing starts</figcaption></figure>
+<figure><img src="vic-on-t800.jpg"><figcaption>+800 ms</figcaption></figure>
+<figure><img src="vic-on-t1200.jpg"><figcaption>+1200 ms — three-quarter front, mid-cheer, and still on the same side of the axis</figcaption></figure>
+<figure><img src="vic-off-t1200.jpg"><figcaption>the same instant, camera off</figcaption></figure>
+</div>
+
+<h2>§6 THE STAGING RATE — the number the spike asked to be moved</h2>
+<p>The spike measured <b>68.8%</b> of sampled encounter cells able to stage a readable 2&times;2 (forest worst
+at 52.1%), after sweeping the arena's yaw. Wave 3 pushed that number in two opposite directions at once and
+<b>the net is DOWN 4.4 points</b>. Same instrument, same 160 road cells, same seed:
+<code>node tools/battle_world_probe.mjs --mode=place --n=160</code>.</p>
+
+<table>
+<tr><th>measure</th><th class="n">spike</th><th class="n">wave 3</th><th>why</th></tr>
+<tr><td><b>stages cleanly, arena swept</b></td><td class="n">68.8%</td><td class="n bad">64.4%</td><td>the visibility test became honest (below) and the pitch sweep did not fully pay for it</td></tr>
+<tr><td>stages cleanly, camera left where the player had it</td><td class="n">32.5%</td><td class="n">31.9%</td><td>within noise of each other</td></tr>
+<tr><td>of the successes, needed the camera to turn</td><td class="n">52.7%</td><td class="n">89.3%</td><td>the sweep now takes the BEST view rather than the first that fits, so it turns far more often</td></tr>
+<tr><td>slot rejections caused by camera occlusion, fixed yaw</td><td class="n">1364</td><td class="n">1461</td><td>+97 slots that the two-ray test used to pass</td></tr>
+<tr><td>meadow</td><td class="n">84.7%</td><td class="n">83.1%</td><td></td></tr>
+<tr><td>crag</td><td class="n">75.0%</td><td class="n">75.0%</td><td></td></tr>
+<tr><td>water</td><td class="n">58.6%</td><td class="n bad">44.8%</td><td>the biggest single loss</td></tr>
+<tr><td><b>forest</b> (the spike's worst zone)</td><td class="n">52.1%</td><td class="n bad">47.9%</td><td></td></tr>
+</table>
+
+<div class="box x">
+<b>THE NUMBER WENT DOWN AND THAT IS THE HONEST RESULT, not a regression to fix by loosening the test.</b>
+The spike's own board listed "two rays are not a silhouette" as a defect it had found in itself: the chest
+and head rays both cleared a stilt while the body behind it did not, and Maren was photographed half hidden
+with the solver reporting her visible. Wave 3 replaced that with <b>nine samples across the body's own box
+— three heights by three lateral offsets, straddling the silhouette on the camera's own screen-right</b> —
+and a slot is refused below 67% visible. The camera gained a second axis at the same time (the sweep is now
+yaw &times; pitch, because a body that no yaw can see at 0.27 rad is often in plain sight from 0.34), and
+that bought some of it back, but not all of it. <b>This is the same shape as the spike's own 86.3% &rarr;
+68.8% drop when its occluder set stopped being <code>collide</code>:</b> the world did not get worse, the
+instrument stopped lying. The two changes are confounded in this one figure and separating them costs
+another 25-minute run that has not been made.
+</div>
+
+<h2>§7 THE FRAME BUDGET</h2>
+<p>The spike's headline was that the world arena is <b>faster</b> than the diorama (243.5 vs 184.7 fps): a
+lead worth not spending carelessly. The shot language is a handful of scalar operations per frame plus a
+few hundred raycasts <i>once</i>, at battle start, behind the entry fade.</p>
+<table>
+<tr><th>configuration</th><th class="n">fps (presented frames, rAF, vsync off)</th></tr>
+<tr><td>world arena, single pose (<code>?bcam=0</code>)</td><td class="n">244.6</td></tr>
+<tr><td><b>world arena + shot language</b>, measured <i>while a move is running</i></td><td class="n good">244.3</td></tr>
+<tr><td>field, no battle, same session</td><td class="n">239.6</td></tr>
+</table>
+<p><b>0.1%.</b> The lead is intact. (Absolute numbers differ from the spike's run by a few percent —
+different session, same machine, same flags: <code>--disable-gpu-vsync --disable-frame-rate-limit</code>,
+without which both paths return exactly 120.0 fps and the measurement is of the display.)</p>
+
+<h2>§8 FLAG OFF IS TODAY'S GAME — the regression proof</h2>
+<p>The page opened with <b>no</b> <code>?arena=world</code>, then a real battle fought:</p>
+<table>
+<tr><th>claim</th><th>measured</th></tr>
+<tr><td><code>window.BattleWorld</code></td><td class="mono good">{version:1, on:false, installed:false, why:"flag off — open with ?arena=world"}</td></tr>
+<tr><td><code>BattleStage3D.__bwPatched</code></td><td class="mono good">false — <code>create()</code> was never wrapped</td></tr>
+<tr><td>which stage answered</td><td class="mono good">the DIORAMA (<code>stage.world === false</code>, <code>stage.cam</code> undefined, 4 bodies)</td></tr>
+<tr><td>WebGL canvases during the battle</td><td class="mono">2 — the diorama's second context, exactly as today</td></tr>
+<tr><td><code>cam.fov</code> before / during / after</td><td class="mono good">42 / 42 / 42</td></tr>
+<tr><td><code>ORBIT</code> before / after</td><td class="mono good">yaw &minus;1.4869, pitch 0.70, tilt 0.16, dist 40, pan 0/0/0 — identical</td></tr>
+<tr><td>player position before / after</td><td class="mono good">identical to 13 decimal places</td></tr>
+</table>
+<p><b>And the lens is the one thing this lane could have leaked.</b> The shot language is the only code in
+this game that ever writes <code>cam.fov</code> after construction, and <code>play3d.html</code> never
+touches it again — a battle that left a 27&deg; lens on the overworld would be a silent, permanent
+regression that no ORBIT receipt could see. It is saved at <code>create()</code> and restored in
+<code>destroy()</code>, and every run above asserts <b>42 after teardown</b>, on all three columns of §1.</p>
+
+<h3>Gates</h3>
+<table>
+<tr><th>gate</th><th>result</th></tr>
+<tr><td><code>node tools/battle_sim.mjs</code></td><td class="good">ALL ENVELOPES GREEN + 6 engine property tests</td></tr>
+<tr><td><code>node tools/encounter_sim.mjs</code></td><td class="good">ENCOUNTER INTEGRATION GREEN</td></tr>
+<tr><td><code>node tools/arena_playtest.mjs</code></td><td class="good">PASS &mdash; and see the flake note below</td></tr>
+<tr><td><code>node tools/transition_test.mjs</code></td><td class="good"><b>168 ok / 0 failed</b></td></tr>
+<tr><td><code>node tools/battle_camera.mjs --mode=assert</code></td><td class="good">576 shots, 0 axis violations, 0 refused</td></tr>
+</table>
+<p><code>battle_rules.js</code> is untouched and unreachable from this module; nothing in this lane
+computes a number, changes turn order or touches damage.</p>
+
+<div class="box x">
+<b>TWO GATE FAILURES WERE SEEN AND BOTH WERE PROVED TO BE LOAD, NOT THIS LANE</b> — by running the SAME
+gate against a <code>git worktree</code> of the parent commit on a second port, which is the only way to
+tell "my change broke it" from "the machine is thrashing".
+<ul>
+<li><code>arena_playtest</code>'s <b>organic</b> suite failed twice on this branch with
+<code>no hostile zone reachable</code>, and passed on the parent. Run the two <b>concurrently</b>, which
+equalises the load, and <b>BOTH FAIL identically</b>. The suite's <code>findHostile()</code> asks
+<code>SIM.walkFloors</code> / <code>SIM.ground</code> for candidate cells as soon as the world reports
+ready; under load the region's meshes are not queryable yet and it finds nothing. Serial and unloaded, this
+branch passes.</li>
+<li><code>transition_test</code> returned <b>167/1</b> once — the standing
+<code>after battle: … back to its baseline</code> geometry-delta assertion — on a run whose worst scene
+load was <b>45.5 seconds</b>. Re-run serially it is <b>168/0</b>. The test's own URL carries no
+<code>?arena=world</code>, so <code>battle_world.js</code> is the frozen inert object throughout it and
+cannot allocate anything at all.</li>
+</ul>
+</div>
+
+<h2>§9 MY VERDICT, AND WHAT IS STILL OPEN</h2>
+<div class="box v" id="verdict">
+<p><b>The camera language moves me further toward the world, and it does it for a reason that is
+structural rather than aesthetic: in the world the camera is an instrument, and in the diorama it is a
+constant.</b> Every number in §4 came out of choosing a distance and a lens per shot from the bodies in
+front of them. The diorama cannot do that at all — not badly, <i>at all</i> — because its four plates were
+generated from one stated height, tilt and fov, and the backdrop band is built around <code>restPos</code>
+and only <code>restPos</code>. Under BET E that is not a tuning job; it is a re-bake of the backdrop for
+every angle a shot language would want, which is exactly the "make the diorama better" answer that already
+failed to satisfy once.</p>
+<p><b>But I would not call the world-vs-diorama question closed by this lane, and the honest reason is in
+§4's second box.</b> Look at the meadow row of §1: the diorama frame is still the most <i>readable</i>
+picture on that page — two clean silhouettes, a horizon at 42%, nothing behind them competing. The shot
+language closes the gap that the audit named (the foes are no longer the smallest thing on screen: worst
+case 13.0% &rarr; 17.8%, and up at all four sites) and it does not close the gap the spike named
+(separation from a busy background). What it does do is <b>change what the remaining gap costs</b>: it is
+now one localised problem — the cast does not separate tonally from mid-value terrain — with known,
+cheap, shader-side answers, rather than a property of the whole arena.</p>
+<p><b>So my recommendation is unchanged in shape and stronger in confidence: both paths, one flag, and the
+diorama stays as the fallback the world path already falls to.</b> If the ruling goes to BET A, the camera
+language is already there and costs 0.1% of the frame. If it goes to BET E, none of this work is wasted or
+even touched — no plate moved, no diorama camera moved, and the flag is still off by default.</p>
+</div>
+
+<h3>Residuals, named</h3>
+<ul>
+<li><b>Tonal separation from the background is unsolved and is the remaining legibility gap.</b> The camera
+cannot fix it: it is the cast's own material against whatever the terrain happens to be. The two answers
+that would are a cast-only rim (blocked: three.js tests light layers against the <b>camera</b>, not the
+object) and a fresnel term through <code>onBeforeCompile</code> on the body materials only — which would
+give this module its first shader and re-open the r185 colour-management class it currently avoids by
+construction. <b>Not attempted; it deserves its own decision.</b></li>
+<li><b>Flat ring decals still clip sloped stone</b> (a spike defect, unchanged here — they want to be
+projected decals).</li>
+<li><b>The diorama still has no <code>sides()</code> accessor.</b> This lane's instrument falls back to
+<code>/^m\d+$/</code> for that column only, and says so in its own source; <code>/^m/</code> matches
+<b>maren</b>, which is how the audit's impact captures once staged Vesper against her own party member.</li>
+<li><b>The harness drives verbs against a live battle.</b> With <code>speed: 1</code> the turn loop is
+parked at the player's own decision prompt while the contact sheet is shot, so a frame can contain both
+the loop's actor and the harness's. The beats are still the beats; the actor in a given frame may not be
+the one named in the caption.</li>
+<li><b>Cuts are unbuilt, not undecided-and-shipped.</b> Every shot carries <code>cut: false</code> pending
+§11.11's coordinator ruling. The machinery to honour a cut is one branch in <code>goTo</code>.</li>
+</ul>
+
+<h2>HOW TO REPRODUCE</h2>
+<pre class="mono" style="background:#0b0906;border:1px solid var(--edge);padding:12px 14px;border-radius:5px;overflow-x:auto">
+node tools/battle_camera.mjs --port=3000 --mode=shots --site=meadow   # the three-column contact sheet
+node tools/battle_camera.mjs --port=3000 --mode=legibility            # the meter, 4 sites, cam off vs on
+node tools/battle_camera.mjs --port=3000 --mode=assert                # the 180-degree rule, 576 shots
+node tools/battle_camera.mjs --port=3000 --mode=moves --site=crag     # the KO push and the victory move
+node tools/battle_camera.mjs --port=3000 --mode=fps                   # vsync off
+node tools/battle_camera.mjs --port=3000 --mode=regress               # flag OFF proof
+node tools/battle_world_probe.mjs --mode=place --port=3000 --n=160    # the staging distribution
+</pre>
+<p class="sub">Receipts in this directory: <code>shots.json</code> · <code>legibility.json</code> ·
+<code>assert.json</code> · <code>moves.json</code> · <code>fps.json</code> · <code>regress.json</code> ·
+<code>placement.json</code>. Runtime knobs: <code>?arena=world</code> turns the world arena on,
+<code>?bcam=0</code> turns the shot language off and leaves the spike's single solved pose;
+<code>BattleWorld.CAM</code> is the live table and <code>stage.cam()</code> / <code>stage.shotTable()</code>
+are the QA surfaces every assertion above is built on.</p>

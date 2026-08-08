@@ -1,0 +1,2119 @@
+{
+  "site": "meadow",
+  "at": [
+    38.12,
+    -26.88
+  ],
+  "group": [
+    "duskpad",
+    "duskpad"
+  ],
+  "fovBefore": 42,
+  "runs": {
+    "dio": {
+      "start": {
+        "ok": true,
+        "zone": "meadow",
+        "world": false,
+        "tiers": {
+          "m0": "model",
+          "m1": "model",
+          "vesper": "model",
+          "maren": "model"
+        },
+        "sides": {
+          "m0": "foe",
+          "m1": "foe",
+          "vesper": "party",
+          "maren": "party"
+        },
+        "cam": null,
+        "plan": null
+      },
+      "world": false,
+      "cams": {
+        "opening": null,
+        "decide": null,
+        "strike": null,
+        "impact": null,
+        "ko": null,
+        "koSettled": null,
+        "victory": null
+      },
+      "table": null,
+      "fovAfterTeardown": 42
+    },
+    "off": {
+      "start": {
+        "ok": true,
+        "zone": "meadow",
+        "world": true,
+        "tiers": {
+          "vesper": "model",
+          "maren": "model",
+          "m0": "model",
+          "m1": "model"
+        },
+        "sides": {
+          "vesper": "party",
+          "maren": "party",
+          "m0": "foe",
+          "m1": "foe"
+        },
+        "cam": {
+          "on": false,
+          "kind": "fixed",
+          "actor": "vesper",
+          "target": null,
+          "moves": 1,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axisRef": 1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7686,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              -0.369
+            ],
+            "foe": [
+              0.4,
+              0.462
+            ]
+          },
+          "orbit": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "tilt": 0,
+            "panX": 0,
+            "panY": 0,
+            "panZ": 0
+          },
+          "fov": 42,
+          "log": [
+            {
+              "t": 2,
+              "kind": "fixed",
+              "why": "entry(fixed)",
+              "dist": 9.6,
+              "fov": 42,
+              "pitch": 0.27,
+              "yaw": -2.537
+            }
+          ]
+        },
+        "plan": {
+          "basis": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "right": [
+              -0.5685092563326359,
+              0.8226768657645074
+            ],
+            "fwd": [
+              0.8226768657645074,
+              0.5685092563326359
+            ],
+            "centre": [
+              38.12,
+              14.074164342250896,
+              -26.88
+            ],
+            "eye": {
+              "x": 30.508428604761527,
+              "y": 17.634786134463674,
+              "z": -32.139961685452896
+            }
+          },
+          "placed": [
+            {
+              "id": "vesper",
+              "side": "party",
+              "h": 1.7,
+              "w": 0.75,
+              "x": 39.0448325534126,
+              "y": 13.657476443943487,
+              "z": -29.041509830685097,
+              "yaw": -0.6046926535897931,
+              "slot": [
+                -2.304,
+                -0.46799999999999997
+              ],
+              "drop": -0.417,
+              "tries": 1
+            },
+            {
+              "id": "maren",
+              "side": "party",
+              "h": 1.7,
+              "w": 0.75,
+              "x": 41.60700398726168,
+              "y": 13.960254048312411,
+              "z": -28.18987754878887,
+              "yaw": -0.6046926535897931,
+              "slot": [
+                -3.06,
+                2.124
+              ],
+              "drop": -0.114,
+              "tries": 6
+            },
+            {
+              "id": "m0",
+              "side": "foe",
+              "h": 1.05,
+              "w": 1.2075,
+              "x": 35.56450707507383,
+              "y": 14.108981428073507,
+              "z": -25.451518579661496,
+              "yaw": 2.5369,
+              "slot": [
+                2.6279999999999997,
+                -1.29024
+              ],
+              "drop": 0.035,
+              "tries": 1
+            },
+            {
+              "id": "m1",
+              "side": "foe",
+              "h": 1.05,
+              "w": 1.2075,
+              "x": 36.73968452428112,
+              "y": 14.360017379944253,
+              "z": -24.63941447717545,
+              "yaw": 2.5369,
+              "slot": [
+                2.6279999999999997,
+                0.13823999999999995
+              ],
+              "drop": 0.286,
+              "tries": 1
+            }
+          ],
+          "failed": [],
+          "occluded": 5,
+          "ok": true,
+          "relief": 0.703,
+          "yawDelta": -1.05
+        }
+      },
+      "world": true,
+      "cams": {
+        "opening": {
+          "on": false,
+          "kind": "fixed",
+          "actor": "vesper",
+          "target": null,
+          "moves": 1,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axisRef": 1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7686,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              -0.369
+            ],
+            "foe": [
+              0.4,
+              0.462
+            ]
+          },
+          "orbit": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "tilt": 0,
+            "panX": 0,
+            "panY": 0,
+            "panZ": 0
+          },
+          "fov": 42,
+          "log": [
+            {
+              "t": 2,
+              "kind": "fixed",
+              "why": "entry(fixed)",
+              "dist": 9.6,
+              "fov": 42,
+              "pitch": 0.27,
+              "yaw": -2.537
+            }
+          ]
+        },
+        "decide": {
+          "on": false,
+          "kind": "fixed",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 1,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axisRef": 1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7686,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              -0.369
+            ],
+            "foe": [
+              0.4,
+              0.462
+            ]
+          },
+          "orbit": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "tilt": 0,
+            "panX": 0,
+            "panY": 0,
+            "panZ": 0
+          },
+          "fov": 42,
+          "log": [
+            {
+              "t": 2,
+              "kind": "fixed",
+              "why": "entry(fixed)",
+              "dist": 9.6,
+              "fov": 42,
+              "pitch": 0.27,
+              "yaw": -2.537
+            }
+          ]
+        },
+        "strike": {
+          "on": false,
+          "kind": "fixed",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 1,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axisRef": 1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.2371,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              0.163
+            ],
+            "foe": [
+              0.4,
+              0.462
+            ]
+          },
+          "orbit": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "tilt": 0,
+            "panX": 0,
+            "panY": 0,
+            "panZ": 0
+          },
+          "fov": 42,
+          "log": [
+            {
+              "t": 2,
+              "kind": "fixed",
+              "why": "entry(fixed)",
+              "dist": 9.6,
+              "fov": 42,
+              "pitch": 0.27,
+              "yaw": -2.537
+            }
+          ]
+        },
+        "impact": {
+          "on": false,
+          "kind": "fixed",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 1,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axisRef": 1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.325,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              0.075
+            ],
+            "foe": [
+              0.4,
+              0.534
+            ]
+          },
+          "orbit": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "tilt": 0,
+            "panX": 0.025,
+            "panY": 0.017,
+            "panZ": 0.004
+          },
+          "fov": 42,
+          "log": [
+            {
+              "t": 2,
+              "kind": "fixed",
+              "why": "entry(fixed)",
+              "dist": 9.6,
+              "fov": 42,
+              "pitch": 0.27,
+              "yaw": -2.537
+            }
+          ]
+        },
+        "ko": {
+          "on": false,
+          "kind": "fixed",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 1,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axisRef": 1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7686,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              -0.369
+            ],
+            "foe": [
+              0.4,
+              0.576
+            ]
+          },
+          "orbit": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "tilt": 0,
+            "panX": 0,
+            "panY": 0,
+            "panZ": 0
+          },
+          "fov": 42,
+          "log": [
+            {
+              "t": 2,
+              "kind": "fixed",
+              "why": "entry(fixed)",
+              "dist": 9.6,
+              "fov": 42,
+              "pitch": 0.27,
+              "yaw": -2.537
+            }
+          ]
+        },
+        "koSettled": {
+          "on": false,
+          "kind": "fixed",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 1,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axisRef": 1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7686,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              -0.369
+            ],
+            "foe": [
+              0.4,
+              0.576
+            ]
+          },
+          "orbit": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "tilt": 0,
+            "panX": 0,
+            "panY": 0,
+            "panZ": 0
+          },
+          "fov": 42,
+          "log": [
+            {
+              "t": 2,
+              "kind": "fixed",
+              "why": "entry(fixed)",
+              "dist": 9.6,
+              "fov": 42,
+              "pitch": 0.27,
+              "yaw": -2.537
+            }
+          ]
+        },
+        "victory": {
+          "on": false,
+          "kind": "fixed",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 1,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axisRef": 1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7686,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              -0.369
+            ],
+            "foe": [
+              0.4,
+              0.4
+            ]
+          },
+          "orbit": {
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "tilt": 0,
+            "panX": 0,
+            "panY": 0,
+            "panZ": 0
+          },
+          "fov": 42,
+          "log": [
+            {
+              "t": 2,
+              "kind": "fixed",
+              "why": "entry(fixed)",
+              "dist": 9.6,
+              "fov": 42,
+              "pitch": 0.27,
+              "yaw": -2.537
+            }
+          ]
+        }
+      },
+      "table": [
+        {
+          "kind": "round",
+          "show": "all",
+          "cut": false,
+          "dist": 10.58,
+          "fov": 34,
+          "pitch": 0.27,
+          "yawOff": 0,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.925,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.333,
+              -0.27
+            ],
+            "foe": [
+              0.655,
+              0.655
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "decide",
+          "show": "actor",
+          "cut": false,
+          "dist": 14.38,
+          "fov": 27,
+          "pitch": 0.25,
+          "yawOff": -0.3,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7209,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.512,
+              -0.431
+            ],
+            "foe": [
+              0.29,
+              0.29
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "strike",
+          "show": "pair",
+          "cut": false,
+          "dist": 10.33,
+          "fov": 34,
+          "pitch": 0.2,
+          "yawOff": -0.22,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.8345,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.436,
+              -0.375
+            ],
+            "foe": [
+              0.46,
+              0.46
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "impact",
+          "show": "pair",
+          "cut": false,
+          "dist": 8.8,
+          "fov": 34,
+          "pitch": 0.2,
+          "yawOff": -0.22,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.966,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.509,
+              -0.424
+            ],
+            "foe": [
+              0.542,
+              0.542
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "ko",
+          "show": "victim",
+          "cut": false,
+          "dist": 12.31,
+          "fov": 27,
+          "pitch": 0.3,
+          "yawOff": 0.16,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.0129,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.97,
+              -0.917
+            ],
+            "foe": [
+              0.095,
+              0.095
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "victory",
+          "show": "party",
+          "cut": false,
+          "dist": 8.95,
+          "fov": 27,
+          "pitch": 0.22,
+          "yawOff": -0.95,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.2007,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.25,
+              0.199
+            ],
+            "foe": [
+              1.4,
+              1.4
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        }
+      ],
+      "fovAfterTeardown": 42
+    },
+    "on": {
+      "start": {
+        "ok": true,
+        "zone": "meadow",
+        "world": true,
+        "tiers": {
+          "vesper": "model",
+          "maren": "model",
+          "m0": "model",
+          "m1": "model"
+        },
+        "sides": {
+          "vesper": "party",
+          "maren": "party",
+          "m0": "foe",
+          "m1": "foe"
+        },
+        "cam": {
+          "on": true,
+          "kind": "decide",
+          "actor": "vesper",
+          "target": null,
+          "moves": 4,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -3.5869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axisRef": 1,
+          "pose": {
+            "ax": 36.978,
+            "ay": 14.589,
+            "az": -28.462,
+            "yaw": -3.8869,
+            "pitch": 0.14,
+            "dist": 7.986,
+            "fov": 27
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.6532,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.173,
+              -0.12
+            ],
+            "foe": [
+              1.533,
+              1.714
+            ]
+          },
+          "orbit": {
+            "yaw": -3.8869,
+            "pitch": 0.14,
+            "dist": 7.986,
+            "tilt": 0,
+            "panX": -1.168,
+            "panY": -0.497,
+            "panZ": -1.635
+          },
+          "fov": 27,
+          "log": [
+            {
+              "t": 308,
+              "kind": "round",
+              "why": "entry",
+              "dist": 8.18,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 656,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 963,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 1074,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 7.99,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            }
+          ]
+        },
+        "plan": {
+          "basis": {
+            "yaw": -3.5869,
+            "pitch": 0.16,
+            "right": [
+              0.4307352741134488,
+              0.9024783230828385
+            ],
+            "fwd": [
+              0.9024783230828385,
+              -0.4307352741134488
+            ],
+            "centre": [
+              38.12,
+              14.074164342250896,
+              -26.88
+            ],
+            "eye": {
+              "x": 29.566868257256363,
+              "y": 16.603619125747656,
+              "z": -22.797757300636068
+            }
+          },
+          "placed": [
+            {
+              "id": "vesper",
+              "side": "party",
+              "h": 1.7,
+              "w": 0.75,
+              "x": 36.70522607323984,
+              "y": 13.70479145720386,
+              "z": -28.757725948097765,
+              "yaw": 0.44530734641020675,
+              "slot": [
+                -2.304,
+                -0.46799999999999997
+              ],
+              "drop": -0.369,
+              "tries": 1
+            },
+            {
+              "id": "maren",
+              "side": "party",
+              "h": 1.7,
+              "w": 0.75,
+              "x": 37.67915899124936,
+              "y": 13.519933414111069,
+              "z": -30.060258355071756,
+              "yaw": 0.44530734641020675,
+              "slot": [
+                -3.06,
+                0.972
+              ],
+              "drop": -0.554,
+              "tries": 1
+            },
+            {
+              "id": "m0",
+              "side": "foe",
+              "h": 1.05,
+              "w": 1.2075,
+              "x": 38.08755866879574,
+              "y": 14.910668252172684,
+              "z": -23.952535086866163,
+              "yaw": -2.6962853071795867,
+              "slot": [
+                2.6279999999999997,
+                -1.29024
+              ],
+              "drop": 0.837,
+              "tries": 1
+            },
+            {
+              "id": "m1",
+              "side": "foe",
+              "h": 1.05,
+              "w": 1.2075,
+              "x": 39.37673090375311,
+              "y": 15.13019683499303,
+              "z": -24.567831811231745,
+              "yaw": -2.6962853071795867,
+              "slot": [
+                2.6279999999999997,
+                0.13823999999999995
+              ],
+              "drop": 1.056,
+              "tries": 1
+            }
+          ],
+          "failed": [],
+          "occluded": 0,
+          "ok": true,
+          "relief": 1.61,
+          "yawDelta": -2.1,
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          }
+        }
+      },
+      "world": true,
+      "cams": {
+        "opening": {
+          "on": true,
+          "kind": "decide",
+          "actor": "vesper",
+          "target": null,
+          "moves": 4,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -3.5869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axisRef": 1,
+          "pose": {
+            "ax": 36.978,
+            "ay": 14.589,
+            "az": -28.462,
+            "yaw": -3.8869,
+            "pitch": 0.14,
+            "dist": 7.986,
+            "fov": 27
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.6532,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.173,
+              -0.12
+            ],
+            "foe": [
+              1.533,
+              1.714
+            ]
+          },
+          "orbit": {
+            "yaw": -3.8869,
+            "pitch": 0.14,
+            "dist": 7.986,
+            "tilt": 0,
+            "panX": -1.168,
+            "panY": -0.497,
+            "panZ": -1.635
+          },
+          "fov": 27,
+          "log": [
+            {
+              "t": 308,
+              "kind": "round",
+              "why": "entry",
+              "dist": 8.18,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 656,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 963,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 1074,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 7.99,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            }
+          ]
+        },
+        "decide": {
+          "on": true,
+          "kind": "decide",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 5,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -3.5869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axisRef": 1,
+          "pose": {
+            "ax": 37.898,
+            "ay": 15.023,
+            "az": -25.812,
+            "yaw": -3.8869,
+            "pitch": 0.14,
+            "dist": 12.667,
+            "fov": 27
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.8132,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.511,
+              -0.504
+            ],
+            "foe": [
+              0.309,
+              0.356
+            ]
+          },
+          "orbit": {
+            "yaw": -3.8869,
+            "pitch": 0.14,
+            "dist": 12.667,
+            "tilt": 0,
+            "panX": -0.276,
+            "panY": -0.079,
+            "panZ": 1.057
+          },
+          "fov": 27,
+          "log": [
+            {
+              "t": 308,
+              "kind": "round",
+              "why": "entry",
+              "dist": 8.18,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 656,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 963,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 1074,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 7.99,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 3338,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 12.67,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            }
+          ]
+        },
+        "strike": {
+          "on": true,
+          "kind": "strike",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 6,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -3.5869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axisRef": 1,
+          "pose": {
+            "ax": 37.854,
+            "ay": 15.023,
+            "az": -24.765,
+            "yaw": -3.8069,
+            "pitch": 0.18,
+            "dist": 6.711,
+            "fov": 34
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.4377,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.806,
+              -0.206
+            ],
+            "foe": [
+              0.232,
+              0.267
+            ]
+          },
+          "orbit": {
+            "yaw": -3.8069,
+            "pitch": 0.18,
+            "dist": 6.711,
+            "tilt": 0,
+            "panX": -0.289,
+            "panY": -0.081,
+            "panZ": 2.144
+          },
+          "fov": 34,
+          "log": [
+            {
+              "t": 308,
+              "kind": "round",
+              "why": "entry",
+              "dist": 8.18,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 656,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 963,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 1074,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 7.99,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 3338,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 12.67,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 4607,
+              "kind": "strike",
+              "why": "strike",
+              "dist": 6.71,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            }
+          ]
+        },
+        "impact": {
+          "on": true,
+          "kind": "impact",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 7,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -3.5869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axisRef": 1,
+          "pose": {
+            "ax": 37.854,
+            "ay": 15.023,
+            "az": -24.765,
+            "yaw": -3.8069,
+            "pitch": 0.18,
+            "dist": 5.661,
+            "fov": 34
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.2116,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.988,
+              -0.902
+            ],
+            "foe": [
+              0.31,
+              0.418
+            ]
+          },
+          "orbit": {
+            "yaw": -3.8069,
+            "pitch": 0.18,
+            "dist": 5.661,
+            "tilt": 0,
+            "panX": -0.232,
+            "panY": -0.063,
+            "panZ": 2.168
+          },
+          "fov": 34,
+          "log": [
+            {
+              "t": 308,
+              "kind": "round",
+              "why": "entry",
+              "dist": 8.18,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 656,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 963,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 1074,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 7.99,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 3338,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 12.67,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 4607,
+              "kind": "strike",
+              "why": "strike",
+              "dist": 6.71,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            },
+            {
+              "t": 5405,
+              "kind": "impact",
+              "why": "impact",
+              "dist": 5.64,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            }
+          ]
+        },
+        "ko": {
+          "on": true,
+          "kind": "ko",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 10,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -3.5869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axisRef": 1,
+          "pose": {
+            "ax": 37.95,
+            "ay": 15.457,
+            "az": -24.423,
+            "yaw": -3.4269,
+            "pitch": 0.19,
+            "dist": 11.382,
+            "fov": 27
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.9762,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -1.013,
+              -0.927
+            ],
+            "foe": [
+              0.049,
+              0.233
+            ]
+          },
+          "orbit": {
+            "yaw": -3.4269,
+            "pitch": 0.19,
+            "dist": 11.382,
+            "tilt": 0,
+            "panX": -0.148,
+            "panY": 0.397,
+            "panZ": 2.456
+          },
+          "fov": 27,
+          "log": [
+            {
+              "t": 308,
+              "kind": "round",
+              "why": "entry",
+              "dist": 8.18,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 656,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 963,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 1074,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 7.99,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 3338,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 12.67,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 4607,
+              "kind": "strike",
+              "why": "strike",
+              "dist": 6.71,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            },
+            {
+              "t": 5405,
+              "kind": "impact",
+              "why": "impact",
+              "dist": 5.64,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            },
+            {
+              "t": 6661,
+              "kind": "round",
+              "why": "settle",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 6747,
+              "kind": "ko",
+              "why": "ko",
+              "dist": 12.21,
+              "fov": 27,
+              "pitch": 0.19,
+              "yaw": -3.427
+            },
+            {
+              "t": 7173,
+              "kind": "ko",
+              "why": "ko-push",
+              "dist": 10.5,
+              "fov": 27,
+              "pitch": 0.19,
+              "yaw": -3.427
+            }
+          ]
+        },
+        "koSettled": {
+          "on": true,
+          "kind": "round",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 11,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -3.5869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axisRef": 1,
+          "pose": {
+            "ax": 37.972,
+            "ay": 15.307,
+            "az": -25.322,
+            "yaw": -3.4905,
+            "pitch": 0.1781,
+            "dist": 10.459,
+            "fov": 29.78
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.9672,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.819,
+              -0.744
+            ],
+            "foe": [
+              0.223,
+              0.418
+            ]
+          },
+          "orbit": {
+            "yaw": -3.4905,
+            "pitch": 0.1781,
+            "dist": 10.459,
+            "tilt": 0,
+            "panX": -0.192,
+            "panY": 0.263,
+            "panZ": 1.508
+          },
+          "fov": 29.78,
+          "log": [
+            {
+              "t": 308,
+              "kind": "round",
+              "why": "entry",
+              "dist": 8.18,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 656,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 963,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 1074,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 7.99,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 3338,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 12.67,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 4607,
+              "kind": "strike",
+              "why": "strike",
+              "dist": 6.71,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            },
+            {
+              "t": 5405,
+              "kind": "impact",
+              "why": "impact",
+              "dist": 5.64,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            },
+            {
+              "t": 6661,
+              "kind": "round",
+              "why": "settle",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 6747,
+              "kind": "ko",
+              "why": "ko",
+              "dist": 12.21,
+              "fov": 27,
+              "pitch": 0.19,
+              "yaw": -3.427
+            },
+            {
+              "t": 7173,
+              "kind": "ko",
+              "why": "ko-push",
+              "dist": 10.5,
+              "fov": 27,
+              "pitch": 0.19,
+              "yaw": -3.427
+            },
+            {
+              "t": 8757,
+              "kind": "round",
+              "why": "settle",
+              "dist": 10.39,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            }
+          ]
+        },
+        "victory": {
+          "on": true,
+          "kind": "victory",
+          "actor": "vesper",
+          "target": "m0",
+          "moves": 13,
+          "refusals": 0,
+          "lastRefusal": null,
+          "base": {
+            "yaw": -3.5869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.7735,
+            "back": 5.91,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axisRef": 1,
+          "pose": {
+            "ax": 37.192,
+            "ay": 14.496,
+            "az": -29.409,
+            "yaw": -4.5369,
+            "pitch": 0.11,
+            "dist": 6.847,
+            "fov": 27
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 2.9061,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.142,
+              0.115
+            ],
+            "foe": [
+              3.021,
+              3.021
+            ]
+          },
+          "orbit": {
+            "yaw": -4.5369,
+            "pitch": 0.11,
+            "dist": 6.847,
+            "tilt": 0,
+            "panX": -0.975,
+            "panY": -0.551,
+            "panZ": -2.576
+          },
+          "fov": 27,
+          "log": [
+            {
+              "t": 308,
+              "kind": "round",
+              "why": "entry",
+              "dist": 8.18,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 656,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 963,
+              "kind": "round",
+              "why": "reframe(models)",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 1074,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 7.99,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 3338,
+              "kind": "decide",
+              "why": "decide",
+              "dist": 12.67,
+              "fov": 27,
+              "pitch": 0.14,
+              "yaw": -3.887
+            },
+            {
+              "t": 4607,
+              "kind": "strike",
+              "why": "strike",
+              "dist": 6.71,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            },
+            {
+              "t": 5405,
+              "kind": "impact",
+              "why": "impact",
+              "dist": 5.64,
+              "fov": 34,
+              "pitch": 0.18,
+              "yaw": -3.807
+            },
+            {
+              "t": 6661,
+              "kind": "round",
+              "why": "settle",
+              "dist": 9.3,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 6747,
+              "kind": "ko",
+              "why": "ko",
+              "dist": 12.21,
+              "fov": 27,
+              "pitch": 0.19,
+              "yaw": -3.427
+            },
+            {
+              "t": 7173,
+              "kind": "ko",
+              "why": "ko-push",
+              "dist": 10.5,
+              "fov": 27,
+              "pitch": 0.19,
+              "yaw": -3.427
+            },
+            {
+              "t": 8757,
+              "kind": "round",
+              "why": "settle",
+              "dist": 10.39,
+              "fov": 34,
+              "pitch": 0.16,
+              "yaw": -3.587
+            },
+            {
+              "t": 9101,
+              "kind": "victory",
+              "why": "victory",
+              "dist": 6.88,
+              "fov": 27,
+              "pitch": 0.11,
+              "yaw": -4.537
+            },
+            {
+              "t": 9881,
+              "kind": "victory",
+              "why": "victory-push",
+              "dist": 6.06,
+              "fov": 27,
+              "pitch": 0.11,
+              "yaw": -4.537
+            }
+          ]
+        }
+      },
+      "table": [
+        {
+          "kind": "round",
+          "show": "all",
+          "cut": false,
+          "dist": 10.24,
+          "fov": 34,
+          "pitch": 0.16,
+          "yawOff": 0,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.9294,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.363,
+              -0.271
+            ],
+            "foe": [
+              0.659,
+              0.659
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "decide",
+          "show": "actor",
+          "cut": false,
+          "dist": 14.24,
+          "fov": 27,
+          "pitch": 0.14,
+          "yawOff": -0.3,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.802,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.516,
+              -0.508
+            ],
+            "foe": [
+              0.294,
+              0.294
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "strike",
+          "show": "pair",
+          "cut": false,
+          "dist": 10.28,
+          "fov": 34,
+          "pitch": 0.09,
+          "yawOff": -0.22,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.8998,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.445,
+              -0.437
+            ],
+            "foe": [
+              0.463,
+              0.463
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "impact",
+          "show": "pair",
+          "cut": false,
+          "dist": 8.75,
+          "fov": 34,
+          "pitch": 0.09,
+          "yawOff": -0.22,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.0558,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.511,
+              -0.51
+            ],
+            "foe": [
+              0.546,
+              0.546
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "ko",
+          "show": "victim",
+          "cut": false,
+          "dist": 12.21,
+          "fov": 27,
+          "pitch": 0.19,
+          "yawOff": 0.16,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.0166,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -1.011,
+              -0.921
+            ],
+            "foe": [
+              0.095,
+              0.095
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        },
+        {
+          "kind": "victory",
+          "show": "party",
+          "cut": false,
+          "dist": 6.88,
+          "fov": 27,
+          "pitch": 0.11,
+          "yawOff": -0.95,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 2.8586,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.141,
+              0.114
+            ],
+            "foe": [
+              2.973,
+              2.973
+            ]
+          },
+          "refused": false,
+          "softened": 1
+        }
+      ],
+      "fovAfterTeardown": 42
+    }
+  }
+}

@@ -1,0 +1,8409 @@
+{
+  "summary": {
+    "sampled": 160,
+    "skipped": 0,
+    "usable": 160,
+    "ok": 103,
+    "fail": 57,
+    "rate": 64.4,
+    "rateFixedYaw": 31.9,
+    "yawTurned": 89.3,
+    "occludedSlotsFixedYaw": 1461,
+    "byZone": {
+      "water": {
+        "n": 29,
+        "ok": 13
+      },
+      "forest": {
+        "n": 48,
+        "ok": 23
+      },
+      "crag": {
+        "n": 24,
+        "ok": 18
+      },
+      "meadow": {
+        "n": 59,
+        "ok": 49
+      }
+    },
+    "relief_ok": {
+      "p50": 0.83,
+      "p90": 2.65,
+      "max": 3.77
+    },
+    "relief_all": {
+      "p50": 0.54,
+      "p90": 2.17,
+      "max": 3.77
+    },
+    "rawSlots": 640,
+    "rawNoFloor": 199,
+    "rawBlocked": 38,
+    "rawCleanPct": 63,
+    "blockers": [
+      [
+        "emberbrook_4",
+        14
+      ],
+      [
+        "emberbrook_3",
+        6
+      ],
+      [
+        "dellhollow_2",
+        5
+      ],
+      [
+        "emberbrook_1",
+        4
+      ],
+      [
+        "ground_valley_3",
+        4
+      ],
+      [
+        "emberbrook_6",
+        2
+      ],
+      [
+        "oldgate_3",
+        2
+      ],
+      [
+        "ground_valley_1",
+        1
+      ]
+    ],
+    "firstTryFraction": 76.5,
+    "failWhy": [
+      "occluded from the battle camera",
+      "blocked by emberbrook_4",
+      "blocked by dellhollow_2",
+      "no floor within 2.2 m",
+      "no floor within 2.2 m",
+      "blocked by emberbrook_1"
+    ]
+  },
+  "rows": [
+    {
+      "x": -45.84,
+      "y": 30,
+      "z": 26.66,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 3.142,
+      "relief": 0,
+      "drops": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tries": [
+        1,
+        1,
+        6,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 15.62,
+      "y": 14.86,
+      "z": -16.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 11,
+      "yawDelta": -0.5,
+      "relief": 0.59,
+      "drops": [
+        -0.258,
+        -0.279,
+        0.213,
+        0.308
+      ],
+      "tries": [
+        1,
+        5,
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.26,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.41,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.21,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.34,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -66.88,
+      "y": 25.75,
+      "z": 45.62,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 19,
+      "yawDelta": 0,
+      "relief": 0.03,
+      "drops": [
+        -0.275,
+        -0.244
+      ],
+      "tries": [
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.44,
+          "blocked": "emberbrook_4"
+        },
+        {
+          "id": "maren",
+          "g": 0.44,
+          "blocked": "emberbrook_1"
+        },
+        {
+          "id": "m0",
+          "g": -0.28,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.24,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 2,
+      "rawBlockers": [
+        "emberbrook_4",
+        "emberbrook_1"
+      ],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 60.42,
+      "y": 21.72,
+      "z": -38.34,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -1.05,
+      "relief": 2.69,
+      "drops": [
+        -1.837,
+        -0.854,
+        -0.505,
+        0.854
+      ],
+      "tries": [
+        2,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.85,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.5,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 44.38,
+      "y": 16.24,
+      "z": -33.12,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 4,
+      "yawDelta": 1.05,
+      "relief": 0,
+      "drops": [
+        -0.006,
+        -0.006,
+        -0.003,
+        -0.003
+      ],
+      "tries": [
+        4,
+        1,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.01,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -53.12,
+      "y": 27.14,
+      "z": 66.88,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -2.1,
+      "relief": 0.47,
+      "drops": [
+        -0.254,
+        0.219,
+        0.136
+      ],
+      "tries": [
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.25,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.07,
+          "blocked": "emberbrook_4"
+        },
+        {
+          "id": "m0",
+          "g": 0.22,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.14,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_4"
+      ],
+      "why": "blocked by emberbrook_4"
+    },
+    {
+      "x": 38.12,
+      "y": 14.07,
+      "z": -26.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 11,
+      "yawDelta": -2.1,
+      "relief": 1.61,
+      "drops": [
+        -0.369,
+        -0.554,
+        0.837,
+        1.056
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.37,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.55,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -50.62,
+      "y": 26.21,
+      "z": 35.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": 1.05,
+      "relief": 1.17,
+      "drops": [
+        0.892,
+        1.025,
+        -0.13,
+        -0.145
+      ],
+      "tries": [
+        1,
+        3,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.13,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.2,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 63.12,
+      "y": 20.49,
+      "z": -40.62,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.89,
+      "drops": [
+        -0.744,
+        0.39,
+        -1.503,
+        0.153
+      ],
+      "tries": [
+        2,
+        1,
+        2,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.39,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.15,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -60.62,
+      "y": 26.66,
+      "z": 63.12,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 14,
+      "yawDelta": 0.5,
+      "relief": 0.51,
+      "drops": [
+        0.063,
+        0.239,
+        -0.198,
+        -0.274
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.06,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.24,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.2,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.27,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -8.34,
+      "y": 14.26,
+      "z": 7.92,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 1.05,
+      "relief": 0.57,
+      "drops": [
+        0.051,
+        0.437,
+        -0.138,
+        -0.045
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.05,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.44,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.14,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.04,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 52.08,
+      "y": 11.66,
+      "z": -39.58,
+      "zone": "crag",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.82,
+      "drops": [
+        -0.747,
+        0.077
+      ],
+      "tries": [
+        2,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.08,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "blocked by dellhollow_2"
+    },
+    {
+      "x": 40.62,
+      "y": 18.17,
+      "z": -29.38,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.29,
+      "drops": [
+        0.336,
+        0.625
+      ],
+      "tries": [
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.34,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -52.08,
+      "y": 29.05,
+      "z": 45.84,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 0,
+      "yawDelta": 0.5,
+      "relief": 0.34,
+      "drops": [
+        -0.261,
+        0.076
+      ],
+      "tries": [
+        1,
+        2
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.26,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -62.92,
+      "y": 26.01,
+      "z": 44.58,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 20,
+      "yawDelta": -0.5,
+      "relief": 0.02,
+      "drops": [
+        -0.162,
+        -0.141
+      ],
+      "tries": [
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.03,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.17,
+          "blocked": "emberbrook_4"
+        },
+        {
+          "id": "m0",
+          "g": -0.16,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.06,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_4"
+      ],
+      "why": "blocked by emberbrook_1"
+    },
+    {
+      "x": 45.62,
+      "y": 16.24,
+      "z": -34.38,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 0,
+      "yawDelta": 1.05,
+      "relief": 2.03,
+      "drops": [
+        -2.033,
+        -2.033,
+        0,
+        0
+      ],
+      "tries": [
+        1,
+        5,
+        6,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -9.38,
+      "y": 14.61,
+      "z": 9.38,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.11,
+      "drops": [
+        -0.379,
+        -0.399,
+        0.415,
+        0.715
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.38,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.4,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.42,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.72,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 39.38,
+      "y": 13.92,
+      "z": -28.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 10,
+      "yawDelta": -2.1,
+      "relief": 1.8,
+      "drops": [
+        -0.41,
+        -0.636,
+        0.965,
+        1.166
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.41,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.64,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -46.88,
+      "y": 24.58,
+      "z": 48.12,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 1,
+      "yawDelta": 0.5,
+      "relief": 1.16,
+      "drops": [
+        0.217,
+        0.458,
+        1.059,
+        1.374
+      ],
+      "tries": [
+        1,
+        5,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.22,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.31,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 64.38,
+      "y": 20.77,
+      "z": -40.62,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.12,
+      "drops": [
+        -0.453,
+        0.12,
+        -0.831,
+        0.287
+      ],
+      "tries": [
+        4,
+        1,
+        2,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.12,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.29,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 31.88,
+      "y": 14.24,
+      "z": -21.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 1.05,
+      "relief": 0.18,
+      "drops": [
+        -0.05,
+        -0.222,
+        -0.232,
+        -0.192
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.05,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.22,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.23,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.19,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -9.58,
+      "y": 14.61,
+      "z": 9.16,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.06,
+      "drops": [
+        -0.384,
+        -0.382,
+        0.397,
+        0.679
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.38,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.38,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.4,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.68,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 57.92,
+      "y": 22.21,
+      "z": -35.84,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 0,
+      "yawDelta": -1.6,
+      "relief": 3.44,
+      "drops": [
+        -2.03,
+        -1.725,
+        0.666,
+        1.413
+      ],
+      "tries": [
+        2,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.67,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -64.38,
+      "y": 28.87,
+      "z": 45.62,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 1,
+      "failed": 3,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 0,
+      "yawDelta": 0.5,
+      "relief": 0,
+      "drops": [
+        -0.653
+      ],
+      "tries": [
+        4
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": 61.66,
+      "y": 22.12,
+      "z": -38.34,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 1.6,
+      "relief": 3.39,
+      "drops": [
+        1.434,
+        1.254,
+        -1.76,
+        -1.955
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 1.88,
+      "y": 14.16,
+      "z": 4.38,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 14,
+      "yawDelta": -1.05,
+      "relief": 0.44,
+      "drops": [
+        0.135,
+        -0.154,
+        0.021,
+        -0.302
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.13,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.15,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.02,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.3,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 57.92,
+      "y": 19.96,
+      "z": -38.34,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -1.05,
+      "relief": 2.8,
+      "drops": [
+        -1.448,
+        -0.777,
+        -0.823,
+        1.351
+      ],
+      "tries": [
+        2,
+        1,
+        1,
+        2
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.78,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.82,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.68,
+          "blocked": "ground_valley_3"
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "ground_valley_3"
+      ],
+      "why": null
+    },
+    {
+      "x": 28.12,
+      "y": 14.26,
+      "z": -20.62,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.18,
+      "drops": [
+        -0.103,
+        0.007,
+        -0.003,
+        0.081
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.1,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.01,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.08,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -25.84,
+      "y": 19.81,
+      "z": 20.42,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 1.19,
+      "drops": [
+        -0.602,
+        -0.384,
+        0.434,
+        0.591
+      ],
+      "tries": [
+        1,
+        5,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.6,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.31,
+          "blocked": "ground_valley_3"
+        },
+        {
+          "id": "m0",
+          "g": 0.43,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.59,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "ground_valley_3"
+      ],
+      "why": null
+    },
+    {
+      "x": -58.12,
+      "y": 27.46,
+      "z": 43.12,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 20,
+      "yawDelta": 1.6,
+      "relief": 3.11,
+      "drops": [
+        -1.629,
+        -1.621,
+        1.482,
+        0.404
+      ],
+      "tries": [
+        1,
+        7,
+        5,
+        4
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.26,
+          "blocked": "emberbrook_3"
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_3"
+      ],
+      "why": null
+    },
+    {
+      "x": 12.92,
+      "y": 15.01,
+      "z": -14.58,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 20,
+      "yawDelta": 0,
+      "relief": 0.01,
+      "drops": [
+        0.455,
+        0.464
+      ],
+      "tries": [
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.78,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.45,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.58,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 22.92,
+      "y": 14.47,
+      "z": -18.34,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 6,
+      "yawDelta": 0.5,
+      "relief": 1.2,
+      "drops": [
+        -0.531,
+        -1.219,
+        -0.015,
+        -0.067
+      ],
+      "tries": [
+        3,
+        1,
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.68,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.01,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.05,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -34.38,
+      "y": 23.72,
+      "z": 20.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -1.05,
+      "relief": 3.77,
+      "drops": [
+        -1.82,
+        -2.127,
+        1.363,
+        1.644
+      ],
+      "tries": [
+        1,
+        7,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 9.38,
+      "y": 14.35,
+      "z": -6.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 0,
+      "failed": 4,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": 0,
+      "relief": null,
+      "drops": [],
+      "tries": [],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.87,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.89,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 34.38,
+      "y": 14.14,
+      "z": -24.38,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0.5,
+      "relief": 0.7,
+      "drops": [
+        0.343,
+        0.562,
+        -0.133,
+        -0.086
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.34,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.56,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.13,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.09,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 8.12,
+      "y": 14.3,
+      "z": -4.38,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": 0.5,
+      "relief": 0.03,
+      "drops": [
+        -0.999,
+        -1.029
+      ],
+      "tries": [
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -50.62,
+      "y": 26.84,
+      "z": 38.12,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 14,
+      "yawDelta": 1.05,
+      "relief": 0.34,
+      "drops": [
+        -0.398,
+        -0.654,
+        -0.741
+      ],
+      "tries": [
+        7,
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.73,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.31,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.65,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.8,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 34.38,
+      "y": 13.99,
+      "z": -25.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0.5,
+      "relief": 0.61,
+      "drops": [
+        0.34,
+        0.529,
+        -0.077,
+        0.042
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.34,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.53,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.08,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.04,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 60.62,
+      "y": 20.65,
+      "z": -39.38,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -1.05,
+      "relief": 2.14,
+      "drops": [
+        -0.648,
+        -0.515,
+        -0.137,
+        1.488
+      ],
+      "tries": [
+        6,
+        2,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.14,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 65.62,
+      "y": 20.98,
+      "z": -40.62,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 1.42,
+      "drops": [
+        -0.111,
+        0.681,
+        -0.743,
+        -0.671
+      ],
+      "tries": [
+        1,
+        1,
+        6,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.11,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.68,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.67,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 3.12,
+      "y": 14.32,
+      "z": 1.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -2.1,
+      "relief": 1.32,
+      "drops": [
+        0.194,
+        0.433,
+        -0.507,
+        -0.888
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.19,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.43,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.51,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.89,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -49.38,
+      "y": 26.28,
+      "z": 55.62,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 19,
+      "yawDelta": 0,
+      "relief": 0.27,
+      "drops": [
+        -0.207,
+        0.059
+      ],
+      "tries": [
+        7,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.08,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.56,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.23,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.09,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -67.92,
+      "y": 25.93,
+      "z": 52.92,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 17,
+      "yawDelta": -1.6,
+      "relief": 0.15,
+      "drops": [
+        -0.065,
+        0.043,
+        -0.111,
+        -0.092
+      ],
+      "tries": [
+        1,
+        3,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.07,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.04,
+          "blocked": "emberbrook_1"
+        },
+        {
+          "id": "m0",
+          "g": -0.11,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.29,
+          "blocked": "emberbrook_3"
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 2,
+      "rawBlockers": [
+        "emberbrook_1",
+        "emberbrook_3"
+      ],
+      "why": null
+    },
+    {
+      "x": -42.08,
+      "y": 30,
+      "z": 25.42,
+      "zone": "crag",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0,
+      "drops": [
+        0,
+        0
+      ],
+      "tries": [
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -65.62,
+      "y": 29.53,
+      "z": 58.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 1,
+      "yawDelta": -1.6,
+      "relief": 0.41,
+      "drops": [
+        -0.221,
+        -0.316,
+        -0.618,
+        -0.629
+      ],
+      "tries": [
+        1,
+        7,
+        4,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.22,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -66.66,
+      "y": 28.73,
+      "z": 55.42,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 0,
+      "yawDelta": 1.05,
+      "relief": 0.41,
+      "drops": [
+        0.009,
+        0.388,
+        0.419
+      ],
+      "tries": [
+        1,
+        7,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.01,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.13,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -50.62,
+      "y": 26.16,
+      "z": 34.38,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": 1.05,
+      "relief": 0.83,
+      "drops": [
+        0.528,
+        0.72,
+        -0.092,
+        -0.113
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.53,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.72,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.09,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.07,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -33.12,
+      "y": 21.74,
+      "z": 18.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 2.94,
+      "drops": [
+        -0.783,
+        -1.237,
+        1.245,
+        1.703
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.78,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -10.62,
+      "y": 15.32,
+      "z": 11.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -1.05,
+      "relief": 1.77,
+      "drops": [
+        -0.604,
+        -0.805,
+        0.966,
+        0.837
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.6,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.81,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 8.12,
+      "y": 15.09,
+      "z": -6.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 1,
+      "failed": 3,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -0.5,
+      "relief": 0,
+      "drops": [
+        0.609
+      ],
+      "tries": [
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.75,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.56,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.39,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -11.88,
+      "y": 15.36,
+      "z": 10.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.24,
+      "drops": [
+        -0.675,
+        -0.698,
+        0.355,
+        0.543
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.67,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.7,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.36,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.54,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 41.88,
+      "y": 16.23,
+      "z": -30.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.49,
+      "drops": [
+        0,
+        0,
+        0.495
+      ],
+      "tries": [
+        1,
+        1,
+        6
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": "dellhollow_2"
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "dellhollow_2"
+      ],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -31.88,
+      "y": 21.24,
+      "z": 18.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 2.59,
+      "drops": [
+        -0.639,
+        -1.001,
+        1.156,
+        1.593
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.64,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -51.88,
+      "y": 30.51,
+      "z": 55.62,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 0,
+      "yawDelta": 2.1,
+      "relief": 0.19,
+      "drops": [
+        -1.663,
+        -1.594,
+        -1.472
+      ],
+      "tries": [
+        7,
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -45.62,
+      "y": 30,
+      "z": 25.62,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 3.142,
+      "relief": 0,
+      "drops": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tries": [
+        1,
+        5,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -48.12,
+      "y": 25.66,
+      "z": 50.62,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 18,
+      "yawDelta": 0.5,
+      "relief": 0.6,
+      "drops": [
+        -0.254,
+        -0.055,
+        0.314,
+        0.345
+      ],
+      "tries": [
+        6,
+        2,
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.74,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.22,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.31,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.54,
+          "blocked": "emberbrook_4"
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_4"
+      ],
+      "why": null
+    },
+    {
+      "x": -28.34,
+      "y": 20.39,
+      "z": 20.42,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.63,
+      "drops": [
+        -0.663,
+        -0.778,
+        0.821,
+        0.851
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.66,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.78,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -55.62,
+      "y": 27.61,
+      "z": 76.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.74,
+      "drops": [
+        -0.043,
+        -0.703,
+        -0.018,
+        0.035
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.04,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.7,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.02,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.03,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -53.12,
+      "y": 28.49,
+      "z": 65.62,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 27,
+      "yawDelta": -2.1,
+      "relief": 0.53,
+      "drops": [
+        -1.744,
+        -1.211,
+        -1.421
+      ],
+      "tries": [
+        5,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "blocked by emberbrook_6"
+    },
+    {
+      "x": -51.88,
+      "y": 27.26,
+      "z": 71.88,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -1.05,
+      "relief": 0.39,
+      "drops": [
+        -0.061,
+        0.327,
+        0.31,
+        0.267
+      ],
+      "tries": [
+        1,
+        5,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.06,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.71,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.31,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.27,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 8.12,
+      "y": 15.9,
+      "z": -11.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 14,
+      "yawDelta": -1.6,
+      "relief": 0.19,
+      "drops": [
+        -0.088,
+        -0.207,
+        -0.014
+      ],
+      "tries": [
+        1,
+        3,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.09,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.26,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.01,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.25,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -46.88,
+      "y": 30,
+      "z": 25.62,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0,
+      "drops": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tries": [
+        1,
+        1,
+        6,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 16.88,
+      "y": 14.69,
+      "z": -16.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 13,
+      "yawDelta": 0,
+      "relief": 0.41,
+      "drops": [
+        -0.109,
+        0.136,
+        0.303
+      ],
+      "tries": [
+        7,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.45,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.14,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.3,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -64.38,
+      "y": 26.11,
+      "z": 60.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 20,
+      "yawDelta": 1.6,
+      "relief": 0.34,
+      "drops": [
+        0.111,
+        -0.134,
+        0.202,
+        0.151
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.11,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.13,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.2,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.01,
+          "blocked": "emberbrook_1"
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_1"
+      ],
+      "why": null
+    },
+    {
+      "x": -52.08,
+      "y": 26.05,
+      "z": 44.58,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 27,
+      "yawDelta": 2.1,
+      "relief": 0.97,
+      "drops": [
+        -0.151,
+        -0.285,
+        0.683,
+        0.636
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.15,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.29,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.68,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.55,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 53.12,
+      "y": 4.25,
+      "z": -45.62,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 3,
+      "yawDelta": 0,
+      "relief": 0.11,
+      "drops": [
+        -0.095,
+        0.013
+      ],
+      "tries": [
+        3,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.21,
+          "blocked": "dellhollow_2"
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "dellhollow_2"
+      ],
+      "why": "blocked by dellhollow_2"
+    },
+    {
+      "x": -65.42,
+      "y": 29.18,
+      "z": 57.92,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 4,
+      "yawDelta": -0.5,
+      "relief": 1.26,
+      "drops": [
+        -0.206,
+        0.708,
+        -0.338,
+        -0.554
+      ],
+      "tries": [
+        2,
+        7,
+        4,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.27,
+          "blocked": "emberbrook_6"
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.55,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_6"
+      ],
+      "why": null
+    },
+    {
+      "x": -47.08,
+      "y": 24.3,
+      "z": 27.92,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 19,
+      "yawDelta": 3.142,
+      "relief": 0.05,
+      "drops": [
+        1.767,
+        1.817
+      ],
+      "tries": [
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "only 67% of the body is visible from the battle camera"
+    },
+    {
+      "x": 60.42,
+      "y": 20.34,
+      "z": -39.58,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 2.65,
+      "drops": [
+        -0.255,
+        1,
+        -1.649,
+        -0.283
+      ],
+      "tries": [
+        2,
+        1,
+        2,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.28,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -50.62,
+      "y": 26.81,
+      "z": 41.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 26,
+      "yawDelta": 1.05,
+      "relief": 1.09,
+      "drops": [
+        -0.196,
+        -0.6,
+        0.494
+      ],
+      "tries": [
+        1,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.2,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.6,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.3,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.54,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -16.88,
+      "y": 17.25,
+      "z": 15.62,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.78,
+      "drops": [
+        -0.23,
+        -0.069,
+        0.292,
+        0.547
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.23,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.07,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.29,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.55,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -29.58,
+      "y": 20.69,
+      "z": 20.42,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0.5,
+      "relief": 0.52,
+      "drops": [
+        0.072,
+        0.406,
+        0.205,
+        0.595
+      ],
+      "tries": [
+        1,
+        7,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.07,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.2,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.6,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -53.12,
+      "y": 27.26,
+      "z": 76.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.46,
+      "drops": [
+        0.125,
+        -0.067,
+        0.398,
+        0.278
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.13,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.07,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.4,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.28,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -45.62,
+      "y": 24.32,
+      "z": 49.38,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 4,
+      "yawDelta": 0,
+      "relief": 0.52,
+      "drops": [
+        1.569,
+        1.045,
+        1.24
+      ],
+      "tries": [
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -60.42,
+      "y": 26.03,
+      "z": 43.34,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 23,
+      "yawDelta": 0,
+      "relief": 0,
+      "drops": [
+        -0.142,
+        -0.146
+      ],
+      "tries": [
+        2,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.14,
+          "blocked": "emberbrook_3"
+        },
+        {
+          "id": "maren",
+          "g": -0.23,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.16,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.1,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_3"
+      ],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 10.62,
+      "y": 15.6,
+      "z": -14.38,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 11,
+      "yawDelta": -0.5,
+      "relief": 0.62,
+      "drops": [
+        -0.4,
+        -0.417,
+        0.2,
+        0.205
+      ],
+      "tries": [
+        3,
+        7,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.36,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.87,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.2,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.21,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 10.62,
+      "y": 14.92,
+      "z": -10.62,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 0,
+      "failed": 4,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": 0,
+      "relief": null,
+      "drops": [],
+      "tries": [],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -48.12,
+      "y": 25.41,
+      "z": 28.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 12,
+      "yawDelta": 3.142,
+      "relief": 0.08,
+      "drops": [
+        0.7,
+        0.78
+      ],
+      "tries": [
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.7,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": 6.88,
+      "y": 15.73,
+      "z": -8.12,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 14,
+      "yawDelta": 0,
+      "relief": 0.08,
+      "drops": [
+        0.137,
+        0.055
+      ],
+      "tries": [
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.76,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.14,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.04,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -14.38,
+      "y": 17.22,
+      "z": 16.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -1.05,
+      "relief": 1.55,
+      "drops": [
+        -0.6,
+        -0.829,
+        0.703,
+        0.718
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.6,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.83,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.7,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -55.84,
+      "y": 26.65,
+      "z": 62.92,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 6,
+      "yawDelta": -1.6,
+      "relief": 0.47,
+      "drops": [
+        -0.218,
+        -0.195,
+        0.251,
+        0.205
+      ],
+      "tries": [
+        1,
+        5,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.22,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.06,
+          "blocked": "emberbrook_4"
+        },
+        {
+          "id": "m0",
+          "g": 0.25,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.21,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_4"
+      ],
+      "why": null
+    },
+    {
+      "x": -54.38,
+      "y": 27.08,
+      "z": 66.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 26,
+      "yawDelta": 3.142,
+      "relief": 0.27,
+      "drops": [
+        -0.104,
+        -0.167,
+        -0.006,
+        0.102
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.1,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.17,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.01,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.17,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -51.88,
+      "y": 29.24,
+      "z": 45.62,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 0,
+      "yawDelta": 0.5,
+      "relief": 0.24,
+      "drops": [
+        -0.348,
+        -0.109
+      ],
+      "tries": [
+        4,
+        4
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -1.88,
+      "y": 14.13,
+      "z": 5.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.19,
+      "drops": [
+        0.076,
+        -0.037,
+        -0.116,
+        -0.009
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.08,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.04,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.12,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.01,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 48.34,
+      "y": 12.29,
+      "z": -39.58,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 9,
+      "yawDelta": 0.5,
+      "relief": 1.3,
+      "drops": [
+        -0.361,
+        0.033,
+        -1.265,
+        -0.444
+      ],
+      "tries": [
+        1,
+        1,
+        4,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.36,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.03,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.44,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -53.34,
+      "y": 25.85,
+      "z": 44.58,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 21,
+      "yawDelta": 2.1,
+      "relief": 0.66,
+      "drops": [
+        -0.078,
+        -0.021,
+        0.584
+      ],
+      "tries": [
+        1,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.08,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.02,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.52,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.3,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -51.88,
+      "y": 27.21,
+      "z": 66.88,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 25,
+      "yawDelta": -2.1,
+      "relief": 0.47,
+      "drops": [
+        -0.24,
+        0.234,
+        0.047
+      ],
+      "tries": [
+        7,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.14,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.14,
+          "blocked": "emberbrook_4"
+        },
+        {
+          "id": "m0",
+          "g": 0.23,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.05,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_4"
+      ],
+      "why": "blocked by emberbrook_4"
+    },
+    {
+      "x": -53.34,
+      "y": 30.73,
+      "z": 56.66,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 2,
+      "yawDelta": 2.1,
+      "relief": 1.63,
+      "drops": [
+        -1.153,
+        -0.439,
+        0.035,
+        0.476
+      ],
+      "tries": [
+        1,
+        7,
+        2,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.76,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 30.62,
+      "y": 14.26,
+      "z": -20.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 1.05,
+      "relief": 0.37,
+      "drops": [
+        -0.238,
+        -0.532,
+        -0.193,
+        -0.158
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.24,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.53,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.19,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.16,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -8.12,
+      "y": 14.28,
+      "z": 8.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.69,
+      "drops": [
+        -0.175,
+        -0.154,
+        0.265,
+        0.512
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.17,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.15,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.27,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.51,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -46.88,
+      "y": 24.2,
+      "z": 28.12,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 23,
+      "yawDelta": 3.142,
+      "relief": 0.05,
+      "drops": [
+        1.854,
+        1.906
+      ],
+      "tries": [
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.16,
+          "blocked": "oldgate_3"
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "oldgate_3"
+      ],
+      "why": "only 67% of the body is visible from the battle camera"
+    },
+    {
+      "x": -49.58,
+      "y": 26.08,
+      "z": 27.92,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 10,
+      "yawDelta": 3.142,
+      "relief": 2.17,
+      "drops": [
+        0.137,
+        0.317,
+        -1.714,
+        -1.85
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.14,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.32,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 68.12,
+      "y": 11.9,
+      "z": -44.38,
+      "zone": "crag",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 1.94,
+      "drops": [
+        -0.127,
+        0.056,
+        1.815
+      ],
+      "tries": [
+        1,
+        7,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.13,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "blocked by dellhollow_2"
+    },
+    {
+      "x": 64.16,
+      "y": 20.55,
+      "z": -40.84,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.95,
+      "drops": [
+        -0.163,
+        0.21,
+        -0.738,
+        0.118
+      ],
+      "tries": [
+        4,
+        1,
+        4,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.21,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.12,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -55.62,
+      "y": 27.59,
+      "z": 75.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -1.05,
+      "relief": 0.23,
+      "drops": [
+        -0.015,
+        -0.106,
+        0.015,
+        0.124
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.02,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.11,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.02,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.12,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -46.88,
+      "y": 24.17,
+      "z": 29.38,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 23,
+      "yawDelta": 3.142,
+      "relief": 0.01,
+      "drops": [
+        1.923,
+        1.916
+      ],
+      "tries": [
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.83,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "only 67% of the body is visible from the battle camera"
+    },
+    {
+      "x": 14.38,
+      "y": 14.97,
+      "z": -15.62,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 16,
+      "yawDelta": 0,
+      "relief": 0.04,
+      "drops": [
+        0.236,
+        0.278
+      ],
+      "tries": [
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.73,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.24,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.33,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -54.38,
+      "y": 27.32,
+      "z": 78.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.87,
+      "drops": [
+        -0.432,
+        -0.503,
+        0.366,
+        0.323
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.43,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.5,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.37,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.32,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -27.08,
+      "y": 20.08,
+      "z": 20.42,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.75,
+      "drops": [
+        -0.589,
+        -0.773,
+        0.684,
+        0.975
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.59,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.77,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.68,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -46.66,
+      "y": 23.88,
+      "z": 27.92,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 1,
+      "failed": 3,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 18,
+      "yawDelta": 3.142,
+      "relief": 0,
+      "drops": [
+        2.164
+      ],
+      "tries": [
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.47,
+          "blocked": "oldgate_3"
+        },
+        {
+          "id": "m0",
+          "g": -0.69,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.75,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "oldgate_3"
+      ],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -49.38,
+      "y": 25.96,
+      "z": 46.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 19,
+      "yawDelta": 1.05,
+      "relief": 1.17,
+      "drops": [
+        -0.64,
+        -0.172,
+        0.535,
+        0.204
+      ],
+      "tries": [
+        1,
+        3,
+        1,
+        2
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.64,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.12,
+          "blocked": "emberbrook_3"
+        },
+        {
+          "id": "m0",
+          "g": 0.54,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.26,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_3"
+      ],
+      "why": null
+    },
+    {
+      "x": -53.12,
+      "y": 27.34,
+      "z": 69.38,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -2.1,
+      "relief": 0.38,
+      "drops": [
+        -0.242,
+        -0.267,
+        0.113,
+        -0.065
+      ],
+      "tries": [
+        1,
+        5,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.24,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.26,
+          "blocked": "emberbrook_3"
+        },
+        {
+          "id": "m0",
+          "g": 0.11,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.06,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_3"
+      ],
+      "why": null
+    },
+    {
+      "x": 23.12,
+      "y": 14.39,
+      "z": -19.38,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.38,
+      "drops": [
+        -0.065,
+        -0.279,
+        0.096,
+        0.025
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.06,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.28,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.1,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.06,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -46.88,
+      "y": 23.87,
+      "z": 31.88,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 0,
+      "failed": 4,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 16,
+      "yawDelta": 0,
+      "relief": null,
+      "drops": [],
+      "tries": [],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.55,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.08,
+          "blocked": "ground_valley_3"
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "ground_valley_3"
+      ],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 4.38,
+      "y": 14.81,
+      "z": -1.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": 3.142,
+      "relief": 0.01,
+      "drops": [
+        -0.121,
+        -0.116
+      ],
+      "tries": [
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.12,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.12,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.9,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -53.72,
+      "y": 26.19,
+      "z": 56.28,
+      "zone": "water",
+      "off": 8,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 3,
+      "yawDelta": -1.05,
+      "relief": 0.26,
+      "drops": [
+        -0.093,
+        -0.137,
+        -0.019,
+        0.121
+      ],
+      "tries": [
+        3,
+        3,
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.1,
+          "blocked": "emberbrook_3"
+        },
+        {
+          "id": "maren",
+          "g": -0.14,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.02,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.15,
+          "blocked": "emberbrook_4"
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 2,
+      "rawBlockers": [
+        "emberbrook_3",
+        "emberbrook_4"
+      ],
+      "why": null
+    },
+    {
+      "x": -51.88,
+      "y": 26.59,
+      "z": 60.62,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 16,
+      "yawDelta": 1.05,
+      "relief": 0.06,
+      "drops": [
+        0.91,
+        0.967
+      ],
+      "tries": [
+        5,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.68,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.59,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.22,
+          "blocked": "emberbrook_4"
+        },
+        {
+          "id": "m1",
+          "g": -0.27,
+          "blocked": "emberbrook_4"
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 2,
+      "rawBlockers": [
+        "emberbrook_4",
+        "emberbrook_4"
+      ],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 9.38,
+      "y": 15.24,
+      "z": -9.38,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 1,
+      "failed": 3,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -1.05,
+      "relief": 0,
+      "drops": [
+        0.621
+      ],
+      "tries": [
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.25,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.87,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.46,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.01,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 50.62,
+      "y": 0.91,
+      "z": -46.88,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 1,
+      "failed": 3,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 14,
+      "yawDelta": -1.05,
+      "relief": 0,
+      "drops": [
+        0.26
+      ],
+      "tries": [
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.44,
+          "blocked": "dellhollow_2"
+        },
+        {
+          "id": "maren",
+          "g": -0.5,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "dellhollow_2"
+      ],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -9.38,
+      "y": 14.22,
+      "z": 6.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.64,
+      "drops": [
+        -0.208,
+        -0.138,
+        0.395,
+        0.433
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.21,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.14,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.4,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.43,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 9.38,
+      "y": 14.76,
+      "z": -8.12,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 0,
+      "failed": 4,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": 0,
+      "relief": null,
+      "drops": [],
+      "tries": [],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 38.12,
+      "y": 13.64,
+      "z": -29.38,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 7,
+      "yawDelta": -2.1,
+      "relief": 0.91,
+      "drops": [
+        -0.073,
+        -0.293,
+        0.551,
+        0.619
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.07,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.29,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.55,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.62,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -43.12,
+      "y": 30,
+      "z": 25.62,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": 3.142,
+      "relief": 0,
+      "drops": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tries": [
+        1,
+        5,
+        6,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0,
+          "blocked": "ground_valley_3"
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "ground_valley_3"
+      ],
+      "why": null
+    },
+    {
+      "x": -53.12,
+      "y": 27.52,
+      "z": 74.38,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.38,
+      "drops": [
+        0.013,
+        -0.354,
+        0,
+        0.026
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.01,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.35,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.03,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -13.12,
+      "y": 15.75,
+      "z": 11.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.82,
+      "drops": [
+        -0.428,
+        -0.093,
+        0.169,
+        0.395
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.43,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.09,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.17,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.4,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 64.38,
+      "y": 16.88,
+      "z": -44.38,
+      "zone": "crag",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 3.52,
+      "drops": [
+        0.27,
+        1.341,
+        -2.175
+      ],
+      "tries": [
+        6,
+        2,
+        4
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": 27.92,
+      "y": 14.23,
+      "z": -19.58,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.13,
+      "drops": [
+        -0.042,
+        -0.047,
+        0.085,
+        0.017
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.04,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.05,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.08,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.02,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -51.88,
+      "y": 26.13,
+      "z": 43.12,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -1.6,
+      "relief": 0,
+      "drops": [
+        -0.17,
+        -0.171
+      ],
+      "tries": [
+        4,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.01,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.26,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.15,
+          "blocked": "emberbrook_1"
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_1"
+      ],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -51.88,
+      "y": 27.07,
+      "z": 65.62,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 23,
+      "yawDelta": 0.5,
+      "relief": 0.17,
+      "drops": [
+        0.556,
+        0.723
+      ],
+      "tries": [
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.56,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.72,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.01,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.01,
+          "blocked": "emberbrook_4"
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_4"
+      ],
+      "why": "blocked by emberbrook_4"
+    },
+    {
+      "x": 63.12,
+      "y": 21.88,
+      "z": -39.38,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 2.94,
+      "drops": [
+        -0.153,
+        1.178,
+        -1.764,
+        -1.362
+      ],
+      "tries": [
+        1,
+        1,
+        6,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.15,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -49.38,
+      "y": 26.87,
+      "z": 36.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 14,
+      "yawDelta": 0.5,
+      "relief": 1.31,
+      "drops": [
+        -2.051,
+        -0.738
+      ],
+      "tries": [
+        2,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.75,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.83,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -51.88,
+      "y": 27.33,
+      "z": 69.38,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -1.6,
+      "relief": 0.35,
+      "drops": [
+        -0.221,
+        -0.225,
+        0.126,
+        -0.075
+      ],
+      "tries": [
+        1,
+        5,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.22,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.23,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.13,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.08,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 1.88,
+      "y": 14.48,
+      "z": 0.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 14,
+      "yawDelta": -1.6,
+      "relief": 0.54,
+      "drops": [
+        0.172,
+        0.307,
+        -0.233,
+        -0.231
+      ],
+      "tries": [
+        1,
+        7,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.17,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.4,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.23,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.23,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 3.12,
+      "y": 14.68,
+      "z": -0.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 21,
+      "yawDelta": -2.1,
+      "relief": 0.84,
+      "drops": [
+        0.115,
+        0.273,
+        -0.451,
+        -0.568
+      ],
+      "tries": [
+        1,
+        7,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.11,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.35,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.45,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.57,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -48.12,
+      "y": 25.49,
+      "z": 49.38,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 22,
+      "yawDelta": 0.5,
+      "relief": 0.91,
+      "drops": [
+        -0.367,
+        -0.118,
+        0.487,
+        0.541
+      ],
+      "tries": [
+        6,
+        4,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.85,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.47,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.49,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.54,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -53.12,
+      "y": 28.83,
+      "z": 54.38,
+      "zone": "water",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 1,
+      "yawDelta": 1.05,
+      "relief": 0.27,
+      "drops": [
+        0.721,
+        0.453
+      ],
+      "tries": [
+        5,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.06,
+          "blocked": "emberbrook_6"
+        },
+        {
+          "id": "maren",
+          "g": 0.45,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_6"
+      ],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 62.92,
+      "y": 21.54,
+      "z": -39.58,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 3.13,
+      "drops": [
+        -0.011,
+        1.314,
+        -1.814,
+        -1.377
+      ],
+      "tries": [
+        1,
+        1,
+        6,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.01,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 44.38,
+      "y": 16.23,
+      "z": -30.62,
+      "zone": "crag",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 2.03,
+      "drops": [
+        -2.029,
+        -0.261,
+        0
+      ],
+      "tries": [
+        5,
+        3,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.23,
+          "blocked": "dellhollow_2"
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "dellhollow_2"
+      ],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -8.34,
+      "y": 14.42,
+      "z": 9.16,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 1.05,
+      "relief": 0.99,
+      "drops": [
+        0.294,
+        0.664,
+        -0.331,
+        -0.197
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.29,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.66,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.33,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.2,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 4.38,
+      "y": 14.3,
+      "z": 0.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": -2.1,
+      "relief": 1.23,
+      "drops": [
+        0.421,
+        -0.663,
+        -0.814
+      ],
+      "tries": [
+        3,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.47,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.73,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.66,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.81,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -23.34,
+      "y": 19.01,
+      "z": 19.16,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.27,
+      "drops": [
+        -0.481,
+        -0.553,
+        0.67,
+        0.716
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.48,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.55,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.67,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.72,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 17.92,
+      "y": 13.79,
+      "z": -15.84,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 23,
+      "yawDelta": 0.5,
+      "relief": 0.01,
+      "drops": [
+        0.883,
+        0.896
+      ],
+      "tries": [
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 44.38,
+      "y": 16.17,
+      "z": -34.38,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 3,
+      "yawDelta": 1.05,
+      "relief": 0.33,
+      "drops": [
+        -0.262,
+        0.062,
+        0.065,
+        0.067
+      ],
+      "tries": [
+        1,
+        1,
+        2,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.26,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.06,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -50.62,
+      "y": 29.48,
+      "z": 46.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 0,
+      "yawDelta": 1.05,
+      "relief": 0.59,
+      "drops": [
+        -0.856,
+        -0.264,
+        -0.716
+      ],
+      "tries": [
+        2,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.26,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.72,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -7.08,
+      "y": 14.2,
+      "z": 7.92,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.48,
+      "drops": [
+        -0.11,
+        -0.083,
+        0.21,
+        0.37
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.11,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.08,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.21,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.37,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -49.38,
+      "y": 25.98,
+      "z": 49.38,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 16,
+      "yawDelta": 1.05,
+      "relief": 0.32,
+      "drops": [
+        -0.256,
+        -0.176,
+        0.002,
+        0.063
+      ],
+      "tries": [
+        1,
+        7,
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.26,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.38,
+          "blocked": "emberbrook_4"
+        },
+        {
+          "id": "m0",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.29,
+          "blocked": "emberbrook_4"
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 2,
+      "rawBlockers": [
+        "emberbrook_4",
+        "emberbrook_4"
+      ],
+      "why": null
+    },
+    {
+      "x": -55.62,
+      "y": 27.54,
+      "z": 73.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -1.6,
+      "relief": 0.34,
+      "drops": [
+        -0.219,
+        -0.244,
+        0.098,
+        0.055
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.22,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.24,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.1,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.06,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -48.12,
+      "y": 25.27,
+      "z": 30.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 23,
+      "yawDelta": -0.5,
+      "relief": 0,
+      "drops": [
+        0.806,
+        0.807
+      ],
+      "tries": [
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -5.84,
+      "y": 14.08,
+      "z": 6.66,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.21,
+      "drops": [
+        -0.044,
+        0.031,
+        0.05,
+        0.166
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.04,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.03,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.05,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.17,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 6.88,
+      "y": 15.53,
+      "z": -6.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 18,
+      "yawDelta": 0,
+      "relief": 0.09,
+      "drops": [
+        0.193,
+        0.101
+      ],
+      "tries": [
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.86,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.19,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.01,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": -48.12,
+      "y": 30,
+      "z": 25.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.13,
+      "drops": [
+        0,
+        0,
+        0.13,
+        0.13
+      ],
+      "tries": [
+        1,
+        1,
+        4,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.13,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 5.62,
+      "y": 14.84,
+      "z": -3.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 0,
+      "failed": 4,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 28,
+      "yawDelta": 0,
+      "relief": null,
+      "drops": [],
+      "tries": [],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.7,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.33,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.12,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "occluded from the battle camera"
+    },
+    {
+      "x": 20.42,
+      "y": 14.56,
+      "z": -18.34,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 14,
+      "yawDelta": -0.5,
+      "relief": 0.28,
+      "drops": [
+        -0.21,
+        -0.136,
+        0.067,
+        0.041
+      ],
+      "tries": [
+        3,
+        1,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.19,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.14,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.07,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 41.88,
+      "y": 12.83,
+      "z": -31.88,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 10,
+      "yawDelta": -2.1,
+      "relief": 0.92,
+      "drops": [
+        0.067,
+        -0.19,
+        0.729,
+        0.406
+      ],
+      "tries": [
+        1,
+        1,
+        2,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.07,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.19,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.27,
+          "blocked": "ground_valley_1"
+        },
+        {
+          "id": "m1",
+          "g": 0.41,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "ground_valley_1"
+      ],
+      "why": null
+    },
+    {
+      "x": 64.16,
+      "y": 21.76,
+      "z": -39.58,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 2.1,
+      "relief": 2.45,
+      "drops": [
+        1.557,
+        0.919,
+        -0.892,
+        -0.837
+      ],
+      "tries": [
+        1,
+        1,
+        2,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.84,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 3,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 36.88,
+      "y": 13.78,
+      "z": -28.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 3,
+      "fixedOccluded": 7,
+      "yawDelta": -2.1,
+      "relief": 0.77,
+      "drops": [
+        -0.022,
+        -0.189,
+        0.522,
+        0.579
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.02,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.19,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.52,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.58,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -49.38,
+      "y": 25.95,
+      "z": 48.12,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 22,
+      "yawDelta": 1.05,
+      "relief": 0.69,
+      "drops": [
+        -0.464,
+        0.071,
+        0.225,
+        0.212
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.46,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.07,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.23,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.33,
+          "blocked": "emberbrook_4"
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_4"
+      ],
+      "why": null
+    },
+    {
+      "x": -48.12,
+      "y": 25.38,
+      "z": 48.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 3,
+      "failed": 1,
+      "fixedOk": false,
+      "fixedPlaced": 0,
+      "fixedOccluded": 21,
+      "yawDelta": 0.5,
+      "relief": 0.8,
+      "drops": [
+        -0.087,
+        0.696,
+        0.717
+      ],
+      "tries": [
+        6,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.59,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.7,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.68,
+          "blocked": "emberbrook_4"
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "emberbrook_4"
+      ],
+      "why": "only 67% of the body is visible from the battle camera"
+    },
+    {
+      "x": -45.42,
+      "y": 30,
+      "z": 26.66,
+      "zone": "water",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": 3.142,
+      "relief": 0,
+      "drops": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tries": [
+        1,
+        1,
+        6,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 1,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 21.66,
+      "y": 14.52,
+      "z": -18.34,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 6,
+      "yawDelta": -2.1,
+      "relief": 1.79,
+      "drops": [
+        -0.09,
+        -0.059,
+        -1.845,
+        -1.605
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        5
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.09,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.06,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 63.12,
+      "y": 11.08,
+      "z": -48.12,
+      "zone": "crag",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.08,
+      "drops": [
+        0.008,
+        0.088
+      ],
+      "tries": [
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.01,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.09,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": -13.12,
+      "y": 15.48,
+      "z": 10.62,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 1.22,
+      "drops": [
+        -0.613,
+        -0.578,
+        0.53,
+        0.606
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.61,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.58,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.53,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.61,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -18.12,
+      "y": 17.72,
+      "z": 16.88,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -1.05,
+      "relief": 1.42,
+      "drops": [
+        -0.645,
+        -0.695,
+        0.712,
+        0.727
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.65,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.69,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.71,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.73,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 40.62,
+      "y": 18.5,
+      "z": -28.12,
+      "zone": "meadow",
+      "off": 5,
+      "ok": false,
+      "placed": 2,
+      "failed": 2,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 0,
+      "yawDelta": 0,
+      "relief": 0.87,
+      "drops": [
+        -0.144,
+        0.724
+      ],
+      "tries": [
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.14,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.72,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": "no floor within 2.2 m"
+    },
+    {
+      "x": 24.16,
+      "y": 13.66,
+      "z": -17.08,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 14,
+      "yawDelta": 1.05,
+      "relief": 1.45,
+      "drops": [
+        -0.553,
+        -0.741,
+        0.656,
+        0.712
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.55,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.74,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.66,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.73,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 21.88,
+      "y": 14.4,
+      "z": -19.38,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 2,
+      "yawDelta": 0,
+      "relief": 0.2,
+      "drops": [
+        -0.047,
+        -0.068,
+        0.136,
+        0.102
+      ],
+      "tries": [
+        1,
+        3,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": -0.05,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.25,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": 0.14,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.1,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": 63.12,
+      "y": 10.89,
+      "z": -49.38,
+      "zone": "crag",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 2,
+      "fixedOccluded": 0,
+      "yawDelta": 0.5,
+      "relief": 2.36,
+      "drops": [
+        0.201,
+        0.201,
+        -2.121,
+        -2.162
+      ],
+      "tries": [
+        1,
+        3,
+        1,
+        7
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.2,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.2,
+          "blocked": "dellhollow_2"
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 2,
+      "rawBlocked": 1,
+      "rawBlockers": [
+        "dellhollow_2"
+      ],
+      "why": null
+    },
+    {
+      "x": -61.88,
+      "y": 26.63,
+      "z": 63.12,
+      "zone": "forest",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": false,
+      "fixedPlaced": 1,
+      "fixedOccluded": 21,
+      "yawDelta": 0.5,
+      "relief": 0.73,
+      "drops": [
+        0.074,
+        0.221,
+        -0.36,
+        -0.507
+      ],
+      "tries": [
+        1,
+        3,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.07,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": 0.26,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.36,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": -0.51,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -3.34,
+      "y": 14.13,
+      "z": 6.66,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 0.14,
+      "drops": [
+        0.007,
+        -0.125,
+        -0.053,
+        0.016
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": 0.01,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": -0.12,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": -0.05,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": 0.02,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 0,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    },
+    {
+      "x": -33.34,
+      "y": 22.24,
+      "z": 19.16,
+      "zone": "meadow",
+      "off": 5,
+      "ok": true,
+      "placed": 4,
+      "failed": 0,
+      "fixedOk": true,
+      "fixedPlaced": 4,
+      "fixedOccluded": 0,
+      "yawDelta": -0.5,
+      "relief": 3.34,
+      "drops": [
+        -1.206,
+        -1.597,
+        1.317,
+        1.744
+      ],
+      "tries": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": [
+        {
+          "id": "vesper",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "maren",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m0",
+          "g": null,
+          "blocked": null
+        },
+        {
+          "id": "m1",
+          "g": null,
+          "blocked": null
+        }
+      ],
+      "rawNoFloor": 4,
+      "rawBlocked": 0,
+      "rawBlockers": [],
+      "why": null
+    }
+  ]
+}

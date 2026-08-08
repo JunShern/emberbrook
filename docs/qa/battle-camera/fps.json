@@ -1,0 +1,25 @@
+{
+  "camOff": {
+    "ok": true,
+    "fps": 244.6,
+    "dt": 4,
+    "canvases": 1,
+    "calls": 1,
+    "tris": 1,
+    "moves": 1,
+    "refusals": 0
+  },
+  "camOn": {
+    "ok": true,
+    "fps": 244.3,
+    "dt": 4,
+    "canvases": 1,
+    "calls": 1,
+    "tris": 1,
+    "moves": 5,
+    "refusals": 0
+  },
+  "fieldIdle": {
+    "fps": 239.6
+  }
+}
