@@ -113,8 +113,9 @@ Measured for the shipped 2×2 case (probe, `stage.anchor()` in a 1600×813 frame
 | m1 (near foe) | 1070 | **115 px** | 14.1% |
 | m0 (far foe) | 1162 | **89 px** | 10.9% |
 
-- **The middle of the frame is empty.** Nearest party body to nearest foe: **581 px = 36% of
-  the frame width** of bare floor. Visible in every one of the four zone captures.
+- **The middle of the frame is empty.** Nearest party body to nearest foe, **centre to centre:
+  581 px = 36% of the frame width** (the bodies themselves are ~60–90 px wide, so ~30% of the
+  frame is literally bare floor between the two sides). Visible in all four zone captures.
 - **The foes are small.** A duskpad is 89–115 px tall in an 813 px frame. The thing the player
   is aiming at is the smallest object on screen.
 - **World gaps:** party slots `[-2.68, -0.65]` and `[-3.73, 1.35]`, foe slots `[4.98, -2.40]`
