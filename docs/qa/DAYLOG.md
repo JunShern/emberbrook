@@ -20670,3 +20670,77 @@ same {"fired":0,"expected":10} signature, i.e. the Dellhollow baseline EXACTLY �
 slice_test 776/0 · findability_test 69/0 with 11 warnings, and findability reads depth.png
 and NEVER bg.png (grep: 0 occurrences), so the 12->11 delta against the round-3 note is not
 attributable to this change · routes_derive --check clean, 15 shots.
+
+------------------------------------------------------------
+## 2026-08-08 ~16:45 — DEPLOY LANE: round 9 is LIVE AND VERIFIED (29/0). Dellhollow's round-4 haze fix is on the site, and it is COLOUR-ONLY BY MEASUREMENT
+
+**WHY THIS DEPLOY EXISTED.** The round-4 atmosphere fix — the aerial-perspective haze card
+rebuilt as a world-height density ramp — was committed but not live, so the four plates the
+judge cleared (`lockfive`, `weave`, `crossing` void findings gone; `gate` moved) were still
+showing the site's visitors the pitch-black far field. A graphics round the judge has
+already cleared is a round the live site should be showing.
+
+Built from a throwaway `git worktree` detached at `origin/migration/3d-hybrid` —
+**8da5d6a7** — with `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache` (the
+main tree carries eight lanes' art edits, as usual). `build-static --compress`:
+**392 files / 520.6 MB / 6.9 s**, cache **248 hit / 5 miss / 5 stored**. Three build gates
+green: every `.glb` binary glTF, **16 bundle GLBs byte-identical to `public/`** on POSITION
++ indices, **256 referenced paths resolve** (237 via the `.webp` rewrite). Local
+`static_verify`: **ALL GREEN 29/0**.
+
+`deploy-ghpages.sh dist` published **dda16175** (push verified by the script; pre-flight
+printed the clean `579 MB, 393 files`). LIVE stamp `2026-08-08T14:13:45.715Z` ->
+**`2026-08-08T15:33:43.592Z`**; `static_verify --url https://junshern.github.io/emberbrook`:
+**ALL GREEN 29/0**, zero failed requests, zero unexpected 4xx/5xx, zero console errors. The
+live screenshot is the default battle diorama — Vesper and two Duskpads, both wolves lit and
+shadowed, turn rail with rendered portraits — i.e. round 8's frame, unchanged.
+
+**THE FIVE CACHE MISSES ARE THE WHOLE DELTA, AND FOUR CACHE FILES SERVED THEM.**
+`git diff --stat d6b3492c 8da5d6a7 -- public/` names exactly six paths: the four
+`del-cine/cameras/{lockfive,weave,crossing,gate}/bg.png`, `del-cine/cine.json` (8 lines) and
+`del-cine/stylized.png`. Five of those are encoded, and **`stylized.png` is byte-identical to
+`cameras/gate/bg.png`** (`5212abae…`, both 6,811,692 bytes) — so five misses stored into
+**four** distinct cache entries, and `stylized.webp` and `gate/bg.webp` ship the same sha.
+The cache being keyed on `sha256(source)` is what makes that collapse automatic rather than
+a coincidence worth checking.
+
+**THE ART IS ON THE SITE, BY SHA, NOT BY STAMP.** Fetched from the live URL and compared to
+`dist`:
+
+| plate | live bytes | live vs dist |
+|---|---:|---|
+| `del-cine/cameras/lockfive/bg.webp` | 415084 | **sha256 MATCH** `a91efb9e…` |
+| `del-cine/cameras/weave/bg.webp` | 673082 | **sha256 MATCH** `f775109b…` |
+| `del-cine/cameras/crossing/bg.webp` | 494832 | **sha256 MATCH** `d7b3b129…` |
+| `del-cine/cameras/gate/bg.webp` | 726034 | **sha256 MATCH** `a48ccdcd…` |
+| `del-cine/stylized.webp` | 726034 | **sha256 MATCH** `a48ccdcd…` (= gate, as above) |
+
+**AND THE COLOUR-ONLY CLAIM IS NOW PROVEN ON THE DEPLOY, THREE WAYS PER PLATE.** The
+graphics lane proved `depth.png` byte-identical against git HEAD in the master; this lane
+asked the question the deploy can answer that the repo cannot — *did the pipeline move it on
+the way out*. For all four cameras, **live == dist == the PREVIOUS deploy's blob at
+`d6b3492c`**:
+
+    lockfive  21a9d87c…   weave  52c7d68f…   crossing  5379dc61…   gate  861ced83…
+
+Depth IS geometry, so a moved depth byte would have meant a moved walk cell or body box
+shipped under a "colour-only" label. It did not move — in the master, in the build, or on
+the wire. The webp pass never touches `depth.png` by construction (`SWAP_DENY`), and this is
+that construction measured rather than trusted.
+
+**THE PAGES BUILD BEHAVED; THE ~70 s TELL HOLDS ON A FIFTH SAMPLE.** Stamp moved between the
+45 s and 60 s poll after the push landed — inside the documented band (round 5 73 s, round 6
+63 s, round 7 72 s, round 8 75 s). No stall, no re-POST needed. Whole publish ran ~40 s for a
+five-file delta on a 579 MB tree; launched detached per the standing rule.
+
+**GATES NOT RUN, NAMED.** `transition_test` skipped again: `uptime` read load 3.8/3.1/4.1 and
+swap **3.91 of 5.12 GB (76%, above the 75% gate)** with the user at the machine and another
+lane live. Same reasoning as round 8 — a test run under the condition it is trying to rule
+out is not evidence. The build's own reference-integrity advisory (`js/dialogue.js`
+`expr-warm.png`, `js/followers.js` `mochi/pose-front.png`) is the standing, documented pair,
+unchanged from round 8: both are `<img>.src`/`fetch` loads the shim rescues, and the live
+run's zero-404 audit is the receipt.
+
+Cleanup: this lane's worktree removed, scratch `dist` and both `static-verify*.png` deleted,
+zero orphaned Chrome (`ppid 1` root check clean). The two stale worktrees from earlier
+sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
