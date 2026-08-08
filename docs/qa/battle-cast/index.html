@@ -1,0 +1,104 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>THE CAST ACTS — battle-cast lane, 2026-08-08</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14151a; color: #e8e4dc; font: 15px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 32px 20px 90px; }
+  h1 { font-size: 26px; letter-spacing: .01em; margin: 0 0 6px; }
+  h2 { font-size: 19px; margin: 46px 0 4px; border-top: 1px solid #2c2e36; padding-top: 20px; }
+  h3 { font-size: 14px; text-transform: uppercase; letter-spacing: .09em; color: #b9a97e; margin: 22px 0 6px; }
+  p { max-width: 78ch; }
+  .sub { color: #9a978f; margin-top: 0; }
+  img { width: 100%; display: block; border-radius: 4px; background: #000; }
+  figure { margin: 0; }
+  figcaption { font-size: 12.5px; color: #a5a29a; padding: 5px 2px 0; }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 10px; }
+  .was { color: #e2857a; font-weight: 600; }
+  .now { color: #8fc48a; font-weight: 600; }
+  code { background: #22242c; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+  table { border-collapse: collapse; margin-top: 10px; font-size: 13.5px; }
+  td, th { border: 1px solid #2c2e36; padding: 5px 10px; text-align: left; }
+  th { background: #1c1e25; }
+</style>
+<main>
+<h1>THE CAST ACTS</h1>
+<p class="sub">battle-cast lane (BET F), 2026-08-08 &mdash; the three beats the game asked for and did not have,
+and the weapon socket. Every arena frame here is <code>stage.snapshot()</code>: a synchronous render through the
+shipping <code>renderFrame()</code>, so a 200&nbsp;ms beat cannot be missed by screenshot timing.
+Instrument: <code>node tools/battle_cast_shots.mjs --port=3000</code>.</p>
+
+<p>The measured starting point is <a href="../../plans/battle-presentation-inventory.md">battle-presentation-inventory.md §6</a>:
+<code>stage.clipsOf()</code> returned <code>["idle","attack","hit","die"]</code> for <em>every body in the game</em>, so
+<span class="was">the victory pose of this game was the party standing in their idles</span>,
+<span class="was">using a tonic was a body standing perfectly still</span>, and
+<span class="was">fleeing was <code>return;</code></span>. It now returns seven kinds for the party and five for a monster.</p>
+
+<table>
+<tr><th>body</th><th>clips bound, before</th><th>clips bound, now</th></tr>
+<tr><td>vesper / maren / lake</td><td>idle attack hit die</td><td>idle attack hit die <b>item cheer walk</b></td></tr>
+<tr><td>duskpad, bramble-shade, …</td><td>idle attack hit die</td><td>idle attack hit die <b>walk</b></td></tr>
+</table>
+
+<h2>1. THE VICTORY POSE</h2>
+<h3>was: everybody standing still</h3>
+<div class="row">
+  <figure><img src="../battle-audit/seq-6-cheer.png"><figcaption>BEFORE — <code>seq-6-cheer.png</code>, the audit's own capture of <code>stage.cheer()</code>. Two idles.</figcaption></figure>
+  <figure><img src="cast-cheer-pose.png"><figcaption>NOW — KayKit <code>Cheer</code>, retargeted, plus a 12&nbsp;cm hop staggered 120&nbsp;ms apart so it is a chorus and not a chorus line.</figcaption></figure>
+</div>
+<h3>and on the real path, not just the verb</h3>
+<div class="row">
+  <figure><img src="cast-victory-tally.png"><figcaption>A whole battle played out by the autoplay seat; <code>battle_turnbased</code> calls <code>stage.cheer()</code> once, on the win.</figcaption></figure>
+  <figure><img src="cast-victory-frame.png"><figcaption>The same frame with the UI. <b>Residual:</b> the tally box covers the party it is celebrating — that is BET&nbsp;I's, not this lane's.</figcaption></figure>
+</div>
+
+<h2>2. AN ITEM IS DRUNK</h2>
+<p><span class="was">Was</span> <code>if (kind === 'item') { oneShot(b,'item'); return; }</code> — a clip no body had, and an early
+return that also killed the step. <span class="now">Now</span> the KayKit <code>Use_Item</code> clip, a rising mote burst
+(the one particle in the arena with <em>negative</em> gravity, because everything else it throws is an impact), and a
+procedural dip-and-lift for any body without the clip.</p>
+<div class="row">
+  <figure><img src="cast-item-raise.png"><figcaption>+220 ms — the hands come up, the motes leave.</figcaption></figure>
+  <figure><img src="cast-item-drink.png"><figcaption>+460 ms</figcaption></figure>
+  <figure><img src="cast-item-settle.png"><figcaption>+780 ms — back to idle.</figcaption></figure>
+</div>
+
+<h2>3. FLEEING LOOKS LIKE LEAVING</h2>
+<p><span class="was">Was</span> <code>if (kind === 'flee') return;</code>, and <code>battle_turnbased</code> did not even call it.
+<span class="now">Now</span> the body turns its back and runs on the rig's OWN walk clip played at 1.9&times; — which is why
+this needed no retarget and why a monster can do it too. The result is two different pictures.</p>
+<div class="row">
+  <figure><img src="cast-flee-cornered-run.png"><figcaption>The attempt: turned, running, 2.6 m out.</figcaption></figure>
+  <figure><img src="cast-flee-cornered-cornered.png"><figcaption>“Cornered — no escape!” — back in the slot, facing the enemy again.</figcaption></figure>
+  <figure><img src="cast-flee-away-gone.png"><figcaption>“Got away safely!” — kept going and thinned out. Maren is still standing there because only the fleeing body ran.</figcaption></figure>
+</div>
+
+<h2>4. THE WEAPON SOCKET</h2>
+<p>Coordinator ruling: weapons appear in hand, attached at runtime to a socket on the hand bone, and the character
+turnaround spec stays “hands empty” — <b>no existing character asset is invalidated</b>. The item id comes from GS's
+equip slot through <code>battle_turnbased</code>'s <code>weaponOf</code> callback; the arena still never reads GS.
+The grip axis is <em>derived</em> from the rig (forearm→hand, expressed in the hand bone's own frame) rather than
+guessed, and the bone's world scale is divided back out so the weapon is authored in metres.</p>
+<div class="row">
+  <figure><img src="cast-unarmed-swing.png"><figcaption>BEFORE (control, same seed, same beat, nothing equipped).</figcaption></figure>
+  <figure><img src="cast-armed-swing.png"><figcaption>AFTER — vesper with the <b>River Cudgel</b>, maren with the <b>Walking Staff</b>.</figcaption></figure>
+</div>
+<div class="row">
+  <figure><img src="cast-armed-rest.png"><figcaption>At rest: both weapons hang clear of the coat (the 3–4 cm outward offset is the one number that came from looking).</figcaption></figure>
+  <figure><img src="cast-hook-rest.png"><figcaption>The <b>Boat Hook</b> — the third and last weapon in items.json.</figcaption></figure>
+  <figure><img src="cast-armed-impact.png"><figcaption>Impact, armed.</figcaption></figure>
+</div>
+<p><b>Art owed:</b> nothing ships under <code>assets/weapons/3d/</code>. All three weapons are CODE recipes in the arena's
+own flat-shaded prop idiom (<code>WEAPONS</code> in <code>battle_stage3d.js</code>), and tier 1 already looks for
+<code>assets/weapons/3d/&lt;item&gt;.glb</code> first, so authored art supersedes a recipe with no code change.
+An equipped weapon with neither is staged as an <b>empty hand</b> — never a placeholder cube.</p>
+<p><b>Residual, by eye:</b> a held pole follows the hand, so on clips that swing the arm across the body (the Use_Item
+raise, the run) the shaft grazes the coat. A stow-on-non-attack socket is the fix and is not in this lane.</p>
+
+<h2>Teardown</h2>
+<p>Measured, not asserted (scratch probe, wrapped <code>dispose</code> counters on everything hanging off a Bone):
+<b>7 of 7 socket geometries and 7 of 7 socket materials disposed</b> by <code>stage.destroy()</code>, 0 textures involved
+(the recipes carry no maps). And a full battle in both <code>ow-valley</code> and <code>del-cine</code>, arena ON and arena
+OFF, four battles each: <code>SIM.gpu()</code> returns <b>byte-identical</b> counts before and after
+(del-cine geo 2075 / tex 44 / programs 13, unchanged).</p>
+</main>

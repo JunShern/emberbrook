@@ -19189,3 +19189,92 @@ program cache, which is a cache, not a leak.
 teardown in play3d.html (coordinator custody), not the battle lanes. A control
 that varies one file clears one file — arm A cleared play3d.html's DPR change and
 was read as clearing play3d.html; it does not clear the file, only that change.
+
+------------------------------------------------------------
+2026-08-08  BATTLE WAVE 1, LANE B (battle-cast) — **THE CAST ACTS: two clips it never
+had, a weapon in the hand, and the two beats that were `return`.** Board with the
+pictures: `docs/qa/battle-cast/index.html`. Instrument: `node tools/battle_cast_shots.mjs
+--port=3000` (new; every arena frame is `stage.snapshot()`, a synchronous render through
+the shipping `renderFrame()`, because a 200 ms beat cannot be caught by screenshot timing).
+
+THE MEASURED START (battle-presentation-inventory §6): `stage.clipsOf()` returned
+`["idle","attack","hit","die"]` for EVERY body in the game. So `cheer()` played a clip
+nothing had — the victory pose of this game was the party standing in their idles — `item`
+did the same AND returned before the step, and `flee` was `if (kind === 'flee') return;`.
+`clipsOf` now reads **7 kinds for a party member and 5 for a monster**.
+
+**CHEER + USE_ITEM ARE REAL CLIPS, KAYKIT DONOR, THE JUMP_FULL_SHORT RECIPE.**
+`tools/vesper_retarget.py` CLIPS gained two entries and all three party rigs were rebuilt
+IN PLACE (`vesper-v2.glb`, `maren-v1.glb`, `lake-v1.glb` — same filenames on purpose: the
+arena and the overworld must never be two different people, and a `-v3` would have needed a
+`play3d.html` MODELS edit, which is coordinator custody). UAL has neither motion (its 46
+actions carry Dance_Loop, Interact, PickUp_Table — a dance, a lever and a table reach), so
+the choice was KayKit's clip or no clip; the chibi-neutral problem is handled by
+`arm_solve='idle'`, exactly as the shipped jump has been since 2026-07-31. No tail trim:
+MEASURED per-key over the donor's own samplers, neither clip has a single static tail key
+(against Sword_Attack's 11 dead of 47 and Death01's 16 of 73).
+
+    THE REBUILD IS FAITHFUL — every shipped idle number reproduced to the digit:
+      upper arm off-vertical   L 8.23 (7.00..9.76)   R 8.19 (6.91..9.25)   bar 15
+      hand-vs-coat (idle)      vesper -0.0359/-0.0253   maren -0.0031/-0.0076
+                               lake   -0.0081/+0.0020   (P3 floor -0.045)
+      the six old clips        Idle 2.500 · Walking_A 0.933 (vesper) / 1.333 (maren, lake)
+                               Jump 1.167 · Attack 1.200 · Hit_A 0.333 · Death_A 1.867
+    THE NEW TWO, through the SAME combat gate (vesper_verify GATED = COMBAT + PERF):
+      Cheer     51 f 1.667 s  upper arm 9.7..86.9 (travel 76.9)  step 29.1  return 0.0  foot z <= 0.084
+      Use_Item  49 f 1.600 s  upper arm 5.1..41.6 (travel 31.6)  step  6.5  return 0.0  foot z <= 0.063
+    G1's travel bar is now PER CLIP (Cheer 60, Use_Item 24) — pinned under each clip's own
+    measured travel, so it catches a transfer that collapsed the motion without encoding a
+    wish about how big a drink should be. `VERIFY OK` on all three rigs.
+    AND LOOKED AT, not just gated: `sheet=side,front sheetn=8` strips per clip — Cheer is
+    arms thrown out and up and returns to the idle exactly; Use_Item brings both hands to
+    the chest and holds. A clip can pass five bars and read as a seizure.
+
+**FLEE IS NOT A RETARGET, AND THAT IS THE DESIGN.** No pack anywhere ships "running away",
+and a body that runs away is a body running: `CLIP.walk` binds the rig's OWN locomotion
+clip, `fleeBeat()` turns the body's `bob` (never its `root` — `root.rotation.y` IS the
+facing every lunge and marker is derived from) and tweens it 2.6 m back at 1.9x tempo.
+Every monster GLB in the game bound `walk` on the first run, so a fleeing anything has legs
+for free. `stage.flee(id, ok)` is the answer beat — away and thinned out, or back to the
+slot facing the enemy again — and `battle_turnbased` now calls `stepIn` for flee (it used
+to skip it outright) and `stage.flee` on the kernel's own flee event.
+
+**THE WEAPON SOCKET (coordinator ruling 2026-08-08: weapons DO appear in hand, at runtime,
+and the turnaround spec stays "hands empty" — no character asset is invalidated).**
+`WEAPONS` keys `public/game/items.json`'s three `slot: weapon` entries; GS's equip slot
+reaches the arena through `battle_turnbased`'s new `weaponOf` callback, so the stage still
+never touches GS. Two derivations, no guesses: the shaft axis is forearm→hand expressed in
+the hand bone's own frame (every rig orients its hand differently — hard-coding it points
+three characters' staves at the floor and the fourth's at her own head), and the bone's
+world scale is divided back out because `setVisual` scales the whole rig to the character's
+height. `handBoneOf` takes `art.weaponHand` ('R'), then the other hand, then any hand-shaped
+bone; a rig with no hand gets no weapon and no error.
+    ART OWED: nothing exists under `assets/weapons/3d/`. All three are CODE recipes in the
+    arena's flat-shaded prop idiom (staff / cudgel / hook), and tier 1 already probes
+    `assets/weapons/3d/<item>.glb` first, so authored art supersedes a recipe with no code
+    change. An equipped weapon with neither is an EMPTY HAND, never a placeholder cube.
+    THE ONE NUMBER THAT CAME FROM LOOKING: round 1 centred the shaft on the hand bone and
+    a 1.50 m staff ran through the coat on every clip that swings the arm. Now 3-4 cm
+    outward along the derived out-direction, and the lengths are down (staff 1.50->1.32,
+    hook 1.78->1.62). RESIDUAL, named: a held pole follows the hand, so on the item raise
+    and the run it still grazes the coat. The fix is a stow-on-non-attack socket; not this
+    lane's, and not free.
+
+TEARDOWN, MEASURED RATHER THAN ASSERTED (scratch probe: wrap `dispose` on everything
+hanging off a Bone, then `stage.destroy()`): **7/7 socket geometries and 7/7 socket
+materials disposed, 0 textures involved** — the recipes carry no maps. Independently, a
+full battle leaves `SIM.gpu()` BYTE-IDENTICAL in both `ow-valley` and `del-cine`, arena ON
+and arena OFF, four battles each (del-cine geo 2075 / tex 44 / programs 13, unchanged),
+which is the same conclusion lane BAT-CONTACT's arm C reached from the other side: the
+standing geo+1/tex+1 is not a battle leak and not per-battle.
+
+GATES: `battle_sim` ALL ENVELOPES GREEN + 6 property tests · `encounter_sim` GREEN ·
+`arena_playtest` GREEN (contexts, teardown, heap drift 1.9 MB) · `transition_test
+--port=3000` 162 ok / 6 failed — the standing pre-existing red attributed above, unchanged
+by this lane. `battle_rules.js` untouched. `dialogue_test` not run: no speaker, portrait or
+dialogue path was touched.
+
+NOTE ON AUTHORSHIP: this lane's runtime edits to `battle_stage3d.js` /
+`battle_turnbased.js` are carried inside lane BAT-CONTACT's commit 088c8703 — a pathspec
+commit over a shared dirty tree, the trap CLAUDE.md already documents. Nothing was lost and
+both lanes' work was gated with both in place; recording it so the archaeology is possible.
