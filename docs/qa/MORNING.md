@@ -69,6 +69,35 @@ fix (`7545d2fd`), which a follow-up deploy is taking.
 - Gates: `transition_test` **168/0**, battle_sim/encounter_sim green. Boards:
   `docs/qa/battle-{ko,monsters}/index.html`.
 
+## BATTLE WAVE 3 (added 12:20) — THE CAMERA LANGUAGE, BUILT WHERE IT COSTS NOTHING
+The camera language is the slate's biggest bet and it is GATED for the diorama (the plates were
+generated around one exact camera). **In the world arena there is no backdrop, so the camera is
+free** — so it was built there only, behind the existing inert flag. Nothing about today's
+default moved, and if you rule for the diorama, nothing here is touched.
+- A SHOT TABLE + SOLVER (round/decide/strike/impact/ko/victory) where the table carries INTENT
+  and **not one metre value is a camera position** — every pose solves against each body's own
+  measured box. **The 180° rule is a REFUSAL inside the solve**, checked with the perspective
+  divide (a flat dot product is wrong the moment two bodies differ in depth): **576 shots, 0
+  violations**. It never CUTS — that needs your ruling. The KO push and the victory move the
+  previous lane wanted, and correctly refused, exist here.
+- **LEGIBILITY, MEASURED AT FOUR SITES — and the honest half:** the camera owns SIZE and
+  OCCLUSION (foe height up everywhere, worst-case forest 14.6 → 18.8% of frame) and **does not
+  own TONAL SEPARATION** — tightening a frame for size can back the cast with mid-value rock
+  instead of sky, and on two sites contrast got worse. A cast-only rim light is unavailable
+  (three.js tests light layers against the CAMERA, not per object); the fix is shader-side and
+  would re-open the r185 colour class this module currently deletes by construction.
+- **The staging rate went DOWN, 68.8% → 64.4%, and that is the instrument improving**: "two rays
+  are not a silhouette" was fixed to nine samples across the body box. Same shape as the spike's
+  own 86.3 → 68.8 drop when its occluder set stopped being the collide set.
+- fps cost of a running camera move: **0.1%**. Flag-off proof: diorama answers, lens restored,
+  `transition_test` 168/0.
+**The lane's verdict, and mine after looking:** the world is better on picture and on structure —
+in the world the camera is an INSTRUMENT, in the diorama it is a CONSTANT — but the diorama's
+meadow frame is still the most READABLE picture on the board. What changed is the size of the
+remaining gap: it is now one localised problem with known answers, not a property of the arena.
+Recommendation: **both paths, one flag, diorama as the fallback** — and your call decides which
+one gets the next round of work.
+
 ## WHAT NEEDS YOUR TASTE (nothing is blocked on it)
 1. **Walk a battle.** `play3d.html` → fight. Then try `?arena=world` and tell me which world you
    want the game to fight in — that single answer orders the whole battle slate.
