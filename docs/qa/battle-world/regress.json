@@ -1,8 +1,7 @@
 {
   "inject": {
-    "already": false,
-    "on": false,
-    "installed": false
+    "already": true,
+    "on": false
   },
   "battleWorld": {
     "version": 1,
@@ -14,7 +13,7 @@
   "battle": {
     "ok": true,
     "world": false,
-    "fps": 120,
+    "fps": 119.9,
     "dt": 4,
     "plan": null,
     "bw": {

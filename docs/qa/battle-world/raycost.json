@@ -1,0 +1,206 @@
+{
+  "rawDrawnSet": 57,
+  "moduleOccluders": 51,
+  "moduleDropped": [
+    {
+      "name": "veg_owd_short",
+      "n": 60590,
+      "h": 0.38
+    },
+    {
+      "name": "veg_owd_med",
+      "n": 56126,
+      "h": 0.53
+    },
+    {
+      "name": "veg_owd_seed",
+      "n": 16017,
+      "h": 0.74
+    },
+    {
+      "name": "veg_owd_weed",
+      "n": 2179,
+      "h": 0.27
+    },
+    {
+      "name": "veg_owd_sedge",
+      "n": 939,
+      "h": 0.64
+    },
+    {
+      "name": "veg_owd_flower",
+      "n": 1505,
+      "h": 0.24
+    }
+  ],
+  "occluders": 57,
+  "withBVH": 50,
+  "accelerated": 50,
+  "instanced": 6,
+  "bvhStats": {
+    "built": 55,
+    "copies": 0,
+    "fail": 0
+  },
+  "usPerRayWholeSet": 11770.8,
+  "msSolveGeomOnly": 0.5,
+  "msSolveWithVis": 1.4,
+  "worst": [
+    {
+      "name": "veg_owd_short",
+      "us": 5941.7,
+      "tris": 6,
+      "bvh": false,
+      "inst": true,
+      "accel": false,
+      "count": 60590,
+      "height": 33.51,
+      "pieceH": 0.72
+    },
+    {
+      "name": "veg_owd_med",
+      "us": 4762.5,
+      "tris": 6,
+      "bvh": false,
+      "inst": true,
+      "accel": false,
+      "count": 56126,
+      "height": 33.61,
+      "pieceH": 1
+    },
+    {
+      "name": "veg_owd_seed",
+      "us": 1354.2,
+      "tris": 12,
+      "bvh": false,
+      "inst": true,
+      "accel": false,
+      "count": 16017,
+      "height": 33.73,
+      "pieceH": 1.32
+    },
+    {
+      "name": "veg_owd_weed",
+      "us": 179.2,
+      "tris": 36,
+      "bvh": false,
+      "inst": true,
+      "accel": false,
+      "count": 2179,
+      "height": 32.84,
+      "pieceH": 0.79
+    },
+    {
+      "name": "veg_owd_flower",
+      "us": 125,
+      "tris": 16,
+      "bvh": false,
+      "inst": true,
+      "accel": false,
+      "count": 1505,
+      "height": 30.91,
+      "pieceH": 0.94
+    },
+    {
+      "name": "veg_owd_sedge",
+      "us": 75,
+      "tris": 48,
+      "bvh": false,
+      "inst": true,
+      "accel": false,
+      "count": 939,
+      "height": 32.8,
+      "pieceH": 0.92
+    },
+    {
+      "name": "veg_canopy_whisperwood_cards",
+      "us": 8.3,
+      "tris": 37280,
+      "bvh": true,
+      "inst": false,
+      "accel": true,
+      "count": 1,
+      "height": 29.27
+    },
+    {
+      "name": "__contact_shadow",
+      "us": 4.2,
+      "tris": 2,
+      "bvh": false,
+      "inst": false,
+      "accel": false,
+      "count": 1,
+      "height": 0
+    },
+    {
+      "name": "ground_valley_1",
+      "us": 4.2,
+      "tris": 27615,
+      "bvh": true,
+      "inst": false,
+      "accel": true,
+      "count": 1,
+      "height": 57.2
+    },
+    {
+      "name": "emberbrook_5",
+      "us": 4.2,
+      "tris": 4388,
+      "bvh": true,
+      "inst": false,
+      "accel": true,
+      "count": 1,
+      "height": 6.53
+    },
+    {
+      "name": "portal_markers_4",
+      "us": 4.2,
+      "tris": 8,
+      "bvh": true,
+      "inst": false,
+      "accel": true,
+      "count": 1,
+      "height": 0.42
+    },
+    {
+      "name": "veg_canopy_trunks",
+      "us": 4.2,
+      "tris": 960,
+      "bvh": true,
+      "inst": false,
+      "accel": true,
+      "count": 1,
+      "height": 36.69
+    },
+    {
+      "name": "veg_land_clumps",
+      "us": 4.2,
+      "tris": 28880,
+      "bvh": true,
+      "inst": false,
+      "accel": true,
+      "count": 1,
+      "height": 35.52
+    },
+    {
+      "name": "ground_valley_2",
+      "us": 0,
+      "tris": 3267,
+      "bvh": true,
+      "inst": false,
+      "accel": true,
+      "count": 1,
+      "height": 44.16
+    },
+    {
+      "name": "ground_valley_3",
+      "us": 0,
+      "tris": 22700,
+      "bvh": true,
+      "inst": false,
+      "accel": true,
+      "count": 1,
+      "height": 55.69
+    }
+  ]
+}
