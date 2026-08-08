@@ -143,8 +143,116 @@
       // command window.
       foeX: 3.4, foeZ: -0.8, foeRank: 2.1, foeSpread: 3.2, foeJog: 0.78, foeChevron: 0.5,
     },
+    // ===== THE FRAME SOLVE (2026-08-08, BET G) ================================
+    // The six numbers above are the FORM — who stands beside whom, and how the
+    // chevron and the jog keep two bodies off one screen ray. They are good, and
+    // they are kept. What they never knew is WHERE THE CAMERA IS: the audit
+    // measured the shipped 2v2 at foes 89-114 px tall in an 813 px frame, party
+    // 185-225, and 36 % of the frame width of bare floor between the two sides.
+    // A formation authored in metres cannot answer for that, because the answer
+    // is in pixels. So the form is now SOLVED against the rest camera before a
+    // body is built: the closed form above supplies the shape, and four scalars
+    // (how far out each line stands, how far apart its members are, how deep each
+    // line sits) are searched until the projection hits these targets.
+    //
+    // TARGETS ARE FRACTIONS OF THE FRAME, never pixels — the same number on a
+    // 1600 px monitor and a 3840 px one.
+    frame: {
+      solve: true,               // kill switch: false = the raw closed form, as shipped
+      foeH: 0.185,               // a foe's silhouette, as a fraction of frame HEIGHT
+      foeHMax: 0.34,
+      partyHMax: 0.30, partyHMin: 0.185,
+      sep: 0.235,                // nearest party body to nearest foe, CENTRE TO CENTRE,
+                                 // as a fraction of frame WIDTH. Was 0.363 measured.
+      // MIN SCREEN SEPARATION between ANY two bodies, in units of their summed
+      // half-widths: 1.0 is two bounding boxes exactly touching. Set at 0.98
+      // BY LOOKING (docs/qa/battle-contact/probe-stage-2v2.png): a duskpad is
+      // 2.07 m long and 1.05 m tall, so two of them at different depths overlap
+      // their boxes well before they overlap as pictures — the nearer one simply
+      // stands in front. What the shipped build had was 0.65 at 2v2 and 0.47 at
+      // 2v3, which IS two monsters inside each other. 1.15 priced a readable
+      // frame out of reach; this is the number the picture supports.
+      pair: 0.98,
+      // AND IT RELAXES WHEN THE FRAME IS CROWDED, on purpose. Three duskpads are
+      // 2.07 m long each; at a silhouette the player can read they want ~295 px
+      // of frame apiece and the foes' half of a 1600 px frame is ~800. Big AND
+      // fully separated is arithmetically impossible at three, so past two foes
+      // the staging spends the difference on DEPTH — which is what the
+      // tallest-to-deepest rule is for, and what stops the answer being three
+      // small creatures in a row. The shipped build measured 0.47 here, which is
+      // two monsters inside each other; this is a floor, not a licence.
+      pairCrowd: 0.80,
+      headY: 0.17, footY: 0.90,  // a body's head must clear the log strip and its feet
+                                 // must stay off the bottom edge
+      inX: 0.045, inY: 0.10,     // and NOBODY LEAVES THE FRAME — a hard refusal
+      // MEASURED OFF THE SHIPPED LAYOUT (docs/qa/battle-contact/before-stage-2v3.png,
+      // 1600x813): the HUD and log strip across the top, the command window
+      // bottom-left, the turn-order window bottom-right. In that very capture the
+      // "Duskpad C" name tag is half behind the turn-order window — audit section 2's
+      // last bullet, reproduced. The staging now knows where the windows are.
+      // Re-measure these three rectangles if the battle layout moves.
+      keepOut: [
+        { x0: 0.000, y0: 0.00, x1: 1.00, y1: 0.150 },   // HUD + log strip
+        { x0: 0.000, y0: 0.78, x1: 0.19, y1: 1.000 },   // command window
+        { x0: 0.655, y0: 0.70, x1: 1.00, y1: 1.000 },   // turn-order / status window
+      ],
+      tagDrop: 0.055,            // how far UNDER a body's anchor its name tag hangs
+      // AND A NAME TAG HAS WIDTH. Tested as a POINT, the first solve put a
+      // duskpad's anchor at x 0.651 against a keep-out starting at 0.655 — a clean
+      // miss by four thousandths of a frame, and the tag, which is ~90 px wide and
+      // drawn centred, was still half behind the turn-order window in the capture.
+      // Half-width in frame-width fractions; its two edges are tested as well.
+      tagW: 0.035,
+      worldX: 8.5, worldZ: 7.0,  // the shadow camera wraps 9 m and the dish is 20 m:
+                                 // a solve that walks a body outside those is refused
+      // The search. Coordinate descent from the identity, three sweeps, fixed
+      // lattices — DETERMINISTIC, because a formation that differs between two
+      // battles of the same shape is a bug nobody can photograph twice.
+      sweep: 3,
+      // FORCE A STAGING (debug). Set to {xP,xF,spread,dzP,dzF} and the search is
+      // skipped and those scalars used verbatim — how the score's landscape gets
+      // LOOKED AT rather than argued about (tools/battle_contact.mjs --cfg=...).
+      force: null,
+      range: {
+        xP: [0.40, 1.15, 0.025], xF: [0.35, 1.15, 0.025],
+        spread: [0.70, 1.40, 0.05],
+        dzP: [-3.0, 2.0, 0.2], dzF: [-1.5, 6.0, 0.2],
+        jog: [0.6, 3.0, 0.1],
+      },
+    },
+
     // How far a body travels on a lunge, and for how long.
+    // ===== CONTACT (2026-08-08, BET C) ========================================
+    // `lungeM` WAS the whole approach: 1.35 m against a measured minimum slot gap
+    // of 5.21 m, so the attacker covered 26 % of the distance and the flash, the
+    // sparks and the shock ring fired on a body four metres away. It is now the
+    // FALLBACK ONLY — what a body does when it has no target to walk at. The
+    // travel is derived from the TARGET'S OWN BODY (see strikeStation), so it is
+    // correct at any slot geometry and stays correct when the frame solve above
+    // moves the slots.
     act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330,
+      // THE BUDGET a caller gets when it names none. battle_turnbased passes
+      // (pacing.approach + pacing.wind); this is what battle_shots and any console
+      // driver get, and it is the same 560 ms so a photograph matches a fight.
+      contactMs: 560,
+      arriveFrac: 0.86,   // of the budget: the body is PLANTED before the blow lands
+      returnMs: 420,      // and walks back after it, outside the damage beat
+      // THE STAND-OFF. Half the attacker's width plus half the target's, times a
+      // little air. Derived, never a constant — a wolf and a bramble shade are not
+      // struck from the same distance. Clamped at the top so the bet's own proof
+      // (centre-to-centre <= 1.40 m at the damage event) holds for any creature.
+      standoffK: 1.05, standoffPad: 0.22, standoffMin: 0.80, standoffMax: 1.32,
+      travelMax: 11.0,
+      aim: 0.8,           // how far the body turns from its staged three-quarter
+                          // pose toward the true line of the blow, 0..1
+      // HIT-STOP. The cheapest modern-feel win there is: the frame the blow lands
+      // is HELD. Everything on this stage runs off one virtual clock, so a stop
+      // freezes the mixers, the tweens, the camera shake and the flash decay
+      // together — which is the whole point, a stop that only freezes one layer
+      // reads as a stutter.
+      hitStop: { ms: 90, scale: 0.0, ko: 150 },
+      // THE CONTACT FRAME, derived from the clip itself — see contactFrac().
+      contact: { samples: 72, min: 0.12, max: 0.9, fallback: 0.37 },
       // CLIP-TO-BEAT FIT (2026-08-02, when the cast got real combat clips). A donor
       // clip is authored at the DONOR's tempo and the turn is paced at the GAME's:
       // battle_turnbased announces, waits `wind` (300 ms), then lands the damage. The
@@ -227,6 +335,30 @@
       pushIn: 0.055,      // the camera leans this fraction of its distance into a strike
       pushMs: 620,
     },
+
+    // ===== THE OTHER THREE BEATS (2026-08-08, BET F) ==========================
+    // Victory, item-use and flight. They live in their own block rather than in
+    // `act` above because they are not strikes: nothing here approaches anybody,
+    // and the contact numbers up there have no opinion about a body drinking a
+    // tonic. Every one of these has a PROCEDURAL half that runs when the body has
+    // no clip for the intent — a monster GLB, a billboard, the mannequin proxy —
+    // because "the clip is missing" was the whole defect and shipping a second
+    // silent no-op for the bodies that still lack one would be the same bug.
+    beat: {
+      itemMs: 620,        // the dip-and-lift when there is no Use_Item clip
+      itemLift: 0.06,     // metres the body settles into the draught
+      motes: 14,          // the rising sparkle that says an item was consumed
+      moteMs: 760,
+      fleeM: 2.6,         // metres a body retreats on the ATTEMPT
+      fleeMs: 620,
+      fleeTs: 1.9,        // the walk clip, played this much faster — a run, not a stroll
+      fleeAwayM: 3.4,     // and this much further again when the escape succeeds
+      fleeAwayMs: 560,
+      fleeBackMs: 520,    // ...or back to the slot when it does not
+      cheerHop: 0.115,    // metres. Two hops, the second smaller.
+      cheerMs: 900,
+      cheerStagger: 120,  // ms between party members — a chorus, not a chorus line
+    },
   };
 
   // ===== ZONE PALETTES ======================================================
@@ -304,12 +436,54 @@
     default: { c: 0xa2957f, c2: 0x4b4237, shape: 'blob' },
   };
 
+  // ===== THE WEAPON SOCKET ==================================================
+  // COORDINATOR RULING 2026-08-08: weapons DO appear in hand, attached AT RUNTIME
+  // to a socket on the hand bone — and the turnaround spec stays "hands empty", so
+  // not one existing character asset is invalidated by this. The economy's whole
+  // visible payoff ("sell drop, buy weapon, equip, hit harder") had ZERO visual
+  // consequence before it: `combat-ecosystem.md` sells a vertical loop whose last
+  // step you could not see, and the audit's own swing frame
+  // (docs/qa/battle-audit/seq-2-swing.png) is a woman swinging her empty hand.
+  //
+  // KEYED BY ITEM ID, off public/game/items.json's own `slot: weapon` entries. A
+  // weapon with no entry here gets NOTHING — no placeholder cube, no borrowed
+  // sword (coordinator ruling: fall back gracefully). The visible defect of a
+  // missing entry is the state the game already shipped in, which is the correct
+  // failure direction; a grey box in a character's hand is not.
+  //
+  // `build` is a CODE RECIPE, in the same language as BUILT/proxySolid — flat-shaded
+  // low-poly in the arena's own prop idiom, not a placeholder. Tier 1 is still a GLB
+  // at assets/weapons/3d/<item>.glb and is tried first, so authored art supersedes a
+  // recipe with no code change (nothing ships there today — see the art-owed list in
+  // DAYLOG 2026-08-08). `grip` is METRES OF SHAFT BELOW THE HAND: the model is built
+  // around the grip at the origin, so a staff hangs long-end-down and a cudgel does
+  // not. `tilt` cants the shaft off the forearm axis, which is the one number here
+  // that is taste and not measurement.
+  // `out` is METRES THE SHAFT SITS CLEAR OF THE PALM, along the derived outward
+  // direction — the one number that came from LOOKING (docs/qa/battle-cast, round 1):
+  // a shaft centred on the hand bone runs through the coat on every clip that swings
+  // the arm, and a full-length staff on a 1.7 m body reads as a quarterstaff. Both
+  // are down-tuned here rather than solved, and the residual is written into the
+  // DAYLOG: a held pole intersects a swinging coat, in this game as in every other.
+  const WEAPONS = {
+    'walking-staff': { build: 'staff',  len: 1.32, grip: 0.55, tilt: -0.20, out: 0.038, wood: 0xa9855b, iron: 0x6f7378 },
+    'river-cudgel':  { build: 'cudgel', len: 0.80, grip: 0.13, tilt: -0.12, out: 0.030, wood: 0x6d4f34, iron: 0x585d63 },
+    'boat-hook':     { build: 'hook',   len: 1.62, grip: 0.54, tilt: -0.24, out: 0.042, wood: 0x9a7a4f, iron: 0x555b60 },
+  };
+
   // ===== ASSET CONVENTIONS ==================================================
   // Same idiom as battle_turnbased's `art`: a base + a directory + an extension,
   // with an override map for exceptions. Nothing enumerates monsters or zones.
   const art = {
     base: 'assets/',
     modelDir: 'monsters/3d/',            // tier 1 — CC0 GLBs
+    weaponDir: 'weapons/3d/',            // tier 1 for a held weapon — nothing there yet
+    // WHICH HAND THE SOCKET IS ON. One letter, because the whole cast shares one
+    // Tripo skeleton (L_Hand / R_Hand) and the shipped Attack donor (UAL
+    // Sword_Attack) is a right-handed cut. Read by handBoneOf, which falls back to
+    // the other hand and then to any hand-shaped bone, so a pack that names its
+    // rig differently still lands.
+    weaponHand: 'R',
     plateDir: 'monsters/',               // tier 2 — hi-res billboard plates (future)
     spriteDir: 'monsters/placeholder/',  // tier 3 — the pixel sprites we ship today
     battleDir: 'battle/',                // the backdrop plates
@@ -519,6 +693,71 @@
     });
   }
 
+  // ===== THE CONTACT FRAME OF A CLIP ========================================
+  // WHEN, INSIDE AN ATTACK ANIMATION, DOES THE BLOW LAND? Nothing in the shipped
+  // pipeline answers that. The donor clips are CC0 packs (Quaternius UAL, KayKit)
+  // retargeted by tools/vesper_retarget.py; glTF carries no event track, none of
+  // them ships a marker, and the fixed 37 % written into CFG.act.fit's comment was
+  // measured BY HAND on ONE clip and then applied to every body in the game.
+  //
+  // SO IT IS DERIVED, AND THE DERIVATION IS THIS: a swing is the moment the arm is
+  // moving fastest, so the contact frame is the PEAK ANGULAR SPEED of the weapon
+  // hand. The clip's own rotation tracks are resampled on a uniform lattice
+  // through their own interpolants (the same interpolants the mixer uses, so this
+  // reads the clip the player sees, not the keys on disk), the angle between
+  // successive orientations is summed over the arm chain, that curve is smoothed
+  // with a 3-tap box (a single noisy key is not a swing) and the argmax is taken.
+  //
+  // ARM CHAIN FIRST, WHOLE BODY SECOND. On a humanoid the hand's peak is the
+  // strike; on a quadruped or a rootball there is no hand, and the whole body's
+  // peak is the lunge, which is the same instant. If a clip has no rotation track
+  // at all — a pure translation, a morph — there is nothing to derive from and the
+  // caller falls back to CFG.act.contact.fallback, which is the hand-measured 37 %.
+  //
+  // CACHED ON THE CLIP, because a clip is parsed once per battle and this walks it.
+  const ARM_RE = /hand|wrist|forearm|lowerarm|lower_arm|weapon|palm|grip/i;
+  function contactFrac(clip) {
+    if (!clip) return null;
+    if (clip.userData && clip.userData.__ebbContact != null) return clip.userData.__ebbContact;
+    let out = null;
+    try {
+      const dur = clip.duration;
+      const quats = (clip.tracks || []).filter(t => /\.quaternion$/.test(t.name || ''));
+      if (dur > 0 && quats.length) {
+        let use = quats.filter(t => ARM_RE.test(t.name));
+        if (!use.length) use = quats;
+        const N = Math.max(8, CFG.act.contact.samples | 0);
+        const sp = new Float64Array(N);
+        for (const tr of use) {
+          let it; try { it = tr.createInterpolant(); } catch (e) { continue; }
+          let px = 0, py = 0, pz = 0, pw = 0, have = false;
+          for (let i = 0; i < N; i++) {
+            const v = it.evaluate(dur * i / (N - 1));
+            const x = v[0], y = v[1], z = v[2], w = v[3];
+            if (have) {
+              // the angle between two unit quaternions; |dot| folds the double cover
+              let d = Math.abs(x * px + y * py + z * pz + w * pw);
+              if (d > 1) d = 1;
+              sp[i] += 2 * Math.acos(d);
+            }
+            px = x; py = y; pz = z; pw = w; have = true;
+          }
+        }
+        // a 3-tap box: one noisy key is not a swing
+        let best = -1, bi = -1;
+        for (let i = 1; i < N - 1; i++) {
+          const s = (sp[i - 1] + sp[i] + sp[i + 1]) / 3;
+          if (s > best) { best = s; bi = i; }
+        }
+        if (bi > 0 && best > 0) {
+          out = clamp(bi / (N - 1), CFG.act.contact.min, CFG.act.contact.max);
+        }
+      }
+    } catch (e) { out = null; }
+    try { (clip.userData || (clip.userData = {})).__ebbContact = out; } catch (e) { }
+    return out;
+  }
+
   // ===== FORMATIONS =========================================================
   // THE SINGLE ROW IS THE THING BEING KILLED. Party: an offset column, each
   // member a step right and a step back — FF's staggered depth, so two bodies
@@ -527,24 +766,42 @@
   // AND jogged sideways so nobody is hidden behind anybody.
   const partySide = () => (CFG.partySide < 0 ? -1 : 1);
   const foeSide = () => -partySide();
-  function partySlots(n) {
+  // THE KNOBS THE FRAME SOLVE TURNS (2026-08-08). `k` is {x, spread, dz}: how far
+  // out along the battle axis this line stands, how far apart its members are, and
+  // how far toward the camera the whole line sits. Defaulting to the identity is
+  // the whole compatibility story — partySlots(n) is the shipped closed form, and
+  // solveStaging() below is the only caller that passes anything else. The chevron,
+  // the alternating jog, the depth stagger and the mirror all stay HERE, written
+  // once: a solver that re-derived them would be a second formation system.
+  // `jog` scales the foe line's SIDEWAYS devices — the alternating jog, the
+  // chevron and the two-rank offset. It is a separate knob from `spread` (which is
+  // depth) because at this camera those two do different jobs: depth makes a body
+  // bigger or smaller, sideways is the only thing that pulls two neighbours apart
+  // on screen. Without it the solve had no way at all to fan three creatures out,
+  // and three duskpads measured 0.82 on the screen-separation ratio at every
+  // setting it could reach — it could move the line and never open it.
+  const KID = { x: 1, spread: 1, dz: 0, jog: 1 };
+  function partySlots(n, k) {
+    k = k || KID;
     const f = CFG.form, out = [], mid = (n - 1) / 2, S = partySide();
     // Each member one step FURTHER FROM THE ENEMY and one step nearer the camera
     // than the one in front of her, so no two party bodies share a screen column.
     // The x is a magnitude times the side, which is what makes the mirror one sign.
     for (let i = 0; i < n; i++) {
-      out.push([S * (f.partyX + (i - mid) * f.partyDx), f.partyZ + (i - mid) * f.partyDz]);
+      out.push([S * (f.partyX * k.x + (i - mid) * f.partyDx * k.spread),
+                f.partyZ + (i - mid) * f.partyDz * k.spread + k.dz]);
     }
     return out;
   }
-  function foeSlots(n) {
+  function foeSlots(n, k) {
+    k = k || KID;
     const f = CFG.form, out = [], mid = (n - 1) / 2;
     // A CHEVRON, not a parity zigzag. Parity put slot 1 and slot 2 on nearly the
     // same screen ray from this camera and one monster stood inside another; a
     // chevron pushes the middle of the line at the party and the ends back, so
     // depth separation and screen separation grow together.
     const S = foeSide();
-    if (n === 1) return [[S * f.foeX, f.foeZ]];
+    if (n === 1) return [[S * f.foeX * k.x, f.foeZ + k.dz]];
     if (n <= 3) {
       // Chevron (middle of the line pushed at the party) PLUS an alternating
       // sideways jog. The jog is what actually pulls neighbours apart: the depth
@@ -564,18 +821,20 @@
       // and 2.78 m pair of gaps into 1.81 m and 0.26 m: two monsters back inside
       // each other, the exact bug the jog was added to kill. Tying the jog to
       // partySide keeps every separation identical under the flip.
-      const jog = f.foeJog * (n === 2 ? 1.7 : 1) * partySide();
+      const kj = k.jog == null ? 1 : k.jog;
+      const jog = f.foeJog * (n === 2 ? 1.7 : 1) * partySide() * kj;
       for (let i = 0; i < n; i++) {
         // the chevron PUSHES THE MIDDLE AT THE PARTY, so it shrinks the magnitude
-        out.push([S * (f.foeX + Math.abs(i - mid) * f.foeChevron) + (i % 2 ? jog : -jog),
-                  f.foeZ + (i - mid) * f.foeSpread]);
+        out.push([S * (f.foeX * k.x + Math.abs(i - mid) * f.foeChevron * kj) + (i % 2 ? jog : -jog),
+                  f.foeZ + (i - mid) * f.foeSpread * k.spread + k.dz]);
       }
       return out;
     }
+    const kj2 = k.jog == null ? 1 : k.jog;
     const front = Math.ceil(n / 2), back = n - front;
-    const sp = f.foeSpread * 0.82;                  // two ranks can pack a little tighter
-    for (let i = 0; i < front; i++) out.push([S * f.foeX, f.foeZ + (i - (front - 1) / 2) * sp]);
-    for (let i = 0; i < back; i++) out.push([S * (f.foeX + f.foeRank), f.foeZ + (i - (back - 1) / 2) * sp + f.foeJog * partySide()]);
+    const sp = f.foeSpread * k.spread * 0.82;       // two ranks can pack a little tighter
+    for (let i = 0; i < front; i++) out.push([S * f.foeX * k.x, f.foeZ + (i - (front - 1) / 2) * sp + k.dz]);
+    for (let i = 0; i < back; i++) out.push([S * (f.foeX * k.x + f.foeRank * kj2), f.foeZ + (i - (back - 1) / 2) * sp + f.foeJog * partySide() * kj2 + k.dz]);
     return out;
   }
 
@@ -1280,6 +1539,18 @@
     }
 
     // ---- clip picking (KayKit's library, by intent not by index) ------------
+    // SEVEN INTENTS, and until 2026-08-08 the shipped rigs bound FOUR: clipsOf()
+    // returned ["idle","attack","hit","die"] for every body in the game, so `cheer`
+    // played nothing (the victory pose of this game was the party standing in their
+    // idles) and `item` played nothing (a tonic was a body standing perfectly still).
+    // The cast now carries Cheer / Use_Item, retargeted from the KayKit donor through
+    // tools/vesper_retarget.py — the names below were ALREADY the names it exports to,
+    // which is the whole reason this table is by-intent and not by-index.
+    //
+    // `walk` IS THE FLEE BEAT'S LEGS. Every rig in the game already has a locomotion
+    // clip and no pack anywhere ships a "running away"; binding the intent to the walk
+    // the body already owns is what lets a monster GLB flee as well as a party member,
+    // with no new asset for anybody. See fleeBeat().
     const CLIP = {
       idle: ['Idle', 'Unarmed_Idle', '2H_Melee_Idle', 'Idle_A'],
       attack: ['1H_Melee_Attack_Slice_Diagonal', '1H_Melee_Attack_Chop', 'Attack', 'Melee_Attack',
@@ -1288,6 +1559,7 @@
       die: ['Death_A', 'Death', 'Die', 'Death_B'],
       item: ['Use_Item', 'PickUp', 'Interact'],
       cheer: ['Cheer', 'Victory'],
+      walk: ['Walking_A', 'Walk', 'Running_A', 'Walk_Loop', 'Jog_Fwd_Loop', 'Gallop', 'Walking_B'],
     };
     function pickClip(clips, kind) {
       if (!clips || !clips.length) return null;
@@ -1297,7 +1569,11 @@
       }
       // a loose match, so a pack that names things its own way still lands
       const re = { idle: /idle/i, attack: /attack|bite|slash|swipe/i, hit: /hit|damage|flinch/i,
-                   die: /death|die/i, item: /item|pick|interact/i, cheer: /cheer|victory|win/i }[kind];
+                   die: /death|die/i, item: /item|pick|interact/i, cheer: /cheer|victory|win/i,
+                   // NOT /run/ alone — 'Running_Strafe_Left' is a sidestep and every
+                   // pack with a 'Jump_Full_Short' also has a 'Jump_Land' that /jump/
+                   // would eat. Anchored on the two words that mean "legs, forward".
+                   walk: /walk|jog|gallop|running_[ab]$/i }[kind];
       return (re && clips.find(c => re.test(c.name))) || null;
     }
     function rigUp(b, gltf) {
@@ -1322,12 +1598,15 @@
     // frame (death). The return is on a TIMER rather than the mixer's 'finished'
     // event because a hidden tab's rAF stops, the mixer never advances, and the
     // event would never fire — leaving a corpse mid-swing when the tab wakes.
-    function oneShot(b, kind, hold) {
+    // `fitMs` (2026-08-08) overrides CFG.act.fit for this one play: act() passes
+    // budget/contactFrac, i.e. the duration at which THIS clip's own contact frame
+    // lands on the turn's damage beat. Absent, the shipped per-kind fit stands.
+    function oneShot(b, kind, hold, fitMs) {
       if (!b.actions || !b.actions[kind]) return false;
       const a = b.actions[kind];
       const idle = b.actions.idle;
       // fit the donor's tempo to the turn's — see CFG.act.fit
-      const raw = a.getClip().duration, want = CFG.act.fit[kind];
+      const raw = a.getClip().duration, want = (fitMs > 0 ? fitMs : CFG.act.fit[kind]);
       const ts = (want && raw > 0)
         ? clamp(raw * 1000 / want, CFG.act.fitMin, CFG.act.fitMax) : 1;
       a.reset(); a.setEffectiveWeight(1); a.setEffectiveTimeScale(ts);
@@ -1345,6 +1624,121 @@
         idle.fadeOut(0.15);
       }
       return true;
+    }
+
+    // ---- THE WEAPON: BUILD IT, FIND THE HAND, DERIVE THE GRIP ---------------
+    // See the WEAPONS table at the top of the file for the ruling and the fallback
+    // rule. Everything here is built in METRES around the grip at the origin with
+    // the shaft along +Y, so the only per-rig work is the orientation below.
+    function buildWeapon(rec) {
+      const TH2 = T();
+      const g = new TH2.Group();
+      const wood = flat(rec.wood), iron = flat(rec.iron);
+      const add = (geo, m, y, rx) => {
+        const me = new TH2.Mesh(geo, m);
+        me.position.y = y;
+        if (rx) me.rotation.x = rx;
+        g.add(me); return me;
+      };
+      const L = rec.len, G = rec.grip, mid = L / 2 - G;      // shaft centre, grip at y=0
+      if (rec.build === 'cudgel') {
+        // a short hardwood club: a taper into a heavy head, two iron bands
+        add(new TH2.CylinderGeometry(0.055, 0.026, L, 7), wood, mid);
+        add(new TH2.CylinderGeometry(0.066, 0.062, 0.16, 7), wood, L - G - 0.10);
+        add(new TH2.TorusGeometry(0.058, 0.011, 5, 9), iron, L - G - 0.20, Math.PI / 2);
+        add(new TH2.TorusGeometry(0.040, 0.010, 5, 9), iron, -G + 0.05, Math.PI / 2);
+      } else if (rec.build === 'hook') {
+        // a long pole, an iron cap, and the hook itself — the silhouette is the point
+        add(new TH2.CylinderGeometry(0.026, 0.030, L, 7), wood, mid);
+        add(new TH2.CylinderGeometry(0.031, 0.031, 0.12, 7), iron, L - G - 0.06);
+        const hk = new TH2.Mesh(new TH2.TorusGeometry(0.10, 0.017, 5, 10, Math.PI * 1.25), iron);
+        hk.position.set(0.10, L - G - 0.02, 0);
+        hk.rotation.z = -0.5;
+        g.add(hk);
+        add(new TH2.ConeGeometry(0.026, 0.13, 6), iron, L - G + 0.06);
+      } else {
+        // a traveller's staff: a slow taper, a bound grip, one knot near the top
+        add(new TH2.CylinderGeometry(0.024, 0.032, L, 7), wood, mid);
+        add(new TH2.CylinderGeometry(0.036, 0.036, 0.17, 7), flat(0x4f3d2b), 0.01);
+        add(new TH2.IcosahedronGeometry(0.043, 0), wood, L - G - 0.16);
+      }
+      return g;
+    }
+    // WHICH BONE IS THE HAND. Exact names first (the cast's Tripo rig, plus the two
+    // conventions the sourced packs use), then a right-hand pattern, then any hand at
+    // all. A rig with no hand-shaped bone gets no weapon and no error: the fallback
+    // chain's rule, applied to one more tier.
+    function handBoneOf(root) {
+      const H = (art.weaponHand === 'L' ? 'L' : 'R'), O = (H === 'R' ? 'L' : 'R');
+      const bones = [];
+      root.traverse(o => { if (o.isBone) bones.push(o); });
+      if (!bones.length) return null;
+      const side = (s) => [s + '_Hand', s + 'Hand', 'hand.' + s.toLowerCase(),
+                           'mixamorig' + (s === 'R' ? 'Right' : 'Left') + 'Hand',
+                           'wrist.' + s.toLowerCase(), 'Hand_' + s];
+      for (const s of [H, O]) {
+        for (const n of side(s)) { const b = bones.find(x => x.name === n); if (b) return b; }
+      }
+      const rr = new RegExp('(^|[._-])(' + H + '|' + (H === 'R' ? 'right' : 'left') +
+                            ')[._-]?(hand|wrist|palm)', 'i');
+      return bones.find(x => rr.test(x.name)) || bones.find(x => /hand|wrist|palm/i.test(x.name)) || null;
+    }
+    // THE GRIP AXIS IS DERIVED FROM THE RIG, NEVER GUESSED — the same rule leanAxis
+    // is written under. Every skeleton orients its hand bone differently, so a
+    // hard-coded rotation would point three characters' staves into the ground and
+    // the fourth's into her own head. What is true of EVERY rig is that the forearm
+    // points at the hand: that world direction, expressed in the hand bone's own
+    // frame, is the axis a held shaft runs along.
+    //
+    // AND THE SCALE HAS TO BE UNDONE. setVisual scales the whole rig to hit the
+    // character's height in metres, and the bone carries that scale, so a 1.5 m staff
+    // parented to it would arrive at 1.5 * k metres. The weapon is authored in world
+    // metres and divides the bone's own world scale back out.
+    function equipWeapon(b, itemId) {
+      if (!itemId || !b || !b.obj) return false;
+      const rec = WEAPONS[itemId];
+      if (!rec) { console.info('[stage3d] no weapon art for', itemId, '- empty hand'); return false; }
+      const bone = handBoneOf(b.obj);
+      if (!bone) return false;
+      try {
+        const TH2 = T();
+        b.root.updateWorldMatrix(true, true);
+        const wp = new TH2.Vector3(), wq = new TH2.Quaternion(), ws = new TH2.Vector3();
+        bone.matrixWorld.decompose(wp, wq, ws);
+        let dir = null;
+        if (bone.parent && bone.parent.isObject3D) {
+          const pp = new TH2.Vector3().setFromMatrixPosition(bone.parent.matrixWorld);
+          dir = wp.clone().sub(pp);
+        }
+        if (!dir || dir.lengthSq() < 1e-9) dir = new TH2.Vector3(0, 1, 0);
+        dir.normalize().applyQuaternion(wq.clone().invert());
+        const g = buildWeapon(rec);
+        g.quaternion.setFromUnitVectors(new TH2.Vector3(0, 1, 0), dir);
+        if (rec.tilt) g.rotateX(rec.tilt);
+        // AND IT SITS OUTSIDE THE PALM, not through it. "Outward" is derived the same
+        // way the shaft axis is: the horizontal direction from the body's own centre
+        // line to the hand, in the hand's frame. Centring the shaft on the bone put it
+        // through the coat on every clip that swings the arm — measured by eye,
+        // docs/qa/battle-cast round 1.
+        if (rec.out) {
+          const rp = new TH2.Vector3().setFromMatrixPosition(b.root.matrixWorld);
+          const o = new TH2.Vector3(wp.x - rp.x, 0, wp.z - rp.z);
+          if (o.lengthSq() > 1e-8) {
+            o.normalize().applyQuaternion(wq.clone().invert());
+            g.position.copy(o.multiplyScalar(rec.out));
+          }
+        }
+        const k = 3 / Math.max(1e-6, ws.x + ws.y + ws.z);
+        g.scale.setScalar(k);
+        g.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false; } });
+        bone.add(g);
+        b.weapon = g; b.weaponId = itemId;
+        // RE-COLLECT, so the weapon flashes when its owner is struck and fades when
+        // she falls. Without this a corpse dissolves and leaves a staff hanging in
+        // the air, which is the exact class of bug setOpacity exists to prevent.
+        collectMats(b);
+        return true;
+      } catch (e) { console.warn('[stage3d] weapon socket', e); return false; }
     }
 
     // ---- BUILD THE CAST -----------------------------------------------------
@@ -1366,7 +1760,186 @@
     // Group order is preserved everywhere else (names, targeting, turn order);
     // this only decides who stands where.
     const foeList = cfg.foes || [];
-    const rawSlots = foeSlots(foeList.length);
+
+    // ===== THE FRAME SOLVE ====================================================
+    // See CFG.frame. The closed forms above give the SHAPE; this decides how big
+    // that shape is in the picture, by projecting every slot onto the rest camera
+    // before a body exists and searching four scalars until the projection hits
+    // the targets. It runs ONCE, synchronously, before any geometry is built —
+    // there is no re-solve, no per-frame cost and nothing to see moving.
+    //
+    // WIDTHS ARE ESTIMATED HERE AND MEASURED LATER, and the difference matters
+    // only to the overlap term. A body's real width is Box3 out of its GLB and
+    // that GLB has not loaded yet, so the estimate is a ratio off the height:
+    // a party rig measures 0.73 m at 1.7 m tall (0.43), and MON.wide already
+    // carries the squatness of a creature (a duskpad measures 2.07 m at 1.05 m
+    // tall, which is wide 1.25 x 1.55). The PROOF of the staging is the anchor
+    // census in tools/battle_contact.mjs, which reads the widths the loader
+    // actually measured — the estimate is a search heuristic, never the receipt.
+    const _sp = new TH.Vector3(), _sq = new TH.Vector3();
+    function frameSize() {
+      const w = mount.clientWidth || window.innerWidth || 1280;
+      const h = mount.clientHeight || window.innerHeight || 720;
+      return { w, h, a: (w / h) || (16 / 9) };
+    }
+    function projFrac(x, z, h) {
+      const y0 = groundY(x, z);
+      _sp.set(x, y0, z).project(camera);
+      _sq.set(x, y0 + h, z).project(camera);
+      // x is a fraction across the frame, y a fraction down it, h a fraction of
+      // the frame's HEIGHT. Fractions, because every target is one.
+      return { x: _sp.x * 0.5 + 0.5, y: -_sp.y * 0.5 + 0.5,
+               h: (_sq.y - _sp.y) * 0.5, front: _sp.z < 1 };
+    }
+    const sq2 = v => v * v;
+    function solveStaging(pH, pW, fH, fW) {
+      const F = CFG.frame, fs = frameSize();
+      const nP = pH.length, nF = fH.length;
+      if (!F.solve || !nP || !nF) return { xP: 1, xF: 1, spread: 1, dzP: 0, dzF: 0, jog: 1, solved: false };
+      if (F.force) return Object.assign({ xP: 1, xF: 1, spread: 1, dzP: 0, dzF: 0, jog: 1 }, F.force, { solved: 'forced' });
+      // the rest pose, exactly — the projection has to be the one the player sees
+      const keepPos = camera.position.clone(), keepA = camera.aspect;
+      camera.position.copy(restPos); camera.lookAt(target);
+      camera.aspect = fs.a; camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
+
+      const inRect = (r, x, y) => x >= r.x0 && x <= r.x1 && y >= r.y0 && y <= r.y1;
+      function score(k) {
+        const ps = partySlots(nP, { x: k.xP, spread: k.spread, dz: k.dzP });
+        const rawF = foeSlots(nF, { x: k.xF, spread: k.spread, dz: k.dzF, jog: k.jog });
+        const rows = [];
+        for (let i = 0; i < nP; i++) rows.push({ side: 1, s: ps[i], h: pH[i], w: pW[i] });
+        for (let i = 0; i < nF; i++) rows.push({ side: 0, s: rawF[i], h: fH[i], w: fW[i] });
+        for (const r of rows) {
+          if (Math.abs(r.s[0]) > F.worldX || Math.abs(r.s[1]) > F.worldZ) return null;
+          const p = projFrac(r.s[0], r.s[1], r.h);
+          if (!p.front || !(p.h > 0)) return null;
+          r.p = p;
+          // half-width in FRAME-WIDTH fractions: w/h in metres is w/h on screen
+          r.hw = p.h * (r.w / (r.h || 1)) * 0.5 / fs.a;
+        }
+        const P = rows.filter(r => r.side), FO = rows.filter(r => !r.side);
+        // THE 180 RULE, as a hard refusal. CFG.partySide is the only place the
+        // handedness is written; a solve is not allowed to argue with it.
+        const pMax = Math.max(...P.map(r => r.p.x)), fMin = Math.min(...FO.map(r => r.p.x));
+        if (!(pMax < fMin)) return null;
+        const minFoeH = Math.min(...FO.map(r => r.p.h));
+        const meanFoeH = FO.reduce((a, r) => a + r.p.h, 0) / FO.length;
+        const maxPartyH = Math.max(...P.map(r => r.p.h)), minPartyH = Math.min(...P.map(r => r.p.h));
+        // nearest party body to nearest foe, centre to centre — the audit's number
+        let sep = Infinity;
+        for (const f of FO) for (const p of P) sep = Math.min(sep, Math.abs(f.p.x - p.p.x));
+        let pair = Infinity;
+        for (let i = 0; i < rows.length; i++) for (let j = i + 1; j < rows.length; j++) {
+          const a = rows[i], b = rows[j];
+          // vertical separation counts for less than horizontal at this camera:
+          // two bodies one above the other still read apart
+          const d = Math.abs(a.p.x - b.p.x) + Math.abs(a.p.y - b.p.y) * 0.35 / fs.a;
+          pair = Math.min(pair, d / (a.hw + b.hw));
+        }
+        let ko = 0, clear = 0;
+        for (const r of rows) {
+          // IN THE FRAME AT ALL. This was missing on the first pass and it is the
+          // only reason a solve can be green on every target and wrong in the
+          // picture: the search fanned three duskpads until one of them stood at
+          // screen x 1950 of a 1600 px frame, off the right edge entirely, with
+          // every keep-out rectangle (which all live inside 0..1) reporting a
+          // clean miss. A body outside the frame is not a staging trade-off.
+          if (r.p.x < F.inX || r.p.x > 1 - F.inX) return null;
+          if (r.p.y < F.inY || r.p.y > 1 - F.inY * 0.2) return null;
+          // and its BODY, not just its anchor, has to be mostly on the glass
+          clear += 1.2 * (sq2(Math.max(0, (r.p.x + r.hw * 0.8) - (1 - F.inX))) +
+                          sq2(Math.max(0, F.inX - (r.p.x - r.hw * 0.8))));
+          for (const rc of F.keepOut) {
+            if (inRect(rc, r.p.x, r.p.y)) ko += 1;
+            // the name tag, at its centre and both its ends
+            if (inRect(rc, r.p.x, r.p.y + F.tagDrop)) ko += 1;
+            if (inRect(rc, r.p.x - F.tagW, r.p.y + F.tagDrop)) ko += 0.7;
+            if (inRect(rc, r.p.x + F.tagW, r.p.y + F.tagDrop)) ko += 0.7;
+            if (inRect(rc, r.p.x, r.p.y - r.p.h)) ko += 0.6;        // the head
+          }
+          clear += sq2(Math.max(0, F.headY - (r.p.y - r.p.h))) + sq2(Math.max(0, r.p.y - F.footY));
+        }
+        // THE WEIGHTS ARE A RANKING, and they were set by measurement, not taste:
+        // at the first pass the keep-out term (45 per hit) was worth seventeen
+        // times the entire foe-size deficit, so the search bought a clean frame
+        // edge with the exact thing the audit is complaining about. Foe
+        // silhouette is the headline defect and now carries the heaviest weight.
+        // MEAN FIRST, MINIMUM SECOND: "the foes read small" is about the typical
+        // foe, and a chevron's far slot is small by construction — pricing the
+        // minimum as hard as the mean just collapses the depth spread the
+        // formation needs, which shows up immediately as screen overlap.
+        let c = 0;
+        c += 6000 * sq2(Math.max(0, F.foeH - meanFoeH)) + 1500 * sq2(Math.max(0, F.foeH * 0.82 - minFoeH));
+        c += 1500 * sq2(Math.max(0, meanFoeH - F.foeHMax));
+        c += 1200 * sq2(Math.max(0, maxPartyH - F.partyHMax)) + 600 * sq2(Math.max(0, F.partyHMin - minPartyH));
+        c += 2500 * sq2(sep - F.sep);
+        const pairT = nF >= 3 ? F.pairCrowd : F.pair;
+        c += 2200 * sq2(Math.max(0, pairT - pair));
+        c += 25 * ko;
+        c += 2000 * clear;
+        // and a gentle pull back toward the authored form, so a flat region of the
+        // score does not wander somewhere arbitrary
+        c += 8 * (sq2(k.xP - 1) + sq2(k.xF - 1) + sq2(k.spread - 1)) +
+             1.5 * (sq2(k.dzP / 3) + sq2(k.dzF / 3));
+        return { c, minFoeH, meanFoeH, maxPartyH, minPartyH, sep, pair, ko };
+      }
+
+      // COORDINATE DESCENT ON FIXED LATTICES, FROM SIX FIXED STARTS. Deterministic:
+      // the same encounter shape stages identically every time, which is what
+      // makes a before/after photograph mean anything.
+      //
+      // AND IT IS MULTI-START BECAUSE ONE START WAS MEASURABLY NOT ENOUGH. From
+      // the identity alone the search settled 2v2 and 2v3 with the foe line pushed
+      // AWAY from the camera (dzF -1.1) — a local minimum where the screen-overlap
+      // term is exactly satisfied and every move that would enlarge a foe breaks
+      // it first. The starts below are spread across the corner of the space the
+      // targets actually live in; the identity stays first so a shape whose
+      // authored form is already right keeps it.
+      const STARTS = [
+        { xP: 1, xF: 1, spread: 1, dzP: 0, dzF: 0, jog: 1 },
+        { xP: 0.75, xF: 0.60, spread: 1.00, dzP: 0.0, dzF: 2.0, jog: 1.4 },
+        { xP: 0.85, xF: 0.50, spread: 1.20, dzP: -1.0, dzF: 3.0, jog: 1.0 },
+        { xP: 0.65, xF: 0.70, spread: 0.90, dzP: 1.0, dzF: 1.5, jog: 2.0 },
+        { xP: 1.00, xF: 0.45, spread: 1.30, dzP: 0.5, dzF: 3.5, jog: 1.7 },
+        { xP: 0.90, xF: 0.40, spread: 1.15, dzP: -0.5, dzF: 4.5, jog: 2.4 },
+      ];
+      const keys = ['xF', 'xP', 'jog', 'spread', 'dzF', 'dzP'];
+      let win = null, winS = null;
+      for (const start of STARTS) {
+        const k = Object.assign({}, start);
+        let bestS = score(k);
+        for (let pass = 0; pass < F.sweep; pass++) {
+          for (const key of keys) {
+            const rg = F.range[key]; if (!rg) continue;
+            const keep = k[key];
+            let bv = keep, bc = bestS;
+            for (let v = rg[0]; v <= rg[1] + 1e-9; v += rg[2]) {
+              k[key] = Math.round(v * 1e6) / 1e6;
+              const s = score(k);
+              if (s && (!bc || s.c < bc.c)) { bc = s; bv = k[key]; }
+            }
+            k[key] = bv; bestS = bc;
+          }
+        }
+        if (bestS && (!winS || bestS.c < winS.c)) { winS = bestS; win = Object.assign({}, k); }
+      }
+      camera.position.copy(keepPos); camera.aspect = keepA; camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
+      if (!win) return { xP: 1, xF: 1, spread: 1, dzP: 0, dzF: 0, jog: 1, solved: false, why: 'every start refused' };
+      return Object.assign(win, { solved: true, m: winS, frame: fs });
+    }
+
+    const partyRefs = (cfg.party || []).map(c => art.height[c.ref] || art.height[c.id] || CFG.charH);
+    const foeRefs = foeList.map(c => (MON[c.ref] || MON.default).h);
+    const FORM_K = solveStaging(
+      partyRefs, partyRefs.map(h => h * 0.43),
+      foeRefs, foeList.map((c, i) => {
+        const md = MON[c.ref] || MON.default;
+        return foeRefs[i] * (md.wide ? md.wide * 1.55 : 0.9);
+      }));
+    const KP = { x: FORM_K.xP, spread: FORM_K.spread, dz: FORM_K.dzP };
+    const KF = { x: FORM_K.xF, spread: FORM_K.spread, dz: FORM_K.dzF, jog: FORM_K.jog };
+
+    const rawSlots = foeSlots(foeList.length, KF);
     const farFirst = rawSlots.map((s, i) => i).sort((a, b) => rawSlots[a][1] - rawSlots[b][1]);
     const tallFirst = foeList.map((c, i) => i).sort((a, b) =>
       ((MON[foeList[b].ref] || MON.default).h) - ((MON[foeList[a].ref] || MON.default).h));
@@ -1415,7 +1988,7 @@
       }).catch(() => { });
     });
 
-    const partySlot = partySlots((cfg.party || []).length);
+    const partySlot = partySlots((cfg.party || []).length, KP);
     (cfg.party || []).forEach((c, i) => {
       const s = partySlot[i] || [CFG.form.partyX, 0];
       // face ACROSS the arena at the foes, turned further toward the camera so we
@@ -1424,6 +1997,11 @@
       b.bobAmp = 0.035;
       const tint = art.tint[c.ref] || art.tint[c.id];
       const hM = art.height[c.ref] || art.height[c.id] || CFG.charH;
+      // WHAT SHE IS HOLDING, and where it comes from: the SCREEN reads GS's equip
+      // slot and hands it down as a plain item id (battle_turnbased's `weaponOf`).
+      // This stage still never touches GS — the seam at the top of this file — and a
+      // caller that supplies nothing simply stages an empty hand, exactly as before.
+      const weaponId = cfg.weaponOf ? (cfg.weaponOf(c.ref || c.id, c.id) || null) : null;
       setVisual(b, proxyFigure(tint), hM, { tier: 'proxy', shadow: 1.9 });
       if (c.dead) markDead(b, true);
 
@@ -1441,6 +2019,7 @@
           if (tint != null) dye(g.scene, tint, null);
           setVisual(b, g.scene, hM, { tier: 'model' });
           rigUp(b, g);
+          equipWeapon(b, weaponId);        // the socket: model tier only, by construction
           if (b.dead) markDead(b, true);
           return 'done';
         });
@@ -1613,6 +2192,40 @@
               opacity: 0.55, additive: false, grow: 1.6, spread: 0.16 });
     }
 
+    // ===== THE STAGE CLOCK, AND HIT-STOP ======================================
+    // Every timed thing on this stage — tweens, the shake, the drift, the intro
+    // sweep, the mixers — reads vnow() rather than now(), and vnow() is the wall
+    // clock MINUS an accumulated skew. Hit-stop is the only thing that grows the
+    // skew, so a stop freezes the swing, the flash decay, the knockback, the
+    // camera shake and the idle drift ON THE SAME FRAME. That is the point: a
+    // stop that freezes the mixer and lets the tweens run is a stutter, not a hit.
+    //
+    // AND IT KEEPS THE ABSOLUTE-TIMESTAMP PROPERTY THE TWEENS WERE BUILT ON.
+    // rAF does not run in a hidden tab, so a delta-accumulated clock would leave
+    // a body standing mid-lunge when the tab woke — the exact failure the tween
+    // comment below warns about. The skew is only ever advanced from INSIDE a
+    // frame, by a delta CLAMPED to 100 ms, and only while a stop is live. So a
+    // tab hidden through a stop advances the skew by nothing at all (no frames
+    // ran), wakes to find the stop expired, and finds every tween finished.
+    // The skew's total lifetime growth is bounded by the hit-stops that actually
+    // played, which is tens of milliseconds per turn.
+    let skew = 0, lastReal = now(), stopUntil = 0;
+    const vnow = () => now() - skew;
+    function tickClock() {
+      const r = now();
+      const d = Math.min(r - lastReal, 100);
+      lastReal = r;
+      if (r < stopUntil) { skew += d * (1 - CFG.act.hitStop.scale); return CFG.act.hitStop.scale; }
+      return 1;
+    }
+    // FREEZE THE FRAME THE BLOW LANDS IN. Reduced motion opts out: a freeze is a
+    // motion effect, and the flash — which is the information — survives it either
+    // way (see flinch).
+    function hitStop(ms) {
+      if (RM || !(ms > 0)) return;
+      stopUntil = Math.max(stopUntil, now() + ms);
+    }
+
     // ===== CAMERA SHAKE + PUSH-IN =============================================
     // Absolute-timestamp driven like every tween here, so a hidden tab that
     // wakes up finds the shake OVER rather than resuming it half a second late
@@ -1621,7 +2234,7 @@
     function shake(amount, ms) {
       if (RM) return;
       shakeAmp = Math.max(shakeAmp, amount);
-      shakeT0 = now(); shakeDur = ms || CFG.fx.shakeMs;
+      shakeT0 = vnow(); shakeDur = ms || CFG.fx.shakeMs;
     }
     function pushIn(side) {
       if (RM) return;
@@ -1638,11 +2251,11 @@
     // the settled pose — which is the only correct answer.
     const tweens = [];
     function tween(dur, fn, done) {
-      const t = { t0: now(), dur: Math.max(1, dur), fn, done };
+      const t = { t0: vnow(), dur: Math.max(1, dur), fn, done };
       tweens.push(t); return t;
     }
     function runTweens() {
-      const t = now();
+      const t = vnow();
       for (let i = tweens.length - 1; i >= 0; i--) {
         const w = tweens[i];
         const u = clamp((t - w.t0) / w.dur, 0, 1);
@@ -1654,13 +2267,93 @@
     // ===== THE PUBLIC VERBS ===================================================
     // Each one is "make this read on screen"; none of them means anything to the
     // battle, which has already decided the outcome before it calls.
-    function act(id, kind) {
+    // ---- THE STRIKE STATION --------------------------------------------------
+    // WHERE A BODY HAS TO STAND FOR THE BLOW TO BE ON THE TARGET. Derived from
+    // the TARGET'S OWN BODY — half its measured width plus half the attacker's,
+    // and a little air — never from a constant, because the constant was the
+    // defect: 1.35 m of lunge against a 5.21 m gap, the flash landing on a body
+    // four metres away (audit section 5).
+    //
+    // b.w is Box3 out of the loaded GLB (setVisual), so this is the creature's
+    // real footprint and not a guess: a duskpad measures 2.07 m across, a party
+    // rig 0.73. The clamp at the top is the bet's own proof holding for a
+    // creature nobody has authored yet — centre-to-centre at contact is exactly
+    // this stand-off, so capping it caps the receipt.
+    function nearestFoe(b) {
+      let best = null, bd = Infinity;
+      for (const oid of order) {
+        const o = bodies[oid];
+        if (!o || o.dead || o.side === b.side) continue;
+        const d = Math.hypot(o.home.x - b.home.x, o.home.z - b.home.z);
+        if (d < bd) { bd = d; best = o; }
+      }
+      return best;
+    }
+    function strikeStation(b, tb) {
+      const dx0 = tb.home.x - b.home.x, dz0 = tb.home.z - b.home.z;
+      const dist = Math.hypot(dx0, dz0);
+      if (!(dist > 0.001)) return null;
+      const nx = dx0 / dist, nz = dz0 / dist;
+      const standoff = clamp((b.w + tb.w) * 0.5 * CFG.act.standoffK + CFG.act.standoffPad,
+                             CFG.act.standoffMin, CFG.act.standoffMax);
+      const travel = clamp(dist - standoff, 0, CFG.act.travelMax);
+      // AIM. The staged facing is a three-quarter pose chosen for the camera, not
+      // for the fight; on the way in the body turns most of the way onto the true
+      // line of the blow and keeps the rest of its camera bias, so it reads as
+      // hitting something rather than sliding past it. The residual is the same
+      // one newBody staged it with, recovered rather than re-invented.
+      const baseYaw = b.side === 'party' ? foeSide() * (Math.PI / 2) : partySide() * (Math.PI / 2);
+      let bias = b.facing - baseYaw;
+      while (bias > Math.PI) bias -= 2 * Math.PI;
+      while (bias < -Math.PI) bias += 2 * Math.PI;
+      let aim = Math.atan2(nx, nz) + bias;       // local forward is +Z: see leanAxis
+      let dYaw = aim - b.facing;
+      while (dYaw > Math.PI) dYaw -= 2 * Math.PI;
+      while (dYaw < -Math.PI) dYaw += 2 * Math.PI;
+      return { nx, nz, dist, standoff, travel, dYaw: dYaw * clamp(CFG.act.aim, 0, 1) };
+    }
+    // Move a body `wx`/`wz` metres in WORLD space while its root is yawed: the
+    // offset has to be expressed in the root's own frame or a yawed body would
+    // travel sideways. axisMove (the world-X move flinch still uses) is this with
+    // wz = 0, which is what it always was.
+    function worldMove(b, wx, wz) {
+      const th = b.root.rotation.y, c = Math.cos(th), s = Math.sin(th);
+      b.pivot.position.x = wx * c - wz * s;
+      b.pivot.position.z = wx * s + wz * c;
+    }
+    // ACT — and it RETURNS THE MILLISECOND THE BLOW LANDS, which is the whole
+    // seam change. battle_turnbased used to wait a constant (pacing.wind, 300 ms)
+    // and then fire the damage event; it now waits for the number this returns,
+    // so the flash, the sparks and the number are on the frame the clip's own
+    // contact happens. `contactMs` is the budget the caller gives the approach
+    // and the swing to share; the caller takes it OUT of its announce beat, so
+    // the turn's wall clock does not move.
+    function act(id, kind, tid, contactMs) {
       const b = bodies[id];
-      if (!b || b.dead) return;
-      if (kind === 'item') { oneShot(b, 'item'); return; }
-      if (kind === 'flee') return;
-      const clipped = oneShot(b, 'attack');
-      if (RM) return;                                  // reduced motion: the clip plays, the body stays put
+      if (!b || b.dead) return 0;
+      const budget = (typeof contactMs === 'number' && contactMs > 0) ? contactMs : CFG.act.contactMs;
+      // THE OTHER TWO INTENTS ARE BEATS NOW, NOT EARLY RETURNS (2026-08-08). Until
+      // today `item` bound no clip on any body in the game and `flee` did nothing at
+      // all, by construction — audit §6. Both are staged below; both still hand the
+      // caller back a duration, because the screen paces its own beats off this
+      // return value and neither of them is an approach.
+      if (kind === 'item') return itemBeat(b, budget);
+      if (kind === 'flee') return fleeBeat(b);
+      // WHO IS BEING HIT. Named by the caller for an AI turn, otherwise the
+      // player's own cursor, otherwise the nearest living enemy — a body must
+      // always have something to walk at.
+      const named = (tid != null && bodies[tid] && !bodies[tid].dead && bodies[tid].side !== b.side)
+        ? bodies[tid] : null;
+      const tb = named || targetIdOf(b) || nearestFoe(b);
+      const st = tb && tb !== b ? strikeStation(b, tb) : null;
+
+      // THE CLIP DECIDES WHEN, NOT A CONSTANT. contactFrac reads the peak angular
+      // speed of the swing out of the clip itself; the clip is then time-scaled so
+      // that instant lands on `budget`. A clip whose fit would exceed CFG.act's
+      // clamp band takes the mismatch rather than a seizure — same rule as before.
+      const cf = clipContact(b, 'attack');
+      const clipped = oneShot(b, 'attack', false, cf > 0 ? budget / cf : 0);
+      if (RM) return budget;              // reduced motion: the clip plays, the body stays put
       const dir = b.side === 'party' ? foeSide() : partySide();   // lunge AT the enemy
       // THE CAMERA LEANS INTO THE BLOW. 5.5 % of the camera's distance, out on
       // the same curve as the lunge — small enough that you feel it and never
@@ -1668,19 +2361,52 @@
       // camera trick. Every FF battle camera in the modern series does this and
       // no ruling of ours needs to change for it: the shot does not cut.
       pushIn(dir);
-      tween(CFG.act.ms, (u) => {
-        // out fast, hold a beat, back slow — a strike, not a slide
-        const p = u < 0.34 ? easeOut(u / 0.34) : u < 0.5 ? 1 : 1 - easeInOut((u - 0.5) / 0.5);
-        axisMove(b, dir * CFG.act.lungeM * p);
-        // THE PROCEDURAL SWING — see procSwing(). Only when no clip took the job.
-        if (!clipped) procSwing(b, u);
-      }, () => { b.pivot.position.set(0, 0, 0); if (!clipped) procSwing(b, 1); });
-      // dirt where the foot plants, at the end of the step out
-      const home = b.home;
-      tween(Math.round(CFG.act.ms * 0.34), () => { }, () => {
-        dustAt(home.x + Math.cos(b.facing) * CFG.act.lungeM * 0.8,
-               home.z + Math.sin(b.facing) * CFG.act.lungeM * 0.8, 1);
+
+      const total = budget + CFG.act.returnMs;
+      const arriveU = clamp((budget * CFG.act.arriveFrac) / total, 0.05, 0.95);
+      const holdU = clamp(budget / total, arriveU, 0.98);
+      // procSwing's own through-point is at 0.46 of ITS u; shift its window so
+      // that point lands on contact, for the bodies that have no attack clip.
+      const swingA = clamp((holdU - 0.46) / 0.54, 0, 0.9);
+      const homeYaw = b.root.rotation.y;
+      const travel = st ? st.travel : CFG.act.lungeM;    // no target: the old lunge
+      const nx = st ? st.nx : dir, nz = st ? st.nz : 0;
+      const dYaw = st ? st.dYaw : 0;
+      let planted = false;
+      tween(total, (u) => {
+        // out fast, plant, strike, walk back — a strike, not a slide
+        const p = u < arriveU ? easeOut(u / arriveU)
+                : u < holdU ? 1
+                : 1 - easeInOut((u - holdU) / (1 - holdU));
+        worldMove(b, nx * travel * p, nz * travel * p);
+        b.root.rotation.y = homeYaw + dYaw * Math.min(1, p * 1.35);
+        if (!clipped) procSwing(b, clamp((u - swingA) / (1 - swingA), 0, 1));
+        if (!planted && u >= arriveU) {
+          planted = true;
+          // dirt where the foot plants, AT THE STRIKE STATION — it used to be
+          // thrown at a point 1.08 m from home whatever the body did next
+          dustAt(b.home.x + nx * travel, b.home.z + nz * travel, 1);
+        }
+      }, () => {
+        b.pivot.position.set(0, 0, 0);
+        b.root.rotation.y = homeYaw;
+        if (!clipped) procSwing(b, 1);
       });
+      return budget;
+    }
+    // the player's cursor, when the caller named no target
+    function targetIdOf(b) {
+      const t = targetId && bodies[targetId];
+      return (t && !t.dead && t.side !== b.side) ? t : null;
+    }
+    // The contact fraction this body's attack clip actually has, or the
+    // hand-measured fallback for a body running on procSwing (whose own swing is
+    // written to land at 0.46 and is re-windowed above to match).
+    function clipContact(b, kind) {
+      const a = b.actions && b.actions[kind];
+      if (!a) return CFG.act.contact.fallback;
+      const f = contactFrac(a.getClip());
+      return f == null ? CFG.act.contact.fallback : f;
     }
     // ---- THE PROCEDURAL SWING — NOW THE FALLBACK, NOT THE PATH ---------------
     // WRITTEN 2026-08-02 because the shipped cast had NO combat clips: the rigs
@@ -1759,6 +2485,11 @@
       // The return value is deliberately NOT captured: unlike act() and markDead(),
       // the hit does not stand its procedural layer down. See procRecoil.
       oneShot(b, 'hit');
+      // HIT-STOP. The first thing that happens on the frame the blow lands is
+      // that nothing happens, for 90 ms. It is set BEFORE the tweens below are
+      // created so they are born into the freeze at u = 0 and the hot white
+      // flash frame is the one that is HELD — which is the whole effect.
+      hitStop(CFG.act.hitStop.ms);
       // THE FLASH SURVIVES REDUCED MOTION. It is not motion — it is the single
       // piece of information "this body is the one that was hit", and a player
       // who has asked for less movement still needs to know who got struck.
@@ -1807,6 +2538,9 @@
       // body hits the ground, and what a body hitting the ground throws up is
       // the ground.
       if (!RM) {
+        // a death is the loudest beat, so it gets the longest hold as well as the
+        // loudest shake — same mechanism, one number
+        hitStop(CFG.act.hitStop.ko);
         shake(CFG.fx.shakeKo, 420);
         dustAt(b.root.position.x, b.root.position.z, 1.9);
       }
@@ -1830,6 +2564,139 @@
       b.root.position.y = b.home.y;
       setOpacity(b, 1);
       if (b.actions && b.actions.idle) { b.actions.idle.reset().fadeIn(0.2).play(); }
+    }
+
+    // ===== THE OTHER THREE BEATS ==============================================
+    // VICTORY, AN ITEM, AND RUNNING AWAY. All three were measured as nothing on
+    // 2026-08-08 (docs/plans/battle-presentation-inventory.md §6): `cheer` played a
+    // clip no body in the game had, `item` played a clip no body in the game had AND
+    // returned before the lunge, and `flee` was `return`. Two of the three are now
+    // real clips on the cast (tools/vesper_retarget.py, PERFORMANCE CLIPS); all three
+    // also have a procedural half here, because a body without the clip — every
+    // monster, every billboard, every proxy — must still be SEEN to do the thing.
+    //
+    // A LOOPING CLIP IS NOT A ONE-SHOT and needs its own two verbs: oneShot's
+    // return-to-idle is a timer sized to the clip's duration, which is exactly wrong
+    // for a retreat that lasts until the battle says whether it worked.
+    function loopClip(b, kind, ts) {
+      if (!b.actions || !b.actions[kind]) return false;
+      const TH2 = T();
+      const a = b.actions[kind], idle = b.actions.idle;
+      clearTimeout(b._backT);                    // a pending one-shot return would kill this
+      a.reset(); a.setLoop(TH2.LoopRepeat, Infinity); a.clampWhenFinished = false;
+      a.setEffectiveWeight(1); a.setEffectiveTimeScale(ts || 1);
+      a.fadeIn(0.12).play();
+      if (idle) idle.fadeOut(0.12);
+      b._loop = a;
+      return true;
+    }
+    function stopLoop(b) {
+      if (b._loop) { try { b._loop.fadeOut(0.22); } catch (e) { } b._loop = null; }
+      if (b.actions && b.actions.idle) { try { b.actions.idle.reset().fadeIn(0.22).play(); } catch (e) { } }
+    }
+
+    // ---- AN ITEM IS DRUNK, NOT MIMED ----------------------------------------
+    // The clip (KayKit Use_Item, retargeted) is the performance; the MOTES are the
+    // information. They rise rather than fall — the one particle in this file with
+    // negative gravity — because everything else the arena throws is an impact, and
+    // a beat that reads as an impact is a beat the player reads as damage.
+    function procUse(b, u) {
+      const s = Math.sin(Math.PI * clamp(u, 0, 1));
+      b.bob.setRotationFromAxisAngle(leanAxis(b), -0.22 * s);
+      b.pivot.position.y = -CFG.beat.itemLift * s;     // pivot, not bob: the frame loop owns bob.y
+    }
+    function itemBeat(b, budget) {
+      const B = CFG.beat;
+      const clipped = oneShot(b, 'item');
+      if (!RM) {
+        b.pivot.getWorldPosition(_rp);
+        burst(new TH.Vector3(_rp.x, b.root.position.y + b.floatY + b.h * 0.62, _rp.z),
+              0xcaf3d2, B.motes,
+              { speed: 0.85, up: 1.5, size: 0.20, ms: B.moteMs, gravity: -1.5,
+                spread: b.w * 0.34, opacity: 0.9, grow: 0.5 });
+        if (!clipped) tween(B.itemMs, (u) => procUse(b, u), () => { procUse(b, 1); b.pivot.position.y = 0; });
+      }
+      // the screen's own beat: long enough to read the gesture, never longer than
+      // the budget the turn was paced with
+      return Math.min(budget || B.itemMs, B.itemMs);
+    }
+
+    // ---- FLEEING LOOKS LIKE LEAVING -----------------------------------------
+    // Turn your back, run. The legs come from the rig's OWN walk (CLIP.walk) played
+    // fast, which is why this needed no new retarget and why a monster can do it too;
+    // a body with no walk clip scurries on procRun, which is the walk cycle's whole
+    // idea reduced to what reads at 200 px: a bounce and a forward pitch.
+    // THE TURN IS ON `bob`, NOT ON `root`. root.rotation.y IS the body's facing and
+    // every lunge, knockback and marker is derived from it — spin that and the arena
+    // forgets which way the fight points.
+    function turnAway(b, k) { b.bob.rotation.set(0, Math.PI * clamp(k, 0, 1), 0); }
+    function procRun(b, u) {
+      const t = u * 9.5;
+      b.pivot.position.y = Math.abs(Math.sin(t)) * 0.055;
+      b.bob.rotation.x = 0;
+    }
+    function awaySide(b) { return b.side === 'party' ? partySide() : foeSide(); }
+    function fleeBeat(b) {
+      const B = CFG.beat;
+      b.fleeing = true;
+      const away = awaySide(b);
+      const ran = loopClip(b, 'walk', B.fleeTs);
+      if (RM) { turnAway(b, 1); axisMove(b, away * B.fleeM); return B.fleeMs; }
+      dustAt(b.home.x, b.home.z, 1.3);
+      tween(B.fleeMs, (u) => {
+        turnAway(b, u / 0.28);
+        axisMove(b, away * B.fleeM * easeOut(u));
+        if (!ran) procRun(b, u);
+      }, () => { b.pivot.position.y = 0; });
+      return B.fleeMs;
+    }
+    // AND THE RESULT IS A DIFFERENT PICTURE. "Got away safely" is a body that keeps
+    // going and thins out into the haze; "Cornered — no escape!" is a body that has
+    // to come back and turn round, which is the only frame in this game that can say
+    // the escape failed.
+    function fleeSettle(b, ok) {
+      const B = CFG.beat, away = awaySide(b);
+      if (!b.fleeing) return;
+      if (ok) {
+        if (RM) { setOpacity(b, 0); return; }
+        tween(B.fleeAwayMs, (u) => {
+          axisMove(b, away * (B.fleeM + B.fleeAwayM * easeOut(u)));
+          setOpacity(b, 1 - u * u);
+        }, () => { b.fleeing = false; });
+        return;
+      }
+      tween(B.fleeBackMs, (u) => {
+        const e = easeInOut(u);
+        axisMove(b, away * B.fleeM * (1 - e));
+        turnAway(b, 1 - e);
+      }, () => {
+        b.pivot.position.set(0, 0, 0);
+        b.bob.rotation.set(0, 0, 0);
+        b.fleeing = false;
+        stopLoop(b);
+      });
+    }
+
+    // ---- THE VICTORY POSE THIS GAME DID NOT HAVE ----------------------------
+    // The clip is KayKit's Cheer (arms thrown out and up), and the HOP is added on
+    // top of it for every body, clip or no clip — the same composition rule
+    // procRecoil is written under. At the shipped camera a party member is ~190 px
+    // tall, so an arm gesture is ~40 px of movement and a 12 cm hop moves the whole
+    // silhouette: legibility at the distance the player actually sits.
+    // STAGGERED, because four bodies hopping on the same frame is a rockette line.
+    function cheerBeat(b, delay) {
+      const B = CFG.beat;
+      tween(Math.max(1, delay || 1), () => { }, () => {
+        if (dead || b.dead) return;
+        const clipped = oneShot(b, 'cheer');
+        if (RM) return;
+        tween(B.cheerMs, (u) => {
+          const h1 = Math.sin(Math.PI * clamp(u / 0.42, 0, 1)) * B.cheerHop;
+          const h2 = u > 0.5 ? Math.sin(Math.PI * clamp((u - 0.5) / 0.5, 0, 1)) * B.cheerHop * 0.55 : 0;
+          b.pivot.position.y = Math.max(h1, h2);
+          if (!clipped) b.bob.setRotationFromAxisAngle(leanAxis(b), -0.16 * Math.sin(u * Math.PI * 2));
+        }, () => { b.pivot.position.y = 0; if (!clipped) b.bob.rotation.set(0, 0, 0); });
+      });
     }
 
     // ===== PROJECTION =========================================================
@@ -2080,12 +2947,17 @@
       if (dead) return;
       raf = requestAnimationFrame(frame);
       resize();
-      const dt = Math.min(clock.getDelta(), 0.1);
-      const t = (now() - t0) / 1000;
+      // THE STAGE CLOCK FIRST, and everything below reads it. tickClock returns
+      // the time scale this frame is running at: 1 normally, CFG.act.hitStop.scale
+      // while a blow is being held. It also advances the skew that keeps every
+      // absolute-timestamp tween on the same frozen clock as the mixers.
+      const tscale = tickClock();
+      const dt = Math.min(clock.getDelta(), 0.1) * tscale;
+      const t = (vnow() - t0) / 1000;
 
       // camera: intro sweep, then the idle drift
       if (introFrom) {
-        const u = clamp((now() - t0) / CFG.intro.ms, 0, 1);
+        const u = clamp((vnow() - t0) / CFG.intro.ms, 0, 1);
         const e = easeOut(u);
         camera.position.set(lerp(introFrom.x, restPos.x, e), lerp(introFrom.y, restPos.y, e),
                             lerp(introFrom.z, restPos.z, e));
@@ -2112,10 +2984,10 @@
         // random() so it is smooth at 60 Hz and identical at 30 — a per-frame
         // random shake is a per-frame-rate shake.
         if (shakeAmp > 0) {
-          const su = clamp((now() - shakeT0) / shakeDur, 0, 1);
+          const su = clamp((vnow() - shakeT0) / shakeDur, 0, 1);
           if (su >= 1) shakeAmp = 0;
           else {
-            const a = shakeAmp * (1 - su) * (1 - su), ph = (now() - shakeT0) / 1000;
+            const a = shakeAmp * (1 - su) * (1 - su), ph = (vnow() - shakeT0) / 1000;
             camera.position.x += Math.sin(ph * 61) * a;
             camera.position.y += Math.sin(ph * 47 + 1.1) * a * 0.85;
             camera.position.z += Math.sin(ph * 53 + 2.3) * a * 0.5;
@@ -2192,6 +3064,11 @@
         return { x: v.x, y: v.y + b.floatY, z: v.z, h: b.h, w: b.w,
                  side: b.side, dead: b.dead, tier: b.tier };
       },
+      // WHAT THE FRAME SOLVE DECIDED, and what it was aiming at. The scalars are
+      // the four the search turned; `m` is the projected reading it settled on
+      // (foe silhouette, party silhouette, centre-to-centre separation, screen
+      // pair ratio, keep-out hits) against CFG.frame's targets. QA only.
+      staging() { return JSON.parse(JSON.stringify(FORM_K)); },
       setTarget(id) { targetId = id && bodies[id] && !bodies[id].dead ? id : null; },
       setActor(id) { actorId = id && bodies[id] && !bodies[id].dead ? id : null; },
       act, flinch,
@@ -2201,7 +3078,24 @@
         if (on && !b.dead) markDead(b, false);
         else if (!on && b.dead) revive(b);
       },
-      cheer() { for (const id of order) { const b = bodies[id]; if (b.side === 'party' && !b.dead) oneShot(b, 'cheer'); } },
+      cheer() {
+        let i = 0;
+        for (const id of order) {
+          const b = bodies[id];
+          if (b.side === 'party' && !b.dead) cheerBeat(b, (i++) * CFG.beat.cheerStagger);
+        }
+      },
+      // THE OTHER HALF OF A FLEE. act(id,'flee') is the ATTEMPT — the screen calls it
+      // on the announce, before the kernel's answer is read out — and this is the
+      // ANSWER: away into the haze, or back to the slot facing the enemy again. A
+      // caller that never calls it leaves the body standing where it ran to, which is
+      // still a better picture than the `return` this replaced, and a battle that
+      // ends on a successful escape tears the whole stage down anyway.
+      flee(id, ok) { const b = bodies[id]; if (b && !b.dead) fleeSettle(b, !!ok); },
+      // WHAT A BODY IS HOLDING, so a harness can assert the socket landed rather
+      // than infer it from the GLB list. null = an empty hand, which is a legitimate
+      // answer (no weapon equipped, or no art for the one that is).
+      weaponOf(id) { const b = bodies[id]; return (b && b.weapon) ? (b.weaponId || null) : null; },
       // ONE frame, rendered synchronously — the QA hook. preserveDrawingBuffer is
       // on, so a headless screenshot of a throttled tab still gets a live canvas.
       // THROUGH renderFrame(), NOT renderer.render(): a QA photograph of a

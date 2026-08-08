@@ -119,7 +119,10 @@ async function evalPage(cdp, expr, timeoutMs) {
 // ---- the page-side prelude, shared by every phase -------------------------
 // Starts a real battle through Battle.start and parks it on the command menu
 // (no key is ever sent), which is the state a player reads.
+const CFGPATCH = arg('cfg', null);
 const BOOT = (c, opts) => `
+  ${CFGPATCH ? `Object.assign(window.BattleStage3D.CFG.frame, ${CFGPATCH});` : ''}
+  ${CFGPATCH ? '' : ''}
   const GS = window.GS, B = window.Battle, R = window.Rules;
   const flags = {}; ${JSON.stringify(c.party)}.forEach(id => {
     if (id === 'maren') flags['maren-joined'] = true; if (id === 'lake') flags['lake-joined'] = true; });
@@ -192,6 +195,7 @@ const stagePhase = (c) => `(async () => {
   // THE 180 RULE: every party body left of every foe body (CFG.partySide = -1).
   const rule180 = Math.max(...pty.map(p => p.x)) < Math.min(...fos.map(f => f.x));
   return { ok: true, frame: { w: W, h: H }, rows, frames: st.frames, framesGained: st.frames - f0,
+    solve: st.staging ? st.staging() : null,
     m: {
       minFoeHpx: minFoeH, maxFoeHpx: maxFoeH, minFoeHpct: minFoeH / H * 100, maxFoeHpct: maxFoeH / H * 100,
       minPartyHpx: minPartyH, maxPartyHpx: maxPartyH, minPartyHpct: minPartyH / H * 100, maxPartyHpct: maxPartyH / H * 100,
@@ -224,7 +228,7 @@ const contactPhase = (c) => `(async () => {
   const ret = st.act(me, 'attack', tgt, budget);
   const contactMs = (typeof ret === 'number' && ret > 0) ? ret : window.Battle.pacing.wind;
   const samples = [];
-  let shot = null, atDamage = null;
+  let shot = null, impact = null, atDamage = null, hitAt = 0;
   const t1 = t0 + contactMs;
   while (performance.now() < t0 + 1600) {
     await new Promise(r => requestAnimationFrame(r));
@@ -234,9 +238,14 @@ const contactPhase = (c) => `(async () => {
       atDamage = d();                     // THE NUMBER THE BET IS JUDGED ON
       shot = st.snapshot();               // and the frame it was true in
       st.flinch(tgt);                     // exactly what the damage event does
+      hitAt = performance.now();
     }
+    // THE IMPACT FRAME IS 70 ms AFTER THE BLOW, NOT AT THE END OF THE WINDOW.
+    // Photographed at the end it is a settled arena with the attacker already
+    // walked home — a true picture of the wrong moment, which is worse than none.
+    if (atDamage != null && !impact && performance.now() >= hitAt + 70) impact = st.snapshot();
   }
-  const impact = st.snapshot();
+  if (!impact) impact = st.snapshot();
   const closest = Math.min(...samples.map(s => s[1]));
   return { ok: true, restM: rest, contactMs, atDamageM: atDamage, closestM: closest,
            samples, frames: st.frames, swing: shot, impact,
@@ -308,6 +317,18 @@ const clockPhase = (c) => `(async () => {
     return { ready: false };
   })()`, 90000);
   if (!ready.ready) { console.error('world never became ready'); kill(); process.exit(2); }
+  // THE MODULE IS LAZY. battle_turnbased injects battle_stage3d.js during the FIRST
+  // battle's entry fade, so a --cfg patch aimed at CFG.frame would have nothing to
+  // patch on case one and would silently measure the shipped defaults instead.
+  // Load it up front and prove it landed.
+  const warm = await evalPage(cdp, `(async () => {
+    if (!window.BattleStage3D) {
+      await new Promise((ok) => { const s = document.createElement('script');
+        s.src = 'js/battle_stage3d.js'; s.onload = ok; s.onerror = ok; document.head.appendChild(s); });
+    }
+    return !!window.BattleStage3D;
+  })()`, 60000);
+  if (!warm) { console.error('battle_stage3d.js never loaded'); kill(); process.exit(2); }
   console.log(`world ready (three r${ready.three})   tag=${TAG}`);
 
   const png = (uri, file) => { if (uri) writeFileSync(file, Buffer.from(uri.slice(uri.indexOf(',') + 1), 'base64')); };
@@ -334,6 +355,8 @@ const clockPhase = (c) => `(async () => {
         `  minPair ${m.minPairRatio.toFixed(2)}` +
         `  worldMin ${m.minWorldM.toFixed(2)}m` +
         `  180:${m.rule180 ? 'OK' : 'VIOLATED'}`);
+      if (r.solve) console.log(`        solve xP=${r.solve.xP} xF=${r.solve.xF} spread=${r.solve.spread} dzP=${r.solve.dzP} dzF=${r.solve.dzF} jog=${r.solve.jog}` +
+        (r.solve.m ? `  |  solved foeH min=${r.solve.m.minFoeH.toFixed(3)} mean=${r.solve.m.meanFoeH.toFixed(3)} partyH=${r.solve.m.maxPartyH.toFixed(3)} sep=${r.solve.m.sep.toFixed(3)} pair=${r.solve.m.pair.toFixed(2)} keepOut=${r.solve.m.ko}` : ''));
       if (!m.rule180) { console.log('    *** 180 RULE VIOLATED — a party body projects right of a foe'); bad++; }
       await evalPage(cdp, TEARDOWN); await sleep(400);
     }

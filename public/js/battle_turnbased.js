@@ -817,6 +817,11 @@
         stage = S3D.create({
           mount: root, zone: cfg.zone, backdrop: cfg.backdrop || cfg.zone,
           familyOf: cfg.familyOf,
+          // WHAT THE PARTY IS HOLDING. The stage owns pixels and geometry and never
+          // reads GS — that seam is the reason this is a callback and not a lookup
+          // inside the arena. The screen already knows the world; the arena only
+          // needs an item id per character.
+          weaponOf: cfg.weaponOf || null,
           party: (cfg.state.party || []).map(c => ({ id: c.id, ref: c.ref || c.id, dead: !!c.dead })),
           foes: (cfg.state.foes || []).map(c => ({ id: c.id, ref: c.ref, dead: !!c.dead })),
           onFrame: syncAnchors,
@@ -1195,13 +1200,19 @@
         t.classList.remove('hit'); void t.offsetWidth; t.classList.add('hit');
       }
     }
-    // The step forward. Decoration, and short: the actor leans into the strike
-    // and settles back before the damage number has finished rising.
-    function stepIn(id, kind) {
-      if (stage) { stage.act(id, kind); return; }          // a real lunge, with a real clip
-      const b = S.bodies[id]; if (!b) return;
+    // The step forward — and, in the arena, THE APPROACH. It returns the number of
+    // milliseconds until the blow lands, and the caller waits exactly that before
+    // firing the damage event. It used to wait a constant (pacing.wind) while the
+    // body travelled a fixed 1.35 m of a 5.21 m gap, so the flash and the number
+    // landed on a body four metres from the swing. The stage derives the travel
+    // from the target's own body and times the swing to the clip's own contact
+    // frame, so only the stage can say when — see battle_stage3d act().
+    function stepIn(id, kind, target) {
+      if (stage) return stage.act(id, kind, target, beat('approach') + beat('wind'));
+      const b = S.bodies[id]; if (!b) return null;
       b.el.classList.add('act');
       setTimeout(() => b.el.classList.remove('act'), 360 * (S.speed || 1));
+      return null;                                        // the DOM stage keeps the old beat
     }
 
     // --- the event feed (this is what makes `emit` awaited in the kernel) -----
@@ -1238,7 +1249,22 @@
             else if (ev.kind === 'item') await say(who + ' uses ' + esc(cfg.itemName(ev.item)) + '.', 'announce');
             else if (ev.kind === 'flee') await say(who + ' tries to flee…', 'announce');
             else await say(who + ' ' + esc(ev.kind) + 's.', 'announce');
-            if (ev.kind !== 'flee') { stepIn(ev.by, ev.kind); await wait(beat('wind')); }
+            // THE DAMAGE EVENT WAITS FOR THE BLOW, not for a constant. A stage
+            // that answers with a number owns the beat; anything else (the DOM
+            // stage, a stage that refuses the action) keeps the whole
+            // approach+wind budget, so the turn's wall clock is the same either way.
+            // FLEE IS A BEAT NOW (2026-08-08). It used to be the one action that
+            // moved no body at all — the stage's flee verb was `return` — so
+            // "tries to flee…" was a line of text over four people standing still.
+            // It gets the same call every other action gets; what it does NOT get is
+            // the wind wait, because the beat it is waiting for is the kernel's
+            // answer, which arrives on the very next event.
+            {
+              const c = stepIn(ev.by, ev.kind, ev.target);
+              if (ev.kind !== 'flee') {
+                await wait(typeof c === 'number' && c > 0 ? c : beat('approach') + beat('wind'));
+              }
+            }
             break;
           }
           case 'damage': {
@@ -1265,6 +1291,9 @@
                       (ev.side === 'foe' ? 'is defeated!' : 'falls!'), 'ko');
             break;
           case 'flee':
+            // the picture and the line land together: away into the haze, or back
+            // to the slot facing the enemy again
+            if (stage) { try { stage.flee(ev.by, ev.ok); } catch (e) { } }
             await say(ev.ok ? 'Got away safely!' : 'Cornered — no escape!', 'flee');
             break;
           case 'noop':
@@ -1711,7 +1740,17 @@
     // reload rather than an edit. speed:0 zeroes all of them, so every automated
     // caller and every suite keeps the instant path it had.
     pacing: {
-      announce: 560,   // "Duskpad A attacks!" — read BEFORE anything moves
+      // THE APPROACH IS PAID FOR OUT OF THE ANNOUNCE, and that is deliberate
+      // (2026-08-08, the contact pass). The attacker now WALKS to its target
+      // instead of leaning 1.35 m toward it, and travelling five metres takes
+      // time the turn did not have. announce 560 -> 300 and a new approach beat
+      // of 260 leaves announce + approach + wind at 860 ms, exactly what
+      // announce + wind was, so the turn's wall clock does not move — measured
+      // at 1965 ms/turn before and after by tools/battle_contact.mjs --only=clock.
+      // The message is still on screen for the whole approach; what shrank is the
+      // dead beat between reading it and anything happening.
+      announce: 300,   // "Duskpad A attacks!" — read BEFORE anything moves
+      approach: 260,   // the attacker crosses the ground to its target
       wind: 300,       // the body steps in and the clip starts
       damage: 640,     // the number lands and is read
       heal: 620,
@@ -1803,6 +1842,21 @@
             speed: speed, autoConfirm: !!opts.autoplay || speed === 0,
             familyOf: (mid) => (monstersMap[mid] && monstersMap[mid].family) || 'default',
             itemName: (id) => (itemsMap[id] && itemsMap[id].name) || id,
+            // THE EQUIPPED WEAPON, BY CHARACTER (2026-08-08). The kernel's
+            // partyMember() deliberately drops `equip` — it derives stats from it and
+            // then has no further use for it — and the kernel is untouchable, so the
+            // visual reads the slot from the SAME source the stats came from: GS's
+            // own party records, with an explicitly-passed member's `equip` honoured
+            // first so a harness can stage a weapon without a save.
+            weaponOf: (charRef) => {
+              try {
+                const m = (members || []).find(x => x && (x.id === charRef || x.ref === charRef));
+                if (m && m.equip && m.equip.weapon) return m.equip.weapon;
+                if (!gs || !gs.ok) return null;
+                const ch = gs.activeParty().find(x => x && x.id === charRef);
+                return (ch && ch.equip && ch.equip.weapon) || null;
+              } catch (e) { return null; }
+            },
             // THE TALLY READS THE SAME CURVE GS IS ABOUT TO WALK. Not a copy of
             // k, not a re-derivation — the same function, so a bar that fills to
             // the top is a level GS will actually grant. And the same share

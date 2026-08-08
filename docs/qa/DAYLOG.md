@@ -19038,3 +19038,123 @@ construction, so it is about the BAKE contract, not the canvas. That was the onl
 
 FOR THE BATTLE LANES: `battle_stage3d.js` already ships the identical capped expression and
 needs no change. Nothing in this lane touched it or `battle_world.js`.
+
+------------------------------------------------------------
+2026-08-08  BATTLE WAVE-1 LANE A — BET C (CONTACT) AND BET G (STAGING SOLVED
+AGAINST THE FRAME). Board with every before/after capture:
+**docs/qa/battle-contact/index.html**. Ruler: `node tools/battle_contact.mjs
+--port=3000 --tag=<before|after>` (real GPU, 1600x813, three r185, seed 4242,
+party [vesper, maren]) — new instrument, and it reproduced the audit's own 2v2
+figures (89-115 px, 581 px, 5.21 m) independently before a line was changed,
+which is what makes the after comparable.
+
+**BET C — THE ATTACKER NOW ARRIVES.** Attacker-to-target centre distance AT the
+damage event: **6.54 m -> 1.32 m** (the bet's bar was <= 1.40). Turn wall-clock,
+measured by wrapping the stage's own act()/flinch() through a whole autoplayed
+fight: mean **1965 -> 1966 ms**, median 1829 -> 1832, 7 actions 20.35 -> 20.43 s.
+Three derivations, none of them a constant:
+
+1. THE STRIKE STATION IS DERIVED FROM THE TARGET'S OWN BODY.
+   `travel = dist - ((w_att + w_tgt)/2 * 1.05 + 0.22)`, each `w` the body's own
+   Box3 out of its GLB (a duskpad measures 2.07 m across at 1.05 m tall; a party
+   rig 0.73). `act.lungeM` survives ONLY as what a body does with no target.
+   Clamped 0.80-1.32 m, which is what makes the receipt hold for a creature
+   nobody has authored yet.
+2. **THE CONTACT FRAME IS THE PEAK ANGULAR SPEED OF THE ARM, READ OUT OF THE CLIP.**
+   Nothing in this pipeline carried a contact marker — the donors are CC0 packs,
+   glTF has no event track, and the 37 % in CFG.act.fit's comment was measured BY
+   HAND on ONE clip and applied to every body in the game. `contactFrac()`
+   resamples the clip's rotation tracks on a 72-step lattice THROUGH THEIR OWN
+   INTERPOLANTS (the ones the mixer uses — so it reads the clip the player sees,
+   not the keys on disk), sums the angle between successive orientations over the
+   arm chain (/hand|wrist|forearm|weapon|palm|grip/, falling back to the whole
+   body for a quadruped), smooths with a 3-tap box and takes the argmax. The clip
+   is then time-scaled so that instant lands on the damage beat. No rotation
+   track at all -> the hand-measured 37 % as the documented fallback.
+3. THE TIME CAME OUT OF THE ANNOUNCE, NOT OUT OF THE PLAYER'S PATIENCE.
+   `Battle.pacing.announce` 560 -> 300 plus a new `approach: 260`, so
+   announce+approach+wind = 860 ms, exactly what announce+wind was.
+   `stage.act(id, kind, targetId, budgetMs)` now RETURNS the millisecond the blow
+   lands and battle_turnbased waits for THAT instead of a constant; a stage that
+   answers nothing (the DOM fallback) keeps the whole budget, so the wall clock
+   is identical on either path. That return value is the whole seam change.
+
+HIT-STOP (90 ms, 150 on a KO) rides ONE VIRTUAL STAGE CLOCK — mixers, tweens,
+camera shake, flash decay and drift all read `vnow()`. A stop that freezes the
+mixer and lets the tweens run is a stutter, not a hit. **AND IT KEEPS THE
+ABSOLUTE-TIMESTAMP PROPERTY THE TWEENS WERE BUILT ON**: the skew only advances
+from inside a rendered frame, by a delta clamped to 100 ms, and only while a stop
+is live — so a hidden tab (no rAF) advances it by nothing, wakes to find the stop
+expired and every tween finished, which is the only correct answer.
+
+**BET G — STAGING SOLVED AGAINST THE FRAME.** CFG.form keeps the SHAPE (the
+chevron, the alternating jog, the depth stagger, the mirror); five scalars are now
+searched against the REST CAMERA's own projection before a body is built —
+deterministic coordinate descent from six fixed starts, once, synchronously,
+nothing moves afterwards. Measured, 1600x813 (foe silhouette / party-foe centre to
+centre / empty centre / min screen pair, before -> after):
+
+  2v1  101 px 12.4% -> 125 px 15.4%   38.1% -> 23.9%   29.4% -> 13.6%   1.90 -> 1.75
+  2v2  89-114 -> 108-165 px           36.3% -> 23.5%   26.7% -> 10.9%   0.65 -> 1.88
+  2v3  82-125 -> 82-114 px            33.6% -> 23.2%   24.9% -> 14.4%   0.47 -> 1.50
+
+THREE LESSONS, each paid for by a measurement and each the same shape:
+
+- **A WEIGHT SET IS A RANKING, AND MINE RANKED THE DEFECT LAST.** First pass, the
+  UI keep-out term was worth SEVENTEEN TIMES the entire foe-size deficit, so the
+  search bought a clean frame edge with exactly the thing the audit complains
+  about. Foe silhouette now carries the heaviest weight — and it is scored on the
+  MEAN foe first, the minimum second, because a chevron's far slot is small by
+  construction and pricing the minimum as hard as the mean just collapses the
+  depth spread, which shows up immediately as screen overlap.
+- **A SOLVER CANNOT BUY WHAT ITS PARAMETERS DO NOT SELL.** The knobs moved the foe
+  line and set its depth; NOTHING opened it sideways, and at this camera sideways
+  is the only thing that pulls two neighbours apart on screen. Three duskpads
+  measured 0.82 on the pair ratio at every setting the search could reach, from
+  all six starts — which reads exactly like a hard geometric limit and was not
+  one. Adding a `jog` scalar took 2v3 from 0.47 to 1.50.
+- **EVERY KEEP-OUT RECTANGLE LIVES INSIDE 0..1, SO A BODY OFF THE FRAME MISSES
+  THEM ALL.** Containment was never scored: the search fanned three duskpads until
+  one stood at screen x 1950 of a 1600 px frame — off the right edge entirely,
+  green on every target, wrong in the picture, and only found BY LOOKING. Same
+  class one step later: a name tag tested as a POINT missed the turn-order window
+  by four thousandths of a frame while its ~90 px tag was still half behind it.
+  Both are now hard/`tagW`-aware. Cousin of the walk_engine_gate lesson: a gate
+  that only measures the thing it was pointed at cannot see what it stepped over.
+- And the instrument bit too: `battle_contact` photographed its "impact" at the END
+  of its sample window, by which time the attacker has walked home. A TRUE PICTURE
+  OF THE WRONG MOMENT IS WORSE THAN NO PICTURE. It shoots 70 ms after flinch now;
+  the mislabelled frame was deleted, not kept.
+
+RESIDUAL, NAMED: **2v3's foes get no bigger and this is a camera problem, not a
+staging one.** Three duskpads are 2.07 m long each; at a readable silhouette they
+want ~295 px of frame apiece and the foes' half of a 1600 px frame is ~800. The
+solve trades correctly — it spends the difference on depth, on the centre gap and
+on ending the overlap. A forced probe that DOES make them big (101-159 px, pair
+1.17) crops the near one at the right edge. That is bet B's to solve.
+
+GATES: battle_sim ALL ENVELOPES GREEN + 6 property tests; encounter_sim GREEN;
+economy_test 228/0; arena_playtest GREEN (contexts, teardown, heap drift 1.9 MB);
+transition_test --port=3000 **162 ok / 6 failed** — see the attribution below.
+Console gate clean in every run. battle_rules.js untouched.
+
+**THE geo+1/tex+1 AFTER-BATTLE LEAK IS NOT THIS WAVE'S, AND HERE IS THE CONTROL
+THAT SAYS SO.** The DPR lane's control served a PRISTINE HEAD `play3d.html` beside
+identical assets and got the same 6 — which clears play3d.html and NOTHING ELSE,
+because both of its arms carried the same working-tree battle modules. So this
+lane ran the missing arm: a symlink tree of the live `public/` with ONLY
+`js/battle_stage3d.js` and `js/battle_turnbased.js` replaced by their **a7cc3891**
+(pre-wave) versions, served on its own port. Result: **162 ok / 6 failed, the same
+four doors (16-19), the same repeat-count drift of 4, the same `after battle`
+assertion, and byte-identical `{geo:1, tex:1, meshes:0, mats:0}` deltas.** The leak
+therefore predates every battle-module edit in flight tonight — mine and lane
+BAT-CAST's. **A CONTROL THAT VARIES ONE FILE CLEARS ONE FILE**; the DPR arm and
+this arm together clear play3d.html and both battle modules, which means the leak
+lives in something neither varied and is committed rather than in-flight. Filed as
+a standing red for the coordinator, not fixed here.
+
+NOTE FOR THE COORDINATOR: `public/js/battle_stage3d.js` is a SHARED FILE this
+window — the sibling cast/weapon-socket lane has in-flight edits in it (the weapon
+socket, the `walk`/flee clip, cheer/item). The index was empty and the tree dirty,
+so the commit below carries their working-tree state in that file as well as mine;
+everything above was gated with both in place.

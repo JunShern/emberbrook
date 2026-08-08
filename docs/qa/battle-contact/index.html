@@ -1,0 +1,196 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Battle — CONTACT and STAGING (wave 1, bets C and G)</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #14161c; color: #dfe3ec;
+         font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  main { max-width: 1360px; margin: 0 auto; padding: 34px 26px 90px; }
+  h1 { font-size: 27px; margin: 0 0 6px; letter-spacing: .01em; }
+  h2 { font-size: 19px; margin: 46px 0 6px; border-bottom: 1px solid #2c313d; padding-bottom: 7px; }
+  h3 { font-size: 15px; margin: 26px 0 6px; color: #ffd39a; letter-spacing: .04em; text-transform: uppercase; }
+  p, li { max-width: 74ch; }
+  .sub { color: #8e96a8; margin: 0 0 26px; }
+  code, .m { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  table { border-collapse: collapse; margin: 12px 0 8px; font-size: 13.5px; }
+  th, td { border: 1px solid #303643; padding: 5px 11px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  th { background: #1c202a; color: #a9b2c4; font-weight: 600; }
+  td.b { color: #ff9d8a; } td.a { color: #8ee6a8; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 10px 0 4px; }
+  .pair figure { margin: 0; }
+  .pair img { width: 100%; display: block; border: 1px solid #2c313d; border-radius: 3px; }
+  figcaption { color: #8e96a8; font-size: 12.5px; margin-top: 5px; }
+  .tag { display: inline-block; font: 11px/1 ui-monospace, monospace; letter-spacing: .1em;
+         padding: 4px 7px; border-radius: 3px; margin-right: 6px; vertical-align: 2px; }
+  .tb { background: #4a2320; color: #ffb3a3; } .ta { background: #1e3f2a; color: #93e5ac; }
+  blockquote { border-left: 3px solid #3c4454; margin: 14px 0; padding: 2px 0 2px 14px; color: #b9c1d1; }
+  .note { background: #1a1e27; border: 1px solid #2c313d; border-radius: 4px; padding: 12px 15px; margin: 16px 0; }
+</style>
+<main>
+
+<h1>Battle wave 1 — CONTACT (bet C) and STAGING SOLVED AGAINST THE FRAME (bet G)</h1>
+<p class="sub">2026-08-08 · every number below was read out of the running game by
+<code>node tools/battle_contact.mjs --port=3000 --tag=&lt;before|after&gt;</code> at 1600&times;813, real GPU,
+three r185, seed 4242, party [vesper, maren]. The brief and the evidence they answer:
+<a href="../../plans/battle-presentation-inventory.md">docs/plans/battle-presentation-inventory.md</a>
+&sect;5 and &sect;2, board at <a href="../battle-audit/index.html">docs/qa/battle-audit/</a>.</p>
+
+<h2>1. THE ATTACKER NOW ARRIVES</h2>
+<blockquote>&ldquo;<code>act.lungeM</code> is 1.35 m against a minimum slot gap of 5.21 m &mdash; the attacker
+covers 25.9 % of the distance, so flash, sparks and shock-ring fire on a body 4 m from the
+swing.&rdquo; (audit &sect;5)</blockquote>
+
+<table>
+  <tr><th>measurement</th><th>before</th><th>after</th></tr>
+  <tr><td>attacker&ndash;target centre distance AT the damage event</td><td class="b">6.54 m</td><td class="a">1.32 m</td></tr>
+  <tr><td>the bet&rsquo;s bar</td><td colspan="2" style="text-align:center">&le; 1.40 m &mdash; <b>PASS</b></td></tr>
+  <tr><td>damage fires at (ms after the body starts moving)</td><td class="b">300 (a constant)</td><td class="a">560 (the clip&rsquo;s own contact frame)</td></tr>
+  <tr><td>turn wall-clock, mean over a whole autoplayed fight</td><td>1965 ms</td><td>1966 ms (+0.05 %)</td></tr>
+  <tr><td>turn wall-clock, median</td><td>1829 ms</td><td>1832 ms (+0.16 %)</td></tr>
+  <tr><td>whole fight, 7 actions</td><td>20.35 s</td><td>20.43 s (+0.4 %)</td></tr>
+</table>
+
+<div class="pair">
+  <figure><img src="before-contact-swing.png" alt=""><figcaption><span class="tag tb">BEFORE</span>the swing. 6.54 m of grass between the blow and the wolf.</figcaption></figure>
+  <figure><img src="after-contact-swing.png" alt=""><figcaption><span class="tag ta">AFTER</span>the swing. She is standing over it, 1.32 m centre to centre.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="../battle-audit/seq-3-impact.png" alt=""><figcaption><span class="tag tb">BEFORE</span>the impact frame, from the audit&rsquo;s own sequence
+    (<code>docs/qa/battle-audit/seq-3-impact.png</code>) &mdash; flash, sparks and shock ring, on a body nobody touched.</figcaption></figure>
+  <figure><img src="after-contact-impact.png" alt=""><figcaption><span class="tag ta">AFTER</span>70 ms after the blow, inside the 90 ms hit-stop: she is standing on it, staff through, the wolf hot white.</figcaption></figure>
+</div>
+<p class="sub" style="margin-top:0">The before column here is the audit&rsquo;s capture rather than this
+instrument&rsquo;s, and that is a correction on the record: the first version of
+<code>battle_contact.mjs</code> photographed its &ldquo;impact&rdquo; at the END of its sample
+window, by which time the attacker has walked home. A true picture of the wrong moment is worse
+than no picture. It now shoots 70 ms after the <code>flinch</code> call, and the mislabelled
+before-frame was deleted rather than kept.</p>
+
+<h3>How the strike station is derived</h3>
+<p>Never a metre value. The attacker walks to
+<code>target &minus; n&#770; &middot; standoff</code>, where <code>standoff = (w<sub>attacker</sub> + w<sub>target</sub>) / 2 &times; 1.05 + 0.22</code>
+and each <code>w</code> is the body&rsquo;s own <code>Box3</code> width as the loader measured it out of its GLB
+(a duskpad is 2.07 m across at 1.05 m tall; a party rig is 0.73 m). Clamped to
+0.80&ndash;1.32 m, which is what makes the receipt above hold for a creature nobody has authored
+yet. The travel is therefore correct at any slot geometry &mdash; including the ones bet G moves
+them to on the next section of this page.</p>
+
+<h3>How the contact frame is derived</h3>
+<p>Nothing in the pipeline carried one. The donor clips are CC0 packs retargeted by
+<code>tools/vesper_retarget.py</code>, glTF has no event track, and the 37 % in
+<code>CFG.act.fit</code>&rsquo;s comment was measured by hand on <em>one</em> clip and applied to every
+body in the game. So <code>contactFrac()</code> derives it: the clip&rsquo;s own rotation tracks are
+resampled on a 72-step lattice <em>through their own interpolants</em> (the same ones the mixer
+uses &mdash; this reads the clip the player sees, not the keys on disk), the angle between
+successive orientations is summed over the arm chain
+(<code>/hand|wrist|forearm|weapon|palm|grip/</code>, falling back to the whole body for a
+quadruped), smoothed with a 3-tap box, and the argmax taken: <b>a swing&rsquo;s contact is where
+the arm is moving fastest.</b> The clip is then time-scaled so that instant lands on the
+turn&rsquo;s damage beat. A clip with no rotation track at all falls back to the hand-measured 37 %.</p>
+
+<h3>Where the time came from</h3>
+<p>Out of the announce beat, not added to the turn.
+<code>Battle.pacing.announce</code> 560 &rarr; 300 and a new <code>approach: 260</code>, leaving
+<code>announce + approach + wind = 860 ms</code> &mdash; exactly what <code>announce + wind</code> was.
+<code>stage.act()</code> now RETURNS the millisecond the blow lands and the screen waits for that
+number instead of a constant; a stage that answers nothing (the DOM fallback) keeps the whole
+budget, so the wall clock is the same on either path. Measured, not asserted: the table above
+times a real autoplayed fight by wrapping the stage&rsquo;s own <code>act()</code>/<code>flinch()</code>.</p>
+
+<h3>Hit-stop</h3>
+<p>90 ms at contact, 150 ms on a KO. Everything on the stage &mdash; mixers, tweens, camera
+shake, the flash decay, the idle drift &mdash; runs off one virtual clock, so the stop freezes
+all of them on the same frame; a stop that freezes only the mixer is a stutter. It keeps the
+absolute-timestamp property the tweens were built on: the skew only advances from inside a
+rendered frame, by a delta clamped to 100 ms, and only while a stop is live &mdash; so a hidden
+tab (where rAF does not run) advances it by nothing, wakes to find the stop expired, and finds
+every tween finished, which is the only correct answer.</p>
+
+<h2>2. THE STAGING IS SOLVED AGAINST THE FRAME</h2>
+<blockquote>&ldquo;36 % of frame width between nearest party body and nearest foe; foes render
+89&ndash;115 px tall against party 186&ndash;225 px in an 813 px frame.&rdquo; (audit &sect;2)</blockquote>
+
+<p>The six constants in <code>CFG.form</code> are the <b>shape</b> &mdash; who stands beside whom, and how
+the chevron and the alternating jog keep two bodies off one screen ray. They are good and they
+are kept. What they never knew is where the camera is. So the form is now solved: five scalars
+(how far out each line stands, how far its members fan sideways, how far apart in depth, and how
+deep each line sits) are searched by deterministic coordinate descent from six fixed starts,
+scoring every candidate by <em>projecting it onto the rest camera</em> before a body is built. It
+runs once, synchronously, at battle start; nothing moves afterwards.</p>
+
+<table>
+  <tr><th>1600&times;813</th><th>foe silhouette</th><th>party&ndash;foe, centre to centre</th><th>empty centre</th><th>min screen pair</th><th>180 rule</th></tr>
+  <tr><td>2v1 before</td><td class="b">101 px (12.4 %)</td><td class="b">610 px (38.1 %)</td><td class="b">29.4 %</td><td>1.90</td><td>OK</td></tr>
+  <tr><td>2v1 after</td><td class="a">125 px (15.4 %)</td><td class="a">382 px (23.9 %)</td><td class="a">13.6 %</td><td>1.75</td><td>OK</td></tr>
+  <tr><td>2v2 before</td><td class="b">89&ndash;114 px (10.9&ndash;14.1 %)</td><td class="b">580 px (36.3 %)</td><td class="b">26.7 %</td><td class="b">0.65</td><td>OK</td></tr>
+  <tr><td>2v2 after</td><td class="a">108&ndash;165 px (13.2&ndash;20.3 %)</td><td class="a">377 px (23.5 %)</td><td class="a">10.9 %</td><td class="a">1.88</td><td>OK</td></tr>
+  <tr><td>2v3 before</td><td class="b">82&ndash;125 px (10.1&ndash;15.3 %)</td><td class="b">538 px (33.6 %)</td><td class="b">24.9 %</td><td class="b">0.47</td><td>OK</td></tr>
+  <tr><td>2v3 after</td><td>82&ndash;114 px (10.1&ndash;14.0 %)</td><td class="a">371 px (23.2 %)</td><td class="a">14.4 %</td><td class="a">1.50</td><td>OK</td></tr>
+</table>
+<p class="sub" style="margin-top:2px">min screen pair = the closest two bodies on screen, in units of their summed
+half-widths: 1.0 is two bounding boxes exactly touching, below 1.0 is an overlap. The shipped
+build put two duskpads at 0.47 &mdash; two monsters inside each other.</p>
+
+<div class="pair">
+  <figure><img src="before-stage-2v1.png" alt=""><figcaption><span class="tag tb">BEFORE</span>2v1</figcaption></figure>
+  <figure><img src="after-stage-2v1.png" alt=""><figcaption><span class="tag ta">AFTER</span>2v1</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="before-stage-2v2.png" alt=""><figcaption><span class="tag tb">BEFORE</span>2v2</figcaption></figure>
+  <figure><img src="after-stage-2v2.png" alt=""><figcaption><span class="tag ta">AFTER</span>2v2</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="before-stage-2v3.png" alt=""><figcaption><span class="tag tb">BEFORE</span>2v3 &mdash; and the &ldquo;Duskpad C&rdquo; tag half behind the turn-order window, audit &sect;2&rsquo;s last bullet.</figcaption></figure>
+  <figure><img src="after-stage-2v3.png" alt=""><figcaption><span class="tag ta">AFTER</span>2v3</figcaption></figure>
+</div>
+
+<h3>Three things the solve had to be taught, each by a measurement</h3>
+<ol>
+<li><b>The weights were a ranking, and the first one was wrong.</b> At the first pass the
+UI keep-out term was worth seventeen times the entire foe-size deficit, so the search bought a
+clean frame edge with exactly the thing the audit is complaining about. Foe silhouette now
+carries the heaviest weight, and it is scored on the MEAN foe first and the minimum second &mdash;
+a chevron&rsquo;s far slot is small by construction, and pricing the minimum as hard as the mean
+just collapses the depth spread, which shows up immediately as screen overlap.</li>
+<li><b>It had no way to fan a line out.</b> The knobs moved the foe line and set its depth;
+nothing opened it sideways, and at this camera sideways is the only thing that pulls two
+neighbours apart on screen. Three duskpads measured 0.82 on the pair ratio at every setting the
+search could reach. A <code>jog</code> scalar (the alternating jog, the chevron and the two-rank
+offset) took 2v3 from 0.47 to 1.50.</li>
+<li><b>Nothing checked that a body was in the frame.</b> Every keep-out rectangle lives inside
+0..1, so a foe at screen x 1950 of a 1600 px frame reported a clean miss on all of them. The
+search fanned three duskpads until one stood off the right edge entirely &mdash; green on every
+target, wrong in the picture. Containment is now a hard refusal. Same class one step later: the
+name tag was tested as a POINT, and a duskpad&rsquo;s anchor missed the turn-order window by four
+thousandths of a frame while its ~90 px tag was still half behind it. The tag has width now.</li>
+</ol>
+
+<h3>The residual, named</h3>
+<div class="note">
+<p><b>2v3 gets no bigger.</b> Three duskpads are 2.07 m long each; at a silhouette the player
+can read they want ~295 px of frame apiece, and the foes&rsquo; half of a 1600 px frame is ~800.
+Big AND separated AND in frame is arithmetically impossible at three foes with this camera
+fixed, and the solve trades correctly: it spends the difference on depth and on the centre gap
+(24.9 % &rarr; 14.4 %) and on ending the overlap (0.47 &rarr; 1.50), and leaves the silhouette
+where it was. A forced probe that does make them big
+(<code>--cfg='{"force":{"xF":0.5,"spread":0.85,"dzF":2.8,"jog":1.6}}'</code>, 101&ndash;159 px,
+pair 1.17) puts the near duskpad&rsquo;s centre at screen x 0.969 with half its body off the right
+edge &mdash; a cropped monster, refused. <b>This one is a camera problem, not a staging problem</b>,
+and it is bet B&rsquo;s to solve, not this lane&rsquo;s.</p>
+</div>
+
+<h2>3. GATES</h2>
+<table>
+  <tr><th>gate</th><th>result</th></tr>
+  <tr><td><code>node tools/battle_sim.mjs</code></td><td class="a">ALL ENVELOPES GREEN &middot; 6 engine property tests</td></tr>
+  <tr><td><code>node tools/encounter_sim.mjs</code></td><td class="a">ENCOUNTER INTEGRATION GREEN</td></tr>
+  <tr><td><code>node tools/economy_test.mjs</code></td><td class="a">228 passed, 0 failed</td></tr>
+  <tr><td><code>node tools/arena_playtest.mjs --port=3000</code></td><td class="a">ARENA PLAYTEST GREEN &mdash; contexts, teardown, heap flat when warm (drift 1.9 MB)</td></tr>
+  <tr><td><code>node tools/transition_test.mjs --port=3000</code></td><td>162 ok / <b>6 failed</b> &mdash; and the same 162/6 with <b>both battle modules pinned to <code>a7cc3891</code></b> (pre-wave) in an otherwise identical symlink tree: same four doors, same repeat-count drift, byte-identical <code>{geo:1, tex:1}</code> deltas. The leak predates this wave. Console gate clean; UILOCK held; battle-in-town green.</td></tr>
+</table>
+<p>The kernel was not touched. <code>battle_rules.js</code> is byte-identical; nothing here computes
+a number, changes turn order or touches damage. The seam grew exactly two things: two optional
+arguments on <code>stage.act()</code> and a return value.</p>
+
+</main>
