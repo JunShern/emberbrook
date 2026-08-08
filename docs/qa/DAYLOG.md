@@ -19614,3 +19614,69 @@ then poll the remote ref with BOUNDED waits.
 INSTRUMENT NOTE (**third sighting**, now unambiguous): the push again produced **TWO Pages
 builds on the same commit** — `errored` at 05:40:40 and `built` at 05:40:41, both on
 b9d7a30. Read the build LIST, never the newest row; the stamp poll is the honest gate.
+
+2026-08-08  RT-TEARDOWN LEAK lane — **THE RESOURCE IS `contactShadow`, A PAGE
+SINGLETON THAT UPLOADS ON THE FIRST REAL-TIME FRAME AND WAS NEVER GIVEN BACK.**
+b4ee7c48's three-arm experiment had already cleared the battle stage and the DPR
+change and pointed at the RT scene's teardown. It is not something ow-valley
+BUILDS: it is something ow-valley is the first to DRAW.
+
+`contactShadow` (R11, 94b5ef61, 2026-08-04) is built at page load — a
+`PlaneGeometry(1,1)` and a `MeshBasicMaterial` whose map is the 64x64 `contactTex`
+canvas — parented to `ch` and left `visible=false`. Only the real-time branch turns
+it on. three.js registers a geometry and uploads a texture when it is first DRAWN,
+so both join `renderer.info` on the first ow-valley frame and stay there for the
+life of the page, above every (scene, shot) baseline taken before that leg. That is
+the whole of `{geo:+1, tex:+1, meshes:0, mats:0}` — exactly +1, once, never +2,
+because a page singleton is uploaded exactly once.
+
+MEASURED, with the only honest oracle three.js gives — dispose it and watch the
+counter, since a resource that was never uploaded drops nothing:
+
+    del-cine|gate, before any real-time frame     geo 2073  tex 39
+      dispose contactShadow.geometry / .map       geo 2073  tex 39    drop 0 / 0
+    after ONE ow-valley round trip, same shot     geo 2074  tex 40    delta +1 / +1
+      dispose contactShadow.geometry / .map       geo 2073  tex 39    drop 1 / 1
+
+Line 2 is the diagnosis and line 3 is the proof it is the WHOLE delta: disposing
+those two objects and nothing else returns the count to the byte it left.
+
+WHY THOSE SIX ASSERTIONS AND NOT OTHERS. Doors 16-19 are precisely the FIRST
+revisits of the three states baselined BEFORE door 4, the run's first ow-valley leg
+(del-inn-int|-, del-cine|shelf-west, del-item-int|-). Everything baselined at doors
+5-15 already carried the upload and matched; the "after battle" check re-reads
+del-cine|shelf-west and inherited the same standing offset, and the whole-run
+"every repeated (scene, shot) has identical counts" reported `drifted 4` for the
+same four states. Six assertions, one resource.
+
+FIX: two lines in `sceneDispose()`, beside the `visible=false` already there.
+Disposed rather than kept, and it costs nothing — the JS objects are untouched (the
+attributes, the canvas behind `contactTex`), so the next frame that draws them
+re-uploads 4 vertices and a 64x64 canvas from the same source.
+
+    node tools/transition_test.mjs --port=3000
+      BEFORE  162 ok / 6 failed      AFTER  168 ok / 0 failed
+      the memory table is now flat: all 12 repeat visits across 12 states identical.
+      node tools/slice_test.mjs 776/0.
+
+SAME PATTERN, MEASURED, LATENT NOT LIVE: `occRing`/`occDia` (the occlusion
+indicator on `ch`) upload the first time they are shown and were disposed by
+nothing either — a census after a second round trip that did show them read +2 geo
+while the gate's own itinerary never triggered them. Disposed in the same breath so
+the gate cannot go red nondeterministically later. `DEPTHQ` is the same SHAPE and is
+deliberately LEFT ALONE: it uploads in the first plate scene, so it is inside every
+baseline this gate takes — it would only bite a run that booted in a real-time
+scene. The battle stage is invisible to this gate by construction: it owns its own
+`WebGLRenderer`, so nothing it allocates ever reaches `R.info` (which is also why
+arm C came back byte-identical).
+
+THE GENERAL RULE, and it is the one this cost a day: **A PAGE-SCOPE SINGLETON THAT
+IS ONLY DRAWN IN SOME SCENES IS SCENE-SCOPED ON THE GPU.** "Built once, never
+disposed" is safe only for an object every baseline has already drawn.
+
+FOOTNOTE, not mine and not new: one of the two verification runs aborted with
+`HARNESS ERROR: ReferenceError: SIM is not defined` at the deep-link re-evaluate,
+immediately after the harness's own readiness check returned true — the same
+intermittent already filed in docs/qa/ow-refs/LOOP.md as provenance-unknown. The
+re-run passed that section. It is a race between `Page.reload` committing and the
+next `Runtime.evaluate`, not a game defect.

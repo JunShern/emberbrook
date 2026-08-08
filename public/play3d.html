@@ -3857,8 +3857,33 @@ function sceneDispose(){
   try{ delete window.__cine; }catch(e){ window.__cine=undefined; }
   window.__sgCam=undefined;
   collide.length=0; walkRef.length=0; allMeshes.length=0; occSet=null;
+  // THE PAGE-SCOPE PASSENGERS ON `ch` UPLOAD LATE AND WERE NEVER GIVEN BACK
+  // (2026-08-08). transition_test read 162 ok / 6 failed, and all six were one
+  // resource: doors 16-19 and the after-battle check each reported
+  // {geo:+1, tex:+1, meshes:0, mats:0} at every (scene,shot) whose baseline was
+  // taken BEFORE the run's first ow-valley leg — exactly +1, once, never +2.
+  // THE RESOURCE IS contactShadow. It is built at page load but sits
+  // `visible=false` until the real-time branch turns it on, and three.js
+  // registers a geometry and uploads a texture when it is first DRAWN — so its
+  // PlaneGeometry and its 64x64 canvas map (contactTex) join renderer.info on the
+  // first ow-valley frame and stay there for the life of the page, above every
+  // town baseline taken before it. Measured with the only honest oracle, dispose
+  // it and watch the counter: in del-cine before any real-time frame it drops
+  // 0/0; after ONE ow-valley round trip the town is +1/+1 and disposing these two
+  // drops 1/1, taking renderer.info back to exactly its pre-trip 2073/39. The
+  // whole delta is these two objects and nothing else.
+  // occRing/occDia are the same pattern, LATENT rather than live: they upload the
+  // first time the occlusion indicator is shown, which this gate's itinerary did
+  // not happen to do (measured +2 geo on a later round trip that did).
+  // DISPOSED, NOT KEPT, and it costs nothing: the JS objects are untouched — the
+  // attributes and the canvas behind contactTex still exist — so the next frame
+  // that draws them re-uploads 4 vertices and a 64x64 canvas from the same source.
+  // (DEPTHQ is the same shape and is deliberately left alone: it uploads in the
+  // FIRST plate scene, so it is already inside every baseline this gate takes.)
   occRing.visible=occDia.visible=false;
+  occRing.geometry.dispose(); occDia.geometry.dispose();
   contactShadow.visible=false;      // re-armed by the RT branch of the next scene
+  contactShadow.geometry.dispose(); contactShadow.material.map.dispose();
   NET=null; CURF=null; cam=undefined;
   METASPAWN=null; METAYAW=null; BUNDLE_TS='';
   // the cut/correction counters are per-town by construction (they measure the
