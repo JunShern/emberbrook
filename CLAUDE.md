@@ -194,6 +194,21 @@ git runs here, on branch `migration/3d-hybrid`.
   conversion, applied once at the light object so the ratified numbers still read as
   themselves. Colour management also means a hand `convertSRGBToLinear` is now a DOUBLE
   conversion: two were deleted, look for a third before adding one.
+- **A PAGE-SCOPE SINGLETON THAT IS ONLY DRAWN IN SOME SCENES IS SCENE-SCOPED ON THE GPU**
+  (2026-08-08). `contactShadow` is built once at load and parented to `ch`, but only the
+  real-time branch ever turns it on — and three.js registers a geometry and uploads a texture
+  when it is first DRAWN, so both joined `renderer.info` on the first ow-valley frame, above
+  every `(scene, shot)` baseline taken before that leg, and stayed for the life of the page.
+  THAT is the whole of transition_test's long-standing 162/6: doors 16-19 are exactly the first
+  REVISITS of the three states baselined before the run's first ow-valley leg, every delta a
+  byte-identical `{geo:1, tex:1}`. Disposing it in `sceneDispose()` (the JS objects stay; the
+  next RT frame re-uploads 4 verts and a 64x64 canvas) takes the gate to **168/0**. `occRing`/
+  `occDia` are the same pattern, measured LATENT — fixed so the gate cannot go red
+  nondeterministically. `DEPTHQ` is the same shape and DELIBERATELY LEFT: it uploads in the
+  first plate scene, so it is inside every baseline — it would only bite a run that booted in a
+  real-time scene. "Built once, never disposed" is safe ONLY for an object every baseline has
+  already drawn. (The battle stage is invisible to this gate by construction — it builds its own
+  WebGLRenderer, so nothing it allocates reaches `R.info`.)
 - **THE PAGE RENDERS AT THE DEVICE PIXEL RATIO, CAPPED AT 2** (2026-08-08). It never did before,
   so a retina display showed 2x2 device-pixel blocks on every contrasty silhouette — the user's
   standing "pixelated seam". THE FACT THAT DECIDED IT: every plate is 2688x1536, EXACTLY twice
