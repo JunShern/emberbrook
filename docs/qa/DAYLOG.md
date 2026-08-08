@@ -19158,3 +19158,34 @@ window — the sibling cast/weapon-socket lane has in-flight edits in it (the we
 socket, the `walk`/flee clip, cheer/item). The index was empty and the tree dirty,
 so the commit below carries their working-tree state in that file as well as mine;
 everything above was gated with both in place.
+
+2026-08-08  ADDENDUM, same lane — **THE geo+1/tex+1 "AFTER-BATTLE LEAK" IS NOT A
+BATTLE LEAK, AND IT IS NOT PER-BATTLE.** Three controls, each a symlink tree of
+the live `public/` with ONE thing swapped, each served on its own port:
+
+  A (DPR lane)  pristine HEAD play3d.html          -> 162 ok / 6 failed, same numbers
+  B (this lane) both battle modules at a7ccdd3891  -> 162 ok / 6 failed, same numbers
+  C (this lane) Battle.stage3d = false (DOM stage, NO WebGL arena is ever built)
+                                                   -> 162 ok / 6 failed, same numbers
+
+Arm C is the one that settles it: **with no 3D arena, no second WebGL context and
+no `BattleStage3D.create()` call at all, the same six fail with byte-identical
+`{geo:1, tex:1, meshes:0, mats:0}` deltas.** The battle stage's teardown cannot be
+the cause of a leak that reproduces when the battle stage is never built.
+
+AND THE ORDERING SAYS WHAT IT ACTUALLY IS. In the run, the battle section is
+`== BATTLE MID-TOWN` at line 217; **doors 16-19 fail at lines 119-137, before a
+battle has happened at all.** What sits between the last clean door and the first
+failing one is door 14, `del-cine -> ow-valley` (84 s), and door 15 back:
+**a round trip through the REAL-TIME scene.** Doors 14 and 15 pass because their
+own baselines are taken at that moment; every town revisit after it is +1/+1, and
+the `after battle` assertion inherits the same standing offset rather than adding
+to it. The delta is **exactly +1 at all five sites, never +2** — ONE resource,
+leaked ONCE, not one per door and not one per battle. `programs 12 -> 38` is the
+RT post stack (RenderPass/GTAO/bloom/Output) compiling into the world renderer's
+program cache, which is a cache, not a leak.
+
+**FILED, NOT FIXED, AND RE-ADDRESSED:** the owner is whoever owns the RT-scene
+teardown in play3d.html (coordinator custody), not the battle lanes. A control
+that varies one file clears one file — arm A cleared play3d.html's DPR change and
+was read as clearing play3d.html; it does not clear the file, only that change.
