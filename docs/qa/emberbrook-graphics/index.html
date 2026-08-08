@@ -833,5 +833,23 @@ not on a dressing rule. The backstop is a warning, not a fix.</li>
 <li><b>The bake floor needs an occlusion term</b> — see homerow above.</li>
 </ol></div>
 
+
+<h3>15i. An unplanned green: cine_test 477/3/2 &rarr; 480 ok / 0 FAILED / 2 soft</h3>
+<div class="verdict">The three failures this town carried as <q>pre-attributed</q> for weeks
+were <b>one</b> problem. <code>emb-townwalk/scene.glb</code> — Emberbrook's own explore
+bundle, and the file <code>cine_solve</code> reads — was <b>four walk meshes behind the
+master</b> (218 vs 222; the missing four are <code>walk_e_square-plaza__barn_l0..l3</code>),
+because it had last been written by a five-mesh CARRIER on an older build. The realtime tier
+carry re-exported it from a full rebuild, and both bundle-parity assertions passed outright.
+That made <code>cameras.solved.json</code> legitimately stale; re-solving moved <b>exactly
+one camera of eleven</b> — <code>square</code>, 1.11 m in position and 0.48 m in aim — and
+rebaking it there took <code>charPxFar</code> <b>37 &rarr; 38</b>, onto its own named floor.
+<b>The square closeness ratchet was never a camera or lens question. It was a stale explore
+bundle</b>, and it cost 450 s of bake to close once the bundle was current.</div>
+<div class="meas">Same shape as <code>walk_engine_gate</code>'s lesson: a gate that compares
+two DERIVED artifacts tells you they disagree and not which one is stale, and a lane that
+reads <q>pre-attributed</q> stops asking. The tell was there all along — one of the two
+numbers matched the master and the other did not.</div>
+
 </body>
 </html>

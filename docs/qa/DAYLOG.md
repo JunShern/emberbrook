@@ -18916,3 +18916,31 @@ governs walk-triggered camera changes and the battle screen is modal and non-nav
 so a cut on a beat is arguably not a "passage", but that reading should be confirmed rather
 than assumed. (c) do weapons appear in hand (it changes the turnaround spec's "hands empty"
 rule for every future character).
+
+### 8. AN UNPLANNED GREEN: `cine_test --town emberbrook` 477/3/2 -> **480 ok / 0 FAILED / 2 soft**, and all three failures had ONE cause
+
+The three failures this town has carried as "pre-attributed" for weeks were not three
+problems. `emb-townwalk/scene.glb` — Emberbrook's own explore bundle, and the thing
+`cine_solve` reads — was **four walk meshes behind the master** (218 vs the master's 222;
+the missing four are `walk_e_square-plaza__barn_l0..l3`). It had last been written by a
+five-mesh CARRIER on an older build, so nothing had re-exported it since those meshes
+landed. The realtime tier carry in this window re-exported it from a full rebuild, and:
+
+1. `the cinematic bundle carries the same walk network as the explore bundle` — **passes.**
+2. `no walk mesh appears in one bundle and not the other` — **passes.**
+3. `cameras.solved.json is STALE` appeared, legitimately: the bundle the solver reads had
+   changed. Re-solving moved **exactly one camera of eleven — `square`, 1.11 m in position
+   and 0.48 m in aim** — and rebaking it there took `charPxFar` **37 -> 38**, onto its own
+   NAMED per-shot floor.
+
+So the `square` closeness ratchet, carried and re-attributed three times as a camera or
+lens question, **was a stale explore bundle**. It cost 450 s of bake to close once the
+bundle was current. `routes_derive` re-derived and `--check` clean. The remaining two soft
+warnings are pondlane's visibleFrac 39% (pre-existing, its own note) and "3 stale:
+woodroad, waystone, gatefield" — which are three of the four plates this lane REFUSED, so
+that warning is the refusal restated.
+
+**THE LESSON IS THE SAME SHAPE AS `walk_engine_gate`'s**: a gate that compares two derived
+artifacts tells you they disagree and NOT which one is stale, and a lane that reads
+"pre-attributed" stops asking. The tell here was available all along — one of the two
+numbers matched the master and the other did not.
