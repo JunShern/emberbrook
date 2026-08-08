@@ -1,0 +1,152 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Foe icons, rendered from the models they claim to be</title>
+<style>html,body{margin:0;background:#171410;color:#e8dcc4;font:13px/1.4 ui-monospace,Menlo,monospace}
+#out{display:flex;flex-wrap:wrap;gap:14px;padding:16px}
+figure{margin:0;text-align:center}img{background:#0c0e2a;border:1px solid #4a4335;border-radius:6px}
+.px{width:28px;height:28px;image-rendering:auto}</style>
+</head><body>
+<div id="out"></div>
+<script src="../../../lib/three.min.js"></script>
+<script src="../../../js/battle_stage3d.js"></script>
+<script>
+/* THE FOE ICON, DERIVED FROM THE FOE.
+ *
+ * `docs/plans/battle-presentation-inventory.md` §7.3: the turn-queue rail draws
+ * every monster as a 16 px placeholder sprite, and the sprites contradict the
+ * bodies — duskpad's icon was salmon-pink against a grey wolf, bramble shade's a
+ * bright mint green against a black root-ball. Measured off the shipped PNGs, the
+ * icons' dominant opaque colours were:
+ *
+ *    duskpad        #bd6c4a  (orange)     model  #777972  grey
+ *    bramble-shade  #43e1b3  (mint)       model  H 29.6   dark brown
+ *    scree-shell    #259569  (green)      model  H 1.5    red
+ *
+ * The panel that exists so a player can PLAN was showing creatures in colours and
+ * shapes they do not have. This page renders each icon from the same GLB the arena
+ * stages, under the same light rig, so "the icon agrees with the model" is true by
+ * construction rather than by somebody remembering to redraw a sprite.
+ *
+ * WHAT IT DOES NOT DO: invent art. A creature whose shipped body is CODE rather
+ * than a mesh (MON[id].build) is drawn from the module's OWN PROXY palette entry,
+ * because rendering its unused fallback GLB would put the lie back the other way
+ * round — the brook sprite ships as a pale blue wisp and its fallback ghost is a
+ * grey pillow with a face.
+ */
+(function () {
+  const Q = new URLSearchParams(location.search);
+  const TH = THREE, S3 = window.BattleStage3D;
+  const CFG = S3.CFG, ZONES = S3.ZONES, MON = S3.MON, PROXY = S3.PROXY;
+  const zone = ZONES.default;
+  const SIZE = parseInt(Q.get('size') || '256', 10);
+  const IDS = (Q.get('ids') || 'reed-nibbler,brook-sprite,duskpad,bramble-shade,scree-shell,weir-eel').split(',');
+  const DIR = '../../../assets/' + (Q.get('dir') || 'monsters/3d/');
+  const C = h => new TH.Color(h);
+  const out = document.getElementById('out');
+
+  const renderer = new TH.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(1);
+  renderer.setSize(SIZE, SIZE, false);
+  renderer.outputColorSpace = TH.SRGBColorSpace;
+  renderer.setClearColor(0x000000, 0);        // ALPHA: the rail paints its own plate behind it
+
+  // THE ARENA'S RIG AGAIN, minus the shadow map — a 28 px icon cannot show one and
+  // a shadow camera on six renders is pure cost. Values read from CFG, not retyped.
+  const scene = new TH.Scene();
+  const IU = v => v * Math.PI;
+  scene.add(new TH.HemisphereLight(C(zone.sky), C(zone.ground), IU(0.44)));
+  const key = new TH.DirectionalLight(C(zone.key), IU(0.94));
+  key.position.set(-7, 9, 6); scene.add(key);      // pulled to the FRONT-left: an icon
+  const fill = new TH.DirectionalLight(C(zone.fill), IU(0.30));   // has no backdrop to
+  fill.position.set(6, 4, 7); scene.add(fill);                    // separate it from
+  scene.add(new TH.AmbientLight(0xffffff, IU(0.20)));             // so it must self-light
+
+  const camera = new TH.PerspectiveCamera(28, 1, 0.05, 100);
+  const loader = new TH.GLTFLoader();
+  const results = {};
+  let pending = IDS.length;
+
+  // A creature that ships as CODE. Same palette entry battle_stage3d's own tier-4
+  // proxy uses, so this is the module's data and not a fourth copy of a colour.
+  function builtOrb(fam) {
+    const p = PROXY[fam] || PROXY.default;
+    const g = new TH.Group();
+    g.add(new TH.Mesh(new TH.IcosahedronGeometry(0.30, 3),
+      new TH.MeshBasicMaterial({ color: C(p.c) })));
+    [[0.46, 0.42], [0.62, 0.20]].forEach(([r, o]) => {
+      g.add(new TH.Mesh(new TH.IcosahedronGeometry(r, 3), new TH.MeshBasicMaterial({
+        color: C(p.c2), transparent: true, opacity: o, blending: TH.AdditiveBlending,
+        depthWrite: false, side: TH.BackSide })));
+    });
+    return g;
+  }
+
+  function shoot(id, root, turn) {
+    scene.add(root);
+    root.rotation.y = turn;
+    root.updateMatrixWorld(true);
+    const bb = new TH.Box3().setFromObject(root);
+    const c = bb.getCenter(new TH.Vector3()), s = bb.getSize(new TH.Vector3());
+    // FRAME THE BODY IN SCREEN SPACE, NOT IN METRES. The icon is square and the
+    // creatures are not: a duskpad is 2.07 m long and 1.05 m tall seen from a
+    // three-quarter angle, so fitting its bounding SPHERE leaves a wolf occupying a
+    // third of a 28 px tile — technically correct and unreadable. Instead the box's
+    // eight corners are projected and the distance is solved against the widest of
+    // them, twice, because moving the camera changes the projection it was solved
+    // for. Two passes is enough at these ratios; the residual is under a percent.
+    const r0 = Math.max(s.x, s.y, s.z) * 0.5;
+    let d = (r0 * 1.2) / Math.tan((camera.fov * Math.PI / 180) / 2);
+    const dir = new TH.Vector3(0.34, 0.22, 0.91).normalize();
+    const corners = [];
+    for (const X of [bb.min.x, bb.max.x]) for (const Y of [bb.min.y, bb.max.y])
+      for (const Z of [bb.min.z, bb.max.z]) corners.push(new TH.Vector3(X, Y, Z));
+    for (let pass = 0; pass < 2; pass++) {
+      camera.position.copy(c).addScaledVector(dir, d);
+      camera.lookAt(c); camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
+      let ext = 0;
+      for (const p of corners) {
+        const q = p.clone().project(camera);
+        ext = Math.max(ext, Math.abs(q.x), Math.abs(q.y));
+      }
+      d *= ext / 0.90;                       // 0.90 = a 10 % breathing margin
+    }
+    camera.position.copy(c).addScaledVector(dir, d);
+    camera.lookAt(c);
+    camera.updateProjectionMatrix();
+    renderer.render(scene, camera);
+    const url = renderer.domElement.toDataURL('image/png');
+    scene.remove(root);
+    results[id] = url;
+    const fig = document.createElement('figure');
+    fig.innerHTML = '<img src="' + url + '" width="96" height="96"><br>' +
+                    '<img class="px" src="' + url + '"><br>' + id;
+    out.appendChild(fig);
+  }
+
+  IDS.forEach((id) => {
+    const md = MON[id] || MON.default;
+    if (md.build) {
+      // family comes from monsters.json; the one place this page needs the game's
+      // data rather than the arena's, and it is fetched, never hardcoded.
+      fetch('../../../game/monsters.json').then(r => r.json()).then(j => {
+        const fam = ((j.monsters || {})[id] || {}).family || 'default';
+        shoot(id, builtOrb(fam), 0);
+        if (--pending === 0) done();
+      });
+      return;
+    }
+    loader.load(DIR + id + '.glb', (g) => {
+      const root = g.scene;
+      root.updateMatrixWorld(true);
+      let bb = new TH.Box3().setFromObject(root);
+      root.scale.setScalar(md.h / Math.max(1e-6, bb.max.y - bb.min.y));
+      root.traverse(o => { if (o.isMesh || o.isSkinnedMesh) o.frustumCulled = false; });
+      const idle = g.animations.find(a => /idle/i.test(a.name)) || g.animations[0];
+      if (idle) { const m = new TH.AnimationMixer(root); m.clipAction(idle).play(); m.setTime(0); }
+      shoot(id, root, (md.yaw || 0) - 0.38);
+      if (--pending === 0) done();
+    }, null, () => { console.warn('no model', id); if (--pending === 0) done(); });
+  });
+
+  function done() { window.__icons = { ready: true, png: results }; }
+})();
+</script></body></html>

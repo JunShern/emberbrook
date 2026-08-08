@@ -1,0 +1,149 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Monster lineup — one frame, one scale, one light rig</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+#lbl{position:fixed;left:0;top:0;width:100%;pointer-events:none;font:600 13px/1.2 ui-monospace,Menlo,monospace;color:#fff}
+#lbl b{position:absolute;transform:translateX(-50%);text-shadow:0 1px 3px #000,0 0 8px #000;letter-spacing:.04em}</style>
+</head><body>
+<div id="lbl"></div>
+<script src="../../../lib/three.min.js"></script>
+<script src="../../../js/battle_stage3d.js"></script>
+<script>
+/* THE MONSTER LINEUP — every shipped creature in ONE frame, at ONE scale, under
+ * ONE light rig, from ONE camera. It exists because "six monsters in four art
+ * directions" was an assertion nobody could see side by side.
+ *
+ * NOTHING HERE IS A SECOND COPY OF THE ARENA'S NUMBERS. The light rig, the zone
+ * palette and the per-monster target height are READ OFF window.BattleStage3D
+ * (CFG / ZONES / MON) at run time, so a change to the shipping arena changes this
+ * picture too. What this page owns, and the arena does not, is the LAYOUT: an
+ * even row on a flat floor, because a comparison must not confound style with
+ * staging.
+ *
+ *   ?dir=<path under assets/>   which model directory to photograph  (default monsters/3d/)
+ *   ?zone=meadow|forest|crag|water
+ *   ?ids=a,b,c                  override the roster
+ *   ?chars=vesper,maren         APPEND party rigs to the row, at CFG.charH
+ *
+ * THE PARTY BELONGS IN THIS PICTURE. "What style should the monsters be?" is not
+ * a taste question in this repo — the party rigs are ratified art the game already
+ * ships, and they are the only reference that settles it. A monster is coherent
+ * when it can stand next to Vesper; that is the frame this page exists to produce.
+ */
+(function () {
+  const Q = new URLSearchParams(location.search);
+  const TH = THREE, S3 = window.BattleStage3D;
+  const CFG = S3.CFG, ZONES = S3.ZONES, MON = S3.MON;
+  const zone = ZONES[Q.get('zone') || 'meadow'] || ZONES.default;
+  const DIR = '../../../assets/' + (Q.get('dir') || 'monsters/3d/');
+  const MONS = (Q.get('ids') || 'reed-nibbler,brook-sprite,duskpad,bramble-shade,scree-shell,weir-eel')
+    .split(',').filter(Boolean);
+  const CHARS = (Q.get('chars') || '').split(',').filter(Boolean);
+  // ROW ENTRIES. A monster resolves through `dir` + MON[id].h; a party member
+  // resolves through the arena's OWN `art.models` preference list (newest first,
+  // first that parses wins) at CFG.charH — the same files the overworld hands out.
+  const ROW = MONS.map(id => ({ id: id, kind: 'mon', urls: [DIR + id + '.glb'] }))
+    .concat(CHARS.map(id => ({ id: id, kind: 'char',
+      urls: (S3.art.models[id] || []).map(u => '../../../' + u) })));
+  const IDS = ROW;
+  const W = parseInt(Q.get('w') || '1560', 10), H = parseInt(Q.get('h') || '470', 10);
+  const TURN = parseFloat(Q.get('turn') || '-22') * Math.PI / 180;   // three-quarter, not dead-on
+  const C = h => new TH.Color(h);
+
+  const renderer = new TH.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(2);   // 2x supersample: this picture is judged BY EYE
+  renderer.setSize(W, H, false);
+  renderer.outputColorSpace = TH.SRGBColorSpace;
+  renderer.setClearColor(zone.sky, 1);
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = TH.PCFShadowMap;
+  document.body.appendChild(renderer.domElement);
+
+  const scene = new TH.Scene();
+  // ---- THE ARENA'S OWN RIG, read from CFG, not retyped ---------------------
+  const IU = v => v * Math.PI;
+  scene.add(new TH.HemisphereLight(C(zone.sky), C(zone.ground), IU(0.44)));
+  const key = new TH.DirectionalLight(C(zone.key), IU(0.86));
+  key.position.set(-7, 9, -4.5); key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  const sc = key.shadow.camera; sc.left = -14; sc.right = 14; sc.top = 8; sc.bottom = -8;
+  sc.near = 0.5; sc.far = 40; sc.updateProjectionMatrix();
+  key.shadow.bias = CFG.shadow.bias; key.shadow.normalBias = CFG.shadow.normalBias;
+  key.shadow.radius = CFG.shadow.radius;
+  key.target.position.set(0, 0.6, 0); scene.add(key.target); scene.add(key);
+  const fill = new TH.DirectionalLight(C(zone.fill), IU(0.22)); fill.position.set(6, 4, 7); scene.add(fill);
+  const rc = C(zone.key).lerp(new TH.Color(1, 1, 1), 0.35);
+  const rim = new TH.DirectionalLight(rc, IU(CFG.rim.intensity));
+  rim.position.set(-CFG.rim.pos[0], CFG.rim.pos[1], CFG.rim.pos[2]); scene.add(rim);
+  scene.add(new TH.AmbientLight(0xffffff, IU(0.12)));
+
+  const floor = new TH.Mesh(new TH.PlaneGeometry(80, 40),
+    new TH.MeshLambertMaterial({ color: C(zone.ground) }));
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+  // ---- the camera: one shot, wide enough for the whole row ------------------
+  const SPAN = parseFloat(Q.get('span') || '2.62');    // metres between stations
+  const x0 = -SPAN * (IDS.length - 1) / 2;
+  const camera = new TH.PerspectiveCamera(30, W / H, 0.5, 200);
+  camera.position.set(0, 1.85, parseFloat(Q.get('dist') || '12.6'));
+  camera.lookAt(0, 0.92, 0);
+
+  const loader = new TH.GLTFLoader();
+  const mixers = [];
+  let pending = IDS.length;
+  const lbl = document.getElementById('lbl');
+  const meta = {};
+
+  // FIRST URL THAT PARSES WINS — the arena's own rule, not a second one. A rig
+  // mid-retarget must cost a silent 404, never a hole in the comparison.
+  function loadFirst(urls, ok, fail) {
+    let n = 0;
+    const next = () => {
+      if (n >= urls.length) return fail();
+      loader.load(urls[n++], ok, null, next);
+    };
+    next();
+  }
+
+  IDS.forEach((ent, i) => {
+    const id = ent.id;
+    loadFirst(ent.urls, (g) => {
+      const md = ent.kind === 'char' ? { h: CFG.charH, y: 0 } : (MON[id] || MON.default);
+      const root = g.scene;
+      // SCALE EXACTLY AS THE ARENA DOES: measure the parsed box, scale uniformly
+      // to MON.h, then re-seat the feet on y = 0.
+      root.updateMatrixWorld(true);
+      let bb = new TH.Box3().setFromObject(root);
+      const k = md.h / Math.max(1e-6, bb.max.y - bb.min.y);
+      root.scale.setScalar(k);
+      root.rotation.y = (md.yaw || 0) + TURN;
+      root.updateMatrixWorld(true);
+      bb = new TH.Box3().setFromObject(root);
+      root.position.set(x0 + i * SPAN, -bb.min.y + (md.y || 0), 0);
+      root.traverse(o => { if (o.isMesh || o.isSkinnedMesh) { o.castShadow = true; o.frustumCulled = false; } });
+      scene.add(root);
+      // THE POSE IS DETERMINISTIC: every clip is sampled at t = 0 of its Idle, so
+      // two builds photographed a week apart are the same picture.
+      const idle = g.animations.find(a => /idle/i.test(a.name)) || g.animations[0];
+      if (idle) { const m = new TH.AnimationMixer(root); m.clipAction(idle).play(); m.setTime(0); mixers.push(m); }
+      root.updateMatrixWorld(true);
+      bb = new TH.Box3().setFromObject(root);
+      const p = new TH.Vector3(x0 + i * SPAN, 0.02, 0).project(camera);
+      // sx is the station's own projected x as a FRACTION of frame width, so a
+      // caption burned onto the PNG later lands under the body and not under the
+      // column it happens to share with perspective.
+      meta[id] = { h: +(bb.max.y - bb.min.y).toFixed(3), w: +(bb.max.x - bb.min.x).toFixed(3),
+                   d: +(bb.max.z - bb.min.z).toFixed(3), clip: idle ? idle.name : null,
+                   sx: +(p.x * 0.5 + 0.5).toFixed(4) };
+      const b = document.createElement('b');
+      b.textContent = id; b.style.left = ((p.x * 0.5 + 0.5) * 100) + '%'; b.style.top = (H - 22) + 'px';
+      lbl.appendChild(b);
+      if (--pending === 0) done();
+    }, () => { console.warn('no model', id); meta[id] = { missing: true }; if (--pending === 0) done(); });
+  });
+
+  function done() {
+    renderer.render(scene, camera);
+    window.__lineup = { ready: true, meta: meta, dir: DIR, zone: Q.get('zone') || 'meadow',
+      shot: () => { renderer.render(scene, camera); return renderer.domElement.toDataURL('image/png'); } };
+  }
+})();
+</script></body></html>

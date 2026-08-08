@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QA — Monsters that look like one game (BET H, 2026-08-08)</title>
+<style>
+ :root{color-scheme:dark}
+ body{margin:0;background:#0d1014;color:#d8cfc2;font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif}
+ main{max-width:1240px;margin:0 auto;padding:38px 22px 90px}
+ h1{font:600 30px/1.2 Georgia,serif;color:#f0e3cd;margin:0 0 .35em}
+ h2{font:600 20px/1.3 Georgia,serif;color:#e9a24b;margin:2.6em 0 .5em}
+ h3{font:600 16px/1.3 Georgia,serif;color:#cbb894;margin:1.8em 0 .4em}
+ .sub{color:#8e8377;margin:0 0 2em;font-size:14px}
+ p,li{max-width:84ch}
+ figure{margin:1.2em 0}
+ figure img{width:100%;display:block;border:1px solid #2a2f36;border-radius:5px;background:#000}
+ figcaption{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#8e8377;padding-top:6px;line-height:1.55}
+ figcaption b{color:#d8cfc2;font-weight:600}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ .note{border-left:3px solid #3d4a5c;background:#141922;padding:12px 16px;margin:1.4em 0;border-radius:0 5px 5px 0;max-width:84ch}
+ .note.red{border-left-color:#8a4a3a;background:#1c1613}
+ .note.ok{border-left-color:#4a7a52;background:#131a14}
+ code{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:#1a1f27;padding:1px 5px;border-radius:3px;color:#c8b89a}
+ table{border-collapse:collapse;margin:1.2em 0;font-size:13.5px}
+ th,td{border:1px solid #2a2f36;padding:5px 11px;text-align:left;vertical-align:top}
+ th{background:#161b22;color:#cbb894;font-weight:600}
+ td.n{font-family:ui-monospace,Menlo,monospace;text-align:right}
+ .bad{color:#e08a72}.good{color:#8fc79a}
+ @media (max-width:820px){.pair{grid-template-columns:1fr}}
+</style></head><body><main>
+
+<h1>Monsters that look like one game</h1>
+<p class="sub">2026-08-08, battle wave-2 lane B · BET H of
+<code>docs/plans/battle-presentation-inventory.md</code> (&sect;8 and &sect;7.3)<br>
+Instruments: <code>tools/monster_lineup.mjs</code> (the comparison frame),
+<code>tools/monster_regrade.py</code> (the census, the band, the grade, the icon-agreement
+measure), <code>tools/monster_icons.mjs</code> (the icons),
+<code>tools/monster_board.py</code> (this page's headline picture),
+<code>tools/battle_shots.mjs</code> (the shipping frames).</p>
+
+<div class="note"><b>The claim under test</b>, verbatim from the audit &sect;8: <i>"six creatures, at
+least four art directions."</i> True as a feeling. This lane's job was to turn it into numbers,
+find out which axes actually carry it, fix what is cheap, and say plainly what is not.</div>
+
+<h2>1. The picture the claim never had</h2>
+<p>The game never shows more than three monsters at once, never at the same distance, and never
+under the same plate — so "they do not match" was an assertion nobody could check. This is all six
+at one scale, under the arena's own five-light rig, from one camera, with <b>Vesper and Maren
+standing in the same row</b>. The party rigs are ratified, shipped art; they are the only reference
+that can settle a style question without asking anybody's taste.</p>
+
+<figure>
+  <img src="lineup-before-after.png" alt="all six monsters and two party members, before and after the regrade">
+  <figcaption><b>THE HEADLINE FRAME.</b> <code>node tools/monster_lineup.mjs --chars vesper,maren
+  --w 2100 --h 500 --dist 14.0 --span 2.75</code>, then <code>python3 tools/monster_board.py</code>.
+  Heights come from <code>BattleStage3D.MON</code>, the rig from <code>BattleStage3D.CFG</code>, the
+  party from <code>BattleStage3D.art.models</code> — the page reads the shipping module, it does not
+  keep a second copy of its numbers. Every body is posed at t = 0 of its own Idle clip, so this
+  frame is reproducible.</figcaption>
+</figure>
+
+<div class="note red"><b>What the frame settles, and it is the opposite of the naive reading.</b>
+The instinct is that the grey wolf is the odd one out among five cartoon creatures. Put Vesper next
+to them and it inverts: <b>the duskpad is the one that matches the game</b> — naturalistic,
+desaturated, real animal proportions, exactly the register the party rigs are in. The outliers are
+the <b>four Quaternius "Cute Animated Monsters" chibis</b> (reed-nibbler, brook-sprite,
+bramble-shade, scree-shell): ball bodies, oversized black almond eyes with a white specular dot, a
+wide grinning mouth with cream teeth. Any pass that had "harmonised" the wolf toward the blobs
+would have moved the whole cast away from the game.</div>
+
+<h2>2. The census — every monster asset the game actually ships</h2>
+<p>Parsed straight out of the GLBs (glTF JSON chunk + accessor walk). Palette figures are
+<b>area-weighted</b>: each triangle's albedo — sampled from the baseColor texture at its UV
+centroid, or from its flat <code>baseColorFactor</code> — weighted by its world-space area, so a
+four-pixel eye is not half a monster and a textured model and a flat one are measured by one rule.</p>
+
+<table>
+<tr><th>slot</th><th>concept</th><th class="n">tris</th><th class="n">prims</th><th>albedo</th>
+    <th class="n">distinct<br>colours</th><th class="n">S</th><th class="n">V50</th><th class="n">V95</th>
+    <th>pack (all CC0, Quaternius)</th></tr>
+<tr><td>reed-nibbler</td><td>green slime blob</td><td class="n">1440</td><td class="n">2</td><td>flat, 2 materials</td><td class="n">2</td><td class="n bad">0.490</td><td class="n bad">0.821</td><td class="n bad">0.821</td><td>Animated Monster Pack</td></tr>
+<tr><td>brook-sprite</td><td>white round ghost</td><td class="n">1000</td><td class="n">1</td><td>512² painted</td><td class="n">79</td><td class="n good">0.033</td><td class="n good">0.494</td><td class="n good">0.553</td><td>Cute Animated Monsters</td></tr>
+<tr><td>duskpad</td><td>four-legged grey wolf</td><td class="n">1962</td><td class="n">4</td><td>flat, 4 materials</td><td class="n">4</td><td class="n good">0.055</td><td class="n good">0.473</td><td class="n good">0.647</td><td>Ultimate Animated Animal</td></tr>
+<tr><td>bramble-shade</td><td>bark creature, branch antlers</td><td class="n">1368</td><td class="n">1</td><td>512² painted</td><td class="n">317</td><td class="n bad">0.499</td><td class="n">0.227</td><td class="n good">0.290</td><td>Cute Animated Monsters</td></tr>
+<tr><td>scree-shell</td><td>red armoured crab</td><td class="n">1820</td><td class="n">1</td><td>512² painted</td><td class="n">393</td><td class="n bad">0.533</td><td class="n">0.255</td><td class="n good">0.435</td><td>Cute Animated Monsters</td></tr>
+<tr><td>weir-eel</td><td>coiled teal serpent</td><td class="n">1618</td><td class="n">7</td><td>flat, 7 materials</td><td class="n">7</td><td class="n good">0.378</td><td class="n">0.657</td><td class="n bad">0.906</td><td>Easy Enemy Pack</td></tr>
+</table>
+
+<p>Provenance is fully receipted in <code>public/assets/monsters/3d/MANIFEST.md</code>: every file is
+Quaternius, CC0 1.0, downloaded 2026-07-30, licence text quoted verbatim. Nothing here is Tripo and
+nothing is procedural — the one <b>built</b> body is the brook sprite's, which is code
+(<code>MON['brook-sprite'].build = 'wisp'</code>) and whose GLB is only its documented fallback.</p>
+
+<h2>3. The axes, with numbers — and the two that turned out not to matter</h2>
+
+<table>
+<tr><th>candidate axis</th><th>measured spread</th><th>verdict</th></tr>
+<tr><td><b>poly density</b></td><td>1000 – 1962 tris (1.96&times;); every model 1–7 primitives, one skin, one skeleton depth class</td><td class="good"><b>NOT the problem.</b> All six are the same low-poly budget from the same author. Nothing to normalise.</td></tr>
+<tr><td><b>texture vs flat vertex colour</b></td><td>3 painted 512², 3 flat <code>baseColorFactor</code>; distinct albedo colours 2 – 393 (196&times;)</td><td>REAL but <b>not</b> what the frame shows. At battle scale (a foe is ~18 % of frame height) a 512² map carrying baked form-shading and a four-colour flat model read as the same kind of object. Recorded, not acted on.</td></tr>
+<tr><td><b>albedo VALUE</b></td><td>V50 <b>0.227 – 0.821</b> (3.6&times;, 1.85 stops); V95 up to <b>0.906</b></td><td class="bad">REAL and fixed. reed-nibbler's body sat <i>above</i> the party's brightest paint (0.784) — a neon jelly beside two muted people.</td></tr>
+<tr><td><b>albedo SATURATION</b></td><td>S <b>0.055 – 0.533</b> (9.4&times;)</td><td class="bad">REAL and fixed. Three creatures were more saturated overall than a person is at her median.</td></tr>
+<tr><td><b>proportion / stylisation</b></td><td>4 of 6 are chibi ball-bodies with painted cartoon eyes + grin; 1 naturalistic quadruped; 1 stylised serpent</td><td class="bad"><b>THE LOUDEST AXIS, and the one this lane refused.</b> It is mesh + repaint, not material. See &sect;6.</td></tr>
+</table>
+
+<h2>4. The target style, stated so a future asset can be judged</h2>
+<p>Measured off the shipping party rigs' baseColor maps (<code>vesper-v2</code>,
+<code>maren-v1</code>, <code>lake-v1</code> — the same files <code>play3d.html</code>'s
+<code>MODELS</code> registry hands the overworld): <b>S50 0.333–0.452, V05 0.192–0.216,
+V50 0.306–0.443, V95 0.718–0.784.</b></p>
+
+<div class="note red"><b>The first version of this gate was wrong and the picture said so.</b> It
+demanded a creature's median value <i>equal</i> the party's median (0.306–0.443) — and took the reed
+nibbler down to a near-black olive lump you had to hunt for on the grass. The error is statistical:
+a party median is taken over a whole human (dark boots, dark hair, mid-tone cloth) while a
+two-colour creature's median <i>is</i> its body. Comparing those two medians compares different
+things. <b>The gate is the party's RANGE, not its centre.</b></div>
+
+<p>So, in <code>tools/monster_regrade.py</code>:</p>
+<ul>
+<li><code>V50 &isin; [0.192, 0.784]</code> — no creature darker than her darkest paint, none brighter than her brightest;</li>
+<li><code>V95 &le; 0.784</code> — no highlight out-glows the cast;</li>
+<li><code>S &le; 0.452</code> — a <b>ceiling, never a floor</b>: a grey wolf and a pale wisp must not be failed for being grey.</li>
+</ul>
+<p>Measured against it, <b>duskpad and brook-sprite pass untouched and the other four fail</b> —
+which is exactly what the lineup frame shows by eye. That agreement is the reason to trust the gate.</p>
+
+<h2>5. What changed: the regrade</h2>
+<pre style="background:#161b22;border:1px solid #2a2f36;border-radius:5px;padding:12px;overflow-x:auto;font-size:12.5px"><code>source rev 633b51fb   band: V50 in (0.192, 0.784)  V95&lt;=0.784  S&lt;=0.452
+monster                    H      S    V05    V50    V95   cols  band
+bramble-shade     src   29.6  0.499  0.055  0.227   0.29    317  out: S
+                   -&gt;   29.7  0.438  0.082  0.341  0.435    317  in band
+brook-sprite      src  358.9  0.033  0.078  0.494  0.553     79  in band
+                 keep   (no recipe: held as reference art)
+duskpad           src   75.6  0.055  0.473  0.473  0.647      4  in band
+                 keep   (no recipe: held as reference art)
+reed-nibbler      src   96.0  0.490  0.117  0.821  0.821      2  out: S,V50,V95
+                   -&gt;   96.0  0.402  0.082  0.580  0.580      2  in band
+scree-shell       src    1.5  0.533  0.016  0.255  0.435    393  out: S
+                   -&gt;    1.5  0.427  0.020  0.341   0.58    393  in band
+weir-eel          src  145.4  0.378  0.657  0.657  0.906      7  out: V95
+                   -&gt;  145.4  0.348  0.440  0.520  0.717      7  in band</code></pre>
+
+<p>Three properties of the tool that matter more than the numbers:</p>
+<ul>
+<li><b>It never reads the file it is about to write.</b> Source bytes come from
+<code>git show 633b51fb:&lt;path&gt;</code>, so running it twice is the same as running it once and the
+recipe stays the whole description of the difference between the pristine download and what ships.</li>
+<li><b>Value moves by a GAIN, not a gamma.</b> A gamma solved on the median is fine for a
+300-colour painted map and catastrophic for a two-colour flat one — it wanted &gamma;&nbsp;4.17 for
+reed-nibbler and drove its black eyes to 0.000 in the same stroke. A gain is a ratio, so the darks
+stay in proportion and the paint's own form-shading survives.</li>
+<li><b>Geometry, skins, UVs and animations are copied verbatim</b>, accessor by accessor. The tool
+cannot move a vertex. Re-censused after the write: tris, prims, node counts and clip lists are
+identical to the source rev.</li>
+</ul>
+
+<h3>In the shipping frame</h3>
+<div class="pair">
+  <figure><img src="after-forest.png" alt="forest battle after"><figcaption><b>forest, after.</b> bramble-shade was a near-black mass whose antlers vanished against the plate; it now reads as warm bark. And the turn-order rail on the right now shows a wolf and a root-ball.</figcaption></figure>
+  <figure><img src="after-crag.png" alt="crag battle after"><figcaption><b>crag, after.</b> scree-shell's hard crimson pulled to brick, which is the same family as Maren's coat.</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><img src="after-meadow.png" alt="meadow battle after"><figcaption><b>meadow, after.</b> The nibblers stopped glowing.</figcaption></figure>
+  <figure><img src="after-water.png" alt="water battle after"><figcaption><b>water, after.</b> weir-eel deepened; the brook sprite is the BUILT wisp and was not touched.</figcaption></figure>
+</div>
+
+<h2>6. What changed: the foe icons, which were lying</h2>
+<p>Audit &sect;7.3: <code>foeIcon: (mid) =&gt; monsterUrl(mid)</code> resolved to a 16&nbsp;px
+hand-drawn sprite from an unrelated pixel pack. <b>The panel that exists so the player can plan was
+showing creatures in colours they do not have.</b> The icons are now rendered from the same GLBs the
+arena stages, under the arena's rig, framed by projecting each body's bounding box —
+<b>agreement is now structural, not remembered</b>.</p>
+
+<figure>
+  <img src="rail-before-after.png" alt="the turn-order rail, before and after">
+  <figcaption><b>The turn-order rail, same encounter, before (top) / after (bottom).</b>
+  Duskpad's icon was salmon-pink over a grey wolf; Bramble Shade's was mint green over a dark
+  root-ball. The audit's other complaint about this table — "party rows carry 30 px painted busts,
+  two art registers in one table" — goes with it: both columns are now rendered art.</figcaption>
+</figure>
+
+<table>
+<tr><th>monster</th><th class="n">model H</th><th class="n">old icon H</th><th class="n">new icon H</th><th class="n">error before</th><th class="n">error after</th></tr>
+<tr><td>reed-nibbler</td><td class="n">96.0</td><td class="n">0.2</td><td class="n">91.6</td><td class="n bad">95.8°</td><td class="n good">4.4°</td></tr>
+<tr><td>scree-shell</td><td class="n">1.5</td><td class="n">256.3</td><td class="n">360.0</td><td class="n bad">105.2°</td><td class="n good">1.5°</td></tr>
+<tr><td>weir-eel</td><td class="n">145.4</td><td class="n">309.4</td><td class="n">120.9</td><td class="n bad">164.0°</td><td class="n good">24.5°</td></tr>
+<tr><td>bramble-shade</td><td class="n">29.7</td><td class="n">338.1</td><td class="n">29.8</td><td class="n bad">51.6°</td><td class="n good">0.1°</td></tr>
+<tr><td>duskpad <i>(grey model — chroma error)</i></td><td class="n">S 0.055</td><td class="n">S 0.488</td><td class="n">S 0.089</td><td class="n bad">S +0.43</td><td class="n good">S +0.03</td></tr>
+<tr><td>brook-sprite <i>(see note)</i></td><td class="n">S 0.033</td><td class="n">S 0.523</td><td class="n">S 0.446</td><td class="n">S +0.49</td><td class="n">S +0.41</td></tr>
+</table>
+
+<div class="note"><b>brook-sprite is expected to disagree with its GLB and must not be "fixed".</b>
+Its shipped body is code — a pale blue emissive core in two additive shells — and the grey ghost GLB
+beside it is only the documented fallback. Its icon is drawn from
+<code>BattleStage3D.PROXY.sprite</code>, the module's own palette for that family, so it matches
+<b>what the player sees</b>. Scoring it against the unused mesh is what would put the lie back.</div>
+
+<div class="note"><b>Hue is circular and a grey model has no hue.</b> The first version of this
+report subtracted hues naively and printed "grey" for duskpad — which said nothing, and hid the
+headline defect. What the salmon icon actually did was invent 0.43 of saturation the wolf does not
+have, so for an achromatic model the reported error is that excess.
+<code>python3 tools/monster_regrade.py --icons</code> re-runs the whole table.</div>
+
+<h2>7. What was refused, and what it would cost</h2>
+<div class="note red"><b>REFUSED: replacing the four chibi meshes.</b> The loudest remaining
+incoherence is not a palette — it is the <b>painted cartoon face</b>. On bramble-shade, scree-shell
+and brook-sprite the oversized black almond eye, its white specular dot, the cream teeth and the
+purple tongue are all <i>in the 512² texture</i>; on reed-nibbler and weir-eel they are separate
+geometry. Neither is reachable by a material grade.
+<ul>
+<li><b>Repaint the three atlases</b> (keep the meshes, redraw eyes/mouth toward the party's register):
+cheapest real fix. ~3 texture repaints, no rig work, no intake gate, no retarget. But it is
+generative-art iteration on 512² maps whose UV islands are unlabelled, and a bad repaint is
+immediately visible where a bad grade is not.</li>
+<li><b>Regenerate the meshes</b> through the character factory (gen-turnaround → Tripo → intake
+joint&times;IBM&asymp;I probe → retarget → <code>vesper_verify</code>): the full pipeline, four times,
+plus re-solving <code>MON</code> heights, yaw and bob, plus re-shooting every board that photographs
+them. That is a lane of its own, not a tail-end of a palette pass.</li>
+</ul>
+Doing either badly at 2am against a "playable prototype, not a polished product" steer would trade a
+coherent-<i>enough</i> cast for a broken one. The measurement, the band, the lineup instrument and
+the before frame are all here so that lane starts with its ruler already built.</div>
+
+<div class="note"><b>REFUSED: touching duskpad.</b> It fails the naive "make them all match" reading
+and passes the measured one. It is the asset the others should converge on. Grading art that is
+already in band is how a style pass loses the one thing it should have been aiming at.</div>
+
+<h2>8. Residuals</h2>
+<ul>
+<li><b>weir-eel's icon still carries 24.5° of hue error</b> — its icon frames the head, and the head
+is where the (now muted) red mouth is. Real, small, and arguably correct: that is what the creature
+looks like from the front.</li>
+<li><b>The chibi faces remain</b> (&sect;7). This is the honest state of BET H: the palette half is
+done and measurable, the silhouette half is named and costed.</li>
+<li><b>The three painted atlases still carry baked form-shading</b>, which fights the arena's own
+key light. Not visible at battle scale; would matter under BET B's camera moves.</li>
+<li><b>The regrade is destructive-in-place and idempotent by reading git.</b> If the source rev is
+ever rewritten, <code>SOURCE_REV</code> in the tool must move with it.</li>
+</ul>
+
+<h2>9. Gates</h2>
+<ul>
+<li><code>battle_sim</code> — <b>ALL ENVELOPES GREEN</b> + 6 engine property tests. The kernel was
+read and never written; <code>monsters.json</code> was not edited at all, so no balance number moved.</li>
+<li><code>encounter_sim</code> — <b>GREEN</b>.</li>
+<li><code>arena_playtest --port=3000</code> — <b>nogl PASS · serial PASS</b>;
+<b>organic FAIL "no hostile zone reachable"</b>, which is <b>pre-existing and already receipted by
+another lane tonight</b> against a pristine HEAD copy served from a scratch tree
+(<code>docs/qa/DAYLOG.md</code>, BET I gates). Nothing this lane changed can reach
+<code>SIM.zone</code>/<code>walkFloors</code>.</li>
+<li><code>transition_test --port=3000</code> — see the DAYLOG entry for this lane's run and its A/B.</li>
+<li><code>dialogue_test</code> — not run: no portrait, bust, cut-in or thumbnail path was touched.
+The foe icon is <code>foeIcon</code>, which that gate does not cover (it gates speakers and party
+faces).</li>
+</ul>
+
+</main></body></html>
