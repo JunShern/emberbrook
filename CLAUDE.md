@@ -556,6 +556,25 @@ git runs here, on branch `migration/3d-hybrid`.
   EXACTLY the set whose TONE pitch differs (15/15). Residual, named: the sky dome's cloud drift
   is also frozen at a wall-clock T and `hide()` does not touch it (it is real background, not a
   mote) — worth 0.9% on one rung at one of six cells, and it changed no pick in 24 repeats.
+  **SURFACE DOMINANCE — THE AXIS THAT WON EVERY SORT — IS NOW SHIPPED** (2026-08-09; board
+  docs/qa/battle-surface/, instrument tools/battle_surface.mjs, `?bsurf=0` is the A/B). A second
+  refusal in `stageArena` after the sun stage (`surfGood 0.22`, `surfMargin 0.06`, capped 8
+  candidates / 140 ms; it ends the search after ONE render at p50). Census: sites reading ≥0.24
+  **29 → 15**, ≥0.30 22 → 10, ≥0.40 14 → 4; of 23 moved sites 22 improved / 1 regressed by the
+  ruler, and ALL 23 were looked at — 19 clear wins, 3 washes, 0 regressions by eye, and the lone
+  objective regression moves the party OUT OF A POND onto a village lawn, so the eye beats the
+  ruler by 0.009. Cost: staging solve p50 45 → 98 ms, trigger-to-cast-staged 2138 → 2185 ms.
+  **THE "IT COULD BE FREE" HYPOTHESIS WAS HALF RIGHT AND THE WRONG HALF MATTERED**: TONE's
+  offscreen buffer is nearly free (2.0-2.8 ms) but tops out at sep 0.60 AT EVERY RESOLUTION,
+  supersampled or not — **the signal is in the POST CHAIN**, and an offscreen target skips GTAO,
+  bloom and the atmospheric grade, which are exactly what make a far surface and a near one
+  different colours. What shipped reads the DISPLAY frame (sep 0.78/0.72/0.87 at 7.3 ms).
+  And the earlier ray grid failed for a reason its own data shows: `meshTop ≥ 0.87` at ALL 62
+  sites because the valley ground is ONE MESH — **"one mesh owns the frame" is true everywhere;
+  the axis is about PIXELS.**
+  **A USER-FACING CONSEQUENCE THAT NEEDS RE-CONFIRMING: ring-0 staging falls 29 → 15**, so "the
+  fight happens where you stand" is now the MINORITY case. The relocation ruling authorised
+  moving when a site refuses; it did not authorise moving most of the time for picture quality.
   Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
