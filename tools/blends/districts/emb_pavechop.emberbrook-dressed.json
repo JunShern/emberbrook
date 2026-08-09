@@ -13,31 +13,31 @@
  "totals": {
   "outline": [
    2233.64,
-   2232.61
+   2241.79
   ],
   "axis": [
-   79.47,
-   34.59
+   67.47,
+   33.17
   ],
-  "dropped": 1402,
-  "pinned": 1354,
-  "relaxed": 1131,
-  "cap_floor": 1241,
-  "cap_zdrop": 259,
+  "dropped": 1192,
+  "pinned": 2197,
+  "relaxed": 1045,
+  "cap_floor": 1023,
+  "cap_zdrop": 226,
   "groundless": 0,
-  "small_loops": 9
+  "small_loops": 10
  },
  "meshes": {
   "walk_e_arrival-clearing__waystone_l0": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     6.54,
@@ -48,1195 +48,7 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_arrival-clearing__waystone_l1": {
-   "verts": [
     8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.29,
-    8.29
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_arrival-clearing__waystone_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    10.03,
-    10.03
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_arrival-clearing__waystone_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    11.77,
-    11.77
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_arrival-clearing__waystone_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    10.03,
-    10.03
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_arrival-clearing__waystone_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.29,
-    8.29
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_arrival-clearing__waystone_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.54,
-    6.54
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l0": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.75,
-    9.6
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l1": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.7,
-    6.7
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 2,
-   "cap_zdrop": 2,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l10": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    11.93,
-    11.93
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l11": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    12.23,
-    12.23
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l12": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    11.81,
-    11.81
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l13": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    11.4,
-    11.4
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l14": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    11.01,
-    11.01
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l15": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    10.63,
-    10.63
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l16": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    9.17,
-    9.17
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l17": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.72,
-    7.72
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l18": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.26,
-    6.26
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.66,
-    7.66
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 3,
-   "cap_zdrop": 2,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.61,
-    8.61
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 3,
-   "cap_zdrop": 1,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    9.4,
-    9.4
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    10.26,
-    10.26
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    11.16,
-    11.16
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l7": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    12.08,
-    12.08
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 3,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l8": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    11.85,
-    11.85
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_barn__gate-court_l9": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    11.8,
-    11.8
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l0": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.49,
-    6.8
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 1,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l1": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.58,
-    5.58
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l10": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    3.86,
-    7.3
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.67,
-    6.67
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.76,
-    7.76
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.05,
-    7.05
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.37,
-    6.37
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.75,
-    5.75
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l7": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.25,
-    5.25
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l8": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.79,
-    4.79
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 3,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_elder-house__home-lane-end_l9": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.33,
-    6.8
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
     8
    ],
    "relaxed": 0,
@@ -1249,1083 +61,489 @@
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_hillside-cottage__elder-house_l0": {
+  "walk_e_arrival-clearing__waystone_l1": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    4.39,
-    6.8
+    8.29,
+    8.29
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__elder-house_l1": {
-   "verts": [
     8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.37,
-    5.37
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__elder-house_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.36,
-    6.36
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__elder-house_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.34,
-    7.34
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__elder-house_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.36,
-    6.36
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__elder-house_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.37,
-    5.37
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__elder-house_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.39,
-    6.8
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l0": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.72,
-    4.72
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l1": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.04,
-    6.04
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l10": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    3.66,
-    7.3
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.36,
-    7.36
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.68,
-    8.68
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.62,
-    7.62
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.57,
-    6.57
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.51,
-    5.51
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l7": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.46,
-    6.8
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
     8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 1,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__lake-home_l8": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.19,
-    6.8
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_hillside-cottage__lake-home_l9": {
+  "walk_e_arrival-clearing__waystone_l2": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    3.93,
-    7.3
+    10.03,
+    10.03
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
+    8,
     8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_hillside-cottage__watermill_l0": {
+  "walk_e_arrival-clearing__waystone_l3": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    3.9,
-    7.3
+    11.77,
+    11.77
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
+    8,
     8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_hillside-cottage__watermill_l1": {
+  "walk_e_arrival-clearing__waystone_l4": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    4.4,
-    6.8
+    10.03,
+    10.03
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
+    8,
     8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
-   "small_loops": 1,
+   "small_loops": 0,
    "family": "e"
   },
-  "walk_e_hillside-cottage__watermill_l2": {
+  "walk_e_arrival-clearing__waystone_l5": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    4.91,
-    4.91
+    8.29,
+    8.29
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_arrival-clearing__waystone_l6": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.54,
+    6.54
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l0": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    5.75,
+    9.6
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l1": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.7,
+    6.7
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 1,
-   "seat_pinned": 3,
+   "seat_pinned": 7,
    "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__watermill_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.41,
-    5.41
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__watermill_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.91,
-    4.91
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 3,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__watermill_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.4,
-    6.8
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 1,
-   "family": "e"
-  },
-  "walk_e_hillside-cottage__watermill_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    3.9,
-    7.3
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 8,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_pond-jetty__brook-bridge_l0": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.75,
-    4.75
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_pond-jetty__brook-bridge_l1": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.09,
-    6.09
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_pond-jetty__brook-bridge_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.44,
-    7.44
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 3,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_pond-jetty__brook-bridge_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.79,
-    8.79
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 1,
    "cap_zdrop": 1,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__brook-bridge_l4": {
+  "walk_e_barn__gate-court_l10": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    7.44,
-    7.44
+    11.93,
+    11.93
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 3,
-   "cap_zdrop": 3,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_pond-jetty__brook-bridge_l5": {
-   "verts": [
     8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.09,
-    6.09
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 3,
-   "cap_zdrop": 3,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_pond-jetty__brook-bridge_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    4.75,
-    4.75
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 2,
-   "cap_zdrop": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__washline-green_l0": {
+  "walk_e_barn__gate-court_l11": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    4.35,
-    6.8
+    12.23,
+    12.23
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l12": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    11.81,
+    11.81
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l13": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    11.4,
+    11.4
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l14": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    11.01,
+    11.01
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l15": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    10.63,
+    10.63
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l16": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    9.17,
+    9.17
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
     8
    ],
    "relaxed": 0,
@@ -2338,82 +556,49 @@
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__washline-green_l1": {
+  "walk_e_barn__gate-court_l17": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    5.3,
-    5.3
+    7.72,
+    7.72
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 3,
+   "dropped": 0,
+   "seat_pinned": 8,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__washline-green_l10": {
+  "walk_e_barn__gate-court_l18": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
-   ],
-   "perim": [
-    3.74,
-    7.3
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 6,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_pond-jetty__washline-green_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
+    14
    ],
    "perim": [
     6.26,
@@ -2424,161 +609,1481 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 1,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__washline-green_l3": {
+  "walk_e_barn__gate-court_l2": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    7.21,
-    7.21
+    7.66,
+    7.66
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 3,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
    "cap_zdrop": 2,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__washline-green_l4": {
+  "walk_e_barn__gate-court_l3": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    6.59,
-    6.59
+    8.61,
+    8.61
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 4,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__washline-green_l5": {
+  "walk_e_barn__gate-court_l4": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    5.97,
-    5.97
+    9.4,
+    9.4
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 3,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__washline-green_l6": {
+  "walk_e_barn__gate-court_l5": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
-    5.35,
-    5.35
+    10.26,
+    10.26
    ],
    "axis": [
     0.0,
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 1,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_pond-jetty__washline-green_l7": {
+  "walk_e_barn__gate-court_l6": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
+   ],
+   "perim": [
+    11.16,
+    11.16
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l7": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    12.08,
+    12.08
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l8": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    11.85,
+    11.85
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_barn__gate-court_l9": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    11.8,
+    11.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l0": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.49,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 1,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l1": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.58,
+    5.58
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l10": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    3.86,
+    7.3
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l2": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.67,
+    6.67
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l3": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.76,
+    7.76
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l4": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.05,
+    7.05
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.37,
+    6.37
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l6": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.75,
+    5.75
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l7": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.25,
+    5.25
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l8": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    4.79,
+    4.79
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_elder-house__home-lane-end_l9": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.33,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__elder-house_l0": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.39,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__elder-house_l1": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.37,
+    5.37
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__elder-house_l2": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.36,
+    6.36
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__elder-house_l3": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.34,
+    7.34
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__elder-house_l4": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.36,
+    6.36
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__elder-house_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.37,
+    5.37
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__elder-house_l6": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.39,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l0": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    4.72,
+    4.72
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l1": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.04,
+    6.04
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l10": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    3.66,
+    7.3
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l2": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.36,
+    7.36
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l3": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.68,
+    8.68
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l4": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.62,
+    7.62
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.57,
+    6.57
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l6": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.51,
+    5.51
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l7": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.46,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 1,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l8": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.19,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__lake-home_l9": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    3.93,
+    7.3
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__watermill_l0": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    3.9,
+    7.3
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__watermill_l1": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.4,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 1,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__watermill_l2": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    4.91,
+    4.91
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__watermill_l3": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.41,
+    5.41
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__watermill_l4": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    4.91,
+    4.91
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__watermill_l5": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.4,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 1,
+   "family": "e"
+  },
+  "walk_e_hillside-cottage__watermill_l6": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    3.9,
+    7.3
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__brook-bridge_l0": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
    ],
    "perim": [
     4.75,
@@ -2589,14 +2094,509 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__brook-bridge_l1": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.09,
+    6.09
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__brook-bridge_l2": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.44,
+    7.44
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__brook-bridge_l3": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.79,
+    8.79
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__brook-bridge_l4": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.44,
+    7.44
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__brook-bridge_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.09,
+    6.09
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__brook-bridge_l6": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    4.75,
+    4.75
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 1,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l0": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    4.35,
+    6.8
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l1": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.3,
+    5.3
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l10": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    3.74,
+    7.3
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l2": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.26,
+    6.26
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l3": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.21,
+    7.21
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 1,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l4": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.59,
+    6.59
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.97,
+    5.97
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l6": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.35,
+    5.35
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_pond-jetty__washline-green_l7": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    4.75,
+    4.75
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -2606,12 +2606,12 @@
    "verts": [
     8,
     8,
-    12
+    16
    ],
    "polys": [
     6,
     6,
-    10
+    13
    ],
    "perim": [
     4.41,
@@ -2622,14 +2622,14 @@
     0.0
    ],
    "bedges": [
-    4,
-    8
+    6,
+    12
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
+   "dropped": 0,
+   "seat_pinned": 6,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 1,
@@ -2639,12 +2639,12 @@
    "verts": [
     8,
     8,
-    12
+    16
    ],
    "polys": [
     6,
     6,
-    10
+    13
    ],
    "perim": [
     4.07,
@@ -2655,14 +2655,14 @@
     0.0
    ],
    "bedges": [
-    4,
-    8
+    6,
+    12
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 6,
-   "cap_floor": 2,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -2672,12 +2672,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     5.65,
@@ -2688,8 +2688,305 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__orchard_l1": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.89,
+    7.89
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__orchard_l2": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    10.14,
+    10.14
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__orchard_l3": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    12.38,
+    12.38
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__orchard_l4": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    10.14,
+    10.14
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__orchard_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.89,
+    7.89
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__orchard_l6": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    5.65,
+    5.65
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__square-plaza_l0": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.08,
+    7.08
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__square-plaza_l1": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    9.36,
+    9.36
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_road-gate__square-plaza_l10": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.06,
+    6.06
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
@@ -2701,313 +2998,16 @@
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_road-gate__orchard_l1": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.89,
-    7.89
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_road-gate__orchard_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    10.14,
-    10.14
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_road-gate__orchard_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    12.38,
-    12.38
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_road-gate__orchard_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    10.14,
-    10.14
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_road-gate__orchard_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.89,
-    7.89
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_road-gate__orchard_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.65,
-    5.65
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_road-gate__square-plaza_l0": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.08,
-    7.08
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_road-gate__square-plaza_l1": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    9.36,
-    9.36
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_road-gate__square-plaza_l10": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.06,
-    6.06
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
   "walk_e_road-gate__square-plaza_l2": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     11.64,
@@ -3018,14 +3018,14 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -3035,12 +3035,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     13.92,
@@ -3051,13 +3051,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -3068,12 +3068,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.69,
@@ -3084,13 +3084,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 2,
-   "seat_pinned": 0,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -3101,12 +3101,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     11.56,
@@ -3117,13 +3117,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 2,
-   "seat_pinned": 0,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -3134,12 +3134,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     10.58,
@@ -3150,13 +3150,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -3167,12 +3167,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     9.85,
@@ -3183,13 +3183,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 3,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -3200,12 +3200,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     8.59,
@@ -3216,8 +3216,8 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
@@ -3233,12 +3233,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     7.33,
@@ -3249,8 +3249,8 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
@@ -3266,12 +3266,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     6.0,
@@ -3282,898 +3282,7 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l1": {
-   "verts": [
     8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.0,
-    6.0
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l10": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.91,
-    8.91
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 4,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l11": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    9.16,
-    9.16
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 3,
-   "cap_zdrop": 2,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l12": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.07,
-    8.07
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l13": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.98,
-    6.98
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l14": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.89,
-    9.6
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 7,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l2": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.0,
-    6.0
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 3,
-   "cap_floor": 1,
-   "cap_zdrop": 1,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l3": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.0,
-    6.0
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 2,
-   "cap_zdrop": 1,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.68,
-    9.6
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 8,
-   "cap_zdrop": 4,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.56,
-    6.56
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 2,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.43,
-    7.43
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 3,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l7": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.31,
-    8.31
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 4,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l8": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.48,
-    8.48
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 4,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__barn_l9": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.68,
-    8.68
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 4,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__hillside-cottage_l10": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.03,
-    6.03
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 3,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__hillside-cottage_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.03,
-    6.03
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 2,
-   "cap_zdrop": 2,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__hillside-cottage_l5": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.27,
-    7.27
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
-   "cap_zdrop": 2,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__hillside-cottage_l6": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.5,
-    8.5
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__hillside-cottage_l7": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    9.74,
-    9.74
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 2,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__hillside-cottage_l8": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    8.5,
-    8.5
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__hillside-cottage_l9": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.27,
-    7.27
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__pond-jetty_l10": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.6,
-    7.6
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__pond-jetty_l11": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    7.42,
-    7.42
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__pond-jetty_l12": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.77,
-    6.77
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__pond-jetty_l13": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    6.11,
-    6.11
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    4
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 0,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__pond-jetty_l14": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.46,
-    9.6
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
-    8
-   ],
-   "relaxed": 0,
-   "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 5,
-   "cap_floor": 1,
-   "cap_zdrop": 0,
-   "groundless": 0,
-   "small_loops": 0,
-   "family": "e"
-  },
-  "walk_e_square-plaza__pond-jetty_l4": {
-   "verts": [
-    8,
-    8,
-    12
-   ],
-   "polys": [
-    6,
-    6,
-    10
-   ],
-   "perim": [
-    5.68,
-    9.6
-   ],
-   "axis": [
-    0.0,
-    0.0
-   ],
-   "bedges": [
-    4,
     8
    ],
    "relaxed": 0,
@@ -4186,16 +3295,313 @@
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_square-plaza__pond-jetty_l5": {
+  "walk_e_square-plaza__barn_l1": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
+   ],
+   "perim": [
+    6.0,
+    6.0
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l10": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.91,
+    8.91
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l11": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    9.16,
+    9.16
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 1,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l12": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.07,
+    8.07
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l13": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.98,
+    6.98
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l14": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    5.89,
+    9.6
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l2": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.0,
+    6.0
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l3": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.0,
+    6.0
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l4": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    5.68,
+    9.6
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
    ],
    "perim": [
     6.56,
@@ -4206,29 +3612,29 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
-   "cap_zdrop": 0,
+   "cap_zdrop": 1,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_square-plaza__pond-jetty_l6": {
+  "walk_e_square-plaza__barn_l6": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     7.43,
@@ -4239,29 +3645,29 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 0,
-   "seat_pinned": 4,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
-   "cap_zdrop": 0,
+   "cap_zdrop": 2,
    "groundless": 0,
    "small_loops": 0,
    "family": "e"
   },
-  "walk_e_square-plaza__pond-jetty_l7": {
+  "walk_e_square-plaza__barn_l7": {
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     8.31,
@@ -4272,13 +3678,607 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l8": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.48,
+    8.48
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__barn_l9": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.68,
+    8.68
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 2,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__hillside-cottage_l10": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.03,
+    6.03
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__hillside-cottage_l4": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.03,
+    6.03
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 3,
+   "seat_pinned": 5,
+   "cap_floor": 0,
+   "cap_zdrop": 1,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__hillside-cottage_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.27,
+    7.27
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__hillside-cottage_l6": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.5,
+    8.5
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__hillside-cottage_l7": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    9.74,
+    9.74
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__hillside-cottage_l8": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.5,
+    8.5
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__hillside-cottage_l9": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.27,
+    7.27
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l10": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.6,
+    7.6
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l11": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.42,
+    7.42
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 1,
-   "seat_pinned": 3,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l12": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.77,
+    6.77
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l13": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.11,
+    6.11
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l14": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    5.46,
+    9.6
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l4": {
+   "verts": [
+    8,
+    8,
+    16
+   ],
+   "polys": [
+    6,
+    6,
+    13
+   ],
+   "perim": [
+    5.68,
+    9.6
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    6,
+    12
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 12,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l5": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    6.56,
+    6.56
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l6": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    7.43,
+    7.43
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
+   "groundless": 0,
+   "small_loops": 0,
+   "family": "e"
+  },
+  "walk_e_square-plaza__pond-jetty_l7": {
+   "verts": [
+    8,
+    8,
+    20
+   ],
+   "polys": [
+    6,
+    6,
+    14
+   ],
+   "perim": [
+    8.31,
+    8.31
+   ],
+   "axis": [
+    0.0,
+    0.0
+   ],
+   "bedges": [
+    8,
+    8
+   ],
+   "relaxed": 0,
+   "relax_pinned": 0,
+   "dropped": 1,
+   "seat_pinned": 7,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4289,12 +4289,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     8.05,
@@ -4305,13 +4305,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
+   "dropped": 1,
+   "seat_pinned": 7,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4322,12 +4322,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     7.81,
@@ -4338,13 +4338,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
+   "dropped": 1,
+   "seat_pinned": 7,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4355,12 +4355,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     7.12,
@@ -4371,13 +4371,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4388,12 +4388,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     9.44,
@@ -4404,13 +4404,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4421,12 +4421,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     11.75,
@@ -4437,13 +4437,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4454,12 +4454,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     14.07,
@@ -4470,13 +4470,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
+   "dropped": 2,
+   "seat_pinned": 6,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4487,12 +4487,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     11.75,
@@ -4503,14 +4503,14 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 1,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -4520,12 +4520,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     9.44,
@@ -4536,14 +4536,14 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 1,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -4553,12 +4553,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     7.12,
@@ -4569,13 +4569,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
+   "dropped": 1,
+   "seat_pinned": 7,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4595,18 +4595,18 @@
    ],
    "perim": [
     39.6,
-    30.82
+    30.95
    ],
    "axis": [
     100.0,
-    4.5
+    6.8
    ],
    "bedges": [
     88,
     88
    ],
-   "relaxed": 83,
-   "relax_pinned": 5,
+   "relaxed": 81,
+   "relax_pinned": 7,
    "dropped": 81,
    "seat_pinned": 7,
    "cap_floor": 75,
@@ -4628,21 +4628,21 @@
    ],
    "perim": [
     92.7,
-    79.73
+    79.86
    ],
    "axis": [
     100.0,
-    9.5
+    10.0
    ],
    "bedges": [
     206,
     210
    ],
-   "relaxed": 199,
-   "relax_pinned": 7,
-   "dropped": 197,
-   "seat_pinned": 7,
-   "cap_floor": 201,
+   "relaxed": 198,
+   "relax_pinned": 8,
+   "dropped": 196,
+   "seat_pinned": 8,
+   "cap_floor": 200,
    "cap_zdrop": 89,
    "groundless": 0,
    "small_loops": 0,
@@ -4661,22 +4661,22 @@
    ],
    "perim": [
     93.6,
-    74.66
+    74.79
    ],
    "axis": [
     100.0,
-    3.7
+    4.2
    ],
    "bedges": [
     208,
     216
    ],
-   "relaxed": 203,
-   "relax_pinned": 5,
+   "relaxed": 202,
+   "relax_pinned": 6,
    "dropped": 198,
    "seat_pinned": 6,
    "cap_floor": 205,
-   "cap_zdrop": 2,
+   "cap_zdrop": 4,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -4706,9 +4706,9 @@
    ],
    "relaxed": 14,
    "relax_pinned": 8,
-   "dropped": 15,
-   "seat_pinned": 7,
-   "cap_floor": 15,
+   "dropped": 14,
+   "seat_pinned": 8,
+   "cap_floor": 14,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -4731,17 +4731,17 @@
    ],
    "axis": [
     100.0,
-    81.2
+    84.4
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 5,
-   "relax_pinned": 27,
-   "dropped": 6,
-   "seat_pinned": 26,
-   "cap_floor": 3,
+   "relaxed": 4,
+   "relax_pinned": 28,
+   "dropped": 4,
+   "seat_pinned": 28,
+   "cap_floor": 2,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -4770,10 +4770,10 @@
     30,
     30
    ],
-   "relaxed": 6,
-   "relax_pinned": 24,
-   "dropped": 8,
-   "seat_pinned": 22,
+   "relaxed": 5,
+   "relax_pinned": 25,
+   "dropped": 5,
+   "seat_pinned": 25,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -4793,18 +4793,18 @@
    ],
    "perim": [
     10.8,
-    10.18
+    10.2
    ],
    "axis": [
     100.0,
-    25.0
+    28.6
    ],
    "bedges": [
     24,
     28
    ],
-   "relaxed": 16,
-   "relax_pinned": 8,
+   "relaxed": 15,
+   "relax_pinned": 9,
    "dropped": 4,
    "seat_pinned": 9,
    "cap_floor": 1,
@@ -4826,22 +4826,22 @@
    ],
    "perim": [
     5.4,
-    6.56
+    7.06
    ],
    "axis": [
     100.0,
-    15.0
+    20.0
    ],
    "bedges": [
     12,
     20
    ],
-   "relaxed": 8,
-   "relax_pinned": 4,
-   "dropped": 6,
-   "seat_pinned": 3,
-   "cap_floor": 13,
-   "cap_zdrop": 3,
+   "relaxed": 7,
+   "relax_pinned": 5,
+   "dropped": 4,
+   "seat_pinned": 6,
+   "cap_floor": 10,
+   "cap_zdrop": 1,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -4905,8 +4905,8 @@
    "relaxed": 13,
    "relax_pinned": 17,
    "dropped": 12,
-   "seat_pinned": 18,
-   "cap_floor": 7,
+   "seat_pinned": 19,
+   "cap_floor": 6,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -4958,18 +4958,18 @@
    ],
    "perim": [
     15.3,
-    16.83
+    17.07
    ],
    "axis": [
     100.0,
-    38.1
+    47.6
    ],
    "bedges": [
     34,
     42
    ],
-   "relaxed": 16,
-   "relax_pinned": 18,
+   "relaxed": 15,
+   "relax_pinned": 19,
    "dropped": 12,
    "seat_pinned": 19,
    "cap_floor": 16,
@@ -4991,20 +4991,20 @@
    ],
    "perim": [
     16.2,
-    15.44
+    15.94
    ],
    "axis": [
     100.0,
-    32.5
+    50.0
    ],
    "bedges": [
     36,
     40
    ],
-   "relaxed": 20,
-   "relax_pinned": 16,
-   "dropped": 5,
-   "seat_pinned": 17,
+   "relaxed": 17,
+   "relax_pinned": 19,
+   "dropped": 2,
+   "seat_pinned": 20,
    "cap_floor": 1,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -5057,21 +5057,21 @@
    ],
    "perim": [
     6.3,
-    6.41
+    6.92
    ],
    "axis": [
     100.0,
-    33.3
+    38.9
    ],
    "bedges": [
     14,
     18
    ],
-   "relaxed": 7,
-   "relax_pinned": 7,
-   "dropped": 6,
-   "seat_pinned": 7,
-   "cap_floor": 9,
+   "relaxed": 6,
+   "relax_pinned": 8,
+   "dropped": 5,
+   "seat_pinned": 9,
+   "cap_floor": 7,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5090,18 +5090,18 @@
    ],
    "perim": [
     12.6,
-    11.39
+    11.54
    ],
    "axis": [
     100.0,
-    57.1
+    60.7
    ],
    "bedges": [
     28,
     28
    ],
-   "relaxed": 11,
-   "relax_pinned": 17,
+   "relaxed": 10,
+   "relax_pinned": 18,
    "dropped": 10,
    "seat_pinned": 18,
    "cap_floor": 10,
@@ -5123,18 +5123,18 @@
    ],
    "perim": [
     15.3,
-    15.4
+    15.43
    ],
    "axis": [
     100.0,
-    60.5
+    63.2
    ],
    "bedges": [
     34,
     38
    ],
-   "relaxed": 10,
-   "relax_pinned": 24,
+   "relaxed": 9,
+   "relax_pinned": 25,
    "dropped": 8,
    "seat_pinned": 26,
    "cap_floor": 10,
@@ -5156,21 +5156,21 @@
    ],
    "perim": [
     16.2,
-    14.58
+    15.36
    ],
    "axis": [
     100.0,
-    52.8
+    63.9
    ],
    "bedges": [
     36,
     36
    ],
-   "relaxed": 15,
-   "relax_pinned": 21,
-   "dropped": 15,
-   "seat_pinned": 21,
-   "cap_floor": 9,
+   "relaxed": 12,
+   "relax_pinned": 24,
+   "dropped": 12,
+   "seat_pinned": 24,
+   "cap_floor": 7,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5189,21 +5189,21 @@
    ],
    "perim": [
     14.4,
-    13.6
+    14.11
    ],
    "axis": [
     100.0,
-    65.6
+    71.9
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 11,
-   "relax_pinned": 21,
-   "dropped": 11,
-   "seat_pinned": 21,
-   "cap_floor": 11,
+   "relaxed": 8,
+   "relax_pinned": 24,
+   "dropped": 8,
+   "seat_pinned": 24,
+   "cap_floor": 8,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5222,24 +5222,24 @@
    ],
    "perim": [
     16.2,
-    16.72
+    15.05
    ],
    "axis": [
     100.0,
-    57.5
+    63.9
    ],
    "bedges": [
     36,
-    40
+    36
    ],
-   "relaxed": 12,
-   "relax_pinned": 24,
+   "relaxed": 11,
+   "relax_pinned": 25,
    "dropped": 10,
-   "seat_pinned": 27,
-   "cap_floor": 13,
+   "seat_pinned": 22,
+   "cap_floor": 10,
    "cap_zdrop": 0,
    "groundless": 0,
-   "small_loops": 0,
+   "small_loops": 1,
    "family": "lm"
   },
   "walk_lm_square-plaza.017": {
@@ -5255,20 +5255,20 @@
    ],
    "perim": [
     14.4,
-    12.7
+    13.07
    ],
    "axis": [
     100.0,
-    53.1
+    62.5
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 13,
-   "relax_pinned": 19,
-   "dropped": 12,
-   "seat_pinned": 20,
+   "relaxed": 11,
+   "relax_pinned": 21,
+   "dropped": 11,
+   "seat_pinned": 21,
    "cap_floor": 10,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -5321,21 +5321,21 @@
    ],
    "perim": [
     13.5,
-    13.02
+    11.89
    ],
    "axis": [
     100.0,
-    35.3
+    50.0
    ],
    "bedges": [
     30,
-    34
+    30
    ],
-   "relaxed": 17,
-   "relax_pinned": 13,
-   "dropped": 13,
+   "relaxed": 14,
+   "relax_pinned": 16,
+   "dropped": 14,
    "seat_pinned": 16,
-   "cap_floor": 16,
+   "cap_floor": 14,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5354,22 +5354,22 @@
    ],
    "perim": [
     14.4,
-    13.46
+    13.74
    ],
    "axis": [
     100.0,
-    65.6
+    68.8
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 10,
-   "relax_pinned": 22,
-   "dropped": 11,
-   "seat_pinned": 21,
-   "cap_floor": 11,
-   "cap_zdrop": 11,
+   "relaxed": 9,
+   "relax_pinned": 23,
+   "dropped": 9,
+   "seat_pinned": 23,
+   "cap_floor": 9,
+   "cap_zdrop": 9,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -5420,21 +5420,21 @@
    ],
    "perim": [
     14.4,
-    13.6
+    14.11
    ],
    "axis": [
     100.0,
-    65.6
+    71.9
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 10,
-   "relax_pinned": 22,
-   "dropped": 10,
-   "seat_pinned": 22,
-   "cap_floor": 10,
+   "relaxed": 8,
+   "relax_pinned": 24,
+   "dropped": 8,
+   "seat_pinned": 24,
+   "cap_floor": 8,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5453,21 +5453,21 @@
    ],
    "perim": [
     14.4,
-    12.84
+    13.82
    ],
    "axis": [
     100.0,
-    40.6
+    53.1
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 17,
-   "relax_pinned": 15,
-   "dropped": 17,
-   "seat_pinned": 15,
-   "cap_floor": 17,
+   "relaxed": 13,
+   "relax_pinned": 19,
+   "dropped": 13,
+   "seat_pinned": 19,
+   "cap_floor": 13,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5486,21 +5486,21 @@
    ],
    "perim": [
     14.4,
-    13.35
+    13.85
    ],
    "axis": [
     100.0,
-    59.4
+    71.9
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 11,
-   "relax_pinned": 21,
-   "dropped": 9,
-   "seat_pinned": 23,
-   "cap_floor": 9,
+   "relaxed": 7,
+   "relax_pinned": 25,
+   "dropped": 7,
+   "seat_pinned": 25,
+   "cap_floor": 7,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5519,21 +5519,21 @@
    ],
    "perim": [
     15.3,
-    18.16
+    19.2
    ],
    "axis": [
     100.0,
-    30.0
+    34.0
    ],
    "bedges": [
     34,
     50
    ],
-   "relaxed": 17,
-   "relax_pinned": 17,
-   "dropped": 13,
-   "seat_pinned": 19,
-   "cap_floor": 23,
+   "relaxed": 15,
+   "relax_pinned": 19,
+   "dropped": 11,
+   "seat_pinned": 21,
+   "cap_floor": 21,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5564,9 +5564,9 @@
    ],
    "relaxed": 5,
    "relax_pinned": 25,
-   "dropped": 6,
-   "seat_pinned": 24,
-   "cap_floor": 6,
+   "dropped": 5,
+   "seat_pinned": 25,
+   "cap_floor": 5,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5585,21 +5585,21 @@
    ],
    "perim": [
     16.2,
-    15.18
+    15.74
    ],
    "axis": [
     100.0,
-    27.5
+    37.5
    ],
    "bedges": [
     36,
     40
    ],
-   "relaxed": 24,
-   "relax_pinned": 12,
-   "dropped": 12,
-   "seat_pinned": 15,
-   "cap_floor": 11,
+   "relaxed": 20,
+   "relax_pinned": 16,
+   "dropped": 11,
+   "seat_pinned": 16,
+   "cap_floor": 10,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5618,22 +5618,22 @@
    ],
    "perim": [
     14.4,
-    13.46
+    13.74
    ],
    "axis": [
     100.0,
-    65.6
+    68.8
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 10,
-   "relax_pinned": 22,
-   "dropped": 11,
-   "seat_pinned": 21,
-   "cap_floor": 11,
-   "cap_zdrop": 9,
+   "relaxed": 9,
+   "relax_pinned": 23,
+   "dropped": 9,
+   "seat_pinned": 23,
+   "cap_floor": 9,
+   "cap_zdrop": 8,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -5684,21 +5684,21 @@
    ],
    "perim": [
     15.3,
-    15.45
+    15.68
    ],
    "axis": [
     100.0,
-    63.2
+    68.4
    ],
    "bedges": [
     34,
     38
    ],
-   "relaxed": 9,
-   "relax_pinned": 25,
-   "dropped": 6,
-   "seat_pinned": 26,
-   "cap_floor": 10,
+   "relaxed": 7,
+   "relax_pinned": 27,
+   "dropped": 5,
+   "seat_pinned": 27,
+   "cap_floor": 9,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5717,21 +5717,21 @@
    ],
    "perim": [
     14.4,
-    13.06
+    13.85
    ],
    "axis": [
     100.0,
-    59.4
+    71.9
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 11,
-   "relax_pinned": 21,
-   "dropped": 10,
-   "seat_pinned": 22,
-   "cap_floor": 10,
+   "relaxed": 7,
+   "relax_pinned": 25,
+   "dropped": 7,
+   "seat_pinned": 25,
+   "cap_floor": 7,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5750,21 +5750,21 @@
    ],
    "perim": [
     16.2,
-    15.19
+    15.9
    ],
    "axis": [
     100.0,
-    37.5
+    47.5
    ],
    "bedges": [
     36,
     40
    ],
-   "relaxed": 18,
-   "relax_pinned": 18,
-   "dropped": 15,
-   "seat_pinned": 20,
-   "cap_floor": 18,
+   "relaxed": 14,
+   "relax_pinned": 22,
+   "dropped": 13,
+   "seat_pinned": 22,
+   "cap_floor": 16,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5783,21 +5783,21 @@
    ],
    "perim": [
     16.2,
-    15.45
+    16.35
    ],
    "axis": [
     100.0,
-    55.0
+    65.0
    ],
    "bedges": [
     36,
     40
    ],
-   "relaxed": 12,
-   "relax_pinned": 24,
-   "dropped": 10,
-   "seat_pinned": 25,
-   "cap_floor": 13,
+   "relaxed": 9,
+   "relax_pinned": 27,
+   "dropped": 8,
+   "seat_pinned": 27,
+   "cap_floor": 11,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5849,20 +5849,20 @@
    ],
    "perim": [
     14.4,
-    12.98
+    13.12
    ],
    "axis": [
     100.0,
-    59.4
+    65.6
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 12,
-   "relax_pinned": 20,
-   "dropped": 7,
-   "seat_pinned": 17,
+   "relaxed": 10,
+   "relax_pinned": 22,
+   "dropped": 6,
+   "seat_pinned": 18,
    "cap_floor": 3,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -5882,21 +5882,21 @@
    ],
    "perim": [
     12.6,
-    12.8
+    11.38
    ],
    "axis": [
     100.0,
-    43.8
+    53.6
    ],
    "bedges": [
     28,
-    32
+    28
    ],
-   "relaxed": 13,
-   "relax_pinned": 15,
-   "dropped": 11,
+   "relaxed": 12,
+   "relax_pinned": 16,
+   "dropped": 12,
    "seat_pinned": 16,
-   "cap_floor": 14,
+   "cap_floor": 12,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5915,18 +5915,18 @@
    ],
    "perim": [
     13.5,
-    12.9
+    13.03
    ],
    "axis": [
     100.0,
-    80.0
+    86.7
    ],
    "bedges": [
     30,
     30
    ],
-   "relaxed": 5,
-   "relax_pinned": 25,
+   "relaxed": 3,
+   "relax_pinned": 27,
    "dropped": 3,
    "seat_pinned": 27,
    "cap_floor": 3,
@@ -5948,18 +5948,18 @@
    ],
    "perim": [
     18.0,
-    17.32
+    17.48
    ],
    "axis": [
     100.0,
-    31.2
+    33.3
    ],
    "bedges": [
     40,
     48
    ],
-   "relaxed": 23,
-   "relax_pinned": 17,
+   "relaxed": 22,
+   "relax_pinned": 18,
    "dropped": 20,
    "seat_pinned": 20,
    "cap_floor": 17,
@@ -5981,21 +5981,21 @@
    ],
    "perim": [
     14.4,
-    12.88
+    13.15
    ],
    "axis": [
     100.0,
-    50.0
+    59.4
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 14,
-   "relax_pinned": 18,
-   "dropped": 12,
-   "seat_pinned": 20,
-   "cap_floor": 12,
+   "relaxed": 11,
+   "relax_pinned": 21,
+   "dropped": 11,
+   "seat_pinned": 21,
+   "cap_floor": 11,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6014,21 +6014,21 @@
    ],
    "perim": [
     15.3,
-    17.19
+    17.7
    ],
    "axis": [
     100.0,
-    34.8
+    37.0
    ],
    "bedges": [
     34,
     46
    ],
-   "relaxed": 16,
-   "relax_pinned": 18,
-   "dropped": 13,
-   "seat_pinned": 19,
-   "cap_floor": 21,
+   "relaxed": 15,
+   "relax_pinned": 19,
+   "dropped": 12,
+   "seat_pinned": 21,
+   "cap_floor": 19,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6113,18 +6113,18 @@
    ],
    "perim": [
     12.6,
-    11.39
+    11.54
    ],
    "axis": [
     100.0,
-    57.1
+    60.7
    ],
    "bedges": [
     28,
     28
    ],
-   "relaxed": 11,
-   "relax_pinned": 17,
+   "relaxed": 10,
+   "relax_pinned": 18,
    "dropped": 10,
    "seat_pinned": 18,
    "cap_floor": 10,
@@ -6146,21 +6146,21 @@
    ],
    "perim": [
     5.4,
-    7.18
+    6.1
    ],
    "axis": [
     100.0,
-    20.0
+    31.2
    ],
    "bedges": [
     12,
-    20
+    16
    ],
-   "relaxed": 7,
-   "relax_pinned": 5,
+   "relaxed": 6,
+   "relax_pinned": 6,
    "dropped": 4,
-   "seat_pinned": 7,
-   "cap_floor": 9,
+   "seat_pinned": 6,
+   "cap_floor": 8,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6179,18 +6179,18 @@
    ],
    "perim": [
     9.9,
-    9.49
+    9.51
    ],
    "axis": [
     100.0,
-    38.5
+    46.2
    ],
    "bedges": [
     22,
     26
    ],
-   "relaxed": 13,
-   "relax_pinned": 9,
+   "relaxed": 12,
+   "relax_pinned": 10,
    "dropped": 10,
    "seat_pinned": 10,
    "cap_floor": 14,
@@ -6212,18 +6212,18 @@
    ],
    "perim": [
     5.4,
-    4.48
+    4.5
    ],
    "axis": [
     100.0,
-    33.3
+    41.7
    ],
    "bedges": [
     12,
     12
    ],
-   "relaxed": 7,
-   "relax_pinned": 5,
+   "relaxed": 6,
+   "relax_pinned": 6,
    "dropped": 6,
    "seat_pinned": 6,
    "cap_floor": 0,
@@ -6311,22 +6311,22 @@
    ],
    "perim": [
     13.5,
-    13.24
+    13.5
    ],
    "axis": [
     100.0,
-    86.7
+    100.0
    ],
    "bedges": [
     30,
     30
    ],
-   "relaxed": 3,
-   "relax_pinned": 27,
-   "dropped": 2,
-   "seat_pinned": 28,
-   "cap_floor": 2,
-   "cap_zdrop": 2,
+   "relaxed": 1,
+   "relax_pinned": 29,
+   "dropped": 1,
+   "seat_pinned": 29,
+   "cap_floor": 1,
+   "cap_zdrop": 1,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -6344,18 +6344,18 @@
    ],
    "perim": [
     12.6,
-    11.23
+    11.25
    ],
    "axis": [
     100.0,
-    53.6
+    57.1
    ],
    "bedges": [
     28,
     28
    ],
-   "relaxed": 12,
-   "relax_pinned": 16,
+   "relaxed": 11,
+   "relax_pinned": 17,
    "dropped": 11,
    "seat_pinned": 17,
    "cap_floor": 11,
@@ -6377,22 +6377,22 @@
    ],
    "perim": [
     6.3,
-    6.41
+    6.92
    ],
    "axis": [
     100.0,
-    33.3
+    38.9
    ],
    "bedges": [
     14,
     18
    ],
-   "relaxed": 7,
-   "relax_pinned": 7,
-   "dropped": 6,
-   "seat_pinned": 7,
-   "cap_floor": 9,
-   "cap_zdrop": 8,
+   "relaxed": 6,
+   "relax_pinned": 8,
+   "dropped": 5,
+   "seat_pinned": 9,
+   "cap_floor": 7,
+   "cap_zdrop": 7,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -6443,22 +6443,22 @@
    ],
    "perim": [
     16.2,
-    14.58
+    14.89
    ],
    "axis": [
     100.0,
-    20.0
+    25.0
    ],
    "bedges": [
     36,
     40
    ],
-   "relaxed": 26,
-   "relax_pinned": 10,
-   "dropped": 23,
-   "seat_pinned": 11,
-   "cap_floor": 27,
-   "cap_zdrop": 12,
+   "relaxed": 24,
+   "relax_pinned": 12,
+   "dropped": 22,
+   "seat_pinned": 12,
+   "cap_floor": 26,
+   "cap_zdrop": 11,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -6476,22 +6476,22 @@
    ],
    "perim": [
     14.4,
-    13.22
+    14.0
    ],
    "axis": [
     100.0,
-    59.4
+    71.9
    ],
    "bedges": [
     32,
     32
    ],
-   "relaxed": 11,
-   "relax_pinned": 21,
-   "dropped": 10,
-   "seat_pinned": 22,
-   "cap_floor": 10,
-   "cap_zdrop": 10,
+   "relaxed": 8,
+   "relax_pinned": 24,
+   "dropped": 8,
+   "seat_pinned": 24,
+   "cap_floor": 8,
+   "cap_zdrop": 8,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -6509,22 +6509,22 @@
    ],
    "perim": [
     12.6,
-    11.63
+    11.87
    ],
    "axis": [
     100.0,
-    60.7
+    71.4
    ],
    "bedges": [
     28,
     28
    ],
-   "relaxed": 10,
-   "relax_pinned": 18,
-   "dropped": 10,
-   "seat_pinned": 18,
-   "cap_floor": 10,
-   "cap_zdrop": 10,
+   "relaxed": 7,
+   "relax_pinned": 21,
+   "dropped": 7,
+   "seat_pinned": 21,
+   "cap_floor": 7,
+   "cap_zdrop": 7,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
@@ -6575,21 +6575,21 @@
    ],
    "perim": [
     24.3,
-    18.8
+    18.94
    ],
    "axis": [
     100.0,
-    3.7
+    7.4
    ],
    "bedges": [
     54,
     54
    ],
-   "relaxed": 51,
-   "relax_pinned": 3,
-   "dropped": 50,
-   "seat_pinned": 4,
-   "cap_floor": 50,
+   "relaxed": 49,
+   "relax_pinned": 5,
+   "dropped": 49,
+   "seat_pinned": 5,
+   "cap_floor": 49,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6599,12 +6599,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     9.2,
@@ -6615,15 +6615,15 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
+   "dropped": 8,
    "seat_pinned": 0,
    "cap_floor": 4,
-   "cap_zdrop": 1,
+   "cap_zdrop": 3,
    "groundless": 0,
    "small_loops": 0,
    "family": "pad"
@@ -6632,12 +6632,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -6648,14 +6648,14 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 1,
-   "seat_pinned": 3,
-   "cap_floor": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6665,12 +6665,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -6681,14 +6681,14 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 3,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
    "cap_zdrop": 2,
    "groundless": 0,
    "small_loops": 0,
@@ -6698,12 +6698,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     8.0,
@@ -6714,14 +6714,14 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 3,
+   "seat_pinned": 5,
+   "cap_floor": 2,
    "cap_zdrop": 3,
    "groundless": 0,
    "small_loops": 0,
@@ -6731,12 +6731,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -6747,15 +6747,15 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
+   "dropped": 5,
+   "seat_pinned": 3,
    "cap_floor": 3,
-   "cap_zdrop": 2,
+   "cap_zdrop": 3,
    "groundless": 0,
    "small_loops": 0,
    "family": "pad"
@@ -6764,12 +6764,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -6780,15 +6780,15 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
+   "dropped": 8,
    "seat_pinned": 0,
    "cap_floor": 4,
-   "cap_zdrop": 3,
+   "cap_zdrop": 6,
    "groundless": 0,
    "small_loops": 0,
    "family": "pad"
@@ -6797,12 +6797,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -6813,14 +6813,14 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 3,
+   "seat_pinned": 5,
+   "cap_floor": 1,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6830,12 +6830,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     8.7,
@@ -6846,14 +6846,14 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 2,
+   "dropped": 4,
+   "seat_pinned": 4,
+   "cap_floor": 1,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6863,12 +6863,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -6879,14 +6879,14 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 3,
-   "cap_floor": 1,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6896,12 +6896,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     8.7,
@@ -6912,15 +6912,15 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 2,
-   "cap_zdrop": 1,
+   "dropped": 3,
+   "seat_pinned": 5,
+   "cap_floor": 1,
+   "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "pad"
@@ -6929,12 +6929,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     4.2,
@@ -6945,13 +6945,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 0,
-   "seat_pinned": 4,
+   "seat_pinned": 8,
    "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -6962,12 +6962,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     4.2,
@@ -6978,14 +6978,14 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 1,
-   "seat_pinned": 3,
-   "cap_floor": 1,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6995,12 +6995,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -7011,14 +7011,14 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 3,
-   "seat_pinned": 1,
-   "cap_floor": 3,
+   "dropped": 4,
+   "seat_pinned": 4,
+   "cap_floor": 2,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7028,12 +7028,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     10.8,
@@ -7044,13 +7044,13 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 1,
-   "seat_pinned": 3,
+   "seat_pinned": 7,
    "cap_floor": 1,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -7061,12 +7061,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.6,
@@ -7077,13 +7077,13 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
+   "dropped": 3,
+   "seat_pinned": 5,
    "cap_floor": 2,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -7094,12 +7094,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     10.2,
@@ -7110,13 +7110,13 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
    "dropped": 1,
-   "seat_pinned": 3,
+   "seat_pinned": 7,
    "cap_floor": 1,
    "cap_zdrop": 1,
    "groundless": 0,
@@ -7127,12 +7127,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     9.2,
@@ -7143,13 +7143,13 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
+   "dropped": 3,
+   "seat_pinned": 5,
    "cap_floor": 2,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -7160,12 +7160,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     10.4,
@@ -7176,14 +7176,14 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 2,
-   "seat_pinned": 2,
-   "cap_floor": 1,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7193,12 +7193,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -7209,12 +7209,12 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
+   "dropped": 8,
    "seat_pinned": 0,
    "cap_floor": 4,
    "cap_zdrop": 0,
@@ -7226,12 +7226,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -7242,15 +7242,15 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
+   "dropped": 8,
    "seat_pinned": 0,
    "cap_floor": 4,
-   "cap_zdrop": 1,
+   "cap_zdrop": 2,
    "groundless": 0,
    "small_loops": 0,
    "family": "pad"
@@ -7259,12 +7259,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     9.2,
@@ -7275,15 +7275,15 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
+   "dropped": 8,
    "seat_pinned": 0,
    "cap_floor": 4,
-   "cap_zdrop": 1,
+   "cap_zdrop": 3,
    "groundless": 0,
    "small_loops": 0,
    "family": "pad"
@@ -7292,12 +7292,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     12.0,
@@ -7308,13 +7308,13 @@
     100.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
+   "dropped": 6,
+   "seat_pinned": 2,
    "cap_floor": 3,
    "cap_zdrop": 0,
    "groundless": 0,
@@ -7325,12 +7325,12 @@
    "verts": [
     8,
     8,
-    12
+    20
    ],
    "polys": [
     6,
     6,
-    10
+    14
    ],
    "perim": [
     9.2,
@@ -7341,15 +7341,15 @@
     0.0
    ],
    "bedges": [
-    4,
-    4
+    8,
+    8
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 4,
-   "seat_pinned": 0,
-   "cap_floor": 4,
-   "cap_zdrop": 1,
+   "dropped": 2,
+   "seat_pinned": 6,
+   "cap_floor": 0,
+   "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
    "family": "pad"

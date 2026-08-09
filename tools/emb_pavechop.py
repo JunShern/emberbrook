@@ -84,9 +84,11 @@ per object, and a mesh that is entirely pinned says so.
 within 0.36 m of another walk mesh's top ring and pinned **587 of the ribbons' 603
 boundary vertices**, because the next one-quad segment along the SAME road is that close
 in the direction the rim runs.  A collinear continuation of a rim is not a junction.  The
-shipped test steps `--outr` metres OUTWARD off the rim (away from the mean of the top
-faces owning the vertex) and asks whether another walk mesh's top surface is under that
-foot.
+shipped test steps `--outr` metres OUTWARD off the rim and asks whether another walk
+mesh's top surface is under that foot — and it asks it AT EACH BOUNDARY EDGE'S MIDPOINT,
+perpendicular to that edge, not at each vertex.  See `joint_edges`: the vertex form
+photographed the town's roads as a ladder of separate plates, because a one-quad ribbon
+segment has only corners and a corner's outward direction misses the segment next to it.
 
 NOT IDEMPOTENT, and it REFUSES rather than compounding: the inset and the relax both
 measure their clamps against the run's own starting position, so a second run would
@@ -127,6 +129,7 @@ XYITER = int(opt("--xysmooth", "8"))
 XYCLAMP = float(opt("--xyclamp", "0.22"))
 JOINR = float(opt("--joinr", "0.36"))
 JOINZ = 0.30
+BSTEP = float(opt("--bstep", "0.60"))    # cut a boundary edge longer than this
 MINLOOP = float(opt("--minloop", "2.4"))     # a loop shorter than this is not chamfered
 ONLY = [s for s in (opt("--only", "") or "").split(",") if s]
 
@@ -334,6 +337,41 @@ def continued_by_other(nm, w, outward):
     return town_[hit[2]] != nm and abs(hit[0].z - w.z) <= JOINZ
 
 
+def joint_edges(nm, world, cen, bedges):
+    """THE PIN SET, AND IT IS AN EDGE TEST, NOT A VERTEX TEST — MEASURED AS A REGRESSION.
+    The first shipped cut asked each boundary VERTEX whether another walk mesh lay one step
+    outward along its own outward direction.  A road edge is a chain of ONE-QUAD
+    `walk_e_..._lN` objects, so every vertex on it is a CORNER, and a corner's outward
+    direction bisects — it points into the gap DIAGONALLY PAST the next segment instead of
+    across the shared edge.  Nothing got pinned, every segment was chamfered on all four
+    sides, and the draft A/B photographed the road as a LADDER OF SEPARATE PLATES with a
+    groove at every joint: a new defect the size of the one being fixed, and only the
+    picture said so.
+      The seat is a property of an EDGE (the chamfer band lies along one), so the question
+    is asked at each boundary edge's MIDPOINT, stepping perpendicular to that edge and away
+    from the face that owns it.  Both endpoints of a continued edge are pinned."""
+    pinned = set()
+    for a, b in bedges:
+        wa_, wb_ = world[a], world[b]
+        ex, ey = wb_.x - wa_.x, wb_.y - wa_.y
+        L = math.hypot(ex, ey)
+        if L < 1e-9:
+            continue
+        px, py = -ey / L, ex / L
+        mx, my = (wa_.x + wb_.x) / 2.0, (wa_.y + wb_.y) / 2.0
+        cs = (cen.get(a) or []) + (cen.get(b) or [])
+        if cs:
+            cx = sum(c[0] for c in cs) / len(cs)
+            cy = sum(c[1] for c in cs) / len(cs)
+            if (mx - cx) * px + (my - cy) * py < 0:
+                px, py = -px, -py
+        mz = (wa_.z + wb_.z) / 2.0
+        if continued_by_other(nm, Vector((mx, my, mz)), (px, py)):
+            pinned.add(a)
+            pinned.add(b)
+    return pinned
+
+
 def outward_of(world, faces_of_v, vi):
     """Away from the mean of the top faces that own this vertex, in XY."""
     cs = faces_of_v.get(vi)
@@ -403,8 +441,9 @@ for o in W:
         for a2, b2 in bedges0:
             bnbr.setdefault(a2, set()).add(b2)
             bnbr.setdefault(b2, set()).add(a2)
-        pinned = {vi for vi in bnbr
-                  if continued_by_other(o.name, world[vi], outward_of(world, cen, vi))}
+        pinned = joint_edges(o.name, world, cen, bedges0) | {
+            vi for vi in bnbr
+            if continued_by_other(o.name, world[vi], outward_of(world, cen, vi))}
         npin = len(pinned)
         xy0 = {vi: (world[vi].x, world[vi].y) for vi in range(len(world))}
         moved = set()
@@ -438,11 +477,44 @@ for o in W:
         me.update()
         top, bot, world, bedges0, cen = top_boundary(o)
 
-    # ============================================== 2. INSET the top region ===
+    # ================================= 2. SUBDIVIDE the boundary, then INSET ===
+    # WHY THE BOUNDARY IS CUT FIRST, AND IT IS THE SECOND THING THE PICTURE HAD TO TEACH
+    # THIS FILE.  A road edge ships as a chain of ONE-QUAD `walk_e_..._lN` objects and a
+    # doorstep pad is a single quad, so EVERY vertex they own is a corner shared between a
+    # free rim and a joint with the next mesh.  Pinning joints therefore pinned the whole
+    # object: `seat 0, pin 608` across all 138 ribbon segments, i.e. the roads kept their
+    # 0.12 m riser and their black outline.  Cutting each boundary edge into <= --bstep
+    # pieces gives a free edge INTERIOR vertices that no joint owns, so a rim chamfers and
+    # tapers to nothing at the joint instead of choosing between the two.
+    if top and BSTEP > 0:
+        bm = bmesh.new()
+        bm.from_mesh(me)
+        bm.edges.ensure_lookup_table()
+        want = {(min(a, b), max(a, b)) for a, b in bedges0}
+        es, cuts = [], 0
+        for e in bm.edges:
+            k = (min(e.verts[0].index, e.verts[1].index), max(e.verts[0].index, e.verts[1].index))
+            if k not in want:
+                continue
+            L = (world[k[0]] - world[k[1]]).length
+            c = min(6, int(math.ceil(L / BSTEP)) - 1)
+            if c > 0:
+                es.append((e, c))
+                cuts = max(cuts, c)
+        for c in range(1, cuts + 1):
+            sel = [e for e, cc in es if cc >= c]
+            if not sel:
+                continue
+            bmesh.ops.subdivide_edges(bm, edges=sel, cuts=1, use_grid_fill=False)
+            break                    # one pass: cuts=1 on every long edge is enough taper
+        bm.to_mesh(me)
+        bm.free()
+        me.update()
+        top, bot, world, bedges0, cen = top_boundary(o)
+
+    # ------------------------------------------------ INSET the top region ---
     # bmesh's own inset, so the ORIGINAL boundary loop becomes the outer edge of a
     # chamfer band and is what gets seated.  Nothing inside the band moves at all.
-    outer_co = [tuple(round(c, 4) for c in world[v]) for e in bedges0 for v in e]
-    outer_key = set(outer_co)
     if top and INSET > 0:
         bm = bmesh.new()
         bm.from_mesh(me)
@@ -488,12 +560,13 @@ for o in W:
     for vi in {v for i in bot for v in me.polygons[i].vertices}:
         bz.setdefault((round(world[vi].x, 2), round(world[vi].y, 2)), []).append(world[vi].z)
 
+    JOINT = joint_edges(o.name, world, cen, bedges1)
     dropped, pinned2, capf, capz, groundless = 0, 0, 0, 0, 0
     for vi in bnd:
         if vi in smallv:
             continue
         w = world[vi]
-        if continued_by_other(o.name, w, outward_of(world, cen, vi)):
+        if vi in JOINT or continued_by_other(o.name, w, outward_of(world, cen, vi)):
             pinned2 += 1
             continue
         g = ground_under(w.x, w.y, w.z)
