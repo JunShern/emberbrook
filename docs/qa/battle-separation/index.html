@@ -1,0 +1,248 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Battle — TONAL SEPARATION: does the cast read against real terrain?</title>
+<style>
+ body{background:#12151a;color:#dfe6ee;font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;margin:0;padding:34px 44px 90px;max-width:1500px}
+ h1{font-size:25px;margin:0 0 6px} h2{font-size:19px;margin:40px 0 8px;border-bottom:1px solid #2b323c;padding-bottom:6px}
+ h3{font-size:15px;margin:22px 0 6px;color:#9fb2c6}
+ p,li{max-width:112ch} code{background:#1c222b;padding:1px 5px;border-radius:3px;font-size:13px}
+ table{border-collapse:collapse;margin:12px 0;font-size:13.5px} th,td{border:1px solid #2b323c;padding:4px 9px;text-align:right}
+ th:first-child,td:first-child{text-align:left} th{background:#1b212a;color:#9fb2c6;font-weight:600}
+ .good{color:#7fd18c} .bad{color:#e8817e} .flat{color:#8b97a5} .key{color:#f0c674}
+ .lead{color:#a9b8c8;font-size:15px;max-width:112ch}
+ .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0}
+ .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+ figure{margin:0} figure img{width:100%;border:1px solid #2b323c;border-radius:3px;display:block}
+ figcaption{font-size:12px;color:#8b97a5;margin-top:3px}
+ blockquote{border-left:3px solid #3a444f;margin:14px 0;padding:2px 0 2px 14px;color:#a9b8c8}
+ .verdict{background:#1a2029;border:1px solid #2f3945;border-radius:5px;padding:14px 18px;margin:18px 0}
+</style>
+
+<h1>TONAL SEPARATION — does the cast read against real terrain?</h1>
+<p class="lead">2026-08-09 · world arena only (<code>?arena=world</code>) · instruments
+<code>tools/battle_sep.mjs</code> + the shared meter <code>tools/battle_meter.mjs</code> ·
+board for the last measured gap between the world arena and being good enough to make default.</p>
+
+<blockquote>The camera lane's verdict, which this board exists to answer: <em>“the world wins on
+picture and loses on legibility — two clean silhouettes on a low-contrast painted field is a
+composition; the valley is rock, foliage, houses and cast shadows.”</em> The shot language moved
+worst-case foe height 14.6% → 18.8% of frame and left RGB silhouette contrast where it found it.</blockquote>
+
+<h2>0 · How it is measured, and why that is not negotiable</h2>
+<p>Three meter rules this repo has already paid for, inherited whole from
+<code>tools/battle_camera.mjs</code> — which now <strong>imports the same file this tool does</strong>
+(<code>tools/battle_meter.mjs</code>), because a meter that is copy-pasted is two meters that drift:</p>
+<ul>
+ <li>a silhouette is a <strong>subtraction</strong> — the frame with a body minus the frame without it,
+ shadow and alpha and all — never a heuristic about where the body is;</li>
+ <li>occlusion is an <strong>intersection</strong> with the depth-test-off silhouette, never a ratio of
+ areas (GTAO and bloom leave halos the two passes do not share; a fully visible body once measured
+ “−136% occluded”);</li>
+ <li>contrast is <strong>RGB, never luminance</strong> — the <code>cutin_edge</code> lesson, where a
+ chartreuse fringe sat on 79 of 112 shipped plates, every one gate-green, because the gate measured
+ brightness and a rim of the wrong hue at the right brightness is invisible to it.</li>
+</ul>
+<p><code>edgeRGB</code> = RGB distance between a body's own edge band and the background ring around it.
+<code>edgeMin</code> = the <em>worst</em> body in the frame. <code>clutter</code> = the ring's own luminance
+spread. <code>snr</code> = edgeRGB ÷ clutter — because contrast alone is not legibility: a body 20 units
+from a background whose own variance is 46 does not read.</p>
+
+<h2>1 · CONTROL — and the first finding is that half the gap had already closed</h2>
+<p>Re-running the camera lane's own <code>--mode=legibility</code> on today's tree
+(<code>control/legibility.json</code>) reproduces the water regression and <strong>does not reproduce the
+meadow one</strong>. The meadow number the arc has been carrying (18.1 → 9.6) belongs to a pose the
+solver no longer picks: the ray-budget lane's scatter-height rule changed the occluder set on
+2026-08-08, which changed the placement, which changed the boom.</p>
+<table>
+<tr><th>site</th><th>edgeRGB cam off</th><th>cam on</th><th>2026-08-08 board</th><th>clutter off → on</th></tr>
+<tr><td>meadow</td><td>18.55</td><td class="good">20.31</td><td class="bad">18.14 → 9.61</td><td>41.7 → 46.3</td></tr>
+<tr><td>forest</td><td>12.15</td><td class="flat">12.57</td><td>12.01 → 11.93</td><td>21.7 → 23.3</td></tr>
+<tr><td>water</td><td>29.05</td><td class="bad">13.89</td><td class="bad">29.52 → 15.44</td><td>15.6 → 27.0</td></tr>
+<tr><td>crag</td><td>20.26</td><td class="flat">20.56</td><td>20.12 → 20.75</td><td>17.5 → 17.2</td></tr>
+</table>
+<p>Run-to-run noise on the control column is ≈2% (18.14→18.55, 12.01→12.15, 29.52→29.05, 20.12→20.26),
+so the meadow move is real and the standing gap is <strong>one site of four</strong>.</p>
+
+<h2>2 · THE TRUTH TABLE — what the boom axis is actually worth</h2>
+<p><code>--mode=pitch</code>, four sites × five boom rungs, one real battle each
+(<code>pitch.json</code>). The shot solver ranks these four elevations; this is what each is worth
+measured rather than proxied.</p>
+<table>
+<tr><th>site</th><th>0.16</th><th>0.22</th><th>0.27</th><th>0.28</th><th>0.34</th><th>spread</th></tr>
+<tr><td>meadow edgeRGB</td><td class="key">20.98</td><td>20.64</td><td>18.31</td><td>9.96*</td><td>18.20</td><td>15%</td></tr>
+<tr><td>forest edgeRGB</td><td class="key">13.51</td><td>12.69</td><td>11.54</td><td>11.60</td><td>10.93</td><td>24%</td></tr>
+<tr><td>water edgeFoe</td><td class="bad">9.85</td><td>17.14</td><td>23.77</td><td>22.54</td><td class="key">33.51</td><td class="key">×3.4</td></tr>
+<tr><td>crag edgeRGB</td><td class="key">21.39</td><td>19.70</td><td>19.84</td><td>19.82</td><td>18.52</td><td>15%</td></tr>
+</table>
+<p class="flat">*meadow 0.28 staged a different formation, not merely a different boom — its body list
+differs. It is the pose the 2026-08-08 meadow number was measured on.</p>
+<p><strong>The boom axis is worth a factor of 3.4 on foe contrast at ONE site and 15–24% at the other
+three — and the shipped solver picked the worst rung at exactly the site where it matters.</strong></p>
+
+<h3>2.1 · Why the geometric proxy cannot be re-weighted into correctness</h3>
+<p><code>scoreView</code>'s <code>wBack</code> term scores metres of clear depth behind each body — the
+stand-in for “it has sky behind it”. Against measured contrast, within each site:</p>
+<table>
+<tr><th>site</th><th>corr(back-depth, edgeRGB)</th><th>corr(back-depth, snr)</th></tr>
+<tr><td>water</td><td class="bad">−0.958</td><td class="bad">−0.796</td></tr>
+<tr><td>crag</td><td class="good">+0.911</td><td class="good">+0.981</td></tr>
+<tr><td>meadow</td><td>−0.332</td><td>−0.297</td></tr>
+<tr><td>forest</td><td>−0.359</td><td>−0.325</td></tr>
+</table>
+<p><strong>The proxy's SIGN is site-dependent.</strong> No weight — positive, negative or zero — fixes
+water without breaking crag. That is the whole case for measuring the thing itself, and it is the
+reason this lane did not ship a one-number change.</p>
+
+<h2>3 · THE LEVERS, ENUMERATED AND PRICED</h2>
+<table>
+<tr><th>lever</th><th>shader?</th><th>price</th><th>measured</th></tr>
+<tr><td>(a) tonal term in the camera's own candidate scoring</td><td>no</td><td>~50 ms once per battle, 4 offscreen renders</td><td class="good">SHIPPED — §4</td></tr>
+<tr><td>(b) staging: put bodies against sky / open ground</td><td>no</td><td>re-opens the measured yaw decision (camera swung off the player's heading on 89.3% of cells at yawKeep 4, for zero extra staged cells)</td><td>folded into (a): the boom is the axis, the yaw stays the player's</td></tr>
+<tr><td>(c) contact / drop shadow</td><td>no</td><td>~free</td><td class="flat">ALREADY PRESENT — cast bodies run <code>castShadow</code>/<code>receiveShadow</code> into the real GTAO, and both marker rings are real ground decals. It separates feet from ground; it does not move a silhouette's edge band</td></tr>
+<tr><td>(d) whole-frame post treatment (aerial recession, re-anchored on the arena)</td><td>no</td><td>2 uniform writes/frame</td><td class="bad">BUILT, MEASURED NULL, DELETED — §6</td></tr>
+<tr><td>(e) fresnel / rim shader</td><td class="bad">YES</td><td>reopens the r185 colour class this module deletes by construction</td><td>NOT REACHED — §8</td></tr>
+<tr><td>(f) cast-only lift via <code>emissive</code> / <code>envMapIntensity</code></td><td>no</td><td>per-material, ~free</td><td class="bad">REFUTED BEFORE BUILDING — the sign of (bodyL − ringL) is mixed <em>within a single frame</em>: at meadow +42.0, +25.3, −46.5, −42.5 across four bodies. A uniform lift raises contrast for two and destroys it for two</td></tr>
+</table>
+
+<h2>4 · WHAT SHIPPED — the boom is chosen on tone, in pixels</h2>
+<p><code>public/js/battle_world.js</code>, <code>TONE</code>. Once the cast has arrived, the game runs
+<strong>the meter's own subtraction on itself</strong>: per candidate boom, render the arena into a
+320×180 offscreen target without the cast and again with it; the difference is each body's silhouette.
+Score is the RGB distance between a body's edge pixels and the background ring around them,
+<strong>half the mean and half the minimum</strong> — the worst-placed body is the one that fails to
+read — minus the ring's clutter.</p>
+<ul>
+ <li><strong>It writes no shader and moves no page state.</strong> An offscreen render target and a
+ temporary camera; the page's camera, ORBIT, canvas and post chain are untouched, so nothing flickers
+ and nothing has to be restored.</li>
+ <li><strong>It is a screen, not a verdict.</strong> The probe renders straight — no GTAO, no bloom, no
+ aerial grade — so it ranks; <code>battle_sep.mjs</code> measuring the real pipeline is what judges.</li>
+ <li><strong>SAY WHICH SPACE THE BYTES ARE IN.</strong> r185 renders into a non-XR target in the
+ <em>linear</em> working space whatever the texture declares, and the OutputPass is not in this loop —
+ so the probe applies exactly one explicit sRGB encode through a 256-entry table before it differences
+ anything. This is the conversion the r185 rules ask for, not the double
+ <code>convertSRGBToLinear</code> they warn about: the renderer performed none.
+ <strong>It was measured wrong first:</strong> ranking raw linear bytes crushes a dark site and picked
+ the wrong boom at the forest (edgeRGB 12.88 → 11.11). Tone mapping is still not applied, and that is
+ the probe's stated approximation.</li>
+ <li><strong>It is a REFUSAL, not a preference.</strong> The probe may only overrule the geometric
+ solver when it beats the incumbent rung's score by 35%. Without that margin the same build picked
+ different rungs at forest and crag between two runs — inside the 15–24% band the probe's ranking is
+ not reliable enough to act on. The margin turns every marginal call into today's game and keeps the
+ one decisive call.</li>
+ <li><strong>It only ever lands on the opening.</strong> It waits for every body to leave the
+ <code>proxy</code> tier (a proxy solid is the wrong colour to rank a background against) and applies
+ its answer only while the opening <code>round</code> shot is still easing, so it reads as one
+ continuous move. If a beat already owns the camera the answer is recorded and not applied.</li>
+</ul>
+<p>Cost measured: <strong>36.9 / 41.9 / 56.1 / 62.2 ms</strong>, once per battle, against a shipped
+trigger-to-first-battle-frame of p50 688 ms. <code>?btone=0</code> is the A/B on one build.</p>
+
+<h2>5 · BEFORE / AFTER — every site, including the one that got worse</h2>
+<p><code>--mode=ab</code>, one page, one build, one flag (<code>ab.json</code>).</p>
+<table>
+<tr><th>site</th><th>boom off → on</th><th>edgeRGB</th><th>edgeMin (worst body)</th><th>clutter</th><th>snr</th></tr>
+<tr><td>meadow</td><td>0.16 → 0.16 (refused)</td><td class="flat">20.69 → 20.83</td><td class="flat">7.56 → 8.24</td><td>46.97 → 46.66</td><td class="flat">0.440 → 0.446</td></tr>
+<tr><td>forest</td><td>0.22 → 0.34</td><td class="flat">12.65 → 12.67</td><td class="flat">7.35 → 7.52</td><td>22.81 → 23.08</td><td class="flat">0.555 → 0.549</td></tr>
+<tr><td><strong>water</strong></td><td>0.16 → 0.34</td><td class="good">13.54 → 22.04 <strong>(+63%)</strong></td><td class="good">5.48 → 10.21 <strong>(+86%)</strong></td><td class="good">27.59 → 17.05 (−38%)</td><td class="good">0.491 → 1.293 <strong>(+163%)</strong></td></tr>
+<tr><td>crag</td><td>0.16 → 0.34</td><td class="bad">20.47 → 19.14 (−6.5%)</td><td class="good">2.45 → 5.12 <strong>(+109%)</strong></td><td>17.39 → 17.53</td><td class="bad">1.177 → 1.092</td></tr>
+</table>
+<p><strong>The crag regression is real and it is the score doing what it was built to do.</strong> Crag's
+frame mean falls 6.5% while the body that was <em>invisible</em> in it — Vesper's cream shirt against a
+pale grass field, edgeRGB 2.45 — more than doubles. Half-the-mean-and-half-the-minimum trades exactly
+this way, deliberately: a mean that hides one unreadable body is the defect the staging solve was fixed
+for once already. If a later round disagrees, the weight is one number.</p>
+
+<h2>6 · THE LEVER THAT WAS BUILT, MEASURED AND DELETED</h2>
+<p>play3d already ships an aerial-perspective pass whose ramp R11 deliberately anchors on the
+<em>player</em>. A battle is a different subject — a fight up to 13 m wide that may have relocated 13 m
+from her — so the ramp was re-anchored onto the arena every frame, derived from the farthest
+combatant's own distance from the lens, with the cast exempt <em>by arithmetic</em> rather than by a
+<code>material.fog</code> list. Two uniform writes, no shader, restored on teardown.</p>
+<table>
+<tr><th>site</th><th>edgeRGB off → on</th><th>clutter off → on</th><th>at extinction 6</th><th>at extinction 3</th></tr>
+<tr><td>meadow</td><td class="flat">21.14 → 21.41</td><td>47.4 → 46.4</td><td>—</td><td>—</td></tr>
+<tr><td>forest</td><td class="flat">12.38 → 12.19</td><td>23.2 → 22.9</td><td>—</td><td>—</td></tr>
+<tr><td>water</td><td class="flat">13.36 → 12.12</td><td>27.1 → 24.9</td><td>13.03</td><td>12.66</td></tr>
+<tr><td>crag</td><td class="flat">21.81 → 20.25</td><td>17.4 → 16.1</td><td>20.38</td><td>20.23</td></tr>
+</table>
+<p><strong>The contrast never moved, at any strength</strong> (<code>sep-ab.json</code>,
+<code>sweep.json</code>). The reason is structural and worth more than the feature: <em>at three of the
+four sites the background a body actually fails against is two to four metres behind it</em> — a cliff
+face at water and crag, near grass at meadow — and no distance-keyed cue can separate a body from
+something it is nearly touching. Aerial perspective is a cue for the far band; this legibility problem
+lives in the near one. The code is deleted (the repo's standing ruling); the derivation is recorded in
+<code>battle_world.js</code> so it is not re-tried blind.</p>
+
+<h2>7 · WHAT THE EYE SAYS — the verdict, and it is not the same as the table</h2>
+<p>These are the exact frames the §5 numbers were measured on, opened and looked at.</p>
+<div class="grid">
+ <figure><img src="ab-water-off.jpg" alt=""><figcaption><strong>water · OFF</strong> (boom 0.16). The eel's teal head sits on a blue-grey roof and pale sky-lit foliage; the white foe behind it is on a house wall.</figcaption></figure>
+ <figure><img src="ab-water-on.jpg" alt=""><figcaption><strong>water · ON</strong> (boom 0.34). <span class="good">The clear win.</span> The sky leaves the top of the frame, both foes come off dark foliage, and the eel is now unambiguous. It costs the shot its horizon — the picture is more crowded and less airy.</figcaption></figure>
+ <figure><img src="ab-crag-off.jpg" alt=""><figcaption><strong>crag · OFF</strong> (0.16). Vesper's cream shirt against the pale grass field is the body the meter scores 2.45.</figcaption></figure>
+ <figure><img src="ab-crag-on.jpg" alt=""><figcaption><strong>crag · ON</strong> (0.34). <span class="flat">A wash by eye.</span> The meter's worst body doubles (2.45 → 5.12) and I cannot honestly see it: she is still cream-on-pale-grass at the frame edge, and the move fills 70% of the shot with a featureless rock dome. The real defect here is that the arena staged on a bare dome, which is a placement question, not a camera one.</figcaption></figure>
+ <figure><img src="ab-meadow-on.jpg" alt=""><figcaption><strong>meadow · ON</strong> — refused, so this is today's game. The two wolves read cleanly against sunlit grass. The party does not: they are standing in the shadow under a stilted building, dark on dark timber. Note the near ground scatter crossing the wolves' legs — that is the clutter 46.7.</figcaption></figure>
+ <figure><img src="ab-forest-on.jpg" alt=""><figcaption><strong>forest · ON</strong> — <span class="bad">still bad, and the worst site in the game.</span> The party is a small dark pair standing INSIDE the hedge bank, at the hedge's own value; the wolf behind the stump is nearly gone. The lower 40% of the frame is empty road.</figcaption></figure>
+</div>
+<p><strong>My verdict in one line: one site clearly better, one unchanged, one a wash, one still bad</strong>
+— and at the two sites that still fail the cast is standing <em>in or against near cover at its own
+value</em> (a hedge bank, a building's shadow), which is not something a camera can be asked to fix.</p>
+
+<h2>8 · WHAT STILL STANDS — and what a shader would buy</h2>
+<ul>
+ <li><strong>The forest is flat and no camera fixes it.</strong> Measured across all five boom rungs, the
+ worst body's |bodyL − ringL| is 0.1–1.7 and the whole site's edgeRGB band is 10.9–13.5. The cast and
+ the canopy are the same value at the same saturation.</li>
+ <li><strong>The meadow's background is the busiest in the game</strong> (clutter 44–50 against water's
+ 17–27) and the boom cannot move it, because the clutter <em>is</em> the ground scatter the player
+ walks through.</li>
+ <li><strong>Both are body-side problems, and the body side is where the shader is.</strong> A cast-only
+ rim is unavailable as a light — three tests a light's <code>layers</code> against the CAMERA, never per
+ object — so it is a fresnel through <code>onBeforeCompile</code>, which would be this module's first
+ shader. If a later lane reaches for it, the guarantees it reopens are named: (1) the grade must convert
+ to display space <em>explicitly</em>, (2) no hand <code>convertSRGBToLinear</code> anywhere near it, and
+ (3) <code>IU()</code> untouched. The non-shader alternative with the same reach is a precomputed
+ inverted-hull shell (expanded positions on a cloned geometry, <code>BackSide</code>,
+ <code>MeshBasicMaterial</code>, skeleton shared) — a graphic outline rather than a light, and a look
+ decision rather than a fix.</li>
+</ul>
+
+<h2>9 · GATES</h2>
+<table id="gates">
+<tr><th>gate</th><th>result</th></tr>
+<tr><td><code>node tools/battle_sim.mjs</code></td><td class="good">ALL ENVELOPES GREEN · 6 engine property tests passed</td></tr>
+<tr><td><code>node tools/encounter_sim.mjs</code></td><td class="good">ENCOUNTER INTEGRATION GREEN</td></tr>
+<tr><td><code>node tools/arena_playtest.mjs</code></td><td class="good">GREEN — all suites passed (2 of 3 runs; the first run reported one suite failed and did not name it in the tail, and the two re-runs are clean. <strong>This gate opens the page WITHOUT <code>?arena=world</code></strong>, so battle_world is the frozen one-object default path and none of this lane's code loads in it — recorded as flake, not explained away)</td></tr>
+<tr><td><code>node tools/transition_test.mjs --port=3000</code></td><td class="good">PASS — <strong>168 assertions ok, 0 failed</strong></td></tr>
+<tr><td><code>node tools/ray_budget.mjs --port=3000</code></td><td class="good">GREEN — W = 2 / 9761 (0.02% of budget), implied worst staging solve ~407 ms</td></tr>
+<tr><td>fps, world arena, strike shot (rAF ticks — <em>not</em> <code>info.render.frame</code>, which the composer increments once per pass and reads ~8× too fast)</td><td class="good">241.9 → 241.5 fps, <strong>−0.17%</strong> — the world arena's lead over the diorama (243.5 vs 184.7) is intact. The probe is a one-time ~50 ms cost at battle start, not a per-frame one</td></tr>
+</table>
+
+<h2>10 · IS THE WORLD ARENA READY TO BE THE DEFAULT?</h2>
+<div class="verdict">
+<p><strong>On tonal separation: not yet — but the thing standing in the way is no longer the camera, and
+it is no longer the case that “the plates are more legible than the valley” across the board.</strong></p>
+<p>What changed: the meadow regression the arc has been carrying does not exist on this tree, and the
+water one is fixed (+63% contrast, +86% on the worst body, +163% snr). Two of four sites now read.</p>
+<p>What still stands, named precisely:</p>
+<ol>
+ <li><strong>FOREST.</strong> The party stages <em>inside</em> the hedge bank at the hedge's own value.
+ Worst-body |bodyL − ringL| is 0.1–1.7 at every one of five boom rungs. Not a camera problem.</li>
+ <li><strong>MEADOW.</strong> Background clutter 44–50, roughly double every other site, and it is the
+ ground scatter the player walks through — the camera cannot move it and the aerial cue cannot reach it
+ (§6). The party also stages into a building's shadow.</li>
+ <li><strong>CRAG.</strong> The arena staged on a bare rock dome; the fight is legible and the picture is
+ not. A placement-quality term (is this a <em>good place to fight</em>, not merely a legal one) is the
+ missing lever, and nobody has measured it.</li>
+ <li><strong>The body side is untouched.</strong> Every lever this lane shipped is a camera lever. The
+ two remaining failures are body-versus-near-background coincidences, and the instruments that would
+ close them are (e) a fresnel rim — this module's first shader — or a precomputed inverted-hull shell.
+ Both are look decisions and neither has been costed by eye.</li>
+</ol>
+<p><strong>Recommendation:</strong> the world arena is close enough that the remaining work is
+<em>placement quality and cast lighting</em>, not arena choice. Making it default now ships a fight that
+reads at two of four sampled sites and is muddy at the other two — that is a call for the user, and the
+honest input to it is that the diorama's advantage was never the arena, it was that a painted plate is a
+background somebody composed.</p>
+</div>
+</html>

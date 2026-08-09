@@ -1,0 +1,18 @@
+world ready  three r185  scene=ow-valley  bw={"on":true,"installed":false}
+postfx: {"grade":true,"ao":true,"family":"realtime"}
+  sides[meadow/off] via stage.sides() · party=[vesper,maren] foes=[m0,m1] · partition OK
+  meadow/off: 6 beats
+  sides[meadow/on] via stage.sides() · party=[vesper,maren] foes=[m0,m1] · partition OK
+  meadow/on: 6 beats
+  sides[forest/off] via stage.sides() · party=[vesper,maren] foes=[m0,m1] · partition OK
+  forest/off: 6 beats
+  sides[forest/on] via stage.sides() · party=[vesper,maren] foes=[m0,m1] · partition OK
+  forest/on: 6 beats
+  sides[water/off] via stage.sides() · party=[vesper,maren] foes=[m0,m1] · partition OK
+  water/off: 6 beats
+  sides[water/on] via stage.sides() · party=[vesper,maren] foes=[m0,m1] · partition OK
+  water/on: 6 beats
+  sides[crag/off] via stage.sides() · party=[vesper,maren] foes=[m0,m1] · partition OK
+  crag/off: 6 beats
+  sides[crag/on] via stage.sides() · party=[vesper,maren] foes=[m0,m1] · partition OK
+  crag/on: 6 beats

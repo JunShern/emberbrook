@@ -1,0 +1,185 @@
+{
+  "site": "water",
+  "when": "2026-08-09T02:46:44.920Z",
+  "pfx": {
+    "grade": true,
+    "ao": true,
+    "family": "realtime"
+  },
+  "arms": {
+    "off": {
+      "frames": 1210,
+      "ms": 5001,
+      "fps": 241.9,
+      "calls": 1,
+      "tris": 1,
+      "tone": {
+        "on": false,
+        "done": false,
+        "basePitch": 0.16,
+        "ok": false,
+        "why": "waiting for the cast"
+      }
+    },
+    "on": {
+      "frames": 1208,
+      "ms": 5002,
+      "fps": 241.5,
+      "calls": 1,
+      "tris": 1,
+      "tone": {
+        "on": true,
+        "done": true,
+        "basePitch": 0.28,
+        "ok": true,
+        "chose": 0.28,
+        "best": 0.28,
+        "was": 0.16,
+        "moved": true,
+        "decisive": true,
+        "incScore": 9.338,
+        "winScore": 13.807,
+        "margin": 0.35,
+        "rows": [
+          {
+            "pitch": 0.16,
+            "score": 9.338,
+            "mean": 20.87,
+            "min": 15.23,
+            "clutter": 24.89,
+            "bodies": [
+              {
+                "id": "vesper",
+                "side": "party",
+                "edgeRGB": 16.18,
+                "clutter": 16.78
+              },
+              {
+                "id": "maren",
+                "side": "party",
+                "edgeRGB": 15.23,
+                "clutter": 15.74
+              },
+              {
+                "id": "m0",
+                "side": "foe",
+                "edgeRGB": 26.91,
+                "clutter": 33.32
+              },
+              {
+                "id": "m1",
+                "side": "foe",
+                "edgeRGB": 25.16,
+                "clutter": 33.73
+              }
+            ]
+          },
+          {
+            "pitch": 0.22,
+            "score": 11.85,
+            "mean": 22.32,
+            "min": 15.47,
+            "clutter": 20.13,
+            "bodies": [
+              {
+                "id": "vesper",
+                "side": "party",
+                "edgeRGB": 16.35,
+                "clutter": 17.11
+              },
+              {
+                "id": "maren",
+                "side": "party",
+                "edgeRGB": 15.47,
+                "clutter": 14.96
+              },
+              {
+                "id": "m0",
+                "side": "foe",
+                "edgeRGB": 28.95,
+                "clutter": 24.6
+              },
+              {
+                "id": "m1",
+                "side": "foe",
+                "edgeRGB": 28.51,
+                "clutter": 23.84
+              }
+            ]
+          },
+          {
+            "pitch": 0.28,
+            "score": 13.807,
+            "mean": 26.08,
+            "min": 13.13,
+            "clutter": 16.56,
+            "bodies": [
+              {
+                "id": "vesper",
+                "side": "party",
+                "edgeRGB": 16.65,
+                "clutter": 16.98
+              },
+              {
+                "id": "maren",
+                "side": "party",
+                "edgeRGB": 13.13,
+                "clutter": 14.61
+              },
+              {
+                "id": "m0",
+                "side": "foe",
+                "edgeRGB": 35.94,
+                "clutter": 17.31
+              },
+              {
+                "id": "m1",
+                "side": "foe",
+                "edgeRGB": 38.6,
+                "clutter": 17.36
+              }
+            ]
+          },
+          {
+            "pitch": 0.34,
+            "score": 12.963,
+            "mean": 25.75,
+            "min": 11.42,
+            "clutter": 16.05,
+            "bodies": [
+              {
+                "id": "vesper",
+                "side": "party",
+                "edgeRGB": 17.13,
+                "clutter": 17.56
+              },
+              {
+                "id": "maren",
+                "side": "party",
+                "edgeRGB": 11.42,
+                "clutter": 14.27
+              },
+              {
+                "id": "m0",
+                "side": "foe",
+                "edgeRGB": 35.82,
+                "clutter": 16.19
+              },
+              {
+                "id": "m1",
+                "side": "foe",
+                "edgeRGB": 38.61,
+                "clutter": 16.2
+              }
+            ]
+          }
+        ],
+        "ms": 56.9,
+        "res": [
+          320,
+          180
+        ]
+      }
+    }
+  }
+}

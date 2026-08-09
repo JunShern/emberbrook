@@ -1,0 +1,16 @@
+world ready  three r185  scene=ow-valley  bw={"on":true,"installed":false}
+postfx: {"grade":true,"ao":true,"family":"realtime"}
+
+site     arm            edgeRGB  edgeFoe  edgeMin  clutter    snr   foeH%   occl  pitch
+  water/goff ... edge=13.59 min=3.08 clutter=27.14 snr=0.501
+water    scale off        13.59     10.1     3.08    27.14  0.501   27.73   0.02   0.16
+  water/g6 ... edge=13.03 min=9.68 clutter=23.84 snr=0.547
+water    scale 6          13.03     9.75     9.68    23.84  0.547   26.63   0.02   0.16
+  water/g3 ... edge=12.66 min=6.58 clutter=23.46 snr=0.54
+water    scale 3          12.66      8.3     6.58    23.46   0.54   27.21   0.02   0.16
+  crag/goff ... edge=21.34 min=3.38 clutter=17.26 snr=1.236
+crag     scale off        21.34    30.98     3.38    17.26  1.236   18.36   0.04   0.16
+  crag/g6 ... edge=20.38 min=2.97 clutter=15.56 snr=1.31
+crag     scale 6          20.38    30.89     2.97    15.56   1.31   18.49   0.04   0.16
+  crag/g3 ... edge=20.23 min=3.13 clutter=14.95 snr=1.353
+crag     scale 3          20.23    30.77     3.13    14.95  1.353   18.75   0.04   0.16

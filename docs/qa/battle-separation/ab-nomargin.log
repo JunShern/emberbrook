@@ -1,0 +1,26 @@
+world ready  three r185  scene=ow-valley  bw={"on":true,"installed":false}
+postfx: {"grade":true,"ao":true,"family":"realtime"}
+
+site     arm            edgeRGB  edgeFoe  edgeMin  clutter    snr   foeH%   occl  pitch
+  meadow/off ... edge=20.96 min=7.56 clutter=46.99 snr=0.446
+meadow   off              20.96    17.89     7.56    46.99  0.446   28.19   0.02   0.16
+  meadow/on ... edge=21.09 min=8.57 clutter=46.9 snr=0.45
+meadow   on               21.09    18.41     8.57     46.9   0.45   29.36   0.02   0.16
+  forest/off ... edge=11.99 min=6.87 clutter=23.29 snr=0.515
+forest   off              11.99    17.02     6.87    23.29  0.515   30.15   0.13   0.22
+  forest/on ... edge=10.89 min=4.33 clutter=22.88 snr=0.476
+forest   on               10.89    16.35     4.33    22.88  0.476   31.25   0.14   0.34
+  water/off ... edge=14.06 min=8.34 clutter=26.97 snr=0.521
+water    off              14.06    10.84     8.34    26.97  0.521   26.37   0.03   0.16
+  water/on ... edge=19.33 min=6.09 clutter=23.34 snr=0.828
+water    on               19.33    23.24     6.09    23.34  0.828   27.02   0.04   0.28
+  crag/off ... edge=20.68 min=2.98 clutter=17.2 snr=1.202
+crag     off              20.68    30.18     2.98     17.2  1.202   18.62   0.04   0.16
+  crag/on ... edge=20.47 min=3.71 clutter=17.35 snr=1.18
+crag     on               20.47    29.92     3.71    17.35   1.18   18.49   0.05   0.22
+
+site     | edgeRGB off->on | edgeMin off->on | clutter off->on |  snr off->on
+meadow   |  20.96 -> 21.09  |   7.56 ->  8.57  |  46.99 ->  46.9  |  0.446 ->  0.45
+forest   |  11.99 -> 10.89  |   6.87 ->  4.33  |  23.29 -> 22.88  |  0.515 -> 0.476
+water    |  14.06 -> 19.33  |   8.34 ->  6.09  |  26.97 -> 23.34  |  0.521 -> 0.828
+crag     |  20.68 -> 20.47  |   2.98 ->  3.71  |   17.2 -> 17.35  |  1.202 ->  1.18

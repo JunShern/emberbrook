@@ -1,0 +1,963 @@
+{
+  "mode": "ab",
+  "when": "2026-08-09T02:18:00.921Z",
+  "pfx": {
+    "grade": true,
+    "ao": true,
+    "family": "realtime"
+  },
+  "sites": {
+    "meadow": {
+      "off": {
+        "ok": true,
+        "pre": "window.BattleWorld.TONE.on = false; true",
+        "summary": {
+          "edgeAll": 20.96,
+          "edgeFoe": 17.89,
+          "edgeParty": 24.02,
+          "edgeMin": 7.56,
+          "edgeLumAll": 18.56,
+          "occlAll": 0.02,
+          "occlMax": 0.052,
+          "foeHPctMin": 25.78,
+          "foeHPctMean": 28.19,
+          "clutter": 46.99,
+          "snr": 0.446,
+          "bodyL": 99.22,
+          "ringL": 105.15,
+          "pose": {
+            "ax": 38.15,
+            "ay": 14.706,
+            "az": -26.892,
+            "yaw": -2.5369,
+            "pitch": 0.16,
+            "dist": 9.398,
+            "fov": 34
+          },
+          "view": {
+            "score": 7.564,
+            "back": 2.03,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          }
+        },
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 14558,
+            "freePx": 14259,
+            "interPx": 14233,
+            "occl": 0.0018,
+            "edgeRGB": 26.78,
+            "hPx": 284.5,
+            "hPct": 31.12,
+            "edge": 23.34,
+            "dL": 22.52,
+            "clutter": 52.62,
+            "ringN": 4446,
+            "bodyL": 118.6,
+            "ringL": 77
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 6538,
+            "freePx": 6497,
+            "interPx": 6329,
+            "occl": 0.0259,
+            "edgeRGB": 21.27,
+            "hPx": 211.9,
+            "hPct": 23.18,
+            "edge": 15.83,
+            "dL": 17.41,
+            "clutter": 25.35,
+            "ringN": 3225,
+            "bodyL": 60.9,
+            "ringL": 37.1
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 34886,
+            "freePx": 33043,
+            "interPx": 32683,
+            "occl": 0.0109,
+            "edgeRGB": 28.23,
+            "hPx": 279.8,
+            "hPct": 30.6,
+            "edge": 31.18,
+            "dL": 53.89,
+            "clutter": 55.73,
+            "ringN": 8556,
+            "bodyL": 74.2,
+            "ringL": 121.6
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 28567,
+            "freePx": 26512,
+            "interPx": 25128,
+            "occl": 0.0522,
+            "edgeRGB": 7.56,
+            "hPx": 235.7,
+            "hPct": 25.78,
+            "edge": 3.9,
+            "dL": 40.15,
+            "clutter": 54.27,
+            "ringN": 10704,
+            "bodyL": 143.2,
+            "ringL": 184.9
+          }
+        ],
+        "pfx": {
+          "grade": true,
+          "ao": true
+        },
+        "plan": {
+          "yawDelta": -1.05,
+          "relief": 0.703
+        }
+      },
+      "on": {
+        "ok": true,
+        "pre": "window.BattleWorld.TONE.on = true; true",
+        "summary": {
+          "edgeAll": 21.09,
+          "edgeFoe": 18.41,
+          "edgeParty": 23.79,
+          "edgeMin": 8.57,
+          "edgeLumAll": 19.26,
+          "occlAll": 0.02,
+          "occlMax": 0.049,
+          "foeHPctMin": 26.56,
+          "foeHPctMean": 29.36,
+          "clutter": 46.9,
+          "snr": 0.45,
+          "bodyL": 99.3,
+          "ringL": 104.9,
+          "pose": {
+            "ax": 38.15,
+            "ay": 14.706,
+            "az": -26.892,
+            "yaw": -2.5369,
+            "pitch": 0.16,
+            "dist": 9.398,
+            "fov": 34
+          },
+          "view": {
+            "score": 7.564,
+            "back": 2.03,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          }
+        },
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 14640,
+            "freePx": 14357,
+            "interPx": 14332,
+            "occl": 0.0017,
+            "edgeRGB": 26.25,
+            "hPx": 276.2,
+            "hPct": 30.21,
+            "edge": 23.04,
+            "dL": 22.76,
+            "clutter": 52.66,
+            "ringN": 4632,
+            "bodyL": 119,
+            "ringL": 77.2
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 6536,
+            "freePx": 6510,
+            "interPx": 6341,
+            "occl": 0.026,
+            "edgeRGB": 21.32,
+            "hPx": 211.9,
+            "hPct": 23.18,
+            "edge": 15.81,
+            "dL": 18.14,
+            "clutter": 25.93,
+            "ringN": 3146,
+            "bodyL": 61.5,
+            "ringL": 37.2
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 34782,
+            "freePx": 32974,
+            "interPx": 32630,
+            "occl": 0.0104,
+            "edgeRGB": 28.24,
+            "hPx": 294,
+            "hPct": 32.16,
+            "edge": 31.08,
+            "dL": 53.84,
+            "clutter": 55.22,
+            "ringN": 8089,
+            "bodyL": 73.9,
+            "ringL": 119.7
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 28852,
+            "freePx": 26667,
+            "interPx": 25349,
+            "occl": 0.0494,
+            "edgeRGB": 8.57,
+            "hPx": 242.9,
+            "hPct": 26.56,
+            "edge": 7.11,
+            "dL": 40.14,
+            "clutter": 53.78,
+            "ringN": 11063,
+            "bodyL": 142.8,
+            "ringL": 185.5
+          }
+        ],
+        "pfx": {
+          "grade": true,
+          "ao": true
+        },
+        "plan": {
+          "yawDelta": -1.05,
+          "relief": 0.703
+        }
+      }
+    },
+    "forest": {
+      "off": {
+        "ok": true,
+        "pre": "window.BattleWorld.TONE.on = false; true",
+        "summary": {
+          "edgeAll": 11.99,
+          "edgeFoe": 17.02,
+          "edgeParty": 6.95,
+          "edgeMin": 6.87,
+          "edgeLumAll": 5.54,
+          "occlAll": 0.13,
+          "occlMax": 0.265,
+          "foeHPctMin": 18.62,
+          "foeHPctMean": 30.15,
+          "clutter": 23.29,
+          "snr": 0.515,
+          "bodyL": 45.1,
+          "ringL": 39.1,
+          "pose": {
+            "ax": 15.486,
+            "ay": 15.696,
+            "az": -17.224,
+            "yaw": -1.9869,
+            "pitch": 0.22,
+            "dist": 9.103,
+            "fov": 34
+          },
+          "view": {
+            "score": 7.0878,
+            "back": 3.26,
+            "seen": 0.917,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.22
+          }
+        },
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 8814,
+            "freePx": 9756,
+            "interPx": 8736,
+            "occl": 0.1046,
+            "edgeRGB": 6.87,
+            "hPx": 252.4,
+            "hPct": 27.6,
+            "edge": 2.58,
+            "dL": 28.3,
+            "clutter": 25.85,
+            "ringN": 5992,
+            "bodyL": 40.9,
+            "ringL": 40
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 7741,
+            "freePx": 8698,
+            "interPx": 7440,
+            "occl": 0.1446,
+            "edgeRGB": 7.03,
+            "hPx": 233.3,
+            "hPct": 25.52,
+            "edge": 1.57,
+            "dL": 4.89,
+            "clutter": 30.25,
+            "ringN": 4992,
+            "bodyL": 45.6,
+            "ringL": 43.5
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 41370,
+            "freePx": 41757,
+            "interPx": 41316,
+            "occl": 0.0106,
+            "edgeRGB": 12.55,
+            "hPx": 381,
+            "hPct": 41.67,
+            "edge": 1.74,
+            "dL": 4.22,
+            "clutter": 19.74,
+            "ringN": 9000,
+            "bodyL": 41.2,
+            "ringL": 38.4
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 10763,
+            "freePx": 14118,
+            "interPx": 10377,
+            "occl": 0.265,
+            "edgeRGB": 21.5,
+            "hPx": 170.2,
+            "hPct": 18.62,
+            "edge": 16.25,
+            "dL": 19.83,
+            "clutter": 17.33,
+            "ringN": 6025,
+            "bodyL": 52.7,
+            "ringL": 34.5
+          }
+        ],
+        "pfx": {
+          "grade": true,
+          "ao": true
+        },
+        "plan": {
+          "yawDelta": -0.5,
+          "relief": 0.616
+        }
+      },
+      "on": {
+        "ok": true,
+        "pre": "window.BattleWorld.TONE.on = true; true",
+        "summary": {
+          "edgeAll": 10.89,
+          "edgeFoe": 16.35,
+          "edgeParty": 5.44,
+          "edgeMin": 4.33,
+          "edgeLumAll": 5.44,
+          "occlAll": 0.14,
+          "occlMax": 0.256,
+          "foeHPctMin": 19.92,
+          "foeHPctMean": 31.25,
+          "clutter": 22.88,
+          "snr": 0.476,
+          "bodyL": 44.77,
+          "ringL": 39.4,
+          "pose": {
+            "ax": 15.486,
+            "ay": 15.696,
+            "az": -17.224,
+            "yaw": -1.9869,
+            "pitch": 0.34,
+            "dist": 9.242,
+            "fov": 34
+          },
+          "view": {
+            "score": 7.0878,
+            "back": 3.26,
+            "seen": 0.917,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.22
+          }
+        },
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 8450,
+            "freePx": 9388,
+            "interPx": 8316,
+            "occl": 0.1142,
+            "edgeRGB": 4.33,
+            "hPx": 246.4,
+            "hPct": 26.95,
+            "edge": 0.62,
+            "dL": 28.02,
+            "clutter": 27.28,
+            "ringN": 6038,
+            "bodyL": 40,
+            "ringL": 43.4
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 7149,
+            "freePx": 8143,
+            "interPx": 6688,
+            "occl": 0.1787,
+            "edgeRGB": 6.54,
+            "hPx": 221.4,
+            "hPct": 24.22,
+            "edge": 0.93,
+            "dL": 4.22,
+            "clutter": 27.88,
+            "ringN": 4940,
+            "bodyL": 44.4,
+            "ringL": 42.9
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 39762,
+            "freePx": 40009,
+            "interPx": 39669,
+            "occl": 0.0085,
+            "edgeRGB": 11.75,
+            "hPx": 389.3,
+            "hPct": 42.58,
+            "edge": 3.54,
+            "dL": 5.78,
+            "clutter": 16.49,
+            "ringN": 9721,
+            "bodyL": 41.3,
+            "ringL": 35
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 10832,
+            "freePx": 13922,
+            "interPx": 10363,
+            "occl": 0.2556,
+            "edgeRGB": 20.95,
+            "hPx": 182.1,
+            "hPct": 19.92,
+            "edge": 16.66,
+            "dL": 20.03,
+            "clutter": 19.88,
+            "ringN": 6827,
+            "bodyL": 53.4,
+            "ringL": 36.3
+          }
+        ],
+        "pfx": {
+          "grade": true,
+          "ao": true
+        },
+        "plan": {
+          "yawDelta": -0.5,
+          "relief": 0.616
+        }
+      }
+    },
+    "water": {
+      "off": {
+        "ok": true,
+        "pre": "window.BattleWorld.TONE.on = false; true",
+        "summary": {
+          "edgeAll": 14.06,
+          "edgeFoe": 10.84,
+          "edgeParty": 17.29,
+          "edgeMin": 8.34,
+          "edgeLumAll": 13.71,
+          "occlAll": 0.03,
+          "occlMax": 0.058,
+          "foeHPctMin": 16.93,
+          "foeHPctMean": 26.37,
+          "clutter": 26.97,
+          "snr": 0.521,
+          "bodyL": 133.3,
+          "ringL": 92.63,
+          "pose": {
+            "ax": -45.744,
+            "ay": 30.767,
+            "az": 26.361,
+            "yaw": -1.4869,
+            "pitch": 0.16,
+            "dist": 8.241,
+            "fov": 34
+          },
+          "view": {
+            "score": 8.2628,
+            "back": 11.7,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          }
+        },
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 12736,
+            "freePx": 12855,
+            "interPx": 12541,
+            "occl": 0.0244,
+            "edgeRGB": 20.38,
+            "hPx": 292.9,
+            "hPct": 32.03,
+            "edge": 21.2,
+            "dL": 50.01,
+            "clutter": 14.81,
+            "ringN": 3392,
+            "bodyL": 160.7,
+            "ringL": 113
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 19949,
+            "freePx": 9806,
+            "interPx": 9634,
+            "occl": 0.0175,
+            "edgeRGB": 14.19,
+            "hPx": 295.2,
+            "hPct": 32.29,
+            "edge": 14.03,
+            "dL": 51.08,
+            "clutter": 16.27,
+            "ringN": 4555,
+            "bodyL": 162.1,
+            "ringL": 117.6
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 24408,
+            "freePx": 25880,
+            "interPx": 24379,
+            "occl": 0.058,
+            "edgeRGB": 8.34,
+            "hPx": 327.4,
+            "hPct": 35.81,
+            "edge": 9.1,
+            "dL": 47.51,
+            "clutter": 38.59,
+            "ringN": 6868,
+            "bodyL": 109.3,
+            "ringL": 71.4
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 18028,
+            "freePx": 17945,
+            "interPx": 17865,
+            "occl": 0.0045,
+            "edgeRGB": 13.35,
+            "hPx": 154.8,
+            "hPct": 16.93,
+            "edge": 10.51,
+            "dL": 55.91,
+            "clutter": 38.21,
+            "ringN": 2293,
+            "bodyL": 101.1,
+            "ringL": 68.5
+          }
+        ],
+        "pfx": {
+          "grade": true,
+          "ao": true
+        },
+        "plan": {
+          "yawDelta": 0,
+          "relief": 0
+        }
+      },
+      "on": {
+        "ok": true,
+        "pre": "window.BattleWorld.TONE.on = true; true",
+        "summary": {
+          "edgeAll": 19.33,
+          "edgeFoe": 23.24,
+          "edgeParty": 15.41,
+          "edgeMin": 6.09,
+          "edgeLumAll": 18.12,
+          "occlAll": 0.04,
+          "occlMax": 0.1,
+          "foeHPctMin": 18.23,
+          "foeHPctMean": 27.02,
+          "clutter": 23.34,
+          "snr": 0.828,
+          "bodyL": 130.73,
+          "ringL": 80.35,
+          "pose": {
+            "ax": -45.744,
+            "ay": 30.767,
+            "az": 26.361,
+            "yaw": -1.4869,
+            "pitch": 0.28,
+            "dist": 8.316,
+            "fov": 34
+          },
+          "view": {
+            "score": 8.2628,
+            "back": 11.7,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          }
+        },
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 14180,
+            "freePx": 14373,
+            "interPx": 13769,
+            "occl": 0.042,
+            "edgeRGB": 13.63,
+            "hPx": 298.8,
+            "hPct": 32.68,
+            "edge": 13.61,
+            "dL": 41.07,
+            "clutter": 23,
+            "ringN": 3790,
+            "bodyL": 157.8,
+            "ringL": 117.8
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 20951,
+            "freePx": 10272,
+            "interPx": 10037,
+            "occl": 0.0229,
+            "edgeRGB": 17.19,
+            "hPx": 295.2,
+            "hPct": 32.29,
+            "edge": 17.03,
+            "dL": 47.95,
+            "clutter": 15.49,
+            "ringN": 5964,
+            "bodyL": 160.4,
+            "ringL": 111.2
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 23763,
+            "freePx": 26393,
+            "interPx": 23752,
+            "occl": 0.1001,
+            "edgeRGB": 6.09,
+            "hPx": 327.4,
+            "hPct": 35.81,
+            "edge": 4.42,
+            "dL": 61.68,
+            "clutter": 40.16,
+            "ringN": 6619,
+            "bodyL": 101.2,
+            "ringL": 56.6
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 18520,
+            "freePx": 18465,
+            "interPx": 18361,
+            "occl": 0.0056,
+            "edgeRGB": 40.4,
+            "hPx": 166.7,
+            "hPct": 18.23,
+            "edge": 37.43,
+            "dL": 66,
+            "clutter": 14.69,
+            "ringN": 2554,
+            "bodyL": 103.5,
+            "ringL": 35.8
+          }
+        ],
+        "pfx": {
+          "grade": true,
+          "ao": true
+        },
+        "plan": {
+          "yawDelta": 0,
+          "relief": 0
+        }
+      }
+    },
+    "crag": {
+      "off": {
+        "ok": true,
+        "pre": "window.BattleWorld.TONE.on = false; true",
+        "summary": {
+          "edgeAll": 20.68,
+          "edgeFoe": 30.18,
+          "edgeParty": 11.19,
+          "edgeMin": 2.98,
+          "edgeLumAll": 22.18,
+          "occlAll": 0.04,
+          "occlMax": 0.087,
+          "foeHPctMin": 18.49,
+          "foeHPctMean": 18.62,
+          "clutter": 17.2,
+          "snr": 1.202,
+          "bodyL": 118.47,
+          "ringL": 130.65,
+          "pose": {
+            "ax": 65.616,
+            "ay": 21.491,
+            "az": -40.472,
+            "yaw": -1.4869,
+            "pitch": 0.16,
+            "dist": 8.913,
+            "fov": 34
+          },
+          "view": {
+            "score": 7.4955,
+            "back": 1.27,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          }
+        },
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 22187,
+            "freePx": 22116,
+            "interPx": 22025,
+            "occl": 0.0041,
+            "edgeRGB": 2.98,
+            "hPx": 286.9,
+            "hPct": 31.38,
+            "edge": 1.72,
+            "dL": 7.58,
+            "clutter": 10.54,
+            "ringN": 3459,
+            "bodyL": 115.3,
+            "ringL": 107.3
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 19764,
+            "freePx": 15714,
+            "interPx": 14350,
+            "occl": 0.0868,
+            "edgeRGB": 19.4,
+            "hPx": 284.5,
+            "hPct": 31.12,
+            "edge": 21.69,
+            "dL": 14.19,
+            "clutter": 38.85,
+            "ringN": 5385,
+            "bodyL": 145.6,
+            "ringL": 153
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 22464,
+            "freePx": 22432,
+            "interPx": 22429,
+            "occl": 0.0001,
+            "edgeRGB": 50.01,
+            "hPx": 169,
+            "hPct": 18.49,
+            "edge": 53.75,
+            "dL": 89.16,
+            "clutter": 7.56,
+            "ringN": 2693,
+            "bodyL": 44.6,
+            "ringL": 133.6
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 35733,
+            "freePx": 24472,
+            "interPx": 22717,
+            "occl": 0.0717,
+            "edgeRGB": 10.35,
+            "hPx": 171.4,
+            "hPct": 18.75,
+            "edge": 11.55,
+            "dL": 37.4,
+            "clutter": 11.86,
+            "ringN": 5229,
+            "bodyL": 168.4,
+            "ringL": 128.7
+          }
+        ],
+        "pfx": {
+          "grade": true,
+          "ao": true
+        },
+        "plan": {
+          "yawDelta": 0,
+          "relief": 1.434
+        }
+      },
+      "on": {
+        "ok": true,
+        "pre": "window.BattleWorld.TONE.on = true; true",
+        "summary": {
+          "edgeAll": 20.47,
+          "edgeFoe": 29.92,
+          "edgeParty": 11.02,
+          "edgeMin": 3.71,
+          "edgeLumAll": 21.71,
+          "occlAll": 0.05,
+          "occlMax": 0.11,
+          "foeHPctMin": 18.36,
+          "foeHPctMean": 18.49,
+          "clutter": 17.35,
+          "snr": 1.18,
+          "bodyL": 118.38,
+          "ringL": 128.85,
+          "pose": {
+            "ax": 65.616,
+            "ay": 21.491,
+            "az": -40.472,
+            "yaw": -1.4869,
+            "pitch": 0.22,
+            "dist": 9.161,
+            "fov": 34
+          },
+          "view": {
+            "score": 7.4955,
+            "back": 1.27,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          }
+        },
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 21616,
+            "freePx": 21534,
+            "interPx": 21457,
+            "occl": 0.0036,
+            "edgeRGB": 3.71,
+            "hPx": 277.4,
+            "hPct": 30.34,
+            "edge": 1,
+            "dL": 9.19,
+            "clutter": 10.78,
+            "ringN": 3439,
+            "bodyL": 116.1,
+            "ringL": 105.8
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 19656,
+            "freePx": 16141,
+            "interPx": 14374,
+            "occl": 0.1095,
+            "edgeRGB": 18.32,
+            "hPx": 283.3,
+            "hPct": 30.99,
+            "edge": 21.03,
+            "dL": 15.96,
+            "clutter": 39.64,
+            "ringN": 5727,
+            "bodyL": 143,
+            "ringL": 148.5
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 21503,
+            "freePx": 21477,
+            "interPx": 21477,
+            "occl": 0,
+            "edgeRGB": 48.12,
+            "hPx": 167.9,
+            "hPct": 18.36,
+            "edge": 51.68,
+            "dL": 88.63,
+            "clutter": 7.45,
+            "ringN": 2685,
+            "bodyL": 44.9,
+            "ringL": 133.3
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 33579,
+            "freePx": 22688,
+            "interPx": 21118,
+            "occl": 0.0692,
+            "edgeRGB": 11.72,
+            "hPx": 170.2,
+            "hPct": 18.62,
+            "edge": 13.13,
+            "dL": 38.31,
+            "clutter": 11.52,
+            "ringN": 5032,
+            "bodyL": 169.5,
+            "ringL": 127.8
+          }
+        ],
+        "pfx": {
+          "grade": true,
+          "ao": true
+        },
+        "plan": {
+          "yawDelta": 0,
+          "relief": 1.434
+        }
+      }
+    }
+  }
+}

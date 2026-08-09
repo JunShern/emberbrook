@@ -1,0 +1,706 @@
+{
+  "when": "2026-08-09T02:20:58.485Z",
+  "pfx": {
+    "grade": true,
+    "ao": true,
+    "family": "realtime"
+  },
+  "runs": {
+    "meadow": {
+      "off": {
+        "ok": true,
+        "tone": {
+          "on": false,
+          "done": false,
+          "basePitch": 0.16,
+          "ok": false,
+          "why": "waiting for the cast"
+        },
+        "site": {
+          "yawDelta": -1.05
+        }
+      },
+      "on": {
+        "ok": true,
+        "tone": {
+          "on": true,
+          "done": true,
+          "basePitch": 0.16,
+          "ok": true,
+          "chose": 0.16,
+          "best": 0.16,
+          "was": 0.16,
+          "moved": false,
+          "decisive": false,
+          "incScore": 7.879,
+          "winScore": 7.879,
+          "margin": 0.35,
+          "rows": [
+            {
+              "pitch": 0.16,
+              "score": 7.879,
+              "mean": 28.3,
+              "min": 19.27,
+              "clutter": 45.45,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 25.92,
+                  "clutter": 46.7
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 40.54,
+                  "clutter": 43.44
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 19.27,
+                  "clutter": 43.89
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 27.47,
+                  "clutter": 47.75
+                }
+              ]
+            },
+            {
+              "pitch": 0.22,
+              "score": 3.116,
+              "mean": 23.95,
+              "min": 13.92,
+              "clutter": 45.2,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 21.67,
+                  "clutter": 45.68
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 37.11,
+                  "clutter": 42.45
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 13.92,
+                  "clutter": 42.85
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 23.11,
+                  "clutter": 49.82
+                }
+              ]
+            },
+            {
+              "pitch": 0.28,
+              "score": 3.317,
+              "mean": 24.52,
+              "min": 13.57,
+              "clutter": 44.94,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 22.27,
+                  "clutter": 44.59
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 38.1,
+                  "clutter": 42.93
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 13.57,
+                  "clutter": 41
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 24.14,
+                  "clutter": 51.23
+                }
+              ]
+            },
+            {
+              "pitch": 0.34,
+              "score": 4.392,
+              "mean": 26.45,
+              "min": 13.71,
+              "clutter": 44.82,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 22.03,
+                  "clutter": 44.49
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 46.69,
+                  "clutter": 43.6
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 13.71,
+                  "clutter": 40.15
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 23.35,
+                  "clutter": 51.02
+                }
+              ]
+            }
+          ],
+          "ms": 51,
+          "res": [
+            320,
+            180
+          ]
+        },
+        "site": {
+          "yawDelta": -1.05
+        }
+      }
+    },
+    "forest": {
+      "off": {
+        "ok": true,
+        "tone": {
+          "on": false,
+          "done": false,
+          "basePitch": 0.22,
+          "ok": false,
+          "why": "waiting for the cast"
+        },
+        "site": {
+          "yawDelta": -0.5
+        }
+      },
+      "on": {
+        "ok": true,
+        "tone": {
+          "on": true,
+          "done": true,
+          "basePitch": 0.34,
+          "ok": true,
+          "chose": 0.34,
+          "best": 0.34,
+          "was": 0.22,
+          "moved": true,
+          "decisive": true,
+          "incScore": 0.477,
+          "winScore": 3.601,
+          "margin": 0.35,
+          "rows": [
+            {
+              "pitch": 0.16,
+              "score": -0.939,
+              "mean": 13.5,
+              "min": 5.93,
+              "clutter": 30.44,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 5.95,
+                  "clutter": 32.22
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 5.93,
+                  "clutter": 31.73
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 17.99,
+                  "clutter": 30.83
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 24.14,
+                  "clutter": 26.99
+                }
+              ]
+            },
+            {
+              "pitch": 0.22,
+              "score": 0.477,
+              "mean": 14.45,
+              "min": 6.21,
+              "clutter": 28.16,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 6.21,
+                  "clutter": 30.41
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 6.48,
+                  "clutter": 30.07
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 20.93,
+                  "clutter": 26
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 24.19,
+                  "clutter": 26.14
+                }
+              ]
+            },
+            {
+              "pitch": 0.28,
+              "score": 1.748,
+              "mean": 14.9,
+              "min": 6.78,
+              "clutter": 25.98,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 6.78,
+                  "clutter": 28.13
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 7.09,
+                  "clutter": 28.11
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 21.46,
+                  "clutter": 23.72
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 24.29,
+                  "clutter": 23.98
+                }
+              ]
+            },
+            {
+              "pitch": 0.34,
+              "score": 3.601,
+              "mean": 16.91,
+              "min": 8.49,
+              "clutter": 26,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 8.49,
+                  "clutter": 29.22
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 8.64,
+                  "clutter": 29.9
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 23.77,
+                  "clutter": 22.26
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 26.75,
+                  "clutter": 22.62
+                }
+              ]
+            }
+          ],
+          "ms": 48,
+          "res": [
+            320,
+            180
+          ]
+        },
+        "site": {
+          "yawDelta": -0.5
+        }
+      }
+    },
+    "water": {
+      "off": {
+        "ok": true,
+        "tone": {
+          "on": false,
+          "done": false,
+          "basePitch": 0.16,
+          "ok": false,
+          "why": "waiting for the cast"
+        },
+        "site": {
+          "yawDelta": 0
+        }
+      },
+      "on": {
+        "ok": true,
+        "tone": {
+          "on": true,
+          "done": true,
+          "basePitch": 0.28,
+          "ok": true,
+          "chose": 0.28,
+          "best": 0.28,
+          "was": 0.16,
+          "moved": true,
+          "decisive": true,
+          "incScore": 8.657,
+          "winScore": 14.1,
+          "margin": 0.35,
+          "rows": [
+            {
+              "pitch": 0.16,
+              "score": 8.657,
+              "mean": 19.04,
+              "min": 15.68,
+              "clutter": 24.87,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 16.56,
+                  "clutter": 16.75
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 15.68,
+                  "clutter": 15.76
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 23.06,
+                  "clutter": 33.33
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 20.87,
+                  "clutter": 33.64
+                }
+              ]
+            },
+            {
+              "pitch": 0.22,
+              "score": 11.568,
+              "mean": 22.17,
+              "min": 15.04,
+              "clutter": 20.11,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 16.28,
+                  "clutter": 17.09
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 15.04,
+                  "clutter": 14.96
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 28.96,
+                  "clutter": 24.53
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 28.4,
+                  "clutter": 23.84
+                }
+              ]
+            },
+            {
+              "pitch": 0.28,
+              "score": 14.1,
+              "mean": 26.06,
+              "min": 13.76,
+              "clutter": 16.6,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 18.22,
+                  "clutter": 16.97
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 13.76,
+                  "clutter": 14.6
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 35.04,
+                  "clutter": 17.35
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 37.22,
+                  "clutter": 17.48
+                }
+              ]
+            },
+            {
+              "pitch": 0.34,
+              "score": 12.631,
+              "mean": 25.59,
+              "min": 10.87,
+              "clutter": 16,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 16.43,
+                  "clutter": 17.55
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 10.87,
+                  "clutter": 14.26
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 36.14,
+                  "clutter": 16.1
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 38.93,
+                  "clutter": 16.09
+                }
+              ]
+            }
+          ],
+          "ms": 40.3,
+          "res": [
+            320,
+            180
+          ]
+        },
+        "site": {
+          "yawDelta": 0
+        }
+      }
+    },
+    "crag": {
+      "off": {
+        "ok": true,
+        "tone": {
+          "on": false,
+          "done": false,
+          "basePitch": 0.16,
+          "ok": false,
+          "why": "waiting for the cast"
+        },
+        "site": {
+          "yawDelta": 0
+        }
+      },
+      "on": {
+        "ok": true,
+        "tone": {
+          "on": true,
+          "done": true,
+          "basePitch": 0.22,
+          "ok": true,
+          "chose": 0.22,
+          "best": 0.22,
+          "was": 0.16,
+          "moved": true,
+          "decisive": true,
+          "incScore": 4.508,
+          "winScore": 7.261,
+          "margin": 0.35,
+          "rows": [
+            {
+              "pitch": 0.16,
+              "score": 4.508,
+              "mean": 12.18,
+              "min": 9.53,
+              "clutter": 18.13,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 17.83,
+                  "clutter": 16.95
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 9.53,
+                  "clutter": 39.47
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 10.53,
+                  "clutter": 8.31
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 10.81,
+                  "clutter": 7.78
+                }
+              ]
+            },
+            {
+              "pitch": 0.22,
+              "score": 7.261,
+              "mean": 14.12,
+              "min": 11.37,
+              "clutter": 15.67,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 19.99,
+                  "clutter": 9.48
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 11.37,
+                  "clutter": 37.35
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 12.65,
+                  "clutter": 8.24
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 12.47,
+                  "clutter": 7.6
+                }
+              ]
+            },
+            {
+              "pitch": 0.28,
+              "score": 5.769,
+              "mean": 14,
+              "min": 8.12,
+              "clutter": 15.11,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 18.36,
+                  "clutter": 8.31
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 8.12,
+                  "clutter": 36.46
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 14.8,
+                  "clutter": 8.22
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 14.7,
+                  "clutter": 7.45
+                }
+              ]
+            },
+            {
+              "pitch": 0.34,
+              "score": 7.164,
+              "mean": 13.61,
+              "min": 10.89,
+              "clutter": 14.53,
+              "bodies": [
+                {
+                  "id": "vesper",
+                  "side": "party",
+                  "edgeRGB": 19.35,
+                  "clutter": 9.23
+                },
+                {
+                  "id": "maren",
+                  "side": "party",
+                  "edgeRGB": 11.7,
+                  "clutter": 33.37
+                },
+                {
+                  "id": "m0",
+                  "side": "foe",
+                  "edgeRGB": 10.89,
+                  "clutter": 8.13
+                },
+                {
+                  "id": "m1",
+                  "side": "foe",
+                  "edgeRGB": 12.5,
+                  "clutter": 7.4
+                }
+              ]
+            }
+          ],
+          "ms": 39,
+          "res": [
+            320,
+            180
+          ]
+        },
+        "site": {
+          "yawDelta": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+world ready  three r185  scene=ow-valley  bw={"on":true,"installed":false}
+postfx: {"grade":true,"ao":true,"family":"realtime"}
+  off: 241.9 fps over 1210 frames
+  on: 241.5 fps over 1208 frames
+delta: -0.17%
