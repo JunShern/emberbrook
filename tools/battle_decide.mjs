@@ -78,6 +78,17 @@ const BPLACE = arg('bplace', null);
 // ORBIT on destroy); `--yaw` defaults to whatever the page boots with, so both
 // arms and the round census all sit on the same heading.
 const YAW = arg('yaw', null);
+// --composite=1 (census only): photograph the page rather than the canvas, so
+// the command menu — a DOM overlay snapshot() cannot see — is IN the frame that
+// gets sorted. See censusHold below.
+const COMPOSITE = arg('composite', '0') === '1';
+// Where the canvas-only twin of each composited frame goes. It is not written
+// under docs by default: it duplicates census/<tag>/ byte-for-byte in intent and
+// exists only as the pairing evidence, so it belongs in a scratch dir.
+const CANVASDIR = arg('canvasdir', null);
+// Composited frames land here (viewport-sized; shrink to the canvas census's own
+// 900 px before committing — see the payload note in the run log).
+const COUT = arg('cout', 'docs/qa/battle-decide/census-c');
 
 mkdirSync(OUT, { recursive: true });
 mkdirSync(join(OUT, 'shots'), { recursive: true });
@@ -367,7 +378,20 @@ const siteDriver = (site) => `(async () => {
 //  * measured with the placement lane's OWN library (tools/battle_place_lib.mjs,
 //    moved verbatim), so silhouette / one-surface dominance / ray census /
 //    frame luminance are the same numbers computed by the same code.
-const censusDriver = (site, yaw) => `(async () => {
+//
+//  * --composite=1 SPLITS THE DRIVER IN HALF AT THE PHOTOGRAPH. The command menu
+//    is a DOM overlay and `stage.snapshot()` reads the WebGL canvas, so every
+//    frame in both censuses was judged without the box that covers its lower
+//    band in play. A page-side script cannot photograph the DOM; only the
+//    browser can. So the head half stages the fight, waits out the decide move,
+//    takes the canvas jpg and RETURNS WITH THE BATTLE STILL LIVE (the command
+//    step is unbounded — it ends on a keypress — so holding it is the real
+//    state, not a contrivance); node then takes ONE `Page.captureScreenshot`,
+//    which composites canvas and DOM exactly as the compositor does for the
+//    player; the tail half measures with the placement library and tears down.
+//    NOTHING ELSE MOVES: the two halves are the same statements in the same
+//    order with a ~200 ms pause between the canvas shot and the composited one.
+const censusHead = (site, yaw) => `
   const S = ${JSON.stringify(site)};
   const GS = window.GS, B = window.Battle, RU = window.Rules, D = window.__DEC;
   GS.setFlags({ 'maren-joined': true });
@@ -413,7 +437,10 @@ const censusDriver = (site, yaw) => `(async () => {
   await new Promise(r => setTimeout(r, 900));
   const samp = D.sample();
   const shot = D.jpg(0.84);
+`;
 
+// The tail: everything measured, then teardown. Shared verbatim by both arms.
+const CENSUS_TAIL = `
   // ---- MEASURED WITH THE PLACEMENT LANE'S OWN RULER -----------------------
   const F = window.__PLACE.frames();
   const sil = window.__PLACE.silhouette(F);
@@ -452,6 +479,42 @@ const censusDriver = (site, yaw) => `(async () => {
       sil: sil, surf: surf, rays: rays, ground: grd, sun: sun, frameL: fl,
       anchors: anchors, tiers: st.tiers(), stageMs: +stageMs.toFixed(0) },
     shot: shot };
+`;
+
+const censusDriver = (site, yaw) => `(async () => {${censusHead(site, yaw)}${CENSUS_TAIL}})()`;
+
+// THE COMPOSITE ARM. Head, then a CDP screenshot from node, then tail. The menu
+// rectangle is read here in CSS pixels ALONGSIDE the canvas rectangle, because a
+// band is only meaningful as a fraction of the frame it covers.
+const censusHold = (site, yaw) => `(async () => {${censusHead(site, yaw)}
+  window.__DEC.hold = { S: S, st: st, p0: p0, zone: zone, yawWas: yawWas,
+                        samp: samp, shot: shot, stageMs: stageMs };
+  const rect = (sel) => { const n = document.querySelector(sel); if (!n) return null;
+    const r = n.getBoundingClientRect();
+    return { x0: +r.left.toFixed(1), y0: +r.top.toFixed(1), x1: +r.right.toFixed(1), y1: +r.bottom.toFixed(1) }; };
+  // EVERY OPAQUE PANEL, not just the command list: battle_turnbased paints a
+  // prompt rail across the top and a turn-order panel bottom-right, and the frame
+  // the player lives in has all of them in it.
+  const ui = {};
+  for (const sel of ['.ebb-cmds', '.ebb-log', '.ebb-rail', '.ebb-party', '.ebb-phead', '.ebb-sub'])
+    ui[sel] = rect(sel);
+  ui.foeTags = Array.from(document.querySelectorAll('.ebb-ftags')).map(n => {
+    const r = n.getBoundingClientRect();
+    return { x0: +r.left.toFixed(1), y0: +r.top.toFixed(1), x1: +r.right.toFixed(1), y1: +r.bottom.toFixed(1) };
+  });
+  return { ok: true, staged: true, id: S.id,
+           menuRect: rect('.ebb-cmds'), canvasRect: rect('canvas'), ui: ui,
+           dpr: window.devicePixelRatio,
+           vw: window.innerWidth, vh: window.innerHeight };
+})()`;
+
+const CENSUS_FINISH = `(async () => {
+  const D = window.__DEC, H = D.hold;
+  if (!H) return { skip: 'nothing held' };
+  D.hold = null;
+  const S = H.S, st = H.st, p0 = H.p0, zone = H.zone, yawWas = H.yawWas,
+        samp = H.samp, shot = H.shot, stageMs = H.stageMs;
+  ${CENSUS_TAIL}
 })()`;
 
 // ---------------------------------------------------------------------------
@@ -593,8 +656,10 @@ function summarise(row) {
     const yaw = YAW != null ? parseFloat(YAW)
       : await ev(cdp, '(() => +window.ORBIT.yaw.toFixed(6))()', 10000);
     console.log('ORBIT.yaw pinned at ' + yaw);
-    const dir = join(OUT, 'census', TAG);
+    const dir = CANVASDIR ? CANVASDIR : join(OUT, 'census', TAG);
     mkdirSync(dir, { recursive: true });
+    const cdir = join(ROOT, COUT, TAG);
+    if (COMPOSITE) { mkdirSync(cdir, { recursive: true }); await cdp.send('Page.enable'); }
     const out = [];
     const t0 = Date.now();
     // --start / --limit are for smoke-testing the driver and for resuming a run;
@@ -605,10 +670,25 @@ function summarise(row) {
     for (const r of census.slice(from, from + lim)) {
       const s = { id: r.id, zone: r.zone, at: r.at };
       process.stdout.write(`  ${s.id} (${s.zone}) ... `);
-      let res;
-      try { res = await ev(cdp, censusDriver(s, yaw), 300000); }
+      let res, held = null;
+      try {
+        if (COMPOSITE) {
+          held = await ev(cdp, censusHold(s, yaw), 300000);
+          if (!held || !held.ok) { console.log('skip: ' + (held && held.skip)); continue; }
+          await sleep(200);
+          const png = await cdp.send('Page.captureScreenshot',
+            { format: 'jpeg', quality: 88, captureBeyondViewport: false });
+          writeFileSync(join(cdir, s.id + '.jpg'), Buffer.from(png.data, 'base64'));
+          res = await ev(cdp, CENSUS_FINISH, 300000);
+        } else {
+          res = await ev(cdp, censusDriver(s, yaw), 300000);
+        }
+      }
       catch (e) { console.log('THREW ' + e.message); continue; }
       if (!res || !res.ok) { console.log('skip: ' + (res && res.skip)); continue; }
+      if (held) { res.row.menuRect = held.menuRect; res.row.canvasRect = held.canvasRect;
+                  res.row.ui = held.ui;
+                  res.row.viewport = { w: held.vw, h: held.vh, dpr: held.dpr }; }
       if (res.shot) writeFileSync(join(dir, s.id + '.jpg'), Buffer.from(res.shot.split(',')[1], 'base64'));
       out.push(res.row);
       const w = res.row;
@@ -619,7 +699,7 @@ function summarise(row) {
     }
     const f = join(OUT, `census-${TAG}.json`);
     writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
-      bplace: BPLACE, keep: KEEP, three: ready.three, n: out.length, of: census.length,
+      bplace: BPLACE, keep: KEEP, composite: COMPOSITE, three: ready.three, n: out.length, of: census.length,
       secs: +((Date.now() - t0) / 1000).toFixed(0) }, rows: out }, null, 1));
     console.log(`\nwrote ${out.length}/${census.length} sites -> ${f}`);
     console.log('shots -> ' + dir);
@@ -866,6 +946,115 @@ function buildBoard() {
     <div class="gal">${gal}</div>`;
   }
 
+  // ---- THE COMPOSITED SECTION: the frame with the UI ON IT ----------------
+  // Every frame above is `stage.snapshot()`, which reads the WebGL canvas. The
+  // battle UI is a DOM overlay the canvas cannot see, so 124 judged frames were
+  // judged without it. This block is the same 62 sites x 2 arms photographed
+  // with Page.captureScreenshot at the SAME INSTANT as their canvas twin
+  // (--composite=1), sorted by eye by ONE rater across all four sets so that
+  // canvas-vs-composited is PAIRED and the rater cannot be the difference.
+  let compHtml = '';
+  const cA = cLoad('census-cAfter.json'), cB = cLoad('census-cBefore.json');
+  const LS = (n) => cLoad('sort-' + n + '.json');
+  const mCA = LS('mine-canvas-after'), mPA = LS('mine-comp-after'),
+        mCB = LS('mine-canvas-before'), mPB = LS('mine-comp-before');
+  if (cA && mCA && mPA && mCB && mPB) {
+    const pil = (s) => (v) => (s.verdict[v] || '').split(/\s|—/)[0].trim();
+    const CAT = ['good', 'acceptable', 'bad'];
+    const ids = Object.keys(mCA.verdict).sort();
+    const pct = (n) => (100 * n / ids.length).toFixed(1) + '%';
+    const dist = (f) => CAT.map(c => ids.filter(i => f(i) === c).length);
+    const distRow = (lab, f) => `<tr><td>${lab}</td>` +
+      dist(f).map(n => `<td>${n} <span class="dim">(${pct(n)})</span></td>`).join('') + `</tr>`;
+    const mx = (lab, A, B, an, bn) => {
+      let h = `<h3>${lab}</h3><table class="m wide cm"><tr><th>${an} &darr; / ${bn} &rarr;</th>` +
+        CAT.map(c => `<th>${c}</th>`).join('') + `<th>tot</th></tr>`;
+      for (const r of CAT) {
+        const row = CAT.map(c => ids.filter(i => A(i) === r && B(i) === c).length);
+        h += `<tr><th>${r}</th>` + row.map((n, j) => `<td class="${n && r !== CAT[j] ? 'off' : ''}">${n || ''}</td>`).join('') +
+             `<td>${row.reduce((a, b) => a + b, 0)}</td></tr>`;
+      }
+      const ag = ids.filter(i => A(i) === B(i)).length;
+      const mv = ids.filter(i => A(i) !== B(i));
+      h += `</table><p class="lede small">agree ${ag}/${ids.length} (${(100 * ag / ids.length).toFixed(1)}%) &middot; ` +
+        `moved: ${mv.map(i => `<b>${i}</b> ${A(i)}&rarr;${B(i)}`).join(' &middot; ') || 'none'}</p>`;
+      return h;
+    };
+    const KA = pil(mCA), PA = pil(mPA), KB = pil(mCB), PB = pil(mPB), RA = pil(sdA), RB = pil(sdB);
+    // the panel geometry, off the capture's own getBoundingClientRect
+    const r0 = cA.rows[0], vp = r0.viewport, ui = r0.ui || {};
+    const ar = (q) => q ? (q.x1 - q.x0) * (q.y1 - q.y0) : 0;
+    const panels = ['.ebb-rail', '.ebb-log', '.ebb-cmds', '.ebb-phead', '.ebb-party'];
+    const panTbl = panels.map(k => `<tr><td><code>${k}</code></td><td>${ui[k] ? `${Math.round(ui[k].x0)},${Math.round(ui[k].y0)} &rarr; ${Math.round(ui[k].x1)},${Math.round(ui[k].y1)}` : '&mdash;'}</td>` +
+      `<td>${(100 * ar(ui[k]) / (vp.w * vp.h)).toFixed(2)}%</td></tr>`).join('');
+    // body-under-panel screen (approximate box off the anchor; a SCREEN, not a verdict)
+    const overlap = (row) => {
+      const P = panels.filter(k => k !== '.ebb-rail').map(k => (row.ui || {})[k]).filter(Boolean);
+      let worst = 0, who = null;
+      for (const [bid, a] of Object.entries(row.anchors || {})) {
+        const hw = a.h * (bid === 'm0' ? 1.1 : 0.5);
+        const bx = [a.x - hw, a.y - a.h, a.x + hw, a.y];
+        const A2 = Math.max(1e-6, (bx[2] - bx[0]) * (bx[3] - bx[1]));
+        let ov = 0;
+        for (const p of P) ov += Math.max(0, Math.min(bx[2], p.x1) - Math.max(bx[0], p.x0)) *
+                                 Math.max(0, Math.min(bx[3], p.y1) - Math.max(bx[1], p.y0));
+        if (ov / A2 > worst) { worst = ov / A2; who = bid; }
+      }
+      return { f: worst, who: who };
+    };
+    const ovs = cA.rows.map(r => ({ id: r.id, ...overlap(r) })).sort((a, b) => b.f - a.f);
+    const band = (t) => ovs.filter(o => o.f > t).length;
+    const gal = ids.filter(i => KA(i) !== PA(i)).map(i =>
+      `<figure><figcaption>${i} &middot; canvas <b>${KA(i)}</b> &rarr; composited <b>${PA(i)}</b><br>
+       <span class="dim">${(mPA.verdict[i] || '').split('— ')[1] || ''}</span></figcaption>
+       <img loading="lazy" src="census-c/cAfter/${i}.jpg"></figure>`).join('');
+    compHtml = `<h2>The frame with the UI on it</h2>
+    <p class="lede">Every plate above is <code>stage.snapshot()</code> &mdash; the WebGL canvas. <b>The battle
+    UI is a DOM overlay the canvas cannot see</b>, so all 124 frames in the census above were judged without
+    the boxes that sit on them in play. Here the same 62 landing cells were fought again in both arms and
+    photographed with <code>Page.captureScreenshot</code> AT THE SAME INSTANT as their canvas twin
+    (<code>battle_decide --mode=census --composite=1</code> splits its driver at the photograph and leaves
+    the battle live &mdash; the command step is unbounded, so holding it is the real state). Staging was
+    verified identical to the census above at <b>62/62</b> sites in both arms. One rater sorted all four
+    sets, so canvas-vs-composited is PAIRED and the rater cannot be the difference.</p>
+    <h3>What the UI actually covers</h3>
+    <table class="m wide"><tr><th>panel</th><th>rect (CSS px, ${vp.w}&times;${vp.h})</th><th>share of frame</th></tr>
+      ${panTbl}<tr><td><b>union of the four opaque panels</b></td><td></td><td><b>17.1%</b></td></tr></table>
+    <p class="lede">The command menu is the SMALL one (2.1%). The panel that matters is <b>TURN ORDER,
+    bottom-right</b> &mdash; because <code>decide</code> is a 27 mm two-shot that puts the foe line at
+    screen-x 0.78, which is exactly where that panel is. Bodies with part of their box under a panel
+    (an approximate box off <code>stage.anchor()</code> &mdash; a SCREEN, confirmed by eye at every site
+    over 12%): <b>${band(0.10)}/62 sites over 10%, ${band(0.25)} over 25%, ${band(0.50)} over 50%</b>, and
+    <b>it is the wolf every time</b> &mdash; never a party body, which stands at screen-left where only the
+    2.1% command list is.</p>
+    <table class="m wide"><tr><th>sort</th><th>good</th><th>acceptable</th><th>bad</th></tr>
+      ${distRow('previous lane &middot; canvas &middot; SHIPPED', RA)}
+      ${distRow('mine &middot; canvas &middot; pre-refusal', KB)}
+      ${distRow('mine &middot; canvas &middot; SHIPPED', KA)}
+      ${distRow('mine &middot; COMPOSITED &middot; pre-refusal', PB)}
+      ${distRow('mine &middot; COMPOSITED &middot; SHIPPED', PA)}
+    </table>
+    ${mx('The answer: canvas vs composited, SHIPPED build, same battles, same rater', KA, PA, 'canvas', 'composited')}
+    ${mx('And on the pre-refusal build', KB, PB, 'canvas', 'composited')}
+    ${mx('Rater calibration: two people, the SAME canvas frames', RA, KA, 'previous lane', 'mine')}
+    <p class="lede"><b>The menu costs 3.2 points of bad, on both arms, and it is not the menu.</b>
+    Bad ${pct(dist(KA)[2])}&rarr;${pct(dist(PA)[2])} shipped and ${pct(dist(KB)[2])}&rarr;${pct(dist(PB)[2])}
+    pre-refusal &mdash; the same +2 sites both times. Four of the six shipped-arm changes are the TURN-ORDER
+    panel eating the wolf; one is the <code>.ebb-vig</code>/<code>.ebb-scrim</code> grade pushing an already
+    dim corner under; and one goes the OTHER way (s053, where the vignette darkens the pale sandstone and
+    the cream wolf separates better than it does on the canvas). <b>The sun refusal is worth the same
+    &minus;3.2 points on the frame the player sees as on the canvas</b>, so the judgement transfers exactly.
+    For scale: two raters applying this rubric to the SAME canvas frames differ by 9.7 points of bad and
+    agree on only 43/62 sites &mdash; the UI is worth about a third of the disagreement between two people.</p>
+    <h3>The ${ids.filter(i => KA(i) !== PA(i)).length} sites the UI changes, pictured</h3>
+    <div class="gal">${gal}</div>
+    <p class="lede small">Data: <code>census-cAfter.json</code>, <code>census-cBefore.json</code>,
+    <code>sort-mine-{canvas,comp}-{after,before}.json</code>. Frames: <code>census-c/</code> (composited),
+    <code>sheets-c-*</code> / <code>sheets-cv-*</code> (the contact sheets the sort was made from).
+    Instrument artefacts present in the composited frames and NOT scored: the <code>?rt=1</code> debug text
+    line and the &ldquo;music off&rdquo; toast are the harness&rsquo;s, not the game&rsquo;s.</p>`;
+  }
+
   let openHtml = '';
   if (before && after) {
     const p = (b) => b.summary.map(s => s.cost.firstFrameMs).sort((x, y) => x - y);
@@ -910,6 +1099,7 @@ battle_turnbased's own <code>.ebb-cmds.idle</code> class. <b>Foes in frame</b> i
 Box3 projected through the live camera and intersected with the canvas &mdash; in frame, not visible.
 <b>Zero-foe dwell</b> is the fraction of sampled command-step frames containing no living foe at all.</p>
 <p class="lede">before: ${hdr(before)}<br>after: ${hdr(after)}</p>
+${compHtml}
 ${censusHtml}
 ${rowsHtml}
 ${costHtml}

@@ -26,6 +26,13 @@ ap.add_argument('--suffix', default='')       # '' = the round shot, '-decide' =
 # geometry is NOT parameterised away from its defaults on purpose: two sorts are
 # only comparable if the human looked at the same size picture.
 ap.add_argument('--ext', default='.png')
+# CELL HEIGHT, and the ONLY reason it is overridable: the composited census
+# (battle_decide --composite=1) photographs the PAGE, whose canvas element is
+# CSS-stretched from the render target's 1.75 to the viewport's 1.97 — so a
+# composited frame forced into the canvas census's 16:9 cell would be squashed
+# by 12% and the human would be sorting a distortion the player never sees.
+# Same cell WIDTH, so the pictures are still the same size on the eye.
+ap.add_argument('--ch', type=int, default=0)
 a = ap.parse_args()
 
 src = os.path.join(ROOT, a.dir)
@@ -39,7 +46,7 @@ if not names:
     sys.exit('no shots in ' + src)
 
 per = a.cols * a.rows
-ch = int(a.cw * 9 / 16)
+ch = a.ch if a.ch else int(a.cw * 9 / 16)
 LAB = 20
 made = []
 for s in range(0, len(names), per):
