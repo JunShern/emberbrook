@@ -1,0 +1,650 @@
+[
+ {
+  "fid": "F15",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "woodroad",
+  "item": null,
+  "category": "navigation",
+  "where": "top right along the path behind the illuminated monument",
+  "bbox": [
+   0.54,
+   0,
+   0.65,
+   0.17
+  ],
+  "severity": 2,
+  "desc": "The pathway leads into pitch darkness and foliage behind the monument without clear indication of where to proceed.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Pathways naturally extend into darker shaded areas or scene boundaries in night environments, which is standard atmospheric design rather than a navigation flaw."
+  }
+ },
+ {
+  "fid": "F3",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "waystone",
+  "item": null,
+  "category": "immersion",
+  "where": "tree leaves above the lamp",
+  "bbox": [
+   0.45,
+   0.28,
+   0.635,
+   0.42
+  ],
+  "severity": 1,
+  "desc": "The tree foliage is brightly illuminated from an angle that does not match the direction or position of the ground lamp.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "51.7,60.1,-9.3,-1.4",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 51.7,60.1,-9.3,-1.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The warm light on the foliage directly matches the position and upward glow of the bollard light beneath it."
+  }
+ },
+ {
+  "fid": "F9",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "waystone",
+  "item": null,
+  "category": "navigation",
+  "where": "end of the illuminated pathway",
+  "bbox": [
+   0.38,
+   0.48,
+   0.6,
+   0.63
+  ],
+  "severity": 2,
+  "desc": "The stone pathway appears to terminate abruptly under the tree without clear indication of where to proceed.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Paths ending near a monument or tree is a standard environment design choice rather than an issue for players."
+  }
+ },
+ {
+  "fid": "F10",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "waystone",
+  "item": null,
+  "category": "occlusion",
+  "where": "dense foliage on the right side",
+  "bbox": [
+   0,
+   0.6,
+   1,
+   1
+  ],
+  "severity": 2,
+  "desc": "Extremely dark foliage completely blocks visibility of the terrain and environment on the right side of the frame.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Dark foreground foliage on the edge of the frame is standard vignette framing, not an unintended visual flaw."
+  }
+ },
+ {
+  "fid": "F16",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "waystone",
+  "item": null,
+  "category": "occlusion",
+  "where": "dense tree foliage on the right",
+  "bbox": [
+   0.58,
+   0,
+   1,
+   1
+  ],
+  "severity": 2,
+  "desc": "Dense foreground foliage completely blocks the view of the play area and potential paths on the right side of the screen.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The foliage serves as normal cinematic foreground framing around the central illuminated focal point."
+  }
+ },
+ {
+  "fid": "F5",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": null,
+  "category": "occlusion",
+  "where": "large tree canopy on the right side",
+  "bbox": [
+   0.55,
+   0,
+   1,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "Dense dark foliage completely obscures the right side of the environment, blocking sightlines to paths or potential obstacles behind it.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tree foliage on the right acts as standard camera framing for the scene rather than an improper obstacle to player gameplay."
+  }
+ },
+ {
+  "fid": "F11",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": null,
+  "category": "occlusion",
+  "where": "right half foreground foliage",
+  "bbox": [
+   0.55,
+   0,
+   1,
+   0.99
+  ],
+  "severity": 2,
+  "desc": "Dense, dark tree foliage covers the entire right foreground, completely blocking the player's view of the path and space below.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Foreground tree foliage framing the right side of the camera view is normal environment composition and not a defect."
+  }
+ },
+ {
+  "fid": "F18",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "arch",
+  "item": null,
+  "category": "occlusion",
+  "where": "dense foliage on the right side of the frame",
+  "bbox": [
+   0.55,
+   0,
+   1,
+   1
+  ],
+  "severity": 2,
+  "desc": "Extremely dense and dark tree foliage completely obscures the ground and potential pathways across the right side of the space.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Dense foliage on the right frame edge is decorative framing foliage standard for environmental art."
+  }
+ },
+ {
+  "fid": "F57",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "square",
+  "item": null,
+  "category": "navigation",
+  "where": "edges around the village perimeter",
+  "bbox": [
+   0,
+   0,
+   0.35,
+   0.4
+  ],
+  "severity": 1,
+  "desc": "Dark, dense foliage completely surrounds the perimeter, making it unclear where walkable pathways continue off-screen.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Using dense trees as a perimeter boundary is a standard method for defining map edges."
+  }
+ },
+ {
+  "fid": "F74",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "square",
+  "item": "quality:water-read",
+  "itemWhat": "[QUALITY] The water surface — water covers about 2.0% of this frame (near Weir & sluice, Brook footbridge, Pond jetty). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+  "verdict": "WEAK",
+  "quality": true,
+  "category": "immersion",
+  "where": "top right corner",
+  "bbox": [
+   0.75,
+   0,
+   0.95,
+   0.1
+  ],
+  "severity": 2,
+  "desc": "The water surface: WEAK — JUDGMENT: Water surface is extremely dark and lacks visible specular highlights or transparency.",
+  "census": null,
+  "hint": {
+   "region": "23,48,12.2,31.9",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 23,48,12.2,31.9"
+  },
+  "aim": {
+   "subject": "visible water",
+   "cells": 340,
+   "hit": 0,
+   "cover": 0,
+   "frameFrac": 0.0203,
+   "min": 0.02,
+   "state": "misaimed",
+   "why": "0.0% of the judged box is visible water (0/340 cells of the shot's own 168x96 census; the frame holds 2.0%)"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "aim-census",
+   "why": "the verdict names visible water but 0.0% of the judged box is visible water (0/340 cells of the shot's own 168x96 census; the frame holds 2.0%) — the sceptic had upheld it (\"The water surface in the top-right corner is pitch dark and fails to render specular reflection or transparency.\")"
+  },
+  "sceptic": {
+   "verdict": "upheld",
+   "by": "adversarial-judge:checklist",
+   "why": "The water surface in the top-right corner is pitch dark and fails to render specular reflection or transparency."
+  }
+ },
+ {
+  "fid": "F61",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "pondlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "large central tree canopy obscuring ground",
+  "bbox": [
+   0.045,
+   0.18,
+   0.55,
+   0.76
+  ],
+  "severity": 2,
+  "desc": "Dense tree foliage covers the center and left portions of the scene, completely hiding the ground and any potential pathways underneath.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Tree foliage naturally obscuring the ground beneath it is expected environment design rather than an art defect."
+  }
+ },
+ {
+  "fid": "F77",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "pondlane",
+  "item": null,
+  "category": "navigation",
+  "where": "foreground dark ground area",
+  "bbox": [
+   0.05,
+   0.65,
+   0.75,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "Deep pitch-black shadows obscure the ground level, making it difficult to discern walkable terrain from obstacles.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The ground area is lit for a night scene with visible terrain textures and objects, not unreadable pitch black."
+  }
+ },
+ {
+  "fid": "F81",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "pondlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "center across foliage canopy",
+  "bbox": [
+   0.1,
+   0.15,
+   0.7,
+   0.75
+  ],
+  "severity": 2,
+  "desc": "Dense tree foliage fills the middle ground, completely obscuring ground paths and structural layout.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Foliage covering background elements is standard naturalistic composition and not a visual bug."
+  }
+ },
+ {
+  "fid": "F83",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "pondlane",
+  "item": null,
+  "category": "geometry",
+  "where": "bottom right market stall roofs",
+  "bbox": [
+   0.63,
+   0.66,
+   0.93,
+   0.99
+  ],
+  "severity": 1,
+  "desc": "The angled roof tiles on the stalls clip into one another cleanly without realistic support beams.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "69.6,82.6,38.1,48.5",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 69.6,82.6,38.1,48.5"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Overlapping angled roof structures on simple stalls are normal for stylized environment art and do not break visuals."
+  }
+ },
+ {
+  "fid": "F65",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": null,
+  "category": "immersion",
+  "where": "roof edge of the rightmost structure",
+  "bbox": [
+   0.76,
+   0.18,
+   0.88,
+   0.4
+  ],
+  "severity": 1,
+  "desc": "Wooden roof rafters extend out into empty space with no roof structure or supporting wall beneath them.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "45.5,52.5,54.3,61.5",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 45.5,52.5,54.3,61.5"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Exposed rafter tails extending beyond roof edges are a standard medieval architectural detail rather than an immersion-breaking flaw."
+  }
+ },
+ {
+  "fid": "F79",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": null,
+  "category": "occlusion",
+  "where": "foreground tree on the left",
+  "bbox": [
+   0,
+   0.13,
+   0.25,
+   0.99
+  ],
+  "severity": 2,
+  "desc": "A large foreground pine tree heavily obstructs the camera, completely hiding the path and building entrance behind it.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Foreground trees framing the scene are a standard composition choice in isometric views and do not constitute a defect."
+  }
+ },
+ {
+  "fid": "F80",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": null,
+  "category": "geometry",
+  "where": "roof frame on the building on the right",
+  "bbox": [
+   0.76,
+   0.2,
+   0.86,
+   0.42
+  ],
+  "severity": 1,
+  "desc": "Wooden roof beams float and clip unnaturally without clear structural support.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "45.6,52.1,54,61.9",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 45.6,52.1,54,61.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The wooden beams are properly integrated into the roof structure to represent exposed timber framing, not floating geometry."
+  }
+ },
+ {
+  "fid": "F86",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "homerow",
+  "item": null,
+  "category": "occlusion",
+  "where": "foreground on the left",
+  "bbox": [
+   0,
+   0.18,
+   0.24,
+   1
+  ],
+  "severity": 2,
+  "desc": "A dense foreground tree completely blocks the player's view of the building and path in the lower-left area.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Foreground foliage obscuring screen edges is a common environment design practice for depth framing."
+  }
+ },
+ {
+  "fid": "F87",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "foliage to the left of the central building",
+  "bbox": [
+   0.09,
+   0,
+   0.45,
+   0.65
+  ],
+  "severity": 2,
+  "desc": "Dense tree foliage completely obscures the ground and left side of the house, hiding potential paths and doorways.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Tree foliage naturally covers the ground beneath it in wooded environments and is normal scene composition rather than a defect."
+  }
+ },
+ {
+  "fid": "F89",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "dense tree canopy around central house",
+  "bbox": [
+   0.08,
+   0,
+   0.6,
+   0.65
+  ],
+  "severity": 2,
+  "desc": "Dense foliage completely covers the ground level and entrances around the central building, hiding paths and playable space from this camera angle.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Dense tree cover obscuring ground space from an overhead view is standard for environmental foliage and does not represent an art error."
+  }
+ },
+ {
+  "fid": "F101",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "northlane",
+  "item": null,
+  "category": "occlusion",
+  "where": "around the central building",
+  "bbox": [
+   0.08,
+   0,
+   0.56,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Dense tree canopy completely covers the ground, pathways, and potential entrances around the house, obscuring playable space.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Natural tree canopy covering surrounding ground areas is expected environment detail for a forested setting."
+  }
+ },
+ {
+  "fid": "F119",
+  "mode": "naive",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": null,
+  "category": "occlusion",
+  "where": "left side of the frame",
+  "bbox": [
+   0,
+   0,
+   1,
+   0.35
+  ],
+  "severity": 2,
+  "desc": "Extremely dark shadows obscure the environment and foliage on the left side of the screen, hiding terrain features.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The deep shadows on the left are a normal result of low-key directional lighting in a night setting, not an artistic flaw."
+  }
+ },
+ {
+  "fid": "F125",
+  "mode": "checklist",
+  "town": "emberbrook",
+  "shot": "gatefield",
+  "item": "quality:water-read",
+  "itemWhat": "[QUALITY] The water surface — water covers about 2.4% of this frame. Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+  "verdict": "FAILING",
+  "quality": true,
+  "category": "immersion",
+  "where": "bottom right shade",
+  "bbox": [
+   0.85,
+   0.7,
+   1,
+   1
+  ],
+  "severity": 3,
+  "desc": "The water surface: FAILING — JUDGMENT: Completely dark plane lacking reflections or water characteristics.",
+  "census": null,
+  "hint": {
+   "region": "81.6,89.8,103.5,118.7",
+   "cmd": "Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 81.6,89.8,103.5,118.7"
+  },
+  "aim": {
+   "subject": "visible water",
+   "cells": 754,
+   "hit": 0,
+   "cover": 0,
+   "frameFrac": 0.0236,
+   "min": 0.02,
+   "state": "misaimed",
+   "why": "0.0% of the judged box is visible water (0/754 cells of the shot's own 168x96 census; the frame holds 2.4%)"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "aim-census",
+   "why": "the verdict names visible water but 0.0% of the judged box is visible water (0/754 cells of the shot's own 168x96 census; the frame holds 2.4%) — the sceptic had upheld it (\"The area in the bottom-right shade is a pitch-black, flat plane devoid of reflections, lighting, or water textures.\")"
+  },
+  "sceptic": {
+   "verdict": "upheld",
+   "by": "adversarial-judge:checklist",
+   "why": "The area in the bottom-right shade is a pitch-black, flat plane devoid of reflections, lighting, or water textures."
+  }
+ }
+]
