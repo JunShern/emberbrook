@@ -695,12 +695,19 @@ const siteDriver = (pt, seen, opts) => `(async () => {
 
   // THE FRAME THIS STUDY JUDGES IS THE ESTABLISHING SHOT, AND IT HAS TO BE ASKED
   // FOR. By the time the cast has arrived, battle_turnbased has already handed
-  // the turn to the player, so the camera sits on 'decide' — fov 27, show 'actor'
-  // — and BOTH FOES ARE OFF FRAME (measured: anchors vis:false for m0/m1 on
-  // every pilot site). A place is judged against the whole fight, so the shot
-  // table's own 'round' (show all, fov 34) is driven explicitly through the
-  // stage's QA verb and given its move time. The 'decide' frame is kept too,
-  // unmeasured, because it is the frame the player dwells on longest.
+  // the turn to the player, so the camera sits on 'decide' rather than 'round'.
+  // A place is judged against the whole fight, so the shot table's own 'round'
+  // (show all, fov 34) is driven explicitly through the stage's QA verb and given
+  // its move time. The 'decide' frame is kept too, unmeasured, because it is the
+  // frame the player dwells on longest.
+  // AND THE HALF OF THAT NOTE THAT WAS A DEFECT REPORT IS FIXED (2026-08-09).
+  // It used to read "and BOTH FOES ARE OFF FRAME (anchors vis:false for m0/m1 on
+  // every pilot site)" — which was true, measured at 12 sites, and was a bug in
+  // the game rather than a fact about it: `show:'actor'` resolved to ONE body
+  // because the command step has no target. battle_world's `decide` row now
+  // carries `keep:'foes'` and the frame contains the fight (tools/battle_decide.mjs,
+  // docs/qa/battle-decide). THE SORT BELOW IS STILL OF 'round' PLATES: the decide
+  // frame has never been eye-sorted at census scale.
   // (Plain quotes: a backtick in a comment INSIDE a template literal ends the
   // literal — CLAUDE.md's own trap, paid again here at first run.)
   st.shotTo('round', { ms: 520 });
