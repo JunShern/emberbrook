@@ -2045,4 +2045,10 @@ async function main() {
   console.log(`report: ${path.relative(ROOT, OUTDIR)}/index.html`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+// A MAIN GUARD, PAID FOR: this file had none, so `import` of it — for ONE exported
+// function, by a lane building an A/B on `refutePrompt` — ran a FULL SWEEP. Measured cost
+// of that one import: 64 judge calls, 234 k tokens and an unasked-for run directory
+// (run-20260809-184544), concurrently with the A/B it was importing the function for.
+// Every other tool here is a script AND a library; this one now says which it is being.
+if (import.meta.url === 'file://' + process.argv[1])
+  main().catch((e) => { console.error(e); process.exit(1); });
