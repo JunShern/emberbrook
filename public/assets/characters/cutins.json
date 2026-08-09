@@ -245,15 +245,17 @@
  "odessa": {
   "expr": [
    "grave",
-   "warm"
+   "stern",
+   "warm",
+   "worried"
   ],
-  "h": 717,
+  "h": 600,
   "head": {
    "chin": 0.315,
    "crown": 0.024,
    "eye": 0.203
   },
-  "w": 636
+  "w": 548
  },
  "pell": {
   "expr": [
