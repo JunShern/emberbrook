@@ -1048,6 +1048,36 @@ git runs here, on branch `migration/3d-hybrid`.
   cut/passage edges deliberately — Dellhollow's levels are joined by 42 self-edges and a
   walk-only fill calls the gate arrival and the log-jam unreachable when they are 0.4 m
   apart in plan and 10 m in height. A clean run is 69/1 until ch2.road's anchor is fixed.
+- **THE GAUNTLET WAS RUN WHOLE ON 2026-08-09 AND ONE GATE LIES UNDER LOAD.**
+  `playthrough_test` **reports "beat never fired" for beats that DEMONSTRABLY DID FIRE**, and one
+  false red cascades. `story_runtime.js:265` writes the ledger at the END of a beat's `do` chain
+  (deliberately — an interrupted beat should replay, do not change it) while `AWAIT_BEAT` polls
+  for 60 s / 75 s / 90 s, so the beats carrying a **`banner`** — `ch1.hush` 4.2 s, `ch2.landing`
+  4.6 s **plus a 20 s end card** — can outlast the window on a loaded machine. **THE PROOF IS IN
+  THE HARNESS'S OWN OUTPUT, PRINTED MOMENTS LATER**: `FAIL beat ch2.landing fired` followed by
+  `beats completed: 28 — … ch2.landing` with §6 fully green; `FAIL beat ch1.hush fired` followed
+  by a flags dump reading `"story.ch1.hush": true`. Zero console errors in both. Three runs on
+  ONE build, one tree: **84/1 · 44/16 · 86/0**. The loop `break`s on the false red, turning one
+  race into 16 failures, and §W then emits `ch1.done -> ch2.road: UNREACHABLE … No walk can ever
+  trigger this beat` — **a scary, quotable sentence that is PURE ARTIFACT of a player who never
+  progressed**, and exactly the kind of line a future lane inherits as a real defect.
+  BASELINE DRIFT, not a red: the assertion count is now **86** (§W grew) and
+  `ch1.done -> ch2.road` is GREEN, so the historic 80/1 and 81/0 are both closed.
+  WHAT THE SAME RUN CONFIRMED: **`transition_test` is 168/0 TWICE with every `del-cine|shelf-west`
+  reading flat at geo 624 / tex 38 across 5 samples** — no trace of the old 157-168 band or the
+  `{geo:±2}` parity drift, so the `1690e9cc` re-baseline HOLDS. **`arena_playtest organic` is
+  14/14**, so today's harness fix holds too. `slice_test` 776/0, `findability` 69/0+11,
+  `story_test` 1112/0, `percept_test` 617/617, `ray_budget` W=2 of 9761.
+  `seam_test` 266/4 and `seam_walk` 8/9 are the documented baseline RE-DERIVED, not inherited:
+  three of the four are the same deep-stairs edge, born in the 2026-08-06 Bet 2 rebuild
+  (`fe5b051c`, `e296cb22`), counts identical to the 2026-08-07 record — **rounds 8 and 9 are not
+  implicated**. And a structural fact worth keeping: **`cine_test` PASSES the weave edge that
+  `seam_test` fails because it has no positional-correction model at all** — it counts cuts, walks
+  the map polyline without snapping to the walk mesh, and only between the two arrival spawns, so
+  it cannot see a correction-vs-cut strobe BY CONSTRUCTION.
+  **AND A TIMING PRINTED BY A GATE THAT RAN UNDER LOAD IS NOT A MEASUREMENT** — that run's
+  `arena_playtest` fps (0.5-0.8) and `transition_test`'s 48 s ow-valley leg are load-contaminated;
+  the ASSERTIONS are trustworthy and the CLOCKS are not.
 - node tools/playthrough_test.mjs --port=3000 — THE END-TO-END RECEIPT (real Chrome):
   cleared localStorage → NEW GAME → every Ch1 beat firing on ITS OWN trigger (it never
   calls Story.force) → the sealed gate edge absent before the flag and live after →
