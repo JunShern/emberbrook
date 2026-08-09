@@ -186,6 +186,24 @@ git runs here, on branch `migration/3d-hybrid`.
   t2_cliff_south) touches an envelope: u span 32 → 67 plate px. The straightness figure is a
   SCREEN — grid-quantised, and a tilted straight line scores well — read it with the u span
   and then look at the plate.
+- **tools/qm_awning_relief.py — A RULED SURFACE HAS ONE NORMAL, AND A PATTERN OFF THE EDGE OF
+  THE FRAME IS NOT A PATTERN** (2026-08-09, round 8). Crossing's "untextured white wedge",
+  FAILING and filed by the judge in four runs as a hole in the world / missing geometry, is
+  **62.5% `qm_awning_0` at 5.3 m — a market awning**. Both halves of the judge's sentence were
+  measurements, not impressions: L p50 **168.8** against the near field's 85.0, and local 5x5 sd
+  **0.60** against 4.11 — the second brightest large object in the plate and **6.9x flatter than
+  everything around it**. THE STRIPES COULD NEVER HAVE ANSWERED IT: projecting the canvas's 21
+  vertices through crossing's own solved camera puts every dark column at v > 0.93, i.e. BELOW
+  THE FRAME, leaving two cream columns in shot. The mechanism is that the canvas is a RULED
+  SURFACE — z constant in x — so its normal never varies along its width and no light rig can
+  give it shading. Fixed as GEOMETRY at 2n+1 columns where old columns become ribs and RISE and
+  midpoints sit exactly on the old surface, so **no vertex ever moves down** (asserted per row,
+  which is what keeps the 0.19 m headroom over a 2.05 m corridor true by arithmetic rather than
+  by re-testing). Receipt: canvas p50 168.8 -> 158.2, above L150 73.2% -> 56.8%, block sd at the
+  facets' own 0.21 m scale 2.44 -> 9.33, and the REST of every frame within 1.3 of one level.
+  Judge: "hole in the world", "plane/polygon/wedge" and "flat" are GONE; **"untextured" and
+  "white" survive** — the value is a separate, unpulled lever. Found alongside: `STALLC[3]` is
+  bit-identical to the constant stripe, so `qm_awning_1` shipped 21/21 vertices at one colour.
 - **tools/dh_haze_medium.py — TAU IS NOT THE WASH, AND THE PHASE FUNCTION IS THE LEVER**
   (2026-08-08, round 6). FIRST: **A REPORT THAT DEDUPLICATES A CHECKLIST ROW PRINTS THE FIRST
   PLATE'S SENTENCE OVER FOUR OTHER PLATES' ANSWERS.** Round 5 handed over "the haze card's own
