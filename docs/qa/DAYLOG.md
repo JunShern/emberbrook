@@ -22744,3 +22744,104 @@ Nothing under `public/` changed, so `battle_sim` / `encounter_sim` / `transition
 NOT run — there is no shipped-code delta for them to gate. `battle_place_sheets.py` grew `--ch` (composited
 frames are 1.97:1, because the canvas element is CSS-stretched from the render target's 1.75 — a 12%
 horizontal stretch the canvas census never showed either).
+
+## 2026-08-09 — THE SAFE RECT SHIPS, AND TONE WAS ONE UNSEEDED LINE (battle-fix lane)
+
+Two items the composited-frame lane costed and did not build. Both shipped, both measured on the
+whole 62-site census, one build with a runtime A/B in each case (`battle_decide --safe=0/1`,
+`--mode=tone`). Gates: `battle_sim` GREEN, `encounter_sim` GREEN, `arena_playtest` GREEN,
+`transition_test` **168/0**, `ray_budget` **W = 2/9761 GREEN**.
+
+**ITEM 2 FIRST, BECAUSE ITEM 1 COULD NOT BE ATTRIBUTED UNTIL IT WAS DONE.** `TONE` scores a boom by
+rendering the arena with and without the cast and differencing — and `rigUp` set every body's idle
+to `Math.random() * 2`, so **the silhouette it differences was a fresh draw every battle**. Second
+axis: `toneMaybe` fires on the frame the last model lands, which is a NETWORK time (measured
+`castPhase().probeTick` = 9-12), so even a fixed phase is sampled at a different point of the clip.
+New `battle_decide --mode=tone` stages one cell R times with `ORBIT.yaw` pinned and records the WHOLE
+score table, not the pick — a chooser that picks the same rung on scores that wander is one near-tie
+away from picking another. Measured, 6 cells x 5 repeats (`tone-diag.json`):
+
+| cell | picks over 5 runs |
+|---|---|
+| s030 water | 0.28, 0.34, 0.28, 0.22, 0.16 — **four rungs in five runs** |
+| s048 forest | 0.16, 0.16, 0.34, 0.16, 0.34 |
+| s005/s033/s041/s008 | stable, but their tables wandered up to 20% |
+
+FIXED TWICE OVER: the phase is now `idlePhase(id)` (FNV-1a over the body's own id — the same
+de-sync, the same numbers every run; **not** a seeded PRNG, which would still depend on the order
+models happened to arrive in), and `toneProbe` PINS each body to that phase for its two passes and
+restores it (`mixer.update(0)` applies a time without advancing one, so the visible frame — drawn by
+play3d's loop after this returns — never moves). After: **24/24 same pick, 23/24 rung scores
+bit-identical** (`tone-fix1.json`).
+
+**THE LAST MOVING THING WAS NOT THE CAST, AND IT WAS PROVEN RATHER THAN ASSERTED.** One crag cell
+still wandered 5.17-5.54 on its top rung. `battle_decide --q=ambient=0` (a new query passthrough,
+added so exactly this kind of claim can be tested by switching the suspect off) made it
+**bit-identical across 4 repeats** (`tone-noamb.json`). Cause: ambient.js's pollen/leaf boxes are
+centred 11 m down the LIVE camera's view axis, so an offscreen probe shot from four different booms
+sees them in four arbitrary places — and their clock FREEZES AT BATTLE ENTRY at a wall-clock value,
+so the freeze point is a different mote pattern every run. New **`Ambient.hide(on)`: a visibility
+flip, never a teardown**, and the probe sits them out for the same reason it already sits out the two
+rings. RESIDUAL, NAMED: the sky dome's cloud drift is frozen at a wall-clock `T` too and `hide()`
+does not touch it — deliberately, because sky is real background and a mote is not. Worth 0.9% on one
+rung at one of six cells; changed no pick in 24 repeats.
+
+**THE RECEIPT, AND IT IS THE ONE THAT MATTERS**: two INDEPENDENT full censuses (62 sites each, ~5
+minutes apart) agree on **pitch 62/62 and site R 62/62**. The same ruler on the PREVIOUS build's two
+arms says **15 of its 47 PLACE-unmoved sites photograph a different picture (mean-abs > 3/255), and
+that set is EXACTLY the set whose TONE pitch differs — 15/15**, worst diffs 41-65/255. The published
+"9 of 41" and this "15 of 47" are the same phenomenon under slightly different definitions of
+unmoved. **Arm-to-arm attribution on this stage is now honest**, which is the only reason item 1's
+numbers below can be read as caused by item 1.
+
+**ITEM 1 — THE SAFE RECT.** `keepSafe` on the `decide` row names DOM SELECTORS
+(`.ebb-partywin`, `.ebb-cmdwin`), never pixels: the rects come off battle_turnbased's own nodes with
+`getBoundingClientRect` and are converted to NDC **against the CANVAS rect, not the viewport** — the
+canvas is CSS-stretched 1.75 to 1.97 and NDC is what survives a linear stretch. Each rect is extended
+to the edges it nearly touches (0.15 NDC): the turn-order window sits 41 px off the right edge and
+22 px off the bottom, and a body "cleared" into that gutter is sliced, not cleared. 500 ms TTL,
+because a `getBoundingClientRect` is a forced layout and the panel really does change (a party member
+dies and the window loses a row).
+
+The arithmetic is the fill band's own — `NDC x = u / ((d + w) * tanH)`, so "x must be at most X" is
+`d >= u / (X * tanH) - w`, the same line with the symmetric limit swapped for the panel edge. **WHAT
+IS WORTH REMEMBERING IS THAT A CORNER HAS TWO WAYS OUT AND A BODY ONLY HAS TO TAKE ONE.** The cost is
+the MINIMUM of clearing sideways and clearing upward, per body, then the maximum over bodies —
+because at the offending sites sideways costs **1.9-2.5x** the boom and upward **1.07-1.68x**. A
+solver that took the max would have paid 2.5x to trade an occluded wolf for a distant one. A rect
+with no escape contributes nothing: this term can widen a shot, never lose it.
+
+MEASURED, one build, `--safe=0` vs `--safe=1`, composited census both arms
+(`census-sBefore.json` / `census-sAfter.json`; picture `saferect-worst.jpg`):
+
+| | >=10% under a panel | >=25% | >=50% |
+|---|---|---|---|
+| safe off | 21/62 | 8 | 3 |
+| safe on | **4/62** | **1** | **0** |
+| turn-order panel alone, off -> on | 18 -> **1** | 7 -> **0** | 3 -> **0** |
+
+Foes in frame **124/124 in both arms**, axis refusals 0, zero-foe dwell 0%, 180-degree check
+untouched (`axisCheck` still reads all live bodies). THE COST, WHICH IS REAL: 31 sites move, median
+boom **1.135x**, max 1.68x (s008, 10.8 -> 18.1 m); foe `hFrac` median 0.211 -> 0.195, worst
+0.165 -> 0.135; party `hFrac` median 0.296 -> 0.286. Contrast does NOT pay for it — `sil.edgeRGB`
+median 9.07 -> 9.25, q3 12.72 -> 14.21. **PLACE and TONE are untouched: pitch identical 62/62, site
+R identical 62/62**, so the two arms differ by the rect and by nothing else. All 31 moved sites were
+looked at side by side at full size before any of this was written; the trade is visible and it is
+the right way round — at s008 the wolf goes from 77% swallowed to whole, at 1.68x the boom.
+
+TIMING: decide re-solve p50 **0.4 -> 0.4 ms** (max 0.5-0.8), trigger-to-first-frame
+**502.2 -> 501.6 ms**, staging solve p50 42.0 -> 42.5 ms, `Battle.start` to plate-ready p50
+2121 -> 2127 ms over 62 sites. The DOM read is inside the 0.4 ms.
+
+**WHAT IS DELIBERATELY NOT IN THE RECT, AND WHY.** `.ebb-log` (the top message band) accounts for
+the only PARTY-body overlaps in the census (maren at s038 26%, s046 13%) — and a containment on the
+KEEP set cannot reach a `show` body, so putting it in the rect would cost boom everywhere and fix
+nothing. It also corrects the board's "it is the wolf every time": at >=25% one of the eight is
+maren, under `.ebb-log`. `.ebb-vig` and `.ebb-scrim` are out because **a rect is the wrong shape for
+them**: the vignette is a radial alpha over the WHOLE frame (excluding it excludes everything) and
+the scrim is a full-width bottom-42% wash; they grade a body, they do not hide one, and the census's
+own accounting gives them one site each way (s004 under, s053 better).
+
+RATER BOUND RESPECTED: no eye-sort percentage is claimed here. Two raters on these same frames differ
+by 9.7 points of bad, so the evidence offered is the objective counts — bodies under panels, foes in
+frame, frame-diff reproducibility — and a look at every frame that moved.

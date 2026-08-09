@@ -504,9 +504,28 @@ git runs here, on branch `migration/3d-hybrid`.
   is the WOLF every time, never a party body**. Two uncounted overlays also ride the frame
   (`.ebb-vig` vignette, `.ebb-scrim` foot wash). Canvas vs composited agree 56/62; the bad fraction
   moves **+3.2 points** — and identically on both arms, so the sun refusal is worth the same −3.2
-  on the frame the player SEES. Costed, not shipped: make `decide`'s `keep:'foes'` containment
-  hold the foe line inside a SAFE RECT (frame minus the bottom-right panel band) — one rect, no
-  new solve, same 0.4 ms path.
+  on the frame the player SEES.
+  **AND THE SAFE RECT IS NOW SHIPPED** (2026-08-09; `keepSafe` on the `decide` row,
+  `battle_decide --safe=0` is the one-build A/B, data census-s{Before,After}.json, picture
+  docs/qa/battle-decide/saferect-worst.jpg). `keepSafe` names DOM SELECTORS
+  (`.ebb-partywin`, `.ebb-cmdwin`) whose rects are read off battle_turnbased's own nodes and
+  converted to NDC **against the CANVAS rect, never the viewport** (the canvas is CSS-stretched
+  1.75 → 1.97 and NDC is what survives a linear stretch), extended to the edges they nearly
+  touch — a body "cleared" into the panel's 41 px gutter is sliced, not cleared. The containment
+  is the fill band's OWN arithmetic with the symmetric limit replaced by the panel edge, and the
+  one thing worth remembering is that **A CORNER HAS TWO WAYS OUT AND A BODY ONLY HAS TO TAKE
+  ONE**: the cost is the MINIMUM of clearing sideways and clearing upward, per body, because
+  sideways costs 1.9-2.5x the boom and upward 1.07-1.68x — a max would have traded an occluded
+  wolf for a distant one. Measured over the census: bodies ≥10% under an opaque panel
+  **21/62 → 4, ≥25% 8 → 1, ≥50% 3 → 0** (turn-order panel alone 18/7/3 → 1/0/0), foes in frame
+  124/124 both arms, refusals 0, zero-foe dwell 0%. Cost: 31 sites move, median boom 1.135x,
+  max 1.68x, foe hFrac median 0.211 → 0.195, `sil.edgeRGB` median 9.07 → 9.25; decide re-solve
+  0.4 → 0.4 ms, trigger-to-first-frame 502.2 → 501.6 ms. **`.ebb-log` (the top message band) is
+  deliberately NOT in the rect**: its overlaps are with PARTY bodies, which are the `show` set —
+  a containment on the keep set cannot reach them. `.ebb-vig`/`.ebb-scrim` are not in it either
+  and a rect is the wrong shape for them: the vignette is a RADIAL alpha over the whole frame
+  (excluding it excludes everything) and the scrim a full-width bottom-42% wash; they grade a
+  body, they do not hide one.
   **AND THE NUMBER THAT BOUNDS EVERY NUMBER ABOVE: TWO RATERS ON THE SAME CANVAS FRAMES AGREE
   ONLY 43/62 (69.4%) AND DIFFER BY 9.7 POINTS OF BAD** (32.3% vs 22.6%), with zero good↔bad
   reversals. So the eye-sort's own spread is ~10 points and the UI is worth about a third of it.
@@ -516,8 +535,27 @@ git runs here, on branch `migration/3d-hybrid`.
   proposed guard never fires there and makes the census worse, on the composited frame it is
   acceptable, and a second rater calls it bad in BOTH arms. The "1 regressed" slot is better
   explained by **TONE's boom pick not being reproducible run to run — 9 of the 41 sites PLACE did
-  not move photograph a different picture between arms.** That non-determinism is unfixed and it
-  contaminates any arm-to-arm attribution.
+  not move photograph a different picture between arms.**
+  **THAT NON-DETERMINISM IS FIXED, AND IT WAS ONE UNSEEDED LINE** (2026-08-09; instrument
+  `battle_decide --mode=tone`, data tone-{diag,fix1,noamb}.json). `rigUp` set every body's idle
+  to `Math.random() * 2` — so the silhouette TONE differences was A FRESH DRAW EACH BATTLE — and
+  `toneMaybe` fires on the frame the last model lands, which is a NETWORK time (measured: stage
+  ticks 9-12), so even a fixed phase was sampled at a different point of the clip. Measured at 6
+  cells x 5 repeats with `ORBIT.yaw` pinned: **the water cell chose FOUR DIFFERENT RUNGS IN FIVE
+  RUNS.** Fixed twice over — the phase is derived from the body's own id (FNV-1a: same spread,
+  same every time) AND the probe PINS each body to it for its two passes and puts it back
+  (`mixer.update(0)` applies a time without advancing one, so nothing on screen moves).
+  The one thing still moving was NOT the cast and was PROVEN, not argued: `--q=ambient=0` made
+  the wandering cell bit-identical, because ambient.js's pollen/leaf boxes are centred 11 m down
+  the LIVE camera's view axis (so an offscreen probe shot from four booms sees them in four
+  arbitrary places) and their clock freezes at battle entry at a WALL-CLOCK value. New
+  **`Ambient.hide(on)` — a visibility flip, never a teardown** — and the probe sits them out for
+  the same reason it already sits out the two rings. RECEIPT: two independent full censuses,
+  **pitch identical 62/62 and site R identical 62/62**; the same ruler on the PREVIOUS build's
+  two arms says 15 of its 47 PLACE-unmoved sites photograph a different picture, and that set is
+  EXACTLY the set whose TONE pitch differs (15/15). Residual, named: the sky dome's cloud drift
+  is also frozen at a wall-clock T and `hide()` does not touch it (it is real background, not a
+  mote) — worth 0.9% on one rung at one of six cells, and it changed no pick in 24 repeats.
   Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
