@@ -1,0 +1,40 @@
+rhetoric-census — 1 run dirs, 113 findings deduped on town+shot+mode+desc, 110 reached the sceptic, 24 refuted by it
+
+  subject class           refuted  appeal-to-intent   sceptic refutal rate
+  foliage-occlusion            12       10/12 = 83%          12/31 = 38.7%
+  foliage-other                 2          0/2 = 0%           2/15 = 13.3%
+  occlusion-nonfoliage          1          0/1 = 0%            1/21 = 4.8%
+  rest                          9          0/9 = 0%           9/43 = 20.9%
+
+  appeal-to-intent by mode:
+    naive          10/16 = 63%
+    checklist      0/8 = 0%
+
+  appeal-to-intent by category:
+    navigation     2/10 = 20%
+    occlusion      8/9 = 89%
+    immersion      0/2 = 0%
+    exit           0/2 = 0%
+    geometry       0/1 = 0%
+
+  10 refutals of an occlusion claim were argued from convention. Verbatim, newest runs last:
+    [waystone/naive] Dense pitch-black tree foliage completely obscures the play space and path on the right side
+       -> Foreground foliage along the screen edge is a standard environmental framing technique and does not represent a flaw.
+    [waystone/naive] Thick tree foliage completely covers the right side of the screen, hiding the ground and pot
+       -> Dense trees acting as boundary foliage to delimit the camera view is normal level design and not an occlusion bug.
+    [therise/naive] Dense overgrown trees block visual sightlines across the ground, making it ambiguous where w
+       -> Foreground foliage framing the environment is standard visual composition and does not represent a technical flaw.
+    [therise/naive] Large dense bushes completely block visibility of the ground and potential walkways.
+       -> Natural placement of bushes in an outdoor scene is standard environment art and not a camera or layout bug.
+    [therise/naive] Dense foreground leaves and branches block the view of the central navigation path.
+       -> Overhanging foliage framing path views is a standard art choice for scene depth rather than an accidental blockage.
+    [therise/naive] A large dark tree in the immediate foreground obscures the right side of the screen.
+       -> The foreground tree on the right acts as normal scene framing and depth composition.
+    [homerow/naive] The tall pine tree in the foreground heavily occludes the path and building structure behind
+       -> Foreground trees framing the camera view are a standard composition technique for environmental depth rather than an art error.
+    [homerow/naive] A dense evergreen tree completely blocks the view of the path and building in the lower-left
+       -> The foreground evergreen tree is normal scene framing used to establish visual depth.
+    [northlane/naive] Dense tree foliage completely obscures the ground, walls, and potential entrances on the lef
+       -> Dense foliage around the side of a building in a forest environment is normal scene composition rather than a defect.
+    [northlane/naive] Heavy tree canopy completely occludes ground paths, walls, and potential entryways around th
+       -> Having trees around buildings is standard environmental placement and does not constitute an art bug.

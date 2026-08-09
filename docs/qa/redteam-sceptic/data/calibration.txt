@@ -1,0 +1,105 @@
+DELLHOLLOW deduped findings that reached the sceptic: N = 750
+
+complaint               N  refuted    rate   naive        checklist
+canopy-wall             3        0    0.0%   0/3          0/0
+gate-stair             13        5   38.5%   5/10         0/3
+stray-cliff            52       10   19.2%   10/44         0/8
+plank-screens          24        4   16.7%   4/15         0/9
+waterfront-jumble     144       26   18.1%   26/144        0/0
+
+MATCHES A USER COMPLAINT   44/228 = 19.3%
+EVERYTHING ELSE            99/522 = 19.0%
+Fisher exact p = 0.9197
+
+  naive      calibration-matching 44/208 =  21.2%   else 94/372 =  25.3%   p=0.3093
+  checklist  calibration-matching 0/20 =   0.0%   else 5/150 =   3.3%   p=1.0000
+
+the calibration-matching findings the sceptic REFUTED (naive), verbatim:
+  [20260731-dellhollow|shelf-east] The oversized foreground roof fills the bottom of the screen, completely obscuring the paths and ground behind
+     -> The foreground roof position is a standard camera framing choice that does not prevent viewing the village path and structures.
+  [20260731-dellhollow|crossing] Wooden beams and platform fragments float in mid-air without attachment to the dock support structure.
+     -> The broken walkway fragments in the lower center are connected to wooden posts and structural framing representing a damaged pier.
+  [20260731-dellhollow|waterfront] The waterfall geometry clips awkwardly through the rock wall, creating sharp visible polygonal edges.
+     -> The water effect merges smoothly into the basin with specular lighting and foam, showing no harsh polygonal clipping seams at the cliff base.
+  [20260731-dellhollow|lockfive] The lantern appears to float in mid-air near the cliff edge without a clear rope or support structure.
+     -> All lanterns throughout the scene are anchored to wooden posts, crossbeams, or roof overhangs.
+  [20260731-dellhollow|lockfive] Deep black shadows completely obscure the background wall and water boundary, making space limits unclear.
+     -> The shadow cast across the background cliff wall is a standard atmospheric lighting choice, and the wall geometry remains legible.
+  [20260806-1-dellhollow-naive|gate] A cluster of leaves is floating in mid-air near the cliff face without any supporting trunk or attachment.
+     -> The lower right foliage cluster rests directly on and intersects the sloping rock face rather than floating in mid-air.
+  [20260806-1-dellhollow-naive|deep-stairs] Deep cast shadows obscure the cliff face and structures behind the staircase, hiding potential pathways and la
+     -> The dark shadow in the upper center is standard directional cast lighting on background cliff geometry rather than a layout flaw.
+  [20260807-183447|boatyard] The curved wooden scaffold beams float along the cliff face without visible vertical supports anchoring them t
+     -> The stilts and scaffolding underneath the upper huts extend down to rest on the lower wooden platforms and cliff ledges.
+  [20260807-183447|boatyard] The large central circular platform is enclosed by railings without clear stairs or openings, making it ambigu
+     -> The railing only covers the front edge of the circular platform, leaving the rear open where it meets the ground level.
+  [20260807-183447|boatyard] Pathing onto the circular deck from the shore or surrounding structures is ambiguous, lacking clear stairs or 
+     -> The circular deck merges directly with the rising dirt slope at its rear, providing a clear entrance without requiring stairs.
+  [20260807-185607-calib|deep-stairs] Deep pitch-black shadows obscure the cavity behind the stairs, making it impossible to tell if there is a path
+     -> The central cavity is not completely pitch-black, as a lit doorway with an illuminated lantern is clearly visible inside at the top.
+  [20260807-185607-calib|boatyard] Exposed skeletal timber framing appears incomplete and floats disconnected from adjacent buildings.
+     -> The timber framework is grounded on vertical support posts along the cliff face rather than floating in air.
+  [20260807-185607-calib|boatyard] The elevated platform has no visible stairs, steps, or ramps connecting it to lower or higher ground levels, m
+     -> The platform sits flush with the adjacent building walkway on the left, forming a continuous navigable route.
+  [20260808-170205-calib|boatyard] The wooden scaffolding consists of disjointed, floating beams that fail to connect to the cliff face or surrou
+     -> The framework in the upper middle background is a connected, stilt-supported wooden structure rather than floating disjointed geometry.
+  [20260808-170205-calib|boatyard] The central circular platform is completely enclosed by a railing, leaving no clear entrance or walkable route
+     -> The railing only borders the front edge facing the water, leaving the sides and rear of the platform completely open and walkable.
+  [20260808-170205-calib|boatyard] The wooden skeleton frame appears disconnected and floating without clear structural anchoring to the cliff or
+     -> The upper center framework is anchored to the posts and platforms beneath it as part of the intended construction style.
+  [20260808-170205-calib|boatyard] Visual clutter and overlapping wooden roofs make it difficult to tell which surfaces are walkable paths versus
+     -> The central circular platform is flat, open, and visually distinct from surrounding roofs, making its walkable nature clear.
+  [20260808-170205-calib|fishdock] The dense cluster of dark wooden stilts, platforms, and deep shadows makes the navigable path leading up into 
+     -> The dark stilts are structural supports under the raised buildings rather than a player walkway, which is routed via the stairs on the left.
+  [20260808-170205-calib|fishdock] The main wooden walkway leads directly into a wall/cliff under a low platform on the right, leaving the contin
+     -> The walkway simply functions as a dock terminating at the rocky shore, which is expected layout for a waterfront pier.
+  [20260808-170205-calib|lockfive] The dense layer of wooden ramps, platforms, and broken dock planks blends together in shadow, making it diffic
+     -> The central walkways and docks are well-lit by multiple lantern light sources and ambient light, rather than being obscured or hidden in shadow.
+  [20260808-round4haze|crossing] Overlapping roofs and dense wooden structures obscure the path below, making the connection between the upper 
+     -> The stairways, ramps, and platforms connecting the upper cliff and lower docks are clearly visible and legible from this perspective.
+  [20260808-round4haze|crossing] A roof canopy structure floats high against the cliff side without visible support columns or attachments.
+     -> The canopy roof near the upper right cliff is properly attached to support beams anchored into the platform below.
+  [20260808-round4haze|lockfive] The dense row of cloth panels along the upper deck railing blocks sightlines to the walkways and structures be
+     -> Decorative cloth panels mounted on a deck railing naturally obscure sightlines behind them and serve as normal environmental set dressing.
+  [20260808-round6phase|gate] The background cliff abruptly cuts off into flat gray placeholder geometry, exposing untextured level boundari
+     -> The background cliff fades naturally into atmospheric haze and fog rather than terminating in flat placeholder geometry.
+  [20260808-round6phase|gate] The fence posts clip directly into the uneven rock terrain without natural anchors or proper ground alignment.
+     -> The fence posts follow the path edge naturally according to the simplified, blocky construction style of the scene.
+  [20260808-round6phase|gate] The tree's foliage and trunk clip directly into the vertical rock cliff face without a natural ledge or root s
+     -> Stylized trees growing out of rock faces with built-in wooden supports are intentional thematic details, not broken geometry.
+  [20260808-round6phase|gate] The upper background rock wall forms an unmodeled flat texture plane terminating abruptly at the level boundar
+     -> The background rock wall features consistent texture and lighting that recedes into fog, not an unmodeled flat plane.
+  [20260808-round6phase|crossing] The wooden walkway consists of fragmented, disconnected, and floating planks with inconsistent gaps.
+     -> The fragmented and gapped planks are an intentional environmental art choice depicting a worn, dilapidated wooden dock.
+  [20260808-round6phase|crossing] A wooden platform floats freely on top of the water without any pilings or supporting structures beneath it.
+     -> Wooden debris and platform segments naturally float on water, so the absence of vertical pilings is entirely expected.
+  [20260808-round6phase|crossing] A wooden plank structure floats isolated in the water with no visible support or connection to the docks.
+     -> Wooden structures naturally float on the water surface, making rigid supports unnecessary for floating platform debris.
+  [20260808-round6phase|north-landing] The dense cluster of timber supports and ramps along the cliff makes walkable paths ambiguous and hard to dist
+     -> The primary walkable route is clearly highlighted with a distinct green moss surface, easily distinguishing it from decorative timber framing.
+  [20260808-round7water|gate] The tree trunk and foliage clip directly out of the smooth cliff rock face without roots or an anchor.
+     -> The tree is visibly anchored to the cliff wall by a wooden scaffolding frame structure behind it.
+  [20260808-round7water|crossing] A wooden plank floats on the water surface without visible physics or support structures.
+     -> Wooden planks naturally float on water, so requiring supporting structures beneath floating debris in a dock environment is unnecessary.
+  [20260808-round7water|crossing] A thin rectangular plane floats unexplained over the water near the dock structure.
+     -> The object is an intended wooden plank floating on the harbor water as environmental clutter rather than an untextured technical geometry error.
+  [20260808-round7water|crossing] A green wooden board floats flat on the water surface without any supporting structure or physics interaction.
+     -> Wood naturally possesses buoyancy, so floating flat on the water surface without underlying pillars is expected physics behavior.
+  [20260808-round7water|lockfive] Overlapping wooden platforms, ladders, and structural supports blend together against the dark rock wall, maki
+     -> The upper cliff walkways are clearly delineated by distinct platforms, guardrails, and lighting that form readable tiered routes.
+  [20260808-round7water|north-landing] The main wooden walkway leads directly into a complex web of scaffolding, making the intended path forward amb
+     -> The green walkway clearly serves as a straightforward main route into the village architecture, which is standard environmental level design.
+  [round8awning|gate] The large cliff face on the left features severe vertical texture stretching.
+     -> The background cliff on the left features horizontal stratification and atmospheric mist rather than vertical texture stretching.
+  [round8awning|gate] The tree trunk clips directly into the vertical cliff rock face without any root system or supporting ground.
+     -> The tree on the right cliff face is held in place by a visible wooden support structure built into the rock face.
+  [round8awning|gate] The trees stick out directly from a vertical cliff face with leaf clusters floating without branch connections
+     -> The leaf cluster cards and cliffside mounting are standard practices for this stylized game art aesthetic.
+  [round8awning|quay-west] Blocky steps protrude directly out of the cliff wall without visible underside supports or blending into the r
+     -> The steps on the upper left are built along a sloped dirt bank rather than protruding unsupported from a cliff wall.
+  [round8awning|deep-stairs] Harsh, pitch-black shadows obscure the upper walkways and stairwell openings into the cliff, making it impossi
+     -> The strong shadow cast by the cliff overhang is normal high-contrast directional sunlight, and interior walkways are clearly marked with illuminated lanterns.
+  [round8awning|deep-stairs] Deep harsh shadows completely obscure path geometry inside the cliff opening, making it unclear where the rout
+     -> The deep shadows in the cliff fissure are a realistic result of direct sunlight and do not prevent navigation, as lit doorways highlight the route inside.
+  [round8awning|deep-stairs] Harsh shadows inside the cliff crevice completely obscure potential stairs and doorways, hiding whether the pa
+     -> Harsh shadows inside the cliff crevice are expected from the strong direct lighting angle rather than an artistic error.

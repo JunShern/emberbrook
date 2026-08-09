@@ -1,0 +1,1648 @@
+{
+ "run": "run-20260809-emb-round1",
+ "model": "gemini-3.6-flash",
+ "temp": 0.4,
+ "arms": [
+  "A",
+  "B"
+ ],
+ "patch": [
+  "",
+  "SAY IT ABOUT THIS FRAME. When the claim is that something is HIDDEN, BLOCKED or",
+  "UNREADABLE, \"it is standard\", \"it is normal composition\", \"it is intentional framing\",",
+  "\"trees naturally cover the ground\" and \"that is how games do it\" are NOT refutations —",
+  "they say why the art is that way, not that the player can see the thing. For those",
+  "claims either point at the thing in the frame and say you can see it, or uphold the",
+  "claim. Style and taste remain valid grounds for every other kind of claim."
+ ],
+ "shots": {
+  "woodroad": {
+   "n": 5,
+   "claims": [
+    {
+     "fid": "F1",
+     "category": "geometry",
+     "severity": 2,
+     "where": "edges of the dark circular platform",
+     "desc": "The circular platform's perimeter is constructed from harsh, blocky staircase steps that cut jaggedly into the smooth ground terrain.",
+     "orig": "upheld",
+     "origWhy": "The circular platform features harsh, blocky staircase steps around its perimeter that clearly clash with the smooth, natural terrain."
+    },
+    {
+     "fid": "F7",
+     "category": "geometry",
+     "severity": 2,
+     "where": "around the edge of the circular paved area in the lower center",
+     "desc": "The perimeter of the circular paved area has jagged, stair-stepped grid geometry that does not blend cleanly with the surrounding terrain.",
+     "orig": "upheld",
+     "origWhy": "The circular area's border has noticeable stair-stepped grid artifacts rather than a smooth or properly blended edge."
+    },
+    {
+     "fid": "F8",
+     "category": "immersion",
+     "severity": 1,
+     "where": "the stone pedestal on the path",
+     "desc": "The pedestal is flatly and brightly overexposed compared to the ambient lighting and nearby lamp post.",
+     "orig": "upheld",
+     "origWhy": "The pedestal is flatly overexposed and stark white, failing to match the warm, dim lighting cast by the adjacent lamp."
+    },
+    {
+     "fid": "F14",
+     "category": "geometry",
+     "severity": 2,
+     "where": "edges of the dark circular platform at the bottom",
+     "desc": "The circular stone platform has jagged, stair-stepped rectangular edges that look like incomplete or broken mesh geometry.",
+     "orig": "upheld",
+     "origWhy": "The edges of the circular platform consist of jagged, stair-stepped rectangular geometry that looks like an unfinished mesh."
+    },
+    {
+     "fid": "F15",
+     "category": "navigation",
+     "severity": 2,
+     "where": "top right along the path behind the illuminated monument",
+     "desc": "The pathway leads into pitch darkness and foliage behind the monument without clear indication of where to proceed.",
+     "orig": "refuted",
+     "origWhy": "Pathways naturally extend into darker shaded areas or scene boundaries in night environments, which is standard atmospheric design rather than a navigation flaw."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The circular platform has glaring, blocky stair-stepped edges that cut unnaturally into the ground terrain."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The outer border of the paved circle consists of unblended, pixelated grid steps."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The stone pedestal is blown out to pure white, completely overexposing its geometry compared to the surrounding light."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The jagged rectangular steps along the edge of the circular platform look like broken or unrefined mesh geometry."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "A pathway continuing into dark foliage at night is normal environmental framing and atmosphere, not a navigation flaw."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The perimeter of the circular platform consists of noticeable, jagged stair-stepped geometry edges cut into the terrain."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The circular paved area clearly features unblended, stair-stepped blocky edges along its entire border."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The stone pedestal is brightly overexposed in stark white, clashing awkwardly with the warm golden glow of the adjacent lamp."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The bottom platform exhibits harsh, pixelated stair-step cutouts that resemble unfinished mesh geometry."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "A path terminating or extending into dark foliage at the edge of a scene is standard environmental boundary design rather than a navigational defect."
+     }
+    ]
+   }
+  },
+  "waystone": {
+   "n": 6,
+   "claims": [
+    {
+     "fid": "F2",
+     "category": "navigation",
+     "severity": 2,
+     "where": "pathway around the stone pillar",
+     "desc": "The paved walkway ends abruptly in sharp floating edges, making it unclear whether the path continues or is blocked.",
+     "orig": "upheld",
+     "origWhy": "The path slab behind the pillar ends abruptly with a floating, disjointed edge above the ground, creating confusing path geometry."
+    },
+    {
+     "fid": "F3",
+     "category": "immersion",
+     "severity": 1,
+     "where": "tree leaves above the lamp",
+     "desc": "The tree foliage is brightly illuminated from an angle that does not match the direction or position of the ground lamp.",
+     "orig": "refuted",
+     "origWhy": "The warm light on the foliage directly matches the position and upward glow of the bollard light beneath it."
+    },
+    {
+     "fid": "F9",
+     "category": "navigation",
+     "severity": 2,
+     "where": "end of the illuminated pathway",
+     "desc": "The stone pathway appears to terminate abruptly under the tree without clear indication of where to proceed.",
+     "orig": "refuted",
+     "origWhy": "Paths ending near a monument or tree is a standard environment design choice rather than an issue for players."
+    },
+    {
+     "fid": "F10",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "dense foliage on the right side",
+     "desc": "Extremely dark foliage completely blocks visibility of the terrain and environment on the right side of the frame.",
+     "orig": "refuted",
+     "origWhy": "Dark foreground foliage on the edge of the frame is standard vignette framing, not an unintended visual flaw."
+    },
+    {
+     "fid": "F16",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "dense tree foliage on the right",
+     "desc": "Dense foreground foliage completely blocks the view of the play area and potential paths on the right side of the screen.",
+     "orig": "refuted",
+     "origWhy": "The foliage serves as normal cinematic foreground framing around the central illuminated focal point."
+    },
+    {
+     "fid": "F17",
+     "category": "geometry",
+     "severity": 1,
+     "where": "walkway slab behind the monument",
+     "desc": "The concrete walkway slab cuts off awkwardly near the monument, creating an unnatural seam and offset in the path geometry.",
+     "orig": "upheld",
+     "origWhy": "The concrete slab behind the monument is noticeably misaligned and floating, leaving an unnatural gap and visible geometry error."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The paved walkway terminates abruptly near the tree with sharp, unintegrated edges, creating confusion about path continuity."
+     },
+     {
+      "n": 2,
+      "verdict": "refuted",
+      "why": "The foliage directly above the post lamp is illuminated on its underside, perfectly matching the lamp's position and light direction."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The stone path terminates abruptly under the tree canopy without any visual cue or blending to indicate where a player should navigate."
+     },
+     {
+      "n": 4,
+      "verdict": "refuted",
+      "why": "Dense dark foliage along the edge of the frame is standard environmental vignetting to define scene boundaries."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "The foliage on the right acts as an intentional visual boundary for the screen rather than obscuring a playable area."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The path slab immediately behind the monument exhibits an unnatural side-step shift and harsh seam in the geometry."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The paved walkway ends in sharp, floating edges that make it ambiguous whether the route is navigable or broken."
+     },
+     {
+      "n": 2,
+      "verdict": "refuted",
+      "why": "The illuminated leaves are located directly above the lamp, matching its position and upward light spread."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The stone path terminates abruptly beneath the tree foliage, offering no clear visual cue on where to navigate next."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The extremely dark tree foliage completely conceals the terrain and ground environment on the right side of the image."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "Dense foreground foliage blocks the view of any potential paths or playable area across the right portion of the screen."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The slab geometry behind the monument cuts off with an unnatural offset seam that misaligns the path structure."
+     }
+    ]
+   }
+  },
+  "arch": {
+   "n": 9,
+   "claims": [
+    {
+     "fid": "F4",
+     "category": "navigation",
+     "severity": 2,
+     "where": "center walkway and ramp area",
+     "desc": "The walkway consists of dark angular planes that merge visually into dark ground shadows, making walkable elevation changes and paths ambiguous.",
+     "orig": "upheld",
+     "origWhy": "Dark tree shadows cast across the flat grey slabs obscure elevation steps and path edges, making navigation ambiguous."
+    },
+    {
+     "fid": "F5",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "large tree canopy on the right side",
+     "desc": "Dense dark foliage completely obscures the right side of the environment, blocking sightlines to paths or potential obstacles behind it.",
+     "orig": "refuted",
+     "origWhy": "The tree foliage on the right acts as standard camera framing for the scene rather than an improper obstacle to player gameplay."
+    },
+    {
+     "fid": "F6",
+     "category": "geometry",
+     "severity": 1,
+     "where": "center path dipping into ground terrain",
+     "desc": "The grey path slab clips sharply into the dirt terrain without any edge transition or border geometry.",
+     "orig": "upheld",
+     "origWhy": "The grey path slab intersects the terrain mesh sharply with no border geometry or texture blending."
+    },
+    {
+     "fid": "F11",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "right half foreground foliage",
+     "desc": "Dense, dark tree foliage covers the entire right foreground, completely blocking the player's view of the path and space below.",
+     "orig": "refuted",
+     "origWhy": "Foreground tree foliage framing the right side of the camera view is normal environment composition and not a defect."
+    },
+    {
+     "fid": "F12",
+     "category": "navigation",
+     "severity": 2,
+     "where": "path network in center ground",
+     "desc": "Harsh foliage shadows and low-contrast dark gray slabs obscure the edges and directions of the walkable path.",
+     "orig": "upheld",
+     "origWhy": "Heavy shadows falling over low-contrast grey slabs make it difficult to discern path boundaries and directions."
+    },
+    {
+     "fid": "F13",
+     "category": "geometry",
+     "severity": 1,
+     "where": "scattered green objects along path edge",
+     "desc": "Small light-green spheres are uniformly scattered along the left path edge, appearing as stray or visually confusing asset clutter.",
+     "orig": "upheld",
+     "origWhy": "A row of uniform light-green spheres sits along the path edge without proper grounding or contextual visual details."
+    },
+    {
+     "fid": "F18",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "dense foliage on the right side of the frame",
+     "desc": "Extremely dense and dark tree foliage completely obscures the ground and potential pathways across the right side of the space.",
+     "orig": "refuted",
+     "origWhy": "Dense foliage on the right frame edge is decorative framing foliage standard for environmental art."
+    },
+    {
+     "fid": "F19",
+     "category": "navigation",
+     "severity": 2,
+     "where": "dark grey pathway slabs in the center ground",
+     "desc": "The dark ground slabs cut into the terrain with low lighting contrast, making it difficult to discern navigable paths from non-traversable ground.",
+     "orig": "upheld",
+     "origWhy": "The dark grey path slabs blend into the dark shadowed ground, reducing visual contrast needed to identify navigable routes."
+    },
+    {
+     "fid": "F20",
+     "category": "immersion",
+     "severity": 1,
+     "where": "row of green spheres on the left lawn",
+     "desc": "Small, identical green spheres are scattered along the left ground plane without clear contextual function or proper terrain blending.",
+     "orig": "upheld",
+     "origWhy": "The green spherical assets placed on the left lawn lack terrain integration or clear functional purpose."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The dark grey path slabs and ramps blend into the heavy foliage shadows, obscuring ground elevation changes and path boundaries."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The massive, dark tree canopy on the right covers a huge portion of the frame and completely blocks visibility of the space behind it."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The grey pathway slabs clip directly into the ground plane with sharp, unblended polygonal edges."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "Foreground tree foliage dominates the right half of the image, severely restricting the player's view of the environment below."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "Harsh tree shadows cast across dark walkway slabs make it hard to discern where the path begins and ends."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "A row of small, identical light-green spheres lines the edge of the left walkway, appearing like untextured placeholder clutter."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "The dark and dense tree branches obscure the right side ground plane, hiding navigable routes and potential obstacles."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "The low lighting contrast between dark terrain and dark grey path slabs makes navigable routes difficult to distinguish from non-walkable ground."
+     },
+     {
+      "n": 9,
+      "verdict": "upheld",
+      "why": "The green spheres placed along the ground on the left lack proper materials, terrain integration, or clear function."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The dark grey path slabs in the center combine with deep tree shadows, making elevation changes and path boundaries difficult to read."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The large dark foliage canopy fills the entire right side of the frame and blocks sightlines to any space or obstacles behind it."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The gray path slabs cut directly into the dirt terrain in the center ground without any border trim or blending geometry."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "Heavy foreground foliage obscures the entire right side, preventing visibility of the ground and pathway beneath it."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "Dark foliage shadows cast directly across dark gray path slabs, severely obscuring the edges and layout of the walkway."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "A line of small light-green spheres sits along the left path edge, looking like untextured placeholder clutter."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "Dense tree foliage covers the entire right side of the scene, completely hiding the ground and potential navigation routes beneath."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "Low lighting contrast and harsh shadows make it hard to differentiate the dark path slabs from surrounding unnavigable ground."
+     },
+     {
+      "n": 9,
+      "verdict": "upheld",
+      "why": "Small, identical green spheres are lined up along the left lawn without any contextual purpose or terrain integration."
+     }
+    ]
+   }
+  },
+  "orchard": {
+   "n": 6,
+   "claims": [
+    {
+     "fid": "F28",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "dense foreground trees on the right edge",
+     "desc": "Large foreground trees heavily obscure the bottom-right area, blocking the player's view of the ground and potential navigation paths.",
+     "orig": "upheld",
+     "origWhy": "Massive foreground trees on the right obscure a huge section of the screen and hide ground terrain beneath them."
+    },
+    {
+     "fid": "F29",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "deep building shadow in center screen",
+     "desc": "The pitch-black shadow cast by the main building completely hides ground details and potential pathing in the middle of the yard.",
+     "orig": "upheld",
+     "origWhy": "The shadow cast by the structure is completely pitch-black, destroying ground readability in the central yard area."
+    },
+    {
+     "fid": "F35",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "foreground trees on the right and left edges",
+     "desc": "Dense foreground foliage occludes a large portion of the play area and obscures ground-level details.",
+     "orig": "upheld",
+     "origWhy": "Dense trees on both the left and right foreground frame occlude large portions of the playable scene."
+    },
+    {
+     "fid": "F36",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "shadow beneath the main roof structure",
+     "desc": "Extreme shadow completely blacks out the area under the building roof, concealing pathways and entrances.",
+     "orig": "upheld",
+     "origWhy": "The region beneath the roof structure is entirely blacked out, hiding potential doors and ground detail."
+    },
+    {
+     "fid": "F40",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "bottom right corner foliage",
+     "desc": "Dense foreground trees completely block the view of the ground and potential navigation paths on the right side.",
+     "orig": "upheld",
+     "origWhy": "The foliage occupying the lower right quadrant fully covers the ground plane, preventing player visibility."
+    },
+    {
+     "fid": "F41",
+     "category": "navigation",
+     "severity": 2,
+     "where": "upper ground area",
+     "desc": "Extreme darkness and low contrast make it difficult to distinguish walkable paths from non-navigable terrain.",
+     "orig": "upheld",
+     "origWhy": "The upper portion of the scene suffers from severe darkness and low contrast, obscuring terrain boundaries and walkable paths."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The dense tree canopy along the right edge covers a large portion of the ground, completely blocking visibility for navigation."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The roof shadow cast across the center yard is pitch black, entirely hiding ground details and potential pathing."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "Foreground foliage along both the left and right frames covers significant portions of the scene and obscures ground-level visibility."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The region beneath the main roof structure is blacked out by total shadow, completely concealing any entrances or pathways underneath."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "Heavy evergreen foliage in the bottom-right corner totally obstructs the ground plane and potential walkable paths."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The upper ground area lacks sufficient illumination and contrast, making it very difficult to distinguish navigable terrain."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "A massive cluster of dark pine trees completely covers the bottom-right quadrant, hiding the ground and any potential navigation paths beneath them."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The shadow cast by the roof is pitch-black and covers a large portion of the central yard, obscuring all ground features underneath."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "Trees along both the left and right sides block view of the ground around the lower half of the frame."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The shaded region beneath the roof overhang is completely blacked out, hiding any doors or pathways underneath."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "The dense foliage in the lower right corner entirely obstructs the ground plane and any paths underneath."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The entire top portion of the map suffers from severe underexposure and low contrast, making terrain boundaries difficult to perceive."
+     }
+    ]
+   }
+  },
+  "therise": {
+   "n": 8,
+   "claims": [
+    {
+     "fid": "F30",
+     "category": "navigation",
+     "severity": 2,
+     "where": "center and left foreground bushes",
+     "desc": "Dense foreground foliage obscures the terrain and pathways, making it ambiguous where the player can walk.",
+     "orig": "upheld",
+     "origWhy": "The massive foreground bush covers a huge section of the ground, completely hiding navigation routes from the player."
+    },
+    {
+     "fid": "F31",
+     "category": "geometry",
+     "severity": 2,
+     "where": "path slab in lower center",
+     "desc": "A flat path polygon clips unnaturally into the ground terrain with sharp unblended edges.",
+     "orig": "upheld",
+     "origWhy": "The dark path slab in the lower center cuts directly into the uneven terrain mesh with a harsh, unblended straight edge."
+    },
+    {
+     "fid": "F32",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "right foreground tree",
+     "desc": "A dark tree in the immediate foreground heavily occludes the right side of the playable area.",
+     "orig": "upheld",
+     "origWhy": "The dark tree on the bottom right takes up a large portion of the foreground and severely blocks the player's view of the area behind it."
+    },
+    {
+     "fid": "F33",
+     "category": "geometry",
+     "severity": 2,
+     "where": "center-bottom path geometry",
+     "desc": "Ground path polygons clip awkwardly through the terrain at sharp angles, leaving unblended seams.",
+     "orig": "upheld",
+     "origWhy": "Sharp, unblended edges are clearly visible where the path geometry intersects awkwardly with the ground terrain in the lower center."
+    },
+    {
+     "fid": "F34",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "large foreground tree on the left",
+     "desc": "Dense foreground branches and leaves block view of the main pathways and ground layout.",
+     "orig": "upheld",
+     "origWhy": "The extensive canopy and foliage on the left foreground obscure the central ground plane and path structure."
+    },
+    {
+     "fid": "F37",
+     "category": "geometry",
+     "severity": 2,
+     "where": "middle bottom path tiles",
+     "desc": "The dark path mesh slabs are visibly misaligned and clipping jaggedly above the terrain surface.",
+     "orig": "upheld",
+     "origWhy": "The individual path tiles in the lower middle area protrude and clip unevenly against the ground surface."
+    },
+    {
+     "fid": "F38",
+     "category": "geometry",
+     "severity": 1,
+     "where": "bottom left corner ground path",
+     "desc": "A raw polygonal path mesh extends into the bottom-left screen edge without proper terrain blending or termination.",
+     "orig": "upheld",
+     "origWhy": "A dark, unblended path polygon visibly cuts off at a sharp angle along the bottom-left screen border."
+    },
+    {
+     "fid": "F39",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "large foreground tree and bush on the left",
+     "desc": "Dense foreground foliage completely blocks the view of central pathways and key space behind it.",
+     "orig": "upheld",
+     "origWhy": "The thick foliage on the left obscures the central courtyard and key navigation paths behind it."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The dense foreground bushes cover a large portion of the ground, hiding path connections and making navigation ambiguous."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The dark path slab in the lower center cuts directly into the ground mesh with a sharp, unblended polygon edge."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The dark foreground tree in the lower right severely obstructs the view of the playable area and nearby building."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The path geometry in the center-bottom intersects the terrain at unnatural angles, leaving harsh seams."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "The large foliage on the left blocks the camera's view of the main ground layout and pathways."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The path tiles are misaligned and clip unevenly into and above the terrain mesh."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "A flat path mesh extends into the bottom-left edge with raw, unblended polygon boundaries."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "The left foreground foliage creates a massive blind spot over the central pathways and ground space."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The massive foliage mass occupying the foreground obscures the ground and path layout, creating navigation ambiguity."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The flat grey path mesh in the lower center visibly slices into the terrain at a sharp angle without any blending."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "A large dark tree in the bottom right corner covers a significant portion of the right foreground and playable area."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The path polygons across the center-bottom intersect the ground mesh at harsh, unblended angles."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "Dense leaves and branches on the left foliage block the view of the ground layout and pathways behind them."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The middle-bottom path slabs sit misaligned and float or clip jaggedly through the ground surface."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "A raw grey path polygon extends straight into the bottom-left corner with hard, unblended edges."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "The oversized foreground bush and tree on the left dominate the view and completely hide the central ground area."
+     }
+    ]
+   }
+  },
+  "square": {
+   "n": 8,
+   "claims": [
+    {
+     "fid": "F42",
+     "category": "geometry",
+     "severity": 2,
+     "where": "bottom center ground terrain",
+     "desc": "The terrain mesh at the bottom center breaks into blocky, jagged geometric steps and black voids.",
+     "orig": "upheld",
+     "origWhy": "Jagged, blocky geometric steps and unrendered gaps are clearly visible in the bottom center ground mesh."
+    },
+    {
+     "fid": "F43",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "bottom right foreground building and foliage",
+     "desc": "The large foreground roof and trees completely occlude the play space and paths in the lower right.",
+     "orig": "upheld",
+     "origWhy": "The oversized foreground roof and foliage obstruct a large area of the lower right play space."
+    },
+    {
+     "fid": "F55",
+     "category": "immersion",
+     "severity": 2,
+     "where": "center of the village square",
+     "desc": "An extremely intense spot of light illuminates the central stone slab without any visible light source like a fire or lantern.",
+     "orig": "upheld",
+     "origWhy": "An intense white light source highlights the central slab without any visible campfire or lantern fixture."
+    },
+    {
+     "fid": "F56",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "bottom right corner",
+     "desc": "A large roof in the immediate foreground blocks a significant portion of the view into the lower village area.",
+     "orig": "upheld",
+     "origWhy": "The foreground roof structure blocks visibility into the lower section of the village."
+    },
+    {
+     "fid": "F57",
+     "category": "navigation",
+     "severity": 1,
+     "where": "edges around the village perimeter",
+     "desc": "Dark, dense foliage completely surrounds the perimeter, making it unclear where walkable pathways continue off-screen.",
+     "orig": "refuted",
+     "origWhy": "Using dense trees as a perimeter boundary is a standard method for defining map edges."
+    },
+    {
+     "fid": "F58",
+     "category": "immersion",
+     "severity": 2,
+     "where": "central light pit",
+     "desc": "The primary central light source is a raw white emissive cube without any fire, embers, or lamp fixture model.",
+     "orig": "upheld",
+     "origWhy": "The central feature is an untextured, bright white emissive block rather than a modeled fire or lamp."
+    },
+    {
+     "fid": "F59",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "bottom right foreground roof",
+     "desc": "A massive roof structure in the bottom right foreground severely cuts off the player's view of the ground.",
+     "orig": "upheld",
+     "origWhy": "The large roof in the bottom right foreground cuts off a significant portion of the ground view."
+    },
+    {
+     "fid": "F60",
+     "category": "occlusion",
+     "severity": 1,
+     "where": "bottom left foreground trees",
+     "desc": "Dark tree canopies in the bottom left cover a large portion of the playable ground space.",
+     "orig": "upheld",
+     "origWhy": "Dense tree canopies in the bottom left obscure the ground level behind them."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "Unfinished, blocky mesh steps and geometry voids are clearly visible in the bottom center terrain."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "Foreground elements in the lower right obscure significant ground area and pathing."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The central focal point features intense light without any modeled light source like a fire."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "A massive foreground roof clips into the camera view and hides the lower ground."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "Dense foliage framing the map edge is standard level boundary design rather than a visual flaw."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The center light is generated by a raw emissive placeholder block lacking proper fire art."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "The bottom-right roof structure blocks camera sightlines to playable terrain."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "Dark foreground tree canopies cover the ground in the lower-left area, reducing visibility."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The terrain mesh at the bottom center breaks into jagged, blocky geometric steps revealing black voids underneath."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The large roof and tree canopies in the bottom-right corner block the view of the ground and potential pathways beneath them."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "An intense bright light emanates from the center square without a proper fire, lantern, or particle effect model."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The massive foreground roof structure in the bottom right obscures a wide area of the village ground."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "Dense trees and foliage completely encircle the village edges, hiding any potential exit paths or trail continuations."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The central light source is clearly an untextured white emissive box placed in the stone pit rather than a modeled light fixture or campfire."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "The huge roof in the lower right foreground cuts off vision of a large portion of the playable ground."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "Dark tree branches in the lower-left foreground cover a significant area of ground, obscuring vision."
+     }
+    ]
+   }
+  },
+  "pondlane": {
+   "n": 8,
+   "claims": [
+    {
+     "fid": "F61",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "large central tree canopy obscuring ground",
+     "desc": "Dense tree foliage covers the center and left portions of the scene, completely hiding the ground and any potential pathways underneath.",
+     "orig": "refuted",
+     "origWhy": "Tree foliage naturally obscuring the ground beneath it is expected environment design rather than an art defect."
+    },
+    {
+     "fid": "F62",
+     "category": "geometry",
+     "severity": 2,
+     "where": "black cutout in terrain mesh near center",
+     "desc": "A sharp, unnatural geometric black gap breaks the ground mesh in the middle of the path.",
+     "orig": "upheld",
+     "origWhy": "There is a sharp, unnatural black geometric hole/cutout in the ground mesh near the center lamp post base."
+    },
+    {
+     "fid": "F75",
+     "category": "geometry",
+     "severity": 2,
+     "where": "center area behind the wooden post",
+     "desc": "A stray black spline/line segment floats unnaturally in mid-air without connecting properly to the surrounding posts.",
+     "orig": "upheld",
+     "origWhy": "A stray black spline curve floats disconnected in mid-air behind the central wooden pole."
+    },
+    {
+     "fid": "F76",
+     "category": "geometry",
+     "severity": 2,
+     "where": "bottom-right roof structures",
+     "desc": "The wooden roof panels and small dark props on top feature floating geometry and clipping edges.",
+     "orig": "upheld",
+     "origWhy": "The small dark prop blocks on the market stall roofs float above the roof surfaces with visible gaps."
+    },
+    {
+     "fid": "F77",
+     "category": "navigation",
+     "severity": 2,
+     "where": "foreground dark ground area",
+     "desc": "Deep pitch-black shadows obscure the ground level, making it difficult to discern walkable terrain from obstacles.",
+     "orig": "refuted",
+     "origWhy": "The ground area is lit for a night scene with visible terrain textures and objects, not unreadable pitch black."
+    },
+    {
+     "fid": "F81",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "center across foliage canopy",
+     "desc": "Dense tree foliage fills the middle ground, completely obscuring ground paths and structural layout.",
+     "orig": "refuted",
+     "origWhy": "Foliage covering background elements is standard naturalistic composition and not a visual bug."
+    },
+    {
+     "fid": "F82",
+     "category": "geometry",
+     "severity": 2,
+     "where": "between center wire poles",
+     "desc": "A segment of the black overhead wire is broken and floats disconnected in mid-air between the poles.",
+     "orig": "upheld",
+     "origWhy": "The overhead wire between the central wooden posts is severed and hangs disconnected in mid-air."
+    },
+    {
+     "fid": "F83",
+     "category": "geometry",
+     "severity": 1,
+     "where": "bottom right market stall roofs",
+     "desc": "The angled roof tiles on the stalls clip into one another cleanly without realistic support beams.",
+     "orig": "refuted",
+     "origWhy": "Overlapping angled roof structures on simple stalls are normal for stylized environment art and do not break visuals."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "refuted",
+      "why": "Dense tree foliage is a normal environmental feature for a forest village setting rather than an art defect."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "There is a distinct, sharp black geometric hole breaking the ground mesh near the center post."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "A stray black spline curve floats unnaturally in mid-air behind the central pole without attaching to anything."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The wooden roof planks on the bottom-right stalls clip awkwardly into each other with dark cylindrical props floating on top."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "The nighttime lighting is dark for atmospheric effect, but the ground plane remains legible and discernable."
+     },
+     {
+      "n": 6,
+      "verdict": "refuted",
+      "why": "Filling the midground with dense foliage is an intentional stylistic choice for a secluded village environment."
+     },
+     {
+      "n": 7,
+      "verdict": "refuted",
+      "why": "The overhead bunting wire string is fully connected between the wooden posts without any missing or broken segments."
+     },
+     {
+      "n": 8,
+      "verdict": "refuted",
+      "why": "Simplified modular roof paneling without detailed underlying support timber is standard practice for stylized environment art."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The dense central tree canopy completely blocks line of sight to the ground and potential paths underneath."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "There is a sharp, unnatural black geometric hole/cutout breaking the ground mesh near the center."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "A stray black line/spline segment floats in mid-air near the center post without connecting to any structure."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The roof panels and dark props on the bottom-right stall feature noticeable clipping and floating geometry."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "The foreground ground is sufficiently lit with visible surface textures, reflections, and obstacles rather than being pitch-black or unreadable."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The heavy foliage in the middle ground completely obscures the ground layout and any underlying structures."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "The overhead black wire breaks in mid-air between the poles, leaving floating disconnected segments."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "The roof segments on the bottom-right market stalls intersect and clip directly into one another without supporting geometry."
+     }
+    ]
+   }
+  },
+  "homerow": {
+   "n": 9,
+   "claims": [
+    {
+     "fid": "F63",
+     "category": "geometry",
+     "severity": 2,
+     "where": "on the stone path near the bottom left",
+     "desc": "A completely pitch-black rectangular block sits on the path, appearing as broken geometry or an unrendered shadow artifact.",
+     "orig": "upheld",
+     "origWhy": "A completely pitch-black rectangular block is clearly visible sitting on the stone pathway near the bottom left, indicating a broken shadow decal or unrendered geometry."
+    },
+    {
+     "fid": "F64",
+     "category": "geometry",
+     "severity": 2,
+     "where": "upper right side of the main building",
+     "desc": "A flat, untextured tan rectangular panel is attached to the timber structure without detail or material graphics.",
+     "orig": "upheld",
+     "origWhy": "A completely flat, untextured tan rectangular panel is visibly attached to the timber structure of the rightmost building."
+    },
+    {
+     "fid": "F65",
+     "category": "immersion",
+     "severity": 1,
+     "where": "roof edge of the rightmost structure",
+     "desc": "Wooden roof rafters extend out into empty space with no roof structure or supporting wall beneath them.",
+     "orig": "refuted",
+     "origWhy": "Exposed rafter tails extending beyond roof edges are a standard medieval architectural detail rather than an immersion-breaking flaw."
+    },
+    {
+     "fid": "F78",
+     "category": "geometry",
+     "severity": 2,
+     "where": "on the stone path to the lower-left",
+     "desc": "A pitch-black rectangle sits flat on the stone pathway, resembling a missing texture or broken shadow decal.",
+     "orig": "upheld",
+     "origWhy": "A pitch-black rectangular artifact sits flat on the lower-left stone path, representing an unrendered shadow or missing texture."
+    },
+    {
+     "fid": "F79",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "foreground tree on the left",
+     "desc": "A large foreground pine tree heavily obstructs the camera, completely hiding the path and building entrance behind it.",
+     "orig": "refuted",
+     "origWhy": "Foreground trees framing the scene are a standard composition choice in isometric views and do not constitute a defect."
+    },
+    {
+     "fid": "F80",
+     "category": "geometry",
+     "severity": 1,
+     "where": "roof frame on the building on the right",
+     "desc": "Wooden roof beams float and clip unnaturally without clear structural support.",
+     "orig": "refuted",
+     "origWhy": "The wooden beams are properly integrated into the roof structure to represent exposed timber framing, not floating geometry."
+    },
+    {
+     "fid": "F84",
+     "category": "geometry",
+     "severity": 2,
+     "where": "on the paved path near bottom left",
+     "desc": "A solid pitch-black rectangular block sits on the stone pathway, appearing as a missing texture or rendering artifact.",
+     "orig": "upheld",
+     "origWhy": "A solid black rectangular block clearly interrupts the path texture in the lower-left area, acting as a rendering artifact."
+    },
+    {
+     "fid": "F85",
+     "category": "geometry",
+     "severity": 2,
+     "where": "upper wall of rightmost building",
+     "desc": "An untextured, plain tan geometric panel is attached to the upper building wall.",
+     "orig": "upheld",
+     "origWhy": "A plain, untextured tan panel sits prominently on the upper wall of the building on the right."
+    },
+    {
+     "fid": "F86",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "foreground on the left",
+     "desc": "A dense foreground tree completely blocks the player's view of the building and path in the lower-left area.",
+     "orig": "refuted",
+     "origWhy": "Foreground foliage obscuring screen edges is a common environment design practice for depth framing."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "There is a solid pitch-black rectangular box sitting on the stone path that appears to be an unrendered shadow or missing texture artifact."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "A completely flat, untextured tan rectangular block sits prominently on the upper timber frame of the rightmost building."
+     },
+     {
+      "n": 3,
+      "verdict": "refuted",
+      "why": "Exposed wooden rafter ends extending beyond the roofline are a standard decorative and structural feature of medieval timber-framed architecture."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "A stark black rectangular artifact is clearly visible on the stone walkway near the lower-left area."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "Foreground foliage framing the edge of an isometric environment shot is standard scene composition and does not represent a defect."
+     },
+     {
+      "n": 6,
+      "verdict": "refuted",
+      "why": "The timber framing beams are properly attached along the roof structure and represent standard medieval construction framing."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "An unrendered black rectangle is present on the paved path, breaking the lighting and visual continuity."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "The upper wall section features an untextured, plain tan geometric panel that lacks material textures."
+     },
+     {
+      "n": 9,
+      "verdict": "refuted",
+      "why": "The tree on the left serves as foreground framing for the isometric camera view and is typical for environmental layout."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "There is a completely pitch-black rectangular block sitting on the path near the lower left that appears to be a rendering artifact or broken shadow."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "A plain, untextured tan panel sits awkwardly attached to the upper timber frame of the rightmost building."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "Wooden roof rafters stick out into open space from the right building with no roofing or walls beneath them."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "A stark black rectangular shape sits on top of the pathway on the lower left, appearing as a broken decal or missing shadow texture."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "The dense pine tree in the left foreground heavily obscures the building and pathway behind it from the camera."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The exposed wooden roof beams on the rightmost building float out into the air without visible support or attached roof sections."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "A pure black rectangular shadow or block artifact is visible directly on the paved path in the lower left."
+     },
+     {
+      "n": 8,
+      "verdict": "upheld",
+      "why": "An untextured tan box-like panel is attached to the upper side wall of the rightmost structure."
+     },
+     {
+      "n": 9,
+      "verdict": "upheld",
+      "why": "The large pine tree on the far left blocks the view of the path and building behind it."
+     }
+    ]
+   }
+  },
+  "northlane": {
+   "n": 6,
+   "claims": [
+    {
+     "fid": "F87",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "foliage to the left of the central building",
+     "desc": "Dense tree foliage completely obscures the ground and left side of the house, hiding potential paths and doorways.",
+     "orig": "refuted",
+     "origWhy": "Tree foliage naturally covers the ground beneath it in wooded environments and is normal scene composition rather than a defect."
+    },
+    {
+     "fid": "F88",
+     "category": "navigation",
+     "severity": 2,
+     "where": "pathway to the right of the central house",
+     "desc": "The paved walkway abruptly terminates against the side of the house without a door or continuation.",
+     "orig": "upheld",
+     "origWhy": "The paved stone walkway leads straight into the solid wall of the central building next to the lamppost without any entrance or path continuation."
+    },
+    {
+     "fid": "F89",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "dense tree canopy around central house",
+     "desc": "Dense foliage completely covers the ground level and entrances around the central building, hiding paths and playable space from this camera angle.",
+     "orig": "refuted",
+     "origWhy": "Dense tree cover obscuring ground space from an overhead view is standard for environmental foliage and does not represent an art error."
+    },
+    {
+     "fid": "F90",
+     "category": "geometry",
+     "severity": 1,
+     "where": "roof on the circular tower",
+     "desc": "A rectangular hipped roof is placed directly over a cylindrical tower, causing the corners of the roof to awkwardly overhang open air.",
+     "orig": "upheld",
+     "origWhy": "A rectangular hipped roof structure is attached directly onto a round stone tower, causing its corners to float awkwardly in mid-air past the curved walls."
+    },
+    {
+     "fid": "F101",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "around the central building",
+     "desc": "Dense tree canopy completely covers the ground, pathways, and potential entrances around the house, obscuring playable space.",
+     "orig": "refuted",
+     "origWhy": "Natural tree canopy covering surrounding ground areas is expected environment detail for a forested setting."
+    },
+    {
+     "fid": "F102",
+     "category": "geometry",
+     "severity": 1,
+     "where": "top left building structure",
+     "desc": "Roof framing and timber beams extend out into open air without supporting walls underneath.",
+     "orig": "upheld",
+     "origWhy": "Exposed timber roof trusses on the top-left building extend far past the exterior wall into open air without support pillars or walls underneath."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "Dense tree foliage completely blocks the view of the ground and left wall of the building, hiding potential pathways and entry points."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The paved walkway leads directly into a blank wall of the central building with no door or connecting path."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "The heavy tree canopy hides the ground level and wall bases surrounding the central building, obscuring navigable space from this top-down view."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "A rectangular hipped roof is placed over a round stone tower, leaving the roof corners hanging over open air."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "Foliage completely covers the ground and perimeter around the building, hiding pathways and potential entrances."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "Timber roof rafters at the top left extend out into open air without any walls or vertical supports beneath them."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "Dense tree foliage completely covers the left side of the building and the ground below, hiding any potential doorways or paths."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The paved walkway leads directly into the solid wall of the house without a door, entrance, or continuation."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "Tree canopies block the view of the ground level and entrances around the central building, making the surrounding space unreadable."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "A rectangular roof is placed over a circular stone tower, leaving the square corners overhanging open air."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "The thick tree canopy obscures the ground, entrances, and potential navigation paths around the central building."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "Exposed timber rafters in the top-left structure extend outwards into open space without supporting walls below."
+     }
+    ]
+   }
+  },
+  "gateroad": {
+   "n": 7,
+   "claims": [
+    {
+     "fid": "F106",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "right half of the frame",
+     "desc": "Dense foreground trees and pitch-black shadows completely occlude the right side of the environment, making it impossible to see the space.",
+     "orig": "upheld",
+     "origWhy": "Dense foreground trees and deep shadows cover the entire right half of the image, obscuring the environment."
+    },
+    {
+     "fid": "F107",
+     "category": "navigation",
+     "severity": 2,
+     "where": "center ground path continuing to the right",
+     "desc": "The central clear pathway terminates directly into heavy darkness, obscuring where the player is supposed to walk next.",
+     "orig": "upheld",
+     "origWhy": "The bright central path curves off into complete shadow on the right, making its continuation impossible to follow."
+    },
+    {
+     "fid": "F110",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "right side of the frame",
+     "desc": "Dense foreground foliage and heavy shadows completely block the view of the environment and any potential paths on the right half of the screen.",
+     "orig": "upheld",
+     "origWhy": "The right side of the screen is heavily blocked by dark foreground leaves and trunks, preventing sightlines into that area."
+    },
+    {
+     "fid": "F111",
+     "category": "navigation",
+     "severity": 2,
+     "where": "left and center ground area",
+     "desc": "Extremely dark shadowing obscures ground details and makes it difficult to tell where navigable space ends and obstacles begin.",
+     "orig": "upheld",
+     "origWhy": "Heavy cast shadows across the foreground lawn crush contrast, hiding ground contours and edges."
+    },
+    {
+     "fid": "F112",
+     "category": "geometry",
+     "severity": 1,
+     "where": "center ground near the street lamp",
+     "desc": "A dark grey block sitting in the field appears to be untextured or placeholder geometry.",
+     "orig": "upheld",
+     "origWhy": "The grey rectangular block near the street lamp lacks surface detail and shading, resembling an untextured greybox asset."
+    },
+    {
+     "fid": "F116",
+     "category": "navigation",
+     "severity": 2,
+     "where": "entire frame",
+     "desc": "Extremely low lighting obscures terrain boundaries and path continuation, making navigation difficult.",
+     "orig": "upheld",
+     "origWhy": "The scene is globally underexposed, making it difficult to read terrain elevation and boundaries across most of the frame."
+    },
+    {
+     "fid": "F117",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "right foreground",
+     "desc": "Dense foreground tree trunks and dark foliage block the player's line of sight across half the screen.",
+     "orig": "upheld",
+     "origWhy": "Large foreground tree trunks dominate the right side of the screen, creating a huge visual blind spot."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "Massive foreground tree trunks and pitch-black foliage cover almost the entire right half of the screen, obscuring the environment."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The central ground pathway leads directly into crushed black shadows, hiding its continuation."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "Dense foreground trees and deep shadows completely block visibility of any terrain or paths on the right side."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "Deep shadows across the foreground and midground grass make it hard to distinguish navigable terrain from obstacles."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "A flat, featureless grey rectangular block sits near the lamp post, resembling untextured placeholder geometry."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The scene is severely underexposed, creating pitch-black areas that obscure path direction and terrain edges."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "Foreground tree trunks sit directly in front of the camera, blocking the player's view across nearly half the image."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "Dense foreground trees and pitch-black shadows cover the right side of the image, completely blocking the view of the environment behind them."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "The clear ground path curves into complete darkness on the right, hiding where navigable space continues."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "Large foreground trunks and thick foliage occupy the right half of the frame, preventing sightlines into that space."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "Deep shadows across the left and central terrain hide ground details and clear boundaries between grass and obstacles."
+     },
+     {
+      "n": 5,
+      "verdict": "upheld",
+      "why": "A flat grey rectangular block sitting on the ground near the street lamp lacks visible surface detail and resembles untextured greybox geometry."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The scene's overall exposure is extremely low, severely degrading contrast and hiding terrain details necessary for navigation."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "Thick tree trunks and dark leaves in the right foreground take up nearly half of the screen area, blocking the camera's field of view."
+     }
+    ]
+   }
+  },
+  "gatefield": {
+   "n": 7,
+   "claims": [
+    {
+     "fid": "F113",
+     "category": "geometry",
+     "severity": 2,
+     "where": "outer perimeter of dark paved area",
+     "desc": "The outer boundary of the dark circular pavement features raw, stair-stepped right-angled edges instead of a smooth or blended edge.",
+     "orig": "upheld",
+     "origWhy": "The outer boundary of the dark paved platform features raw, stair-stepped grid edges without smooth curves or blending."
+    },
+    {
+     "fid": "F114",
+     "category": "geometry",
+     "severity": 1,
+     "where": "pavement around shrine pillars",
+     "desc": "The paved floor has sharp rectangular cutouts around the stone pillars that reveal bare dirt underneath.",
+     "orig": "upheld",
+     "origWhy": "A sharp rectangular section of the pavement flooring around the pillar structure is missing, exposing unrefined dirt beneath."
+    },
+    {
+     "fid": "F115",
+     "category": "geometry",
+     "severity": 1,
+     "where": "pavement in front of wooden bench",
+     "desc": "A sharp square cutout in the paved surface exposes grass and dirt directly in front of the bench structure.",
+     "orig": "upheld",
+     "origWhy": "There is a distinct rectangular cutout in the dark pavement mesh in front of and beneath the bench structure showing bare ground."
+    },
+    {
+     "fid": "F118",
+     "category": "geometry",
+     "severity": 2,
+     "where": "outer edge of the dark stone platform",
+     "desc": "The boundary of the central platform features jagged, blocky grid steps that contrast unnaturally with the organic environment.",
+     "orig": "upheld",
+     "origWhy": "The circular platform's border is composed of jagged, blocky tile steps that clash with the natural grass ground."
+    },
+    {
+     "fid": "F119",
+     "category": "occlusion",
+     "severity": 2,
+     "where": "left side of the frame",
+     "desc": "Extremely dark shadows obscure the environment and foliage on the left side of the screen, hiding terrain features.",
+     "orig": "refuted",
+     "origWhy": "The deep shadows on the left are a normal result of low-key directional lighting in a night setting, not an artistic flaw."
+    },
+    {
+     "fid": "F120",
+     "category": "geometry",
+     "severity": 2,
+     "where": "along the left and bottom edges of the central dark patio",
+     "desc": "The perimeter of the dark pavement uses a harsh, blocky stepped mesh boundary that cuts unnaturally into the grass terrain.",
+     "orig": "upheld",
+     "origWhy": "The patio edge displays harsh, blocky stepped cuts against the surrounding grass mesh."
+    },
+    {
+     "fid": "F121",
+     "category": "geometry",
+     "severity": 2,
+     "where": "around the stone pillars and altar near the back wall",
+     "desc": "The pillars sit over unrefined rectangular cutouts in the patio flooring that expose raw ground gaps.",
+     "orig": "upheld",
+     "origWhy": "The pavement mesh features unrefined rectangular gaps around the stone pillar bases that expose raw ground."
+    }
+   ],
+   "arms": {
+    "A": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The boundary of the dark paved patio clearly shows raw, unblended stair-stepped grid geometry."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "Sharp, unfinished rectangular cutouts in the floor mesh around the stone pillars expose the underlying ground."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "A square hole in the dark pavement mesh is clearly visible right in front of the bench."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The perimeter of the patio platform consists of obvious blocky grid steps that fail to blend with the surrounding terrain."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "Deep shadows beneath tree canopies are a normal atmospheric lighting choice for dark fantasy environments rather than a technical defect."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The harsh, stair-stepped edges along the patio perimeter cut visually into the grass without any edge blending or trim."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "Unrefined rectangular holes in the pavement around the rear shrine pillars expose raw dirt underneath."
+     }
+    ],
+    "B": [
+     {
+      "n": 1,
+      "verdict": "upheld",
+      "why": "The outer perimeter of the dark paved area clearly exhibits raw, stair-stepped right-angled edges rather than a smooth or blended boundary."
+     },
+     {
+      "n": 2,
+      "verdict": "upheld",
+      "why": "Sharp rectangular cutouts in the paving around the base of the stone pillars reveal raw dirt underneath."
+     },
+     {
+      "n": 3,
+      "verdict": "upheld",
+      "why": "A square cutout in the dark pavement exposes exposed dirt and grass directly in front of the bench structure."
+     },
+     {
+      "n": 4,
+      "verdict": "upheld",
+      "why": "The boundary of the dark stone platform consists of blocky grid steps that contrast unnaturally with the organic terrain."
+     },
+     {
+      "n": 5,
+      "verdict": "refuted",
+      "why": "Foliage, tree trunks, and ground terrain on the left side remain clearly visible despite the shadows."
+     },
+     {
+      "n": 6,
+      "verdict": "upheld",
+      "why": "The lower and left edges of the dark patio display a harsh, blocky stepped mesh outline against the grass."
+     },
+     {
+      "n": 7,
+      "verdict": "upheld",
+      "why": "Unrefined rectangular holes are cut into the flooring around the stone pillars and altar, exposing the underlying ground."
+     }
+    ]
+   }
+  }
+ },
+ "budget": {
+  "calls": 22,
+  "promptTok": 35856,
+  "replyTok": 41592,
+  "errors": 0
+ }
+}

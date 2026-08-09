@@ -1,0 +1,48 @@
+rhetoric-census — 1 run dirs, 117 findings deduped on town+shot+mode+desc, 115 reached the sceptic, 21 refuted by it
+
+  subject class           refuted  appeal-to-intent   sceptic refutal rate
+  foliage-occlusion            15      15/15 = 100%          15/38 = 39.5%
+  foliage-other                 2         1/2 = 50%            2/9 = 22.2%
+  occlusion-nonfoliage          1          0/1 = 0%            1/24 = 4.2%
+  rest                          3         2/3 = 67%            3/44 = 6.8%
+
+  appeal-to-intent by mode:
+    naive          18/21 = 86%
+
+  appeal-to-intent by category:
+    occlusion      13/13 = 100%
+    navigation     3/4 = 75%
+    immersion      1/2 = 50%
+    geometry       1/2 = 50%
+
+  15 refutals of an occlusion claim were argued from convention. Verbatim, newest runs last:
+    [woodroad/naive] The pathway leads into pitch darkness and foliage behind the monument without clear indicati
+       -> Pathways naturally extend into darker shaded areas or scene boundaries in night environments, which is standard atmospheric design rather than a navigation flaw.
+    [waystone/naive] Extremely dark foliage completely blocks visibility of the terrain and environment on the ri
+       -> Dark foreground foliage on the edge of the frame is standard vignette framing, not an unintended visual flaw.
+    [waystone/naive] Dense foreground foliage completely blocks the view of the play area and potential paths on 
+       -> The foliage serves as normal cinematic foreground framing around the central illuminated focal point.
+    [arch/naive] Dense dark foliage completely obscures the right side of the environment, blocking sightline
+       -> The tree foliage on the right acts as standard camera framing for the scene rather than an improper obstacle to player gameplay.
+    [arch/naive] Dense, dark tree foliage covers the entire right foreground, completely blocking the player'
+       -> Foreground tree foliage framing the right side of the camera view is normal environment composition and not a defect.
+    [arch/naive] Extremely dense and dark tree foliage completely obscures the ground and potential pathways 
+       -> Dense foliage on the right frame edge is decorative framing foliage standard for environmental art.
+    [square/naive] Dark, dense foliage completely surrounds the perimeter, making it unclear where walkable pat
+       -> Using dense trees as a perimeter boundary is a standard method for defining map edges.
+    [pondlane/naive] Dense tree foliage covers the center and left portions of the scene, completely hiding the g
+       -> Tree foliage naturally obscuring the ground beneath it is expected environment design rather than an art defect.
+    [pondlane/naive] Dense tree foliage fills the middle ground, completely obscuring ground paths and structural
+       -> Foliage covering background elements is standard naturalistic composition and not a visual bug.
+    [homerow/naive] A large foreground pine tree heavily obstructs the camera, completely hiding the path and bu
+       -> Foreground trees framing the scene are a standard composition choice in isometric views and do not constitute a defect.
+    [homerow/naive] A dense foreground tree completely blocks the player's view of the building and path in the 
+       -> Foreground foliage obscuring screen edges is a common environment design practice for depth framing.
+    [northlane/naive] Dense tree foliage completely obscures the ground and left side of the house, hiding potenti
+       -> Tree foliage naturally covers the ground beneath it in wooded environments and is normal scene composition rather than a defect.
+    [northlane/naive] Dense foliage completely covers the ground level and entrances around the central building, 
+       -> Dense tree cover obscuring ground space from an overhead view is standard for environmental foliage and does not represent an art error.
+    [northlane/naive] Dense tree canopy completely covers the ground, pathways, and potential entrances around the
+       -> Natural tree canopy covering surrounding ground areas is expected environment detail for a forested setting.
+    [gatefield/naive] Extremely dark shadows obscure the environment and foliage on the left side of the screen, h
+       -> The deep shadows on the left are a normal result of low-key directional lighting in a night setting, not an artistic flaw.

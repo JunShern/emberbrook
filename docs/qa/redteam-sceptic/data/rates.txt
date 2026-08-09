@@ -1,0 +1,42 @@
+
+==============================================================================
+ALL RUNS, NOT DEDUPED (replayed runs double-count)
+==============================================================================
+total findings 1532  |  reached the sceptic 1526  |  pre-refuted by an instrument, never shown to the sceptic 6
+
+class                        N  refuted    rate  95% CI
+foliage-occlusion          147       30   20.4%  [14.7, 27.6]
+foliage-other              103       25   24.3%  [17.0, 33.4]
+occlusion-nonfoliage       356       67   18.8%  [15.1, 23.2]
+rest                       920      135   14.7%  [12.5, 17.1]
+EVERYTHING ELSE           1379      227   16.5%  [14.6, 18.5]
+Fisher exact (foliage-occlusion vs everything else): p = 0.2457
+
+per mode:
+  naive      foliage-occl 29/82 =  35.4%   else 198/948 =  20.9%   p=0.0050
+  checklist  foliage-occl 1/65 =   1.5%   else 29/431 =   6.7%   p=0.1576
+
+per town:
+  dellhollow   foliage-occl 0/10 =   0.0%   else 186/1019 =  18.3%   p=0.2233
+  emberbrook   foliage-occl 30/137 =  21.9%   else 41/360 =  11.4%   p=0.0040
+
+==============================================================================
+DEDUPED on (town, shot, mode, desc) — this is the number to quote
+==============================================================================
+total findings 1134  |  reached the sceptic 1128  |  pre-refuted by an instrument, never shown to the sceptic 6
+
+class                        N  refuted    rate  95% CI
+foliage-occlusion          109       23   21.1%  [14.5, 29.7]
+foliage-other               79       20   25.3%  [17.0, 35.9]
+occlusion-nonfoliage       258       50   19.4%  [15.0, 24.6]
+rest                       682      106   15.5%  [13.0, 18.5]
+EVERYTHING ELSE           1019      176   17.3%  [15.1, 19.7]
+Fisher exact (foliage-occlusion vs everything else): p = 0.3540
+
+per mode:
+  naive      foliage-occl 22/58 =  37.9%   else 150/678 =  22.1%   p=0.0093
+  checklist  foliage-occl 1/51 =   2.0%   else 26/341 =   7.6%   p=0.2304
+
+per town:
+  dellhollow   foliage-occl 0/8 =   0.0%   else 143/742 =  19.3%   p=0.3644
+  emberbrook   foliage-occl 23/101 =  22.8%   else 33/277 =  11.9%   p=0.0134

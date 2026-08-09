@@ -1,0 +1,32 @@
+A/B on run-20260809-emb-round1, NAIVE stage 2 only, same plates, same claims, same order.
+  arm orig = the shipped run's own stored verdicts (a third draw of the shipped head)
+  arm A    = the SHIPPED head, re-asked (the control)
+  arm B    = the shipped head + one paragraph withdrawing the "it is normal for the style" licence
+
+arm     claims   refuted    rate     foliage-occl refuted    appeal-to-intent
+orig        79        21   26.6%       15/31                18/21 = 86%
+A           79        15   19.0%        9/31                12/15 = 80%
+B           79         4    5.1%        2/31                1/4 = 25%
+
+7 foliage-occlusion claims the shipped head REFUTED and arm B UPHELD:
+  [waystone] F10: Extremely dark foliage completely blocks visibility of the terrain and environme
+     A -> Dense dark foliage along the edge of the frame is standard environmental vignetting to define scene boundaries.
+     B -> The extremely dark tree foliage completely conceals the terrain and ground environment on the right side of the image.
+  [waystone] F16: Dense foreground foliage completely blocks the view of the play area and potenti
+     A -> The foliage on the right acts as an intentional visual boundary for the screen rather than obscuring a playable area.
+     B -> Dense foreground foliage blocks the view of any potential paths or playable area across the right portion of the screen.
+  [square] F57: Dark, dense foliage completely surrounds the perimeter, making it unclear where 
+     A -> Dense foliage framing the map edge is standard level boundary design rather than a visual flaw.
+     B -> Dense trees and foliage completely encircle the village edges, hiding any potential exit paths or trail continuations.
+  [pondlane] F61: Dense tree foliage covers the center and left portions of the scene, completely 
+     A -> Dense tree foliage is a normal environmental feature for a forest village setting rather than an art defect.
+     B -> The dense central tree canopy completely blocks line of sight to the ground and potential paths underneath.
+  [pondlane] F81: Dense tree foliage fills the middle ground, completely obscuring ground paths an
+     A -> Filling the midground with dense foliage is an intentional stylistic choice for a secluded village environment.
+     B -> The heavy foliage in the middle ground completely obscures the ground layout and any underlying structures.
+  [homerow] F79: A large foreground pine tree heavily obstructs the camera, completely hiding the
+     A -> Foreground foliage framing the edge of an isometric environment shot is standard scene composition and does not represen
+     B -> The dense pine tree in the left foreground heavily obscures the building and pathway behind it from the camera.
+  [homerow] F86: A dense foreground tree completely blocks the player's view of the building and 
+     A -> The tree on the left serves as foreground framing for the isometric camera view and is typical for environmental layout.
+     B -> The large pine tree on the far left blocks the view of the path and building behind it.

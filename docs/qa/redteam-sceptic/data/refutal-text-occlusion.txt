@@ -1,0 +1,154 @@
+REFUTED, occlusion-category OR foliage-occlusion class, N = 51
+[del|occlusion-nonfoliage|20260731-dellhollow|lockfive|naive|occlusion|sev2] F89
+   CLAIM: The massive elevated circular deck dominates the foreground and heavily occludes the walkways, stairs, and lower structures beneath it.
+   WHY  : Foreground deck occlusion of lower elements is a standard consequence of camera angle and architectural composition rather than a defect.
+[del|occlusion-nonfoliage|20260731-dellhollow|shelf-east|naive|occlusion|sev2] F14
+   CLAIM: The oversized foreground roof fills the bottom of the screen, completely obscuring the paths and ground behind it.
+   WHY  : The foreground roof position is a standard camera framing choice that does not prevent viewing the village path and structures.
+[del|occlusion-nonfoliage|20260806-1-dellhollow-naive|deep-stairs|naive|occlusion|sev2] F57
+   CLAIM: Extremely dark shadows obscure the cliff face and geometry, making it impossible to tell if there is walkable space or a fatal drop.
+   WHY  : The dark shadow in the cliff recess is a normal result of high-contrast directional sunlight rather than a scene defect.
+[del|occlusion-nonfoliage|20260806-1-dellhollow-naive|deep-stairs|naive|occlusion|sev2] F62
+   CLAIM: Pitch-black cast shadow obscures the path continuity and terrain geometry behind the central building, making navigation unreadable.
+   WHY  : Deep cast shadows behind the central building are an intentional lighting choice for sunny exterior environments and do not impede primary navigation.
+[del|occlusion-nonfoliage|20260806-1-dellhollow-naive|deep-stairs|naive|occlusion|sev2] F66
+   CLAIM: Deep cast shadows obscure the cliff face and structures behind the staircase, hiding potential pathways and layout.
+   WHY  : The dark shadow in the upper center is standard directional cast lighting on background cliff geometry rather than a layout flaw.
+[del|occlusion-nonfoliage|20260806-1-dellhollow-naive|gate|naive|occlusion|sev1] F9
+   CLAIM: The large rock wall in the immediate foreground blocks the view of the lower dock area and pathways below.
+   WHY  : Foreground terrain partially occluding background areas is a standard result of 3D perspective and composition, not a design defect.
+[del|occlusion-nonfoliage|20260806-1-dellhollow-naive|shelf-east|naive|occlusion|sev2] F5
+   CLAIM: Extremely dense pitch-black shadow across the central village path hides terrain detail and makes navigation hard to parse.
+   WHY  : Ground textures, pebbles, and path contours remain clearly visible inside the shadow, so terrain detail and navigation are not obscured.
+[del|occlusion-nonfoliage|20260806-1-dellhollow-naive|shelf-west|naive|occlusion|sev2] F3
+   CLAIM: Pitch-black shadows beneath the overhang conceal ground geometry, making it impossible to see if the area below is walkable.
+   WHY  : The space beneath the walkway is sufficiently illuminated to clearly discern the floor, barrels, and surrounding structures.
+[del|occlusion-nonfoliage|20260806-1-dellhollow-naive|shelf-west|naive|occlusion|sev2] F14
+   CLAIM: Heavy pitch-black shadowing under the wooden platform obscures the floor and pathway, making it unclear whether the area is walkable.
+   WHY  : The covered area under the platform is well-lit enough that props and walkable surfaces are clearly recognizable.
+[del|occlusion-nonfoliage|20260807-185607-calib|deep-stairs|naive|occlusion|sev2] F63
+   CLAIM: Deep pitch-black shadows obscure the cavity behind the stairs, making it impossible to tell if there is a path or ledge inside.
+   WHY  : The central cavity is not completely pitch-black, as a lit doorway with an illuminated lantern is clearly visible inside at the top.
+[del|occlusion-nonfoliage|20260807-185607-calib|deep-stairs|naive|occlusion|sev2] F70
+   CLAIM: Harsh direct lighting casts a deep shadow over the central cliff recess, completely obscuring paths and doorways.
+   WHY  : The shadow does not completely obscure pathways or doorways, as the illuminated passageway and lantern inside the cliff recess remain visible.
+[del|occlusion-nonfoliage|20260807-185607-calib|fishdock|naive|occlusion|sev1] F92
+   CLAIM: Deep cast shadows completely obscure the ground terrain and potential pathways along the cliffside behind the main walkway.
+   WHY  : Ground terrain, props, and vegetation remain clearly visible beneath the upper structures despite being in shadow.
+[del|occlusion-nonfoliage|20260807-185607-calib|quay-west|naive|occlusion|sev2] F34
+   CLAIM: Harsh black shadows completely obscure the elevation, layout, and boundaries of lower-level walkways.
+   WHY  : The lower-left walkways are illuminated by lanterns and direct light, leaving paths, fences, and elevation changes clearly visible.
+[del|occlusion-nonfoliage|20260807-185607-calib|shelf-east|naive|occlusion|sev2] F11
+   CLAIM: Deep, pitch-black cast shadows completely obscure the ground terrain, making elevation changes and path boundaries impossible to read.
+   WHY  : The shadowed path area retains visible ground textures and clear contrast, making terrain details easy to read.
+[del|occlusion-nonfoliage|20260807-185607-calib|shelf-west|naive|occlusion|sev2] F7
+   CLAIM: Deep pitch-black shadows beneath the upper deck obscure the ground details and potential walkable paths beneath.
+   WHY  : The area beneath the platform is well-lit with ambient light, leaving barrels, crates, and architecture clearly visible.
+[del|occlusion-nonfoliage|20260808-170205-calib|quay-west|naive|occlusion|sev2] F33
+   CLAIM: A massive tilted green roof in the immediate foreground blocks the player's view of the path and space underneath it.
+   WHY  : Foreground structures framing the bottom of an environmental render are standard compositional elements rather than a visual bug.
+[del|occlusion-nonfoliage|20260808-170205-calib|quay-west|naive|occlusion|sev2] F36
+   CLAIM: The large foreground roof structure obstructs the camera view of the paths and lower platform beneath it.
+   WHY  : Using foreground architecture to frame a scene render is a standard artistic technique rather than a flawed view obstruction.
+[del|occlusion-nonfoliage|20260808-170205-calib|quay-west|naive|occlusion|sev2] F43
+   CLAIM: A large foreground roof completely occludes the lower ground level, hiding potential paths and hazards beneath it.
+   WHY  : The foreground roof serves as deliberate compositional framing for the environmental view rather than an improper occlusion flaw.
+[del|occlusion-nonfoliage|20260808-170205-calib|shelf-east|naive|occlusion|sev2] F13
+   CLAIM: A harsh, pitch-black shadow cuts across the central pathway, completely obscuring ground details and making navigation unreadable.
+   WHY  : The shadowed central ground area is lit by ambient light, making the dirt texture and path details completely visible.
+[del|occlusion-nonfoliage|20260808-170205-calib|shelf-west|naive|occlusion|sev2] F11
+   CLAIM: Deep shadows and overlapping roofs completely block the view of the ground path connecting the left settlement area to the right platform.
+   WHY  : The central walkway and its railing are brightly lit by sunlight and clearly visible connecting the areas.
+[del|occlusion-nonfoliage|20260808-170205-calib|weave|naive|occlusion|sev2] F50
+   CLAIM: Harsh, unlit pitch-black shadows beneath the platform obscure the terrain, making it impossible to tell if there is an accessible lower route.
+   WHY  : Terrain, foliage, and water under the central wooden stilts are illuminated and clearly visible rather than hidden in pitch-black shadows.
+[del|occlusion-nonfoliage|20260808-170205-calib|weave|naive|occlusion|sev2] F55
+   CLAIM: Harsh shadows and dense overlapping stilt supports completely obscure lower paths and ground level, making navigation difficult.
+   WHY  : The ground and water beneath the stilt supports remain visible between the posts, so lower areas are not completely obscured.
+[del|occlusion-nonfoliage|20260808-round6phase|shelf-east|naive|occlusion|sev1] F16
+   CLAIM: The large roof in the lower-left foreground heavily obstructs the view of the ground path and space behind it.
+   WHY  : This is an elevated camera perspective meant to showcase the village layout, not an in-game camera obstruction issue.
+[del|occlusion-nonfoliage|20260808-round6phase|shelf-east|naive|occlusion|sev2] F22
+   CLAIM: Harsh cast shadows completely obscure the ground terrain and pathing through the center of the village, hiding potential obstacles or routes.
+   WHY  : The ground details and path outlines remain completely legible within the shadow areas.
+[del|occlusion-nonfoliage|round8awning|deep-stairs|naive|occlusion|sev2] F50
+   CLAIM: Harsh, pitch-black shadows obscure the upper walkways and stairwell openings into the cliff, making it impossible to see navigable paths.
+   WHY  : The strong shadow cast by the cliff overhang is normal high-contrast directional sunlight, and interior walkways are clearly marked with illuminated lanterns.
+[del|rest|20260806-1-dellhollow-naive|fishdock|naive|occlusion|sev2] F83
+   CLAIM: Deep, harsh shadows under the central platforms render the geometry and potential paths completely unreadable.
+   WHY  : The shaded central area beneath the upper platforms remains clearly visible, showing foliage, props, lanterns, and background rock geometry.
+[del|rest|20260807-185607-calib|deep-stairs|naive|occlusion|sev2] F59
+   CLAIM: Deep pitch-black shadows completely black out the geometry beneath the upper-left building, making it impossible to discern depth or spatial layout.
+   WHY  : The area beneath the upper-left building clearly shows vertical support pillars, hanging banners, and visible wall geometry rather than pitch-black darkness.
+[del|rest|20260808-170205-calib|shelf-west|naive|occlusion|sev2] F5
+   CLAIM: Pitch-black shadow under the lower walkway makes it impossible to see if the ground below is walkable or a lethal drop.
+   WHY  : The lower-left pit contains visible barrels, lighting, and floor geometry rather than pitch-black occlusion.
+[emb|foliage-occlusion|20260806-1-emberbrook-naive|arch|naive|navigation|sev2] F3
+   CLAIM: Pitch-black tree shadows obscure the terrain surface, making walkable routes indistinguishable.
+   WHY  : The tree shadows are semi-transparent dappled light, leaving ground textures and paths clearly visible underneath.
+[emb|foliage-occlusion|20260806-1-emberbrook-naive|arch|naive|occlusion|sev2] F7
+   CLAIM: Extremely dense and dark tree foliage obscures most of the space and potential paths on the right side of the screen.
+   WHY  : Foreground foliage framing the right side of the camera view is a standard artistic choice that does not constitute a gameplay defect.
+[emb|foliage-occlusion|20260806-1-emberbrook-naive|homerow|naive|occlusion|sev2] F54
+   CLAIM: The dense evergreen tree severely obstructs the view of the building entrance, path, and surrounding walkable space.
+   WHY  : Foreground foliage is a standard framing element in isometric environment art and does not constitute a defect.
+[emb|foliage-occlusion|20260806-1-emberbrook-naive|northlane|naive|occlusion|sev2] F47
+   CLAIM: Thick dark foliage obscures the ground and left side of the house, hiding potential paths and entrances.
+   WHY  : The tree foliage around the house is standard environmental scenery and does not impede gameplay or obscure essential navigation.
+[emb|foliage-occlusion|20260806-1-emberbrook-naive|northlane|naive|occlusion|sev2] F57
+   CLAIM: Dense foliage completely covers the area around the house, concealing paths and potential doors from view.
+   WHY  : Tree canopies surrounding structures are normal environment art details rather than game-breaking occlusion issues.
+[emb|foliage-occlusion|20260806-1-emberbrook-naive|northlane|naive|occlusion|sev2] F61
+   CLAIM: Heavy tree foliage completely blocks view of the space behind the central building, hiding potential walkways and wall boundaries.
+   WHY  : Dense foliage behind the building serves as standard background dressing and does not obstruct player movement.
+[emb|foliage-occlusion|20260806-1-emberbrook-naive|woodroad|naive|navigation|sev2] F9
+   CLAIM: Pitch-black foliage completely obscures the right side of the scene, making it impossible to determine if it is a playable path or an impassable boundary.
+   WHY  : The dense, dark pine trees clearly function as a standard impassable forest boundary wall rather than a confusing navigation path.
+[emb|foliage-occlusion|20260807-205035-round3water|gateroad|checklist|immersion|sev2] F39
+   CLAIM: The world at the frame edges: WEAK — Dense trees cover the borders, though heavy shadows obscure background depth.
+   WHY  : The frame edges are fully populated with 3D trees and background structures that integrate seamlessly without revealing void or unfinished terrain.
+[emb|foliage-occlusion|20260809-emb-round1|arch|naive|occlusion|sev2] F5
+   CLAIM: Dense dark foliage completely obscures the right side of the environment, blocking sightlines to paths or potential obstacles behind it.
+   WHY  : The tree foliage on the right acts as standard camera framing for the scene rather than an improper obstacle to player gameplay.
+[emb|foliage-occlusion|20260809-emb-round1|arch|naive|occlusion|sev2] F11
+   CLAIM: Dense, dark tree foliage covers the entire right foreground, completely blocking the player's view of the path and space below.
+   WHY  : Foreground tree foliage framing the right side of the camera view is normal environment composition and not a defect.
+[emb|foliage-occlusion|20260809-emb-round1|arch|naive|occlusion|sev2] F18
+   CLAIM: Extremely dense and dark tree foliage completely obscures the ground and potential pathways across the right side of the space.
+   WHY  : Dense foliage on the right frame edge is decorative framing foliage standard for environmental art.
+[emb|foliage-occlusion|20260809-emb-round1|gatefield|naive|occlusion|sev2] F119
+   CLAIM: Extremely dark shadows obscure the environment and foliage on the left side of the screen, hiding terrain features.
+   WHY  : The deep shadows on the left are a normal result of low-key directional lighting in a night setting, not an artistic flaw.
+[emb|foliage-occlusion|20260809-emb-round1|homerow|naive|occlusion|sev2] F79
+   CLAIM: A large foreground pine tree heavily obstructs the camera, completely hiding the path and building entrance behind it.
+   WHY  : Foreground trees framing the scene are a standard composition choice in isometric views and do not constitute a defect.
+[emb|foliage-occlusion|20260809-emb-round1|homerow|naive|occlusion|sev2] F86
+   CLAIM: A dense foreground tree completely blocks the player's view of the building and path in the lower-left area.
+   WHY  : Foreground foliage obscuring screen edges is a common environment design practice for depth framing.
+[emb|foliage-occlusion|20260809-emb-round1|northlane|naive|occlusion|sev2] F87
+   CLAIM: Dense tree foliage completely obscures the ground and left side of the house, hiding potential paths and doorways.
+   WHY  : Tree foliage naturally covers the ground beneath it in wooded environments and is normal scene composition rather than a defect.
+[emb|foliage-occlusion|20260809-emb-round1|northlane|naive|occlusion|sev2] F89
+   CLAIM: Dense foliage completely covers the ground level and entrances around the central building, hiding paths and playable space from this camera angle.
+   WHY  : Dense tree cover obscuring ground space from an overhead view is standard for environmental foliage and does not represent an art error.
+[emb|foliage-occlusion|20260809-emb-round1|northlane|naive|occlusion|sev2] F101
+   CLAIM: Dense tree canopy completely covers the ground, pathways, and potential entrances around the house, obscuring playable space.
+   WHY  : Natural tree canopy covering surrounding ground areas is expected environment detail for a forested setting.
+[emb|foliage-occlusion|20260809-emb-round1|pondlane|naive|occlusion|sev2] F61
+   CLAIM: Dense tree foliage covers the center and left portions of the scene, completely hiding the ground and any potential pathways underneath.
+   WHY  : Tree foliage naturally obscuring the ground beneath it is expected environment design rather than an art defect.
+[emb|foliage-occlusion|20260809-emb-round1|pondlane|naive|occlusion|sev2] F81
+   CLAIM: Dense tree foliage fills the middle ground, completely obscuring ground paths and structural layout.
+   WHY  : Foliage covering background elements is standard naturalistic composition and not a visual bug.
+[emb|foliage-occlusion|20260809-emb-round1|square|naive|navigation|sev1] F57
+   CLAIM: Dark, dense foliage completely surrounds the perimeter, making it unclear where walkable pathways continue off-screen.
+   WHY  : Using dense trees as a perimeter boundary is a standard method for defining map edges.
+[emb|foliage-occlusion|20260809-emb-round1|waystone|naive|occlusion|sev2] F10
+   CLAIM: Extremely dark foliage completely blocks visibility of the terrain and environment on the right side of the frame.
+   WHY  : Dark foreground foliage on the edge of the frame is standard vignette framing, not an unintended visual flaw.
+[emb|foliage-occlusion|20260809-emb-round1|waystone|naive|occlusion|sev2] F16
+   CLAIM: Dense foreground foliage completely blocks the view of the play area and potential paths on the right side of the screen.
+   WHY  : The foliage serves as normal cinematic foreground framing around the central illuminated focal point.
+[emb|foliage-occlusion|20260809-emb-round1|woodroad|naive|navigation|sev2] F15
+   CLAIM: The pathway leads into pitch darkness and foliage behind the monument without clear indication of where to proceed.
+   WHY  : Pathways naturally extend into darker shaded areas or scene boundaries in night environments, which is standard atmospheric design rather than a navigation flaw.

@@ -1,0 +1,12 @@
+TIGHTENED appeal-to-intent census over 199 deduped refutals
+  foliage-occlusion      naive      21/22
+  foliage-occlusion      checklist  0/1
+  foliage-other          naive      7/18
+  foliage-other          checklist  1/2
+  occlusion-nonfoliage   naive      13/43
+  occlusion-nonfoliage   checklist  2/7
+  rest                   naive      27/89
+  rest                   checklist  1/17
+
+  foliage-occlusion 21/23 = 91.3%   everything else 51/176 = 29.0%  p=8.32e-09
+  category=occlusion 28/46 = 60.9%   other categories 44/153 = 28.8%  p=0.0001
