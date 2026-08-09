@@ -180,7 +180,14 @@ const AIM_OFF = flag('--no-aim');
 // Emberbrook ships as a MASSING BLOCKOUT and is judged as one. Told to the judge, not
 // filtered out afterwards: a judge that spends its findings on "the materials are grey
 // placeholder" has learned nothing about the layout, which is the thing under test.
-const BLOCKOUT_DEFAULT = {dellhollow: false, emberbrook: true};
+// EMBERBROOK WENT `true` -> `false` ON 2026-08-09, AND THE STALE `true` COST TWO WHOLE SWEEPS.
+// Blockout mode tells the judge that flat untextured surfaces and placeholder colours are
+// INTENDED and must not be reported. Emberbrook's plates became the DRESSED bake long before
+// this default moved, so run-20260807-205035 and run-20260808-005259 both judged finished art
+// under a "do not report materials" instruction — and neither ran naive mode. The first honest
+// sweep (2026-08-09, `--no-blockout`) returned 94 survivors, 58 of them naive.
+// A DEFAULT THAT DESCRIBES THE ART'S STATE MUST MOVE WHEN THE ART DOES.
+const BLOCKOUT_DEFAULT = {dellhollow: false, emberbrook: false};
 const BLOCKOUT_FLAG = flag('--blockout') ? true : flag('--no-blockout') ? false : null;
 
 const STAMP = opt('--stamp', new Date().toISOString().replace(/[-:]/g, '').replace(/\..*/, '')
@@ -278,17 +285,25 @@ const CALIBRATION = {
 // says an interpretation may be recorded only alongside the instrument that proved it,
 // and a "known issues" list is nothing but interpretation. Anything unmatched is
 // reported as NEW and left for a human to place.
+// EVERY ROW CARRIES ITS `town`, AND THE FIVE BELOW DID NOT UNTIL 2026-08-09. The filter is
+// `if (t.town && t.town !== TOWN) continue`, so an UNSCOPED rule matches EVERY town — and all
+// five of these are sourced from Dellhollow's own audit (its DAYLOG, its cameras.json) while
+// silently triaging Emberbrook. Measured cost: Emberbrook's round-1 sweep filed THREE
+// instances of its largest new defect (the walk-apron rim) as Dellhollow's already-known
+// `gate-stair-occluded`. That is the same triage error the comment further down warns about,
+// committed five more times — the tool labelling its own best result "nothing to do here".
+// A NEW ROW WITHOUT A `town` IS A ROW THAT WILL DO THIS AGAIN.
 const TRACKED = [
-  {id: 'canopy-over-road', where: 'DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)',
+  {id: 'canopy-over-road', town: 'dellhollow', where: 'DAYLOG 15:10 legibility audit (gate + shelf-west, road 0% visible)',
    terms: [['canopy', 'foliage', 'tree', 'shrub', 'leaves', 'vegetation', 'bush'],
            ['block', 'occlud', 'hide', 'hidden', 'obscur', 'cover', 'in front of']]},
-  {id: 'gate-stair-occluded', where: 'dellhollow.cameras.json gate._framing_note (stair 6.1% post-bake)',
+  {id: 'gate-stair-occluded', town: 'dellhollow', where: 'dellhollow.cameras.json gate._framing_note (stair 6.1% post-bake)',
    terms: [['stair', 'steps', 'staircase'], ['occlud', 'hidden', 'obscur', 'block', 'behind']]},
-  {id: 'cottage-steps-slabs', where: 'DAYLOG legibility audit bucket 4 — disconnected floating plank slabs',
+  {id: 'cottage-steps-slabs', town: 'dellhollow', where: 'DAYLOG legibility audit bucket 4 — disconnected floating plank slabs',
    terms: [['step', 'stair', 'slab', 'plank'], ['float', 'disconnect', 'gap', 'no stair']]},
-  {id: 'unprotected-falloff', where: 'DAYLOG legibility audit — 91 unprotected fall-off places measured town-wide',
+  {id: 'unprotected-falloff', town: 'dellhollow', where: 'DAYLOG legibility audit — 91 unprotected fall-off places measured town-wide',
    terms: [['edge', 'drop', 'fall', 'ledge'], ['unprotect', 'no rail', 'no fence', 'no barrier', 'fall off', 'fall into']]},
-  {id: 'exit-out-of-frame', where: 'DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame',
+  {id: 'exit-out-of-frame', town: 'dellhollow', where: 'DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame',
    terms: [['exit', 'way out', 'seam', 'way on'], ['off frame', 'out of frame', 'not visible', 'cannot see', 'absent']]},
   // TOWN-SCOPED, and it had to be: unscoped, this rule swallowed Dellhollow's
   // "untextured greybox staircase" and "bright magenta polygon" findings into the
