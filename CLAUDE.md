@@ -683,6 +683,55 @@ git runs here, on branch `migration/3d-hybrid`.
   this arc reporting "2.00 of 2 foes in frame" was true and hollow. Not fixed here because the foe
   line is the `keep` set, the `show` set at strike/impact and one half of the 180° ordering test,
   and a wolf's projected width is nothing like its slot `w`.
+  **AND IT IS FIXED, THE SAME WAY, ONE LINE DOWN** (2026-08-09; board docs/qa/battle-foeline/index.html,
+  reader tools/battle_foeline_stats.mjs, `?bfoe=<rake>&bfoedz=<depth>` / `--foe/--foedz` is the
+  one-build A/B). Re-measured first on the SHIPPED build (the 50/36 above was the pre-party-fix arm):
+  **52/44/28 of 62 at ≥10/25/50%**, foe pair screen centres **0.009 frame widths apart**, lateral
+  separation **0.422 m of a 1.428 m line** at 17.2° off the view axis — against a duskpad that
+  projects **0.32 frame widths WIDE**. **THE SMALLEST CHANGE THE EVIDENCE NAMES DOES NOT FIX IT**:
+  deleting the `Math.abs` and keeping `foeChevron`'s own 0.5 is 0.36 m of offset and moves the
+  census 12/11/9 → 12/9/6 of 13 (sweep arm `(0.25, 1)`). Nine (rake, depth) pairs were swept over 13
+  stratified sites before anything was chosen, and **A FLAT RANK WINS THE SAME WAY IT WON FOR THE
+  PARTY AND FOR THE SAME REASON** — perpendicular to `baseYaw`, so the swing leaves the line 72.8°
+  off the axis instead of 17.2°, and it DOES NOT LENGTHEN THE LINE (the across span is the spread
+  the depth rank was already using), so staging — a SEARCH over exactly this geometry — is perturbed
+  no harder than the party fix perturbed it. Wider is not better: at rake 1.4 the occlusion is
+  already zero and the extra metres only buy a smaller foe. SHIPPED `CFG.foeRake = 1`,
+  `CFG.foeDepth = 0`. Census: foe occTeam **52/44/28 → 2/0/0**, occTotal 52/44/29 → 11/2/2, foes in
+  frame **122/124 → 124/124**, bodies with NO SILHOUETTE AT ALL 4 → 0, **axisOk 62/62** in every arm,
+  zero camera refusals. It is nearly free: foe height in frame 0.277 → 0.273, camera distance
+  11.98 → 11.16 m (a line abreast is SHALLOWER than a line in depth, so the frame gets tighter, not
+  wider), ring-0 staging unchanged at 13, staging solve p50 100 → 99 ms, decide re-solve 0.5 → 0.5 ms,
+  trigger-to-first-frame p50 575.5 → 554.4 ms. REGRESSIONS, NAMED — all of them relocation or a new
+  world occluder, never a teammate: foe occWorld 7 sites (s038 crag 0.04→0.47 is the real one and it
+  is looked at: the fight is staged UNDER A DECK and the across move slid the wolf behind a post;
+  s022 forest 0.89→0.99 was already 0.89 lost before the change; s001, s015, s026, s040, s058 are
+  ≤0.21), party occTeam 3 (s015 0.00→0.23, s031 0.39→0.51, s046 0.01→0.06), party occTotal 4.
+  **THE WORST CASE FOR AN ACROSS RANK IS TWO BODIES OF THE SAME WIDTH** — `duskpad, duskpad` is a
+  real shipped encounter — and it was measured, 21 sites both arms: occTeam 16/13/8 → **7/0/0**, no
+  foe ever half-eaten by its twin, and **this is where the fix costs something: foe height in frame
+  0.297 → 0.257 (−13%)**, because two two-metre bodies abreast have to be framed wider. Looked at,
+  and this is the whole point: before, s012/s024/s006 are ONE animal with a green wedge stuck to it
+  (it reads as a saddle, not a creature) and two duskpads are one wolf with a doubled outline; after,
+  they are a wolf and a blob, and two wolves. n≥4 is untouched and no ow-valley encounter table
+  contains a 3-foe group, so the odd-n V is unreachable from shipped play.
+  **AND THE VALIDATION GAP BEHIND ITS SIX REGRESSIONS WAS BUILT, MEASURED AND LEFT DEFAULT OFF**
+  (`decideEye()` in battle_world.js, `CFG.eye2`, `?beye2=1`). `solvePlacement` validates every slot
+  from the ROUND eye and `decide` swings 0.30 rad off it; the second eye reproduces the swing, the
+  pitch offset and a `keepBias`-weighted aim, and walks the SAME per-slot jitter ring — preferring a
+  jitter that clears both eyes, falling back to the round eye's own answer, so it can never lose a
+  slot, refuse a site or relocate a fight. **61 OF 62 SITES IDENTICAL**, foe occWorld unchanged at
+  7/2/1, party occWorld 15/2/0 → 14/2/0, **and the one site it moves is a REGRESSION** (s049, party
+  occTeam 0.05→0.22), for staging solve p50 99 → 108 ms and +14.9% of the census's staging time.
+  **WHY IT IS NULL IS WORTH MORE THAN THE TERM: THE SHOT SOLVER ALREADY HAS THIS REFUSAL AND HAS
+  FAR MORE ROOM TO ACT ON IT** — `decide` carries `keepVis` and `showParty`, so every foe and every
+  party body is already in `subjVis()` at the REAL decide pose, and `solveShotSafe` walks three
+  swings × three boom lifts to clear them. A staging-time copy is a second bite at the same apple
+  with a ±1.6-slot jitter instead of a whole boom ladder, and where the world is genuinely in the
+  way (s038, under the deck) no jitter escapes the post and the fallback holds. The form that would
+  have somewhere to go is a REFUSAL that relocates, which is the mechanism behind every regression
+  this arc has named. The proxy is honest about itself: median 1.87 m from the real decide eye
+  (p95 5.22, max 6.38).
   **TONE RE-DERIVED ON THE FULL 62-SITE CENSUS, AND THE DEFAULT DELIBERATELY NOT MOVED.** The
   probe now reports the 6-band contrast beside `edgeRGB` (reported, never scored — chosen boom
   identical 62/62 against the pre-edit build's own census at the same pinned yaw), and `?btband=1`
