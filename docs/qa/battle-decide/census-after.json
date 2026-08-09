@@ -1,0 +1,11506 @@
+{
+ "meta": {
+  "when": "2026-08-09T05:43:36.749Z",
+  "tag": "after",
+  "yaw": -1.4869,
+  "bplace": null,
+  "keep": null,
+  "three": "185",
+  "n": 62,
+  "of": 62,
+  "secs": 268
+ },
+ "rows": [
+  {
+   "id": "s000",
+   "zone": "water",
+   "at": {
+    "x": -45.844466094067265,
+    "y": 18.684116940527446,
+    "z": 19.584466094067263
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 13,
+    "d": 13,
+    "ms": 53,
+    "cands": 4,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 1,
+     "incR": 13,
+     "litOf": [
+      0
+     ]
+    }
+   },
+   "relief": 1.316,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.4205,
+    "back": 2.86,
+    "seen": 0.972,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 11.03,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.286,
+     "cx": 0.782,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.21,
+     "cx": 0.782,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.335,
+     "cx": 0.255,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.294,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2559,
+    "castFrac": 0.0444,
+    "edgeRGB": 5.84,
+    "bandMin": 9.2,
+    "bands": [
+     27.62,
+     25.15,
+     9.2,
+     30.48
+    ],
+    "clutter": 49.6,
+    "ringL": 66.3,
+    "castL": 57.3
+   },
+   "surf": {
+    "topSurface": 0.3793,
+    "entropy": 3.54,
+    "bins": 49,
+    "backTopSurface": 0.3567,
+    "backEntropy": 3.515,
+    "backBins": 38
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.46,
+    "dMed": 12.72,
+    "dFar": 21.49,
+    "dSpanOct": 1.18,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 51,
+    "slopeDeg": 11.2,
+    "rough": 0.287,
+    "span": 1.531
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 15.2,
+    "L50": 55.9,
+    "L95": 152.6
+   },
+   "anchors": {
+    "vesper": {
+     "x": 420,
+     "y": 536,
+     "h": 232,
+     "vis": true
+    },
+    "maren": {
+     "x": 422,
+     "y": 471,
+     "h": 207,
+     "vis": true
+    },
+    "m0": {
+     "x": 1226,
+     "y": 476,
+     "h": 176,
+     "vis": true
+    },
+    "m1": {
+     "x": 1243,
+     "y": 422,
+     "h": 109,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2358
+  },
+  {
+   "id": "s001",
+   "zone": "forest",
+   "at": {
+    "x": 10.619999999999997,
+    "y": 15.178331662104512,
+    "z": -21.88
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 25,
+    "cands": 6,
+    "solved": 6,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.791,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.557,
+    "back": 2.71,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 11.051,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.269,
+     "cx": 0.777,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.181,
+     "cx": 0.781,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.32,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.281,
+     "cx": 0.259,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2612,
+    "castFrac": 0.0453,
+    "edgeRGB": 7.81,
+    "bandMin": 18.95,
+    "bands": [
+     20.01,
+     31.23,
+     18.95,
+     37.13
+    ],
+    "clutter": 41.38,
+    "ringL": 48.7,
+    "castL": 56.4
+   },
+   "surf": {
+    "topSurface": 0.5189,
+    "entropy": 2.807,
+    "bins": 47,
+    "backTopSurface": 0.5898,
+    "backEntropy": 2.483,
+    "backBins": 29
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.8,
+    "dMed": 13.6,
+    "dFar": 33.47,
+    "dSpanOct": 1.77,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 29,
+    "slopeDeg": 5.59,
+    "rough": 0.204,
+    "span": 1.421
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 15.2,
+    "L50": 33.9,
+    "L95": 134.1
+   },
+   "anchors": {
+    "vesper": {
+     "x": 416,
+     "y": 471,
+     "h": 247,
+     "vis": true
+    },
+    "maren": {
+     "x": 420,
+     "y": 450,
+     "h": 217,
+     "vis": true
+    },
+    "m0": {
+     "x": 1225,
+     "y": 661,
+     "h": 176,
+     "vis": true
+    },
+    "m1": {
+     "x": 1244,
+     "y": 530,
+     "h": 111,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2125
+  },
+  {
+   "id": "s002",
+   "zone": "forest",
+   "at": {
+    "x": -66.88,
+    "y": 25.75091804397981,
+    "z": 45.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 8,
+    "d": 8,
+    "ms": 266,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.75,
+     "moved": true,
+     "choices": 4,
+     "incR": 5,
+     "litOf": [
+      0.25,
+      0.5,
+      0,
+      0.75
+     ]
+    }
+   },
+   "relief": 0.118,
+   "yawDelta": 1.05,
+   "view": {
+    "score": 7.3826,
+    "back": 1.77,
+    "seen": 0.972,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 11.343,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.294,
+     "cx": 0.772,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.187,
+     "cx": 0.754,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.324,
+     "cx": 0.246,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.277,
+     "cx": 0.239,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3249,
+    "castFrac": 0.0564,
+    "edgeRGB": 5.55,
+    "bandMin": 4.82,
+    "bands": [
+     6.46,
+     11.32,
+     4.82,
+     11.26,
+     15.45
+    ],
+    "clutter": 56.76,
+    "ringL": 121.9,
+    "castL": 111.5
+   },
+   "surf": {
+    "topSurface": 0.1391,
+    "entropy": 4.619,
+    "bins": 66,
+    "backTopSurface": 0.1964,
+    "backEntropy": 4.137,
+    "backBins": 48
+   },
+   "rays": {
+    "skyFrac": 0.031,
+    "dNear": 7.43,
+    "dMed": 13.37,
+    "dFar": 35.18,
+    "dSpanOct": 2.24,
+    "layers": 8,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 1.09,
+    "rough": 0.106,
+    "span": 0.652
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 1,
+    "shadedFrac": 0.25,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 19.8,
+    "L50": 76.8,
+    "L95": 197.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 400,
+     "y": 496,
+     "h": 245,
+     "vis": true
+    },
+    "maren": {
+     "x": 388,
+     "y": 456,
+     "h": 211,
+     "vis": true
+    },
+    "m0": {
+     "x": 1222,
+     "y": 563,
+     "h": 172,
+     "vis": true
+    },
+    "m1": {
+     "x": 1206,
+     "y": 517,
+     "h": 103,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2379
+  },
+  {
+   "id": "s003",
+   "zone": "water",
+   "at": {
+    "x": 53.344466094067265,
+    "y": 8.003377914428711,
+    "z": -45.41553390593274
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 39,
+    "cands": 3,
+    "solved": 2,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.782,
+   "yawDelta": -1.6,
+   "view": {
+    "score": 7.3781,
+    "back": 2.41,
+    "seen": 0.972,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 11.873,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.225,
+     "cx": 0.773,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.183,
+     "cx": 0.752,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.325,
+     "cx": 0.259,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.302,
+     "cx": 0.206,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 1976,
+    "castFrac": 0.0343,
+    "edgeRGB": 39.8,
+    "bandMin": 33.66,
+    "bands": [
+     33.66,
+     117.49,
+     49.31,
+     37.05
+    ],
+    "clutter": 7.19,
+    "ringL": 18.9,
+    "castL": 64.7
+   },
+   "surf": {
+    "topSurface": 0.9115,
+    "entropy": 0.543,
+    "bins": 20,
+    "backTopSurface": 0.8676,
+    "backEntropy": 0.658,
+    "backBins": 6
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 3.34,
+    "dMed": 12.44,
+    "dFar": 20.34,
+    "dSpanOct": 2.61,
+    "layers": 7,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 65,
+    "slopeDeg": 3.53,
+    "rough": 0.345,
+    "span": 1.156
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 10.4,
+    "L50": 14.5,
+    "L95": 32.5
+   },
+   "anchors": {
+    "vesper": {
+     "x": 428,
+     "y": 510,
+     "h": 221,
+     "vis": true
+    },
+    "maren": {
+     "x": 344,
+     "y": 411,
+     "h": 211,
+     "vis": true
+    },
+    "m0": {
+     "x": 1216,
+     "y": 566,
+     "h": 140,
+     "vis": true
+    },
+    "m1": {
+     "x": 1193,
+     "y": 399,
+     "h": 94,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2157
+  },
+  {
+   "id": "s004",
+   "zone": "crag",
+   "at": {
+    "x": 42.91553390593274,
+    "y": 12.307595071298039,
+    "z": -36.655533905932735
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 134,
+    "cands": 10,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 5,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0.5,
+      0
+     ]
+    }
+   },
+   "relief": 0.933,
+   "yawDelta": 0.5,
+   "view": {
+    "score": 6.1138,
+    "back": 1.38,
+    "seen": 1,
+    "of": 4,
+    "boom": false,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 12.049,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.357,
+     "cx": 0.744,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.274,
+     "cx": 0.741,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.318,
+     "cx": 0.282,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.308,
+     "cx": 0.228,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4025,
+    "castFrac": 0.0699,
+    "edgeRGB": 6.53,
+    "bandMin": 15.97,
+    "bands": [
+     17.73,
+     15.97,
+     27.89,
+     17.31
+    ],
+    "clutter": 54.01,
+    "ringL": 76.9,
+    "castL": 99
+   },
+   "surf": {
+    "topSurface": 0.2435,
+    "entropy": 3.543,
+    "bins": 39,
+    "backTopSurface": 0.2732,
+    "backEntropy": 3.473,
+    "backBins": 23
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 4.59,
+    "dMed": 11.43,
+    "dFar": 15.63,
+    "dSpanOct": 1.77,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 19,
+    "slopeDeg": 3.28,
+    "rough": 0.21,
+    "span": 1.234
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 17.2,
+    "L50": 46.8,
+    "L95": 160.3
+   },
+   "anchors": {
+    "vesper": {
+     "x": 460,
+     "y": 431,
+     "h": 212,
+     "vis": true
+    },
+    "maren": {
+     "x": 376,
+     "y": 348,
+     "h": 212,
+     "vis": true
+    },
+    "m0": {
+     "x": 1164,
+     "y": 632,
+     "h": 143,
+     "vis": true
+    },
+    "m1": {
+     "x": 1171,
+     "y": 596,
+     "h": 96,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2228
+  },
+  {
+   "id": "s005",
+   "zone": "forest",
+   "at": {
+    "x": -61.655533905932735,
+    "y": 27.445520418617143,
+    "z": 70.41553390593273
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 44,
+    "cands": 3,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0.75,
+      1
+     ]
+    }
+   },
+   "relief": 0.103,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.7897,
+    "back": 5.97,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.974,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.299,
+     "cx": 0.776,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.214,
+     "cx": 0.781,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.337,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.296,
+     "cx": 0.258,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5555,
+    "castFrac": 0.0964,
+    "edgeRGB": 6.8,
+    "bandMin": 4.86,
+    "bands": [
+     4.86,
+     5.02,
+     20.65,
+     7.7
+    ],
+    "clutter": 37.07,
+    "ringL": 130.8,
+    "castL": 158.2
+   },
+   "surf": {
+    "topSurface": 0.1451,
+    "entropy": 3.907,
+    "bins": 54,
+    "backTopSurface": 0.1679,
+    "backEntropy": 3.8,
+    "backBins": 39
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 6.65,
+    "dMed": 13.54,
+    "dFar": 25.67,
+    "dSpanOct": 1.95,
+    "layers": 7,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 2.21,
+    "rough": 0.133,
+    "span": 0.972
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 85.5,
+    "L50": 149.4,
+    "L95": 191.6
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 475,
+     "h": 239,
+     "vis": true
+    },
+    "maren": {
+     "x": 422,
+     "y": 397,
+     "h": 214,
+     "vis": true
+    },
+    "m0": {
+     "x": 1217,
+     "y": 621,
+     "h": 173,
+     "vis": true
+    },
+    "m1": {
+     "x": 1242,
+     "y": 519,
+     "h": 105,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2143
+  },
+  {
+   "id": "s006",
+   "zone": "crag",
+   "at": {
+    "x": 29.58446609406726,
+    "y": 13.064357393927281,
+    "z": -30.415533905932737
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 27,
+    "cands": 6,
+    "solved": 6,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.734,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 7.9681,
+    "back": 10.97,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 12.838,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.265,
+     "cx": 0.736,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.185,
+     "cx": 0.732,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.284,
+     "cx": 0.278,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.25,
+     "cx": 0.277,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 1938,
+    "castFrac": 0.0336,
+    "edgeRGB": 12.03,
+    "bandMin": 22.41,
+    "bands": [
+     22.41,
+     28.89,
+     32.29
+    ],
+    "clutter": 57.1,
+    "ringL": 53.2,
+    "castL": 59.8
+   },
+   "surf": {
+    "topSurface": 0.5482,
+    "entropy": 2.931,
+    "bins": 57,
+    "backTopSurface": 0.6643,
+    "backEntropy": 2.343,
+    "backBins": 42
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 12.54,
+    "dMed": 13.68,
+    "dFar": 30.66,
+    "dSpanOct": 1.29,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 64,
+    "slopeDeg": 19.43,
+    "rough": 0.321,
+    "span": 1.533
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 16.2,
+    "L50": 27.1,
+    "L95": 174.1
+   },
+   "anchors": {
+    "vesper": {
+     "x": 449,
+     "y": 439,
+     "h": 218,
+     "vis": true
+    },
+    "maren": {
+     "x": 447,
+     "y": 359,
+     "h": 196,
+     "vis": true
+    },
+    "m0": {
+     "x": 1164,
+     "y": 638,
+     "h": 142,
+     "vis": true
+    },
+    "m1": {
+     "x": 1170,
+     "y": 573,
+     "h": 96,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2114
+  },
+  {
+   "id": "s007",
+   "zone": "meadow",
+   "at": {
+    "x": -50.62,
+    "y": 26.211600394824337,
+    "z": 35.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 338,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5
+     ]
+    }
+   },
+   "relief": 0.655,
+   "yawDelta": 3.142,
+   "view": {
+    "score": 7.1216,
+    "back": 3.94,
+    "seen": 0.917,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 11.012,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.303,
+     "cx": 0.77,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.215,
+     "cx": 0.781,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.34,
+     "cx": 0.252,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.283,
+     "cx": 0.284,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5577,
+    "castFrac": 0.0968,
+    "edgeRGB": 15.19,
+    "bandMin": 9.81,
+    "bands": [
+     25.97,
+     88.1,
+     17.58,
+     9.81
+    ],
+    "clutter": 40.12,
+    "ringL": 67.1,
+    "castL": 92.6
+   },
+   "surf": {
+    "topSurface": 0.2117,
+    "entropy": 3.724,
+    "bins": 32,
+    "backTopSurface": 0.1839,
+    "backEntropy": 3.621,
+    "backBins": 23
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.4,
+    "dMed": 12.58,
+    "dFar": 21.66,
+    "dSpanOct": 1.37,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 55,
+    "slopeDeg": 6.35,
+    "rough": 0.275,
+    "span": 1.094
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 27.2,
+    "L50": 54.6,
+    "L95": 150.4
+   },
+   "anchors": {
+    "vesper": {
+     "x": 415,
+     "y": 466,
+     "h": 241,
+     "vis": true
+    },
+    "maren": {
+     "x": 464,
+     "y": 374,
+     "h": 206,
+     "vis": true
+    },
+    "m0": {
+     "x": 1209,
+     "y": 700,
+     "h": 168,
+     "vis": true
+    },
+    "m1": {
+     "x": 1242,
+     "y": 507,
+     "h": 107,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2432
+  },
+  {
+   "id": "s008",
+   "zone": "crag",
+   "at": {
+    "x": 63.12,
+    "y": 20.48794622523709,
+    "z": -40.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 9,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 1.894,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 8.2096,
+    "back": 15.47,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 10.705,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 1,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 0.937,
+     "hFrac": 0.415,
+     "cx": 0.785,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.236,
+     "cx": 0.796,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.348,
+     "cx": 0.258,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.31,
+     "cx": 0.237,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 7186,
+    "castFrac": 0.1248,
+    "edgeRGB": 5.36,
+    "bandMin": 2.73,
+    "bands": [
+     2.73,
+     4.77,
+     17.94,
+     8.01,
+     8.76
+    ],
+    "clutter": 20.84,
+    "ringL": 131.6,
+    "castL": 164.6
+   },
+   "surf": {
+    "topSurface": 0.276,
+    "entropy": 2.843,
+    "bins": 45,
+    "backTopSurface": 0.2767,
+    "backEntropy": 2.829,
+    "backBins": 32
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 10.02,
+    "dMed": 11.42,
+    "dFar": 21.17,
+    "dSpanOct": 1.08,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 68,
+    "slopeDeg": 39.34,
+    "rough": 0.316,
+    "span": 1.554
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 101.6,
+    "L50": 131.6,
+    "L95": 169.1
+   },
+   "anchors": {
+    "vesper": {
+     "x": 423,
+     "y": 486,
+     "h": 247,
+     "vis": true
+    },
+    "maren": {
+     "x": 390,
+     "y": 288,
+     "h": 235,
+     "vis": true
+    },
+    "m0": {
+     "x": 1232,
+     "y": 734,
+     "h": 175,
+     "vis": true
+    },
+    "m1": {
+     "x": 1268,
+     "y": 405,
+     "h": 118,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2080
+  },
+  {
+   "id": "s009",
+   "zone": "forest",
+   "at": {
+    "x": -60.62,
+    "y": 26.664494226409246,
+    "z": 63.12
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 7,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      0.75
+     ]
+    }
+   },
+   "relief": 0.514,
+   "yawDelta": 0.5,
+   "view": {
+    "score": 7.5148,
+    "back": 1.69,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 10.924,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.365,
+     "cx": 0.779,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.238,
+     "cx": 0.782,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.341,
+     "cx": 0.255,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.297,
+     "cx": 0.256,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5585,
+    "castFrac": 0.097,
+    "edgeRGB": 5.65,
+    "bandMin": 2.27,
+    "bands": [
+     2.27,
+     15.08,
+     18.27,
+     20.08,
+     16.54
+    ],
+    "clutter": 40.32,
+    "ringL": 107.7,
+    "castL": 121.3
+   },
+   "surf": {
+    "topSurface": 0.1178,
+    "entropy": 4.501,
+    "bins": 57,
+    "backTopSurface": 0.1544,
+    "backEntropy": 4.093,
+    "backBins": 45
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 5.39,
+    "dMed": 12.42,
+    "dFar": 36.27,
+    "dSpanOct": 2.75,
+    "layers": 7,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 5.17,
+    "rough": 0.186,
+    "span": 1.296
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 1,
+    "shadedFrac": 0.25,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 26.7,
+    "L50": 106.5,
+    "L95": 176.1
+   },
+   "anchors": {
+    "vesper": {
+     "x": 415,
+     "y": 468,
+     "h": 244,
+     "vis": true
+    },
+    "maren": {
+     "x": 416,
+     "y": 386,
+     "h": 219,
+     "vis": true
+    },
+    "m0": {
+     "x": 1216,
+     "y": 627,
+     "h": 178,
+     "vis": true
+    },
+    "m1": {
+     "x": 1239,
+     "y": 557,
+     "h": 107,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2107
+  },
+  {
+   "id": "s010",
+   "zone": "meadow",
+   "at": {
+    "x": -8.344466094067263,
+    "y": 14.264115396860987,
+    "z": 7.915533905932737
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 8,
+    "cands": 2,
+    "solved": 2,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      1
+     ]
+    }
+   },
+   "relief": 0.294,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.595,
+    "back": 2.35,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.965,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.299,
+     "cx": 0.776,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.214,
+     "cx": 0.782,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.337,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.295,
+     "cx": 0.259,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5114,
+    "castFrac": 0.0888,
+    "edgeRGB": 3.78,
+    "bandMin": 3.16,
+    "bands": [
+     11.25,
+     3.16,
+     5,
+     3.88
+    ],
+    "clutter": 38.16,
+    "ringL": 148.7,
+    "castL": 173.4
+   },
+   "surf": {
+    "topSurface": 0.1418,
+    "entropy": 4.319,
+    "bins": 55,
+    "backTopSurface": 0.1555,
+    "backEntropy": 3.955,
+    "backBins": 46
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.49,
+    "dMed": 13.61,
+    "dFar": 16.24,
+    "dSpanOct": 0.94,
+    "layers": 3,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 14,
+    "slopeDeg": 2.31,
+    "rough": 0.203,
+    "span": 1.259
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 41.7,
+    "L50": 132.6,
+    "L95": 191.7
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 480,
+     "h": 239,
+     "vis": true
+    },
+    "maren": {
+     "x": 424,
+     "y": 426,
+     "h": 212,
+     "vis": true
+    },
+    "m0": {
+     "x": 1218,
+     "y": 616,
+     "h": 173,
+     "vis": true
+    },
+    "m1": {
+     "x": 1244,
+     "y": 508,
+     "h": 106,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2099
+  },
+  {
+   "id": "s011",
+   "zone": "meadow",
+   "at": {
+    "x": 40.62,
+    "y": 18.17379192387793,
+    "z": -29.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 28,
+    "cands": 3,
+    "solved": 2,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      1
+     ]
+    }
+   },
+   "relief": 0.003,
+   "yawDelta": 1.6,
+   "view": {
+    "score": 7.833,
+    "back": 11.44,
+    "seen": 0.972,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.966,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.289,
+     "cx": 0.774,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.225,
+     "cx": 0.773,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.339,
+     "cx": 0.248,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.305,
+     "cx": 0.235,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5327,
+    "castFrac": 0.0925,
+    "edgeRGB": 22.86,
+    "bandMin": 13.56,
+    "bands": [
+     26.4,
+     57.11,
+     18.62,
+     13.56,
+     32.21
+    ],
+    "clutter": 38.33,
+    "ringL": 56.2,
+    "castL": 96.3
+   },
+   "surf": {
+    "topSurface": 0.3018,
+    "entropy": 3.327,
+    "bins": 52,
+    "backTopSurface": 0.4229,
+    "backEntropy": 2.887,
+    "backBins": 34
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.66,
+    "dMed": 15.51,
+    "dFar": 54.44,
+    "dSpanOct": 2.49,
+    "layers": 8,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 53,
+    "slopeDeg": 2.05,
+    "rough": 0.163,
+    "span": 1.005
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 16.1,
+    "L50": 52.8,
+    "L95": 139.5
+   },
+   "anchors": {
+    "vesper": {
+     "x": 410,
+     "y": 478,
+     "h": 240,
+     "vis": true
+    },
+    "maren": {
+     "x": 387,
+     "y": 420,
+     "h": 219,
+     "vis": true
+    },
+    "m0": {
+     "x": 1214,
+     "y": 592,
+     "h": 169,
+     "vis": true
+    },
+    "m1": {
+     "x": 1226,
+     "y": 546,
+     "h": 108,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2121
+  },
+  {
+   "id": "s012",
+   "zone": "forest",
+   "at": {
+    "x": -52.08446609406726,
+    "y": 29.05360498516103,
+    "z": 45.844466094067265
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 336,
+    "cands": 13,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.5
+     ]
+    }
+   },
+   "relief": 0.982,
+   "yawDelta": 0.5,
+   "view": {
+    "score": 7.336,
+    "back": 1.26,
+    "seen": 0.972,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.145,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.336,
+     "cx": 0.806,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.207,
+     "cx": 0.806,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.344,
+     "cx": 0.254,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.305,
+     "cx": 0.238,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3970,
+    "castFrac": 0.0689,
+    "edgeRGB": 3.85,
+    "bandMin": 7.59,
+    "bands": [
+     7.59,
+     15.18,
+     25.75,
+     44.46
+    ],
+    "clutter": 51.62,
+    "ringL": 95.7,
+    "castL": 79.3
+   },
+   "surf": {
+    "topSurface": 0.2143,
+    "entropy": 3.821,
+    "bins": 53,
+    "backTopSurface": 0.3093,
+    "backEntropy": 3.311,
+    "backBins": 43
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 3.6,
+    "dMed": 10.2,
+    "dFar": 16.1,
+    "dSpanOct": 2.16,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 12,
+    "slopeDeg": 5.67,
+    "rough": 0.32,
+    "span": 1.478
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 21.3,
+    "L50": 78.5,
+    "L95": 159.7
+   },
+   "anchors": {
+    "vesper": {
+     "x": 409,
+     "y": 551,
+     "h": 257,
+     "vis": true
+    },
+    "maren": {
+     "x": 385,
+     "y": 471,
+     "h": 233,
+     "vis": true
+    },
+    "m0": {
+     "x": 1256,
+     "y": 488,
+     "h": 218,
+     "vis": true
+    },
+    "m1": {
+     "x": 1276,
+     "y": 443,
+     "h": 128,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2480
+  },
+  {
+   "id": "s013",
+   "zone": "meadow",
+   "at": {
+    "x": -19.380000000000003,
+    "y": 16.269786360975452,
+    "z": 9.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 39,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.632,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.5291,
+    "back": 1.92,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.938,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.301,
+     "cx": 0.778,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.213,
+     "cx": 0.785,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.338,
+     "cx": 0.257,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.298,
+     "cx": 0.256,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3901,
+    "castFrac": 0.0677,
+    "edgeRGB": 8.83,
+    "bandMin": 7.05,
+    "bands": [
+     18.2,
+     9.2,
+     7.05
+    ],
+    "clutter": 33.11,
+    "ringL": 71.8,
+    "castL": 55.8
+   },
+   "surf": {
+    "topSurface": 0.2165,
+    "entropy": 3.604,
+    "bins": 40,
+    "backTopSurface": 0.1698,
+    "backEntropy": 3.414,
+    "backBins": 20
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 6.08,
+    "dMed": 12.18,
+    "dFar": 19.82,
+    "dSpanOct": 1.7,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 37,
+    "slopeDeg": 12.84,
+    "rough": 0.258,
+    "span": 1.486
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 30.3,
+    "L50": 70,
+    "L95": 136.7
+   },
+   "anchors": {
+    "vesper": {
+     "x": 423,
+     "y": 499,
+     "h": 237,
+     "vis": true
+    },
+    "maren": {
+     "x": 420,
+     "y": 376,
+     "h": 216,
+     "vis": true
+    },
+    "m0": {
+     "x": 1221,
+     "y": 593,
+     "h": 175,
+     "vis": true
+    },
+    "m1": {
+     "x": 1248,
+     "y": 459,
+     "h": 108,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2126
+  },
+  {
+   "id": "s014",
+   "zone": "meadow",
+   "at": {
+    "x": 34.38,
+    "y": 13.742574939845042,
+    "z": -33.120000000000005
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 36,
+    "cands": 6,
+    "solved": 6,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.25,
+      0.25,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.642,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.5286,
+    "back": 1.59,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.925,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.299,
+     "cx": 0.781,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.212,
+     "cx": 0.785,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.338,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.304,
+     "cx": 0.242,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3879,
+    "castFrac": 0.0673,
+    "edgeRGB": 6.04,
+    "bandMin": 6.99,
+    "bands": [
+     27.24,
+     13.15,
+     34.3,
+     6.99,
+     8.32
+    ],
+    "clutter": 40.52,
+    "ringL": 72.4,
+    "castL": 82.4
+   },
+   "surf": {
+    "topSurface": 0.2181,
+    "entropy": 3.816,
+    "bins": 57,
+    "backTopSurface": 0.2068,
+    "backEntropy": 3.662,
+    "backBins": 39
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 3.96,
+    "dMed": 12.07,
+    "dFar": 19.5,
+    "dSpanOct": 2.3,
+    "layers": 7,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 6,
+    "slopeDeg": 6.94,
+    "rough": 0.29,
+    "span": 1.61
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 18.1,
+    "L50": 53,
+    "L95": 163.1
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 508,
+     "h": 237,
+     "vis": true
+    },
+    "maren": {
+     "x": 398,
+     "y": 445,
+     "h": 217,
+     "vis": true
+    },
+    "m0": {
+     "x": 1224,
+     "y": 557,
+     "h": 178,
+     "vis": true
+    },
+    "m1": {
+     "x": 1248,
+     "y": 465,
+     "h": 108,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2117
+  },
+  {
+   "id": "s015",
+   "zone": "water",
+   "at": {
+    "x": -48.344466094067265,
+    "y": 25.84173047163707,
+    "z": 51.655533905932735
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 209,
+    "cands": 5,
+    "solved": 5,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 5,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 0.242,
+   "yawDelta": -1.6,
+   "view": {
+    "score": 7.7289,
+    "back": 5.68,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.597,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.281,
+     "cx": 0.797,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.191,
+     "cx": 0.797,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.333,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.289,
+     "cx": 0.258,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5368,
+    "castFrac": 0.0932,
+    "edgeRGB": 6.06,
+    "bandMin": 2.47,
+    "bands": [
+     10.41,
+     19.04,
+     46.84,
+     2.47,
+     10.64,
+     8.3
+    ],
+    "clutter": 55.52,
+    "ringL": 124.1,
+    "castL": 124.5
+   },
+   "surf": {
+    "topSurface": 0.1725,
+    "entropy": 4.449,
+    "bins": 73,
+    "backTopSurface": 0.1259,
+    "backEntropy": 4.223,
+    "backBins": 54
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 6.27,
+    "dMed": 11.22,
+    "dFar": 24.33,
+    "dSpanOct": 1.96,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 2.36,
+    "rough": 0.156,
+    "span": 1.136
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 19.5,
+    "L50": 117.2,
+    "L95": 197.2
+   },
+   "anchors": {
+    "vesper": {
+     "x": 416,
+     "y": 512,
+     "h": 254,
+     "vis": true
+    },
+    "maren": {
+     "x": 419,
+     "y": 454,
+     "h": 224,
+     "vis": true
+    },
+    "m0": {
+     "x": 1256,
+     "y": 563,
+     "h": 194,
+     "vis": true
+    },
+    "m1": {
+     "x": 1270,
+     "y": 513,
+     "h": 120,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2306
+  },
+  {
+   "id": "s016",
+   "zone": "forest",
+   "at": {
+    "x": 31.88,
+    "y": 14.243883453365285,
+    "z": -21.88
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 37,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.25,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0.5,
+      0.5,
+      0.25,
+      0,
+      0,
+      0,
+      0,
+      0.5
+     ]
+    }
+   },
+   "relief": 0.315,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.6525,
+    "back": 3.52,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.99,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.299,
+     "cx": 0.774,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.215,
+     "cx": 0.78,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.337,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.296,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3606,
+    "castFrac": 0.0626,
+    "edgeRGB": 5.54,
+    "bandMin": 6.94,
+    "bands": [
+     7.18,
+     17.3,
+     6.94,
+     9.24
+    ],
+    "clutter": 44.25,
+    "ringL": 79.4,
+    "castL": 64
+   },
+   "surf": {
+    "topSurface": 0.2039,
+    "entropy": 4.064,
+    "bins": 54,
+    "backTopSurface": 0.2609,
+    "backEntropy": 3.873,
+    "backBins": 42
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.91,
+    "dMed": 13.21,
+    "dFar": 24.21,
+    "dSpanOct": 1.44,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 2.56,
+    "rough": 0.252,
+    "span": 1.541
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 3,
+    "shadedFrac": 0.75,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 28.7,
+    "L50": 67.9,
+    "L95": 166.9
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 465,
+     "h": 240,
+     "vis": true
+    },
+    "maren": {
+     "x": 422,
+     "y": 384,
+     "h": 215,
+     "vis": true
+    },
+    "m0": {
+     "x": 1215,
+     "y": 638,
+     "h": 171,
+     "vis": true
+    },
+    "m1": {
+     "x": 1240,
+     "y": 538,
+     "h": 104,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2143
+  },
+  {
+   "id": "s017",
+   "zone": "meadow",
+   "at": {
+    "x": -13.12,
+    "y": 15.48234052125153,
+    "z": 10.620000000000001
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 33,
+    "cands": 8,
+    "solved": 8,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0.5
+     ]
+    }
+   },
+   "relief": 0.863,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.4911,
+    "back": 1.22,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.726,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.274,
+     "cx": 0.787,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.173,
+     "cx": 0.792,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.33,
+     "cx": 0.253,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.285,
+     "cx": 0.255,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4288,
+    "castFrac": 0.0744,
+    "edgeRGB": 12.48,
+    "bandMin": 2.74,
+    "bands": [
+     2.74,
+     15.58,
+     10.48,
+     7.58
+    ],
+    "clutter": 59.83,
+    "ringL": 100.8,
+    "castL": 91.7
+   },
+   "surf": {
+    "topSurface": 0.1232,
+    "entropy": 4.395,
+    "bins": 56,
+    "backTopSurface": 0.1478,
+    "backEntropy": 4.26,
+    "backBins": 52
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 7.58,
+    "dMed": 12.53,
+    "dFar": 15.97,
+    "dSpanOct": 1.08,
+    "layers": 3,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 30,
+    "slopeDeg": 9.04,
+    "rough": 0.157,
+    "span": 1.368
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 33.3,
+    "L50": 116.8,
+    "L95": 203.3
+   },
+   "anchors": {
+    "vesper": {
+     "x": 412,
+     "y": 536,
+     "h": 250,
+     "vis": true
+    },
+    "maren": {
+     "x": 413,
+     "y": 416,
+     "h": 223,
+     "vis": true
+    },
+    "m0": {
+     "x": 1239,
+     "y": 536,
+     "h": 192,
+     "vis": true
+    },
+    "m1": {
+     "x": 1261,
+     "y": 431,
+     "h": 116,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2123
+  },
+  {
+   "id": "s018",
+   "zone": "crag",
+   "at": {
+    "x": 57.91553390593274,
+    "y": 22.212422097584508,
+    "z": -35.844466094067265
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 7,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 2.094,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 7.4746,
+    "back": 1.09,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 13.613,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.248,
+     "cx": 0.718,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.178,
+     "cx": 0.715,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.268,
+     "cx": 0.287,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.238,
+     "cx": 0.285,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3255,
+    "castFrac": 0.0565,
+    "edgeRGB": 1.37,
+    "bandMin": 4.72,
+    "bands": [
+     7.36,
+     5.04,
+     4.72,
+     8.2
+    ],
+    "clutter": 24.26,
+    "ringL": 132.7,
+    "castL": 164
+   },
+   "surf": {
+    "topSurface": 0.2335,
+    "entropy": 3.575,
+    "bins": 59,
+    "backTopSurface": 0.2826,
+    "backEntropy": 2.991,
+    "backBins": 37
+   },
+   "rays": {
+    "skyFrac": 0.121,
+    "dNear": 12.89,
+    "dMed": 14.78,
+    "dFar": 19.9,
+    "dSpanOct": 0.63,
+    "layers": 6,
+    "horizonRow": 0.125,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 65,
+    "slopeDeg": 31.9,
+    "rough": 0.283,
+    "span": 1.524
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 98.7,
+    "L50": 139.8,
+    "L95": 191.6
+   },
+   "anchors": {
+    "vesper": {
+     "x": 463,
+     "y": 426,
+     "h": 206,
+     "vis": true
+    },
+    "maren": {
+     "x": 459,
+     "y": 326,
+     "h": 187,
+     "vis": true
+    },
+    "m0": {
+     "x": 1136,
+     "y": 628,
+     "h": 133,
+     "vis": true
+    },
+    "m1": {
+     "x": 1142,
+     "y": 596,
+     "h": 90,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2098
+  },
+  {
+   "id": "s019",
+   "zone": "meadow",
+   "at": {
+    "x": -3.120000000000001,
+    "y": 14.31342145274806,
+    "z": -0.6200000000000001
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 90,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0.5,
+      0.25,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.211,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.7195,
+    "back": 4.25,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.986,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.299,
+     "cx": 0.775,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.215,
+     "cx": 0.78,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.337,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.296,
+     "cx": 0.258,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3424,
+    "castFrac": 0.0594,
+    "edgeRGB": 8.58,
+    "bandMin": 16.13,
+    "bands": [
+     19.21,
+     19.6,
+     22.22,
+     16.13
+    ],
+    "clutter": 55.01,
+    "ringL": 92.5,
+    "castL": 92.7
+   },
+   "surf": {
+    "topSurface": 0.1349,
+    "entropy": 4.397,
+    "bins": 57,
+    "backTopSurface": 0.1198,
+    "backEntropy": 4.264,
+    "backBins": 46
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.26,
+    "dMed": 13.72,
+    "dFar": 19.45,
+    "dSpanOct": 1.24,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 1.71,
+    "rough": 0.155,
+    "span": 1.029
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 32.8,
+    "L50": 109.2,
+    "L95": 180.2
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 467,
+     "h": 240,
+     "vis": true
+    },
+    "maren": {
+     "x": 423,
+     "y": 398,
+     "h": 214,
+     "vis": true
+    },
+    "m0": {
+     "x": 1216,
+     "y": 638,
+     "h": 171,
+     "vis": true
+    },
+    "m1": {
+     "x": 1241,
+     "y": 532,
+     "h": 105,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2177
+  },
+  {
+   "id": "s020",
+   "zone": "meadow",
+   "at": {
+    "x": 19.584466094067263,
+    "y": 14.566609699675212,
+    "z": -24.15553390593274
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 36,
+    "cands": 6,
+    "solved": 6,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.992,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.5246,
+    "back": 1.82,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.75,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.288,
+     "cx": 0.783,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.178,
+     "cx": 0.791,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.327,
+     "cx": 0.253,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.286,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2915,
+    "castFrac": 0.0506,
+    "edgeRGB": 13.69,
+    "bandMin": 10.1,
+    "bands": [
+     17.46,
+     10.1,
+     29.14,
+     32.09
+    ],
+    "clutter": 38.9,
+    "ringL": 49.1,
+    "castL": 58.1
+   },
+   "surf": {
+    "topSurface": 0.4268,
+    "entropy": 3.081,
+    "bins": 48,
+    "backTopSurface": 0.5326,
+    "backEntropy": 2.717,
+    "backBins": 31
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.64,
+    "dMed": 15.38,
+    "dFar": 31.22,
+    "dSpanOct": 1.7,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 26,
+    "slopeDeg": 3.86,
+    "rough": 0.174,
+    "span": 1.138
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 16.6,
+    "L50": 47.2,
+    "L95": 131.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 412,
+     "y": 484,
+     "h": 252,
+     "vis": true
+    },
+    "maren": {
+     "x": 416,
+     "y": 468,
+     "h": 221,
+     "vis": true
+    },
+    "m0": {
+     "x": 1233,
+     "y": 694,
+     "h": 186,
+     "vis": true
+    },
+    "m1": {
+     "x": 1260,
+     "y": 473,
+     "h": 115,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2136
+  },
+  {
+   "id": "s021",
+   "zone": "meadow",
+   "at": {
+    "x": -25.84446609406726,
+    "y": 19.54809054011293,
+    "z": 13.344466094067261
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 43,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.556,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.5169,
+    "back": 1.89,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 10.806,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.292,
+     "cx": 0.786,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.193,
+     "cx": 0.793,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.337,
+     "cx": 0.255,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.295,
+     "cx": 0.258,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3616,
+    "castFrac": 0.0628,
+    "edgeRGB": 11.39,
+    "bandMin": 6.81,
+    "bands": [
+     16.35,
+     6.81,
+     8.99,
+     12.06
+    ],
+    "clutter": 41.57,
+    "ringL": 75.8,
+    "castL": 60
+   },
+   "surf": {
+    "topSurface": 0.1747,
+    "entropy": 3.838,
+    "bins": 44,
+    "backTopSurface": 0.2071,
+    "backEntropy": 3.564,
+    "backBins": 33
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.82,
+    "dMed": 13.44,
+    "dFar": 21.33,
+    "dSpanOct": 1.27,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 46,
+    "slopeDeg": 12.96,
+    "rough": 0.271,
+    "span": 1.556
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 25.7,
+    "L50": 80.4,
+    "L95": 146.1
+   },
+   "anchors": {
+    "vesper": {
+     "x": 419,
+     "y": 552,
+     "h": 240,
+     "vis": true
+    },
+    "maren": {
+     "x": 421,
+     "y": 486,
+     "h": 214,
+     "vis": true
+    },
+    "m0": {
+     "x": 1234,
+     "y": 508,
+     "h": 187,
+     "vis": true
+    },
+    "m1": {
+     "x": 1261,
+     "y": 367,
+     "h": 115,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2143
+  },
+  {
+   "id": "s022",
+   "zone": "forest",
+   "at": {
+    "x": -58.12,
+    "y": 27.459785468775394,
+    "z": 43.12
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 350,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.5
+     ]
+    }
+   },
+   "relief": 0.1,
+   "yawDelta": -2.1,
+   "view": {
+    "score": 7.5082,
+    "back": 1.66,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.982,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.42,
+     "cx": 0.782,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.266,
+     "cx": 0.785,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.352,
+     "cx": 0.257,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.307,
+     "cx": 0.258,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4339,
+    "castFrac": 0.0753,
+    "edgeRGB": 22.48,
+    "bandMin": 13.11,
+    "bands": [
+     51.16,
+     20.84,
+     14.11,
+     20.32,
+     15.14,
+     13.11
+    ],
+    "clutter": 61.74,
+    "ringL": 79.1,
+    "castL": 114.8
+   },
+   "surf": {
+    "topSurface": 0.3192,
+    "entropy": 3.947,
+    "bins": 68,
+    "backTopSurface": 0.4404,
+    "backEntropy": 3.284,
+    "backBins": 43
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.35,
+    "dMed": 11.71,
+    "dFar": 16.97,
+    "dSpanOct": 1.02,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 3,
+    "slopeDeg": 0.96,
+    "rough": 0.162,
+    "span": 0.654
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 20.3,
+    "L50": 46.3,
+    "L95": 177.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 423,
+     "y": 480,
+     "h": 240,
+     "vis": true
+    },
+    "maren": {
+     "x": 424,
+     "y": 405,
+     "h": 214,
+     "vis": true
+    },
+    "m0": {
+     "x": 1224,
+     "y": 628,
+     "h": 173,
+     "vis": true
+    },
+    "m1": {
+     "x": 1249,
+     "y": 519,
+     "h": 106,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2483
+  },
+  {
+   "id": "s023",
+   "zone": "forest",
+   "at": {
+    "x": 22.915533905932737,
+    "y": 14.46819718472885,
+    "z": -18.34446609406726
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 120,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.204,
+   "yawDelta": 0.5,
+   "view": {
+    "score": 6.8751,
+    "back": 1.93,
+    "seen": 0.889,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 11.217,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.39,
+     "cx": 0.775,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.273,
+     "cx": 0.776,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.347,
+     "cx": 0.257,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.293,
+     "cx": 0.277,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2634,
+    "castFrac": 0.0457,
+    "edgeRGB": 9.79,
+    "bandMin": 5.77,
+    "bands": [
+     5.77,
+     23.34,
+     16.72,
+     17.02
+    ],
+    "clutter": 14.71,
+    "ringL": 34.9,
+    "castL": 47.4
+   },
+   "surf": {
+    "topSurface": 0.4796,
+    "entropy": 2.627,
+    "bins": 41,
+    "backTopSurface": 0.5888,
+    "backEntropy": 1.994,
+    "backBins": 23
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.07,
+    "dMed": 11.34,
+    "dFar": 20.67,
+    "dSpanOct": 1.19,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 26,
+    "slopeDeg": 4.38,
+    "rough": 0.188,
+    "span": 1.051
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 19,
+    "L50": 36,
+    "L95": 98.2
+   },
+   "anchors": {
+    "vesper": {
+     "x": 424,
+     "y": 485,
+     "h": 222,
+     "vis": true
+    },
+    "maren": {
+     "x": 453,
+     "y": 447,
+     "h": 191,
+     "vis": true
+    },
+    "m0": {
+     "x": 1206,
+     "y": 560,
+     "h": 157,
+     "vis": true
+    },
+    "m1": {
+     "x": 1226,
+     "y": 487,
+     "h": 99,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2251
+  },
+  {
+   "id": "s024",
+   "zone": "forest",
+   "at": {
+    "x": 7.915533905932737,
+    "y": 15.962529002641944,
+    "z": -10.415533905932739
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 284,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 4,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.653,
+   "yawDelta": -1.05,
+   "view": {
+    "score": 7.13,
+    "back": 0.81,
+    "seen": 0.944,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 12.004,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.329,
+     "cx": 0.755,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.236,
+     "cx": 0.754,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.31,
+     "cx": 0.284,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.297,
+     "cx": 0.234,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2540,
+    "castFrac": 0.0441,
+    "edgeRGB": 16.42,
+    "bandMin": 8.71,
+    "bands": [
+     17.44,
+     108.26,
+     26.25,
+     12.77,
+     8.71
+    ],
+    "clutter": 18.74,
+    "ringL": 35.5,
+    "castL": 50.3
+   },
+   "surf": {
+    "topSurface": 0.3195,
+    "entropy": 3.419,
+    "bins": 48,
+    "backTopSurface": 0.5275,
+    "backEntropy": 2.12,
+    "backBins": 15
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.31,
+    "dMed": 12.21,
+    "dFar": 26.81,
+    "dSpanOct": 1.69,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 12,
+    "slopeDeg": 7.32,
+    "rough": 0.176,
+    "span": 1.389
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 18,
+    "L50": 45.5,
+    "L95": 137.6
+   },
+   "anchors": {
+    "vesper": {
+     "x": 460,
+     "y": 444,
+     "h": 223,
+     "vis": true
+    },
+    "maren": {
+     "x": 381,
+     "y": 423,
+     "h": 215,
+     "vis": true
+    },
+    "m0": {
+     "x": 1183,
+     "y": 630,
+     "h": 157,
+     "vis": true
+    },
+    "m1": {
+     "x": 1196,
+     "y": 597,
+     "h": 101,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2378
+  },
+  {
+   "id": "s025",
+   "zone": "forest",
+   "at": {
+    "x": -67.91553390593273,
+    "y": 25.93015563032425,
+    "z": 52.91553390593274
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 21,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      0.75
+     ]
+    }
+   },
+   "relief": 0.154,
+   "yawDelta": -1.6,
+   "view": {
+    "score": 7.5755,
+    "back": 2.92,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.276,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.288,
+     "cx": 0.809,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.218,
+     "cx": 0.802,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.337,
+     "cx": 0.257,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.301,
+     "cx": 0.242,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5722,
+    "castFrac": 0.0993,
+    "edgeRGB": 5.96,
+    "bandMin": 7.13,
+    "bands": [
+     21.73,
+     22.06,
+     8.65,
+     34.33,
+     29.3,
+     7.13
+    ],
+    "clutter": 64.21,
+    "ringL": 104.1,
+    "castL": 119.7
+   },
+   "surf": {
+    "topSurface": 0.147,
+    "entropy": 4.466,
+    "bins": 70,
+    "backTopSurface": 0.2125,
+    "backEntropy": 4.376,
+    "backBins": 55
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 7.3,
+    "dMed": 11.27,
+    "dFar": 20.61,
+    "dSpanOct": 1.5,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 4.19,
+    "rough": 0.111,
+    "span": 1.093
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 1,
+    "shadedFrac": 0.25,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 17.8,
+    "L50": 99.5,
+    "L95": 197.3
+   },
+   "anchors": {
+    "vesper": {
+     "x": 417,
+     "y": 496,
+     "h": 259,
+     "vis": true
+    },
+    "maren": {
+     "x": 393,
+     "y": 449,
+     "h": 234,
+     "vis": true
+    },
+    "m0": {
+     "x": 1274,
+     "y": 587,
+     "h": 197,
+     "vis": true
+    },
+    "m1": {
+     "x": 1278,
+     "y": 571,
+     "h": 131,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2133
+  },
+  {
+   "id": "s026",
+   "zone": "meadow",
+   "at": {
+    "x": -65.62,
+    "y": 29.525743207776316,
+    "z": 58.12
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 9,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 0.408,
+   "yawDelta": -1.6,
+   "view": {
+    "score": 8.5339,
+    "back": 13.25,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.745,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.261,
+     "cx": 0.797,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.207,
+     "cx": 0.788,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.329,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.315,
+     "cx": 0.202,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5868,
+    "castFrac": 0.1019,
+    "edgeRGB": 2.82,
+    "bandMin": 4.08,
+    "bands": [
+     4.27,
+     82.66,
+     5.62,
+     4.08,
+     20.01
+    ],
+    "clutter": 41.72,
+    "ringL": 84.6,
+    "castL": 119.4
+   },
+   "surf": {
+    "topSurface": 0.151,
+    "entropy": 4.298,
+    "bins": 66,
+    "backTopSurface": 0.1649,
+    "backEntropy": 4.259,
+    "backBins": 53
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.37,
+    "dMed": 21,
+    "dFar": 42.56,
+    "dSpanOct": 2.18,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 67,
+    "slopeDeg": 5.95,
+    "rough": 0.329,
+    "span": 1.452
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 21.6,
+    "L50": 78.3,
+    "L95": 159.9
+   },
+   "anchors": {
+    "vesper": {
+     "x": 416,
+     "y": 478,
+     "h": 254,
+     "vis": true
+    },
+    "maren": {
+     "x": 330,
+     "y": 479,
+     "h": 243,
+     "vis": true
+    },
+    "m0": {
+     "x": 1257,
+     "y": 593,
+     "h": 177,
+     "vis": true
+    },
+    "m1": {
+     "x": 1257,
+     "y": 595,
+     "h": 121,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2145
+  },
+  {
+   "id": "s027",
+   "zone": "crag",
+   "at": {
+    "x": -55.62,
+    "y": 26.846833131823466,
+    "z": 29.380000000000003
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 253,
+    "cands": 10,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.095,
+   "yawDelta": 1.05,
+   "view": {
+    "score": 5.9369,
+    "back": 1.16,
+    "seen": 0.972,
+    "of": 4,
+    "boom": false,
+    "pitch": 0.22
+   },
+   "kind": "decide",
+   "pitch": 0.22,
+   "fov": 27,
+   "camDist": 11.711,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.278,
+     "cx": 0.765,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.191,
+     "cx": 0.736,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.328,
+     "cx": 0.246,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.29,
+     "cx": 0.206,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2349,
+    "castFrac": 0.0408,
+    "edgeRGB": 25.02,
+    "bandMin": 18.59,
+    "bands": [
+     18.59,
+     110.84,
+     35.27,
+     26.99
+    ],
+    "clutter": 8.93,
+    "ringL": 26.6,
+    "castL": 60.3
+   },
+   "surf": {
+    "topSurface": 0.4839,
+    "entropy": 2.301,
+    "bins": 42,
+    "backTopSurface": 0.7796,
+    "backEntropy": 1.14,
+    "backBins": 8
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.64,
+    "dMed": 11.92,
+    "dFar": 16.46,
+    "dSpanOct": 0.93,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 17,
+    "slopeDeg": 2.16,
+    "rough": 0.267,
+    "span": 1.548
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 17.5,
+    "L50": 34.4,
+    "L95": 64.7
+   },
+   "anchors": {
+    "vesper": {
+     "x": 402,
+     "y": 500,
+     "h": 239,
+     "vis": true
+    },
+    "maren": {
+     "x": 337,
+     "y": 465,
+     "h": 214,
+     "vis": true
+    },
+    "m0": {
+     "x": 1213,
+     "y": 532,
+     "h": 156,
+     "vis": true
+    },
+    "m1": {
+     "x": 1177,
+     "y": 504,
+     "h": 98,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2325
+  },
+  {
+   "id": "s028",
+   "zone": "meadow",
+   "at": {
+    "x": -33.12,
+    "y": 21.73660282203582,
+    "z": 18.12
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 34,
+    "cands": 7,
+    "solved": 7,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.75,
+     "moved": true,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.25,
+      0.75,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.299,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.4795,
+    "back": 0.94,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.876,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.301,
+     "cx": 0.782,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.207,
+     "cx": 0.791,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.338,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.305,
+     "cx": 0.241,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5264,
+    "castFrac": 0.0914,
+    "edgeRGB": 7.85,
+    "bandMin": 3.98,
+    "bands": [
+     17.03,
+     3.98,
+     11.95,
+     6.51
+    ],
+    "clutter": 41.23,
+    "ringL": 76.8,
+    "castL": 122.7
+   },
+   "surf": {
+    "topSurface": 0.1902,
+    "entropy": 3.513,
+    "bins": 48,
+    "backTopSurface": 0.2512,
+    "backEntropy": 3.254,
+    "backBins": 35
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.14,
+    "dMed": 11.93,
+    "dFar": 14.4,
+    "dSpanOct": 0.66,
+    "layers": 3,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 64,
+    "slopeDeg": 15.53,
+    "rough": 0.261,
+    "span": 1.593
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 1,
+    "shadedFrac": 0.25,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 18.7,
+    "L50": 95,
+    "L95": 139
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 530,
+     "h": 236,
+     "vis": true
+    },
+    "maren": {
+     "x": 397,
+     "y": 460,
+     "h": 217,
+     "vis": true
+    },
+    "m0": {
+     "x": 1226,
+     "y": 551,
+     "h": 180,
+     "vis": true
+    },
+    "m1": {
+     "x": 1256,
+     "y": 391,
+     "h": 112,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2139
+  },
+  {
+   "id": "s029",
+   "zone": "water",
+   "at": {
+    "x": -51.88,
+    "y": 30.506433593364683,
+    "z": 55.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 8,
+    "d": 8,
+    "ms": 205,
+    "cands": 7,
+    "solved": 5,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 1,
+     "moved": true,
+     "choices": 2,
+     "incR": 8,
+     "litOf": [
+      0,
+      1
+     ]
+    }
+   },
+   "relief": 0.537,
+   "yawDelta": -1.6,
+   "view": {
+    "score": 7.6242,
+    "back": 2.76,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.22
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.951,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.302,
+     "cx": 0.784,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.215,
+     "cx": 0.788,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.339,
+     "cx": 0.259,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.297,
+     "cx": 0.26,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5369,
+    "castFrac": 0.0932,
+    "edgeRGB": 6.77,
+    "bandMin": 3.84,
+    "bands": [
+     23.18,
+     3.84,
+     9.88,
+     10.34,
+     9.51,
+     4.88
+    ],
+    "clutter": 45.28,
+    "ringL": 107.9,
+    "castL": 126.8
+   },
+   "surf": {
+    "topSurface": 0.1658,
+    "entropy": 4.366,
+    "bins": 64,
+    "backTopSurface": 0.1371,
+    "backEntropy": 3.959,
+    "backBins": 38
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 7.11,
+    "dMed": 12.99,
+    "dFar": 17.29,
+    "dSpanOct": 1.28,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 4.89,
+    "rough": 0.125,
+    "span": 1.083
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 19.8,
+    "L50": 97.1,
+    "L95": 172.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 426,
+     "y": 499,
+     "h": 238,
+     "vis": true
+    },
+    "maren": {
+     "x": 427,
+     "y": 433,
+     "h": 212,
+     "vis": true
+    },
+    "m0": {
+     "x": 1230,
+     "y": 589,
+     "h": 176,
+     "vis": true
+    },
+    "m1": {
+     "x": 1254,
+     "y": 485,
+     "h": 107,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2311
+  },
+  {
+   "id": "s030",
+   "zone": "water",
+   "at": {
+    "x": -45.62,
+    "y": 30,
+    "z": 25.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 48,
+    "cands": 4,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 3,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0,
+      0.25
+     ]
+    }
+   },
+   "relief": 0,
+   "yawDelta": 0,
+   "view": {
+    "score": 8.1976,
+    "back": 10.27,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 11.342,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.254,
+     "cx": 0.776,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.202,
+     "cx": 0.771,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.329,
+     "cx": 0.255,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.288,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3421,
+    "castFrac": 0.0594,
+    "edgeRGB": 4.14,
+    "bandMin": 1.59,
+    "bands": [
+     16.65,
+     14.27,
+     1.59,
+     20.49
+    ],
+    "clutter": 50.19,
+    "ringL": 97.5,
+    "castL": 114.9
+   },
+   "surf": {
+    "topSurface": 0.1678,
+    "entropy": 3.794,
+    "bins": 45,
+    "backTopSurface": 0.196,
+    "backEntropy": 3.793,
+    "backBins": 30
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 11.51,
+    "dMed": 14.98,
+    "dFar": 44.65,
+    "dSpanOct": 1.96,
+    "layers": 7,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 63,
+    "slopeDeg": 0.69,
+    "rough": 0.027,
+    "span": 0.13
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 16.9,
+    "L50": 107.8,
+    "L95": 163.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 417,
+     "y": 490,
+     "h": 238,
+     "vis": true
+    },
+    "maren": {
+     "x": 419,
+     "y": 429,
+     "h": 212,
+     "vis": true
+    },
+    "m0": {
+     "x": 1223,
+     "y": 544,
+     "h": 159,
+     "vis": true
+    },
+    "m1": {
+     "x": 1227,
+     "y": 530,
+     "h": 106,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2124
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "at": {
+    "x": -54.58446609406726,
+    "y": 27.226050526981396,
+    "z": 69.15553390593274
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 15,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 0.136,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 7.5356,
+    "back": 1.72,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.976,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.408,
+     "cx": 0.781,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.262,
+     "cx": 0.783,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.349,
+     "cx": 0.259,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.297,
+     "cx": 0.275,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 7060,
+    "castFrac": 0.1226,
+    "edgeRGB": 6.75,
+    "bandMin": 3.3,
+    "bands": [
+     3.3,
+     4.82,
+     10.85,
+     3.8,
+     9.13
+    ],
+    "clutter": 45.57,
+    "ringL": 122,
+    "castL": 145.2
+   },
+   "surf": {
+    "topSurface": 0.1155,
+    "entropy": 4.451,
+    "bins": 63,
+    "backTopSurface": 0.1502,
+    "backEntropy": 4.267,
+    "backBins": 45
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 5.64,
+    "dMed": 12.26,
+    "dFar": 26.74,
+    "dSpanOct": 2.25,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 4.1,
+    "rough": 0.174,
+    "span": 1.189
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 24.8,
+    "L50": 137.3,
+    "L95": 198
+   },
+   "anchors": {
+    "vesper": {
+     "x": 426,
+     "y": 482,
+     "h": 238,
+     "vis": true
+    },
+    "maren": {
+     "x": 449,
+     "y": 388,
+     "h": 209,
+     "vis": true
+    },
+    "m0": {
+     "x": 1223,
+     "y": 606,
+     "h": 173,
+     "vis": true
+    },
+    "m1": {
+     "x": 1246,
+     "y": 512,
+     "h": 105,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2138
+  },
+  {
+   "id": "s032",
+   "zone": "water",
+   "at": {
+    "x": 58.12,
+    "y": 4.807225141810463,
+    "z": -50.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 153,
+    "cands": 11,
+    "solved": 10,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.153,
+   "yawDelta": -1.05,
+   "view": {
+    "score": 6.9038,
+    "back": 2.59,
+    "seen": 0.889,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 11.935,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.336,
+     "cx": 0.759,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.255,
+     "cx": 0.754,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.319,
+     "cx": 0.28,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.266,
+     "cx": 0.311,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 1739,
+    "castFrac": 0.0302,
+    "edgeRGB": 26.46,
+    "bandMin": 7.57,
+    "bands": [
+     45.26,
+     29.47,
+     18.11,
+     7.57
+    ],
+    "clutter": 26.86,
+    "ringL": 32.6,
+    "castL": 59.4
+   },
+   "surf": {
+    "topSurface": 0.5884,
+    "entropy": 2.096,
+    "bins": 30,
+    "backTopSurface": 0.5297,
+    "backEntropy": 2.063,
+    "backBins": 14
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.24,
+    "dMed": 14.37,
+    "dFar": 22.1,
+    "dSpanOct": 1.26,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 47,
+    "slopeDeg": 2.28,
+    "rough": 0.375,
+    "span": 1.61
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 10.2,
+    "L50": 22.7,
+    "L95": 81.9
+   },
+   "anchors": {
+    "vesper": {
+     "x": 456,
+     "y": 444,
+     "h": 222,
+     "vis": true
+    },
+    "maren": {
+     "x": 503,
+     "y": 479,
+     "h": 183,
+     "vis": true
+    },
+    "m0": {
+     "x": 1189,
+     "y": 617,
+     "h": 150,
+     "vis": true
+    },
+    "m1": {
+     "x": 1194,
+     "y": 600,
+     "h": 100,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2250
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "at": {
+    "x": -54.155533905932735,
+    "y": 38.5179913319579,
+    "z": 20.84446609406726
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 21,
+    "cands": 4,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0,
+      0.75,
+      1
+     ]
+    }
+   },
+   "relief": 0.584,
+   "yawDelta": 0,
+   "view": {
+    "score": 8.2024,
+    "back": 15.41,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.22
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.749,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.283,
+     "cx": 0.784,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.179,
+     "cx": 0.791,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.328,
+     "cx": 0.253,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.287,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5518,
+    "castFrac": 0.0958,
+    "edgeRGB": 6.86,
+    "bandMin": 6.5,
+    "bands": [
+     9.58,
+     20.44,
+     7.08,
+     6.5
+    ],
+    "clutter": 39.35,
+    "ringL": 165.3,
+    "castL": 177.3
+   },
+   "surf": {
+    "topSurface": 0.1751,
+    "entropy": 4.35,
+    "bins": 57,
+    "backTopSurface": 0.17,
+    "backEntropy": 4.116,
+    "backBins": 48
+   },
+   "rays": {
+    "skyFrac": 0.228,
+    "dNear": 8.35,
+    "dMed": 11.09,
+    "dFar": 74.47,
+    "dSpanOct": 3.16,
+    "layers": 8,
+    "horizonRow": 0.313,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 35,
+    "slopeDeg": 9.36,
+    "rough": 0.314,
+    "span": 1.565
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 77.6,
+    "L50": 172.3,
+    "L95": 216.4
+   },
+   "anchors": {
+    "vesper": {
+     "x": 412,
+     "y": 495,
+     "h": 252,
+     "vis": true
+    },
+    "maren": {
+     "x": 417,
+     "y": 485,
+     "h": 220,
+     "vis": true
+    },
+    "m0": {
+     "x": 1235,
+     "y": 637,
+     "h": 188,
+     "vis": true
+    },
+    "m1": {
+     "x": 1259,
+     "y": 487,
+     "h": 114,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2121
+  },
+  {
+   "id": "s034",
+   "zone": "meadow",
+   "at": {
+    "x": -61.655533905932735,
+    "y": 27.724476828941654,
+    "z": 80.41553390593273
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 4,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 0.586,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.7398,
+    "back": 4.41,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.22
+   },
+   "kind": "decide",
+   "pitch": 0.22,
+   "fov": 27,
+   "camDist": 10.856,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.285,
+     "cx": 0.782,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.202,
+     "cx": 0.783,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.331,
+     "cx": 0.254,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.289,
+     "cx": 0.258,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4117,
+    "castFrac": 0.0715,
+    "edgeRGB": 11.3,
+    "bandMin": 8.59,
+    "bands": [
+     10.79,
+     17.27,
+     13.72,
+     8.59
+    ],
+    "clutter": 19.48,
+    "ringL": 173,
+    "castL": 181.7
+   },
+   "surf": {
+    "topSurface": 0.3555,
+    "entropy": 3.309,
+    "bins": 43,
+    "backTopSurface": 0.3645,
+    "backEntropy": 2.952,
+    "backBins": 33
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 7.23,
+    "dMed": 16.49,
+    "dFar": 22.13,
+    "dSpanOct": 1.61,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 5,
+    "slopeDeg": 3.29,
+    "rough": 0.231,
+    "span": 0.882
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 119.3,
+    "L50": 175.3,
+    "L95": 199
+   },
+   "anchors": {
+    "vesper": {
+     "x": 415,
+     "y": 473,
+     "h": 248,
+     "vis": true
+    },
+    "maren": {
+     "x": 420,
+     "y": 451,
+     "h": 218,
+     "vis": true
+    },
+    "m0": {
+     "x": 1229,
+     "y": 582,
+     "h": 185,
+     "vis": true
+    },
+    "m1": {
+     "x": 1247,
+     "y": 594,
+     "h": 109,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2093
+  },
+  {
+   "id": "s035",
+   "zone": "crag",
+   "at": {
+    "x": 0.6200000000000001,
+    "y": 15.375768417365947,
+    "z": -14.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 46,
+    "cands": 6,
+    "solved": 6,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.337,
+   "yawDelta": -1.05,
+   "view": {
+    "score": 7.5517,
+    "back": 2.46,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.22
+   },
+   "kind": "decide",
+   "pitch": 0.22,
+   "fov": 27,
+   "camDist": 11.382,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.356,
+     "cx": 0.771,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.218,
+     "cx": 0.777,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.317,
+     "cx": 0.28,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.292,
+     "cx": 0.247,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3093,
+    "castFrac": 0.0537,
+    "edgeRGB": 28.4,
+    "bandMin": 24.66,
+    "bands": [
+     25.34,
+     26.55,
+     38.49,
+     24.66
+    ],
+    "clutter": 15.24,
+    "ringL": 29.1,
+    "castL": 56
+   },
+   "surf": {
+    "topSurface": 0.6166,
+    "entropy": 2.39,
+    "bins": 44,
+    "backTopSurface": 0.7627,
+    "backEntropy": 1.467,
+    "backBins": 17
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 10.4,
+    "dMed": 13.59,
+    "dFar": 45.78,
+    "dSpanOct": 2.14,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 36,
+    "slopeDeg": 6.03,
+    "rough": 0.264,
+    "span": 1.348
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 15.8,
+    "L50": 27.5,
+    "L95": 127.6
+   },
+   "anchors": {
+    "vesper": {
+     "x": 452,
+     "y": 457,
+     "h": 235,
+     "vis": true
+    },
+    "maren": {
+     "x": 400,
+     "y": 383,
+     "h": 222,
+     "vis": true
+    },
+    "m0": {
+     "x": 1207,
+     "y": 718,
+     "h": 173,
+     "vis": true
+    },
+    "m1": {
+     "x": 1232,
+     "y": 515,
+     "h": 111,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2166
+  },
+  {
+   "id": "s036",
+   "zone": "forest",
+   "at": {
+    "x": -14.379999999999999,
+    "y": 17.222303280453964,
+    "z": 16.88
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 26,
+    "cands": 6,
+    "solved": 5,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.25,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0,
+      0,
+      0,
+      0.5
+     ]
+    }
+   },
+   "relief": 1.326,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 7.4802,
+    "back": 1,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.872,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.394,
+     "cx": 0.788,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.245,
+     "cx": 0.792,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.35,
+     "cx": 0.258,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.316,
+     "cx": 0.238,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4819,
+    "castFrac": 0.0837,
+    "edgeRGB": 7.34,
+    "bandMin": 3.24,
+    "bands": [
+     29.76,
+     3.24,
+     26.91,
+     15.95,
+     18.7
+    ],
+    "clutter": 42.99,
+    "ringL": 81.2,
+    "castL": 85.1
+   },
+   "surf": {
+    "topSurface": 0.1541,
+    "entropy": 3.871,
+    "bins": 46,
+    "backTopSurface": 0.1733,
+    "backEntropy": 3.946,
+    "backBins": 33
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8,
+    "dMed": 11.75,
+    "dFar": 13.96,
+    "dSpanOct": 0.8,
+    "layers": 3,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 49,
+    "slopeDeg": 14.77,
+    "rough": 0.171,
+    "span": 1.557
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 3,
+    "shadedFrac": 0.75,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 27.4,
+    "L50": 93.5,
+    "L95": 143.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 425,
+     "y": 538,
+     "h": 235,
+     "vis": true
+    },
+    "maren": {
+     "x": 392,
+     "y": 368,
+     "h": 225,
+     "vis": true
+    },
+    "m0": {
+     "x": 1234,
+     "y": 514,
+     "h": 183,
+     "vis": true
+    },
+    "m1": {
+     "x": 1260,
+     "y": 397,
+     "h": 112,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2129
+  },
+  {
+   "id": "s037",
+   "zone": "meadow",
+   "at": {
+    "x": -10.415533905932739,
+    "y": 14.228801666026442,
+    "z": 2.084466094067263
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 51,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.196,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.6688,
+    "back": 3.51,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.96,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.299,
+     "cx": 0.777,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.214,
+     "cx": 0.782,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.337,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.297,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3642,
+    "castFrac": 0.0632,
+    "edgeRGB": 4.72,
+    "bandMin": 9.98,
+    "bands": [
+     12.58,
+     27.27,
+     9.98,
+     12.18
+    ],
+    "clutter": 57.28,
+    "ringL": 84.8,
+    "castL": 92.1
+   },
+   "surf": {
+    "topSurface": 0.165,
+    "entropy": 4.338,
+    "bins": 58,
+    "backTopSurface": 0.162,
+    "backEntropy": 4.008,
+    "backBins": 42
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.34,
+    "dMed": 13.3,
+    "dFar": 19.22,
+    "dSpanOct": 1.2,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 5,
+    "slopeDeg": 2.1,
+    "rough": 0.124,
+    "span": 0.69
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 29.4,
+    "L50": 79.5,
+    "L95": 190.5
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 485,
+     "h": 238,
+     "vis": true
+    },
+    "maren": {
+     "x": 422,
+     "y": 398,
+     "h": 214,
+     "vis": true
+    },
+    "m0": {
+     "x": 1220,
+     "y": 601,
+     "h": 174,
+     "vis": true
+    },
+    "m1": {
+     "x": 1244,
+     "y": 505,
+     "h": 106,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2132
+  },
+  {
+   "id": "s038",
+   "zone": "crag",
+   "at": {
+    "x": 48.344466094067265,
+    "y": 12.286950869357128,
+    "z": -39.58446609406726
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 50,
+    "cands": 4,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.75,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0.75
+     ]
+    }
+   },
+   "relief": 2.107,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.4879,
+    "back": 1.06,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 11.581,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.216,
+     "cx": 0.768,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.165,
+     "cx": 0.756,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.317,
+     "cx": 0.251,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.279,
+     "cx": 0.212,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4644,
+    "castFrac": 0.0806,
+    "edgeRGB": 9.34,
+    "bandMin": 6.76,
+    "bands": [
+     10.39,
+     83.36,
+     22.08,
+     25.93,
+     6.76
+    ],
+    "clutter": 56.86,
+    "ringL": 75.8,
+    "castL": 100.6
+   },
+   "surf": {
+    "topSurface": 0.3061,
+    "entropy": 3.482,
+    "bins": 41,
+    "backTopSurface": 0.3945,
+    "backEntropy": 2.954,
+    "backBins": 22
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 4.68,
+    "dMed": 10.4,
+    "dFar": 17.23,
+    "dSpanOct": 1.88,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 24,
+    "slopeDeg": 3.7,
+    "rough": 0.213,
+    "span": 1.516
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 1,
+    "shadedFrac": 0.25,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 13.3,
+    "L50": 47.7,
+    "L95": 160.3
+   },
+   "anchors": {
+    "vesper": {
+     "x": 407,
+     "y": 478,
+     "h": 245,
+     "vis": true
+    },
+    "maren": {
+     "x": 345,
+     "y": 239,
+     "h": 220,
+     "vis": true
+    },
+    "m0": {
+     "x": 1215,
+     "y": 566,
+     "h": 154,
+     "vis": true
+    },
+    "m1": {
+     "x": 1203,
+     "y": 554,
+     "h": 102,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2163
+  },
+  {
+   "id": "s039",
+   "zone": "meadow",
+   "at": {
+    "x": -58.12,
+    "y": 39.14252039674246,
+    "z": 24.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 46,
+    "cands": 4,
+    "solved": 4,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 4,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0,
+      0.75,
+      1
+     ]
+    }
+   },
+   "relief": 0.629,
+   "yawDelta": 0,
+   "view": {
+    "score": 8.2047,
+    "back": 15.5,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.942,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.3,
+     "cx": 0.777,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.212,
+     "cx": 0.785,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.338,
+     "cx": 0.256,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.295,
+     "cx": 0.259,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 6348,
+    "castFrac": 0.1102,
+    "edgeRGB": 12.54,
+    "bandMin": 7.57,
+    "bands": [
+     18.49,
+     11.17,
+     13.58,
+     7.57
+    ],
+    "clutter": 41.88,
+    "ringL": 135,
+    "castL": 158.9
+   },
+   "surf": {
+    "topSurface": 0.1538,
+    "entropy": 4.443,
+    "bins": 55,
+    "backTopSurface": 0.1437,
+    "backEntropy": 4.301,
+    "backBins": 49
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.15,
+    "dMed": 12.14,
+    "dFar": 256.81,
+    "dSpanOct": 4.81,
+    "layers": 9,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 39,
+    "slopeDeg": 3.5,
+    "rough": 0.332,
+    "span": 1.087
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 58.7,
+    "L50": 142.1,
+    "L95": 205.9
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 490,
+     "h": 238,
+     "vis": true
+    },
+    "maren": {
+     "x": 425,
+     "y": 439,
+     "h": 211,
+     "vis": true
+    },
+    "m0": {
+     "x": 1219,
+     "y": 613,
+     "h": 174,
+     "vis": true
+    },
+    "m1": {
+     "x": 1247,
+     "y": 475,
+     "h": 108,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2133
+  },
+  {
+   "id": "s040",
+   "zone": "crag",
+   "at": {
+    "x": 66.65553390593273,
+    "y": 11.365829860637035,
+    "z": -47.91553390593274
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 29,
+    "cands": 3,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.064,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.5873,
+    "back": 2.61,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.22,
+   "fov": 27,
+   "camDist": 10.802,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.264,
+     "cx": 0.79,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.212,
+     "cx": 0.782,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.333,
+     "cx": 0.254,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.307,
+     "cx": 0.223,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3169,
+    "castFrac": 0.055,
+    "edgeRGB": 25.1,
+    "bandMin": 11.6,
+    "bands": [
+     11.6,
+     51.16,
+     43.55,
+     38.09
+    ],
+    "clutter": 40.81,
+    "ringL": 39.6,
+    "castL": 60.5
+   },
+   "surf": {
+    "topSurface": 0.5408,
+    "entropy": 2.696,
+    "bins": 28,
+    "backTopSurface": 0.6632,
+    "backEntropy": 2.15,
+    "backBins": 21
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 10.51,
+    "dMed": 12.99,
+    "dFar": 17.16,
+    "dSpanOct": 0.71,
+    "layers": 3,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 51,
+    "slopeDeg": 5.07,
+    "rough": 0.374,
+    "span": 1.393
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 11.6,
+    "L50": 22.7,
+    "L95": 124.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 416,
+     "y": 495,
+     "h": 248,
+     "vis": true
+    },
+    "maren": {
+     "x": 365,
+     "y": 464,
+     "h": 231,
+     "vis": true
+    },
+    "m0": {
+     "x": 1244,
+     "y": 550,
+     "h": 174,
+     "vis": true
+    },
+    "m1": {
+     "x": 1244,
+     "y": 550,
+     "h": 119,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2119
+  },
+  {
+   "id": "s041",
+   "zone": "meadow",
+   "at": {
+    "x": -55.844466094067265,
+    "y": 27.569916740962732,
+    "z": 74.58446609406727
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 3,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 0.137,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.7722,
+    "back": 5.39,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.755,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.278,
+     "cx": 0.785,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.184,
+     "cx": 0.789,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.328,
+     "cx": 0.253,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.286,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4353,
+    "castFrac": 0.0756,
+    "edgeRGB": 4.95,
+    "bandMin": 3.56,
+    "bands": [
+     6.4,
+     21.28,
+     9.15,
+     3.56
+    ],
+    "clutter": 31.36,
+    "ringL": 154.8,
+    "castL": 168.4
+   },
+   "surf": {
+    "topSurface": 0.1663,
+    "entropy": 3.95,
+    "bins": 56,
+    "backTopSurface": 0.1513,
+    "backEntropy": 3.679,
+    "backBins": 41
+   },
+   "rays": {
+    "skyFrac": 0.016,
+    "dNear": 7.4,
+    "dMed": 20,
+    "dFar": 31.46,
+    "dSpanOct": 2.09,
+    "layers": 7,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 1,
+    "slopeDeg": 2.26,
+    "rough": 0.206,
+    "span": 0.999
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 101.7,
+    "L50": 163.6,
+    "L95": 200.5
+   },
+   "anchors": {
+    "vesper": {
+     "x": 412,
+     "y": 497,
+     "h": 251,
+     "vis": true
+    },
+    "maren": {
+     "x": 416,
+     "y": 473,
+     "h": 220,
+     "vis": true
+    },
+    "m0": {
+     "x": 1236,
+     "y": 587,
+     "h": 190,
+     "vis": true
+    },
+    "m1": {
+     "x": 1257,
+     "y": 523,
+     "h": 114,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2083
+  },
+  {
+   "id": "s042",
+   "zone": "meadow",
+   "at": {
+    "x": -27.084466094067263,
+    "y": 20.07709207595817,
+    "z": 20.415533905932737
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 28,
+    "cands": 6,
+    "solved": 6,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0.75,
+      0.5,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.14,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.4921,
+    "back": 1.18,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.716,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.269,
+     "cx": 0.788,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.17,
+     "cx": 0.793,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.331,
+     "cx": 0.253,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.286,
+     "cx": 0.254,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4109,
+    "castFrac": 0.0713,
+    "edgeRGB": 11.56,
+    "bandMin": 10.84,
+    "bands": [
+     19.81,
+     50.99,
+     34.64,
+     10.84,
+     30.27
+    ],
+    "clutter": 37.03,
+    "ringL": 94.6,
+    "castL": 93.7
+   },
+   "surf": {
+    "topSurface": 0.199,
+    "entropy": 3.932,
+    "bins": 54,
+    "backTopSurface": 0.2057,
+    "backEntropy": 3.949,
+    "backBins": 42
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 5.15,
+    "dMed": 11.9,
+    "dFar": 14.9,
+    "dSpanOct": 1.53,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 47,
+    "slopeDeg": 13.15,
+    "rough": 0.246,
+    "span": 1.548
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 48.5,
+    "L50": 95.1,
+    "L95": 160.2
+   },
+   "anchors": {
+    "vesper": {
+     "x": 412,
+     "y": 556,
+     "h": 250,
+     "vis": true
+    },
+    "maren": {
+     "x": 413,
+     "y": 422,
+     "h": 223,
+     "vis": true
+    },
+    "m0": {
+     "x": 1241,
+     "y": 482,
+     "h": 194,
+     "vis": true
+    },
+    "m1": {
+     "x": 1262,
+     "y": 408,
+     "h": 116,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2128
+  },
+  {
+   "id": "s043",
+   "zone": "water",
+   "at": {
+    "x": -46.88,
+    "y": 23.86568782081669,
+    "z": 31.88
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 284,
+    "cands": 12,
+    "solved": 11,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.189,
+   "yawDelta": 1.05,
+   "view": {
+    "score": 7.5271,
+    "back": 1.65,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 12.686,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.345,
+     "cx": 0.722,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.246,
+     "cx": 0.722,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.302,
+     "cx": 0.282,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.275,
+     "cx": 0.265,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2074,
+    "castFrac": 0.036,
+    "edgeRGB": 18.79,
+    "bandMin": 16.07,
+    "bands": [
+     17.69,
+     16.07,
+     31.25,
+     16.42
+    ],
+    "clutter": 27.48,
+    "ringL": 39.1,
+    "castL": 65.1
+   },
+   "surf": {
+    "topSurface": 0.4363,
+    "entropy": 2.668,
+    "bins": 52,
+    "backTopSurface": 0.6914,
+    "backEntropy": 1.949,
+    "backBins": 22
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 11.23,
+    "dMed": 14.09,
+    "dFar": 18.38,
+    "dSpanOct": 0.71,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 28,
+    "slopeDeg": 0.5,
+    "rough": 0.247,
+    "span": 1.371
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 19.1,
+    "L50": 37.6,
+    "L95": 88
+   },
+   "anchors": {
+    "vesper": {
+     "x": 461,
+     "y": 429,
+     "h": 209,
+     "vis": true
+    },
+    "maren": {
+     "x": 433,
+     "y": 334,
+     "h": 197,
+     "vis": true
+    },
+    "m0": {
+     "x": 1136,
+     "y": 635,
+     "h": 142,
+     "vis": true
+    },
+    "m1": {
+     "x": 1150,
+     "y": 598,
+     "h": 92,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2387
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "at": {
+    "x": -53.344466094067265,
+    "y": 29.804280042093076,
+    "z": 64.15553390593273
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 127,
+    "cands": 5,
+    "solved": 4,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0,
+      0.5,
+      1
+     ]
+    }
+   },
+   "relief": 0.431,
+   "yawDelta": 2.1,
+   "view": {
+    "score": 7.5691,
+    "back": 2.12,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 12.197,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.35,
+     "cx": 0.742,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.267,
+     "cx": 0.731,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.353,
+     "cx": 0.252,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.316,
+     "cx": 0.207,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4431,
+    "castFrac": 0.0769,
+    "edgeRGB": 1.8,
+    "bandMin": 2.39,
+    "bands": [
+     2.39,
+     20.96,
+     12.25,
+     15.15
+    ],
+    "clutter": 60.23,
+    "ringL": 131.1,
+    "castL": 117.6
+   },
+   "surf": {
+    "topSurface": 0.1244,
+    "entropy": 4.344,
+    "bins": 55,
+    "backTopSurface": 0.1448,
+    "backEntropy": 3.89,
+    "backBins": 40
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.81,
+    "dMed": 13.03,
+    "dFar": 23.27,
+    "dSpanOct": 1.25,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 0,
+    "slopeDeg": 4.26,
+    "rough": 0.101,
+    "span": 0.993
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 26.2,
+    "L50": 118.5,
+    "L95": 213.3
+   },
+   "anchors": {
+    "vesper": {
+     "x": 418,
+     "y": 488,
+     "h": 213,
+     "vis": true
+    },
+    "maren": {
+     "x": 348,
+     "y": 398,
+     "h": 198,
+     "vis": true
+    },
+    "m0": {
+     "x": 1168,
+     "y": 510,
+     "h": 122,
+     "vis": true
+    },
+    "m1": {
+     "x": 1160,
+     "y": 494,
+     "h": 81,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2226
+  },
+  {
+   "id": "s045",
+   "zone": "meadow",
+   "at": {
+    "x": -0.6200000000000001,
+    "y": 15.841554452205983,
+    "z": -9.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 82,
+    "cands": 7,
+    "solved": 7,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.065,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.3611,
+    "back": 2.17,
+    "seen": 0.972,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 12.906,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.242,
+     "cx": 0.719,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.185,
+     "cx": 0.727,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.292,
+     "cx": 0.281,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.26,
+     "cx": 0.28,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 1906,
+    "castFrac": 0.0331,
+    "edgeRGB": 14.87,
+    "bandMin": 12.36,
+    "bands": [
+     12.36,
+     24.61,
+     20.57
+    ],
+    "clutter": 26.7,
+    "ringL": 43.3,
+    "castL": 54.3
+   },
+   "surf": {
+    "topSurface": 0.4461,
+    "entropy": 3.108,
+    "bins": 45,
+    "backTopSurface": 0.5952,
+    "backEntropy": 2.167,
+    "backBins": 14
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.79,
+    "dMed": 14.39,
+    "dFar": 34.18,
+    "dSpanOct": 1.8,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 17,
+    "slopeDeg": 3.15,
+    "rough": 0.335,
+    "span": 1.513
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 17,
+    "L50": 43.3,
+    "L95": 145.5
+   },
+   "anchors": {
+    "vesper": {
+     "x": 459,
+     "y": 428,
+     "h": 209,
+     "vis": true
+    },
+    "maren": {
+     "x": 456,
+     "y": 381,
+     "h": 188,
+     "vis": true
+    },
+    "m0": {
+     "x": 1137,
+     "y": 655,
+     "h": 136,
+     "vis": true
+    },
+    "m1": {
+     "x": 1160,
+     "y": 561,
+     "h": 88,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2182
+  },
+  {
+   "id": "s046",
+   "zone": "meadow",
+   "at": {
+    "x": 0.41553390593273765,
+    "y": 14.226818388212394,
+    "z": 4.155533905932737
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 58,
+    "cands": 3,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      1
+     ]
+    }
+   },
+   "relief": 1.174,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.4889,
+    "back": 1.23,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 10.92,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.293,
+     "cx": 0.779,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.208,
+     "cx": 0.781,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.335,
+     "cx": 0.255,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.302,
+     "cx": 0.237,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5047,
+    "castFrac": 0.0876,
+    "edgeRGB": 8.16,
+    "bandMin": 1.99,
+    "bands": [
+     9.8,
+     70.13,
+     8,
+     1.99,
+     19.04
+    ],
+    "clutter": 21.86,
+    "ringL": 122.9,
+    "castL": 156.7
+   },
+   "surf": {
+    "topSurface": 0.2091,
+    "entropy": 3.977,
+    "bins": 46,
+    "backTopSurface": 0.2337,
+    "backEntropy": 3.288,
+    "backBins": 34
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 1.01,
+    "dMed": 12.13,
+    "dFar": 14.86,
+    "dSpanOct": 3.88,
+    "layers": 8,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 27,
+    "slopeDeg": 3.46,
+    "rough": 0.29,
+    "span": 1.376
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 30.1,
+    "L50": 113.8,
+    "L95": 158.2
+   },
+   "anchors": {
+    "vesper": {
+     "x": 419,
+     "y": 475,
+     "h": 244,
+     "vis": true
+    },
+    "maren": {
+     "x": 388,
+     "y": 315,
+     "h": 230,
+     "vis": true
+    },
+    "m0": {
+     "x": 1224,
+     "y": 596,
+     "h": 180,
+     "vis": true
+    },
+    "m1": {
+     "x": 1243,
+     "y": 560,
+     "h": 107,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2138
+  },
+  {
+   "id": "s047",
+   "zone": "meadow",
+   "at": {
+    "x": 2.9155339059327368,
+    "y": 14.908164617927483,
+    "z": -2.9155339059327385
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 223,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.836,
+   "yawDelta": -1.6,
+   "view": {
+    "score": 7.2187,
+    "back": 2.48,
+    "seen": 0.944,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.22,
+   "fov": 27,
+   "camDist": 11.615,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.268,
+     "cx": 0.763,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.189,
+     "cx": 0.767,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.312,
+     "cx": 0.271,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.299,
+     "cx": 0.22,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4016,
+    "castFrac": 0.0697,
+    "edgeRGB": 5.84,
+    "bandMin": 5.83,
+    "bands": [
+     16,
+     5.83,
+     7.77,
+     16.09
+    ],
+    "clutter": 53.79,
+    "ringL": 71.5,
+    "castL": 103.2
+   },
+   "surf": {
+    "topSurface": 0.3357,
+    "entropy": 3.612,
+    "bins": 48,
+    "backTopSurface": 0.3567,
+    "backEntropy": 3.18,
+    "backBins": 30
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.3,
+    "dMed": 12.9,
+    "dFar": 24.15,
+    "dSpanOct": 1.54,
+    "layers": 7,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 9,
+    "slopeDeg": 6.48,
+    "rough": 0.237,
+    "span": 1.581
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 18.7,
+    "L50": 52.7,
+    "L95": 159.4
+   },
+   "anchors": {
+    "vesper": {
+     "x": 441,
+     "y": 457,
+     "h": 235,
+     "vis": true
+    },
+    "maren": {
+     "x": 359,
+     "y": 429,
+     "h": 227,
+     "vis": true
+    },
+    "m0": {
+     "x": 1204,
+     "y": 618,
+     "h": 170,
+     "vis": true
+    },
+    "m1": {
+     "x": 1225,
+     "y": 592,
+     "h": 102,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2344
+  },
+  {
+   "id": "s048",
+   "zone": "forest",
+   "at": {
+    "x": 18.12,
+    "y": 14.512737216983666,
+    "z": -16.88
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 330,
+    "cands": 12,
+    "solved": 12,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 7,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.687,
+   "yawDelta": -2.1,
+   "view": {
+    "score": 7.501,
+    "back": 3.19,
+    "seen": 0.972,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 11.429,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.287,
+     "cx": 0.78,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.195,
+     "cx": 0.763,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.325,
+     "cx": 0.253,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.284,
+     "cx": 0.233,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 1980,
+    "castFrac": 0.0344,
+    "edgeRGB": 19.65,
+    "bandMin": 19.67,
+    "bands": [
+     19.67,
+     23.49,
+     20.88
+    ],
+    "clutter": 15.6,
+    "ringL": 45.2,
+    "castL": 54.8
+   },
+   "surf": {
+    "topSurface": 0.4733,
+    "entropy": 2.118,
+    "bins": 42,
+    "backTopSurface": 0.3798,
+    "backEntropy": 2.199,
+    "backBins": 15
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 5.8,
+    "dMed": 8.61,
+    "dFar": 16.87,
+    "dSpanOct": 1.54,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 19,
+    "slopeDeg": 3.29,
+    "rough": 0.253,
+    "span": 1.049
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 16.2,
+    "L50": 35.8,
+    "L95": 62
+   },
+   "anchors": {
+    "vesper": {
+     "x": 411,
+     "y": 484,
+     "h": 247,
+     "vis": true
+    },
+    "maren": {
+     "x": 378,
+     "y": 422,
+     "h": 219,
+     "vis": true
+    },
+    "m0": {
+     "x": 1234,
+     "y": 568,
+     "h": 166,
+     "vis": true
+    },
+    "m1": {
+     "x": 1220,
+     "y": 557,
+     "h": 103,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2412
+  },
+  {
+   "id": "s049",
+   "zone": "meadow",
+   "at": {
+    "x": -62.91553390593274,
+    "y": 27.706957539998285,
+    "z": 75.41553390593273
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 5,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 0.422,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.7069,
+    "back": 4.16,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.22
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 11.015,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.279,
+     "cx": 0.778,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.2,
+     "cx": 0.78,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.331,
+     "cx": 0.255,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.29,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4287,
+    "castFrac": 0.0744,
+    "edgeRGB": 3.6,
+    "bandMin": 3.71,
+    "bands": [
+     3.71,
+     5.42,
+     6.06,
+     11.96
+    ],
+    "clutter": 22.63,
+    "ringL": 168.3,
+    "castL": 175.4
+   },
+   "surf": {
+    "topSurface": 0.2277,
+    "entropy": 3.875,
+    "bins": 56,
+    "backTopSurface": 0.2931,
+    "backEntropy": 3.309,
+    "backBins": 31
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 5.04,
+    "dMed": 14.79,
+    "dFar": 26.68,
+    "dSpanOct": 2.4,
+    "layers": 8,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 14,
+    "slopeDeg": 2.93,
+    "rough": 0.189,
+    "span": 0.861
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 63,
+    "L50": 166.5,
+    "L95": 196.6
+   },
+   "anchors": {
+    "vesper": {
+     "x": 417,
+     "y": 473,
+     "h": 245,
+     "vis": true
+    },
+    "maren": {
+     "x": 419,
+     "y": 414,
+     "h": 217,
+     "vis": true
+    },
+    "m0": {
+     "x": 1224,
+     "y": 623,
+     "h": 173,
+     "vis": true
+    },
+    "m1": {
+     "x": 1242,
+     "y": 540,
+     "h": 108,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2102
+  },
+  {
+   "id": "s050",
+   "zone": "meadow",
+   "at": {
+    "x": 25.62,
+    "y": 14.233411875124744,
+    "z": -24.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 30,
+    "cands": 7,
+    "solved": 7,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.308,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.1995,
+    "back": 2.26,
+    "seen": 0.944,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 11.154,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.287,
+     "cx": 0.77,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.181,
+     "cx": 0.783,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.329,
+     "cx": 0.254,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.288,
+     "cx": 0.257,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2213,
+    "castFrac": 0.0384,
+    "edgeRGB": 8.03,
+    "bandMin": 8.69,
+    "bands": [
+     8.69,
+     9.14,
+     21.32,
+     16.9
+    ],
+    "clutter": 32.51,
+    "ringL": 54.9,
+    "castL": 56.8
+   },
+   "surf": {
+    "topSurface": 0.306,
+    "entropy": 3.67,
+    "bins": 51,
+    "backTopSurface": 0.327,
+    "backEntropy": 3.392,
+    "backBins": 38
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 8.92,
+    "dMed": 14.67,
+    "dFar": 27.97,
+    "dSpanOct": 1.65,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 14,
+    "slopeDeg": 2.28,
+    "rough": 0.136,
+    "span": 1.149
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 17.5,
+    "L50": 57.9,
+    "L95": 141.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 416,
+     "y": 492,
+     "h": 242,
+     "vis": true
+    },
+    "maren": {
+     "x": 419,
+     "y": 441,
+     "h": 215,
+     "vis": true
+    },
+    "m0": {
+     "x": 1211,
+     "y": 622,
+     "h": 178,
+     "vis": true
+    },
+    "m1": {
+     "x": 1247,
+     "y": 474,
+     "h": 103,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2132
+  },
+  {
+   "id": "s051",
+   "zone": "meadow",
+   "at": {
+    "x": -32.08446609406726,
+    "y": 20.794388540265366,
+    "z": 12.08446609406726
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 26,
+    "cands": 5,
+    "solved": 5,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 2.804,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 7.5476,
+    "back": 2.57,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 11.393,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.34,
+     "cx": 0.794,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.185,
+     "cx": 0.8,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.348,
+     "cx": 0.258,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.3,
+     "cx": 0.256,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3512,
+    "castFrac": 0.061,
+    "edgeRGB": 10.88,
+    "bandMin": 3.81,
+    "bands": [
+     3.81,
+     22.77,
+     27.33,
+     17.95
+    ],
+    "clutter": 50.84,
+    "ringL": 58.1,
+    "castL": 62.8
+   },
+   "surf": {
+    "topSurface": 0.5247,
+    "entropy": 2.734,
+    "bins": 49,
+    "backTopSurface": 0.5298,
+    "backEntropy": 2.96,
+    "backBins": 43
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.15,
+    "dMed": 12.04,
+    "dFar": 30.02,
+    "dSpanOct": 1.71,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 55,
+    "slopeDeg": 11.45,
+    "rough": 0.222,
+    "span": 1.597
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 16.1,
+    "L50": 29,
+    "L95": 134.9
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 612,
+     "h": 240,
+     "vis": true
+    },
+    "maren": {
+     "x": 418,
+     "y": 431,
+     "h": 220,
+     "vis": true
+    },
+    "m0": {
+     "x": 1246,
+     "y": 428,
+     "h": 194,
+     "vis": true
+    },
+    "m1": {
+     "x": 1276,
+     "y": 224,
+     "h": 121,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2110
+  },
+  {
+   "id": "s052",
+   "zone": "meadow",
+   "at": {
+    "x": 14.379999999999999,
+    "y": 12.8819564882223,
+    "z": -25.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 26,
+    "cands": 5,
+    "solved": 5,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.29,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 7.4646,
+    "back": 0.78,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.746,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.374,
+     "cx": 0.797,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.271,
+     "cx": 0.79,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.353,
+     "cx": 0.259,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.326,
+     "cx": 0.222,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2898,
+    "castFrac": 0.0503,
+    "edgeRGB": 24.91,
+    "bandMin": 18.55,
+    "bands": [
+     31.51,
+     18.55,
+     23.76,
+     19.79
+    ],
+    "clutter": 23.25,
+    "ringL": 31.8,
+    "castL": 62.8
+   },
+   "surf": {
+    "topSurface": 0.7093,
+    "entropy": 1.974,
+    "bins": 35,
+    "backTopSurface": 0.7472,
+    "backEntropy": 1.655,
+    "backBins": 22
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.81,
+    "dMed": 11.78,
+    "dFar": 19.71,
+    "dSpanOct": 1.01,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": false,
+    "miss": 76,
+    "n": 81
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 14.6,
+    "L50": 20.6,
+    "L95": 121.8
+   },
+   "anchors": {
+    "vesper": {
+     "x": 426,
+     "y": 536,
+     "h": 237,
+     "vis": true
+    },
+    "maren": {
+     "x": 367,
+     "y": 396,
+     "h": 231,
+     "vis": true
+    },
+    "m0": {
+     "x": 1249,
+     "y": 484,
+     "h": 178,
+     "vis": true
+    },
+    "m1": {
+     "x": 1256,
+     "y": 435,
+     "h": 119,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2119
+  },
+  {
+   "id": "s053",
+   "zone": "crag",
+   "at": {
+    "x": -40.62,
+    "y": 22.89766207058959,
+    "z": 18.12
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 20,
+    "cands": 4,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0.25,
+      0.75,
+      1
+     ]
+    }
+   },
+   "relief": 0.96,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 7.4964,
+    "back": 1.3,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 10.984,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.347,
+     "cx": 0.788,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.232,
+     "cx": 0.785,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.344,
+     "cx": 0.257,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.308,
+     "cx": 0.241,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 7106,
+    "castFrac": 0.1234,
+    "edgeRGB": 10.37,
+    "bandMin": 6.4,
+    "bands": [
+     10.57,
+     6.4,
+     14.24,
+     14.22
+    ],
+    "clutter": 49.66,
+    "ringL": 100.2,
+    "castL": 129.3
+   },
+   "surf": {
+    "topSurface": 0.2529,
+    "entropy": 3.369,
+    "bins": 41,
+    "backTopSurface": 0.2162,
+    "backEntropy": 3.409,
+    "backBins": 36
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 7.68,
+    "dMed": 11.7,
+    "dFar": 17.8,
+    "dSpanOct": 1.21,
+    "layers": 3,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 48,
+    "slopeDeg": 7.58,
+    "rough": 0.347,
+    "span": 1.472
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 14.6,
+    "L50": 104.8,
+    "L95": 163.3
+   },
+   "anchors": {
+    "vesper": {
+     "x": 421,
+     "y": 534,
+     "h": 240,
+     "vis": true
+    },
+    "maren": {
+     "x": 395,
+     "y": 439,
+     "h": 221,
+     "vis": true
+    },
+    "m0": {
+     "x": 1236,
+     "y": 484,
+     "h": 180,
+     "vis": true
+    },
+    "m1": {
+     "x": 1251,
+     "y": 452,
+     "h": 111,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2108
+  },
+  {
+   "id": "s054",
+   "zone": "forest",
+   "at": {
+    "x": -56.88,
+    "y": 26.257137307883866,
+    "z": 34.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 8,
+    "d": 8,
+    "ms": 373,
+    "cands": 11,
+    "solved": 11,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 8,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 2.139,
+   "yawDelta": 0.5,
+   "view": {
+    "score": 7.5145,
+    "back": 1.29,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.34
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 11.71,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.395,
+     "cx": 0.785,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.272,
+     "cx": 0.754,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.341,
+     "cx": 0.254,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.315,
+     "cx": 0.203,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2155,
+    "castFrac": 0.0374,
+    "edgeRGB": 11.91,
+    "bandMin": 18.1,
+    "bands": [
+     18.27,
+     18.1,
+     33.15,
+     30.5
+    ],
+    "clutter": 39.55,
+    "ringL": 76.7,
+    "castL": 58.6
+   },
+   "surf": {
+    "topSurface": 0.1827,
+    "entropy": 3.508,
+    "bins": 32,
+    "backTopSurface": 0.2507,
+    "backEntropy": 3.147,
+    "backBins": 22
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 1.84,
+    "dMed": 11.11,
+    "dFar": 16.54,
+    "dSpanOct": 3.17,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 36,
+    "slopeDeg": 2.27,
+    "rough": 0.29,
+    "span": 1.551
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 24,
+    "L50": 87.8,
+    "L95": 158.6
+   },
+   "anchors": {
+    "vesper": {
+     "x": 421,
+     "y": 565,
+     "h": 200,
+     "vis": true
+    },
+    "maren": {
+     "x": 341,
+     "y": 479,
+     "h": 192,
+     "vis": true
+    },
+    "m0": {
+     "x": 1230,
+     "y": 391,
+     "h": 154,
+     "vis": true
+    },
+    "m1": {
+     "x": 1195,
+     "y": 319,
+     "h": 98,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2447
+  },
+  {
+   "id": "s055",
+   "zone": "forest",
+   "at": {
+    "x": 28.12,
+    "y": 13.820083147233376,
+    "z": -18.12
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 59,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.824,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.6879,
+    "back": 3.91,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.22,
+   "fov": 27,
+   "camDist": 11.065,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.28,
+     "cx": 0.774,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.197,
+     "cx": 0.777,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.325,
+     "cx": 0.259,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.284,
+     "cx": 0.26,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3143,
+    "castFrac": 0.0546,
+    "edgeRGB": 15.3,
+    "bandMin": 2.51,
+    "bands": [
+     2.51,
+     51.4,
+     29.86,
+     11.89,
+     14.59
+    ],
+    "clutter": 49.38,
+    "ringL": 94.5,
+    "castL": 92.2
+   },
+   "surf": {
+    "topSurface": 0.155,
+    "entropy": 4.094,
+    "bins": 55,
+    "backTopSurface": 0.1921,
+    "backEntropy": 3.975,
+    "backBins": 44
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 7.55,
+    "dMed": 14.39,
+    "dFar": 21.07,
+    "dSpanOct": 1.48,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 21,
+    "slopeDeg": 5.14,
+    "rough": 0.213,
+    "span": 1.34
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 39.2,
+    "L50": 97.3,
+    "L95": 173
+   },
+   "anchors": {
+    "vesper": {
+     "x": 422,
+     "y": 467,
+     "h": 244,
+     "vis": true
+    },
+    "maren": {
+     "x": 423,
+     "y": 392,
+     "h": 217,
+     "vis": true
+    },
+    "m0": {
+     "x": 1219,
+     "y": 601,
+     "h": 180,
+     "vis": true
+    },
+    "m1": {
+     "x": 1238,
+     "y": 588,
+     "h": 107,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2193
+  },
+  {
+   "id": "s056",
+   "zone": "crag",
+   "at": {
+    "x": -40.62,
+    "y": 30,
+    "z": 26.88
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 23,
+    "cands": 4,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.5,
+      0.5
+     ]
+    }
+   },
+   "relief": 0,
+   "yawDelta": 0,
+   "view": {
+    "score": 8.1544,
+    "back": 10.14,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 10.902,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.293,
+     "cx": 0.779,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.205,
+     "cx": 0.783,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.335,
+     "cx": 0.255,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.32,
+     "cx": 0.202,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 5059,
+    "castFrac": 0.0878,
+    "edgeRGB": 2.69,
+    "bandMin": 2.78,
+    "bands": [
+     3.7,
+     43.11,
+     9.28,
+     2.78,
+     16.49
+    ],
+    "clutter": 47.16,
+    "ringL": 98.1,
+    "castL": 113.1
+   },
+   "surf": {
+    "topSurface": 0.1696,
+    "entropy": 3.899,
+    "bins": 48,
+    "backTopSurface": 0.1712,
+    "backEntropy": 3.809,
+    "backBins": 33
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.99,
+    "dMed": 15.54,
+    "dFar": 42.73,
+    "dSpanOct": 2.1,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 63,
+    "slopeDeg": 0.69,
+    "rough": 0.027,
+    "span": 0.13
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 2,
+    "shadedFrac": 0.5,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 17.6,
+    "L50": 105.6,
+    "L95": 164.2
+   },
+   "anchors": {
+    "vesper": {
+     "x": 419,
+     "y": 483,
+     "h": 244,
+     "vis": true
+    },
+    "maren": {
+     "x": 334,
+     "y": 463,
+     "h": 235,
+     "vis": true
+    },
+    "m0": {
+     "x": 1224,
+     "y": 603,
+     "h": 180,
+     "vis": true
+    },
+    "m1": {
+     "x": 1246,
+     "y": 525,
+     "h": 108,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2122
+  },
+  {
+   "id": "s057",
+   "zone": "meadow",
+   "at": {
+    "x": 35.620000000000005,
+    "y": 14.085168108157873,
+    "z": -25.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 70,
+    "cands": 3,
+    "solved": 3,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0.75,
+      1
+     ]
+    }
+   },
+   "relief": 0.699,
+   "yawDelta": -1.6,
+   "view": {
+    "score": 7.489,
+    "back": 1.26,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 10.924,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.303,
+     "cx": 0.783,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.211,
+     "cx": 0.791,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.34,
+     "cx": 0.258,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.299,
+     "cx": 0.258,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 6745,
+    "castFrac": 0.1171,
+    "edgeRGB": 9.73,
+    "bandMin": 4.58,
+    "bands": [
+     22.49,
+     16.04,
+     6.23,
+     26.35,
+     4.58
+    ],
+    "clutter": 59.75,
+    "ringL": 126.3,
+    "castL": 139.9
+   },
+   "surf": {
+    "topSurface": 0.1592,
+    "entropy": 4.039,
+    "bins": 50,
+    "backTopSurface": 0.1603,
+    "backEntropy": 3.986,
+    "backBins": 45
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 9.11,
+    "dMed": 11.64,
+    "dFar": 17.82,
+    "dSpanOct": 0.97,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 46,
+    "slopeDeg": 15.85,
+    "rough": 0.28,
+    "span": 1.604
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 14.3,
+    "L50": 128.4,
+    "L95": 207.3
+   },
+   "anchors": {
+    "vesper": {
+     "x": 426,
+     "y": 501,
+     "h": 239,
+     "vis": true
+    },
+    "maren": {
+     "x": 423,
+     "y": 389,
+     "h": 217,
+     "vis": true
+    },
+    "m0": {
+     "x": 1229,
+     "y": 626,
+     "h": 175,
+     "vis": true
+    },
+    "m1": {
+     "x": 1260,
+     "y": 449,
+     "h": 110,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2162
+  },
+  {
+   "id": "s058",
+   "zone": "forest",
+   "at": {
+    "x": 11.879999999999999,
+    "y": 15.295795580027956,
+    "z": -15.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 212,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 0.755,
+   "yawDelta": -0.5,
+   "view": {
+    "score": 5.756,
+    "back": 1.22,
+    "seen": 0.944,
+    "of": 4,
+    "boom": false,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.28,
+   "fov": 27,
+   "camDist": 10.565,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.38,
+     "cx": 0.798,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.262,
+     "cx": 0.792,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.351,
+     "cx": 0.258,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.313,
+     "cx": 0.244,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 3292,
+    "castFrac": 0.0572,
+    "edgeRGB": 10.24,
+    "bandMin": 8.15,
+    "bands": [
+     14.7,
+     23.25,
+     8.15,
+     10.06
+    ],
+    "clutter": 36.31,
+    "ringL": 52.6,
+    "castL": 53.7
+   },
+   "surf": {
+    "topSurface": 0.2502,
+    "entropy": 3.576,
+    "bins": 44,
+    "backTopSurface": 0.4715,
+    "backEntropy": 2.548,
+    "backBins": 22
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 7.39,
+    "dMed": 10.74,
+    "dFar": 27.58,
+    "dSpanOct": 1.9,
+    "layers": 6,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 16,
+    "slopeDeg": 6.58,
+    "rough": 0.169,
+    "span": 1.461
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 17.6,
+    "L50": 72.3,
+    "L95": 142.7
+   },
+   "anchors": {
+    "vesper": {
+     "x": 423,
+     "y": 514,
+     "h": 246,
+     "vis": true
+    },
+    "maren": {
+     "x": 400,
+     "y": 476,
+     "h": 223,
+     "vis": true
+    },
+    "m0": {
+     "x": 1251,
+     "y": 538,
+     "h": 188,
+     "vis": true
+    },
+    "m1": {
+     "x": 1262,
+     "y": 496,
+     "h": 120,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2303
+  },
+  {
+   "id": "s059",
+   "zone": "meadow",
+   "at": {
+    "x": -17.91553390593274,
+    "y": 15.401087980146201,
+    "z": 2.084466094067263
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 48,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "relief": 1.919,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.5582,
+    "back": 2.3,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.28
+   },
+   "kind": "decide",
+   "pitch": 0.22,
+   "fov": 27,
+   "camDist": 10.914,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.309,
+     "cx": 0.787,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.221,
+     "cx": 0.789,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.337,
+     "cx": 0.257,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.296,
+     "cx": 0.259,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 2924,
+    "castFrac": 0.0508,
+    "edgeRGB": 11.15,
+    "bandMin": 9.1,
+    "bands": [
+     25.62,
+     14.33,
+     9.33,
+     9.1
+    ],
+    "clutter": 31.46,
+    "ringL": 76,
+    "castL": 51.7
+   },
+   "surf": {
+    "topSurface": 0.2886,
+    "entropy": 3.545,
+    "bins": 49,
+    "backTopSurface": 0.2436,
+    "backEntropy": 3.446,
+    "backBins": 22
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 6.41,
+    "dMed": 13.37,
+    "dFar": 23.7,
+    "dSpanOct": 1.89,
+    "layers": 5,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 24,
+    "slopeDeg": 5.36,
+    "rough": 0.419,
+    "span": 1.549
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 16.9,
+    "L50": 59.8,
+    "L95": 148.9
+   },
+   "anchors": {
+    "vesper": {
+     "x": 426,
+     "y": 546,
+     "h": 226,
+     "vis": true
+    },
+    "maren": {
+     "x": 427,
+     "y": 479,
+     "h": 202,
+     "vis": true
+    },
+    "m0": {
+     "x": 1231,
+     "y": 455,
+     "h": 183,
+     "vis": true
+    },
+    "m1": {
+     "x": 1253,
+     "y": 394,
+     "h": 109,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2131
+  },
+  {
+   "id": "s060",
+   "zone": "meadow",
+   "at": {
+    "x": -3.1199999999999997,
+    "y": 14.025782719329271,
+    "z": 9.379999999999999
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 5,
+    "cands": 1,
+    "solved": 1,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "relief": 0.289,
+   "yawDelta": 0,
+   "view": {
+    "score": 7.5438,
+    "back": 1.75,
+    "seen": 1,
+    "of": 4,
+    "boom": true,
+    "pitch": 0.16
+   },
+   "kind": "decide",
+   "pitch": 0.16,
+   "fov": 27,
+   "camDist": 10.745,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.275,
+     "cx": 0.786,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.181,
+     "cx": 0.79,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.329,
+     "cx": 0.253,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.286,
+     "cx": 0.256,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 4988,
+    "castFrac": 0.0866,
+    "edgeRGB": 3.69,
+    "bandMin": 7.24,
+    "bands": [
+     17.31,
+     18.08,
+     7.67,
+     7.24
+    ],
+    "clutter": 43.08,
+    "ringL": 144.3,
+    "castL": 165.8
+   },
+   "surf": {
+    "topSurface": 0.1863,
+    "entropy": 4.252,
+    "bins": 59,
+    "backTopSurface": 0.219,
+    "backEntropy": 3.942,
+    "backBins": 49
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 6.48,
+    "dMed": 12.82,
+    "dFar": 15.11,
+    "dSpanOct": 1.22,
+    "layers": 4,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 28,
+    "slopeDeg": 2.48,
+    "rough": 0.172,
+    "span": 1.065
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 0,
+    "shadedFrac": 0,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 49.3,
+    "L50": 131.3,
+    "L95": 195.2
+   },
+   "anchors": {
+    "vesper": {
+     "x": 412,
+     "y": 514,
+     "h": 251,
+     "vis": true
+    },
+    "maren": {
+     "x": 415,
+     "y": 442,
+     "h": 222,
+     "vis": true
+    },
+    "m0": {
+     "x": 1238,
+     "y": 551,
+     "h": 191,
+     "vis": true
+    },
+    "m1": {
+     "x": 1258,
+     "y": 497,
+     "h": 114,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2106
+  },
+  {
+   "id": "s061",
+   "zone": "forest",
+   "at": {
+    "x": 8.120000000000001,
+    "y": 14.299317997200433,
+    "z": -4.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 370,
+    "cands": 9,
+    "solved": 9,
+    "quality": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 1,
+     "incR": 5,
+     "litOf": [
+      0
+     ]
+    }
+   },
+   "relief": 0.911,
+   "yawDelta": -1.6,
+   "view": {
+    "score": 5.7541,
+    "back": 1.01,
+    "seen": 0.944,
+    "of": 4,
+    "boom": false,
+    "pitch": 0.22
+   },
+   "kind": "decide",
+   "pitch": 0.34,
+   "fov": 27,
+   "camDist": 12.729,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "foesFull": 2,
+   "foes": [
+    {
+     "id": "m0",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.219,
+     "cx": 0.738,
+     "anchorVis": true
+    },
+    {
+     "id": "m1",
+     "side": "foe",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.204,
+     "cx": 0.731,
+     "anchorVis": true
+    }
+   ],
+   "partyBoxes": [
+    {
+     "id": "vesper",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.301,
+     "cx": 0.278,
+     "anchorVis": true
+    },
+    {
+     "id": "maren",
+     "side": "party",
+     "dead": false,
+     "inFrame": 1,
+     "hFrac": 0.274,
+     "cx": 0.254,
+     "anchorVis": true
+    }
+   ],
+   "sil": {
+    "ok": true,
+    "castPx": 1863,
+    "castFrac": 0.0323,
+    "edgeRGB": 30.55,
+    "bandMin": 17.35,
+    "bands": [
+     37.7,
+     105.04,
+     21.92,
+     17.35
+    ],
+    "clutter": 8.53,
+    "ringL": 27.5,
+    "castL": 57.5
+   },
+   "surf": {
+    "topSurface": 0.549,
+    "entropy": 2.583,
+    "bins": 43,
+    "backTopSurface": 0.7878,
+    "backEntropy": 1.13,
+    "backBins": 10
+   },
+   "rays": {
+    "skyFrac": 0,
+    "dNear": 10.9,
+    "dMed": 12.91,
+    "dFar": 18.76,
+    "dSpanOct": 0.78,
+    "layers": 3,
+    "horizonRow": 0,
+    "grid": [
+     28,
+     16
+    ]
+   },
+   "ground": {
+    "ok": true,
+    "n": 81,
+    "miss": 11,
+    "slopeDeg": 8.26,
+    "rough": 0.171,
+    "span": 1.552
+   },
+   "sun": {
+    "ok": true,
+    "n": 4,
+    "shaded": 4,
+    "shadedFrac": 1,
+    "dir": [
+     -0.437,
+     0.559,
+     -0.704
+    ]
+   },
+   "frameL": {
+    "L05": 17.9,
+    "L50": 32.4,
+    "L95": 118.2
+   },
+   "anchors": {
+    "vesper": {
+     "x": 458,
+     "y": 420,
+     "h": 199,
+     "vis": true
+    },
+    "maren": {
+     "x": 420,
+     "y": 322,
+     "h": 186,
+     "vis": true
+    },
+    "m0": {
+     "x": 1160,
+     "y": 620,
+     "h": 121,
+     "vis": true
+    },
+    "m1": {
+     "x": 1160,
+     "y": 597,
+     "h": 81,
+     "vis": true
+    }
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "stageMs": 2501
+  }
+ ]
+}

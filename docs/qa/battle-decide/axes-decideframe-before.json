@@ -1,0 +1,1082 @@
+{
+  "piles": {
+    "good": [
+      "s015",
+      "s016",
+      "s022",
+      "s025",
+      "s030",
+      "s031",
+      "s055",
+      "s056",
+      "s060"
+    ],
+    "acceptable": [
+      "s000",
+      "s002",
+      "s004",
+      "s005",
+      "s009",
+      "s010",
+      "s011",
+      "s012",
+      "s013",
+      "s014",
+      "s017",
+      "s019",
+      "s020",
+      "s021",
+      "s027",
+      "s028",
+      "s033",
+      "s036",
+      "s037",
+      "s039",
+      "s041",
+      "s042",
+      "s045",
+      "s046",
+      "s049",
+      "s051",
+      "s052",
+      "s053",
+      "s057",
+      "s058",
+      "s059"
+    ],
+    "bad": [
+      "s001",
+      "s003",
+      "s006",
+      "s007",
+      "s008",
+      "s018",
+      "s023",
+      "s024",
+      "s026",
+      "s029",
+      "s032",
+      "s034",
+      "s035",
+      "s038",
+      "s040",
+      "s043",
+      "s044",
+      "s047",
+      "s048",
+      "s050",
+      "s054",
+      "s061"
+    ]
+  },
+  "axes": [
+    {
+      "axis": "surf.entropy",
+      "auc": 0.965,
+      "sep": 0.929,
+      "balAcc": 0.955,
+      "thresh": 3.789,
+      "dir": "good is HIGHER",
+      "goodMean": 4.154,
+      "accMean": 3.705,
+      "badMean": 2.847,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "surf.backEntropy",
+      "auc": 0.947,
+      "sep": 0.894,
+      "balAcc": 0.952,
+      "thresh": 3.217,
+      "dir": "good is HIGHER",
+      "goodMean": 3.872,
+      "accMean": 3.388,
+      "badMean": 2.311,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "surf.backTopSurface",
+      "auc": 0.063,
+      "sep": 0.873,
+      "balAcc": 0.921,
+      "thresh": 0.2338,
+      "dir": "good is LOWER",
+      "goodMean": 0.213,
+      "accMean": 0.313,
+      "badMean": 0.523,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "relief",
+      "auc": 0.066,
+      "sep": 0.869,
+      "balAcc": 0.899,
+      "thresh": 0.315,
+      "dir": "good is LOWER",
+      "goodMean": 0.218,
+      "accMean": 1.098,
+      "badMean": 1.069,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "surf.backBins",
+      "auc": 0.91,
+      "sep": 0.82,
+      "balAcc": 0.841,
+      "thresh": 38.0,
+      "dir": "good is HIGHER",
+      "goodMean": 43.0,
+      "accMean": 34.258,
+      "badMean": 23.524,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "sil.clutter",
+      "auc": 0.899,
+      "sep": 0.799,
+      "balAcc": 0.897,
+      "thresh": 43.32,
+      "dir": "good is HIGHER",
+      "goodMean": 47.857,
+      "accMean": 42.842,
+      "badMean": 26.113,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "surf.topSurface",
+      "auc": 0.106,
+      "sep": 0.788,
+      "balAcc": 0.876,
+      "thresh": 0.1873,
+      "dir": "good is LOWER",
+      "goodMean": 0.182,
+      "accMean": 0.267,
+      "badMean": 0.434,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "sil.bandMin",
+      "auc": 0.111,
+      "sep": 0.778,
+      "balAcc": 0.873,
+      "thresh": 6.02,
+      "dir": "good is LOWER",
+      "goodMean": 4.741,
+      "accMean": 7.735,
+      "badMean": 14.048,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "sil.castPx",
+      "auc": 0.874,
+      "sep": 0.747,
+      "balAcc": 0.854,
+      "thresh": 3413.0,
+      "dir": "good is HIGHER",
+      "goodMean": 4694.556,
+      "accMean": 3495.548,
+      "badMean": 2693.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "surf.bins",
+      "auc": 0.869,
+      "sep": 0.737,
+      "balAcc": 0.798,
+      "thresh": 53.0,
+      "dir": "good is HIGHER",
+      "goodMean": 59.222,
+      "accMean": 50.774,
+      "badMean": 44.091,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "sil.castFrac",
+      "auc": 0.868,
+      "sep": 0.735,
+      "balAcc": 0.849,
+      "thresh": 0.0593,
+      "dir": "good is HIGHER",
+      "goodMean": 0.082,
+      "accMean": 0.061,
+      "badMean": 0.049,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "frameL.L95",
+      "auc": 0.864,
+      "sep": 0.727,
+      "balAcc": 0.841,
+      "thresh": 144.1,
+      "dir": "good is HIGHER",
+      "goodMean": 178.289,
+      "accMean": 162.968,
+      "badMean": 129.527,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "ground.rough",
+      "auc": 0.141,
+      "sep": 0.717,
+      "balAcc": 0.843,
+      "thresh": 0.174,
+      "dir": "good is LOWER",
+      "goodMean": 0.153,
+      "accMean": 0.241,
+      "badMean": 0.27,
+      "n": [
+        9,
+        30,
+        22
+      ]
+    },
+    {
+      "axis": "sil.edgeRGB",
+      "auc": 0.153,
+      "sep": 0.693,
+      "balAcc": 0.849,
+      "thresh": 7.7,
+      "dir": "good is LOWER",
+      "goodMean": 6.899,
+      "accMean": 10.037,
+      "badMean": 17.288,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "sil.ringL",
+      "auc": 0.847,
+      "sep": 0.693,
+      "balAcc": 0.881,
+      "thresh": 55.4,
+      "dir": "good is HIGHER",
+      "goodMean": 99.6,
+      "accMean": 79.9,
+      "badMean": 57.981,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "camDist",
+      "auc": 0.154,
+      "sep": 0.692,
+      "balAcc": 0.831,
+      "thresh": 11.047,
+      "dir": "good is LOWER",
+      "goodMean": 10.866,
+      "accMean": 11.136,
+      "badMean": 11.84,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "frameL.L50",
+      "auc": 0.818,
+      "sep": 0.636,
+      "balAcc": 0.841,
+      "thresh": 46.5,
+      "dir": "good is HIGHER",
+      "goodMean": 98.1,
+      "accMean": 74.448,
+      "badMean": 56.195,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "sun.shaded",
+      "auc": 0.202,
+      "sep": 0.596,
+      "balAcc": 0.831,
+      "thresh": 3.0,
+      "dir": "good is LOWER",
+      "goodMean": 1.556,
+      "accMean": 3.032,
+      "badMean": 3.227,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "sun.shadedFrac",
+      "auc": 0.202,
+      "sep": 0.596,
+      "balAcc": 0.831,
+      "thresh": 0.75,
+      "dir": "good is LOWER",
+      "goodMean": 0.389,
+      "accMean": 0.758,
+      "badMean": 0.807,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "ground.span",
+      "auc": 0.207,
+      "sep": 0.586,
+      "balAcc": 0.775,
+      "thresh": 1.189,
+      "dir": "good is LOWER",
+      "goodMean": 0.936,
+      "accMean": 1.372,
+      "badMean": 1.396,
+      "n": [
+        9,
+        30,
+        22
+      ]
+    },
+    {
+      "axis": "ground.miss",
+      "auc": 0.22,
+      "sep": 0.561,
+      "balAcc": 0.833,
+      "thresh": 3.0,
+      "dir": "good is LOWER",
+      "goodMean": 17.667,
+      "accMean": 29.355,
+      "badMean": 35.091,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "sil.castL",
+      "auc": 0.741,
+      "sep": 0.481,
+      "balAcc": 0.794,
+      "thresh": 114.8,
+      "dir": "good is HIGHER",
+      "goodMean": 113.456,
+      "accMean": 81.839,
+      "badMean": 78.733,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "ground.slopeDeg",
+      "auc": 0.273,
+      "sep": 0.455,
+      "balAcc": 0.74,
+      "thresh": 4.19,
+      "dir": "good is LOWER",
+      "goodMean": 2.618,
+      "accMean": 7.43,
+      "badMean": 7.936,
+      "n": [
+        9,
+        30,
+        22
+      ]
+    },
+    {
+      "axis": "view.score",
+      "auc": 0.712,
+      "sep": 0.424,
+      "balAcc": 0.75,
+      "thresh": 7.5082,
+      "dir": "good is HIGHER",
+      "goodMean": 7.723,
+      "accMean": 7.426,
+      "badMean": 7.357,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "view.seen",
+      "auc": 0.705,
+      "sep": 0.409,
+      "balAcc": 0.705,
+      "thresh": 1.0,
+      "dir": "good is HIGHER",
+      "goodMean": 1.0,
+      "accMean": 0.989,
+      "badMean": 0.971,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "at.z",
+      "auc": 0.699,
+      "sep": 0.399,
+      "balAcc": 0.73,
+      "thresh": 9.38,
+      "dir": "good is HIGHER",
+      "goodMean": 26.525,
+      "accMean": 13.039,
+      "badMean": -1.991,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "view.pitch",
+      "auc": 0.306,
+      "sep": 0.389,
+      "balAcc": 0.717,
+      "thresh": 0.16,
+      "dir": "good is LOWER",
+      "goodMean": 0.18,
+      "accMean": 0.214,
+      "badMean": 0.225,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "at.x",
+      "auc": 0.318,
+      "sep": 0.364,
+      "balAcc": 0.73,
+      "thresh": -3.12,
+      "dir": "good is LOWER",
+      "goodMean": -28.703,
+      "accMean": -20.0,
+      "badMean": 3.957,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "frameL.L05",
+      "auc": 0.682,
+      "sep": 0.364,
+      "balAcc": 0.697,
+      "thresh": 19.5,
+      "dir": "good is HIGHER",
+      "goodMean": 24.989,
+      "accMean": 26.906,
+      "badMean": 29.468,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "d.castVsFrameL",
+      "auc": 0.333,
+      "sep": 0.333,
+      "balAcc": 0.698,
+      "thresh": 20.8,
+      "dir": "good is LOWER",
+      "goodMean": 15.356,
+      "accMean": 7.39,
+      "badMean": 24.438,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "d.nearBandFrac",
+      "auc": 0.333,
+      "sep": 0.333,
+      "balAcc": 0.73,
+      "thresh": 0.6477,
+      "dir": "good is LOWER",
+      "goodMean": 0.621,
+      "accMean": 0.606,
+      "badMean": 0.659,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "view.back",
+      "auc": 0.641,
+      "sep": 0.283,
+      "balAcc": 0.682,
+      "thresh": 1.66,
+      "dir": "good is HIGHER",
+      "goodMean": 4.507,
+      "accMean": 2.653,
+      "badMean": 3.927,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "at.y",
+      "auc": 0.636,
+      "sep": 0.273,
+      "balAcc": 0.697,
+      "thresh": 25.8417,
+      "dir": "good is HIGHER",
+      "goodMean": 23.172,
+      "accMean": 20.346,
+      "badMean": 18.412,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "stageMs",
+      "auc": 0.384,
+      "sep": 0.232,
+      "balAcc": 0.697,
+      "thresh": 2114.0,
+      "dir": "good is LOWER",
+      "goodMean": 2144.0,
+      "accMean": 2123.871,
+      "badMean": 2174.227,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "pitch",
+      "auc": 0.391,
+      "sep": 0.217,
+      "balAcc": 0.606,
+      "thresh": 0.22,
+      "dir": "good is LOWER",
+      "goodMean": 0.22,
+      "accMean": 0.241,
+      "badMean": 0.25,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "rays.dNear",
+      "auc": 0.394,
+      "sep": 0.212,
+      "balAcc": 0.73,
+      "thresh": 8.48,
+      "dir": "good is LOWER",
+      "goodMean": 8.119,
+      "accMean": 7.781,
+      "badMean": 8.328,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "site.ms",
+      "auc": 0.399,
+      "sep": 0.202,
+      "balAcc": 0.616,
+      "thresh": 17.0,
+      "dir": "good is LOWER",
+      "goodMean": 45.778,
+      "accMean": 16.806,
+      "badMean": 65.455,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "yawDelta",
+      "auc": 0.409,
+      "sep": 0.182,
+      "balAcc": 0.659,
+      "thresh": 0.0,
+      "dir": "good is LOWER",
+      "goodMean": -0.644,
+      "accMean": 0.24,
+      "badMean": -0.291,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "site.solved",
+      "auc": 0.424,
+      "sep": 0.152,
+      "balAcc": 0.581,
+      "thresh": 3.0,
+      "dir": "good is LOWER",
+      "goodMean": 1.667,
+      "accMean": 1.194,
+      "badMean": 2.227,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "rays.dSpanOct",
+      "auc": 0.561,
+      "sep": 0.121,
+      "balAcc": 0.639,
+      "thresh": 1.32,
+      "dir": "good is HIGHER",
+      "goodMean": 1.619,
+      "accMean": 1.701,
+      "badMean": 1.59,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "d.bandSpread",
+      "auc": 0.556,
+      "sep": 0.111,
+      "balAcc": 0.635,
+      "thresh": 13.46,
+      "dir": "good is HIGHER",
+      "goodMean": 25.26,
+      "accMean": 25.685,
+      "badMean": 28.808,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "d.ringVsFrameL",
+      "auc": 0.45,
+      "sep": 0.101,
+      "balAcc": 0.651,
+      "thresh": -7.2,
+      "dir": "good is LOWER",
+      "goodMean": 1.5,
+      "accMean": 5.452,
+      "badMean": 3.686,
+      "n": [
+        9,
+        31,
+        21
+      ]
+    },
+    {
+      "axis": "site.cands",
+      "auc": 0.449,
+      "sep": 0.101,
+      "balAcc": 0.604,
+      "thresh": 3.0,
+      "dir": "good is LOWER",
+      "goodMean": 1.778,
+      "accMean": 1.387,
+      "badMean": 2.409,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "view.boom",
+      "auc": 0.545,
+      "sep": 0.091,
+      "balAcc": 0.545,
+      "thresh": 1.0,
+      "dir": "good is HIGHER",
+      "goodMean": 1.0,
+      "accMean": 0.935,
+      "badMean": 0.909,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "site.R",
+      "auc": 0.47,
+      "sep": 0.061,
+      "balAcc": 0.545,
+      "thresh": 5.0,
+      "dir": "good is LOWER",
+      "goodMean": 1.667,
+      "accMean": 1.548,
+      "badMean": 2.091,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "site.d",
+      "auc": 0.47,
+      "sep": 0.061,
+      "balAcc": 0.545,
+      "thresh": 5.0,
+      "dir": "good is LOWER",
+      "goodMean": 1.667,
+      "accMean": 1.548,
+      "badMean": 2.091,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "foesFull",
+      "auc": 0.523,
+      "sep": 0.045,
+      "balAcc": 0.523,
+      "thresh": 2.0,
+      "dir": "good is HIGHER",
+      "goodMean": 2.0,
+      "accMean": 2.0,
+      "badMean": 1.955,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "rays.layers",
+      "auc": 0.477,
+      "sep": 0.045,
+      "balAcc": 0.568,
+      "thresh": 7.0,
+      "dir": "good is LOWER",
+      "goodMean": 5.444,
+      "accMean": 5.387,
+      "badMean": 5.682,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "sil.ok",
+      "auc": 0.523,
+      "sep": 0.045,
+      "balAcc": 0.523,
+      "thresh": 1.0,
+      "dir": "good is HIGHER",
+      "goodMean": 1.0,
+      "accMean": 1.0,
+      "badMean": 0.955,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "rays.dFar",
+      "auc": 0.52,
+      "sep": 0.04,
+      "balAcc": 0.596,
+      "thresh": 24.33,
+      "dir": "good is HIGHER",
+      "goodMean": 26.063,
+      "accMean": 27.13,
+      "badMean": 23.895,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "rays.dMed",
+      "auc": 0.515,
+      "sep": 0.03,
+      "balAcc": 0.614,
+      "thresh": 11.22,
+      "dir": "good is HIGHER",
+      "goodMean": 13.021,
+      "accMean": 12.986,
+      "badMean": 12.62,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "rays.skyFrac",
+      "auc": 0.515,
+      "sep": 0.03,
+      "balAcc": 0.556,
+      "thresh": 0.025,
+      "dir": "good is HIGHER",
+      "goodMean": 0.003,
+      "accMean": 0.003,
+      "badMean": 0.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "axisOk",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 1.0,
+      "dir": "good is HIGHER",
+      "goodMean": 1.0,
+      "accMean": 1.0,
+      "badMean": 1.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "foesAll",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 2.0,
+      "dir": "good is HIGHER",
+      "goodMean": 2.0,
+      "accMean": 2.0,
+      "badMean": 2.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "foesIn",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 2.0,
+      "dir": "good is HIGHER",
+      "goodMean": 2.0,
+      "accMean": 2.0,
+      "badMean": 2.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "fov",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 27.0,
+      "dir": "good is HIGHER",
+      "goodMean": 27.0,
+      "accMean": 27.0,
+      "badMean": 27.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "ground.n",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 81.0,
+      "dir": "good is HIGHER",
+      "goodMean": 81.0,
+      "accMean": 81.0,
+      "badMean": 81.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "ground.ok",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 1.0,
+      "dir": "good is HIGHER",
+      "goodMean": 1.0,
+      "accMean": 0.968,
+      "badMean": 1.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "rays.horizonRow",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 0.0,
+      "dir": "good is HIGHER",
+      "goodMean": 0.0,
+      "accMean": 0.0,
+      "badMean": 0.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "sun.n",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 4.0,
+      "dir": "good is HIGHER",
+      "goodMean": 4.0,
+      "accMean": 4.0,
+      "badMean": 4.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "sun.ok",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 1.0,
+      "dir": "good is HIGHER",
+      "goodMean": 1.0,
+      "accMean": 1.0,
+      "badMean": 1.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "view.of",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": 4.0,
+      "dir": "good is HIGHER",
+      "goodMean": 4.0,
+      "accMean": 4.0,
+      "badMean": 4.0,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    },
+    {
+      "axis": "yawWas",
+      "auc": 0.5,
+      "sep": 0.0,
+      "balAcc": 0.5,
+      "thresh": -1.4869,
+      "dir": "good is HIGHER",
+      "goodMean": -1.487,
+      "accMean": -1.487,
+      "badMean": -1.487,
+      "n": [
+        9,
+        31,
+        22
+      ]
+    }
+  ]
+}

@@ -22589,3 +22589,81 @@ Cleanup: this lane's worktree removed, scratch `dist`, the `node_modules` symlin
 fetch dirs, the probe Chrome profiles and every `static-verify*.png` deleted; zero orphaned
 Chrome (`ppid 1` root check clean). The two stale worktrees from earlier sessions
 (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+---
+
+## 2026-08-09 — DECIDE-FRAME CENSUS: does the placement number transfer to the frame the player lives in
+
+Board: **docs/qa/battle-decide/index.html** (top section). Data: `census-{before,after}.json`,
+`sort-decide{,-q}.json` (the eye sorts, with a written reason per site), `axes-*.json`,
+pictures in `census/{before,after}/` and contact sheets in `sheets-{before,after}/`.
+Instrument: `tools/battle_decide.mjs --mode=census` (new mode, no runtime touched).
+
+**THE GAP CLOSED.** The placement lane's headline — 48.4% bad -> 32.3% after the sun refusal —
+was an eye-sort of `round` ESTABLISHING PLATES. The decide lane had already proved the player
+lives in the `decide` command step. Nobody had eye-sorted THAT frame at census scale, so
+"good staging for a wide establishing shot is good staging for a 27 mm two-shot" was an
+inherited hypothesis. It has now been tested at all 62 census sites, both arms.
+
+**THE CORRECTED NUMBER: the frame the player lives in is 32.3% bad on the shipped build and was
+35.5% bad before the sun refusal.** The round headline's own after-number (32.3%) happens to
+land on the same value; ITS BEFORE-NUMBER DOES NOT TRANSFER. The refusal buys −3.2 points of
+bad here against −16.1 on the round plates. What it does buy is the top pile: good 14.5% ->
+30.6% (round: 14.5% -> 24.2%).
+
+**THE PLACEMENT JUDGEMENT TRANSFERS DIRECTIONALLY AND ONLY ROUGHLY.** Round vs decide on the
+shipped build: agree 40/62 (64.5%), **zero good<->bad reversals in either direction** (same on
+the pre-fix arm: 40/62, zero reversals). So the placement sort was not measuring the wrong
+picture — but a third of the sites sit in a different pile, 13 better in decide and 9 worse,
+and the pre-fix bad rate was overstated by 13 points for the frame that matters.
+
+**AND THE "0 REGRESSED" CLAIM DOES NOT SURVIVE THE MOVE.** The round sort recorded 14 improved
+/ 0 regressed. In the decide frame the refusal is 11 improved / 1 REGRESSED: **s053 went
+acceptable -> bad because the refusal moved the fight onto a lit pale canyon floor, where the
+cream wolf is a ghost at the sandstone's own value.** SUN IS NOT CONTRAST — a quality term
+that only asks "is the cast lit" can light a body onto a background of its own value, and the
+round plate (wider, more background in frame) hid it.
+
+**WHICH AXES STILL SEPARATE** (`tools/battle_place_stats.py`, `sep` = |AUC−0.5|×2):
+* ONE-SURFACE DOMINANCE HOLDS AND STRENGTHENS. `surf.entropy` / `surf.topSurface` 0.844 sep on
+  the round sort -> **0.949** under the decide sort, and 0.937 when re-measured ON the decide
+  frame. It is the top separator in every arm and every labelling. The winner did not change.
+* **SUN EXPOSURE WEAKENS.** `sun.shadedFrac` 0.685 -> 0.596 (pre-fix arm) -> **0.553** on the
+  shipped arm. Still real, no longer second: on the decide frame it ranks below background
+  variety, frame luminance, silhouette clutter and worst-band contrast. The axis the shipped
+  fix optimises is the axis that transfers least well.
+* THE NEGATIVES ALL HOLD, AND HARDEN. Sky is not the axis (0.363 -> 0.182, and **0.055** measured
+  on the decide frame — chance). `view.back`, the axis the solver already optimises, falls
+  0.467 -> 0.211. And **the shipped tonal metric still runs BACKWARDS**: `sil.edgeRGB` AUC 0.244
+  on the round sort, **0.153 on the decide frame** — more backwards, not less. Confirmed again:
+  TONE is right at its own job (choosing a boom at one site) and is not a placement metric.
+* ONE AXIS FLIPS AND IT IS AN ARTEFACT, NOT A FINDING: relocation distance `site.d` predicts
+  nothing pre-fix (0.450/0.470) but reads 0.649 on the shipped arm — because the refusal only
+  moves sites it improves. Do not read it as "moving is good".
+
+**RECEIPTS FROM THE SAME RUN.** 62/62 sites at both arms: shot `decide`, fov 27, **2/2 foes in
+frame, `axisOk` true, zero refusals** — the `keep:'foes'` containment fix was previously proven
+at 12 sites and now holds at census scale. Mean shaded fraction of the cast 0.722 -> 0.520,
+which is the refusal doing exactly what it says. `ORBIT.yaw` was pinned before every
+`Battle.start` and the pre-pin reading was **identical (−1.4869) at all 124 sites**, which is
+the receipt that the stage restores ORBIT on destroy and that the two arms are comparable.
+
+**METHOD NOTE, and it is a departure from sort.json's letter.** The rubric's `good` says all
+four bodies read as separate figures. The `decide` shot is a two-shot on the deciding character,
+so the two PARTY bodies overlap into one silhouette at most sites in BOTH arms — a fixed
+property of the lens, present everywhere. Scoring it would have measured the camera and called
+it placement, so party-on-party overlap is not counted; every other clause is applied as
+written. Also not scored, and worth someone's attention: the shipped command menu is a DOM
+overlay that `snapshot()` cannot see, so a real player reads this frame with a menu box over
+its lower band.
+
+**INSTRUMENT CHANGE.** `tools/battle_place.mjs`'s measurement library was moved VERBATIM to
+`tools/battle_place_lib.mjs` and is now imported by both tools, so "does one surface own the
+frame" is the same object computing the same number on both frames — two sorts compared with
+two rulers is not a comparison. Proven still live by a one-site `battle_place` capture after
+the move. `battle_place_sheets.py` grew `--ext` (the census writes JPEG); its sheet geometry is
+deliberately NOT parameterised, because two sorts are only comparable if the human looked at
+the same size picture.
+
+No shipped runtime behaviour changed by this lane (nothing under `public/`). Gates run:
+`battle_sim` ALL ENVELOPES GREEN, `encounter_sim` GREEN.

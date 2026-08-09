@@ -14,6 +14,15 @@ table.m.wide{max-width:760px;margin:10px 0 4px}
  table.m td{padding:2px 14px 2px 0;font-variant-numeric:tabular-nums}
  .bad{color:#ff8b7a;font-weight:600}.good{color:#7fd39b;font-weight:600}
  code{background:#232833;padding:1px 5px;border-radius:3px}
+ h3{font-size:13px;margin:18px 0 6px;color:#c3cede;letter-spacing:.03em}
+ .dim{color:#6f7b8e;font-weight:400}
+ p.lede.small{font-size:12px;margin-top:4px}
+ table.m.cm td{text-align:right;padding-right:18px;min-width:64px}
+ table.m.cm td.off{color:#e8c07d}
+ table.m.cm th{padding-right:18px}
+ .gal{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ .pair2{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+ a{color:#8fb5ff}
 </style>
 <h1>The frame the player chooses in</h1>
 <p class="lede">A real battle at four census sites, one per encounter zone. Nothing drives the camera:
@@ -22,6 +31,82 @@ battle_turnbased's own <code>.ebb-cmds.idle</code> class. <b>Foes in frame</b> i
 Box3 projected through the live camera and intersected with the canvas &mdash; in frame, not visible.
 <b>Zero-foe dwell</b> is the fraction of sampled command-step frames containing no living foe at all.</p>
 <p class="lede">before: 2026-08-09 04:29 &middot; r185 &middot; dwell 3000 ms<br>after: 2026-08-09 04:33 &middot; r185 &middot; dwell 3000 ms</p>
+<h2>Does the placement number transfer to this frame</h2>
+    <p class="lede">The placement lane censused 62 staged sites and eye-sorted them
+    <b>48.4% bad &rarr; 32.3%</b> after its sun refusal. It sorted <code>round</code> PLATES.
+    Here are the SAME 62 landing cells photographed at the <code>decide</code> command step
+    &mdash; same party, same foes, same seed, <code>ORBIT.yaw</code> pinned, nothing driving the
+    camera &mdash; and sorted by eye from contact sheets of the same geometry
+    (<a href="sheets-after/sheet00.jpg">sheets-after</a> / <a href="sheets-before/sheet00.jpg">sheets-before</a>),
+    before any number was opened. Method and per-site reasons: <code>sort-decide{,-q}.json</code>.</p>
+    <table class="m wide"><tr><th>sort</th><th>good</th><th>acceptable</th><th>bad</th></tr>
+      <tr><td>round &middot; before the sun refusal</td><td>9 <span class="dim">(14.5%)</span></td><td>23 <span class="dim">(37.1%)</span></td><td>30 <span class="dim">(48.4%)</span></td></tr>
+      <tr><td>round &middot; SHIPPED</td><td>15 <span class="dim">(24.2%)</span></td><td>27 <span class="dim">(43.5%)</span></td><td>20 <span class="dim">(32.3%)</span></td></tr>
+      <tr><td>decide &middot; before the sun refusal</td><td>9 <span class="dim">(14.5%)</span></td><td>31 <span class="dim">(50.0%)</span></td><td>22 <span class="dim">(35.5%)</span></td></tr>
+      <tr><td>decide &middot; SHIPPED</td><td>19 <span class="dim">(30.6%)</span></td><td>23 <span class="dim">(37.1%)</span></td><td>20 <span class="dim">(32.3%)</span></td></tr>
+    </table>
+    <p class="lede">Read the last two rows, not the first two: <b>the frame the player lives in is
+    32.3% bad on the shipped build, and it was 35.5% bad before the sun
+    refusal.</b> The refusal is worth far less here than the round headline says (&minus;3.2 points of
+    bad, against &minus;16.1 on the round plates) &mdash; but it MOVES SITES UP: good 14.5% &rarr; 30.6%.</p>
+    <h3>Round vs decide, on the shipped build</h3><table class="m wide cm"><tr><th>round &darr; / decide &rarr;</th><th>good</th><th>acceptable</th><th>bad</th><th>tot</th></tr><tr><th>good</th><td class="">11</td><td class="off">4</td><td class=""></td><td>15</td></tr><tr><th>acceptable</th><td class="off">8</td><td class="">14</td><td class="off">5</td><td>27</td></tr><tr><th>bad</th><td class=""></td><td class="off">5</td><td class="">15</td><td>20</td></tr></table><p class="lede small">agree 40/62 (64.5%) &middot; <b>good&harr;bad reversals: 0</b></p>
+    <h3>Round vs decide, before the sun refusal</h3><table class="m wide cm"><tr><th>round &darr; / decide &rarr;</th><th>good</th><th>acceptable</th><th>bad</th><th>tot</th></tr><tr><th>good</th><td class="">3</td><td class="off">6</td><td class=""></td><td>9</td></tr><tr><th>acceptable</th><td class="off">6</td><td class="">16</td><td class="off">1</td><td>23</td></tr><tr><th>bad</th><td class=""></td><td class="off">9</td><td class="">21</td><td>30</td></tr></table><p class="lede small">agree 40/62 (64.5%) &middot; <b>good&harr;bad reversals: 0</b></p>
+    <h3>What the sun refusal did to the decide frame</h3><table class="m wide cm"><tr><th>before &darr; / after &rarr;</th><th>good</th><th>acceptable</th><th>bad</th><th>tot</th></tr><tr><th>good</th><td class="">9</td><td class=""></td><td class=""></td><td>9</td></tr><tr><th>acceptable</th><td class="off">8</td><td class="">22</td><td class="off">1</td><td>31</td></tr><tr><th>bad</th><td class="off">2</td><td class="off">1</td><td class="">19</td><td>22</td></tr></table><p class="lede small">agree 50/62 (80.6%) &middot; <b>good&harr;bad reversals: 2</b></p>
+    <h3>Which axes still separate</h3>
+    <p class="lede">Same instrument (<code>tools/battle_place_stats.py</code>), same axes, three
+    labellings. <code>sep</code> is |AUC&minus;0.5|&times;2, so it is direction-free; below 0.35 is
+    noise. The decide-frame column re-measures every frame axis ON the decide frame with the placement
+    lane's own library (<code>tools/battle_place_lib.mjs</code>, moved verbatim so the ruler is
+    literally the same object).</p>
+    <table class="m wide"><tr><th>axis</th><th>round frame / ROUND sort<br><span class="dim">AUC / sep</span></th><th>round frame / decide sort<br><span class="dim">AUC / sep</span></th><th>decide frame / decide sort<br><span class="dim">AUC / sep</span></th></tr><tr><td><code>surf.topSurface</code></td><td>0.078 / <b class="good">0.844</b></td><td>0.034 / <b class="good">0.932</b></td><td>0.058 / <b class="good">0.884</b></td></tr><tr><td><code>surf.entropy</code></td><td>0.922 / <b class="good">0.844</b></td><td>0.958 / <b class="good">0.916</b></td><td>0.968 / <b class="good">0.937</b></td></tr><tr><td><code>sun.shadedFrac</code></td><td>0.157 / <b class="good">0.685</b></td><td>0.224 / <b class="">0.553</b></td><td>0.224 / <b class="">0.553</b></td></tr><tr><td><code>rays.skyFrac</code></td><td>0.681 / <b class="">0.363</b></td><td>0.608 / <b class="bad">0.216</b></td><td>0.528 / <b class="bad">0.055</b></td></tr><tr><td><code>site.d</code></td><td>0.450 / <b class="bad">0.100</b></td><td>0.649 / <b class="bad">0.297</b></td><td>0.649 / <b class="bad">0.297</b></td></tr><tr><td><code>sil.edgeRGB</code></td><td>0.244 / <b class="">0.511</b></td><td>0.276 / <b class="">0.447</b></td><td>0.266 / <b class="">0.468</b></td></tr><tr><td><code>view.back</code></td><td>0.733 / <b class="">0.467</b></td><td>0.605 / <b class="bad">0.211</b></td><td>0.605 / <b class="bad">0.211</b></td></tr><tr><td><code>view.seen</code></td><td>0.657 / <b class="bad">0.315</b></td><td>0.682 / <b class="">0.363</b></td><td>0.682 / <b class="">0.363</b></td></tr></table>
+    <h3>The 22 sites the two frames disagree about</h3>
+    <p class="lede">Left: the <code>round</code> plate the placement lane sorted. Right: the
+    <code>decide</code> frame at the same site on the same build.</p>
+    <div class="gal"><figure><figcaption>s000 &middot; round <b>bad</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s000.jpg">
+      <img loading="lazy" src="census/after/s000.jpg"></div></figure><figure><figcaption>s007 &middot; round <b>good</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s007.jpg">
+      <img loading="lazy" src="census/after/s007.jpg"></div></figure><figure><figcaption>s016 &middot; round <b>acceptable</b> &rarr; decide <b>good</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s016.jpg">
+      <img loading="lazy" src="census/after/s016.jpg"></div></figure><figure><figcaption>s020 &middot; round <b>bad</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s020.jpg">
+      <img loading="lazy" src="census/after/s020.jpg"></div></figure><figure><figcaption>s022 &middot; round <b>acceptable</b> &rarr; decide <b>good</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s022.jpg">
+      <img loading="lazy" src="census/after/s022.jpg"></div></figure><figure><figcaption>s025 &middot; round <b>acceptable</b> &rarr; decide <b>good</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s025.jpg">
+      <img loading="lazy" src="census/after/s025.jpg"></div></figure><figure><figcaption>s027 &middot; round <b>bad</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s027.jpg">
+      <img loading="lazy" src="census/after/s027.jpg"></div></figure><figure><figcaption>s028 &middot; round <b>acceptable</b> &rarr; decide <b>good</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s028.jpg">
+      <img loading="lazy" src="census/after/s028.jpg"></div></figure><figure><figcaption>s029 &middot; round <b>acceptable</b> &rarr; decide <b>good</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s029.jpg">
+      <img loading="lazy" src="census/after/s029.jpg"></div></figure><figure><figcaption>s031 &middot; round <b>acceptable</b> &rarr; decide <b>good</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s031.jpg">
+      <img loading="lazy" src="census/after/s031.jpg"></div></figure><figure><figcaption>s034 &middot; round <b>acceptable</b> &rarr; decide <b>bad</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s034.jpg">
+      <img loading="lazy" src="census/after/s034.jpg"></div></figure><figure><figcaption>s038 &middot; round <b>acceptable</b> &rarr; decide <b>bad</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s038.jpg">
+      <img loading="lazy" src="census/after/s038.jpg"></div></figure><figure><figcaption>s041 &middot; round <b>good</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s041.jpg">
+      <img loading="lazy" src="census/after/s041.jpg"></div></figure><figure><figcaption>s044 &middot; round <b>acceptable</b> &rarr; decide <b>good</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s044.jpg">
+      <img loading="lazy" src="census/after/s044.jpg"></div></figure><figure><figcaption>s046 &middot; round <b>good</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s046.jpg">
+      <img loading="lazy" src="census/after/s046.jpg"></div></figure><figure><figcaption>s047 &middot; round <b>acceptable</b> &rarr; decide <b>bad</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s047.jpg">
+      <img loading="lazy" src="census/after/s047.jpg"></div></figure><figure><figcaption>s048 &middot; round <b>acceptable</b> &rarr; decide <b>bad</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s048.jpg">
+      <img loading="lazy" src="census/after/s048.jpg"></div></figure><figure><figcaption>s049 &middot; round <b>good</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s049.jpg">
+      <img loading="lazy" src="census/after/s049.jpg"></div></figure><figure><figcaption>s051 &middot; round <b>bad</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s051.jpg">
+      <img loading="lazy" src="census/after/s051.jpg"></div></figure><figure><figcaption>s052 &middot; round <b>bad</b> &rarr; decide <b>acceptable</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s052.jpg">
+      <img loading="lazy" src="census/after/s052.jpg"></div></figure><figure><figcaption>s053 &middot; round <b>acceptable</b> &rarr; decide <b>bad</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s053.jpg">
+      <img loading="lazy" src="census/after/s053.jpg"></div></figure><figure><figcaption>s060 &middot; round <b>acceptable</b> &rarr; decide <b>good</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/s060.jpg">
+      <img loading="lazy" src="census/after/s060.jpg"></div></figure></div>
 <section><h2>s041 &middot; meadow</h2>
     <div class="pair">
       <figure><figcaption>BEFORE &mdash; the command step</figcaption><img loading="lazy" src="shots/before-s041-cmd.jpg">
