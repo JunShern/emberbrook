@@ -1,0 +1,100 @@
+<meta charset=utf-8><title>cutin_edge — the chroma term</title>
+<style>
+body{background:#11131c;color:#cbd;font:13px/1.6 system-ui;margin:20px;max-width:1000px}
+h1{font-size:20px}h2{font-size:15px;margin:28px 0 6px;border-top:1px solid #2a2d3c;padding-top:14px}
+p{max-width:80ch}img{display:block;border:1px solid #333;max-width:100%;margin:8px 0}
+table{border-collapse:collapse;font-size:12px;margin:8px 0}
+td,th{padding:3px 10px 3px 0;text-align:left;vertical-align:top}
+th{color:#8a90a6;font-weight:600}
+code{color:#9fd1c0}.k{color:#6a7085}.ok{color:#7fd18d}.bad{color:#e08a7a}
+</style>
+
+<h1>A GATE THAT MEASURES BRIGHTNESS CANNOT SEE COLOUR</h1>
+<p class=k>The evidence behind <code>chroma_rim</code> in tools/cutin_edge.py. Every crop
+on this page is at NATIVE resolution over a night value (26,30,44) — a fringe is
+invisible over white, which is how it shipped in the first place.</p>
+
+<h2>1. The defect, recovered from git — not synthesised</h2>
+<p>The despill fix is commit <code>8416ca3c</code>, so every pre-fix plate is recoverable
+verbatim at <code>8416ca3c^</code>. 105 were. 98 of them have a byte-comparable
+post-fix twin at the same geometry, and the pixels that were chartreuse before and
+are not after ARE the defect, with legitimately green paint cancelled out by
+construction. That labels <b>51 plates</b> pixel-for-pixel.
+The counter reproduces the fix commit's own recorded number to within one pixel:
+<code>G − max(R,B) &gt; 8</code> over visible pixels gives <b>3157 px</b> on
+boatwright/cutin against its recorded 3158.</p>
+<p class=k>boatwright/cutin — pre-fix (left) and shipped (right), same art, one variable:</p>
+<img src="ab-boatwright.png" alt="boatwright before and after the despill fix">
+<p class=k>The eight worst pre-fix plates by defect pixels:</p>
+<img src="pre-fix-worst.png" alt="the eight worst pre-fix plates">
+
+<h2>2. The metric, and the two forms that were measured and rejected</h2>
+<p><b><code>chroma_rim</code> = share of the figure's outer 3&nbsp;px SHELL carrying
+<code>G − max(R,B) &gt; 72</code>, minus the share of its own material 4–10&nbsp;px in
+that does.</b> The hue is the key's own axis: gen-cutin identifies magenta key by
+CHANNEL ORDER (<code>keyness</code> = min(R,B) − G), and over-subtracting it leaves the
+mirror image of that signature. <code>key_rim</code> is the same number for key colour
+that survived — reported, not gated (see §5).</p>
+<table>
+<tr><th>form</th><th>why it fails</th></tr>
+<tr><td>per-pixel vs a LOCAL interior reference</td><td>defeated by texture — Maren's
+striped shirt puts a teal stripe at the boundary and a stripe/cream average a few px in,
+so honest paint reads as an excursion</td></tr>
+<tr><td>plain shell share, no subtraction</td><td>defeated by paint — child-girl's
+silhouette IS a bundle of green reeds</td></tr>
+<tr><td>&quot;chroma mass&quot; (Σ excess above a low threshold)</td><td>measured
+strictly worse than a count at every threshold: separation 0.10–0.51x, i.e. inverted</td></tr>
+</table>
+<p>Paint runs through BOTH bands and cancels. A rim exists in the shell and nowhere else.</p>
+
+<h2>3. The threshold and the bar, derived from the separation</h2>
+<p>51 known-defect plates against the 106 shipped plates that carry no rim,
+shell-minus-core share:</p>
+<table>
+<tr><th>T</th><th>weakest defect</th><th>worst clean</th><th>verdict</th></tr>
+<tr><td>24</td><td>0.0056</td><td>0.0942</td><td class=bad>inverted</td></tr>
+<tr><td>32</td><td>0.0041</td><td>0.0474</td><td class=bad>inverted</td></tr>
+<tr><td>40</td><td>0.0022</td><td>0.0195</td><td class=bad>inverted</td></tr>
+<tr><td>48</td><td>0.00127</td><td>0.00649</td><td class=bad>inverted</td></tr>
+<tr><td>56</td><td>0.00123</td><td>0.00171</td><td class=bad>inverted</td></tr>
+<tr><td>64</td><td>0.00088</td><td>0.00033</td><td class=ok>separated 2.7x</td></tr>
+<tr><td><b>72</b></td><td><b>0.00088</b></td><td><b>0.00016</b></td><td class=ok><b>separated 5.5x — SHIPPED</b></td></tr>
+<tr><td>80</td><td>0.00055</td><td>0.00005</td><td>separated 11.7x, but the defect
+has started to fade faster than the paint</td></tr>
+</table>
+<p>Below 64 the honest green paint OUTSCORES the defect and no bar exists at all.
+72 is the highest threshold that still costs the weakest measured defect nothing.
+<b>GATE = 0.0003</b>, in the gap: 1.9x the clean ceiling, 2.9x under the weakest defect.
+102 of the 120 shipped plates read <b>exactly zero</b>, and the highest-scoring clean
+plate in the cast is <b>one pixel</b>.</p>
+
+<h2>4. What it fails today — all fourteen looked at, all fourteen right</h2>
+<p>Maren's whole suite of 13 plus weaponsmith/cutin. These are the &quot;20 left&quot;
+the fix commit named as unrepairable without studio art to re-mat from — they were never
+put through the fixed despill and still ship the rim.</p>
+<img src="newly-failed-1.png" alt="eight of Maren's plates, neon rim on every one">
+<img src="newly-failed-2.png" alt="five more Maren plates and weaponsmith">
+<p class=k>maren/cutin at 3x — this is what has been shipping:</p>
+<img src="zoom-maren.png" alt="maren cut-in at 3x, neon chartreuse rim">
+<p>And the nearest PASSING plates, which are paint and not defects: child-girl's reeds,
+villager-woman's olive braid, creel, Vesper's sage coat.</p>
+<img src="nearest-passing.png" alt="the nearest passing plates">
+<p class=k>creel/cutin at 4x — the highest-scoring clean plate in the cast, ONE firing pixel:</p>
+<img src="zoom-creel-top-passing.png" alt="creel at 4x">
+
+<h2>5. What is NOT gated, and why</h2>
+<p><code>key_rim</code> — the same measurement for key colour that SURVIVED — is reported
+and not gated. Vesper owns the top ten of the whole cast on it (0.011–0.028), and what
+fires is the magenta edge along her auburn hair strands. I could not tell that from
+bloomed key by eye and have no labelled positive set to settle it, and gating it would
+refuse the character the framing gate is calibrated on for something that may be her own
+art. The direction is not unguarded: gen-cutin's <code>keyres</code> already refuses any
+visible pixel still within KEY_RESIDUE_R of the key, which is this failure at source.</p>
+<img src="key-side-vesper.png" alt="vesper key-side firing, three plates">
+
+<h2>6. Proving it red without any art on disk</h2>
+<p><code>python3 tools/cutin_edge.py --selftest</code> builds two synthetic plates
+differing only in whether the outer two pixels have been through the old despill's
+over-subtraction, and asserts what matters: the fringed plate reads <b>halo −12.1</b>,
+i.e. the luminance gate is not merely blind to it but REASSURED by it, and every term in
+this file except <code>chroma_rim</code> passes it.</p>

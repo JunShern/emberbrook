@@ -1044,10 +1044,12 @@ def report(ids):
             body.append(
                 '<figure><img src="%s"><figcaption><b>%s</b><br>'
                 '<span class="%s">%s</span><br><span class=k>edge %.3f &middot; ramp %.2f'
-                ' &middot; halo %+.1f &middot; speckle %.4f</span></figcaption></figure>'
+                ' &middot; halo %+.1f &middot; chroma %.5f &middot; speckle %.4f'
+                '</span></figcaption></figure>'
                 % (fn, mood or 'rest', 'ok' if good else 'bad',
                    'PASS' if good else 'FAIL ' + '; '.join(why),
-                   m['edge_noise'], m['ramp_px'], m['halo'], m['speckle']))
+                   m['edge_noise'], m['ramp_px'], m['halo'],
+                   m.get('chroma_rim', 0.0), m['speckle']))
         body.append('</div>')
 
     with open(os.path.join(QA, 'index.html'), 'w') as f:
@@ -1066,7 +1068,10 @@ def report(ids):
             'looks perfect on white and terrible on a night street, so this is the only '
             'honest place to judge one. Metrics are tools/cutin_edge.py; the gate is '
             'edge_noise&le;0.12, halo&le;+18, ramp&le;3.5&nbsp;px, speckle&le;0.004, '
-            'pinhole&le;0.004. One row is one character &mdash; read it ACROSS for '
+            'chroma_rim&le;0.0003. `halo` is a LUMINANCE difference and cannot see a '
+            'rim of the wrong HUE &mdash; `chroma_rim` is the term that can, and the '
+            'evidence for its bar is docs/qa/cutins/chroma/. One row is one character '
+            '&mdash; read it ACROSS for '
             'identity drift, which is invisible in a single plate and obvious in a row.'
             '</p>' % (plate_path or 'no plate found'))
         f.write(''.join(body))
