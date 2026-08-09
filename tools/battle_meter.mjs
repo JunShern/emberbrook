@@ -115,7 +115,32 @@ window.__BC.shot = () => window.__BC.stage().snapshot();
 // ============================ THE LEGIBILITY METER =========================
 // A silhouette is a SUBTRACTION, not a heuristic: frame-with-body minus
 // frame-without-body. Everything else follows from that one mask.
-window.__BC.legibility = function () {
+//
+// opt.hist IS ADDITIVE AND OFF BY DEFAULT. With it on, each body also carries
+// the VALUE and SATURATION DISTRIBUTIONS of three pixel sets read out of the two
+// frames this function already renders: the body itself, the background RING
+// around it, and the background UNDER its mask (literally what that body is
+// standing in front of). Nothing existing is recomputed or renamed, so a run with
+// hist off is byte-identical to every run before it — which is the only way the
+// party-albedo lane's numbers are comparable with the camera and separation
+// lanes'. Histograms, not means: "does the party share the terrain's band" is a
+// question about two distributions and a pair of means cannot answer it.
+window.__BC.legibility = function (opt) {
+  opt = opt || {};
+  const HIST = !!opt.hist, NB = 32;
+  const hv = () => new Float64Array(NB);
+  const push = (h, a, i) => {
+    const r = a[i] / 255, g = a[i + 1] / 255, b = a[i + 2] / 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    const s = mx <= 0 ? 0 : (mx - mn) / mx;
+    h.v[Math.min(NB - 1, (mx * NB) | 0)]++;
+    h.s[Math.min(NB - 1, (s * NB) | 0)]++;
+    h.r += a[i]; h.g += a[i + 1]; h.b += a[i + 2]; h.n++;
+  };
+  const newh = () => ({ v: hv(), s: hv(), r: 0, g: 0, b: 0, n: 0 });
+  const outh = (h) => h.n ? { n: h.n, rgb: [+(h.r / h.n).toFixed(2), +(h.g / h.n).toFixed(2), +(h.b / h.n).toFixed(2)],
+                              v: Array.from(h.v, x => +(x / h.n).toFixed(5)),
+                              s: Array.from(h.s, x => +(x / h.n).toFixed(5)) } : null;
   const st = window.__BC.stage(); if (!st || !st.qa) return null;
   const cv = st.canvas, W = cv.width, H = cv.height;
   const c2 = window.__BC._c2 || (window.__BC._c2 = document.createElement('canvas'));
@@ -187,11 +212,29 @@ window.__BC.legibility = function () {
     }
     let sumB = 0, nB = 0, sumBg = 0, sumEdge = 0, nEdge = 0, sumRing = 0, nRing = 0, sumRing2 = 0;
     const eRGB = [0, 0, 0], rRGB = [0, 0, 0];
+    const hBody = HIST ? newh() : null, hEdge = HIST ? newh() : null,
+          hRing = HIST ? newh() : null, hUnder = HIST ? newh() : null;
+    // opt.hist only. THE SAME CONTRAST, CUT INTO HORIZONTAL BANDS.
+    // edgeRGB is the magnitude of a SIGNED difference of two means, so a body
+    // whose top is brighter than its surround and whose bottom is darker than
+    // its surround cancels itself toward zero. That is not a hypothesis about
+    // tall bodies, it is arithmetic, and the cast's two shapes differ exactly
+    // along it: a standing person spans several surfaces top to bottom, a wolf
+    // or a blob sits on one. Six bands over the mask's OWN y-extent, each
+    // scored the same way; the mean of their magnitudes cannot cancel
+    // vertically and the difference between the two numbers IS the cancellation.
+    const NR = 6, rowE = [], rowR = [];
+    for (let k2 = 0; k2 < NR; k2++) { rowE.push([0, 0, 0, 0]); rowR.push([0, 0, 0, 0]); }
+    const ry0 = y0, rspan = Math.max(1, y1 - y0 + 1);
     for (let p = 0, i = 0; p < A.m.length; p++, i += 4) {
       const lb = L(A.im, i), lg = L(A.bg, i);
       if (A.m[p]) {
         sumB += lb; sumBg += lg; nB++;
-        if (!ero[p]) { sumEdge += lb; nEdge++; eRGB[0] += A.im[i]; eRGB[1] += A.im[i + 1]; eRGB[2] += A.im[i + 2]; }
+        if (HIST) { push(hBody, A.im, i); push(hUnder, A.bg, i); }
+        if (!ero[p]) { sumEdge += lb; nEdge++; eRGB[0] += A.im[i]; eRGB[1] += A.im[i + 1]; eRGB[2] += A.im[i + 2];
+                       if (HIST) { push(hEdge, A.im, i);
+                         const rb = Math.min(NR - 1, (((p / r.w) | 0) - ry0) * NR / rspan | 0);
+                         if (rb >= 0) { const q = rowE[rb]; q[0] += A.im[i]; q[1] += A.im[i + 1]; q[2] += A.im[i + 2]; q[3]++; } } }
       }
       else if (dil[p]) {
         // the ring is read off the BACKGROUND frame, so a body's own rim light
@@ -199,7 +242,10 @@ window.__BC.legibility = function () {
         const px = p % r.w, py = (p / r.w) | 0;
         let near = 0;
         for (let dy = -RING; dy <= RING && !near; dy += 2) for (let dx = -RING; dx <= RING; dx += 2) if (at(px + dx, py + dy)) { near = 1; break; }
-        if (near) { sumRing += lg; sumRing2 += lg * lg; nRing++; rRGB[0] += A.bg[i]; rRGB[1] += A.bg[i + 1]; rRGB[2] += A.bg[i + 2]; }
+        if (near) { sumRing += lg; sumRing2 += lg * lg; nRing++; rRGB[0] += A.bg[i]; rRGB[1] += A.bg[i + 1]; rRGB[2] += A.bg[i + 2];
+                    if (HIST) { push(hRing, A.bg, i);
+                      const rb = Math.min(NR - 1, (py - ry0) * NR / rspan | 0);
+                      if (rb >= 0) { const q = rowR[rb]; q[0] += A.bg[i]; q[1] += A.bg[i + 1]; q[2] += A.bg[i + 2]; q[3]++; } } }
       }
     }
     // ---- pass 2: the same body with depth testing off = its FREE silhouette --
@@ -244,6 +290,20 @@ window.__BC.legibility = function () {
       // does not read; this is the noise.
       clutter: +Math.sqrt(vRing).toFixed(2),
       ringN: nRing, bodyL: +mB.toFixed(1), ringL: +mRing.toFixed(1),
+      // opt.hist only. THREE PIXEL SETS OUT OF THE TWO FRAMES ALREADY RENDERED:
+      // body = the mask in the body frame, edge = the mask's outer band, ring =
+      // the dilated band read off the BACKGROUND frame (so a body never scores
+      // against its own rim), under = the background where the body covers it.
+      // 32-bin normalised histograms of HSV V and S plus each set's mean RGB.
+      hist: HIST ? { nb: NB, body: outh(hBody), edge: outh(hEdge),
+                     ring: outh(hRing), under: outh(hUnder),
+                     rows: rowE.map((q, k2) => {
+                       const w2 = rowR[k2];
+                       if (!q[3] || !w2[3]) return null;
+                       const a2 = q[0] / q[3] - w2[0] / w2[3], b3 = q[1] / q[3] - w2[1] / w2[3], c2 = q[2] / q[3] - w2[2] / w2[3];
+                       return { n: q[3], rgb: +Math.sqrt((a2 * a2 + b3 * b3 + c2 * c2) / 3).toFixed(2),
+                                dL: +(0.2126 * a2 + 0.7152 * b3 + 0.0722 * c2).toFixed(2) };
+                     }) } : undefined,
     });
   }
   st.qa.showAll(true); st.draw();
