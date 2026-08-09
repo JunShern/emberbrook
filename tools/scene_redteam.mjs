@@ -1839,6 +1839,25 @@ async function main() {
     const stamps = RHET_CENSUS === 'all'
       ? fs.readdirSync(RTDIR).filter((d) => d.startsWith('run-')).map((d) => d.slice(4)).sort()
       : RHET_CENSUS.split(',').map((s) => s.trim()).filter(Boolean);
+    // AN INSTRUMENT THAT FINDS NOTHING MUST PROVE IT COULD HAVE FOUND SOMETHING. A mistyped or
+    // abbreviated stamp (`emb-round1` for `20260809-emb-round1`) used to print a full, neatly
+    // formatted table of ZEROES — a census that looks like a measurement and is a typo. Read
+    // every stamp that was asked for and refuse the run if any of them resolved to nothing.
+    const missing = stamps.filter((st) => {
+      try { return !Array.isArray(JSON.parse(fs.readFileSync(
+        path.join(RTDIR, 'run-' + st, 'findings.json'), 'utf8')).survivors); } catch { return true; }
+    });
+    if (missing.length === stamps.length) {
+      console.error(`--rhetoric-census: none of ${stamps.length} requested stamp(s) resolved to a ` +
+        `readable run — ${missing.join(', ')}`);
+      const avail = fs.existsSync(RTDIR) ? fs.readdirSync(RTDIR).filter((d) => d.startsWith('run-')) : [];
+      console.error(`  ${avail.length} run dir(s) under ${RTDIR}${avail.length ? ':' : ''}`);
+      for (const d of avail.slice(-8)) console.error(`    ${d.slice(4)}`);
+      if (avail.length > 8) console.error(`    … and ${avail.length - 8} more (use 'all')`);
+      process.exit(1);
+    }
+    if (missing.length) console.error(`  note: ${missing.length} requested stamp(s) unreadable and ` +
+      `skipped — ${missing.join(', ')}`);
     const seen = new Set(), rows = [];
     for (const st of stamps) {
       let F; try { F = JSON.parse(fs.readFileSync(path.join(RTDIR, 'run-' + st, 'findings.json'), 'utf8')); }
