@@ -1281,6 +1281,26 @@ git runs here, on branch `migration/3d-hybrid`.
     own definition, and widening `KEY_BAND` makes it 3x worse, which is what proves it is the
     drawing. Also re-derived and NO LONGER TRUE: this file's own "43 of the 62 incumbents fail
     it" is 15 of 65 on the same path today.
+    **A `framing` OVERRIDE PASSES A PLATE BY DISARMING THE GATE; AN `extra` CLAUSE FIXES THE
+    DRAWING** (2026-08-09, odessa — the first re-draw the chroma work forced, 2 generations,
+    $0.078, both clean on the FIRST roll). Her `grave`/`surprised` came back FULL-LENGTH
+    (head_frac 0.149/0.166) and her `warm` held a **SECOND FIGURE** cropped by the frame
+    (speckle 0.2805, edge_touch 0.4936) while four siblings from the same batch landed
+    0.198-0.247 — a coin flip, not a systematic miss, **because alone in the cast her ratified
+    `bust.png` IS A FULL-LENGTH FIGURE** and the POSE block asks for the whole body. The lever
+    was one prompt clause, not more rolls: a per-character `extra` naming both MEASURED defects
+    (one person only; the picture ends at her belt). halo +40.1/+35.5/+30.9 → +12.8/+14.5/+13.9,
+    speckle and edge_touch to 0.0000, cast 115/120 → **120/122**. Declaring `framing` instead
+    would have set `own_framing` and DROPPED the absolute head_frac band — passing the plate by
+    disarming the gate that caught it. **AND A CARRIED HEAD BOX SURVIVES A NEW BASE PLATE, PROVED
+    BY PROPORTION AND NOT BY EYE ALONE**: crown→eye 0.175 on the retired salvage base against
+    0.176 on the studio one, so the marking convention transfers unchanged.
+    **PAINTED KEY SPILL IS NOT MATTE RESIDUE, AND THE CUT IS HOW YOU TELL** — odessa's `stern`
+    carries 1841 px of magenta-tinted paint with only 27% within 3 px of the cut (so no matte
+    arithmetic may touch it), and it is MILDER than what the cast already ships: **vesper, the
+    character the framing gate is calibrated on, ships 3338-3779 such pixels at 99% ON the cut**,
+    visible as pink hair tips at display size. That is the known ungated `key_rim` hole; gating
+    it fails vesper's whole suite.
     **RE-ROLL `rest` FIRST, NEVER LAST**: `rest` is the identity reference the mood plates
     are drawn from, so re-rolling it after them orphans the set against a superseded
     reference (sorrel's striped apron went plain white, her peel wood → terracotta). The
