@@ -1,4 +1,37 @@
-# HANDOVER — 2026-08-09 06:40 (READ THIS FIRST; the 08-08 section below is history)
+# UPDATE — 2026-08-09 19:10 (eight more lanes since the 06:40 handover below)
+
+Everything committed, pushed, and live (deploy 18, verified 29/0 with the shipped bytes fetched).
+`?arena=world` on the live site now also has: **placement refusals** (shadow + one-surface
+dominance), **the party no longer eclipsing itself** (bodies ≥25% hidden by a teammate 44/62 → 2)
+and **enemies no longer standing in single file** (44/62 → 0, foes-in-frame 122/124 → 124/124).
+
+**THE FOUR THINGS THESE LANES FOUND ARE MORE USEFUL THAN THE FIXES:**
+1. **A ruler we leaned on cancels itself.** Silhouette contrast was ONE signed difference of means
+   over a whole body, so a character bright at the top and dark at the bottom scores ~0. Cut into
+   six bands, the party/foe failure split INVERTS. **Every single-site contrast number in this arc
+   is now marked suspect** (three of them I had reported to you); every AXIS RANKING stands.
+2. **An audit found the damage is contained**: SEVEN of eight shipped decisions never read that
+   metric, and re-deriving the eighth changed the camera at 0 of 62 sites.
+3. **"2 of 2 foes in frame" was true and hollow** — the bodies were inside the frame and on top of
+   each other. A receipt can be correct and mean nothing.
+4. **The body-side shader was priced and REFUSED**: it improves frames that already read, leaves
+   the failing ones unmoved, traces a visible outline at one site, and does nothing at the forest
+   hedge it was built for. The world path still writes ZERO shaders, which is what deletes the
+   r185 colour-bug class rather than managing it.
+
+**DEFAULT-READINESS: still not yet, and the remaining residuals are finally cosmetic** — a wolf
+behind a deck post at one site, and a 13% frame-height cost when two same-width enemies stand
+abreast. That thinning is the signal I've been waiting for to call the arc complete rather than
+paused.
+
+**WHAT I'D STILL LIKE FROM YOU** (nothing is blocked): (1) is one-site-in-three-bad tolerable for
+a prototype, or does it gate the default? (2) **fights now RELOCATE MORE OFTEN THAN THEY STAY PUT**
+(ring-0 staging 29 → 15) — your ruling authorised moving when a site refuses, not moving most of
+the time for picture quality, and you should feel that before it is permanent.
+
+---
+
+# HANDOVER — 2026-08-09 06:40 (history from here down)
 
 Since the 08-08 handover: **Dellhollow graphics rounds 4-7** and **the battle arena arc through
 wave 3 plus the world-arena commit**. All committed, pushed and deployed (14 deploys, each
