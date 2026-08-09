@@ -76,6 +76,28 @@ put through the fixed despill and still ship the rim.</p>
 <img src="newly-failed-2.png" alt="five more Maren plates and weaponsmith">
 <p class=k>maren/cutin at 3x — this is what has been shipping:</p>
 <img src="zoom-maren.png" alt="maren cut-in at 3x, neon chartreuse rim">
+<h2 style="border-top:0">4b. FIXED, 2026-08-09 — and it was a RE-MAT, not a re-draw</h2>
+<p>The premise above is wrong in one word: the studio art is GITIGNORED, not ABSENT. Maren's
+full pose matrix &mdash; 13 moods &times; 3 rolls &mdash; is on the authoring machine, and the exact
+rolls the user picked are recorded in <code>gen-cutin-poses.mjs</code>'s <code>ALL_PICKS</code>.
+So the same drawings went back through the pipeline whose band despill was fixed in 8416ca3c,
+and <b>all thirteen pass: chroma_rim 0.0047&ndash;0.0176 &rarr; 0.00000 on twelve and 0.00007 on
+crushed</b> &mdash; the level 102 of the 106 clean plates read, not a squeak under the bar. Nothing
+else moved (halo within a level, keyres 0.0, speckle and pinhole unchanged), because nothing but
+the fringe changed. Identity is preserved BY CONSTRUCTION: same source art, same picks, and
+<code>silhouette_crop</code> returned the identical box on 12 of 13.</p>
+<p class=k>maren/cutin-awed at 3&times; &mdash; SHIPPED left, re-matted right. 289 firing pixels &rarr; 5:</p>
+<img src="zoom-maren-fixed.png" alt="maren awed at 3x, before and after the re-mat">
+<p><b>weaponsmith/cutin is a different animal and stays red.</b> His plate was matted at 11:04
+and committed in the fix itself at 11:08, so it is ALREADY post-fix output &mdash; a re-mat
+reproduces it exactly, 7 firing pixels and 0.00031 both ways. It is still a REAL defect and not
+paint, which is worth stating because nobody had checked: the same 7 px in the SOURCE drawing
+read anti = 4.0 max, a neutral khaki (103,107,71). The matte made the green. It is 7 dark-green
+pixels in the notch of a blade at the top of a 956 px plate, it cannot be re-matted away, and
+the bar is not moved to buy margin for it &mdash; 0.0002 would start failing child-girl's reeds.
+<b>The cheap triage this leaves behind: compare a borderline plate's firing pixels against the
+SOURCE drawing. Paint is in both; residue is only in the matte.</b></p>
+
 <p>And the nearest PASSING plates, which are paint and not defects: child-girl's reeds,
 villager-woman's olive braid, creel, Vesper's sage coat.</p>
 <img src="nearest-passing.png" alt="the nearest passing plates">
