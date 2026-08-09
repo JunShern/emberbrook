@@ -204,6 +204,50 @@ git runs here, on branch `migration/3d-hybrid`.
   Judge: "hole in the world", "plane/polygon/wedge" and "flat" are GONE; **"untextured" and
   "white" survive** — the value is a separate, unpulled lever. Found alongside: `STALLC[3]` is
   bit-identical to the constant stripe, so `qm_awning_1` shipped 21/21 vertices at one colour.
+- **A CONTROL THAT DRIVES THE LEVER TO ITS ABSURD LIMIT IS WORTH MORE THAN THREE RUNGS OF IT**
+  (2026-08-09, round 9; tools/qm_canvas_value.py, tools/dh_stair_stringer.py). Round 8 left the
+  awning canvas's VALUE as its one unclosed judge verdict ("untextured", "white"). The frame's own
+  answer, ray-derived over the shipped plates: the canvas ran L p50 **159.2** while `mat_qm_paving`
+  — the town's own sunlit stone on five cameras — never exceeds **p95 138.1**, i.e. **the canvas's
+  MEDIAN sat above the p95 of every paved surface in Dellhollow**. But the finding is the CONTROL,
+  not the ladder: painted **16x darker than cream (albedo 0.020, black paint)** it still lands at
+  104.2, the paving's own value. **THE SURFACE IS OVER-EXPOSED, NOT OVER-ALBEDO** — it lives in
+  AgX's shoulder, and what survives at zero diffuse is the Principled's default 0.5 Specular IOR
+  Level (~4%) on a woven cloth. Shipped `0.144 / spec 0.15` (p50 133.0, over-150 57.5% → 6.3%,
+  off-canvas mean |ΔL| 0.03 of one level). Judge: **"white" was in 3/3 naive passes in rounds 6, 7
+  AND 8 and is now said ZERO times**; "untextured" survives 2/3, which is exactly what the
+  mechanism predicts. **AND ROUND 8'S OWN PREMISE EXPIRED WITH ITS OWN FIX**: "the in-frame corner
+  is two cream columns" was true of the 7-column canvas it MEASURED and false of the 13-column one
+  it SHIPPED — columns 07-12 project in frame and col 09 is the navy stripe. Re-derive a premise
+  after the fix that changed its subject.
+- **A BUILDER THAT REFUSES IN SILENCE LEAVES THE DEFECT AND THE RECEIPT BOTH INVISIBLE**
+  (2026-08-09, round 9). Deep-stairs' "floating treads" — four judge passes, both modes — are real:
+  **36 of 168 treads (21.4%) have no stringer within 1.3 m**, 33 of them one contiguous band
+  projecting inside the box every pass drew. The cause is `waterfront_build.py:358-375`, which
+  `continue`s with NO LOG LINE, under a `log("BUILD", …)` that counts TREADS AND NEVER STRINGERS.
+  Same family as `_court_probe` and `walk_engine_gate`: a builder's own report described its
+  intent. (Fix was two centre carriages UNDERNEATH — the outboard beam is what gets refused over a
+  zigzag.) Its sibling, crossing's "floating plank": `t2c_N5_nl_barge_deck` is **4 vertices**, one
+  bone-white quad hanging **0.55 m over water with nothing under it**, because its own hull was
+  already in `not_built` for "no clear mounting face on the moored barge" — **the barge was never
+  there**. Dropped. A part whose host was refused is not a part, it is a floating quad.
+- **AND WEAVE HAS NO CAVE** (2026-08-09, round 9 — the third "the judge named an object that is not
+  there" in two days). Nine naive passes over four runs plus a checklist row called it a black cave
+  mouth; of the 188 sub-L6 rays in that box, **78.1% are five `veg_lf_rimclump_*` autumn-foliage
+  clumps at ~59 m rendering at literal L 0.0** and only 11.7% is rock, with no opening in it. **AN
+  ARCHITECTURAL FEATURE WAS INVENTED TO EXPLAIN A VALUE.** The real subject — `mat_leaf_autumn` at
+  p50 0.0/0.2/0.4 on crossing/cottage/weave against 121.5 at waterfront — is unresolved between
+  albedo and light and is round 10's. Same round: quay-west's "three absent exits" REFUTED as a
+  graphics defect (all three project in frame and are visible at 30-37 m; seam canon is satisfied
+  geometrically) and handed to the legibility lane.
+- **A `.blend` COPIED OUT OF `tools/blends/` LOSES EVERY RELATIVE IMAGE PATH, AND CYCLES RENDERS
+  THE MISSING TEXTURES MAGENTA** (2026-08-09, cost round 9 a whole sweep). The frame renders,
+  Blender **exits 0**, and the numbers are plausible garbage — `mat_qm_paving` p50 161.2 against
+  the shipped 117.5, whole-frame p50 35.3 against 46.9. `tools/blends/backups/` is one level
+  deeper and is still a different relative root; it reproduced the fault bit for bit. **THE TRAP IS
+  WORSE THAN THE BUG**: the awning's OWN numbers barely moved (163.5 vs 160.1) because it wears a
+  vertex-colour material with no texture, so a sweep of exactly that object would have survived
+  undetected. Bake from the master IN PLACE.
 - **tools/dh_haze_medium.py — TAU IS NOT THE WASH, AND THE PHASE FUNCTION IS THE LEVER**
   (2026-08-08, round 6). FIRST: **A REPORT THAT DEDUPLICATES A CHECKLIST ROW PRINTS THE FIRST
   PLATE'S SENTENCE OVER FOUR OTHER PLATES' ANSWERS.** Round 5 handed over "the haze card's own
