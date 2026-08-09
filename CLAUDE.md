@@ -1112,8 +1112,33 @@ git runs here, on branch `migration/3d-hybrid`.
     legitimately brighter edge pixel read as magenta residue and the subtraction drove R
     and B under G. Fixed by solving the mixture on the key's own chroma axis,
     `(R+B)/2 - G`: 79/112 → 20/119, magenta residue unchanged or lower everywhere.
-    THE GATE ITSELF WAS NOT FIXED. Until it grows a chroma term, a green/cyan/magenta
-    fringe can ship gate-green again — A GATE THAT MEASURES BRIGHTNESS CANNOT SEE COLOUR.
+    **THE HOLE IS CLOSED — `chroma_rim`, DERIVED NOT PICKED** (2026-08-09; board
+    docs/qa/cutins/chroma/, `python3 tools/cutin_edge.py --selftest` is the 0.2 s
+    red-before-green and needs no art on disk). `chroma_rim` = the share of the figure's
+    outer 3 px SHELL carrying `G - max(R,B) > 72`, MINUS the share its own material 4-10 px
+    in carries, on THE KEY'S OWN AXIS (gen-cutin identifies the magenta key by CHANNEL
+    ORDER, `keyness = min(R,B) - G`; over-subtracting it leaves the mirror of that
+    signature). **THE SUBTRACTION IS THE WHOLE TRICK — PAINT RUNS THROUGH BOTH BANDS AND
+    CANCELS, A RIM IS IN THE SHELL AND NOWHERE ELSE**: a per-pixel LOCAL reference (the
+    despill fix's own shape) dies on Maren's striped shirt, and a plain shell share dies on
+    child-girl, whose silhouette IS a bundle of green reeds. **THE THRESHOLD IS WHERE ONE
+    POPULATION LEAVES THE AXIS, NOT A TUNED KNEE**: swept over 51 plates whose defect is
+    known PIXEL-FOR-PIXEL (recovered at `8416ca3c^` and differenced against their own
+    geometry-identical post-fix twins, so green PAINT cancels by construction) against 106
+    clean ones, T = 24…56 are **INVERTED** — honest green paint outscores the defect and NO
+    BAR EXISTS — and only at 64/72 do the populations separate. Bar **0.0003 at T=72**
+    (5.5x separation): 102 of 120 shipped plates read EXACTLY ZERO and the worst clean plate
+    is ONE PIXEL. **IT COSTS 14 SHIPPED PLATES AND ALL 14 ARE RIGHT** — Maren's whole suite
+    plus weaponsmith/cutin, i.e. exactly the "20 left" that `8416ca3c` named as unrepairable
+    without studio art; each was looked at at 1:1. On the synthetic fringe `halo` reads
+    **-12.1**, so the luminance gate is not merely blind, it is REASSURED, and every other
+    term passes it too. `key_rim` (surviving key colour) is REPORTED AND NOT GATED: Vesper
+    owns the cast's top ten on it and her auburn strand edges cannot be told from bloomed
+    key by eye — `keyres` in gen-cutin guards that direction at source. **AND A DEFECT
+    COUNTER THAT ALSO COUNTS THE PICTURE IS NOT A COUNTER** — the raw chartreuse predicate
+    reads 78,436 px on Vesper's teal coat, so only the paired pre/post difference is ground
+    truth. The old law still governs everything without such a term:
+    A GATE THAT MEASURES BRIGHTNESS CANNOT SEE COLOUR.
     **RE-ROLL `rest` FIRST, NEVER LAST**: `rest` is the identity reference the mood plates
     are drawn from, so re-rolling it after them orphans the set against a superseded
     reference (sorrel's striped apron went plain white, her peel wood → terracotta). The
