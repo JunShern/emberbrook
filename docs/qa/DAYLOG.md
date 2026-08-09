@@ -23854,3 +23854,129 @@ OWED / NAMED FOR ROUND 10:
      are cheap, and neither is the value.
   5. Quay-west's three exits are a LEGIBILITY item for the town-legibility lane, not a graphics
      one, and the loop-stairs sightline has a bunting rope across it.
+
+## 2026-08-09 — EMBERBROOK ROUND 1 (the ranked worklist): the paving's rim is seated, and the town's fourteen lamps turn out never to have been on
+
+Board: `docs/qa/emberbrook-redteam/index.html` (round 1's measure-and-rank sweep, run
+`docs/qa/redteam/run-20260809-emb-round1/`). This lane took its ranked worklist. Three
+carriers, one bake set, and two refutations that are worth more than what they killed.
+
+### 1. THE HEADLINE, AND IT WAS NOT ON THE WORKLIST: EMBERBROOK'S FOURTEEN LAMPS HAVE NEVER LIT IT
+
+`tools/emb_lightbodies.py`. The town's lanterns are `emb_lamp_<id>_glass` — a 0.30 x 0.30
+x 0.34 m CLOSED BOX wearing `emb_dress_lampglass`, an EMISSIVE Principled surface at
+strength 3.5, Alpha 1.0, no transmission, i.e. **opaque**. `KEYEMB_lamp_<id>` is a 680 W
+POINT light standing INSIDE it. Instrument: a 16 x 12 grid of shadow rays from the pad
+outside Lake's home toward `KEYEMB_lamp_04_lake-home` — **165 of 192 blocked by that
+lamp's own glass (85.9%)**, the other 27 by the cottage. Not one sample reached the light.
+
+THE CONTROL (draft 1008x576 / 28 spp; two independent draft renders of one master differ
+by 0.01% of frame above 4/255, so that is the floor). `visible_shadow = False` on the
+fourteen shells, NOTHING else changed:
+
+    shot      changed >4/255   L<=8/255        L<=24/255       clipped >=250
+    homerow   65.31%           66.1% -> 37.9%  84.2% -> 59.7%  0.00% -> 0.00%
+    square    71.54%           41.6% -> 19.6%  74.1% -> 52.5%  0.10% -> 0.10%
+
+**Half the crushed frame goes away and nothing new clips.** That is the board's item #2
+("Emberbrook's shadows go to absolute zero", crushed 6.8-15.6% of frame, 12 of 94
+survivors about not being able to see the ground) and it is one flag.
+
+AND IT EXPLAINS A DOCTRINE ENTRY THAT HAS STOOD FOR A WEEK. CLAUDE.md's night-grade note
+records as measured history: *"adjusting an existing light has never moved this town;
+adding a new source always has (sky ladder, LAMP WATTAGE TWICE, moon colour: inert or
+exhausted)"*. Lamp wattage was inert because the wattage was sealed in a box. The note was
+an accurate record of a broken world, and reading it as a law about the town rather than a
+symptom is what kept it broken. No light's energy, colour or position was touched here —
+the ratified 680 W simply reaches the town for the first time.
+
+### 2. TARGET 1 — THE PAVING IS THE WALK NETWORK, AND ITS RIM IS A LATTICE STAIRCASE
+
+`tools/emb_pavechop.py`, the direct analogue of `emb_brookchop` for the water. Measured in
+`emberbrook-master.blend`: 222 walk meshes, 40,400 verts, **8.00 verts per up-face in every
+family** — one detached BOX per cell, exactly the raft found under the water.
+`emb_blockout`'s area-floor loop emits eight verts and six quads per 0.45 m cell, and
+`CUT_DROP = 0.12` carves the ground 0.12 m down under every walk surface and keeps it
+carved for 1.40 m beyond, so the rim is a 0.12 m lit riser with a black line at every tread.
+
+**AND THE BOARD'S 2,233.7 m IS THE BUNDLE'S NUMBER, NOT THE BLEND'S.** Per-cell boundary in
+the blend is 10,061.1 m over 20,200 edges at 97.1% axis-aligned; the glTF exporter's own
+vertex dedup has already welded the bundle, so 2,233.7 m is the TRUE OUTLINE. Both are
+right. This carrier welds first and reproduces the bundle's figure to 0.1 m (2,233.6 m),
+which is what makes its receipt comparable.
+
+WELD -> RELAX (the `walk_lm_*` aprons only; a ribbon is already Chaikin-smoothed at 0.0%
+axis-aligned and a pad is a rectangle the map authored — the refusal is printed) -> SEAT
+(inset the top region, drop the original boundary loop onto the ground beneath it, so the
+vertical face becomes a ~22-degree chamfer that dies into the terrain).
+
+RECEIPT: **axis-aligned 67.5% -> 33.2%**, 1,192 rim vertices seated, 1,045 relaxed, 2,197
+pinned, 0 groundless. Per apron: `walk_lm_orchard` 93.6 -> 74.9 m outline and 100.0% ->
+3.7% axis, `gate-court` 92.7 -> 79.9 m and 100.0% -> 9.5%, `arrival-clearing` 39.6 ->
+30.9 m and 100.0% -> 4.5%, `washline-green` 24.3 -> 18.9 m and 100.0% -> 3.7%.
+
+**TWO THINGS THE PICTURE TAUGHT THIS FILE THAT NO NUMBER DID.**
+  (a) A boundary is only a rim where nothing else continues it, and **PROXIMITY IS THE
+      WRONG TEST**: pinning any vertex within 0.36 m of another walk mesh's top ring pinned
+      587 of the ribbons' 603 boundary vertices, because the next segment along the SAME
+      road is that close in the direction the rim runs.
+  (b) The fix for (a) — an outward step at each boundary VERTEX — photographed every road
+      in town as **A LADDER OF SEPARATE PLATES** with a groove at each joint, because a
+      road ships as a chain of ONE-QUAD `walk_e_..._lN` objects, every vertex it owns is a
+      corner, and a corner's outward direction bisects into the gap PAST its neighbour.
+      Shipped test: the outward step is taken at each boundary EDGE's MIDPOINT,
+      perpendicular to that edge, and the boundary is SUBDIVIDED first (`--bstep 0.60`) so
+      a free rim has interior vertices no joint owns and can taper to nothing at a joint
+      instead of choosing between the two. Ribbons went seat 0 -> 159, pads 30 -> 82.
+      **Only the draft A/B said so; every number in the receipt was already green.**
+
+### 3. TWO REFUTATIONS
+
+**TARGET 3 — THE HEARTLIGHT'S FLAME IS BUILT, VISIBLE-FLAGGED, AND INVISIBLE; AND ITS
+EMISSION IS NOT THE LEVER.** The board attributes the blown-out white box to
+`lm_heartlight_cap` 67.9% + `lm_heartlight_flame` 11.5%. **`lm_heartlight_flame` does not
+exist in the dressed master** — it is the blockout's proxy, `kit_heartlight` kills it, and
+the attribution came from `emb-cine/scene.glb`, which is exported from the GRAY BLOCKOUT
+(the tool documents exactly this residual). What the dressed master holds is
+`emb_dress_heartflame0..4` (five nested translucent shells, z 2.38..3.75) and
+`emb_dress_heartember0..6`, all `hide_render=False`, `visible_camera=True`, outer shell
+emitting **0.24** against the lamp glass's 3.5. CONTROL, driven to an absurd limit:
+**x12 on all six emission nodes moved 0.54% of the frame above 4/255 and 0.06% above
+12/255**, heartbox p50 100.9 -> 100.4, clipped 6.92% -> 7.67%. The emission knob is inert.
+What clips is the CAP: a 2.00 x 2.00 x 0.20 m pale stone slab standing 0.75 m under a
+5200 W point light (~736 W/m2). NOTHING WAS SHIPPED for target 3.
+  AND THE GATE IS WHY IT SURVIVED: `kit_heartlight`'s own bar was *"ZERO CLIPPED PIXELS ON
+THE FLAME"* — **a bar with a ceiling and no floor. A flame you cannot see passes it
+perfectly.**
+
+**TARGET 2 — `walk_pad_lake-home`'s pitch-black quad is NOT a floating card, NOT scatter,
+NOT a black material, and NOT the lamp seal.** `emb_plate_object` puts the plate's own
+depth surface on the pad's own top at **residual p50 0.00 m / p90 0.01 m**, so nothing is
+in front of it. Every one of the scene's 16 lights is blocked at that point (the sun is at
+**10.0 degrees elevation** and blocked at 108/108 samples across the whole region). It
+SURVIVES the lamp unsealing — visible in the arm-B draft, now conspicuous against lit
+paving. Named and NOT closed; see OWED.
+
+### 4. THE PIPELINE TRAP THIS ROUND CAUGHT, AND IT WOULD HAVE SHIPPED SILENTLY
+
+**A WHOLE-TOWN REBAKE FROM THE MASTER REGRADES EVERY PLATE TO `cameras.json`'s
+`defaults.exposure`, AND THAT IS NOT THE SHIPPED GRADE.** The default is 0.55; the eleven
+shipped plates carry, in `cine.json`'s own per-camera `appliedGrade`, exposure 1.00 on
+eight of them, 0.78 on three, with per-plate `moon` at 1.5 / 2.0 / 2.71 / 3.14 / 3.75 and
+a `warmAnchorGlow 0.35` + 900 W waystone lantern on two. Measured on the shipped art
+against a 0.55 draft of the same master: homerow p50 27.4 vs 3.0, square 37.8 vs 12.0,
+gatefield 13.0 vs 1.0. **A plain `cine_bake --town emberbrook` would have darkened nine of
+eleven plates by 0.45-0.86 stops with cine_test, slice_test, routes_derive and both walk
+gates green.** `cine.json` RECORDS the grade and nothing ENFORCES it; the only prose copy
+of the bake commands is a NEXT STEP paragraph in this file from 2026-08-02. The bake here
+is driven by a script that reads the grade off `appliedGrade` per plate.
+
+### GATES
+`routes_derive --check` clean (11 shots) · `slice_test` 776/0 · `findability_test` 69/0
+with 11 warnings · **`walk_engine_gate --scene emb-cine` GREEN and `--scene emb-townwalk`
+GREEN** — 7,467 standable cells / 1,512.1 m2 in the FILE and the same in the ENGINE, 0
+lost, 0 extra, height agreement median 0.000 m, `SIM.bvh().fail 0` on both ·
+`walk_bodygate` 0.15% of steps blocked and **every blocker an authored barrier**
+(`bar_upper-lane-closed_cart_bed` 2124, `bar_back-lane-closed_cart_bed` 1006, bridge rails,
+two lamp posts) · `cine_test --town emberbrook` red on exactly the five cameras the
+re-solve moved (max 0.28 m), which the bake clears.
