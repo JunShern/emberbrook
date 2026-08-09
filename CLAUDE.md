@@ -1048,6 +1048,32 @@ git runs here, on branch `migration/3d-hybrid`.
   cut/passage edges deliberately — Dellhollow's levels are joined by 42 self-edges and a
   walk-only fill calls the gate arrival and the log-jam unreachable when they are 0.4 m
   apart in plan and 10 m in height. A clean run is 69/1 until ch2.road's anchor is fixed.
+- **tools/playthrough_lib.mjs — A GATE THAT POLLS FOR A LEDGER WRITTEN AT THE END OF A BEAT IS
+  RACING THE BEAT** (2026-08-09; `--selftest` is 36/0 offline in 0.1 s, no browser, no server).
+  One tree, one build, one server produced **84/1 · 44/16 · 86/0**. `story_runtime` writes
+  `beats[id]` at the END of the `do` chain (deliberately — an interrupted beat must replay) and
+  the flat 60/75/90 s poll expired while the beat was legitimately PRESENTING ITSELF. The number
+  that names it: **ch2.landing's 75 s window contained 67.45 s of presentation — a 7.55 s window
+  wearing a 75 s label** — and that beat was measured taking **171 s** under load. The proof was
+  always in the harness's own NEXT LINE: `FAIL beat ch2.landing fired` printed directly above
+  `beats completed: 28 — … ch2.landing`. Fixed three ways: the window is **DERIVED FROM THE
+  BEAT'S OWN DECLARED UI** (`banner.ms`/`toast.ms`/`endCard.ms`/`wait` exact, dialogue from
+  story.json's own node line counts at a MEASURED 1.2 s/line — and the selftest asserts NO window
+  shrank); a **bounded grace gated on a positive statement from the page**, `Story.debug().busy`
+  — busy means LATE, **idle means ABSENT and fails with ZERO grace spent**, and the grace never
+  pumps `SIM.tick` because it must not be able to cause what it measures; and a break now books
+  downstream checks in a third **NOT RUN** column by name instead of inventing 15 failures.
+  §W will no longer say `No walk can ever trigger this beat` about an anchor where no beat fired:
+  **AN ANCHOR IS WHERE A BEAT FIRED, NOT WHERE THE HARNESS IS STANDING.**
+  **`--slack=<sec>` IS A FAULT INJECTOR** that reproduces the race on demand in 102 s instead of
+  one run in three; `--grace=0` is the one-build A/B. **A RED NOW NAMES ITS OWN ATTRIBUTION** —
+  `director idle` is a game defect, `grace expired while busy` is a LOAD verdict, and the same
+  build ran **814 s quiet against 1441 s at 24% free memory (1.77x)**. The lane REFUSED to raise
+  the 30 s bound to turn its one pathological-load red green (`--grace=60000` is the knob when
+  running beside a dressed-master bake), refused to make a busy-timeout a non-failure, and
+  refused "skip to the next chapter anchor and keep asserting" because fabricating the flags and
+  party the missed beats set is `Story.force()` by another name — and §2's whole claim is that
+  nothing here forces a beat.
 - **THE GAUNTLET WAS RUN WHOLE ON 2026-08-09 AND ONE GATE LIES UNDER LOAD.**
   `playthrough_test` **reports "beat never fired" for beats that DEMONSTRABLY DID FIRE**, and one
   false red cascades. `story_runtime.js:265` writes the ledger at the END of a beat's `do` chain
