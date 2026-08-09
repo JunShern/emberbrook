@@ -1,0 +1,1089 @@
+{
+  "summary": {
+    "arm": {
+      "visMin": 0.67,
+      "camOn": true,
+      "pitches": [
+        0.16,
+        0.22,
+        0.28,
+        0.34
+      ],
+      "placeOn": false,
+      "sunMargin": 0.5
+    },
+    "sampled": 40,
+    "skipped": 0,
+    "ok": 40,
+    "rate": 100,
+    "solve_ms_all": {
+      "n": 40,
+      "ok": 40,
+      "p50": 20.2,
+      "p95": 322.5,
+      "max": 397.3
+    },
+    "solve_ms_oldRefused": {
+      "n": 20,
+      "ok": 20,
+      "p50": 97.2,
+      "p95": 397.3,
+      "max": 397.3
+    },
+    "solve_ms_oldStaged": {
+      "n": 20,
+      "ok": 20,
+      "p50": 6.3,
+      "p95": 37,
+      "max": 37
+    },
+    "ringHistogram": [
+      [
+        0,
+        19
+      ],
+      [
+        5,
+        19
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        11,
+        0
+      ],
+      [
+        13,
+        0
+      ]
+    ],
+    "dist": {
+      "p50": 5,
+      "p90": 5,
+      "max": 8
+    },
+    "e2e_ms_toFirstFrame": {
+      "n": 11,
+      "p50": 576,
+      "p95": 855,
+      "max": 855
+    },
+    "e2e": [
+      {
+        "at": [
+          -45.84,
+          26.66
+        ],
+        "world": true,
+        "site": {
+          "R": 0,
+          "d": 0,
+          "dy": 0,
+          "bearing": 0,
+          "at": {
+            "x": -45.84,
+            "y": 30,
+            "z": 26.66
+          },
+          "player": {
+            "x": -45.84,
+            "y": 30,
+            "z": 26.66
+          },
+          "cands": 1,
+          "screened": 0,
+          "solved": 1,
+          "ms": 6,
+          "quality": null
+        },
+        "msToStage": 402,
+        "msToFirstFrame": 410
+      },
+      {
+        "at": [
+          -50.62,
+          41.88
+        ],
+        "world": true,
+        "site": {
+          "R": 8,
+          "d": 8,
+          "dy": -0.61,
+          "bearing": 1.571,
+          "at": {
+            "x": -50.62,
+            "y": 26.202,
+            "z": 49.88
+          },
+          "player": {
+            "x": -50.62,
+            "y": 26.815,
+            "z": 41.88
+          },
+          "cands": 11,
+          "screened": 0,
+          "solved": 11,
+          "ms": 407,
+          "quality": null
+        },
+        "msToStage": 851,
+        "msToFirstFrame": 855
+      },
+      {
+        "at": [
+          -50.62,
+          38.12
+        ],
+        "world": true,
+        "site": {
+          "R": 5,
+          "d": 5,
+          "dy": -0.75,
+          "bearing": 4.712,
+          "at": {
+            "x": -50.62,
+            "y": 26.092,
+            "z": 33.12
+          },
+          "player": {
+            "x": -50.62,
+            "y": 26.84,
+            "z": 38.12
+          },
+          "cands": 8,
+          "screened": 0,
+          "solved": 8,
+          "ms": 342,
+          "quality": null
+        },
+        "msToStage": 759,
+        "msToFirstFrame": 763
+      },
+      {
+        "at": [
+          -49.38,
+          55.62
+        ],
+        "world": true,
+        "site": {
+          "R": 5,
+          "d": 5,
+          "dy": -0.08,
+          "bearing": 3.142,
+          "at": {
+            "x": -54.38,
+            "y": 26.193,
+            "z": 55.62
+          },
+          "player": {
+            "x": -49.38,
+            "y": 26.277,
+            "z": 55.62
+          },
+          "cands": 6,
+          "screened": 0,
+          "solved": 6,
+          "ms": 249,
+          "quality": null
+        },
+        "msToStage": 666,
+        "msToFirstFrame": 669
+      },
+      {
+        "at": [
+          8.12,
+          -4.38
+        ],
+        "world": true,
+        "site": {
+          "R": 5,
+          "d": 5,
+          "dy": 0.84,
+          "bearing": 3.142,
+          "at": {
+            "x": 3.12,
+            "y": 15.14,
+            "z": -4.38
+          },
+          "player": {
+            "x": 8.12,
+            "y": 14.299,
+            "z": -4.38
+          },
+          "cands": 6,
+          "screened": 0,
+          "solved": 6,
+          "ms": 246,
+          "quality": null
+        },
+        "msToStage": 678,
+        "msToFirstFrame": 682
+      },
+      {
+        "at": [
+          8.12,
+          -11.88
+        ],
+        "world": true,
+        "site": {
+          "R": 5,
+          "d": 5,
+          "dy": -0.16,
+          "bearing": 2.356,
+          "at": {
+            "x": 4.584,
+            "y": 15.744,
+            "z": -8.344
+          },
+          "player": {
+            "x": 8.12,
+            "y": 15.902,
+            "z": -11.88
+          },
+          "cands": 5,
+          "screened": 0,
+          "solved": 5,
+          "ms": 195,
+          "quality": null
+        },
+        "msToStage": 624,
+        "msToFirstFrame": 628
+      },
+      {
+        "at": [
+          -51.88,
+          55.62
+        ],
+        "world": true,
+        "site": {
+          "R": 8,
+          "d": 8,
+          "dy": -2.11,
+          "bearing": 0.785,
+          "at": {
+            "x": -46.223,
+            "y": 28.397,
+            "z": 61.277
+          },
+          "player": {
+            "x": -51.88,
+            "y": 30.506,
+            "z": 55.62
+          },
+          "cands": 5,
+          "screened": 2,
+          "solved": 3,
+          "ms": 142,
+          "quality": null
+        },
+        "msToStage": 572,
+        "msToFirstFrame": 576
+      },
+      {
+        "at": [
+          53.12,
+          -45.62
+        ],
+        "world": true,
+        "site": {
+          "R": 5,
+          "d": 5,
+          "dy": 0.05,
+          "bearing": 3.927,
+          "at": {
+            "x": 49.584,
+            "y": 4.293,
+            "z": -49.156
+          },
+          "player": {
+            "x": 53.12,
+            "y": 4.247,
+            "z": -45.62
+          },
+          "cands": 3,
+          "screened": 0,
+          "solved": 3,
+          "ms": 55,
+          "quality": null
+        },
+        "msToStage": 474,
+        "msToFirstFrame": 478
+      },
+      {
+        "at": [
+          -52.08,
+          45.84
+        ],
+        "world": true,
+        "site": {
+          "R": 5,
+          "d": 5,
+          "dy": -3.3,
+          "bearing": 0.785,
+          "at": {
+            "x": -48.544,
+            "y": 25.759,
+            "z": 49.376
+          },
+          "player": {
+            "x": -52.08,
+            "y": 29.058,
+            "z": 45.84
+          },
+          "cands": 2,
+          "screened": 1,
+          "solved": 1,
+          "ms": 23,
+          "quality": null
+        },
+        "msToStage": 441,
+        "msToFirstFrame": 445
+      },
+      {
+        "at": [
+          45.62,
+          -34.38
+        ],
+        "world": true,
+        "site": {
+          "R": 0,
+          "d": 0,
+          "dy": 0,
+          "bearing": 0,
+          "at": {
+            "x": 45.62,
+            "y": 16.236,
+            "z": -34.38
+          },
+          "player": {
+            "x": 45.62,
+            "y": 16.236,
+            "z": -34.38
+          },
+          "cands": 1,
+          "screened": 0,
+          "solved": 1,
+          "ms": 10,
+          "quality": null
+        },
+        "msToStage": 442,
+        "msToFirstFrame": 446
+      },
+      {
+        "at": [
+          -46.88,
+          48.12
+        ],
+        "world": true,
+        "site": {
+          "R": 0,
+          "d": 0,
+          "dy": 0,
+          "bearing": 0,
+          "at": {
+            "x": -46.88,
+            "y": 24.576,
+            "z": 48.12
+          },
+          "player": {
+            "x": -46.88,
+            "y": 24.576,
+            "z": 48.12
+          },
+          "cands": 1,
+          "screened": 0,
+          "solved": 1,
+          "ms": 5,
+          "quality": null
+        },
+        "msToStage": 446,
+        "msToFirstFrame": 451
+      }
+    ],
+    "residual": []
+  },
+  "rows": [
+    {
+      "from": [
+        -66.88,
+        45.62
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": 0.27,
+      "bearing": 0.785,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawDelta": 1.6,
+      "ms": 106.6
+    },
+    {
+      "from": [
+        -45.84,
+        26.66
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0,
+      "ms": 6.6
+    },
+    {
+      "from": [
+        52.08,
+        -39.58
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": 0.69,
+      "bearing": 2.356,
+      "cands": 3,
+      "screened": 2,
+      "solved": 1,
+      "yawDelta": 0.5,
+      "ms": 17
+    },
+    {
+      "from": [
+        15.62,
+        -16.88
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": -0.5,
+      "ms": 12.8
+    },
+    {
+      "from": [
+        40.62,
+        -29.38
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -3.97,
+      "bearing": 2.356,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawDelta": 0,
+      "ms": 9.6
+    },
+    {
+      "from": [
+        60.42,
+        -38.34
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": -0.5,
+      "ms": 5
+    },
+    {
+      "from": [
+        -52.08,
+        45.84
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -3.3,
+      "bearing": 0.785,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawDelta": 0.5,
+      "ms": 20.2
+    },
+    {
+      "from": [
+        44.38,
+        -33.12
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 1.05,
+      "ms": 7.5
+    },
+    {
+      "from": [
+        -62.92,
+        44.58
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -0.11,
+      "bearing": 0.785,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawDelta": 2.1,
+      "ms": 106.5
+    },
+    {
+      "from": [
+        -53.12,
+        66.88
+      ],
+      "was": true,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": 1.28,
+      "bearing": 0,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawDelta": 0,
+      "ms": 37
+    },
+    {
+      "from": [
+        -64.38,
+        45.62
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -2.88,
+      "bearing": 0.785,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawDelta": 1.6,
+      "ms": 31.7
+    },
+    {
+      "from": [
+        38.12,
+        -26.88
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": -1.05,
+      "ms": 21
+    },
+    {
+      "from": [
+        12.92,
+        -14.58
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -2.14,
+      "bearing": 0.785,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawDelta": -2.1,
+      "ms": 122.3
+    },
+    {
+      "from": [
+        -50.62,
+        35.62
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 1.05,
+      "ms": 14.1
+    },
+    {
+      "from": [
+        9.38,
+        -6.88
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -0.63,
+      "bearing": 0.785,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawDelta": -0.5,
+      "ms": 97.2
+    },
+    {
+      "from": [
+        63.12,
+        -40.62
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": -0.5,
+      "ms": 6.1
+    },
+    {
+      "from": [
+        8.12,
+        -4.38
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": 0.84,
+      "bearing": 3.142,
+      "cands": 6,
+      "screened": 0,
+      "solved": 6,
+      "yawDelta": -1.6,
+      "ms": 234.1
+    },
+    {
+      "from": [
+        -60.62,
+        63.12
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0.5,
+      "ms": 6.3
+    },
+    {
+      "from": [
+        -50.62,
+        38.12
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -0.75,
+      "bearing": 4.712,
+      "cands": 8,
+      "screened": 0,
+      "solved": 8,
+      "yawDelta": 1.05,
+      "ms": 322.5
+    },
+    {
+      "from": [
+        -8.34,
+        7.92
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0,
+      "ms": 3
+    },
+    {
+      "from": [
+        -49.38,
+        55.62
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -0.08,
+      "bearing": 3.142,
+      "cands": 6,
+      "screened": 0,
+      "solved": 6,
+      "yawDelta": -0.5,
+      "ms": 243.2
+    },
+    {
+      "from": [
+        45.62,
+        -34.38
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0.5,
+      "ms": 7.8
+    },
+    {
+      "from": [
+        -42.08,
+        25.42
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": 0,
+      "bearing": 3.142,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawDelta": -0.5,
+      "ms": 9.8
+    },
+    {
+      "from": [
+        -9.38,
+        9.38
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0,
+      "ms": 3.1
+    },
+    {
+      "from": [
+        -66.66,
+        55.42
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -2.45,
+      "bearing": 0.785,
+      "cands": 2,
+      "screened": 1,
+      "solved": 1,
+      "yawDelta": 2.1,
+      "ms": 33.1
+    },
+    {
+      "from": [
+        39.38,
+        -28.12
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": -1.05,
+      "ms": 25.7
+    },
+    {
+      "from": [
+        8.12,
+        -6.88
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -1.53,
+      "bearing": 0.785,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawDelta": 0,
+      "ms": 92.9
+    },
+    {
+      "from": [
+        -46.88,
+        48.12
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0,
+      "ms": 5
+    },
+    {
+      "from": [
+        41.88,
+        -30.62
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -2.18,
+      "bearing": 2.356,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawDelta": -1.6,
+      "ms": 36
+    },
+    {
+      "from": [
+        64.38,
+        -40.62
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": -0.5,
+      "ms": 6.1
+    },
+    {
+      "from": [
+        -51.88,
+        55.62
+      ],
+      "was": false,
+      "ok": true,
+      "R": 8,
+      "d": 8,
+      "dy": -2.11,
+      "bearing": 0.785,
+      "cands": 5,
+      "screened": 2,
+      "solved": 3,
+      "yawDelta": 2.1,
+      "ms": 142.5
+    },
+    {
+      "from": [
+        31.88,
+        -21.88
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0,
+      "ms": 3.1
+    },
+    {
+      "from": [
+        -53.12,
+        65.62
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": -0.06,
+      "bearing": 0,
+      "cands": 2,
+      "screened": 0,
+      "solved": 2,
+      "yawDelta": 1.05,
+      "ms": 63.9
+    },
+    {
+      "from": [
+        -9.58,
+        9.16
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0,
+      "ms": 3.4
+    },
+    {
+      "from": [
+        8.12,
+        -11.88
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": 0.02,
+      "bearing": 3.142,
+      "cands": 6,
+      "screened": 0,
+      "solved": 6,
+      "yawDelta": 0.5,
+      "ms": 210.7
+    },
+    {
+      "from": [
+        57.92,
+        -35.84
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": -0.5,
+      "ms": 5
+    },
+    {
+      "from": [
+        53.12,
+        -45.62
+      ],
+      "was": false,
+      "ok": true,
+      "R": 5,
+      "d": 5,
+      "dy": 0.05,
+      "bearing": 3.927,
+      "cands": 3,
+      "screened": 0,
+      "solved": 3,
+      "yawDelta": -0.5,
+      "ms": 49.6
+    },
+    {
+      "from": [
+        61.66,
+        -38.34
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": 0,
+      "ms": 4.4
+    },
+    {
+      "from": [
+        -50.62,
+        41.88
+      ],
+      "was": false,
+      "ok": true,
+      "R": 8,
+      "d": 8,
+      "dy": -0.61,
+      "bearing": 1.571,
+      "cands": 11,
+      "screened": 0,
+      "solved": 11,
+      "yawDelta": 1.05,
+      "ms": 397.3
+    },
+    {
+      "from": [
+        1.88,
+        4.38
+      ],
+      "was": true,
+      "ok": true,
+      "R": 0,
+      "d": 0,
+      "dy": 0,
+      "bearing": 0,
+      "cands": 1,
+      "screened": 0,
+      "solved": 1,
+      "yawDelta": -0.5,
+      "ms": 11.8
+    }
+  ]
+}

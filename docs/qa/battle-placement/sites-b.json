@@ -1,0 +1,318 @@
+{
+  "meta": {
+    "n": 2,
+    "scanned": 400,
+    "spread": 5,
+    "group": [
+      "duskpad",
+      "reed-nibbler"
+    ],
+    "party": [
+      "vesper",
+      "maren"
+    ],
+    "three": "185",
+    "when": "2026-08-09T03:25:57.510Z",
+    "secs": 134
+  },
+  "rows": [
+    {
+      "at": {
+        "x": -3.1199999999999997,
+        "y": 14.025782719329271,
+        "z": 9.379999999999999,
+        "zone": "meadow"
+      },
+      "site": {
+        "R": 0,
+        "d": 0,
+        "dy": 0,
+        "bearing": 0,
+        "at": {
+          "x": -3.12,
+          "y": 14.026,
+          "z": 9.38
+        },
+        "player": {
+          "x": -3.12,
+          "y": 14.026,
+          "z": 9.38
+        },
+        "cands": 1,
+        "screened": 0,
+        "solved": 1,
+        "ms": 10
+      },
+      "zone": "meadow",
+      "relief": 0.289,
+      "yawDelta": 0,
+      "view": {
+        "score": 7.5438,
+        "back": 1.75,
+        "seen": 1,
+        "of": 4,
+        "boom": true,
+        "pitch": 0.16
+      },
+      "pitch": 0.16,
+      "fov": 34,
+      "camDist": 9.218,
+      "tone": {
+        "ok": true,
+        "chose": 0.16,
+        "was": 0.16,
+        "moved": false,
+        "winScore": 16.797,
+        "incScore": 16.483
+      },
+      "sil": {
+        "ok": true,
+        "castPx": 5498,
+        "castFrac": 0.0955,
+        "edgeRGB": 3.09,
+        "bandMin": 6.12,
+        "bands": [
+          10.91,
+          35.07,
+          23.54,
+          10.48,
+          6.12
+        ],
+        "clutter": 46.77,
+        "ringL": 133.1,
+        "castL": 147.5
+      },
+      "surf": {
+        "topSurface": 0.1847,
+        "entropy": 3.883,
+        "bins": 55,
+        "backTopSurface": 0.2102,
+        "backEntropy": 3.843,
+        "backBins": 45
+      },
+      "rays": {
+        "skyFrac": 0,
+        "dNear": 5.38,
+        "dMed": 11.19,
+        "dFar": 15.19,
+        "dSpanOct": 1.5,
+        "layers": 5,
+        "horizonRow": 0,
+        "grid": [
+          28,
+          16
+        ]
+      },
+      "ground": {
+        "ok": true,
+        "n": 81,
+        "miss": 28,
+        "slopeDeg": 2.48,
+        "rough": 0.172,
+        "span": 1.065
+      },
+      "sun": {
+        "ok": true,
+        "n": 4,
+        "shaded": 0,
+        "shadedFrac": 0,
+        "dir": [
+          -0.437,
+          0.559,
+          -0.704
+        ]
+      },
+      "frameL": {
+        "L05": 41.2,
+        "L50": 133.3,
+        "L95": 183.6
+      },
+      "anchors": {
+        "vesper": {
+          "x": 425,
+          "y": 537,
+          "h": 249,
+          "vis": true
+        },
+        "maren": {
+          "x": 366,
+          "y": 462,
+          "h": 217,
+          "vis": true
+        },
+        "m0": {
+          "x": 1279,
+          "y": 531,
+          "h": 168,
+          "vis": true
+        },
+        "m1": {
+          "x": 1210,
+          "y": 477,
+          "h": 98,
+          "vis": true
+        }
+      },
+      "tiers": {
+        "vesper": "model",
+        "maren": "model",
+        "m0": "model",
+        "m1": "model"
+      },
+      "stageMs": 2271,
+      "id": "s060",
+      "from": [
+        -3.12,
+        4.38
+      ]
+    },
+    {
+      "at": {
+        "x": 8.120000000000001,
+        "y": 14.299317997200433,
+        "z": -4.38,
+        "zone": "forest"
+      },
+      "site": {
+        "R": 5,
+        "d": 5,
+        "dy": 0.84,
+        "bearing": 3.142,
+        "at": {
+          "x": 3.12,
+          "y": 15.14,
+          "z": -4.38
+        },
+        "player": {
+          "x": 8.12,
+          "y": 14.299,
+          "z": -4.38
+        },
+        "cands": 6,
+        "screened": 0,
+        "solved": 6,
+        "ms": 258
+      },
+      "zone": "forest",
+      "relief": 0.911,
+      "yawDelta": -1.6,
+      "view": {
+        "score": 5.7541,
+        "back": 1.01,
+        "seen": 0.944,
+        "of": 4,
+        "boom": false,
+        "pitch": 0.22
+      },
+      "pitch": 0.22,
+      "fov": 34,
+      "camDist": 8.847,
+      "tone": {
+        "ok": true,
+        "chose": 0.34,
+        "was": 0.22,
+        "moved": true,
+        "winScore": 9.948,
+        "incScore": 6.635
+      },
+      "sil": {
+        "ok": true,
+        "castPx": 2738,
+        "castFrac": 0.0475,
+        "edgeRGB": 21,
+        "bandMin": 10.97,
+        "bands": [
+          25.93,
+          21.24,
+          10.97
+        ],
+        "clutter": 21.89,
+        "ringL": 37.2,
+        "castL": 51.5
+      },
+      "surf": {
+        "topSurface": 0.341,
+        "entropy": 3.234,
+        "bins": 45,
+        "backTopSurface": 0.521,
+        "backEntropy": 2.231,
+        "backBins": 21
+      },
+      "rays": {
+        "skyFrac": 0,
+        "dNear": 5.73,
+        "dMed": 8.6,
+        "dFar": 22.56,
+        "dSpanOct": 1.98,
+        "layers": 7,
+        "horizonRow": 0,
+        "grid": [
+          28,
+          16
+        ]
+      },
+      "ground": {
+        "ok": true,
+        "n": 81,
+        "miss": 11,
+        "slopeDeg": 8.26,
+        "rough": 0.171,
+        "span": 1.552
+      },
+      "sun": {
+        "ok": true,
+        "n": 4,
+        "shaded": 4,
+        "shadedFrac": 1,
+        "dir": [
+          -0.437,
+          0.559,
+          -0.704
+        ]
+      },
+      "frameL": {
+        "L05": 17.9,
+        "L50": 41.5,
+        "L95": 138.1
+      },
+      "anchors": {
+        "vesper": {
+          "x": 426,
+          "y": 449,
+          "h": 257,
+          "vis": true
+        },
+        "maren": {
+          "x": 367,
+          "y": 391,
+          "h": 223,
+          "vis": true
+        },
+        "m0": {
+          "x": 1290,
+          "y": 609,
+          "h": 164,
+          "vis": true
+        },
+        "m1": {
+          "x": 1275,
+          "y": 591,
+          "h": 108,
+          "vis": true
+        }
+      },
+      "tiers": {
+        "vesper": "model",
+        "maren": "model",
+        "m0": "model",
+        "m1": "model"
+      },
+      "stageMs": 2456,
+      "id": "s061",
+      "from": [
+        3.12,
+        -4.38
+      ]
+    }
+  ]
+}

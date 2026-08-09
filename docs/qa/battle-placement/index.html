@@ -1,0 +1,473 @@
+<title>Placement quality — is this a good place to fight?</title>
+<style>
+:root{--bg:#111214;--fg:#e9e9ec;--dim:#9aa0a6;--line:#2a2c31;--good:#4a9d5f;--acc:#b0862c;--bad:#a8453c}
+@media (prefers-color-scheme: light){:root{--bg:#fbfbfc;--fg:#17181b;--dim:#5d636b;--line:#dcdee3}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 90px}
+h1{font-size:30px;line-height:1.15;margin:0 0 6px}
+h2{font-size:19px;margin:44px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+h3{font-size:15px;margin:22px 0 6px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+p{max-width:74ch}
+.sub{color:var(--dim);margin:0 0 24px}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+th,td{border-bottom:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+td.k{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;white-space:nowrap}
+.p{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11.5px;font-weight:700;color:#fff;margin-right:6px}
+.p.good{background:var(--good)}.p.acceptable{background:var(--acc)}.p.bad{background:var(--bad)}
+.gal td{vertical-align:top}
+.gal img{width:100%;max-width:420px;border-radius:4px;display:block;border:1px solid var(--line)}
+.gal .cap{font-size:12.5px;color:var(--dim);margin-top:5px;max-width:420px}
+.gal td.id{width:64px;font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.gal td.d{width:74px;font-weight:700;font-size:12px}
+.gal td.d.up{color:var(--good)}.gal td.d.down{color:var(--bad)}
+.gal tr.moved td.id{border-left:3px solid #4d7ec8}
+.z{color:var(--dim);font-weight:400;font-size:11px;margin-top:3px}
+.bars{display:flex;gap:2px;margin:6px 0 2px;height:26px;border-radius:4px;overflow:hidden;max-width:640px}
+.bars i{display:block;font-style:normal;font-size:11px;color:#fff;text-align:center;line-height:26px}
+.note{border-left:3px solid var(--line);padding:2px 0 2px 14px;color:var(--dim);margin:14px 0;max-width:74ch}
+.big{font-size:26px;font-weight:700}
+</style>
+<div class="wrap">
+<h1>Is this a good place to fight?</h1>
+<p class="sub">2026-08-09 · the world arena's staging search, measured for the first time on the one thing it never asked ·
+instruments <code>tools/battle_place.mjs</code>, <code>tools/battle_place_sheets.py</code>, <code>tools/battle_place_stats.py</code></p>
+
+<p><code>stageArena</code> stages 100% of sampled <code>ow-valley</code> cells and the camera language owns size, occlusion and
+tonal separation. The places it picks are another matter: it staged on a bare rock dome, in a building's shadow,
+inside a hedge bank, <b>on a rooftop</b>, and once with the lens inside a leaf. All of those are legal placements.
+The search only ever asked <i>can bodies stand here</i> and <i>can the camera see them</i>.</p>
+
+<h2>Method — the sort came first, on purpose</h2>
+<p>62 sites were staged as <b>real battles</b> through the shipped path and photographed with the stage's own
+<code>snapshot()</code>, so every frame below is the player's pipeline (RenderPass → GTAO → bloom → OutputPass) and the
+bytes are display-space. They were then <b>sorted by eye into good / acceptable / bad from contact sheets alone, before a
+single number was read</b> (<code>sort.json</code>; sheets in <code>sheets/</code>). Only then was every recorded axis asked how
+well it separates the piles. A metric invented before the sort is taste with a number on it.</p>
+<p class="note">The 62 sites are close to a <b>census, not a sample</b>: walking all 400 recorded road cells into the
+neighbouring encounter zones and refusing any site within 5 m of an accepted one exhausts at 62. That is the size of the
+band a fight can actually fire in beside the ow-valley road.</p>
+
+<h2>The distribution, before</h2>
+<div class="bars"><i style="flex:9;background:#4a9d5f">good 9</i><i style="flex:23;background:#b0862c">acceptable 23</i><i style="flex:30;background:#a8453c">bad 30</i></div>
+<p class="big">48.4% bad · 37.1% acceptable · 14.5% good</p>
+<p>That is the answer to "how far is the world arena from default-ready". Half the places it picks are places where a
+body is lost — inside foliage, at its background's own value, or in near-black.</p>
+
+<h2>Which axes separate the piles — and which do not</h2>
+<p>AUC is the probability a random <i>good</i> site outranks a random <i>bad</i> one; 0.5 is chance and <b>below 0.5 means the
+axis runs backwards</b>, which is a result. <code>sep</code> = |AUC−0.5|×2. Full table in <code>axes.json</code>.</p>
+<div class="scroll"><table>
+<tr><th>axis</th><th>AUC</th><th>sep</th><th>bal.acc</th><th>good</th><th>accept</th><th>bad</th><th>direction</th></tr>
+<tr><td class="k">frameL.L95</td><td>0.937</td><td>0.874</td><td>0.917</td><td>189.711</td><td>159.596</td><td>125.533</td><td>good is HIGHER</td></tr><tr><td class="k">sil.ringL</td><td>0.930</td><td>0.859</td><td>0.900</td><td>113.500</td><td>81.713</td><td>51.810</td><td>good is HIGHER</td></tr><tr><td class="k">sil.castL</td><td>0.922</td><td>0.844</td><td>0.950</td><td>124.578</td><td>85.896</td><td>72.693</td><td>good is HIGHER</td></tr><tr><td class="k">surf.entropy</td><td>0.922</td><td>0.844</td><td>0.894</td><td>3.976</td><td>3.769</td><td>2.843</td><td>good is HIGHER</td></tr><tr><td class="k">surf.topSurface</td><td>0.078</td><td>0.844</td><td>0.894</td><td>0.199</td><td>0.236</td><td>0.444</td><td>good is LOWER</td></tr><tr><td class="k">sil.castFrac</td><td>0.907</td><td>0.815</td><td>0.933</td><td>0.080</td><td>0.065</td><td>0.052</td><td>good is HIGHER</td></tr><tr><td class="k">sil.castPx</td><td>0.907</td><td>0.815</td><td>0.933</td><td>4602.222</td><td>3737.435</td><td>2998.167</td><td>good is HIGHER</td></tr><tr><td class="k">surf.backEntropy</td><td>0.907</td><td>0.815</td><td>0.933</td><td>3.657</td><td>3.409</td><td>2.442</td><td>good is HIGHER</td></tr><tr><td class="k">frameL.L50</td><td>0.885</td><td>0.770</td><td>0.861</td><td>109.256</td><td>77.735</td><td>47.117</td><td>good is HIGHER</td></tr><tr><td class="k">surf.backTopSurface</td><td>0.126</td><td>0.748</td><td>0.867</td><td>0.237</td><td>0.294</td><td>0.507</td><td>good is LOWER</td></tr><tr><td class="k">sil.bandMin</td><td>0.133</td><td>0.733</td><td>0.883</td><td>3.880</td><td>7.375</td><td>12.291</td><td>good is LOWER</td></tr><tr><td class="k">sun.shaded</td><td>0.157</td><td>0.685</td><td>0.861</td><td>1.556</td><td>2.696</td><td>3.433</td><td>good is LOWER</td></tr><tr><td class="k">sun.shadedFrac</td><td>0.157</td><td>0.685</td><td>0.861</td><td>0.389</td><td>0.674</td><td>0.858</td><td>good is LOWER</td></tr><tr><td class="k">ground.span</td><td>0.161</td><td>0.678</td><td>0.782</td><td>0.974</td><td>1.317</td><td>1.422</td><td>good is LOWER</td></tr><tr><td class="k">surf.backBins</td><td>0.833</td><td>0.667</td><td>0.828</td><td>39.111</td><td>34.870</td><td>26.267</td><td>good is HIGHER</td></tr><tr><td class="k">sil.clutter</td><td>0.830</td><td>0.659</td><td>0.839</td><td>48.224</td><td>41.498</td><td>29.407</td><td>good is HIGHER</td></tr><tr><td class="k">rays.dSpanOct</td><td>0.811</td><td>0.622</td><td>0.789</td><td>2.564</td><td>1.820</td><td>1.705</td><td>good is HIGHER</td></tr><tr><td class="k">surf.bins</td><td>0.802</td><td>0.604</td><td>0.772</td><td>53.333</td><td>51.696</td><td>42.533</td><td>good is HIGHER</td></tr><tr><td class="k">site.at.z</td><td>0.796</td><td>0.593</td><td>0.778</td><td>36.388</td><td>19.175</td><td>-4.395</td><td>good is HIGHER</td></tr><tr><td class="k">at.z</td><td>0.794</td><td>0.589</td><td>0.778</td><td>35.995</td><td>18.714</td><td>-5.174</td><td>good is HIGHER</td></tr><tr><td class="k">site.player.z</td><td>0.794</td><td>0.589</td><td>0.778</td><td>35.995</td><td>18.714</td><td>-5.174</td><td>good is HIGHER</td></tr><tr><td class="k">site.at.x</td><td>0.211</td><td>0.578</td><td>0.761</td><td>-38.517</td><td>-22.346</td><td>2.952</td><td>good is LOWER</td></tr><tr><td class="k">view.score</td><td>0.789</td><td>0.578</td><td>0.811</td><td>7.765</td><td>7.443</td><td>7.350</td><td>good is HIGHER</td></tr><tr><td class="k">relief</td><td>0.215</td><td>0.570</td><td>0.806</td><td>0.554</td><td>0.821</td><td>1.189</td><td>good is LOWER</td></tr><tr><td class="k">frameL.L05</td><td>0.781</td><td>0.563</td><td>0.806</td><td>36.644</td><td>27.252</td><td>23.370</td><td>good is HIGHER</td></tr><tr><td class="k">site.at.y</td><td>0.767</td><td>0.533</td><td>0.789</td><td>26.218</td><td>19.526</td><td>18.302</td><td>good is HIGHER</td></tr><tr><td class="k">rays.dFar</td><td>0.759</td><td>0.519</td><td>0.744</td><td>37.801</td><td>21.559</td><td>23.603</td><td>good is HIGHER</td></tr><tr><td class="k">sil.edgeRGB</td><td>0.244</td><td>0.511</td><td>0.739</td><td>8.892</td><td>8.765</td><td>17.298</td><td>good is LOWER</td></tr><tr><td class="k">ground.rough</td><td>0.245</td><td>0.510</td><td>0.807</td><td>0.184</td><td>0.223</td><td>0.267</td><td>good is LOWER</td></tr><tr><td class="k">at.x</td><td>0.248</td><td>0.504</td><td>0.761</td><td>-37.013</td><td>-23.025</td><td>2.381</td><td>good is LOWER</td></tr><tr><td class="k">site.player.x</td><td>0.248</td><td>0.504</td><td>0.761</td><td>-37.013</td><td>-23.025</td><td>2.381</td><td>good is LOWER</td></tr><tr><td class="k">rays.layers</td><td>0.746</td><td>0.493</td><td>0.711</td><td>7.333</td><td>5.652</td><td>5.800</td><td>good is HIGHER</td></tr><tr><td class="k">rays.dMed</td><td>0.743</td><td>0.485</td><td>0.700</td><td>11.691</td><td>10.923</td><td>10.152</td><td>good is HIGHER</td></tr><tr><td class="k">at.y</td><td>0.741</td><td>0.481</td><td>0.772</td><td>26.155</td><td>19.735</td><td>18.502</td><td>good is HIGHER</td></tr>
+</table></div>
+
+<h3>What won</h3>
+<p><b>Whether the frame is one flat lit thing or many.</b> <code>surf.topSurface</code> — the share of the background frame owned by
+the single most common quantised colour — separates at AUC 0.922 (good 0.199, bad 0.444), and its entropy twin agrees.
+<b>And whether the cast stands in the sun.</b> <code>sun.shadedFrac</code> reads 0.39 at good sites and 0.86 at bad ones
+(AUC 0.157 inverted = 0.843), and it costs <b>four rays</b> where the surface term costs a render.</p>
+
+<h3>What did not — the negative results, which cost more to learn</h3>
+<ul>
+<li><b>Sky / horizon presence is not the axis.</b> <code>rays.skyFrac</code> reads AUC 0.681 and <code>rays.horizonRow</code> 0.556.
+Almost no frame in this valley contains sky at all; the camera pitch band and the valley walls see to that.</li>
+<li><b>The axis the solver already optimises barely separates.</b> <code>view.back</code> — clear depth behind each body, the whole
+argument the base pose is searched on — reads AUC 0.733, and <code>view.seen</code> reads 0.657 because it is ~0.99 everywhere
+by construction. The staging solver is already maximising something that is not the thing that matters.</li>
+<li><b>Relocation distance predicts nothing.</b> <code>site.R</code> / <code>site.d</code>: AUC 0.450. Where the ladder puts the fight
+relative to the player has no bearing on whether it reads — which independently supports the 2026-08-08 ruling that
+distance is not the constraint.</li>
+<li><b>Ground slope is weak</b> (AUC 0.318 → sep 0.364); roughness and vertical span are moderate (sep 0.510 / 0.678).
+Terrain flatness is a minor term, not the story.</li>
+<li><b>And the shipped tonal metric runs backwards across sites.</b> <code>sil.edgeRGB</code> — what the <code>TONE</code> boom chooser
+maximises — ranks the three piles at <b>0.291</b> ordered-pair concordance: good sites average <b>8.9</b> against bad sites'
+<b>17.3</b>. A lit body against near-black is enormous RGB contrast and is exactly the pile a human calls bad. TONE is not
+wrong at its own job — choosing a boom <i>at one site</i> — but it must never be used as a placement metric.</li>
+<li><b>Combining does not help.</b> Sun exposure and surface dominance correlate 0.59; the z-sum of the two scores
+AUC 0.881, <i>worse</i> than surface dominance alone at 0.922.</li>
+</ul>
+
+<h2>The change</h2>
+<p>The ladder returned on its first acceptance, and ring 0 accepts at most cells — so there was never a second candidate
+to prefer and any quality term would have been inert. It now finishes the ring that first accepted, walks one more, and
+prefers a materially sunnier site among them. <b>Sun exposure is the term, not surface dominance</b>: the render-based
+winner has no affordable proxy (its ray-grid stand-in scores only AUC 0.79 and costs 52 ms a candidate — measured,
+<code>proxy-8x5.json</code>), and sun exposure separates nearly as well for four rays.</p>
+<p>It is a <b>refusal, not a preference</b> — the same shape TONE's margin has. A challenger must move at least half the cast
+out of shadow (<code>PLACE.sunMargin = 0.5</code>) before it takes the site; the incumbent is still the ladder's own first
+acceptance and is never assumed to be the worst. <code>?bplace=0</code> is the A/B on one build.</p>
+<p class="note"><b>Two short-circuits, proven rather than argued.</b> <code>lit</code> is a fraction, so if the incumbent is already
+within the margin of fully lit no candidate can clear the bar (22/62 cells); and candidates are generated in
+ring-then-bearing order with the tie-break sunniest→nearest→earliest, so the first fully-lit challenger that clears the
+margin is exactly what the ranking would pick (19/62). <code>tools/battle_place.mjs --mode=equiv</code> drives both arms in ONE page
+with <code>ORBIT.yaw</code> pinned — <b>62/62 identical sites, 0 differ</b> — and the fast path cuts the walk from
+72.9 ms to 46.9 ms at p50. The yaw pin matters: solveArena's ladder is relative to the live camera
+heading, so two separate runs of the same cell are not comparable and six cells appeared to differ for exactly that reason.</p>
+
+<h3>What it cost</h3>
+<div class="scroll"><table>
+<tr><th>arm</th><th>staged</th><th>staging solve p50 / p95 / max</th><th>trigger → first battle frame p50 / p95 / max</th><th>ring histogram</th><th>relocation p50/p90/max</th></tr>
+<tr><td><code>?bplace=0</code> first acceptance</td><td>40/40</td>
+<td class="mono">20.2 / 322.5 / 397.3 ms</td>
+<td class="mono">576 / 855 / 855 ms</td>
+<td class="mono">[[0, 19], [5, 19], [8, 2], [11, 0], [13, 0]]</td><td class="mono">5 / 5 / 8 m</td></tr>
+<tr><td><b>shipped</b> quality term</td><td>40/40</td>
+<td class="mono">69.7 / 371.2 / 441.3 ms</td>
+<td class="mono">734 / 900 / 900 ms</td>
+<td class="mono">[[0, 13], [5, 23], [8, 4], [11, 0], [13, 0]]</td><td class="mono">5 / 8 / 8 m</td></tr>
+</table></div>
+<p>Same 40 interleaved cells, same session. Coverage is unchanged at 100%. The fight still moves one sideways step —
+p90 5 → 8 m, max 8 m, well inside the 13 m ladder. <b>Without</b> the two short-circuits the solve p50 was 179.3 ms.</p>
+
+<h2>The distribution, after — and every site, honestly</h2>
+<div class="bars"><i style="flex:15;background:#4a9d5f">good 15</i><i style="flex:27;background:#b0862c">acceptable 27</i><i style="flex:20;background:#a8453c">bad 20</i></div>
+<p class="big">32.3% bad · 43.5% acceptable · 24.2% good</p>
+<p>14 sites improved, <b>0 regressed</b>. 13 of the 14 are sites the term actually moved; the fourteenth (<code>s048</code>) was
+<b>not</b> moved — its site is byte-identical and the frame changed because the TONE probe picked pitch 0.16 instead of 0.34
+between runs. That is capture variance, not this change, and excluding it gives the conservative
+<b>bad 48.4% → 33.9%, good 14.5% → 24.2%</b>. Restricted to the 21 sites the term moved: <b>4 good / 8 acceptable / 9 bad
+became 10 good / 11 acceptable / 0 bad</b>.</p>
+<p class="note">The nearest thing to a regression is <code>s010</code>: it moved 5 m and the party now stands in a shadowed rock
+notch. It stays <i>acceptable</i> either way — a within-pile wash, arguably a small loss. Four of the nine sites already
+sorted <i>good</i> were moved (<code>s005 s033 s046 s057</code>) and all four stayed good; <code>s033</code> and <code>s039</code> gained sky and
+distant hills.</p>
+
+<h3>Left: first acceptance. Right: quality term. Blue bar = the term moved this site.</h3>
+<div class="scroll"><table class="gal">
+<tr><th></th><th>before — <code>?bplace=0</code></th><th>after — shipped</th><th></th></tr>
+<tr class="">
+<td class="id">s000<div class="z">water</div></td>
+<td><img loading="lazy" src="sites/s000.jpg"><div class="cap"><span class="p bad">bad</span> party small and dark on a shadowed rock slope; foes against dark rock</div></td>
+<td><img loading="lazy" src="sites-q/s000.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 1&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s001<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s001.jpg"><div class="cap"><span class="p bad">bad</span> whole cast small against a dark hedge bank in shadow</div></td>
+<td><img loading="lazy" src="sites-q/s001.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 6&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s002<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s002.jpg"><div class="cap"><span class="p acceptable">acceptable</span> sunlit village square, but the party is wedged in a doorway between two houses</div></td>
+<td><img loading="lazy" src="sites-q/s002.jpg"><div class="cap"><span class="p good">good</span> moved 5 m onto the sunlit waystone lawn; was wedged in a doorway</div></td>
+<td class="d up">UP<div class="z">moved 8 m, lit 0.25→0.75</div></td>
+</tr><tr class="">
+<td class="id">s003<div class="z">water</div></td>
+<td><img loading="lazy" src="sites/s003.jpg"><div class="cap"><span class="p bad">bad</span> under a structure, near-black; the foes are silhouettes with no value</div></td>
+<td><img loading="lazy" src="sites-q/s003.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 2&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s004<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s004.jpg"><div class="cap"><span class="p bad">bad</span> party against black timber blocks on a shadowed rock ramp</div></td>
+<td><img loading="lazy" src="sites-q/s004.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved onto a sunlit ramp; the black timber blocks are still behind the party</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.00→0.50</div></td>
+</tr><tr class="moved">
+<td class="id">s005<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s005.jpg"><div class="cap"><span class="p good">good</span> sunlit clearing, open ground, all four read, trees behind at a different value</div></td>
+<td><img loading="lazy" src="sites-q/s005.jpg"><div class="cap"><span class="p good">good</span> moved; open lit slope instead of the lit clearing — still good</div></td>
+<td class="d "><div class="z">moved 5 m, lit 0.50→1.00</div></td>
+</tr><tr class="">
+<td class="id">s006<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s006.jpg"><div class="cap"><span class="p bad">bad</span> dark reed-bed water margin; every body sits at the background&#x27;s value</div></td>
+<td><img loading="lazy" src="sites-q/s006.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 6&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s007<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s007.jpg"><div class="cap"><span class="p bad">bad</span> party inside a dense dark hedge, foes on dark grass in front of it</div></td>
+<td><img loading="lazy" src="sites-q/s007.jpg"><div class="cap"><span class="p good">good</span> moved 5 m out of the hedge onto a lit ledge over the water</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.00→0.50</div></td>
+</tr><tr class="">
+<td class="id">s008<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s008.jpg"><div class="cap"><span class="p bad">bad</span> bare rock dome owns the frame; the wolf is a white ghost on it</div></td>
+<td><img loading="lazy" src="sites-q/s008.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 5&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s009<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s009.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party in bush shadow, foes on lit grass; half the cast reads</div></td>
+<td><img loading="lazy" src="sites-q/s009.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.75, 9&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s010<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s010.jpg"><div class="cap"><span class="p acceptable">acceptable</span> lit grass under a rock face; reads, but the face fills the left</div></td>
+<td><img loading="lazy" src="sites-q/s010.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved 5 m; the party now stands in a shadowed rock notch — a within-pile WASH, arguably a small loss</div></td>
+<td class="d "><div class="z">moved 5 m, lit 0.50→1.00</div></td>
+</tr><tr class="moved">
+<td class="id">s011<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s011.jpg"><div class="cap"><span class="p bad">bad</span> party behind timber scaffolding against a shadowed rock wall</div></td>
+<td><img loading="lazy" src="sites-q/s011.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved onto a lit timber bridge; was behind scaffolding in shadow</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.50→1.00</div></td>
+</tr><tr class="">
+<td class="id">s012<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s012.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party standing IN the pond; high contrast but an absurd place</div></td>
+<td><img loading="lazy" src="sites-q/s012.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.50, 2&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s013<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s013.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party dark on a dark path against rock; the foes read on lit grass</div></td>
+<td><img loading="lazy" src="sites-q/s013.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 9&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s014<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s014.jpg"><div class="cap"><span class="p acceptable">acceptable</span> cast split across a hard light/shadow line at a bridge</div></td>
+<td><img loading="lazy" src="sites-q/s014.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved onto the lit patch under the bridge frame</div></td>
+<td class="d "><div class="z">moved 5 m, lit 0.00→0.50</div></td>
+</tr><tr class="">
+<td class="id">s015<div class="z">water</div></td>
+<td><img loading="lazy" src="sites/s015.jpg"><div class="cap"><span class="p good">good</span> sunlit village square with a lit waystone; all four read</div></td>
+<td><img loading="lazy" src="sites-q/s015.jpg"><div class="cap"><span class="p good">good</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 1&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s016<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s016.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party against a pink rock face, foes on lit grass</div></td>
+<td><img loading="lazy" src="sites-q/s016.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.25, 9&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s017<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s017.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party half behind a bush, foes on lit grass</div></td>
+<td><img loading="lazy" src="sites-q/s017.jpg"><div class="cap"><span class="p good">good</span> moved onto lit grass under a lit rock face</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.00→0.50</div></td>
+</tr><tr class="">
+<td class="id">s018<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s018.jpg"><div class="cap"><span class="p bad">bad</span> bare rock dome, no background at all; the cast is furniture on it</div></td>
+<td><img loading="lazy" src="sites-q/s018.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 5&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s019<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s019.jpg"><div class="cap"><span class="p bad">bad</span> the foes are inside the hedge bank at its own value</div></td>
+<td><img loading="lazy" src="sites-q/s019.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved out of the hedge onto lit grass</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.00→0.50</div></td>
+</tr><tr class="">
+<td class="id">s020<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s020.jpg"><div class="cap"><span class="p bad">bad</span> party inside a dark hedge bank</div></td>
+<td><img loading="lazy" src="sites-q/s020.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 6&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s021<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s021.jpg"><div class="cap"><span class="p acceptable">acceptable</span> grass strip under a cliff; reads but the cliff owns the frame</div></td>
+<td><img loading="lazy" src="sites-q/s021.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 9&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s022<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s022.jpg"><div class="cap"><span class="p acceptable">acceptable</span> village, party against a dark shed doorway</div></td>
+<td><img loading="lazy" src="sites-q/s022.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.50, 2&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s023<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s023.jpg"><div class="cap"><span class="p bad">bad</span> a single dark hedge mass owns the frame, cast at its value</div></td>
+<td><img loading="lazy" src="sites-q/s023.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 8&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s024<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s024.jpg"><div class="cap"><span class="p bad">bad</span> dark hedge over dark ground, no separation anywhere</div></td>
+<td><img loading="lazy" src="sites-q/s024.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 4&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s025<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s025.jpg"><div class="cap"><span class="p acceptable">acceptable</span> village, party in a doorway shadow, foes on lit grass</div></td>
+<td><img loading="lazy" src="sites-q/s025.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.75, 6&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s026<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s026.jpg"><div class="cap"><span class="p bad">bad</span> the party stands ON the rooftops; roofs own the frame</div></td>
+<td><img loading="lazy" src="sites-q/s026.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 8&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s027<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s027.jpg"><div class="cap"><span class="p bad">bad</span> dark tree mass over flat brown ground</div></td>
+<td><img loading="lazy" src="sites-q/s027.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 2&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s028<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s028.jpg"><div class="cap"><span class="p acceptable">acceptable</span> cast small and spread under a cliff; readable</div></td>
+<td><img loading="lazy" src="sites-q/s028.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved onto a lit rock ledge</div></td>
+<td class="d "><div class="z">moved 5 m, lit 0.00→0.75</div></td>
+</tr><tr class="moved">
+<td class="id">s029<div class="z">water</div></td>
+<td><img loading="lazy" src="sites/s029.jpg"><div class="cap"><span class="p bad">bad</span> dark green slope, cast at the slope&#x27;s own value</div></td>
+<td><img loading="lazy" src="sites-q/s029.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved out of the dark green slope onto a village path</div></td>
+<td class="d up">UP<div class="z">moved 8 m, lit 0.00→1.00</div></td>
+</tr><tr class="">
+<td class="id">s030<div class="z">water</div></td>
+<td><img loading="lazy" src="sites/s030.jpg"><div class="cap"><span class="p good">good</span> a stone ledge over the river with the town behind; real depth</div></td>
+<td><img loading="lazy" src="sites-q/s030.jpg"><div class="cap"><span class="p good">good</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.50, 3&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s031<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s031.jpg"><div class="cap"><span class="p acceptable">acceptable</span> split light, party against dark timber</div></td>
+<td><img loading="lazy" src="sites-q/s031.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 6&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s032<div class="z">water</div></td>
+<td><img loading="lazy" src="sites/s032.jpg"><div class="cap"><span class="p bad">bad</span> near-black under a structure</div></td>
+<td><img loading="lazy" src="sites-q/s032.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 6&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s033<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s033.jpg"><div class="cap"><span class="p good">good</span> light figures on dark slate with sky and lit grass above</div></td>
+<td><img loading="lazy" src="sites-q/s033.jpg"><div class="cap"><span class="p good">good</span> moved onto a lit ridge with sky and distant hills — still good, and better</div></td>
+<td class="d "><div class="z">moved 5 m, lit 0.00→1.00</div></td>
+</tr><tr class="">
+<td class="id">s034<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s034.jpg"><div class="cap"><span class="p acceptable">acceptable</span> plain tan ground fills the frame; the cast reads but there is no background</div></td>
+<td><img loading="lazy" src="sites-q/s034.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 9&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s035<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s035.jpg"><div class="cap"><span class="p bad">bad</span> dark hedge bank at the cast&#x27;s own value</div></td>
+<td><img loading="lazy" src="sites-q/s035.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 6&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s036<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s036.jpg"><div class="cap"><span class="p acceptable">acceptable</span> lit rock wall behind the party, foes on gravel</div></td>
+<td><img loading="lazy" src="sites-q/s036.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.25, 5&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s037<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s037.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party small in shadow, big bushes own the lower frame</div></td>
+<td><img loading="lazy" src="sites-q/s037.jpg"><div class="cap"><span class="p good">good</span> moved onto lit grass; was small in shadow behind bushes</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.00→0.50</div></td>
+</tr><tr class="moved">
+<td class="id">s038<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s038.jpg"><div class="cap"><span class="p bad">bad</span> dark timber structure, cast lost in it</div></td>
+<td><img loading="lazy" src="sites-q/s038.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved onto a lit rock ramp; the wolf is still dim in the cleft</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.25→0.75</div></td>
+</tr><tr class="moved">
+<td class="id">s039<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s039.jpg"><div class="cap"><span class="p bad">bad</span> cast scattered across a washed-out slope, foes up and away</div></td>
+<td><img loading="lazy" src="sites-q/s039.jpg"><div class="cap"><span class="p good">good</span> moved onto lit grass with sky; was a washed-out slope with the foes up and away</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.50→1.00</div></td>
+</tr><tr class="">
+<td class="id">s040<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s040.jpg"><div class="cap"><span class="p bad">bad</span> dark scaffolding, party on a platform inside it</div></td>
+<td><img loading="lazy" src="sites-q/s040.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 2&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s041<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s041.jpg"><div class="cap"><span class="p good">good</span> open lit slope with sky, all four read</div></td>
+<td><img loading="lazy" src="sites-q/s041.jpg"><div class="cap"><span class="p good">good</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 9&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s042<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s042.jpg"><div class="cap"><span class="p acceptable">acceptable</span> big rock face owns the left, foes on lit grass</div></td>
+<td><img loading="lazy" src="sites-q/s042.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.50, 6&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s043<div class="z">water</div></td>
+<td><img loading="lazy" src="sites/s043.jpg"><div class="cap"><span class="p bad">bad</span> dark trees over dark grass</div></td>
+<td><img loading="lazy" src="sites-q/s043.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 2&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s044<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s044.jpg"><div class="cap"><span class="p bad">bad</span> dark bank, everything at one value</div></td>
+<td><img loading="lazy" src="sites-q/s044.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved beside a lit house; was a dark bank</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.00→1.00</div></td>
+</tr><tr class="">
+<td class="id">s045<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s045.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party in shadow, foes on dark grass; the path gives some read</div></td>
+<td><img loading="lazy" src="sites-q/s045.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 7&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s046<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s046.jpg"><div class="cap"><span class="p good">good</span> lit rock face and grass, all four read</div></td>
+<td><img loading="lazy" src="sites-q/s046.jpg"><div class="cap"><span class="p good">good</span> moved; still a lit rock face and grass — good either way</div></td>
+<td class="d "><div class="z">moved 5 m, lit 0.50→1.00</div></td>
+</tr><tr class="moved">
+<td class="id">s047<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s047.jpg"><div class="cap"><span class="p bad">bad</span> a single dark hedge mass owns the frame</div></td>
+<td><img loading="lazy" src="sites-q/s047.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved onto a lit path; the hedge no longer owns the frame</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.00→0.50</div></td>
+</tr><tr class="">
+<td class="id">s048<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s048.jpg"><div class="cap"><span class="p bad">bad</span> the camera is inside foliage; a giant green blur owns the frame</div></td>
+<td><img loading="lazy" src="sites-q/s048.jpg"><div class="cap"><span class="p acceptable">acceptable</span> NOT MOVED — the site is identical and the change is the TONE probe picking pitch 0.16 instead of 0.34 between runs. Capture variance, NOT this lane&#x27;s fix, and it is why the attribution below excludes it.</div></td>
+<td class="d up">UP<div class="z">lit 0.00, 6&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s049<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s049.jpg"><div class="cap"><span class="p good">good</span> bright open ground, all four read</div></td>
+<td><img loading="lazy" src="sites-q/s049.jpg"><div class="cap"><span class="p good">good</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 9&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s050<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s050.jpg"><div class="cap"><span class="p bad">bad</span> dark path under a hedge; a foe is inside the hedge</div></td>
+<td><img loading="lazy" src="sites-q/s050.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 7&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s051<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s051.jpg"><div class="cap"><span class="p bad">bad</span> party in deep shadow, half the frame black</div></td>
+<td><img loading="lazy" src="sites-q/s051.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 5&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s052<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s052.jpg"><div class="cap"><span class="p bad">bad</span> dark grass in shadow throughout</div></td>
+<td><img loading="lazy" src="sites-q/s052.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 5&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s053<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s053.jpg"><div class="cap"><span class="p acceptable">acceptable</span> lit gravel and rock, foes on a dark path</div></td>
+<td><img loading="lazy" src="sites-q/s053.jpg"><div class="cap"><span class="p acceptable">acceptable</span> moved onto lit stone steps</div></td>
+<td class="d "><div class="z">moved 5 m, lit 0.25→1.00</div></td>
+</tr><tr class="">
+<td class="id">s054<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s054.jpg"><div class="cap"><span class="p bad">bad</span> deep shadow, dark foliage over dark ground</div></td>
+<td><img loading="lazy" src="sites-q/s054.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 2&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s055<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s055.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party against a dark hedge, foes on grass</div></td>
+<td><img loading="lazy" src="sites-q/s055.jpg"><div class="cap"><span class="p good">good</span> moved onto lit flowery grass</div></td>
+<td class="d up">UP<div class="z">moved 5 m, lit 0.00→0.50</div></td>
+</tr><tr class="">
+<td class="id">s056<div class="z">crag</div></td>
+<td><img loading="lazy" src="sites/s056.jpg"><div class="cap"><span class="p good">good</span> stone ledge over the river with the town behind</div></td>
+<td><img loading="lazy" src="sites-q/s056.jpg"><div class="cap"><span class="p good">good</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.50, 3&nbsp;cands</div></td>
+</tr><tr class="moved">
+<td class="id">s057<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s057.jpg"><div class="cap"><span class="p good">good</span> lit grass both sides, clean read</div></td>
+<td><img loading="lazy" src="sites-q/s057.jpg"><div class="cap"><span class="p good">good</span> moved under the timber bridge onto lit grass — still good</div></td>
+<td class="d "><div class="z">moved 5 m, lit 0.50→1.00</div></td>
+</tr><tr class="">
+<td class="id">s058<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s058.jpg"><div class="cap"><span class="p acceptable">acceptable</span> a big pale hedge owns the frame but the path reads</div></td>
+<td><img loading="lazy" src="sites-q/s058.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 5&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s059<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s059.jpg"><div class="cap"><span class="p acceptable">acceptable</span> party in shadow, foes on a lit path</div></td>
+<td><img loading="lazy" src="sites-q/s059.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 9&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s060<div class="z">meadow</div></td>
+<td><img loading="lazy" src="sites/s060.jpg"><div class="cap"><span class="p acceptable">acceptable</span> the party is jammed in a rock alcove; foes on lit grass</div></td>
+<td><img loading="lazy" src="sites-q/s060.jpg"><div class="cap"><span class="p acceptable">acceptable</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 1.00, 6&nbsp;cands</div></td>
+</tr><tr class="">
+<td class="id">s061<div class="z">forest</div></td>
+<td><img loading="lazy" src="sites/s061.jpg"><div class="cap"><span class="p bad">bad</span> the hedge owns the right; the foes are at its value</div></td>
+<td><img loading="lazy" src="sites-q/s061.jpg"><div class="cap"><span class="p bad">bad</span> (site unchanged)</div></td>
+<td class="d "><div class="z">lit 0.00, 1&nbsp;cands</div></td>
+</tr>
+</table></div>
+
+<h2>Where default-readiness stands</h2>
+<p>One site in three is still a bad place to fight. The 20 that remain bad are the ones sun exposure cannot reach: a
+frame that is one flat surface edge to edge (the rock domes <code>s008</code> / <code>s018</code>), a place with no sunlit neighbour
+inside 8 m (the deep-shadow cluster <code>s051</code> / <code>s052</code> / <code>s054</code>), the interiors under structures
+(<code>s003</code> / <code>s032</code> / <code>s040</code>), and the rooftop (<code>s026</code>). <b>Making <code>?arena=world</code> the default today
+ships a fight that reads well at one site in four and badly at one in three.</b> The measured next lever is the axis that
+won and was not shipped — surface dominance — which needs either an affordable proxy nobody has found yet or a render
+budget the staging path does not have.</p>
+
+<h2>Gates</h2>
+<ul>
+<li><code>battle_sim</code> — ALL ENVELOPES GREEN + 6 engine property tests. <code>encounter_sim</code> — GREEN.</li>
+<li><code>transition_test --port=3000</code> — <b>PASS, 168 assertions ok / 0 failed</b>.</li>
+<li><code>ray_budget --port=3000</code> — <b>GREEN, W = 2 / 9761</b> (unchanged; no scatter constant moved).</li>
+<li><code>arena_playtest --port=3000</code> — nogl PASS · serial PASS · <b>organic FAIL "no hostile zone reachable"</b>, the
+pre-existing failure already receipted against pristine HEAD twice on this branch. That page carries no
+<code>?arena=world</code>, so battle_world.js is the frozen inert object throughout.</li>
+</ul>
+</div>

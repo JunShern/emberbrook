@@ -88,6 +88,10 @@
   const BCAM_OFF = !!(Q && Q.get('bcam') === '0');
   // `?btone=0` turns the tonal boom chooser off and leaves the geometric one.
   const BTONE_OFF = !!(Q && Q.get('btone') === '0');
+  // `?bplace=0` turns the placement-quality term off and leaves the ladder's
+  // own first-acceptance rule. One build, one flag — the same A/B discipline
+  // `?bcam=0` and `?btone=0` were built with.
+  const BPLACE_OFF = !!(Q && Q.get('bplace') === '0');
 
   if (!HAS_DOM) return;                       // node (battle_sim / encounter_sim): nothing at all
   if (!FLAG) {
@@ -701,10 +705,124 @@
     }
     return out;
   }
-  // WHERE THIS FIGHT STANDS. Walks the ladder, returns the first accepted site
-  // with the plan the shipped solver produced for it, or null — and null here
-  // means the world refused every bearing on every ring, which the sweep has
-  // never once seen. Callers treat null as a crash guard, not as a fallback.
+  // ============ IS THIS A GOOD PLACE TO FIGHT (wave 5, 2026-08-09) ===========
+  // Everything above this point asks only whether bodies can STAND somewhere and
+  // whether the camera can SEE them. Both are satisfied almost everywhere — and
+  // the places the ladder then picks are bad: it staged on a bare rock dome, in
+  // a building's shadow, inside a hedge bank, ON A ROOF, and once with the lens
+  // inside a leaf. All legal. NOBODY HAD EVER MEASURED THE DIFFERENCE.
+  //
+  // THE DEFINITION IS DERIVED FROM A SORT, NOT FROM TASTE. 62 sites — the whole
+  // ow-valley encounter band at 5 m spacing — were staged as REAL battles,
+  // photographed through the player's own pipeline, and sorted by eye into
+  // good/acceptable/bad BEFORE any number was read (docs/qa/battle-placement/
+  // sort.json). Only then was every recorded axis asked how well it separates
+  // the piles. What won, and what did not, is in that board; the short version:
+  //
+  //   * SUN EXPOSURE of the placed bodies separates good from bad at AUC 0.902
+  //     / balanced accuracy 0.917 — good sites average 39% of the cast in
+  //     shadow, bad sites 86% — and it costs FOUR RAYS.
+  //   * "how much of the frame ONE surface owns" is marginally the best axis of
+  //     all (AUC 0.922) but needs a RENDER; its ray-grid proxy is much weaker
+  //     (0.79) and costs 52 ms a candidate, so it is measured on the board and
+  //     NOT shipped in the search.
+  //   * THE AXIS THE SOLVER ALREADY OPTIMISES BARELY SEPARATES: `view.back`
+  //     (clear depth behind a body) reads AUC 0.733, and `view.seen` 0.657
+  //     because it is ~0.99 everywhere by construction.
+  //   * SKY / HORIZON PRESENCE IS NOT THE AXIS (AUC 0.68, and 0.556 for where
+  //     the horizon sits) — almost no frame in this valley contains sky.
+  //   * RELOCATION DISTANCE PREDICTS NOTHING (AUC 0.450). Where the ladder puts
+  //     the fight relative to the player has no bearing on whether it reads.
+  //   * AND THE SHIPPED TONAL METRIC RUNS BACKWARDS ACROSS SITES: silhouette
+  //     edgeRGB ranks the three piles at 0.291 concordance — good sites average
+  //     8.9 against bad sites' 17.3, because a lit body against near-black is
+  //     enormous RGB contrast and is exactly the pile a human calls bad. TONE is
+  //     not wrong at its own job (choosing a boom AT one site) but it is not a
+  //     placement metric and must never be used as one.
+  //
+  // SO THE TERM IS SUN EXPOSURE, AND IT IS A REFUSAL RATHER THAN A PREFERENCE —
+  // the same shape TONE's margin has, for the same reason. The ladder's "the
+  // fight stays where you are" property is worth keeping; a challenger has to
+  // move at least HALF THE CAST out of shadow (sunMargin 0.5) before it takes
+  // the site. Measured over the 62 cells that bar fires on 23 and leaves 38
+  // alone, and it touches only 2 of the 9 sites already sorted good.
+  const PLACE = {
+    on: true,                 // ?bplace=0
+    sunMargin: 0.5,           // a challenger must light this much more of the cast
+    // How many rings past the FIRST ACCEPTING ONE the search keeps collecting.
+    // The ladder normally returns on its first acceptance, and ring 0 accepts at
+    // most cells, so without this there is no second candidate to prefer and the
+    // term is inert by construction. At 1 the choice set measured 9.4 candidates
+    // (p50 10, max 17).
+    extraRings: 1,
+    // A BUDGET, NOT A HOPE. Collecting stops when the solve has already spent
+    // this long, so the worst case is bounded by the same clock the staging
+    // budget is stated in (p50 16 ms / max 407 ms before this change).
+    budgetMs: 260,
+    sunRay: 120,              // metres of shadow-caster to look through
+    // THE TWO SHORT-CIRCUITS BELOW ARE AN OPTIMISATION, NOT A RULE, so they get
+    // a switch: `PLACE.fastPath = false` evaluates every candidate and must
+    // return the identical site. tools/battle_place.mjs --mode=equiv drives both
+    // arms in ONE page with ORBIT.yaw pinned (the yaw ladder is relative to the
+    // live camera heading, so two separate runs are not comparable — six sites
+    // "differed" that way before the pin went in, and none of them was the
+    // optimisation).
+    fastPath: true,
+  };
+  function placeOn() { return !!(PLACE.on && !BPLACE_OFF); }
+  // THE KEY LIGHT, out of the live scene rather than a constant: play3d solves
+  // the town/overworld sun per rig and "THE FILL IS THE SKY" replaced the flat
+  // hemisphere, so the one directional light left IS the sun. Cached beside the
+  // occluder set and invalidated with it.
+  let _sunDir = null, _sunStamp = 0;
+  function sunDir() {
+    const TH = T();
+    if (!TH) return null;
+    if (_sunDir && (now() - _sunStamp) < 2000) return _sunDir;
+    let sc = null;
+    try { sc = typeof scene !== 'undefined' ? scene : null; } catch (e) { return null; }
+    if (!sc) return null;
+    let d = null, bestI = 0;
+    sc.traverse((o) => {
+      if (!o.isDirectionalLight || !(o.intensity > bestI)) return;
+      const p = new TH.Vector3().setFromMatrixPosition(o.matrixWorld);
+      const t = o.target ? new TH.Vector3().setFromMatrixPosition(o.target.matrixWorld) : new TH.Vector3();
+      const v = p.sub(t);
+      if (v.lengthSq() < 1e-6) return;
+      d = v.normalize(); bestI = o.intensity;
+    });
+    _sunDir = d; _sunStamp = now();
+    return d;
+  }
+  // WHAT FRACTION OF THE CAST STANDS IN THE LIGHT. One ray per placed body from
+  // its own chest toward the key light, against the SAME occluder set the
+  // visibility test uses — so "in shadow" here means "geometry this search can
+  // see is between this body and the sun", never a guess from a shadow map.
+  function sunLit(plan) {
+    const dir = sunDir(), TH = T(), set = occluders();
+    if (!dir || !TH || !set || !set.length || !plan || !plan.placed.length) return null;
+    if (!_rc.ray) { _rc.ray = new TH.Raycaster(); _rc.v0 = new TH.Vector3(); _rc.v1 = new TH.Vector3(); }
+    let lit = 0;
+    for (const r of plan.placed) {
+      _rc.v0.set(r.x, r.y + (r.h || 1.6) * 0.6, r.z);
+      _rc.ray.set(_rc.v0, dir);
+      _rc.ray.far = PLACE.sunRay;
+      if (!_rc.ray.intersectObjects(set, true).length) lit++;
+    }
+    return lit / plan.placed.length;
+  }
+
+  // WHERE THIS FIGHT STANDS. Walks the ladder and returns a site, or null — and
+  // null here means the world refused every bearing on every ring, which the
+  // sweep has never once seen. Callers treat null as a crash guard, not as a
+  // fallback.
+  // IT NO LONGER RETURNS ON THE FIRST ACCEPTANCE (see PLACE above): it finishes
+  // the ring that first accepted, walks `extraRings` more, and prefers a
+  // materially sunnier site among them. THE INCUMBENT IS STILL THE FIRST
+  // ACCEPTANCE IN LADDER ORDER, so with `?bplace=0` — or with no sun in the
+  // scene, or no challenger clearing the margin — the answer is byte-for-byte
+  // what the ladder returned before, including its `cands/screened/solved`
+  // counters up to that point.
   function stageArena(slots) {
     const S = window.SIM;
     const p = S.pos();
@@ -712,8 +830,13 @@
     const t0 = now();
     let cands = 0, screened = 0, solved = 0, best = null;
     const whys = [];
-    for (const ring of RELOC.rings) {
-      for (let a = 0; a < ring.n; a++) {
+    const accepted = [];
+    let firstRingIdx = -1, stop = false;
+    for (let ri = 0; ri < RELOC.rings.length && !stop; ri++) {
+      const ring = RELOC.rings[ri];
+      if (firstRingIdx >= 0 && ri > firstRingIdx + PLACE.extraRings) break;
+      if (accepted.length && now() - t0 > PLACE.budgetMs) break;
+      for (let a = 0; a < ring.n && !stop; a++) {
         const th = ring.ph + a * Math.PI * 2 / ring.n;
         const at = ring.R === 0 ? P0
           : centreAt(P0.x + Math.cos(th) * ring.R, P0.z + Math.sin(th) * ring.R, P0);
@@ -724,12 +847,34 @@
         solved++;
         const plan = solveArena({ slots: slots, at: at, yaws: viable });
         if (plan && plan.ok) {
-          return { plan: plan, at: at, R: ring.R,
-                   bearing: +(th % (Math.PI * 2)).toFixed(3),
-                   d: +Math.hypot(at.x - P0.x, at.z - P0.z).toFixed(2),
-                   dy: +(at.y - P0.y).toFixed(2),
-                   cands: cands, screened: screened, solved: solved,
-                   ms: Math.round(now() - t0) };
+          const site = { plan: plan, at: at, R: ring.R,
+                         bearing: +(th % (Math.PI * 2)).toFixed(3),
+                         d: +Math.hypot(at.x - P0.x, at.z - P0.z).toFixed(2),
+                         dy: +(at.y - P0.y).toFixed(2),
+                         cands: cands, screened: screened, solved: solved,
+                         ms: Math.round(now() - t0) };
+          // THE OLD RETURN, kept exactly, behind the flag.
+          if (!placeOn()) return site;
+          if (firstRingIdx < 0) firstRingIdx = ri;
+          site.lit = sunLit(plan);
+          accepted.push(site);
+          if (site.lit == null) return site;      // no sun in this scene: nothing to rank on
+          // TWO SHORT-CIRCUITS, AND BOTH ARE PROVABLY THE SAME ANSWER — the
+          // reason for writing them down is that the naive version cost 159 ms
+          // of solve at p50 and these give most of it back for nothing.
+          // (1) `lit` is a fraction, so it cannot exceed 1: if the INCUMBENT is
+          //     already within `sunMargin` of fully lit, no candidate can clear
+          //     the bar and the rest of the search cannot change the result.
+          //     Measured: fires on 22 of the 62 sampled cells.
+          // (2) Candidates are generated in (ring, bearing) order and the
+          //     tie-break is sunniest -> nearest -> earliest bearing, so the
+          //     FIRST candidate that is fully lit AND clears the margin is
+          //     exactly the one the ranking below would choose. 19 of 62.
+          if (PLACE.fastPath && accepted[0].lit + PLACE.sunMargin > 1 + 1e-9) { stop = true; continue; }
+          if (PLACE.fastPath && site !== accepted[0] && site.lit >= 1 - 1e-9 &&
+              site.lit >= accepted[0].lit + PLACE.sunMargin) { stop = true; continue; }
+          if (accepted.length > 1 && now() - t0 > PLACE.budgetMs) { stop = true; }
+          continue;
         }
         if (plan) {
           // kept ONLY for cfg.forcePlace, the QA lever that stages a fight the
@@ -738,6 +883,27 @@
           for (const f of plan.failed) if (whys.length < 8) whys.push(f.why);
         }
       }
+    }
+    if (accepted.length) {
+      // THE INCUMBENT IS THE LADDER'S OWN ANSWER — first acceptance, in ladder
+      // order — and it is never assumed to be the worst (TONE's own lesson).
+      const inc = accepted[0];
+      let win = inc;
+      for (const c of accepted) {
+        if (c.lit < inc.lit + PLACE.sunMargin) continue;
+        // among challengers that clear the bar: sunniest, then NEAREST, then the
+        // ladder's own bearing order. Deterministic, and it keeps the ruling's
+        // "one sideways step" shape rather than wandering for a marginal gain.
+        if (win === inc || c.lit > win.lit + 1e-9 ||
+            (Math.abs(c.lit - win.lit) < 1e-9 && c.R < win.R)) win = c;
+      }
+      win.quality = { on: true, axis: 'sunLit', margin: PLACE.sunMargin,
+                      incLit: +inc.lit.toFixed(3), lit: +win.lit.toFixed(3),
+                      moved: win !== inc, choices: accepted.length,
+                      incR: inc.R, litOf: accepted.map(c => +c.lit.toFixed(2)) };
+      win.cands = cands; win.screened = screened; win.solved = solved;
+      win.ms = Math.round(now() - t0);
+      return win;
     }
     return { plan: null, bestPlan: best, at: best ? best.__at : null, R: null,
              cands: cands, screened: screened, solved: solved, whys: whys,
@@ -1900,7 +2066,10 @@
               bearing: site.bearing == null ? null : site.bearing,
               at: { x: +A0.x.toFixed(3), y: +A0.y.toFixed(3), z: +A0.z.toFixed(3) },
               player: { x: +P0.x.toFixed(3), y: +P0.y.toFixed(3), z: +P0.z.toFixed(3) },
-              cands: site.cands, screened: site.screened, solved: site.solved, ms: site.ms },
+              cands: site.cands, screened: site.screened, solved: site.solved, ms: site.ms,
+              // WHY THIS SITE AND NOT THE ONE THE LADDER WOULD HAVE TAKEN —
+              // null when the quality term is off or had no second candidate.
+              quality: site.quality || null },
       anchor: anchor,
       tierOf(id) { return bodies[id] ? bodies[id].tier : null; },
       tiers() { const o = {}; for (const id of order) o[id] = bodies[id].tier; return o; },
@@ -2143,6 +2312,13 @@
     // identical — and `tone()` is the live stage's own receipt for it.
     TONE: TONE,
     toneOn() { return toneOn(); },
+    // THE PLACEMENT-QUALITY TERM, live. `BattleWorld.PLACE.on = false` is the
+    // A/B the placement board is built from; `sunLit` is callable so an
+    // instrument can score a plan the search did not choose.
+    PLACE: PLACE,
+    placeOn() { return placeOn(); },
+    sunLit: sunLit,
+    sunDir: sunDir,
     tone() { return api._live && api._live.tone ? api._live.tone() : { on: toneOn(), ok: false, why: 'no battle' }; },
     solve(o) { return solveArena(o || { slots: slotsFor([{ id: 'a' }, { id: 'b' }], [{ id: 'm0' }, { id: 'm1' }]) }); },
     solveArena: solveArena,

@@ -22387,3 +22387,108 @@ re-tested rather than filed):
    battle_camera --mode=legibility through battle_meter.mjs gives cam-off
    17.95/12.38/29.10/20.38 against the pre-extraction 18.55/12.15/29.05/20.26 —
    within ~3%. RUN THE THING YOU SAID PROVED IT.
+
+------------------------------------------------------------
+
+## 2026-08-09 — PLACEMENT QUALITY: "is this a good place to fight", measured
+
+Board **docs/qa/battle-placement/index.html**. Instruments **tools/battle_place.mjs**
+(`--mode=capture|proxy|neighbours|equiv`), **tools/battle_place_sheets.py**,
+**tools/battle_place_stats.py**; `--bplace` added to tools/battle_world_probe.mjs.
+Change: `PLACE` in public/js/battle_world.js. `?arena=world` stays OPT-IN.
+
+**THE SORT CAME FIRST, AND THAT ORDERING IS THE RESULT.** 62 sites staged as REAL
+battles through the shipped path, photographed with the stage's own `snapshot()`
+(so the bytes are the player's pipeline and display-space — no explicit encode is
+needed or applied on this path, because it never reads an offscreen target), then
+sorted by eye into good/acceptable/bad from contact sheets ALONE before any number
+was read (docs/qa/battle-placement/sort.json). Only then were the recorded axes
+asked how well they separate. **The 62 are close to a census, not a sample**: all
+400 recorded road cells walked into their neighbouring encounter zones, refusing
+any site within 5 m of an accepted one, exhausts at 62 — that is the size of the
+band a fight can fire in beside the ow-valley road.
+
+**THE DISTRIBUTION NOBODY HAD: 48.4% bad / 37.1% acceptable / 14.5% good.**
+
+WHAT SEPARATES (AUC good-vs-bad, N=62):
+- `surf.topSurface` — the share of the background frame owned by ONE quantised
+  colour — **0.922** (good 0.199, bad 0.444). Needs a RENDER.
+- `sun.shadedFrac` — bodies with geometry between them and the key light —
+  **0.843** inverted (good 0.39, bad 0.86). Costs FOUR RAYS.
+- The luminance family (`frameL.L95` 0.937, `sil.ringL` 0.930, `sil.castL` 0.922)
+  is the same fact seen through the frame: it correlates −0.88…−0.94 with
+  `sun.shadedFrac`. One axis, not four.
+
+**THE NEGATIVE RESULTS ARE WORTH MORE THAN THE FEATURE:**
+- **SKY / HORIZON PRESENCE IS NOT THE AXIS** (`rays.skyFrac` 0.681,
+  `rays.horizonRow` 0.556). Almost no frame in this valley contains sky.
+- **THE AXIS THE SOLVER ALREADY OPTIMISES BARELY SEPARATES**: `view.back` (clear
+  depth behind each body — the whole argument the base pose is searched on) 0.733,
+  and `view.seen` 0.657 because it is ~0.99 everywhere by construction.
+- **RELOCATION DISTANCE PREDICTS NOTHING** (`site.R`/`site.d` 0.450) — independent
+  support for the 2026-08-08 ruling that distance is not the constraint.
+- Ground slope is weak (0.318 → sep 0.364); roughness/span moderate (0.510/0.678).
+- **AND THE SHIPPED TONAL METRIC RUNS BACKWARDS ACROSS SITES.** `sil.edgeRGB` —
+  what TONE maximises — ranks the three piles at **0.291** ordered-pair concordance
+  (good 8.9, bad 17.3): a lit body against near-black is enormous RGB contrast and
+  is exactly the pile a human calls bad. TONE is not wrong at its own job (choosing
+  a boom AT one site) but **it must never be used as a placement metric**.
+- Combining does not help: sun and surface correlate 0.59 and their z-sum scores
+  0.881, WORSE than surface alone.
+
+**THE FIX, AND WHY IT IS SUN AND NOT THE WINNER.** The ladder returned on its first
+acceptance and ring 0 accepts at most cells, so no quality term could have had a
+second candidate to prefer — it now finishes the accepting ring, walks one more,
+and prefers a materially sunnier site among them. The render-based winner has no
+affordable proxy: a ray grid answering "does one MESH own the frame" scores only
+0.79 and costs 52 ms a candidate (docs/qa/battle-placement/proxy-8x5.json). It is a
+REFUSAL not a preference (`PLACE.sunMargin = 0.5` — half the cast must leave the
+shade), the incumbent is still the ladder's own answer, and `?bplace=0` is the A/B.
+
+**TWO SHORT-CIRCUITS, PROVEN NOT ARGUED** (`PLACE.fastPath`): `lit` is a fraction so
+an incumbent within the margin of fully lit cannot be beaten (22/62); and candidates
+are generated ring-then-bearing with tie-break sunniest→nearest→earliest, so the
+first fully-lit challenger clearing the margin IS the ranking's pick (19/62).
+`--mode=equiv` drives both arms in ONE page: **62/62 identical sites, 0 differ**, p50
+72.9 → 46.9 ms. **THE YAW PIN IS WHY IT IS A PROOF**: solveArena's ladder is relative
+to the LIVE camera heading, so two separate runs of the same cell are not comparable
+— six cells "differed" that way before the pin, and none of them was the optimisation.
+
+**RESULT — 14 improved, 0 regressed** (second by-eye sort, same rubric, sort-q.json):
+**bad 48.4% → 32.3%, acceptable 37.1% → 43.5%, good 14.5% → 24.2%**. Restricted to the
+21 sites the term actually moved: 4 good / 8 acceptable / 9 bad → **10 good / 11
+acceptable / 0 bad**. One of the 14 (`s048`) was NOT moved — its site is identical and
+the frame changed because the TONE probe picked pitch 0.16 instead of 0.34 between
+runs; that is capture variance, not this change, and excluding it gives the
+conservative bad 48.4% → 33.9%. Nearest thing to a regression: `s010` moved 5 m into a
+shadowed rock notch — stays acceptable either way, a within-pile wash. Four of the
+nine already-good sites were moved (`s005 s033 s046 s057`) and all four stayed good.
+
+COST, same 40 interleaved cells, same session (stageperf-off/on.json): staging solve
+p50 **20.2 → 69.7 ms**, p95 322.5 → 371.2, max 397.3 → 441.3; trigger → first battle
+frame p50 **576 → 734 ms**, p95 855 → 900, max 855 → 900. Coverage unchanged 40/40.
+Relocation p90 5 → 8 m, max 8 m — still one sideways step, well inside the 13 m ladder.
+Without the short-circuits the solve p50 was 179.3 ms.
+
+GATES: `battle_sim` ALL ENVELOPES GREEN + 6 property tests · `encounter_sim` GREEN ·
+`transition_test --port=3000` **PASS 168/0** · `ray_budget --port=3000` **GREEN W = 2 /
+9761** (no scatter constant moved) · `arena_playtest` nogl PASS · serial PASS ·
+**organic FAIL "no hostile zone reachable"**, the pre-existing failure already
+receipted against pristine HEAD twice on this branch; that page carries no
+`?arena=world`, so battle_world.js is the frozen inert object throughout.
+
+**WHERE DEFAULT-READINESS STANDS: one site in three is still a bad place to fight.**
+The 20 that remain bad are the ones sun cannot reach — a frame that is one flat
+surface edge to edge (the rock domes s008/s018), no sunlit neighbour inside 8 m
+(s051/s052/s054), interiors under structures (s003/s032/s040), and the rooftop
+(s026). Making `?arena=world` the default today ships a fight that reads well at one
+site in four and badly at one in three. The measured next lever is the axis that WON
+and was not shipped — surface dominance — which needs an affordable proxy nobody has
+found or a render budget the staging path does not have.
+
+RESIDUAL, NAMED: the `round` establishing shot has to be ASKED FOR to photograph a
+site — by the time the cast arrives, battle_turnbased has handed the turn over and
+the camera sits on `decide` (fov 27, show 'actor') with **both foes off frame**
+(anchors `vis:false` on every pilot site). That is the frame a player dwells on
+longest and it does not contain the enemy. Not this lane's to fix; the capture tool
+drives `shotTo('round')` explicitly and says so.

@@ -63,6 +63,12 @@ const WORLD = arg('arena', 'world');
 const VISMIN = arg('vismin', null);      // null = leave CFG.place.visMin alone
 const BCAM = arg('bcam', null);          // '0' = yaw-only sweep (spike behaviour)
 const PITCHES = arg('pitches', null);    // e.g. '0.27' — CAM.solve.pitches, comma-separated
+// ---- (d) THE PLACEMENT-QUALITY TERM (2026-08-09) --------------------------
+// `--bplace=0` sets BattleWorld.PLACE.on = false, which restores the ladder's
+// own first-acceptance rule to the line. It is the A/B this instrument needs to
+// price the term: the extra candidates it evaluates are the whole cost, and the
+// only honest way to state that cost is the same cells through both arms.
+const BPLACE = arg('bplace', null);
 // ---- THE RELOCATION SWEEP (--relocate) ------------------------------------
 // THE RULING THIS MEASURES (CLAUDE.md, 2026-08-08): when placement refuses a
 // spot the game RELOCATES WITHIN THE WORLD to the nearest feasible staging
@@ -771,12 +777,16 @@ const FPSDRIVE = (worldMode) => `(async () => {
     ${VISMIN == null ? '' : `BW.CFG.place.visMin = ${parseFloat(VISMIN)};`}
     ${BCAM == null ? '' : `BW.CAM.on = ${BCAM === '0' || BCAM === 'false' ? 'false' : 'true'};`}
     ${PITCHES == null ? '' : `BW.CAM.solve.pitches = ${JSON.stringify(PITCHES.split(',').map(parseFloat))};`}
+    ${BPLACE == null ? '' : `if (BW.PLACE) BW.PLACE.on = ${BPLACE === '0' || BPLACE === 'false' ? 'false' : 'true'};`}
     return { ok: true, visMin: BW.CFG.place.visMin, camOn: BW.CAM.on,
-             pitches: BW.CAM.solve.pitches.slice() };
+             pitches: BW.CAM.solve.pitches.slice(),
+             placeOn: BW.PLACE ? BW.PLACE.on : null,
+             sunMargin: BW.PLACE ? BW.PLACE.sunMargin : null };
   })()`, 30000);
   console.log(`knobs: visMin=${knobs.visMin}  CAM.on=${knobs.camOn}  pitches=[${knobs.pitches}]`
             + `   [vis test = ${knobs.visMin > 0 ? 'NINE-SAMPLE (new)' : 'TWO SPINE RAYS (old)'};`
-            + ` sweep = ${knobs.camOn ? (knobs.pitches.length > 1 ? 'yaw x pitch, best (new)' : 'yaw only, BEST (isolated)') : 'yaw only, first (old)'}]`);
+            + ` sweep = ${knobs.camOn ? (knobs.pitches.length > 1 ? 'yaw x pitch, best (new)' : 'yaw only, BEST (isolated)') : 'yaw only, first (old)'};`
+            + ` placement quality = ${knobs.placeOn === null ? 'absent' : (knobs.placeOn ? 'ON, sunMargin ' + knobs.sunMargin : 'OFF (first acceptance)')}]`);
 
   if (MODE === 'raycost') {
     await ev(cdp, `SIM.tp(-66.88, 45.62, (SIM.floors(-66.88,45.62)||[0])[0]); SIM.tick(3); true`);
@@ -834,7 +844,8 @@ const FPSDRIVE = (worldMode) => `(async () => {
     }
     const e2ems = srt(e2e.filter(r => r.msToFirstFrame != null).map(r => r.msToFirstFrame));
     const summary = {
-      arm: { visMin: knobs.visMin, camOn: knobs.camOn, pitches: knobs.pitches },
+      arm: { visMin: knobs.visMin, camOn: knobs.camOn, pitches: knobs.pitches,
+             placeOn: knobs.placeOn, sunMargin: knobs.sunMargin },
       sampled: live.length, skipped: rows.length - live.length,
       ok: live.filter(r => r.ok).length,
       rate: +(live.filter(r => r.ok).length / Math.max(1, live.length) * 100).toFixed(1),

@@ -462,6 +462,31 @@ git runs here, on branch `migration/3d-hybrid`.
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
   luminance (the cutin_edge lesson: a gate that measures brightness cannot see colour).
+  **PLACEMENT QUALITY, MEASURED FOR THE FIRST TIME** (2026-08-09; board
+  docs/qa/battle-placement/index.html, instruments tools/battle_place{.mjs,_sheets.py,_stats.py},
+  `--bplace` on battle_world_probe, `PLACE` in battle_world.js, `?bplace=0` is the A/B).
+  62 sites — ALL 400 road cells walked into their encounter zones at 5 m spacing, which EXHAUSTS
+  the band, so this is a census not a sample — staged as REAL battles and **SORTED BY EYE BEFORE
+  ANY NUMBER WAS READ** (sort.json). The distribution nobody had: **48.4% bad / 37.1% acceptable /
+  14.5% good.** WHAT SEPARATES: how much of the frame ONE SURFACE owns (AUC 0.922, needs a render)
+  and WHETHER THE CAST STANDS IN THE SUN (0.843, four rays). THE NEGATIVES ARE WORTH MORE:
+  sky/horizon presence is NOT the axis (0.681 — almost no frame here contains sky); **the axis the
+  solver already optimises barely separates** (`view.back` 0.733, `view.seen` 0.657 because it is
+  0.99 everywhere by construction); relocation distance predicts NOTHING (0.450); and **the shipped
+  tonal metric RUNS BACKWARDS ACROSS SITES** — `edgeRGB` ranks the piles at 0.291 concordance (good
+  8.9, bad 17.3), because a lit body against near-black is enormous RGB contrast and is exactly the
+  bad pile. TONE is right at its own job (a boom AT one site) and is NOT a placement metric.
+  SHIPPED: the ladder no longer returns on first acceptance (ring 0 accepts at most cells, so a
+  quality term had nothing to choose among) — it finishes that ring, walks one more, and takes a
+  materially sunnier site (`sunMargin` 0.5, a REFUSAL not a preference). Sun and not the winner
+  because the winner has no affordable proxy: a ray grid asking "does one MESH own the frame"
+  scores 0.79 and costs 52 ms a candidate. **14 sites improved, 0 regressed: bad 48.4 -> 32.3%,
+  good 14.5 -> 24.2%**; of the 21 sites it moved, 9 bad became 0 bad. Cost, same cells same session:
+  solve p50 20.2 -> 69.7 ms, max 397 -> 441; trigger to first frame p50 576 -> 734 ms, max 855 ->
+  900. Two short-circuits (`PLACE.fastPath`) are PROVEN, not argued — `--mode=equiv`, 62/62
+  identical sites — and **the proof needed ORBIT.yaw PINNED**: solveArena's yaw ladder is relative
+  to the live camera heading, so two separate runs of one cell are not comparable and six cells
+  "differed" for that reason alone. STILL: one site in three is a bad place to fight.
 - Modules (public/js/): game_state (GS), battle_rules (pure kernel — untouchable),
   battle_turnbased + battle_stage3d, encounters, ui_kit (FF-blue), shop, menu, npc,
   dialogue, **story_runtime**, followers, hush, route_overlay, music. Each self-arms at
