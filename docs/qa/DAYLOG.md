@@ -23025,3 +23025,110 @@ the minority case. (4) The term optimises the ROUND establishing pose while the 
 DECIDE frame; they agree directionally but not exactly. (5) The sky dome's cloud drift is still frozen
 at a wall-clock T, inside the 0.0011 arm noise. (6) The 124 per-site census jpgs (23 MB) are NOT
 committed; the 23 that moved are in the sheets and the 39 that did not are identical between arms.
+
+---
+
+## 2026-08-09 — DEPLOY round 17: the surface-dominance refusal goes live (a JS-only ship)
+
+`git worktree` detached at `origin/migration/3d-hybrid` — **554930d587a3d377a7b25c9f148fd6d51144d0aa**
+— `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`. All three named commits
+(`863deb2f`, `d16a9bc1`, `554930d5`) confirmed ancestors of the built sha before the build ran, as
+was the round-16 source sha `4cbbdaf6`.
+
+**THE DIFF INTO `public/` IS ONE FILE.** `git diff --stat 4cbbdaf6 554930d5 -- public/` names exactly
+`public/js/battle_world.js` (+208/-7). NO plate, NO bundle, NO `depth.png`. The other 18 changed
+paths in the source range are `docs/qa/battle-surface/` + `battle-decide/` boards and
+`tools/battle_surface.mjs`, none of which the build ships. Note this is a NARROWER diff than round
+16, which also carried `ambient.js` — so `ambient.js` becomes a control this round.
+
+`build-static --compress`: **392 files / 520.7 MB / 3.0 s**, the same shape as rounds 13-16. Three
+build gates green: every `.glb` binary glTF, **16 bundle GLBs byte-identical to `public/`**, **256
+referenced paths resolve** (237 via the `.webp` rewrite). Encode cache **253 hit / 0 miss / 0
+stored**, 319.4 MB served — **the fifth zero-encode deploy running, and the empty miss list was
+PREDICTED from the diff**: JS is not an encoded artifact. GLB pass 16/16 from cache. Local
+`static_verify` **29/0**; `deploy-ghpages.sh dist` published
+**149bd76e8604a4b46b6844b67e50f09847c4e461** (push verified by the script; pre-flight printed the
+clean `579 MB, 393 files` — measured BEFORE the push, since `dist/.git` inflates it afterwards).
+LIVE stamp `2026-08-09T07:47:26.515Z` -> **`2026-08-09T09:14:07.008Z`**, matching `dist` exactly.
+
+**MY POLLER WAS BLIND FOR SIX MINUTES AND THE DEPLOY WAS ALREADY FINE.** The stamp poll read
+`BUILD.json` with `.get('builtAt','')` — **the key is `built`** — so it printed an empty string on
+all 24 samples while the site had in fact published. An empty reading is not an unchanged reading,
+and the tell was that the FIRST sample was empty too: a stalled Pages build would still have
+returned the OLD stamp. (The baseline capture had survived the same bug only because it used a
+`builtAt or built` fallback chain.) **A POLLER THAT CANNOT READ THE OLD VALUE CANNOT DETECT A NEW
+ONE** — a stamp poll must be proved against the known-current stamp before it is trusted to see a
+change. The band was then recovered from a BETTER instrument than polling ever was:
+`gh api repos/JunShern/emberbrook/pages/builds` gives the build directly — commit `149bd76e`,
+status `built`, `created_at` 09:19:12Z -> `updated_at` 09:20:40Z, **duration 88.8 s**, inside the
+63-105 s health band. No stall, no re-POST. Band over twelve deploys: ~55/60/63/72/72/73/75/75/~75/
+88.8/105 s. **Use the Pages API for the duration; use the stamp only to prove the bytes moved.**
+`static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**, zero failed
+requests, zero unexpected 4xx/5xx, zero console errors.
+
+**THE BYTES, WITH THE CONTROLS.** Live fetched, `sha256`, against `dist` AND against the round-16
+deploy's own live copy (captured off the wire BEFORE the push — the only moment it still exists; its
+five shas reproduced round 16's table exactly, which is itself the check that the right baseline was
+captured):
+
+| path | live bytes | live vs dist | vs round-16 deploy |
+|---|---:|---|---|
+| `js/battle_world.js` | 158526 | **MATCH** `7f701cc0…` | **DIFFERS** (r16 `0d794b89…`, 147228 B) |
+| `js/ambient.js` | 37121 | **MATCH** `7a4c9bf9…` | **SAME** — control |
+| `js/battle_stage3d.js` | 192301 | **MATCH** `cacaa9d7…` | **SAME** — control |
+| `js/battle_turnbased.js` | 118267 | **MATCH** `cdf3a1a0…` | **SAME** — control |
+| `play3d.html` | 349272 | **MATCH** `a6a6af6b…` | **SAME** — control |
+
+**ONE DIFFERS against FOUR SAMEs** — one more control than round 16, because `ambient.js` moved last
+round and not this one.
+
+**AND THE GREP WOULD HAVE LIED, EXACTLY AS PREDICTED.** `bsurf` appears **5x** in the live
+`battle_world.js` and **0x** in the round-16 copy (the grep's own positive control) — but **THREE OF
+THE FIVE ARE COMMENTS** (lines 95, 1149, 2745 are prose naming the A/B switch). Counting would have
+"proved" the ship from documentation. Read instead: line 98 `const BSURF_OFF = !!(Q && Q.get('bsurf')
+=== '0')` and line 869 `surf: true,` inside `PLACE` are executable, and the refusal itself ships as
+live code — `surfRank` / `surfScoreOne` / `surfHist` with the thresholds `surfGood: 0.22`,
+`surfMargin: 0.06`, `surfMax: 8`, `surfBudgetMs: 140`, `surfRes: [320,180]`, `surfDist: 9.0`, plus
+`surfOn()` and `surfScoreOne` exported on the public API. All 0x in r16.
+
+**THE OPT-IN GATE, PROVED ON THE LIVE PAGE IN BOTH DIRECTIONS.** Both paths booted against the LIVE
+site, `window.BattleWorld` read out:
+
+  * **DEFAULT** (`/play3d.html?scene=emb-cine&nomusic=1`) ->
+    `{on:false, installed:false, why:"flag off — open with ?arena=world", frozen:true, keys:4,
+    surfOn:"no-fn", surfGood:null, surfFlag:null, hasSurfScoreOne:false}` — the frozen no-op object
+    the module's own early return builds, byte-for-byte the same 4-key reading rounds 15 and 16 got.
+    The new code is not merely inactive on the default path, it is **not reachable**: the API that
+    carries it does not exist.
+  * **`&arena=world`** -> `{on:true, installed:false, frozen:false, keys:30, surfOn:true,
+    surfGood:0.22, surfFlag:true, hasSurfScoreOne:true}`. **The positive control**: the probe
+    demonstrably distinguishes the two states, so the DEFAULT reading is a measurement and not a
+    silence. **And the key count is its own corroboration — 28 in round 16, 30 now, +2 being exactly
+    `surfOn` and `surfScoreOne`**, the two members the source adds.
+
+`static_verify`'s own screenshot agrees and was LOOKED AT: the live battle frame is the **default
+diorama** — golden dusk stage, Vesper and both Duskpads, Attack/Item/Flee command menu and the
+turn-order panel up. The world arena did not engage on the default path.
+
+Round 16's destroyed-context scar was pre-empted rather than re-paid: the probe re-finds the target
+on a destroyed context (up to six attempts) and awaits the async `freePort()`. It did not need the
+retry this run — both readings came on the first attempt.
+
+**GATES NOT RUN, NAMED.** `transition_test` **SKIPPED — for the eleventh consecutive deploy**, on the
+measurement. It is 168/0 on this exact change in the authoring lane, but the machine did not clear
+the bar: **swap sat at 3097.81 of 4096.00 MB = 75.63%** on four samples over ~50 s, above the 75%
+line — the identical reading to round 16, unmoved to the byte. Load was falling across the samples
+(1-min 4.62 -> 3.33 against a 15-min 5.2), so it was the swap gate alone that failed, on every
+sample. **No number is reported because no number was obtained.** The build's reference-integrity
+advisory (`js/dialogue.js` `expr-warm.png`, `js/followers.js` `mochi/pose-front.png`) is the standing
+documented pair, unchanged; the live run's zero-404 audit is the receipt.
+
+Cleanup: this lane's worktree removed, scratch `dist`, the `node_modules` symlink (the symlink, never
+the target — verified 101 entries intact after) and both `static-verify*.png` deleted; zero orphaned
+Chrome (`ppid 1` root check clean, `pgrep -if arenaprobe` empty, no leftover `arenaprobe-*` profile
+dirs). The two stale worktrees from earlier sessions (`wt-prestair`,
+`.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+**STILL FLAGGED FOR THE USER, unchanged by this deploy** (it is the authoring lane's finding, now
+live behind the flag): ring-0 staging falls 29 -> 15, so "the fight stays where you are" is now the
+minority case and wants the user's re-confirmation.
