@@ -1,0 +1,254 @@
+
+== BOOT
+  ok   the start scene became playable
+  ok   boot scene is del-cine
+  ok   every hooked module loaded
+       boot gpu: {"geometries":2073,"textures":39,"programs":12,"meshes":2354,"collide":1483,"walk":275,"cineArt":2,"epoch":1,"sceneMats":4857}
+       GS dirtied: gold=1264 potion=7 flag=ember-1786238614937
+
+== BASELINE — one round trip, then measure
+  ok   warm-up: town -> inn
+  ok   warm-up: inn -> town
+       baseline gpu @del-cine|shelf-west: geometries=622 textures=38 programs=13 meshes=2354 cineArt=3
+
+== MUSIC ARITHMETIC — the drift ruler, before it is trusted on a real voice
+       dellhollow loop body = 71.981s (loopEnd - loopStart, game/music.json)
+  ok   the loop length is READ from music.json (71.981s), not assumed
+  ok   the real failure: a door across the loop point: drift 0.008s -> PASSES (must pass)
+  ok   an ordinary door, nowhere near the loop point: drift 0.000s -> PASSES (must pass)
+  ok   A STALL: the playhead frozen across the door: drift 3.970s -> FAILS (must fail)
+  ok   A RESTART: the voice re-created from zero: drift 28.011s -> FAILS (must fail)
+  ok   A RESUME from a saved playhead 2 s behind: drift 2.000s -> FAILS (must fail)
+  ok   a stall on a ONE-SHOT track (no loop to hide in): drift 3.970s -> FAILS (must fail)
+  ok   a wrap the instrument must NOT credit: 2 loops: drift 71.989s -> FAILS (must fail)
+       music: town=dellhollow inn=dellhollow ow=valley now=dellhollow@30.43 ctx=running
+
+== GAUNTLET — 24 mixed transitions
+  ok   door 0: del-cine -> del-inn-int in 2462ms (url agrees)
+       door 0: first visit to del-inn-int|- — baseline geo=246 tex=18 meshes=228
+  ok   door 0: the character is really rasterised in the new frame (3223px drawn, 2045px through the shot's depth map)
+  ok   door 0: arrival stands on del-inn-int's walk network
+  ok   door 0: same-track music LITERALLY uninterrupted (drift 0.011s)
+  ok   door 0: encounter director re-graced on arrival
+  ok   door 1: del-inn-int -> del-cine in 3419ms (url agrees)
+  ok   door 1: del-cine|shelf-west is back to its baseline (geo 622, tex 38)
+  ok   door 1: the character is really rasterised in the new frame (811px drawn, 794px through the shot's depth map)
+  ok   door 1: arrival stands on del-cine's walk network
+  ok   door 1: same-track music LITERALLY uninterrupted (drift 0.004s)
+  ok   door 1: encounter director re-graced on arrival
+  ok   door 2: del-cine -> del-item-int in 2596ms (url agrees)
+       door 2: first visit to del-item-int|- — baseline geo=161 tex=13 meshes=182
+  ok   door 2: the character is really rasterised in the new frame (4350px drawn, 3407px through the shot's depth map)
+  ok   door 2: arrival stands on del-item-int's walk network
+  ok   door 2: same-track music LITERALLY uninterrupted (drift 0.003s)
+  ok   door 2: encounter director re-graced on arrival
+  ok   door 3: del-item-int -> del-cine in 3113ms (url agrees)
+  ok   door 3: del-cine|shelf-west is back to its baseline (geo 622, tex 38)
+  ok   door 3: the character is really rasterised in the new frame (844px drawn, 836px through the shot's depth map)
+  ok   door 3: arrival stands on del-cine's walk network
+  ok   door 3: same-track music LITERALLY uninterrupted (drift 0.008s)
+  ok   door 3: encounter director re-graced on arrival
+  ok   door 4: del-cine -> ow-valley in 46238ms (url agrees)
+       door 4: first visit to ow-valley|- — baseline geo=80 tex=69 meshes=55
+  ok   door 4: the character is really rasterised in the new frame (159px drawn, 129px through the shot's depth map)
+  ok   door 4: arrival stands on ow-valley's walk network
+  ok   door 4: encounter director re-graced on arrival
+         ray budget SKIPPED: software WebGL — ow_detail.js places NO scatter here by design, so the runtime half of this budget cannot be measured in this environment. Bundle-borne instancing WAS measured: W = 2 / 9761. Run tools/ray_budget.mjs standalone (real GPU) for the whole surface.
+         ray budget censused 51 occluders in 880ms (OWD draws=0, 0 instanced pieces in the drawn scene, tallest piece 0m vs SCATTER_H 1.5m)
+  ok   door 5: ow-valley -> del-cine in 5908ms (url agrees)
+       door 5: first visit to del-cine|gate — baseline geo=2075 tex=39 meshes=2354
+  ok   door 5: the character is really rasterised in the new frame (714px drawn, 714px through the shot's depth map)
+  ok   door 5: arrival stands on del-cine's walk network
+  ok   door 5: encounter director re-graced on arrival
+  ok   door 6: del-cine -> del-weapon-int in 3954ms (url agrees)
+       door 6: first visit to del-weapon-int|- — baseline geo=193 tex=13 meshes=214
+  ok   door 6: the character is really rasterised in the new frame (4338px drawn, 3229px through the shot's depth map)
+  ok   door 6: arrival stands on del-weapon-int's walk network
+  ok   door 6: same-track music LITERALLY uninterrupted (drift 0.007s)
+  ok   door 6: encounter director re-graced on arrival
+  ok   door 7: del-weapon-int -> del-cine in 3498ms (url agrees)
+       door 7: first visit to del-cine|shelf-east — baseline geo=1002 tex=38 meshes=2354
+  ok   door 7: the character is really rasterised in the new frame (1080px drawn, 950px through the shot's depth map)
+  ok   door 7: arrival stands on del-cine's walk network
+  ok   door 7: same-track music LITERALLY uninterrupted (drift 0.007s)
+  ok   door 7: encounter director re-graced on arrival
+  ok   door 8: del-cine -> del-armor-int in 2902ms (url agrees)
+       door 8: first visit to del-armor-int|- — baseline geo=174 tex=13 meshes=195
+  ok   door 8: the character is really rasterised in the new frame (4338px drawn, 3403px through the shot's depth map)
+  ok   door 8: arrival stands on del-armor-int's walk network
+  ok   door 8: same-track music LITERALLY uninterrupted (drift 0.001s)
+  ok   door 8: encounter director re-graced on arrival
+  ok   door 9: del-armor-int -> del-cine in 3488ms (url agrees)
+  ok   door 9: del-cine|shelf-east is back to its baseline (geo 1002, tex 38)
+  ok   door 9: the character is really rasterised in the new frame (3288px drawn, 3288px through the shot's depth map)
+  ok   door 9: arrival stands on del-cine's walk network
+  ok   door 9: same-track music LITERALLY uninterrupted (drift 0.000s)
+  ok   door 9: encounter director re-graced on arrival
+  ok   door 10: del-cine -> del-cookhouse-int in 2768ms (url agrees)
+       door 10: first visit to del-cookhouse-int|- — baseline geo=297 tex=21 meshes=278
+  ok   door 10: the character is really rasterised in the new frame (3610px drawn, 1834px through the shot's depth map)
+  ok   door 10: arrival stands on del-cookhouse-int's walk network
+  ok   door 10: same-track music LITERALLY uninterrupted (drift 0.025s)
+  ok   door 10: encounter director re-graced on arrival
+  ok   door 11: del-cookhouse-int -> del-cine in 3750ms (url agrees)
+       door 11: first visit to del-cine|quay-west — baseline geo=800 tex=38 meshes=2354
+  ok   door 11: the character is really rasterised in the new frame (764px drawn, 361px through the shot's depth map)
+  ok   door 11: arrival stands on del-cine's walk network
+  ok   door 11: same-track music LITERALLY uninterrupted (drift 0.003s)
+  ok   door 11: encounter director re-graced on arrival
+  ok   door 12: del-cine -> del-cottage-int in 2571ms (url agrees)
+       door 12: first visit to del-cottage-int|- — baseline geo=1035 tex=8 meshes=1033
+  ok   door 12: the character is really rasterised in the new frame (2966px drawn, 2966px through the shot's depth map)
+  ok   door 12: arrival stands on del-cottage-int's walk network
+  ok   door 12: same-track music LITERALLY uninterrupted (drift 0.004s)
+  ok   door 12: encounter director re-graced on arrival
+  ok   door 13: del-cottage-int -> del-cine in 2457ms (url agrees)
+       door 13: first visit to del-cine|cottage — baseline geo=367 tex=38 meshes=2354
+  ok   door 13: the character is really rasterised in the new frame (1337px drawn, 1328px through the shot's depth map)
+  ok   door 13: arrival stands on del-cine's walk network
+  ok   door 13: same-track music LITERALLY uninterrupted (drift 0.004s, across the 71.98s loop point: 99.4 -> 36.05)
+  ok   door 13: encounter director re-graced on arrival
+  ok   door 14: del-cine -> ow-valley in 59543ms (url agrees)
+  ok   door 14: ow-valley|- is back to its baseline (geo 80, tex 69)
+  ok   door 14: the character is really rasterised in the new frame (154px drawn, 126px through the shot's depth map)
+  ok   door 14: arrival stands on ow-valley's walk network
+  ok   door 14: encounter director re-graced on arrival
+  ok   door 15: ow-valley -> del-cine in 5036ms (url agrees)
+  FAIL door 15: del-cine|gate is back to its baseline (geo 2075, tex 39)  {"delta":{"geo":-2,"tex":0,"meshes":0,"mats":0},"base":{"geometries":2075,"textures":39,"programs":36,"meshes":2354,"collide":1483,"walk":275,"cineArt":2,"epoch":9,"sceneMats":4857},"now":{"geometries":2073,"textures":39,"programs":42,"meshes":2354,"collide":1483,"walk":275,"cineArt":2,"epoch":19,"sceneMats":4857}}
+  ok   door 15: the character is really rasterised in the new frame (713px drawn, 713px through the shot's depth map)
+  ok   door 15: arrival stands on del-cine's walk network
+  ok   door 15: encounter director re-graced on arrival
+  ok   door 16: del-cine -> del-inn-int in 3608ms (url agrees)
+  ok   door 16: del-inn-int|- is back to its baseline (geo 246, tex 18)
+  ok   door 16: the character is really rasterised in the new frame (3249px drawn, 2057px through the shot's depth map)
+  ok   door 16: arrival stands on del-inn-int's walk network
+  ok   door 16: same-track music LITERALLY uninterrupted (drift 0.012s)
+  ok   door 16: encounter director re-graced on arrival
+  ok   door 17: del-inn-int -> del-cine in 2992ms (url agrees)
+  ok   door 17: del-cine|shelf-west is back to its baseline (geo 622, tex 38)
+  ok   door 17: the character is really rasterised in the new frame (812px drawn, 794px through the shot's depth map)
+  ok   door 17: arrival stands on del-cine's walk network
+  ok   door 17: same-track music LITERALLY uninterrupted (drift 0.001s)
+  ok   door 17: encounter director re-graced on arrival
+  ok   door 18: del-cine -> del-item-int in 2488ms (url agrees)
+  ok   door 18: del-item-int|- is back to its baseline (geo 161, tex 13)
+  ok   door 18: the character is really rasterised in the new frame (4268px drawn, 3340px through the shot's depth map)
+  ok   door 18: arrival stands on del-item-int's walk network
+  ok   door 18: same-track music LITERALLY uninterrupted (drift 0.001s)
+  ok   door 18: encounter director re-graced on arrival
+  ok   door 19: del-item-int -> del-cine in 2698ms (url agrees)
+  ok   door 19: del-cine|shelf-west is back to its baseline (geo 622, tex 38)
+  ok   door 19: the character is really rasterised in the new frame (840px drawn, 833px through the shot's depth map)
+  ok   door 19: arrival stands on del-cine's walk network
+  ok   door 19: same-track music LITERALLY uninterrupted (drift 0.004s)
+  ok   door 19: encounter director re-graced on arrival
+  ok   door 20: del-cine -> ow-valley in 42995ms (url agrees)
+  ok   door 20: ow-valley|- is back to its baseline (geo 80, tex 69)
+  ok   door 20: the character is really rasterised in the new frame (151px drawn, 124px through the shot's depth map)
+  ok   door 20: arrival stands on ow-valley's walk network
+  ok   door 20: encounter director re-graced on arrival
+  ok   door 21: ow-valley -> del-cine in 5057ms (url agrees)
+  FAIL door 21: del-cine|gate is back to its baseline (geo 2075, tex 39)  {"delta":{"geo":-2,"tex":0,"meshes":0,"mats":0},"base":{"geometries":2075,"textures":39,"programs":36,"meshes":2354,"collide":1483,"walk":275,"cineArt":2,"epoch":9,"sceneMats":4857},"now":{"geometries":2073,"textures":39,"programs":42,"meshes":2354,"collide":1483,"walk":275,"cineArt":2,"epoch":25,"sceneMats":4857}}
+  ok   door 21: the character is really rasterised in the new frame (716px drawn, 716px through the shot's depth map)
+  ok   door 21: arrival stands on del-cine's walk network
+  ok   door 21: encounter director re-graced on arrival
+  ok   door 22: del-cine -> del-cottage-int in 3517ms (url agrees)
+  ok   door 22: del-cottage-int|- is back to its baseline (geo 1035, tex 8)
+  ok   door 22: the character is really rasterised in the new frame (2964px drawn, 2964px through the shot's depth map)
+  ok   door 22: arrival stands on del-cottage-int's walk network
+  ok   door 22: same-track music LITERALLY uninterrupted (drift 0.000s)
+  ok   door 22: encounter director re-graced on arrival
+  ok   door 23: del-cottage-int -> del-cine in 2063ms (url agrees)
+  FAIL door 23: del-cine|cottage is back to its baseline (geo 367, tex 38)  {"delta":{"geo":-2,"tex":0,"meshes":0,"mats":0},"base":{"geometries":367,"textures":38,"programs":36,"meshes":2354,"collide":1483,"walk":275,"cineArt":3,"epoch":17,"sceneMats":4857},"now":{"geometries":365,"textures":38,"programs":39,"meshes":2354,"collide":1483,"walk":275,"cineArt":3,"epoch":27,"sceneMats":4857}}
+  ok   door 23: the character is really rasterised in the new frame (1352px drawn, 1343px through the shot's depth map)
+  ok   door 23: arrival stands on del-cine's walk network
+  ok   door 23: same-track music LITERALLY uninterrupted (drift 0.002s)
+  ok   door 23: encounter director re-graced on arrival
+
+== GPU — renderer.info returns to baseline
+  ok   24 transitions driven (20+ required)
+  FAIL final: del-cine|cottage is back to its baseline (geo 367, tex 38)  {"delta":{"geo":-2,"tex":0,"meshes":0,"mats":0},"base":{"geometries":367,"textures":38,"programs":36,"meshes":2354,"collide":1483,"walk":275,"cineArt":3,"epoch":17,"sceneMats":4857},"now":{"geometries":365,"textures":38,"programs":39,"meshes":2354,"collide":1483,"walk":275,"cineArt":3,"epoch":27,"sceneMats":4857}}
+       page totals now vs the del-cine|shelf-west baseline: geo 622 -> 365, tex 38 -> 38, mats 4857 -> 4857
+
+== MEMORY TABLE
+   door  ->scene            shot            ms   geoms   texs  meshes  mats  art
+      0  del-inn-int       -              2462    246     18     228   523    0
+      1  del-cine          shelf-west     3419    622     38    2354  4857    3
+      2  del-item-int      -              2596    161     13     182   410    0
+      3  del-cine          shelf-west     3113    622     38    2354  4857    3
+      4  ow-valley         -              46238     80     69      55   139    0
+      5  del-cine          gate           5908   2075     39    2354  4857    2
+      6  del-weapon-int    -              3954    193     13     214   482    0
+      7  del-cine          shelf-east     3498   1002     38    2354  4857    3
+      8  del-armor-int     -              2902    174     13     195   437    0
+      9  del-cine          shelf-east     3488   1002     38    2354  4857    3
+     10  del-cookhouse-int -              2768    297     21     278   643    0
+     11  del-cine          quay-west      3750    800     38    2354  4857    5
+     12  del-cottage-int   -              2571   1035      8    1033  2107    0
+     13  del-cine          cottage        2457    367     38    2354  4857    3
+     14  ow-valley         -              59543     80     69      55   139    0
+     15  del-cine          gate           5036   2073     39    2354  4857    2
+     16  del-inn-int       -              3608    246     18     228   523    0
+     17  del-cine          shelf-west     2992    622     38    2354  4857    3
+     18  del-item-int      -              2488    161     13     182   410    0
+     19  del-cine          shelf-west     2698    622     38    2354  4857    3
+     20  ow-valley         -              42995     80     69      55   139    0
+     21  del-cine          gate           5057   2073     39    2354  4857    2
+     22  del-cottage-int   -              3517   1035      8    1033  2107    0
+     23  del-cine          cottage        2063    365     38    2354  4857    3
+         drift at del-cine|gate: 2075/39/2354/4857 -> 2073/39/2354/4857
+         drift at del-cine|gate: 2075/39/2354/4857 -> 2073/39/2354/4857
+         drift at del-cine|cottage: 367/38/2354/4857 -> 365/38/2354/4857
+  FAIL every repeated (scene, shot) has identical counts (12 repeat visits across 12 distinct states)  {"drifted":3}
+       swap cost incl. both 350ms fades: median 3488ms, min 2063ms, max 59543ms
+
+== MUSIC
+  ok   same-track doors exercised (18 of 24)
+  ok   worst same-track playhead drift 0.025s
+  ok   the AudioContext is the SAME one, still running
+  ok   no sessionStorage resume was used to fake the continuity
+
+== GS PERSISTENCE — no save, no load, no reset
+  ok   a flag set before the journey survived it
+  ok   gold unchanged across the journey (1264)
+  ok   inventory unchanged
+  ok   party levels/xp unchanged
+  ok   GS.save/GS.load were never called by a door
+
+== BATTLE MID-TOWN, THEN A DOOR (UILOCK interplay)
+       fought a meadow group: ["reed-nibbler"]
+  ok   a battle really started in the town
+  ok   UILOCK is held from the battle's first frame
+  ok   no door could fire during the fight (120 physics ticks under the lock)
+       battle result: victory, gold 1264 -> 1264
+  ok   a door taken right after the fight still works
+  ok   and back out again
+  FAIL after battle: del-cine|shelf-west is back to its baseline (geo 622, tex 38)  {"delta":{"geo":2,"tex":0,"meshes":0,"mats":0},"base":{"geometries":622,"textures":38,"programs":13,"meshes":2354,"collide":1483,"walk":275,"cineArt":3,"epoch":3,"sceneMats":4857},"now":{"geometries":624,"textures":38,"programs":39,"meshes":2354,"collide":1483,"walk":275,"cineArt":3,"epoch":29,"sceneMats":4857}}
+
+== IN-SCENE CAMERA CUTS after a swap (the local handoff is untouched)
+  ok   an in-scene edge is still routed as a LOCAL handoff (no swap)
+  ok   the cut landed on shot 'gate'
+  ok   and it counted as exactly one cut
+  ok   the re-entered town still knows all 15 of its shots
+  ok   and its 41 edges were re-bound on arrival
+
+== DEEP LINK — F5 on the swapped URL lands where the swap did
+  ok   the reloaded page became playable
+  ok   a refresh reproduces the swapped scene
+  ok   and lands on the arrival the URL declares (0.00u from ?sx/?sz)
+  ok   the query string itself round-trips through a refresh byte for byte
+
+== CONSOLE
+  ok   no console errors across the whole run (66 total, 66 optional-asset 404s)
+
+== TRANSITION LOG
+       29 transitions recorded in the page, path=in-place swap
+       in-page swap work, EXCLUDING both 350ms fades:
+         total   median 1108ms   min 231ms   max 43603ms
+         dispose median 10ms   min 2ms   max 18ms   (the price the old full page load did not pay)
+         load    median 1107ms    min 221ms   max 43593ms   (fetch + parse + BVH + spawn — the reload paid this too)
+         worst: del-cine -> ow-valley  43603ms (dispose 10 + load 43593)
+         worst: del-cine -> ow-valley  32037ms (dispose 11 + load 32026)
+         worst: del-cine -> ow-valley  30923ms (dispose 10 + load 30913)
+
+FAIL  162 assertions ok, 6 failed

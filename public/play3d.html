@@ -1127,8 +1127,40 @@ function pfxDispose(){
 // goes through here, so a screenshot can never be of a different pipeline from the
 // one the player sees. (The battle stage learned this the same way and calls its
 // own renderFrame() for the same reason.)
+// THE OCC-MARKER WARM-UP — half two of the 2026-08-09 baseline fix (half one is the
+// occRing/occDia dispose REMOVED from sceneDispose(); neither half works alone).
+// occRing/occDia are page-scope singletons that are only DRAWN while the occlusion
+// indicator is up, and three.js registers a geometry when it is first drawn — so
+// left to themselves their two geometries join renderer.info at an arbitrary moment
+// and transition_test's per-(scene,shot) GPU baseline is not a function of
+// (scene, shot). MEASURED (tools/gpu_baseline_probe.mjs, docs/qa/transition-test/
+// gpu-baseline-probe-20260809.log): one probe run drifted four del-cine states by
+// exactly two — shelf-west {624,622,624,624}, gate {2073,2075,2075}, cottage
+// {367,365} — and doors 3 and 19 are the SAME edge, shot and position (27.6,-7.38)
+// reading 622 and 624. Dispose-and-watch named the pair: of 2348 geometries exactly
+// TWO belong to a non-drawable object, a RingGeometry and an OctahedronGeometry
+// under `ch` with no maps, i.e. the {geo:±2, tex:0} fingerprint of every red.
+// DRAWN ONCE HERE, before any baseline exists, they sit inside EVERY baseline the
+// gate takes — the same deal DEPTHQ already has (it uploads in the first plate
+// scene). No flash: this render is overwritten by the real one below in the same JS
+// turn. frustumCulled is lifted for the warm so the registration cannot depend on
+// where the body happens to be standing when the page boots.
+// VERIFIED BY A/B ON ONE QUIET MACHINE, both trees served the same way
+// (docs/qa/transition-test/run-20260809-*): HEAD reads 162 ok / 6 failed and EVERY
+// red is a {geo:±2, tex:0, meshes:0, mats:0} del-cine shot; with both halves the
+// gate reads 168 ok / 0 failed on four runs of five. The fifth was a global
+// {geo:-39, tex:-29} collapse from door 13 with meshes/mats unchanged — a WebGL
+// context loss, a different animal from this, and NOT a ±2.
+let OCCWARM=true;
 function renderFrame(){
   if(!cam) return;
+  if(OCCWARM){ OCCWARM=false;
+    const fc=[occRing.frustumCulled,occDia.frustumCulled];
+    occRing.frustumCulled=occDia.frustumCulled=false;
+    occRing.visible=occDia.visible=true;
+    R.setRenderTarget(null); R.render(scene,cam);
+    occRing.visible=occDia.visible=false;
+    occRing.frustumCulled=fc[0]; occDia.frustumCulled=fc[1]; }
   if(!PFX_ON||PFX_DEAD||(!RT&&!PFX_ALL)){ R.setRenderTarget(null); R.render(scene,cam); return; }
   if(!PFXRIG){
     try{ PFXRIG=pfxBuild(); }
@@ -3872,16 +3904,21 @@ function sceneDispose(){
   // 0/0; after ONE ow-valley round trip the town is +1/+1 and disposing these two
   // drops 1/1, taking renderer.info back to exactly its pre-trip 2073/39. The
   // whole delta is these two objects and nothing else.
-  // occRing/occDia are the same pattern, LATENT rather than live: they upload the
-  // first time the occlusion indicator is shown, which this gate's itinerary did
-  // not happen to do (measured +2 geo on a later round trip that did).
   // DISPOSED, NOT KEPT, and it costs nothing: the JS objects are untouched — the
   // attributes and the canvas behind contactTex still exist — so the next frame
   // that draws them re-uploads 4 vertices and a 64x64 canvas from the same source.
   // (DEPTHQ is the same shape and is deliberately left alone: it uploads in the
   // FIRST plate scene, so it is already inside every baseline this gate takes.)
+  // occRing/occDia ARE NOT DISPOSED HERE, AND THAT IS THE FIX (2026-08-09). They
+  // were, from 7545d2fd, on the theory that they are the same pattern — but they
+  // are not: contactShadow's visibility IS a function of the scene branch (only
+  // real-time turns it on), while the occlusion marker's is a function of frame
+  // parity (`++occT%6`), arrival position and load. Disposing them per scene turned
+  // a monotone false +2 into a PER-VISIT COIN FLIP: four del-cine states drifted by
+  // exactly two in one gpu_baseline_probe run and the gate read 157-168 instead of
+  // a number. They are warmed once at boot instead — see THE OCC-MARKER WARM-UP in
+  // renderFrame(), which is the other half of this and is required with it.
   occRing.visible=occDia.visible=false;
-  occRing.geometry.dispose(); occDia.geometry.dispose();
   contactShadow.visible=false;      // re-armed by the RT branch of the next scene
   contactShadow.geometry.dispose(); contactShadow.material.map.dispose();
   NET=null; CURF=null; cam=undefined;

@@ -22120,3 +22120,99 @@ to catch.
 
 Instrument: `node tools/gpu_baseline_probe.mjs --port=3000` (~8 min, real Chrome through
 cdp.mjs, reaps its own profile). Receipts in `docs/qa/transition-test/`.
+
+------------------------------------------------------------
+
+## 2026-08-09 ~02:50 — THE FIX IS TAKEN: transition_test is 168/0 and it is now DETERMINISTIC
+
+Both halves landed in `public/play3d.html` (coordinator-owned; granted for this fix only).
+Half 1: the `occRing.geometry.dispose(); occDia.geometry.dispose();` pair is GONE from
+`sceneDispose()` — `contactShadow`'s dispose is UNTOUCHED, because its visibility genuinely
+is a function of the scene branch. Half 2: `THE OCC-MARKER WARM-UP` at the top of
+`renderFrame()` draws the pair for exactly one render at boot, behind a one-shot `OCCWARM`
+latch, with `frustumCulled` lifted so the registration cannot depend on where the body
+happens to be standing. No flash — the warm render is overwritten by the real one in the
+same JS turn.
+
+### THE A/B, ON ONE QUIET MACHINE, BOTH TREES SERVED THE SAME WAY
+
+The control is the whole point: HEAD and the fix differ only in `play3d.html` (a symlink
+farm over the same `public/`, two static servers), so nothing but the change moved.
+
+| tree | run | result |
+|---|---|---|
+| **HEAD** | `run-20260809-HEAD-control.log` | **162 ok / 6 failed** |
+| fixed | `run-20260809-occfix-1.log` | **168 ok / 0 failed** |
+| fixed | `run-20260809-occfix-2.log` | **168 ok / 0 failed** |
+| fixed | `run-20260809-occfix-3.log` | 155 ok / 13 failed — NOT this bug, see below |
+| fixed | `run-20260809-occfix-4.log` | **168 ok / 0 failed** |
+| fixed | `run-20260809-occfix-5.log` | **168 ok / 0 failed** |
+
+Every one of HEAD's six reds is the predicted fingerprint and nothing else:
+`del-cine|gate 2075 -> 2073` (doors 15 and 21), `del-cine|cottage 367 -> 365` (door 23 and
+final), the derived identical-counts roll-up, and the after-battle `shelf-west` baseline
+taken at 622 and read back at 624 — all `{geo: +/-2, tex: 0, meshes: 0, mats: 0}`.
+
+### THE DIRECT MEASUREMENT: `gpu_baseline_probe`, BEFORE AND AFTER
+
+The instrument that found the drift is the one that says it is gone. Per-state counts on
+repeat visits to the same `(scene, shot)`:
+
+| state | BEFORE (HEAD) | AFTER (fixed) |
+|---|---|---|
+| `del-cine\|shelf-west` | 624, 624, **622**, 624, **622** | 624, 624, 624, 624, 624 |
+| `del-cine\|gate` | 2075, **2073**, 2075 | 2075, 2075, 2075 |
+| `del-cine\|cottage` | 367, 367, 367 | 367, 367, 367 |
+| after-battle delta | **-2** | **0** |
+
+Receipts: `docs/qa/transition-test/gpu-baseline-probe-20260809-occfix-{BEFORE,AFTER}.{log,json}`.
+The resident-set scan closes it from the other side: AFTER carries
+`RingGeometry:1 OctahedronGeometry:1` permanently resident-but-not-drawable — the DEPTHQ
+deal, now theirs — where BEFORE had zero non-drawable residents at the same snapshot
+because they had been disposed and not yet redrawn. The `+2` is also visible as a plain
+level shift on every state whose baseline used to be taken before the marker ever fired:
+`ow-valley 80 -> 82`, `del-item-int 161 -> 163`, `del-weapon-int 193 -> 195`,
+`del-armor-int 174 -> 176`, `del-cine|quay-west 798 -> 800`, `del-cottage-int 1035 -> 1037`.
+
+### THE contactShadow LEAK HAS NOT RETURNED
+
+Its dispose was deliberately left in place, and the four clean runs carry zero
+`{geo:1, tex:1}` deltas at doors 16-19 — the exact seat of the old 162/6. That signature
+does not appear anywhere in any run this session.
+
+### RESIDUAL, NAMED AND NOT EXPLAINED: A CONTEXT-LOSS COLLAPSE
+
+Run 3 failed 155/13 with a completely different payload: from door 13 onward EVERY scene's
+textures collapse to 8-9 and `del-cine|shelf-west` reads `{geo: -39, tex: -29}`, while
+`meshes` (2354) and `mats` (4857) never move. Page-side counts intact, GPU-side counts
+gone, and the baselines themselves were taken in the collapsed state — that is a WebGL
+context loss under swiftshader, not a leak and not a `+/-2`. It also hit one
+`gpu_baseline_probe` run earlier in the session. **It is not explained.** The one
+hypothesis worth killing was killed: door 4's `ow-valley` load time is 46-48 s in ALL five
+runs including the failure, so "slow load implies collapse" is false. Both occurrences were
+on the fixed tree and none on HEAD (1 gate run + 1 probe run), which is too thin to mean
+anything either way; a one-frame extra render at boot cannot plausibly drop a context
+thirteen doors later. **If a future run reports a global texture collapse with `meshes` and
+`mats` unchanged, it is this and it is environmental — re-run it.**
+
+### PROCESS SCARS PAID FOR AGAIN
+
+- **A PORT THAT ANSWERS IS NOT YOUR SERVER.** A probe run hung 20 minutes with an EMPTY log
+  because another lane's node process already held IPv6 `*:3012` while my python server had
+  only IPv4 `127.0.0.1:3012` — `localhost` resolves `::1` first, so Chrome fetched
+  `play3d.html` from the neighbour, got a 404, and never requested a second asset. The tell
+  was the server access log: ONE request, then silence. `lsof -nP -iTCP:<port> -sTCP:LISTEN`
+  BEFORE serving, and read it for the address family, not just the port. This is the same
+  lesson `cdp.mjs freePort()` already encodes for the CDP port; a hand-rolled content server
+  needs it too.
+- The `gpu_baseline_probe` and `transition_test` waits both exceeded the 10-minute shell
+  ceiling. Wait on the PID (`while ps -p <PID>`), never on the wrapper's exit code.
+
+### OWED TO THE COORDINATOR (this lane may not edit CLAUDE.md)
+
+`CLAUDE.md`'s `A PAGE-SCOPE SINGLETON...` entry still ends on the pre-fix state — it says
+"SO 168/0 IS NOT A REPRODUCIBLE BASELINE", "the gate reads **157-168 ok**", "eleven
+assertions are exposed", and describes the fix as pending. **All four are now stale.** The
+re-derived claim for the next lane is: **transition_test is 168 ok / 0 failed and that
+number is now deterministic** — a `{geo: +/-2, tex: 0}` red on a `del-cine` shot is no
+longer an accepted outcome and should be read as a real regression.

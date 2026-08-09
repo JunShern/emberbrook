@@ -1,0 +1,5965 @@
+{
+  "rows": [
+    {
+      "tag": "door 0",
+      "scene": "del-inn-int",
+      "shot": "-",
+      "geo": 246,
+      "tex": 18,
+      "ring": true,
+      "nHits": 2,
+      "first": "hanging_15",
+      "pos": [
+        -3.4,
+        -2.72
+      ]
+    },
+    {
+      "tag": "door 1",
+      "scene": "del-cine",
+      "shot": "shelf-west",
+      "geo": 624,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        28.48,
+        -7.52
+      ]
+    },
+    {
+      "tag": "door 2",
+      "scene": "del-item-int",
+      "shot": "-",
+      "geo": 163,
+      "tex": 13,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        -2.5,
+        -2.28
+      ]
+    },
+    {
+      "tag": "door 3",
+      "scene": "del-cine",
+      "shot": "shelf-west",
+      "geo": 624,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        27.6,
+        -7.38
+      ]
+    },
+    {
+      "tag": "door 4",
+      "scene": "ow-valley",
+      "shot": "-",
+      "geo": 82,
+      "tex": 69,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        41.29,
+        -33.83
+      ]
+    },
+    {
+      "tag": "door 5",
+      "scene": "del-cine",
+      "shot": "gate",
+      "geo": 2075,
+      "tex": 39,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        4.89,
+        -6.48
+      ]
+    },
+    {
+      "tag": "door 6",
+      "scene": "del-weapon-int",
+      "shot": "-",
+      "geo": 195,
+      "tex": 13,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        -2.5,
+        -2.28
+      ]
+    },
+    {
+      "tag": "door 7",
+      "scene": "del-cine",
+      "shot": "shelf-east",
+      "geo": 1004,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        40.3,
+        -6.97
+      ]
+    },
+    {
+      "tag": "door 8",
+      "scene": "del-armor-int",
+      "shot": "-",
+      "geo": 176,
+      "tex": 13,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        -2.5,
+        -2.28
+      ]
+    },
+    {
+      "tag": "door 9",
+      "scene": "del-cine",
+      "shot": "shelf-east",
+      "geo": 1004,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        49.69,
+        -8.64
+      ]
+    },
+    {
+      "tag": "door 10",
+      "scene": "del-cookhouse-int",
+      "shot": "-",
+      "geo": 297,
+      "tex": 21,
+      "ring": true,
+      "nHits": 1,
+      "first": "beams_1",
+      "pos": [
+        3,
+        -2.58
+      ]
+    },
+    {
+      "tag": "door 11",
+      "scene": "del-cine",
+      "shot": "quay-west",
+      "geo": 800,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        42.8,
+        -16.8
+      ]
+    },
+    {
+      "tag": "door 12",
+      "scene": "del-cottage-int",
+      "shot": "-",
+      "geo": 1037,
+      "tex": 8,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        1.9,
+        -6.38
+      ]
+    },
+    {
+      "tag": "door 13",
+      "scene": "del-cine",
+      "shot": "cottage",
+      "geo": 367,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        90.54,
+        -19.97
+      ]
+    },
+    {
+      "tag": "door 14",
+      "scene": "ow-valley",
+      "shot": "-",
+      "geo": 82,
+      "tex": 69,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        41.29,
+        -33.83
+      ]
+    },
+    {
+      "tag": "door 15",
+      "scene": "del-cine",
+      "shot": "gate",
+      "geo": 2075,
+      "tex": 39,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        4.89,
+        -6.48
+      ]
+    },
+    {
+      "tag": "door 16",
+      "scene": "del-inn-int",
+      "shot": "-",
+      "geo": 246,
+      "tex": 18,
+      "ring": true,
+      "nHits": 2,
+      "first": "hanging_15",
+      "pos": [
+        -3.4,
+        -2.72
+      ]
+    },
+    {
+      "tag": "door 17",
+      "scene": "del-cine",
+      "shot": "shelf-west",
+      "geo": 624,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        28.48,
+        -7.52
+      ]
+    },
+    {
+      "tag": "door 18",
+      "scene": "del-item-int",
+      "shot": "-",
+      "geo": 163,
+      "tex": 13,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        -2.5,
+        -2.28
+      ]
+    },
+    {
+      "tag": "door 19",
+      "scene": "del-cine",
+      "shot": "shelf-west",
+      "geo": 624,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        27.6,
+        -7.38
+      ]
+    },
+    {
+      "tag": "door 20",
+      "scene": "ow-valley",
+      "shot": "-",
+      "geo": 82,
+      "tex": 69,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        41.29,
+        -33.83
+      ]
+    },
+    {
+      "tag": "door 21",
+      "scene": "del-cine",
+      "shot": "gate",
+      "geo": 2075,
+      "tex": 39,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        4.89,
+        -6.48
+      ]
+    },
+    {
+      "tag": "door 22",
+      "scene": "del-cottage-int",
+      "shot": "-",
+      "geo": 1037,
+      "tex": 8,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        1.9,
+        -6.38
+      ]
+    },
+    {
+      "tag": "door 23",
+      "scene": "del-cine",
+      "shot": "cottage",
+      "geo": 367,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        90.54,
+        -19.97
+      ]
+    },
+    {
+      "tag": "postfight",
+      "scene": "del-cine",
+      "shot": "cottage",
+      "geo": 367,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        90.54,
+        -19.97
+      ]
+    },
+    {
+      "tag": "->inn",
+      "scene": "del-inn-int",
+      "shot": "-",
+      "geo": 246,
+      "tex": 18,
+      "ring": true,
+      "nHits": 2,
+      "first": "hanging_15",
+      "pos": [
+        -3.4,
+        -2.72
+      ]
+    },
+    {
+      "tag": "AFTER",
+      "scene": "del-cine",
+      "shot": "shelf-west",
+      "geo": 624,
+      "tex": 38,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "pos": [
+        28.48,
+        -7.52
+      ]
+    }
+  ],
+  "after": {
+    "scene": "del-cine",
+    "shot": "shelf-west",
+    "gpu": {
+      "geometries": 624,
+      "textures": 38,
+      "programs": 35,
+      "meshes": 2354,
+      "collide": 1483,
+      "walk": 275,
+      "cineArt": 3,
+      "epoch": 27,
+      "sceneMats": 4857
+    },
+    "occ": {
+      "depthMode": true,
+      "rtMode": false,
+      "ring": false,
+      "nHits": 0,
+      "first": null,
+      "camDist": 24.79
+    },
+    "pos": {
+      "x": 28.48,
+      "y": 19.070000000298023,
+      "z": -7.52
+    },
+    "fol": {
+      "scene": "del-cine",
+      "town": true,
+      "built": false,
+      "count": 0,
+      "leader": "vesper",
+      "roster": "",
+      "crumbs": 0,
+      "span": 0,
+      "hiddenNpcs": [],
+      "inGroup": 0,
+      "mixers": 0,
+      "epoch": 26,
+      "off": false
+    }
+  },
+  "resident": {
+    "scanned": 2348,
+    "resident": [
+      {
+        "gt": "RingGeometry",
+        "name": "(anon)",
+        "type": "Mesh",
+        "parent": "Group",
+        "drawable": false,
+        "chain": "Mesh<Group<Scene",
+        "n": 1
+      },
+      {
+        "gt": "OctahedronGeometry",
+        "name": "(anon)",
+        "type": "Mesh",
+        "parent": "Group",
+        "drawable": false,
+        "chain": "Mesh<Group<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "tripo_node_8985772b",
+        "type": "SkinnedMesh",
+        "parent": "Armature",
+        "drawable": true,
+        "chain": "tripo_node_8985772b<Armature<RootNode<Scene",
+        "n": 2
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lantern_3_1",
+        "type": "Mesh",
+        "parent": "KEYQ_pit_lantern_prop",
+        "drawable": true,
+        "chain": "lantern_3_1<KEYQ_pit_lantern_prop<Scene<Scene",
+        "n": 2
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lantern_3_2",
+        "type": "Mesh",
+        "parent": "KEYQ_pit_lantern_prop",
+        "drawable": true,
+        "chain": "lantern_3_2<KEYQ_pit_lantern_prop<Scene<Scene",
+        "n": 2
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "KEYQ_pit_lantern_hanger",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "KEYQ_pit_lantern_hanger<Scene<Scene",
+        "n": 2
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "water_pool-upstream",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "water_pool-upstream<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_far_toe",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_far_toe<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_far",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_far<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_west2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_west2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_skirt",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_skirt<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_west",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_west<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_b",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_mid",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_mid<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_c",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_a",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_a<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_d",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_d<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cliff_town_back",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "cliff_town_back<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_valley-gate",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_valley-gate<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_winch-head",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_winch-head<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_item-shop",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_item-shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_weapon-shop",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_weapon-shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_armor-shop",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_armor-shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_shelf-homes",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_shelf-homes<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_notice-board",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_notice-board<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_deep-stairs-head",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_deep-stairs-head<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__gatehouse_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__gatehouse_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__gatehouse_l1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__gatehouse_l1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__gatehouse_l2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__gatehouse_l2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l4",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l5",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l6",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l7",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l8",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l9",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l9<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_item-shop__weapon-shop_l10",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_item-shop__weapon-shop_l10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l4",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l5",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l6",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l7",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l8",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l9",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l9<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_weapon-shop__armor-shop_l10",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_weapon-shop__armor-shop_l10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l4",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l5",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l6",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l7",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l8",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l9",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l9<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_armor-shop__shelf-homes_l10",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_armor-shop__shelf-homes_l10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_quay-deck__notice-board_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_quay-deck__notice-board_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_quay-deck__deep-stairs-head_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_quay-deck__deep-stairs-head_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_quay-deck__deep-stairs-head_l1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_quay-deck__deep-stairs-head_l1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_quay-deck__deep-stairs-head_l2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_quay-deck__deep-stairs-head_l2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__valley-road_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__valley-road_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__valley-road_l1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__valley-road_l1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__valley-road_l2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__valley-road_l2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t00",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t00<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t01",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t01<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t02",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t02<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t03",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t03<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t04",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t04<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t05",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t05<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t06",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t06<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t07",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t07<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t08",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t08<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t09",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t09<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t10",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t11",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t11<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_valley-gate__inn_l0_t12",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_valley-gate__inn_l0_t12<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_gatehouse__winch-head_l10",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_gatehouse__winch-head_l10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_gatehouse__winch-head_l3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_gatehouse__winch-head_l3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_gatehouse__winch-head_l4",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_gatehouse__winch-head_l4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_gatehouse__winch-head_l5",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_gatehouse__winch-head_l5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_gatehouse__winch-head_l6",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_gatehouse__winch-head_l6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_gatehouse__winch-head_l7",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_gatehouse__winch-head_l7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_gatehouse__winch-head_l8",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_gatehouse__winch-head_l8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_gatehouse__winch-head_l9",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_gatehouse__winch-head_l9<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l10",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l4",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l5",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l6",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l7",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l8",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_inn__item-shop_l9",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_inn__item-shop_l9<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_inn",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_deep-stairs-head__deep-stairs-foot_l0_t00",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_deep-stairs-head__deep-stairs-foot_l0_t00<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_quay-deck__cookhouse_l0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_quay-deck__cookhouse_l0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_quay-deck__cookhouse_l1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_quay-deck__cookhouse_l1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_shelf-homes__market-stalls_l0_t00",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_shelf-homes__market-stalls_l0_t00<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_shelf-homes__market-stalls_l0_t01",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_shelf-homes__market-stalls_l0_t01<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_shelf-homes__market-stalls_l0_t02",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_shelf-homes__market-stalls_l0_t02<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_shelf-homes__market-stalls_l0_t03",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_shelf-homes__market-stalls_l0_t03<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_shelf-homes__market-stalls_l0_t04",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_shelf-homes__market-stalls_l0_t04<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_shelf-homes__market-stalls_l1_t00",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_shelf-homes__market-stalls_l1_t00<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_shelf-homes__market-stalls_l1_t01",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_shelf-homes__market-stalls_l1_t01<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_e_shelf-homes__market-stalls_landing",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_e_shelf-homes__market-stalls_landing<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_pad_cookhouse",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_pad_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "walk_lm_quay-deck",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "walk_lm_quay-deck<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "bank_netloft_1",
+        "type": "Mesh",
+        "parent": "bank_netloft",
+        "drawable": true,
+        "chain": "bank_netloft_1<bank_netloft<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "bank_netloft_2",
+        "type": "Mesh",
+        "parent": "bank_netloft",
+        "drawable": true,
+        "chain": "bank_netloft_2<bank_netloft<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "bank_netloft_3",
+        "type": "Mesh",
+        "parent": "bank_netloft",
+        "drawable": true,
+        "chain": "bank_netloft_3<bank_netloft<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "bank_netloft_4",
+        "type": "Mesh",
+        "parent": "bank_netloft",
+        "drawable": true,
+        "chain": "bank_netloft_4<bank_netloft<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "by_v10_apron_1",
+        "type": "Mesh",
+        "parent": "by_v10_apron",
+        "drawable": true,
+        "chain": "by_v10_apron_1<by_v10_apron<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "by_v10_apron_2",
+        "type": "Mesh",
+        "parent": "by_v10_apron",
+        "drawable": true,
+        "chain": "by_v10_apron_2<by_v10_apron<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "cargo_winch_foot_2",
+        "type": "Mesh",
+        "parent": "cargo_winch_foot",
+        "drawable": true,
+        "chain": "cargo_winch_foot_2<cargo_winch_foot<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_0_1",
+        "type": "Mesh",
+        "parent": "veg_creeper_0",
+        "drawable": true,
+        "chain": "veg_creeper_0_1<veg_creeper_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_0_2",
+        "type": "Mesh",
+        "parent": "veg_creeper_0",
+        "drawable": true,
+        "chain": "veg_creeper_0_2<veg_creeper_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_10_1",
+        "type": "Mesh",
+        "parent": "veg_creeper_10",
+        "drawable": true,
+        "chain": "veg_creeper_10_1<veg_creeper_10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_10_2",
+        "type": "Mesh",
+        "parent": "veg_creeper_10",
+        "drawable": true,
+        "chain": "veg_creeper_10_2<veg_creeper_10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_16_1",
+        "type": "Mesh",
+        "parent": "veg_creeper_16",
+        "drawable": true,
+        "chain": "veg_creeper_16_1<veg_creeper_16<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_16_2",
+        "type": "Mesh",
+        "parent": "veg_creeper_16",
+        "drawable": true,
+        "chain": "veg_creeper_16_2<veg_creeper_16<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_18_1",
+        "type": "Mesh",
+        "parent": "veg_creeper_18",
+        "drawable": true,
+        "chain": "veg_creeper_18_1<veg_creeper_18<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_18_2",
+        "type": "Mesh",
+        "parent": "veg_creeper_18",
+        "drawable": true,
+        "chain": "veg_creeper_18_2<veg_creeper_18<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_25_1",
+        "type": "Mesh",
+        "parent": "veg_creeper_25",
+        "drawable": true,
+        "chain": "veg_creeper_25_1<veg_creeper_25<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_25_2",
+        "type": "Mesh",
+        "parent": "veg_creeper_25",
+        "drawable": true,
+        "chain": "veg_creeper_25_2<veg_creeper_25<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_3_1",
+        "type": "Mesh",
+        "parent": "veg_creeper_3",
+        "drawable": true,
+        "chain": "veg_creeper_3_1<veg_creeper_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_3_2",
+        "type": "Mesh",
+        "parent": "veg_creeper_3",
+        "drawable": true,
+        "chain": "veg_creeper_3_2<veg_creeper_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_5_1",
+        "type": "Mesh",
+        "parent": "veg_creeper_5",
+        "drawable": true,
+        "chain": "veg_creeper_5_1<veg_creeper_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_creeper_5_2",
+        "type": "Mesh",
+        "parent": "veg_creeper_5",
+        "drawable": true,
+        "chain": "veg_creeper_5_2<veg_creeper_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lock_four_dam_1",
+        "type": "Mesh",
+        "parent": "lock_four_dam",
+        "drawable": true,
+        "chain": "lock_four_dam_1<lock_four_dam<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lockside_chandlery_1",
+        "type": "Mesh",
+        "parent": "lockside_chandlery",
+        "drawable": true,
+        "chain": "lockside_chandlery_1<lockside_chandlery<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lockside_chandlery_2",
+        "type": "Mesh",
+        "parent": "lockside_chandlery",
+        "drawable": true,
+        "chain": "lockside_chandlery_2<lockside_chandlery<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lockside_chandlery_3",
+        "type": "Mesh",
+        "parent": "lockside_chandlery",
+        "drawable": true,
+        "chain": "lockside_chandlery_3<lockside_chandlery<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lockside_chandlery_4",
+        "type": "Mesh",
+        "parent": "lockside_chandlery",
+        "drawable": true,
+        "chain": "lockside_chandlery_4<lockside_chandlery<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lockside_chandlery_5",
+        "type": "Mesh",
+        "parent": "lockside_chandlery",
+        "drawable": true,
+        "chain": "lockside_chandlery_5<lockside_chandlery<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_rimclump_3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_rimclump_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_rimtree_1_2",
+        "type": "Mesh",
+        "parent": "veg_rimtree_1",
+        "drawable": true,
+        "chain": "veg_rimtree_1_2<veg_rimtree_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "riverbed",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "riverbed<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_tuft_0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_tuft_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "yard_ground",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "yard_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "yard_joists",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "yard_joists<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "yard_planking",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "yard_planking<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "seam_bank",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "seam_bank<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wf_ground",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wf_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wf_lantern_brackets_1",
+        "type": "Mesh",
+        "parent": "wf_lantern_brackets",
+        "drawable": true,
+        "chain": "wf_lantern_brackets_1<wf_lantern_brackets<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wf_lantern_brackets_2",
+        "type": "Mesh",
+        "parent": "wf_lantern_brackets",
+        "drawable": true,
+        "chain": "wf_lantern_brackets_2<wf_lantern_brackets<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_wf_rimclump_3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_wf_rimclump_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_wf_rimclump_11",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_wf_rimclump_11<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_wf_rimclump_16",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_wf_rimclump_16<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "lf_ground",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "lf_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "water_pool-mid",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "water_pool-mid<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_planking",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wv_planking<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_piles",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wv_piles<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_pile_bracing",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wv_pile_bracing<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_props_1",
+        "type": "Mesh",
+        "parent": "wv_props",
+        "drawable": true,
+        "chain": "wv_props_1<wv_props<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_props_2",
+        "type": "Mesh",
+        "parent": "wv_props",
+        "drawable": true,
+        "chain": "wv_props_2<wv_props<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_props_3",
+        "type": "Mesh",
+        "parent": "wv_props",
+        "drawable": true,
+        "chain": "wv_props_3<wv_props<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_cloth_1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wv_cloth_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_cloth_2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wv_cloth_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_cloth_3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wv_cloth_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_cloth_5",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wv_cloth_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "wv_cloth_6",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "wv_cloth_6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_ground_1",
+        "type": "Mesh",
+        "parent": "gate_ground",
+        "drawable": true,
+        "chain": "gate_ground_1<gate_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_ground_2",
+        "type": "Mesh",
+        "parent": "gate_ground",
+        "drawable": true,
+        "chain": "gate_ground_2<gate_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_cliffface",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gate_cliffface<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_road",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gate_road<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_arch001",
+        "type": "Mesh",
+        "parent": "gate_arch",
+        "drawable": true,
+        "chain": "gate_arch001<gate_arch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_arch001_1",
+        "type": "Mesh",
+        "parent": "gate_arch",
+        "drawable": true,
+        "chain": "gate_arch001_1<gate_arch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_arch001_2",
+        "type": "Mesh",
+        "parent": "gate_arch",
+        "drawable": true,
+        "chain": "gate_arch001_2<gate_arch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_arch001_3",
+        "type": "Mesh",
+        "parent": "gate_arch",
+        "drawable": true,
+        "chain": "gate_arch001_3<gate_arch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_arch001_4",
+        "type": "Mesh",
+        "parent": "gate_arch",
+        "drawable": true,
+        "chain": "gate_arch001_4<gate_arch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_leaves001",
+        "type": "Mesh",
+        "parent": "gate_leaves",
+        "drawable": true,
+        "chain": "gate_leaves001<gate_leaves<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_leaves001_1",
+        "type": "Mesh",
+        "parent": "gate_leaves",
+        "drawable": true,
+        "chain": "gate_leaves001_1<gate_leaves<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_palisade001",
+        "type": "Mesh",
+        "parent": "gate_palisade",
+        "drawable": true,
+        "chain": "gate_palisade001<gate_palisade<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_palisade001_1",
+        "type": "Mesh",
+        "parent": "gate_palisade",
+        "drawable": true,
+        "chain": "gate_palisade001_1<gate_palisade<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_barrier001",
+        "type": "Mesh",
+        "parent": "gate_barrier",
+        "drawable": true,
+        "chain": "gate_barrier001<gate_barrier<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_yard",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gate_yard<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_winch001",
+        "type": "Mesh",
+        "parent": "gate_winch",
+        "drawable": true,
+        "chain": "gate_winch001<gate_winch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_winch001_1",
+        "type": "Mesh",
+        "parent": "gate_winch",
+        "drawable": true,
+        "chain": "gate_winch001_1<gate_winch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_winch001_2",
+        "type": "Mesh",
+        "parent": "gate_winch",
+        "drawable": true,
+        "chain": "gate_winch001_2<gate_winch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_winch001_3",
+        "type": "Mesh",
+        "parent": "gate_winch",
+        "drawable": true,
+        "chain": "gate_winch001_3<gate_winch<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_winch_rope",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gate_winch_rope<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_parapet_1",
+        "type": "Mesh",
+        "parent": "gate_parapet",
+        "drawable": true,
+        "chain": "gate_parapet_1<gate_parapet<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_parapet_2",
+        "type": "Mesh",
+        "parent": "gate_parapet",
+        "drawable": true,
+        "chain": "gate_parapet_2<gate_parapet<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_parapet_3",
+        "type": "Mesh",
+        "parent": "gate_parapet",
+        "drawable": true,
+        "chain": "gate_parapet_3<gate_parapet<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_bunting001",
+        "type": "Mesh",
+        "parent": "gate_bunting",
+        "drawable": true,
+        "chain": "gate_bunting001<gate_bunting<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_bunting001_1",
+        "type": "Mesh",
+        "parent": "gate_bunting",
+        "drawable": true,
+        "chain": "gate_bunting001_1<gate_bunting<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_bunting001_4",
+        "type": "Mesh",
+        "parent": "gate_bunting",
+        "drawable": true,
+        "chain": "gate_bunting001_4<gate_bunting<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_bunting001_5",
+        "type": "Mesh",
+        "parent": "gate_bunting",
+        "drawable": true,
+        "chain": "gate_bunting001_5<gate_bunting<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_bunting001_6",
+        "type": "Mesh",
+        "parent": "gate_bunting",
+        "drawable": true,
+        "chain": "gate_bunting001_6<gate_bunting<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_bunting001_7",
+        "type": "Mesh",
+        "parent": "gate_bunting",
+        "drawable": true,
+        "chain": "gate_bunting001_7<gate_bunting<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_lantern_arch_e1_1",
+        "type": "Mesh",
+        "parent": "gate_lantern_arch_e1",
+        "drawable": true,
+        "chain": "gate_lantern_arch_e1_1<gate_lantern_arch_e1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_lantern_arch_e1_2",
+        "type": "Mesh",
+        "parent": "gate_lantern_arch_e1",
+        "drawable": true,
+        "chain": "gate_lantern_arch_e1_2<gate_lantern_arch_e1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_lantern_arch_e3_1",
+        "type": "Mesh",
+        "parent": "gate_lantern_arch_e3",
+        "drawable": true,
+        "chain": "gate_lantern_arch_e3_1<gate_lantern_arch_e3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_lantern_arch_e3_2",
+        "type": "Mesh",
+        "parent": "gate_lantern_arch_e3",
+        "drawable": true,
+        "chain": "gate_lantern_arch_e3_2<gate_lantern_arch_e3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_lantern_8_1",
+        "type": "Mesh",
+        "parent": "gate_lantern_8",
+        "drawable": true,
+        "chain": "gate_lantern_8_1<gate_lantern_8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_lantern_8_2",
+        "type": "Mesh",
+        "parent": "gate_lantern_8",
+        "drawable": true,
+        "chain": "gate_lantern_8_2<gate_lantern_8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_lantern_brackets",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gate_lantern_brackets<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_tuft_67",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_tuft_67<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_fern_25",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_fern_25<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_clutter001",
+        "type": "Mesh",
+        "parent": "gate_clutter",
+        "drawable": true,
+        "chain": "gate_clutter001<gate_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_clutter001_1",
+        "type": "Mesh",
+        "parent": "gate_clutter",
+        "drawable": true,
+        "chain": "gate_clutter001_1<gate_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_clutter001_2",
+        "type": "Mesh",
+        "parent": "gate_clutter",
+        "drawable": true,
+        "chain": "gate_clutter001_2<gate_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_clutter001_3",
+        "type": "Mesh",
+        "parent": "gate_clutter",
+        "drawable": true,
+        "chain": "gate_clutter001_3<gate_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_clutter001_5",
+        "type": "Mesh",
+        "parent": "gate_clutter",
+        "drawable": true,
+        "chain": "gate_clutter001_5<gate_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_clutter001_6",
+        "type": "Mesh",
+        "parent": "gate_clutter",
+        "drawable": true,
+        "chain": "gate_clutter001_6<gate_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_corbels",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gate_corbels<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_clump_0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_clump_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_clump_1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_clump_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_clump_4",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_clump_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_clump_7",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_clump_7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_clump_12",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_clump_12<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_clump_13",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_clump_13<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_clump_16",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_clump_16<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_9",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_9<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_15",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_15<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_17",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_17<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_22",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_22<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_27",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_27<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_28",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_28<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_30",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_30<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_31",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_31<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_33",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_33<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_41",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_41<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_44",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_44<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_67",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_67<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_tuft_69",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_tuft_69<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_fern_2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_fern_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_fern_3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_fern_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_fern_5",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_fern_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_fern_11",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_fern_11<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_fern_14",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_fern_14<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_gate_chop_fern_18",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_gate_chop_fern_18<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gate_gorgeface",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gate_gorgeface<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "ga_lantern_threshold_1",
+        "type": "Mesh",
+        "parent": "ga_lantern_threshold",
+        "drawable": true,
+        "chain": "ga_lantern_threshold_1<ga_lantern_threshold<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "ga_lantern_threshold_2",
+        "type": "Mesh",
+        "parent": "ga_lantern_threshold",
+        "drawable": true,
+        "chain": "ga_lantern_threshold_2<ga_lantern_threshold<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_ground001",
+        "type": "Mesh",
+        "parent": "shelf_ground",
+        "drawable": true,
+        "chain": "shelf_ground001<shelf_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_ground001_1",
+        "type": "Mesh",
+        "parent": "shelf_ground",
+        "drawable": true,
+        "chain": "shelf_ground001_1<shelf_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_1",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_1<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_2",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_2<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_3",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_3<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_4",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_4<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_5",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_5<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_6",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_6<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_7",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_7<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_8",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_8<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_9",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_9<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_10",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_10<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_11",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_11<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_inn001_12",
+        "type": "Mesh",
+        "parent": "shelf_inn",
+        "drawable": true,
+        "chain": "shelf_inn001_12<shelf_inn<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_awning_0001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_awning_0001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_1",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_1<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_2",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_2<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_3",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_3<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_4",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_4<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_5",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_5<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_6",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_6<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_7",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_7<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_8",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_8<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_item_shop001_9",
+        "type": "Mesh",
+        "parent": "shelf_item_shop",
+        "drawable": true,
+        "chain": "shelf_item_shop001_9<shelf_item_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_1",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_1<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_2",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_2<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_3",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_3<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_4",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_4<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_5",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_5<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_6",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_6<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_7",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_7<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_8",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_8<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_9",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_9<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_weapon_shop001_10",
+        "type": "Mesh",
+        "parent": "shelf_weapon_shop",
+        "drawable": true,
+        "chain": "shelf_weapon_shop001_10<shelf_weapon_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_1",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_1<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_2",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_2<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_3",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_3<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_4",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_4<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_5",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_5<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_6",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_6<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_7",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_7<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_8",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_8<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_9",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_9<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_11",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_11<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_armor_shop001_12",
+        "type": "Mesh",
+        "parent": "shelf_armor_shop",
+        "drawable": true,
+        "chain": "shelf_armor_shop001_12<shelf_armor_shop<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_a001",
+        "type": "Mesh",
+        "parent": "shelf_home_a",
+        "drawable": true,
+        "chain": "shelf_home_a001<shelf_home_a<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_a001_1",
+        "type": "Mesh",
+        "parent": "shelf_home_a",
+        "drawable": true,
+        "chain": "shelf_home_a001_1<shelf_home_a<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_a001_2",
+        "type": "Mesh",
+        "parent": "shelf_home_a",
+        "drawable": true,
+        "chain": "shelf_home_a001_2<shelf_home_a<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_a001_3",
+        "type": "Mesh",
+        "parent": "shelf_home_a",
+        "drawable": true,
+        "chain": "shelf_home_a001_3<shelf_home_a<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_a001_4",
+        "type": "Mesh",
+        "parent": "shelf_home_a",
+        "drawable": true,
+        "chain": "shelf_home_a001_4<shelf_home_a<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_a001_5",
+        "type": "Mesh",
+        "parent": "shelf_home_a",
+        "drawable": true,
+        "chain": "shelf_home_a001_5<shelf_home_a<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_a001_7",
+        "type": "Mesh",
+        "parent": "shelf_home_a",
+        "drawable": true,
+        "chain": "shelf_home_a001_7<shelf_home_a<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_b001",
+        "type": "Mesh",
+        "parent": "shelf_home_b",
+        "drawable": true,
+        "chain": "shelf_home_b001<shelf_home_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_b001_1",
+        "type": "Mesh",
+        "parent": "shelf_home_b",
+        "drawable": true,
+        "chain": "shelf_home_b001_1<shelf_home_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_b001_2",
+        "type": "Mesh",
+        "parent": "shelf_home_b",
+        "drawable": true,
+        "chain": "shelf_home_b001_2<shelf_home_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_b001_3",
+        "type": "Mesh",
+        "parent": "shelf_home_b",
+        "drawable": true,
+        "chain": "shelf_home_b001_3<shelf_home_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_b001_4",
+        "type": "Mesh",
+        "parent": "shelf_home_b",
+        "drawable": true,
+        "chain": "shelf_home_b001_4<shelf_home_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_b001_5",
+        "type": "Mesh",
+        "parent": "shelf_home_b",
+        "drawable": true,
+        "chain": "shelf_home_b001_5<shelf_home_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_b001_6",
+        "type": "Mesh",
+        "parent": "shelf_home_b",
+        "drawable": true,
+        "chain": "shelf_home_b001_6<shelf_home_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_b001_7",
+        "type": "Mesh",
+        "parent": "shelf_home_b",
+        "drawable": true,
+        "chain": "shelf_home_b001_7<shelf_home_b<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_c001",
+        "type": "Mesh",
+        "parent": "shelf_home_c",
+        "drawable": true,
+        "chain": "shelf_home_c001<shelf_home_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_c001_1",
+        "type": "Mesh",
+        "parent": "shelf_home_c",
+        "drawable": true,
+        "chain": "shelf_home_c001_1<shelf_home_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_c001_2",
+        "type": "Mesh",
+        "parent": "shelf_home_c",
+        "drawable": true,
+        "chain": "shelf_home_c001_2<shelf_home_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_c001_3",
+        "type": "Mesh",
+        "parent": "shelf_home_c",
+        "drawable": true,
+        "chain": "shelf_home_c001_3<shelf_home_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_c001_4",
+        "type": "Mesh",
+        "parent": "shelf_home_c",
+        "drawable": true,
+        "chain": "shelf_home_c001_4<shelf_home_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_c001_5",
+        "type": "Mesh",
+        "parent": "shelf_home_c",
+        "drawable": true,
+        "chain": "shelf_home_c001_5<shelf_home_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_c001_6",
+        "type": "Mesh",
+        "parent": "shelf_home_c",
+        "drawable": true,
+        "chain": "shelf_home_c001_6<shelf_home_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_home_c001_7",
+        "type": "Mesh",
+        "parent": "shelf_home_c",
+        "drawable": true,
+        "chain": "shelf_home_c001_7<shelf_home_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_awning_1001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_awning_1001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_awning_2001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_awning_2001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_awning_3001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_awning_3001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_stalls001",
+        "type": "Mesh",
+        "parent": "shelf_stalls",
+        "drawable": true,
+        "chain": "shelf_stalls001<shelf_stalls<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_stalls001_1",
+        "type": "Mesh",
+        "parent": "shelf_stalls",
+        "drawable": true,
+        "chain": "shelf_stalls001_1<shelf_stalls<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_paving",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_paving<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_stair_underworks",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_stair_underworks<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_bunting",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_bunting<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_bunting_lines",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_bunting_lines<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_0001",
+        "type": "Mesh",
+        "parent": "shelf_lantern_0",
+        "drawable": true,
+        "chain": "shelf_lantern_0001<shelf_lantern_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_0001_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_0",
+        "drawable": true,
+        "chain": "shelf_lantern_0001_1<shelf_lantern_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_1001",
+        "type": "Mesh",
+        "parent": "shelf_lantern_1",
+        "drawable": true,
+        "chain": "shelf_lantern_1001<shelf_lantern_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_1001_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_1",
+        "drawable": true,
+        "chain": "shelf_lantern_1001_1<shelf_lantern_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_2001",
+        "type": "Mesh",
+        "parent": "shelf_lantern_2",
+        "drawable": true,
+        "chain": "shelf_lantern_2001<shelf_lantern_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_2001_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_2",
+        "drawable": true,
+        "chain": "shelf_lantern_2001_1<shelf_lantern_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_3001",
+        "type": "Mesh",
+        "parent": "shelf_lantern_3",
+        "drawable": true,
+        "chain": "shelf_lantern_3001<shelf_lantern_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_3001_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_3",
+        "drawable": true,
+        "chain": "shelf_lantern_3001_1<shelf_lantern_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_4001",
+        "type": "Mesh",
+        "parent": "shelf_lantern_4",
+        "drawable": true,
+        "chain": "shelf_lantern_4001<shelf_lantern_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_4001_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_4",
+        "drawable": true,
+        "chain": "shelf_lantern_4001_1<shelf_lantern_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_5001",
+        "type": "Mesh",
+        "parent": "shelf_lantern_5",
+        "drawable": true,
+        "chain": "shelf_lantern_5001<shelf_lantern_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_5001_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_5",
+        "drawable": true,
+        "chain": "shelf_lantern_5001_1<shelf_lantern_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_6_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_6",
+        "drawable": true,
+        "chain": "shelf_lantern_6_1<shelf_lantern_6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_6_2",
+        "type": "Mesh",
+        "parent": "shelf_lantern_6",
+        "drawable": true,
+        "chain": "shelf_lantern_6_2<shelf_lantern_6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_hang_7001",
+        "type": "Mesh",
+        "parent": "shelf_lantern_hang_7",
+        "drawable": true,
+        "chain": "shelf_lantern_hang_7001<shelf_lantern_hang_7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_hang_7001_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_hang_7",
+        "drawable": true,
+        "chain": "shelf_lantern_hang_7001_1<shelf_lantern_hang_7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_hang_8_1",
+        "type": "Mesh",
+        "parent": "shelf_lantern_hang_8",
+        "drawable": true,
+        "chain": "shelf_lantern_hang_8_1<shelf_lantern_hang_8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_hang_8_2",
+        "type": "Mesh",
+        "parent": "shelf_lantern_hang_8",
+        "drawable": true,
+        "chain": "shelf_lantern_hang_8_2<shelf_lantern_hang_8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_lantern_brackets",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_lantern_brackets<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_parapet001",
+        "type": "Mesh",
+        "parent": "shelf_parapet",
+        "drawable": true,
+        "chain": "shelf_parapet001<shelf_parapet<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_parapet001_1",
+        "type": "Mesh",
+        "parent": "shelf_parapet",
+        "drawable": true,
+        "chain": "shelf_parapet001_1<shelf_parapet<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_parapet001_2",
+        "type": "Mesh",
+        "parent": "shelf_parapet",
+        "drawable": true,
+        "chain": "shelf_parapet001_2<shelf_parapet<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_cliffface",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "shelf_cliffface<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_clutter001",
+        "type": "Mesh",
+        "parent": "shelf_clutter",
+        "drawable": true,
+        "chain": "shelf_clutter001<shelf_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_clutter001_1",
+        "type": "Mesh",
+        "parent": "shelf_clutter",
+        "drawable": true,
+        "chain": "shelf_clutter001_1<shelf_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_clutter001_2",
+        "type": "Mesh",
+        "parent": "shelf_clutter",
+        "drawable": true,
+        "chain": "shelf_clutter001_2<shelf_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_clutter001_3",
+        "type": "Mesh",
+        "parent": "shelf_clutter",
+        "drawable": true,
+        "chain": "shelf_clutter001_3<shelf_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_clutter001_4",
+        "type": "Mesh",
+        "parent": "shelf_clutter",
+        "drawable": true,
+        "chain": "shelf_clutter001_4<shelf_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "shelf_clutter001_5",
+        "type": "Mesh",
+        "parent": "shelf_clutter",
+        "drawable": true,
+        "chain": "shelf_clutter001_5<shelf_clutter<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_ground_1",
+        "type": "Mesh",
+        "parent": "qm_ground",
+        "drawable": true,
+        "chain": "qm_ground_1<qm_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_ground_2",
+        "type": "Mesh",
+        "parent": "qm_ground",
+        "drawable": true,
+        "chain": "qm_ground_2<qm_ground<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cliffface",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "qm_cliffface<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_revetment_1",
+        "type": "Mesh",
+        "parent": "qm_revetment",
+        "drawable": true,
+        "chain": "qm_revetment_1<qm_revetment<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_revetment_2",
+        "type": "Mesh",
+        "parent": "qm_revetment",
+        "drawable": true,
+        "chain": "qm_revetment_2<qm_revetment<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_paving",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "qm_paving<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stair_underworks",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "qm_stair_underworks<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_1",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_1<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_2",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_2<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_3",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_3<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_4",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_4<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_5",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_5<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_6",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_6<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_7",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_7<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_9",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_9<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_10",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_10<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_cookhouse_11",
+        "type": "Mesh",
+        "parent": "qm_cookhouse",
+        "drawable": true,
+        "chain": "qm_cookhouse_11<qm_cookhouse<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_notice_board_1",
+        "type": "Mesh",
+        "parent": "qm_notice_board",
+        "drawable": true,
+        "chain": "qm_notice_board_1<qm_notice_board<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_notice_board_2",
+        "type": "Mesh",
+        "parent": "qm_notice_board",
+        "drawable": true,
+        "chain": "qm_notice_board_2<qm_notice_board<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_notice_board_3",
+        "type": "Mesh",
+        "parent": "qm_notice_board",
+        "drawable": true,
+        "chain": "qm_notice_board_3<qm_notice_board<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_notice_board_4",
+        "type": "Mesh",
+        "parent": "qm_notice_board",
+        "drawable": true,
+        "chain": "qm_notice_board_4<qm_notice_board<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_notice_board_5",
+        "type": "Mesh",
+        "parent": "qm_notice_board",
+        "drawable": true,
+        "chain": "qm_notice_board_5<qm_notice_board<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_notice_board_6",
+        "type": "Mesh",
+        "parent": "qm_notice_board",
+        "drawable": true,
+        "chain": "qm_notice_board_6<qm_notice_board<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_notice_board_7",
+        "type": "Mesh",
+        "parent": "qm_notice_board",
+        "drawable": true,
+        "chain": "qm_notice_board_7<qm_notice_board<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stairhead_1",
+        "type": "Mesh",
+        "parent": "qm_stairhead",
+        "drawable": true,
+        "chain": "qm_stairhead_1<qm_stairhead<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stairhead_2",
+        "type": "Mesh",
+        "parent": "qm_stairhead",
+        "drawable": true,
+        "chain": "qm_stairhead_2<qm_stairhead<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stairhead_3",
+        "type": "Mesh",
+        "parent": "qm_stairhead",
+        "drawable": true,
+        "chain": "qm_stairhead_3<qm_stairhead<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stairhead_4",
+        "type": "Mesh",
+        "parent": "qm_stairhead",
+        "drawable": true,
+        "chain": "qm_stairhead_4<qm_stairhead<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_rail_1",
+        "type": "Mesh",
+        "parent": "qm_rail",
+        "drawable": true,
+        "chain": "qm_rail_1<qm_rail<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_rail_2",
+        "type": "Mesh",
+        "parent": "qm_rail",
+        "drawable": true,
+        "chain": "qm_rail_2<qm_rail<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_0_1",
+        "type": "Mesh",
+        "parent": "qm_lantern_0",
+        "drawable": true,
+        "chain": "qm_lantern_0_1<qm_lantern_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_0_2",
+        "type": "Mesh",
+        "parent": "qm_lantern_0",
+        "drawable": true,
+        "chain": "qm_lantern_0_2<qm_lantern_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_2_1",
+        "type": "Mesh",
+        "parent": "qm_lantern_2",
+        "drawable": true,
+        "chain": "qm_lantern_2_1<qm_lantern_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_2_2",
+        "type": "Mesh",
+        "parent": "qm_lantern_2",
+        "drawable": true,
+        "chain": "qm_lantern_2_2<qm_lantern_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_3_1",
+        "type": "Mesh",
+        "parent": "qm_lantern_3",
+        "drawable": true,
+        "chain": "qm_lantern_3_1<qm_lantern_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_3_2",
+        "type": "Mesh",
+        "parent": "qm_lantern_3",
+        "drawable": true,
+        "chain": "qm_lantern_3_2<qm_lantern_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_4_1",
+        "type": "Mesh",
+        "parent": "qm_lantern_4",
+        "drawable": true,
+        "chain": "qm_lantern_4_1<qm_lantern_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_4_2",
+        "type": "Mesh",
+        "parent": "qm_lantern_4",
+        "drawable": true,
+        "chain": "qm_lantern_4_2<qm_lantern_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_5_1",
+        "type": "Mesh",
+        "parent": "qm_lantern_5",
+        "drawable": true,
+        "chain": "qm_lantern_5_1<qm_lantern_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_5_2",
+        "type": "Mesh",
+        "parent": "qm_lantern_5",
+        "drawable": true,
+        "chain": "qm_lantern_5_2<qm_lantern_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_6_1",
+        "type": "Mesh",
+        "parent": "qm_lantern_6",
+        "drawable": true,
+        "chain": "qm_lantern_6_1<qm_lantern_6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_6_2",
+        "type": "Mesh",
+        "parent": "qm_lantern_6",
+        "drawable": true,
+        "chain": "qm_lantern_6_2<qm_lantern_6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_lantern_brackets",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "qm_lantern_brackets<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_planking",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "qm_planking<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_deck_frame",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "qm_deck_frame<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_2_1",
+        "type": "Mesh",
+        "parent": "qm_stall_2",
+        "drawable": true,
+        "chain": "qm_stall_2_1<qm_stall_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_2_2",
+        "type": "Mesh",
+        "parent": "qm_stall_2",
+        "drawable": true,
+        "chain": "qm_stall_2_2<qm_stall_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_2_3",
+        "type": "Mesh",
+        "parent": "qm_stall_2",
+        "drawable": true,
+        "chain": "qm_stall_2_3<qm_stall_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_2_4",
+        "type": "Mesh",
+        "parent": "qm_stall_2",
+        "drawable": true,
+        "chain": "qm_stall_2_4<qm_stall_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_3_1",
+        "type": "Mesh",
+        "parent": "qm_stall_3",
+        "drawable": true,
+        "chain": "qm_stall_3_1<qm_stall_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_3_2",
+        "type": "Mesh",
+        "parent": "qm_stall_3",
+        "drawable": true,
+        "chain": "qm_stall_3_2<qm_stall_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_awning_1",
+        "type": "Mesh",
+        "parent": "qm_stall_3",
+        "drawable": true,
+        "chain": "qm_awning_1<qm_stall_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_4_1",
+        "type": "Mesh",
+        "parent": "qm_stall_4",
+        "drawable": true,
+        "chain": "qm_stall_4_1<qm_stall_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_4_2",
+        "type": "Mesh",
+        "parent": "qm_stall_4",
+        "drawable": true,
+        "chain": "qm_stall_4_2<qm_stall_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_4_3",
+        "type": "Mesh",
+        "parent": "qm_stall_4",
+        "drawable": true,
+        "chain": "qm_stall_4_3<qm_stall_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_stall_4_4",
+        "type": "Mesh",
+        "parent": "qm_stall_4",
+        "drawable": true,
+        "chain": "qm_stall_4_4<qm_stall_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_awning_2",
+        "type": "Mesh",
+        "parent": "qm_stall_4",
+        "drawable": true,
+        "chain": "qm_awning_2<qm_stall_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_fish_slab_1",
+        "type": "Mesh",
+        "parent": "qm_fish_slab",
+        "drawable": true,
+        "chain": "qm_fish_slab_1<qm_fish_slab<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_fish_slab_2",
+        "type": "Mesh",
+        "parent": "qm_fish_slab",
+        "drawable": true,
+        "chain": "qm_fish_slab_2<qm_fish_slab<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_fish_slab_3",
+        "type": "Mesh",
+        "parent": "qm_fish_slab",
+        "drawable": true,
+        "chain": "qm_fish_slab_3<qm_fish_slab<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_bunting",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "qm_bunting<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_bunting_lines",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "qm_bunting_lines<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_0001",
+        "type": "Mesh",
+        "parent": "qm_clutter_0",
+        "drawable": true,
+        "chain": "qm_clutter_0001<qm_clutter_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_0001_1",
+        "type": "Mesh",
+        "parent": "qm_clutter_0",
+        "drawable": true,
+        "chain": "qm_clutter_0001_1<qm_clutter_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_0001_2",
+        "type": "Mesh",
+        "parent": "qm_clutter_0",
+        "drawable": true,
+        "chain": "qm_clutter_0001_2<qm_clutter_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_0001_3",
+        "type": "Mesh",
+        "parent": "qm_clutter_0",
+        "drawable": true,
+        "chain": "qm_clutter_0001_3<qm_clutter_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_0001_4",
+        "type": "Mesh",
+        "parent": "qm_clutter_0",
+        "drawable": true,
+        "chain": "qm_clutter_0001_4<qm_clutter_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_0001_5",
+        "type": "Mesh",
+        "parent": "qm_clutter_0",
+        "drawable": true,
+        "chain": "qm_clutter_0001_5<qm_clutter_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_1001",
+        "type": "Mesh",
+        "parent": "qm_clutter_1",
+        "drawable": true,
+        "chain": "qm_clutter_1001<qm_clutter_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_1001_1",
+        "type": "Mesh",
+        "parent": "qm_clutter_1",
+        "drawable": true,
+        "chain": "qm_clutter_1001_1<qm_clutter_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_1001_2",
+        "type": "Mesh",
+        "parent": "qm_clutter_1",
+        "drawable": true,
+        "chain": "qm_clutter_1001_2<qm_clutter_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_1001_3",
+        "type": "Mesh",
+        "parent": "qm_clutter_1",
+        "drawable": true,
+        "chain": "qm_clutter_1001_3<qm_clutter_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_4001",
+        "type": "Mesh",
+        "parent": "qm_clutter_4",
+        "drawable": true,
+        "chain": "qm_clutter_4001<qm_clutter_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_4001_1",
+        "type": "Mesh",
+        "parent": "qm_clutter_4",
+        "drawable": true,
+        "chain": "qm_clutter_4001_1<qm_clutter_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_4001_3",
+        "type": "Mesh",
+        "parent": "qm_clutter_4",
+        "drawable": true,
+        "chain": "qm_clutter_4001_3<qm_clutter_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_4001_4",
+        "type": "Mesh",
+        "parent": "qm_clutter_4",
+        "drawable": true,
+        "chain": "qm_clutter_4001_4<qm_clutter_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "qm_clutter_4001_5",
+        "type": "Mesh",
+        "parent": "qm_clutter_4",
+        "drawable": true,
+        "chain": "qm_clutter_4001_5<qm_clutter_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_5",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_10",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_12",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_12<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_17",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_17<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_20",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_20<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_32",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_32<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_36",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_36<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_43",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_43<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_46",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_46<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_tuft_52",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_tuft_52<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_3",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_3<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_4",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_6",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_7",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_7<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_8",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_9",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_9<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_11",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_11<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_12",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_12<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_13",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_13<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_14",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_14<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_15",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_15<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_16",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_16<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_18",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_18<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_19",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_19<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_20",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_20<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_21",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_21<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_22",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_22<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_23",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_23<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_24",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_24<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_25",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_25<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_26",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_26<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_27",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_27<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_28",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_28<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_29",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_29<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_30",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_30<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_31",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_31<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_32",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_32<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_33",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_33<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_34",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_34<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_35",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_35<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_36",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_36<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_37",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_37<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_39",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_39<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_40",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_40<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_41",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_41<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_42",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_42<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_43",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_43<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_44",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_44<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_45",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_45<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_46",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_46<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_47",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_47<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_12001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_12001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_15001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_15001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_16001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_16001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_19001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_19001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_23001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_23001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_fern_25001",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "veg_qm_fern_25001<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_0001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_0",
+        "drawable": true,
+        "chain": "veg_qm_creeper_0001<veg_qm_creeper_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_0001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_0",
+        "drawable": true,
+        "chain": "veg_qm_creeper_0001_1<veg_qm_creeper_0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_1001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_1",
+        "drawable": true,
+        "chain": "veg_qm_creeper_1001<veg_qm_creeper_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_1001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_1",
+        "drawable": true,
+        "chain": "veg_qm_creeper_1001_1<veg_qm_creeper_1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_2001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_2",
+        "drawable": true,
+        "chain": "veg_qm_creeper_2001<veg_qm_creeper_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_2001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_2",
+        "drawable": true,
+        "chain": "veg_qm_creeper_2001_1<veg_qm_creeper_2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_4001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_4",
+        "drawable": true,
+        "chain": "veg_qm_creeper_4001<veg_qm_creeper_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_4001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_4",
+        "drawable": true,
+        "chain": "veg_qm_creeper_4001_1<veg_qm_creeper_4<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_5001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_5",
+        "drawable": true,
+        "chain": "veg_qm_creeper_5001<veg_qm_creeper_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_5001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_5",
+        "drawable": true,
+        "chain": "veg_qm_creeper_5001_1<veg_qm_creeper_5<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_6001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_6",
+        "drawable": true,
+        "chain": "veg_qm_creeper_6001<veg_qm_creeper_6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_6001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_6",
+        "drawable": true,
+        "chain": "veg_qm_creeper_6001_1<veg_qm_creeper_6<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_8001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_8",
+        "drawable": true,
+        "chain": "veg_qm_creeper_8001<veg_qm_creeper_8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_8001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_8",
+        "drawable": true,
+        "chain": "veg_qm_creeper_8001_1<veg_qm_creeper_8<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_10001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_10",
+        "drawable": true,
+        "chain": "veg_qm_creeper_10001<veg_qm_creeper_10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_10001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_10",
+        "drawable": true,
+        "chain": "veg_qm_creeper_10001_1<veg_qm_creeper_10<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_11001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_11",
+        "drawable": true,
+        "chain": "veg_qm_creeper_11001<veg_qm_creeper_11<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_11001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_11",
+        "drawable": true,
+        "chain": "veg_qm_creeper_11001_1<veg_qm_creeper_11<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_13001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_13",
+        "drawable": true,
+        "chain": "veg_qm_creeper_13001<veg_qm_creeper_13<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_13001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_13",
+        "drawable": true,
+        "chain": "veg_qm_creeper_13001_1<veg_qm_creeper_13<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_14001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_14",
+        "drawable": true,
+        "chain": "veg_qm_creeper_14001<veg_qm_creeper_14<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_14001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_14",
+        "drawable": true,
+        "chain": "veg_qm_creeper_14001_1<veg_qm_creeper_14<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_15001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_15",
+        "drawable": true,
+        "chain": "veg_qm_creeper_15001<veg_qm_creeper_15<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_15001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_15",
+        "drawable": true,
+        "chain": "veg_qm_creeper_15001_1<veg_qm_creeper_15<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_16001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_16",
+        "drawable": true,
+        "chain": "veg_qm_creeper_16001<veg_qm_creeper_16<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_16001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_16",
+        "drawable": true,
+        "chain": "veg_qm_creeper_16001_1<veg_qm_creeper_16<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_17001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_17",
+        "drawable": true,
+        "chain": "veg_qm_creeper_17001<veg_qm_creeper_17<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_17001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_17",
+        "drawable": true,
+        "chain": "veg_qm_creeper_17001_1<veg_qm_creeper_17<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_19001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_19",
+        "drawable": true,
+        "chain": "veg_qm_creeper_19001<veg_qm_creeper_19<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_19001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_19",
+        "drawable": true,
+        "chain": "veg_qm_creeper_19001_1<veg_qm_creeper_19<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_20001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_20",
+        "drawable": true,
+        "chain": "veg_qm_creeper_20001<veg_qm_creeper_20<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_20001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_20",
+        "drawable": true,
+        "chain": "veg_qm_creeper_20001_1<veg_qm_creeper_20<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_21001",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_21",
+        "drawable": true,
+        "chain": "veg_qm_creeper_21001<veg_qm_creeper_21<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "veg_qm_creeper_21001_1",
+        "type": "Mesh",
+        "parent": "veg_qm_creeper_21",
+        "drawable": true,
+        "chain": "veg_qm_creeper_21001_1<veg_qm_creeper_21<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G4_arch_banner_1",
+        "type": "Mesh",
+        "parent": "t2c_G4_arch_banner",
+        "drawable": true,
+        "chain": "t2c_G4_arch_banner_1<t2c_G4_arch_banner<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G4_arch_banner_2",
+        "type": "Mesh",
+        "parent": "t2c_G4_arch_banner",
+        "drawable": true,
+        "chain": "t2c_G4_arch_banner_2<t2c_G4_arch_banner<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G7_bunting_gate2_1",
+        "type": "Mesh",
+        "parent": "t2c_G7_bunting_gate2",
+        "drawable": true,
+        "chain": "t2c_G7_bunting_gate2_1<t2c_G7_bunting_gate2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G7_bunting_gate2_2",
+        "type": "Mesh",
+        "parent": "t2c_G7_bunting_gate2",
+        "drawable": true,
+        "chain": "t2c_G7_bunting_gate2_2<t2c_G7_bunting_gate2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G7_bunting_gate2_3",
+        "type": "Mesh",
+        "parent": "t2c_G7_bunting_gate2",
+        "drawable": true,
+        "chain": "t2c_G7_bunting_gate2_3<t2c_G7_bunting_gate2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G7_bunting_gate2_4",
+        "type": "Mesh",
+        "parent": "t2c_G7_bunting_gate2",
+        "drawable": true,
+        "chain": "t2c_G7_bunting_gate2_4<t2c_G7_bunting_gate2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G7_bunting_gate2_5",
+        "type": "Mesh",
+        "parent": "t2c_G7_bunting_gate2",
+        "drawable": true,
+        "chain": "t2c_G7_bunting_gate2_5<t2c_G7_bunting_gate2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G7_bunting_gate2_6",
+        "type": "Mesh",
+        "parent": "t2c_G7_bunting_gate2",
+        "drawable": true,
+        "chain": "t2c_G7_bunting_gate2_6<t2c_G7_bunting_gate2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G8_cliff_baskets_1",
+        "type": "Mesh",
+        "parent": "t2c_G8_cliff_baskets",
+        "drawable": true,
+        "chain": "t2c_G8_cliff_baskets_1<t2c_G8_cliff_baskets<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G8_cliff_baskets_2",
+        "type": "Mesh",
+        "parent": "t2c_G8_cliff_baskets",
+        "drawable": true,
+        "chain": "t2c_G8_cliff_baskets_2<t2c_G8_cliff_baskets<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G8_cliff_baskets_3",
+        "type": "Mesh",
+        "parent": "t2c_G8_cliff_baskets",
+        "drawable": true,
+        "chain": "t2c_G8_cliff_baskets_3<t2c_G8_cliff_baskets<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_GB3_cliff_banner_c_1",
+        "type": "Mesh",
+        "parent": "t2c_GB3_cliff_banner_c",
+        "drawable": true,
+        "chain": "t2c_GB3_cliff_banner_c_1<t2c_GB3_cliff_banner_c<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "t2c_G3_awning_tollyard_2",
+        "type": "Mesh",
+        "parent": "t2c_G3_awning_tollyard",
+        "drawable": true,
+        "chain": "t2c_G3_awning_tollyard_2<t2c_G3_awning_tollyard<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "ls_treads",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "ls_treads<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "ls_rail",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "ls_rail<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gs_treads",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gs_treads<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gs_walls",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "gs_walls<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gs_rail001",
+        "type": "Mesh",
+        "parent": "gs_rail",
+        "drawable": true,
+        "chain": "gs_rail001<gs_rail<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "gs_rail001_1",
+        "type": "Mesh",
+        "parent": "gs_rail",
+        "drawable": true,
+        "chain": "gs_rail001_1<gs_rail<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_panel",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_panel<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_rail0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_rail0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_rail1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_rail1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_handle",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_handle<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_pilasterl",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_pilasterl<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_pilasterr",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_pilasterr<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_head",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_head<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_lintel",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_lintel<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_pane_l",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_pane_l<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_panebar_l",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_panebar_l<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_pane_r",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_pane_r<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_panebar_r",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_panebar_r<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_inn_step",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_inn_step<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_panel",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_panel<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_rail0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_rail0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_rail1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_rail1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_handle",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_handle<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_pilasterl",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_pilasterl<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_pilasterr",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_pilasterr<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_head",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_head<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_pane_l",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_pane_l<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_panebar_l",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_panebar_l<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_pane_r",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_pane_r<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_panebar_r",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_panebar_r<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_item_step",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_item_step<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_panel",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_panel<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_rail0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_rail0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_rail1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_rail1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_handle",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_handle<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_pilasterl",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_pilasterl<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_pilasterr",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_pilasterr<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_head",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_head<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_pane_l",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_pane_l<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_panebar_l",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_panebar_l<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_pane_r",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_pane_r<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_panebar_r",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_panebar_r<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_weapon_step",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_weapon_step<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_panel",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_panel<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_rail0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_rail0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_rail1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_rail1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_handle",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_handle<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_pilasterl",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_pilasterl<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_pilasterr",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_pilasterr<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_head",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_head<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_pane_l",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_pane_l<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_panebar_l",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_panebar_l<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_pane_r",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_pane_r<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_panebar_r",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_panebar_r<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_armor_step",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_armor_step<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_panel",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_panel<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_rail0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_rail0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_rail1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_rail1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_handle",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_handle<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_pilasterl",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_pilasterl<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_pilasterr",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_pilasterr<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_head",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_head<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_transom",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_transom<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_muntin0",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_muntin0<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_muntin1",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_muntin1<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_muntin2",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_muntin2<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_lintel",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_lintel<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "df_cookhouse_step",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "df_cookhouse_step<Scene<Scene",
+        "n": 1
+      },
+      {
+        "gt": "PlaneGeometry",
+        "name": "(anon)",
+        "type": "Mesh",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "Mesh<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "tripo_node_fded39be-2623-4ad4-a05e-1dde40a519b1",
+        "type": "SkinnedMesh",
+        "parent": "Armature",
+        "drawable": true,
+        "chain": "tripo_node_fded39be-2623-4ad4-a05e-1dde40a519b1<Armature<Scene<Group",
+        "n": 3
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "tripo_node_4186c5a3-e4fc-4072-b7cf-65f086943b5c",
+        "type": "SkinnedMesh",
+        "parent": "Armature",
+        "drawable": true,
+        "chain": "tripo_node_4186c5a3-e4fc-4072-b7cf-65f086943b5c<Armature<Scene<Group",
+        "n": 3
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "tripo_node_5ef6b7a3-b906-47b7-8b77-a5ea60e60a06",
+        "type": "SkinnedMesh",
+        "parent": "Armature",
+        "drawable": true,
+        "chain": "tripo_node_5ef6b7a3-b906-47b7-8b77-a5ea60e60a06<Armature<Scene<Group",
+        "n": 6
+      },
+      {
+        "gt": "PlaneGeometry",
+        "name": "(anon)",
+        "type": "Mesh",
+        "parent": "Group",
+        "drawable": true,
+        "chain": "Mesh<Group<npcs<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "tripo_node_08c26aa2-fe0c-4fbb-a5c0-579fd7345943",
+        "type": "SkinnedMesh",
+        "parent": "Armature",
+        "drawable": true,
+        "chain": "tripo_node_08c26aa2-fe0c-4fbb-a5c0-579fd7345943<Armature<Scene<Group",
+        "n": 2
+      },
+      {
+        "gt": "PlaneGeometry",
+        "name": "(anon)",
+        "type": "Mesh",
+        "parent": "Group",
+        "drawable": true,
+        "chain": "Mesh<Group<npcs<Scene",
+        "n": 1
+      },
+      {
+        "gt": "PlaneGeometry",
+        "name": "(anon)",
+        "type": "Mesh",
+        "parent": "Group",
+        "drawable": true,
+        "chain": "Mesh<Group<npcs<Scene",
+        "n": 1
+      },
+      {
+        "gt": "BufferGeometry",
+        "name": "amb_glint",
+        "type": "Points",
+        "parent": "Scene",
+        "drawable": true,
+        "chain": "amb_glint<Scene",
+        "n": 1
+      }
+    ]
+  }
+}

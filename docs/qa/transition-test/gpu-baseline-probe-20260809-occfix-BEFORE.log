@@ -1,0 +1,41 @@
+
+== GAUNTLET (transition_test's own itinerary, 24 doors)
+  door 0    del-inn-int  -           geo=  246 tex= 18 ring=true  nHits=  2 first=hanging_15             pos=-3.4,-2.72
+  door 1    del-cine     shelf-west  geo=  624 tex= 38 ring=false nHits=  0 first=-                      pos=28.48,-7.52
+  door 2    del-item-int -           geo=  161 tex= 13 ring=false nHits=  0 first=-                      pos=-2.5,-2.28
+  door 3    del-cine     shelf-west  geo=  624 tex= 38 ring=false nHits=  0 first=-                      pos=27.6,-7.38
+  door 4    ow-valley    -           geo=   80 tex= 69 ring=false nHits=  0 first=-                      pos=41.29,-33.83
+  door 5    del-cine     gate        geo= 2075 tex= 39 ring=false nHits=  0 first=-                      pos=4.89,-6.48
+  door 6    del-weapon-int -           geo=  193 tex= 13 ring=false nHits=  0 first=-                      pos=-2.5,-2.28
+  door 7    del-cine     shelf-east  geo= 1004 tex= 38 ring=false nHits=  0 first=-                      pos=40.3,-6.97
+  door 8    del-armor-int -           geo=  174 tex= 13 ring=false nHits=  0 first=-                      pos=-2.5,-2.28
+  door 9    del-cine     shelf-east  geo= 1004 tex= 38 ring=false nHits=  0 first=-                      pos=49.69,-8.64
+  door 10   del-cookhouse-int -           geo=  297 tex= 21 ring=true  nHits=  1 first=beams_1                pos=3,-2.58
+  door 11   del-cine     quay-west   geo=  798 tex= 38 ring=false nHits=  0 first=-                      pos=42.8,-16.8
+  door 12   del-cottage-int -           geo= 1035 tex=  8 ring=false nHits=  0 first=-                      pos=1.9,-6.38
+  door 13   del-cine     cottage     geo=  367 tex= 38 ring=false nHits=  0 first=-                      pos=90.54,-19.97
+  door 14   ow-valley    -           geo=   80 tex= 69 ring=false nHits=  0 first=-                      pos=41.29,-33.83
+  door 15   del-cine     gate        geo= 2073 tex= 39 ring=false nHits=  0 first=-                      pos=4.89,-6.48
+  door 16   del-inn-int  -           geo=  246 tex= 18 ring=true  nHits=  2 first=hanging_15             pos=-3.4,-2.72
+  door 17   del-cine     shelf-west  geo=  622 tex= 38 ring=false nHits=  0 first=-                      pos=28.48,-7.52
+  door 18   del-item-int -           geo=  161 tex= 13 ring=false nHits=  0 first=-                      pos=-2.5,-2.28
+  door 19   del-cine     shelf-west  geo=  624 tex= 38 ring=false nHits=  0 first=-                      pos=27.6,-7.38
+  door 20   ow-valley    -           geo=   80 tex= 69 ring=false nHits=  0 first=-                      pos=41.29,-33.83
+  door 21   del-cine     gate        geo= 2075 tex= 39 ring=false nHits=  0 first=-                      pos=4.89,-6.48
+  door 22   del-cottage-int -           geo= 1035 tex=  8 ring=false nHits=  0 first=-                      pos=1.9,-6.38
+  door 23   del-cine     cottage     geo=  367 tex= 38 ring=false nHits=  0 first=-                      pos=90.54,-19.97
+
+== BATTLE MID-TOWN, THEN A DOOR (transition_test's own leg)
+  {"zone":"meadow","group":["reed-nibbler"],"result":"victory"}
+  postfight del-cine     cottage     geo=  367 tex= 38 ring=false nHits=  0 first=-                      pos=90.54,-19.97
+  ->inn     del-inn-int  -           geo=  246 tex= 18 ring=true  nHits=  2 first=hanging_15             pos=-3.4,-2.72
+  AFTER     del-cine     shelf-west  geo=  622 tex= 38 ring=false nHits=  0 first=-                      pos=28.48,-7.52
+
+  shelf-west baseline geo=624, after-battle geo=622 => DELTA -2  << not reproduced
+
+== RESIDENT SET, named by dispose-and-watch
+  scanned 2348 distinct geometries in the live graph; 613 were RESIDENT.
+  of those, 0 belong to an object that is NOT currently drawable:
+  resident geometry types: BufferGeometry:609 PlaneGeometry:4
+
+  wrote /private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/probe-BEFORE.json
