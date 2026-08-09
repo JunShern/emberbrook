@@ -478,6 +478,26 @@ git runs here, on branch `migration/3d-hybrid`.
   and good placement for a wide establishing shot is NOT proven to be good placement for a 27 mm
   two-shot. (`round` is not absent from play, as an earlier note implied — it fires at entry and
   settles back between actions; what was true is that the menu opens after the camera has left it.)
+  **AND THE NUMBER CORRECTED FOR THAT FRAME** (2026-08-09; 62/62 sites, both arms, 124 real
+  battles, all 124 frames looked at, sorted by eye against the round census's own rubric before
+  any metric was opened; `battle_decide --mode=census`, board §decide-census). The decide frame
+  reads **35.5% → 32.3% bad, good 14.5% → 30.6%**. Round and decide **agree 40/62 with ZERO
+  good↔bad reversals in either arm** — so the placement judgement TRANSFERS DIRECTIONALLY and we
+  were not optimising the wrong picture — but a third of sites sit in a different pile, and the
+  PRE-FIX bad rate was overstated by 13 points for the frame that matters. The sun refusal is
+  worth **−3.2 points of bad here, not −16.1**, and **"14 improved, 0 regressed" does not
+  survive the move: it is 11 improved / 1 REGRESSED** (s053, moved onto a lit pale canyon floor
+  where a cream wolf sits at the sandstone's own value). **SUN IS NOT CONTRAST** — the wider
+  round plate hid it. Axes on the decide frame: one-surface dominance HOLDS and strengthens
+  (sep 0.937, still the winner and still unshipped for want of an affordable proxy); **sun
+  exposure WEAKENS to 0.553 — the axis the shipped fix optimises is the one that transfers
+  least well**; sky is chance (0.055); `view.back`, what the solver already optimises, falls to
+  0.211; `edgeRGB` still runs BACKWARDS. Two rulers would not have been a comparison, so the
+  measurement library was moved verbatim into `tools/battle_place_lib.mjs` and both frames are
+  read by literally the same object.
+  **STILL UNMEASURED, AND IT IS THE NEXT HONEST GAP: the command menu is a DOM overlay
+  `snapshot()` CANNOT SEE.** Every frame in both censuses is judged without the box that covers
+  its lower band in play. Nobody has sorted what the player actually sees.
   Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
