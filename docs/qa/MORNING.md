@@ -1,3 +1,71 @@
+# UPDATE — 2026-08-09 evening (round 9, the cut-in cast, the sceptic audit, deploy 20)
+
+**LIVE: deploy 20, built from `d4b24031`, static_verify 29/0 local AND against the URL.** All ten of
+round 9's plates and four Maren portraits fetched off the wire and byte-matched. **AND PROVENANCE WAS
+PROVED, NOT ASSUMED** — a byte-match only says wire == local, so it was checked three ways: the git
+commit that last touched each file; cache arithmetic (237 plates, 214 from cache, **23 fresh encodes =
+exactly the 10 plates + 13 portraits**); and PIXEL EVIDENCE on the downloaded bytes — the portrait's
+alpha-edge green excess reads **p95 19.0 / 1.4% of edge px** live against **71.5 / 16.9%** pre-repair.
+A whole-image difference was INCONCLUSIVE for this and is recorded as such: **a global-mean ruler
+cannot see a rim.**
+
+**DELLHOLLOW ROUND 9 — and it refuted the target I ranked first, for the second round running.**
+The awning canvas's value was real (its MEDIAN sat above the p95 of every paved surface in town) but
+**the mechanism was over-EXPOSURE, not over-albedo**, and the control is what proved it: painted 16x
+darker than cream it STILL lands at the paving's own value. Shipped as albedo + specular. Judge:
+**"white" was in 3/3 naive passes in rounds 6, 7 AND 8 and is now said ZERO times.** Round 8's own
+premise had also expired with its own fix — it measured a 7-column canvas and shipped a 13-column one,
+so the dark stripe it said was off-frame is in the picture. Structural: deep-stairs' floating treads
+are **36 of 168 with no stringer**, caused by a builder that `continue`s with NO LOG LINE under a
+summary counting treads and never stringers; crossing's floating plank is a **4-vertex quad hanging
+0.55 m over water** because its own hull was refused for having "no clear mounting face on the moored
+barge" — **the barge was never there**. And **weave has no cave**: 78.1% of the rays in that box are
+autumn foliage rendering at literal L 0.0. Nine naive passes over four runs invented an architectural
+feature to explain a value. Ten plates rebaked from rendered frames, five refused with numbers.
+
+**THE CUT-IN CAST WENT 106 → 120 OF 122, AND EVERY STEP WAS A DIFFERENT DEFECT.**
+1. **The chroma hole is closed** (`chroma_rim`, board docs/qa/cutins/chroma/). The bar was DERIVED
+   from 51 plates whose defect is known pixel-for-pixel, and **every threshold below 64 is INVERTED** —
+   honest green paint outscores the defect and no bar exists down there. On the synthetic fringe the
+   old `halo` reads **−12.1**: the luminance gate is not blind, it is REASSURED.
+2. **Maren's 13 plates were a RE-MAT, not a re-draw** — the studio art is gitignored but PRESENT, so
+   "gitignored" must never again be read as "absent". Twelve of thirteen now read exactly zero.
+3. **The last fringe was the UN-PREMULTIPLY, not the despill.** Alpha is a NORMALISED DISTANCE whose
+   denominator is a local maximum, so solid paint in a dark notch reads 60-70% covered and a third of
+   the key is subtracted out of it. Proved with a 148-plate two-arm re-mat: alpha metrics identical
+   148/148, chroma moves on 6 and NEVER RISES.
+4. **The no-regression floor read one source of two** — `story.json` carries **217 `expr` keys to
+   dialogue.json's 82**, so the story layer is the LARGER consumer. Proven red-then-green.
+5. **Odessa: 2 generations, $0.078, clean on the first roll.** She came back full-length because
+   **alone in the cast her ratified `bust.png` is a full-length figure**. A `framing` override would
+   have passed her by DISARMING the gate; an `extra` clause fixed the drawing instead.
+
+**THE SCEPTIC AUDIT REFUTED ITS OWN PROMPT.** The inherited "refutes foliage occlusion at 39% vs 13%"
+is **true of its run and false of the corpus** — 25.5% vs 15.8%, p = 0.35, a **Simpson stratum** in
+which two towns run opposite ways and cancel. What generalises is the RHETORIC: **21 of 23 refutals
+argue from convention** ("standard cinematic framing") against 51/176 elsewhere, p = 8e-9, because the
+naive prompt literally says *"REFUTE if … is normal for the style"*. All 23 were put back on their
+plates: **every evidence-argued refutal was right; 15 of 21 convention-argued ones were WRONG.**
+**AND THE HEADLINE HYPOTHESIS DIED: the user's own CALIBRATION complaints are NOT treated worse
+(19.3% vs 19.0%, p = 0.92).** Census shipped REPORTED-NOT-GATED; the prompt fix is measured and
+UNSHIPPED because its own control moved on a repeat draw.
+
+**FOUR INSTRUMENT DEFECTS FIXED THIS EVENING**, each of which had been silently corrupting results:
+`BLOCKOUT_DEFAULT.emberbrook` was still `true`, so **two whole sweeps judged finished art under a "do
+not report placeholder materials" instruction**; five TRACKED triage rules carried no `town` key and
+so triaged BOTH towns (three instances of Emberbrook's largest defect were filed as a known Dellhollow
+issue); `scene_redteam` had **no `main` guard**, so importing it for one function ran a 64-call sweep;
+and `--rhetoric-census` printed a neat table of **ZEROES** for a mistyped stamp — a census that looks
+like a measurement and is a typo.
+
+**STILL WITH THE USER (none blocking):** `?arena=world` as default; fights relocating more often than
+they stay put; **tally's cut-ins** (his whole shipped set is off-spec on framing, grandfathered
+because that gate applies at promotion and never retroactively — a compositional reference fix plus 6
+re-rolls, ~$0.23, and nothing scripts him); and **mochi**, which is not an art call at all but a
+proposed split of a calibrated primary gate that two lanes have deliberately left alone.
+
+---
+
 # UPDATE — 2026-08-09 late (Dellhollow round 8, deploy 19, and a green suite that was held up by a coincidence)
 
 **LIVE: deploy 19, built from `2e8acf9a`, static_verify 29/0 BOTH locally and against the URL.**
