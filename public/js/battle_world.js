@@ -86,6 +86,8 @@
   // pose. It exists so the before/after board is ONE BUILD with one switch —
   // the same discipline the KO lane's `--noreact` A/B used.
   const BCAM_OFF = !!(Q && Q.get('bcam') === '0');
+  // `?btone=0` turns the tonal boom chooser off and leaves the geometric one.
+  const BTONE_OFF = !!(Q && Q.get('btone') === '0');
 
   if (!HAS_DOM) return;                       // node (battle_sim / encounter_sim): nothing at all
   if (!FLAG) {
@@ -236,6 +238,48 @@
                  push: { k: 0.88, ms: 900, ease: 'lin' } },
     },
   };
+
+  // ============ WHAT WAS TRIED FIRST, MEASURED, AND DELETED ==================
+  // AERIAL RE-ANCHOR (2026-08-09): play3d already ships an aerial-perspective
+  // pass whose ramp R11 deliberately anchors on the PLAYER (`dRef` = lens-to-
+  // character, `dNear` a 10 m offset past her). A battle is a different subject —
+  // a fight up to 13 m wide that may have relocated 13 m from the player — so the
+  // ramp was re-anchored onto the arena every frame, derived from the farthest
+  // combatant's own distance from the lens, with the cast exempt BY ARITHMETIC
+  // (t = 0 at every body) rather than by a `material.fog` list. Two uniform
+  // writes, no shader, restored on teardown.
+  // IT MEASURED ESSENTIALLY NULL AND IS GONE (docs/qa/battle-separation/sep-ab.json
+  // and sep-sweep.json, four sites plus a strength ladder): edgeRGB 21.14->21.41,
+  // 12.38->12.19, 13.36->12.12, 21.81->20.25 — two up, two down — against a
+  // clutter fall of 2-13%. At scale 6 and 3 (a far harder ramp than the overworld's
+  // 20) water read 13.59 -> 13.03 -> 12.66 and crag 21.34 -> 20.38 -> 20.23: the
+  // contrast never moved.
+  // THE REASON IS STRUCTURAL AND IT IS WORTH MORE THAN THE FEATURE: at three of the
+  // four sites the background a body actually fails against is TWO TO FOUR METRES
+  // BEHIND IT — a cliff face at water and crag, near grass at meadow — and no
+  // distance-keyed cue can separate a body from something it is nearly touching.
+  // Aerial perspective is a cue for the far band; the legibility problem is in the
+  // near one. Do not re-open this without first measuring how far the offending
+  // background actually is.
+
+  const TONE = {
+    on: true,                 // ?btone=0
+    res: [320, 180],          // the probe target; the ranking is a mean, not a detail
+    wClutter: 0.35,           // how much a busy background discounts a contrasty one
+    // A REFUSAL, NOT A PREFERENCE. The probe may only overrule the geometric
+    // solver when it beats it DECISIVELY — the winner's score must exceed the
+    // incumbent rung's by this fraction. MEASURED, and it is the difference
+    // between a treatment that helps one site and one that also hurts two:
+    // across four sites the boom axis is worth a factor of 3.4 at water and
+    // 10-20% at meadow/forest/crag, and inside that 10-20% band the probe's own
+    // ranking is not reliable enough to be worth acting on (it picked a
+    // different rung at forest and crag between two runs of the same build).
+    // A margin turns every one of those marginal calls into today's game.
+    margin: 0.35,
+    waitMs: 12000,            // give up waiting for models and keep the solver's pitch
+  };
+
+  function toneOn() { return !!(TONE.on && !BTONE_OFF); }
 
   // ============================ THE SOLVER ==================================
   // WHERE THE FIGHT STANDS. Given the player's position and a candidate camera
@@ -842,7 +886,9 @@
     //      reference eye, the degenerate aim) is measured from here.
     const A0 = { x: plan.basis.centre[0], y: plan.basis.centre[1], z: plan.basis.centre[2] };
     const baseYaw = (plan && plan.basis) ? plan.basis.yaw : O.yaw;
-    const basePitch = (plan && plan.basis && plan.basis.pitch != null) ? plan.basis.pitch : CFG.cam.pitch;
+    // NOT A CONST ANY MORE: the tonal probe re-picks the boom once the cast has
+    // arrived, and every shot in the table is solved RELATIVE to this number.
+    let basePitch = (plan && plan.basis && plan.basis.pitch != null) ? plan.basis.pitch : CFG.cam.pitch;
 
     // ======================= THE SHOT SOLVER ================================
     // Every pose is derived from the bodies the shot must show. Nothing here is
@@ -1581,6 +1627,196 @@
     // is already drawing every frame under the modal panel (its own phys() comment
     // says so). All this does is advance mixers/tweens, drive ORBIT, and hand
     // battle_turnbased the projection callback it needs.
+    // ================= THE BOOM, CHOSEN ON TONE (wave 4) =====================
+    // The meter's own subtraction, run inside the game at 320x180. See TONE.
+    let toneLive = { ok: false, why: 'waiting for the cast' }, toneDone = false;
+    // ---- SAY WHICH SPACE THE BYTES ARE IN, AND CONVERT ONCE ------------------
+    // r185 renders into a non-XR render target in the LINEAR working space
+    // whatever the texture declares, and this probe reads that target directly —
+    // so its bytes are LINEAR and the page's own OutputPass, which is what the
+    // player and the meter see, is not in the loop. Differencing linear bytes
+    // measures a dark site through a crushed transfer: MEASURED, and it is why
+    // the first build of this probe picked the WRONG boom at the forest (edgeRGB
+    // 12.88 -> 11.11 where the truth table's best rung was a third one).
+    // This is the one conversion the r185 rules ASK for — the pass that would
+    // have done it is absent, so exactly one explicit encode is applied here and
+    // nothing else in this file converts anything. It is NOT the double
+    // `convertSRGBToLinear` the notes warn about; that is a conversion applied on
+    // top of the renderer's own, and the renderer performed none.
+    // TONE MAPPING IS NOT APPLIED and that is the probe's stated approximation:
+    // it moves highlights, it is monotone, and this is a RANKING.
+    const _srgbLUT = (function () {
+      const t = new Uint8Array(256);
+      for (let i = 0; i < 256; i++) {
+        const c = i / 255;
+        const v = c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+        t[i] = Math.max(0, Math.min(255, Math.round(v * 255)));
+      }
+      return t;
+    })();
+    function castReady() {
+      for (const id of order) if (bodies[id] && bodies[id].tier === 'proxy') return false;
+      return order.length > 0;
+    }
+    // ONE BODY'S NUMBERS OUT OF TWO BUFFERS. `full` is the frame with the cast in
+    // it, `bg` the same frame without — so `mask` IS the silhouette, shadow and
+    // alpha and all, rather than a guess at where the body is. Buffer rows run
+    // BOTTOM-UP out of readRenderTargetPixels and the projection is done straight
+    // into that space, which is why there is no flip anywhere below: a flip that
+    // exists in one place and not the other is the classic way this measurement
+    // comes back plausible and wrong.
+    function toneBody(b, cam2, full, bg, rw, rh) {
+      const bx = new TH.Box3().setFromObject(b.root);
+      let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      for (let i = 0; i < 8; i++) {
+        _v.set(i & 1 ? bx.max.x : bx.min.x, i & 2 ? bx.max.y : bx.min.y, i & 4 ? bx.max.z : bx.min.z).project(cam2);
+        const px = (_v.x * 0.5 + 0.5) * rw, py = (_v.y * 0.5 + 0.5) * rh;
+        if (px < x0) x0 = px; if (px > x1) x1 = px;
+        if (py < y0) y0 = py; if (py > y1) y1 = py;
+      }
+      const M = 6;
+      const ax0 = Math.max(0, Math.floor(x0 - M)), ay0 = Math.max(0, Math.floor(y0 - M));
+      const ax1 = Math.min(rw, Math.ceil(x1 + M)), ay1 = Math.min(rh, Math.ceil(y1 + M));
+      const w = ax1 - ax0, h = ay1 - ay0;
+      if (w < 4 || h < 4) return null;
+      const m = new Uint8Array(w * h);
+      const S = _srgbLUT;                    // linear byte -> display byte, once
+      let n = 0;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const i = ((y + ay0) * rw + (x + ax0)) * 4;
+        const d = Math.max(Math.abs(S[full[i]] - S[bg[i]]), Math.abs(S[full[i + 1]] - S[bg[i + 1]]), Math.abs(S[full[i + 2]] - S[bg[i + 2]]));
+        if (d > 12) { m[y * w + x] = 1; n++; }
+      }
+      if (n < 12) return null;
+      const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? 0 : m[y * w + x];
+      const eRGB = [0, 0, 0], rRGB = [0, 0, 0];
+      let nE = 0, nR = 0, sL = 0, sL2 = 0;
+      const K = 1, RING = 4;                 // one twenty-fifth of the meter's pixels
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const p = y * w + x, i = ((y + ay0) * rw + (x + ax0)) * 4;
+        if (m[p]) {
+          // the EDGE BAND: a body pixel with a background pixel within K. That
+          // band is what an eye reads a silhouette by and what the shipped meter
+          // scores, so it is what is scored here.
+          let edge = 0;
+          for (let dy = -K; dy <= K && !edge; dy++) for (let dx = -K; dx <= K; dx++) if (!at(x + dx, y + dy)) { edge = 1; break; }
+          if (edge) { eRGB[0] += S[full[i]]; eRGB[1] += S[full[i + 1]]; eRGB[2] += S[full[i + 2]]; nE++; }
+        } else {
+          let near = 0;
+          for (let dy = -RING; dy <= RING && !near; dy++) for (let dx = -RING; dx <= RING; dx++) if (at(x + dx, y + dy)) { near = 1; break; }
+          if (near) {
+            // read off the BACKGROUND buffer, so a body's own bloom or contact
+            // shadow never inflates the contrast it is being scored against
+            rRGB[0] += S[bg[i]]; rRGB[1] += S[bg[i + 1]]; rRGB[2] += S[bg[i + 2]]; nR++;
+            const L = 0.2126 * S[bg[i]] + 0.7152 * S[bg[i + 1]] + 0.0722 * S[bg[i + 2]];
+            sL += L; sL2 += L * L;
+          }
+        }
+      }
+      if (!nE || !nR) return null;
+      const dr = eRGB[0] / nE - rRGB[0] / nR, dg = eRGB[1] / nE - rRGB[1] / nR, db = eRGB[2] / nE - rRGB[2] / nR;
+      const mL = sL / nR;
+      return { edgeRGB: Math.sqrt((dr * dr + dg * dg + db * db) / 3),
+               clutter: Math.sqrt(Math.max(0, sL2 / nR - mL * mL)), px: n };
+    }
+    function toneProbe() {
+      const t0 = now();
+      const pitches = (camOn() && CAM.solve.pitches && CAM.solve.pitches.length) ? CAM.solve.pitches : [basePitch];
+      if (pitches.length < 2) return { ok: false, why: 'one candidate boom' };
+      const rw = TONE.res[0], rh = TONE.res[1];
+      const rt = new TH.WebGLRenderTarget(rw, rh, { depthBuffer: true, stencilBuffer: false });
+      const cam2 = new TH.PerspectiveCamera(CAM.fov.rest, W.cam.aspect, W.cam.near, W.cam.far);
+      const full = new Uint8Array(rw * rh * 4), bg = new Uint8Array(rw * rh * 4);
+      const prevRT = W.R.getRenderTarget();
+      // THE MARKERS ARE NOT THE CAST. Both rings are ground decals under a body's
+      // feet; counted as silhouette they would flatter every candidate equally
+      // and add noise to none of them usefully, so they sit out both passes.
+      const ringsWere = [targetRing.visible, actorRing.visible];
+      targetRing.visible = actorRing.visible = false;
+      const savedPitch = basePitch;
+      const rows = [];
+      try {
+        for (const p of pitches) {
+          basePitch = p;                            // solveShot reads it
+          let pose = null;
+          try { pose = solveShot('round', {}); } catch (e) { continue; }
+          camBasis(pose.yaw, pose.pitch, camB);
+          cam2.fov = pose.fov; cam2.aspect = W.cam.aspect;
+          cam2.position.set(pose.ax + camB.boom.x * pose.dist,
+                            pose.ay + camB.boom.y * pose.dist,
+                            pose.az + camB.boom.z * pose.dist);
+          cam2.up.set(0, 1, 0);
+          cam2.lookAt(pose.ax, pose.ay, pose.az);
+          cam2.updateProjectionMatrix(); cam2.updateMatrixWorld();
+          root.visible = false;
+          W.R.setRenderTarget(rt); W.R.render(W.scene, cam2);
+          W.R.readRenderTargetPixels(rt, 0, 0, rw, rh, bg);
+          root.visible = true;
+          W.R.setRenderTarget(rt); W.R.render(W.scene, cam2);
+          W.R.readRenderTargetPixels(rt, 0, 0, rw, rh, full);
+          const per = [];
+          for (const id of order) {
+            const b = bodies[id];
+            if (!b || b.dead || b.root.visible === false) continue;
+            const r = toneBody(b, cam2, full, bg, rw, rh);
+            if (r) per.push({ id: id, side: b.side, edgeRGB: +r.edgeRGB.toFixed(2), clutter: +r.clutter.toFixed(2) });
+          }
+          if (!per.length) continue;
+          const mean = per.reduce((s, r) => s + r.edgeRGB, 0) / per.length;
+          const min = Math.min(...per.map(r => r.edgeRGB));
+          const clut = per.reduce((s, r) => s + r.clutter, 0) / per.length;
+          // HALF THE MEAN AND HALF THE MINIMUM. Pricing only the mean buys a good
+          // average and one invisible body — scoreView's own comment, and the
+          // measurement behind it: at crag one party body reads 2.7 against a
+          // four-body mean of 21.4.
+          rows.push({ pitch: p, score: +(0.5 * mean + 0.5 * min - TONE.wClutter * clut).toFixed(3),
+                      mean: +mean.toFixed(2), min: +min.toFixed(2), clutter: +clut.toFixed(2), bodies: per });
+        }
+      } finally {
+        basePitch = savedPitch;
+        root.visible = true;
+        targetRing.visible = ringsWere[0]; actorRing.visible = ringsWere[1];
+        W.R.setRenderTarget(prevRT);
+        rt.dispose();
+      }
+      if (!rows.length) return { ok: false, why: 'no candidate produced a silhouette' };
+      let win = rows[0];
+      for (const r of rows) if (r.score > win.score) win = r;
+      // THE INCUMBENT IS THE RUNG THE GEOMETRIC SOLVER ALREADY CHOSE, scored on
+      // the same evidence as its challengers — never assumed to be the worst.
+      let inc = null;
+      for (const r of rows) if (Math.abs(r.pitch - savedPitch) < 1e-6) inc = r;
+      const decisive = !inc || win.score > inc.score + Math.abs(inc.score) * TONE.margin;
+      const chose = decisive ? win.pitch : savedPitch;
+      return { ok: true, chose: chose, best: win.pitch, was: savedPitch,
+               moved: chose !== savedPitch, decisive: decisive,
+               incScore: inc ? inc.score : null, winScore: win.score, margin: TONE.margin,
+               rows: rows, ms: +(now() - t0).toFixed(1), res: [rw, rh] };
+    }
+    // ONE SHOT AT IT, and the frame it happens on is the frame the cast finishes
+    // arriving. The opening `round` move is still easing then (900 ms), so
+    // re-issuing it lands as ONE continuous move rather than a correction — which
+    // is also why this must not be deferred to a later beat.
+    function toneMaybe() {
+      if (toneDone || !toneOn()) return;
+      const waited = now() - camT0;
+      if (!castReady() && waited < TONE.waitMs) return;
+      toneDone = true;
+      if (!castReady()) { toneLive = { ok: false, why: 'cast never left proxy in ' + TONE.waitMs + ' ms' }; return; }
+      try { toneLive = toneProbe(); } catch (e) { toneLive = { ok: false, why: 'threw: ' + e.message }; return; }
+      // AND IT ONLY EVER LANDS ON THE OPENING. If the models were slow enough
+      // that a turn has already started, the fight owns the camera and a boom
+      // correction would read as a mistake being fixed in front of the player —
+      // so the probe's answer is RECORDED and not applied. That is what lets
+      // `waitMs` be generous without buying a camera swing mid-swing.
+      if (toneLive.ok && toneLive.moved && RIG.kind === 'round') {
+        basePitch = toneLive.chose;
+        shotB('round', { ms: 700, why: 'tone' });
+      } else if (toneLive.ok && toneLive.moved) {
+        toneLive.applied = false; toneLive.why = 'a beat already owns the camera (' + RIG.kind + ')';
+      }
+    }
+
     const clock = new TH.Clock();
     let ticks = 0;
     function tick() {
@@ -1635,6 +1871,7 @@
         }
       }
 
+      toneMaybe();
       runTweens();
       for (const m of mixers) m.update(dt);
       placeRing(targetRing, targetId, 1.0 + Math.sin(t * 4.2) * 0.06);
@@ -1823,6 +2060,10 @@
                    side: b.side, dead: b.dead, tier: b.tier };
         },
       },
+      // WHAT THE TONAL BOOM CHOOSER DID — every candidate's score, the rung it
+      // took, the rung the geometric solver had picked, and how long it cost.
+      // A run where it never fired says WHY rather than reporting nothing.
+      tone() { return Object.assign({ on: toneOn(), done: toneDone, basePitch: +basePitch.toFixed(4) }, toneLive || {}); },
       draw() { if (W.render) W.render(); return W.R.info.render.frame; },
       // ---- TEARDOWN: TOTAL, AND EVERY LINE OF IT IS A RESTORE ---------------
       // The audit's constraint (§11.12) and the four post-battle queue tickets.
@@ -1895,6 +2136,12 @@
     // board is built from — one build, one flag, everything else identical.
     CAM: CAM,
     camOn() { return camOn(); },
+    // THE TONAL BOOM CHOOSER, live. `BattleWorld.TONE.on = false` is the A/B the
+    // separation board is built from — one build, one flag, everything else
+    // identical — and `tone()` is the live stage's own receipt for it.
+    TONE: TONE,
+    toneOn() { return toneOn(); },
+    tone() { return api._live && api._live.tone ? api._live.tone() : { on: toneOn(), ok: false, why: 'no battle' }; },
     solve(o) { return solveArena(o || { slots: slotsFor([{ id: 'a' }, { id: 'b' }], [{ id: 'm0' }, { id: 'm1' }]) }); },
     solveArena: solveArena,
     solveFixed: solvePlacement,
