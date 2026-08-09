@@ -643,6 +643,46 @@ git runs here, on branch `migration/3d-hybrid`.
   are Vesper behind Maren in the 27 mm two-shot. Include them and both rulers fall to chance. The
   largest single cause of a party body not reading in this census is a SHOT problem, not paint
   and not the boom, and no tonal instrument in this arc can report it.
+  **AND IT WAS ONE SIGN IN THE FORMATION — MEASURED, FIXED, AND THE AUDIT NAMED THE WRONG BODY**
+  (2026-08-09; board docs/qa/battle-overlap/index.html, instrument tools/battle_overlap_lib.mjs +
+  `battle_decide --mode=overlap|ovsweep`, `?bform=1` is the one-build A/B). THE METER: `SOLO` = the
+  silhouette a body has against the world; `VIS` = the pixels it is the FRONTMOST thing at in the
+  real frame (the whole cast, minus that body — bodies are opaque, so a SOLO pixel that does not
+  change when the body is removed is a pixel a TEAMMATE is in front of); occTeam is their
+  INTERSECTION over SOLO, and the lost pixels are attributed by whose own SOLO mask covers them.
+  Census: a party body ≥10/25/50% eaten by its own teammate at **53 / 44 / 33 of 62 sites**, and
+  **it is MAREN at 44 of 44 — never Vesper**, who is the nearer body and does the eclipsing. The
+  audit's "five of eight are Vesper behind Maren" is REFUTED and the reason is instructive: its
+  target set was the bodies the two rulers disagreed about, so it scored the eclipsE-ER and not the
+  eclipsed. THE MECHANISM IS ARITHMETIC, predicted before it was measured and returned to three
+  figures: the party line runs 27.7° off the depth axis and `decide` swings the boom −0.30 rad, so
+  the lens points to within **10.5° of that line** and lateral separation `cosθ·Δu − sinθ·Δv`
+  collapses **0.756 → 0.297 m**, under half a body width. THE SWEEP THAT DECIDED IT (one battle
+  staged once, the shot re-solved between readings, so nothing but the knob moves): **the safe rect
+  is NOT the cause** — `keepSafe:null` moves the number by ≤0.06 at all six sites, which refutes the
+  inherited claim; `keepBias`, `fov` and `lead` are second order; `yawOff` owns it. SHIPPED:
+  `CFG.partyStagger` = 0 (a flat rank) in battle_world's own `slotsFor` — teammate occlusion
+  **53/44/33 → 4/2/1 sites**, 49 sites improved. **AND 0 BEAT −1 ON THE ANGLE, NOT THE SPACING**:
+  flipping the line's sign buys more lateral metres (1.148) by making the line longer but only
+  reaches 44.9° off the axis, while a flat rank is 72.8°; the flip moves every body 1.44 m instead
+  of 0.72 and **staging is a SEARCH over the slot geometry**, so it relocated 6 sites instead of 3
+  and left 10 bodies with NO SILHOUETTE AT ALL instead of 4. Cost: decide re-solve 0.4 → 0.5 ms,
+  trigger-to-first-frame 554 → 561 ms p50, foes in frame 124 → 122/124, axisOk 62/62, zero-foe
+  dwell still 0%. REGRESSIONS, NAMED: 7 sites, all of them WORLD occlusion after the party
+  relocated, and two (s015, s002) were already ≥0.73 lost in the shipped arm for the other reason.
+  **THE RESIDUAL'S CAUSE IS ALSO NAMED: `stageArena` validates every slot's visibility from the
+  ROUND eye, and `decide` swings 0.30 rad off it and pushes in** — so a body placement proved
+  visible can be behind a lamp post in the frame the player lives in. `showParty` (the same shape as
+  `keepVis`: visibility test only, never the fill, never the aim) fires at 2 of 62 and rescues one
+  body that was 95% gone; it is nearly null and is kept only for that.
+  **AND THE BIGGER DEFECT THE SAME METER FOUND IS THE FOE LINE, LEFT UNFIXED ON PURPOSE**:
+  `slotsFor` gives foes `ax = foeX + |i − (n−1)/2| · foeChevron`, and the absolute value makes the
+  chevron a V at three foes and **INERT AT TWO** — both foes take the SAME across-axis coordinate
+  and differ only in depth, i.e. single file down the arena axis. The second foe is ≥25% eaten by
+  the first at **50 of 62 sites, ≥50% at 36** — worse than the party ever was, and every census in
+  this arc reporting "2.00 of 2 foes in frame" was true and hollow. Not fixed here because the foe
+  line is the `keep` set, the `show` set at strike/impact and one half of the 180° ordering test,
+  and a wolf's projected width is nothing like its slot `w`.
   **TONE RE-DERIVED ON THE FULL 62-SITE CENSUS, AND THE DEFAULT DELIBERATELY NOT MOVED.** The
   probe now reports the 6-band contrast beside `edgeRGB` (reported, never scored — chosen boom
   identical 62/62 against the pre-edit build's own census at the same pinned yaw), and `?btband=1`
