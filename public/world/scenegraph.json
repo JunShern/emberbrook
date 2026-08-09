@@ -85,7 +85,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-07T21:01:55Z",
+ "generated": "2026-08-09T21:59:53Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -142,10 +142,10 @@
        -0.34
       ],
       [
-       47.05,
+       47.14,
        23.05,
-       56.95,
-       32.95,
+       56.86,
+       32.86,
        -0.5
       ]
      ]
@@ -325,10 +325,10 @@
      "id": "orchard",
      "boxes": [
       [
-       30.1,
-       -33.9,
-       49.9,
-       -14.1,
+       30.13,
+       -33.87,
+       49.74,
+       -14.13,
        0.6
       ]
      ]
@@ -520,7 +520,7 @@
        50.95,
        -40.4,
        53.65,
-       -38.15,
+       -38.32,
        1.5
       ],
       [
@@ -539,13 +539,13 @@
       ],
       [
        50.95,
-       -50.3,
+       -50.1,
        53.65,
        -47.6,
        1.5
       ],
       [
-       55.45,
+       55.64,
        -33.65,
        56.8,
        -32.3,
@@ -554,8 +554,8 @@
       [
        56.35,
        -34.1,
-       56.8,
-       -33.65,
+       56.85,
+       -33.6,
        1.5
       ],
       [
@@ -587,7 +587,7 @@
        1.5
       ],
       [
-       53.65,
+       53.83,
        -54.35,
        56.8,
        -51.2,
@@ -629,10 +629,10 @@
        1.5
       ],
       [
-       56.8,
+       56.75,
        -47.6,
        60.4,
-       -44,
+       -43.95,
        1.5
       ],
       [
@@ -707,7 +707,7 @@
       ],
       [
        60.4,
-       -57.95,
+       -57.76,
        64,
        -54.35,
        1.5
@@ -763,7 +763,7 @@
       ],
       [
        64,
-       -57.5,
+       -57.41,
        67.6,
        -54.35,
        1.5
@@ -828,27 +828,27 @@
        71.2,
        -33.65,
        73,
-       -32.75,
+       -32.96,
        1.5
       ],
       [
        71.2,
        -35.9,
-       73.9,
+       73.7,
        -33.65,
        1.5
       ],
       [
        71.2,
        -40.4,
-       72.1,
+       71.92,
        -38.6,
        1.5
       ],
       [
        71.2,
        -43.1,
-       73.45,
+       73.26,
        -40.4,
        1.5
       ],
@@ -869,7 +869,7 @@
       [
        71.2,
        -54.35,
-       74.35,
+       74.18,
        -51.2,
        1.5
       ],
@@ -882,9 +882,9 @@
       ],
       [
        76.15,
-       -40.4,
+       -40.42,
        77.05,
-       -39.95,
+       -40.1,
        1.5
       ],
       [
@@ -911,8 +911,8 @@
       [
        74.8,
        -51.65,
-       75.25,
-       -51.2,
+       75.3,
+       -51.15,
        1.5
       ],
       [
@@ -1090,9 +1090,9 @@
       ],
       [
        81.64,
-       -57.81,
+       -57.88,
        83.34,
-       -57.31,
+       -57.24,
        1
       ],
       [
@@ -1145,9 +1145,9 @@
        1.25
       ],
       [
-       79.3,
-       -62.7,
-       84.7,
+       79.33,
+       -62.67,
+       84.53,
        -57.3,
        1
       ]
@@ -1311,9 +1311,9 @@
        2
       ],
       [
-       36.72,
+       36.7,
        -50.31,
-       37.58,
+       37.6,
        -48.72,
        2
       ],
@@ -1445,9 +1445,9 @@
       ],
       [
        46.91,
-       -56.66,
+       -56.67,
        48.63,
-       -56.21,
+       -56.2,
        2
       ],
       [
@@ -1487,9 +1487,9 @@
       ],
       [
        47.34,
-       -60.4,
+       -60.41,
        49.06,
-       -59.95,
+       -59.94,
        2
       ]
      ]
@@ -1718,10 +1718,10 @@
        2.78
       ],
       [
-       68.1,
+       68.13,
        -128.3,
-       85.65,
-       -112.1,
+       85.45,
+       -112.13,
        2.8
       ]
      ]
@@ -3874,9 +3874,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    68.358,
-    1.5,
-    -41.385
+    68.572,
+    1.386,
+    -41.257
    ],
    "spawnYaw": null,
    "cam": {
@@ -3885,7 +3885,7 @@
    "label": "Leave Item Shop",
    "key": "e",
    "reciprocal": "emb-cine>emb-item-int@item-shop",
-   "source": "emb-item-int walk_pad_door -> emberbrook street via road square-plaza->item-shop; derived point (68.6,-41.3) had no walk surface, SEARCHED to the nearest legal one 0.25u away (3.15u out, 0 deg off the street); arrives in shot 'square'"
+   "source": "emb-item-int walk_pad_door -> emberbrook street via road square-plaza->item-shop; arrives in shot 'square'"
   },
   {
    "id": "emb-cine>emb-inn-int@inn",
@@ -3927,9 +3927,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    59.545,
-    1.5,
-    -38.579
+    57.734,
+    1.492,
+    -40.844
    ],
    "spawnYaw": null,
    "cam": {
@@ -3938,7 +3938,7 @@
    "label": "Leave The Ember Hearth",
    "key": "e",
    "reciprocal": "emb-cine>emb-inn-int@inn",
-   "source": "emb-inn-int walk_pad_door -> emberbrook street via road square-plaza->inn; derived point (58.9,-40.0) had no walk surface, SEARCHED to the nearest legal one 1.50u away (2.90u out, 30 deg off the street); arrives in shot 'square'"
+   "source": "emb-inn-int walk_pad_door -> emberbrook street via road square-plaza->inn; derived point (58.9,-40.0) had no walk surface, SEARCHED to the nearest legal one 1.50u away (2.90u out, -30 deg off the street); arrives in shot 'square'"
   },
   {
    "id": "emb-cine>emb-lake-int@lake-home",
@@ -4033,9 +4033,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    55.206,
-    1.5,
-    -44.833
+    54.622,
+    1.462,
+    -44.376
    ],
    "spawnYaw": null,
    "cam": {
@@ -4044,7 +4044,7 @@
    "label": "Leave Poppy's bakery",
    "key": "e",
    "reciprocal": "emb-cine>emb-bakery-int@bakery",
-   "source": "emb-bakery-int walk_pad_door -> emberbrook street via path square-plaza->bakery; derived point (54.7,-44.9) had no walk surface, SEARCHED to the nearest legal one 0.50u away (3.40u out, 0 deg off the street); arrives in shot 'square'"
+   "source": "emb-bakery-int walk_pad_door -> emberbrook street via path square-plaza->bakery; derived point (54.7,-44.9) had no walk surface, SEARCHED to the nearest legal one 0.51u away (2.90u out, 10 deg off the street); arrives in shot 'square'"
   },
   {
    "from": "emb-cine",
@@ -4422,7 +4422,7 @@
      -0.9963
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 2.25
    },
    "vTol": 1.6,
    "auto": true,
@@ -4440,7 +4440,7 @@
     -60.549
    ],
    "reciprocal": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:northlane>square",
-   "source": "camera boundary 'square' -> 'northlane' where the walk network crosses square-plaza__barn@0..0.573 into square-plaza__barn@0.573..1; seam slid to square-plaza__barn@t=0.568, band half-width 2.95u measured off the walk surface, clearance margin 0u"
+   "source": "camera boundary 'square' -> 'northlane' where the walk network crosses square-plaza__barn@0..0.573 into square-plaza__barn@0.573..1; seam slid to square-plaza__barn@t=0.568, band half-width 2.25u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "emb-cine",
@@ -4458,7 +4458,7 @@
      -0.9963
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 2.25
    },
    "vTol": 1.6,
    "auto": true,
@@ -4638,7 +4638,7 @@
      0.5547
     ],
     "t": 1.1,
-    "w": 2.25
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -4656,7 +4656,7 @@
     -48.73
    ],
    "reciprocal": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane",
-   "source": "camera boundary 'pondlane' -> 'square' where the walk network crosses landmark brook-bridge into brook-bridge__square-plaza@0..1; seam slid to brook-bridge__square-plaza@t=0.211, band half-width 2.25u measured off the walk surface, clearance margin 0.15u"
+   "source": "camera boundary 'pondlane' -> 'square' where the walk network crosses landmark brook-bridge into brook-bridge__square-plaza@0..1; seam slid to brook-bridge__square-plaza@t=0.211, band half-width 1.9u measured off the walk surface, clearance margin 0.15u"
   },
   {
    "from": "emb-cine",
@@ -4674,7 +4674,7 @@
      0.5547
     ],
     "t": 1.1,
-    "w": 2.25
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -6564,9 +6564,8 @@
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': arrival fell back to arc-length back-off on one side",
-  "item-shop: return spawn (68.6,-41.3) is off the walk network — searched to (68.4,-41.4), 0.25u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
-  "inn: return spawn (58.9,-40.0) is off the walk network — searched to (59.5,-38.6), 1.50u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
-  "bakery: return spawn (54.7,-44.9) is off the walk network — searched to (55.2,-44.8), 0.50u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
+  "inn: return spawn (58.9,-40.0) is off the walk network — searched to (57.7,-40.8), 1.50u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
+  "bakery: return spawn (54.7,-44.9) is off the walk network — searched to (54.6,-44.4), 0.51u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
   "inn: \"doorstepFromMap\" — trigger taken from the MAP, not walk_pad_inn, which still stands 0.00u away. The bundle is STALE for this landmark: the next blockout/bake moves the pad onto the map point and this flag becomes a no-op.",
   "weapon-shop return spawn: spawn (35.27,-6.92) sat -0.951u from the shelf-west<->shelf-east on 'item-shop__weapon-shop' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (40.30,-6.98), 5.02u along the walk surface, now 3.40u clear, on 'shelf-east' ground (its own shot)",
   "armor-shop return spawn: spawn (47.12,-8.31) sat -0.157u from the shelf-east<->loop-stairs on 'armor-shop__shelf-homes' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (49.69,-8.64), 2.59u along the walk surface, now 0.53u clear, on 'shelf-east' ground (its own shot)",
