@@ -1,0 +1,365 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Emberbrook red-team — round 1 (2026-08-09)</title>
+<style>
+:root{--bg:#14161a;--fg:#e6e8ec;--dim:#9aa3b0;--line:#2a2f38;--card:#1a1e24;--hi:#ffcc66;--bad:#ff7a70;--ok:#7fd18b;--info:#8ab4f8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:28px 22px 90px}
+h1{font-size:28px;margin:0 0 4px}h2{font-size:20px;margin:42px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+h3{font-size:16px;margin:26px 0 6px;color:var(--hi)}
+.sub{color:var(--dim);margin:0 0 22px}
+code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:#0f1216;padding:1px 5px;border-radius:3px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;margin:10px 0 6px;font-size:13.5px}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+th{background:#1d2229;color:var(--dim);font-weight:600}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin:14px 0}
+.lead{border-left:3px solid var(--hi)}
+.kill{border-left:3px solid var(--bad)}
+.meth{border-left:3px solid var(--info)}
+img{max-width:100%;border-radius:5px;border:1px solid var(--line);display:block;margin:10px 0 4px}
+.cap{color:var(--dim);font-size:12.5px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.pill{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11.5px;border:1px solid var(--line);color:var(--dim);margin-right:5px}
+.pill.ref{color:var(--bad);border-color:#5a2a28}
+.pill.new{color:var(--ok);border-color:#2a4a30}
+.pill.known{color:var(--hi);border-color:#544224}
+.pill.q{color:var(--info);border-color:#26405e}
+.verb{color:#dfe4ea}
+.obj{color:var(--dim);font-size:12.5px;font-family:ui-monospace,Menlo,monospace}
+.big{font-size:26px;font-weight:600;color:var(--hi);font-variant-numeric:tabular-nums}
+ul{margin:6px 0 6px 20px;padding:0}li{margin:3px 0}
+.warn{color:var(--bad)}
+details summary{cursor:pointer;color:var(--info);margin:8px 0}
+</style>
+<main>
+<h1>Emberbrook red-team — round 1</h1>
+<p class="sub">2026-08-09 · <code>scene_redteam</code> judge <b>gemini-3.6-flash</b> (PINNED), naive + checklist, N=3, adversarial verify, aim census armed ·
+11 plates · bake pinned to a copy of <code>public/assets/scenes/emb-cine</code> taken at run start ·
+run dir <a href="../redteam/run-20260809-emb-round1/index.html">docs/qa/redteam/run-20260809-emb-round1/</a> ·
+<b>this board is the TRIAGE layer</b>: every verdict verbatim, per plate, with the object its own bbox actually lands on.</p>
+
+<div class="card meth">
+<h3 style="margin-top:0">READ THE ROW, NEVER THE ROLL-UP</h3>
+<p>Round 6 of the Dellhollow loop learned that a report which deduplicates a checklist row prints the first
+plate's sentence over four other plates' answers — five &ldquo;same&rdquo; findings were five different subjects. Every
+verdict below is printed against <b>its own plate</b>, with <b>its own bbox put on the geometry</b>. A finding here is a
+HYPOTHESIS: this repo's calibration is 4/5 by hand and 2/5 by the mechanical matcher, and stage 2 filters weak
+criticism, never confabulation.</p>
+</div>
+
+<h2>0 · The premise was wrong, and the correction matters</h2>
+<div class="card">
+<p>CLAUDE.md says <i>&ldquo;Emberbrook is UNSWEPT: its blockout frames die to the dressing pass.&rdquo;</i>
+<b>That is stale twice over.</b> Emberbrook has been swept four times — <code>run-20260806-1-emberbrook</code>
+(both modes), <code>run-20260806-2-emberbrook-checklist</code>, <code>run-20260807-205035-round3water</code> and
+<code>run-20260808-005259-round3fieldsky</code>. What is true is narrower and worse:</p>
+<ul>
+<li><b>The two most recent Emberbrook runs were judged as a GRAY MASSING BLOCKOUT.</b> <code>BLOCKOUT_DEFAULT</code>
+in <code>scene_redteam.mjs</code> still reads <code>{emberbrook: true}</code>, and both round-3 runs record
+<code>blockout: true</code>. In that mode the judge is told, verbatim: <i>&ldquo;Flat untextured surfaces, simple faceted
+shapes, missing surface detail and placeholder colours are INTENDED at this stage and are NOT problems.
+Do not report them.&rdquo;</i> The plates are the DRESSED bake — <code>plateSource: emberbrook-dressed.blend</code>,
+128 samples, AgX, a night grade.</li>
+<li><b>And the triage swallows what survives.</b> With <code>IS_BLOCKOUT</code> live, the tracked rule
+<code>emb-blockout-materials</code> arms and every finding containing <i>material / texture / detail / flat / plain /
+colour / grey</i> is bucketed &ldquo;already known — waits for the dressing pass&rdquo;. Measured on those runs:
+3 survivors bucketed <code>emb-blockout-materials</code> and 2 bucketed <code>blockout-dressing</code>.</li>
+<li><b>Neither round-3 run ran NAIVE mode at all</b> (<code>modes: ['checklist']</code>). Naive is the only mode that can
+catch confusion, and it is the mode this sweep's biggest findings came out of: <b>58 of 94 survivors are naive.</b></li>
+</ul>
+<p><b>This run is the first sweep of dressed Emberbrook in ART MODE with both modes and the aim census armed.</b>
+(<code>--no-blockout</code>.) The pointer in CLAUDE.md should say so.</p>
+</div>
+
+<h2>1 · What the sweep cost and returned</h2>
+<table>
+<tr><th>stage</th><th class="num">n</th><th>note</th></tr>
+<tr><td>plates swept</td><td class="num">11</td><td>woodroad, waystone, arch, orchard, therise, square, pondlane, homerow, northlane, gateroad, gatefield — every camera in <code>emb-cine</code></td></tr>
+<tr><td>raw findings</td><td class="num">125</td><td>naive N=3 per plate + one checklist pass per plate</td></tr>
+<tr><td>deduped</td><td class="num">117</td><td></td></tr>
+<tr><td>refuted at stage 2</td><td class="num">23</td><td>21 by the adversarial sceptic, <b>2 by the aim census</b></td></tr>
+<tr><td><b>survivors</b></td><td class="num"><b>94</b></td><td>58 naive / 36 checklist · 67 NEW, 27 &ldquo;known&rdquo; (3 of them wrongly, see §5)</td></tr>
+<tr><td>API</td><td class="num">65 calls</td><td>113,765 prompt + 117,613 reply tokens, <b>0 errors</b> — no spend or API blocker</td></tr>
+<tr><td>bbox agreement</td><td class="num">21/52</td><td>the tool's own check: 40% of judged boxes contain the census point</td></tr>
+</table>
+
+<h2>2 · The two no-API censuses, on this sweep's own findings</h2>
+
+<h3>Water census (<code>--water-census</code>)</h3>
+<p>14,446 water triangles in <code>emb-cine/scene.glb</code>; arming threshold 0.5% of frame, measured through the
+shipped projection against each plate's own depth.png.</p>
+<table><tr><th>plate</th><th class="num">visible water</th><th>quality:water-read</th></tr>
+<tr><td>pondlane</td><td class="num">9.24%</td><td>ARMED</td></tr>
+<tr><td>gatefield</td><td class="num">2.36%</td><td>ARMED</td></tr>
+<tr><td>northlane</td><td class="num">2.13%</td><td>ARMED</td></tr>
+<tr><td>square</td><td class="num">2.03%</td><td>ARMED</td></tr>
+<tr><td>homerow</td><td class="num">0.90%</td><td>ARMED</td></tr>
+<tr><td>gateroad</td><td class="num">0.45%</td><td>suppressed</td></tr>
+<tr><td>arch / therise</td><td class="num">0.12%</td><td>suppressed</td></tr>
+<tr><td>woodroad / waystone / orchard</td><td class="num">0.00%</td><td>suppressed</td></tr></table>
+
+<h3>Aim census (<code>aimOf</code>, armed)</h3>
+<p>6 <code>[QUALITY]</code> verdicts reached the census. <b>2 were refuted as aimed at nothing</b>, and both are water:</p>
+<table><tr><th>family</th><th class="num">n</th><th class="num">refuted</th><th>coverage of the subject inside the judged box</th></tr>
+<tr><td>quality:water-read</td><td class="num">3</td><td class="num warn">2</td><td>0.000 · 0.355 · 0.000</td></tr>
+<tr><td>quality:sky</td><td class="num">2</td><td class="num">0</td><td>0.327 · 0.495</td></tr>
+<tr><td>quality:frame-edge-world</td><td class="num">1</td><td class="num">0</td><td>left unmeasurable on purpose</td></tr></table>
+<p><b>67% of Emberbrook's water verdicts were aimed at ZERO water</b>, against round 7's 31% on Dellhollow — the same
+defect, worse here. The two killed:</p>
+<ul>
+<li><code>F125 gatefield</code> — <span class="verb">&ldquo;The water surface: <b>FAILING</b> — Completely dark plane lacking reflection&rdquo;</span>
+&nbsp;· 0 of 754 census cells in the box hold visible water; the frame holds 2.4%.</li>
+<li><code>F74 square</code> — <span class="verb">&ldquo;The water surface: WEAK — Water surface is extremely dark and lacks…&rdquo;</span>
+&nbsp;· 0 of 340 cells; the frame holds 2.0%.</li>
+</ul>
+<p>Both would have been believed: <b>the sceptic is shown the words and never the box</b>, so it cannot catch this
+class. One water verdict survives — <code>F100 pondlane</code>, WEAK, aimed at 35.5% real water. That is the town's
+only standing water finding, on the only plate that shows meaningful water.</p>
+
+<h2>3 · The instrument this round had to build</h2>
+<div class="card meth">
+<p><b><code>tools/emb_plate_object.mjs</code> — WHICH OBJECT IS AT THESE PIXELS.</b> No Blender, no browser.
+<code>plate_probe</code> is explicit that it names a REGION and never an object, and the doctrine's answer — a Blender
+ray census — is unavailable to a lane that does not own the GPU. So a judge's bbox could not be put on the geometry
+at all while a bake was running. This closes it: the same world-XYZ reconstruction (the bundle's solved camera +
+its rgb24-viewz depth.png, NEAREST only), converted glTF Y-up → the bake's Blender Z-up, nearest-triangle against
+<code>scene.glb</code>, reporting the node names and <b>the residual distance</b>.</p>
+<p class="warn"><b>What it cannot see, said up front:</b> <code>emb-cine/scene.glb</code> is exported from
+<code>emberbrook-master.blend</code> — the GRAY BLOCKOUT (CLAUDE.md, &ldquo;the 146x trap&rdquo;). Dressing scatter,
+leaves, awnings and every render-only card are NOT in it. A high residual means <i>&ldquo;the thing making this pixel
+is dressing, not massing&rdquo;</i> and is reported, never hidden. It is a screen, not the Blender census.</p>
+</div>
+
+<h2>4 · THE RANKED WORKLIST</h2>
+
+<div class="card lead">
+<h3 style="margin-top:0">#1 — THE WALK NETWORK IS THE TOWN'S PAVING, AND ITS RIM IS A 0.12 m LATTICE STAIRCASE</h3>
+<p class="big">17.7% of the average frame · 26 of 73 boxed survivors · 10 of 11 plates</p>
+<p><b>Objects:</b> <code>walk_lm_*</code> region aprons (<code>arrival-clearing</code>, <code>gate-court</code>,
+<code>orchard</code>, <code>square-plaza.*</code>, <code>washline-green</code>), <code>walk_pad_*</code> doorsteps,
+<code>walk_e_*</code> road ribbons. 222 walk meshes in the bundle.</p>
+<p><b>The control that proves it is not an artefact of nearest-triangle attribution.</b> A walk pad could be reported
+merely because it lies <i>on</i> the ground. It does not: the walk surface stands <b>0.12 m proud</b> of
+<code>emb_ground_valley</code>, and the shipped plate's own depth surface sits at the WALK top, not the ground top —
+measured on six plates, <b>4,660 of 4,760 samples nearer the walk mesh</b>:</p>
+<table><tr><th>plate</th><th>mesh</th><th class="num">|plate − walk|</th><th class="num">|plate − ground|</th><th class="num">walk − ground</th><th class="num">nearer walk</th></tr>
+<tr><td>woodroad</td><td><code>walk_lm_arrival-clearing</code></td><td class="num">0.0041 m</td><td class="num">0.1197 m</td><td class="num">0.120 m</td><td class="num">917 / 917</td></tr>
+<tr><td>gatefield</td><td><code>walk_lm_gate-court</code></td><td class="num">0.0047 m</td><td class="num">0.1211 m</td><td class="num">0.120 m</td><td class="num">760 / 763</td></tr>
+<tr><td>homerow</td><td><code>walk_pad_lake-home</code></td><td class="num">0.0038 m</td><td class="num">0.1221 m</td><td class="num">0.120 m</td><td class="num">788 / 788</td></tr>
+<tr><td>square</td><td><code>walk_lm_square-plaza*</code></td><td class="num">0.0098 m</td><td class="num">0.1265 m</td><td class="num">0.120 m</td><td class="num">661 / 670</td></tr>
+<tr><td>waystone</td><td><code>walk_pad/e_waystone*</code></td><td class="num">0.0040 m</td><td class="num">0.0948 m</td><td class="num">0.094 m</td><td class="num">733 / 741</td></tr>
+<tr><td>therise</td><td><code>walk_e_road-gate__square-plaza_l3</code></td><td class="num">0.0035 m</td><td class="num">0.0420 m</td><td class="num">0.042 m</td><td class="num">718 / 798</td></tr></table>
+<p><b>The magnitude of the rim itself, straight off the bundle:</b> 2,233.7 m of walk-mesh boundary over 2,806
+edges, <b>52.0% axis-aligned overall — and 100.0% axis-aligned on every <code>walk_lm_*</code> region apron</b>
+(<code>orchard</code> 93.6 m / 208 edges, <code>gate-court</code> 92.7 m / 206, <code>arrival-clearing</code> 39.6 m / 88,
+mean edge 0.45 m). That is a pure lattice staircase with a lit 0.12 m riser and a black shadow line at every tread.</p>
+<div class="grid">
+<div><img src="ev/rim-woodroad.jpg" alt="woodroad clearing rim"><p class="cap">woodroad, ×2.4 gain. <code>walk_lm_arrival-clearing</code>: the clearing's apron rim as a right-angled staircase with a black riser at every step. F1/F7/F14 — three independent naive looks.</p></div>
+<div><img src="ev/rim-gatefield.jpg" alt="gatefield court rim"><p class="cap">gatefield, ×3.2 gain. <code>walk_lm_gate-court</code>: the same staircase, plus the square cutouts around the sigil plates (F114/F121) — the apron was punched around the props and the 0.12 m riser makes each hole read as bare dirt.</p></div>
+</div>
+<div><img src="ev/rim-arch-stones.jpg" alt="arch kerb stones on the stepped rim"><p class="cap">arch, ×2.6 gain. The same rim from a third plate — and the site of a refutation, §6.</p></div>
+<p><b>What fixing it buys.</b> This is the single largest legible geometric defect in the town and it has an exact
+precedent in this repo: <code>emb_brookchop</code> did the identical job for the water (weld the independent lattice
+cells into one strip, relax the boundary <i>−22.3% boundary length</i>, seat the bottom ring on the bed) and closed
+Emberbrook's water class 0/6 FAILING → 0 FAILING. Doing the same to the paving — relax the <code>walk_lm_*</code>
+outlines and seat/chamfer the rim onto <code>emb_ground_valley</code> so no lit vertical face and no shadow line
+survives — would retire <b>21 findings whose description is about the paving itself, across 8 plates</b>, at no
+navigational cost (the walk records are unchanged; only the drawn silhouette moves).
+<b>Verify against the walk network afterwards</b> — <code>walk_engine_gate</code> and <code>walk_bodygate</code> — because
+the walk pad IS the doorstep and a rim relaxation is a change to a walkable surface.</p>
+</div>
+
+<div class="card lead">
+<h3 style="margin-top:0">#2 — EMBERBROOK'S SHADOWS GO TO ABSOLUTE ZERO, AND ONE OF THEM SITS ON A STORY PROP</h3>
+<p class="big">crushed 6.8–15.6% of frame · ground p50 as low as 12.6/255</p>
+<p><b>The plate-wide numbers</b> (<code>plate_probe ground</code> + <code>crushed</code>, on the pinned bake; crushed =
+dark AND locally flat, L ≤ 24 with 5×5 sd ≤ 2 — a dark surface that still carries texture is a shadow, a dark
+surface that carries none is a hole):</p>
+<table><tr><th>plate</th><th class="num">ground p05</th><th class="num">ground p50</th><th class="num">ground ≤12</th><th class="num">crushed % of frame</th><th class="num">baked</th></tr>
+<tr><td>gateroad</td><td class="num">0.0</td><td class="num warn">12.6</td><td class="num warn">48.4%</td><td class="num">12.88%</td><td class="num">08-07</td></tr>
+<tr><td>gatefield</td><td class="num">0.0</td><td class="num warn">13.9</td><td class="num warn">46.6%</td><td class="num">14.55%</td><td class="num warn">08-02</td></tr>
+<tr><td>arch</td><td class="num">1.1</td><td class="num">27.1</td><td class="num">27.7%</td><td class="num warn">15.64%</td><td class="num">08-07</td></tr>
+<tr><td>homerow</td><td class="num">0.0</td><td class="num">29.4</td><td class="num">31.3%</td><td class="num warn">14.98%</td><td class="num">08-07</td></tr>
+<tr><td>therise</td><td class="num">1.1</td><td class="num">28.8</td><td class="num">33.3%</td><td class="num">11.47%</td><td class="num">08-08</td></tr>
+<tr><td>pondlane</td><td class="num">1.1</td><td class="num">26.5</td><td class="num">27.8%</td><td class="num">10.25%</td><td class="num">08-08</td></tr>
+<tr><td>orchard</td><td class="num">1.9</td><td class="num">32.9</td><td class="num">26.9%</td><td class="num">10.17%</td><td class="num">08-07</td></tr>
+<tr><td>woodroad</td><td class="num">2.6</td><td class="num">34.8</td><td class="num">16.3%</td><td class="num">10.08%</td><td class="num warn">08-02</td></tr>
+<tr><td>waystone</td><td class="num">1.9</td><td class="num">32.6</td><td class="num">18.8%</td><td class="num">8.08%</td><td class="num warn">08-02</td></tr>
+<tr><td>square</td><td class="num">2.3</td><td class="num">38.1</td><td class="num">18.8%</td><td class="num">6.81%</td><td class="num">08-08</td></tr>
+<tr><td>northlane</td><td class="num">3.4</td><td class="num">26.9</td><td class="num">20.4%</td><td class="num">6.75%</td><td class="num">08-07</td></tr></table>
+<p><b>gateroad and gatefield are a different town from square.</b> gateroad's ground median is 12.6/255 with
+<b>48.4% of its floor at or under 12/255</b>; square's is 38.1. 12 of the 94 survivors are directly about not
+being able to see the ground.</p>
+<div><img src="ev/dark-gateroad.jpg" alt="gateroad as shipped"><p class="cap">gateroad as shipped. The naive judge, three looks: <i>&ldquo;the central clear pathway terminates directly into heavy darkness&rdquo;</i>, <i>&ldquo;extremely low lighting obscures terrain boundaries and path continuation&rdquo;</i>, <i>&ldquo;makes it difficult to tell where navigable space ends and obstacles begin&rdquo;</i>. Box-measured right half: L p50 <b>9.6</b>, 46.2% of pixels ≤ 8/255, 12.7% crushed.</p></div>
+<p><b>The sharpest single instance, and it is a story site.</b> Three independent naive looks at homerow reported
+<i>&ldquo;a completely pitch-black rectangular block sits on the path, appearing as broken geometry&rdquo;</i> (F63/F78/F84).
+Measured in the box: <b>L p50 = 1.0/255, 53.9% of pixels ≤ 8, 48.7% crushed, saturation 0.000</b>, against a ring
+median of 53.5. <b>98.2% of the black pixels are <code>walk_pad_lake-home</code>'s own surface</b> — attributed on the
+DARK PIXELS, not on the rectangle, because a bbox contains its surroundings.</p>
+<div><img src="ev/black-homerow.jpg" alt="homerow black quad"><p class="cap">homerow, ×2.2 gain. The pad outside Lake's home. <b>Grandmother's bench is standing in it</b> — and the checklist, independently, reported <code>grandmothers-bench: ABSENT</code> (F104). Two findings, one cause.</p></div>
+<p><b>What it is not:</b> not a black material (the same pad reads L50 = 45.6 where it is lit) and not the lamp cap's
+shadow (the lamp is at x 37.8–38.2, y 47.1–47.5; the black region is x 35.6–38.6, <b>y 48.9–51.0</b> — 1.5 m away and
+in the wrong direction). It is a cast shadow with no fill in it at all.</p>
+<p><b>What fixing it buys.</b> Emberbrook's own night doctrine is on record and is a warning against the obvious
+move: <i>&ldquo;adjusting an existing light has never moved this town; ADDING a new source always has&rdquo;</i>, and slopes
+ran 4.8–10.1 L/W across one town so never borrow another shot's. Dellhollow's rounds 4–6 solved the same class
+as ATMOSPHERE and not as light (<code>dh_haze_east_depth</code>, then one anisotropy number) precisely because more
+light printed a tiling artefact. Emberbrook has no gorge wall to quilt, so the cheap experiment is a fill/bounce
+term rather than a key. <b>Do not treat this as one town-wide number</b> — gateroad/gatefield are 3× worse than
+square on the same axis and the doctrine says to solve a class on its median member and give a sub-floor plate its
+own two-rung slope.</p>
+</div>
+
+<div class="card lead">
+<h3 style="margin-top:0">#3 — THE HEARTLIGHT IS A BLOWN-OUT WHITE BOX</h3>
+<p class="big">48.1% of its own box at ≥250/255 · 0.28% of frame</p>
+<p><b>Object: <code>lm_heartlight_cap</code> 67.9% + <code>lm_heartlight_flame</code> 11.5%</b> (residual 0.01 m — this
+one IS the massing). Naive, twice: <i>&ldquo;the primary central light source is a raw white emissive cube without any
+fire, embers, or lamp fixture model&rdquo;</i> (F58), <i>&ldquo;an extremely intense spot of light illuminates the central
+stone slab without any visible light source&rdquo;</i> (F55).</p>
+<p>Measured: box L p50 <b>249.3</b>, p95 254.9, <b>48.1% of pixels at or above 250/255</b>, saturation 0.075 against a
+ring saturation of 0.399. Across the three plates that hold it, <code>lm_heartlight_cap</code> reads
+<b>L50 = 247.7</b> — the brightest named object in town by a distance.</p>
+<div><img src="ev/heartlight-square.jpg" alt="the Heartlight on the square"><p class="cap">square, no gain. The Heartlight, unretouched.</p></div>
+<p><b>Why this ranks above much larger defects.</b> World canon: <i>EMBERBROOK IS the Heartlight town</i>; the
+Heartlight is the object the town is named for, it is Chapter One's Kindling Hour staging, and
+<code>public/js/hush.js</code> exists because <i>&ldquo;the user chose TAKE THE LIGHT over a grayscale wash and the reason
+is canon&rdquo;</i>. It is one small prop at 0.28% of frame — the cheapest item on this list — and it is currently a
+clipped white cube. Expect the fix to be an emissive/fixture model plus a value that does not clip, not a light
+change; the plate is baked, so it is a re-bake of <code>square</code>, <code>arch</code> and <code>therise</code> only.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">#4 — <code>lm_dovecote_cap</code>: a rectangular hipped roof on a cylindrical shaft</h3>
+<p><b>Object named at 72.1%, residual 0.00 m</b> — massing, not dressing. northlane, naive:
+<i>&ldquo;a rectangular hipped roof is placed directly over a cylindrical tower, causing the corners of the roof to
+awkwardly overhang open air&rdquo;</i> (F90, sev 1). 2.75% of frame. Small, unambiguous, one prop.</p>
+<img src="ev/dovecote-northlane.jpg" alt="dovecote cap" style="max-width:520px">
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">#5 — A FLAT PANEL ON THE WATERMILL THAT THIS LANE CANNOT NAME</h3>
+<p>homerow, naive twice: <i>&ldquo;a flat, untextured tan rectangular panel is attached to the timber structure without
+detail or material graphics&rdquo;</i> (F64), <i>&ldquo;an untextured, plain tan geometric panel&rdquo;</i> (F85). 2.09% of frame.</p>
+<p><b>Partly refuted, partly upheld, and honestly unnamed.</b> Measured: 5×5 local sd p50 = <b>2.24</b> against a
+ring of 8.69 — so it is <b>3.9× flatter than everything around it</b>, but it is above the 2.0 &ldquo;no texture&rdquo;
+floor, so &ldquo;untextured&rdquo; is the wrong word. And <b>the object census abstains</b>: the nearest massing is
+<code>lm_watermill_body</code> at a residual of <b>1.16–1.41 m</b>, i.e. the thing making these pixels is
+<b>dressing that is not in the collision bundle</b>. <code>northlane</code> F102 (&ldquo;roof framing extends into open air&rdquo;)
+lands on the same object at 0.47 m.</p>
+<img src="ev/panel-homerow.jpg" alt="watermill panel" style="max-width:380px">
+<p>This is the <code>blockout_material_coverage()</code> class in CLAUDE.md — flat untextured paint shipping through
+green gates for weeks, on no keep list and matched by no substitution rule. <b>It needs the Blender census
+this lane could not run</b>, aimed at world x[47.4,51.1] y[56.6,61.9] z[1.9,8.8].</p>
+</div>
+
+<h2>5 · REFUTATIONS — the things that should not be built</h2>
+
+<div class="card kill">
+<h3 style="margin-top:0">R1 · &ldquo;Small light-green spheres scattered along the path edge — stray asset clutter&rdquo; (arch, F13 + F20)</h3>
+<p><b>Killed on the pixels, then re-named on the picture.</b> The box's mean RGB is <b>[61.7, 63.3, 62.9]</b> —
+neutral grey — with saturation 0.131 against the surrounding ring's 0.136. There is nothing green there and the
+box is chromatically <i>indistinguishable</i> from its surround. Two independent naive looks agreed on a colour
+that is not present.</p>
+<p><b>And looking at it settles what they actually saw</b> (<code>ev/rim-arch-stones.jpg</code> above): pale kerb
+stones set along the apron edge — a deliberate dressing element, the same stones that line gatefield's court —
+sitting on <b>#1's staircase rim</b>. The rim is real and is already ranked; the &ldquo;stray green clutter&rdquo; is not a
+worklist item and building against it would have moved a dressing pass that is doing its job.</p>
+</div>
+
+<div class="card kill">
+<h3 style="margin-top:0">R2 · gatefield &ldquo;The water surface: FAILING — completely dark plane lacking reflection&rdquo; (F125), and square F74</h3>
+<p>Killed by the aim census before the sceptic ever saw them: <b>0 of 754</b> and <b>0 of 340</b> census cells inside
+the judged boxes hold visible water. Both plates <i>do</i> hold water (2.4% and 2.0% of frame) — the verdicts point
+somewhere else. Emberbrook's water class was closed 0/6 FAILING → 0 FAILING by <code>emb_brookchop</code> on
+2026-08-07; <b>a fresh FAILING water verdict on gatefield would have looked like a regression of that work and is
+not one.</b> The town's only standing water finding is F100 on pondlane (WEAK, 35.5% real water in its box).</p>
+</div>
+
+<div class="card kill">
+<h3 style="margin-top:0">R3 · &ldquo;The sky is flat / boring&rdquo; is not an Emberbrook item</h3>
+<p>The SKY quality family arms off measured sky-pixel fraction, and Emberbrook's plates have almost none:
+<b>void is 0.00% on 9 of 11 plates</b>, 1.66% on pondlane and 1.49% on therise. Two sky verdicts were issued, both
+on plates that actually have sky, both on-subject (coverage 0.327 / 0.495), and one is WEAK (F54 therise:
+<i>&ldquo;simple gradient visible in a narrow cutout&rdquo;</i> — on a cutout the census agrees is 2% of frame).
+This is the same shape as <code>dh_seam_census</code>'s finding that Dellhollow is a closed gorge with no sky to be
+flat against. <b>Do not open a sky lane for Emberbrook on this evidence.</b></p>
+</div>
+
+<div class="card kill">
+<h3 style="margin-top:0">R4 · Three &ldquo;already known&rdquo; labels are wrong, and they are on the #1 item</h3>
+<p><code>F1 woodroad</code>, <code>F42 square</code> and <code>F118 gatefield</code> were bucketed
+<code>gate-stair-occluded</code> — a <b>Dellhollow</b> tracked item (&ldquo;dellhollow.cameras.json gate._framing_note,
+stair 6.1% post-bake&rdquo;) whose terms are <code>[stair|steps|staircase] × [occluded|hidden|…]</code> and which carries
+no <code>town</code> key, so it matches any town. All three are the paving-rim finding of §4 #1 and none of them is
+about a stair. <b>The largest new defect in this sweep was partly filed as an old defect in another town.</b>
+Two other TRACKED rules are unscoped the same way; only <code>emb-blockout-materials</code> carries
+<code>town: 'emberbrook'</code>.</p>
+</div>
+
+<div class="card kill">
+<h3 style="margin-top:0">R5 · METHOD — the sceptic systematically discounts foliage occlusion, 3× harder than anything else</h3>
+<p>Refute rates on this run, split by whether the finding is about foliage blocking the view:</p>
+<table><tr><th>class</th><th class="num">raised</th><th class="num">refuted</th><th class="num">rate</th></tr>
+<tr><td>foliage occlusion</td><td class="num">31</td><td class="num">12</td><td class="num warn">39%</td></tr>
+<tr><td>everything else</td><td class="num">86</td><td class="num">11</td><td class="num">13%</td></tr></table>
+<p>The refusals are all one sentence in twelve costumes: <i>&ldquo;standard cinematic foreground framing&rdquo;</i>,
+<i>&ldquo;normal environment composition&rdquo;</i>, <i>&ldquo;a standard method for defining map edges&rdquo;</i>,
+<i>&ldquo;standard vignette framing&rdquo;</i>. <b>The user's own #1 hand-filed complaint against Dellhollow is
+<code>canopy-wall</code> — &ldquo;a wall of tree canopy stands between the camera and the road into town&rdquo;</b> — and the
+calibration gate already records that complaint as caught only LENIENTLY and only by the checklist, never
+strictly and never naive. This measurement says why: the sceptic is refuting that exact class at 3× the base
+rate. <b>This is a claim about the harness, not the town, and it is the cheapest thing on this board to test</b>
+— re-run stage 2 with the foliage class exempted, or scored against the ray census, and see which of the 12 come
+back. It is not a fix I am authorised to make and it is not costed here.</p>
+</div>
+
+<h2>6 · Every verdict, verbatim, by plate</h2>
+<p class="sub">Survivors and refutations together — a refutation is data. <span class="pill new">NEW</span>
+<span class="pill known">known</span> <span class="pill ref">REFUTED</span> <span class="pill q">[QUALITY]</span> ·
+<b>obj:</b> what this finding's own bbox lands on in <code>emb-cine/scene.glb</code>, with the residual (a large
+residual = dressing the collision bundle does not carry).</p>
+<div id="rows"></div>
+
+<h2>7 · What this round did NOT and could not measure</h2>
+<ul>
+<li><b>Nothing was fixed.</b> This is a measure-and-rank lane by instruction; no geometry, material, light or plate was touched.</li>
+<li><b>No Blender.</b> Items #5 and every &ldquo;residual &gt; 0.5 m&rdquo; row need the Blender ray census to name their object. The GPU was another lane's.</li>
+<li><b>Interiors are unswept.</b> <code>emb-bakery-int</code>, <code>emb-inn-int</code>, <code>emb-item-int</code>, <code>emb-lake-int</code> hold no <code>cine.json</code> cameras this tool reads; only <code>emb-cine</code>'s eleven were judged.</li>
+<li><b>Three plates predate the water carrier and the dressing rebakes</b> — woodroad and waystone (2026-08-02T11:41/12:15) and gatefield (2026-08-02T22:57), against eight baked 08-07/08-08. They also carry the older grade (<code>exposure 0.78</code>, <code>moon 2.0</code>) where the rebaked eight mostly carry <code>exposure 1.0</code>. Every finding on those three is a finding about a plate that is a week behind its own master, and gatefield is the second-darkest plate in town.</li>
+<li><b>A plate judge cannot see feet.</b> seam-canon §10.3 stands: nothing here says whether a surface catches a foot, whether a solid blocks the body, or whether a naive reading of a frame escapes. #1 in particular is a change to a WALKABLE surface and owes <code>walk_engine_gate</code> + <code>walk_bodygate</code>.</li>
+</ul>
+
+<script>
+fetch('rows.json').then(r=>r.json()).then(rows=>{
+  const byShot={};
+  for(const r of rows){(byShot[r.shot]=byShot[r.shot]||[]).push(r);}
+  const order=['woodroad','waystone','arch','orchard','therise','square','pondlane','homerow','northlane','gateroad','gatefield'];
+  const esc=s=>(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  let h='';
+  for(const s of order){
+    const rs=(byShot[s]||[]).sort((a,b)=>(a.refuted-b.refuted)||(b.sev-a.sev));
+    h+=`<h3 style="margin-top:34px">${s} <span style="color:#9aa3b0;font-weight:400;font-size:13px">— ${rs.length} verdicts (${rs.filter(x=>!x.refuted).length} survived)</span></h3>`;
+    h+=`<img src="ev/plate-${s}.jpg" style="max-width:520px" alt="${s}">`;
+    h+='<table><tr><th>id</th><th>verdict, verbatim</th><th style="width:33%">obj at its own bbox</th></tr>';
+    for(const r of rs){
+      const pills=[r.refuted?'<span class="pill ref">REFUTED</span>':'',
+        r.bucket==='known'?`<span class="pill known">known:${esc(r.triage)}</span>`:(r.refuted?'':'<span class="pill new">new</span>'),
+        (r.item||'').startsWith('quality:')?'<span class="pill q">QUALITY</span>':'',
+        `<span class="pill">${r.mode}</span>`,`<span class="pill">sev ${r.sev}</span>`,
+        r.cat?`<span class="pill">${esc(r.cat)}</span>`:''].join('');
+      const obj=(r.obj&&r.obj.length)?r.obj.map(o=>`${(100*o.f).toFixed(0)}% <code>${esc(o.n)}</code>${o.d>0.5?` <span style="color:#ff7a70">res ${o.d} m</span>`:''}`).join('<br>'):'<span style="color:#9aa3b0">no bbox / not boxed</span>';
+      h+=`<tr><td><b>${r.fid}</b></td><td>${pills}<div class="verb" style="margin-top:5px">${esc(r.desc)}</div>`
+       + (r.itemWhat?`<div style="color:#9aa3b0;font-size:12px;margin-top:4px">item: <code>${esc(r.item)}</code></div>`:'')
+       + (r.why?`<div style="color:#9aa3b0;font-size:12.5px;margin-top:5px"><b>stage 2 (${esc(r.by)}):</b> ${esc(r.why)}</div>`:'')
+       + `</td><td class="obj">${obj}</td></tr>`;
+    }
+    h+='</table>';
+  }
+  document.getElementById('rows').innerHTML=h;
+});
+</script>
+</main>

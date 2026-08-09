@@ -1,0 +1,2234 @@
+[
+ {
+  "name": "walk_e_elder-house__home-lane-end_l4",
+  "n": 26,
+  "L50": 0.7874,
+  "L95": 1.9278,
+  "S": 0.3525641025641026,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_watermill_bank07",
+  "n": 43,
+  "L50": 0.9278,
+  "L95": 3.4252000000000002,
+  "S": 0.4542635658914728,
+  "shots": "homerow,gateroad"
+ },
+ {
+  "name": "walk_e_elder-house__home-lane-end_l5",
+  "n": 26,
+  "L50": 1,
+  "L95": 44.258,
+  "S": 0.39512748689219274,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_field_11_pale22",
+  "n": 34,
+  "L50": 1.6429999999999998,
+  "L95": 21.3606,
+  "S": 0.47187759952465835,
+  "shots": "gateroad"
+ },
+ {
+  "name": "lm_infill_16_body",
+  "n": 33,
+  "L50": 2.0722,
+  "L95": 42.34739999999999,
+  "S": 0.42035302363133015,
+  "shots": "pondlane"
+ },
+ {
+  "name": "lm_elder-house_door",
+  "n": 30,
+  "L50": 2.2126,
+  "L95": 8.6378,
+  "S": 0.34578403078403086,
+  "shots": "homerow"
+ },
+ {
+  "name": "walk_e_pond-jetty__brook-bridge_l5",
+  "n": 30,
+  "L50": 2.2848,
+  "L95": 45.6696,
+  "S": 0.6842254376723178,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "veg_emb_wood_05_crownG",
+  "n": 32,
+  "L50": 2.6430000000000002,
+  "L95": 27.9932,
+  "S": 0.5238951573459723,
+  "shots": "woodroad"
+ },
+ {
+  "name": "walk_pad_elder-house",
+  "n": 65,
+  "L50": 2.7874000000000003,
+  "L95": 5.0722,
+  "S": 0.3328205128205127,
+  "shots": "homerow"
+ },
+ {
+  "name": "veg_emb_wood_06_crownA",
+  "n": 43,
+  "L50": 2.9278,
+  "L95": 20.4236,
+  "S": 0.5344374712534765,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "lm_watermill_bank05",
+  "n": 33,
+  "L50": 3,
+  "L95": 17.6454,
+  "S": 0.48860306360306366,
+  "shots": "homerow,gateroad"
+ },
+ {
+  "name": "lm_barn_door",
+  "n": 27,
+  "L50": 3.2126,
+  "L95": 15.9238,
+  "S": 0.22864750838607048,
+  "shots": "gateroad"
+ },
+ {
+  "name": "veg_emb_wood_05_crownA",
+  "n": 33,
+  "L50": 3.4985999999999997,
+  "L95": 71.8672,
+  "S": 0.5997877102702184,
+  "shots": "woodroad,gateroad"
+ },
+ {
+  "name": "veg_emb_wood_08_crownA",
+  "n": 52,
+  "L50": 3.7112,
+  "L95": 33.343799999999995,
+  "S": 0.6829844912118486,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "lm_cider-press_gableend",
+  "n": 124,
+  "L50": 4.1404,
+  "L95": 70.6796,
+  "S": 0.3321980550268434,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "lm_cider-press_post00",
+  "n": 30,
+  "L50": 4.2126,
+  "L95": 12.6338,
+  "S": 0.3032617845117845,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "veg_emb_wood_07_crownG",
+  "n": 72,
+  "L50": 4.498599999999999,
+  "L95": 50.345,
+  "S": 0.5403613626867315,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "lm_watermill_bank04",
+  "n": 49,
+  "L50": 4.5656,
+  "L95": 38.5744,
+  "S": 0.4695955211723743,
+  "shots": "gateroad"
+ },
+ {
+  "name": "veg_emb_wood_18_crownA",
+  "n": 31,
+  "L50": 4.855599999999999,
+  "L95": 44.35659999999999,
+  "S": 0.48980402014845886,
+  "shots": "arch,pondlane,gateroad,gatefield"
+ },
+ {
+  "name": "lm_cider-press_plate",
+  "n": 43,
+  "L50": 4.9277999999999995,
+  "L95": 108.20539999999998,
+  "S": 0.35769265769070385,
+  "shots": "arch,therise"
+ },
+ {
+  "name": "lm_cider-press_press",
+  "n": 94,
+  "L50": 4.999999999999999,
+  "L95": 45.6254,
+  "S": 0.3368270180480958,
+  "shots": "arch,orchard,therise"
+ },
+ {
+  "name": "walk_e_square-plaza__pond-jetty_l8",
+  "n": 36,
+  "L50": 5.144399999999999,
+  "L95": 34.330600000000004,
+  "S": 0.36839931832780803,
+  "shots": "arch,square,pondlane"
+ },
+ {
+  "name": "emb_bluff_W0_mass0",
+  "n": 169,
+  "L50": 5.212599999999999,
+  "L95": 44.538799999999995,
+  "S": 0.3523053981832278,
+  "shots": "arch,therise,gatefield"
+ },
+ {
+  "name": "veg_emb_wood_07_crownA",
+  "n": 62,
+  "L50": 5.2138,
+  "L95": 48.1954,
+  "S": 0.5914274577217846,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "walk_e_pond-jetty__washline-green_l3",
+  "n": 29,
+  "L50": 5.425199999999999,
+  "L95": 31.1296,
+  "S": 0.43981379281582117,
+  "shots": "therise,square,pondlane"
+ },
+ {
+  "name": "veg_emb_wood_09_crownA",
+  "n": 40,
+  "L50": 5.7059999999999995,
+  "L95": 48.4352,
+  "S": 0.6417322917321819,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "lm_watermill_bank01",
+  "n": 33,
+  "L50": 6.0694,
+  "L95": 47.86719999999999,
+  "S": 0.6719571132645342,
+  "shots": "gateroad"
+ },
+ {
+  "name": "lm_sigil-gate_doors",
+  "n": 95,
+  "L50": 6.2848,
+  "L95": 12.284799999999999,
+  "S": 0.19524166489458955,
+  "shots": "therise,gatefield"
+ },
+ {
+  "name": "lm_forest-trailhead_stileA",
+  "n": 27,
+  "L50": 6.357,
+  "L95": 62.2074,
+  "S": 0.206616653195244,
+  "shots": "arch,gatefield"
+ },
+ {
+  "name": "lm_elder-house_base",
+  "n": 106,
+  "L50": 6.716399999999999,
+  "L95": 30.4132,
+  "S": 0.4461131455327949,
+  "shots": "arch,therise,homerow,gateroad"
+ },
+ {
+  "name": "veg_emb_wood_19_crownG",
+  "n": 63,
+  "L50": 7.001199999999999,
+  "L95": 28.055,
+  "S": 0.3679167945454978,
+  "shots": "arch,gateroad,gatefield"
+ },
+ {
+  "name": "veg_emb_wood_08_crownG",
+  "n": 42,
+  "L50": 7.281999999999999,
+  "L95": 40.709999999999994,
+  "S": 0.6659679241470672,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "lm_sigil-gate_jambR",
+  "n": 36,
+  "L50": 7.493399999999999,
+  "L95": 18.9146,
+  "S": 0.40140924093774966,
+  "shots": "therise,gatefield"
+ },
+ {
+  "name": "lm_infill_25_body",
+  "n": 318,
+  "L50": 8.0722,
+  "L95": 58.75379999999999,
+  "S": 0.47066889160176956,
+  "shots": "arch,pondlane"
+ },
+ {
+  "name": "walk_pad_brook-bridge",
+  "n": 78,
+  "L50": 8.127199999999998,
+  "L95": 52.38199999999999,
+  "S": 0.6766338605070218,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "lm_infill_00_track2",
+  "n": 33,
+  "L50": 8.2046,
+  "L95": 54.358999999999995,
+  "S": 0.6795579392296408,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_road-gate_postR",
+  "n": 49,
+  "L50": 8.2126,
+  "L95": 35.765,
+  "S": 0.46867935275370587,
+  "shots": "waystone,arch,orchard"
+ },
+ {
+  "name": "lm_watermill_base",
+  "n": 54,
+  "L50": 8.2716,
+  "L95": 56.187400000000004,
+  "S": 0.6132680129505528,
+  "shots": "arch,therise,homerow,northlane,gateroad"
+ },
+ {
+  "name": "lm_road-gate_postL",
+  "n": 29,
+  "L50": 8.357,
+  "L95": 11.852799999999998,
+  "S": 0.3855933019726123,
+  "shots": "waystone,arch,orchard"
+ },
+ {
+  "name": "lm_spring-house_body",
+  "n": 101,
+  "L50": 8.702,
+  "L95": 36.4854,
+  "S": 0.4476403300182659,
+  "shots": "homerow"
+ },
+ {
+  "name": "emb_bluff_W1_mass0",
+  "n": 101,
+  "L50": 9.0602,
+  "L95": 44.6848,
+  "S": 0.48960160213031173,
+  "shots": "therise,gatefield"
+ },
+ {
+  "name": "lm_cider-press_post11",
+  "n": 27,
+  "L50": 9.566799999999999,
+  "L95": 56.99079999999999,
+  "S": 0.5257434413979029,
+  "shots": "arch,therise"
+ },
+ {
+  "name": "lm_incident_00_road-gate__square-plaza_woodpile",
+  "n": 116,
+  "L50": 9.6402,
+  "L95": 98.13119999999999,
+  "S": 0.5007674982324086,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "emb_gatewall_Egrate",
+  "n": 389,
+  "L50": 9.7754,
+  "L95": 33.2808,
+  "S": 0.3029159082952936,
+  "shots": "arch,therise,gatefield"
+ },
+ {
+  "name": "walk_e_square-plaza__pond-jetty_l9",
+  "n": 35,
+  "L50": 9.8332,
+  "L95": 44.603,
+  "S": 0.5944859342280875,
+  "shots": "arch,therise,square,pondlane"
+ },
+ {
+  "name": "emb_gatewall_W",
+  "n": 197,
+  "L50": 10.1404,
+  "L95": 35.4212,
+  "S": 0.2852692979253006,
+  "shots": "arch,gatefield"
+ },
+ {
+  "name": "emb_gatewall_E",
+  "n": 243,
+  "L50": 10.1404,
+  "L95": 19.0722,
+  "S": 0.2801203909845626,
+  "shots": "arch,gatefield"
+ },
+ {
+  "name": "lm_infill_05_body",
+  "n": 97,
+  "L50": 10.4894,
+  "L95": 43.8914,
+  "S": 0.6105509848790085,
+  "shots": "square,gateroad"
+ },
+ {
+  "name": "lm_field_11_pale21",
+  "n": 30,
+  "L50": 10.4894,
+  "L95": 47.5444,
+  "S": 0.45937323651777096,
+  "shots": "gateroad"
+ },
+ {
+  "name": "lm_barn_base",
+  "n": 78,
+  "L50": 10.4946,
+  "L95": 47.035000000000004,
+  "S": 0.5608637519919714,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "lm_road-gate_lintel",
+  "n": 61,
+  "L50": 11.4224,
+  "L95": 36.428799999999995,
+  "S": 0.6284747242029558,
+  "shots": "arch,orchard"
+ },
+ {
+  "name": "emb_bluff_W2_mass0",
+  "n": 38,
+  "L50": 11.565599999999998,
+  "L95": 51.336999999999996,
+  "S": 0.38279210194240915,
+  "shots": "arch,gatefield"
+ },
+ {
+  "name": "walk_e_waystone__road-gate_l3",
+  "n": 323,
+  "L50": 12.4292,
+  "L95": 49.1974,
+  "S": 0.6390510126390929,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "water_emb_river",
+  "n": 459,
+  "L50": 12.635,
+  "L95": 47.5376,
+  "S": 0.5351085376213137,
+  "shots": "arch,therise,pondlane,gatefield"
+ },
+ {
+  "name": "lm_incident_01_road-gate__square-plaza_handcart",
+  "n": 61,
+  "L50": 12.993199999999998,
+  "L95": 66.19739999999999,
+  "S": 0.6455323698959224,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "lm_sigil-gate_jambL",
+  "n": 25,
+  "L50": 13.2768,
+  "L95": 28.4212,
+  "S": 0.3349592079264896,
+  "shots": "gatefield"
+ },
+ {
+  "name": "lm_infill_13_body",
+  "n": 30,
+  "L50": 13.283199999999999,
+  "L95": 39.612199999999994,
+  "S": 0.7501648284786747,
+  "shots": "orchard"
+ },
+ {
+  "name": "walk_e_road-gate__square-plaza_l2",
+  "n": 132,
+  "L50": 13.357,
+  "L95": 29.842,
+  "S": 0.3132161220237979,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "veg_emb_wood_14_crownA",
+  "n": 71,
+  "L50": 13.568,
+  "L95": 48.626599999999996,
+  "S": 0.4931681263145119,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "walk_e_square-plaza__barn_l5",
+  "n": 57,
+  "L50": 13.8464,
+  "L95": 46.9186,
+  "S": 0.3652216588561428,
+  "shots": "arch,therise,square,northlane"
+ },
+ {
+  "name": "lm_field_03_ridge03",
+  "n": 79,
+  "L50": 13.8464,
+  "L95": 53.049,
+  "S": 0.4830640405669146,
+  "shots": "orchard,therise,square"
+ },
+ {
+  "name": "veg_emb_wood_14_crownG",
+  "n": 81,
+  "L50": 13.9302,
+  "L95": 45.419599999999996,
+  "S": 0.5277426283121833,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "lm_infill_22_body",
+  "n": 93,
+  "L50": 14.2098,
+  "L95": 44.4128,
+  "S": 0.5508351683349229,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_e_pond-jetty__washline-green_l2",
+  "n": 27,
+  "L50": 14.3502,
+  "L95": 53.0482,
+  "S": 0.4993988363464729,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "emb_bluff_W5_mass0",
+  "n": 36,
+  "L50": 14.421199999999999,
+  "L95": 39.698,
+  "S": 0.436650266677721,
+  "shots": "therise"
+ },
+ {
+  "name": "lm_hillside-cottage_base",
+  "n": 79,
+  "L50": 14.4934,
+  "L95": 139.9484,
+  "S": 0.40934504276494027,
+  "shots": "homerow"
+ },
+ {
+  "name": "water_emb_pond",
+  "n": 465,
+  "L50": 14.5536,
+  "L95": 72.4678,
+  "S": 0.6271814097571095,
+  "shots": "arch,therise,square,pondlane"
+ },
+ {
+  "name": "walk_e_waystone__road-gate_l4",
+  "n": 177,
+  "L50": 14.627,
+  "L95": 50.007999999999996,
+  "S": 0.5514083213397555,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "walk_e_square-plaza__barn_l9",
+  "n": 54,
+  "L50": 14.924999999999999,
+  "L95": 45.2058,
+  "S": 0.5472758345954767,
+  "shots": "northlane"
+ },
+ {
+  "name": "walk_lm_square-plaza.051",
+  "n": 77,
+  "L50": 15.199399999999999,
+  "L95": 30.6992,
+  "S": 0.6329170922686639,
+  "shots": "therise,square,pondlane,northlane"
+ },
+ {
+  "name": "lm_infill_25_roof",
+  "n": 232,
+  "L50": 15.848799999999999,
+  "L95": 67.80739999999999,
+  "S": 0.6634517155947894,
+  "shots": "arch,therise,pondlane"
+ },
+ {
+  "name": "lm_field_10_ridge14",
+  "n": 69,
+  "L50": 16.058999999999997,
+  "L95": 42.9392,
+  "S": 0.7736519427485542,
+  "shots": "pondlane,gateroad"
+ },
+ {
+  "name": "walk_e_pond-jetty__brook-bridge_l4",
+  "n": 49,
+  "L50": 16.182199999999998,
+  "L95": 49.2808,
+  "S": 0.45746168941658094,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "lm_infill_28_body",
+  "n": 45,
+  "L50": 16.5628,
+  "L95": 49.407599999999995,
+  "S": 0.500996258526497,
+  "shots": "pondlane"
+ },
+ {
+  "name": "water_emb_brook",
+  "n": 671,
+  "L50": 16.695199999999996,
+  "L95": 73.00619999999999,
+  "S": 0.5658205137683838,
+  "shots": "arch,therise,square,pondlane,homerow,northlane,gateroad"
+ },
+ {
+  "name": "lm_infill_13_track3",
+  "n": 27,
+  "L50": 16.8528,
+  "L95": 36.3118,
+  "S": 0.6113744405447512,
+  "shots": "homerow"
+ },
+ {
+  "name": "emb_culvert_01_deck",
+  "n": 39,
+  "L50": 17.481399999999997,
+  "L95": 69.23639999999999,
+  "S": 0.544145839807343,
+  "shots": "arch,therise,northlane"
+ },
+ {
+  "name": "lm_infill_04_body",
+  "n": 207,
+  "L50": 17.635,
+  "L95": 53.073,
+  "S": 0.6029889206753707,
+  "shots": "arch,square,gateroad"
+ },
+ {
+  "name": "walk_pad_pond-jetty",
+  "n": 73,
+  "L50": 18.0534,
+  "L95": 53.5998,
+  "S": 0.45581128641317087,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "emb_lanestub_upper-lane-closed_4",
+  "n": 25,
+  "L50": 18.351399999999998,
+  "L95": 42.2828,
+  "S": 0.6262970209997016,
+  "shots": "homerow"
+ },
+ {
+  "name": "walk_e_square-plaza__barn_l8",
+  "n": 55,
+  "L50": 18.569599999999998,
+  "L95": 67.8778,
+  "S": 0.46332321711869373,
+  "shots": "northlane"
+ },
+ {
+  "name": "lm_item-shop_chimney",
+  "n": 33,
+  "L50": 18.615399999999998,
+  "L95": 64.9564,
+  "S": 0.6116432585528734,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "lm_infill_02_body",
+  "n": 173,
+  "L50": 19.003999999999998,
+  "L95": 77.3438,
+  "S": 0.2896274484769923,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "emb_bluff_W6_mass0",
+  "n": 47,
+  "L50": 19.140400000000003,
+  "L95": 53.12519999999999,
+  "S": 0.25617235901624563,
+  "shots": "therise"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l12",
+  "n": 183,
+  "L50": 19.286,
+  "L95": 32.709599999999995,
+  "S": 0.237922954981595,
+  "shots": "gateroad,gatefield"
+ },
+ {
+  "name": "lm_infill_19_body",
+  "n": 80,
+  "L50": 19.337,
+  "L95": 43.1164,
+  "S": 0.6134468086702678,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_pad_road-gate",
+  "n": 99,
+  "L50": 19.4196,
+  "L95": 77.5118,
+  "S": 0.44670238701716247,
+  "shots": "waystone,arch,orchard"
+ },
+ {
+  "name": "lm_elder-house_body",
+  "n": 395,
+  "L50": 19.4252,
+  "L95": 118.29399999999998,
+  "S": 0.27515845062172006,
+  "shots": "arch,therise,homerow,gateroad"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l13",
+  "n": 326,
+  "L50": 19.4998,
+  "L95": 33.648199999999996,
+  "S": 0.26076545906100645,
+  "shots": "arch,gateroad,gatefield"
+ },
+ {
+  "name": "lm_infill_03_body",
+  "n": 784,
+  "L50": 19.7914,
+  "L95": 80.1398,
+  "S": 0.4750428177384002,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "lm_watermill_bank03",
+  "n": 33,
+  "L50": 19.9868,
+  "L95": 51.6928,
+  "S": 0.507994705432596,
+  "shots": "gateroad"
+ },
+ {
+  "name": "lm_infill_05_roof",
+  "n": 96,
+  "L50": 20.1284,
+  "L95": 45.7522,
+  "S": 0.6029784111752996,
+  "shots": "square,gateroad"
+ },
+ {
+  "name": "lm_pond-weir_cheek1",
+  "n": 35,
+  "L50": 20.198999999999998,
+  "L95": 62.5492,
+  "S": 0.6562843142578121,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_e_pond-jetty__washline-green_l5",
+  "n": 29,
+  "L50": 20.3342,
+  "L95": 59.0118,
+  "S": 0.8882288338248291,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "walk_e_pond-jetty__washline-green_l6",
+  "n": 29,
+  "L50": 20.3382,
+  "L95": 64.5384,
+  "S": 0.7214427590906642,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "lm_incident_02_waystone__road-gate_woodpile",
+  "n": 85,
+  "L50": 20.3526,
+  "L95": 64.6034,
+  "S": 0.47992162107728364,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "emb_ground_valley",
+  "n": 56596,
+  "L50": 20.4998,
+  "L95": 71.4838,
+  "S": 0.448324424324506,
+  "shots": "woodroad,waystone,arch,orchard,therise,square,pondlane,homerow,northlane,gateroad,gatefield"
+ },
+ {
+  "name": "walk_e_pond-jetty__washline-green_l4",
+  "n": 27,
+  "L50": 20.556,
+  "L95": 42.47939999999999,
+  "S": 0.6828730157013756,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "lm_pips-den_floor",
+  "n": 38,
+  "L50": 20.620599999999996,
+  "L95": 100.6498,
+  "S": 0.5746565187741028,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_e_waystone__road-gate_l2",
+  "n": 307,
+  "L50": 21.055,
+  "L95": 66.2952,
+  "S": 0.5098176780244086,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "lm_infill_30_track0",
+  "n": 28,
+  "L50": 21.069399999999998,
+  "L95": 61.8436,
+  "S": 0.2868185799170111,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "walk_e_road-gate__orchard_l5",
+  "n": 25,
+  "L50": 21.1484,
+  "L95": 68.1974,
+  "S": 0.24742947121634543,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "walk_lm_square-plaza.050",
+  "n": 297,
+  "L50": 21.1954,
+  "L95": 34.5588,
+  "S": 0.6129860920971687,
+  "shots": "square,pondlane,northlane,gateroad"
+ },
+ {
+  "name": "emb_bluff_W3_mass0",
+  "n": 53,
+  "L50": 21.2844,
+  "L95": 58.128,
+  "S": 0.6656355146431144,
+  "shots": "therise"
+ },
+ {
+  "name": "walk_e_waystone__road-gate_l5",
+  "n": 81,
+  "L50": 21.339799999999997,
+  "L95": 63.93579999999999,
+  "S": 0.5173264089927875,
+  "shots": "waystone,arch,orchard"
+ },
+ {
+  "name": "walk_lm_washline-green",
+  "n": 188,
+  "L50": 21.5364,
+  "L95": 58.843,
+  "S": 0.749005976876563,
+  "shots": "pondlane,gateroad"
+ },
+ {
+  "name": "walk_e_road-gate__square-plaza_l6",
+  "n": 83,
+  "L50": 21.7192,
+  "L95": 74.50540000000001,
+  "S": 0.4310738991779133,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "lm_inn_base",
+  "n": 109,
+  "L50": 21.8946,
+  "L95": 139.4762,
+  "S": 0.4914511728253805,
+  "shots": "arch,orchard,therise,square,gateroad"
+ },
+ {
+  "name": "lm_east-cottages_3_body",
+  "n": 41,
+  "L50": 22.623,
+  "L95": 62.461400000000005,
+  "S": 0.6891007374580244,
+  "shots": "arch,pondlane"
+ },
+ {
+  "name": "lm_infill_09_roof",
+  "n": 67,
+  "L50": 22.6924,
+  "L95": 54.940799999999996,
+  "S": 0.7291962509610334,
+  "shots": "square,gateroad"
+ },
+ {
+  "name": "walk_pad_back-lane-closed",
+  "n": 76,
+  "L50": 22.8384,
+  "L95": 53.63099999999999,
+  "S": 0.5265417119198834,
+  "shots": "therise,square,northlane"
+ },
+ {
+  "name": "walk_e_waystone__road-gate_l1",
+  "n": 167,
+  "L50": 22.9736,
+  "L95": 43.2332,
+  "S": 0.4709119350194707,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "emb_bluff_E2_mass0",
+  "n": 274,
+  "L50": 23.1268,
+  "L95": 60.073,
+  "S": 0.576897381309938,
+  "shots": "arch,therise"
+ },
+ {
+  "name": "walk_e_road-gate__orchard_l2",
+  "n": 51,
+  "L50": 23.1444,
+  "L95": 54.8544,
+  "S": 0.3556148996310096,
+  "shots": "arch,orchard,square,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.043",
+  "n": 321,
+  "L50": 23.1954,
+  "L95": 65.2588,
+  "S": 0.5582973371595535,
+  "shots": "therise,square,pondlane,northlane,gateroad"
+ },
+ {
+  "name": "lm_bakery_chimney",
+  "n": 67,
+  "L50": 23.2122,
+  "L95": 125.8304,
+  "S": 0.4009711486529585,
+  "shots": "arch,therise,square,homerow"
+ },
+ {
+  "name": "emb_bluff_E1_mass0",
+  "n": 61,
+  "L50": 23.4076,
+  "L95": 65.59179999999999,
+  "S": 0.7553533473937204,
+  "shots": "arch,therise"
+ },
+ {
+  "name": "walk_e_arrival-clearing__waystone_l1",
+  "n": 47,
+  "L50": 23.6298,
+  "L95": 35.9948,
+  "S": 0.27759900663531056,
+  "shots": "woodroad"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l14",
+  "n": 240,
+  "L50": 23.643,
+  "L95": 36.6522,
+  "S": 0.22697073044361085,
+  "shots": "gateroad,gatefield"
+ },
+ {
+  "name": "lm_infill_09_body",
+  "n": 53,
+  "L50": 23.9102,
+  "L95": 66.655,
+  "S": 0.6916661959591277,
+  "shots": "square,gateroad"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l8",
+  "n": 45,
+  "L50": 23.933,
+  "L95": 103.38219999999998,
+  "S": 0.31684434539227674,
+  "shots": "therise,northlane,gateroad"
+ },
+ {
+  "name": "lm_pond-weir_gate",
+  "n": 45,
+  "L50": 24.463,
+  "L95": 77.3038,
+  "S": 0.7433995341817782,
+  "shots": "arch,therise,square,pondlane"
+ },
+ {
+  "name": "lm_lake-home_body",
+  "n": 321,
+  "L50": 25.144,
+  "L95": 97.651,
+  "S": 0.41881422236587834,
+  "shots": "therise,homerow,gateroad"
+ },
+ {
+  "name": "lm_east-cottages_3_roof",
+  "n": 61,
+  "L50": 25.2764,
+  "L95": 53.7812,
+  "S": 0.7112362824947477,
+  "shots": "arch,pondlane"
+ },
+ {
+  "name": "lm_infill_20_track4",
+  "n": 27,
+  "L50": 25.284399999999998,
+  "L95": 42.141200000000005,
+  "S": 0.5767103569578098,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_pond-weir_cheek0",
+  "n": 28,
+  "L50": 25.3554,
+  "L95": 63.893,
+  "S": 0.6338203522463333,
+  "shots": "arch,therise,square,pondlane"
+ },
+ {
+  "name": "emb_bluff_W8_mass0",
+  "n": 29,
+  "L50": 25.567999999999998,
+  "L95": 71.8504,
+  "S": 0.4005678380088446,
+  "shots": "therise"
+ },
+ {
+  "name": "walk_e_square-plaza__pond-jetty_l10",
+  "n": 47,
+  "L50": 25.6218,
+  "L95": 49.940999999999995,
+  "S": 0.3965936838504004,
+  "shots": "arch,therise,square,pondlane,gateroad"
+ },
+ {
+  "name": "lm_lake-home_chimney",
+  "n": 27,
+  "L50": 25.641399999999997,
+  "L95": 51.711999999999996,
+  "S": 0.5450323499558389,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_item-shop_base",
+  "n": 113,
+  "L50": 25.7096,
+  "L95": 143.8596,
+  "S": 0.524788575458642,
+  "shots": "arch,therise,square,pondlane,gateroad"
+ },
+ {
+  "name": "bar_upper-lane-closed_cart_bed",
+  "n": 44,
+  "L50": 26.065399999999997,
+  "L95": 87.8344,
+  "S": 0.411515325497776,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_infill_04_roof",
+  "n": 136,
+  "L50": 26.2042,
+  "L95": 56.791000000000004,
+  "S": 0.7084316087527109,
+  "shots": "arch,square,gateroad"
+ },
+ {
+  "name": "lm_pond-weir_sill",
+  "n": 29,
+  "L50": 26.415599999999998,
+  "L95": 58.681400000000004,
+  "S": 0.6948368462823808,
+  "shots": "arch,therise,square,pondlane"
+ },
+ {
+  "name": "walk_lm_arrival-clearing",
+  "n": 1157,
+  "L50": 26.5616,
+  "L95": 50.9266,
+  "S": 0.17188341947535798,
+  "shots": "woodroad,gateroad"
+ },
+ {
+  "name": "lm_pond-weir_winch",
+  "n": 30,
+  "L50": 26.6832,
+  "L95": 83.79039999999999,
+  "S": 0.6275621739050001,
+  "shots": "arch,therise,square,pondlane"
+ },
+ {
+  "name": "lm_lake-home_roof",
+  "n": 461,
+  "L50": 26.7096,
+  "L95": 119.127,
+  "S": 0.604600610413222,
+  "shots": "therise,homerow,gateroad"
+ },
+ {
+  "name": "lm_infill_26_body",
+  "n": 51,
+  "L50": 26.751399999999997,
+  "L95": 66.824,
+  "S": 0.5025466860403504,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l7",
+  "n": 127,
+  "L50": 26.859599999999997,
+  "L95": 42.353,
+  "S": 0.23239581008002538,
+  "shots": "arch,northlane,gateroad"
+ },
+ {
+  "name": "lm_infill_14_body",
+  "n": 60,
+  "L50": 27.331400000000002,
+  "L95": 72.91,
+  "S": 0.7479498873784672,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l6",
+  "n": 118,
+  "L50": 27.502599999999997,
+  "L95": 44.461,
+  "S": 0.2214398076005599,
+  "shots": "arch,northlane,gateroad"
+ },
+ {
+  "name": "walk_e_square-plaza__barn_l6",
+  "n": 75,
+  "L50": 27.5696,
+  "L95": 46,
+  "S": 0.1920827405807507,
+  "shots": "therise,square,northlane"
+ },
+ {
+  "name": "lm_item-shop_body",
+  "n": 402,
+  "L50": 27.6968,
+  "L95": 165.7066,
+  "S": 0.47526078997607996,
+  "shots": "arch,therise,square,pondlane,gateroad"
+ },
+ {
+  "name": "veg_emb_wood_09_crownG",
+  "n": 52,
+  "L50": 28.2584,
+  "L95": 51.5616,
+  "S": 0.3816557918317777,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l9",
+  "n": 52,
+  "L50": 28.2884,
+  "L95": 69.37419999999999,
+  "S": 0.26411824181844956,
+  "shots": "gateroad"
+ },
+ {
+  "name": "lm_heartlight_plinth",
+  "n": 36,
+  "L50": 28.309399999999997,
+  "L95": 80.2636,
+  "S": 0.6381262716683463,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l15",
+  "n": 103,
+  "L50": 28.3622,
+  "L95": 37.4192,
+  "S": 0.15286284504114664,
+  "shots": "gatefield"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l5",
+  "n": 97,
+  "L50": 28.929000000000002,
+  "L95": 43.434400000000004,
+  "S": 0.1708111870056922,
+  "shots": "northlane,gateroad"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l4",
+  "n": 81,
+  "L50": 28.934199999999997,
+  "L95": 42.357,
+  "S": 0.17007118950635472,
+  "shots": "northlane,gateroad"
+ },
+ {
+  "name": "veg_emb_screen_04_crownG",
+  "n": 33,
+  "L50": 29.0518,
+  "L95": 71.69800000000001,
+  "S": 0.6444633281819515,
+  "shots": "therise,northlane,gateroad"
+ },
+ {
+  "name": "lm_bakery_base",
+  "n": 72,
+  "L50": 29.4894,
+  "L95": 115.56499999999998,
+  "S": 0.4586077364527214,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "walk_pad_pips-den",
+  "n": 129,
+  "L50": 29.552399999999995,
+  "L95": 55.50659999999999,
+  "S": 0.33656689584050004,
+  "shots": "arch,square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_pad_spring-house",
+  "n": 78,
+  "L50": 29.647,
+  "L95": 56.8648,
+  "S": 0.25931448160012166,
+  "shots": "homerow"
+ },
+ {
+  "name": "walk_lm_square-plaza.042",
+  "n": 297,
+  "L50": 29.7622,
+  "L95": 58.535199999999996,
+  "S": 0.5232155875558252,
+  "shots": "arch,therise,square,pondlane,northlane,gateroad"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l10",
+  "n": 75,
+  "L50": 29.7898,
+  "L95": 75.235,
+  "S": 0.301730858078362,
+  "shots": "arch,gateroad"
+ },
+ {
+  "name": "walk_e_square-plaza__hillside-cottage_l6",
+  "n": 85,
+  "L50": 30.203400000000002,
+  "L95": 58.9266,
+  "S": 0.2008029051561041,
+  "shots": "square,homerow"
+ },
+ {
+  "name": "emb_bluff_E0_mass0",
+  "n": 147,
+  "L50": 30.2608,
+  "L95": 73.09320000000001,
+  "S": 0.6544004112852726,
+  "shots": "arch,therise"
+ },
+ {
+  "name": "lm_barn_body",
+  "n": 376,
+  "L50": 30.4974,
+  "L95": 121.43839999999999,
+  "S": 0.41282889308690746,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "walk_e_square-plaza__barn_l10",
+  "n": 56,
+  "L50": 30.578799999999998,
+  "L95": 58.3438,
+  "S": 0.43084561695304197,
+  "shots": "therise,northlane"
+ },
+ {
+  "name": "lm_infill_30_track2",
+  "n": 46,
+  "L50": 30.6362,
+  "L95": 69.13759999999999,
+  "S": 0.30558472852154284,
+  "shots": "northlane,gateroad"
+ },
+ {
+  "name": "lm_lake-home_base",
+  "n": 98,
+  "L50": 30.855199999999996,
+  "L95": 86.2596,
+  "S": 0.4440621830287946,
+  "shots": "therise,homerow,gateroad"
+ },
+ {
+  "name": "walk_e_square-plaza__pond-jetty_l11",
+  "n": 36,
+  "L50": 31.842399999999998,
+  "L95": 55.650999999999996,
+  "S": 0.6518050536039022,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "lm_infill_28_roof",
+  "n": 38,
+  "L50": 31.8894,
+  "L95": 87.66699999999999,
+  "S": 0.4332937934744888,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_e_square-plaza__hillside-cottage_l8",
+  "n": 113,
+  "L50": 32.2138,
+  "L95": 57.6534,
+  "S": 0.20539319188741662,
+  "shots": "homerow,northlane"
+ },
+ {
+  "name": "walk_e_road-gate__square-plaza_l1",
+  "n": 38,
+  "L50": 32.353,
+  "L95": 73.71799999999999,
+  "S": 0.3269168266975728,
+  "shots": "arch,orchard,square"
+ },
+ {
+  "name": "walk_lm_orchard",
+  "n": 2667,
+  "L50": 32.714,
+  "L95": 48.9266,
+  "S": 0.29035636788877295,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "walk_lm_square-plaza.037",
+  "n": 33,
+  "L50": 32.757,
+  "L95": 54.5484,
+  "S": 0.4294674398906976,
+  "shots": "square,gateroad"
+ },
+ {
+  "name": "lm_infill_30_track3",
+  "n": 42,
+  "L50": 32.852799999999995,
+  "L95": 65.27,
+  "S": 0.3454915297451174,
+  "shots": "arch,northlane,gateroad"
+ },
+ {
+  "name": "lm_inn_body",
+  "n": 481,
+  "L50": 32.9186,
+  "L95": 171.4418,
+  "S": 0.3099092024228209,
+  "shots": "arch,orchard,therise,square,gateroad"
+ },
+ {
+  "name": "lm_east-cottages_0_body",
+  "n": 40,
+  "L50": 33.1244,
+  "L95": 66.75259999999999,
+  "S": 0.7453961488990186,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_e_pond-jetty__brook-bridge_l3",
+  "n": 36,
+  "L50": 33.206999999999994,
+  "L95": 69.3528,
+  "S": 0.6509693182376324,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "lm_infill_11_roof",
+  "n": 26,
+  "L50": 33.401199999999996,
+  "L95": 70.5104,
+  "S": 0.8052166432167098,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_e_square-plaza__hillside-cottage_l7",
+  "n": 165,
+  "L50": 33.8488,
+  "L95": 60.081399999999995,
+  "S": 0.19707846996873832,
+  "shots": "square,homerow,northlane"
+ },
+ {
+  "name": "lm_infill_03_roof",
+  "n": 446,
+  "L50": 34.238800000000005,
+  "L95": 140.78199999999998,
+  "S": 0.5613320228975649,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "lm_infill_30_body",
+  "n": 32,
+  "L50": 34.2688,
+  "L95": 77.4346,
+  "S": 0.6164026555599078,
+  "shots": "arch,therise"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l16",
+  "n": 37,
+  "L50": 34.288799999999995,
+  "L95": 46.5118,
+  "S": 0.14112738261668747,
+  "shots": "gatefield"
+ },
+ {
+  "name": "lm_watermill_body",
+  "n": 250,
+  "L50": 34.41839999999999,
+  "L95": 110.51859999999999,
+  "S": 0.5014746160137157,
+  "shots": "arch,therise,square,homerow,northlane,gateroad"
+ },
+ {
+  "name": "walk_e_pond-jetty__brook-bridge_l2",
+  "n": 52,
+  "L50": 34.6186,
+  "L95": 63.1678,
+  "S": 0.2862125296541272,
+  "shots": "arch,therise,square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_pad_dovecote",
+  "n": 135,
+  "L50": 35.8544,
+  "L95": 86.90859999999999,
+  "S": 0.235579768040313,
+  "shots": "arch,therise,northlane"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l3",
+  "n": 65,
+  "L50": 36.0052,
+  "L95": 49.0734,
+  "S": 0.13599518033257998,
+  "shots": "northlane,gateroad"
+ },
+ {
+  "name": "walk_lm_gate-court",
+  "n": 2019,
+  "L50": 36.0762,
+  "L95": 46.9422,
+  "S": 0.18689869603626028,
+  "shots": "arch,therise,gatefield"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l11",
+  "n": 102,
+  "L50": 36.29,
+  "L95": 45.58,
+  "S": 0.2055158600985563,
+  "shots": "therise,gateroad"
+ },
+ {
+  "name": "lm_infill_14_roof",
+  "n": 41,
+  "L50": 36.3194,
+  "L95": 77.8382,
+  "S": 0.7887183163830627,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_pad_barn",
+  "n": 116,
+  "L50": 36.9358,
+  "L95": 52.0052,
+  "S": 0.25147039259165765,
+  "shots": "northlane,gateroad"
+ },
+ {
+  "name": "lm_bakery_body",
+  "n": 302,
+  "L50": 37.349000000000004,
+  "L95": 151.60340000000002,
+  "S": 0.4089678478176519,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "veg_emb_village_04_crown",
+  "n": 45,
+  "L50": 38.037800000000004,
+  "L95": 112.21659999999999,
+  "S": 0.3630921191247453,
+  "shots": "arch,orchard,therise,square,gateroad"
+ },
+ {
+  "name": "lm_infill_30_track1",
+  "n": 48,
+  "L50": 38.4894,
+  "L95": 71.126,
+  "S": 0.26020971530593656,
+  "shots": "arch,northlane,gateroad"
+ },
+ {
+  "name": "walk_e_road-gate__square-plaza_l5",
+  "n": 106,
+  "L50": 38.5612,
+  "L95": 94.8364,
+  "S": 0.39930913727312245,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "lm_infill_30_roof",
+  "n": 59,
+  "L50": 38.99199999999999,
+  "L95": 97.7326,
+  "S": 0.4912465712747399,
+  "shots": "arch,therise"
+ },
+ {
+  "name": "veg_emb_wood_10_crownG",
+  "n": 54,
+  "L50": 39.357,
+  "L95": 59.568,
+  "S": 0.367770281299086,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "walk_e_barn__gate-court_l2",
+  "n": 49,
+  "L50": 39.786199999999994,
+  "L95": 51.797799999999995,
+  "S": 0.10919919266321051,
+  "shots": "northlane,gateroad"
+ },
+ {
+  "name": "walk_pad_bakery",
+  "n": 37,
+  "L50": 39.8504,
+  "L95": 54.407999999999994,
+  "S": 0.21406802646651124,
+  "shots": "square"
+ },
+ {
+  "name": "walk_lm_square-plaza.019",
+  "n": 144,
+  "L50": 40.7782,
+  "L95": 61.117999999999995,
+  "S": 0.24211509910347317,
+  "shots": "therise,square,northlane"
+ },
+ {
+  "name": "walk_e_arrival-clearing__waystone_l2",
+  "n": 169,
+  "L50": 40.9868,
+  "L95": 57.4172,
+  "S": 0.2323695507225643,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "walk_lm_square-plaza.011",
+  "n": 32,
+  "L50": 41.1456,
+  "L95": 76.3646,
+  "S": 0.22716346920330105,
+  "shots": "therise,square,homerow,northlane"
+ },
+ {
+  "name": "walk_e_square-plaza__barn_l7",
+  "n": 87,
+  "L50": 41.5026,
+  "L95": 59.0104,
+  "S": 0.21208753252715176,
+  "shots": "arch,square,northlane"
+ },
+ {
+  "name": "veg_emb_wood_10_crownA",
+  "n": 68,
+  "L50": 41.8528,
+  "L95": 73.1926,
+  "S": 0.32467620500175665,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "walk_lm_square-plaza.049",
+  "n": 407,
+  "L50": 41.9146,
+  "L95": 59.952,
+  "S": 0.3447382530291901,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_e_road-gate__square-plaza_l7",
+  "n": 25,
+  "L50": 42.4292,
+  "L95": 109.8296,
+  "S": 0.3108311565300863,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "lm_infill_01_body",
+  "n": 256,
+  "L50": 43.0378,
+  "L95": 88.63839999999999,
+  "S": 0.6052103605671861,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "lm_infill_19_roof",
+  "n": 45,
+  "L50": 43.3342,
+  "L95": 91.8898,
+  "S": 0.45627475203266193,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_e_arrival-clearing__waystone_l0",
+  "n": 29,
+  "L50": 43.641799999999996,
+  "L95": 54.56679999999999,
+  "S": 0.15246998083276608,
+  "shots": "woodroad"
+ },
+ {
+  "name": "veg_emb_wood_11_crownG",
+  "n": 64,
+  "L50": 43.706,
+  "L95": 82.8908,
+  "S": 0.22320079924171368,
+  "shots": "woodroad,waystone,arch,orchard"
+ },
+ {
+  "name": "walk_pad_hillside-cottage",
+  "n": 96,
+  "L50": 43.7862,
+  "L95": 64.79379999999999,
+  "S": 0.21530057923969215,
+  "shots": "homerow,northlane"
+ },
+ {
+  "name": "walk_lm_square-plaza.018",
+  "n": 80,
+  "L50": 44.336999999999996,
+  "L95": 64.19539999999999,
+  "S": 0.23587779257657182,
+  "shots": "arch,therise,square,northlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.035",
+  "n": 125,
+  "L50": 44.6286,
+  "L95": 77.29619999999998,
+  "S": 0.43149209354176105,
+  "shots": "therise,square,northlane"
+ },
+ {
+  "name": "walk_lm_square-plaza.027",
+  "n": 145,
+  "L50": 44.785799999999995,
+  "L95": 67.92099999999999,
+  "S": 0.22004459587185413,
+  "shots": "arch,therise,square,northlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.055",
+  "n": 197,
+  "L50": 45,
+  "L95": 61.067,
+  "S": 0.40234464077866317,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_pad_home-lane-end",
+  "n": 49,
+  "L50": 45.4332,
+  "L95": 66.1938,
+  "S": 0.3398421980572467,
+  "shots": "homerow"
+ },
+ {
+  "name": "walk_lm_square-plaza.048",
+  "n": 239,
+  "L50": 45.4344,
+  "L95": 62.3944,
+  "S": 0.1371008728627962,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.026",
+  "n": 135,
+  "L50": 45.6338,
+  "L95": 77.004,
+  "S": 0.17961681050015454,
+  "shots": "arch,therise,square,northlane,gateroad"
+ },
+ {
+  "name": "walk_pad_lake-home",
+  "n": 148,
+  "L50": 45.641799999999996,
+  "L95": 64.9342,
+  "S": 0.12241673798193439,
+  "shots": "homerow"
+ },
+ {
+  "name": "walk_lm_square-plaza.047",
+  "n": 48,
+  "L50": 45.6624,
+  "L95": 63.9696,
+  "S": 0.5570546235813074,
+  "shots": "square,pondlane"
+ },
+ {
+  "name": "lm_field_10_ridge15",
+  "n": 31,
+  "L50": 45.921,
+  "L95": 62.489399999999996,
+  "S": 0.25327756851772415,
+  "shots": "pondlane,gateroad"
+ },
+ {
+  "name": "lm_infill_26_roof",
+  "n": 57,
+  "L50": 45.92659999999999,
+  "L95": 66.58579999999999,
+  "S": 0.2732885978863522,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_lm_square-plaza.012",
+  "n": 70,
+  "L50": 46,
+  "L95": 118.75019999999999,
+  "S": 0.3727355417172958,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "lm_item-shop_roof",
+  "n": 260,
+  "L50": 46.1534,
+  "L95": 93.6816,
+  "S": 0.6916207716859168,
+  "shots": "arch,therise,square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.054",
+  "n": 289,
+  "L50": 46.4292,
+  "L95": 60.081399999999995,
+  "S": 0.1814356582616396,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.010",
+  "n": 73,
+  "L50": 46.573600000000006,
+  "L95": 73.78979999999999,
+  "S": 0.2790348874436997,
+  "shots": "therise,square,homerow,northlane"
+ },
+ {
+  "name": "lm_infill_22_roof",
+  "n": 47,
+  "L50": 47.1256,
+  "L95": 106.96599999999998,
+  "S": 0.354821244360975,
+  "shots": "pondlane"
+ },
+ {
+  "name": "walk_lm_square-plaza.001",
+  "n": 28,
+  "L50": 47.416000000000004,
+  "L95": 59.8424,
+  "S": 0.18509244740375536,
+  "shots": "square"
+ },
+ {
+  "name": "walk_lm_square-plaza.053",
+  "n": 144,
+  "L50": 47.577600000000004,
+  "L95": 63.9244,
+  "S": 0.1798470162753662,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.029",
+  "n": 51,
+  "L50": 47.7346,
+  "L95": 132.84699999999998,
+  "S": 0.4768445322984127,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "walk_e_arrival-clearing__waystone_l3",
+  "n": 307,
+  "L50": 47.9134,
+  "L95": 74.8108,
+  "S": 0.3886891489276678,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "walk_e_hillside-cottage__lake-home_l2",
+  "n": 58,
+  "L50": 48.139199999999995,
+  "L95": 66.06819999999999,
+  "S": 0.08186003147827682,
+  "shots": "homerow,northlane"
+ },
+ {
+  "name": "walk_pad_upper-lane-closed",
+  "n": 43,
+  "L50": 48.5014,
+  "L95": 72.64939999999999,
+  "S": 0.15130301199955035,
+  "shots": "homerow"
+ },
+ {
+  "name": "walk_pad_brook-spring",
+  "n": 64,
+  "L50": 48.5736,
+  "L95": 59.211400000000005,
+  "S": 0.2035751655998551,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_inn_chimney",
+  "n": 34,
+  "L50": 49.215999999999994,
+  "L95": 103.18739999999998,
+  "S": 0.40614574192846736,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "walk_e_hillside-cottage__lake-home_l4",
+  "n": 65,
+  "L50": 49.288799999999995,
+  "L95": 64.0786,
+  "S": 0.10915430598014375,
+  "shots": "homerow"
+ },
+ {
+  "name": "walk_lm_square-plaza.040",
+  "n": 37,
+  "L50": 49.29919999999999,
+  "L95": 107.0996,
+  "S": 0.23552743276335797,
+  "shots": "arch,square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.020",
+  "n": 97,
+  "L50": 49.416,
+  "L95": 143.23319999999998,
+  "S": 0.3033605962212962,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "walk_e_hillside-cottage__lake-home_l3",
+  "n": 79,
+  "L50": 49.429199999999994,
+  "L95": 66.2178,
+  "S": 0.10528201199703273,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_hillside-cottage_door",
+  "n": 32,
+  "L50": 49.4418,
+  "L95": 87.7386,
+  "S": 0.5099247313278721,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_infill_02_chim",
+  "n": 29,
+  "L50": 49.7266,
+  "L95": 87.5782,
+  "S": 0.3070264361384261,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "walk_e_hillside-cottage__lake-home_l5",
+  "n": 51,
+  "L50": 49.9306,
+  "L95": 72.1404,
+  "S": 0.11750106172783946,
+  "shots": "arch,homerow"
+ },
+ {
+  "name": "walk_lm_square-plaza.041",
+  "n": 204,
+  "L50": 51.048199999999994,
+  "L95": 101.279,
+  "S": 0.3771247998646476,
+  "shots": "arch,therise,square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.034",
+  "n": 126,
+  "L50": 51.523199999999996,
+  "L95": 79.87499999999999,
+  "S": 0.4020623129672877,
+  "shots": "therise,square,northlane"
+ },
+ {
+  "name": "walk_lm_square-plaza.028",
+  "n": 56,
+  "L50": 51.551199999999994,
+  "L95": 135.518,
+  "S": 0.24194062461885432,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.013",
+  "n": 56,
+  "L50": 51.620599999999996,
+  "L95": 141.36679999999998,
+  "S": 0.3902959412238937,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "lm_infill_02_roof",
+  "n": 480,
+  "L50": 53.06699999999999,
+  "L95": 101.6366,
+  "S": 0.21346889947575012,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "walk_lm_square-plaza.007",
+  "n": 41,
+  "L50": 56.9736,
+  "L95": 90.1674,
+  "S": 0.35517117405026954,
+  "shots": "square,gateroad"
+ },
+ {
+  "name": "lm_spring-house_roof",
+  "n": 54,
+  "L50": 57.582800000000006,
+  "L95": 110.8034,
+  "S": 0.20700126665635654,
+  "shots": "homerow"
+ },
+ {
+  "name": "lm_inn_roof",
+  "n": 383,
+  "L50": 58.5868,
+  "L95": 132.88479999999998,
+  "S": 0.20535014451913303,
+  "shots": "arch,orchard,therise,square,gateroad"
+ },
+ {
+  "name": "walk_pad_waystone",
+  "n": 79,
+  "L50": 58.8578,
+  "L95": 101.02799999999999,
+  "S": 0.6135411961015736,
+  "shots": "woodroad,waystone,orchard"
+ },
+ {
+  "name": "lm_infill_01_roof",
+  "n": 207,
+  "L50": 59.0112,
+  "L95": 80.547,
+  "S": 0.6207328179510881,
+  "shots": "pondlane"
+ },
+ {
+  "name": "lm_dovecote_band",
+  "n": 35,
+  "L50": 59.1312,
+  "L95": 94.08019999999999,
+  "S": 0.2544517047689791,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "lm_market-row_stall0_canopy",
+  "n": 69,
+  "L50": 60.2568,
+  "L95": 83.796,
+  "S": 0.4561689088426345,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "walk_e_road-gate__square-plaza_l4",
+  "n": 159,
+  "L50": 60.6458,
+  "L95": 84.27959999999999,
+  "S": 0.3641378700337829,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "lm_dovecote_plinth",
+  "n": 65,
+  "L50": 61.413199999999996,
+  "L95": 114.2556,
+  "S": 0.3088625879686279,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.014",
+  "n": 32,
+  "L50": 61.83039999999999,
+  "L95": 100.90479999999998,
+  "S": 0.3451162789291229,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "walk_e_road-gate__orchard_l3",
+  "n": 219,
+  "L50": 61.9398,
+  "L95": 86.78859999999999,
+  "S": 0.18234147243339377,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "lm_cider-press_roof",
+  "n": 950,
+  "L50": 62.2968,
+  "L95": 107.22059999999999,
+  "S": 0.2412725269212013,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "walk_e_road-gate__orchard_l4",
+  "n": 178,
+  "L50": 63.36099999999999,
+  "L95": 79.1432,
+  "S": 0.15002394029606134,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "lm_market-row_stall2_canopy",
+  "n": 62,
+  "L50": 64.1284,
+  "L95": 95.06299999999999,
+  "S": 0.2734924497509117,
+  "shots": "square,pondlane,gateroad"
+ },
+ {
+  "name": "lm_hillside-cottage_chimney",
+  "n": 25,
+  "L50": 64.6074,
+  "L95": 136.51399999999998,
+  "S": 0.32841058763290554,
+  "shots": "therise,homerow"
+ },
+ {
+  "name": "walk_e_road-gate__square-plaza_l3",
+  "n": 330,
+  "L50": 64.8584,
+  "L95": 84.7216,
+  "S": 0.15143001432923772,
+  "shots": "arch,orchard,therise,square"
+ },
+ {
+  "name": "walk_lm_square-plaza.021",
+  "n": 64,
+  "L50": 65.534,
+  "L95": 169.4418,
+  "S": 0.3368573267813096,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "lm_market-row_stall1_canopy",
+  "n": 109,
+  "L50": 68.13359999999999,
+  "L95": 105.32079999999999,
+  "S": 0.45112525495959666,
+  "shots": "therise,square,pondlane"
+ },
+ {
+  "name": "lm_hillside-cottage_body",
+  "n": 289,
+  "L50": 68.5782,
+  "L95": 142.48020000000002,
+  "S": 0.36974119574555986,
+  "shots": "homerow,gateroad"
+ },
+ {
+  "name": "lm_dovecote_shaft",
+  "n": 270,
+  "L50": 71.28999999999999,
+  "L95": 131.1484,
+  "S": 0.24048698600180923,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.017",
+  "n": 38,
+  "L50": 76.9524,
+  "L95": 130.17419999999998,
+  "S": 0.44990541921176647,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "walk_e_arrival-clearing__waystone_l4",
+  "n": 192,
+  "L50": 80.55699999999999,
+  "L95": 116.6052,
+  "S": 0.6208957883821151,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "lm_dovecote_cap",
+  "n": 269,
+  "L50": 81.547,
+  "L95": 114.245,
+  "S": 0.533687180889583,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "lm_barn_roof",
+  "n": 512,
+  "L50": 82.66120000000001,
+  "L95": 106.24379999999998,
+  "S": 0.5666420360107786,
+  "shots": "arch,therise,northlane,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.015",
+  "n": 47,
+  "L50": 84.72139999999999,
+  "L95": 130.7038,
+  "S": 0.47063195069050184,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.039",
+  "n": 26,
+  "L50": 88.9982,
+  "L95": 128.32999999999998,
+  "S": 0.5120029207257129,
+  "shots": "square,gateroad"
+ },
+ {
+  "name": "lm_bakery_roof",
+  "n": 575,
+  "L50": 89.5298,
+  "L95": 141.96819999999997,
+  "S": 0.5466040104967437,
+  "shots": "arch,therise,square,homerow"
+ },
+ {
+  "name": "walk_e_arrival-clearing__waystone_l5",
+  "n": 63,
+  "L50": 89.9008,
+  "L95": 144.5358,
+  "S": 0.5791418381390017,
+  "shots": "woodroad,waystone"
+ },
+ {
+  "name": "lm_hillside-cottage_roof",
+  "n": 440,
+  "L50": 91.131,
+  "L95": 131.5928,
+  "S": 0.6017549617050822,
+  "shots": "arch,therise,homerow,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.022",
+  "n": 51,
+  "L50": 91.79999999999998,
+  "L95": 195.7266,
+  "S": 0.35882119765178744,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "walk_lm_square-plaza.033",
+  "n": 78,
+  "L50": 98.4968,
+  "L95": 142.62,
+  "S": 0.4277586764532059,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.016",
+  "n": 55,
+  "L50": 101.591,
+  "L95": 140.7824,
+  "S": 0.4770781031023709,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.030",
+  "n": 73,
+  "L50": 104.2028,
+  "L95": 176.65959999999998,
+  "S": 0.4729031256110779,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "lm_elder-house_roof",
+  "n": 377,
+  "L50": 106.9642,
+  "L95": 129.2622,
+  "S": 0.4980614026235036,
+  "shots": "arch,therise,homerow,gateroad"
+ },
+ {
+  "name": "walk_lm_square-plaza.024",
+  "n": 42,
+  "L50": 128.3416,
+  "L95": 166.1478,
+  "S": 0.384421163147206,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "walk_lm_square-plaza.032",
+  "n": 49,
+  "L50": 131.97699999999998,
+  "L95": 160.4744,
+  "S": 0.4206472124493532,
+  "shots": "arch,therise,square"
+ },
+ {
+  "name": "walk_lm_square-plaza.023",
+  "n": 25,
+  "L50": 133.196,
+  "L95": 162.2052,
+  "S": 0.4252770076072926,
+  "shots": "therise,square"
+ },
+ {
+  "name": "walk_lm_square-plaza.031",
+  "n": 53,
+  "L50": 135.4022,
+  "L95": 170.3748,
+  "S": 0.42953844600318214,
+  "shots": "arch,therise,square,gateroad"
+ },
+ {
+  "name": "lm_waystone",
+  "n": 85,
+  "L50": 184.208,
+  "L95": 227.37359999999998,
+  "S": 0.28386047030571776,
+  "shots": "woodroad,waystone,arch"
+ },
+ {
+  "name": "lm_heartlight_cap",
+  "n": 29,
+  "L50": 247.68999999999997,
+  "L95": 254.85559999999998,
+  "S": 0.28192338914388243,
+  "shots": "arch,therise,square"
+ }
+]

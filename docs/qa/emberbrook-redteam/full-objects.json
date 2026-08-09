@@ -1,0 +1,7908 @@
+{
+ "woodroad": {
+  "shot": "woodroad",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.7711111111111111,
+    "dist": 0.005851108795935604
+   },
+   {
+    "name": "walk_lm_arrival-clearing",
+    "frac": 0.11580246913580247,
+    "dist": 0.004227357532989493
+   },
+   {
+    "name": "veg_emb_wood_05_crownG",
+    "frac": 0.011728395061728396,
+    "dist": 0.124574840739922
+   },
+   {
+    "name": "veg_emb_wood_05_crownA",
+    "frac": 0.007901234567901235,
+    "dist": 0.1354830275304234
+   },
+   {
+    "name": "veg_emb_wood_06_crownA",
+    "frac": 0.007654320987654321,
+    "dist": 0.2125596006612842
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l3",
+    "frac": 0.007160493827160494,
+    "dist": 0.005196888794649737
+   },
+   {
+    "name": "veg_emb_wood_07_crownG",
+    "frac": 0.00654320987654321,
+    "dist": 0.09396581580735543
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l2",
+    "frac": 0.006296296296296296,
+    "dist": 0.005025604825693533
+   },
+   {
+    "name": "veg_emb_wood_07_crownA",
+    "frac": 0.005308641975308642,
+    "dist": 0.1050775319219494
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l3",
+    "frac": 0.004567901234567902,
+    "dist": 0.005884231872981859
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l1",
+    "frac": 0.004567901234567902,
+    "dist": 0.004550337697874497
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l4",
+    "frac": 0.0044444444444444444,
+    "dist": 0.005287094395034418
+   },
+   {
+    "name": "veg_emb_wood_08_crownA",
+    "frac": 0.004320987654320987,
+    "dist": 0.0916811911184953
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l2",
+    "frac": 0.003950617283950617,
+    "dist": 0.006409205273523408
+   },
+   {
+    "name": "veg_emb_wood_06_crownG",
+    "frac": 0.0033333333333333335,
+    "dist": 0.17885530185943785
+   },
+   {
+    "name": "veg_emb_wood_04_crownG",
+    "frac": 0.0033333333333333335,
+    "dist": 0.09979917876713644
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l0",
+    "frac": 0.002962962962962963,
+    "dist": 0.006847710562028635
+   },
+   {
+    "name": "veg_emb_wood_08_crownG",
+    "frac": 0.002839506172839506,
+    "dist": 0.041907876139993624
+   },
+   {
+    "name": "lm_waystone",
+    "frac": 0.0025925925925925925,
+    "dist": 0.005158133015163023
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l1",
+    "frac": 0.002345679012345679,
+    "dist": 0.005842508863298696
+   },
+   {
+    "name": "veg_emb_wood_03_crownG",
+    "frac": 0.002345679012345679,
+    "dist": 0.513344228584496
+   },
+   {
+    "name": "veg_emb_wood_09_crownG",
+    "frac": 0.0019753086419753087,
+    "dist": 0.04353348589009504
+   },
+   {
+    "name": "veg_emb_wood_04_crownA",
+    "frac": 0.0019753086419753087,
+    "dist": 0.09970504118690596
+   },
+   {
+    "name": "walk_pad_waystone",
+    "frac": 0.001851851851851852,
+    "dist": 0.005003917614889706
+   },
+   {
+    "name": "veg_emb_wood_10_crownG",
+    "frac": 0.0016049382716049382,
+    "dist": 0.0031218880041425
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l4",
+    "frac": 0.0016049382716049382,
+    "dist": 0.006518227464537331
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l5",
+    "frac": 0.0016049382716049382,
+    "dist": 0.005074648988504902
+   },
+   {
+    "name": "veg_emb_wood_10_crownA",
+    "frac": 0.0014814814814814814,
+    "dist": 0.024812205005635884
+   },
+   {
+    "name": "lm_incident_02_waystone__road-gate_woodpile",
+    "frac": 0.0014814814814814814,
+    "dist": 0.007641428008274713
+   },
+   {
+    "name": "veg_emb_wood_07_trunks",
+    "frac": 0.0013580246913580246,
+    "dist": 0.10390580561862507
+   },
+   {
+    "name": "veg_emb_wood_09_crownA",
+    "frac": 0.0012345679012345679,
+    "dist": 0.054451962452939116
+   },
+   {
+    "name": "lm_waystone_base",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0025301036046101095
+   },
+   {
+    "name": "veg_emb_wood_11_crownG",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0027383601898002537
+   },
+   {
+    "name": "veg_emb_wood_05_trunks",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0533335440057094
+   },
+   {
+    "name": "veg_emb_wood_08_trunks",
+    "frac": 0.00037037037037037035,
+    "dist": 0.03167811717806924
+   },
+   {
+    "name": "veg_emb_wood_10_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0014005952981008818
+   },
+   {
+    "name": "veg_emb_wood_06_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.13580649853752647
+   },
+   {
+    "name": "veg_emb_rim_217_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0017970101576523234
+   }
+  ],
+  "distP50": 0.005072134658258427,
+  "distP90": 0.011117409944552946
+ },
+ "waystone": {
+  "shot": "waystone",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.807037037037037,
+    "dist": 0.004527897924825608
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l3",
+    "frac": 0.02345679012345679,
+    "dist": 0.003153667289699667
+   },
+   {
+    "name": "veg_emb_wood_08_crownA",
+    "frac": 0.014567901234567901,
+    "dist": 0.15244371209243723
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l4",
+    "frac": 0.014444444444444444,
+    "dist": 0.0032969522897555365
+   },
+   {
+    "name": "veg_emb_wood_07_crownG",
+    "frac": 0.014074074074074074,
+    "dist": 0.22592228313389687
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l3",
+    "frac": 0.011851851851851851,
+    "dist": 0.004265163386232319
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l2",
+    "frac": 0.010864197530864197,
+    "dist": 0.003950932761293673
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l2",
+    "frac": 0.010864197530864197,
+    "dist": 0.0029141858619683766
+   },
+   {
+    "name": "veg_emb_wood_06_crownA",
+    "frac": 0.01037037037037037,
+    "dist": 0.2905049666309381
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l1",
+    "frac": 0.008395061728395062,
+    "dist": 0.00404811339832253
+   },
+   {
+    "name": "veg_emb_wood_09_crownA",
+    "frac": 0.008148148148148147,
+    "dist": 0.18737292862283214
+   },
+   {
+    "name": "veg_emb_wood_07_crownA",
+    "frac": 0.007654320987654321,
+    "dist": 0.12099725465951373
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l4",
+    "frac": 0.007160493827160494,
+    "dist": 0.004726389669638472
+   },
+   {
+    "name": "walk_pad_waystone",
+    "frac": 0.006049382716049383,
+    "dist": 0.003742002990804605
+   },
+   {
+    "name": "lm_waystone",
+    "frac": 0.005185185185185185,
+    "dist": 0.02326434767944574
+   },
+   {
+    "name": "walk_e_arrival-clearing__waystone_l5",
+    "frac": 0.005061728395061729,
+    "dist": 0.0033665662358227256
+   },
+   {
+    "name": "veg_emb_wood_06_crownG",
+    "frac": 0.0044444444444444444,
+    "dist": 0.28223483211622596
+   },
+   {
+    "name": "veg_emb_wood_08_crownG",
+    "frac": 0.004074074074074074,
+    "dist": 0.051228116033478543
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l5",
+    "frac": 0.003950617283950617,
+    "dist": 0.004915037059711382
+   },
+   {
+    "name": "veg_emb_wood_09_crownG",
+    "frac": 0.003703703703703704,
+    "dist": 0.11108803852779313
+   },
+   {
+    "name": "walk_pad_road-gate",
+    "frac": 0.0032098765432098763,
+    "dist": 0.0050902840258731505
+   },
+   {
+    "name": "lm_incident_02_waystone__road-gate_woodpile",
+    "frac": 0.0030864197530864196,
+    "dist": 0.005135618271232558
+   },
+   {
+    "name": "veg_emb_wood_10_crownG",
+    "frac": 0.0024691358024691358,
+    "dist": 0.2109628163947587
+   },
+   {
+    "name": "veg_emb_wood_11_crownG",
+    "frac": 0.0024691358024691358,
+    "dist": 0.0659392924979971
+   },
+   {
+    "name": "veg_emb_wood_10_crownA",
+    "frac": 0.0022222222222222222,
+    "dist": 0.019548769681207574
+   },
+   {
+    "name": "lm_waystone_base",
+    "frac": 0.0014814814814814814,
+    "dist": 0.002661464544818387
+   },
+   {
+    "name": "veg_emb_wood_07_trunks",
+    "frac": 0.0007407407407407407,
+    "dist": 0.09284037908825259
+   },
+   {
+    "name": "veg_emb_wood_10_trunks",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0022324112194418433
+   },
+   {
+    "name": "veg_emb_wood_08_trunks",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0806096034194379
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0035005207093030516
+   },
+   {
+    "name": "veg_emb_wood_06_trunks",
+    "frac": 0.00037037037037037035,
+    "dist": 0.13893203320652073
+   },
+   {
+    "name": "lm_road-gate_postR",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0031399502272175944
+   },
+   {
+    "name": "veg_emb_wood_05_crownA",
+    "frac": 0.0002469135802469136,
+    "dist": 1.2113223357180383
+   },
+   {
+    "name": "veg_emb_wood_11_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0024364940934189453
+   },
+   {
+    "name": "lm_road-gate_postL",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0024783047136520257
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0001889122558956102
+   },
+   {
+    "name": "emb_lamp_00_road-gate_post",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00018872031230898756
+   },
+   {
+    "name": "veg_emb_wood_11_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0062361802907560104
+   },
+   {
+    "name": "veg_emb_wood_09_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.18592426665535555
+   }
+  ],
+  "distP50": 0.004111625863876616,
+  "distP90": 0.009922721151111676
+ },
+ "arch": {
+  "shot": "arch",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.548395061728395,
+    "dist": 0.007342894131829386
+   },
+   {
+    "name": "lm_infill_03_body",
+    "frac": 0.02234567901234568,
+    "dist": 0.004820959662375395
+   },
+   {
+    "name": "walk_lm_orchard",
+    "frac": 0.020864197530864197,
+    "dist": 0.005274041930884857
+   },
+   {
+    "name": "veg_emb_village_04_crown",
+    "frac": 0.016049382716049384,
+    "dist": 0.600639206567894
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l2",
+    "frac": 0.014567901234567901,
+    "dist": 0.003519788637421473
+   },
+   {
+    "name": "lm_cider-press_roof",
+    "frac": 0.013827160493827161,
+    "dist": 0.004419296193303674
+   },
+   {
+    "name": "lm_infill_04_body",
+    "frac": 0.013333333333333334,
+    "dist": 0.0028069310117406396
+   },
+   {
+    "name": "emb_bluff_E2_mass0",
+    "frac": 0.012839506172839505,
+    "dist": 0.004848282775583084
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l3",
+    "frac": 0.012839506172839505,
+    "dist": 0.003965533836073037
+   },
+   {
+    "name": "lm_inn_body",
+    "frac": 0.012345679012345678,
+    "dist": 0.06491783938598567
+   },
+   {
+    "name": "lm_infill_02_body",
+    "frac": 0.010493827160493827,
+    "dist": 0.0018122145830398368
+   },
+   {
+    "name": "lm_infill_03_roof",
+    "frac": 0.010493827160493827,
+    "dist": 0.003950352480110692
+   },
+   {
+    "name": "lm_watermill_body",
+    "frac": 0.01037037037037037,
+    "dist": 0.22149764489778395
+   },
+   {
+    "name": "lm_infill_02_roof",
+    "frac": 0.01,
+    "dist": 0.00421411036782555
+   },
+   {
+    "name": "lm_item-shop_body",
+    "frac": 0.01,
+    "dist": 0.004079437426549279
+   },
+   {
+    "name": "lm_cider-press_gableend",
+    "frac": 0.00962962962962963,
+    "dist": 0.0072037925019333175
+   },
+   {
+    "name": "veg_emb_wood_10_crownG",
+    "frac": 0.008641975308641974,
+    "dist": 0.5879206108133348
+   },
+   {
+    "name": "lm_barn_body",
+    "frac": 0.0077777777777777776,
+    "dist": 0.0037539658372332677
+   },
+   {
+    "name": "veg_emb_village_04_trunk",
+    "frac": 0.007407407407407408,
+    "dist": 0.8672088586138056
+   },
+   {
+    "name": "lm_inn_roof",
+    "frac": 0.006790123456790123,
+    "dist": 0.0403920268903058
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l4",
+    "frac": 0.006790123456790123,
+    "dist": 0.003941375448007949
+   },
+   {
+    "name": "lm_bakery_body",
+    "frac": 0.006049382716049383,
+    "dist": 0.002284607003699455
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l1",
+    "frac": 0.005925925925925926,
+    "dist": 0.002909428375962624
+   },
+   {
+    "name": "emb_bluff_E0_mass0",
+    "frac": 0.005802469135802469,
+    "dist": 0.003613465772791932
+   },
+   {
+    "name": "lm_road-gate_lintel",
+    "frac": 0.005432098765432099,
+    "dist": 0.0012436763301497103
+   },
+   {
+    "name": "lm_infill_04_roof",
+    "frac": 0.005308641975308642,
+    "dist": 0.0036753578540651265
+   },
+   {
+    "name": "veg_emb_village_08_trunk",
+    "frac": 0.004567901234567902,
+    "dist": 0.2357937724056783
+   },
+   {
+    "name": "lm_item-shop_roof",
+    "frac": 0.0044444444444444444,
+    "dist": 0.005512211033326742
+   },
+   {
+    "name": "walk_pad_road-gate",
+    "frac": 0.0044444444444444444,
+    "dist": 0.005108079089501933
+   },
+   {
+    "name": "veg_emb_wood_11_crownA",
+    "frac": 0.004320987654320987,
+    "dist": 0.9320518946536589
+   },
+   {
+    "name": "lm_bakery_roof",
+    "frac": 0.003950617283950617,
+    "dist": 0.002154833940816628
+   },
+   {
+    "name": "lm_inn_base",
+    "frac": 0.003950617283950617,
+    "dist": 0.006776367651746396
+   },
+   {
+    "name": "lm_incident_02_waystone__road-gate_woodpile",
+    "frac": 0.003950617283950617,
+    "dist": 0.0015834577233473535
+   },
+   {
+    "name": "emb_gatewall_Egrate",
+    "frac": 0.0038271604938271606,
+    "dist": 0.004746278856310204
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l5",
+    "frac": 0.0038271604938271606,
+    "dist": 0.004545908640852008
+   },
+   {
+    "name": "lm_road-gate_postR",
+    "frac": 0.003703703703703704,
+    "dist": 0.0012405463551706845
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l3",
+    "frac": 0.0034567901234567903,
+    "dist": 0.005165052332335265
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l3",
+    "frac": 0.0034567901234567903,
+    "dist": 0.004997762856087308
+   },
+   {
+    "name": "lm_hillside-cottage_roof",
+    "frac": 0.0033333333333333335,
+    "dist": 0.008042593342860843
+   },
+   {
+    "name": "lm_dovecote_shaft",
+    "frac": 0.0033333333333333335,
+    "dist": 0.010177341893969393
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l2",
+    "frac": 0.0033333333333333335,
+    "dist": 0.005433600295515306
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l2",
+    "frac": 0.0032098765432098763,
+    "dist": 0.004916557243688415
+   },
+   {
+    "name": "lm_cider-press_press",
+    "frac": 0.0030864197530864196,
+    "dist": 0.0019519528423120464
+   },
+   {
+    "name": "lm_waystone",
+    "frac": 0.002962962962962963,
+    "dist": 0.3053814947741247
+   },
+   {
+    "name": "lm_infill_25_body",
+    "frac": 0.0025925925925925925,
+    "dist": 0.001967921245493287
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l4",
+    "frac": 0.0025925925925925925,
+    "dist": 0.005685515486458955
+   },
+   {
+    "name": "lm_elder-house_roof",
+    "frac": 0.0024691358024691358,
+    "dist": 0.007552984700433603
+   },
+   {
+    "name": "veg_emb_village_05_crown",
+    "frac": 0.0024691358024691358,
+    "dist": 0.4300502101284783
+   },
+   {
+    "name": "lm_infill_25_roof",
+    "frac": 0.0024691358024691358,
+    "dist": 0.0063588425042141435
+   },
+   {
+    "name": "walk_lm_square-plaza.021",
+    "frac": 0.0024691358024691358,
+    "dist": 1.0582280351867943
+   },
+   {
+    "name": "veg_emb_wood_14_crownG",
+    "frac": 0.002345679012345679,
+    "dist": 0.30797882768991797
+   },
+   {
+    "name": "veg_emb_village_23_trunk",
+    "frac": 0.002345679012345679,
+    "dist": 0.32017490385369957
+   },
+   {
+    "name": "veg_emb_wood_11_crownG",
+    "frac": 0.002345679012345679,
+    "dist": 0.28568228268562484
+   },
+   {
+    "name": "veg_emb_village_08_crown",
+    "frac": 0.0022222222222222222,
+    "dist": 0.7488577165462158
+   },
+   {
+    "name": "lm_road-gate_postL",
+    "frac": 0.0022222222222222222,
+    "dist": 0.0008870286225743686
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l4",
+    "frac": 0.0022222222222222222,
+    "dist": 0.007399282089964567
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l1",
+    "frac": 0.0022222222222222222,
+    "dist": 0.00457090745285674
+   },
+   {
+    "name": "veg_emb_village_23_crown",
+    "frac": 0.0020987654320987655,
+    "dist": 0.4667895492434062
+   },
+   {
+    "name": "lm_item-shop_base",
+    "frac": 0.0020987654320987655,
+    "dist": 0.004523328462158587
+   },
+   {
+    "name": "lm_infill_30_roof",
+    "frac": 0.0019753086419753087,
+    "dist": 0.009348678880664166
+   },
+   {
+    "name": "lm_cider-press_plate",
+    "frac": 0.0019753086419753087,
+    "dist": 0.005094138249614411
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l6",
+    "frac": 0.0019753086419753087,
+    "dist": 0.00699404871825307
+   },
+   {
+    "name": "lm_barn_roof",
+    "frac": 0.001851851851851852,
+    "dist": 0.00822329363297426
+   },
+   {
+    "name": "lm_barn_base",
+    "frac": 0.001851851851851852,
+    "dist": 0.0022679495425637756
+   },
+   {
+    "name": "lm_cider-press_post10",
+    "frac": 0.001851851851851852,
+    "dist": 0.003064806407936946
+   },
+   {
+    "name": "lm_incident_00_road-gate__square-plaza_woodpile",
+    "frac": 0.001851851851851852,
+    "dist": 0.005185565338922662
+   },
+   {
+    "name": "lm_heartlight_plinth",
+    "frac": 0.0017283950617283952,
+    "dist": 0.003267329983408034
+   },
+   {
+    "name": "walk_lm_square-plaza.020",
+    "frac": 0.0017283950617283952,
+    "dist": 0.005513061140135659
+   },
+   {
+    "name": "veg_emb_wood_10_crownA",
+    "frac": 0.0017283950617283952,
+    "dist": 0.032339797473053246
+   },
+   {
+    "name": "lm_cider-press_post00",
+    "frac": 0.0016049382716049382,
+    "dist": 0.005836417466193359
+   },
+   {
+    "name": "veg_emb_wood_09_crownA",
+    "frac": 0.0016049382716049382,
+    "dist": 0.20016476090474652
+   },
+   {
+    "name": "lm_inn_chimney",
+    "frac": 0.0014814814814814814,
+    "dist": 0.004223411406926152
+   },
+   {
+    "name": "lm_elder-house_body",
+    "frac": 0.0014814814814814814,
+    "dist": 0.001781516243461547
+   },
+   {
+    "name": "lm_cider-press_post11",
+    "frac": 0.0014814814814814814,
+    "dist": 0.006399681500083511
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l1",
+    "frac": 0.0014814814814814814,
+    "dist": 0.003860596758999551
+   },
+   {
+    "name": "emb_bluff_E1_mass0",
+    "frac": 0.0013580246913580246,
+    "dist": 0.005653999511192286
+   },
+   {
+    "name": "veg_emb_wood_12_crownA",
+    "frac": 0.0013580246913580246,
+    "dist": 0.37865583273773284
+   },
+   {
+    "name": "lm_east-cottages_3_roof",
+    "frac": 0.0013580246913580246,
+    "dist": 0.00423028228290974
+   },
+   {
+    "name": "lm_road-gate_brace",
+    "frac": 0.0013580246913580246,
+    "dist": 0.0018912409989624997
+   },
+   {
+    "name": "lm_infill_30_body",
+    "frac": 0.0012345679012345679,
+    "dist": 0.0020722805640777083
+   },
+   {
+    "name": "lm_dovecote_cap",
+    "frac": 0.0011111111111111111,
+    "dist": 0.005849176159540368
+   },
+   {
+    "name": "walk_lm_square-plaza.013",
+    "frac": 0.0011111111111111111,
+    "dist": 0.05628348056521501
+   },
+   {
+    "name": "emb_bluff_W2_mass0",
+    "frac": 0.0009876543209876543,
+    "dist": 0.0035895289782139628
+   },
+   {
+    "name": "lm_item-shop_chimney",
+    "frac": 0.0009876543209876543,
+    "dist": 0.001778271138580647
+   },
+   {
+    "name": "lm_festival-dais_deck",
+    "frac": 0.0009876543209876543,
+    "dist": 0.12486536248367608
+   },
+   {
+    "name": "veg_emb_wood_14_crownA",
+    "frac": 0.0008641975308641976,
+    "dist": 0.2089340730747796
+   },
+   {
+    "name": "emb_gatewall_W",
+    "frac": 0.0008641975308641976,
+    "dist": 0.00568367152289235
+   },
+   {
+    "name": "veg_emb_village_05_trunk",
+    "frac": 0.0008641975308641976,
+    "dist": 0.457700973107165
+   },
+   {
+    "name": "lm_poppy-stall",
+    "frac": 0.0008641975308641976,
+    "dist": 0.5083156935816866
+   },
+   {
+    "name": "walk_lm_square-plaza.022",
+    "frac": 0.0008641975308641976,
+    "dist": 0.026170478552004082
+   },
+   {
+    "name": "walk_lm_square-plaza.028",
+    "frac": 0.0008641975308641976,
+    "dist": 0.006336037700160446
+   },
+   {
+    "name": "walk_lm_square-plaza.012",
+    "frac": 0.0008641975308641976,
+    "dist": 0.004383021224651428
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l5",
+    "frac": 0.0008641975308641976,
+    "dist": 0.003888581784361529
+   },
+   {
+    "name": "lm_watermill_base",
+    "frac": 0.0007407407407407407,
+    "dist": 0.138912241001425
+   },
+   {
+    "name": "lm_elder-house_base",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0021495714219863854
+   },
+   {
+    "name": "lm_heartlight_cap",
+    "frac": 0.0007407407407407407,
+    "dist": 0.005615135841485912
+   },
+   {
+    "name": "walk_lm_square-plaza.031",
+    "frac": 0.0007407407407407407,
+    "dist": 0.00934438463946948
+   },
+   {
+    "name": "veg_emb_village_29_trunk",
+    "frac": 0.0006172839506172839,
+    "dist": 0.5707219780169075
+   },
+   {
+    "name": "lm_dovecote_band",
+    "frac": 0.0006172839506172839,
+    "dist": 0.009710196473387852
+   },
+   {
+    "name": "lm_infill_03_chim",
+    "frac": 0.0006172839506172839,
+    "dist": 0.005464392373922141
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_post",
+    "frac": 0.0006172839506172839,
+    "dist": 0.002494505619702636
+   },
+   {
+    "name": "lm_market-row_stall4_canopy",
+    "frac": 0.0006172839506172839,
+    "dist": 1.004992719377855
+   },
+   {
+    "name": "lm_market-row_stall2_canopy",
+    "frac": 0.0006172839506172839,
+    "dist": 0.1863154026246975
+   },
+   {
+    "name": "walk_lm_square-plaza.014",
+    "frac": 0.0006172839506172839,
+    "dist": 0.21222619735349202
+   },
+   {
+    "name": "lm_bakery_chimney",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0011589682297757638
+   },
+   {
+    "name": "veg_emb_village_03_crown",
+    "frac": 0.0004938271604938272,
+    "dist": 0.2203193984440438
+   },
+   {
+    "name": "emb_gatewall_E",
+    "frac": 0.0004938271604938272,
+    "dist": 0.009040082481835299
+   },
+   {
+    "name": "veg_emb_screen_04_crownG",
+    "frac": 0.0004938271604938272,
+    "dist": 0.2097508462420596
+   },
+   {
+    "name": "veg_emb_rim_035_trunk",
+    "frac": 0.0004938271604938272,
+    "dist": 0.059111728429805055
+   },
+   {
+    "name": "walk_lm_gate-court",
+    "frac": 0.0004938271604938272,
+    "dist": 0.016489298538038044
+   },
+   {
+    "name": "lm_dovecote_door",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0046129201590687785
+   },
+   {
+    "name": "walk_lm_square-plaza.029",
+    "frac": 0.0004938271604938272,
+    "dist": 0.7190683922452057
+   },
+   {
+    "name": "water_emb_brook",
+    "frac": 0.0004938271604938272,
+    "dist": 0.006214111831303715
+   },
+   {
+    "name": "lm_pond-weir_gate",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0013248592797896004
+   },
+   {
+    "name": "walk_lm_square-plaza.024",
+    "frac": 0.0004938271604938272,
+    "dist": 0.02983637623387514
+   },
+   {
+    "name": "lm_bakery_base",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0004265414671030247
+   },
+   {
+    "name": "walk_lm_square-plaza.030",
+    "frac": 0.0004938271604938272,
+    "dist": 0.01090366712545876
+   },
+   {
+    "name": "lm_incident_01_road-gate__square-plaza_handcart",
+    "frac": 0.0004938271604938272,
+    "dist": 0.002305083893936078
+   },
+   {
+    "name": "veg_emb_wood_09_crownG",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0012272617944575044
+   },
+   {
+    "name": "veg_emb_wood_21_crownG",
+    "frac": 0.00037037037037037035,
+    "dist": 0.13430299130777176
+   },
+   {
+    "name": "emb_bluff_W0_mass0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006030369640361262
+   },
+   {
+    "name": "walk_e_barn__gate-court_l10",
+    "frac": 0.00037037037037037035,
+    "dist": 0.7084148156209805
+   },
+   {
+    "name": "veg_emb_wood_17_crownA",
+    "frac": 0.00037037037037037035,
+    "dist": 0.014103899920972022
+   },
+   {
+    "name": "lm_east-cottages_0_roof",
+    "frac": 0.00037037037037037035,
+    "dist": 0.007071029368872889
+   },
+   {
+    "name": "lm_dovecote_plinth",
+    "frac": 0.00037037037037037035,
+    "dist": 0.009074125835912642
+   },
+   {
+    "name": "walk_pad_dovecote",
+    "frac": 0.00037037037037037035,
+    "dist": 0.010383939112148374
+   },
+   {
+    "name": "lm_market-row_stall3_canopy",
+    "frac": 0.00037037037037037035,
+    "dist": 0.14066616998016931
+   },
+   {
+    "name": "lm_village-bell_post0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006580339122606915
+   },
+   {
+    "name": "lm_east-cottages_3_body",
+    "frac": 0.00037037037037037035,
+    "dist": 0.002028455926315556
+   },
+   {
+    "name": "lm_infill_02_win1",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0013703835835587655
+   },
+   {
+    "name": "water_emb_river",
+    "frac": 0.00037037037037037035,
+    "dist": 0.01508345269485171
+   },
+   {
+    "name": "lm_pond-weir_cheek0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0029319222603991055
+   },
+   {
+    "name": "water_emb_pond",
+    "frac": 0.00037037037037037035,
+    "dist": 0.007834385643719818
+   },
+   {
+    "name": "walk_lm_square-plaza.041",
+    "frac": 0.00037037037037037035,
+    "dist": 0.015094923274017921
+   },
+   {
+    "name": "walk_lm_square-plaza.023",
+    "frac": 0.00037037037037037035,
+    "dist": 0.001157680522310282
+   },
+   {
+    "name": "walk_lm_square-plaza.045",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0027686394167609762
+   },
+   {
+    "name": "lm_infill_05_drystone11",
+    "frac": 0.00037037037037037035,
+    "dist": 0.1409776300952033
+   },
+   {
+    "name": "walk_lm_square-plaza.004",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0022003190400621264
+   },
+   {
+    "name": "lm_infill_04_rail14p",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0054482517735520005
+   },
+   {
+    "name": "lm_infill_04_rail15p",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006759568020062723
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l7",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006582922268902876
+   },
+   {
+    "name": "veg_emb_wood_20_crownA",
+    "frac": 0.0002469135802469136,
+    "dist": 0.19147975543500662
+   },
+   {
+    "name": "veg_emb_village_29_crown",
+    "frac": 0.0002469135802469136,
+    "dist": 0.39034934116312714
+   },
+   {
+    "name": "veg_emb_rim_033_trunk",
+    "frac": 0.0002469135802469136,
+    "dist": 0.11638360481982096
+   },
+   {
+    "name": "lm_infill_02_chim",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0013838851839358614
+   },
+   {
+    "name": "lm_sigil-plate-e",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0036099190360658895
+   },
+   {
+    "name": "veg_emb_wood_19_crownG",
+    "frac": 0.0002469135802469136,
+    "dist": 0.2274663667788004
+   },
+   {
+    "name": "lm_infill_04_chim",
+    "frac": 0.0002469135802469136,
+    "dist": 0.004250777154518208
+   },
+   {
+    "name": "lm_east-cottages_3_chim",
+    "frac": 0.0002469135802469136,
+    "dist": 0.004576229112269315
+   },
+   {
+    "name": "lm_east-cottages_0_chim",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0049324838948406015
+   },
+   {
+    "name": "lm_infill_25_win0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0023026986755818675
+   },
+   {
+    "name": "emb_lamp_10_inn_cap",
+    "frac": 0.0002469135802469136,
+    "dist": 0.5224352011646545
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l11",
+    "frac": 0.0002469135802469136,
+    "dist": 0.010542116011983916
+   },
+   {
+    "name": "lm_village-bell_head",
+    "frac": 0.0002469135802469136,
+    "dist": 0.08192121986614076
+   },
+   {
+    "name": "lm_village-bell_bell",
+    "frac": 0.0002469135802469136,
+    "dist": 0.042001130611422785
+   },
+   {
+    "name": "lm_pond-weir_winch",
+    "frac": 0.0002469135802469136,
+    "dist": 0.007053861289202027
+   },
+   {
+    "name": "lm_market-row_stall4_top",
+    "frac": 0.0002469135802469136,
+    "dist": 0.1845417978210948
+   },
+   {
+    "name": "lm_market-row_stall3_top",
+    "frac": 0.0002469135802469136,
+    "dist": 0.05415114060063342
+   },
+   {
+    "name": "walk_lm_square-plaza.042",
+    "frac": 0.0002469135802469136,
+    "dist": 0.003924959715304155
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l6",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00079711203564016
+   },
+   {
+    "name": "lm_pond-weir_sill",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0017192926347791605
+   },
+   {
+    "name": "lm_infill_02_track2",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0010762836579302395
+   },
+   {
+    "name": "walk_lm_square-plaza.017",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0011888589669837302
+   },
+   {
+    "name": "walk_lm_square-plaza.032",
+    "frac": 0.0002469135802469136,
+    "dist": 0.059374192819293015
+   },
+   {
+    "name": "walk_pad_pips-den",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0012291663164232247
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l11",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0011221297907643532
+   },
+   {
+    "name": "lm_infill_03_rail23p",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0012802951034181578
+   },
+   {
+    "name": "lm_infill_04_rail131",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0023064812653644027
+   },
+   {
+    "name": "lm_infill_04_rail141",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006476649568557146
+   },
+   {
+    "name": "lm_infill_04_rail151",
+    "frac": 0.0002469135802469136,
+    "dist": 0.005717415747349628
+   },
+   {
+    "name": "lm_infill_04_rail150",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006874515473596994
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l5",
+    "frac": 0.0002469135802469136,
+    "dist": 0.026561822397011856
+   },
+   {
+    "name": "lm_barn_chimney",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0016427160332580007
+   },
+   {
+    "name": "veg_emb_rim_031_crown1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.09821649561532642
+   },
+   {
+    "name": "lm_infill_30_chim",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004092621051141039
+   },
+   {
+    "name": "veg_emb_wood_19_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.4015515046637252
+   },
+   {
+    "name": "veg_emb_wood_21_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0006473331386372825
+   },
+   {
+    "name": "veg_emb_rim_030_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004784159255933673
+   },
+   {
+    "name": "lm_hillside-cottage_body",
+    "frac": 0.0001234567901234568,
+    "dist": 0.002222150361212347
+   },
+   {
+    "name": "veg_emb_wood_16_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 1.8997357670081618
+   },
+   {
+    "name": "lm_sigil-plate-e_base",
+    "frac": 0.0001234567901234568,
+    "dist": 0.002544084151224979
+   },
+   {
+    "name": "walk_e_barn__gate-court_l13",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0021575923619000068
+   },
+   {
+    "name": "veg_emb_rim_032_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.1421558525752289
+   },
+   {
+    "name": "lm_infill_30_win1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0031131140418695887
+   },
+   {
+    "name": "walk_e_barn__gate-court_l8",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005580306639247918
+   },
+   {
+    "name": "walk_e_barn__gate-court_l6",
+    "frac": 0.0001234567901234568,
+    "dist": 0.018940283376187247
+   },
+   {
+    "name": "walk_lm_square-plaza.034",
+    "frac": 0.0001234567901234568,
+    "dist": 2.7774595450481385
+   },
+   {
+    "name": "veg_emb_wood_15_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.013550584989566516
+   },
+   {
+    "name": "lm_infill_30_drystone06",
+    "frac": 0.0001234567901234568,
+    "dist": 0.02391624331034325
+   },
+   {
+    "name": "lm_infill_30_rail121",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006333002508633922
+   },
+   {
+    "name": "veg_emb_wood_17_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005232533395583161
+   },
+   {
+    "name": "emb_lamp_12_square-ring1_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00407121935417365
+   },
+   {
+    "name": "lm_bakery_door",
+    "frac": 0.0001234567901234568,
+    "dist": 0.010668191546808443
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l7",
+    "frac": 0.0001234567901234568,
+    "dist": 0.012438621491277519
+   },
+   {
+    "name": "lm_market-row_stall3_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.31924556976091467
+   },
+   {
+    "name": "emb_culvert_01_deck",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0021892027468481956
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l5",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006702621724024576
+   },
+   {
+    "name": "lm_heartlight_flame",
+    "frac": 0.0001234567901234568,
+    "dist": 0.033932403361644936
+   },
+   {
+    "name": "lm_market-row_stall2_top",
+    "frac": 0.0001234567901234568,
+    "dist": 0.08155041824078779
+   },
+   {
+    "name": "lm_market-row_stall4_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.3368655010999963
+   },
+   {
+    "name": "walk_lm_square-plaza.026",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003924959715304155
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003799393962707729
+   },
+   {
+    "name": "walk_lm_square-plaza.025",
+    "frac": 0.0001234567901234568,
+    "dist": 0.016528840074084172
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l3",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01754543850649881
+   },
+   {
+    "name": "walk_lm_square-plaza.016",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011888589669837302
+   },
+   {
+    "name": "walk_lm_square-plaza.040",
+    "frac": 0.0001234567901234568,
+    "dist": 0.002169351490607596
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l10",
+    "frac": 0.0001234567901234568,
+    "dist": 0.001169768853432858
+   },
+   {
+    "name": "lm_infill_02_track0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01629641254115406
+   },
+   {
+    "name": "walk_lm_square-plaza.039",
+    "frac": 0.0001234567901234568,
+    "dist": 0.017530439532160713
+   },
+   {
+    "name": "lm_festival-dais_step",
+    "frac": 0.0001234567901234568,
+    "dist": 0.13982920578734076
+   },
+   {
+    "name": "lm_infill_03_rail231",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0034897369769411515
+   },
+   {
+    "name": "lm_infill_04_track0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005002866571946599
+   },
+   {
+    "name": "lm_infill_03_rail221",
+    "frac": 0.0001234567901234568,
+    "dist": 0.001180464696225821
+   },
+   {
+    "name": "lm_infill_04_rail120",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011397982614485493
+   },
+   {
+    "name": "lm_infill_03_rail21p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0012158197141822029
+   },
+   {
+    "name": "lm_infill_03_rail211",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0014103531722241367
+   },
+   {
+    "name": "lm_infill_04_rail130",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004089347483387531
+   },
+   {
+    "name": "lm_infill_03_rail191",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00012715501870723286
+   },
+   {
+    "name": "lm_infill_03_rail210",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0061644002012801735
+   },
+   {
+    "name": "lm_infill_03_rail190",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00009745043674403182
+   },
+   {
+    "name": "lm_infill_03_track0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0035418080965832132
+   },
+   {
+    "name": "emb_lamp_01_orchard_post",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00042597759880891317
+   },
+   {
+    "name": "veg_emb_wood_11_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0006606130073265604
+   },
+   {
+    "name": "veg_emb_wood_10_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0012497129340047763
+   }
+  ],
+  "distP50": 0.004711857977047051,
+  "distP90": 0.018363184385997326
+ },
+ "orchard": {
+  "shot": "orchard",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.5203703703703704,
+    "dist": 0.01094180632917356
+   },
+   {
+    "name": "walk_lm_orchard",
+    "frac": 0.2097530864197531,
+    "dist": 0.005297889960601117
+   },
+   {
+    "name": "lm_cider-press_roof",
+    "frac": 0.054814814814814816,
+    "dist": 0.0043427740389580805
+   },
+   {
+    "name": "veg_emb_village_02_crown",
+    "frac": 0.02691358024691358,
+    "dist": 3.3946125709465966
+   },
+   {
+    "name": "veg_emb_village_12_crown",
+    "frac": 0.020864197530864197,
+    "dist": 0.4579400533526436
+   },
+   {
+    "name": "lm_infill_02_roof",
+    "frac": 0.01888888888888889,
+    "dist": 0.0011912217368354478
+   },
+   {
+    "name": "veg_emb_village_03_crown",
+    "frac": 0.01691358024691358,
+    "dist": 2.2742638711619927
+   },
+   {
+    "name": "lm_inn_roof",
+    "frac": 0.013580246913580247,
+    "dist": 0.0033947434830183757
+   },
+   {
+    "name": "veg_emb_village_04_crown",
+    "frac": 0.011728395061728396,
+    "dist": 0.618206328229507
+   },
+   {
+    "name": "lm_field_03_ridge03",
+    "frac": 0.006666666666666667,
+    "dist": 0.004288616220970416
+   },
+   {
+    "name": "veg_emb_village_23_trunk",
+    "frac": 0.006419753086419753,
+    "dist": 0.2641052801529508
+   },
+   {
+    "name": "lm_inn_body",
+    "frac": 0.006172839506172839,
+    "dist": 0.0038783098645629533
+   },
+   {
+    "name": "veg_emb_village_22_crown",
+    "frac": 0.005802469135802469,
+    "dist": 0.39861770041103484
+   },
+   {
+    "name": "veg_emb_village_04_trunk",
+    "frac": 0.005555555555555556,
+    "dist": 0.8510740283678545
+   },
+   {
+    "name": "veg_emb_village_19_trunk",
+    "frac": 0.0044444444444444444,
+    "dist": 0.3482064899857752
+   },
+   {
+    "name": "veg_emb_village_23_crown",
+    "frac": 0.004320987654320987,
+    "dist": 0.3923466481925662
+   },
+   {
+    "name": "veg_emb_village_22_trunk",
+    "frac": 0.004197530864197531,
+    "dist": 0.25001633926938727
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l4",
+    "frac": 0.003580246913580247,
+    "dist": 0.07701449865727618
+   },
+   {
+    "name": "veg_emb_village_12_trunk",
+    "frac": 0.0033333333333333335,
+    "dist": 0.532179103750679
+   },
+   {
+    "name": "veg_emb_village_19_crown",
+    "frac": 0.002962962962962963,
+    "dist": 0.37575493740113447
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l5",
+    "frac": 0.0024691358024691358,
+    "dist": 0.004600487864727603
+   },
+   {
+    "name": "lm_infill_13_body",
+    "frac": 0.0024691358024691358,
+    "dist": 0.0010805502731018946
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l3",
+    "frac": 0.0022222222222222222,
+    "dist": 0.009706200785998525
+   },
+   {
+    "name": "lm_incident_01_road-gate__square-plaza_handcart",
+    "frac": 0.0022222222222222222,
+    "dist": 0.009086630814829114
+   },
+   {
+    "name": "lm_infill_02_chim",
+    "frac": 0.0022222222222222222,
+    "dist": 0.0028900325959546422
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l2",
+    "frac": 0.0020987654320987655,
+    "dist": 0.0062231393564896025
+   },
+   {
+    "name": "veg_emb_wood_10_crownG",
+    "frac": 0.0019753086419753087,
+    "dist": 0.06760823890884282
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l4",
+    "frac": 0.0017283950617283952,
+    "dist": 0.008436577641591005
+   },
+   {
+    "name": "walk_pad_road-gate",
+    "frac": 0.0017283950617283952,
+    "dist": 0.004883756764211203
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l2",
+    "frac": 0.0016049382716049382,
+    "dist": 0.008307546815162391
+   },
+   {
+    "name": "veg_emb_wood_10_crownA",
+    "frac": 0.0016049382716049382,
+    "dist": 0.008024691791649665
+   },
+   {
+    "name": "veg_emb_wood_11_crownG",
+    "frac": 0.0016049382716049382,
+    "dist": 0.004883227487197956
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l3",
+    "frac": 0.0016049382716049382,
+    "dist": 0.006554758130121336
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l1",
+    "frac": 0.0014814814814814814,
+    "dist": 0.008398567479570783
+   },
+   {
+    "name": "lm_road-gate_lintel",
+    "frac": 0.0012345679012345679,
+    "dist": 0.007444830003476695
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l3",
+    "frac": 0.0012345679012345679,
+    "dist": 0.008552276098052983
+   },
+   {
+    "name": "lm_infill_08_track1",
+    "frac": 0.0011111111111111111,
+    "dist": 0.006000339824554176
+   },
+   {
+    "name": "emb_lamp_01_orchard_post",
+    "frac": 0.0011111111111111111,
+    "dist": 0.00421855591827046
+   },
+   {
+    "name": "lm_cider-press_post00",
+    "frac": 0.0011111111111111111,
+    "dist": 0.00620667226924186
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l2",
+    "frac": 0.0009876543209876543,
+    "dist": 0.005721681203078274
+   },
+   {
+    "name": "lm_incident_00_road-gate__square-plaza_woodpile",
+    "frac": 0.0009876543209876543,
+    "dist": 0.006792551385631251
+   },
+   {
+    "name": "lm_infill_08_track2",
+    "frac": 0.0009876543209876543,
+    "dist": 0.004798005636836723
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l1",
+    "frac": 0.0008641975308641976,
+    "dist": 0.009743651955779581
+   },
+   {
+    "name": "lm_incident_02_waystone__road-gate_woodpile",
+    "frac": 0.0008641975308641976,
+    "dist": 0.010895273708927886
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l4",
+    "frac": 0.0008641975308641976,
+    "dist": 0.0064794197501300685
+   },
+   {
+    "name": "lm_cider-press_post01",
+    "frac": 0.0008641975308641976,
+    "dist": 0.003220919158825362
+   },
+   {
+    "name": "veg_emb_wood_11_crownA",
+    "frac": 0.0007407407407407407,
+    "dist": 0.9553018900995293
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l5",
+    "frac": 0.0007407407407407407,
+    "dist": 0.006962695160294523
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l6",
+    "frac": 0.0007407407407407407,
+    "dist": 0.005294917266899106
+   },
+   {
+    "name": "veg_emb_wood_09_crownG",
+    "frac": 0.0006172839506172839,
+    "dist": 0.004277331054228594
+   },
+   {
+    "name": "lm_road-gate_postR",
+    "frac": 0.0006172839506172839,
+    "dist": 0.007538900433717022
+   },
+   {
+    "name": "lm_road-gate_postL",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0036735385899639233
+   },
+   {
+    "name": "lm_field_04_ridge04",
+    "frac": 0.0006172839506172839,
+    "dist": 0.004191762819108646
+   },
+   {
+    "name": "walk_pad_waystone",
+    "frac": 0.0004938271604938272,
+    "dist": 0.009341009026352499
+   },
+   {
+    "name": "lm_road-gate_brace",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0013004867592058896
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l1",
+    "frac": 0.0004938271604938272,
+    "dist": 0.007889989661816473
+   },
+   {
+    "name": "lm_infill_08_track0",
+    "frac": 0.0004938271604938272,
+    "dist": 0.004866189399634061
+   },
+   {
+    "name": "lm_inn_chimney",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0019301636291170405
+   },
+   {
+    "name": "lm_field_04_drystone08",
+    "frac": 0.0004938271604938272,
+    "dist": 0.19284180928458342
+   },
+   {
+    "name": "veg_emb_wood_09_crownA",
+    "frac": 0.00037037037037037035,
+    "dist": 0.04937295189300996
+   },
+   {
+    "name": "veg_emb_wood_09_trunks",
+    "frac": 0.00037037037037037035,
+    "dist": 0.005391430023220067
+   },
+   {
+    "name": "emb_lamp_00_road-gate_post",
+    "frac": 0.00037037037037037035,
+    "dist": 0.008216809857856333
+   },
+   {
+    "name": "lm_infill_13_rail18p",
+    "frac": 0.00037037037037037035,
+    "dist": 0.005563780336995093
+   },
+   {
+    "name": "lm_cider-press_press",
+    "frac": 0.00037037037037037035,
+    "dist": 0.004254168492655285
+   },
+   {
+    "name": "emb_lamp_00_road-gate_glass",
+    "frac": 0.0002469135802469136,
+    "dist": 0.01569962307502948
+   },
+   {
+    "name": "lm_infill_08_rail19p",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0021484012387976894
+   },
+   {
+    "name": "lm_infill_08_track3",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0069316151988765284
+   },
+   {
+    "name": "lm_infill_13_rail171",
+    "frac": 0.0002469135802469136,
+    "dist": 0.009833841274570432
+   },
+   {
+    "name": "lm_infill_13_rail181",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0013140291923330336
+   },
+   {
+    "name": "lm_infill_13_rail180",
+    "frac": 0.0002469135802469136,
+    "dist": 0.007018582511277575
+   },
+   {
+    "name": "lm_infill_13_rail191",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0038406958941367016
+   },
+   {
+    "name": "lm_infill_13_rail190",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00263002555816444
+   },
+   {
+    "name": "lm_cider-press_gableend",
+    "frac": 0.0002469135802469136,
+    "dist": 0.008793033447060717
+   },
+   {
+    "name": "lm_infill_02_bramble21",
+    "frac": 0.0002469135802469136,
+    "dist": 0.01324045269763019
+   },
+   {
+    "name": "veg_emb_wood_08_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0036246149187482883
+   },
+   {
+    "name": "walk_e_waystone__road-gate_l0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006019382509077568
+   },
+   {
+    "name": "veg_emb_wood_11_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006047361137966334
+   },
+   {
+    "name": "veg_emb_wood_12_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0017258047744022065
+   },
+   {
+    "name": "lm_infill_08_rail20p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.001273626018079426
+   },
+   {
+    "name": "lm_infill_07_track5",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00783515477326471
+   },
+   {
+    "name": "emb_lamp_01_orchard_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0020513452454267167
+   },
+   {
+    "name": "emb_lamp_01_orchard_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005858732292292501
+   },
+   {
+    "name": "lm_infill_13_rail170",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006758622565440789
+   },
+   {
+    "name": "lm_infill_13_rail19p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005102644702855828
+   },
+   {
+    "name": "lm_field_03_hedge06",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0033154607200955866
+   },
+   {
+    "name": "lm_inn_base",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0034518489250920936
+   }
+  ],
+  "distP50": 0.0067519733356675715,
+  "distP90": 0.12943423345763172
+ },
+ "therise": {
+  "shot": "therise",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0.014197530864197531,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.4208641975308642,
+    "dist": 0.010532754762662841
+   },
+   {
+    "name": "lm_infill_03_body",
+    "frac": 0.049012345679012345,
+    "dist": 0.0035332982613240495
+   },
+   {
+    "name": "veg_emb_village_04_crown",
+    "frac": 0.04395061728395062,
+    "dist": 0.6396284442093557
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l3",
+    "frac": 0.027777777777777776,
+    "dist": 0.0028153649557265776
+   },
+   {
+    "name": "lm_infill_03_roof",
+    "frac": 0.025802469135802468,
+    "dist": 0.003189634463842499
+   },
+   {
+    "name": "lm_watermill_body",
+    "frac": 0.021604938271604937,
+    "dist": 0.7841154463506498
+   },
+   {
+    "name": "veg_emb_village_04_trunk",
+    "frac": 0.01950617283950617,
+    "dist": 0.7694006265700565
+   },
+   {
+    "name": "lm_inn_body",
+    "frac": 0.018641975308641975,
+    "dist": 0.004188542688900302
+   },
+   {
+    "name": "lm_cider-press_roof",
+    "frac": 0.01654320987654321,
+    "dist": 0.0027289870218473555
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l3",
+    "frac": 0.01617283950617284,
+    "dist": 0.0027490380876493414
+   },
+   {
+    "name": "emb_bluff_E2_mass0",
+    "frac": 0.014814814814814815,
+    "dist": 0.006292506291266638
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l4",
+    "frac": 0.014567901234567901,
+    "dist": 0.0030378910951979355
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l4",
+    "frac": 0.012222222222222223,
+    "dist": 0.10134193189676487
+   },
+   {
+    "name": "lm_bakery_body",
+    "frac": 0.011851851851851851,
+    "dist": 0.003339157654776149
+   },
+   {
+    "name": "walk_lm_orchard",
+    "frac": 0.011728395061728396,
+    "dist": 0.004829523754040606
+   },
+   {
+    "name": "lm_item-shop_body",
+    "frac": 0.010617283950617284,
+    "dist": 0.005317432629614187
+   },
+   {
+    "name": "lm_infill_02_roof",
+    "frac": 0.009382716049382716,
+    "dist": 0.0032348781408052672
+   },
+   {
+    "name": "emb_bluff_E0_mass0",
+    "frac": 0.009012345679012346,
+    "dist": 0.012570091395311943
+   },
+   {
+    "name": "veg_emb_village_08_trunk",
+    "frac": 0.008641975308641974,
+    "dist": 0.27609542566046247
+   },
+   {
+    "name": "lm_inn_roof",
+    "frac": 0.008641975308641974,
+    "dist": 0.006246625666614897
+   },
+   {
+    "name": "lm_incident_00_road-gate__square-plaza_woodpile",
+    "frac": 0.008148148148148147,
+    "dist": 0.0019156861676015082
+   },
+   {
+    "name": "lm_item-shop_roof",
+    "frac": 0.007530864197530864,
+    "dist": 0.004789620355249328
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l2",
+    "frac": 0.00654320987654321,
+    "dist": 0.0026221033521955897
+   },
+   {
+    "name": "lm_bakery_roof",
+    "frac": 0.006049382716049383,
+    "dist": 0.004189271977584078
+   },
+   {
+    "name": "emb_bluff_W3_mass0",
+    "frac": 0.005925925925925926,
+    "dist": 0.006026058428762138
+   },
+   {
+    "name": "lm_infill_02_body",
+    "frac": 0.005679012345679012,
+    "dist": 0.001667090050285245
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l5",
+    "frac": 0.005679012345679012,
+    "dist": 0.004316935118126019
+   },
+   {
+    "name": "emb_bluff_E1_mass0",
+    "frac": 0.005308641975308642,
+    "dist": 0.008273060595025014
+   },
+   {
+    "name": "lm_cider-press_press",
+    "frac": 0.005185185185185185,
+    "dist": 0.0038231307242068743
+   },
+   {
+    "name": "veg_emb_village_08_crown",
+    "frac": 0.004691358024691358,
+    "dist": 0.5231615702652951
+   },
+   {
+    "name": "emb_bluff_W6_mass0",
+    "frac": 0.004567901234567902,
+    "dist": 0.006150347236654538
+   },
+   {
+    "name": "lm_inn_base",
+    "frac": 0.004567901234567902,
+    "dist": 0.0037347544457876094
+   },
+   {
+    "name": "lm_barn_body",
+    "frac": 0.004320987654320987,
+    "dist": 0.0028453341027572365
+   },
+   {
+    "name": "walk_lm_square-plaza.020",
+    "frac": 0.004197530864197531,
+    "dist": 0.004686740132764247
+   },
+   {
+    "name": "veg_emb_village_23_trunk",
+    "frac": 0.003950617283950617,
+    "dist": 0.42005752691144793
+   },
+   {
+    "name": "lm_lake-home_body",
+    "frac": 0.003950617283950617,
+    "dist": 0.002136171547080875
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l6",
+    "frac": 0.003950617283950617,
+    "dist": 0.0047295675865386
+   },
+   {
+    "name": "lm_hillside-cottage_roof",
+    "frac": 0.003580246913580247,
+    "dist": 0.5950569858672841
+   },
+   {
+    "name": "walk_lm_square-plaza.012",
+    "frac": 0.003580246913580247,
+    "dist": 0.004354750966658673
+   },
+   {
+    "name": "emb_bluff_W5_mass0",
+    "frac": 0.0033333333333333335,
+    "dist": 0.006267006282187098
+   },
+   {
+    "name": "lm_elder-house_roof",
+    "frac": 0.002962962962962963,
+    "dist": 0.006232429990604114
+   },
+   {
+    "name": "lm_bakery_base",
+    "frac": 0.002962962962962963,
+    "dist": 0.0033546130755320058
+   },
+   {
+    "name": "lm_barn_roof",
+    "frac": 0.002839506172839506,
+    "dist": 0.0077271658505390665
+   },
+   {
+    "name": "lm_incident_01_road-gate__square-plaza_handcart",
+    "frac": 0.0027160493827160493,
+    "dist": 0.004139464479563551
+   },
+   {
+    "name": "emb_bluff_W8_mass0",
+    "frac": 0.0025925925925925925,
+    "dist": 0.0063671935062454095
+   },
+   {
+    "name": "veg_emb_village_17_crown",
+    "frac": 0.0025925925925925925,
+    "dist": 0.40433137361297494
+   },
+   {
+    "name": "veg_emb_village_23_crown",
+    "frac": 0.0025925925925925925,
+    "dist": 0.4185961665758127
+   },
+   {
+    "name": "walk_lm_square-plaza.021",
+    "frac": 0.0025925925925925925,
+    "dist": 0.8873114531869624
+   },
+   {
+    "name": "lm_dovecote_shaft",
+    "frac": 0.0024691358024691358,
+    "dist": 0.005188871959750372
+   },
+   {
+    "name": "emb_bluff_W0_mass0",
+    "frac": 0.002345679012345679,
+    "dist": 0.2045015193914775
+   },
+   {
+    "name": "lm_infill_30_roof",
+    "frac": 0.002345679012345679,
+    "dist": 0.008837995977657614
+   },
+   {
+    "name": "lm_festival-dais_deck",
+    "frac": 0.0022222222222222222,
+    "dist": 0.17368483529296386
+   },
+   {
+    "name": "veg_emb_wood_14_crownG",
+    "frac": 0.0020987654320987655,
+    "dist": 0.45784691071385514
+   },
+   {
+    "name": "lm_infill_30_body",
+    "frac": 0.0020987654320987655,
+    "dist": 0.0029976733249853123
+   },
+   {
+    "name": "lm_cider-press_plate",
+    "frac": 0.0020987654320987655,
+    "dist": 0.0015669264392918813
+   },
+   {
+    "name": "walk_lm_square-plaza.013",
+    "frac": 0.0019753086419753087,
+    "dist": 0.17520297239727178
+   },
+   {
+    "name": "walk_lm_square-plaza.028",
+    "frac": 0.0017283950617283952,
+    "dist": 0.004446630049781154
+   },
+   {
+    "name": "lm_item-shop_chimney",
+    "frac": 0.0016049382716049382,
+    "dist": 0.004247956945741903
+   },
+   {
+    "name": "lm_lake-home_roof",
+    "frac": 0.0016049382716049382,
+    "dist": 0.0031620544619853064
+   },
+   {
+    "name": "emb_gatewall_Egrate",
+    "frac": 0.0016049382716049382,
+    "dist": 0.005960120740387363
+   },
+   {
+    "name": "lm_elder-house_body",
+    "frac": 0.0016049382716049382,
+    "dist": 0.005668243745255708
+   },
+   {
+    "name": "lm_barn_base",
+    "frac": 0.0016049382716049382,
+    "dist": 0.004123057560793938
+   },
+   {
+    "name": "lm_cider-press_post11",
+    "frac": 0.0016049382716049382,
+    "dist": 0.002763500705123136
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l7",
+    "frac": 0.0016049382716049382,
+    "dist": 0.007196322723666276
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l5",
+    "frac": 0.0016049382716049382,
+    "dist": 0.01565494549359991
+   },
+   {
+    "name": "walk_lm_square-plaza.042",
+    "frac": 0.0014814814814814814,
+    "dist": 2.184104839376717
+   },
+   {
+    "name": "walk_lm_square-plaza.014",
+    "frac": 0.0014814814814814814,
+    "dist": 0.13975370525819888
+   },
+   {
+    "name": "walk_lm_square-plaza.029",
+    "frac": 0.0014814814814814814,
+    "dist": 0.375130657082925
+   },
+   {
+    "name": "veg_emb_village_29_crown",
+    "frac": 0.0013580246913580246,
+    "dist": 0.5040427202957751
+   },
+   {
+    "name": "lm_inn_chimney",
+    "frac": 0.0013580246913580246,
+    "dist": 0.0013878324210895865
+   },
+   {
+    "name": "lm_infill_03_chim",
+    "frac": 0.0013580246913580246,
+    "dist": 0.001604749288894968
+   },
+   {
+    "name": "lm_cider-press_gableend",
+    "frac": 0.0013580246913580246,
+    "dist": 0.000613978057806462
+   },
+   {
+    "name": "emb_bluff_W1_mass0",
+    "frac": 0.0012345679012345679,
+    "dist": 0.006515229448356763
+   },
+   {
+    "name": "walk_lm_square-plaza.024",
+    "frac": 0.0012345679012345679,
+    "dist": 0.029000027659069616
+   },
+   {
+    "name": "lm_item-shop_base",
+    "frac": 0.0012345679012345679,
+    "dist": 0.008732755317444323
+   },
+   {
+    "name": "walk_lm_square-plaza.022",
+    "frac": 0.0012345679012345679,
+    "dist": 0.01780651804098473
+   },
+   {
+    "name": "lm_heartlight_plinth",
+    "frac": 0.0011111111111111111,
+    "dist": 0.0044113116450798275
+   },
+   {
+    "name": "veg_emb_village_03_crown",
+    "frac": 0.0009876543209876543,
+    "dist": 0.21320781805442146
+   },
+   {
+    "name": "lm_dovecote_cap",
+    "frac": 0.0009876543209876543,
+    "dist": 0.006469752400465583
+   },
+   {
+    "name": "lm_market-row_stall4_canopy",
+    "frac": 0.0009876543209876543,
+    "dist": 0.5150557546426395
+   },
+   {
+    "name": "walk_lm_square-plaza.016",
+    "frac": 0.0009876543209876543,
+    "dist": 0.008362135896481493
+   },
+   {
+    "name": "emb_bluff_E0_cap",
+    "frac": 0.0008641975308641976,
+    "dist": 0.01772200163949978
+   },
+   {
+    "name": "veg_emb_wood_14_crownA",
+    "frac": 0.0008641975308641976,
+    "dist": 0.2731818576567858
+   },
+   {
+    "name": "water_emb_brook",
+    "frac": 0.0008641975308641976,
+    "dist": 0.08279761146141847
+   },
+   {
+    "name": "walk_lm_square-plaza.031",
+    "frac": 0.0008641975308641976,
+    "dist": 0.010074851362563666
+   },
+   {
+    "name": "lm_field_03_ridge03",
+    "frac": 0.0008641975308641976,
+    "dist": 0.007852822608792016
+   },
+   {
+    "name": "walk_lm_square-plaza.004",
+    "frac": 0.0008641975308641976,
+    "dist": 0.004334063575953958
+   },
+   {
+    "name": "veg_emb_village_29_trunk",
+    "frac": 0.0007407407407407407,
+    "dist": 0.41009859248074637
+   },
+   {
+    "name": "lm_watermill_base",
+    "frac": 0.0007407407407407407,
+    "dist": 0.08528315824019106
+   },
+   {
+    "name": "lm_market-row_stall2_canopy",
+    "frac": 0.0007407407407407407,
+    "dist": 0.12010540909560558
+   },
+   {
+    "name": "lm_festival-dais_step",
+    "frac": 0.0007407407407407407,
+    "dist": 0.08113507550269243
+   },
+   {
+    "name": "walk_lm_square-plaza.030",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0052394302974954066
+   },
+   {
+    "name": "veg_emb_village_30_crown",
+    "frac": 0.0006172839506172839,
+    "dist": 0.6020803460880055
+   },
+   {
+    "name": "veg_emb_wood_16_crownA",
+    "frac": 0.0006172839506172839,
+    "dist": 3.243656691906235
+   },
+   {
+    "name": "lm_bakery_chimney",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0060180886483013046
+   },
+   {
+    "name": "lm_market-row_stall5_canopy",
+    "frac": 0.0006172839506172839,
+    "dist": 0.8664525761081766
+   },
+   {
+    "name": "walk_lm_square-plaza.026",
+    "frac": 0.0006172839506172839,
+    "dist": 0.5557426846267809
+   },
+   {
+    "name": "walk_lm_square-plaza.049",
+    "frac": 0.0006172839506172839,
+    "dist": 2.693694491973547
+   },
+   {
+    "name": "lm_market-row_stall3_canopy",
+    "frac": 0.0006172839506172839,
+    "dist": 0.16442320874226599
+   },
+   {
+    "name": "water_emb_river",
+    "frac": 0.0006172839506172839,
+    "dist": 0.018150358367265973
+   },
+   {
+    "name": "lm_pond-weir_cheek0",
+    "frac": 0.0006172839506172839,
+    "dist": 0.007522720815079138
+   },
+   {
+    "name": "walk_lm_square-plaza.017",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0062642856186787554
+   },
+   {
+    "name": "lm_infill_03_track0",
+    "frac": 0.0006172839506172839,
+    "dist": 0.004043989715562417
+   },
+   {
+    "name": "emb_bluff_W7_mass0",
+    "frac": 0.0004938271604938272,
+    "dist": 0.007178094569944449
+   },
+   {
+    "name": "lm_hillside-cottage_chimney",
+    "frac": 0.0004938271604938272,
+    "dist": 1.3746983124075196
+   },
+   {
+    "name": "emb_bluff_W0_cap",
+    "frac": 0.0004938271604938272,
+    "dist": 0.09617523785459266
+   },
+   {
+    "name": "emb_gatewall_Egrate_cope",
+    "frac": 0.0004938271604938272,
+    "dist": 0.010514464063930973
+   },
+   {
+    "name": "walk_pad_dovecote",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0007183235042216296
+   },
+   {
+    "name": "emb_lamp_10_inn_glass",
+    "frac": 0.0004938271604938272,
+    "dist": 1.3441552503649223
+   },
+   {
+    "name": "lm_village-bell_post0",
+    "frac": 0.0004938271604938272,
+    "dist": 0.046750014661255675
+   },
+   {
+    "name": "walk_lm_square-plaza.043",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0037546783942050688
+   },
+   {
+    "name": "walk_lm_square-plaza.018",
+    "frac": 0.0004938271604938272,
+    "dist": 0.007802156299420382
+   },
+   {
+    "name": "walk_lm_square-plaza.032",
+    "frac": 0.0004938271604938272,
+    "dist": 0.029649975540102957
+   },
+   {
+    "name": "lm_infill_04_track0",
+    "frac": 0.0004938271604938272,
+    "dist": 0.003675381901110871
+   },
+   {
+    "name": "walk_lm_gate-court",
+    "frac": 0.00037037037037037035,
+    "dist": 0.11334065953659778
+   },
+   {
+    "name": "walk_e_barn__gate-court_l8",
+    "frac": 0.00037037037037037035,
+    "dist": 0.01125784966181134
+   },
+   {
+    "name": "walk_lm_square-plaza.034",
+    "frac": 0.00037037037037037035,
+    "dist": 1.937642866259158
+   },
+   {
+    "name": "lm_elder-house_base",
+    "frac": 0.00037037037037037035,
+    "dist": 0.004798731017577301
+   },
+   {
+    "name": "lm_dovecote_plinth",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006266586945743508
+   },
+   {
+    "name": "lm_heartlight_flame",
+    "frac": 0.00037037037037037035,
+    "dist": 0.11367762876899025
+   },
+   {
+    "name": "lm_market-row_stall5_top",
+    "frac": 0.00037037037037037035,
+    "dist": 0.2645200226049269
+   },
+   {
+    "name": "lm_market-row_stall4_top",
+    "frac": 0.00037037037037037035,
+    "dist": 0.09917189347613764
+   },
+   {
+    "name": "walk_lm_square-plaza.019",
+    "frac": 0.00037037037037037035,
+    "dist": 0.003172963434931416
+   },
+   {
+    "name": "walk_lm_square-plaza.027",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006809188617311612
+   },
+   {
+    "name": "veg_emb_village_05_crown",
+    "frac": 0.00037037037037037035,
+    "dist": 0.46977397379669134
+   },
+   {
+    "name": "lm_well_ring",
+    "frac": 0.00037037037037037035,
+    "dist": 0.002132786980726877
+   },
+   {
+    "name": "walk_lm_square-plaza.041",
+    "frac": 0.00037037037037037035,
+    "dist": 0.005070596337710971
+   },
+   {
+    "name": "walk_lm_square-plaza.023",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0430050132866846
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l9",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0038485531214271945
+   },
+   {
+    "name": "emb_bluff_E1_cap",
+    "frac": 0.0002469135802469136,
+    "dist": 0.022470076979554044
+   },
+   {
+    "name": "veg_emb_wood_20_crownA",
+    "frac": 0.0002469135802469136,
+    "dist": 1.805494501901344
+   },
+   {
+    "name": "walk_e_barn__gate-court_l11",
+    "frac": 0.0002469135802469136,
+    "dist": 1.9759645625212416
+   },
+   {
+    "name": "lm_sigil-gate_lintel",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0024450818368393357
+   },
+   {
+    "name": "veg_emb_screen_01_crownG",
+    "frac": 0.0002469135802469136,
+    "dist": 0.03410056560843839
+   },
+   {
+    "name": "lm_sigil-gate_doors",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006562305980367
+   },
+   {
+    "name": "lm_sigil-gate_jambR",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006535536052595603
+   },
+   {
+    "name": "lm_infill_25_roof",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006984702882995549
+   },
+   {
+    "name": "veg_emb_screen_04_crownG",
+    "frac": 0.0002469135802469136,
+    "dist": 0.21859866759878815
+   },
+   {
+    "name": "lm_sigil-plate-e",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006242316887949073
+   },
+   {
+    "name": "lm_dovecote_door",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00165169674153276
+   },
+   {
+    "name": "lm_market-row_stall1_canopy",
+    "frac": 0.0002469135802469136,
+    "dist": 2.886272028415079
+   },
+   {
+    "name": "bar_back-lane-closed_cart_bed",
+    "frac": 0.0002469135802469136,
+    "dist": 0.1804706774827572
+   },
+   {
+    "name": "lm_market-row_stall5_post0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.11659832463004664
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l10",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0014880837605368254
+   },
+   {
+    "name": "walk_pad_back-lane-closed",
+    "frac": 0.0002469135802469136,
+    "dist": 0.022746489957079064
+   },
+   {
+    "name": "lm_market-row_stall3_post1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.3117133633927137
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l6",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0014041959316106146
+   },
+   {
+    "name": "lm_village-bell_bell",
+    "frac": 0.0002469135802469136,
+    "dist": 0.08986689107030522
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l4",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0033669017201987898
+   },
+   {
+    "name": "lm_market-row_stall3_top",
+    "frac": 0.0002469135802469136,
+    "dist": 0.06929713425968066
+   },
+   {
+    "name": "lm_heartlight_cap",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0029225762350790774
+   },
+   {
+    "name": "lm_market-row_stall2_top",
+    "frac": 0.0002469135802469136,
+    "dist": 0.02605258893217144
+   },
+   {
+    "name": "lm_pond-weir_gate",
+    "frac": 0.0002469135802469136,
+    "dist": 0.009071239122178033
+   },
+   {
+    "name": "walk_lm_square-plaza.033",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0062642856186787554
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l10",
+    "frac": 0.0002469135802469136,
+    "dist": 0.008187908315543889
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l11",
+    "frac": 0.0002469135802469136,
+    "dist": 0.005666731560768338
+   },
+   {
+    "name": "walk_pad_poppy-stall",
+    "frac": 0.0002469135802469136,
+    "dist": 0.002601727138347165
+   },
+   {
+    "name": "lm_cider-press_post00",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00045459678384498304
+   },
+   {
+    "name": "lm_watermill_roof",
+    "frac": 0.0001234567901234568,
+    "dist": 2.2603592259756886
+   },
+   {
+    "name": "veg_emb_rim_069_crown1",
+    "frac": 0.0001234567901234568,
+    "dist": 4.898874372021052
+   },
+   {
+    "name": "veg_emb_village_02_crown",
+    "frac": 0.0001234567901234568,
+    "dist": 0.09382773231597188
+   },
+   {
+    "name": "veg_emb_wood_12_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.009394255646899975
+   },
+   {
+    "name": "veg_emb_village_30_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.8969969106846427
+   },
+   {
+    "name": "lm_elder-house_chimney",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0034867897792345147
+   },
+   {
+    "name": "veg_emb_wood_19_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.2344562165511466
+   },
+   {
+    "name": "veg_emb_village_00_crown",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011859643756937537
+   },
+   {
+    "name": "lm_infill_02_chim",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0021216185282744928
+   },
+   {
+    "name": "emb_gatewall_E_cope",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003325563077652305
+   },
+   {
+    "name": "veg_emb_screen_04_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.04902883397283078
+   },
+   {
+    "name": "veg_emb_wood_18_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.5810747323104183
+   },
+   {
+    "name": "veg_emb_screen_02_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.018293014718517034
+   },
+   {
+    "name": "lm_infill_30_chim",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0012279348700642075
+   },
+   {
+    "name": "lm_hillside-cottage_body",
+    "frac": 0.0001234567901234568,
+    "dist": 0.002696725025830334
+   },
+   {
+    "name": "veg_emb_screen_02_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.018100534005327854
+   },
+   {
+    "name": "veg_emb_wood_21_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.011035326413555906
+   },
+   {
+    "name": "veg_emb_screen_03_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.038493707391521824
+   },
+   {
+    "name": "veg_emb_wood_21_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00376347494709961
+   },
+   {
+    "name": "veg_emb_wood_20_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.06551131252100895
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0030658355004362647
+   },
+   {
+    "name": "veg_emb_rim_033_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.015708146839727988
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.001716659252885222
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 3.130186563426692
+   },
+   {
+    "name": "lm_infill_30_win1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0048744773338124485
+   },
+   {
+    "name": "lm_infill_30_drystone06",
+    "frac": 0.0001234567901234568,
+    "dist": 0.09051241430016965
+   },
+   {
+    "name": "walk_lm_square-plaza.048",
+    "frac": 0.0001234567901234568,
+    "dist": 2.7436575323735983
+   },
+   {
+    "name": "veg_emb_wood_17_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003590591722860026
+   },
+   {
+    "name": "lm_infill_30_rail12p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.019988802905662968
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.002071699531234617
+   },
+   {
+    "name": "lm_village-bell_head",
+    "frac": 0.0001234567901234568,
+    "dist": 0.014878951744506708
+   },
+   {
+    "name": "emb_culvert_01_deck",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0003770260530089331
+   },
+   {
+    "name": "lm_pond-weir_winch",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0012942847583419237
+   },
+   {
+    "name": "lm_notice-board_postL",
+    "frac": 0.0001234567901234568,
+    "dist": 0.8932990704845069
+   },
+   {
+    "name": "walk_lm_square-plaza.035",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004234167650047915
+   },
+   {
+    "name": "walk_lm_square-plaza.010",
+    "frac": 0.0001234567901234568,
+    "dist": 0.014474393652830209
+   },
+   {
+    "name": "lm_market-row_stall4_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.3448723331350749
+   },
+   {
+    "name": "walk_lm_square-plaza.025",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0015807370211575744
+   },
+   {
+    "name": "lm_market-row_stall2_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.29281405730112003
+   },
+   {
+    "name": "water_emb_pond",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00702258480575324
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.011523671687906249
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l3",
+    "frac": 0.0001234567901234568,
+    "dist": 0.011522752479772969
+   },
+   {
+    "name": "walk_pad_pips-den",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0021395847331575624
+   },
+   {
+    "name": "walk_lm_square-plaza.015",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007466969596152673
+   },
+   {
+    "name": "lm_cider-press_post01",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0022055121959515755
+   },
+   {
+    "name": "walk_lm_square-plaza.045",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00021199178098640914
+   },
+   {
+    "name": "lm_infill_03_rail231",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00035184855939136524
+   },
+   {
+    "name": "lm_infill_03_rail230",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0001859546019442391
+   }
+  ],
+  "distP50": 0.004724603315927716,
+  "distP90": 0.19677963339105364
+ },
+ "square": {
+  "shot": "square",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.3387654320987654,
+    "dist": 0.011462678009210815
+   },
+   {
+    "name": "lm_watermill_body",
+    "frac": 0.08814814814814814,
+    "dist": 0.8373553165576024
+   },
+   {
+    "name": "walk_lm_orchard",
+    "frac": 0.025802469135802468,
+    "dist": 0.009625316812728593
+   },
+   {
+    "name": "water_emb_brook",
+    "frac": 0.014320987654320988,
+    "dist": 0.017226689964094873
+   },
+   {
+    "name": "lm_bakery_roof",
+    "frac": 0.014074074074074074,
+    "dist": 0.005431762254583493
+   },
+   {
+    "name": "lm_item-shop_roof",
+    "frac": 0.012098765432098766,
+    "dist": 0.006650484933487807
+   },
+   {
+    "name": "lm_bakery_body",
+    "frac": 0.011234567901234569,
+    "dist": 0.014328254331845841
+   },
+   {
+    "name": "lm_cider-press_roof",
+    "frac": 0.01037037037037037,
+    "dist": 0.008356597893778933
+   },
+   {
+    "name": "lm_item-shop_body",
+    "frac": 0.01037037037037037,
+    "dist": 0.04608204680014019
+   },
+   {
+    "name": "lm_inn_roof",
+    "frac": 0.009753086419753086,
+    "dist": 0.003526699979696458
+   },
+   {
+    "name": "walk_lm_square-plaza.042",
+    "frac": 0.00962962962962963,
+    "dist": 0.07561136002697744
+   },
+   {
+    "name": "lm_infill_05_roof",
+    "frac": 0.009012345679012346,
+    "dist": 0.006437650898668043
+   },
+   {
+    "name": "lm_inn_body",
+    "frac": 0.009012345679012346,
+    "dist": 0.03525291881424619
+   },
+   {
+    "name": "walk_lm_square-plaza.041",
+    "frac": 0.009012345679012346,
+    "dist": 0.006099514209347821
+   },
+   {
+    "name": "lm_infill_02_roof",
+    "frac": 0.008888888888888889,
+    "dist": 0.0010638804849565009
+   },
+   {
+    "name": "lm_infill_05_body",
+    "frac": 0.008518518518518519,
+    "dist": 0.011391339430063043
+   },
+   {
+    "name": "walk_lm_square-plaza.026",
+    "frac": 0.008518518518518519,
+    "dist": 0.1956487472686213
+   },
+   {
+    "name": "walk_lm_square-plaza.043",
+    "frac": 0.008271604938271605,
+    "dist": 0.005166296921851103
+   },
+   {
+    "name": "walk_lm_square-plaza.034",
+    "frac": 0.008148148148148147,
+    "dist": 0.08819336653633317
+   },
+   {
+    "name": "walk_lm_square-plaza.054",
+    "frac": 0.007901234567901235,
+    "dist": 0.006313049507014223
+   },
+   {
+    "name": "walk_lm_square-plaza.049",
+    "frac": 0.007654320987654321,
+    "dist": 0.10381857323096023
+   },
+   {
+    "name": "walk_lm_square-plaza.033",
+    "frac": 0.007530864197530864,
+    "dist": 0.006282711557009252
+   },
+   {
+    "name": "lm_infill_04_roof",
+    "frac": 0.0072839506172839505,
+    "dist": 0.00866842943435698
+   },
+   {
+    "name": "walk_lm_square-plaza.019",
+    "frac": 0.006790123456790123,
+    "dist": 0.008049242401154276
+   },
+   {
+    "name": "lm_infill_03_roof",
+    "frac": 0.006666666666666667,
+    "dist": 0.008568258500981397
+   },
+   {
+    "name": "walk_lm_square-plaza.050",
+    "frac": 0.00654320987654321,
+    "dist": 0.00581070100845016
+   },
+   {
+    "name": "lm_infill_03_body",
+    "frac": 0.006049382716049383,
+    "dist": 0.011851928112289892
+   },
+   {
+    "name": "walk_lm_square-plaza.027",
+    "frac": 0.005925925925925926,
+    "dist": 0.006404163623382697
+   },
+   {
+    "name": "walk_lm_square-plaza.055",
+    "frac": 0.005802469135802469,
+    "dist": 0.008336071817637602
+   },
+   {
+    "name": "lm_infill_09_roof",
+    "frac": 0.005555555555555556,
+    "dist": 0.00425393946903849
+   },
+   {
+    "name": "lm_festival-dais_deck",
+    "frac": 0.005061728395061729,
+    "dist": 0.15031206476791958
+   },
+   {
+    "name": "walk_lm_square-plaza.007",
+    "frac": 0.0049382716049382715,
+    "dist": 0.11449141588442754
+   },
+   {
+    "name": "walk_lm_square-plaza.032",
+    "frac": 0.0049382716049382715,
+    "dist": 0.018116254529910593
+   },
+   {
+    "name": "walk_pad_pips-den",
+    "frac": 0.0049382716049382715,
+    "dist": 0.006426759117259362
+   },
+   {
+    "name": "walk_lm_square-plaza.035",
+    "frac": 0.0049382716049382715,
+    "dist": 0.005992129247701783
+   },
+   {
+    "name": "lm_infill_04_body",
+    "frac": 0.004814814814814815,
+    "dist": 0.010271511941785274
+   },
+   {
+    "name": "walk_lm_square-plaza.053",
+    "frac": 0.004814814814814815,
+    "dist": 0.006475186532940624
+   },
+   {
+    "name": "walk_lm_square-plaza.030",
+    "frac": 0.004691358024691358,
+    "dist": 0.006939482306352966
+   },
+   {
+    "name": "walk_lm_square-plaza.016",
+    "frac": 0.004691358024691358,
+    "dist": 0.006713639973881975
+   },
+   {
+    "name": "walk_lm_square-plaza.048",
+    "frac": 0.004691358024691358,
+    "dist": 0.09596148795887546
+   },
+   {
+    "name": "walk_lm_square-plaza.031",
+    "frac": 0.004320987654320987,
+    "dist": 0.020716558759241468
+   },
+   {
+    "name": "walk_pad_bakery",
+    "frac": 0.004320987654320987,
+    "dist": 0.03665792096295978
+   },
+   {
+    "name": "walk_lm_square-plaza.024",
+    "frac": 0.004320987654320987,
+    "dist": 0.019456821553297386
+   },
+   {
+    "name": "walk_lm_square-plaza.015",
+    "frac": 0.004197530864197531,
+    "dist": 0.012518751125824741
+   },
+   {
+    "name": "walk_lm_square-plaza.018",
+    "frac": 0.004074074074074074,
+    "dist": 0.0057596498314465075
+   },
+   {
+    "name": "lm_infill_09_body",
+    "frac": 0.003950617283950617,
+    "dist": 0.008133186932537754
+   },
+   {
+    "name": "walk_lm_square-plaza.029",
+    "frac": 0.0038271604938271606,
+    "dist": 0.09296950862365086
+   },
+   {
+    "name": "walk_lm_square-plaza.010",
+    "frac": 0.0038271604938271606,
+    "dist": 0.005998329165574974
+   },
+   {
+    "name": "walk_lm_square-plaza.028",
+    "frac": 0.003703703703703704,
+    "dist": 0.008196669809184225
+   },
+   {
+    "name": "walk_lm_square-plaza.021",
+    "frac": 0.003703703703703704,
+    "dist": 0.08984444036841026
+   },
+   {
+    "name": "walk_lm_square-plaza.020",
+    "frac": 0.0034567901234567903,
+    "dist": 0.006984915793421388
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l6",
+    "frac": 0.0034567901234567903,
+    "dist": 0.005410279353404002
+   },
+   {
+    "name": "walk_lm_square-plaza.013",
+    "frac": 0.0033333333333333335,
+    "dist": 0.2723668127938411
+   },
+   {
+    "name": "lm_bakery_base",
+    "frac": 0.0033333333333333335,
+    "dist": 0.005600574520500583
+   },
+   {
+    "name": "walk_pad_pond-jetty",
+    "frac": 0.0033333333333333335,
+    "dist": 0.005941087959761983
+   },
+   {
+    "name": "walk_pad_back-lane-closed",
+    "frac": 0.0033333333333333335,
+    "dist": 0.005186641192839271
+   },
+   {
+    "name": "walk_lm_square-plaza.037",
+    "frac": 0.0032098765432098763,
+    "dist": 0.007857016599896127
+   },
+   {
+    "name": "walk_lm_square-plaza.022",
+    "frac": 0.0032098765432098763,
+    "dist": 0.007671789087602713
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l7",
+    "frac": 0.0032098765432098763,
+    "dist": 0.005219187547178251
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l6",
+    "frac": 0.002962962962962963,
+    "dist": 0.005777322571422414
+   },
+   {
+    "name": "walk_lm_square-plaza.039",
+    "frac": 0.002839506172839506,
+    "dist": 0.007065564356905162
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l3",
+    "frac": 0.002839506172839506,
+    "dist": 0.00568375024085848
+   },
+   {
+    "name": "walk_lm_square-plaza.014",
+    "frac": 0.0027160493827160493,
+    "dist": 0.07245502250643021
+   },
+   {
+    "name": "lm_item-shop_base",
+    "frac": 0.0027160493827160493,
+    "dist": 0.0053841146535763655
+   },
+   {
+    "name": "walk_lm_square-plaza.001",
+    "frac": 0.0027160493827160493,
+    "dist": 0.006552331238892186
+   },
+   {
+    "name": "lm_poppy-stall",
+    "frac": 0.0027160493827160493,
+    "dist": 0.7057654170623704
+   },
+   {
+    "name": "walk_lm_square-plaza.023",
+    "frac": 0.0027160493827160493,
+    "dist": 0.036268954926374955
+   },
+   {
+    "name": "walk_pad_brook-bridge",
+    "frac": 0.0027160493827160493,
+    "dist": 0.0059833345914292605
+   },
+   {
+    "name": "walk_lm_square-plaza.017",
+    "frac": 0.0025925925925925925,
+    "dist": 0.0063021287761148275
+   },
+   {
+    "name": "lm_market-row_stall5_canopy",
+    "frac": 0.0025925925925925925,
+    "dist": 0.5560172084393623
+   },
+   {
+    "name": "lm_inn_base",
+    "frac": 0.0024691358024691358,
+    "dist": 0.007022692961966999
+   },
+   {
+    "name": "lm_market-row_stall1_canopy",
+    "frac": 0.0024691358024691358,
+    "dist": 0.2819572027482608
+   },
+   {
+    "name": "lm_market-row_stall2_canopy",
+    "frac": 0.0024691358024691358,
+    "dist": 0.10511389502425925
+   },
+   {
+    "name": "lm_market-row_stall3_canopy",
+    "frac": 0.0024691358024691358,
+    "dist": 0.11690705160099027
+   },
+   {
+    "name": "lm_market-row_stall4_canopy",
+    "frac": 0.0024691358024691358,
+    "dist": 0.6027092770897493
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l10",
+    "frac": 0.0024691358024691358,
+    "dist": 0.006258836151468439
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l3",
+    "frac": 0.0024691358024691358,
+    "dist": 0.00570884495301152
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l7",
+    "frac": 0.002345679012345679,
+    "dist": 0.005800096804393998
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l2",
+    "frac": 0.002345679012345679,
+    "dist": 0.005864490551982946
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l4",
+    "frac": 0.002345679012345679,
+    "dist": 0.004664240604633058
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l4",
+    "frac": 0.002345679012345679,
+    "dist": 0.005309656090987558
+   },
+   {
+    "name": "walk_lm_square-plaza.036",
+    "frac": 0.0022222222222222222,
+    "dist": 0.007153440510591993
+   },
+   {
+    "name": "lm_watermill_roof",
+    "frac": 0.0022222222222222222,
+    "dist": 0.9523789015908393
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l5",
+    "frac": 0.0022222222222222222,
+    "dist": 0.005383953461999436
+   },
+   {
+    "name": "lm_cider-press_gableend",
+    "frac": 0.0020987654320987655,
+    "dist": 0.006905114071538612
+   },
+   {
+    "name": "lm_market-row_stall0_canopy",
+    "frac": 0.0020987654320987655,
+    "dist": 0.12202498716419805
+   },
+   {
+    "name": "lm_heartlight_cap",
+    "frac": 0.0020987654320987655,
+    "dist": 0.00630892734224965
+   },
+   {
+    "name": "walk_lm_square-plaza.002",
+    "frac": 0.0020987654320987655,
+    "dist": 0.08580495575652931
+   },
+   {
+    "name": "lm_well_ring",
+    "frac": 0.0020987654320987655,
+    "dist": 0.006439485002944854
+   },
+   {
+    "name": "walk_lm_square-plaza.003",
+    "frac": 0.0020987654320987655,
+    "dist": 0.021666351357249338
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l5",
+    "frac": 0.0020987654320987655,
+    "dist": 0.00568014137121941
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l5",
+    "frac": 0.0020987654320987655,
+    "dist": 0.005764092769576976
+   },
+   {
+    "name": "walk_lm_square-plaza.008",
+    "frac": 0.0019753086419753087,
+    "dist": 0.005253224585752836
+   },
+   {
+    "name": "veg_emb_village_08_trunk",
+    "frac": 0.001851851851851852,
+    "dist": 0.1737271738503028
+   },
+   {
+    "name": "lm_infill_02_body",
+    "frac": 0.001851851851851852,
+    "dist": 0.006871316959248545
+   },
+   {
+    "name": "walk_lm_square-plaza.012",
+    "frac": 0.001851851851851852,
+    "dist": 0.009590735719779876
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l11",
+    "frac": 0.001851851851851852,
+    "dist": 0.005299711633399105
+   },
+   {
+    "name": "veg_emb_village_04_crown",
+    "frac": 0.0017283950617283952,
+    "dist": 0.6711117561278842
+   },
+   {
+    "name": "veg_emb_village_23_crown",
+    "frac": 0.0017283950617283952,
+    "dist": 0.5315117495270137
+   },
+   {
+    "name": "walk_lm_square-plaza.006",
+    "frac": 0.0017283950617283952,
+    "dist": 0.20154099067712242
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l6",
+    "frac": 0.0017283950617283952,
+    "dist": 0.005379513100343759
+   },
+   {
+    "name": "veg_emb_village_04_trunk",
+    "frac": 0.0016049382716049382,
+    "dist": 0.9459630849661219
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l6",
+    "frac": 0.0016049382716049382,
+    "dist": 0.008152333748687741
+   },
+   {
+    "name": "walk_lm_square-plaza",
+    "frac": 0.0016049382716049382,
+    "dist": 0.007587873988724207
+   },
+   {
+    "name": "walk_lm_square-plaza.040",
+    "frac": 0.0016049382716049382,
+    "dist": 0.0062606065051025
+   },
+   {
+    "name": "walk_pad_pond-weir",
+    "frac": 0.0016049382716049382,
+    "dist": 0.005992390351367978
+   },
+   {
+    "name": "walk_lm_square-plaza.051",
+    "frac": 0.0016049382716049382,
+    "dist": 0.005440961433835357
+   },
+   {
+    "name": "lm_market-row_stall3_top",
+    "frac": 0.0014814814814814814,
+    "dist": 0.12278793853576782
+   },
+   {
+    "name": "lm_market-row_stall4_top",
+    "frac": 0.0014814814814814814,
+    "dist": 0.1312011561040419
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l9",
+    "frac": 0.0014814814814814814,
+    "dist": 0.0063107463643351965
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l5",
+    "frac": 0.0014814814814814814,
+    "dist": 0.005782609219117674
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l2",
+    "frac": 0.0014814814814814814,
+    "dist": 0.005827892473374341
+   },
+   {
+    "name": "veg_emb_village_20_trunk",
+    "frac": 0.0013580246913580246,
+    "dist": 0.5630295135636071
+   },
+   {
+    "name": "lm_pips-den_floor",
+    "frac": 0.0013580246913580246,
+    "dist": 0.006480287700510184
+   },
+   {
+    "name": "walk_lm_square-plaza.011",
+    "frac": 0.0013580246913580246,
+    "dist": 0.0058240147738146675
+   },
+   {
+    "name": "lm_pond-weir_cheek1",
+    "frac": 0.0013580246913580246,
+    "dist": 0.008147947231066379
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l3",
+    "frac": 0.0012345679012345679,
+    "dist": 0.008018141570120624
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l5",
+    "frac": 0.0012345679012345679,
+    "dist": 0.00968589033769066
+   },
+   {
+    "name": "lm_item-shop_chimney",
+    "frac": 0.0012345679012345679,
+    "dist": 0.011655561970424723
+   },
+   {
+    "name": "lm_bakery_chimney",
+    "frac": 0.0012345679012345679,
+    "dist": 0.006914146137051412
+   },
+   {
+    "name": "lm_market-row_stall2_top",
+    "frac": 0.0012345679012345679,
+    "dist": 0.11653232649795117
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l8",
+    "frac": 0.0012345679012345679,
+    "dist": 0.006126431150606472
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l0",
+    "frac": 0.0012345679012345679,
+    "dist": 0.006672893349775023
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l2",
+    "frac": 0.0012345679012345679,
+    "dist": 0.006479404222406056
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l3",
+    "frac": 0.0012345679012345679,
+    "dist": 0.006305501072429889
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l4",
+    "frac": 0.0011111111111111111,
+    "dist": 0.010406567163529045
+   },
+   {
+    "name": "lm_inn_door",
+    "frac": 0.0011111111111111111,
+    "dist": 0.006657833895063315
+   },
+   {
+    "name": "lm_market-row_stall0_top",
+    "frac": 0.0011111111111111111,
+    "dist": 0.08796185209924164
+   },
+   {
+    "name": "lm_heartlight_plinth",
+    "frac": 0.0011111111111111111,
+    "dist": 0.004876073274416176
+   },
+   {
+    "name": "lm_market-row_stall1_top",
+    "frac": 0.0011111111111111111,
+    "dist": 0.07494773015276611
+   },
+   {
+    "name": "lm_market-row_stall5_top",
+    "frac": 0.0011111111111111111,
+    "dist": 0.2045434157212408
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l1",
+    "frac": 0.0011111111111111111,
+    "dist": 0.005994506168625001
+   },
+   {
+    "name": "veg_emb_village_08_crown",
+    "frac": 0.0009876543209876543,
+    "dist": 0.39038626201504334
+   },
+   {
+    "name": "veg_emb_village_22_trunk",
+    "frac": 0.0009876543209876543,
+    "dist": 0.07691143247609045
+   },
+   {
+    "name": "lm_incident_01_road-gate__square-plaza_handcart",
+    "frac": 0.0009876543209876543,
+    "dist": 0.012508670123298666
+   },
+   {
+    "name": "walk_lm_square-plaza.038",
+    "frac": 0.0009876543209876543,
+    "dist": 0.008808018408938079
+   },
+   {
+    "name": "walk_lm_square-plaza.009",
+    "frac": 0.0009876543209876543,
+    "dist": 0.014620154328292667
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l7",
+    "frac": 0.0009876543209876543,
+    "dist": 0.005185582660120178
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l1",
+    "frac": 0.0009876543209876543,
+    "dist": 0.003929403746873844
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l4",
+    "frac": 0.0009876543209876543,
+    "dist": 0.0054978524220480225
+   },
+   {
+    "name": "veg_emb_village_03_crown",
+    "frac": 0.0008641975308641976,
+    "dist": 0.35235393656337183
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l2",
+    "frac": 0.0008641975308641976,
+    "dist": 0.010020309370630334
+   },
+   {
+    "name": "lm_inn_chimney",
+    "frac": 0.0008641975308641976,
+    "dist": 0.0041110508242674995
+   },
+   {
+    "name": "lm_notice-board_face",
+    "frac": 0.0008641975308641976,
+    "dist": 0.4955094598429274
+   },
+   {
+    "name": "lm_infill_01_body",
+    "frac": 0.0008641975308641976,
+    "dist": 0.0012093917525021725
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l4",
+    "frac": 0.0008641975308641976,
+    "dist": 0.006901290389775698
+   },
+   {
+    "name": "walk_lm_square-plaza.025",
+    "frac": 0.0008641975308641976,
+    "dist": 0.006371597726711745
+   },
+   {
+    "name": "lm_pond-weir_sill",
+    "frac": 0.0008641975308641976,
+    "dist": 0.004493963350943732
+   },
+   {
+    "name": "lm_infill_05_drystone07",
+    "frac": 0.0007407407407407407,
+    "dist": 0.11016403454267848
+   },
+   {
+    "name": "lm_item-shop_door",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0037239322370608424
+   },
+   {
+    "name": "lm_infill_02_track1",
+    "frac": 0.0007407407407407407,
+    "dist": 0.007738120494196058
+   },
+   {
+    "name": "walk_pad_poppy-stall",
+    "frac": 0.0007407407407407407,
+    "dist": 0.09705449350478546
+   },
+   {
+    "name": "lm_infill_02_track2",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0068764862993616034
+   },
+   {
+    "name": "lm_pond-weir_cheek0",
+    "frac": 0.0007407407407407407,
+    "dist": 0.007615088369655697
+   },
+   {
+    "name": "lm_pond-weir_winch",
+    "frac": 0.0007407407407407407,
+    "dist": 0.005791669575095397
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l1",
+    "frac": 0.0006172839506172839,
+    "dist": 0.012119992789867055
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l2",
+    "frac": 0.0006172839506172839,
+    "dist": 0.011234996765386971
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l3",
+    "frac": 0.0006172839506172839,
+    "dist": 0.007100949165672915
+   },
+   {
+    "name": "veg_emb_village_05_trunk",
+    "frac": 0.0006172839506172839,
+    "dist": 0.2062978006786012
+   },
+   {
+    "name": "lm_field_00_ridge00",
+    "frac": 0.0006172839506172839,
+    "dist": 0.009831134589613554
+   },
+   {
+    "name": "lm_infill_05_chim",
+    "frac": 0.0006172839506172839,
+    "dist": 0.004047021074940054
+   },
+   {
+    "name": "lm_field_03_ridge03",
+    "frac": 0.0006172839506172839,
+    "dist": 0.009241397396061047
+   },
+   {
+    "name": "lm_bakery_door",
+    "frac": 0.0006172839506172839,
+    "dist": 0.04087096745293918
+   },
+   {
+    "name": "walk_pad_item-shop",
+    "frac": 0.0006172839506172839,
+    "dist": 0.005995413125728301
+   },
+   {
+    "name": "lm_pips-den_crate",
+    "frac": 0.0006172839506172839,
+    "dist": 0.006989043546540677
+   },
+   {
+    "name": "emb_culvert_00_deck",
+    "frac": 0.0006172839506172839,
+    "dist": 0.004773080266808449
+   },
+   {
+    "name": "veg_emb_village_06_crown",
+    "frac": 0.0004938271604938272,
+    "dist": 0.193222821407966
+   },
+   {
+    "name": "lm_cider-press_post11",
+    "frac": 0.0004938271604938272,
+    "dist": 0.004720720146589396
+   },
+   {
+    "name": "lm_infill_04_chim",
+    "frac": 0.0004938271604938272,
+    "dist": 0.009225053394472972
+   },
+   {
+    "name": "lm_infill_05_drystone08",
+    "frac": 0.0004938271604938272,
+    "dist": 0.11634289211166016
+   },
+   {
+    "name": "lm_festival-dais_step",
+    "frac": 0.0004938271604938272,
+    "dist": 0.05852707119337509
+   },
+   {
+    "name": "lm_notice-board_postR",
+    "frac": 0.0004938271604938272,
+    "dist": 0.034265498051640614
+   },
+   {
+    "name": "lm_infill_02_track0",
+    "frac": 0.0004938271604938272,
+    "dist": 0.007068068643482087
+   },
+   {
+    "name": "lm_infill_08_track0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.011350099691643198
+   },
+   {
+    "name": "lm_infill_08_track2",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0042847644299707196
+   },
+   {
+    "name": "veg_emb_village_23_trunk",
+    "frac": 0.00037037037037037035,
+    "dist": 0.4535796690636941
+   },
+   {
+    "name": "lm_infill_03_rail19p",
+    "frac": 0.00037037037037037035,
+    "dist": 0.007740024094483082
+   },
+   {
+    "name": "lm_infill_02_chim",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0074996692246086195
+   },
+   {
+    "name": "lm_infill_04_win0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.01612853856819078
+   },
+   {
+    "name": "lm_infill_09_drystone00",
+    "frac": 0.00037037037037037035,
+    "dist": 0.019688050140543194
+   },
+   {
+    "name": "lm_infill_04_rail121",
+    "frac": 0.00037037037037037035,
+    "dist": 0.007908033819333582
+   },
+   {
+    "name": "lm_infill_04_track0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006193314566784961
+   },
+   {
+    "name": "lm_infill_05_drystone10",
+    "frac": 0.00037037037037037035,
+    "dist": 0.18188725131296635
+   },
+   {
+    "name": "lm_infill_05_drystone09",
+    "frac": 0.00037037037037037035,
+    "dist": 0.08214858285712028
+   },
+   {
+    "name": "walk_pad_inn",
+    "frac": 0.00037037037037037035,
+    "dist": 0.007686028203520341
+   },
+   {
+    "name": "lm_village-bell_head",
+    "frac": 0.00037037037037037035,
+    "dist": 0.03591765282185943
+   },
+   {
+    "name": "emb_lamp_09_bakery_cap",
+    "frac": 0.00037037037037037035,
+    "dist": 0.3698513966171331
+   },
+   {
+    "name": "walk_lm_square-plaza.046",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006028650438246075
+   },
+   {
+    "name": "lm_heartlight_flame",
+    "frac": 0.00037037037037037035,
+    "dist": 0.09811734142817424
+   },
+   {
+    "name": "lm_market-row_stall1_post1",
+    "frac": 0.00037037037037037035,
+    "dist": 0.1374200766784681
+   },
+   {
+    "name": "walk_pad_smokehouse",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006947709712887236
+   },
+   {
+    "name": "lm_smokehouse_body",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006783504329998635
+   },
+   {
+    "name": "lm_market-row_stall5_post0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.1288547130855275
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_cap",
+    "frac": 0.00037037037037037035,
+    "dist": 0.7336174956724805
+   },
+   {
+    "name": "lm_pips-den_plank1",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0048003042344764895
+   },
+   {
+    "name": "lm_pips-den_plank0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.004551144678005359
+   },
+   {
+    "name": "bar_brook-bridge_railA",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0031724593794175554
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_post",
+    "frac": 0.00037037037037037035,
+    "dist": 0.003789540282725932
+   },
+   {
+    "name": "veg_emb_wood_12_crownA",
+    "frac": 0.0002469135802469136,
+    "dist": 0.007248153993561601
+   },
+   {
+    "name": "veg_emb_wood_12_crownG",
+    "frac": 0.0002469135802469136,
+    "dist": 0.005421800180068834
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.010181710311730487
+   },
+   {
+    "name": "veg_emb_village_19_trunk",
+    "frac": 0.0002469135802469136,
+    "dist": 0.07650845093424508
+   },
+   {
+    "name": "lm_infill_09_chim",
+    "frac": 0.0002469135802469136,
+    "dist": 0.010552207319607737
+   },
+   {
+    "name": "lm_infill_03_chim",
+    "frac": 0.0002469135802469136,
+    "dist": 0.014134756746173907
+   },
+   {
+    "name": "emb_lamp_01_orchard_post",
+    "frac": 0.0002469135802469136,
+    "dist": 0.008770277221291423
+   },
+   {
+    "name": "lm_incident_00_road-gate__square-plaza_woodpile",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00740250004888143
+   },
+   {
+    "name": "lm_infill_09_win0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00993129442055727
+   },
+   {
+    "name": "lm_cider-press_post00",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006949235351350953
+   },
+   {
+    "name": "lm_infill_09_win1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.01003460917748247
+   },
+   {
+    "name": "lm_infill_04_rail150",
+    "frac": 0.0002469135802469136,
+    "dist": 0.009499672299201555
+   },
+   {
+    "name": "lm_cider-press_post01",
+    "frac": 0.0002469135802469136,
+    "dist": 0.009004868162383358
+   },
+   {
+    "name": "veg_emb_village_06_trunk",
+    "frac": 0.0002469135802469136,
+    "dist": 0.10066709910948646
+   },
+   {
+    "name": "lm_field_04_drystone08",
+    "frac": 0.0002469135802469136,
+    "dist": 0.1816029525399303
+   },
+   {
+    "name": "walk_e_road-gate__square-plaza_l7",
+    "frac": 0.0002469135802469136,
+    "dist": 0.015573936587941487
+   },
+   {
+    "name": "lm_field_04_drystone09",
+    "frac": 0.0002469135802469136,
+    "dist": 0.16361876325656782
+   },
+   {
+    "name": "lm_infill_05_win0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.013113207934149163
+   },
+   {
+    "name": "emb_lamp_12_square-ring1_post",
+    "frac": 0.0002469135802469136,
+    "dist": 0.007328136568606425
+   },
+   {
+    "name": "lm_infill_02_bramble21",
+    "frac": 0.0002469135802469136,
+    "dist": 0.020039240181565405
+   },
+   {
+    "name": "emb_lamp_10_inn_cap",
+    "frac": 0.0002469135802469136,
+    "dist": 0.5730211439045475
+   },
+   {
+    "name": "lm_infill_05_win1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.013530310112146903
+   },
+   {
+    "name": "lm_village-bell_bell",
+    "frac": 0.0002469135802469136,
+    "dist": 0.11105903062834105
+   },
+   {
+    "name": "emb_lamp_11_item-shop_cap",
+    "frac": 0.0002469135802469136,
+    "dist": 0.4582962596587889
+   },
+   {
+    "name": "lm_infill_01_rail140",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00888256633685094
+   },
+   {
+    "name": "emb_lamp_09_bakery_post",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00602527680522158
+   },
+   {
+    "name": "lm_well_frameA",
+    "frac": 0.0002469135802469136,
+    "dist": 0.005386936288332112
+   },
+   {
+    "name": "lm_market-row_stall4_post1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.24821820692958835
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l12",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006467211563844719
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_post",
+    "frac": 0.0002469135802469136,
+    "dist": 0.005388778832031704
+   },
+   {
+    "name": "lm_pips-den_plank3",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0007607091765464702
+   },
+   {
+    "name": "walk_lm_square-plaza.056",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00529396313828201
+   },
+   {
+    "name": "bar_brook-bridge_railB",
+    "frac": 0.0002469135802469136,
+    "dist": 0.009022014977864218
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l6",
+    "frac": 0.0002469135802469136,
+    "dist": 0.007288975712828034
+   },
+   {
+    "name": "lm_pond-weir_gate",
+    "frac": 0.0002469135802469136,
+    "dist": 0.009540273695831238
+   },
+   {
+    "name": "lm_infill_08_rail21p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00978392009329359
+   },
+   {
+    "name": "emb_lamp_01_orchard_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.018438977204532137
+   },
+   {
+    "name": "lm_infill_08_track1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0028099908681455577
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l4",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0183320854740676
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l5",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011286881186906344
+   },
+   {
+    "name": "veg_emb_wood_13_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01568805685488428
+   },
+   {
+    "name": "lm_infill_09_rail12p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.012624890955052637
+   },
+   {
+    "name": "lm_infill_03_rail190",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007915406957431474
+   },
+   {
+    "name": "lm_infill_03_win0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01165813706736618
+   },
+   {
+    "name": "lm_infill_09_drystone21",
+    "frac": 0.0001234567901234568,
+    "dist": 0.04048205547263504
+   },
+   {
+    "name": "lm_infill_09_rail121",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0005342373334305201
+   },
+   {
+    "name": "lm_infill_03_rail211",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0030718965014985564
+   },
+   {
+    "name": "lm_infill_09_rail110",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007826744504789781
+   },
+   {
+    "name": "lm_infill_04_rail151",
+    "frac": 0.0001234567901234568,
+    "dist": 0.010475557061209173
+   },
+   {
+    "name": "lm_infill_03_rail210",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0013125450192752004
+   },
+   {
+    "name": "lm_field_02_pale04",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007477458194294921
+   },
+   {
+    "name": "lm_infill_03_rail221",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005480538504816224
+   },
+   {
+    "name": "lm_infill_03_rail21p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003711377256956292
+   },
+   {
+    "name": "lm_infill_04_rail140",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01060104214969308
+   },
+   {
+    "name": "lm_infill_03_track0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.008122096491399588
+   },
+   {
+    "name": "veg_emb_village_11_crown",
+    "frac": 0.0001234567901234568,
+    "dist": 0.46025577146302865
+   },
+   {
+    "name": "lm_infill_09_rail09p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006033901753052603
+   },
+   {
+    "name": "lm_infill_04_bramble21",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0017712198456595971
+   },
+   {
+    "name": "lm_infill_04_rail120",
+    "frac": 0.0001234567901234568,
+    "dist": 0.011625646542702442
+   },
+   {
+    "name": "walk_lm_square-plaza.004",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011074411635796366
+   },
+   {
+    "name": "lm_infill_05_drystone11",
+    "frac": 0.0001234567901234568,
+    "dist": 0.1891474873878245
+   },
+   {
+    "name": "walk_lm_square-plaza.005",
+    "frac": 0.0001234567901234568,
+    "dist": 0.013889916410953163
+   },
+   {
+    "name": "lm_infill_02_rail100",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01122542680910854
+   },
+   {
+    "name": "veg_emb_village_00_crown",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0013950329369224667
+   },
+   {
+    "name": "emb_lamp_10_inn_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 1.1044875354299595
+   },
+   {
+    "name": "lm_infill_02_rail101",
+    "frac": 0.0001234567901234568,
+    "dist": 0.010641624581384233
+   },
+   {
+    "name": "lm_infill_02_rail091",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006790510797397786
+   },
+   {
+    "name": "lm_village-bell_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.11781229065258003
+   },
+   {
+    "name": "lm_village-bell_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01097136292528944
+   },
+   {
+    "name": "lm_infill_01_rail151",
+    "frac": 0.0001234567901234568,
+    "dist": 0.011025829917878725
+   },
+   {
+    "name": "lm_infill_01_rail141",
+    "frac": 0.0001234567901234568,
+    "dist": 0.012488825573797158
+   },
+   {
+    "name": "lm_festival-dais_newel0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.1782953254494459
+   },
+   {
+    "name": "lm_infill_01_rail150",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0009447465732250748
+   },
+   {
+    "name": "emb_lamp_11_item-shop_post",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0001503507022491135
+   },
+   {
+    "name": "emb_lamp_09_bakery_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006033019501813897
+   },
+   {
+    "name": "walk_lm_square-plaza.052",
+    "frac": 0.0001234567901234568,
+    "dist": 0.010151848815720399
+   },
+   {
+    "name": "walk_lm_square-plaza.047",
+    "frac": 0.0001234567901234568,
+    "dist": 0.010153715638654859
+   },
+   {
+    "name": "lm_poppy-stall_base",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004121723177856751
+   },
+   {
+    "name": "lm_market-row_stall0_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0003204384614135723
+   },
+   {
+    "name": "lm_market-row_stall1_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.4261194443832323
+   },
+   {
+    "name": "lm_well_beam",
+    "frac": 0.0001234567901234568,
+    "dist": 2.360272319737243
+   },
+   {
+    "name": "lm_market-row_stall2_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.4312648174100447
+   },
+   {
+    "name": "emb_lamp_05_hillside-cottage_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 0.002292116383443954
+   },
+   {
+    "name": "emb_lamp_05_hillside-cottage_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007616633856045496
+   },
+   {
+    "name": "lm_market-row_stall4_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006247089081090305
+   },
+   {
+    "name": "lm_market-row_stall3_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.35278539203591547
+   },
+   {
+    "name": "lm_market-row_stall5_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.15004375044416568
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l13",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004028200904613874
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007910992196794808
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0003915133322323072
+   },
+   {
+    "name": "lm_pips-den_plank2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0007484867719682597
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0007705813856810177
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.009972210569394235
+   },
+   {
+    "name": "bar_brook-bridge_postA0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.010236339970545539
+   },
+   {
+    "name": "bar_brook-bridge_postB0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.012328914964155432
+   },
+   {
+    "name": "lm_pond-weir_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0007812111541182379
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l7",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00477284802157385
+   }
+  ],
+  "distP50": 0.008153906159443728,
+  "distP90": 0.2728006567940283
+ },
+ "pondlane": {
+  "shot": "pondlane",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0.01654320987654321,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.23382716049382715,
+    "dist": 0.010188508843354286
+   },
+   {
+    "name": "(no massing within 12 m)",
+    "frac": 0.1054320987654321,
+    "dist": 50
+   },
+   {
+    "name": "water_emb_pond",
+    "frac": 0.04617283950617284,
+    "dist": 0.007325632582854575
+   },
+   {
+    "name": "walk_lm_square-plaza.049",
+    "frac": 0.036049382716049384,
+    "dist": 0.2534624514755431
+   },
+   {
+    "name": "lm_infill_25_body",
+    "frac": 0.029012345679012345,
+    "dist": 0.004880497490961926
+   },
+   {
+    "name": "water_emb_brook",
+    "frac": 0.025308641975308643,
+    "dist": 0.020007585714889645
+   },
+   {
+    "name": "lm_infill_01_body",
+    "frac": 0.024691358024691357,
+    "dist": 0.0022529404263213508
+   },
+   {
+    "name": "water_emb_river",
+    "frac": 0.023703703703703703,
+    "dist": 0.010710780183861401
+   },
+   {
+    "name": "walk_lm_square-plaza.054",
+    "frac": 0.02148148148148148,
+    "dist": 0.0036700029721654366
+   },
+   {
+    "name": "walk_lm_square-plaza.050",
+    "frac": 0.02148148148148148,
+    "dist": 0.0032409617700838857
+   },
+   {
+    "name": "walk_lm_square-plaza.042",
+    "frac": 0.021358024691358026,
+    "dist": 0.7734397509765543
+   },
+   {
+    "name": "lm_market-row_stall1_canopy",
+    "frac": 0.02123456790123457,
+    "dist": 0.3224315754295061
+   },
+   {
+    "name": "walk_lm_square-plaza.048",
+    "frac": 0.020493827160493826,
+    "dist": 0.15173943098906958
+   },
+   {
+    "name": "lm_infill_01_roof",
+    "frac": 0.020246913580246915,
+    "dist": 0.003744061025171707
+   },
+   {
+    "name": "lm_infill_25_roof",
+    "frac": 0.01925925925925926,
+    "dist": 0.005138911198176759
+   },
+   {
+    "name": "walk_lm_washline-green",
+    "frac": 0.01691358024691358,
+    "dist": 0.004924247696834891
+   },
+   {
+    "name": "walk_lm_square-plaza.055",
+    "frac": 0.01345679012345679,
+    "dist": 0.003762457615403359
+   },
+   {
+    "name": "walk_lm_square-plaza.043",
+    "frac": 0.011234567901234569,
+    "dist": 0.002923103630784949
+   },
+   {
+    "name": "lm_market-row_stall0_canopy",
+    "frac": 0.011111111111111112,
+    "dist": 0.1263087785808344
+   },
+   {
+    "name": "walk_lm_square-plaza.041",
+    "frac": 0.010987654320987654,
+    "dist": 0.061383378237449396
+   },
+   {
+    "name": "lm_market-row_stall2_canopy",
+    "frac": 0.01074074074074074,
+    "dist": 0.07904020522005982
+   },
+   {
+    "name": "lm_infill_22_body",
+    "frac": 0.009876543209876543,
+    "dist": 0.00957745861418934
+   },
+   {
+    "name": "walk_lm_square-plaza.053",
+    "frac": 0.00962962962962963,
+    "dist": 0.0033436146692493616
+   },
+   {
+    "name": "lm_infill_19_body",
+    "frac": 0.008888888888888889,
+    "dist": 0.012422721722894832
+   },
+   {
+    "name": "walk_pad_pips-den",
+    "frac": 0.006913580246913581,
+    "dist": 0.004750555416083111
+   },
+   {
+    "name": "lm_field_10_ridge14",
+    "frac": 0.006790123456790123,
+    "dist": 0.003291765780992413
+   },
+   {
+    "name": "lm_infill_26_roof",
+    "frac": 0.005802469135802469,
+    "dist": 0.007138452356024042
+   },
+   {
+    "name": "emb_ground_far",
+    "frac": 0.005802469135802469,
+    "dist": 4.706813277379737
+   },
+   {
+    "name": "lm_infill_14_body",
+    "frac": 0.005185185185185185,
+    "dist": 0.0035650967093119553
+   },
+   {
+    "name": "lm_east-cottages_3_roof",
+    "frac": 0.005061728395061729,
+    "dist": 0.0047262645582726885
+   },
+   {
+    "name": "lm_infill_22_roof",
+    "frac": 0.004814814814814815,
+    "dist": 0.00882614252315069
+   },
+   {
+    "name": "walk_lm_square-plaza.047",
+    "frac": 0.004567901234567902,
+    "dist": 0.0028287199461278236
+   },
+   {
+    "name": "lm_infill_19_roof",
+    "frac": 0.0044444444444444444,
+    "dist": 0.009367899098436433
+   },
+   {
+    "name": "lm_infill_28_body",
+    "frac": 0.004197530864197531,
+    "dist": 0.00479762931118657
+   },
+   {
+    "name": "lm_infill_26_body",
+    "frac": 0.004197530864197531,
+    "dist": 0.004960360951370553
+   },
+   {
+    "name": "lm_infill_14_roof",
+    "frac": 0.004197530864197531,
+    "dist": 0.005295042798828835
+   },
+   {
+    "name": "walk_pad_pond-jetty",
+    "frac": 0.004197530864197531,
+    "dist": 0.005389877983000744
+   },
+   {
+    "name": "lm_pond-weir_gate",
+    "frac": 0.004074074074074074,
+    "dist": 0.0020626742892717103
+   },
+   {
+    "name": "lm_infill_28_roof",
+    "frac": 0.003950617283950617,
+    "dist": 0.012318056324308312
+   },
+   {
+    "name": "walk_pad_brook-bridge",
+    "frac": 0.003950617283950617,
+    "dist": 0.003299064075705652
+   },
+   {
+    "name": "lm_east-cottages_3_body",
+    "frac": 0.0038271604938271606,
+    "dist": 0.0025453874409141035
+   },
+   {
+    "name": "lm_east-cottages_0_body",
+    "frac": 0.0034567901234567903,
+    "dist": 0.0030713227418451604
+   },
+   {
+    "name": "walk_lm_square-plaza.051",
+    "frac": 0.0034567901234567903,
+    "dist": 0.0033603524892138153
+   },
+   {
+    "name": "veg_emb_village_28_trunk",
+    "frac": 0.0032098765432098763,
+    "dist": 0.37034801217639657
+   },
+   {
+    "name": "veg_emb_village_26_crown",
+    "frac": 0.002839506172839506,
+    "dist": 0.4416839422464624
+   },
+   {
+    "name": "lm_infill_11_roof",
+    "frac": 0.002839506172839506,
+    "dist": 0.009938754896130537
+   },
+   {
+    "name": "lm_infill_16_body",
+    "frac": 0.0027160493827160493,
+    "dist": 0.00960223215069427
+   },
+   {
+    "name": "lm_pond-weir_sill",
+    "frac": 0.0024691358024691358,
+    "dist": 0.002653950054880961
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l8",
+    "frac": 0.0024691358024691358,
+    "dist": 0.00439324847351333
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l2",
+    "frac": 0.002345679012345679,
+    "dist": 0.004907818843423024
+   },
+   {
+    "name": "lm_field_10_ridge15",
+    "frac": 0.002345679012345679,
+    "dist": 0.0036013295468973923
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l4",
+    "frac": 0.002345679012345679,
+    "dist": 0.004072009581514704
+   },
+   {
+    "name": "lm_item-shop_base",
+    "frac": 0.002345679012345679,
+    "dist": 0.0011200920125217651
+   },
+   {
+    "name": "veg_emb_village_24_crown",
+    "frac": 0.0022222222222222222,
+    "dist": 0.35231412294566283
+   },
+   {
+    "name": "emb_lamp_11_item-shop_post",
+    "frac": 0.0022222222222222222,
+    "dist": 0.0009089931119904785
+   },
+   {
+    "name": "veg_emb_village_32_trunk",
+    "frac": 0.0019753086419753087,
+    "dist": 0.27244155241675944
+   },
+   {
+    "name": "lm_east-cottages_0_roof",
+    "frac": 0.0019753086419753087,
+    "dist": 0.0031399845894281363
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l10",
+    "frac": 0.0019753086419753087,
+    "dist": 0.00666119444730285
+   },
+   {
+    "name": "lm_pips-den_floor",
+    "frac": 0.0019753086419753087,
+    "dist": 0.0042262024541070975
+   },
+   {
+    "name": "lm_infill_16_roof",
+    "frac": 0.001851851851851852,
+    "dist": 0.009558561273018277
+   },
+   {
+    "name": "lm_pond-weir_winch",
+    "frac": 0.001851851851851852,
+    "dist": 0.003320239573545544
+   },
+   {
+    "name": "veg_emb_village_24_trunk",
+    "frac": 0.0017283950617283952,
+    "dist": 0.34576845442672
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l11",
+    "frac": 0.0017283950617283952,
+    "dist": 0.0032927299369566493
+   },
+   {
+    "name": "veg_emb_village_27_crown",
+    "frac": 0.0016049382716049382,
+    "dist": 0.5257981401516401
+   },
+   {
+    "name": "veg_emb_village_32_crown",
+    "frac": 0.0014814814814814814,
+    "dist": 0.5051626004361839
+   },
+   {
+    "name": "lm_pond-weir_cheek1",
+    "frac": 0.0014814814814814814,
+    "dist": 0.0034139303361479805
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l9",
+    "frac": 0.0014814814814814814,
+    "dist": 0.003845004192201467
+   },
+   {
+    "name": "veg_emb_village_27_trunk",
+    "frac": 0.0013580246913580246,
+    "dist": 0.5498982932435392
+   },
+   {
+    "name": "lm_east-cottages_1_roof",
+    "frac": 0.0013580246913580246,
+    "dist": 0.0038954606885767823
+   },
+   {
+    "name": "lm_east-cottages_2_body",
+    "frac": 0.0013580246913580246,
+    "dist": 0.0022901570004293386
+   },
+   {
+    "name": "lm_east-cottages_1_body",
+    "frac": 0.0013580246913580246,
+    "dist": 0.002951248887550724
+   },
+   {
+    "name": "lm_pond-weir_cheek0",
+    "frac": 0.0013580246913580246,
+    "dist": 0.002862244703052409
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l6",
+    "frac": 0.0013580246913580246,
+    "dist": 0.005277939121633006
+   },
+   {
+    "name": "lm_infill_23_body",
+    "frac": 0.0012345679012345679,
+    "dist": 0.010065365688860857
+   },
+   {
+    "name": "veg_emb_village_26_trunk",
+    "frac": 0.0012345679012345679,
+    "dist": 0.39889754028186036
+   },
+   {
+    "name": "lm_east-cottages_2_roof",
+    "frac": 0.0012345679012345679,
+    "dist": 0.0021813548576540918
+   },
+   {
+    "name": "lm_infill_01_win0",
+    "frac": 0.0012345679012345679,
+    "dist": 0.002553150410553837
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_cap",
+    "frac": 0.0012345679012345679,
+    "dist": 1.7980126779064753
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_post",
+    "frac": 0.0012345679012345679,
+    "dist": 0.0021945770685569245
+   },
+   {
+    "name": "lm_item-shop_body",
+    "frac": 0.0012345679012345679,
+    "dist": 0.0008381128795560864
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l5",
+    "frac": 0.0012345679012345679,
+    "dist": 0.012082469459921683
+   },
+   {
+    "name": "walk_lm_square-plaza.040",
+    "frac": 0.0012345679012345679,
+    "dist": 0.003013168120476628
+   },
+   {
+    "name": "veg_emb_village_31_crown",
+    "frac": 0.0011111111111111111,
+    "dist": 0.37027211310658154
+   },
+   {
+    "name": "lm_infill_01_win1",
+    "frac": 0.0011111111111111111,
+    "dist": 0.0026464727552996045
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l7",
+    "frac": 0.0011111111111111111,
+    "dist": 0.004355391384901475
+   },
+   {
+    "name": "bar_brook-bridge_railA",
+    "frac": 0.0011111111111111111,
+    "dist": 0.0032188898331001804
+   },
+   {
+    "name": "walk_lm_square-plaza.052",
+    "frac": 0.0011111111111111111,
+    "dist": 0.008208320435472692
+   },
+   {
+    "name": "veg_emb_village_28_crown",
+    "frac": 0.0009876543209876543,
+    "dist": 0.540356788994091
+   },
+   {
+    "name": "lm_infill_11_body",
+    "frac": 0.0009876543209876543,
+    "dist": 0.012247931266029457
+   },
+   {
+    "name": "bar_brook-bridge_railB",
+    "frac": 0.0009876543209876543,
+    "dist": 0.002936021682747297
+   },
+   {
+    "name": "walk_lm_square-plaza.034",
+    "frac": 0.0009876543209876543,
+    "dist": 2.652944065672303
+   },
+   {
+    "name": "veg_emb_village_31_trunk",
+    "frac": 0.0008641975308641976,
+    "dist": 0.4588830868060505
+   },
+   {
+    "name": "lm_infill_23_roof",
+    "frac": 0.0008641975308641976,
+    "dist": 0.009743362093099598
+   },
+   {
+    "name": "lm_infill_19_fruit0_crown",
+    "frac": 0.0008641975308641976,
+    "dist": 0.005457090842988903
+   },
+   {
+    "name": "lm_infill_25_win0",
+    "frac": 0.0008641975308641976,
+    "dist": 0.0015416635742260903
+   },
+   {
+    "name": "lm_infill_25_win1",
+    "frac": 0.0008641975308641976,
+    "dist": 0.009166405417692976
+   },
+   {
+    "name": "lm_item-shop_roof",
+    "frac": 0.0008641975308641976,
+    "dist": 0.001974398954317956
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l2",
+    "frac": 0.0008641975308641976,
+    "dist": 0.005777961428297372
+   },
+   {
+    "name": "lm_smokehouse_body",
+    "frac": 0.0008641975308641976,
+    "dist": 0.0037288051674251627
+   },
+   {
+    "name": "lm_infill_01_chim",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0017120689793941359
+   },
+   {
+    "name": "lm_east-cottages_3_chim",
+    "frac": 0.0007407407407407407,
+    "dist": 0.008305338229956874
+   },
+   {
+    "name": "lm_infill_14_win1",
+    "frac": 0.0007407407407407407,
+    "dist": 0.003174970485543297
+   },
+   {
+    "name": "lm_field_02_pale05",
+    "frac": 0.0007407407407407407,
+    "dist": 0.006967730443108611
+   },
+   {
+    "name": "emb_lamp_02_washline-green_post",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0021209176390447246
+   },
+   {
+    "name": "lm_pond-weir_post0",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0010603457092231907
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l8",
+    "frac": 0.0007407407407407407,
+    "dist": 0.005054983534846545
+   },
+   {
+    "name": "walk_pad_pond-weir",
+    "frac": 0.0007407407407407407,
+    "dist": 0.004054116486834403
+   },
+   {
+    "name": "emb_lamp_11_item-shop_cap",
+    "frac": 0.0007407407407407407,
+    "dist": 0.735454292187641
+   },
+   {
+    "name": "emb_lamp_11_item-shop_glass",
+    "frac": 0.0007407407407407407,
+    "dist": 0.5528197027927161
+   },
+   {
+    "name": "lm_infill_25_chim",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0024646653276826852
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_glass",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0025212107011753915
+   },
+   {
+    "name": "lm_pips-den_crate",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0042395547821986405
+   },
+   {
+    "name": "lm_market-row_stall0_post1",
+    "frac": 0.0006172839506172839,
+    "dist": 0.5138689677845408
+   },
+   {
+    "name": "veg_emb_wood_13_crownA",
+    "frac": 0.0004938271604938272,
+    "dist": 0.15014459861610463
+   },
+   {
+    "name": "veg_emb_rim_308_trunk",
+    "frac": 0.0004938271604938272,
+    "dist": 0.255427047733205
+   },
+   {
+    "name": "lm_infill_14_chim",
+    "frac": 0.0004938271604938272,
+    "dist": 0.002196685612216952
+   },
+   {
+    "name": "veg_emb_village_07_crown",
+    "frac": 0.0004938271604938272,
+    "dist": 0.2739183757666288
+   },
+   {
+    "name": "lm_east-cottages_1_chim",
+    "frac": 0.0004938271604938272,
+    "dist": 0.003048159516773824
+   },
+   {
+    "name": "lm_field_07_ridge07",
+    "frac": 0.0004938271604938272,
+    "dist": 0.010795082846584592
+   },
+   {
+    "name": "lm_pond-weir_post1",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0015218813508468534
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l1",
+    "frac": 0.0004938271604938272,
+    "dist": 0.005810115890382148
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l9",
+    "frac": 0.0004938271604938272,
+    "dist": 0.004787183968814165
+   },
+   {
+    "name": "lm_pips-den_plank1",
+    "frac": 0.0004938271604938272,
+    "dist": 0.004699354203873445
+   },
+   {
+    "name": "lm_pips-den_plank0",
+    "frac": 0.0004938271604938272,
+    "dist": 0.004273266063966098
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l7",
+    "frac": 0.0004938271604938272,
+    "dist": 0.028432961234911215
+   },
+   {
+    "name": "bar_brook-bridge_postA0",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0015506060172042909
+   },
+   {
+    "name": "walk_lm_square-plaza.056",
+    "frac": 0.0004938271604938272,
+    "dist": 0.003944579357105127
+   },
+   {
+    "name": "lm_market-row_stall1_top",
+    "frac": 0.0004938271604938272,
+    "dist": 0.10052228377926298
+   },
+   {
+    "name": "veg_emb_wood_13_crownG",
+    "frac": 0.00037037037037037035,
+    "dist": 0.12778784803578336
+   },
+   {
+    "name": "veg_emb_rim_000_trunk",
+    "frac": 0.00037037037037037035,
+    "dist": 0.309693960435743
+   },
+   {
+    "name": "veg_emb_rim_306_trunk",
+    "frac": 0.00037037037037037035,
+    "dist": 0.1673260097449829
+   },
+   {
+    "name": "lm_infill_16_win0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.01595987206496478
+   },
+   {
+    "name": "veg_emb_village_07_trunk",
+    "frac": 0.00037037037037037035,
+    "dist": 0.24683997370166685
+   },
+   {
+    "name": "lm_east-cottages_3_win1",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0024361962967700077
+   },
+   {
+    "name": "lm_infill_16_track0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0029566448855050157
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l5",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006361557734895958
+   },
+   {
+    "name": "lm_pips-den_plank3",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006232226379692204
+   },
+   {
+    "name": "lm_pips-den_plank2",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0035576350258059862
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l3",
+    "frac": 0.00037037037037037035,
+    "dist": 0.003121796978742599
+   },
+   {
+    "name": "bar_brook-bridge_postB2",
+    "frac": 0.00037037037037037035,
+    "dist": 0.003149157007207261
+   },
+   {
+    "name": "bar_brook-bridge_postA2",
+    "frac": 0.00037037037037037035,
+    "dist": 0.002551431947814697
+   },
+   {
+    "name": "lm_market-row_stall0_top",
+    "frac": 0.00037037037037037035,
+    "dist": 0.05753469634851278
+   },
+   {
+    "name": "veg_emb_rim_309_crown0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.09067413557934847
+   },
+   {
+    "name": "veg_emb_wood_17_crownA",
+    "frac": 0.0002469135802469136,
+    "dist": 0.17174624239857975
+   },
+   {
+    "name": "veg_emb_rim_002_trunk",
+    "frac": 0.0002469135802469136,
+    "dist": 0.004048507202639939
+   },
+   {
+    "name": "lm_infill_26_chim",
+    "frac": 0.0002469135802469136,
+    "dist": 0.012583777687186057
+   },
+   {
+    "name": "lm_infill_19_win0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.012865164389680312
+   },
+   {
+    "name": "veg_emb_rim_303_trunk",
+    "frac": 0.0002469135802469136,
+    "dist": 0.019268759934419677
+   },
+   {
+    "name": "lm_infill_19_win1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.013380143441893328
+   },
+   {
+    "name": "veg_emb_rim_307_trunk",
+    "frac": 0.0002469135802469136,
+    "dist": 0.03715937358892063
+   },
+   {
+    "name": "veg_emb_wood_13_trunks",
+    "frac": 0.0002469135802469136,
+    "dist": 0.28274312387678624
+   },
+   {
+    "name": "lm_infill_26_win1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.003688441428438589
+   },
+   {
+    "name": "lm_infill_26_win0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.005417781016790846
+   },
+   {
+    "name": "lm_infill_28_rail131",
+    "frac": 0.0002469135802469136,
+    "dist": 0.003558608953278726
+   },
+   {
+    "name": "lm_infill_22_drystone04",
+    "frac": 0.0002469135802469136,
+    "dist": 0.15867706092616374
+   },
+   {
+    "name": "lm_infill_26_drystone03",
+    "frac": 0.0002469135802469136,
+    "dist": 0.1395444125862723
+   },
+   {
+    "name": "lm_east-cottages_0_chim",
+    "frac": 0.0002469135802469136,
+    "dist": 0.005699701189387569
+   },
+   {
+    "name": "lm_infill_22_drystone05",
+    "frac": 0.0002469135802469136,
+    "dist": 0.1511312669273067
+   },
+   {
+    "name": "lm_infill_16_win1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.01414294291820747
+   },
+   {
+    "name": "lm_infill_16_rail030",
+    "frac": 0.0002469135802469136,
+    "dist": 0.007476777834695828
+   },
+   {
+    "name": "emb_lamp_02_washline-green_glass",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0021126873945220837
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006772703270401692
+   },
+   {
+    "name": "walk_e_pond-jetty__washline-green_l10",
+    "frac": 0.0002469135802469136,
+    "dist": 0.008486363175662426
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l12",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006718943190896197
+   },
+   {
+    "name": "veg_emb_rim_302_crown0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.17070093565571606
+   },
+   {
+    "name": "veg_emb_rim_007_crown1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.34140433529578473
+   },
+   {
+    "name": "veg_emb_rim_001_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.09979472127904643
+   },
+   {
+    "name": "veg_emb_rim_302_crown1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.08184576635661411
+   },
+   {
+    "name": "lm_infill_28_chim",
+    "frac": 0.0001234567901234568,
+    "dist": 0.010842077040627996
+   },
+   {
+    "name": "veg_emb_rim_009_crown0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007696351444463021
+   },
+   {
+    "name": "veg_emb_rim_007_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.09334277519878816
+   },
+   {
+    "name": "veg_emb_rim_005_crown1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.13213269386193272
+   },
+   {
+    "name": "veg_emb_rim_001_crown0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.1082104049463144
+   },
+   {
+    "name": "veg_emb_rim_309_crown1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.06661640019985082
+   },
+   {
+    "name": "veg_emb_rim_021_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.026465849320231882
+   },
+   {
+    "name": "lm_infill_19_chim",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0017641778652981444
+   },
+   {
+    "name": "veg_emb_rim_306_crown1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.1706222337351715
+   },
+   {
+    "name": "veg_emb_rim_297_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.12898538706296847
+   },
+   {
+    "name": "lm_infill_11_chim",
+    "frac": 0.0001234567901234568,
+    "dist": 0.008665362673635801
+   },
+   {
+    "name": "veg_emb_wood_16_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01382490935529292
+   },
+   {
+    "name": "veg_emb_rim_303_crown0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.3990061081971099
+   },
+   {
+    "name": "veg_emb_rim_309_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.23309655276968044
+   },
+   {
+    "name": "veg_emb_rim_307_crown0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.7181617925065549
+   },
+   {
+    "name": "veg_emb_rim_302_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.6573042947210462
+   },
+   {
+    "name": "lm_infill_28_win0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00015155754463929647
+   },
+   {
+    "name": "veg_emb_rim_003_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.565217929496473
+   },
+   {
+    "name": "veg_emb_wood_18_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0041514023460464955
+   },
+   {
+    "name": "lm_infill_23_drystone18",
+    "frac": 0.0001234567901234568,
+    "dist": 0.18375940014014874
+   },
+   {
+    "name": "lm_infill_23_drystone14",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0012203943309447851
+   },
+   {
+    "name": "lm_infill_19_drystone16",
+    "frac": 0.0001234567901234568,
+    "dist": 0.17556160947129532
+   },
+   {
+    "name": "lm_infill_11_drystone23",
+    "frac": 0.0001234567901234568,
+    "dist": 0.024283280662993005
+   },
+   {
+    "name": "lm_infill_28_rail130",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0043681835898229625
+   },
+   {
+    "name": "lm_infill_11_bramble01",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0065824539590683415
+   },
+   {
+    "name": "lm_east-cottages_2_chim",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011399511925143102
+   },
+   {
+    "name": "lm_infill_26_rail201",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0003980617756958182
+   },
+   {
+    "name": "lm_infill_26_drystone04",
+    "frac": 0.0001234567901234568,
+    "dist": 0.014744737260692573
+   },
+   {
+    "name": "lm_infill_22_drystone06",
+    "frac": 0.0001234567901234568,
+    "dist": 0.018546470504651417
+   },
+   {
+    "name": "lm_infill_22_drystone08",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0026732276965795165
+   },
+   {
+    "name": "lm_infill_16_rail031",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006541687012230568
+   },
+   {
+    "name": "lm_infill_16_rail021",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0021726127602589174
+   },
+   {
+    "name": "lm_infill_16_rail020",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007098490162445211
+   },
+   {
+    "name": "lm_brook-mouth_bank3",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0029635396945463743
+   },
+   {
+    "name": "lm_brook-mouth_bank2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.008416604866171795
+   },
+   {
+    "name": "lm_east-cottages_0_win0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005038547684507752
+   },
+   {
+    "name": "emb_lamp_03_pond-jetty_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0031282736807867195
+   },
+   {
+    "name": "lm_field_07_drystone16",
+    "frac": 0.0001234567901234568,
+    "dist": 0.054364042555719624
+   },
+   {
+    "name": "emb_lamp_02_washline-green_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003613741222867617
+   },
+   {
+    "name": "emb_lamp_03_pond-jetty_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00024134948117193744
+   },
+   {
+    "name": "lm_infill_14_rail101",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011582436359209292
+   },
+   {
+    "name": "lm_infill_14_track0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.001288968533129408
+   },
+   {
+    "name": "lm_infill_10_track5",
+    "frac": 0.0001234567901234568,
+    "dist": 0.011642373961564692
+   },
+   {
+    "name": "lm_infill_01_bramble18",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005433486589412848
+   },
+   {
+    "name": "emb_lamp_03_pond-jetty_post",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004683324529714559
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l14",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0068221346348983185
+   },
+   {
+    "name": "lm_infill_01_rail140",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006379217018823269
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l13",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003685928250632365
+   },
+   {
+    "name": "veg_emb_village_01_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0020951275247060863
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l6",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006045612466779029
+   },
+   {
+    "name": "lm_market-row_stall2_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0024600003900354227
+   },
+   {
+    "name": "lm_market-row_stall1_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.31757265320270267
+   }
+  ],
+  "distP50": 0.005790111773044356,
+  "distP90": null
+ },
+ "homerow": {
+  "shot": "homerow",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.33098765432098765,
+    "dist": 0.02831130660547241
+   },
+   {
+    "name": "lm_watermill_body",
+    "frac": 0.12753086419753087,
+    "dist": 0.821176030519377
+   },
+   {
+    "name": "lm_lake-home_roof",
+    "frac": 0.04604938271604938,
+    "dist": 0.0033427793537415596
+   },
+   {
+    "name": "lm_hillside-cottage_roof",
+    "frac": 0.044444444444444446,
+    "dist": 0.18413787030440712
+   },
+   {
+    "name": "lm_bakery_roof",
+    "frac": 0.03432098765432099,
+    "dist": 0.002998735530296348
+   },
+   {
+    "name": "lm_elder-house_roof",
+    "frac": 0.03,
+    "dist": 0.003031769719003583
+   },
+   {
+    "name": "lm_hillside-cottage_body",
+    "frac": 0.029382716049382716,
+    "dist": 0.005234618060525916
+   },
+   {
+    "name": "lm_elder-house_body",
+    "frac": 0.027160493827160494,
+    "dist": 0.00488038457627551
+   },
+   {
+    "name": "lm_lake-home_body",
+    "frac": 0.024074074074074074,
+    "dist": 0.003184624206933037
+   },
+   {
+    "name": "walk_pad_hillside-cottage",
+    "frac": 0.01691358024691358,
+    "dist": 0.4229133508190208
+   },
+   {
+    "name": "walk_pad_lake-home",
+    "frac": 0.013950617283950617,
+    "dist": 0.003768632431967768
+   },
+   {
+    "name": "veg_emb_village_02_crown",
+    "frac": 0.013209876543209877,
+    "dist": 2.242340823829496
+   },
+   {
+    "name": "lm_watermill_base",
+    "frac": 0.012839506172839505,
+    "dist": 0.4536003335562129
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l7",
+    "frac": 0.012098765432098766,
+    "dist": 0.003800993477862736
+   },
+   {
+    "name": "lm_spring-house_body",
+    "frac": 0.009753086419753086,
+    "dist": 0.0054352007296387134
+   },
+   {
+    "name": "lm_lake-home_base",
+    "frac": 0.009012345679012346,
+    "dist": 0.003522250884511177
+   },
+   {
+    "name": "lm_hillside-cottage_base",
+    "frac": 0.008888888888888889,
+    "dist": 0.06688124458849229
+   },
+   {
+    "name": "lm_watermill_roof",
+    "frac": 0.008765432098765432,
+    "dist": 1.5733112217074714
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l8",
+    "frac": 0.008518518518518519,
+    "dist": 0.015134624083027064
+   },
+   {
+    "name": "walk_pad_spring-house",
+    "frac": 0.008148148148148147,
+    "dist": 0.0045314657816107
+   },
+   {
+    "name": "lm_elder-house_base",
+    "frac": 0.008024691358024692,
+    "dist": 0.005104057557808512
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l3",
+    "frac": 0.0077777777777777776,
+    "dist": 0.003807757043881553
+   },
+   {
+    "name": "walk_pad_brook-spring",
+    "frac": 0.007160493827160494,
+    "dist": 0.00478170987012636
+   },
+   {
+    "name": "water_emb_brook",
+    "frac": 0.006913580246913581,
+    "dist": 0.021083567747075333
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l4",
+    "frac": 0.00654320987654321,
+    "dist": 0.0038624029856707638
+   },
+   {
+    "name": "walk_pad_elder-house",
+    "frac": 0.006419753086419753,
+    "dist": 0.004291763985988654
+   },
+   {
+    "name": "lm_spring-house_roof",
+    "frac": 0.005308641975308642,
+    "dist": 0.0020364444265170973
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l6",
+    "frac": 0.005308641975308642,
+    "dist": 0.004475402182689974
+   },
+   {
+    "name": "water_emb_millpond",
+    "frac": 0.005185185185185185,
+    "dist": 0.4044200215130118
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l2",
+    "frac": 0.005061728395061729,
+    "dist": 0.0036927430719493203
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l5",
+    "frac": 0.005061728395061729,
+    "dist": 0.0037058524620424546
+   },
+   {
+    "name": "walk_pad_home-lane-end",
+    "frac": 0.004814814814814815,
+    "dist": 0.004458847421440102
+   },
+   {
+    "name": "bar_upper-lane-closed_cart_bed",
+    "frac": 0.004691358024691358,
+    "dist": 0.004169691323201478
+   },
+   {
+    "name": "lm_hillside-cottage_chimney",
+    "frac": 0.004197530864197531,
+    "dist": 0.7470192600841278
+   },
+   {
+    "name": "lm_watermill_bank07",
+    "frac": 0.004197530864197531,
+    "dist": 0.07322915518575086
+   },
+   {
+    "name": "walk_pad_upper-lane-closed",
+    "frac": 0.0038271604938271606,
+    "dist": 0.004143665843994514
+   },
+   {
+    "name": "lm_hillside-cottage_door",
+    "frac": 0.003703703703703704,
+    "dist": 0.09587774271795975
+   },
+   {
+    "name": "lm_bakery_chimney",
+    "frac": 0.003580246913580247,
+    "dist": 0.0031386331758601975
+   },
+   {
+    "name": "lm_infill_00_track2",
+    "frac": 0.0034567901234567903,
+    "dist": 0.004008077509435987
+   },
+   {
+    "name": "lm_infill_20_track4",
+    "frac": 0.002962962962962963,
+    "dist": 0.004145067202457799
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l5",
+    "frac": 0.002839506172839506,
+    "dist": 0.004533302377289178
+   },
+   {
+    "name": "lm_lake-home_chimney",
+    "frac": 0.002839506172839506,
+    "dist": 0.004038502008265127
+   },
+   {
+    "name": "emb_lanestub_upper-lane-closed_4",
+    "frac": 0.0027160493827160493,
+    "dist": 0.004918395379996032
+   },
+   {
+    "name": "lm_infill_20_track3",
+    "frac": 0.0025925925925925925,
+    "dist": 0.004803241722986863
+   },
+   {
+    "name": "lm_infill_13_track3",
+    "frac": 0.0025925925925925925,
+    "dist": 0.0036356042621494694
+   },
+   {
+    "name": "lm_elder-house_chimney",
+    "frac": 0.0024691358024691358,
+    "dist": 0.00536046958167056
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l4",
+    "frac": 0.0024691358024691358,
+    "dist": 0.004372237377608264
+   },
+   {
+    "name": "lm_field_13_pale33",
+    "frac": 0.002345679012345679,
+    "dist": 0.003618115489394374
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l6",
+    "frac": 0.002345679012345679,
+    "dist": 0.0036333199379203515
+   },
+   {
+    "name": "lm_field_13_pale29",
+    "frac": 0.0022222222222222222,
+    "dist": 0.0038462177567202024
+   },
+   {
+    "name": "lm_elder-house_door",
+    "frac": 0.0022222222222222222,
+    "dist": 0.00302097464569759
+   },
+   {
+    "name": "lm_field_13_ridge26",
+    "frac": 0.0020987654320987655,
+    "dist": 0.005575309714524024
+   },
+   {
+    "name": "lm_watermill_door",
+    "frac": 0.0020987654320987655,
+    "dist": 0.05858277582334696
+   },
+   {
+    "name": "lm_infill_13_track4",
+    "frac": 0.0020987654320987655,
+    "dist": 0.003368360915688112
+   },
+   {
+    "name": "lm_field_12_pale24",
+    "frac": 0.0019753086419753087,
+    "dist": 0.00980046316125357
+   },
+   {
+    "name": "lm_watermill_bank08",
+    "frac": 0.0019753086419753087,
+    "dist": 0.019024563207620623
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l6",
+    "frac": 0.0019753086419753087,
+    "dist": 0.004189222923763417
+   },
+   {
+    "name": "walk_lm_square-plaza.010",
+    "frac": 0.0019753086419753087,
+    "dist": 0.005645521051525382
+   },
+   {
+    "name": "lm_field_11_ridge19",
+    "frac": 0.0017283950617283952,
+    "dist": 0.005375674558786107
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l7",
+    "frac": 0.0017283950617283952,
+    "dist": 0.004552744263746521
+   },
+   {
+    "name": "lm_grandmothers-bench_seat",
+    "frac": 0.0017283950617283952,
+    "dist": 0.0038948452500946473
+   },
+   {
+    "name": "lm_spring-house_door",
+    "frac": 0.0016049382716049382,
+    "dist": 0.003958967753606457
+   },
+   {
+    "name": "emb_lanestub_upper-lane-closed_3",
+    "frac": 0.0016049382716049382,
+    "dist": 0.0036845297540508107
+   },
+   {
+    "name": "walk_pad_watermill",
+    "frac": 0.0014814814814814814,
+    "dist": 0.005581834356082875
+   },
+   {
+    "name": "lm_watermill_bank06",
+    "frac": 0.0013580246913580246,
+    "dist": 0.004094757585811051
+   },
+   {
+    "name": "emb_lamp_06_elder-house_post",
+    "frac": 0.0012345679012345679,
+    "dist": 0.37831130796285184
+   },
+   {
+    "name": "emb_lanestub_upper-lane-closed_0",
+    "frac": 0.0012345679012345679,
+    "dist": 0.004147858130863468
+   },
+   {
+    "name": "lm_field_12_ridge22",
+    "frac": 0.0011111111111111111,
+    "dist": 0.005300253062558448
+   },
+   {
+    "name": "lm_lake-home_door",
+    "frac": 0.0011111111111111111,
+    "dist": 0.005389575420056101
+   },
+   {
+    "name": "lm_field_12_ridge24",
+    "frac": 0.0009876543209876543,
+    "dist": 0.005434431959420061
+   },
+   {
+    "name": "bar_upper-lane-closed_cart_rail",
+    "frac": 0.0009876543209876543,
+    "dist": 0.006088999701311832
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l9",
+    "frac": 0.0009876543209876543,
+    "dist": 0.09906973018659654
+   },
+   {
+    "name": "emb_lamp_04_lake-home_post",
+    "frac": 0.0009876543209876543,
+    "dist": 0.004456643542837924
+   },
+   {
+    "name": "lm_brook-spring_stone0",
+    "frac": 0.0008641975308641976,
+    "dist": 0.008151947216160941
+   },
+   {
+    "name": "lm_home-lane-end_seat",
+    "frac": 0.0008641975308641976,
+    "dist": 0.004332891888918931
+   },
+   {
+    "name": "lm_field_08_ridge10",
+    "frac": 0.0008641975308641976,
+    "dist": 0.004431101102028289
+   },
+   {
+    "name": "bar_upper-lane-closed_barrel1",
+    "frac": 0.0008641975308641976,
+    "dist": 0.005742393446031015
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l1",
+    "frac": 0.0008641975308641976,
+    "dist": 0.0037466170332290725
+   },
+   {
+    "name": "walk_pad_grandmothers-bench",
+    "frac": 0.0008641975308641976,
+    "dist": 0.0036213238027309152
+   },
+   {
+    "name": "lm_field_12_ridge21",
+    "frac": 0.0007407407407407407,
+    "dist": 0.006252591492664462
+   },
+   {
+    "name": "lm_watermill_bank05",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0035527799178530065
+   },
+   {
+    "name": "lm_brook-spring_stone1",
+    "frac": 0.0007407407407407407,
+    "dist": 0.005378115458646324
+   },
+   {
+    "name": "lm_brook-spring_stone2",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0053889727828840515
+   },
+   {
+    "name": "lm_watermill_bank09",
+    "frac": 0.0007407407407407407,
+    "dist": 0.047188014927111964
+   },
+   {
+    "name": "bar_upper-lane-closed_barrel0",
+    "frac": 0.0007407407407407407,
+    "dist": 0.005761434758880444
+   },
+   {
+    "name": "lm_field_13_pale30",
+    "frac": 0.0006172839506172839,
+    "dist": 0.002268866638420578
+   },
+   {
+    "name": "lm_brook-spring_stone3",
+    "frac": 0.0006172839506172839,
+    "dist": 0.006121168508316907
+   },
+   {
+    "name": "lm_brook-spring_stone4",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0038067727179155126
+   },
+   {
+    "name": "lm_infill_02_track2",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0032435060072586964
+   },
+   {
+    "name": "veg_emb_village_14_crown",
+    "frac": 0.0004938271604938272,
+    "dist": 0.8923412190170525
+   },
+   {
+    "name": "emb_lamp_04_lake-home_cap",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0032291456206863245
+   },
+   {
+    "name": "emb_lamp_04_lake-home_glass",
+    "frac": 0.0004938271604938272,
+    "dist": 0.004771417047466642
+   },
+   {
+    "name": "walk_lm_square-plaza.011",
+    "frac": 0.0004938271604938272,
+    "dist": 0.005719423690567993
+   },
+   {
+    "name": "lm_field_12_ridge20",
+    "frac": 0.00037037037037037035,
+    "dist": 0.004184490984706755
+   },
+   {
+    "name": "bar_upper-lane-closed_barrel2",
+    "frac": 0.00037037037037037035,
+    "dist": 0.00506869201657049
+   },
+   {
+    "name": "lm_field_12_pale25",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00595329702501544
+   },
+   {
+    "name": "lm_field_11_ridge18",
+    "frac": 0.0002469135802469136,
+    "dist": 0.001973797744994954
+   },
+   {
+    "name": "emb_lamp_06_elder-house_cap",
+    "frac": 0.0002469135802469136,
+    "dist": 0.005410074269464715
+   },
+   {
+    "name": "emb_lamp_06_elder-house_glass",
+    "frac": 0.0002469135802469136,
+    "dist": 0.26869603625789806
+   },
+   {
+    "name": "lm_home-lane-end_legB",
+    "frac": 0.0002469135802469136,
+    "dist": 0.003725732760237427
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l3",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0046982572873983325
+   },
+   {
+    "name": "emb_lamp_05_hillside-cottage_cap",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0038567401791169686
+   },
+   {
+    "name": "emb_lamp_05_hillside-cottage_glass",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0031536841986188335
+   },
+   {
+    "name": "emb_lamp_05_hillside-cottage_post",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0025478797346387694
+   },
+   {
+    "name": "veg_emb_village_16_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005656010549333956
+   },
+   {
+    "name": "lm_home-lane-end_legA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00529376705637786
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l8",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003757767620312954
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00055466746919887
+   },
+   {
+    "name": "walk_e_elder-house__home-lane-end_l2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0005746952434086969
+   },
+   {
+    "name": "lm_field_08_hedge18",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006077681313158223
+   },
+   {
+    "name": "walk_e_hillside-cottage__elder-house_l2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004703413998706727
+   },
+   {
+    "name": "lm_grandmothers-bench_legB",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0035188128742404956
+   }
+  ],
+  "distP50": 0.005010370854469059,
+  "distP90": 0.8159164450682228
+ },
+ "northlane": {
+  "shot": "northlane",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.5867901234567902,
+    "dist": 0.012530122619689594
+   },
+   {
+    "name": "lm_watermill_body",
+    "frac": 0.06851851851851852,
+    "dist": 0.44206051287645187
+   },
+   {
+    "name": "lm_barn_roof",
+    "frac": 0.03580246913580247,
+    "dist": 0.004534872693362295
+   },
+   {
+    "name": "water_emb_brook",
+    "frac": 0.02185185185185185,
+    "dist": 0.013876033270880116
+   },
+   {
+    "name": "lm_dovecote_cap",
+    "frac": 0.02,
+    "dist": 0.0030645843962255523
+   },
+   {
+    "name": "lm_watermill_base",
+    "frac": 0.015679012345679012,
+    "dist": 0.24723270945125728
+   },
+   {
+    "name": "veg_emb_wood_14_crownG",
+    "frac": 0.01493827160493827,
+    "dist": 0.39191493432661206
+   },
+   {
+    "name": "walk_pad_dovecote",
+    "frac": 0.012592592592592593,
+    "dist": 0.0038235263244162606
+   },
+   {
+    "name": "walk_lm_square-plaza.043",
+    "frac": 0.012222222222222223,
+    "dist": 0.004012808187569392
+   },
+   {
+    "name": "walk_pad_barn",
+    "frac": 0.01,
+    "dist": 0.004120958237209477
+   },
+   {
+    "name": "veg_emb_wood_14_crownA",
+    "frac": 0.009259259259259259,
+    "dist": 0.2492800150188646
+   },
+   {
+    "name": "lm_dovecote_shaft",
+    "frac": 0.009012345679012346,
+    "dist": 0.0041690163495172
+   },
+   {
+    "name": "walk_e_barn__gate-court_l6",
+    "frac": 0.008888888888888889,
+    "dist": 0.00409638165379434
+   },
+   {
+    "name": "walk_e_barn__gate-court_l7",
+    "frac": 0.008518518518518519,
+    "dist": 0.004479893792352847
+   },
+   {
+    "name": "lm_barn_body",
+    "frac": 0.007901234567901235,
+    "dist": 0.00420966885302039
+   },
+   {
+    "name": "walk_e_barn__gate-court_l5",
+    "frac": 0.0077777777777777776,
+    "dist": 0.00433402029697021
+   },
+   {
+    "name": "walk_lm_square-plaza.035",
+    "frac": 0.007407407407407408,
+    "dist": 0.005049800048297372
+   },
+   {
+    "name": "walk_lm_square-plaza.019",
+    "frac": 0.006666666666666667,
+    "dist": 0.0045196968194906985
+   },
+   {
+    "name": "walk_e_barn__gate-court_l4",
+    "frac": 0.006666666666666667,
+    "dist": 0.004189673323703967
+   },
+   {
+    "name": "walk_lm_square-plaza.027",
+    "frac": 0.00654320987654321,
+    "dist": 0.005276078312512157
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l9",
+    "frac": 0.005555555555555556,
+    "dist": 0.004045080596505656
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l10",
+    "frac": 0.005555555555555556,
+    "dist": 0.004088053709331427
+   },
+   {
+    "name": "walk_e_barn__gate-court_l3",
+    "frac": 0.005555555555555556,
+    "dist": 0.004189516300134298
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l7",
+    "frac": 0.005308641975308642,
+    "dist": 0.004199140404734149
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l8",
+    "frac": 0.005185185185185185,
+    "dist": 0.004326342773183369
+   },
+   {
+    "name": "walk_lm_square-plaza.026",
+    "frac": 0.004567901234567902,
+    "dist": 0.0042248489896118254
+   },
+   {
+    "name": "walk_lm_square-plaza.034",
+    "frac": 0.004567901234567902,
+    "dist": 0.0040680906439315104
+   },
+   {
+    "name": "walk_pad_back-lane-closed",
+    "frac": 0.0044444444444444444,
+    "dist": 0.004602428420789629
+   },
+   {
+    "name": "walk_lm_square-plaza.018",
+    "frac": 0.004074074074074074,
+    "dist": 0.012736004252257408
+   },
+   {
+    "name": "lm_infill_30_track1",
+    "frac": 0.004074074074074074,
+    "dist": 0.003308422432664121
+   },
+   {
+    "name": "walk_e_barn__gate-court_l2",
+    "frac": 0.003950617283950617,
+    "dist": 0.00412282215026539
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l6",
+    "frac": 0.003950617283950617,
+    "dist": 0.003958540218072176
+   },
+   {
+    "name": "walk_pad_hillside-cottage",
+    "frac": 0.003703703703703704,
+    "dist": 0.4748249556950272
+   },
+   {
+    "name": "emb_culvert_01_deck",
+    "frac": 0.003703703703703704,
+    "dist": 0.0041582061489115005
+   },
+   {
+    "name": "walk_lm_square-plaza.042",
+    "frac": 0.003703703703703704,
+    "dist": 0.0038212329899517763
+   },
+   {
+    "name": "lm_infill_30_track3",
+    "frac": 0.003580246913580247,
+    "dist": 0.003908870757185265
+   },
+   {
+    "name": "lm_infill_30_track2",
+    "frac": 0.003580246913580247,
+    "dist": 0.003964371508862331
+   },
+   {
+    "name": "veg_emb_screen_04_crownG",
+    "frac": 0.0034567901234567903,
+    "dist": 0.2075018344215989
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l8",
+    "frac": 0.0033333333333333335,
+    "dist": 0.005027910322510887
+   },
+   {
+    "name": "lm_dovecote_plinth",
+    "frac": 0.0033333333333333335,
+    "dist": 0.0042269415640841905
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l5",
+    "frac": 0.002839506172839506,
+    "dist": 0.004079743121421534
+   },
+   {
+    "name": "veg_emb_screen_01_crownG",
+    "frac": 0.0024691358024691358,
+    "dist": 0.10021829255942116
+   },
+   {
+    "name": "walk_lm_square-plaza.051",
+    "frac": 0.0024691358024691358,
+    "dist": 0.0035941796341653286
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l7",
+    "frac": 0.0022222222222222222,
+    "dist": 0.00471565659699279
+   },
+   {
+    "name": "bar_back-lane-closed_cart_bed",
+    "frac": 0.0022222222222222222,
+    "dist": 0.08116290450720824
+   },
+   {
+    "name": "lm_infill_30_track0",
+    "frac": 0.0020987654320987655,
+    "dist": 0.0035191433068482874
+   },
+   {
+    "name": "lm_barn_chimney",
+    "frac": 0.001851851851851852,
+    "dist": 0.0038192906240483515
+   },
+   {
+    "name": "walk_lm_square-plaza.010",
+    "frac": 0.0016049382716049382,
+    "dist": 0.005226138410007545
+   },
+   {
+    "name": "lm_dovecote_band",
+    "frac": 0.0016049382716049382,
+    "dist": 0.003727615303117403
+   },
+   {
+    "name": "walk_lm_square-plaza.011",
+    "frac": 0.0014814814814814814,
+    "dist": 0.005843852425423179
+   },
+   {
+    "name": "walk_lm_square-plaza.050",
+    "frac": 0.0014814814814814814,
+    "dist": 0.004039918361916269
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l4",
+    "frac": 0.0013580246913580246,
+    "dist": 0.004293013611708202
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l2",
+    "frac": 0.0012345679012345679,
+    "dist": 0.005206074334182631
+   },
+   {
+    "name": "bar_back-lane-closed_barrel2",
+    "frac": 0.0011111111111111111,
+    "dist": 0.003964784872264299
+   },
+   {
+    "name": "veg_emb_screen_04_trunks",
+    "frac": 0.0008641975308641976,
+    "dist": 0.07241924508123836
+   },
+   {
+    "name": "walk_e_square-plaza__hillside-cottage_l9",
+    "frac": 0.0008641975308641976,
+    "dist": 0.1878530892425272
+   },
+   {
+    "name": "bar_back-lane-closed_cart_rail",
+    "frac": 0.0008641975308641976,
+    "dist": 0.16132915036144882
+   },
+   {
+    "name": "veg_emb_village_29_crown",
+    "frac": 0.0008641975308641976,
+    "dist": 0.0840262129636615
+   },
+   {
+    "name": "veg_emb_wood_15_crownG",
+    "frac": 0.0007407407407407407,
+    "dist": 0.003050074611815614
+   },
+   {
+    "name": "lm_watermill_bank02",
+    "frac": 0.0006172839506172839,
+    "dist": 0.6080784737311277
+   },
+   {
+    "name": "veg_emb_screen_04_crownA",
+    "frac": 0.0006172839506172839,
+    "dist": 0.05420930188974049
+   },
+   {
+    "name": "walk_e_barn__gate-court_l8",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0029064455963257125
+   },
+   {
+    "name": "veg_emb_screen_01_crownA",
+    "frac": 0.0004938271604938272,
+    "dist": 0.15421209584256274
+   },
+   {
+    "name": "emb_lamp_07_barn_cap",
+    "frac": 0.0004938271604938272,
+    "dist": 0.004511271660241789
+   },
+   {
+    "name": "veg_emb_wood_14_trunks",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0012521996518325789
+   },
+   {
+    "name": "bar_back-lane-closed_barrel1",
+    "frac": 0.00037037037037037035,
+    "dist": 0.00430504254998556
+   },
+   {
+    "name": "lm_market-row_stall5_canopy",
+    "frac": 0.00037037037037037035,
+    "dist": 0.957959327255811
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_post",
+    "frac": 0.00037037037037037035,
+    "dist": 0.006112525215577591
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l11",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0035073282826798215
+   },
+   {
+    "name": "lm_barn_base",
+    "frac": 0.00037037037037037035,
+    "dist": 0.00462287791247988
+   },
+   {
+    "name": "lm_dovecote_door",
+    "frac": 0.00037037037037037035,
+    "dist": 0.008701127935751174
+   },
+   {
+    "name": "veg_emb_screen_01_trunks",
+    "frac": 0.0002469135802469136,
+    "dist": 0.4597970539862029
+   },
+   {
+    "name": "bar_back-lane-closed_barrel0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.007943463375351626
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_cap",
+    "frac": 0.0002469135802469136,
+    "dist": 0.004153617114834418
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0027888116827307482
+   },
+   {
+    "name": "emb_culvert_01_abut1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.004705188254334303
+   },
+   {
+    "name": "walk_e_hillside-cottage__lake-home_l1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006173702370226408
+   },
+   {
+    "name": "lm_watermill_roof",
+    "frac": 0.0001234567901234568,
+    "dist": 1.1303308618723085
+   },
+   {
+    "name": "veg_emb_wood_15_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.001196180945754577
+   },
+   {
+    "name": "emb_lanestub_back-lane-closed_0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.16136098481215952
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0016089017604201672
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l3",
+    "frac": 0.0001234567901234568,
+    "dist": 0.008715704232647283
+   },
+   {
+    "name": "emb_culvert_01_abut0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006528687659994148
+   }
+  ],
+  "distP50": 0.005148351324112296,
+  "distP90": 0.0755863249412451
+ },
+ "gateroad": {
+  "shot": "gateroad",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.5997530864197531,
+    "dist": 0.010198620047616826
+   },
+   {
+    "name": "lm_watermill_body",
+    "frac": 0.04160493827160494,
+    "dist": 0.18909438870141212
+   },
+   {
+    "name": "veg_emb_wood_19_crownG",
+    "frac": 0.020370370370370372,
+    "dist": 0.3434228508027472
+   },
+   {
+    "name": "lm_barn_body",
+    "frac": 0.017037037037037038,
+    "dist": 0.0019233433500661188
+   },
+   {
+    "name": "walk_e_barn__gate-court_l13",
+    "frac": 0.017037037037037038,
+    "dist": 0.003072800143120502
+   },
+   {
+    "name": "veg_emb_wood_14_crownG",
+    "frac": 0.013333333333333334,
+    "dist": 0.9764126793101087
+   },
+   {
+    "name": "walk_e_barn__gate-court_l12",
+    "frac": 0.012962962962962963,
+    "dist": 0.003365428391620103
+   },
+   {
+    "name": "walk_e_barn__gate-court_l14",
+    "frac": 0.012098765432098766,
+    "dist": 0.002862661096910124
+   },
+   {
+    "name": "veg_emb_wood_16_crownA",
+    "frac": 0.011604938271604939,
+    "dist": 2.6894974747357088
+   },
+   {
+    "name": "lm_dovecote_shaft",
+    "frac": 0.011111111111111112,
+    "dist": 0.0052247376416115375
+   },
+   {
+    "name": "walk_e_barn__gate-court_l11",
+    "frac": 0.010864197530864197,
+    "dist": 0.19867707154014805
+   },
+   {
+    "name": "lm_barn_roof",
+    "frac": 0.010493827160493827,
+    "dist": 0.004209854533793199
+   },
+   {
+    "name": "lm_elder-house_body",
+    "frac": 0.00962962962962963,
+    "dist": 0.0029094714708910105
+   },
+   {
+    "name": "veg_emb_wood_18_crownG",
+    "frac": 0.009259259259259259,
+    "dist": 0.3122363115645744
+   },
+   {
+    "name": "walk_e_barn__gate-court_l10",
+    "frac": 0.008888888888888889,
+    "dist": 0.4512382477352245
+   },
+   {
+    "name": "veg_emb_wood_18_crownA",
+    "frac": 0.008271604938271605,
+    "dist": 0.6361826753179063
+   },
+   {
+    "name": "lm_item-shop_body",
+    "frac": 0.007654320987654321,
+    "dist": 0.0038165893184177123
+   },
+   {
+    "name": "lm_watermill_base",
+    "frac": 0.00654320987654321,
+    "dist": 0.20543373365776452
+   },
+   {
+    "name": "water_emb_brook",
+    "frac": 0.006049382716049383,
+    "dist": 0.04798741076995113
+   },
+   {
+    "name": "walk_e_barn__gate-court_l9",
+    "frac": 0.005679012345679012,
+    "dist": 0.03337875508350905
+   },
+   {
+    "name": "veg_emb_wood_14_crownA",
+    "frac": 0.005308641975308642,
+    "dist": 0.2269185757963673
+   },
+   {
+    "name": "walk_e_barn__gate-court_l8",
+    "frac": 0.005308641975308642,
+    "dist": 0.38423126141413755
+   },
+   {
+    "name": "water_emb_millpond",
+    "frac": 0.005185185185185185,
+    "dist": 0.9980946152786039
+   },
+   {
+    "name": "lm_barn_base",
+    "frac": 0.004814814814814815,
+    "dist": 0.0022463160774138977
+   },
+   {
+    "name": "lm_watermill_bank03",
+    "frac": 0.004567901234567902,
+    "dist": 0.0023185183467784474
+   },
+   {
+    "name": "lm_lake-home_body",
+    "frac": 0.0044444444444444444,
+    "dist": 0.011004267667002274
+   },
+   {
+    "name": "lm_dovecote_cap",
+    "frac": 0.0044444444444444444,
+    "dist": 0.0045114638410494665
+   },
+   {
+    "name": "lm_watermill_bank04",
+    "frac": 0.004320987654320987,
+    "dist": 0.0779497512404907
+   },
+   {
+    "name": "lm_watermill_bank01",
+    "frac": 0.004197530864197531,
+    "dist": 0.03290278210384996
+   },
+   {
+    "name": "veg_emb_screen_04_crownG",
+    "frac": 0.004074074074074074,
+    "dist": 0.23703595718435266
+   },
+   {
+    "name": "walk_e_barn__gate-court_l7",
+    "frac": 0.0038271604938271606,
+    "dist": 0.005828605692071775
+   },
+   {
+    "name": "lm_inn_body",
+    "frac": 0.0034567901234567903,
+    "dist": 0.06360600896496503
+   },
+   {
+    "name": "veg_emb_wood_19_crownA",
+    "frac": 0.0034567901234567903,
+    "dist": 0.16101129662033617
+   },
+   {
+    "name": "lm_elder-house_roof",
+    "frac": 0.0032098765432098763,
+    "dist": 0.0031988134589804036
+   },
+   {
+    "name": "lm_field_11_pale22",
+    "frac": 0.0032098765432098763,
+    "dist": 0.0025834504249573997
+   },
+   {
+    "name": "lm_infill_04_body",
+    "frac": 0.002962962962962963,
+    "dist": 0.006172248538900055
+   },
+   {
+    "name": "veg_emb_screen_01_crownG",
+    "frac": 0.002962962962962963,
+    "dist": 0.1576851040785315
+   },
+   {
+    "name": "lm_field_11_pale21",
+    "frac": 0.0025925925925925925,
+    "dist": 0.0015210142203977257
+   },
+   {
+    "name": "lm_watermill_bank05",
+    "frac": 0.0024691358024691358,
+    "dist": 0.05040672329141989
+   },
+   {
+    "name": "lm_elder-house_base",
+    "frac": 0.0024691358024691358,
+    "dist": 0.0018549164663824625
+   },
+   {
+    "name": "lm_item-shop_roof",
+    "frac": 0.002345679012345679,
+    "dist": 0.1305255464737179
+   },
+   {
+    "name": "walk_e_barn__gate-court_l6",
+    "frac": 0.002345679012345679,
+    "dist": 0.004685281465215953
+   },
+   {
+    "name": "lm_field_11_pale20",
+    "frac": 0.0020987654320987655,
+    "dist": 0.35556803581821733
+   },
+   {
+    "name": "lm_dovecote_plinth",
+    "frac": 0.0020987654320987655,
+    "dist": 0.005129253561606411
+   },
+   {
+    "name": "walk_pad_barn",
+    "frac": 0.0020987654320987655,
+    "dist": 0.005480727799868745
+   },
+   {
+    "name": "walk_e_barn__gate-court_l5",
+    "frac": 0.0020987654320987655,
+    "dist": 0.006363669058851958
+   },
+   {
+    "name": "lm_item-shop_base",
+    "frac": 0.0019753086419753087,
+    "dist": 0.0034771189664698117
+   },
+   {
+    "name": "lm_barn_door",
+    "frac": 0.0019753086419753087,
+    "dist": 0.0019803638740653186
+   },
+   {
+    "name": "lm_infill_03_roof",
+    "frac": 0.001851851851851852,
+    "dist": 0.009433245232820001
+   },
+   {
+    "name": "lm_infill_09_body",
+    "frac": 0.0017283950617283952,
+    "dist": 0.004365307094508238
+   },
+   {
+    "name": "lm_dovecote_band",
+    "frac": 0.0016049382716049382,
+    "dist": 0.006504365468547066
+   },
+   {
+    "name": "walk_lm_washline-green",
+    "frac": 0.0016049382716049382,
+    "dist": 0.00788681794311699
+   },
+   {
+    "name": "walk_e_barn__gate-court_l3",
+    "frac": 0.0014814814814814814,
+    "dist": 0.00696723520414972
+   },
+   {
+    "name": "veg_emb_wood_17_crownG",
+    "frac": 0.0014814814814814814,
+    "dist": 1.118263108827083
+   },
+   {
+    "name": "lm_infill_09_roof",
+    "frac": 0.0013580246913580246,
+    "dist": 0.0076727681771724034
+   },
+   {
+    "name": "lm_hillside-cottage_body",
+    "frac": 0.0013580246913580246,
+    "dist": 0.0017631493935938867
+   },
+   {
+    "name": "lm_watermill_leat0",
+    "frac": 0.0013580246913580246,
+    "dist": 1.0028609113508933
+   },
+   {
+    "name": "lm_watermill_bank02",
+    "frac": 0.0013580246913580246,
+    "dist": 0.16940176569396018
+   },
+   {
+    "name": "walk_lm_square-plaza.054",
+    "frac": 0.0013580246913580246,
+    "dist": 0.00912953987449715
+   },
+   {
+    "name": "lm_infill_04_roof",
+    "frac": 0.0012345679012345679,
+    "dist": 0.006009886487420154
+   },
+   {
+    "name": "veg_emb_village_16_crown",
+    "frac": 0.0012345679012345679,
+    "dist": 2.1214697001453544
+   },
+   {
+    "name": "lm_infill_03_body",
+    "frac": 0.0012345679012345679,
+    "dist": 0.008594358554598294
+   },
+   {
+    "name": "lm_infill_05_body",
+    "frac": 0.0012345679012345679,
+    "dist": 0.003494132932648622
+   },
+   {
+    "name": "lm_watermill_dam",
+    "frac": 0.0012345679012345679,
+    "dist": 0.1051785481600513
+   },
+   {
+    "name": "walk_e_barn__gate-court_l4",
+    "frac": 0.0012345679012345679,
+    "dist": 0.006338536135668871
+   },
+   {
+    "name": "veg_emb_wood_15_crownG",
+    "frac": 0.0009876543209876543,
+    "dist": 0.343566690598478
+   },
+   {
+    "name": "lm_hillside-cottage_roof",
+    "frac": 0.0008641975308641976,
+    "dist": 0.006089547461977844
+   },
+   {
+    "name": "veg_emb_screen_04_crownA",
+    "frac": 0.0008641975308641976,
+    "dist": 0.06470820171491798
+   },
+   {
+    "name": "lm_infill_30_track1",
+    "frac": 0.0008641975308641976,
+    "dist": 0.005952888624045524
+   },
+   {
+    "name": "lm_infill_30_track0",
+    "frac": 0.0008641975308641976,
+    "dist": 0.004712364434331013
+   },
+   {
+    "name": "veg_emb_wood_14_trunks",
+    "frac": 0.0007407407407407407,
+    "dist": 0.06267849889744559
+   },
+   {
+    "name": "lm_market-row_stall4_canopy",
+    "frac": 0.0007407407407407407,
+    "dist": 0.13353482683405993
+   },
+   {
+    "name": "walk_lm_square-plaza.041",
+    "frac": 0.0007407407407407407,
+    "dist": 0.009137247674443572
+   },
+   {
+    "name": "walk_lm_square-plaza.043",
+    "frac": 0.0007407407407407407,
+    "dist": 0.010456031688071002
+   },
+   {
+    "name": "lm_infill_30_track3",
+    "frac": 0.0007407407407407407,
+    "dist": 0.006367156807436067
+   },
+   {
+    "name": "lm_infill_30_track2",
+    "frac": 0.0007407407407407407,
+    "dist": 0.0050214350310230525
+   },
+   {
+    "name": "(no massing within 12 m)",
+    "frac": 0.0006172839506172839,
+    "dist": 50
+   },
+   {
+    "name": "veg_emb_village_04_crown",
+    "frac": 0.0006172839506172839,
+    "dist": 0.9005984224839331
+   },
+   {
+    "name": "lm_market-row_stall5_canopy",
+    "frac": 0.0006172839506172839,
+    "dist": 1.005316883119846
+   },
+   {
+    "name": "walk_lm_square-plaza.042",
+    "frac": 0.0006172839506172839,
+    "dist": 0.6179300245211486
+   },
+   {
+    "name": "lm_infill_05_drystone07",
+    "frac": 0.0006172839506172839,
+    "dist": 0.08441663002239325
+   },
+   {
+    "name": "lm_market-row_stall2_top",
+    "frac": 0.0006172839506172839,
+    "dist": 0.1475274725901476
+   },
+   {
+    "name": "lm_watermill_bank06",
+    "frac": 0.0006172839506172839,
+    "dist": 0.006138962368879812
+   },
+   {
+    "name": "walk_lm_square-plaza.053",
+    "frac": 0.0006172839506172839,
+    "dist": 0.009183300962890684
+   },
+   {
+    "name": "walk_lm_square-plaza.055",
+    "frac": 0.0006172839506172839,
+    "dist": 0.009218975741450919
+   },
+   {
+    "name": "lm_field_10_ridge14",
+    "frac": 0.0006172839506172839,
+    "dist": 0.008051203007428077
+   },
+   {
+    "name": "emb_lamp_07_barn_post",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0018397263287567966
+   },
+   {
+    "name": "lm_field_10_ridge15",
+    "frac": 0.0006172839506172839,
+    "dist": 0.009260787360398837
+   },
+   {
+    "name": "walk_e_barn__gate-court_l2",
+    "frac": 0.0006172839506172839,
+    "dist": 0.004526804373725864
+   },
+   {
+    "name": "lm_lake-home_roof",
+    "frac": 0.0004938271604938272,
+    "dist": 0.014182955444693727
+   },
+   {
+    "name": "veg_emb_screen_01_crownA",
+    "frac": 0.0004938271604938272,
+    "dist": 0.14133475084661112
+   },
+   {
+    "name": "lm_infill_05_roof",
+    "frac": 0.0004938271604938272,
+    "dist": 0.006257323453445751
+   },
+   {
+    "name": "veg_emb_screen_04_trunks",
+    "frac": 0.0004938271604938272,
+    "dist": 0.10616808454393693
+   },
+   {
+    "name": "walk_lm_square-plaza.048",
+    "frac": 0.0004938271604938272,
+    "dist": 0.7222823906069915
+   },
+   {
+    "name": "lm_inn_base",
+    "frac": 0.0004938271604938272,
+    "dist": 0.004510379113287938
+   },
+   {
+    "name": "lm_watermill_bank07",
+    "frac": 0.0004938271604938272,
+    "dist": 0.1415182180730605
+   },
+   {
+    "name": "walk_lm_square-plaza.026",
+    "frac": 0.0004938271604938272,
+    "dist": 0.008446912277098484
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l3",
+    "frac": 0.0004938271604938272,
+    "dist": 0.011887265503734557
+   },
+   {
+    "name": "walk_pad_brook-bridge",
+    "frac": 0.0004938271604938272,
+    "dist": 0.012728459681037411
+   },
+   {
+    "name": "lm_field_11_ridge18",
+    "frac": 0.0004938271604938272,
+    "dist": 0.009296915115262734
+   },
+   {
+    "name": "veg_emb_wood_16_crownG",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0035800093080188846
+   },
+   {
+    "name": "veg_emb_village_12_crown",
+    "frac": 0.00037037037037037035,
+    "dist": 1.1560132293929781
+   },
+   {
+    "name": "veg_emb_village_06_trunk",
+    "frac": 0.00037037037037037035,
+    "dist": 0.2749515701746427
+   },
+   {
+    "name": "walk_lm_square-plaza.037",
+    "frac": 0.00037037037037037035,
+    "dist": 0.912918688734063
+   },
+   {
+    "name": "lm_infill_05_win0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.002922278387776065
+   },
+   {
+    "name": "lm_village-bell_head",
+    "frac": 0.00037037037037037035,
+    "dist": 0.01695222075554644
+   },
+   {
+    "name": "lm_village-bell_post0",
+    "frac": 0.00037037037037037035,
+    "dist": 0.021068655111105783
+   },
+   {
+    "name": "lm_market-row_stall0_canopy",
+    "frac": 0.00037037037037037035,
+    "dist": 0.033199947839637645
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_post",
+    "frac": 0.00037037037037037035,
+    "dist": 0.0016691803389174236
+   },
+   {
+    "name": "lm_pips-den_crate",
+    "frac": 0.00037037037037037035,
+    "dist": 0.00735500214245938
+   },
+   {
+    "name": "lm_pips-den_floor",
+    "frac": 0.00037037037037037035,
+    "dist": 0.003160785676216212
+   },
+   {
+    "name": "walk_lm_square-plaza.027",
+    "frac": 0.00037037037037037035,
+    "dist": 0.011174363943894742
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l4",
+    "frac": 0.00037037037037037035,
+    "dist": 0.015079254348367049
+   },
+   {
+    "name": "walk_e_pond-jetty__brook-bridge_l5",
+    "frac": 0.00037037037037037035,
+    "dist": 0.038598771772991924
+   },
+   {
+    "name": "veg_emb_village_06_crown",
+    "frac": 0.0002469135802469136,
+    "dist": 0.37075826942884227
+   },
+   {
+    "name": "lm_elder-house_chimney",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0021173227573220957
+   },
+   {
+    "name": "walk_lm_arrival-clearing",
+    "frac": 0.0002469135802469136,
+    "dist": 0.026392660918340027
+   },
+   {
+    "name": "veg_emb_village_04_trunk",
+    "frac": 0.0002469135802469136,
+    "dist": 0.8233835970499506
+   },
+   {
+    "name": "lm_infill_09_win0",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006098413994214297
+   },
+   {
+    "name": "lm_lake-home_door",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00566686584647156
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_glass",
+    "frac": 0.0002469135802469136,
+    "dist": 0.008598624075244032
+   },
+   {
+    "name": "lm_market-row_stall2_canopy",
+    "frac": 0.0002469135802469136,
+    "dist": 0.07112176757563216
+   },
+   {
+    "name": "walk_lm_square-plaza.014",
+    "frac": 0.0002469135802469136,
+    "dist": 0.385168035342085
+   },
+   {
+    "name": "lm_market-row_stall0_top",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0332129845046687
+   },
+   {
+    "name": "walk_lm_square-plaza.038",
+    "frac": 0.0002469135802469136,
+    "dist": 0.006431283734861459
+   },
+   {
+    "name": "lm_watermill_leat1",
+    "frac": 0.0002469135802469136,
+    "dist": 0.37318674201123514
+   },
+   {
+    "name": "walk_lm_square-plaza.039",
+    "frac": 0.0002469135802469136,
+    "dist": 0.00918259300346147
+   },
+   {
+    "name": "emb_lamp_07_barn_glass",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0033682362076490335
+   },
+   {
+    "name": "lm_market-row_stall4_top",
+    "frac": 0.0002469135802469136,
+    "dist": 0.14133782446681664
+   },
+   {
+    "name": "lm_market-row_stall5_top",
+    "frac": 0.0002469135802469136,
+    "dist": 0.1749394590458362
+   },
+   {
+    "name": "walk_lm_square-plaza.018",
+    "frac": 0.0002469135802469136,
+    "dist": 0.5675956857220541
+   },
+   {
+    "name": "walk_lm_square-plaza.016",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0066743891700706826
+   },
+   {
+    "name": "walk_lm_square-plaza.033",
+    "frac": 0.0002469135802469136,
+    "dist": 0.009788646640107146
+   },
+   {
+    "name": "walk_lm_square-plaza.025",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0011650832647447373
+   },
+   {
+    "name": "walk_pad_pips-den",
+    "frac": 0.0002469135802469136,
+    "dist": 0.008924206374490318
+   },
+   {
+    "name": "walk_lm_square-plaza.049",
+    "frac": 0.0002469135802469136,
+    "dist": 0.007446246271686441
+   },
+   {
+    "name": "bar_back-lane-closed_cart_bed",
+    "frac": 0.0002469135802469136,
+    "dist": 0.08470215409101792
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l10",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0036782900919972725
+   },
+   {
+    "name": "walk_lm_square-plaza.050",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0032917832228847033
+   },
+   {
+    "name": "lm_infill_30_rail120",
+    "frac": 0.0002469135802469136,
+    "dist": 0.0025487000243218172
+   },
+   {
+    "name": "veg_emb_wood_15_crownA",
+    "frac": 0.0002469135802469136,
+    "dist": 0.002193363277252541
+   },
+   {
+    "name": "veg_emb_wood_19_trunks",
+    "frac": 0.0002469135802469136,
+    "dist": 0.1871220978649803
+   },
+   {
+    "name": "veg_emb_village_05_trunk",
+    "frac": 0.0001234567901234568,
+    "dist": 0.5497471003803353
+   },
+   {
+    "name": "veg_emb_wood_02_crownG",
+    "frac": 0.0001234567901234568,
+    "dist": 0.013886446432578137
+   },
+   {
+    "name": "lm_inn_roof",
+    "frac": 0.0001234567901234568,
+    "dist": 0.008438512615525135
+   },
+   {
+    "name": "emb_ground_far",
+    "frac": 0.0001234567901234568,
+    "dist": 10.750648395912393
+   },
+   {
+    "name": "veg_emb_village_05_crown",
+    "frac": 0.0001234567901234568,
+    "dist": 0.8495904250931172
+   },
+   {
+    "name": "lm_hillside-cottage_chimney",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004285642437482126
+   },
+   {
+    "name": "walk_lm_square-plaza.029",
+    "frac": 0.0001234567901234568,
+    "dist": 2.670306455222237
+   },
+   {
+    "name": "emb_lamp_10_inn_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 1.499255657746878
+   },
+   {
+    "name": "lm_infill_09_rail111",
+    "frac": 0.0001234567901234568,
+    "dist": 0.019828328707485573
+   },
+   {
+    "name": "lm_village-bell_bell",
+    "frac": 0.0001234567901234568,
+    "dist": 0.017349547721371327
+   },
+   {
+    "name": "lm_infill_09_rail110",
+    "frac": 0.0001234567901234568,
+    "dist": 0.02175488356026712
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.000924667736944845
+   },
+   {
+    "name": "walk_e_road-gate__orchard_l3",
+    "frac": 0.0001234567901234568,
+    "dist": 0.022750252344304483
+   },
+   {
+    "name": "emb_lamp_06_elder-house_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005439955261358875
+   },
+   {
+    "name": "emb_lamp_13_square-ring0_cap",
+    "frac": 0.0001234567901234568,
+    "dist": 2.0617251660739533
+   },
+   {
+    "name": "lm_incident_01_road-gate__square-plaza_handcart",
+    "frac": 0.0001234567901234568,
+    "dist": 0.002490099391977
+   },
+   {
+    "name": "emb_lamp_06_elder-house_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0009372537233076628
+   },
+   {
+    "name": "lm_infill_05_drystone11",
+    "frac": 0.0001234567901234568,
+    "dist": 0.1629699933904732
+   },
+   {
+    "name": "lm_notice-board_face",
+    "frac": 0.0001234567901234568,
+    "dist": 0.2191729568281439
+   },
+   {
+    "name": "walk_lm_square-plaza.036",
+    "frac": 0.0001234567901234568,
+    "dist": 0.016360901786008242
+   },
+   {
+    "name": "walk_lm_square-plaza.012",
+    "frac": 0.0001234567901234568,
+    "dist": 0.016360901786008242
+   },
+   {
+    "name": "lm_lake-home_base",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00998461341619781
+   },
+   {
+    "name": "lm_infill_05_drystone09",
+    "frac": 0.0001234567901234568,
+    "dist": 0.024907681172975524
+   },
+   {
+    "name": "lm_infill_05_drystone10",
+    "frac": 0.0001234567901234568,
+    "dist": 0.048156105611683216
+   },
+   {
+    "name": "emb_lamp_08_brook-bridge_glass",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0012462416061822523
+   },
+   {
+    "name": "lm_market-row_stall2_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.4183920958563659
+   },
+   {
+    "name": "lm_watermill_trestle0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.649117582669515
+   },
+   {
+    "name": "lm_infill_05_drystone08",
+    "frac": 0.0001234567901234568,
+    "dist": 0.11366731184397627
+   },
+   {
+    "name": "lm_festival-dais_deck",
+    "frac": 0.0001234567901234568,
+    "dist": 0.17272528174602542
+   },
+   {
+    "name": "walk_lm_square-plaza.006",
+    "frac": 0.0001234567901234568,
+    "dist": 0.08613091746682677
+   },
+   {
+    "name": "lm_market-row_stall0_post0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.231697710151802
+   },
+   {
+    "name": "walk_lm_square-plaza.031",
+    "frac": 0.0001234567901234568,
+    "dist": 0.009561474355461286
+   },
+   {
+    "name": "lm_market-row_stall4_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.018742070736449137
+   },
+   {
+    "name": "walk_lm_square-plaza.024",
+    "frac": 0.0001234567901234568,
+    "dist": 0.011581954620565327
+   },
+   {
+    "name": "walk_lm_square-plaza.017",
+    "frac": 0.0001234567901234568,
+    "dist": 0.011676416323439298
+   },
+   {
+    "name": "lm_market-row_stall5_post1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.26374442968961814
+   },
+   {
+    "name": "bar_back-lane-closed_cart_rail",
+    "frac": 0.0001234567901234568,
+    "dist": 0.18347654508622827
+   },
+   {
+    "name": "lm_smokehouse_body",
+    "frac": 0.0001234567901234568,
+    "dist": 0.006975486971233735
+   },
+   {
+    "name": "lm_pips-den_plank3",
+    "frac": 0.0001234567901234568,
+    "dist": 0.010579343716556016
+   },
+   {
+    "name": "lm_pips-den_plank2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011216222591165805
+   },
+   {
+    "name": "lm_pips-den_plank0",
+    "frac": 0.0001234567901234568,
+    "dist": 0.015118221948857093
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l7",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003861736970223307
+   },
+   {
+    "name": "bar_brook-bridge_railB",
+    "frac": 0.0001234567901234568,
+    "dist": 0.007422286212805006
+   },
+   {
+    "name": "bar_brook-bridge_railA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0021410748466916575
+   },
+   {
+    "name": "walk_e_square-plaza__pond-jetty_l9",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00021256428570452424
+   },
+   {
+    "name": "walk_lm_square-plaza.056",
+    "frac": 0.0001234567901234568,
+    "dist": 0.00021415530710555686
+   },
+   {
+    "name": "walk_lm_square-plaza.019",
+    "frac": 0.0001234567901234568,
+    "dist": 0.003502389426669694
+   },
+   {
+    "name": "bar_back-lane-closed_barrel2",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0011784361811493227
+   },
+   {
+    "name": "lm_pond-weir_cheek1",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004240313323962034
+   },
+   {
+    "name": "lm_field_11_ridge19",
+    "frac": 0.0001234567901234568,
+    "dist": 0.01227965219513294
+   },
+   {
+    "name": "walk_e_square-plaza__barn_l12",
+    "frac": 0.0001234567901234568,
+    "dist": 0.012581303847287362
+   },
+   {
+    "name": "lm_field_11_pale23",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0009157674711668819
+   },
+   {
+    "name": "lm_infill_30_rail121",
+    "frac": 0.0001234567901234568,
+    "dist": 0.005966079388947776
+   },
+   {
+    "name": "lm_infill_30_rail12p",
+    "frac": 0.0001234567901234568,
+    "dist": 0.001293385727473577
+   },
+   {
+    "name": "veg_emb_wood_16_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0015635706137402394
+   },
+   {
+    "name": "veg_emb_wood_17_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.004185201937707827
+   }
+  ],
+  "distP50": 0.004918396028877279,
+  "distP90": 0.13730950105828388
+ },
+ "gatefield": {
+  "shot": "gatefield",
+  "bbox": [
+   0,
+   0,
+   1,
+   1
+  ],
+  "area": null,
+  "samples": 8100,
+  "voidFrac": 0,
+  "rows": [
+   {
+    "name": "emb_ground_valley",
+    "frac": 0.5641975308641975,
+    "dist": 0.0076440253990494155
+   },
+   {
+    "name": "walk_lm_gate-court",
+    "frac": 0.2082716049382716,
+    "dist": 0.021860308883939892
+   },
+   {
+    "name": "emb_gatewall_Egrate",
+    "frac": 0.034074074074074076,
+    "dist": 0.004413985896559593
+   },
+   {
+    "name": "emb_gatewall_E",
+    "frac": 0.023209876543209877,
+    "dist": 0.004501855770684111
+   },
+   {
+    "name": "water_emb_river",
+    "frac": 0.02185185185185185,
+    "dist": 0.0049892221937674576
+   },
+   {
+    "name": "emb_gatewall_W",
+    "frac": 0.018024691358024692,
+    "dist": 0.004575599920486118
+   },
+   {
+    "name": "walk_e_barn__gate-court_l13",
+    "frac": 0.014814814814814815,
+    "dist": 0.003794350105437486
+   },
+   {
+    "name": "emb_bluff_W0_mass0",
+    "frac": 0.014074074074074074,
+    "dist": 0.0045591691275898
+   },
+   {
+    "name": "walk_e_barn__gate-court_l14",
+    "frac": 0.011728395061728396,
+    "dist": 0.0039362317812206065
+   },
+   {
+    "name": "walk_e_barn__gate-court_l15",
+    "frac": 0.01074074074074074,
+    "dist": 0.004076573829949323
+   },
+   {
+    "name": "lm_sigil-gate_doors",
+    "frac": 0.008888888888888889,
+    "dist": 0.004452574107324618
+   },
+   {
+    "name": "emb_bluff_W1_mass0",
+    "frac": 0.008641975308641974,
+    "dist": 0.004650257640435029
+   },
+   {
+    "name": "veg_emb_wood_18_crownA",
+    "frac": 0.005679012345679012,
+    "dist": 0.8219170695951168
+   },
+   {
+    "name": "walk_e_barn__gate-court_l12",
+    "frac": 0.005555555555555556,
+    "dist": 0.003853964694755016
+   },
+   {
+    "name": "veg_emb_wood_18_crownG",
+    "frac": 0.004074074074074074,
+    "dist": 0.2815492851422077
+   },
+   {
+    "name": "lm_sigil-gate_jambR",
+    "frac": 0.003580246913580247,
+    "dist": 0.02649383497548512
+   },
+   {
+    "name": "lm_sigil-gate_jambL",
+    "frac": 0.0034567901234567903,
+    "dist": 0.02873163039037437
+   },
+   {
+    "name": "veg_emb_wood_19_crownG",
+    "frac": 0.0033333333333333335,
+    "dist": 0.2374870462752659
+   },
+   {
+    "name": "walk_e_barn__gate-court_l16",
+    "frac": 0.0032098765432098763,
+    "dist": 0.004143979844767032
+   },
+   {
+    "name": "lm_sigil-gate_plateR",
+    "frac": 0.0030864197530864196,
+    "dist": 0.11554003128449392
+   },
+   {
+    "name": "lm_sigil-gate_plateL",
+    "frac": 0.002839506172839506,
+    "dist": 0.10236015633231788
+   },
+   {
+    "name": "veg_emb_wood_16_crownA",
+    "frac": 0.0027160493827160493,
+    "dist": 3.447793995432262
+   },
+   {
+    "name": "emb_bluff_W2_mass0",
+    "frac": 0.0024691358024691358,
+    "dist": 0.003989231932976622
+   },
+   {
+    "name": "lm_forest-trailhead_stileA",
+    "frac": 0.0024691358024691358,
+    "dist": 0.005344005223649262
+   },
+   {
+    "name": "lm_forest-trailhead_stileB",
+    "frac": 0.0024691358024691358,
+    "dist": 0.0035563506897673845
+   },
+   {
+    "name": "lm_sigil-plate-e",
+    "frac": 0.001851851851851852,
+    "dist": 0.0041608170506478356
+   },
+   {
+    "name": "lm_sigil-plate-w",
+    "frac": 0.0017283950617283952,
+    "dist": 0.003815866665215495
+   },
+   {
+    "name": "emb_gategrate",
+    "frac": 0.0017283950617283952,
+    "dist": 0.005221033028651131
+   },
+   {
+    "name": "veg_emb_screen_03_crownG",
+    "frac": 0.0014814814814814814,
+    "dist": 0.053443569667318204
+   },
+   {
+    "name": "veg_emb_wood_19_crownA",
+    "frac": 0.0012345679012345679,
+    "dist": 0.1300678226495994
+   },
+   {
+    "name": "veg_emb_screen_02_crownA",
+    "frac": 0.0012345679012345679,
+    "dist": 0.07883456435795928
+   },
+   {
+    "name": "lm_sigil-plate-w_base",
+    "frac": 0.0011111111111111111,
+    "dist": 0.03823777840337423
+   },
+   {
+    "name": "lm_forest-trailhead_step",
+    "frac": 0.0008641975308641976,
+    "dist": 0.004798756170848557
+   },
+   {
+    "name": "veg_emb_wood_17_crownG",
+    "frac": 0.0007407407407407407,
+    "dist": 1.331893406996482
+   },
+   {
+    "name": "veg_emb_wood_20_crownG",
+    "frac": 0.0006172839506172839,
+    "dist": 0.00535235973201063
+   },
+   {
+    "name": "lm_sigil-plate-e_base",
+    "frac": 0.0006172839506172839,
+    "dist": 0.0030454563959821713
+   },
+   {
+    "name": "veg_emb_screen_03_crownA",
+    "frac": 0.0006172839506172839,
+    "dist": 0.07900358616310289
+   },
+   {
+    "name": "veg_emb_wood_20_crownA",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0884816772495548
+   },
+   {
+    "name": "veg_emb_wood_21_crownG",
+    "frac": 0.0004938271604938272,
+    "dist": 0.0032022016169678956
+   },
+   {
+    "name": "veg_emb_screen_02_crownG",
+    "frac": 0.0004938271604938272,
+    "dist": 0.03606983839818884
+   },
+   {
+    "name": "walk_e_barn__gate-court_l11",
+    "frac": 0.0004938271604938272,
+    "dist": 3.1653910265905654
+   },
+   {
+    "name": "emb_gatewall_Egrate_cope",
+    "frac": 0.00037037037037037035,
+    "dist": 0.004241611787468476
+   },
+   {
+    "name": "veg_emb_wood_17_crownA",
+    "frac": 0.0001234567901234568,
+    "dist": 0.11320000751456737
+   },
+   {
+    "name": "veg_emb_wood_18_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0032077634134424216
+   },
+   {
+    "name": "veg_emb_screen_02_trunks",
+    "frac": 0.0001234567901234568,
+    "dist": 0.0007486750699428057
+   }
+  ],
+  "distP50": 0.004496218984940015,
+  "distP90": 0.0090768593778634
+ }
+}
