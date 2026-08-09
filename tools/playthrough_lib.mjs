@@ -33,9 +33,10 @@
 // budget = SLACK + UI makes SLACK mean the same thing on every row. Under the old flat
 // window a heavily-presented beat was implicitly given LESS trigger slack than a bare
 // one — ch2.landing's 75 s window contained a 20 s end card, a 4.6 s banner, a 2.6 s
-// toast and two dialogue nodes, so it was really a ~40 s window wearing a 75 s label,
-// and it was the beat that failed. It is also self-maintaining: lengthening an end card
-// in story.json now lengthens the window that waits for it, with no edit here.
+// toast and thirty lines of dialogue, i.e. 67.45 s of presentation, so it was really
+// A 7.55 s WINDOW WEARING A 75 s LABEL, and it was the beat that failed. It is also
+// self-maintaining: lengthening an end card in story.json now lengthens the window that
+// waits for it, with no edit here.
 //
 // DECLARED durations are exact. The others are ESTIMATES and are marked as such — they
 // exist so that a beat with four dialogue nodes is not scored against the same trigger
@@ -45,20 +46,51 @@ export const STEP_MS = {
   toast:    (s) => (s.ms == null ? 2600 : s.ms),
   endCard:  (s) => 50 + (s.ms == null ? 16000 : s.ms) + 750,    // + fade-in + fade-out
   wait:     (s) => Math.max(0, (s || 0) * 1000),
-  dialogue: () => 5000,   // ESTIMATE: the auto-reader's pace over a node of unknown length
   pov:      () => 8000,   // ESTIMATE: a pov step loads a scene
   shot:     () => 1500,   // ESTIMATE: a cut
 };
-export function beatUiMs(beat) {
+// A DIALOGUE NODE'S LENGTH IS ALSO DECLARED DATA — story.json's own `nodes` carry the
+// lines, and `next` chains them. MEASURED, not guessed (instrument: playthrough_test
+// `--slack=-3`, which shortens every window until it expires inside the beat and then
+// reports the overrun in §G; run r4.log, quiet machine, 2026-08-09):
+//
+//   beat            lines   elapsed to the ledger write     ms/line
+//   ch1.see.poppy      11   2.7 s                              250
+//   ch1.see.mara       12   3.5 s                              290
+//   ch1.rowan          13   4.5 s                              350
+//   ch1.meet           15   19.4 s (incl. a pov step)          850
+//   ch1.hush           27   29.7 s (less its 4.65 s banner)    930
+//   ch1.pact           29   >39.7 s (less 7.65 s of toast+banner) >1100
+//
+// The spread is not noise and it is not the auto-reader, which presses every 45 ms: the
+// slow beats are the ones that introduce new cut-in portraits, and a portrait is a PNG
+// that is fetched the first time it is spoken. 1200 ms/line covers the worst measured
+// line and leaves the fast beats over-provisioned, which costs NOTHING on a green run
+// (the poll returns the moment the ledger is written) and is the entire margin on a
+// loaded one. THE OLD FLAT 60 s WINDOW GAVE ch1.hush 60 s FOR A 29.7 s BEAT — a 2x
+// slowdown was all it took, and that is exactly what a plate bake on this laptop does.
+export const DIALOGUE_LINE_MS = 1200;
+export const DIALOGUE_NODE_MS = 1500;   // the window's own open/close
+export const DIALOGUE_UNKNOWN_MS = 13500;  // a node we cannot resolve: the median 10 lines
+export function dialogueMs(nodeId, nodes) {
+  if (!nodes || !nodes[nodeId]) return DIALOGUE_UNKNOWN_MS;
+  let lines = 0, id = nodeId; const seen = new Set();
+  while (id && nodes[id] && !seen.has(id)) {
+    seen.add(id); lines += (nodes[id].lines || []).length; id = nodes[id].next;
+  }
+  return DIALOGUE_NODE_MS + lines * DIALOGUE_LINE_MS;
+}
+export function beatUiMs(beat, nodes) {
   let ms = 0;
   for (const s of (beat && beat['do']) || []) {
     if (!s || typeof s !== 'object') continue;
+    if (s.dialogue !== undefined) ms += dialogueMs(s.dialogue, nodes);
     for (const k of Object.keys(STEP_MS)) if (s[k] !== undefined) ms += STEP_MS[k](s[k]);
   }
   return ms;
 }
-export function beatBudgetMs(beat, slackMs) {
-  return (slackMs || 60000) + beatUiMs(beat);
+export function beatBudgetMs(beat, slackMs, nodes) {
+  return (slackMs || 60000) + beatUiMs(beat, nodes);
 }
 
 // ----------------------------------------------------------------- the grace --
@@ -191,36 +223,46 @@ async function selftest() {
   const head = (s) => console.log('\n== ' + s);
 
   head('A. the window is derived from the beat\'s own declared UI, and the old flat one was short');
-  // The two beats that actually failed on 2026-08-09, verbatim from story.json.
-  const HUSH = { id: 'ch1.hush', do: [{ dialogue: 'x' }, { setFlags: {} },
-    { banner: { title: 'The Hush has come to Emberbrook', ms: 4200 } }, { objective: 'y' }] };
-  const LANDING = { id: 'ch2.landing', do: [{ dialogue: 'a' }, { dialogue: 'b' }, { setFlags: {} },
-    { toast: { text: 't' } }, { banner: { ms: 4600 } },
-    { endCard: { title: 'Chapter Two', ms: 20000, lines: [1, 2, 3, 4] } }, { objective: 'z' }, { save: 1 }] };
-  const DONE = { id: 'ch1.done', do: [{ setFlags: {} }, { chapter: 2 },
-    { endCard: { ms: 15000, lines: [1, 2] } }, { banner: { ms: 4200 } }, { objective: 'z' }, { save: 1 }] };
-  ok(beatUiMs(HUSH) === 5000 + 4650, 'ch1.hush presents for 9.65 s of its window', beatUiMs(HUSH));
-  ok(beatUiMs(LANDING) === 10000 + 2600 + 5050 + 20800, 'ch2.landing presents for 38.45 s of its window', beatUiMs(LANDING));
-  ok(beatUiMs(DONE) === 15800 + 4650, 'ch1.done presents for 20.45 s of its window', beatUiMs(DONE));
-  ok(beatUiMs({ id: 'ch1.reveal', do: [{ dialogue: 'x' }, { setFlags: {} }] }) === 5000,
-     'a bare beat presents for 5 s, so it keeps essentially the whole old window');
-  // The number that says the old flat window was mislabelled.
-  ok(75000 - beatUiMs(LANDING) === 36550,
-     'ch2.landing\'s OLD 75 s window was really 36.6 s of trigger slack wearing a 75 s label');
-  ok(beatBudgetMs(LANDING, 75000) === 113450, 'the NEW window for ch2.landing is 113.4 s', beatBudgetMs(LANDING, 75000));
-  ok(beatBudgetMs({ do: [] }, 60000) === 60000, 'a beat with no `do` chain is unchanged at 60 s');
+  // THE REAL story.json, not a hand-written stand-in — the whole point is that this is
+  // shipped data, so a beat that grows a longer end card grows its own window.
+  const { readFileSync } = await import('fs');
+  const S = JSON.parse(readFileSync(new URL('../public/game/story.json', import.meta.url), 'utf8'));
+  const NODES = S.nodes || {};
+  const B = Object.fromEntries((S.beats || []).map(b => [b.id, b]));
+  const HUSH = B['ch1.hush'], LANDING = B['ch2.landing'], DONE = B['ch1.done'];
+  ok(dialogueMs('story.ch1.hush', NODES) === 1500 + 27 * 1200,
+     'ch1.hush\'s node is 27 lines -> 33.9 s of reading', dialogueMs('story.ch1.hush', NODES));
+  ok(beatUiMs(HUSH, NODES) === 33900 + 4650, 'ch1.hush presents for 38.55 s (reading + a 4.2 s banner)', beatUiMs(HUSH, NODES));
+  ok(beatUiMs(LANDING, NODES) === 7500 + 31500 + 2600 + 5050 + 20800,
+     'ch2.landing presents for 67.45 s — two nodes, a toast, a banner and a 20 s end card', beatUiMs(LANDING, NODES));
+  ok(beatUiMs(DONE, NODES) === 15800 + 4650, 'ch1.done presents for 20.45 s (no dialogue at all)', beatUiMs(DONE, NODES));
+  // THE NUMBERS THAT SAY THE OLD FLAT WINDOWS WERE MISLABELLED, and they are worse than
+  // "tight": for two beats the flat window was SHORTER THAN THE BEAT.
+  ok(60000 - beatUiMs(HUSH, NODES) === 21450,
+     'ch1.hush\'s OLD 60 s window was 21.4 s of trigger slack wearing a 60 s label');
+  ok(75000 - beatUiMs(LANDING, NODES) === 7550,
+     'ch2.landing\'s OLD 75 s window left 7.55 s of trigger slack — 67.45 s of it was the beat presenting itself');
+  ok(beatBudgetMs(LANDING, 75000, NODES) === 142450, 'the NEW window for ch2.landing is 142.5 s', beatBudgetMs(LANDING, 75000, NODES));
+  ok(beatBudgetMs({ do: [] }, 60000, NODES) === 60000, 'a beat with no `do` chain is unchanged at 60 s');
+  ok(dialogueMs('story.nope', NODES) === 13500, 'an unresolvable node falls back to a stated 13.5 s, never to zero');
 
   head('B. THE RACE — a beat still presenting when the window expires (this is the bug)');
   {
-    // The measured shape: eligible late (68 s in, under load), then 9.65 s of `do`.
-    const script = { busyFrom: 68000, ledgerAt: 68000 + 9650 };
+    // The measured shape: eligible late under load, then a `do` chain that outlasts the
+    // remaining window. Times are chosen against the DERIVED window so the case still
+    // exercises the grace once the window grew.
+    const budgetMs = beatBudgetMs(HUSH, 60000, NODES);      // 98.55 s
+    const script = { busyFrom: 90000, ledgerAt: 110000 };
     const oldIo = fakeIo(script);
-    const oldRes = await oldIo.poll('ch1.hush', 60000);                     // the OLD logic, verbatim
-    ok(oldRes === false, 'OLD: flat 60 s window -> FAIL beat ch1.hush fired  (the false red)');
+    ok(await oldIo.poll('ch1.hush', 60000) === false,
+       'OLD: flat 60 s window -> FAIL beat ch1.hush fired  (the false red, and the beat had not even started)');
+    const midIo = fakeIo(script);
+    ok(await midIo.poll('ch1.hush', budgetMs) === false,
+       'the DERIVED window alone is still not enough when the trigger is 90 s late');
     const newIo = fakeIo(script);
-    const r = await awaitBeat(newIo, 'ch1.hush', { budgetMs: beatBudgetMs(HUSH, 60000), graceMs: 30000 });
-    ok(r.fired === true, 'NEW: the derived 69.65 s window plus a bounded grace -> PASS', r);
-    ok(r.graceMs === 8000, 'NEW: and it says it needed 8.0 s of grace', r.graceMs);
+    const r = await awaitBeat(newIo, 'ch1.hush', { budgetMs, graceMs: 30000 });
+    ok(r.fired === true, 'NEW: derived window PLUS a bounded grace -> PASS', r);
+    ok(r.graceMs === 11500, 'NEW: and it says it needed 11.5 s of grace', r.graceMs);
     ok(r.why === 'grace', 'NEW: the pass is labelled as a grace pass, never silent', r.why);
   }
 
@@ -303,22 +345,20 @@ async function selftest() {
 
   head('F. NO WINDOW SHRANK — the real story.json, against the flat 60/75/90 it replaces');
   {
-    const { readFileSync } = await import('fs');
-    const S = JSON.parse(readFileSync(new URL('../public/game/story.json', import.meta.url), 'utf8'));
     // The slack the harness passes per call site, and the flat window it used to pass.
     const SLACK = { 'ch1.open': [40, 40], 'ch1.done': [75, 90], 'ch2.road': [40, 40] };
     const CH2 = (b) => b.id.startsWith('ch2.');
     let worst = null, shrank = 0;
     for (const b of S.beats || []) {
       const [slack, old] = SLACK[b.id] || (CH2(b) ? [75, 75] : [60, 60]);
-      const now = beatBudgetMs(b, slack * 1000);
+      const now = beatBudgetMs(b, slack * 1000, NODES);
       if (now < old * 1000) shrank++;
       const gain = now - old * 1000;
       if (!worst || gain > worst.gain) worst = { id: b.id, gain, now, old: old * 1000 };
     }
     ok(shrank === 0, 'every beat\'s window is >= the flat one it replaces (nothing got tighter)', shrank);
-    ok(worst.id === 'ch2.landing' && worst.gain === 38450,
-       'the biggest gain is ch2.landing: 75.0 s -> 113.5 s, and it is the beat that failed', worst);
+    ok(worst.id === 'ch2.landing' && worst.now === 142450,
+       'the biggest gain is ch2.landing: 75.0 s -> 142.5 s, and it is the beat that failed', worst);
   }
 
   head('G. --grace=0 is a real A/B — with the grace off, the race is red again');

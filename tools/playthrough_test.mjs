@@ -127,6 +127,15 @@ const START = (() => {
 // bounded here, and every millisecond of it is reported in §G. --grace=0 disables it,
 // which is the one-build A/B on a suspect green.
 const GRACE_MS = parseInt(arg('grace', '30000'), 10);
+// --slack=<sec> — INDUCE THE RACE. Overrides the trigger slack on every beat, so
+// `--slack=0` leaves each window equal to the beat's own declared UI and nothing else.
+// A machine that needs any time at all to become eligible then overruns, which is the
+// 2026-08-09 failure ON DEMAND rather than one run in three. It is the pair that proves
+// the fix in the browser and not only in playthrough_lib's selftest:
+//   --slack=0 --grace=0   the false red, reproduced (and the NOT RUN column exercised)
+//   --slack=0             the same condition, rescued and REPORTED in §G
+// Never pass it in a real gate run: it is a fault injector, not a tuning knob.
+const SLACK_OVERRIDE = argv.some(a => a.startsWith('--slack=')) ? parseFloat(arg('slack', '0')) : null;
 
 let pass = 0, fail = 0;
 const fails = [];
@@ -328,6 +337,9 @@ const BEAT_R = Object.fromEntries((STORY.beats || []).map(b => [b.id, b.r]));
 // before its ledger write. beatBudgetMs adds them to the trigger slack — see the long
 // note in playthrough_lib.
 const BEAT_DEF = Object.fromEntries((STORY.beats || []).map(b => [b.id, b]));
+// ...and the nodes its dialogue steps name, so a 27-line node is not scored as a 5-line
+// one. story.json carries both; nothing here estimates what the file already states.
+const BEAT_NODES = STORY.nodes || {};
 const reachStat = { pairs: 0, skipped: 0, ms: 0, red: 0, noAnchor: 0 };
 const graceLog = [];
 let prevAnchor = null;
@@ -388,7 +400,8 @@ async function anchor(cdp, id, fired) {
   // lists every one, because a rescued run that hides a real slowdown is the next bug.
   async function beatFired(id, slackSec) {
     const def = BEAT_DEF[id];
-    const budgetMs = beatBudgetMs(def, (slackSec || 60) * 1000);
+    const slack = SLACK_OVERRIDE == null ? (slackSec || 60) : SLACK_OVERRIDE;
+    const budgetMs = beatBudgetMs(def, slack * 1000, BEAT_NODES);
     const io = {
       now: () => Date.now(), sleep,
       poll: (i, ms) => ev(cdp, POLL_BEAT(i, ms), ms + 30000),
@@ -398,7 +411,7 @@ async function anchor(cdp, id, fired) {
     if (r.fired && r.graceMs > 0) {
       graceLog.push({ id, budgetMs, graceMs: r.graceMs });
       note(`GRACE: ${id} fired ${(r.graceMs / 1000).toFixed(1)} s PAST its ` +
-           `${(budgetMs / 1000).toFixed(1)} s window (${(beatUiMs(def) / 1000).toFixed(1)} s of that ` +
+           `${(budgetMs / 1000).toFixed(1)} s window (${(beatUiMs(def, BEAT_NODES) / 1000).toFixed(1)} s of that ` +
            `window is the beat's own declared UI). The director was still running the beat, so this ` +
            `is a PASS — but the window is too tight for this machine and that is the finding.`);
     } else if (!r.fired) {
