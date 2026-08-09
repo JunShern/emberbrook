@@ -22492,3 +22492,100 @@ the camera sits on `decide` (fov 27, show 'actor') with **both foes off frame**
 (anchors `vis:false` on every pilot site). That is the frame a player dwells on
 longest and it does not contain the enemy. Not this lane's to fix; the capture tool
 drives `shotTo('round')` explicitly and says so.
+
+## 2026-08-09 ~05:20 — DEPLOY LANE: round 15 is LIVE AND VERIFIED (29/0). Both world-arena improvements are on the site, and the DEFAULT GAME IS PROVED UNTOUCHED — on the live page, in both directions
+
+**WHY THIS DEPLOY EXISTED.** Two player-visible world-arena changes were committed and not
+live: `57ad166f` (the staging search refuses materially shadowed sites — bad sites 48.4% ->
+32.3% over a 62-site census) and `af51bcb2` + `ef0a2493` (the `decide` shot keeps the foe line
+in frame — zero-foe dwell 100% -> 0% at 12 of 12 sites). Built from a throwaway `git worktree`
+detached at `origin/migration/3d-hybrid` — **8d2ccf24** — with `EB_BUILD_CACHE` pointed at the
+main repo's warm `.build-cache`. All three commits confirmed ancestors of the built sha before
+the build ran.
+
+**THE DIFF IS ONE FILE, AND THAT WAS THE PRE-CONDITION.** `git diff --stat 0e2b48e7 8d2ccf24
+-- public/` names exactly `public/js/battle_world.js` (+505/-25). NO plate, NO bundle, NO
+`depth.png`. The other 60-odd changed paths in the source range are `docs/qa/battle-decide/`
+and `docs/qa/battle-placement/` boards plus CLAUDE.md/DAYLOG — none of which the build ships.
+
+`build-static --compress`: **392 files / 520.7 MB / 3.0 s**, the same shape as rounds 13-14.
+Three build gates green: every `.glb` binary glTF, **16 bundle GLBs byte-identical to
+`public/`**, **256 referenced paths resolve** (237 via the `.webp` rewrite). Encode cache
+**253 hit / 0 miss / 0 stored**, 319.4 MB served — **the third zero-encode deploy running, and
+the empty miss list was PREDICTED from the diff** for the same reason as rounds 13 and 14: JS
+is not an encoded artifact. GLB pass reported 16/16 from cache. Local `static_verify` **29/0**;
+`deploy-ghpages.sh dist` published **7c14a5bd** (push verified by the script; pre-flight
+printed the clean `579 MB, 393 files` — measured BEFORE the push, since `dist/.git` inflates
+it afterwards). LIVE stamp `2026-08-09T01:53:48.693Z` -> **`2026-08-09T05:14:16.071Z`**, moved
+between the 45 s and 60 s poll. No stall, no re-POST; the band now reads
+~55/60/63/72/72/73/75/~75/105 s over ten deploys. `static_verify --url
+https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**, zero failed requests, zero
+unexpected 4xx/5xx, zero console errors.
+
+**THE BYTES, WITH THE CONTROLS.** Live fetched, `sha256`, against `dist` AND against the
+round-14 deploy's own live copy (captured off the wire BEFORE the push — the only moment it
+still exists; its four shas reproduced round 14's table exactly, which is itself a check that
+the right baseline was captured):
+
+| path | live bytes | live vs dist | vs round-14 deploy |
+|---|---:|---|---|
+| `js/battle_world.js` | 136991 | **MATCH** `060352f5…` | **DIFFERS** (r14 `9fde66b8…`, 107767 B) |
+| `js/battle_stage3d.js` | 192301 | **MATCH** `cacaa9d7…` | **SAME** — control |
+| `js/battle_turnbased.js` | 118267 | **MATCH** `cdf3a1a0…` | **SAME** — control |
+| `play3d.html` | 349272 | **MATCH** `a6a6af6b…` | **SAME** — control |
+
+One DIFFERS against three SAMEs. **Both changes read OUT OF THE DEPLOYED FILE**, not assumed:
+the live `battle_world.js` carries the placement term's `sunMargin: 0.5` / `sunRay: 120` and
+its four-ray sun census (lines 757-904), and the decide shot's containment set
+`decide: { show:'actor', keep:'foes', keepFill:0.90, keepBias:0.62, keepVis:true, … }` at line
+234 with the weighted-centroid aim at 1235. **The round-14 copy contains ZERO of those five
+tokens** — the grep's own positive control, so "found in live" is not a grep that matches
+everywhere.
+
+**THE OPT-IN GATE, PROVED ON THE LIVE PAGE IN BOTH DIRECTIONS.** `?arena=world` is opt-in and
+the default game must be unchanged — an assertion this lane is not entitled to make from a
+diff, because `battle_world.js` is fetched by the default game too. So both paths were booted
+against the LIVE site and `window.BattleWorld` read out:
+
+  * **DEFAULT** (`/play3d.html?scene=emb-cine&nomusic=1`) ->
+    `{on:false, installed:false, why:"flag off — open with ?arena=world", frozen:true, keys:4}`
+    — the frozen no-op object the module's own early return builds. No patch, no listener, no
+    allocation.
+  * **`&arena=world`** -> `{on:true, installed:false, frozen:false, keys:28}` — the module
+    armed, 28 keys instead of 4. **This is the positive control**: the probe demonstrably
+    distinguishes the two states, so the DEFAULT reading is a measurement and not a silence.
+
+`static_verify`'s own screenshot agrees and was LOOKED AT: the live battle frame is the
+**default diorama** — the golden dusk stage, Vesper and both Duskpads, command menu open —
+i.e. the world arena did not engage on the default path.
+
+**THE USER-FACING POINT OF THIS ROUND.** MORNING.md's "WHAT I'D ASK YOU" item 1 is *"Try
+`?arena=world` on the live site and tell me whether one-in-three-bad-sites is tolerable."*
+Until this deploy that question could not be answered from the site — the live copy was the
+pre-placement, pre-decide module. It can be now, at
+`https://junshern.github.io/emberbrook/play3d.html?arena=world`.
+
+**GATES NOT RUN, NAMED.** `transition_test` **SKIPPED — for the eighth consecutive deploy**,
+and this time the reason is a measurement rather than a standing order. The brief was right
+that a `{geo:±2, tex:0}` red is now a real regression (168/0 deterministic as of the 02:50
+entry above; the "lucky draw" correction applies to the 08-08 report, not to the current
+number). But the machine did not clear the bar: **swap sat at 3097.81 of 4096.00 MB = 75.6%**
+on four samples spread over 100 s, above the 75% line, while 1-min load ran 2.45-4.84 with the
+5- and 15-min averages at 5.3-6.5. The swap gate failed on every sample, so the run was not
+attempted. **No number is reported because no number was obtained.** The build's
+reference-integrity advisory (`js/dialogue.js` `expr-warm.png`, `js/followers.js`
+`mochi/pose-front.png`) is the standing documented pair, unchanged; the live run's zero-404
+audit is the receipt.
+
+**A SCAR PAID AGAIN, CHEAPLY.** `cdp.mjs`'s `freePort()` is **async**, and calling it without
+`await` sent the string `[object Promise]` in as the port. The failure was diagnosed in one
+read because `findPage` does what CLAUDE.md says it must: it printed *"CDP was never reachable
+at 127.0.0.1:[object Promise]"* and separated "Chrome did not start" from "matcher wrong". An
+instrument that says which of the four worlds it is in costs one minute; one that says "no
+page found" costs twenty. `findPage` also returns the **webSocketDebuggerUrl string**, not a
+target object.
+
+Cleanup: this lane's worktree removed, scratch `dist`, the `node_modules` symlink, both live
+fetch dirs, the probe Chrome profiles and every `static-verify*.png` deleted; zero orphaned
+Chrome (`ppid 1` root check clean). The two stale worktrees from earlier sessions
+(`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
