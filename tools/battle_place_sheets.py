@@ -21,14 +21,20 @@ ap.add_argument('--cols', type=int, default=4)
 ap.add_argument('--rows', type=int, default=3)
 ap.add_argument('--cw', type=int, default=460)
 ap.add_argument('--suffix', default='')       # '' = the round shot, '-decide' = the dwell shot
+# The decide census (tools/battle_decide.mjs --mode=census) writes JPEG straight
+# out of the page, so the reader is not hard-wired to one container. The sheet
+# geometry is NOT parameterised away from its defaults on purpose: two sorts are
+# only comparable if the human looked at the same size picture.
+ap.add_argument('--ext', default='.png')
 a = ap.parse_args()
 
 src = os.path.join(ROOT, a.dir)
 out = os.path.join(ROOT, a.out)
 os.makedirs(out, exist_ok=True)
 
+E = a.ext
 names = sorted(f for f in os.listdir(src)
-               if f.endswith('.png') and (f.endswith('-decide.png') if a.suffix else not f.endswith('-decide.png')))
+               if f.endswith(E) and (f.endswith('-decide' + E) if a.suffix else not f.endswith('-decide' + E)))
 if not names:
     sys.exit('no shots in ' + src)
 
@@ -48,9 +54,9 @@ for s in range(0, len(names), per):
         x, y = c * a.cw, r * (ch + LAB)
         sheet.paste(im, (x, y + LAB))
         d.rectangle([x, y, x + a.cw - 1, y + LAB - 1], fill=(30, 30, 34))
-        d.text((x + 6, y + 5), n.replace('.png', ''), fill=(235, 235, 235))
+        d.text((x + 6, y + 5), n[:-len(E)], fill=(235, 235, 235))
         d.rectangle([x, y + LAB, x + a.cw - 1, y + LAB + ch - 1], outline=(60, 60, 66))
-    f = os.path.join(out, 'sheet%02d%s.png' % (s // per, a.suffix))
+    f = os.path.join(out, 'sheet%02d%s%s' % (s // per, a.suffix, E))
     sheet.save(f)
     made.append(f)
     print(f, len(chunk))

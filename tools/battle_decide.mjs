@@ -42,6 +42,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { freePort, killOrphans, sweepStaleProfiles } from './cdp.mjs';
+import { LIB as PLACE_LIB } from './battle_place_lib.mjs';
 
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
@@ -66,6 +67,17 @@ const SITES = arg('sites', '41,5,33,30');     // meadow, forest, crag, water (so
 // moves, nothing in public/ is touched, and the two arms differ by one
 // assignment. Same shape as --bcam / --btone / --bplace.
 const KEEP = arg('keep', null);
+// --mode=census only. `--bplace=0` sets BattleWorld.PLACE.on = false at runtime,
+// which is exactly what `?bplace=0` does through placeOn() — the sun-refusal A/B
+// as ONE BUILD, the same discipline as --keep above.
+const BPLACE = arg('bplace', null);
+// THE YAW IS PINNED, and this is not a nicety: solveArena's yaw ladder is
+// measured RELATIVE TO THE LIVE CAMERA HEADING, so two runs of one cell that
+// start at different headings can legitimately stage in different places. The
+// placement census ran with the boot heading throughout (the stage restores
+// ORBIT on destroy); `--yaw` defaults to whatever the page boots with, so both
+// arms and the round census all sit on the same heading.
+const YAW = arg('yaw', null);
 
 mkdirSync(OUT, { recursive: true });
 mkdirSync(join(OUT, 'shots'), { recursive: true });
@@ -333,6 +345,116 @@ const siteDriver = (site) => `(async () => {
 })()`;
 
 // ---------------------------------------------------------------------------
+// MODE: census — THE DECIDE FRAME AT EVERY SITE THE PLACEMENT CENSUS SORTED.
+//
+// The placement study eye-sorted 62 sites and reported 48.4% bad -> 32.3% after
+// the sun refusal. It sorted `round` PLATES. This mode photographs the SAME 62
+// landing cells at the `decide` command step so the two sorts can be laid side
+// by side, because "good staging for a wide establishing shot is good staging
+// for a 27 mm two-shot" is a HYPOTHESIS and nothing had tested it.
+//
+// EVERY CLAUSE THAT MAKES THE TWO COMPARABLE:
+//  * the same landing cell (sites.json `at`, replayed with SIM.tp — the landing
+//    walk is deterministic and independent of staging, 62/62 verified by the
+//    placement lane), the same party, the same two foes, the same seed;
+//  * the same maturity: tiers off proxy, the tone chooser landed, +1100 ms —
+//    battle_place's own ladder, to the line, so the plate is as finished here;
+//  * ORBIT.yaw PINNED before Battle.start (see YAW above);
+//  * NOTHING DRIVES THE CAMERA. battle_place had to call st.shotTo('round') by
+//    hand to photograph its frame; this one waits for the shipped `decide` to
+//    arrive and then waits out its 620 ms move. The shot that is up is the shot
+//    the shipped code put there, at the step the player is sitting in;
+//  * measured with the placement lane's OWN library (tools/battle_place_lib.mjs,
+//    moved verbatim), so silhouette / one-surface dominance / ray census /
+//    frame luminance are the same numbers computed by the same code.
+const censusDriver = (site, yaw) => `(async () => {
+  const S = ${JSON.stringify(site)};
+  const GS = window.GS, B = window.Battle, RU = window.Rules, D = window.__DEC;
+  GS.setFlags({ 'maren-joined': true });
+  const f = SIM.floors(S.at.x, S.at.z);
+  if (!f.length) return { skip: 'no floor at the census cell' };
+  SIM.tp(S.at.x, S.at.z, S.at.y); SIM.tick(3);
+  const p0 = SIM.pos();
+  const zone = SIM.zone(p0.x, p0.z) || S.zone;
+  const yawWas = +window.ORBIT.yaw.toFixed(4);
+  window.ORBIT.yaw = ${yaw};
+
+  const items = GS.data.items.items, growth = GS.data.growth;
+  const party = GS.activeParty().filter(c => ['vesper','maren'].indexOf(c.id) >= 0)
+                 .map(c => RU.derive.partyMember(growth, items, c));
+  const zd = GS.data.encounters.zones[zone] || GS.data.encounters.zones.meadow;
+  const t0 = performance.now();
+  const pr = B.start({ zone: zone, group: ['duskpad','reed-nibbler'], seed: 4242,
+                       backdrop: zd && zd.battleBackdrop }, party, { speed: 1 });
+  pr.then(()=>{}, ()=>{});
+  let st = null;
+  for (let i = 0; i < 300 && !(st = D.st()); i++) await new Promise(r => setTimeout(r, 100));
+  if (!st) return { skip: 'no stage' };
+  if (!st.world) return { skip: 'not the world stage' };
+  const f0 = st.frames;
+  for (let i = 0; i < 300; i++) {
+    const t = st.tiers();
+    if (Object.values(t).every(v => v !== 'proxy') && st.frames > f0 + 90) break;
+    await new Promise(r => setTimeout(r, 100));
+  }
+  for (let i = 0; i < 160; i++) { const tn = st.tone(); if (tn && (tn.ok || tn.why && !/waiting/.test(tn.why))) break; await new Promise(r => setTimeout(r, 100)); }
+  await new Promise(r => setTimeout(r, 1100));
+  const stageMs = performance.now() - t0;
+
+  // ---- THE COMMAND STEP, WAITED FOR AND NEVER FORCED ----------------------
+  let m = D.menu();
+  for (let i = 0; i < 400 && !(m.up && m.mode === 'cmd'); i++) { await new Promise(r => setTimeout(r, 25)); m = D.menu(); }
+  if (!(m.up && m.mode === 'cmd')) return { skip: 'the command step never arrived (menu ' + JSON.stringify(m) + ')' };
+  // and the MOVE IS NOT THE STATE: wait for the decide pose to be the live one
+  // and then wait out its 620 ms travel, so what is photographed is the frame
+  // the player sits in rather than the tail of the round shot.
+  let s0 = D.sample();
+  for (let i = 0; i < 200 && !(s0 && s0.kind === 'decide'); i++) { await new Promise(r => setTimeout(r, 25)); s0 = D.sample(); }
+  await new Promise(r => setTimeout(r, 900));
+  const samp = D.sample();
+  const shot = D.jpg(0.84);
+
+  // ---- MEASURED WITH THE PLACEMENT LANE'S OWN RULER -----------------------
+  const F = window.__PLACE.frames();
+  const sil = window.__PLACE.silhouette(F);
+  const surf = window.__PLACE.surface(F, sil.ok ? sil.mask : null);
+  if (sil.ok) delete sil.mask;
+  const rays = window.__PLACE.rays(28, 16);
+  const fl = window.__PLACE.frameL(F);
+  const site = st.site || {};
+  const plan = st.plan || {};
+  const camr = st.cam ? st.cam() : null;
+  const anchors = {};
+  for (const id of Object.keys(st.tiers())) { const a = st.anchor(id); if (a) anchors[id] = { x:+a.x.toFixed(0), y:+a.y.toFixed(0), h:+a.h.toFixed(0), vis:a.vis }; }
+  const sun = window.__PLACE.sun(plan);
+  const grd = window.__PLACE.ground(site.at || p0, 5, 1.25);
+
+  // teardown (the battle_world_probe recipe)
+  try { st.destroy(); } catch (e) {}
+  const sc = window.__EBB_SCREEN;
+  if (sc && sc.destroy) { try { sc.destroy(); } catch (e) {} }
+  window.__EBB_SCREEN = null; window.Battle.active = false;
+  document.querySelectorAll('.ebb-root').forEach(n => n.remove());
+  try { window.UILOCK && UILOCK.unlock('battle'); } catch (e) {}
+
+  return { ok: true, row: {
+      id: S.id, zone: zone, at: p0, yawWas: yawWas,
+      site: { R: site.R, d: site.d, ms: site.ms, cands: site.cands, solved: site.solved,
+              quality: site.quality || null },
+      relief: plan.relief, yawDelta: plan.yawDelta, view: plan.view || null,
+      kind: samp ? samp.kind : null,
+      pitch: camr && camr.base ? camr.base.pitch : null,
+      fov: samp ? samp.fov : null, camDist: samp ? samp.dist : null,
+      axisOk: samp ? samp.axisOk : null,
+      foesIn: samp ? samp.foesIn : null, foesAll: samp ? samp.foesAll : null,
+      foesFull: samp ? samp.foesFull : null,
+      foes: samp ? samp.foes : null, partyBoxes: samp ? samp.party : null,
+      sil: sil, surf: surf, rays: rays, ground: grd, sun: sun, frameL: fl,
+      anchors: anchors, tiers: st.tiers(), stageMs: +stageMs.toFixed(0) },
+    shot: shot };
+})()`;
+
+// ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // WHAT THE CONTAINMENT TERM COSTS, A/B'd ON ONE LIVE BATTLE. `keep` is a field
 // on the live shot row, so the two arms are one build with one assignment
@@ -445,15 +567,64 @@ function summarise(row) {
   console.log(`ready three=r${ready.three} scene=${ready.scene}`);
   console.log('battle_world: ' + JSON.stringify(await ev(cdp, INJECT, 60000)));
   await ev(cdp, LIB, 30000);
+  if (MODE === 'census') await ev(cdp, PLACE_LIB, 30000);
+  if (BPLACE != null) {
+    const v = await ev(cdp, `(() => { window.BattleWorld.PLACE.on = ${BPLACE === '0' ? 'false' : 'true'};
+      return window.BattleWorld.PLACE.on; })()`, 10000);
+    console.log('PLACE.on = ' + v);
+  }
   if (KEEP != null) {
     const k = await ev(cdp, `(() => { const r = window.BattleWorld.CAM.shots.decide;
       r.keep = ${KEEP === '0' ? 'null' : "'foes'"}; return r.keep; })()`, 10000);
     console.log('decide.keep = ' + JSON.stringify(k));
   }
 
-  const census = JSON.parse(readFileSync(join(ROOT, 'docs/qa/battle-placement/sites.json'), 'utf8')).rows;
+  // THE CENSUS IS 60 + 2: battle_place exhausted the 400 road cells in one pass
+  // (sites.json) and a second rotated pass added two more (sites-b.json). Both
+  // files together are the 62 the sort covers; reading only the first silently
+  // drops s060/s061, which is how a "census" quietly becomes a sample.
+  const census = JSON.parse(readFileSync(join(ROOT, 'docs/qa/battle-placement/sites.json'), 'utf8')).rows
+    .concat(existsSync(join(ROOT, 'docs/qa/battle-placement/sites-b.json'))
+      ? JSON.parse(readFileSync(join(ROOT, 'docs/qa/battle-placement/sites-b.json'), 'utf8')).rows : []);
   const want = SITES.split(',').map(s => parseInt(s, 10));
   const sites = want.map(i => ({ id: 's' + String(i).padStart(3, '0'), zone: census[i].zone, at: census[i].at }));
+
+  if (MODE === 'census') {
+    const yaw = YAW != null ? parseFloat(YAW)
+      : await ev(cdp, '(() => +window.ORBIT.yaw.toFixed(6))()', 10000);
+    console.log('ORBIT.yaw pinned at ' + yaw);
+    const dir = join(OUT, 'census', TAG);
+    mkdirSync(dir, { recursive: true });
+    const out = [];
+    const t0 = Date.now();
+    // --start / --limit are for smoke-testing the driver and for resuming a run;
+    // the DEFAULT IS THE WHOLE CENSUS, because a census with a default sample
+    // size is a sample.
+    const from = parseInt(arg('start', '0'), 10);
+    const lim = parseInt(arg('limit', String(census.length)), 10);
+    for (const r of census.slice(from, from + lim)) {
+      const s = { id: r.id, zone: r.zone, at: r.at };
+      process.stdout.write(`  ${s.id} (${s.zone}) ... `);
+      let res;
+      try { res = await ev(cdp, censusDriver(s, yaw), 300000); }
+      catch (e) { console.log('THREW ' + e.message); continue; }
+      if (!res || !res.ok) { console.log('skip: ' + (res && res.skip)); continue; }
+      if (res.shot) writeFileSync(join(dir, s.id + '.jpg'), Buffer.from(res.shot.split(',')[1], 'base64'));
+      out.push(res.row);
+      const w = res.row;
+      console.log(`kind=${w.kind} fov=${w.fov} foesIn=${w.foesIn}/${w.foesAll} ` +
+                  `edgeRGB=${w.sil.edgeRGB} top=${w.surf.topSurface} sky=${w.rays.skyFrac} ` +
+                  `R=${w.site.R} ${((Date.now() - t0) / 1000).toFixed(0)}s`);
+      await sleep(300);
+    }
+    const f = join(OUT, `census-${TAG}.json`);
+    writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
+      bplace: BPLACE, keep: KEEP, three: ready.three, n: out.length, of: census.length,
+      secs: +((Date.now() - t0) / 1000).toFixed(0) }, rows: out }, null, 1));
+    console.log(`\nwrote ${out.length}/${census.length} sites -> ${f}`);
+    console.log('shots -> ' + dir);
+    cdp.close(); kill(); process.exit(0);
+  }
 
   if (MODE === 'cost') {
     const out = [];
@@ -605,6 +776,96 @@ function buildBoard() {
           <td>${s.axisOk ? 'ok' : 'CROSSED'}</td><td>${rf ? rf.refusals : '&mdash;'}</td></tr>`;
       }).join('') + `</table>`;
   }
+  // ---- THE CENSUS SECTION: does the placement number transfer -------------
+  // The placement lane's 48.4% -> 32.3% was an eye-sort of `round` PLATES. This
+  // block lays the same 62 sites' `decide` frames beside them and prints the
+  // confusion matrix, because "good staging for a wide establishing shot is
+  // good staging for a 27 mm two-shot" was never tested, only assumed.
+  let censusHtml = '';
+  const cLoad = (n) => existsSync(join(OUT, n)) ? JSON.parse(readFileSync(join(OUT, n), 'utf8')) : null;
+  const pLoad = (n) => existsSync(join(ROOT, 'docs/qa/battle-placement', n))
+    ? JSON.parse(readFileSync(join(ROOT, 'docs/qa/battle-placement', n), 'utf8')) : null;
+  const cAfter = cLoad('census-after.json'), cBefore = cLoad('census-before.json');
+  const sdA = cLoad('sort-decide-q.json'), sdB = cLoad('sort-decide.json');
+  const srA = pLoad('sort-q.json'), srB = pLoad('sort.json');
+  if (cAfter && sdA && srA) {
+    const pile = (s) => (v) => (s.verdict[v] || '').split(/\s|—/)[0].trim();
+    const RA = pile(srA), RB = pile(srB), DA = pile(sdA), DB = pile(sdB);
+    const ids = Object.keys(sdA.verdict).sort();
+    const CAT = ['good', 'acceptable', 'bad'];
+    const dist = (f) => CAT.map(c => ids.filter(i => f(i) === c).length);
+    const pct = (n) => (100 * n / ids.length).toFixed(1) + '%';
+    const distRow = (lab, f) => { const d = dist(f); return `<tr><td>${lab}</td>` +
+      d.map(n => `<td>${n} <span class="dim">(${pct(n)})</span></td>`).join('') + `</tr>`; };
+    const matrix = (lab, A, B, an, bn) => {
+      let h = `<h3>${lab}</h3><table class="m wide cm"><tr><th>${an} &darr; / ${bn} &rarr;</th>` +
+        CAT.map(c => `<th>${c}</th>`).join('') + `<th>tot</th></tr>`;
+      for (const r of CAT) {
+        const row = CAT.map(c => ids.filter(i => A(i) === r && B(i) === c).length);
+        h += `<tr><th>${r}</th>` + row.map((n, j) => `<td class="${n && r !== CAT[j] ? 'off' : ''}">${n || ''}</td>`).join('') +
+             `<td>${row.reduce((a, b) => a + b, 0)}</td></tr>`;
+      }
+      const agree = ids.filter(i => A(i) === B(i)).length;
+      const flip = ids.filter(i => (A(i) === 'good' && B(i) === 'bad') || (A(i) === 'bad' && B(i) === 'good')).length;
+      h += `</table><p class="lede small">agree ${agree}/${ids.length} (${(100 * agree / ids.length).toFixed(1)}%) &middot; ` +
+           `<b>good&harr;bad reversals: ${flip}</b></p>`;
+      return h;
+    };
+    // the sites the two frames disagree about, pictured
+    const dis = ids.filter(i => RA(i) !== DA(i));
+    const gal = dis.map(i => `<figure><figcaption>${i} &middot; round <b>${RA(i)}</b> &rarr; decide <b>${DA(i)}</b></figcaption>
+      <div class="pair2"><img loading="lazy" src="../battle-placement/sites-q/${i}.jpg">
+      <img loading="lazy" src="census/after/${i}.jpg"></div></figure>`).join('');
+    // the named axes, across the four analyses
+    const ax = { 'round frame / ROUND sort': pLoad('axes.json'),
+                 'round frame / decide sort': cLoad('axes-roundframe-decidesort-after.json'),
+                 'decide frame / decide sort': cLoad('axes-decideframe-after.json') };
+    const NAMED = ['surf.topSurface', 'surf.entropy', 'sun.shadedFrac', 'rays.skyFrac',
+                   'site.d', 'sil.edgeRGB', 'view.back', 'view.seen'];
+    const axNames = Object.keys(ax).filter(k => ax[k]);
+    let axHtml = `<table class="m wide"><tr><th>axis</th>` +
+      axNames.map(k => `<th>${k}<br><span class="dim">AUC / sep</span></th>`).join('') + `</tr>`;
+    for (const a of NAMED) {
+      axHtml += `<tr><td><code>${a}</code></td>` + axNames.map(k => {
+        const r = (ax[k].axes || []).find(x => x.axis === a);
+        return r ? `<td>${r.auc.toFixed(3)} / <b class="${r.sep > 0.6 ? 'good' : (r.sep < 0.35 ? 'bad' : '')}">${r.sep.toFixed(3)}</b></td>` : `<td>&mdash;</td>`;
+      }).join('') + `</tr>`;
+    }
+    axHtml += `</table>`;
+    censusHtml = `<h2>Does the placement number transfer to this frame</h2>
+    <p class="lede">The placement lane censused 62 staged sites and eye-sorted them
+    <b>48.4% bad &rarr; 32.3%</b> after its sun refusal. It sorted <code>round</code> PLATES.
+    Here are the SAME 62 landing cells photographed at the <code>decide</code> command step
+    &mdash; same party, same foes, same seed, <code>ORBIT.yaw</code> pinned, nothing driving the
+    camera &mdash; and sorted by eye from contact sheets of the same geometry
+    (<a href="sheets-after/sheet00.jpg">sheets-after</a> / <a href="sheets-before/sheet00.jpg">sheets-before</a>),
+    before any number was opened. Method and per-site reasons: <code>sort-decide{,-q}.json</code>.</p>
+    <table class="m wide"><tr><th>sort</th><th>good</th><th>acceptable</th><th>bad</th></tr>
+      ${distRow('round &middot; before the sun refusal', RB)}
+      ${distRow('round &middot; SHIPPED', RA)}
+      ${distRow('decide &middot; before the sun refusal', DB)}
+      ${distRow('decide &middot; SHIPPED', DA)}
+    </table>
+    <p class="lede">Read the last two rows, not the first two: <b>the frame the player lives in is
+    ${pct(dist(DA)[2])} bad on the shipped build, and it was ${pct(dist(DB)[2])} bad before the sun
+    refusal.</b> The refusal is worth far less here than the round headline says (&minus;3.2 points of
+    bad, against &minus;16.1 on the round plates) &mdash; but it MOVES SITES UP: good 14.5% &rarr; 30.6%.</p>
+    ${matrix('Round vs decide, on the shipped build', RA, DA, 'round', 'decide')}
+    ${matrix('Round vs decide, before the sun refusal', RB, DB, 'round', 'decide')}
+    ${matrix('What the sun refusal did to the decide frame', DB, DA, 'before', 'after')}
+    <h3>Which axes still separate</h3>
+    <p class="lede">Same instrument (<code>tools/battle_place_stats.py</code>), same axes, three
+    labellings. <code>sep</code> is |AUC&minus;0.5|&times;2, so it is direction-free; below 0.35 is
+    noise. The decide-frame column re-measures every frame axis ON the decide frame with the placement
+    lane's own library (<code>tools/battle_place_lib.mjs</code>, moved verbatim so the ruler is
+    literally the same object).</p>
+    ${axHtml}
+    <h3>The ${dis.length} sites the two frames disagree about</h3>
+    <p class="lede">Left: the <code>round</code> plate the placement lane sorted. Right: the
+    <code>decide</code> frame at the same site on the same build.</p>
+    <div class="gal">${gal}</div>`;
+  }
+
   let openHtml = '';
   if (before && after) {
     const p = (b) => b.summary.map(s => s.cost.firstFrameMs).sort((x, y) => x - y);
@@ -632,6 +893,15 @@ table.m.wide{max-width:760px;margin:10px 0 4px}
  table.m td{padding:2px 14px 2px 0;font-variant-numeric:tabular-nums}
  .bad{color:#ff8b7a;font-weight:600}.good{color:#7fd39b;font-weight:600}
  code{background:#232833;padding:1px 5px;border-radius:3px}
+ h3{font-size:13px;margin:18px 0 6px;color:#c3cede;letter-spacing:.03em}
+ .dim{color:#6f7b8e;font-weight:400}
+ p.lede.small{font-size:12px;margin-top:4px}
+ table.m.cm td{text-align:right;padding-right:18px;min-width:64px}
+ table.m.cm td.off{color:#e8c07d}
+ table.m.cm th{padding-right:18px}
+ .gal{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ .pair2{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+ a{color:#8fb5ff}
 </style>
 <h1>The frame the player chooses in</h1>
 <p class="lede">A real battle at four census sites, one per encounter zone. Nothing drives the camera:
@@ -640,6 +910,7 @@ battle_turnbased's own <code>.ebb-cmds.idle</code> class. <b>Foes in frame</b> i
 Box3 projected through the live camera and intersected with the canvas &mdash; in frame, not visible.
 <b>Zero-foe dwell</b> is the fraction of sampled command-step frames containing no living foe at all.</p>
 <p class="lede">before: ${hdr(before)}<br>after: ${hdr(after)}</p>
+${censusHtml}
 ${rowsHtml}
 ${costHtml}
 ${openHtml}
