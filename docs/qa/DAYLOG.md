@@ -22845,3 +22845,109 @@ own accounting gives them one site each way (s004 under, s053 better).
 RATER BOUND RESPECTED: no eye-sort percentage is claimed here. Two raters on these same frames differ
 by 9.7 points of bad, so the evidence offered is the objective counts — bodies under panels, foes in
 frame, frame-diff reproducibility — and a look at every frame that moved.
+
+---
+
+## 2026-08-09 ~07:50 — DEPLOY LANE: round 16 is LIVE AND VERIFIED (29/0). The safe rect and the seeded tone phase are on the site; TWO files moved, and `ambient.js` moving is proved inert in the default game
+
+**WHY THIS DEPLOY EXISTED.** `a824a739` + `e0b3b1f2` + `4cbbdaf6` were committed and not live:
+the `decide` shot's SAFE RECT (the foe line kept clear of the turn-order and command windows,
+the rect derived live from those DOM nodes rather than hardcoded — bodies >=10% under a panel
+**21 -> 4**, >=25% **8 -> 1**, >=50% **3 -> 0** across the 62-site census) and the TONAL CHOOSER
+MADE DETERMINISTIC (idle phase was `Math.random() * 2` per battle, so the silhouette TONE scored
+was a fresh draw each time; now hash-derived, pinned during the probe and restored — two
+independent full censuses, pitch identical 62/62, site identical 62/62). Built from a throwaway
+`git worktree` detached at `origin/migration/3d-hybrid` — **4cbbdaf62405046c2a2c04a4a205c8f2dfe1dc4a**
+— `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`. All three commits confirmed
+ancestors of the built sha before the build ran.
+
+**THE DIFF IS TWO FILES, AND THE SECOND ONE IS THE INTERESTING ONE.** `git diff --stat 8d2ccf24
+4cbbdaf6 -- public/` names exactly `public/js/battle_world.js` (+176/-1) and
+`public/js/ambient.js` (**+15/-0**). NO plate, NO bundle, NO `depth.png`. The other changed paths
+in the source range are `docs/qa/battle-decide/` boards plus CLAUDE.md/DAYLOG, none of which the
+build ships.
+
+`build-static --compress`: **392 files / 520.7 MB / 3.3 s**, the same shape as rounds 13-15.
+Three build gates green: every `.glb` binary glTF, **16 bundle GLBs byte-identical to `public/`**,
+**256 referenced paths resolve** (237 via the `.webp` rewrite). Encode cache **253 hit / 0 miss /
+0 stored**, 319.4 MB served — **the fourth zero-encode deploy running, and the empty miss list was
+PREDICTED from the diff** for the same reason as rounds 13-15: JS is not an encoded artifact.
+GLB pass 16/16 from cache. Local `static_verify` **29/0**; `deploy-ghpages.sh dist` published
+**8744fd471480111c8b79b6ee94e535af6c5f35b1** (push verified by the script; pre-flight printed the
+clean `579 MB, 393 files` — measured BEFORE the push, since `dist/.git` inflates it afterwards).
+LIVE stamp `2026-08-09T05:14:16.071Z` -> **`2026-08-09T07:47:26.515Z`**, moved between the 60 s and
+75 s poll. No stall, no re-POST; the band now reads ~55/60/63/72/72/73/75/75/~75/105 s over eleven
+deploys. `static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**, zero
+failed requests, zero unexpected 4xx/5xx, zero console errors.
+
+**THE BYTES, WITH THE CONTROLS.** Live fetched, `sha256`, against `dist` AND against the round-15
+deploy's own live copy (captured off the wire BEFORE the push — the only moment it still exists;
+its five shas reproduced round 15's table exactly, which is itself the check that the right
+baseline was captured):
+
+| path | live bytes | live vs dist | vs round-15 deploy |
+|---|---:|---|---|
+| `js/battle_world.js` | 147228 | **MATCH** `0d794b89…` | **DIFFERS** (r15 `060352f5…`, 136991 B) |
+| `js/ambient.js` | 37121 | **MATCH** `7a4c9bf9…` | **DIFFERS** (r15 `ca66eddd…`, 36192 B) |
+| `js/battle_stage3d.js` | 192301 | **MATCH** `cacaa9d7…` | **SAME** — control |
+| `js/battle_turnbased.js` | 118267 | **MATCH** `cdf3a1a0…` | **SAME** — control |
+| `play3d.html` | 349272 | **MATCH** `a6a6af6b…` | **SAME** — control |
+
+Two DIFFER against three SAMEs. **Both changes read OUT OF THE DEPLOYED FILE**, not assumed:
+`safeRect` appears 4x in the live `battle_world.js` and **0x in the round-15 copy** (the grep's own
+positive control), and the tone fix is legible as a REPLACEMENT rather than an addition — r15's
+live code carried `b.actions.idle.time = Math.random() * 2` at line 1484; r16 carries
+`b.phase = idlePhase(b.id)` at line 1607, with `idlePhase` defined at 1579 and **0 occurrences in
+r15**. The one surviving `Math.random() * 2` match in r16 is at line 1597, inside the new comment
+that names what it used to be — checked, not counted.
+
+**`ambient.js` SHIPS IN THE DEFAULT GAME, SO "INERT" WAS PROVED, NOT ASSERTED.** Unlike
+`battle_world.js`, `ambient.js` is not behind the flag — it runs on every page. Three measurements,
+not one argument:
+  1. **`15 insertions, 0 deletions`** (`git diff --numstat`). Not one existing line is removed or
+     modified, and every added non-comment line sits INSIDE the returned object literal
+     (`hide: function (on) { … }`) — no new top-level statement, so nothing runs at module load.
+  2. **Caller census over the SHIPPED TREE**: `grep -rl 'Ambient\.hide' dist/` returns exactly one
+     file, `js/battle_world.js`, at two lines (2100, 2154) — both inside the TONE probe, which the
+     flag-off early return makes unreachable. A method nobody calls cannot change a frame.
+  3. On the LIVE page the default arm reports `ambientHasHide:true` — so the method is genuinely
+     there and the "no caller" finding is about reachability, not about a missing symbol.
+
+**THE OPT-IN GATE, PROVED ON THE LIVE PAGE IN BOTH DIRECTIONS.** Both paths booted against the LIVE
+site, `window.BattleWorld` read out:
+
+  * **DEFAULT** (`/play3d.html?scene=emb-cine&nomusic=1`) ->
+    `{on:false, installed:false, why:"flag off — open with ?arena=world", frozen:true, keys:4}` —
+    the frozen no-op object the module's own early return builds (battle_world.js:99), byte-for-byte
+    the same reading round 15 got.
+  * **`&arena=world`** -> `{on:true, installed:false, frozen:false, keys:28}` — armed, 28 keys
+    instead of 4. **The positive control**: the probe demonstrably distinguishes the two states, so
+    the DEFAULT reading is a measurement and not a silence.
+
+`static_verify`'s own screenshot agrees and was LOOKED AT: the live battle frame is the **default
+diorama** — golden dusk stage, Vesper and both Duskpads, command menu and turn-order panels up —
+i.e. the world arena did not engage on the default path.
+
+**A SCAR PAID, AND IT IS A NEW ONE.** The both-ways probe died first time on
+`Runtime.evaluate -> {"code":-32000,"message":"Execution context was destroyed."}`. The game page
+NAVIGATES ONCE after `findPage` matches it, so the target found is stale by the time the expression
+runs. The fix is not a longer timeout but a RE-FIND: settle, then `findPage` again and re-evaluate,
+up to six attempts. **A destroyed context is a stale target, not a failed read** — and a probe that
+reports the page's state must prove it attached to the page that survived. (`freePort()` is async;
+awaited, per the round-15 entry.)
+
+**GATES NOT RUN, NAMED.** `transition_test` **SKIPPED — for the tenth consecutive deploy**, on the
+measurement rather than the standing order. It is 168/0 deterministic as of the 02:50 entry and the
+authoring lane ran it green on this exact change, but the machine did not clear the bar: **swap sat
+at 3097.81 of 4096.00 MB = 75.63%** on four samples over ~50 s, above the 75% line, with 1-min load
+6.74-10.16 against 5-/15-min averages of 6.8-6.1. The swap gate failed on every sample, so the run
+was not attempted. **No number is reported because no number was obtained.** The build's
+reference-integrity advisory (`js/dialogue.js` `expr-warm.png`, `js/followers.js`
+`mochi/pose-front.png`) is the standing documented pair, unchanged; the live run's zero-404 audit is
+the receipt.
+
+Cleanup: this lane's worktree removed, scratch `dist`, both `node_modules` symlinks and every
+`static-verify*.png` deleted; zero orphaned Chrome (`ppid 1` root check clean, `pgrep -if arenaprobe`
+empty). The `ps | grep` false positive fired again exactly as cdp.mjs's comment predicts — the two
+"matches" were the SHELL carrying the pattern in its own command line. The two stale worktrees from
+earlier sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
