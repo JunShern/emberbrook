@@ -1,0 +1,4076 @@
+{
+ "meta": {
+  "when": "2026-08-09T08:27:54.440Z",
+  "yaw": -1.4869,
+  "raw": false,
+  "reps": 1,
+  "n": 62,
+  "secs": 14
+ },
+ "rows": [
+  {
+   "id": "s000",
+   "zone": "water",
+   "off": {
+    "x": -33.834,
+    "z": 14.61,
+    "R": 13,
+    "ms": 50.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 1,
+     "incR": 13,
+     "litOf": [
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -33.834,
+    "z": 14.61,
+    "R": 13,
+    "ms": 57,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 1,
+     "incR": 13,
+     "litOf": [
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.3141,
+      "top": 0.3141,
+      "moved": false,
+      "scored": 1,
+      "tops": [
+       0.3141
+      ],
+      "ms": 19,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s001",
+   "zone": "forest",
+   "off": {
+    "x": 10.62,
+    "z": -21.88,
+    "R": 0,
+    "ms": 24,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 14.156,
+    "z": -18.344,
+    "R": 5,
+    "ms": 70.2,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.3674,
+      "top": 0.2384,
+      "moved": true,
+      "scored": 6,
+      "tops": [
+       0.3674,
+       0.3446,
+       0.2384,
+       0.2817,
+       0.3404,
+       0.663
+      ],
+      "ms": 47,
+      "fromR": 0,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s002",
+   "zone": "forest",
+   "off": {
+    "x": -72.537,
+    "z": 51.277,
+    "R": 8,
+    "ms": 266.2,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 1,
+     "moved": true,
+     "choices": 5,
+     "incR": 5,
+     "litOf": [
+      0.25,
+      0.5,
+      0,
+      0.75,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -72.537,
+    "z": 51.277,
+    "R": 8,
+    "ms": 280.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 1,
+     "moved": true,
+     "choices": 5,
+     "incR": 5,
+     "litOf": [
+      0.25,
+      0.5,
+      0,
+      0.75,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1977,
+      "top": 0.1977,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 16,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s003",
+   "zone": "water",
+   "off": {
+    "x": 53.344,
+    "z": -45.416,
+    "R": 0,
+    "ms": 34.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 53.344,
+    "z": -45.416,
+    "R": 0,
+    "ms": 54,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1841,
+      "top": 0.1841,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 20,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s004",
+   "zone": "crag",
+   "off": {
+    "x": 46.451,
+    "z": -33.12,
+    "R": 5,
+    "ms": 119.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 5,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0.5,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 46.451,
+    "z": -33.12,
+    "R": 5,
+    "ms": 131.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 5,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0.5,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2019,
+      "top": 0.2019,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 13,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s005",
+   "zone": "forest",
+   "off": {
+    "x": -61.656,
+    "z": 70.416,
+    "R": 0,
+    "ms": 26.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      0.75
+     ]
+    }
+   },
+   "on": {
+    "x": -61.656,
+    "z": 70.416,
+    "R": 0,
+    "ms": 95.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0.75,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0.5,
+      0.75
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1078,
+      "top": 0.1078,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 18,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s006",
+   "zone": "crag",
+   "off": {
+    "x": 29.584,
+    "z": -30.416,
+    "R": 0,
+    "ms": 22.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 29.584,
+    "z": -30.416,
+    "R": 0,
+    "ms": 34.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.188,
+      "top": 0.188,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 12,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s007",
+   "zone": "meadow",
+   "off": {
+    "x": -45.62,
+    "z": 35.62,
+    "R": 5,
+    "ms": 337.2,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5
+     ]
+    }
+   },
+   "on": {
+    "x": -45.62,
+    "z": 35.62,
+    "R": 5,
+    "ms": 357.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2198,
+      "top": 0.2198,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 11,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s008",
+   "zone": "crag",
+   "off": {
+    "x": 63.12,
+    "z": -40.62,
+    "R": 0,
+    "ms": 6.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": 63.12,
+    "z": -40.62,
+    "R": 0,
+    "ms": 73.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2303,
+      "top": 0.2303,
+      "moved": false,
+      "scored": 5,
+      "tops": [
+       0.2303,
+       0.1991,
+       0.1717,
+       0.2169,
+       0.2258
+      ],
+      "ms": 49,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s009",
+   "zone": "forest",
+   "off": {
+    "x": -60.62,
+    "z": 63.12,
+    "R": 0,
+    "ms": 6.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      0.75
+     ]
+    }
+   },
+   "on": {
+    "x": -60.62,
+    "z": 63.12,
+    "R": 0,
+    "ms": 210.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0.75,
+      1,
+      0.5,
+      0.75,
+      0.75,
+      0.25,
+      1,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1046,
+      "top": 0.1046,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 26,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s010",
+   "zone": "meadow",
+   "off": {
+    "x": -3.344,
+    "z": 7.916,
+    "R": 5,
+    "ms": 6.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -3.344,
+    "z": 7.916,
+    "R": 5,
+    "ms": 48.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      1,
+      1,
+      0.75,
+      0.25,
+      0,
+      0,
+      0,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1807,
+      "top": 0.1807,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 13,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s011",
+   "zone": "meadow",
+   "off": {
+    "x": 44.156,
+    "z": -32.916,
+    "R": 5,
+    "ms": 20.2,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": 34.963,
+    "z": -23.723,
+    "R": 8,
+    "ms": 63.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      1,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.3189,
+      "top": 0.1821,
+      "moved": true,
+      "scored": 3,
+      "tops": [
+       0.3189,
+       0.1988,
+       0.1821
+      ],
+      "ms": 31,
+      "fromR": 5,
+      "incLit": 1,
+      "lit": 0.5
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s012",
+   "zone": "forest",
+   "off": {
+    "x": -48.549,
+    "z": 49.38,
+    "R": 5,
+    "ms": 321.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.5
+     ]
+    }
+   },
+   "on": {
+    "x": -55.62,
+    "z": 49.38,
+    "R": 5,
+    "ms": 346.5,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2273,
+      "top": 0.1649,
+      "moved": true,
+      "scored": 2,
+      "tops": [
+       0.2273,
+       0.1649
+      ],
+      "ms": 25,
+      "fromR": 5,
+      "incLit": 0.5,
+      "lit": 0.5
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s013",
+   "zone": "meadow",
+   "off": {
+    "x": -19.38,
+    "z": 9.38,
+    "R": 0,
+    "ms": 32.5,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -19.38,
+    "z": 14.38,
+    "R": 5,
+    "ms": 87.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.239,
+      "top": 0.1563,
+      "moved": true,
+      "scored": 8,
+      "tops": [
+       0.239,
+       0.1865,
+       0.2118,
+       0.1563,
+       0.1588,
+       0.3469,
+       0.306,
+       0.2144
+      ],
+      "ms": 55,
+      "fromR": 0,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s014",
+   "zone": "meadow",
+   "off": {
+    "x": 39.38,
+    "z": -33.12,
+    "R": 5,
+    "ms": 32.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.25,
+      0.25,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 39.38,
+    "z": -33.12,
+    "R": 5,
+    "ms": 46.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.25,
+      0.25,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1695,
+      "top": 0.1695,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 15,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s015",
+   "zone": "water",
+   "off": {
+    "x": -53.344,
+    "z": 51.656,
+    "R": 5,
+    "ms": 201.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 5,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -53.344,
+    "z": 51.656,
+    "R": 5,
+    "ms": 353.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 5,
+     "litOf": [
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.0965,
+      "top": 0.0965,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 25,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s016",
+   "zone": "forest",
+   "off": {
+    "x": 31.88,
+    "z": -21.88,
+    "R": 0,
+    "ms": 29.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.25,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0.5,
+      0.5,
+      0.25,
+      0,
+      0,
+      0,
+      0,
+      0.5
+     ]
+    }
+   },
+   "on": {
+    "x": 31.88,
+    "z": -21.88,
+    "R": 0,
+    "ms": 47.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.25,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0.5,
+      0.5,
+      0.25,
+      0,
+      0,
+      0,
+      0,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1572,
+      "top": 0.1572,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 18,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s017",
+   "zone": "meadow",
+   "off": {
+    "x": -8.12,
+    "z": 10.62,
+    "R": 5,
+    "ms": 28.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0.5
+     ]
+    }
+   },
+   "on": {
+    "x": -8.12,
+    "z": 10.62,
+    "R": 5,
+    "ms": 39.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1283,
+      "top": 0.1283,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 12,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s018",
+   "zone": "crag",
+   "off": {
+    "x": 57.916,
+    "z": -35.844,
+    "R": 0,
+    "ms": 4.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": 57.916,
+    "z": -35.844,
+    "R": 0,
+    "ms": 63,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2352,
+      "top": 0.2352,
+      "moved": false,
+      "scored": 5,
+      "tops": [
+       0.2352,
+       0.2373,
+       0.1842,
+       0.1837,
+       0.2564
+      ],
+      "ms": 43,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s019",
+   "zone": "meadow",
+   "off": {
+    "x": -3.12,
+    "z": 4.38,
+    "R": 5,
+    "ms": 76.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0.25,
+      0.5,
+      0.25,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -3.12,
+    "z": 4.38,
+    "R": 5,
+    "ms": 91.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0.25,
+      0.5,
+      0.25,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1622,
+      "top": 0.1622,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 15,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s020",
+   "zone": "meadow",
+   "off": {
+    "x": 19.584,
+    "z": -24.156,
+    "R": 0,
+    "ms": 28.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 19.584,
+    "z": -19.156,
+    "R": 5,
+    "ms": 76.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.3907,
+      "top": 0.1652,
+      "moved": true,
+      "scored": 6,
+      "tops": [
+       0.3907,
+       0.191,
+       0.1677,
+       0.1652,
+       0.2849,
+       0.4725
+      ],
+      "ms": 48,
+      "fromR": 0,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s021",
+   "zone": "meadow",
+   "off": {
+    "x": -25.844,
+    "z": 13.344,
+    "R": 0,
+    "ms": 36.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -25.844,
+    "z": 13.344,
+    "R": 0,
+    "ms": 53.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1545,
+      "top": 0.1545,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 17,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s022",
+   "zone": "forest",
+   "off": {
+    "x": -58.12,
+    "z": 43.12,
+    "R": 0,
+    "ms": 331.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.25,
+     "moved": false,
+     "choices": 3,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0.5,
+      0.5
+     ]
+    }
+   },
+   "on": {
+    "x": -58.12,
+    "z": 43.12,
+    "R": 0,
+    "ms": 344.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.25,
+     "moved": false,
+     "choices": 3,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0.5,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2152,
+      "top": 0.2152,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 15,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s023",
+   "zone": "forest",
+   "off": {
+    "x": 22.916,
+    "z": -18.344,
+    "R": 0,
+    "ms": 106,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 27.916,
+    "z": -18.344,
+    "R": 5,
+    "ms": 169,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2859,
+      "top": 0.141,
+      "moved": true,
+      "scored": 8,
+      "tops": [
+       0.2859,
+       0.141,
+       0.2189,
+       0.5304,
+       0.2302,
+       0.2997,
+       0.2585,
+       0.1563
+      ],
+      "ms": 64,
+      "fromR": 0,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s024",
+   "zone": "forest",
+   "off": {
+    "x": 4.38,
+    "z": -6.88,
+    "R": 5,
+    "ms": 268,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 2.916,
+    "z": -10.416,
+    "R": 5,
+    "ms": 298.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 4,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2895,
+      "top": 0.2234,
+      "moved": true,
+      "scored": 4,
+      "tops": [
+       0.2895,
+       0.2234,
+       0.2833,
+       0.2267
+      ],
+      "ms": 38,
+      "fromR": 5,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s025",
+   "zone": "forest",
+   "off": {
+    "x": -67.916,
+    "z": 52.916,
+    "R": 0,
+    "ms": 15.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      0.75
+     ]
+    }
+   },
+   "on": {
+    "x": -67.916,
+    "z": 52.916,
+    "R": 0,
+    "ms": 190.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0.75,
+      0.5,
+      1,
+      1,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1332,
+      "top": 0.1332,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 25,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s026",
+   "zone": "meadow",
+   "off": {
+    "x": -65.62,
+    "z": 58.12,
+    "R": 0,
+    "ms": 7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -65.62,
+    "z": 58.12,
+    "R": 0,
+    "ms": 122.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      1,
+      1,
+      0.5,
+      0.75,
+      0.75,
+      1,
+      1,
+      0.25
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1814,
+      "top": 0.1814,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 15,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s027",
+   "zone": "crag",
+   "off": {
+    "x": -52.084,
+    "z": 32.916,
+    "R": 5,
+    "ms": 244.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -49.963,
+    "z": 35.037,
+    "R": 8,
+    "ms": 267.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.5643,
+      "top": 0.4657,
+      "moved": true,
+      "scored": 2,
+      "tops": [
+       0.5643,
+       0.4657
+      ],
+      "ms": 25,
+      "fromR": 5,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s028",
+   "zone": "meadow",
+   "off": {
+    "x": -36.656,
+    "z": 21.656,
+    "R": 5,
+    "ms": 30.2,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.75,
+     "moved": true,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.25,
+      0.75,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -36.656,
+    "z": 21.656,
+    "R": 5,
+    "ms": 49.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.75,
+     "moved": true,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.25,
+      0.75,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1981,
+      "top": 0.1981,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 19,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s029",
+   "zone": "water",
+   "off": {
+    "x": -57.537,
+    "z": 61.277,
+    "R": 8,
+    "ms": 194.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 1,
+     "moved": true,
+     "choices": 2,
+     "incR": 8,
+     "litOf": [
+      0,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -57.537,
+    "z": 61.277,
+    "R": 8,
+    "ms": 315.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 8,
+     "litOf": [
+      0,
+      1,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1913,
+      "top": 0.1913,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 17,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s030",
+   "zone": "water",
+   "off": {
+    "x": -45.62,
+    "z": 25.62,
+    "R": 0,
+    "ms": 43.2,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 3,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0,
+      0.25
+     ]
+    }
+   },
+   "on": {
+    "x": -45.62,
+    "z": 25.62,
+    "R": 0,
+    "ms": 61.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 3,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0,
+      0.25
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1486,
+      "top": 0.1486,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 18,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "off": {
+    "x": -54.584,
+    "z": 69.156,
+    "R": 0,
+    "ms": 10.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -54.584,
+    "z": 69.156,
+    "R": 0,
+    "ms": 172.5,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      1,
+      1,
+      1,
+      1,
+      0.75,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1159,
+      "top": 0.1159,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 19,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s032",
+   "zone": "water",
+   "off": {
+    "x": 53.12,
+    "z": -50.62,
+    "R": 5,
+    "ms": 140.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 53.12,
+    "z": -50.62,
+    "R": 5,
+    "ms": 156.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1437,
+      "top": 0.1437,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 18,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "off": {
+    "x": -57.691,
+    "z": 17.309,
+    "R": 5,
+    "ms": 18.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.75,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -57.691,
+    "z": 17.309,
+    "R": 5,
+    "ms": 47,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 6,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.75,
+      1,
+      1,
+      1,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1455,
+      "top": 0.1455,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 15,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s034",
+   "zone": "meadow",
+   "off": {
+    "x": -61.656,
+    "z": 80.416,
+    "R": 0,
+    "ms": 2.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -61.656,
+    "z": 75.416,
+    "R": 5,
+    "ms": 84.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.3329,
+      "top": 0.2249,
+      "moved": true,
+      "scored": 8,
+      "tops": [
+       0.3329,
+       0.3154,
+       0.4406,
+       0.4977,
+       0.365,
+       0.3146,
+       0.2503,
+       0.2249
+      ],
+      "ms": 57,
+      "fromR": 0,
+      "incLit": 1,
+      "lit": 1
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s035",
+   "zone": "crag",
+   "off": {
+    "x": 0.62,
+    "z": -14.38,
+    "R": 0,
+    "ms": 38.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 4.156,
+    "z": -10.844,
+    "R": 5,
+    "ms": 82.2,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.5503,
+      "top": 0.2592,
+      "moved": true,
+      "scored": 6,
+      "tops": [
+       0.5503,
+       0.2644,
+       0.2592,
+       0.2852,
+       0.5434,
+       0.5004
+      ],
+      "ms": 44,
+      "fromR": 0,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s036",
+   "zone": "forest",
+   "off": {
+    "x": -14.38,
+    "z": 16.88,
+    "R": 0,
+    "ms": 22,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.25,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0,
+      0,
+      0,
+      0.5
+     ]
+    }
+   },
+   "on": {
+    "x": -14.38,
+    "z": 16.88,
+    "R": 0,
+    "ms": 37,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.25,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0,
+      0,
+      0,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2189,
+      "top": 0.2189,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 16,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s037",
+   "zone": "meadow",
+   "off": {
+    "x": -6.88,
+    "z": 5.62,
+    "R": 5,
+    "ms": 45.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -6.88,
+    "z": 5.62,
+    "R": 5,
+    "ms": 61,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1245,
+      "top": 0.1245,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 15,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s038",
+   "zone": "crag",
+   "off": {
+    "x": 48.344,
+    "z": -34.584,
+    "R": 5,
+    "ms": 46.5,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.75,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0.75
+     ]
+    }
+   },
+   "on": {
+    "x": 48.344,
+    "z": -39.584,
+    "R": 0,
+    "ms": 71.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 0.75,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0.25,
+      0.75
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2266,
+      "top": 0.1572,
+      "moved": true,
+      "scored": 2,
+      "tops": [
+       0.2266,
+       0.1572
+      ],
+      "ms": 25,
+      "fromR": 5,
+      "incLit": 0.75,
+      "lit": 0.25
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s039",
+   "zone": "meadow",
+   "off": {
+    "x": -58.12,
+    "z": 19.38,
+    "R": 5,
+    "ms": 44.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 4,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0,
+      0.75,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -58.12,
+    "z": 19.38,
+    "R": 5,
+    "ms": 67.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0,
+      0.75,
+      1,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1297,
+      "top": 0.1297,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 18,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s040",
+   "zone": "crag",
+   "off": {
+    "x": 66.656,
+    "z": -47.916,
+    "R": 0,
+    "ms": 24.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 66.656,
+    "z": -47.916,
+    "R": 0,
+    "ms": 42.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2534,
+      "top": 0.2534,
+      "moved": false,
+      "scored": 2,
+      "tops": [
+       0.2534,
+       0.2889
+      ],
+      "ms": 19,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s041",
+   "zone": "meadow",
+   "off": {
+    "x": -55.844,
+    "z": 74.584,
+    "R": 0,
+    "ms": 3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -55.844,
+    "z": 74.584,
+    "R": 0,
+    "ms": 102.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      1,
+      0.75,
+      1,
+      1,
+      1,
+      1,
+      0.5,
+      1,
+      0.75
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1607,
+      "top": 0.1607,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 18,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s042",
+   "zone": "meadow",
+   "off": {
+    "x": -27.084,
+    "z": 20.416,
+    "R": 0,
+    "ms": 24.5,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0.75,
+      0.75,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -27.084,
+    "z": 20.416,
+    "R": 0,
+    "ms": 41.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      0.75,
+      0.75,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1846,
+      "top": 0.1846,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 17,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s043",
+   "zone": "water",
+   "off": {
+    "x": -50.416,
+    "z": 35.416,
+    "R": 5,
+    "ms": 274.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -50.416,
+    "z": 35.416,
+    "R": 5,
+    "ms": 296.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 5,
+     "litOf": [
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.4289,
+      "top": 0.4289,
+      "moved": false,
+      "scored": 2,
+      "tops": [
+       0.4289,
+       0.5426
+      ],
+      "ms": 25,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "off": {
+    "x": -56.88,
+    "z": 67.691,
+    "R": 5,
+    "ms": 119.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0,
+      0.5,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -56.88,
+    "z": 67.691,
+    "R": 5,
+    "ms": 311.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 1,
+     "moved": true,
+     "choices": 7,
+     "incR": 5,
+     "litOf": [
+      0,
+      0.5,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1005,
+      "top": 0.1005,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 20,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s045",
+   "zone": "meadow",
+   "off": {
+    "x": -0.62,
+    "z": -9.38,
+    "R": 0,
+    "ms": 70.9,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -0.62,
+    "z": -4.38,
+    "R": 5,
+    "ms": 124.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.3051,
+      "top": 0.1403,
+      "moved": true,
+      "scored": 7,
+      "tops": [
+       0.3051,
+       0.2858,
+       0.231,
+       0.1403,
+       0.2165,
+       0.6715,
+       0.3139
+      ],
+      "ms": 53,
+      "fromR": 0,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s046",
+   "zone": "meadow",
+   "off": {
+    "x": 0.416,
+    "z": 4.156,
+    "R": 0,
+    "ms": 6.5,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      0.75
+     ]
+    }
+   },
+   "on": {
+    "x": 0.416,
+    "z": 4.156,
+    "R": 0,
+    "ms": 134,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.75,
+     "lit": 0.75,
+     "moved": false,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0.75,
+      1,
+      1,
+      1,
+      0.5,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.142,
+      "top": 0.142,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 13,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s047",
+   "zone": "meadow",
+   "off": {
+    "x": 2.916,
+    "z": 2.084,
+    "R": 5,
+    "ms": 207.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 2.916,
+    "z": 2.084,
+    "R": 5,
+    "ms": 220.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2055,
+      "top": 0.2055,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 17,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s048",
+   "zone": "forest",
+   "off": {
+    "x": 23.12,
+    "z": -16.88,
+    "R": 5,
+    "ms": 285,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 8,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 26.12,
+    "z": -16.88,
+    "R": 8,
+    "ms": 338.5,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 8,
+     "incR": 5,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2299,
+      "top": 0.1461,
+      "moved": true,
+      "scored": 8,
+      "tops": [
+       0.2299,
+       0.4172,
+       0.2075,
+       0.2707,
+       0.3308,
+       0.1817,
+       0.1461,
+       0.4705
+      ],
+      "ms": 57,
+      "fromR": 5,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s049",
+   "zone": "meadow",
+   "off": {
+    "x": -62.916,
+    "z": 75.416,
+    "R": 0,
+    "ms": 3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -62.916,
+    "z": 75.416,
+    "R": 0,
+    "ms": 69.5,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0.5,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2117,
+      "top": 0.2117,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 18,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s050",
+   "zone": "meadow",
+   "off": {
+    "x": 25.62,
+    "z": -24.38,
+    "R": 0,
+    "ms": 24.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 25.62,
+    "z": -24.38,
+    "R": 0,
+    "ms": 43.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 7,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1814,
+      "top": 0.1814,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 19,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s051",
+   "zone": "meadow",
+   "off": {
+    "x": -32.084,
+    "z": 12.084,
+    "R": 0,
+    "ms": 21,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -32.084,
+    "z": 17.084,
+    "R": 5,
+    "ms": 63.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.3389,
+      "top": 0.1548,
+      "moved": true,
+      "scored": 5,
+      "tops": [
+       0.3389,
+       0.24,
+       0.1773,
+       0.1548,
+       0.326
+      ],
+      "ms": 44,
+      "fromR": 0,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s052",
+   "zone": "meadow",
+   "off": {
+    "x": 14.38,
+    "z": -25.62,
+    "R": 0,
+    "ms": 21.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 14.38,
+    "z": -20.62,
+    "R": 5,
+    "ms": 60.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.6988,
+      "top": 0.2811,
+      "moved": true,
+      "scored": 5,
+      "tops": [
+       0.6988,
+       0.5455,
+       0.3373,
+       0.2811,
+       0.3771
+      ],
+      "ms": 39,
+      "fromR": 0,
+      "incLit": 0,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s053",
+   "zone": "crag",
+   "off": {
+    "x": -40.62,
+    "z": 23.12,
+    "R": 5,
+    "ms": 17.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 1,
+     "moved": true,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0.25,
+      0.75,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -32.62,
+    "z": 18.12,
+    "R": 8,
+    "ms": 87.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.25,
+     "lit": 1,
+     "moved": true,
+     "choices": 6,
+     "incR": 5,
+     "litOf": [
+      0.25,
+      0.75,
+      1,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2287,
+      "top": 0.1645,
+      "moved": true,
+      "scored": 6,
+      "tops": [
+       0.2287,
+       0.2883,
+       0.1805,
+       0.511,
+       0.1645,
+       0.4126
+      ],
+      "ms": 47,
+      "fromR": 5,
+      "incLit": 1,
+      "lit": 0
+     }
+    }
+   },
+   "same": false
+  },
+  {
+   "id": "s054",
+   "zone": "forest",
+   "off": {
+    "x": -48.88,
+    "z": 34.38,
+    "R": 8,
+    "ms": 361,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 8,
+     "litOf": [
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -48.88,
+    "z": 34.38,
+    "R": 8,
+    "ms": 379.8,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 2,
+     "incR": 8,
+     "litOf": [
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.341,
+      "top": 0.341,
+      "moved": false,
+      "scored": 2,
+      "tops": [
+       0.341,
+       0.5612
+      ],
+      "ms": 23,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s055",
+   "zone": "forest",
+   "off": {
+    "x": 33.12,
+    "z": -18.12,
+    "R": 5,
+    "ms": 50.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 33.12,
+    "z": -18.12,
+    "R": 5,
+    "ms": 66.2,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0.5,
+     "moved": true,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0.5,
+      0.5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.191,
+      "top": 0.191,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 16,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s056",
+   "zone": "crag",
+   "off": {
+    "x": -45.62,
+    "z": 26.88,
+    "R": 5,
+    "ms": 20.1,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.5,
+      0.5
+     ]
+    }
+   },
+   "on": {
+    "x": -45.62,
+    "z": 26.88,
+    "R": 5,
+    "ms": 34.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 0.5,
+     "moved": false,
+     "choices": 3,
+     "incR": 5,
+     "litOf": [
+      0.5,
+      0.5,
+      0.5
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1612,
+      "top": 0.1612,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 15,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s057",
+   "zone": "meadow",
+   "off": {
+    "x": 40.62,
+    "z": -25.62,
+    "R": 5,
+    "ms": 41.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 2,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": 40.62,
+    "z": -25.62,
+    "R": 5,
+    "ms": 91.3,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0.5,
+     "lit": 1,
+     "moved": true,
+     "choices": 8,
+     "incR": 0,
+     "litOf": [
+      0.5,
+      1,
+      1,
+      0.5,
+      0,
+      0,
+      0,
+      0.25
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.1724,
+      "top": 0.1724,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 16,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s058",
+   "zone": "forest",
+   "off": {
+    "x": 11.88,
+    "z": -15.62,
+    "R": 0,
+    "ms": 198.4,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 11.88,
+    "z": -15.62,
+    "R": 0,
+    "ms": 237,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 5,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2411,
+      "top": 0.2411,
+      "moved": false,
+      "scored": 5,
+      "tops": [
+       0.2411,
+       0.2556,
+       0.3273,
+       0.2879,
+       0.2726
+      ],
+      "ms": 40,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s059",
+   "zone": "meadow",
+   "off": {
+    "x": -17.916,
+    "z": 2.084,
+    "R": 0,
+    "ms": 39.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": -17.916,
+    "z": 2.084,
+    "R": 0,
+    "ms": 100.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 9,
+     "incR": 0,
+     "litOf": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.2655,
+      "top": 0.2655,
+      "moved": false,
+      "scored": 8,
+      "tops": [
+       0.2655,
+       0.2661,
+       0.2732,
+       0.2901,
+       0.2966,
+       0.4405,
+       0.6369,
+       0.4764
+      ],
+      "ms": 61,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s060",
+   "zone": "meadow",
+   "off": {
+    "x": -3.12,
+    "z": 9.38,
+    "R": 0,
+    "ms": 3.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 1,
+     "incR": 0,
+     "litOf": [
+      1
+     ]
+    }
+   },
+   "on": {
+    "x": -3.12,
+    "z": 9.38,
+    "R": 0,
+    "ms": 28.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 1,
+     "lit": 1,
+     "moved": false,
+     "choices": 6,
+     "incR": 0,
+     "litOf": [
+      1,
+      1,
+      0.5,
+      0.5,
+      0.5,
+      1
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.19,
+      "top": 0.19,
+      "moved": false,
+      "scored": 1,
+      "tops": null,
+      "ms": 7,
+      "why": "incumbent under surfGood"
+     }
+    }
+   },
+   "same": true
+  },
+  {
+   "id": "s061",
+   "zone": "forest",
+   "off": {
+    "x": 3.12,
+    "z": -4.38,
+    "R": 5,
+    "ms": 352.7,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 1,
+     "incR": 5,
+     "litOf": [
+      0
+     ]
+    }
+   },
+   "on": {
+    "x": 3.12,
+    "z": -4.38,
+    "R": 5,
+    "ms": 364.6,
+    "q": {
+     "on": true,
+     "axis": "sunLit",
+     "margin": 0.5,
+     "incLit": 0,
+     "lit": 0,
+     "moved": false,
+     "choices": 1,
+     "incR": 5,
+     "litOf": [
+      0
+     ],
+     "surf": {
+      "on": true,
+      "axis": "topSurface",
+      "margin": 0.06,
+      "incTop": 0.4836,
+      "top": 0.4836,
+      "moved": false,
+      "scored": 1,
+      "tops": [
+       0.4836
+      ],
+      "ms": 12,
+      "why": null
+     }
+    }
+   },
+   "same": true
+  }
+ ]
+}

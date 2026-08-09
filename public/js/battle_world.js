@@ -92,6 +92,10 @@
   // own first-acceptance rule. One build, one flag — the same A/B discipline
   // `?bcam=0` and `?btone=0` were built with.
   const BPLACE_OFF = !!(Q && Q.get('bplace') === '0');
+  // `?bsurf=0` turns the one-surface-dominance refusal off and leaves the sun
+  // refusal alone. It is a SECOND switch rather than a mode of the first, so the
+  // board can show sun-only, surface-only and both from one build.
+  const BSURF_OFF = !!(Q && Q.get('bsurf') === '0');
 
   if (!HAS_DOM) return;                       // node (battle_sim / encounter_sim): nothing at all
   if (!FLAG) {
@@ -837,8 +841,163 @@
     // "differed" that way before the pin went in, and none of them was the
     // optimisation).
     fastPath: true,
+    // ============ ONE-SURFACE DOMINANCE (wave 6, 2026-08-09) ================
+    // THE AXIS THAT WON EVERY SORT AND HAD NO AFFORDABLE PROXY. "How much of the
+    // frame does ONE SURFACE own" separates the by-eye piles at sep 0.844 on the
+    // round plate, 0.949 on the round plate against the decide sort and 0.937 on
+    // the decide frame — ahead of sun exposure (which shipped), sky, view.back
+    // and the tonal metric. It did not ship because the only proxy anyone had
+    // was a RAY GRID at 0.79 and 52 ms a candidate.
+    //
+    // THE RAY GRID FAILED FOR A REASON ITS OWN DATA SHOWS: proxy-14x8.json reads
+    // meshTop >= 0.87 at every one of 62 sites, because the valley ground is ONE
+    // MESH. "One mesh owns the frame" is true everywhere. The axis was never
+    // about meshes — it is a statement about PIXELS, and it was always a colour
+    // histogram.
+    //
+    // THE CHEAP VERSION WAS MEASURED FIRST AND IS NOT GOOD ENOUGH, which is the
+    // whole reason this costs a display frame. An OFFSCREEN render (the buffer
+    // TONE is already producing, so nearly free at 2.0 ms a candidate) reaches
+    // only sep 0.60 / 0.60 / 0.65 against the three sorts and Spearman 0.63 with
+    // the offline number, supersampled or not, at every resolution from 48x27 to
+    // 320x180. The signal is in the POST CHAIN: an offscreen target skips GTAO,
+    // bloom and the atmospheric grade, and it is those that turn a far surface
+    // and a near one into two colours. The page's own renderFrame() reaches
+    // sep 0.778 / 0.717 / 0.874 and Spearman 0.85, and costs 7.3 ms at p50.
+    // (Tone mapping is NOT the difference and was checked, not assumed: ow-*
+    // ships NoToneMapping.) Data: docs/qa/battle-surface/stats-v2.json.
+    surf: true,               // ?bsurf=0
+    // AN INCUMBENT THIS UNDOMINATED IS ALREADY A GOOD FRAME, so the search
+    // stops after ONE render. Measured means on the display frame: good 0.153,
+    // acceptable 0.233, bad 0.266-0.288. At 0.22 the median site pays one score
+    // and only the dominated ones pay for challengers.
+    surfGood: 0.22,
+    // A REFUSAL, NOT A PREFERENCE — the shape the sun term already has. A
+    // challenger must own this much LESS of the frame before the fight moves.
+    surfMargin: 0.06,
+    surfMax: 8,               // candidates scored, cap
+    surfBudgetMs: 140,
+    surfRes: [320, 180],      // the offline library's own reduction
+    surfDist: 9.0,            // the establishing boom the axis was validated on
   };
   function placeOn() { return !!(PLACE.on && !BPLACE_OFF); }
+  function surfOn() { return !!(PLACE.on && PLACE.surf && !BPLACE_OFF && !BSURF_OFF); }
+  // ---- WHAT ONE SURFACE OWNS OF A CANDIDATE'S FRAME ------------------------
+  // Colours quantised to a 6x6x6 cube over a 320x180 reduction of the DISPLAY
+  // canvas; the biggest bin's share is the answer. This is tools/
+  // battle_place_lib.mjs W.surface's arithmetic verbatim, with the one
+  // difference that at ladder time there is no cast to hide — nothing is staged
+  // yet, so the frame IS the background.
+  // AND THE BYTES ARE ALREADY IN DISPLAY SPACE: they come off the canvas, after
+  // OutputPass. No encode is applied or needed here, which is exactly why this
+  // path does not have to reason about the r185 linear-target rule at all.
+  let _sfC = null, _sfG = null;
+  function surfHist() {
+    if (!HAS_DOM) return null;
+    const cv = document.querySelector('canvas');
+    if (!cv) return null;
+    const rw = PLACE.surfRes[0], rh = PLACE.surfRes[1];
+    if (!_sfC) {
+      _sfC = document.createElement('canvas'); _sfC.width = rw; _sfC.height = rh;
+      _sfG = _sfC.getContext('2d', { willReadFrequently: true });
+    }
+    _sfG.drawImage(cv, 0, 0, rw, rh);
+    const d = _sfG.getImageData(0, 0, rw, rh).data;
+    const H = new Float64Array(216);
+    const n = rw * rh;
+    for (let p = 0, i = 0; p < n; p++, i += 4) {
+      H[(Math.min(5, d[i] * 6 / 256 | 0) * 36) +
+        (Math.min(5, d[i + 1] * 6 / 256 | 0) * 6) +
+         Math.min(5, d[i + 2] * 6 / 256 | 0)]++;
+    }
+    let top = 0, ent = 0, nz = 0;
+    for (let k = 0; k < 216; k++) {
+      const h = H[k];
+      if (h > top) top = h;
+      if (h > 0) { const q = h / n; ent -= q * Math.log2(q); nz++; }
+    }
+    return { topSurface: +(top / n).toFixed(4), entropy: +ent.toFixed(3), bins: nz };
+  }
+  // ONE CANDIDATE, PHOTOGRAPHED THROUGH THE PAGE'S OWN RENDER. The camera is
+  // borrowed for one synchronous frame and put back field by field before this
+  // returns; play3d recomputes it from ORBIT on the next tick anyway, so the
+  // restore is belt and braces rather than the mechanism. Nothing else is
+  // touched: no ORBIT write, no scene graph change, no 'eb-scene'.
+  function surfScoreOne(plan, at) {
+    const TH = T(), C = W.cam, RF = W.render;
+    if (!TH || !C || !RF) return null;
+    const b = plan.basis;
+    const P = at || { x: b.centre[0], y: b.centre[1], z: b.centre[2] };
+    const pitch = (b.pitch == null ? CFG.cam.pitch : b.pitch);
+    const D = PLACE.surfDist;
+    const sv = { p: C.position.clone(), q: C.quaternion.clone(), up: C.up.clone(), fov: C.fov };
+    C.position.set(P.x + Math.cos(b.yaw) * Math.cos(pitch) * D,
+                   P.y + 1 + Math.sin(pitch) * D,
+                   P.z + Math.sin(b.yaw) * Math.cos(pitch) * D);
+    C.up.set(0, 1, 0);
+    C.lookAt(P.x, P.y + 1, P.z);
+    C.fov = CAM.fov.rest;
+    C.updateProjectionMatrix(); C.updateMatrixWorld();
+    let h = null;
+    try { RF(); h = surfHist(); } catch (e) { h = null; }
+    C.position.copy(sv.p); C.quaternion.copy(sv.q); C.up.copy(sv.up); C.fov = sv.fov;
+    C.updateProjectionMatrix(); C.updateMatrixWorld();
+    return h;
+  }
+  // THE STAGE. The incumbent is scored FIRST and an undominated one ends the
+  // search there — which is what keeps the median site at one render. Two
+  // things sit out every probe frame for the reasons TONE already wrote down:
+  // the PLAYER'S OWN BODY (stageArena runs before the fight hides it, so at ring
+  // 0 the player stands in the middle of every candidate frame) and AMBIENT'S
+  // MOTES (their boxes are centred 11 m down the LIVE camera's view axis, so a
+  // probe shot from six places sees them in six arbitrary ones). Both are
+  // VISIBILITY FLIPS, never teardowns.
+  function surfRank(accepted, inc) {
+    if (!surfOn() || !accepted.length) return null;
+    const t0 = now();
+    const chWas = (W.ch && W.ch.visible !== undefined) ? W.ch.visible : null;
+    let motes = 0;
+    const scored = [];
+    try {
+      if (chWas !== null) W.ch.visible = false;
+      try { if (window.Ambient && window.Ambient.hide) motes = window.Ambient.hide(true); } catch (e) { }
+      const h0 = surfScoreOne(inc.plan, inc.at);
+      if (!h0) return null;
+      inc.surf = h0;
+      scored.push(inc);
+      if (h0.topSurface <= PLACE.surfGood) {
+        return { on: true, axis: 'topSurface', margin: PLACE.surfMargin,
+                 incTop: h0.topSurface, top: h0.topSurface, moved: false,
+                 scored: 1, why: 'incumbent under surfGood', ms: Math.round(now() - t0) };
+      }
+      for (const c of accepted) {
+        if (c === inc) continue;
+        if (scored.length >= PLACE.surfMax) break;
+        if (now() - t0 > PLACE.surfBudgetMs) break;
+        const h = surfScoreOne(c.plan, c.at);
+        if (!h) continue;
+        c.surf = h;
+        scored.push(c);
+      }
+    } finally {
+      if (chWas !== null) W.ch.visible = chWas;
+      if (motes) { try { window.Ambient.hide(false); } catch (e) { } }
+    }
+    // among challengers that clear the bar: least dominated, then NEAREST, then
+    // the ladder's own bearing order. Same tie-break shape as the sun stage, so
+    // the ruling's "one sideways step" property survives both terms.
+    let win = inc;
+    for (const c of scored) {
+      if (c === inc) continue;
+      if (c.surf.topSurface > inc.surf.topSurface - PLACE.surfMargin) continue;
+      if (win === inc || c.surf.topSurface < win.surf.topSurface - 1e-9 ||
+          (Math.abs(c.surf.topSurface - win.surf.topSurface) < 1e-9 && c.R < win.R)) win = c;
+    }
+    return { on: true, axis: 'topSurface', margin: PLACE.surfMargin,
+             incTop: inc.surf.topSurface, top: win.surf.topSurface,
+             moved: win !== inc, win: win, scored: scored.length,
+             tops: scored.map(c => c.surf.topSurface), ms: Math.round(now() - t0) };
+  }
   // THE KEY LIGHT, out of the live scene rather than a constant: play3d solves
   // the town/overworld sun per rig and "THE FILL IS THE SKY" replaced the flat
   // hemisphere, so the one directional light left IS the sun. Cached beside the
@@ -927,7 +1086,11 @@
           if (firstRingIdx < 0) firstRingIdx = ri;
           site.lit = sunLit(plan);
           accepted.push(site);
-          if (site.lit == null) return site;      // no sun in this scene: nothing to rank on
+          // no sun in this scene: nothing for the SUN stage to rank on. The
+          // surface stage does not read the sun, so the walk still ends here but
+          // the accepted set is carried to the quality block below rather than
+          // returned past it.
+          if (site.lit == null) { stop = true; continue; }
           // TWO SHORT-CIRCUITS, AND BOTH ARE PROVABLY THE SAME ANSWER — the
           // reason for writing them down is that the naive version cost 159 ms
           // of solve at p50 and these give most of it back for nothing.
@@ -939,8 +1102,15 @@
           //     tie-break is sunniest -> nearest -> earliest bearing, so the
           //     FIRST candidate that is fully lit AND clears the margin is
           //     exactly the one the ranking below would choose. 19 of 62.
-          if (PLACE.fastPath && accepted[0].lit + PLACE.sunMargin > 1 + 1e-9) { stop = true; continue; }
-          if (PLACE.fastPath && site !== accepted[0] && site.lit >= 1 - 1e-9 &&
+          // AND BOTH ARE ARGUMENTS ABOUT THE SUN RANKING ONLY, so they are
+          // switched off when a SECOND axis has to choose among the same
+          // candidates: they fire at 41 of the 62 census cells and would leave
+          // the surface refusal inert at exactly those sites. Priced both ways
+          // at every cell (docs/qa/battle-surface/cost-v1.json): stage p50
+          // 34.7 -> 49.6 ms, p95 327.7 -> 332.1, SAME SITE 62/62 — the walk gets
+          // longer, the sun answer does not change.
+          if (PLACE.fastPath && !surfOn() && accepted[0].lit + PLACE.sunMargin > 1 + 1e-9) { stop = true; continue; }
+          if (PLACE.fastPath && !surfOn() && site !== accepted[0] && site.lit >= 1 - 1e-9 &&
               site.lit >= accepted[0].lit + PLACE.sunMargin) { stop = true; continue; }
           if (accepted.length > 1 && now() - t0 > PLACE.budgetMs) { stop = true; }
           continue;
@@ -959,6 +1129,7 @@
       const inc = accepted[0];
       let win = inc;
       for (const c of accepted) {
+        if (c.lit == null || inc.lit == null) break;
         if (c.lit < inc.lit + PLACE.sunMargin) continue;
         // among challengers that clear the bar: sunniest, then NEAREST, then the
         // ladder's own bearing order. Deterministic, and it keeps the ruling's
@@ -966,10 +1137,35 @@
         if (win === inc || c.lit > win.lit + 1e-9 ||
             (Math.abs(c.lit - win.lit) < 1e-9 && c.R < win.R)) win = c;
       }
-      win.quality = { on: true, axis: 'sunLit', margin: PLACE.sunMargin,
-                      incLit: +inc.lit.toFixed(3), lit: +win.lit.toFixed(3),
-                      moved: win !== inc, choices: accepted.length,
-                      incR: inc.R, litOf: accepted.map(c => +c.lit.toFixed(2)) };
+      const sunQ = { on: true, axis: 'sunLit', margin: PLACE.sunMargin,
+                     incLit: inc.lit == null ? null : +inc.lit.toFixed(3),
+                     lit: win.lit == null ? null : +win.lit.toFixed(3),
+                     moved: win !== inc, choices: accepted.length,
+                     incR: inc.R, litOf: accepted.map(c => (c.lit == null ? null : +c.lit.toFixed(2))) };
+      // THE SECOND REFUSAL, ON THE SAME CANDIDATE SET AND WITH THE SUN STAGE'S
+      // ANSWER AS ITS INCUMBENT. Order matters and this is the order the census
+      // was measured in: sun first (it is four rays and already shipped), then
+      // one-surface dominance, which is the stronger axis on every sort but
+      // costs a display frame per candidate. `?bsurf=0` leaves the answer
+      // byte-for-byte what the sun stage returned.
+      const sq = surfRank(accepted, win);
+      if (sq && sq.moved && sq.win) {
+        const w2 = sq.win;
+        w2.quality = sunQ;
+        w2.quality.surf = { on: true, axis: 'topSurface', margin: PLACE.surfMargin,
+                            incTop: sq.incTop, top: sq.top, moved: true,
+                            scored: sq.scored, tops: sq.tops, ms: sq.ms,
+                            fromR: win.R, incLit: win.lit == null ? null : +win.lit.toFixed(3),
+                            lit: w2.lit == null ? null : +w2.lit.toFixed(3) };
+        w2.cands = cands; w2.screened = screened; w2.solved = solved;
+        w2.ms = Math.round(now() - t0);
+        return w2;
+      }
+      win.quality = sunQ;
+      if (sq) win.quality.surf = { on: true, axis: 'topSurface', margin: PLACE.surfMargin,
+                                   incTop: sq.incTop, top: sq.top, moved: false,
+                                   scored: sq.scored, tops: sq.tops || null, ms: sq.ms,
+                                   why: sq.why || null };
       win.cands = cands; win.screened = screened; win.solved = solved;
       win.ms = Math.round(now() - t0);
       return win;
@@ -2546,6 +2742,11 @@
     // instrument can score a plan the search did not choose.
     PLACE: PLACE,
     placeOn() { return placeOn(); },
+    // ONE-SURFACE DOMINANCE, live. `?bsurf=0` (or PLACE.surf = false) is the A/B
+    // the surface board is built from; `surfScoreOne` is callable so an
+    // instrument can score a plan the search did not choose.
+    surfOn() { return surfOn(); },
+    surfScoreOne: surfScoreOne,
     sunLit: sunLit,
     sunDir: sunDir,
     tone() { return api._live && api._live.tone ? api._live.tone() : { on: toneOn(), ok: false, why: 'no battle' }; },

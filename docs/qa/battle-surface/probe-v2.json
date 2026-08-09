@@ -1,0 +1,7577 @@
+{
+ "meta": {
+  "when": "2026-08-09T08:21:02.251Z",
+  "yaw": -1.4869,
+  "raw": false,
+  "reps": 1,
+  "three": "185",
+  "n": 62,
+  "secs": 13
+ },
+ "rows": [
+  {
+   "id": "s000",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -33.834,
+    "y": 21.745,
+    "z": 14.61
+   },
+   "R": 13,
+   "stageMs": 49.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1968,
+     "top2": 0.1659,
+     "entropy": 3.767,
+     "bins": 37,
+     "ms": {
+      "render": 1,
+      "read": 2,
+      "hist": 0.2,
+      "all": 3.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1905,
+     "top2": 0.1723,
+     "entropy": 3.803,
+     "bins": 41,
+     "ms": {
+      "render": 0.7,
+      "read": 2.1,
+      "hist": 0.2,
+      "all": 3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2002,
+     "top2": 0.1723,
+     "entropy": 3.843,
+     "bins": 47,
+     "ms": {
+      "render": 0.7,
+      "read": 2.3,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.199,
+     "top2": 0.1704,
+     "entropy": 3.871,
+     "bins": 49,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.5
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2023,
+     "top2": 0.1716,
+     "entropy": 3.865,
+     "bins": 55,
+     "ms": {
+      "render": 0.7,
+      "read": 1.7,
+      "hist": 0.6,
+      "all": 3
+     }
+    },
+    "region96": {
+     "topRegion": 0.2755,
+     "comps": 668,
+     "ms": 3.5
+    },
+    "ss2.round": {
+     "topSurface": 0.2099,
+     "entropy": 3.813,
+     "bins": 54,
+     "ms": 9.4
+    },
+    "ss4.round": {
+     "topSurface": 0.2118,
+     "entropy": 3.758,
+     "bins": 52,
+     "ms": 9.1
+    },
+    "ss4.decide": {
+     "topSurface": 0.2266,
+     "entropy": 3.647,
+     "bins": 50,
+     "ms": 10.7
+    },
+    "off.decide": {
+     "topSurface": 0.2188,
+     "top2": 0.1766,
+     "entropy": 3.769,
+     "bins": 54,
+     "ms": {
+      "render": 0.9,
+      "read": 2.9,
+      "hist": 1.3,
+      "all": 5.1
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.3139,
+     "entropy": 3.683,
+     "bins": 49,
+     "ms": 12.4
+    },
+    "cvs.decide": {
+     "topSurface": 0.3191,
+     "entropy": 3.627,
+     "bins": 45,
+     "ms": 7.1
+    }
+   }
+  },
+  {
+   "id": "s001",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 10.62,
+    "y": 15.178,
+    "z": -21.88
+   },
+   "R": 0,
+   "stageMs": 24.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2014,
+     "top2": 0.1806,
+     "entropy": 3.706,
+     "bins": 30,
+     "ms": {
+      "render": 0.8,
+      "read": 2.2,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1975,
+     "top2": 0.1758,
+     "entropy": 3.745,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1991,
+     "top2": 0.168,
+     "entropy": 3.804,
+     "bins": 36,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2027,
+     "top2": 0.1599,
+     "entropy": 3.856,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.3,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2073,
+     "top2": 0.1587,
+     "entropy": 3.876,
+     "bins": 48,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.5,
+      "all": 2.7
+     }
+    },
+    "region96": {
+     "topRegion": 0.2623,
+     "comps": 718,
+     "ms": 2.7
+    },
+    "ss2.round": {
+     "topSurface": 0.225,
+     "entropy": 3.864,
+     "bins": 51,
+     "ms": 8.6
+    },
+    "ss4.round": {
+     "topSurface": 0.2339,
+     "entropy": 3.796,
+     "bins": 44,
+     "ms": 8.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.2491,
+     "entropy": 3.785,
+     "bins": 42,
+     "ms": 8.6
+    },
+    "off.decide": {
+     "topSurface": 0.2245,
+     "top2": 0.1668,
+     "entropy": 3.864,
+     "bins": 48,
+     "ms": {
+      "render": 0.6,
+      "read": 3.2,
+      "hist": 0.3,
+      "all": 4.1
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.3673,
+     "entropy": 3.208,
+     "bins": 42,
+     "ms": 6.9
+    },
+    "cvs.decide": {
+     "topSurface": 0.3736,
+     "entropy": 3.272,
+     "bins": 41,
+     "ms": 7.1
+    }
+   }
+  },
+  {
+   "id": "s002",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -72.537,
+    "y": 25.448,
+    "z": 51.277
+   },
+   "R": 8,
+   "stageMs": 267.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3534,
+     "top2": 0.1481,
+     "entropy": 3.776,
+     "bins": 45,
+     "ms": {
+      "render": 0.7,
+      "read": 3.4,
+      "hist": 0,
+      "all": 4.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3351,
+     "top2": 0.1289,
+     "entropy": 3.976,
+     "bins": 50,
+     "ms": {
+      "render": 0.6,
+      "read": 3,
+      "hist": 0,
+      "all": 3.6
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3272,
+     "top2": 0.1209,
+     "entropy": 4.007,
+     "bins": 52,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3084,
+     "top2": 0.1167,
+     "entropy": 4.104,
+     "bins": 61,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2805,
+     "top2": 0.1126,
+     "entropy": 4.226,
+     "bins": 69,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.2419,
+     "comps": 898,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.263,
+     "entropy": 4.261,
+     "bins": 67,
+     "ms": 9.2
+    },
+    "ss4.round": {
+     "topSurface": 0.2989,
+     "entropy": 4.06,
+     "bins": 61,
+     "ms": 9.7
+    },
+    "ss4.decide": {
+     "topSurface": 0.2974,
+     "entropy": 4.039,
+     "bins": 64,
+     "ms": 9.8
+    },
+    "off.decide": {
+     "topSurface": 0.2798,
+     "top2": 0.1336,
+     "entropy": 4.175,
+     "bins": 66,
+     "ms": {
+      "render": 0.6,
+      "read": 3.1,
+      "hist": 0.3,
+      "all": 4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1977,
+     "entropy": 4.386,
+     "bins": 68,
+     "ms": 6.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.2061,
+     "entropy": 4.371,
+     "bins": 68,
+     "ms": 6.7
+    }
+   }
+  },
+  {
+   "id": "s003",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": 53.344,
+    "y": 8.003,
+    "z": -45.416
+   },
+   "R": 0,
+   "stageMs": 34.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2847,
+     "top2": 0.2569,
+     "entropy": 2.764,
+     "bins": 20,
+     "ms": {
+      "render": 0.6,
+      "read": 3.3,
+      "hist": 0,
+      "all": 3.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2943,
+     "top2": 0.2543,
+     "entropy": 2.763,
+     "bins": 24,
+     "ms": {
+      "render": 0.5,
+      "read": 3,
+      "hist": 0,
+      "all": 3.5
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2843,
+     "top2": 0.2504,
+     "entropy": 2.77,
+     "bins": 25,
+     "ms": {
+      "render": 0.6,
+      "read": 2.7,
+      "hist": 0,
+      "all": 3.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.288,
+     "top2": 0.2447,
+     "entropy": 2.798,
+     "bins": 27,
+     "ms": {
+      "render": 0.6,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2923,
+     "top2": 0.2391,
+     "entropy": 2.823,
+     "bins": 35,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.3912,
+     "comps": 314,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.299,
+     "entropy": 2.873,
+     "bins": 41,
+     "ms": 8
+    },
+    "ss4.round": {
+     "topSurface": 0.2997,
+     "entropy": 2.84,
+     "bins": 36,
+     "ms": 7.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.3452,
+     "entropy": 2.704,
+     "bins": 30,
+     "ms": 7.8
+    },
+    "off.decide": {
+     "topSurface": 0.341,
+     "top2": 0.2309,
+     "entropy": 2.654,
+     "bins": 30,
+     "ms": {
+      "render": 0.9,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 3
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1848,
+     "entropy": 3.618,
+     "bins": 35,
+     "ms": 11.4
+    },
+    "cvs.decide": {
+     "topSurface": 0.2044,
+     "entropy": 3.468,
+     "bins": 29,
+     "ms": 5.9
+    }
+   }
+  },
+  {
+   "id": "s004",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 46.451,
+    "y": 12.368,
+    "z": -33.12
+   },
+   "R": 5,
+   "stageMs": 118.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3418,
+     "top2": 0.2176,
+     "entropy": 2.924,
+     "bins": 27,
+     "ms": {
+      "render": 0.7,
+      "read": 2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3316,
+     "top2": 0.2018,
+     "entropy": 3.018,
+     "bins": 34,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0.1,
+      "all": 2.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3297,
+     "top2": 0.1923,
+     "entropy": 3.069,
+     "bins": 36,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3292,
+     "top2": 0.1831,
+     "entropy": 3.119,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3185,
+     "top2": 0.1713,
+     "entropy": 3.238,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1819,
+     "comps": 551,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.3058,
+     "entropy": 3.305,
+     "bins": 49,
+     "ms": 8.7
+    },
+    "ss4.round": {
+     "topSurface": 0.3088,
+     "entropy": 3.223,
+     "bins": 43,
+     "ms": 7.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.3165,
+     "entropy": 3.189,
+     "bins": 41,
+     "ms": 7.7
+    },
+    "off.decide": {
+     "topSurface": 0.3275,
+     "top2": 0.1701,
+     "entropy": 3.189,
+     "bins": 45,
+     "ms": {
+      "render": 0.6,
+      "read": 2.5,
+      "hist": 0.3,
+      "all": 3.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2027,
+     "entropy": 3.619,
+     "bins": 46,
+     "ms": 6.5
+    },
+    "cvs.decide": {
+     "topSurface": 0.2092,
+     "entropy": 3.59,
+     "bins": 45,
+     "ms": 6.4
+    }
+   }
+  },
+  {
+   "id": "s005",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -61.656,
+    "y": 27.446,
+    "z": 70.416
+   },
+   "R": 0,
+   "stageMs": 27.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2346,
+     "top2": 0.1096,
+     "entropy": 3.969,
+     "bins": 41,
+     "ms": {
+      "render": 0.6,
+      "read": 2.7,
+      "hist": 0,
+      "all": 3.3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.224,
+     "top2": 0.1037,
+     "entropy": 3.985,
+     "bins": 44,
+     "ms": {
+      "render": 0.5,
+      "read": 4,
+      "hist": 0.1,
+      "all": 4.6
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2118,
+     "top2": 0.1051,
+     "entropy": 4.047,
+     "bins": 45,
+     "ms": {
+      "render": 0.8,
+      "read": 3.1,
+      "hist": 0.1,
+      "all": 4
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2103,
+     "top2": 0.1028,
+     "entropy": 4.041,
+     "bins": 48,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1991,
+     "top2": 0.099,
+     "entropy": 4.122,
+     "bins": 60,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0.2,
+      "all": 2.5
+     }
+    },
+    "region96": {
+     "topRegion": 0.0926,
+     "comps": 1146,
+     "ms": 2.5
+    },
+    "ss2.round": {
+     "topSurface": 0.1971,
+     "entropy": 4.16,
+     "bins": 64,
+     "ms": 9.1
+    },
+    "ss4.round": {
+     "topSurface": 0.2001,
+     "entropy": 4.105,
+     "bins": 60,
+     "ms": 7.7
+    },
+    "ss4.decide": {
+     "topSurface": 0.2129,
+     "entropy": 4.056,
+     "bins": 58,
+     "ms": 7.3
+    },
+    "off.decide": {
+     "topSurface": 0.213,
+     "top2": 0.0925,
+     "entropy": 4.08,
+     "bins": 59,
+     "ms": {
+      "render": 0.6,
+      "read": 1.8,
+      "hist": 0.2,
+      "all": 2.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.108,
+     "entropy": 4.447,
+     "bins": 60,
+     "ms": 12.7
+    },
+    "cvs.decide": {
+     "topSurface": 0.1131,
+     "entropy": 4.441,
+     "bins": 60,
+     "ms": 6.4
+    }
+   }
+  },
+  {
+   "id": "s006",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 29.584,
+    "y": 13.064,
+    "z": -30.416
+   },
+   "R": 0,
+   "stageMs": 23.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3202,
+     "top2": 0.1289,
+     "entropy": 3.541,
+     "bins": 43,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3225,
+     "top2": 0.135,
+     "entropy": 3.541,
+     "bins": 42,
+     "ms": {
+      "render": 0.6,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3237,
+     "top2": 0.1277,
+     "entropy": 3.582,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.3,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3216,
+     "top2": 0.1271,
+     "entropy": 3.617,
+     "bins": 47,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3141,
+     "top2": 0.1292,
+     "entropy": 3.682,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1508,
+     "comps": 566,
+     "ms": 2
+    },
+    "ss2.round": {
+     "topSurface": 0.3046,
+     "entropy": 3.73,
+     "bins": 59,
+     "ms": 8.7
+    },
+    "ss4.round": {
+     "topSurface": 0.3077,
+     "entropy": 3.663,
+     "bins": 51,
+     "ms": 7.2
+    },
+    "ss4.decide": {
+     "topSurface": 0.2893,
+     "entropy": 3.75,
+     "bins": 52,
+     "ms": 9.4
+    },
+    "off.decide": {
+     "topSurface": 0.292,
+     "top2": 0.1231,
+     "entropy": 3.778,
+     "bins": 52,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 2.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1881,
+     "entropy": 3.815,
+     "bins": 46,
+     "ms": 6
+    },
+    "cvs.decide": {
+     "topSurface": 0.1787,
+     "entropy": 3.844,
+     "bins": 46,
+     "ms": 6.2
+    }
+   }
+  },
+  {
+   "id": "s007",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -45.62,
+    "y": 23.352,
+    "z": 35.62
+   },
+   "R": 5,
+   "stageMs": 342.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1844,
+     "top2": 0.1057,
+     "entropy": 3.756,
+     "bins": 23,
+     "ms": {
+      "render": 0.8,
+      "read": 3.4,
+      "hist": 0,
+      "all": 4.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2148,
+     "top2": 0.1155,
+     "entropy": 3.759,
+     "bins": 27,
+     "ms": {
+      "render": 0.7,
+      "read": 3.4,
+      "hist": 0.1,
+      "all": 4.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2386,
+     "top2": 0.1308,
+     "entropy": 3.685,
+     "bins": 30,
+     "ms": {
+      "render": 0.6,
+      "read": 3.2,
+      "hist": 0.1,
+      "all": 3.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2582,
+     "top2": 0.135,
+     "entropy": 3.534,
+     "bins": 33,
+     "ms": {
+      "render": 0.5,
+      "read": 3.5,
+      "hist": 0.1,
+      "all": 4.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2797,
+     "top2": 0.169,
+     "entropy": 3.365,
+     "bins": 34,
+     "ms": {
+      "render": 0.6,
+      "read": 3.5,
+      "hist": 0.2,
+      "all": 4.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.4967,
+     "comps": 537,
+     "ms": 4.3
+    },
+    "ss2.round": {
+     "topSurface": 0.2944,
+     "entropy": 3.24,
+     "bins": 34,
+     "ms": 11.9
+    },
+    "ss4.round": {
+     "topSurface": 0.2977,
+     "entropy": 3.211,
+     "bins": 29,
+     "ms": 10.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.2662,
+     "entropy": 3.262,
+     "bins": 31,
+     "ms": 10.3
+    },
+    "off.decide": {
+     "topSurface": 0.2426,
+     "top2": 0.1914,
+     "entropy": 3.423,
+     "bins": 38,
+     "ms": {
+      "render": 0.6,
+      "read": 3.6,
+      "hist": 0.1,
+      "all": 4.3
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2197,
+     "entropy": 3.59,
+     "bins": 32,
+     "ms": 7
+    },
+    "cvs.decide": {
+     "topSurface": 0.2108,
+     "entropy": 3.715,
+     "bins": 33,
+     "ms": 8
+    }
+   }
+  },
+  {
+   "id": "s008",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 63.12,
+    "y": 20.488,
+    "z": -40.62
+   },
+   "R": 0,
+   "stageMs": 6.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2716,
+     "top2": 0.2091,
+     "entropy": 3.129,
+     "bins": 21,
+     "ms": {
+      "render": 0.6,
+      "read": 2.3,
+      "hist": 0,
+      "all": 2.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2661,
+     "top2": 0.2092,
+     "entropy": 3.183,
+     "bins": 25,
+     "ms": {
+      "render": 0.6,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.261,
+     "top2": 0.2006,
+     "entropy": 3.205,
+     "bins": 31,
+     "ms": {
+      "render": 0.5,
+      "read": 2,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "160x90": {
+     "topSurface": 0.256,
+     "top2": 0.1975,
+     "entropy": 3.222,
+     "bins": 37,
+     "ms": {
+      "render": 0.6,
+      "read": 2.7,
+      "hist": 0.1,
+      "all": 3.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2508,
+     "top2": 0.1906,
+     "entropy": 3.256,
+     "bins": 45,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0.2,
+      "all": 2.9
+     }
+    },
+    "region96": {
+     "topRegion": 0.3131,
+     "comps": 334,
+     "ms": 3.1
+    },
+    "ss2.round": {
+     "topSurface": 0.2423,
+     "entropy": 3.289,
+     "bins": 50,
+     "ms": 9.9
+    },
+    "ss4.round": {
+     "topSurface": 0.2472,
+     "entropy": 3.264,
+     "bins": 42,
+     "ms": 9.7
+    },
+    "ss4.decide": {
+     "topSurface": 0.2541,
+     "entropy": 3.163,
+     "bins": 45,
+     "ms": 9.7
+    },
+    "off.decide": {
+     "topSurface": 0.2577,
+     "top2": 0.2054,
+     "entropy": 3.163,
+     "bins": 48,
+     "ms": {
+      "render": 0.6,
+      "read": 3.8,
+      "hist": 0.2,
+      "all": 4.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2302,
+     "entropy": 3.419,
+     "bins": 44,
+     "ms": 6.9
+    },
+    "cvs.decide": {
+     "topSurface": 0.2417,
+     "entropy": 3.282,
+     "bins": 45,
+     "ms": 7.1
+    }
+   }
+  },
+  {
+   "id": "s009",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -60.62,
+    "y": 26.664,
+    "z": 63.12
+   },
+   "R": 0,
+   "stageMs": 6.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1605,
+     "top2": 0.1497,
+     "entropy": 3.825,
+     "bins": 39,
+     "ms": {
+      "render": 0.7,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1502,
+     "top2": 0.1493,
+     "entropy": 3.884,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 2.4,
+      "hist": 0.1,
+      "all": 2.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1559,
+     "top2": 0.1545,
+     "entropy": 3.895,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1524,
+     "top2": 0.1483,
+     "entropy": 3.959,
+     "bins": 53,
+     "ms": {
+      "render": 0.4,
+      "read": 2.2,
+      "hist": 0.2,
+      "all": 2.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1517,
+     "top2": 0.1456,
+     "entropy": 4.029,
+     "bins": 57,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0.3,
+      "all": 3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1487,
+     "comps": 955,
+     "ms": 2.8
+    },
+    "ss2.round": {
+     "topSurface": 0.149,
+     "entropy": 4.093,
+     "bins": 69,
+     "ms": 11.3
+    },
+    "ss4.round": {
+     "topSurface": 0.1502,
+     "entropy": 3.992,
+     "bins": 52,
+     "ms": 10.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.1646,
+     "entropy": 3.874,
+     "bins": 53,
+     "ms": 10.7
+    },
+    "off.decide": {
+     "topSurface": 0.1666,
+     "top2": 0.1571,
+     "entropy": 3.898,
+     "bins": 57,
+     "ms": {
+      "render": 0.7,
+      "read": 2.1,
+      "hist": 0.3,
+      "all": 3.1
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1048,
+     "entropy": 4.538,
+     "bins": 57,
+     "ms": 8
+    },
+    "cvs.decide": {
+     "topSurface": 0.1243,
+     "entropy": 4.42,
+     "bins": 55,
+     "ms": 8.2
+    }
+   }
+  },
+  {
+   "id": "s010",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -3.344,
+    "y": 14.074,
+    "z": 7.916
+   },
+   "R": 5,
+   "stageMs": 7.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1983,
+     "top2": 0.1975,
+     "entropy": 3.611,
+     "bins": 38,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1975,
+     "top2": 0.1953,
+     "entropy": 3.658,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1971,
+     "top2": 0.1842,
+     "entropy": 3.684,
+     "bins": 41,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1976,
+     "top2": 0.1797,
+     "entropy": 3.721,
+     "bins": 44,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.195,
+     "top2": 0.174,
+     "entropy": 3.774,
+     "bins": 48,
+     "ms": {
+      "render": 0.6,
+      "read": 1.8,
+      "hist": 0.3,
+      "all": 2.7
+     }
+    },
+    "region96": {
+     "topRegion": 0.2357,
+     "comps": 666,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.1861,
+     "entropy": 3.805,
+     "bins": 52,
+     "ms": 8.7
+    },
+    "ss4.round": {
+     "topSurface": 0.1873,
+     "entropy": 3.715,
+     "bins": 47,
+     "ms": 7.2
+    },
+    "ss4.decide": {
+     "topSurface": 0.1862,
+     "entropy": 3.657,
+     "bins": 48,
+     "ms": 7.2
+    },
+    "off.decide": {
+     "topSurface": 0.1939,
+     "top2": 0.1766,
+     "entropy": 3.711,
+     "bins": 48,
+     "ms": {
+      "render": 0.5,
+      "read": 2.6,
+      "hist": 0.2,
+      "all": 3.3
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1807,
+     "entropy": 4.082,
+     "bins": 52,
+     "ms": 6.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.1752,
+     "entropy": 4.075,
+     "bins": 51,
+     "ms": 6.2
+    }
+   }
+  },
+  {
+   "id": "s011",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 44.156,
+    "y": 16.309,
+    "z": -32.916
+   },
+   "R": 5,
+   "stageMs": 20.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3719,
+     "top2": 0.1443,
+     "entropy": 3.188,
+     "bins": 32,
+     "ms": {
+      "render": 0.7,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3772,
+     "top2": 0.1437,
+     "entropy": 3.19,
+     "bins": 41,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3872,
+     "top2": 0.1399,
+     "entropy": 3.176,
+     "bins": 43,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3852,
+     "top2": 0.1404,
+     "entropy": 3.213,
+     "bins": 47,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3889,
+     "top2": 0.1414,
+     "entropy": 3.218,
+     "bins": 49,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3665,
+     "comps": 495,
+     "ms": 2.2
+    },
+    "ss2.round": {
+     "topSurface": 0.3922,
+     "entropy": 3.194,
+     "bins": 53,
+     "ms": 8.4
+    },
+    "ss4.round": {
+     "topSurface": 0.3884,
+     "entropy": 3.164,
+     "bins": 49,
+     "ms": 7.3
+    },
+    "ss4.decide": {
+     "topSurface": 1,
+     "entropy": 0,
+     "bins": 1,
+     "ms": 8.4
+    },
+    "off.decide": {
+     "topSurface": 1,
+     "top2": 0,
+     "entropy": 0,
+     "bins": 1,
+     "ms": {
+      "render": 0.6,
+      "read": 3.3,
+      "hist": 0.3,
+      "all": 4.2
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.319,
+     "entropy": 3.558,
+     "bins": 46,
+     "ms": 8
+    },
+    "cvs.decide": {
+     "topSurface": 0.4752,
+     "entropy": 1.712,
+     "bins": 4,
+     "ms": 5.8
+    }
+   }
+  },
+  {
+   "id": "s012",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -48.549,
+    "y": 25.76,
+    "z": 49.38
+   },
+   "R": 5,
+   "stageMs": 321.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1427,
+     "top2": 0.1258,
+     "entropy": 4.392,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1328,
+     "top2": 0.1328,
+     "entropy": 4.391,
+     "bins": 49,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1383,
+     "top2": 0.1333,
+     "entropy": 4.32,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0.1,
+      "all": 2.5
+     }
+    },
+    "160x90": {
+     "topSurface": 0.143,
+     "top2": 0.1335,
+     "entropy": 4.264,
+     "bins": 55,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1432,
+     "top2": 0.1314,
+     "entropy": 4.179,
+     "bins": 63,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 2.6
+     }
+    },
+    "region96": {
+     "topRegion": 0.3306,
+     "comps": 533,
+     "ms": 2
+    },
+    "ss2.round": {
+     "topSurface": 0.1531,
+     "entropy": 4.139,
+     "bins": 68,
+     "ms": 8.7
+    },
+    "ss4.round": {
+     "topSurface": 0.1569,
+     "entropy": 4.083,
+     "bins": 59,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.151,
+     "entropy": 4.144,
+     "bins": 60,
+     "ms": 7.8
+    },
+    "off.decide": {
+     "topSurface": 0.1397,
+     "top2": 0.1341,
+     "entropy": 4.211,
+     "bins": 65,
+     "ms": {
+      "render": 0.6,
+      "read": 2.3,
+      "hist": 0.1,
+      "all": 3
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2271,
+     "entropy": 4.017,
+     "bins": 68,
+     "ms": 7.8
+    },
+    "cvs.decide": {
+     "topSurface": 0.222,
+     "entropy": 4.036,
+     "bins": 68,
+     "ms": 6.2
+    }
+   }
+  },
+  {
+   "id": "s013",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -19.38,
+    "y": 16.27,
+    "z": 9.38
+   },
+   "R": 0,
+   "stageMs": 32.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3881,
+     "top2": 0.1235,
+     "entropy": 3.136,
+     "bins": 33,
+     "ms": {
+      "render": 0.4,
+      "read": 2.3,
+      "hist": 0.1,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3885,
+     "top2": 0.1185,
+     "entropy": 3.18,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 3,
+      "hist": 0,
+      "all": 3.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3835,
+     "top2": 0.1194,
+     "entropy": 3.192,
+     "bins": 37,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3794,
+     "top2": 0.1217,
+     "entropy": 3.204,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3765,
+     "top2": 0.1172,
+     "entropy": 3.258,
+     "bins": 56,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3997,
+     "comps": 591,
+     "ms": 1.9
+    },
+    "ss2.round": {
+     "topSurface": 0.3619,
+     "entropy": 3.248,
+     "bins": 52,
+     "ms": 8.8
+    },
+    "ss4.round": {
+     "topSurface": 0.3592,
+     "entropy": 3.146,
+     "bins": 45,
+     "ms": 7.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.3995,
+     "entropy": 2.937,
+     "bins": 46,
+     "ms": 9.3
+    },
+    "off.decide": {
+     "topSurface": 0.4271,
+     "top2": 0.1277,
+     "entropy": 3.013,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 3.6,
+      "hist": 0.3,
+      "all": 4.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.239,
+     "entropy": 3.618,
+     "bins": 42,
+     "ms": 5.9
+    },
+    "cvs.decide": {
+     "topSurface": 0.2587,
+     "entropy": 3.503,
+     "bins": 43,
+     "ms": 6.1
+    }
+   }
+  },
+  {
+   "id": "s014",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 39.38,
+    "y": 13.111,
+    "z": -33.12
+   },
+   "R": 5,
+   "stageMs": 31.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2253,
+     "top2": 0.1204,
+     "entropy": 3.744,
+     "bins": 38,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2235,
+     "top2": 0.1259,
+     "entropy": 3.727,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2224,
+     "top2": 0.1204,
+     "entropy": 3.784,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2272,
+     "top2": 0.1185,
+     "entropy": 3.795,
+     "bins": 46,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2247,
+     "top2": 0.1156,
+     "entropy": 3.835,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.3,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.3056,
+     "comps": 729,
+     "ms": 2
+    },
+    "ss2.round": {
+     "topSurface": 0.2119,
+     "entropy": 3.861,
+     "bins": 61,
+     "ms": 8.5
+    },
+    "ss4.round": {
+     "topSurface": 0.2173,
+     "entropy": 3.728,
+     "bins": 54,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.2186,
+     "entropy": 3.601,
+     "bins": 51,
+     "ms": 7.9
+    },
+    "off.decide": {
+     "topSurface": 0.2232,
+     "top2": 0.1472,
+     "entropy": 3.7,
+     "bins": 45,
+     "ms": {
+      "render": 0.7,
+      "read": 2.4,
+      "hist": 0.3,
+      "all": 3.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1693,
+     "entropy": 4.089,
+     "bins": 54,
+     "ms": 7.8
+    },
+    "cvs.decide": {
+     "topSurface": 0.174,
+     "entropy": 3.991,
+     "bins": 51,
+     "ms": 5.8
+    }
+   }
+  },
+  {
+   "id": "s015",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -53.344,
+    "y": 26.034,
+    "z": 51.656
+   },
+   "R": 5,
+   "stageMs": 203.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1242,
+     "top2": 0.1173,
+     "entropy": 4.45,
+     "bins": 42,
+     "ms": {
+      "render": 0.6,
+      "read": 3.5,
+      "hist": 0,
+      "all": 4.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1246,
+     "top2": 0.112,
+     "entropy": 4.536,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 3.2,
+      "hist": 0,
+      "all": 3.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1188,
+     "top2": 0.1115,
+     "entropy": 4.57,
+     "bins": 61,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1151,
+     "top2": 0.1092,
+     "entropy": 4.594,
+     "bins": 65,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1142,
+     "top2": 0.1048,
+     "entropy": 4.619,
+     "bins": 69,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.0503,
+     "comps": 737,
+     "ms": 2.4
+    },
+    "ss2.round": {
+     "topSurface": 0.1116,
+     "entropy": 4.643,
+     "bins": 75,
+     "ms": 8.2
+    },
+    "ss4.round": {
+     "topSurface": 0.1147,
+     "entropy": 4.582,
+     "bins": 68,
+     "ms": 7.4
+    },
+    "ss4.decide": {
+     "topSurface": 0.1043,
+     "entropy": 4.557,
+     "bins": 67,
+     "ms": 7.7
+    },
+    "off.decide": {
+     "topSurface": 0.1048,
+     "top2": 0.0875,
+     "entropy": 4.599,
+     "bins": 70,
+     "ms": {
+      "render": 0.6,
+      "read": 2.1,
+      "hist": 0.2,
+      "all": 2.9
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.0962,
+     "entropy": 4.768,
+     "bins": 71,
+     "ms": 6.3
+    },
+    "cvs.decide": {
+     "topSurface": 0.1075,
+     "entropy": 4.711,
+     "bins": 73,
+     "ms": 6.4
+    }
+   }
+  },
+  {
+   "id": "s016",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 31.88,
+    "y": 14.244,
+    "z": -21.88
+   },
+   "R": 0,
+   "stageMs": 29.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2215,
+     "top2": 0.1921,
+     "entropy": 3.283,
+     "bins": 33,
+     "ms": {
+      "render": 0.5,
+      "read": 2.9,
+      "hist": 0,
+      "all": 3.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2096,
+     "top2": 0.1871,
+     "entropy": 3.404,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 2.5,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2103,
+     "top2": 0.1742,
+     "entropy": 3.501,
+     "bins": 43,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2069,
+     "top2": 0.1811,
+     "entropy": 3.526,
+     "bins": 45,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2035,
+     "top2": 0.1822,
+     "entropy": 3.61,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.1769,
+     "comps": 670,
+     "ms": 1.9
+    },
+    "ss2.round": {
+     "topSurface": 0.1909,
+     "entropy": 3.729,
+     "bins": 57,
+     "ms": 8.5
+    },
+    "ss4.round": {
+     "topSurface": 0.1901,
+     "entropy": 3.61,
+     "bins": 48,
+     "ms": 8
+    },
+    "ss4.decide": {
+     "topSurface": 0.186,
+     "entropy": 3.567,
+     "bins": 49,
+     "ms": 9.4
+    },
+    "off.decide": {
+     "topSurface": 0.1928,
+     "top2": 0.1809,
+     "entropy": 3.574,
+     "bins": 48,
+     "ms": {
+      "render": 0.7,
+      "read": 3.7,
+      "hist": 0.2,
+      "all": 4.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1572,
+     "entropy": 4.002,
+     "bins": 50,
+     "ms": 11.7
+    },
+    "cvs.decide": {
+     "topSurface": 0.1676,
+     "entropy": 3.929,
+     "bins": 48,
+     "ms": 6.2
+    }
+   }
+  },
+  {
+   "id": "s017",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -8.12,
+    "y": 14.629,
+    "z": 10.62
+   },
+   "R": 5,
+   "stageMs": 28.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2485,
+     "top2": 0.1898,
+     "entropy": 3.496,
+     "bins": 39,
+     "ms": {
+      "render": 0.7,
+      "read": 2,
+      "hist": 0.1,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2474,
+     "top2": 0.178,
+     "entropy": 3.525,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2434,
+     "top2": 0.1829,
+     "entropy": 3.593,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.239,
+     "top2": 0.1801,
+     "entropy": 3.653,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2344,
+     "top2": 0.172,
+     "entropy": 3.731,
+     "bins": 50,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.3,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.1346,
+     "comps": 704,
+     "ms": 2
+    },
+    "ss2.round": {
+     "topSurface": 0.2147,
+     "entropy": 3.826,
+     "bins": 52,
+     "ms": 8.1
+    },
+    "ss4.round": {
+     "topSurface": 0.2122,
+     "entropy": 3.754,
+     "bins": 47,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.2076,
+     "entropy": 3.755,
+     "bins": 48,
+     "ms": 7
+    },
+    "off.decide": {
+     "topSurface": 0.23,
+     "top2": 0.1819,
+     "entropy": 3.729,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 2.5,
+      "hist": 0.3,
+      "all": 3.3
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1285,
+     "entropy": 4.15,
+     "bins": 49,
+     "ms": 6.7
+    },
+    "cvs.decide": {
+     "topSurface": 0.1223,
+     "entropy": 4.138,
+     "bins": 46,
+     "ms": 5.8
+    }
+   }
+  },
+  {
+   "id": "s018",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 57.916,
+    "y": 22.212,
+    "z": -35.844
+   },
+   "R": 0,
+   "stageMs": 4.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3218,
+     "top2": 0.1674,
+     "entropy": 3.263,
+     "bins": 33,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3286,
+     "top2": 0.1623,
+     "entropy": 3.309,
+     "bins": 37,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3235,
+     "top2": 0.1617,
+     "entropy": 3.307,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3145,
+     "top2": 0.1578,
+     "entropy": 3.386,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3098,
+     "top2": 0.1518,
+     "entropy": 3.418,
+     "bins": 51,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.2014,
+     "comps": 350,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.3016,
+     "entropy": 3.462,
+     "bins": 56,
+     "ms": 8
+    },
+    "ss4.round": {
+     "topSurface": 0.3033,
+     "entropy": 3.432,
+     "bins": 49,
+     "ms": 7
+    },
+    "ss4.decide": {
+     "topSurface": 0.3186,
+     "entropy": 3.373,
+     "bins": 48,
+     "ms": 7.4
+    },
+    "off.decide": {
+     "topSurface": 0.3253,
+     "top2": 0.1501,
+     "entropy": 3.349,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 2.6,
+      "hist": 0.2,
+      "all": 3.2
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2351,
+     "entropy": 3.679,
+     "bins": 50,
+     "ms": 7.5
+    },
+    "cvs.decide": {
+     "topSurface": 0.2314,
+     "entropy": 3.629,
+     "bins": 48,
+     "ms": 5.6
+    }
+   }
+  },
+  {
+   "id": "s019",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -3.12,
+    "y": 14.036,
+    "z": 4.38
+   },
+   "R": 5,
+   "stageMs": 76.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2894,
+     "top2": 0.152,
+     "entropy": 3.502,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2891,
+     "top2": 0.1541,
+     "entropy": 3.505,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2905,
+     "top2": 0.1466,
+     "entropy": 3.575,
+     "bins": 47,
+     "ms": {
+      "render": 0.6,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2915,
+     "top2": 0.1431,
+     "entropy": 3.583,
+     "bins": 52,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.1,
+      "all": 2.5
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2878,
+     "top2": 0.1423,
+     "entropy": 3.628,
+     "bins": 55,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0.2,
+      "all": 2.6
+     }
+    },
+    "region96": {
+     "topRegion": 0.146,
+     "comps": 647,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.2702,
+     "entropy": 3.688,
+     "bins": 59,
+     "ms": 8.5
+    },
+    "ss4.round": {
+     "topSurface": 0.2648,
+     "entropy": 3.629,
+     "bins": 52,
+     "ms": 7.4
+    },
+    "ss4.decide": {
+     "topSurface": 0.2396,
+     "entropy": 3.694,
+     "bins": 52,
+     "ms": 7.4
+    },
+    "off.decide": {
+     "topSurface": 0.2651,
+     "top2": 0.1414,
+     "entropy": 3.689,
+     "bins": 54,
+     "ms": {
+      "render": 0.3,
+      "read": 2.1,
+      "hist": 0.2,
+      "all": 2.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.162,
+     "entropy": 4.135,
+     "bins": 50,
+     "ms": 7.4
+    },
+    "cvs.decide": {
+     "topSurface": 0.1542,
+     "entropy": 4.095,
+     "bins": 49,
+     "ms": 5.9
+    }
+   }
+  },
+  {
+   "id": "s020",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 19.584,
+    "y": 14.567,
+    "z": -24.156
+   },
+   "R": 0,
+   "stageMs": 28.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2029,
+     "top2": 0.1836,
+     "entropy": 3.526,
+     "bins": 30,
+     "ms": {
+      "render": 0.6,
+      "read": 2.4,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2018,
+     "top2": 0.1897,
+     "entropy": 3.565,
+     "bins": 32,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1885,
+     "top2": 0.1869,
+     "entropy": 3.662,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1878,
+     "top2": 0.1837,
+     "entropy": 3.678,
+     "bins": 43,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.189,
+     "top2": 0.1821,
+     "entropy": 3.711,
+     "bins": 48,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.2803,
+     "comps": 579,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.2096,
+     "entropy": 3.719,
+     "bins": 54,
+     "ms": 8.4
+    },
+    "ss4.round": {
+     "topSurface": 0.2181,
+     "entropy": 3.665,
+     "bins": 43,
+     "ms": 7.3
+    },
+    "ss4.decide": {
+     "topSurface": 0.2287,
+     "entropy": 3.657,
+     "bins": 43,
+     "ms": 8.4
+    },
+    "off.decide": {
+     "topSurface": 0.1949,
+     "top2": 0.1944,
+     "entropy": 3.714,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 2.5,
+      "hist": 0.2,
+      "all": 3.1
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.3907,
+     "entropy": 3.137,
+     "bins": 41,
+     "ms": 6.4
+    },
+    "cvs.decide": {
+     "topSurface": 0.4034,
+     "entropy": 3.109,
+     "bins": 39,
+     "ms": 6.3
+    }
+   }
+  },
+  {
+   "id": "s021",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -25.844,
+    "y": 19.548,
+    "z": 13.344
+   },
+   "R": 0,
+   "stageMs": 36.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2492,
+     "top2": 0.1644,
+     "entropy": 3.487,
+     "bins": 34,
+     "ms": {
+      "render": 0.5,
+      "read": 3.3,
+      "hist": 0,
+      "all": 3.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2448,
+     "top2": 0.1706,
+     "entropy": 3.521,
+     "bins": 36,
+     "ms": {
+      "render": 0.3,
+      "read": 3.2,
+      "hist": 0,
+      "all": 3.5
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2479,
+     "top2": 0.169,
+     "entropy": 3.549,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 3.6,
+      "hist": 0,
+      "all": 4
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2468,
+     "top2": 0.1652,
+     "entropy": 3.581,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2449,
+     "top2": 0.1616,
+     "entropy": 3.632,
+     "bins": 54,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0.3,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.278,
+     "comps": 579,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.2508,
+     "entropy": 3.561,
+     "bins": 56,
+     "ms": 8.1
+    },
+    "ss4.round": {
+     "topSurface": 0.2514,
+     "entropy": 3.464,
+     "bins": 48,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.2449,
+     "entropy": 3.454,
+     "bins": 48,
+     "ms": 7.4
+    },
+    "off.decide": {
+     "topSurface": 0.2371,
+     "top2": 0.1566,
+     "entropy": 3.647,
+     "bins": 49,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.155,
+     "entropy": 3.911,
+     "bins": 46,
+     "ms": 6.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.1807,
+     "entropy": 3.85,
+     "bins": 48,
+     "ms": 6.1
+    }
+   }
+  },
+  {
+   "id": "s022",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -58.12,
+    "y": 27.46,
+    "z": 43.12
+   },
+   "R": 0,
+   "stageMs": 330.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.4228,
+     "top2": 0.1003,
+     "entropy": 3.1,
+     "bins": 36,
+     "ms": {
+      "render": 0.7,
+      "read": 2.3,
+      "hist": 0.1,
+      "all": 3.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.447,
+     "top2": 0.0938,
+     "entropy": 3.036,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.4502,
+     "top2": 0.0932,
+     "entropy": 3.089,
+     "bins": 46,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.4508,
+     "top2": 0.0919,
+     "entropy": 3.115,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.4399,
+     "top2": 0.0926,
+     "entropy": 3.184,
+     "bins": 63,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.0812,
+     "comps": 797,
+     "ms": 2.4
+    },
+    "ss2.round": {
+     "topSurface": 0.4331,
+     "entropy": 3.215,
+     "bins": 67,
+     "ms": 8.9
+    },
+    "ss4.round": {
+     "topSurface": 0.4643,
+     "entropy": 3.085,
+     "bins": 57,
+     "ms": 7.7
+    },
+    "ss4.decide": {
+     "topSurface": 0.4772,
+     "entropy": 2.957,
+     "bins": 52,
+     "ms": 8.4
+    },
+    "off.decide": {
+     "topSurface": 0.4491,
+     "top2": 0.1029,
+     "entropy": 3.069,
+     "bins": 53,
+     "ms": {
+      "render": 0.6,
+      "read": 2.6,
+      "hist": 0.2,
+      "all": 3.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2147,
+     "entropy": 3.663,
+     "bins": 62,
+     "ms": 7.5
+    },
+    "cvs.decide": {
+     "topSurface": 0.2267,
+     "entropy": 3.573,
+     "bins": 60,
+     "ms": 6.2
+    }
+   }
+  },
+  {
+   "id": "s023",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 22.916,
+    "y": 14.468,
+    "z": -18.344
+   },
+   "R": 0,
+   "stageMs": 106.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.341,
+     "top2": 0.1111,
+     "entropy": 3.295,
+     "bins": 28,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3372,
+     "top2": 0.1046,
+     "entropy": 3.34,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3355,
+     "top2": 0.0976,
+     "entropy": 3.373,
+     "bins": 35,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3329,
+     "top2": 0.0983,
+     "entropy": 3.404,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3248,
+     "top2": 0.1018,
+     "entropy": 3.48,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.2133,
+     "comps": 630,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.331,
+     "entropy": 3.516,
+     "bins": 55,
+     "ms": 8.5
+    },
+    "ss4.round": {
+     "topSurface": 0.3449,
+     "entropy": 3.418,
+     "bins": 46,
+     "ms": 7.3
+    },
+    "ss4.decide": {
+     "topSurface": 0.3688,
+     "entropy": 3.351,
+     "bins": 44,
+     "ms": 7.9
+    },
+    "off.decide": {
+     "topSurface": 0.3482,
+     "top2": 0.0991,
+     "entropy": 3.41,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 2.4,
+      "hist": 0.2,
+      "all": 3
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2856,
+     "entropy": 3.543,
+     "bins": 43,
+     "ms": 5.8
+    },
+    "cvs.decide": {
+     "topSurface": 0.2907,
+     "entropy": 3.478,
+     "bins": 42,
+     "ms": 5.9
+    }
+   }
+  },
+  {
+   "id": "s024",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 4.38,
+    "y": 15.542,
+    "z": -6.88
+   },
+   "R": 5,
+   "stageMs": 268.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2253,
+     "top2": 0.1759,
+     "entropy": 3.535,
+     "bins": 28,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2153,
+     "top2": 0.1701,
+     "entropy": 3.621,
+     "bins": 31,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2174,
+     "top2": 0.1485,
+     "entropy": 3.677,
+     "bins": 35,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.216,
+     "top2": 0.1358,
+     "entropy": 3.727,
+     "bins": 39,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2126,
+     "top2": 0.1383,
+     "entropy": 3.79,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3225,
+     "comps": 526,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.2302,
+     "entropy": 3.84,
+     "bins": 54,
+     "ms": 8.3
+    },
+    "ss4.round": {
+     "topSurface": 0.2483,
+     "entropy": 3.76,
+     "bins": 47,
+     "ms": 7
+    },
+    "ss4.decide": {
+     "topSurface": 0.2101,
+     "entropy": 3.846,
+     "bins": 47,
+     "ms": 7.2
+    },
+    "off.decide": {
+     "topSurface": 0.1703,
+     "top2": 0.1466,
+     "entropy": 3.874,
+     "bins": 46,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.3,
+      "all": 2.7
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2895,
+     "entropy": 3.562,
+     "bins": 49,
+     "ms": 6.9
+    },
+    "cvs.decide": {
+     "topSurface": 0.2998,
+     "entropy": 3.599,
+     "bins": 49,
+     "ms": 5.9
+    }
+   }
+  },
+  {
+   "id": "s025",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -67.916,
+    "y": 25.93,
+    "z": 52.916
+   },
+   "R": 0,
+   "stageMs": 15.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1883,
+     "top2": 0.1019,
+     "entropy": 4.375,
+     "bins": 42,
+     "ms": {
+      "render": 0.7,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1888,
+     "top2": 0.099,
+     "entropy": 4.403,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.179,
+     "top2": 0.1111,
+     "entropy": 4.426,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1666,
+     "top2": 0.1176,
+     "entropy": 4.472,
+     "bins": 55,
+     "ms": {
+      "render": 0.4,
+      "read": 2.2,
+      "hist": 0.1,
+      "all": 2.7
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1521,
+     "top2": 0.1202,
+     "entropy": 4.525,
+     "bins": 70,
+     "ms": {
+      "render": 0.4,
+      "read": 2.3,
+      "hist": 0.1,
+      "all": 2.8
+     }
+    },
+    "region96": {
+     "topRegion": 0.0473,
+     "comps": 897,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.1216,
+     "entropy": 4.603,
+     "bins": 73,
+     "ms": 8.3
+    },
+    "ss4.round": {
+     "topSurface": 0.1328,
+     "entropy": 4.5,
+     "bins": 64,
+     "ms": 7.8
+    },
+    "ss4.decide": {
+     "topSurface": 0.1411,
+     "entropy": 4.442,
+     "bins": 63,
+     "ms": 7.7
+    },
+    "off.decide": {
+     "topSurface": 0.1631,
+     "top2": 0.1305,
+     "entropy": 4.441,
+     "bins": 67,
+     "ms": {
+      "render": 0.7,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1334,
+     "entropy": 4.671,
+     "bins": 73,
+     "ms": 6.6
+    },
+    "cvs.decide": {
+     "topSurface": 0.1407,
+     "entropy": 4.633,
+     "bins": 70,
+     "ms": 6.4
+    }
+   }
+  },
+  {
+   "id": "s026",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -65.62,
+    "y": 29.526,
+    "z": 58.12
+   },
+   "R": 0,
+   "stageMs": 6.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.135,
+     "top2": 0.1304,
+     "entropy": 4.168,
+     "bins": 41,
+     "ms": {
+      "render": 0.6,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1372,
+     "top2": 0.1137,
+     "entropy": 4.249,
+     "bins": 47,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1364,
+     "top2": 0.1159,
+     "entropy": 4.305,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1409,
+     "top2": 0.1138,
+     "entropy": 4.377,
+     "bins": 61,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1469,
+     "top2": 0.1209,
+     "entropy": 4.419,
+     "bins": 65,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.093,
+     "comps": 948,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.167,
+     "entropy": 4.337,
+     "bins": 72,
+     "ms": 8.8
+    },
+    "ss4.round": {
+     "topSurface": 0.159,
+     "entropy": 4.311,
+     "bins": 64,
+     "ms": 7.8
+    },
+    "ss4.decide": {
+     "topSurface": 0.1637,
+     "entropy": 4.312,
+     "bins": 67,
+     "ms": 7.8
+    },
+    "off.decide": {
+     "topSurface": 0.1576,
+     "top2": 0.1066,
+     "entropy": 4.408,
+     "bins": 65,
+     "ms": {
+      "render": 0.5,
+      "read": 2.4,
+      "hist": 0.2,
+      "all": 3.1
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1809,
+     "entropy": 4.248,
+     "bins": 63,
+     "ms": 13.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.1723,
+     "entropy": 4.249,
+     "bins": 63,
+     "ms": 7.2
+    }
+   }
+  },
+  {
+   "id": "s027",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": -52.084,
+    "y": 26.013,
+    "z": 32.916
+   },
+   "R": 5,
+   "stageMs": 241.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.6134,
+     "top2": 0.1968,
+     "entropy": 1.996,
+     "bins": 27,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.6202,
+     "top2": 0.1853,
+     "entropy": 1.967,
+     "bins": 26,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.6173,
+     "top2": 0.1765,
+     "entropy": 2.02,
+     "bins": 30,
+     "ms": {
+      "render": 0.3,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "160x90": {
+     "topSurface": 0.6218,
+     "top2": 0.1674,
+     "entropy": 2.048,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0.1,
+      "all": 2.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.6157,
+     "top2": 0.1626,
+     "entropy": 2.11,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 2.3,
+      "hist": 0.2,
+      "all": 2.9
+     }
+    },
+    "region96": {
+     "topRegion": 0.4612,
+     "comps": 565,
+     "ms": 2.6
+    },
+    "ss2.round": {
+     "topSurface": 0.625,
+     "entropy": 2.153,
+     "bins": 53,
+     "ms": 8.5
+    },
+    "ss4.round": {
+     "topSurface": 0.6391,
+     "entropy": 2.068,
+     "bins": 45,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.6509,
+     "entropy": 1.907,
+     "bins": 39,
+     "ms": 7.8
+    },
+    "off.decide": {
+     "topSurface": 0.6234,
+     "top2": 0.1662,
+     "entropy": 1.967,
+     "bins": 38,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0.2,
+      "all": 2.9
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.564,
+     "entropy": 2.226,
+     "bins": 48,
+     "ms": 6.2
+    },
+    "cvs.decide": {
+     "topSurface": 0.5482,
+     "entropy": 2.123,
+     "bins": 37,
+     "ms": 6.2
+    }
+   }
+  },
+  {
+   "id": "s028",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -36.656,
+    "y": 24.618,
+    "z": 21.656
+   },
+   "R": 5,
+   "stageMs": 30.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2461,
+     "top2": 0.169,
+     "entropy": 3.469,
+     "bins": 30,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2365,
+     "top2": 0.1671,
+     "entropy": 3.52,
+     "bins": 34,
+     "ms": {
+      "render": 0.3,
+      "read": 2.8,
+      "hist": 0.1,
+      "all": 3.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2344,
+     "top2": 0.1599,
+     "entropy": 3.578,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2306,
+     "top2": 0.1563,
+     "entropy": 3.588,
+     "bins": 44,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2299,
+     "top2": 0.1542,
+     "entropy": 3.597,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1383,
+     "comps": 329,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.2348,
+     "entropy": 3.549,
+     "bins": 50,
+     "ms": 8.8
+    },
+    "ss4.round": {
+     "topSurface": 0.2367,
+     "entropy": 3.491,
+     "bins": 50,
+     "ms": 7.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.2526,
+     "entropy": 3.416,
+     "bins": 46,
+     "ms": 7.4
+    },
+    "off.decide": {
+     "topSurface": 0.2465,
+     "top2": 0.1581,
+     "entropy": 3.519,
+     "bins": 48,
+     "ms": {
+      "render": 0.6,
+      "read": 2.1,
+      "hist": 0.3,
+      "all": 3
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1983,
+     "entropy": 3.603,
+     "bins": 48,
+     "ms": 10.8
+    },
+    "cvs.decide": {
+     "topSurface": 0.2087,
+     "entropy": 3.55,
+     "bins": 47,
+     "ms": 6.3
+    }
+   }
+  },
+  {
+   "id": "s029",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -57.537,
+    "y": 26.509,
+    "z": 61.277
+   },
+   "R": 8,
+   "stageMs": 194.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1543,
+     "top2": 0.1219,
+     "entropy": 4.243,
+     "bins": 35,
+     "ms": {
+      "render": 0.7,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1519,
+     "top2": 0.1128,
+     "entropy": 4.264,
+     "bins": 39,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.151,
+     "top2": 0.113,
+     "entropy": 4.327,
+     "bins": 44,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.148,
+     "top2": 0.1179,
+     "entropy": 4.352,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1418,
+     "top2": 0.1237,
+     "entropy": 4.377,
+     "bins": 60,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.1036,
+     "comps": 640,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.145,
+     "entropy": 4.392,
+     "bins": 69,
+     "ms": 8.3
+    },
+    "ss4.round": {
+     "topSurface": 0.1442,
+     "entropy": 4.356,
+     "bins": 59,
+     "ms": 7.3
+    },
+    "ss4.decide": {
+     "topSurface": 0.132,
+     "entropy": 4.337,
+     "bins": 59,
+     "ms": 7.6
+    },
+    "off.decide": {
+     "topSurface": 0.1271,
+     "top2": 0.1066,
+     "entropy": 4.372,
+     "bins": 59,
+     "ms": {
+      "render": 0.6,
+      "read": 1.9,
+      "hist": 0.3,
+      "all": 2.8
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1909,
+     "entropy": 4.41,
+     "bins": 62,
+     "ms": 6.3
+    },
+    "cvs.decide": {
+     "topSurface": 0.1289,
+     "entropy": 4.507,
+     "bins": 63,
+     "ms": 6.6
+    }
+   }
+  },
+  {
+   "id": "s030",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -45.62,
+    "y": 30,
+    "z": 25.62
+   },
+   "R": 0,
+   "stageMs": 43.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2122,
+     "top2": 0.1327,
+     "entropy": 3.983,
+     "bins": 40,
+     "ms": {
+      "render": 0.7,
+      "read": 2.3,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.214,
+     "top2": 0.1311,
+     "entropy": 4.035,
+     "bins": 43,
+     "ms": {
+      "render": 0.6,
+      "read": 2.5,
+      "hist": 0,
+      "all": 3.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2051,
+     "top2": 0.1265,
+     "entropy": 4.101,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1916,
+     "top2": 0.1289,
+     "entropy": 4.188,
+     "bins": 48,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1781,
+     "top2": 0.1287,
+     "entropy": 4.268,
+     "bins": 56,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1065,
+     "comps": 603,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.1585,
+     "entropy": 4.332,
+     "bins": 66,
+     "ms": 8.7
+    },
+    "ss4.round": {
+     "topSurface": 0.1676,
+     "entropy": 4.269,
+     "bins": 58,
+     "ms": 7.9
+    },
+    "ss4.decide": {
+     "topSurface": 0.1699,
+     "entropy": 4.359,
+     "bins": 56,
+     "ms": 8.1
+    },
+    "off.decide": {
+     "topSurface": 0.1785,
+     "top2": 0.1241,
+     "entropy": 4.363,
+     "bins": 59,
+     "ms": {
+      "render": 0.7,
+      "read": 2.3,
+      "hist": 0.2,
+      "all": 3.2
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1486,
+     "entropy": 4.048,
+     "bins": 44,
+     "ms": 6.5
+    },
+    "cvs.decide": {
+     "topSurface": 0.1637,
+     "entropy": 4.011,
+     "bins": 45,
+     "ms": 7.9
+    }
+   }
+  },
+  {
+   "id": "s031",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -54.584,
+    "y": 27.226,
+    "z": 69.156
+   },
+   "R": 0,
+   "stageMs": 11,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1605,
+     "top2": 0.142,
+     "entropy": 4.123,
+     "bins": 47,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1523,
+     "top2": 0.1345,
+     "entropy": 4.133,
+     "bins": 49,
+     "ms": {
+      "render": 0.6,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1493,
+     "top2": 0.1372,
+     "entropy": 4.145,
+     "bins": 51,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1472,
+     "top2": 0.1299,
+     "entropy": 4.228,
+     "bins": 61,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1435,
+     "top2": 0.1243,
+     "entropy": 4.302,
+     "bins": 68,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "region96": {
+     "topRegion": 0.1128,
+     "comps": 859,
+     "ms": 2
+    },
+    "ss2.round": {
+     "topSurface": 0.1411,
+     "entropy": 4.349,
+     "bins": 72,
+     "ms": 8.2
+    },
+    "ss4.round": {
+     "topSurface": 0.1523,
+     "entropy": 4.242,
+     "bins": 64,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.1669,
+     "entropy": 4.163,
+     "bins": 68,
+     "ms": 7.9
+    },
+    "off.decide": {
+     "topSurface": 0.1499,
+     "top2": 0.1305,
+     "entropy": 4.169,
+     "bins": 69,
+     "ms": {
+      "render": 0.5,
+      "read": 2.3,
+      "hist": 0.3,
+      "all": 3.1
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1157,
+     "entropy": 4.342,
+     "bins": 62,
+     "ms": 6.4
+    },
+    "cvs.decide": {
+     "topSurface": 0.1353,
+     "entropy": 4.333,
+     "bins": 72,
+     "ms": 6.1
+    }
+   }
+  },
+  {
+   "id": "s032",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": 53.12,
+    "y": 3.972,
+    "z": -50.62
+   },
+   "R": 5,
+   "stageMs": 140.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2122,
+     "top2": 0.1767,
+     "entropy": 3.467,
+     "bins": 26,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0.1,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.207,
+     "top2": 0.1693,
+     "entropy": 3.497,
+     "bins": 30,
+     "ms": {
+      "render": 0.4,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2118,
+     "top2": 0.1661,
+     "entropy": 3.505,
+     "bins": 34,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2213,
+     "top2": 0.1534,
+     "entropy": 3.528,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.219,
+     "top2": 0.1427,
+     "entropy": 3.566,
+     "bins": 47,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 2.6
+     }
+    },
+    "region96": {
+     "topRegion": 0.1194,
+     "comps": 388,
+     "ms": 2.2
+    },
+    "ss2.round": {
+     "topSurface": 0.2151,
+     "entropy": 3.613,
+     "bins": 58,
+     "ms": 8.7
+    },
+    "ss4.round": {
+     "topSurface": 0.2226,
+     "entropy": 3.554,
+     "bins": 49,
+     "ms": 7.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.4289,
+     "entropy": 1.911,
+     "bins": 5,
+     "ms": 7.2
+    },
+    "off.decide": {
+     "topSurface": 0.4329,
+     "top2": 0.3015,
+     "entropy": 1.908,
+     "bins": 5,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0.2,
+      "all": 2.9
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1436,
+     "entropy": 3.908,
+     "bins": 55,
+     "ms": 7.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.3849,
+     "entropy": 2.451,
+     "bins": 11,
+     "ms": 5.7
+    }
+   }
+  },
+  {
+   "id": "s033",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": -57.691,
+    "y": 40.239,
+    "z": 17.309
+   },
+   "R": 5,
+   "stageMs": 18.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2346,
+     "top2": 0.1204,
+     "entropy": 4.209,
+     "bins": 49,
+     "ms": {
+      "render": 0.6,
+      "read": 2.4,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2331,
+     "top2": 0.1181,
+     "entropy": 4.17,
+     "bins": 48,
+     "ms": {
+      "render": 0.5,
+      "read": 2.7,
+      "hist": 0,
+      "all": 3.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2232,
+     "top2": 0.1215,
+     "entropy": 4.183,
+     "bins": 54,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2116,
+     "top2": 0.1188,
+     "entropy": 4.243,
+     "bins": 55,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1996,
+     "top2": 0.1209,
+     "entropy": 4.312,
+     "bins": 61,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 2.5
+     }
+    },
+    "region96": {
+     "topRegion": 0.0758,
+     "comps": 824,
+     "ms": 2.5
+    },
+    "ss2.round": {
+     "topSurface": 0.1811,
+     "entropy": 4.399,
+     "bins": 65,
+     "ms": 8.9
+    },
+    "ss4.round": {
+     "topSurface": 0.1983,
+     "entropy": 4.307,
+     "bins": 57,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.2139,
+     "entropy": 4.306,
+     "bins": 58,
+     "ms": 7.8
+    },
+    "off.decide": {
+     "topSurface": 0.2094,
+     "top2": 0.1053,
+     "entropy": 4.322,
+     "bins": 64,
+     "ms": {
+      "render": 0.5,
+      "read": 2.8,
+      "hist": 0.1,
+      "all": 3.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1454,
+     "entropy": 4.481,
+     "bins": 56,
+     "ms": 7.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.15,
+     "entropy": 4.466,
+     "bins": 59,
+     "ms": 6.3
+    }
+   }
+  },
+  {
+   "id": "s034",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -61.656,
+    "y": 27.724,
+    "z": 80.416
+   },
+   "R": 0,
+   "stageMs": 2.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.4421,
+     "top2": 0.1651,
+     "entropy": 2.993,
+     "bins": 33,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.4154,
+     "top2": 0.1654,
+     "entropy": 3.102,
+     "bins": 37,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.4018,
+     "top2": 0.1723,
+     "entropy": 3.121,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.379,
+     "top2": 0.1749,
+     "entropy": 3.204,
+     "bins": 41,
+     "ms": {
+      "render": 0.2,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "320x180": {
+     "topSurface": 0.356,
+     "top2": 0.1778,
+     "entropy": 3.278,
+     "bins": 45,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0.2,
+      "all": 1.9
+     }
+    },
+    "region96": {
+     "topRegion": 0.3559,
+     "comps": 782,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.3083,
+     "entropy": 3.436,
+     "bins": 47,
+     "ms": 8.4
+    },
+    "ss4.round": {
+     "topSurface": 0.3349,
+     "entropy": 3.275,
+     "bins": 41,
+     "ms": 7
+    },
+    "ss4.decide": {
+     "topSurface": 0.376,
+     "entropy": 3.039,
+     "bins": 40,
+     "ms": 7
+    },
+    "off.decide": {
+     "topSurface": 0.4037,
+     "top2": 0.1714,
+     "entropy": 3.015,
+     "bins": 38,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 2.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.3332,
+     "entropy": 3.392,
+     "bins": 45,
+     "ms": 6
+    },
+    "cvs.decide": {
+     "topSurface": 0.3709,
+     "entropy": 3.177,
+     "bins": 40,
+     "ms": 6.2
+    }
+   }
+  },
+  {
+   "id": "s035",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 0.62,
+    "y": 15.376,
+    "z": -14.38
+   },
+   "R": 0,
+   "stageMs": 37.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.213,
+     "top2": 0.1466,
+     "entropy": 3.536,
+     "bins": 28,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2166,
+     "top2": 0.145,
+     "entropy": 3.598,
+     "bins": 34,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2103,
+     "top2": 0.1445,
+     "entropy": 3.639,
+     "bins": 40,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1994,
+     "top2": 0.1487,
+     "entropy": 3.718,
+     "bins": 42,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1984,
+     "top2": 0.1479,
+     "entropy": 3.768,
+     "bins": 46,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.4321,
+     "comps": 440,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.1715,
+     "entropy": 3.835,
+     "bins": 51,
+     "ms": 8.2
+    },
+    "ss4.round": {
+     "topSurface": 0.1557,
+     "entropy": 3.799,
+     "bins": 43,
+     "ms": 7.3
+    },
+    "ss4.decide": {
+     "topSurface": 0.1592,
+     "entropy": 3.811,
+     "bins": 47,
+     "ms": 7.5
+    },
+    "off.decide": {
+     "topSurface": 0.204,
+     "top2": 0.1555,
+     "entropy": 3.778,
+     "bins": 49,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 2.5
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.5501,
+     "entropy": 2.671,
+     "bins": 46,
+     "ms": 7.3
+    },
+    "cvs.decide": {
+     "topSurface": 0.5691,
+     "entropy": 2.653,
+     "bins": 46,
+     "ms": 6
+    }
+   }
+  },
+  {
+   "id": "s036",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -14.38,
+    "y": 17.222,
+    "z": 16.88
+   },
+   "R": 0,
+   "stageMs": 22.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2253,
+     "top2": 0.1844,
+     "entropy": 3.381,
+     "bins": 34,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2148,
+     "top2": 0.1918,
+     "entropy": 3.459,
+     "bins": 36,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2062,
+     "top2": 0.1998,
+     "entropy": 3.488,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2065,
+     "top2": 0.1978,
+     "entropy": 3.506,
+     "bins": 47,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2013,
+     "top2": 0.1963,
+     "entropy": 3.566,
+     "bins": 52,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.2205,
+     "comps": 482,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.2093,
+     "entropy": 3.583,
+     "bins": 56,
+     "ms": 8.4
+    },
+    "ss4.round": {
+     "topSurface": 0.2145,
+     "entropy": 3.509,
+     "bins": 49,
+     "ms": 7.2
+    },
+    "ss4.decide": {
+     "topSurface": 0.2155,
+     "entropy": 3.563,
+     "bins": 46,
+     "ms": 7.3
+    },
+    "off.decide": {
+     "topSurface": 0.2032,
+     "top2": 0.1989,
+     "entropy": 3.647,
+     "bins": 52,
+     "ms": {
+      "render": 0.3,
+      "read": 2.1,
+      "hist": 0.2,
+      "all": 2.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2191,
+     "entropy": 3.742,
+     "bins": 45,
+     "ms": 6
+    },
+    "cvs.decide": {
+     "topSurface": 0.2159,
+     "entropy": 3.791,
+     "bins": 46,
+     "ms": 5.8
+    }
+   }
+  },
+  {
+   "id": "s037",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -6.88,
+    "y": 14.002,
+    "z": 5.62
+   },
+   "R": 5,
+   "stageMs": 45.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3789,
+     "top2": 0.1127,
+     "entropy": 3.39,
+     "bins": 40,
+     "ms": {
+      "render": 0.5,
+      "read": 2.5,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3815,
+     "top2": 0.112,
+     "entropy": 3.344,
+     "bins": 42,
+     "ms": {
+      "render": 0.6,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3808,
+     "top2": 0.1119,
+     "entropy": 3.396,
+     "bins": 47,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3714,
+     "top2": 0.1076,
+     "entropy": 3.484,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3674,
+     "top2": 0.105,
+     "entropy": 3.511,
+     "bins": 55,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.1499,
+     "comps": 674,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.3456,
+     "entropy": 3.573,
+     "bins": 57,
+     "ms": 8.8
+    },
+    "ss4.round": {
+     "topSurface": 0.3385,
+     "entropy": 3.525,
+     "bins": 52,
+     "ms": 10.1
+    },
+    "ss4.decide": {
+     "topSurface": 0.3087,
+     "entropy": 3.618,
+     "bins": 50,
+     "ms": 9.6
+    },
+    "off.decide": {
+     "topSurface": 0.3391,
+     "top2": 0.1102,
+     "entropy": 3.624,
+     "bins": 54,
+     "ms": {
+      "render": 0.5,
+      "read": 3.3,
+      "hist": 0.2,
+      "all": 4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1244,
+     "entropy": 4.223,
+     "bins": 52,
+     "ms": 6.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.1452,
+     "entropy": 4.209,
+     "bins": 49,
+     "ms": 5.8
+    }
+   }
+  },
+  {
+   "id": "s038",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 48.344,
+    "y": 12.356,
+    "z": -34.584
+   },
+   "R": 5,
+   "stageMs": 46.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3542,
+     "top2": 0.1343,
+     "entropy": 2.837,
+     "bins": 21,
+     "ms": {
+      "render": 0.6,
+      "read": 3,
+      "hist": 0.1,
+      "all": 3.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.352,
+     "top2": 0.1393,
+     "entropy": 2.876,
+     "bins": 18,
+     "ms": {
+      "render": 0.4,
+      "read": 2.5,
+      "hist": 0,
+      "all": 2.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3457,
+     "top2": 0.1366,
+     "entropy": 2.921,
+     "bins": 24,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3423,
+     "top2": 0.1377,
+     "entropy": 2.97,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3328,
+     "top2": 0.1384,
+     "entropy": 3.059,
+     "bins": 43,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1366,
+     "comps": 344,
+     "ms": 1.9
+    },
+    "ss2.round": {
+     "topSurface": 0.3271,
+     "entropy": 3.114,
+     "bins": 46,
+     "ms": 8.4
+    },
+    "ss4.round": {
+     "topSurface": 0.3326,
+     "entropy": 3.06,
+     "bins": 43,
+     "ms": 7.1
+    },
+    "ss4.decide": {
+     "topSurface": 0.2931,
+     "entropy": 3.16,
+     "bins": 37,
+     "ms": 7.4
+    },
+    "off.decide": {
+     "topSurface": 0.2831,
+     "top2": 0.127,
+     "entropy": 3.175,
+     "bins": 33,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.3,
+      "all": 2.7
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2265,
+     "entropy": 3.381,
+     "bins": 43,
+     "ms": 5.8
+    },
+    "cvs.decide": {
+     "topSurface": 0.2151,
+     "entropy": 3.498,
+     "bins": 38,
+     "ms": 5.8
+    }
+   }
+  },
+  {
+   "id": "s039",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -58.12,
+    "y": 40.719,
+    "z": 19.38
+   },
+   "R": 5,
+   "stageMs": 44.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2199,
+     "top2": 0.169,
+     "entropy": 3.93,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 2.4,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2044,
+     "top2": 0.1675,
+     "entropy": 3.97,
+     "bins": 45,
+     "ms": {
+      "render": 0.5,
+      "read": 2.6,
+      "hist": 0,
+      "all": 3.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1964,
+     "top2": 0.1696,
+     "entropy": 4.008,
+     "bins": 49,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0.1,
+      "all": 2.5
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1836,
+     "top2": 0.1701,
+     "entropy": 4.111,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1723,
+     "top2": 0.1699,
+     "entropy": 4.186,
+     "bins": 58,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.3,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.0849,
+     "comps": 810,
+     "ms": 2.2
+    },
+    "ss2.round": {
+     "topSurface": 0.171,
+     "entropy": 4.269,
+     "bins": 62,
+     "ms": 8.8
+    },
+    "ss4.round": {
+     "topSurface": 0.1722,
+     "entropy": 4.181,
+     "bins": 52,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.185,
+     "entropy": 4.172,
+     "bins": 56,
+     "ms": 7.8
+    },
+    "off.decide": {
+     "topSurface": 0.1788,
+     "top2": 0.1603,
+     "entropy": 4.193,
+     "bins": 57,
+     "ms": {
+      "render": 0.4,
+      "read": 2.2,
+      "hist": 0.2,
+      "all": 2.8
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1297,
+     "entropy": 4.449,
+     "bins": 55,
+     "ms": 6.3
+    },
+    "cvs.decide": {
+     "topSurface": 0.1236,
+     "entropy": 4.416,
+     "bins": 54,
+     "ms": 6.1
+    }
+   }
+  },
+  {
+   "id": "s040",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 66.656,
+    "y": 11.366,
+    "z": -47.916
+   },
+   "R": 0,
+   "stageMs": 24.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3835,
+     "top2": 0.1142,
+     "entropy": 2.911,
+     "bins": 19,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3793,
+     "top2": 0.1115,
+     "entropy": 2.967,
+     "bins": 21,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.381,
+     "top2": 0.1098,
+     "entropy": 2.964,
+     "bins": 24,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3751,
+     "top2": 0.109,
+     "entropy": 2.994,
+     "bins": 26,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.376,
+     "top2": 0.1053,
+     "entropy": 3.024,
+     "bins": 30,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.3453,
+     "comps": 270,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.3785,
+     "entropy": 3.038,
+     "bins": 37,
+     "ms": 8.3
+    },
+    "ss4.round": {
+     "topSurface": 0.3812,
+     "entropy": 2.997,
+     "bins": 30,
+     "ms": 7.4
+    },
+    "ss4.decide": {
+     "topSurface": 0.4232,
+     "entropy": 2.913,
+     "bins": 29,
+     "ms": 7.2
+    },
+    "off.decide": {
+     "topSurface": 0.4225,
+     "top2": 0.0964,
+     "entropy": 2.925,
+     "bins": 27,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0.2,
+      "all": 2.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2534,
+     "entropy": 3.439,
+     "bins": 29,
+     "ms": 5.7
+    },
+    "cvs.decide": {
+     "topSurface": 0.2648,
+     "entropy": 3.391,
+     "bins": 30,
+     "ms": 5.6
+    }
+   }
+  },
+  {
+   "id": "s041",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -55.844,
+    "y": 27.57,
+    "z": 74.584
+   },
+   "R": 0,
+   "stageMs": 2.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2346,
+     "top2": 0.1613,
+     "entropy": 3.76,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2435,
+     "top2": 0.1632,
+     "entropy": 3.722,
+     "bins": 38,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2272,
+     "top2": 0.1717,
+     "entropy": 3.767,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2198,
+     "top2": 0.168,
+     "entropy": 3.81,
+     "bins": 45,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2115,
+     "top2": 0.1678,
+     "entropy": 3.884,
+     "bins": 49,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.3,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.1848,
+     "comps": 931,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.1939,
+     "entropy": 3.927,
+     "bins": 53,
+     "ms": 8.5
+    },
+    "ss4.round": {
+     "topSurface": 0.2007,
+     "entropy": 3.774,
+     "bins": 45,
+     "ms": 7.4
+    },
+    "ss4.decide": {
+     "topSurface": 0.4052,
+     "entropy": 2.169,
+     "bins": 17,
+     "ms": 7.8
+    },
+    "off.decide": {
+     "topSurface": 0.379,
+     "top2": 0.2749,
+     "entropy": 2.179,
+     "bins": 16,
+     "ms": {
+      "render": 0.6,
+      "read": 2.3,
+      "hist": 0.3,
+      "all": 3.2
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1602,
+     "entropy": 3.921,
+     "bins": 46,
+     "ms": 6.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.6564,
+     "entropy": 1.37,
+     "bins": 15,
+     "ms": 5.9
+    }
+   }
+  },
+  {
+   "id": "s042",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -27.084,
+    "y": 20.077,
+    "z": 20.416
+   },
+   "R": 0,
+   "stageMs": 24,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2423,
+     "top2": 0.1775,
+     "entropy": 3.348,
+     "bins": 31,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2457,
+     "top2": 0.1806,
+     "entropy": 3.399,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2452,
+     "top2": 0.1775,
+     "entropy": 3.403,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2393,
+     "top2": 0.1738,
+     "entropy": 3.447,
+     "bins": 48,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2311,
+     "top2": 0.1751,
+     "entropy": 3.472,
+     "bins": 51,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.2423,
+     "comps": 536,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.2319,
+     "entropy": 3.458,
+     "bins": 59,
+     "ms": 8.2
+    },
+    "ss4.round": {
+     "topSurface": 0.2351,
+     "entropy": 3.376,
+     "bins": 51,
+     "ms": 7.2
+    },
+    "ss4.decide": {
+     "topSurface": 0.2345,
+     "entropy": 3.362,
+     "bins": 50,
+     "ms": 7.3
+    },
+    "off.decide": {
+     "topSurface": 0.2313,
+     "top2": 0.1686,
+     "entropy": 3.432,
+     "bins": 52,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.3,
+      "all": 2.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1845,
+     "entropy": 3.928,
+     "bins": 52,
+     "ms": 7.9
+    },
+    "cvs.decide": {
+     "topSurface": 0.1734,
+     "entropy": 3.904,
+     "bins": 51,
+     "ms": 5.8
+    }
+   }
+  },
+  {
+   "id": "s043",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -50.416,
+    "y": 26.23,
+    "z": 35.416
+   },
+   "R": 5,
+   "stageMs": 274.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.5664,
+     "top2": 0.1296,
+     "entropy": 2.467,
+     "bins": 28,
+     "ms": {
+      "render": 0.7,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.5799,
+     "top2": 0.135,
+     "entropy": 2.4,
+     "bins": 29,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.587,
+     "top2": 0.1323,
+     "entropy": 2.382,
+     "bins": 35,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.5799,
+     "top2": 0.1265,
+     "entropy": 2.443,
+     "bins": 38,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0.1,
+      "all": 2.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.5783,
+     "top2": 0.1241,
+     "entropy": 2.473,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.2593,
+     "comps": 610,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.5837,
+     "entropy": 2.508,
+     "bins": 55,
+     "ms": 8.5
+    },
+    "ss4.round": {
+     "topSurface": 0.5984,
+     "entropy": 2.426,
+     "bins": 46,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.809,
+     "entropy": 1.039,
+     "bins": 9,
+     "ms": 8.1
+    },
+    "off.decide": {
+     "topSurface": 0.8126,
+     "top2": 0.0983,
+     "entropy": 1.028,
+     "bins": 10,
+     "ms": {
+      "render": 0.7,
+      "read": 2.6,
+      "hist": 0.3,
+      "all": 3.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.4288,
+     "entropy": 2.874,
+     "bins": 49,
+     "ms": 8.3
+    },
+    "cvs.decide": {
+     "topSurface": 0.4004,
+     "entropy": 1.765,
+     "bins": 7,
+     "ms": 6.2
+    }
+   }
+  },
+  {
+   "id": "s044",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -56.88,
+    "y": 27.054,
+    "z": 67.691
+   },
+   "R": 5,
+   "stageMs": 117.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2276,
+     "top2": 0.0988,
+     "entropy": 4.073,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 2.3,
+      "hist": 0,
+      "all": 2.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2209,
+     "top2": 0.0929,
+     "entropy": 4.105,
+     "bins": 40,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0.1,
+      "all": 2.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2147,
+     "top2": 0.0992,
+     "entropy": 4.167,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2135,
+     "top2": 0.0977,
+     "entropy": 4.178,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2087,
+     "top2": 0.096,
+     "entropy": 4.206,
+     "bins": 59,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.0702,
+     "comps": 1177,
+     "ms": 2.2
+    },
+    "ss2.round": {
+     "topSurface": 0.2132,
+     "entropy": 4.228,
+     "bins": 62,
+     "ms": 8.9
+    },
+    "ss4.round": {
+     "topSurface": 0.2128,
+     "entropy": 4.152,
+     "bins": 54,
+     "ms": 8
+    },
+    "ss4.decide": {
+     "topSurface": 0.2711,
+     "entropy": 3.955,
+     "bins": 53,
+     "ms": 7.5
+    },
+    "off.decide": {
+     "topSurface": 0.263,
+     "top2": 0.0875,
+     "entropy": 4.01,
+     "bins": 54,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0.2,
+      "all": 2.9
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1005,
+     "entropy": 4.614,
+     "bins": 60,
+     "ms": 7.7
+    },
+    "cvs.decide": {
+     "topSurface": 0.1394,
+     "entropy": 4.45,
+     "bins": 62,
+     "ms": 6.4
+    }
+   }
+  },
+  {
+   "id": "s045",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -0.62,
+    "y": 15.842,
+    "z": -9.38
+   },
+   "R": 0,
+   "stageMs": 69.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1752,
+     "top2": 0.1512,
+     "entropy": 3.831,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.201,
+     "top2": 0.1411,
+     "entropy": 3.756,
+     "bins": 41,
+     "ms": {
+      "render": 0.3,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2091,
+     "top2": 0.1354,
+     "entropy": 3.809,
+     "bins": 44,
+     "ms": {
+      "render": 0.3,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2133,
+     "top2": 0.1299,
+     "entropy": 3.823,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2148,
+     "top2": 0.1224,
+     "entropy": 3.856,
+     "bins": 53,
+     "ms": {
+      "render": 0.3,
+      "read": 2,
+      "hist": 0.1,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.2361,
+     "comps": 640,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.2385,
+     "entropy": 3.827,
+     "bins": 57,
+     "ms": 8.7
+    },
+    "ss4.round": {
+     "topSurface": 0.2455,
+     "entropy": 3.738,
+     "bins": 45,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.2475,
+     "entropy": 3.772,
+     "bins": 46,
+     "ms": 7.1
+    },
+    "off.decide": {
+     "topSurface": 0.2147,
+     "top2": 0.1248,
+     "entropy": 3.909,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.3,
+      "all": 2.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.3053,
+     "entropy": 3.4,
+     "bins": 43,
+     "ms": 6.3
+    },
+    "cvs.decide": {
+     "topSurface": 0.2978,
+     "entropy": 3.427,
+     "bins": 44,
+     "ms": 6.4
+    }
+   }
+  },
+  {
+   "id": "s046",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 0.416,
+    "y": 14.227,
+    "z": 4.156
+   },
+   "R": 0,
+   "stageMs": 6.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2276,
+     "top2": 0.2052,
+     "entropy": 3.494,
+     "bins": 35,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2266,
+     "top2": 0.1984,
+     "entropy": 3.612,
+     "bins": 39,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2253,
+     "top2": 0.1962,
+     "entropy": 3.639,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2219,
+     "top2": 0.1884,
+     "entropy": 3.696,
+     "bins": 46,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2207,
+     "top2": 0.1815,
+     "entropy": 3.747,
+     "bins": 51,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.2,
+     "comps": 549,
+     "ms": 2
+    },
+    "ss2.round": {
+     "topSurface": 0.2162,
+     "entropy": 3.786,
+     "bins": 57,
+     "ms": 8.3
+    },
+    "ss4.round": {
+     "topSurface": 0.2187,
+     "entropy": 3.675,
+     "bins": 51,
+     "ms": 6.8
+    },
+    "ss4.decide": {
+     "topSurface": 0.2152,
+     "entropy": 3.758,
+     "bins": 50,
+     "ms": 7.4
+    },
+    "off.decide": {
+     "topSurface": 0.214,
+     "top2": 0.1561,
+     "entropy": 3.841,
+     "bins": 49,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.1,
+      "all": 2.5
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1423,
+     "entropy": 4.196,
+     "bins": 51,
+     "ms": 6
+    },
+    "cvs.decide": {
+     "topSurface": 0.146,
+     "entropy": 4.203,
+     "bins": 47,
+     "ms": 6
+    }
+   }
+  },
+  {
+   "id": "s047",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 2.916,
+    "y": 14.32,
+    "z": 2.084
+   },
+   "R": 5,
+   "stageMs": 201.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2739,
+     "top2": 0.1836,
+     "entropy": 3.534,
+     "bins": 37,
+     "ms": {
+      "render": 0.7,
+      "read": 3.3,
+      "hist": 0.1,
+      "all": 4.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2717,
+     "top2": 0.1793,
+     "entropy": 3.6,
+     "bins": 40,
+     "ms": {
+      "render": 0.5,
+      "read": 3.6,
+      "hist": 0.1,
+      "all": 4.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2741,
+     "top2": 0.1771,
+     "entropy": 3.594,
+     "bins": 38,
+     "ms": {
+      "render": 0.5,
+      "read": 3.2,
+      "hist": 0,
+      "all": 3.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2711,
+     "top2": 0.1745,
+     "entropy": 3.651,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2723,
+     "top2": 0.1654,
+     "entropy": 3.697,
+     "bins": 49,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 2.5
+     }
+    },
+    "region96": {
+     "topRegion": 0.1435,
+     "comps": 541,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.2672,
+     "entropy": 3.783,
+     "bins": 56,
+     "ms": 8.6
+    },
+    "ss4.round": {
+     "topSurface": 0.2707,
+     "entropy": 3.72,
+     "bins": 52,
+     "ms": 7.4
+    },
+    "ss4.decide": {
+     "topSurface": 0.273,
+     "entropy": 3.723,
+     "bins": 51,
+     "ms": 7.1
+    },
+    "off.decide": {
+     "topSurface": 0.2754,
+     "top2": 0.1668,
+     "entropy": 3.683,
+     "bins": 48,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0.1,
+      "all": 2.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2053,
+     "entropy": 3.991,
+     "bins": 49,
+     "ms": 6.2
+    },
+    "cvs.decide": {
+     "topSurface": 0.1902,
+     "entropy": 4,
+     "bins": 51,
+     "ms": 6.1
+    }
+   }
+  },
+  {
+   "id": "s048",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 23.12,
+    "y": 13.676,
+    "z": -16.88
+   },
+   "R": 5,
+   "stageMs": 280.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.5918,
+     "top2": 0.0725,
+     "entropy": 2.494,
+     "bins": 31,
+     "ms": {
+      "render": 0.8,
+      "read": 2.5,
+      "hist": 0,
+      "all": 3.3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.5768,
+     "top2": 0.0951,
+     "entropy": 2.513,
+     "bins": 31,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0.1,
+      "all": 2.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.5563,
+     "top2": 0.0947,
+     "entropy": 2.647,
+     "bins": 35,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.544,
+     "top2": 0.0969,
+     "entropy": 2.716,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.5361,
+     "top2": 0.0958,
+     "entropy": 2.778,
+     "bins": 38,
+     "ms": {
+      "render": 0.3,
+      "read": 1.9,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1676,
+     "comps": 693,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.5367,
+     "entropy": 2.776,
+     "bins": 46,
+     "ms": 8.8
+    },
+    "ss4.round": {
+     "topSurface": 0.5377,
+     "entropy": 2.726,
+     "bins": 42,
+     "ms": 8
+    },
+    "ss4.decide": {
+     "topSurface": 0.5049,
+     "entropy": 2.858,
+     "bins": 41,
+     "ms": 8.4
+    },
+    "off.decide": {
+     "topSurface": 0.5031,
+     "top2": 0.1061,
+     "entropy": 2.909,
+     "bins": 37,
+     "ms": {
+      "render": 0.5,
+      "read": 2.9,
+      "hist": 0.2,
+      "all": 3.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.23,
+     "entropy": 3.278,
+     "bins": 44,
+     "ms": 7.5
+    },
+    "cvs.decide": {
+     "topSurface": 0.2336,
+     "entropy": 3.317,
+     "bins": 45,
+     "ms": 6.3
+    }
+   }
+  },
+  {
+   "id": "s049",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -62.916,
+    "y": 27.707,
+    "z": 75.416
+   },
+   "R": 0,
+   "stageMs": 2.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3696,
+     "top2": 0.1242,
+     "entropy": 3.264,
+     "bins": 29,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3715,
+     "top2": 0.1068,
+     "entropy": 3.326,
+     "bins": 32,
+     "ms": {
+      "render": 0.2,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3393,
+     "top2": 0.1167,
+     "entropy": 3.398,
+     "bins": 34,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3179,
+     "top2": 0.1202,
+     "entropy": 3.469,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.3,
+      "hist": 0.1,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3019,
+     "top2": 0.1282,
+     "entropy": 3.522,
+     "bins": 45,
+     "ms": {
+      "render": 0.2,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3308,
+     "comps": 787,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.2613,
+     "entropy": 3.588,
+     "bins": 47,
+     "ms": 8.4
+    },
+    "ss4.round": {
+     "topSurface": 0.2727,
+     "entropy": 3.423,
+     "bins": 43,
+     "ms": 7.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.2974,
+     "entropy": 3.47,
+     "bins": 49,
+     "ms": 7.3
+    },
+    "off.decide": {
+     "topSurface": 0.3272,
+     "top2": 0.1365,
+     "entropy": 3.509,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0.2,
+      "all": 2.6
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2118,
+     "entropy": 3.637,
+     "bins": 47,
+     "ms": 5.9
+    },
+    "cvs.decide": {
+     "topSurface": 0.2434,
+     "entropy": 3.713,
+     "bins": 48,
+     "ms": 6
+    }
+   }
+  },
+  {
+   "id": "s050",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 25.62,
+    "y": 14.233,
+    "z": -24.38
+   },
+   "R": 0,
+   "stageMs": 23.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2284,
+     "top2": 0.1211,
+     "entropy": 3.895,
+     "bins": 35,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2096,
+     "top2": 0.1211,
+     "entropy": 4.02,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2101,
+     "top2": 0.1171,
+     "entropy": 4.025,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2101,
+     "top2": 0.1167,
+     "entropy": 4.058,
+     "bins": 44,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2112,
+     "top2": 0.1166,
+     "entropy": 4.084,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.0828,
+     "comps": 767,
+     "ms": 2.2
+    },
+    "ss2.round": {
+     "topSurface": 0.2212,
+     "entropy": 4.087,
+     "bins": 53,
+     "ms": 8.4
+    },
+    "ss4.round": {
+     "topSurface": 0.223,
+     "entropy": 4.011,
+     "bins": 49,
+     "ms": 7.2
+    },
+    "ss4.decide": {
+     "topSurface": 0.2525,
+     "entropy": 3.956,
+     "bins": 47,
+     "ms": 7.5
+    },
+    "off.decide": {
+     "topSurface": 0.2391,
+     "top2": 0.1063,
+     "entropy": 4.022,
+     "bins": 47,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0.2,
+      "all": 2.8
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1814,
+     "entropy": 4.15,
+     "bins": 52,
+     "ms": 7.4
+    },
+    "cvs.decide": {
+     "topSurface": 0.1935,
+     "entropy": 4.11,
+     "bins": 52,
+     "ms": 6.1
+    }
+   }
+  },
+  {
+   "id": "s051",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -32.084,
+    "y": 20.794,
+    "z": 12.084
+   },
+   "R": 0,
+   "stageMs": 20.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2747,
+     "top2": 0.1767,
+     "entropy": 3.518,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 1.8,
+      "hist": 0.1,
+      "all": 2.5
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2708,
+     "top2": 0.1719,
+     "entropy": 3.618,
+     "bins": 41,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2674,
+     "top2": 0.1707,
+     "entropy": 3.668,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2628,
+     "top2": 0.1692,
+     "entropy": 3.7,
+     "bins": 56,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0.1,
+      "all": 2.7
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2608,
+     "top2": 0.1673,
+     "entropy": 3.746,
+     "bins": 59,
+     "ms": {
+      "render": 0.5,
+      "read": 2,
+      "hist": 0.3,
+      "all": 2.8
+     }
+    },
+    "region96": {
+     "topRegion": 0.3351,
+     "comps": 651,
+     "ms": 2.3
+    },
+    "ss2.round": {
+     "topSurface": 0.2508,
+     "entropy": 3.727,
+     "bins": 61,
+     "ms": 9.8
+    },
+    "ss4.round": {
+     "topSurface": 0.2452,
+     "entropy": 3.654,
+     "bins": 53,
+     "ms": 9.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.2433,
+     "entropy": 3.709,
+     "bins": 55,
+     "ms": 9.6
+    },
+    "off.decide": {
+     "topSurface": 0.2592,
+     "top2": 0.1765,
+     "entropy": 3.797,
+     "bins": 62,
+     "ms": {
+      "render": 0.7,
+      "read": 3.5,
+      "hist": 0.2,
+      "all": 4.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.3388,
+     "entropy": 3.41,
+     "bins": 48,
+     "ms": 12.1
+    },
+    "cvs.decide": {
+     "topSurface": 0.3329,
+     "entropy": 3.479,
+     "bins": 53,
+     "ms": 7.2
+    }
+   }
+  },
+  {
+   "id": "s052",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 14.38,
+    "y": 12.882,
+    "z": -25.62
+   },
+   "R": 0,
+   "stageMs": 22.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.4853,
+     "top2": 0.0864,
+     "entropy": 2.975,
+     "bins": 36,
+     "ms": {
+      "render": 0.5,
+      "read": 3.4,
+      "hist": 0,
+      "all": 3.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.477,
+     "top2": 0.0855,
+     "entropy": 3.039,
+     "bins": 37,
+     "ms": {
+      "render": 0.6,
+      "read": 3.3,
+      "hist": 0,
+      "all": 3.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.4751,
+     "top2": 0.0802,
+     "entropy": 3.056,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 3.4,
+      "hist": 0.1,
+      "all": 3.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.4698,
+     "top2": 0.08,
+     "entropy": 3.104,
+     "bins": 45,
+     "ms": {
+      "render": 0.3,
+      "read": 3.3,
+      "hist": 0,
+      "all": 3.6
+     }
+    },
+    "320x180": {
+     "topSurface": 0.4643,
+     "top2": 0.086,
+     "entropy": 3.146,
+     "bins": 50,
+     "ms": {
+      "render": 0.7,
+      "read": 3.5,
+      "hist": 0.2,
+      "all": 4.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.7436,
+     "comps": 407,
+     "ms": 4.1
+    },
+    "ss2.round": {
+     "topSurface": 0.4344,
+     "entropy": 3.231,
+     "bins": 54,
+     "ms": 11.6
+    },
+    "ss4.round": {
+     "topSurface": 0.4191,
+     "entropy": 3.221,
+     "bins": 49,
+     "ms": 10
+    },
+    "ss4.decide": {
+     "topSurface": 0.421,
+     "entropy": 3.204,
+     "bins": 49,
+     "ms": 9.6
+    },
+    "off.decide": {
+     "topSurface": 0.4682,
+     "top2": 0.089,
+     "entropy": 3.122,
+     "bins": 53,
+     "ms": {
+      "render": 0.5,
+      "read": 3.9,
+      "hist": 0.1,
+      "all": 4.5
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.6986,
+     "entropy": 2.055,
+     "bins": 46,
+     "ms": 7.2
+    },
+    "cvs.decide": {
+     "topSurface": 0.7228,
+     "entropy": 1.976,
+     "bins": 45,
+     "ms": 7.4
+    }
+   }
+  },
+  {
+   "id": "s053",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": -40.62,
+    "y": 25.598,
+    "z": 23.12
+   },
+   "R": 5,
+   "stageMs": 17.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2917,
+     "top2": 0.2778,
+     "entropy": 3.061,
+     "bins": 25,
+     "ms": {
+      "render": 0.6,
+      "read": 2.8,
+      "hist": 0.1,
+      "all": 3.5
+     }
+    },
+    "64x36": {
+     "topSurface": 0.296,
+     "top2": 0.2661,
+     "entropy": 3.102,
+     "bins": 26,
+     "ms": {
+      "render": 0.6,
+      "read": 2.8,
+      "hist": 0,
+      "all": 3.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2899,
+     "top2": 0.2587,
+     "entropy": 3.188,
+     "bins": 33,
+     "ms": {
+      "render": 0.6,
+      "read": 2.3,
+      "hist": 0,
+      "all": 2.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2819,
+     "top2": 0.2526,
+     "entropy": 3.265,
+     "bins": 35,
+     "ms": {
+      "render": 0.6,
+      "read": 2.4,
+      "hist": 0.1,
+      "all": 3.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2727,
+     "top2": 0.2448,
+     "entropy": 3.34,
+     "bins": 42,
+     "ms": {
+      "render": 0.7,
+      "read": 2.7,
+      "hist": 0.3,
+      "all": 3.7
+     }
+    },
+    "region96": {
+     "topRegion": 0.1954,
+     "comps": 264,
+     "ms": 3
+    },
+    "ss2.round": {
+     "topSurface": 0.25,
+     "entropy": 3.424,
+     "bins": 52,
+     "ms": 11.1
+    },
+    "ss4.round": {
+     "topSurface": 0.2634,
+     "entropy": 3.345,
+     "bins": 44,
+     "ms": 9.7
+    },
+    "ss4.decide": {
+     "topSurface": 0.2582,
+     "entropy": 3.385,
+     "bins": 45,
+     "ms": 9.3
+    },
+    "off.decide": {
+     "topSurface": 0.2562,
+     "top2": 0.2529,
+     "entropy": 3.381,
+     "bins": 41,
+     "ms": {
+      "render": 0.7,
+      "read": 3.5,
+      "hist": 0.3,
+      "all": 4.5
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2287,
+     "entropy": 3.494,
+     "bins": 42,
+     "ms": 7.6
+    },
+    "cvs.decide": {
+     "topSurface": 0.2343,
+     "entropy": 3.479,
+     "bins": 45,
+     "ms": 7.9
+    }
+   }
+  },
+  {
+   "id": "s054",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -48.88,
+    "y": 26.028,
+    "z": 34.38
+   },
+   "R": 8,
+   "stageMs": 363,
+   "res": {
+    "48x27": {
+     "topSurface": 0.4483,
+     "top2": 0.0957,
+     "entropy": 3.232,
+     "bins": 35,
+     "ms": {
+      "render": 0.6,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.4661,
+     "top2": 0.0959,
+     "entropy": 3.147,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.4599,
+     "top2": 0.1246,
+     "entropy": 3.062,
+     "bins": 39,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.4644,
+     "top2": 0.1288,
+     "entropy": 2.984,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.4611,
+     "top2": 0.1362,
+     "entropy": 2.953,
+     "bins": 53,
+     "ms": {
+      "render": 0.6,
+      "read": 1.8,
+      "hist": 0.2,
+      "all": 2.6
+     }
+    },
+    "region96": {
+     "topRegion": 0.3468,
+     "comps": 570,
+     "ms": 2.2
+    },
+    "ss2.round": {
+     "topSurface": 0.471,
+     "entropy": 2.89,
+     "bins": 59,
+     "ms": 8.9
+    },
+    "ss4.round": {
+     "topSurface": 0.4865,
+     "entropy": 2.823,
+     "bins": 50,
+     "ms": 8.6
+    },
+    "ss4.decide": {
+     "topSurface": 0.273,
+     "entropy": 3.31,
+     "bins": 39,
+     "ms": 8.6
+    },
+    "off.decide": {
+     "topSurface": 0.2576,
+     "top2": 0.257,
+     "entropy": 3.297,
+     "bins": 40,
+     "ms": {
+      "render": 0.6,
+      "read": 2.7,
+      "hist": 0.2,
+      "all": 3.5
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.3411,
+     "entropy": 3.175,
+     "bins": 49,
+     "ms": 9
+    },
+    "cvs.decide": {
+     "topSurface": 0.2247,
+     "entropy": 3.569,
+     "bins": 40,
+     "ms": 6.3
+    }
+   }
+  },
+  {
+   "id": "s055",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 33.12,
+    "y": 13.935,
+    "z": -18.12
+   },
+   "R": 5,
+   "stageMs": 51.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3225,
+     "top2": 0.1736,
+     "entropy": 3.151,
+     "bins": 36,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3108,
+     "top2": 0.178,
+     "entropy": 3.262,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2988,
+     "top2": 0.1788,
+     "entropy": 3.282,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2766,
+     "top2": 0.1851,
+     "entropy": 3.362,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2489,
+     "top2": 0.1857,
+     "entropy": 3.489,
+     "bins": 50,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2
+     }
+    },
+    "region96": {
+     "topRegion": 0.141,
+     "comps": 588,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.2107,
+     "entropy": 3.635,
+     "bins": 54,
+     "ms": 8.2
+    },
+    "ss4.round": {
+     "topSurface": 0.2294,
+     "entropy": 3.527,
+     "bins": 50,
+     "ms": 7.5
+    },
+    "ss4.decide": {
+     "topSurface": 0.2311,
+     "entropy": 3.527,
+     "bins": 49,
+     "ms": 9.3
+    },
+    "off.decide": {
+     "topSurface": 0.25,
+     "top2": 0.1851,
+     "entropy": 3.482,
+     "bins": 46,
+     "ms": {
+      "render": 0.5,
+      "read": 2,
+      "hist": 0.3,
+      "all": 2.8
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1908,
+     "entropy": 3.909,
+     "bins": 50,
+     "ms": 6.2
+    },
+    "cvs.decide": {
+     "topSurface": 0.1975,
+     "entropy": 3.899,
+     "bins": 49,
+     "ms": 5.6
+    }
+   }
+  },
+  {
+   "id": "s056",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": -45.62,
+    "y": 30,
+    "z": 26.88
+   },
+   "R": 5,
+   "stageMs": 20.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2006,
+     "top2": 0.142,
+     "entropy": 4.046,
+     "bins": 39,
+     "ms": {
+      "render": 0.7,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1979,
+     "top2": 0.1424,
+     "entropy": 4.112,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.186,
+     "top2": 0.1418,
+     "entropy": 4.143,
+     "bins": 46,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1775,
+     "top2": 0.1408,
+     "entropy": 4.222,
+     "bins": 51,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1656,
+     "top2": 0.1384,
+     "entropy": 4.301,
+     "bins": 58,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1011,
+     "comps": 640,
+     "ms": 2.1
+    },
+    "ss2.round": {
+     "topSurface": 0.1495,
+     "entropy": 4.345,
+     "bins": 63,
+     "ms": 8.8
+    },
+    "ss4.round": {
+     "topSurface": 0.1562,
+     "entropy": 4.289,
+     "bins": 59,
+     "ms": 7.9
+    },
+    "ss4.decide": {
+     "topSurface": 0.1588,
+     "entropy": 4.376,
+     "bins": 60,
+     "ms": 8.6
+    },
+    "off.decide": {
+     "topSurface": 0.1667,
+     "top2": 0.1327,
+     "entropy": 4.393,
+     "bins": 61,
+     "ms": {
+      "render": 0.6,
+      "read": 2.6,
+      "hist": 0.3,
+      "all": 3.5
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.161,
+     "entropy": 4.124,
+     "bins": 48,
+     "ms": 8.5
+    },
+    "cvs.decide": {
+     "topSurface": 0.1696,
+     "entropy": 4.08,
+     "bins": 46,
+     "ms": 6.6
+    }
+   }
+  },
+  {
+   "id": "s057",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 40.62,
+    "y": 15.166,
+    "z": -25.62
+   },
+   "R": 5,
+   "stageMs": 42.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1543,
+     "top2": 0.1335,
+     "entropy": 3.983,
+     "bins": 38,
+     "ms": {
+      "render": 0.8,
+      "read": 2.3,
+      "hist": 0,
+      "all": 3.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.151,
+     "top2": 0.1476,
+     "entropy": 3.962,
+     "bins": 43,
+     "ms": {
+      "render": 0.6,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1524,
+     "top2": 0.1429,
+     "entropy": 3.983,
+     "bins": 45,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1535,
+     "top2": 0.1417,
+     "entropy": 4.011,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.154,
+     "top2": 0.1409,
+     "entropy": 4.051,
+     "bins": 51,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1887,
+     "comps": 573,
+     "ms": 2.5
+    },
+    "ss2.round": {
+     "topSurface": 0.1383,
+     "entropy": 4.162,
+     "bins": 56,
+     "ms": 8.7
+    },
+    "ss4.round": {
+     "topSurface": 0.1339,
+     "entropy": 4.155,
+     "bins": 55,
+     "ms": 7.9
+    },
+    "ss4.decide": {
+     "topSurface": 0.1366,
+     "entropy": 4.181,
+     "bins": 54,
+     "ms": 8.6
+    },
+    "off.decide": {
+     "topSurface": 0.1649,
+     "top2": 0.1444,
+     "entropy": 4.059,
+     "bins": 51,
+     "ms": {
+      "render": 0.8,
+      "read": 2.5,
+      "hist": 0.2,
+      "all": 3.5
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1722,
+     "entropy": 4.159,
+     "bins": 50,
+     "ms": 8.2
+    },
+    "cvs.decide": {
+     "topSurface": 0.1783,
+     "entropy": 4.17,
+     "bins": 48,
+     "ms": 6
+    }
+   }
+  },
+  {
+   "id": "s058",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 11.88,
+    "y": 15.296,
+    "z": -15.62
+   },
+   "R": 0,
+   "stageMs": 202.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2106,
+     "top2": 0.142,
+     "entropy": 3.67,
+     "bins": 30,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2018,
+     "top2": 0.128,
+     "entropy": 3.769,
+     "bins": 32,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1927,
+     "top2": 0.1179,
+     "entropy": 3.874,
+     "bins": 36,
+     "ms": {
+      "render": 0.3,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1883,
+     "top2": 0.1138,
+     "entropy": 3.949,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1883,
+     "top2": 0.1176,
+     "entropy": 3.992,
+     "bins": 49,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0.3,
+      "all": 2.7
+     }
+    },
+    "region96": {
+     "topRegion": 0.2635,
+     "comps": 573,
+     "ms": 2.2
+    },
+    "ss2.round": {
+     "topSurface": 0.2082,
+     "entropy": 3.984,
+     "bins": 56,
+     "ms": 9.4
+    },
+    "ss4.round": {
+     "topSurface": 0.2196,
+     "entropy": 3.916,
+     "bins": 49,
+     "ms": 9
+    },
+    "ss4.decide": {
+     "topSurface": 0.1853,
+     "entropy": 3.977,
+     "bins": 46,
+     "ms": 9.7
+    },
+    "off.decide": {
+     "topSurface": 0.1652,
+     "top2": 0.1444,
+     "entropy": 4.046,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 3.6,
+      "hist": 0.2,
+      "all": 4.2
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2412,
+     "entropy": 3.721,
+     "bins": 45,
+     "ms": 6.7
+    },
+    "cvs.decide": {
+     "topSurface": 0.2438,
+     "entropy": 3.803,
+     "bins": 47,
+     "ms": 7.2
+    }
+   }
+  },
+  {
+   "id": "s059",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -17.916,
+    "y": 15.401,
+    "z": 2.084
+   },
+   "R": 0,
+   "stageMs": 40.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2762,
+     "top2": 0.2106,
+     "entropy": 3.36,
+     "bins": 31,
+     "ms": {
+      "render": 0.5,
+      "read": 2,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2756,
+     "top2": 0.2079,
+     "entropy": 3.424,
+     "bins": 33,
+     "ms": {
+      "render": 0.3,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2816,
+     "top2": 0.2106,
+     "entropy": 3.413,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.289,
+     "top2": 0.2107,
+     "entropy": 3.417,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2932,
+     "top2": 0.206,
+     "entropy": 3.445,
+     "bins": 55,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.3,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.4363,
+     "comps": 562,
+     "ms": 2
+    },
+    "ss2.round": {
+     "topSurface": 0.2982,
+     "entropy": 3.425,
+     "bins": 54,
+     "ms": 8.4
+    },
+    "ss4.round": {
+     "topSurface": 0.2976,
+     "entropy": 3.34,
+     "bins": 42,
+     "ms": 7.4
+    },
+    "ss4.decide": {
+     "topSurface": 0.3331,
+     "entropy": 3.1,
+     "bins": 44,
+     "ms": 7.5
+    },
+    "off.decide": {
+     "topSurface": 0.3268,
+     "top2": 0.219,
+     "entropy": 3.199,
+     "bins": 49,
+     "ms": {
+      "render": 0.5,
+      "read": 2,
+      "hist": 0.2,
+      "all": 2.7
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.2655,
+     "entropy": 3.444,
+     "bins": 41,
+     "ms": 5.9
+    },
+    "cvs.decide": {
+     "topSurface": 0.2648,
+     "entropy": 3.264,
+     "bins": 40,
+     "ms": 6.3
+    }
+   }
+  },
+  {
+   "id": "s060",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -3.12,
+    "y": 14.026,
+    "z": 9.38
+   },
+   "R": 0,
+   "stageMs": 3.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2137,
+     "top2": 0.1921,
+     "entropy": 3.496,
+     "bins": 36,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2044,
+     "top2": 0.191,
+     "entropy": 3.553,
+     "bins": 38,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2087,
+     "top2": 0.1914,
+     "entropy": 3.555,
+     "bins": 40,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2002,
+     "top2": 0.1972,
+     "entropy": 3.591,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1996,
+     "top2": 0.1926,
+     "entropy": 3.652,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3285,
+     "comps": 552,
+     "ms": 1.8
+    },
+    "ss2.round": {
+     "topSurface": 0.1947,
+     "entropy": 3.695,
+     "bins": 51,
+     "ms": 8.1
+    },
+    "ss4.round": {
+     "topSurface": 0.1951,
+     "entropy": 3.599,
+     "bins": 47,
+     "ms": 6.9
+    },
+    "ss4.decide": {
+     "topSurface": 0.2007,
+     "entropy": 3.533,
+     "bins": 45,
+     "ms": 7.7
+    },
+    "off.decide": {
+     "topSurface": 0.2085,
+     "top2": 0.1903,
+     "entropy": 3.584,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 2.7,
+      "hist": 0.3,
+      "all": 3.4
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.1905,
+     "entropy": 3.879,
+     "bins": 50,
+     "ms": 7.5
+    },
+    "cvs.decide": {
+     "topSurface": 0.1886,
+     "entropy": 3.853,
+     "bins": 49,
+     "ms": 5.8
+    }
+   }
+  },
+  {
+   "id": "s061",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 3.12,
+    "y": 15.14,
+    "z": -4.38
+   },
+   "R": 5,
+   "stageMs": 351.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3634,
+     "top2": 0.1875,
+     "entropy": 3.05,
+     "bins": 24,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0.1,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3594,
+     "top2": 0.1758,
+     "entropy": 3.125,
+     "bins": 29,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.359,
+     "top2": 0.1707,
+     "entropy": 3.173,
+     "bins": 30,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3619,
+     "top2": 0.1675,
+     "entropy": 3.224,
+     "bins": 36,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3638,
+     "top2": 0.1649,
+     "entropy": 3.266,
+     "bins": 43,
+     "ms": {
+      "render": 0.7,
+      "read": 1.8,
+      "hist": 0.3,
+      "all": 2.8
+     }
+    },
+    "region96": {
+     "topRegion": 0.423,
+     "comps": 510,
+     "ms": 2.4
+    },
+    "ss2.round": {
+     "topSurface": 0.3811,
+     "entropy": 3.32,
+     "bins": 43,
+     "ms": 9.9
+    },
+    "ss4.round": {
+     "topSurface": 0.392,
+     "entropy": 3.244,
+     "bins": 41,
+     "ms": 8.3
+    },
+    "ss4.decide": {
+     "topSurface": 0.3967,
+     "entropy": 3.201,
+     "bins": 40,
+     "ms": 9.1
+    },
+    "off.decide": {
+     "topSurface": 0.3723,
+     "top2": 0.1742,
+     "entropy": 3.211,
+     "bins": 43,
+     "ms": {
+      "render": 0.6,
+      "read": 3,
+      "hist": 0.2,
+      "all": 3.8
+     },
+     "buf": null
+    },
+    "cvs.round": {
+     "topSurface": 0.4835,
+     "entropy": 2.978,
+     "bins": 42,
+     "ms": 11
+    },
+    "cvs.decide": {
+     "topSurface": 0.4765,
+     "entropy": 2.951,
+     "bins": 41,
+     "ms": 6
+    }
+   }
+  }
+ ]
+}

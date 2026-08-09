@@ -1,0 +1,392 @@
+{
+ "file": "/Users/junshernchan/projects/multiplayer-rpg/docs/qa/battle-surface/probe-v1.json",
+ "n": 62,
+ "axes": {
+  "round": {
+   "proxy.48x27.topSurface": {
+    "auc": 0.302,
+    "sep": 0.396,
+    "good": 0.221,
+    "acc": 0.2603,
+    "bad": 0.3104
+   },
+   "proxy.48x27.entropy": {
+    "auc": 0.807,
+    "sep": 0.615,
+    "good": 3.9057,
+    "acc": 3.5431,
+    "bad": 3.3427
+   },
+   "proxy.64x36.topSurface": {
+    "auc": 0.311,
+    "sep": 0.378,
+    "good": 0.2206,
+    "acc": 0.2566,
+    "bad": 0.3089
+   },
+   "proxy.64x36.entropy": {
+    "auc": 0.811,
+    "sep": 0.622,
+    "good": 3.9412,
+    "acc": 3.5877,
+    "bad": 3.3775
+   },
+   "proxy.96x54.topSurface": {
+    "auc": 0.269,
+    "sep": 0.463,
+    "good": 0.2099,
+    "acc": 0.2545,
+    "bad": 0.3078
+   },
+   "proxy.96x54.entropy": {
+    "auc": 0.813,
+    "sep": 0.626,
+    "good": 3.9806,
+    "acc": 3.6213,
+    "bad": 3.4067
+   },
+   "proxy.160x90.topSurface": {
+    "auc": 0.233,
+    "sep": 0.533,
+    "good": 0.2021,
+    "acc": 0.2496,
+    "bad": 0.3064
+   },
+   "proxy.160x90.entropy": {
+    "auc": 0.819,
+    "sep": 0.637,
+    "good": 4.0306,
+    "acc": 3.6631,
+    "bad": 3.4388
+   },
+   "proxy.320x180.topSurface": {
+    "auc": 0.2,
+    "sep": 0.6,
+    "good": 0.1939,
+    "acc": 0.2432,
+    "bad": 0.3046
+   },
+   "proxy.320x180.entropy": {
+    "auc": 0.837,
+    "sep": 0.674,
+    "good": 4.0919,
+    "acc": 3.7165,
+    "bad": 3.4737
+   },
+   "proxy.region96.topRegion": {
+    "auc": 0.256,
+    "sep": 0.489,
+    "good": 0.1478,
+    "acc": 0.2261,
+    "bad": 0.2595
+   },
+   "offline.decide.topSurface": {
+    "auc": 0.178,
+    "sep": 0.644,
+    "good": 0.1767,
+    "acc": 0.2075,
+    "bad": 0.3884
+   },
+   "offline.decide.entropy": {
+    "auc": 0.863,
+    "sep": 0.726,
+    "good": 4.0689,
+    "acc": 3.9516,
+    "bad": 3.1416
+   },
+   "__piles": {
+    "good": 9,
+    "acceptable": 23,
+    "bad": 30
+   }
+  },
+  "decide": {
+   "proxy.48x27.topSurface": {
+    "auc": 0.28,
+    "sep": 0.439,
+    "good": 0.2296,
+    "acc": 0.2732,
+    "bad": 0.3069
+   },
+   "proxy.48x27.entropy": {
+    "auc": 0.702,
+    "sep": 0.404,
+    "good": 3.7768,
+    "acc": 3.5155,
+    "bad": 3.3615
+   },
+   "proxy.64x36.topSurface": {
+    "auc": 0.255,
+    "sep": 0.49,
+    "good": 0.2277,
+    "acc": 0.2705,
+    "bad": 0.3054
+   },
+   "proxy.64x36.entropy": {
+    "auc": 0.712,
+    "sep": 0.424,
+    "good": 3.8318,
+    "acc": 3.551,
+    "bad": 3.3975
+   },
+   "proxy.96x54.topSurface": {
+    "auc": 0.235,
+    "sep": 0.53,
+    "good": 0.2229,
+    "acc": 0.2673,
+    "bad": 0.3037
+   },
+   "proxy.96x54.entropy": {
+    "auc": 0.702,
+    "sep": 0.404,
+    "good": 3.8676,
+    "acc": 3.5891,
+    "bad": 3.4203
+   },
+   "proxy.160x90.topSurface": {
+    "auc": 0.222,
+    "sep": 0.556,
+    "good": 0.2147,
+    "acc": 0.2639,
+    "bad": 0.3019
+   },
+   "proxy.160x90.entropy": {
+    "auc": 0.725,
+    "sep": 0.449,
+    "good": 3.9222,
+    "acc": 3.6274,
+    "bad": 3.4519
+   },
+   "proxy.320x180.topSurface": {
+    "auc": 0.202,
+    "sep": 0.596,
+    "good": 0.205,
+    "acc": 0.2592,
+    "bad": 0.2997
+   },
+   "proxy.320x180.entropy": {
+    "auc": 0.747,
+    "sep": 0.495,
+    "good": 3.9946,
+    "acc": 3.675,
+    "bad": 3.4836
+   },
+   "proxy.region96.topRegion": {
+    "auc": 0.212,
+    "sep": 0.576,
+    "good": 0.1273,
+    "acc": 0.255,
+    "bad": 0.2394
+   },
+   "offline.decide.topSurface": {
+    "auc": 0.152,
+    "sep": 0.697,
+    "good": 0.1738,
+    "acc": 0.2574,
+    "bad": 0.385
+   },
+   "offline.decide.entropy": {
+    "auc": 0.909,
+    "sep": 0.818,
+    "good": 4.2168,
+    "acc": 3.7108,
+    "bad": 3.1259
+   },
+   "__piles": {
+    "good": 9,
+    "acceptable": 31,
+    "bad": 22
+   }
+  },
+  "decide2": {
+   "proxy.48x27.topSurface": {
+    "auc": 0.275,
+    "sep": 0.45,
+    "good": 0.2377,
+    "acc": 0.2739,
+    "bad": 0.3237
+   },
+   "proxy.48x27.entropy": {
+    "auc": 0.813,
+    "sep": 0.626,
+    "good": 3.8177,
+    "acc": 3.4555,
+    "bad": 3.2455
+   },
+   "proxy.64x36.topSurface": {
+    "auc": 0.27,
+    "sep": 0.461,
+    "good": 0.2334,
+    "acc": 0.2736,
+    "bad": 0.3214
+   },
+   "proxy.64x36.entropy": {
+    "auc": 0.805,
+    "sep": 0.611,
+    "good": 3.8582,
+    "acc": 3.4918,
+    "bad": 3.2847
+   },
+   "proxy.96x54.topSurface": {
+    "auc": 0.25,
+    "sep": 0.5,
+    "good": 0.2285,
+    "acc": 0.2725,
+    "bad": 0.3184
+   },
+   "proxy.96x54.entropy": {
+    "auc": 0.811,
+    "sep": 0.621,
+    "good": 3.8998,
+    "acc": 3.5204,
+    "bad": 3.3125
+   },
+   "proxy.160x90.topSurface": {
+    "auc": 0.226,
+    "sep": 0.547,
+    "good": 0.2212,
+    "acc": 0.2717,
+    "bad": 0.3152
+   },
+   "proxy.160x90.entropy": {
+    "auc": 0.813,
+    "sep": 0.626,
+    "good": 3.9507,
+    "acc": 3.5425,
+    "bad": 3.3575
+   },
+   "proxy.320x180.topSurface": {
+    "auc": 0.2,
+    "sep": 0.6,
+    "good": 0.2123,
+    "acc": 0.2698,
+    "bad": 0.3118
+   },
+   "proxy.320x180.entropy": {
+    "auc": 0.824,
+    "sep": 0.647,
+    "good": 4.0142,
+    "acc": 3.5745,
+    "bad": 3.4017
+   },
+   "proxy.region96.topRegion": {
+    "auc": 0.168,
+    "sep": 0.663,
+    "good": 0.1277,
+    "acc": 0.3016,
+    "bad": 0.2477
+   },
+   "offline.decide.topSurface": {
+    "auc": 0.053,
+    "sep": 0.895,
+    "good": 0.1643,
+    "acc": 0.2877,
+    "bad": 0.4138
+   },
+   "offline.decide.entropy": {
+    "auc": 0.968,
+    "sep": 0.937,
+    "good": 4.2367,
+    "acc": 3.5527,
+    "bad": 2.9772
+   },
+   "__piles": {
+    "good": 19,
+    "acceptable": 23,
+    "bad": 20
+   }
+  }
+ },
+ "cost": {
+  "48x27": {
+   "p50": 2.5,
+   "p95": 3.7,
+   "max": 4,
+   "render": 0.49,
+   "read": 2.06,
+   "hist": 0.01
+  },
+  "64x36": {
+   "p50": 2.2,
+   "p95": 2.8,
+   "max": 3.6,
+   "render": 0.43,
+   "read": 1.72,
+   "hist": 0
+  },
+  "96x54": {
+   "p50": 2,
+   "p95": 2.6,
+   "max": 3.3,
+   "render": 0.42,
+   "read": 1.59,
+   "hist": 0.01
+  },
+  "160x90": {
+   "p50": 2,
+   "p95": 2.6,
+   "max": 3.4,
+   "render": 0.43,
+   "read": 1.6,
+   "hist": 0.05
+  },
+  "320x180": {
+   "p50": 2.2,
+   "p95": 2.8,
+   "max": 3.6,
+   "render": 0.44,
+   "read": 1.64,
+   "hist": 0.22
+  },
+  "region96": {
+   "p50": 2,
+   "max": 4
+  }
+ },
+ "agree": {
+  "proxy.48x27.topSurface": {
+   "vsOfflineTop": 0.376,
+   "vsOfflineEnt": -0.42
+  },
+  "proxy.48x27.entropy": {
+   "vsOfflineTop": -0.543,
+   "vsOfflineEnt": 0.604
+  },
+  "proxy.64x36.topSurface": {
+   "vsOfflineTop": 0.382,
+   "vsOfflineEnt": -0.437
+  },
+  "proxy.64x36.entropy": {
+   "vsOfflineTop": -0.544,
+   "vsOfflineEnt": 0.605
+  },
+  "proxy.96x54.topSurface": {
+   "vsOfflineTop": 0.414,
+   "vsOfflineEnt": -0.466
+  },
+  "proxy.96x54.entropy": {
+   "vsOfflineTop": -0.541,
+   "vsOfflineEnt": 0.607
+  },
+  "proxy.160x90.topSurface": {
+   "vsOfflineTop": 0.444,
+   "vsOfflineEnt": -0.501
+  },
+  "proxy.160x90.entropy": {
+   "vsOfflineTop": -0.521,
+   "vsOfflineEnt": 0.604
+  },
+  "proxy.320x180.topSurface": {
+   "vsOfflineTop": 0.483,
+   "vsOfflineEnt": -0.535
+  },
+  "proxy.320x180.entropy": {
+   "vsOfflineTop": -0.537,
+   "vsOfflineEnt": 0.625
+  },
+  "proxy.region96.topRegion": {
+   "vsOfflineTop": 0.544,
+   "vsOfflineEnt": -0.604
+  }
+ }
+}

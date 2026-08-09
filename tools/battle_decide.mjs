@@ -71,6 +71,11 @@ const KEEP = arg('keep', null);
 // which is exactly what `?bplace=0` does through placeOn() — the sun-refusal A/B
 // as ONE BUILD, the same discipline as --keep above.
 const BPLACE = arg('bplace', null);
+// AND THE ONE-SURFACE-DOMINANCE A/B, the same shape once more: `--bsurf=0` sets
+// BattleWorld.PLACE.surf = false at runtime, which is exactly what `?bsurf=0`
+// does through surfOn(). The sun refusal is untouched by it, so the three arms
+// (neither term, sun only, both) come out of ONE build.
+const BSURF = arg('bsurf', null);
 // AND THE SAFE-RECT A/B, the same shape again: `--safe=0` clears the `keepSafe`
 // list off the live `decide` row, so the arm that keeps the foe line out of the
 // turn-order panel and the arm that only keeps it inside the frame are ONE
@@ -686,6 +691,11 @@ function summarise(row) {
       return window.BattleWorld.PLACE.on; })()`, 10000);
     console.log('PLACE.on = ' + v);
   }
+  if (BSURF != null) {
+    const v = await ev(cdp, `(() => { window.BattleWorld.PLACE.surf = ${BSURF === '0' ? 'false' : 'true'};
+      return window.BattleWorld.PLACE.surf; })()`, 10000);
+    console.log('PLACE.surf = ' + v);
+  }
   if (KEEP != null) {
     const k = await ev(cdp, `(() => { const r = window.BattleWorld.CAM.shots.decide;
       r.keep = ${KEEP === '0' ? 'null' : "'foes'"}; return r.keep; })()`, 10000);
@@ -785,7 +795,7 @@ function summarise(row) {
     }
     const f = join(OUT, `census-${TAG}.json`);
     writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
-      bplace: BPLACE, keep: KEEP, composite: COMPOSITE, three: ready.three, n: out.length, of: census.length,
+      bplace: BPLACE, bsurf: BSURF, keep: KEEP, composite: COMPOSITE, three: ready.three, n: out.length, of: census.length,
       secs: +((Date.now() - t0) / 1000).toFixed(0) }, rows: out }, null, 1));
     console.log(`\nwrote ${out.length}/${census.length} sites -> ${f}`);
     console.log('shots -> ' + dir);

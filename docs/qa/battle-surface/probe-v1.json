@@ -1,0 +1,4911 @@
+{
+ "meta": {
+  "when": "2026-08-09T08:18:16.496Z",
+  "yaw": -1.4869,
+  "raw": false,
+  "reps": 3,
+  "three": "185",
+  "n": 62,
+  "secs": 9
+ },
+ "rows": [
+  {
+   "id": "s000",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -33.834,
+    "y": 21.745,
+    "z": 14.61
+   },
+   "R": 13,
+   "stageMs": 50.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1975,
+     "top2": 0.1659,
+     "entropy": 3.765,
+     "bins": 37,
+     "ms": {
+      "render": 0.9,
+      "read": 2.4,
+      "hist": 0.2,
+      "all": 3.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1905,
+     "top2": 0.1723,
+     "entropy": 3.803,
+     "bins": 41,
+     "ms": {
+      "render": 0.8,
+      "read": 2.6,
+      "hist": 0,
+      "all": 3.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2006,
+     "top2": 0.1721,
+     "entropy": 3.842,
+     "bins": 47,
+     "ms": {
+      "render": 0.7,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.199,
+     "top2": 0.1704,
+     "entropy": 3.871,
+     "bins": 49,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.5
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2023,
+     "top2": 0.1716,
+     "entropy": 3.865,
+     "bins": 55,
+     "ms": {
+      "render": 0.7,
+      "read": 1.9,
+      "hist": 0.3,
+      "all": 2.8
+     }
+    },
+    "region96": {
+     "topRegion": 0.2755,
+     "comps": 668,
+     "ms": 3.5
+    }
+   }
+  },
+  {
+   "id": "s001",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 10.62,
+    "y": 15.178,
+    "z": -21.88
+   },
+   "R": 0,
+   "stageMs": 25.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2014,
+     "top2": 0.1806,
+     "entropy": 3.706,
+     "bins": 30,
+     "ms": {
+      "render": 0.5,
+      "read": 3.5,
+      "hist": 0,
+      "all": 4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1975,
+     "top2": 0.1758,
+     "entropy": 3.745,
+     "bins": 35,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1991,
+     "top2": 0.168,
+     "entropy": 3.804,
+     "bins": 36,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2027,
+     "top2": 0.1599,
+     "entropy": 3.856,
+     "bins": 43,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2073,
+     "top2": 0.1587,
+     "entropy": 3.876,
+     "bins": 48,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.2623,
+     "comps": 718,
+     "ms": 3
+    }
+   }
+  },
+  {
+   "id": "s002",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -72.537,
+    "y": 25.448,
+    "z": 51.277
+   },
+   "R": 8,
+   "stageMs": 271,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3534,
+     "top2": 0.1481,
+     "entropy": 3.776,
+     "bins": 45,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3351,
+     "top2": 0.1289,
+     "entropy": 3.976,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3272,
+     "top2": 0.1209,
+     "entropy": 4.007,
+     "bins": 52,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3084,
+     "top2": 0.1167,
+     "entropy": 4.104,
+     "bins": 61,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2805,
+     "top2": 0.1126,
+     "entropy": 4.226,
+     "bins": 69,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.4,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.2419,
+     "comps": 898,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s003",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": 53.344,
+    "y": 8.003,
+    "z": -45.416
+   },
+   "R": 0,
+   "stageMs": 34.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2855,
+     "top2": 0.2569,
+     "entropy": 2.764,
+     "bins": 20,
+     "ms": {
+      "render": 0.7,
+      "read": 2.6,
+      "hist": 0,
+      "all": 3.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2943,
+     "top2": 0.2543,
+     "entropy": 2.761,
+     "bins": 24,
+     "ms": {
+      "render": 0.7,
+      "read": 2.8,
+      "hist": 0,
+      "all": 3.6
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2845,
+     "top2": 0.2508,
+     "entropy": 2.768,
+     "bins": 25,
+     "ms": {
+      "render": 0.7,
+      "read": 2.7,
+      "hist": 0,
+      "all": 3.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.288,
+     "top2": 0.2447,
+     "entropy": 2.798,
+     "bins": 26,
+     "ms": {
+      "render": 0.6,
+      "read": 1.4,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2923,
+     "top2": 0.2391,
+     "entropy": 2.823,
+     "bins": 35,
+     "ms": {
+      "render": 0.6,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.3914,
+     "comps": 314,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s004",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 46.451,
+    "y": 12.368,
+    "z": -33.12
+   },
+   "R": 5,
+   "stageMs": 119.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3418,
+     "top2": 0.2176,
+     "entropy": 2.924,
+     "bins": 27,
+     "ms": {
+      "render": 0.6,
+      "read": 3.3,
+      "hist": 0,
+      "all": 3.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3316,
+     "top2": 0.2018,
+     "entropy": 3.018,
+     "bins": 34,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3297,
+     "top2": 0.1923,
+     "entropy": 3.069,
+     "bins": 36,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3292,
+     "top2": 0.1831,
+     "entropy": 3.119,
+     "bins": 41,
+     "ms": {
+      "render": 0.7,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3185,
+     "top2": 0.1713,
+     "entropy": 3.238,
+     "bins": 46,
+     "ms": {
+      "render": 0.7,
+      "read": 1.9,
+      "hist": 0.2,
+      "all": 2.8
+     }
+    },
+    "region96": {
+     "topRegion": 0.1819,
+     "comps": 551,
+     "ms": 2.7
+    }
+   }
+  },
+  {
+   "id": "s005",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -61.656,
+    "y": 27.446,
+    "z": 70.416
+   },
+   "R": 0,
+   "stageMs": 28.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2346,
+     "top2": 0.1096,
+     "entropy": 3.969,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.224,
+     "top2": 0.1037,
+     "entropy": 3.985,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2118,
+     "top2": 0.1051,
+     "entropy": 4.047,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2103,
+     "top2": 0.1028,
+     "entropy": 4.041,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1991,
+     "top2": 0.099,
+     "entropy": 4.122,
+     "bins": 60,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.0926,
+     "comps": 1146,
+     "ms": 2.3
+    }
+   }
+  },
+  {
+   "id": "s006",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 29.584,
+    "y": 13.064,
+    "z": -30.416
+   },
+   "R": 0,
+   "stageMs": 23.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3202,
+     "top2": 0.1289,
+     "entropy": 3.541,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3225,
+     "top2": 0.135,
+     "entropy": 3.541,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3237,
+     "top2": 0.1277,
+     "entropy": 3.582,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3216,
+     "top2": 0.1271,
+     "entropy": 3.617,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3141,
+     "top2": 0.1292,
+     "entropy": 3.682,
+     "bins": 52,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.5
+     }
+    },
+    "region96": {
+     "topRegion": 0.1508,
+     "comps": 566,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s007",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -45.62,
+    "y": 23.352,
+    "z": 35.62
+   },
+   "R": 5,
+   "stageMs": 332.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.189,
+     "top2": 0.1003,
+     "entropy": 3.79,
+     "bins": 23,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2153,
+     "top2": 0.1098,
+     "entropy": 3.781,
+     "bins": 26,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2388,
+     "top2": 0.1227,
+     "entropy": 3.688,
+     "bins": 31,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2587,
+     "top2": 0.1354,
+     "entropy": 3.526,
+     "bins": 34,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2798,
+     "top2": 0.1692,
+     "entropy": 3.364,
+     "bins": 34,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3339,
+     "comps": 506,
+     "ms": 2.2
+    }
+   }
+  },
+  {
+   "id": "s008",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 63.12,
+    "y": 20.488,
+    "z": -40.62
+   },
+   "R": 0,
+   "stageMs": 6.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2716,
+     "top2": 0.2091,
+     "entropy": 3.129,
+     "bins": 21,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2661,
+     "top2": 0.2092,
+     "entropy": 3.183,
+     "bins": 25,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.261,
+     "top2": 0.2006,
+     "entropy": 3.205,
+     "bins": 31,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.256,
+     "top2": 0.1975,
+     "entropy": 3.222,
+     "bins": 37,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2508,
+     "top2": 0.1906,
+     "entropy": 3.256,
+     "bins": 45,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.3131,
+     "comps": 334,
+     "ms": 1.8
+    }
+   }
+  },
+  {
+   "id": "s009",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -60.62,
+    "y": 26.664,
+    "z": 63.12
+   },
+   "R": 0,
+   "stageMs": 6.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1605,
+     "top2": 0.1497,
+     "entropy": 3.825,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1502,
+     "top2": 0.1493,
+     "entropy": 3.884,
+     "bins": 46,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1559,
+     "top2": 0.1545,
+     "entropy": 3.895,
+     "bins": 50,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1524,
+     "top2": 0.1483,
+     "entropy": 3.959,
+     "bins": 53,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1517,
+     "top2": 0.1456,
+     "entropy": 4.029,
+     "bins": 57,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0.2,
+      "all": 3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1487,
+     "comps": 955,
+     "ms": 2.9
+    }
+   }
+  },
+  {
+   "id": "s010",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -3.344,
+    "y": 14.074,
+    "z": 7.916
+   },
+   "R": 5,
+   "stageMs": 6.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1983,
+     "top2": 0.1975,
+     "entropy": 3.611,
+     "bins": 38,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1975,
+     "top2": 0.1953,
+     "entropy": 3.658,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 2.3,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1971,
+     "top2": 0.1842,
+     "entropy": 3.684,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1976,
+     "top2": 0.1797,
+     "entropy": 3.721,
+     "bins": 44,
+     "ms": {
+      "render": 0.6,
+      "read": 2.8,
+      "hist": 0,
+      "all": 3.4
+     }
+    },
+    "320x180": {
+     "topSurface": 0.195,
+     "top2": 0.174,
+     "entropy": 3.774,
+     "bins": 48,
+     "ms": {
+      "render": 0.6,
+      "read": 2.8,
+      "hist": 0.3,
+      "all": 3.6
+     }
+    },
+    "region96": {
+     "topRegion": 0.2357,
+     "comps": 666,
+     "ms": 4
+    }
+   }
+  },
+  {
+   "id": "s011",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 44.156,
+    "y": 16.309,
+    "z": -32.916
+   },
+   "R": 5,
+   "stageMs": 20.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3758,
+     "top2": 0.1412,
+     "entropy": 3.186,
+     "bins": 33,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0.1,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3776,
+     "top2": 0.1441,
+     "entropy": 3.197,
+     "bins": 43,
+     "ms": {
+      "render": 0.6,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3877,
+     "top2": 0.14,
+     "entropy": 3.175,
+     "bins": 43,
+     "ms": {
+      "render": 0.7,
+      "read": 2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3853,
+     "top2": 0.1402,
+     "entropy": 3.213,
+     "bins": 47,
+     "ms": {
+      "render": 0.6,
+      "read": 2.1,
+      "hist": 0.1,
+      "all": 2.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3889,
+     "top2": 0.1414,
+     "entropy": 3.218,
+     "bins": 49,
+     "ms": {
+      "render": 0.7,
+      "read": 2.3,
+      "hist": 0.2,
+      "all": 3.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.3661,
+     "comps": 491,
+     "ms": 3
+    }
+   }
+  },
+  {
+   "id": "s012",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -48.549,
+    "y": 25.76,
+    "z": 49.38
+   },
+   "R": 5,
+   "stageMs": 336.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1466,
+     "top2": 0.1242,
+     "entropy": 4.384,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1337,
+     "top2": 0.1337,
+     "entropy": 4.382,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1379,
+     "top2": 0.1337,
+     "entropy": 4.319,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1432,
+     "top2": 0.1333,
+     "entropy": 4.258,
+     "bins": 55,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1433,
+     "top2": 0.1313,
+     "entropy": 4.176,
+     "bins": 63,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3312,
+     "comps": 527,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s013",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -19.38,
+    "y": 16.27,
+    "z": 9.38
+   },
+   "R": 0,
+   "stageMs": 33.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3881,
+     "top2": 0.1235,
+     "entropy": 3.136,
+     "bins": 33,
+     "ms": {
+      "render": 0.6,
+      "read": 2.4,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3885,
+     "top2": 0.1185,
+     "entropy": 3.18,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3835,
+     "top2": 0.1194,
+     "entropy": 3.192,
+     "bins": 37,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3794,
+     "top2": 0.1217,
+     "entropy": 3.204,
+     "bins": 44,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3765,
+     "top2": 0.1172,
+     "entropy": 3.258,
+     "bins": 56,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.3997,
+     "comps": 591,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s014",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 39.38,
+    "y": 13.111,
+    "z": -33.12
+   },
+   "R": 5,
+   "stageMs": 32.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2253,
+     "top2": 0.1204,
+     "entropy": 3.744,
+     "bins": 38,
+     "ms": {
+      "render": 0.6,
+      "read": 3.3,
+      "hist": 0,
+      "all": 4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2235,
+     "top2": 0.1259,
+     "entropy": 3.727,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2224,
+     "top2": 0.1204,
+     "entropy": 3.784,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2272,
+     "top2": 0.1185,
+     "entropy": 3.795,
+     "bins": 46,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2247,
+     "top2": 0.1156,
+     "entropy": 3.835,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3056,
+     "comps": 729,
+     "ms": 2.2
+    }
+   }
+  },
+  {
+   "id": "s015",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -53.344,
+    "y": 26.034,
+    "z": 51.656
+   },
+   "R": 5,
+   "stageMs": 203.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1242,
+     "top2": 0.1173,
+     "entropy": 4.444,
+     "bins": 41,
+     "ms": {
+      "render": 0.6,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1246,
+     "top2": 0.112,
+     "entropy": 4.538,
+     "bins": 51,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1186,
+     "top2": 0.1121,
+     "entropy": 4.571,
+     "bins": 61,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1151,
+     "top2": 0.1092,
+     "entropy": 4.595,
+     "bins": 65,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1142,
+     "top2": 0.1048,
+     "entropy": 4.62,
+     "bins": 69,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.0503,
+     "comps": 739,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s016",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 31.88,
+    "y": 14.244,
+    "z": -21.88
+   },
+   "R": 0,
+   "stageMs": 28.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2215,
+     "top2": 0.1921,
+     "entropy": 3.283,
+     "bins": 33,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0.1,
+      "all": 2.5
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2096,
+     "top2": 0.1871,
+     "entropy": 3.404,
+     "bins": 39,
+     "ms": {
+      "render": 0.3,
+      "read": 2,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2103,
+     "top2": 0.1742,
+     "entropy": 3.501,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2069,
+     "top2": 0.1811,
+     "entropy": 3.526,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2035,
+     "top2": 0.1822,
+     "entropy": 3.61,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.1769,
+     "comps": 670,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s017",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -8.12,
+    "y": 14.629,
+    "z": 10.62
+   },
+   "R": 5,
+   "stageMs": 28.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2485,
+     "top2": 0.1898,
+     "entropy": 3.496,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 2.8,
+      "hist": 0,
+      "all": 3.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2474,
+     "top2": 0.178,
+     "entropy": 3.525,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2434,
+     "top2": 0.1829,
+     "entropy": 3.593,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.239,
+     "top2": 0.1801,
+     "entropy": 3.653,
+     "bins": 47,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2344,
+     "top2": 0.172,
+     "entropy": 3.731,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.1346,
+     "comps": 704,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s018",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 57.916,
+    "y": 22.212,
+    "z": -35.844
+   },
+   "R": 0,
+   "stageMs": 4.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3218,
+     "top2": 0.1674,
+     "entropy": 3.263,
+     "bins": 33,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3286,
+     "top2": 0.1623,
+     "entropy": 3.309,
+     "bins": 37,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3235,
+     "top2": 0.1617,
+     "entropy": 3.306,
+     "bins": 39,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3145,
+     "top2": 0.1578,
+     "entropy": 3.386,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3098,
+     "top2": 0.1518,
+     "entropy": 3.418,
+     "bins": 51,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.2014,
+     "comps": 350,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s019",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -3.12,
+    "y": 14.036,
+    "z": 4.38
+   },
+   "R": 5,
+   "stageMs": 77.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2894,
+     "top2": 0.152,
+     "entropy": 3.502,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2891,
+     "top2": 0.1541,
+     "entropy": 3.505,
+     "bins": 43,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2905,
+     "top2": 0.1466,
+     "entropy": 3.575,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2915,
+     "top2": 0.1431,
+     "entropy": 3.583,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2878,
+     "top2": 0.1423,
+     "entropy": 3.628,
+     "bins": 55,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2
+     }
+    },
+    "region96": {
+     "topRegion": 0.146,
+     "comps": 647,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s020",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 19.584,
+    "y": 14.567,
+    "z": -24.156
+   },
+   "R": 0,
+   "stageMs": 29,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2029,
+     "top2": 0.1836,
+     "entropy": 3.526,
+     "bins": 30,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2018,
+     "top2": 0.1897,
+     "entropy": 3.565,
+     "bins": 32,
+     "ms": {
+      "render": 0.3,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1885,
+     "top2": 0.1869,
+     "entropy": 3.662,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1878,
+     "top2": 0.1837,
+     "entropy": 3.678,
+     "bins": 43,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.189,
+     "top2": 0.1821,
+     "entropy": 3.711,
+     "bins": 48,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.2803,
+     "comps": 579,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s021",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -25.844,
+    "y": 19.548,
+    "z": 13.344
+   },
+   "R": 0,
+   "stageMs": 37.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2492,
+     "top2": 0.1644,
+     "entropy": 3.487,
+     "bins": 34,
+     "ms": {
+      "render": 0.4,
+      "read": 3.2,
+      "hist": 0,
+      "all": 3.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2448,
+     "top2": 0.1706,
+     "entropy": 3.521,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2479,
+     "top2": 0.169,
+     "entropy": 3.549,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2468,
+     "top2": 0.1652,
+     "entropy": 3.581,
+     "bins": 47,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2449,
+     "top2": 0.1616,
+     "entropy": 3.632,
+     "bins": 54,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0.3,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.278,
+     "comps": 579,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s022",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -58.12,
+    "y": 27.46,
+    "z": 43.12
+   },
+   "R": 0,
+   "stageMs": 327.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.4228,
+     "top2": 0.1003,
+     "entropy": 3.1,
+     "bins": 36,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.447,
+     "top2": 0.0938,
+     "entropy": 3.036,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.4502,
+     "top2": 0.0932,
+     "entropy": 3.089,
+     "bins": 46,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "160x90": {
+     "topSurface": 0.4508,
+     "top2": 0.0919,
+     "entropy": 3.115,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 2.2,
+      "hist": 0.1,
+      "all": 2.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.4399,
+     "top2": 0.0926,
+     "entropy": 3.184,
+     "bins": 63,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0.2,
+      "all": 2.8
+     }
+    },
+    "region96": {
+     "topRegion": 0.0812,
+     "comps": 797,
+     "ms": 2.8
+    }
+   }
+  },
+  {
+   "id": "s023",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 22.916,
+    "y": 14.468,
+    "z": -18.344
+   },
+   "R": 0,
+   "stageMs": 106.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.341,
+     "top2": 0.1111,
+     "entropy": 3.295,
+     "bins": 28,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3372,
+     "top2": 0.1046,
+     "entropy": 3.34,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3355,
+     "top2": 0.0976,
+     "entropy": 3.373,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3329,
+     "top2": 0.0983,
+     "entropy": 3.404,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3248,
+     "top2": 0.1018,
+     "entropy": 3.48,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.2133,
+     "comps": 630,
+     "ms": 1.8
+    }
+   }
+  },
+  {
+   "id": "s024",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 4.38,
+    "y": 15.542,
+    "z": -6.88
+   },
+   "R": 5,
+   "stageMs": 261,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2253,
+     "top2": 0.1759,
+     "entropy": 3.535,
+     "bins": 28,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2153,
+     "top2": 0.1701,
+     "entropy": 3.621,
+     "bins": 31,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2174,
+     "top2": 0.1485,
+     "entropy": 3.677,
+     "bins": 35,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.216,
+     "top2": 0.1358,
+     "entropy": 3.727,
+     "bins": 39,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2126,
+     "top2": 0.1383,
+     "entropy": 3.79,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.3225,
+     "comps": 526,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s025",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -67.916,
+    "y": 25.93,
+    "z": 52.916
+   },
+   "R": 0,
+   "stageMs": 15.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1883,
+     "top2": 0.1019,
+     "entropy": 4.375,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 2.4,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1888,
+     "top2": 0.099,
+     "entropy": 4.403,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.179,
+     "top2": 0.1111,
+     "entropy": 4.426,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1666,
+     "top2": 0.1176,
+     "entropy": 4.472,
+     "bins": 55,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1521,
+     "top2": 0.1202,
+     "entropy": 4.525,
+     "bins": 70,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0.2,
+      "all": 2.5
+     }
+    },
+    "region96": {
+     "topRegion": 0.0473,
+     "comps": 897,
+     "ms": 2.2
+    }
+   }
+  },
+  {
+   "id": "s026",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -65.62,
+    "y": 29.526,
+    "z": 58.12
+   },
+   "R": 0,
+   "stageMs": 6.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1343,
+     "top2": 0.1304,
+     "entropy": 4.171,
+     "bins": 42,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1376,
+     "top2": 0.1137,
+     "entropy": 4.251,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1364,
+     "top2": 0.1159,
+     "entropy": 4.307,
+     "bins": 53,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1409,
+     "top2": 0.1138,
+     "entropy": 4.377,
+     "bins": 60,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1469,
+     "top2": 0.1209,
+     "entropy": 4.419,
+     "bins": 65,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.093,
+     "comps": 949,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s027",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": -52.084,
+    "y": 26.013,
+    "z": 32.916
+   },
+   "R": 5,
+   "stageMs": 244.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.6134,
+     "top2": 0.1968,
+     "entropy": 1.996,
+     "bins": 27,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "64x36": {
+     "topSurface": 0.6202,
+     "top2": 0.1853,
+     "entropy": 1.967,
+     "bins": 26,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.6173,
+     "top2": 0.1765,
+     "entropy": 2.02,
+     "bins": 30,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.6218,
+     "top2": 0.1674,
+     "entropy": 2.048,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.6157,
+     "top2": 0.1626,
+     "entropy": 2.11,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.4612,
+     "comps": 565,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s028",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -36.656,
+    "y": 24.618,
+    "z": 21.656
+   },
+   "R": 5,
+   "stageMs": 30.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2461,
+     "top2": 0.169,
+     "entropy": 3.468,
+     "bins": 30,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2365,
+     "top2": 0.1671,
+     "entropy": 3.52,
+     "bins": 34,
+     "ms": {
+      "render": 0.5,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2344,
+     "top2": 0.1599,
+     "entropy": 3.578,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2306,
+     "top2": 0.1563,
+     "entropy": 3.588,
+     "bins": 44,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2299,
+     "top2": 0.1542,
+     "entropy": 3.597,
+     "bins": 48,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.1383,
+     "comps": 329,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s029",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -57.537,
+    "y": 26.509,
+    "z": 61.277
+   },
+   "R": 8,
+   "stageMs": 196.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1543,
+     "top2": 0.1219,
+     "entropy": 4.243,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1519,
+     "top2": 0.1128,
+     "entropy": 4.264,
+     "bins": 39,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.151,
+     "top2": 0.113,
+     "entropy": 4.327,
+     "bins": 44,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.148,
+     "top2": 0.1179,
+     "entropy": 4.352,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1418,
+     "top2": 0.1237,
+     "entropy": 4.377,
+     "bins": 60,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1036,
+     "comps": 640,
+     "ms": 2.3
+    }
+   }
+  },
+  {
+   "id": "s030",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -45.62,
+    "y": 30,
+    "z": 25.62
+   },
+   "R": 0,
+   "stageMs": 43.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2122,
+     "top2": 0.1327,
+     "entropy": 3.982,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2135,
+     "top2": 0.1311,
+     "entropy": 4.04,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2051,
+     "top2": 0.1265,
+     "entropy": 4.099,
+     "bins": 44,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1916,
+     "top2": 0.1289,
+     "entropy": 4.187,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1781,
+     "top2": 0.1288,
+     "entropy": 4.268,
+     "bins": 56,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.1065,
+     "comps": 605,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s031",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -54.584,
+    "y": 27.226,
+    "z": 69.156
+   },
+   "R": 0,
+   "stageMs": 10.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1605,
+     "top2": 0.142,
+     "entropy": 4.123,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1523,
+     "top2": 0.1345,
+     "entropy": 4.133,
+     "bins": 49,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1493,
+     "top2": 0.1372,
+     "entropy": 4.145,
+     "bins": 51,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1472,
+     "top2": 0.1299,
+     "entropy": 4.228,
+     "bins": 61,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1435,
+     "top2": 0.1243,
+     "entropy": 4.302,
+     "bins": 68,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.1128,
+     "comps": 859,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s032",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": 53.12,
+    "y": 3.972,
+    "z": -50.62
+   },
+   "R": 5,
+   "stageMs": 140.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2122,
+     "top2": 0.1752,
+     "entropy": 3.469,
+     "bins": 26,
+     "ms": {
+      "render": 0.6,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2062,
+     "top2": 0.1693,
+     "entropy": 3.498,
+     "bins": 30,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2118,
+     "top2": 0.1659,
+     "entropy": 3.508,
+     "bins": 35,
+     "ms": {
+      "render": 0.5,
+      "read": 2,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2213,
+     "top2": 0.1534,
+     "entropy": 3.529,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.219,
+     "top2": 0.1427,
+     "entropy": 3.567,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.1194,
+     "comps": 390,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s033",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": -57.691,
+    "y": 40.239,
+    "z": 17.309
+   },
+   "R": 5,
+   "stageMs": 18.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2315,
+     "top2": 0.1188,
+     "entropy": 4.218,
+     "bins": 48,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2326,
+     "top2": 0.1181,
+     "entropy": 4.17,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2232,
+     "top2": 0.1217,
+     "entropy": 4.181,
+     "bins": 53,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2117,
+     "top2": 0.1187,
+     "entropy": 4.243,
+     "bins": 55,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1996,
+     "top2": 0.1209,
+     "entropy": 4.312,
+     "bins": 60,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.0758,
+     "comps": 824,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s034",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -61.656,
+    "y": 27.724,
+    "z": 80.416
+   },
+   "R": 0,
+   "stageMs": 3.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.4421,
+     "top2": 0.1651,
+     "entropy": 2.993,
+     "bins": 33,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.4154,
+     "top2": 0.1654,
+     "entropy": 3.102,
+     "bins": 37,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.4018,
+     "top2": 0.1723,
+     "entropy": 3.121,
+     "bins": 36,
+     "ms": {
+      "render": 0.3,
+      "read": 1.3,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.379,
+     "top2": 0.1749,
+     "entropy": 3.204,
+     "bins": 41,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.356,
+     "top2": 0.1778,
+     "entropy": 3.278,
+     "bins": 45,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3559,
+     "comps": 782,
+     "ms": 1.8
+    }
+   }
+  },
+  {
+   "id": "s035",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 0.62,
+    "y": 15.376,
+    "z": -14.38
+   },
+   "R": 0,
+   "stageMs": 37.6,
+   "res": {
+    "48x27": {
+     "topSurface": 0.213,
+     "top2": 0.1466,
+     "entropy": 3.536,
+     "bins": 28,
+     "ms": {
+      "render": 0.5,
+      "read": 3.3,
+      "hist": 0,
+      "all": 3.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2166,
+     "top2": 0.145,
+     "entropy": 3.598,
+     "bins": 34,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2103,
+     "top2": 0.1445,
+     "entropy": 3.639,
+     "bins": 40,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1994,
+     "top2": 0.1487,
+     "entropy": 3.718,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1984,
+     "top2": 0.1479,
+     "entropy": 3.768,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.3,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.4321,
+     "comps": 440,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s036",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -14.38,
+    "y": 17.222,
+    "z": 16.88
+   },
+   "R": 0,
+   "stageMs": 22.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2253,
+     "top2": 0.1844,
+     "entropy": 3.381,
+     "bins": 34,
+     "ms": {
+      "render": 0.5,
+      "read": 2.8,
+      "hist": 0,
+      "all": 3.3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2148,
+     "top2": 0.1918,
+     "entropy": 3.459,
+     "bins": 36,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2062,
+     "top2": 0.1998,
+     "entropy": 3.488,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2065,
+     "top2": 0.1978,
+     "entropy": 3.506,
+     "bins": 47,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2013,
+     "top2": 0.1963,
+     "entropy": 3.566,
+     "bins": 52,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.3,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.2205,
+     "comps": 482,
+     "ms": 1.8
+    }
+   }
+  },
+  {
+   "id": "s037",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -6.88,
+    "y": 14.002,
+    "z": 5.62
+   },
+   "R": 5,
+   "stageMs": 45.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3789,
+     "top2": 0.1127,
+     "entropy": 3.39,
+     "bins": 40,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3815,
+     "top2": 0.112,
+     "entropy": 3.344,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3808,
+     "top2": 0.1119,
+     "entropy": 3.396,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3714,
+     "top2": 0.1076,
+     "entropy": 3.484,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3674,
+     "top2": 0.105,
+     "entropy": 3.511,
+     "bins": 55,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.1499,
+     "comps": 674,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s038",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 48.344,
+    "y": 12.356,
+    "z": -34.584
+   },
+   "R": 5,
+   "stageMs": 47.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3542,
+     "top2": 0.1343,
+     "entropy": 2.837,
+     "bins": 21,
+     "ms": {
+      "render": 0.5,
+      "read": 2.6,
+      "hist": 0,
+      "all": 3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.352,
+     "top2": 0.1393,
+     "entropy": 2.876,
+     "bins": 18,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3457,
+     "top2": 0.1366,
+     "entropy": 2.921,
+     "bins": 24,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3423,
+     "top2": 0.1377,
+     "entropy": 2.97,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3328,
+     "top2": 0.1384,
+     "entropy": 3.059,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.1366,
+     "comps": 344,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s039",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -58.12,
+    "y": 40.719,
+    "z": 19.38
+   },
+   "R": 5,
+   "stageMs": 44.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2199,
+     "top2": 0.169,
+     "entropy": 3.93,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2044,
+     "top2": 0.1675,
+     "entropy": 3.969,
+     "bins": 45,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1964,
+     "top2": 0.1692,
+     "entropy": 4.01,
+     "bins": 49,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1836,
+     "top2": 0.1703,
+     "entropy": 4.111,
+     "bins": 52,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1723,
+     "top2": 0.1699,
+     "entropy": 4.186,
+     "bins": 58,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.0849,
+     "comps": 813,
+     "ms": 2.3
+    }
+   }
+  },
+  {
+   "id": "s040",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": 66.656,
+    "y": 11.366,
+    "z": -47.916
+   },
+   "R": 0,
+   "stageMs": 24.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3835,
+     "top2": 0.1142,
+     "entropy": 2.911,
+     "bins": 19,
+     "ms": {
+      "render": 0.5,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3793,
+     "top2": 0.1115,
+     "entropy": 2.967,
+     "bins": 21,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.381,
+     "top2": 0.1098,
+     "entropy": 2.964,
+     "bins": 24,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3751,
+     "top2": 0.109,
+     "entropy": 2.994,
+     "bins": 26,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.376,
+     "top2": 0.1053,
+     "entropy": 3.024,
+     "bins": 30,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.3453,
+     "comps": 270,
+     "ms": 1.8
+    }
+   }
+  },
+  {
+   "id": "s041",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -55.844,
+    "y": 27.57,
+    "z": 74.584
+   },
+   "R": 0,
+   "stageMs": 3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2346,
+     "top2": 0.1613,
+     "entropy": 3.76,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2435,
+     "top2": 0.1632,
+     "entropy": 3.722,
+     "bins": 38,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2272,
+     "top2": 0.1717,
+     "entropy": 3.767,
+     "bins": 39,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2198,
+     "top2": 0.168,
+     "entropy": 3.81,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2115,
+     "top2": 0.1678,
+     "entropy": 3.884,
+     "bins": 49,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2
+     }
+    },
+    "region96": {
+     "topRegion": 0.1848,
+     "comps": 931,
+     "ms": 1.8
+    }
+   }
+  },
+  {
+   "id": "s042",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -27.084,
+    "y": 20.077,
+    "z": 20.416
+   },
+   "R": 0,
+   "stageMs": 24.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2423,
+     "top2": 0.1775,
+     "entropy": 3.348,
+     "bins": 31,
+     "ms": {
+      "render": 0.6,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2457,
+     "top2": 0.1806,
+     "entropy": 3.399,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2452,
+     "top2": 0.1775,
+     "entropy": 3.403,
+     "bins": 43,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2393,
+     "top2": 0.1738,
+     "entropy": 3.447,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2311,
+     "top2": 0.1751,
+     "entropy": 3.472,
+     "bins": 51,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.2423,
+     "comps": 536,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s043",
+   "ok": true,
+   "zone": "water",
+   "at": {
+    "x": -50.416,
+    "y": 26.23,
+    "z": 35.416
+   },
+   "R": 5,
+   "stageMs": 275,
+   "res": {
+    "48x27": {
+     "topSurface": 0.5648,
+     "top2": 0.1296,
+     "entropy": 2.474,
+     "bins": 28,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.5799,
+     "top2": 0.135,
+     "entropy": 2.401,
+     "bins": 29,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.587,
+     "top2": 0.1323,
+     "entropy": 2.382,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.5799,
+     "top2": 0.1265,
+     "entropy": 2.443,
+     "bins": 38,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2.2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.5783,
+     "top2": 0.1241,
+     "entropy": 2.473,
+     "bins": 50,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.2593,
+     "comps": 610,
+     "ms": 2.6
+    }
+   }
+  },
+  {
+   "id": "s044",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -56.88,
+    "y": 27.054,
+    "z": 67.691
+   },
+   "R": 5,
+   "stageMs": 118,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2276,
+     "top2": 0.0988,
+     "entropy": 4.073,
+     "bins": 39,
+     "ms": {
+      "render": 0.6,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2209,
+     "top2": 0.0929,
+     "entropy": 4.105,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2147,
+     "top2": 0.0992,
+     "entropy": 4.167,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2135,
+     "top2": 0.0977,
+     "entropy": 4.178,
+     "bins": 50,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2087,
+     "top2": 0.096,
+     "entropy": 4.206,
+     "bins": 59,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0.3,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.0702,
+     "comps": 1177,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s045",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -0.62,
+    "y": 15.842,
+    "z": -9.38
+   },
+   "R": 0,
+   "stageMs": 70.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1752,
+     "top2": 0.1512,
+     "entropy": 3.831,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.201,
+     "top2": 0.1411,
+     "entropy": 3.756,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2091,
+     "top2": 0.1354,
+     "entropy": 3.809,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2133,
+     "top2": 0.1299,
+     "entropy": 3.823,
+     "bins": 47,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2148,
+     "top2": 0.1224,
+     "entropy": 3.856,
+     "bins": 53,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.3,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.2361,
+     "comps": 640,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s046",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 0.416,
+    "y": 14.227,
+    "z": 4.156
+   },
+   "R": 0,
+   "stageMs": 6.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2276,
+     "top2": 0.2052,
+     "entropy": 3.494,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2266,
+     "top2": 0.1984,
+     "entropy": 3.612,
+     "bins": 39,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2253,
+     "top2": 0.1962,
+     "entropy": 3.639,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2219,
+     "top2": 0.1884,
+     "entropy": 3.696,
+     "bins": 46,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2207,
+     "top2": 0.1815,
+     "entropy": 3.747,
+     "bins": 51,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0.2,
+      "all": 1.9
+     }
+    },
+    "region96": {
+     "topRegion": 0.2,
+     "comps": 549,
+     "ms": 2.2
+    }
+   }
+  },
+  {
+   "id": "s047",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 2.916,
+    "y": 14.32,
+    "z": 2.084
+   },
+   "R": 5,
+   "stageMs": 202.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2739,
+     "top2": 0.1836,
+     "entropy": 3.534,
+     "bins": 37,
+     "ms": {
+      "render": 0.5,
+      "read": 3,
+      "hist": 0,
+      "all": 3.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2717,
+     "top2": 0.1793,
+     "entropy": 3.6,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2741,
+     "top2": 0.1771,
+     "entropy": 3.594,
+     "bins": 38,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2711,
+     "top2": 0.1745,
+     "entropy": 3.651,
+     "bins": 44,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2723,
+     "top2": 0.1654,
+     "entropy": 3.697,
+     "bins": 49,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.1435,
+     "comps": 541,
+     "ms": 2.2
+    }
+   }
+  },
+  {
+   "id": "s048",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 23.12,
+    "y": 13.676,
+    "z": -16.88
+   },
+   "R": 5,
+   "stageMs": 276.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.5918,
+     "top2": 0.0725,
+     "entropy": 2.494,
+     "bins": 31,
+     "ms": {
+      "render": 0.4,
+      "read": 2.2,
+      "hist": 0,
+      "all": 2.7
+     }
+    },
+    "64x36": {
+     "topSurface": 0.5768,
+     "top2": 0.0951,
+     "entropy": 2.513,
+     "bins": 31,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "96x54": {
+     "topSurface": 0.5563,
+     "top2": 0.0947,
+     "entropy": 2.647,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.544,
+     "top2": 0.0969,
+     "entropy": 2.716,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.5361,
+     "top2": 0.0958,
+     "entropy": 2.778,
+     "bins": 38,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0.2,
+      "all": 2.6
+     }
+    },
+    "region96": {
+     "topRegion": 0.1676,
+     "comps": 693,
+     "ms": 2.3
+    }
+   }
+  },
+  {
+   "id": "s049",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -62.916,
+    "y": 27.707,
+    "z": 75.416
+   },
+   "R": 0,
+   "stageMs": 3.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3696,
+     "top2": 0.1242,
+     "entropy": 3.264,
+     "bins": 29,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3715,
+     "top2": 0.1068,
+     "entropy": 3.326,
+     "bins": 32,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "96x54": {
+     "topSurface": 0.3393,
+     "top2": 0.1167,
+     "entropy": 3.398,
+     "bins": 34,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3179,
+     "top2": 0.1202,
+     "entropy": 3.469,
+     "bins": 40,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3019,
+     "top2": 0.1282,
+     "entropy": 3.522,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.3,
+      "all": 2.3
+     }
+    },
+    "region96": {
+     "topRegion": 0.3308,
+     "comps": 787,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s050",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 25.62,
+    "y": 14.233,
+    "z": -24.38
+   },
+   "R": 0,
+   "stageMs": 23.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2284,
+     "top2": 0.1211,
+     "entropy": 3.895,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2096,
+     "top2": 0.1211,
+     "entropy": 4.02,
+     "bins": 42,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2101,
+     "top2": 0.1171,
+     "entropy": 4.025,
+     "bins": 42,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2101,
+     "top2": 0.1167,
+     "entropy": 4.058,
+     "bins": 44,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2112,
+     "top2": 0.1166,
+     "entropy": 4.084,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.0828,
+     "comps": 767,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s051",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -32.084,
+    "y": 20.794,
+    "z": 12.084
+   },
+   "R": 0,
+   "stageMs": 20.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2747,
+     "top2": 0.1767,
+     "entropy": 3.518,
+     "bins": 39,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2708,
+     "top2": 0.1719,
+     "entropy": 3.618,
+     "bins": 41,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2674,
+     "top2": 0.1707,
+     "entropy": 3.668,
+     "bins": 48,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2628,
+     "top2": 0.1692,
+     "entropy": 3.7,
+     "bins": 56,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2608,
+     "top2": 0.1673,
+     "entropy": 3.746,
+     "bins": 59,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.3351,
+     "comps": 651,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s052",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 14.38,
+    "y": 12.882,
+    "z": -25.62
+   },
+   "R": 0,
+   "stageMs": 21.3,
+   "res": {
+    "48x27": {
+     "topSurface": 0.4853,
+     "top2": 0.0864,
+     "entropy": 2.975,
+     "bins": 36,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.477,
+     "top2": 0.0855,
+     "entropy": 3.039,
+     "bins": 37,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "96x54": {
+     "topSurface": 0.4751,
+     "top2": 0.0802,
+     "entropy": 3.056,
+     "bins": 40,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.4698,
+     "top2": 0.08,
+     "entropy": 3.104,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.4643,
+     "top2": 0.086,
+     "entropy": 3.146,
+     "bins": 50,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.2,
+      "all": 2
+     }
+    },
+    "region96": {
+     "topRegion": 0.7436,
+     "comps": 407,
+     "ms": 1.8
+    }
+   }
+  },
+  {
+   "id": "s053",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": -40.62,
+    "y": 25.598,
+    "z": 23.12
+   },
+   "R": 5,
+   "stageMs": 17.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2917,
+     "top2": 0.277,
+     "entropy": 3.063,
+     "bins": 25,
+     "ms": {
+      "render": 0.6,
+      "read": 2.3,
+      "hist": 0,
+      "all": 2.9
+     }
+    },
+    "64x36": {
+     "topSurface": 0.296,
+     "top2": 0.2661,
+     "entropy": 3.1,
+     "bins": 26,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2899,
+     "top2": 0.2587,
+     "entropy": 3.187,
+     "bins": 33,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2819,
+     "top2": 0.2526,
+     "entropy": 3.265,
+     "bins": 35,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2727,
+     "top2": 0.2448,
+     "entropy": 3.34,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.1954,
+     "comps": 265,
+     "ms": 1.8
+    }
+   }
+  },
+  {
+   "id": "s054",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": -48.88,
+    "y": 26.028,
+    "z": 34.38
+   },
+   "R": 8,
+   "stageMs": 357.9,
+   "res": {
+    "48x27": {
+     "topSurface": 0.4529,
+     "top2": 0.0957,
+     "entropy": 3.249,
+     "bins": 35,
+     "ms": {
+      "render": 0.6,
+      "read": 2,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.4657,
+     "top2": 0.102,
+     "entropy": 3.144,
+     "bins": 38,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.4597,
+     "top2": 0.1211,
+     "entropy": 3.068,
+     "bins": 39,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "160x90": {
+     "topSurface": 0.4644,
+     "top2": 0.1267,
+     "entropy": 2.992,
+     "bins": 46,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.4611,
+     "top2": 0.1357,
+     "entropy": 2.955,
+     "bins": 53,
+     "ms": {
+      "render": 0.5,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.3451,
+     "comps": 554,
+     "ms": 2.2
+    }
+   }
+  },
+  {
+   "id": "s055",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 33.12,
+    "y": 13.935,
+    "z": -18.12
+   },
+   "R": 5,
+   "stageMs": 49.8,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3225,
+     "top2": 0.1736,
+     "entropy": 3.151,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3108,
+     "top2": 0.178,
+     "entropy": 3.262,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 1.9,
+      "hist": 0,
+      "all": 2.4
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2988,
+     "top2": 0.1788,
+     "entropy": 3.282,
+     "bins": 42,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2766,
+     "top2": 0.1851,
+     "entropy": 3.362,
+     "bins": 46,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2489,
+     "top2": 0.1857,
+     "entropy": 3.489,
+     "bins": 50,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.141,
+     "comps": 588,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s056",
+   "ok": true,
+   "zone": "crag",
+   "at": {
+    "x": -45.62,
+    "y": 30,
+    "z": 26.88
+   },
+   "R": 5,
+   "stageMs": 19.4,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2006,
+     "top2": 0.142,
+     "entropy": 4.037,
+     "bins": 39,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.1979,
+     "top2": 0.1424,
+     "entropy": 4.117,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.186,
+     "top2": 0.1418,
+     "entropy": 4.14,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1775,
+     "top2": 0.1408,
+     "entropy": 4.224,
+     "bins": 51,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1656,
+     "top2": 0.1384,
+     "entropy": 4.301,
+     "bins": 58,
+     "ms": {
+      "render": 0.3,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.1011,
+     "comps": 642,
+     "ms": 2
+    }
+   }
+  },
+  {
+   "id": "s057",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": 40.62,
+    "y": 15.166,
+    "z": -25.62
+   },
+   "R": 5,
+   "stageMs": 40.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.1543,
+     "top2": 0.1335,
+     "entropy": 3.983,
+     "bins": 38,
+     "ms": {
+      "render": 0.4,
+      "read": 2,
+      "hist": 0,
+      "all": 2.6
+     }
+    },
+    "64x36": {
+     "topSurface": 0.151,
+     "top2": 0.1476,
+     "entropy": 3.961,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 2.1,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1524,
+     "top2": 0.1429,
+     "entropy": 3.983,
+     "bins": 45,
+     "ms": {
+      "render": 0.5,
+      "read": 1.7,
+      "hist": 0.1,
+      "all": 2.3
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1535,
+     "top2": 0.1417,
+     "entropy": 4.01,
+     "bins": 50,
+     "ms": {
+      "render": 0.6,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.3
+     }
+    },
+    "320x180": {
+     "topSurface": 0.154,
+     "top2": 0.1409,
+     "entropy": 4.051,
+     "bins": 51,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.5
+     }
+    },
+    "region96": {
+     "topRegion": 0.1887,
+     "comps": 573,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s058",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 11.88,
+    "y": 15.296,
+    "z": -15.62
+   },
+   "R": 0,
+   "stageMs": 199.1,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2106,
+     "top2": 0.142,
+     "entropy": 3.67,
+     "bins": 30,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2018,
+     "top2": 0.128,
+     "entropy": 3.769,
+     "bins": 32,
+     "ms": {
+      "render": 0.3,
+      "read": 1.7,
+      "hist": 0,
+      "all": 2.1
+     }
+    },
+    "96x54": {
+     "topSurface": 0.1927,
+     "top2": 0.1179,
+     "entropy": 3.874,
+     "bins": 36,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "160x90": {
+     "topSurface": 0.1883,
+     "top2": 0.1138,
+     "entropy": 3.949,
+     "bins": 41,
+     "ms": {
+      "render": 0.5,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2.1
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1883,
+     "top2": 0.1176,
+     "entropy": 3.992,
+     "bins": 49,
+     "ms": {
+      "render": 0.6,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.4
+     }
+    },
+    "region96": {
+     "topRegion": 0.2635,
+     "comps": 573,
+     "ms": 2.1
+    }
+   }
+  },
+  {
+   "id": "s059",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -17.916,
+    "y": 15.401,
+    "z": 2.084
+   },
+   "R": 0,
+   "stageMs": 41.2,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2762,
+     "top2": 0.2106,
+     "entropy": 3.36,
+     "bins": 31,
+     "ms": {
+      "render": 0.5,
+      "read": 2.6,
+      "hist": 0,
+      "all": 3.1
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2756,
+     "top2": 0.2079,
+     "entropy": 3.424,
+     "bins": 33,
+     "ms": {
+      "render": 0.5,
+      "read": 2.6,
+      "hist": 0.1,
+      "all": 3.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2816,
+     "top2": 0.2106,
+     "entropy": 3.413,
+     "bins": 41,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.289,
+     "top2": 0.2107,
+     "entropy": 3.417,
+     "bins": 47,
+     "ms": {
+      "render": 0.5,
+      "read": 1.4,
+      "hist": 0,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.2932,
+     "top2": 0.206,
+     "entropy": 3.445,
+     "bins": 55,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0.3,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.4363,
+     "comps": 562,
+     "ms": 1.9
+    }
+   }
+  },
+  {
+   "id": "s060",
+   "ok": true,
+   "zone": "meadow",
+   "at": {
+    "x": -3.12,
+    "y": 14.026,
+    "z": 9.38
+   },
+   "R": 0,
+   "stageMs": 3.7,
+   "res": {
+    "48x27": {
+     "topSurface": 0.2137,
+     "top2": 0.1921,
+     "entropy": 3.496,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.8
+     }
+    },
+    "64x36": {
+     "topSurface": 0.2044,
+     "top2": 0.191,
+     "entropy": 3.553,
+     "bins": 38,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "96x54": {
+     "topSurface": 0.2087,
+     "top2": 0.1914,
+     "entropy": 3.555,
+     "bins": 40,
+     "ms": {
+      "render": 0.3,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.7
+     }
+    },
+    "160x90": {
+     "topSurface": 0.2002,
+     "top2": 0.1972,
+     "entropy": 3.591,
+     "bins": 42,
+     "ms": {
+      "render": 0.3,
+      "read": 1.5,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "320x180": {
+     "topSurface": 0.1996,
+     "top2": 0.1926,
+     "entropy": 3.652,
+     "bins": 45,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.3,
+      "all": 2.1
+     }
+    },
+    "region96": {
+     "topRegion": 0.3285,
+     "comps": 552,
+     "ms": 1.7
+    }
+   }
+  },
+  {
+   "id": "s061",
+   "ok": true,
+   "zone": "forest",
+   "at": {
+    "x": 3.12,
+    "y": 15.14,
+    "z": -4.38
+   },
+   "R": 5,
+   "stageMs": 350.5,
+   "res": {
+    "48x27": {
+     "topSurface": 0.3634,
+     "top2": 0.1875,
+     "entropy": 3.05,
+     "bins": 24,
+     "ms": {
+      "render": 0.5,
+      "read": 2,
+      "hist": 0,
+      "all": 2.5
+     }
+    },
+    "64x36": {
+     "topSurface": 0.3594,
+     "top2": 0.1758,
+     "entropy": 3.125,
+     "bins": 29,
+     "ms": {
+      "render": 0.4,
+      "read": 1.8,
+      "hist": 0,
+      "all": 2.2
+     }
+    },
+    "96x54": {
+     "topSurface": 0.359,
+     "top2": 0.1707,
+     "entropy": 3.173,
+     "bins": 30,
+     "ms": {
+      "render": 0.4,
+      "read": 1.4,
+      "hist": 0,
+      "all": 1.9
+     }
+    },
+    "160x90": {
+     "topSurface": 0.3619,
+     "top2": 0.1675,
+     "entropy": 3.224,
+     "bins": 36,
+     "ms": {
+      "render": 0.4,
+      "read": 1.5,
+      "hist": 0.1,
+      "all": 2
+     }
+    },
+    "320x180": {
+     "topSurface": 0.3638,
+     "top2": 0.1649,
+     "entropy": 3.266,
+     "bins": 43,
+     "ms": {
+      "render": 0.4,
+      "read": 1.6,
+      "hist": 0.2,
+      "all": 2.2
+     }
+    },
+    "region96": {
+     "topRegion": 0.423,
+     "comps": 510,
+     "ms": 1.9
+    }
+   }
+  }
+ ]
+}
