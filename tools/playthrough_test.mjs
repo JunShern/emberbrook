@@ -417,6 +417,21 @@ async function anchor(cdp, id, fired) {
     } else if (!r.fired) {
       note(`beat ${id} did not fire in ${(budgetMs / 1000).toFixed(1)} s + ` +
            `${(r.graceMs / 1000).toFixed(1)} s of grace — ${r.why}`);
+      // TWO FAILURES, TWO DIFFERENT ATTRIBUTIONS, AND THE DIFFERENCE MUST SURVIVE INTO
+      // WHOEVER READS THIS LOG NEXT WEEK. `director idle` is a statement about the GAME:
+      // nothing was running and the beat is not in the ledger. `grace expired while
+      // busy` is a statement about the MACHINE: the beat WAS running and did not finish,
+      // which is what a 9.8 GB plate bake on this laptop does to a browser. Measured
+      // 2026-08-09: the same build ran 814 s on a quiet machine and 1441 s at 24% free
+      // memory with 14.9 GB of swap in use, and ch1.pact — the longest beat in the game
+      // at 29 lines — overran 104 s + 30 s of grace in the second loaded run while the
+      // ledger showed it had not completed. Both are red, and only one is a bug in the
+      // game. This repo has been burned four times by inheriting an attribution.
+      if (/grace expired/.test(r.why))
+        note(`  ATTRIBUTION: the director was BUSY for the whole window and the grace, so this ` +
+             `beat was RUNNING and did not finish — that is a LOAD verdict, not a game defect. ` +
+             `Check §6's 'beats completed' line and re-run on a quiet machine before attributing ` +
+             `anything to ${id}.`);
     }
     return r.fired;
   }
