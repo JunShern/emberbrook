@@ -458,6 +458,26 @@ git runs here, on branch `migration/3d-hybrid`.
   good, and NOBODY HAS EVER MEASURED "is this a good place to fight" — and (2) the BODY SIDE, still
   untouched, which is where the fresnel/inverted-hull question actually sits. Making `?arena=world`
   the default today ships a fight that reads at two of four sampled sites.
+  **AND THE FRAME THE PLAYER LIVES IN WAS NOT THE FRAME ANYONE WAS MEASURING** (2026-08-09, board
+  docs/qa/battle-decide/, instrument tools/battle_decide.mjs, `--keep=0` is the one-build A/B).
+  Measured at 12 census sites: past the opening move the command step sat on `decide` with **ZERO
+  FOES IN FRAME, 100% of the dwell, at 12 of 12** — foe screen-x 1.25-1.38 frame widths, i.e. off
+  the right edge. A round holds ONE COMMAND STEP PER LIVING PARTY MEMBER and each is unbounded (it
+  ends on a keypress), so that frame is where the player actually lives; the only fixed part of a
+  round is its 7.83 s resolution. ROOT CAUSE: `decide`'s own comment said `show:'actor'` resolved
+  to the deciding body AND ITS TARGET — but `renderMenu` calls `markFoe(-1)` in `cmd` mode, so
+  there is no target and it resolved to one body. Fixed with a CONTAINMENT SET, not a wider lens
+  (`keep:'foes'` at a looser fill, aim weighted 0.62 toward the subject so the medium survives,
+  keep bodies in the nine-sample visibility test): 0% zero-foe dwell at 12/12, 2.00 of 2 foes in
+  frame, **180° rule untouched** (`axisCheck` reads all live bodies, never the subject set).
+  Cost is on the TURN path, not staging: decide re-solve p50 0.1 → 0.4 ms, and trigger-to-first-
+  frame measured UNMOVED (497.9 → 493.6 ms).
+  **THE CORRECTION THIS FORCES ON THE READINESS NUMBERS**: the 48.4/37.1/14.5 and post-fix
+  32.3/37.1/24.2 eye-sorts were done on `round` PLATES — a frame seen for ~900 ms at entry and
+  between actions. Placement quality has never been eye-sorted on the frame the player lives in,
+  and good placement for a wide establishing shot is NOT proven to be good placement for a 27 mm
+  two-shot. (`round` is not absent from play, as an earlier note implied — it fires at entry and
+  settles back between actions; what was true is that the menu opens after the camera has left it.)
   Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
