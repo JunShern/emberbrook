@@ -703,9 +703,9 @@ const siteDriver = (pt, seen, opts) => `(async () => {
   // AND THE HALF OF THAT NOTE THAT WAS A DEFECT REPORT IS FIXED (2026-08-09).
   // It used to read "and BOTH FOES ARE OFF FRAME (anchors vis:false for m0/m1 on
   // every pilot site)" — which was true, measured at 12 sites, and was a bug in
-  // the game rather than a fact about it: `show:'actor'` resolved to ONE body
-  // because the command step has no target. battle_world's `decide` row now
-  // carries `keep:'foes'` and the frame contains the fight (tools/battle_decide.mjs,
+  // the game rather than a fact about it: show:'actor' resolved to ONE body
+  // because the command step has no target. battle_world's 'decide' row now
+  // carries keep:'foes' and the frame contains the fight (tools/battle_decide.mjs,
   // docs/qa/battle-decide). THE SORT BELOW IS STILL OF 'round' PLATES: the decide
   // frame has never been eye-sorted at census scale.
   // (Plain quotes: a backtick in a comment INSIDE a template literal ends the
