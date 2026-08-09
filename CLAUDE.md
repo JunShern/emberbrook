@@ -438,7 +438,26 @@ git runs here, on branch `migration/3d-hybrid`.
   cast with sky. A cast-only rim light is not available (three.js tests a light's layers against the
   CAMERA, never per object) and a fresnel via onBeforeCompile would give this module its first
   shader — which is the whole reason the r185 colour class is *deleted* here rather than managed.
-  OPEN, and it is the remaining legibility gap.
+  **ADDRESSED 2026-08-09 WITHOUT A SHADER, AND THE GAP WAS SMALLER THAN THE BOARD SAID.** Re-measured
+  first: the MEADOW regression DOES NOT REPRODUCE — it belonged to a pose the solver stopped picking
+  once the ray-budget lane changed the occluder set, so the standing gap was ONE site, not two.
+  `TONE` in battle_world.js scores each candidate boom by rendering the arena into a 320×180
+  offscreen target WITHOUT the cast and again WITH it — the difference IS the silhouette — and takes
+  half the mean and half the MINIMUM edge-vs-ring RGB distance minus ring clutter. ~50 ms once per
+  battle, fps 241.9 → 241.5. TWO THINGS IT COST THAT ARE WORTH MORE: (i) r185 renders into a non-XR
+  target in the LINEAR working space and OutputPass is not in that loop, so differencing raw linear
+  bytes crushed the dark site and picked the WRONG boom at the forest — one explicit sRGB encode
+  fixes it, and it is the same "say which space the bytes are in" law as the three above;
+  (ii) the refusal margin was BACKWARDS at 0.35 — inert where it should help (forest clears it 4.7×)
+  and biting only at the one site the chooser exists for. At 0.15 water fires 3/3 and no other
+  decision changes. Result: **water +18% to +63% contrast over 4 runs, crag −6.5% (a real
+  regression), meadow and forest flat.** Honest by eye: water is a clear win, crag is a wash, and
+  FOREST IS STILL BAD because the party stands INSIDE the hedge bank at the hedge's own value.
+  **SO THE REMAINING LEGIBILITY GAP IS NO LONGER THE CAMERA.** It is (1) PLACEMENT QUALITY — crag
+  staged on a bare dome, meadow into a building's shadow, forest inside a hedge: all legal, none
+  good, and NOBODY HAS EVER MEASURED "is this a good place to fight" — and (2) the BODY SIDE, still
+  untouched, which is where the fresnel/inverted-hull question actually sits. Making `?arena=world`
+  the default today ships a fight that reads at two of four sampled sites.
   Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
