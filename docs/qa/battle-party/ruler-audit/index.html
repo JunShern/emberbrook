@@ -1,0 +1,191 @@
+<meta charset="utf-8"><title>Battle — THE RULER AUDIT: which shipped decisions rest on edgeRGB</title>
+<style>
+body{background:#12151a;color:#dfe6ee;font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;margin:0;padding:34px 44px 90px;max-width:1500px}
+h1{font-size:25px;margin:0 0 6px} h2{font-size:19px;margin:38px 0 8px;border-bottom:1px solid #2b323c;padding-bottom:6px}
+h3{font-size:15px;margin:22px 0 6px;color:#9fb2c6}
+p,li{max-width:112ch} code{background:#1c222b;padding:1px 5px;border-radius:3px;font-size:13px}
+table{border-collapse:collapse;margin:12px 0;font-size:13.5px} th,td{border:1px solid #2b323c;padding:4px 9px;text-align:right}
+th:first-child,td:first-child{text-align:left} th{background:#1b212a;color:#9fb2c6;font-weight:600}
+.good{color:#7fd18c} .bad{color:#e8817e} .flat{color:#8b97a5} .key{color:#f0c674}
+.lead{color:#a9b8c8;font-size:15px;max-width:112ch}
+.verdict{background:#1a2029;border:1px solid #2f3945;border-radius:5px;padding:14px 18px;margin:18px 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+figure{margin:0} figure img{width:100%;border:1px solid #2b323c;border-radius:3px;display:block}
+figcaption{font-size:12px;color:#8b97a5;margin-top:3px}
+</style>
+
+<h1>THE RULER AUDIT — which shipped decisions rest on <code>edgeRGB</code>, and do they survive</h1>
+<p class="lead">2026-08-09 · world arena only (<code>?arena=world</code>) · data <code>eyesort-bodies.json</code>,
+<code>joined.json</code>, <code>tone-compare.json</code>, <code>findings.txt</code>, and the 62-site tone censuses
+<code>../../battle-decide/tone-band{,2}.json</code>. The defect this board answers is the one
+<a href="../index.html">the party-albedo lane</a> exposed: <b><code>edgeRGB</code> is ONE SIGNED DIFFERENCE OF MEANS
+over a whole silhouette, so a body brighter than its surround at the top and darker at the bottom cancels
+itself.</b> The six-band alternative was handed off untested. This board tests it, and then asks every shipped
+decision in the world-arena path whether it ever read the broken number.</p>
+
+<div class="verdict">
+<b>THE SHORT ANSWER, in three parts.</b>
+<b>(1) Almost nothing shipped reads it.</b> The placement refusals (sun, one-surface dominance), the safe rect,
+the pitch ranker <code>scoreView</code> and the <code>keep</code> containment are all geometric or histogram
+terms that never touch a tonal number — clean passes, and the reason the arc is not in trouble.
+<b>(2) The one shipped decision that does read it is <code>TONE</code>'s boom chooser, and its answer is
+ruler-dependent at 26 of 61 census sites.</b>
+<b>(3) The six-band ruler earns its keep at BODY level and changes nothing at SITE level</b> — so
+"<code>edgeRGB</code> runs backwards across sites" survives de-cancelling and PLACE was right not to use a
+tonal metric. Nothing about TONE's default was flipped: the alternative ships as <code>?btband=1</code>,
+default off, with the shipped picks proven identical 62/62.
+</div>
+
+<h2>1. THE AUDIT — every shipped decision in the world-arena path</h2>
+<table>
+<thead><tr><th>shipped decision</th><th>where</th><th>reads <code>edgeRGB</code>?</th><th>survives?</th></tr></thead>
+<tbody>
+<tr><td><code>TONE</code> boom chooser (score + refusal margin 0.15)</td><td><code>battle_world.js</code> <code>toneProbe</code></td>
+    <td class="bad">DIRECTLY — the score IS <code>0.5·mean + 0.5·min − 0.35·clutter</code> over per-body <code>edgeRGB</code></td>
+    <td class="bad">CONDITIONAL — see §3</td></tr>
+<tr><td><code>PLACE</code> sun refusal (<code>sunMargin</code> 0.5)</td><td><code>stageArena</code> ladder</td>
+    <td class="good">NO — four rays per candidate against the occluder set (<code>site.lit</code>)</td><td class="good">clean pass</td></tr>
+<tr><td><code>PLACE.surf</code> one-surface refusal (<code>surfGood</code> 0.22, <code>surfMargin</code> 0.06)</td><td><code>surfProbe</code></td>
+    <td class="good">NO — a 6×6×6 colour histogram of the display frame; the biggest bin's share</td><td class="good">clean pass</td></tr>
+<tr><td>the pitch ranker (<code>scoreView</code>, <code>wBack</code>/<code>wBoom</code>/<code>wPitch</code>)</td><td><code>solveArena</code></td>
+    <td class="good">NO — nine-sample visibility + background depth + boom clearance</td><td class="good">clean pass</td></tr>
+<tr><td><code>keep:'foes'</code> containment + <code>keepBias</code> 0.62</td><td><code>solveShot</code></td>
+    <td class="good">NO — projection of each body's own Box3</td><td class="good">clean pass</td></tr>
+<tr><td><code>keepSafe</code> safe rect (<code>.ebb-partywin</code>, <code>.ebb-cmdwin</code>)</td><td><code>solveShot</code> / <code>safeRects</code></td>
+    <td class="good">NO — DOM rects in NDC against the canvas rect</td><td class="good">clean pass</td></tr>
+<tr><td>the 180° refusal (<code>axisCheck</code>)</td><td><code>solveShot</code></td>
+    <td class="good">NO — a perspective-divided ordering test</td><td class="good">clean pass</td></tr>
+<tr><td>the tonal-separation lane's aerial re-anchor</td><td>deleted (029526e7)</td>
+    <td class="flat">n/a — it measured null and was removed; the lane's shipped output IS <code>TONE</code></td><td class="good">n/a</td></tr>
+<tr><td><code>RIM</code> polarity (<code>rimAuto</code>, <code>autoDead</code> 4)</td><td><code>battle_world.js</code>, <code>?brim=1</code></td>
+    <td class="bad">INDIRECTLY — <code>sign(edgeL − ringL)</code>, whole-silhouette means, the same cancelling shape</td>
+    <td class="flat">DEFAULT OFF and recommended against — not a shipped decision</td></tr>
+</tbody></table>
+<p>Read the middle column twice: <b>the metric that was found defective was never in the placement path at all.</b>
+Every refusal that moves where the fight happens is geometry or a colour histogram. The lane that hurt is the one
+that picks the boom.</p>
+
+<h2>2. IS THE SIX-BAND RULER ANY BETTER — an eye sort, then the numbers</h2>
+<p>57 bodies at 39 sites out of the shipped <code>decide</code> census (<code>../census/pair/</code>, the same
+frames the party-albedo lane photographed), scored per body: <b>2</b> = reads immediately as a separate figure,
+<b>1</b> = compromised, <b>0</b> = effectively lost. The sample is the <b>disagreement set</b> — every body the two
+rulers disagree about, plus 20 drawn at random from the bodies neither flags. <b>One rater, and NOT blind:</b> the
+disagreement lists were computed before the looking. Treat the direction, not the level.</p>
+<table>
+<thead><tr><th>ranking "does this body read"</th><th>n</th><th><code>edgeRGB</code></th><th>6-band mean</th><th>6-band worst</th></tr></thead>
+<tbody>
+<tr><td>AUC, reads(2) vs not(0/1) — all targets</td><td>57</td><td class="bad">0.510</td><td>0.580</td><td>0.564</td></tr>
+<tr><td>AUC, reads(2) vs not(0/1) — <b>excluding teammate overlap</b></td><td>49</td><td class="bad">0.591</td><td class="good"><b>0.820</b></td><td>0.792</td></tr>
+<tr><td>concordance with the 3-level score — excluding teammate overlap</td><td>49</td><td class="bad">0.590</td><td class="good"><b>0.818</b></td><td>—</td></tr>
+</tbody></table>
+<p><b>The exclusion is not a convenience, it is the finding.</b> 8 of the 57 targets are compromised because one
+party body is standing behind the other, and <b>NEITHER RULER CAN SEE THAT BY CONSTRUCTION</b> — the meter renders
+each body against a cast-free background, so a teammate never occludes it. Five of the eight are Vesper behind
+Maren in the 27 mm two-shot. Include them and both rulers collapse to chance, which is a true statement about
+what the meter measures rather than about which ruler is better.</p>
+<p>On the bodies a ruler could in principle see, six-band is clearly better and the failure mode is exactly the
+predicted one: of the 20 bodies <code>edgeRGB &lt; 5</code> calls failing, <b>14 read perfectly well by eye</b> and
+none is lost. Of the 20 the six-band ruler flags at the same census-wide rate, 10 read, 9 are compromised and 1 is
+lost.</p>
+<div class="grid">
+<figure><img src="../census/pair/s040.jpg"><figcaption>s040 — Vesper reads <code>edgeRGB</code> <b>1.60</b>, the
+worst party reading in the census. He is plainly visible: dark top on a sunlit tan cliff, dark boots on a pale
+deck. Bands 12.3 / 9.1 / 8.7 / 11.3 / 29.9 / 38.1 — the top and the bottom have OPPOSITE sign and the whole-
+silhouette number annihilates them against each other.</figcaption></figure>
+<figure><img src="../census/pair/s036.jpg"><figcaption>s036 — Maren in the rock crevice. <code>edgeRGB</code> 5.52
+says fine; six-band says <b>4.89</b>, the worst reading on the board. By eye she is compromised — the dress sits in
+the shadow at the rock's own value and only the hair carries her.</figcaption></figure>
+<figure><img src="../census/pair/s053.jpg"><figcaption>s053 — the cream wolf on pale sandstone that the safe-rect
+lane argued about. Compromised by eye in both rulers' books; the blob behind it is genuinely lost. This is the site
+whose "regression" was settled on a single-site <code>edgeRGB</code> delta — a number this arc has since shown is
+unusable at N=1.</figcaption></figure>
+</div>
+
+<h3>and at SITE level the fix changes nothing — which is the other half of the answer</h3>
+<p>The placement lane's headline was that the tonal metric <b>runs backwards across sites</b>: good frames score
+LOW because a lit body against near-black is enormous RGB contrast. De-cancelling does not rescue it. Against the
+existing <code>decide</code> eye sorts:</p>
+<table>
+<thead><tr><th>site-level ranking of good / acceptable / bad</th><th>shipped arm (n=62)</th><th>bplace=0 arm (n=61)</th></tr></thead>
+<tbody>
+<tr><td><code>sil.edgeRGB</code> (whole cast, signed difference)</td><td class="bad">0.335</td><td class="bad">0.265</td></tr>
+<tr><td><code>sil.bandMin</code> (six column bands, worst)</td><td class="bad">0.292</td><td class="bad">0.243</td></tr>
+<tr><td>mean of the six column bands</td><td class="bad">0.298</td><td class="bad">0.302</td></tr>
+<tr><td>one-surface dominance, inverted (the shipped axis)</td><td class="good">0.829</td><td class="good">0.793</td></tr>
+</tbody></table>
+<p>Every tonal variant sits far below 0.5 — <b>backwards, not merely weak</b>. <code>PLACE</code>'s ruling that
+"TONE is right at its own job and is NOT a placement metric" survives the ruler fix intact.</p>
+
+<h2>3. TONE, RE-DERIVED ON THE FULL 62-SITE CENSUS</h2>
+<p>The probe now also reports the six-band contrast per body and a <code>bScore</code> per rung —
+<b>reported, never scored</b>, the same discipline <code>ringL</code> already follows. Receipt that the field moved
+no pick: chosen boom <b>identical 62/62</b> against <code>census-surfAfter.json</code>, the last census of the
+pre-edit shipped build at the same pinned <code>ORBIT.yaw</code>, and identical 62/62 across two runs of the
+edited build.</p>
+<table>
+<thead><tr><th>on the 61 sites with a tone reading</th><th><code>edgeRGB</code> score (shipped)</th><th>six-band score</th></tr></thead>
+<tbody>
+<tr><td>the boom moves off the geometric solver's rung at</td><td class="bad">39 / 61 (64%)</td><td>29 / 61 (48%)</td></tr>
+<tr><td>argmax before any margin agrees with the other ruler</td><td colspan="2">29 / 61</td></tr>
+<tr><td>FINAL pitch differs between the rulers</td><td colspan="2" class="key">26 / 61 sites</td></tr>
+<tr><td>incumbent rung scores NEGATIVE</td><td class="bad">5 / 61</td><td class="good">0 / 61</td></tr>
+<tr><td>refusal bar <code>|inc|·0.15</code> under 0.5 (inert; median rung span 3.94)</td><td class="bad">10 / 61</td><td class="good">0 / 61</td></tr>
+<tr><td>per-body six-band ÷ <code>edgeRGB</code>, p50, inside the probe (n=954)</td><td colspan="2">party <b>1.55</b> · foe <b>1.18</b></td></tr>
+</tbody></table>
+<p><b>Three things this says, in order of how much they matter.</b></p>
+<p><b>(a) The cancellation is real inside TONE's own probe, not just in the offline meter</b>, and it is
+side-asymmetric: the whole-silhouette number understates a party body's contrast by ~55% and a foe's by ~18%. So
+the <code>min</code> term — the one that exists to stop a boom buying a good average and one invisible body — is
+partly ranking BODY SHAPE, and it is the party's shape it penalises.</p>
+<p><b>(b) The refusal margin is not a bar.</b> <code>|inc| · margin</code> on a score that can reach zero or go
+negative is degenerate: at 10 of 61 sites the bar is under 0.5 against a median rung-to-rung span of 3.94, so the
+refusal is inert at one site in six — and at 0.15 the chooser overrules the geometric solver at <b>64% of sites</b>,
+which is a preference, not the refusal its own comment claims. This defect is INDEPENDENT of which ruler is used
+and was invisible to the four-site derivation that set 0.15. Under the six-band score the incumbent is never
+negative and the bar is never degenerate.</p>
+<p><b>(c) And the pick is ruler-dependent at two sites in five</b> — which means the "water +18% to +63%, crag
+−6.5%" verdict the margin was ratified on used the defective ruler to <i>choose</i> the boom AND to <i>score</i> the
+result. That is circular and those four numbers should be treated as unproven, not as wrong.</p>
+<div class="verdict">
+<b>WHY NOTHING WAS FLIPPED.</b> Promoting the six-band ruler changes the picture at 26 of 61 sites and
+<b>nobody has looked at those 26 in both arms</b>. A single-rater sort would not settle it either: two raters on
+this arc's own frames agree 43/62 and differ by 9.7 points of bad. The eye evidence that exists is BODY-level, on
+the <code>decide</code> frame, from one non-blind rater — enough to justify building the A/B, not enough to move a
+shipped default. <code>?btband=1</code> makes the next lane's job one command:
+<code>node tools/battle_decide.mjs --port=3000 --mode=census --q=btband=1</code> against the shipped arm, then
+sort both by eye.
+</div>
+
+<h2>4. WHAT THIS COSTS THE ARC'S WRITTEN NUMBERS</h2>
+<p><b>SUSPECT.</b> Every single-site <code>edgeRGB</code> delta, which the arc already knew (the meter moves 4.50
+over six repeats of one battle) and which this audit adds a second reason to distrust — the number is also
+shape-biased. Named: the s053 "the library says the new site is BETTER (5.63 → 10.37)" argument; the safe-rect cost
+line "<code>sil.edgeRGB</code> median 9.07 → 9.25"; the fresnel's "mean <code>edgeRGB</code> 9.27 → 10.89, 24 better
+/ 2 worse"; the TONE contrast verdicts at water / crag / meadow / forest; and the <code>edgeRGB &lt; 5</code> failure
+threshold itself, which by eye flags 14 bodies that read for every 1 it flags that is lost.</p>
+<p><b>STANDS.</b> Everything that never read the metric: the placement census's axis ranking (one-surface dominance
+0.922/0.937, sun 0.843/0.553, sky 0.68, <code>view.back</code> 0.733, relocation 0.450); the surface refusal's
+29→15 census move; the safe rect's 21/62 → 4 panel-overlap counts; the zero-foe-dwell fix; the 180° receipt; the
+staging and first-frame timings. <b>And the placement lane's tonal finding stands twice over</b> — the metric runs
+backwards across sites at 0.335, and the de-cancelled version is no better at 0.292.</p>
+<p><b>WHAT CHANGES SIGN.</b> "The failures concentrate on small clothed party bodies" was already retracted by the
+party lane. This board adds the eye evidence: on 49 bodies the eye's own party/foe split is party 12/29
+not-fully-reading against foe 8/28 — a difference far smaller than either ruler's threshold count claims, and
+<b>the largest single cause of a party body not reading in this census is the other party body standing in front of
+it</b>, which is a shot problem, not a paint problem and not a boom problem.</p>
+
+<h2>Residuals, named</h2>
+<ul>
+<li>The eye sort is <b>one rater and not blind</b> to which ruler flagged what. It is a discrimination test between
+two rulers, not a level.</li>
+<li>The body-level sort is on the <code>decide</code> frame; <code>TONE</code> ranks the <code>round</code>
+establishing boom, and this arc has already measured that the two sorts disagree at a third of sites.</li>
+<li>At <b>s047</b> the recorded camera pitch differed between two runs while <code>TONE</code>'s own decision was
+bit-identical: the probe landed after the first turn had started and reported
+<code>applied:false — a beat already owns the camera</code>. That is a pre-existing race between model-load network
+time and the first turn, untouched by this lane.</li>
+<li>Two sites (<b>s033</b>, <b>s039</b>) move in the third decimal between runs — the sky-dome cloud drift the tone
+lane already named. No pick moved.</li>
+<li><code>arena_playtest</code>'s <code>organic</code> suite fails "no hostile zone reachable". <b>Proven
+pre-existing</b>: the same failure reproduces with this lane's change reverted to HEAD.</li>
+</ul>

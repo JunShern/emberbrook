@@ -1,0 +1,1458 @@
+[
+ {
+  "site": "s000",
+  "zone": "water",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   33.785,
+   31.121,
+   30.71,
+   30.886
+  ],
+  "scoreBand": [
+   33.426,
+   32.667,
+   31.899,
+   30.796
+  ]
+ },
+ {
+  "site": "s001",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   5.919,
+   7.74,
+   9.441,
+   10.38
+  ],
+  "scoreBand": [
+   11.476,
+   13.265,
+   17.156,
+   17.814
+  ]
+ },
+ {
+  "site": "s002",
+  "zone": "forest",
+  "was": 0.34,
+  "edgeChose": 0.16,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   8.692,
+   1.878,
+   0.565,
+   -0.163
+  ],
+  "scoreBand": [
+   20.792,
+   15.733,
+   20.192,
+   24.282
+  ]
+ },
+ {
+  "site": "s003",
+  "zone": "water",
+  "was": 0.28,
+  "edgeChose": 0.34,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.22,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   -2.266,
+   1.035,
+   2.321
+  ],
+  "scoreBand": [
+   18.957,
+   18.36,
+   18.323
+  ]
+ },
+ {
+  "site": "s004",
+  "zone": "crag",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   10.234,
+   14.936,
+   13.805,
+   16.322
+  ],
+  "scoreBand": [
+   14.349,
+   17.735,
+   18.884,
+   21.928
+  ]
+ },
+ {
+  "site": "s005",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   5.001,
+   6.039,
+   6.454,
+   7.494
+  ],
+  "scoreBand": [
+   13.406,
+   11.563,
+   13.198,
+   16.207
+  ]
+ },
+ {
+  "site": "s006",
+  "zone": "crag",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.22,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   13.16,
+   14.763,
+   10.993,
+   9.442
+  ],
+  "scoreBand": [
+   15.325,
+   17.067,
+   11.885,
+   13.505
+  ]
+ },
+ {
+  "site": "s007",
+  "zone": "meadow",
+  "was": 0.28,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   4.172,
+   6.343,
+   8.16,
+   9.476
+  ],
+  "scoreBand": [
+   10.507,
+   11.134,
+   12.902,
+   15.36
+  ]
+ },
+ {
+  "site": "s008",
+  "zone": "crag",
+  "was": 0.16,
+  "edgeChose": 0.28,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   9.041,
+   10.868,
+   11.391,
+   10.639
+  ],
+  "scoreBand": [
+   16.492,
+   16.708,
+   16.106,
+   19.909
+  ]
+ },
+ {
+  "site": "s009",
+  "zone": "forest",
+  "was": 0.28,
+  "edgeChose": 0.28,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.16,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   8.697,
+   9.68,
+   11.589,
+   12.834
+  ],
+  "scoreBand": [
+   27.492,
+   26.26,
+   24.758,
+   24.892
+  ]
+ },
+ {
+  "site": "s010",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.16,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   13.144,
+   13.444,
+   14.303,
+   13.996
+  ],
+  "scoreBand": [
+   26.896,
+   25.404,
+   26.26,
+   24.271
+  ]
+ },
+ {
+  "site": "s011",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   9.481,
+   12.994,
+   12.42,
+   16.085
+  ],
+  "scoreBand": [
+   18.251,
+   24.044,
+   24.546,
+   26.485
+  ]
+ },
+ {
+  "site": "s012",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   0.54,
+   -0.007,
+   6.198,
+   9.398
+  ],
+  "scoreBand": [
+   14.05,
+   16.042,
+   17.075,
+   21.621
+  ]
+ },
+ {
+  "site": "s013",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.28,
+  "edgeDecisive": false,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   7.485,
+   6.445,
+   6.627,
+   6.619
+  ],
+  "scoreBand": [
+   15.046,
+   17.982,
+   20.352,
+   18.172
+  ]
+ },
+ {
+  "site": "s014",
+  "zone": "meadow",
+  "was": 0.34,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   17.991,
+   26.626
+  ],
+  "scoreBand": [
+   19.364,
+   28.872
+  ]
+ },
+ {
+  "site": "s015",
+  "zone": "water",
+  "was": 0.16,
+  "edgeChose": 0.22,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.28,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   2.575,
+   4.988,
+   3.574,
+   3.004
+  ],
+  "scoreBand": [
+   13.929,
+   15.208,
+   17.829,
+   14.545
+  ]
+ },
+ {
+  "site": "s016",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.22,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.28,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   11.594,
+   13.947,
+   13.707,
+   12.563
+  ],
+  "scoreBand": [
+   14.34,
+   15.706,
+   20.483,
+   19.495
+  ]
+ },
+ {
+  "site": "s017",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.34,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   12.015,
+   12.015,
+   11.507,
+   11.845
+  ],
+  "scoreBand": [
+   15.04,
+   16.213,
+   16.334,
+   16.968
+  ]
+ },
+ {
+  "site": "s018",
+  "zone": "crag",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   7.074,
+   8.285,
+   9.178,
+   9.448
+  ],
+  "scoreBand": [
+   17.852,
+   17.919,
+   18.746,
+   19.7
+  ]
+ },
+ {
+  "site": "s019",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   5.624,
+   2.806,
+   3.236,
+   8.287
+  ],
+  "scoreBand": [
+   14.925,
+   15.566,
+   15.195,
+   21.419
+  ]
+ },
+ {
+  "site": "s020",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.28,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.22,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   8.838,
+   10.285,
+   12.553,
+   11.203
+  ],
+  "scoreBand": [
+   16.468,
+   18.748,
+   17.8,
+   15.323
+  ]
+ },
+ {
+  "site": "s021",
+  "zone": "meadow",
+  "was": 0.28,
+  "edgeChose": 0.28,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.28,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   21.754,
+   21.299,
+   24.25,
+   21.851
+  ],
+  "scoreBand": [
+   24.95,
+   25.854,
+   27.831,
+   23.747
+  ]
+ },
+ {
+  "site": "s022",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.16,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   11.999,
+   12.475,
+   9.082,
+   11.626
+  ],
+  "scoreBand": [
+   38.022,
+   36.213,
+   32.906,
+   32.827
+  ]
+ },
+ {
+  "site": "s023",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.34,
+  "edgeDecisive": false,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   15.615,
+   12.832,
+   11.716,
+   13.627
+  ],
+  "scoreBand": [
+   16.53,
+   15.447,
+   16.306,
+   19.296
+  ]
+ },
+ {
+  "site": "s024",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   0.987,
+   0.272,
+   1.423,
+   2.836
+  ],
+  "scoreBand": [
+   14.351,
+   13.082,
+   14.686,
+   18.463
+  ]
+ },
+ {
+  "site": "s025",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   9.963,
+   9.444,
+   6.356,
+   4.123
+  ],
+  "scoreBand": [
+   23.466,
+   20.67,
+   18.201,
+   14.455
+  ]
+ },
+ {
+  "site": "s026",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.34,
+  "edgeDecisive": false,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   22.981,
+   18.225,
+   14.909,
+   11.29
+  ],
+  "scoreBand": [
+   24.12,
+   25.814,
+   27.143,
+   29.053
+  ]
+ },
+ {
+  "site": "s027",
+  "zone": "crag",
+  "was": 0.28,
+  "edgeChose": 0.28,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.34,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   22.916,
+   24.312,
+   24.183
+  ],
+  "scoreBand": [
+   24.257,
+   25.141,
+   25.22
+  ]
+ },
+ {
+  "site": "s028",
+  "zone": "meadow",
+  "was": 0.34,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.22,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   15.478,
+   20.776,
+   22.989,
+   22.839
+  ],
+  "scoreBand": [
+   28.775,
+   29.669,
+   28.508,
+   26.791
+  ]
+ },
+ {
+  "site": "s029",
+  "zone": "water",
+  "was": 0.22,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   20.569,
+   10.54,
+   11.837,
+   10.56
+  ],
+  "scoreBand": [
+   32.761,
+   22.553,
+   21.373,
+   19.108
+  ]
+ },
+ {
+  "site": "s030",
+  "zone": "water",
+  "was": 0.16,
+  "edgeChose": 0.22,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.28,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   15.276,
+   18.62,
+   16.082,
+   13.697
+  ],
+  "scoreBand": [
+   26.406,
+   32.508,
+   34.087,
+   33.748
+  ]
+ },
+ {
+  "site": "s031",
+  "zone": "meadow",
+  "was": 0.34,
+  "edgeChose": 0.28,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.22,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   19.588,
+   21.256,
+   21.476,
+   18.472
+  ],
+  "scoreBand": [
+   32.836,
+   34.04,
+   32.889,
+   29.997
+  ]
+ },
+ {
+  "site": "s032",
+  "zone": "water",
+  "was": 0.34,
+  "edgeChose": 0.34,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.28,
+  "edgeDecisive": false,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   -7.26,
+   -4.547,
+   -5.004,
+   -3.186
+  ],
+  "scoreBand": [
+   12,
+   12.337,
+   12.391,
+   9.165
+  ]
+ },
+ {
+  "site": "s033",
+  "zone": "crag",
+  "was": 0.22,
+  "edgeChose": 0.28,
+  "bandChose": 0.22,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   4.133,
+   4.088,
+   5.672,
+   5.588
+  ],
+  "scoreBand": [
+   16.615,
+   16.763,
+   15.273,
+   18.443
+  ]
+ },
+ {
+  "site": "s034",
+  "zone": "meadow",
+  "was": 0.22,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   9.612,
+   3.109,
+   4.17,
+   5.329
+  ],
+  "scoreBand": [
+   17.304,
+   10.344,
+   14.619,
+   12.521
+  ]
+ },
+ {
+  "site": "s035",
+  "zone": "crag",
+  "was": 0.22,
+  "edgeChose": 0.16,
+  "bandChose": 0.22,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.28,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   -2.423,
+   -4.935,
+   -6.669,
+   -2.805
+  ],
+  "scoreBand": [
+   12.93,
+   14.34,
+   15.614,
+   14.999
+  ]
+ },
+ {
+  "site": "s036",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.28,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   -3.525,
+   -2.245,
+   0.569,
+   1.64
+  ],
+  "scoreBand": [
+   10.131,
+   12.447,
+   13.071,
+   12.994
+  ]
+ },
+ {
+  "site": "s037",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.28,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   6.752,
+   9.782,
+   10.55,
+   11.663
+  ],
+  "scoreBand": [
+   20.401,
+   19.668,
+   21.702,
+   21.573
+  ]
+ },
+ {
+  "site": "s038",
+  "zone": "crag",
+  "was": 0.34,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   26.293,
+   -1.458,
+   18.701,
+   13.178
+  ],
+  "scoreBand": [
+   45.528,
+   10.902,
+   26.699,
+   18.269
+  ]
+ },
+ {
+  "site": "s039",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   0.65,
+   0.374,
+   9.571,
+   12.315
+  ],
+  "scoreBand": [
+   12.876,
+   20.34,
+   19.113,
+   21.543
+  ]
+ },
+ {
+  "site": "s040",
+  "zone": "crag",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.22,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   6.423,
+   10.681,
+   10.19,
+   10.883
+  ],
+  "scoreBand": [
+   23.063,
+   24.572,
+   22.669,
+   22.959
+  ]
+ },
+ {
+  "site": "s041",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   6.959,
+   5.521,
+   5.955,
+   5.516
+  ],
+  "scoreBand": [
+   19.672,
+   18.463,
+   17.351,
+   14.769
+  ]
+ },
+ {
+  "site": "s042",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.22,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   8.278,
+   8.709,
+   6.844,
+   6.855
+  ],
+  "scoreBand": [
+   15.321,
+   16.211,
+   13.222,
+   11.181
+  ]
+ },
+ {
+  "site": "s043",
+  "zone": "water",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   19.967,
+   22.607,
+   24.128,
+   24.606
+  ],
+  "scoreBand": [
+   24.942,
+   26.704,
+   27.285,
+   29.698
+  ]
+ },
+ {
+  "site": "s044",
+  "zone": "forest",
+  "was": 0.28,
+  "edgeChose": 0.34,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.22,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   -6.112,
+   -1.924,
+   4.86,
+   7.556
+  ],
+  "scoreBand": [
+   29.908,
+   37.713,
+   34.625,
+   31.689
+  ]
+ },
+ {
+  "site": "s045",
+  "zone": "meadow",
+  "was": 0.34,
+  "edgeChose": 0.16,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   0.082,
+   -2.001,
+   -0.128,
+   -0.352
+  ],
+  "scoreBand": [
+   13.069,
+   9.199,
+   10.531,
+   11.518
+  ]
+ },
+ {
+  "site": "s046",
+  "zone": "meadow",
+  "was": 0.22,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   15.77,
+   6.232,
+   3.207,
+   2.392
+  ],
+  "scoreBand": [
+   23.597,
+   16.305,
+   12.049,
+   9.796
+  ]
+ },
+ {
+  "site": "s047",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   13.083,
+   19.354,
+   19.195,
+   21.447
+  ],
+  "scoreBand": [
+   19.883,
+   22.975,
+   24.609,
+   27.063
+  ]
+ },
+ {
+  "site": "s048",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.22,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   19.657,
+   19.998,
+   18.673,
+   17.983
+  ],
+  "scoreBand": [
+   20.144,
+   20.234,
+   20.144,
+   20.062
+  ]
+ },
+ {
+  "site": "s049",
+  "zone": "meadow",
+  "was": 0.22,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.16,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   17.212,
+   2.145,
+   4.67,
+   6.777
+  ],
+  "scoreBand": [
+   19.988,
+   8.676,
+   8.451,
+   13.806
+  ]
+ },
+ {
+  "site": "s050",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   15.419,
+   14.605,
+   16.08,
+   17.695
+  ],
+  "scoreBand": [
+   17.539,
+   14.642,
+   16.715,
+   18.437
+  ]
+ },
+ {
+  "site": "s051",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.28,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   20.904,
+   21.714,
+   20.402,
+   20.662
+  ],
+  "scoreBand": [
+   23.153,
+   23.79,
+   25.506,
+   25.306
+  ]
+ },
+ {
+  "site": "s052",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": true,
+  "scoreEdge": [
+   3.395,
+   3.014,
+   3.787,
+   5.668
+  ],
+  "scoreBand": [
+   12.773,
+   16.508,
+   15.291,
+   17.002
+  ]
+ },
+ {
+  "site": "s053",
+  "zone": "crag",
+  "was": 0.28,
+  "edgeChose": 0.28,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.34,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   23.93,
+   22.636,
+   25.803,
+   23.263
+  ],
+  "scoreBand": [
+   26.243,
+   27.389,
+   29.52,
+   29.787
+  ]
+ },
+ {
+  "site": "s055",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.22,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.16,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   5.023,
+   6.372,
+   0.996,
+   4.276
+  ],
+  "scoreBand": [
+   19.62,
+   18.777,
+   17.194,
+   17.184
+  ]
+ },
+ {
+  "site": "s056",
+  "zone": "crag",
+  "was": 0.16,
+  "edgeChose": 0.22,
+  "bandChose": 0.28,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.28,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   14.395,
+   17.653,
+   17.302,
+   17.567
+  ],
+  "scoreBand": [
+   21.191,
+   24.895,
+   26.351,
+   26.159
+  ]
+ },
+ {
+  "site": "s057",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.34,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.16,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   9.136,
+   8.474,
+   10.294,
+   12.033
+  ],
+  "scoreBand": [
+   25.545,
+   22.389,
+   24.167,
+   22.534
+  ]
+ },
+ {
+  "site": "s058",
+  "zone": "forest",
+  "was": 0.16,
+  "edgeChose": 0.28,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.28,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   15.195,
+   17.189,
+   18.532,
+   16.425
+  ],
+  "scoreBand": [
+   18.651,
+   21.381,
+   22.391,
+   22.527
+  ]
+ },
+ {
+  "site": "s059",
+  "zone": "meadow",
+  "was": 0.28,
+  "edgeChose": 0.22,
+  "bandChose": 0.34,
+  "edgeArgmax": 0.22,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": true,
+  "same": false,
+  "scoreEdge": [
+   10.081,
+   11.364,
+   9.484,
+   10.974
+  ],
+  "scoreBand": [
+   10.267,
+   12.168,
+   11.672,
+   13.498
+  ]
+ },
+ {
+  "site": "s060",
+  "zone": "meadow",
+  "was": 0.16,
+  "edgeChose": 0.16,
+  "bandChose": 0.16,
+  "edgeArgmax": 0.16,
+  "bandArgmax": 0.28,
+  "edgeDecisive": false,
+  "bandDecisive": false,
+  "same": true,
+  "scoreEdge": [
+   20.099,
+   18.158,
+   18.09,
+   16.695
+  ],
+  "scoreBand": [
+   30.044,
+   27.939,
+   30.767,
+   25.819
+  ]
+ },
+ {
+  "site": "s061",
+  "zone": "forest",
+  "was": 0.22,
+  "edgeChose": 0.34,
+  "bandChose": 0.22,
+  "edgeArgmax": 0.34,
+  "bandArgmax": 0.34,
+  "edgeDecisive": true,
+  "bandDecisive": false,
+  "same": false,
+  "scoreEdge": [
+   9.438,
+   8.183,
+   10.474,
+   12.122
+  ],
+  "scoreBand": [
+   18.566,
+   17.433,
+   17.622,
+   18.815
+  ]
+ }
+]

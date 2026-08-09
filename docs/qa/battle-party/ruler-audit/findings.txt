@@ -1,0 +1,113 @@
+== BODY-LEVEL EYE SORT vs BOTH RULERS
+
+== ALL TARGETS  (n=57)
+   reads(2) vs not(0/1)       pos=37 neg=20
+      edgeRGB        AUC=0.510
+      6band rowsAbs  AUC=0.580
+      6band rowMin   AUC=0.564
+   not-lost(1/2) vs lost(0)   pos=54 neg=3
+      edgeRGB        AUC=0.302
+      6band rowsAbs  AUC=0.389
+      6band rowMin   AUC=0.364
+   means by eye pile:
+      score 0 n= 3  edgeRGB  10.53   6band  24.13
+      score 1 n=17  edgeRGB   7.91   6band  14.83
+      score 2 n=37  edgeRGB   9.47   6band  16.57
+   edgeRGB  concordance with the 3-level eye score: 0.495  (391 conc / 399 disc)
+   6band    concordance with the 3-level eye score: 0.565  (447 conc / 344 disc)
+
+== EXCLUDING bodies lost to TEAMMATE OVERLAP (which no ruler measures)  (n=49)
+   reads(2) vs not(0/1)       pos=37 neg=12
+      edgeRGB        AUC=0.591
+      6band rowsAbs  AUC=0.820
+      6band rowMin   AUC=0.792
+   not-lost(1/2) vs lost(0)   pos=48 neg=1
+      edgeRGB        AUC=0.542
+      6band rowsAbs  AUC=0.917
+      6band rowMin   AUC=0.896
+   means by eye pile:
+      score 0 n= 1  edgeRGB   5.94   6band   7.77
+      score 1 n=11  edgeRGB   6.13   6band   9.67
+      score 2 n=37  edgeRGB   9.47   6band  16.57
+   edgeRGB  concordance with the 3-level eye score: 0.590  (268 conc / 186 disc)
+   6band    concordance with the 3-level eye score: 0.818  (372 conc / 83 disc)
+
+== HOW EACH RULER'S OWN FAIL CALL SCORED BY EYE (all 57 targets)
+   edgeRGB<5    flagged 20  -> eye: reads(2) 14 | compromised(1)  6 | lost(0)  0
+   6band<10.59  flagged 20  -> eye: reads(2) 10 | compromised(1)  9 | lost(0)  1
+                the eye called 20 bodies not-fully-reading (0/1) out of 57 looked at
+
+== THE EYE'S OWN PARTY/FOE SPLIT ON THE TARGETS
+   party  n=29  mean eye 1.52  not-fully-reading 12
+   foe    n=28  mean eye 1.68  not-fully-reading 8
+
+== SITE-LEVEL, existing decide sorts
+
+== decide frame, SHIPPED-at-the-time arm  n=62
+   sil.edgeRGB (whole-cast, signed-diff)  concordance 0.335  (427/849)
+   sil.bandMin (6 COLUMN bands, worst)    concordance 0.292  (373/903)
+   mean of the 6 column bands             concordance 0.298  (381/896)
+   topSurface (INVERTED: -x)              concordance 0.829  (1059/218)
+   bad         n=20  edgeRGB  15.06  bandMin  12.62
+   acceptable  n=23  edgeRGB  10.65  bandMin   8.81
+   good        n=19  edgeRGB   7.77  bandMin   5.18
+
+== decide frame, bplace=0 arm  n=61
+   sil.edgeRGB (whole-cast, signed-diff)  concordance 0.265  (297/822)
+   sil.bandMin (6 COLUMN bands, worst)    concordance 0.243  (272/846)
+   mean of the 6 column bands             concordance 0.302  (338/781)
+   topSurface (INVERTED: -x)              concordance 0.793  (887/232)
+   bad         n=21  edgeRGB  17.29  bandMin  14.05
+   acceptable  n=31  edgeRGB  10.04  bandMin   7.74
+   good        n= 9  edgeRGB   6.90  bandMin   4.74
+
+== TONE: edge vs band boom picks, 62-site census
+meta {'when': '2026-08-09T12:07:05.300Z', 'tag': 'band', 'reps': 1, 'three': '185'} n= 62
+
+sites with a tone reading: 61
+CURRENT (edgeRGB score, margin 0.15): moved the boom at 39/61
+BAND   (6-band score,  margin 0.15): moved the boom at 29/61
+SAME FINAL PITCH: 35/61   DIFFERENT: 26
+
+ARGMAX (before any margin) agreement:
+  edge-argmax == band-argmax at 29/61
+
+sites where the FINAL pitch differs:
+  site   zone       was  edge  band   scores edge | band
+  s002   forest    0.34  0.16  0.34   8.69,1.88,0.56,-0.16 | 20.79,15.73,20.19,24.28
+  s003   water     0.28  0.34  0.28   -2.27,1.03,2.32 | 18.96,18.36,18.32
+  s008   crag      0.16  0.28  0.34   9.04,10.87,11.39,10.64 | 16.49,16.71,16.11,19.91
+  s013   meadow    0.16  0.16  0.28   7.49,6.45,6.63,6.62 | 15.05,17.98,20.35,18.17
+  s015   water     0.16  0.22  0.28   2.58,4.99,3.57,3.00 | 13.93,15.21,17.83,14.54
+  s016   forest    0.16  0.22  0.28   11.59,13.95,13.71,12.56 | 14.34,15.71,20.48,19.50
+  s018   crag      0.16  0.34  0.16   7.07,8.29,9.18,9.45 | 17.85,17.92,18.75,19.70
+  s020   meadow    0.16  0.28  0.16   8.84,10.29,12.55,11.20 | 16.47,18.75,17.80,15.32
+  s023   forest    0.16  0.16  0.34   15.62,12.83,11.72,13.63 | 16.53,15.45,16.31,19.30
+  s026   meadow    0.16  0.16  0.34   22.98,18.23,14.91,11.29 | 24.12,25.81,27.14,29.05
+  s030   water     0.16  0.22  0.28   15.28,18.62,16.08,13.70 | 26.41,32.51,34.09,33.75
+  s031   meadow    0.34  0.28  0.34   19.59,21.26,21.48,18.47 | 32.84,34.04,32.89,30.00
+  s032   water     0.34  0.34  0.28   -7.26,-4.55,-5.00,-3.19 | 12.00,12.34,12.39,9.16
+  s033   crag      0.22  0.28  0.22   4.13,4.09,5.67,5.59 | 16.61,16.76,15.27,18.44
+  s035   crag      0.22  0.16  0.22   -2.42,-4.93,-6.67,-2.81 | 12.93,14.34,15.61,15.00
+  s036   forest    0.16  0.34  0.28   -3.52,-2.25,0.57,1.64 | 10.13,12.45,13.07,12.99
+  s037   meadow    0.16  0.34  0.16   6.75,9.78,10.55,11.66 | 20.40,19.67,21.70,21.57
+  s040   crag      0.16  0.34  0.16   6.42,10.68,10.19,10.88 | 23.06,24.57,22.67,22.96
+  s044   forest    0.28  0.34  0.28   -6.11,-1.92,4.86,7.56 | 29.91,37.71,34.62,31.69
+  s045   meadow    0.34  0.16  0.34   0.08,-2.00,-0.13,-0.35 | 13.07,9.20,10.53,11.52
+  s055   forest    0.16  0.22  0.16   5.02,6.37,1.00,4.28 | 19.62,18.78,17.19,17.18
+  s056   crag      0.16  0.22  0.28   14.39,17.65,17.30,17.57 | 21.19,24.89,26.35,26.16
+  s057   meadow    0.16  0.34  0.16   9.14,8.47,10.29,12.03 | 25.55,22.39,24.17,22.53
+  s058   forest    0.16  0.28  0.34   15.20,17.19,18.53,16.43 | 18.65,21.38,22.39,22.53
+  s059   meadow    0.28  0.22  0.34   10.08,11.36,9.48,10.97 | 10.27,12.17,11.67,13.50
+  s061   forest    0.22  0.34  0.22   9.44,8.18,10.47,12.12 | 18.57,17.43,17.62,18.82
+
+MARGIN SWEEP — sites whose boom MOVES off the geometric solver's rung:
+  margin  edge-score band-score
+  0.00    48         51        
+  0.05    44         46        
+  0.10    42         39        
+  0.15    39         29        
+  0.20    36         25        
+  0.25    31         20        
+  0.35    27         15        
+  0.50    22         7         
