@@ -17,10 +17,16 @@ to ray-test than six-triangle grass, and instanced pieces under 1.5 m are now gr
 ## THE HONEST ANSWER ON MAKING `?arena=world` THE DEFAULT: NOT YET
 Three lanes measured it rather than arguing it:
 - **Placement quality, measured for the first time** (62 sites — a census, not a sample, sorted
-  BY EYE before any metric): **48.4% were bad places to fight.** Sun exposure separates good from
-  bad (0.84 AUC); sky/horizon does not (this valley has almost no sky in frame); relocation
-  distance predicts nothing, which independently supports your ruling. Shipping a sun refusal
-  took bad 48.4% → **32.3%**, 14 sites improved, 0 regressed. **One site in three is still bad.**
+  BY EYE before any metric). **CORRECTED NUMBER, and the correction matters**: the first sort used
+  the ~900 ms establishing plate and read 48.4% → 32.3% bad. Re-censused on the frame you actually
+  live in (124 real battles, every frame looked at): **35.5% → 32.3% bad, good 14.5% → 30.6%.**
+  The two frames agree 40/62 with ZERO good↔bad reversals, so the judgement transfers — but the
+  sun refusal is worth −3.2 points there, not −16.1, and **"14 improved, 0 regressed" becomes 11
+  improved / 1 REGRESSED** (one site lit onto pale sandstone at a cream wolf's own value — SUN IS
+  NOT CONTRAST). Sky/horizon separates nothing (0.055, chance); relocation distance predicts
+  nothing, which independently supports your ruling. The winning axis is one-surface dominance
+  (0.937) and it is UNSHIPPED — no proxy cheaper than a render per candidate. **One site in three
+  is still a bad place to fight.**
 - **Tonal separation** closed without a shader (the world path still writes ZERO shaders, which is
   what deletes the r185 colour-bug class rather than managing it). Water improves 18-63%, crag
   regresses 6.5%, forest is still bad — the party stands INSIDE a hedge bank.
