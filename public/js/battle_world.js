@@ -221,7 +221,18 @@
       // `show:'actor'` resolves to the deciding body AND its current target when
       // the player has one — a "medium on the character deciding" that loses the
       // thing they are aiming at is not a shot, it is a bug with a lens on it.
-      decide:  { show: 'actor',  fillH: 0.58, fillV: 0.50, dPitch: -0.02, fov: 'tight', yawOff: 0.30, lead: 0.12, ms: 620, ease: 'io',  cut: false },
+      // AND AT THE COMMAND STEP THERE IS NO TARGET, WHICH IS WHERE THAT SENTENCE
+      // WAS WRONG FOR AS LONG AS IT HAS EXISTED. battle_turnbased's renderMenu
+      // calls markFoe(-1) in 'cmd' mode, so `targetId` is null for the whole
+      // decision — the longest-dwelt state in the fight — and `show:'actor'`
+      // resolved to ONE body. Measured at four sites: the foes sat 1.25-1.38
+      // frame-widths off the right edge for 100% of the steady dwell, so the
+      // player chose an action against a picture of their own party standing in
+      // an empty field. `keep` fixes it WITHOUT making this a group shot: the
+      // foes never size the frame and never own the aim, they are only refused
+      // permission to be outside it. Board docs/qa/battle-decide/index.html.
+      decide:  { show: 'actor',  keep: 'foes', keepFill: 0.90, keepBias: 0.62, keepVis: true,
+                 fillH: 0.58, fillV: 0.50, dPitch: -0.02, fov: 'tight', yawOff: 0.30, lead: 0.12, ms: 620, ease: 'io',  cut: false },
       strike:  { show: 'pair',   fillH: 0.66, fillV: 0.58, dPitch: -0.07, fov: 'rest',  yawOff: 0.22, lead: 0.00, ms: 380, ease: 'io',  cut: false },
       impact:  { show: 'pair',   fillH: 0.78, fillV: 0.68, dPitch: -0.07, fov: 'rest',  yawOff: 0.22, lead: 0.00, ms: 170, ease: 'out', cut: false },
       // MEASURED AND LOOSENED: at 0.40/0.46 the push ended on a 5.4 m boom and
@@ -1185,12 +1196,48 @@
       // time she arrived the frame was two seconds stale. `o.pos` carries the
       // strike station act() has already derived from both bodies' own widths.
       const posOf = (b) => (o.pos && o.pos[b.id]) || b.root.position;
-      const subjP = subj.map(b => ({ b: b, p: posOf(b) }));
-      // AIM: the subject group's own centre of mass at chest height.
-      let n = 0;
-      for (const s2 of subjP) { pose.ax += s2.p.x; pose.ay += s2.p.y + s2.b.h * 0.52; pose.az += s2.p.z; n++; }
-      if (!n) { pose.ax = A0.x; pose.ay = A0.y + 1; pose.az = A0.z; n = 1; }
-      pose.ax /= n; pose.ay /= n; pose.az /= n;
+      const subjP = subj.map(b => ({ b: b, p: posOf(b), fh: sh.fillH, fv: sh.fillV, keep: false }));
+      // ---- WHAT THE SHOT IS ABOUT vs WHAT IT MUST NOT LOSE ------------------
+      // `keep` is a CONTAINMENT set, not a subject: it never sizes the frame
+      // (that is `fill`'s job, on `show`) and it never claims the aim — it only
+      // refuses to be outside the frame. MEASURED, and it is the reason the term
+      // exists: at the command step there is no target, `show:'actor'` resolved
+      // to ONE body, and the deciding character was framed at fov 27 / 8.0 m with
+      // BOTH FOES 1.25-1.38 frame-widths off the right edge at all four sampled
+      // sites — 100% of the steady dwell with nothing to choose against
+      // (docs/qa/battle-decide). Making `show` the whole group instead would have
+      // deleted the medium the row exists for; this keeps it and adds the line.
+      const keepP = [];
+      if (sh.keep === 'foes') {
+        const have = {};
+        for (const s2 of subjP) have[s2.b.id] = 1;
+        const kf = sh.keepFill == null ? 0.92 : sh.keepFill;
+        for (const id of order) {
+          const b = bodies[id];
+          if (!b || b.dead || b.root.visible === false || b.side !== 'foe' || have[id]) continue;
+          keepP.push({ b: b, p: posOf(b), fh: kf, fv: kf, keep: true });
+        }
+      }
+      const allP = subjP.concat(keepP);
+      // AIM: the subject group's own centre of mass at chest height — and when
+      // there is a keep set, a WEIGHTED point between the two centroids, so the
+      // subject still owns the frame (bias 1 = the old aim, 0.5 = a group shot).
+      // Centring on the subject alone and only pulling back to contain the keep
+      // set costs twice the distance for the same containment, and spends all of
+      // it on empty frame behind the subject.
+      const cen = (list) => {
+        let x = 0, y = 0, z = 0, m = 0;
+        for (const s2 of list) { x += s2.p.x; y += s2.p.y + s2.b.h * 0.52; z += s2.p.z; m++; }
+        return m ? { x: x / m, y: y / m, z: z / m } : null;
+      };
+      const cS = cen(subjP), cK = cen(keepP);
+      if (cS && cK) {
+        const w = sh.keepBias == null ? 0.62 : sh.keepBias;
+        pose.ax = cS.x * w + cK.x * (1 - w);
+        pose.ay = cS.y * w + cK.y * (1 - w);
+        pose.az = cS.z * w + cK.z * (1 - w);
+      } else if (cS) { pose.ax = cS.x; pose.ay = cS.y; pose.az = cS.z; }
+      else { pose.ax = A0.x; pose.ay = A0.y + 1; pose.az = A0.z; }
       // DISTANCE: solved so every one of the subject's own extremes — feet, head,
       // and its own measured half-width either side — lands inside the fill band.
       // Two passes, because `lead` moves the aim and the aim moves the fit.
@@ -1199,7 +1246,10 @@
         const tanV = Math.tan(pose.fov * Math.PI / 360);
         const tanH = tanV * (W.cam ? W.cam.aspect : 16 / 9);
         let d = CAM.dist.min;
-        for (const s2 of subjP) {
+        // The subject is fitted at `fill`; a keep body carries its own, looser
+        // pair (it must be INSIDE the frame, not a given size in it) — same
+        // arithmetic, one band each, so the two can never disagree.
+        for (const s2 of allP) {
           const b = s2.b, hw = b.w / 2;
           for (const sx of [-1, 1]) for (const sy of [0, 1]) {
             const px = s2.p.x + camB.right.x * hw * sx,
@@ -1207,8 +1257,8 @@
                   pz = s2.p.z + camB.right.z * hw * sx;
             const vx = px - pose.ax, vy = py - pose.ay, vz = pz - pose.az;
             const u = dot3(camB.right, vx, vy, vz), v = dot3(camB.up, vx, vy, vz), w = dot3(camB.fwd, vx, vy, vz);
-            const dh = Math.abs(u) / (Math.max(0.05, sh.fillH) * tanH) - w;
-            const dv = Math.abs(v) / (Math.max(0.05, sh.fillV) * tanV) - w;
+            const dh = Math.abs(u) / (Math.max(0.05, s2.fh) * tanH) - w;
+            const dv = Math.abs(v) / (Math.max(0.05, s2.fv) * tanV) - w;
             if (dh > d) d = dh;
             if (dv > d) d = dv;
           }
@@ -1226,7 +1276,12 @@
         pose.ax -= camB.right.x * k; pose.az -= camB.right.z * k;
         fit();
       }
-      pose._subj = subjP;
+      // AND THE SHOT MUST BE ABLE TO SEE WHAT IT REFUSED TO LOSE. `keepVis`
+      // puts the keep set into the nine-sample visibility test too, so a
+      // `decide` solved with the foes behind a rock is refused and the ladder
+      // lifts the boom — the same refusal the subject already had. It can never
+      // lose the shot: solveShotSafe always returns its best-vis fallback.
+      pose._subj = (sh.keepVis && keepP.length) ? allP : subjP;
       return pose;
     }
     // CAN THE SHOT SEE ITS OWN SUBJECT — nine samples per body, from this pose's

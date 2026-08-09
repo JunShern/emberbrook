@@ -1,0 +1,145 @@
+<!doctype html><meta charset="utf-8"><title>battle-decide &mdash; the frame the player chooses in</title>
+<style>
+ body{background:#14161b;color:#dfe3ea;font:14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0 auto;padding:28px;max-width:1500px}
+ h1{font-size:22px;margin:0 0 4px} h2{font-size:15px;margin:26px 0 8px;color:#9fb2d0;letter-spacing:.04em}
+ p.lede{color:#9aa4b5;max-width:78ch}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+ figure{margin:0;background:#1b1f27;border:1px solid #2a3140;border-radius:7px;padding:9px}
+ figcaption{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#8d98ab;margin-bottom:7px}
+ img{width:100%;display:block;border-radius:4px}
+ .none{height:180px;display:grid;place-items:center;color:#5c6577;border:1px dashed #2f3746}
+ table.m{width:100%;margin-top:8px;border-collapse:collapse;font-size:12px}
+table.m.wide{max-width:760px;margin:10px 0 4px}
+ table.m th{text-align:left;color:#8d98ab;font-weight:500;padding:2px 8px 2px 0;white-space:nowrap}
+ table.m td{padding:2px 14px 2px 0;font-variant-numeric:tabular-nums}
+ .bad{color:#ff8b7a;font-weight:600}.good{color:#7fd39b;font-weight:600}
+ code{background:#232833;padding:1px 5px;border-radius:3px}
+</style>
+<h1>The frame the player chooses in</h1>
+<p class="lede">A real battle at four census sites, one per encounter zone. Nothing drives the camera:
+the shot that is up is the shot the shipped code put there, and the command menu is detected off
+battle_turnbased's own <code>.ebb-cmds.idle</code> class. <b>Foes in frame</b> is each foe's world
+Box3 projected through the live camera and intersected with the canvas &mdash; in frame, not visible.
+<b>Zero-foe dwell</b> is the fraction of sampled command-step frames containing no living foe at all.</p>
+<p class="lede">before: 2026-08-09 04:29 &middot; r185 &middot; dwell 3000 ms<br>after: 2026-08-09 04:33 &middot; r185 &middot; dwell 3000 ms</p>
+<section><h2>s041 &middot; meadow</h2>
+    <div class="pair">
+      <figure><figcaption>BEFORE &mdash; the command step</figcaption><img loading="lazy" src="shots/before-s041-cmd.jpg">
+        <table class="m">
+        <tr><th>shot</th><td>decide</td><th>fov</th><td>27.0</td></tr>
+        <tr><th>foes in frame</th><td class="">0.30 / 2</td>
+            <th>zero-foe dwell</th><td class="bad">83%</td></tr>
+        <tr><th>180&deg;</th><td>ok</td><th>cam dist</th><td>7.91 m</td></tr>
+        </table></figure>
+      <figure><figcaption>AFTER &mdash; the command step</figcaption><img loading="lazy" src="shots/after-s041-cmd.jpg">
+        <table class="m">
+        <tr><th>shot</th><td>decide</td><th>fov</th><td>27.0</td></tr>
+        <tr><th>foes in frame</th><td class="good">2.00 / 2</td>
+            <th>zero-foe dwell</th><td class="good">0%</td></tr>
+        <tr><th>180&deg;</th><td>ok</td><th>cam dist</th><td>10.76 m</td></tr>
+        </table></figure>
+    </div></section><section><h2>s005 &middot; forest</h2>
+    <div class="pair">
+      <figure><figcaption>BEFORE &mdash; the command step</figcaption><img loading="lazy" src="shots/before-s005-cmd.jpg">
+        <table class="m">
+        <tr><th>shot</th><td>decide</td><th>fov</th><td>27.0</td></tr>
+        <tr><th>foes in frame</th><td class="">0.27 / 2</td>
+            <th>zero-foe dwell</th><td class="bad">87%</td></tr>
+        <tr><th>180&deg;</th><td>ok</td><th>cam dist</th><td>7.96 m</td></tr>
+        </table></figure>
+      <figure><figcaption>AFTER &mdash; the command step</figcaption><img loading="lazy" src="shots/after-s005-cmd.jpg">
+        <table class="m">
+        <tr><th>shot</th><td>decide</td><th>fov</th><td>27.0</td></tr>
+        <tr><th>foes in frame</th><td class="good">2.00 / 2</td>
+            <th>zero-foe dwell</th><td class="good">0%</td></tr>
+        <tr><th>180&deg;</th><td>ok</td><th>cam dist</th><td>10.99 m</td></tr>
+        </table></figure>
+    </div></section><section><h2>s033 &middot; crag</h2>
+    <div class="pair">
+      <figure><figcaption>BEFORE &mdash; the command step</figcaption><img loading="lazy" src="shots/before-s033-cmd.jpg">
+        <table class="m">
+        <tr><th>shot</th><td>decide</td><th>fov</th><td>27.0</td></tr>
+        <tr><th>foes in frame</th><td class="">0.27 / 2</td>
+            <th>zero-foe dwell</th><td class="bad">87%</td></tr>
+        <tr><th>180&deg;</th><td>ok</td><th>cam dist</th><td>7.91 m</td></tr>
+        </table></figure>
+      <figure><figcaption>AFTER &mdash; the command step</figcaption><img loading="lazy" src="shots/after-s033-cmd.jpg">
+        <table class="m">
+        <tr><th>shot</th><td>decide</td><th>fov</th><td>27.0</td></tr>
+        <tr><th>foes in frame</th><td class="good">2.00 / 2</td>
+            <th>zero-foe dwell</th><td class="good">0%</td></tr>
+        <tr><th>180&deg;</th><td>ok</td><th>cam dist</th><td>10.89 m</td></tr>
+        </table></figure>
+    </div></section><section><h2>s030 &middot; water</h2>
+    <div class="pair">
+      <figure><figcaption>BEFORE &mdash; the command step</figcaption><img loading="lazy" src="shots/before-s030-cmd.jpg">
+        <table class="m">
+        <tr><th>shot</th><td>decide</td><th>fov</th><td>27.0</td></tr>
+        <tr><th>foes in frame</th><td class="">0.30 / 2</td>
+            <th>zero-foe dwell</th><td class="bad">83%</td></tr>
+        <tr><th>180&deg;</th><td>ok</td><th>cam dist</th><td>7.91 m</td></tr>
+        </table></figure>
+      <figure><figcaption>AFTER &mdash; the command step</figcaption><img loading="lazy" src="shots/after-s030-cmd.jpg">
+        <table class="m">
+        <tr><th>shot</th><td>decide</td><th>fov</th><td>27.0</td></tr>
+        <tr><th>foes in frame</th><td class="good">2.00 / 2</td>
+            <th>zero-foe dwell</th><td class="good">0%</td></tr>
+        <tr><th>180&deg;</th><td>ok</td><th>cam dist</th><td>11.41 m</td></tr>
+        </table></figure>
+    </div></section>
+<h2>What it costs</h2>
+    <p class="lede">A <code>decide</code> re-solve happens DURING the turn (setActor, setTarget), never at
+    staging &mdash; <code>solveArena</code>, the 69.7 ms the placement lane priced, is not on this path.
+    Both arms alternate inside ONE live battle off the live shot row's own <code>keep</code> field, so a
+    thermal drift lands on both.</p>
+    <table class="m wide"><tr><th>site</th><th>keep off p50</th><th>p90</th><th>max</th>
+      <th>keep on p50</th><th>p90</th><th>max</th><th>refusals</th></tr><tr><td>s041 meadow</td><td>0.1</td><td>0.2</td><td>0.3</td>
+        <td>0.4</td><td>0.5</td><td>0.9</td><td>0</td></tr><tr><td>s005 forest</td><td>0.1</td><td>0.2</td><td>0.3</td>
+        <td>0.4</td><td>0.5</td><td>0.7</td><td>0</td></tr><tr><td>s033 crag</td><td>0.1</td><td>0.2</td><td>0.2</td>
+        <td>0.4</td><td>0.5</td><td>0.9</td><td>0</td></tr><tr><td>s030 water</td><td>0.1</td><td>0.2</td><td>0.2</td>
+        <td>0.4</td><td>0.4</td><td>0.9</td><td>0</td></tr></table>
+<h2>And the opening, which must not move</h2>
+    <table class="m wide"><tr><th></th><th>staging solve p50 / max</th><th>trigger &rarr; first frame p50 / max</th></tr>
+      <tr><td>before</td><td>51 / 51 ms</td><td>497.9 / 499.2 ms</td></tr>
+      <tr><td>after</td><td>47 / 50 ms</td><td>493.6 / 496.8 ms</td></tr>
+    </table>
+<h2>Does it hold away from the good sites</h2>
+    <p class="lede">Eight further census sites, all four zones, most of them sorted BAD by the placement
+    lane. One build: <code>--keep=0</code> restores the pre-fix <code>decide</code> row at run time.</p>
+    <table class="m wide"><tr><th>site</th><th>zone</th><th>keep off &mdash; foes in frame</th>
+      <th>zero-foe dwell</th><th>keep on &mdash; foes in frame</th><th>zero-foe dwell</th><th>180&deg;</th><th>refusals</th></tr><tr><td>s000</td><td>water</td>
+          <td class="bad">0 / 2</td><td class="bad">100%</td>
+          <td class="good">2 / 2</td><td class="good">0%</td>
+          <td>ok</td><td>0</td></tr><tr><td>s008</td><td>crag</td>
+          <td class="bad">0 / 2</td><td class="bad">100%</td>
+          <td class="good">2 / 2</td><td class="good">0%</td>
+          <td>ok</td><td>0</td></tr><tr><td>s007</td><td>meadow</td>
+          <td class="bad">0 / 2</td><td class="bad">100%</td>
+          <td class="good">2 / 2</td><td class="good">0%</td>
+          <td>ok</td><td>0</td></tr><tr><td>s023</td><td>forest</td>
+          <td class="bad">0 / 2</td><td class="bad">100%</td>
+          <td class="good">2 / 2</td><td class="good">0%</td>
+          <td>ok</td><td>0</td></tr><tr><td>s012</td><td>forest</td>
+          <td class="bad">0 / 2</td><td class="bad">100%</td>
+          <td class="good">2 / 2</td><td class="good">0%</td>
+          <td>ok</td><td>0</td></tr><tr><td>s026</td><td>meadow</td>
+          <td class="bad">0 / 2</td><td class="bad">100%</td>
+          <td class="good">2 / 2</td><td class="good">0%</td>
+          <td>ok</td><td>0</td></tr><tr><td>s039</td><td>meadow</td>
+          <td class="bad">0 / 2</td><td class="bad">100%</td>
+          <td class="good">2 / 2</td><td class="good">0%</td>
+          <td>ok</td><td>0</td></tr><tr><td>s051</td><td>meadow</td>
+          <td class="bad">0 / 2</td><td class="bad">100%</td>
+          <td class="good">2 / 2</td><td class="good">0%</td>
+          <td>ok</td><td>0</td></tr></table>
+<h2>The denominator</h2>
+<p class="lede">A round contains ONE command step per living party member &mdash; the scheduler collects
+every decision before anything resolves &mdash; and each one is unbounded, because it ends when the
+player presses a key. The only fixed part of a round is its resolution: <b>median 7.83 s</b> from the
+last commit to the next round's first menu, measured over the same four sites, unchanged by this change.
+So at two seats and a brisk one second a seat, a quarter of the round was the zero-foe frame; at a
+deliberating five seconds a seat it was over half of it. The steady-state figure does not depend on
+that guess: past the 620 ms move it was <b>100% zero-foe at 4/4 sites</b>, and it is now 0%.</p>
+<p class="lede" style="margin-top:26px">Instrument: <code>tools/battle_decide.mjs</code>
+(<code>--mode=measure|cost|board</code>).
+Data: <code>decide-before.json</code>, <code>decide-after.json</code>, <code>cost.json</code>.</p>

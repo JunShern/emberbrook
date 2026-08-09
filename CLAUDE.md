@@ -487,6 +487,24 @@ git runs here, on branch `migration/3d-hybrid`.
   identical sites — and **the proof needed ORBIT.yaw PINNED**: solveArena's yaw ladder is relative
   to the live camera heading, so two separate runs of one cell are not comparable and six cells
   "differed" for that reason alone. STILL: one site in three is a bad place to fight.
+  **AND THE FRAME THE PLAYER DWELLS ON LONGEST DID NOT CONTAIN THE ENEMY** (2026-08-09; board
+  docs/qa/battle-decide/index.html, instrument tools/battle_decide.mjs, `--keep=0` is the A/B).
+  The `decide` row's own comment said `show:'actor'` resolves to the deciding body AND its current
+  target — and AT THE COMMAND STEP THERE IS NO TARGET (battle_turnbased's `renderMenu` calls
+  `markFoe(-1)` in 'cmd' mode), so it resolved to ONE body for the whole decision. Measured through
+  the shipped path at **12 census sites, all four zones**, with nothing driving the camera: past the
+  620 ms move, **100% of the steady dwell had ZERO foes in frame**, both of them 1.25-1.38 frame-widths
+  off the right edge at fov 27 / 8.0 m, `anchor().vis` false. A round holds ONE command step per living
+  party member and each is unbounded; the only fixed part is the 7.83 s resolution. FIXED WITH A
+  CONTAINMENT TERM, NOT A WIDER LENS: `keep: 'foes'` on the row is a set the shot may not lose — it
+  never sizes the frame (`fill` still does, on `show`) and never owns the aim (`keepBias` 0.62 weights
+  it), so the medium on the deciding character survives. 12/12 sites now 2/2 foes in frame, 0% zero-foe,
+  180-degree check still ok and refusals still 0 at every site. **COST: SAY WHICH SOLVE IT IS** — a
+  `decide` re-solve happens DURING the turn (setActor/setTarget), not at staging, and it is 0.1 -> 0.4 ms
+  p50 (max 0.9); `solveArena` and trigger-to-first-frame are untouched and measured so (staging solve
+  p50 38 -> 35 ms, first frame p50 497.9 -> 493.6 ms, same cells same session). What made this findable
+  at all is that `battle_place`'s driver had to call `st.shotTo('round')` BY HAND to photograph a site —
+  a workaround in an instrument is a defect report about the game.
 - Modules (public/js/): game_state (GS), battle_rules (pure kernel — untouchable),
   battle_turnbased + battle_stage3d, encounters, ui_kit (FF-blue), shop, menu, npc,
   dialogue, **story_runtime**, followers, hush, route_overlay, music. Each self-arms at

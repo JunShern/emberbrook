@@ -1,0 +1,2201 @@
+{
+ "meta": {
+  "when": "2026-08-09T04:33:07.052Z",
+  "tag": "after",
+  "dwellMs": 3000,
+  "three": "185",
+  "sites": "41,5,33,30",
+  "port": 3000
+ },
+ "summary": [
+  {
+   "id": "s041",
+   "zone": "meadow",
+   "kindAtMenu": "decide",
+   "kinds": {
+    "decide": 30
+   },
+   "fov": 27,
+   "dist": 10.755,
+   "axisOk": true,
+   "samples": 30,
+   "steadySamples": 23,
+   "zeroFoeFrac": 0,
+   "zeroFoeSteady": 0,
+   "meanFoesIn": 2,
+   "meanFoesInSteady": 2,
+   "foesAll": 2,
+   "foeInFrame": [
+    {
+     "id": "m0",
+     "inFrame": 1,
+     "hFrac": 0.278,
+     "cx": 0.777,
+     "vis": true
+    },
+    {
+     "id": "m1",
+     "inFrame": 1,
+     "hFrac": 0.183,
+     "cx": 0.783,
+     "vis": true
+    }
+   ],
+   "partyIn": [
+    {
+     "id": "vesper",
+     "inFrame": 1,
+     "hFrac": 0.328,
+     "cx": 0.247
+    },
+    {
+     "id": "maren",
+     "inFrame": 1,
+     "hFrac": 0.286,
+     "cx": 0.251
+    }
+   ],
+   "seats": [
+    {
+     "seat": 1,
+     "samples": 8,
+     "zeroFoeFrac": 0
+    }
+   ],
+   "targetStep": {
+    "kind": "decide",
+    "foesIn": 2,
+    "foesAll": 2
+   },
+   "cost": {
+    "stageMs": 412.6,
+    "firstFrameMs": 440.3,
+    "menuMs": 1178.7
+   },
+   "spans": {
+    "dwellMs": 3000,
+    "seats": 2,
+    "drivenMs": 2041.8,
+    "resolveMs": 7827.8,
+    "ended": false
+   }
+  },
+  {
+   "id": "s005",
+   "zone": "forest",
+   "kindAtMenu": "decide",
+   "kinds": {
+    "decide": 30
+   },
+   "fov": 27,
+   "dist": 10.986,
+   "axisOk": true,
+   "samples": 30,
+   "steadySamples": 23,
+   "zeroFoeFrac": 0,
+   "zeroFoeSteady": 0,
+   "meanFoesIn": 2,
+   "meanFoesInSteady": 2,
+   "foesAll": 2,
+   "foeInFrame": [
+    {
+     "id": "m0",
+     "inFrame": 1,
+     "hFrac": 0.3,
+     "cx": 0.769,
+     "vis": true
+    },
+    {
+     "id": "m1",
+     "inFrame": 1,
+     "hFrac": 0.216,
+     "cx": 0.775,
+     "vis": true
+    }
+   ],
+   "partyIn": [
+    {
+     "id": "vesper",
+     "inFrame": 1,
+     "hFrac": 0.338,
+     "cx": 0.251
+    },
+    {
+     "id": "maren",
+     "inFrame": 1,
+     "hFrac": 0.297,
+     "cx": 0.253
+    }
+   ],
+   "seats": [
+    {
+     "seat": 1,
+     "samples": 8,
+     "zeroFoeFrac": 0
+    }
+   ],
+   "targetStep": {
+    "kind": "decide",
+    "foesIn": 2,
+    "foesAll": 2
+   },
+   "cost": {
+    "stageMs": 484.9,
+    "firstFrameMs": 493.6,
+    "menuMs": 1046.6
+   },
+   "spans": {
+    "dwellMs": 3000,
+    "seats": 2,
+    "drivenMs": 2039.1,
+    "resolveMs": 7836.7,
+    "ended": false
+   }
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "kindAtMenu": "decide",
+   "kinds": {
+    "decide": 30
+   },
+   "fov": 27,
+   "dist": 10.891,
+   "axisOk": true,
+   "samples": 30,
+   "steadySamples": 23,
+   "zeroFoeFrac": 0,
+   "zeroFoeSteady": 0,
+   "meanFoesIn": 2,
+   "meanFoesInSteady": 2,
+   "foesAll": 2,
+   "foeInFrame": [
+    {
+     "id": "m0",
+     "inFrame": 1,
+     "hFrac": 0.296,
+     "cx": 0.771,
+     "vis": true
+    },
+    {
+     "id": "m1",
+     "inFrame": 1,
+     "hFrac": 0.202,
+     "cx": 0.78,
+     "vis": true
+    }
+   ],
+   "partyIn": [
+    {
+     "id": "vesper",
+     "inFrame": 1,
+     "hFrac": 0.336,
+     "cx": 0.25
+    },
+    {
+     "id": "maren",
+     "inFrame": 1,
+     "hFrac": 0.293,
+     "cx": 0.254
+    }
+   ],
+   "seats": [
+    {
+     "seat": 1,
+     "samples": 8,
+     "zeroFoeFrac": 0
+    }
+   ],
+   "targetStep": {
+    "kind": "decide",
+    "foesIn": 2,
+    "foesAll": 2
+   },
+   "cost": {
+    "stageMs": 465.6,
+    "firstFrameMs": 476,
+    "menuMs": 1008.4
+   },
+   "spans": {
+    "dwellMs": 3000,
+    "seats": 2,
+    "drivenMs": 2035.5,
+    "resolveMs": 7831.5,
+    "ended": false
+   }
+  },
+  {
+   "id": "s030",
+   "zone": "water",
+   "kindAtMenu": "decide",
+   "kinds": {
+    "decide": 30
+   },
+   "fov": 27,
+   "dist": 11.415,
+   "axisOk": true,
+   "samples": 30,
+   "steadySamples": 23,
+   "zeroFoeFrac": 0,
+   "zeroFoeSteady": 0,
+   "meanFoesIn": 2,
+   "meanFoesInSteady": 2,
+   "foesAll": 2,
+   "foeInFrame": [
+    {
+     "id": "m0",
+     "inFrame": 1,
+     "hFrac": 0.259,
+     "cx": 0.768,
+     "vis": true
+    },
+    {
+     "id": "m1",
+     "inFrame": 1,
+     "hFrac": 0.211,
+     "cx": 0.762,
+     "vis": true
+    }
+   ],
+   "partyIn": [
+    {
+     "id": "vesper",
+     "inFrame": 1,
+     "hFrac": 0.331,
+     "cx": 0.25
+    },
+    {
+     "id": "maren",
+     "inFrame": 1,
+     "hFrac": 0.291,
+     "cx": 0.252
+    }
+   ],
+   "seats": [
+    {
+     "seat": 1,
+     "samples": 8,
+     "zeroFoeFrac": 0
+    }
+   ],
+   "targetStep": {
+    "kind": "decide",
+    "foesIn": 2,
+    "foesAll": 2
+   },
+   "cost": {
+    "stageMs": 487.4,
+    "firstFrameMs": 496.8,
+    "menuMs": 1037.6
+   },
+   "spans": {
+    "dwellMs": 3000,
+    "seats": 2,
+    "drivenMs": 2034,
+    "resolveMs": 7823.9,
+    "ended": false
+   }
+  }
+ ],
+ "rows": [
+  {
+   "id": "s041",
+   "zone": "meadow",
+   "at": {
+    "x": -55.844466094067265,
+    "y": 27.569916740962732,
+    "z": 74.58446609406727
+   },
+   "cost": {
+    "stageMs": 412.6,
+    "firstFrameMs": 440.3,
+    "menuMs": 1178.7
+   },
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 9,
+    "cands": 1,
+    "solved": 1
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "spans": {
+    "dwellMs": 3000,
+    "seats": 2,
+    "drivenMs": 2041.8,
+    "resolveMs": 7827.8,
+    "ended": false
+   },
+   "log": [
+    {
+     "t": 52,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 9.21,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 357,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 9.21,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 556,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 9.21,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 558,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 10.76,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.787
+    },
+    {
+     "t": 3899,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 17.02,
+     "fov": 27,
+     "pitch": 0.23,
+     "yaw": -1.787
+    },
+    {
+     "t": 4659,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.28,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.787
+    },
+    {
+     "t": 5636,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 16.69,
+     "fov": 27,
+     "pitch": 0.23,
+     "yaw": -1.787
+    },
+    {
+     "t": 5940,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.28,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.787
+    },
+    {
+     "t": 6244,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 5.98,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.707
+    },
+    {
+     "t": 6808,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.04,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.707
+    },
+    {
+     "t": 7749,
+     "kind": "round",
+     "why": "settle",
+     "dist": 9.21,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 7774,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 6.68,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.187
+    },
+    {
+     "t": 8077,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.14,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.267
+    },
+    {
+     "t": 8641,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.23,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.267
+    },
+    {
+     "t": 9583,
+     "kind": "round",
+     "why": "settle",
+     "dist": 9.21,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 9605,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 10.76,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.787
+    },
+    {
+     "t": 9908,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.41,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.707
+    },
+    {
+     "t": 10469,
+     "kind": "ko",
+     "why": "ko",
+     "dist": 12.29,
+     "fov": 27,
+     "pitch": 0.28,
+     "yaw": -1.327
+    },
+    {
+     "t": 10890,
+     "kind": "ko",
+     "why": "ko-push",
+     "dist": 10.57,
+     "fov": 27,
+     "pitch": 0.28,
+     "yaw": -1.327
+    },
+    {
+     "t": 12171,
+     "kind": "round",
+     "why": "settle",
+     "dist": 10.28,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 12258,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 4.6,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.187
+    },
+    {
+     "t": 12559,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.95,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.267
+    },
+    {
+     "t": 13121,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.98,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.267
+    },
+    {
+     "t": 13766,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.04,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.787
+    }
+   ],
+   "cam": {
+    "kind": "decide",
+    "actor": "vesper",
+    "target": null,
+    "moves": 6,
+    "refusals": 0,
+    "pose": {
+     "ax": -55.942,
+     "ay": 28.284,
+     "az": 74.238,
+     "yaw": -1.7869,
+     "pitch": 0.14,
+     "dist": 10.755,
+     "fov": 27
+    },
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 1.0374,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.496,
+      -0.489
+     ],
+     "foe": [
+      0.548,
+      0.573
+     ]
+    }
+   },
+   "dwellSteady": [
+    {
+     "id": "m0",
+     "inFrame": 1,
+     "hFrac": 0.278,
+     "cx": 0.777,
+     "vis": true
+    },
+    {
+     "id": "m1",
+     "inFrame": 1,
+     "hFrac": 0.183,
+     "cx": 0.783,
+     "vis": true
+    }
+   ],
+   "trace": {
+    "pre": [
+     {
+      "t": 2154,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 2369
+     }
+    ],
+    "dwell": [
+     {
+      "t": 2892,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 5836
+     }
+    ],
+    "after": [
+     {
+      "t": 8201,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 8324
+     },
+     {
+      "t": 8366,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 8866
+     },
+     {
+      "t": 8910,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 9824
+     },
+     {
+      "t": 9866,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 9909,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 10157
+     },
+     {
+      "t": 10199,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 10448
+     },
+     {
+      "t": 10491,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2,
+      "until": 10699
+     },
+     {
+      "t": 10743,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2,
+      "until": 10908
+     },
+     {
+      "t": 10949,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2,
+      "until": 11657
+     },
+     {
+      "t": 11699,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2
+     },
+     {
+      "t": 11740,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2,
+      "until": 11949
+     },
+     {
+      "t": 11991,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2
+     },
+     {
+      "t": 12031,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 12532
+     },
+     {
+      "t": 12574,
+      "kind": "ko",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 14241
+     },
+     {
+      "t": 14282,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 14324
+     },
+     {
+      "t": 14365,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 14658
+     },
+     {
+      "t": 14699,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 15199
+     },
+     {
+      "t": 15242,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 15824
+     },
+     {
+      "t": 15867,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 1,
+      "foesAll": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "s005",
+   "zone": "forest",
+   "at": {
+    "x": -61.655533905932735,
+    "y": 27.445520418617143,
+    "z": 70.41553390593273
+   },
+   "cost": {
+    "stageMs": 484.9,
+    "firstFrameMs": 493.6,
+    "menuMs": 1046.6
+   },
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 47,
+    "cands": 3,
+    "solved": 3
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "spans": {
+    "dwellMs": 3000,
+    "seats": 2,
+    "drivenMs": 2039.1,
+    "resolveMs": 7836.7,
+    "ended": false
+   },
+   "log": [
+    {
+     "t": 35,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 9.2,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 174,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 9.2,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 369,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 9.2,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 605,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 10.99,
+     "fov": 27,
+     "pitch": 0.33,
+     "yaw": -1.787
+    },
+    {
+     "t": 3729,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 17.19,
+     "fov": 27,
+     "pitch": 0.33,
+     "yaw": -1.787
+    },
+    {
+     "t": 4488,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.26,
+     "fov": 27,
+     "pitch": 0.23,
+     "yaw": -1.787
+    },
+    {
+     "t": 5464,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 17.01,
+     "fov": 27,
+     "pitch": 0.33,
+     "yaw": -1.787
+    },
+    {
+     "t": 5768,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.26,
+     "fov": 27,
+     "pitch": 0.23,
+     "yaw": -1.787
+    },
+    {
+     "t": 6072,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.91,
+     "fov": 34,
+     "pitch": 0.28,
+     "yaw": -1.597
+    },
+    {
+     "t": 6635,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.92,
+     "fov": 34,
+     "pitch": 0.28,
+     "yaw": -1.707
+    },
+    {
+     "t": 7579,
+     "kind": "round",
+     "why": "settle",
+     "dist": 9.2,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 7601,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 6.68,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.187
+    },
+    {
+     "t": 7904,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.63,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.267
+    },
+    {
+     "t": 8465,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.65,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.267
+    },
+    {
+     "t": 9406,
+     "kind": "round",
+     "why": "settle",
+     "dist": 9.2,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 9430,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 10.99,
+     "fov": 27,
+     "pitch": 0.33,
+     "yaw": -1.787
+    },
+    {
+     "t": 9735,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.56,
+     "fov": 34,
+     "pitch": 0.18,
+     "yaw": -1.597
+    },
+    {
+     "t": 10296,
+     "kind": "ko",
+     "why": "ko",
+     "dist": 12.21,
+     "fov": 27,
+     "pitch": 0.19,
+     "yaw": -1.327
+    },
+    {
+     "t": 10720,
+     "kind": "ko",
+     "why": "ko-push",
+     "dist": 10.5,
+     "fov": 27,
+     "pitch": 0.19,
+     "yaw": -1.327
+    },
+    {
+     "t": 11998,
+     "kind": "round",
+     "why": "settle",
+     "dist": 10.28,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 12080,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 4.6,
+     "fov": 27,
+     "pitch": 0.14,
+     "yaw": -1.187
+    },
+    {
+     "t": 12383,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.91,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.267
+    },
+    {
+     "t": 12945,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.94,
+     "fov": 34,
+     "pitch": 0.09,
+     "yaw": -1.267
+    },
+    {
+     "t": 13588,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.15,
+     "fov": 27,
+     "pitch": 0.23,
+     "yaw": -1.787
+    }
+   ],
+   "cam": {
+    "kind": "decide",
+    "actor": "vesper",
+    "target": null,
+    "moves": 6,
+    "refusals": 0,
+    "pose": {
+     "ax": -58.217,
+     "ay": 28.243,
+     "az": 73.605,
+     "yaw": -1.7869,
+     "pitch": 0.33,
+     "dist": 10.986,
+     "fov": 27
+    },
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 1.0146,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.488,
+      -0.486
+     ],
+     "foe": [
+      0.528,
+      0.557
+     ]
+    }
+   },
+   "dwellSteady": [
+    {
+     "id": "m0",
+     "inFrame": 1,
+     "hFrac": 0.3,
+     "cx": 0.769,
+     "vis": true
+    },
+    {
+     "id": "m1",
+     "inFrame": 1,
+     "hFrac": 0.216,
+     "cx": 0.775,
+     "vis": true
+    }
+   ],
+   "trace": {
+    "pre": [
+     {
+      "t": 16380,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 16933,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 2,
+      "foesAll": 2
+     }
+    ],
+    "dwell": [
+     {
+      "t": 16933,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 19874
+     }
+    ],
+    "after": [
+     {
+      "t": 22232,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 22358
+     },
+     {
+      "t": 22399,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 22899
+     },
+     {
+      "t": 22942,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 23858
+     },
+     {
+      "t": 23899,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 23941,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 24191
+     },
+     {
+      "t": 24232,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 24483
+     },
+     {
+      "t": 24525,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2,
+      "until": 24732
+     },
+     {
+      "t": 24775,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2,
+      "until": 24982
+     },
+     {
+      "t": 25025,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2,
+      "until": 25699
+     },
+     {
+      "t": 25741,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2,
+      "until": 25949
+     },
+     {
+      "t": 25991,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2
+     },
+     {
+      "t": 26032,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 26074,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 26574
+     },
+     {
+      "t": 26616,
+      "kind": "ko",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 28282
+     },
+     {
+      "t": 28324,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 28366
+     },
+     {
+      "t": 28408,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 28658
+     },
+     {
+      "t": 28700,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 29240
+     },
+     {
+      "t": 29283,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 29866
+     },
+     {
+      "t": 29908,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 1,
+      "foesAll": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "at": {
+    "x": -54.155533905932735,
+    "y": 38.5179913319579,
+    "z": 20.84446609406726
+   },
+   "cost": {
+    "stageMs": 465.6,
+    "firstFrameMs": 476,
+    "menuMs": 1008.4
+   },
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 23,
+    "cands": 4,
+    "solved": 3
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "spans": {
+    "dwellMs": 3000,
+    "seats": 2,
+    "drivenMs": 2035.5,
+    "resolveMs": 7831.5,
+    "ended": false
+   },
+   "log": [
+    {
+     "t": 165,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 9.16,
+     "fov": 34,
+     "pitch": 0.22,
+     "yaw": -1.487
+    },
+    {
+     "t": 362,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 9.16,
+     "fov": 34,
+     "pitch": 0.22,
+     "yaw": -1.487
+    },
+    {
+     "t": 580,
+     "kind": "round",
+     "why": "tone",
+     "dist": 9.16,
+     "fov": 34,
+     "pitch": 0.28,
+     "yaw": -1.487
+    },
+    {
+     "t": 582,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 10.89,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.787
+    },
+    {
+     "t": 3710,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 17.07,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.787
+    },
+    {
+     "t": 4470,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.22,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.787
+    },
+    {
+     "t": 5444,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 16.73,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.787
+    },
+    {
+     "t": 5746,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.22,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.787
+    },
+    {
+     "t": 6049,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.86,
+     "fov": 34,
+     "pitch": 0.21,
+     "yaw": -1.707
+    },
+    {
+     "t": 6610,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.82,
+     "fov": 34,
+     "pitch": 0.21,
+     "yaw": -1.707
+    },
+    {
+     "t": 7552,
+     "kind": "round",
+     "why": "settle",
+     "dist": 9.16,
+     "fov": 34,
+     "pitch": 0.28,
+     "yaw": -1.487
+    },
+    {
+     "t": 7574,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 7.48,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.187
+    },
+    {
+     "t": 7879,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.77,
+     "fov": 34,
+     "pitch": 0.4,
+     "yaw": -1.267
+    },
+    {
+     "t": 8443,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.83,
+     "fov": 34,
+     "pitch": 0.4,
+     "yaw": -1.267
+    },
+    {
+     "t": 9385,
+     "kind": "round",
+     "why": "settle",
+     "dist": 9.16,
+     "fov": 34,
+     "pitch": 0.28,
+     "yaw": -1.487
+    },
+    {
+     "t": 9407,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 10.89,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.787
+    },
+    {
+     "t": 9710,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 7.51,
+     "fov": 34,
+     "pitch": 0.21,
+     "yaw": -1.707
+    },
+    {
+     "t": 10271,
+     "kind": "ko",
+     "why": "ko",
+     "dist": 12.31,
+     "fov": 27,
+     "pitch": 0.31,
+     "yaw": -1.327
+    },
+    {
+     "t": 10693,
+     "kind": "ko",
+     "why": "ko-push",
+     "dist": 10.59,
+     "fov": 27,
+     "pitch": 0.31,
+     "yaw": -1.327
+    },
+    {
+     "t": 11974,
+     "kind": "round",
+     "why": "settle",
+     "dist": 10.21,
+     "fov": 34,
+     "pitch": 0.28,
+     "yaw": -1.487
+    },
+    {
+     "t": 12057,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 4.6,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.187
+    },
+    {
+     "t": 12360,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.22,
+     "fov": 34,
+     "pitch": 0.21,
+     "yaw": -1.267
+    },
+    {
+     "t": 12922,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.37,
+     "fov": 34,
+     "pitch": 0.21,
+     "yaw": -1.267
+    },
+    {
+     "t": 13565,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.17,
+     "fov": 27,
+     "pitch": 0.26,
+     "yaw": -1.787
+    }
+   ],
+   "cam": {
+    "kind": "decide",
+    "actor": "vesper",
+    "target": null,
+    "moves": 7,
+    "refusals": 0,
+    "pose": {
+     "ax": -57.785,
+     "ay": 40.427,
+     "az": 16.962,
+     "yaw": -1.7869,
+     "pitch": 0.26,
+     "dist": 10.891,
+     "fov": 27
+    },
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 1.0176,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.491,
+      -0.485
+     ],
+     "foe": [
+      0.533,
+      0.567
+     ]
+    }
+   },
+   "dwellSteady": [
+    {
+     "id": "m0",
+     "inFrame": 1,
+     "hFrac": 0.296,
+     "cx": 0.771,
+     "vis": true
+    },
+    {
+     "id": "m1",
+     "inFrame": 1,
+     "hFrac": 0.202,
+     "cx": 0.78,
+     "vis": true
+    }
+   ],
+   "trace": {
+    "pre": [
+     {
+      "t": 30401,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 30933,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 2,
+      "foesAll": 2
+     }
+    ],
+    "dwell": [
+     {
+      "t": 30933,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 33875
+     }
+    ],
+    "after": [
+     {
+      "t": 36230,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 36355
+     },
+     {
+      "t": 36399,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 36899
+     },
+     {
+      "t": 36941,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 37858
+     },
+     {
+      "t": 37900,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 38191
+     },
+     {
+      "t": 38232,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 38525
+     },
+     {
+      "t": 38567,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2,
+      "until": 38732
+     },
+     {
+      "t": 38775,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2,
+      "until": 38983
+     },
+     {
+      "t": 39025,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2,
+      "until": 39696
+     },
+     {
+      "t": 39737,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2,
+      "until": 39943
+     },
+     {
+      "t": 39983,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2
+     },
+     {
+      "t": 40024,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 40066,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 40566
+     },
+     {
+      "t": 40608,
+      "kind": "ko",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 42274
+     },
+     {
+      "t": 42316,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 42357
+     },
+     {
+      "t": 42399,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 42650
+     },
+     {
+      "t": 42691,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 43232
+     },
+     {
+      "t": 43274,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 43858
+     },
+     {
+      "t": 43899,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 1,
+      "foesAll": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "s030",
+   "zone": "water",
+   "at": {
+    "x": -45.62,
+    "y": 30,
+    "z": 25.62
+   },
+   "cost": {
+    "stageMs": 487.4,
+    "firstFrameMs": 496.8,
+    "menuMs": 1037.6
+   },
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 50,
+    "cands": 4,
+    "solved": 3
+   },
+   "tiers": {
+    "vesper": "model",
+    "maren": "model",
+    "m0": "model",
+    "m1": "model"
+   },
+   "spans": {
+    "dwellMs": 3000,
+    "seats": 2,
+    "drivenMs": 2034,
+    "resolveMs": 7823.9,
+    "ended": false
+   },
+   "log": [
+    {
+     "t": 178,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 8.36,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 371,
+     "kind": "round",
+     "why": "reframe(models)",
+     "dist": 8.36,
+     "fov": 34,
+     "pitch": 0.16,
+     "yaw": -1.487
+    },
+    {
+     "t": 589,
+     "kind": "round",
+     "why": "tone",
+     "dist": 8.42,
+     "fov": 34,
+     "pitch": 0.34,
+     "yaw": -1.487
+    },
+    {
+     "t": 590,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.42,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.787
+    },
+    {
+     "t": 3722,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 18.09,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.787
+    },
+    {
+     "t": 4480,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.58,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.787
+    },
+    {
+     "t": 5455,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 17.81,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.787
+    },
+    {
+     "t": 5756,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.58,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.787
+    },
+    {
+     "t": 6060,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.57,
+     "fov": 34,
+     "pitch": 0.27,
+     "yaw": -1.707
+    },
+    {
+     "t": 6621,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.6,
+     "fov": 34,
+     "pitch": 0.27,
+     "yaw": -1.707
+    },
+    {
+     "t": 7562,
+     "kind": "round",
+     "why": "settle",
+     "dist": 8.42,
+     "fov": 34,
+     "pitch": 0.34,
+     "yaw": -1.487
+    },
+    {
+     "t": 7585,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 5.75,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.187
+    },
+    {
+     "t": 7888,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.38,
+     "fov": 34,
+     "pitch": 0.27,
+     "yaw": -1.267
+    },
+    {
+     "t": 8450,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.49,
+     "fov": 34,
+     "pitch": 0.27,
+     "yaw": -1.267
+    },
+    {
+     "t": 9393,
+     "kind": "round",
+     "why": "settle",
+     "dist": 8.42,
+     "fov": 34,
+     "pitch": 0.34,
+     "yaw": -1.487
+    },
+    {
+     "t": 9414,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.42,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.787
+    },
+    {
+     "t": 9717,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.46,
+     "fov": 34,
+     "pitch": 0.27,
+     "yaw": -1.707
+    },
+    {
+     "t": 10279,
+     "kind": "ko",
+     "why": "ko",
+     "dist": 12.36,
+     "fov": 27,
+     "pitch": 0.37,
+     "yaw": -1.327
+    },
+    {
+     "t": 10703,
+     "kind": "ko",
+     "why": "ko-push",
+     "dist": 10.63,
+     "fov": 27,
+     "pitch": 0.37,
+     "yaw": -1.327
+    },
+    {
+     "t": 11980,
+     "kind": "round",
+     "why": "settle",
+     "dist": 9.4,
+     "fov": 34,
+     "pitch": 0.34,
+     "yaw": -1.487
+    },
+    {
+     "t": 12064,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 4.6,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.187
+    },
+    {
+     "t": 12367,
+     "kind": "strike",
+     "why": "strike",
+     "dist": 6.77,
+     "fov": 34,
+     "pitch": 0.27,
+     "yaw": -1.267
+    },
+    {
+     "t": 12929,
+     "kind": "impact",
+     "why": "impact",
+     "dist": 5.85,
+     "fov": 34,
+     "pitch": 0.27,
+     "yaw": -1.267
+    },
+    {
+     "t": 13571,
+     "kind": "decide",
+     "why": "decide",
+     "dist": 11.25,
+     "fov": 27,
+     "pitch": 0.32,
+     "yaw": -1.787
+    }
+   ],
+   "cam": {
+    "kind": "decide",
+    "actor": "vesper",
+    "target": null,
+    "moves": 7,
+    "refusals": 0,
+    "pose": {
+     "ax": -45.73,
+     "ay": 30.723,
+     "az": 25.49,
+     "yaw": -1.7869,
+     "pitch": 0.32,
+     "dist": 11.415,
+     "fov": 27
+    },
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 1.0164,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.491,
+      -0.488
+     ],
+     "foe": [
+      0.529,
+      0.532
+     ]
+    }
+   },
+   "dwellSteady": [
+    {
+     "id": "m0",
+     "inFrame": 1,
+     "hFrac": 0.259,
+     "cx": 0.768,
+     "vis": true
+    },
+    {
+     "id": "m1",
+     "inFrame": 1,
+     "hFrac": 0.211,
+     "cx": 0.762,
+     "vis": true
+    }
+   ],
+   "trace": {
+    "pre": [
+     {
+      "t": 44412,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 44953,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 2,
+      "foesAll": 2
+     }
+    ],
+    "dwell": [
+     {
+      "t": 44953,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 47901
+     }
+    ],
+    "after": [
+     {
+      "t": 50254,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 50380
+     },
+     {
+      "t": 50421,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 50920
+     },
+     {
+      "t": 50962,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 51874
+     },
+     {
+      "t": 51916,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 51958,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 52208
+     },
+     {
+      "t": 52249,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 52500
+     },
+     {
+      "t": 52541,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2,
+      "until": 52749
+     },
+     {
+      "t": 52792,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 2,
+      "until": 53041
+     },
+     {
+      "t": 53082,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2,
+      "until": 53708
+     },
+     {
+      "t": 53749,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2
+     },
+     {
+      "t": 53791,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 0,
+      "foesAll": 2,
+      "until": 53999
+     },
+     {
+      "t": 54041,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2
+     },
+     {
+      "t": 54083,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 2,
+      "foesAll": 2,
+      "until": 54583
+     },
+     {
+      "t": 54625,
+      "kind": "ko",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 56291
+     },
+     {
+      "t": 56332,
+      "kind": "round",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 56374
+     },
+     {
+      "t": 56416,
+      "kind": "decide",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 56666
+     },
+     {
+      "t": 56708,
+      "kind": "strike",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 57250
+     },
+     {
+      "t": 57292,
+      "kind": "impact",
+      "menu": null,
+      "foesIn": 1,
+      "foesAll": 1,
+      "until": 57874
+     },
+     {
+      "t": 57916,
+      "kind": "decide",
+      "menu": "cmd",
+      "foesIn": 1,
+      "foesAll": 1
+     }
+    ]
+   }
+  }
+ ]
+}
