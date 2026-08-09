@@ -22216,3 +22216,77 @@ assertions are exposed", and describes the fix as pending. **All four are now st
 re-derived claim for the next lane is: **transition_test is 168 ok / 0 failed and that
 number is now deterministic** — a `{geo: +/-2, tex: 0}` red on a `del-cine` shot is no
 longer an accepted outcome and should be read as a real regression.
+
+------------------------------------------------------------
+## 2026-08-09 ~02:00 — DEPLOY LANE: round 14 is LIVE AND VERIFIED (29/0). One runtime file moved (`play3d.html`), and the flash the change could have shipped IS NOT ON THE SITE — proved with a positive control
+
+**WHY THIS DEPLOY EXISTED.** `1690e9cc` (the occRing/occDia baseline fix — the per-scene
+dispose removed, plus a one-shot warm render at boot) was committed but not live. Built from a
+throwaway `git worktree` detached at `origin/migration/3d-hybrid` — **0e2b48e7** — with
+`EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache`. `git diff --stat 04d1117b
+0e2b48e7 -- public/` names ONE path, `public/play3d.html` (+41/-4).
+
+`build-static --compress`: **392 files / 520.7 MB / 3.0 s**, the same shape as round 13. Three
+build gates green: every `.glb` binary glTF, **16 bundle GLBs byte-identical to `public/`**,
+**256 referenced paths resolve** (237 via the `.webp` rewrite). Encode cache **253 hit / 0 miss
+/ 0 stored**, 319.4 MB served — the second zero-encode deploy running, and predicted from the
+diff for the same reason as round 13: HTML/JS is not an encoded artifact. Local `static_verify`
+**29/0**; `deploy-ghpages.sh dist` published **9899b73b** (push verified by the script;
+pre-flight printed the clean `579 MB, 393 files`). LIVE stamp `2026-08-08T22:34:16.626Z` ->
+**`2026-08-09T01:53:48.693Z`**, moved between the 45 s and 60 s poll from the start of polling.
+No stall, no re-POST. `static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN
+29/0**, zero failed requests, zero unexpected 4xx/5xx, zero console errors.
+
+**THE BYTES, WITH THE CONTROLS.** Live fetched, `sha256`, against `dist` AND against the
+round-13 deploy's own live copy (captured off the wire BEFORE the push — the only moment it
+still exists):
+
+| path | live bytes | live vs dist | vs round-13 deploy |
+|---|---:|---|---|
+| `play3d.html` | 349272 | **MATCH** `a6a6af6b…` | **DIFFERS** (r13 `7ff97c64…`, 346532 B) |
+| `play.html` | 349272 | **MATCH** `a6a6af6b…` | (the same file, by build) |
+| `js/battle_world.js` | 107767 | **MATCH** `9fde66b8…` | **SAME** — control |
+| `js/battle_stage3d.js` | 192301 | **MATCH** `cacaa9d7…` | **SAME** — control |
+| `js/battle_turnbased.js` | 118267 | **MATCH** `cdf3a1a0…` | **SAME** — control |
+
+One DIFFERS against three SAMEs. **Both halves read out of the DEPLOYED file, not assumed**:
+the live `play3d.html` carries `OCCWARM` at lines 1183/1186 and NO `occRing.geometry.dispose`,
+while `contactShadow.geometry.dispose()` is still there at 3952 (the deliberate exception).
+The round-13 copy is the mirror image — zero `OCCWARM`, `occRing.geometry.dispose();
+occDia.geometry.dispose();` at 3913.
+
+**THE ONE WAY THIS CHANGE COULD HAVE BEEN USER-VISIBLE, AND THE ANSWER IS NO.** The warm render
+draws the two golden (`0xffd27a`) markers — a ring at the body's feet, an octahedron at
+y = 2.1 — for exactly one render at boot. `static_verify`'s screenshot CANNOT answer this and
+should not be quoted as if it could: it photographs a **battle** frame, and occRing/occDia are
+children of `ch` in the town scene, which `battle_stage3d` does not draw. **THE COMPOSITOR IS
+THE ORACLE**, so the check was `Page.startScreencast` (every frame Chrome actually presents)
+across a live boot, listening BEFORE navigation.
+
+  * **POSITIVE CONTROL FIRST** — an instrument that finds nothing must prove it could have
+    found something. A `#ffd27a` overlay painted over the live page for exactly one
+    `requestAnimationFrame` came back as **1 of 16 composited frames**. The screencast
+    resolves a one-frame flash.
+  * **THE MEASUREMENT** — `?scene=townwalk`, where the follow camera puts the body at
+    `charNdc [0, -0.01]`, dead centre. The FIRST composited frame containing any 3D at all
+    (f007, +20.3 s, the scene is 35 MB over the wire) shows Vesper on the quay with **no ring
+    at her feet and no diamond over her head**, checked at 4x on a 200 px crop. Two more live
+    boots (`emb-cine` at `woodroad` and at `square`) agree. At rest `SIM.occCheck().ring ===
+    false` on every run.
+  * Which is what the code says it must be: the warm `R.render()` is followed by the real
+    `R.render()` in the same synchronous `renderFrame()` call, and the browser composites at
+    the end of the task. **VERDICT: no marker artefact on the live site.**
+
+**GATES NOT RUN, NAMED.** `transition_test` skipped for the seventh deploy running — standing
+order (the user may be at the machine, build+network only). Note this is the one deploy whose
+change was MADE for that gate; its 168/0 was proved by the authoring lane against a control
+tree, not re-run here. Swap read **3.14 of 4.10 GB (76.6%)** at build time, just over the 75 %
+bar — recorded because the bar exists for Blender concurrency and this lane spawned none; the
+3.0 s build and the browser runs were unaffected. The build's reference-integrity advisory
+(`js/dialogue.js` `expr-warm.png`, `js/followers.js` `mochi/pose-front.png`) is the standing
+documented pair, unchanged; the live run's zero-404 audit is the receipt.
+
+Cleanup: this lane's worktree removed, scratch `dist`, both live fetch dirs, the probe Chrome
+profiles and every `static-verify*.png` deleted; zero orphaned Chrome (`ppid 1` root check
+clean). The two stale worktrees from earlier sessions (`wt-prestair`,
+`.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
