@@ -31,6 +31,63 @@ battle_turnbased's own <code>.ebb-cmds.idle</code> class. <b>Foes in frame</b> i
 Box3 projected through the live camera and intersected with the canvas &mdash; in frame, not visible.
 <b>Zero-foe dwell</b> is the fraction of sampled command-step frames containing no living foe at all.</p>
 <p class="lede">before: 2026-08-09 04:29 &middot; r185 &middot; dwell 3000 ms<br>after: 2026-08-09 04:33 &middot; r185 &middot; dwell 3000 ms</p>
+<h2>The frame with the UI on it</h2>
+    <p class="lede">Every plate above is <code>stage.snapshot()</code> &mdash; the WebGL canvas. <b>The battle
+    UI is a DOM overlay the canvas cannot see</b>, so all 124 frames in the census above were judged without
+    the boxes that sit on them in play. Here the same 62 landing cells were fought again in both arms and
+    photographed with <code>Page.captureScreenshot</code> AT THE SAME INSTANT as their canvas twin
+    (<code>battle_decide --mode=census --composite=1</code> splits its driver at the photograph and leaves
+    the battle live &mdash; the command step is unbounded, so holding it is the real state). Staging was
+    verified identical to the census above at <b>62/62</b> sites in both arms. One rater sorted all four
+    sets, so canvas-vs-composited is PAIRED and the rater cannot be the difference.</p>
+    <h3>What the UI actually covers</h3>
+    <table class="m wide"><tr><th>panel</th><th>rect (CSS px, 1600&times;813)</th><th>share of frame</th></tr>
+      <tr><td><code>.ebb-rail</code></td><td>40,18 &rarr; 1560,50</td><td>3.76%</td></tr><tr><td><code>.ebb-log</code></td><td>40,57 &rarr; 1560,115</td><td>6.74%</td></tr><tr><td><code>.ebb-cmds</code></td><td>41,678 &rarr; 287,791</td><td>2.14%</td></tr><tr><td><code>.ebb-phead</code></td><td>1053,604 &rarr; 1559,624</td><td>0.78%</td></tr><tr><td><code>.ebb-party</code></td><td>1053,624 &rarr; 1559,791</td><td>6.50%</td></tr><tr><td><b>union of the four opaque panels</b></td><td></td><td><b>17.1%</b></td></tr></table>
+    <p class="lede">The command menu is the SMALL one (2.1%). The panel that matters is <b>TURN ORDER,
+    bottom-right</b> &mdash; because <code>decide</code> is a 27 mm two-shot that puts the foe line at
+    screen-x 0.78, which is exactly where that panel is. Bodies with part of their box under a panel
+    (an approximate box off <code>stage.anchor()</code> &mdash; a SCREEN, confirmed by eye at every site
+    over 12%): <b>21/62 sites over 10%, 8 over 25%, 2 over 50%</b>, and
+    <b>it is the wolf every time</b> &mdash; never a party body, which stands at screen-left where only the
+    2.1% command list is.</p>
+    <table class="m wide"><tr><th>sort</th><th>good</th><th>acceptable</th><th>bad</th></tr>
+      <tr><td>previous lane &middot; canvas &middot; SHIPPED</td><td>19 <span class="dim">(30.6%)</span></td><td>23 <span class="dim">(37.1%)</span></td><td>20 <span class="dim">(32.3%)</span></td></tr>
+      <tr><td>mine &middot; canvas &middot; pre-refusal</td><td>16 <span class="dim">(25.8%)</span></td><td>30 <span class="dim">(48.4%)</span></td><td>16 <span class="dim">(25.8%)</span></td></tr>
+      <tr><td>mine &middot; canvas &middot; SHIPPED</td><td>26 <span class="dim">(41.9%)</span></td><td>22 <span class="dim">(35.5%)</span></td><td>14 <span class="dim">(22.6%)</span></td></tr>
+      <tr><td>mine &middot; COMPOSITED &middot; pre-refusal</td><td>15 <span class="dim">(24.2%)</span></td><td>29 <span class="dim">(46.8%)</span></td><td>18 <span class="dim">(29.0%)</span></td></tr>
+      <tr><td>mine &middot; COMPOSITED &middot; SHIPPED</td><td>23 <span class="dim">(37.1%)</span></td><td>23 <span class="dim">(37.1%)</span></td><td>16 <span class="dim">(25.8%)</span></td></tr>
+    </table>
+    <h3>The answer: canvas vs composited, SHIPPED build, same battles, same rater</h3><table class="m wide cm"><tr><th>canvas &darr; / composited &rarr;</th><th>good</th><th>acceptable</th><th>bad</th><th>tot</th></tr><tr><th>good</th><td class="">23</td><td class="off">2</td><td class="off">1</td><td>26</td></tr><tr><th>acceptable</th><td class=""></td><td class="">20</td><td class="off">2</td><td>22</td></tr><tr><th>bad</th><td class=""></td><td class="off">1</td><td class="">13</td><td>14</td></tr></table><p class="lede small">agree 56/62 (90.3%) &middot; moved: <b>s004</b> acceptable&rarr;bad &middot; <b>s007</b> good&rarr;acceptable &middot; <b>s019</b> good&rarr;acceptable &middot; <b>s033</b> good&rarr;bad &middot; <b>s035</b> acceptable&rarr;bad &middot; <b>s053</b> bad&rarr;acceptable</p>
+    <h3>And on the pre-refusal build</h3><table class="m wide cm"><tr><th>canvas &darr; / composited &rarr;</th><th>good</th><th>acceptable</th><th>bad</th><th>tot</th></tr><tr><th>good</th><td class="">15</td><td class="off">1</td><td class=""></td><td>16</td></tr><tr><th>acceptable</th><td class=""></td><td class="">28</td><td class="off">2</td><td>30</td></tr><tr><th>bad</th><td class=""></td><td class=""></td><td class="">16</td><td>16</td></tr></table><p class="lede small">agree 59/62 (95.2%) &middot; moved: <b>s005</b> good&rarr;acceptable &middot; <b>s007</b> acceptable&rarr;bad &middot; <b>s035</b> acceptable&rarr;bad</p>
+    <h3>Rater calibration: two people, the SAME canvas frames</h3><table class="m wide cm"><tr><th>previous lane &darr; / mine &rarr;</th><th>good</th><th>acceptable</th><th>bad</th><th>tot</th></tr><tr><th>good</th><td class="">17</td><td class="off">2</td><td class=""></td><td>19</td></tr><tr><th>acceptable</th><td class="off">9</td><td class="">13</td><td class="off">1</td><td>23</td></tr><tr><th>bad</th><td class=""></td><td class="off">7</td><td class="">13</td><td>20</td></tr></table><p class="lede small">agree 43/62 (69.4%) &middot; moved: <b>s001</b> bad&rarr;acceptable &middot; <b>s006</b> bad&rarr;acceptable &middot; <b>s007</b> acceptable&rarr;good &middot; <b>s009</b> acceptable&rarr;good &middot; <b>s010</b> acceptable&rarr;good &middot; <b>s012</b> acceptable&rarr;good &middot; <b>s016</b> good&rarr;acceptable &middot; <b>s019</b> acceptable&rarr;good &middot; <b>s023</b> bad&rarr;acceptable &middot; <b>s030</b> good&rarr;acceptable &middot; <b>s034</b> bad&rarr;acceptable &middot; <b>s035</b> bad&rarr;acceptable &middot; <b>s040</b> bad&rarr;acceptable &middot; <b>s041</b> acceptable&rarr;good &middot; <b>s046</b> acceptable&rarr;good &middot; <b>s047</b> bad&rarr;acceptable &middot; <b>s049</b> acceptable&rarr;good &middot; <b>s051</b> acceptable&rarr;good &middot; <b>s059</b> acceptable&rarr;bad</p>
+    <p class="lede"><b>The menu costs 3.2 points of bad, on both arms, and it is not the menu.</b>
+    Bad 22.6%&rarr;25.8% shipped and 25.8%&rarr;29.0%
+    pre-refusal &mdash; the same +2 sites both times. Four of the six shipped-arm changes are the TURN-ORDER
+    panel eating the wolf; one is the <code>.ebb-vig</code>/<code>.ebb-scrim</code> grade pushing an already
+    dim corner under; and one goes the OTHER way (s053, where the vignette darkens the pale sandstone and
+    the cream wolf separates better than it does on the canvas). <b>The sun refusal is worth the same
+    &minus;3.2 points on the frame the player sees as on the canvas</b>, so the judgement transfers exactly.
+    For scale: two raters applying this rubric to the SAME canvas frames differ by 9.7 points of bad and
+    agree on only 43/62 sites &mdash; the UI is worth about a third of the disagreement between two people.</p>
+    <h3>The 6 sites the UI changes, pictured</h3>
+    <div class="gal"><figure><figcaption>s004 &middot; canvas <b>acceptable</b> &rarr; composited <b>bad</b><br>
+       <span class="dim">the vignette and the foot scrim take the wolf corner; it no longer separates</span></figcaption>
+       <img loading="lazy" src="census-c/cAfter/s004.jpg"></figure><figure><figcaption>s007 &middot; canvas <b>good</b> &rarr; composited <b>acceptable</b><br>
+       <span class="dim">the turn-order panel covers about half the wolf; head and shoulders still read</span></figcaption>
+       <img loading="lazy" src="census-c/cAfter/s007.jpg"></figure><figure><figcaption>s019 &middot; canvas <b>good</b> &rarr; composited <b>acceptable</b><br>
+       <span class="dim">the turn-order panel covers the wolf hindquarters and its own nameplate</span></figcaption>
+       <img loading="lazy" src="census-c/cAfter/s019.jpg"></figure><figure><figcaption>s033 &middot; canvas <b>good</b> &rarr; composited <b>bad</b><br>
+       <span class="dim">the turn-order panel covers nearly the whole wolf; only a sliver of back is left</span></figcaption>
+       <img loading="lazy" src="census-c/cAfter/s033.jpg"></figure><figure><figcaption>s035 &middot; canvas <b>acceptable</b> &rarr; composited <b>bad</b><br>
+       <span class="dim">the panel covers more than half the wolf, on top of a dim bank</span></figcaption>
+       <img loading="lazy" src="census-c/cAfter/s035.jpg"></figure><figure><figcaption>s053 &middot; canvas <b>bad</b> &rarr; composited <b>acceptable</b><br>
+       <span class="dim">the vignette darkens the sandstone and the white wolf separates better than on the canvas</span></figcaption>
+       <img loading="lazy" src="census-c/cAfter/s053.jpg"></figure></div>
+    <p class="lede small">Data: <code>census-cAfter.json</code>, <code>census-cBefore.json</code>,
+    <code>sort-mine-{canvas,comp}-{after,before}.json</code>. Frames: <code>census-c/</code> (composited),
+    <code>sheets-c-*</code> / <code>sheets-cv-*</code> (the contact sheets the sort was made from).
+    Instrument artefacts present in the composited frames and NOT scored: the <code>?rt=1</code> debug text
+    line and the &ldquo;music off&rdquo; toast are the harness&rsquo;s, not the game&rsquo;s.</p>
 <h2>Does the placement number transfer to this frame</h2>
     <p class="lede">The placement lane censused 62 staged sites and eye-sorted them
     <b>48.4% bad &rarr; 32.3%</b> after its sun refusal. It sorted <code>round</code> PLATES.

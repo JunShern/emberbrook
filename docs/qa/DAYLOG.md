@@ -22667,3 +22667,80 @@ the same size picture.
 
 No shipped runtime behaviour changed by this lane (nothing under `public/`). Gates run:
 `battle_sim` ALL ENVELOPES GREEN, `encounter_sim` GREEN.
+
+---
+
+## 2026-08-09 — THE COMPOSITED FRAME: the UI is on it, and it costs 3.2 points (composited-frame lane)
+
+Board: `docs/qa/battle-decide/index.html` §"The frame with the UI on it". Instrument:
+`tools/battle_decide.mjs --mode=census --composite=1`. Sorts: `sort-mine-{canvas,comp}-{after,before}.json`.
+Frames: `docs/qa/battle-decide/census-c/{cAfter,cBefore}/` + `sheets-c-*` (composited) / `sheets-cv-*` (their
+canvas twins).
+
+**WHAT WAS MISSING.** All 124 frames in the decide census were `stage.snapshot()`, which reads the WebGL
+canvas. The battle UI is a DOM overlay the canvas cannot see. `--composite=1` splits the census driver AT
+THE PHOTOGRAPH — head stages the fight and returns WITH THE BATTLE LIVE (the command step is unbounded, so
+holding it is the real state, not a contrivance), node takes one `Page.captureScreenshot`, the tail measures
+and tears down. **Staging verified identical to the archived census at 62/62 sites in both arms** (R, d,
+relief, yawDelta, `quality.lit/moved`), so this is the same world with the compositor left on.
+
+**IT IS NOT THE MENU.** The command list is 2.1% of the frame. The union of the four opaque panels is
+**17.1%**, and the one that matters is TURN ORDER, bottom-right — because `decide` is a 27 mm two-shot that
+puts the foe line at screen-x 0.78, which is exactly where that panel is. Bodies with part of their box
+under a panel: **21/62 sites over 10%, 8 over 25%, 2 over 50% — and it is the WOLF every time**, never a
+party body, which stands at screen-left behind the small one. Two DOM elements nobody had counted at all
+also ride the frame: `.ebb-vig` (a radial vignette to `#02030fa8`) and `.ebb-scrim` (a foot wash to
+`#03051599` over the bottom 42%). The composited frame is a GRADED frame, not just an occluded one.
+
+**THE ANSWER, PAIRED.** One rater sorted all four sets, and each composited frame is the same battle at the
+same instant as its canvas twin, so rater is held fixed. Shipped build: canvas vs composited agree **56/62
+(90.3%)**, bad **22.6% → 25.8%**; pre-refusal: agree 59/62, bad **25.8% → 29.0%**. The same **+3.2 points,
++2 sites, on both arms** — so **the sun refusal is worth the same −3.2 points on the frame the player sees
+as on the canvas**, and the placement judgement transfers exactly. Of the six shipped-arm changes, four are
+the turn-order panel eating the wolf (s007 s019 s033 s035), one is the grade pushing an already-dim corner
+under (s004), and **one goes the other way: s053, where the vignette darkens the pale sandstone and the
+cream wolf separates BETTER than on the canvas.**
+
+**THE SIZE OF THE RULER MATTERS MORE THAN THE RESULT.** Two raters applying this rubric to the SAME canvas
+frames agree on **43/62 (69.4%)** with zero good↔bad reversals and differ by **9.7 points of bad** (32.3%
+vs 22.6%). The UI is worth about a third of the disagreement between two people. Any future claim of the
+form "this change moved the bad rate by N points" with N < 10 needs the same rater on both arms or it is
+inside the noise. **AND THE SHEET WAS TOO SMALL**: the first pass sorted 460 px contact-sheet cells and
+missed FIVE sites where a grey wolf sat behind a blue panel of similar value; the panel-overlap screen
+ranked them and every site over 12% was re-opened at full size. Same "look at the image" lesson, again.
+
+**s053, DIAGNOSED — AND THE PROPOSED FIX IS REFUTED ON THE CENSUS, SO NOTHING SHIPPED.** The shape offered
+was "the refusal must not accept a site whose cast-vs-ground contrast is worse than the one it left". The
+measurement library computes that term and **it says s053's new site is BETTER**: `sil.edgeRGB` 5.63 → 10.37,
+`sil.bandMin` 2.11 → 6.40, `surf.topSurface` 0.303 → 0.253, `sun.shadedFrac` 0.75 → 0.00. Simulated over
+all 62 sites (a guard BLOCKS the move, so the site keeps its pre-refusal verdict):
+
+| guard | blocks | bad | good |
+|---|---|---|---|
+| shipped (no guard) | 0 | 32.3% | 30.6% |
+| edgeRGB must not FALL (the proposed direction) | 10, **not s053** | **35.5%** | 24.2% |
+| edgeRGB must not RISE (the empirical direction) | 10, incl. s053 | 30.6% | **22.6%** |
+| bandMin must not FALL | 11, not s053 | 35.5% | 22.6% |
+| bandMin must not RISE | 9, incl. s053 | 30.6% | 24.2% |
+
+The proposed direction never fires at s053 and makes the census worse; the inverted direction rescues s053
+by blocking five sites the same sort called improvements. **No term the library computes separates s053 from
+the eleven sites the refusal improved.** Three further reasons not to build it: (i) on the composited frame
+s053-after is *acceptable* — the grade helps it; (ii) an independent rater sorts s053 **bad in both arms**,
+so under that sort it is not a regression at all, and one pile-step sits well inside the 9.7-point rater
+band; (iii) **the "1 regressed" slot is better explained by TONE than by PLACE.** Measured: **9 of the 41
+sites PLACE did NOT move photograph a different picture between the two arms** (frame diff > 3/255), every
+one of them a `TONE` boom re-pick of one pitch rung — s048 flips from a readable meadow to a leaf canopy
+with nothing in the placement path changing. TONE's boom choice is not reproducible run to run, and any
+arm-to-arm attribution in this lane carries that noise.
+
+**THE REAL DEFECT THIS FOUND, COSTED AND NOT SHIPPED (it is the camera lane's mechanism).** The turn-order
+panel occludes the foe at a fifth of the census and half-eats it at 8 sites. The cheap fix is one rect:
+`decide`'s `keep:'foes'` containment already exists and already keeps the foe line inside the FRAME — make
+it keep them inside a SAFE RECT (frame minus the bottom-right panel band) instead. No new solve, no new
+term, same 0.4 ms path. The alternative is moving the UI, which is a different lane's call.
+
+Nothing under `public/` changed, so `battle_sim` / `encounter_sim` / `transition_test` / `ray_budget` were
+NOT run — there is no shipped-code delta for them to gate. `battle_place_sheets.py` grew `--ch` (composited
+frames are 1.97:1, because the canvas element is CSS-stretched from the render target's 1.75 — a 12%
+horizontal stretch the canvas census never showed either).
