@@ -23535,3 +23535,156 @@ LESSON, and it is the second of this shape this week: **a suite whose green depe
 undocumented coincidence in someone else's data is a suite that will go red for a reason its own
 message cannot express.** The message said "no hostile zone reachable" — true, and about the wrong
 world.
+
+------------------------------------------------------------
+## 2026-08-09 — DELLHOLLOW GRAPHICS ROUND 8: THE "EDGE OF THE WORLD" IS A MARKET AWNING
+## AT 5.3 m, AND ITS STRIPES WERE OFF THE EDGE OF THE FRAME. THE FAR-FIELD ITEM REFUTES
+## ON A CONTROL
+
+Board with every table: docs/qa/dellhollow-graphics/index.html (round-8 section). Carrier
+tools/qm_awning_relief.py; builder tools/qm_build.py carries the same three edits.
+
+THREE INHERITED TARGETS, EACH TAKEN AS A HYPOTHESIS. One refutes on value and was not built.
+
+(A) "THE FAR FIELD IS GREYBOX" — THE MEASUREMENT REPRODUCES EXACTLY AND THE VALUE DOES NOT
+SURVIVE ITS OWN CONTROL. Round 7 named `mat_rock_far`/`mat_silhouette` at 5.52% of shelf-east,
+5x5 sd 0.32, ON THE MEASUREMENT and explicitly not on a verdict. Re-censused against the
+current master over all fifteen cameras (`dh_objmap dump`, 486,000 marched rays):
+shelf-east 5.51%, north-landing 2.99%, waterfront 1.80%, **0.00% on the other twelve** —
+town-wide mean 0.687% of frame.
+**THE NUMBER THAT DECIDES IT IS A CONTROL, NOT THE SUBJECT.** Dressing can only buy the local
+contrast the atmosphere still passes at that range, so the greybox was measured against the
+TEXTURED surfaces in the SAME frame at the SAME distance:
+    shelf-east    greybox                227,666 px  126 m  L 1.4/54.5/116.5   sd5 **0.55**
+    shelf-east    CONTROL textured >100m 264,822 px  117 m  L 6.3/11.5/94.2    sd5 **1.08**
+    north-landing greybox                123,446 px  174 m  L 3.6/53.5/129.7   sd5 0.79
+    north-landing CONTROL textured >100m 216,007 px  109 m  L 5.6/28.3/146.8   sd5 2.30
+**A texture on this geometry can buy at most half of one 8-bit level**, because rounds 4, 6
+and 7 already put aerial perspective in front of it and haze is what eats texture. Against
+that: 3 of 15 cameras, 0.687% of the town's pixels, and ZERO judge verdicts in four
+consecutive runs — while target B below was filed ELEVEN TIMES in the same four runs.
+Looked at, at native resolution, it reads as distant mist-shrouded mass; what is genuinely
+ugly there is a hard rectangular silhouette (`fx_far_town_base` is a box), which is a SHAPE
+question and not the dressing question that was handed over. NOT BUILT.
+
+(B) CROSSING'S "UNTEXTURED WHITE WEDGE" — NAMED, AND BOTH HALVES OF THE JUDGE'S SENTENCE ARE
+A MEASUREMENT. Eleven independent naive passes across four runs (170205-calib, round4haze,
+round6phase, round7water) filed u 0.915..1.00 v 0.755..1.00. On the geometry the box is
+**62.5% `qm_awning_0 | mat_qm_awning` at 5.3 m** — a market awning in the near field.
+    crossing subject               px      dist    L p50    local 5x5 sd
+    qm_awning_0 (THE WEDGE)     56,827     5.3 m   168.8    **0.60**
+    everything else 3-12 m     432,589    10.6 m    85.0      4.11
+    ... its brightest third     92,507    10.4 m   125.8      5.05
+The second brightest large object in the plate and **6.9x flatter than the near field it sits
+in**. So "white" and "untextured" are both true AS NUMBERS.
+**AND THE STRIPES WERE NEVER GOING TO ANSWER IT.** `awning()` bakes stripes into vertex
+colours. Projecting the 21 vertices through crossing's OWN solved camera: every dark column
+(v00/v06/v12, colour 0.068,0.123,0.191) lands at v > 0.93, below the frame; the in-frame
+corner is columns 5 and 6, BOTH the cream 0.320,0.295,0.248. **A PATTERN OFF THE EDGE OF THE
+FRAME IS NOT A PATTERN** — four rounds of colour work could not have moved this verdict.
+**THE MECHANISM IS THE LEVER**: the canvas is a RULED SURFACE, three vertex rows with z
+constant in x, so its normal does not vary along its own width and no light can print anything
+on it at any crop. Same class as round 3's town-wide water finding.
+
+(C) `qm_stall_3`'s "PLACEHOLDER PLANE" — ROUND 3 NAMED THE CAUSE AND NOBODY BUILT THE FIX,
+AND IT IS ALL SEVEN BOARDS. Round 3 had already refuted the words (the board wears
+`mat_wallwood`'s planks at 5x5 sd 6.15) and named the structure: `stall()` puts the backboard
+at cy - sgn*(hy - 0.20), spanning hy-0.25..hy-0.15, while the four posts at +-(hy - 0.12) span
+hy-0.175..hy-0.065 — the 1.30 m panel stands **0.185 m PROUD of its own frame** on the plaza
+side. The defect is in `stall()`, so it is seven boards, not the one the judge was looking at.
+
+WHAT SHIPPED, all of it through a CARRIER and never a rebuild (`qm_build` derives
+`mat_qm_cliff`, which `t3_rock_projection` owns — re-running the district builder against the
+live master is round 5's time bomb, in the same family):
+  * `relief` (GEOMETRY) — every awning rebuilt at 2n+1 columns. The old columns become RIBS
+    AND RISE; the new midpoints sit EXACTLY on the old ruled surface. **NO VERTEX EVER MOVES
+    DOWN**, asserted per row per awning — this canvas hangs 0.19 m over a 2.05 m corridor and
+    `AWN_CLEAR` exists because a 50 mm margin is not a margin, so the headroom `awning_lip`
+    and `over_walk` cleared is untouched BY ARITHMETIC rather than re-tested. The wall row is
+    pinned (a canvas is nailed to a straight batten); mid and lip scallop, so the lip's
+    straight silhouette breaks too. Sag 0.110 m at the lip / 0.073 at mid over ribs 0.42 m
+    apart = 19 deg of peak cross-slope.
+  * `restripe` (material, as vertex data) — **`STALLC[3]` IS BIT-IDENTICAL to the hard-coded
+    second stripe colour `stall()` passes every awning**, so `qm_awning_1` shipped 21/21
+    vertices at one colour: the only truly monochrome canvas in town, and invisible to every
+    instrument in this lane because they report MATERIALS and a stripe is vertex data.
+    `awning()` now refuses rgb_a == rgb_b.
+  * `board` (GEOMETRY) — offset 0.20 -> 0.015 on all seven; each board moves back 0.185 m
+    until its plaza face is flush with its own posts' back face. Nothing moves plaza-ward.
+    The carrier DERIVES the shift from the posts it finds rather than from the constant, and
+    it returned +-0.185 on all seven — so carrier and builder cannot silently disagree.
+
+REBAKE LIST FROM RENDERED FRAMES, never from a frustum (whole-town draft A/B, 15 frames a
+SIDE at 1008x576/28 spp; documented two-render noise floor 0.010% / 0.000%):
+  quay-west 3.026/1.781 · loop-stairs 1.607/1.075 · deep-stairs 1.380/0.730 ·
+  crossing 1.318/1.079 · lockhead 1.070/0.694 · weave 0.801/0.513 · gate 0.276/0.184
+REFUSED WITH A NUMBER, all <= 0.015% above 4/255 and <= 0.001% above 12/255: shelf-west
+0.015, shelf-east 0.013, waterfront 0.011, boatyard 0.010, fishdock 0.009, lockfive 0.004,
+north-landing 0.004, cottage 0.001. Eight plates keep their bytes.
+BAKES: seven, 1-WIDE SERIAL in one Blender, all rc=0 — quay-west 164.1 s, loop-stairs
+166.8 s, deep-stairs 190.9 s, crossing 212.8 s, lockhead 177.9 s, weave 198.2 s, gate
+242.9 s (1353.6 s of beauty). `memory_pressure -Q` read 78-87% free before every spawn and
+no second Blender ran at any point; the user may have been at the machine.
+
+THE RECEIPT, through the SAME ray-derived pixel indices on both sides (the mask is the
+BEFORE geometry's objmap):
+  crossing the canvas   L p05 118.1 -> 97.3   p50 168.8 -> 158.2   above L150 73.2 -> 56.8%
+  gate     the canvas   L p05  13.6 -> 13.5   p50 159.7 -> 108.3   above L150 61.3 -> 12.5%
+  quay-west the boards  L p50 82.5 -> 83.0 — a SILHOUETTE change, which a luminance stat
+                        correctly cannot see; the picture is the verdict there.
+CONFINEMENT: the REST of every one of the seven frames moves <= 1.3 of one 8-bit level.
+**AND READ IT AT THE FOLD'S OWN SCALE**: the facets are 0.21 m wide so a 5x5 window sits
+INSIDE one (crossing sd5 0.60 -> 0.73, i.e. almost nothing). Median per-block std:
+crossing 8 px 0.83 -> 1.13, **25 px 2.44 -> 9.33**, 64 px 6.70 -> 16.64; gate 8 px 13.01 ->
+24.52. A ROUGHNESS RULER MUST BE THE SIZE OF THE THING IT IS RULING.
+
+THE VERDICT (scene_redteam --mode both, pinned gemini-3.6-flash, 40 calls, 0 errors,
+run-round8awning, 7 plates, N=3). **PARTIALLY MOVED, AND THE HONEST WAY TO SAY IT IS THE
+LANGUAGE COUNT** at the same box (crossing, u >= 0.85) across five runs:
+    170205-calib 3 hits / 1 "clips-cuts-into-terrain / missing geometry"
+    round4haze   3 / 2      round6phase 2 / 2      round7water 3 / 2
+    **round8awning 2 / 0**
+**THE "HOLE IN THE WORLD" READING IS GONE** — zero mentions of clipping through terrain or
+missing geometry against two in each of the previous three runs — and so are the nouns
+"plane", "polygon", "triangle", "wedge" and the adjective "flat"; round 8 says "mesh" twice.
+**WHAT SURVIVES IS "UNTEXTURED" AND "WHITE"**, 2 of 3 naive passes. 3/3 -> 2/3 at N=3 is
+inside this judge's noise and is NOT claimed as a clear.
+**SO THE RESIDUAL IS NAMED AND IT IS A DIFFERENT LEVER: VALUE.** The canvas is still the
+brightest thing in the corner (L 158.2 against the near field's 85.0) because its albedo is
+the cream 0.320,0.295,0.248. That is a one-number MATERIAL change, deliberately NOT pulled
+this round — the mechanism named relief, relief is what was built, and mixing the two would
+have made neither measurable. ROUND 9'S ITEM.
+The board fix has NO judge receipt in either direction: no placeholder/flat-board language
+appears at quay-west in any of the five committed findings.json sets. Its verdict is the
+picture and the geometry.
+
+GATES: cine_test 635 ok / 1 failed / 2 soft warnings — the PRE-ATTRIBUTED
+deep-stairs<->waterfront seam red, same {"fired":0,"expected":10} signature, i.e. the
+Dellhollow baseline EXACTLY · slice_test 776/0 · findability_test 69/0 with 11 warnings ·
+routes_derive --check clean, 15 shots (re-derived — the bundle moving made it STALE).
+
+TWO INSTRUMENT FACTS THIS ROUND PAID FOR, both worth more than an hour each:
+  * **`cine_bake` WRITES THE COLLISION GLB ONLY UNDER `--glb`** (`GLB_ONLY`,
+    cine_bake.py:673). A `--cams` beauty run rebakes plates and depth maps and leaves
+    `scene.glb` untouched, and NOTHING IN THE RUN SAYS SO — the artifact's mtime is the only
+    tell. `cine_test` still read 635/1 against the stale bundle because walk-mesh parity was
+    unaffected, so the gate that exists to catch a stale bundle could not: the awnings and
+    boards are collision, and they were a day old in del-cine while the plates were new.
+  * **`findability_test` FINISHES ITS WORK IN SECONDS AND THEN DOES NOT EXIT.** Piped through
+    `| tail` its result is invisible until the process is killed — two runs looked like
+    11-minute hangs and were completed gates sitting in a pipe (`lsof` showed no open files
+    and an idle kqueue; killing the process made `tail` print `69 passed, 0 failed`).
+  * And the memory one: `sliding_window_view(...).std()` at a 61 px window over a
+    2688x1536 plate reached **7.6 GB RSS and was still growing** and had to be killed — a
+    windowed view is MATERIALISED by the reduction. Block-reduce, or crop first.
+
+OWED / NAMED FOR ROUND 9:
+  1. **The canvas's VALUE** — the residual the judge still files. One number
+     (`CANVAS_B` 0.320,0.295,0.248), class material, and the A/B is already tooled.
+  2. Do NOT inherit "dress the far field" without re-deriving the control above.
+  3. A DEPLOY IS OWED: seven plates and both bundles supersede what is on the site.
+  4. Untouched by this round and standing in the round-8 judge run: crossing's floating
+     plank (u 0.39..0.44, three passes), deep-stairs' floating stair treads (four passes,
+     two modes), quay-west's three ABSENT exits, weave's black cave mouth (three passes).
+     The stair-tread family is the loudest thing in Dellhollow that nobody has measured.
+

@@ -1400,5 +1400,193 @@ artifact, not inherited through handovers</b> &mdash; an owed item that never ge
 <figure style="margin:1em 0"><img src="crop-rockproj-loop-stairs.jpg" style="width:100%;border:1px solid #333"><figcaption><b>loop-stairs at NATIVE resolution</b> &mdash; shipped plate against <code>t3fixA_loop-stairs</code>: the same scalloped columns, the same mottle, zero vertical fibres.</figcaption></figure>
 <figure style="margin:1em 0"><img src="crop-rockproj-cottage.jpg" style="width:100%;border:1px solid #333"><figcaption><b>cottage</b> &mdash; the third camera the original defect was filed on. Framing moved (round 5&rsquo;s buttresses are on this wall) so this is not a pixel A/B; the texture character is the repaired one on both. Cottage was rebaked in round 5 anyway, i.e. definitively post-repair.</figcaption></figure>
 
+
+<h1 style="margin-top:3em">Dellhollow graphics fix — round 8 <span class="note">(2026-08-09 · the near field, not the far one: a market awning has been the &ldquo;edge of the world&rdquo; for four rounds)</span></h1>
+<p class="note">Three inherited targets, each taken as a hypothesis. <b>One refutes on value and is
+not built</b>; the other two are one district and one carrier. Instruments:
+<code>tools/dh_objmap.py</code> (one 486,000-ray Blender pass, every later question offline),
+the shipped plates, and a whole-town draft A/B. Carrier <code>tools/qm_awning_relief.py</code>;
+the builder <code>tools/qm_build.py</code> carries the same three edits so a rebuild agrees.</p>
+
+<h2>Target A — THE GREYBOX FAR FIELD: reproduced exactly, and REFUSED on a number</h2>
+<div class="claim">Round 7, named on the measurement and explicitly not on a verdict:
+<code>mat_rock_far</code> / <code>mat_silhouette</code> own <b>5.52% of shelf-east</b> at 5&times;5
+sd <b>0.32</b> &mdash; flat, untextured placeholder. Worth dressing?</div>
+<div class="meas">
+<p><b>The share reproduces to two decimals across all fifteen cameras</b> (ray census against the
+current master): shelf-east <b>5.51%</b>, north-landing <b>2.99%</b>, waterfront <b>1.80%</b>,
+<b>0.00% on the other twelve</b> &mdash; a town-wide mean of <b>0.687% of frame</b>.</p>
+<p><b>THE NUMBER THAT DECIDES IT IS A CONTROL, NOT THE SUBJECT.</b> Dressing can only buy the
+local contrast the atmosphere still lets through at that range, so the greybox was measured
+against the <em>textured</em> surfaces in the SAME frame at the SAME distance:</p>
+<table style="border-collapse:collapse;font-size:13px"><tr style="color:#8a919c"><td style="padding:2px 12px 2px 0">shot</td><td style="padding:2px 12px 2px 0">subject</td><td>px</td><td style="padding:0 12px">dist p50</td><td style="padding:0 12px">L p05 / p50 / p95</td><td>local 5&times;5 sd</td></tr>
+<tr><td>shelf-east</td><td>greybox</td><td>227,666</td><td style="padding:0 12px">126 m</td><td style="padding:0 12px">1.4 / 54.5 / 116.5</td><td><b>0.55</b></td></tr>
+<tr><td>shelf-east</td><td>CONTROL &mdash; textured, &gt;100 m</td><td>264,822</td><td style="padding:0 12px">117 m</td><td style="padding:0 12px">6.3 / 11.5 / 94.2</td><td><b>1.08</b></td></tr>
+<tr><td>north-landing</td><td>greybox</td><td>123,446</td><td style="padding:0 12px">174 m</td><td style="padding:0 12px">3.6 / 53.5 / 129.7</td><td><b>0.79</b></td></tr>
+<tr><td>north-landing</td><td>CONTROL &mdash; textured, &gt;100 m</td><td>216,007</td><td style="padding:0 12px">109 m</td><td style="padding:0 12px">5.6 / 28.3 / 146.8</td><td><b>2.30</b></td></tr></table>
+<p><b>A texture on this geometry can buy at most half of one 8-bit level at shelf-east</b>
+(0.55 &rarr; 1.08), because rounds 4, 6 and 7 already put aerial perspective in front of it and
+haze is what eats texture. Against that: 3 of 15 cameras, 0.687% of the town's pixels, and
+<b>ZERO judge verdicts in four consecutive runs</b> (170205-calib at n=3 both modes / 71 calls,
+round4haze, round6phase, round7water) &mdash; while the crossing corner below was filed
+<b>eleven times</b> in the same four runs. Looked at, at native resolution, it reads as distant
+mist-shrouded mass; what is actually ugly there is a hard rectangular silhouette
+(<code>fx_far_town_base</code> is a box), which is a SHAPE question and not the dressing
+question that was handed over. <b>Not built. Round 9 should not inherit &ldquo;dress the far
+field&rdquo; without re-deriving this control.</b></p>
+</div>
+
+<h2>Target B — CROSSING'S &ldquo;UNTEXTURED WHITE WEDGE&rdquo; is a market awning at 5.3 m, and both halves of the judge's sentence are a measurement</h2>
+<div class="claim">Filed by <b>eleven independent naive passes across four runs</b> at
+u&nbsp;0.915&ndash;1.00 / v&nbsp;0.755&ndash;1.00: &ldquo;an untextured white polygon clips into the
+bottom right corner&rdquo;, &ldquo;a flat white untextured plane &hellip; revealing missing
+geometry&rdquo;. Pre-existing through four rounds, never diagnosed.</div>
+<div class="meas">
+<p>Put on the geometry, the box is <b>62.5% <code>qm_awning_0 | mat_qm_awning</code> at 5.3 m</b>
+(then paving 16.2%, <code>lk_bankface</code> 18.6%). It is a stall awning in the near field &mdash;
+not missing geometry, and not the far field.</p>
+<table style="border-collapse:collapse;font-size:13px"><tr style="color:#8a919c"><td style="padding:2px 12px 2px 0">crossing subject</td><td>px</td><td style="padding:0 12px">dist p50</td><td style="padding:0 12px">L p50</td><td>local 5&times;5 sd</td></tr>
+<tr><td>qm_awning_0 (THE WEDGE)</td><td>56,827</td><td style="padding:0 12px">5.3 m</td><td style="padding:0 12px"><b>168.8</b></td><td><b>0.60</b></td></tr>
+<tr><td>everything else at 3&ndash;12 m</td><td>432,589</td><td style="padding:0 12px">10.6 m</td><td style="padding:0 12px">85.0</td><td>4.11</td></tr>
+<tr><td>&hellip; its brightest third</td><td>92,507</td><td style="padding:0 12px">10.4 m</td><td style="padding:0 12px">125.8</td><td>5.05</td></tr></table>
+<p>The second brightest large object in the plate and <b>6.9&times; flatter than the near field it
+sits in</b>. So &ldquo;white&rdquo; and &ldquo;untextured&rdquo; are both true as numbers.</p>
+<p><b>AND THE STRIPES WERE NEVER THE ANSWER, BECAUSE THEY ARE OFF THE EDGE OF THE FRAME.</b>
+<code>awning()</code> bakes stripes into vertex colours (the glTF-survival gate forbids a
+procedural). Projecting <code>qm_awning_0</code>'s 21 vertices through crossing's own solved
+camera: every dark column (v00/v06/v12, colour 0.068,0.123,0.191) lands at
+<b>v&nbsp;&gt;&nbsp;0.93</b>, below the frame; the in-frame corner is columns 5 and 6, <b>both the
+cream 0.320,0.295,0.248</b>. <b>A PATTERN OFF THE EDGE OF THE FRAME IS NOT A PATTERN</b> &mdash;
+which is why four rounds of colour work could never have answered this verdict.</p>
+<p><b>THE MECHANISM, AND IT IS THE LEVER.</b> The canvas is a RULED SURFACE: three vertex rows,
+z constant in x. <b>Its normal does not vary along its own width, so no light can print anything
+on it at any crop.</b> Same class as round 3's town-wide water finding (&ldquo;the sheets are flat
+to a hundredth of a degree, so there are no ripple normals for any light to catch&rdquo;).</p>
+</div>
+<div class="verdict">
+<p><b>FIX (class: GEOMETRY).</b> <code>qm_awning_relief.py relief</code> &mdash; every awning
+rebuilt at 2n+1 columns: the old columns become <b>RIBS AND RISE</b>, the new midpoints sit
+<em>exactly</em> on the old ruled surface. <b>NO VERTEX EVER MOVES DOWN</b>, asserted per row per
+awning, because this canvas hangs 0.19&nbsp;m over a 2.05&nbsp;m corridor and <code>AWN_CLEAR</code>
+exists because a 50&nbsp;mm margin is not a margin &mdash; the headroom <code>awning_lip</code> and
+<code>over_walk</code> cleared is arithmetically untouched rather than re-tested. The wall row is
+pinned (a canvas is nailed to a straight batten); mid and lip scallop, so the lip's straight
+silhouette breaks too. Sag 0.110&nbsp;m at the lip / 0.073 at mid over ribs 0.42&nbsp;m apart =
+19&deg; of peak cross-slope.</p>
+<p><b>AND ONE MONOCHROME CANVAS, FOUND ON THE WAY (class: material, as vertex data).</b>
+<code>STALLC[3]</code> is <b>bit-identical</b> to the hard-coded second stripe colour
+<code>stall()</code> passes every awning, so <code>qm_awning_1</code> shipped
+<b>21/21 vertices at one colour</b> &mdash; the only truly monochrome awning in town, and
+invisible to every instrument here because they report MATERIALS and a stripe is vertex data.
+<code>awning()</code> now refuses <code>rgb_a == rgb_b</code>.</p>
+</div>
+
+<h2>Target C — <code>qm_stall_3</code>'s &ldquo;placeholder plane&rdquo;: round 3 named the cause and nobody built the fix, and it is all seven boards</h2>
+<div class="claim">Found by a blind judge on BOTH the before and after plates in round 3, so not
+a regression, and never addressed.</div>
+<div class="meas">
+<p>Round 3 already refuted the words (the board wears <code>mat_wallwood</code>'s planks at
+5&times;5 sd 6.15 &mdash; not flat, not untextured) and named the real defect as structural:
+<code>stall()</code> puts the backboard at <code>cy - sgn*(hy - 0.20)</code>, spanning
+hy&minus;0.25&hellip;hy&minus;0.15, while the four posts at <code>&plusmn;(hy - 0.12)</code> span
+hy&minus;0.175&hellip;hy&minus;0.065. <b>The 1.30&nbsp;m painted panel stands 0.185&nbsp;m PROUD of
+its own frame on the plaza side</b>, so the square sees an unbroken face with nothing holding it
+up. <b>The defect is in <code>stall()</code>, so it is all seven boards</b>, not the one the judge
+happened to be looking at &mdash; frame share <code>qm_stall_*</code>: quay-west 0.43%,
+deep-stairs 0.14%.</p>
+</div>
+<div class="verdict"><p><b>FIX (class: GEOMETRY).</b> Board offset 0.20 &rarr; 0.015, i.e. each board
+moves back 0.185&nbsp;m until its plaza face is flush with its own posts' back face. Nothing moves
+toward the plaza. Carrier and builder produce the same number and the carrier derives it from the
+posts it finds rather than from the constant, so it cannot silently disagree.</p></div>
+
+<h2>The rebake list, DERIVED FROM RENDERED FRAMES <span class="note">(whole-town draft A/B, 15 frames at 1008&times;576 / 28 spp; documented two-render noise floor 0.010% / 0.000%)</span></h2>
+<div class="meas">
+<table style="border-collapse:collapse;font-size:13px"><tr style="color:#8a919c"><td style="padding:2px 24px 2px 0">shot</td><td style="padding:0 18px">&gt;4/255 %</td><td>&gt;12/255 %</td></tr>
+<tr><td>quay-west</td><td style="padding:0 18px">3.026</td><td>1.781</td></tr>
+<tr><td>loop-stairs</td><td style="padding:0 18px">1.607</td><td>1.075</td></tr>
+<tr><td>deep-stairs</td><td style="padding:0 18px">1.380</td><td>0.730</td></tr>
+<tr><td>crossing</td><td style="padding:0 18px">1.318</td><td>1.079</td></tr>
+<tr><td>lockhead</td><td style="padding:0 18px">1.070</td><td>0.694</td></tr>
+<tr><td>weave</td><td style="padding:0 18px">0.801</td><td>0.513</td></tr>
+<tr><td>gate</td><td style="padding:0 18px">0.276</td><td>0.184</td></tr></table>
+<p><b>REFUSED WITH A NUMBER</b>, all &le;0.015% above 4/255 and <b>&le;0.001% above 12/255</b>:
+shelf-west 0.015, shelf-east 0.013, waterfront 0.011, boatyard 0.010, fishdock 0.009,
+lockfive 0.004, north-landing 0.004, cottage 0.001. Eight plates keep their existing bytes.</p>
+</div>
+
+
+<h2>The receipt — the SAME ray-derived pixel indices read out of both plate trees</h2>
+<div class="meas">
+<p>The mask is the <b>BEFORE</b> geometry's objmap, so it is one set of pixel indices and both
+renders are read through it; a mask recomputed per plate moves exactly when you are measuring.</p>
+<table style="border-collapse:collapse;font-size:13px"><tr style="color:#8a919c"><td style="padding:2px 16px 2px 0">shot</td><td style="padding:0 16px">subject</td><td style="padding:0 12px">%frame</td><td style="padding:0 12px">L p05</td><td style="padding:0 12px">L p50</td><td style="padding:0 12px">L&gt;150</td></tr>
+<tr><td>crossing</td><td style="padding:0 16px">the canvas</td><td style="padding:0 12px">1.38</td><td style="padding:0 12px">118.1 &rarr; <b>97.3</b></td><td style="padding:0 12px">168.8 &rarr; <b>158.2</b></td><td style="padding:0 12px">73.2% &rarr; <b>56.8%</b></td></tr>
+<tr><td>gate</td><td style="padding:0 16px">the canvas</td><td style="padding:0 12px">0.07</td><td style="padding:0 12px">13.6 &rarr; 13.5</td><td style="padding:0 12px">159.7 &rarr; <b>108.3</b></td><td style="padding:0 12px">61.3% &rarr; <b>12.5%</b></td></tr>
+<tr><td>quay-west</td><td style="padding:0 16px">the boards</td><td style="padding:0 12px">2.89</td><td style="padding:0 12px">4.7 &rarr; 5.6</td><td style="padding:0 12px">82.5 &rarr; 83.0</td><td style="padding:0 12px">1.2% &rarr; 1.8%</td></tr>
+<tr><td>crossing</td><td style="padding:0 16px">REST of the frame</td><td style="padding:0 12px">98.53</td><td style="padding:0 12px">2.8 &rarr; 2.8</td><td style="padding:0 12px">44.8 &rarr; 44.8</td><td style="padding:0 12px">7.5% &rarr; 7.6%</td></tr>
+<tr><td>gate</td><td style="padding:0 16px">REST of the frame</td><td style="padding:0 12px">99.79</td><td style="padding:0 12px">7.2 &rarr; 7.2</td><td style="padding:0 12px">67.6 &rarr; 67.6</td><td style="padding:0 12px">7.9% &rarr; 7.9%</td></tr></table>
+<p><b>CONFINEMENT HOLDS</b>: the REST of every one of the seven frames moves by &le;1.3 of one
+8-bit level (largest is quay-west 52.4&nbsp;&rarr;&nbsp;51.1, where the boards' own shadows moved).</p>
+<p><b>AND READ IT AT THE FOLD'S OWN SCALE.</b> The facets are 0.21&nbsp;m wide, so a 5&times;5 window
+sits <em>inside</em> one and reports almost nothing (crossing sd5 0.60&nbsp;&rarr;&nbsp;0.73). Median
+per-block std at the scale the relief actually works at:</p>
+<table style="border-collapse:collapse;font-size:13px"><tr style="color:#8a919c"><td style="padding:2px 16px 2px 0">shot</td><td style="padding:0 16px">block 8&nbsp;px</td><td style="padding:0 16px">block 25&nbsp;px</td><td>block 64&nbsp;px</td></tr>
+<tr><td>crossing before</td><td style="padding:0 16px">0.83</td><td style="padding:0 16px">2.44</td><td>6.70</td></tr>
+<tr><td>crossing after</td><td style="padding:0 16px"><b>1.13</b></td><td style="padding:0 16px"><b>9.33</b></td><td><b>16.64</b></td></tr>
+<tr><td>gate before</td><td style="padding:0 16px">13.01</td><td style="padding:0 16px">53.00</td><td>&mdash;</td></tr>
+<tr><td>gate after</td><td style="padding:0 16px"><b>24.52</b></td><td style="padding:0 16px">38.76</td><td>&mdash;</td></tr></table>
+<p class="note">A note paid for inside this round: the obvious implementation of that table &mdash;
+<code>sliding_window_view(...).std()</code> at a 61&nbsp;px window over a 2688&times;1536 plate &mdash;
+reached <b>7.6&nbsp;GB RSS and was still growing</b> and had to be killed. A windowed view is
+materialised by the reduction. Block-reduce, or crop to the region first.</p>
+</div>
+
+<div class="pair">
+<figure><img src="crop-crossing-awning-r8.jpg"><figcaption><b>crossing, NATIVE resolution, before | after.</b> The wedge is <code>qm_awning_0</code> at 5.3 m. Before: one featureless pale plane. After: folded panels with real light and shade, and a scalloped edge against the deck.</figcaption></figure>
+<figure><img src="crop-quaywest-stall-r8.jpg"><figcaption><b>quay-west, NATIVE resolution, before | after.</b> The teal backboard recedes 0.185 m and its own four posts now stand IN FRONT of it over their whole height &mdash; the panel reads as a backboard inside a trestle rather than a board dropped on the deck. The awning above it gains a scalloped lip.</figcaption></figure>
+</div>
+
+<h2>Blind verdict — round 8 <span class="note">(scene_redteam --mode both, pinned gemini-3.6-flash, 40 calls, 0 errors, run-round8awning, 7 plates, N=3)</span></h2>
+<div class="verdict">
+<p><b>PARTIALLY MOVED, AND THE HONEST WAY TO SAY IT IS THE LANGUAGE COUNT.</b> At the same box
+(u&nbsp;&ge;&nbsp;0.85, crossing) across five runs:</p>
+<table style="border-collapse:collapse;font-size:13px"><tr style="color:#8a919c"><td style="padding:2px 20px 2px 0">run</td><td style="padding:0 18px">naive hits</td><td>&ldquo;clips / cuts into the terrain / missing geometry&rdquo;</td></tr>
+<tr><td>170205-calib</td><td style="padding:0 18px">3</td><td>1</td></tr>
+<tr><td>round4haze</td><td style="padding:0 18px">3</td><td>2</td></tr>
+<tr><td>round6phase</td><td style="padding:0 18px">2</td><td>2</td></tr>
+<tr><td>round7water</td><td style="padding:0 18px">3</td><td>2</td></tr>
+<tr><td><b>round8awning</b></td><td style="padding:0 18px"><b>2</b></td><td><b>0</b></td></tr></table>
+<p><b>THE &ldquo;HOLE IN THE WORLD&rdquo; READING IS GONE</b> &mdash; zero mentions of clipping through
+terrain or missing geometry, against two in each of the previous three runs &mdash; and so are the
+nouns &ldquo;plane&rdquo;, &ldquo;polygon&rdquo;, &ldquo;triangle&rdquo;, &ldquo;wedge&rdquo; and the
+adjective &ldquo;flat&rdquo;; round 8 says &ldquo;mesh&rdquo; twice. <b>What survives is
+&ldquo;untextured&rdquo; and &ldquo;white&rdquo;</b>: 2 of 3 naive passes still file it. 3/3 &rarr; 2/3
+at N=3 is inside this judge's noise and is NOT claimed as a clear.</p>
+<p><b>SO THE RESIDUAL IS NAMED AND IT IS A DIFFERENT LEVER: VALUE.</b> The canvas is still the
+brightest thing in that corner (L 158.2 against the near field's 85.0) because its albedo is the
+cream 0.320,0.295,0.248. That is a one-number MATERIAL change and it was deliberately not pulled
+this round &mdash; the mechanism named relief, relief is what was built, and mixing the two would
+have made neither measurable. <b>Round 9's item.</b></p>
+<p>The board fix has NO judge receipt in either direction: no placeholder/flat-board language
+appears at quay-west in any of the five committed <code>findings.json</code> sets, so its verdict
+is the PICTURE and the geometry, not the judge.</p>
+</div>
+
+<h2>Gates</h2>
+<div class="meas"><p><code>cine_test</code> <b>635 ok / 1 failed / 2 soft warnings</b> &mdash; the
+pre-attributed deep-stairs&harr;waterfront seam red, same <code>{"fired":0,"expected":10}</code>
+signature, i.e. the Dellhollow baseline EXACTLY, and bundle parity (walk = 275 both sides) is
+inside those 635 &middot; <code>slice_test</code> <b>776/0</b> &middot;
+<code>findability_test</code> <b>69/0 with 11 warnings</b> &middot;
+<code>routes_derive --check</code> clean, 15 shots (re-derived: the bundle moving made it STALE).
+Both bundles re-exported in this window &mdash; <b><code>cine_bake</code> writes the collision GLB
+only under <code>--glb</code> (<code>GLB_ONLY</code>, cine_bake.py:673); a <code>--cams</code>
+beauty run does NOT refresh it</b>, and nothing in the run says so.</p>
+<p class="note">Instrument note, banked: <code>findability_test</code> finishes its work in
+seconds and then <b>does not exit</b>. Piped through <code>| tail</code> its result is invisible
+until the process is killed &mdash; two runs looked like 11-minute hangs and were completed gates
+sitting in a pipe.</p></div>
+
 </body>
 </html>

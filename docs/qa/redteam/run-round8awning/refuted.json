@@ -1,0 +1,343 @@
+[
+ {
+  "fid": "F2",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "background cliff face on the left",
+  "bbox": [
+   0,
+   0,
+   0.388,
+   0.46
+  ],
+  "severity": 1,
+  "desc": "The large cliff face on the left features severe vertical texture stretching.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "14.3,150.3,8.6,67.1",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 14.3,150.3,8.6,67.1"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The background cliff on the left features horizontal stratification and atmospheric mist rather than vertical texture stretching."
+  }
+ },
+ {
+  "fid": "F3",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "geometry",
+  "where": "tree on the right cliff face",
+  "bbox": [
+   0.595,
+   0.668,
+   0.808,
+   0.788
+  ],
+  "severity": 1,
+  "desc": "The tree trunk clips directly into the vertical cliff rock face without any root system or supporting ground.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-1.5,10.2,-1,6.1",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -1.5,10.2,-1,6.1"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The tree on the right cliff face is held in place by a visible wooden support structure built into the rock face."
+  }
+ },
+ {
+  "fid": "F10",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "autumn trees on the right cliff face",
+  "bbox": [
+   0.698,
+   0.249,
+   0.915,
+   0.78
+  ],
+  "severity": 1,
+  "desc": "The trees stick out directly from a vertical cliff face with leaf clusters floating without branch connections.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-4.5,12.7,-6.1,3.7",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -4.5,12.7,-6.1,3.7"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The leaf cluster cards and cliffside mounting are standard practices for this stylized game art aesthetic."
+  }
+ },
+ {
+  "fid": "F22",
+  "mode": "checklist",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": "quality:water-read",
+  "itemWhat": "[QUALITY] The water surface — water covers about 6.9% of this frame (near Harbor Deck, Fish dock, Moorage). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.",
+  "verdict": "WEAK",
+  "quality": true,
+  "category": "immersion",
+  "where": "lower left harbor water",
+  "bbox": [
+   0,
+   0.38,
+   0.2,
+   1
+  ],
+  "severity": 2,
+  "desc": "The water surface: WEAK — JUDGMENT: Water surface shows acceptable tone and highlights, but contact lines with the wooden pilings are fairly plain.",
+  "census": null,
+  "hint": {
+   "region": "4.5,131.5,14,72.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 4.5,131.5,14,72.6"
+  },
+  "aim": {
+   "subject": "visible water",
+   "cells": 2040,
+   "hit": 1054,
+   "cover": 0.5167,
+   "frameFrac": 0.0693,
+   "min": 0.02,
+   "state": "on-subject",
+   "why": "51.7% of the judged box is visible water (1054/2040 cells of the shot's own 168x96 census; the frame holds 6.9%)"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:checklist",
+   "why": "The water surface genuinely holds up well with convincing lighting highlights, wave textures, and depth tones."
+  }
+ },
+ {
+  "fid": "F11",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "loop-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "staircase leading up the cliff",
+  "bbox": [
+   0.396,
+   0.437,
+   0.622,
+   0.758
+  ],
+  "severity": 2,
+  "desc": "The wooden staircase ascends along the rock wall but leads to a cramped, ambiguous ledge without a clear doorway or path forward.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The top of the stairs connects directly to an upper wooden deck platform that provides a clear walkable path along the structure."
+  }
+ },
+ {
+  "fid": "F17",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "loop-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "staircase leading to the upper structure",
+  "bbox": [
+   0.395,
+   0.43,
+   0.675,
+   0.83
+  ],
+  "severity": 2,
+  "desc": "The wooden staircase ascends along the slope, but at the top it terminates directly against a solid wall without a clear doorway or walkable path.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The stairs do not terminate against a wall, but open onto a continuous wooden walkway and upper porch area."
+  }
+ },
+ {
+  "fid": "F13",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "quay-west",
+  "item": null,
+  "category": "geometry",
+  "where": "blocky steps on left cliff face",
+  "bbox": [
+   0.22,
+   0.21,
+   0.32,
+   0.33
+  ],
+  "severity": 1,
+  "desc": "Blocky steps protrude directly out of the cliff wall without visible underside supports or blending into the rock geometry.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "50.2,64.2,1.6,15.1",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 50.2,64.2,1.6,15.1"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The steps on the upper left are built along a sloped dirt bank rather than protruding unsupported from a cliff wall."
+  }
+ },
+ {
+  "fid": "F28",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockhead",
+  "item": null,
+  "category": "navigation",
+  "where": "wooden walkways and bridge across the center",
+  "bbox": [
+   0,
+   0.4,
+   0.85,
+   0.99
+  ],
+  "severity": 2,
+  "desc": "Overlapping wooden ramps, elevated walkways, and identical textures make the walkable path difficult to distinguish from background structures.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The main elevated bridge and ramps are clearly delineated from the background by distinct wooden railings and elevated posts."
+  }
+ },
+ {
+  "fid": "F48",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "geometry",
+  "where": "roof in the lower right corner",
+  "bbox": [
+   0.81,
+   0.788,
+   1,
+   1
+  ],
+  "severity": 1,
+  "desc": "The sloped roof structure in the bottom right corner clips directly into adjacent wall geometry without supporting joints.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "41.4,51.3,17.6,26.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 41.4,51.3,17.6,26.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Overlapping roof and wall geometry is standard modular kit construction for stylized game art and does not visually break the scene."
+  }
+ },
+ {
+  "fid": "F50",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "occlusion",
+  "where": "cliff shadow in the upper center",
+  "bbox": [
+   0.135,
+   0.485,
+   0.55,
+   0.68
+  ],
+  "severity": 2,
+  "desc": "Harsh, pitch-black shadows obscure the upper walkways and stairwell openings into the cliff, making it impossible to see navigable paths.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The strong shadow cast by the cliff overhang is normal high-contrast directional sunlight, and interior walkways are clearly marked with illuminated lanterns."
+  }
+ },
+ {
+  "fid": "F54",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "cliff fissure and upper staircase shadowed entry",
+  "bbox": [
+   0.14,
+   0.48,
+   0.54,
+   0.58
+  ],
+  "severity": 2,
+  "desc": "Deep harsh shadows completely obscure path geometry inside the cliff opening, making it unclear where the route leads.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The deep shadows in the cliff fissure are a realistic result of direct sunlight and do not prevent navigation, as lit doorways highlight the route inside."
+  }
+ },
+ {
+  "fid": "F56",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "dark cliff crevice in center",
+  "bbox": [
+   0.45,
+   0.13,
+   0.6,
+   0.56
+  ],
+  "severity": 2,
+  "desc": "Harsh shadows inside the cliff crevice completely obscure potential stairs and doorways, hiding whether the path continues inside.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Harsh shadows inside the cliff crevice are expected from the strong direct lighting angle rather than an artistic error."
+  }
+ }
+]
