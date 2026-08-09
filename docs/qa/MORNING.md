@@ -1,4 +1,58 @@
-# HANDOVER — 2026-08-08 06:45 (READ THIS SECTION FIRST; everything below is history)
+# HANDOVER — 2026-08-09 06:40 (READ THIS FIRST; the 08-08 section below is history)
+
+Since the 08-08 handover: **Dellhollow graphics rounds 4-7** and **the battle arena arc through
+wave 3 plus the world-arena commit**. All committed, pushed and deployed (14 deploys, each
+verified 29/0 against the live URL with the shipped bytes fetched and compared).
+
+## YOUR RULING, EXECUTED AND MEASURED
+You ruled: fight in the real world, no diorama fallback, relocate to the nearest feasible place —
+*"the diorama is itself a teleport to a place the player never sees again."* Measured answer:
+**100% coverage at 13 m**, zero residual class, and **the binding variable was never distance —
+it was BEARING** (41 of the 57 previously-refused cells stage at the SAME 5 m on a different
+compass heading). Relocation is one sideways step (p50 5 m). The fallback is deleted; a refusal
+now relocates. Trigger-to-first-battle-frame is **p50 ~700 ms** after a 40-second scare that
+turned out to be 137k instanced grass pieces with no BVH — a 37k-triangle tree is 3000x cheaper
+to ray-test than six-triangle grass, and instanced pieces under 1.5 m are now ground detail.
+
+## THE HONEST ANSWER ON MAKING `?arena=world` THE DEFAULT: NOT YET
+Three lanes measured it rather than arguing it:
+- **Placement quality, measured for the first time** (62 sites — a census, not a sample, sorted
+  BY EYE before any metric): **48.4% were bad places to fight.** Sun exposure separates good from
+  bad (0.84 AUC); sky/horizon does not (this valley has almost no sky in frame); relocation
+  distance predicts nothing, which independently supports your ruling. Shipping a sun refusal
+  took bad 48.4% → **32.3%**, 14 sites improved, 0 regressed. **One site in three is still bad.**
+- **Tonal separation** closed without a shader (the world path still writes ZERO shaders, which is
+  what deletes the r185 colour-bug class rather than managing it). Water improves 18-63%, crag
+  regresses 6.5%, forest is still bad — the party stands INSIDE a hedge bank.
+- **THE FRAME YOU LIVE IN WAS NOT THE FRAME ANYONE WAS MEASURING.** At the command menu the camera
+  showed **zero foes, 100% of the dwell, at 12 of 12 sites** — they sat off the right edge. A
+  round holds one unbounded command step per party member, so that is where you actually are.
+  Fixed at 0.3 ms on the turn path with the opening unmoved. It also means every placement number
+  above was eye-sorted on the ~900 ms establishing plate, not on the frame you live in.
+
+## DELLHOLLOW ROUNDS 4-7 — every round refuted part of what it inherited
+Gorge void → atmosphere (the aerial-perspective card was a 6 m CURTAIN, so the most distant
+surface was the darkest); the "dead-straight silhouette against the sky" DOESN'T EXIST (closed
+gorge, zero sky columns) and the real defect was a grazing seam; the water had no aerial
+perspective at all — fixed with a phase function at +3% render cost after a full medium was built,
+measured and REFUSED. Judge: multiple plates FAILING → CONVINCING.
+
+## TOOLING THAT GOT MEASURABLY BETTER
+`transition_test` is **168/0 DETERMINISTIC** again — and the 168/0 I reported to you on 08-08 was
+**one lucky draw**: a fix of mine had made it nondeterministic and I had written the opposite into
+CLAUDE.md. Both are corrected there. New gates: `ray_budget` (proved RED before GREEN by inducing
+the failure), `dh_pixel_census`, `dh_seam_census`, `plate_probe`, `battle_place`, `battle_decide`.
+
+## WHAT I'D ASK YOU
+1. **Try `?arena=world` on the live site** and tell me whether one-in-three-bad-sites is
+   tolerable for a prototype or whether it must be fixed before it becomes the default.
+2. The remaining levers are named and priced: surface dominance (the axis that WON the placement
+   analysis and was not shipped — no affordable proxy), and the body side (fresnel/inverted hull),
+   which would give the world path its first shader.
+
+---
+
+# HANDOVER — 2026-08-08 06:45 (history from here down)
 
 An overnight window, ~17:00 → 06:45. Round 3 of the graphics loop CLOSED, the device-pixel-ratio
 fix shipped, and the BATTLE PRESENTATION ARC opened and delivered its first wave. All work is
