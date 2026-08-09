@@ -31,7 +31,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import { freePort, killOrphans, findPage, GAME_PAGE } from './cdp.mjs';
+import { freePort, killOrphans, findPage, sweepStaleProfiles, GAME_PAGE } from './cdp.mjs';
 
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
@@ -66,6 +66,13 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ---- launch ---------------------------------------------------------------
 const profile = join(process.env.TMPDIR || '/tmp', 'arena-playtest-' + process.pid);
+// A PER-PID PROFILE CANNOT ORPHAN A PROCESS AND STILL LEAKS THE DISK. That was the
+// standing reasoning here and it was half right: nothing is left running, but nothing
+// removes the ~170 MB profile either, and 60 of them (10 GB) had accumulated by
+// 2026-08-09. cdp.mjs already owns the safe sweep — older than two hours, never our
+// own, orphan-reaped by its own --user-data-dir before the rmdir.
+{ const swept = sweepStaleProfiles('arena-playtest-');
+  if (swept) log(`swept ${swept} stale arena-playtest profile(s)`); }
 const flags = [
   `--remote-debugging-port=${CDP_PORT}`,
   `--user-data-dir=${profile}`,
