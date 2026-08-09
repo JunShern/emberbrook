@@ -725,10 +725,36 @@ def matte_key(im):
             _mk = (key[0] + key[2]) / 2.0 - key[1]
             den = (_mk - _mg(ref))
             num = (_mg(out) - _mg(ref))
+            # THE SAME RULE THE OTHER WAY ROUND, AND THE OTHER WAY ROUND IS WHERE THE
+            # LAST SURVIVING FRINGE WAS (2026-08-09, weaponsmith/cutin). The clip's
+            # floor of 0.0 said key may be REMOVED from a band pixel and never PUT
+            # BACK — so this block could only ever chase key the matte had kept, and
+            # was blind to key the matte had already taken too much of. It is the
+            # UN-PREMULTIPLY above that takes too much: it is exact only for a
+            # correct alpha, and alpha here is a NORMALISED distance whose
+            # denominator is the local maximum, so a DARK pixel in a notch of an
+            # otherwise bright figure reads as 60-70% covered when it is solid paint.
+            # Measured on weaponsmith's blade notch: six source pixels of neutral
+            # khaki (122,112,99), _mg -1.5 to +10.5 — no magenta in them at all —
+            # come out of the un-premultiply at (78,152,79), _mg -73 to -98, i.e.
+            # R and B driven under G. That is the chartreuse again, arriving through
+            # the OTHER arithmetic in this function, and it survived the 2026-08-03
+            # despill fix untouched because `share` clipped to zero there.
+            # `back` is the share that would carry the pixel exactly back to the
+            # colour that was DRAWN, and it is the floor rather than the answer: the
+            # target is still the local opaque figure's own key-ness, and the clamp
+            # only refuses to overshoot the drawing. Both bounds are on the key's own
+            # chroma axis, so honest paint — which runs through the band and the
+            # interior alike — measures zero correction and moves nowhere.
+            back = np.minimum((_mg(out) - _mg(rgb))
+                              / np.maximum(_mk - _mg(rgb), 1e-4), 0.0)
             share = np.where((den > 60.0) & have_ref & soft,
-                             np.clip(num / np.maximum(den, 1e-4), 0.0, 0.65), 0.0)
+                             np.clip(num / np.maximum(den, 1e-4), back, 0.65), 0.0)
             sh = share[..., None]
-            out = np.where(sh > 0.01,
+            # `abs`, not `>`: `share` is now signed (see `back` above) and a negative
+            # share — key put back into a pixel the un-premultiply over-stripped — is
+            # exactly the correction this block exists to make.
+            out = np.where(np.abs(sh) > 0.01,
                            np.clip((out - sh * np.array(key, float)) / (1.0 - sh), 0, 255),
                            out)
 
@@ -1192,29 +1218,70 @@ def spec_moods(cid):
     return own | (defaults & used)
 
 
+# EVERY FILE THAT CAN ASK A LINE TO WEAR A MOOD, in the order dialogue.js merges
+# them. THE SECOND ONE WAS MISSING AND THAT WAS A HOLE IN THE FLOOR (2026-08-09).
+# `scripted_moods` read dialogue.json alone, but public/game/story.json carries
+# nodes of exactly the same shape and Dialogue.inject merges them into the same
+# table at load — 217 `expr` keys against dialogue.json's 82, i.e. the story layer
+# is now the LARGER consumer. So the no-regression floor could not see a mood whose
+# only consumer is a story beat, and a character whose story-scripted moods exceed
+# their shipped set could silently lose one to a re-roll: the beat would still play,
+# the portrait would simply stop changing, which is the exact invisible regression
+# `required_moods` exists to prevent. It did not bite when it was found only because
+# the four Maren moods in that position (indignant, surprised, thinking, wry) were
+# all already in her shipped manifest, so the OTHER half of the floor covered them.
+#
+# NOTHING ELSE SCRIPTS A MOOD, and that is measured rather than assumed: those two
+# are the only files under public/game carrying an `expr` key at all, and
+# chapter1/2/3.js — the INERT script-of-record data — carry ZERO (their `mood:`
+# keys are music/atmosphere cues, and their only consumers are dialogue_style.mjs,
+# docs/exemplars.md and build-story.mjs). They also address the 2D runtime's
+# `expr-*.png` busts rather than `cutin-*.png`, so they are out of scope twice over.
+SCRIPT_SOURCES = ('public/game/dialogue.json', 'public/game/story.json')
+_SCRIPTED = None
+
+
 def scripted_moods():
-    """portrait id -> set of moods public/game/dialogue.json actually asks a line to
-    wear. These are the moods with a CONSUMER; losing one is a scripted beat quietly
-    demoting itself to the neutral plate."""
-    path = os.path.join(ROOT, 'public/game/dialogue.json')
-    if not os.path.exists(path):
-        return {}
-    D = json.load(open(path))
-    sp = D.get('speakers', {})
+    """portrait id -> set of moods a shipped line actually asks to wear, across
+    EVERY file that scripts one (SCRIPT_SOURCES). These are the moods with a
+    CONSUMER; losing one is a scripted beat quietly demoting itself to the neutral
+    plate.
+
+    PORTRAIT RESOLUTION FOLLOWS Dialogue.inject's OWN PRECEDENCE: a speaker entry
+    already in dialogue.json is kept and the injected one dropped
+    (`if (!DATA.speakers[s])`), so the first source to define a speaker wins here
+    too. story.json declares only `narrator`, so today every portrait id in it
+    resolves through dialogue.json's table — which is exactly why reading story
+    nodes without dialogue's speakers would have mapped some lines to the wrong
+    character."""
+    global _SCRIPTED
+    if _SCRIPTED is not None:
+        return _SCRIPTED
+    sp, docs = {}, []
+    for rel in SCRIPT_SOURCES:
+        path = os.path.join(ROOT, rel)
+        if not os.path.exists(path):
+            continue
+        D = json.load(open(path))
+        docs.append(D)
+        for s, e in (D.get('speakers') or {}).items():
+            sp.setdefault(s, e)          # first source wins — inject's own rule
 
     def pid_of(s):
         e = sp.get(s)
         return e.get('portrait', s) if e and 'portrait' in e else s
 
     out = {}
-    for n in D.get('nodes', {}).values():
-        for l in n.get('lines') or []:
-            if isinstance(l, dict) and (l.get('expr') or n.get('expr')):
-                p = pid_of(l.get('speaker') or n.get('speaker'))
-                if p:
-                    out.setdefault(p, set()).add(l.get('expr') or n.get('expr'))
-        if n.get('expr') and n.get('speaker'):
-            out.setdefault(pid_of(n['speaker']), set()).add(n['expr'])
+    for D in docs:
+        for n in D.get('nodes', {}).values():
+            for l in n.get('lines') or []:
+                if isinstance(l, dict) and (l.get('expr') or n.get('expr')):
+                    p = pid_of(l.get('speaker') or n.get('speaker'))
+                    if p:
+                        out.setdefault(p, set()).add(l.get('expr') or n.get('expr'))
+            if n.get('expr') and n.get('speaker'):
+                out.setdefault(pid_of(n['speaker']), set()).add(n['expr'])
+    _SCRIPTED = out
     return out
 
 
@@ -1231,6 +1298,86 @@ def required_moods(cid, man, scripted):
     character already ships is a FLOOR, and a set that cannot clear it is not an
     upgrade no matter how good its neutral looks."""
     return set(scripted.get(cid, set())) | set((man.get(cid) or {}).get('expr', []))
+
+
+def selftest():
+    """PROVE THE FLOOR RED BEFORE ANYONE TRUSTS IT GREEN, on the case it was blind
+    to: a mood whose ONLY consumer is a story beat.
+
+    The character is synthetic and so are both script files, because the point is
+    the FLOOR's arithmetic and not today's content — the shipped cast happens to
+    cover its own story-only moods out of the manifest, which is exactly why this
+    hole survived. `scriptless` reproduces the pre-2026-08-09 reader (dialogue.json
+    alone) against the same two files, so the two arms differ in nothing but which
+    sources are read, and the assertion is made on `required_moods` — the floor
+    itself — rather than on the reader in isolation."""
+    import tempfile
+    global ROOT, _SCRIPTED
+    ok = True
+    real_root = ROOT
+    tmp = tempfile.mkdtemp(prefix='cutin-floor-')
+    os.makedirs(os.path.join(tmp, 'public/game'), exist_ok=True)
+    # `probe` speaks twice: once in dialogue.json wearing `happy`, once in a story
+    # beat wearing `wry`. A re-roll that keeps `happy` and drops `wry` is the
+    # regression, and the manifest is deliberately EMPTY so the floor's other half
+    # cannot cover for the reader.
+    json.dump({'speakers': {'probe': {'portrait': 'probe'}},
+               'nodes': {'n1': {'lines': [{'speaker': 'probe', 'expr': 'happy',
+                                           'text': 'hello'}]}}},
+              open(os.path.join(tmp, 'public/game/dialogue.json'), 'w'))
+    json.dump({'speakers': {'narrator': {'name': ''}},
+               'nodes': {'story.n1': {'lines': [{'speaker': 'probe', 'expr': 'wry',
+                                                 'text': 'so it is'}]}}},
+              open(os.path.join(tmp, 'public/game/story.json'), 'w'))
+
+    man = {}                     # ships nothing, so ONLY the script can defend a mood
+    kept = ['happy']             # the re-roll's surviving moods: `wry` was dropped
+    try:
+        ROOT = tmp
+        _SCRIPTED = None
+        after = scripted_moods()
+        _SCRIPTED = None
+        srcs = SCRIPT_SOURCES
+        try:                     # the pre-fix reader: dialogue.json and nothing else
+            globals()['SCRIPT_SOURCES'] = ('public/game/dialogue.json',)
+            before = scripted_moods()
+        finally:
+            globals()['SCRIPT_SOURCES'] = srcs
+            _SCRIPTED = None
+    finally:
+        ROOT = real_root
+        _SCRIPTED = None
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    miss_before = sorted(required_moods('probe', man, before) - set(kept))
+    miss_after = sorted(required_moods('probe', man, after) - set(kept))
+
+    def want(cond, msg):
+        nonlocal ok
+        print(('  ok   ' if cond else '  FAIL ') + msg)
+        ok = ok and cond
+
+    print('dialogue.json alone : probe -> %s' % (sorted(before.get('probe', ())),))
+    print('both sources        : probe -> %s' % (sorted(after.get('probe', ())),))
+    print('a re-roll keeping %s would lose: before %s / after %s'
+          % (kept, miss_before or 'nothing', miss_after))
+    want('wry' not in before.get('probe', set()),
+         'RED: the old reader cannot see a mood only story.json scripts')
+    want(miss_before == [],
+         'RED: so the floor PASSES a set that silently drops it (missing=%s)'
+         % (miss_before,))
+    want('wry' in after.get('probe', set()),
+         'GREEN: the new reader sees it')
+    want(miss_after == ['wry'],
+         'GREEN: and the floor now REFUSES the set (missing=%s)' % (miss_after,))
+    want('happy' in after.get('probe', set()),
+         'and dialogue.json is still read (happy survives the merge)')
+    # The merge must not invent a portrait: story.json names no speaker table of its
+    # own for `probe`, so the id has to resolve through dialogue.json's entry.
+    want(list(after) == ['probe'],
+         'portrait ids resolve through dialogue.json speakers, not the raw name')
+    print('SELFTEST ' + ('PASS' if ok else 'FAIL'))
+    return 0 if ok else 1
 
 
 def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None,
@@ -1374,6 +1521,8 @@ def main():
     force = '--force' in sys.argv
     gate = '--no-gate' not in sys.argv
     only_report = '--report' in sys.argv
+    if '--selftest' in sys.argv:
+        sys.exit(selftest())
 
     # SHIP A SET OF PICKED POSE ROLLS:
     #     python3 tools/gen-cutin.py maren --picks rest=2,happy=1,awed=3
