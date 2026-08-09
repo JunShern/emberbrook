@@ -575,6 +575,32 @@ git runs here, on branch `migration/3d-hybrid`.
   **A USER-FACING CONSEQUENCE THAT NEEDS RE-CONFIRMING: ring-0 staging falls 29 → 15**, so "the
   fight happens where you stand" is now the MINORITY case. The relocation ruling authorised
   moving when a site refuses; it did not authorise moving most of the time for picture quality.
+  **THE BODY SIDE WAS PRICED AND IS NOT RECOMMENDED** (2026-08-09 spike; board
+  docs/qa/battle-rim/, instrument tools/battle_rim.mjs, `?arena=world&brim=1`, DEFAULT OFF).
+  A cast-only rim LIGHT is unavailable (three tests `light.layers` against the CAMERA in
+  `projectObject`); an inverted hull doubles the cast draws, lands flat unlit colour in a linear
+  target and is literally the outline the lane was trying not to ship; a post-chain edge needs a
+  second scene render for a mask and writes inside the post chain. A fresnel via `onBeforeCompile`
+  WAS built and measured: mean `edgeRGB` 9.27 → 10.89, 24 better / 2 worse / 36 inside noise, fps
+  −0.3%, gates all green, **and the gain is IN THE WRONG PLACE** — the six biggest gains are at
+  sites that already read (25.8→34.7), while sites where a body does NOT read are unmoved
+  (`edgeRGB<5` 14 → 15). By eye it is worse than that: at s017 a pale line traces the whole wolf —
+  **that is the sticker** — and at the forest hedge THE LANE EXISTED FOR, the party pair inside
+  the hedge is UNCHANGED at every strength that does not blow the foes out. Structural reason: the
+  cue scales with apparent SIZE and ROUNDNESS, so it lands on foes and not on small clothed party
+  bodies. **The zero-shader property is worth more than a cue that adds contrast to frames that
+  already have it**, and the sign it needs must be chosen PER BODY, which is exactly what stops it
+  reading as one light. THREE MEASUREMENTS WORTH MORE THAN THE FEATURE: (1) **one battle, staged
+  once, metered six times, moves `edgeRGB` by 1.5 and the background ring's own luminance by 4.6 —
+  staging is reproducible to four figures, THE FRAME IS NOT, because the valley keeps animating.
+  This bounds every single-site claim in this arc and makes `bandMin` unusable at N=1**;
+  `stage.qa.pose()` now pins the cast's idle phase for a photograph. (2) A cast cue CHANGES WHAT
+  TONE SEES — armed during the probe it scored a different boom, so it is now pinned off for the
+  probe like the idle phase, the rings and the motes. (3) The polarity rule was BACKWARDS on
+  absolute surround luminance; the right signal is `sign(edge − ring)`, which TONE already
+  computed and discarded. NAMED NEXT: the monster-register lane regraded the FOES into the party's
+  value/saturation band — **nobody has asked whether the PARTY's own albedo range is wide enough
+  to sit against this valley.**
   Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
