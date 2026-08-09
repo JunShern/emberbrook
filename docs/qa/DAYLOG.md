@@ -23222,3 +23222,80 @@ for the standing gap: PLACEMENT (one site in three is still a bad place to fight
 surface dominance already moves that), and the party rigs' own albedo — the monster-register
 lane regraded the FOES into the party's value/saturation range and nobody has asked whether
 the PARTY's own range is wide enough to sit against this valley.
+
+---
+
+## 2026-08-09 · PARTY-ALBEDO — THE HYPOTHESIS DOES NOT SURVIVE, AND THE RULER MOVED INSTEAD
+
+Board docs/qa/battle-party/index.html. Instruments: tools/battle_party.mjs (62-site census,
+real battles, photographed at the `decide` frame, staged exactly as battle_decide's census
+stages it — same cells, same foes, same seed, ORBIT.yaw pinned), tools/battle_party_albedo.py
+(imports monster_regrade's OWN sample_albedo/stats — one ruler), tools/battle_party_stats.py.
+The pixel side is tools/battle_meter.mjs's `__BC.legibility` with a new ADDITIVE `{hist:true}`
+option; nothing existing was renamed or retuned, so a run with hist off is what it always was.
+NO SHIPPED ASSET, DEFAULT OR RUNTIME FILE WAS TOUCHED.
+
+THE QUESTION (named by the rim spike): bet H pulled the six creatures INTO the party's
+value/saturation band; nobody had asked whether the PARTY's range is wide enough to sit
+against ow-valley.
+
+**IT IS. FOUR INDEPENDENT WAYS, all on the 62-site census.**
+1. THE CONTROL DECIDES IT. The two foes are in every frame, measured by the same ruler, and
+   bet H graded them into the party's band. Party bodies overlap the terrain ring around
+   their own mask at 0.546 of their value histogram; the foes overlap at 0.528. Same band,
+   same terrain, and it is the foes' band by construction.
+2. Overlap-with-terrain does not predict failure: AUC 0.560 over all 248 bodies, 0.547 over
+   the party alone. Every palette axis is 0.47-0.62. Chance.
+3. THE PARTY'S RENDERED RANGE IS WIDER THAN THE TERRAIN'S, NOT NARROWER — Vesper spans
+   V 0.141-0.922 on screen, Maren 0.141-0.953, against a terrain ring of 0.172-0.734.
+4. NO FIXED ALBEDO ESCAPES THIS VALLEY. Site to site the ring's own MEDIAN runs 0.141-0.797,
+   i.e. the whole range. Priced as a fixed shift (which is what a grade IS): the shifts that
+   buy anything are ±0.5 of value — black, or white — and they point in OPPOSITE directions
+   for two members of one party (Vesper darker, Maren lighter) while demanding the two
+   freshly-graded foes be taken to +0.5, undoing bet H. At ±0.15, which for Vesper is an
+   albedo gain of 0.66 or 1.34 with V95 already 0.792 and clipping, census overlap moves
+   0.52 -> 0.45. **A party regrade is not proposed, and the user is not being asked.**
+
+**AND THE PREMISE THAT PARTY BODIES FAIL MORE IS SUBSTANTIALLY THE RULER.** `edgeRGB` is the
+magnitude of ONE signed difference of means over a whole silhouette, so a body brighter than
+its surround at the top and darker at the bottom cancels itself toward zero — arithmetic, not
+a theory, and the cast's two sides have opposite shapes (a standing person spans several
+surfaces top to bottom; a wolf or a blob sits on one). Cut the SAME contrast into six
+horizontal bands over each body's own extent: of the 13 party bodies edgeRGB calls failing,
+**12 have a 6-band contrast more than twice their own edgeRGB and 12 contain bands of
+OPPOSITE SIGN** (6-band median 14.48 against an edgeRGB median of 3.97). At the same
+census-wide failure rate **THE SPLIT INVERTS: party 7/124 and foe 13/124, the mirror of
+edgeRGB's 13/124 and 7/124.** One picture settles it and one picture keeps the other half
+honest: at s040 Vesper reads edgeRGB 1.6 — the worst party read in the census — and she is
+plainly visible (bands 12.3/9.1/8.7/11.3/29.9/38.1); at s017 Maren reads 4.03 and it is
+REAL (bands 4.6/13.6/2.6/3.8/2.9/7.1, a cream top on sunlit sandstone, nothing to cancel).
+HAND-OFF, NOT A SHIPPED REPLACEMENT: nothing has been eye-sorted under the 6-band number.
+
+WHERE THE GAP ACTUALLY IS, from the same census: **edgeRGB variance is 40.1% the SITE and
+3.7% the BODY.** 13/62 sites have a party body the ruler calls failing and a foe fails too at
+only 1 of them.
+
+WHICH PARTY BODY IS WORST: **Maren**, in both censuses and under both rulers (13/62 failing
+with Lake in the party; 6-band 14.83 against Vesper's 25.86 and Lake's 21.95), worst on
+MEADOW and CRAG. What is measurably true of her is not her band: she is the most OCCLUDED
+body on the stage (median 4.8% two-handed, 5.8% three-handed, against Vesper's 0.6-1.1%)
+because the formation puts her behind the actor, and she is the least saturated body on
+screen (S50 0.328) against terrain at 0.359. Lake's albedo is LESS saturated than hers
+(S 0.325 vs 0.385) and he reads better at every zone, so saturation does not carry it either.
+
+METER BOUNDS MEASURED ON THIS PATH (`--mode=noise`, s055, 6 reps, cast pinned with
+`qa.pose()` and `Ambient.hide(true)`): the PALETTE axes are pinned to four figures —
+ringV50 spread 0.00, dV50 0.00, ovlV 0.03-0.11 — while **edgeRGB moves 4.50 on one body at
+one site**, and two full censuses of the same build with the same yaw disagreed on the party
+failure count 15 vs 13. So the palette numbers here are usable at N=1 and no edgeRGB
+single-site claim is.
+
+RESIDUALS, NAMED. (a) **The band bet H gates against is not reproducible from bet H's own
+sampler**: monster_regrade states S50 0.333-0.452 / V95 0.718-0.784; re-measured with that
+file's own `sample_albedo` it is S50 0.325-0.474 / V95 0.729-0.792, and under its own tool
+**Vesper fails the band derived from her** (S 0.474, V95 0.792). The party GLBs have not
+changed since (e2d18009, clips only), so the stated band came off a path nobody kept. No
+monster verdict flips at the re-measured edges. (b) The 6-band ruler still averages WITHIN a
+band and has not been eye-sorted. (c) The three-handed census kept only 8 of its 62 frames —
+a payload call, its tables are computed from all 62 rows. (d) docs/qa/index.html was NOT
+edited: another lane holds it dirty in the working tree.
