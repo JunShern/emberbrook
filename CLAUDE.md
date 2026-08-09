@@ -1573,8 +1573,21 @@ git runs here, on branch `migration/3d-hybrid`.
   camera-inside-tree-crown case) before re-aiming; move the occluder, not the aim.
   Bake ray-cast is the ONLY visibility oracle. For dusk grades, measure GROUND
   luminance on the region probes — the floor is what has to be read.
-- Night grades (Emberbrook, measured HISTORY not law — DAYLOG 2026-08-01 night lane):
-  adjusting an existing light has never moved this town; adding a new source always
+- **AND THE REASON THE LAMPS WERE INERT IS NOW KNOWN, AND IT WAS A BUG, NOT A LAW**
+  (2026-08-09, Emberbrook round 1, `tools/emb_lightbodies.py`, commit `1caa39cd`). **Each of the
+  fourteen lamps is a 680 W point light SEALED INSIDE ITS OWN OPAQUE EMISSIVE GLASS BOX** —
+  **165 of 192 shadow rays blocked by the housing.** The light was never reaching the town. One
+  `visible_shadow` flag on the housing halves the crushed frame: **homerow L≤8 66.1% → 37.9%,
+  square 41.6% → 19.6%**, and nothing new clips. **THAT IS WHY "LAMP WATTAGE" MEASURED INERT,
+  TWICE** — and it is why the note below, which is an accurate record of what was MEASURED, drew
+  a conclusion about lighting that was really a fact about one broken prop. **A DOCTRINE EARNED
+  FROM A BROKEN WORLD DESCRIBES THE BREAKAGE.** The observations stand; the interpretation
+  ("adjusting an existing light has never moved this town") short-circuited investigation for
+  over a week, which is exactly the failure mode the documentation bar warns about. Re-derive
+  before inheriting — including from this file.
+- Night grades (Emberbrook, measured HISTORY not law — DAYLOG 2026-08-01 night lane; **read the
+  entry ABOVE first: the lamp half of this is explained by a sealed housing, not by a property of
+  light**): adjusting an existing light has never moved this town; adding a new source always
   has (sky ladder, lamp wattage twice, moon colour: inert or exhausted; the moon's and
   the waystone lantern's ADDITION are what made frames read). Solve a class recipe on
   the class's MEDIAN member; a plate under the 25-median floor gets its OWN two-rung
