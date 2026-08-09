@@ -135,6 +135,23 @@ git runs here, on branch `migration/3d-hybrid`.
   alternatives passed the oracle and failed the drive, one roofed by derived planking that
   `self_roof` cannot see because it tests centre-lines. Same family as `_court_probe`: a gate
   that measures its own drawing cannot measure its own build.
+- **A GREEN SUITE CAN BE HELD UP BY A COINCIDENCE OF MAP GEOGRAPHY** (2026-08-09).
+  `arena_playtest`'s `organic` suite failed all week with "no hostile zone reachable", and FOUR
+  lanes correctly attributed it as pre-existing and moved on — receipted four times, diagnosed
+  zero. **It was a HARNESS bug: the readiness gate waited for the MODULES (which self-arm ~250 ms
+  after boot) and never for the 58 MB scene GLB, in flat contradiction of its own comment.** At
+  "world ready" the probe reads `pos (0,2,0)` — the DEFAULT player position — and
+  `SIM.gpu().collide === 0`, i.e. no scene geometry at all; 250 ms later collide is 31, the player
+  is at the bundle spawn and the suite passes 14/14. The world is innocent: ow-valley's zones are
+  **98.4% hostile by area**. THE ARCHAEOLOGY IS THE LESSON — the race existed from birth but was
+  UNREACHABLE because `zoneAt(0,0)`, the default cell, happened to be hostile, so `findHostile`'s
+  own-cell branch matched before the scene mattered. Commit `2b0322e9` (the F5 ow-valley rebuild,
+  "bent road") moved the carriage road over the tile origin, `zoneAt(0,0)` became `road` = SAFE by
+  design, and **a legitimate art commit knocked away the coincidence that had been holding the
+  suite up.** Gate now also requires `collide !== 0` and its failure names `SCENE NOT LOADED`.
+  **ATTRIBUTION RE-DERIVED: `organic` is FIXED and is NOT a known-red — from `9c1caf7a` a red
+  there is a real regression.** (Also reclaimed: 60 stale per-pid Chrome profiles, ~10 GB, each
+  verified against a DEAD pid; the sweep is now in the tool.)
 - **tools/dh_pixel_census.py — A RAY-CASTER STOPS AT THE FIRST HIT, AND A HAZE CARD IS NOT THE
   ANSWER IT LANDS ON** (2026-08-08). It drops `hide_render` objects and MARCHES THROUGH
   render-only volume cards (a Volume link with no Surface link), accumulating τ = density × path,
