@@ -1080,8 +1080,44 @@ git runs here, on branch `migration/3d-hybrid`.
   criticism, NOT confabulation — triage survivors by eye, and MEASURE before building.
   `--replay a,b` (newest first) merges runs into ONE report and every plate records which
   run judged it; `--plates` pins the bake and stale shots self-mark against-superseded-bake.
-  CURRENT: docs/qa/redteam/run-20260731-dellhollow2/index.html — all 16 Dellhollow plates
-  (:3000/docs/). Emberbrook is UNSWEPT: its blockout frames die to the dressing pass.
+  CURRENT: docs/qa/redteam/run-20260731-dellhollow2/ (Dellhollow, 16 plates, :3000/docs/) and
+  **docs/qa/emberbrook-redteam/index.html — EMBERBROOK ROUND 1, 2026-08-09** (all 11 emb-cine
+  plates, both modes, 125 raw → 94 survivors, 58 of them naive).
+  **"EMBERBROOK IS UNSWEPT" WAS WRONG, AND HOW IT HAD BEEN SWEPT WAS WORSE.** It had been swept
+  four times — and the two most recent runs both record `blockout: true`, because
+  `BLOCKOUT_DEFAULT` still said `{emberbrook: true}` after the emb-cine plates became the
+  DRESSED bake. So the judge was told "flat untextured surfaces, missing surface detail and
+  placeholder colours are INTENDED — do not report them" about finished art, the
+  `emb-blockout-materials` rule bucketed whatever survived, and NEITHER RUN USED NAIVE MODE.
+  Both defaults are FIXED (2026-08-09, `8ec974bc`): emberbrook is `false`, and **five TRACKED
+  rules that carried no `town` key now carry one** — the filter is `if (t.town && t.town !==
+  TOWN) continue`, so an unscoped rule triages EVERY town, and all five were sourced from
+  Dellhollow's own audit. Measured cost: three instances of Emberbrook's LARGEST NEW DEFECT
+  were filed as Dellhollow's already-known `gate-stair-occluded`. **A NEW ROW WITHOUT A `town`
+  WILL DO THIS AGAIN.**
+  ROUND 1'S HEADLINE: **the walk network IS the town's paving, and its rim is a 0.12 m lattice
+  staircase** — 17.7% of the average frame (31.5% at square), 26 of 73 boxed survivors, 10 of
+  11 plates, `walk_lm_*` aprons **100.0% axis-aligned** boundary over 2,233.7 m. Proved against
+  the ground with a HEIGHT CONTROL, not by attribution: the shipped plate's own depth surface
+  sits at the WALK top, not the ground top (4,660 of 4,760 samples on six plates, |plate−walk|
+  p50 0.0035–0.0098 m against |plate−ground| 0.042–0.127 m). Same defect class `emb_brookchop`
+  closed for the water. Second: **`walk_pad_lake-home` is a pitch-black hole in homerow's
+  paving** — L p50 **1.0**, 53.9% of it ≤8, saturation 0.000 against a ring of 53.5, 98.2% of
+  the DARK PIXELS (attributed on the dark pixels, never the box) — with grandmother's bench
+  standing in it, which is why a second finding reported the bench ABSENT. Not a black material
+  (the same pad reads 45.6 lit) and not the lamp's shadow. Third: the **Heartlight is a clipped
+  white box** (48.1% of its box ≥250/255) — the cheapest item on the board, on the object the
+  town is named for. REFUTED, with controls: the "light-green spheres" (box saturation 0.131
+  against a ring of 0.136 — nothing green, they are pale kerb stones) and **any sky lane at all**
+  (world background 0.00% on 9 of 11 plates — same shape as `dh_seam_census`'s closed-gorge
+  finding). And a METHOD finding worth more than an item: **the sceptic refutes foliage
+  occlusion at 39% against a 13% base rate**, all one sentence in twelve costumes — that is the
+  user's own `canopy-wall` complaint class, and it is the cheapest thing on the board to test.
+  `--aim-census` earned itself here: **2 of 6 quality verdicts misaimed, both water (67% vs
+  Dellhollow's 31%)** — a "completely dark plane lacking reflection" at gatefield whose box holds
+  0 of 754 water cells would have read as a regression of `emb_brookchop` and is not one.
+  Instrument: **tools/emb_plate_object.mjs** names the mesh at a pixel with no Blender, and its
+  RESIDUAL says when the answer is dressing the collision bundle does not carry.
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder
