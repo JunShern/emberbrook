@@ -1,0 +1,190 @@
+<!doctype html><meta charset="utf-8"><title>battle-rim — the body side, priced</title>
+<style>
+ body{font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0 auto;max-width:1180px;padding:28px 20px 80px;color:#20242c}
+ h1{font-size:22px;margin:0 0 6px} h2{font-size:17px;margin:34px 0 8px;border-bottom:1px solid #dcdfe6;padding-bottom:5px}
+ h3{font-size:14px;margin:18px 0 6px;color:#555}
+ table{border-collapse:collapse;font-size:12.5px;width:100%} th,td{border:1px solid #dfe2e8;padding:3px 7px;text-align:right}
+ th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+ th{background:#f2f4f7} tr.moved td{background:#fff6e6}
+ td.win{background:#e6f6ea;font-weight:600} td.lose{background:#fdeaea;font-weight:600}
+ .k{background:#f7f8fa;border-left:3px solid #99a;padding:9px 13px;margin:12px 0}
+ .pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:10px}
+ figure{margin:0} img{width:100%;border:1px solid #ccd;border-radius:3px} figcaption{font-size:11px;color:#666}
+ code{background:#f0f1f4;padding:1px 4px;border-radius:3px}
+ @media(prefers-color-scheme:dark){body{background:#14161a;color:#dde}th{background:#242832}td,th{border-color:#333a46}
+  .k{background:#1c2028;border-left-color:#667}tr.moved td{background:#2a2418}td.win{background:#1d3324}td.lose{background:#33201f}
+  code{background:#242832}img{border-color:#333a46}}
+</style>
+<h1>The body side, priced — <code>?arena=world&amp;brim=1</code></h1>
+<p>A SPIKE. Nothing here is default: <code>?arena=world</code> is opt-in and <code>brim</code> is off inside it.
+Both census arms are one build with one assignment between them
+(<code>battle_decide --mode=census --brim=off|auto</code>), read by
+<code>tools/battle_place_lib.mjs</code> — the same object every prior lane in this arc read.</p>
+
+<div class="k"><b>THE NUMBER THAT BOUNDS EVERY OTHER NUMBER ON THIS PAGE.</b>
+One battle, staged once and metered six times with <em>nothing touched in between</em>
+(<code>battle_rim --mode=stability</code>): the shared meter's <code>edgeRGB</code> spread
+1.52, its <code>bandMin</code> spread
+1.14, and at native resolution
+2.81 / 6.21;
+the <em>background</em> ring luminance itself moved 4.6.
+The staging is reproducible (site ring and mask pixel count agree to four figures across
+repeats) — the frame is not, because the valley keeps animating.
+<b>So a single-site delta under about 1.5 edgeRGB is noise, in this lane and in every
+earlier lane that read one frame per site.</b></div>
+
+<h2>The pairing receipt</h2>
+<p>62 sites in both arms (62 / 62 staged).
+Same relocation ring <b>62/62</b>, same boom pitch <b>62/62</b>,
+same lens <b>62/62</b>. The cue is pinned OFF during TONE's two probe passes for
+exactly this reason: with it armed, a darkened silhouette scored a different boom and the two arms
+photographed different cameras.</p>
+
+<h2>Silhouette contrast, RGB, on the frame the player dwells in</h2>
+<p>Mean <code>edgeRGB</code> 9.27 &rarr; 10.89;
+mean <code>bandMin</code> (the worst band of the cast, never the mean)
+7.16 &rarr; 7.98.
+Sites moving more than the one-battle spread: <b>24 better, 2 worse</b>, 36 inside the noise.</p>
+<table><thead><tr><th>site</th><th>zone</th><th>edgeRGB off</th><th>edgeRGB on</th><th>&Delta;</th>
+<th>bandMin off</th><th>bandMin on</th><th>polarity</th><th>mats patched</th><th>leaked</th></tr></thead>
+<tbody><tr class=""><td>s000</td><td>water</td><td>6.49</td><td>7.14</td><td class="">0.65</td><td>9.02</td><td>8.57</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s001</td><td>forest</td><td>9.92</td><td>14.67</td><td class="win">4.75</td><td>6.84</td><td>6.11</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s002</td><td>forest</td><td>6.28</td><td>5.91</td><td class="">-0.37</td><td>4.67</td><td>4.87</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s003</td><td>water</td><td>22.49</td><td>26.78</td><td class="win">4.29</td><td>8.82</td><td>14.05</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s004</td><td>crag</td><td>6.69</td><td>9.25</td><td class="win">2.56</td><td>5.59</td><td>7.20</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s005</td><td>forest</td><td>4.58</td><td>7.72</td><td class="win">3.14</td><td>2.88</td><td>4.44</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s006</td><td>crag</td><td>14.56</td><td>16.49</td><td class="win">1.93</td><td>7.78</td><td>8.90</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s007</td><td>meadow</td><td>15.29</td><td>19.33</td><td class="win">4.04</td><td>4.38</td><td>3.05</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s008</td><td>crag</td><td>3.28</td><td>2.28</td><td class="">-1.00</td><td>3.19</td><td>2.53</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s009</td><td>forest</td><td>6.33</td><td>5.72</td><td class="">-0.61</td><td>5.60</td><td>3.24</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s010</td><td>meadow</td><td>3.06</td><td>2.98</td><td class="">-0.08</td><td>5.03</td><td>3.73</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s011</td><td>meadow</td><td>7.50</td><td>6.05</td><td class="">-1.45</td><td>5.74</td><td>8.49</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s012</td><td>forest</td><td>9.88</td><td>12.97</td><td class="win">3.09</td><td>1.21</td><td>1.36</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s013</td><td>meadow</td><td>5.86</td><td>5.78</td><td class="">-0.08</td><td>2.80</td><td>2.12</td><td>none</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s014</td><td>meadow</td><td>5.73</td><td>6.89</td><td class="">1.16</td><td>6.62</td><td>8.57</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s015</td><td>water</td><td>5.31</td><td>4.86</td><td class="">-0.45</td><td>0.79</td><td>3.08</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s016</td><td>forest</td><td>12.75</td><td>12.91</td><td class="">0.16</td><td>7.55</td><td>7.66</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s017</td><td>meadow</td><td>12.61</td><td>8.76</td><td class="lose">-3.85</td><td>3.17</td><td>3.06</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s018</td><td>crag</td><td>5.29</td><td>4.99</td><td class="">-0.30</td><td>4.34</td><td>3.29</td><td>none</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s019</td><td>meadow</td><td>11.58</td><td>7.73</td><td class="lose">-3.85</td><td>19.03</td><td>13.74</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s020</td><td>meadow</td><td>1.90</td><td>2.00</td><td class="">0.10</td><td>5.44</td><td>4.68</td><td>none</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s021</td><td>meadow</td><td>10.16</td><td>12.49</td><td class="win">2.33</td><td>6.37</td><td>5.99</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s022</td><td>forest</td><td>26.24</td><td>31.89</td><td class="win">5.65</td><td>10.82</td><td>16.12</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s023</td><td>forest</td><td>8.96</td><td>9.74</td><td class="">0.78</td><td>9.02</td><td>8.73</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s024</td><td>forest</td><td>10.46</td><td>17.54</td><td class="win">7.08</td><td>5.05</td><td>9.74</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s025</td><td>forest</td><td>5.05</td><td>4.04</td><td class="">-1.01</td><td>3.38</td><td>5.51</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s026</td><td>meadow</td><td>1.79</td><td>1.62</td><td class="">-0.17</td><td>2.56</td><td>2.54</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s027</td><td>crag</td><td>20.96</td><td>27.45</td><td class="win">6.49</td><td>17.92</td><td>23.62</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s028</td><td>meadow</td><td>8.81</td><td>11.87</td><td class="win">3.06</td><td>5.89</td><td>5.19</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s029</td><td>water</td><td>6.37</td><td>7.17</td><td class="">0.80</td><td>3.88</td><td>3.91</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s030</td><td>water</td><td>5.42</td><td>5.52</td><td class="">0.10</td><td>7.64</td><td>9.41</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s031</td><td>meadow</td><td>1.83</td><td>1.56</td><td class="">-0.27</td><td>3.13</td><td>3.27</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s032</td><td>water</td><td>27.86</td><td>33.17</td><td class="win">5.31</td><td>14.31</td><td>17.66</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s033</td><td>crag</td><td>2.88</td><td>2.96</td><td class="">0.08</td><td>3.71</td><td>3.31</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s034</td><td>meadow</td><td>4.51</td><td>4.37</td><td class="">-0.14</td><td>3.56</td><td>6.57</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s035</td><td>crag</td><td>6.52</td><td>13.42</td><td class="win">6.90</td><td>8.11</td><td>2.59</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s036</td><td>forest</td><td>6.80</td><td>6.57</td><td class="">-0.23</td><td>2.91</td><td>4.05</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s037</td><td>meadow</td><td>4.34</td><td>7.60</td><td class="win">3.26</td><td>10.13</td><td>14.84</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s038</td><td>crag</td><td>9.76</td><td>11.08</td><td class="">1.32</td><td>7.49</td><td>5.70</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s039</td><td>meadow</td><td>11.74</td><td>11.21</td><td class="">-0.53</td><td>6.26</td><td>10.68</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s040</td><td>crag</td><td>25.77</td><td>34.74</td><td class="win">8.97</td><td>13.62</td><td>16.85</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s041</td><td>meadow</td><td>5.40</td><td>5.68</td><td class="">0.28</td><td>2.98</td><td>2.50</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s042</td><td>meadow</td><td>10.95</td><td>10.22</td><td class="">-0.73</td><td>8.46</td><td>11.84</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s043</td><td>water</td><td>18.30</td><td>25.37</td><td class="win">7.07</td><td>12.77</td><td>22.51</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s044</td><td>forest</td><td>1.47</td><td>1.74</td><td class="">0.27</td><td>1.31</td><td>1.21</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s045</td><td>meadow</td><td>5.48</td><td>6.63</td><td class="">1.15</td><td>8.12</td><td>7.92</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s046</td><td>meadow</td><td>4.62</td><td>3.63</td><td class="">-0.99</td><td>17.83</td><td>18.76</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s047</td><td>meadow</td><td>9.15</td><td>9.78</td><td class="">0.63</td><td>6.39</td><td>7.19</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s048</td><td>forest</td><td>5.43</td><td>5.56</td><td class="">0.13</td><td>9.99</td><td>9.36</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s049</td><td>meadow</td><td>3.61</td><td>3.70</td><td class="">0.09</td><td>4.25</td><td>4.29</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s050</td><td>meadow</td><td>10.15</td><td>11.28</td><td class="">1.13</td><td>10.74</td><td>8.30</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s051</td><td>meadow</td><td>11.30</td><td>13.81</td><td class="win">2.51</td><td>9.23</td><td>8.65</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s052</td><td>meadow</td><td>8.19</td><td>13.29</td><td class="win">5.10</td><td>8.06</td><td>10.01</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s053</td><td>crag</td><td>8.24</td><td>11.08</td><td class="win">2.84</td><td>7.43</td><td>9.13</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s054</td><td>forest</td><td>11.48</td><td>13.22</td><td class="win">1.74</td><td>17.83</td><td>18.73</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s055</td><td>forest</td><td>12.43</td><td>18.39</td><td class="win">5.96</td><td>1.80</td><td>2.69</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s056</td><td>crag</td><td>1.33</td><td>1.63</td><td class="">0.30</td><td>3.82</td><td>3.59</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s057</td><td>meadow</td><td>7.37</td><td>9.46</td><td class="win">2.09</td><td>2.75</td><td>1.47</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s058</td><td>forest</td><td>9.85</td><td>8.56</td><td class="">-1.29</td><td>8.00</td><td>6.49</td><td>none</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s059</td><td>meadow</td><td>11.52</td><td>12.01</td><td class="">0.49</td><td>9.20</td><td>9.06</td><td>dark</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s060</td><td>meadow</td><td>2.52</td><td>2.55</td><td class="">0.03</td><td>7.61</td><td>6.90</td><td>add</td><td>12</td><td>0</td></tr>
+<tr class=""><td>s061</td><td>forest</td><td>32.52</td><td>40.26</td><td class="win">7.74</td><td>19.40</td><td>25.04</td><td>add</td><td>12</td><td>0</td></tr></tbody></table>
+
+<h2>Where the gain landed — and it is the wrong place</h2>
+<div class="k"><b>THE CUE ADDS CONTRAST TO THE FRAMES THAT ALREADY HAVE IT.</b>
+The six largest gains are at sites whose OFF contrast was already 6.5&ndash;32.5
+(s040 25.8&rarr;34.7, s061 32.5&rarr;40.3, s027 21.0&rarr;27.5). Meanwhile the count of sites where a
+body does not read is unmoved: <code>edgeRGB &lt; 5</code> went <b>14 &rarr; 15</b>, <code>bandMin &lt; 3</code>
+went <b>10 &rarr; 9</b>, and the worst band in the whole census went <b>0.79 &rarr; 1.21</b> &mdash; still zero.
+This is the same shape the placement lane found when it measured <code>edgeRGB</code> across sites and it
+ran backwards: a lit body against near-black is enormous RGB contrast, and adding light to a body that is
+already separated separates it further. The sites that fail do so because the body sits at the terrain's
+own value <em>in shadow</em>, and multiplying a shadowed albedo by 0.45 moves almost nothing.</div>
+
+<h2>What it looks like</h2>
+<p>The numbers are for iteration; these are the verdict. Every pair below was looked at.</p>
+<div class="k"><b>WHAT I SAW.</b>
+<b>s019 (meadow, the largest regression, 11.75&rarr;7.57):</b> off, the slate-grey duskpad reads crisply
+against sunlit grass. On, its back and flanks carry a pale halo, its dark value is diluted and it reads
+MUSHIER, not sharper &mdash; the wolf is darker than its surround and wanted the other sign, but the cast-wide
+mean was set by the party member who is lighter than hers.
+<b>s017 (meadow, &minus;3.85):</b> the same wolf comes back with a pale line traced right around its
+silhouette &mdash; legs, tail, spine. That is the sticker read, plainly, at the shipped default.
+<b>s040 (crag scaffold at dusk, the largest gain):</b> a real win by eye &mdash; the edge light reads as an
+ambient wrap off the water below, and the party pair lifts off the dark wall. It was already the
+highest-contrast site in the census.
+<b>s044 (the forest hedge that motivated the lane):</b> the duskpad picks up a soft dark rim that reads as
+occlusion rather than outline; the party pair standing IN the hedge bank is, honestly, unchanged.
+<b>s005 (forest, cream wolf on pale sand):</b> unreadable before, marginally worse after &mdash; the rim
+lifts its edge toward the sand it is lost in.
+<b>s031 (meadow, party against a dark ivy wall):</b> the reed-nibbler blows into a glowing lozenge and the
+duskpad flattens; the two party bodies, which are the defect in that frame, are essentially untouched.
+<b>s033 (crag):</b> a wash.
+The pattern is consistent and structural: the cue scales with apparent size and roundness, so it lands on
+the foes and not on small clothed party bodies &mdash; and the party is what the lane was opened for.</div>
+<section><h3>s005</h3><div class="pair"><figure><img loading="lazy" src="shots-look/s005-auto.jpg"><figcaption>auto</figcaption></figure><figure><img loading="lazy" src="shots-look/s005-off.jpg"><figcaption>off</figcaption></figure></div></section>
+<section><h3>s017</h3><div class="pair"><figure><img loading="lazy" src="shots-look/s017-auto.jpg"><figcaption>auto</figcaption></figure><figure><img loading="lazy" src="shots-look/s017-off.jpg"><figcaption>off</figcaption></figure></div></section>
+<section><h3>s019</h3><div class="pair"><figure><img loading="lazy" src="shots-look/s019-auto.jpg"><figcaption>auto</figcaption></figure><figure><img loading="lazy" src="shots-look/s019-off.jpg"><figcaption>off</figcaption></figure></div></section>
+<section><h3>s026</h3><div class="pair"><figure><img loading="lazy" src="shots-look/s026-auto.jpg"><figcaption>auto</figcaption></figure><figure><img loading="lazy" src="shots-look/s026-off.jpg"><figcaption>off</figcaption></figure></div></section>
+<section><h3>s031</h3><div class="pair"><figure><img loading="lazy" src="shots-look/s031-auto.jpg"><figcaption>auto</figcaption></figure><figure><img loading="lazy" src="shots-look/s031-off.jpg"><figcaption>off</figcaption></figure></div></section>
+<section><h3>s033</h3><div class="pair"><figure><img loading="lazy" src="shots-look/s033-auto.jpg"><figcaption>auto</figcaption></figure><figure><img loading="lazy" src="shots-look/s033-off.jpg"><figcaption>off</figcaption></figure></div></section>
+<section><h3>s040</h3><div class="pair"><figure><img loading="lazy" src="shots-look/s040-auto.jpg"><figcaption>auto</figcaption></figure><figure><img loading="lazy" src="shots-look/s040-off.jpg"><figcaption>off</figcaption></figure></div></section>
+<section><h3>s044</h3><div class="pair"><figure><img loading="lazy" src="shots-look/s044-auto.jpg"><figcaption>auto</figcaption></figure><figure><img loading="lazy" src="shots-look/s044-off.jpg"><figcaption>off</figcaption></figure></div></section>
+<h2>The receipts</h2>
+<table><thead><tr><th style="text-align:left">what</th><th style="text-align:left">measured</th></tr></thead><tbody>
+<tr><td>flag off (no <code>arena</code> in the URL, module injected anyway)</td><td>BattleWorld frozen, <code>on:false installed:false</code>,
+ BattleStage3D unpatched, a real battle answered by the DIORAMA, <b>0 of 77 scene materials marked</b> &mdash;
+ <code>battle_rim --mode=regress</code>, regress.json</td></tr>
+<tr><td><code>?arena=world</code> without <code>brim</code></td><td>62/62 sites staged in the same ring at the same
+ pitch and the same lens as the arm with it on; <code>rim().patched</code> 0 and <code>polarity null</code> on every row</td></tr>
+<tr><td>material leak into the field</td><td><b>0</b> at every one of 62 sites (<code>rim().shared</code>, which walks the
+ live scene for a non-battle mesh holding a patched material). The cast's graph is re-parsed per body by
+ <code>loadGlb</code>, so no field object can share it.</td></tr>
+<tr><td>teardown</td><td>geometries <b>&Delta;0</b>, programs return to their pre-battle count, canvases &Delta;0, on
+ all three arms. Textures &Delta;+4 identically in <em>every</em> arm including OFF &mdash; pre-existing, not this cue.</td></tr>
+<tr><td>fps (rAF-counted, vsync off, alternating passes)</td><td>off 241.2 / 240.9 &rarr; on 240.4 / 240.4 &mdash;
+ <b>&minus;0.3%</b>. One extra program, no extra draw call, no extra triangle.</td></tr>
+<tr><td>ray budget</td><td><b>W = 2 / 9761, GREEN</b>, unchanged &mdash; the cue adds no geometry by construction.</td></tr>
+<tr><td>gates</td><td>battle_sim ALL ENVELOPES GREEN &middot; encounter_sim GREEN &middot; economy_test 228/0 &middot;
+ arena_playtest GREEN &middot; transition_test <b>168 ok / 0 failed</b></td></tr>
+</tbody></table>
+
+<h2>The colour-space position</h2>
+<p>The world arena's zero-shader property is what DELETES the r185 colour-management class here. This spike
+re-opens it, and here is exactly how far. The cue adds to <code>totalEmissiveRadiance</code> and multiplies
+<code>diffuseColor.rgb</code> at <code>#include &lt;emissivemap_fragment&gt;</code> &mdash; after
+<code>normal_fragment_begin</code>, before <code>lights_physical_fragment</code>. That is
+<b>radiance in the working space</b>: the same variable every light's contribution lands in, with
+<code>tonemapping_fragment</code> and <code>colorspace_fragment</code> running after it exactly as they do for
+the sun. It <b>allocates no render target, reads no pixel back and encodes nothing</b>, so the rule that bit
+TONE &mdash; a non-XR target holds LINEAR bytes whatever its texture declares, and OutputPass is not in that
+loop &mdash; cannot reach this path. The only value that must be in the right space is the colour, and
+<code>THREE.Color</code> converts a hex on assignment with ColorManagement on, so the uniform is uploaded
+linear with <b>no hand <code>convertSRGBToLinear</code></b> &mdash; adding one would be the double conversion
+the runtime notes warn about. <code>IU()</code> is untouched; no light was added or scaled.
+<b>What is NOT proved:</b> ow-* ships <code>NoToneMapping</code>, so an added 0.30 linear encodes to ~0.58
+display and the ladder's blow-out at 0.70 is that arithmetic, not a bug &mdash; but on any scene that later
+turns tone mapping ON, this constant means something different, and nothing here gates that.</p>
+
+<p style="margin-top:40px;color:#888;font-size:12px">off arm 2026-08-09T10:28:29.197Z &middot; on arm 2026-08-09T10:33:18.879Z &middot;
+three r185 &middot; yaw pinned -1.4869</p>

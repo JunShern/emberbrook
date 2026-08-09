@@ -1,0 +1,149 @@
+{
+ "yaw": -1.4869,
+ "rows": [
+  {
+   "id": "s044",
+   "zone": "forest",
+   "arm": "off",
+   "pol": null,
+   "ringL": null,
+   "edgeRGB": 1.51,
+   "bandMin": 3.95
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "arm": "auto",
+   "pol": "dark",
+   "ringL": 152.7,
+   "edgeRGB": 2.77,
+   "bandMin": 2.18
+  },
+  {
+   "id": "s017",
+   "zone": "meadow",
+   "arm": "off",
+   "pol": null,
+   "ringL": null,
+   "edgeRGB": 11.16,
+   "bandMin": 3.11
+  },
+  {
+   "id": "s017",
+   "zone": "meadow",
+   "arm": "auto",
+   "pol": "add",
+   "ringL": 117.2,
+   "edgeRGB": 9.91,
+   "bandMin": 2.29
+  },
+  {
+   "id": "s019",
+   "zone": "meadow",
+   "arm": "off",
+   "pol": null,
+   "ringL": null,
+   "edgeRGB": 11.75,
+   "bandMin": 19.28
+  },
+  {
+   "id": "s019",
+   "zone": "meadow",
+   "arm": "auto",
+   "pol": "add",
+   "ringL": 115.9,
+   "edgeRGB": 7.57,
+   "bandMin": 13.19
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "arm": "off",
+   "pol": null,
+   "ringL": null,
+   "edgeRGB": 3.28,
+   "bandMin": 4.45
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "arm": "auto",
+   "pol": "add",
+   "ringL": 126.3,
+   "edgeRGB": 1.49,
+   "bandMin": 2.63
+  },
+  {
+   "id": "s026",
+   "zone": "meadow",
+   "arm": "off",
+   "pol": null,
+   "ringL": null,
+   "edgeRGB": 2.09,
+   "bandMin": 3.36
+  },
+  {
+   "id": "s026",
+   "zone": "meadow",
+   "arm": "auto",
+   "pol": "add",
+   "ringL": 103.6,
+   "edgeRGB": 1.07,
+   "bandMin": 2.67
+  },
+  {
+   "id": "s005",
+   "zone": "forest",
+   "arm": "off",
+   "pol": null,
+   "ringL": null,
+   "edgeRGB": 5.03,
+   "bandMin": 2.7
+  },
+  {
+   "id": "s005",
+   "zone": "forest",
+   "arm": "auto",
+   "pol": "add",
+   "ringL": 145.1,
+   "edgeRGB": 4.84,
+   "bandMin": 2.61
+  },
+  {
+   "id": "s040",
+   "zone": "crag",
+   "arm": "off",
+   "pol": null,
+   "ringL": null,
+   "edgeRGB": 26.46,
+   "bandMin": 14.22
+  },
+  {
+   "id": "s040",
+   "zone": "crag",
+   "arm": "auto",
+   "pol": "add",
+   "ringL": 49.9,
+   "edgeRGB": 36.52,
+   "bandMin": 19.32
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "arm": "off",
+   "pol": null,
+   "ringL": null,
+   "edgeRGB": 2.38,
+   "bandMin": 3.3
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "arm": "auto",
+   "pol": "add",
+   "ringL": 160.6,
+   "edgeRGB": 2.93,
+   "bandMin": 3.44
+  }
+ ]
+}

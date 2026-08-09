@@ -1,0 +1,32 @@
+{
+  "url": "http://localhost:3000/play3d.html?scene=ow-valley&rt=1&nomusic=1",
+  "inject": {
+    "already": true,
+    "on": false
+  },
+  "battleWorld": {
+    "version": 1,
+    "on": false,
+    "installed": false,
+    "why": "flag off — open with ?arena=world"
+  },
+  "frozen": true,
+  "patchedStage3d": false,
+  "battle": {
+    "ok": true,
+    "world": false,
+    "rim": "NO rim() ON THIS STAGE",
+    "canvases": 2
+  },
+  "sceneMaterials": {
+    "mats": 77,
+    "marked": 0,
+    "outside": 0
+  },
+  "console": [
+    {
+      "level": "warning",
+      "txt": "THREE.Clock: This module has been deprecated. Please use THREE.Timer instead."
+    }
+  ]
+}

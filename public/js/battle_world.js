@@ -96,6 +96,13 @@
   // refusal alone. It is a SECOND switch rather than a mode of the first, so the
   // board can show sun-only, surface-only and both from one build.
   const BSURF_OFF = !!(Q && Q.get('bsurf') === '0');
+  // `?brim=1` — THE BODY-SIDE SPIKE, AND IT IS THE ONLY SWITCH HERE THAT
+  // DEFAULTS OFF INSIDE `?arena=world`. Every other flag above turns a shipped
+  // term OFF; this one turns an UNSHIPPED one ON, because it is the only thing
+  // in this file that writes a shader and the whole structural argument for the
+  // world arena is that it writes none. `?arena=world` alone must draw exactly
+  // what it drew before this lane existed. See RIM.
+  const BRIM_ON = !!(Q && Q.get('brim') === '1');
 
   if (!HAS_DOM) return;                       // node (battle_sim / encounter_sim): nothing at all
   if (!FLAG) {
@@ -310,6 +317,127 @@
   };
 
   function toneOn() { return !!(TONE.on && !BTONE_OFF); }
+
+  // ============ THE BODY SIDE (spike, 2026-08-09, `?brim=1`) ================
+  // THE LAST UNTOUCHED LEVER, AND THE ONE THAT COSTS SOMETHING TO PULL. The
+  // camera lane closed size and occlusion, TONE closed the boom, PLACE closed
+  // where the fight happens. What none of them can fix is a body and its
+  // background being GENUINELY THE SAME COLOUR — the forest party standing
+  // inside a hedge bank at the hedge's own value. No pose separates that.
+  //
+  // WHAT THIS FILE'S ZERO-SHADER PROPERTY IS WORTH, said plainly before it is
+  // spent: the world arena borrows the page's renderer, camera, PMREM and post
+  // chain and writes NO SHADER, which is what DELETES the r185 colour-
+  // management bug class here rather than managing it. Everything below
+  // re-opens that class for the cast's own materials, and the position it takes
+  // is written where the shader is (see RIM_FRAG).
+  //
+  // A CAST-ONLY LIGHT IS NOT AVAILABLE — three.js tests a light's `layers`
+  // against the CAMERA, never per object, so a rim light that lit only the cast
+  // would have to be a second render. What IS available, cheaply, is the
+  // material side, and the cast's materials are ours: loadGlb re-PARSES the
+  // cached ArrayBuffer per body, so every battle body owns a fresh material
+  // graph that no field object shares. That is not an argument, it is checkable
+  // — `st.rim().shared` walks the live scene and counts any non-battle mesh
+  // holding a material we patched, and it must be 0.
+  //
+  // AND THE POLARITY IS MEASURED, NOT ASSUMED. The obvious build is a bright
+  // fresnel. The census says that is the WRONG default: of the eight worst
+  // sites by `sil.bandMin` in census-sAfter.json, seven have a ring luminance
+  // of 84-159 out of 255 (median site 81.4) — the frames that fail are mostly
+  // BRIGHT-background, and adding light to a body already in front of a bright
+  // bank REDUCES its contrast. So the rim is signed: it adds radiance in front
+  // of a dark surround and pinches albedo in front of a bright one, and which
+  // one it does is read off the background TONE has already rendered.
+  const RIM = {
+    // OFF unless `?brim=1`. `BattleWorld.RIM.on = true` before a battle is the
+    // one-build A/B every instrument in this arc uses.
+    on: BRIM_ON,
+    // 'fresnel' = one shader on the cast materials (the thing being priced).
+    // 'flat'    = NO SHADER AT ALL: a flat emissive lift through the material
+    //             API. It is the control, not a candidate — it raises a body's
+    //             whole value rather than its edge — and it exists so the
+    //             question "what does the shader actually buy" has a number.
+    // 'off'     = armed but inert, for a null arm that still pays the walk.
+    mode: 'fresnel',
+    // 'auto' | 'add' | 'dark'. auto is ONE decision for the whole cast, taken on
+    // the mean ring luminance of the frame TONE measured — a rim light is one
+    // source, and a frame where one body glows and its neighbour is pinched
+    // reads as a graphic device rather than as light. `perBody: true` makes it a
+    // per-body decision, which measures better and looks worse; it is a knob for
+    // the board, not a default.
+    polarity: 'auto',
+    perBody: false,
+    // THE DEAD BAND, in DISPLAY-space luminance. Auto pushes a body AWAY from
+    // its own surround: darker than it -> darken further, lighter -> lighten.
+    // Inside this band there is no side to push to and the cue stays off, which
+    // is the difference between a separation cue and a look.
+    // (The first rule flipped on the ABSOLUTE surround luminance and was wrong;
+    // the measurement that killed it is written at rimAuto.)
+    autoDead: 4,
+    // What auto does when TONE never ran (`?btone=0`, or the cast never left
+    // proxy). Not 'auto' — a fallback that cannot be evaluated is not a
+    // fallback.
+    fallback: 'dark',
+    // THE THREE CONSTANTS, CHOSEN BY LOOKING AT A LADDER AND NOT BY TASTE — and
+    // the ladder's honest answer is that THERE IS NO RUNG THAT BOTH READS AS
+    // LIGHT AND MOVES THE CASE THIS EXISTS FOR (docs/qa/battle-rim/, shots-
+    // ladder/). At add 0.70 / power 1.4 the reed-nibbler blows out into a
+    // glowing lozenge and the duskpad goes flat, while the party pair standing
+    // against the dark ivy bank at s031 — the actual defect in that frame — is
+    // essentially unchanged. At add 0.25 nothing is visible anywhere. These
+    // numbers are the middle of that ladder, kept so the flag has a defensible
+    // setting, NOT because a setting was found that works.
+    power: 2.0,       // pow(1 - N·V, power): soft and wide, deliberately. A hard
+                      // thin band is the outline read this spike is trying to avoid.
+    add: 0.30,        // LINEAR radiance added at the grazing limit ('add' polarity)
+    dark: 0.45,       // albedo multiplier at the grazing limit ('dark' polarity)
+    // Set through THREE.Color, which in r185 with colour management on ALREADY
+    // converts a hex from sRGB to the linear working space. Calling
+    // convertSRGBToLinear on it here would be the double conversion the runtime
+    // notes warn about; two of those were deleted from this repo already.
+    colour: 0xffe3c0,
+    darkColour: 0x000000,  // the pinch is a multiply, so this is documentation
+    // THE NO-SHADER CONTROL'S OWN NUMBERS. A whole-body emissive lift and a
+    // whole-body albedo pinch, sized so the mean body value moves by about what
+    // the fresnel's edge band moves it — otherwise the control would be
+    // measuring its own strength rather than the shape of the cue.
+    flatE: 0.22,
+    flatDark: 0.78,
+  };
+  function rimOn() { return !!RIM.on && RIM.mode !== 'off'; }
+
+  // ---- THE SHADER, AND THE ONE PLACE THIS MODULE SAYS WHICH SPACE IT IS IN --
+  // Injected at `#include <emissivemap_fragment>`, which in r185's
+  // meshphysical_frag sits AFTER <normal_fragment_begin> (so `normal` is the
+  // shaded VIEW-space normal and `vViewPosition` is the fragment->eye vector)
+  // and BEFORE <lights_physical_fragment> (so a pinched albedo is still lit
+  // rather than pasted on top of the lighting).
+  //
+  // THE COLOUR-SPACE POSITION, EXPLICITLY: this adds RADIANCE IN THE WORKING
+  // SPACE. It never allocates a target, never reads a pixel back and never
+  // encodes anything, so the r185 rule that bit TONE — a non-XR render target
+  // holds LINEAR bytes whatever its texture declares, and OutputPass is not in
+  // that loop — cannot reach it. `totalEmissiveRadiance` is the same variable
+  // every light's contribution lands in; <tonemapping_fragment> and
+  // <colorspace_fragment> run after it exactly as they do for the sun. The one
+  // number that has to be in the right space is the colour, and THREE.Color
+  // converts a hex on assignment (ColorManagement on) — so the uniform is
+  // uploaded linear with no hand conversion, which is the rule as written.
+  const RIM_FRAG = [
+    '#include <emissivemap_fragment>',
+    'float bwNdV = clamp( dot( normalize( normal ), normalize( vViewPosition ) ), 0.0, 1.0 );',
+    'float bwRim = pow( 1.0 - bwNdV, bwRimPow );',
+    'totalEmissiveRadiance += bwRimCol * ( bwRim * bwRimAdd );',
+    'diffuseColor.rgb *= mix( 1.0, bwRimDark, bwRim );',
+  ].join('\n');
+  const RIM_DECL = [
+    '#include <common>',
+    'uniform vec3 bwRimCol;',
+    'uniform float bwRimPow;',
+    'uniform float bwRimAdd;',
+    'uniform float bwRimDark;',
+  ].join('\n');
 
   // ================= THE SAFE RECT (2026-08-09) =============================
   // WHAT THE UI COVERS, IN THE CAMERA'S OWN UNITS. The battle UI is a DOM
@@ -1710,6 +1838,212 @@
       });
     }
 
+    // ---- THE BODY-SIDE CUE, ARMED PER BODY (spike, `?brim=1`) --------------
+    // Everything it touches is a material this stage PARSED and already owns
+    // (see ownDispose above and the disposal in destroy) — which is what makes
+    // "it cannot leak into the field" true by construction rather than by a
+    // restore that could be forgotten. `st.rim().shared` proves it per run.
+    const rimS = { on: rimOn(), mode: RIM.mode, polarity: null, why: 'not armed',
+                   patched: 0, flat: 0, skipped: 0, bodies: {}, ringL: null, ms: 0 };
+    function rimUni(b) {
+      if (b.rimU) return b.rimU;
+      b.rimU = { bwRimCol: { value: new TH.Color(RIM.colour) },
+                 bwRimPow: { value: RIM.power },
+                 bwRimAdd: { value: 0 },
+                 bwRimDark: { value: 1 } };
+      return b.rimU;
+    }
+    // ONE ASSIGNMENT PER POLARITY CHANGE AND NO RECOMPILE: both uniforms always
+    // exist, so flipping the sign after TONE has read the background costs four
+    // float writes. A polarity that needed a shader variant would have to
+    // recompile in the middle of the entry move.
+    function rimPolar(b, pol) {
+      const u = rimUni(b);
+      u.bwRimCol.value.set(RIM.colour);
+      u.bwRimPow.value = RIM.power;
+      u.bwRimAdd.value = pol === 'add' ? RIM.add : 0;
+      u.bwRimDark.value = pol === 'dark' ? RIM.dark : 1;
+      b.rimPol = pol;
+      if (RIM.mode === 'flat') {
+        for (const m of (b.rimMats || [])) {
+          const sv = m.__bwRimFlat; if (!sv) continue;
+          if (pol === 'add' && ('emissive' in m)) {
+            m.emissive.set(RIM.colour); m.emissiveIntensity = RIM.flatE;
+            if (m.color && sv.c) m.color.copy(sv.c);
+          } else if (pol === 'dark') {
+            if (('emissive' in m) && sv.e) { m.emissive.copy(sv.e); m.emissiveIntensity = sv.i; }
+            if (m.color && sv.c) m.color.copy(sv.c).multiplyScalar(RIM.flatDark);
+          } else {                                   // 'none' — put it back
+            if (('emissive' in m) && sv.e) { m.emissive.copy(sv.e); m.emissiveIntensity = sv.i; }
+            if (m.color && sv.c) m.color.copy(sv.c);
+          }
+        }
+      }
+      rimS.bodies[b.id] = { pol: pol, side: b.side, tier: b.tier,
+                            ringL: b.rimRingL == null ? null : +b.rimRingL.toFixed(1),
+                            mats: b.rimMats ? b.rimMats.length : 0 };
+    }
+    function rimArm(b) {
+      if (!rimOn() || !b.obj) return;
+      const t0 = now();
+      const u = rimUni(b);
+      const mats = [];
+      b.obj.traverse((o) => {
+        if (!o.isMesh || !o.material) return;
+        const ms = Array.isArray(o.material) ? o.material : [o.material];
+        for (const m of ms) {
+          if (m.__bwRim) { mats.push(m); continue; }
+          // ONLY THE STANDARD/PHYSICAL SHADER IS PATCHED. `vViewPosition` and
+          // `totalEmissiveRadiance` do not both exist in basic/lambert, and a
+          // replace() that silently matched nothing would be a shader that
+          // compiled fine and did nothing — the failure mode this repo keeps
+          // paying for. A material that is neither is COUNTED, not guessed at.
+          if (RIM.mode === 'fresnel' && m.isMeshStandardMaterial) {
+            m.onBeforeCompile = function (sh) {
+              sh.fragmentShader = sh.fragmentShader
+                .replace('#include <common>', RIM_DECL)
+                .replace('#include <emissivemap_fragment>', RIM_FRAG);
+              sh.uniforms.bwRimCol = u.bwRimCol;
+              sh.uniforms.bwRimPow = u.bwRimPow;
+              sh.uniforms.bwRimAdd = u.bwRimAdd;
+              sh.uniforms.bwRimDark = u.bwRimDark;
+            };
+            // A PATCHED PROGRAM IS A DIFFERENT PROGRAM. Without its own cache
+            // key three would hand this material the unpatched program it
+            // already built for an identical-looking one.
+            m.customProgramCacheKey = function () { return 'bwrim1'; };
+            m.needsUpdate = true;
+            m.__bwRim = 'fresnel'; rimS.patched++;
+          } else if (RIM.mode === 'flat' && (('emissive' in m) || m.color)) {
+            m.__bwRimFlat = { e: ('emissive' in m) ? m.emissive.clone() : null,
+                              i: m.emissiveIntensity, c: m.color ? m.color.clone() : null };
+            m.__bwRim = 'flat'; rimS.flat++;
+          } else { m.__bwRim = 'skip'; rimS.skipped++; }
+          mats.push(m);
+        }
+      });
+      b.rimMats = mats;
+      rimPolar(b, rimS.polarity && rimS.polarity !== 'perBody' ? rimS.polarity
+                : (RIM.polarity === 'auto' ? RIM.fallback : RIM.polarity));
+      rimS.ms += now() - t0;
+    }
+    // THE POLARITY IS READ OFF THE BACKGROUND TONE ALREADY RENDERED. TONE
+    // differences a with-cast and a without-cast pass at each candidate boom and
+    // already computes, per body, the mean DISPLAY-space luminance of the ring
+    // band its silhouette is scored against — so the sign of this cue costs one
+    // extra field on a number that was being thrown away. IT IS AN
+    // APPROXIMATION AND THE APPROXIMATION IS NAMED: that reading is taken at the
+    // `round` pose, and the frame the player dwells in is `decide`.
+    function rimAuto(tl) {
+      if (!rimOn()) return;
+      if (RIM.polarity !== 'auto') {
+        rimS.polarity = RIM.polarity; rimS.why = 'polarity pinned to ' + RIM.polarity;
+        for (const id of order) if (bodies[id]) rimPolar(bodies[id], RIM.polarity);
+        return;
+      }
+      let row = null;
+      if (tl && tl.ok && tl.rows) for (const r of tl.rows) if (Math.abs(r.pitch - tl.chose) < 1e-6) row = r;
+      if (!row || !row.bodies || !row.bodies.length) {
+        rimS.polarity = RIM.fallback;
+        rimS.why = 'no TONE reading (' + ((tl && tl.why) || 'none') + ') — fallback ' + RIM.fallback;
+        for (const id of order) if (bodies[id]) rimPolar(bodies[id], RIM.fallback);
+        return;
+      }
+      // THE SIGN IS "PUSH AWAY FROM THE BACKGROUND", AND THE FIRST RULE WAS
+      // WRONG IN A WAY ITS OWN DATA SHOWED. It flipped on the ABSOLUTE ring
+      // luminance (dark surround -> brighten, bright surround -> darken), which
+      // reads plausibly and is not the question. At the crag site s033 the ring
+      // is bright (146.8) AND the cast is brighter still (edge 163.9): the
+      // absolute rule darkened a body that was already lighter than what it
+      // stood against and CUT its contrast — measured, native edgeRGB
+      // 17.9 -> 14.6 against a repeat spread of 0.3.
+      // What actually raises |edge - ring| is the SIGN OF (edge - ring), and
+      // TONE has both numbers already. Inside the dead band the cue is left off:
+      // a body whose edge and surround are within `autoDead` has no side to be
+      // pushed to, and guessing one is how a cue becomes a look.
+      const byId = Object.create(null);
+      let sr = 0, se = 0, n = 0;
+      for (const r of row.bodies) {
+        byId[r.id] = r;
+        if (r.ringL != null && r.edgeL != null) { sr += r.ringL; se += r.edgeL; n++; }
+      }
+      const meanR = n ? sr / n : null, meanE = n ? se / n : null;
+      rimS.ringL = meanR == null ? null : +meanR.toFixed(1);
+      rimS.edgeL = meanE == null ? null : +meanE.toFixed(1);
+      const sign = (e, r2) => {
+        if (e == null || r2 == null) return RIM.fallback;
+        if (Math.abs(e - r2) < RIM.autoDead) return 'none';
+        return e > r2 ? 'add' : 'dark';
+      };
+      const one = sign(meanE, meanR);
+      rimS.polarity = RIM.perBody ? 'perBody' : one;
+      rimS.why = 'TONE edge ' + rimS.edgeL + ' vs ring ' + rimS.ringL
+               + ' (dead band ' + RIM.autoDead + ')';
+      for (const id of order) {
+        const b = bodies[id]; if (!b) continue;
+        const r = byId[id];
+        b.rimRingL = r && r.ringL != null ? r.ringL : meanR;
+        b.rimEdgeL = r && r.edgeL != null ? r.edgeL : meanE;
+        rimPolar(b, RIM.perBody ? sign(b.rimEdgeL, b.rimRingL) : one);
+      }
+    }
+    // ---- AND THE CUE SITS OUT THE TONE PROBE -------------------------------
+    // MEASURED, NOT ANTICIPATED: the first build armed the cue at setVisual and
+    // left it armed, so the cast TONE differenced was the RIMMED cast — and the
+    // two census arms photographed DIFFERENT CAMERA POSES at the very first
+    // site (s044), because a darkened silhouette scores a different boom. Two
+    // arms that differ by a camera are not an A/B of a body-side cue.
+    // So it is pinned off for the probe's two passes and put back, which is
+    // exactly what the probe already does to the idle phase, the two ground
+    // rings and ambient's motes, and for the same reason: THE THING BEING
+    // RANKED MUST NOT MOVE WHILE IT IS BEING RANKED. It also makes `ringL` the
+    // honest background reading the polarity is chosen from.
+    function rimPin(off) {
+      if (!rimOn()) return 0;
+      let n = 0;
+      for (const id of order) {
+        const b = bodies[id]; if (!b) continue;
+        if (off) {
+          if (b.rimU) {
+            b._rimSave = { a: b.rimU.bwRimAdd.value, d: b.rimU.bwRimDark.value };
+            b.rimU.bwRimAdd.value = 0; b.rimU.bwRimDark.value = 1; n++;
+          }
+          if (RIM.mode === 'flat') for (const m of (b.rimMats || [])) {
+            const sv = m.__bwRimFlat; if (!sv) continue;
+            if (('emissive' in m) && sv.e) { m.emissive.copy(sv.e); m.emissiveIntensity = sv.i; }
+            if (m.color && sv.c) m.color.copy(sv.c);
+          }
+        } else {
+          if (b.rimU && b._rimSave) {
+            b.rimU.bwRimAdd.value = b._rimSave.a; b.rimU.bwRimDark.value = b._rimSave.d;
+            b._rimSave = null; n++;
+          }
+          if (RIM.mode === 'flat' && b.rimPol) rimPolar(b, b.rimPol);
+        }
+      }
+      return n;
+    }
+
+    // THE RECEIPT, AND THE LEAK CHECK IS IN IT. `shared` walks the LIVE scene
+    // for any mesh outside this stage holding a material we patched: the claim
+    // "the cast's materials are ours alone" is then a number in every run
+    // rather than a paragraph about how loadGlb parses.
+    function rimReport() {
+      let shared = 0, seen = 0;
+      try {
+        W.scene.traverse((o) => {
+          if (!o.isMesh || !o.material) return;
+          let a = o, own = false;
+          while (a) { if (a.userData && a.userData.isBattleWorld) { own = true; break; } a = a.parent; }
+          const ms = Array.isArray(o.material) ? o.material : [o.material];
+          for (const m of ms) { if (m && m.__bwRim) { seen++; if (!own) shared++; } }
+        });
+      } catch (e) { }
+      return Object.assign({}, rimS, { ms: +rimS.ms.toFixed(2), seen: seen, shared: shared,
+        cfg: { power: RIM.power, add: RIM.add, dark: RIM.dark, autoDead: RIM.autoDead,
+               colour: RIM.colour, perBody: RIM.perBody, fallback: RIM.fallback } });
+    }
+
     function newBody(rec) {
       const g = new TH.Group();
       g.position.set(rec.x, rec.y, rec.z);
@@ -1745,6 +2079,11 @@
       // 2.07 m across and a party rig 0.73, and a constant stand-off cannot know that.
       const k = opt.noScale ? 1 : targetH / h;
       b.w = Math.max(0.25, Math.max(box.max.x - box.min.x, box.max.z - box.min.z) * k);
+      // A NEW VISUAL IS A NEW MATERIAL GRAPH, so the cue is armed here and
+      // nowhere else — the proxy gets it too, or the body would visibly change
+      // its own rendering the instant its GLB landed.
+      b.rimMats = null; b.rimU = null;
+      rimArm(b);
     }
 
     // The proxy solid, borrowed in spirit from battle_stage3d's: a spike does not
@@ -2259,8 +2598,16 @@
       if (!nE || !nR) return null;
       const dr = eRGB[0] / nE - rRGB[0] / nR, dg = eRGB[1] / nE - rRGB[1] / nR, db = eRGB[2] / nE - rRGB[2] / nR;
       const mL = sL / nR;
+      // `ringL` IS REPORTED AND NEVER SCORED. It is the mean DISPLAY-space
+      // luminance of the surround this body's silhouette is read against, and
+      // it was already being computed for the clutter variance and thrown away.
+      // The body-side cue reads it to choose its sign (see rimAuto); nothing in
+      // the boom ranking above touches it, so adding the field cannot move a
+      // pick — which the tone census re-run proves rather than asserts.
+      const eL = 0.2126 * (eRGB[0] / nE) + 0.7152 * (eRGB[1] / nE) + 0.0722 * (eRGB[2] / nE);
       return { edgeRGB: Math.sqrt((dr * dr + dg * dg + db * db) / 3),
-               clutter: Math.sqrt(Math.max(0, sL2 / nR - mL * mL)), px: n };
+               clutter: Math.sqrt(Math.max(0, sL2 / nR - mL * mL)),
+               ringL: mL, edgeL: eL, px: n };
     }
     function toneProbe() {
       const t0 = now();
@@ -2294,6 +2641,10 @@
       // crag site bit-identical across repeats, tone-noamb.json).
       let motes = 0;
       try { if (window.Ambient && window.Ambient.hide) motes = window.Ambient.hide(true); } catch (e) { }
+      // AND THE BODY-SIDE CUE SITS OUT BOTH PASSES — see rimPin. A rimmed cast
+      // differences differently and picked a different boom, which would have
+      // made every arm of the body-side board an arm of the camera as well.
+      const rimmed = rimPin(true);
       const posed = [];
       for (const id of order) {
         const b = bodies[id];
@@ -2329,7 +2680,9 @@
             const b = bodies[id];
             if (!b || b.dead || b.root.visible === false) continue;
             const r = toneBody(b, cam2, full, bg, rw, rh);
-            if (r) per.push({ id: id, side: b.side, edgeRGB: +r.edgeRGB.toFixed(2), clutter: +r.clutter.toFixed(2) });
+            if (r) per.push({ id: id, side: b.side, edgeRGB: +r.edgeRGB.toFixed(2),
+                              clutter: +r.clutter.toFixed(2),
+                              ringL: +r.ringL.toFixed(1), edgeL: +r.edgeL.toFixed(1) });
           }
           if (!per.length) continue;
           const mean = per.reduce((s, r) => s + r.edgeRGB, 0) / per.length;
@@ -2347,6 +2700,7 @@
         root.visible = true;
         targetRing.visible = ringsWere[0]; actorRing.visible = ringsWere[1];
         if (posed.length) { for (const p of posed) p.a.time = p.t; for (const m of mixers) m.update(0); }
+        if (rimmed) rimPin(false);
         if (motes) { try { window.Ambient.hide(false); } catch (e) { } }
         W.R.setRenderTarget(prevRT);
         rt.dispose();
@@ -2375,8 +2729,16 @@
       if (!castReady() && waited < TONE.waitMs) return;
       toneDone = true;
       toneTick = ticks; toneFrame = W.R.info.render.frame;
-      if (!castReady()) { toneLive = { ok: false, why: 'cast never left proxy in ' + TONE.waitMs + ' ms' }; return; }
-      try { toneLive = toneProbe(); } catch (e) { toneLive = { ok: false, why: 'threw: ' + e.message }; return; }
+      if (!castReady()) {
+        toneLive = { ok: false, why: 'cast never left proxy in ' + TONE.waitMs + ' ms' };
+        rimAuto(toneLive); return;
+      }
+      try { toneLive = toneProbe(); }
+      catch (e) { toneLive = { ok: false, why: 'threw: ' + e.message }; rimAuto(toneLive); return; }
+      // THE BODY-SIDE CUE TAKES ITS SIGN FROM THE SAME TWO RENDERS. It runs
+      // whether or not the boom moved, and whether or not the probe was
+      // decisive — the background it read is the background either way.
+      rimAuto(toneLive);
       // AND IT ONLY EVER LANDS ON THE OPENING. If the models were slow enough
       // that a turn has already started, the fight owns the camera and a boom
       // correction would read as a mistake being fixed in front of the player —
@@ -2620,6 +2982,30 @@
             });
           }
         },
+        // ---- PIN THE CAST TO ITS OWN PHASE, FOR A PHOTOGRAPH ---------------
+        // QA ONLY, AND IT IS THE LESSON THE TONE LANE PAID FOR, ONE LAYER OUT.
+        // TONE pins each body to `idlePhase(id)` for its two probe passes
+        // because a silhouette measured at a drifting point of the idle is a
+        // measurement of the clip. THE SAME IS TRUE OF ANY INSTRUMENT THAT
+        // PHOTOGRAPHS THE CAST: the model lands on a NETWORK time, so at the
+        // moment a meter fires `idle.time` is phase + however long that took,
+        // and two arms of an A/B photograph two poses. Measured on this stage:
+        // the same arm at one site read edgeRGB 1.44 and 5.31 on two runs.
+        // `mixer.update(0)` applies a time without advancing one, so nothing
+        // moves on screen; the previous time is restored on pose(false).
+        pose(on) {
+          let n = 0;
+          for (const id of order) {
+            const b = bodies[id];
+            if (!b || !b.mixer || !b.actions || !b.actions.idle) continue;
+            const a = b.actions.idle;
+            if (on) { if (b._qaPose == null) b._qaPose = a.time;
+                      a.time = b.phase == null ? 0 : b.phase; n++; }
+            else if (b._qaPose != null) { a.time = b._qaPose; b._qaPose = null; n++; }
+          }
+          if (n) for (const m of mixers) m.update(0);
+          return n;
+        },
         // the body's own world box, projected — the region a mask lives in
         box(id) {
           const b = bodies[id]; if (!b || !W.cam) return null;
@@ -2640,6 +3026,10 @@
       // took, the rung the geometric solver had picked, and how long it cost.
       // A run where it never fired says WHY rather than reporting nothing.
       tone() { return Object.assign({ on: toneOn(), done: toneDone, basePitch: +basePitch.toFixed(4) }, toneLive || {}); },
+      // WHAT THE BODY-SIDE CUE DID: how many materials it patched, which sign it
+      // took and why, the background luminance it took it from, and the LEAK
+      // COUNT (`shared` must be 0). A run where it never armed says why.
+      rim() { return rimReport(); },
       // WHAT POSE THE CAST WAS IN WHEN THE PROBE PHOTOGRAPHED IT. The probe
       // subtracts two renders of the same frame, so the cast's own animation
       // phase is part of every number it produces — and a phase that differs
@@ -2737,6 +3127,11 @@
     // identical — and `tone()` is the live stage's own receipt for it.
     TONE: TONE,
     toneOn() { return toneOn(); },
+    // THE BODY-SIDE SPIKE, live and DEFAULT OFF. `BattleWorld.RIM.on = true`
+    // before a battle is the one-build A/B; `rim()` is the live stage's receipt.
+    RIM: RIM,
+    rimOn() { return rimOn(); },
+    rim() { return api._live && api._live.rim ? api._live.rim() : { on: rimOn(), why: 'no battle' }; },
     // THE PLACEMENT-QUALITY TERM, live. `BattleWorld.PLACE.on = false` is the
     // A/B the placement board is built from; `sunLit` is callable so an
     // instrument can score a plan the search did not choose.

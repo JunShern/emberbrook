@@ -81,6 +81,15 @@ const BSURF = arg('bsurf', null);
 // turn-order panel and the arm that only keeps it inside the frame are ONE
 // BUILD with one assignment between them.
 const SAFE = arg('safe', null);
+// AND THE BODY-SIDE CUE, the same shape once more. `--brim=off|auto|add|dark|
+// flat|perbody` sets BattleWorld.RIM before the battle, which is exactly what
+// `?brim=1` does through rimOn() — so the two census arms are ONE BUILD with one
+// assignment between them and every number below is read by the same ruler.
+// `--rimadd/--rimdark/--rimpow` sweep its three constants without a checkout.
+const BRIM = arg('brim', null);
+const RIMADD = arg('rimadd', null);
+const RIMDARK = arg('rimdark', null);
+const RIMPOW = arg('rimpow', null);
 // --mode=cost only: which field of the `decide` row the A/B toggles.
 const COSTWHAT = arg('costwhat', 'keep') === 'safe' ? 'keepSafe' : 'keep';
 // THE YAW IS PINNED, and this is not a nicety: solveArena's yaw ladder is
@@ -523,7 +532,12 @@ const CENSUS_TAIL = `
       foesFull: samp ? samp.foesFull : null,
       foes: samp ? samp.foes : null, partyBoxes: samp ? samp.party : null,
       sil: sil, surf: surf, rays: rays, ground: grd, sun: sun, frameL: fl,
-      anchors: anchors, tiers: st.tiers(), stageMs: +stageMs.toFixed(0) },
+      anchors: anchors, tiers: st.tiers(), stageMs: +stageMs.toFixed(0),
+      // THE BODY-SIDE RECEIPT, per site: which sign the cue took, off what
+      // background, how many materials it patched, and the leak count. A row
+      // with rim.on true and rim.patched 0 is a cue that did nothing, which is
+      // exactly the failure a mean would hide.
+      rim: (st.rim ? st.rim() : null) },
     shot: shot };
 `;
 
@@ -696,6 +710,23 @@ function summarise(row) {
       return window.BattleWorld.PLACE.surf; })()`, 10000);
     console.log('PLACE.surf = ' + v);
   }
+  if (BRIM != null) {
+    const v = await ev(cdp, `(() => {
+      const M = window.BattleWorld.RIM;
+      if (!M) return { absent: true };
+      const w = ${JSON.stringify(BRIM)};
+      M.on = w !== 'off';
+      M.mode = (w === 'flat') ? 'flat' : 'fresnel';
+      M.perBody = (w === 'perbody');
+      M.polarity = (w === 'add' || w === 'dark') ? w : 'auto';
+      ${RIMADD == null ? '' : `M.add = ${parseFloat(RIMADD)};`}
+      ${RIMDARK == null ? '' : `M.dark = ${parseFloat(RIMDARK)};`}
+      ${RIMPOW == null ? '' : `M.power = ${parseFloat(RIMPOW)};`}
+      return { on: M.on, mode: M.mode, polarity: M.polarity, perBody: M.perBody,
+               add: M.add, dark: M.dark, power: M.power };
+    })()`, 10000);
+    console.log('RIM = ' + JSON.stringify(v));
+  }
   if (KEEP != null) {
     const k = await ev(cdp, `(() => { const r = window.BattleWorld.CAM.shots.decide;
       r.keep = ${KEEP === '0' ? 'null' : "'foes'"}; return r.keep; })()`, 10000);
@@ -795,7 +826,9 @@ function summarise(row) {
     }
     const f = join(OUT, `census-${TAG}.json`);
     writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
-      bplace: BPLACE, bsurf: BSURF, keep: KEEP, composite: COMPOSITE, three: ready.three, n: out.length, of: census.length,
+      bplace: BPLACE, bsurf: BSURF, keep: KEEP, brim: BRIM,
+      rimadd: RIMADD, rimdark: RIMDARK, rimpow: RIMPOW,
+      composite: COMPOSITE, three: ready.three, n: out.length, of: census.length,
       secs: +((Date.now() - t0) / 1000).toFixed(0) }, rows: out }, null, 1));
     console.log(`\nwrote ${out.length}/${census.length} sites -> ${f}`);
     console.log('shots -> ' + dir);

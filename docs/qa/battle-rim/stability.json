@@ -1,0 +1,164 @@
+{
+ "site": {
+  "id": "s033",
+  "zone": "crag",
+  "x": -54.155533905932735,
+  "y": 38.5179913319579,
+  "z": 20.84446609406726,
+  "sil": {
+   "ok": true,
+   "castPx": 3064,
+   "castFrac": 0.0532,
+   "edgeRGB": 2.92,
+   "bandMin": 2.53,
+   "bands": [
+    7.99,
+    24.57,
+    2.53,
+    7.24
+   ],
+   "clutter": 40.1,
+   "ringL": 159.2,
+   "castL": 176.9
+  },
+  "surf": {
+   "topSurface": 0.166,
+   "entropy": 4.431,
+   "bins": 57,
+   "backTopSurface": 0.1835,
+   "backEntropy": 4.171,
+   "backBins": 47
+  }
+ },
+ "arm": "off",
+ "rows": [
+  {
+   "i": 0,
+   "m320": {
+    "edgeRGB": 4.18,
+    "bandMin": 4.15,
+    "ringL": 162.2,
+    "castPx": 3045
+   },
+   "nat": {
+    "edgeRGB": 8.95,
+    "bandMin": 4.32,
+    "ringL": 156.4,
+    "edgeL": 163.4,
+    "castPx": 54664
+   }
+  },
+  {
+   "i": 1,
+   "m320": {
+    "edgeRGB": 2.66,
+    "bandMin": 3.05,
+    "ringL": 162.3,
+    "castPx": 3112
+   },
+   "nat": {
+    "edgeRGB": 11.67,
+    "bandMin": 9.79,
+    "ringL": 152,
+    "edgeL": 163,
+    "castPx": 55797
+   }
+  },
+  {
+   "i": 2,
+   "m320": {
+    "edgeRGB": 2.95,
+    "bandMin": 3.68,
+    "ringL": 162.5,
+    "castPx": 3081
+   },
+   "nat": {
+    "edgeRGB": 11.76,
+    "bandMin": 9.63,
+    "ringL": 153.1,
+    "edgeL": 163.1,
+    "castPx": 55560
+   }
+  },
+  {
+   "i": 3,
+   "m320": {
+    "edgeRGB": 3.59,
+    "bandMin": 3.73,
+    "ringL": 160.3,
+    "castPx": 3050
+   },
+   "nat": {
+    "edgeRGB": 11.42,
+    "bandMin": 3.91,
+    "ringL": 153.7,
+    "edgeL": 163.7,
+    "castPx": 54968
+   }
+  },
+  {
+   "i": 4,
+   "m320": {
+    "edgeRGB": 2.92,
+    "bandMin": 4.19,
+    "ringL": 161.3,
+    "castPx": 3067
+   },
+   "nat": {
+    "edgeRGB": 10.69,
+    "bandMin": 5.2,
+    "ringL": 153.2,
+    "edgeL": 162.7,
+    "castPx": 55033
+   }
+  },
+  {
+   "i": 5,
+   "m320": {
+    "edgeRGB": 2.81,
+    "bandMin": 4.11,
+    "ringL": 162.3,
+    "castPx": 3072
+   },
+   "nat": {
+    "edgeRGB": 9.53,
+    "bandMin": 3.58,
+    "ringL": 156.6,
+    "edgeL": 164.6,
+    "castPx": 55615
+   }
+  }
+ ],
+ "spread": {
+  "m320edge": {
+   "min": 2.66,
+   "max": 4.18,
+   "range": 1.52
+  },
+  "m320band": {
+   "min": 3.05,
+   "max": 4.19,
+   "range": 1.14
+  },
+  "natEdge": {
+   "min": 8.95,
+   "max": 11.76,
+   "range": 2.81
+  },
+  "natBand": {
+   "min": 3.58,
+   "max": 9.79,
+   "range": 6.21
+  },
+  "natRing": {
+   "min": 152,
+   "max": 156.6,
+   "range": 4.6
+  },
+  "castPx": {
+   "min": 54664,
+   "max": 55797,
+   "range": 1133
+  }
+ }
+}

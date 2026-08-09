@@ -1,0 +1,238 @@
+{
+ "site": {
+  "id": "s044",
+  "zone": "forest",
+  "x": -53.344466094067265,
+  "y": 29.804280042093076,
+  "z": 64.15553390593273,
+  "sil": {
+   "ok": true,
+   "castPx": 4541,
+   "castFrac": 0.0788,
+   "edgeRGB": 1.12,
+   "bandMin": 1.47,
+   "bands": [
+    1.47,
+    22.45,
+    13.71,
+    10.99
+   ],
+   "clutter": 60.51,
+   "ringL": 130.8,
+   "castL": 118.4
+  },
+  "surf": {
+   "topSurface": 0.1257,
+   "entropy": 4.338,
+   "bins": 57,
+   "backTopSurface": 0.142,
+   "backEntropy": 3.927,
+   "backBins": 40
+  }
+ },
+ "yaw": -1.4869,
+ "runs": [
+  {
+   "ok": true,
+   "arm": "off",
+   "fps": 241.2,
+   "dt": 4,
+   "rendersPerFrame": 22,
+   "calls": 1,
+   "tris": 1,
+   "progs": 83,
+   "rim": {
+    "on": false,
+    "mode": "fresnel",
+    "polarity": null,
+    "why": "not armed",
+    "patched": 0,
+    "flat": 0,
+    "skipped": 0,
+    "bodies": {},
+    "ringL": null,
+    "ms": 0,
+    "seen": 0,
+    "shared": 0,
+    "cfg": {
+     "power": 2,
+     "add": 0.3,
+     "dark": 0.45,
+     "autoDead": 4,
+     "colour": 16769984,
+     "perBody": false,
+     "fallback": "dark"
+    }
+   }
+  },
+  {
+   "ok": true,
+   "arm": "auto",
+   "fps": 240.4,
+   "dt": 4,
+   "rendersPerFrame": 22,
+   "calls": 1,
+   "tris": 1,
+   "progs": 84,
+   "rim": {
+    "on": true,
+    "mode": "fresnel",
+    "polarity": "dark",
+    "why": "TONE edge 148.1 vs ring 152.7 (dead band 4)",
+    "patched": 12,
+    "flat": 0,
+    "skipped": 0,
+    "bodies": {
+     "vesper": {
+      "pol": "dark",
+      "side": "party",
+      "tier": "model",
+      "ringL": 98.2,
+      "mats": 1
+     },
+     "maren": {
+      "pol": "dark",
+      "side": "party",
+      "tier": "model",
+      "ringL": 83.4,
+      "mats": 1
+     },
+     "m0": {
+      "pol": "dark",
+      "side": "foe",
+      "tier": "model",
+      "ringL": 214.7,
+      "mats": 4
+     },
+     "m1": {
+      "pol": "dark",
+      "side": "foe",
+      "tier": "model",
+      "ringL": 214.5,
+      "mats": 2
+     }
+    },
+    "ringL": 152.7,
+    "ms": 0.3,
+    "edgeL": 148.1,
+    "seen": 8,
+    "shared": 0,
+    "cfg": {
+     "power": 2,
+     "add": 0.3,
+     "dark": 0.45,
+     "autoDead": 4,
+     "colour": 16769984,
+     "perBody": false,
+     "fallback": "dark"
+    }
+   }
+  },
+  {
+   "ok": true,
+   "arm": "off",
+   "fps": 240.9,
+   "dt": 4,
+   "rendersPerFrame": 22,
+   "calls": 1,
+   "tris": 1,
+   "progs": 83,
+   "rim": {
+    "on": false,
+    "mode": "fresnel",
+    "polarity": null,
+    "why": "not armed",
+    "patched": 0,
+    "flat": 0,
+    "skipped": 0,
+    "bodies": {},
+    "ringL": null,
+    "ms": 0,
+    "seen": 0,
+    "shared": 0,
+    "cfg": {
+     "power": 2,
+     "add": 0.3,
+     "dark": 0.45,
+     "autoDead": 4,
+     "colour": 16769984,
+     "perBody": false,
+     "fallback": "dark"
+    }
+   }
+  },
+  {
+   "ok": true,
+   "arm": "auto",
+   "fps": 240.4,
+   "dt": 4,
+   "rendersPerFrame": 22,
+   "calls": 1,
+   "tris": 1,
+   "progs": 84,
+   "rim": {
+    "on": true,
+    "mode": "fresnel",
+    "polarity": "dark",
+    "why": "TONE edge 148.1 vs ring 152.7 (dead band 4)",
+    "patched": 12,
+    "flat": 0,
+    "skipped": 0,
+    "bodies": {
+     "vesper": {
+      "pol": "dark",
+      "side": "party",
+      "tier": "model",
+      "ringL": 98.2,
+      "mats": 1
+     },
+     "maren": {
+      "pol": "dark",
+      "side": "party",
+      "tier": "model",
+      "ringL": 83.4,
+      "mats": 1
+     },
+     "m0": {
+      "pol": "dark",
+      "side": "foe",
+      "tier": "model",
+      "ringL": 214.7,
+      "mats": 4
+     },
+     "m1": {
+      "pol": "dark",
+      "side": "foe",
+      "tier": "model",
+      "ringL": 214.5,
+      "mats": 2
+     }
+    },
+    "ringL": 152.7,
+    "ms": 0,
+    "edgeL": 148.1,
+    "seen": 8,
+    "shared": 0,
+    "cfg": {
+     "power": 2,
+     "add": 0.3,
+     "dark": 0.45,
+     "autoDead": 4,
+     "colour": 16769984,
+     "perBody": false,
+     "fallback": "dark"
+    }
+   }
+  }
+ ],
+ "by": {
+  "off": [
+   241.2,
+   240.9
+  ],
+  "auto": [
+   240.4,
+   240.4
+  ]
+ }
+}

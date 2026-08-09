@@ -1,0 +1,172 @@
+{
+ "site": {
+  "id": "s044",
+  "zone": "forest",
+  "x": -53.344466094067265,
+  "y": 29.804280042093076,
+  "z": 64.15553390593273,
+  "sil": {
+   "ok": true,
+   "castPx": 4541,
+   "castFrac": 0.0788,
+   "edgeRGB": 1.12,
+   "bandMin": 1.47,
+   "bands": [
+    1.47,
+    22.45,
+    13.71,
+    10.99
+   ],
+   "clutter": 60.51,
+   "ringL": 130.8,
+   "castL": 118.4
+  },
+  "surf": {
+   "topSurface": 0.1257,
+   "entropy": 4.338,
+   "bins": 57,
+   "backTopSurface": 0.142,
+   "backEntropy": 3.927,
+   "backBins": 40
+  }
+ },
+ "yaw": -1.4869,
+ "rows": [
+  {
+   "arm": "off",
+   "armed": {
+    "on": false,
+    "mode": "fresnel",
+    "polarity": "auto",
+    "perBody": false,
+    "add": 0.25,
+    "dark": 0,
+    "power": 1,
+    "autoL": 85
+   },
+   "rim": {
+    "on": false,
+    "mode": "fresnel",
+    "polarity": null,
+    "why": "not armed",
+    "patched": 0,
+    "flat": 0,
+    "skipped": 0,
+    "bodies": {},
+    "ringL": null,
+    "ms": 0,
+    "seen": 0,
+    "shared": 0,
+    "cfg": {
+     "power": 1,
+     "add": 0.25,
+     "dark": 0,
+     "autoL": 85,
+     "colour": 16769984,
+     "perBody": false,
+     "fallback": "dark"
+    }
+   },
+   "kind": "decide",
+   "sil": {
+    "ok": true,
+    "castPx": 4520,
+    "castFrac": 0.0785,
+    "edgeRGB": 1.42,
+    "bandMin": 1.77,
+    "bands": [
+     1.77,
+     22.71,
+     11.23,
+     14.03
+    ],
+    "clutter": 60.36,
+    "ringL": 131.6,
+    "castL": 118.7
+   }
+  },
+  {
+   "arm": "dark",
+   "armed": {
+    "on": true,
+    "mode": "fresnel",
+    "polarity": "dark",
+    "perBody": false,
+    "add": 0.25,
+    "dark": 0,
+    "power": 1,
+    "autoL": 85
+   },
+   "rim": {
+    "on": true,
+    "mode": "fresnel",
+    "polarity": "dark",
+    "why": "polarity pinned to dark",
+    "patched": 12,
+    "flat": 0,
+    "skipped": 0,
+    "bodies": {
+     "vesper": {
+      "pol": "dark",
+      "side": "party",
+      "tier": "model",
+      "ringL": null,
+      "mats": 1
+     },
+     "maren": {
+      "pol": "dark",
+      "side": "party",
+      "tier": "model",
+      "ringL": null,
+      "mats": 1
+     },
+     "m0": {
+      "pol": "dark",
+      "side": "foe",
+      "tier": "model",
+      "ringL": null,
+      "mats": 4
+     },
+     "m1": {
+      "pol": "dark",
+      "side": "foe",
+      "tier": "model",
+      "ringL": null,
+      "mats": 2
+     }
+    },
+    "ringL": null,
+    "ms": 0.2,
+    "seen": 8,
+    "shared": 0,
+    "cfg": {
+     "power": 1,
+     "add": 0.25,
+     "dark": 0,
+     "autoL": 85,
+     "colour": 16769984,
+     "perBody": false,
+     "fallback": "dark"
+    }
+   },
+   "kind": "decide",
+   "sil": {
+    "ok": true,
+    "castPx": 4392,
+    "castFrac": 0.0762,
+    "edgeRGB": 5.04,
+    "bandMin": 2.67,
+    "bands": [
+     2.67,
+     16.81,
+     14.77,
+     16.71
+    ],
+    "clutter": 59.94,
+    "ringL": 131.4,
+    "castL": 111.2
+   }
+  }
+ ],
+ "console": []
+}

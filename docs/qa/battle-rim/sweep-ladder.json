@@ -1,0 +1,1969 @@
+{
+ "meta": {
+  "when": "2026-08-09T10:18:44.995Z",
+  "yaw": -1.4869,
+  "sites": "s044,s031,s033",
+  "arms": "off,dark:0.55,dark:0.35,dark:0.20,add:0.25,add:0.60",
+  "over": {},
+  "reps": 2,
+  "three": "185"
+ },
+ "rows": [
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 0,
+   "arm": "off",
+   "edgeRGB": 1.42,
+   "bandMin": 3.46,
+   "castL": 117.8,
+   "ringL": 130.2,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 79912,
+    "castFrac": 0.0774,
+    "edgeRGB": 3.87,
+    "bandMin": 11.39,
+    "bands": [
+     11.39,
+     16.59,
+     18.06,
+     14.76
+    ],
+    "clutter": 62.18,
+    "ringL": 130.2,
+    "castL": 117.7,
+    "edgeL": 125.7,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 2.28,
+    "bandMin": 1.89
+   },
+   "clutter": 60.7,
+   "castFrac": 0.0775,
+   "pol": null,
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.55,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 0,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 0,
+   "arm": "dark:0.55",
+   "edgeRGB": 4.64,
+   "bandMin": 1.82,
+   "castL": 117.3,
+   "ringL": 133.2,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 76199,
+    "castFrac": 0.0738,
+    "edgeRGB": 7.27,
+    "bandMin": 1.98,
+    "bands": [
+     1.98,
+     17.29,
+     21.34,
+     26.32
+    ],
+    "clutter": 62.19,
+    "ringL": 133.3,
+    "castL": 117.3,
+    "edgeL": 125,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 5.35,
+    "bandMin": 1.9
+   },
+   "clutter": 62.07,
+   "castFrac": 0.0739,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.55,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.2,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 0,
+   "arm": "dark:0.35",
+   "edgeRGB": 2.17,
+   "bandMin": 2.04,
+   "castL": 115.9,
+   "ringL": 129.6,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 79143,
+    "castFrac": 0.0767,
+    "edgeRGB": 5.6,
+    "bandMin": 3.82,
+    "bands": [
+     3.82,
+     16.05,
+     16.51,
+     16.68
+    ],
+    "clutter": 60.6,
+    "ringL": 131.5,
+    "castL": 115.7,
+    "edgeL": 125.2,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.24,
+    "bandMin": 1.87
+   },
+   "clutter": 60.66,
+   "castFrac": 0.0767,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.35,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 0,
+   "arm": "dark:0.20",
+   "edgeRGB": 3.3,
+   "bandMin": 2.57,
+   "castL": 115.4,
+   "ringL": 130.6,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 78969,
+    "castFrac": 0.0765,
+    "edgeRGB": 5.8,
+    "bandMin": 1.19,
+    "bands": [
+     1.19,
+     15.35,
+     16.56,
+     13.54
+    ],
+    "clutter": 60.29,
+    "ringL": 132,
+    "castL": 115.3,
+    "edgeL": 125.4,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.04,
+    "bandMin": 2.3
+   },
+   "clutter": 60.51,
+   "castFrac": 0.0766,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 0,
+   "arm": "add:0.25",
+   "edgeRGB": 1.2,
+   "bandMin": 4.49,
+   "castL": 120,
+   "ringL": 130.9,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 80088,
+    "castFrac": 0.0776,
+    "edgeRGB": 8.91,
+    "bandMin": 1.92,
+    "bands": [
+     1.92,
+     17.58,
+     23.24,
+     12.6
+    ],
+    "clutter": 61.33,
+    "ringL": 135.9,
+    "castL": 120,
+    "edgeL": 126.1,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.55,
+    "bandMin": 3.45
+   },
+   "clutter": 60.48,
+   "castFrac": 0.0776,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 0,
+   "arm": "add:0.60",
+   "edgeRGB": 1.5,
+   "bandMin": 5.88,
+   "castL": 122.4,
+   "ringL": 130.8,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 80517,
+    "castFrac": 0.078,
+    "edgeRGB": 5.23,
+    "bandMin": 1.55,
+    "bands": [
+     1.55,
+     18.61,
+     16.44,
+     12.18
+    ],
+    "clutter": 61.25,
+    "ringL": 132.9,
+    "castL": 122.5,
+    "edgeL": 126.9,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.39,
+    "bandMin": 5.28
+   },
+   "clutter": 60.3,
+   "castFrac": 0.0779,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 1,
+   "arm": "off",
+   "edgeRGB": 3.01,
+   "bandMin": 2.14,
+   "castL": 117.6,
+   "ringL": 130.7,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 79869,
+    "castFrac": 0.0774,
+    "edgeRGB": 2.06,
+    "bandMin": 1.89,
+    "bands": [
+     1.89,
+     27.39,
+     9.64,
+     25.72,
+     58.62
+    ],
+    "clutter": 63.32,
+    "ringL": 124.8,
+    "castL": 117.8,
+    "edgeL": 125.3,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.86,
+    "bandMin": 2.39
+   },
+   "clutter": 60.5,
+   "castFrac": 0.0771,
+   "pol": null,
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 0,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 1,
+   "arm": "dark:0.55",
+   "edgeRGB": 5.82,
+   "bandMin": 1.86,
+   "castL": 117.5,
+   "ringL": 133.5,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 76133,
+    "castFrac": 0.0738,
+    "edgeRGB": 6.31,
+    "bandMin": 4.68,
+    "bands": [
+     4.68,
+     17.81,
+     12.95,
+     27.34
+    ],
+    "clutter": 63.01,
+    "ringL": 132.2,
+    "castL": 117.3,
+    "edgeL": 125,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 5.55,
+    "bandMin": 1.95
+   },
+   "clutter": 62.01,
+   "castFrac": 0.0737,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.55,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 1,
+   "arm": "dark:0.35",
+   "edgeRGB": 2.88,
+   "bandMin": 2.15,
+   "castL": 115.9,
+   "ringL": 130.7,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 79134,
+    "castFrac": 0.0767,
+    "edgeRGB": 6.65,
+    "bandMin": 3.58,
+    "bands": [
+     3.58,
+     16.21,
+     19.64,
+     14.02
+    ],
+    "clutter": 61.52,
+    "ringL": 132.7,
+    "castL": 115.8,
+    "edgeL": 125.2,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.64,
+    "bandMin": 1.6
+   },
+   "clutter": 60.55,
+   "castFrac": 0.0766,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.35,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 1,
+   "arm": "dark:0.20",
+   "edgeRGB": 3.46,
+   "bandMin": 2.45,
+   "castL": 115.4,
+   "ringL": 130.7,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 78978,
+    "castFrac": 0.0765,
+    "edgeRGB": 5.04,
+    "bandMin": 1.53,
+    "bands": [
+     1.53,
+     18.81,
+     16.91,
+     17.59
+    ],
+    "clutter": 62.53,
+    "ringL": 130.8,
+    "castL": 115.3,
+    "edgeL": 124.8,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.15,
+    "bandMin": 2.16
+   },
+   "clutter": 60.51,
+   "castFrac": 0.0764,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 1,
+   "arm": "add:0.25",
+   "edgeRGB": 1.47,
+   "bandMin": 4.52,
+   "castL": 120,
+   "ringL": 131.7,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 80078,
+    "castFrac": 0.0776,
+    "edgeRGB": 3.12,
+    "bandMin": 1.16,
+    "bands": [
+     1.16,
+     17.04,
+     18.6,
+     12.43
+    ],
+    "clutter": 61.53,
+    "ringL": 130.2,
+    "castL": 120,
+    "edgeL": 126.3,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.44,
+    "bandMin": 4.32
+   },
+   "clutter": 59.88,
+   "castFrac": 0.0777,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 5
+  },
+  {
+   "id": "s044",
+   "zone": "forest",
+   "rep": 1,
+   "arm": "add:0.60",
+   "edgeRGB": 1.2,
+   "bandMin": 5.98,
+   "castL": 122.7,
+   "ringL": 130.9,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 80506,
+    "castFrac": 0.078,
+    "edgeRGB": 1.79,
+    "bandMin": 5.49,
+    "bands": [
+     5.49,
+     33.77,
+     12.28,
+     15.04
+    ],
+    "clutter": 62.31,
+    "ringL": 126.7,
+    "castL": 122.5,
+    "edgeL": 127.1,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.51,
+    "bandMin": 4.77
+   },
+   "clutter": 60.35,
+   "castFrac": 0.0781,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.2,
+   "R": 5
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 0,
+   "arm": "off",
+   "edgeRGB": 1.58,
+   "bandMin": 3.24,
+   "castL": 147,
+   "ringL": 120.2,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 108864,
+    "castFrac": 0.1055,
+    "edgeRGB": 5.91,
+    "bandMin": 2.16,
+    "bands": [
+     45.01,
+     19.03,
+     2.16,
+     7.06,
+     15.51
+    ],
+    "clutter": 50.99,
+    "ringL": 116.2,
+    "castL": 146.7,
+    "edgeL": 121.7,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.7,
+    "bandMin": 2.85
+   },
+   "clutter": 45.92,
+   "castFrac": 0.1049,
+   "pol": null,
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 0,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 0,
+   "arm": "dark:0.55",
+   "edgeRGB": 1.51,
+   "bandMin": 2.75,
+   "castL": 146.6,
+   "ringL": 120,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 106937,
+    "castFrac": 0.1036,
+    "edgeRGB": 4.3,
+    "bandMin": 2.36,
+    "bands": [
+     34.56,
+     25.67,
+     2.36,
+     11.22,
+     18.32
+    ],
+    "clutter": 50.65,
+    "ringL": 118.1,
+    "castL": 146.2,
+    "edgeL": 121.9,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 2.03,
+    "bandMin": 3.21
+   },
+   "clutter": 44.03,
+   "castFrac": 0.103,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.55,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 0,
+   "arm": "dark:0.35",
+   "edgeRGB": 1.36,
+   "bandMin": 1.69,
+   "castL": 146.2,
+   "ringL": 119.6,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 106425,
+    "castFrac": 0.1031,
+    "edgeRGB": 0.9,
+    "bandMin": 7,
+    "bands": [
+     33.37,
+     16.67,
+     7,
+     14.04,
+     16.54
+    ],
+    "clutter": 50.98,
+    "ringL": 121.9,
+    "castL": 145.9,
+    "edgeL": 121.7,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 2.72,
+    "bandMin": 2.98
+   },
+   "clutter": 45.24,
+   "castFrac": 0.1026,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.35,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 0,
+   "arm": "dark:0.20",
+   "edgeRGB": 1.93,
+   "bandMin": 5.24,
+   "castL": 146.1,
+   "ringL": 120.7,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 105839,
+    "castFrac": 0.1025,
+    "edgeRGB": 3.24,
+    "bandMin": 8.53,
+    "bands": [
+     38.21,
+     22.72,
+     8.53,
+     12.6,
+     15.31
+    ],
+    "clutter": 51.23,
+    "ringL": 119.2,
+    "castL": 145.7,
+    "edgeL": 121.8,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.97,
+    "bandMin": 3.8
+   },
+   "clutter": 44.55,
+   "castFrac": 0.102,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 0,
+   "arm": "add:0.25",
+   "edgeRGB": 1.49,
+   "bandMin": 2.13,
+   "castL": 147.9,
+   "ringL": 120.8,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 109520,
+    "castFrac": 0.1061,
+    "edgeRGB": 2.62,
+    "bandMin": 7.12,
+    "bands": [
+     38.29,
+     13.18,
+     7.12,
+     11.64,
+     13.3
+    ],
+    "clutter": 49.75,
+    "ringL": 121,
+    "castL": 147.6,
+    "edgeL": 123,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 2.46,
+    "bandMin": 2.51
+   },
+   "clutter": 44.6,
+   "castFrac": 0.1056,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 0,
+   "arm": "add:0.60",
+   "edgeRGB": 1.3,
+   "bandMin": 4.28,
+   "castL": 148.7,
+   "ringL": 120.9,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 111527,
+    "castFrac": 0.108,
+    "edgeRGB": 4,
+    "bandMin": 6.48,
+    "bands": [
+     35.95,
+     17.62,
+     6.48,
+     7.83,
+     15.28
+    ],
+    "clutter": 50.44,
+    "ringL": 119,
+    "castL": 148.5,
+    "edgeL": 122.9,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.08,
+    "bandMin": 3.62
+   },
+   "clutter": 43.8,
+   "castFrac": 0.1078,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 1,
+   "arm": "off",
+   "edgeRGB": 3.56,
+   "bandMin": 3.73,
+   "castL": 147,
+   "ringL": 122.9,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 108795,
+    "castFrac": 0.1054,
+    "edgeRGB": 8.53,
+    "bandMin": 2.57,
+    "bands": [
+     22.54,
+     4.2,
+     2.57,
+     15.81
+    ],
+    "clutter": 52.13,
+    "ringL": 113.4,
+    "castL": 146.7,
+    "edgeL": 121.5,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 2.76,
+    "bandMin": 2.88
+   },
+   "clutter": 44.41,
+   "castFrac": 0.1051,
+   "pol": null,
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 0,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 1,
+   "arm": "dark:0.55",
+   "edgeRGB": 1.39,
+   "bandMin": 3.1,
+   "castL": 146.5,
+   "ringL": 120.3,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 106925,
+    "castFrac": 0.1036,
+    "edgeRGB": 7.01,
+    "bandMin": 3.75,
+    "bands": [
+     21.16,
+     3.75,
+     4.98,
+     9.38
+    ],
+    "clutter": 49.53,
+    "ringL": 115,
+    "castL": 146.2,
+    "edgeL": 121.5,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.04,
+    "bandMin": 2.99
+   },
+   "clutter": 43.94,
+   "castFrac": 0.103,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.55,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 1,
+   "arm": "dark:0.35",
+   "edgeRGB": 1.82,
+   "bandMin": 2.79,
+   "castL": 146.3,
+   "ringL": 120.8,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 106343,
+    "castFrac": 0.103,
+    "edgeRGB": 1.62,
+    "bandMin": 2.26,
+    "bands": [
+     22.55,
+     14.23,
+     2.26,
+     14.61
+    ],
+    "clutter": 48.05,
+    "ringL": 120.6,
+    "castL": 145.9,
+    "edgeL": 122,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.6,
+    "bandMin": 4.5
+   },
+   "clutter": 44.69,
+   "castFrac": 0.1023,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.35,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.2,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 1,
+   "arm": "dark:0.20",
+   "edgeRGB": 3.65,
+   "bandMin": 5.98,
+   "castL": 146.1,
+   "ringL": 122.4,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 105824,
+    "castFrac": 0.1025,
+    "edgeRGB": 2.89,
+    "bandMin": 5.53,
+    "bands": [
+     30.79,
+     29.83,
+     7.23,
+     5.53,
+     14.26
+    ],
+    "clutter": 49.38,
+    "ringL": 119.2,
+    "castL": 145.7,
+    "edgeL": 121.6,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.95,
+    "bandMin": 3.13
+   },
+   "clutter": 44.16,
+   "castFrac": 0.1019,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 1,
+   "arm": "add:0.25",
+   "edgeRGB": 0.83,
+   "bandMin": 2.84,
+   "castL": 148,
+   "ringL": 120.9,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 109526,
+    "castFrac": 0.1061,
+    "edgeRGB": 4.77,
+    "bandMin": 3.44,
+    "bands": [
+     24.12,
+     3.44,
+     6.38,
+     11.99
+    ],
+    "clutter": 49.41,
+    "ringL": 118.6,
+    "castL": 147.6,
+    "edgeL": 123,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 1.57,
+    "bandMin": 3.34
+   },
+   "clutter": 44.62,
+   "castFrac": 0.1055,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 0
+  },
+  {
+   "id": "s031",
+   "zone": "meadow",
+   "rep": 1,
+   "arm": "add:0.60",
+   "edgeRGB": 0.72,
+   "bandMin": 1.21,
+   "castL": 149,
+   "ringL": 120.3,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 111425,
+    "castFrac": 0.1079,
+    "edgeRGB": 5.89,
+    "bandMin": 3.09,
+    "bands": [
+     9.87,
+     20.21,
+     3.09,
+     7.91,
+     16.28
+    ],
+    "clutter": 49.97,
+    "ringL": 117.1,
+    "castL": 148.6,
+    "edgeL": 122.7,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 2.09,
+    "bandMin": 1.95
+   },
+   "clutter": 45.41,
+   "castFrac": 0.1073,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 0
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 0,
+   "arm": "off",
+   "edgeRGB": 3.1,
+   "bandMin": 3.71,
+   "castL": 178.2,
+   "ringL": 162.7,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 54900,
+    "castFrac": 0.0532,
+    "edgeRGB": 12.01,
+    "bandMin": 8.25,
+    "bands": [
+     22,
+     8.25,
+     10.51,
+     16.54
+    ],
+    "clutter": 44,
+    "ringL": 152.4,
+    "castL": 178.1,
+    "edgeL": 163.7,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.86,
+    "bandMin": 2.92
+   },
+   "clutter": 38.03,
+   "castFrac": 0.0528,
+   "pol": null,
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 0,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 0,
+   "arm": "dark:0.55",
+   "edgeRGB": 3.92,
+   "bandMin": 2.83,
+   "castL": 177.2,
+   "ringL": 158.3,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 53916,
+    "castFrac": 0.0522,
+    "edgeRGB": 5.39,
+    "bandMin": 7.84,
+    "bands": [
+     7.84,
+     11.51,
+     9.56,
+     38.6
+    ],
+    "clutter": 38.58,
+    "ringL": 160.8,
+    "castL": 177,
+    "edgeL": 163.6,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.76,
+    "bandMin": 3.6
+   },
+   "clutter": 43.96,
+   "castFrac": 0.0521,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.55,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 0,
+   "arm": "dark:0.35",
+   "edgeRGB": 3.92,
+   "bandMin": 4.38,
+   "castL": 176.9,
+   "ringL": 158.8,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 53270,
+    "castFrac": 0.0516,
+    "edgeRGB": 10.62,
+    "bandMin": 2.4,
+    "bands": [
+     10.95,
+     21.98,
+     2.4,
+     13.87
+    ],
+    "clutter": 46.26,
+    "ringL": 153.2,
+    "castL": 176.5,
+    "edgeL": 162.6,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.93,
+    "bandMin": 3.85
+   },
+   "clutter": 43.35,
+   "castFrac": 0.0516,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.35,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.2,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 0,
+   "arm": "dark:0.20",
+   "edgeRGB": 4.31,
+   "bandMin": 3.87,
+   "castL": 176.4,
+   "ringL": 163.3,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 53048,
+    "castFrac": 0.0514,
+    "edgeRGB": 13.8,
+    "bandMin": 3.26,
+    "bands": [
+     10.54,
+     15.55,
+     3.26,
+     25.79
+    ],
+    "clutter": 47.89,
+    "ringL": 149.8,
+    "castL": 176.1,
+    "edgeL": 162.6,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 4.22,
+    "bandMin": 3.3
+   },
+   "clutter": 38.44,
+   "castFrac": 0.0513,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 0,
+   "arm": "add:0.25",
+   "edgeRGB": 3.08,
+   "bandMin": 3.43,
+   "castL": 179.3,
+   "ringL": 161.6,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 55612,
+    "castFrac": 0.0539,
+    "edgeRGB": 13.79,
+    "bandMin": 10.02,
+    "bands": [
+     17.84,
+     11.65,
+     11.97,
+     10.02,
+     48.88
+    ],
+    "clutter": 46.8,
+    "ringL": 151.2,
+    "castL": 179.2,
+    "edgeL": 164.2,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 4.73,
+    "bandMin": 3.94
+   },
+   "clutter": 38.14,
+   "castFrac": 0.0536,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 0,
+   "arm": "add:0.60",
+   "edgeRGB": 2.63,
+   "bandMin": 3.54,
+   "castL": 180.7,
+   "ringL": 160.8,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 57693,
+    "castFrac": 0.0559,
+    "edgeRGB": 12.16,
+    "bandMin": 5.96,
+    "bands": [
+     19.9,
+     11.61,
+     13.15,
+     5.96,
+     28.3
+    ],
+    "clutter": 40.87,
+    "ringL": 151.7,
+    "castL": 180.8,
+    "edgeL": 163.5,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.23,
+    "bandMin": 3.8
+   },
+   "clutter": 37.93,
+   "castFrac": 0.0557,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 1,
+   "arm": "off",
+   "edgeRGB": 2.82,
+   "bandMin": 3.67,
+   "castL": 178.1,
+   "ringL": 161.9,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 54933,
+    "castFrac": 0.0532,
+    "edgeRGB": 18.68,
+    "bandMin": 5.84,
+    "bands": [
+     14.77,
+     26.26,
+     5.84,
+     21.83
+    ],
+    "clutter": 48.42,
+    "ringL": 145.1,
+    "castL": 178.1,
+    "edgeL": 163.5,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.95,
+    "bandMin": 3.13
+   },
+   "clutter": 38.19,
+   "castFrac": 0.0531,
+   "pol": null,
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 0,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 1,
+   "arm": "dark:0.55",
+   "edgeRGB": 3.7,
+   "bandMin": 3.68,
+   "castL": 177.4,
+   "ringL": 163.1,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 53896,
+    "castFrac": 0.0522,
+    "edgeRGB": 11.33,
+    "bandMin": 4.22,
+    "bands": [
+     10.66,
+     21.16,
+     4.22,
+     24.8
+    ],
+    "clutter": 46.01,
+    "ringL": 152.6,
+    "castL": 176.9,
+    "edgeL": 162.5,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.38,
+    "bandMin": 3.52
+   },
+   "clutter": 38.24,
+   "castFrac": 0.0518,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.55,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 1,
+   "arm": "dark:0.35",
+   "edgeRGB": 4.22,
+   "bandMin": 3.76,
+   "castL": 176.9,
+   "ringL": 163.1,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 53300,
+    "castFrac": 0.0516,
+    "edgeRGB": 6.84,
+    "bandMin": 4.59,
+    "bands": [
+     10.29,
+     11.97,
+     4.59,
+     41.55
+    ],
+    "clutter": 41.95,
+    "ringL": 158,
+    "castL": 176.5,
+    "edgeL": 162.8,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.42,
+    "bandMin": 3.22
+   },
+   "clutter": 38.52,
+   "castFrac": 0.0515,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.35,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 1,
+   "arm": "dark:0.20",
+   "edgeRGB": 4.19,
+   "bandMin": 3.45,
+   "castL": 176.5,
+   "ringL": 163.5,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 53059,
+    "castFrac": 0.0514,
+    "edgeRGB": 7.08,
+    "bandMin": 3.93,
+    "bands": [
+     12.36,
+     16.33,
+     3.93,
+     14.49
+    ],
+    "clutter": 40.77,
+    "ringL": 157.3,
+    "castL": 176.1,
+    "edgeL": 162.7,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.75,
+    "bandMin": 3.24
+   },
+   "clutter": 38.59,
+   "castFrac": 0.0513,
+   "pol": "dark",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0.1,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 1,
+   "arm": "add:0.25",
+   "edgeRGB": 2.96,
+   "bandMin": 3.52,
+   "castL": 179.3,
+   "ringL": 161.8,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 55586,
+    "castFrac": 0.0539,
+    "edgeRGB": 14.48,
+    "bandMin": 6.76,
+    "bands": [
+     27.9,
+     12.55,
+     10.86,
+     6.76,
+     41.24
+    ],
+    "clutter": 45.36,
+    "ringL": 150,
+    "castL": 179.2,
+    "edgeL": 164.2,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 3.94,
+    "bandMin": 3.75
+   },
+   "clutter": 38.15,
+   "castFrac": 0.0537,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.25,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  },
+  {
+   "id": "s033",
+   "zone": "crag",
+   "rep": 1,
+   "arm": "add:0.60",
+   "edgeRGB": 4.33,
+   "bandMin": 3.68,
+   "castL": 181.1,
+   "ringL": 157.9,
+   "nat": {
+    "ok": true,
+    "res": [
+     1344,
+     768
+    ],
+    "castPx": 57655,
+    "castFrac": 0.0559,
+    "edgeRGB": 12.27,
+    "bandMin": 2.6,
+    "bands": [
+     11.33,
+     20.12,
+     2.6,
+     20.55
+    ],
+    "clutter": 46.09,
+    "ringL": 151.8,
+    "castL": 180.8,
+    "edgeL": 163.2,
+    "K": 4,
+    "RING": 21
+   },
+   "eq320": {
+    "edgeRGB": 2.79,
+    "bandMin": 3.44
+   },
+   "clutter": 40.63,
+   "castFrac": 0.0556,
+   "pol": "add",
+   "rimRingL": null,
+   "cfg": {
+    "power": 2.2,
+    "add": 0.6,
+    "dark": 0.2,
+    "autoL": 85,
+    "colour": 16769984,
+    "perBody": false,
+    "fallback": "dark"
+   },
+   "patched": 12,
+   "shared": 0,
+   "rimMs": 0,
+   "R": 5
+  }
+ ]
+}
