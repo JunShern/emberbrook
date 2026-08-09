@@ -1,0 +1,309 @@
+[
+ {
+  "fid": "F6",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "navigation",
+  "where": "cluttered structures beyond central gateway",
+  "bbox": [
+   0.26,
+   0.22,
+   0.47,
+   0.6
+  ],
+  "severity": 2,
+  "desc": "Overlapping roofs, walkways, and wooden clutter behind the gate obscure the main pathway and make further traversal ambiguous.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The central dirt road clearly leads under the gateway and into the town, providing an obvious, unobstructed navigation path."
+  }
+ },
+ {
+  "fid": "F12",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "foreground right cliff slope",
+  "bbox": [
+   0.668,
+   0.595,
+   0.786,
+   0.778
+  ],
+  "severity": 1,
+  "desc": "The lower tree floats above the terrain with its trunk ending abruptly above the ground slope.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "-0.9,11,-0.4,4.3",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -0.9,11,-0.4,4.3"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The lower tree is clearly attached to and supported by wooden structure beams anchored into the cliff face rather than floating freely."
+  }
+ },
+ {
+  "fid": "F27",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockhead",
+  "item": null,
+  "category": "immersion",
+  "where": "along the central bridge walkway",
+  "bbox": [
+   0.35,
+   0.435,
+   0.685,
+   0.575
+  ],
+  "severity": 1,
+  "desc": "The decorative string of bunting flags clips directly through the crates lined along the bridge.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "66,79.2,-3.1,18.8",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 66,79.2,-3.1,18.8"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The string of bunting flags remains suspended above the crates along the bridge rail without clipping into them."
+  }
+ },
+ {
+  "fid": "F33",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "geometry",
+  "where": "broken wooden dock walkway in lower left",
+  "bbox": [
+   0.16,
+   0.74,
+   0.38,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "The broken wooden walkway planks float disjointedly in mid-air without supporting posts or underlying framework.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "69.3,87.3,20.9,38.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 69.3,87.3,20.9,38.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The broken wooden platform has visible supporting posts and underlying timber beams connecting it to the structure below."
+  }
+ },
+ {
+  "fid": "F34",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "occlusion",
+  "where": "large roof in foreground center",
+  "bbox": [
+   0.45,
+   0.47,
+   0.75,
+   1
+  ],
+  "severity": 2,
+  "desc": "The massive foreground roof structure completely obscures the ground-level paths and walkways running underneath it.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "A foreground roof hiding elements directly beneath it is a standard result of high-angle camera perspective, not a visual defect."
+  }
+ },
+ {
+  "fid": "F35",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "immersion",
+  "where": "conveyor track on upper right slope",
+  "bbox": [
+   0.67,
+   0.14,
+   0.74,
+   0.43
+  ],
+  "severity": 1,
+  "desc": "The cargo blocks along the incline track appear as untextured primitive cubes resting unnaturally without visible attachments or supports.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "67.7,98.6,15.3,21.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 67.7,98.6,15.3,21.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The cargo blocks have textured colored surfaces and sit within a defined track channel as part of the stylized aesthetic."
+  }
+ },
+ {
+  "fid": "F38",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "geometry",
+  "where": "bottom right foreground roof",
+  "bbox": [
+   0.81,
+   0.78,
+   1,
+   1
+  ],
+  "severity": 1,
+  "desc": "The foreground roof planes clip into the camera frame with flat, unfinished geometric cross-sections.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "41.4,51.3,16.9,26.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 41.4,51.3,16.9,26.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The foreground roof in the bottom right is fully modeled with board thickness and simply extends beyond the camera frame, which is normal camera framing rather than broken geometry."
+  }
+ },
+ {
+  "fid": "F42",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "immersion",
+  "where": "string lights on the upper right",
+  "bbox": [
+   0.86,
+   0.26,
+   0.97,
+   0.32
+  ],
+  "severity": 1,
+  "desc": "The hanging string light wire extends into open space without attaching to a visible post or wall anchor on the right.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "48.5,57,6.8,20.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 48.5,57,6.8,20.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The hanging string light wires on the upper right attach properly to visible wooden posts and building walls."
+  }
+ },
+ {
+  "fid": "F47",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "middle ground wooden staircase",
+  "bbox": [
+   0.301,
+   0.328,
+   0.704,
+   0.726
+  ],
+  "severity": 2,
+  "desc": "The primary staircase leads down into dark shadows with ambiguous landings, making it unclear where the player can walk.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The main staircase and its bottom landing platform are clearly lit and clearly defined where they connect to the lower ramp."
+  }
+ },
+ {
+  "fid": "F49",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "long central wooden staircase",
+  "bbox": [
+   0.32,
+   0.33,
+   0.7,
+   0.72
+  ],
+  "severity": 2,
+  "desc": "The staircase visually blends into the dark background shadow, making the primary path difficult to distinguish.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The main wooden staircase is brightly lit by direct sunlight and stands out with strong visual contrast against the dark background shadow."
+  }
+ },
+ {
+  "fid": "F50",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "geometry",
+  "where": "floating staircase steps",
+  "bbox": [
+   0.36,
+   0.42,
+   0.7,
+   0.72
+  ],
+  "severity": 1,
+  "desc": "The central staircase section lacks structural joists or support beams beneath the steps, leaving them floating in mid-air.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "32.4,47.1,18,26.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 32.4,47.1,18,26.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The individual steps are attached to long side stringers rather than floating independently in mid-air."
+  }
+ }
+]

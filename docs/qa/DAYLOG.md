@@ -23688,3 +23688,169 @@ OWED / NAMED FOR ROUND 9:
      two modes), quay-west's three ABSENT exits, weave's black cave mouth (three passes).
      The stair-tread family is the loudest thing in Dellhollow that nobody has measured.
 
+
+## 2026-08-09 — DELLHOLLOW GRAPHICS ROUND 9: THE CANVAS'S VALUE IS A WEAK LEVER AND ITS
+## OWN CONTROL SAYS SO; THE STAIRS' BUILDER REFUSES IN SILENCE; AND WEAVE'S CAVE IS FOLIAGE
+
+Board with every table: docs/qa/dellhollow-graphics/index.html (round-9 section). Carriers
+tools/qm_canvas_value.py, tools/dh_stair_stringer.py, and a `drop` mode inside
+tools/t2_color_pops.py. All measurement off ONE `dh_objmap dump` (486,000 marched rays,
+15 cameras) read against the shipped plates.
+
+(1) TARGET 1 — THE CANVAS'S VALUE. WHAT THE FRAME WANTS IS A NUMBER, AND SO IS THE PROOF
+THAT ALBEDO CANNOT REACH IT. Round 8 named `CANVAS_B` as the residual lever. Measured:
+crossing's `qm_awning_0` reads L p05 97.3 / p50 159.2 / p95 186.4 with 57.3% over L150,
+against everything else at 2.6-10.6 m at p05 3.2 / p50 98.4 / p95 131.7 — and against
+`mat_qm_paving`, THE TOWN'S OWN SUNLIT STONE, which reads p50 99.8-117.5 on FIVE cameras
+and never exceeds p95 138.1 on any of them. The canvas's MEDIAN sat above the p95 of every
+paved surface in Dellhollow.
+**THE STRIPE-PERIOD LEVER IS REFUTED ON THE GEOMETRY, and round 8's premise expired with
+its own fix.** "The in-frame corner is two cream columns" was true of the SEVEN-column
+canvas round 8 measured and is false of the THIRTEEN-column one it shipped: projecting the
+39 vertices through crossing's own solved camera puts columns 07..12 in frame, column 09
+being the navy `STALLC[1]`. The plate agrees (canvas L down to 92.1). THE DARK STRIPE IS
+ALREADY IN THE PICTURE. NOT BUILT.
+**AND THE LEVER THAT WAS BUILT IS WEAK, WHICH ITS OWN CONTROL SAYS BEFORE THE JUDGE DOES.**
+Draft sweep at crossing (1008x576/28 spp), same ray-derived mask, albedo / spec -> p50 / >150 / >170:
+    0.320 0.50  160.1  57.5%  39.5%   (as shipped by round 8)
+    0.240 0.50  153.4  53.1%  16.3%
+    0.192 0.50  148.3  49.0%   5.2%
+    0.144 0.50  141.3  16.1%   0.0%
+    0.020 0.50  104.2   0.4%   0.0%   <- CONTROL: BLACK PAINT, STILL L 104
+    0.320 0.15  154.1  52.9%  33.7%
+    0.144 0.15  133.0   6.3%   0.0%   <- SHIPPED
+**AT SIXTEEN TIMES DARKER THAN CREAM THE CANVAS IS STILL AT THE PAVING'S OWN VALUE.** A
+sixteen-fold albedo cut buys 56 levels of median and cannot get under the stone, so THIS
+SURFACE IS OVER-EXPOSED, NOT OVER-ALBEDO: it is the one thing in that corner catching direct
+light while the near field sits in gorge shadow, and it lives in AgX's shoulder where albedo
+is nearly inert. What remains at zero diffuse is the Principled's DEFAULT 0.5 Specular IOR
+Level (~4%) on a woven cloth — hence `--spec 0.15`, physics rather than taste. Confinement:
+off-canvas mean |dL| 0.03 of one 8-bit level. CLASS: MATERIAL.
+And the guard round 8 earned would have been re-broken by the pull: `qm_awning_1`'s cloth IS
+the cream, so its partner `CANVAS_ALT` (0.150,0.128,0.104) lands 0.006 from the new cream —
+the one monochrome canvas in town, back again by the same mechanism for the opposite reason.
+The carrier refuses that and re-derives the partner at 2.13x contrast; qm_build carries both.
+
+(2) DEEP-STAIRS' FLOATING TREADS — THE JUDGE IS RIGHT AND THE BUILDER REFUSES IN SILENCE.
+`wf_stair_treads` 168 components, `wf_stair_stringers` FOUR (2 per flight, so two flights are
+carried). 36 of 168 treads (21.4%) have no stringer within 1.3 m and 33 of the 36 are ONE
+CONTIGUOUS BAND at z 5.0-6.9, which projects to deep-stairs u 0.546..0.666 v 0.562..0.666 —
+inside the box all four judge passes drew.
+THE MECHANISM IS `waterfront_build.py` LINES 358-375: `if (p1-p0).length < 0.9 or
+any(blocked_at(...)): continue` — no log line, no counter, no manifest, and its own
+`log("BUILD", ...)` reports the number of TREADS. A flight that lost both stringers looks
+exactly like a flight that kept them. Same family as `_court_probe`.
+FIXED AS A DIFFERENT SHAPE, and that is the whole of why it is buildable: the original beam
+runs OUTBOARD, which over a zigzag flight is straight over the flight below. The carrier runs
+TWO CARRIAGES UNDERNEATH on the flight's own centre line, top face on the treads' own
+underside, at +-1.07 m of a 1.25 m half-width — inside the tread footprint, so they stand over
+nothing the treads do not. Measured clearance under them 3.82 m over
+`walk_e_fish-dock__winch-foot_l6` against a 2.05 m bar. CLASS: GEOMETRY.
+TWO ORACLE DEFECTS PAID FOR IN DRY RUNS, BOTH SILENT: the walk network is `hide_render` (it is
+collision, never a picture), so the obvious filter left the headroom oracle with ONE walk mesh
+of 275; and a naive "anything within 2.05 m below" refuses EVERY stair in the world, because a
+flight's own treads are 0.38 m apart — the first run refused the one real orphan flight and
+named a tread OF THE VERY FLIGHT IT WAS CARRYING.
+
+(3) CROSSING'S FLOATING PLANK — CONFIRMED, AND IT IS A COLOUR POP WHOSE HOST WAS NEVER BUILT.
+`t2c_N5_nl_barge_deck` is FOUR VERTICES — one quad, 4.5 x 1.3 m, `mat_shelf_paint_bone` — at
+z -3.25..-3.00 over `water_pool-downstream`, whose surface is z -3.80: a bone-white rectangle
+hanging 0.55 m IN MID-AIR over open water with nothing under it. The tarp branch's own "posts
+if it floats" never fired (`ground_below` finds no ground over a pool), so it built the cloth
+and no legs. THE SIBLING ROW ALREADY KNEW: `N4_nl_barge_hull` is in `not_built` for "no clear
+mounting face on the moored barge". Dropped; the row is now in `DROP_ROWS`. CLASS: GEOMETRY.
+AND THE DROP CARRIER TAKES NAMES, NOT THE SET: swept over all of `DROP_ROWS` its first dry run
+reported `G3_awning_tollyard` present and would have DELETED IT — that row is HANDED_OFF to
+`tools/t2_gate_awnings.py`, WHICH BUILDS IT UNDER THE SAME NAME. "Not built here" and "not in
+the master" are different claims.
+
+(4) WEAVE'S "BLACK CAVE MOUTH" — REFUTED. THERE IS NO CAVE. Nine naive passes over four runs,
+plus round 8's CHECKLIST ("a dark cave archway cut into the rock face leading out of the
+district"), describe a pitch-black cave at u 0.255..0.330 v 0.070..0.200. Census of the 188
+sub-L6 rays in that box: 43.6% `veg_lf_rimclump_6`, 24.5% `_20`, 3.7% `_17`, 2.1% `_32`, 2.1%
+`_30` — all `mat_leaf_autumn` at ~59 m — and only 11.7% rock. **78.1% OF THE BLACK IS FIVE
+AUTUMN-FOLIAGE CLUMPS RENDERING AT LITERAL L 0.0**, silhouetted against a lit far wall. The
+judge invented an architectural feature to explain a value. NOT BUILT.
+The real defect under it is town-wide and is NOT a cave: `mat_leaf_autumn` reads L p50 0.0 at
+crossing, 0.2 at cottage (5.2% of frame), 0.4 at weave, 13.8 at deep-stairs — and 121.5 at
+waterfront, 58.6 at gate. The material is capable; those clumps are unlit. ROUND 10's, with
+the caution that `dh_albedo_floor`'s own note already separates "a 0.94% albedo" from
+"genuinely unlit, and the lighting doctrine governs them", and this is resolved neither way.
+
+(5) QUAY-WEST'S "THREE ABSENT EXITS" — ALL THREE ARE IN FRAME. Every edge leaving quay-west,
+projected through its own solved camera with `dh_objmap`'s first hit:
+    cookhouse (door)  u 0.645 v 0.575  26.2 m  visible
+    -> lockhead       u 0.098 v 0.422  35.0 m  visible
+    -> weave          u 0.105 v 0.504  30.3 m  visible
+    -> deep-stairs    u 0.608 v 0.865  22.9 m  visible   <- the ONE the judge found
+    -> loop-stairs    u 0.243 v 0.297  36.6 m  first hit `qm_bunting_lines | mat_rope` at 31.4 m
+SEAM CANON'S "EXITS IN FRAME" IS SATISFIED GEOMETRICALLY. The three called absent sit at
+30-37 m near the left edge; the one found sits at 22.9 m filling the bottom-right. It is a
+LEGIBILITY question (docs/plans/town-legibility.md), fixed by a camera or a threshold marker,
+not by a material or a mesh. NOT BUILT.
+
+REBAKE LIST FROM RENDERED FRAMES (whole-town draft A/B, 15 a side, 1008x576/28 spp; documented
+noise floor 0.010% / 0.000%), with the objmap identity of the changed rays as the receipt:
+  crossing 1.777/1.666 (awning 79%, tarp 7%) · north-landing 1.617/1.478 (tarp 67%) ·
+  deep-stairs 1.070/0.696 · waterfront 0.543/0.363 · quay-west 0.403/0.198 (awnings 73%) ·
+  gate 0.226/0.139 · boatyard 0.169/0.081 · loop-stairs 0.132/0.109 · weave 0.131/0.050 ·
+  lockhead 0.089/0.060
+REFUSED WITH A NUMBER: shelf-east 0.016/0.001 · fishdock 0.010/0.001 · lockfive 0.006/0.000 ·
+shelf-west 0.005/0.001 · cottage 0.003/0.001. Ten of fifteen is a real reach and not a frustum
+guess: the awning class appears in seven cameras by the objmap's own census, the tarp in two,
+the carriages in three, and EVERY camera's changed pixels attribute to exactly those edits.
+BAKES: ten, 1-WIDE SERIAL in one Blender, rc=0, 2172.9 s (loop-stairs 189.3 s ... gate 264.3 s);
+`memory_pressure -Q` 89% free before the spawn, no second Blender at any point.
+
+THE VERDICT (scene_redteam --mode both, pinned gemini-3.6-flash, 39 calls, 0 errors,
+run-round9canvas, 7 plates, N=3), said as a language count at the same box:
+  * THE CANVAS — "WHITE" IS GONE. crossing bottom-right: round6phase 3/3 naive + checklist,
+    round7water 3/3 + checklist, round8awning 2/3 + checklist, ALL of them carrying the
+    adjective "white"; round9canvas 2/3 naive, checklist 0, and the word "white" appears
+    ZERO times ("Incomplete low-poly GREY mesh geometry", "A bright untextured polygon wedge").
+    "Untextured" survives 2/3 — exactly what the mechanism predicts, since the value moved
+    (>L170 39.5% -> 0.0%) and the surface still has no texture.
+  * THE PLANK — CLEARED. "a plank/board/platform floats on the water" ran 2/2/3 in rounds
+    6/7/8 and is ZERO in round 9; the checklist now calls that water "convincing light
+    reflection, subtle tonal depth".
+  * THE STAIRS — PARTIALLY MOVED, and the sentence says it better than the count. Round 8's
+    three naive passes each said the treads float INDIVIDUALLY without stringers; round 9 says
+    that word zero times, naive_0 stops complaining about support at all, and what survives is
+    1/3 "lacks structural joists or support beams beneath the steps" and 1/3 "without any
+    support POSTS or structural frame ANCHORING IT UNDERNEATH" — a posts-to-ground claim, which
+    is true and different: this flight hangs 3.8 m clear of the deck below by design.
+  * WHAT GREW, AND IT IS ROUND 10'S ITEM: darkness at deep-stairs, 2/3 -> 3/3 naive passes
+    ("extremely harsh cast shadows completely obscure the pathing", "pitch-black cast shadow
+    completely obscures the passage and stairwell", "the staircase visually blends into the
+    dark background shadow").
+  * NOT CLAIMED: quay-west's three "no exit toward X" checklist rows went 3 -> 0 and NOTHING
+    in this round touched those exits. At N=3 that is judge noise, reported as noise.
+
+GATES: cine_test 635 ok / 1 failed / 2 soft — the pre-attributed deep-stairs<->waterfront seam
+red, same {"fired":0,"expected":10}, i.e. the Dellhollow baseline EXACTLY · slice_test 776/0 ·
+findability_test 69/0 with 11 warnings · routes_derive --check clean, 15 shots (nothing
+walkable moved, so it was already up to date). Both bundles re-exported in this window
+(`cine_bake --glb` + `tools/town_export.py`) because master geometry moved.
+
+ONE INSTRUMENT FACT THIS ROUND PAID FOR, AND IT COST THE FIRST WHOLE SWEEP:
+**A `.blend` COPIED OUT OF `tools/blends/` LOSES EVERY RELATIVE IMAGE PATH, AND CYCLES RENDERS
+THE MISSING TEXTURES MAGENTA.** The frame still renders, Blender exits 0, and the numbers are
+plausible-looking garbage — `mat_qm_paving` p50 161.2 against the shipped plate's 117.5,
+whole-frame p50 35.3 against 46.9. THE TELL IS ONLY A PICTURE, and the trap is worse than that:
+the awning's OWN numbers barely moved (163.5 vs 160.1) because it wears a vertex-colour material
+with no texture, so a sweep of exactly that object would have survived undetected and shipped a
+number derived under a broken bounce environment. Copy a working blend to `tools/blends/`,
+never to a scratchpad — `tools/blends/backups/` is ALSO wrong (one level deeper is still a
+different relative root, and it reproduced the broken numbers bit for bit).
+
+OWED / NAMED FOR ROUND 10:
+  1. **A DEPLOY IS OWED** — ten plates and both bundles supersede what is on the site.
+  2. Deep-stairs DARKNESS, now 3/3 naive passes and the loudest thing left in that frame.
+  3. `mat_leaf_autumn` at literal L 0.0 across four cameras (cottage 5.2% of frame) — the real
+     subject behind the phantom cave. Decide albedo vs light with a control, not an inheritance.
+  4. The canvas's residual is now "untextured", and the two levers left are a HEM/VALANCE on the
+     lip (t2_color_pops' own awning kind builds one "so it is a thing"; qm_build's does not) and
+     darkening the RIB columns instead of averaging them. Both are geometry/vertex-data, both
+     are cheap, and neither is the value.
+  5. Quay-west's three exits are a LEGIBILITY item for the town-legibility lane, not a graphics
+     one, and the loop-stairs sightline has a bunting rope across it.
