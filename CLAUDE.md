@@ -495,9 +495,29 @@ git runs here, on branch `migration/3d-hybrid`.
   0.211; `edgeRGB` still runs BACKWARDS. Two rulers would not have been a comparison, so the
   measurement library was moved verbatim into `tools/battle_place_lib.mjs` and both frames are
   read by literally the same object.
-  **STILL UNMEASURED, AND IT IS THE NEXT HONEST GAP: the command menu is a DOM overlay
-  `snapshot()` CANNOT SEE.** Every frame in both censuses is judged without the box that covers
-  its lower band in play. Nobody has sorted what the player actually sees.
+  **MEASURED ON THE COMPOSITED FRAME (2026-08-09) — AND IT IS NOT THE MENU.** 124 frames captured
+  with the DOM composited in (`battle_decide --composite=1`), all looked at, and their 124 canvas
+  twins re-sorted BY THE SAME RATER because comparing across raters would confound treatment with
+  rater. The command list is 2.1% of the frame; the union of opaque panels is 17.1%, and the one
+  that matters is **TURN ORDER, BOTTOM-RIGHT — exactly where `decide`'s 27 mm two-shot puts the
+  foe line (screen-x 0.78)**. 21/62 sites have a body ≥10% under a panel, 8 ≥25%, 2 ≥50%, **and it
+  is the WOLF every time, never a party body**. Two uncounted overlays also ride the frame
+  (`.ebb-vig` vignette, `.ebb-scrim` foot wash). Canvas vs composited agree 56/62; the bad fraction
+  moves **+3.2 points** — and identically on both arms, so the sun refusal is worth the same −3.2
+  on the frame the player SEES. Costed, not shipped: make `decide`'s `keep:'foes'` containment
+  hold the foe line inside a SAFE RECT (frame minus the bottom-right panel band) — one rect, no
+  new solve, same 0.4 ms path.
+  **AND THE NUMBER THAT BOUNDS EVERY NUMBER ABOVE: TWO RATERS ON THE SAME CANVAS FRAMES AGREE
+  ONLY 43/62 (69.4%) AND DIFFER BY 9.7 POINTS OF BAD** (32.3% vs 22.6%), with zero good↔bad
+  reversals. So the eye-sort's own spread is ~10 points and the UI is worth about a third of it.
+  Treat any single-rater placement percentage as ±10; DIRECTIONS (which axis separates, which way
+  a fix moves) survive, absolute levels do not.
+  **s053 WAS NOT A REGRESSION**: the library says the new site is BETTER (edgeRGB 5.63→10.37), the
+  proposed guard never fires there and makes the census worse, on the composited frame it is
+  acceptable, and a second rater calls it bad in BOTH arms. The "1 regressed" slot is better
+  explained by **TONE's boom pick not being reproducible run to run — 9 of the 41 sites PLACE did
+  not move photograph a different picture between arms.** That non-determinism is unfixed and it
+  contaminates any arm-to-arm attribution.
   Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
