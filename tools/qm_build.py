@@ -1261,32 +1261,80 @@ AWNINGS = []
 NOAWN = []
 
 
+# the scallop, at the lip and at the mid row.  0.11 m over a 0.98 m reach with ribs
+# 0.42 m apart is a slack canvas, not a tent: peak cross-slope at the mid row is
+# atan(0.073 / 0.21) = 19 deg, which is what a directional key needs to print
+# anything at all on a surface that is otherwise ruled.
+SAG_LIP = 0.110
+SAG_MID = 0.073
+CANVAS_B = (0.320, 0.295, 0.248)    # the constant second stripe every awning wears
+CANVAS_ALT = (0.150, 0.128, 0.104)  # ... and its partner when the CLOTH is that cream
+
+
 def awning(x0, x1, y_wall, y_out, z_wall, z_out, rgb_a, rgb_b, nstripe=None,
            cname=None):
-    """A striped canvas awning, its stripes baked into VERTEX COLOURS.
+    """A striped canvas awning, its stripes baked into VERTEX COLOURS, SCALLOPED
+    BETWEEN ITS RIBS.
 
     A stripe is the obvious job for a texture or a procedural checker and both
     are exactly what the glTF-survival gate forbids.  ONE OBJECT PER AWNING, not
     one for the market: the geometry audit takes its footprint probes on the
     BBOX, and awnings 10 m apart leave most of those probes in mid-air
     (finding 97 read the other way).
+
+    THE RELIEF IS NOT DECORATION (round 8, and tools/qm_awning_relief.py carries
+    the same edit onto the live master).  Built flat this is a RULED SURFACE with
+    z constant in x: its normal does not vary along its own width, so no light can
+    print anything on it AT ANY CROP.  Measured on crossing, where `qm_awning_0`
+    fills the bottom-right corner at 5.3 m: local 5x5 sd **0.60** against 4.11 for
+    everything else in that frame at 3-12 m, at L p50 168.8 against the near
+    field's 85.0 — the second brightest large object in the plate and 6.9x flatter
+    than its surroundings.  Eleven naive judge passes over four runs called it "an
+    untextured white polygon".  The stripes could not answer that, and projecting
+    the 21 vertices through crossing's own camera says why: the frame edge crops
+    the canvas to ONE STRIPE, every dark column landing below v = 0.93.
+    A PATTERN OFF THE EDGE OF THE FRAME IS NOT A PATTERN.
+
+    So: 2n+1 columns.  The old columns become RIBS AND RISE; the new midpoints sit
+    exactly on the old ruled surface.  NO VERTEX EVER MOVES DOWN, which is not a
+    nicety — this canvas hangs 0.19 m over a 2.05 m corridor and `AWN_CLEAR`
+    exists because a 50 mm margin is not a margin, so the headroom `awning_lip`
+    and `over_walk` cleared has to be arithmetically untouched.  The wall row is
+    pinned (a canvas is nailed to a straight batten); mid and lip scallop, which
+    breaks the lip's straight silhouette as well.
     """
     n = nstripe or max(4, int(round((x1 - x0) / 0.42)))
+    if tuple(rgb_a) == tuple(rgb_b):
+        # STALLC[3] is BIT-IDENTICAL to the constant partner stall() passes, so
+        # one canvas in town shipped 21/21 vertices at one colour — the only truly
+        # monochrome awning here, invisible to every instrument that reports
+        # materials because a stripe is vertex data.
+        rgb_b = CANVAS_ALT
+    NC = 2 * n + 1
     V, F, C = [], [], []
-    for k in range(n + 1):
-        x = x0 + (x1 - x0) * k / n
-        V.append((x, y_wall, z_wall))
-        V.append((x, (y_wall + y_out) / 2, (z_wall + z_out) / 2 + 0.055))
-        V.append((x, y_out, z_out))
-        C += [rgb_a, rgb_a, rgb_a]
-    for k in range(n):
-        c = rgb_a if k % 2 == 0 else rgb_b
+    stripe = [rgb_a if k % 2 == 0 else rgb_b for k in range(n)]
+    LIFT = (0.0, SAG_MID, SAG_LIP)
+    for j in range(NC):
+        x = x0 + (x1 - x0) * j / (NC - 1.0)
+        rib = (j % 2 == 0)
+        lift = LIFT if rib else (0.0, 0.0, 0.0)
+        V.append((x, y_wall, z_wall + lift[0]))
+        V.append((x, (y_wall + y_out) / 2, (z_wall + z_out) / 2 + 0.055 + lift[1]))
+        V.append((x, y_out, z_out + lift[2]))
+        k = j // 2
+        if not rib:                       # a panel centre keeps its panel's colour
+            c = stripe[k]
+        elif j == 0:
+            c = stripe[0]
+        elif j == NC - 1:
+            c = stripe[n - 1]
+        else:                             # the rib is where the stripe turns over
+            c = tuple((stripe[k - 1][i] + stripe[k][i]) / 2.0 for i in range(3))
+        C += [c, c, c]
+    for j in range(NC - 1):
         for r in (0, 1):
-            i0 = k * 3 + r
+            i0 = j * 3 + r
             F.append((i0, i0 + 3, i0 + 4, i0 + 1))
-        for r in range(3):
-            C[k * 3 + r] = c
-            C[(k + 1) * 3 + r] = c
     me = bpy.data.meshes.new("qm_awning_%d" % len(AWNINGS))
     me.from_pydata(V, [], F)
     me.validate()
@@ -1559,14 +1607,20 @@ def stall(name, cx, cy, ax, w, d, paint, cloth, fish=False):
                       mat=MT, cname=COLL_PROPS))
         p.append(obox("sk", cx, cy + sgn * (hy - 0.08), zc + 0.44, w - 0.24, 0.09, 0.80,
                       mat=paint, cname=COLL_PROPS))
-        p.append(obox("sb", cx, cy - sgn * (hy - 0.20), zc + 1.28, w - 0.20, 0.10, 1.30,
+        # 0.015, NOT 0.20: at 0.20 the board spans hy-0.25..hy-0.15 while the posts
+        # span hy-0.175..hy-0.065, so a 1.30 m painted panel stood 0.185 m PROUD of
+        # its own frame and showed the plaza an unbroken face with nothing holding
+        # it up — round 3's "placeholder plane", named then and never built.  At
+        # 0.015 its plaza face is flush with the posts' back face and the frame is
+        # in front of the panel over its whole height.  Nothing moves plaza-ward.
+        p.append(obox("sb", cx, cy - sgn * (hy - 0.015), zc + 1.28, w - 0.20, 0.10, 1.30,
                       mat=paint, cname=COLL_PROPS))
     else:
         p.append(obox("st", cx + sgn * (hx - 0.42), cy, zc + 0.86, 0.78, w - 0.20, 0.10,
                       mat=MT, cname=COLL_PROPS))
         p.append(obox("sk", cx + sgn * (hx - 0.08), cy, zc + 0.44, 0.09, w - 0.24, 0.80,
                       mat=paint, cname=COLL_PROPS))
-        p.append(obox("sb", cx - sgn * (hx - 0.20), cy, zc + 1.28, 0.10, w - 0.20, 1.30,
+        p.append(obox("sb", cx - sgn * (hx - 0.015), cy, zc + 1.28, 0.10, w - 0.20, 1.30,
                       mat=paint, cname=COLL_PROPS))
     # THE GOODS.  Crates of produce on the trestle, in vertex-coloured heaps —
     # a market with an empty counter is a bus stop.
@@ -1619,7 +1673,7 @@ def stall(name, cx, cy, ax, w, d, paint, cloth, fish=False):
                     fits = False
         if fits:
             aw = awning(cx - w / 2 - 0.10, cx + w / 2 + 0.10, y_w, y_o, zw, lip,
-                        cloth, (0.320, 0.295, 0.248))
+                        cloth, CANVAS_B)
             # PARENTED to its stall, and that is not a dodge: an awning IS
             # attached, the audit says so in as many words ("parented objects are
             # attached by definition"), and the alternative — joining the canvas
