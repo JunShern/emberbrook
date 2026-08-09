@@ -22290,3 +22290,80 @@ Cleanup: this lane's worktree removed, scratch `dist`, both live fetch dirs, the
 profiles and every `static-verify*.png` deleted; zero orphaned Chrome (`ppid 1` root check
 clean). The two stale worktrees from earlier sessions (`wt-prestair`,
 `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+------------------------------------------------------------
+2026-08-09 · BATTLE TONAL-SEPARATION LANE — the boom is chosen on TONE, and half
+the gap turned out to have closed already.
+Board: docs/qa/battle-separation/index.html · instruments tools/battle_sep.mjs +
+the extracted tools/battle_meter.mjs · commits f1ca31fa, 029526e7, f27b342b.
+
+MEASURED FIRST, and the control is the finding. Re-running the camera lane's own
+--mode=legibility on today's tree reproduces the WATER regression and DOES NOT
+reproduce the MEADOW one (18.14 -> 9.61 became 18.55 -> 20.31). The meadow number
+the arc has been carrying belongs to a pose the solver no longer picks: the
+ray-budget lane's scatter-height rule changed the occluder set, which changed the
+placement, which changed the boom. Control-column run-to-run noise is ~2%.
+A NUMBER IN A BOARD IS A MEASUREMENT OF A TREE, NOT A PROPERTY OF THE GAME.
+
+THE TRUTH TABLE (4 sites x 5 boom rungs, one real battle each, pitch.json):
+the boom axis is worth a FACTOR OF 3.4 on foe contrast at water (edgeFoe 9.85 at
+0.16 -> 33.51 at 0.34) and 15-24% at meadow/forest/crag — and the shipped solver
+picked the WORST rung at the one site where the axis matters.
+AND THE GEOMETRIC PROXY CANNOT BE RE-WEIGHTED INTO CORRECTNESS: scoreView's
+back-depth term correlates with measured contrast at -0.958 at water and +0.911
+at crag. THE PROXY'S SIGN IS SITE-DEPENDENT, so no weight — positive, negative or
+zero — fixes both. That is the whole case for measuring the thing itself.
+
+SHIPPED (battle_world.js `TONE`, world arena only, `?btone=0`): the meter's own
+subtraction, run inside the game. Per candidate boom, render the arena into a
+320x180 OFFSCREEN target without the cast and again with it; the difference IS
+each body's silhouette. Score = half the mean and half the MINIMUM edge-vs-ring
+RGB distance, minus ring clutter. No shader; no page camera, ORBIT, canvas or post
+chain touched, so nothing flickers and nothing is restored.
+THREE THINGS IT COST THAT ARE WORTH MORE THAN THE FEATURE:
+ (1) SAY WHICH SPACE THE BYTES ARE IN, AGAIN. r185 renders into a non-XR target in
+     the LINEAR working space and the OutputPass is not in this loop, so the first
+     build differenced raw linear bytes — which crushes a dark site and picked the
+     WRONG boom at the forest (12.88 -> 11.11). One explicit sRGB encode through a
+     256-entry table fixes it. This is the conversion the rules ASK for, not the
+     double convertSRGBToLinear they warn about: the renderer performed none.
+ (2) A CHOOSER THAT IS NOT A REFUSAL IS A COIN FLIP. Inside the 15-24% band the
+     probe's own ranking flipped between two runs of ONE build. It may now only
+     overrule the geometric solver by 35%, which turns every marginal call into
+     today's game and keeps the one decisive call.
+ (3) IT MUST WAIT FOR THE CAST. A proxy solid is the wrong colour to rank a
+     background against; it waits for every tier to leave `proxy` and applies its
+     answer only while the opening `round` shot is still easing.
+RESULT (ab.json): water edgeRGB 13.54 -> 22.04 (+63%), worst body 5.48 -> 10.21
+(+86%), clutter 27.59 -> 17.05, snr 0.491 -> 1.293. meadow/forest flat. crag mean
+20.47 -> 19.14 (-6.5%) while its INVISIBLE body goes 2.45 -> 5.12 (+109%) — the
+half-mean/half-min score trading exactly as designed. Cost 36.9-62.2 ms ONCE per
+battle; steady-state fps 241.9 -> 241.5 (-0.17%), the world arena's lead intact.
+
+BUILT, MEASURED NULL, DELETED — AND THIS IS THE MORE USEFUL RESULT. play3d's
+aerial-perspective ramp is anchored on the PLAYER (R11). A battle is a different
+subject, so the ramp was re-anchored on the arena every frame, derived from the
+farthest combatant's distance from the lens, with the cast exempt BY ARITHMETIC
+(t = 0 at every body) rather than by a material.fog list. Two uniform writes, no
+shader. IT MOVED NOTHING at four sites and at three extinction lengths (water
+13.59 -> 13.03 -> 12.66; crag 21.34 -> 20.38 -> 20.23). THE REASON IS STRUCTURAL:
+at three of four sites the background a body actually fails against is TWO TO FOUR
+METRES BEHIND IT — a cliff face, a hedge bank, near grass. Aerial perspective is a
+cue for the far band and this legibility problem lives in the near one. Do not
+re-open it without first measuring how far the offending background is.
+ALSO REFUTED BEFORE BUILDING: a cast-only lift via emissive/envMapIntensity. The
+sign of (bodyL - ringL) is mixed WITHIN ONE FRAME (meadow: +42.0, +25.3, -46.5,
+-42.5 across four bodies), so a uniform lift raises two and destroys two.
+
+WHAT THE EYE SAYS (the deliverable, and it is not the table): water clearly
+better, meadow unchanged, crag a WASH — the meter's worst body doubles and I
+cannot see it, and the move fills 70% of the shot with a bare rock dome — forest
+STILL BAD, the party standing inside the hedge bank at the hedge's own value.
+DEFAULT-READINESS: not yet on legibility, but what stands in the way is no longer
+the camera. It is (a) placement QUALITY — crag staged on a bare dome, meadow into
+a building's shadow, forest inside a hedge: all legal, none good — and (b) the
+body side, which is where the fresnel/rim shader question still sits, untouched.
+GATES: transition_test 168/0 · ray_budget GREEN W=2/9761 · battle_sim +
+encounter_sim green · arena_playtest green on 2 of 3 runs (the first run reported
+one unnamed suite failed; that gate opens the page WITHOUT ?arena=world so none of
+this lane's code loads in it — recorded as flake, not explained away).
