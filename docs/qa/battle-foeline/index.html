@@ -1,0 +1,664 @@
+<title>The foe line stood in single file</title>
+<style>
+:root{--bg:#12141a;--fg:#e8e6e1;--dim:#9aa0aa;--line:#2a2f3a;--ok:#6fbf73;--warn:#d8a657;--bad:#e06c75;--acc:#7aa2f7}
+@media (prefers-color-scheme:light){:root{--bg:#fbfaf7;--fg:#1b1d22;--dim:#5c626c;--line:#dcd8d0}}
+:root[data-theme="dark"]{--bg:#12141a;--fg:#e8e6e1;--dim:#9aa0aa;--line:#2a2f3a}
+:root[data-theme="light"]{--bg:#fbfaf7;--fg:#1b1d22;--dim:#5c626c;--line:#dcd8d0}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;margin:0;padding:2rem clamp(1rem,4vw,4rem)}
+h1{font-size:1.7rem;margin:0 0 .2rem} h2{font-size:1.15rem;margin:2.2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.3rem}
+h3{font-size:1rem;margin:1.4rem 0 .3rem;color:var(--acc)}
+p,li{max-width:78ch} .dim{color:var(--dim)} code{background:#0003;padding:.1em .35em;border-radius:3px}
+table{border-collapse:collapse;font-size:13px;margin:.6rem 0;display:block;overflow-x:auto;max-width:100%}
+th,td{border:1px solid var(--line);padding:.25rem .5rem;text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td.ok{color:var(--ok)} td.warn{color:var(--warn)} td.bad{color:var(--bad)}
+tr.win td{background:#6fbf7322;font-weight:600}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.5rem 0}
+.pair figure{margin:0} .pair img{width:100%;border:1px solid var(--line);border-radius:4px}
+figcaption{font-size:12px;color:var(--dim)}
+.lead{font-size:1.05rem}
+</style>
+<h1>The foe line stood in single file</h1>
+<p class="dim">2026-08-09 &middot; instrument <code>tools/battle_overlap_lib.mjs</code> + <code>battle_decide --mode=overlap</code> &middot;
+62-site census, three arms, one build &middot; <code>?bfoe=&lt;rake&gt;&amp;bfoedz=&lt;depth&gt;</code> is the A/B</p>
+
+<p class="lead">The party-overlap lane found this in its own residuals and left it on purpose. <code>slotsFor</code> gives a foe
+<code>ax = foeX + |i &minus; (n&minus;1)/2| &middot; foeChevron</code>: <b>the absolute value makes the chevron a V at three
+foes and inert at two</b> &mdash; both foes take the same across-axis coordinate and differ only in depth. Measured here, on the
+shipped build: <b>the second foe is &ge;25% eaten by the first at 44 of 62 sites and &ge;50% at 28</b>, with the pair's
+screen-x centres <b>0.009 frame widths apart</b>. Every &ldquo;2.00 of 2 foes in frame&rdquo; receipt in this arc was true and hollow.</p>
+
+<h2>1. The mechanism, and it is the same arithmetic as the party's</h2>
+<p>At two foes the closed form puts both slots at <code>ax = foeX + 0.5&middot;foeChevron</code> and separates them only in
+depth (<code>&plusmn;0.62&middot;foeSpread</code>). <code>decide</code> swings the boom 0.30 rad, so the line ends
+<b>17.2&deg;</b> off the view axis and lateral separation is <b>0.422 m of a 1.428 m line</b> &mdash; against a duskpad
+that projects <b>0.32 frame widths wide</b>. Two bodies 0.42 m apart across, one of them two metres long, are one body.</p>
+
+<h2>2. The sweep &mdash; nine (rake, depth) pairs, 13 stratified sites, one build</h2>
+<p class="dim"><code>rake</code> = the SIGNED across-axis rank as a multiple of the spread the depth rank uses; <code>depth</code> =
+a multiplier on that depth rank. (0, 1) is the shipped closed form character for character. Worst foe per site.</p>
+<table><tr><th>(rake, depth)</th><th>occTeam &ge;10/25/50</th><th>occTotal</th><th>bodies with no silhouette</th>
+<th>foes in frame</th><th>&Delta;cx p50</th><th>lateral m p50</th><th>line vs axis</th><th>foe hFrac p50</th><th>camDist p50</th></tr>
+<tr class=""><td>(0, 1) &mdash; the shipped closed form</td><td>12/11/9</td><td>12/11/9</td>
+    <td>4</td>
+    <td>24/26</td>
+    <td>0.007</td><td>0.421</td><td>17.2&deg;</td>
+    <td>0.286</td><td>11.661</td></tr>
+<tr class=""><td>(0.25, 1) &mdash; drop the <code>Math.abs</code>, keep foeChevron 0.5</td><td>12/9/6</td><td>12/9/6</td>
+    <td>4</td>
+    <td>24/26</td>
+    <td>0.048</td><td>0.766</td><td>31.3&deg;</td>
+    <td>0.287</td><td>11.748</td></tr>
+<tr class=""><td>(0.5, 1)</td><td>9/6/1</td><td>11/7/1</td>
+    <td>4</td>
+    <td>24/26</td>
+    <td>0.092</td><td>1.093</td><td>43.8&deg;</td>
+    <td>0.294</td><td>11.166</td></tr>
+<tr class=""><td>(1, 1) &mdash; the diagonal: rake AND depth</td><td>2/0/0</td><td>4/1/0</td>
+    <td>0</td>
+    <td>26/26</td>
+    <td>0.169</td><td>1.787</td><td>62.2&deg;</td>
+    <td>0.293</td><td>11.36</td></tr>
+<tr class=""><td>(0.7, 0.5)</td><td>10/3/0</td><td>12/4/0</td>
+    <td>0</td>
+    <td>26/26</td>
+    <td>0.118</td><td>1.166</td><td>71.6&deg;</td>
+    <td>0.304</td><td>10.652</td></tr>
+<tr class=""><td>(0.7, 0)</td><td>10/0/0</td><td>13/1/0</td>
+    <td>0</td>
+    <td>26/26</td>
+    <td>0.112</td><td>0.955</td><td>72.8&deg;</td>
+    <td>0.292</td><td>10.664</td></tr>
+<tr class="win"><td>(1, 0) &mdash; a flat rank abreast</td><td>0/0/0</td><td>3/0/0</td>
+    <td>0</td>
+    <td>26/26</td>
+    <td>0.17</td><td>1.365</td><td>72.8&deg;</td>
+    <td>0.284</td><td>10.815</td></tr>
+<tr class=""><td>(1.4, 0)</td><td>0/0/0</td><td>2/1/0</td>
+    <td>0</td>
+    <td>26/26</td>
+    <td>0.219</td><td>1.911</td><td>72.8&deg;</td>
+    <td>0.261</td><td>11.365</td></tr>
+<tr class=""><td>(&minus;1, 0) &mdash; the flat rank, other sign</td><td>0/0/0</td><td>2/1/0</td>
+    <td>0</td>
+    <td>26/26</td>
+    <td>0.173</td><td>1.365</td><td>72.8&deg;</td>
+    <td>0.269</td><td>11.474</td></tr>
+</table>
+<p><b>The smallest change the evidence names does not fix it.</b> Literally deleting the <code>Math.abs</code> and keeping
+<code>foeChevron</code>'s own 0.5 is arm (0.25, 1): 12/9/6 against the control's 12/11/9. 0.36 m of across-axis offset is not a
+separation when the near body projects a third of the frame wide.</p>
+<p><b>A flat rank wins the same way it won for the party, and for the same reason.</b> It is perpendicular to
+<code>baseYaw</code>, so the swing leaves the line <b>72.8&deg;</b> off the view axis instead of 17.2&deg;, and
+<b>it does not lengthen the line</b> &mdash; the across span is the spread the depth rank was already using, so every body moves
+1.0 m and staging (a SEARCH over exactly this geometry) is perturbed no harder than the party fix perturbed it. Wider is not
+better: at 1.4 the occlusion is already zero and the extra metres only buy a smaller foe (hFrac 0.284 &rarr; 0.261). The
+opposite sign is no better and costs 0.7 m of boom.</p>
+
+<h2>3. The census, three arms &times; 62 sites</h2>
+<table><tr><th>arm</th><th>n</th><th>foe occTeam<br>&ge;10/25/50</th><th>foe occWorld</th><th>foe occTotal</th>
+<th>party occTeam</th><th>party occWorld</th><th>party occTotal</th><th>no silhouette</th><th>foes in frame</th><th>axisOk</th>
+<th>&Delta;cx p50</th><th>lateral m</th><th>line vs axis</th><th>foe hFrac</th><th>camDist</th><th>ring&nbsp;0</th><th>stage ms p50</th></tr>
+<tr><td>BEFORE &mdash; the closed form (rake 0, depth 1)</td><td>62</td>
+  <td>52/44/28</td><td>11/2/1</td><td>52/44/29</td>
+  <td>3/1/0</td><td>17/5/2</td><td>23/6/2</td>
+  <td>4</td>
+  <td>122/124</td>
+  <td>62/62</td>
+  <td>0.009</td><td>0.422</td><td>17.2&deg;</td>
+  <td>0.277</td><td>11.975</td>
+  <td>13</td><td>100</td></tr>
+<tr><td>SHIPPED &mdash; a flat rank (rake 1, depth 0)</td><td>62</td>
+  <td>2/0/0</td><td>7/2/1</td><td>11/2/2</td>
+  <td>4/1/1</td><td>15/2/0</td><td>20/5/1</td>
+  <td>0</td>
+  <td>124/124</td>
+  <td>62/62</td>
+  <td>0.165</td><td>1.365</td><td>72.8&deg;</td>
+  <td>0.273</td><td>11.158</td>
+  <td>13</td><td>99</td></tr>
+<tr><td>+ the second staging eye (<code>?beye2=1</code>, NOT shipped)</td><td>62</td>
+  <td>1/0/0</td><td>7/2/1</td><td>11/2/2</td>
+  <td>5/1/1</td><td>14/2/0</td><td>21/5/1</td>
+  <td>0</td>
+  <td>124/124</td>
+  <td>62/62</td>
+  <td>0.165</td><td>1.365</td><td>72.8&deg;</td>
+  <td>0.273</td><td>11.158</td>
+  <td>13</td><td>108</td></tr>
+</table>
+<p><b>The foe line: occTeam 52/44/28 &rarr; 2/0/0, occTotal 52/44/29 &rarr; 11/2/2, foes in frame 122/124 &rarr; 124/124,
+bodies with no silhouette at all 4 &rarr; 0 (all four were ONE site, s015, where the before arm rendered no cast silhouette whatever), axisOk 62/62 in every arm.</b> The pair's screen centres go 0.009 &rarr; 0.165 frame
+widths apart. It is close to free: foe height in frame 0.277 &rarr; 0.273 (&minus;1.4%), camera distance 11.98 &rarr; 11.16 m
+(the frame gets <i>tighter</i>, because a line abreast is shallower than a line in depth), ring-0 staging unchanged at 13 sites,
+staging solve p50 100 &rarr; 99 ms.</p>
+
+<h2>4. Every regression, named</h2>
+<ul>
+<li><b>foe occTeam</b>: improved 52, regressed 1 &mdash; s018 (crag) 0.01&rarr;0.10</li>
+<li><b>foe occWorld</b> (the trade: a body moved out from behind its neighbour can move behind the world): improved 6, regressed 7 &mdash; s001 (forest) 0.04&rarr;0.09; s015 (water) 0.00&rarr;0.09; s022 (forest) 0.89&rarr;0.99; s026 (meadow) 0.02&rarr;0.09; s038 (crag) 0.04&rarr;0.47; s040 (crag) 0.00&rarr;0.19; s058 (forest) 0.07&rarr;0.21</li>
+<li><b>foe occTotal</b> (what the player is actually left with): improved 51, regressed 2 &mdash; s015 (water) 0.00&rarr;0.13; s022 (forest) 0.89&rarr;0.99</li>
+<li><b>party occTeam</b>: improved 2, regressed 3 &mdash; s015 (water) 0.00&rarr;0.23; s031 (meadow) 0.39&rarr;0.51; s046 (meadow) 0.01&rarr;0.06</li>
+<li><b>party occTotal</b>: improved 9, regressed 4 &mdash; s015 (water) 0.00&rarr;0.26; s025 (forest) 0.07&rarr;0.18; s031 (meadow) 0.42&rarr;0.52; s032 (water) 0.04&rarr;0.18</li>
+</ul>
+<p>Seven sites changed staging ring (s002 R8&rarr;5, s004 R8&rarr;5, s007 R5&rarr;0, s026 R0&rarr;5, s036 R0&rarr;5,
+s046 R5&rarr;0, s053 R5&rarr;8) &mdash; staging is a search over the slot geometry and this lane moved the geometry, so every
+regression above is a relocation or a new world occluder, never a teammate. <b>s022</b> is not a new defect: its foe was already
+0.89 lost to the world before the change. <b>s038</b> is the real one and it is looked at below.</p>
+
+<h2>5. Looked at</h2>
+<p>Frames are the shipped <code>decide</code> shot at the command step, cast idle phase pinned with <code>stage.qa.pose()</code>,
+<code>ORBIT.yaw</code> pinned, ambient motes sat out &mdash; nothing between the two arms but the two numbers.</p>
+<h3>s012 &middot; forest</h3><div class="pair">
+  <figure><img loading="lazy" src="frames/before/s012.jpg"><figcaption>BEFORE &mdash; second foe occTeam <b>0.88</b>, &Delta;cx 0.0087</figcaption></figure>
+  <figure><img loading="lazy" src="frames/after/s012.jpg"><figcaption>AFTER &mdash; occTeam <b>0.01</b>, occWorld 0.15, &Delta;cx 0.1849</figcaption></figure></div>
+<h3>s024 &middot; forest</h3><div class="pair">
+  <figure><img loading="lazy" src="frames/before/s024.jpg"><figcaption>BEFORE &mdash; second foe occTeam <b>0.87</b>, &Delta;cx 0.0042</figcaption></figure>
+  <figure><img loading="lazy" src="frames/after/s024.jpg"><figcaption>AFTER &mdash; occTeam <b>0.00</b>, occWorld 0.22, &Delta;cx 0.13</figcaption></figure></div>
+<h3>s006 &middot; crag</h3><div class="pair">
+  <figure><img loading="lazy" src="frames/before/s006.jpg"><figcaption>BEFORE &mdash; second foe occTeam <b>0.85</b>, &Delta;cx 0.0041</figcaption></figure>
+  <figure><img loading="lazy" src="frames/after/s006.jpg"><figcaption>AFTER &mdash; occTeam <b>0.03</b>, occWorld 0.10, &Delta;cx 0.1917</figcaption></figure></div>
+<h3>s038 &middot; crag</h3><div class="pair">
+  <figure><img loading="lazy" src="frames/before/s038.jpg"><figcaption>BEFORE &mdash; second foe occTeam <b>0.86</b>, &Delta;cx 0.0115</figcaption></figure>
+  <figure><img loading="lazy" src="frames/after/s038.jpg"><figcaption>AFTER &mdash; occTeam <b>0.24</b>, occWorld 0.47, &Delta;cx 0.1505</figcaption></figure></div>
+<p><b>Before, at s012 and s024 and s006, there is one animal on screen with a green wedge stuck to it</b> &mdash; it reads as part
+of the wolf, a saddle or a shadow, not as a creature. After, there is a wolf in profile and a green blob beside it, and nobody
+would describe that frame as containing one enemy. <b>s038 is the honest cost</b>: the fight is staged under a wooden deck, and
+the across-axis move slid the wolf behind one of the deck's posts (occWorld 0.04 &rarr; 0.47). Even there the frame is more
+legible as <i>two</i> creatures than the before frame was &mdash; but half a wolf is behind a post, and that is a real loss.</p>
+
+<h2>6. The worst case for an across-axis rank: two bodies of the same width</h2>
+<p>The census pair is a duskpad and a reed-nibbler &mdash; a two-metre wolf and a small blob. <code>duskpad, duskpad</code> is a
+real shipped encounter (<code>encounters.json</code>, forest weight 3) and is the hardest case for any across offset, because both
+bodies project the same width. 21 stratified sites, both arms, same build.</p>
+<table><tr><th>arm</th><th>n</th><th>foe occTeam &ge;10/25/50</th><th>foe occWorld</th><th>foe occTotal</th><th>no silhouette</th><th>foes in frame</th><th>axisOk</th><th>&Delta;cx p50</th><th>foe hFrac p50</th></tr>
+<tr><td>BEFORE</td><td>21</td><td>16/13/8</td><td>6/0/0</td><td>16/13/7</td><td>4</td><td>41/42</td><td>21/21</td><td>0.012</td><td>0.297</td></tr>
+<tr><td>AFTER</td><td>21</td><td>7/0/0</td><td>4/1/0</td><td>12/2/0</td><td>0</td><td>42/42</td><td>21/21</td><td>0.17</td><td>0.257</td></tr>
+</table>
+<h3>s009 &middot; forest &mdash; two duskpads</h3><div class="pair">
+<figure><img loading="lazy" src="frames/pair-before/s009.jpg"><figcaption>BEFORE &mdash; occTeam 0.41</figcaption></figure>
+<figure><img loading="lazy" src="frames/pair-after/s009.jpg"><figcaption>AFTER &mdash; occTeam 0.13</figcaption></figure></div>
+<p><b>occTeam &ge;25% goes 13 of 21 to ZERO</b> and no foe is ever half-eaten by its twin; 7 sites keep a &ge;10% clip, which is
+what two two-metre bodies 1.43 m apart do to each other's edges. <b>This is where the fix costs something real</b>: two wide
+bodies abreast have to be framed wider, so foe height in frame falls 0.297 &rarr; 0.257 (&minus;13%) at this group, against
+&minus;1.4% at the census pair. Bodies with no silhouette 4 &rarr; 0, foes in frame 41/42 &rarr; 42/42, axisOk 21/21.</p>
+<p>Before, the two wolves are one animal with a doubled outline and a second head; after, they are two wolves.</p>
+
+<h2>7. The validation gap: built, measured, and default OFF</h2>
+<p>The party lane named the cause of its own residual: <code>stageArena</code> validates every slot from the <b>round</b> eye and
+<code>decide</code> swings 0.30 rad off it and pushes in. <code>decideEye()</code> in <code>battle_world.js</code> now
+reproduces the part a ray cares about &mdash; the swing (read off the shot row and <code>partySide()</code>), the pitch offset,
+and an aim weighted <code>keepBias</code> from the party slots toward the foe slots &mdash; and walks the SAME per-slot jitter
+ring, preferring a jitter that clears both eyes and falling back to the round eye's own answer. By construction it cannot lose a
+slot, refuse a site or relocate a fight, which is deliberate: relocation is the mechanism that produced every regression this lane
+and the party lane have named.</p>
+<p><b>It measures null and it is not free.</b> Against the shipped arm over the full census: <b>61 of 62 sites identical</b>,
+foe occWorld unchanged at 7/2/1, party occWorld 15/2/0 &rarr; 14/2/0, and <b>the one site it moves is a regression</b>
+(s049, party occTeam 0.05 &rarr; 0.22). Cost: staging solve p50 99 &rarr; 108 ms, p95 +66 ms, 8.70 &rarr; 9.99 s over the
+census &mdash; <b>+14.9%</b>.</p>
+<p><b>Why it is null is the part worth keeping.</b> The shot solver already has this refusal and has far more room to act on it:
+<code>decide</code> carries <code>keepVis</code> and <code>showParty</code>, so every foe and every party body is already in
+<code>subjVis()</code> at the <i>real</i> decide pose, and <code>solveShotSafe</code> walks three swings &times; three boom lifts
+looking for one that clears them. A staging-time copy is a second bite at the same apple with a &plusmn;1.6-slot jitter instead of
+a whole boom ladder &mdash; and where the world is genuinely in the way (s038, a fight under a deck) no jitter escapes the post,
+so the fallback holds. The form that would have somewhere to go is a REFUSAL that relocates the site, and that is the trade this
+arc has already paid for twice. The proxy is honest about itself: it sits a median <b>1.87 m</b> from the real decide eye
+(p95 5.22, max 6.38). Kept, off, as the A/B that proves the above: <code>?beye2=1</code> / <code>--beye2=1</code>.</p>
+
+<h2>8. What it costs</h2>
+<table><tr><th></th><th>BEFORE (rake 0, depth 1)</th><th>SHIPPED (rake 1, depth 0)</th></tr>
+<tr><td>staging solve p50 (62 sites)</td><td>100 ms</td><td>99 ms</td></tr>
+<tr><td>staging solve, census total</td><td>8.80 s</td><td>8.70 s</td></tr>
+<tr><td><code>decide</code> re-solve p50 (4 sites &times; 60 reps)</td><td>0.5 ms</td><td>0.5 ms</td></tr>
+<tr><td>trigger &rarr; first frame p50 / max</td><td>575.5 / 614.8 ms</td><td>554.4 / 630.1 ms</td></tr>
+<tr><td>round resolution (fixed scripted part)</td><td>7833.4 ms</td><td>7829.9 ms</td></tr>
+<tr><td>camera refusals</td><td>0</td><td>0</td></tr>
+<tr><td>foe height in frame p50</td><td>0.277</td><td>0.273</td></tr>
+<tr><td>camera distance p50</td><td>11.98 m</td><td>11.16 m</td></tr>
+<tr><td>ring-0 staging (&ldquo;fight where you stand&rdquo;)</td><td>13 / 62</td><td>13 / 62</td></tr>
+</table>
+<p>Nothing on the turn path moved: the slot geometry is read once, at <code>create()</code>, and the shot solver does the same
+arithmetic on the same number of bodies either way.</p>
+
+<h2>9. Per site</h2>
+<table><tr><th>site</th><th>zone</th><th colspan=2>BEFORE</th><th colspan=3>AFTER</th><th colspan=2>&Delta;cx</th><th colspan=2>lateral m</th><th colspan=2>foe hFrac</th></tr>
+<tr><th></th><th></th><th>occTeam</th><th>occTotal</th><th>occTeam</th><th>occWorld</th><th>occTotal</th><th>before</th><th>after</th><th>before</th><th>after</th><th>before</th><th>after</th></tr>
+<tr><td>s000</td><td class=dim>water</td>
+  <td class="bad">0.779</td><td class="bad">0.792</td>
+  <td class="ok">0.016</td><td class="ok">0.052</td>
+  <td class="ok">0.057</td>
+  <td>0.001</td><td>0.1838</td>
+  <td>0.315</td><td>1.365</td>
+  <td>0.304</td><td>0.312</td></tr>
+<tr><td>s001</td><td class=dim>forest</td>
+  <td class="warn">0.261</td><td class="warn">0.264</td>
+  <td class="ok">0.037</td><td class="ok">0.090</td>
+  <td class="warn">0.109</td>
+  <td>0.009</td><td>0.1921</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.28</td><td>0.27</td></tr>
+<tr><td>s002</td><td class=dim>forest</td>
+  <td class="bad">0.681</td><td class="bad">0.682</td>
+  <td class="ok">0.036</td><td class="ok">0.004</td>
+  <td class="ok">0.039</td>
+  <td>0.0171</td><td>0.1608</td>
+  <td>0.214</td><td>1.412</td>
+  <td>0.334</td><td>0.242</td></tr>
+<tr><td>s003</td><td class=dim>water</td>
+  <td class="bad">0.775</td><td class="bad">0.775</td>
+  <td class="ok">0.007</td><td class="ok">0.020</td>
+  <td class="ok">0.020</td>
+  <td>0.0015</td><td>0.165</td>
+  <td>0.209</td><td>1.471</td>
+  <td>0.253</td><td>0.253</td></tr>
+<tr><td>s004</td><td class=dim>crag</td>
+  <td class="warn">0.355</td><td class="warn">0.358</td>
+  <td class="ok">0.023</td><td class="ok">0.044</td>
+  <td class="ok">0.061</td>
+  <td>0.0082</td><td>0.19</td>
+  <td>0.423</td><td>1.365</td>
+  <td>0.285</td><td>0.299</td></tr>
+<tr><td>s005</td><td class=dim>forest</td>
+  <td class="warn">0.244</td><td class="warn">0.244</td>
+  <td class="ok">0.053</td><td class="ok">0.035</td>
+  <td class="ok">0.080</td>
+  <td>0.0139</td><td>0.1697</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.229</td><td>0.267</td></tr>
+<tr><td>s006</td><td class=dim>crag</td>
+  <td class="bad">0.849</td><td class="bad">0.850</td>
+  <td class="ok">0.030</td><td class="ok">0.098</td>
+  <td class="warn">0.111</td>
+  <td>0.0041</td><td>0.1917</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.295</td><td>0.274</td></tr>
+<tr><td>s007</td><td class=dim>meadow</td>
+  <td class="ok">0.013</td><td class="ok">0.048</td>
+  <td class="ok">0.002</td><td class="ok">0.009</td>
+  <td class="ok">0.011</td>
+  <td>0.0184</td><td>0.1036</td>
+  <td>0.422</td><td>1.471</td>
+  <td>0.181</td><td>0.24</td></tr>
+<tr><td>s008</td><td class=dim>crag</td>
+  <td class="ok">0.067</td><td class="ok">0.033</td>
+  <td class="ok">0.064</td><td class="ok">0.010</td>
+  <td class="ok">0.066</td>
+  <td>0.0122</td><td>0.1916</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.243</td><td>0.271</td></tr>
+<tr><td>s009</td><td class=dim>forest</td>
+  <td class="bad">0.649</td><td class="bad">0.661</td>
+  <td class="ok">0.047</td><td class="ok">0.041</td>
+  <td class="ok">0.050</td>
+  <td>0.0115</td><td>0.1422</td>
+  <td>0.214</td><td>1.413</td>
+  <td>0.311</td><td>0.316</td></tr>
+<tr><td>s010</td><td class=dim>meadow</td>
+  <td class="bad">0.573</td><td class="bad">0.573</td>
+  <td class="ok">0.045</td><td class="ok">0.017</td>
+  <td class="ok">0.032</td>
+  <td>0.008</td><td>0.1915</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.275</td><td>0.272</td></tr>
+<tr><td>s011</td><td class=dim>meadow</td>
+  <td class="ok">0.009</td><td class="ok">0.015</td>
+  <td class="ok">0.006</td><td class="ok">0.009</td>
+  <td class="ok">0.011</td>
+  <td>0.0157</td><td>0.1112</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.179</td><td>0.193</td></tr>
+<tr><td>s012</td><td class=dim>forest</td>
+  <td class="bad">0.880</td><td class="bad">0.891</td>
+  <td class="ok">0.011</td><td class="warn">0.149</td>
+  <td class="warn">0.155</td>
+  <td>0.0087</td><td>0.1849</td>
+  <td>0.082</td><td>1.705</td>
+  <td>0.299</td><td>0.308</td></tr>
+<tr><td>s013</td><td class=dim>meadow</td>
+  <td class="warn">0.278</td><td class="warn">0.288</td>
+  <td class="ok">0.005</td><td class="ok">0.087</td>
+  <td class="ok">0.088</td>
+  <td>0.0038</td><td>0.1924</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.338</td><td>0.294</td></tr>
+<tr><td>s014</td><td class=dim>meadow</td>
+  <td class="warn">0.400</td><td class="warn">0.405</td>
+  <td class="ok">0.024</td><td class="ok">0.044</td>
+  <td class="ok">0.061</td>
+  <td>0.0047</td><td>0.19</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.32</td><td>0.299</td></tr>
+<tr><td>s015</td><td class=dim>water</td>
+  <td class="ok">0.000</td><td class="ok">0.000</td>
+  <td class="ok">0.041</td><td class="ok">0.095</td>
+  <td class="warn">0.129</td>
+  <td>&mdash;</td><td>0.1542</td>
+  <td>0.213</td><td>1.365</td>
+  <td>0</td><td>0.348</td></tr>
+<tr><td>s016</td><td class=dim>forest</td>
+  <td class="ok">0.006</td><td class="ok">0.008</td>
+  <td class="ok">0.005</td><td class="ok">0.003</td>
+  <td class="ok">0.006</td>
+  <td>0.0154</td><td>0.0934</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.156</td><td>0.164</td></tr>
+<tr><td>s017</td><td class=dim>meadow</td>
+  <td class="warn">0.230</td><td class="warn">0.234</td>
+  <td class="ok">0.022</td><td class="ok">0.037</td>
+  <td class="ok">0.050</td>
+  <td>0.0051</td><td>0.1924</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.3</td><td>0.272</td></tr>
+<tr><td>s018</td><td class=dim>crag</td>
+  <td class="ok">0.011</td><td class="warn">0.161</td>
+  <td class="warn">0.101</td><td class="ok">0.069</td>
+  <td class="ok">0.100</td>
+  <td>0.0215</td><td>0.1025</td>
+  <td>0.528</td><td>1.365</td>
+  <td>0.15</td><td>0.168</td></tr>
+<tr><td>s019</td><td class=dim>meadow</td>
+  <td class="ok">0.054</td><td class="ok">0.055</td>
+  <td class="ok">0.010</td><td class="ok">0.042</td>
+  <td class="ok">0.048</td>
+  <td>0.0146</td><td>0.1484</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.219</td><td>0.246</td></tr>
+<tr><td>s020</td><td class=dim>meadow</td>
+  <td class="bad">0.538</td><td class="bad">0.581</td>
+  <td class="ok">0.016</td><td class="ok">0.027</td>
+  <td class="ok">0.037</td>
+  <td>0.0032</td><td>0.1818</td>
+  <td>0.315</td><td>1.365</td>
+  <td>0.39</td><td>0.32</td></tr>
+<tr><td>s021</td><td class=dim>meadow</td>
+  <td class="ok">0.011</td><td class="ok">0.038</td>
+  <td class="ok">0.014</td><td class="ok">0.021</td>
+  <td class="ok">0.030</td>
+  <td>0.0057</td><td>0.193</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.331</td><td>0.261</td></tr>
+<tr><td>s022</td><td class=dim>forest</td>
+  <td class="warn">0.144</td><td class="bad">0.893</td>
+  <td class="ok">0.000</td><td class="bad">0.991</td>
+  <td class="bad">0.991</td>
+  <td>0.034</td><td>0.1477</td>
+  <td>0</td><td>1.428</td>
+  <td>0.354</td><td>0.351</td></tr>
+<tr><td>s023</td><td class=dim>forest</td>
+  <td class="bad">0.781</td><td class="bad">0.781</td>
+  <td class="ok">0.019</td><td class="ok">0.052</td>
+  <td class="ok">0.059</td>
+  <td>0.0042</td><td>0.1915</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.298</td><td>0.272</td></tr>
+<tr><td>s024</td><td class=dim>forest</td>
+  <td class="bad">0.870</td><td class="bad">0.914</td>
+  <td class="ok">0.002</td><td class="warn">0.219</td>
+  <td class="warn">0.219</td>
+  <td>0.0042</td><td>0.13</td>
+  <td>0.21</td><td>1.412</td>
+  <td>0.256</td><td>0.275</td></tr>
+<tr><td>s025</td><td class=dim>forest</td>
+  <td class="bad">0.531</td><td class="bad">0.530</td>
+  <td class="ok">0.088</td><td class="ok">0.050</td>
+  <td class="ok">0.089</td>
+  <td>0.0117</td><td>0.1444</td>
+  <td>0.422</td><td>1.428</td>
+  <td>0.235</td><td>0.401</td></tr>
+<tr><td>s026</td><td class=dim>meadow</td>
+  <td class="warn">0.451</td><td class="warn">0.381</td>
+  <td class="ok">0.044</td><td class="ok">0.094</td>
+  <td class="warn">0.104</td>
+  <td>0.0082</td><td>0.1365</td>
+  <td>0.004</td><td>1.471</td>
+  <td>0.237</td><td>0.315</td></tr>
+<tr><td>s027</td><td class=dim>crag</td>
+  <td class="warn">0.188</td><td class="warn">0.191</td>
+  <td class="ok">0.004</td><td class="ok">0.049</td>
+  <td class="ok">0.052</td>
+  <td>0.0147</td><td>0.1259</td>
+  <td>0.422</td><td>1.294</td>
+  <td>0.235</td><td>0.314</td></tr>
+<tr><td>s028</td><td class=dim>meadow</td>
+  <td class="ok">0.038</td><td class="ok">0.046</td>
+  <td class="ok">0.015</td><td class="ok">0.022</td>
+  <td class="ok">0.034</td>
+  <td>0.0117</td><td>0.1986</td>
+  <td>0.422</td><td>1.47</td>
+  <td>0.285</td><td>0.278</td></tr>
+<tr><td>s029</td><td class=dim>water</td>
+  <td class="warn">0.307</td><td class="warn">0.282</td>
+  <td class="ok">0.046</td><td class="ok">0.021</td>
+  <td class="ok">0.050</td>
+  <td>0.0085</td><td>0.1907</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.277</td><td>0.298</td></tr>
+<tr><td>s030</td><td class=dim>water</td>
+  <td class="bad">0.724</td><td class="bad">0.723</td>
+  <td class="ok">0.013</td><td class="ok">0.027</td>
+  <td class="ok">0.041</td>
+  <td>0.0068</td><td>0.1795</td>
+  <td>0.082</td><td>1.364</td>
+  <td>0.287</td><td>0.28</td></tr>
+<tr><td>s031</td><td class=dim>meadow</td>
+  <td class="warn">0.265</td><td class="warn">0.227</td>
+  <td class="ok">0.047</td><td class="ok">0.081</td>
+  <td class="ok">0.061</td>
+  <td>0.0128</td><td>0.1627</td>
+  <td>0.421</td><td>1.365</td>
+  <td>0.321</td><td>0.372</td></tr>
+<tr><td>s032</td><td class=dim>water</td>
+  <td class="warn">0.214</td><td class="warn">0.197</td>
+  <td class="ok">0.006</td><td class="ok">0.030</td>
+  <td class="ok">0.034</td>
+  <td>0.0094</td><td>0.1616</td>
+  <td>0.315</td><td>1.259</td>
+  <td>0.236</td><td>0.265</td></tr>
+<tr><td>s033</td><td class=dim>crag</td>
+  <td class="ok">0.043</td><td class="ok">0.028</td>
+  <td class="ok">0.044</td><td class="ok">0.013</td>
+  <td class="ok">0.044</td>
+  <td>0.017</td><td>0.1051</td>
+  <td>0.421</td><td>1.152</td>
+  <td>0.19</td><td>0.195</td></tr>
+<tr><td>s034</td><td class=dim>meadow</td>
+  <td class="bad">0.715</td><td class="bad">0.715</td>
+  <td class="ok">0.024</td><td class="ok">0.029</td>
+  <td class="ok">0.031</td>
+  <td>0.0085</td><td>0.1734</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.267</td><td>0.267</td></tr>
+<tr><td>s035</td><td class=dim>crag</td>
+  <td class="bad">0.574</td><td class="bad">0.653</td>
+  <td class="ok">0.014</td><td class="ok">0.057</td>
+  <td class="ok">0.064</td>
+  <td>0.0048</td><td>0.1615</td>
+  <td>0.421</td><td>1.365</td>
+  <td>0.362</td><td>0.367</td></tr>
+<tr><td>s036</td><td class=dim>forest</td>
+  <td class="warn">0.356</td><td class="warn">0.401</td>
+  <td class="ok">0.018</td><td class="ok">0.040</td>
+  <td class="ok">0.050</td>
+  <td>0.0001</td><td>0.1924</td>
+  <td>0.423</td><td>1.365</td>
+  <td>0.43</td><td>0.267</td></tr>
+<tr><td>s037</td><td class=dim>meadow</td>
+  <td class="warn">0.225</td><td class="warn">0.228</td>
+  <td class="ok">0.021</td><td class="ok">0.057</td>
+  <td class="ok">0.068</td>
+  <td>0.0113</td><td>0.1768</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.251</td><td>0.285</td></tr>
+<tr><td>s038</td><td class=dim>crag</td>
+  <td class="bad">0.862</td><td class="bad">0.867</td>
+  <td class="warn">0.241</td><td class="warn">0.470</td>
+  <td class="bad">0.598</td>
+  <td>0.0115</td><td>0.1505</td>
+  <td>0.001</td><td>1.428</td>
+  <td>0.218</td><td>0.223</td></tr>
+<tr><td>s039</td><td class=dim>meadow</td>
+  <td class="warn">0.104</td><td class="warn">0.100</td>
+  <td class="ok">0.019</td><td class="ok">0.011</td>
+  <td class="ok">0.016</td>
+  <td>0.0147</td><td>0.1447</td>
+  <td>0.422</td><td>1.705</td>
+  <td>0.23</td><td>0.205</td></tr>
+<tr><td>s040</td><td class=dim>crag</td>
+  <td class="warn">0.314</td><td class="warn">0.314</td>
+  <td class="ok">0.012</td><td class="warn">0.189</td>
+  <td class="warn">0.195</td>
+  <td>0.01</td><td>0.1145</td>
+  <td>0.003</td><td>1.364</td>
+  <td>0.292</td><td>0.193</td></tr>
+<tr><td>s041</td><td class=dim>meadow</td>
+  <td class="bad">0.803</td><td class="bad">0.801</td>
+  <td class="ok">0.045</td><td class="ok">0.028</td>
+  <td class="ok">0.037</td>
+  <td>0.0077</td><td>0.1814</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.267</td><td>0.273</td></tr>
+<tr><td>s042</td><td class=dim>meadow</td>
+  <td class="warn">0.426</td><td class="warn">0.427</td>
+  <td class="ok">0.012</td><td class="ok">0.033</td>
+  <td class="ok">0.041</td>
+  <td>0.003</td><td>0.1921</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.32</td><td>0.278</td></tr>
+<tr><td>s043</td><td class=dim>water</td>
+  <td class="bad">0.726</td><td class="bad">0.752</td>
+  <td class="ok">0.002</td><td class="ok">0.010</td>
+  <td class="ok">0.011</td>
+  <td>0.0048</td><td>0.1072</td>
+  <td>0.209</td><td>1.471</td>
+  <td>0.24</td><td>0.248</td></tr>
+<tr><td>s044</td><td class=dim>forest</td>
+  <td class="bad">0.664</td><td class="bad">0.658</td>
+  <td class="ok">0.025</td><td class="ok">0.028</td>
+  <td class="ok">0.049</td>
+  <td>0.0117</td><td>0.1444</td>
+  <td>0</td><td>1.429</td>
+  <td>0.35</td><td>0.382</td></tr>
+<tr><td>s045</td><td class=dim>meadow</td>
+  <td class="bad">0.629</td><td class="bad">0.589</td>
+  <td class="ok">0.009</td><td class="warn">0.142</td>
+  <td class="warn">0.144</td>
+  <td>0.0004</td><td>0.1513</td>
+  <td>0.316</td><td>1.364</td>
+  <td>0.37</td><td>0.351</td></tr>
+<tr><td>s046</td><td class=dim>meadow</td>
+  <td class="warn">0.406</td><td class="warn">0.409</td>
+  <td class="ok">0.021</td><td class="ok">0.020</td>
+  <td class="ok">0.022</td>
+  <td>0.0128</td><td>0.1709</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.254</td><td>0.277</td></tr>
+<tr><td>s047</td><td class=dim>meadow</td>
+  <td class="bad">0.536</td><td class="bad">0.566</td>
+  <td class="ok">0.006</td><td class="ok">0.064</td>
+  <td class="ok">0.062</td>
+  <td>0.0008</td><td>0.15</td>
+  <td>0.209</td><td>1.577</td>
+  <td>0.3</td><td>0.341</td></tr>
+<tr><td>s048</td><td class=dim>forest</td>
+  <td class="bad">0.832</td><td class="bad">0.838</td>
+  <td class="ok">0.015</td><td class="ok">0.034</td>
+  <td class="ok">0.039</td>
+  <td>0.002</td><td>0.1916</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.312</td><td>0.272</td></tr>
+<tr><td>s049</td><td class=dim>meadow</td>
+  <td class="warn">0.483</td><td class="warn">0.480</td>
+  <td class="ok">0.029</td><td class="ok">0.038</td>
+  <td class="ok">0.038</td>
+  <td>0.0081</td><td>0.0938</td>
+  <td>0.316</td><td>1.258</td>
+  <td>0.221</td><td>0.162</td></tr>
+<tr><td>s050</td><td class=dim>meadow</td>
+  <td class="warn">0.324</td><td class="warn">0.329</td>
+  <td class="ok">0.022</td><td class="ok">0.011</td>
+  <td class="ok">0.029</td>
+  <td>0.0113</td><td>0.1918</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.246</td><td>0.275</td></tr>
+<tr><td>s051</td><td class=dim>meadow</td>
+  <td class="bad">0.804</td><td class="bad">0.812</td>
+  <td class="ok">0.015</td><td class="ok">0.078</td>
+  <td class="ok">0.088</td>
+  <td>0.002</td><td>0.1927</td>
+  <td>0.422</td><td>1.364</td>
+  <td>0.295</td><td>0.257</td></tr>
+<tr><td>s052</td><td class=dim>meadow</td>
+  <td class="warn">0.417</td><td class="warn">0.421</td>
+  <td class="ok">0.018</td><td class="ok">0.060</td>
+  <td class="ok">0.076</td>
+  <td>0.0079</td><td>0.1894</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.285</td><td>0.301</td></tr>
+<tr><td>s053</td><td class=dim>crag</td>
+  <td class="bad">0.760</td><td class="bad">0.770</td>
+  <td class="ok">0.004</td><td class="ok">0.033</td>
+  <td class="ok">0.034</td>
+  <td>0.0017</td><td>0.1937</td>
+  <td>0.209</td><td>1.365</td>
+  <td>0.273</td><td>0.258</td></tr>
+<tr><td>s054</td><td class=dim>forest</td>
+  <td class="bad">0.593</td><td class="bad">0.607</td>
+  <td class="ok">0.009</td><td class="ok">0.012</td>
+  <td class="ok">0.017</td>
+  <td>0.0316</td><td>0.1526</td>
+  <td>0</td><td>1.429</td>
+  <td>0.408</td><td>0.389</td></tr>
+<tr><td>s055</td><td class=dim>forest</td>
+  <td class="bad">0.587</td><td class="bad">0.585</td>
+  <td class="ok">0.018</td><td class="ok">0.051</td>
+  <td class="ok">0.068</td>
+  <td>0.0067</td><td>0.1514</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.263</td><td>0.225</td></tr>
+<tr><td>s056</td><td class=dim>crag</td>
+  <td class="warn">0.299</td><td class="warn">0.299</td>
+  <td class="ok">0.008</td><td class="ok">0.028</td>
+  <td class="ok">0.027</td>
+  <td>0.0102</td><td>0.1795</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.252</td><td>0.28</td></tr>
+<tr><td>s057</td><td class=dim>meadow</td>
+  <td class="warn">0.109</td><td class="ok">0.049</td>
+  <td class="ok">0.035</td><td class="ok">0.062</td>
+  <td class="ok">0.074</td>
+  <td>0.0136</td><td>0.1252</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.251</td><td>0.272</td></tr>
+<tr><td>s058</td><td class=dim>forest</td>
+  <td class="bad">0.733</td><td class="bad">0.724</td>
+  <td class="ok">0.010</td><td class="warn">0.206</td>
+  <td class="warn">0.213</td>
+  <td>0.0251</td><td>0.1527</td>
+  <td>0</td><td>1.428</td>
+  <td>0.267</td><td>0.257</td></tr>
+<tr><td>s059</td><td class=dim>meadow</td>
+  <td class="bad">0.744</td><td class="bad">0.745</td>
+  <td class="ok">0.004</td><td class="ok">0.039</td>
+  <td class="ok">0.041</td>
+  <td>0.0007</td><td>0.1585</td>
+  <td>0.422</td><td>1.428</td>
+  <td>0.338</td><td>0.239</td></tr>
+<tr><td>s060</td><td class=dim>meadow</td>
+  <td class="bad">0.756</td><td class="bad">0.757</td>
+  <td class="ok">0.038</td><td class="ok">0.024</td>
+  <td class="ok">0.030</td>
+  <td>0.0063</td><td>0.1909</td>
+  <td>0.422</td><td>1.365</td>
+  <td>0.286</td><td>0.284</td></tr>
+<tr><td>s061</td><td class=dim>forest</td>
+  <td class="warn">0.433</td><td class="warn">0.481</td>
+  <td class="ok">0.023</td><td class="ok">0.078</td>
+  <td class="ok">0.098</td>
+  <td>0.012</td><td>0.1215</td>
+  <td>0.423</td><td>1.364</td>
+  <td>0.27</td><td>0.265</td></tr>
+</table>
+<p class="dim">Data: <code>overlap-{before,after,eye2,pair-before,pair-after}.json</code> and the nine
+<code>overlap-sw-*.json</code> sweep arms in this directory. Frames: <code>frames/{before,after}/</code>.
+Occlusion is an INTERSECTION of the solo silhouette and the visible-pixels mask, never a ratio of areas; every grab is
+display-space sRGB off the WebGL canvas after play3d's own post chain.</p>

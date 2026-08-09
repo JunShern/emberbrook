@@ -104,6 +104,22 @@ const COSTWHAT = ({ safe: 'keepSafe', keep: 'keep', party: 'showParty' })[arg('c
 // clears `showParty` off the live decide row.
 const SEEPARTY = arg('seeparty', null);
 const FORM = arg('form', null) == null ? null : (arg('form', null) === '0' ? 0 : parseFloat(arg('form', null)));
+// AND THE FOE LINE'S OWN TWO NUMBERS, the same one-build shape once more.
+// `--foe=<rake> --foedz=<depth>` set BattleWorld.CFG.foeRake / .foeDepth before
+// the battle, which is exactly what `?bfoe=` / `?bfoedz=` do — so the sweep, the
+// before arm and the after arm are ONE BUILD with one assignment between them.
+// `--foe=0 --foedz=1` is the pre-fix closed form (the abs chevron, inert at two).
+const FOE = arg('foe', null) == null ? null : parseFloat(arg('foe', null));
+const FOEDZ = arg('foedz', null) == null ? null : parseFloat(arg('foedz', null));
+// AND THE SECOND STAGING EYE, the same one-build shape: `--beye2=1` sets
+// BattleWorld.CFG.eye2.on, which is exactly what `?beye2=1` does. It validates
+// every slot from the `decide` eye as well as the `round` one — see decideEye().
+const BEYE2 = arg('beye2', null);
+// THE FOE GROUP. The census's own pair is duskpad + reed-nibbler (a long wolf
+// and a small blob); `--group=duskpad,duskpad` stages the WORST CASE for any
+// across-axis foe rank, two bodies of the same projected width, which is a real
+// shipped encounter (encounters.json, forest weight 3).
+const GROUP = arg('group', 'duskpad,reed-nibbler');
 // THE YAW IS PINNED, and this is not a nicety: solveArena's yaw ladder is
 // measured RELATIVE TO THE LIVE CAMERA HEADING, so two runs of one cell that
 // start at different headings can legitimately stage in different places. The
@@ -475,7 +491,7 @@ const censusHead = (site, yaw) => `
                  .map(c => RU.derive.partyMember(growth, items, c));
   const zd = GS.data.encounters.zones[zone] || GS.data.encounters.zones.meadow;
   const t0 = performance.now();
-  const pr = B.start({ zone: zone, group: ['duskpad','reed-nibbler'], seed: 4242,
+  const pr = B.start({ zone: zone, group: ${JSON.stringify(GROUP.split(','))}, seed: 4242,
                        backdrop: zd && zd.battleBackdrop }, party, { speed: 1 });
   pr.then(()=>{}, ()=>{});
   let st = null;
@@ -795,6 +811,20 @@ function summarise(row) {
       if (!C) return { absent: true }; C.partyStagger = ${JSON.stringify(FORM)}; return C.partyStagger; })()`, 10000);
     console.log('CFG.partyStagger = ' + JSON.stringify(v));
   }
+  if (FOE != null || FOEDZ != null) {
+    const v = await ev(cdp, `(() => { const C = window.BattleWorld.CFG;
+      if (!C) return { absent: true };
+      ${FOE == null ? '' : `C.foeRake = ${JSON.stringify(FOE)};`}
+      ${FOEDZ == null ? '' : `C.foeDepth = ${JSON.stringify(FOEDZ)};`}
+      return { foeRake: C.foeRake, foeDepth: C.foeDepth }; })()`, 10000);
+    console.log('CFG.foe = ' + JSON.stringify(v));
+  }
+  if (BEYE2 != null) {
+    const v = await ev(cdp, `(() => { const C = window.BattleWorld.CFG;
+      if (!C || !C.eye2) return { absent: true };
+      C.eye2.on = ${BEYE2 === '0' ? 'false' : 'true'}; return C.eye2; })()`, 10000);
+    console.log('CFG.eye2 = ' + JSON.stringify(v));
+  }
   if (BPLACE != null) {
     const v = await ev(cdp, `(() => { window.BattleWorld.PLACE.on = ${BPLACE === '0' ? 'false' : 'true'};
       return window.BattleWorld.PLACE.on; })()`, 10000);
@@ -935,17 +965,19 @@ function summarise(row) {
       if (res.shot) writeFileSync(join(dir, s.id + '.jpg'), Buffer.from(res.shot.split(',')[1], 'base64'));
       out.push(res.row);
       const o = res.row.ovl || {};
-      const pr = (o.rows || []).filter(x => x.side !== 'foe');
+      // BOTH LINES, because this instrument now has two lanes behind it: the
+      // party's (docs/qa/battle-overlap) and the foes' (docs/qa/battle-foeline).
       const g = o.geo || {};
       console.log(`kind=${res.row.kind} ` +
-        pr.map(x => `${x.id} team=${x.occTeam} world=${x.occWorld} tot=${x.occTotal} in=${x.inFrame}`).join(' ') +
-        ` lat=${g.lateralM} axis=${g.lineVsAxisDeg} near=${g.nearer} ` +
+        (o.rows || []).map(x => `${x.id} team=${x.occTeam} world=${x.occWorld} tot=${x.occTotal}`).join(' ') +
+        ` lat=${g.lateralM} axis=${g.lineVsAxisDeg} ` +
         `${((Date.now() - t0) / 1000).toFixed(0)}s`);
       await sleep(300);
     }
     const f = join(OUT, `overlap-${TAG}.json`);
     writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
-      form: FORM, bplace: BPLACE, bsurf: BSURF, three: ready.three,
+      form: FORM, foe: FOE, foedz: FOEDZ, beye2: BEYE2, group: GROUP, only: arg('only', null),
+      bplace: BPLACE, bsurf: BSURF, three: ready.three,
       n: out.length, of: census.length, secs: +((Date.now() - t0) / 1000).toFixed(0) }, rows: out }, null, 1));
     console.log(`\nwrote ${out.length}/${census.length} sites -> ${f}`);
     console.log('shots -> ' + dir);

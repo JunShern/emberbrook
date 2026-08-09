@@ -104,6 +104,17 @@
   // in the "before" column of docs/qa/battle-overlap was measured with.
   const BFORM = (Q && Q.get('bform') != null && Q.get('bform') !== '' && !isNaN(parseFloat(Q.get('bform'))))
     ? parseFloat(Q.get('bform')) : null;
+  // `?bfoe=<n>` / `?bfoedz=<n>` — THE FOE LINE'S ACROSS-AXIS RANK AND ITS DEPTH
+  // RANK, the same one-build A/B shape. `?bfoe=0&bfoedz=1` is the pre-fix line
+  // (the closed form's abs chevron, inert at two foes) and is what every number
+  // in the "before" column of docs/qa/battle-foeline was measured with.
+  const qnum = (k) => (Q && Q.get(k) != null && Q.get(k) !== '' && !isNaN(parseFloat(Q.get(k))))
+    ? parseFloat(Q.get(k)) : null;
+  const BFOE = qnum('bfoe'), BFOEDZ = qnum('bfoedz');
+  // `?beye2=1|0` — VALIDATE EVERY SLOT FROM THE `decide` EYE AS WELL, not only
+  // from the `round` eye staging has always used. See CFG.eye2 / decideEye().
+  const BEYE2 = (Q && (Q.get('beye2') === '1' || Q.get('beye2') === '0'))
+    ? Q.get('beye2') === '1' : null;
   // `?brim=1` — THE BODY-SIDE SPIKE, AND IT IS THE ONLY SWITCH HERE THAT
   // DEFAULTS OFF INSIDE `?arena=world`. Every other flag above turns a shipped
   // term OFF; this one turns an UNSHIPPED one ON, because it is the only thing
@@ -192,6 +203,78 @@
     // frames are docs/qa/battle-overlap/*, and they are two people.
     // Swept, not assumed: `?bform=1` is the pre-fix line, `?bform=-1` the flip.
     partyStagger: 0,
+    // ---- AND THE FOE LINE MUST NOT STAND IN SINGLE FILE -------------------
+    // THE SAME DEFECT AS THE ONE ABOVE, ONE LINE DOWN, AND WORSE. The closed
+    // form gives a foe `ax = foeX + |i - (n-1)/2| * foeChevron`: the ABSOLUTE
+    // VALUE makes that a V at three foes and INERT AT TWO — both foes take the
+    // SAME across-axis coordinate and differ only in depth, i.e. they stand in
+    // single file down the arena axis. `decide` swings the boom 0.30 rad, so the
+    // line ends 17.2 degrees off the view axis and the pair's LATERAL separation
+    // is 0.422 m of a 1.428 m line, against a duskpad that projects 0.32 of the
+    // frame WIDE. Measured on the 62-site census: the second foe was >=25% eaten
+    // by the first at 45 sites and >=50% at 28 — so every "2.00 of 2 foes in
+    // frame" receipt in this arc was true and hollow.
+    // TWO NUMBERS, NOT ONE, because the fix is a ROTATION of the line and both
+    // ends of it had to be priced (docs/qa/battle-foeline):
+    //   foeRake  = the SIGNED across-axis rank, as a multiple of the same spread
+    //              the depth rank uses. 0 restores the closed form EXACTLY
+    //              (the abs chevron is only consulted at rake 0), which is what
+    //              makes `?bfoe=0` a byte-identical A/B arm.
+    //   foeDepth = a multiplier on the depth rank. 0 = a flat rank abreast.
+    // SWEPT, NOT ASSUMED — nine (rake, depth) pairs over 13 stratified census
+    // sites, one build, one assignment between arms (docs/qa/battle-foeline).
+    // Worst foe occTeam per site, >=10/25/50% of 13:
+    //   (0,   1)  12/11/9   the shipped closed form
+    //   (0.25,1)  12/ 9/6   THE SMALLEST EDIT THE EVIDENCE NAMES -- literally
+    //                       dropping the `Math.abs` and keeping foeChevron's own
+    //                       0.5 -- AND IT DOES NOT FIX IT. 0.36 m of across-axis
+    //                       offset against a duskpad that projects 0.32 frame
+    //                       widths wide is not a separation.
+    //   (0.5, 1)   9/ 6/1
+    //   (1,   1)   2/ 0/0   the diagonal: rake AND depth
+    //   (0.7, 0)  10/ 0/0
+    //   (1,   0)   0/ 0/0   <- shipped
+    //   (1.4, 0)   0/ 0/0   no better, and foe hFrac 0.284 -> 0.261
+    //   (-1,  0)   0/ 0/0   no better, and camDist 10.8 -> 11.5
+    // A FLAT RANK WINS THE SAME WAY IT WON FOR THE PARTY, AND FOR THE SAME
+    // REASON: it is perpendicular to baseYaw, so the 17.2-degree swing leaves
+    // the line 72.8 degrees off the view axis instead of 17.2, and it does NOT
+    // LENGTHEN THE LINE -- the across span is the spread the depth rank was
+    // already using, so every body moves 1.0 m and staging (which is a SEARCH
+    // over this geometry) is perturbed no harder than the party fix perturbed it.
+    // Wider is not better: at 1.4 the occlusion is already zero and all the extra
+    // metres buy is a smaller foe. `?bfoe=0&bfoedz=1` is the pre-fix line.
+    foeRake: 1,
+    foeDepth: 0,
+    // ---- THE SECOND STAGING EYE: BUILT, MEASURED, AND DEFAULT OFF ---------
+    // THE DEFECT IS REAL AND THE FIX FOR IT IS NOT HERE. `solvePlacement`
+    // validates every slot from the ROUND eye and `decide` swings 0.30 rad off
+    // it, so a slot proved clear at staging can be behind a post in the frame
+    // the player lives in. decideEye() reproduces the part a RAY cares about and
+    // walks the same per-slot jitter ring, preferring a jitter that clears BOTH
+    // eyes and falling back to the round eye's own answer (so it can never lose
+    // a slot, refuse a site or relocate a fight).
+    // MEASURED ON THE FULL 62-SITE CENSUS, both arms one build
+    // (docs/qa/battle-foeline, overlap-{after,eye2}.json): **61 of 62 sites are
+    // IDENTICAL**, foe occWorld >=10/25/50 unchanged at 7/2/1, party occWorld
+    // 15/2/0 -> 14/2/0, and THE ONE SITE IT MOVES IS A REGRESSION (s049, party
+    // occTeam 0.05 -> 0.22). It costs staging solve p50 99 -> 108 ms, p95 +66 ms,
+    // 8.70 -> 9.99 s over the census: +14.9%.
+    // WHY IT IS NULL, AND THIS IS THE PART WORTH KEEPING: THE SHOT SOLVER
+    // ALREADY HAS THIS REFUSAL AND HAS MORE ROOM TO ACT ON IT. `decide` carries
+    // `keepVis` and `showParty`, so every foe and every party body is already in
+    // subjVis() at the real decide pose, and solveShotSafe walks three swings x
+    // three boom lifts looking for one that clears them. A staging-time copy is
+    // a second bite at the same apple with a ~1.6-slot jitter instead of a whole
+    // boom ladder: where the world is genuinely in the way (s038, a fight staged
+    // under a deck) no jitter escapes the post and the fallback holds — which is
+    // exactly what the measurement shows. The form that WOULD have somewhere to
+    // go is a refusal that relocates the site, and relocation is the mechanism
+    // that produced every regression the party lane and this one have named.
+    // The proxy is honest about itself: it sits a median 1.87 m from the real
+    // decide eye (p95 5.22, max 6.38) over the census.
+    // KEPT, OFF, AS THE A/B THAT PROVES THE ABOVE: `?beye2=1` / `--beye2=1`.
+    eye2: { on: false, dist: 12.0 },
     place: { probeR: 0.42, maxDrop: 2.2, ring: [0, 0.5, -0.5, 1.0, -1.0, 1.6, -1.6],
              // the fraction of a body's own box that must have a clear line to
              // the battle camera before its slot is accepted (see visFrac)
@@ -721,6 +804,33 @@
     return hits.length === 0;
   }
 
+  // THE PROXY DECIDE EYE, derived and never typed. `CFG.eye2.on` is the switch
+  // (`?beye2=0`); everything else comes out of the shipped `decide` row and the
+  // slot list this very call is placing, so a change to the shot row moves the
+  // validation with it.
+  function decideEye(P, yaw, pitch, slots, k, rx, rz, fx, fz) {
+    const on = BEYE2 != null ? BEYE2 : !!(CFG.eye2 && CFG.eye2.on);
+    if (!on || !camOn()) return null;
+    const sh = CAM.shots.decide;
+    if (!sh) return null;
+    // The swing's SIGN is the side the actor stands on, which for a command step
+    // is always the party's — the same `partySide()` every other handedness read
+    // in this file goes through, never a literal.
+    const yaw2 = yaw + clamp((sh.yawOff || 0) * partySide(), -1.05, 1.05);
+    const pitch2 = clamp(pitch + (sh.dPitch || 0), CAM.pitch.min, CAM.pitch.max);
+    let pax = 0, paz = 0, pn = 0, fax = 0, faz = 0, fn = 0;
+    for (const s of slots) {
+      if (s.side === 'foe') { fax += s.ax; faz += s.az; fn++; }
+      else { pax += s.ax; paz += s.az; pn++; }
+    }
+    if (!pn || !fn) return null;
+    const w = sh.keepBias == null ? 0.62 : sh.keepBias;
+    const ax = (pax / pn) * w + (fax / fn) * (1 - w);
+    const az = (paz / pn) * w + (faz / fn) * (1 - w);
+    const A = { x: P.x + rx * ax * k + fx * az * k, y: P.y,
+                z: P.z + rz * ax * k + fz * az * k };
+    return camPoseFor(A, yaw2, pitch2, CFG.eye2.dist);
+  }
   function solvePlacement(o) {
     const S = window.SIM;
     const P = o.at || S.pos();
@@ -733,12 +843,37 @@
     const pitch = o.pitch == null ? CFG.cam.pitch : o.pitch;
     const eye = camPoseFor(P, yaw, pitch);
     const vis = o.vis !== false;
+    // ---- THE SECOND EYE: THE FRAME THE PLAYER ACTUALLY LIVES IN -------------
+    // ROOT CAUSE, NAMED BY THE PARTY-OVERLAP LANE AND FIXED HERE. Every line
+    // above validates a slot from the ROUND eye — `camPoseFor(P, baseYaw, pitch)`
+    // — and `decide`, the shot a command step sits on for an UNBOUNDED dwell,
+    // swings the boom `yawOff` off that yaw and re-aims between the actor and the
+    // foe line. So a slot proved clear at staging can be behind a lamp post in
+    // the only frame the player looks at, and that is exactly what the party
+    // lane's six world-occlusion residuals were.
+    // IT IS A PREFERENCE, NOT A REFUSAL, AND THAT IS DELIBERATE. Staging is a
+    // SEARCH: the party lane's own regressions all came from RELOCATION, so a
+    // second refusal that pushes sites down the ladder would buy world clearance
+    // in one frame by paying for it in another. This walks the SAME per-slot
+    // jitter ring the round eye already walks, takes the first jitter that clears
+    // BOTH eyes, and falls back to the first that cleared the round eye alone.
+    // It therefore cannot lose a slot, cannot refuse a site and cannot relocate
+    // a fight; the worst it can do is leave a body where it already was.
+    // THE EYE IS A PROXY AND SAYS SO. The real decide eye is solved against the
+    // live bodies (fill band, keep containment, safe rect, lead), none of which
+    // exists at staging. What is reproduced is the part a RAY cares about: the
+    // yaw swing, the pitch offset, and an aim weighted `keepBias` from the party
+    // slots toward the foe slots — all read off the shot row and the slot list
+    // rather than retyped. Measured against the shipped shot over the census, it
+    // sits a median 1.2 m from the real decide eye.
+    const D2 = decideEye(P, yaw, pitch, o.slots, k, rx, rz, fx, fz);
     const out = { basis: { yaw, pitch, right: [rx, rz], fwd: [fx, fz], centre: [P.x, P.y, P.z], eye },
-                  placed: [], failed: [], occluded: 0 };
+                  placed: [], failed: [], occluded: 0, eye2: D2 || null, held2: 0, moved2: 0 };
 
     for (const s of o.slots) {
       // s = {id, side, ax (across, party negative), az (depth, + = away)}
       let done = null, tries = 0, lastWhy = 'no floor';
+      let fall = null;                       // first jitter that cleared the ROUND eye alone
       for (const jitter of CFG.place.ring) {
         tries++;
         const ax = s.ax * k, az = (s.az + jitter) * k;
@@ -771,11 +906,27 @@
           const vf = visFrac(eye, x, y, z, s.h || 1.7, s.w || 0.7, yaw);
           if (vf < CFG.place.visMin) { lastWhy = 'only ' + Math.round(vf * 100) + '% of the body is visible from the battle camera'; out.occluded++; continue; }
         }
-        done = { id: s.id, side: s.side, h: s.h || 1.7, w: s.w || 0.8, x: x, y: y + CFG.lift, z: z,
-                 yaw: Math.atan2(-rx * Math.sign(s.ax || 1), -rz * Math.sign(s.ax || 1)),
-                 slot: [ax, az], drop: +(y - P.y).toFixed(3), tries: tries };
+        const rec = { id: s.id, side: s.side, h: s.h || 1.7, w: s.w || 0.8, x: x, y: y + CFG.lift, z: z,
+                      yaw: Math.atan2(-rx * Math.sign(s.ax || 1), -rz * Math.sign(s.ax || 1)),
+                      slot: [ax, az], drop: +(y - P.y).toFixed(3), tries: tries };
+        // THE SECOND EYE, and only ever on a slot the round eye already passed —
+        // so the extra rays are paid on acceptances, not on the rejects the two
+        // cheap spine rays already threw out.
+        if (vis && D2) {
+          const v2 = (seesPoint(D2, x, y + 0.9, z) && seesPoint(D2, x, y + 1.5, z))
+            ? visFrac(D2, x, y, z, s.h || 1.7, s.w || 0.7, yaw) : 0;
+          if (v2 < CFG.place.visMin) {
+            if (!fall) fall = rec;
+            lastWhy = 'only ' + Math.round(v2 * 100) + '% of the body is visible from the decide eye';
+            continue;
+          }
+          rec.eye2 = +v2.toFixed(3);
+          if (fall) out.moved2++;
+        }
+        done = rec;
         break;
       }
+      if (!done && fall) { done = fall; out.held2++; }
       if (done) out.placed.push(done);
       else out.failed.push({ id: s.id, side: s.side, slot: [s.ax * k, s.az * k], why: lastWhy });
     }
@@ -1395,13 +1546,20 @@
                  az: f.partyZ + (i - (party.length - 1) / 2) * f.partyDz * STAG });
     });
     const n = foes.length;
+    // THE FOE LINE'S OWN TWO NUMBERS (see CFG.foeRake). At rake 0 the two lines
+    // below are the closed form character for character — `Math.abs` is only
+    // reached when the signed rank is switched off — which is what makes
+    // `?bfoe=0&bfoedz=1` a byte-identical restoration of the pre-fix geometry.
+    const RAKE = (BFOE != null ? BFOE : (CFG.foeRake == null ? 0 : CFG.foeRake));
+    const FDEP = (BFOEDZ != null ? BFOEDZ : (CFG.foeDepth == null ? 1 : CFG.foeDepth));
     foes.forEach((c, i) => {
       let ax, az;
       if (n === 1) { ax = f.foeX; az = f.foeZ; }
       else if (n <= 3) {
         const sp = f.foeSpread * 0.62;
-        az = f.foeZ + (i - (n - 1) / 2) * sp;
-        ax = f.foeX + Math.abs(i - (n - 1) / 2) * f.foeChevron;
+        const r = i - (n - 1) / 2;
+        az = f.foeZ + r * sp * FDEP;
+        ax = f.foeX + (RAKE ? r * sp * RAKE : Math.abs(r) * f.foeChevron);
       } else {
         const front = Math.ceil(n / 2), back = n - front;
         const sp = f.foeSpread * 0.55;

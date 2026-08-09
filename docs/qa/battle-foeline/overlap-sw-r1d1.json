@@ -1,0 +1,3101 @@
+{
+ "meta": {
+  "when": "2026-08-09T14:04:50.279Z",
+  "tag": "sw-r1d1",
+  "yaw": -1.4869,
+  "form": null,
+  "foe": 1,
+  "foedz": 1,
+  "beye2": null,
+  "only": "s000,s005,s010,s015,s020,s025,s030,s035,s040,s045,s050,s055,s060",
+  "bplace": null,
+  "bsurf": null,
+  "three": "185",
+  "n": 13,
+  "of": 62,
+  "secs": 48
+ },
+ "rows": [
+  {
+   "id": "s000",
+   "zone": "water",
+   "at": {
+    "x": -45.844466094067265,
+    "y": 18.684116940527446,
+    "z": 19.584466094067263
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 13,
+    "d": 13,
+    "ms": 62
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 11105,
+      "visPx": 11804,
+      "interPx": 11103,
+      "lostPx": 2,
+      "freePx": 11223,
+      "occTeam": 0.0002,
+      "occWorld": 0.0122,
+      "occTotal": 0.0124,
+      "occUnclaimed": 0.0002,
+      "by": {
+       "maren": 0,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 347.4,
+       "y0": 215.2,
+       "x1": 495.2,
+       "y1": 500.8
+      },
+      "inFrame": 1,
+      "cx": 0.2633,
+      "wFrac": 0.0924,
+      "hFrac": 0.3513
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 10438,
+      "visPx": 11218,
+      "interPx": 10430,
+      "lostPx": 8,
+      "freePx": 10471,
+      "occTeam": 0.0008,
+      "occWorld": 0.0068,
+      "occTotal": 0.006,
+      "occUnclaimed": 0.0008,
+      "by": {
+       "vesper": 0,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 235.3,
+       "y0": 230.6,
+       "x1": 387.9,
+       "y1": 507.7
+      },
+      "inFrame": 1,
+      "cx": 0.1947,
+      "wFrac": 0.0954,
+      "hFrac": 0.3408
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 36238,
+      "visPx": 36240,
+      "interPx": 36194,
+      "lostPx": 44,
+      "freePx": 36297,
+      "occTeam": 0.0012,
+      "occWorld": 0.0123,
+      "occTotal": 0.0132,
+      "occUnclaimed": 0.0012,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 832,
+       "y0": 364,
+       "x1": 1325.3,
+       "y1": 646
+      },
+      "inFrame": 1,
+      "cx": 0.6742,
+      "wFrac": 0.3083,
+      "hFrac": 0.3468
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 18699,
+      "visPx": 18630,
+      "interPx": 18609,
+      "lostPx": 90,
+      "freePx": 19547,
+      "occTeam": 0.0048,
+      "occWorld": 0.0529,
+      "occTotal": 0.0572,
+      "occUnclaimed": 0.0048,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 0
+      },
+      "box": {
+       "x0": 1250.8,
+       "y0": 388.6,
+       "x1": 1541.6,
+       "y1": 622.4
+      },
+      "inFrame": 1,
+      "cx": 0.8726,
+      "wFrac": 0.1818,
+      "hFrac": 0.2876
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.756,
+     "lateralM": -0.722,
+     "depthM": 0.223,
+     "lineVsAxisDeg": 72.84,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0686,
+     "xOverlapFrac": 0.274
+    },
+    "placed": {
+     "vesper": {
+      "x": -31.559,
+      "y": 21.126,
+      "z": 15.054,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": -30.806,
+      "y": 20.923,
+      "z": 15.117,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": -35.454,
+      "y": 22.028,
+      "z": 13.179,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": -36.967,
+      "y": 21.813,
+      "z": 14.124,
+      "slot": [
+       3.1622399999999993,
+       -0.22176000000000004
+      ]
+     }
+    },
+    "pose": {
+     "ax": -33.913,
+     "ay": 22.151,
+     "az": 14.649,
+     "yaw": -1.7869,
+     "pitch": 0.51,
+     "dist": 10.32,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.34
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.8004,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.608,
+      -0.471
+     ],
+     "foe": [
+      0.33,
+      0.735
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 10.32,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2364
+  },
+  {
+   "id": "s005",
+   "zone": "forest",
+   "at": {
+    "x": -61.655533905932735,
+    "y": 27.445520418617143,
+    "z": 70.41553390593273
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 100
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 8029,
+      "visPx": 8013,
+      "interPx": 7981,
+      "lostPx": 48,
+      "freePx": 8155,
+      "occTeam": 0.006,
+      "occWorld": 0.0264,
+      "occTotal": 0.0267,
+      "occUnclaimed": 0.0056,
+      "by": {
+       "maren": 3,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 438.3,
+       "y0": 246,
+       "x1": 543.3,
+       "y1": 469
+      },
+      "inFrame": 1,
+      "cx": 0.3068,
+      "wFrac": 0.0656,
+      "hFrac": 0.2742
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 11332,
+      "visPx": 10917,
+      "interPx": 10743,
+      "lostPx": 589,
+      "freePx": 7999,
+      "occTeam": 0.052,
+      "occWorld": 0.0539,
+      "occTotal": 0.0486,
+      "occUnclaimed": 0.0507,
+      "by": {
+       "vesper": 14,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 346.3,
+       "y0": 237.7,
+       "x1": 453.3,
+       "y1": 456.8
+      },
+      "inFrame": 1,
+      "cx": 0.2499,
+      "wFrac": 0.0669,
+      "hFrac": 0.2695
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 32852,
+      "visPx": 33175,
+      "interPx": 32543,
+      "lostPx": 309,
+      "freePx": 22254,
+      "occTeam": 0.0094,
+      "occWorld": 0.0373,
+      "occTotal": 0.0379,
+      "occUnclaimed": 0.0092,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 7
+      },
+      "box": {
+       "x0": 810,
+       "y0": 430.1,
+       "x1": 1161.7,
+       "y1": 626
+      },
+      "inFrame": 1,
+      "cx": 0.6162,
+      "wFrac": 0.2198,
+      "hFrac": 0.241
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 12373,
+      "visPx": 12260,
+      "interPx": 12207,
+      "lostPx": 166,
+      "freePx": 12352,
+      "occTeam": 0.0134,
+      "occWorld": 0.0002,
+      "occTotal": 0.0123,
+      "occUnclaimed": 0.0133,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 2
+      },
+      "box": {
+       "x0": 1134.3,
+       "y0": 411.9,
+       "x1": 1334,
+       "y1": 562.9
+      },
+      "inFrame": 1,
+      "cx": 0.7713,
+      "wFrac": 0.1249,
+      "hFrac": 0.1858
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.756,
+     "lateralM": -0.722,
+     "depthM": 0.224,
+     "lineVsAxisDeg": 72.76,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0569,
+     "xOverlapFrac": 0.1429
+    },
+    "placed": {
+     "vesper": {
+      "x": -55.845,
+      "y": 27.556,
+      "z": 74.395,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": -55.092,
+      "y": 27.578,
+      "z": 74.459,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": -59.74,
+      "y": 27.478,
+      "z": 72.52,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": -61.283,
+      "y": 27.572,
+      "z": 73.824,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": -58.28,
+     "ay": 28.267,
+     "az": 74.076,
+     "yaw": -1.7869,
+     "pitch": 0.33,
+     "dist": 13.428,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.16
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.6085,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.502,
+      -0.388
+     ],
+     "foe": [
+      0.221,
+      0.54
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 13.428,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2213
+  },
+  {
+   "id": "s010",
+   "zone": "meadow",
+   "at": {
+    "x": -8.344466094067263,
+    "y": 14.264115396860987,
+    "z": 7.915533905932737
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 53
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 12216,
+      "visPx": 11842,
+      "interPx": 11753,
+      "lostPx": 463,
+      "freePx": 12878,
+      "occTeam": 0.0379,
+      "occWorld": 0.0735,
+      "occTotal": 0.094,
+      "occUnclaimed": 0.0261,
+      "by": {
+       "maren": 144,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 371.8,
+       "y0": 242.8,
+       "x1": 499.6,
+       "y1": 508
+      },
+      "inFrame": 1,
+      "cx": 0.2723,
+      "wFrac": 0.0798,
+      "hFrac": 0.3262
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 17494,
+      "visPx": 16489,
+      "interPx": 16418,
+      "lostPx": 1076,
+      "freePx": 11936,
+      "occTeam": 0.0615,
+      "occWorld": 0.0313,
+      "occTotal": 0.0335,
+      "occUnclaimed": 0.0477,
+      "by": {
+       "vesper": 241,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 262.7,
+       "y0": 255.7,
+       "x1": 392.1,
+       "y1": 515.5
+      },
+      "inFrame": 1,
+      "cx": 0.2046,
+      "wFrac": 0.0808,
+      "hFrac": 0.3195
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 58361,
+      "visPx": 58592,
+      "interPx": 57825,
+      "lostPx": 536,
+      "freePx": 37690,
+      "occTeam": 0.0092,
+      "occWorld": 0.0146,
+      "occTotal": 0.0139,
+      "occUnclaimed": 0.0085,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 40
+      },
+      "box": {
+       "x0": 830.3,
+       "y0": 383.5,
+       "x1": 1291.2,
+       "y1": 622.1
+      },
+      "inFrame": 1,
+      "cx": 0.663,
+      "wFrac": 0.2881,
+      "hFrac": 0.2935
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 18509,
+      "visPx": 18438,
+      "interPx": 18360,
+      "lostPx": 149,
+      "freePx": 18556,
+      "occTeam": 0.0081,
+      "occWorld": 0.0032,
+      "occTotal": 0.0101,
+      "occUnclaimed": 0.0075,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 11
+      },
+      "box": {
+       "x0": 1244.8,
+       "y0": 387.6,
+       "x1": 1506.6,
+       "y1": 556.8
+      },
+      "inFrame": 1,
+      "cx": 0.8598,
+      "wFrac": 0.1636,
+      "hFrac": 0.208
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.757,
+     "lateralM": -0.723,
+     "depthM": 0.223,
+     "lineVsAxisDeg": 72.84,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0677,
+     "xOverlapFrac": 0.1588
+    },
+    "placed": {
+     "vesper": {
+      "x": -1.07,
+      "y": 13.957,
+      "z": 8.36,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": -0.316,
+      "y": 13.842,
+      "z": 8.423,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": -4.964,
+      "y": 14.091,
+      "z": 6.485,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": -6.507,
+      "y": 14.191,
+      "z": 7.788,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": -3.425,
+     "ay": 14.75,
+     "az": 8.023,
+     "yaw": -1.7869,
+     "pitch": 0.2,
+     "dist": 10.786,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.22
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.7673,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.593,
+      -0.457
+     ],
+     "foe": [
+      0.31,
+      0.708
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 10.786,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2154
+  },
+  {
+   "id": "s015",
+   "zone": "water",
+   "at": {
+    "x": -48.344466094067265,
+    "y": 25.84173047163707,
+    "z": 51.655533905932735
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 328
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 20570,
+      "visPx": 23548,
+      "interPx": 20356,
+      "lostPx": 214,
+      "freePx": 20728,
+      "occTeam": 0.0104,
+      "occWorld": 0.0131,
+      "occTotal": 0.0189,
+      "occUnclaimed": 0.0051,
+      "by": {
+       "maren": 110,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 331.3,
+       "y0": 246.4,
+       "x1": 504.1,
+       "y1": 531.9
+      },
+      "inFrame": 1,
+      "cx": 0.261,
+      "wFrac": 0.108,
+      "hFrac": 0.3511
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 21750,
+      "visPx": 19890,
+      "interPx": 19777,
+      "lostPx": 1973,
+      "freePx": 19103,
+      "occTeam": 0.0907,
+      "occWorld": 0.0153,
+      "occTotal": 0.1,
+      "occUnclaimed": 0.0167,
+      "by": {
+       "vesper": 1609,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 245,
+       "y0": 228.4,
+       "x1": 406.8,
+       "y1": 499.6
+      },
+      "inFrame": 1,
+      "cx": 0.2037,
+      "wFrac": 0.1011,
+      "hFrac": 0.3336
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 52859,
+      "visPx": 53027,
+      "interPx": 51917,
+      "lostPx": 942,
+      "freePx": 38680,
+      "occTeam": 0.0178,
+      "occWorld": 0.0292,
+      "occTotal": 0.0288,
+      "occUnclaimed": 0.0098,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 426
+      },
+      "box": {
+       "x0": 881.2,
+       "y0": 334.2,
+       "x1": 1330.3,
+       "y1": 615.9
+      },
+      "inFrame": 1,
+      "cx": 0.6911,
+      "wFrac": 0.2807,
+      "hFrac": 0.3466
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 16548,
+      "visPx": 14859,
+      "interPx": 14837,
+      "lostPx": 1711,
+      "freePx": 18588,
+      "occTeam": 0.1034,
+      "occWorld": 0.1163,
+      "occTotal": 0.2019,
+      "occUnclaimed": 0.0514,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 860
+      },
+      "box": {
+       "x0": 1152.9,
+       "y0": 345.2,
+       "x1": 1500,
+       "y1": 535.2
+      },
+      "inFrame": 1,
+      "cx": 0.829,
+      "wFrac": 0.217,
+      "hFrac": 0.2337
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.15,
+     "lineLen": 0.87,
+     "lateralM": -0.683,
+     "depthM": 0.54,
+     "lineVsAxisDeg": 51.65,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0573,
+     "xOverlapFrac": 0.4666
+    },
+    "placed": {
+     "vesper": {
+      "x": -52.775,
+      "y": 26.01,
+      "z": 49.248,
+      "slot": [
+       -2.304,
+       -0.8999999999999999
+      ]
+     },
+     "maren": {
+      "x": -51.99,
+      "y": 26.017,
+      "z": 48.872,
+      "slot": [
+       -3.06,
+       -0.46799999999999997
+      ]
+     },
+     "m0": {
+      "x": -55.392,
+      "y": 26.151,
+      "z": 52.348,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": -55.029,
+      "y": 26.08,
+      "z": 54.336,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": -53.947,
+     "ay": 26.773,
+     "az": 51.308,
+     "yaw": -2.6869,
+     "pitch": 0.33,
+     "dist": 11.411,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -2.5369,
+     "pitch": 0.16
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.8393,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.603,
+      -0.488
+     ],
+     "foe": [
+      0.351,
+      0.641
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 11.411,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2433
+  },
+  {
+   "id": "s020",
+   "zone": "meadow",
+   "at": {
+    "x": 19.584466094067263,
+    "y": 14.566609699675212,
+    "z": -24.15553390593274
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 80
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 8770,
+      "visPx": 8841,
+      "interPx": 8764,
+      "lostPx": 6,
+      "freePx": 10418,
+      "occTeam": 0.0007,
+      "occWorld": 0.1723,
+      "occTotal": 0.1728,
+      "occUnclaimed": 0.0006,
+      "by": {
+       "maren": 1,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 335.1,
+       "y0": 250.4,
+       "x1": 523.9,
+       "y1": 525.3
+      },
+      "inFrame": 1,
+      "cx": 0.2684,
+      "wFrac": 0.118,
+      "hFrac": 0.3382
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 7005,
+      "visPx": 7059,
+      "interPx": 6953,
+      "lostPx": 52,
+      "freePx": 9558,
+      "occTeam": 0.0074,
+      "occWorld": 0.2843,
+      "occTotal": 0.2812,
+      "occUnclaimed": 0.0073,
+      "by": {
+       "vesper": 1,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 224.4,
+       "y0": 252.3,
+       "x1": 408.6,
+       "y1": 521.2
+      },
+      "inFrame": 1,
+      "cx": 0.1978,
+      "wFrac": 0.1151,
+      "hFrac": 0.3307
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 42758,
+      "visPx": 44061,
+      "interPx": 42548,
+      "lostPx": 210,
+      "freePx": 41506,
+      "occTeam": 0.0049,
+      "occWorld": 0.0369,
+      "occTotal": 0.0387,
+      "occUnclaimed": 0.0047,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 8
+      },
+      "box": {
+       "x0": 823.2,
+       "y0": 344.2,
+       "x1": 1359.8,
+       "y1": 631.2
+      },
+      "inFrame": 1,
+      "cx": 0.6822,
+      "wFrac": 0.3354,
+      "hFrac": 0.353
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 19589,
+      "visPx": 19452,
+      "interPx": 19425,
+      "lostPx": 164,
+      "freePx": 18399,
+      "occTeam": 0.0084,
+      "occWorld": 0.0179,
+      "occTotal": 0.0249,
+      "occUnclaimed": 0.0029,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 108
+      },
+      "box": {
+       "x0": 1202.6,
+       "y0": 375.1,
+       "x1": 1605.1,
+       "y1": 568.7
+      },
+      "inFrame": 0.9874,
+      "cx": 0.8774,
+      "wFrac": 0.2516,
+      "hFrac": 0.2382
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.756,
+     "lateralM": -0.722,
+     "depthM": 0.223,
+     "lineVsAxisDeg": 72.86,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0706,
+     "xOverlapFrac": 0.399
+    },
+    "placed": {
+     "vesper": {
+      "x": 21.794,
+      "y": 14.363,
+      "z": -19.856,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": 22.485,
+      "y": 14.339,
+      "z": -20.162,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": 17.477,
+      "y": 14.581,
+      "z": -19.635,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": 16.602,
+      "y": 14.68,
+      "z": -18.08,
+      "slot": [
+       3.1622399999999993,
+       -0.22176000000000004
+      ]
+     }
+    },
+    "pose": {
+     "ax": 19.536,
+     "ay": 15.187,
+     "az": -19.084,
+     "yaw": -2.2869,
+     "pitch": 0.14,
+     "dist": 10.286,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.9869,
+     "pitch": 0.16
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.8026,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.612,
+      -0.471
+     ],
+     "foe": [
+      0.332,
+      0.747
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 10.286,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2174
+  },
+  {
+   "id": "s025",
+   "zone": "forest",
+   "at": {
+    "x": -67.91553390593273,
+    "y": 25.93015563032425,
+    "z": 52.91553390593274
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 192
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 8014,
+      "visPx": 7633,
+      "interPx": 7592,
+      "lostPx": 422,
+      "freePx": 7939,
+      "occTeam": 0.0527,
+      "occWorld": 0.0069,
+      "occTotal": 0.0472,
+      "occUnclaimed": 0.003,
+      "by": {
+       "maren": 398,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 447.1,
+       "y0": 245.1,
+       "x1": 548,
+       "y1": 460.6
+      },
+      "inFrame": 1,
+      "cx": 0.311,
+      "wFrac": 0.063,
+      "hFrac": 0.2651
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 11285,
+      "visPx": 11327,
+      "interPx": 10998,
+      "lostPx": 287,
+      "freePx": 9828,
+      "occTeam": 0.0254,
+      "occWorld": 0.0403,
+      "occTotal": 0.0388,
+      "occUnclaimed": 0.014,
+      "by": {
+       "vesper": 129,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 357.9,
+       "y0": 235.1,
+       "x1": 460.5,
+       "y1": 447
+      },
+      "inFrame": 1,
+      "cx": 0.2557,
+      "wFrac": 0.0641,
+      "hFrac": 0.2606
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 28561,
+      "visPx": 29084,
+      "interPx": 28233,
+      "lostPx": 328,
+      "freePx": 19471,
+      "occTeam": 0.0115,
+      "occWorld": 0.0112,
+      "occTotal": 0.0112,
+      "occUnclaimed": 0.0115,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 805.9,
+       "y0": 437,
+       "x1": 1143.2,
+       "y1": 624.5
+      },
+      "inFrame": 1,
+      "cx": 0.6091,
+      "wFrac": 0.2108,
+      "hFrac": 0.2306
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 9675,
+      "visPx": 9633,
+      "interPx": 9595,
+      "lostPx": 80,
+      "freePx": 9676,
+      "occTeam": 0.0083,
+      "occWorld": 0.0001,
+      "occTotal": 0.0083,
+      "occUnclaimed": 0.008,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 3
+      },
+      "box": {
+       "x0": 1117.6,
+       "y0": 427.7,
+       "x1": 1308.3,
+       "y1": 572.6
+      },
+      "inFrame": 1,
+      "cx": 0.7581,
+      "wFrac": 0.1192,
+      "hFrac": 0.1782
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.756,
+     "lateralM": -0.722,
+     "depthM": 0.224,
+     "lineVsAxisDeg": 72.76,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0553,
+     "xOverlapFrac": 0.1328
+    },
+    "placed": {
+     "vesper": {
+      "x": -69.176,
+      "y": 25.822,
+      "z": 56.895,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": -68.423,
+      "y": 25.863,
+      "z": 56.959,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": -73.071,
+      "y": 25.602,
+      "z": 55.02,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": -74.614,
+      "y": 25.633,
+      "z": 56.324,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": -71.634,
+     "ay": 26.467,
+     "az": 56.581,
+     "yaw": -1.7869,
+     "pitch": 0.32,
+     "dist": 13.907,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.34
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.5866,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.49,
+      -0.379
+     ],
+     "foe": [
+      0.207,
+      0.514
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 13.907,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2303
+  },
+  {
+   "id": "s030",
+   "zone": "water",
+   "at": {
+    "x": -45.62,
+    "y": 30,
+    "z": 25.62
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 51
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 12897,
+      "visPx": 12936,
+      "interPx": 12612,
+      "lostPx": 285,
+      "freePx": 13137,
+      "occTeam": 0.0221,
+      "occWorld": 0.0493,
+      "occTotal": 0.0537,
+      "occUnclaimed": 0.0139,
+      "by": {
+       "maren": 106,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 341.6,
+       "y0": 217.3,
+       "x1": 481.9,
+       "y1": 498.4
+      },
+      "inFrame": 1,
+      "cx": 0.2573,
+      "wFrac": 0.0876,
+      "hFrac": 0.3457
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 23735,
+      "visPx": 22717,
+      "interPx": 22354,
+      "lostPx": 1381,
+      "freePx": 13699,
+      "occTeam": 0.0582,
+      "occWorld": 0.0312,
+      "occTotal": 0.0291,
+      "occUnclaimed": 0.0506,
+      "by": {
+       "vesper": 181,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 226.9,
+       "y0": 210.8,
+       "x1": 371,
+       "y1": 485.8
+      },
+      "inFrame": 1,
+      "cx": 0.1869,
+      "wFrac": 0.0901,
+      "hFrac": 0.3382
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 49978,
+      "visPx": 49892,
+      "interPx": 49702,
+      "lostPx": 276,
+      "freePx": 31249,
+      "occTeam": 0.0055,
+      "occWorld": 0.0324,
+      "occTotal": 0.0346,
+      "occUnclaimed": 0.004,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 77
+      },
+      "box": {
+       "x0": 880.4,
+       "y0": 375.3,
+       "x1": 1307.5,
+       "y1": 606.7
+      },
+      "inFrame": 1,
+      "cx": 0.6837,
+      "wFrac": 0.2669,
+      "hFrac": 0.2846
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 15235,
+      "visPx": 15545,
+      "interPx": 15065,
+      "lostPx": 170,
+      "freePx": 14880,
+      "occTeam": 0.0112,
+      "occWorld": 0.0007,
+      "occTotal": 0.012,
+      "occUnclaimed": 0.0035,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 117
+      },
+      "box": {
+       "x0": 1241.7,
+       "y0": 428.4,
+       "x1": 1512.3,
+       "y1": 627.6
+      },
+      "inFrame": 1,
+      "cx": 0.8606,
+      "wFrac": 0.1691,
+      "hFrac": 0.2451
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.756,
+     "lateralM": -0.722,
+     "depthM": 0.224,
+     "lineVsAxisDeg": 72.76,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0704,
+     "xOverlapFrac": 0.2096
+    },
+    "placed": {
+     "vesper": {
+      "x": -43.345,
+      "y": 30,
+      "z": 26.064,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": -42.592,
+      "y": 30,
+      "z": 26.128,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": -47.336,
+      "y": 30,
+      "z": 25.337,
+      "slot": [
+       1.73376,
+       -0.13823999999999995
+      ]
+     },
+     "m1": {
+      "x": -48.783,
+      "y": 30,
+      "z": 25.493,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": -45.717,
+     "ay": 30.723,
+     "az": 25.945,
+     "yaw": -1.7869,
+     "pitch": 0.32,
+     "dist": 10.66,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.34
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.8376,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.628,
+      -0.486
+     ],
+     "foe": [
+      0.351,
+      0.709
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 10.66,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2160
+  },
+  {
+   "id": "s035",
+   "zone": "crag",
+   "at": {
+    "x": 0.6200000000000001,
+    "y": 15.375768417365947,
+    "z": -14.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 100
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 7519,
+      "visPx": 7519,
+      "interPx": 7508,
+      "lostPx": 11,
+      "freePx": 8224,
+      "occTeam": 0.0015,
+      "occWorld": 0.0964,
+      "occTotal": 0.0975,
+      "occUnclaimed": 0.0015,
+      "by": {
+       "maren": 0,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 336.1,
+       "y0": 218.1,
+       "x1": 525.2,
+       "y1": 496
+      },
+      "inFrame": 1,
+      "cx": 0.2692,
+      "wFrac": 0.1182,
+      "hFrac": 0.3419
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 7742,
+      "visPx": 7776,
+      "interPx": 7676,
+      "lostPx": 66,
+      "freePx": 8663,
+      "occTeam": 0.0085,
+      "occWorld": 0.1429,
+      "occTotal": 0.1468,
+      "occUnclaimed": 0.0085,
+      "by": {
+       "vesper": 0,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 229,
+       "y0": 215.6,
+       "x1": 416.2,
+       "y1": 486.9
+      },
+      "inFrame": 1,
+      "cx": 0.2016,
+      "wFrac": 0.117,
+      "hFrac": 0.3338
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 33107,
+      "visPx": 34137,
+      "interPx": 32996,
+      "lostPx": 111,
+      "freePx": 32139,
+      "occTeam": 0.0034,
+      "occWorld": 0.0638,
+      "occTotal": 0.0647,
+      "occUnclaimed": 0.0031,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 10
+      },
+      "box": {
+       "x0": 842.4,
+       "y0": 370.7,
+       "x1": 1307,
+       "y1": 681.4
+      },
+      "inFrame": 1,
+      "cx": 0.6717,
+      "wFrac": 0.2904,
+      "hFrac": 0.3821
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 16017,
+      "visPx": 15953,
+      "interPx": 15852,
+      "lostPx": 165,
+      "freePx": 14473,
+      "occTeam": 0.0103,
+      "occWorld": 0.0054,
+      "occTotal": 0.0147,
+      "occUnclaimed": 0.0025,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 125
+      },
+      "box": {
+       "x0": 1174,
+       "y0": 405.7,
+       "x1": 1516.7,
+       "y1": 619.5
+      },
+      "inFrame": 1,
+      "cx": 0.8408,
+      "wFrac": 0.2141,
+      "hFrac": 0.263
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.755,
+     "lateralM": -0.721,
+     "depthM": 0.224,
+     "lineVsAxisDeg": 72.79,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0676,
+     "xOverlapFrac": 0.4279
+    },
+    "placed": {
+     "vesper": {
+      "x": 6.074,
+      "y": 15.957,
+      "z": -12.204,
+      "slot": [
+       -2.304,
+       -0.46799999999999997
+      ]
+     },
+     "maren": {
+      "x": 6.765,
+      "y": 15.931,
+      "z": -12.509,
+      "slot": [
+       -3.06,
+       -0.46799999999999997
+      ]
+     },
+     "m0": {
+      "x": 2.048,
+      "y": 15.905,
+      "z": -11.324,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": 1.319,
+      "y": 15.737,
+      "z": -9.44,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": 3.962,
+     "ay": 16.628,
+     "az": -11.126,
+     "yaw": -2.2869,
+     "pitch": 0.32,
+     "dist": 11.226,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.9869,
+     "pitch": 0.34
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.7816,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.603,
+      -0.467
+     ],
+     "foe": [
+      0.314,
+      0.674
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 11.226,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2197
+  },
+  {
+   "id": "s040",
+   "zone": "crag",
+   "at": {
+    "x": 66.65553390593273,
+    "y": 11.365829860637035,
+    "z": -47.91553390593274
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 41
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 6445,
+      "visPx": 6588,
+      "interPx": 6420,
+      "lostPx": 25,
+      "freePx": 6479,
+      "occTeam": 0.0039,
+      "occWorld": 0.01,
+      "occTotal": 0.0117,
+      "occUnclaimed": 0.0037,
+      "by": {
+       "maren": 1,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 484.1,
+       "y0": 244.1,
+       "x1": 569.8,
+       "y1": 432.1
+      },
+      "inFrame": 1,
+      "cx": 0.3294,
+      "wFrac": 0.0536,
+      "hFrac": 0.2312
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 4231,
+      "visPx": 4384,
+      "interPx": 4116,
+      "lostPx": 115,
+      "freePx": 4157,
+      "occTeam": 0.0272,
+      "occWorld": 0.0806,
+      "occTotal": 0.0938,
+      "occUnclaimed": 0.0262,
+      "by": {
+       "vesper": 4,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 405.5,
+       "y0": 240.6,
+       "x1": 491.9,
+       "y1": 425.7
+      },
+      "inFrame": 1,
+      "cx": 0.2804,
+      "wFrac": 0.054,
+      "hFrac": 0.2277
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 5298,
+      "visPx": 5453,
+      "interPx": 5256,
+      "lostPx": 42,
+      "freePx": 7205,
+      "occTeam": 0.0079,
+      "occWorld": 0.3381,
+      "occTotal": 0.3378,
+      "occUnclaimed": 0.0079,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 798.3,
+       "y0": 460.5,
+       "x1": 1087.6,
+       "y1": 618.2
+      },
+      "inFrame": 1,
+      "cx": 0.5893,
+      "wFrac": 0.1808,
+      "hFrac": 0.194
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 5329,
+      "visPx": 5282,
+      "interPx": 5281,
+      "lostPx": 48,
+      "freePx": 5198,
+      "occTeam": 0.009,
+      "occWorld": 0,
+      "occTotal": 0.0085,
+      "occUnclaimed": 0.009,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 0
+      },
+      "box": {
+       "x0": 1053.4,
+       "y0": 482.2,
+       "x1": 1223.4,
+       "y1": 610.5
+      },
+      "inFrame": 1,
+      "cx": 0.7115,
+      "wFrac": 0.1062,
+      "hFrac": 0.1578
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.757,
+     "lateralM": -0.723,
+     "depthM": 0.223,
+     "lineVsAxisDeg": 72.84,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.049,
+     "xOverlapFrac": 0.091
+    },
+    "placed": {
+     "vesper": {
+      "x": 68.93,
+      "y": 11.902,
+      "z": -47.471,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": 69.684,
+      "y": 11.902,
+      "z": -47.408,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": 65.036,
+      "y": 11.091,
+      "z": -49.347,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": 63.553,
+      "y": 11.101,
+      "z": -48.76,
+      "slot": [
+       3.1622399999999993,
+       -0.58176
+      ]
+     }
+    },
+    "pose": {
+     "ax": 66.394,
+     "ay": 12.319,
+     "az": -47.902,
+     "yaw": -1.7869,
+     "pitch": 0.26,
+     "dist": 15.729,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.28
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.5126,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.441,
+      -0.343
+     ],
+     "foe": [
+      0.17,
+      0.424
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 15.729,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2147
+  },
+  {
+   "id": "s045",
+   "zone": "meadow",
+   "at": {
+    "x": -0.6200000000000001,
+    "y": 15.841554452205983,
+    "z": -9.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 136
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 10109,
+      "visPx": 10316,
+      "interPx": 10089,
+      "lostPx": 20,
+      "freePx": 9928,
+      "occTeam": 0.002,
+      "occWorld": 0.0061,
+      "occTotal": 0.0081,
+      "occUnclaimed": 0.0019,
+      "by": {
+       "maren": 1,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 329.6,
+       "y0": 212.6,
+       "x1": 517.8,
+       "y1": 491.2
+      },
+      "inFrame": 1,
+      "cx": 0.2648,
+      "wFrac": 0.1176,
+      "hFrac": 0.3426
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 7599,
+      "visPx": 7527,
+      "interPx": 7474,
+      "lostPx": 125,
+      "freePx": 8116,
+      "occTeam": 0.0164,
+      "occWorld": 0.0976,
+      "occTotal": 0.105,
+      "occUnclaimed": 0.0164,
+      "by": {
+       "vesper": 0,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 210.7,
+       "y0": 199,
+       "x1": 401.1,
+       "y1": 473.8
+      },
+      "inFrame": 1,
+      "cx": 0.1912,
+      "wFrac": 0.119,
+      "hFrac": 0.338
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 24263,
+      "visPx": 24390,
+      "interPx": 24175,
+      "lostPx": 88,
+      "freePx": 23090,
+      "occTeam": 0.0036,
+      "occWorld": 0.0849,
+      "occTotal": 0.0801,
+      "occUnclaimed": 0.0028,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 20
+      },
+      "box": {
+       "x0": 861.3,
+       "y0": 368.8,
+       "x1": 1332.3,
+       "y1": 677.4
+      },
+      "inFrame": 1,
+      "cx": 0.6855,
+      "wFrac": 0.2943,
+      "hFrac": 0.3796
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 11071,
+      "visPx": 10073,
+      "interPx": 10069,
+      "lostPx": 1002,
+      "freePx": 10687,
+      "occTeam": 0.0905,
+      "occWorld": 0.0389,
+      "occTotal": 0.132,
+      "occUnclaimed": 0.0158,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 827
+      },
+      "box": {
+       "x0": 1160.9,
+       "y0": 421.7,
+       "x1": 1460.3,
+       "y1": 619.3
+      },
+      "inFrame": 1,
+      "cx": 0.8191,
+      "wFrac": 0.1871,
+      "hFrac": 0.2431
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.15,
+     "lineLen": 0.756,
+     "lateralM": -0.748,
+     "depthM": 0.114,
+     "lineVsAxisDeg": 81.35,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0736,
+     "xOverlapFrac": 0.3799
+    },
+    "placed": {
+     "vesper": {
+      "x": 1.589,
+      "y": 15.214,
+      "z": -5.081,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": 2.281,
+      "y": 15.291,
+      "z": -5.386,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": -2.727,
+      "y": 15.215,
+      "z": -4.859,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": -3.166,
+      "y": 14.559,
+      "z": -2.317,
+      "slot": [
+       3.1622399999999993,
+       0.8582399999999999
+      ]
+     }
+    },
+    "pose": {
+     "ax": -0.618,
+     "ay": 15.813,
+     "az": -4.206,
+     "yaw": -2.1369,
+     "pitch": 0.33,
+     "dist": 11.36,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.9869,
+     "pitch": 0.16
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.822,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.622,
+      -0.474
+     ],
+     "foe": [
+      0.348,
+      0.635
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 11.36,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2239
+  },
+  {
+   "id": "s050",
+   "zone": "meadow",
+   "at": {
+    "x": 25.62,
+    "y": 14.233411875124744,
+    "z": -24.38
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 83
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 7670,
+      "visPx": 7688,
+      "interPx": 7660,
+      "lostPx": 10,
+      "freePx": 7671,
+      "occTeam": 0.0013,
+      "occWorld": 0.0017,
+      "occTotal": 0.003,
+      "occUnclaimed": 0.0013,
+      "by": {
+       "maren": 0,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 404.7,
+       "y0": 245.1,
+       "x1": 520.9,
+       "y1": 490.4
+      },
+      "inFrame": 1,
+      "cx": 0.2892,
+      "wFrac": 0.0726,
+      "hFrac": 0.3018
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 7599,
+      "visPx": 7632,
+      "interPx": 7576,
+      "lostPx": 23,
+      "freePx": 7600,
+      "occTeam": 0.003,
+      "occWorld": 0.0088,
+      "occTotal": 0.0084,
+      "occUnclaimed": 0.003,
+      "by": {
+       "vesper": 0,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 302.2,
+       "y0": 243,
+       "x1": 419.9,
+       "y1": 483.5
+      },
+      "inFrame": 1,
+      "cx": 0.2257,
+      "wFrac": 0.0735,
+      "hFrac": 0.2959
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 23971,
+      "visPx": 24458,
+      "interPx": 23927,
+      "lostPx": 44,
+      "freePx": 24438,
+      "occTeam": 0.0018,
+      "occWorld": 0.0348,
+      "occTotal": 0.035,
+      "occUnclaimed": 0.0018,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 827.3,
+       "y0": 403.7,
+       "x1": 1240.9,
+       "y1": 620.1
+      },
+      "inFrame": 1,
+      "cx": 0.6463,
+      "wFrac": 0.2585,
+      "hFrac": 0.2661
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 10001,
+      "visPx": 9999,
+      "interPx": 9996,
+      "lostPx": 5,
+      "freePx": 9881,
+      "occTeam": 0.0005,
+      "occWorld": 0.0054,
+      "occTotal": 0.0057,
+      "occUnclaimed": 0.0005,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 0
+      },
+      "box": {
+       "x0": 1206.2,
+       "y0": 407.3,
+       "x1": 1440.1,
+       "y1": 562.8
+      },
+      "inFrame": 1,
+      "cx": 0.8269,
+      "wFrac": 0.1462,
+      "hFrac": 0.1913
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.757,
+     "lateralM": -0.723,
+     "depthM": 0.223,
+     "lineVsAxisDeg": 72.84,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0635,
+     "xOverlapFrac": 0.1308
+    },
+    "placed": {
+     "vesper": {
+      "x": 31.43,
+      "y": 14.215,
+      "z": -20.4,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": 32.184,
+      "y": 14.209,
+      "z": -20.337,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": 27.536,
+      "y": 14.161,
+      "z": -22.275,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": 25.993,
+      "y": 14.249,
+      "z": -20.972,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": 29.077,
+     "ay": 14.934,
+     "az": -20.738,
+     "yaw": -1.7869,
+     "pitch": 0.2,
+     "dist": 11.728,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.22
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.7035,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.551,
+      -0.423
+     ],
+     "foe": [
+      0.28,
+      0.646
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 11.728,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2205
+  },
+  {
+   "id": "s055",
+   "zone": "forest",
+   "at": {
+    "x": 28.12,
+    "y": 13.820083147233376,
+    "z": -18.12
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 5,
+    "d": 5,
+    "ms": 67
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 9549,
+      "visPx": 9414,
+      "interPx": 9374,
+      "lostPx": 175,
+      "freePx": 9693,
+      "occTeam": 0.0183,
+      "occWorld": 0.0223,
+      "occTotal": 0.0341,
+      "occUnclaimed": 0.0169,
+      "by": {
+       "maren": 14,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 429.1,
+       "y0": 243.4,
+       "x1": 533.3,
+       "y1": 466
+      },
+      "inFrame": 1,
+      "cx": 0.3007,
+      "wFrac": 0.0652,
+      "hFrac": 0.2739
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 11876,
+      "visPx": 11371,
+      "interPx": 11282,
+      "lostPx": 594,
+      "freePx": 8525,
+      "occTeam": 0.05,
+      "occWorld": 0.0488,
+      "occTotal": 0.0598,
+      "occUnclaimed": 0.04,
+      "by": {
+       "vesper": 119,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 333.3,
+       "y0": 220.3,
+       "x1": 438.2,
+       "y1": 438.5
+      },
+      "inFrame": 1,
+      "cx": 0.2411,
+      "wFrac": 0.0655,
+      "hFrac": 0.2684
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 15731,
+      "visPx": 15812,
+      "interPx": 15709,
+      "lostPx": 22,
+      "freePx": 15778,
+      "occTeam": 0.0014,
+      "occWorld": 0.0117,
+      "occTotal": 0.0124,
+      "occUnclaimed": 0.0014,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 817.1,
+       "y0": 399.3,
+       "x1": 1192.2,
+       "y1": 588.2
+      },
+      "inFrame": 1,
+      "cx": 0.6279,
+      "wFrac": 0.2344,
+      "hFrac": 0.2324
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 5698,
+      "visPx": 5361,
+      "interPx": 5062,
+      "lostPx": 636,
+      "freePx": 6465,
+      "occTeam": 0.1116,
+      "occWorld": 0.1316,
+      "occTotal": 0.2113,
+      "occUnclaimed": 0.1116,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 0
+      },
+      "box": {
+       "x0": 1163.5,
+       "y0": 478.6,
+       "x1": 1372.8,
+       "y1": 617.5
+      },
+      "inFrame": 1,
+      "cx": 0.7926,
+      "wFrac": 0.1308,
+      "hFrac": 0.1709
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.756,
+     "lateralM": -0.722,
+     "depthM": 0.224,
+     "lineVsAxisDeg": 72.76,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0596,
+     "xOverlapFrac": 0.0873
+    },
+    "placed": {
+     "vesper": {
+      "x": 35.395,
+      "y": 14.407,
+      "z": -17.676,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": 36.148,
+      "y": 14.588,
+      "z": -17.612,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": 31.5,
+      "y": 14.124,
+      "z": -19.551,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": 29.957,
+      "y": 13.712,
+      "z": -18.247,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": 32.995,
+     "ay": 14.944,
+     "az": -18.003,
+     "yaw": -1.7869,
+     "pitch": 0.14,
+     "dist": 12.719,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.16
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.6461,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.521,
+      -0.401
+     ],
+     "foe": [
+      0.245,
+      0.58
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 12.719,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2173
+  },
+  {
+   "id": "s060",
+   "zone": "meadow",
+   "at": {
+    "x": -3.1199999999999997,
+    "y": 14.025782719329271,
+    "z": 9.379999999999999
+   },
+   "yawWas": -1.4869,
+   "site": {
+    "R": 0,
+    "d": 0,
+    "ms": 34
+   },
+   "ovl": {
+    "ok": true,
+    "canvas": [
+     1344,
+     768
+    ],
+    "dpr": 0.84,
+    "posed": 4,
+    "rows": [
+     {
+      "id": "vesper",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 13888,
+      "visPx": 13716,
+      "interPx": 13630,
+      "lostPx": 258,
+      "freePx": 14838,
+      "occTeam": 0.0186,
+      "occWorld": 0.0918,
+      "occTotal": 0.0991,
+      "occUnclaimed": 0.0169,
+      "by": {
+       "maren": 23,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 352.3,
+       "y0": 245.5,
+       "x1": 484.5,
+       "y1": 518.7
+      },
+      "inFrame": 1,
+      "cx": 0.2615,
+      "wFrac": 0.0826,
+      "hFrac": 0.336
+     },
+     {
+      "id": "maren",
+      "side": "party",
+      "tier": "model",
+      "soloPx": 17746,
+      "visPx": 16665,
+      "interPx": 16448,
+      "lostPx": 1298,
+      "freePx": 13279,
+      "occTeam": 0.0731,
+      "occWorld": 0.1173,
+      "occTotal": 0.1245,
+      "occUnclaimed": 0.0679,
+      "by": {
+       "vesper": 93,
+       "m0": 0,
+       "m1": 0
+      },
+      "box": {
+       "x0": 237.8,
+       "y0": 246.6,
+       "x1": 371.3,
+       "y1": 514
+      },
+      "inFrame": 1,
+      "cx": 0.1904,
+      "wFrac": 0.0835,
+      "hFrac": 0.3289
+     },
+     {
+      "id": "m0",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 66426,
+      "visPx": 66513,
+      "interPx": 65539,
+      "lostPx": 887,
+      "freePx": 37760,
+      "occTeam": 0.0134,
+      "occWorld": 0.0259,
+      "occTotal": 0.0219,
+      "occUnclaimed": 0.0122,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m1": 76
+      },
+      "box": {
+       "x0": 832.6,
+       "y0": 368.3,
+       "x1": 1325.5,
+       "y1": 612.7
+      },
+      "inFrame": 1,
+      "cx": 0.6744,
+      "wFrac": 0.308,
+      "hFrac": 0.3006
+     },
+     {
+      "id": "m1",
+      "side": "foe",
+      "tier": "model",
+      "soloPx": 20674,
+      "visPx": 20450,
+      "interPx": 20313,
+      "lostPx": 361,
+      "freePx": 20708,
+      "occTeam": 0.0175,
+      "occWorld": 0.0017,
+      "occTotal": 0.0184,
+      "occUnclaimed": 0.0158,
+      "by": {
+       "vesper": 0,
+       "maren": 0,
+       "m0": 35
+      },
+      "box": {
+       "x0": 1270.6,
+       "y0": 385.1,
+       "x1": 1551.4,
+       "y1": 552.3
+      },
+      "inFrame": 1,
+      "cx": 0.8819,
+      "wFrac": 0.1755,
+      "hFrac": 0.2056
+     }
+    ],
+    "geo": {
+     "pair": [
+      "vesper",
+      "maren"
+     ],
+     "swingRad": -0.3,
+     "lineLen": 0.756,
+     "lateralM": -0.722,
+     "depthM": 0.224,
+     "lineVsAxisDeg": 72.76,
+     "nearer": "vesper",
+     "farther": "maren"
+    },
+    "pair": {
+     "a": "vesper",
+     "b": "maren",
+     "dCx": 0.0711,
+     "xOverlapFrac": 0.1437
+    },
+    "placed": {
+     "vesper": {
+      "x": -0.845,
+      "y": 13.996,
+      "z": 9.824,
+      "slot": [
+       -2.304,
+       0.252
+      ]
+     },
+     "maren": {
+      "x": -0.092,
+      "y": 13.979,
+      "z": 9.888,
+      "slot": [
+       -3.06,
+       0.252
+      ]
+     },
+     "m0": {
+      "x": -4.74,
+      "y": 14.119,
+      "z": 7.949,
+      "slot": [
+       1.73376,
+       -1.29024
+      ]
+     },
+     "m1": {
+      "x": -6.283,
+      "y": 14.222,
+      "z": 9.253,
+      "slot": [
+       3.1622399999999993,
+       0.13823999999999995
+      ]
+     }
+    },
+    "pose": {
+     "ax": -3.2,
+     "ay": 14.785,
+     "az": 9.487,
+     "yaw": -1.7869,
+     "pitch": 0.14,
+     "dist": 10.238,
+     "fov": 27
+    },
+    "base": {
+     "yaw": -1.4869,
+     "pitch": 0.16
+    },
+    "kind": "decide",
+    "actor": "vesper",
+    "axis": {
+     "ok": true,
+     "order": true,
+     "side": true,
+     "gap": 0.8106,
+     "sgn": 1,
+     "ref": 1,
+     "party": [
+      -0.623,
+      -0.48
+     ],
+     "foe": [
+      0.331,
+      0.751
+     ]
+    }
+   },
+   "kind": "decide",
+   "fov": 27,
+   "camDist": 10.238,
+   "axisOk": true,
+   "foesIn": 2,
+   "foesAll": 2,
+   "stageMs": 2122
+  }
+ ]
+}
