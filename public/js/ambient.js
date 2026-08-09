@@ -653,6 +653,21 @@
     set: function (o) { for (var k in o) if (k in Ptun) Ptun[k] = o[k]; return Ptun; },
     rebuild: function () { teardown(); build(); return REPORT; },
     enable: function (on) { ON = on !== false; if (!ON) teardown(); else schedule(); return ON; },
+    // HIDE THE MOTES FOR THE LENGTH OF A MEASUREMENT — a visibility flip, never
+    // a teardown, so it costs nothing and nothing has to be rebuilt after it.
+    // battle_world's TONE probe uses it: the near-field pollen/leaf boxes are
+    // centred 11 m down the LIVE camera's view axis, so in an offscreen probe
+    // rendered from four different booms they land in four arbitrary places and
+    // put a wall-clock-phased term into a ranking. Same argument the probe's own
+    // "the markers are not the cast" comment makes about the two rings.
+    // MEASURED: with the motes in, one crag site's score table wandered 5.17-5.54
+    // on its top rung across repeats; with `?ambient=0` it was bit-identical
+    // (docs/qa/battle-decide/tone-{fix1,noamb}.json).
+    hide: function (on) {
+      var n = 0;
+      for (var i = 0; i < FX.length; i++) if (FX[i].obj) { FX[i].obj.visible = !on; n++; }
+      return n;
+    },
     debug: function () { return { report: REPORT, params: Ptun, fxon: FXON, t: T }; },
   };
 

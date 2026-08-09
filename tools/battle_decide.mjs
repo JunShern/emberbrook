@@ -71,6 +71,13 @@ const KEEP = arg('keep', null);
 // which is exactly what `?bplace=0` does through placeOn() — the sun-refusal A/B
 // as ONE BUILD, the same discipline as --keep above.
 const BPLACE = arg('bplace', null);
+// AND THE SAFE-RECT A/B, the same shape again: `--safe=0` clears the `keepSafe`
+// list off the live `decide` row, so the arm that keeps the foe line out of the
+// turn-order panel and the arm that only keeps it inside the frame are ONE
+// BUILD with one assignment between them.
+const SAFE = arg('safe', null);
+// --mode=cost only: which field of the `decide` row the A/B toggles.
+const COSTWHAT = arg('costwhat', 'keep') === 'safe' ? 'keepSafe' : 'keep';
 // THE YAW IS PINNED, and this is not a nicety: solveArena's yaw ladder is
 // measured RELATIVE TO THE LIVE CAMERA HEADING, so two runs of one cell that
 // start at different headings can legitimately stage in different places. The
@@ -78,6 +85,13 @@ const BPLACE = arg('bplace', null);
 // ORBIT on destroy); `--yaw` defaults to whatever the page boots with, so both
 // arms and the round census all sit on the same heading.
 const YAW = arg('yaw', null);
+// --mode=tone only: how many times each cell is staged. Reproducibility is a
+// claim about repeats, so the default is more than two.
+const REPS = parseInt(arg('reps', '4'), 10);
+// Extra query params appended to the game URL (`--q=ambient=0&x=1`). It exists so
+// a claim about WHAT ELSE moves in the frame can be tested by switching that
+// thing off rather than asserted — see the tone residual in the run log.
+const QEXTRA = arg('q', '');
 // --composite=1 (census only): photograph the page rather than the canvas, so
 // the command menu — a DOM overlay snapshot() cannot see — is IN the frame that
 // gets sorted. See censusHold below.
@@ -101,7 +115,8 @@ const PROFILE_PREFIX = 'battle-decide-';
 sweepStaleProfiles(PROFILE_PREFIX);
 const profile = join(process.env.TMPDIR || '/tmp', PROFILE_PREFIX + process.pid);
 
-const URL = `http://localhost:${PORT}/play3d.html?scene=ow-valley&rt=1&nomusic=1&arena=world`;
+const URL = `http://localhost:${PORT}/play3d.html?scene=ow-valley&rt=1&nomusic=1&arena=world`
+  + (QEXTRA ? '&' + QEXTRA : '');
 const chrome = spawn(CHROME, [
   `--remote-debugging-port=${CDP_PORT}`, `--user-data-dir=${profile}`,
   '--no-first-run', '--no-default-browser-check', '--disable-extensions',
@@ -356,6 +371,32 @@ const siteDriver = (site) => `(async () => {
 })()`;
 
 // ---------------------------------------------------------------------------
+// MODE: tone — IS THE BOOM CHOOSER REPRODUCIBLE. Stage the SAME cell R times
+// with ORBIT.yaw pinned and record the whole score table (`st.tone().rows`),
+// not just the rung it chose: a chooser that picks the same rung on scores that
+// wander is one near-tie away from picking a different one, so the ROWS are the
+// measurement and the pick is the symptom. The canvas frame is saved per repeat
+// so "did it photograph the same picture" is answerable off the same run.
+// Nothing here drives the camera and nothing forces the probe.
+const toneDriver = (site, yaw) => `(async () => {${censusHead(site, yaw)}
+  const tn = st.tone();
+  const cast = st.castPhase ? st.castPhase() : null;
+  const camr = st.cam ? st.cam() : null;
+  try { st.destroy(); } catch (e) {}
+  const sc = window.__EBB_SCREEN;
+  if (sc && sc.destroy) { try { sc.destroy(); } catch (e) {} }
+  window.__EBB_SCREEN = null; window.Battle.active = false;
+  document.querySelectorAll('.ebb-root').forEach(n => n.remove());
+  try { window.UILOCK && UILOCK.unlock('battle'); } catch (e) {}
+  return { ok: true, row: { id: S.id, zone: zone, at: p0,
+      tone: tn, cast: cast,
+      pitch: camr && camr.base ? camr.base.pitch : null,
+      kind: samp ? samp.kind : null, camDist: samp ? samp.dist : null,
+      fov: samp ? samp.fov : null, foesIn: samp ? samp.foesIn : null,
+      stageR: (st.site || {}).R }, shot: shot };
+})()`;
+
+// ---------------------------------------------------------------------------
 // MODE: census — THE DECIDE FRAME AT EVERY SITE THE PLACEMENT CENSUS SORTED.
 //
 // The placement study eye-sorted 62 sites and reported 48.4% bad -> 32.3% after
@@ -502,7 +543,9 @@ const censusHold = (site, yaw) => `(async () => {${censusHead(site, yaw)}
     const r = n.getBoundingClientRect();
     return { x0: +r.left.toFixed(1), y0: +r.top.toFixed(1), x1: +r.right.toFixed(1), y1: +r.bottom.toFixed(1) };
   });
-  return { ok: true, staged: true, id: S.id,
+  const uiSafe = ['.ebb-partywin', '.ebb-cmdwin'];
+  for (const sel of uiSafe) ui[sel] = rect(sel);
+  return { ok: true, staged: true, id: S.id, safe: (st.safeRect ? st.safeRect('decide') : null),
            menuRect: rect('.ebb-cmds'), canvasRect: rect('canvas'), ui: ui,
            dpr: window.devicePixelRatio,
            vw: window.innerWidth, vh: window.innerHeight };
@@ -549,16 +592,23 @@ const costDriver = (site) => `(async () => {
   }
   await new Promise(r => setTimeout(r, 600));
   const row = window.BattleWorld.CAM.shots.decide;
-  const saved = row.keep;
+  // WHICH TERM IS BEING PRICED. --costwhat=keep is the containment the last lane
+  // shipped; --costwhat=safe is the safe rect on top of it, and it is a DIFFERENT
+  // question: the safe rect reads the DOM, so its cost is a forced layout as well
+  // as arithmetic and it must be priced with the containment already on in both
+  // arms. (No backticks in this comment on purpose -- it lives INSIDE a template
+  // literal, and a backtick in a comment ends the literal. Paid twice now.)
+  const FIELD = '${COSTWHAT}';
+  const saved = row[FIELD];
   const on = [], off = [];
   const one = () => { const t = performance.now(); st.shotTo('decide', { actor: 'vesper' }); return performance.now() - t; };
-  row.keep = null;  for (let i = 0; i < 6; i++) one();          // warm both paths
-  row.keep = saved; for (let i = 0; i < 6; i++) one();
+  row[FIELD] = null;  for (let i = 0; i < 6; i++) one();          // warm both paths
+  row[FIELD] = saved; for (let i = 0; i < 6; i++) one();
   for (let i = 0; i < 60; i++) {
-    row.keep = null;  off.push(one());
-    row.keep = saved; on.push(one());
+    row[FIELD] = null;  off.push(one());
+    row[FIELD] = saved; on.push(one());
   }
-  row.keep = saved;
+  row[FIELD] = saved;
   const refusals = st.cam().refusals;
   try { st.destroy(); } catch (e) {}
   const sc = window.__EBB_SCREEN; if (sc && sc.destroy) { try { sc.destroy(); } catch (e) {} }
@@ -630,7 +680,7 @@ function summarise(row) {
   console.log(`ready three=r${ready.three} scene=${ready.scene}`);
   console.log('battle_world: ' + JSON.stringify(await ev(cdp, INJECT, 60000)));
   await ev(cdp, LIB, 30000);
-  if (MODE === 'census') await ev(cdp, PLACE_LIB, 30000);
+  if (MODE === 'census' || MODE === 'tone') await ev(cdp, PLACE_LIB, 30000);
   if (BPLACE != null) {
     const v = await ev(cdp, `(() => { window.BattleWorld.PLACE.on = ${BPLACE === '0' ? 'false' : 'true'};
       return window.BattleWorld.PLACE.on; })()`, 10000);
@@ -642,6 +692,12 @@ function summarise(row) {
     console.log('decide.keep = ' + JSON.stringify(k));
   }
 
+  if (SAFE != null) {
+    const v = await ev(cdp, `(() => { const r = window.BattleWorld.CAM.shots.decide;
+      r.keepSafe = ${SAFE === '0' ? 'null' : "['.ebb-partywin', '.ebb-cmdwin']"}; return r.keepSafe; })()`, 10000);
+    console.log('decide.keepSafe = ' + JSON.stringify(v));
+  }
+
   // THE CENSUS IS 60 + 2: battle_place exhausted the 400 road cells in one pass
   // (sites.json) and a second rotated pass added two more (sites-b.json). Both
   // files together are the 62 the sort covers; reading only the first silently
@@ -651,6 +707,36 @@ function summarise(row) {
       ? JSON.parse(readFileSync(join(ROOT, 'docs/qa/battle-placement/sites-b.json'), 'utf8')).rows : []);
   const want = SITES.split(',').map(s => parseInt(s, 10));
   const sites = want.map(i => ({ id: 's' + String(i).padStart(3, '0'), zone: census[i].zone, at: census[i].at }));
+
+  if (MODE === 'tone') {
+    const yaw = YAW != null ? parseFloat(YAW)
+      : await ev(cdp, '(() => +window.ORBIT.yaw.toFixed(6))()', 10000);
+    console.log('ORBIT.yaw pinned at ' + yaw);
+    const dir = join(OUT, 'tone', TAG);
+    mkdirSync(dir, { recursive: true });
+    const out = [];
+    for (let rep = 0; rep < REPS; rep++) {
+      for (const s of sites) {
+        process.stdout.write(`  rep${rep} ${s.id} (${s.zone}) ... `);
+        let r;
+        try { r = await ev(cdp, toneDriver(s, yaw), 300000); }
+        catch (e) { console.log('THREW ' + e.message); continue; }
+        if (!r || !r.ok) { console.log('skip: ' + (r && r.skip)); continue; }
+        if (r.shot) writeFileSync(join(dir, `${s.id}-r${rep}.jpg`), Buffer.from(r.shot.split(',')[1], 'base64'));
+        r.row.rep = rep;
+        out.push(r.row);
+        const t = r.row.tone || {};
+        console.log(`was=${t.was} chose=${t.chose} best=${t.best} decisive=${t.decisive} ` +
+                    `scores=[${(t.rows || []).map(x => x.score).join(', ')}] pitch=${r.row.pitch}`);
+        await sleep(300);
+      }
+    }
+    const f = join(OUT, `tone-${TAG}.json`);
+    writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
+      reps: REPS, sites: SITES, three: ready.three }, rows: out }, null, 1));
+    console.log('WROTE ' + f + '\nframes -> ' + dir);
+    cdp.close(); kill(); process.exit(0);
+  }
 
   if (MODE === 'census') {
     const yaw = YAW != null ? parseFloat(YAW)
@@ -687,7 +773,7 @@ function summarise(row) {
       catch (e) { console.log('THREW ' + e.message); continue; }
       if (!res || !res.ok) { console.log('skip: ' + (res && res.skip)); continue; }
       if (held) { res.row.menuRect = held.menuRect; res.row.canvasRect = held.canvasRect;
-                  res.row.ui = held.ui;
+                  res.row.ui = held.ui; res.row.safe = held.safe;
                   res.row.viewport = { w: held.vw, h: held.vh, dpr: held.dpr }; }
       if (res.shot) writeFileSync(join(dir, s.id + '.jpg'), Buffer.from(res.shot.split(',')[1], 'base64'));
       out.push(res.row);

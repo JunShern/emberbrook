@@ -231,7 +231,16 @@
       // an empty field. `keep` fixes it WITHOUT making this a group shot: the
       // foes never size the frame and never own the aim, they are only refused
       // permission to be outside it. Board docs/qa/battle-decide/index.html.
+      // AND THE FRAME IS NOT THE CANVAS. `keep` put the foe line back INSIDE the
+      // frame; the composited census then measured where inside, and it is under
+      // the turn-order panel: a 27 mm two-shot puts the foes at screen-x 0.78 and
+      // that is exactly the panel's own band. 21 of 62 sites had a body ≥10%
+      // under an opaque panel, 8 ≥25%, 2 ≥50% — the WOLF at every one of those.
+      // `keepSafe` names the DOM elements the keep set may not hide behind; the
+      // rects are read off battle_turnbased's own nodes, never typed here, so a
+      // UI that moves takes the camera with it.
       decide:  { show: 'actor',  keep: 'foes', keepFill: 0.90, keepBias: 0.62, keepVis: true,
+                 keepSafe: ['.ebb-partywin', '.ebb-cmdwin'],
                  fillH: 0.58, fillV: 0.50, dPitch: -0.02, fov: 'tight', yawOff: 0.30, lead: 0.12, ms: 620, ease: 'io',  cut: false },
       strike:  { show: 'pair',   fillH: 0.66, fillV: 0.58, dPitch: -0.07, fov: 'rest',  yawOff: 0.22, lead: 0.00, ms: 380, ease: 'io',  cut: false },
       impact:  { show: 'pair',   fillH: 0.78, fillV: 0.68, dPitch: -0.07, fov: 'rest',  yawOff: 0.22, lead: 0.00, ms: 170, ease: 'out', cut: false },
@@ -297,6 +306,55 @@
   };
 
   function toneOn() { return !!(TONE.on && !BTONE_OFF); }
+
+  // ================= THE SAFE RECT (2026-08-09) =============================
+  // WHAT THE UI COVERS, IN THE CAMERA'S OWN UNITS. The battle UI is a DOM
+  // overlay; the canvas cannot see it and neither could any camera term until
+  // now. These rects are read off battle_turnbased's OWN nodes with
+  // getBoundingClientRect and converted to NDC against the CANVAS rect — never
+  // the viewport, because the canvas is CSS-stretched (the composited census is
+  // 1.97:1 where the render target is 1.75, and NDC is what survives a linear
+  // stretch). Nothing here is a typed pixel: move the panel, restyle it, resize
+  // the window, and the number the solver reads moves with it.
+  //
+  // EACH RECT IS EXTENDED TO THE EDGES IT VERY NEARLY TOUCHES (0.15 NDC ~ 7% of
+  // the frame). The turn-order window sits 41 px off the right edge and 22 px
+  // off the bottom; a body "cleared" into that gutter is not cleared, it is
+  // sliced. Extending makes the exclusion a CORNER, which is also what makes it
+  // cheap to escape: a corner leaves two ways out and the solver takes the
+  // nearer one.
+  //
+  // TTL, because a getBoundingClientRect is a forced layout and `decide`
+  // re-solves during the turn. The rects DO change (a party member dies and the
+  // window loses a row), so it is a cache with a life, not a constant.
+  const SAFE = { t: 0, key: '', rects: [] };
+  function safeRects(sel) {
+    if (!sel || !sel.length || !HAS_DOM || !W.R || !W.R.domElement) return [];
+    const key = sel.join('|');
+    if (SAFE.key === key && now() - SAFE.t < 500) return SAFE.rects;
+    const cv = W.R.domElement.getBoundingClientRect();
+    const out = [];
+    if (cv.width > 8 && cv.height > 8) {
+      for (const s of sel) {
+        let n = null;
+        try { n = document.querySelector(s); } catch (e) { }
+        if (!n) continue;
+        const r = n.getBoundingClientRect();
+        if (r.width < 2 || r.height < 2) continue;
+        let x0 = 2 * (r.left - cv.left) / cv.width - 1, x1 = 2 * (r.right - cv.left) / cv.width - 1;
+        let y0 = 1 - 2 * (r.bottom - cv.top) / cv.height, y1 = 1 - 2 * (r.top - cv.top) / cv.height;
+        const E = 0.15;
+        if (x0 < -1 + E) x0 = -1;
+        if (x1 > 1 - E) x1 = 1;
+        if (y0 < -1 + E) y0 = -1;
+        if (y1 > 1 - E) y1 = 1;
+        if (x0 >= x1 || y0 >= y1) continue;
+        out.push({ sel: s, x0: x0, x1: x1, y0: y0, y1: y1 });
+      }
+    }
+    SAFE.key = key; SAFE.t = now(); SAFE.rects = out;
+    return out;
+  }
 
   // ============================ THE SOLVER ==================================
   // WHERE THE FIGHT STANDS. Given the player's position and a candidate camera
@@ -1241,6 +1299,7 @@
       // DISTANCE: solved so every one of the subject's own extremes — feet, head,
       // and its own measured half-width either side — lands inside the fill band.
       // Two passes, because `lead` moves the aim and the aim moves the fit.
+      const safe = (sh.keepSafe && keepP.length) ? safeRects(sh.keepSafe) : [];
       const fit = () => {
         camBasis(pose.yaw, pose.pitch, camB);
         const tanV = Math.tan(pose.fov * Math.PI / 360);
@@ -1249,8 +1308,13 @@
         // The subject is fitted at `fill`; a keep body carries its own, looser
         // pair (it must be INSIDE the frame, not a given size in it) — same
         // arithmetic, one band each, so the two can never disagree.
+        // The four corners of the body's own measured box, kept for the safe-rect
+        // pass below: an exclusion is a claim about the WHOLE BOX and one point at
+        // a time cannot make it (a body whose head clears above and whose foot
+        // clears to the left has cleared nothing).
         for (const s2 of allP) {
           const b = s2.b, hw = b.w / 2;
+          if (safe.length && s2.keep) s2.pts = [];
           for (const sx of [-1, 1]) for (const sy of [0, 1]) {
             const px = s2.p.x + camB.right.x * hw * sx,
                   py = s2.p.y + (sy ? b.h * 1.08 : -0.05),
@@ -1261,6 +1325,46 @@
             const dv = Math.abs(v) / (Math.max(0.05, s2.fv) * tanV) - w;
             if (dh > d) d = dh;
             if (dv > d) d = dv;
+            if (safe.length && s2.keep) s2.pts.push(u, v, w);
+          }
+        }
+        // ---- THE SAFE RECT ---------------------------------------------------
+        // The SAME arithmetic as the fill band, with the band's symmetric limit
+        // replaced by the panel edge: NDC x = u / ((d + w) * tanH), so
+        // "x must be ≤ X" is d ≥ u / (X * tanH) − w, exactly as above. What is
+        // new is that a corner exclusion has TWO ways out and the body only has
+        // to take ONE — clear it sideways or clear it upward — so the cost is the
+        // MINIMUM of the two, per body, and only then the maximum over bodies.
+        // Taking the maximum of both would have priced the wrong escape: at the
+        // measured sites, going sideways costs 1.9-2.5x the boom and going up
+        // costs 1.07-1.65x, and a solver that pays 2.5x to clear a panel has
+        // traded an occluded wolf for a distant one.
+        // A rect with no escape available (one that spans the frame) simply
+        // contributes nothing: this term may make a shot wider, never lose it.
+        if (safe.length) {
+          for (const s2 of allP) {
+            if (!s2.keep || !s2.pts) continue;
+            for (const R of safe) {
+              let best = Infinity;
+              const ways = [
+                [R.x0 > 0.02, 0, R.x0 * tanH, 1],     // out to the left of the rect
+                [R.x1 < -0.02, 0, R.x1 * tanH, -1],   // out to its right
+                [R.y1 < -0.02, 1, R.y1 * tanV, -1],   // up over its top
+                [R.y0 > 0.02, 1, R.y0 * tanV, 1],     // down under its bottom
+              ];
+              for (const wy of ways) {
+                if (!wy[0]) continue;
+                let need = 0;
+                for (let i = 0; i < s2.pts.length; i += 3) {
+                  const q = s2.pts[i + wy[1]], w2 = s2.pts[i + 2];
+                  if (q * wy[3] <= 0) continue;       // this corner is already past the edge
+                  const dq = q / wy[2] - w2;
+                  if (dq > need) need = dq;
+                }
+                if (need < best) best = need;
+              }
+              if (best !== Infinity && best > d) d = best;
+            }
           }
         }
         pose.dist = clamp(d, CAM.dist.min, CAM.dist.max);
@@ -1469,6 +1573,14 @@
       return g;
     }
 
+    // A STABLE OFFSET PER BODY, out of its own id (FNV-1a over 0..2 s). Not a
+    // seeded PRNG: a PRNG would still depend on the ORDER the models happened
+    // to arrive in, and models arrive on network promises.
+    function idlePhase(id) {
+      let h = 2166136261;
+      for (let i = 0; i < id.length; i++) { h ^= id.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return ((h >>> 0) % 2000) / 1000;
+    }
     function rigUp(b, gltf) {
       const clips = gltf.animations || [];
       if (!clips.length) return;
@@ -1481,7 +1593,18 @@
         if (kind !== 'idle') { a.setLoop(TH.LoopOnce, 1); a.clampWhenFinished = kind === 'die'; }
         b.actions[kind] = a;
       }
-      if (b.actions.idle) { b.actions.idle.play(); b.actions.idle.time = Math.random() * 2; }
+      // THE IDLE PHASE IS OFFSET SO THE CAST DOES NOT BOB IN LOCKSTEP — and it
+      // used to be `Math.random() * 2`, which made every silhouette in the
+      // fight a fresh draw. That is fine for a picture and fatal for a
+      // MEASUREMENT: `TONE` scores each candidate boom by differencing two
+      // renders of the cast, so an unseeded phase put an unseeded number into
+      // the chooser. Measured (docs/qa/battle-decide/tone-diag.json, 5 repeats
+      // of one cell with ORBIT.yaw pinned): the water site scored
+      // 14.3/17.1/17.5/16.3 on one run and 11.5/17.5/18.1/16.6 on the next and
+      // CHOSE FOUR DIFFERENT RUNGS IN FIVE RUNS. Derived from the body's own id
+      // it is still a spread — vesper, maren and each foe sit at different
+      // points of the clip — and it is the same spread every time.
+      if (b.actions.idle) { b.phase = idlePhase(b.id); b.actions.idle.play(); b.actions.idle.time = b.phase; }
     }
     function oneShot(b, kind, hold) {
       if (!b.actions || !b.actions[kind]) return false;
@@ -1853,6 +1976,7 @@
     // ================= THE BOOM, CHOSEN ON TONE (wave 4) =====================
     // The meter's own subtraction, run inside the game at 320x180. See TONE.
     let toneLive = { ok: false, why: 'waiting for the cast' }, toneDone = false;
+    let toneTick = null, toneFrame = null;   // WHEN it fired — see castPhase()
     // ---- SAY WHICH SPACE THE BYTES ARE IN, AND CONVERT ONCE ------------------
     // r185 renders into a non-XR render target in the LINEAR working space
     // whatever the texture declares, and this probe reads that target directly —
@@ -1956,6 +2080,33 @@
       // and add noise to none of them usefully, so they sit out both passes.
       const ringsWere = [targetRing.visible, actorRing.visible];
       targetRing.visible = actorRing.visible = false;
+      // AND THE CAST IS HELD STILL FOR THE LENGTH OF THE MEASUREMENT. The probe
+      // fires on the frame the last model lands, which is a NETWORK time: it was
+      // measured landing on tick 9 to 12 of the stage, so even a fixed phase is
+      // sampled at a different point of the idle every run. A silhouette is what
+      // this thing measures, so the pose it measures must not be an accident of
+      // load timing. Each body is set to its own `idlePhase` for the passes and
+      // put back afterwards; `mixer.update(0)` applies a time without advancing
+      // one, so nothing the player sees moves — the visible frame is drawn by
+      // play3d's own loop, after this returns.
+      // AND THE MOTES SIT OUT BOTH PASSES, for the rings' own reason. Ambient's
+      // pollen/leaf boxes are centred 11 m down the LIVE camera's view axis, so
+      // an offscreen probe shot from four different booms sees them in four
+      // arbitrary places — and their phase is frozen at battle entry at a
+      // WALL-CLOCK value, which is the one thing that still moved the score
+      // table once the cast was pinned (proven: `?ambient=0` made a wandering
+      // crag site bit-identical across repeats, tone-noamb.json).
+      let motes = 0;
+      try { if (window.Ambient && window.Ambient.hide) motes = window.Ambient.hide(true); } catch (e) { }
+      const posed = [];
+      for (const id of order) {
+        const b = bodies[id];
+        if (!b || !b.mixer || !b.actions || !b.actions.idle) continue;
+        const a = b.actions.idle;
+        posed.push({ a: a, t: a.time });
+        a.time = b.phase == null ? 0 : b.phase;
+      }
+      if (posed.length) for (const m of mixers) m.update(0);
       const savedPitch = basePitch;
       const rows = [];
       try {
@@ -1999,6 +2150,8 @@
         basePitch = savedPitch;
         root.visible = true;
         targetRing.visible = ringsWere[0]; actorRing.visible = ringsWere[1];
+        if (posed.length) { for (const p of posed) p.a.time = p.t; for (const m of mixers) m.update(0); }
+        if (motes) { try { window.Ambient.hide(false); } catch (e) { } }
         W.R.setRenderTarget(prevRT);
         rt.dispose();
       }
@@ -2025,6 +2178,7 @@
       const waited = now() - camT0;
       if (!castReady() && waited < TONE.waitMs) return;
       toneDone = true;
+      toneTick = ticks; toneFrame = W.R.info.render.frame;
       if (!castReady()) { toneLive = { ok: false, why: 'cast never left proxy in ' + TONE.waitMs + ' ms' }; return; }
       try { toneLive = toneProbe(); } catch (e) { toneLive = { ok: false, why: 'threw: ' + e.message }; return; }
       // AND IT ONLY EVER LANDS ON THE OPENING. If the models were slow enough
@@ -2290,6 +2444,26 @@
       // took, the rung the geometric solver had picked, and how long it cost.
       // A run where it never fired says WHY rather than reporting nothing.
       tone() { return Object.assign({ on: toneOn(), done: toneDone, basePitch: +basePitch.toFixed(4) }, toneLive || {}); },
+      // WHAT POSE THE CAST WAS IN WHEN THE PROBE PHOTOGRAPHED IT. The probe
+      // subtracts two renders of the same frame, so the cast's own animation
+      // phase is part of every number it produces — and a phase that differs
+      // run to run makes the whole table differ run to run. QA only.
+      // THE RECTS THE SOLVER ACTUALLY READ, in NDC — so a report never has to
+      // re-derive them from a screenshot and guess whether it guessed the same.
+      safeRect(kind) {
+        const sh = CAM.shots[kind || 'decide'] || {};
+        return { sel: sh.keepSafe || null, rects: safeRects(sh.keepSafe) };
+      },
+      castPhase() {
+        const o = {};
+        for (const id of order) {
+          const b = bodies[id]; if (!b) continue;
+          o[id] = { tier: b.tier, phase: b.phase == null ? null : +b.phase.toFixed(4),
+                    idleTime: b.actions && b.actions.idle ? +b.actions.idle.time.toFixed(4) : null,
+                    mixerTime: b.mixer ? +b.mixer.time.toFixed(4) : null };
+        }
+        return { bodies: o, probeTick: toneTick, probeFrame: toneFrame };
+      },
       draw() { if (W.render) W.render(); return W.R.info.render.frame; },
       // ---- TEARDOWN: TOTAL, AND EVERY LINE OF IT IS A RESTORE ---------------
       // The audit's constraint (§11.12) and the four post-battle queue tickets.
