@@ -99,6 +99,11 @@
   // refusal alone. It is a SECOND switch rather than a mode of the first, so the
   // board can show sun-only, surface-only and both from one build.
   const BSURF_OFF = !!(Q && Q.get('bsurf') === '0');
+  // `?bform=<n>` — THE PARTY'S DEPTH STAGGER, as a one-build A/B. `?bform=1`
+  // restores the pre-fix line (the diorama's own sign) and is what every number
+  // in the "before" column of docs/qa/battle-overlap was measured with.
+  const BFORM = (Q && Q.get('bform') != null && Q.get('bform') !== '' && !isNaN(parseFloat(Q.get('bform'))))
+    ? parseFloat(Q.get('bform')) : null;
   // `?brim=1` — THE BODY-SIDE SPIKE, AND IT IS THE ONLY SWITCH HERE THAT
   // DEFAULTS OFF INSIDE `?arena=world`. Every other flag above turns a shipped
   // term OFF; this one turns an UNSHIPPED one ON, because it is the only thing
@@ -155,6 +160,38 @@
           lungeM: 1.35, lungeMs: 620, flinchM: 0.42, flinchMs: 330, ringMs: 430 },
     // A body that cannot find real ground within this many metres of the sampled
     // column is REFUSED its slot and the solver tries the next candidate.
+    // ---- THE PARTY LINE MUST NOT POINT AT THE LENS ------------------------
+    // A MULTIPLIER ON `CFG.form.partyDz`, AND IT IS 0 FOR A MEASURED REASON.
+    // The diorama's formation walks the party line AWAY from the camera as it
+    // goes outboard: at two members the line runs (-1.05 across, +2.00 deep) in
+    // slot units, i.e. 27.7 degrees off the depth axis. `decide` then swings the
+    // boom 0.30 rad round toward the foes so the deciding character is seen
+    // three-quarter FRONT — and that swing points the lens to within 10.5
+    // degrees OF THAT LINE. The party's lateral separation collapses from
+    // 0.756 m to 0.297 m, under half a body width, and the outboard member is
+    // eclipsed by the inboard one at 44 of 62 census sites.
+    // THE DIORAMA'S CAMERA NEVER SWINGS, so the sign is free there and is not
+    // free here; the across-axis spread, the depth MAGNITUDE and the whole foe
+    // block are still borrowed, so the two stages still block the same fight.
+    // MEASURED, docs/qa/battle-overlap (tools/battle_overlap_lib.mjs: the
+    // silhouette a body has against the world, intersected with the pixels it is
+    // the frontmost thing at in the real frame — THE CAST-FREE METER EVERY OTHER
+    // LANE IN THIS ARC USED CANNOT SEE THIS BY CONSTRUCTION). Party bodies
+    // >=10/25/50% eaten by a TEAMMATE, over the 62-site census:
+    //     t=+1 (the diorama's line)  53 / 44 / 33 sites
+    //     t=-1 (the line flipped)     5 /  4 /  4
+    //     t= 0 (a flat rank)          4 /  2 /  1     <- shipped
+    // 0 WINS ON THE ANGLE, not on the spacing: a flat rank is perpendicular to
+    // baseYaw, so the 17.2-degree swing leaves the line 72.8 degrees off the
+    // view axis, where the flip only reaches 44.9. The flip buys more lateral
+    // METRES (1.148 vs 0.722) because it makes the line longer, and pays for
+    // them by moving every body 1.44 m instead of 0.72: staging is a SEARCH over
+    // the slot geometry, and the bigger perturbation relocated 6 sites instead
+    // of 3 and left 10 bodies with no silhouette at all instead of 4.
+    // A FLAT RANK DOES NOT READ AS A LINE-UP, because the shot is swung: the
+    // frames are docs/qa/battle-overlap/*, and they are two people.
+    // Swept, not assumed: `?bform=1` is the pre-fix line, `?bform=-1` the flip.
+    partyStagger: 0,
     place: { probeR: 0.42, maxDrop: 2.2, ring: [0, 0.5, -0.5, 1.0, -1.0, 1.6, -1.6],
              // the fraction of a body's own box that must have a clear line to
              // the battle camera before its slot is accepted (see visFrac)
@@ -254,7 +291,7 @@
       // rects are read off battle_turnbased's own nodes, never typed here, so a
       // UI that moves takes the camera with it.
       decide:  { show: 'actor',  keep: 'foes', keepFill: 0.90, keepBias: 0.62, keepVis: true,
-                 keepSafe: ['.ebb-partywin', '.ebb-cmdwin'],
+                 keepSafe: ['.ebb-partywin', '.ebb-cmdwin'], showParty: true,
                  fillH: 0.58, fillV: 0.50, dPitch: -0.02, fov: 'tight', yawOff: 0.30, lead: 0.12, ms: 620, ease: 'io',  cut: false },
       strike:  { show: 'pair',   fillH: 0.66, fillV: 0.58, dPitch: -0.07, fov: 'rest',  yawOff: 0.22, lead: 0.00, ms: 380, ease: 'io',  cut: false },
       impact:  { show: 'pair',   fillH: 0.78, fillV: 0.68, dPitch: -0.07, fov: 'rest',  yawOff: 0.22, lead: 0.00, ms: 170, ease: 'out', cut: false },
@@ -1345,11 +1382,17 @@
     // in the camera language and the 180-degree assertion that guards them read
     // the same sign out of the same field, so flipping it flips the whole game.
     const PS = partySide();
+    // THE ONE NUMBER THIS FUNCTION DOES NOT BORROW, and the comment on
+    // CFG.partyStagger says why: the diorama's camera never swings, so the sign
+    // of the party's depth stagger is free there and is NOT free here. The
+    // across-axis spread, the depth MAGNITUDE and the foe block are all still
+    // the diorama's, so the two stages still block the same fight.
+    const STAG = (BFORM != null ? BFORM : (CFG.partyStagger == null ? 0 : CFG.partyStagger));
     const out = [];
     party.forEach((c, i) => {
       out.push({ id: c.id, side: 'party', h: 1.7, w: 0.75,
                  ax: PS * (f.partyX + i * f.partyDx),
-                 az: f.partyZ + (i - (party.length - 1) / 2) * f.partyDz });
+                 az: f.partyZ + (i - (party.length - 1) / 2) * f.partyDz * STAG });
     });
     const n = foes.length;
     foes.forEach((c, i) => {
@@ -1629,6 +1672,31 @@
           keepP.push({ b: b, p: posOf(b), fh: kf, fv: kf, keep: true });
         }
       }
+      // ---- AND THE REST OF THE PARTY MUST BE VISIBLE, WITHOUT BEING SUBJECTS -
+      // `showParty` puts every living party body that is neither the subject nor
+      // in the keep set into the NINE-SAMPLE VISIBILITY TEST ONLY. It never
+      // sizes the frame, never owns the aim and is not in the safe rect — the
+      // shot stays the medium it is — but a pose that hides a teammate behind a
+      // rock is now refused and the ladder lifts the boom, exactly as `keepVis`
+      // already does for the foes.
+      // WHY IT IS NEEDED HERE AND NOT AT STAGING: stageArena validates every
+      // slot's visibility from the ROUND eye (camPoseFor at baseYaw), and
+      // `decide` swings 0.30 rad off it and pushes in — so a body that placement
+      // proved visible can be behind a lamp post in the frame the player lives
+      // in. Measured: with the formation fixed, EVERY remaining party body that
+      // does not read is lost to the WORLD, not to a teammate (party occTeam
+      // >=25% at 2 of 62 sites, occWorld at 6).
+      const seeP = [];
+      if (sh.showParty) {
+        const have = {};
+        for (const s2 of subjP) have[s2.b.id] = 1;
+        for (const s2 of keepP) have[s2.b.id] = 1;
+        for (const id of order) {
+          const b = bodies[id];
+          if (!b || b.dead || b.root.visible === false || b.side === 'foe' || have[id]) continue;
+          seeP.push({ b: b, p: posOf(b) });
+        }
+      }
       const allP = subjP.concat(keepP);
       // AIM: the subject group's own centre of mass at chest height — and when
       // there is a keep set, a WEIGHTED point between the two centroids, so the
@@ -1738,7 +1806,7 @@
       // `decide` solved with the foes behind a rock is refused and the ladder
       // lifts the boom — the same refusal the subject already had. It can never
       // lose the shot: solveShotSafe always returns its best-vis fallback.
-      pose._subj = (sh.keepVis && keepP.length) ? allP : subjP;
+      pose._subj = ((sh.keepVis && keepP.length) ? allP : subjP).concat(seeP);
       return pose;
     }
     // CAN THE SHOT SEE ITS OWN SUBJECT — nine samples per body, from this pose's

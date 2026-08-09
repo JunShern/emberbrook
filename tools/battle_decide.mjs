@@ -43,6 +43,7 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { freePort, killOrphans, sweepStaleProfiles } from './cdp.mjs';
 import { LIB as PLACE_LIB } from './battle_place_lib.mjs';
+import { LIB as OVERLAP_LIB } from './battle_overlap_lib.mjs';
 
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
@@ -54,7 +55,10 @@ const arg = (k, d) => { const h = argv.find(a => a.startsWith('--' + k + '=')); 
 const PORT = parseInt(arg('port', '3000'), 10);
 const MODE = arg('mode', 'measure');
 const TAG = arg('tag', 'before');
-const OUT = join(ROOT, arg('out', 'docs/qa/battle-decide'));
+// The overlap lane keeps its own board: it measures a different question with a
+// different library and its frames are a second full census.
+const OUT = join(ROOT, arg('out', (MODE === 'overlap' || MODE === 'ovsweep')
+  ? 'docs/qa/battle-overlap' : 'docs/qa/battle-decide'));
 const HEAD = argv.includes('--head');
 // The dwell window sampled at the command step. The real one is UNBOUNDED (it
 // ends when the player presses a key), so this is a sampling window, never a
@@ -91,7 +95,15 @@ const RIMADD = arg('rimadd', null);
 const RIMDARK = arg('rimdark', null);
 const RIMPOW = arg('rimpow', null);
 // --mode=cost only: which field of the `decide` row the A/B toggles.
-const COSTWHAT = arg('costwhat', 'keep') === 'safe' ? 'keepSafe' : 'keep';
+const COSTWHAT = ({ safe: 'keepSafe', keep: 'keep', party: 'showParty' })[arg('costwhat', 'keep')] || 'keep';
+// AND THE FORMATION A/B, the same one-build shape as every knob above:
+// `--form=1` restores the PRE-FIX party depth ordering (the diorama's own sign)
+// by setting BattleWorld.CFG.partyStagger, which is exactly what `?bform=1` does.
+// The shipped value is -1; 0 is a flat rank, priced beside the other two.
+// AND THE PARTY-VISIBILITY TERM, the same one-build shape: `--seeparty=0`
+// clears `showParty` off the live decide row.
+const SEEPARTY = arg('seeparty', null);
+const FORM = arg('form', null) == null ? null : (arg('form', null) === '0' ? 0 : parseFloat(arg('form', null)));
 // THE YAW IS PINNED, and this is not a nicety: solveArena's yaw ladder is
 // measured RELATIVE TO THE LIVE CAMERA HEADING, so two runs of one cell that
 // start at different headings can legitimately stage in different places. The
@@ -580,6 +592,78 @@ const CENSUS_FINISH = `(async () => {
 })()`;
 
 // ---------------------------------------------------------------------------
+// MODE: overlap — DOES A PARTY BODY STAND IN FRONT OF ANOTHER PARTY BODY.
+//
+// THE FINDING THAT CREATED THIS MODE. The ruler audit eye-sorted 57 bodies and
+// found 8 compromised by a TEAMMATE standing in front of them — a failure mode
+// NEITHER contrast ruler can see, because the meter renders each body against a
+// CAST-FREE background. Excluding those 8 is what takes the 6-band ruler from
+// chance to AUC 0.820; including them, both rulers are at chance. So the largest
+// single cause of a party body not reading in that census is a SHOT problem, and
+// no tonal instrument in this arc can report it.
+//
+// It stages exactly as --mode=census does — same cells, same party, same foes,
+// same seed, same maturity ladder, ORBIT.yaw pinned, nothing driving the camera —
+// and then measures with tools/battle_overlap_lib.mjs (three renders per body;
+// occlusion is an INTERSECTION, never a ratio of areas). It also records the
+// GEOMETRY that would explain a result: the angle between the party's own
+// formation line and the camera's view axis at the swung `decide` yaw, the
+// lateral and depth separation of the two party bodies in metres, and their
+// projected boxes. A distribution without a mechanism beside it is a symptom.
+const overlapDriver = (site, yaw) => `(async () => {${censusHead(site, yaw)}
+  const ovl = window.__OVL.measure();
+  const site2 = st.site || {};
+  const camr = st.cam ? st.cam() : null;
+  try { st.destroy(); } catch (e) {}
+  const sc = window.__EBB_SCREEN;
+  if (sc && sc.destroy) { try { sc.destroy(); } catch (e) {} }
+  window.__EBB_SCREEN = null; window.Battle.active = false;
+  document.querySelectorAll('.ebb-root').forEach(n => n.remove());
+  try { window.UILOCK && UILOCK.unlock('battle'); } catch (e) {}
+  return { ok: true, row: { id: S.id, zone: zone, at: p0, yawWas: yawWas,
+      site: { R: site2.R, d: site2.d, ms: site2.ms }, ovl: ovl,
+      kind: samp ? samp.kind : null, fov: samp ? samp.fov : null,
+      camDist: samp ? samp.dist : null, axisOk: samp ? samp.axisOk : null,
+      foesIn: samp ? samp.foesIn : null, foesAll: samp ? samp.foesAll : null,
+      stageMs: +stageMs.toFixed(0) }, shot: shot };
+})()`;
+
+// ---------------------------------------------------------------------------
+// MODE: ovsweep — WHICH KNOB OWNS THE OVERLAP. One battle staged ONCE, then the
+// `decide` row's own fields swept and the shot RE-SOLVED between measurements,
+// so the site, the placement, the cast phase and the world are all held fixed
+// and the ONLY thing that differs between readings is the knob. Staging is the
+// expensive, noisy part of this arc; this mode never repeats it.
+//
+// It sweeps four candidate causes named by the lane brief: the swing (`yawOff`),
+// the safe rect (`keepSafe`), the containment aim (`keepBias`) and the lens
+// (`fov`). Every reading is a real `__OVL.measure()` on the live frame.
+const sweepDriver = (site, yaw, plan) => `(async () => {${censusHead(site, yaw)}
+  const PLANS = ${JSON.stringify(plan)};
+  const row = window.BattleWorld.CAM.shots.decide;
+  const save = { yawOff: row.yawOff, keepSafe: row.keepSafe, keepBias: row.keepBias,
+                 fov: row.fov, ms: row.ms, lead: row.lead };
+  const actor = (st.cam ? st.cam().actor : null) || 'vesper';
+  const out = [];
+  for (const P of PLANS) {
+    for (const k of Object.keys(save)) row[k] = (k in P) ? P[k] : save[k];
+    row.ms = 1;                                   // the move is not the state
+    st.shotTo('decide', { actor: actor });
+    await new Promise(r => setTimeout(r, 260));
+    const m = window.__OVL.measure();
+    out.push({ plan: P, ovl: m });
+  }
+  for (const k of Object.keys(save)) row[k] = save[k];
+  try { st.destroy(); } catch (e) {}
+  const sc = window.__EBB_SCREEN;
+  if (sc && sc.destroy) { try { sc.destroy(); } catch (e) {} }
+  window.__EBB_SCREEN = null; window.Battle.active = false;
+  document.querySelectorAll('.ebb-root').forEach(n => n.remove());
+  try { window.UILOCK && UILOCK.unlock('battle'); } catch (e) {}
+  return { ok: true, id: S.id, zone: zone, at: p0, actor: actor, sweep: out };
+})()`;
+
+// ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // WHAT THE CONTAINMENT TERM COSTS, A/B'd ON ONE LIVE BATTLE. `keep` is a field
 // on the live shot row, so the two arms are one build with one assignment
@@ -700,6 +784,17 @@ function summarise(row) {
   console.log('battle_world: ' + JSON.stringify(await ev(cdp, INJECT, 60000)));
   await ev(cdp, LIB, 30000);
   if (MODE === 'census' || MODE === 'tone') await ev(cdp, PLACE_LIB, 30000);
+  if (MODE === 'overlap' || MODE === 'ovsweep') await ev(cdp, OVERLAP_LIB, 30000);
+  if (SEEPARTY != null) {
+    const v = await ev(cdp, `(() => { const r = window.BattleWorld.CAM.shots.decide;
+      r.showParty = ${SEEPARTY === '0' ? 'null' : 'true'}; return r.showParty; })()`, 10000);
+    console.log('decide.showParty = ' + JSON.stringify(v));
+  }
+  if (FORM != null) {
+    const v = await ev(cdp, `(() => { const C = window.BattleWorld.CFG;
+      if (!C) return { absent: true }; C.partyStagger = ${JSON.stringify(FORM)}; return C.partyStagger; })()`, 10000);
+    console.log('CFG.partyStagger = ' + JSON.stringify(v));
+  }
   if (BPLACE != null) {
     const v = await ev(cdp, `(() => { window.BattleWorld.PLACE.on = ${BPLACE === '0' ? 'false' : 'true'};
       return window.BattleWorld.PLACE.on; })()`, 10000);
@@ -776,6 +871,84 @@ function summarise(row) {
     writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
       reps: REPS, sites: SITES, three: ready.three }, rows: out }, null, 1));
     console.log('WROTE ' + f + '\nframes -> ' + dir);
+    cdp.close(); kill(); process.exit(0);
+  }
+
+  if (MODE === 'ovsweep') {
+    const yaw = YAW != null ? parseFloat(YAW)
+      : await ev(cdp, '(() => +window.ORBIT.yaw.toFixed(6))()', 10000);
+    console.log('ORBIT.yaw pinned at ' + yaw);
+    // THE PLANS. Each is a patch onto the live `decide` row; anything absent
+    // keeps the shipped value, so `{}` IS the shipped shot and is the control.
+    const plans = [
+      {}, { yawOff: 0.00 }, { yawOff: 0.10 }, { yawOff: 0.20 }, { yawOff: 0.45 }, { yawOff: 0.60 },
+      { keepSafe: null }, { keepBias: 1.0 }, { keepBias: 0.8 }, { fov: 'rest' }, { lead: 0 },
+    ];
+    const out = [];
+    for (const s of sites) {
+      process.stdout.write(`  ${s.id} (${s.zone}) ...\n`);
+      let r;
+      try { r = await ev(cdp, sweepDriver(s, yaw, plans), 300000); }
+      catch (e) { console.log('   THREW ' + e.message); continue; }
+      if (!r || !r.ok) { console.log('   skip: ' + (r && r.skip)); continue; }
+      out.push(r);
+      for (const w of r.sweep) {
+        const o = w.ovl || {};
+        const pr = (o.rows || []).filter(x => x.side !== 'foe');
+        const g = o.geo || {};
+        console.log(`   ${JSON.stringify(w.plan).padEnd(22)} occTeam ` +
+          pr.map(x => `${x.id}=${x.occTeam}`).join(' ') +
+          `  lat=${g.lateralM} lineVsAxis=${g.lineVsAxisDeg}deg  xOv=${o.pair ? o.pair.xOverlapFrac : null}`);
+      }
+      await sleep(300);
+    }
+    const f = join(OUT, `ovsweep-${TAG}.json`);
+    writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
+      sites: SITES, form: FORM, three: ready.three }, rows: out }, null, 1));
+    console.log('WROTE ' + f);
+    cdp.close(); kill(); process.exit(0);
+  }
+
+  if (MODE === 'overlap') {
+    const yaw = YAW != null ? parseFloat(YAW)
+      : await ev(cdp, '(() => +window.ORBIT.yaw.toFixed(6))()', 10000);
+    console.log('ORBIT.yaw pinned at ' + yaw);
+    const dir = CANVASDIR ? CANVASDIR : join(OUT, 'overlap', TAG);
+    mkdirSync(dir, { recursive: true });
+    const out = [];
+    const t0 = Date.now();
+    const from = parseInt(arg('start', '0'), 10);
+    const lim = parseInt(arg('limit', String(census.length)), 10);
+    // --only=s015,s032 re-runs named sites. A REGRESSION MUST BE REPRODUCED
+    // BEFORE IT IS EXPLAINED: staging is a search and this lane's own A/B moved
+    // the thing it searches over, so "worse" and "different draw" look alike.
+    const only = arg('only', null);
+    const pick = only ? new Set(only.split(',')) : null;
+    for (const r of census.slice(from, from + lim)) {
+      if (pick && !pick.has(r.id)) continue;
+      const s = { id: r.id, zone: r.zone, at: r.at };
+      process.stdout.write(`  ${s.id} (${s.zone}) ... `);
+      let res;
+      try { res = await ev(cdp, overlapDriver(s, yaw), 300000); }
+      catch (e) { console.log('THREW ' + e.message); continue; }
+      if (!res || !res.ok) { console.log('skip: ' + (res && res.skip)); continue; }
+      if (res.shot) writeFileSync(join(dir, s.id + '.jpg'), Buffer.from(res.shot.split(',')[1], 'base64'));
+      out.push(res.row);
+      const o = res.row.ovl || {};
+      const pr = (o.rows || []).filter(x => x.side !== 'foe');
+      const g = o.geo || {};
+      console.log(`kind=${res.row.kind} ` +
+        pr.map(x => `${x.id} team=${x.occTeam} world=${x.occWorld} tot=${x.occTotal} in=${x.inFrame}`).join(' ') +
+        ` lat=${g.lateralM} axis=${g.lineVsAxisDeg} near=${g.nearer} ` +
+        `${((Date.now() - t0) / 1000).toFixed(0)}s`);
+      await sleep(300);
+    }
+    const f = join(OUT, `overlap-${TAG}.json`);
+    writeFileSync(f, JSON.stringify({ meta: { when: new Date().toISOString(), tag: TAG, yaw: yaw,
+      form: FORM, bplace: BPLACE, bsurf: BSURF, three: ready.three,
+      n: out.length, of: census.length, secs: +((Date.now() - t0) / 1000).toFixed(0) }, rows: out }, null, 1));
+    console.log(`\nwrote ${out.length}/${census.length} sites -> ${f}`);
+    console.log('shots -> ' + dir);
     cdp.close(); kill(); process.exit(0);
   }
 
