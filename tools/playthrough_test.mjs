@@ -5,6 +5,16 @@
 //   node tools/playthrough_test.mjs --stop-at=ch1.done stop after a named beat
 //   node tools/playthrough_test.mjs --no-walk          skip the reachability check (§W)
 //   node tools/playthrough_test.mjs --walk-step=0.3    finer lattice, on a suspect red
+//   node tools/playthrough_test.mjs --grace=0          no grace re-check (the A/B on §G)
+//   node tools/playthrough_lib.mjs --selftest          drive this file's three decisions
+//                                                      offline, in 0.1 s, no browser
+//
+// IT REPORTS THREE COLUMNS, NOT TWO: passed / failed / NOT RUN. A beat that does not
+// fire breaks the SPINE, and everything downstream of a break is not-run rather than
+// failed — because it was never looked at. On 2026-08-09 one 4.2 s banner race made
+// this gate print 44 passed / 16 failed on a build whose game worked end to end, and
+// one of those sixteen lines was `No walk can ever trigger this beat`, a claim about
+// the world made about a player who never got there. See playthrough_lib.mjs.
 //
 // WHY THIS EXISTS. Every other gate in this project measures ONE layer: seam_test
 // the camera grammar, dialogue_test the cast, transition_test the swap, economy_test
@@ -61,6 +71,13 @@
 import { spawn } from 'child_process';
 import { readFileSync, rmSync } from 'fs';
 import { CALL, verdict } from './reach_probe.mjs';
+// THE THREE DECISIONS THAT USED TO BE INLINE HERE, and are now testable without a
+// browser: how long to wait for a beat, what to do when one does not fire, and when a
+// walk pair may be formed at all. `node tools/playthrough_lib.mjs --selftest` drives
+// all three against a fake ledger and a virtual clock in 0.1 s — the race that made
+// this gate print 84/1, 44/16 and 86/0 from one tree on 2026-08-09 is reproduced there
+// deterministically, which a browser run cannot do.
+import { beatBudgetMs, beatUiMs, awaitBeat, Spine, walkPair } from './playthrough_lib.mjs';
 import { createRequire } from 'module';
 import { join } from 'path';
 import { freePort, killOrphans, findPage, GAME_PAGE, sweepStaleProfiles } from './cdp.mjs';
@@ -104,11 +121,30 @@ const START = (() => {
   return `http://localhost:${PORT}/play3d.html?` + q.toString();
 })();
 
+// THE GRACE BOUND. When a poll window expires the harness asks the page WHY before it
+// declares a failure (see playthrough_lib's awaitBeat): a busy director is a beat that
+// is late, an idle one is a beat that is absent. Only the first gets grace, it is
+// bounded here, and every millisecond of it is reported in §G. --grace=0 disables it,
+// which is the one-build A/B on a suspect green.
+const GRACE_MS = parseInt(arg('grace', '30000'), 10);
+
 let pass = 0, fail = 0;
 const fails = [];
 const ok = (c, m, extra) => { if (c) { pass++; console.log('  ok   ' + m); }
   else { fail++; fails.push(m); console.log('  FAIL ' + m + (extra !== undefined ? '  ' + JSON.stringify(extra) : '')); } };
 const note = (m) => console.log('       ' + m);
+// A THIRD COLUMN. After a spine break a downstream check is NOT RUN: not a pass (we do
+// not know) and not a failure (we did not look). Run 2 of 2026-08-09 reported 44/16
+// when the game worked, because a 4.2 s banner race was allowed to answer fifteen
+// questions nobody had asked. The reasoning, and the "skip to the next chapter anchor"
+// alternative that was refused, are in playthrough_lib's Spine.
+const spine = new Spine();
+const runnable = (labels) => {
+  const res = labels.map((l) => { const g = spine.guard(l);
+    if (!g) console.log('  --   ' + l + '   [NOT RUN: the spine broke at ' + spine.broken + ']');
+    return g; });
+  return res.every(Boolean);
+};
 const head = (s) => console.log('\n== ' + s);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -222,13 +258,30 @@ const TALK = (id, secs) => `(async()=>{
 // Wait for a beat to have fired (its id is in the save's beat ledger), pumping the
 // physics tick by hand: rAF is throttled in a background tab, so loop() is not
 // running and Story.tick() would never be reached.
-function AWAIT_BEAT(id, secs) {
+//
+// THE LEDGER IS WRITTEN AT THE END OF THE BEAT (story_runtime.js runBeat, deliberately
+// — an interrupted beat should replay rather than be silently lost), so "the ledger is
+// still empty" and "the beat is not happening" are DIFFERENT STATEMENTS and this poll
+// could only ever make the first one. PROBE_BEAT is the second: Story.debug().busy is
+// true for exactly as long as a `do` chain is running. Both are read in one expression
+// so the pair cannot straddle the ledger write.
+function POLL_BEAT(id, ms) {
   return `(async()=>{ const t0=Date.now();
-    while(Date.now()-t0 < ${(secs || 45) * 1000}){
+    while(Date.now()-t0 < ${ms}){
       try{ if(window.GS&&GS.state&&GS.state.beats&&GS.state.beats[${JSON.stringify(id)}]) return true; }catch(e){}
       try{ if(window.SIM&&SIM.tick&&!(window.UILOCK&&UILOCK.active())) SIM.tick(3); }catch(e){}
       await new Promise(r=>setTimeout(r,50));
     } return false; })()`;
+}
+// NO PUMP HERE, ON PURPOSE: a running beat holds UILOCK, so SIM.tick would be a no-op,
+// and a beat advances on setTimeout regardless. The grace must not be able to CAUSE the
+// thing it is measuring.
+function PROBE_BEAT(id) {
+  return `(()=>{ let beat=false, busy=false, elig=[], obj=null;
+    try{ beat=!!(window.GS&&GS.state&&GS.state.beats&&GS.state.beats[${JSON.stringify(id)}]); }catch(e){}
+    try{ const d=window.Story&&Story.debug&&Story.debug();
+         if(d){ busy=!!d.busy; elig=d.eligible||[]; obj=d.objective||null; } }catch(e){}
+    return {beat, busy, elig, obj, lock:!!(window.UILOCK&&UILOCK.active())}; })()`;
 }
 // Put the body somewhere and make the shot that owns it current, then let the
 // director see it. SIM.shot() is the shipped cut; SIM.tp() is the runtime's own
@@ -270,19 +323,39 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
 // cannot be walked to from the last one, that is the finding.
 const STORY = JSON.parse(readFileSync(new URL('../public/game/story.json', import.meta.url), 'utf8'));
 const BEAT_R = Object.fromEntries((STORY.beats || []).map(b => [b.id, b.r]));
-const reachStat = { pairs: 0, skipped: 0, ms: 0, red: 0 };
+// THE BEAT'S OWN DEFINITION, for the window: `banner.ms`, `endCard.ms`, `toast.ms` and
+// `wait` are declared data and are exactly how long the game spends presenting a beat
+// before its ledger write. beatBudgetMs adds them to the trigger slack — see the long
+// note in playthrough_lib.
+const BEAT_DEF = Object.fromEntries((STORY.beats || []).map(b => [b.id, b]));
+const reachStat = { pairs: 0, skipped: 0, ms: 0, red: 0, noAnchor: 0 };
+const graceLog = [];
 let prevAnchor = null;
 // A beat's own trigger radius IS the reachability criterion: get inside it and the
 // beat fires. Floored at 1.5 m so a beat with no radius (a shot-and-flag beat, where
 // the anchor is wherever the harness stood) still has a lattice cell's worth of slack.
 const tolFor = (id) => Math.max(1.5, BEAT_R[id] || 0);
 
-async function anchor(cdp, id) {
+// AN ANCHOR IS WHERE A BEAT FIRED. NOT WHERE THE HARNESS IS STANDING.
+// `fired` is now REQUIRED and is the precondition made explicit. On 2026-08-09 run 2,
+// ch1.done never fired, the body was still in the Emberbrook square, §W labelled that
+// spot `ch1.done` and filled it against a Dellhollow coordinate — and printed
+// "No walk can ever trigger this beat", which is a claim about the WORLD made about a
+// player who never got there. A beat that did not fire has no anchor: it neither closes
+// the pair behind it nor opens one in front of it, and the chain is said to be cut.
+async function anchor(cdp, id, fired) {
   const cur = await ev(cdp, `({scene:SIM.scene(), pos:SIM.pos()})`);
-  const B = { id, scene: cur.scene, at: [cur.pos.x, cur.pos.y, cur.pos.z] };
-  const A = prevAnchor; prevAnchor = B;
-  if (!WALK || !A) return;
-  if (A.scene !== B.scene) {
+  const B = { id, scene: cur.scene, at: [cur.pos.x, cur.pos.y, cur.pos.z], fired: fired === true };
+  const A = prevAnchor; prevAnchor = B.fired ? B : null;
+  if (!WALK) return;
+  const p = walkPair(A, B);
+  if (p.action === 'no-anchor' || p.action === 'chain-broken') {
+    reachStat.noAnchor++;
+    note(`walk: ${A ? A.id + ' -> ' : ''}${id} NOT MEASURED — ${p.reason}.`);
+    return;
+  }
+  if (p.action === 'chain-start') return;
+  if (p.action === 'scene-change') {
     reachStat.skipped++;
     note(`walk: ${A.id} -> ${B.id} SKIPPED — ${A.scene} -> ${B.scene}. A scene change is an ` +
          `edge, not a walk (seam_walk owns it).`);
@@ -308,6 +381,32 @@ async function anchor(cdp, id) {
 
   const cdp = await connect(await targetWs());
   await cdp.send('Runtime.enable'); await cdp.send('Log.enable'); await cdp.send('Page.enable');
+
+  // THE WAIT, in one place. `slackSec` is how long the harness will wait for the beat
+  // to become ELIGIBLE; the time the game spends PRESENTING it is added from the beat's
+  // own `do` chain. A grace pass is never silent — it prints how much it needed, and §G
+  // lists every one, because a rescued run that hides a real slowdown is the next bug.
+  async function beatFired(id, slackSec) {
+    const def = BEAT_DEF[id];
+    const budgetMs = beatBudgetMs(def, (slackSec || 60) * 1000);
+    const io = {
+      now: () => Date.now(), sleep,
+      poll: (i, ms) => ev(cdp, POLL_BEAT(i, ms), ms + 30000),
+      probe: (i) => ev(cdp, PROBE_BEAT(i), 30000),
+    };
+    const r = await awaitBeat(io, id, { budgetMs, graceMs: GRACE_MS });
+    if (r.fired && r.graceMs > 0) {
+      graceLog.push({ id, budgetMs, graceMs: r.graceMs });
+      note(`GRACE: ${id} fired ${(r.graceMs / 1000).toFixed(1)} s PAST its ` +
+           `${(budgetMs / 1000).toFixed(1)} s window (${(beatUiMs(def) / 1000).toFixed(1)} s of that ` +
+           `window is the beat's own declared UI). The director was still running the beat, so this ` +
+           `is a PASS — but the window is too tight for this machine and that is the finding.`);
+    } else if (!r.fired) {
+      note(`beat ${id} did not fire in ${(budgetMs / 1000).toFixed(1)} s + ` +
+           `${(r.graceMs / 1000).toFixed(1)} s of grace — ${r.why}`);
+    }
+    return r.fired;
+  }
   // A bundle that ships no zones.json / cine.json / depth.json / meta.json is the
   // DOCUMENTED "absent is fine" path for that feature - every interior takes it - and
   // the browser logs a network 404 for each. Classified BY URL, not by message text:
@@ -344,9 +443,10 @@ async function anchor(cdp, id) {
   ok(boot.v === 2, 'a fresh save is written at schema v2', boot);
 
   head('1. Chapter One speaks by itself — nothing forces the first beat');
-  const openFired = await ev(cdp, AWAIT_BEAT('ch1.open', 40), 90000);
+  const openFired = await beatFired('ch1.open', 40);
   ok(openFired === true, 'beat ch1.open fired on its own trigger');
-  await anchor(cdp, 'ch1.open');       // §W: the chain starts at the NEW GAME spawn
+  if (!openFired) spine.break('ch1.open');
+  await anchor(cdp, 'ch1.open', openFired);   // §W: the chain starts at the NEW GAME spawn
   const obj0 = await ev(cdp, `(window.Story?Story.debug().objective:null)`);
   ok(!!obj0, 'an objective is on screen after the opening beat', obj0);
 
@@ -399,30 +499,41 @@ async function anchor(cdp, id) {
   for (const [id, shot, at, pre, body] of CH1) {
     if (pre) { const r = await ev(cdp, pre, 60000); note(id + ': prerequisite -> ' + JSON.stringify(r)); }
     const where = await ev(cdp, GOTO(shot, at), 60000);
-    const fired = await ev(cdp, AWAIT_BEAT(id, 60), 120000);
+    const fired = await beatFired(id, 60);
     ok(fired === true, 'beat ' + id + ' fired (shot ' + (shot || '—') + ')', fired ? undefined : where);
-    if (!fired) { note('  stopped: the spine cannot continue past a beat that never fires'); break; }
+    if (!fired) {
+      spine.break(id);
+      note('  stopped: the spine cannot continue past a beat that never fires. Everything');
+      note('  downstream is now reported as NOT RUN, not as failed — see the tally.');
+      await anchor(cdp, id, false);   // cuts the §W chain; no pair is formed here
+      break;
+    }
     // WHOSE BODY IS THIS. Only stated on the rows where it is the point; a beat
     // that does not care leaves the column off and nothing is asserted.
     if (body) {
       const worn = await ev(cdp, `(window.SIM&&SIM.body?SIM.body():null)`);
       ok(worn === body, 'beat ' + id + ': the player is wearing "' + body + '"', worn);
     }
-    await anchor(cdp, id);
+    await anchor(cdp, id, true);
     if (STOP_AT && id === STOP_AT) { note('  --stop-at reached'); break; }
   }
-  const f1 = await ev(cdp, FLAGS);
-  note('Chapter One flags: ' + JSON.stringify(f1));
-  ok(f1['story.ch1.gate-open'] === true, 'story.ch1.gate-open is set by the sigil beat');
-  ok(f1['lake-joined'] === true, 'lake-joined is set — Lake is in the party');
-  const party1 = await ev(cdp, `GS.activeParty().map(p=>p.id)`);
-  ok(party1.includes('lake'), 'GS.activeParty() now contains Lake', party1);
+  const CH1_FLAG_LABELS = ['story.ch1.gate-open is set by the sigil beat',
+    'lake-joined is set — Lake is in the party', 'GS.activeParty() now contains Lake'];
+  if (runnable(CH1_FLAG_LABELS)) {
+    const f1 = await ev(cdp, FLAGS);
+    note('Chapter One flags: ' + JSON.stringify(f1));
+    ok(f1['story.ch1.gate-open'] === true, CH1_FLAG_LABELS[0]);
+    ok(f1['lake-joined'] === true, CH1_FLAG_LABELS[1]);
+    const party1 = await ev(cdp, `GS.activeParty().map(p=>p.id)`);
+    ok(party1.includes('lake'), CH1_FLAG_LABELS[2], party1);
+  }
 
   head('3. THE OLD GATE — the sealed edge is an absence until the flag flips');
-  // Measured BOTH ways from the shipped graph rather than asserted one way: the
-  // question "is this edge conditional at all" is a fact about the derive, and a
-  // test that only ever sees the open state cannot tell a working gate from an
-  // ungated one.
+  // SPINE-DEPENDENT: the "open" half reads the live flag, which only ch1.sigils sets.
+  // (§3b below is NOT — it forces story.ch1.done both ways itself, which is why it was
+  // green even in the 44/16 run, and it still runs after a break.)
+  if (runnable(['sealed: the gate edge is NOT live while the flag is false',
+                'open: the same edge is live once the flag is true'])) {
   const gate = await ev(cdp, `(()=>{
     const all = SIM.edges();
     const conditional = all.filter(e=>e.when);
@@ -449,6 +560,7 @@ async function anchor(cdp, id) {
       return {shut, open}; })()`);
     ok(sealedProbe.shut.every(v => v === false), 'sealed: the gate edge is NOT live while the flag is false', sealedProbe);
     ok(sealedProbe.open.some(v => v === true), 'open: the same edge is live once the flag is true', sealedProbe);
+  }
   }
 
   // ---- 3b. THE WHISPERWOOD ROAD, DENIED (PT-20260803-002 / -008) -------------
@@ -483,6 +595,15 @@ async function anchor(cdp, id) {
   // used to take whichever came first in the file — the SOUTH road, the way Vesper
   // walked in, which is not the chapter's exit and is now denied outright (PT-002).
   // ch1.sendoff's own objective is "Step through the Old Gate"; the receipt says so too.
+  // SPINE-DEPENDENT: the old-gate edge does not exist until ch1.sigils sets its flag,
+  // so after a break this section can only report `no edge to ow-valley from emb-cine`
+  // — a true sentence about a player who never got there, which is exactly the kind of
+  // line a later lane inherits as a defect.
+  if (runnable(['the corridor was entered by the OLD GATE, the exit the chapter sends them to',
+                'the player is in ow-valley, having taken an edge',
+                'beat ch1.done fired on arrival in the corridor (the end card)',
+                'at.chapter is 2 — a label, not a mode',
+                'at.scene tracks the corridor'])) {
   const toValley = await ev(cdp, `(async()=>{
     const r = await SIM.door('ow-valley', 'old-gate');
     return {r, scene:SIM.scene()}; })()`, 180000);
@@ -491,12 +612,16 @@ async function anchor(cdp, id) {
   ok(toValley.scene === 'ow-valley', 'the player is in ow-valley, having taken an edge', toValley);
   await ev(cdp, READY(600), 180000);
   await ev(cdp, AUTOREADER);
-  const doneFired = await ev(cdp, AWAIT_BEAT('ch1.done', 90), 150000);
+  const doneFired = await beatFired('ch1.done', 75);
   ok(doneFired === true, 'beat ch1.done fired on arrival in the corridor (the end card)');
-  await anchor(cdp, 'ch1.done');
-  const at2 = await ev(cdp, `(window.GS&&GS.state?GS.state.at:null)`);
-  ok(at2 && at2.chapter === 2, 'at.chapter is 2 — a label, not a mode', at2);
-  ok(at2 && at2.scene === 'ow-valley', 'at.scene tracks the corridor', at2);
+  if (!doneFired) spine.break('ch1.done');
+  await anchor(cdp, 'ch1.done', doneFired);
+  if (runnable(['at.chapter is 2 — a label, not a mode', 'at.scene tracks the corridor'])) {
+    const at2 = await ev(cdp, `(window.GS&&GS.state?GS.state.at:null)`);
+    ok(at2 && at2.chapter === 2, 'at.chapter is 2 — a label, not a mode', at2);
+    ok(at2 && at2.scene === 'ow-valley', 'at.scene tracks the corridor', at2);
+  }
+  }
 
   head('5. Chapter Two, in Dellhollow');
   // WHERE THE HARNESS STANDS FOR ch2.road, AND WHY IT IS A HAIR OFF THE BEAT'S ANCHOR.
@@ -517,20 +642,19 @@ async function anchor(cdp, id) {
   // west bank it does not: 167851 cells, no path. That is the Old Gate court's masonry,
   // measured independently by the Old Gate lane and fixed there with a road-arc
   // back-off — not this anchor.
-  const roadFired = await ev(cdp, `(async()=>{
-    ${'SIM.tp(44.5,-36.31,12.455);'}
-    const t0=Date.now();
-    while(Date.now()-t0<40000){
-      if(GS.state.beats['ch2.road']) return true;
-      if(!(window.UILOCK&&UILOCK.active())) SIM.tick(3);
-      await new Promise(r=>setTimeout(r,50)); }
-    return false; })()`, 90000);
+  if (runnable(['beat ch2.road fired on the approach to Dellhollow'])) {
+  await ev(cdp, `(SIM.tp(44.5,-36.31,12.455), true)`);
+  const roadFired = await beatFired('ch2.road', 40);
   ok(roadFired === true, 'beat ch2.road fired on the approach to Dellhollow');
-  await anchor(cdp, 'ch2.road');
+  if (!roadFired) spine.break('ch2.road');
+  await anchor(cdp, 'ch2.road', roadFired);
+  }
+  if (runnable(['the corridor was WALKED into Dellhollow'])) {
   const toTown = await ev(cdp, `(async()=>{ const r=await SIM.door('del-cine'); return {r, scene:SIM.scene()}; })()`, 180000);
   ok(toTown.scene === 'del-cine', 'the corridor was WALKED into Dellhollow', toTown);
   await ev(cdp, READY(600), 180000);
   await ev(cdp, AUTOREADER);
+  }
 
   const CH2 = [
     ['ch2.arrive', null, null],
@@ -544,6 +668,7 @@ async function anchor(cdp, id) {
     ['ch2.landing', null, null],
   ];
   for (const [id, shot, at] of CH2) {
+    if (!runnable(['beat ' + id + ' fired'])) continue;
     if (shot && shot[0] === '@') {
       const r = await ev(cdp, `(async()=>{ const r=await SIM.door(${JSON.stringify(shot.slice(1))}); return {r,scene:SIM.scene()}; })()`, 180000);
       note(id + ': door -> ' + JSON.stringify(r.scene));
@@ -551,21 +676,36 @@ async function anchor(cdp, id) {
     } else if (shot || at) {
       await ev(cdp, GOTO(shot, at), 60000);
     }
-    const fired = await ev(cdp, AWAIT_BEAT(id, 75), 150000);
+    const fired = await beatFired(id, 75);
     ok(fired === true, 'beat ' + id + ' fired');
-    if (!fired) { note('  stopped: Chapter Two cannot continue past a beat that never fires'); break; }
-    await anchor(cdp, id);
+    if (!fired) {
+      spine.break(id);
+      note('  stopped: Chapter Two cannot continue past a beat that never fires. Everything');
+      note('  downstream is now reported as NOT RUN, not as failed — see the tally.');
+      await anchor(cdp, id, false);
+      continue;   // the loop books the remaining rows as NOT RUN, by name
+    }
+    await anchor(cdp, id, true);
   }
 
   head('6. the payoff — Maren joins for real');
+  // ALWAYS PRINTED, even after a break, because it is the evidence that told us the
+  // 44/16 and 84/1 runs were false reds: `beats completed: 28 — … ch2.landing` sitting
+  // three lines under `FAIL beat ch2.landing fired`. Only the ASSERTIONS are guarded.
   const end = await ev(cdp, `({flags:${FLAGS}, party:GS.activeParty().map(p=>p.id),
     at:GS.state.at, beats:Object.keys(GS.state.beats)})`);
-  ok(end.flags['story.ch2.done'] === true, 'story.ch2.done is set', end.flags);
-  ok(end.flags['maren-joined'] === true, 'maren-joined is set (growth.json:33\'s declared joinFlag)');
-  ok(end.party.includes('maren'), 'GS.activeParty() now contains Maren', end.party);
   note('beats completed: ' + end.beats.length + ' — ' + end.beats.join(', '));
+  if (runnable(['story.ch2.done is set', 'maren-joined is set (growth.json:33\'s declared joinFlag)',
+                'GS.activeParty() now contains Maren'])) {
+    ok(end.flags['story.ch2.done'] === true, 'story.ch2.done is set', end.flags);
+    ok(end.flags['maren-joined'] === true, 'maren-joined is set (growth.json:33\'s declared joinFlag)');
+    ok(end.party.includes('maren'), 'GS.activeParty() now contains Maren', end.party);
+  }
 
   head('7. save / resume — a cold reload built from `at` alone');
+  if (runnable(['the reloaded save is v2', 'the same scene', 'the same shot',
+                'within a stride of the same place', 'gold survived',
+                'every story flag survived', 'the party survived'])) {
   await ev(cdp, `(GS.autosave(), true)`);
   const before = await ev(cdp, `({at:GS.state.at, gold:GS.state.gold, flags:${FLAGS},
     party:GS.activeParty().map(p=>p.id), scene:SIM.scene(), shot:(SIM.cine()||{}).shot, pos:SIM.pos()})`);
@@ -586,6 +726,7 @@ async function anchor(cdp, id) {
   ok(JSON.stringify(after.flags) === JSON.stringify(before.flags), 'every story flag survived',
      { before: before.flags, after: after.flags });
   ok(after.party.join() === before.party.join(), 'the party survived', { before: before.party, after: after.party });
+  }
 
   head('8. console');
   drainErrors();
@@ -603,15 +744,39 @@ async function anchor(cdp, id) {
          `${reachStat.red} unreachable.`);
     note(`added ${(reachStat.ms / 1000).toFixed(1)} s of wall clock at --walk-step=${WALK_STEP} ` +
          `(--no-walk removes all of it).`);
+    if (reachStat.noAnchor)
+      note(`${reachStat.noAnchor} pair(s) NOT MEASURED: an anchor is where a beat FIRED, and a beat ` +
+           `that did not fire leaves the body wherever the harness last stood it. §W says nothing ` +
+           `about a place the player never reached — see playthrough_lib's walkPair.`);
     note('what it still cannot see: the 0.075 m stride (walk_bodygate), whether the NPC a beat');
     note('needs is standing at the anchor (npcs.json / findability_test), and whether the shot');
     note('that offers an in-scene edge is one the player can actually be in (seam_test).');
   }
 
+  head('G. the grace — beats that were LATE, not absent');
+  // A SILENT RESCUE HIDES A REAL SLOWDOWN. Every grace pass is named here with the
+  // window it overran, so a machine that is getting slower shows up as a growing list
+  // long before it shows up as a red.
+  if (!graceLog.length) {
+    note('none — every beat fired inside its own derived window. (grace bound ' +
+         (GRACE_MS / 1000).toFixed(0) + ' s; --grace=0 is the A/B.)');
+  } else {
+    for (const g of graceLog)
+      note(`${g.id}: ${(g.graceMs / 1000).toFixed(1)} s past a ${(g.budgetMs / 1000).toFixed(1)} s window`);
+    note('These are PASSES, and they are also the finding: the windows are near the edge on');
+    note('this machine. A beat that never fires does not appear here — it fails at the window');
+    note('with `director idle`, because the grace is gated on Story.debug().busy.');
+  }
+
   console.log('\n' + '='.repeat(64));
-  console.log(`playthrough_test: ${pass} passed, ${fail} failed`);
+  console.log(`playthrough_test: ${pass} passed, ${fail} failed, ${spine.notrun} not run`);
   if (fail) { console.log('\nfailures:'); fails.forEach(f => console.log('  - ' + f)); }
+  if (spine.notrun) {
+    console.log(`\nNOT RUN — the spine broke at ${spine.broken}, so these were never looked at.`);
+    console.log('They are neither passes nor failures; do not quote them as defects.');
+    spine.skipped.forEach(f => console.log('  ? ' + f));
+  }
   console.log('='.repeat(64));
   cdp.close(); kill();
-  process.exit(fail ? 1 : 0);
+  process.exit(fail || spine.broken ? 1 : 0);
 })();
