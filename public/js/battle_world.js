@@ -266,16 +266,18 @@
     on: true,                 // ?btone=0
     res: [320, 180],          // the probe target; the ranking is a mean, not a detail
     wClutter: 0.35,           // how much a busy background discounts a contrasty one
-    // A REFUSAL, NOT A PREFERENCE. The probe may only overrule the geometric
-    // solver when it beats it DECISIVELY — the winner's score must exceed the
-    // incumbent rung's by this fraction. MEASURED, and it is the difference
-    // between a treatment that helps one site and one that also hurts two:
-    // across four sites the boom axis is worth a factor of 3.4 at water and
-    // 10-20% at meadow/forest/crag, and inside that 10-20% band the probe's own
-    // ranking is not reliable enough to be worth acting on (it picked a
-    // different rung at forest and crag between two runs of the same build).
-    // A margin turns every one of those marginal calls into today's game.
-    margin: 0.35,
+    // A REFUSAL, NOT A PREFERENCE: the probe may only overrule the geometric
+    // solver when it beats the INCUMBENT rung's score by this fraction.
+    // AND THE FIRST NUMBER WAS BACKWARDS, WHICH IS WHY IT IS WRITTEN DOWN. At
+    // 0.35 the margin was inert everywhere it was supposed to help — forest
+    // (0.74 -> 3.52, 4.7x) and crag (5.35 -> 9.36, 1.75x) clear any plausible bar
+    // — and it bit ONLY at water, the one site where the axis is worth a factor
+    // of 3.4, whose winner runs about 1.38x. Measured across four runs the water
+    // decision fired three times and REFUSED once, which is a coin flip on the
+    // whole result. A gate that only ever blocks the case it exists to pass is
+    // not a gate. 0.15 keeps the shape (a decisive override, never a preference)
+    // at a bar the evidence actually sits above.
+    margin: 0.15,
     waitMs: 12000,            // give up waiting for models and keep the solver's pitch
   };
 

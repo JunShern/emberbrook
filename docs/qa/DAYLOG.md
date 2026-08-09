@@ -22367,3 +22367,23 @@ GATES: transition_test 168/0 · ray_budget GREEN W=2/9761 · battle_sim +
 encounter_sim green · arena_playtest green on 2 of 3 runs (the first run reported
 one unnamed suite failed; that gate opens the page WITHOUT ?arena=world so none of
 this lane's code loads in it — recorded as flake, not explained away).
+
+2026-08-09 · TONAL-SEPARATION LANE, AMENDMENT (same lane, after the claim was
+re-tested rather than filed):
+ * THE REFUSAL MARGIN WAS BACKWARDS AT 0.35. It was inert exactly where it was
+   meant to help — forest clears it 4.7x, crag 1.75x — and bit only at WATER, the
+   one site where the boom axis is worth a factor of 3.4 and whose winner runs
+   1.2-1.6x. Over four runs the water decision fired three times and REFUSED once.
+   A GATE THAT ONLY EVER BLOCKS THE CASE IT EXISTS TO PASS IS NOT A GATE. At 0.15
+   water fires 3/3 and no other site's decision changes.
+ * AND ONE RUN IS NOT A RESULT. Three fresh A/Bs at water (rep1..rep3): mean
+   contrast and snr improve 4 of 4 (+18% to +63%, +36% to +154%) — but edgeMin,
+   the "worst body" figure the first board led on at +86%, MOVES BOTH WAYS, and
+   the OFF baseline alone varies 5.90 -> 10.83 between runs (a factor of 1.8). The
+   worst-body number at this site is inside its own noise and the board now says
+   so. The claim that holds is that 0.28 and 0.34 both beat 0.16.
+ * THE EXTRACTION IS PROVED, LATE. The control run predated the meter extraction,
+   so the commit's "proves itself" was a claim with no run behind it. Re-run:
+   battle_camera --mode=legibility through battle_meter.mjs gives cam-off
+   17.95/12.38/29.10/20.38 against the pre-extraction 18.55/12.15/29.05/20.26 —
+   within ~3%. RUN THE THING YOU SAID PROVED IT.

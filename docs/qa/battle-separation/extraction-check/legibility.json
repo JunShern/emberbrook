@@ -1,0 +1,1017 @@
+{
+  "sites": {
+    "meadow": {
+      "off": {
+        "ok": true,
+        "zone": "meadow",
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 9824,
+            "freePx": 9683,
+            "interPx": 9626,
+            "occl": 0.0059,
+            "edgeRGB": 21.54,
+            "hPx": 192.9,
+            "hPct": 21.09,
+            "edge": 16.85,
+            "dL": 4.72,
+            "clutter": 52.23,
+            "ringN": 2944,
+            "bodyL": 122,
+            "ringL": 95.1
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 2781,
+            "freePx": 3040,
+            "interPx": 2673,
+            "occl": 0.1207,
+            "edgeRGB": 17.45,
+            "hPx": 139.3,
+            "hPct": 15.23,
+            "edge": 10.34,
+            "dL": 10.26,
+            "clutter": 9.79,
+            "ringN": 1741,
+            "bodyL": 41.4,
+            "ringL": 29.6
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 20597,
+            "freePx": 19664,
+            "interPx": 19232,
+            "occl": 0.022,
+            "edgeRGB": 23.03,
+            "hPx": 169,
+            "hPct": 18.49,
+            "edge": 25.29,
+            "dL": 28.77,
+            "clutter": 43.64,
+            "ringN": 6215,
+            "bodyL": 63.9,
+            "ringL": 96.9
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 17685,
+            "freePx": 15904,
+            "interPx": 15101,
+            "occl": 0.0505,
+            "edgeRGB": 9.79,
+            "hPx": 225,
+            "hPct": 24.61,
+            "edge": 7.32,
+            "dL": 21.28,
+            "clutter": 62.73,
+            "ringN": 7559,
+            "bodyL": 148.5,
+            "ringL": 163.9
+          }
+        ],
+        "summary": {
+          "edgeAll": 17.95,
+          "edgeFoe": 16.41,
+          "edgeLumAll": 14.95,
+          "occlAll": 0.05,
+          "occlMax": 0.121,
+          "foeHPctMin": 18.49,
+          "foeHPctMean": 21.55,
+          "clutter": 42.1,
+          "pose": {
+            "ax": 38.12,
+            "ay": 15.074,
+            "az": -26.88,
+            "yaw": -2.5369,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7686,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.389,
+              -0.369
+            ],
+            "foe": [
+              0.4,
+              0.462
+            ]
+          }
+        },
+        "plan": {
+          "yawDelta": -1.05,
+          "relief": 0.703
+        }
+      },
+      "on": {
+        "ok": true,
+        "zone": "meadow",
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 14655,
+            "freePx": 14273,
+            "interPx": 14240,
+            "occl": 0.0023,
+            "edgeRGB": 25.48,
+            "hPx": 306,
+            "hPct": 33.46,
+            "edge": 22.18,
+            "dL": 22.39,
+            "clutter": 52.52,
+            "ringN": 4724,
+            "bodyL": 118.7,
+            "ringL": 77
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 6538,
+            "freePx": 6507,
+            "interPx": 6340,
+            "occl": 0.0257,
+            "edgeRGB": 21.46,
+            "hPx": 211.9,
+            "hPct": 23.18,
+            "edge": 16.41,
+            "dL": 17.97,
+            "clutter": 24.42,
+            "ringN": 3043,
+            "bodyL": 61.4,
+            "ringL": 36.1
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 34733,
+            "freePx": 32913,
+            "interPx": 32557,
+            "occl": 0.0108,
+            "edgeRGB": 27.62,
+            "hPx": 248.8,
+            "hPct": 27.21,
+            "edge": 30.44,
+            "dL": 53.93,
+            "clutter": 54.41,
+            "ringN": 8627,
+            "bodyL": 73.8,
+            "ringL": 119.1
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 28378,
+            "freePx": 26175,
+            "interPx": 24932,
+            "occl": 0.0475,
+            "edgeRGB": 7.72,
+            "hPx": 232.1,
+            "hPct": 25.39,
+            "edge": 3.9,
+            "dL": 41.19,
+            "clutter": 55.09,
+            "ringN": 10642,
+            "bodyL": 142.1,
+            "ringL": 185.4
+          }
+        ],
+        "summary": {
+          "edgeAll": 20.57,
+          "edgeFoe": 17.67,
+          "edgeLumAll": 18.23,
+          "occlAll": 0.02,
+          "occlMax": 0.048,
+          "foeHPctMin": 25.39,
+          "foeHPctMean": 26.3,
+          "clutter": 46.61,
+          "pose": {
+            "ax": 38.15,
+            "ay": 14.706,
+            "az": -26.892,
+            "yaw": -2.5369,
+            "pitch": 0.16,
+            "dist": 9.398,
+            "fov": 34
+          },
+          "base": {
+            "yaw": -2.5369,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 7.564,
+            "back": 2.03,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.9985,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.513,
+              -0.476
+            ],
+            "foe": [
+              0.523,
+              0.611
+            ]
+          }
+        },
+        "plan": {
+          "yawDelta": -1.05,
+          "relief": 0.703
+        }
+      }
+    },
+    "forest": {
+      "off": {
+        "ok": true,
+        "zone": "forest",
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 5299,
+            "freePx": 5707,
+            "interPx": 5231,
+            "occl": 0.0834,
+            "edgeRGB": 6.88,
+            "hPx": 194,
+            "hPct": 21.22,
+            "edge": 2.74,
+            "dL": 29.6,
+            "clutter": 24.89,
+            "ringN": 3873,
+            "bodyL": 39.5,
+            "ringL": 40.1
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 4454,
+            "freePx": 4882,
+            "interPx": 4182,
+            "occl": 0.1434,
+            "edgeRGB": 5.23,
+            "hPx": 175,
+            "hPct": 19.14,
+            "edge": 1.08,
+            "dL": 4.15,
+            "clutter": 27.93,
+            "ringN": 3428,
+            "bodyL": 44.1,
+            "ringL": 44.8
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 25226,
+            "freePx": 25582,
+            "interPx": 25174,
+            "occl": 0.0159,
+            "edgeRGB": 12.82,
+            "hPx": 307.1,
+            "hPct": 33.59,
+            "edge": 4.23,
+            "dL": 5.26,
+            "clutter": 16.52,
+            "ringN": 6979,
+            "bodyL": 41.3,
+            "ringL": 35
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 6483,
+            "freePx": 8504,
+            "interPx": 6213,
+            "occl": 0.2694,
+            "edgeRGB": 24.6,
+            "hPx": 132.1,
+            "hPct": 14.45,
+            "edge": 19.68,
+            "dL": 20.46,
+            "clutter": 16.36,
+            "ringN": 4233,
+            "bodyL": 52.7,
+            "ringL": 32.9
+          }
+        ],
+        "summary": {
+          "edgeAll": 12.38,
+          "edgeFoe": 18.71,
+          "edgeLumAll": 6.93,
+          "occlAll": 0.13,
+          "occlMax": 0.269,
+          "foeHPctMin": 14.45,
+          "foeHPctMean": 24.02,
+          "clutter": 21.43,
+          "pose": {
+            "ax": 15.6,
+            "ay": 15.861,
+            "az": -16.9,
+            "yaw": -1.9869,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "base": {
+            "yaw": -1.9869,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7709,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.457,
+              -0.37
+            ],
+            "foe": [
+              0.4,
+              0.471
+            ]
+          }
+        },
+        "plan": {
+          "yawDelta": -0.5,
+          "relief": 0.616
+        }
+      },
+      "on": {
+        "ok": true,
+        "zone": "forest",
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 8460,
+            "freePx": 9391,
+            "interPx": 8340,
+            "occl": 0.1119,
+            "edgeRGB": 4.95,
+            "hPx": 282.1,
+            "hPct": 30.86,
+            "edge": 0.21,
+            "dL": 28.1,
+            "clutter": 25.7,
+            "ringN": 5814,
+            "bodyL": 39.6,
+            "ringL": 42.2
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 7379,
+            "freePx": 8406,
+            "interPx": 6945,
+            "occl": 0.1738,
+            "edgeRGB": 7.72,
+            "hPx": 227.4,
+            "hPct": 24.87,
+            "edge": 2.61,
+            "dL": 4.6,
+            "clutter": 26.9,
+            "ringN": 4592,
+            "bodyL": 44.7,
+            "ringL": 41.4
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 40204,
+            "freePx": 40499,
+            "interPx": 40114,
+            "occl": 0.0095,
+            "edgeRGB": 11.76,
+            "hPx": 394,
+            "hPct": 43.1,
+            "edge": 3.91,
+            "dL": 5.74,
+            "clutter": 16.36,
+            "ringN": 9642,
+            "bodyL": 41.4,
+            "ringL": 34.5
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 10971,
+            "freePx": 14018,
+            "interPx": 10522,
+            "occl": 0.2494,
+            "edgeRGB": 20.81,
+            "hPx": 181,
+            "hPct": 19.79,
+            "edge": 16.45,
+            "dL": 20.31,
+            "clutter": 19.95,
+            "ringN": 6934,
+            "bodyL": 53.8,
+            "ringL": 36.2
+          }
+        ],
+        "summary": {
+          "edgeAll": 11.31,
+          "edgeFoe": 16.29,
+          "edgeLumAll": 5.79,
+          "occlAll": 0.14,
+          "occlMax": 0.249,
+          "foeHPctMin": 19.79,
+          "foeHPctMean": 31.45,
+          "clutter": 22.23,
+          "pose": {
+            "ax": 15.486,
+            "ay": 15.696,
+            "az": -17.224,
+            "yaw": -1.9869,
+            "pitch": 0.34,
+            "dist": 9.242,
+            "fov": 34
+          },
+          "base": {
+            "yaw": -1.9869,
+            "pitch": 0.34
+          },
+          "view": {
+            "score": 7.0878,
+            "back": 3.26,
+            "seen": 0.917,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.22
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.9747,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.573,
+              -0.462
+            ],
+            "foe": [
+              0.512,
+              0.603
+            ]
+          }
+        },
+        "plan": {
+          "yawDelta": -0.5,
+          "relief": 0.616
+        }
+      }
+    },
+    "water": {
+      "off": {
+        "ok": true,
+        "zone": "water",
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 6217,
+            "freePx": 6221,
+            "interPx": 6086,
+            "occl": 0.0217,
+            "edgeRGB": 24.39,
+            "hPx": 192.9,
+            "hPct": 21.09,
+            "edge": 25.19,
+            "dL": 48.31,
+            "clutter": 16.42,
+            "ringN": 2388,
+            "bodyL": 160.9,
+            "ringL": 112.1
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 10815,
+            "freePx": 4591,
+            "interPx": 4524,
+            "occl": 0.0146,
+            "edgeRGB": 16.84,
+            "hPx": 203.6,
+            "hPct": 22.27,
+            "edge": 16.78,
+            "dL": 45.28,
+            "clutter": 13.31,
+            "ringN": 2993,
+            "bodyL": 157.2,
+            "ringL": 108.7
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 13235,
+            "freePx": 15076,
+            "interPx": 13220,
+            "occl": 0.1231,
+            "edgeRGB": 19.64,
+            "hPx": 225,
+            "hPct": 24.61,
+            "edge": 20.89,
+            "dL": 64.28,
+            "clutter": 14.91,
+            "ringN": 3726,
+            "bodyL": 102.1,
+            "ringL": 39.3
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 8326,
+            "freePx": 8218,
+            "interPx": 8144,
+            "occl": 0.009,
+            "edgeRGB": 55.53,
+            "hPx": 116.7,
+            "hPct": 12.76,
+            "edge": 52.4,
+            "dL": 70,
+            "clutter": 11.91,
+            "ringN": 1826,
+            "bodyL": 106.2,
+            "ringL": 31.8
+          }
+        ],
+        "summary": {
+          "edgeAll": 29.1,
+          "edgeFoe": 37.59,
+          "edgeLumAll": 28.81,
+          "occlAll": 0.04,
+          "occlMax": 0.123,
+          "foeHPctMin": 12.76,
+          "foeHPctMean": 18.68,
+          "clutter": 14.14,
+          "pose": {
+            "ax": -45.8,
+            "ay": 31,
+            "az": 26.7,
+            "yaw": -1.4869,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "base": {
+            "yaw": -1.4869,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7697,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.461,
+              -0.373
+            ],
+            "foe": [
+              0.396,
+              0.464
+            ]
+          }
+        },
+        "plan": {
+          "yawDelta": 0,
+          "relief": 0
+        }
+      },
+      "on": {
+        "ok": true,
+        "zone": "water",
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 12675,
+            "freePx": 12782,
+            "interPx": 12496,
+            "occl": 0.0224,
+            "edgeRGB": 20.05,
+            "hPx": 291.7,
+            "hPct": 31.9,
+            "edge": 20.74,
+            "dL": 47,
+            "clutter": 13.92,
+            "ringN": 3414,
+            "bodyL": 157.8,
+            "ringL": 112.3
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 19923,
+            "freePx": 9682,
+            "interPx": 9490,
+            "occl": 0.0198,
+            "edgeRGB": 13.89,
+            "hPx": 295.2,
+            "hPct": 32.29,
+            "edge": 13.71,
+            "dL": 50.73,
+            "clutter": 15.33,
+            "ringN": 4514,
+            "bodyL": 161.7,
+            "ringL": 117.7
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 25548,
+            "freePx": 26867,
+            "interPx": 25522,
+            "occl": 0.0501,
+            "edgeRGB": 3.99,
+            "hPx": 328.6,
+            "hPct": 35.94,
+            "edge": 4.13,
+            "dL": 47.68,
+            "clutter": 38.02,
+            "ringN": 6668,
+            "bodyL": 109,
+            "ringL": 72.6
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 18481,
+            "freePx": 18363,
+            "interPx": 18293,
+            "occl": 0.0038,
+            "edgeRGB": 15.88,
+            "hPx": 159.5,
+            "hPct": 17.45,
+            "edge": 13.16,
+            "dL": 55.31,
+            "clutter": 37.67,
+            "ringN": 2211,
+            "bodyL": 101.5,
+            "ringL": 69.5
+          }
+        ],
+        "summary": {
+          "edgeAll": 13.45,
+          "edgeFoe": 9.94,
+          "edgeLumAll": 12.94,
+          "occlAll": 0.02,
+          "occlMax": 0.05,
+          "foeHPctMin": 17.45,
+          "foeHPctMean": 26.7,
+          "clutter": 26.24,
+          "pose": {
+            "ax": -45.744,
+            "ay": 30.767,
+            "az": 26.361,
+            "yaw": -1.4869,
+            "pitch": 0.16,
+            "dist": 8.241,
+            "fov": 34
+          },
+          "base": {
+            "yaw": -1.4869,
+            "pitch": 0.16
+          },
+          "view": {
+            "score": 8.2628,
+            "back": 11.7,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.0919,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.643,
+              -0.525
+            ],
+            "foe": [
+              0.567,
+              0.679
+            ]
+          }
+        },
+        "plan": {
+          "yawDelta": 0,
+          "relief": 0
+        }
+      }
+    },
+    "crag": {
+      "off": {
+        "ok": true,
+        "zone": "crag",
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 12402,
+            "freePx": 12370,
+            "interPx": 12311,
+            "occl": 0.0048,
+            "edgeRGB": 5.52,
+            "hPx": 192.9,
+            "hPct": 21.09,
+            "edge": 3.11,
+            "dL": 6.59,
+            "clutter": 13.58,
+            "ringN": 2376,
+            "bodyL": 113.3,
+            "ringL": 105
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 10965,
+            "freePx": 9624,
+            "interPx": 8414,
+            "occl": 0.1257,
+            "edgeRGB": 14.93,
+            "hPx": 201.2,
+            "hPct": 22.01,
+            "edge": 17.1,
+            "dL": 18.9,
+            "clutter": 37.35,
+            "ringN": 3264,
+            "bodyL": 137.1,
+            "ringL": 137.9
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 11662,
+            "freePx": 11647,
+            "interPx": 11646,
+            "occl": 0.0001,
+            "edgeRGB": 48.05,
+            "hPx": 122.6,
+            "hPct": 13.41,
+            "edge": 51.79,
+            "dL": 87.17,
+            "clutter": 8.04,
+            "ringN": 1819,
+            "bodyL": 46.1,
+            "ringL": 133
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 17401,
+            "freePx": 11502,
+            "interPx": 10801,
+            "occl": 0.0609,
+            "edgeRGB": 13,
+            "hPx": 119,
+            "hPct": 13.02,
+            "edge": 14.46,
+            "dL": 41.87,
+            "clutter": 11.29,
+            "ringN": 3171,
+            "bodyL": 173.6,
+            "ringL": 126.8
+          }
+        ],
+        "summary": {
+          "edgeAll": 20.38,
+          "edgeFoe": 30.52,
+          "edgeLumAll": 21.62,
+          "occlAll": 0.05,
+          "occlMax": 0.126,
+          "foeHPctMin": 13.02,
+          "foeHPctMean": 13.21,
+          "clutter": 17.56,
+          "pose": {
+            "ax": 65.6,
+            "ay": 21.992,
+            "az": -40.6,
+            "yaw": -1.4869,
+            "pitch": 0.27,
+            "dist": 9.6,
+            "fov": 42
+          },
+          "base": {
+            "yaw": -1.4869,
+            "pitch": 0.27
+          },
+          "view": null,
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 0.7618,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.438,
+              -0.372
+            ],
+            "foe": [
+              0.39,
+              0.399
+            ]
+          }
+        },
+        "plan": {
+          "yawDelta": 0,
+          "relief": 1.434
+        }
+      },
+      "on": {
+        "ok": true,
+        "zone": "crag",
+        "bodies": [
+          {
+            "id": "vesper",
+            "side": "party",
+            "tier": "model",
+            "silPx": 21662,
+            "freePx": 21636,
+            "interPx": 21522,
+            "occl": 0.0053,
+            "edgeRGB": 3.61,
+            "hPx": 279.8,
+            "hPct": 30.6,
+            "edge": 1.29,
+            "dL": 9.45,
+            "clutter": 11.03,
+            "ringN": 3526,
+            "bodyL": 116.3,
+            "ringL": 105.9
+          },
+          {
+            "id": "maren",
+            "side": "party",
+            "tier": "model",
+            "silPx": 19731,
+            "freePx": 16151,
+            "interPx": 14374,
+            "occl": 0.11,
+            "edgeRGB": 21.26,
+            "hPx": 291.7,
+            "hPct": 31.9,
+            "edge": 24.2,
+            "dL": 15.51,
+            "clutter": 39.56,
+            "ringN": 5747,
+            "bodyL": 142.6,
+            "ringL": 148.7
+          },
+          {
+            "id": "m0",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 21835,
+            "freePx": 21807,
+            "interPx": 21807,
+            "occl": 0,
+            "edgeRGB": 46.88,
+            "hPx": 171.4,
+            "hPct": 18.75,
+            "edge": 50.45,
+            "dL": 88.45,
+            "clutter": 7.64,
+            "ringN": 2643,
+            "bodyL": 45.1,
+            "ringL": 133.2
+          },
+          {
+            "id": "m1",
+            "side": "foe",
+            "tier": "model",
+            "silPx": 33791,
+            "freePx": 22696,
+            "interPx": 21190,
+            "occl": 0.0664,
+            "edgeRGB": 10.45,
+            "hPx": 171.4,
+            "hPct": 18.75,
+            "edge": 11.79,
+            "dL": 38.78,
+            "clutter": 11.46,
+            "ringN": 4954,
+            "bodyL": 169.9,
+            "ringL": 127.7
+          }
+        ],
+        "summary": {
+          "edgeAll": 20.55,
+          "edgeFoe": 28.66,
+          "edgeLumAll": 21.93,
+          "occlAll": 0.05,
+          "occlMax": 0.11,
+          "foeHPctMin": 18.75,
+          "foeHPctMean": 18.75,
+          "clutter": 17.42,
+          "pose": {
+            "ax": 65.616,
+            "ay": 21.491,
+            "az": -40.472,
+            "yaw": -1.4869,
+            "pitch": 0.22,
+            "dist": 9.161,
+            "fov": 34
+          },
+          "base": {
+            "yaw": -1.4869,
+            "pitch": 0.22
+          },
+          "view": {
+            "score": 7.4955,
+            "back": 1.27,
+            "seen": 1,
+            "of": 4,
+            "boom": true,
+            "pitch": 0.16
+          },
+          "axis": {
+            "ok": true,
+            "order": true,
+            "side": true,
+            "gap": 1.0319,
+            "sgn": 1,
+            "ref": 1,
+            "party": [
+              -0.581,
+              -0.499
+            ],
+            "foe": [
+              0.533,
+              0.547
+            ]
+          }
+        },
+        "plan": {
+          "yawDelta": 0,
+          "relief": 1.434
+        }
+      }
+    }
+  },
+  "when": "2026-08-09T02:50:22.764Z"
+}

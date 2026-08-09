@@ -1,0 +1,15 @@
+world ready  three r185  scene=ow-valley  bw={"on":true,"installed":false}  fov=42
+  meadow cam=off ... edge=17.95 foeH=21.55% occl=0.05 clutter=42.1
+  meadow cam=on ... edge=20.57 foeH=26.3% occl=0.02 clutter=46.61
+  forest cam=off ... edge=12.38 foeH=24.02% occl=0.13 clutter=21.43
+  forest cam=on ... edge=11.31 foeH=31.45% occl=0.14 clutter=22.23
+  water cam=off ... edge=29.1 foeH=18.68% occl=0.04 clutter=14.14
+  water cam=on ... edge=13.45 foeH=26.7% occl=0.02 clutter=26.24
+  crag cam=off ... edge=20.38 foeH=13.21% occl=0.05 clutter=17.56
+  crag cam=on ... edge=20.55 foeH=18.75% occl=0.05 clutter=17.42
+
+site      | edge off->on | foe h% off->on | occl off->on | clutter off->on
+meadow    | 17.95 -> 20.57 | 21.55 ->  26.3 |  0.05 ->  0.02 |  42.1 -> 46.61
+forest    | 12.38 -> 11.31 | 24.02 -> 31.45 |  0.13 ->  0.14 | 21.43 -> 22.23
+water     |  29.1 -> 13.45 | 18.68 ->  26.7 |  0.04 ->  0.02 | 14.14 -> 26.24
+crag      | 20.38 -> 20.55 | 13.21 -> 18.75 |  0.05 ->  0.05 | 17.56 -> 17.42

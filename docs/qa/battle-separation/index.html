@@ -125,11 +125,14 @@ read — minus the ring's clutter.</p>
  <strong>It was measured wrong first:</strong> ranking raw linear bytes crushes a dark site and picked
  the wrong boom at the forest (edgeRGB 12.88 → 11.11). Tone mapping is still not applied, and that is
  the probe's stated approximation.</li>
- <li><strong>It is a REFUSAL, not a preference.</strong> The probe may only overrule the geometric
- solver when it beats the incumbent rung's score by 35%. Without that margin the same build picked
- different rungs at forest and crag between two runs — inside the 15–24% band the probe's ranking is
- not reliable enough to act on. The margin turns every marginal call into today's game and keeps the
- one decisive call.</li>
+ <li><strong>It is a REFUSAL, not a preference</strong> — the probe may only overrule the geometric
+ solver when it beats the <em>incumbent rung's</em> score by a margin. <strong>The first margin was
+ backwards and that is written down rather than quietly retuned:</strong> at 35% it was inert exactly
+ where it was meant to help (forest clears it 4.7×, crag 1.75×) and bit only at water — the one site
+ where the axis is worth a factor of 3.4 — whose winner runs about 1.2–1.6×. Measured over four runs
+ the water decision fired three times and <em>refused once</em>, which is a coin flip on the whole
+ result. A gate that only ever blocks the case it exists to pass is not a gate. At 15% water fires
+ 3/3 (§5.1) and no other site's decision changes.</li>
  <li><strong>It only ever lands on the opening.</strong> It waits for every body to leave the
  <code>proxy</code> tier (a proxy solid is the wrong colour to rank a background against) and applies
  its answer only while the opening <code>round</code> shot is still easing, so it reads as one
@@ -147,6 +150,22 @@ trigger-to-first-battle-frame of p50 688 ms. <code>?btone=0</code> is the A/B on
 <tr><td><strong>water</strong></td><td>0.16 → 0.34</td><td class="good">13.54 → 22.04 <strong>(+63%)</strong></td><td class="good">5.48 → 10.21 <strong>(+86%)</strong></td><td class="good">27.59 → 17.05 (−38%)</td><td class="good">0.491 → 1.293 <strong>(+163%)</strong></td></tr>
 <tr><td>crag</td><td>0.16 → 0.34</td><td class="bad">20.47 → 19.14 (−6.5%)</td><td class="good">2.45 → 5.12 <strong>(+109%)</strong></td><td>17.39 → 17.53</td><td class="bad">1.177 → 1.092</td></tr>
 </table>
+<h3>5.1 · REPEATABILITY at water — because one run is not a result</h3>
+<p>The headline is the water site, so it was re-run. Three fresh A/Bs at the shipped margin
+(<code>rep1..rep3/ab.json</code>), plus the run in §5:</p>
+<table>
+<tr><th>run</th><th>boom chosen</th><th>score ratio</th><th>edgeRGB off → on</th><th>edgeMin off → on</th><th>snr off → on</th></tr>
+<tr><td>§5</td><td>0.34</td><td>1.38</td><td class="good">13.54 → 22.04</td><td class="good">5.48 → 10.21</td><td class="good">0.491 → 1.293</td></tr>
+<tr><td>rep1</td><td>0.28</td><td>1.27</td><td class="good">16.01 → 18.87</td><td class="bad">10.83 → 5.98</td><td class="good">0.587 → 0.800</td></tr>
+<tr><td>rep2</td><td>0.28</td><td>1.60</td><td class="good">14.56 → 18.90</td><td class="bad">7.03 → 4.82</td><td class="good">0.535 → 0.790</td></tr>
+<tr><td>rep3</td><td>0.34</td><td>1.21</td><td class="good">13.83 → 22.00</td><td class="good">5.90 → 10.83</td><td class="good">0.518 → 1.313</td></tr>
+</table>
+<p><strong>Mean contrast and snr improve in 4 of 4 runs</strong> (+18% to +63% and +36% to +154%).
+<strong>The worst-body figure does not survive repetition</strong>: it moves both ways, and the OFF
+baseline alone varies 5.90 → 10.83 between runs — a factor of 1.8. So <code>edgeMin</code> at this site
+is inside its own noise and the §5 “+86%” must be read as one draw, not a result. The probe also lands
+on 0.28 as often as 0.34; both beat 0.16, which is the claim that holds.</p>
+
 <p><strong>The crag regression is real and it is the score doing what it was built to do.</strong> Crag's
 frame mean falls 6.5% while the body that was <em>invisible</em> in it — Vesper's cream shirt against a
 pale grass field, edgeRGB 2.45 — more than doubles. Half-the-mean-and-half-the-minimum trades exactly
