@@ -1252,6 +1252,35 @@ git runs here, on branch `migration/3d-hybrid`.
     reads 78,436 px on Vesper's teal coat, so only the paired pre/post difference is ground
     truth. The old law still governs everything without such a term:
     A GATE THAT MEASURES BRIGHTNESS CANNOT SEE COLOUR.
+    **A DEFECT COUNTER THAT ONLY COUNTS ITS OWN THRESHOLD CROSSINGS UNDERSTATES THE DEFECT**
+    (2026-08-09; board docs/qa/cutins/reds/). `chroma_rim` called weaponsmith's fringe SIX
+    PIXELS; at 8x it is a green line down the whole blade edge. And it was made by the
+    **UN-PREMULTIPLY, NOT THE DESPILL**: alpha there is a NORMALISED DISTANCE whose denominator
+    is a local maximum, so a dark pixel in a bright figure's notch reads 60-70% covered when it
+    is solid paint, and a third of the key gets subtracted out of it — source `_mg -1.5`, output
+    `_mg -73…-98`. The band despill clipped its share to `[0, 0.65]`, so it could only chase key
+    the matte KEPT and was blind to key it had OVER-REMOVED; the share is now signed, floored at
+    the value that carries the pixel back to the drawn colour. Proved with a 148-plate two-arm
+    re-mat from identical sources: every alpha-derived metric **identical 148/148** (it is a
+    colour-only change and the A/B says so), `chroma_rim` moves on 6 and **NEVER RISES**, `halo`
+    +0.3…+3.4 with the tightest survivor at +17.3 against the +18 bar. Cast 114/120 → 115/120.
+    **THE NO-REGRESSION FLOOR ALSO READ ONE SOURCE OF TWO**: `scripted_moods()` read
+    `dialogue.json` alone while `story.json` carries **217 `expr` keys to its 82** — the story
+    layer is now the LARGER consumer — so a character whose story-scripted moods exceed their
+    shipped set could silently lose one. `python3 tools/gen-cutin.py --selftest` proves it RED
+    then GREEN on a synthetic portrait; 8 real portraits gain a floor requirement, all covered
+    today, so the hole was LATENT not live. `chapter1/2/3.js` are out of scope MEASURED, not
+    assumed: they carry ZERO `expr` keys (their `mood:` keys are music cues).
+    **THE REMAINING FIVE REDS ARE DRAWINGS, NOT PIPELINE** — odessa's `warm` source holds a
+    SECOND FIGURE cropped by the frame and no crop of it clears halo (12 waist cuts swept,
+    minimum +21.4 against +18); tally fails BOTH sources (salvage on the matte, studio on the
+    framing — drawn as a bust at head_frac 0.394-0.408 against a verified 0.328, and **his
+    shipped plates are already out of band at 0.343-0.351 and survive only because the framing
+    gate applies at promotion and never retroactively**); mochi's re-mat is refused on THE CAT'S
+    FUR — 98-100% of its off-band soft alpha is INSIDE the figure, the opposite of the metric's
+    own definition, and widening `KEY_BAND` makes it 3x worse, which is what proves it is the
+    drawing. Also re-derived and NO LONGER TRUE: this file's own "43 of the 62 incumbents fail
+    it" is 15 of 65 on the same path today.
     **RE-ROLL `rest` FIRST, NEVER LAST**: `rest` is the identity reference the mood plates
     are drawn from, so re-rolling it after them orphans the set against a superseded
     reference (sorrel's striped apron went plain white, her peel wood → terracotta). The
