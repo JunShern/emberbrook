@@ -598,9 +598,36 @@ git runs here, on branch `migration/3d-hybrid`.
   TONE SEES — armed during the probe it scored a different boom, so it is now pinned off for the
   probe like the idle phase, the rings and the motes. (3) The polarity rule was BACKWARDS on
   absolute surround luminance; the right signal is `sign(edge − ring)`, which TONE already
-  computed and discarded. NAMED NEXT: the monster-register lane regraded the FOES into the party's
-  value/saturation band — **nobody has asked whether the PARTY's own albedo range is wide enough
-  to sit against this valley.**
+  computed and discarded.
+  **AND THE PARTY-ALBEDO HYPOTHESIS IS REFUTED — WITH A RULER DEFECT THAT BOUNDS EVERY `edgeRGB`
+  NUMBER ABOVE IT** (2026-08-09; board docs/qa/battle-party/, instruments tools/battle_party.mjs).
+  The question was whether the party rigs share too much value with ow-valley. They do not, four
+  ways: the FOES were graded INTO the party's band by bet H and overlap terrain 0.528 vs the
+  party's 0.546 — same band, same terrain — yet fail 7/124 against the party's 13/124; overlap
+  ranks a failing body against a reading one at AUC 0.560, i.e. CHANCE, and every palette axis is
+  0.47-0.62; the party's rendered range (V 0.141-0.953) is WIDER than the ring's (0.172-0.734);
+  and no fixed shift escapes — the shifts that buy anything are ±0.5 (black or white) and point in
+  OPPOSITE directions for two members of one party while demanding the freshly-graded foes undo
+  bet H. Attribution: **edgeRGB variance is 40.1% the SITE and 3.7% the BODY.** So: do not regrade
+  the party, and do not put it to the user on this evidence.
+  **THE RULER DEFECT: `edgeRGB` IS ONE SIGNED DIFFERENCE OF MEANS OVER A WHOLE SILHOUETTE, so a
+  body brighter than its surround at the top and darker at the bottom CANCELS ITSELF.** Cut the
+  same contrast into six horizontal bands and of the 13 party bodies edgeRGB calls failing, 12
+  have >2x their own edgeRGB and 12 contain bands of OPPOSITE SIGN (6-band median 14.48 vs
+  edgeRGB 3.97) — **and the party/foe split INVERTS to party 7/124, foe 13/124.** A standing
+  person spans several surfaces top to bottom; a wolf or a blob sits on one. So "the failures
+  concentrate on small clothed party bodies", which the rim spike inferred and I repeated, is
+  substantially THE RULER'S SHAPE TERM. Looked at: the worst party read in the census (edgeRGB
+  1.6) is plainly visible — teal coat on sunlit tan, dark boots on a pale deck, bands
+  12.3/9.1/8.7/11.3/29.9/38.1. The 6-band ruler is a hand-off, not a shipped replacement, and
+  nothing has been eye-sorted under it.
+  **ALSO MEASURED: bet H's own band is not reproducible from bet H's own sampler** — stated
+  S50 0.333-0.452 / V95 0.718-0.784, re-measured 0.325-0.474 / 0.729-0.792, so **under its own
+  tool vesper fails the band derived from her.** The party GLBs have not changed; no monster
+  verdict flips. And the meter bound again, this path: palette axes pin to ±0.00-0.11 at N=1 but
+  **edgeRGB moves 4.50 across six repeats of one battle**, and two full censuses of one build at
+  one yaw disagreed 15 vs 13 party failures. Palette numbers are usable at N=1; NO `edgeRGB`
+  single-site claim is.
   Measuring it needed two meter fixes this repo has paid for before: occlusion is an INTERSECTION of
   the real and depth-test-off silhouettes, never a ratio of areas (GTAO/bloom leave a halo the two
   passes do not share — a fully visible body measured "−136% occluded"), and contrast is RGB, never
