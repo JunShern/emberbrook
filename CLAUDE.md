@@ -1118,6 +1118,39 @@ git runs here, on branch `migration/3d-hybrid`.
   0 of 754 water cells would have read as a regression of `emb_brookchop` and is not one.
   Instrument: **tools/emb_plate_object.mjs** names the mesh at a pixel with no Blender, and its
   RESIDUAL says when the answer is dressing the collision bundle does not carry.
+- **AN APPEAL TO INTENT IS NOT A REFUTATION OF A FACT, AND THE NAIVE HEAD ASKS FOR ONE**
+  (2026-08-09; board docs/qa/redteam-sceptic/, instrument `scene_redteam --rhetoric-census`,
+  NO API). The inherited "the sceptic refutes foliage occlusion at 39% against 13%" is **true of
+  its run and false of the corpus**: over 31 run dirs (1,299 findings deduped on
+  town+shot+mode+desc) it is 25.5% vs 15.8%, **p = 0.35**, and it is a **SIMPSON STRATUM** —
+  Emberbrook·naive 40.7% vs 11.8%, Dellhollow 0/8, and inside `category=occlusion` the two towns
+  run OPPOSITE ways and cancel. The town-independent fact is the CATEGORY: naive refutes
+  occlusion claims **47.4% (46/97)**, checklist **0/57**. **WHAT GENERALISES IS THE RHETORIC:
+  21 of 23 foliage-occlusion refutals argue FROM CONVENTION** ("standard cinematic framing",
+  "expected environment detail for a forested setting") against 51/176 elsewhere, **p = 8e-9** —
+  and the naive prompt literally says *"REFUTE if … is normal for the style"*, while the
+  checklist head's counter-clause is why it refutes the same class 1/47. **THE DIFFERENCE IS IN
+  THE PROMPT, NOT THE PICTURES.** All 23 were put back on their plates and LOOKED AT: **every
+  evidence-argued refutal was right (2/2); 15 of 21 convention-argued ones were WRONG** —
+  including a tree standing in front of `lm_lake-home`, a named story landmark, and a lit road
+  exiting frame INTO a black conifer mass (the `canopy-wall` shape exactly). Stage 2 also stops
+  filtering weak criticism here: it refutes at mean severity **1.96** and upholds at 1.99,
+  against 1.70/2.06 elsewhere — killing claims of exactly the weight it keeps.
+  **AND THE HEADLINE HYPOTHESIS IS REFUTED: the user's own `CALIBRATION` complaints are NOT
+  treated worse — 19.3% vs 19.0%, p = 0.92, and `canopy-wall` has never once been refuted.**
+  The census is REPORTED AND NOT GATED (the `key_rim` shape): 4 of the 21 convention-argued
+  refutals are fair calls in convention's clothing, so a word list may PREDICT the error and must
+  never DELETE a finding. The one-paragraph prompt fix is MEASURED AND UNSHIPPED (A/B, 22 calls:
+  refutals 15 → 4, foliage 9 → 2, convention 80% → 25%) because **the control itself moved
+  21 → 15 on one draw**, so N=1 per arm is not a rate, and it gives up `square F57` — a refutal
+  the eye says was CORRECT. Next round: 3 draws an arm, scoped to `category=occlusion`, judged
+  against the eye verdicts as the labelled set.
+  **TWO INSTRUMENT DEFECTS PAID FOR HERE:** this file had **no `main` guard**, so importing it
+  for ONE exported function ran a full 64-call sweep and wrote an unasked-for run dir (the
+  replicate is kept — it reproduces the class rate at 38.7%); and `--rhetoric-census` with a
+  mistyped or abbreviated stamp printed a neatly formatted table of **ZEROES** — a census that
+  looks like a measurement and is a typo. Both fixed; the census now names what it could not read
+  and lists the stamps that exist.
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder
