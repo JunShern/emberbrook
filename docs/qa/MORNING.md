@@ -1,3 +1,69 @@
+# UPDATE — 2026-08-09 late (Dellhollow round 8, deploy 19, and a green suite that was held up by a coincidence)
+
+**LIVE: deploy 19, built from `2e8acf9a`, static_verify 29/0 BOTH locally and against the URL.**
+All seven of round 8's rebaked plates were fetched off the wire and each matches the local build
+byte-for-byte; both re-exported bundles match too. Pages built in 76 s, no re-queue. The build took
+**13 s** (242 cache hit / 11 miss, the misses being exactly the changed art) — that is the encode
+cache earning its keep, and it is why a deploy is now something you do rather than something you
+put off. Independently spot-checked from the main thread: `crossing` 488048, `lockhead` 857260,
+`game/lightrigs.json` 200.
+
+**THE `organic` SUITE WAS A HARNESS BUG, AND AN ART COMMIT KNOCKED AWAY WHAT WAS HOLDING IT UP.**
+`arena_playtest`'s organic suite had failed all week with "no hostile zone reachable" and FOUR lanes
+correctly attributed it as pre-existing and moved on — receipted four times, diagnosed zero. The
+readiness gate waited for the game MODULES (which self-arm ~250 ms after boot) and never for the
+58 MB scene GLB, in flat contradiction of its own comment: at "world ready" the probe reads the
+DEFAULT player position and `SIM.gpu().collide === 0`, i.e. no scene geometry at all. 250 ms later
+the suite passes 14/14. The world is innocent — ow-valley is **98.4% hostile by area**. THE
+ARCHAEOLOGY IS THE LESSON: the race existed from birth but was UNREACHABLE because `zoneAt(0,0)`,
+the default cell, happened to be hostile, so `findHostile`'s own-cell branch matched before the
+scene mattered. Commit `2b0322e9` (the F5 "bent road" rebuild) moved the carriage road over the
+tile origin, that cell became `road` = SAFE by design, and a legitimate art commit took away the
+coincidence. **ATTRIBUTION RE-DERIVED: organic is FIXED and from `9c1caf7a` a red there is a REAL
+REGRESSION.** Also reclaimed: 60 stale per-pid Chrome profiles, ~10 GB, each verified against a
+DEAD pid; the sweep is now in the tool.
+
+**DELLHOLLOW ROUND 8 (`de20fb04`, `bd522980`, `132fd97b`, `87c1c028`) — one fix, one refutation,
+and the refutation is the better result.**
+- **Crossing's "untextured white wedge"** — FAILING, and filed by the judge in FOUR runs as a hole
+  in the world / missing geometry — is **a market awning at 5.3 m** (62.5% `qm_awning_0`). Both
+  halves of the judge's sentence were measurements: L p50 **168.8** against the near field's 85.0,
+  local sd **0.60** against 4.11. The mechanism: the canvas is a RULED SURFACE, so its normal never
+  varies along its width and NO LIGHT RIG CAN SHADE IT. And its stripes could never have helped —
+  projected through crossing's own solved camera they fall at v > 0.93, BELOW THE FRAME. Fixed as
+  geometry with the safety in the arithmetic (ribs rise, midpoints sit on the old surface, so no
+  vertex ever moves down — that is what keeps 0.19 m of headroom true by construction). Judge:
+  "hole in the world"/"plane"/"wedge"/"flat" GONE; **"untextured" and "white" survive at 2 of 3**,
+  correctly NOT claimed as a clear at N=3. Pointer in CLAUDE.md under `tools/qm_awning_relief.py`.
+- **"Dress the greybox far field" REFUTED ON A CONTROL.** I ranked it first; the lane measured
+  textured surfaces at the SAME distance in the SAME frame (sd 1.08 vs the greybox's 0.55) and
+  showed dressing buys at most half of one 8-bit level, on 3 of 15 cameras, with zero judge verdicts
+  in four runs. Not built. **Do not inherit "dress the far field" without re-deriving that control.**
+  What IS wrong there is a hard rectangular silhouette (`fx_far_town_base` is a box) — a SHAPE
+  question, not the dressing question that was handed over.
+- Stall backboards fixed on all seven, not just the one the judge saw. Seven plates rebaked from a
+  15-frame-a-side draft A/B; **eight refused with their numbers**. Gates at baseline.
+
+**TWO INSTRUMENT FACTS THAT WILL BITE SOMEBODY:** `cine_bake` writes the collision GLB **only under
+`--glb`**, so a `--cams` run leaves `scene.glb` stale and NOTHING says so (`cine_test` still reads
+635/1 because walk-mesh parity is unaffected); and `findability_test` finishes in seconds but does
+not exit, so through `| tail` it looks like an 11-minute hang.
+
+**A MEASUREMENT SCRIPT CAN TAKE THE MACHINE DOWN.** Round 8's `sliding_window_view(...).std()` at
+61 px over a 2688x1536 plate reached **7.6 GB RSS growing 14 MB/s**; system swap had been grown by
+macOS from 4 GB to 38.9 GB and sat at 37.8 GB used / 1.1 GB free. Killed it: swap returned to 9.2 GB
+and free memory 36% → 87%, so it was the entire cause. Crop or block-reduce BEFORE any windowed
+statistic; if an analysis script passes ~2 GB RSS it is wrong.
+
+**IN FLIGHT at the time of writing:** Dellhollow round 9 (the canvas's VALUE — the one surviving
+verdict — plus the four loudest never-diagnosed items: deep-stairs' floating treads, crossing's
+floating plank, weave's black cave mouth, quay-west's three absent exits) and the cut-in CHROMA
+GATE (closing the open hole below: `cutin_edge`'s halo term is luminance-only, so a fringe of the
+wrong hue at the right brightness is invisible to it — 79 of 112 shipped plates once carried a
+chartreuse outline, all gate-green, until a human looked).
+
+---
+
 # UPDATE — 2026-08-09 19:10 (eight more lanes since the 06:40 handover below)
 
 Everything committed, pushed, and live (deploy 18, verified 29/0 with the shipped bytes fetched).
