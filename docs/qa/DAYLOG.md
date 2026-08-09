@@ -23132,3 +23132,93 @@ dirs). The two stale worktrees from earlier sessions (`wt-prestair`,
 **STILL FLAGGED FOR THE USER, unchanged by this deploy** (it is the authoring lane's finding, now
 live behind the flag): ring-0 staging falls 29 -> 15, so "the fight stays where you are" is now the
 minority case and wants the user's re-confirmation.
+
+------------------------------------------------------------
+
+## 2026-08-09 ~11:50 — BODY-SIDE SPIKE: a separation cue on the cast, priced and NOT recommended
+
+Board docs/qa/battle-rim/index.html · instrument tools/battle_rim.mjs ·
+`?arena=world&brim=1` (default OFF inside the world arena) · `BattleWorld.RIM` is the
+runtime A/B · census arms via `battle_decide --mode=census --brim=off|auto`.
+
+THE CANDIDATES, PRICED BEFORE ANYTHING WAS BUILT.
+1. A cast-only rim LIGHT — UNAVAILABLE, not expensive: three.js tests `light.layers`
+   against the CAMERA in projectObject, never per object, so a private layer excludes the
+   light for everyone. Any per-object light is a second render of the cast.
+2. FRESNEL via `onBeforeCompile` on the cast materials — BUILT. No draw call, no pass, no
+   geometry, no readback; one program; measured −0.3% fps. The cast's materials are OURS
+   by construction (`loadGlb` re-parses the cached ArrayBuffer per body, which is also why
+   `destroy` can dispose them), proved per run by `st.rim().shared === 0`.
+3. INVERTED-HULL outline — priced, refused. Doubles cast draws and skinned work (a twin
+   SkinnedMesh per mesh bound to the same skeleton), adds geometry (so it is the one
+   candidate that could move the ray budget), needs new geometries and materials disposed
+   (directly into transition_test's {geo:±2, tex:0}), is darkened by GTAO and smeared by
+   bloom — and it is *literally* the video-game outline this lane is trying not to ship.
+4. POST-CHAIN edge from depth/normals — priced, refused. It needs an edit to play3d.html
+   (coordinator-owned), runs full-res every frame of the WHOLE GAME, cannot tell cast from
+   world without an ID/mask pass (a second scene render), and writes inside the post chain,
+   which is exactly where the r185 target-space rule bites.
+5. FLAT emissive lift / albedo pinch through the material API — NO SHADER AT ALL, built as
+   the control (`RIM.mode='flat'`). It moves a body's whole value, not its edge.
+6. `envMapIntensity` on the cast only — same family as 5, named for completeness.
+7. Aerial perspective / background blur — already refuted by the sep lane and written into
+   battle_world.js: at 3 of 4 sites the offending background is 2–4 m behind the body.
+
+WHAT THE CENSUS SAID (62 sites, both arms, shared meter, 62/62 staged in the same ring at
+the same pitch and lens): mean edgeRGB 9.27 → 10.89, bandMin 7.16 → 7.98, 24 sites better /
+2 worse / 36 inside the noise. **AND IT IS THE WRONG GAIN.** The six biggest are at sites
+already reading 6.5–32.5 (s040 25.8→34.7, s061 32.5→40.3); the count where a body does NOT
+read is unmoved — `edgeRGB<5` 14 → 15, `bandMin<3` 10 → 9, worst band 0.79 → 1.21. Same
+shape as `edgeRGB` running backwards as a placement metric: adding light to a body that is
+already separated separates it further, and the frames that fail have the body at the
+terrain's own value IN SHADOW, where multiplying albedo by 0.45 does almost nothing.
+
+BY EYE (every moved frame): s017 comes back with a pale line traced round the whole duskpad
+silhouette — the sticker. s019 (largest regression) gives a dark wolf a halo and it reads
+mushier, because it wanted the other sign and the cast-wide mean was set by the party member
+on the other side of it. s040 is a genuine win and was already the best site in the census.
+s044 — the forest hedge this lane exists for — the party pair is UNCHANGED at every strength
+that does not blow the foes out.
+
+THREE MEASUREMENTS WORTH MORE THAN THE FEATURE:
+(1) **A ONE-BATTLE METER SPREAD OF 1.5 edgeRGB AND 1.1 bandMin** (2.8 / 6.2 at native, and
+    the background ring luminance itself moved 4.6): one battle, staged once, metered six
+    times with nothing touched (`battle_rim --mode=stability`). Staging is reproducible to
+    four figures — site ring and mask pixel count — so this is the FRAME, not the search:
+    the valley keeps animating between reads. **Every single-site claim in this arc is
+    bounded by that, not just this lane's.** It also means `bandMin` is unusable at N=1.
+    Before the fix the same arm at one site read edgeRGB 1.44 and 5.31, which is why
+    `stage.qa.pose()` now pins the cast to its own idle phase for a photograph — the exact
+    lesson TONE paid for one layer in.
+(2) **A CUE ON THE CAST CHANGES WHAT THE TONAL BOOM CHOOSER SEES.** Armed during TONE's two
+    probe passes, a darkened silhouette scored a different boom and the first two arms
+    photographed DIFFERENT CAMERAS at the very first site. It is now pinned off for the
+    probe and put back, exactly as the idle phase, the two ground rings and ambient's motes
+    already are: the thing being ranked must not move while it is being ranked.
+(3) **THE POLARITY RULE WAS BACKWARDS FIRST.** Flipping on the ABSOLUTE surround luminance
+    (dark surround → brighten) reads plausibly and is the wrong question: at crag s033 the
+    surround is bright at 146.8 and the cast is brighter still at 163.9, so the rule
+    darkened a body that was already lighter than what it stood against and cut its contrast
+    (native edgeRGB 17.9 → 14.6 against a repeat spread of 0.3). What raises separation is
+    the SIGN OF (edge − ring), and TONE already computed both numbers and threw one away.
+
+COLOUR-SPACE POSITION. The cue adds to `totalEmissiveRadiance` and multiplies
+`diffuseColor.rgb` at `#include <emissivemap_fragment>` — after `normal_fragment_begin`, so
+`normal` and `vViewPosition` exist, and before `lights_physical_fragment`, so a pinched
+albedo is still lit. That is RADIANCE IN THE WORKING SPACE: no target allocated, no pixel
+read back, nothing encoded, so the rule that bit TONE cannot reach it. The colour is a
+`THREE.Color` from a hex, which ColorManagement already converts on assignment — adding a
+hand `convertSRGBToLinear` would be the double conversion the runtime notes warn about.
+`IU()` untouched; no light added or scaled. **NOT PROVED:** the constants assume
+`NoToneMapping`, which is what ow-* ships; 0.30 linear encodes to ~0.58 display and the
+ladder's blow-out at 0.70 is that arithmetic. On a scene with tone mapping on they mean
+something else and nothing gates that.
+
+RECOMMENDATION: **do not promote. Keep it behind `?brim=1` as a recorded negative, or
+delete it.** The world arena's zero-shader property is worth more than a cue that adds
+contrast to the frames that already have it, and the sign this cue needs to work has to be
+chosen PER BODY — which is exactly what stops it reading as one light source. What is left
+for the standing gap: PLACEMENT (one site in three is still a bad place to fight, and
+surface dominance already moves that), and the party rigs' own albedo — the monster-register
+lane regraded the FOES into the party's value/saturation range and nobody has asked whether
+the PARTY's own range is wide enough to sit against this valley.
