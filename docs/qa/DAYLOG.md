@@ -23299,3 +23299,65 @@ monster verdict flips at the re-measured edges. (b) The 6-band ruler still avera
 band and has not been eye-sorted. (c) The three-handed census kept only 8 of its 62 frames —
 a payload call, its tables are computed from all 62 rows. (d) docs/qa/index.html was NOT
 edited: another lane holds it dirty in the working tree.
+
+------------------------------------------------------------
+## 2026-08-09 — RULER-AUDIT lane: which shipped decisions rested on `edgeRGB`
+
+Board docs/qa/battle-party/ruler-audit/index.html · data eyesort-bodies.json,
+joined.json, tone-compare.json, findings.txt, docs/qa/battle-decide/tone-band{,2}.json ·
+code 685d652c, board 10f2b1ac.
+
+THE AUDIT. Eight shipped decisions in the world-arena path. SEVEN are clean passes
+that never read a tonal number: the PLACE sun refusal (four rays -> `site.lit`), the
+one-surface refusal (a 6x6x6 colour histogram of the display frame), `scoreView`'s
+pitch ranking (visibility + back depth + boom clearance), `keep:'foes'`, `keepSafe`
+(DOM rects in NDC), the 180-degree `axisCheck`, and the separation lane, whose aerial
+re-anchor was deleted at 029526e7 for measuring null. ONE reads it directly: TONE's
+boom chooser, whose score IS 0.5*mean + 0.5*min - 0.35*clutter over per-body edgeRGB.
+`RIM`'s polarity reads the same cancelling shape in luminance and is default off.
+The metric that was found defective was never in the placement path.
+
+THE 6-BAND RULER, VALIDATED AT BODY LEVEL AND REFUTED AT SITE LEVEL. 57 bodies at 39
+sites of the shipped decide census, every body the two rulers disagree about plus 20
+controls, scored by eye reads / compromised / lost. One rater, NOT blind - the
+disagreement lists were computed before the looking, so this is a discrimination test
+between rulers, never a level. On the 49 bodies a ruler could see, 6-band ranks
+readability at AUC 0.820 against edgeRGB's 0.591 (concordance 0.818 vs 0.590); of the
+20 bodies edgeRGB<5 calls failing, FOURTEEN read perfectly well by eye and none is
+lost. At site level, against the existing decide sorts, whole-cast edgeRGB ranks the
+piles at 0.335 and every band variant at 0.29-0.30 - below chance in both directions,
+i.e. backwards - while one-surface dominance reads 0.829. PLACE's ruling survives.
+
+AND THE EXCLUSION IS THE FINDING. 8 of 57 targets are compromised because one party
+body stands behind the other, and NEITHER RULER CAN SEE THAT BY CONSTRUCTION: the
+meter renders each body against a cast-free background, so a teammate never occludes
+it. Five of the eight are Vesper behind Maren in the 27 mm two-shot. Include them and
+both rulers fall to chance. The largest single cause of a party body not reading in
+this census is a SHOT problem, and no tonal instrument in this arc can report it.
+
+TONE RE-DERIVED, DEFAULT NOT MOVED. toneBody now also reports the six-band contrast
+per body and a bScore per rung - reported, never scored, and proven so: chosen boom
+identical 62/62 against census-surfAfter.json (the last census of the pre-edit build
+at the same pinned ORBIT.yaw) and identical 62/62 across two runs of the edited build.
+Then: (i) the cancellation is real inside the probe and side-asymmetric, band/edgeRGB
+1.55 p50 for party bodies vs 1.18 for foes over 954 readings, so the `min` term is
+partly ranking body SHAPE; (ii) THE REFUSAL MARGIN IS NOT A BAR - |inc|*0.15 on a
+score that can go negative gives a bar under 0.5 at 10 of 61 sites against a median
+rung span of 3.94, and at 0.15 the chooser overrules the geometric solver at 64% of
+sites; under the band score, 0/61 and 0/61. That defect is independent of the ruler
+and was invisible to the four-site derivation that set 0.15; (iii) the pick is
+ruler-dependent at 26 of 61 sites. Nothing flipped: `?btband=1` is the A/B, default
+off, because nobody has looked at those 26 in both arms and two raters on this arc's
+own frames differ by 9.7 points.
+
+GATES (public/ changed): battle_sim ALL ENVELOPES GREEN + 6 property tests,
+encounter_sim GREEN, transition_test PASS 168/0, ray_budget GREEN W=2/9761.
+arena_playtest `organic` fails "no hostile zone reachable" and REPRODUCES AT HEAD
+with this lane's change reverted (file restored byte-identical, sha-verified) -
+pre-existing, not a regression, and worth someone's morning.
+
+RESIDUALS. s047's recorded camera pitch differed between two runs while TONE's own
+decision was bit-identical: the probe landed after the first turn started and reported
+`applied:false - a beat already owns the camera`, a pre-existing race between
+model-load network time and the first turn. s033/s039 move in the third decimal
+between runs (the sky-drift residual the tone lane already named); no pick moved.

@@ -621,6 +621,46 @@ git runs here, on branch `migration/3d-hybrid`.
   1.6) is plainly visible — teal coat on sunlit tan, dark boots on a pale deck, bands
   12.3/9.1/8.7/11.3/29.9/38.1. The 6-band ruler is a hand-off, not a shipped replacement, and
   nothing has been eye-sorted under it.
+  **AUDITED, AND THE ARC IS NOT IN TROUBLE — BECAUSE ALMOST NOTHING SHIPPED READ IT**
+  (2026-08-09; board docs/qa/battle-party/ruler-audit/index.html, data tone-band{,2}.json).
+  Eight shipped decisions in the world-arena path, SEVEN of them clean passes that never touch a
+  tonal number: the sun refusal (four rays), the one-surface refusal (a 6³ colour histogram),
+  `scoreView`, the `keep` containment, the safe rect, the 180° refusal, and the separation lane
+  (whose aerial ramp was deleted for measuring null). **THE METRIC FOUND DEFECTIVE WAS NEVER IN
+  THE PLACEMENT PATH.** Only `TONE`'s boom chooser reads it directly; `RIM`'s polarity reads the
+  same cancelling shape in luminance and is default OFF.
+  **THE 6-BAND RULER IS BETTER PER BODY AND NO BETTER PER SITE, and the second half matters as
+  much as the first.** Eye sort, 57 bodies at 39 sites of the shipped decide census (every body
+  the two rulers disagree about plus 20 controls; ONE rater, NOT blind — direction, not level):
+  on the 49 a ruler could see, 6-band ranks readability at **AUC 0.820 vs edgeRGB's 0.591**, and
+  of the 20 bodies `edgeRGB<5` calls failing **FOURTEEN read perfectly well**. But at SITE level
+  against the existing decide sorts, whole-cast `edgeRGB` ranks the piles at 0.335 and every band
+  variant at 0.29-0.30 — **backwards, not merely weak**, against one-surface dominance's 0.829.
+  So PLACE's "TONE is not a placement metric" survives the ruler being broken.
+  **AND THE EXCLUSION IS ITSELF THE FINDING: 8 of 57 targets are compromised because ONE PARTY
+  BODY STANDS BEHIND THE OTHER, which NEITHER RULER CAN SEE BY CONSTRUCTION** — the meter renders
+  each body against a cast-free background, so a teammate never occludes it. Five of the eight
+  are Vesper behind Maren in the 27 mm two-shot. Include them and both rulers fall to chance. The
+  largest single cause of a party body not reading in this census is a SHOT problem, not paint
+  and not the boom, and no tonal instrument in this arc can report it.
+  **TONE RE-DERIVED ON THE FULL 62-SITE CENSUS, AND THE DEFAULT DELIBERATELY NOT MOVED.** The
+  probe now reports the 6-band contrast beside `edgeRGB` (reported, never scored — chosen boom
+  identical 62/62 against the pre-edit build's own census at the same pinned yaw), and `?btband=1`
+  ranks on it. Three measurements: (i) the cancellation is real INSIDE the probe and
+  side-asymmetric — over 954 body readings the band/edgeRGB ratio is **1.55 p50 party vs 1.18
+  foe**, so the `min` term is partly ranking BODY SHAPE; (ii) **THE REFUSAL MARGIN IS NOT A BAR** —
+  `|inc| * 0.15` on a score that can go NEGATIVE gives a bar under 0.5 at **10 of 61** sites
+  against a median rung span of 3.94, and at 0.15 the chooser overrules the geometric solver at
+  **64% of sites**, a preference rather than the refusal its own comment claims; under the band
+  score that is 0/61 and 0/61. This defect is INDEPENDENT of the ruler and was invisible to the
+  four-site derivation that set 0.15; (iii) the pick is **ruler-dependent at 26 of 61 sites**, so
+  the "water +18% to +63%, crag −6.5%" verdict used the defective ruler to CHOOSE the boom and to
+  SCORE the result — circular, therefore unproven rather than wrong. Nothing flipped because
+  nobody has looked at those 26 in both arms and a single-rater sort cannot settle a ±10-point
+  question. **SUSPECT from here on: every single-site `edgeRGB` delta in this entry** (s053's
+  5.63→10.37, the safe-rect 9.07→9.25 cost line, the fresnel's 9.27→10.89 and its 24/2/36 split,
+  TONE's per-site contrast verdicts, and the `edgeRGB<5` threshold itself). **STANDING: every
+  axis ranking, every geometric receipt, and the placement lane's tonal finding twice over.**
   **ALSO MEASURED: bet H's own band is not reproducible from bet H's own sampler** — stated
   S50 0.333-0.452 / V95 0.718-0.784, re-measured 0.325-0.474 / 0.729-0.792, so **under its own
   tool vesper fails the band derived from her.** The party GLBs have not changed; no monster
