@@ -22951,3 +22951,77 @@ Cleanup: this lane's worktree removed, scratch `dist`, both `node_modules` symli
 empty). The `ps | grep` false positive fired again exactly as cdp.mjs's comment predicts — the two
 "matches" were the SHELL carrying the pattern in its own command line. The two stale worktrees from
 earlier sessions (`wt-prestair`, `.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+---
+
+## 2026-08-09 — SURFACE-DOMINANCE lane: the axis that won every sort finally ships
+
+Board **docs/qa/battle-surface/index.html**, instrument **tools/battle_surface.mjs**, term `PLACE.surf`
+in `public/js/battle_world.js`, A/B `?bsurf=0` / `--bsurf=0`. Commit 863deb2f.
+
+**THE NEGATIVE RESULT FIRST, BECAUSE IT IS THE FINDING.** The standing hypothesis was that
+one-surface dominance could come nearly free off a buffer `TONE` already produces — it renders the
+arena into a 320x180 offscreen target twice per candidate boom and the without-cast pass IS that
+frame's background. **The cost half was right and the quality half was wrong.** An offscreen render
+costs **2.0-2.8 ms a candidate** and tops out at **sep 0.60 / Spearman 0.63** against the offline
+ruler, at EVERY resolution from 48x27 to 320x180. Supersampling 1280x720 and box-filtering down (the
+same reduction the offline library's `drawImage` performs, so aliasing was the obvious suspect)
+bought 0.60 -> 0.74 on the round sort and nothing on the decide sorts, at 7.6-8.6 ms. A largest-
+connected-region variant on a 4^3 cube scored 0.49-0.66 at 2.1 ms. **THE SIGNAL IS IN THE POST
+CHAIN**: an offscreen target skips GTAO, bloom and the atmospheric grade, and those are what turn a
+far surface and a near one into two colours. The page's own `renderFrame()` reaches **sep
+0.778 / 0.717 / 0.874** on the three sorts and **Spearman 0.85**, for **7.3 ms**. So the metric costs
+a display frame per candidate — 3.5x cheaper than the ray grid it replaces and 0.08-0.09 better.
+**AND TONE MAPPING IS NOT THE DIFFERENCE — CHECKED, NOT ASSUMED**: one explicit sRGB encode is applied
+to every offscreen byte (`--raw=1` measures without it) and `ow-*` ships `NoToneMapping` anyway.
+
+**AND THE RAY GRID'S 0.79 FAILED FOR A REASON ITS OWN DATA SHOWS.** `docs/qa/battle-placement/
+proxy-14x8.json` reads `meshTop` >= 0.87 at all 62 sites and exactly 1.00 at many, **because the
+valley ground is ONE MESH.** "One mesh owns the frame" is true everywhere. The winning axis was never
+about meshes; it is a statement about PIXELS and it was always a colour histogram.
+
+**THE GATE BEFORE BUILDING.** `--mode=nb` enumerates exactly the candidate set the shipped ladder
+collects and scores every one on the display frame: 6.0 candidates a site at p50, incumbent
+topSurface p50 0.217 against a best-reachable 0.153, and **18 of the 22 sites the sort calls BAD have
+a reachable candidate under the good/bad threshold.** Only then was anything built.
+
+**SHIPPED**: a SECOND refusal on the sun stage's own answer. `surfGood 0.22` ends the search after
+ONE render (candidates scored per site: **p50 1**, p95 8), `surfMargin 0.06`, capped at 8 candidates
+and 140 ms. **The sun refusal's two short-circuits come off when it is on** — they fire at 41 of 62
+cells and are arguments about the SUN ranking only, so they would leave a second axis inert at
+exactly those sites. Priced both ways at every cell before the change: stage p50 **34.7 -> 49.6 ms**,
+p95 327.7 -> 332.1, **SAME SITE 62/62** — the walk gets longer, the sun answer does not change.
+
+**RECEIPT — the whole 62-site census, both arms, one build, yaw pinned.** topSurface p50
+0.218 -> 0.183, entropy 3.711 -> 3.984; **sites >= 0.24: 29 -> 15, >= 0.30: 22 -> 10, >= 0.40:
+14 -> 4**; on the 23 sites that moved, **22 improved / 1 regressed** on topSurface, 21/2 on entropy,
+20/3 on frame median luminance. foes in frame 124/124 both arms, 180-degree rule 62/62, refusals 0.
+**The arms are deterministic**: at the 39 unmoved sites the two arms differ by |dTop| p50 0.0002,
+max 0.0011. **And `bsurf=0` reproduces the PREVIOUSLY SHIPPED census**: site.R identical 62/62, pitch
+identical 62/62 against `census-sAfter.json` — the default path did not move.
+
+**ALL 23 MOVED FRAMES LOOKED AT** (docs/qa/battle-surface/moved/sheet{0,1,2}.jpg): 19 clear wins,
+3 washes (s008, s024, s046), 0 regressions. The one objective regression, s012 0.213 -> 0.222, is a
+frame that goes from **the party standing in a pond** to a village lawn — the ruler disagrees with the
+eye by 0.009 and the eye is right. No bad-fraction claim is made from a single-rater sort; two raters
+on these frames differ by 9.7 points.
+
+**COST**: staging solve p50 **45 -> 98 ms** (15 ms of longer walk plus 2.5 display frames on average),
+p95 359 -> 366, max 381 -> 405; trigger-to-cast-staged 2138 -> 2185 ms; decide re-solve 0.4 ms
+unmoved.
+
+**GATES, ALL RUN**: battle_sim GREEN (envelopes + 6 property tests), encounter_sim GREEN,
+arena_playtest GREEN (teardown, no context leak, warm heap drift 1.9 MB), **transition_test PASS
+168 assertions / 0 failed** — the machine cleared the bar this window (memory free 86-87%) so the run
+was taken rather than skipped for an eleventh time — ray_budget GREEN W = 2 / 9761.
+
+**RESIDUALS, NAMED.** (1) 15 sites still read >= 0.24 and 4 >= 0.40; the commonest reason is that the
+ladder has nothing better in reach (s061 has exactly ONE accepted candidate, at 0.484) — the next
+lever is a wider ladder, which costs candidate walk and not renders. (2) **The surface term takes a
+shadier site at 3 of the 23 moved sites** (sun.shadedFrac mean 0.520 -> 0.552); the two axes are not
+always aligned and surface is deliberately allowed to win. (3) **Ring-0 staging falls 29 -> 15** — the
+fight takes its one sideways step more often than it did, so "the fight stays where you are" is now
+the minority case. (4) The term optimises the ROUND establishing pose while the census measures the
+DECIDE frame; they agree directionally but not exactly. (5) The sky dome's cloud drift is still frozen
+at a wall-clock T, inside the 0.0011 arm noise. (6) The 124 per-site census jpgs (23 MB) are NOT
+committed; the 23 that moved are in the sheets and the 39 that did not are identical between arms.
