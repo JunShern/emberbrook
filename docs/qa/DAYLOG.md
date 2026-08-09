@@ -23361,3 +23361,134 @@ decision was bit-identical: the probe landed after the first turn started and re
 `applied:false - a beat already owns the camera`, a pre-existing race between
 model-load network time and the first turn. s033/s039 move in the third decimal
 between runs (the sky-drift residual the tone lane already named); no pick moved.
+
+------------------------------------------------------------
+## 2026-08-09 ~16:40 — DEPLOY round 18: BOTH FORMATION FIXES ARE LIVE (29/0). A JS-only ship, the default game proved untouched in both directions — and the swap gate cleared for the first time in twelve deploys, so `transition_test` has a NUMBER
+
+`git worktree` detached at `origin/migration/3d-hybrid` — **df8304d83666ae634d7b5566c7c6d3b608b4a6a8**
+— `EB_BUILD_CACHE` pointed at the main repo's warm `.build-cache` (the main tree carries other
+lanes' art edits, as always). All four named commits (`61aa2a18`, `7404efb8`, `24bba01f`,
+`df8304d8`) confirmed ancestors of the built sha before the build ran, as was round 17's source
+sha `554930d5`.
+
+**THE DIFF INTO `public/` IS ONE FILE.** `git diff --stat 554930d5 df8304d8 -- public/` names
+exactly `public/js/battle_world.js` (+713/-18). **NO plate, NO bundle, NO `depth.png`** — the
+asset-extension filter over the range returns empty. The other ~430 changed paths are
+`docs/qa/battle-{overlap,foeline,party,rim,decide}/` boards and six `tools/battle_*` instruments,
+none of which the build ships.
+
+`build-static --compress`: **392 files / 520.8 MB / 3.4 s**, the same shape as rounds 13-17. Three
+build gates green: every `.glb` binary glTF, **16 bundle GLBs byte-identical to `public/`**, **256
+referenced paths resolve** (237 via the `.webp` rewrite). Encode cache **253 hit / 0 miss / 0
+stored**, 319.4 MB served — **the sixth zero-encode deploy running, and the empty miss list was
+PREDICTED from the diff**: JS is not an encoded artifact. GLB pass 532 MB -> 270 MB, 16/16 from
+cache. Local `static_verify` **29/0**; `deploy-ghpages.sh dist` published
+**8ad448c1f9d2734428ffa8990760288cdec3fad0** (push verified by the script; pre-flight printed the
+clean `579 MB, 393 files` — measured BEFORE the push, since `dist/.git` inflates it afterwards).
+LIVE stamp `2026-08-09T09:14:07.008Z` -> **`2026-08-09T15:09:51.150Z`**, matching `dist` exactly.
+`static_verify --url https://junshern.github.io/emberbrook`: **ALL GREEN 29/0**, zero failed
+requests, zero unexpected 4xx/5xx, zero console errors.
+
+**THE POLLER WAS PROVED BEFORE IT WAS TRUSTED, AND ROUND 17'S TRAP IS CONFIRMED AT THE SOURCE.**
+Sample 0 was taken against the site BEFORE the Pages build landed and returned the known-current
+`2026-08-09T09:14:07.008Z` — so the poller could demonstrably read the OLD value, which is the only
+thing that makes a later change detectable. The trap itself is now measured rather than inherited:
+the live `BUILD.json` has **`built` set and `builtAt` ABSENT (`None`)**, so round 17's
+`.get('builtAt','')` could only ever have returned empty. Read `built`.
+
+**THE PAGES BUILD RAN LONG — 374 s, 3.5x THE TOP OF THE BAND — AND WAS STILL HEALTHY.**
+`gh api repos/JunShern/emberbrook/pages/builds`: commit `8ad448c1`, status `built`,
+`created_at` 15:15:05Z -> `updated_at` 15:21:19Z, **duration 374.0 s**, against a band whose
+previous twelve samples ran ~55-105 s (round 17 was 88.8 s). It reached `built` on its own; **no
+re-POST was issued and none was needed**. The paired `errored` row at 1.0 s on the same commit is
+the documented auto-trigger racing the script's explicit queue — read the LIST, not the newest row.
+This is the first sample outside the 63-105 s health band in thirteen deploys, on a five-file
+delta; nothing about the deploy's content explains it, so it is banked as a WIDER band, not as a
+diagnosis. The stamp poll saw the bytes at ~362 s, corroborating the API to within a sample.
+
+**THE BYTES, WITH FOUR NEGATIVE CONTROLS.** Live fetched, `sha256`, against `dist` AND against the
+round-17 deploy's own live copy (captured off the wire BEFORE the push — the only moment it still
+exists; its five shas reproduced round 17's table exactly, which is itself the check that the right
+baseline was captured):
+
+| path | live bytes | live vs dist | vs round-17 deploy |
+|---|---:|---|---|
+| `js/battle_world.js` | 201756 | **MATCH** `453c7939…` | **DIFFERS** (r17 `7f701cc0…`, 158526 B) |
+| `js/ambient.js` | 37121 | **MATCH** `7a4c9bf9…` | **SAME** — control |
+| `js/battle_stage3d.js` | 192301 | **MATCH** `cacaa9d7…` | **SAME** — control |
+| `js/battle_turnbased.js` | 118267 | **MATCH** `cdf3a1a0…` | **SAME** — control |
+| `play3d.html` | 349272 | **MATCH** `a6a6af6b…` | **SAME** — control |
+
+**ONE DIFFERS against FOUR SAMEs.**
+
+**AND THE GREP WOULD HAVE LIED AGAIN — THE THIRD ROUND RUNNING.** `foeRake` appears **4x** in the
+live `battle_world.js` and **0x** in the round-17 copy (the grep's own positive control) — but
+**TWO OF THE FOUR ARE COMMENTS** (lines 219 and 1549 are prose naming the knob). Counting would
+have "proved" the ship from documentation. Read instead — both fixes, as executable lines off the
+LIVE file:
+
+  * **the foe line**: `247: foeRake: 1,` · `248: foeDepth: 0,` ·
+    `1553: const RAKE = (BFOE != null ? BFOE : (CFG.foeRake == null ? 0 : CFG.foeRake));` ·
+    `1562: ax = f.foeX + (RAKE ? r * sp * RAKE : Math.abs(r) * f.foeChevron);`
+  * **the party line**: `205: partyStagger: 0,` · `1541: const STAG = …` ·
+    `1546: az: f.partyZ + (i - (party.length - 1) / 2) * f.partyDz * STAG });` ·
+    `377: showParty: true,` · `1848-1855: if (sh.showParty) { … seeP.push(…) }` ·
+    `1967: pose._subj = (…).concat(seeP);` — all five party markers **0x** in r17.
+
+**THE REPLACED CODE IS GONE, NOT MERELY OUTNUMBERED.** The two pre-fix lines were counted in both
+copies: bare `f.partyDz });` is **0x live / 1x r17**, and
+`Math.abs(i - (n - 1) / 2) * f.foeChevron` is **0x live / 1x r17**. That asymmetry is what a
+substitution looks like; a grep for the new symbol alone cannot see it.
+
+**THE OPT-IN GATE, PROVED ON THE LIVE PAGE IN BOTH DIRECTIONS.** Both paths booted against the LIVE
+site, `window.BattleWorld` read out:
+
+  * **DEFAULT** (`/play3d.html?scene=emb-cine&nomusic=1`) ->
+    `{on:false, installed:false, why:"flag off — open with ?arena=world", frozen:true, keys:4,
+    surfOn:"no-fn", CFG:"no-CFG", rimOn:"absent"}` — the frozen no-op object the module's own early
+    return builds, the same 4-key reading rounds 15-17 got. The new code is not merely inactive on
+    the default path, it is **not reachable**: the `CFG` that carries the two fixed numbers does not
+    exist.
+  * **`&arena=world`** -> `{on:true, frozen:false, keys:33, surfOn:true, hasSurfScoreOne:true}` —
+    **the positive control**, so the DEFAULT reading is a measurement and not a silence. **And the
+    three shipped numbers were read out of the RUNNING GAME, not the file**:
+    `CFG.foeRake = 1`, `CFG.foeDepth = 0`, `CFG.partyStagger = 0`.
+
+**THE KEY COUNT MOVED 30 -> 33 AND THE THREE ARE NAMED.** `RIM`, `rimOn` and `rim` are each **0x**
+in the r17 shipped file — the battle-rim spike's members, riding along in the same file. **The rim
+is DEFAULT OFF and that was measured, not assumed**: its gate is `const BRIM_ON = !!(Q &&
+Q.get('brim') === '1')` and the live page under `?arena=world` reports **`rimOn: false`**. So this
+deploy carries a third thing beyond the two named fixes, inside the same one file, inert until
+`?brim=1`. Named here because the deploy brief predicted two changes and the honest count is three.
+(A first static key-diff said only `RIM` was new and **it was wrong** — it parsed the `const api =
+{…}` literal, and `rimOn`/`rim` are assigned outside it. The runtime count is the authority; the
+static extractor under-counted 16 against the runtime's 33 and was discarded rather than reported.)
+
+**`transition_test`: PASS — 168 assertions ok, 0 failed.** RUN THIS TIME, for the first time in
+twelve deploys, because the machine cleared its own bar: **swap 3049.81 of 4096.00 MB = 74.46% on
+four samples over ~45 s**, under the 75% line, with load falling 3.72 -> 3.13 across them. Served
+off the WORKTREE at `df8304d8` on port 3477 (the clean tree, not the dirty main one) — the address
+family was checked at `lsof` before trusting reachability, and it was IPv6 `*:3477` answering
+127.0.0.1 fine. 29 transitions recorded, no console errors. This reproduces the authoring lane's
+168/0 on the same change, now on the deployed source. **Eleven consecutive skips were a machine
+condition, not a broken gate** — which the first run under a cleared gate is the only way to show.
+
+The build's reference-integrity advisory (`js/dialogue.js` `expr-warm.png`, `js/followers.js`
+`mochi/pose-front.png`) is the standing documented pair, unchanged; the live run's zero-404 audit is
+the receipt. `static_verify`'s screenshots were LOOKED AT, local and live, and agree: the battle
+frame is the **default diorama** — golden dusk stage, Vesper and both Duskpads, Attack/Item/Flee and
+the turn-order rail. The world arena did not engage on the default path.
+
+Cleanup: this lane's worktree removed, scratch `dist` and the fetched baseline/live copies deleted,
+the `node_modules` symlink removed (the symlink, never the target — 101 entries verified intact
+after), the dev server on 3477 stopped. Zero orphaned Chrome (`ppid 1` root check clean, no
+`arenaprobe-*` profile dirs). **`pgrep -if arenaprobe` returned a pid and it was a FALSE POSITIVE**
+— the shell running the `pgrep` matching its own command line, exactly the trap `cdp.mjs`'s
+`killOrphans` comment documents; `ps -p` on it showed it already gone. Confirm an orphan by pid,
+never by the grep that named it. The main tree's two stray `static-verify*.png` were already gone
+(another lane). The two stale worktrees from earlier sessions (`wt-prestair`,
+`.claude/worktrees/agent-aeb5ec2ca012e9f70`) were left alone.
+
+**STILL FLAGGED FOR THE USER, unchanged by this deploy** (the authoring lane's standing finding,
+live behind the flag): ring-0 staging falls 29 -> 15, so "the fight stays where you are" is now the
+minority case and wants the user's re-confirmation.
