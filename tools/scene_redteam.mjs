@@ -176,6 +176,10 @@ const AIM_CENSUS = opt('--aim-census', null);
 // on a replay rather than a diff of the tool, and so a lane that distrusts the gate can see
 // the findings it would have removed without editing this file.
 const AIM_OFF = flag('--no-aim');
+// `--rhetoric-census <stamp>[,<stamp>…]` reads FINISHED runs' findings.json and reports how
+// each sceptic refutal was ARGUED — an appeal to convention ("standard framing") or a claim
+// about what is in the frame. No API, no re-judging, no gate: see the census's own header.
+const RHET_CENSUS = opt('--rhetoric-census', null);
 
 // Emberbrook ships as a MASSING BLOCKOUT and is judged as one. Told to the judge, not
 // filtered out afterwards: a judge that spends its findings on "the materials are grey
@@ -950,7 +954,7 @@ function checklistPrompt(items) {
 // to a sceptic that HAS the contract and is told the object's existence is not the
 // question. The naive sceptic is unchanged — its innocence is the point, exactly as the
 // naive critic's is.
-function refutePrompt(claims, mode) {
+export function refutePrompt(claims, mode) {
   const head = mode === 'checklist' ? [
     'You are the sceptic on a game art review. The claims below are about objects that the',
     'DESIGNER\'S OWN MAP says really are in this shot. That they belong here is NOT in',
@@ -1124,6 +1128,67 @@ function aimSummary(all) {
     else if (f.aim.state === 'on-subject') out.onSubject++;
     else if (f.aim.state === 'absence-claim') out.absenceClaim++;
     else out.unmeasurable++;
+  }
+  return out;
+}
+
+// ------------------------------------------------------- THE RHETORIC CENSUS ---
+// AN APPEAL TO INTENT IS NOT A REFUTATION OF A FACT, AND THE NAIVE HEAD ASKS FOR ONE.
+// The naive sceptic is told to "REFUTE if the thing described ... is normal for the style,
+// or does not matter". Measured over every run in docs/qa/redteam (1,134 findings deduped
+// on town+shot+mode+desc, 199 sceptic refutals): 21 of the 22 naive refutals of a
+// FOLIAGE-OCCLUSION claim quote that clause back — "standard cinematic framing", "normal
+// environment composition", "expected environment design" — against 27 of 89 for
+// everything else naive (p = 8e-9). The checklist head already carries the counter-clause
+// ("'It is normal for games' is not a refutation of a quality claim") and refutes that
+// class 1/51. So the difference is IN THE PROMPT, not in the pictures.
+//
+// IT IS REPORTED AND NOT GATED, on purpose, for the same reason `key_rim` is: the eye
+// check says the sceptic was RIGHT on both of the two refutals in that class that cited
+// what it could SEE, and wrong on 15 of the 21 that cited convention — but 4 of the 21 are
+// fair calls in convention's clothes, so the rhetoric predicts the error without deciding
+// it. A word list must never delete a finding. It makes the failure legible in the report,
+// which is what nobody had.
+//
+// `--rhetoric-census <stamp>[,<stamp>…]` scores FINISHED runs with no API and no
+// re-judging: the numbers above are reproducible from the committed run dirs alone.
+const NORM_TERMS = ['standard', 'normal', 'typical', 'common ', 'commonly', 'expected', 'is expected',
+  'are expected', 'intentional', 'deliberate', 'convention', 'by design', 'design choice',
+  'design practice', 'artistic choice', 'artistic technique', 'stylistic', 'art style', 'aesthetic',
+  'stylized', 'stylised', 'for the style', 'naturally', 'decorative', 'not a defect',
+  'rather than a defect', 'not constitute a defect', 'not an art error', 'not a design defect',
+  'not a visual bug'];
+const FOLIAGE_TERMS = ['canopy', 'foliage', 'tree', 'trees', 'leaf', 'leaves', 'shrub', 'bush', 'bushes',
+  'vegetation', 'hedge', 'branch', 'branches', 'plants', 'brush', 'greenery', 'undergrowth', 'grass',
+  'fern', 'forest', 'crown'];
+const OCCL_TERMS = ['block', 'hide', 'hides', 'hidden', 'hiding', 'obscur', 'occlud', 'conceal',
+  'wall of', 'screen', 'cover', 'in front of', 'behind', 'interrupt', 'obstruct', 'not visible',
+  'cannot see', 'invisible'];
+// MEASURED PRECISION, said up front: on a 12-sample hand check of the flagged refutals, 11
+// were plain appeals to convention and one was a false positive (a sentence that used
+// "framing" descriptively while giving real evidence). Bare 'framing' and 'composition' are
+// therefore NOT triggers — only the norm words above are.
+const rhetoricOf = (why) => NORM_TERMS.some((t) => String(why || '').toLowerCase().includes(t))
+  ? 'intent' : 'evidence';
+function subjectClass(f) {
+  const h = hay(f);
+  const fo = FOLIAGE_TERMS.some((t) => h.includes(t)), oc = OCCL_TERMS.some((t) => h.includes(t));
+  return fo && oc ? 'foliage-occlusion' : fo ? 'foliage-other'
+       : oc ? 'occlusion-nonfoliage' : 'rest';
+}
+function rhetoricCensus(all) {
+  const out = {n: 0, intent: 0, byClass: {}, byMode: {}, byCategory: {}, examples: []};
+  for (const f of all) {
+    const v = f.verify || {};
+    if (v.verdict !== 'refuted' || !String(v.by || '').startsWith('adversarial-judge')) continue;
+    const kind = rhetoricOf(v.why), k = subjectClass(f);
+    out.n++; if (kind === 'intent') out.intent++;
+    for (const [bag, key] of [[out.byClass, k], [out.byMode, f.mode], [out.byCategory, f.category]]) {
+      const B = bag[key] ||= {n: 0, intent: 0};
+      B.n++; if (kind === 'intent') B.intent++;
+    }
+    if (kind === 'intent' && (k === 'foliage-occlusion' || f.category === 'occlusion'))
+      out.examples.push({fid: f.fid, shot: f.shot, mode: f.mode, cls: k, desc: f.desc, why: v.why});
   }
   return out;
 }
@@ -1769,6 +1834,49 @@ async function main() {
                   `  absence-claim ${t.absence}  unmeasurable ${t.unmeasurable}`);
     return;
   }
+  if (RHET_CENSUS) {
+    // no API, no re-judging: every number here comes out of committed run dirs.
+    const stamps = RHET_CENSUS === 'all'
+      ? fs.readdirSync(RTDIR).filter((d) => d.startsWith('run-')).map((d) => d.slice(4)).sort()
+      : RHET_CENSUS.split(',').map((s) => s.trim()).filter(Boolean);
+    const seen = new Set(), rows = [];
+    for (const st of stamps) {
+      let F; try { F = JSON.parse(fs.readFileSync(path.join(RTDIR, 'run-' + st, 'findings.json'), 'utf8')); }
+      catch { continue; }
+      if (!Array.isArray(F.survivors)) continue;
+      for (const f of [...F.survivors, ...F.refuted]) {
+        // several runs --replay others, which reuses the STORED sceptic reply. Those are
+        // literal duplicates and must not be counted twice.
+        const k = `${F.town}|${f.shot}|${f.mode}|${(f.desc || '').trim()}`;
+        if (seen.has(k)) continue;
+        seen.add(k); rows.push({...f, town: F.town});
+      }
+    }
+    const c = rhetoricCensus(rows);
+    const judged = rows.filter((f) => (f.verify || {}).verdict === 'upheld' ||
+      String((f.verify || {}).by || '').startsWith('adversarial-judge'));
+    console.log(`rhetoric-census — ${stamps.length} run dirs, ${rows.length} findings deduped on ` +
+                `town+shot+mode+desc, ${judged.length} reached the sceptic, ${c.n} refuted by it`);
+    console.log(`\n  ${'subject class'.padEnd(22)} ${'refuted'.padStart(8)} ${'appeal-to-intent'.padStart(17)}` +
+                `   ${'sceptic refutal rate'.padStart(20)}`);
+    for (const k of ['foliage-occlusion', 'foliage-other', 'occlusion-nonfoliage', 'rest']) {
+      const B = c.byClass[k] || {n: 0, intent: 0};
+      const pool = judged.filter((f) => subjectClass(f) === k);
+      const ref = pool.filter((f) => (f.verify || {}).verdict !== 'upheld').length;
+      console.log(`  ${k.padEnd(22)} ${String(B.n).padStart(8)} ` +
+        `${(B.n ? (B.intent + '/' + B.n + ' = ' + (100 * B.intent / B.n).toFixed(0) + '%') : '—').padStart(17)}` +
+        `   ${(ref + '/' + pool.length + ' = ' + (pool.length ? (100 * ref / pool.length).toFixed(1) : '0') + '%').padStart(20)}`);
+    }
+    for (const [name, bag] of [['mode', c.byMode], ['category', c.byCategory]]) {
+      console.log(`\n  appeal-to-intent by ${name}:`);
+      for (const [k, B] of Object.entries(bag).sort((a, b) => b[1].n - a[1].n))
+        console.log(`    ${String(k).padEnd(14)} ${B.intent}/${B.n} = ${(100 * B.intent / B.n).toFixed(0)}%`);
+    }
+    console.log(`\n  ${c.examples.length} refutals of an occlusion claim were argued from convention. ` +
+                'Verbatim, newest runs last:');
+    for (const e of c.examples) console.log(`    [${e.shot}/${e.mode}] ${e.desc.slice(0, 92)}\n       -> ${e.why}`);
+    return;
+  }
   if (WATER_CENSUS) {
     const T = waterTris();
     console.log(`water-census ${TOWN}/${SCENE} — ${T ? T.count : 0} water triangles in ` +
@@ -1881,7 +1989,7 @@ async function main() {
                                 checklist: r.items.map((i) => ({id: i.id, src: i.src, what: i.what,
                                   census: i.census, judged: i.judged || null, suppressed: i.suppressed || null}))})),
     raw: all.length, survivors, refuted, budget: BUDGET,
-    bboxAgreement: null, aimCensus: aimSummary(all),
+    bboxAgreement: null, aimCensus: aimSummary(all), rhetoric: rhetoricCensus(all),
     calibration: CALIBRATE ? scoreCalibration(survivors, refuted) : null,
   };
 
