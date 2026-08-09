@@ -287,13 +287,24 @@ git runs here, on branch `migration/3d-hybrid`.
   dispose-and-watch (`tools/gpu_baseline_probe.mjs`): of 2348 geometries, exactly TWO belong to a
   non-drawable object — a RingGeometry and an OctahedronGeometry under `ch`, no maps, giving the
   `{geo:±2, tex:0}` fingerprint of every red. **SO 168/0 IS NOT A REPRODUCIBLE BASELINE — IT WAS
-  ONE LUCKY DRAW.** The gate reads **157-168 ok**; eleven assertions are exposed. A failure whose
-  payload is exactly `{geo:±2, tex:0, meshes:0, mats:0}` on a `del-cine|<shot>` state (or the
-  roll-up after one) is this and is NOT a regression; ANYTHING ELSE IS REAL. The fix is two halves
-  and needs both: drop the occRing/occDia dispose (keep contactShadow's — its visibility IS a
-  function of the scene branch) AND warm them once at boot so their two geometries sit inside
-  every baseline, which is the deal `DEPTHQ` already has. Tolerating ±2 in `gpuCheck` was rejected:
-  it would blind the gate to a real two-geometry leak.
+  ONE LUCKY DRAW** — it read 157-168 for a day. **FIXED AND RE-BASELINED 2026-08-09 (`1690e9cc`):
+  the gate is 168 ok / 0 failed, DETERMINISTIC, and a `{geo:±2, tex:0}` red on a del-cine shot is
+  now A REAL REGRESSION, not an accepted outcome.** The fix is two halves and needed both: drop
+  the occRing/occDia dispose (contactShadow's STAYS — its visibility genuinely IS a function of
+  the scene branch) AND warm the pair for exactly one render at boot with `frustumCulled` lifted,
+  so registration cannot depend on where the body is standing and their two geometries sit inside
+  every baseline — the deal `DEPTHQ` already has. Tolerating ±2 in `gpuCheck` was REJECTED: it
+  would blind the gate to a real two-geometry leak.
+  **PROVED WITH A CONTROL, NOT A GREEN RUN**: same machine, two symlink farms over the same
+  `public/` differing only in play3d.html — HEAD **162/6**, fixed **168/0 on four of five runs**,
+  and the probe's per-state counts went from drifting (shelf-west 624/624/622/624/622) to flat
+  (624 ×5). The `+2` also shows as a plain level shift on states baselined before the marker ever
+  fired (ow-valley 80→82, quay-west 798→800).
+  **THE FIFTH RUN (155/13) IS UNEXPLAINED AND WAS NOT EXPLAINED AWAY** — a different payload
+  entirely (global texture collapse to 8-9 from door 13, `meshes`/`mats` unmoved), i.e. a
+  swiftshader context loss with the baselines themselves taken in the collapsed state. Its one
+  testable hypothesis died on measurement (door 4's load was 46-48 s in ALL five runs). If you see
+  it, it is that — not this.
   `DEPTHQ` is the same shape and DELIBERATELY LEFT: it uploads in the
   first plate scene, so it is inside every baseline — it would only bite a run that booted in a
   real-time scene. "Built once, never disposed" is safe ONLY for an object every baseline has
