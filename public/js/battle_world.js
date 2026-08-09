@@ -88,6 +88,9 @@
   const BCAM_OFF = !!(Q && Q.get('bcam') === '0');
   // `?btone=0` turns the tonal boom chooser off and leaves the geometric one.
   const BTONE_OFF = !!(Q && Q.get('btone') === '0');
+  // `?btband=1` ranks the booms on the SIX-BAND contrast instead of `edgeRGB`.
+  // DEFAULT OFF, and off is the shipped decision unchanged — see TONE.ruler.
+  const BTBAND_ON = !!(Q && Q.get('btband') === '1');
   // `?bplace=0` turns the placement-quality term off and leaves the ladder's
   // own first-acceptance rule. One build, one flag — the same A/B discipline
   // `?bcam=0` and `?btone=0` were built with.
@@ -314,9 +317,35 @@
     // at a bar the evidence actually sits above.
     margin: 0.15,
     waitMs: 12000,            // give up waiting for models and keep the solver's pitch
+    // WHICH RULER RANKS THE RUNGS. 'edge' is what shipped and is still the
+    // default; 'band' (`?btband=1`) is the same score computed on the six-band
+    // contrast, which cannot cancel vertically. IT IS AN A/B, NOT A FIX, AND
+    // THE REASON IT IS NOT THE DEFAULT IS WRITTEN DOWN (2026-08-09 ruler audit,
+    // data docs/qa/battle-decide/tone-band.json):
+    //   * The defect is real INSIDE THIS PROBE, not just in the offline meter:
+    //     over 954 body readings the band/edgeRGB ratio is 1.55 at p50 for
+    //     PARTY bodies and 1.18 for FOES, so `min` — the term that exists to
+    //     stop one invisible body — is partly ranking BODY SHAPE, and it is the
+    //     party's shape it penalises.
+    //   * THE MARGIN IS DEGENERATE UNDER 'edge' AND WELL-BEHAVED UNDER 'band'.
+    //     A fractional bar `|inc| * margin` on a score that can reach zero or go
+    //     negative is not a bar: the incumbent is NEGATIVE at 5 of 61 census
+    //     sites and the bar falls under 0.5 at 10 of 61 against a median
+    //     rung-to-rung span of 3.94, i.e. the refusal is inert at one site in
+    //     six. Under 'band' that is 0 of 61 and 0 of 61.
+    //   * AND THE PICK IS RULER-DEPENDENT AT 26 OF 61 SITES (argmax before any
+    //     margin agrees at only 29/61), so this is a change to the picture at
+    //     two sites in five. NOBODY HAS LOOKED AT THOSE 26 IN BOTH ARMS, and a
+    //     single-rater sort of them would not settle it — two raters on this
+    //     arc's own frames differ by 9.7 points. The eye evidence that exists is
+    //     BODY-LEVEL on the `decide` frame (49 bodies, one rater): six-band
+    //     ranks "does this body read" at AUC 0.820 against edgeRGB's 0.591. That
+    //     justifies the flag. It does not justify flipping the default.
+    ruler: 'edge',
   };
 
   function toneOn() { return !!(TONE.on && !BTONE_OFF); }
+  function toneRuler() { return BTBAND_ON ? 'band' : TONE.ruler; }
 
   // ============ THE BODY SIDE (spike, 2026-08-09, `?brim=1`) ================
   // THE LAST UNTOUCHED LEVER, AND THE ONE THAT COSTS SOMETHING TO PULL. The
@@ -2574,6 +2603,25 @@
       const eRGB = [0, 0, 0], rRGB = [0, 0, 0];
       let nE = 0, nR = 0, sL = 0, sL2 = 0;
       const K = 1, RING = 4;                 // one twenty-fifth of the meter's pixels
+      // ---- `band` IS REPORTED AND NEVER SCORED (2026-08-09, ruler audit) -----
+      // `edgeRGB` above is the magnitude of ONE SIGNED difference of means over
+      // the whole silhouette, so a body brighter than its surround at the top
+      // and darker at the bottom cancels itself toward zero — arithmetic, not a
+      // hypothesis, and tools/battle_meter.mjs already cuts the same contrast
+      // into six HORIZONTAL bands for exactly that reason. This reproduces that
+      // decomposition on the probe's own two buffers so the boom ranking can be
+      // re-derived offline against a ruler that cannot cancel vertically. THE
+      // SCORE ABOVE IS UNTOUCHED: adding this field cannot move a pick, which
+      // the paired tone censuses prove rather than assert. (These rows run
+      // BOTTOM-UP out of readRenderTargetPixels while the meter's run top-down;
+      // the mean of six magnitudes is order-invariant, so the two numbers are
+      // comparable band-set to band-set even though band 0 is a different end.)
+      let my0 = 1e9, my1 = -1;
+      for (let p = 0; p < m.length; p++) if (m[p]) { const py = (p / w) | 0; if (py < my0) my0 = py; if (py > my1) my1 = py; }
+      const NB = 6, bSpan = Math.max(1, my1 - my0 + 1);
+      const bE = [], bR = [];
+      for (let k = 0; k < NB; k++) { bE.push([0, 0, 0, 0]); bR.push([0, 0, 0, 0]); }
+      const bandOf = (y) => Math.min(NB - 1, Math.max(0, ((y - my0) * NB / bSpan) | 0));
       for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
         const p = y * w + x, i = ((y + ay0) * rw + (x + ax0)) * 4;
         if (m[p]) {
@@ -2582,7 +2630,8 @@
           // scores, so it is what is scored here.
           let edge = 0;
           for (let dy = -K; dy <= K && !edge; dy++) for (let dx = -K; dx <= K; dx++) if (!at(x + dx, y + dy)) { edge = 1; break; }
-          if (edge) { eRGB[0] += S[full[i]]; eRGB[1] += S[full[i + 1]]; eRGB[2] += S[full[i + 2]]; nE++; }
+          if (edge) { eRGB[0] += S[full[i]]; eRGB[1] += S[full[i + 1]]; eRGB[2] += S[full[i + 2]]; nE++;
+                      const q = bE[bandOf(y)]; q[0] += S[full[i]]; q[1] += S[full[i + 1]]; q[2] += S[full[i + 2]]; q[3]++; }
         } else {
           let near = 0;
           for (let dy = -RING; dy <= RING && !near; dy++) for (let dx = -RING; dx <= RING; dx++) if (at(x + dx, y + dy)) { near = 1; break; }
@@ -2592,6 +2641,7 @@
             rRGB[0] += S[bg[i]]; rRGB[1] += S[bg[i + 1]]; rRGB[2] += S[bg[i + 2]]; nR++;
             const L = 0.2126 * S[bg[i]] + 0.7152 * S[bg[i + 1]] + 0.0722 * S[bg[i + 2]];
             sL += L; sL2 += L * L;
+            const q = bR[bandOf(y)]; q[0] += S[bg[i]]; q[1] += S[bg[i + 1]]; q[2] += S[bg[i + 2]]; q[3]++;
           }
         }
       }
@@ -2605,9 +2655,18 @@
       // the boom ranking above touches it, so adding the field cannot move a
       // pick — which the tone census re-run proves rather than asserts.
       const eL = 0.2126 * (eRGB[0] / nE) + 0.7152 * (eRGB[1] / nE) + 0.0722 * (eRGB[2] / nE);
+      const bands = [];
+      for (let k = 0; k < NB; k++) {
+        const q = bE[k], v = bR[k];
+        if (!q[3] || !v[3]) continue;
+        const a = q[0] / q[3] - v[0] / v[3], b2 = q[1] / q[3] - v[1] / v[3], c = q[2] / q[3] - v[2] / v[3];
+        bands.push(+Math.sqrt((a * a + b2 * b2 + c * c) / 3).toFixed(2));
+      }
+      const bandMean = bands.length ? bands.reduce((s2, v) => s2 + v, 0) / bands.length : null;
       return { edgeRGB: Math.sqrt((dr * dr + dg * dg + db * db) / 3),
                clutter: Math.sqrt(Math.max(0, sL2 / nR - mL * mL)),
-               ringL: mL, edgeL: eL, px: n };
+               ringL: mL, edgeL: eL, px: n,
+               band: bandMean, bandMin: bands.length ? Math.min.apply(null, bands) : null, bands: bands };
     }
     function toneProbe() {
       const t0 = now();
@@ -2682,18 +2741,29 @@
             const r = toneBody(b, cam2, full, bg, rw, rh);
             if (r) per.push({ id: id, side: b.side, edgeRGB: +r.edgeRGB.toFixed(2),
                               clutter: +r.clutter.toFixed(2),
-                              ringL: +r.ringL.toFixed(1), edgeL: +r.edgeL.toFixed(1) });
+                              ringL: +r.ringL.toFixed(1), edgeL: +r.edgeL.toFixed(1),
+                              band: r.band == null ? null : +r.band.toFixed(2),
+                              bandMin: r.bandMin, bands: r.bands });
           }
           if (!per.length) continue;
           const mean = per.reduce((s, r) => s + r.edgeRGB, 0) / per.length;
           const min = Math.min(...per.map(r => r.edgeRGB));
           const clut = per.reduce((s, r) => s + r.clutter, 0) / per.length;
+          // reported, never scored — see the band comment in toneBody
+          const bHave = per.filter(r => r.band != null);
+          const bMean = bHave.length ? bHave.reduce((s, r) => s + r.band, 0) / bHave.length : null;
+          const bMin = bHave.length ? Math.min(...bHave.map(r => r.band)) : null;
           // HALF THE MEAN AND HALF THE MINIMUM. Pricing only the mean buys a good
           // average and one invisible body — scoreView's own comment, and the
           // measurement behind it: at crag one party body reads 2.7 against a
           // four-body mean of 21.4.
           rows.push({ pitch: p, score: +(0.5 * mean + 0.5 * min - TONE.wClutter * clut).toFixed(3),
-                      mean: +mean.toFixed(2), min: +min.toFixed(2), clutter: +clut.toFixed(2), bodies: per });
+                      mean: +mean.toFixed(2), min: +min.toFixed(2), clutter: +clut.toFixed(2),
+                      bMean: bMean == null ? null : +bMean.toFixed(2),
+                      bMin: bMin == null ? null : +bMin.toFixed(2),
+                      bScore: bMean == null ? null
+                        : +(0.5 * bMean + 0.5 * bMin - TONE.wClutter * clut).toFixed(3),
+                      bodies: per });
         }
       } finally {
         basePitch = savedPitch;
@@ -2706,15 +2776,19 @@
         rt.dispose();
       }
       if (!rows.length) return { ok: false, why: 'no candidate produced a silhouette' };
+      // WHICH COLUMN IS THE RANK. 'edge' is the shipped default and reads the
+      // same `score` it always did; 'band' reads `bScore` and falls back to
+      // `score` on any rung too small to band, so the ladder is never mixed.
+      const RK = (toneRuler() === 'band' && rows.every(r => r.bScore != null)) ? 'bScore' : 'score';
       let win = rows[0];
-      for (const r of rows) if (r.score > win.score) win = r;
+      for (const r of rows) if (r[RK] > win[RK]) win = r;
       // THE INCUMBENT IS THE RUNG THE GEOMETRIC SOLVER ALREADY CHOSE, scored on
       // the same evidence as its challengers — never assumed to be the worst.
       let inc = null;
       for (const r of rows) if (Math.abs(r.pitch - savedPitch) < 1e-6) inc = r;
-      const decisive = !inc || win.score > inc.score + Math.abs(inc.score) * TONE.margin;
+      const decisive = !inc || win[RK] > inc[RK] + Math.abs(inc[RK]) * TONE.margin;
       const chose = decisive ? win.pitch : savedPitch;
-      return { ok: true, chose: chose, best: win.pitch, was: savedPitch,
+      return { ok: true, chose: chose, best: win.pitch, was: savedPitch, ruler: RK,
                moved: chose !== savedPitch, decisive: decisive,
                incScore: inc ? inc.score : null, winScore: win.score, margin: TONE.margin,
                rows: rows, ms: +(now() - t0).toFixed(1), res: [rw, rh] };
