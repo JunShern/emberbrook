@@ -174,14 +174,31 @@ function verdictLines(kind, run) {
 
   // Wait for the game to be genuinely ready, not merely loaded: the scene GLB, the
   // rules data, the battle kernel and the director all arrive async.
+  //
+  // THE SCENE IS A TERM IN THIS GATE, AND IT WAS MISSING FOR A WEEK (2026-08-09).
+  // Every module here self-arms off its own <script>, so all of them are up ~250 ms
+  // after boot — while ow-valley's 58 MB scene.glb is still in flight. Until it
+  // lands there is no collide geometry and the player is still at the DEFAULT
+  // P (0,2,0), not the bundle's spawn, so `organic` — the only suite that consults
+  // the world (nogl/serial/music name their zone and call Battle.demo) — ran
+  // findHostile() against an empty scene and failed 'no hostile zone reachable'.
+  // The race was always here; what hid it was that zone(0,0) used to be hostile
+  // (crag, later meadow), so findHostile's own-cell branch matched anyway. Commit
+  // 2b0322e9 (2026-08-06, 'bent road') moved the carriage road over the tile origin,
+  // zone(0,0) became 'road' = SAFE by design, and the race stopped being survivable.
+  // SIM.gpu().collide is the honest term: it is the list findHostile's own floor
+  // probe casts against, so waiting on it waits for exactly what the suite needs.
   log('waiting for the world...');
   const ready = await evalPage(cdp, `(async () => {
+    const collide = () => { try { return window.SIM.gpu ? window.SIM.gpu().collide : -1; } catch (e) { return -1; } };
     for (let i = 0; i < 240; i++) {
       const ok = window.SIM && window.SIM.zone && window.GS && window.GS.ok &&
                  window.Battle && window.Rules && window.Encounters &&
-                 window.Encounters._debug().attached;
+                 window.Encounters._debug().attached &&
+                 collide() !== 0;
       if (ok) return { ready: true, i,
         scene: location.search, zone: window.SIM.zone(), pos: window.SIM.pos(),
+        collide: collide(), gpu: window.SIM.gpu ? window.SIM.gpu() : null,
         director: window.Encounters._debug(),
         music: !!window.Music, three: !!window.THREE && THREE.REVISION };
       await new Promise(r => setTimeout(r, 250));
@@ -189,10 +206,11 @@ function verdictLines(kind, run) {
     return { ready: false,
       have: { SIM: !!window.SIM, GS: !!(window.GS && window.GS.ok), Battle: !!window.Battle,
               Rules: !!window.Rules, Encounters: !!window.Encounters,
-              attached: !!(window.Encounters && window.Encounters._debug().attached) } };
+              attached: !!(window.Encounters && window.Encounters._debug().attached),
+              collide: collide() } };
   })()`, 90000);
   if (!ready.ready) { console.error('world never became ready:', JSON.stringify(ready)); kill(); process.exit(2); }
-  log(`world ready (zone=${ready.zone}, three=r${ready.three}, music=${ready.music})`);
+  log(`world ready (zone=${ready.zone}, collide=${ready.collide}, three=r${ready.three}, music=${ready.music})`);
 
   // Inject the driver.
   await evalPage(cdp, readFileSync(join(HERE, 'arena_walk.js'), 'utf8') + '\n;true');

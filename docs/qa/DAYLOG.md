@@ -23492,3 +23492,46 @@ never by the grep that named it. The main tree's two stray `static-verify*.png` 
 **STILL FLAGGED FOR THE USER, unchanged by this deploy** (the authoring lane's standing finding,
 live behind the flag): ring-0 staging falls 29 -> 15, so "the fight stays where you are" is now the
 minority case and wants the user's re-confirmation.
+
+------------------------------------------------------------
+2026-08-09 INVESTIGATION LANE — `arena_playtest organic` ("no hostile zone reachable"):
+**HARNESS BUG. FIXED. It is no longer a known-red — a red here now means a real regression.**
+
+Four lanes this week attributed the failure away as pre-existing and none diagnosed it. What the
+assertion actually claims: `arena_walk.js findHostile()` looks for a cell whose `SIM.zone()` is one
+of meadow/forest/crag/water (`road` is SAFE by design, encounters.json `chancePerStep: 0`) AND which
+has a floor under it (`SIM.walkFloors(x,z).length || SIM.ground(x,z,playerY) != null`) — the player's
+own cell first, then 320 ring samples out to 120 u. Null from that is the message.
+
+MEASURED on the live page (`arena_playtest --eval`, probes in the run's scratchpad):
+- at the instant the harness declared "world ready": `pos (0,2,0)` — the DEFAULT `P`, not the
+  bundle spawn — `SIM.gpu().collide === 0`, `zone 'road'`, `findHostile() === null`.
+- **250 ms later**, `collide 31`, pos at meta.json's spawn `(-57.85, 26.44, 60.58)`:
+  `findHostile()` returns a depth-22 meadow cell and the FULL organic suite passes 14/14 with
+  `pedometer: "walked"` (the real walk, not the distance fallback).
+So the world is fine — ow-valley's zones.json is 98.4% hostile by area (meadow 56.8 / crag 21.94 /
+forest 13.31 / water 6.34; road 1.61). The readiness gate in `arena_playtest.mjs` waited for the
+MODULES (which self-arm ~250 ms after boot) and never for the 58 MB `scene.glb`, in flat
+contradiction of its own comment. `organic` is the only suite that consults the world; `nogl`,
+`serial` and `music` name their zone and call `Battle.demo()`, which is exactly why they passed
+every run.
+
+WHEN IT STARTED: the race was there from birth (ab5cd5b0, 2026-07-30, "four suites, all green") but
+was UNREACHABLE because `zoneAt(0,0)` — the default player cell — was hostile: `crag` at birth,
+`meadow` from 3730dd90. **2b0322e9 (2026-08-06, "F5: ow-valley bundle ... bent road") moved the
+carriage road over the tile origin and `zoneAt(0,0)` became `road`**, so `findHostile`'s own-cell
+branch stopped matching and the race stopped being survivable. Measured by replaying zones.json's
+RLE at (0,0) across every ow-valley bundle commit. A green suite was being held up by a coincidence
+of map geography, and a legitimate art commit knocked the prop away.
+
+FIX (tools/ only — no shipped code or game data touched, so battle_sim / encounter_sim /
+transition_test / ray_budget do not apply): `arena_playtest.mjs`'s readiness gate now also requires
+`SIM.gpu().collide !== 0` (degrades to the old behaviour, not a hang, on a page with no `SIM.gpu`)
+and prints `collide=` with the ready line; `arena_walk.js` failure now carries pos/zone/collide/walk
+and names "SCENE NOT LOADED" when that is what it is. Receipts: full suite GREEN (organic + nogl +
+serial), and organic PASS 3/3 across three separate launches.
+
+LESSON, and it is the second of this shape this week: **a suite whose green depends on an
+undocumented coincidence in someone else's data is a suite that will go red for a reason its own
+message cannot express.** The message said "no hostile zone reachable" — true, and about the wrong
+world.

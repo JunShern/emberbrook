@@ -260,7 +260,22 @@ window.ARENAWALK = (function () {
     run.warm = (opts.warm === false) ? { skipped: true } : await warm();
 
     const spot = findHostile();
-    if (!spot) { run.error = 'no hostile zone reachable'; rep.runs.push(run); return run; }
+    // AN INSTRUMENT THAT FINDS NOTHING MUST PROVE IT COULD HAVE FOUND SOMETHING.
+    // The bare message cost four lanes a re-diagnosis each: the usual cause is not
+    // a world without hostile ground (ow-valley is 98.4% hostile by area) but a
+    // world that has not LOADED yet — no collide meshes, so every candidate fails
+    // findHostile's floor probe, and the player is still at the default (0,2,0)
+    // rather than the bundle spawn. Say which, in the failure itself.
+    if (!spot) {
+      const g = (S.gpu ? S.gpu() : null);
+      run.error = 'no hostile zone reachable' +
+        ' (pos ' + JSON.stringify(S.pos()) + ', zone ' + S.zone() +
+        ', collide ' + (g ? g.collide : '?') + ', walk ' + (g ? g.walk : '?') +
+        ', zones ' + (S.zoneInfo() ? 'loaded' : 'MISSING') + ')' +
+        (g && g.collide === 0 ? ' — SCENE NOT LOADED: wait for SIM.gpu().collide > 0 before calling organic()' : '');
+      run.diag = { pos: S.pos(), zone: S.zone(), gpu: g, zonesLoaded: !!S.zoneInfo() };
+      rep.runs.push(run); return run;
+    }
     if (spot.moved) S.tp(spot.x, spot.z);
     step('placed', { zone: S.zone(), pos: S.pos(), depth: spot.depth,
                      walkedTo: spot.moved, glCanvasesBefore: glCanvases() });
