@@ -72,8 +72,12 @@ SAVE = "save" in argv
 # 19 deg, which is what a directional key needs to print anything at all.
 SAG_LIP = 0.110
 SAG_MID = 0.073          # 0.66 x, so the fold is deepest where the canvas is free
-CREAM = (0.320, 0.295, 0.248)
-CREAM_ALT = (0.150, 0.128, 0.104)   # the partner when the cloth IS the cream
+# ROUND 9 PULLED THE CANVAS VALUE (tools/qm_canvas_value.py, and `qm_build.CANVAS_B`
+# carries the same pair).  These two must move with it or `restripe` would paint the
+# one monochrome canvas back to round 8's cream on a master whose other four wear
+# round 9's — two tools owning one number, which is the trap this repo has a rule for.
+CREAM = (0.144, 0.133, 0.112)
+CREAM_ALT = (0.068, 0.063, 0.053)   # the partner when the cloth IS the cream
 
 
 def digest(names):

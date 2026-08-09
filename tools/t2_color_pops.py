@@ -206,8 +206,71 @@ HANDED_OFF = {"G3_awning_tollyard": "tools/t2_gate_awnings.py",
               "GB5_road_marketrow": "tools/t2_gate_awnings.py"}
 DROP_ROWS = DROP_ROWS | set(HANDED_OFF)
 
+# A POP WHOSE HOST DOES NOT EXIST IS A FLOATING PLANK (round 9, 2026-08-09).
+# `N5_nl_barge_deck` shipped as `t2c_N5_nl_barge_deck`: FOUR VERTICES — one quad,
+# 4.5 x 1.3 m, `mat_shelf_paint_bone` — at z -3.25..-3.00 over
+# `water_pool-downstream`, whose surface is z -3.80.  That is a bone-white
+# rectangle hanging 0.55 m in mid-air over open water with NOTHING under it: the
+# tarp branch's own "posts if it floats" never fired (`ground_below` finds no
+# ground over the pool), so it built the cloth and no legs, and the nearest
+# structure is `nl_pier`, 1.3 m away in y.  Three independent naive judge passes
+# across four runs filed it — "a wooden plank floats on the water without any
+# supporting structure", crossing u 0.393..0.440 v 0.480..0.545 — and
+# `dh_objmap` puts 38.4% of that box on this object at 52.1 m, reading L p50 95.2
+# against the water's 35.4.  THE SIBLING ROW ALREADY KNEW: `N4_nl_barge_hull` is
+# in `not_built` for "no clear mounting face on the moored barge", i.e. the barge
+# this deck belongs to was never there.  Dropping the deck for the same reason
+# is the smallest lever; the alternative is authoring a barge nobody asked for.
+DROP_ROWS = DROP_ROWS | {"N5_nl_barge_deck"}
+
 # B2_yard_paintpots is in the candidate file and is NOT built: re-probed against
 # the rebuilt master it projects under 0.05% in every one of the 17 cameras.
+
+# ---------------------------------------------------------------- drop-only --
+# `-- drop <row,row> [save]` is a CARRIER MODE: it deletes NAMED DROP_ROWS objects
+# from the live master and does nothing else.  It exists because re-running this
+# whole generator against a master other tools have since edited is round 5's time
+# bomb (`t2_cliff_south.derive_material` reverting `t3_rock_projection`'s measured
+# mapping fix under a comment reading "Idempotent"), and because a carrier living
+# in a DIFFERENT file from the table it enforces is a second owner of one number.
+#
+# IT TAKES NAMES, NOT THE WHOLE SET, AND THE FIRST DRY RUN IS WHY: swept over all
+# of DROP_ROWS it reported `G3_awning_tollyard` present and would have deleted it.
+# That row is in HANDED_OFF — "this pass does not build it, tools/t2_gate_awnings.py
+# does" — and t2_gate_awnings builds it UNDER THE SAME NAME (`PREFIX + s["id"]`).
+# "Not built here" and "not in the master" are different claims, and a carrier that
+# conflates them deletes another tool's searched, shipped work.
+if "drop" in argv:
+    import bpy as _bpy
+    _i = argv.index("drop")
+    _want = [r for r in (argv[_i + 1].split(",") if _i + 1 < len(argv) else []) if r]
+    assert _want, "drop needs an explicit row list, e.g. `-- drop N5_nl_barge_deck save`"
+    n = 0
+    for _rid in _want:
+        assert _rid in DROP_ROWS, "%s is not in DROP_ROWS — add it, with its reason" % _rid
+        assert _rid not in HANDED_OFF, (
+            "%s is HANDED_OFF to %s, which builds it under this very name — dropping it "
+            "would delete that tool's work" % (_rid, HANDED_OFF.get(_rid)))
+        _ob = _bpy.data.objects.get(PREFIX + _rid)
+        if _ob is None:
+            print("  %-24s already absent" % _rid)
+            continue
+        _me = _ob.data
+        print("  %-24s DROPPED — %d verts, bbox z %.2f..%.2f"
+              % (_rid, len(_me.vertices),
+                 min((_ob.matrix_world @ v.co).z for v in _me.vertices),
+                 max((_ob.matrix_world @ v.co).z for v in _me.vertices)))
+        _bpy.data.objects.remove(_ob, do_unlink=True)
+        if _me.users == 0:
+            _bpy.data.meshes.remove(_me)
+        n += 1
+    print("DROP %d object(s) removed of %d asked" % (n, len(_want)))
+    if SAVE:
+        _bpy.ops.wm.save_mainfile()
+        print("SAVED %s" % _bpy.data.filepath)
+    else:
+        print("DRY RUN — pass `save` to write")
+    sys.exit(0)
 
 # ------------------------------------------------------------ P1 free wins ---
 GREY = (0.60, 0.58, 0.54)          # the neutral the awnings are half made of

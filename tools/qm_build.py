@@ -165,7 +165,7 @@ MPBONE = derive("mat_wallwood", "mat_qm_paint_bone", scale=2.40, tint=(0.78, 0.7
 PAINTS = [MPRED, MPOCHRE, MPGREEN, MPBLUE, MPBONE]
 
 
-def vcol_mat(name, rough=0.86, metal=0.0):
+def vcol_mat(name, rough=0.86, metal=0.0, spec=None):
     """Principled with Base Color driven by the mesh's own `Col` attribute.
 
     The GLTF-SURVIVAL GATE forbids a procedural node tree from reaching an
@@ -184,6 +184,16 @@ def vcol_mat(name, rough=0.86, metal=0.0):
     b = nt.nodes["Principled BSDF"]
     b.inputs["Roughness"].default_value = rough
     b.inputs["Metallic"].default_value = metal
+    if spec is not None:
+        # ROUND 9, and it is a measurement not a preference: at albedo 0.020 —
+        # sixteen times darker than the shipped canvas cream, i.e. black paint —
+        # `qm_awning_0` STILL read L p50 104.2 at crossing, because the Principled's
+        # default 0.5 Specular IOR Level is ~4% reflectance and that surface catches
+        # the only direct light in that corner.  Woven canvas is a rough dielectric,
+        # not a painted panel.
+        si = b.inputs.get("Specular IOR Level") or b.inputs.get("Specular")
+        if si is not None:
+            si.default_value = spec
     ca = nt.nodes.new("ShaderNodeVertexColor")
     ca.layer_name = "Col"
     nt.links.new(ca.outputs["Color"], b.inputs["Base Color"])
@@ -230,7 +240,7 @@ def paint_vcol(ob, tints, jitter=0.10, seed=0):
 
 
 MCLOTH = vcol_mat("mat_qm_cloth", rough=0.92)
-MAWN = vcol_mat("mat_qm_awning", rough=0.90)
+MAWN = vcol_mat("mat_qm_awning", rough=0.90, spec=0.15)
 MPRODUCE = vcol_mat("mat_qm_produce", rough=0.72)
 
 
@@ -1267,8 +1277,30 @@ NOAWN = []
 # anything at all on a surface that is otherwise ruled.
 SAG_LIP = 0.110
 SAG_MID = 0.073
-CANVAS_B = (0.320, 0.295, 0.248)    # the constant second stripe every awning wears
-CANVAS_ALT = (0.150, 0.128, 0.104)  # ... and its partner when the CLOTH is that cream
+# THE CANVAS'S VALUE, PULLED IN ROUND 9 AND CARRIED BY tools/qm_canvas_value.py.
+# Measured through `dh_objmap`'s ray-derived mask on the shipped plates: at
+# crossing this canvas read L p50 159.2 / p95 186.4 with 57.3% of it over L150,
+# while `mat_qm_paving` — the town's own sunlit stone, on FIVE cameras — reads
+# p50 99.8..117.5 and never exceeds p95 138.1.  The canvas's MEDIAN sat above the
+# p95 of every paved surface in Dellhollow.  Draft sweep at crossing (1008x576 /
+# 28 spp, the documented ruler), canvas p50 / >L150 / >L170:
+#     0.320 spec 0.50   160.1  57.5%  39.5%   (as shipped by round 8)
+#     0.240 spec 0.50   153.4  53.1%  16.3%
+#     0.192 spec 0.50   148.3  49.0%   5.2%
+#     0.144 spec 0.50   141.3  16.1%   0.0%
+#     0.020 spec 0.50   104.2   0.4%   0.0%   <- CONTROL: black paint, still 104
+#     0.320 spec 0.15   154.1  52.9%  33.7%
+#     0.144 spec 0.15   133.0   6.3%   0.0%   <- shipped
+# THE CONTROL IS THE FINDING: a sixteen-fold albedo cut buys 56 levels and cannot
+# reach the paving band, so this surface is OVER-EXPOSED, not over-albedo, and
+# albedo is a weak lever on it.  What ships is the best the two numbers on this
+# material can do, and it is honest about being partial.
+CANVAS_B = (0.144, 0.133, 0.112)    # the constant second stripe every awning wears
+CANVAS_ALT = (0.068, 0.063, 0.053)  # ... and its partner when the CLOTH is that
+                                    # cream.  Re-derived with CANVAS_B: the old
+                                    # 0.150,0.128,0.104 is now 0.006 from it, and
+                                    # a partner that close is the monochrome
+                                    # canvas round 8 fixed, back again.
 
 
 def awning(x0, x1, y_wall, y_out, z_wall, z_out, rgb_a, rgb_b, nstripe=None,
