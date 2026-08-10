@@ -1,0 +1,138 @@
+<meta charset="utf-8">
+<title>Dellhollow graphics — round 12</title>
+<style>
+ body{background:#14110f;color:#e8ddd0;font:15px/1.55 -apple-system,Segoe UI,sans-serif;
+      max-width:1180px;margin:0 auto;padding:28px}
+ h1{font-size:26px;margin:0 0 4px} h2{font-size:19px;margin:34px 0 8px;color:#f0c98a}
+ h3{font-size:16px;margin:22px 0 6px;color:#cbb69a}
+ table{border-collapse:collapse;margin:10px 0;font-size:13.5px}
+ th,td{border:1px solid #3a332c;padding:3px 9px;text-align:right}
+ th:first-child,td:first-child{text-align:left}
+ th{background:#221d19;color:#f0c98a}
+ .g{color:#8fd07a} .r{color:#e8846a} .d{color:#9a8f82}
+ img{max-width:100%;border:1px solid #3a332c;margin:8px 0}
+ code{background:#221d19;padding:1px 5px;border-radius:3px;font-size:13px}
+ p{max-width:88ch}
+</style>
+
+<h1>Dellhollow graphics — round 12</h1>
+<p class=d>Carrier <code>tools/dh_clump_kit.py</code>. All footprint measurement off one
+<code>dh_objmap dump</code> (15 cameras &times; 240&times;135 = 486,000 marched rays) read
+against the shipped plates. Tone measurement is numpy on the rendered frames.</p>
+
+<h2>Target 2 — closed before anything was built: it was judge noise, and the metric that
+produced it conflates two stages</h2>
+<p>Round 11 recorded deep-stairs going 4&nbsp;&rarr;&nbsp;7 survivors with darkness
+0&nbsp;&rarr;&nbsp;3 as <em>unexplained</em>. Re-judged at N=10 on both arms, same
+instrument, same cameras — the <b>raw per-look finding rate is flat on every class</b>:</p>
+<table>
+<tr><th>per look (N=10)</th><th>before</th><th>after</th></tr>
+<tr><td>findings</td><td>3.00 &plusmn;0.47</td><td>2.80 &plusmn;0.42</td></tr>
+<tr><td>dark / shadow / obscured</td><td>1.50</td><td>1.60</td></tr>
+<tr><td>cave / pitch-black / void</td><td>0.40</td><td>0.30</td></tr>
+<tr><td>floating / clipping</td><td>0.80</td><td>0.80</td></tr>
+</table>
+<p>The <b>survivor</b> count did move, 30&nbsp;&rarr;&nbsp;20, and all of it is stage 2:
+0 of 30 refuted in the before arm against 7 of 27 in the after arm. <b>A survivor count is
+not a judge-language count.</b> Bootstrapping N=3 out of these same twenty looks says
+&ldquo;after worse&rdquo; on darkness <b>43.0%</b> of the time (tie 34.9%) and on the total
+11.3% — a per-camera phrase class at N=3 in this town is a coin flip, and round 11 drew one.
+Runs: <code>docs/qa/redteam/run-r12ds-{before,after}</code>.</p>
+
+<h2>Target 1 — the third grammar is 89 meshes on eleven cameras, not 15 on one</h2>
+<p><code>veg_nl_clump_*</code> (&times;15) and <code>veg_wv_clump_*</code> (&times;74) are the
+same object: three 9-sided tapered drums joined, 54 verts / 33 faces, on
+<code>lf_matte</code>, built by two functions of one file
+(<code>weave_build.py</code> 1567&ndash;1591 and 1726&ndash;1749). Nobody had put the two
+together. <code>lf_matte</code> itself is not the subject — it is 14.85% of lockfive as barge
+hulls, dam caps and bunting.</p>
+<table>
+<tr><th>camera</th><th>nl</th><th>wv</th><th>rim (T4)</th></tr>
+<tr><td>north-landing</td><td>2.80</td><td>0.42</td><td>0.25</td></tr>
+<tr><td>cottage</td><td>&mdash;</td><td>2.08</td><td>5.24</td></tr>
+<tr><td>fishdock</td><td>&mdash;</td><td>1.62</td><td>0.02</td></tr>
+<tr><td>deep-stairs</td><td>&mdash;</td><td>1.08</td><td>&mdash;</td></tr>
+<tr><td>waterfront</td><td>&mdash;</td><td>1.01</td><td>&mdash;</td></tr>
+<tr><td>weave</td><td>0.06</td><td>0.90</td><td>0.68</td></tr>
+<tr><td>lockfive</td><td>0.06</td><td>0.53</td><td>0.22</td></tr>
+<tr><td>lockhead</td><td>&mdash;</td><td>0.42</td><td>&mdash;</td></tr>
+<tr><td>crossing</td><td>&mdash;</td><td>0.20</td><td>0.72</td></tr>
+</table>
+<p class=d>% of frame, ray-derived.</p>
+
+<h3>waterfront, 16.5 m — before / after</h3>
+<img src="crop-waterfront-drums.jpg">
+<h3>north-landing — the shipped plate, then the fix</h3>
+<img src="before-north-landing-drums.jpg">
+<img src="after-north-landing-drums.jpg">
+
+<h2>Target 4 — &ldquo;there is no kit to copy&rdquo; is false</h2>
+<p><code>v10_src_clump_a</code> (184v/46f, h 2.099) and <code>v10_src_clump_b</code>
+(112v/28f, h 1.216) sit <code>hide_render</code> in the master beside the tuft donors
+<code>dh_veg_kit</code> already used, at <b>uv area 1.00000 per face</b> — round 10's own
+number — and 63 healthy in-town clumps already wear those two signatures. So target 4 is a
+copy, not authoring, and it shipped in the same carrier. The trunk is kept: only the
+<code>mat_leaf_autumn</code> faces are replaced, the <code>mat_timber_dark</code> faces are
+carried through.</p>
+<h3>cottage — before / after</h3>
+<img src="crop-cottage-rim.jpg">
+<p><b>And the geometry fix made a second defect legible</b>, which is why the rim dye is
+re-derived and the drums' is not:</p>
+<table>
+<tr><th>family</th><th>Col luminance p05 / p50 / p95</th><th>verdict</th></tr>
+<tr><td>63 healthy clumps (the kit)</td><td>0.1501 / 0.1535 / 0.1617</td><td class=d>reference</td></tr>
+<tr><td>89 orphan drums</td><td>0.1059 / 0.1309 / 0.1653</td><td class=g>in family — dye carried</td></tr>
+<tr><td>41 rim clumps</td><td>0.3037 / 0.3061 / 0.3094</td><td class=r>2.0&times; — dye re-drawn from the kit</td></tr>
+</table>
+
+<h2>Two materials that are one material</h2>
+<p><code>mat_leaf_green</code> and <code>mat_leaf_autumn</code> were dumped node by node and
+link by link and are <b>identical</b> — 17 nodes, 18 links, same two Color Ramps. The ramp
+that looks like the autumn tint <b>drives nothing</b>: its Color output is unlinked, and the
+only ramp reaching the shader is the cutout factor. Every autumn/green difference in this
+town is carried by the vertex colour. The carrier asserts this rather than assuming it.</p>
+
+<h2>Target 3 — the whole global-ambient family is refuted, including the lever I found myself</h2>
+<p>Four absurd-limit controls at 1008&times;576 / 28 spp on lockfive, shelf-west, deep-stairs
+and weave, then near (&lt;25 m, the town) split from far (&gt;60 m) through the objmap's own
+ray-derived distance.</p>
+<table>
+<tr><th>arm</th><th>whole-frame crushed%</th><th>near p05</th><th>far L</th></tr>
+<tr><td>base (sky 2.1, diffuse_bounces 4)</td><td>18.32</td><td>1.8</td><td>41.6</td></tr>
+<tr><td>diffuse_bounces 4 &rarr; 32</td><td class=d>18.32</td><td class=d>1.8</td><td class=d>41.6</td></tr>
+<tr><td>all 23 FILL_bounce / CLIFF_BOUNCE &rarr; 0 W</td><td>19.02</td><td>1.4</td><td>41.6</td></tr>
+<tr><td>world Background &rarr; 0</td><td>24.01</td><td>1.4</td><td>24.4</td></tr>
+<tr><td>world Background 2.1 &rarr; 4.2</td><td>15.72</td><td>2.5</td><td>55.5</td></tr>
+<tr><td>world Background 2.1 &rarr; 8.4</td><td>11.87</td><td>3.5</td><td>79.0</td></tr>
+</table>
+<p class=d>crushed% is the four-camera mean; near p05 / far L are lockfive.</p>
+<ol>
+<li><b>The transport hypothesis is dead.</b> Eight times the diffuse bounces is identical to
+base to every printed digit on all four cameras, near and far.</li>
+<li><b>The 23-light fake-bounce rig is nearly inert where it was built to work</b> — 0.4
+levels of near p05 for the whole rig.</li>
+<li><b>The sky looked like a one-number win and is not.</b> It moves the FAR field: lockfive
+far L +90% against near +11%, and the far field is 17&ndash;23% of frame — so most of the
+crushed improvement is a region that was never the subject.</li>
+</ol>
+<p><b>And every tonal number I had was blind to what it costs.</b> Across the whole ladder
+p95 moves 137.0 &rarr; 142.4, blown pixels are <em>identical</em> at 0.147% on every rung
+including sky = 0, and chroma goes UP. The plate says otherwise: the far wall milks to a
+lavender fog bank, because the same world lights the volume cards round 6 tuned.
+<b>A mid-tone wash is invisible to metrics that live at the tails.</b></p>
+<h3>lockfive at sky 2.1 / 3.2 / 8.4</h3>
+<img src="sky-ladder-lockfive.jpg">
+<p><b>The headline.</b> Turn the sky <em>and</em> the entire bounce rig off and near-field
+p05 falls 1.8 &rarr; 1.0; turn the sky up fourfold and it reaches 3.5. Every global ambient
+term in this town put together is worth about two levels of 255 in the near field. The
+near-field shadow floor is <b>not reachable from any global parameter</b>; it needs local
+sources sized per region, which is the class <code>dh_qm_underlight</code> and
+<code>KEYW_CLIFF_</code> already belong to. Nothing was built here.</p>
+
+<h2>A trap paid for in this round</h2>
+<p><b>A <code>.blend</code> copied out of <code>tools/blends/</code> renders MAGENTA.</b> The
+master's image textures are <code>//../textures/&hellip;</code>, relative to the blend, so a
+backup at any other path loses 58 of its 60 textures — silently, with no error. The first
+draft A/B arm of this round was rendered from such a backup and was not a baseline, it was a
+different material set. An A/B arm must be rendered from a blend standing at the canonical
+path.</p>
