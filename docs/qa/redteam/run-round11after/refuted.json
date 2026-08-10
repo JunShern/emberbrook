@@ -1,0 +1,300 @@
+[
+ {
+  "fid": "F26",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "quay-west",
+  "item": null,
+  "category": "immersion",
+  "where": "lantern below midground platform",
+  "bbox": [
+   0.33,
+   0.67,
+   0.36,
+   0.73
+  ],
+  "severity": 1,
+  "desc": "The small glowing lantern hangs in mid-air without any visible mounting rope or support hardware.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "46.4,51,16.8,21.8",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 46.4,51,16.8,21.8"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The lantern beneath the platform is clearly attached to and suspended by a visible mounting wire hung from the wooden beam above."
+  }
+ },
+ {
+  "fid": "F2",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "geometry",
+  "where": "lower left wooden platform",
+  "bbox": [
+   0.18,
+   0.78,
+   0.375,
+   0.995
+  ],
+  "severity": 2,
+  "desc": "Wooden walkway planks and ramp structures float in mid-air above the water without structural support posts.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "68.9,85.6,20.8,36.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 68.9,85.6,20.8,36.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The lower-left wooden walkways are supported by wooden posts and stilts anchored into the ground and water."
+  }
+ },
+ {
+  "fid": "F10",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "occlusion",
+  "where": "foreground roof and structures",
+  "bbox": [
+   0.44,
+   0.47,
+   0.75,
+   1
+  ],
+  "severity": 2,
+  "desc": "Foreground rooftop structures heavily obstruct the view of the walkway beneath, hiding the play area.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The foreground roof belongs to a solid building structure rather than occluding an active playable path beneath it."
+  }
+ },
+ {
+  "fid": "F18",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "occlusion",
+  "where": "foreground building roofs on the right",
+  "bbox": [
+   0.445,
+   0.475,
+   0.785,
+   0.99
+  ],
+  "severity": 2,
+  "desc": "Large foreground roofs completely block the view of the walkways and lower paths underneath them.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The walkways wrap around and above the foreground building roofs rather than running underneath obscured areas."
+  }
+ },
+ {
+  "fid": "F27",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "navigation",
+  "where": "across the middle ground settlement",
+  "bbox": [
+   0.15,
+   0.12,
+   0.9,
+   0.85
+  ],
+  "severity": 2,
+  "desc": "Walkways, roofs, and background rock share identical wooden textures and lighting, making navigable paths blend seamlessly into non-walkable roofs and structures.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The background rock face clearly uses a cliff rock texture rather than sharing wooden textures with the walkways and roofs."
+  }
+ },
+ {
+  "fid": "F32",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "navigation",
+  "where": "central walkway and dock intersections",
+  "bbox": [
+   0.41,
+   0.35,
+   0.86,
+   0.7
+  ],
+  "severity": 2,
+  "desc": "Multiple overlapping, fragmented wooden platforms and stairs create visual clutter, making walkable paths difficult to identify.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The layered layout of docks and ramps is standard environmental detail for a rustic cliffside settlement rather than a navigation defect."
+  }
+ },
+ {
+  "fid": "F33",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "geometry",
+  "where": "standalone wooden post in foreground",
+  "bbox": [
+   0.726,
+   0.528,
+   1,
+   0.582
+  ],
+  "severity": 1,
+  "desc": "A vertical post stands in the water near the foreground without connecting to or supporting any deck or structure.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "59.5,65.2,23.7,31.2",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 59.5,65.2,23.7,31.2"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The isolated post in the water is a standard harbor piling used for mooring boats."
+  }
+ },
+ {
+  "fid": "F35",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "navigation",
+  "where": "middle ground multi-level wooden structures",
+  "bbox": [
+   0.22,
+   0.38,
+   0.8,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "The dense stacking of platforms, railings, stairs, and vertical pilings creates heavy visual noise that masks viable walkable paths.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Dense multi-level platforms are intentional world-building for stylized harbor architecture rather than a flaw that hinders play."
+  }
+ },
+ {
+  "fid": "F45",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "navigation",
+  "where": "lower center dock platform",
+  "bbox": [
+   0.35,
+   0.66,
+   0.59,
+   0.85
+  ],
+  "severity": 2,
+  "desc": "Multiple overlapping wooden walkways and stairs converge with broken planks and missing railings, making the intended walkable path ambiguous.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The layout of converging wooden platforms clearly indicates a walkable dock network typical of hand-built piers."
+  }
+ },
+ {
+  "fid": "F54",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "north-landing",
+  "item": null,
+  "category": "geometry",
+  "where": "square cutout in foreground platform",
+  "bbox": [
+   0.33,
+   0.84,
+   0.5,
+   0.96
+  ],
+  "severity": 1,
+  "desc": "Vertical support posts clip through the edge of the floor cutout without structural framing.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "105.2,110.9,24,30.3",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 105.2,110.9,24,30.3"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The cutout edge is framed by visible structural beams underneath, showing proper support framing rather than geometry clipping."
+  }
+ },
+ {
+  "fid": "F55",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "north-landing",
+  "item": null,
+  "category": "navigation",
+  "where": "walkway leading into midground scaffolding",
+  "bbox": [
+   0.45,
+   0.23,
+   0.58,
+   0.57
+  ],
+  "severity": 2,
+  "desc": "The central elevated pathway leads into a visually cluttered mesh of wooden supports, making it hard to discern where the walkable path continues.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The elevated walkway is clearly distinguished from the surrounding wooden scaffolding by its distinct green surface layer."
+  }
+ }
+]
