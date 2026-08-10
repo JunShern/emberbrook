@@ -1,5 +1,5 @@
 {
- "exported": "2026-08-10T02:41:11Z",
+ "exported": "2026-08-10T03:23:44Z",
  "source": "tools/blends/dellhollow-master.blend",
  "tool": "tools/cine_bake.py --glb",
  "walkMeshes": 275,
