@@ -362,4 +362,105 @@ fetch('rows.json').then(r=>r.json()).then(rows=>{
   document.getElementById('rows').innerHTML=h;
 });
 </script>
+
+<h2 id="shipped">8 · ROUND 1 SHIPPED (2026-08-10) — what was built, what refuted, what is owed</h2>
+<p class="lede">Three carriers, one bake set of all eleven plates, and two refutations. Re-judge:
+<code>docs/qa/redteam/run-20260810-002549-emb-round1-after/</code> (all 11) and
+<code>run-20260810-004941-emb-round1-homerow-after/</code> (homerow, after the last fix).</p>
+
+<h3>The verdict as a LANGUAGE COUNT, not a vibe</h3>
+<table>
+<tr><th>judge language over the survivors</th><th>before</th><th>after</th></tr>
+<tr><td>rim / staircase / jagged / blocky-step</td><td>8</td><td><b>0</b></td></tr>
+<tr><td>darkness / pitch-black / cannot see the ground</td><td>35</td><td>31</td></tr>
+<tr><td>untextured / flat / placeholder</td><td>11</td><td>8</td></tr>
+<tr><td>category <code>occlusion</code></td><td>22</td><td>13</td></tr>
+<tr><td>category <code>geometry</code></td><td>29</td><td>37</td></tr>
+<tr><td>survivors, total</td><td>94</td><td>97</td></tr>
+</table>
+<p><b>The total went UP and that is the honest result.</b> A town that was too dark to read hid its
+own geometry; unsealing the lamps moved 22 occlusion findings down to 13 and 29 geometry findings
+up to 37, because the judge can now SEE what it is describing. The one count this round set out to
+move — the paving rim — is <b>8 to 0</b>.</p>
+
+<h3>#1 THE PAVING RIM — SHIPPED (<code>tools/emb_pavechop.py</code>)</h3>
+<p>Weld, relax, seat, on all three tiers. <b>Axis-aligned boundary 67.5% &rarr; 33.2%</b>, 1,192 rim
+vertices seated onto the ground, 1,045 relaxed, 2,197 pinned at a genuine junction, 0 groundless.
+Per apron: <code>orchard</code> 93.6&rarr;74.9 m and 100.0%&rarr;3.7% axis; <code>gate-court</code>
+92.7&rarr;79.9 m and 100.0%&rarr;9.5%; <code>arrival-clearing</code> 39.6&rarr;30.9 m and
+100.0%&rarr;4.5%; <code>washline-green</code> 24.3&rarr;18.9 m and 100.0%&rarr;3.7%.
+<b>This board's 2,233.7 m is the BUNDLE's number</b> — the blend holds 10,061.1 m over 20,200 edges
+at 97.1% axis-aligned because every cell is an independent box, and the glTF exporter's vertex dedup
+had already welded what the bundle reports. The carrier welds first and reproduces 2,233.6 m, which
+is what makes its receipt comparable.</p>
+<p><b>Two things only the picture caught.</b> Proximity is the wrong junction test (it pinned 587 of
+the ribbons' 603 boundary vertices, because the next segment along the same road is 0.36 m away in
+the direction the rim runs); and its fix, an outward step per VERTEX, photographed every road in town
+as <b>a ladder of separate plates</b> — a one-quad <code>walk_e_..._lN</code> segment has only
+corners, and a corner's outward direction bisects into the gap past its neighbour. Shipped: the step
+is taken per boundary EDGE at its midpoint, and the boundary is subdivided first so a free rim has
+interior vertices no joint owns.</p>
+
+<h3>#2 THE BLACK HOLE — CLOSED, AND IT WAS TWO DEFECTS</h3>
+<p><b>(a) The town's fourteen lamps have never lit it</b> (<code>tools/emb_lightbodies.py</code>).
+<code>emb_lamp_&lt;id&gt;_glass</code> is a closed 0.30&times;0.30&times;0.34 m box wearing an
+EMISSIVE Principled surface at strength 3.5, Alpha 1.0, no transmission — opaque — and
+<code>KEYEMB_lamp_&lt;id&gt;</code> is a 680 W POINT light standing inside it. 165 of 192 shadow rays
+from the pad outside Lake's home were blocked by that lamp's own housing. One
+<code>visible_shadow</code> flag: homerow L&le;8/255 <b>66.1% &rarr; 37.9%</b>, square
+<b>41.6% &rarr; 19.6%</b>, and <b>nothing new clips</b> (&ge;250 unchanged at 0.00% / 0.10%).
+This is item #2 of this board, and it explains CLAUDE.md's own week-old note that
+<i>&ldquo;lamp wattage, twice: inert&rdquo;</i> — the wattage was sealed in a box.</p>
+<p><b>(b) The black quad survived that fix, and it was two walk pads in one plane</b>
+(<code>tools/emb_padcoplanar.py</code>). <code>walk_pad_lake-home</code> and
+<code>walk_pad_grandmothers-bench</code> are both z 1.930..2.070 and overlap 1.81&times;1.55 m; the
+black region's silhouette is the <b>stepped UNION</b> of the two footprints, which is what named it.
+Control: one <code>hide_render</code> took the box p50 57.9&rarr;83.5 and &le;8/255
+40.7%&rarr;0.1%. Shipped as a 4 mm nudge instead (55 coincident pairs exist town-wide and hiding a
+65%-swallowed pad deletes the rest of it): in the shipped plate the box is p50 79.0 and
+<b>&le;8/255 is 0.0%</b>. Both judge findings retired — the void AND
+<i>&ldquo;Grandmother's bench: ABSENT&rdquo;</i>.</p>
+
+<h3>#3 THE HEARTLIGHT — REFUTED, NOTHING SHIPPED</h3>
+<p><code>lm_heartlight_flame</code> <b>does not exist in the dressed master</b>; it is the blockout's
+proxy, <code>kit_heartlight</code> kills it, and this board's attribution came from
+<code>emb-cine/scene.glb</code>, which is exported from the gray blockout. The dressed master holds
+<code>emb_dress_heartflame0..4</code> (five translucent shells, z 2.38..3.75) and
+<code>emb_dress_heartember0..6</code>, all render-visible, outer shell emitting <b>0.24</b> against
+the lamp glass's 3.5 — and <b>&times;12 on every emission node moved 0.54% of the frame above 4/255
+and 0.06% above 12/255</b> (floor 0.01%), heartbox p50 100.9&rarr;100.4. The emission knob is inert.
+What clips is the CAP: a 2.00&times;2.00&times;0.20 m pale stone slab standing 0.75 m under a 5200 W
+point light. <b>And the gate is why it survived</b>: <code>kit_heartlight</code>'s bar was
+<i>&ldquo;zero clipped pixels on the flame&rdquo;</i> — a ceiling with no floor. A flame you cannot
+see passes it perfectly.</p>
+
+<h3>THE PIPELINE TRAP THIS ROUND CAUGHT</h3>
+<p><b>A whole-town rebake regrades every plate to <code>cameras.json</code>'s
+<code>defaults.exposure</code>, and that is not the shipped grade.</b> The default is 0.55; the plates
+carry, in <code>cine.json</code>'s own per-camera <code>appliedGrade</code>, exposure 1.00 on eight
+and 0.78 on three, with moon 1.5/2.0/2.71/3.14/3.75 and a <code>warmAnchorGlow 0.35</code> + 900 W
+waystone lantern on two. Measured against a 0.55 draft of the same master: homerow p50 27.4 vs 3.0,
+square 37.8 vs 12.0, gatefield 13.0 vs 1.0. A plain <code>cine_bake --town emberbrook</code> would
+have darkened nine of eleven plates by 0.45&ndash;0.86 stops <b>with every gate green</b>.
+<code>cine.json</code> records the grade; nothing enforces it.</p>
+
+<h3>OWED, NAMED, WITH ITS NUMBER</h3>
+<ol>
+<li><b>The untextured tan panel on the watermill is now round 2's #1</b> — six independent naive
+looks on homerow after the fixes, and it is the one item this lane still cannot name: the nearest
+massing is <code>lm_watermill_body</code> at residual 1.16&ndash;1.41 m, i.e. dressing the collision
+bundle does not carry. It needs the Blender ray census, aimed at world x[47.4,51.1] y[56.6,61.9]
+z[1.9,8.8].</li>
+<li><b>The ribbon/apron JOIN still reads as a hard edge</b> — woodroad, three naive looks:
+<i>&ldquo;the path plane ends with a sharp, unblended polygonal edge&rdquo;</i>. That is the pinned
+joint, by construction: a pinned vertex keeps its 0.12 m riser. 50 of 138 ribbon segments are
+entirely pinned.</li>
+<li><b>gatefield's pillar cutouts survive</b> — <code>--minloop 2.40 m</code> refused 10 boundary
+loops as too short to carry a chamfer, and the pillar holes are among them.</li>
+<li><b>The Heartlight cap.</b> Massing plus a 5200 W point 0.75 m above it; the flame is built and
+translucent and does not respond to emission.</li>
+<li><b>The root fix for the coincident pads belongs in <code>emb_blockout</code></b>, which emitted
+two threshold pads at one landmark's height with no overlap test. 55 pairs town-wide.</li>
+</ol>
+
 </main>
