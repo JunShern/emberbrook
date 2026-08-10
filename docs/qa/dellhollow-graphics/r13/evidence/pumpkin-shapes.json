@@ -1,0 +1,282 @@
+{
+ "barge_0": {
+  "obj_verts": 324,
+  "obj_faces": 222,
+  "pumpkin_faces": 84,
+  "pumpkin_verts": 140,
+  "poly_sides": [
+   4,
+   10
+  ],
+  "bbox": [
+   2.83,
+   4.39,
+   31.77,
+   33.6,
+   3.68,
+   4.1
+  ],
+  "islands_est": 17.5,
+  "uv": 1,
+  "col": 0,
+  "smooth": 0
+ },
+ "barge_1": {
+  "obj_verts": 324,
+  "obj_faces": 222,
+  "pumpkin_faces": 84,
+  "pumpkin_verts": 140,
+  "poly_sides": [
+   4,
+   10
+  ],
+  "bbox": [
+   -5.63,
+   -4.23,
+   34.53,
+   35.83,
+   3.68,
+   4.1
+  ],
+  "islands_est": 17.5,
+  "uv": 1,
+  "col": 0,
+  "smooth": 0
+ },
+ "barge_mid_pool": {
+  "obj_verts": 316,
+  "obj_faces": 216,
+  "pumpkin_faces": 84,
+  "pumpkin_verts": 140,
+  "poly_sides": [
+   4,
+   10
+  ],
+  "bbox": [
+   17.61,
+   19.08,
+   39.66,
+   41.46,
+   0.28,
+   0.7
+  ],
+  "islands_est": 17.5,
+  "uv": 1,
+  "col": 0,
+  "smooth": 0
+ },
+ "CLC_SRC_t2c_W5_flowerbox_rail": {
+  "obj_verts": 96,
+  "obj_faces": 72,
+  "pumpkin_faces": 18,
+  "pumpkin_verts": 24,
+  "poly_sides": [
+   4
+  ],
+  "bbox": [
+   83.25,
+   87.75,
+   23.37,
+   23.63,
+   8.2,
+   8.4
+  ],
+  "islands_est": 3.0,
+  "uv": 0,
+  "col": 0,
+  "smooth": 0
+ },
+ "gate_clutter": {
+  "obj_verts": 1584,
+  "obj_faces": 986,
+  "pumpkin_faces": 168,
+  "pumpkin_verts": 280,
+  "poly_sides": [
+   4,
+   10
+  ],
+  "bbox": [
+   10.91,
+   23.08,
+   8.63,
+   11.19,
+   23.72,
+   24.86
+  ],
+  "islands_est": 35.0,
+  "uv": 0,
+  "col": 1,
+  "smooth": 168
+ },
+ "qm_clutter_0": {
+  "obj_verts": 1060,
+  "obj_faces": 646,
+  "pumpkin_faces": 84,
+  "pumpkin_verts": 140,
+  "poly_sides": [
+   4,
+   10
+  ],
+  "bbox": [
+   32.35,
+   36.47,
+   8.97,
+   13.49,
+   13.96,
+   14.65
+  ],
+  "islands_est": 17.5,
+  "uv": 0,
+  "col": 0,
+  "smooth": 84
+ },
+ "qm_clutter_4": {
+  "obj_verts": 444,
+  "obj_faces": 276,
+  "pumpkin_faces": 36,
+  "pumpkin_verts": 60,
+  "poly_sides": [
+   4,
+   10
+  ],
+  "bbox": [
+   61.88,
+   62.83,
+   7.75,
+   8.64,
+   14.16,
+   14.86
+  ],
+  "islands_est": 7.5,
+  "uv": 0,
+  "col": 0,
+  "smooth": 36
+ },
+ "shelf_clutter": {
+  "obj_verts": 4272,
+  "obj_faces": 2634,
+  "pumpkin_faces": 360,
+  "pumpkin_verts": 600,
+  "poly_sides": [
+   4,
+   10
+  ],
+  "bbox": [
+   19.44,
+   55.25,
+   4.73,
+   9.5,
+   18.44,
+   19.75
+  ],
+  "islands_est": 75.0,
+  "uv": 0,
+  "col": 0,
+  "smooth": 360
+ },
+ "t2c_F5_fish_floats": {
+  "obj_verts": 56,
+  "obj_faces": 42,
+  "pumpkin_faces": 18,
+  "pumpkin_verts": 24,
+  "poly_sides": [
+   4
+  ],
+  "bbox": [
+   57.85,
+   62.13,
+   33.3,
+   34.24,
+   1.16,
+   1.48
+  ],
+  "islands_est": 3.0,
+  "uv": 0,
+  "col": 0,
+  "smooth": 0
+ },
+ "t2c_G8_cliff_baskets": {
+  "obj_verts": 96,
+  "obj_faces": 72,
+  "pumpkin_faces": 18,
+  "pumpkin_verts": 24,
+  "poly_sides": [
+   4
+  ],
+  "bbox": [
+   7.58,
+   18.08,
+   2.07,
+   2.33,
+   26.6,
+   26.8
+  ],
+  "islands_est": 3.0,
+  "uv": 0,
+  "col": 0,
+  "smooth": 0
+ },
+ "t2c_LH3_rail_flowerbox": {
+  "obj_verts": 96,
+  "obj_faces": 72,
+  "pumpkin_faces": 18,
+  "pumpkin_verts": 24,
+  "poly_sides": [
+   4
+  ],
+  "bbox": [
+   69.6,
+   75.98,
+   17.27,
+   17.53,
+   15.5,
+   15.7
+  ],
+  "islands_est": 3.0,
+  "uv": 0,
+  "col": 0,
+  "smooth": 0
+ },
+ "t2c_W5_flowerbox_rail": {
+  "obj_verts": 72,
+  "obj_faces": 54,
+  "pumpkin_faces": 12,
+  "pumpkin_verts": 16,
+  "poly_sides": [
+   4
+  ],
+  "bbox": [
+   85.25,
+   87.75,
+   23.37,
+   23.63,
+   8.2,
+   8.4
+  ],
+  "islands_est": 2.0,
+  "uv": 0,
+  "col": 0,
+  "smooth": 0
+ },
+ "t2c_W7_keeper_boxes": {
+  "obj_verts": 96,
+  "obj_faces": 72,
+  "pumpkin_faces": 36,
+  "pumpkin_verts": 48,
+  "poly_sides": [
+   4
+  ],
+  "bbox": [
+   89.87,
+   93.53,
+   19.57,
+   19.83,
+   10.6,
+   10.8
+  ],
+  "islands_est": 6.0,
+  "uv": 0,
+  "col": 0,
+  "smooth": 0
+ }
+}

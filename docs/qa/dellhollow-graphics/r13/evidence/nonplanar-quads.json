@@ -1,0 +1,660 @@
+{
+ "cliff_east_closure": {
+  "quads": 2108,
+  "nonplanar": 2011,
+  "frac": 0.9539848197343453,
+  "worst_m": 2.2902,
+  "polys": 2108,
+  "smooth": 2108,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_gorgewall"
+  ]
+ },
+ "cliff_far": {
+  "quads": 540,
+  "nonplanar": 248,
+  "frac": 0.45925925925925926,
+  "worst_m": 0.052,
+  "polys": 540,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock_farwall"
+  ]
+ },
+ "cliff_far_toe": {
+  "quads": 32,
+  "nonplanar": 2,
+  "frac": 0.0625,
+  "worst_m": 0.04,
+  "polys": 34,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock_farwall"
+  ]
+ },
+ "cliff_town_a": {
+  "quads": 2214,
+  "nonplanar": 1667,
+  "frac": 0.7529358626919602,
+  "worst_m": 1.4212,
+  "polys": 2214,
+  "smooth": 2214,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_townwall"
+  ]
+ },
+ "cliff_town_b": {
+  "quads": 1517,
+  "nonplanar": 1406,
+  "frac": 0.926829268292683,
+  "worst_m": 0.5931,
+  "polys": 1517,
+  "smooth": 1517,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_townwall"
+  ]
+ },
+ "cliff_town_c": {
+  "quads": 574,
+  "nonplanar": 531,
+  "frac": 0.9250871080139372,
+  "worst_m": 0.9293,
+  "polys": 574,
+  "smooth": 574,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_townwall"
+  ]
+ },
+ "cliff_town_d": {
+  "quads": 859,
+  "nonplanar": 754,
+  "frac": 0.8777648428405123,
+  "worst_m": 1.2285,
+  "polys": 859,
+  "smooth": 859,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_townwall"
+  ]
+ },
+ "cliff_town_mid": {
+  "quads": 369,
+  "nonplanar": 342,
+  "frac": 0.926829268292683,
+  "worst_m": 0.5128,
+  "polys": 369,
+  "smooth": 369,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_townwall"
+  ]
+ },
+ "cliff_town_west": {
+  "quads": 244,
+  "nonplanar": 163,
+  "frac": 0.6680327868852459,
+  "worst_m": 0.6805,
+  "polys": 244,
+  "smooth": 244,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_townwall"
+  ]
+ },
+ "cliff_town_west2": {
+  "quads": 819,
+  "nonplanar": 557,
+  "frac": 0.6800976800976801,
+  "worst_m": 0.4611,
+  "polys": 819,
+  "smooth": 819,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_townwall"
+  ]
+ },
+ "fx_ridge_upstream": {
+  "quads": 825,
+  "nonplanar": 820,
+  "frac": 0.9939393939393939,
+  "worst_m": 1.5135,
+  "polys": 825,
+  "smooth": 825,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_far"
+  ]
+ },
+ "fx_ridge_upstream_mid": {
+  "quads": 825,
+  "nonplanar": 813,
+  "frac": 0.9854545454545455,
+  "worst_m": 1.2849,
+  "polys": 825,
+  "smooth": 825,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock_far"
+  ]
+ },
+ "gate_cliffface": {
+  "quads": 4524,
+  "nonplanar": 1306,
+  "frac": 0.28868258178603007,
+  "worst_m": 0.2075,
+  "polys": 4524,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_gate_cliff"
+  ]
+ },
+ "gate_gorgeface": {
+  "quads": 1663,
+  "nonplanar": 1453,
+  "frac": 0.8737221888153939,
+  "worst_m": 0.4408,
+  "polys": 1663,
+  "smooth": 1663,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_gate_gorgeface"
+  ]
+ },
+ "gate_ground": {
+  "quads": 14758,
+  "nonplanar": 1268,
+  "frac": 0.08591950128743732,
+  "worst_m": 2.107,
+  "polys": 14812,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock",
+   "mat_gate_turf"
+  ]
+ },
+ "gate_road": {
+  "quads": 5854,
+  "nonplanar": 2184,
+  "frac": 0.37307823710283566,
+  "worst_m": 0.0487,
+  "polys": 5854,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_gate_road"
+  ]
+ },
+ "hero_hull_clinker": {
+  "quads": 418,
+  "nonplanar": 154,
+  "frac": 0.3684210526315789,
+  "worst_m": 0.088,
+  "polys": 418,
+  "smooth": 418,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_deck",
+   "mat_wallwood_dark",
+   "mat_timber"
+  ]
+ },
+ "lf_ground": {
+  "quads": 6210,
+  "nonplanar": 2921,
+  "frac": 0.4703703703703704,
+  "worst_m": 2.6959,
+  "polys": 6210,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock"
+  ]
+ },
+ "lk_surface": {
+  "quads": 1168,
+  "nonplanar": 144,
+  "frac": 0.1232876712328767,
+  "worst_m": 0.6782,
+  "polys": 1168,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_timber_dark",
+   "mat_qm_paving",
+   "mat_qm_deck"
+  ]
+ },
+ "qm_awning_0": {
+  "quads": 24,
+  "nonplanar": 24,
+  "frac": 1.0,
+  "worst_m": 0.0705,
+  "polys": 24,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_qm_awning"
+  ]
+ },
+ "qm_awning_1": {
+  "quads": 24,
+  "nonplanar": 24,
+  "frac": 1.0,
+  "worst_m": 0.0705,
+  "polys": 24,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_qm_awning"
+  ]
+ },
+ "qm_awning_2": {
+  "quads": 24,
+  "nonplanar": 24,
+  "frac": 1.0,
+  "worst_m": 0.0729,
+  "polys": 24,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_qm_awning"
+  ]
+ },
+ "qm_awning_3": {
+  "quads": 24,
+  "nonplanar": 24,
+  "frac": 1.0,
+  "worst_m": 0.0705,
+  "polys": 24,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_qm_awning"
+  ]
+ },
+ "qm_awning_4": {
+  "quads": 24,
+  "nonplanar": 24,
+  "frac": 1.0,
+  "worst_m": 0.0705,
+  "polys": 24,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_qm_awning"
+  ]
+ },
+ "qm_cliffface": {
+  "quads": 926,
+  "nonplanar": 396,
+  "frac": 0.42764578833693306,
+  "worst_m": 0.1878,
+  "polys": 926,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_qm_cliff"
+  ]
+ },
+ "qm_ground": {
+  "quads": 6768,
+  "nonplanar": 2179,
+  "frac": 0.3219562647754137,
+  "worst_m": 0.4296,
+  "polys": 6768,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock",
+   "mat_qm_ground"
+  ]
+ },
+ "qm_paving": {
+  "quads": 6288,
+  "nonplanar": 1698,
+  "frac": 0.2700381679389313,
+  "worst_m": 0.3436,
+  "polys": 6288,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_qm_paving"
+  ]
+ },
+ "qm_planking": {
+  "quads": 1260,
+  "nonplanar": 98,
+  "frac": 0.07777777777777778,
+  "worst_m": 0.6,
+  "polys": 1260,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_qm_deck"
+  ]
+ },
+ "seam_bank": {
+  "quads": 507,
+  "nonplanar": 345,
+  "frac": 0.6804733727810651,
+  "worst_m": 1.6037,
+  "polys": 507,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock"
+  ]
+ },
+ "shelf_cliffface": {
+  "quads": 3966,
+  "nonplanar": 809,
+  "frac": 0.20398386283408976,
+  "worst_m": 0.1711,
+  "polys": 3966,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_shelf_cliff"
+  ]
+ },
+ "shelf_ground": {
+  "quads": 7962,
+  "nonplanar": 1697,
+  "frac": 0.21313740266264758,
+  "worst_m": 5.8574,
+  "polys": 7962,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock",
+   "mat_shelf_ground"
+  ]
+ },
+ "shelf_paving": {
+  "quads": 5658,
+  "nonplanar": 1072,
+  "frac": 0.18946624248851185,
+  "worst_m": 5.0,
+  "polys": 5658,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_shelf_paving"
+  ]
+ },
+ "slip_hull_clinker": {
+  "quads": 418,
+  "nonplanar": 106,
+  "frac": 0.2535885167464115,
+  "worst_m": 0.0546,
+  "polys": 418,
+  "smooth": 418,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_deck",
+   "mat_wallwood_dark",
+   "mat_timber"
+  ]
+ },
+ "t2c_DS4_yard_laundry": {
+  "quads": 81,
+  "nonplanar": 42,
+  "frac": 0.5185185185185185,
+  "worst_m": 0.0701,
+  "polys": 81,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rope",
+   "mat_timber",
+   "mat_shelf_paint_rust",
+   "mat_shelf_paint_bone"
+  ]
+ },
+ "t2c_F4_wf_laundry": {
+  "quads": 81,
+  "nonplanar": 42,
+  "frac": 0.5185185185185185,
+  "worst_m": 0.0701,
+  "polys": 81,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rope",
+   "mat_timber",
+   "mat_shelf_paint_bone",
+   "mat_shelf_paint_teal"
+  ]
+ },
+ "t2c_G4_arch_banner": {
+  "quads": 30,
+  "nonplanar": 19,
+  "frac": 0.6333333333333333,
+  "worst_m": 0.0495,
+  "polys": 30,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_flag_blue",
+   "mat_timber"
+  ]
+ },
+ "t2c_GB1_cliff_banner_a": {
+  "quads": 30,
+  "nonplanar": 19,
+  "frac": 0.6333333333333333,
+  "worst_m": 0.0495,
+  "polys": 30,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_shelf_paint_teal",
+   "mat_timber"
+  ]
+ },
+ "t2c_GB2_cliff_banner_b": {
+  "quads": 30,
+  "nonplanar": 19,
+  "frac": 0.6333333333333333,
+  "worst_m": 0.0495,
+  "polys": 30,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_shelf_paint_slate",
+   "mat_timber"
+  ]
+ },
+ "t2c_GB3_cliff_banner_c": {
+  "quads": 30,
+  "nonplanar": 19,
+  "frac": 0.6333333333333333,
+  "worst_m": 0.0495,
+  "polys": 30,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_shelf_paint_ochre",
+   "mat_timber"
+  ]
+ },
+ "t2c_L1_crest_banners": {
+  "quads": 30,
+  "nonplanar": 19,
+  "frac": 0.6333333333333333,
+  "worst_m": 0.0495,
+  "polys": 30,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_flag_blue",
+   "mat_timber"
+  ]
+ },
+ "t2c_W1_laundry_deckA": {
+  "quads": 75,
+  "nonplanar": 42,
+  "frac": 0.56,
+  "worst_m": 0.0701,
+  "polys": 75,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rope",
+   "mat_timber",
+   "mat_shelf_paint_bone",
+   "mat_shelf_paint_teal",
+   "mat_shelf_paint_madder"
+  ]
+ },
+ "t2c_W2_laundry_deckB": {
+  "quads": 81,
+  "nonplanar": 42,
+  "frac": 0.5185185185185185,
+  "worst_m": 0.0701,
+  "polys": 81,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rope",
+   "mat_timber",
+   "mat_shelf_paint_ochre",
+   "mat_shelf_paint_slate"
+  ]
+ },
+ "t2c_WV1_quaydeck_laundry": {
+  "quads": 81,
+  "nonplanar": 42,
+  "frac": 0.5185185185185185,
+  "worst_m": 0.0701,
+  "polys": 81,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rope",
+   "mat_timber",
+   "mat_shelf_paint_bone",
+   "mat_shelf_paint_teal",
+   "mat_shelf_paint_madder",
+   "mat_shelf_paint_ochre"
+  ]
+ },
+ "t2w_bed_deep-stairs": {
+  "quads": 450,
+  "nonplanar": 442,
+  "frac": 0.9822222222222222,
+  "worst_m": 3.1269,
+  "polys": 450,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock"
+  ]
+ },
+ "t2w_shelf_boatyard_e": {
+  "quads": 52,
+  "nonplanar": 18,
+  "frac": 0.34615384615384615,
+  "worst_m": 1.9912,
+  "polys": 52,
+  "smooth": 52,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock"
+  ]
+ },
+ "t2w_shelf_boatyard_w": {
+  "quads": 208,
+  "nonplanar": 106,
+  "frac": 0.5096153846153846,
+  "worst_m": 3.7434,
+  "polys": 208,
+  "smooth": 208,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock"
+  ]
+ },
+ "t2w_shelf_cottage-steps": {
+  "quads": 136,
+  "nonplanar": 66,
+  "frac": 0.4852941176470588,
+  "worst_m": 3.405,
+  "polys": 136,
+  "smooth": 136,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock"
+  ]
+ },
+ "t2w_shelf_lockfive": {
+  "quads": 240,
+  "nonplanar": 159,
+  "frac": 0.6625,
+  "worst_m": 3.8511,
+  "polys": 240,
+  "smooth": 240,
+  "smooth_frac": 1.0,
+  "mat": [
+   "mat_rock"
+  ]
+ },
+ "wf_ground": {
+  "quads": 2990,
+  "nonplanar": 1457,
+  "frac": 0.4872909698996655,
+  "worst_m": 0.3068,
+  "polys": 2990,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock"
+  ]
+ },
+ "wf_skiff_dock.001": {
+  "quads": 134,
+  "nonplanar": 72,
+  "frac": 0.5373134328358209,
+  "worst_m": 0.051,
+  "polys": 135,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_timber_dark",
+   "mat_freshwood"
+  ]
+ },
+ "wf_skiff_walk.001": {
+  "quads": 134,
+  "nonplanar": 72,
+  "frac": 0.5373134328358209,
+  "worst_m": 0.0509,
+  "polys": 135,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_timber_dark",
+   "mat_freshwood"
+  ]
+ },
+ "yard_ground": {
+  "quads": 4042,
+  "nonplanar": 2534,
+  "frac": 0.6269173676397823,
+  "worst_m": 0.7097,
+  "polys": 4042,
+  "smooth": 0,
+  "smooth_frac": 0.0,
+  "mat": [
+   "mat_rock"
+  ]
+ }
+}

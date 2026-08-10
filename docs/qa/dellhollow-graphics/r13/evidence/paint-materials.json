@@ -1,0 +1,71 @@
+{
+ "mat_pumpkin": {
+  "nodes": 2,
+  "links": 1,
+  "images": []
+ },
+ "mat_shelf_paint_ochre": {
+  "nodes": 21,
+  "links": 25,
+  "images": [
+   "green_rough_planks_Diffuse.jpg",
+   "green_rough_planks_AO.jpg",
+   "green_rough_planks_Rough.jpg",
+   "green_rough_planks_nor_gl.jpg"
+  ]
+ },
+ "mat_qm_paint_red": {
+  "nodes": 21,
+  "links": 25,
+  "images": [
+   "green_rough_planks_Diffuse.jpg",
+   "green_rough_planks_AO.jpg",
+   "green_rough_planks_Rough.jpg",
+   "green_rough_planks_nor_gl.jpg"
+  ]
+ },
+ "mat_shelf_paint_green": {
+  "nodes": 21,
+  "links": 25,
+  "images": [
+   "green_rough_planks_Diffuse.jpg",
+   "green_rough_planks_AO.jpg",
+   "green_rough_planks_Rough.jpg",
+   "green_rough_planks_nor_gl.jpg"
+  ]
+ },
+ "mat_timber": {
+  "nodes": 22,
+  "links": 26,
+  "images": [
+   "raw_plank_wall_Diffuse.jpg",
+   "raw_plank_wall_AO.jpg",
+   "raw_plank_wall_Rough.jpg",
+   "raw_plank_wall_nor_gl.jpg"
+  ]
+ },
+ "mat_flag_red": {
+  "nodes": 6,
+  "links": 5,
+  "images": []
+ },
+ "mat_qm_awning": {
+  "nodes": 10,
+  "links": 11,
+  "images": [
+   "canvas_awning_Diffuse.jpg",
+   "canvas_awning_Rough.jpg",
+   "canvas_awning_nor_gl.jpg"
+  ]
+ },
+ "mat_blackstone": {
+  "nodes": 12,
+  "links": 12,
+  "images": []
+ },
+ "m_water": {
+  "nodes": 19,
+  "links": 22,
+  "images": []
+ }
+}

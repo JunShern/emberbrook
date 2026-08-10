@@ -1,0 +1,732 @@
+{
+ "note": "objmap 15 cams x 240x135 marched rays against the shipped master; pct is of all 486000 rays",
+ "n_objects": 38,
+ "objects": {
+  "t2c_B1_boat_sailcloth": {
+   "verts": 36,
+   "faces": 25,
+   "mats": [
+    "mat_shelf_paint_bone",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 724,
+   "pct_15frames": 0.149,
+   "mean_dist": 26.5,
+   "per_cam": {
+    "gate": 0.213,
+    "deep-stairs": 0.7037,
+    "boatyard": 1.108,
+    "waterfront": 0.2068,
+    "north-landing": 0.0031
+   }
+  },
+  "t2c_DS1_yard_tarps": {
+   "verts": 12,
+   "faces": 7,
+   "mats": [
+    "mat_shelf_paint_ochre",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 198,
+   "pct_15frames": 0.0407,
+   "mean_dist": 32.7,
+   "per_cam": {
+    "gate": 0.0988,
+    "deep-stairs": 0.1636,
+    "boatyard": 0.3179,
+    "waterfront": 0.0309
+   }
+  },
+  "t2c_DS2_hull_paint": {
+   "verts": 4,
+   "faces": 1,
+   "mats": [
+    "mat_shelf_paint_madder"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 373,
+   "pct_15frames": 0.0767,
+   "mean_dist": 25.3,
+   "per_cam": {
+    "gate": 0.0648,
+    "deep-stairs": 0.5309,
+    "boatyard": 0.5123,
+    "waterfront": 0.0432
+   }
+  },
+  "t2c_DS3_shed_doors": {
+   "verts": 4,
+   "faces": 1,
+   "mats": [
+    "mat_qm_paint_blue"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 254,
+   "pct_15frames": 0.0523,
+   "mean_dist": 26.4,
+   "per_cam": {
+    "boatyard": 0.7469,
+    "waterfront": 0.034,
+    "north-landing": 0.0031
+   }
+  },
+  "t2c_DS4_yard_laundry": {
+   "verts": 136,
+   "faces": 81,
+   "mats": [
+    "mat_rope",
+    "mat_timber",
+    "mat_shelf_paint_rust",
+    "mat_shelf_paint_bone"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 924,
+   "pct_15frames": 0.1901,
+   "mean_dist": 28.4,
+   "per_cam": {
+    "deep-stairs": 1.4012,
+    "boatyard": 0.9537,
+    "waterfront": 0.4938,
+    "north-landing": 0.0031
+   }
+  },
+  "t2c_F1_wf_awnings": {
+   "verts": 24,
+   "faces": 14,
+   "mats": [
+    "mat_qm_paint_red",
+    "mat_shelf_paint_ochre",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 2712,
+   "pct_15frames": 0.558,
+   "mean_dist": 19.6,
+   "per_cam": {
+    "deep-stairs": 1.358,
+    "waterfront": 5.3858,
+    "fishdock": 1.6204,
+    "north-landing": 0.0062
+   }
+  },
+  "t2c_F2_skiff_mid_a": {
+   "verts": 16,
+   "faces": 12,
+   "mats": [
+    "mat_shelf_paint_slate",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 346,
+   "pct_15frames": 0.0712,
+   "mean_dist": 24.0,
+   "per_cam": {
+    "gate": 0.071,
+    "fishdock": 0.9938,
+    "north-landing": 0.0031
+   }
+  },
+  "t2c_F3_skiff_mid_b": {
+   "verts": 16,
+   "faces": 12,
+   "mats": [
+    "mat_shelf_paint_rust",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 295,
+   "pct_15frames": 0.0607,
+   "mean_dist": 23.5,
+   "per_cam": {
+    "gate": 0.037,
+    "fishdock": 0.8642,
+    "north-landing": 0.0093
+   }
+  },
+  "t2c_F4_wf_laundry": {
+   "verts": 136,
+   "faces": 81,
+   "mats": [
+    "mat_rope",
+    "mat_timber",
+    "mat_shelf_paint_bone",
+    "mat_shelf_paint_teal"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 1123,
+   "pct_15frames": 0.2311,
+   "mean_dist": 22.5,
+   "per_cam": {
+    "deep-stairs": 0.6235,
+    "waterfront": 1.9815,
+    "fishdock": 0.8488,
+    "north-landing": 0.0123
+   }
+  },
+  "t2c_F5_fish_floats": {
+   "verts": 56,
+   "faces": 42,
+   "mats": [
+    "mat_qm_paint_red",
+    "mat_pumpkin"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 105,
+   "pct_15frames": 0.0216,
+   "mean_dist": 26.1,
+   "per_cam": {
+    "gate": 0.0031,
+    "fishdock": 0.3086,
+    "north-landing": 0.0123
+   }
+  },
+  "t2c_G3_awning_tollyard": {
+   "verts": 80,
+   "faces": 56,
+   "mats": [
+    "mat_shelf_paint_teal",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 69,
+   "pct_15frames": 0.0142,
+   "mean_dist": 29.2,
+   "per_cam": {
+    "gate": 0.1698,
+    "shelf-west": 0.0432
+   }
+  },
+  "t2c_G4_arch_banner": {
+   "verts": 43,
+   "faces": 30,
+   "mats": [
+    "mat_flag_blue",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 28,
+   "pct_15frames": 0.0058,
+   "mean_dist": 26.9,
+   "per_cam": {
+    "gate": 0.034,
+    "shelf-west": 0.0525
+   }
+  },
+  "t2c_G5_gatehouse_door": {
+   "verts": 4,
+   "faces": 1,
+   "mats": [
+    "mat_shelf_paint_madder"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 0,
+   "pct_15frames": 0.0,
+   "mean_dist": null,
+   "per_cam": {}
+  },
+  "t2c_G7_bunting_gate2": {
+   "verts": 137,
+   "faces": 89,
+   "mats": [
+    "mat_rope",
+    "mat_timber",
+    "mat_flag_red",
+    "mat_flag_blue",
+    "mat_flag_ochre",
+    "mat_flag_green"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 139,
+   "pct_15frames": 0.0286,
+   "mean_dist": 24.5,
+   "per_cam": {
+    "gate": 0.1914,
+    "shelf-west": 0.2377
+   }
+  },
+  "t2c_G8_cliff_baskets": {
+   "verts": 96,
+   "faces": 72,
+   "mats": [
+    "mat_timber",
+    "mat_pumpkin",
+    "mat_shelf_paint_green"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 62,
+   "pct_15frames": 0.0128,
+   "mean_dist": 26.5,
+   "per_cam": {
+    "gate": 0.0957,
+    "shelf-west": 0.0957
+   }
+  },
+  "t2c_GB1_cliff_banner_a": {
+   "verts": 43,
+   "faces": 30,
+   "mats": [
+    "mat_shelf_paint_teal",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 1,
+   "pct_15frames": 0.0002,
+   "mean_dist": 25.7,
+   "per_cam": {
+    "gate": 0.0031
+   }
+  },
+  "t2c_GB2_cliff_banner_b": {
+   "verts": 43,
+   "faces": 30,
+   "mats": [
+    "mat_shelf_paint_slate",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 83,
+   "pct_15frames": 0.0171,
+   "mean_dist": 31.0,
+   "per_cam": {
+    "gate": 0.2562
+   }
+  },
+  "t2c_GB3_cliff_banner_c": {
+   "verts": 43,
+   "faces": 30,
+   "mats": [
+    "mat_shelf_paint_ochre",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 239,
+   "pct_15frames": 0.0492,
+   "mean_dist": 27.9,
+   "per_cam": {
+    "gate": 0.1111,
+    "shelf-west": 0.6265
+   }
+  },
+  "t2c_L1_crest_banners": {
+   "verts": 43,
+   "faces": 30,
+   "mats": [
+    "mat_flag_blue",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 34,
+   "pct_15frames": 0.007,
+   "mean_dist": 40.7,
+   "per_cam": {
+    "weave": 0.0309,
+    "lockfive": 0.0679,
+    "north-landing": 0.0062
+   }
+  },
+  "t2c_L2_lockhouse_paint": {
+   "verts": 4,
+   "faces": 1,
+   "mats": [
+    "mat_shelf_paint_slate"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 118,
+   "pct_15frames": 0.0243,
+   "mean_dist": 42.4,
+   "per_cam": {
+    "gate": 0.0093,
+    "crossing": 0.0988,
+    "weave": 0.0586,
+    "lockfive": 0.108,
+    "north-landing": 0.0895
+   }
+  },
+  "t2c_LH1_station_awning": {
+   "verts": 24,
+   "faces": 14,
+   "mats": [
+    "mat_shelf_paint_ochre",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 1872,
+   "pct_15frames": 0.3852,
+   "mean_dist": 21.1,
+   "per_cam": {
+    "gate": 0.0185,
+    "lockhead": 3.0278,
+    "cottage": 2.0031,
+    "crossing": 0.571,
+    "weave": 0.1574
+   }
+  },
+  "t2c_LH2_rail_bunting": {
+   "verts": 137,
+   "faces": 89,
+   "mats": [
+    "mat_rope",
+    "mat_timber",
+    "mat_flag_red",
+    "mat_flag_blue",
+    "mat_flag_ochre",
+    "mat_flag_green"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 631,
+   "pct_15frames": 0.1298,
+   "mean_dist": 20.5,
+   "per_cam": {
+    "gate": 0.0123,
+    "lockhead": 0.7809,
+    "cottage": 0.2222,
+    "crossing": 0.7531,
+    "weave": 0.1512,
+    "lockfive": 0.0278
+   }
+  },
+  "t2c_LH3_rail_flowerbox": {
+   "verts": 96,
+   "faces": 72,
+   "mats": [
+    "mat_timber",
+    "mat_pumpkin",
+    "mat_shelf_paint_green"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 632,
+   "pct_15frames": 0.13,
+   "mean_dist": 20.0,
+   "per_cam": {
+    "gate": 0.0185,
+    "lockhead": 1.0247,
+    "crossing": 0.7315,
+    "weave": 0.1759
+   }
+  },
+  "t2c_LH4_deck_crates": {
+   "verts": 24,
+   "faces": 18,
+   "mats": [
+    "mat_qm_paint_red",
+    "mat_qm_paint_blue"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 466,
+   "pct_15frames": 0.0959,
+   "mean_dist": 15.2,
+   "per_cam": {
+    "lockhead": 0.2685,
+    "crossing": 1.0926,
+    "weave": 0.0772
+   }
+  },
+  "t2c_LH5_hut_shutters_hi": {
+   "verts": 20,
+   "faces": 5,
+   "mats": [
+    "mat_shelf_paint_teal",
+    "mat_shelf_paint_rust"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 226,
+   "pct_15frames": 0.0465,
+   "mean_dist": 24.9,
+   "per_cam": {
+    "lockhead": 0.3272,
+    "crossing": 0.0895,
+    "weave": 0.071,
+    "fishdock": 0.0216,
+    "lockfive": 0.1883
+   }
+  },
+  "t2c_LH6_hut_gable_paint": {
+   "verts": 20,
+   "faces": 5,
+   "mats": [
+    "mat_shelf_paint_madder",
+    "mat_shelf_paint_ochre"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 317,
+   "pct_15frames": 0.0652,
+   "mean_dist": 23.5,
+   "per_cam": {
+    "gate": 0.0062,
+    "lockhead": 0.5278,
+    "crossing": 0.1543,
+    "weave": 0.0741,
+    "fishdock": 0.0031,
+    "lockfive": 0.213
+   }
+  },
+  "t2c_N1_nl_awnings": {
+   "verts": 24,
+   "faces": 14,
+   "mats": [
+    "mat_shelf_paint_rust",
+    "mat_shelf_paint_teal",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 590,
+   "pct_15frames": 0.1214,
+   "mean_dist": 20.9,
+   "per_cam": {
+    "crossing": 0.0062,
+    "weave": 0.1173,
+    "lockfive": 0.0247,
+    "north-landing": 1.6728
+   }
+  },
+  "t2c_N2_nl_bunting": {
+   "verts": 137,
+   "faces": 89,
+   "mats": [
+    "mat_rope",
+    "mat_timber",
+    "mat_flag_red",
+    "mat_flag_blue",
+    "mat_flag_ochre",
+    "mat_flag_green"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 341,
+   "pct_15frames": 0.0702,
+   "mean_dist": 23.6,
+   "per_cam": {
+    "crossing": 0.0432,
+    "weave": 0.0679,
+    "lockfive": 0.071,
+    "north-landing": 0.8704
+   }
+  },
+  "t2c_N3_nl_crates": {
+   "verts": 24,
+   "faces": 18,
+   "mats": [
+    "mat_qm_paint_blue"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 403,
+   "pct_15frames": 0.0829,
+   "mean_dist": 24.7,
+   "per_cam": {
+    "weave": 0.0895,
+    "lockfive": 0.108,
+    "north-landing": 1.0463
+   }
+  },
+  "t2c_N6_nl_nets": {
+   "verts": 20,
+   "faces": 13,
+   "mats": [
+    "mat_shelf_paint_ochre",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 153,
+   "pct_15frames": 0.0315,
+   "mean_dist": 27.4,
+   "per_cam": {
+    "weave": 0.0093,
+    "lockfive": 0.0617,
+    "north-landing": 0.4012
+   }
+  },
+  "t2c_W1_laundry_deckA": {
+   "verts": 128,
+   "faces": 75,
+   "mats": [
+    "mat_rope",
+    "mat_timber",
+    "mat_shelf_paint_bone",
+    "mat_shelf_paint_teal",
+    "mat_shelf_paint_madder"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 798,
+   "pct_15frames": 0.1642,
+   "mean_dist": 21.0,
+   "per_cam": {
+    "gate": 0.0185,
+    "weave": 0.2963,
+    "fishdock": 0.2963,
+    "lockfive": 1.8241,
+    "north-landing": 0.0278
+   }
+  },
+  "t2c_W2_laundry_deckB": {
+   "verts": 136,
+   "faces": 81,
+   "mats": [
+    "mat_rope",
+    "mat_timber",
+    "mat_shelf_paint_ochre",
+    "mat_shelf_paint_slate"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 1292,
+   "pct_15frames": 0.2658,
+   "mean_dist": 20.7,
+   "per_cam": {
+    "gate": 0.0247,
+    "crossing": 0.0062,
+    "weave": 0.358,
+    "fishdock": 0.9136,
+    "lockfive": 2.6574,
+    "north-landing": 0.0278
+   }
+  },
+  "t2c_W5_flowerbox_rail": {
+   "verts": 72,
+   "faces": 54,
+   "mats": [
+    "mat_timber",
+    "mat_pumpkin",
+    "mat_shelf_paint_green"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 156,
+   "pct_15frames": 0.0321,
+   "mean_dist": 29.7,
+   "per_cam": {
+    "gate": 0.0031,
+    "cottage": 0.1759,
+    "crossing": 0.1204,
+    "weave": 0.0432,
+    "lockfive": 0.0833,
+    "north-landing": 0.0556
+   }
+  },
+  "t2c_W7_keeper_boxes": {
+   "verts": 96,
+   "faces": 72,
+   "mats": [
+    "mat_timber",
+    "mat_pumpkin"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 232,
+   "pct_15frames": 0.0477,
+   "mean_dist": 25.3,
+   "per_cam": {
+    "gate": 0.0031,
+    "cottage": 0.5463,
+    "crossing": 0.0772,
+    "weave": 0.0432,
+    "lockfive": 0.0463
+   }
+  },
+  "t2c_W8_tenant_gable": {
+   "verts": 4,
+   "faces": 1,
+   "mats": [
+    "mat_qm_paint_blue"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 0,
+   "pct_15frames": 0.0,
+   "mean_dist": null,
+   "per_cam": {}
+  },
+  "t2c_WV1_quaydeck_laundry": {
+   "verts": 136,
+   "faces": 81,
+   "mats": [
+    "mat_rope",
+    "mat_timber",
+    "mat_shelf_paint_bone",
+    "mat_shelf_paint_teal",
+    "mat_shelf_paint_madder",
+    "mat_shelf_paint_ochre"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 268,
+   "pct_15frames": 0.0551,
+   "mean_dist": 30.6,
+   "per_cam": {
+    "gate": 0.0093,
+    "quay-west": 0.2994,
+    "weave": 0.3241,
+    "deep-stairs": 0.1944
+   }
+  },
+  "t2c_WV2_dryingdeck_awning": {
+   "verts": 24,
+   "faces": 14,
+   "mats": [
+    "mat_shelf_paint_rust",
+    "mat_timber"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 1041,
+   "pct_15frames": 0.2142,
+   "mean_dist": 24.5,
+   "per_cam": {
+    "gate": 0.0463,
+    "weave": 0.9877,
+    "fishdock": 0.4167,
+    "lockfive": 1.7253,
+    "north-landing": 0.037
+   }
+  },
+  "t2c_WV3_north_hut_paint": {
+   "verts": 4,
+   "faces": 1,
+   "mats": [
+    "mat_shelf_paint_teal"
+   ],
+   "uv": 0,
+   "col": 0,
+   "rays": 675,
+   "pct_15frames": 0.1389,
+   "mean_dist": 31.7,
+   "per_cam": {
+    "quay-west": 0.2099,
+    "weave": 0.2315,
+    "deep-stairs": 0.5679,
+    "fishdock": 1.0741
+   }
+  }
+ }
+}

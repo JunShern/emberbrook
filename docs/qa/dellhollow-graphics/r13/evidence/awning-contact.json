@@ -1,0 +1,298 @@
+{
+ "qm_awning_0": {
+  "bbox": [
+   61.35,
+   63.85,
+   14.88,
+   15.86,
+   16.485,
+   17.005
+  ],
+  "dims": [
+   2.5,
+   0.98,
+   0.52
+  ],
+  "verts": 39,
+  "faces": 24,
+  "mat": "mat_qm_awning",
+  "overlaps": [],
+  "gap_min": 2.075,
+  "gap_max": 3.4124,
+  "gap_n": 39,
+  "gap_none": 0,
+  "under_names": [
+   "lk_bearers",
+   "qm_paving",
+   "qm_planking",
+   "qm_stall_1",
+   "walk_e_market-stalls__lockhead_l0",
+   "walk_lm_market-stalls"
+  ]
+ },
+ "qm_awning_1": {
+  "bbox": [
+   43.95,
+   46.45,
+   12.48,
+   13.46,
+   16.31,
+   16.83
+  ],
+  "dims": [
+   2.5,
+   0.98,
+   0.52
+  ],
+  "verts": 39,
+  "faces": 24,
+  "mat": "mat_qm_awning",
+  "overlaps": [],
+  "gap_min": 1.9026,
+  "gap_max": 2.8514,
+  "gap_n": 39,
+  "gap_none": 0,
+  "under_names": [
+   "qm_paving",
+   "qm_stall_3",
+   "wf_ground"
+  ]
+ },
+ "qm_awning_2": {
+  "bbox": [
+   44.55,
+   47.05,
+   10.04,
+   11.02,
+   16.31,
+   16.611
+  ],
+  "dims": [
+   2.5,
+   0.98,
+   0.301
+  ],
+  "verts": 39,
+  "faces": 24,
+  "mat": "mat_qm_awning",
+  "overlaps": [
+   {
+    "obj": "qm_notice_board",
+    "mat": "mat_timber_dark",
+    "tri_pairs": 3
+   },
+   {
+    "obj": "shelf_paving",
+    "mat": "mat_shelf_paving",
+    "tri_pairs": 11
+   }
+  ],
+  "gap_min": 0.091,
+  "gap_max": 2.5985,
+  "gap_n": 39,
+  "gap_none": 0,
+  "under_names": [
+   "qm_notice_board",
+   "qm_paving",
+   "qm_stall_4",
+   "shelf_paving",
+   "walk_pad_notice-board"
+  ]
+ },
+ "qm_awning_3": {
+  "bbox": [
+   43.95,
+   46.45,
+   17.58,
+   18.56,
+   16.31,
+   16.83
+  ],
+  "dims": [
+   2.5,
+   0.98,
+   0.52
+  ],
+  "verts": 39,
+  "faces": 24,
+  "mat": "mat_qm_awning",
+  "overlaps": [],
+  "gap_min": 1.9148,
+  "gap_max": 4.2909,
+  "gap_n": 39,
+  "gap_none": 0,
+  "under_names": [
+   "qm_paving",
+   "qm_stall_5",
+   "walk_e_quay-deck__cookhouse_l1",
+   "walk_e_quay-deck__deep-stairs-head_l1",
+   "wv_hut_weave-north_0"
+  ]
+ },
+ "qm_awning_4": {
+  "bbox": [
+   40.65,
+   43.15,
+   17.88,
+   18.86,
+   16.31,
+   16.83
+  ],
+  "dims": [
+   2.5,
+   0.98,
+   0.52
+  ],
+  "verts": 39,
+  "faces": 24,
+  "mat": "mat_qm_awning",
+  "overlaps": [],
+  "gap_min": 1.9082,
+  "gap_max": 2.8203,
+  "gap_n": 39,
+  "gap_none": 0,
+  "under_names": [
+   "qm_paving",
+   "qm_stall_6",
+   "walk_e_quay-deck__deep-stairs-head_l1",
+   "walk_pad_cookhouse"
+  ]
+ },
+ "shelf_awning_0.001": {
+  "bbox": [
+   30.85,
+   34.7,
+   5.9,
+   7.15,
+   21.12,
+   21.2
+  ],
+  "dims": [
+   3.85,
+   1.25,
+   0.08
+  ],
+  "verts": 30,
+  "faces": 18,
+  "mat": "mat_shelf_awning",
+  "overlaps": [
+   {
+    "obj": "shelf_item_shop",
+    "mat": "mat_shelf_stone",
+    "tri_pairs": 45
+   }
+  ],
+  "gap_min": 0.07,
+  "gap_max": 2.2246,
+  "gap_n": 30,
+  "gap_none": 0,
+  "under_names": [
+   "shelf_item_shop",
+   "shelf_paving",
+   "walk_e_item-shop__weapon-shop_l4",
+   "walk_e_item-shop__weapon-shop_l5",
+   "walk_e_item-shop__weapon-shop_l6"
+  ]
+ },
+ "shelf_awning_1.001": {
+  "bbox": [
+   39.8,
+   41.42,
+   3.62,
+   4.42,
+   20.91,
+   21.15
+  ],
+  "dims": [
+   1.62,
+   0.8,
+   0.24
+  ],
+  "verts": 15,
+  "faces": 8,
+  "mat": "mat_shelf_awning",
+  "overlaps": [
+   {
+    "obj": "shelf_stalls",
+    "mat": "mat_timber",
+    "tri_pairs": 4
+   }
+  ],
+  "gap_min": 0.0055,
+  "gap_max": 2.3862,
+  "gap_n": 15,
+  "gap_none": 0,
+  "under_names": [
+   "shelf_ground",
+   "shelf_paving",
+   "shelf_stalls"
+  ]
+ },
+ "shelf_awning_2.001": {
+  "bbox": [
+   41.52,
+   43.14,
+   3.62,
+   4.42,
+   20.99,
+   21.23
+  ],
+  "dims": [
+   1.62,
+   0.8,
+   0.24
+  ],
+  "verts": 15,
+  "faces": 8,
+  "mat": "mat_shelf_awning",
+  "overlaps": [
+   {
+    "obj": "shelf_stalls",
+    "mat": "mat_timber",
+    "tri_pairs": 7
+   }
+  ],
+  "gap_min": 0.0055,
+  "gap_max": 2.3495,
+  "gap_n": 15,
+  "gap_none": 0,
+  "under_names": [
+   "shelf_ground",
+   "shelf_paving",
+   "shelf_stalls"
+  ]
+ },
+ "shelf_awning_3.001": {
+  "bbox": [
+   43.24,
+   44.86,
+   3.62,
+   4.42,
+   20.96,
+   21.2
+  ],
+  "dims": [
+   1.62,
+   0.8,
+   0.24
+  ],
+  "verts": 15,
+  "faces": 8,
+  "mat": "mat_shelf_awning",
+  "overlaps": [
+   {
+    "obj": "shelf_stalls",
+    "mat": "mat_timber",
+    "tri_pairs": 4
+   }
+  ],
+  "gap_min": 0.0055,
+  "gap_max": 2.1813,
+  "gap_n": 15,
+  "gap_none": 0,
+  "under_names": [
+   "shelf_ground",
+   "shelf_stalls"
+  ]
+ }
+}
