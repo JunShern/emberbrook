@@ -1435,6 +1435,51 @@ git runs here, on branch `migration/3d-hybrid`.
   the three height sources AT SOURCE; `emb_dress_mill_lucam` is the gable's twin (sd 4.72 vs ring
   10.59, same shape of fix); the water wheel reads as a sawn log; the Heartlight cap.
   `walk_bodygate` **OOMs on the 94 MB emb-townwalk** — not a walk finding.
+- **EMBERBROOK ROUND 3 (2026-08-10) — THE DOORSTEP STOPS BEING A HEIGHT SOURCE.** Round 2 measured
+  106.0 m² of stacked paving; round 3 **decomposed it by pair family for the first time** — pad
+  over ribbon **51.77 m²**, area over ribbon 34.69, area over pad 9.94, pad over pad 5.02, ribbon
+  over ribbon 4.57, area over area 0.02. **66.7 of the 106 IS A PAD**, and the mechanism is
+  arithmetic: a ribbon starts at `DOOR` with `DOOR`'s z and CLIMBS, while the pad is a flat 3.0 m
+  box on that same point — so 1.5 m x the grade IS the measured 70 mm. `emb_blockout`'s own
+  comment claimed threshold pads are emitted "coplanar" with the plaza; the bakery's was **70 mm
+  proud**. Fixed at source (`tools/emb_padlevel.py` + the same rule in `emb_blockout`): the pad's
+  top is read off the walk surface under it. **The modal 60-120 mm band — the lit riser — falls
+  38.05 → 3.07 m², p50 step 0.0700 → 0.0231 m.** **AND THE HONEST HEADLINE IS THAT DOUBLE COVERAGE
+  IS STILL 106.0 m²: this fixes HEIGHTS, not OVERLAP.**
+  **THE PREDICTION WAS RUN BEFORE THE BLENDER WAS**: a 5-second simulation on the shipped bundle
+  forecast every band, and the two things it could NOT see are the two that needed care — **a pad
+  can stand on another pad** (one pass would have re-opened the exact 70 mm step round 1 shipped
+  `emb_padcoplanar` to close, so it is two passes) and **lower only** (`pond-weir` sits 0.178 m
+  UNDER the lane that bridges it).
+  **THE PAVING HOLES WERE CUT TO THE MAP'S `bodysize`, NOT TO WHAT THE BUILDER STANDS THERE** —
+  **a 0.13 m lamp post cut 1.26 m², SEVENTY-FOUR TIMES its own plan area**; the well's cut is
+  2.5 m square for a ring built 2.0 m round. Empty enclosed holes **37.91 → 0.79 m²**.
+  **AND CHAPTER ONE'S TWIN SIGIL PLATES STOOD IN AN 11.29 m² HOLE WITH NO WALK RECORD IN IT** —
+  there is no `walk_pad_sigil-plate-*` at all. That is a gameplay surface, not a dressing one.
+  Two rules it cost: **an obstacle is a thing you cannot step over, not a thing that is there**
+  (at 0.30 m the festival dais gave back 16.20 m² of walk floor UNDER ITS OWN DECK; the threshold
+  is 0.20 m), and **decide once on the DRESSED blend and replay the decision** (`--cells-out`/
+  `--cells-in`) — the gray master's own census says **108 cells where dressed says 127**, so
+  deriving per blend ships three different walk networks with every gate green.
+  **TWO INHERITED WORDS REFUTED ON THE LUCAM**: it is not "missing a material" — **every
+  `emb_dress` box shares one template mesh, so `data.materials` reads `[None]` TOWN-WIDE and the
+  material lives on an OBJECT slot** — and it is not only a texture problem (cropped out of the
+  plate it is a pale carton with three flat faces). Judge: the lucam **is not mentioned at all**
+  after boarding it at the gable's own 0.24 m pitch, and round 2's sawtooth trap did not repeat.
+  **RAW PER-LOOK RATES, PER ROUND 12'S LAW**: findings/look 2.24 → 2.30 (flat), **black
+  void/tear/hole 0.18 → 0.06**, untextured/flat 0.18 → 0.09, survivors 87 → 80, hole class 6 → 1.
+  **`woodroad` 4 → 9 IS THAT LAW IN ACTION**: only 0.019% of frame moved, the raw rate went
+  2.00 → 2.33, and all nine sit at `support 1/3` — **stage 2 simply refuted less.** No per-camera
+  claim carried at N=3.
+  **REFUTED: A WHOLE-FRAME NEAR-BLACK CENSUS CANNOT SEE THIS CLASS** — town mean L≤8/255
+  **17.192% → 17.192%**, unchanged to three decimals, while the hole class fell 6 → 1. It is a
+  SHAPE class, not a luminance one.
+  **`cine_solve` IS IDEMPOTENT AND THE CHAIN IS NOT**: it reads `scenegraph.json` and
+  `scenegraph_derive` reads the solve, so a walk change needs **solve → derive → solve**. Baking
+  after one pass cost six plates a second bake (0.25-3.77 plate px).
+  **LIVE TIME BOMB, NAMED AND NOT YET FIXED**: `emb_dress.py` still builds the plain lucam box and
+  knows nothing about the 36 boarding members — **a re-dress silently drops them.** Same family as
+  `t2_cliff_south` re-asserting a texture rotation another tool owned. Round 4 owes the mirror.
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder
