@@ -2267,13 +2267,23 @@ def build_mill():
             box("emb_dress_mill_gableboard%+d_%02d" % (sx2, gi),
                 HW(sx2 * (hw / 2 + 1.0) + (GREL if gi % 2 else -GREL), t, gz0 + h / 2),
                 (0.18, gbw - GGAP, h), rot=(0, 0, HRZ), mat=PLANK)
+        # AND THE BARGE-BOARD MUST CAP THE RAKE, NOT STAND BESIDE IT.  The board tops step
+        # by (RIDGE-EAVE)/(hd/2+OVER) x gbw = 0.119 m each, which from `square` — where the
+        # mill is 26-39 m away and the gable is seen nearly EDGE-ON, so the camera sees its
+        # top edge as a LINE — is ~10 plate pixels, and the first bake came back with a lit
+        # SAWTOOTH along it. So the barge straddles the gable's own plane and is wider than
+        # one step. Only the picture said so; every receipt was green.
+        gstep = (RIDGE - EAVE) * gbw / (hd / 2 + OVER)
+        gwide = max(0.24, gstep * 1.9)
         for sy2 in (-1, 1):
             bl = math.hypot(GL / 2, (RIDGE - EAVE) * (GL / 2) / (hd / 2 + OVER))
             box("emb_dress_mill_gablebarge%+d%+d" % (sx2, sy2),
-                HW(sx2 * (hw / 2 + 1.09), sy2 * GL / 4,
-                   (RIDGE - 0.06 - 0.05 / math.cos(angr) + gz0
-                    + (RIDGE - EAVE) * (1 - (GL / 2) / (hd / 2 + OVER))) / 2 + 0.06),
-                (0.10, bl, 0.20), rot=(sy2 * -angr, 0, HRZ), mat=PLANK)
+                HW(sx2 * (hw / 2 + 1.0), sy2 * GL / 4,
+                   (RIDGE - 0.06 - 0.05 / math.cos(angr)
+                    + RIDGE - (RIDGE - EAVE) * (GL / 2) / (hd / 2 + OVER)
+                    - 0.06 - 0.05 / math.cos(angr)) / 2 - gwide * 0.18),
+                (0.18 + 2 * GREL + 0.06, bl, gwide),
+                rot=(sy2 * -angr, 0, HRZ), mat=PLANK)
     box("emb_dress_mill_lucam", HW(- 1.6, - hd / 2 - 0.9, RIDGE - 1.95),
         (2.6, 1.9, 2.6), rot=(0, 0, HRZ), mat=PLANK)
     box("emb_dress_mill_lucamroof", HW(- 1.6, - hd / 2 - 1.0, RIDGE - 0.50),

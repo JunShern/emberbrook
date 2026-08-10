@@ -211,7 +211,18 @@ for g in GABLES:
             c.objects.link(b)
         made += 1
 
-    # a barge-board along each slope of the silhouette the boards just cut
+    # A BARGE-BOARD THAT DOES NOT CAP THE RAKE IS A DECORATION, AND THE RAKE IS A STAIRCASE.
+    # MEASURED (2026-08-10, the first shipped bake): from `square` the mill is 26-39 m away
+    # and the gable is seen nearly EDGE-ON, so what that camera sees is the gable's TOP EDGE
+    # as a line — and the board tops step by (RIDGE-EAVE)/(hd/2+OVER) x bw = 0.119 m per
+    # board, which is ~10 plate pixels there.  The first cut put the barge OUTBOARD
+    # (`ex * (T/2 + 0.05)`, 0.10 m thick), beside the rake instead of over it, so the plate
+    # came back with a lit SAWTOOTH along the beam — a hard geometric serration on a lit
+    # edge, which is exactly the "jagged / blocky-step" language round 1 took from 8 to 0.
+    # ONLY THE PICTURE SAID SO: the carrier's own receipt (88 members, 0 refused) was green,
+    # the homerow A/B looked right, and the draft A/B ranked `square` FIRST at 3.379% without
+    # saying why.  The barge now straddles the gable's own plane and is wider than one step,
+    # so the rake reads as one line at every angle.
     for side, rng in (("L", range(0, n // 2)), ("R", range(n - n // 2, n))):
         pts = [(i, tops[i]) for i in rng if tops[i] is not None]
         if len(pts) < 2:
@@ -223,16 +234,21 @@ for g in GABLES:
         rise = z2 - z1
         ln = math.hypot(run, rise)
         ang = math.atan2(rise, (t1 - t0)) if abs(t1 - t0) > 1e-9 else 0.0
-        mid = ctr + ey * ((t0 + t1) / 2) + ex * (T / 2 + 0.05)
+        # straddle the gable's OWN plane (ex offset 0) and be thicker than the boards, so
+        # the barge wraps the rake on both faces instead of standing beside it
+        mid = ctr + ey * ((t0 + t1) / 2)
+        step = abs(rise) / max(1, len(pts) - 1)          # the rake's own stair, per board
+        wide = max(0.24, step * 1.9)                     # cover a whole step and then some
         bpy.ops.mesh.primitive_cube_add(size=1.0)
         b = bpy.context.active_object
         b.name = "%sbarge%s" % (g.name.replace("gable", "gablebarge"), side)
         ea = ey * math.cos(ang) + Vector((0, 0, 1)) * math.sin(ang)
         eb = Vector((0, 0, 1)) * math.cos(ang) - ey * math.sin(ang)
+        thick = T + 2 * RELIEF + 0.06
         b.matrix_world = type(mw)((
-            (ex.x * 0.10, ea.x * (ln + bw), eb.x * 0.20, mid.x),
-            (ex.y * 0.10, ea.y * (ln + bw), eb.y * 0.20, mid.y),
-            (ex.z * 0.10, ea.z * (ln + bw), eb.z * 0.20, (z1 + z2) / 2 + 0.06),
+            (ex.x * thick, ea.x * (ln + bw), eb.x * wide, mid.x),
+            (ex.y * thick, ea.y * (ln + bw), eb.y * wide, mid.y),
+            (ex.z * thick, ea.z * (ln + bw), eb.z * wide, (z1 + z2) / 2 - wide * 0.18),
             (0.0, 0.0, 0.0, 1.0)))
         if mat:
             b.data.materials.append(mat)
