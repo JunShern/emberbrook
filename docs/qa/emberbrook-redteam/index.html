@@ -863,6 +863,57 @@ and the body's radius is 0.30 m</b>, so paving now reaches a ring of cells a 0.6
 samples 686 &rarr; 1006. Those cells cannot be ENTERED either, so they are dead rather than a trap, and
 <code>walk_bodygate</code> does not model the slide that <code>walkStep</code> actually performs. Round 4: run
 <code>emb_padfill --clear 0.32</code>.</p>
+
+<h3>The verdict &mdash; RAW PER-LOOK first, because a survivor count is two stages convolved</h3>
+<p>Re-judge over all eleven plates, same judge, same modes, N=3, 65 calls
+(<code>docs/qa/redteam/run-20260810-emb-round3-after/</code>).</p>
+<table>
+<tr><th>RAW naive looks (33 per arm) &mdash; stage 2 not involved</th><th class="num">r2-after</th><th class="num">r3-after</th></tr>
+<tr><td>findings per look</td><td class="num">2.24 &plusmn; 0.11</td><td class="num">2.30 &plusmn; 0.10</td></tr>
+<tr><td><b>black void / tear / hole &mdash; the class this round targeted</b></td><td class="num">0.18</td><td class="num"><b>0.06</b></td></tr>
+<tr><td>untextured / flat / placeholder</td><td class="num">0.18</td><td class="num"><b>0.09</b></td></tr>
+<tr><td>darkness / pitch-black / cannot see</td><td class="num">0.64</td><td class="num">0.48</td></tr>
+<tr><td>rim / staircase / jagged / step</td><td class="num">0.12</td><td class="num">0.09</td></tr>
+<tr><td>floating / clipping paving slab</td><td class="num">0.48</td><td class="num">0.45</td></tr>
+</table>
+<table>
+<tr><th>over the SURVIVORS</th><th class="num">r2-after</th><th class="num">r3-after</th></tr>
+<tr><td><b>black void / tear / hole</b></td><td class="num">6</td><td class="num"><b>1</b></td></tr>
+<tr><td>darkness / pitch-black / cannot see</td><td class="num">14</td><td class="num">7</td></tr>
+<tr><td>floating / clipping paving slab</td><td class="num">15</td><td class="num">13</td></tr>
+<tr><td>untextured / flat / placeholder</td><td class="num">4</td><td class="num">4</td></tr>
+<tr><td>category <code>geometry</code></td><td class="num">28</td><td class="num">26</td></tr>
+<tr><td>category <code>navigation</code></td><td class="num">30</td><td class="num">24</td></tr>
+<tr><td><b>survivors, total</b></td><td class="num">87</td><td class="num"><b>80</b></td></tr>
+</table>
+<div class="card lead"><p style="margin:0"><b>The honest headline is that the total is FLAT and the
+targeted class is GONE.</b> The empty-hole class &mdash; the nine findings round 2 handed over &mdash; is
+<b>6 survivors &rarr; 1</b>. <code>gatefield</code>, whose three pillar-cutout findings round 2 refused to touch
+and said why, goes <b>7 &rarr; 3</b>. <code>square</code> keeps not one void or hole sentence.
+<b>And the lucam is not mentioned at all</b> &mdash; round 2's homerow carried <i>&ldquo;the elevated box
+structure juts out from the roof on thin, floating beams&rdquo;</i> and <i>&ldquo;an overexposed or untextured
+white mesh&rdquo;</i>, and both are absent. <b>What replaced them is round 2's own residual #4</b>: three of
+homerow's eight survivors are now the WATER WHEEL.</p>
+<p style="margin:8px 0 0"><b>The one alarming number is <code>woodroad</code> 4 &rarr; 9, and it is round 12's
+law again.</b> Its draft A/B moved <b>0.019%</b> of frame, the smallest in town; its RAW per-look rate moved
+2.00 &rarr; 2.33 while its survivor count moved +125%; and <b>every one of its nine is <code>support 1/3</code></b>,
+three of them checklist ABSENCE claims. The survivor count moved because stage 2 refuted less. <b>At N=3 no
+per-camera claim is carried, in either direction.</b></p></div>
+<p><img src="ev/r3-lucam-shipped-ab.jpg" style="max-width:640px" alt="the lucam at the shipped grade"><br>
+<span class="cap">The lucam at the SHIPPED grade, before and after. The judge stopped mentioning it.</span></p>
+<p><img src="ev/r3-well-shipped-ab.jpg" style="max-width:640px" alt="the well at the shipped grade"><br>
+<img src="ev/r3-notice-shipped-ab.jpg" style="max-width:640px" alt="the notice board at the shipped grade"><br>
+<span class="cap">The well (top) is the fix working: its crop's L&le;8/255 falls 0.42% &rarr; 0.23%. The notice
+board (bottom) is the ONE SITE THE FIX MADE WORSE &mdash; 0.33% &rarr; 0.44% &mdash; and putting those black
+pixels on the geometry through the plate's own depth proves it: <b>72.2% of them reconstruct to the ground
+0.11 m UNDER the paving</b>, so they are still HOLES. What is left there is a 3.03 m&sup2; ring of
+<code>--clear</code> around three 0.13&ndash;0.16 m posts, and it now reads as sharp black slots against bright
+new paving instead of blending into one ragged patch of dirt. It did not reach the judge.</span></p>
+<p><b>A whole-frame near-black census cannot see this defect class, and saying so is the point.</b> Over all
+eleven plates, town mean L&le;8/255 <b>17.192% &rarr; 17.192%</b> and L&le;2/255 6.508% &rarr; 6.499%, no plate
+moving more than 0.06 points. 37.9 m&sup2; of hole is nothing against 2688&times;1536 pixels of night town: the
+empty-hole class is a SHAPE class, not a luminance one, and only the local region probe, the picture and the
+judge can score it.</p>
 <p class="cap" id="r3foot">Round 3 instruments: <code>tools/emb_padfill.py</code>, <code>tools/emb_padlevel.py</code>,
 <code>tools/emb_millucam.py</code>, <code>tools/emb_padstack.mjs</code>, <code>tools/plate_ab.py</code>,
 <code>tools/emb_bake_shipped.mjs</code>. Decision record: <code>tools/blends/districts/emb_padfill.cells.json</code>.</p>

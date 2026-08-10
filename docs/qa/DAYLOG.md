@@ -25245,3 +25245,133 @@ the paving now reaches a ring of cells a 0.6 m body cannot stand in — stuck sa
 `walk_bodygate` does not model the slide `walkStep` actually performs. Round 4 fixes it by
 re-running `emb_padfill --clear 0.32`; the cost is about three cells per post.
 
+### 7. THE BAKE, AND THREE PIPELINE FACTS IT COST
+
+Eleven plates, seven grade groups, `emb_bake_shipped` (1-wide serial). Plate times 304-838 s.
+
+  * **THE METAL KERNEL CACHE BIT `northlane`** — SIGABRT at render start, and the .ips carries
+    `MetalKernelPipeline::compile` x12 with `free_tiny_botch`, CLAUDE.md's exact signature.
+    Round 1 lost `homerow` to it twice and round 2 once; this round it took `northlane`, and
+    `homerow` had already paid the recompile tax at **833 s against its group-mates' ~470**.
+    Quarantining the cache and re-running took `northlane` in 838.9 s. The driver did the job
+    round 2 built it for: it named the group, said its plates keep their old art, carried on
+    with the rest and exited 1.
+  * **`cine_solve` IS IDEMPOTENT AND THE CHAIN IS NOT.** After the bake, `cine_test` went
+    475/6 — six cameras moved by up to 0.032 m. That looks exactly like solver noise, and it is
+    not: run the solver twice in a row and it moves **0.000000 m**, twice. What moved is the
+    CHAIN — `cine_solve` reads `scenegraph.json` and `scenegraph_derive` reads the solve, so a
+    walk-network change needs **solve -> derive -> solve** to reach its fixed point, and I baked
+    after one pass. Measured, the pre-bake solve is 0.25-3.77 PLATE PIXELS from the converged
+    one (waystone 3.77, homerow 2.99, northlane 0.25). Six plates were rebaked against the
+    converged solve rather than handing round 4 a "known-red" it would have to re-derive.
+  * **A WHOLE-FRAME NEAR-BLACK CENSUS CANNOT SEE THIS DEFECT CLASS, AND SAYING SO IS THE
+    POINT.** Over all eleven plates, before vs after: town mean L<=8/255 **17.192% ->
+    17.192%**, L<=2/255 6.508% -> 6.499%, no plate moving more than 0.06 points. 37.9 m2 of
+    hole is nothing against 2688x1536 pixels of night town. **The empty-hole class is a SHAPE
+    class — a sharp rectangular cut-out in a paved surface — not a luminance one**, and the
+    instruments that can score it are the local region probe (the well's own crop: L<=8/255
+    0.42% -> 0.23%, L<=2/255 0.28% -> 0.10%), the picture, and the judge.
+
+### 8. AND THE PICTURE CAUGHT A REAL REGRESSION AT ONE SITE
+
+`square`'s notice-board/bell corner is the one place the fix made a frame WORSE, and both the
+eye and the number say so: its crop's L<=8/255 goes **0.33% -> 0.44%**. Putting the black
+pixels on the geometry through the plate's own depth — 72.2% of them reconstruct to world
+z 1.387, i.e. the ground 0.11 m UNDER the 1.496 paving — proves they are still HOLES and not
+shadows. That corner's hole is made of three 0.13-0.16 m POSTS and a 1.72 x 0.09 m BOARD, so
+what is left after the fill is a 3.03 m2 ring of `--clear` around slender things, and it now
+reads as sharp black slots against bright new paving instead of blending into one ragged
+patch of dirt.
+  **THE ROOT IS THAT A HOLE IN THE PAVING IS THE WRONG WAY TO KEEP A BODY OUT OF A POST.**
+`walk_bodygate` says the same thing from the other side: those posts BLOCK (596/488/480 steps
+each), so the collider already does the job and the missing floor is doing nothing but
+photographing badly. Round 4: `--clear` should be 0 for a solid the body's own collider stops.
+
+## 2026-08-10 — EMBERBROOK ROUND 3, THE RECEIPT: the hole class is GONE, the total is FLAT, and the lucam is not mentioned
+
+(Continues the round-3 entry above; that one was written before the bake.)
+
+### 9. THE VERDICT, AS RAW PER-LOOK RATES FIRST
+
+Re-judge over all eleven plates, same judge, same modes, N=3, 65 calls
+(`docs/qa/redteam/run-20260810-emb-round3-after/`). **RAW PER-LOOK FIRST, because a survivor
+count is the judge's first look convolved with the refuter's second:**
+
+    RAW naive looks (33 looks each arm)          r2-after   r3-after
+    findings per look                            2.24+-0.11 2.30+-0.10   FLAT
+    black void / tear / hole                        0.18       0.06      -67%
+    untextured / flat / placeholder                 0.18       0.09      -50%
+    darkness / pitch-black / cannot see             0.64       0.48
+    rim / staircase / jagged / step                 0.12       0.09
+    floating / clipping paving slab                 0.48       0.45      FLAT
+
+    over the SURVIVORS                           r2-after   r3-after
+    black void / tear / hole                           6          1
+    darkness / pitch-black / cannot see                14         7
+    floating / clipping paving slab                    15        13
+    untextured / flat / placeholder                     4         4
+    category geometry                                  28        26
+    category navigation                                30        24
+    category occlusion                                 18        16
+    category immersion                                 10        13
+    survivors, total                                   87        80
+
+**THE HONEST HEADLINE IS THAT THE TOTAL IS FLAT AND THE TARGETED CLASS IS GONE.** The
+empty-hole class — the nine findings round 2 handed over — is **6 survivors -> 1**, and its raw
+per-look rate is down two thirds. `gatefield`, whose three pillar-cutout findings round 2
+refused to touch and said why, goes **7 -> 3**. `square` keeps not one void or hole sentence;
+what survives there is six foreground-occlusion findings (the user's own `canopy-wall` class)
+and three doors that do not read.
+
+**AND THE LUCAM IS NOT MENTIONED AT ALL.** Round 2's homerow carried *"the elevated box
+structure juts out from the roof on thin, floating beams"* and *"an overexposed or untextured
+white mesh"*; both are absent. **What replaced them is round 2's own residual #4**: three of
+homerow's eight survivors are now the WATER WHEEL — *"the large wooden disc is clipped directly
+into the stone wall"*, *"a massive sliced tree trunk stands upright against the house wall"* —
+so the wheel is now the loudest thing on that plate, exactly as handed over.
+
+**THE ONE ALARMING NUMBER IS `woodroad` 4 -> 9, AND IT IS THE ROUND-12 LAW AGAIN.** Its draft
+A/B moved **0.019%** of frame, the smallest in town; its RAW per-look rate moved 2.00 -> 2.33
+(+17%) while its SURVIVOR count moved +125%; and **every one of its nine is `support 1/3`** —
+one look out of three — with three of them checklist ABSENCE claims. The survivor count moved
+because stage 2 refuted less, not because the picture got worse. **At N=3 no per-camera claim
+is carried, in either direction**, and the per-plate table below is data, not a finding.
+
+    plate       survivors     draft A/B
+    gatefield    7 ->  3        0.423%
+    orchard     10 ->  6        0.075%
+    pondlane    17 -> 12        0.543%
+    northlane    7 ->  5        0.441%
+    therise      9 ->  8        0.303%
+    gateroad     6 ->  6        0.112%
+    homerow      8 ->  8        2.003%
+    square       9 -> 10        1.471%
+    waystone     4 ->  5        0.040%
+    arch         6 ->  8        0.215%
+    woodroad     4 ->  9        0.019%   <- the smallest mover in town
+
+### 10. RESIDUALS FOR ROUND 4, EACH WITH ITS NUMBER
+
+  1. **THE CLEARANCE RING IS NOW THE DEFECT AT `square`'s NOTICE BOARD** (3.03 m2, and the one
+     site the fix made worse: its crop's L<=8/255 0.33% -> 0.44%, with 72.2% of those black
+     pixels reconstructing to the ground 0.11 m under the paving). `emb_padfill --clear 0.28`
+     around three 0.13-0.16 m posts leaves black slots that now sit against bright paving.
+     **A hole in the paving is the wrong way to keep a body out of a post** — `walk_bodygate`
+     shows those posts BLOCK 596/488/480 steps each, so the collider already does the job.
+     `--clear` should be 0 for a solid the body's own collider stops. It did NOT reach the
+     judge this round.
+  2. **`emb_padfill --clear 0.28` IS UNDER THE WALKER'S OWN 0.30 m BODY RADIUS**, so paving now
+     reaches a ring of cells a 0.6 m body cannot stand in: `walk_bodygate` stuck samples
+     686 -> 1006. They cannot be ENTERED either, so they are dead rather than a trap, and the
+     gate does not model the slide `walkStep` performs. Same one-line fix as (1).
+  3. **THE WATER WHEEL** — now three of homerow's eight survivors and the loudest object on the
+     plate. Round 2's residual #4, unchanged, and now named by the judge three different ways.
+  4. **`emb_dress.py` DID NOT GET THE LUCAM MIRROR.** That file carried another lane's
+     uncommitted work all window and `git commit -m … -- <pathspec>` commits the WORKING TREE,
+     so touching it would have published theirs. A re-dress silently drops the 36 members;
+     copy round 2's gable shape into the `emb_dress_mill_lucam` line when the file is clean.
+  5. **THE >250 mm STACK BAND (14.20 m2)** — real terraces, refused on purpose, unchanged.
+     And `area over ribbon` (34.69 m2) is untouched: it is the rim overlap, by design.
+  6. **`lm_infill_30_track0..3`** and **the Heartlight cap** — both unchanged from round 2.
+  7. **A DEPLOY IS STILL OWED** (round 2's residual 7, still open).
+
