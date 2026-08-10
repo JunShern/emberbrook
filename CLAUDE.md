@@ -204,6 +204,36 @@ git runs here, on branch `migration/3d-hybrid`.
   Judge: "hole in the world", "plane/polygon/wedge" and "flat" are GONE; **"untextured" and
   "white" survive** — the value is a separate, unpulled lever. Found alongside: `STALLC[3]` is
   bit-identical to the constant stripe, so `qm_awning_1` shipped 21/21 vertices at one colour.
+- **tools/dh_rimclump_col.py — A MESH BUILT FROM A FRESH PRIMITIVE HAS NO `Col` AND NO UV, AND THE
+  TWO FAIL IN OPPOSITE DIRECTIONS** (2026-08-10, round 10). `locksfoot_build.py` joins rim clumps
+  from fresh `cyl()` primitives; `mat_leaf_autumn` reads `Col` into Base Color AND the Translucent
+  BSDF, and `Texture Coordinate.UV` into a Transparent-BSDF cutout. **Missing colour makes a mesh
+  BLACK in Cycles; missing UV makes the cutout factor CONSTANT and the mesh fully TRANSPARENT — so
+  41 of 225 leaf meshes were NOT RENDERING AT ALL**, and the same meshes shipped to the runtime
+  with only NORMAL/POSITION, where glTF's defaults drew them **WHITE**. One defect, three
+  appearances. **A RAY CENSUS CANNOT SEE THE SECOND, BECAUSE A RAY-CASTER IGNORES ALPHA** — which
+  is exactly why round 9's `dh_pixel_census` attributed weave's black to these clumps rendering at
+  L 0.0 and that explanation is now known to be wrong (they were not black, they were absent;
+  **weave's remaining black has still never been measured**). The control separated colour from
+  cutout: repairing `Col` alone moved the autumn clumps by NOTHING (0.0 → 0.0 at cottage and
+  weave) while grass/fern — same missing `Col`, no cutout branch — moved hard on the same run
+  (lockfive 1.2 → 14.3, weave 15.1 → 51.5).
+  **AND THE UV *SCALE* IS THE WHOLE OF IT: THE CUTOUT IS A RADIAL MASK PER FACE** (`(UV−0.5) →
+  LENGTH`). Bake 1 shipped a projection measuring **0.034 UV area per face against the kit's
+  1.00000** — 29x wrong — which made each clump ONE leaf and showed cylinder backfaces. **THE
+  JUDGE CAUGHT IT**: cottage went 0 → 2 on "hollow/backface" and 1 → 3 on "wreckage/torn", and
+  bake 2 (a unit square per face) took the same rows to 0/0. Match the kit's MEASURED UV area per
+  face; never invent a projection. **THIS IS WHY A JUDGE PASS IS A BRANCH POINT AND NOT THE END OF
+  A ROUND.**
+  Round 10 also REFUTED three inherited claims with numbers: deep-stairs' "harsh cast shadow" is a
+  BACK FACE (`SUN_key` **0 of 440, blocked 383 times by the stair mass itself**; `KEY_slip` reached
+  at plate L 12.1 against 7.3 blocked; `KEY_gorge_dam_0` INVERTED at 9.0 reached vs 9.5 blocked —
+  a cast shadow is a boundary and there is none); round 9's hem and rib-column levers for the
+  awning (canvas local sd **0.47 against paving 6.03 and deck 10.58** — 13x flatter at a brighter
+  value, so they are silhouette/value levers aimed at a texture problem); and **round 8's shipped
+  `relief` measures NULL** (0.60/168.8 → 0.47/134.6, relative 0.36% → 0.35%). HELD BACK with
+  numbers: the 104 `veg_lf_fern_*` are `obox()` BOXES — two colour rungs measured right by the
+  ruler and read as **lime blocks by eye**; colour is owed the geometry first.
 - **A CONTROL THAT DRIVES THE LEVER TO ITS ABSURD LIMIT IS WORTH MORE THAN THREE RUNGS OF IT**
   (2026-08-09, round 9; tools/qm_canvas_value.py, tools/dh_stair_stringer.py). Round 8 left the
   awning canvas's VALUE as its one unclosed judge verdict ("untextured", "white"). The frame's own
