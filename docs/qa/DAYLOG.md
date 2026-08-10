@@ -23866,6 +23866,83 @@ that is the first time in four rounds — rounds 8/9/10 refused eight, five and 
     shelf-east 1.239/0.127 · boatyard 1.227/0.139 · cottage 1.223/0.441 ·
     gate 1.181/0.189 · north-landing 1.084/0.653 · shelf-west 1.028/0.122
 
+### THE VERDICT, AND IT IS A HONEST PARTIAL — 43 -> 44 SURVIVORS, WHICH IS FLAT
+scene_redteam, pinned gemini-3.6-flash, naive, N=3, 7 plates, 56 calls over two arms, 0 errors.
+The BEFORE arm is the SHIPPED pre-round-11 plates extracted from git into a scratch bundle and
+judged through `--plates`, so both arms are the same instrument on the same cameras.
+
+    shot            BEFORE  AFTER      phrase class                 BEFORE  AFTER
+    cottage              9      9      untextured / flat / plain         3      4
+    crossing             3      5      white / blown                     0      1
+    deep-stairs          4      7      cave / pitch-black / void         2      5
+    lockfive             5      3      dark / shadow / obscured          5      7
+    north-landing        8      6      block / box / cube / primitive    6      4
+    quay-west            9      8      floating / clipping              15     17
+    weave                5      6      mesh / grid / screen / weave      2      0
+    TOTAL               43     44      vegetation                        2      2
+
+  * **THE AWNING'S OWN CLASS MOVED AT ITS OWN CAMERA**: crossing `untextured/flat/plain`
+    3 -> 2 and `block/box/cube/primitive` **2 -> 0**. And the risk this fix ran did not land —
+    **`mesh/grid/screen/weave` is 0 at crossing in BOTH arms** (town-wide 2 -> 0), so the weave
+    is not being read as a screen door. Shipped-plate numbers on its own ray-derived mask:
+    SD3 1.12 -> 7.56, SD5 1.10 -> 8.19 against `mat_qm_paving`'s 4.26/6.40, L p50 133.6 -> 96.1
+    (i.e. it lands UNDER the paving's 117.2 instead of over it, which is round 9's direction).
+  * **quay-west `dark/shadow/obscured` 4 -> 1** and cave/void 1 -> 0; lockfive 5 -> 3 with
+    cave/void 1 -> 0; north-landing 8 -> 6. NOTHING WAS BUILT FOR THOSE CAMERAS — that is the
+    indirect-light lift from 104 meshes that used to be black.
+  * **deep-stairs 4 -> 7 with darkness 0 -> 3, AND IT IS NOT EXPLAINED AWAY.** It is also not
+    attributable to the fix aimed there, because that fix made the subject BRIGHTER (below). At
+    N=3 over 44 findings it is most likely judge variance; it is recorded as UNEXPLAINED, not as
+    noise, and the frame was looked at (visually indistinguishable apart from more green ground
+    cover).
+
+### TARGET 4 IS NEARLY NULL, AND THE NUMBER SAYS SO
+`dh_qm_underlight` ran and is in the master. On its own subject's ray-derived mask at deep-stairs
+`qm_stair_underworks` moved **L p50 10.0 -> 11.1** and **L<=8 41.73% -> 35.63%**, against round
+10's own reference of **p50 60.4** for the same material at waterfront: **about 2% of the distance
+to the target.** Two measurable reasons, both round 12's: the cards are derived from the WHOLE
+object bbox (x 35.33..60.01) while the measured hole in the `KEYW_CLIFF_` run is at x < 46, so
+two of three land inside the existing run; and 13.33 W at a 16 m cutoff, 4.5 m off a face round 10
+showed is self-shadowed for 87% of the sun rays, is not much light. The MECHANISM is right (add a
+source, existing named class, measured hole). The DOSE is wrong.
+
+### GATES
+`cine_test` **636 ok / 1 failed / 1 soft** — the pre-attributed deep-stairs<->waterfront seam,
+same `{"fired":0,"expected":10}`, i.e. the Dellhollow baseline exactly, with ONE MORE assertion
+passing and ONE FEWER soft warning than the 635/1/2 baseline · `slice_test` **776/0** ·
+`findability_test` **69 passed / 0 failed / 11 warnings** · `routes_derive --check` clean, 15
+shots (nothing walkable moved — `veg_` is the no-stand prefix and an awning is not a floor).
+Both bundles re-exported from the master that ships and **VERIFIED IN THE ARTIFACT, NOT THE LOG**:
+all 104 reshaped nodes export `COLOR_0, NORMAL, POSITION, TEXCOORD_0` in BOTH
+`del-cine/scene.glb` and `townwalk/scene.glb`, where they previously carried only
+`NORMAL, POSITION` and therefore drew FLAT WHITE in the walkable town. Round 10's "check both
+halves of a mesh-data fix", paid.
+BAKES: fifteen, 1-WIDE SERIAL in one Blender, rc=0, **2645.8 s** (shelf-east 142.1 s ... gate
+202.5 s); `memory_pressure -Q` 89% free before every spawn, never a second Blender, no Metal
+kernel-cache SIGABRT this window.
+
+### OWED / NAMED FOR ROUND 12
+  1. **A DEPLOY IS OWED** — fifteen plates and both bundles supersede what is on the site.
+  2. **THE TOWN'S SHADOW FLOOR** is the real subject behind three rounds of "weave's black":
+     crushed frame 7.38-22.08% over fifteen plates, median 17.25%, and the same material 4.6x to
+     33.5x brighter in light than in its own shadow. CLASS: light transport, town-wide.
+  3. **THE RIM CLUMPS, SIZED**: 41 meshes of three stacked 9-sided cylinders, 5.24% of the
+     cottage frame at 21.8 m where the plate is 8.9 mm/px — **ONE FLAT FACET SPANS 92-191 PLATE
+     PIXELS**, and getting under ~20 px needs about 70 sides. Unlike the groundcover there is NO
+     KIT to copy, so it is authoring, not carrying. That is why round 11 did not take it.
+  4. **A THIRD FOLIAGE GRAMMAR NOBODY HAS NAMED**: `veg_nl_clump_*` wearing `lf_matte`, **2.80%
+     of the north-landing frame at 19 m**, smooth pale-green lozenges MOUNTED ON A SHEER CLIFF
+     FACE with several standing clear of it. THE PICTURE FOUND THEM; no census was looking,
+     because they are in neither the leaf family nor the grass/fern family. `lf_matte` is 14.30%
+     of lockfive, 6.38% of north-landing, 6.30% of weave and 9.2% of weave's crushed set.
+  5. **THE UNDERLIGHT DOSE** — 2% of the distance, two of three cards in the wrong place.
+  6. If the awning wants calming, the knob is the NORMAL map's strength (6.0), not the diffuse
+     (sd 0.047). The judge did not call it a mesh in either arm, so nothing is owed.
+  7. `dh_rimclump_col` used to leave `cycles.samples = 1` in the SAVED master and nothing caught
+     it because `cine_bake` sets its own samples for both passes. Fixed here (saved/restored).
+     Any tool that renders without setting samples should be checked against masters saved by it
+     before this commit.
+
 ## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 10: THE CLUMPS WERE NEVER BLACK, THEY WERE
 ## INVISIBLE; THE DEEP-STAIRS "CAST SHADOW" IS NOT A SHADOW; AND THE CANVAS'S RESIDUAL
 ## IS SPATIAL FREQUENCY, WHICH NEITHER NAMED LEVER TOUCHES

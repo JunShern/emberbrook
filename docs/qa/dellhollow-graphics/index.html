@@ -1816,5 +1816,272 @@ against 46.9). The awning's own numbers barely moved (163.5 vs 160.1) because it
 vertex-colour material with no texture &mdash; which is exactly what would let a sweep of THAT object
 survive undetected. Copy a working blend to <code>tools/blends/</code>, never to a scratchpad.</p></div>
 
+<h1 style="margin-top:3em">Dellhollow graphics fix — round 11 <span class="note">(2026-08-10 · the residuals round 10 named, each with a number)</span></h1>
+<p class="note">Round 10's four residuals were taken in order. Two of the three that were
+supposed to be built turned out to need a REFUTATION first, and the one that was supposed to
+be a whole job turned out to be a material edit because both constraints it carried were
+false. Every number below is off one <code>dh_objmap dump</code> (15 cameras, 240&times;135 =
+486,000 marched rays), <code>plate_probe crushed</code> on all fifteen SHIPPED plates, and one
+Blender property probe.</p>
+
+<h2>The soundness condition for reading a ray-caster as an attribution of RENDERED pixels</h2>
+<div class="meas"><p>Round 10 established that <code>dh_objmap</code>/<code>dh_pixel_census</code>
+cannot see an alpha cutout &mdash; which is how round 9 attributed weave's black to five clumps
+that were not rendering at all. The condition under which the marcher is nevertheless exact is
+checkable, so it was checked: <b>exactly 5 of Dellhollow's 148 materials contain a Transparent
+BSDF</b> (<code>mat_leaf_autumn</code>, <code>_autumn_far</code>, <code>mat_leaf_creeper</code>,
+<code>mat_leaf_green</code>, <code>_green_far</code>). Every other material is opaque, so on
+those pixels the marcher and the renderer agree BY CONSTRUCTION.</p>
+<p>At weave the whole cutout class is <b>1.33% of frame and 1.6% of the crushed set</b>, so the
+attribution below is exact to within 1.6%. <b>Say the condition, do not assume it</b>: at gate
+that class is 10.16% of frame and at deep-stairs 5.49%, where the same reading would not be
+safe.</p></div>
+
+<h2>Target 1 — WEAVE HAS NO BLACK OF ITS OWN. It ranks 7th of 15, and what is left is the
+town's own shadow floor</h2>
+<div class="claim">Handed over: "weave's remaining black &mdash; the thing the invisible clumps
+were standing in front of &mdash; has never actually been measured. Round 9 attributed it to
+them and that is now known to be wrong."</div>
+<div class="meas"><p><code>plate_probe crushed</code> (L&nbsp;&le;&nbsp;24/255 AND 5&times;5
+SD&nbsp;&le;&nbsp;2 &mdash; dark AND flat) over all fifteen shipped plates, % of frame:</p>
+<pre>lockfive 22.08 · deep-stairs 22.02 · shelf-west 20.44 · crossing 19.89 · fishdock 19.62 ·
+quay-west 19.46 · <b>WEAVE 17.86</b> · cottage 17.25 · shelf-east 16.24 · lockhead 12.35 ·
+loop-stairs 10.71 · gate 9.18 · waterfront 7.68 · north-landing 7.58 · boatyard 7.38</pre>
+<p><b>Weave is SEVENTH OF FIFTEEN against a town median of 17.25%.</b> There is no weave anomaly
+to explain. Round 9 invented a cave, round 10 refuted the cave and named the foliage, and the
+residual it handed on is the town's own floor.</p>
+<p>Attribution of weave's 17.86% &mdash; no object exceeds 9.5% of the crushed set, and the top
+twelve are twelve different huts, decks, pile clusters and grounds:</p>
+<pre>by MATERIAL   lf_deck 21.9% of crushed · mat_rock 12.5 · lf_stone 10.7 · lf_shingle 10.5 ·
+              lf_matte 9.2 · mat_rock_townwall 6.3 · mat_timber_dark 5.0 · m_water 4.8 ·
+              mat_leaf_creeper 1.6</pre>
+<p><b>And the number that names the mechanism &mdash; the SAME material, in the SAME frame,
+crushed vs not:</b></p>
+<pre>lf_shingle        crushed L p50  2.5  |  rest L p50  83.6   ratio 33.5x
+lf_deck           crushed L p50  4.8  |  rest L p50  64.4   ratio 13.5x
+mat_timber_dark   crushed L p50  4.1  |  rest L p50  44.1   ratio 10.9x
+lf_matte          crushed L p50  8.4  |  rest L p50  43.4   ratio  5.2x
+mat_rock          crushed L p50  8.5  |  rest L p50  42.8   ratio  5.1x
+lf_stone          crushed L p50  4.7  |  rest L p50  21.7   ratio  4.6x</pre>
+<p>A material at 83.6 in the light and 2.5 in its own shadow is not a dark material and not a
+missing mesh: <b>it is a shadow with nothing in it</b>. THE PICTURE SAYS IT FASTER &mdash;
+masking L&le;8 magenta over the weave plate draws the railings' cast shadows on the pale
+terrace, the underside of every deck, and the shadow side of every post. It is distributed and
+structural, not a place. CLASS: LIGHT TRANSPORT, TOWN-WIDE. Budget as found:
+<code>diffuse_bounces 4</code>, <code>volume_bounces 0</code>, clamp indirect 10.0, world
+Background strength 2.100 with its colour LINKED to a gradient, AgX Medium High Contrast,
+exposure 0.150, 193 lights.</p>
+<p class="note">NOT BUILT, deliberately. A town-wide fill is not a weave fix and it is not a
+smallest lever &mdash; it would move all fifteen plates for a defect the round-10 judge no
+longer names at weave (cave/pitch-black/void 2 &rarr; 0). Round 12 owns it, and it now has a
+subject, a class and six ratios instead of a camera name.</p></div>
+
+<h2>Target 2 — THE TOWN ALREADY HAD A GROUNDCOVER KIT, AND TWO DISTRICTS IGNORED IT</h2>
+<div class="claim">Handed over: "the 104 <code>veg_lf_fern_*</code> are <code>obox()</code> BOXES.
+Give them tuft geometry, then delete the <code>HOLD</code> entry and their colour comes back
+for free."</div>
+<div class="meas"><p>385 meshes wear <code>mat_grass</code>/<code>mat_fern</code> and their
+geometry falls into exactly four shapes:</p>
+<pre>160 verts / 64 faces   x150   THE TUFT KIT     Col yes  UV yes
+110 verts / 44 faces   x131   THE FERN KIT     Col yes  UV yes
+  8 verts /  6 faces   x 78   veg_lf_fern_*    Col NO   UV NO   &lt;- an obox(): A BOX
+  8 verts /  2 faces   x 26   veg_lk_tuft_*    Col NO   UV NO   &lt;- two crossed quads</pre>
+<p><b>That 78 + 26 IS round 10's "104".</b> It was one orphan set counted under one prefix, and
+it is TWO districts. <code>lk_build.py:1648</code> builds its own under a comment reading <i>"a
+district that invents its own foliage grammar reads as a different game from the district beside
+it"</i> &mdash; the comment describes the intent, the artifact is 8 verts and 2 faces against a
+kit of 160 and 64.</p>
+<p>So nothing was authored. <code>tools/dh_veg_kit.py</code> replaces each orphan's mesh with a
+copy of the town's own donor (<code>v10_src_tuft_fern</code>/<code>_grass</code>, which the ray
+census puts in NONE of the fifteen frames), scaled UNIFORMLY and never larger than the envelope
+<code>clear_box()</code> cleared, at a height drawn from the healthy family's own distribution,
+with a deterministic per-name yaw. Round 10's own rim-clump lesson, applied: MATCH THE KIT'S OWN
+NUMBER, DO NOT INVENT A PROJECTION.</p></div>
+<div class="verdict"><p><b>AND THE ORIGIN WAS SOLVED, NOT CHOSEN, BECAUSE THE ORIGIN IS THE
+COLOUR.</b> <code>mat_grass</code>/<code>mat_fern</code> read <code>Texture Coordinate OBJECT
+&rarr; Separate XYZ.Z &rarr; Map Range(0, 0.45 / 0.55, CLAMPED)</code>, so where the origin sits
+decides how much of every plant clamps to the dark end. Three rungs, each measured by Cycles
+bake BEFORE the call:</p>
+<pre>base-at-zero      mat_grass (0.1633, 0.1745, 0.0654)   35% BRIGHT
+centred-on-zero   mat_grass (0.0692, 0.0880, 0.0346)   43% DARK
++ kit height      mat_grass (0.0653, 0.0845, 0.0334)   61% of healthy on BOTH materials
+healthy 150       mat_grass (0.1214, 0.1359, 0.0517)</pre>
+<p>The same 61% factor on both materials is what said the remaining term was not size. That
+chain is arithmetic, so it is evaluated in numpy and the offset SOLVED to a thousandth of a
+metre &mdash; and <b>the model was checked against the thing it replaces before being
+trusted</b>: predicted (0.0378, 0.0743, 0.0289) / (0.0656, 0.0848, 0.0335) against a Cycles EMIT
+bake of the same meshes at (0.0378, 0.0742, 0.0289) / (0.0653, 0.0845, 0.0334) &mdash; four
+decimals on both. SHIPPED: <b><code>mat_fern</code> 100% and <code>mat_grass</code> 99% of their
+own healthy family.</b></p>
+<p><b>And the target is the STORED <code>Col</code>, not what the ramp says about it &mdash;
+they differ by 1.36&times;</b> (fern stored 0.0634 vs 0.0454 predicted, grass 0.1214 vs 0.0895).
+After <code>master_survivability</code> the Base Color is read from the <code>surv_col</code>
+VERTEX ATTRIBUTE and the ramp is only ever a bake source, so the stored colour is what ships and
+the ramp is not a second opinion about it.</p>
+<p class="note"><code>dh_rimclump_col</code>'s <code>HOLD</code> is deleted; its origin shift is
+now CONDITIONAL on the mesh lying outside the ramp's own clamped domain (which is the defect it
+was written for &mdash; <code>obox()</code>+<code>join_meshes()</code> leave object space = world
+space); and it now prints each repaired mean against ITS OWN MATERIAL'S healthy family. The
+single "autumn reference" line it had before is what silently passed a <code>mat_grass</code>
+repair at 57%.</p></div>
+<p class="note">THE RIM CLUMPS ARE ROUND 12's, WITH A NUMBER. 41 meshes at 66 verts / 41 faces,
+5.24% of the cottage frame at 22 m, 0.72% of crossing at 32 m. They are the town's own autumn
+canopy grammar (nothing else in Dellhollow is built from stacked 9-sided cylinders), so unlike
+the groundcover there is no kit to copy and the fix is authoring, not carrying. Not this round.</p>
+
+<h2>Target 3 — "UNTEXTURED" IS LITERAL, and BOTH inherited constraints on fixing it are false</h2>
+<div class="claim">Handed over: "the awning needs an image texture with UVs, or 'untextured'
+stays" &mdash; and, from Emberbrook round 2, the sibling hypothesis that a panel called
+untextured may be TEXTURED BELOW THE PLATE'S NYQUIST.</div>
+<div class="meas"><p><code>qm_awning</code> at crossing is <b>1.45% of frame at 5.3 m &mdash;
+the NEAREST significant surface in that frame &mdash; and the plate resolves it at 1.9 mm per
+pixel.</b> Median local SD of luminance by box scale, silhouette and depth-step pixels dropped:</p>
+<pre>subject          dist   mm/px |  SD 3px    SD 5px    SD 9px   SD 17px
+qm_awning         5.3     1.9 |   <b>0.00</b>      3.56      5.06      6.64
+mat_qm_paving    10.5     3.9 |   4.26      6.40      7.54      8.63
+mat_deck         30.1    11.3 |   6.09      8.34     12.33     19.62
+mat_timber       20.3     8.5 |   3.53      5.27     11.13     20.99
+mat_rock         91.3    35.4 |   1.21      1.66      2.18      2.87</pre>
+<p><b>It is the only surface in the frame whose median 3&times;3 SD is exactly zero, and it is
+the surface the plate samples two to eighteen times more finely than any other.</b> Below
+Nyquist would look like signal at coarse scales and none at fine; this is none at 6 mm on a
+surface that could carry detail down to about 4 mm. <b>The Emberbrook hypothesis is REFUTED</b>
+&mdash; it is untextured, full stop.</p>
+<p><b>And the fix is a material edit, because both of the constraints the handover carried are
+false:</b></p>
+<ul>
+<li>"it needs an image texture WITH UVs" &mdash; <b>the town's 61 textured materials do not use
+UVs at all.</b> Every one is <code>Texture Coordinate.Object &rarr; Mapping(scale 1.9) &rarr;
+Image Texture</code> &times;4 (Diffuse / AO / Rough / nor_gl).</li>
+<li>"a procedural weave would make the plate and the runtime disagree" &mdash; <b>Dellhollow's
+runtime never draws this material.</b> <code>del-cine</code> is a pre-rendered bg+depth bundle
+whose <code>scene.glb</code> is collision; the plate IS the art. (The constraint is real for
+<code>emb-townwalk</code>, which ships a dressed realtime tier. It is not real here.)</li>
+</ul>
+<p><code>tools/qm_awning_canvas.py</code> generates a tileable canvas &mdash; a 4 mm weave for
+the roughness and normal to bite on, and a 20&ndash;180 mm wear field, which is the band every
+other surface in the frame carries its texture in and the only band the plate can actually
+resolve here &mdash; and MULTIPLIES it into the existing <code>Col</code>. So round 8's thirteen
+stripe columns and round 9's value pull (albedo 0.320 &rarr; 0.144, specular 0.50 &rarr; 0.15)
+both survive by construction, and a multiply can only darken.</p></div>
+
+<h2>Target 4 — <code>dh_qm_underlight</code>, run as round 10 built it</h2>
+<div class="meas"><p>Three <code>KEYQ_UNDER_*</code> cards at 13.33 W, 1/3 size, 16 m cutoff,
+derived from <code>qm_stair_underworks</code>'s own world bbox and standing at y 25.99, outboard
+of every vertex of the subject, <code>use_shadow=False</code>.</p>
+<p class="note">NOTE FOR ROUND 12: round 10's note placed the mass at "x 34.7..38.6" and the
+object's actual bbox is <b>x 35.33..60.01</b>, so two of the three derived cards land inside the
+existing <code>KEYW_CLIFF_</code> run rather than in the measured gap. The tool derives from the
+whole object; the gap was measured on the visible face.</p></div>
+
+<h2>The rebake list, DERIVED FROM RENDERED FRAMES — and the noise floor RE-MEASURED, which is
+what says it is real <span class="note">(whole-town draft A/B, 15 frames a side at 1008&times;576
+/ 28 spp)</span></h2>
+<div class="meas"><p>The A/B came back with <b>all fifteen cameras above 1% of frame changed
+above 4/255</b> &mdash; far more than three local edits should do, and exactly the shape of a
+global render difference. So the floor was MEASURED rather than inherited: two draft renders of
+the SAME master, same session, same machine &mdash; <b>boatyard 0.031% &middot; shelf-west
+0.006% &middot; crossing 0.001%</b> above 4/255. The documented 0.010% holds.</p>
+<pre>camera             &gt;4/255   &gt;12/255        camera             &gt;4/255   &gt;12/255
+deep-stairs         3.375    0.299          waterfront          1.596    0.175
+fishdock            3.322    0.607          shelf-east          1.239    0.127
+crossing            3.107    2.213          boatyard            1.227    0.139
+quay-west           2.747    0.277          cottage             1.223    0.441
+weave               2.721    0.435          gate                1.181    0.189
+lockfive            2.686    0.937          north-landing       1.084    0.653
+lockhead            1.844    0.767          shelf-west          1.028    0.122
+loop-stairs         1.798    0.299</pre>
+<p>So the A/B is <b>30&times; to 170&times; the floor on every camera</b>, and the cause is real
+and nameable: <b>104 meshes that were pure black</b> (absent <code>Col</code> = zero albedo of
+both kinds) <b>now bounce light</b>, in a scene with <code>diffuse_bounces 4</code>. That is why
+shelf-west and boatyard move at all &mdash; nothing they contain was edited.</p>
+<p><b>NOTHING IS REFUSED THIS ROUND, and that is the first time in four:</b> rounds 8, 9 and 10
+refused eight, five and nine cameras respectively. All fifteen were rebaked at 2688&times;1536 /
+128 spp, 1-wide serial in one Blender.</p></div>
+
+<h2>Blind verdict — round 11, said as a language count <span class="note">(scene_redteam, pinned
+gemini-3.6-flash, naive, N=3, 7 plates, 56 calls over two arms, 0 errors; run-round11before is
+the SHIPPED pre-round-11 plates extracted from git and judged through <code>--plates</code>, so
+both arms are the same instrument on the same cameras)</span></h2>
+<div class="verdict"><pre>shot            BEFORE  AFTER      phrase class                 BEFORE  AFTER
+cottage              9      9      untextured / flat / plain         3      4
+crossing             3      5      white / blown                     0      1
+deep-stairs          4      7      cave / pitch-black / void         2      5
+lockfive             5      3      dark / shadow / obscured          5      7
+north-landing        8      6      block / box / cube / primitive    6      4
+quay-west            9      8      floating / clipping              15     17
+weave                5      6      mesh / grid / screen / weave      2      0
+TOTAL               43     44      vegetation                        2      2</pre>
+<p><b>SAID PLAINLY: THE TOTAL DID NOT MOVE — 43 &rarr; 44.</b> This is not a round that cleared a
+class the way round 10 cleared the cave. What moved is per shot and per class:</p>
+<ul>
+<li><b>THE AWNING'S OWN CLASS MOVED AT ITS OWN CAMERA.</b> crossing <code>untextured/flat/plain</code>
+3 &rarr; 2 and <code>block/box/cube/primitive</code> <b>2 &rarr; 0</b>. And the risk this fix ran
+did not land: <b><code>mesh/grid/screen/weave</code> is 0 at crossing in BOTH arms</b> &mdash; the
+weave is not being read as a screen door. Town-wide that class went 2 &rarr; 0.</li>
+<li><b>quay-west <code>dark/shadow/obscured</code> 4 &rarr; 1</b> and cave/void 1 &rarr; 0;
+lockfive 5 &rarr; 3 survivors with cave/void 1 &rarr; 0; north-landing 8 &rarr; 6. Nothing was
+built for those cameras &mdash; this is the indirect-light lift from 104 meshes that used to be
+black.</li>
+<li><b>deep-stairs 4 &rarr; 7, with darkness 0 &rarr; 3, AND IT IS NOT EXPLAINED AWAY.</b> It is
+also not attributable to the fix aimed there: on the subject's own ray-derived mask
+<code>qm_stair_underworks</code> got <i>brighter</i> — L p50 <b>10.0 &rarr; 11.1</b>, L&le;8
+<b>41.73% &rarr; 35.63%</b>. See the next box: the lever is near-null, and a near-null lever
+cannot have caused a darkness complaint that was not there before. At N=3 over 44 findings this
+is most likely judge variance, and it is reported as unexplained rather than as noise.</li>
+</ul></div>
+
+<h2>The honest number on Target 4 — <code>dh_qm_underlight</code> is NEARLY NULL</h2>
+<div class="claim">Round 10 built it, measured the gap and handed it over as "one bake".</div>
+<div class="meas"><p>It ran, it is in the master, and on its own subject's ray-derived mask at
+deep-stairs it moved <b>L p50 10.0 &rarr; 11.1</b> and L&le;8 <b>41.73% &rarr; 35.63%</b>.
+<b>Round 10's own reference for that same material elsewhere in town is p50 60.4 at waterfront</b>
+&mdash; so this is roughly <b>2% of the distance to the target</b>, for three 13.33 W cards.</p>
+<p>Two reasons, both measurable and both for round 12: the cards are derived from the WHOLE
+object's bbox (x 35.33..60.01) while the measured hole in the <code>KEYW_CLIFF_</code> run is at
+x &lt; 46, so <b>two of the three land inside the existing run</b>; and 13.33 W at a 16 m cutoff
+4.5 m off a face that round 10 showed is <b>self-shadowed for 87% of the sun rays</b> is simply
+not much light. The mechanism round 10 identified is right &mdash; ADD A SOURCE, in an existing
+named class, at a measured hole. The dose is wrong.</p></div>
+
+<h2>Gates</h2>
+<div class="meas"><p><code>cine_test</code> <b>636 ok / 1 failed / 1 soft warning</b> &mdash; the
+pre-attributed deep-stairs&harr;waterfront seam, same <code>{"fired":0,"expected":10}</code>
+signature, i.e. the Dellhollow baseline exactly, with <b>one more assertion passing and one FEWER
+soft warning</b> than the 635/1/2 baseline &middot; <code>slice_test</code> <b>776/0</b> &middot;
+<code>findability_test</code> <b>69 passed / 0 failed / 11 warnings</b> &middot;
+<code>routes_derive --check</code> clean, 15 shots (nothing walkable moved &mdash;
+<code>veg_</code> is the no-stand prefix and the awning is not a floor).</p>
+<p class="note">Both bundles re-exported from the master that ships, and <b>verified in the
+ARTIFACT rather than the log</b>: all 104 reshaped nodes export
+<code>COLOR_0, NORMAL, POSITION, TEXCOORD_0</code> in <i>both</i>
+<code>del-cine/scene.glb</code> and <code>townwalk/scene.glb</code>, where they previously
+carried only <code>NORMAL, POSITION</code> and therefore drew FLAT WHITE in the walkable town.
+That is round 10's own "check both halves of a mesh-data fix", paid.</p></div>
+
+<h2>Residuals for round 12, each with a number</h2>
+<div class="meas"><ol>
+<li><b>THE TOWN'S SHADOW FLOOR.</b> Crushed frame runs 7.38&ndash;22.08% across fifteen plates
+with a median of 17.25%, and the same material reads 4.6&times; to 33.5&times; brighter in light
+than in its own shadow (<code>lf_shingle</code> 83.6 vs 2.5). CLASS: light transport, town-wide.
+This is the real subject behind three rounds of "weave's black".</li>
+<li><b>THE RIM CLUMPS, AND THE NUMBER THAT SIZES THE JOB.</b> 41 meshes of three stacked 9-sided
+cylinders, 5.24% of the cottage frame at 21.8 m where the plate is 8.9 mm/px &mdash; so ONE FLAT
+FACET SPANS 92&ndash;191 PLATE PIXELS depending on the clump's radius. Getting a facet under
+~20 px needs about 70 sides. Unlike the groundcover there is NO KIT to copy (nothing else in town
+is built from stacked cylinders), so this is authoring, not carrying. That is why it was not
+taken this round.</li>
+<li><b>A THIRD FOLIAGE GRAMMAR NOBODY HAS NAMED: <code>veg_nl_clump_*</code> wearing
+<code>lf_matte</code>, 2.80% of the north-landing frame at 19 m.</b> They are smooth pale-green
+lozenges MOUNTED ON A SHEER CLIFF FACE, several standing clear of it. The picture found them;
+no census was looking for them because they are in neither the leaf family nor the
+grass/fern family. <code>lf_matte</code> is 14.30% of lockfive, 6.38% of north-landing, 6.30% of
+weave and 9.2% of weave's crushed set, so the material is large and worth a pass of its own.</li>
+<li><b>THE UNDERLIGHT DOSE</b> — see above: 2% of the distance, two cards in the wrong place.</li>
+<li><b>The awning is now the busiest surface in its frame</b>: SD3 1.12 &rarr; 7.56 and SD5 1.10
+&rarr; 8.19 against <code>mat_qm_paving</code>'s 4.26 / 6.40, with L p50 133.6 &rarr; 96.1. The
+judge did not call it a mesh in either arm, so nothing is owed &mdash; but if round 12 wants it
+calmer the knob is the normal map's strength (6.0), not the diffuse (sd 0.047).</li>
+</ol></div>
 </body>
 </html>

@@ -347,6 +347,12 @@ for n in orphans:
 print("ramp domain is object z 0..%.2f; %d orphan meshes already lie in it (left alone), "
       "%d moved to their own base" % (FROM_MAX, inside, len(origins)))
 
+# RESTORE EVERYTHING THIS TOUCHES, INCLUDING THE SAMPLE COUNT.  An earlier cut set
+# `samples = 1` for the bake and never put it back, so the SAVED MASTER carried a
+# one-sample render setting out of a vertex-colour tool.  Nothing caught it because
+# `cine_bake` sets its own samples for both passes — i.e. it was invisible until some
+# other tool rendered without doing so, which is the definition of a trap.
+sam0 = sc.cycles.samples
 sc.render.engine = 'CYCLES'
 sc.cycles.samples = 1
 sc.render.bake.target = 'VERTEX_COLORS'
@@ -418,6 +424,7 @@ for o in bpy.data.objects:
     o.hide_render = hr0.get(o.name, o.hide_render)
     o.hide_viewport = hv0.get(o.name, o.hide_viewport)
 sc.render.engine, sc.render.bake.target = eng0, tgt0
+sc.cycles.samples = sam0
 
 # ------------------------------------------------------------------- the gates --
 mean = np.mean(stats, axis=0) if stats else np.zeros(3)
