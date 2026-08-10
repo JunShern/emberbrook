@@ -23689,6 +23689,179 @@ OWED / NAMED FOR ROUND 9:
      The stair-tread family is the loudest thing in Dellhollow that nobody has measured.
 
 
+## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 10: THE CLUMPS WERE NEVER BLACK, THEY WERE
+## INVISIBLE; THE DEEP-STAIRS "CAST SHADOW" IS NOT A SHADOW; AND THE CANVAS'S RESIDUAL
+## IS SPATIAL FREQUENCY, WHICH NEITHER NAMED LEVER TOUCHES
+
+Carriers tools/dh_rimclump_col.py (shipped) and tools/dh_qm_underlight.py (built,
+measured, NOT applied — round 11's). All measurement off ONE `dh_objmap dump` (486,000
+marched rays, 15 cameras) read against the shipped plates, plus 440 shadow-rayed samples.
+FIRST, THE TRAP THAT WAS NOT THERE: Dellhollow's `appliedGrade` is exposure 0.150 /
+sky 2.100 on ALL FIFTEEN cameras and `defaults.exposure` is 0.150 — identical, so the
+Emberbrook regrade trap has no purchase here. Checked before any bake, said so it is
+never re-checked.
+
+(1) TARGET 2 — `mat_leaf_autumn` AT LITERAL L 0.0. IT IS NEITHER ALBEDO NOR LIGHT, AND
+THE MESH IS MISSING TWO ATTRIBUTES ITS OWN MATERIALS READ.
+`locksfoot_build.py` joins its rim clumps from fresh `cyl()` primitives; a fresh
+primitive has no colour attribute and no UV layer.
+
+  * `Col` — `mat_leaf_autumn` takes Base Color AND the Translucent BSDF's Color from
+    the `surv_col` VertexColor node (master_survivability's glTF cure). An absent
+    attribute returns BLACK: zero albedo of both kinds. 145 meshes were in that state.
+  * `UVMap` — the LEAF materials additionally drive a Transparent BSDF mix from
+    `Texture Coordinate.UV -> … -> Color Ramp -> Mix Shader.001.Factor`. With no UV
+    layer the coordinate is the constant (0,0,0), the cutout factor is CONSTANT over
+    the whole mesh, and it evaluates FULLY TRANSPARENT. 41 of 225 leaf meshes — every
+    `veg_lf_rimclump_*` — were in that state; all 184 healthy ones carry UVs in 0..1.
+
+**A CONTROL SEPARATED THEM AND IT COST ONE DRAFT SWEEP.** Repairing `Col` ALONE and
+re-rendering the whole town moved the autumn clumps' own pixels by NOTHING — cottage
+p50 0.0 -> 0.0, weave 0.0 -> 0.0, crossing 0.6 -> 0.6, north-landing 36.5 -> 36.5 —
+while grass and fern, same missing `Col` and NO cutout branch, moved hard on the same
+run (lockfive 1.2 -> 14.3, weave 15.1 -> 51.5, north-landing 1.2 -> 23.3). A material
+change inert on exactly the meshes with the second defect and live on exactly the ones
+without it is not an interpretation, it is the split.
+**SO THE CLUMPS WERE NEVER RENDERING AT ALL, AND THE RAY CENSUS COULD NOT SAY SO: A
+RAY-CASTER IGNORES ALPHA.** That is why round 9's census attributed 78.1% of weave's
+"black cave mouth" to five of them and concluded they rendered at L 0.0. Round 9's
+REFUTATION of the cave stands; its EXPLANATION does not, and the black behind them is a
+different subject still owed a diagnosis. Third member of the family `dh_pixel_census`
+already documents: the ray-caster's object set is not the renderer's.
+**AND THE SAME DEFECT SHIPPED A DIFFERENT WRONG PICTURE TO THE RUNTIME.** In both
+bundles those meshes carried ONLY `NORMAL` and `POSITION` — no COLOR_0, no TEXCOORD_0,
+no baseColorFactor — so glTF's default made them FLAT WHITE in the walkable town while
+Cycles saw straight through them. One missing attribute, two opposite failures, and the
+whole point of master_survivability's white-material gate, still live on 145 meshes.
+CLASS: MESH DATA (not material, not light).
+
+**AND THE UV SCALE IS THE WHOLE OF IT — MEASURED, NOT CHOSEN.** The cutout is
+`(UV - 0.5) -> LENGTH`, a RADIAL mask, so a face mapped to the full 0..1 square is ONE
+LEAF. Bake 1 used one cylindrical span over the whole mesh: median UV area **0.034 per
+face against the kit's healthy clumps at 1.00000**, i.e. each clump became a single
+leaf — a few huge holes with the cylinder's open backfaces through them. The judge named
+it before anyone looked: at cottage "missing/hollow/backface" 0 -> 2 and
+"debris/wreckage/torn" 1 -> 3, verbatim *"a cluster of bright orange vehicle wreckage"*
+and *"open holes that expose backface-culled hollow interiors"*. Bake 2 assigns a unit
+square per face and re-measures 1.00000/face, 1.16-1.48 uv/m against the healthy
+1.105-1.754. **MATCH THE KIT'S OWN NUMBER; DO NOT INVENT A PROJECTION.**
+
+HELD BACK WITH A MEASUREMENT, NOT A SHRUG: the 104 `veg_lf_fern_*` grass/fern meshes
+have the same missing `Col`, and repairing it makes the picture WORSE — they are
+`obox()` LITERAL BOXES where every other district's groundcover is a tuft, so black
+they were furniture and coloured they are lime blocks on lockfive's strand (1.34% of
+that frame). Two rungs measured before the call: baking the object-space Z ramp at
+world z gave (0.2372, 0.2423, 0.0895) against the 165 healthy grass meshes'
+(0.1376, 0.1509, 0.0570); re-baking with each origin moved to its own base gave
+(0.1756, 0.1858, 0.0694) — right by the ruler, and BY EYE THE BLOCKS ARE UNCHANGED,
+because no gradient makes a box a plant. The colour is owed the geometry first.
+Delete the `HOLD` entry in the carrier to ship it. **A REPAIR CAN MAKE A SECOND DEFECT
+LEGIBLE** — the same shape as Emberbrook round 1's survivors going 94 -> 97.
+
+(2) TARGET 1 — DEEP-STAIRS DARKNESS. THE INHERITED CLAIM IS REFUTED WITH A NUMBER, AND
+NOTHING WAS BUILT.
+Round 9 handed this over at 3/3 naive passes: "extremely harsh cast shadows", "pitch-black
+cast shadow completely obscures the passage and stairwell cut into the cliff face". On
+the geometry (`dh_objmap box` over the union of the three boxes) that region is
+**49.0% `qm_stair_underworks | mat_qm_stone_dark` at 27.3 m**, 12.2% `seam_bank`,
+9.7% `wf_ground`. The object is 5.98% of the frame at L p05 4.1 / p50 10.0, and the SAME
+material reads p50 60.4 at waterfront, 42.9 at lockhead, 36.6 at loop-stairs — capable,
+and unlit here.
+**THERE IS NO CAST SHADOW.** 440 samples on the visible face, each shadow-rayed to every
+light in the scene:
+
+    KEY_slip          reached 247/440   plate L p50 reached 12.1 · blocked  7.3
+    KEY_gorge_dam_0   reached 403/440   plate L p50 reached  9.0 · blocked  9.5
+    SUN_key           reached   0/440   383 of the 440 blocked by qm_stair_underworks
+    KEY_gorgewall     reached   0/440
+
+A cast shadow is a BOUNDARY. The pixels a light reaches are 4.8 levels of 255 brighter
+than the ones it does not, and for the widest-reaching light the difference INVERTS. The
+mass is uniformly dark because its visible faces point away from everything — 87% of the
+sun rays are stopped BY ITS OWN BODY. That refutes the obvious fixes twice: raising
+`KEY_slip` is "adjusting an existing light", which this town's night-grade doctrine
+records as never having moved it, and raising `KEY_gorgewall` was rejected once already
+because more light prints the rock's 16.7 m texture period as a quilt.
+THE LEVER IS THE ONE THE NEXT DISTRICT ALREADY USES AND THIS ONE LACKS. `weave_light`
+fills exactly this class with `KEYW_CLIFF_`: small horizontal cards standing gorge-ward
+of the frontages, firing -y, safe by COSINE and not by wattage (anything further out in
++y is behind the emitter). That run starts at x = 46.0. The stair mass stands at
+x 34.7..38.6, in the gap, and the census says so — `CLIFF_BOUNCE` (x 28.0, 120 W)
+reaches 10/440; `KEYW_CLIFF_0` (x 46.0) reaches 166/440 at 0.0057.
+`tools/dh_qm_underlight.py` derives the card row from the subject's own bbox and asserts
+the cosine argument. BUILT AND NOT RUN — round 11's, and it is one bake.
+
+(3) TARGET 3 — THE AWNING'S "UNTEXTURED" RESIDUAL. BOTH OF ROUND 9'S NAMED LEVERS ARE
+REFUTED BEFORE BUILDING, AND ROUND 8'S SHIPPED ONE MEASURES NULL.
+Local 5x5 SD on the shipped crossing plate over ray-derived masks:
+
+    awning canvas   0.47   (L p50 134.6)      mat_deck    10.58  (129.7)
+    mat_qm_paving   6.03   (117.7)            mat_rock     3.70  ( 24.4)
+                                              mat_timber   3.57  ( 25.3)
+
+The canvas is **13x flatter than the town's own sunlit stone** at a brighter value. So
+"untextured" is a SPATIAL-FREQUENCY deficit, and a hem/valance on the lip and darker rib
+columns are a silhouette lever and a value lever — neither touches it. **AND ROUND 8'S
+`relief` DID NOT MOVE IT EITHER**: 0.60/168.8 before, 0.47/134.6 now — 0.36% and 0.35%
+relative, unchanged. A slowly-varying normal makes a slowly-varying shade. The real lever
+is a TEXTURE, and the material is vertex-colour-only for glTF survival, so a procedural
+weave would be Blender-only and make the plate and the runtime disagree — it needs an
+image texture with UVs, which is a job and not a cheap round. NOT BUILT.
+
+REBAKE LIST FROM RENDERED FRAMES (whole-town draft A/B against the pristine pre-fix
+master, 15 a side, 1008x576 / 28 spp; documented noise floor 0.010% / 0.000%). RE-DERIVED
+for the second iteration, not inherited:
+  cottage 6.190/5.533 · crossing 0.806/0.644 · weave 0.780/0.616 ·
+  north-landing 0.718/0.652 · lockfive 0.258/0.165 · gate 0.155/0.114
+REFUSED WITH A NUMBER: boatyard 0.053/0.004 · fishdock 0.034/0.008 · lockhead 0.030/0.003 ·
+shelf-west 0.024/0.002 · loop-stairs 0.021/0.002 · shelf-east 0.020/0.001 ·
+deep-stairs 0.018/0.001 · waterfront 0.018/0.001 · quay-west 0.014/0.001. A 3x gap at the
+cut, and the six are exactly the cameras `dh_objmap` puts the 41 meshes in.
+BAKES: six, TWICE (the UV-scale iteration), 1-WIDE SERIAL in one Blender, rc=0,
+176.6-227.3 s a plate; `memory_pressure -Q` 87-89% free before every spawn, never a
+second Blender. Both bundles re-exported after each (`cine_bake --glb` +
+`tools/town_export.py`) because mesh data moved — verified in the artifact, not the log:
+`veg_lf_rimclump_0.001` now exports `['COLOR_0','NORMAL','POSITION','TEXCOORD_0']`.
+
+THE VERDICT (scene_redteam, pinned gemini-3.6-flash, naive, N=3), and the BEFORE arm was
+RENDERED FOR THIS COMPARISON — the pre-fix plates were extracted from git into a scratch
+bundle and judged through `--plates`, because cottage was not in round 9's shot set and a
+claim of improvement without a baseline is not a claim:
+
+    shot      phrase class                    BEFORE   bake1   bake2
+    cottage   cave / pitch-black / void            3       0       0
+    cottage   missing / hollow / backface          0       2       0
+    cottage   debris / wreckage / torn             1       3       0
+    cottage   TOTAL naive survivors                9       9       5
+    weave     cave / pitch-black / void            2       0       0
+    weave     TOTAL naive survivors                7       6       4
+
+**THE CAVE IS GONE AT BOTH CAMERAS (5 mentions -> 0) AND THE REPAIRED FOLIAGE IS NOT
+MENTIONED AS A DEFECT ANYWHERE IN BAKE 2.** Total naive survivors across the two cameras
+16 -> 9. Bake 1's row is left in the table on purpose: it is the receipt for the UV-scale
+defect and shows a fix landing at the right place with the wrong number.
+SAID PLAINLY: what survives at cottage is the wooden walkway ("fractured into jagged,
+disjointed planks") and one pre-existing healthy clump floating off the cliff — different
+subjects, both real, neither touched here.
+
+GATES: cine_test 635 ok / 1 failed / 2 soft — the pre-attributed deep-stairs<->waterfront
+seam red, same `{"fired":0,"expected":10}`, i.e. the Dellhollow baseline EXACTLY ·
+slice_test 776/0 · findability_test 69 passed / 0 failed / 11 warnings ·
+routes_derive --check clean, 15 shots (nothing walkable moved).
+
+OWED / NAMED FOR ROUND 11:
+  1. **A DEPLOY IS OWED** — six plates and both bundles supersede what is on the site.
+  2. `dh_qm_underlight.py` — built, its gap measured, NOT run. One bake.
+  3. The 104 `veg_lf_fern_*` are `obox()` BOXES. Give them tuft geometry, then delete the
+     `HOLD` entry and their colour comes back for free.
+  4. The rim clumps are 41-poly stacked cylinders. At cottage they are 5% of frame at
+     21 m and the facets show at native resolution even with the cutout right. That is a
+     geometry-quality item, not an attribute one.
+  5. The awning needs an image texture with UVs, or its "untextured" residual stays.
+  6. Weave's remaining black — the thing the invisible clumps were standing in front of —
+     has never actually been measured. Round 9 attributed it to them and that is now
+     known to be wrong.
+
 ## 2026-08-09 — DELLHOLLOW GRAPHICS ROUND 9: THE CANVAS'S VALUE IS A WEAK LEVER AND ITS
 ## OWN CONTROL SAYS SO; THE STAIRS' BUILDER REFUSES IN SILENCE; AND WEAVE'S CAVE IS FOLIAGE
 
