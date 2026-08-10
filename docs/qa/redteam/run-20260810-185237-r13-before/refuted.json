@@ -1,0 +1,645 @@
+[
+ {
+  "fid": "F2",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "navigation",
+  "where": "foreground path sloping towards bottom right",
+  "bbox": [
+   0.63,
+   0.65,
+   0.968,
+   1
+  ],
+  "severity": 2,
+  "desc": "The main walkway slopes downwards off-screen into jagged, steep rock geometry, making it unclear if the path continues or drops off a cliff.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The path simply extends off the camera frame, which is standard perspective framing rather than a broken pathway."
+  }
+ },
+ {
+  "fid": "F9",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "navigation",
+  "where": "dark archway along the main upper path",
+  "bbox": [
+   0.487,
+   0.468,
+   0.565,
+   0.575
+  ],
+  "severity": 2,
+  "desc": "It is unclear whether the path continues through the dark covered structure or terminates inside.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Light and continuing ground geometry are clearly visible through the archway structure."
+  }
+ },
+ {
+  "fid": "F25",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "occlusion",
+  "where": "rocky ridge on the left",
+  "bbox": [
+   0.15,
+   0.575,
+   0.43,
+   1
+  ],
+  "severity": 1,
+  "desc": "The large rocky ridge occludes the ground connection between the upper path and the lower dock area, making the transition route between them hard to read from this camera angle.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Natural terrain occluding lower elevation areas from an elevated overview camera angle is standard level design."
+  }
+ },
+ {
+  "fid": "F53",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "navigation",
+  "where": "cluttered wooden scaffolding on the cliff edge",
+  "bbox": [
+   0.22,
+   0.28,
+   0.65,
+   0.48
+  ],
+  "severity": 2,
+  "desc": "Overlapping scaffolding, ropes, and roofs obscure pathways between the upper town and lower docks, making navigation visually confusing.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The dense wooden architecture represents intended environmental clutter and stylization rather than a navigation defect."
+  }
+ },
+ {
+  "fid": "F59",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "orange block light fixture on the side of the building",
+  "bbox": [
+   0.637,
+   0.498,
+   0.663,
+   0.548
+  ],
+  "severity": 1,
+  "desc": "The orange light block is floating off the side of the wall without any visible mounting bracket or connection.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "6.2,11,-0.1,3.8",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 6.2,11,-0.1,3.8"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The orange fixture is attached to the building wall with visible mounting hardware."
+  }
+ },
+ {
+  "fid": "F60",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "immersion",
+  "where": "top-left end of the flag banner line",
+  "bbox": [
+   0.439,
+   0.398,
+   0.479,
+   0.445
+  ],
+  "severity": 1,
+  "desc": "The decorative banner string attaches to an arbitrary point in mid-air rather than a wooden post or wall fixture.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "12.3,18.2,5.1,9.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 12.3,18.2,5.1,9.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The banner string connects directly to the wooden beam structure on the left."
+  }
+ },
+ {
+  "fid": "F44",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockhead",
+  "item": null,
+  "category": "navigation",
+  "where": "wooden stairs in the upper right background",
+  "bbox": [
+   0.807,
+   0.102,
+   0.936,
+   0.335
+  ],
+  "severity": 2,
+  "desc": "The staircase leads straight up to the cliff face with no clear doorway, ledge, or visible continuation.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The upper staircase leads directly to a wooden platform with stalls, barrels, and a continuing walkway rather than ending at a blank cliff face."
+  }
+ },
+ {
+  "fid": "F62",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockhead",
+  "item": null,
+  "category": "geometry",
+  "where": "staircase on the upper right cliff face",
+  "bbox": [
+   0.814,
+   0.107,
+   0.93,
+   0.28
+  ],
+  "severity": 2,
+  "desc": "The wooden steps float above the cliff side without structural supports anchoring them into the terrain.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "50.9,58.6,1.5,11.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 50.9,58.6,1.5,11.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The wooden staircase is visibly supported from below by thick wooden posts and beams connecting it to the terrain."
+  }
+ },
+ {
+  "fid": "F4",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of orange cubes floating in mid-air on the left",
+  "bbox": [
+   0.238,
+   0.556,
+   0.415,
+   0.612
+  ],
+  "severity": 3,
+  "desc": "A horizontal line of untextured orange cubes floats in mid-air without ropes or structural support.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "88.5,95.8,15.8,20.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.5,95.8,15.8,20.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The orange blocks are supported by a wooden beam beneath them rather than floating unsupported in mid-air."
+  }
+ },
+ {
+  "fid": "F10",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of orange blocks on the left",
+  "bbox": [
+   0.237,
+   0.556,
+   0.418,
+   0.608
+  ],
+  "severity": 2,
+  "desc": "A series of bright orange block steps float horizontally in mid-air without visible structural supports or ropes.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "88.4,95.8,15.8,20.3",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.4,95.8,15.8,20.3"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The orange blocks rest on a narrow horizontal wooden beam rather than floating in mid-air."
+  }
+ },
+ {
+  "fid": "F15",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of orange blocks on the left",
+  "bbox": [
+   0.238,
+   0.554,
+   0.418,
+   0.624
+  ],
+  "severity": 2,
+  "desc": "A row of orange rectangular blocks floats suspended in mid-air near the building without any visible support or string.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "88.4,95.8,15.8,20.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.4,95.8,15.8,20.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The blocks are positioned directly on top of a horizontal wooden rail."
+  }
+ },
+ {
+  "fid": "F23",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of orange blocks on the left",
+  "bbox": [
+   0.239,
+   0.556,
+   0.415,
+   0.608
+  ],
+  "severity": 2,
+  "desc": "A horizontal sequence of bright orange cubic blocks floats in mid-air without visible structural supports.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "88.5,95.8,15.8,20.3",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.5,95.8,15.8,20.3"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "A wooden beam clearly supports the row of orange blocks underneath."
+  }
+ },
+ {
+  "fid": "F24",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "occlusion",
+  "where": "dark shadow region behind central roof",
+  "bbox": [
+   0.326,
+   0.301,
+   0.52,
+   0.524
+  ],
+  "severity": 2,
+  "desc": "A harsh, completely black shadow conceals the terrain and structures behind the central wooden roof.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The area behind the central roof is lit and clearly shows the cliff face and timber structures, not a total black shadow."
+  }
+ },
+ {
+  "fid": "F30",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of floating orange blocks left of center",
+  "bbox": [
+   0.239,
+   0.555,
+   0.415,
+   0.61
+  ],
+  "severity": 2,
+  "desc": "A series of orange square blocks float in mid-air without any supporting structure.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "88.5,95.8,15.8,20.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.5,95.8,15.8,20.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The blocks rest on a wooden pole extending from the building."
+  }
+ },
+ {
+  "fid": "F31",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "geometry",
+  "where": "long ladder on the right cliff side",
+  "bbox": [
+   0.686,
+   0.37,
+   0.85,
+   0.99
+  ],
+  "severity": 1,
+  "desc": "The ladder hovers unsupported off the rocky cliff face without visible mounting points or anchoring.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "78.2,85.8,15.3,23.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 78.2,85.8,15.3,23.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The ladder is slanted between the lower structure and upper platform as a standard leaning ladder rather than hovering in space."
+  }
+ },
+ {
+  "fid": "F37",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of orange boxes floating in mid-air near the house",
+  "bbox": [
+   0.235,
+   0.555,
+   0.415,
+   0.62
+  ],
+  "severity": 2,
+  "desc": "A row of small orange cubic blocks floats in mid-air without any visible rope, beam, or support.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "88.5,95.8,15.8,20.5",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.5,95.8,15.8,20.5"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "A visible wooden beam supports the row of orange blocks."
+  }
+ },
+ {
+  "fid": "F41",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of orange cubes hanging in the mid-left",
+  "bbox": [
+   0.555,
+   0.238,
+   0.615,
+   0.415
+  ],
+  "severity": 1,
+  "desc": "The bright orange cubes float along the thin beam without visible hooks or attachment fixtures.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "84.3,88.9,12.3,18.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 84.3,88.9,12.3,18.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Objects resting on a flat wooden beam do not require special hooks or attachment fixtures."
+  }
+ },
+ {
+  "fid": "F45",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "floating orange cubes across the gap near the hut",
+  "bbox": [
+   0.23,
+   0.55,
+   0.42,
+   0.62
+  ],
+  "severity": 2,
+  "desc": "A row of bright orange cubes floats in mid-air across the gap without any supporting structure.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "88.3,96,15.8,20.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.3,96,15.8,20.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The orange cubes sit on top of a wooden beam spanning out from the structure."
+  }
+ },
+ {
+  "fid": "F55",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of orange cubes near the middle left",
+  "bbox": [
+   0.238,
+   0.554,
+   0.413,
+   0.61
+  ],
+  "severity": 2,
+  "desc": "A row of bright orange blocks floats in mid-air without structural support or context, breaking scene belief.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "88.3,95.8,15.9,21.2",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.3,95.8,15.9,21.2"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The orange blocks are resting on a wooden beam rather than floating freely without support."
+  }
+ },
+ {
+  "fid": "F76",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "immersion",
+  "where": "middle center dock walkway",
+  "bbox": [
+   0.552,
+   0.377,
+   0.564,
+   0.413
+  ],
+  "severity": 1,
+  "desc": "A white cylinder light fixture floats in mid-air above the dock structure without any support or mount.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "84.4,91.4,20.7,24.7",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 84.4,91.4,20.7,24.7"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The white light fixture on the central dock walkway rests directly on the wooden deck surface rather than floating."
+  }
+ },
+ {
+  "fid": "F120",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "immersion",
+  "where": "top-right background near mountain ridge",
+  "bbox": [
+   0.775,
+   0,
+   0.878,
+   0.045
+  ],
+  "severity": 2,
+  "desc": "The background mountain mesh terminates prematurely, revealing the empty background void.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "89.8,151.5,4.7,17.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 89.8,151.5,4.7,17.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The mountain wall in the top-right background continues fully off-screen without exposing any empty void."
+  }
+ },
+ {
+  "fid": "F70",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "fishdock",
+  "item": null,
+  "category": "navigation",
+  "where": "right end of the main boardwalk",
+  "bbox": [
+   0.93,
+   0.71,
+   0.98,
+   0.77
+  ],
+  "severity": 2,
+  "desc": "The primary wooden boardwalk terminates abruptly mid-air over the water with no stairs, ladder, or clear way forward.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The boardwalk properly terminates on supporting wooden pilings near the shore structure as part of the dock boundary."
+  }
+ },
+ {
+  "fid": "F113",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "fishdock",
+  "item": null,
+  "category": "occlusion",
+  "where": "dark shadowed recess underneath the cliff overhang in center background",
+  "bbox": [
+   0.45,
+   0.05,
+   0.75,
+   0.35
+  ],
+  "severity": 2,
+  "desc": "Extremely heavy shadow obscures the interior space beneath the upper buildings, making it impossible to see if there is walkable ground or an path.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Heavy shadowing under stilted cliffside structures is standard environmental lighting and does not obscure playable pathways."
+  }
+ }
+]
