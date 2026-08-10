@@ -1395,6 +1395,34 @@ git runs here, on branch `migration/3d-hybrid`.
     character the framing gate is calibrated on, ships 3338-3779 such pixels at 99% ON the cut**,
     visible as pink hair tips at display size. That is the known ungated `key_rim` hole; gating
     it fails vesper's whole suite.
+    **AND THE MATTE IS THE INSTRUMENT THAT SETTLES PAINT vs RESIDUE** (2026-08-10 — odessa/stern
+    shipped a pink rim LIVE on deploy 21 with every gate green, and two lanes disagreed about
+    what it was). Run `matte_key` on the SOURCE and difference **its own output against its own
+    input** at the firing pixels: `out − src` is **0.0 at the median AND at p95, at mg>30/50/70,
+    on all five plates**, and those pixels sit 135-210 levels from `key0`. **The matte is a
+    no-op on it** — it is a painted rim light 15-30 px INSIDE the drawn outline, which no despill
+    or un-premultiply change can reach. The two lanes were each right about different things and
+    the reconciliation is a DATE, not a mechanism: `grave`/`warm` were re-drawn under the new
+    `extra` clause; `stern`/`worried`/`rest` are the older batch, and within that batch it is
+    ROLL VARIANCE (rest 25 px above mg>50, stern 2010).
+    **`key_rim` STILL CANNOT GATE, AND NOW THERE ARE NUMBERS**: over 122 plates on four forms —
+    absolute count, shell−core share at T=40/56/72, shell−core mean, and wide(0-12)−deep(16-40)
+    mean — **Vesper's ten plates outrank the defect on EVERY ONE** (stern key_rim −0.00019 /
+    wide−deep +5.43 / 2010 px against vesper 0.0032-0.0283 / +6.8-13.6 / 1573-3273), and lowering
+    T makes stern MORE negative. **WHAT SEPARATES IS SHAPE, NOT AMOUNT: A RIM IS A LINE AND
+    STRAND-TIP SPILL IS DOTS** — largest 4-connected run of local-excess pixels, stern **561 px
+    spanning 121**, every other plate in the cast's top 20 is 8-75 px spanning 4-25 (7.5x on run,
+    4.8x on span). NOT shipped as a gate: one labelled positive, and it is silent on
+    odessa/worried. Banked as the candidate form; today the honest answer is the QA composite and
+    the eye.
+    **THE OUTCOME WAS A SMALLER MOOD SET, AND THAT WAS THE RIGHT CALL** — one re-roll under an
+    `extra` clause banning THE KEY ACTING AS A LIGHT (the global prompt already banned magenta
+    trim, outline and hair — not this) left stern 5x better and STILL PINK, and worried came back
+    worse and off-grammar. Both dropped: neither is scripted, and **a pink rim on a named story
+    character is worse than a smaller mood set**. They were removed from `cutins.spec.json`'s
+    `moods` as well as the manifest — **leaving a mood in the spec when the gate PASSES its
+    defect is a time bomb that re-draws and re-promotes it on the next full run.** Cast
+    120/122 → 118/120, failure count unchanged at 2.
     **RE-ROLL `rest` FIRST, NEVER LAST**: `rest` is the identity reference the mood plates
     are drawn from, so re-rolling it after them orphans the set against a superseded
     reference (sorrel's striped apron went plain white, her peel wood → terracotta). The
