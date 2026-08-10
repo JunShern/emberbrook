@@ -234,6 +234,49 @@ git runs here, on branch `migration/3d-hybrid`.
   `relief` measures NULL** (0.60/168.8 → 0.47/134.6, relative 0.36% → 0.35%). HELD BACK with
   numbers: the 104 `veg_lf_fern_*` are `obox()` BOXES — two colour rungs measured right by the
   ruler and read as **lime blocks by eye**; colour is owed the geometry first.
+- **tools/dh_veg_kit.py — COPY THE TOWN'S OWN KIT, AND SOLVE THE FREE PARAMETER INSTEAD OF
+  CHOOSING IT** (2026-08-10, round 11). 385 meshes wear `mat_grass`/`mat_fern` in exactly four
+  shapes — 150 tuft kit, 131 fern kit, **78 `veg_lf_fern_*` boxes and 26 `veg_lk_tuft_*` crossed
+  quads**. That 78+26 IS round 10's "104", and **it is TWO DISTRICTS THAT IGNORED A KIT THE TOWN
+  ALREADY HAD** — so nothing was authored: each orphan takes a copy of the town's own donor,
+  scaled never larger than the envelope its builder cleared. **THE ORIGIN IS THE COLOUR**: the
+  ramp is `Object.Z → Map Range(0, 0.45/0.55, clamped)`, so base-at-zero measures 35% bright,
+  centred 43% dark, kit-height 61% correct on both materials. The chain is arithmetic, so it is
+  evaluated in **numpy and checked against a Cycles EMIT bake to four decimals** before being
+  trusted. Result: `mat_fern` 100%, `mat_grass` 99% of their own healthy family.
+  **AND THE TARGET IS THE SHIPPED VERTEX ATTRIBUTE, NOT WHAT THE RAMP PREDICTS FOR IT** (they
+  differ by 1.36x) — after `master_survivability` the ramp is only a bake source.
+  **STATE A RAY-CASTER'S SOUNDNESS, DO NOT ASSUME IT**: round 10 proved a ray census cannot see
+  an alpha cutout, so round 11 counted the exposure before using one — exactly **5 of 148
+  materials carry a Transparent BSDF**, at weave that class is 1.6% of the crushed set (so the
+  attribution is exact to within 1.6%), **and at gate 10.16% and deep-stairs 5.49% the same
+  reading would NOT be safe**. That sentence is the model for every future census here.
+  **WEAVE'S BLACK IS REFUTED AND WAS NEVER A WEAVE ITEM**: 17.86% crushed, **rank 7 of 15**
+  against a town median of 17.25% and lockfive's 22.08%; no object exceeds 9.5% of the crushed
+  set and the top twelve are twelve different huts, decks and grounds. The mechanism is the same
+  material lit vs in its own shadow — `lf_shingle` **83.6 vs 2.5 (33.5x)**, `lf_deck` 13.5x,
+  `mat_timber_dark` 10.9x. **It is a shadow with nothing in it: a town-wide light-transport
+  question, and three rounds mistook it for a local defect.** NOT BUILT — a town-wide fill is not
+  a smallest lever.
+  **THE AWNING'S "UNTEXTURED" WAS LITERAL, AND EMBERBROOK'S BELOW-NYQUIST HYPOTHESIS DOES NOT
+  TRANSFER**: it is 1.45% of crossing at 5.3 m — the NEAREST significant surface — resolved at
+  1.9 mm/px, with median 3x3 SD **exactly 0.00** where paving reads 4.26. Below Nyquist would
+  show coarse signal and no fine signal; this had **none at 6 mm**. Both constraints inherited
+  into the brief were also false: the town's **61 textured materials use no UVs at all**
+  (`Texture Coordinate.Object`), and Dellhollow's runtime never draws this material (`del-cine`
+  is a plate bundle whose glb is collision). Fixed as a generated canvas MULTIPLIED into `Col`,
+  so round 8's stripes and round 9's value pull survive by construction: SD3 **1.12 → 7.56**,
+  L p50 133.6 → 96.1 (under the paving instead of over it).
+  **ZERO REFUSALS FOR THE FIRST TIME IN FOUR ROUNDS — AND THE FLOOR WAS RE-MEASURED TO EARN IT.**
+  All fifteen cameras exceeded 1% of frame, which looks like a global render difference, so two
+  draft renders of the SAME master were compared: boatyard 0.031%, shelf-west 0.006%, crossing
+  0.001%. The A/B is **30x-170x the floor everywhere** and the cause is nameable — 104 pure-black
+  meshes now bounce at `diffuse_bounces 4`. **A SUSPICIOUS RESULT IS A REASON TO RE-MEASURE THE
+  INSTRUMENT, NOT TO WAIVE IT.**
+  Judge: survivors **43 → 44, flat**, reported as such. crossing `block/box/primitive` 2 → 0 and
+  `mesh/grid/screen/weave` 0 in both arms (so the new canvas does not read as a screen door);
+  quay-west darkness 4 → 1, lockfive 5 → 3 as indirect lift. **deep-stairs 4 → 7 with darkness
+  0 → 3 is recorded UNEXPLAINED, not as noise** — the fix aimed there made its subject BRIGHTER.
 - **A CONTROL THAT DRIVES THE LEVER TO ITS ABSURD LIMIT IS WORTH MORE THAN THREE RUNGS OF IT**
   (2026-08-09, round 9; tools/qm_canvas_value.py, tools/dh_stair_stringer.py). Round 8 left the
   awning canvas's VALUE as its one unclosed judge verdict ("untextured", "white"). The frame's own
