@@ -2234,10 +2234,46 @@ def build_mill():
                 (0.14, 0.80, 0.22), rot=(sy2 * -angr, 0, HRZ), mat=TIMBER_D)
     box("emb_dress_mill_ridge", HW(0, 0, RIDGE + 0.18), (hw + 2.2, 0.40, 0.24),
         rot=(0, 0, HRZ), mat=TIMBER_D)
+    # THE GABLE IS BOARDED AND CUT TO THE ROOF — it used to be ONE BOX, and that box was
+    # Emberbrook's single most-complained-about surface (round 2, 2026-08-10).  Measured:
+    # 0.18 x 10.20 x 2.92 m, ONE FLAT FACE, top edge dead level 0.30 m under the ridge
+    # while the roof it closes slopes away on both sides — and `emb_dress_boarding`'s only
+    # detail is a procedural noise at 1/26 m = 38 mm, which is TWO PIXELS on `homerow`
+    # (fov 20 over 768 rows at 42 m = 18.4 mm/px), so the denoiser takes it and the panel
+    # renders as its own mean colour.  `emb_ray_census` put 73.8% of the judge's box on
+    # `emb_dress_mill_gable+1 | emb_dress_boarding`; six independent naive looks called it
+    # "a large blank rectangular block" / "placeholder geometry".
+    #   A MATERIAL CANNOT RESCUE A SURFACE WHOSE ONLY FREQUENCY IS AT THE SENSOR'S NYQUIST
+    # LIMIT.  Everything around it that reads — the studs, the daub panels, the cedar
+    # shingles, the sawn log — carries GEOMETRY at 0.1-0.5 m.  So does this now: vertical
+    # boards at a 0.24 m pitch (13 plate pixels) with +-0.018 m of relief, each cut to the
+    # roof plane above it, plus a barge-board down each slope.
+    #   The carrier `tools/emb_millgable.py` puts the same members on the three blends that
+    # are already built, deriving each board's top by casting UP against `roofdeck` instead
+    # of repeating the arithmetic below — two tools, one number, neither owning the other.
+    GBW, GREL, GGAP = 0.24, 0.018, 0.012
+    GL = hd + 0.8
+    gz0 = EAVE - 0.30
+    gn = max(3, int(round(GL / GBW)))
+    gbw = GL / gn
     for sx2 in (-1, 1):
-        box("emb_dress_mill_gable%+d" % sx2,
-            HW(sx2 * (hw / 2 + 1.0), 0, (RIDGE + EAVE) / 2 - 0.30),
-            (0.18, hd + 0.8, RIDGE - EAVE), rot=(0, 0, HRZ), mat=PLANK)
+        for gi in range(gn):
+            t = -GL / 2 + (gi + 0.5) * gbw
+            ztop = RIDGE - (RIDGE - EAVE) * abs(t) / (hd / 2 + OVER) \
+                - 0.06 - 0.05 / math.cos(angr)
+            h = ztop - gz0
+            if h <= 0.05:
+                continue
+            box("emb_dress_mill_gableboard%+d_%02d" % (sx2, gi),
+                HW(sx2 * (hw / 2 + 1.0) + (GREL if gi % 2 else -GREL), t, gz0 + h / 2),
+                (0.18, gbw - GGAP, h), rot=(0, 0, HRZ), mat=PLANK)
+        for sy2 in (-1, 1):
+            bl = math.hypot(GL / 2, (RIDGE - EAVE) * (GL / 2) / (hd / 2 + OVER))
+            box("emb_dress_mill_gablebarge%+d%+d" % (sx2, sy2),
+                HW(sx2 * (hw / 2 + 1.09), sy2 * GL / 4,
+                   (RIDGE - 0.06 - 0.05 / math.cos(angr) + gz0
+                    + (RIDGE - EAVE) * (1 - (GL / 2) / (hd / 2 + OVER))) / 2 + 0.06),
+                (0.10, bl, 0.20), rot=(sy2 * -angr, 0, HRZ), mat=PLANK)
     box("emb_dress_mill_lucam", HW(- 1.6, - hd / 2 - 0.9, RIDGE - 1.95),
         (2.6, 1.9, 2.6), rot=(0, 0, HRZ), mat=PLANK)
     box("emb_dress_mill_lucamroof", HW(- 1.6, - hd / 2 - 1.0, RIDGE - 0.50),
