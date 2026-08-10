@@ -1,0 +1,1733 @@
+<meta charset="utf-8"><title>Scene red-team — emberbrook — run 20260810-emb-round2-after</title>
+<style>
+:root{--bg:#14110e;--fg:#efe6d8;--dim:#a2957f;--line:#33291f;--hit:#5fb56b;--miss:#c9584a;
+      --naive:#e0a33c;--checklist:#5aa9d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+  font:14px/1.55 -apple-system,Segoe UI,Roboto,sans-serif}
+.pad{max-width:1240px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:38px 0 6px;border-bottom:1px solid var(--line);
+  padding-bottom:6px}h3{font-size:15px;margin:24px 0 4px}
+.small{color:var(--dim);font-size:12px}.blurb{color:var(--dim);margin:2px 0 10px;font-size:13px}
+code{background:#241d16;padding:1px 5px;border-radius:3px;font-size:12px}
+.verdict{background:#1e1912;border:1px solid var(--line);border-left:4px solid var(--naive);
+  padding:14px 16px;border-radius:6px;margin:14px 0 6px;font-size:16px;line-height:1.6}
+table{border-collapse:collapse;width:100%;margin-top:10px}
+th,td{border:1px solid var(--line);padding:9px;vertical-align:top;font-size:13px}
+th{background:#1e1912;text-align:left;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.refcell{width:210px}.refcell img{width:100%;border-radius:4px;display:block}
+.whatcell{width:250px}.said{color:var(--dim);font-style:italic;margin:4px 0}
+td.hit{background:#16240f}td.miss{background:#2a1512}
+td.hit b{color:var(--hit)}td.miss b{color:var(--miss)}
+.quote{margin-top:6px;padding-left:8px;border-left:2px solid var(--line)}
+.src{display:block;color:var(--dim);font-size:11px}
+.wrap{position:relative;display:block;line-height:0;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.wrap img.plate{width:100%;display:block}
+.bx{position:absolute;border:2px solid var(--naive);border-radius:2px;box-shadow:0 0 0 1px #0008}
+.bx.checklist{border-color:var(--checklist)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+.card{background:#1a1610;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.card.sev3{border-color:#6b3229}
+.ch{padding:8px 10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.pill{font-size:10.5px;padding:1px 6px;border-radius:99px;background:#2a2118;color:var(--dim);
+  text-transform:uppercase;letter-spacing:.04em}
+.pill.naive{background:#3a2c12;color:var(--naive)}.pill.checklist{background:#122c3a;color:var(--checklist)}
+.shot{margin-left:auto;font-size:12px;color:var(--dim)}
+.crop{width:100%;aspect-ratio:16/9;background:#000 no-repeat;border-bottom:1px solid var(--line)}
+.cb{padding:10px}.q{font-size:13px}
+.meta{color:var(--dim);font-size:11.5px;margin-top:5px}
+.meta.cmd{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;word-break:break-all;color:#8fa07d}
+.verify.upheld b{color:var(--hit)}.verify.refuted b{color:var(--miss)}
+.count{color:var(--dim);font-weight:400;font-size:12px}
+.empty{color:var(--dim);font-size:12px;padding:10px}
+.limits{background:#1c1712;border:1px solid var(--line);border-left:4px solid var(--miss);
+  padding:14px 18px;border-radius:6px}
+.limits li{margin:5px 0}
+section.shot{margin:18px 0 26px}
+.budget{color:var(--dim);font-size:12px;margin-top:8px}
+.sub{color:var(--dim);font-size:12.5px;font-weight:400;margin-top:8px;line-height:1.5}
+td.adj{width:190px}td.adj.hit{background:#16240f}td.adj.hit b{color:var(--hit)}
+td.adj.weak{background:#2a2410}td.adj.weak b{color:var(--naive)}
+td.adj.miss{background:#2a1512}td.adj.miss b{color:var(--miss)}
+.pill.sup{background:#22301f;color:#8fbf7f}
+</style>
+<div class="pad">
+<h1>Scene red-team — emberbrook</h1>
+<div class="small">run <code>20260810-emb-round2-after</code> · judge <code>gemini:gemini-3.6-flash</code> (pinned) ·
+  11 plates · naive + checklist · naive N=3 ·
+  generated 2026-08-10T07:16:17.015Z by <code>tools/scene_redteam.mjs</code> · plates baked 2026-08-09T22:49:48Z .. 2026-08-10T07:11:52Z</div>
+
+<h2>1 &nbsp;The prompts, verbatim</h2>
+<p class="blurb">Exactly what each judge call was asked (judge <code>gemini:gemini-3.6-flash</code>, pinned) —
+read these first; everything below is these prompts' output. The naive prompt is fixed for the whole
+run; the checklist and sceptic prompts are templates filled per plate — shown here filled with this
+run's own data. The style paragraph switches between art and blockout mode; this run used
+art mode, and that is the version shown.</p>
+<details class="prompt"><summary>Stage 1 — the naive critic (every plate, each of the N looks)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are a first-time player. The image is one frame of a video game, exactly what is on
+screen. You have never been here, you have no map, and nobody has told you anything.
+
+Critique this frame. Report anything that would make the place HARD TO UNDERSTAND or
+HARD TO PLAY. Use exactly these category tokens:
+  navigation  — you would not know where to go, or the way on is ambiguous
+  occlusion   — something blocks your understanding of the space
+  geometry    — incomplete, stray, floating, clipping, or plainly ugly geometry
+  exit        — a door or way out that does not read as a door or a way out
+  immersion   — floating objects, z-fighting, wrong scale, anything that breaks belief
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+RULES. Report only things you can actually point at in this image. Do NOT invent
+problems to fill the list, and do NOT list matters of taste. If the frame is fine,
+return an empty list — that is a valid and useful answer. At most 6 findings.
+severity: 3 = a player would be stuck or would think the game is broken, 2 = clearly
+wrong but survivable, 1 = a blemish.
+
+Answer with JSON only, in this exact shape:
+{&quot;findings&quot;:[{&quot;category&quot;:&quot;occlusion&quot;,&quot;where&quot;:&quot;a few words locating it in the frame&quot;,
+ &quot;bbox&quot;:[x0,y0,x1,y1],&quot;severity&quot;:2,&quot;desc&quot;:&quot;one sentence&quot;}]}
+bbox is in normalised image coordinates: x 0 at the left edge and 1 at the right, y 0
+at the top edge and 1 at the bottom.</pre></details>
+<details class="prompt"><summary>Stage 1 — the checklist auditor (filled for plate &quot;square&quot;, 30 items derived from the map/ownership contract)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are auditing one frame of a video game. The designer says the things listed below
+are in this shot and that a player should be able to find them. For EACH item, decide
+which of these four is true, using the exact token:
+  FINDABLE               a first-time player would find it AND know what it is
+  OCCLUDED               it is hidden behind something else (say what hides it)
+  VISIBLE-BUT-ILLEGIBLE  part of it is on screen, but it does not read as what it is
+                         — too small, too dark, merged into its background, cropped,
+                         or it looks like some other kind of thing entirely
+  ABSENT                 you cannot see it anywhere in this frame at all
+
+Items marked [QUALITY] are different: they are already in frame, so findability is
+not the question — how well they HOLD UP is. For those items, and ONLY those, answer
+with one of these tokens instead:
+  CONVINCING   it holds up — it reads as the real thing at this scene's own hour
+  WEAK         it reads, but visibly falls short — say exactly what falls short
+  FAILING      it breaks the picture — it reads as a flat fill, a painted plane, or
+               an unfinished edge of the world
+For a [QUALITY] item, put the bbox around the specific area your judgment rests on,
+and make &quot;desc&quot; a JUDGMENT with a reason — never a neutral description of what is
+there.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+YOU ARE NOT TOLD WHERE ANYTHING IS. Do not guess a position to be helpful: if you
+cannot find it, ABSENT is the correct and useful answer. If you DO find it, give the
+bbox where you see it so your reading can be checked against the model.
+
+Two rules that keep the answers useful. (1) Names like &quot;shelf-west&quot; are the designers'
+internal names for other areas; a player never sees them, so NEVER report a missing
+sign, label or name as a problem — judge only whether the thing itself can be found and
+recognised for what it is. (2) Judge what is DRAWN, not what a game would normally add:
+no icons, markers or waypoints exist in this art and their absence is not a finding.
+
+Items:
+  1. Festival Square — a plaza (cobbled heart of the village; stalls and bunting in season | CH1 AUDIT: finn moved to pond-weir.residents — the shipped script posts him at the pond (beat 7); long-term post is user question Q-finn.)
+  2. The Heartlight — a heartlight (THE magical flame on its stone pedestal — story core; treat with reverence in every shot | MATERIAL RULING 2026-08-01, RETRACTED AND CORRECTED same day (cef5d61): the plinth and cap were NEVER emissive — emb_mat_heartlight is on the flame mesh alone and always was; the prior note rested on measurement boxes that lapped the flame. The true clipper was the flame kit's EMBER BED, built at alpha 0.92 without the shells' facing-fade rule — a construction fault at the flame's foot, fixed in the kit, not a material reassignment. The 5200 W canon light was never touched by any of this.)
+  3. The market row — a market (SEARCHED, not authored (dressing lane 2026-08-01, 24 bearings x 8 offsets against the 10 lane mouths the map's own edges derive). The 5.8 m THRESHOLD HOLE at the row centre is the point of the record: seam-canon 4 says a cut sits on a threshold and never mid-span of open floor, and the across-the-square cut derives from this. Stalls stand 4.94 m from the Heartlight at the tightest, against a 1.44 m stall half-diagonal and the 2.30 m kerb ring = 1.20 m of clear aisle. Bunting cords cross a lane head at 3.20 m, over a body and never through one; posts are SEARCHED round the ring and a post that cannot clear a mouth is refused, so the ring opens where the town has roads (11 of 12 seated). PROPS, NO POSTS: the lamp roll stays 14. | STAMPED 2026-08-01 (coordinator, from the dressing lane's seated search): six stalls on the 150-deg axis with the 5.8 m threshold hole — the across-the-square cut's map fact. Seating measured: stall-to-nearest-landmark 6.12/5.07/4.94/4.94/6.25/6.14 m; tightest aisle 1.20 m clear. Generative params carried WITH derived footprints so the row re-derives if the plaza moves; bunting as ring parameters (posts searched against lane mouths, never frozen). Footprints are AABBs of yawed stalls (over-report by design, flagged); true shape derivable from axis+slots+size. Props — lamp roll stays 14.)
+  4. Item Shop — a shop item (village general store — preserves, twine, lamp oil)
+  5. Inn — The Ember Hearth — a shop inn (small — two rooms and a warm parlour; rarely a stranger in it)
+  6. Notice board — a prop (festival duties rota; a child's drawing of the Heartlight pinned up | CH1 POSTER (shipped text, for the dressing pass): &quot;EMBERWAKE TONIGHT — bring a memory worth keeping. And a chair. We are short of chairs.&quot;)
+  7. Village well — a prop (nudged 2.5 m off the square-&gt;hillside-cottage lane (2x scale put it in the road))
+  8. Poppy's bakery — a building (warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging | MOVED 2026-07-31 (coordinator): 1.5 m away from the inn — at (24.5,21.5) the two roofs shared a volume (4.03 m centres vs 4.96 m needed at cottage size + 1.14 roof oversail, measured by the square builder). Still on the square's west rim, west of the well.)
+  9. poppy-stall — a prop (CH1 STAMP (audit, beat 5): Poppy's festival stall — &quot;My stall. My bread.&quot; is the load-bearing line of her post-Hush recovery. Plaza rim, in front of the bakery.)
+  10. Festival dais — a prop (low wooden dais near the Heartlight where the Kindling Hour queue forms — ch1 staging. | rowan's festival post (ch1 beats 11/23 — the Hour is called here).)
+  11. Village bell — a prop (bell on a post beside the notice board.)
+  12. the route between Village Arch and Festival Square — a road (STAMPED retype 2026-08-01: was waystone-&gt;square-plaza, which forked the wood road around the arch and bypassed the reveal. Chain is now clearing -&gt; waystone -&gt; arch -&gt; square; same waypoints.)
+  13. the route between Festival Square and Item Shop — a road
+  14. the route between Festival Square and Inn — The Ember Hearth — a road
+  15. the route between Festival Square and Notice board — a path
+  16. the route between Festival Square and Village well — a path
+  17. the route between Festival Square and Poppy's bakery — a path
+  18. the route between Festival Square and Pond jetty — a road (pond lane east, curling with the shore)
+  19. the route between Festival Square and Mara &amp; Pip's cottage — a road (home lane west, up the rise)
+  20. the route between Festival Square and Tithe barn — a road (north lane between walls)
+  21. the route between Brook footbridge and Festival Square — a path
+  22. a door / entrance you can go through (&quot;Enter Item Shop&quot;)
+  23. a door / entrance you can go through (&quot;Enter The Ember Hearth&quot;)
+  24. a door / entrance you can go through (&quot;Enter Poppy's bakery&quot;)
+  25. the way out of this area on foot towards therise — a path that carries on out of the frame
+  26. the way out of this area on foot towards pondlane — a path that carries on out of the frame
+  27. the way out of this area on foot towards homerow — a path that carries on out of the frame
+  28. the way out of this area on foot towards northlane — a path that carries on out of the frame
+  29. [QUALITY] The world at the frame edges — the terrain, backdrop and distant geometry BEYOND the built set, at the borders of the picture. Does the world hold up all the way to every edge of the frame, or does it visibly end, thin out, or turn rough and unfinished somewhere inside the frame (bare terrain, abrupt cut-offs, missing backdrop)? Say where.
+  30. [QUALITY] The water surface — water covers about 2.0% of this frame (near Weir &amp; sluice, Brook footbridge, Pond jetty). Judge ONLY those pixels. Does that surface read as WATER — some transparency toward the shallows, believable colour, flow or reflection, and convincing contact where it meets banks, decks and structures — or as a painted / solid plane? Judge the surface AND its edge contact; say what fails or what carries it, and put the bbox on the water itself.
+
+Answer with JSON only, one entry per item, in order:
+{&quot;items&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;FINDABLE&quot;,&quot;where&quot;:&quot;a few words&quot;,&quot;bbox&quot;:[x0,y0,x1,y1],
+ &quot;desc&quot;:&quot;one sentence saying how you recognised it, or what hides it, or why it does
+ not read&quot;}]}
+bbox is normalised: x 0 left to 1 right, y 0 top to 1 bottom. Use null when ABSENT.</pre></details>
+<details class="prompt"><summary>Stage 2 — the naive sceptic (shown with one real claim from this run; the live call lists every claim on the plate)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are the sceptic on a game art review, and your job is to protect the team from
+wasted work. Below are criticisms somebody has made of THIS frame. For each one,
+decide honestly whether it is a REAL problem for a player, or whether it is a
+misreading of the picture, a matter of taste, or simply normal for this art style.
+
+UPHOLD only if you can find the same thing in the frame yourself AND it would really
+cost a player something. REFUTE if the thing described is not there, is not what the
+critic thought it was, is normal for the style, or does not matter. Do not be polite:
+refuting a weak criticism is the useful answer.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+Claims:
+  1. [geometry] jagged mesh edges along the path and central circle: The path geometry has sharp, unblended polygonal edges that visibly cut into and float above the ground texture.
+
+Answer with JSON only, one entry per claim, in order:
+{&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
+<details class="prompt"><summary>Stage 2 — the checklist sceptic (contract-aware: told the object's existence is not in question; shown with one real claim)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are the sceptic on a game art review. The claims below are about objects that the
+DESIGNER'S OWN MAP says really are in this shot. That they belong here is NOT in
+question, and &quot;it is not there&quot; / &quot;this area would not have one&quot; / &quot;expecting it is
+arbitrary&quot; are NOT valid refutations. The only question is whether the claim about how
+well a player can FIND or READ the object is fair.
+
+UPHOLD if, looking at the frame yourself, you agree the object is genuinely hard to
+find, hidden behind something, or does not read as the kind of thing it is. REFUTE if
+you can point straight at it and it is plainly legible, or if the complaint is really
+about a missing sign, label, icon or name rather than about the art.
+
+Claims tagged [quality] are JUDGMENTS that a sky, a backdrop, the world at the frame
+edges, or a water surface fails to hold up as art (a flat fill, a painted plane, an
+unfinished edge of the world). For those, UPHOLD if your own look at the frame agrees
+it falls short in the way described; REFUTE only if the surface genuinely holds up in
+this frame. &quot;It is normal for games&quot; is not a refutation of a quality claim.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+Claims:
+  1. [navigation] not present: a door / entrance you can go through (&quot;Leave Emberbrook&quot;): ABSENT — There are no doors, gates, or enterable structures visible in this forest environment.
+
+Answer with JSON only, one entry per claim, in order:
+{&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
+
+<h2>2 &nbsp;How well does this work?</h2>
+<div class="verdict">No calibration was scored in this run.</div>
+<p class="blurb">The gate is recall against complaints the user made <em>by hand</em>, before this tool
+existed. The judge is never told what the complaints are; it is shown the shipped plate that holds the
+object and asked to criticise it. Two numbers because there is a real ambiguity: <b>exact plate</b> counts
+the finding only on the one shot whose frame most nearly holds what the user circled; <b>any plate</b>
+counts it on any shot holding the same object. <b>Not reproducible, and said plainly:</b> all five
+references were screenshot from a free orbit camera, from angles no shipped plate holds — so this
+measures whether the same defect is <em>catchable from the shipped frames</em>, not whether the judge
+can reproduce the user's screenshots.</p>
+
+
+<h2>3 &nbsp;The sweep — surviving findings, triaged</h2>
+<p class="blurb">87 survivors from 110 raw findings over 11
+plates. Deduped across shots: a finding seen on more than one plate is listed once and says so.</p>
+
+
+<h3>Already known / tracked <span class="count">0</span></h3><p class="blurb">The judge re-found something the repo already knows about. Useful as a confirmation that the instrument sees real defects; not new work.</p>
+      <div class="grid"><div class="empty">nothing in this bucket</div></div>
+<h3>New, and looks real <span class="count">87</span></h3><p class="blurb">Not matched to anything tracked. This is the bucket that earns the tool its keep — and the bucket a human must read before anybody acts on it.</p>
+      <div class="grid"><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">woodroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/woodroad.png');background-size:500% auto;background-position:53.3% 58.1%"></div>
+    <div class="cb"><div class="q">The path geometry has sharp, unblended polygonal edges that visibly cut into and float above the ground texture.</div>
+      <div class="meta">where: jagged mesh edges along the path and central circle</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The path and circular ground meshes have raw, unblended polygonal edges that abruptly cut into the surrounding terrain texture.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 50.3,57.9,-26.2,-20.6</div>
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">2/3 looks</span>
+      <span class="shot">woodroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/woodroad.png');background-size:500% auto;background-position:54.5% 60.5%"></div>
+    <div class="cb"><div class="q">The pathway ribbon mesh has sharp, unblended polygonal edges that clip abruptly into the terrain surface.</div>
+      <div class="meta">where: along the edges of the pathway</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The pathway strip clearly shows sharp, unsoftened mesh edges intersecting the ground plane without edge blending.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 50.3,58.6,-27.3,-20.9</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">woodroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/woodroad.png');background-size:235% auto;background-position:43.3% 76.0%"></div>
+    <div class="cb"><div class="q">The circular paved area features raw low-poly edges intersecting the surrounding ground without blending.</div>
+      <div class="meta">where: the circular stone clearing</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The circular clearing mesh has noticeable low-poly faceted edges clipping into the surrounding dirt with no transition.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 43.9,58.7,-34.2,-21.6</div>
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">woodroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/woodroad.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Leave Emberbrook&quot;): ABSENT — There are no doors, gates, or enterable structures visible in this forest environment.</div>
+      <div class="meta">where: not present</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 91 px tall at 40.67 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — There are no doors, gates, or interactive transition points visible anywhere in this scene.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">waystone</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/waystone.png');background-size:500% auto;background-position:56.5% 51.0%"></div>
+    <div class="cb"><div class="q">The path terrain mesh features sharp, unstitched geometric seams and step gaps near the light pole.</div>
+      <div class="meta">where: path mesh near the light post</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A sharp, unstitched seam and geometric gap are clearly visible in the path mesh right next to the light pole.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 54.2,60,-13.7,-5.4</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">waystone</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/waystone.png');background-size:500% auto;background-position:57.0% 50.7%"></div>
+    <div class="cb"><div class="q">A sharp geometric seam and mesh misalignment splits the path terrain near the monument.</div>
+      <div class="meta">where: path ground mesh beside the monument</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A distinct geometric tear and mesh misalignment visibly splits the path terrain beside the monument.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 54.5,60,-13.5,-5.6</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">waystone</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/waystone.png');background-size:500% auto;background-position:55.8% 54.6%"></div>
+    <div class="cb"><div class="q">The path mesh has sharp, unnatural step-like seams and gaps next to the stone monument.</div>
+      <div class="meta">where: path surface near the stone monument</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The terrain mesh around the stone monument has obvious step-like gaps and unstitched edges.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 54.2,60,-14.2,-6.7</div>
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">waystone</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/waystone.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the way out of this area on foot towards arch: ABSENT — The path fades into tree shadows before reaching the frame edge on the arch side.</div>
+      
+      
+      <div class="meta">ray census: <b>clear</b>, 90 px tall at 41.34 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The path disappears into dense tree shadows on the upper right before reaching the edge of the frame.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">arch</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/arch.png');background-size:500% auto;background-position:51.6% 50.8%"></div>
+    <div class="cb"><div class="q">Jagged, intersecting terrain polygons create unnatural sharp gaps and clipping artifacts along the walkway.</div>
+      <div class="meta">where: center ground path terrain</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Sharp geometric clipping and broken terrain mesh edges are clearly visible along the central walkway.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 53.8,59.9,6.3,22</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">arch</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/arch.png');background-size:500% auto;background-position:51.7% 51.5%"></div>
+    <div class="cb"><div class="q">Unstitched terrain mesh produces unnatural sharp triangular black shadow cuts across the pathway.</div>
+      <div class="meta">where: ground path in the center</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Unstitched terrain geometry creates obvious, unnatural sharp black triangular cuts across the middle path.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 53.6,62.3,6.6,21.8</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">arch</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/arch.png');background-size:500% auto;background-position:51.5% 51.5%"></div>
+    <div class="cb"><div class="q">The paved path mesh clips jaggedly into the terrain, creating broken edges and sharp geometric cuts along the ground.</div>
+      <div class="meta">where: central pathway intersecting terrain</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The paved pathway mesh clips jaggedly into the surrounding terrain, leaving broken geometric cuts across the ground.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 53.5,59.9,6.3,22.4</div>
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">arch</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/arch.png');background-size:500% auto;background-position:10.5% 49.0%"></div>
+    <div class="cb"><div class="q">Small green spherical assets are scattered unnaturally across the lawn, clipping into the ground like misplaced placeholder geometry.</div>
+      <div class="meta">where: left lawn area</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Small green spherical assets are scattered awkwardly along the left lawn and clip into the ground like misplaced placeholder nodes.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 41,50.1,11.7,21.9</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">arch</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/arch.png');background-size:500% auto;background-position:48.5% 15.0%"></div>
+    <div class="cb"><div class="q">the way out of this area on foot towards waystone: OCCLUDED — The distant road exiting towards the waystone is hidden behind the background buildings and trees.</div>
+      <div class="meta">where: behind background buildings</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 127 px tall at 29.11 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The exit path leading out towards the waystone is completely occluded by the dense background buildings and foliage.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">arch</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/arch.png');background-size:500% auto;background-position:49.0% 21.0%"></div>
+    <div class="cb"><div class="q">Item Shop: VISIBLE-BUT-ILLEGIBLE — Small illuminated stalls in the background are too distant and dark to read specifically as a general item store.</div>
+      <div class="meta">where: background market area</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 2.43 m nearer), 50 px tall at 74.19 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The market stalls in the background are extremely distant and dark, making it impossible to read them visually as an item shop.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:137% auto;background-position:79.5% 63.5%"></div>
+    <div class="cb"><div class="q">Heavy foreground foliage covers a large portion of the frame, completely blocking vision of the ground and potential paths on the right.</div>
+      <div class="meta">where: dense foreground trees on the right</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Heavy foreground foliage on the right obscures a massive portion of the scene, blocking vision of the ground.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:333% auto;background-position:43.0% 71.5%"></div>
+    <div class="cb"><div class="q">The illuminated ground area cuts off with an unnaturally sharp, straight geometric edge rather than a smooth light falloff.</div>
+      <div class="meta">where: light patch on the ground below the shelter</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The illuminated ground patch terminates in a stark, unnaturally straight edge.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 36.8,49.3,22.7,33.3</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:139% auto;background-position:64.0% 79.5%"></div>
+    <div class="cb"><div class="q">Dense foreground tree branches cover a large fraction of the playable ground area, obscuring movement and sightlines.</div>
+      <div class="meta">where: bottom right foreground trees</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Dense foreground branches at the bottom right cover a significant portion of the screen and block sightlines.</div>
+      
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:294% auto;background-position:69.0% 46.5%"></div>
+    <div class="cb"><div class="q">The light cast by the post lamp forms a harsh, perfectly straight diagonal shadow boundary on the terrain.</div>
+      <div class="meta">where: ground light shadow beneath the shelter</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The shadow cast across the ground forms a completely straight, sharp diagonal line on the terrain.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 25.1,42,14.2,26.2</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:143% auto;background-position:80.0% 65.0%"></div>
+    <div class="cb"><div class="q">Dense foreground trees obscure a large portion of the lower-right play area and screen space.</div>
+      <div class="meta">where: foreground foliage on the right side</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Large foreground trees on the right side cover a substantial fraction of the play space.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:294% auto;background-position:43.0% 69.0%"></div>
+    <div class="cb"><div class="q">The light pool cast on the ground has sharp, straight geometric edges that create an unnatural polygonal boundary.</div>
+      <div class="meta">where: light pattern on the ground around the lamp</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The pool of light around the lamp has harsh, straight polygonal boundaries rather than smooth falloff.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 36.7,49.5,21,33.3</div>
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Orchard rows: ABSENT — No apple orchard rows, ladders, or apple baskets are present in this frame.</div>
+      
+      
+      <div class="meta">ray census: <b>clear</b>, 62 px tall at 33.37 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No apple orchard rows, ladders, or apple baskets are visible in this frame.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Village Arch and Orchard rows: ABSENT — Neither the village arch nor the orchard rows are visible in this view.</div>
+      
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 9.17 m nearer), 52 px tall at 39.86 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Neither the village arch nor any orchard rows appear in this view.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Orchard rows and Cider press barn: ABSENT — No path leading from an orchard to the barn is present.</div>
+      
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 5.3 m nearer), 64 px tall at 32.16 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — There is no visible path connecting an orchard to a cider press barn in this shot.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">orchard</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/orchard.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the way out of this area on foot towards arch: ABSENT — There is no defined egress path leading out of the frame towards a village arch.</div>
+      
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 6.45 m nearer), 58 px tall at 35.78 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No defined egress route leading toward a village arch is visible in the frame.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">therise</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:379% auto;background-position:49.7% 76.4%"></div>
+    <div class="cb"><div class="q">Sharp polygonal mesh slabs cut harshly into the terrain without edge blending, creating unnatural ground geometry.</div>
+      <div class="meta">where: along the central path</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Dark grey path slabs cut harshly into the terrain mesh with sharp, unblended polygon edges.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 55,61.8,14.3,24.2</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">2/3 looks</span>
+      <span class="shot">therise</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:420% auto;background-position:11.9% 89.4%"></div>
+    <div class="cb"><div class="q">A flat grey polygon plane clips horizontally across the ground texture.</div>
+      <div class="meta">where: bottom left ground area</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A flat grey polygon plane visibly clips horizontally across the ground texture in the bottom left corner.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 47.8,56.2,12.8,19.7</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">therise</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:500% auto;background-position:49.5% 80.0%"></div>
+    <div class="cb"><div class="q">Dark grey floor geometry slabs stick up awkwardly out of the terrain at disjointed angles with unblended, sharp edges.</div>
+      <div class="meta">where: center foreground path slabs</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The dark grey floor slabs in the center foreground stick up at disjointed angles with sharp, unblended edges.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 55.1,61.6,14.4,21.7</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">therise</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:435% auto;background-position:11.5% 93.5%"></div>
+    <div class="cb"><div class="q">Abrupt, raw polygon edges of dark floor geometry clip unnaturally into the ground surface without terrain blending.</div>
+      <div class="meta">where: bottom left ground plane</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Raw, dark polygon geometry at the bottom left clips directly into the terrain without any edge blending.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 48.7,56.1,12.8,18</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">therise</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:500% auto;background-position:49.8% 80.8%"></div>
+    <div class="cb"><div class="q">Sharp, unblended stone slab polygons protrude awkwardly from the terrain mesh with harsh vertical edges.</div>
+      <div class="meta">where: ground path in lower center</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The stone slab polygons along the lower central path protrude awkwardly from the ground mesh with harsh vertical edges.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 55.3,61.6,14.4,21.3</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">therise</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:302% auto;background-position:9.7% 39.3%"></div>
+    <div class="cb"><div class="q">Cider press barn: VISIBLE-BUT-ILLEGIBLE — Structure is heavily obscured by foliage and shadows.</div>
+      <div class="meta">where: far left trees</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 0.7 m nearer), 82 px tall at 25.16 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The structure in the far left background is almost completely covered by dense tree branches and dark shadows, making its identity unclear.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">therise</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:500% auto;background-position:72.5% 26.0%"></div>
+    <div class="cb"><div class="q">Village bell: OCCLUDED — Blocked from view by surrounding tree foliage and props.</div>
+      <div class="meta">where: behind trees on right plaza</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 16.29 m nearer), 54 px tall at 38.06 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by ray-census — the shot's own depth plate draws something 16.29 m nearer at that pixel</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">therise</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:500% auto;background-position:50.5% 25.0%"></div>
+    <div class="cb"><div class="q">The Heartlight: VISIBLE-BUT-ILLEGIBLE — Small light source blends into background wooden props.</div>
+      <div class="meta">where: plaza center post</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 16.33 m nearer), 50 px tall at 41.46 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The small light source in the central plaza blends into the light-colored wooden posts and benches surrounding it.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">therise</span>
+      <span class="pill also">+1 more shot</span>
+    </div>
+    <div class="crop" style="background-image:url('plates/therise.png');background-size:500% auto;background-position:71.5% 3.0%"></div>
+    <div class="cb"><div class="q">The sky: WEAK — Visible sky strip is relatively flat with minimal gradient.</div>
+      <div class="meta">where: top right sky patch</div>
+      <div class="meta">aim census: <b>on-subject</b> — 83.3% of the judged box is sky (60/72 cells of the shot's own 168x96 census; the frame holds 1.5%)</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The visible sky in the top gaps is a flat, featureless grey field without gradient or texture.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 62,93.7,27.6,131.3</div>
+      <div class="meta">also on: pondlane</div>
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:500% auto;background-position:86.8% 19.9%"></div>
+    <div class="cb"><div class="q">A roof structure rests directly on the terrain without supporting walls or visible foundation.</div>
+      <div class="meta">where: roof sunken into ground in upper right background</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — In the upper right background, a roof asset sits flat on the ground mesh with no walls or supporting structure visible underneath.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 30.4,46.9,24.4,40.9</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:213% auto;background-position:87.5% 76.5%"></div>
+    <div class="cb"><div class="q">The massive foreground roof blocks line of sight to the ground area and pathing along the lower-right side of the plaza.</div>
+      <div class="meta">where: large roof in the bottom right foreground</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The massive roof structure in the bottom right foreground blocks a large portion of the ground area and creates a severe blind spot for navigation.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:218% auto;background-position:87.4% 76.6%"></div>
+    <div class="cb"><div class="q">A large building roof in the immediate foreground blocks visibility of the ground area along the bottom-right edge of the screen.</div>
+      <div class="meta">where: bottom right foreground building</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The giant building roof in the immediate bottom-right foreground heavily obstructs visibility of the terrain and camera view along that screen edge.</div>
+      
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:182% auto;background-position:68.5% 12.0%"></div>
+    <div class="cb"><div class="q">The gaps between outer houses blend into dark, dense trees, making it difficult to distinguish accessible paths from impassable map boundaries.</div>
+      <div class="meta">where: perimeter pathways between outer buildings</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The dark, unlit forest surrounding the outer buildings makes it difficult to tell where walkable pathways end and impassable map limits begin.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:500% auto;background-position:39.6% 39.8%"></div>
+    <div class="cb"><div class="q">poppy-stall: VISIBLE-BUT-ILLEGIBLE — Blends in with nearby market stalls and wooden props.</div>
+      <div class="meta">where: near bakery/notice board</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 46 px tall at 45.08 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The wooden stalls and benches around the plaza blend together into generic timber props, making a specific poppy stall impossible to identify.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Village Arch and Festival Square: ABSENT — Village arch and its connecting route are not visible in this view.</div>
+      
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 2.32 m nearer), 36 px tall at 58.07 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Neither the village arch nor its connecting pathway is visible within this camera angle.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Festival Square and Tithe barn: ABSENT — Tithe barn road is not captured in this frame.</div>
+      
+      
+      <div class="meta">ray census: <b>clear</b>, 59 px tall at 34.92 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The path leading to the tithe barn is outside the frame boundaries.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:334% auto;background-position:86.0% 38.0%"></div>
+    <div class="cb"><div class="q">a door / entrance you can go through (&quot;Enter Item Shop&quot;): OCCLUDED — Hidden from view by the building's exterior wall angle.</div>
+      <div class="meta">where: behind item shop wall</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 45 px tall at 46.28 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The entrance door on the side/rear wall is completely hidden behind the building's exterior wall structure.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">square</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/square.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the way out of this area on foot towards northlane: ABSENT — Northlane exit path is not visible in this scene orientation.</div>
+      
+      
+      <div class="meta">ray census: <b>clear</b>, 62 px tall at 33.61 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Dense foliage and surrounding houses obscure any exit path leading northward out of the square.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:175% auto;background-position:69.4% 67.9%"></div>
+    <div class="cb"><div class="q">The terrain mesh contains missing polygons and sharp triangular holes that expose black void underneath.</div>
+      <div class="meta">where: ground terrain near center and right</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Visible black triangular gaps and torn polygons occur throughout the ground terrain mesh near the center and right.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 73.6,86.8,35.7,55</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:282% auto;background-position:17.8% 78.5%"></div>
+    <div class="cb"><div class="q">The flat green water plane clips bluntly through the ground terrain without shore geometry or blending.</div>
+      <div class="meta">where: water stream on the lower left</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The flat green stream plane intersects the ground mesh directly with no shore geometry or edge blending.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 70.6,77.8,50.3,62.3</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:250% auto;background-position:50.0% 60.0%"></div>
+    <div class="cb"><div class="q">Dense overlapping foliage, unclear elevation drops, and visual clutter obscure walkable paths and destination routes.</div>
+      <div class="meta">where: middle ground paths around center foliage</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Dense vegetation and cluttered structural elements obscure elevation changes and clear pathing through the center area.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:500% auto;background-position:56.0% 59.0%"></div>
+    <div class="cb"><div class="q">There are open gaps and tearing in the ground terrain mesh, revealing black void underneath.</div>
+      <div class="meta">where: ground terrain in center middle</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Mesh tearing is clearly present in the center terrain, exposing black void underneath.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 71.9,84.9,46,51.8</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:500% auto;background-position:95.8% 76.8%"></div>
+    <div class="cb"><div class="q">Mesh tearing in the terrain geometry creates visible black holes in the floor.</div>
+      <div class="meta">where: ground terrain in lower right</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Sharp triangular holes revealing void are visible in the lower-right ground mesh.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 72.2,79.5,38,42.5</div>
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:500% auto;background-position:88.5% 40.7%"></div>
+    <div class="cb"><div class="q">The window appears as a flat, untextured white emissive rectangle without frame or depth detail.</div>
+      <div class="meta">where: window on the house on the right</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The house window on the right is a raw, flat white emissive box with no frame, sill, or depth detail.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 86.2,89.4,37.5,41.6</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:182% auto;background-position:29.0% 48.5%"></div>
+    <div class="cb"><div class="q">Large, dense foliage completely obscures ground paths and walkable areas, making spatial navigation ambiguous.</div>
+      <div class="meta">where: dense trees and foliage in center left</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A massive tree canopy in the center-left fully blocks sightlines to the ground terrain and potential walkways.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:500% auto;background-position:56.0% 58.5%"></div>
+    <div class="cb"><div class="q">There is a sharp black triangular hole in the ground terrain mesh where polygon edges fail to meet.</div>
+      <div class="meta">where: center ground area</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A sharp black triangular hole caused by unmerged terrain vertices is visible in the center ground.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 71.3,85.1,46,51.8</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:500% auto;background-position:96.0% 76.0%"></div>
+    <div class="cb"><div class="q">Multiple black triangular tears and missing polygons are visible in the ground mesh near the right edge.</div>
+      <div class="meta">where: ground terrain on the right</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Multiple missing polygons and black mesh tears appear along the ground towards the right edge.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 70.3,79.6,37.9,43.8</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:500% auto;background-position:56.5% 61.5%"></div>
+    <div class="cb"><div class="q">The overhead banner string breaks into disconnected floating segments rather than forming a continuous line.</div>
+      <div class="meta">where: cords stretched between wooden posts</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The string connecting the wooden posts breaks into disconnected, floating segments across the scene.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 71.2,82.1,45.5,50.6</div>
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Pond jetty: ABSENT — No dock or jetty structure extending into the water is visible.</div>
+      <div class="meta">where: near pond edge</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 72 px tall at 28.67 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — There is no jetty or dock structure visible along the water edge.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Brook mouth: ABSENT — The point where the brook joins the main river is not visible.</div>
+      <div class="meta">where: river confluence</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 3.26 m nearer), 45 px tall at 45.8 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The brook extends out of frame to the left without showing any point of confluence with a main river.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Weir &amp; sluice: ABSENT — No weir mechanism or sluice gate can be seen.</div>
+      <div class="meta">where: along brook</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 78 px tall at 26.6 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No weir mechanism or sluice gate is visible along the brook channel.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Finn's smokehouse: ABSENT — No small smokehouse structure is present near the shore.</div>
+      <div class="meta">where: near water shore</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 81 px tall at 25.49 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No smokehouse structure is present anywhere near the water shore.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Pip's den: OCCLUDED — Hidden beneath foliage and the steep bank near the footbridge.</div>
+      <div class="meta">where: under brook bank</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 90 px tall at 22.96 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — Dense foliage and the steep bank beneath the footbridge obscure any potential entrance or interior of a den.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">The world at the frame edges: WEAK — WEAK: Background trees end abruptly against the sky, creating stark borders.</div>
+      <div class="meta">where: entire frame boundaries</div>
+      <div class="meta">aim census: <b>unmeasurable</b> — no derivable subject mask for this family</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The tops of the background tree trunks and canopies clip abruptly into the flat sky band.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 67.9,88.5,39.4,58.1</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">pondlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/pondlane.png');background-size:282% auto;background-position:17.8% 78.7%"></div>
+    <div class="cb"><div class="q">The water surface: WEAK — WEAK: Reads as a flat green fill with sharp, unblended contact along the shore.</div>
+      <div class="meta">where: green water channel</div>
+      <div class="meta">aim census: <b>on-subject</b> — 31.6% of the judged box is visible water (284/900 cells of the shot's own 168x96 census; the frame holds 9.4%)</div>
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The stream reads as a solid, flat green plane with harsh, unblended edges along the bank.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 70.6,77.7,50.3,62.2</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">2/3 looks</span>
+      <span class="shot">homerow</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/homerow.png');background-size:125% auto;background-position:12.0% 59.7%"></div>
+    <div class="cb"><div class="q">The large pine tree in the foreground heavily occludes the path and building in the lower-left area, obscuring player vision.</div>
+      <div class="meta">where: bottom left foreground pine tree</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The large foreground pine tree on the lower left severely blocks the view of the path and building, creating a major camera vision obstacle.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">homerow</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/homerow.png');background-size:500% auto;background-position:75.4% 14.9%"></div>
+    <div class="cb"><div class="q">The elevated box structure juts out from the roof on thin, floating beams with unsupported vertical posts.</div>
+      <div class="meta">where: suspended wooden structure on upper right roof</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The elevated wooden box on the upper-right roof relies on beams with a vertical support post that floats unsupported above the roof slope.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 40.7,50.7,57.6,71</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">homerow</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/homerow.png');background-size:481% auto;background-position:95.3% 63.9%"></div>
+    <div class="cb"><div class="q">A massive wooden cylinder/disc is clipped directly into the stone foundation wall and terrain.</div>
+      <div class="meta">where: large wooden disc at bottom right building</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The massive wooden disc at the base of the rightmost house visibly clips directly through the stone foundation and ground terrain.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 50.5,56.6,55.3,61.2</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">homerow</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/homerow.png');background-size:125% auto;background-position:12.0% 58.1%"></div>
+    <div class="cb"><div class="q">The large evergreen tree in the foreground completely blocks the view of the house and walkway on the lower-left, hiding potential gameplay space.</div>
+      <div class="meta">where: foreground tree on the left</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The dense evergreen tree in the lower-left foreground completely obscures the house and walkway beneath it, hiding playable space.</div>
+      
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">homerow</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/homerow.png');background-size:500% auto;background-position:60.9% 22.7%"></div>
+    <div class="cb"><div class="q">An overexposed or untextured white mesh sits in the vegetation behind the upper house, standing out unnaturally from the lighting.</div>
+      <div class="meta">where: bright white shape behind upper house</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A stark, overexposed white shape behind the upper house stands out unnaturally against the dark foliage and surroundings.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 37.8,45.9,56,70.1</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">homerow</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/homerow.png');background-size:500% auto;background-position:62.3% 20.3%"></div>
+    <div class="cb"><div class="q">Brook spring: VISIBLE-BUT-ILLEGIBLE — A tiny glistening patch of water is visible in deep shadow behind the cottage, but it is too small and dark to clearly read as a spring.</div>
+      <div class="meta">where: behind Mara &amp; Pip's cottage</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 67 px tall at 55.04 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The patch behind the top cottage is shrouded in shadow and extremely hard to identify as a water spring.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">homerow</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/homerow.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Upper lane (closed): ABSENT — No closed lane or festival cart is visible past Lake's home.</div>
+      
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 1.2 m nearer), 77 px tall at 48.28 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No upper lane or festival cart is visible beyond the cottage on the right.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">homerow</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/homerow.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Spring house: ABSENT — No stone hut structure over the spring is present in this frame.</div>
+      
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 1.98 m nearer), 64 px tall at 57.64 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — There is no stone hut spring house structure anywhere in this view.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">northlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/northlane.png');background-size:169% auto;background-position:32.6% 29.6%"></div>
+    <div class="cb"><div class="q">Dense tree canopy heavily covers the left side of the building and ground path, obscuring ground layout and visual clarity.</div>
+      <div class="meta">where: dense tree foliage obscuring the left side of the building and pathway</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The dense tree canopy on the left completely covers the ground path and building side, severely blocking player visibility.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">exit</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">northlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/northlane.png');background-size:153% auto;background-position:44.7% 55.5%"></div>
+    <div class="cb"><div class="q">The steep overhead camera angle and roof overhang completely hide all entrances and doors, making it unclear how to access the structure.</div>
+      <div class="meta">where: building structure in center frame</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The top-down perspective and roof overhangs completely hide all doors and entry points, making building access unclear.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">northlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/northlane.png');background-size:175% auto;background-position:33.8% 28.6%"></div>
+    <div class="cb"><div class="q">Dense foliage completely blocks sight of the ground and paths surrounding the house, hiding player movement and potential hazards.</div>
+      <div class="meta">where: center-left dense tree canopy</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Thick foliage to the left of the central building obscures the ground entirely, hiding paths and potential hazards.</div>
+      
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">northlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/northlane.png');background-size:500% auto;background-position:45.8% 65.4%"></div>
+    <div class="cb"><div class="q">A rectangular hip roof sits awkwardly on top of a round tower wall base, causing mismatched geometry overhangs.</div>
+      <div class="meta">where: small roof atop circular tower base</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — A rectangular hip roof sits directly on top of a round stone tower base, creating mismatched geometry and unnatural overhangs.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 64.7,73.7,64,72.3</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">northlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/northlane.png');background-size:204% auto;background-position:33.5% 34.0%"></div>
+    <div class="cb"><div class="q">Dense tree foliage completely covers the ground and building perimeter on the left and top, hiding potential paths and entrances from view.</div>
+      <div class="meta">where: trees around the main building</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Tree coverage along the top and left sides of the building obscures the perimeter and potential access paths.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">northlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/northlane.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">Back lane (closed): ABSENT — No closed lane with stacked barrels exists in this frame.</div>
+      <div class="meta">where: nowhere in frame</div>
+      
+      <div class="meta">ray census: <b>occluded</b> (plate is 1.02 m nearer), 63 px tall at 58.32 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No closed lane with stacked barrels is present within this frame.</div>
+      
+      
+    </div></div><div class="card sev3">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 3</span>
+      
+      <span class="shot">northlane</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/northlane.png');background-size:100% auto;background-position:50.0% 50.0%"></div>
+    <div class="cb"><div class="q">the route between Festival Square and Tithe barn: ABSENT — No north lane bordered by walls is visible anywhere in this shot.</div>
+      <div class="meta">where: nowhere in frame</div>
+      
+      <div class="meta">ray census: <b>clear</b>, 70 px tall at 52.9 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — No walled north lane representing this route is visible in the shot.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gateroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gateroad.png');background-size:100% auto;background-position:66.8% 50.0%"></div>
+    <div class="cb"><div class="q">Extremely dark foliage and heavy shadows obscure the right half of the frame, hiding any ground features or potential paths.</div>
+      <div class="meta">where: dense trees and foliage on the right side</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The foliage and tree trunks on the right half are severely underexposed and pitch-black, completely hiding ground terrain and pathways.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gateroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gateroad.png');background-size:133% auto;background-position:37.5% 82.5%"></div>
+    <div class="cb"><div class="q">Deep darkness in the foreground obscures the path boundaries, making it difficult to discern walkable terrain.</div>
+      <div class="meta">where: foreground grass and lower path area</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Extreme shadow coverage in the foreground hides grass transitions and obscures navigable path edges.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gateroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gateroad.png');background-size:100% auto;background-position:72.5% 50.0%"></div>
+    <div class="cb"><div class="q">Extreme darkness and dense tree foliage completely obscure the right side of the frame, hiding terrain and potential paths.</div>
+      <div class="meta">where: right half of the screen in deep shadow</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The right side of the image suffers from near-total darkness, masking the layout and potential player routes.</div>
+      
+      
+    </div></div><div class="card sev1">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 1</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gateroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gateroad.png');background-size:200% auto;background-position:25.0% 56.5%"></div>
+    <div class="cb"><div class="q">The cleared dirt area has a sharp, unnaturally hard edge with the surrounding grass texture without proper blending.</div>
+      <div class="meta">where: dirt ground patch in the center-left terrain</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The cleared dirt patch in the middle ground displays a harsh, hard-edged boundary with the adjacent grass texture without alpha blending.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 62.5,80.2,80.2,102.5</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gateroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gateroad.png');background-size:100% auto;background-position:67.5% 50.0%"></div>
+    <div class="cb"><div class="q">Extremely dense and pitch-black foliage obscures over half the frame, hiding layout and potential pathways.</div>
+      <div class="meta">where: right half of the frame</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Dense, unlit foliage covers the right side of the screen, rendering that section of the scene illegible.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gateroad</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gateroad.png');background-size:143% auto;background-position:35.0% 82.5%"></div>
+    <div class="cb"><div class="q">Deep shadows across the foreground obscure where the walkable path leads.</div>
+      <div class="meta">where: foreground path and ground area</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Heavy pitch-black shadows across the bottom foreground obscure where the path leads and make terrain readability poor.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gatefield</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gatefield.png');background-size:500% auto;background-position:68.9% 27.5%"></div>
+    <div class="cb"><div class="q">The paved floor mesh around the stone structure has square cutouts revealing empty black space beneath the terrain.</div>
+      <div class="meta">where: around the stone pillars in the paved courtyard</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Square cutouts are clearly visible in the paved terrain mesh surrounding the stone pillar structure, revealing black empty space beneath.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 73.1,82,119.9,128.3</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gatefield</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gatefield.png');background-size:100% auto;background-position:25.0% 50.0%"></div>
+    <div class="cb"><div class="q">Deep shadow and severe underexposure conceal the terrain and boundaries, making navigation difficult across the left half of the scene.</div>
+      <div class="meta">where: the left and lower areas of the environment</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Extreme shadow across the entire left half of the scene hides terrain features and obstacle boundaries, making navigation confusing.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gatefield</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gatefield.png');background-size:500% auto;background-position:68.7% 30.0%"></div>
+    <div class="cb"><div class="q">The terrain ground mesh cuts off abruptly around the stone pillars and platform, leaving empty black voids underneath.</div>
+      <div class="meta">where: under the stone platform structure on the right</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The terrain mesh terminates abruptly beneath the stone platform, leaving noticeable dark voids where ground should be.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 73.2,82,119.9,126.6</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gatefield</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gatefield.png');background-size:100% auto;background-position:22.5% 50.0%"></div>
+    <div class="cb"><div class="q">Extremely dark shadows obscure the environment and path, making navigable terrain nearly impossible to distinguish from obstacles.</div>
+      <div class="meta">where: across the entire left and lower screen area</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Deep darkness across the bottom and left areas obscures where the player path ends and where obstacles begin.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gatefield</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gatefield.png');background-size:500% auto;background-position:75.9% 30.5%"></div>
+    <div class="cb"><div class="q">The paved ground mesh cuts off abruptly next to the pillar base, leaving a hole into empty space underneath.</div>
+      <div class="meta">where: base of the right stone pillar in the courtyard</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The paved ground mesh cuts away next to the base of the right pillar, creating a hole into empty space.</div>
+      <div class="meta cmd">Blender -b tools/blends/emberbrook-master.blend -P tools/geometry_audit.py -- --region 77.8,82.3,120.7,126.5</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">gatefield</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gatefield.png');background-size:127% auto;background-position:22.5% 59.5%"></div>
+    <div class="cb"><div class="q">The dense foliage and trees are heavily underexposed in shadow, obscuring terrain bounds and path edges.</div>
+      <div class="meta">where: left side and bottom-left half of the frame</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Heavy underexposure in the foliage on the left conceals the edge of the walkable pathway and tree collisions.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill checklist">checklist</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      
+      <span class="shot">gatefield</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/gatefield.png');background-size:500% auto;background-position:71.4% 6.3%"></div>
+    <div class="cb"><div class="q">Downstream (vista beyond the Gate): OCCLUDED — Blocked from view by the closed wooden gate doors and wall.</div>
+      <div class="meta">where: behind the gate doors</div>
+      
+      <div class="meta">ray census: <b>off-frame</b>, 56 px tall at 65.62 m</div>
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:checklist — The closed wooden gate and high stone wall completely block any view beyond the gate.</div>
+      
+      
+    </div></div></div>
+<h3>Style bar — waits for the dressing pass <span class="count">0</span></h3><p class="blurb">Material and detail complaints against a massing blockout. Correct observations, wrong stage.</p>
+      <div class="grid"><div class="empty">nothing in this bucket</div></div>
+
+<h2>4 &nbsp;Every plate, with its findings drawn on</h2>
+<p class="blurb">Boxes are the judge's own bboxes: <span style="color:var(--naive)">orange = naive</span>,
+<span style="color:var(--checklist)">blue = checklist</span>. This is the user's own annotated-screenshot
+format, machine-made.</p>
+
+<section class="shot"><h3>woodroad <span class="small">The Whisperwood Road · bake 2026-08-10T05:58:29Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/woodroad.png" alt="">
+        <div class="bx naive" style="left:45.20%;top:53.80%;width:16.20%;height:8.60%"></div><div class="bx naive" style="left:45.00%;top:55.00%;width:19.00%;height:11.00%"></div><div class="bx naive" style="left:22.00%;top:57.00%;width:42.50%;height:38.00%"></div></div>
+      <div class="small">4 surviving findings ·
+        2 refuted ·
+        5 checklist items</div></section>
+<section class="shot"><h3>waystone <span class="small">The Waystone · bake 2026-08-10T05:58:29Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/waystone.png" alt="">
+        <div class="bx naive" style="left:52.00%;top:41.00%;width:9.00%;height:20.00%"></div><div class="bx naive" style="left:53.00%;top:41.50%;width:8.00%;height:18.50%"></div><div class="bx naive" style="left:51.00%;top:46.20%;width:9.50%;height:16.80%"></div></div>
+      <div class="small">4 surviving findings ·
+        2 refuted ·
+        7 checklist items</div></section>
+<section class="shot"><h3>arch <span class="small">The Village Arch · bake 2026-08-10T05:45:39Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/arch.png" alt="">
+        <div class="bx naive" style="left:45.20%;top:43.40%;width:12.80%;height:14.80%"></div><div class="bx naive" style="left:45.00%;top:43.50%;width:13.50%;height:16.00%"></div><div class="bx naive" style="left:45.00%;top:43.00%;width:13.00%;height:17.00%"></div><div class="bx naive" style="left:1.00%;top:45.00%;width:19.00%;height:8.00%"></div><div class="bx checklist" style="left:42.00%;top:10.00%;width:13.00%;height:10.00%"></div><div class="bx checklist" style="left:42.00%;top:16.00%;width:14.00%;height:10.00%"></div></div>
+      <div class="small">6 surviving findings ·
+        3 refuted ·
+        13 checklist items</div></section>
+<section class="shot"><h3>orchard <span class="small">The Orchard Rows · bake 2026-08-09T23:17:18Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/orchard.png" alt="">
+        <div class="bx naive" style="left:59.00%;top:27.00%;width:41.00%;height:73.00%"></div><div class="bx naive" style="left:28.00%;top:57.00%;width:30.00%;height:29.00%"></div><div class="bx naive" style="left:28.00%;top:59.00%;width:72.00%;height:41.00%"></div><div class="bx naive" style="left:52.00%;top:35.00%;width:34.00%;height:23.00%"></div><div class="bx naive" style="left:60.00%;top:30.00%;width:40.00%;height:70.00%"></div><div class="bx naive" style="left:28.00%;top:52.00%;width:30.00%;height:34.00%"></div></div>
+      <div class="small">10 surviving findings ·
+        1 refuted ·
+        7 checklist items</div></section>
+<section class="shot"><h3>therise <span class="small">The Rise · bake 2026-08-10T07:11:52Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/therise.png" alt="">
+        <div class="bx naive" style="left:41.60%;top:63.20%;width:16.30%;height:26.40%"></div><div class="bx naive" style="left:0.00%;top:78.80%;width:23.80%;height:21.20%"></div><div class="bx naive" style="left:41.00%;top:71.00%;width:17.00%;height:18.00%"></div><div class="bx naive" style="left:0.00%;top:87.00%;width:23.00%;height:13.00%"></div><div class="bx naive" style="left:41.60%;top:72.50%;width:16.40%;height:16.50%"></div><div class="bx checklist" style="left:0.00%;top:22.70%;width:19.40%;height:33.10%"></div><div class="bx checklist" style="left:70.00%;top:23.00%;width:5.00%;height:6.00%"></div><div class="bx checklist" style="left:49.50%;top:23.00%;width:2.00%;height:4.00%"></div><div class="bx checklist" style="left:68.00%;top:0.00%;width:7.00%;height:6.00%"></div></div>
+      <div class="small">9 surviving findings ·
+        4 refuted ·
+        14 checklist items</div></section>
+<section class="shot"><h3>square <span class="small">Festival Square · bake 2026-08-10T06:36:33Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/square.png" alt="">
+        <div class="bx naive" style="left:81.00%;top:13.70%;width:11.50%;height:12.30%"></div><div class="bx naive" style="left:75.00%;top:53.00%;width:25.00%;height:47.00%"></div><div class="bx naive" style="left:74.80%;top:53.70%;width:25.20%;height:45.80%"></div><div class="bx naive" style="left:41.00%;top:0.00%;width:55.00%;height:24.00%"></div><div class="bx checklist" style="left:36.50%;top:34.70%;width:6.30%;height:10.30%"></div><div class="bx checklist" style="left:78.50%;top:23.00%;width:14.90%;height:29.90%"></div></div>
+      <div class="small">9 surviving findings ·
+        3 refuted ·
+        30 checklist items</div></section>
+<section class="shot"><h3>pondlane <span class="small">Pond Lane · bake 2026-08-10T04:54:28Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/pondlane.png" alt="">
+        <div class="bx naive" style="left:40.80%;top:56.80%;width:57.20%;height:22.20%"></div><div class="bx naive" style="left:0.00%;top:71.30%;width:35.50%;height:14.30%"></div><div class="bx naive" style="left:30.00%;top:45.00%;width:40.00%;height:30.00%"></div><div class="bx naive" style="left:52.00%;top:56.50%;width:8.00%;height:5.00%"></div><div class="bx naive" style="left:93.80%;top:73.50%;width:4.00%;height:6.50%"></div><div class="bx naive" style="left:86.80%;top:37.70%;width:3.30%;height:6.00%"></div><div class="bx naive" style="left:4.00%;top:21.00%;width:50.00%;height:55.00%"></div><div class="bx naive" style="left:52.00%;top:56.00%;width:8.00%;height:5.00%"></div><div class="bx naive" style="left:94.00%;top:73.00%;width:4.00%;height:6.00%"></div><div class="bx naive" style="left:50.00%;top:58.00%;width:13.00%;height:7.00%"></div><div class="bx checklist" style="left:0.00%;top:0.00%;width:100.00%;height:100.00%"></div><div class="bx checklist" style="left:0.00%;top:71.80%;width:35.50%;height:13.80%"></div></div>
+      <div class="small">17 surviving findings ·
+        0 refuted ·
+        16 checklist items</div></section>
+<section class="shot"><h3>homerow <span class="small">Home Row · bake 2026-08-10T06:27:16Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/homerow.png" alt="">
+        <div class="bx naive" style="left:0.00%;top:19.80%;width:24.00%;height:79.70%"></div><div class="bx naive" style="left:67.20%;top:6.30%;width:16.30%;height:17.20%"></div><div class="bx naive" style="left:90.70%;top:53.50%;width:9.30%;height:20.80%"></div><div class="bx naive" style="left:0.00%;top:18.30%;width:24.10%;height:79.70%"></div><div class="bx naive" style="left:58.00%;top:16.50%;width:5.80%;height:12.50%"></div><div class="bx checklist" style="left:60.80%;top:16.00%;width:3.00%;height:8.50%"></div></div>
+      <div class="small">8 surviving findings ·
+        1 refuted ·
+        20 checklist items</div></section>
+<section class="shot"><h3>northlane <span class="small">The North Lane · bake 2026-08-10T07:03:20Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/northlane.png" alt="">
+        <div class="bx naive" style="left:7.20%;top:0.00%;width:50.80%;height:59.20%"></div><div class="bx naive" style="left:36.20%;top:22.80%;width:17.00%;height:65.30%"></div><div class="bx naive" style="left:9.50%;top:0.00%;width:48.70%;height:57.20%"></div><div class="bx naive" style="left:38.60%;top:55.80%;width:14.40%;height:19.20%"></div><div class="bx naive" style="left:9.00%;top:10.00%;width:49.00%;height:48.00%"></div></div>
+      <div class="small">7 surviving findings ·
+        1 refuted ·
+        10 checklist items</div></section>
+<section class="shot"><h3>gateroad <span class="small">The Quiet Road · bake 2026-08-10T06:11:56Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/gateroad.png" alt="">
+        <div class="bx naive" style="left:33.50%;top:0.00%;width:66.50%;height:100.00%"></div><div class="bx naive" style="left:0.00%;top:65.00%;width:75.00%;height:35.00%"></div><div class="bx naive" style="left:45.00%;top:0.00%;width:55.00%;height:100.00%"></div><div class="bx naive" style="left:0.00%;top:44.00%;width:50.00%;height:25.00%"></div><div class="bx naive" style="left:35.00%;top:0.00%;width:65.00%;height:100.00%"></div><div class="bx naive" style="left:0.00%;top:65.00%;width:70.00%;height:35.00%"></div></div>
+      <div class="small">6 surviving findings ·
+        2 refuted ·
+        13 checklist items</div></section>
+<section class="shot"><h3>gatefield <span class="small">The Old Gate · bake 2026-08-09T22:49:48Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/gatefield.png" alt="">
+        <div class="bx naive" style="left:60.80%;top:20.50%;width:16.20%;height:14.00%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:50.00%;height:100.00%"></div><div class="bx naive" style="left:60.30%;top:25.80%;width:16.70%;height:8.50%"></div><div class="bx naive" style="left:0.00%;top:0.00%;width:45.00%;height:100.00%"></div><div class="bx naive" style="left:74.00%;top:26.50%;width:3.80%;height:8.00%"></div><div class="bx naive" style="left:0.00%;top:20.00%;width:45.00%;height:79.00%"></div><div class="bx checklist" style="left:66.80%;top:0.00%;width:9.20%;height:12.50%"></div></div>
+      <div class="small">7 surviving findings ·
+        4 refuted ·
+        13 checklist items</div></section>
+
+<h2>5 &nbsp;Limits — what this instrument structurally cannot see</h2>
+<div class="limits">
+<p>This tool looks at <b>pixels</b>. Seam-canon §10.3 (amended after the loop-stairs post-mortem) is the
+reason that sentence needs a warning label:</p>
+<p style="font-size:15px;margin:10px 0"><b>&ldquo;in frame&rdquo; &ne; &ldquo;visible&rdquo; &ne;
+&ldquo;unobstructed ray&rdquo; &ne; <span style="color:var(--miss)">catches a foot</span></b></p>
+<p>The loop-stairs flight was 72% visible, correctly framed, unoccluded and handsome — and unwalkable,
+because <code>walkGround</code> keeps the highest surface in the step window and the neighbouring
+flight's top tread covered its head. It caught a foot in 0 of 72 entries. <b>No critique of that plate
+could ever have found it.</b> What this tool cannot see, and where each of those defects <em>is</em>
+caught:</p>
+<ul>
+<li>whether a walk surface catches a foot &rarr; <code>tools/ls_nav_probe.mjs</code>, <code>seam_walk.mjs</code></li>
+<li>whether a solid blocks the body &rarr; WALKLOCK / <code>boxSolid</code>, <code>seam_test.mjs</code></li>
+<li>whether a naive reading of the frame actually <em>escapes</em> the shot &rarr; <code>tools/nav_eval.mjs</code> (it walks the answer)</li>
+<li>whether a seam fires where it should &rarr; <code>seam_test.mjs</code>, <code>transition_test.mjs</code></li>
+<li>true occlusion over a whole object, in metres &rarr; the bake ray-cast — the <em>only</em> visibility oracle — and <code>cine_visprobe.py</code></li>
+<li>anything outside the shipped fixed frames &rarr; nothing automated sees it. The user plays with a free orbit camera; all five reference frames were taken from angles no plate holds.</li>
+</ul>
+<p>A finding here is a <b>perception</b>, and a perception is not a measurement. Geometry findings ship
+with a <code>geometry_audit --region</code> command for exactly this reason: the next step is to measure
+it, not to believe it.</p>
+</div>
+
+<div class="budget">Budget: 66 judge calls
+(naive 33, checklist 11, refute-naive 11, refute-checklist 11) ·
+114,748 prompt + 117,580 reply tokens ·
+0 errors. Aim census: 2/9 [QUALITY] verdicts were REFUTED because the
+judge's own box held under 2% of the subject the verdict names
+(water = the same visible-water mask the arming gate counts; sky = the plate's own depth). Every one is in
+<code>refuted.json</code> with its number. 0 claimed the subject was ABSENT —
+the aim rule inverts there and the census abstained; 4 had no derivable
+subject (frame-edge-world, and verdicts the judge returned without a box). Box check: 20/53 (38%) of the
+judge's checklist boxes contain the point the ray census projected — the drawn rectangles are
+only as trustworthy as that number. Raw replies in <code>raw/</code>, findings in
+<code>findings.json</code>, discarded claims in <code>refuted.json</code>.</div>
+</div>
