@@ -1454,8 +1454,19 @@ git runs here, on branch `migration/3d-hybrid`.
   **THE PAVING HOLES WERE CUT TO THE MAP'S `bodysize`, NOT TO WHAT THE BUILDER STANDS THERE** —
   **a 0.13 m lamp post cut 1.26 m², SEVENTY-FOUR TIMES its own plan area**; the well's cut is
   2.5 m square for a ring built 2.0 m round. Empty enclosed holes **37.91 → 0.79 m²**.
-  **AND CHAPTER ONE'S TWIN SIGIL PLATES STOOD IN AN 11.29 m² HOLE WITH NO WALK RECORD IN IT** —
-  there is no `walk_pad_sigil-plate-*` at all. That is a gameplay surface, not a dressing one.
+  **AND CHAPTER ONE'S TWIN SIGIL PLATES STOOD IN AN 11.29 m² HOLE** — the floor of a scripted
+  climax, unwalkable. **CORRECTED AT DEPLOY 27, and the correction is the useful half**: the
+  plates are SOLID PROPS (`lm_sigil-plate-w/e`, 0.78 m wide), so the defect was never a missing
+  pad ON them — it was the oversized clearance hole cut AROUND them, and the fix ships as
+  `walk_lm_gate-court` geometry, not as a new named record. **36 of the gate court's 48 fill cells
+  (75%) lie within 1.2 m of a sigil plate.** A name-level diff of the shipped bundles shows **ZERO
+  walk meshes added or removed**; the receipt is per-mesh GEOMETRY — 31 walk meshes changed
+  identically in both bundles, walk verts 53,080 → 53,713, and the entire all-mesh vertex delta IS
+  that +633, so nothing but the walk network moved. **AND THE DOORSTEP FIX IS VISIBLE IN THE
+  SHIPPED BYTES**: all 13 changed `walk_pad_*` records LOST vertices at exactly 36 triangles each
+  (`walk_pad_inn` 58 → 40) — same topology, fewer distinct positions, i.e. the pads went FLAT.
+  `walk_engine_gate` re-run against the BUILT `dist` confirms 7595 cells / 1538.0 m² survive the
+  WebP+DRACO pass, 0 lost, 0 extra.
   Two rules it cost: **an obstacle is a thing you cannot step over, not a thing that is there**
   (at 0.30 m the festival dais gave back 16.20 m² of walk floor UNDER ITS OWN DECK; the threshold
   is 0.20 m), and **decide once on the DRESSED blend and replay the decision** (`--cells-out`/
