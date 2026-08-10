@@ -23689,6 +23689,221 @@ OWED / NAMED FOR ROUND 9:
      The stair-tread family is the loudest thing in Dellhollow that nobody has measured.
 
 
+## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 12: A REGRESSION THAT WAS A COIN FLIP, A THIRD
+## GRAMMAR THAT IS SIX TIMES BIGGER THAN IT LOOKED AND HAD A KIT ALL ALONG, AND A SHADOW
+## FLOOR NO GLOBAL PARAMETER CAN REACH
+
+Carrier tools/dh_clump_kit.py (shipped). Board docs/qa/dellhollow-graphics/r12/index.html.
+All footprint measurement off ONE `dh_objmap dump` (15 cameras x 240x135 = 486,000 marched
+rays) read against the shipped plates; all tone measurement is numpy on rendered frames.
+
+### TARGET 2 — CLOSED BEFORE ANYTHING WAS BUILT, AND THE METRIC THAT PRODUCED IT IS THE FINDING
+Round 11 recorded deep-stairs going 4 -> 7 survivors with darkness 0 -> 3 as UNEXPLAINED.
+Re-judged at **N=10 on both arms**, same instrument, same cameras, the RAW PER-LOOK finding
+rate is flat on every class:
+
+    per look (N=10)            before   after
+    findings                   3.00 sd 0.47   2.80 sd 0.42
+    dark / shadow / obscured   1.50     1.60
+    cave / pitch-black / void  0.40     0.30
+    floating / clipping        0.80     0.80
+
+**THE SURVIVOR COUNT DID MOVE, 30 -> 20, AND ALL OF IT IS STAGE 2**: 0 of 30 refuted in the
+before arm against 7 of 27 in the after arm. A SURVIVOR COUNT IS NOT A JUDGE-LANGUAGE COUNT —
+it is the judge's first look convolved with the adversarial refuter's second, and the two
+moved in opposite directions here. Bootstrapping N=3 out of these same twenty looks says
+"after worse" on darkness **43.0%** of the time (tie 34.9%) and on the total 11.3%. **A
+per-camera phrase class at N=3 in this town is a coin flip**, and round 11 drew one. Nothing
+was built. Runs: docs/qa/redteam/run-r12ds-{before,after}.
+
+### TARGET 1 — THE THIRD GRAMMAR IS 89 MESHES ON ELEVEN CAMERAS, NOT 15 ON ONE
+`veg_nl_clump_*` (x15, the lozenges round 11 found by looking) and `veg_wv_clump_*` (**x74**)
+are the SAME OBJECT: three 9-sided tapered drums joined, 54 verts / 33 faces, on `lf_matte`,
+built by two functions of one file — `weave_build.py` 1567-1591 and 1726-1749, the second
+under a comment about districts that invent their own foliage grammar. Nobody had put the two
+together. Footprint, % of frame, ray-derived: north-landing 3.22 (nl 2.80 + wv 0.42) · cottage
+2.08 · fishdock 1.62 · deep-stairs 1.08 · waterfront 1.01 · weave 0.96 · lockfive 0.59 ·
+lockhead 0.42 · crossing 0.20 · quay-west 0.02 · gate 0.01.
+**`lf_matte` IS NOT THE SUBJECT** — it is 14.85% of lockfive as barge hulls, dam caps and
+bunting cloth. The subject is the OBJECT PREFIX; the material is a symptom, and sizing the job
+by the material would have been six times too big.
+
+### AND ROUND 11's "THERE IS NO KIT TO COPY" IS REFUTED, WHICH FOLDS TARGET 4 INTO THE SAME CARRIER
+
+    v10_src_clump_a  184 verts / 46 faces  mat_leaf_autumn  h 2.099  uv area/face 1.00000
+    v10_src_clump_b  112 verts / 28 faces  mat_leaf_autumn  h 1.216  uv area/face 1.00000
+
+Both `hide_render`, both at the origin, sitting beside the tuft donors `dh_veg_kit` already
+used — and **63 healthy in-town clumps already wear exactly those two signatures**. The UV is
+1.00000 per face, which is round 10's own hard-won number, so the radial cutout is right BY
+COPY and not by choice. `veg_lf_rimclump_*` (41 meshes, 66v/41f = the same three drums plus a
+6-gon trunk, 5.24% of cottage) therefore shipped in the same run: only the `mat_leaf_autumn`
+faces are replaced and the `mat_timber_dark` trunk is carried through, because a whole-mesh
+copy would delete a trunk the donor does not have.
+
+### THREE THINGS DERIVED RATHER THAN CHOSEN
+  * **THE WIDTH IS THE BUILDER'S CLEARANCE TEST, NOT THE DRUM'S OWN BOX**, and the first
+    attempt proved why. `dh_veg_kit`'s rule (fit the donor in the orphan's own bbox) is
+    width-limited here because the donor is 1.16 WIDER THAN TALL and a drum is taller than
+    wide: it produced 0.71 m plants against the drums' own 0.96 m (scale p50 0.582) and at
+    cottage's 21 m they nearly vanished. The load-bearing bound is the one `weave_build`
+    itself tested before placing anything — `spot(px, py, 0.55)` / `spot(px, py, 0.60)`, a
+    cleared CIRCLE of diameter 1.10 / 1.20 m — and at the donor's aspect a height-matched
+    copy lands within 1% of it. After: 1.04 x 1.03 x 0.89 (wv) and 1.09 x 1.17 x 0.98 (nl),
+    silhouette area +64%.
+  * **THE HEIGHT IS THE ORPHAN'S OWN, WHICH IS THE OPPOSITE OF `dh_veg_kit`'S RULE, AND THE
+    MATERIAL IS THE REASON.** `mat_grass`/`mat_fern` drive a Color Ramp from object-space Z
+    through a CLAMPED Map Range, so a short plant reads dark and the height had to be drawn
+    from the kit. `mat_leaf_green` HAS NO Z TERM AT ALL. So height is free here.
+  * **THE DYE IS KEPT FOR ONE FAMILY AND RE-DRAWN FOR THE OTHER, ON ONE MEASUREMENT:**
+
+        63 healthy clumps (the kit)   Col luminance p05/p50/p95  0.1501 / 0.1535 / 0.1617
+        89 orphan drums              0.1059 / 0.1309 / 0.1653   IN FAMILY — carried
+        41 rim clumps                0.3037 / 0.3061 / 0.3094   2.0x — re-drawn from the kit
+
+    As stacked cylinders the rim clumps' dye was a bright orange fan; on kit geometry with the
+    cutout it photographed as **pale pink-brown blossom, which is worse** — a repair making a
+    second defect legible, seen in a draft and fixed before the bake. That stale dye is
+    `dh_rimclump_col`'s round-10 bake of an object-space Z ramp over CYLINDER geometry that no
+    longer exists: carrying it forward would have been carrying a derived artifact past the
+    thing it was derived from.
+
+### TWO MATERIALS THAT ARE ONE MATERIAL
+`mat_leaf_green` and `mat_leaf_autumn` were dumped node by node and link by link and are
+**IDENTICAL** — 17 nodes, 18 links, the same two Color Ramps. The ramp that looks like the
+autumn tint (0.235/0.062/0.028 .. 0.285/0.180/0.058) **DRIVES NOTHING**: its Color output is
+unlinked, and the only ramp reaching the shader is the cutout factor. Every autumn/green
+difference in this town is carried by the VERTEX COLOUR. The carrier asserts this equality
+rather than assuming it, so the day someone makes them differ the run stops.
+
+### TARGET 3 — THE WHOLE GLOBAL-AMBIENT FAMILY IS REFUTED, INCLUDING THE LEVER I FOUND MYSELF
+Four absurd-limit controls at 1008x576 / 28 spp on lockfive, shelf-west, deep-stairs and
+weave, then NEAR (<25 m, the town) split from FAR (>60 m) through the objmap's own
+ray-derived distance:
+
+    arm                                 crushed%   near p05   far L
+    base (sky 2.1, diffuse_bounces 4)     18.32       1.8      41.6
+    diffuse_bounces 4 -> 32               18.32       1.8      41.6
+    all 23 FILL_bounce/CLIFF_BOUNCE -> 0  19.02       1.4      41.6
+    world Background -> 0                 24.01       1.4      24.4
+    world Background 2.1 -> 4.2           15.72       2.5      55.5
+    world Background 2.1 -> 8.4           11.87       3.5      79.0
+
+  1. **THE TRANSPORT HYPOTHESIS IS DEAD.** Eight times the diffuse bounces is identical to
+     base to every printed digit on all four cameras, near and far — which agrees with the
+     arithmetic at the town's own measured shadow albedos of 0.12-0.34.
+  2. **THE 23-LIGHT FAKE-BOUNCE RIG IS NEARLY INERT WHERE IT WAS BUILT TO WORK** — deleting
+     every one of them costs 0.4 levels of near p05.
+  3. **THE SKY LOOKED LIKE A ONE-NUMBER WIN AND IS NOT.** It moves the FAR field: lockfive
+     far L +90% against near +11%, and the far field is 17-23% of frame, so most of the
+     crushed improvement is a region that was never the subject.
+
+**AND EVERY TONAL NUMBER I HAD WAS BLIND TO WHAT IT COSTS.** Across the whole ladder p95 moves
+137.0 -> 142.4, blown pixels are IDENTICAL at 0.147% on every rung including sky = 0, and
+chroma goes UP. The plate says otherwise: the far wall milks to a lavender fog bank, because
+the same world lights the volume cards round 6 tuned. **A MID-TONE WASH IS INVISIBLE TO METRICS
+THAT LIVE AT THE TAILS.**
+THE HEADLINE: turn the sky AND the entire bounce rig off and near-field p05 falls 1.8 -> 1.0;
+turn the sky up fourfold and it reaches 3.5. **Every global ambient term in this town put
+together is worth about two levels of 255 in the near field**, because the near field is a
+closed gorge under overhangs and sees almost none of any of them. The near-field shadow floor
+is NOT REACHABLE FROM ANY GLOBAL PARAMETER. Round 13 owes it LOCAL sources sized per region —
+the class `dh_qm_underlight` and `KEYW_CLIFF_` already belong to. NOT BUILT.
+
+### A TRAP PAID FOR, AND IT COST ONE DRAFT ARM
+**A `.blend` COPIED OUT OF `tools/blends/` RENDERS MAGENTA.** The master's image textures are
+`//../textures/...`, relative to the blend, so a backup at any other path loses 58 of its 60
+textures — silently, no error, no warning. The first draft A/B arm of this round was rendered
+from such a backup and was not a baseline, it was a different material set. An A/B arm must be
+rendered from a blend standing at the CANONICAL path; back up by moving the file, not by
+rendering the copy.
+
+### REBAKE LIST FROM RENDERED FRAMES, AND THE FLOOR RE-MEASURED PER CAMERA
+Whole-town draft A/B, 15 a side, 1008x576 / 28 spp:
+  cottage 11.817/9.184 · north-landing 5.525/4.117 · fishdock 2.556/1.278 · weave 2.365/1.407 ·
+  waterfront 1.753/1.240 · deep-stairs 1.592/0.818 · lockfive 1.252/0.745 · crossing 1.236/0.906 ·
+  lockhead 0.859/0.501 · gate 0.183/0.124 · quay-west 0.049/0.015 · loop-stairs 0.024/0.002
+**REFUSED WITH THEIR NUMBERS: shelf-west 0.006/0.000 · boatyard 0.003/0.000 · shelf-east
+0.001/0.000.** The floor was RE-MEASURED rather than inherited, on the three marginal cameras,
+as two draft renders of the SAME post-fix master: **quay-west 0.020% · loop-stairs 0.005% ·
+gate 0.000%** above 4/255. So quay-west at 0.049 is the WEAKEST INCLUSION at 2.5x its own
+floor and is named as such; cottage and north-landing are three orders over it.
+
+### THE VERDICT — N=10 BOTH ARMS, AND THE HONEST HEADLINE IS THAT THE TOTAL IS FLAT
+scene_redteam, pinned gemini-3.6-flash, naive, N=10, 6 plates, 132 calls over two arms, 0
+errors. The BEFORE arm is the shipped pre-round-12 plates extracted from git into a scratch
+bundle and judged through `--plates`. Reported as RAW PER-LOOK RATES, per this round's own
+target-2 finding:
+
+    findings per look (6 shots summed)   BEFORE   AFTER
+    TOTAL                                 15.40   15.10
+    vegetation / foliage                   0.90    0.00
+    cave / pitch-black / void              1.30    0.60
+    dark / shadow / obscured               2.50    1.70
+    floating / clipping                    6.80    6.00
+    untextured / flat / plain              0.90    1.80
+    block / box / cube / cone / cylinder   0.40    2.10
+
+  * **THE FOLIAGE CLASS IS GONE — 0.90 -> 0.00 over six cameras, north-landing 0.70 -> 0.00**,
+    and there is not one mention of a cone, a lozenge or a plant sticking out of a cliff
+    anywhere in the after arm. The before arm named it six ways: *"Stylized conical plant
+    assets protrude horizontally directly out of the vertical cliff face without stems or
+    natural attachment points."*
+  * **cave/void 1.30 -> 0.60 and dark/shadow 2.50 -> 1.70 WITH NOTHING BUILT FOR EITHER** —
+    130 opaque drums became cutout leaf clusters and more light gets past them.
+  * **THE RISES ARE REAL AND NONE OF THEM ARE MINE. READ THE ROWS, NEVER THE ROLL-UP.**
+    cottage's block 0.00 -> 0.90 is a *"row of orange cubes floating in mid-air"* = **`t2c_W7_
+    keeper_boxes`, mat_timber + mat_pumpkin, 43.4% of the judge's own box at 19.6 m** — newly
+    the only orange thing in a frame whose orange fan just became green foliage. fishdock's is
+    **`t2c_F5_fish_floats`**, the same `t2c_` colour-pop family round 9 already dropped a
+    member of (`t2c_N5_nl_barge_deck`). north-landing's *"white stepping stones floating flat
+    on the water"* is **`lf_crest_bay_02` / `lf_spill_bay_01`** on `mat_blackstone` — the dam's
+    spillway bays, with no immersion at the waterline.
+  * **AND CROSSING'S STANDING COMPLAINT IS THE AWNING, NAMED ON THE GEOMETRY FOR THE FIRST
+    TIME.** *"An untextured grey polygon clipping through the wooden walkway, bottom right"* is
+    **78.5% `qm_awning_0 | mat_qm_awning` at 5.3 m**, 10 mentions before and 7 after in two
+    arms that BOTH carry round 11's canvas. Four rounds have worked on this surface as a VALUE
+    and a TEXTURE question; the judge has been describing it as raw clipping geometry the whole
+    time and nobody had put its box on the map.
+
+### GATES
+`cine_test` **635 ok / 1 failed / 2 soft** — the failure is the pre-attributed
+deep-stairs<->waterfront seam, same `{"fired":0,"expected":10}`. The delta from round 11's
+636/1/1 is EXACTLY the three refusals: the second soft warning is *"every shot's art is NEWER
+than the live master — 3 stale: shelf-west, shelf-east, boatyard"*, which is the refusal list
+verbatim. Round 11 got 636/1/1 by baking all fifteen; refusing three below the noise floor
+costs one assertion and one soft warning, and that is the correct trade. ·
+`slice_test` **776/0** · `findability_test` **69 passed / 0 failed / 11 warnings** ·
+`routes_derive --check` clean, 15 shots (`veg_` is the no-stand prefix; nothing walkable moved).
+Both bundles re-exported from the master that ships, plus `town_export`'s two ortho plates, and
+**VERIFIED IN THE ARTIFACT NOT THE LOG**: all 130 reshaped nodes export
+`COLOR_0, NORMAL, POSITION, TEXCOORD_0` across 171 primitives in BOTH `del-cine/scene.glb` and
+`townwalk/scene.glb`, 0 missing.
+BAKES: twelve, 1-WIDE SERIAL in one Blender, rc=0, **2145 s** (lockhead 151.3 s ... waterfront
+207.4 s); `memory_pressure -Q` 89% free before every spawn, never a second Blender, no Metal
+kernel-cache SIGABRT this window.
+
+### OWED / NAMED FOR ROUND 13
+  1. **A DEPLOY IS OWED** — twelve plates and both bundles supersede what is on the site.
+  2. **THE `t2c_` COLOUR-POP FAMILY IS THE NEW LOUDEST DEFECT** and the judge sized it for us:
+     `t2c_W7_keeper_boxes` at cottage and `t2c_F5_fish_floats` at fishdock, both read as
+     *"untextured developer placeholder cubes"*. Round 9 dropped `t2c_N5_nl_barge_deck` from
+     this same family for the same reason. Census the whole `t2c_` set before fixing one.
+  3. **THE AWNING IS A SILHOUETTE/CONTACT DEFECT, NOT A TEXTURE ONE** — 78.5% of a judge box
+     at 5.3 m described as untextured grey geometry clipping through the floor. Four rounds
+     of value and texture work have not touched what the judge is actually looking at.
+  4. **THE NEAR-FIELD SHADOW FLOOR NEEDS LOCAL SOURCES.** Every global term is worth ~2 levels
+     of 255 there; the sky is a far-field lever and it milks the haze. The underlight dose
+     (round 11 item 5, two of three cards in the wrong place, 2% of the distance) is the live
+     instance of the right class.
+  5. **`lf_crest_bay_*` / `lf_spill_bay_*` DO NOT MEET THE WATER** — flat on the surface, no
+     immersion, read as floating white slabs. water-transparency.md is the canon.
+  6. **N=3 IS NOT ENOUGH FOR A PER-CAMERA CLAIM IN THIS TOWN** (43% sign-flip on darkness,
+     measured), and a SURVIVOR COUNT is not a judge-language count. Report raw per-look rates.
+  7. The clumps still stand ON the cliff rather than in a ledge — the judge's *"without roots
+     or soil"* half. My fix removed the "conical" half entirely and the whole complaint went
+     with it at N=10, but the placement is unexamined and is a `weave_build` question.
+
 ## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 11 (measurements banked before any build):
 ## WEAVE HAS NO BLACK OF ITS OWN, THE AWNING IS NOT BELOW NYQUIST, AND THE FERNS ARE
 ## STILL LITERAL CUBES
