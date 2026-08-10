@@ -2776,6 +2776,70 @@ if nisland:
     print("  walk_pad_*             %d island pad(s) refused at the %.2f m threshold"
           % (nisland, ISLAND_REACH))
 
+# ======================= HOW MUCH OF THE PAVING IS TWO PAVINGS STACKED? (round 2) ==
+# THE GENERATOR EMITS THIS DEFECT AND HAS NEVER SAID SO.  `walk_pad_<id>` takes its height
+# from the terrain at its own doorstep (`DOOR[i][2]`); `walk_e_*` takes its height from a
+# smoothed chain of lane waypoints; `walk_lm_*` from the area's own floor.  Three
+# independent height sources, all of them right on their own, and NOTHING HERE HAS EVER
+# COMPARED THEM where their footprints overlap.  Measured on the shipped bundle
+# (`tools/emb_padstack.mjs`, 2026-08-10): **106.0 m2 of the town's 1,510 m2 of paving is
+# two walk surfaces on one plan cell, at a median step of 70 mm** — a doorstep pad
+# standing proud of the road that runs across it, with a lit 0.12 m riser and a shadow
+# line, which is sixteen of round 1's thirty-seven surviving geometry findings
+# ("the concrete path slabs clip and overlap unnaturally", "floating above the ground").
+#   The picture is carried by `emb_pavechop`, which now seats such a rim ONTO the paving
+# below instead of pinning it.  THE HEIGHTS ARE STILL WRONG AT SOURCE and reconciling
+# them is a walk-network change this pass cannot validate on its own (`DOOR[i][2]` is read
+# downstream by the ribbon ends and by `scenegraph_derive`).  So this census exists to
+# make the refusal SPEAK: after every walk surface is emitted, print the stacks and the
+# area, so a rebuild can never again ship the defect in silence.  Round 9's floating stair
+# treads were a `continue` with no log line under a summary that counted treads.
+_SCELL = 0.10
+_sgrid = {}
+for _o in _walkobs:
+    _M = _o.matrix_world
+    _me = _o.data
+    _me.calc_loop_triangles()
+    for _p in _me.polygons:
+        if (_M.to_3x3().inverted().transposed() @ _p.normal).normalized().z < 0.5:
+            continue
+        _vs = [_M @ _me.vertices[_v].co for _v in _p.vertices]
+        _x0 = min(_v.x for _v in _vs); _x1 = max(_v.x for _v in _vs)
+        _y0 = min(_v.y for _v in _vs); _y1 = max(_v.y for _v in _vs)
+        _z = sum(_v.z for _v in _vs) / len(_vs)
+        for _ix in range(int(math.floor(_x0 / _SCELL)), int(math.floor(_x1 / _SCELL)) + 1):
+            for _iy in range(int(math.floor(_y0 / _SCELL)), int(math.floor(_y1 / _SCELL)) + 1):
+                _cx, _cy = (_ix + 0.5) * _SCELL, (_iy + 0.5) * _SCELL
+                if not (_x0 - 1e-9 <= _cx <= _x1 + 1e-9 and _y0 - 1e-9 <= _cy <= _y1 + 1e-9):
+                    continue
+                _k = (_ix, _iy)
+                _cur = _sgrid.get(_k)
+                if _cur is None:
+                    _sgrid[_k] = {_o.name: _z}
+                else:
+                    if _z > _cur.get(_o.name, -1e9):
+                        _cur[_o.name] = _z
+_stack, _nmulti = {}, 0
+for _k, _tops in _sgrid.items():
+    if len(_tops) < 2:
+        continue
+    _nmulti += 1
+    _e = sorted(_tops.items(), key=lambda t: -t[1])
+    _key = (_e[0][0], _e[1][0])
+    _r = _stack.setdefault(_key, [0, 0.0])
+    _r[0] += 1
+    _r[1] += _e[0][1] - _e[1][1]
+_area = _nmulti * _SCELL * _SCELL
+print("  walk STACK census        %.1f m2 of %.1f m2 paved plan is TWO walk surfaces on "
+      "one cell (%.1f%%), over %d pairs — three independent height sources (pad = terrain "
+      "at its doorstep, ribbon = smoothed lane waypoints, area = its own floor) and "
+      "nothing here reconciles them. Carried by emb_pavechop; NOT fixed at source."
+      % (_area, len(_sgrid) * _SCELL * _SCELL,
+         100.0 * _nmulti / max(1, len(_sgrid)), len(_stack)))
+for _key, _r in sorted(_stack.items(), key=lambda t: -t[1][0])[:12]:
+    print("      %6.2f m2  step %.3f m  %s over %s"
+          % (_r[0] * _SCELL * _SCELL, _r[1] / _r[0], _key[0], _key[1]))
+
 rebuild_occ()
 rebuild_wcut()
 
