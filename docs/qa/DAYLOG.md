@@ -23787,6 +23787,85 @@ weave 0.16% @52 m.
 1 UV layer and 1 colour attribute (round 10's repair, verified in the master).
 cottage 5.24% of frame @22 m · crossing 0.72% @32 m · weave 0.68% @59 m.
 
+
+### WHAT WAS BUILT, AND THE ONE THING EACH CARRIER HAD TO REFUTE FIRST
+
+**(1) `tools/dh_veg_kit.py` — THE TOWN ALREADY HAD A KIT AND TWO DISTRICTS IGNORED IT.**
+385 meshes wear `mat_grass`/`mat_fern` and fall into exactly four shapes: 150 tufts at
+160 verts / 64 faces, 131 ferns at 110/44, **78 `veg_lf_fern_*` at 8/6 (an `obox()`:
+A BOX)** and **26 `veg_lk_tuft_*` at 8/2 (two crossed quads)**. THAT 78 + 26 IS ROUND
+10's "104": one orphan set counted under one prefix, and it is TWO districts.
+`lk_build.py:1648` builds its own under a comment reading *"a district that invents
+its own foliage grammar reads as a different game from the district beside it"* — the
+comment describes the intent and the artifact is 8 verts.
+So nothing was authored: each orphan's mesh is replaced by a copy of the town's own
+donor (`v10_src_tuft_fern` / `_grass`, which the ray census puts in NONE of the fifteen
+frames), scaled UNIFORMLY and never larger than the envelope `clear_box()` cleared, at a
+height drawn from the healthy family's own distribution, with a deterministic per-name yaw.
+**AND THE ORIGIN WAS SOLVED, NOT CHOSEN, BECAUSE THE ORIGIN IS THE COLOUR.** `mat_grass`/
+`mat_fern` read `Texture Coordinate OBJECT -> Separate XYZ.Z -> Map Range(0, 0.45 / 0.55,
+CLAMPED)`, so where the origin sits decides how much of every plant clamps to the dark
+end. Three rungs, all measured by Cycles bake before the call: base-at-zero put
+`mat_grass` at (0.1633, 0.1745, 0.0654) against the healthy 150's (0.1214, 0.1359,
+0.0517) — 35% bright; centred-on-zero put it at (0.0692, 0.0880, 0.0346) — 43% dark; and
+drawing the HEIGHT from the kit moved it almost not at all (61% of healthy on BOTH
+materials, the same factor twice, which is what said the remaining term was not size).
+That chain is arithmetic, so it is evaluated in numpy and the offset solved to a
+thousandth of a metre — **the model was checked against the thing it replaces before
+being trusted**: predicted (0.0378, 0.0743, 0.0289) / (0.0656, 0.0848, 0.0335) against a
+Cycles EMIT bake of the same meshes at (0.0378, 0.0742, 0.0289) / (0.0653, 0.0845,
+0.0334), four decimals on both. SHIPPED: `mat_fern` **100%** and `mat_grass` **99%** of
+their own healthy family.
+**AND THE TARGET IS THE STORED `Col`, NOT WHAT THE RAMP SAYS ABOUT IT — THEY DIFFER BY
+1.36x** (fern stored 0.0634 vs 0.0454 predicted, grass 0.1214 vs 0.0895). After
+`master_survivability` the Base Color is read from the `surv_col` VERTEX ATTRIBUTE and
+the ramp is only ever a bake source, so the stored colour is what ships and the ramp is
+not a second opinion about it. CLASS: GEOMETRY, then MESH DATA.
+`dh_rimclump_col`'s `HOLD` is deleted; its origin shift is now CONDITIONAL on the mesh
+lying outside the ramp's own clamped domain (which is the defect it was written for —
+`obox()`+`join_meshes()` leave object space = world space); and it now prints each
+repaired mean against ITS OWN MATERIAL'S healthy family. The single "autumn reference"
+line it had before is what silently passed a `mat_grass` repair at 57%.
+
+**(2) `tools/qm_awning_canvas.py` — BOTH INHERITED CONSTRAINTS ON THE AWNING ARE FALSE.**
+Round 10 handed over "it needs an image texture with UVs, which is a job and not a cheap
+round". Measured: **the town's 61 textured materials do not use UVs at all** — every one
+is `Texture Coordinate.Object -> Mapping(scale 1.9) -> Image Texture` x4 — and
+**Dellhollow's runtime never draws this material**, because `del-cine` is a pre-rendered
+bg+depth bundle whose `scene.glb` is collision. (That constraint is real for
+`emb-townwalk`. It is not real here.) So it is a material edit: a generated tileable
+canvas — 4 mm weave for the roughness and normal to bite on, 20-180 mm wear for the band
+the plate can actually resolve — MULTIPLIED into the existing `Col`, so round 8's
+thirteen stripe columns and round 9's value pull (albedo 0.320 -> 0.144, spec 0.50 ->
+0.15) both survive by construction and a multiply can only darken. Draft receipt at the
+awning's own ray-derived mask: **masked SD5 2.06 -> 2.68 (+30%) and L p50 126.1 -> 101.5**,
+which lands it inside `mat_qm_paving`'s own 99.8-117.5 band instead of above it.
+CLASS: MATERIAL.
+
+**(3) `tools/dh_qm_underlight.py` — RUN, AS ROUND 10 BUILT IT.** Three `KEYQ_UNDER_*`
+cards at 13.33 W, 1/3 size, 16 m cutoff, derived from `qm_stair_underworks`'s own world
+bbox (x 35.33..60.01, y 8.08..21.49, z 5.92..17.73) and standing at y 25.99, outboard of
+every vertex of the subject, `use_shadow=False`. NOTE FOR ROUND 12: round 10's note
+placed the mass at "x 34.7..38.6" and the object's actual bbox is x 35.33..60.01, so two
+of the three cards land inside the existing `KEYW_CLIFF_` run rather than in the gap.
+
+### THE NOISE FLOOR WAS RE-MEASURED, AND IT IS WHAT SAID THE WHOLE-TOWN CHANGE IS REAL
+The whole-town draft A/B (1008x576 / 28 spp, 15 a side) came back with **ALL FIFTEEN
+cameras above 1% of frame changed above 4/255**, which is far more than three local edits
+should do and is exactly the shape of a global render difference. So the floor was
+measured rather than inherited — two draft renders of the SAME master, same session:
+**boatyard 0.031% · shelf-west 0.006% · crossing 0.001%** above 4/255. The documented
+0.010% holds. The A/B is therefore **30x to 170x the floor on every camera**, and the
+cause is real and nameable: 104 meshes that were pure black (absent `Col` = zero albedo)
+now bounce light, in a scene with `diffuse_bounces 4`. NOTHING IS REFUSED THIS ROUND, and
+that is the first time in four rounds — rounds 8/9/10 refused eight, five and nine.
+
+    deep-stairs 3.375/0.299 · fishdock 3.322/0.607 · crossing 3.107/2.213 ·
+    quay-west 2.747/0.277 · weave 2.721/0.435 · lockfive 2.686/0.937 ·
+    lockhead 1.844/0.767 · loop-stairs 1.798/0.299 · waterfront 1.596/0.175 ·
+    shelf-east 1.239/0.127 · boatyard 1.227/0.139 · cottage 1.223/0.441 ·
+    gate 1.181/0.189 · north-landing 1.084/0.653 · shelf-west 1.028/0.122
+
 ## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 10: THE CLUMPS WERE NEVER BLACK, THEY WERE
 ## INVISIBLE; THE DEEP-STAIRS "CAST SHADOW" IS NOT A SHADOW; AND THE CANVAS'S RESIDUAL
 ## IS SPATIAL FREQUENCY, WHICH NEITHER NAMED LEVER TOUCHES
