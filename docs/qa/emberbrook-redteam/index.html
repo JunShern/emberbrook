@@ -706,4 +706,113 @@ stacked 65&ndash;78 mm apart in their interiors. The heights have to be reconcil
 
 <p class="cap" id="r2foot">Round 2 evidence: <code>docs/qa/emberbrook-redteam/round2-draft-ab.json</code>, <code>padstack-before.json</code>, <code>padstack-after-master.json</code>. Instruments: <code>tools/emb_padstack.mjs</code>, <code>tools/emb_ray_census.py</code>, <code>tools/plate_ab.py</code>, <code>tools/emb_bake_shipped.mjs</code>, <code>tools/emb_millgable.py</code>.</p>
 
+
+<h2 id="r3">&sect;10 &mdash; ROUND 3, 2026-08-10: the doorstep stops being a height source, and 37.9 m&sup2; of empty hole was a cut sized to the map instead of to the building</h2>
+
+<h3>Target 1 &mdash; the 106.0 m&sup2; decomposed by mechanism, which nobody had done</h3>
+<p><code>emb_padstack</code>'s own JSON, classified by the FAMILY of each stacked pair:</p>
+<table>
+<tr><th>pair family</th><th class="num">m&sup2;</th><th class="num">pairs</th><th>what it is</th></tr>
+<tr><td>pad over ribbon</td><td class="num"><b>51.77</b></td><td class="num">83</td><td>a flat doorstep on a graded lane</td></tr>
+<tr><td>area over ribbon</td><td class="num">34.69</td><td class="num">42</td><td>the 0.6 m rim overlap, by design</td></tr>
+<tr><td>area over pad</td><td class="num">9.94</td><td class="num">9</td><td>the &ldquo;coplanar&rdquo; threshold, off by 70 mm</td></tr>
+<tr><td>pad over pad</td><td class="num">5.02</td><td class="num">6</td><td></td></tr>
+<tr><td>ribbon over ribbon</td><td class="num">4.57</td><td class="num">67</td><td>segment joints at corners</td></tr>
+<tr><td>area over area</td><td class="num">0.02</td><td class="num">5</td><td></td></tr>
+</table>
+<div class="card lead"><p style="margin:0"><b>SIXTY-SIX OF THE 106 IS A PAD</b>, and the mechanism is arithmetic:
+a ribbon starts at <code>DOOR</code> carrying <code>DOOR</code>'s own z and then CLIMBS toward the next waypoint,
+while <code>walk_pad_*</code> is a FLAT 3.0 m box centred on that same point &mdash; so at the pad's far edge the
+lane has gained 1.5 m &times; the local grade. That is the measured 70 mm. And <code>emb_blockout</code>'s
+threshold-pad branch says in its own comment that it emits the pad <i>&ldquo;coplanar with it, so
+<code>eff_top</code> still has nothing to choose between&rdquo;</i> &mdash; measured, the bakery's threshold stands
+<b>70 mm over the plaza it is supposed to be coplanar with</b>.</p></div>
+<p><b>The fix is one rule, not three</b> (<code>tools/emb_padlevel.py</code>, and the same rule at source in
+<code>emb_blockout.py</code>): the pad stops being a height source. Its top is read off the walk surface it
+actually stands on &mdash; the median, over its own plan cells, of the highest OTHER walk surface there &mdash;
+plus 4 mm. The 4 mm is round 1's <code>emb_padcoplanar</code> result kept on purpose: two walk surfaces at exactly
+0.000 m rendered as a pitch-black hole under <code>walk_pad_lake-home</code>. <b>Flush, never coincident.</b>
+<code>DOOR[i][2]</code> is not touched, so the ribbon ends and <code>scenegraph_derive</code>'s triggers keep their
+authority; what moves is the SLAB, which is a picture and not a contract.</p>
+<table>
+<tr><th>band</th><th class="num">before</th><th class="num">predicted</th><th class="num">measured</th></tr>
+<tr><td>&le; 2 mm (z-fight)</td><td class="num">5.20</td><td class="num">6.86</td><td class="num">5.05</td></tr>
+<tr><td>2&ndash;20 mm</td><td class="num">8.38</td><td class="num">42.17</td><td class="num">43.09</td></tr>
+<tr><td>20&ndash;60 mm</td><td class="num">28.79</td><td class="num">30.02</td><td class="num">29.35</td></tr>
+<tr><td><b>60&ndash;120 mm &mdash; the modal band, a lit riser and its shadow line</b></td><td class="num">38.05</td><td class="num">3.66</td><td class="num"><b>3.07</b></td></tr>
+<tr><td>120&ndash;250 mm</td><td class="num">11.40</td><td class="num">9.11</td><td class="num">11.25</td></tr>
+<tr><td>&gt; 250 mm (real terraces)</td><td class="num">14.20</td><td class="num">14.20</td><td class="num">14.20</td></tr>
+<tr><td><b>p50 step</b></td><td class="num">0.0700 m</td><td class="num"></td><td class="num"><b>0.0231 m</b></td></tr>
+</table>
+<p><b>Predicted before any Blender ran</b> &mdash; the simulation is <code>emb_padstack</code>'s own rasteriser with
+each pad's z replaced by the rule's answer, five seconds, no bake &mdash; and it called the modal band to within
+0.6 m&sup2;. <b>Two things it could not see, and both needed a refusal:</b></p>
+<ul>
+<li><b>A pad can stand on another pad, and a pad is exactly what this file moves.</b> Six do. One pass against the
+ORIGINAL heights seats <code>grandmothers-bench</code> 4 mm over where <code>lake-home</code> USED to be and then
+drops <code>lake-home</code> 66 mm &mdash; re-opening, between two pads, the exact 70 mm step round 1 shipped
+<code>emb_padcoplanar</code> to close. So: pass A levels every pad standing on a RIBBON or an AREA FLOOR, pass B
+levels the rest onto pass A's ANSWERS.</li>
+<li><b>Lower only.</b> A pad standing UNDER the surface that crosses it is COVERED by it and shows nothing;
+<code>pond-weir</code> sits 0.178 m below the lane that BRIDGES it. Raising buys no picture and costs z-fight. The
+measured &le;2 mm band went DOWN, so nothing new z-fights.</li>
+</ul>
+<p><code>emb_pavechop</code>'s own receipt is the independent confirmation: rims SEATED ONTO LOWER PAVING
+<b>108 &rarr; 56</b>, rims PINNED as level with their neighbour <b>2140 &rarr; 2192</b>. Half the stacked rims
+stopped being stacked. <b>Double coverage is still 106.0 m&sup2; and that is the honest headline</b>: this fixes
+HEIGHTS, not overlap &mdash; the overlap is deliberate and invisible once the two surfaces agree.</p>
+
+<h3>Target 2 &mdash; 37.9 m&sup2; of empty paving hole, and the cut was sized to the map</h3>
+<table>
+<tr><th>hole</th><th class="num">area</th><th>what actually stands in it</th></tr>
+<tr><td>gate-court sigil</td><td class="num">11.29</td><td>two sigil plates, rim 1.84 m round, 0.32 m proud</td></tr>
+<tr><td>square well</td><td class="num">10.64</td><td>a 2.00 m well RING and two 0.17 m frames</td></tr>
+<tr><td>square notice / bell</td><td class="num">8.75</td><td>a 1.72 &times; 0.09 m BOARD and three 0.13&ndash;0.16 m posts</td></tr>
+<tr><td>gate-court trailhead</td><td class="num">5.33</td><td>a 0.50 &times; 1.90 m step and two 1.50 &times; 0.22 m stiles</td></tr>
+<tr><td>square lamp-ring0</td><td class="num">1.26</td><td>ONE 0.13 &times; 0.13 m LAMP POST</td></tr>
+<tr><td>orchard lamp01</td><td class="num">0.63</td><td>ONE 0.13 &times; 0.13 m LAMP POST</td></tr>
+</table>
+<div class="card lead"><p style="margin:0"><b>A 0.13 m POST CUTS 1.26 m&sup2; OF PAVING &mdash; 74&times; ITS OWN
+PLAN AREA.</b> The area-floor loop drops a 0.45 m cell whose CENTRE lands within 0.28 m of a landmark's
+<code>foot_rects_cut</code> rectangle, and that rectangle is the MAP'S AUTHORED <code>bodysize</code>, not the
+thing the builder stands there. <code>foot_rects_cut</code>'s own docstring had already ruled on this shape of
+mistake &mdash; <i>&ldquo;the direction of safety is not the same for the two consumers&rdquo;</i> &mdash; and the
+lamp is its third instance. <b>And one of the holes is a story site</b>: there is no
+<code>walk_pad_sigil-plate-*</code>, so Chapter One's twin sigil plates stood in an 11.29 m&sup2; hole with no walk
+record anywhere in it.</p></div>
+<p><img src="ev/r3-hole-well-before.jpg" style="max-width:380px" alt="the well in its hole">
+<img src="ev/r3-hole-notice-before.jpg" style="max-width:280px" alt="the notice board in its hole">
+<img src="ev/r3-hole-sigil-before.jpg" style="max-width:380px" alt="the sigil plates in their hole"></p>
+<p><b>An obstacle is a thing you cannot step over, not a thing that is there &mdash; and one 0.20 m threshold
+decides five holes.</b> At 0.30 m the festival dais gave back <b>16.20 m&sup2; of walk floor UNDER ITS OWN
+DECK</b> (its boards top out 0.259 m over the plaza). At 0.20 m the dais, the market stalls and the Heartlight
+plinth hold their holes, while the gate court's own dressing &mdash; 1.34 m flagstones at &plusmn;0.05 m and the
+sigil plates' rims topping out at +0.16 &mdash; is PAVING and does not.</p>
+<p><b>And the decision is made once and replayed, because the three blends do not see the same town.</b> The gray
+master's own census says <b>108 cells</b> where the dressed blend says <b>127</b>. Deriving per blend would have
+shipped THREE DIFFERENT WALK NETWORKS with every gate green, and <code>walk_engine_gate</code> compares a bundle
+against the ENGINE, never a bundle against a bundle. <code>--cells-out</code> writes the list from
+<code>-dressed</code>; <code>--cells-in</code> replays it. Receipt: <b>empty enclosed holes 37.91 &rarr; 0.79
+m&sup2;</b>, paved plan 1510.2 &rarr; 1537.3 m&sup2;, and no new stack.</p>
+
+<h3>Target 3 &mdash; the lucam, and two inherited words were wrong</h3>
+<p><img src="ev/r3-lucam-before.jpg" style="max-width:420px" alt="the lucam before"></p>
+<ul>
+<li><b>It is not missing a material</b>, and the thing that makes it look like it is, is worth knowing: every
+<code>emb_dress</code> box shares ONE template mesh, so <code>o.data.materials</code> reads <code>[None]</code> on
+all of them and the material lives on an OBJECT-linked slot. A probe that reads the mesh's material list finds
+nothing on the whole town.</li>
+<li><b>It is not only a texture problem.</b> Cropped out of the shipped plate it is a pale-tan carton with three
+flat faces and one unbroken silhouette, hung on a roof of textured shingles and dark rafters.</li>
+</ul>
+<p><b>A lucam is a hoist housing, and what makes one read is the loading door the sack comes out of.</b>
+<code>emb_dress_mill_hoistbeam</code>, <code>_pulley</code>, <code>_rope</code> and <code>_hoistsack</code> already
+hang off it and there was nothing for them to come out of. <code>tools/emb_millucam.py</code> boards it at the
+gable's own 0.24 m pitch, puts a two-leaf loading door with a lintel and a bressummer in the outward face, and
+adds four corner posts &mdash; 36 members. Outward is DERIVED from the roof deck's own centroid, never assumed.</p>
+
+<p class="cap" id="r3foot">Round 3 instruments: <code>tools/emb_padfill.py</code>, <code>tools/emb_padlevel.py</code>,
+<code>tools/emb_millucam.py</code>, <code>tools/emb_padstack.mjs</code>, <code>tools/plate_ab.py</code>,
+<code>tools/emb_bake_shipped.mjs</code>. Decision record: <code>tools/blends/districts/emb_padfill.cells.json</code>.</p>
+
 </main>
