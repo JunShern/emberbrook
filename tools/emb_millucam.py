@@ -4,10 +4,16 @@ THE ROOF.  This boards it and gives it the loading door a hoist housing is FOR.
     Blender -b tools/blends/<blend> --python-exit-code 1 \
         -P tools/emb_millucam.py -- [save] [revert save] [--bw 0.24] [--relief 0.018]
 
-A CARRIER, NEVER A REBUILD (CLAUDE.md's `gate_rimchop` rule).  The generator is
-`tools/emb_dress.py`'s mill builder, which carries the matching change so a re-dress
-agrees; this carries it onto the blends already built.  Nothing outside
+A CARRIER, NEVER A REBUILD (CLAUDE.md's `gate_rimchop` rule).  Nothing outside
 `emb_dress_mill_lucam*` is touched.
+
+**THE GENERATOR MIRROR IS OWED AND IS NOT WRITTEN** (round 3, 2026-08-10).  `emb_dress.py`
+carried ANOTHER LANE'S uncommitted work for the whole of this window, and
+`git commit -m … -- <pathspec>` commits the WORKING TREE, not the index — the trap that
+published 309 lines of three lanes' in-progress edits on 2026-08-03.  So the mill builder
+does NOT yet emit these members and a re-dress would silently drop them.  Round 2's gable
+fix DID land in `emb_dress.py`; copy its shape (`GBW/GREL/GGAP` and the board loop) into
+the `emb_dress_mill_lucam` line when that file is clean.
 
 =============================== WHAT WAS MEASURED ================================
 

@@ -1,0 +1,179 @@
+{
+ "blend": "/Users/junshernchan/projects/multiplayer-rpg/tools/blends/emberbrook-master.blend",
+ "clear": 0.28,
+ "minh": 0.2,
+ "maxb": 1.7,
+ "families": [
+  {
+   "fam": "walk_lm_gate-court",
+   "cells": 988,
+   "z": 2.799999952316284,
+   "holes": [
+    {
+     "m2": 12.15,
+     "give": 7.29,
+     "blockers": [
+      [
+       "lm_sigil-plate-w_base",
+       2.43
+      ],
+      [
+       "lm_sigil-plate-e_base",
+       2.43
+      ]
+     ]
+    },
+    {
+     "m2": 6.075,
+     "give": 2.43,
+     "blockers": [
+      [
+       "lm_forest-trailhead_step",
+       1.62
+      ],
+      [
+       "lm_forest-trailhead_stileB",
+       1.215
+      ],
+      [
+       "lm_forest-trailhead_stileA",
+       0.81
+      ]
+     ]
+    }
+   ],
+   "added": 0
+  },
+  {
+   "fam": "walk_lm_orchard",
+   "cells": 1277,
+   "z": 0.6000000238418579,
+   "holes": [
+    {
+     "m2": 1.215,
+     "give": 0.81,
+     "blockers": [
+      [
+       "emb_lamp_01_orchard_post",
+       0.405
+      ]
+     ]
+    }
+   ],
+   "added": 0
+  },
+  {
+   "fam": "walk_lm_square-plaza",
+   "cells": 2150,
+   "z": 1.5,
+   "holes": [
+    {
+     "m2": 18.8325,
+     "give": 1.215,
+     "blockers": [
+      [
+       "lm_market-row_stall3_top",
+       6.277500000000001
+      ],
+      [
+       "lm_market-row_stall4_top",
+       5.8725000000000005
+      ],
+      [
+       "lm_market-row_stall5_top",
+       5.4675
+      ]
+     ]
+    },
+    {
+     "m2": 17.01,
+     "give": 0.0,
+     "blockers": [
+      [
+       "lm_festival-dais_deck",
+       16.2
+      ],
+      [
+       "emb_lamp_10_inn_post",
+       0.81
+      ]
+     ]
+    },
+    {
+     "m2": 10.732500000000002,
+     "give": 4.2525,
+     "blockers": [
+      [
+       "lm_well_ring",
+       6.075
+      ],
+      [
+       "emb_lamp_09_bakery_post",
+       0.405
+      ]
+     ]
+    },
+    {
+     "m2": 9.1125,
+     "give": 4.455,
+     "blockers": [
+      [
+       "lm_notice-board_face",
+       2.43
+      ],
+      [
+       "lm_village-bell_post1",
+       0.6075
+      ],
+      [
+       "lm_village-bell_post0",
+       0.6075
+      ]
+     ]
+    },
+    {
+     "m2": 7.29,
+     "give": 0.0,
+     "blockers": [
+      [
+       "lm_heartlight_plinth",
+       7.29
+      ]
+     ]
+    },
+    {
+     "m2": 1.8225,
+     "give": 1.4175,
+     "blockers": [
+      [
+       "emb_lamp_13_square-ring0_post",
+       0.405
+      ]
+     ]
+    }
+   ],
+   "added": 0
+  }
+ ],
+ "holeM2": 84.24000000000001,
+ "addM2": 25.717500000000044,
+ "touched": [
+  "walk_lm_gate-court",
+  "walk_lm_orchard",
+  "walk_lm_square-plaza.002",
+  "walk_lm_square-plaza.008",
+  "walk_lm_square-plaza.009",
+  "walk_lm_square-plaza.016",
+  "walk_lm_square-plaza.017",
+  "walk_lm_square-plaza.018",
+  "walk_lm_square-plaza.019",
+  "walk_lm_square-plaza.025",
+  "walk_lm_square-plaza.026",
+  "walk_lm_square-plaza.027",
+  "walk_lm_square-plaza.030",
+  "walk_lm_square-plaza.031",
+  "walk_lm_square-plaza.033",
+  "walk_lm_square-plaza.038",
+  "walk_lm_square-plaza.039"
+ ]
+}

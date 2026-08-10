@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-08-09T21:59:25Z",
+ "generated": "2026-08-10T12:23:20Z",
  "sources": [
   "townmap/emberbrook.cameras.json",
   "townmap/emberbrook.map.json",
@@ -2608,7 +2608,7 @@
     },
     {
      "at": [
-      65.8,
+      66.025,
       42.2,
       1.5
      ],
@@ -2648,8 +2648,8 @@
     },
     {
      "at": [
-      58.576,
-      45.776,
+      58.6,
+      45.8,
       1.5
      ],
      "from": "walk_lm_square-plaza.016"
@@ -2657,7 +2657,7 @@
     {
      "at": [
       69.4,
-      42.2,
+      41.75,
       1.5
      ],
      "from": "walk_lm_square-plaza.039"
@@ -2680,14 +2680,6 @@
     },
     {
      "at": [
-      65.8,
-      38.6,
-      1.5
-     ],
-     "from": "walk_lm_square-plaza.030"
-    },
-    {
-     "at": [
       62.2,
       38.6,
       1.5
@@ -2696,11 +2688,27 @@
     },
     {
      "at": [
+      66.25,
+      38.6,
+      1.5
+     ],
+     "from": "walk_lm_square-plaza.030"
+    },
+    {
+     "at": [
       58.6,
-      49.4,
+      49.175,
       1.5
      ],
      "from": "walk_lm_square-plaza.017"
+    },
+    {
+     "at": [
+      62.2,
+      52.55,
+      1.5
+     ],
+     "from": "walk_lm_square-plaza.026"
     },
     {
      "at": [
@@ -2709,35 +2717,27 @@
       1.5
      ],
      "from": "walk_lm_square-plaza.034"
-    },
-    {
-     "at": [
-      62.2,
-      52.775,
-      1.5
-     ],
-     "from": "walk_lm_square-plaza.026"
     }
    ],
    "pos": [
-    69.66,
-    76.241,
-    31.105
+    69.677,
+    76.255,
+    31.133
    ],
    "aim": [
-    64.186,
-    45.193,
+    64.197,
+    45.177,
     2.718
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 42.42,
-   "solvedDist": 42.42,
+   "dist": 42.46,
+   "solvedDist": 42.46,
    "capped": false,
    "samples": 836,
    "inFrameFrac": 1,
-   "zNear": 31.66,
-   "zFar": 55.04,
+   "zNear": 31.69,
+   "zFar": 55.07,
    "charPxNear": 65,
    "charPxFar": 38,
    "clip": [

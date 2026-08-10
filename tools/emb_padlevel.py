@@ -169,12 +169,11 @@ print("blend %s   nudge %.4f m   minfrac %.2f   maxmove %.2f m"
 print("=" * 78)
 
 PADS = sorted([o for o in WALK if o.name.startswith("walk_pad_")], key=lambda o: o.name)
-report = {"blend": bpy.data.filepath, "nudge": NUDGE, "pads": []}
-moved = alone = refused = 0
+OWN, ZTOP = {}, {}
 for o in PADS:
     me = o.data
     M = o.matrix_world
-    own = set()
+    s = set()
     for pi in top_faces(o):
         vs = [M @ me.vertices[v].co for v in me.polygons[pi].vertices]
         x0 = min(v.x for v in vs); x1 = max(v.x for v in vs)
@@ -183,53 +182,100 @@ for o in PADS:
             for j in range(int(math.floor(y0 / CELL)), int(math.floor(y1 / CELL)) + 1):
                 cx, cy = (i + 0.5) * CELL, (j + 0.5) * CELL
                 if x0 - 1e-9 <= cx <= x1 + 1e-9 and y0 - 1e-9 <= cy <= y1 + 1e-9:
-                    own.add((i, j))
-    if not own:
-        continue
-    unders, who = [], {}
-    for k in own:
-        others = [(nm, z) for nm, z in GRID.get(k, {}).items() if nm != o.name]
-        if not others:
+                    s.add((i, j))
+    OWN[o.name] = s
+    ZTOP[o.name] = max((M @ v.co).z for v in me.vertices)
+
+# TWO PASSES, AND THE SECOND ONE IS NOT OPTIONAL.  Six of Emberbrook's pads stand on
+# ANOTHER PAD (`grandmothers-bench` on `lake-home`, `brook-spring` on `home-lane-end`), and
+# a pad is exactly the surface this file is about to move.  Levelling everything against
+# the ORIGINAL heights in one pass would have seated `grandmothers-bench` 4 mm over where
+# `lake-home` USED to be and then dropped `lake-home` 66 mm — re-opening, between two pads,
+# the very 70 mm step round 1 shipped `emb_padcoplanar` to close.  So pass A levels every
+# pad that stands on a RIBBON or an AREA FLOOR (the two internally consistent sources), and
+# pass B levels the rest onto pass A's ANSWERS.
+NEWTOP = {}
+plan = {}
+
+
+def derive(names_ok, pass_no):
+    got = 0
+    for o in PADS:
+        if o.name in plan:
             continue
-        nm, z = max(others, key=lambda t: t[1])
-        unders.append(z)
-        who[nm] = who.get(nm, 0) + 1
-    frac = len(unders) / len(own)
-    ztop = max((M @ v.co).z for v in me.vertices)
-    if frac < MINFRAC:
+        unders, who = [], {}
+        for k in OWN[o.name]:
+            cands = [(nm, NEWTOP.get(nm, z)) for nm, z in GRID.get(k, {}).items()
+                     if nm != o.name and names_ok(nm)]
+            if not cands:
+                continue
+            nm, z = max(cands, key=lambda t: t[1])
+            unders.append(z)
+            who[nm] = who.get(nm, 0) + 1
+        if not OWN[o.name] or len(unders) < MINFRAC * len(OWN[o.name]):
+            continue
+        unders.sort()
+        plan[o.name] = dict(
+            dz=unders[len(unders) // 2] + NUDGE - ZTOP[o.name],
+            frac=len(unders) / len(OWN[o.name]), pass_no=pass_no,
+            src=", ".join("%s %.0f%%" % (n, 100 * c / len(OWN[o.name]))
+                          for n, c in sorted(who.items(), key=lambda t: -t[1])[:2]))
+        got += 1
+    return got
+
+
+derive(lambda nm: not nm.startswith("walk_pad_"), 1)
+for nm, r in plan.items():
+    NEWTOP[nm] = ZTOP[nm] + r["dz"]
+derive(lambda nm: True, 2)
+
+report = {"blend": bpy.data.filepath, "nudge": NUDGE, "pads": []}
+moved = alone = refused = raised = 0
+for o in PADS:
+    r = plan.get(o.name)
+    if r is None:
         alone += 1
-        print("  %-30s ALONE — %.0f%% of its %.2f m2 has another walk surface under it "
-              "(< %.0f%%); nothing to reconcile with, height kept"
-              % (o.name, 100 * frac, len(own) * CELL * CELL, 100 * MINFRAC))
+        print("  %-30s ALONE — less than %.0f%% of its %.2f m2 has another walk surface "
+              "under it; nothing to reconcile with, height kept"
+              % (o.name, 100 * MINFRAC, len(OWN[o.name]) * CELL * CELL))
         continue
-    unders.sort()
-    target = unders[len(unders) // 2] + NUDGE
-    dz = target - ztop
-    src = ", ".join("%s %.0f%%" % (n, 100 * c / len(own))
-                    for n, c in sorted(who.items(), key=lambda t: -t[1])[:2])
+    dz = r["dz"]
     if abs(dz) > MAXMOVE:
         refused += 1
         print("  %-30s REFUSED — would move %+.3f m (> --maxmove %.2f). That is a "
-              "terrace, not a step; %s" % (o.name, dz, MAXMOVE, src))
+              "terrace, not a step; %s" % (o.name, dz, MAXMOVE, r["src"]))
         continue
-    print("  %-30s %+.4f m   %.0f%% covered, over %s" % (o.name, dz, 100 * frac, src))
-    report["pads"].append({"pad": o.name, "dz": dz, "frac": frac, "over": src})
+    # LOWER ONLY.  The defect is a doorstep standing PROUD of the road — a lit 0.12 m riser
+    # and a shadow line.  A pad standing BELOW the surface that crosses it is COVERED by it
+    # and shows nothing, so raising it buys no picture and costs new step and new z-fight
+    # risk: `pond-weir` sits 0.178 m under the lane that bridges it, and that is the lane
+    # bridging a weir, not a defect.  Printed, never silent.
+    if dz > 0:
+        raised += 1
+        print("  %-30s NOT RAISED %+.4f m — it stands UNDER the surface that crosses it, "
+              "which covers it; %s" % (o.name, dz, r["src"]))
+        continue
+    print("  %-30s %+.4f m   pass %d, %.0f%% covered, over %s"
+          % (o.name, dz, r["pass_no"], 100 * r["frac"], r["src"]))
+    report["pads"].append({"pad": o.name, "dz": dz, "frac": r["frac"], "over": r["src"],
+                           "pass": r["pass_no"]})
     moved += 1
     if CENSUS:
         continue
-    snap = [[v.index, v.co.z] for v in me.vertices]
-    o[PROP] = json.dumps({"z": snap})
-    # the pad's own transform may scale z; move in LOCAL units so the world delta is dz
-    sz = M.col[2].to_3d().length or 1.0
+    me = o.data
+    o[PROP] = json.dumps({"z": [[v.index, v.co.z] for v in me.vertices]})
+    sz = o.matrix_world.col[2].to_3d().length or 1.0
     for v in me.vertices:
         v.co.z += dz / sz
     me.update()
 
 print("-" * 78)
-print("%d pad(s) levelled onto the walk surface under them, %d left ALONE (nothing under "
-      "them), %d REFUSED as terraces" % (moved, alone, refused))
+print("%d pad(s) lowered onto the walk surface under them, %d left ALONE (nothing under "
+      "them), %d NOT RAISED (they stand under it), %d REFUSED as terraces"
+      % (moved, alone, raised, refused))
 report["moved"] = moved
 report["alone"] = alone
+report["notRaised"] = raised
 report["refusedTerrace"] = refused
 if CENSUS:
     print("(census only — nothing written)")

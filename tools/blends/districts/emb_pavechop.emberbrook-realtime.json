@@ -14,20 +14,20 @@
  "saved": true,
  "totals": {
   "outline": [
-   2233.64,
-   2241.79
+   2240.84,
+   2244.03
   ],
   "axis": [
-   67.47,
-   33.17
+   67.62,
+   34.41
   ],
-  "dropped": 1299,
-  "pinned": 2089,
-  "relaxed": 1045,
-  "stepped": 108,
+  "dropped": 1208,
+  "pinned": 2192,
+  "relaxed": 1007,
+  "stepped": 56,
   "terraced": 4,
-  "cap_floor": 1023,
-  "cap_zdrop": 227,
+  "cap_floor": 969,
+  "cap_zdrop": 224,
   "groundless": 0,
   "small_loops": 10
  },
@@ -4899,72 +4899,72 @@
   },
   "walk_lm_gate-court": {
    "verts": [
-    7904,
-    2180,
-    2220
+    8288,
+    2268,
+    2312
    ],
    "polys": [
-    5928,
-    4055,
-    4134
+    6216,
+    4244,
+    4331
    ],
    "perim": [
-    92.7,
-    79.86
+    90.0,
+    74.16
    ],
    "axis": [
     100.0,
-    10.0
+    10.3
    ],
    "bedges": [
-    206,
-    210
+    200,
+    204
    ],
-   "relaxed": 198,
+   "relaxed": 192,
    "relax_pinned": 8,
-   "dropped": 204,
+   "dropped": 198,
    "seat_pinned": 0,
    "stepped": 8,
    "terraced": 0,
-   "cap_floor": 200,
-   "cap_zdrop": 89,
+   "cap_floor": 194,
+   "cap_zdrop": 87,
    "groundless": 0,
    "small_loops": 0,
    "family": "lm"
   },
   "walk_lm_orchard": {
    "verts": [
-    10216,
-    2762,
-    2825
+    10248,
+    2766,
+    2829
    ],
    "polys": [
-    7662,
-    5212,
-    5337
+    7686,
+    5226,
+    5351
    ],
    "perim": [
-    93.6,
-    74.79
+    91.8,
+    73.01
    ],
    "axis": [
     100.0,
     4.2
    ],
    "bedges": [
-    208,
-    216
+    204,
+    212
    ],
-   "relaxed": 202,
+   "relaxed": 198,
    "relax_pinned": 6,
-   "dropped": 198,
+   "dropped": 188,
    "seat_pinned": 6,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 197,
+   "cap_floor": 187,
    "cap_zdrop": 7,
    "groundless": 0,
-   "small_loops": 0,
+   "small_loops": 1,
    "family": "lm"
   },
   "walk_lm_square-plaza": {
@@ -5039,31 +5039,31 @@
   },
   "walk_lm_square-plaza.002": {
    "verts": [
-    368,
-    124,
-    129
+    376,
+    128,
+    135
    ],
    "polys": [
-    276,
-    199,
-    209
+    282,
+    204,
+    217
    ],
    "perim": [
-    13.5,
-    13.24
+    14.4,
+    13.9
    ],
    "axis": [
     100.0,
-    86.7
+    81.2
    ],
    "bedges": [
-    30,
-    30
+    32,
+    32
    ],
-   "relaxed": 5,
-   "relax_pinned": 25,
-   "dropped": 5,
-   "seat_pinned": 25,
+   "relaxed": 4,
+   "relax_pinned": 28,
+   "dropped": 4,
+   "seat_pinned": 28,
    "stepped": 0,
    "terraced": 0,
    "cap_floor": 0,
@@ -5249,34 +5249,34 @@
   },
   "walk_lm_square-plaza.008": {
    "verts": [
-    168,
-    80,
-    91
+    248,
+    102,
+    111
    ],
    "polys": [
-    126,
-    101,
-    119
+    186,
+    143,
+    160
    ],
    "perim": [
-    15.3,
-    17.07
+    17.1,
+    15.95
    ],
    "axis": [
     100.0,
-    47.6
+    63.2
    ],
    "bedges": [
-    34,
-    42
+    38,
+    38
    ],
-   "relaxed": 15,
-   "relax_pinned": 19,
-   "dropped": 12,
-   "seat_pinned": 19,
+   "relaxed": 13,
+   "relax_pinned": 25,
+   "dropped": 13,
+   "seat_pinned": 25,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 16,
+   "cap_floor": 11,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5284,31 +5284,31 @@
   },
   "walk_lm_square-plaza.009": {
    "verts": [
-    168,
-    80,
-    89
+    184,
+    86,
+    96
    ],
    "polys": [
-    126,
-    102,
-    119
+    138,
+    111,
+    130
    ],
    "perim": [
-    16.2,
-    15.94
+    17.1,
+    16.84
    ],
    "axis": [
     100.0,
-    50.0
+    52.4
    ],
    "bedges": [
-    36,
-    40
+    38,
+    42
    ],
-   "relaxed": 17,
-   "relax_pinned": 19,
-   "dropped": 2,
-   "seat_pinned": 20,
+   "relaxed": 16,
+   "relax_pinned": 22,
+   "dropped": 1,
+   "seat_pinned": 23,
    "stepped": 0,
    "terraced": 0,
    "cap_floor": 1,
@@ -5529,66 +5529,66 @@
   },
   "walk_lm_square-plaza.016": {
    "verts": [
-    368,
-    132,
-    142
+    424,
+    142,
+    148
    ],
    "polys": [
-    276,
-    202,
-    217
+    318,
+    229,
+    240
    ],
    "perim": [
-    16.2,
-    15.05
+    15.3,
+    14.74
    ],
    "axis": [
     100.0,
-    63.9
+    79.4
    ],
    "bedges": [
-    36,
-    36
+    34,
+    34
    ],
-   "relaxed": 11,
-   "relax_pinned": 25,
-   "dropped": 10,
-   "seat_pinned": 22,
+   "relaxed": 7,
+   "relax_pinned": 27,
+   "dropped": 7,
+   "seat_pinned": 27,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 9,
+   "cap_floor": 7,
    "cap_zdrop": 0,
    "groundless": 0,
-   "small_loops": 1,
+   "small_loops": 0,
    "family": "lm"
   },
   "walk_lm_square-plaza.017": {
    "verts": [
-    408,
-    136,
-    144
+    416,
+    140,
+    149
    ],
    "polys": [
-    306,
-    220,
-    236
+    312,
+    225,
+    242
    ],
    "perim": [
-    14.4,
-    13.07
+    15.3,
+    13.97
    ],
    "axis": [
     100.0,
-    62.5
+    64.7
    ],
    "bedges": [
-    32,
-    32
+    34,
+    34
    ],
    "relaxed": 11,
-   "relax_pinned": 21,
+   "relax_pinned": 23,
    "dropped": 11,
-   "seat_pinned": 21,
+   "seat_pinned": 23,
    "stepped": 0,
    "terraced": 0,
    "cap_floor": 11,
@@ -5599,34 +5599,34 @@
   },
   "walk_lm_square-plaza.018": {
    "verts": [
-    232,
-    92,
-    101
+    280,
+    104,
+    112
    ],
    "polys": [
-    174,
-    132,
-    148
+    210,
+    156,
+    170
    ],
    "perim": [
     14.4,
-    14.05
+    14.33
    ],
    "axis": [
     100.0,
-    50.0
+    52.8
    ],
    "bedges": [
     32,
     36
    ],
-   "relaxed": 13,
-   "relax_pinned": 19,
-   "dropped": 12,
-   "seat_pinned": 19,
+   "relaxed": 12,
+   "relax_pinned": 20,
+   "dropped": 11,
+   "seat_pinned": 20,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 15,
+   "cap_floor": 14,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5634,34 +5634,34 @@
   },
   "walk_lm_square-plaza.019": {
    "verts": [
-    288,
-    104,
-    113
+    312,
+    108,
+    115
    ],
    "polys": [
-    216,
-    159,
-    176
+    234,
+    170,
+    184
    ],
    "perim": [
-    13.5,
-    11.89
+    12.6,
+    11.54
    ],
    "axis": [
     100.0,
-    50.0
+    60.7
    ],
    "bedges": [
-    30,
-    30
+    28,
+    28
    ],
-   "relaxed": 14,
-   "relax_pinned": 16,
-   "dropped": 14,
-   "seat_pinned": 16,
+   "relaxed": 11,
+   "relax_pinned": 17,
+   "dropped": 11,
+   "seat_pinned": 17,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 14,
+   "cap_floor": 11,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5844,34 +5844,34 @@
   },
   "walk_lm_square-plaza.025": {
    "verts": [
-    184,
-    84,
-    97
+    224,
+    100,
+    115
    ],
    "polys": [
-    138,
-    109,
-    131
+    168,
+    132,
+    157
    ],
    "perim": [
-    15.3,
-    19.2
+    18.0,
+    20.91
    ],
    "axis": [
     100.0,
-    34.0
+    35.7
    ],
    "bedges": [
-    34,
-    50
+    40,
+    56
    ],
-   "relaxed": 15,
-   "relax_pinned": 19,
-   "dropped": 11,
-   "seat_pinned": 21,
+   "relaxed": 18,
+   "relax_pinned": 22,
+   "dropped": 13,
+   "seat_pinned": 24,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 21,
+   "cap_floor": 24,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5879,34 +5879,34 @@
   },
   "walk_lm_square-plaza.026": {
    "verts": [
-    432,
-    140,
-    145
+    456,
+    148,
+    154
    ],
    "polys": [
-    324,
-    231,
-    241
+    342,
+    244,
+    255
    ],
    "perim": [
-    13.5,
-    12.9
+    14.4,
+    15.34
    ],
    "axis": [
     100.0,
-    80.0
+    75.0
    ],
    "bedges": [
-    30,
-    30
+    32,
+    36
    ],
-   "relaxed": 5,
-   "relax_pinned": 25,
-   "dropped": 5,
-   "seat_pinned": 25,
+   "relaxed": 4,
+   "relax_pinned": 28,
+   "dropped": 3,
+   "seat_pinned": 28,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 5,
+   "cap_floor": 6,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -5914,34 +5914,34 @@
   },
   "walk_lm_square-plaza.027": {
    "verts": [
-    320,
-    118,
-    127
+    352,
+    124,
+    133
    ],
    "polys": [
-    240,
-    178,
-    193
+    264,
+    193,
+    208
    ],
    "perim": [
-    16.2,
-    15.74
+    15.3,
+    14.88
    ],
    "axis": [
     100.0,
-    37.5
+    39.5
    ],
    "bedges": [
-    36,
-    40
+    34,
+    38
    ],
-   "relaxed": 20,
-   "relax_pinned": 16,
-   "dropped": 11,
-   "seat_pinned": 16,
+   "relaxed": 17,
+   "relax_pinned": 17,
+   "dropped": 8,
+   "seat_pinned": 17,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 10,
+   "cap_floor": 7,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6019,34 +6019,34 @@
   },
   "walk_lm_square-plaza.030": {
    "verts": [
-    488,
-    158,
-    165
+    560,
+    180,
+    188
    ],
    "polys": [
-    366,
-    261,
-    274
+    420,
+    299,
+    315
    ],
    "perim": [
-    15.3,
-    15.68
+    17.1,
+    16.05
    ],
    "axis": [
     100.0,
-    68.4
+    81.6
    ],
    "bedges": [
-    34,
+    38,
     38
    ],
-   "relaxed": 7,
-   "relax_pinned": 27,
+   "relaxed": 5,
+   "relax_pinned": 33,
    "dropped": 5,
-   "seat_pinned": 27,
+   "seat_pinned": 33,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 9,
+   "cap_floor": 5,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6054,34 +6054,34 @@
   },
   "walk_lm_square-plaza.031": {
    "verts": [
-    424,
-    140,
-    146
+    440,
+    148,
+    158
    ],
    "polys": [
-    318,
-    228,
-    240
+    330,
+    238,
+    254
    ],
    "perim": [
-    14.4,
-    13.85
+    16.2,
+    15.68
    ],
    "axis": [
     100.0,
-    71.9
+    77.8
    ],
    "bedges": [
-    32,
-    32
+    36,
+    36
    ],
-   "relaxed": 7,
-   "relax_pinned": 25,
-   "dropped": 7,
-   "seat_pinned": 25,
+   "relaxed": 6,
+   "relax_pinned": 29,
+   "dropped": 6,
+   "seat_pinned": 29,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 7,
+   "cap_floor": 6,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6124,34 +6124,34 @@
   },
   "walk_lm_square-plaza.033": {
    "verts": [
-    440,
-    148,
-    156
+    464,
+    152,
+    159
    ],
    "polys": [
-    330,
-    238,
-    253
+    348,
+    249,
+    262
    ],
    "perim": [
-    16.2,
-    16.35
+    15.3,
+    15.84
    ],
    "axis": [
     100.0,
-    65.0
+    71.1
    ],
    "bedges": [
-    36,
-    40
+    34,
+    38
    ],
-   "relaxed": 9,
-   "relax_pinned": 27,
-   "dropped": 8,
-   "seat_pinned": 27,
+   "relaxed": 6,
+   "relax_pinned": 28,
+   "dropped": 5,
+   "seat_pinned": 28,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 11,
+   "cap_floor": 8,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6299,34 +6299,34 @@
   },
   "walk_lm_square-plaza.038": {
    "verts": [
-    216,
-    96,
-    111
+    320,
+    122,
+    135
    ],
    "polys": [
-    162,
-    128,
-    156
+    240,
+    181,
+    205
    ],
    "perim": [
-    18.0,
-    17.48
+    18.9,
+    18.2
    ],
    "axis": [
     100.0,
-    33.3
+    47.8
    ],
    "bedges": [
-    40,
-    48
+    42,
+    46
    ],
-   "relaxed": 22,
-   "relax_pinned": 18,
-   "dropped": 20,
-   "seat_pinned": 20,
+   "relaxed": 16,
+   "relax_pinned": 24,
+   "dropped": 15,
+   "seat_pinned": 24,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 18,
+   "cap_floor": 15,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6334,34 +6334,34 @@
   },
   "walk_lm_square-plaza.039": {
    "verts": [
-    440,
-    144,
-    151
+    488,
+    162,
+    173
    ],
    "polys": [
-    330,
-    236,
-    250
+    366,
+    263,
+    280
    ],
    "perim": [
-    14.4,
-    13.15
+    17.1,
+    16.22
    ],
    "axis": [
     100.0,
-    59.4
+    73.7
    ],
    "bedges": [
-    32,
-    32
+    38,
+    38
    ],
-   "relaxed": 11,
-   "relax_pinned": 21,
-   "dropped": 11,
-   "seat_pinned": 21,
+   "relaxed": 8,
+   "relax_pinned": 29,
+   "dropped": 8,
+   "seat_pinned": 29,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 11,
+   "cap_floor": 8,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -6917,11 +6917,11 @@
    ],
    "relaxed": 7,
    "relax_pinned": 21,
-   "dropped": 10,
-   "seat_pinned": 18,
-   "stepped": 3,
+   "dropped": 7,
+   "seat_pinned": 21,
+   "stepped": 0,
    "terraced": 0,
-   "cap_floor": 10,
+   "cap_floor": 7,
    "cap_zdrop": 7,
    "groundless": 0,
    "small_loops": 0,
@@ -7057,9 +7057,9 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 6,
-   "seat_pinned": 2,
-   "stepped": 5,
+   "dropped": 1,
+   "seat_pinned": 7,
+   "stepped": 0,
    "terraced": 0,
    "cap_floor": 0,
    "cap_zdrop": 0,
@@ -7092,12 +7092,12 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 8,
-   "seat_pinned": 0,
-   "stepped": 6,
+   "dropped": 5,
+   "seat_pinned": 3,
+   "stepped": 3,
    "terraced": 0,
    "cap_floor": 0,
-   "cap_zdrop": 2,
+   "cap_zdrop": 1,
    "groundless": 0,
    "small_loops": 0,
    "family": "pad"
@@ -7127,9 +7127,9 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 6,
-   "seat_pinned": 2,
-   "stepped": 3,
+   "dropped": 5,
+   "seat_pinned": 3,
+   "stepped": 2,
    "terraced": 0,
    "cap_floor": 2,
    "cap_zdrop": 3,
@@ -7232,11 +7232,11 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 8,
-   "seat_pinned": 0,
-   "stepped": 5,
+   "dropped": 5,
+   "seat_pinned": 3,
+   "stepped": 2,
    "terraced": 0,
-   "cap_floor": 1,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7271,7 +7271,7 @@
    "seat_pinned": 4,
    "stepped": 0,
    "terraced": 0,
-   "cap_floor": 1,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7302,9 +7302,9 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 7,
-   "seat_pinned": 1,
-   "stepped": 7,
+   "dropped": 3,
+   "seat_pinned": 5,
+   "stepped": 3,
    "terraced": 0,
    "cap_floor": 0,
    "cap_zdrop": 0,
@@ -7341,7 +7341,7 @@
    "seat_pinned": 0,
    "stepped": 5,
    "terraced": 0,
-   "cap_floor": 1,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7372,9 +7372,9 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 8,
-   "seat_pinned": 0,
-   "stepped": 8,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "stepped": 0,
    "terraced": 0,
    "cap_floor": 0,
    "cap_zdrop": 0,
@@ -7407,9 +7407,9 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 8,
-   "seat_pinned": 0,
-   "stepped": 8,
+   "dropped": 0,
+   "seat_pinned": 8,
+   "stepped": 0,
    "terraced": 0,
    "cap_floor": 0,
    "cap_zdrop": 0,
@@ -7442,11 +7442,11 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 6,
-   "seat_pinned": 2,
-   "stepped": 2,
+   "dropped": 4,
+   "seat_pinned": 4,
+   "stepped": 0,
    "terraced": 0,
-   "cap_floor": 2,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7477,9 +7477,9 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 8,
-   "seat_pinned": 0,
-   "stepped": 7,
+   "dropped": 5,
+   "seat_pinned": 3,
+   "stepped": 4,
    "terraced": 0,
    "cap_floor": 1,
    "cap_zdrop": 0,
@@ -7512,11 +7512,11 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 8,
-   "seat_pinned": 0,
-   "stepped": 5,
+   "dropped": 4,
+   "seat_pinned": 4,
+   "stepped": 1,
    "terraced": 0,
-   "cap_floor": 2,
+   "cap_floor": 1,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7582,11 +7582,11 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 5,
-   "seat_pinned": 3,
-   "stepped": 2,
+   "dropped": 3,
+   "seat_pinned": 5,
+   "stepped": 0,
    "terraced": 0,
-   "cap_floor": 2,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7617,9 +7617,9 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 5,
-   "seat_pinned": 3,
-   "stepped": 4,
+   "dropped": 4,
+   "seat_pinned": 4,
+   "stepped": 3,
    "terraced": 0,
    "cap_floor": 0,
    "cap_zdrop": 0,
@@ -7757,11 +7757,11 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 8,
-   "seat_pinned": 0,
-   "stepped": 2,
+   "dropped": 6,
+   "seat_pinned": 2,
+   "stepped": 0,
    "terraced": 0,
-   "cap_floor": 3,
+   "cap_floor": 0,
    "cap_zdrop": 0,
    "groundless": 0,
    "small_loops": 0,
@@ -7792,9 +7792,9 @@
    ],
    "relaxed": 0,
    "relax_pinned": 0,
-   "dropped": 8,
-   "seat_pinned": 0,
-   "stepped": 6,
+   "dropped": 5,
+   "seat_pinned": 3,
+   "stepped": 3,
    "terraced": 0,
    "cap_floor": 0,
    "cap_zdrop": 0,

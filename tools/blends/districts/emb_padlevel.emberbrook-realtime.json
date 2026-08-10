@@ -1,0 +1,122 @@
+{
+ "blend": "/Users/junshernchan/projects/multiplayer-rpg/tools/blends/emberbrook-realtime.blend",
+ "nudge": 0.004,
+ "pads": [
+  {
+   "pad": "walk_pad_bakery",
+   "dz": -0.0660000524520874,
+   "frac": 0.7172222222222222,
+   "over": "walk_lm_square-plaza.002 58%, walk_lm_square-plaza.001 13%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_barn",
+   "dz": -0.05975002861022949,
+   "frac": 0.8486111111111111,
+   "over": "walk_e_barn__gate-court_l1 27%, walk_e_square-plaza__barn_l14 21%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_brook-bridge",
+   "dz": -0.07600004291534423,
+   "frac": 0.5590185676392573,
+   "over": "walk_e_pond-jetty__brook-bridge_l6 31%, walk_e_pond-jetty__brook-bridge_l5 13%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_elder-house",
+   "dz": -0.06599993324279785,
+   "frac": 0.6536111111111111,
+   "over": "walk_e_elder-house__home-lane-end_l1 19%, walk_e_hillside-cottage__elder-house_l5 18%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_grandmothers-bench",
+   "dz": -0.061999933242797844,
+   "frac": 0.6428571428571429,
+   "over": "walk_pad_lake-home 64%",
+   "pass": 2
+  },
+  {
+   "pad": "walk_pad_hillside-cottage",
+   "dz": -0.06599993324279785,
+   "frac": 0.9558333333333333,
+   "over": "walk_e_square-plaza__hillside-cottage_l10 28%, walk_e_hillside-cottage__elder-house_l1 23%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_home-lane-end",
+   "dz": -0.07849998092651367,
+   "frac": 0.4128289473684211,
+   "over": "walk_e_elder-house__home-lane-end_l10 20%, walk_e_elder-house__home-lane-end_l8 11%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_inn",
+   "dz": -0.0660000524520874,
+   "frac": 1.0,
+   "over": "walk_lm_square-plaza.006 59%, walk_lm_square-plaza.014 41%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_item-shop",
+   "dz": -0.0660000524520874,
+   "frac": 0.8857142857142857,
+   "over": "walk_lm_square-plaza.038 48%, walk_lm_square-plaza.046 34%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_lake-home",
+   "dz": -0.06599993324279785,
+   "frac": 0.4061111111111111,
+   "over": "walk_e_hillside-cottage__lake-home_l6 14%, walk_e_hillside-cottage__lake-home_l7 10%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_pips-den",
+   "dz": -0.04100007629394531,
+   "frac": 0.5903448275862069,
+   "over": "walk_e_square-plaza__pond-jetty_l8 24%, walk_e_square-plaza__pond-jetty_l9 19%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_pond-jetty",
+   "dz": -0.029125042915344235,
+   "frac": 0.6107142857142858,
+   "over": "walk_e_pond-jetty__brook-bridge_l1 17%, walk_e_square-plaza__pond-jetty_l11 10%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_poppy-stall",
+   "dz": -0.0660000524520874,
+   "frac": 0.4495192307692308,
+   "over": "walk_lm_square-plaza.001 44%, walk_lm_square-plaza.002 1%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_road-gate",
+   "dz": -0.02225000104308128,
+   "frac": 0.9615384615384616,
+   "over": "walk_e_road-gate__square-plaza_l0 31%, walk_e_waystone__road-gate_l6 29%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_watermill",
+   "dz": -0.06599993324279785,
+   "frac": 0.31305555555555553,
+   "over": "walk_e_hillside-cottage__watermill_l4 15%, walk_e_hillside-cottage__watermill_l5 10%",
+   "pass": 1
+  },
+  {
+   "pad": "walk_pad_waystone",
+   "dz": -0.05350000476837158,
+   "frac": 0.8886198547215496,
+   "over": "walk_e_waystone__road-gate_l0 40%, walk_e_arrival-clearing__waystone_l6 33%",
+   "pass": 1
+  }
+ ],
+ "moved": 16,
+ "alone": 5,
+ "notRaised": 2,
+ "refusedTerrace": 0
+}
