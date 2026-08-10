@@ -23980,3 +23980,70 @@ lost, 0 extra, height agreement median 0.000 m, `SIM.bvh().fail 0` on both ·
 (`bar_upper-lane-closed_cart_bed` 2124, `bar_back-lane-closed_cart_bed` 1006, bridge rails,
 two lamp posts) · `cine_test --town emberbrook` red on exactly the five cameras the
 re-solve moved (max 0.28 m), which the bake clears.
+
+### 5. TARGET 2 CLOSED AFTER ALL, AND THE §3 PARAGRAPH ABOVE IS SUPERSEDED
+
+`tools/emb_padcoplanar.py`. The black quad survives the lamp unsealing because it is a
+SECOND defect, and the plate named it once the town was lit: its silhouette is not a
+rectangle but the **stepped UNION of two footprints**.
+
+    walk_pad_lake-home           x[35.592, 38.592]  y[47.984, 50.984]  z 1.930..2.070
+    walk_pad_grandmothers-bench  x[34.600, 37.400]  y[49.400, 50.950]  z 1.930..2.070
+
+Identical z to the millimetre, overlapping 1.81 x 1.55 m. Coincident coplanar surfaces
+mutually occlude. CONTROL (one `hide_render`, homerow at its own shipped grade): box
+**p50 57.9 -> 83.5, <= 8/255 40.7% -> 0.1%**. SHIPPED as a 4 mm downward nudge of the
+smaller member instead, because the census found **55 coincident pairs town-wide** (mostly
+road-ribbon segments) and a "more than half swallowed" hide rule would DELETE the uncovered
+remainder — `walk_pad_grandmothers-bench` is only 65% swallowed, so hiding it removes
+1.5 m2 of drawn paving. 4 mm is 6.7x Cycles' own ray epsilon at this town's distance from
+the world origin. In the SHIPPED plate the box is p50 79.0 and **<= 8/255 is 0.0%**.
+Applied to the PLATE MASTER ONLY — `hide_render`/location there cannot reach the walk
+network, which is exported from the master and the realtime tier.
+RE-JUDGED (`run-20260810-004941-emb-round1-homerow-after`, 6 calls): **both findings are
+gone** — the pitch-black void AND "Grandmother's bench: ABSENT". Two findings, one cause,
+both retired. The root fix is `emb_blockout` emitting two threshold pads at one landmark's
+height with no overlap test; that is round 2's.
+
+### 6. THE VERDICT AS A LANGUAGE COUNT
+
+Re-judge over all 11 rebaked plates (`run-20260810-002549-emb-round1-after`, 66 calls,
+same judge, same modes, N=3):
+
+    judge language over the survivors        before   after
+    rim / staircase / jagged / blocky-step        8       0
+    darkness / pitch-black / cannot see ground   35      31
+    untextured / flat / placeholder              11       8
+    category occlusion                           22      13
+    category geometry                            29      37
+    survivors, total                             94      97
+
+**The total went UP and that is the honest result.** A town too dark to read was hiding its
+own geometry: occlusion findings fell 22 -> 13 and geometry rose 29 -> 37 because the judge
+can now see what it is describing. The count this round set out to move is 8 -> 0.
+
+### 7. OWED FOR ROUND 2, EACH WITH ITS NUMBER
+  1. **The untextured tan panel on the watermill is round 2's #1** — SIX independent naive
+     looks on homerow after the fixes, and the one item no instrument here can name: the
+     nearest massing is `lm_watermill_body` at residual 1.16-1.41 m, i.e. dressing the
+     collision bundle does not carry. Needs the Blender ray census at world x[47.4,51.1]
+     y[56.6,61.9] z[1.9,8.8].
+  2. **The ribbon/apron JOIN still reads as a hard edge** — woodroad, three naive looks
+     ("the path plane ends with a sharp, unblended polygonal edge"). By construction: a
+     PINNED vertex keeps its 0.12 m riser, and 50 of 138 ribbon segments are entirely
+     pinned. The lever is a taper across the joint, not a wider chamfer.
+  3. **gatefield's pillar cutouts survive** — `--minloop 2.40 m` refused 10 boundary loops
+     as too short to carry a chamfer and the pillar holes are among them.
+  4. **The Heartlight cap** — massing plus a 5200 W point 0.75 m above a 2 x 2 m pale slab.
+     The flame is built, translucent, and does not respond to emission (x12 control).
+  5. **Two towns' worth of coincident pads** — 55 pairs, root fix in `emb_blockout`.
+  6. **A DEPLOY IS OWED**: eleven plates and both bundles supersede what is on the site.
+
+### 8. TWO PROCESS FACTS THIS ROUND PAID FOR
+  * `homerow` **SIGABRTed (exit 134) at render start, twice, deterministically, while ten
+    other cameras passed** — CLAUDE.md's Metal-kernel-cache case exactly. Quarantining
+    `/var/folders/*/C/org.blenderfoundation.blender` (215 MB) fixed it on the next attempt.
+    A crashed plate writes NOTHING and leaves the old art in place, so the only honest
+    progress check is the ARTIFACT's mtime, never the queue's log.
+  * A foreground tool call with a timeout **kills the Blender it is waiting on**. Two plate
+    renders were lost that way. Launch long bakes detached and poll the artifact.
