@@ -1,0 +1,112 @@
+{
+ "instrument": "cine_bake --draft --res 1008x576 --samples 28, 15 cameras a side; arm A is the git-committed master with round 11's normal map restored, arm B is the same master + the three round-13 fixes",
+ "trap_paid": "the FIRST arm A was thrown away and re-rendered. It had been shot AFTER `qm_awning_canvas maps` regenerated the normal map on disk, so it already contained fix 2b - and Blender links these images rather than packing them, so a texture regenerated on disk is live in the very next render with nothing in the blend changing. An arm rendered from the state you did not mean is not a baseline. Same family as round 12's magenta-backup arm.",
+ "ab_percent_of_frame_changed_above_4_and_12_of_255": {
+  "deep-stairs": [
+   38.068,
+   15.551
+  ],
+  "quay-west": [
+   31.439,
+   14.011
+  ],
+  "waterfront": [
+   14.611,
+   2.243
+  ],
+  "fishdock": [
+   14.188,
+   2.81
+  ],
+  "boatyard": [
+   11.283,
+   3.087
+  ],
+  "weave": [
+   10.507,
+   1.981
+  ],
+  "lockfive": [
+   9.079,
+   2.63
+  ],
+  "shelf-west": [
+   5.575,
+   0.6
+  ],
+  "crossing": [
+   4.619,
+   2.253
+  ],
+  "loop-stairs": [
+   4.264,
+   0.462
+  ],
+  "lockhead": [
+   3.455,
+   0.822
+  ],
+  "cottage": [
+   3.333,
+   0.794
+  ],
+  "shelf-east": [
+   3.061,
+   0.311
+  ],
+  "gate": [
+   3.05,
+   0.638
+  ],
+  "north-landing": [
+   2.233,
+   0.373
+  ]
+ },
+ "floor_RE-MEASURED_not_inherited": {
+  "note": "two draft renders of the SAME post-fix master, same session, on the four smallest movers",
+  "shelf-east": [
+   0.003,
+   0.0
+  ],
+  "gate": [
+   0.003,
+   0.0
+  ],
+  "north-landing": [
+   0.002,
+   0.0
+  ],
+  "cottage": [
+   0.001,
+   0.0
+  ]
+ },
+ "verdict": "the A/B is 740x to 38000x the measured floor on every camera. NOTHING IS REFUSED; all fifteen rebake. Round 12 refused three at 0.006/0.003/0.001.",
+ "why_all_fifteen_moved": "four new 150 W sources in a scene with diffuse_bounces 4, plus 30 new meshes and 555 reshaded polygons bouncing differently. Same shape as round 11's all-fifteen result and the same response: re-measure the floor, name the cause.",
+ "quay-west_is_not_a_leak": {
+  "note": "31.4% at a camera nothing was aimed at, attributed by putting the changed pixels on the objmap",
+  "yard_ground|mat_rock": 21.1,
+  "qm_stair_underworks|mat_qm_stone_dark": 14.6,
+  "wf_stairmouth|mat_deck": 5.7,
+  "wf_ground|mat_rock": 3.9,
+  "qm_paving|mat_qm_paving": 3.8,
+  "frame_L_p05": [
+   2.8,
+   4.3
+  ],
+  "frame_L_p50": [
+   56.6,
+   59.4
+  ],
+  "frame_L_p95": [
+   146.8,
+   148.1
+  ],
+  "blown_pct": [
+   0.06,
+   0.06
+  ],
+  "verdict": "every one of them is a near-field surface around the quay-market stair: the underlight landing on a SECOND camera, which is target 3's brief (the near-field shadow floor) and not a spill. p95 moves 1.3 of 255 and blown is identical."
+ }
+}
